@@ -1,0 +1,82 @@
+error-card .error {
+  position: fixed;
+  background: var(--error-background);  
+  top: 25vh;
+  right: 5vw;
+  width: 90%;
+  z-index: 20;
+  border-radius: 10px;
+  padding: 15px 25px;
+  overflow: hidden;
+  max-width: 44rem;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+error-card .error::before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 100%;
+  background: crimson;
+}
+
+error-card .error.bounce {
+  animation: bounceFromRight 0.4s linear forwards;
+}
+
+error-card .error p {
+  margin: 0;
+  color: crimson;
+}
+
+error-card .error svg {
+  width: 20px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-right: 15px;
+  margin-top: 15px;
+  stroke: crimson;
+  cursor: pointer;
+}
+
+error-card .error .time-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: crimson;
+  height: 5px;
+}
+
+error-card .error .time-line.disappear {
+  animation: timelineDisappear var(--error-duration) linear forwards;
+}
+
+@keyframes bounceFromRight {
+  0% {
+    transform: translateX(100%);
+  }
+  40% {
+    transform: translateX(0);
+  }
+  70% {
+    transform: translateX(10%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes timelineDisappear {
+  0% {
+    width: 100%;
+  }
+  100% {
+    width: 0;
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "sections": {
+    "2ec79988-c5e9-407a-9a25-f86242ee749d": {
+      "type": "image-banner",
+      "settings": {
+        "image_desktop": "shopify:\/\/shop_images\/FAQ_ORDI.jpg",
+        "image_desktop_fit": "contain",
+        "image_desktop_horizontal_position": "center",
+        "image_desktop_vertical_position": "center",
+        "image_desktop_height": 60,
+        "content_width_desktop": 60,
+        "content_horizontal_position_desktop": 50,
+        "content_vertical_position_desktop": 50,
+        "content_alignment_desktop": "left",
+        "image_mobile_fit": "cover",
+        "image_mobile_horizontal_position": "center",
+        "image_mobile_vertical_position": "center",
+        "image_mobile_height": 45,
+        "content_width_mobile": 85,
+        "content_horizontal_position_mobile": 50,
+        "content_vertical_position_mobile": 80,
+        "content_alignment_mobile": "right",
+        "overlay_opacity": 0,
+        "body_text": "#ffffff"
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "2ec79988-c5e9-407a-9a25-f86242ee749d",
+    "main"
+  ]
+}

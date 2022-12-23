@@ -1,0 +1,143 @@
+.breadcrumb {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.breadcrumb nav {
+  display: none;
+}
+
+.breadcrumb nav a {
+  display: block;
+}
+
+.mobile-container {
+  display: flex;
+  margin: 1rem 0;
+}
+
+.breadcrumb .visible-on-mobile {
+  padding-left: 10px;
+}
+
+.breadcrumb .mobile {
+  text-decoration: none;
+  color: inherit;
+  background: rgb(var(--color-foreground));
+  padding: 0.5rem 2rem;
+  position: relative;
+  z-index: 1;
+  margin: 0 0 0 -5px;
+  font-size: 1.3rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.breadcrumb .mobile:after {
+  content: '';
+  display: block;
+  position: absolute;
+  inset: 2px;
+  background: rgb(var(--color-background));
+  z-index: -1;
+}
+
+.breadcrumb .mobile,
+.breadcrumb .mobile:after {
+  clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%);
+}
+
+.breadcrumb button {
+  display: block;
+  height: 100%;
+  padding: 0.5rem 2rem 1rem 1rem;
+  color: rgb(var(--color-background));
+  background: rgb(var(--color-foreground));
+  font-weight: bold;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 50%, 100% 100%, 0 100%);
+  cursor: pointer;
+}
+
+.breadcrumb nav.open {
+  display: block;
+}
+
+.breadcrumb a {
+  color: inherit;
+}
+
+@media screen and (min-width: 500px) {
+  .mobile-container {
+    display: none;
+    margin: 1rem 0;
+  }
+
+  .breadcrumb svg {
+    display: none;
+  }
+
+  .breadcrumb nav {
+    display: flex;
+    margin: 2rem 0 1.5rem;
+  }
+
+  .breadcrumb .visible-on-mobile {
+    padding-left: 2rem;
+  }
+
+  .breadcrumb nav a,
+  .breadcrumb nav span {
+    text-decoration: none;
+    background: rgb(var(--color-foreground));
+    padding: 0.5rem 2rem;
+    position: relative;
+    z-index: 1;
+    margin: 0 -2px;
+    font-size: 1.3rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+  }
+
+  .breadcrumb nav a:after,
+  .breadcrumb nav span:after {
+    content: '';
+    display: block;
+    position: absolute;
+    inset: 2px;
+    background: rgb(var(--color-background));
+    z-index: -1;
+  }
+
+  .breadcrumb nav a:last-child,
+  .breadcrumb nav span:last-child {
+    color: var(--color-selected);
+    background: var(--color-selected);
+  }
+
+  .breadcrumb nav a:last-child:after,
+  .breadcrumb nav span:last-child:after {
+    background: var(--background-selected);
+  }
+
+  .breadcrumb .first,
+  .breadcrumb .first:after {
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
+  }
+
+  .breadcrumb .not-first,
+  .breadcrumb .not-first:after {
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%, 10px 50%);
+  }
+
+  .breadcrumb a.not-first {
+    text-align: not-first;
+  }
+
+  .breadcrumb a:visited {
+    color: inherit;
+  }
+}

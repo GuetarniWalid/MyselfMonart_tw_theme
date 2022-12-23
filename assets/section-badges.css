@@ -1,0 +1,101 @@
+.section-badges {
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+  background: var(--background);
+}
+
+.section-badges > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: var(--columns-alignment);
+}
+
+.section-badges > h2 {
+  text-align: center;
+}
+
+.section-badges .badge-column {
+  margin-top: 55px;
+  padding: 0 3rem;
+  text-align: center;
+  width: var(--badge-column-width);
+}
+
+.section-badges .title {
+  margin-top: 0;
+  font-weight: var(--title-font-weight);
+  margin-bottom: var(--title-margin-bottom);
+}
+
+.section-badges .title + p {
+  margin: 0 auto;
+  text-align: left;
+}
+
+.section-badges svg {
+  max-width: 100px;
+  height: auto;
+  width: calc(var(--svg-width));
+  color: var(--svg-color);
+}
+
+.section-badges svg path {
+  fill: var(--svg-color);
+}
+
+.section-badges .svg-wrapper {
+  display: inline-block;
+  line-height: 0;
+  position: relative;
+  z-index: 0;
+  margin-bottom: var(--svg-wrapper-margin-bottom);
+}
+
+.section-badges .svg-background::before {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  content: "";
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  background: var(--svg-background);
+  width: calc(var(--svg-width) * 1.5 + 2rem);
+  height: calc(var(--svg-width) * 1.5 + 2rem);
+  border: var(--svg-border);
+}
+
+.section-badges .number-wrapper {
+  font-size: var(--number-size);
+  background: var(--svg-background);
+  border-radius: 50%;
+  width: calc(var(--number-size) + 6rem);
+  height: calc(var(--number-size) + 6rem);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: var(--svg-border);
+  color: var(--svg-color);
+  margin-bottom: 2rem;
+}
+
+.section-badges .lottie-wrapper {
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+@media only screen and (max-width: 750px) {
+  .section-badges .badge-column {
+    width: var(--badge-column-width-on-mobile);
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .section-badges .badge-column {
+    padding: 0 1rem;
+  }
+}
+
+

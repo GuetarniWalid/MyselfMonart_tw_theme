@@ -1,0 +1,357 @@
+{% comment %}
+    Renders product addon for the product.
+
+    Accepts:
+    - block: {Object} block object
+    - product_form_id: {String} product form id
+
+    Usage:
+    {% render 'component-product-addon', block: block %}
+{% endcomment %}
+
+{{ 'component-product-addon.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+    .product-addon {
+        --addon-background: {{ section.settings.text_color | color_modify: 'alpha', 0.03 }};
+    }
+{%- endstyle -%}
+
+{%- liquid
+
+    assign mattter_images = "toile_forme.jpg,plexiglas_forme.jpg,aluminium_forme.jpg" | split: ','
+    assign matter_info_titles = "LA TOILE 100% POLYESTER : mate et texturée|LE PLEXIGLAS : brillant et transparent|L'ALUMINIUM : contraste et éclat" | split: '|'
+    assign matter_info_txt = "La toile offre une prise en main agréable. Le grain du papier est visible principalement dans les zones claires de l’image, tandis que les noirs auront tendance à gommer le grain. Sa surface ajoute du relief et de la profondeur à vos tableaux. La toile apporte une touche artistique et dote les tableaux d’une incroyable intensité.|Le verre acrylique, également appelé Plexiglas, est un matériau synthétique rigide et transparent haut de gamme. Son aspect est similaire à du verre. Le plexiglas offrira une profondeur et une luminosité extraordinaire à vos tableaux. Les couleurs du tableau seront vives et éclatantes. Il est particulièrement recommandé pour les tableaux lumineux.|L'aluminium permet une présentation sobre, moderne et sans reflet. La densité des couleurs et les contrastes sont très forts. L'aluminium est un support très résistant et de qualitaté. Il n'est pas sensible aux traces de doigts, ni à l'humidité. Son entretien est très facile. Vous pouvez le nettoyer avec un tissu légèrement humide." | split: '|'
+    assign matter_info_images = "toile_coin_forme.jpg,plexiglas_coin_forme.jpg,aluminium_coin_forme.jpg" | split: ','
+
+    assign support_images = "sans-fixation.jpg,decoration-murale-corde.jpg,support_crochet.jpg?,decoration_murale_RAIL-2.jpg,support_entretoise.jpg" | split: ','
+    assign support_info_titles = "SANS SYSTÈME DE FIXATION|FIXATION POUR TOILE|CROCHET AVEC SYSTÈME ADHÉSIF|RAILS EN ALUMINIUM|ENTRETOISES + TROUS" | split: '|'
+    assign support_info_txt = "Tableau seul, livré sans système de fixation| ■ Non visible de face<br>■ Facile d'installation<br><br>Accrochez votre tableau rapidement et simplement avec notre set de fixation pour toile. Notre kit comprend 2 types d’installation différentes:<br><br>● <b>Le crochet en dent de scie:</b> Sur la largeur, à l’aide d’un mètre, repérez le centre de votre tableau et placez-y votre crochet en dent de scie à l’aide d’un marteau et des clous fournis. Il ne vous reste plus qu'à suspendre votre toile sur le mur de votre choix.<br><br>● <b>La corde et les 2 anneaux triangulaires:</b> Ce système est particulièrement recommandé pour les grandes toiles car il permet de répartir le poids sur la corde. À l’aide d’un tournevis et des vis fournis fixez les 2 anneaux triangulaires au centre de chacune des hauteurs (voir image ci-dessus). Attachez la corde  solidement sur chaque anneau. Il ne vous reste plus qu'à suspendre votre toile sur le mur de votre choix.|■ Non visible de face<br>■ Ne convient pas à un usage extérieur<br><br>Accrochez votre tableau rapidement et simplement grâce à notre crochet adhésif. Il est constitué de deux faces, l'une adhesive qui se colle sur la surface du tableau et l'autre forme le crochet. Pour l'installation il suffit d'enlever le film protecteur de la surface adhésive, puis de coller le crochet au centre du tableau. Une légère pression de 10 secondes suffit. Placez une vis sur le mur, il ne vous reste plus qu'à suspendre votre tableau sur le mur de votre choix|■ non visible de face<br>■ 1 cm de distance par rapport au mur pour un effet flottant<br><br>Le rail en aluminium est la solution si vous souhaitez accrocher votre tableau rapidement et facilement. Le système est déjà monté sur tableau quand vous le recevrez. Placez les chevilles adaptées au type de mur sur lequel vous voulez l'accrocher en prenant aussi en compte le poids du tableau. Il ne vous reste plus qu'à suspendre votre tableau sur le mur de votre choix.|■ les entretoises sont visibles de face<br>■ épuré et design<br><br>Les entretoises métalliques sont particulièrement adaptées au tableau en aluminium ou en plexiglas. Ce système d'accroche est visible sur le devant du tableau. Parfait pour une ambiance élégante et design, votre tableau flotte à quelques millimètres dur mur. Le tableau est perforé en amont par nos soins pour y accueillir les entretoises. Installez des chevilles adaptées au support du mur en y reportant la distance entre les trous du tableau.Il ne vous reste plus qu'à suspendre votre tableau sur le mur de votre choix." | split: '|'
+    assign support_info_images = "sans-fixation.jpg,decoration-murale-corde.jpg,support_crochet.jpg,decoration_murale_RAIL.jpg,support_entretoise_mur.jpg" | split: ','
+
+    assign matter_by_default = "Toile"
+    assign suppot_by_default = "Aucun"
+    assign default_size_variants = product.variants | where: "option2", matter_by_default | where: "option3", suppot_by_default
+    assign default_matter_variants = product.variants | where: "option1", default_size_variants.first.option1 | where: "option3", suppot_by_default
+    comment
+        default_support_variants = "aucun:0,set:6,crochet:8,rails:15,entretoise:30"
+    endcomment
+    assign default_support_variants = "0,600,800,1500,3000" | split: ','
+    -%}
+
+<show-product-addon>
+    <button
+        class="addon button button--full-width cart-button component-cart-button"
+        style="background:{{ block.settings.background }};color:{{ block.settings.color }};border:{{ block.settings.border_size }}px solid {{ block.settings.color }};border-radius:{{ block.settings.border_radius }}px;"
+    >{{ block.settings.text }}</button>
+    <div class="product-addon hidden">
+        <button class="close">
+            {%- render 'icon-close' -%}
+        </button>
+
+        <form id="painting-addon">
+            <div class="c-grid">
+                <div class="grid-left">
+                    <div class="sticky">
+                        <painting-settings>
+                            <div class="painting-container">
+                                {%- assign size = product.options_with_values.first.values.first | split: 'x' -%}
+                                <span class="width"><span>{{ size.first }} cm</span></span>
+                                <span class="height"><span>{{ size.last }}</span></span>
+                                <span class="corner one"></span><span class="corner two"></span><span class="corner three"></span><span class="corner four"></span>
+                                <span class="frame hidden one"></span><span class="frame hidden two"></span><span class="frame hidden three"></span><span class="frame hidden four"></span>
+                                <span class="frame-shadow"></span>
+                                <div class="painting-wrapper white" thickness="2">
+                                    <div class="inside">
+                                        <img 
+                                            src="{{ product.images[1] | image_url: width: 420 }}" 
+                                            alt="Representation du tableau choisi avec ses differentes options comme la taille,la matière, le support, etc"
+                                            width="420" 
+                                            height="auto" 
+                                            loading="lazy"
+                                            srcset="
+                                            {{ product.images[1] | image_url: width: 285 }} 285w,
+                                            {{ product.images[1] | image_url: width: 340 }} 340w,
+                                            {{ product.images[1] | image_url: width: 420 }}
+                                            "
+                                            sizes="(max-width: 405px) 285px,(max-width: 460px) 340px,420px"
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                        </painting-settings>
+                        <summary-addon>
+                            <template class="line">
+                                <p class="line-item">
+                                    <span>
+                                        <span></span>
+                                        <span></span>
+                                    </span>
+                                    <span></span>
+                                </p>
+                            </template>
+                            <div class="summary-left-wrapper">
+                                <button type="submit" class="button button--full-width cart-button component-cart-button">
+                                    <svg class="hidden" aria-hidden="true" width="30" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                                    <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                                  </svg>
+                                  <span>Ajouter au panier</span>
+                                </button>
+                                <div class="summary box-style">
+                                    <h4 class="h2">Résumé</h4>
+                                    {%- for option in product.options_with_values -%}
+                                        <p class="line-item {{ option.name | handleize }}">
+                                            <span>
+                                                <span>{{ option.name }}: </span>
+                                                <span>{{ option.values.first }}</span>
+                                            </span>
+                                            <span>
+                                                {%- if forloop.first -%}
+                                                    {{ product.variants.first.price | money }}
+                                                {%- else -%}
+                                                    {{ 0 | money }}
+                                                {%- endif -%}
+                                            </span>
+                                        </p>
+                                    {%- endfor -%}
+                                    <hr>
+                                    <p><span>Prix:</span><span class="final-price">{{ product.variants.first.price | money }}</span></p>
+                                </div>
+                                
+                            </div>
+                        </summary-addon>
+                    </div>
+                </div>
+                <div class="addon">
+
+                    {%- comment -%} Main product's variant part {%- endcomment -%}
+                    <main-variants>
+                        <main-options-selector data-item-id="{{ product.variants.first.id }}">
+                            {%- for option in product.options_with_values -%}
+                                {%- if forloop.first -%}
+                                    <div class="select-container box-style main-variant">
+                                {%- else -%}
+                                    <div class="radio-container box-style main-variant" data-option-name-handleize="{{ option.name | handleize }}" data-option-name="{{ option.name }}" data-option-first-value="{{ option.values.first }}" data-option-first-price="{{ 0 | money }}">
+                                {%- endif -%}
+                                    <h3 class="h2">{{ forloop.index }}. Choisissez {% if forloop.index < 3 %}la{% else %}le{% endif %} {{ option.name }}</h3>
+                                    {% unless forloop.first %}<div>{% endunless %}
+                                        {%- if forloop.first -%}
+                                            <select class="select__select" name="{{ option.name | handleize }}" data-order="{{ forloop.index }}">
+                                                {%- for value in option.values -%}
+                                                    <option value="{{ value }}" data-price="{{ default_size_variants[forloop.index0].price }}">{{ value }} - {{ default_size_variants[forloop.index0].price | money }}</option>
+                                                {%- endfor -%}
+                                            </select>
+                                        {%- else -%}
+                                            {%- liquid
+                                                if forloop.index == 2
+                                                    assign images = mattter_images
+                                                    assign info_images = matter_info_images
+                                                    assign info_titles = matter_info_titles
+                                                    assign info_txts = matter_info_txt
+                                                    assign prices = default_matter_variants | map: 'price'
+                                                else
+                                                    assign images = support_images
+                                                    assign info_images = support_info_images
+                                                    assign info_titles = support_info_titles
+                                                    assign info_txts = support_info_txt
+                                                    assign prices = default_support_variants
+                                                endif
+                                            -%}
+                                            {%- for value in option.values -%}
+                                                <div class="radio">
+                                                    <div>
+                                                        <img 
+                                                            src="{{ images[forloop.index0] | file_img_url: '372x343' }}" 
+                                                            alt="un tableau en {{ value }}, vu de profile" 
+                                                            width="372" 
+                                                            height="auto" 
+                                                            loading="lazy"
+                                                            srcset="
+                                                            {{ images[forloop.index0] | file_img_url: '187x185' }} 187w,
+                                                            {{ images[forloop.index0] | file_img_url: '250x250' }} 250w,
+                                                            {{ images[forloop.index0] | file_img_url: '372x343' }}
+                                                            "
+                                                            sizes="(min-width: 950px) 187px,(max-width: 415px) 250px,372px"
+                                                        >
+                                                        <label for="addon-{{ option.name | handleize }}-{{ value | downcase }}"></label>
+                                                        <input type="radio" id="addon-{{ option.name | handleize }}-{{ value | downcase }}" name="{{ option.name | handleize }}" value="{{ value | downcase }}" hidden {% if forloop.first %}checked{% endif %} data-price="{{ prices[forloop.index0] | minus: prices.first }}" data-order="{{ forloop.parentloop.index }}">
+                                                        <span class="validator"></span>
+                                                        <p>{{ value }}</p>
+                                                        <p>+ {{ prices[forloop.index0] | minus: prices.first | money }}</p>
+                                                    </div>
+                                                    <button class="button">
+                                                        <svg width="25" height="25" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 7h.01"/><path stroke-linecap="round" stroke-linejoin="round" d="M10 11h2v5m-2 0h4"/></g></svg>&nbsp;Info
+                                                    </button>
+                                                    <hr>
+                                                    <span class="popup-overlay"></span>
+                                                    <div class="popup">
+                                                        <img 
+                                                            src="{{ info_images[forloop.index0] | file_img_url: '348x340' }}" 
+                                                            alt="le coin d'un tableau en {{ value }}, vu de près" 
+                                                            width="348" 
+                                                            height="auto" 
+                                                            loading="lazy"
+                                                            srcset="
+                                                            {{ info_images[forloop.index0] | file_img_url: '280x280' }} 280w,
+                                                            {{ info_images[forloop.index0] | file_img_url: '348x340' }}
+                                                            "
+                                                            sizes="(max-width: 363px) 280px,348px"
+                                                        >
+                                                        <h4 class="h2">{{ info_titles[forloop.index0] }}</h4>
+                                                        <p>{{ info_txts[forloop.index0] }}</p>
+                                                    </div>
+                                                </div>
+                                            {%- endfor -%}
+                                        {%- endif -%}
+                                    {% unless forloop.first %}</div>{% endunless %}
+                                </div>
+                            {%- endfor -%}
+                            <script type="application/json">
+                                {{ product.variants | json }}
+                            </script>
+                        </options-selector>
+                    </main-variants>
+                    
+                    {%- comment -%} Other options part {%- endcomment -%}
+                    {%- for i in (1..2) -%}
+                        <template id="{% if forloop.first %}canvas{% else %}aluminium{% endif %}">
+                            {% if forloop.first %}
+                                <canvas-addon>
+                                    {%- assign other_option_name = 'options-de-la-toile' -%}
+                                    <canvas-options-selector data-item-id="{{ all_products[other_option_name].variants.first.id }}" data-forbidden-sizes-small="{{ all_products["options-de-la-toile"].metafields.info.about.value['Tailles-interdites-2cm'] }}" data-forbidden-sizes-big="{{ all_products["options-de-la-toile"].metafields.info.about.value['Tailles-interdites-4cm'] }}" data-forbidden-sizes-frames="{{ all_products["options-de-la-toile"].metafields.info.about.value['Tailles-interdites-cadres'] }}">    
+                            {% else %}
+                                <other-addon>
+                                    {%- assign other_option_name = 'options-de-laluminium' -%}
+                                    <options-selector data-item-id="{{ all_products[other_option_name].variants.first.id }}">
+    
+                            {% endif %}
+                                    {%- for option in all_products[other_option_name].options_with_values -%}
+                                        {%- assign meta_beforeOptionName = option.name | append: "-beforeOptionName" -%}
+                                        {%- assign meta_prices = option.name | append: "-prices" -%}
+                                        {%- assign prices = all_products[other_option_name].metafields.info.about.value[meta_prices] | split: "," -%}
+                                        <div class="radio-container box-style" data-option-name-handleize="{{ option.name | handleize }}" data-option-name="{{ option.name }}" data-option-first-value="{{ option.values.first }}" data-option-first-price="{{ 0 | money }}">
+                                            <h3 class="h2">{{ forloop.index | plus: 3 }}. Choisissez {{ all_products[other_option_name].metafields.info.about.value[meta_beforeOptionName] }}{{ option.name }}</h3>
+                                            <div>
+                                                {%- for value in option.values -%}
+                                                    <div class="radio">
+                                                        <div>
+                                                            {%- assign image_index = forloop.index0 | plus: count -%}
+                                                            {%- if forloop.last -%}
+                                                                {%- assign count = count | plus: forloop.length -%}
+                                                            {%- endif -%}
+                                                            <img 
+                                                                src="{{ all_products[other_option_name].images[image_index] | image_url: width: 372 }}" 
+                                                                alt="{{ all_products[other_option_name].images[image_index].alt }}" 
+                                                                width="372" 
+                                                                height="auto" 
+                                                                loading="lazy"
+                                                                srcset="
+                                                                {{ all_products[other_option_name].images[image_index] | image_url: width: 187 }} 187w,
+                                                                {{ all_products[other_option_name].images[image_index] | image_url: width: 250 }} 250w,
+                                                                {{ all_products[other_option_name].images[image_index] | image_url: width: 372 }}
+                                                                "
+                                                                sizes="(min-width: 950px) 187px,(max-width: 415px) 250px,372px"
+                                                            >
+                                                            <label test="{{ image_index }}" for="addon-{{ option.name | handleize }}-{{ value | downcase }}"></label>
+                                                            <input type="radio" id="addon-{{ option.name | handleize }}-{{ value | downcase }}" name="{{ option.name | handleize }}" value="{{ value }}" hidden {% if forloop.first %}checked{% endif %} data-price="{{ prices[forloop.index0] }}">
+                                                            <span class="validator"></span>
+                                                        </div>
+                                                        <p>{{ value }}</p>
+                                                        <p>+ {{ prices[forloop.index0] | money }}</p>
+                                                        {%- assign meta_info_title = option.name | append: '-' | append: value | append: '-' | append: 'title' -%}
+                                                        {%- assign meta_info_description = option.name | append: '-' | append: value | append: '-' | append: 'description' -%}
+                                                        {%- if all_products[other_option_name].metafields.info.about.value[meta_info_title] != blank and all_products[other_option_name].metafields.info.about.value[meta_info_description] -%}
+                                                            <button class="button">
+                                                                <svg width="25" height="25" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 7h.01"/><path stroke-linecap="round" stroke-linejoin="round" d="M10 11h2v5m-2 0h4"/></g></svg>&nbsp;Info
+                                                            </button>
+                                                            <hr>
+                                                            <span class="popup-overlay"></span>
+                                                            <div class="popup">
+                                                                <img 
+                                                                    src="{{ all_products[other_option_name].images[image_index] | image_url: width: 348 }}" 
+                                                                    alt="{{ all_products[other_option_name].images[image_index].alt }}" 
+                                                                    width="348" 
+                                                                    height="auto" 
+                                                                    loading="lazy"
+                                                                    srcset="
+                                                                    {{ all_products[other_option_name].images[image_index] | image_url: width: 280 }} 280w,
+                                                                    {{ all_products[other_option_name].images[image_index] | image_url: width: 348 }}
+                                                                    "
+                                                                    sizes="(max-width: 363px) 280px,348px"
+                                                                >
+                                                                <h4 class="h2">{{ all_products[other_option_name].metafields.info.about.value[meta_info_title] }}</h4>
+                                                                <p>{{ all_products[other_option_name].metafields.info.about.value[meta_info_description] }}</p>
+                                                            </div>
+                                                        {%- else -%}
+                                                            <hr>
+                                                        {%- endif -%}
+                                                    </div>
+                                                {%- endfor -%}
+                                            </div>
+                                        </div>
+                                    {%- endfor -%}
+                                    {%- assign count = 0 -%}
+
+                                    <script type="application/json">
+                                        {{ all_products[other_option_name].variants | json }}
+                                    </script>
+                            {% if forloop.first %}
+                                    </canvas-options-selector>
+                                </canvas-addon>
+                            {% else %}
+                                    </options-selector>
+                                </other-addon>
+                            {% endif %}
+                        </template>
+                    {%- endfor -%}
+
+                    <summary-addon>
+                        <template class="line">
+                            <p class="line-item">
+                                <span>
+                                    <span></span>
+                                    <span></span>
+                                </span>
+                                <span></span>
+                            </p>
+                        </template>
+                        <div class="summary right box-style">
+                            <h4 class="h2">Résumé</h4>
+                            {%- for option in product.options_with_values -%}
+                                <p class="line-item {{ option.name | handleize }}">
+                                    <span>
+                                        <span>{{ option.name }}: </span>
+                                        <span>{{ option.values.first }}</span>
+                                    </span>
+                                    <span>
+                                        {%- if forloop.first -%}
+                                            {{ product.variants.first.price | money }}
+                                        {%- else -%}
+                                            {{ 0 | money }}
+                                        {%- endif -%}
+                                    </span>
+                                </p>
+                            {%- endfor -%}
+                            <hr>
+                            <p><span>Prix:</span><span class="final-price">{{ product.variants.first.price | money }}</span></p>
+                        </div>
+                        <button type="submit" class="button button--full-width cart-button component-cart-button">
+                            <svg class="hidden" aria-hidden="true" width="30" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                                <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                            </svg>
+                            <span>Ajouter au panier</span>
+                        </button>
+                    </summary-addon>
+
+
+
+                    
+                </div>
+            </div>
+        </form>
+    </div>
+</show-product-addon>
+
+
+
+<script src="{{ 'component-product-addon.js' | asset_url }}" defer="defer"></script>

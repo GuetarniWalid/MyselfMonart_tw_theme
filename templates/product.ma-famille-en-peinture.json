@@ -1,0 +1,445 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {
+          }
+        },
+        "9f20570b-1a97-4c34-8758-c5af9b8d2cfc": {
+          "type": "price",
+          "settings": {
+            "size": "h2",
+            "spacing": 2.4
+          }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "dropdown",
+            "show_border": true,
+            "background": "#F6F2EC",
+            "text_color": "#002e5d"
+          }
+        },
+        "c59f156d-0f68-4f38-9305-89aabec23da9": {
+          "type": "uploader",
+          "settings": {
+            "text": "Télécharger mon image",
+            "background": "#F6F2EC",
+            "color": "#002e5d",
+            "border_size": 2,
+            "border_radius": 8
+          }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_payment_button": "cart",
+            "show_payment_types": true,
+            "cart_background": "#002E5D",
+            "cart_color": "#f6f2ec",
+            "cart_border_radius": 8,
+            "cart_show_border": true,
+            "checkout_background": "#121212",
+            "checkout_color": "#ffffff",
+            "checkout_border_radius": 8,
+            "checkout_show_border": true
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {
+          }
+        },
+        "collapsible-content-0": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Guide de tailles",
+            "icon": "ruler",
+            "icon_color": "#002e5d",
+            "content": "<p>&lt;p&gt;TEST&lt;\/p&gt;<\/p>",
+            "page": "guide-de-tailles"
+          }
+        },
+        "01739746-0e53-4617-8010-ea37a29a1133": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Materiaux",
+            "icon": "leather",
+            "icon_color": "#002e5d",
+            "content": "<p><strong>- La Toile<\/strong> est composée de fibres <strong>100% coton <\/strong>d'une épaisseur de 340g\/m².<\/p><p>L'épaisseur du châssis est de 4cm pour les produits les plus imposants. Elle est de 2cm pour les tableaux les plus petits.<\/p><p><strong>- Le Plexiglass<\/strong> est composé de <strong>PMMA coulé, <\/strong>d'une épaisseur de 3 mm pour les produits les plus petits, et 5 mm pour les grandes toiles.<\/p><p>- <strong>L'aluminium argent brossé, <\/strong>dit Alupanel, est une plaque composite en aluminium d'une épaisseur de 3mm. Il est <strong>résistant aux UV et à l'humidité.<\/strong><\/p><p><\/p>",
+            "page": ""
+          }
+        },
+        "collapsible-content-2": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Livraison",
+            "icon": "truck",
+            "icon_color": "#002e5d",
+            "content": "<p>En raison de la personnalisation de la toile, il vous faut compter un maximum de 4 jours pour recevoir par mails la 1er version. Une fois validé par vos soins le temps d'expéditions est de 10 jours ouvrables.<\/p>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "9f20570b-1a97-4c34-8758-c5af9b8d2cfc",
+        "variant_picker",
+        "c59f156d-0f68-4f38-9305-89aabec23da9",
+        "buy_buttons",
+        "description",
+        "collapsible-content-0",
+        "01739746-0e53-4617-8010-ea37a29a1133",
+        "collapsible-content-2"
+      ],
+      "settings": {
+        "section_background": "#f6f2ec",
+        "text_color": "#002e5d",
+        "slider_border": true,
+        "media_full_horizontal": false,
+        "gallery_layout": "thumbnail",
+        "media_size": "small",
+        "enable_sticky_info": true,
+        "padding_top": 48,
+        "padding_bottom": 0,
+        "with_border": false,
+        "mobile_image_height": 45,
+        "slider_buttons_color": "#002e5d",
+        "hide_variants": false,
+        "enable_video_looping": false,
+        "enable_zoom": true
+      }
+    },
+    "main-product-recommendations": {
+      "type": "product-recommendations",
+      "disabled": true,
+      "settings": {
+        "heading": "",
+        "heading_size": "h2",
+        "products_to_show": 10,
+        "columns_desktop": 4,
+        "color_scheme": "background-1",
+        "image_ratio": "adapt",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": false,
+        "columns_mobile": "2",
+        "padding_top": 36,
+        "padding_bottom": 24
+      }
+    },
+    "16637725317f40c776": {
+      "type": "badges",
+      "blocks": {
+        "49995965-fe5b-4033-b1f4-96cb02de774a": {
+          "type": "number_block",
+          "settings": {
+            "number": 1,
+            "heading": "Ne perdez plus votre temps à chercher",
+            "text": "Créez votre tableau à partir du plus beau souvenir de votre vie.",
+            "text_arrangement": "unset"
+          }
+        },
+        "771ebb10-42b1-44bf-8c4c-ac1c002c7bf4": {
+          "type": "number_block",
+          "settings": {
+            "number": 2,
+            "heading": "L’art de sortir de l’ordinaire",
+            "text": "Faites de votre intérieur un lieu qui vous ressemble.",
+            "text_arrangement": "unset"
+          }
+        },
+        "8acb7301-5ab0-4dd6-b1b6-b21009c85f06": {
+          "type": "number_block",
+          "settings": {
+            "number": 3,
+            "heading": "Trouvez l'accord parfait",
+            "text": "Petit ou grand espace, vintage ou moderne, personnalisez taille et matière pour un accord parfait.",
+            "text_arrangement": "unset"
+          }
+        }
+      },
+      "block_order": [
+        "49995965-fe5b-4033-b1f4-96cb02de774a",
+        "771ebb10-42b1-44bf-8c4c-ac1c002c7bf4",
+        "8acb7301-5ab0-4dd6-b1b6-b21009c85f06"
+      ],
+      "settings": {
+        "title": "",
+        "heading_size": "h1",
+        "nb_columns_on_computer": "33.33",
+        "nb_columns_on_mobile": "100",
+        "columns_alignment": "flex-start",
+        "logo_color": "#012e5d",
+        "logo_size": 45,
+        "logo_background": true,
+        "logo_background_color": "#E0E0E0",
+        "logo_border": true,
+        "title_bold": true,
+        "margin_under_logo": 26,
+        "margin_under_title": 12,
+        "section_background_color": "#F6F2EC",
+        "margin_top": 10,
+        "margin_bottom": 35
+      }
+    },
+    "22e5a2a2-b659-4bf2-8159-5189547c5a1b": {
+      "type": "image-with-text",
+      "blocks": {
+        "template--16541684859135__22e5a2a2-b659-4bf2-8159-5189547c5a1b-16660176518d287887-0": {
+          "type": "heading",
+          "settings": {
+            "heading": "DU SUR-MESURE",
+            "heading_size": "h1"
+          }
+        },
+        "template--16541684859135__22e5a2a2-b659-4bf2-8159-5189547c5a1b-16660176518d287887-1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Choisissez la taille de votre tableau. En paysage, portrait, carré, petit ou grand, à vous de voir selon votre espace.<\/p>",
+            "text_style": "body"
+          }
+        }
+      },
+      "block_order": [
+        "template--16541684859135__22e5a2a2-b659-4bf2-8159-5189547c5a1b-16660176518d287887-0",
+        "template--16541684859135__22e5a2a2-b659-4bf2-8159-5189547c5a1b-16660176518d287887-1"
+      ],
+      "settings": {
+        "image": "shopify:\/\/shop_images\/metre.jpg",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "content_layout": "no-overlap",
+        "color_scheme": "background-1",
+        "mobile_content_alignment": "left",
+        "enable_blob": true,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "4c1c487c-7650-4ef7-af4e-ea89398fae12": {
+      "type": "image-with-text",
+      "blocks": {
+        "template--16541684859135__4c1c487c-7650-4ef7-af4e-ea89398fae12-16660176518d287887-0": {
+          "type": "heading",
+          "settings": {
+            "heading": "EN HARMONIE",
+            "heading_size": "h1"
+          }
+        },
+        "template--16541684859135__4c1c487c-7650-4ef7-af4e-ea89398fae12-16660176518d287887-1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Vous avez le souci du détail ? Allez plus loin en personnalisant aussi le support. Sur toile, plexiglas ou aluminium, choisissez l’aspect qui s’accorde le mieux à votre intérieur.<\/p>",
+            "text_style": "body"
+          }
+        }
+      },
+      "block_order": [
+        "template--16541684859135__4c1c487c-7650-4ef7-af4e-ea89398fae12-16660176518d287887-0",
+        "template--16541684859135__4c1c487c-7650-4ef7-af4e-ea89398fae12-16660176518d287887-1"
+      ],
+      "settings": {
+        "image": "shopify:\/\/shop_images\/texture_x3_70ae7c8b-712c-4c74-bb93-e76a2eddc37b.jpg",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "text_first",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "content_layout": "no-overlap",
+        "color_scheme": "background-1",
+        "mobile_content_alignment": "left",
+        "enable_blob": true,
+        "padding_top": 16,
+        "padding_bottom": 36
+      }
+    },
+    "ee314877-7817-42ff-af83-c5c589b5943a": {
+      "type": "image-with-text",
+      "blocks": {
+        "template--16541684859135__ee314877-7817-42ff-af83-c5c589b5943a-16660176518d287887-0": {
+          "type": "heading",
+          "settings": {
+            "heading": "MADE IN FRANCE",
+            "heading_size": "h1"
+          }
+        },
+        "template--16541684859135__ee314877-7817-42ff-af83-c5c589b5943a-16660176518d287887-1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>L’art au pays de l’art. Pour soutenir l'industrie, réduire l'empreinte carbone et vous offrir un service de qualité, nos tableaux sont conçus et expédiés depuis la France.<\/p>",
+            "text_style": "body"
+          }
+        }
+      },
+      "block_order": [
+        "template--16541684859135__ee314877-7817-42ff-af83-c5c589b5943a-16660176518d287887-0",
+        "template--16541684859135__ee314877-7817-42ff-af83-c5c589b5943a-16660176518d287887-1"
+      ],
+      "settings": {
+        "image": "shopify:\/\/shop_images\/tour_eiffel.jpg",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "content_layout": "no-overlap",
+        "color_scheme": "background-1",
+        "mobile_content_alignment": "left",
+        "enable_blob": true,
+        "padding_top": 16,
+        "padding_bottom": 60
+      }
+    },
+    "35e3f3c7-66da-4933-a877-7280a021388a": {
+      "type": "badges",
+      "blocks": {
+        "92d6916a-9360-4f3e-a7bd-320babfd374c": {
+          "type": "lottie",
+          "settings": {
+            "json_link": "https:\/\/cdn.shopify.com\/s\/files\/1\/0623\/2388\/4287\/files\/mail-notification.json?v=1665585585",
+            "lottie_size": 17,
+            "range_under_lottie": 4,
+            "heading": "SATISFACTION",
+            "text": "Avant chaque impression vous recevez par mail votre tableau. Si celui-ci vous convient, il part pour l'impression sinon vous pouvez toujours demander une retouche.",
+            "text_arrangement": "unset"
+          }
+        },
+        "b2b4133d-89b9-4d4b-8833-ad5efd372b16": {
+          "type": "lottie",
+          "settings": {
+            "json_link": "https:\/\/cdn.shopify.com\/s\/files\/1\/0623\/2388\/4287\/files\/credit-card.json?v=1665582489",
+            "lottie_size": 17,
+            "range_under_lottie": 4,
+            "heading": "REMBOURSEMENT",
+            "text": "Nos tableaux sont spécialement protégés pour le transport. Si toutefois il venait à être endommagé, nous nous engagons à vous rembourser en moins de 5 jours.",
+            "text_arrangement": "unset"
+          }
+        },
+        "78382ee0-8022-4c51-9525-b373dfe79cd7": {
+          "type": "lottie",
+          "settings": {
+            "json_link": "https:\/\/cdn.shopify.com\/s\/files\/1\/0623\/2388\/4287\/files\/customer-support.json?v=1665585976",
+            "lottie_size": 21,
+            "range_under_lottie": 0,
+            "heading": "SERVICE CLIENT",
+            "text": "Par mail ou téléphone, c’est toujours avec joie que nous échangeons avec vous.",
+            "text_arrangement": "unset"
+          }
+        }
+      },
+      "block_order": [
+        "92d6916a-9360-4f3e-a7bd-320babfd374c",
+        "b2b4133d-89b9-4d4b-8833-ad5efd372b16",
+        "78382ee0-8022-4c51-9525-b373dfe79cd7"
+      ],
+      "settings": {
+        "title": "NOS GARANTIES",
+        "heading_size": "h1",
+        "nb_columns_on_computer": "33.33",
+        "nb_columns_on_mobile": "100",
+        "columns_alignment": "flex-start",
+        "logo_color": "#121212",
+        "logo_size": 45,
+        "logo_background": false,
+        "logo_background_color": "#E0E0E0",
+        "logo_border": false,
+        "title_bold": true,
+        "margin_under_logo": 20,
+        "margin_under_title": 12,
+        "section_background_color": "#F5F3EE",
+        "margin_top": 35,
+        "margin_bottom": 35
+      }
+    },
+    "7cc4faf6-954a-4193-80e2-ee75442ec5d5": {
+      "type": "collapsible-content",
+      "blocks": {
+        "template--16541684859135__7cc4faf6-954a-4193-80e2-ee75442ec5d5-1665667415f0b0c1ba-0": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Quels supports choisir, le rendu est-il différent ?",
+            "icon": "none",
+            "row_content": "<p>- La toile 100% coton : <strong>mate et texturée<\/strong><\/p><p>La toile offre une prise en main agréable. Le grain est visible principalement dans les zones claires de l’image. La surface de<strong> la toile <\/strong>ajoute relief et profondeur à vos tableaux. Elle apporte une touche artistique et dote les tableaux d’une <strong>incroyable intensité.<\/strong><\/p><p>Pour un résultat optimal, nous vous conseillons de transmettre un <strong>fichier <\/strong>JPEG avec la résolution maximale (comprise entre 72 et 300 Dpi).<\/p><p><\/p><p>- Le plexiglas :<strong> Brillant et transparent<\/strong><\/p><p>Le <strong>verre acrylique<\/strong>, également appelé <strong>Plexiglas<\/strong>, est un matériau synthétique rigide et transparent haut de gamme. Son aspect est similaire à du verre.<\/p><p>Le verre acrylique offrira <strong>une profondeur <\/strong>et <strong>une luminosité extraordinaire <\/strong>à vos tableaux. Les couleurs de votre photo seront vives et éclatantes. Il est particulièrement recommandé pour la réalisation de tableaux lumineux.<\/p><p><\/p><p>- L'aluminium argent brossé : <strong>contraste et éclat.<\/strong><\/p><p>L'aluminium permet une <strong>présentation sobre, moderne et sans reflet<\/strong>. La densité des couleurs et les contrastes sont forts.<\/p><p>L'aluminium est un support très résistant. Il n'est pas sensible aux traces de doigts ou à l'humidité, et l’entretien de vos tableaux est facile. Vous pouvez le nettoyer avec un tissu légèrement humide.<\/p>",
+            "page": ""
+          }
+        },
+        "template--16541684859135__7cc4faf6-954a-4193-80e2-ee75442ec5d5-1665667415f0b0c1ba-1": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Comment savoir si ma toile va ma plaire ?",
+            "icon": "none",
+            "row_content": "<p>Dans un 1er temps vous recevez par mail l'ébauche de votre toile. Puis deux choix s'offrent à vous :<\/p><p>-la toile vous plaît alors la toile part en impression.<\/p><p>-la toile ne vous plaît pas. Dans ce cas vous avez alors le choix de demander une retouche ou un remboursement.<\/p>",
+            "page": ""
+          }
+        },
+        "template--16541684859135__7cc4faf6-954a-4193-80e2-ee75442ec5d5-1665667415f0b0c1ba-2": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Pourquoi acheter chez vous ?",
+            "icon": "none",
+            "row_content": "<p>La quasi-totalité des tableaux que vous pouvez trouver sont conçus pour plaire au plus grand nombre. Ils sont dépourvus de personnalité. MyselMonArt met tout en œuvre pour vous permettre d'immortaliser et de façonner votre souvenir.<\/p><p>Choisissez votre photo, la matière et la taille. Un graphiste vous est dédié pour faire de votre souvenir une œuvre unique.<\/p>",
+            "page": ""
+          }
+        },
+        "583a0a5b-db90-4d1d-9d9c-c4d62bea16ab": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Quelle taille de toile choisir ?",
+            "icon": "none",
+            "row_content": "<p>Pour ne pas vous tromper, mesurez la largeur de votre pan de mur. Multipliez le résultat par 0,57 pour obtenir le ratio idéal.<\/p><p>Sachez qu'il est également recommandé d'accrocher le centre du tableau à environ 1,65 mètre du sol (ce qui correspond à peu près à la hauteur des yeux). Il est aussi recommandé de laisser environ 30 centimètres d'espace entre un meuble et un tableau. <\/p>",
+            "page": ""
+          }
+        },
+        "fd855d20-690d-4b45-aac3-cdff5971bea4": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Avec quoi et comment accrochez mon tableau",
+            "icon": "none",
+            "row_content": "<p>Pour une finition à la hauteur de votre tableau il est important de prendre en compte le support d'impression.<\/p><p>- Les supports tels que le plexiglas coulé et l'aluminium nécessitent un espacement entre le tableau et le mur.<\/p><p>Nous vous recommandons d'utiliser des entretoises qui sont disponibles en supplément sur notre site. Nos équipes s'occupent de percer le tableau et nous vous livrons 2 paires entretoises avec votre commande.<br\/><\/p><p>- Pour accrocher les tableaux montés sur châssis il est recommandé d'utilisé des crochets, attention il vous faudra prendre en compte le poids du tableau avant tout achat.<br\/><\/p><p>Enfin, pour ne pas abîmer votre mur il vous faudra également faire attention aux chevilles qui sont différentes selon si le mur est en placo, brique ou béton.<\/p><p>En raison de la particularité de chaque mur nos entretoises sont livrées sans visserie.<\/p>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "template--16541684859135__7cc4faf6-954a-4193-80e2-ee75442ec5d5-1665667415f0b0c1ba-0",
+        "template--16541684859135__7cc4faf6-954a-4193-80e2-ee75442ec5d5-1665667415f0b0c1ba-1",
+        "template--16541684859135__7cc4faf6-954a-4193-80e2-ee75442ec5d5-1665667415f0b0c1ba-2",
+        "583a0a5b-db90-4d1d-9d9c-c4d62bea16ab",
+        "fd855d20-690d-4b45-aac3-cdff5971bea4"
+      ],
+      "settings": {
+        "caption": "",
+        "heading": "QUESTIONS FRÉQUENTES",
+        "heading_size": "h1",
+        "heading_alignment": "center",
+        "layout": "none",
+        "logo_color": "#000000",
+        "color_scheme": "background-1",
+        "container_color_scheme": "background-2",
+        "open_first_collapsible_row": false,
+        "image_ratio": "adapt",
+        "desktop_layout": "image_second",
+        "padding_top": 52,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "main",
+    "main-product-recommendations",
+    "16637725317f40c776",
+    "22e5a2a2-b659-4bf2-8159-5189547c5a1b",
+    "4c1c487c-7650-4ef7-af4e-ea89398fae12",
+    "ee314877-7817-42ff-af83-c5c589b5943a",
+    "35e3f3c7-66da-4933-a877-7280a021388a",
+    "7cc4faf6-954a-4193-80e2-ee75442ec5d5"
+  ]
+}

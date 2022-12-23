@@ -1,0 +1,429 @@
+{
+  "sections": {
+    "16588255569cee342f": {
+      "type": "image-banner",
+      "blocks": {
+        "9f36e032-76cf-4952-aed3-19816a4225f0": {
+          "type": "heading",
+          "settings": {
+            "heading": "<p>TROUVEZ UN TABLEAU ART DECO UNIQUE<\/p>",
+            "heading_size_desktop": 5,
+            "heading_size_mobile": 3
+          }
+        },
+        "f1c33222-9760-495f-b022-8d3529c4155f": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "text": "<p>Pour un intérieur unique, choisissez l'œuvre d'art de vos rêves<\/p>",
+            "text_size_desktop": 2.2,
+            "text_size_mobile": 2.3
+          }
+        }
+      },
+      "block_order": [
+        "9f36e032-76cf-4952-aed3-19816a4225f0",
+        "f1c33222-9760-495f-b022-8d3529c4155f"
+      ],
+      "settings": {
+        "image_desktop": "shopify:\/\/shop_images\/Living_room_with_chair_and_cabinet.jpg",
+        "image_desktop_fit": "cover",
+        "image_desktop_horizontal_position": "center",
+        "image_desktop_vertical_position": "top",
+        "image_desktop_height": 100,
+        "content_width_desktop": 50,
+        "content_horizontal_position_desktop": 100,
+        "content_vertical_position_desktop": 30,
+        "content_alignment_desktop": "left",
+        "image_mobile_fit": "cover",
+        "image_mobile_horizontal_position": "left",
+        "image_mobile_vertical_position": "bottom",
+        "image_mobile_height": 85,
+        "content_width_mobile": 75,
+        "content_horizontal_position_mobile": 0,
+        "content_vertical_position_mobile": 50,
+        "content_alignment_mobile": "left",
+        "overlay_opacity": 0,
+        "body_text": "#002e5d",
+        "enable_lazy_loading": true
+      }
+    },
+    "ec9f0ad1-e7be-4a07-9dc0-d5046a5e1243": {
+      "type": "rich-text",
+      "blocks": {
+        "template--16404732051711__ec9f0ad1-e7be-4a07-9dc0-d5046a5e1243-1668611724f85aa970-0": {
+          "type": "heading",
+          "settings": {
+            "heading": "<p>DÉCOUVREZ NOTRE GAMME DE TABLEAU POUR CUISINE<\/p>",
+            "heading_size": "h1"
+          }
+        },
+        "template--16404732051711__ec9f0ad1-e7be-4a07-9dc0-d5046a5e1243-1668611724f85aa970-1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>En quête d'une cuisine originale ? <a href=\"\/collections\/tableau-cuisine\" title=\"Tableau cuisine\">Notre collection de tableaux pour cuisine<\/a> saura sublimer votre décoration d'intérieure.<\/p><p>Souvent négligée, la cuisine est aujourd’hui devenue l’une des pièces principales de notre maison. Ambiance rustique, décoration design ou cuisine moderne, on ne néglige plus aucun détail pour faire de cette pièce un endroit à notre image. <\/p><p>De l'électroménager à l'étagère en bois, en passant par les petits objets déco, tout est bon pour affirmer votre personnalité. <\/p><p>Chez MyselfMonart nous proposons une large gamme de tableau pour cuisine, des illustrations rétro, des toiles multicolores, et même des tableaux photos de vos pâtisseries préférées. Si vous êtes à la recherche d’idées déco originales ou simplement d’un cadeau créatif vous trouverez forcément parmi nos impressions sur toile une façon d’habiller vos murs.<\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "template--16404732051711__ec9f0ad1-e7be-4a07-9dc0-d5046a5e1243-1668611724f85aa970-0",
+        "template--16404732051711__ec9f0ad1-e7be-4a07-9dc0-d5046a5e1243-1668611724f85aa970-1"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "left",
+        "color_scheme": "background-1",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "20c0c98e-ed16-4069-b89a-bb18d96ee241": {
+      "type": "rich-text",
+      "blocks": {
+        "template--16404732051711__20c0c98e-ed16-4069-b89a-bb18d96ee241-1666624599c69c0f87-0": {
+          "type": "heading",
+          "settings": {
+            "heading": "<p>Habillez vos murs d’émotions, découvrez le portrait de famille personnalisé. <\/p>",
+            "heading_size": "h1"
+          }
+        },
+        "template--16404732051711__20c0c98e-ed16-4069-b89a-bb18d96ee241-1666624599c69c0f87-1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Habillez votre mur avec de superbes <strong>impressions sur toile<\/strong>. Succombez aux tableaux de nos graphistes, en transformant<strong> une photo<\/strong> en magnifique <strong>portrait de famille original<\/strong>. Personnaliser la taille, le support et le cadre pour devenir l'œuvre d’art qui sublimera <strong>votre intérieur. <\/strong><\/p><p>Arrêtez le temps et contemplez la beauté de votre souvenir. Étonnez-vous par votre créativité et prenez plaisir à partager un moment qui vous est cher. Revivez<strong> l'émotion, le rire et l’amour<\/strong> en offrant <strong>le cadeau <\/strong>parfait à une personne spéciale. <\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "template--16404732051711__20c0c98e-ed16-4069-b89a-bb18d96ee241-1666624599c69c0f87-0",
+        "template--16404732051711__20c0c98e-ed16-4069-b89a-bb18d96ee241-1666624599c69c0f87-1"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "left",
+        "color_scheme": "background-1",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 20
+      }
+    },
+    "1aaec86d-3d6c-44d8-aaa8-716ea425a598": {
+      "type": "multicolumn",
+      "blocks": {
+        "template--16404732051711__1aaec86d-3d6c-44d8-aaa8-716ea425a598-16665463000e3de778-0": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/bedouin_1400PX.jpg",
+            "title": "Bedoin à l'heure d'or",
+            "text": "",
+            "link_label": "",
+            "link": "shopify:\/\/products\/bedoin-a-lheure-dor"
+          }
+        },
+        "template--16404732051711__1aaec86d-3d6c-44d8-aaa8-716ea425a598-16665463000e3de778-1": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/rouge_a_levre.jpg",
+            "title": "Le baiser",
+            "text": "",
+            "link_label": "",
+            "link": "shopify:\/\/products\/le-baiser"
+          }
+        },
+        "template--16404732051711__1aaec86d-3d6c-44d8-aaa8-716ea425a598-16665463000e3de778-2": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/chat_1400PX.jpg",
+            "title": "Portrait de chat",
+            "text": "",
+            "link_label": "",
+            "link": "shopify:\/\/products\/portrait-de-chat"
+          }
+        },
+        "150ac81d-f4d4-4a1a-a431-e1c732d7b6a5": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/vilonniste_1400px.jpg",
+            "title": "La femme au violoncelle",
+            "text": "",
+            "link_label": "",
+            "link": "shopify:\/\/products\/la-femme-au-violoncelle"
+          }
+        }
+      },
+      "block_order": [
+        "template--16404732051711__1aaec86d-3d6c-44d8-aaa8-716ea425a598-16665463000e3de778-0",
+        "template--16404732051711__1aaec86d-3d6c-44d8-aaa8-716ea425a598-16665463000e3de778-1",
+        "template--16404732051711__1aaec86d-3d6c-44d8-aaa8-716ea425a598-16665463000e3de778-2",
+        "150ac81d-f4d4-4a1a-a431-e1c732d7b6a5"
+      ],
+      "settings": {
+        "title": "Les coups de coeur",
+        "heading_size": "h1",
+        "image_width": "full",
+        "image_ratio": "adapt",
+        "columns_desktop": 4,
+        "column_alignment": "left",
+        "background_style": "none",
+        "title_color": "#002e5d",
+        "text_color": "#f6f3ef",
+        "button_label": "Voir les autres oeuvres",
+        "button_link": "shopify:\/\/collections\/nos-oeuvres-dart",
+        "color_scheme": "background-2",
+        "columns_mobile": "2",
+        "swipe_on_mobile": true,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
+    },
+    "7f048e47-ff73-4ef2-a44d-204a6ad96f65": {
+      "type": "rich-text",
+      "blocks": {
+        "template--16404732051711__7f048e47-ff73-4ef2-a44d-204a6ad96f65-16666290841ff88433-0": {
+          "type": "heading",
+          "settings": {
+            "heading": "<p>Trouvez l'accord parfait. Personnalisez vos envies.<\/p>",
+            "heading_size": "h1"
+          }
+        },
+        "template--16404732051711__7f048e47-ff73-4ef2-a44d-204a6ad96f65-16666290841ff88433-1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Vous avez le souci du détail ? Allez plus loin en personnalisant la taille et le support. Petit tableau, grand tableau,  tableau sur toile, tableau plexiglas ou  tableau aluminium, choisissez l’aspect qui s’accorde le mieux à votre intérieur.<\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "template--16404732051711__7f048e47-ff73-4ef2-a44d-204a6ad96f65-16666290841ff88433-0",
+        "template--16404732051711__7f048e47-ff73-4ef2-a44d-204a6ad96f65-16666290841ff88433-1"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "left",
+        "color_scheme": "background-2",
+        "full_width": true,
+        "padding_top": 16,
+        "padding_bottom": 40
+      }
+    },
+    "0400eb0c-febd-4b30-a9fc-23868b723b01": {
+      "type": "badges",
+      "blocks": {
+        "dadd0693-3b95-45ea-91d0-dade5eb6933f": {
+          "type": "number_block",
+          "settings": {
+            "number": 1,
+            "heading": "Choisissez",
+            "text": "Choisissez votre tableau deco parmi la large collection de tableaux.",
+            "text_arrangement": "unset"
+          }
+        },
+        "c44537b3-1279-4836-9f93-bd9ff2a05e77": {
+          "type": "number_block",
+          "settings": {
+            "number": 2,
+            "heading": "Configurez",
+            "text": "Choisissez le format et le support de votre tableau.",
+            "text_arrangement": "unset"
+          }
+        },
+        "a6c21ad7-b53a-477a-9209-290c852bb6e7": {
+          "type": "number_block",
+          "settings": {
+            "number": 3,
+            "heading": "Conception",
+            "text": "Impression de votre tableau.",
+            "text_arrangement": "unset"
+          }
+        },
+        "9bbd06d2-2f00-4f08-9b98-9313305b1a02": {
+          "type": "number_block",
+          "settings": {
+            "number": 4,
+            "heading": "Admirez",
+            "text": "Accrochez votre tableau et admirez le résultat !",
+            "text_arrangement": "unset"
+          }
+        }
+      },
+      "block_order": [
+        "dadd0693-3b95-45ea-91d0-dade5eb6933f",
+        "c44537b3-1279-4836-9f93-bd9ff2a05e77",
+        "a6c21ad7-b53a-477a-9209-290c852bb6e7",
+        "9bbd06d2-2f00-4f08-9b98-9313305b1a02"
+      ],
+      "settings": {
+        "title": "",
+        "heading_size": "h1",
+        "nb_columns_on_computer": "25",
+        "nb_columns_on_mobile": "100",
+        "columns_alignment": "flex-start",
+        "logo_color": "#002e5d",
+        "logo_size": 45,
+        "logo_background": true,
+        "logo_background_color": "#E0E0E0",
+        "logo_border": true,
+        "title_bold": true,
+        "margin_under_logo": 26,
+        "margin_under_title": 12,
+        "section_background_color": "#F6F3EF",
+        "margin_top": 10,
+        "margin_bottom": 35
+      }
+    },
+    "4b1091f9-5105-4ade-8d19-47caa37cefe7": {
+      "type": "collage",
+      "blocks": {
+        "template--16404732051711__4b1091f9-5105-4ade-8d19-47caa37cefe7-166662719029d70416-2": {
+          "type": "collection",
+          "settings": {
+            "collection": "nos-oeuvres-dart"
+          }
+        },
+        "template--16404732051711__4b1091f9-5105-4ade-8d19-47caa37cefe7-166662719029d70416-1": {
+          "type": "product",
+          "settings": {
+            "product": "tableau-famille-1",
+            "second_image": false,
+            "show_price": false
+          }
+        },
+        "abb6fe34-8792-4eb5-be87-911054cca78d": {
+          "type": "collection",
+          "settings": {
+            "collection": "tableau-cuisine"
+          }
+        }
+      },
+      "block_order": [
+        "template--16404732051711__4b1091f9-5105-4ade-8d19-47caa37cefe7-166662719029d70416-2",
+        "template--16404732051711__4b1091f9-5105-4ade-8d19-47caa37cefe7-166662719029d70416-1",
+        "abb6fe34-8792-4eb5-be87-911054cca78d"
+      ],
+      "settings": {
+        "heading": "Découvrir nos produits",
+        "heading_size": "h1",
+        "desktop_layout": "left",
+        "mobile_layout": "collage",
+        "color_scheme": "background-1",
+        "padding_top": 60,
+        "padding_bottom": 24
+      }
+    },
+    "bc7808a3-010e-4d80-a8f4-053c77379028": {
+      "type": "rich-text",
+      "blocks": {
+        "template--16404732051711__bc7808a3-010e-4d80-a8f4-053c77379028-16666290841ff88433-0": {
+          "type": "heading",
+          "settings": {
+            "heading": "<p>Un doute sur la taille ?<\/p>",
+            "heading_size": "h1"
+          }
+        },
+        "template--16404732051711__bc7808a3-010e-4d80-a8f4-053c77379028-16666290841ff88433-1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Consultez notre guide des tailles ou prenez contacte avec nous. Nous serons heureux de pouvoir vous aider à harmoniser votre intérieur.<\/p>"
+          }
+        },
+        "template--16404732051711__bc7808a3-010e-4d80-a8f4-053c77379028-16666290841ff88433-2": {
+          "type": "button",
+          "settings": {
+            "button_label": "Guide des tailles",
+            "button_link": "shopify:\/\/pages\/guide-de-tailles",
+            "button_style_secondary": false,
+            "button_label_2": "Contactez-nous",
+            "button_link_2": "shopify:\/\/pages\/contactez-nous",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "template--16404732051711__bc7808a3-010e-4d80-a8f4-053c77379028-16666290841ff88433-0",
+        "template--16404732051711__bc7808a3-010e-4d80-a8f4-053c77379028-16666290841ff88433-1",
+        "template--16404732051711__bc7808a3-010e-4d80-a8f4-053c77379028-16666290841ff88433-2"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "left",
+        "color_scheme": "background-2",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 72
+      }
+    },
+    "490671aa-79b7-40da-8e00-59f7773b6755": {
+      "type": "badges",
+      "blocks": {
+        "9a6c0070-b6b1-49f5-acfa-223034bb02dc": {
+          "type": "lottie",
+          "settings": {
+            "json_link": "https:\/\/cdn.shopify.com\/s\/files\/1\/0623\/2388\/4287\/files\/french.json?v=1666690026",
+            "lottie_size": 15,
+            "range_under_lottie": 6,
+            "heading": "Fabrication de haute qualité",
+            "text": "La conception, l'impression, ainsi que le service client sont basés en France",
+            "text_arrangement": "unset"
+          }
+        },
+        "c5c20d26-3a40-441c-accb-062a48e10cc4": {
+          "type": "lottie",
+          "settings": {
+            "json_link": "https:\/\/cdn.shopify.com\/s\/files\/1\/0623\/2388\/4287\/files\/delivery-consignment.json?v=1666691880",
+            "lottie_size": 19,
+            "range_under_lottie": 2,
+            "heading": "Suivi de Livraison",
+            "text": "Nous vous accompagnons de la création à la réception.",
+            "text_arrangement": "unset"
+          }
+        },
+        "85d42c9f-575b-432c-8546-7677d56053f5": {
+          "type": "lottie",
+          "settings": {
+            "json_link": "https:\/\/cdn.shopify.com\/s\/files\/1\/0623\/2388\/4287\/files\/credit-card.json?v=1665582489",
+            "lottie_size": 18,
+            "range_under_lottie": 3,
+            "heading": "Paiement sécurisé",
+            "text": "Processeur de paiement sécurisé avec 3D secure.",
+            "text_arrangement": "unset"
+          }
+        }
+      },
+      "block_order": [
+        "9a6c0070-b6b1-49f5-acfa-223034bb02dc",
+        "c5c20d26-3a40-441c-accb-062a48e10cc4",
+        "85d42c9f-575b-432c-8546-7677d56053f5"
+      ],
+      "settings": {
+        "title": "NOS GARANTIES",
+        "heading_size": "h1",
+        "nb_columns_on_computer": "33.33",
+        "nb_columns_on_mobile": "100",
+        "columns_alignment": "flex-start",
+        "logo_color": "#121212",
+        "logo_size": 45,
+        "logo_background": false,
+        "logo_background_color": "#E0E0E0",
+        "logo_border": false,
+        "title_bold": true,
+        "margin_under_logo": 26,
+        "margin_under_title": 12,
+        "section_background_color": "#F6F3EE",
+        "margin_top": 25,
+        "margin_bottom": 35
+      }
+    }
+  },
+  "order": [
+    "16588255569cee342f",
+    "ec9f0ad1-e7be-4a07-9dc0-d5046a5e1243",
+    "20c0c98e-ed16-4069-b89a-bb18d96ee241",
+    "1aaec86d-3d6c-44d8-aaa8-716ea425a598",
+    "7f048e47-ff73-4ef2-a44d-204a6ad96f65",
+    "0400eb0c-febd-4b30-a9fc-23868b723b01",
+    "4b1091f9-5105-4ade-8d19-47caa37cefe7",
+    "bc7808a3-010e-4d80-a8f4-053c77379028",
+    "490671aa-79b7-40da-8e00-59f7773b6755"
+  ]
+}

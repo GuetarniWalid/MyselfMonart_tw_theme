@@ -1,0 +1,53 @@
+{% comment %}
+    Renders a carrousel
+
+    Accepts:
+    - products_handle: {Object} An array of product handle
+    - button_text: {String} The text of the button
+
+    Usage:
+    {% render 'component-carrousel', products_handle: [], button_text: '' %}
+{% endcomment %}
+
+{{ 'component-carrousel.css' | asset_url | stylesheet_tag }}
+
+<snap-carrousel>
+    <ul class="component-carroussel page-width">
+        {%- for product_handle in products_handle -%}
+            {%- assign first_image = all_products[product_handle].featured_image -%}
+            {%- assign second_image = all_products[product_handle].images[1] -%}
+        <li>
+            <div class="img-wrapper">
+                <img
+                    src="{{ first_image | image_url }}"
+                    alt="{{ first_image.alt }}"
+                    width="350"
+                    height="auto"
+                    loading="lazy"
+                    srcset="
+                        {{ first_image | image_url: width: 300 }} 300w,
+                        {{ first_image | image_url: width: 350 }} 350w"
+                    sizes="(max-width: 356px) 300px, 350px"
+                >
+                {%- if second_image != blank -%}
+                    <img
+                        src="{{ second_image | image_url }}"
+                        alt="{{ second_image.alt }}"
+                        width="350"
+                        height="auto"
+                        loading="lazy"
+                        srcset="
+                            {{ second_image | image_url: width: 300 }} 300w,
+                            {{ second_image | image_url: width: 350 }} 350w"
+                        sizes="(max-width: 356px) 300px, 350px"
+                    >
+                {%- endif -%}
+            </div>
+                <h3>{{ all_products[product_handle].title }}</h3>
+                <a href="{{ collection.url | append: all_products[product_handle].url }}" class="button cart-button component-cart-button">{{ button_text }}</a>
+        </li>
+    {%- endfor -%}
+    </ul>
+</snap-carrousel>
+
+<script src="{{ 'component-carrousel.js' | asset_url }}" defer="defer"></script>

@@ -1,0 +1,20 @@
+.main-collection-product-grid {
+  background: var(--background);
+}
+
+.main-collection-product-grid .card-wrapper > .card {
+  background: var(--card-background);
+  border: var(--card-border);
+}
+
+.main-collection-product-grid .card-wrapper > .card button {
+  background: var(--button-background);
+  color: var(--card-background);
+}
+
+@media screen and (max-width: 500px) {
+    .main-collection-product-grid .grid__item {
+    width: calc(100% - var(--grid-mobile-horizontal-spacing) / 2);
+    max-width: unset;
+  }
+}

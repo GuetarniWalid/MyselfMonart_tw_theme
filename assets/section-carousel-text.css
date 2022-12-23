@@ -1,0 +1,15 @@
+/******CUSTOM******/
+
+.carousel-text .slideshow__slide .banner__buttons {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.carousel-text .slideshow__controls {
+    border: none;
+}
+
+.carousel-text .slideshow__autoplay.slider-button {
+    pointer-events: none;
+    visibility: hidden;
+}

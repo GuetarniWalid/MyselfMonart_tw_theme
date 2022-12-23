@@ -1,0 +1,99 @@
+{{ 'section-product-carrousel.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign family_tag = product.tags | where: 'famille' | first
+  assign same_product_handles = ''
+  for _product in collection.products
+    assign is_same_family = _product.tags | where: family_tag
+    if is_same_family.size > 0 and product.handle != _product.handle
+      assign same_product_handles = same_product_handles | append: _product.handle | append: ','
+    endif
+  endfor
+  assign same_product_handles = same_product_handles | split: ','
+-%}
+
+{%- if same_product_handles.size > 0 -%}
+  <h2 class="page-width {{ section.settings.heading_size }}">{{ section.settings.heading | escape }}</h2>
+  {% render 'component-carrousel', products_handle: same_product_handles | split: ',', button_text: section.settings.button_text %}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.product-carrousel.name",
+  "tag": "section",
+  "class": "section product-carrousel",
+  "templates": [
+    "product"
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "You may also like",
+      "label": "t:sections.product-recommendations.settings.heading.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "default": "See the product",
+      "label": "t:sections.product-carrousel.settings.button_text.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.product-carrousel.name"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,123 @@
+{{ 'section-breadcrumb.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    --background-selected: {{ section.settings.selected_item_background }};
+    --color-selected: {{ section.settings.selected_item_color }};
+  }
+
+  {%- if template contains 'collection' -%}
+    @media screen and (max-width: 500px) {
+      .breadcrumb {
+        margin-bottom: 0;
+      }
+    }
+  {%- endif -%}
+{%- endstyle -%}
+
+{%- assign itemListElement_names = '' -%}
+{%- assign itemListElement_urls = '' -%}
+{% unless template == 'index' or template == 'cart' or template == 'list-collections' %}
+    <nav role="navigation" aria-label="breadcrumbs">
+      {%- liquid
+        assign mobile_url = "/"
+        assign mobile_text = 'sections.footer.home' | t
+        assign itemListElement_names = mobile_text
+        assign itemListElement_urls = mobile_url
+      -%}
+      <a href="/" class="first">{{ 'sections.footer.home' | t }}</a>
+        {% if template contains 'page' %}
+          {%- assign itemListElement_names = itemListElement_names | append: '|,|' | append: page.title -%}
+          {%- assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: page.url -%}
+          <span class="not-first">{{ page.title }}</span>
+        {% elsif template contains 'product' %}
+          {% if collection.url %}
+            {%- liquid
+              assign mobile_url = collection.url
+              assign mobile_text = collection.title
+              assign itemListElement_names = itemListElement_names | append: '|,|' | append: mobile_text
+              assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: mobile_url
+            -%}
+            <a href="{{ collection.url }}" class="not-first"> 
+              {%- render 'icon-sub-arrow' -%}
+              {{ collection.title }}
+            </a>
+          {% endif %}
+          {%- assign itemListElement_names = itemListElement_names | append: '|,|' | append: product.title -%}
+          {%- assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: product.url -%}
+          <span class="not-first visible-on-mobile">
+            {%- render 'icon-sub-arrow' -%}
+            {{ product.title }}
+          </span>
+        {% elsif template contains 'collection' and collection.handle %}
+          {%- assign itemListElement_names = itemListElement_names | append: '|,|' | append: collection.title -%}
+          {%- assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: collection.url -%}
+          <span class="not-first">
+            {%- render 'icon-sub-arrow' -%}
+            {{ collection.title }}
+          </span>
+        {% endif %}
+    </nav>
+    <div class="mobile-container">
+      <button><span>...</span></button>
+      <span class="mobile obfuscate" data-url64="{{ mobile_url | base64_encode }}">{{ mobile_text }}</span>
+    </div>
+{% endunless %}
+
+{%- assign itemListElement_names = itemListElement_names | split: '|,|' -%}
+{%- assign itemListElement_urls = itemListElement_urls | split: '|,|' -%}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+    {%- for itemListElement_name in itemListElement_names -%}
+      {
+        "@type": "ListItem",
+        "position": {{ forloop.index }},
+        "name": "{{ itemListElement_name }}",
+        "item": "{{ shop.secure_url }}{{ itemListElement_urls[forloop.index0] }}"
+    }{%- if forloop.last == false -%},{%- endif -%}
+    {%- endfor -%}
+    ]
+  }
+</script>
+
+{% javascript %}
+  document.querySelector('.breadcrumb button').addEventListener('click', () => {
+    document.querySelector('.breadcrumb nav').classList.toggle('open');
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "t:sections.breadcrumb.name",
+  "class": "breadcrumb page-width",
+  "tag": "div",
+  "limit": 1,
+  "templates": [
+    "collection",
+    "page",
+    "product"
+  ],
+  "settings": [
+    {
+      "type": "color",
+      "id": "selected_item_background",
+      "label": "t:sections.breadcrumb.settings.selected_item_background",
+      "default": "#ECD1CE"
+    },
+    {
+      "type": "color",
+      "id": "selected_item_color",
+      "label": "t:sections.breadcrumb.settings.selected_item_color",
+      "default": "#384031"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.breadcrumb.name"
+    }
+  ]
+}
+{% endschema %}

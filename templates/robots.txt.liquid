@@ -1,0 +1,27 @@
+{% for group in robots.default_groups %}
+    {{- group.user_agent }}
+  
+    {%- for rule in group.rules -%}
+      {{ rule }}
+    {%- endfor -%}
+  
+    {%- if group.user_agent.value == '*' -%}
+      {{ 'Disallow: /*?q=*' }}
+    {%- endif -%}
+
+    {{- 'Disallow: /blogs/infos' }}
+    {{- 'Disallow: /collections/all' }}
+    {{- 'Disallow: /collections/famille*' }}
+    {{- 'Disallow: /pages/conditions-generales-de-vente-1' }}
+    {{- 'Disallow: /pages/politique-de-confidentialite' }}
+    {{- 'Disallow: /pages/conditions-dutilisation' }}
+    {{- 'Disallow: /pages/mentions-legales' }}
+    {{- 'Disallow: /pages/politique-de-remboursement' }}
+    {{- 'Disallow: /pages/contactez-nous' }}
+    {{- 'Disallow: /pages/guide-de-tailles' }}
+    {{- 'Disallow: /blogs/tableau-cuisine' }}
+  
+    {%- if group.sitemap != blank -%}
+        {{ group.sitemap }}
+    {%- endif -%}
+  {% endfor %}

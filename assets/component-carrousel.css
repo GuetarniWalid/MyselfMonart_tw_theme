@@ -1,0 +1,75 @@
+.component-carroussel {
+  --flex-gap: 1.5rem;
+  padding-left: 0;
+  display: flex;
+  list-style: none;
+  overflow-x: auto;
+  gap: var(--flex-gap);
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding-bottom: 2rem;
+  /** FIREFOX **/
+  scrollbar-color: rgba(1, 46, 93, 0.2) #efece8;
+  scrollbar-width: 5px;
+}
+
+.component-carroussel::-webkit-scrollbar {
+  height: 5px;
+}
+
+.component-carroussel::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 10px #efece8;
+}
+
+.component-carroussel::-webkit-scrollbar-thumb {
+  background: rgba(1, 46, 93, 0.2);
+}
+
+.component-carroussel li {
+  width: calc(100% - 5% - var(--flex-gap));
+  max-width: 350px;
+  flex-shrink: 0;
+  text-align: center;
+  scroll-snap-align: start;
+  padding-bottom: 0.5rem;
+}
+
+.component-carroussel .img-wrapper {
+  position: relative;
+  width: 95%;
+  cursor: pointer;
+  margin: 0 auto;
+}
+
+.component-carroussel img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.component-carroussel .img-wrapper img:nth-child(2) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.component-carroussel .img-wrapper:hover img:nth-child(2) {
+  opacity: 1;
+}
+
+.component-carroussel a {
+  border: 1px solid rgb(var(--color-foreground));
+}
+
+.component-carroussel a:hover {
+  box-shadow: inset 0 0 0 1px rgb(var(--color-foreground));
+}
+
+
+
+

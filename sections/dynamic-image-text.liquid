@@ -1,0 +1,173 @@
+{{ 'section-dynamic-text.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+    #shopify-section-{{ section.id }} {
+      {% if section.settings.background_image != blank %}
+        background-image: url("{{ section.settings.background_image }}");
+        background-repeat: {{ section.settings.background_repeat }};
+        min-height: 200px;
+        background-size: {% if section.settings.background_repeat == 'no-repeat' %}cover{% else %}unset{% endif %};
+      {% endif %}
+      padding-top: {{ section.settings.margin_top }}px;
+      padding-bottom: {{ section.settings.margin_bottom }}px;
+      --background-color: {{ section.settings.section_background_color }};
+      background-color: {{ section.settings.section_background_color }};
+      }
+{%- endstyle -%}
+
+
+<div class="page-width wrapper">
+  {%- if section.settings.title != blank -%}
+    <h2 class="text__heading {{ section.settings.heading_size }}">{{ section.settings.title }}</h2>
+  {%- endif -%}
+  <dynamic-image-text>
+    <div class="wrapper-image-message" data-duration-appearance="{{ section.settings.duration_image_appearance }}">
+        {%- if section.blocks.first.settings.message != blank -%}
+          <div class="message"><p>{{ section.blocks.first.settings.message }}</p></div>
+        {%- endif -%}
+          {%- if section.blocks.first.settings.image == blank -%}
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- else -%}
+            <div class="wrapper-image"><img src="{{ section.blocks.first.settings.image | image_url: width: 400 }}" class="active" width="400" height="400" loading="lazy"></div>
+        {%- endif -%}
+    </div>
+
+    {% capture dynamic_content %}
+      {%- for block in section.blocks -%}
+        {{ block.settings.message }}|{{ block.settings.image | image_url: width: 400 }}
+        {% if forloop.last == false %}::{% endif %}
+      {% endfor %}
+    {% endcapture %}
+    {% assign content = dynamic_content | split: '::' %}
+
+    <script type="application/json" class="content">
+      {{ content | json }}
+    </script>
+
+  </dynamic-image-text>
+</div>
+
+<script src="{{ 'section-dynamic-image-text.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "t:sections.dynamic-image-text.name",
+  "tag": "section",
+  "class": "dynamic-image-text",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:sections.dynamic-image-text.settings.title.label",
+      "default": "Title"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "url",
+      "id": "background_image",
+      "label": "t:sections.dynamic-image-text.settings.background_image.label",
+      "info": "t:sections.dynamic-image-text.settings.background_image.info"
+    },
+    {
+      "type": "select",
+      "id": "background_repeat",
+      "options": [
+        {
+          "value": "no-repeat",
+          "label": "t:sections.dynamic-image-text.settings.background_repeat.options__1.label"
+        },
+        {
+          "value": "repeat",
+          "label": "t:sections.dynamic-image-text.settings.background_repeat.options__2.label"
+        }
+      ],
+      "default": "no-repeat",
+      "label": "t:sections.dynamic-image-text.settings.background_repeat.label"
+    },
+    {
+      "type": "number",
+      "id": "duration_image_appearance",
+      "label": "t:sections.dynamic-image-text.settings.duration_image_appearance.label",
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "SECTION"
+    },
+    {
+      "type": "color_background",
+      "id": "section_background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "t:sections.badges.settings.margin_top.label",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "t:sections.badges.settings.margin_bottom.label",
+      "default": 35
+    }
+  ],
+  "blocks": [
+    {
+      "type": "dynamic-image-text",
+      "name": "t:sections.dynamic-image-text.blocks.dynamic-image-text.name",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "message",
+          "label": "t:sections.dynamic-image-text.blocks.dynamic-image-text.settings.message.label",
+          "default": "A short message that describes the image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.dynamic-image-text.blocks.dynamic-image-text.settings.image.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.dynamic-image-text.name",
+      "blocks": [
+        {
+          "type": "dynamic-image-text"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,8 @@
+.component-cart-button {
+  line-height: unset;
+  min-height: calc(5rem + var(--buttons-border-width) * 2);
+}
+
+.component-cart-button span {
+  margin-left: 7px;
+}

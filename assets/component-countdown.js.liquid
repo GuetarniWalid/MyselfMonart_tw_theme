@@ -1,0 +1,190 @@
+class Countdown extends HTMLElement {
+  PROMO_NOT_STARTED = 1;
+  PROMO_OK = 2;
+  PROMO_ENDED = 3;
+  DAYS = "{{ 'components.countdown.days' | t }}";
+  HOURS = "{{ 'components.countdown.hours' | t }}";
+  MINUTES = "{{ 'components.countdown.minutes' | t }}";
+  DAY = "{{ 'components.countdown.day' | t }}";
+  HOUR = "{{ 'components.countdown.hour' | t }}";
+  MINUTE = "{{ 'components.countdown.minute' | t }}";
+  PROMO_BEGIN_TEXT = "{{ 'components.countdown.promo_begin' | t }}";
+  PROMO_END_TEXT = "{{ 'components.countdown.promo_ended' | t }}";
+  PROMO_REMAIN_TEXT = "{{ 'components.countdown.promo_remaining' | t }}";
+  countdownShown = false;
+
+  constructor() {
+    super();
+    this.endYear = this.dataset.endYear;
+    this.endMonth = this.dataset.endMonth;
+    this.endDay = this.dataset.endDay;
+    this.endHour = this.dataset.endHour;
+    this.startYear = this.dataset.startYear;
+    this.startMonth = this.dataset.startMonth;
+    this.startDay = this.dataset.startDay;
+    this.startHour = this.dataset.startHour;
+    this.timer = this.querySelector('.time');
+    this.showBeforePromo = this.dataset.showBeforePromo === 'true';
+    this.showAfterPromo = this.dataset.showAfterPromo === 'true';
+  }
+
+  connectedCallback() {
+    this.dateStartPromo = this.getDateStartPromo();
+    this.dateEndPromo = this.getDateEndPromo();
+
+    this.verifyIfPromoValidity();
+    this.displayCountDownChanges();
+
+    setInterval(() => {
+      this.verifyIfPromoValidity();
+      this.displayCountDownChanges();
+    }, 10000);
+  }
+
+  getDateEndPromo() {
+    const dateEndPromo = new Date();
+    dateEndPromo.setFullYear(this.endYear);
+    dateEndPromo.setMonth(parseInt(this.endMonth) - 1);
+    dateEndPromo.setDate(this.endDay);
+    dateEndPromo.setHours(this.endHour);
+    dateEndPromo.setMinutes(0);
+    dateEndPromo.setSeconds(0);
+
+    return dateEndPromo;
+  }
+
+  getDateStartPromo() {
+    const dateStartPromo = new Date();
+    dateStartPromo.setFullYear(this.startYear);
+    dateStartPromo.setMonth(parseInt(this.startMonth) - 1);
+    dateStartPromo.setDate(this.startDay);
+    dateStartPromo.setHours(this.startHour);
+    dateStartPromo.setMinutes(0);
+    dateStartPromo.setSeconds(0);
+
+    return dateStartPromo;
+  }
+
+  getTimeFromNowToEndCountdownText() {
+    const now = Date.now();
+    const diff = this.dateEndPromo - now;
+    const { diffDays, diffHours, diffMinutes } = this.getDiffUnits(diff);
+    return this.getDiffText({ diffDays, diffHours, diffMinutes });
+  }
+
+  getTimeFromNowToStartCountdownText() {
+    const now = Date.now();
+    const diff = this.dateStartPromo - now;
+    const { diffDays, diffHours, diffMinutes } = this.getDiffUnits(diff);
+    return this.getDiffText({ diffDays, diffHours, diffMinutes });
+  }
+
+  getDiffText({ diffDays, diffHours, diffMinutes }) {
+    if (diffDays > 0) {
+      return diffDays === 1 ? `${diffDays} ${this.DAY}` : `${diffDays} ${this.DAYS}`;
+    } else if (diffHours > 0) {
+      return diffHours === 1 ? `${diffHours} ${this.HOUR}` : `${diffHours} ${this.HOURS}`;
+    } else {
+      return diffMinutes === 1 ? `${diffMinutes} ${this.MINUTE}` : `${diffMinutes} ${this.MINUTES}`;
+    }
+  }
+
+  getDiffUnits(diff) {
+    const diffDays = this.getUnitRounded(diff / (1000 * 3600 * 24));
+    const diffHours = this.getUnitRounded(diff / (1000 * 3600));
+    const diffMinutes = Math.ceil(diff / (1000 * 60));
+
+    return { diffDays, diffHours, diffMinutes };
+  }
+
+  getUnitRounded(remainindUnits) {
+    return remainindUnits > 1 ? Math.round(remainindUnits) : Math.floor(remainindUnits);
+  }
+
+  getTimeFromStartToEndPromoInPercent() {
+    const now = Date.now();
+    const diffFromStartToEndPromo = this.dateEndPromo - this.dateStartPromo;
+
+    const diffFromNowToEndProm = this.dateEndPromo - now;
+    const percent = (diffFromNowToEndProm / diffFromStartToEndPromo) * 100;
+    return percent.toFixed(0);
+  }
+
+  verifyIfPromoValidity() {
+    const now = Date.now();
+    const diffFromStartToEndPromo = this.dateEndPromo - this.dateStartPromo;
+
+    //promo not started yet
+    if (now < this.dateStartPromo) {
+      this.promoStatus = this.PROMO_NOT_STARTED;
+      return;
+    }
+    //promo ended yet or misadjusted
+    else if (now > this.dateEndPromo || diffFromStartToEndPromo <= 0) {
+      this.promoStatus = this.PROMO_ENDED;
+      return;
+    }
+    //promo started and not ended yet
+    else {
+      this.promoStatus = this.PROMO_OK;
+      return;
+    }
+  }
+
+  print({ countdownText, aboveCountdownText, waveYPositionInPercent }) {
+    if (countdownText) {
+      this.timer.innerHTML = countdownText;
+    }
+    if (aboveCountdownText || aboveCountdownText === '') {
+      this.querySelector('.promo-description-container .above-countdown').innerHTML = aboveCountdownText;
+    }
+    if (waveYPositionInPercent) {
+      const countDown = this.querySelector('.countdown');
+      countDown.style.setProperty('--waves-y-percent-postion', waveYPositionInPercent);
+    }
+  }
+
+  displayCountDownChanges() {
+    switch (this.promoStatus) {
+      case this.PROMO_NOT_STARTED:
+        //countdown info
+        this.print({
+          countdownText: this.getTimeFromNowToStartCountdownText(),
+          aboveCountdownText: this.PROMO_BEGIN_TEXT,
+          waveYPositionInPercent: -100,
+        });
+        //countdown visibility
+        if (!this.countdownShown && this.showBeforePromo) this.showCountdown(true);
+        break;
+      case this.PROMO_ENDED:
+        //countdown info
+        this.print({
+          countdownText: this.PROMO_END_TEXT,
+          aboveCountdownText: '',
+          waveYPositionInPercent: 200,
+        });
+        this.querySelector('.hr').style.display = 'none';
+        //countdown visibility
+        if (!this.countdownShown && this.showAfterPromo) this.showCountdown(true);
+        else this.showCountdown(false)
+        break;
+      case this.PROMO_OK:
+        //countdown info
+        this.print({
+          countdownText: this.getTimeFromNowToEndCountdownText(),
+          aboveCountdownText: this.PROMO_REMAIN_TEXT,
+          waveYPositionInPercent: 100 - this.getTimeFromStartToEndPromoInPercent(),
+        });
+        //countdown visibility
+        if (!this.countdownShown) this.showCountdown(true);
+    }
+  }
+
+  showCountdown(toShow) {
+    if (toShow) this.querySelector('.countdown-container').classList.remove('hide');
+    else this.querySelector('.countdown-container').classList.add('hide');
+    this.countdownShown = toShow;
+  }
+}
+
+customElements.define('countdown-timer', Countdown);

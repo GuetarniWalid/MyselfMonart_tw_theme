@@ -1,0 +1,54 @@
+{% comment %}
+    Renders a countdown.
+
+    Accepts:
+    - block: {Object} block object
+
+    Usage:
+    {% render 'component-countdown', block: block %}
+{% endcomment %}
+
+{{ 'component-countdown.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+#countdown-{{ section.id }} {
+  --promo-background: {{ block.settings.justification_background }};
+  --promo-color: {{ block.settings.text_color }};
+  --wave-light-background: {{ block.settings.wave_color }};
+  --wave-dark-background: {{ block.settings.wave_color | color_darken: 10 }};
+  --countdown-border-color: {{ block.settings.border_color }};
+  --countdown-inside-border: {{ block.settings.wave_color | hex_to_rgba: 0.1 }};
+  --countdown-timer-color: {{ block.settings.timer_color }};
+}
+{%- endstyle -%}
+
+  <countdown-timer data-end-year="{{ block.settings.end_year }}" data-end-month="{{ block.settings.end_month }}" data-end-day="{{ block.settings.end_day }}" data-end-hour="{{ block.settings.end_hour }}" data-start-year="{{ block.settings.start_year }}" data-start-month="{{ block.settings.start_month }}" data-start-day="{{ block.settings.start_day }}" data-start-hour="{{ block.settings.start_hour }}" data-show-before-promo='{{ block.settings.show_before_promo }}' data-show-after-promo='{{ block.settings.show_after_promo }}'>
+    <div id="countdown-{{ section.id }}" class="countdown-container hide">
+      <div class="promo-description-container">
+        <div class="justification">
+          {{ block.settings.justification }}
+        </div>
+        <hr class="hr" />
+        <p class="above-countdown"></p>
+      </div>
+      <div class="countdown">
+        <div class="wave-container">
+          <svg class="wave light first" width="790" viewBox="0 0 790 668" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M279.999 1.00024C140.998 -2.49976 -0.000976562 19.0003 -0.000976562 19.0003V668H789.499V19.0003C789.499 19.0003 716.999 28 632.5 27.5C548.001 27 419 4.50024 279.999 1.00024Z" />
+          </svg>
+          <svg class="wave light second" width="790" viewBox="0 0 790 668" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M279.999 1.00024C140.998 -2.49976 -0.000976562 19.0003 -0.000976562 19.0003V668H789.499V19.0003C789.499 19.0003 716.999 28 632.5 27.5C548.001 27 419 4.50024 279.999 1.00024Z" />
+          </svg>
+          <svg class="wave dark first" width="790" viewBox="0 0 790 668" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M279.999 1.00024C140.998 -2.49976 -0.000976562 19.0003 -0.000976562 19.0003V668H789.499V19.0003C789.499 19.0003 716.999 28 632.5 27.5C548.001 27 419 4.50024 279.999 1.00024Z" />
+          </svg>
+          <svg class="wave dark second" width="790" viewBox="0 0 790 668" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M279.999 1.00024C140.998 -2.49976 -0.000976562 19.0003 -0.000976562 19.0003V668H789.499V19.0003C789.499 19.0003 716.999 28 632.5 27.5C548.001 27 419 4.50024 279.999 1.00024Z" />
+          </svg>
+        </div>
+        <span class="time"></span>
+      </div>
+    </div>
+  </countdown-timer>
+
+<script src="{{ 'component-countdown.js' | asset_url }}" defer></script>

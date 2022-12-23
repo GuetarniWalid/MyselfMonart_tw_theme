@@ -1,0 +1,55 @@
+.announcement-bar {
+  overflow: hidden;
+  --anim-width: -400vw;
+}
+
+.announcement-bar .wrapper-anim {
+  white-space: nowrap;
+  padding: 0 2rem;
+  animation: moveToLeft infinite 30s linear;
+}
+
+.announcement-bar > p span,
+.announcement-bar > a span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.announcement-bar .wrapper-anim a {
+    display: flex;
+  }
+
+.announcement-bar .wrapper-anim p span,
+.announcement-bar .wrapper-anim a span {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 40px;
+}
+
+@keyframes moveToLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  1% {
+    opacity: 1;
+  }
+  99% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(var(--anim-width));
+  }
+}
+
+.announcement-bar svg {
+  width: var(--svg-size);
+}
+
+@media screen and (min-width: 750px) {
+  .announcement-bar {
+    --anim-width: -200vw;
+  }
+}

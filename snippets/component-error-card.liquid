@@ -1,0 +1,17 @@
+{{ 'component-error-card.css' | asset_url | stylesheet_tag }}
+
+{% assign error_duration_in_sec = 6 %}
+<style>
+  :root {
+    --error-duration: {{ error_duration_in_sec }}s;
+    --error-background: #fff;
+  }
+</style>
+<error-card data-error-duration="{{ error_duration_in_sec }}">
+  <div class="error hidden">
+    <p class="message">il y a une erreur</p>
+    {% render 'icon-close' %}
+    <span class="time-line disappear"></span>
+  </div>
+</error-card>
+<script src="{{ 'component-error-card.js' | asset_url }}" defer="defer"></script>
