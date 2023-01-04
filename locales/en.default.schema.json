@@ -2497,6 +2497,12 @@
         },
         "enable_zoom": {
           "label": "Enable zoom"
+        },
+        "image_to_show_in_serp": {
+          "label": "Image to show in SERP"
+        },
+        "choose_image_to_show_in_serp": {
+          "label": "Choose image to show in SERP"
         }
       },
       "headings": {

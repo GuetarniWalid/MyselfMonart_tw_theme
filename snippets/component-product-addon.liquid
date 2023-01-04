@@ -218,11 +218,11 @@
                             {% if forloop.first %}
                                 <canvas-addon>
                                     {%- assign other_option_name = 'options-de-la-toile' -%}
-                                    <canvas-options-selector data-item-id="{{ all_products[other_option_name].variants.first.id }}" data-forbidden-sizes-small="{{ all_products["options-de-la-toile"].metafields.info.about.value['Tailles-interdites-2cm'] }}" data-forbidden-sizes-big="{{ all_products["options-de-la-toile"].metafields.info.about.value['Tailles-interdites-4cm'] }}" data-forbidden-sizes-frames="{{ all_products["options-de-la-toile"].metafields.info.about.value['Tailles-interdites-cadres'] }}">    
+                                    <canvas-options-selector data-item-id="{{ all_products[other_option_name].variants.first.id }}" data-forbidden-sizes-small="{{ all_products["options-de-la-toile"].metafields.info.about.value['Tailles-interdites-2cm'] }}" data-forbidden-sizes-big="{{ all_products["options-de-la-toile"].metafields.info.about.value['Tailles-interdites-4cm'] }}" data-forbidden-sizes-frames="{{ all_products["options-de-la-toile"].metafields.info.about.value['Tailles-interdites-cadres'] }}" data-forbidden-sizes-border-no-folded="{{ all_products["options-de-la-toile"].metafields.info.about.value['Taille-interdites-bordures-non-plié'] }}">    
                             {% else %}
                                 <other-addon>
                                     {%- assign other_option_name = 'options-de-laluminium' -%}
-                                    <options-selector data-item-id="{{ all_products[other_option_name].variants.first.id }}">
+                                    <aluminium-options-selector data-item-id="{{ all_products[other_option_name].variants.first.id }}" data-forbidden-sizes-shine="{{ all_products["options-de-la-toile"].metafields.info.about.value['Taille-interdites-bordures-non-plié'] }}">
     
                             {% endif %}
                                     {%- for option in all_products[other_option_name].options_with_values -%}
@@ -252,7 +252,7 @@
                                                                 "
                                                                 sizes="(min-width: 950px) 187px,(max-width: 415px) 250px,372px"
                                                             >
-                                                            <label test="{{ image_index }}" for="addon-{{ option.name | handleize }}-{{ value | downcase }}"></label>
+                                                            <label for="addon-{{ option.name | handleize }}-{{ value | downcase }}"></label>
                                                             <input type="radio" id="addon-{{ option.name | handleize }}-{{ value | downcase }}" name="{{ option.name | handleize }}" value="{{ value }}" hidden {% if forloop.first %}checked{% endif %} data-price="{{ prices[forloop.index0] }}">
                                                             <span class="validator"></span>
                                                         </div>
@@ -299,7 +299,7 @@
                                     </canvas-options-selector>
                                 </canvas-addon>
                             {% else %}
-                                    </options-selector>
+                                    </aluminium-options-selector>
                                 </other-addon>
                             {% endif %}
                         </template>

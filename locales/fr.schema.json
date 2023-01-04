@@ -2441,7 +2441,7 @@
             },
             "spacing": {
               "label": "Spacing"
-            }    
+            }
           }
         },
         "quantity_selector": {
@@ -2830,6 +2830,12 @@
         },
         "enable_zoom": {
           "label": "Activer le zoom"
+        },
+        "image_to_show_in_serp": {
+          "label": "Image à afficher dans la SERP"
+        },
+        "choose_image_to_show_in_serp": {
+          "label": "Choisir l'image à afficher dans la SERP"
         }
       },
       "headings": {

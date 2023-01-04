@@ -84,9 +84,9 @@
     "sold_out_badge_color_scheme": "inverse",
     "accent_icons": "text",
     "social_twitter_link": "",
-    "social_facebook_link": "",
-    "social_pinterest_link": "",
-    "social_instagram_link": "",
+    "social_facebook_link": "https:\/\/www.facebook.com\/profile.php?id=100086313005015",
+    "social_pinterest_link": "https:\/\/www.pinterest.fr\/MyselfMonArt\/",
+    "social_instagram_link": "https:\/\/www.instagram.com\/myselfmonart\/",
     "social_tiktok_link": "",
     "social_tumblr_link": "",
     "social_snapchat_link": "",
@@ -120,7 +120,7 @@
             "settings": {
               "svg": "",
               "svg_size": 2,
-              "text": "Livraison gratuite à partir de 150€",
+              "text": "Livraison gratuite à partir de 70€",
               "text_bold": true,
               "link": ""
             }
@@ -221,7 +221,7 @@
             "type": "reduction",
             "settings": {
               "description": "Livraison offerte",
-              "price_to_reach": 15000
+              "price_to_reach": 7000
             }
           }
         },

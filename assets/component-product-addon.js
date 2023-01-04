@@ -194,7 +194,7 @@ class SummaryAddon extends HTMLElement {
   addOptionLine({ optionNameHandleize, optionName, optionValue, price }) {
     const clone = this.template.content.cloneNode(true);
     clone.querySelector('p').classList.add(optionNameHandleize);
-    clone.querySelector('p > span > span:first-child').innerHTML = optionName;
+    clone.querySelector('p > span > span:first-child').innerHTML = optionName + ': ';
     clone.querySelector('p > span > span:last-child').innerHTML = optionValue;
     clone.querySelector('p > span:last-child').innerHTML = price;
     const hr = this.querySelector('hr');
@@ -324,7 +324,7 @@ class CanvasAddon extends OtherAddon {
   };
   frame = {
     radioName: 'cadre',
-    aucun: {
+    'sans cadre': {
       isFrame: false,
       frameIsPhoto: false,
       horizontal: 'none',
@@ -366,7 +366,7 @@ class CanvasAddon extends OtherAddon {
       vertical: 'url(https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-noyer-vertical.jpg?v=1669288160)',
       boxShadow: '0 0 2px 13px rgba(0, 0, 0, 0.5)',
     },
-    selected: 'aucun',
+    selected: 'sans cadre',
   };
   borderSizeInCm = {
     big: 4,
@@ -429,7 +429,7 @@ class CanvasAddon extends OtherAddon {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.changeImgBorderSize('0');
-    this.changeImgFrame('aucun');
+    this.changeImgFrame('sans cadre');
     this.changeImgBorderColor(this.borderColor.white);
 
     //remove listeners
@@ -452,7 +452,6 @@ class CanvasAddon extends OtherAddon {
     const hideFoldBorder = this.frame[this.frame.selected].isFrame && this.borderColor.selected === this.borderColor.folded && this.thickness.selected === 'big';
     this.paintingSettings.painting.container.querySelector('.folded-wrapper')?.classList.toggle('hide-border', hideFoldBorder);
 
-    // const hideContainerShadow = this.frame[this.frame.selected].isFrame && this.borderColor.selected === this.borderColor.folded && this.thickness.selected === 'small';
     if (hideFoldBorder) {
       this.paintingSettings.painting.container.classList.toggle('with-frame', false);
     }
@@ -486,7 +485,7 @@ class CanvasAddon extends OtherAddon {
     this.paintingSettings.painting.container.querySelectorAll('.frame').forEach(corner => corner.classList.toggle('hidden', boolean));
     this.paintingSettings.painting.container.classList.toggle('without-border', !boolean);
     this.paintingSettings.painting.wrapper.classList.toggle('transparent', !boolean);
-    this.paintingSettings.painting.wrapperInside.style.overflow = boolean ? 'hidden' : 'visible';
+    this.paintingSettings.painting.wrapperInside.style.overflow = boolean ? 'visible' : 'hidden';
   }
 
   changeImgBorderColor(color) {
@@ -684,7 +683,7 @@ class OptionsSelector extends HTMLElement {
 
   hideInputsContainerWithoutInputs(inputs) {
     const onlyInputWithoutValueIsVisible = !Array.from(inputs).some(input => {
-      if (input.value.toLowerCase() === 'aucun') return false;
+      if (input.value.toLowerCase() === 'aucun' || input.value.toLowerCase() === 'sans cadre') return false;
       else {
         return !input.closest('.radio').classList.contains('hidden');
       }
@@ -784,6 +783,7 @@ class CanvasOptionsSelector extends OptionsSelector {
     small: [],
     big: [],
     frames: [],
+    borderNoFolded: [],
   };
 
   constructor() {
@@ -791,9 +791,11 @@ class CanvasOptionsSelector extends OptionsSelector {
     this.forbiddenSizes.small = this.dataset.forbiddenSizesSmall.split(',');
     this.forbiddenSizes.big = this.dataset.forbiddenSizesBig.split(',');
     this.forbiddenSizes.frames = this.dataset.forbiddenSizesFrames.split(',');
+    this.forbiddenSizes.borderNoFolded = this.dataset.forbiddenSizesBorderNoFolded.split(',');
     this.mainVariants = this.closest('form').querySelector('main-variants');
     this.canvasAddon = this.closest('canvas-addon');
     this.thickness = this.canvasAddon.thickness;
+    this.borderColor = this.canvasAddon.borderColor;
     this.frame = this.canvasAddon.frame;
     this.radios = Array.from(this.querySelectorAll('input[type="radio"]'));
     this.thicknessRadios = this.radios.filter(radio => radio.name === this.thickness.radioName);
@@ -809,6 +811,7 @@ class CanvasOptionsSelector extends OptionsSelector {
     this.thicknessRadios.forEach(radio => radio.addEventListener('change', this.thicknessRadioBoundListener));
     this.hideForbiddenSizes(this.mainVariants.sizeSelector.value);
     this.hideForbiddenFramesBySize(this.mainVariants.sizeSelector.value);
+    this.hideForbiddenBorderNoFoldedBySize(this.mainVariants.sizeSelector.value);
   }
 
   disconnectedCallback() {
@@ -821,10 +824,11 @@ class CanvasOptionsSelector extends OptionsSelector {
     const size = this.mainVariants.sizeSelector.value;
     this.hideForbiddenSizes(size);
     this.hideForbiddenFramesBySize(size);
+    this.hideForbiddenBorderNoFoldedBySize(size);
   }
 
   handleThicknessChange() {
-    this.hideForbiddenFramesBySize(this.mainVariants.sizeSelector.value)
+    this.hideForbiddenFramesBySize(this.mainVariants.sizeSelector.value);
   }
 
   hideForbiddenSizes(size) {
@@ -858,17 +862,90 @@ class CanvasOptionsSelector extends OptionsSelector {
   }
 
   hideForbiddenFramesBySize(size) {
-    if(this.thickness.selected === 'big') return;
+    if (this.thickness.selected === 'big') return;
     const frameInputs = this.radios.filter(radio => radio.name === this.frame.radioName);
     const sizeFormat = [Number(size.split('x')[0]), Number(size.split('x')[1].split(' ')[0])].sort((a, b) => b - a).join('x');
     const framesAreForbidden = this.forbiddenSizes.frames.includes(sizeFormat);
 
-    if(framesAreForbidden) {
+    if (framesAreForbidden) {
       frameInputs[0].click();
       frameInputs[0].closest('.radio-container').classList.add('hidden');
     } else {
       frameInputs[0].closest('.radio-container').classList.remove('hidden');
     }
   }
+
+  hideForbiddenBorderNoFoldedBySize(size) {
+    const sizeIsForbidden = this.forbiddenSizes.borderNoFolded.includes(size);
+    const borderInputs = this.radios.filter(radio => radio.name === this.borderColor.radioName);
+    if (sizeIsForbidden) {
+      borderInputs.forEach(input => {
+        if (input.value.toLowerCase() !== this.borderColor.folded) {
+          input.closest('.radio').classList.add('hidden2');
+        } else {
+          input.click();
+        }
+      });
+    } else {
+      borderInputs.forEach(input => {
+        input.closest('.radio').classList.remove('hidden2');
+      });
+    }
+  }
 }
 customElements.define('canvas-options-selector', CanvasOptionsSelector);
+
+class AluminiumOptionsSelector extends OptionsSelector {
+  shine = {
+    radioName: 'finition',
+    mat: 'mat',
+    shine: 'brillant'
+  }
+  forbiddenSizes = {
+    shine: []
+  };
+
+  constructor() {
+    super();
+    this.forbiddenSizes.shine = this.dataset.forbiddenSizesShine.split(',');
+    this.mainVariants = this.closest('form').querySelector('main-variants');
+    this.radios = Array.from(this.querySelectorAll('input[type="radio"]'));
+    this.shineRadios = this.radios.filter(radio => radio.name === this.shine.radioName);
+
+    //Bonded listeners
+    this.sizeSelectorBoundListener = this.handleSizeChange.bind(this);
+  }
+
+  connectedCallback() {
+    this.mainVariants.sizeSelector.addEventListener('change', this.sizeSelectorBoundListener);
+    this.hideForbiddenShine(this.mainVariants.sizeSelector.value);
+  }
+
+  disconnectedCallback() {
+    this.mainVariants.sizeSelector.removeEventListener('change', this.sizeSelectorBoundListener);
+  }
+
+  handleSizeChange() {
+    const size = this.mainVariants.sizeSelector.value;
+    this.hideForbiddenShine(size);
+  }
+
+  hideForbiddenShine(size) {
+    const sizeIsForbidden = this.forbiddenSizes.shine.includes(size);
+
+    if (sizeIsForbidden) {
+      this.shineRadios.forEach(input => {
+        if (input.value.toLowerCase() !== this.shine.mat) {
+          input.closest('.radio').classList.add('hidden2');
+        } else {
+          input.click();
+        }
+      });
+    } else {
+      this.shineRadios.forEach(input => {
+        input.closest('.radio').classList.remove('hidden2');
+      });
+    }
+  }
+}
+customElements.define('aluminium-options-selector', AluminiumOptionsSelector);

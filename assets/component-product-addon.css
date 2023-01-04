@@ -578,3 +578,7 @@ show-product-addon .transparent {
     margin-top: 12rem;
   }
 }
+
+.hidden2 {
+  display: none;
+}

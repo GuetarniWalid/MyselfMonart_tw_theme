@@ -524,7 +524,10 @@
   </script>
 
   {%- liquid
-    if product.selected_or_first_available_variant.featured_media
+    if section.settings.choose_image_to_show_in_serp and product.images[section.settings.image_to_show_in_serp]
+      assign img_index = section.settings.image_to_show_in_serp | minus: 1
+      assign seo_media = product.images[img_index]
+    elsif product.selected_or_first_available_variant.featured_media
       assign seo_media = product.selected_or_first_available_variant.featured_media
     else
       assign seo_media = product.featured_media
@@ -1630,6 +1633,22 @@
       "id": "enable_zoom",
       "default": true,
       "label": "t:sections.main-product.settings.enable_zoom.label"
+    },
+    {
+      "type": "header",
+      "content": "SEO"
+    },
+    {
+      "type": "checkbox",
+      "id": "choose_image_to_show_in_serp",
+      "label": "t:sections.main-product.settings.choose_image_to_show_in_serp.label",
+      "default": false
+    },
+    {
+      "type": "number",
+      "id": "image_to_show_in_serp",
+      "label": "t:sections.main-product.settings.image_to_show_in_serp.label",
+      "default": 1
     }
   ]
 }
