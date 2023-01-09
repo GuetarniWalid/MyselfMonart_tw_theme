@@ -2743,6 +2743,9 @@
       "settings": {
         "button_text": {
           "label": "Button text"
+        },
+        "number_products_to_display": {
+          "label": "Number of products to display"
         }
       }
     },

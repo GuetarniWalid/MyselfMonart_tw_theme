@@ -118,7 +118,7 @@
             "title": "Bedoin à l'heure d'or",
             "text": "",
             "link_label": "",
-            "link": "shopify:\/\/products\/bedoin-a-lheure-dor"
+            "link": "https:\/\/www.myselfmonart.com\/collections\/tableau-salon\/products\/touareg-a-lheure-dor"
           }
         },
         "template--16404732051711__1aaec86d-3d6c-44d8-aaa8-716ea425a598-16665463000e3de778-1": {
@@ -128,17 +128,17 @@
             "title": "Le baiser",
             "text": "",
             "link_label": "",
-            "link": "shopify:\/\/products\/le-baiser"
+            "link": "https:\/\/www.myselfmonart.com\/collections\/tableau-salon\/products\/tableau-levre-rouge-paradoxe"
           }
         },
         "template--16404732051711__1aaec86d-3d6c-44d8-aaa8-716ea425a598-16665463000e3de778-2": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/chat_1400PX.jpg",
-            "title": "Portrait de chat",
+            "image": "shopify:\/\/shop_images\/tableau-arabe-les-maisons-orientales.jpg",
+            "title": "Les maisons orientales",
             "text": "",
             "link_label": "",
-            "link": "shopify:\/\/products\/portrait-de-chat"
+            "link": "https:\/\/myselfmonart.com\/collections\/tableau-salon\/products\/tableau-arabe-les-maisons-orientales"
           }
         },
         "150ac81d-f4d4-4a1a-a431-e1c732d7b6a5": {
@@ -148,7 +148,7 @@
             "title": "La femme au violoncelle",
             "text": "",
             "link_label": "",
-            "link": "shopify:\/\/products\/la-femme-au-violoncelle"
+            "link": "https:\/\/www.myselfmonart.com\/collections\/tableau-salon\/products\/tableau-la-femme-au-violon"
           }
         }
       },
@@ -169,7 +169,7 @@
         "title_color": "#002e5d",
         "text_color": "#f6f3ef",
         "button_label": "Voir les autres oeuvres",
-        "button_link": "shopify:\/\/collections\/nos-oeuvres-dart",
+        "button_link": "shopify:\/\/collections\/tableau-salon",
         "color_scheme": "background-2",
         "columns_mobile": "2",
         "swipe_on_mobile": true,
@@ -275,10 +275,10 @@
     "4b1091f9-5105-4ade-8d19-47caa37cefe7": {
       "type": "collage",
       "blocks": {
-        "template--16404732051711__4b1091f9-5105-4ade-8d19-47caa37cefe7-166662719029d70416-2": {
+        "39a353da-9377-4df7-8aac-105a8e2ca5a9": {
           "type": "collection",
           "settings": {
-            "collection": "nos-oeuvres-dart"
+            "collection": "tableau-salon"
           }
         },
         "template--16404732051711__4b1091f9-5105-4ade-8d19-47caa37cefe7-166662719029d70416-1": {
@@ -297,7 +297,7 @@
         }
       },
       "block_order": [
-        "template--16404732051711__4b1091f9-5105-4ade-8d19-47caa37cefe7-166662719029d70416-2",
+        "39a353da-9377-4df7-8aac-105a8e2ca5a9",
         "template--16404732051711__4b1091f9-5105-4ade-8d19-47caa37cefe7-166662719029d70416-1",
         "abb6fe34-8792-4eb5-be87-911054cca78d"
       ],

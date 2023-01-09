@@ -3063,6 +3063,9 @@
       "settings": {
         "button_text": {
           "label": "Texte du bouton"
+        },
+        "number_products_to_display": {
+          "label": "Nombre de produits à afficher"
         }
       }
     },

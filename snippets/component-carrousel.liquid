@@ -2,7 +2,7 @@
     Renders a carrousel
 
     Accepts:
-    - products_handle: {Object} An array of product handle
+    - productList: {Object} An array of products
     - button_text: {String} The text of the button
 
     Usage:
@@ -13,9 +13,9 @@
 
 <snap-carrousel>
     <ul class="component-carroussel page-width">
-        {%- for product_handle in products_handle -%}
-            {%- assign first_image = all_products[product_handle].featured_image -%}
-            {%- assign second_image = all_products[product_handle].images[1] -%}
+        {%- for product in productList -%}
+            {%- assign first_image = product.featured_image -%}
+            {%- assign second_image = product.images[1] -%}
         <li>
             <div class="img-wrapper">
                 <img
@@ -43,11 +43,9 @@
                     >
                 {%- endif -%}
             </div>
-                <h3>{{ all_products[product_handle].title }}</h3>
-                <a href="{{ collection.url | append: all_products[product_handle].url }}" class="button cart-button component-cart-button">{{ button_text }}</a>
+                <h3>{{ product.title }}</h3>
+                <a href="{{ product.url }}" class="button cart-button component-cart-button">{{ button_text }}</a>
         </li>
     {%- endfor -%}
     </ul>
 </snap-carrousel>
-
-<script src="{{ 'component-carrousel.js' | asset_url }}" defer="defer"></script>

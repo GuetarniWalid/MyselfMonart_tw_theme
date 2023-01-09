@@ -7,22 +7,17 @@
   }
 {%- endstyle -%}
 
-{%- liquid
-  assign family_tag = product.tags | where: 'famille' | first
-  assign same_product_handles = ''
-  for _product in collection.products
-    assign is_same_family = _product.tags | where: family_tag
-    if is_same_family.size > 0 and product.handle != _product.handle
-      assign same_product_handles = same_product_handles | append: _product.handle | append: ','
-    endif
-  endfor
-  assign same_product_handles = same_product_handles | split: ','
--%}
-
-{%- if same_product_handles.size > 0 -%}
-  <h2 class="page-width {{ section.settings.heading_size }}">{{ section.settings.heading | escape }}</h2>
-  {% render 'component-carrousel', products_handle: same_product_handles | split: ',', button_text: section.settings.button_text %}
+<div class="{{ section.settings.heading_size }} product-recommendations" style="display:block" data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.number_products_to_display  }}&intent=related">
+{%- if recommendations.performed? and recommendations.products_count > 0 -%}
+  <h2 class="page-width {{ section.settings.heading_size }}">
+    {{ section.settings.heading | escape }}
+  </h2>
+  {% render 'component-carrousel', productList: recommendations.products, button_text: section.settings.button_text %}
 {%- endif -%}
+</div>
+
+<script src="{{ 'component-carrousel.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'section-product-carroussel.js' | asset_url }}" defer="defer"></script>
 
 {% schema %}
 {
@@ -64,6 +59,12 @@
       "id": "button_text",
       "default": "See the product",
       "label": "t:sections.product-carrousel.settings.button_text.label"
+    },
+    {
+      "type": "number",
+      "id": "number_products_to_display",
+      "label": "t:sections.product-carrousel.settings.number_products_to_display.label",
+      "default": 4
     },
     {
       "type": "header",
