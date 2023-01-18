@@ -1,0 +1,162 @@
+.shopify-section.collections-grid nav  {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.shopify-section.collections-grid nav > ul {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 1rem;
+  position: relative;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.shopify-section.collections-grid .one-collection > a {
+  display: block;
+  height: 100%;
+}
+
+.shopify-section.collections-grid .one-collection > a::before {
+  content: '';
+  display: block;
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0) 60%, rgba(0,0,0,1) 100%);
+}
+
+.shopify-section.collections-grid img,
+.shopify-section.collections-grid svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.shopify-section.collections-grid .svg-wrapper svg {
+  opacity: 0.6;
+}
+
+.shopify-section.collections-grid .one-collection {
+  position: relative;
+  height: 40vh;
+  grid-column: 1 / span 10;
+}
+
+.shopify-section.collections-grid div.svg-wrapper {
+  height: 100%;
+}
+
+.shopify-section.collections-grid div.svg-wrapper::before {
+  content: '';
+  display: block;
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.shopify-section.collections-grid .collection-title {
+  position: absolute;
+  bottom: 0;
+  padding-left: 3rem;
+  max-height: 100%;
+  z-index: 1;
+}
+
+.shopify-section.collections-grid .collection-title h2 {
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+}
+
+.shopify-section.collections-grid .collection-title button {
+  background: none;
+  color: var(--text-color);
+  border: none;
+  font-size: 1.6rem;
+  margin-bottom: 2rem;
+  overflow: hidden;
+  opacity: 0.7;
+}
+
+.shopify-section.collections-grid .collection-title > button:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.4rem;
+}
+
+.shopify-section.collections-grid .paragraph {
+  background: rgba(var(--color-background));
+  color: var(--color-foreground);
+  height: 0;
+  overflow: auto;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 2;
+  padding: 0 3rem;
+}
+
+.shopify-section.collections-grid .paragraph button {
+  position: sticky;
+  top: 1rem;
+  padding: 1rem 2rem;
+  transform: scaleX(-1);
+  color: rgba(var(--color-foreground)) !important;
+  border: 1px solid rgba(var(--color-foreground));
+  box-shadow: 0 0 0 1rem rgba(var(--color-background));
+  margin-top: 1rem;
+  background: rgb(var(--color-background));
+  border-radius: 4px;
+}
+
+.shopify-section.collections-grid .paragraph button svg {
+  width: 2rem;
+}
+
+@media screen and (min-width: 800px) {
+  .shopify-section.collections-grid .one-collection {
+    height: 60vh;
+  }
+
+  .shopify-section.collections-grid .one-collection:nth-of-type(2),
+  .shopify-section.collections-grid .one-collection:nth-of-type(9) {
+    grid-column: 1 / span 6;
+  }
+  .shopify-section.collections-grid .one-collection:nth-of-type(3),
+  .shopify-section.collections-grid .one-collection:nth-of-type(10) {
+    grid-column: 7 / span 4;
+  }
+  .shopify-section.collections-grid .one-collection:nth-of-type(4),
+  .shopify-section.collections-grid .one-collection:nth-of-type(11) {
+    grid-column: 1 / span 4;
+  }
+  .shopify-section.collections-grid .one-collection:nth-of-type(5),
+  .shopify-section.collections-grid .one-collection:nth-of-type(12) {
+    grid-column: 5 / span 6;
+  }
+  .shopify-section.collections-grid .one-collection:nth-of-type(6),
+  .shopify-section.collections-grid .one-collection:nth-of-type(13) {
+    grid-column: 1 / span 5;
+  }
+  .shopify-section.collections-grid .one-collection:nth-of-type(7),
+  .shopify-section.collections-grid .one-collection:nth-of-type(14) {
+    grid-column: 6 / span 5;
+  }
+  .shopify-section.collections-grid .one-collection:first-of-type,
+  .shopify-section.collections-grid .one-collection:nth-of-type(8),
+  .shopify-section.collections-grid .one-collection.full-width {
+    grid-column: 1 / span 10;
+  }
+
+  .shopify-section.collections-grid .paragraph button svg {
+    width: 3rem;
+  }
+}
+
+.full-height {
+  height: 100% !important;
+}
+
+.pointer {
+  cursor: pointer;
+}

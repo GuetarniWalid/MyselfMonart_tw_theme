@@ -1582,6 +1582,34 @@
         }
       }
     },
+    "collections-grid": {
+      "name": "Grille de collection",
+      "settings": {
+        "lazy_load": {
+          "label": "Chargement différé des images",
+          "info": "Les images ne seront chargées que lorsque l'utilisateur les verra. Il est conseillé de décocher cette option que si cette section se trouve au tout debut de la page."
+        },
+        "color_text": {
+          "label": "Couleur dus texte"
+        }
+      },
+      "blocks": {
+        "image_text": {
+          "name": "Collection",
+          "settings": {
+            "image": {
+              "label": "Image"
+            },
+            "title": {
+              "label": "Titre"
+            },
+            "paragraph": {
+              "label": "Paragraphe"
+            }
+          }
+        }
+      }
+    },
     "header": {
       "name": "En-tête",
       "settings": {

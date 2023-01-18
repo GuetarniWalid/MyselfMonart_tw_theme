@@ -1,0 +1,139 @@
+{{ 'section-collections-grid.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    --text-color: {{ section.settings.color_text }};
+    padding-top: {{ section.settings.padding_top | append: 'px' }};
+    padding-bottom: {{ section.settings.padding_bottom | append: 'px' }};
+  }
+{%- endstyle -%}
+
+<nav role="navigation">
+  <ul>
+    {% for block in section.blocks %}
+      {% assign force_full_width = false %}
+      {% if forloop.last and forloop.index == 2 or forloop.index == 4 or forloop.index == 6 or forloop.index == 9 or forloop.index == 11 or forloop.index == 13  %}
+        {% assign force_full_width = true %}
+      {% endif %}
+      <li class="one-collection{% if force_full_width %} full-width{% endif %}{% if block.settings.collection.title != blank or block.settings.paragraph != blank %} dark-overlay{% endif %}{% if block.settings.url != blank %} pointer{% endif %}">
+        {% if forloop.index > 5 or section.settings.lazy_load %}
+          {%  assign loading = 'lazy' %}
+        {% else %}
+          {%  assign loading = 'eager' %}
+        {% endif %}
+        {% if block.settings.collection.url != blank %}
+          <a href="{{ block.settings.collection.url }}" aria-labelledby="section-collections-grid-h2-{{ forloop.index }}">
+        {% endif %}
+        {% render 'collection-grid-image', block: block, loading: loading, index: forloop.index, force_full_width: force_full_width %}
+        {% if block.settings.collection.url != blank %}
+          </a>
+        {% endif %}
+        {% if block.settings.collection.title != blank or block.settings.paragraph != blank %}
+          <div class="collection-title">
+            {% if block.settings.collection.title != blank %}
+              <h2 class="h1" id="section-collections-grid-h2-{{ forloop.index }}">{{ block.settings.collection.title }}</h2>
+            {% endif %}
+            {% if block.settings.paragraph != blank %}
+              <button class="pointer">En savoir plus...</button>
+            {% endif %}
+          </div>
+        {% endif %}
+        {% if block.settings.paragraph != blank %}
+          <div class="paragraph">
+            <button class="pointer">{% render 'icon-arrow' %}</button>
+            {{ block.settings.paragraph }}
+          </div>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</nav>
+
+<script src="{{ 'section-collections-grid.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "t:sections.collections-grid.name",
+  "tag": "section",
+  "class": "collections-grid",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "lazy_load",
+      "default": true,
+      "label": "t:sections.collections-grid.settings.lazy_load.label",
+      "info": "t:sections.collections-grid.settings.lazy_load.info"
+    },
+    {
+      "type": "color",
+      "id": "color_text",
+      "label": "t:sections.collections-grid.settings.color_text.label",
+      "default": "#fff"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 0
+    }
+  ],
+  "blocks":[
+    {
+        "type": "image_text",
+        "name": "t:sections.collections-grid.blocks.image_text.name",
+        "limit": 14,
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "t:sections.collections-grid.blocks.image_text.settings.image.label"
+          },
+          {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection"
+          },
+          {
+            "type": "html",
+            "id": "paragraph",
+            "label": "t:sections.collections-grid.blocks.image_text.settings.paragraph.label"
+          }
+        ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.collections-grid.name",
+      "blocks": [
+        {
+          "type": "image_text"
+        },
+        {
+          "type": "image_text"
+        },
+        {
+          "type": "image_text"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1213,6 +1213,34 @@
         }
       }
     },
+    "collections-grid": {
+      "name": "Collection grid",
+      "settings": {
+        "lazy_load": {
+          "label": "Lazy load images",
+          "info": "Images will load as they appear in the viewport. It is advisable to uncheck this option only if this section is at the very beginning of the page."
+        },
+        "color_text": {
+          "label": "Text color"
+        }
+      },
+      "blocks": {
+        "image_text": {
+          "name": "Collection",
+          "settings": {
+            "image": {
+              "label": "Image"
+            },
+            "title": {
+              "label": "Title"
+            },
+            "paragraph": {
+              "label": "Paragraph"
+            }
+          }
+        }
+      }
+    },
     "header": {
       "name": "Header",
       "settings": {

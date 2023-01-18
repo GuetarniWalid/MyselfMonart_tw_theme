@@ -1,0 +1,42 @@
+{% comment %}
+    Renders an image withe the good proportion.
+
+    Accepts:
+    - block: {Object} block object
+    - loading: {String} lazy or eager 
+    - index: {Number} index number of the block 
+    - force_full_width: {Boolean} If this is the image must be in full width 
+
+    Usage:
+    {% render 'collection-grid-image', block: block %}
+{% endcomment %}
+
+{% liquid
+    if index == 1 or index == 8 or force_full_width
+        assign size = '(max-width: 1300px) 100vw, 1300px'
+    elsif index == 2 or index == 5 or index == 9 or index == 12
+        assign size = '(max-width: 800px) 100vw, (max-width: 1300px) 60vw, 780px'
+    elsif index == 3 or index == 4 or index == 10 or index == 11
+        assign size = '(max-width: 800px) 100vw, (max-width: 1300px) 40vw, 520px'
+    else
+        assign size = '(max-width: 800px) 100vw, (max-width: 1300px) 50vw, 650px'
+    endif
+%}
+
+{% if block.settings.image != blank %}
+    <img
+    srcset="{{ block.settings.image | image_url: width: 375 }} 375w,
+    {{ block.settings.image | image_url: width: 550 }} 550w,
+    {{ block.settings.image | image_url: width: 750 }} 750w,
+    {{ block.settings.image | image_url: width: 1100 }} 1100w,
+    {{ block.settings.image | image_url: width: 1300 }} 1300w,
+    {{ block.settings.image | image_url: width: 1500 }} 1500w,
+    {{ block.settings.image | image_url: width: 2000 }} 2000w"
+    sizes="{{ size }}"
+    src="{{ block.settings.image | image_url: width: 2000 }}"
+    loading="{{ loading }}"
+    alt="{{ block.settings.image.alt | escape }}"
+  >
+{% else %}
+    <div class="svg-wrapper">{{ 'collection-1' | placeholder_svg_tag  }}</div>
+{% endif %}
