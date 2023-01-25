@@ -3189,6 +3189,9 @@
           "settings": {
             "heading": {
               "label": "Titre"
+            },
+            "markup": {
+              "label": "Niveau de titre"
             }
           }
         },

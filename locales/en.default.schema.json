@@ -3280,6 +3280,9 @@
         "settings": {
           "heading": {
             "label": "Heading"
+          },
+          "markup": {
+            "label": "Heading type"
           }
         }
       },

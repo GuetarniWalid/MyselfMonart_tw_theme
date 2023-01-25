@@ -171,14 +171,19 @@ summary.list-menu__item {
 .header__heading-link svg,
 .header__heading-link svg path,
 .header__icon.header__icon--summary {
-  color: var(--icons-color);
-  fill: var(--icons-color);
   width: var(--logo-size);
   height: var(--logo-size);
 }
 
-.menu-open .header__heading-link svg,
-.menu-open .header__heading-link svg path {
+.header__heading-link svg:not(.default),
+.header__heading-link svg:not(.default) path,
+.header__icon.header__icon--summary {
+  color: var(--icons-color);
+  fill: var(--icons-color);
+}
+
+.menu-open .header__heading-link svg:not(.default),
+.menu-open .header__heading-link svg:not(.default) path {
   fill: rgb(var(--color-foreground));
   stroke: rgb(var(--color-foreground));
 }

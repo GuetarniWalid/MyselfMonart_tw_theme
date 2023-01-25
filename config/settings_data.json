@@ -139,7 +139,7 @@
       "header": {
         "type": "header",
         "settings": {
-          "enable_index_transparent_header": true,
+          "enable_index_transparent_header": false,
           "enable_product_mobile_transparent_header": false,
           "icons_color_on_transparency": "#002e5d",
           "background_color": "#F6F3EE",

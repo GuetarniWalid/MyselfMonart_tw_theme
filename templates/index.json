@@ -1,81 +1,163 @@
 {
   "sections": {
-    "16588255569cee342f": {
+    "2b3b46e7-881c-4925-96cf-76c7ebf203c4": {
       "type": "image-banner",
-      "blocks": {
-        "9f36e032-76cf-4952-aed3-19816a4225f0": {
-          "type": "heading",
-          "settings": {
-            "heading": "<p>TROUVEZ UN TABLEAU ART DECO UNIQUE<\/p>",
-            "heading_size_desktop": 5,
-            "heading_size_mobile": 3
-          }
-        },
-        "f1c33222-9760-495f-b022-8d3529c4155f": {
-          "type": "text",
-          "disabled": true,
-          "settings": {
-            "text": "<p>Pour un intérieur unique, choisissez l'œuvre d'art de vos rêves<\/p>",
-            "text_size_desktop": 2.2,
-            "text_size_mobile": 2.3
-          }
-        }
-      },
-      "block_order": [
-        "9f36e032-76cf-4952-aed3-19816a4225f0",
-        "f1c33222-9760-495f-b022-8d3529c4155f"
-      ],
       "settings": {
-        "image_desktop": "shopify:\/\/shop_images\/Living_room_with_chair_and_cabinet.jpg",
+        "image_desktop": "shopify:\/\/shop_images\/tableau-decoration_6614a093-607b-412d-a38b-5335607be12c.jpg",
         "image_desktop_fit": "cover",
         "image_desktop_horizontal_position": "center",
-        "image_desktop_vertical_position": "top",
-        "image_desktop_height": 100,
-        "content_width_desktop": 50,
-        "content_horizontal_position_desktop": 100,
-        "content_vertical_position_desktop": 30,
+        "image_desktop_vertical_position": "center",
+        "image_desktop_height": 80,
+        "content_width_desktop": 60,
+        "content_horizontal_position_desktop": 50,
+        "content_vertical_position_desktop": 100,
         "content_alignment_desktop": "left",
         "image_mobile_fit": "cover",
-        "image_mobile_horizontal_position": "left",
-        "image_mobile_vertical_position": "bottom",
-        "image_mobile_height": 85,
-        "content_width_mobile": 75,
-        "content_horizontal_position_mobile": 0,
-        "content_vertical_position_mobile": 50,
-        "content_alignment_mobile": "left",
+        "image_mobile_horizontal_position": "center",
+        "image_mobile_vertical_position": "center",
+        "image_mobile_height": 60,
+        "content_width_mobile": 90,
+        "content_horizontal_position_mobile": 50,
+        "content_vertical_position_mobile": 100,
+        "content_alignment_mobile": "center",
         "overlay_opacity": 0,
-        "body_text": "#002e5d",
+        "body_text": "#104173",
         "enable_lazy_loading": true
       }
     },
-    "ec9f0ad1-e7be-4a07-9dc0-d5046a5e1243": {
+    "1198c25f-e6b6-405b-aa76-db2afd719caf": {
       "type": "rich-text",
       "blocks": {
-        "template--16404732051711__ec9f0ad1-e7be-4a07-9dc0-d5046a5e1243-1668611724f85aa970-0": {
+        "template--16404732051711__1198c25f-e6b6-405b-aa76-db2afd719caf-167457706007ac71a1-0": {
           "type": "heading",
           "settings": {
-            "heading": "<p>DÉCOUVREZ NOTRE GAMME DE TABLEAU POUR CUISINE<\/p>",
+            "heading": "<p>TABLEAU ART DECO<\/p>",
             "heading_size": "h1"
           }
         },
-        "template--16404732051711__ec9f0ad1-e7be-4a07-9dc0-d5046a5e1243-1668611724f85aa970-1": {
+        "template--16404732051711__1198c25f-e6b6-405b-aa76-db2afd719caf-167457706007ac71a1-1": {
           "type": "text",
           "settings": {
-            "text": "<p>En quête d'une cuisine originale ? <a href=\"\/collections\/tableau-cuisine\" title=\"Tableau cuisine\">Notre collection de tableaux pour cuisine<\/a> saura sublimer votre décoration d'intérieure.<\/p><p>Souvent négligée, la cuisine est aujourd’hui devenue l’une des pièces principales de notre maison. Ambiance rustique, décoration design ou cuisine moderne, on ne néglige plus aucun détail pour faire de cette pièce un endroit à notre image. <\/p><p>De l'électroménager à l'étagère en bois, en passant par les petits objets déco, tout est bon pour affirmer votre personnalité. <\/p><p>Chez MyselfMonart nous proposons une large gamme de tableau pour cuisine, des illustrations rétro, des toiles multicolores, et même des tableaux photos de vos pâtisseries préférées. Si vous êtes à la recherche d’idées déco originales ou simplement d’un cadeau créatif vous trouverez forcément parmi nos impressions sur toile une façon d’habiller vos murs.<\/p>"
+            "text": "<p>Découvrez notre collection de tableau décoratif murale pour toutes les pieces de votre maison.<\/p>"
           }
         }
       },
       "block_order": [
-        "template--16404732051711__ec9f0ad1-e7be-4a07-9dc0-d5046a5e1243-1668611724f85aa970-0",
-        "template--16404732051711__ec9f0ad1-e7be-4a07-9dc0-d5046a5e1243-1668611724f85aa970-1"
+        "template--16404732051711__1198c25f-e6b6-405b-aa76-db2afd719caf-167457706007ac71a1-0",
+        "template--16404732051711__1198c25f-e6b6-405b-aa76-db2afd719caf-167457706007ac71a1-1"
       ],
       "settings": {
         "desktop_content_position": "center",
-        "content_alignment": "left",
+        "content_alignment": "center",
         "color_scheme": "background-1",
         "full_width": true,
         "padding_top": 40,
         "padding_bottom": 52
+      }
+    },
+    "e2edd939-3626-48bb-a1b3-68b7d45d2b13": {
+      "type": "collections-grid",
+      "blocks": {
+        "template--16404732051711__e2edd939-3626-48bb-a1b3-68b7d45d2b13-167457071323298b01-0": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-salon-2.jpg",
+            "collection": "tableau-salon",
+            "paragraph": "<h3>DÉCOUVREZ NOTRE GAMME DE TABLEAU POUR SALON<\/h3>\n<p>Des designs uniques pour sublimer votre décoration d'intérieur ! La pièce de vie par excellence, le salon est le reflet de votre personnalité et de votre style de vie. Chez MyselfMonart, nous avons sélectionné pour vous une gamme de tableaux modernes pour salon pour tous les goûts, que ce soit un tableau abstrait, une toile multicolore , ou encore un tableau paysage, vous trouverez forcément le tableau art deco pour personnaliser votre espace.<\/p>\n<p>Offrez-vous une décoration originale et tendance avec nos tableaux pour salon. Que ce soit pour une ambiance chic, design, moderne ou minimaliste, Vous découvrirez certainement le tableau de décoration de salon qui convient à votre intérieur. N'attendez plus pour donner vie à vos murs avec nos plus beaux tableaux.<\/p>"
+          }
+        },
+        "template--16404732051711__e2edd939-3626-48bb-a1b3-68b7d45d2b13-167457071323298b01-1": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-chambre-2.jpg",
+            "collection": "tableau-chambre",
+            "paragraph": ""
+          }
+        },
+        "template--16404732051711__e2edd939-3626-48bb-a1b3-68b7d45d2b13-167457071323298b01-2": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-cuisine_eaec6264-da1e-45c2-ba57-214beaf70168.jpg",
+            "collection": "tableau-cuisine",
+            "paragraph": "<h3>DÉCOUVREZ NOTRE GAMME DE TABLEAU POUR CUISINE<\/h3>\n<p>En quête d'une cuisine originale ? <a href=\"\/collections\/tableau-cuisine\" title=\"Tableau cuisine\">Notre collection de tableaux pour cuisine<\/a> saura sublimer votre décoration d'intérieure.<\/p>\n<p>Souvent négligée, la cuisine est aujourd’hui devenue l’une des pièces principales de notre maison. Ambiance rustique, décoration design ou cuisine moderne, on ne néglige plus aucun détail pour faire de cette pièce un endroit à notre image.<\/p>\n<p>De l'électroménager à l'étagère en bois, en passant par les petits objets déco, tout est bon pour affirmer votre personnalité. <\/p>\n<p>Chez MyselfMonart nous proposons une large gamme de tableau pour cuisine, des illustrations rétro, des toiles multicolores, et même des tableaux photos de vos pâtisseries préférées. Si vous êtes à la recherche d’idées déco originales ou simplement d’un cadeau créatif vous trouverez forcément parmi nos impressions sur toile une façon d’habiller vos murs.<\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "template--16404732051711__e2edd939-3626-48bb-a1b3-68b7d45d2b13-167457071323298b01-0",
+        "template--16404732051711__e2edd939-3626-48bb-a1b3-68b7d45d2b13-167457071323298b01-1",
+        "template--16404732051711__e2edd939-3626-48bb-a1b3-68b7d45d2b13-167457071323298b01-2"
+      ],
+      "settings": {
+        "lazy_load": false,
+        "color_text": "#f6f3ef",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "0400eb0c-febd-4b30-a9fc-23868b723b01": {
+      "type": "badges",
+      "blocks": {
+        "dadd0693-3b95-45ea-91d0-dade5eb6933f": {
+          "type": "number_block",
+          "settings": {
+            "number": 1,
+            "heading": "Choisissez",
+            "text": "Choisissez votre tableau deco parmi la large collection de tableaux",
+            "text_arrangement": "unset"
+          }
+        },
+        "c44537b3-1279-4836-9f93-bd9ff2a05e77": {
+          "type": "number_block",
+          "settings": {
+            "number": 2,
+            "heading": "Personnalisez",
+            "text": "Configurez la taille et le support de votre tableau",
+            "text_arrangement": "unset"
+          }
+        },
+        "a6c21ad7-b53a-477a-9209-290c852bb6e7": {
+          "type": "number_block",
+          "settings": {
+            "number": 3,
+            "heading": "Commandez",
+            "text": "Nous fabriquons votre tableau et nous chargeons de vous l'envoyer.",
+            "text_arrangement": "unset"
+          }
+        },
+        "9bbd06d2-2f00-4f08-9b98-9313305b1a02": {
+          "type": "number_block",
+          "settings": {
+            "number": 4,
+            "heading": "Admirez",
+            "text": "Accrochez votre tableau et profitez du résultat !",
+            "text_arrangement": "unset"
+          }
+        }
+      },
+      "block_order": [
+        "dadd0693-3b95-45ea-91d0-dade5eb6933f",
+        "c44537b3-1279-4836-9f93-bd9ff2a05e77",
+        "a6c21ad7-b53a-477a-9209-290c852bb6e7",
+        "9bbd06d2-2f00-4f08-9b98-9313305b1a02"
+      ],
+      "settings": {
+        "title": "",
+        "heading_size": "h1",
+        "nb_columns_on_computer": "25",
+        "nb_columns_on_mobile": "100",
+        "columns_alignment": "flex-start",
+        "logo_color": "#002e5d",
+        "logo_size": 45,
+        "logo_background": true,
+        "logo_background_color": "#E0E0E0",
+        "logo_border": true,
+        "title_bold": true,
+        "margin_under_logo": 26,
+        "margin_under_title": 12,
+        "section_background_color": "#F6F3EF",
+        "margin_top": 10,
+        "margin_bottom": 35
       }
     },
     "20c0c98e-ed16-4069-b89a-bb18d96ee241": {
@@ -207,110 +289,6 @@
         "padding_bottom": 40
       }
     },
-    "0400eb0c-febd-4b30-a9fc-23868b723b01": {
-      "type": "badges",
-      "blocks": {
-        "dadd0693-3b95-45ea-91d0-dade5eb6933f": {
-          "type": "number_block",
-          "settings": {
-            "number": 1,
-            "heading": "Choisissez",
-            "text": "Choisissez votre tableau deco parmi la large collection de tableaux.",
-            "text_arrangement": "unset"
-          }
-        },
-        "c44537b3-1279-4836-9f93-bd9ff2a05e77": {
-          "type": "number_block",
-          "settings": {
-            "number": 2,
-            "heading": "Configurez",
-            "text": "Choisissez le format et le support de votre tableau.",
-            "text_arrangement": "unset"
-          }
-        },
-        "a6c21ad7-b53a-477a-9209-290c852bb6e7": {
-          "type": "number_block",
-          "settings": {
-            "number": 3,
-            "heading": "Conception",
-            "text": "Impression de votre tableau.",
-            "text_arrangement": "unset"
-          }
-        },
-        "9bbd06d2-2f00-4f08-9b98-9313305b1a02": {
-          "type": "number_block",
-          "settings": {
-            "number": 4,
-            "heading": "Admirez",
-            "text": "Accrochez votre tableau et admirez le résultat !",
-            "text_arrangement": "unset"
-          }
-        }
-      },
-      "block_order": [
-        "dadd0693-3b95-45ea-91d0-dade5eb6933f",
-        "c44537b3-1279-4836-9f93-bd9ff2a05e77",
-        "a6c21ad7-b53a-477a-9209-290c852bb6e7",
-        "9bbd06d2-2f00-4f08-9b98-9313305b1a02"
-      ],
-      "settings": {
-        "title": "",
-        "heading_size": "h1",
-        "nb_columns_on_computer": "25",
-        "nb_columns_on_mobile": "100",
-        "columns_alignment": "flex-start",
-        "logo_color": "#002e5d",
-        "logo_size": 45,
-        "logo_background": true,
-        "logo_background_color": "#E0E0E0",
-        "logo_border": true,
-        "title_bold": true,
-        "margin_under_logo": 26,
-        "margin_under_title": 12,
-        "section_background_color": "#F6F3EF",
-        "margin_top": 10,
-        "margin_bottom": 35
-      }
-    },
-    "4b1091f9-5105-4ade-8d19-47caa37cefe7": {
-      "type": "collage",
-      "blocks": {
-        "39a353da-9377-4df7-8aac-105a8e2ca5a9": {
-          "type": "collection",
-          "settings": {
-            "collection": "tableau-salon"
-          }
-        },
-        "template--16404732051711__4b1091f9-5105-4ade-8d19-47caa37cefe7-166662719029d70416-1": {
-          "type": "product",
-          "settings": {
-            "product": "tableau-famille-1",
-            "second_image": false,
-            "show_price": false
-          }
-        },
-        "abb6fe34-8792-4eb5-be87-911054cca78d": {
-          "type": "collection",
-          "settings": {
-            "collection": "tableau-cuisine"
-          }
-        }
-      },
-      "block_order": [
-        "39a353da-9377-4df7-8aac-105a8e2ca5a9",
-        "template--16404732051711__4b1091f9-5105-4ade-8d19-47caa37cefe7-166662719029d70416-1",
-        "abb6fe34-8792-4eb5-be87-911054cca78d"
-      ],
-      "settings": {
-        "heading": "Découvrir nos produits",
-        "heading_size": "h1",
-        "desktop_layout": "left",
-        "mobile_layout": "collage",
-        "color_scheme": "background-1",
-        "padding_top": 60,
-        "padding_bottom": 24
-      }
-    },
     "bc7808a3-010e-4d80-a8f4-053c77379028": {
       "type": "rich-text",
       "blocks": {
@@ -416,13 +394,13 @@
     }
   },
   "order": [
-    "16588255569cee342f",
-    "ec9f0ad1-e7be-4a07-9dc0-d5046a5e1243",
+    "2b3b46e7-881c-4925-96cf-76c7ebf203c4",
+    "1198c25f-e6b6-405b-aa76-db2afd719caf",
+    "e2edd939-3626-48bb-a1b3-68b7d45d2b13",
+    "0400eb0c-febd-4b30-a9fc-23868b723b01",
     "20c0c98e-ed16-4069-b89a-bb18d96ee241",
     "1aaec86d-3d6c-44d8-aaa8-716ea425a598",
     "7f048e47-ff73-4ef2-a44d-204a6ad96f65",
-    "0400eb0c-febd-4b30-a9fc-23868b723b01",
-    "4b1091f9-5105-4ade-8d19-47caa37cefe7",
     "bc7808a3-010e-4d80-a8f4-053c77379028",
     "490671aa-79b7-40da-8e00-59f7773b6755"
   ]

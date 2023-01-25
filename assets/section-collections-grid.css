@@ -84,7 +84,7 @@
 }
 
 .shopify-section.collections-grid .paragraph {
-  background: rgba(var(--color-background));
+  background: rgba(var(--color-background), 0.97);
   color: var(--color-foreground);
   height: 0;
   overflow: auto;

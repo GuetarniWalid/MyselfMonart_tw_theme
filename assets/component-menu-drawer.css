@@ -39,6 +39,10 @@ menu-drawer > details[open] > summary::before {
   filter: drop-shadow(var(--drawer-shadow-horizontal-offset) var(--drawer-shadow-vertical-offset) var(--drawer-shadow-blur-radius) rgba(var(--color-shadow), var(--drawer-shadow-opacity)));
 }
 
+sticky-header .menu-drawer {
+  border-top: 1px solid var(--icons-border-color-on-colored); 
+}
+
 .js .menu-drawer {
   height: calc(100vh - 100%);
   height: calc(var(--viewport-height, 100vh) - (var(--header-bottom-position, 100%)));
