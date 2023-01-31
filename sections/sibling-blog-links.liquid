@@ -21,12 +21,17 @@
 <h3 class="h2">{{ 'sections.sibling-blog-links.complementary_blog_posts' | t }} :</h3>
 <ul>
     {% for same_article in same_articles %}
-        {%- if same_article.metafields.firstBlogLink.parentCollection == blank and article.handle != same_article.handle and same_article.metafields.firstBlogLink.blogParent == parent_article -%}
-          {%- assign is_empty = false -%}
-            <li>
-                <a href="{{ same_article.url }}">{{ same_article.title }}</a>
-            </li>      
-        {%- endif -%}
+      {%- if same_article.metafields.firstBlogLink.parentCollection == blank and article.handle != same_article.handle and same_article.metafields.firstBlogLink.blogParent == parent_article -%}
+        {%- assign is_empty = false -%}
+          <li>
+            <a href="{{ same_article.url }}">{{ same_article.title }}</a>
+          </li>      
+      {%- elsif article.metafields.firstBlogLink.parentCollection != blank and article.handle != same_article.handle and article.metafields.firstBlogLink.parentCollection.value.id == same_article.metafields.firstBlogLink.parentCollection.value.id -%}
+        {%- assign is_empty = false -%}
+          <li>
+            <a href="{{ same_article.url }}">{{ same_article.title }}</a>
+          </li> 
+      {%- endif -%}
     {% endfor %}
 </ul>
 

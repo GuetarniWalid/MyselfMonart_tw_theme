@@ -22,7 +22,7 @@
         "content_alignment_mobile": "center",
         "overlay_opacity": 0,
         "body_text": "#104173",
-        "enable_lazy_loading": true
+        "enable_lazy_loading": false
       }
     },
     "1198c25f-e6b6-405b-aa76-db2afd719caf": {
@@ -32,13 +32,14 @@
           "type": "heading",
           "settings": {
             "heading": "<p>TABLEAU ART DECO<\/p>",
-            "heading_size": "h1"
+            "heading_size": "h0",
+            "markup": "h1"
           }
         },
         "template--16404732051711__1198c25f-e6b6-405b-aa76-db2afd719caf-167457706007ac71a1-1": {
           "type": "text",
           "settings": {
-            "text": "<p>Découvrez notre collection de tableau décoratif murale pour toutes les pieces de votre maison.<\/p>"
+            "text": "<p>Découvrez nos collections de tableaux décoratifs muraux pour toutes les pièces de votre maison.<\/p>"
           }
         }
       },
@@ -63,7 +64,7 @@
           "settings": {
             "image": "shopify:\/\/shop_images\/tableau-salon-2.jpg",
             "collection": "tableau-salon",
-            "paragraph": "<h3>DÉCOUVREZ NOTRE GAMME DE TABLEAU POUR SALON<\/h3>\n<p>Des designs uniques pour sublimer votre décoration d'intérieur ! La pièce de vie par excellence, le salon est le reflet de votre personnalité et de votre style de vie. Chez MyselfMonart, nous avons sélectionné pour vous une gamme de tableaux modernes pour salon pour tous les goûts, que ce soit un tableau abstrait, une toile multicolore , ou encore un tableau paysage, vous trouverez forcément le tableau art deco pour personnaliser votre espace.<\/p>\n<p>Offrez-vous une décoration originale et tendance avec nos tableaux pour salon. Que ce soit pour une ambiance chic, design, moderne ou minimaliste, Vous découvrirez certainement le tableau de décoration de salon qui convient à votre intérieur. N'attendez plus pour donner vie à vos murs avec nos plus beaux tableaux.<\/p>"
+            "paragraph": "<h3>DÉCOUVREZ NOTRE GAMME DE TABLEAU POUR SALON<\/h3>\n<p>Découvrez des designs uniques pour sublimer votre décoration d'intérieur ! La pièce de vie par excellence, le salon est le reflet de votre personnalité et de votre style de vie. Chez MyselfMonart, nous avons sélectionné pour vous une gamme de tableaux modernes pour salon pour tous les goûts, que ce soit un tableau abstrait, une toile multicolore , ou encore un tableau paysage, vous trouverez forcément le tableau art deco pour personnaliser votre espace.<\/p>\n<p>Offrez-vous une décoration originale et tendance avec nos tableaux pour salon. Que ce soit pour une ambiance chic, design, moderne ou minimaliste, Vous découvrirez certainement le tableau de décoration de salon qui convient à votre intérieur. N'attendez plus pour donner vie à vos murs avec nos plus beaux tableaux.<\/p>"
           }
         },
         "template--16404732051711__e2edd939-3626-48bb-a1b3-68b7d45d2b13-167457071323298b01-1": {
@@ -71,7 +72,7 @@
           "settings": {
             "image": "shopify:\/\/shop_images\/tableau-chambre-2.jpg",
             "collection": "tableau-chambre",
-            "paragraph": ""
+            "paragraph": "<h3>DÉCOUVREZ NOTRE GAMME DE TABLEAU POUR CHAMBRE<\/h3>\n<p>Les tableaux pour chambre sont un excellent moyen de personnaliser votre espace et de créer une ambiance confortable et relaxante. Chez Myselfmonart, nous sommes fiers de proposer une large gamme de tableau murale chambre, pour sublimer votre intérieure.<\/p>\n<p>Quel que soit votre style de décoration, Chaque tableau chambre est conçu pour répondre à toutes les envies. Que vous cherchiez à accentuer le caractère de votre chambre adulte avec un tableau de paysages romantiques, un tableau abstrait moderne ou un tableau de nus sensuels, ou que vous cherchiez à créer une ambiance joyeuse dans la chambre de votre enfant avec des tableaux colorés et amusants, nous avons ce qu'il vous faut. Nous avons également des tableaux avec des motifs doux et apaisants pour les chambres de bébés qui aiderons votre enfant a s'endormir paisiblement.<\/p>\n<p>Nos tableaux chambre à coucher sont imprimés sur des supports de haute qualité tels que la toile, l'aluminium et le plexiglas, pour une finition durable et résistante. Avec nos tableaux décoratifs pour chambre, vous pourrez rendre votre chambre encore plus confortable, et en faire un véritable refuge que vous ne voudrez plus quitter. Découvrez notre collection de tableaux pour chambre adulte, tableaux pour chambre enfant et tableaux pour chambre bébé. Choisissez parmi une variété de styles et de motifs pour trouver celui qui conviendra parfaitement à votre intérieur et à votre personnalité.<\/p>"
           }
         },
         "template--16404732051711__e2edd939-3626-48bb-a1b3-68b7d45d2b13-167457071323298b01-2": {
@@ -89,7 +90,7 @@
         "template--16404732051711__e2edd939-3626-48bb-a1b3-68b7d45d2b13-167457071323298b01-2"
       ],
       "settings": {
-        "lazy_load": false,
+        "lazy_load": true,
         "color_text": "#f6f3ef",
         "padding_top": 0,
         "padding_bottom": 0
@@ -167,7 +168,8 @@
           "type": "heading",
           "settings": {
             "heading": "<p>Habillez vos murs d’émotions, découvrez le portrait de famille personnalisé. <\/p>",
-            "heading_size": "h1"
+            "heading_size": "h1",
+            "markup": "h2"
           }
         },
         "template--16404732051711__20c0c98e-ed16-4069-b89a-bb18d96ee241-1666624599c69c0f87-1": {
@@ -266,7 +268,8 @@
           "type": "heading",
           "settings": {
             "heading": "<p>Trouvez l'accord parfait. Personnalisez vos envies.<\/p>",
-            "heading_size": "h1"
+            "heading_size": "h1",
+            "markup": "h2"
           }
         },
         "template--16404732051711__7f048e47-ff73-4ef2-a44d-204a6ad96f65-16666290841ff88433-1": {
@@ -296,7 +299,8 @@
           "type": "heading",
           "settings": {
             "heading": "<p>Un doute sur la taille ?<\/p>",
-            "heading_size": "h1"
+            "heading_size": "h1",
+            "markup": "h2"
           }
         },
         "template--16404732051711__bc7808a3-010e-4d80-a8f4-053c77379028-16666290841ff88433-1": {
