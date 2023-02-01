@@ -58,7 +58,7 @@
 .shopify-section.collections-grid .collection-title {
   position: absolute;
   bottom: 0;
-  padding-left: 3rem;
+  padding: 0 3rem 1rem;
   max-height: 100%;
   z-index: 1;
 }
