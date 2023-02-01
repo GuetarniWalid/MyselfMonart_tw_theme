@@ -68,7 +68,7 @@
   color: inherit;
 }
 
-@media screen and (min-width: 500px) {
+@media screen and (min-width: 675px) {
   .mobile-container {
     display: none;
     margin: 1rem 0;

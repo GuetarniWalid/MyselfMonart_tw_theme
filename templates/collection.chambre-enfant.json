@@ -1,0 +1,88 @@
+{
+  "sections": {
+    "main-collection-banner": {
+      "type": "main-collection-banner",
+      "settings": {
+        "show_collection_description": true,
+        "show_collection_image": false,
+        "show_collapse_button": true,
+        "color_scheme": "background-1"
+      }
+    },
+    "1a11d62a-6f3c-40ac-8f0f-ecbbe37c5f3a": {
+      "type": "collections-grid",
+      "blocks": {
+        "template--16666302152959__1a11d62a-6f3c-40ac-8f0f-ecbbe37c5f3a-1675177864e381d6d0-0": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-chambre-garcon.jpg",
+            "collection": "tableau-chambre-garcon",
+            "paragraph": ""
+          }
+        },
+        "template--16666302152959__1a11d62a-6f3c-40ac-8f0f-ecbbe37c5f3a-1675177864e381d6d0-1": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-chambre-fille.jpg",
+            "collection": "tableau-chambre-fille",
+            "paragraph": ""
+          }
+        },
+        "template--16666302152959__1a11d62a-6f3c-40ac-8f0f-ecbbe37c5f3a-1675177864e381d6d0-2": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-chambre-filette.jpg",
+            "collection": "tableau-chambre-fillette",
+            "paragraph": ""
+          }
+        }
+      },
+      "block_order": [
+        "template--16666302152959__1a11d62a-6f3c-40ac-8f0f-ecbbe37c5f3a-1675177864e381d6d0-0",
+        "template--16666302152959__1a11d62a-6f3c-40ac-8f0f-ecbbe37c5f3a-1675177864e381d6d0-1",
+        "template--16666302152959__1a11d62a-6f3c-40ac-8f0f-ecbbe37c5f3a-1675177864e381d6d0-2"
+      ],
+      "settings": {
+        "lazy_load": true,
+        "color_text": "#fff",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "cf6565ea-5338-4b92-985b-b5b0824700db": {
+      "type": "breadcrumb",
+      "settings": {
+        "selected_item_background": "#ecd1ce",
+        "selected_item_color": "#384031"
+      }
+    },
+    "main-collection-product-grid": {
+      "type": "main-collection-product-grid",
+      "settings": {
+        "background": "#F5F3EE",
+        "card_background": "#eae7df",
+        "button_background": "#002e5d",
+        "enable_border": true,
+        "products_per_page": 24,
+        "columns_desktop": 3,
+        "image_ratio": "adapt",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "enable_quick_add": false,
+        "enable_filtering": false,
+        "filter_type": "vertical",
+        "enable_sorting": false,
+        "columns_mobile": "2",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    }
+  },
+  "order": [
+    "main-collection-banner",
+    "1a11d62a-6f3c-40ac-8f0f-ecbbe37c5f3a",
+    "cf6565ea-5338-4b92-985b-b5b0824700db",
+    "main-collection-product-grid"
+  ]
+}

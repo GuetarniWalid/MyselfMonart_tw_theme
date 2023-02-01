@@ -12,6 +12,8 @@
     "cf6565ea-5338-4b92-985b-b5b0824700db": {
       "type": "breadcrumb",
       "settings": {
+        "selected_item_background": "#ECD1CE",
+        "selected_item_color": "#384031"
       }
     },
     "main-collection-product-grid": {

@@ -1,0 +1,97 @@
+{
+  "sections": {
+    "main-collection-banner": {
+      "type": "main-collection-banner",
+      "settings": {
+        "show_collection_description": true,
+        "show_collection_image": false,
+        "show_collapse_button": true,
+        "color_scheme": "background-1"
+      }
+    },
+    "6b217ec2-fb95-4b03-b3da-987ecf1dd229": {
+      "type": "collections-grid",
+      "blocks": {
+        "template--16404731756799__6b217ec2-fb95-4b03-b3da-987ecf1dd229-1675176260b6aab62b-0": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-chambre-adulte.jpg",
+            "collection": "tableau-chambre-adulte",
+            "paragraph": ""
+          }
+        },
+        "template--16404731756799__6b217ec2-fb95-4b03-b3da-987ecf1dd229-1675176260b6aab62b-1": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-chambre-enfant.jpg",
+            "collection": "tableau-chambre-enfant",
+            "paragraph": ""
+          }
+        },
+        "template--16404731756799__6b217ec2-fb95-4b03-b3da-987ecf1dd229-1675176260b6aab62b-2": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-chambre-ado.jpg",
+            "collection": "tableau-chambre-ado",
+            "paragraph": ""
+          }
+        },
+        "dd369175-596c-4f5a-99c2-41bf3cf8acb2": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-chambre-bebe.jpg",
+            "collection": "tableaux-chambre-bebe",
+            "paragraph": ""
+          }
+        }
+      },
+      "block_order": [
+        "template--16404731756799__6b217ec2-fb95-4b03-b3da-987ecf1dd229-1675176260b6aab62b-0",
+        "template--16404731756799__6b217ec2-fb95-4b03-b3da-987ecf1dd229-1675176260b6aab62b-1",
+        "template--16404731756799__6b217ec2-fb95-4b03-b3da-987ecf1dd229-1675176260b6aab62b-2",
+        "dd369175-596c-4f5a-99c2-41bf3cf8acb2"
+      ],
+      "settings": {
+        "lazy_load": true,
+        "color_text": "#fff",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "cf6565ea-5338-4b92-985b-b5b0824700db": {
+      "type": "breadcrumb",
+      "settings": {
+        "selected_item_background": "#ECD1CE",
+        "selected_item_color": "#384031"
+      }
+    },
+    "main-collection-product-grid": {
+      "type": "main-collection-product-grid",
+      "settings": {
+        "background": "#F5F3EE",
+        "card_background": "#eae7df",
+        "button_background": "#002e5d",
+        "enable_border": true,
+        "products_per_page": 24,
+        "columns_desktop": 3,
+        "image_ratio": "adapt",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "enable_quick_add": false,
+        "enable_filtering": false,
+        "filter_type": "vertical",
+        "enable_sorting": false,
+        "columns_mobile": "2",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    }
+  },
+  "order": [
+    "main-collection-banner",
+    "6b217ec2-fb95-4b03-b3da-987ecf1dd229",
+    "cf6565ea-5338-4b92-985b-b5b0824700db",
+    "main-collection-product-grid"
+  ]
+}
