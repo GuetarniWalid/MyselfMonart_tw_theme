@@ -31,7 +31,7 @@
         "template--16404731756799__6b217ec2-fb95-4b03-b3da-987ecf1dd229-1675176260b6aab62b-2": {
           "type": "image_text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-chambre-ado.jpg",
+            "image": "shopify:\/\/shop_images\/tableau-chambre-ado_404a2bc9-e107-4689-a81b-0142fc90fb3d.jpg",
             "collection": "tableau-chambre-ado",
             "paragraph": ""
           }
@@ -53,7 +53,7 @@
       ],
       "settings": {
         "lazy_load": true,
-        "color_text": "#fff",
+        "color_text": "#ffffff",
         "padding_top": 0,
         "padding_bottom": 0
       }
@@ -61,7 +61,7 @@
     "cf6565ea-5338-4b92-985b-b5b0824700db": {
       "type": "breadcrumb",
       "settings": {
-        "selected_item_background": "#ECD1CE",
+        "selected_item_background": "#ecd1ce",
         "selected_item_color": "#384031"
       }
     },

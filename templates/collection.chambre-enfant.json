@@ -3,10 +3,17 @@
     "main-collection-banner": {
       "type": "main-collection-banner",
       "settings": {
-        "show_collection_description": true,
+        "show_collection_description": false,
         "show_collection_image": false,
-        "show_collapse_button": true,
+        "show_collapse_button": false,
         "color_scheme": "background-1"
+      }
+    },
+    "cf6565ea-5338-4b92-985b-b5b0824700db": {
+      "type": "breadcrumb",
+      "settings": {
+        "selected_item_background": "#ecd1ce",
+        "selected_item_color": "#384031"
       }
     },
     "1a11d62a-6f3c-40ac-8f0f-ecbbe37c5f3a": {
@@ -23,7 +30,7 @@
         "template--16666302152959__1a11d62a-6f3c-40ac-8f0f-ecbbe37c5f3a-1675177864e381d6d0-1": {
           "type": "image_text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-chambre-fille.jpg",
+            "image": "shopify:\/\/shop_images\/tableau-chambre-fille_8ca67c81-b66a-4a8c-a573-c7dd3f43ecb9.jpg",
             "collection": "tableau-chambre-fille",
             "paragraph": ""
           }
@@ -31,7 +38,7 @@
         "template--16666302152959__1a11d62a-6f3c-40ac-8f0f-ecbbe37c5f3a-1675177864e381d6d0-2": {
           "type": "image_text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-chambre-filette.jpg",
+            "image": "shopify:\/\/shop_images\/tableau-chambre-filette_c4ebc9ac-6b26-4952-9340-8945174c0338.jpg",
             "collection": "tableau-chambre-fillette",
             "paragraph": ""
           }
@@ -44,16 +51,9 @@
       ],
       "settings": {
         "lazy_load": true,
-        "color_text": "#fff",
+        "color_text": "#ffffff",
         "padding_top": 0,
-        "padding_bottom": 0
-      }
-    },
-    "cf6565ea-5338-4b92-985b-b5b0824700db": {
-      "type": "breadcrumb",
-      "settings": {
-        "selected_item_background": "#ecd1ce",
-        "selected_item_color": "#384031"
+        "padding_bottom": 40
       }
     },
     "main-collection-product-grid": {
@@ -81,8 +81,8 @@
   },
   "order": [
     "main-collection-banner",
-    "1a11d62a-6f3c-40ac-8f0f-ecbbe37c5f3a",
     "cf6565ea-5338-4b92-985b-b5b0824700db",
+    "1a11d62a-6f3c-40ac-8f0f-ecbbe37c5f3a",
     "main-collection-product-grid"
   ]
 }
