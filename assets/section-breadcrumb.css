@@ -13,7 +13,7 @@
 
 .mobile-container {
   display: flex;
-  margin: 1rem 0;
+  margin: var(--margin-top) 0 var(--margin-bottom);
 }
 
 .breadcrumb .visible-on-mobile {
@@ -80,7 +80,7 @@
 
   .breadcrumb nav {
     display: flex;
-    margin: 2rem 0 1.5rem;
+    margin: var(--margin-top) 0 var(--margin-bottom);
   }
 
   .breadcrumb .visible-on-mobile {
