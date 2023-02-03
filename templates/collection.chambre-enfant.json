@@ -13,7 +13,9 @@
       "type": "breadcrumb",
       "settings": {
         "selected_item_background": "#ecd1ce",
-        "selected_item_color": "#384031"
+        "selected_item_color": "#384031",
+        "padding_top": 0,
+        "padding_bottom": 24
       }
     },
     "1a11d62a-6f3c-40ac-8f0f-ecbbe37c5f3a": {
