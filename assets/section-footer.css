@@ -509,6 +509,7 @@ noscript .localization-selector.link {
 
 /*** CUSTOM CSS ***/
 
+.footer .h2,
 .footer h2 {
   color: var(--text-color);
 }
@@ -518,6 +519,7 @@ noscript .localization-selector.link {
   width: 6rem;
 }
 
+.footer > .h2,
 .footer > h2 {
   margin-top: 0;
   margin-bottom: 7rem;

@@ -343,10 +343,6 @@ a.product__text {
   margin: 0;
 }
 
-.product__title > a {
-  display: none;
-}
-
 .product__title + .product__text.caption-with-letter-spacing {
   margin-top: -1.5rem;
 }
