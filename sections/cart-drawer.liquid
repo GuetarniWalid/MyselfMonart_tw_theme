@@ -1,6 +1,10 @@
 <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
 
 <style>
+  #shopify-section-{{ section.id }} {
+    display: none;
+  }
+
   .drawer {
     visibility: hidden;
     --drawer-background: {{ section.settings.cart_drawer_background }};

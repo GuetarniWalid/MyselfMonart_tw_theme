@@ -1034,3 +1034,11 @@ function navigate() {
   const urlInBase64 = this.dataset.url64;
   document.location.href = decodeURIComponent(window.atob(urlInBase64));
 }
+
+function loadCSS(href) {
+  var cssLink = document.createElement("link");
+  cssLink.rel = "stylesheet";
+  cssLink.href = href;
+  cssLink.type = "text/css";
+  document.head.appendChild(cssLink);
+}

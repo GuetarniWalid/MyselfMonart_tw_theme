@@ -89,7 +89,7 @@
     src="{{ section.settings.image_desktop | image_url: width: 1500 }}"
     loading="{% if section.settings.enable_lazy_loading %}lazy{% else %}eager{% endif %}"
     alt="{{ section.settings.image_desktop.alt | escape }}"
-    width="{{ section.settings.image_desktop.width }}"
+    width="2000"
     height="{{ section.settings.image_desktop.width | divided_by: section.settings.image_desktop.aspect_ratio }}"
     class="{{ desktop_image_class }}"
   >
@@ -106,7 +106,7 @@
     src="{{ section.settings.image_mobile | image_url: width: 750 }}"
     loading="{% if section.settings.enable_lazy_loading %}lazy{% else %}eager{% endif %}"
     alt="{{ section.settings.image_mobile.alt | escape }}"
-    width="{{ section.settings.image_mobile.width }}"
+    width="500"
     height="{{ section.settings.image_mobile.width | divided_by: section.settings.image_mobile.aspect_ratio }}"
     class="image-banner-mobile"
   >

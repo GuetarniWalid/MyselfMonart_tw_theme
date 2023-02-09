@@ -9,8 +9,6 @@
     {% render 'component-product-addon', block: block %}
 {% endcomment %}
 
-{{ 'component-product-addon.css' | asset_url | stylesheet_tag }}
-
 {%- style -%}
     .product-addon {
         --addon-background: {{ section.settings.text_color | color_modify: 'alpha', 0.03 }};

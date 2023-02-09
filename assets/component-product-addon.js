@@ -1,6 +1,7 @@
 class ShowProductAddon extends HTMLElement {
   constructor() {
     super();
+    loadCSS('/assets/component-product-addon.css');
     this.addonButton = this.querySelector('button.addon');
     this.closeButton = this.querySelector('button.close');
     this.addonContainer = this.querySelector('.product-addon');
