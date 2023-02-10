@@ -229,7 +229,7 @@
           "a4178c33-6f9d-4e5d-ac38-f8191e289c7f"
         ],
         "settings": {
-          "keep_shopping_url": "shopify:\/\/collections\/nos-oeuvres-dart",
+          "keep_shopping_url": "shopify:\/\/collections",
           "cart_drawer_collection": "nos-oeuvres-dart",
           "outline_button_link": "shopify:\/\/collections\/nos-oeuvres-dart",
           "cart_drawer_background": "#f6f2ec",

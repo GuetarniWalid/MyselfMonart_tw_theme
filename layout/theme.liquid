@@ -7,6 +7,7 @@
     <meta name="theme-color" content="" />
     <link rel="canonical" href="{{ canonical_url }}" />
     <link rel="preconnect" href="https://cdn.shopify.com" crossorigin />
+    <meta name="p:domain_verify" content="df84d648bc3332c06767fb16e0fb142e"/>
 
     {%- if template.name == 'page' and page.metafields.robots.noindex.value -%}
       <meta name="robots" content="noindex,nofollow">
@@ -38,8 +39,6 @@
       assign body_font_bold_italic = body_font_bold | font_modify: 'style', 'italic' 
     -%} 
     {% style %}
-    /* Font */
-
     {%- if settings.type_header_font_custom -%}
       @font-face {
         font-family: "custom_font";
