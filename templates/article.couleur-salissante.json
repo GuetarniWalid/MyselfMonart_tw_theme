@@ -1,0 +1,109 @@
+{
+  "layout": "article",
+  "sections": {
+    "ce4595e5-01e5-472d-ac56-563a87ef335c": {
+      "type": "first-blog-link",
+      "settings": {
+      }
+    },
+    "main": {
+      "type": "main-article",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {
+            "blog_show_date": true,
+            "blog_show_author": false
+          }
+        },
+        "featured_image": {
+          "type": "featured_image",
+          "settings": {
+            "image_height": "adapt"
+          }
+        },
+        "content": {
+          "type": "content",
+          "settings": {
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "featured_image",
+        "content"
+      ],
+      "settings": {
+      }
+    },
+    "6c561c97-0f1d-4aa7-a63a-12aa622b8593": {
+      "type": "multicolumn",
+      "blocks": {
+        "template--16679740834047__6c561c97-0f1d-4aa7-a63a-12aa622b8593-167690862253fa249a-0": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-cuisine_jpg.jpg",
+            "title": "Tableau chat original",
+            "text": "",
+            "link_label": "Voir le produit",
+            "link": "shopify:\/\/products\/tableau-chat-original"
+          }
+        },
+        "template--16679740834047__6c561c97-0f1d-4aa7-a63a-12aa622b8593-167690862253fa249a-1": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-pour-cuisine.jpg",
+            "title": "Tableau grain de café",
+            "text": "",
+            "link_label": "Voir le produit",
+            "link": "https:\/\/www.myselfmonart.com\/collections\/tableau-cuisine\/products\/tableau-grain-de-cafe"
+          }
+        },
+        "template--16679740834047__6c561c97-0f1d-4aa7-a63a-12aa622b8593-167690862253fa249a-2": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-pour-la-cuisine.jpg",
+            "title": "Tableau poire",
+            "text": "",
+            "link_label": "Voir le produit",
+            "link": "https:\/\/www.myselfmonart.com\/collections\/tableau-cuisine\/products\/tableau-poire"
+          }
+        }
+      },
+      "block_order": [
+        "template--16679740834047__6c561c97-0f1d-4aa7-a63a-12aa622b8593-167690862253fa249a-0",
+        "template--16679740834047__6c561c97-0f1d-4aa7-a63a-12aa622b8593-167690862253fa249a-1",
+        "template--16679740834047__6c561c97-0f1d-4aa7-a63a-12aa622b8593-167690862253fa249a-2"
+      ],
+      "settings": {
+        "title": "Découvrez notre sélection originale de tableau pour cuisine",
+        "heading_size": "h1",
+        "image_width": "full",
+        "image_ratio": "portrait",
+        "columns_desktop": 3,
+        "column_alignment": "left",
+        "background_style": "primary",
+        "title_color": "#002e5d",
+        "text_color": "#002e5d",
+        "button_label": "Découvrir la collection tableau cuisine",
+        "button_link": "shopify:\/\/collections\/tableau-cuisine",
+        "color_scheme": "accent-1",
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 0,
+        "padding_bottom": 36
+      }
+    },
+    "11ed1855-d812-4ccc-8f80-65a14ff1c6bd": {
+      "type": "sibling-blog-links",
+      "settings": {
+      }
+    }
+  },
+  "order": [
+    "ce4595e5-01e5-472d-ac56-563a87ef335c",
+    "main",
+    "6c561c97-0f1d-4aa7-a63a-12aa622b8593",
+    "11ed1855-d812-4ccc-8f80-65a14ff1c6bd"
+  ]
+}
