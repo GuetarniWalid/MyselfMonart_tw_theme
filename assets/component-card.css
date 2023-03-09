@@ -90,6 +90,11 @@
   position: relative;
 }
 
+.card__information .price {
+  color: rgb(var(--color-foreground));
+  margin: 1rem 0 0;
+}
+
 .card__content {
   display: grid;
   grid-template-rows: minmax(0,1fr) max-content minmax(0,1fr);
@@ -113,7 +118,7 @@
 @media screen and (min-width: 750px) {
   .card__information {
     padding-bottom: 1.7rem;
-    padding-top: 1.7rem;
+    padding-top: 0.7rem;
   }
 }
 

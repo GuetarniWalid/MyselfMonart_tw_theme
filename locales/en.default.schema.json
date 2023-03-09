@@ -1845,15 +1845,11 @@
             "label": "Square"
           }
         },
+        "show_price": {
+          "label": "Show price"
+        },
         "show_secondary_image": {
           "label": "Show second image on hover"
-        },
-        "show_vendor": {
-          "label": "Show vendor"
-        },
-        "show_rating": {
-          "label": "Show product rating",
-          "info": "To display a rating, add a product rating app. [Learn more](https://help.shopify.com/manual/online-store/themes/theme-structure/page-types#product-grid-section-settings)"
         },
         "header__1": {
           "content": "Filtering and sorting"
@@ -1864,10 +1860,6 @@
         "enable_tags": {
           "label": "Enable filtering",
           "info": "[Customize filters](/admin/menus)"
-        },
-        "enable_quick_buy": {
-          "label": "Enable quick add button",
-          "info": "Optimal with popup or drawer cart type."
         },
         "header_mobile": {
           "content": "Tablet Layout"

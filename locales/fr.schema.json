@@ -2174,11 +2174,11 @@
             "label": "Square"
           }
         },
+        "show_price": {
+          "label": "Afficher le prix"
+        },
         "show_secondary_image": {
           "label": "Afficher la deuxième image en survol"
-        },
-        "show_vendor": {
-          "label": "Afficher le distributeur"
         },
         "header__1": {
           "content": "Filtrage et tri"
@@ -2189,14 +2189,6 @@
         "enable_tags": {
           "label": "Activer le filtrage",
           "info": "[Personnaliser les filtres](/admin/menus)"
-        },
-        "show_rating": {
-          "label": "Afficher la note du produit",
-          "info": "Pour afficher une note, ajoutez une application d'évaluation de produits. [En savoir plus](https://help.shopify.com/manual/online-store/themes/theme-structure/page-types#product-grid-section-settings)"
-        },
-        "enable_quick_buy": {
-          "label": "Activer le bouton d'ajout rapide",
-          "info": "Optimal avec un type de panier pop-up ou à tiroir."
         },
         "columns_desktop": {
           "label": "Nombre de colonnes sur ordinateur"

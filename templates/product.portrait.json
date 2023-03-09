@@ -4,7 +4,9 @@
       "type": "breadcrumb",
       "settings": {
         "selected_item_background": "#ecd1ce",
-        "selected_item_color": "#384031"
+        "selected_item_color": "#384031",
+        "padding_top": 36,
+        "padding_bottom": 28
       }
     },
     "main": {
@@ -13,12 +15,13 @@
         "vendor": {
           "type": "text",
           "settings": {
-            "text": "<p>{{ product.vendor }}</p>"
+            "text": "<p>{{ product.vendor }}<\/p>"
           }
         },
         "title": {
           "type": "title",
-          "settings": {}
+          "settings": {
+          }
         },
         "9f20570b-1a97-4c34-8758-c5af9b8d2cfc": {
           "type": "price",
@@ -30,7 +33,7 @@
         "caption": {
           "type": "text",
           "settings": {
-            "text": "<p>{{ product.metafields.descriptors.subtitle.value }}</p>"
+            "text": "<p>{{ product.metafields.descriptors.subtitle.value }}<\/p>"
           }
         },
         "5dccdf4a-5644-4f0d-be8c-c01c7d538494": {
@@ -45,12 +48,13 @@
         },
         "description": {
           "type": "description",
-          "settings": {}
+          "settings": {
+          }
         },
         "09bd0ce8-dfec-4d37-9f99-b06e314b81fa": {
           "type": "text",
           "settings": {
-            "text": "<p>🖼️ Laissez-vous transporter par nos tableau cuisine. Une sensation unique et singulière à transposer dans votre  décoration intérieur.<br/>📏 Possibilité de choisir la taille et le support de l’œuvre.<br/></p>"
+            "text": "<p>🖼️ Laissez-vous transporter par nos tableau cuisine. Une sensation unique et singulière à transposer dans votre  décoration intérieur.<br\/>📏 Possibilité de choisir la taille et le support de l’œuvre.<br\/><\/p>"
           }
         },
         "collapsible-content-0": {
@@ -69,7 +73,7 @@
             "heading": "Materiaux",
             "icon": "leather",
             "icon_color": "#002e5d",
-            "content": "<p><strong>- La Toile</strong> est composée de fibres 100% polyester d'une épaisseur de 285g/m².</p><p>L'épaisseur du châssis est de 4cm pour les produits les plus imposants. Elle est de 2cm pour les tableaux les plus petits.</p><p><strong>- Le Plexiglass</strong> est composé de <strong>PMMA coulé, </strong>d'une épaisseur de 3 mm pour les produits les plus petits, et 5 mm pour les grandes toiles.</p><p>- <strong>L'aluminium argent brossé, </strong>dit Alupanel, est une plaque composite en aluminium d'une épaisseur de 3mm. Il est <strong>résistant aux UV et à l'humidité.</strong></p>",
+            "content": "<p><strong>- La Toile<\/strong> est composée de fibres 100% polyester d'une épaisseur de 285g\/m².<\/p><p>L'épaisseur du châssis est de 4cm pour les produits les plus imposants. Elle est de 2cm pour les tableaux les plus petits.<\/p><p><strong>- Le Plexiglass<\/strong> est composé de <strong>PMMA coulé, <\/strong>d'une épaisseur de 3 mm pour les produits les plus petits, et 5 mm pour les grandes toiles.<\/p><p>- <strong>L'aluminium argent brossé, <\/strong>dit Alupanel, est une plaque composite en aluminium d'une épaisseur de 3mm. Il est <strong>résistant aux UV et à l'humidité.<\/strong><\/p>",
             "page": ""
           }
         },
@@ -79,12 +83,23 @@
             "heading": "Livraison",
             "icon": "truck",
             "icon_color": "#002e5d",
-            "content": "<p>En raison de la personnalisation de la toile, il vous faut compter 48h pour le traitement de la commande, 2 à 4 jours pour la fabrication et un temps d'expédition de 10 jours ouvrables.</p>",
+            "content": "<p>En raison de la personnalisation de la toile, il vous faut compter 48h pour le traitement de la commande, 2 à 4 jours pour la fabrication et un temps d'expédition de 10 jours ouvrables.<\/p>",
             "page": ""
           }
         }
       },
-      "block_order": ["vendor", "title", "9f20570b-1a97-4c34-8758-c5af9b8d2cfc", "caption", "5dccdf4a-5644-4f0d-be8c-c01c7d538494", "description", "09bd0ce8-dfec-4d37-9f99-b06e314b81fa", "collapsible-content-0", "collapsible-content-2", "01739746-0e53-4617-8010-ea37a29a1133"],
+      "block_order": [
+        "vendor",
+        "title",
+        "9f20570b-1a97-4c34-8758-c5af9b8d2cfc",
+        "caption",
+        "5dccdf4a-5644-4f0d-be8c-c01c7d538494",
+        "description",
+        "09bd0ce8-dfec-4d37-9f99-b06e314b81fa",
+        "collapsible-content-0",
+        "collapsible-content-2",
+        "01739746-0e53-4617-8010-ea37a29a1133"
+      ],
       "settings": {
         "section_background": "#f6f2ec",
         "text_color": "#002e5d",
@@ -111,6 +126,7 @@
         "heading": "VOUS POURRIEZ AIMER",
         "heading_size": "h1",
         "button_text": "Voir le tableau",
+        "number_products_to_display": 4,
         "padding_top": 8,
         "padding_bottom": 20
       }
@@ -164,7 +180,11 @@
           }
         }
       },
-      "block_order": ["0d828fdc-6b3f-4d41-b681-8958311ca765", "507662eb-d34c-4c96-8d2b-4ba9966ea22a", "cfbe96ea-324c-4ee3-ba8c-d72fc121dd5e"],
+      "block_order": [
+        "0d828fdc-6b3f-4d41-b681-8958311ca765",
+        "507662eb-d34c-4c96-8d2b-4ba9966ea22a",
+        "cfbe96ea-324c-4ee3-ba8c-d72fc121dd5e"
+      ],
       "settings": {
         "title": "",
         "heading_size": "h1",
@@ -197,14 +217,17 @@
         "template--16552086012159__4edf4141-9e38-44d5-9e5d-1b61c253cef2-1666165334b636ae96-1": {
           "type": "text",
           "settings": {
-            "text": "<p>Vous avez le souci du détail ? Allez plus loin en personnalisant aussi le support. Tableau toile, tableau sur plexiglas ou tableau imprimé sur support aluminium, choisissez l’aspect qui s’accorde le mieux à votre décoration murale cuisine.</p>",
+            "text": "<p>Vous avez le souci du détail ? Allez plus loin en personnalisant aussi le support. Tableau toile, tableau sur plexiglas ou tableau imprimé sur support aluminium, choisissez l’aspect qui s’accorde le mieux à votre décoration murale cuisine.<\/p>",
             "text_style": "body"
           }
         }
       },
-      "block_order": ["template--16552086012159__4edf4141-9e38-44d5-9e5d-1b61c253cef2-1666165334b636ae96-0", "template--16552086012159__4edf4141-9e38-44d5-9e5d-1b61c253cef2-1666165334b636ae96-1"],
+      "block_order": [
+        "template--16552086012159__4edf4141-9e38-44d5-9e5d-1b61c253cef2-1666165334b636ae96-0",
+        "template--16552086012159__4edf4141-9e38-44d5-9e5d-1b61c253cef2-1666165334b636ae96-1"
+      ],
       "settings": {
-        "image": "shopify://shop_images/texture_x3_70ae7c8b-712c-4c74-bb93-e76a2eddc37b.jpg",
+        "image": "shopify:\/\/shop_images\/texture_x3_70ae7c8b-712c-4c74-bb93-e76a2eddc37b.jpg",
         "height": "adapt",
         "desktop_image_width": "medium",
         "layout": "image_first",
@@ -231,14 +254,17 @@
         "template--16552086012159__02cc24e2-3446-42db-930a-0c53de878193-1666165334b636ae96-1": {
           "type": "text",
           "settings": {
-            "text": "<p>Choisissez la taille de votre cadre cuisine. Tableau paysage, tableau portrait, carré, petit tableau cusine ou tableau grand format, à vous de voir selon votre espace.</p>",
+            "text": "<p>Choisissez la taille de votre cadre cuisine. Tableau paysage, tableau portrait, carré, petit tableau cusine ou tableau grand format, à vous de voir selon votre espace.<\/p>",
             "text_style": "body"
           }
         }
       },
-      "block_order": ["template--16552086012159__02cc24e2-3446-42db-930a-0c53de878193-1666165334b636ae96-0", "template--16552086012159__02cc24e2-3446-42db-930a-0c53de878193-1666165334b636ae96-1"],
+      "block_order": [
+        "template--16552086012159__02cc24e2-3446-42db-930a-0c53de878193-1666165334b636ae96-0",
+        "template--16552086012159__02cc24e2-3446-42db-930a-0c53de878193-1666165334b636ae96-1"
+      ],
       "settings": {
-        "image": "shopify://shop_images/metre.jpg",
+        "image": "shopify:\/\/shop_images\/metre.jpg",
         "height": "adapt",
         "desktop_image_width": "medium",
         "layout": "text_first",
@@ -265,14 +291,17 @@
         "template--16552086012159__67d24d9b-48a4-46a1-9b04-c6c9e33c16bb-1666165334b636ae96-1": {
           "type": "text",
           "settings": {
-            "text": "<p>L’art au pays de l’art. Pour soutenir l'industrie, réduire l'empreinte carbone et vous offrir un service de qualité, nos tableaux sont conçus en la France.</p>",
+            "text": "<p>L’art au pays de l’art. Pour soutenir l'industrie, réduire l'empreinte carbone et vous offrir un service de qualité, nos tableaux sont conçus en la France.<\/p>",
             "text_style": "body"
           }
         }
       },
-      "block_order": ["template--16552086012159__67d24d9b-48a4-46a1-9b04-c6c9e33c16bb-1666165334b636ae96-0", "template--16552086012159__67d24d9b-48a4-46a1-9b04-c6c9e33c16bb-1666165334b636ae96-1"],
+      "block_order": [
+        "template--16552086012159__67d24d9b-48a4-46a1-9b04-c6c9e33c16bb-1666165334b636ae96-0",
+        "template--16552086012159__67d24d9b-48a4-46a1-9b04-c6c9e33c16bb-1666165334b636ae96-1"
+      ],
       "settings": {
-        "image": "shopify://shop_images/tour_eiffel.jpg",
+        "image": "shopify:\/\/shop_images\/tour_eiffel.jpg",
         "height": "adapt",
         "desktop_image_width": "medium",
         "layout": "image_first",
@@ -292,7 +321,7 @@
         "a9e9d01c-97d4-4bfd-b125-ef8aa6ccf497": {
           "type": "lottie",
           "settings": {
-            "json_link": "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/mail-notification.json?v=1665585585",
+            "json_link": "https:\/\/cdn.shopify.com\/s\/files\/1\/0623\/2388\/4287\/files\/mail-notification.json?v=1665585585",
             "lottie_size": 17,
             "range_under_lottie": 4,
             "heading": "SATISFACTION",
@@ -303,7 +332,7 @@
         "16fbda95-f2d9-4db5-8750-cc02dc48ce59": {
           "type": "lottie",
           "settings": {
-            "json_link": "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/credit-card.json?v=1665582489",
+            "json_link": "https:\/\/cdn.shopify.com\/s\/files\/1\/0623\/2388\/4287\/files\/credit-card.json?v=1665582489",
             "lottie_size": 17,
             "range_under_lottie": 4,
             "heading": "REMBOURSEMENT",
@@ -314,7 +343,7 @@
         "f0633fd2-c6d6-4eac-b4ea-d5cf27d2cdd9": {
           "type": "lottie",
           "settings": {
-            "json_link": "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/customer-support.json?v=1665585976",
+            "json_link": "https:\/\/cdn.shopify.com\/s\/files\/1\/0623\/2388\/4287\/files\/customer-support.json?v=1665585976",
             "lottie_size": 21,
             "range_under_lottie": 0,
             "heading": "SERVICE CLIENT",
@@ -323,7 +352,11 @@
           }
         }
       },
-      "block_order": ["a9e9d01c-97d4-4bfd-b125-ef8aa6ccf497", "16fbda95-f2d9-4db5-8750-cc02dc48ce59", "f0633fd2-c6d6-4eac-b4ea-d5cf27d2cdd9"],
+      "block_order": [
+        "a9e9d01c-97d4-4bfd-b125-ef8aa6ccf497",
+        "16fbda95-f2d9-4db5-8750-cc02dc48ce59",
+        "f0633fd2-c6d6-4eac-b4ea-d5cf27d2cdd9"
+      ],
       "settings": {
         "title": "NOS GARANTIES",
         "heading_size": "h1",
@@ -351,7 +384,7 @@
           "settings": {
             "heading": "Quels supports choisir, le rendu est-il différent ?",
             "icon": "none",
-            "row_content": "<p>- Tableau toile 100% polyester (285g/m²) : <strong>Mate et texturée</strong></p><p>Le tableau cuisine en toile offre une prise en main agréable. Le grain<strong> </strong>du papier est visible principalement dans les zones claires de l’image, tandis que les noirs auront tendance à les gommer. La surface de toile cuisine ajoute du relief et de la profondeur à vos tableaux. Il apporte une touche artistique et les dote d’une <strong>incroyable intensité.</strong></p><p>- tableau plexiglas ou tableau en verre acrylique :<strong> Brillant et transparent</strong></p><p>Le tableau mural cuisine en <strong>verre acrylique</strong>, également appelé <strong>tableau plexiglas,</strong> est un matériau synthétique rigide et transparent haut de gamme, son aspect est similaire à du verre.</p><p>Le tableau en verre pour cuisine  offrira <strong>une profondeur </strong>et <strong>une luminosité extraordinaire </strong>à vos tableaux. Les couleurs de votre photo seront vives et éclatantes il est particulièrement recommandé pour la réalisation de tableaux lumineux.</p><p>- Tableau aluminium argent brossé ou tableau métal : <strong>Contraste et éclat.</strong></p><p>Le tableau deco pour cuisine en aluminium permet une <strong>présentation sobre, moderne et sans reflet</strong>. La densité des couleurs et les contrastes sont très forts.</p><p>L'aluminium est un support très résistant et de qualité il n'est pas sensible aux traces de doigts ou à l'humidité et l’entretien de vos toiles est facile. Vous pouvez les nettoyer avec un tissu légèrement humide.</p>",
+            "row_content": "<p>- Tableau toile 100% polyester (285g\/m²) : <strong>Mate et texturée<\/strong><\/p><p>Le tableau cuisine en toile offre une prise en main agréable. Le grain<strong> <\/strong>du papier est visible principalement dans les zones claires de l’image, tandis que les noirs auront tendance à les gommer. La surface de toile cuisine ajoute du relief et de la profondeur à vos tableaux. Il apporte une touche artistique et les dote d’une <strong>incroyable intensité.<\/strong><\/p><p>- tableau plexiglas ou tableau en verre acrylique :<strong> Brillant et transparent<\/strong><\/p><p>Le tableau mural cuisine en <strong>verre acrylique<\/strong>, également appelé <strong>tableau plexiglas,<\/strong> est un matériau synthétique rigide et transparent haut de gamme, son aspect est similaire à du verre.<\/p><p>Le tableau en verre pour cuisine  offrira <strong>une profondeur <\/strong>et <strong>une luminosité extraordinaire <\/strong>à vos tableaux. Les couleurs de votre photo seront vives et éclatantes il est particulièrement recommandé pour la réalisation de tableaux lumineux.<\/p><p>- Tableau aluminium argent brossé ou tableau métal : <strong>Contraste et éclat.<\/strong><\/p><p>Le tableau deco pour cuisine en aluminium permet une <strong>présentation sobre, moderne et sans reflet<\/strong>. La densité des couleurs et les contrastes sont très forts.<\/p><p>L'aluminium est un support très résistant et de qualité il n'est pas sensible aux traces de doigts ou à l'humidité et l’entretien de vos toiles est facile. Vous pouvez les nettoyer avec un tissu légèrement humide.<\/p>",
             "page": ""
           }
         },
@@ -360,7 +393,7 @@
           "settings": {
             "heading": "Avec quoi et comment accrochez mon tableau",
             "icon": "none",
-            "row_content": "<p>Pour une finition à la hauteur de votre décoration cuisine  il est important de prendre en compte le support d'impression. </p><p>- Les supports tels que le plexiglas coulé et l'aluminium nécessitent un espacement entre le tableau et le mur. </p><p>Nous vous recommandons d'utiliser notres système d'accrochage de cadres ou les entretoises, nos équipes s'occupent de percer le tableau les 2 systeme d'accroche sont disponibles en supplément sur notre site. </p><p>- Pour accrocher les tableaux en toile montés sur châssis il est recommandé d'utiliser des crochets. Attention, il vous faudra prendre en compte le poids du tableau avant tout achat. <br/></p><p>Enfin, pour ne pas abîmer votre mur il vous faudra également faire attention aux chevilles qui sont différentes selon les murs en placo, brique ou béton.</p><p>En raison de la particularité de chaque mur nos entretoises sont livrées sans visserie.</p>",
+            "row_content": "<p>Pour une finition à la hauteur de votre décoration cuisine  il est important de prendre en compte le support d'impression. <\/p><p>- Les supports tels que le plexiglas coulé et l'aluminium nécessitent un espacement entre le tableau et le mur. <\/p><p>Nous vous recommandons d'utiliser notres système d'accrochage de cadres ou les entretoises, nos équipes s'occupent de percer le tableau les 2 systeme d'accroche sont disponibles en supplément sur notre site. <\/p><p>- Pour accrocher les tableaux en toile montés sur châssis il est recommandé d'utiliser des crochets. Attention, il vous faudra prendre en compte le poids du tableau avant tout achat. <br\/><\/p><p>Enfin, pour ne pas abîmer votre mur il vous faudra également faire attention aux chevilles qui sont différentes selon les murs en placo, brique ou béton.<\/p><p>En raison de la particularité de chaque mur nos entretoises sont livrées sans visserie.<\/p>",
             "page": ""
           }
         },
@@ -369,7 +402,7 @@
           "settings": {
             "heading": "Pourquoi acheter chez vous ?",
             "icon": "none",
-            "row_content": "<p>Nos graphistes travaillent chaque jour pour créer de nouveau tableau déco cuisine. Chaque semaine, nous mettons à jour notre site et ajoutons les nouveaux tableau pour cuisine .</p><p>Vous avez la possibilité de choisir le support et la taille pour un accord parfait avec votre intérieur.</p><p>Si toutefois aucune taille de tableau décoration cuisine ne vous convient, vous avez la possibilité de demander à nos graphistes de modifier la taille  cadre pour cuisine.  Sur certain tableau, nos graphistes ont la possibilité de modifier le formats. Pour cela, rien de plus simple, il vous suffit de vous rendre à la page contacte.</p>",
+            "row_content": "<p>Nos graphistes travaillent chaque jour pour créer de nouveau tableau déco cuisine. Chaque semaine, nous mettons à jour notre site et ajoutons les nouveaux tableau pour cuisine .<\/p><p>Vous avez la possibilité de choisir le support et la taille pour un accord parfait avec votre intérieur.<\/p><p>Si toutefois aucune taille de tableau décoration cuisine ne vous convient, vous avez la possibilité de demander à nos graphistes de modifier la taille  cadre pour cuisine.  Sur certain tableau, nos graphistes ont la possibilité de modifier le formats. Pour cela, rien de plus simple, il vous suffit de vous rendre à la page contacte.<\/p>",
             "page": ""
           }
         },
@@ -378,7 +411,7 @@
           "settings": {
             "heading": "Quelle taille de toile choisir ?",
             "icon": "none",
-            "row_content": "<p>Pour ne pas vous tromper, mesurez la largeur de votre pan de mur. Multipliez le résultat par 0,57 pour obtenir le ratio idéal.</p><p>Sachez qu'il est également recommandé d'accrocher le centre du tableau à environ 1,65 mètre du sol (ce qui correspond à peu près à la hauteur des yeux). Il est aussi recommandé de laisser environ 30 centimètres d'espace entre un meuble et un tableau.</p>",
+            "row_content": "<p>Pour ne pas vous tromper, mesurez la largeur de votre pan de mur. Multipliez le résultat par 0,57 pour obtenir le ratio idéal.<\/p><p>Sachez qu'il est également recommandé d'accrocher le centre du tableau à environ 1,65 mètre du sol (ce qui correspond à peu près à la hauteur des yeux). Il est aussi recommandé de laisser environ 30 centimètres d'espace entre un meuble et un tableau.<\/p>",
             "page": ""
           }
         }

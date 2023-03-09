@@ -283,6 +283,11 @@
       "title": "Collection",
       "use_fewer_filters_html": "Use fewer filters or <a class=\"{{ class }}\" href=\"{{ link }}\">remove all</a>"
     },
+    "main-collection-product-grid": {
+      "card-product": {
+        "starting_at": "Starting at"
+      }
+    },
     "video": {
       "load_video": "Load video: {{ description }}"
     },
