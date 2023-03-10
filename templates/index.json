@@ -82,12 +82,21 @@
             "collection": "tableau-cuisine",
             "paragraph": "<h3>DÉCOUVREZ NOTRE GAMME DE TABLEAU POUR CUISINE<\/h3>\n<p>En quête d'une cuisine originale ? <a href=\"\/collections\/tableau-cuisine\" title=\"Tableau cuisine\">Notre collection de tableaux pour cuisine<\/a> saura sublimer votre décoration d'intérieure.<\/p>\n<p>Souvent négligée, la cuisine est aujourd’hui devenue l’une des pièces principales de notre maison. Ambiance rustique, décoration design ou cuisine moderne, on ne néglige plus aucun détail pour faire de cette pièce un endroit à notre image.<\/p>\n<p>De l'électroménager à l'étagère en bois, en passant par les petits objets déco, tout est bon pour affirmer votre personnalité. <\/p>\n<p>Chez MyselfMonart nous proposons une large gamme de tableau pour cuisine, des illustrations rétro, des toiles multicolores, et même des tableaux photos de vos pâtisseries préférées. Si vous êtes à la recherche d’idées déco originales ou simplement d’un cadeau créatif vous trouverez forcément parmi nos impressions sur toile une façon d’habiller vos murs.<\/p>"
           }
+        },
+        "4fe0edd9-6e76-4900-b7e2-782666024e27": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-animaux_pg.jpg",
+            "collection": "tableau-animaux",
+            "paragraph": "<h2>Découvrez notre collection de tableaux animaux<\/h2>\n<p>\n  Pour habiller les murs de votre maison ou offrir un cadeau original à vos proches,découvrez notre collection impressionnante de tableaux design et moderne et optez pour un tableau d'art sur le thème des animaux. Vous trouverez celui qui correspond le mieux à votre intérieur et vos envies, que vous\n  préfériez un tableau de loup sauvage, un tableau de lion dominant, un tableau de cerf sauvage, ou encore un tableau de chaton mignon. Nous proposons une variété d'animaux pour répondre à toutes vos préférences et passions.\n<\/p>\n<p>\n  Nos tableaux d'animaux sont imprimés sur toile, aluminium, ou plexiglas de haute qualité avec des couleurs éclatantes et une netteté exceptionnelle pour donner vie à chaque détail. De plus, nous offrons différentes tailles pour s'adapter à tous les espaces, grands ou petits. Que vous souhaitiez un\n  tableau imposant pour habiller votre salon ou une petite toile pour votre bureau, nous avons tout ce qu'il vous faut pour embellir votre espace de vie.\n<\/p>\n<p>\n  Offrez à vos proches un cadeau unique et personnalisé en choisissant l'animal qui correspond le mieux à leur personnalité et à leur goût. Ils seront ravis de recevoir un tel cadeau original et de pouvoir ajouter une touche d'exotisme et de créativité à leur décoration intérieure. Avec notre\n  collection de tableaux animaux, offrez des cadeaux qui sortent de l'ordinaire, ajoutez une touche de nature et une atmosphère sauvage à votre maison.\n<\/p>"
+          }
         }
       },
       "block_order": [
         "template--16404732051711__e2edd939-3626-48bb-a1b3-68b7d45d2b13-167457071323298b01-0",
         "template--16404732051711__e2edd939-3626-48bb-a1b3-68b7d45d2b13-167457071323298b01-1",
-        "template--16404732051711__e2edd939-3626-48bb-a1b3-68b7d45d2b13-167457071323298b01-2"
+        "template--16404732051711__e2edd939-3626-48bb-a1b3-68b7d45d2b13-167457071323298b01-2",
+        "4fe0edd9-6e76-4900-b7e2-782666024e27"
       ],
       "settings": {
         "lazy_load": true,
