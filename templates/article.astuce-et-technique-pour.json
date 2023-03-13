@@ -354,6 +354,59 @@
         "padding_bottom": 12
       }
     },
+    "a7d1451c-e6ce-43d5-a98b-f5727aec67e6": {
+      "type": "rich-text",
+      "blocks": {
+        "template--16684094587135__a7d1451c-e6ce-43d5-a98b-f5727aec67e6-167861931592fdd33d-0": {
+          "type": "heading",
+          "settings": {
+            "heading": "<h1>Conseils pour éclairer un tableau décoratif comme un pro<\/h1>",
+            "heading_size": "h1",
+            "markup": "h2"
+          }
+        }
+      },
+      "block_order": [
+        "template--16684094587135__a7d1451c-e6ce-43d5-a98b-f5727aec67e6-167861931592fdd33d-0"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "background-1",
+        "full_width": true,
+        "padding_top": 16,
+        "padding_bottom": 0
+      }
+    },
+    "16005790-41fe-4d8e-9c68-622a054db9a4": {
+      "type": "image-with-text",
+      "blocks": {
+        "template--16684094587135__16005790-41fe-4d8e-9c68-622a054db9a4-1678619400a090dade-1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Si vous êtes passionné d'art, vous savez que l'éclairage joue un rôle crucial dans la mise en valeur d'un tableau.<\/p><p>Un bon éclairage peut révéler les couleurs, les détails et les textures d'une œuvre d'art, alors qu'un mauvais éclairage ou un éclairage trop fort peut entraîner une décoloration ou une modification des pigmentations tout en fragilisant votre tableau décoratif. <\/p><p>Alors, êtes-vous prêt à donner vie à votre art ? Lisez la suite pour en savoir plus ! <a href=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/mettez-votre-art-en-lumiere-conseils-pour-eclairer-un-tableau-decoratif-comme-un-pro\" target=\"_blank\" title=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/mettez-votre-art-en-lumiere-conseils-pour-eclairer-un-tableau-decoratif-comme-un-pro\">Mettez votre art en lumière !<\/a><\/p>",
+            "text_style": "body"
+          }
+        }
+      },
+      "block_order": [
+        "template--16684094587135__16005790-41fe-4d8e-9c68-622a054db9a4-1678619400a090dade-1"
+      ],
+      "settings": {
+        "image": "shopify:\/\/shop_images\/applique-murale-pour-tableaujpg.jpg",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "content_layout": "no-overlap",
+        "color_scheme": "background-1",
+        "mobile_content_alignment": "left",
+        "enable_blob": true,
+        "padding_top": 0,
+        "padding_bottom": 12
+      }
+    },
     "8babb80d-11ea-47b3-9fd7-4547747a9d48": {
       "type": "collapsible-content",
       "blocks": {
@@ -447,6 +500,8 @@
     "bd8905d9-2e3f-417a-bd29-62ee386a63c9",
     "59f57207-7352-4b20-8997-6150043274fb",
     "9a82c12f-f7fe-411b-846b-80ad0e58b58f",
+    "a7d1451c-e6ce-43d5-a98b-f5727aec67e6",
+    "16005790-41fe-4d8e-9c68-622a054db9a4",
     "8babb80d-11ea-47b3-9fd7-4547747a9d48",
     "11ed1855-d812-4ccc-8f80-65a14ff1c6bd"
   ]

@@ -26,7 +26,7 @@
           {%- case block.type -%}
             {%- when 'heading' -%}
               <{{ block.settings.markup }} class="rich-text__heading rte {{ block.settings.heading_size }}" {{ block.shopify_attributes }}>
-                {{ block.settings.heading | replace: 'p>', 'span>' }}
+                {{ block.settings.heading | escape }}
               </{{ block.settings.markup }}>
             {%- when 'caption' -%}
               <p class="rich-text__caption {{ block.settings.text_style }} {{ block.settings.text_style }}--{{ block.settings.text_size }}" {{ block.shopify_attributes }}>
@@ -165,10 +165,10 @@
       "limit": 3,
       "settings": [
         {
-          "type": "richtext",
+          "type": "text",
           "id": "heading",
-          "default": "<p>Talk about your brand</p>",
-          "label": "t:sections.rich-text.blocks.heading.settings.heading.label"
+          "label": "t:sections.rich-text.blocks.heading.settings.heading.label",
+          "default": "Talk about your brand"
         },
         {
           "type": "select",
