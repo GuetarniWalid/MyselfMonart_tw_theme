@@ -188,7 +188,7 @@ class SummaryAddon extends HTMLElement {
   }
 
   formatPrice(price) {
-    const index = price.length > 3 ? 2 : 1;
+    const index = price.length - 2;
     return price.substr(0, index) + ',' + price.substr(index);
   }
 
