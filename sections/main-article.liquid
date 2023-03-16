@@ -27,7 +27,8 @@
                 loading="lazy"
                 width="{{ article.image.width }}"
                 height="{{ article.image.height }}"
-                alt="{{ article.image.alt | escape }}">
+                alt="{{ article.image.alt | escape }}"
+                class="skeleton">
             </div>
           </div>
         {%- endif -%}

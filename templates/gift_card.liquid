@@ -122,7 +122,7 @@
 
     <main class="gift-card">
       <div class="gift-card__image-wrapper">
-        <img src="{{ 'gift-card/card.svg' | shopify_asset_url }}" alt="" class="gift-card__image" height="{{ 570 | divided_by: 1.5 }}" width="570" loading="lazy">
+        <img src="{{ 'gift-card/card.svg' | shopify_asset_url }}" alt="" class="gift-card__image skeleton" height="{{ 570 | divided_by: 1.5 }}" width="570" loading="lazy">
       </div>
       <div class="gift-card__qr-code" data-identifier="{{ gift_card.qr_identifier }}"></div>
       <div class="gift-card__information">
@@ -142,7 +142,7 @@
         </div>
         {%- if gift_card.pass_url -%}
           <a href="{{ gift_card.pass_url }}" class="gift_card__apple-wallet">
-            <img src="{{ 'gift-card/add-to-apple-wallet.svg' | shopify_asset_url }}" width="120" height="40" alt="{{ 'gift_cards.issued.add_to_apple_wallet' | t }}" loading="lazy">
+            <img src="{{ 'gift-card/add-to-apple-wallet.svg' | shopify_asset_url }}" width="120" height="40" alt="{{ 'gift_cards.issued.add_to_apple_wallet' | t }}" loading="lazy" class="skeleton">
           </a>
         {%- endif -%}
         <div class="gift-card__buttons no-print">

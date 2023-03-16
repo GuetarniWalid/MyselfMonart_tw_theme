@@ -28,6 +28,7 @@
                         {{ first_image | image_url: width: 300 }} 300w,
                         {{ first_image | image_url: width: 350 }} 350w"
                     sizes="(max-width: 356px) 300px, 350px"
+                    class="skeleton"
                 >
                 {%- if second_image != blank -%}
                     <img
@@ -40,6 +41,7 @@
                             {{ second_image | image_url: width: 300 }} 300w,
                             {{ second_image | image_url: width: 350 }} 350w"
                         sizes="(max-width: 356px) 300px, 350px"
+                        class="skeleton"
                     >
                 {%- endif -%}
             </div>

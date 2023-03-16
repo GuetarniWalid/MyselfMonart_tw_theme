@@ -127,7 +127,7 @@
                             -%}
                             {%- if url_to_custom_img != blank -%}
                               {% comment %}theme-check-disable RemoteAsset{% endcomment %}
-                              <img class="cart-item__image"
+                              <img class="cart-item__image skeleton"
                                 src="{{ url_to_custom_img }}"
                                 loading="lazy"
                                 width="150"
@@ -135,7 +135,7 @@
                               >
                               {% comment %}theme-check-enable RemoteAsset{% endcomment %}
                             {%- else -%}
-                              <img class="cart-item__image"
+                              <img class="cart-item__image skeleton"
                                 src="{{ item.image | image_url: width: 300 }}"
                                 alt="{{ item.image.alt | escape }}"
                                 loading="lazy"

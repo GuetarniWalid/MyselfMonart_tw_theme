@@ -65,37 +65,6 @@
         "padding_bottom": 0
       }
     },
-    "bc26a722-24cd-43be-a48f-889e1781d101": {
-      "type": "rich-text",
-      "blocks": {
-        "template--16692575371519__bc26a722-24cd-43be-a48f-889e1781d101-167855766175a8acf4-0": {
-          "type": "heading",
-          "settings": {
-            "heading": "<h3><strong>Choisir le bon emplacement pour votre tableau<\/strong><\/h3>",
-            "heading_size": "h1",
-            "markup": "h2"
-          }
-        },
-        "template--16692575371519__bc26a722-24cd-43be-a48f-889e1781d101-167855766175a8acf4-1": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Avant de choisir l'éclairage pour votre tableau décoratif, vous devez choisir le meilleur emplacement pour l'accrocher. Cela dépendra de plusieurs facteurs tels que la taille du tableau, la hauteur des murs, l'orientation de la pièce, etc. Une fois que vous avez choisi l'emplacement idéal, vous pouvez commencer à penser à l'éclairage.<\/p>"
-          }
-        }
-      },
-      "block_order": [
-        "template--16692575371519__bc26a722-24cd-43be-a48f-889e1781d101-167855766175a8acf4-0",
-        "template--16692575371519__bc26a722-24cd-43be-a48f-889e1781d101-167855766175a8acf4-1"
-      ],
-      "settings": {
-        "desktop_content_position": "center",
-        "content_alignment": "left",
-        "color_scheme": "background-1",
-        "full_width": true,
-        "padding_top": 40,
-        "padding_bottom": 0
-      }
-    },
     "383ee9d3-91a0-446f-b0c2-093c5372796e": {
       "type": "rich-text",
       "blocks": {
@@ -271,7 +240,7 @@
         "template--16692575371519__91fe4963-90f8-428f-bdcf-e3268b519267-167855766175a8acf4-1": {
           "type": "text",
           "settings": {
-            "text": "<h3>Maintenant que vous avez choisi le type de luminaire, il est important de comprendre comment l'utiliser pour créer une ambiance chaleureuse et cosy dans votre maison. <\/h3><h3><strong>Sélectionner le bon angle d'éclairage<\/strong><\/h3><p>Le bon angle d'éclairage peut également jouer un rôle important dans la façon dont votre tableau est présenté. Pour les tableaux plus petits, un éclairage direct peut être suffisant. Cependant, pour les tableaux plus grands, vous pouvez envisager un éclairage indirect pour créer une lumière douce et uniforme. L'utilisation de projecteurs d'éclairage peut également aider à créer des ombres et des reflets sur votre tableau.<\/p><h3><strong>Positionner le luminaire correctement<\/strong><\/h3><p>Une fois que vous avez sélectionné le type de luminaire et l'angle d'éclairage, il est important de positionner le luminaire correctement. Le luminaire doit être placé à une distance suffisante du tableau pour éviter tout éblouissement, mais suffisamment proche pour que la lumière soit bien concentrée sur le tableau. Il est également important de placer le luminaire à une hauteur appropriée pour que le tableau soit bien éclairé et visible. il est recommandé de placer le luminaire à une hauteur d'environ 1,50 mètre du sol. Cette hauteur permet d'obtenir un éclairage homogène sur toute la surface du tableau, sans créer de zones d'ombre ni de reflets indésirables.<\/p>"
+            "text": "<p><strong>Maintenant que vous avez choisi le type de luminaire, il est important de comprendre comment l'utiliser pour créer une ambiance chaleureuse et cosy dans votre maison. <\/strong><\/p><h3><strong>Sélectionner le bon angle d'éclairage<\/strong><\/h3><p>Le bon angle d'éclairage peut également jouer un rôle important dans la façon dont votre tableau est présenté. Pour les tableaux plus petits, un éclairage direct peut être suffisant. Cependant, pour les tableaux plus grands, vous pouvez envisager un éclairage indirect pour créer une lumière douce et uniforme. L'utilisation de projecteurs d'éclairage peut également aider à créer des ombres et des reflets sur votre tableau.<\/p><h3><strong>Positionner le luminaire correctement<\/strong><\/h3><p>Une fois que vous avez sélectionné le type de luminaire et l'angle d'éclairage, il est important de positionner le luminaire correctement. Le luminaire doit être placé à une distance suffisante du tableau pour éviter tout éblouissement, mais suffisamment proche pour que la lumière soit bien concentrée sur le tableau. Il est également important de placer le luminaire à une hauteur appropriée pour que le tableau soit bien éclairé et visible. il est recommandé de placer le luminaire à une hauteur d'environ 1,50 mètre du sol. Cette hauteur permet d'obtenir un éclairage homogène sur toute la surface du tableau, sans créer de zones d'ombre ni de reflets indésirables.<\/p>"
           }
         }
       },
@@ -348,7 +317,6 @@
     "ce4595e5-01e5-472d-ac56-563a87ef335c",
     "main",
     "d1b293a4-2408-4f73-9deb-b89ac4a436b5",
-    "bc26a722-24cd-43be-a48f-889e1781d101",
     "383ee9d3-91a0-446f-b0c2-093c5372796e",
     "23a43a26-7952-47aa-ae44-f382b92ccc75",
     "e3e5fd50-b846-4d69-a333-47d313f75e35",

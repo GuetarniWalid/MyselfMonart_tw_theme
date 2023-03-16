@@ -37,6 +37,7 @@
     loading="{{ loading }}"
     width="500"
     alt="{{ block.settings.image.alt | escape }}"
+    class="skeleton"
   >
 {% else %}
     <div class="svg-wrapper">{{ 'collection-1' | placeholder_svg_tag  }}</div>

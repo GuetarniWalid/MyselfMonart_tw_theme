@@ -58,7 +58,7 @@
                 src="{{ card_product.featured_media | image_url: width: 533 }}"
                 sizes="(min-width: 990px) 357px, (min-width: 900px) 425px, (min-width: 637px) 376px, (min-width: 500px) 295px, 100%"
                 alt="{{ card_product.featured_media.alt | escape }}"
-                class="motion-reduce"
+                class="motion-reduce skeleton"
                 {% unless lazy_load == false %}loading="lazy"{% endunless %}
                 width="{{ card_product.featured_media.width }}"
                 height="{{ card_product.featured_media.height }}"
@@ -78,7 +78,7 @@
                     src="{{ card_product.media[1] | image_url: width: 533 }}"
                     sizes="(min-width: 990px) 357px, (min-width: 900px) 425px, (min-width: 637px) 376px, (min-width: 500px) 295px, 100%"
                     alt="{{ card_product.media[1].alt | escape }}"
-                    class="motion-reduce"
+                    class="motion-reduce skeleton"
                     loading="lazy"
                     width="{{ card_product.media[1].width }}"
                     height="{{ card_product.media[1].height }}"
@@ -95,11 +95,10 @@
                     src="{{ card_product.media[1] | image_url: width: 533, height: 456, crop: 'center' }}"
                     sizes="(min-width: 990px) 357px, (min-width: 900px) 425px, (min-width: 637px) 376px, (min-width: 500px) 295px, 100%"
                     alt="{{ card_product.media[1].alt | escape }}"
-                    class="motion-reduce"
+                    class="motion-reduce skeleton"
                     loading="lazy"
                     width="{{ card_product.media[1].width }}"
                     height="{{ card_product.media[1].height }}"
-                    test="test caca"
                   >
                 {% endif %}
               {%- endif -%}

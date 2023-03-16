@@ -65,7 +65,7 @@
                                             src="{{ product.images[1] | image_url: width: 420 }}" 
                                             alt="Representation du tableau choisi avec ses differentes options comme la taille,la matière, le support, etc"
                                             width="420" 
-                                            height="auto" 
+                                            height="420" 
                                             loading="lazy"
                                             srcset="
                                             {{ product.images[1] | image_url: width: 285 }} 285w,
@@ -73,6 +73,7 @@
                                             {{ product.images[1] | image_url: width: 420 }}
                                             "
                                             sizes="(max-width: 405px) 285px,(max-width: 460px) 340px,420px"
+                                            class="skeleton"
                                         >
                                     </div>
                                 </div>
@@ -162,7 +163,7 @@
                                                             src="{{ images[forloop.index0] | file_img_url: '372x343' }}" 
                                                             alt="un tableau en {{ value }}, vu de profile" 
                                                             width="372" 
-                                                            height="auto" 
+                                                            height="372" 
                                                             loading="lazy"
                                                             srcset="
                                                             {{ images[forloop.index0] | file_img_url: '187x185' }} 187w,
@@ -170,6 +171,7 @@
                                                             {{ images[forloop.index0] | file_img_url: '372x343' }}
                                                             "
                                                             sizes="(min-width: 950px) 187px,(max-width: 415px) 250px,372px"
+                                                            class="skeleton"
                                                         >
                                                         <label for="addon-{{ option.name | handleize }}-{{ value | downcase }}"></label>
                                                         <input type="radio" id="addon-{{ option.name | handleize }}-{{ value | downcase }}" name="{{ option.name | handleize }}" value="{{ value | downcase }}" hidden {% if forloop.first %}checked{% endif %} data-price="{{ prices[forloop.index0] | minus: prices.first }}" data-order="{{ forloop.parentloop.index }}">
@@ -187,13 +189,14 @@
                                                             src="{{ info_images[forloop.index0] | file_img_url: '348x340' }}" 
                                                             alt="le coin d'un tableau en {{ value }}, vu de près" 
                                                             width="348" 
-                                                            height="auto" 
+                                                            height="348" 
                                                             loading="lazy"
                                                             srcset="
                                                             {{ info_images[forloop.index0] | file_img_url: '280x280' }} 280w,
                                                             {{ info_images[forloop.index0] | file_img_url: '348x340' }}
                                                             "
                                                             sizes="(max-width: 363px) 280px,348px"
+                                                            class="skeleton"
                                                         >
                                                         <h4 class="h2">{{ info_titles[forloop.index0] }}</h4>
                                                         <p>{{ info_txts[forloop.index0] }}</p>
@@ -241,7 +244,7 @@
                                                                 src="{{ all_products[other_option_name].images[image_index] | image_url: width: 372 }}" 
                                                                 alt="{{ all_products[other_option_name].images[image_index].alt }}" 
                                                                 width="372" 
-                                                                height="auto" 
+                                                                height="372" 
                                                                 loading="lazy"
                                                                 srcset="
                                                                 {{ all_products[other_option_name].images[image_index] | image_url: width: 187 }} 187w,
@@ -249,6 +252,7 @@
                                                                 {{ all_products[other_option_name].images[image_index] | image_url: width: 372 }}
                                                                 "
                                                                 sizes="(min-width: 950px) 187px,(max-width: 415px) 250px,372px"
+                                                                class="skeleton"
                                                             >
                                                             <label for="addon-{{ option.name | handleize }}-{{ value | downcase }}"></label>
                                                             <input type="radio" id="addon-{{ option.name | handleize }}-{{ value | downcase }}" name="{{ option.name | handleize }}" value="{{ value }}" hidden {% if forloop.first %}checked{% endif %} data-price="{{ prices[forloop.index0] }}">
@@ -269,13 +273,14 @@
                                                                     src="{{ all_products[other_option_name].images[image_index] | image_url: width: 348 }}" 
                                                                     alt="{{ all_products[other_option_name].images[image_index].alt }}" 
                                                                     width="348" 
-                                                                    height="auto" 
+                                                                    height="348" 
                                                                     loading="lazy"
                                                                     srcset="
                                                                     {{ all_products[other_option_name].images[image_index] | image_url: width: 280 }} 280w,
                                                                     {{ all_products[other_option_name].images[image_index] | image_url: width: 348 }}
                                                                     "
                                                                     sizes="(max-width: 363px) 280px,348px"
+                                                                    class="skeleton"
                                                                 >
                                                                 <h4 class="h2">{{ all_products[other_option_name].metafields.info.about.value[meta_info_title] }}</h4>
                                                                 <p>{{ all_products[other_option_name].metafields.info.about.value[meta_info_description] }}</p>

@@ -144,7 +144,7 @@
                   {% if customizable %}
                     {% if customizable_type == 'texture' %}
                       <label class="texture" for="{{ section.id }}-{{ option.position }}-{{ index0 }}-{{ id }}-{{ forloop.index0 }}">
-                        <span class="image-wrapper"><img src="{{customizable_values[forloop.index0]}}" width="60" height="60"></span>
+                        <span class="image-wrapper"><img src="{{customizable_values[forloop.index0]}}" width="60" height="60" class="skeleton"></span>
                         <span>{{ value }}</span>
                       </label>
                     {% else %}

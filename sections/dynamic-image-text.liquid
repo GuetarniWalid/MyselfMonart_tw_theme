@@ -28,7 +28,7 @@
           {%- if section.blocks.first.settings.image == blank -%}
             {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
           {%- else -%}
-            <div class="wrapper-image"><img src="{{ section.blocks.first.settings.image | image_url: width: 400 }}" class="active" width="400" height="400" loading="lazy"></div>
+            <div class="wrapper-image"><img src="{{ section.blocks.first.settings.image | image_url: width: 400 }}" class="active skeleton" width="400" height="400" loading="lazy"></div>
         {%- endif -%}
     </div>
 

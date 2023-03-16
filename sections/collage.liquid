@@ -45,6 +45,7 @@
                       loading="lazy"
                       width="{{ block.settings.image.width }}"
                       height="{{ block.settings.image.height }}"
+                      class="skeleton"
                     >
                   {%- else -%}
                     {{ 'image' | placeholder_svg_tag: 'placeholder-svg placeholder' }}
@@ -96,6 +97,7 @@
                           loading="lazy"
                           width="{{ block.settings.cover_image.width }}"
                           height="{{ block.settings.cover_image.height }}"
+                          class="skeleton"
                         >
                       {%- else -%}
                         {{ 'collection-2' | placeholder_svg_tag: 'placeholder-svg placeholder' }}
@@ -127,6 +129,7 @@
                             loading="lazy"
                             width="{{ block.settings.cover_image.width }}"
                             height="{{ block.settings.cover_image.height }}"
+                            class="skeleton"
                           >
                         {%- else -%}
                           {{ 'collection-2' | placeholder_svg_tag: 'placeholder-svg placeholder' }}

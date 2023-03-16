@@ -118,6 +118,7 @@
               alt="{{ block.settings.image.alt | escape }}"
               width="{{ block.settings.image.width }}"
               height="{{ block.settings.image.width | divided_by: block.settings.image.aspect_ratio | round }}"
+              class="skeleton"
             >
           {%- else -%}
             {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}

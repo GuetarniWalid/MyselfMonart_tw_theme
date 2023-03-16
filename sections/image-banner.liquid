@@ -91,7 +91,7 @@
     alt="{{ section.settings.image_desktop.alt | escape }}"
     width="2000"
     height="{{ section.settings.image_desktop.width | divided_by: section.settings.image_desktop.aspect_ratio }}"
-    class="{{ desktop_image_class }}"
+    class="{{ desktop_image_class }} skeleton"
   >
 
 {%- endif -%}
@@ -108,7 +108,7 @@
     alt="{{ section.settings.image_mobile.alt | escape }}"
     width="500"
     height="{{ section.settings.image_mobile.width | divided_by: section.settings.image_mobile.aspect_ratio }}"
-    class="image-banner-mobile"
+    class="image-banner-mobile skeleton"
   >
     {% # theme-check-enable ImgLazyLoading %}
 {%- endif -%}
