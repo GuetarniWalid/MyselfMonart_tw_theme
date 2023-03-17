@@ -1034,6 +1034,7 @@ function navigate() {
   const urlInBase64 = this.dataset.url64;
   document.location.href = decodeURIComponent(window.atob(urlInBase64));
 }
+/***/
 
 function loadCSS(href) {
   var cssLink = document.createElement("link");
@@ -1042,3 +1043,15 @@ function loadCSS(href) {
   cssLink.type = "text/css";
   document.head.appendChild(cssLink);
 }
+
+function replacePlaceholderImages() {
+  var images = document.querySelectorAll('img.placeholder');
+  images.forEach((image) => {
+    image.setAttribute('srcset', image.getAttribute('data-srcset'));
+    image.removeAttribute('data-srcset');
+    image.onload = () => {
+      image.classList.remove('placeholder');
+    }
+  });
+}
+replacePlaceholderImages();

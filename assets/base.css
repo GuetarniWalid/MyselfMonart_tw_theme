@@ -2827,3 +2827,11 @@ img.skeleton {
     background-position-x: -200%;
   }
 }
+
+img.placeholder {
+  filter: blur(20px);
+}
+
+img {
+  transition: filter 0.2s;
+}

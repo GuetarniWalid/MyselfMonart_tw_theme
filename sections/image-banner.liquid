@@ -73,9 +73,8 @@
       assign desktop_image_class = desktop_image_class | append: ' show-on-mobile'
     endif
   -%} 
-  {% # theme-check-disable ImgLazyLoading %}
   <img
-    srcset="{%- if section.settings.image_desktop.width >= 375 -%}{{ section.settings.image_desktop | image_url: width: 375 }} 375w,{%- endif -%}
+{% if section.settings.enable_lazy_loading %}srcset{% else %}data-srcset{% endif %}="{%- if section.settings.image_desktop.width >= 375 -%}{{ section.settings.image_desktop | image_url: width: 375 }} 375w,{%- endif -%}
       {%- if section.settings.image_desktop.width >= 550 -%}{{ section.settings.image_desktop | image_url: width: 550 }} 550w,{%- endif -%}
       {%- if section.settings.image_desktop.width >= 750 -%}{{ section.settings.image_desktop | image_url: width: 750 }} 750w,{%- endif -%}
       {%- if section.settings.image_desktop.width >= 1100 -%}{{ section.settings.image_desktop | image_url: width: 1100 }} 1100w,{%- endif -%}
@@ -86,31 +85,30 @@
       {%- if section.settings.image_desktop.width >= 3840 -%}{{ section.settings.image_desktop | image_url: width: 3840 }} 3840w,{%- endif -%}
       {{ section.settings.image_desktop | image_url }} {{ section.settings.image_desktop.width }}w"
     sizes="100vw"
-    src="{{ section.settings.image_desktop | image_url: width: 1500 }}"
+    src="{{ section.settings.image_desktop | image_url: width: 40 }}"
     loading="{% if section.settings.enable_lazy_loading %}lazy{% else %}eager{% endif %}"
     alt="{{ section.settings.image_desktop.alt | escape }}"
     width="2000"
     height="{{ section.settings.image_desktop.width | divided_by: section.settings.image_desktop.aspect_ratio }}"
-    class="{{ desktop_image_class }} skeleton"
+    class="{{ desktop_image_class }} skeleton{% unless section.settings.enable_lazy_loading %} placeholder{% endunless %}"
   >
 
 {%- endif -%}
 {%- if section.settings.image_mobile != blank -%}
     <img
-    srcset="{%- if section.settings.image_mobile.width >= 375 -%}{{ section.settings.image_mobile | image_url: width: 375 }} 375w,{%- endif -%}
+  {% if section.settings.enable_lazy_loading %}srcset{% else %}data-srcset{% endif %}="{%- if section.settings.image_mobile.width >= 375 -%}{{ section.settings.image_mobile | image_url: width: 375 }} 375w,{%- endif -%}
       {%- if section.settings.image_mobile.width >= 550 -%}{{ section.settings.image_mobile | image_url: width: 550 }} 550w,{%- endif -%}
       {%- if section.settings.image_mobile.width >= 750 -%}{{ section.settings.image_mobile | image_url: width: 750 }} 750w,{%- endif -%}
       {%- if section.settings.image_mobile.width >= 1100 -%}{{ section.settings.image_mobile | image_url: width: 1100 }} 1100w,{%- endif -%}
       {{ section.settings.image_mobile | image_url }} {{ section.settings.image_mobile.width }}w"
     sizes="100vh"
-    src="{{ section.settings.image_mobile | image_url: width: 750 }}"
+    src="{{ section.settings.image_mobile | image_url: width: 40 }}"
     loading="{% if section.settings.enable_lazy_loading %}lazy{% else %}eager{% endif %}"
     alt="{{ section.settings.image_mobile.alt | escape }}"
     width="500"
     height="{{ section.settings.image_mobile.width | divided_by: section.settings.image_mobile.aspect_ratio }}"
-    class="image-banner-mobile skeleton"
+    class="image-banner-mobile skeleton{% unless section.settings.enable_lazy_loading %} placeholder{% endunless %}"
   >
-    {% # theme-check-enable ImgLazyLoading %}
 {%- endif -%}
 {%- liquid
   if section.settings.image_desktop == blank

@@ -41,6 +41,7 @@
   position: relative;
   height: 40vh;
   grid-column: 1 / span 10;
+  overflow: hidden;
 }
 
 .shopify-section.collections-grid div.svg-wrapper {
