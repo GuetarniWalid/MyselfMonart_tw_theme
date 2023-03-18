@@ -10,6 +10,10 @@
   margin-top: 0;
 }
 
+.multicolumn slider-component + div {
+  margin-top: 1rem;
+}
+
 @media screen and (max-width: 749px) {
   .multicolumn .title-wrapper-with-link {
     margin-bottom: 3rem;

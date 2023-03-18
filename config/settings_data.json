@@ -155,6 +155,7 @@
           "enable_sticky_header": true,
           "show_search_icon": false,
           "to_obfuscate": true,
+          "to_obfuscate_social_media": true,
           "padding_top": 12,
           "padding_bottom": 12
         }
@@ -196,6 +197,7 @@
           "enable_language_selector": false,
           "payment_enable": true,
           "to_obfuscate": false,
+          "to_obfuscate_social_media": true,
           "padding_top": 16,
           "padding_bottom": 64
         }

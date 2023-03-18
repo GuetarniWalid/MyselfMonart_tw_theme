@@ -80,7 +80,7 @@
           "settings": {
             "image": "shopify:\/\/shop_images\/tableau-cuisine_eaec6264-da1e-45c2-ba57-214beaf70168.jpg",
             "collection": "tableau-cuisine",
-            "paragraph": "<h3>DÉCOUVREZ NOTRE GAMME DE TABLEAU POUR CUISINE<\/h3>\n<p>En quête d'une cuisine originale ? <a href=\"\/collections\/tableau-cuisine\" title=\"Tableau cuisine\">Notre collection de tableaux pour cuisine<\/a> saura sublimer votre décoration d'intérieure.<\/p>\n<p>Souvent négligée, la cuisine est aujourd’hui devenue l’une des pièces principales de notre maison. Ambiance rustique, décoration design ou cuisine moderne, on ne néglige plus aucun détail pour faire de cette pièce un endroit à notre image.<\/p>\n<p>De l'électroménager à l'étagère en bois, en passant par les petits objets déco, tout est bon pour affirmer votre personnalité. <\/p>\n<p>Chez MyselfMonart nous proposons une large gamme de tableau pour cuisine, des illustrations rétro, des toiles multicolores, et même des tableaux photos de vos pâtisseries préférées. Si vous êtes à la recherche d’idées déco originales ou simplement d’un cadeau créatif vous trouverez forcément parmi nos impressions sur toile une façon d’habiller vos murs.<\/p>"
+            "paragraph": "<h3>DÉCOUVREZ NOTRE GAMME DE TABLEAU POUR CUISINE<\/h3>\n<p>En quête d'une cuisine originale ? Notre collection de tableaux pour cuisine saura sublimer votre décoration d'intérieure.<\/p>\n<p>Souvent négligée, la cuisine est aujourd’hui devenue l’une des pièces principales de notre maison. Ambiance rustique, décoration design ou cuisine moderne, on ne néglige plus aucun détail pour faire de cette pièce un endroit à notre image.<\/p>\n<p>De l'électroménager à l'étagère en bois, en passant par les petits objets déco, tout est bon pour affirmer votre personnalité. <\/p>\n<p>Chez MyselfMonart nous proposons une large gamme de tableau pour cuisine, des illustrations rétro, des toiles multicolores, et même des tableaux photos de vos pâtisseries préférées. Si vous êtes à la recherche d’idées déco originales ou simplement d’un cadeau créatif vous trouverez forcément parmi nos impressions sur toile une façon d’habiller vos murs.<\/p>"
           }
         },
         "4fe0edd9-6e76-4900-b7e2-782666024e27": {
@@ -99,7 +99,7 @@
         "4fe0edd9-6e76-4900-b7e2-782666024e27"
       ],
       "settings": {
-        "lazy_load": true,
+        "lazy_load": false,
         "color_text": "#f6f3ef",
         "padding_top": 0,
         "padding_bottom": 0
