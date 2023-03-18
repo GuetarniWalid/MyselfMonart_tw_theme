@@ -1,5 +1,5 @@
 function getFocusableElements(container) {
-  if (!container) return
+  if (!container) return;
   return Array.from(container.querySelectorAll("summary, a[href], button:enabled, [tabindex]:not([tabindex^='-']), [draggable], area, input:not([type=hidden]):enabled, select:enabled, textarea:enabled, object, iframe"));
 }
 
@@ -1032,26 +1032,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function navigate() {
   const urlInBase64 = this.dataset.url64;
-  document.location.href = decodeURIComponent(window.atob(urlInBase64));
+  const detination = decodeURIComponent(window.atob(urlInBase64));
+  if (this.dataset.blank === 'true') {
+    window.open(detination, '_blank');
+  } else {
+    document.location.href = detination;
+  }
 }
 /***/
 
 function loadCSS(href) {
-  var cssLink = document.createElement("link");
-  cssLink.rel = "stylesheet";
+  var cssLink = document.createElement('link');
+  cssLink.rel = 'stylesheet';
   cssLink.href = href;
-  cssLink.type = "text/css";
+  cssLink.type = 'text/css';
   document.head.appendChild(cssLink);
 }
 
 function replacePlaceholderImages() {
   var images = document.querySelectorAll('img.placeholder');
-  images.forEach((image) => {
+  images.forEach(image => {
     image.setAttribute('srcset', image.getAttribute('data-srcset'));
     image.removeAttribute('data-srcset');
     image.onload = () => {
       image.classList.remove('placeholder');
-    }
+    };
   });
 }
 replacePlaceholderImages();

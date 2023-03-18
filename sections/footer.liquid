@@ -1,4 +1,4 @@
-{%- render 'section-footer' -%}
+{%- render 'section-footer', to_obfuscate_social_media: section.settings.to_obfuscate_social_media -%}
 
 {% javascript %}
   class LocalizationForm extends HTMLElement {
@@ -245,7 +245,14 @@
       "type": "checkbox",
       "id": "to_obfuscate",
       "default": false,
-      "label": "t:sections.footer.settings.to_obfuscate.label"
+      "label": "t:sections.footer.settings.to_obfuscate.label",
+      "info": "t:sections.footer.settings.to_obfuscate.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "to_obfuscate_social_media",
+      "default": false,
+      "label": "t:sections.footer.settings.to_obfuscate_social_media.label"
     },
     {
       "type": "header",

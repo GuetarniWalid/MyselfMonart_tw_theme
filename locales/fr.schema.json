@@ -1572,7 +1572,11 @@
           "content": "Moyens de paiement"
         },
         "to_obfuscate": {
-          "label": "Obfusquer tous les liens"
+          "label": "Obfusquer tous les liens",
+          "info": "Sauf les liens vers les médias sociaux"
+        },
+        "to_obfuscate_social_media": {
+          "label": "Obfusquer les liens vers les médias sociaux"
         },
         "payment_enable": {
           "label": "Afficher les icônes de paiement"

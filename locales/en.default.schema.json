@@ -1203,7 +1203,11 @@
           "content": "Payment methods"
         },
         "to_obfuscate": {
-          "label": "Obfuscate all links"
+          "label": "Obfuscate all links",
+          "info": "Except links to social media"
+        },
+        "to_obfuscate_social_media": {
+          "label": "Obfuscate links to social media"
         },
         "payment_enable": {
           "label": "Show payment icons"
