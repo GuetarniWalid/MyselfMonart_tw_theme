@@ -94,16 +94,23 @@
               {%- endif -%}
               <div class="multicolumn-card__info">
                 {%- if block.settings.title != blank -%}
-                  <h3>{{ block.settings.title | escape }}</h3>
+                  <h3>
+                    {%- if block.settings.link != blank -%}
+                      {% if section.settings.to_obfuscate %}
+                        <span data-url64="{{ block.settings.link | base64_encode }}" class="obfuscate full-link">{{ block.settings.title | escape }}</span>
+                      {% else %}
+                        <a href="{{ block.settings.link }}" class="full-link">{{ block.settings.title | escape }}</a>
+                      {% endif %}
+                    {%- else -%}
+                      {{ block.settings.title | escape }}
+                    {%- endif -%}
+                  </h3>
                 {%- endif -%}
                 {%- if block.settings.text != blank -%}
                   <div class="rte">{{ block.settings.text }}</div>
                 {%- endif -%}
-                {%- if block.settings.link != blank -%}
-                  <a class="full-link" {% if block.settings.link == blank %}role="link" aria-disabled="true"{% else %}href="{{ block.settings.link }}"{% endif %}></span></a>
-                  {%- if block.settings.link_label != blank -%}
-                    <p class="link animate-arrow">{{ block.settings.link_label | escape }}<span class="icon-wrap">&nbsp;{% render 'icon-arrow' %}</p>
-                  {%- endif -%}
+                {%- if block.settings.link != blank and block.settings.link_label != blank -%}
+                  <p class="link animate-arrow">{{ block.settings.link_label | escape }}<span class="icon-wrap">&nbsp;{% render 'icon-arrow' %}</p>
                 {%- endif -%}
               </div>
             </div>
@@ -327,6 +334,16 @@
       "id": "swipe_on_mobile",
       "default": false,
       "label": "t:sections.multicolumn.settings.swipe_on_mobile.label"
+    },
+    {
+      "type": "header",
+      "content": "SEO"
+    },
+    {
+      "type": "checkbox",
+      "id": "to_obfuscate",
+      "default": false,
+      "label": "t:sections.footer.settings.to_obfuscate.label"
     },
     {
       "type": "header",
