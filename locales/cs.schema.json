@@ -369,20 +369,7 @@
       }
     },
     "announcement-bar": {
-      "name": "Panel oznámení",
-      "blocks": {
-        "announcement": {
-          "name": "Oznámení",
-          "settings": {
-            "text": {
-              "label": "Text"
-            },
-            "link": {
-              "label": "Odkaz"
-            }
-          }
-        }
-      }
+      "name": "Panel oznámení"
     },
     "collage": {
       "name": "Koláž",

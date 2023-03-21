@@ -369,20 +369,7 @@
       }
     },
     "announcement-bar": {
-      "name": "Meddelandefält",
-      "blocks": {
-        "announcement": {
-          "settings": {
-            "text": {
-              "label": "Text"
-            },
-            "link": {
-              "label": "Länk"
-            }
-          },
-          "name": "Meddelande"
-        }
-      }
+      "name": "Meddelandefält"
     },
     "collage": {
       "name": "Kollage",

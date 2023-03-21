@@ -369,20 +369,7 @@
       }
     },
     "announcement-bar": {
-      "name": "Meddelelseslinje",
-      "blocks": {
-        "announcement": {
-          "name": "Meddelelse",
-          "settings": {
-            "text": {
-              "label": "Tekstfarve"
-            },
-            "link": {
-              "label": "Link"
-            }
-          }
-        }
-      }
+      "name": "Meddelelseslinje"
     },
     "collage": {
       "name": "Collage",

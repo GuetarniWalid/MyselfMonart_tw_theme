@@ -369,20 +369,7 @@
       }
     },
     "announcement-bar": {
-      "name": "แถบประกาศ",
-      "blocks": {
-        "announcement": {
-          "settings": {
-            "text": {
-              "label": "ข้อความ"
-            },
-            "link": {
-              "label": "ลิงก์"
-            }
-          },
-          "name": "การประกาศ"
-        }
-      }
+      "name": "แถบประกาศ"
     },
     "collage": {
       "name": "คอลลาจ",

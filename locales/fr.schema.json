@@ -193,6 +193,9 @@
         "header": {
           "content": "Suggestions de produits"
         },
+        "enable_predictive_search": {
+          "label": "Activer la barre de recherche"
+        },
         "predictive_search_enabled": {
           "label": "Activer les suggestions de produits"
         },
@@ -392,30 +395,19 @@
     },
     "announcement-bar": {
       "name": "Barre d'annonces",
-      "sections": {
-        "settings": {
-          "animate": {
-            "label": "Animer la bar"
-          },
-          "border_color": {
-            "label": "Couleur des bordures"
-          }
-        }
-      },
-      "blocks": {
-        "announcement": {
-          "name": "Annonce",
-          "settings": {
-            "text": {
-              "label": "Texte"
-            },
-            "text_bold": {
-              "label": "Texte en gras"
-            },
-            "link": {
-              "label": "Lien"
-            }
-          }
+      "settings": {
+        "animate": {
+          "label": "Animer la bar"
+        },
+        "text_bold": {
+          "label": "Texte en gras"
+        },
+        "border_color": {
+          "label": "Couleur des bordures"
+        },
+        "link": {
+          "label": "Lien",
+          "info": "Laissez vide pour désactiver le lien"
         }
       }
     },
@@ -1659,33 +1651,15 @@
         "menu": {
           "label": "Menu"
         },
-        "enable_index_transparent_header": {
-          "label": "Activer l'en-tête transparent sur la page d'accueil"
-        },
-        "enable_product_mobile_transparent_header": {
-          "label": "Activer l'en-tête transparent sur la page produit",
-          "info": "Visible uniquement en mode mobile"
-        },
         "enable_sticky_header": {
           "label": "Activer l'en-tête collé",
           "info": "L'en-tête s'affiche à l'écran lorsque les clients font défiler vers le haut."
         },
         "margin_bottom": {
           "label": "Marge inférieure"
-        },
-        "show_search_icon": {
-          "label": "Afficher la loupe"
         }
       },
       "headings": {
-        "header_transparent": {
-          "content": "En-tête transparent",
-          "info": "Ces paramètres ne s'appliquent que si vous activez l'en-tête transparent"
-        },
-        "header_colored": {
-          "content": "En-tête coloré",
-          "info": "Ces paramètres ne s'appliquent que si vous n'activez pas l'en-tête transparent ou sur l'en-tête collant si vous l'activez"
-        },
         "general_settings": {
           "content": "Réglages généraux"
         },

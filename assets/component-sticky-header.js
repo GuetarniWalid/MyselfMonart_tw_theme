@@ -5,7 +5,6 @@ class StickyHeader extends HTMLElement {
 
   connectedCallback() {
     this.header = this.querySelector('.header');
-    this.fixHeader = document.querySelector('.header-wrapper.fix header');
     this.headerBounds = {};
     this.currentScrollTop = 0;
     this.preventReveal = false;
@@ -14,6 +13,8 @@ class StickyHeader extends HTMLElement {
     this.predictiveSearch = this.querySelector('predictive-search');
 
     this.onScrollHandler = this.onScroll.bind(this);
+    this.revealBinded = this.reveal.bind(this)
+    this.hideBinded = this.hide.bind(this)
     this.hideHeaderOnScrollUp = () => (this.preventReveal = true);
 
     this.addEventListener('preventHeaderReveal', this.hideHeaderOnScrollUp);
@@ -28,7 +29,7 @@ class StickyHeader extends HTMLElement {
   }
 
   measureFixHeaderHeight() {
-    this.headerBounds.bottom = this.fixHeader.offsetHeight;
+    this.headerBounds.bottom = this.header.offsetHeight;
   }
 
   onScroll() {
@@ -37,12 +38,16 @@ class StickyHeader extends HTMLElement {
     if (this.predictiveSearch && this.predictiveSearch.isOpen) return;
 
     if (scrollTop < this.headerBounds.bottom) {
-        requestAnimationFrame(this.hide.bind(this));
+      requestAnimationFrame(this.revealBinded);
+    }
+    else if(window.innerHeight + window.scrollY >= document.documentElement.scrollHeight) {
+        requestAnimationFrame(this.hideBinded);
     } 
     else if (scrollTop > this.currentScrollTop) {
       if (!this.preventHide) {
-        requestAnimationFrame(this.hide.bind(this));
-      } else {
+        requestAnimationFrame(this.hideBinded);
+      } 
+      else {
         window.clearTimeout(this.isScrollingDown);
 
         this.isScrollingDown = setTimeout(() => {
@@ -51,7 +56,7 @@ class StickyHeader extends HTMLElement {
       }
     } else if (scrollTop < this.currentScrollTop) {
       if (!this.preventReveal) {
-        requestAnimationFrame(this.reveal.bind(this));
+        requestAnimationFrame(this.revealBinded);
       } else {
         window.clearTimeout(this.isScrollingUp);
 

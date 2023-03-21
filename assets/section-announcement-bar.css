@@ -1,6 +1,10 @@
 .announcement-bar {
   overflow: hidden;
+  display: flex;
+  align-items: center;
   --anim-width: -400vw;
+  min-height: 2rem;
+  padding: 1.2rem 0;
 }
 
 .announcement-bar .wrapper-anim {
@@ -9,21 +13,38 @@
   animation: moveToLeft infinite 30s linear;
 }
 
+.announcement-bar p {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+
+.announcement-bar a {
+  text-decoration: none;
+}
+
+.announcement-bar .message {
+  margin: 0 0.5rem;
+}
 .announcement-bar > p span,
 .announcement-bar > a span {
   display: flex;
-  justify-content: center;
   align-items: center;
 }
 
 .announcement-bar .wrapper-anim a {
-    display: flex;
-  }
+  display: flex;
+}
 
 .announcement-bar .wrapper-anim p span,
 .announcement-bar .wrapper-anim a span {
   display: inline-flex;
   align-items: center;
+}
+
+.announcement-bar .wrapper-anim p > span,
+.announcement-bar .wrapper-anim a > span {
   margin-right: 40px;
 }
 
@@ -44,8 +65,9 @@
   }
 }
 
-.announcement-bar svg {
+.announcement-bar span > svg:first-child {
   width: var(--svg-size);
+  height: var(--svg-size);
 }
 
 @media screen and (min-width: 750px) {

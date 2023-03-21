@@ -1,5 +1,4 @@
 /* Color custom properties */
-
 :root,
 .color-background-1 {
   --color-foreground: var(--color-base-text);
@@ -1275,7 +1274,7 @@ button.shopify-payment-button__button--unbranded,
 }
 
 .button {
-  z-index: 15;
+  z-index: 2;
 }
 
 .button,
@@ -2153,13 +2152,6 @@ input[type='checkbox'] {
   transform: translateY(0);
 }
 
-/* Main Header Layout */
-.header-wrapper {
-  display: block;
-  position: relative;
-  background-color: rgb(var(--color-background));
-}
-
 .header {
   display: grid;
   grid-template-areas: 'left-icon heading icons';
@@ -2260,6 +2252,7 @@ input[type='checkbox'] {
   display: flex;
   grid-area: icons;
   justify-self: end;
+  z-index: 9999;
 }
 
 .header__icon:not(.header__icon--summary),
@@ -2394,6 +2387,7 @@ details[open] .modal-overlay::after {
   padding: 0 5rem 0 1rem;
   line-height: calc(1 + 0.8 / var(--font-body-scale));
   position: relative;
+  background: var(--background);
 }
 
 .search-modal__content-bottom {

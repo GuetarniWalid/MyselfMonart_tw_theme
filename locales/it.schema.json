@@ -369,20 +369,7 @@
       }
     },
     "announcement-bar": {
-      "name": "Barra degli annunci",
-      "blocks": {
-        "announcement": {
-          "name": "Annuncio",
-          "settings": {
-            "text": {
-              "label": "Testo"
-            },
-            "link": {
-              "label": "Link"
-            }
-          }
-        }
-      }
+      "name": "Barra degli annunci"
     },
     "collage": {
       "name": "Collage",

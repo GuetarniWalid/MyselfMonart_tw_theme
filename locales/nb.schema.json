@@ -369,20 +369,7 @@
       }
     },
     "announcement-bar": {
-      "name": "Kunngjøringslinje",
-      "blocks": {
-        "announcement": {
-          "name": "Kunngjøring",
-          "settings": {
-            "text": {
-              "label": "Tekst"
-            },
-            "link": {
-              "label": "Kobling"
-            }
-          }
-        }
-      }
+      "name": "Kunngjøringslinje"
     },
     "collage": {
       "name": "Fotomontasje",

@@ -422,7 +422,6 @@ class HeaderDrawer extends MenuDrawer {
     this.header.classList.remove('menu-open');
   }
 }
-
 customElements.define('header-drawer', HeaderDrawer);
 
 class ModalDialog extends HTMLElement {

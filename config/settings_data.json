@@ -114,21 +114,6 @@
     "sections": {
       "announcement-bar": {
         "type": "announcement-bar",
-        "blocks": {
-          "announcement-bar-0": {
-            "type": "announcement",
-            "settings": {
-              "svg": "",
-              "svg_size": 2,
-              "text": "Paiement en ligne 100% sécurisé",
-              "text_bold": true,
-              "link": ""
-            }
-          }
-        },
-        "block_order": [
-          "announcement-bar-0"
-        ],
         "settings": {
           "background": "#002E5D",
           "color": "#f6f3ee",
@@ -153,7 +138,6 @@
           "cart_width": 50,
           "menu": "main-menu",
           "enable_sticky_header": true,
-          "show_search_icon": false,
           "to_obfuscate": true,
           "to_obfuscate_social_media": true,
           "padding_top": 12,
@@ -391,18 +375,6 @@
       "sections": {
         "announcement-bar": {
           "type": "announcement-bar",
-          "blocks": {
-            "announcement-bar-0": {
-              "type": "announcement",
-              "settings": {
-                "text": "Welcome to our store",
-                "link": ""
-              }
-            }
-          },
-          "block_order": [
-            "announcement-bar-0"
-          ],
           "settings": {
             "color": "#ffffff",
             "border_color": "transparent"

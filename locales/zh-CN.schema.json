@@ -369,20 +369,7 @@
       }
     },
     "announcement-bar": {
-      "name": "公告栏",
-      "blocks": {
-        "announcement": {
-          "settings": {
-            "text": {
-              "label": "文本"
-            },
-            "link": {
-              "label": "链接"
-            }
-          },
-          "name": "公告"
-        }
-      }
+      "name": "公告栏"
     },
     "collage": {
       "name": "拼贴画",

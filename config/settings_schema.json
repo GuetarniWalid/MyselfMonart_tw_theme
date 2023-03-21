@@ -1103,6 +1103,12 @@
       },
       {
         "type": "checkbox",
+        "id": "enable_predictive_search",
+        "default": true,
+        "label": "t:settings_schema.search_input.settings.enable_predictive_search.label"
+      },
+      {
+        "type": "checkbox",
         "id": "predictive_search_enabled",
         "default": true,
         "label": "t:settings_schema.search_input.settings.predictive_search_enabled.label"

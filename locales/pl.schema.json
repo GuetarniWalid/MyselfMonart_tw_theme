@@ -369,20 +369,7 @@
       }
     },
     "announcement-bar": {
-      "name": "Pasek ogłoszeń",
-      "blocks": {
-        "announcement": {
-          "name": "Ogłoszenie",
-          "settings": {
-            "text": {
-              "label": "Tekst"
-            },
-            "link": {
-              "label": "Link"
-            }
-          }
-        }
-      }
+      "name": "Pasek ogłoszeń"
     },
     "collage": {
       "name": "Kolaż",

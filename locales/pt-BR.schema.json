@@ -369,20 +369,7 @@
       }
     },
     "announcement-bar": {
-      "name": "Barra de avisos",
-      "blocks": {
-        "announcement": {
-          "name": "Comunicado",
-          "settings": {
-            "text": {
-              "label": "Texto"
-            },
-            "link": {
-              "label": "Link"
-            }
-          }
-        }
-      }
+      "name": "Barra de avisos"
     },
     "collage": {
       "name": "Colagem",

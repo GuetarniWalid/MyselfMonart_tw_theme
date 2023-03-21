@@ -1,11 +1,13 @@
 <link rel="stylesheet" href="{{ 'component-list-menu.css' | asset_url }}" media="print" onload="this.media='all'">
-<link rel="stylesheet" href="{{ 'component-search.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-menu-drawer.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-cart-notification.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'header.css' | asset_url }}">
+{%- if settings.enable_predictive_search -%}
+  <link rel="stylesheet" href="{{ 'component-search.css' | asset_url }}" media="print" onload="this.media='all'">
+{%- endif -%}
 {%- if settings.predictive_search_enabled -%}
-<link rel="stylesheet" href="{{ 'component-loading-overlay.css' | asset_url }}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{ 'component-loading-overlay.css' | asset_url }}" media="print" onload="this.media='all'">
 {%- endif -%}
 {{ 'component-loading-overlay.css' | asset_url | stylesheet_tag }}
 
@@ -24,17 +26,22 @@
     --header-padding-bottom-mobile: {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px;
     --logo-size: {{ section.settings.logo_width }}px;
     --cart-size: {{ section.settings.cart_width }}px;
-    --icons-color-on-transparency: {{ section.settings.icons_color_on_transparency }};
-    --icons-color-on-colored: {{ section.settings.icons_color_on_colored }};
-    --icons-border-color-on-colored: {{ section.settings.border_color_on_colored }};
+    --icons-color: {{ section.settings.icons_color }};
+    --icons-border-color: {{ section.settings.border_color }};
     --shadow-on-colored: {% if section.settings.add_shadow %}1px 12px 30px -1px rgba(0,0,0,0.1){% else %}none{% endif %};
+    --header-position: {% if section.settings.enable_sticky_header %}sticky{% else %}relative{% endif %};
   }
 {%- endstyle -%}
 
 <script src="{{ 'details-disclosure.js' | asset_url }}" defer="defer"></script>
-<script src="{{ 'details-modal.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'cart-notification.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
+{%- if settings.enable_predictive_search -%}
+  <script src="{{ 'details-modal.js' | asset_url }}" defer="defer"></script>
+{% endif  %}
+{%- if section.settings.enable_sticky_header -%}
+  <script src="{{ 'component-sticky-header.js' | asset_url }}" defer="defer"></script>
+{% endif  %}
 
 <svg xmlns="http://www.w3.org/2000/svg" class="hidden">
   <symbol id="icon-search" viewbox="0 0 18 19" fill="none">
@@ -46,17 +53,9 @@
   </symbol>
 </svg>
 
-<div class="header-wrapper fix">
-  {% render 'component-header', isTransparentOnIndex: section.settings.enable_index_transparent_header, isTransparentOnProduct: section.settings.enable_product_mobile_transparent_header, isSticky: false, index: 1, toObfuscate: section.settings.to_obfuscate, to_obfuscate_social_media: section.settings.to_obfuscate_social_media %}
-</div>
-
-{% if section.settings.enable_sticky_header %}
-  <sticky-header class="header-wrapper">
-    {% render 'component-header', isTransparentOnIndex: false, isTransparentOnProduct: false, isSticky: true, index: 2, toObfuscate: section.settings.to_obfuscate %}
-  </sticky-header>
-  <script src="{{ 'component-sticky-header.js' | asset_url }}" defer="defer"></script>
-{% endif %}
-
+<sticky-header>
+  {% render 'component-header', toObfuscate: section.settings.to_obfuscate, to_obfuscate_social_media: section.settings.to_obfuscate_social_media %}
+</sticky-header>
 
 <script type="application/ld+json">
   {
@@ -104,41 +103,6 @@
   "class": "section-header",
   "settings": [
     {
-      "type": "header",
-      "content": "t:sections.header.headings.header_transparent.content"
-    },
-    {
-      "type": "paragraph",
-      "content": "t:sections.header.headings.header_transparent.info"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_index_transparent_header",
-      "label": "t:sections.header.settings.enable_index_transparent_header.label",
-      "default": false
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_product_mobile_transparent_header",
-      "label": "t:sections.header.settings.enable_product_mobile_transparent_header.label",
-      "info": "t:sections.header.settings.enable_product_mobile_transparent_header.info",
-      "default": false
-    },
-    {
-      "type": "color",
-      "id": "icons_color_on_transparency",
-      "label": "t:sections.header.settings.icon_color.label",
-      "default": "#121212"
-    },
-    {
-      "type": "header",
-      "content": "t:sections.header.headings.header_colored.content"
-    },
-    {
-      "type": "paragraph",
-      "content": "t:sections.header.headings.header_colored.info"
-    },
-    {
       "type": "color_background",
       "id": "background_color",
       "label": "t:sections.header.settings.color_background.label",
@@ -146,13 +110,13 @@
     },
     {
       "type": "color",
-      "id": "icons_color_on_colored",
+      "id": "icons_color",
       "label": "t:sections.header.settings.icon_color.label",
       "default": "#121212"
     },
     {
       "type": "color",
-      "id": "border_color_on_colored",
+      "id": "border_color",
       "label": "t:sections.header.settings.border_bottom_color.label",
       "default": "#121212"
     },
@@ -235,12 +199,6 @@
       "default": true,
       "label": "t:sections.header.settings.enable_sticky_header.label",
       "info": "t:sections.header.settings.enable_sticky_header.info"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_search_icon",
-      "default": false,
-      "label": "t:sections.header.settings.show_search_icon.label"
     },
     {
       "type": "header",

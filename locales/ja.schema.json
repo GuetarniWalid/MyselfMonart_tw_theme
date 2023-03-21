@@ -369,20 +369,7 @@
       }
     },
     "announcement-bar": {
-      "name": "告知バー",
-      "blocks": {
-        "announcement": {
-          "settings": {
-            "text": {
-              "label": "テキスト"
-            },
-            "link": {
-              "label": "リンク"
-            }
-          },
-          "name": "告知"
-        }
-      }
+      "name": "告知バー"
     },
     "collage": {
       "name": "コラージュ",

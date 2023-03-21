@@ -369,20 +369,7 @@
       }
     },
     "announcement-bar": {
-      "name": "Thanh thông báo",
-      "blocks": {
-        "announcement": {
-          "name": "Thông báo",
-          "settings": {
-            "text": {
-              "label": "Văn bản"
-            },
-            "link": {
-              "label": "Liên kết"
-            }
-          }
-        }
-      }
+      "name": "Thanh thông báo"
     },
     "collage": {
       "name": "Ghép",

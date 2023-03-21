@@ -369,20 +369,7 @@
       }
     },
     "announcement-bar": {
-      "name": "Ankündigungsleiste",
-      "blocks": {
-        "announcement": {
-          "name": "Ankündigung",
-          "settings": {
-            "text": {
-              "label": "Text"
-            },
-            "link": {
-              "label": "Link"
-            }
-          }
-        }
-      }
+      "name": "Ankündigungsleiste"
     },
     "collage": {
       "name": "Collage",

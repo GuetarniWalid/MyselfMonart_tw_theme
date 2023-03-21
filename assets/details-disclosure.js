@@ -29,13 +29,12 @@ class DetailsDisclosure extends HTMLElement {
     this.mainDetailsToggle.querySelector('summary').setAttribute('aria-expanded', false);
   }
 }
-
 customElements.define('details-disclosure', DetailsDisclosure);
 
 class HeaderMenu extends DetailsDisclosure {
   constructor() {
     super();
-    this.header = document.querySelector('.header-wrapper');
+    this.header = document.querySelector('header');
   }
 
   onToggle() {
@@ -46,5 +45,4 @@ class HeaderMenu extends DetailsDisclosure {
     document.documentElement.style.setProperty('--header-bottom-position-desktop', `${Math.floor(this.header.getBoundingClientRect().bottom)}px`);
   }
 }
-
 customElements.define('header-menu', HeaderMenu);

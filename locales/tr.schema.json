@@ -369,20 +369,7 @@
       }
     },
     "announcement-bar": {
-      "name": "Duyuru çubuğu",
-      "blocks": {
-        "announcement": {
-          "name": "Duyuru",
-          "settings": {
-            "text": {
-              "label": "Metin"
-            },
-            "link": {
-              "label": "Bağlantı"
-            }
-          }
-        }
-      }
+      "name": "Duyuru çubuğu"
     },
     "collage": {
       "name": "Kolaj",

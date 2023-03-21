@@ -260,12 +260,13 @@
         "column_alignment": "left",
         "background_style": "none",
         "title_color": "#002e5d",
-        "text_color": "#f6f3ef",
+        "text_color": "#002e5d",
         "button_label": "Voir les autres oeuvres",
         "button_link": "shopify:\/\/collections\/tableau-salon",
         "color_scheme": "background-2",
         "columns_mobile": "2",
         "swipe_on_mobile": true,
+        "to_obfuscate": true,
         "padding_top": 20,
         "padding_bottom": 20
       }

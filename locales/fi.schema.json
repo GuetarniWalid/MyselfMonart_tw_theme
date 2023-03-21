@@ -369,20 +369,7 @@
       }
     },
     "announcement-bar": {
-      "name": "Ilmoituspalkki",
-      "blocks": {
-        "announcement": {
-          "name": "Ilmoitus",
-          "settings": {
-            "text": {
-              "label": "Teksti"
-            },
-            "link": {
-              "label": "Linkki"
-            }
-          }
-        }
-      }
+      "name": "Ilmoituspalkki"
     },
     "collage": {
       "name": "Kollaasi",

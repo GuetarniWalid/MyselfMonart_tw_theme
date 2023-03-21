@@ -1,78 +1,74 @@
 {{ 'section-announcement-bar.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
+  #shopify-section-announcement-bar {
+      --svg-size: {{ section.settings.svg_size }}rem;
+    }
+
   #shopify-section-announcement-bar .announcement-bar {
       background: {{ section.settings.background }};
       border-top: 1px solid {{ section.settings.border_color }};
       border-bottom: 1px solid {{ section.settings.border_color }};
+      {% unless section.settings.animate %}
+        justify-content: center;
+      {% endunless %}
     }
     
     #shopify-section-announcement-bar p,
     #shopify-section-announcement-bar a {
       color: {{ section.settings.color }};
+      font-weight: {% if section.settings.text_bold %}bold{% else %}normal{% endif %};
     }
 {%- endstyle -%}
 
-{%- for block in section.blocks -%}
-  {%- case block.type -%}
-    {%- when 'announcement' -%}
-        {%- style -%}
-          #shopify-section-{{ section.id }} p,
-          #shopify-section-{{ section.id }} a {
-            font-weight: {% if block.settings.text_bold %}bold{% else %}normal{% endif %};
-          }
-        {%- endstyle -%}
-      <div class="announcement-bar" role="region" aria-label="{{ 'sections.header.announcement' | t }}" {{ block.shopify_attributes }}>
-        {% if section.settings.animate %}
-          <div class="wrapper-anim">
-        {% endif %}
-          {%- if block.settings.text != blank or block.settings.svg != blank -%}
-            {%- if block.settings.link != blank -%}
-              <a href="{{ block.settings.link }}" class="announcement-bar__link link focus-inset animate-arrow repeat-text">
-            {%- else -%}
-              <p class="h5 repeat-text">
-            {%- endif -%}
-              <span>
-                {%- if block.settings.svg != blank -%}
-                  {%- style -%}
-                    #shopify-section-{{ section.id }} {
-                      --svg-size: {{ block.settings.svg_size }}rem;
-                    }
-                  {%- endstyle -%}
-
-                  {{ block.settings.svg }}&nbsp;
-                {%- endif -%}      
-                {{ block.settings.text | escape }}
-              </span>
-
-              {% if section.settings.animate %}
-                {% for i in (1..34) -%}
-                <span>
-                  {%- if block.settings.svg != blank -%}
-                    {{ block.settings.svg }}&nbsp;
-                  {%- endif -%}      
-                  {{ block.settings.text | escape }}
-                </span>
-                {%- endfor %}
-              {% endif %}
-
-            {%- if block.settings.link != blank -%}
-              </a>
-            {%- else -%}
-              </p>
-            {%- endif -%}
+<div class="announcement-bar" role="region" aria-label="{{ 'sections.header.announcement' | t }}">
+  {% if section.settings.animate %}
+    <div class="wrapper-anim">
+  {% endif %}
+    {%- if section.settings.text != blank or sedction.settings.svg != blank -%}
+      {%- if section.settings.link != blank -%}
+        <a href="{{ section.settings.link }}" class="announcement-bar__link link focus-inset animate-arrow repeat-text">
+      {%- else -%}
+        <p class="h5 repeat-text">
+      {%- endif -%}
+        <span>
+          {%- if section.settings.svg != blank -%}
+            {{ section.settings.svg }}
+          {%- endif -%}      
+          <span class="message">{{ section.settings.text | escape }}</span>
+          {%- if section.settings.link != blank -%}
+            {% render 'icon-arrow' %}
           {%- endif -%}
+        </span>
+
         {% if section.settings.animate %}
-          </div>
+          {% for i in (1..34) -%}
+          <span>
+            {%- if section.settings.svg != blank -%}
+              {{ section.settings.svg }}
+            {%- endif -%}      
+            <span class="message">{{ section.settings.text | escape }}</span>
+            {%- if section.settings.link != blank -%}
+              {% render 'icon-arrow' %}
+            {%- endif -%}
+          </span>
+          {%- endfor %}
         {% endif %}
-      </div>
-  {%- endcase -%}
-{%- endfor -%}
+
+      {%- if section.settings.link != blank -%}
+        </a>
+      {%- else -%}
+        </p>
+      {%- endif -%}
+    {%- endif -%}
+  {% if section.settings.animate %}
+    </div>
+  {% endif %}
+</div>
 
 {% schema %}
 {
   "name": "t:sections.announcement-bar.name",
-  "max_blocks": 1,
   "settings": [
     {
       "type": "color_background",
@@ -89,63 +85,48 @@
     {
       "type": "color",
       "id": "border_color",
-      "label": "t:sections.announcement-bar.sections.settings.border_color.label",
+      "label": "t:sections.announcement-bar.settings.border_color.label",
       "default": "transparent"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "default": "Welcome to our store",
+      "label": "Message"
+    },
+    {
+      "type": "checkbox",
+      "id": "text_bold",
+      "label": "t:sections.announcement-bar.settings.text_bold.label",
+      "default": false
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:sections.announcement-bar.settings.link.label"
     },
     {
       "type": "checkbox",
       "id": "animate",
-      "label": "t:sections.announcement-bar.sections.settings.animate.label",
+      "label": "t:sections.announcement-bar.settings.animate.label",
       "default": true
-    }
-  ],
-  "blocks": [
+    },
     {
-      "type": "announcement",
-      "name": "t:sections.announcement-bar.blocks.announcement.name",
-      "settings": [
-        {
-          "type": "html",
-          "id": "svg",
-          "label": "SVG",
-          "info": "t:sections.all.svg.info"
-        },
-        {
-          "type": "range",
-          "id": "svg_size",
-          "min": 1.8,
-          "max": 4,
-          "step": 0.2,
-          "unit": "rem",
-          "label": "t:sections.all.svg.size",
-          "default": 2
-        },
-        {
-          "type": "text",
-          "id": "text",
-          "default": "Welcome to our store",
-          "label": "t:sections.announcement-bar.blocks.announcement.settings.text.label"
-        },
-        {
-          "type": "checkbox",
-          "id": "text_bold",
-          "label": "t:sections.announcement-bar.blocks.announcement.settings.text_bold.label",
-          "default": false
-        },
-        {
-          "type": "url",
-          "id": "link",
-          "label": "t:sections.announcement-bar.blocks.announcement.settings.link.label"
-        }
-      ]
+      "type": "html",
+      "id": "svg",
+      "label": "SVG",
+      "info": "t:sections.all.svg.info"
+    },
+    {
+      "type": "range",
+      "id": "svg_size",
+      "min": 1.8,
+      "max": 4,
+      "step": 0.2,
+      "unit": "rem",
+      "label": "t:sections.all.svg.size",
+      "default": 2
     }
-  ],
-  "default": {
-    "blocks": [
-      {
-        "type": "announcement"
-      }
-    ]
-  }
+  ]
 }
 {% endschema %}

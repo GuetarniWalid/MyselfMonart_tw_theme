@@ -369,20 +369,7 @@
       }
     },
     "announcement-bar": {
-      "name": "Aankondigingsbalk",
-      "blocks": {
-        "announcement": {
-          "name": "Aankondiging",
-          "settings": {
-            "text": {
-              "label": "Tekst"
-            },
-            "link": {
-              "label": "Link"
-            }
-          }
-        }
-      }
+      "name": "Aankondigingsbalk"
     },
     "collage": {
       "name": "Collage",

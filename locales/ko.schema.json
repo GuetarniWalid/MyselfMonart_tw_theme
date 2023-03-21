@@ -369,20 +369,7 @@
       }
     },
     "announcement-bar": {
-      "name": "공지 표시줄",
-      "blocks": {
-        "announcement": {
-          "settings": {
-            "text": {
-              "label": "텍스트"
-            },
-            "link": {
-              "label": "링크"
-            }
-          },
-          "name": "공지"
-        }
-      }
+      "name": "공지 표시줄"
     },
     "collage": {
       "name": "콜라주",

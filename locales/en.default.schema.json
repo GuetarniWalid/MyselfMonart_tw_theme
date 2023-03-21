@@ -259,6 +259,9 @@
         "header": {
           "content": "Product suggestions"
         },
+        "enable_predictive_search": {
+          "label": "Enable search bar"
+        },
         "predictive_search_enabled": {
           "label": "Enable product suggestions"
         },
@@ -375,24 +378,15 @@
           "animate": {
             "label": "Animate the bar"
           },
+          "text_bold": {
+            "label": "Bold text"
+          },
           "border_color": {
             "label": "Border color"
-          }
-        }
-      },
-      "blocks": {
-        "announcement": {
-          "name": "Announcement",
-          "settings": {
-            "text": {
-              "label": "Text"
-            },
-            "text_bold": {
-              "label": "Bold text"
-            },
-            "link": {
-              "label": "Link"
-            }
+          },
+          "link": {
+            "label": "Link",
+            "info": "Optional: Link to a page or external URL"
           }
         }
       }
@@ -1290,33 +1284,15 @@
         "menu": {
           "label": "Menu"
         },
-        "enable_index_transparent_header": {
-          "label": "Enable transparent header on home page"
-        },
-        "enable_product_mobile_transparent_header": {
-          "label": "Enable transparent header on product pages",
-          "info": "Visible only in mobile mode"
-        },
         "enable_sticky_header": {
           "label": "Enable sticky header",
           "info": "Header shows on the screen as customers scroll up."
         },
         "margin_bottom": {
           "label": "Bottom margin"
-        },
-        "show_search_icon": {
-          "label": "Show search icon"
         }
       },
       "headings": {
-        "header_transparent": {
-          "content": "Transparent header",
-          "info": "These settings only apply if you enable transparent header"
-        },
-        "header_colored": {
-          "content": "Colored header",
-          "info": "These settings only apply if you don't enable transparent header or on sticky header if you enable it"
-        },
         "general_settings": {
           "content": "General settings"
         },
