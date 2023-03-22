@@ -1704,15 +1704,6 @@
         "header__1": {
           "content": "Produktkarte"
         },
-        "header__2": {
-          "content": "Blog-Karte"
-        },
-        "article_show_date": {
-          "label": "Datum anzeigen"
-        },
-        "article_show_author": {
-          "label": "Autor anzeigen"
-        },
         "show_rating": {
           "label": "Produktbewertung anzeigen",
           "info": "Um eine Bewertung anzuzeigen, musst du eine Produktbewertungs-App hinzufügen. [Mehr Informationen](https:\/\/help.shopify.com\/manual\/online-store\/themes\/theme-structure\/page-types#search-results-section-settings)"

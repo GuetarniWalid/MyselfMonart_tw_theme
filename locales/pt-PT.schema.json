@@ -1704,15 +1704,6 @@
         "header__1": {
           "content": "Cartão de produtos"
         },
-        "header__2": {
-          "content": "Cartão de blogue"
-        },
-        "article_show_date": {
-          "label": "Mostrar data"
-        },
-        "article_show_author": {
-          "label": "Mostrar autor"
-        },
         "show_rating": {
           "label": "Mostrar classificação do produto",
           "info": "Para mostrar uma classificação, adicione uma aplicação de classificação de produto. [Saber mais](https:\/\/help.shopify.com\/manual\/online-store\/themes\/theme-structure\/page-types#search-results-section-settings)"

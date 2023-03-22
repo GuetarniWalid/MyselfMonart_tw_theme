@@ -1704,15 +1704,6 @@
         "header__1": {
           "content": "Ürün kartı"
         },
-        "header__2": {
-          "content": "Blog kartı"
-        },
-        "article_show_date": {
-          "label": "Tarihi göster"
-        },
-        "article_show_author": {
-          "label": "Yazarı göster"
-        },
         "show_rating": {
           "label": "Ürün puanlarını göster",
           "info": "Puan göstermek için bir ürün puanlandırma uygulaması ekleyin. [Daha fazla bilgi edinin](https:\/\/help.shopify.com\/manual\/online-store\/themes\/theme-structure\/page-types#search-results-section-settings)"

@@ -2548,15 +2548,6 @@
         "header__1": {
           "content": "Product card"
         },
-        "header__2": {
-          "content": "Blog card"
-        },
-        "article_show_date": {
-          "label": "Show date"
-        },
-        "article_show_author": {
-          "label": "Show author"
-        },
         "header_mobile": {
           "content": "Mobile Layout"
         },

@@ -1704,15 +1704,6 @@
         "header__1": {
           "content": "商品カード"
         },
-        "header__2": {
-          "content": "ブログカード"
-        },
-        "article_show_date": {
-          "label": "日付を表示する"
-        },
-        "article_show_author": {
-          "label": "執筆者を表示する"
-        },
         "show_rating": {
           "label": "商品の評価を表示",
           "info": "評価を表示するには、商品評価アプリを追加します。[詳しくはこちら](https:\/\/help.shopify.com\/manual\/online-store\/themes\/theme-structure\/page-types#search-results-section-settings)"

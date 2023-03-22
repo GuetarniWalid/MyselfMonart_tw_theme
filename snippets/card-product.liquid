@@ -10,6 +10,7 @@
     - lazy_load: {Boolean} Image should be lazy loaded. Default: true (optional)
     - section_id: {String} The ID of the section that contains this card.
     - hide_second_quick_add_button: {Boolean} Hide the second quick add button. Default: false (optional)
+    - item_product: {Object} Product Liquid object (optional)
 
     Usage:
     {% render 'card-product' %}
@@ -109,7 +110,7 @@
       <div class="card__content">
         <div class="card__information">
           <h3 class="card__heading"{% if card_product.featured_media or settings.card_style == 'card' %} id="title-{{ section_id }}-{{ card_product.id }}"{% endif %}>
-            <a href="/collections/{{ collection.handle }}/products/{{ card_product.handle }}" id="CardLink-{{ section_id }}-{{ card_product.id }}" class="full-unstyled-link" aria-labelledby="CardLink-{{ section_id }}-{{ card_product.id }} Badge-{{ section_id }}-{{ card_product.id }}">
+        <a href="{% if item_product %}{{ item_product.url }}{% else %}/collections/{{ collection.handle }}/products/{{ card_product.handle }}{% endif %}" id="CardLink-{{ section_id }}-{{ card_product.id }}" class="full-unstyled-link" aria-labelledby="CardLink-{{ section_id }}-{{ card_product.id }} Badge-{{ section_id }}-{{ card_product.id }}">
               {{ card_product.title | escape }}<span class="icon-wrap">{% render 'icon-arrow' %}</span> 
             </a>
           </h3>

@@ -1704,15 +1704,6 @@
         "header__1": {
           "content": "제품 카드"
         },
-        "header__2": {
-          "content": "블로그 카드"
-        },
-        "article_show_date": {
-          "label": "날짜 표시"
-        },
-        "article_show_author": {
-          "label": "작성자 표시"
-        },
         "show_rating": {
           "label": "제품 평점 표시",
           "info": "평점을 표시하려면 제품 평점 앱을 추가하십시오. [자세히 알아보기](https:\/\/help.shopify.com\/manual\/online-store\/themes\/theme-structure\/page-types#search-results-section-settings)"

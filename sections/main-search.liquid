@@ -1,8 +1,8 @@
 {{ 'template-collection.css' | asset_url | stylesheet_tag }}
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'section-main-collection-product-grid.css' | asset_url | stylesheet_tag }}
 
-<link rel="stylesheet" href="{{ 'component-search.css' | asset_url }}" media="print" onload="this.media='all'">
 
 <noscript>{{ 'component-search.css' | asset_url | stylesheet_tag }}</noscript>
 
@@ -47,6 +47,13 @@
 -%}
 
 {%- style -%}
+  #shopify-section-{{ section.id }} {
+    --background: {{ section.settings.background }};
+    --card-background: {{ section.settings.card_background }};
+    --button-background: {{ section.settings.button_background }};
+    --card-border: {% if section.settings.enable_border %}1px solid {{ section.settings.button_background }}{% else %}none{% endif %};
+  }
+
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
@@ -196,57 +203,31 @@
             </div>
           </div>
         {%- else -%}
-          {% paginate search.results by 24 %}
+          {% paginate search.results by section.settings.products_per_page %}
             <div class="template-search__results collection{% if section.settings.filter_type != 'vertical' %} page-width{% endif %}" id="product-grid" data-id="{{ section.id }}">
               <div class="loading-overlay gradient"></div>
-              <ul class="grid product-grid  grid--{{ section.settings.columns_mobile }}-col-tablet-down grid--{{ section.settings.columns_desktop }}-col-desktop" role="list">
+              <ul id="product-grid" data-id="{{ section.id }}" class="
+              grid product-grid grid--{{ section.settings.columns_mobile }}-col-tablet-down
+              grid--{{ section.settings.columns_desktop }}-col-desktop">
                 {%- for item in search.results -%}
                   {% assign lazy_load = false %}
                   {%- if forloop.index > 2 -%}
                     {%- assign lazy_load = true -%}
                   {%- endif -%}
 
-                  <li class="grid__item">
-                    {%- case item.object_type -%}
-                      {%- when 'product' -%}
-                        {%- capture product_settings -%}{%- if section.settings.product_show_vendor -%}vendor,{%- endif -%}title,price{%- endcapture -%}
-                        {% render 'card-product',
-                          card_product: item,
-                          media_aspect_ratio: section.settings.image_ratio,
-                          show_secondary_image: section.settings.show_secondary_image,
-                          show_vendor: section.settings.show_vendor,
-                          show_rating: section.settings.show_rating,
-                          lazy_load: lazy_load
-                        %}
-                      {%- when 'article' -%}
-                        {% render 'article-card',
-                          article: item,
-                          show_image: true,
-                          show_date: section.settings.article_show_date,
-                          show_author: section.settings.article_show_author,
-                          show_badge: true,
-                          media_aspect_ratio: 1,
-                          lazy_load: lazy_load
-                        %}
-                      {%- when 'page' -%}
-                        <div class="card-wrapper underline-links-hover">
-                          <div class="card card--card card--text ratio color-{{ settings.card_color_scheme }}" style="--ratio-percent: 100%;">
-                            <div class="card__content">
-                              <div class="card__information">
-                                <h3 class="card__heading">
-                                  <a href="{{ item.url }}" class="full-unstyled-link">
-                                    {{ item.title | truncate: 50 | escape }}
-                                  </a>
-                                </h3>
-                              </div>
-                              <div class="card__badge {{ settings.badge_position }}">
-                                <span class="badge color-background-1">{{ 'templates.search.page' | t }}</span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                    {%- endcase -%}
-                  </li>
+                  {%- if item.object_type == 'product' -%}
+                    <li class="grid__item">
+                      {% render 'card-product',
+                        card_product: item,
+                        media_aspect_ratio: section.settings.image_ratio,
+                        show_secondary_image: section.settings.show_secondary_image,
+                        lazy_load: lazy_load,
+                        section_id: section.id,
+                        show_price: section.settings.show_price,
+                        item_product: item
+                      %}
+                    </li>
+                  {%- endif -%}
                 {%- endfor -%}
               </ul>
               {%- if paginate.pages > 1 -%}
@@ -264,8 +245,41 @@
 {
   "name": "t:sections.main-search.name",
   "tag": "section",
-  "class": "section",
+  "class": "section main-collection-product-grid",
   "settings": [
+    {
+      "type": "color_background",
+      "id": "background",
+      "label": "t:sections.main-collection-product-grid.settings.background.label",
+      "default": "#fff"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "t:sections.main-collection-product-grid.settings.card_background.label",
+      "default": "#fff"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "t:sections.main-collection-product-grid.settings.button_background.label",
+      "default": "#fff"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_border",
+      "label": "t:sections.main-collection-product-grid.settings.enable_border.label",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 8,
+      "max": 24,
+      "step": 4,
+      "default": 16,
+      "label": "t:sections.main-collection-product-grid.settings.products_per_page.label"
+    },
     {
       "type": "range",
       "id": "columns_desktop",
@@ -307,16 +321,9 @@
     },
     {
       "type": "checkbox",
-      "id": "show_vendor",
-      "default": false,
-      "label": "t:sections.main-search.settings.show_vendor.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_rating",
-      "default": false,
-      "label": "t:sections.main-search.settings.show_rating.label",
-      "info": "t:sections.main-search.settings.show_rating.info"
+      "id": "show_price",
+      "default": true,
+      "label": "t:sections.main-collection-product-grid.settings.show_price.label"
     },
     {
       "type": "header",
@@ -358,29 +365,13 @@
     },
     {
       "type": "header",
-      "content": "t:sections.main-search.settings.header__2.content"
-    },
-    {
-      "type": "checkbox",
-      "id": "article_show_date",
-      "default": true,
-      "label": "t:sections.main-search.settings.article_show_date.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "article_show_author",
-      "default": false,
-      "label": "t:sections.main-search.settings.article_show_author.label"
-    },
-    {
-      "type": "header",
-      "content": "t:sections.main-search.settings.header_mobile.content"
+      "content": "t:sections.main-collection-product-grid.settings.header_mobile.content"
     },
     {
       "type": "select",
       "id": "columns_mobile",
       "default": "2",
-      "label": "t:sections.main-search.settings.columns_mobile.label",
+      "label": "t:sections.main-collection-product-grid.settings.columns_mobile.label",
       "options": [
         {
           "value": "1",

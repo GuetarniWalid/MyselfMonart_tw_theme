@@ -1704,15 +1704,6 @@
         "header__1": {
           "content": "Thẻ sản phẩm"
         },
-        "header__2": {
-          "content": "Thẻ blog"
-        },
-        "article_show_date": {
-          "label": "Hiển thị ngày"
-        },
-        "article_show_author": {
-          "label": "Hiển thị tác giả"
-        },
         "show_rating": {
           "label": "Hiển thị thứ hạng sản phẩm",
           "info": "Nếu muốn hiển thị thứ hạng, hãy thêm ứng dụng xếp hạng sản phẩm. [Tìm hiểu thêm](https:\/\/help.shopify.com\/manual\/online-store\/themes\/theme-structure\/page-types#search-results-section-settings)"

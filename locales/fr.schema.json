@@ -2872,15 +2872,6 @@
         "header__1": {
           "content": "Carte de produit"
         },
-        "header__2": {
-          "content": "Carte de blog"
-        },
-        "article_show_date": {
-          "label": "Afficher la date"
-        },
-        "article_show_author": {
-          "label": "Afficher l'auteur"
-        },
         "show_rating": {
           "label": "Afficher la note du produit",
           "info": "Pour afficher une note, ajoutez une application d'évaluation de produits. [En savoir plus](https://help.shopify.com/manual/online-store/themes/theme-structure/page-types#search-results-section-settings)"
