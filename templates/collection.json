@@ -4,7 +4,9 @@
       "type": "breadcrumb",
       "settings": {
         "selected_item_background": "#ecd1ce",
-        "selected_item_color": "#384031"
+        "selected_item_color": "#384031",
+        "padding_top": 36,
+        "padding_bottom": 8
       }
     },
     "main-collection-product-grid": {
@@ -18,9 +20,7 @@
         "columns_desktop": 3,
         "image_ratio": "adapt",
         "show_secondary_image": true,
-        "show_vendor": false,
-        "show_rating": false,
-        "enable_quick_add": false,
+        "show_price": true,
         "enable_filtering": false,
         "filter_type": "vertical",
         "enable_sorting": false,
