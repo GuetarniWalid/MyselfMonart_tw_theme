@@ -52,7 +52,7 @@ class StickyHeader extends HTMLElement {
 
         this.isScrollingDown = setTimeout(() => {
           this.preventHide = false;
-        }, 66);
+        }, 33);
       }
     } else if (scrollTop < this.currentScrollTop) {
       if (!this.preventReveal) {
@@ -62,7 +62,7 @@ class StickyHeader extends HTMLElement {
 
         this.isScrollingUp = setTimeout(() => {
           this.preventReveal = false;
-        }, 66);
+        }, 33);
       }
     }
 
