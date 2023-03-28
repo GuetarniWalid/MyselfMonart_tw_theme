@@ -6,6 +6,7 @@
 <link rel="preload" href="{{ 'component-rte.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
 <noscript>{{ 'component-rte.css' | asset_url | stylesheet_tag }}</noscript>
+<script src="{{ 'component-infinite-scroll.js' | asset_url }}" defer="defer"></script>
 
 {%- style -%}
   #shopify-section-{{ section.id }} {
@@ -99,26 +100,28 @@
         {%- else -%}
           <div class="collection{% if section.settings.filter_type != 'vertical' %} page-width{% endif %}">
             <div class="loading-overlay gradient"></div>
-              <ul id="product-grid" data-id="{{ section.id }}" class="
-                grid product-grid grid--{{ section.settings.columns_mobile }}-col-tablet-down
-                grid--{{ section.settings.columns_desktop }}-col-desktop">
-                {%- for product in collection.products -%}
-                  {% assign lazy_load = false %}
-                  {%- if forloop.index > 2 -%}
-                    {%- assign lazy_load = true -%}
-                  {%- endif -%}
-                  <li class="grid__item">
-                    {% render 'card-product',
-                      card_product: product,
-                      media_aspect_ratio: section.settings.image_ratio,
-                      show_secondary_image: section.settings.show_secondary_image,
-                      lazy_load: lazy_load,
-                      section_id: section.id,
-                      show_price: section.settings.show_price
-                    %}
-                  </li>
-                {%- endfor -%}
-              </ul>
+            <infinite-scroll-storage data-page="{{ paginate.current_page }}">
+              <infinite-scroll id="infinite-scroll-{{ collection.id }}-{{ paginate.current_page }}" data-pages="{{ paginate.pages }}" data-page="{{ paginate.current_page }}" data-section-id="{{ section.id }}">
+                  <ul id="product-grid" data-id="{{ section.id }}" class="grid product-grid grid--{{ section.settings.columns_mobile }}-col-tablet-down grid--{{ section.settings.columns_desktop }}-col-desktop">
+                    {%- for product in collection.products -%}
+                      {% assign lazy_load = false %}
+                      {%- if forloop.index > 2 -%}
+                        {%- assign lazy_load = true -%}
+                      {%- endif -%}
+                      <li class="grid__item" id="{{ product.id }}">
+                        {% render 'card-product',
+                          card_product: product,
+                          media_aspect_ratio: section.settings.image_ratio,
+                          show_secondary_image: section.settings.show_secondary_image,
+                          lazy_load: lazy_load,
+                          section_id: section.id,
+                          show_price: section.settings.show_price
+                        %}
+                      </li>
+                    {%- endfor -%}
+                    </ul>
+              </infinite-scroll>
+            </infinite-scroll-storage>
             {%- if paginate.pages > 1 -%}
               {% render 'pagination', paginate: paginate, anchor: '' %}
             {%- endif -%}
@@ -134,6 +137,7 @@
 {
   "name": "t:sections.main-collection-product-grid.name",
   "class": "section main-collection-product-grid",
+  "templates": ["collection"],
   "settings": [
     {
       "type": "color_background",
