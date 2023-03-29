@@ -55,7 +55,7 @@
 }
 
 .drawer__inner-empty h2,
-.cart-drawer__empty-content a,
+.cart-drawer__empty-content button,
 .drawer__inner-empty p {
   color: var(--drawer-color);
 }
@@ -68,11 +68,11 @@
   stroke: var(--drawer-color);
 }
 
-.cart-drawer__empty-content a {
+.cart-drawer__empty-content button {
   background: var(--drawer-background);
 }
 
-.cart-drawer__empty-content a::after {
+.cart-drawer__empty-content button::after {
   box-shadow: none;
   border: 1px solid var(--drawer-color);
 }

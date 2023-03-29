@@ -428,10 +428,6 @@
           {%- render 'component-product-addon', block: block, product_form_id: product_form_id -%}
       {%- endcase -%}
         {%- endfor -%}
-        <a href="{{ product.url }}" class="link product__view-details animate-arrow">
-          {{ 'products.product.view_full_details' | t }}
-          {% render 'icon-arrow' %}
-        </a>
       </div>
     </div>
   </div>
