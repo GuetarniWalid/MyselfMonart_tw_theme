@@ -44,6 +44,17 @@
               {%- render 'icon-sub-arrow' -%}
               {{ collection.title }}
             </a>
+          {% elsif product.metafields.link.mother_collection != blank %}
+            {%- liquid
+              assign mobile_url = product.metafields.link.mother_collection.value.url
+              assign mobile_text = product.metafields.link.mother_collection.value.title
+              assign itemListElement_names = itemListElement_names | append: '|,|' | append: mobile_text
+              assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: mobile_url
+            -%}
+            <a href="{{ product.metafields.link.mother_collection.value.url }}" class="not-first"> 
+              {%- render 'icon-sub-arrow' -%}
+              {{ product.metafields.link.mother_collection.value.title }}
+            </a>
           {% endif %}
           {%- assign itemListElement_names = itemListElement_names | append: '|,|' | append: product.title -%}
           {%- assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: product.url -%}
