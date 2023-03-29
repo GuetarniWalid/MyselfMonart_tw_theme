@@ -28,13 +28,6 @@
         padding-bottom: {{ section.settings.padding_bottom }}px;
       }
     }
-
-    {%- comment -%}Adapt header icon color according product{%- endcomment -%}
-    {% if product.metafields.style.couleur %}
-      #shopify-section-header {
-        --icons-color-on-transparency: {{ product.metafields.style.couleur }};
-      }
-    {% endif %}
   {%- endstyle -%}
 
   <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
