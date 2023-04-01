@@ -8,7 +8,6 @@ if (!customElements.get('snap-carrousel')) {
 
     constructor() {
       super();
-      console.log('constuctorrr');
       this.ul = this.querySelector('ul');
       this.liList = this.ul.querySelectorAll('li');
     }

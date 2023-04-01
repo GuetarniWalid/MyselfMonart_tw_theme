@@ -11,6 +11,7 @@
     - media_width: {Float} The width percentage that the media column occupies on desktop.
     - lazy_load: {Boolean} Image should be lazy loaded. Default: true (optional)
     - enable_zoom: {Boolean} Show zoom logo. Default: true (optional)
+    - poster: {String} Poster image for 3D model (optional)
 
     Usage:
     {% render 'product-thumbnail',
@@ -22,8 +23,15 @@
     %}
 {% endcomment %}
 
+{% liquid
+  assign media_type = media.media_type
+  if media.media_type == 'generic_file'
+    assign media_type = 'model'
+  endif
+%}
+
 <noscript>
-  {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
+  {%- if media_type == 'video' or media_type == 'external_video' -%}
     <span class="product__media-icon motion-reduce quick-add-hidden">{% render 'icon-play' %}</span>
     <div class="product__media media gradient global-media-settings" style="padding-top: {{ 1 | divided_by: media.preview_image.aspect_ratio | times: 100 }}%;">
       <img
@@ -49,7 +57,7 @@
         class="skeleton"
       >
     </div>
-    <a href="{% if media.media_type == 'video' %}{{ media.sources[1].url }}{% else %}{{ media | external_video_url }}{% endif %}" class="product__media-toggle skeleton">
+    <a href="{% if media_type == 'video' %}{{ media.sources[1].url }}{% else %}{{ media | external_video_url }}{% endif %}" class="product__media-toggle skeleton">
       <span class="visually-hidden">{{ 'products.product.video_exit_message' | t: title: product.title | escape }}</span>
     </a>
   {%- else -%}
@@ -84,14 +92,14 @@
   {%- endif -%}
 </noscript>
 
-<modal-opener class="product__modal-opener product__modal-opener--{{ media.media_type }} no-js-hidden" data-modal="#ProductModal-{{ modal_id }}">
+<modal-opener class="product__modal-opener product__modal-opener--{{ media_type }} no-js-hidden" data-modal="#ProductModal-{{ modal_id }}">
   {% if enable_zoom %}
     <span class="product__media-icon motion-reduce quick-add-hidden" aria-hidden="true">
       {%- liquid
-        case media.media_type
+        case media_type
         when 'video' or 'external_video'
           render 'icon-play'
-        when 'model'
+        when 'model' or 'generic_file'
           render 'icon-3d-model'
         else
           render 'icon-zoom'
@@ -137,15 +145,15 @@
   {% endif %}
 </modal-opener>
 
-{%- if media.media_type != 'image' -%}
-  {%- if media.media_type == 'model' -%}
+{%- if media_type != 'image' -%}
+  {%- if media_type == 'model' -%}
     <product-model class="deferred-media media media--transparent gradient global-media-settings no-js-hidden" style="padding-top: 100%" data-media-id="{{ media.id }}">
   {%- else -%}
     <deferred-media class="deferred-media gradient global-media-settings media no-js-hidden" style="padding-top: {{ 1 | divided_by: media.aspect_ratio | times: 100 }}%" data-media-id="{{ media.id }}">
   {%- endif -%}
   <button id="Deferred-Poster-Modal-{{ media.id }}" class="deferred-media__poster" type="button">
     <span class="deferred-media__poster-button motion-reduce">
-      {%- if media.media_type == 'model' -%}
+      {%- if media_type == 'model' -%}
         <span class="visually-hidden">{{ 'products.product.media.play_model' | t }}</span>
         {%- render 'icon-3d-model' -%}
       {%- else -%}
@@ -189,12 +197,15 @@
       when 'video'
         echo media | media_tag: image_size: "2048x", autoplay: true, loop: loop, controls: true, preload: "none"
       when 'model'
-        echo media | model_viewer_tag: poster: media, auto-rotate: "true", auto-rotate-delay: "0", rotation-per-second: "300%", field-of-view: "60deg", min-camera-orbit: "auto 90deg auto", max-camera-orbit: "auto 90deg auto", environment-image: "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Component_5.jpg?v=1664877964"
+        echo media | model_viewer_tag: poster: media, image_size: '400x', auto-rotate: "true", auto-rotate-delay: "0", rotation-per-second: "300%", field-of-view: "60deg", min-camera-orbit: "auto 90deg auto", max-camera-orbit: "auto 90deg auto", environment-image: "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Component_5.jpg?v=1664877964"
       endcase
-    -%}
+    -%}    
+    {% if media.media_type == 'generic_file' %}
+      <model-viewer poster="{% if poster != blank %}{{ poster }}{% else %}{{ media.preview_image | image_url: width: 400 }}{% endif %}" auto-rotate="true" auto-rotate-delay="0" rotation-per-second="300%" field-of-view="60deg" min-camera-orbit="auto 90deg auto" max-camera-orbit="auto 90deg auto" environment-image="https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Component_5.jpg?v=1664877964" src="{{ media.url }}" camera-controls="true" data-shopify-feature="1.12" alt="{{ media.alt }}"></model-viewer>
+    {% endif %}
   </template>
 
-  {%- if media.media_type == 'model' -%}
+  {%- if media_type == 'model' -%}
     </product-model>
   {%- else -%}
     </deferred-media>
