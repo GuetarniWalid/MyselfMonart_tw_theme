@@ -74,6 +74,8 @@ class InfiniteScroll extends HTMLElement {
     this.previousPageExists = Number(this.previousElementSibling?.dataset?.page) === this.page - 1;
     this.nextPageExists = Number(this.nextElementSibling?.dataset?.page) === this.page + 1;
     this.paginationNavbar = document.querySelector('nav.pagination');
+    this.previousAriaLabel = this.dataset.previousAriaLabel;
+    this.nextAriaLabel = this.dataset.nextAriaLabel;
   }
 
   connectedCallback() {
@@ -163,6 +165,42 @@ class InfiniteScroll extends HTMLElement {
     obsoleteLink.classList.remove('pagination__item--current', 'light');
     obsoleteLink.classList.add('link');
     obsoleteLink.href = this.baseUrl + obsoleteLink.textContent;
+
+    const previousLink = document.querySelector('.pagination__list .pagination__item--next')?.closest('li');
+    const previousLinkRemoved = this.removePaginateArrow(previousLink, this.isFirstPage);
+    const previousLinkCreated = this.createPaginateArrow(!previousLinkRemoved && !previousLink && !this.isFirstPage, this.page - 1, true);
+    this.changePaginateArrow(!previousLinkRemoved && !previousLinkCreated && previousLink, previousLink, (this.page - 1));
+
+    const nextLink = document.querySelector('.pagination__list .pagination__item--prev')?.closest('li');
+    const nextLinkRemoved = this.removePaginateArrow(nextLink, this.isLastPage);
+    const nextLinkCreated = this.createPaginateArrow(!nextLinkRemoved && !nextLink && !this.isLastPage, this.page + 1, false);
+    this.changePaginateArrow(!nextLinkRemoved && !nextLinkCreated && nextLink, nextLink, (this.page + 1));
+  }
+
+  removePaginateArrow(arrowNode, toRemove) {
+    if (!arrowNode || !toRemove) return;
+    arrowNode.remove();
+    return true;
+  }
+
+  createPaginateArrow(toCreate, page, atFirst) {
+    if (!toCreate) return;
+    const li = document.createElement('li');
+    li.innerHTML = `<a href="/collections/tableau-cuisine?page=${page}" class="pagination__item pagination__item--${atFirst ? 'next' : 'prev'} pagination__item-arrow link motion-reduce" aria-label="${atFirst ? this.previousAriaLabel : this.nextAriaLabel}">
+                      <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-caret" viewBox="0 0 10 6">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor">
+                        </path>
+                      </svg>
+                    </a>`;
+    const ul = this.paginationNavbar.querySelector('ul');
+    if (atFirst) ul.prepend(li);
+    else ul.appendChild(li);
+    return true
+  }
+
+  changePaginateArrow(toChange, arrowNode, page) {
+    if (!toChange) return;
+    arrowNode.querySelector('a').href = this.baseUrl + page;
   }
 
   disablePaginateLinkToCurrentPage() {

@@ -101,7 +101,7 @@
           <div class="collection{% if section.settings.filter_type != 'vertical' %} page-width{% endif %}">
             <div class="loading-overlay gradient"></div>
             <infinite-scroll-storage data-page="{{ paginate.current_page }}">
-              <infinite-scroll id="infinite-scroll-{{ collection.id }}-{{ paginate.current_page }}" data-pages="{{ paginate.pages }}" data-page="{{ paginate.current_page }}" data-section-id="{{ section.id }}">
+              <infinite-scroll id="infinite-scroll-{{ collection.id }}-{{ paginate.current_page }}" data-pages="{{ paginate.pages }}" data-page="{{ paginate.current_page }}" data-section-id="{{ section.id }}" data-paginate-previous-url="{{ paginate.previous.url }}" data-paginate-next-url="{{ paginate.next.url }}" data-previous-aria-label="{{ 'general.pagination.previous' | t }}" data-next-aria-label="{{ 'general.pagination.next' | t }}">
                   <ul id="product-grid" data-id="{{ section.id }}" class="grid product-grid grid--{{ section.settings.columns_mobile }}-col-tablet-down grid--{{ section.settings.columns_desktop }}-col-desktop">
                     {%- for product in collection.products -%}
                       {% assign lazy_load = false %}
