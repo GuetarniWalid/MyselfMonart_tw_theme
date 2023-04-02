@@ -88,7 +88,15 @@
           "settings": {
             "image": "shopify:\/\/shop_images\/tableau-animaux_pg.jpg",
             "collection": "tableau-animaux",
-            "paragraph": "<h2>Découvrez notre collection de tableaux animaux<\/h2>\n<p>\n  Pour habiller les murs de votre maison ou offrir un cadeau original à vos proches,découvrez notre collection impressionnante de tableaux design et moderne et optez pour un tableau d'art sur le thème des animaux. Vous trouverez celui qui correspond le mieux à votre intérieur et vos envies, que vous\n  préfériez un tableau de loup sauvage, un tableau de lion dominant, un tableau de cerf sauvage, ou encore un tableau de chaton mignon. Nous proposons une variété d'animaux pour répondre à toutes vos préférences et passions.\n<\/p>\n<p>\n  Nos tableaux d'animaux sont imprimés sur toile, aluminium, ou plexiglas de haute qualité avec des couleurs éclatantes et une netteté exceptionnelle pour donner vie à chaque détail. De plus, nous offrons différentes tailles pour s'adapter à tous les espaces, grands ou petits. Que vous souhaitiez un\n  tableau imposant pour habiller votre salon ou une petite toile pour votre bureau, nous avons tout ce qu'il vous faut pour embellir votre espace de vie.\n<\/p>\n<p>\n  Offrez à vos proches un cadeau unique et personnalisé en choisissant l'animal qui correspond le mieux à leur personnalité et à leur goût. Ils seront ravis de recevoir un tel cadeau original et de pouvoir ajouter une touche d'exotisme et de créativité à leur décoration intérieure. Avec notre\n  collection de tableaux animaux, offrez des cadeaux qui sortent de l'ordinaire, ajoutez une touche de nature et une atmosphère sauvage à votre maison.\n<\/p>"
+            "paragraph": "<h3>Découvrez notre collection de tableaux animaux<\/h3>\n<p>\n  Pour habiller les murs de votre maison ou offrir un cadeau original à vos proches,découvrez notre collection impressionnante de tableaux design et moderne et optez pour un tableau d'art sur le thème des animaux. Vous trouverez celui qui correspond le mieux à votre intérieur et vos envies, que vous\n  préfériez un tableau de loup sauvage, un tableau de lion dominant, un tableau de cerf sauvage, ou encore un tableau de chaton mignon. Nous proposons une variété d'animaux pour répondre à toutes vos préférences et passions.\n<\/p>\n<p>\n  Nos tableaux d'animaux sont imprimés sur toile, aluminium, ou plexiglas de haute qualité avec des couleurs éclatantes et une netteté exceptionnelle pour donner vie à chaque détail. De plus, nous offrons différentes tailles pour s'adapter à tous les espaces, grands ou petits. Que vous souhaitiez un\n  tableau imposant pour habiller votre salon ou une petite toile pour votre bureau, nous avons tout ce qu'il vous faut pour embellir votre espace de vie.\n<\/p>\n<p>\n  Offrez à vos proches un cadeau unique et personnalisé en choisissant l'animal qui correspond le mieux à leur personnalité et à leur goût. Ils seront ravis de recevoir un tel cadeau original et de pouvoir ajouter une touche d'exotisme et de créativité à leur décoration intérieure. Avec notre\n  collection de tableaux animaux, offrez des cadeaux qui sortent de l'ordinaire, ajoutez une touche de nature et une atmosphère sauvage à votre maison.\n<\/p>"
+          }
+        },
+        "cd2ff1e5-67ff-4ddc-a4bf-e05ca75d0144": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/Tableaux-bureau.jpg",
+            "collection": "tableau-bureau",
+            "paragraph": "<h3>DÉCOUVREZ NOTRE COLLECTION DE TABLEAUX POUR BUREAU<\/h3>\n<p>Vous cherchez à apporter une touche de style et de personnalité à votre espace de travail ? Ne cherchez pas plus loin que notre collection de tableaux pour bureau. Chez Myselfmonart, nous avons une variété de tableaux qui ajouteront une touche d'élégance à votre espace de travail.<\/p>\n<p>Que vous soyez à la recherche d'un tableau abstrait pour donner une touche d'originalité à votre bureau ou d'un tableau inspirant pour vous motiver, nous avons ce qu'il vous faut. Nous avons également des tableaux avec des motifs apaisants et relaxants pour créer une ambiance zen dans votre espace de travail.<\/p>\n<p>Nos tableaux pour bureau sont imprimés sur des supports de haute qualité pour une finition durable et résistante. Ils sont disponibles dans une variété de tailles pour s'adapter à n'importe quel espace de bureau.<\/p>\n<p>Avec nos tableaux décoratifs pour bureau, vous pourrez créer un espace de travail qui vous inspirera et vous aidera à vous concentrer. Découvrez notre collection de tableaux pour bureau et trouvez celui qui conviendra parfaitement à votre style et à votre personnalité.<\/p>"
           }
         }
       },
@@ -96,7 +104,8 @@
         "template--16404732051711__e2edd939-3626-48bb-a1b3-68b7d45d2b13-167457071323298b01-0",
         "template--16404732051711__e2edd939-3626-48bb-a1b3-68b7d45d2b13-167457071323298b01-1",
         "template--16404732051711__e2edd939-3626-48bb-a1b3-68b7d45d2b13-167457071323298b01-2",
-        "4fe0edd9-6e76-4900-b7e2-782666024e27"
+        "4fe0edd9-6e76-4900-b7e2-782666024e27",
+        "cd2ff1e5-67ff-4ddc-a4bf-e05ca75d0144"
       ],
       "settings": {
         "lazy_load": false,
@@ -324,10 +333,9 @@
           "settings": {
             "button_label": "Guide des tailles",
             "button_link": "shopify:\/\/pages\/guide-de-tailles",
-            "button_style_secondary": false,
             "button_label_2": "Contactez-nous",
             "button_link_2": "shopify:\/\/pages\/contactez-nous",
-            "button_style_secondary_2": false
+            "to_obfuscate": false
           }
         }
       },

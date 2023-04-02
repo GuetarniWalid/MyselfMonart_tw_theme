@@ -1049,13 +1049,18 @@ function loadCSS(href) {
 }
 
 function replacePlaceholderImages() {
-  var images = document.querySelectorAll('img.placeholder');
-  images.forEach(image => {
-    image.setAttribute('srcset', image.getAttribute('data-srcset'));
-    image.removeAttribute('data-srcset');
-    image.onload = () => {
-      image.classList.remove('placeholder');
-    };
+  const medias = document.querySelectorAll('img.placeholder, picture.placeholder source');
+  medias.forEach(media => {
+    media.setAttribute('srcset', media.getAttribute('data-srcset'));
+    media.removeAttribute('data-srcset');
+    if(media.tagName === 'SOURCE') {
+      media.closest('picture').classList.remove('placeholder');
+    }
+    else {
+      media.onload = () => {
+        media.classList.remove('placeholder');
+      };
+    }
   });
 }
 replacePlaceholderImages();

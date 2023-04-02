@@ -17,15 +17,19 @@
     elsif index == 2 or index == 5 or index == 9 or index == 12
         assign size = '(max-width: 800px) 100vw, (max-width: 1300px) 60vw, 780px'
     elsif index == 3 or index == 4 or index == 10 or index == 11
-        assign size = '(max-width: 800px) 100vw, (max-width: 1300px) 40vw, 520px'
+        assign picture = true
     else
         assign size = '(max-width: 800px) 100vw, (max-width: 1300px) 50vw, 650px'
     endif
+    assign srcset = 'srcset'
+    if loading == 'eager'
+        assign srcset = 'data-srcset'
+    endif
 %}
 
-{% if block.settings.image != blank %}
+{% if block.settings.image != blank and picture != true %}
     <img
-{% if loading == 'eager' %}data-srcset{% else %}srcset{% endif %}="{{ block.settings.image | image_url: width: 375 }} 375w,
+    {{ srcset }}="{{ block.settings.image | image_url: width: 375 }} 375w,
     {{ block.settings.image | image_url: width: 550 }} 550w,
     {{ block.settings.image | image_url: width: 750 }} 750w,
     {{ block.settings.image | image_url: width: 1100 }} 1100w,
@@ -39,6 +43,35 @@
     alt="{{ block.settings.image.alt | escape }}"
     class="skeleton{% if loading == 'eager' %} placeholder{% endif %}"
   >
+{% elsif block.settings.image != blank and picture == true %}
+    <picture class="{% if loading == 'eager' %} placeholder{% endif %}">
+        <source 
+        media="(max-width: 375px)" 
+        {{ srcset }}="{{ block.settings.image | image_url: width: 375 }}">
+        <source 
+        media="(max-width: 550px)" 
+        {{ srcset }}="{{ block.settings.image | image_url: width: 550 }}"
+        >
+        <source 
+        media="(max-width: 800px)"
+        {{ srcset }}="{{ block.settings.image | image_url: width: 800 }}"
+        >
+        <source 
+        media="(max-width: 1100px)" 
+        {{ srcset }}="{{ block.settings.image | image_url: width: 450, height: 600, crop: 'center' }}"
+        >
+        <source 
+        media="(min-width: 1101px)" 
+        {{ srcset }}="{{ block.settings.image | image_url: width: 530, height: 600, crop: 'center' }}"
+        >
+        <img 
+        src="{{ block.settings.image | image_url: width: 40 }}" 
+        alt="{{ block.settings.image.alt | escape }}" 
+        class="skeleton{% if loading == 'eager' %} placeholder{% endif %}"
+        width="500"
+        loading="{{ loading }}"
+        >
+    </picture>
 {% else %}
     <div class="svg-wrapper">{{ 'collection-1' | placeholder_svg_tag  }}</div>
 {% endif %}
