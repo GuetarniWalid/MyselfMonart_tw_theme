@@ -383,7 +383,9 @@
     }}px; --page-color-link:
     {{
       settings.page_color_link
-    }}; } *, *::before, *::after { box-sizing: inherit; } html { box-sizing: border-box; font-size: calc(var(--font-body-scale) * 62.5%); height: 100%; } body { display: grid; grid-template-rows: auto auto 1fr auto; grid-template-columns: 100%; min-height: 100%; margin: 0; font-size: 1.5rem;
+    }};
+    --heart-color: {{ settings.heart_color }};
+   } *, *::before, *::after { box-sizing: inherit; } html { box-sizing: border-box; font-size: calc(var(--font-body-scale) * 62.5%); height: 100%; } body { display: grid; grid-template-rows: auto auto 1fr auto; grid-template-columns: 100%; min-height: 100%; margin: 0; font-size: 1.5rem;
     letter-spacing: 0.06rem; line-height: calc(1 + 0.8 / var(--font-body-scale)); 
     font-family: var(--font-body-family); 
     font-style: var(--font-body-style); 
@@ -432,8 +434,8 @@
       {{ content_for_layout }}
     </main>
 
-    {%- if settings.enable_predictive_search -%}
-      {% render 'component-search-loup' %}
+    {%- if settings.enable_predictive_search or settings.enable_likes -%}
+      {% render 'component-button-bottom-left' %}
     {%- endif -%}
 
     {% section 'footer' %}
@@ -473,7 +475,7 @@
     </script>
 
     {%- if settings.predictive_search_enabled -%}
-    <script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
+      <script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
   </body>
 </html>

@@ -1103,7 +1103,32 @@
         "default": true,
         "label": "t:settings_schema.likes.settings.enable_likes.label",
         "info": "t:settings_schema.likes.settings.enable_likes.info"
-      }
+      },
+      {
+        "type": "color",
+        "id": "like_bottom_button_color",
+        "label": "t:settings_schema.likes.settings.like_bottom_button_color.label",
+        "info": "t:settings_schema.likes.settings.like_bottom_button_color.info",
+        "default": "#C3272B"
+      },
+      {
+        "type": "color",
+        "id": "heart_color",
+        "label": "t:settings_schema.likes.settings.heart_color.label",
+        "info": "t:settings_schema.likes.settings.heart_color.info",
+        "default": "#EE6E6E"
+      },     
+      {
+        "type": "page",
+        "id": "likes_page",
+        "label": "t:settings_schema.likes.settings.likes_page.label"
+      },
+      {
+        "type": "checkbox",
+        "id": "obfuscate_likes_bottom_button",
+        "label": "t:settings_schema.likes.settings.obfuscate_likes_bottom_button.label",
+        "default": false
+      }      
     ]
   },
   {

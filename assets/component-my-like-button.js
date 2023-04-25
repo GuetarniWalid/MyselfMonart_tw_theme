@@ -46,9 +46,9 @@ class MyLikeButton extends HTMLElement {
 
   colorButton(likedLisString) {
     if (likedLisString.length > 0) {
-      document.querySelector('header .list-item.likes').classList.add('liked');
+      document.querySelector('header .list-item.likes')?.classList.add('liked');
     } else {
-      document.querySelector('header .list-item.likes').classList.remove('liked');
+      document.querySelector('header .list-item.likes')?.classList.remove('liked');
     }
   }
 

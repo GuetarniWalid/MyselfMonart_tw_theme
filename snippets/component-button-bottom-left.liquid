@@ -1,0 +1,154 @@
+{% style %}
+    .button-bottom-right {
+        position: fixed;
+        bottom: 2rem;
+        right: 2.5rem;
+        background: rgb(var(--header-color));
+        z-index: 3;
+        border-radius: 50%;
+        height: 60px;
+        width: 60px;
+        border: 2px solid rgb(var(--header-background));
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .button-bottom-right svg {
+        color: rgb(var(--header-background));
+    }
+{% endstyle %}
+
+{%- if settings.enable_predictive_search and settings.enable_likes == false or template.suffix == "likes" -%}
+    {% style %}
+        .button-bottom-right svg {
+            stroke: rgb(var(--header-background));
+            transform: translateX(1px);
+        }
+    {% endstyle %}
+
+    <fixed-loup>
+        <button class="button-bottom-right">
+            <svg class="loup" aria-hidden="true" focusable="false" role="presentation" width="26" height="26">
+                <use href="#icon-search">
+            </svg>
+        </button>
+    </fixed-loup>
+{%- endif -%}
+
+{%- if settings.enable_likes and settings.enable_predictive_search == false and template.suffix != "likes" -%}
+    {% style %}
+        .button-bottom-right {
+            background: {{ settings.like_bottom_button_color }};
+        }
+
+        .button-bottom-right svg {
+            width: 30px;
+            height: auto;
+        }
+    {% endstyle %}
+    {% if settings.obfuscate_likes_bottom_button %}
+        <span class="button-bottom-right obfuscate" data-url64="{{ "/pages/" | append: settings.likes_page | base64_encode }}">
+            {% render 'icon-heart' %}
+        </span>
+    {% else %}
+        <a class="button-bottom-right" href="/pages/{{ settings.likes_page }}">
+            {% render 'icon-heart' %}
+        </a>
+    {% endif %}
+{%- endif -%}
+
+{%- if settings.enable_predictive_search and settings.enable_likes and template.suffix != "likes" -%}
+    {% style %}
+       .button-bottom-right {
+            border-radius: 50px;
+            height: auto;
+            width: auto;
+            border: 2px solid rgb(var(--header-background));
+            justify-content: space-around;
+            padding: 3px 20px;
+            gap: 35px;
+            overflow: hidden;
+        }
+
+        .button-bottom-right:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 40%;
+            background: {{ settings.like_bottom_button_color }};
+        }
+
+        .button-bottom-right button,
+        .button-bottom-right a.button,
+        .button-bottom-right span.button {
+            background: transparent;
+            padding: 0;
+            min-width: 0;
+        }
+
+        .button-bottom-right a.button::before,
+        .button-bottom-right span.button::before,
+        .button-bottom-right button::before {
+            left: -15px;
+            right: -15px;
+        }
+
+        .button-bottom-right a.button::after,
+        .button-bottom-right span.button::after {
+            content: none;
+        }
+
+        .button-bottom-right button {
+            background: transparent;
+            padding: 0;
+            min-width: 0;
+        }
+
+        .button-bottom-right svg.heart {
+            width: 28px;
+            height: auto;
+        }
+
+        .button-bottom-right svg.loup {
+            stroke: rgb(var(--header-background));
+            transform: translateX(1px);
+        }
+
+        .button-bottom-right svg.wave {
+            position: absolute;
+            height: 100%;
+            width: auto;
+            left: 50%;
+            top: 0;
+            transform: translateX(-4px);
+        }
+    {% endstyle %}
+
+    <div class="button-bottom-right">
+        <fixed-loup>
+            <button class="button">
+                <svg class="loup" aria-hidden="true" focusable="false" role="presentation" width="26" height="26">
+                    <use href="#icon-search">
+                </svg>
+            </button>
+        </fixed-loup>
+
+        {% if settings.obfuscate_likes_bottom_button %}
+            <span class="button obfuscate" data-url64="{{ "/pages/" | append: settings.likes_page | base64_encode }}">
+                {% render 'icon-heart' %}
+            </span>
+        {% else %}
+            <a class="button" href="/pages/{{ settings.likes_page }}">
+                {% render 'icon-heart' %}
+            </a>
+        {% endif %}
+
+        <svg width="22" height="55" viewBox="0 0 22 55" fill="none" xmlns="http://www.w3.org/2000/svg" class="wave">
+            <path d="M22 55H3.11475L4.94852 49.4037C6.28451 45.3266 5.81064 40.8725 3.64671 37.1676L2.36472 34.9728C-0.336437 30.3482 -0.366971 24.6342 2.2846 19.981L3.71299 17.4744C5.83497 13.7505 6.26264 9.29681 4.88807 5.23721L3.11475 -2.98023e-07H22L22 55Z" fill="{{ settings.like_bottom_button_color }}"/>
+        </svg>
+    </div>
+{%- endif -%}

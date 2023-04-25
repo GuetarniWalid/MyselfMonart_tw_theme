@@ -168,12 +168,12 @@
           </button>
         {% endif %}
         {%- if settings.enable_likes and toObfuscate and template.suffix != 'likes' -%}
-            <span class="list-item obfuscate likes" data-url64="{{ "/pages/mes-j-aimes" | base64_encode }}">
+            <span class="list-item obfuscate likes" data-url64="{{ "/pages/" | append: settings.likes_page | base64_encode }}">
               <span>{{ 'sections.header.my_likes' | t }}</span>&nbsp;&nbsp;
               {% render 'icon-heart' %}
             </span>
         {%- elsif settings.enable_likes and template.suffix != 'likes' -%}
-            <a class="list-item" href="/pages/mes-j-aimes">
+            <a class="list-item" href="/pages/{{ settings.likes_page }}">
               <span>{{ 'sections.header.my_likes' | t }}</span>&nbsp;&nbsp;
               {% render 'icon-heart' %}
             </a>

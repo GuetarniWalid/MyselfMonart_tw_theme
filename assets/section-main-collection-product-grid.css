@@ -31,25 +31,8 @@
   transition: all 0.2s;
 }
 .main-collection-product-grid .card-wrapper my-like-button .like.liked svg path.in {
-  fill: #EE6E6E;
+  fill: var(--heart-color);
 }
-
-.main-collection-product-grid .card-wrapper my-like-button .like:hover {
-  background: #EE6E6E;
-}
-.main-collection-product-grid .card-wrapper my-like-button .like:hover {
-  background: #EE6E6E;
-}
-.main-collection-product-grid .card-wrapper my-like-button .like:hover svg path.in {
-  fill: var(--card-background);
-}
-.main-collection-product-grid .card-wrapper my-like-button .like.liked:hover {
-  background: transparent;
-}
-.main-collection-product-grid .card-wrapper my-like-button .like.liked:hover svg path.in {
-  fill: #EE6E6E;
-}
-
 
 @media screen and (max-width: 500px) {
     .main-collection-product-grid .grid__item {

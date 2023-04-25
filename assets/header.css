@@ -203,7 +203,7 @@ header .toggle-menu svg.rotate {
 }
 
 header .list-item.liked svg path.in {
-  fill: #EE6E6E;
+  fill: var(--heart-color);
 }
 
 @media screen and (min-width: 850px) {

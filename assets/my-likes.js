@@ -23,7 +23,8 @@ class MyLikes extends HTMLElement {
   }
 
   showEmptyMessage() {
-    this.nextElementSibling.nextElementSibling.classList.remove('hidden');
+    console.log(document.querySelector('.empty-message'))
+    document.querySelector('.empty-message')?.classList.remove('hidden');
   }
 
 }

@@ -43,13 +43,14 @@ h1 {
 .section-my-likes .flex p {
   font-size: 2rem;
   position: relative;
-  margin: 0;
+  margin: 0 2rem;
 }
 
 .section-my-likes .flex > svg {
   width: 17%;
   height: auto;
   animation: flottement 10s ease-in-out infinite;
+  max-width: 200px;
 }
 
 .section-my-likes .flex svg path.border {
@@ -71,6 +72,24 @@ h1 {
   }
   80% {
     transform: translate(-3px, 6px) rotate(2deg);
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .section-my-likes .flex > svg {
+    width: 30%;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .section-my-likes .flex {
+    flex-direction: column;
+  }
+  .section-my-likes .flex > svg {
+    width: 50%;
+  }
+  .section-my-likes .flex p {
+    font-size: 1.7rem;
   }
 }
 

@@ -215,6 +215,20 @@
         "enable_likes": {
           "label": "Activer les j'aimes",
           "info": "Possibilité pour l'utilisateur de liker les produits et de les retrouver sur une page dédiée"
+        },
+        "like_bottom_button_color": {
+          "label": "Bouton like",
+          "info": "Bouton en bas à droite"
+        },
+        "heart_color": {
+          "label": "Couleur des coeurs",
+          "info": "Seulement l'intérieur des coeurs"
+        },
+        "likes_page": {
+          "label": "Lien vers la page j'aime"
+        },
+        "obfuscate_likes_bottom_button": {
+          "label": "Obfusquer le bouton Like en bas à droite"
         }
       }
     },

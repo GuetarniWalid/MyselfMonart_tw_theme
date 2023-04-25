@@ -204,6 +204,20 @@
         "enable_likes": {
           "label": "Enable likes",
           "info": "Possibility for the user to like products and find them on a dedicated page"
+        },
+        "like_bottom_button_color": {
+          "label": "Color of likes",
+          "info": "Present in hearts and on some buttons"
+        },
+        "heart_color": {
+          "label": "Color of hearts",
+          "info": "Only inside hearts"
+        },
+        "likes_page": {
+          "label": "Link to like page"
+        },
+        "obfuscate_likes_bottom_button": {
+          "label": "Obfuscate the like button at the bottom right"
         }
       }
     },
