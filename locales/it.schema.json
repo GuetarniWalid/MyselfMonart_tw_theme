@@ -750,22 +750,6 @@
           "unit": "px",
           "label": "Larghezza logo personalizzata"
         },
-        "logo_position": {
-          "label": "Posizione logo su desktop",
-          "options__1": {
-            "label": "In mezzo a sinistra"
-          },
-          "options__2": {
-            "label": "In alto a sinistra"
-          },
-          "options__3": {
-            "label": "In alto al centro"
-          },
-          "info": "Posizione automaticamente ottimizzata per dispositivi mobili."
-        },
-        "menu": {
-          "label": "Menu"
-        },
         "show_line_separator": {
           "label": "Mostra linea di separazione"
         },

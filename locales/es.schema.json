@@ -750,22 +750,6 @@
           "unit": "px",
           "label": "Ancho del logo personalizado"
         },
-        "logo_position": {
-          "label": "Posición de logo en computadora",
-          "options__1": {
-            "label": "Centrado a la izquierda"
-          },
-          "options__2": {
-            "label": "Arriba a la izquierda"
-          },
-          "options__3": {
-            "label": "Superior centrada"
-          },
-          "info": "La posición se optimizó automáticamente para dispositivos móviles."
-        },
-        "menu": {
-          "label": "Menú"
-        },
         "show_line_separator": {
           "label": "Mostrar línea separadora"
         },

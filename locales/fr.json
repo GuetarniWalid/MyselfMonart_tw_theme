@@ -238,7 +238,8 @@
         "one": "{{ count }} article",
         "other": "{{ count }} articles",
         "many": "{{ count }} articles"
-      }
+      },
+      "my_likes": "Mes j'aime"
     },
     "cart": {
       "title": "Votre panier",

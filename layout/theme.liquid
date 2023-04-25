@@ -25,7 +25,7 @@
     </title>
 
     {% if page_description %}
-    <meta name="description" content="{{ page_description | escape }}" />
+      <meta name="description" content="{{ page_description | escape }}" />
     {% endif %} {% render 'meta-tags' %}
 
     <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
@@ -410,6 +410,10 @@
         document.documentElement.classList.add('shopify-design-mode');
       }
     </script>
+
+    {%- if template.name == 'search' -%}
+      <script src="{{ 'component-my-like-button.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
 
     {%- if request.design_mode -%}
       <script src="{{ 'theme-editor.js' | asset_url }}" defer="defer"></script>

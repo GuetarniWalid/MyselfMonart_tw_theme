@@ -220,7 +220,7 @@ html.no-js .no-js-hidden {
 
 @media screen and (min-width: 750px) {
   .page-width {
-    padding: 0 5rem;
+    padding: 0 2rem;
   }
 
   .page-width--narrow {
@@ -2152,37 +2152,6 @@ input[type='checkbox'] {
   transform: translateY(0);
 }
 
-.header {
-  display: grid;
-  grid-template-areas: 'left-icon heading icons';
-  grid-template-columns: 1fr 2fr 1fr;
-  align-items: center;
-}
-
-@media screen and (min-width: 990px) {
-  .header--middle-left:not(.header--has-menu) {
-    grid-template-areas:
-      'heading icons'
-      'navigation navigation';
-    grid-template-columns: 1fr auto;
-  }
-
-  .header--middle-left {
-    grid-template-areas: 'heading navigation icons';
-    column-gap: 2rem;
-  }
-
-  .header--top-center {
-    grid-template-areas:
-      'left-icon heading icons'
-      'navigation navigation navigation';
-  }
-
-  .header:not(.header--middle-left) .header__inline-menu {
-    margin-top: 1.05rem;
-  }
-}
-
 .header *[tabindex='-1']:focus {
   outline: none;
 }
@@ -2196,55 +2165,15 @@ input[type='checkbox'] {
   line-height: 0;
 }
 
-.header__heading,
 .header__heading-link {
-  grid-area: heading;
-  justify-self: center;
-}
-
-.header__heading-link {
-  display: inline-block;
   padding: 0.75rem;
   text-decoration: none;
   word-break: break-word;
 }
 
-.header__heading-link:hover .h2 {
-  color: rgb(var(--color-foreground));
-}
-
-.header__heading-link .h2 {
-  line-height: 1;
-  color: rgba(var(--color-foreground), 0.75);
-}
-
 .header__heading-logo {
   height: auto;
   width: 100%;
-}
-
-@media screen and (max-width: 989px) {
-  .header__heading,
-  .header__heading-link {
-    text-align: center;
-  }
-}
-
-@media screen and (min-width: 990px) {
-  .header__heading-link {
-    margin-left: -0.75rem;
-  }
-
-  .header__heading,
-  .header__heading-link {
-    justify-self: start;
-  }
-
-  .header--top-center .header__heading-link,
-  .header--top-center .header__heading {
-    justify-self: center;
-    text-align: center;
-  }
 }
 
 /* Header icons */
@@ -2260,10 +2189,6 @@ input[type='checkbox'] {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.header__icon {
-  color: rgb(var(--color-foreground));
 }
 
 .header__icon span {
@@ -2323,22 +2248,12 @@ menu-drawer + .header__search {
   line-height: 0;
 }
 
-.header--top-center > .header__search {
-  display: none;
-}
-
-.header--top-center * > .header__search {
-  display: inline-flex;
-}
-
 @media screen and (min-width: 990px) {
-  .header:not(.header--top-center) * > .header__search,
-  .header--top-center > .header__search {
+  .header * > .header__search {
     display: inline-flex;
   }
 
-  .header:not(.header--top-center) > .header__search,
-  .header--top-center * > .header__search {
+  .header > .header__search {
     display: none;
   }
 }
@@ -2387,7 +2302,7 @@ details[open] .modal-overlay::after {
   padding: 0 5rem 0 1rem;
   line-height: calc(1 + 0.8 / var(--font-body-scale));
   position: relative;
-  background: var(--background);
+  background: rgb(var(--header-background));
 }
 
 .search-modal__content-bottom {
@@ -2479,29 +2394,6 @@ details[open] > .header__submenu {
   display: none;
 }
 
-.header--top-center .header__inline-menu,
-.header--top-center .header__heading-link {
-  margin-left: 0;
-}
-
-@media screen and (min-width: 990px) {
-  .header__inline-menu {
-    display: block;
-  }
-
-  .header--top-center .header__inline-menu {
-    justify-self: center;
-  }
-
-  .header--top-center .header__inline-menu > .list-menu--inline {
-    justify-content: center;
-  }
-
-  .header--middle-left .header__inline-menu {
-    margin-left: 0;
-  }
-}
-
 .header__menu {
   padding: 0 1rem;
 }
@@ -2509,11 +2401,6 @@ details[open] > .header__submenu {
 .header__menu-item {
   padding: 1.2rem;
   text-decoration: none;
-  color: rgba(var(--color-foreground), 0.75);
-}
-
-.header__menu-item:hover {
-  color: rgb(var(--color-foreground));
 }
 
 .header__menu-item span {
@@ -2811,7 +2698,7 @@ details-disclosure > details {
 }
 
 img.skeleton {
-  background: linear-gradient(90deg, rgb(0,0,0,0.05) 8%, rgba(355,355,355,0.05) 18%, rgb(0,0,0,0.05) 33%);
+  background: linear-gradient(90deg, rgb(0, 0, 0, 0.05) 8%, rgba(355, 355, 355, 0.05) 18%, rgb(0, 0, 0, 0.05) 33%);
   background-size: 200% 100%;
   animation: 1.5s shine linear infinite;
 }

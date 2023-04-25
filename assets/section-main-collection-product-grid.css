@@ -12,6 +12,45 @@
   color: var(--card-background);
 }
 
+.main-collection-product-grid .card-wrapper > .card button.like {
+  border: 1px solid var(--button-background);
+  background: var(--card-background);
+  color: var(--button-background);
+  border-radius: 5px;
+  padding: 0;
+  flex-grow: 0;
+  min-width: calc(4.5rem + var(--buttons-border-width) * 2);
+  transition: all 0.2s;
+}
+
+.main-collection-product-grid .card-wrapper my-like-button .like::after {
+  content: none;
+}
+
+.main-collection-product-grid .card-wrapper my-like-button .like svg path.in {
+  transition: all 0.2s;
+}
+.main-collection-product-grid .card-wrapper my-like-button .like.liked svg path.in {
+  fill: #EE6E6E;
+}
+
+.main-collection-product-grid .card-wrapper my-like-button .like:hover {
+  background: #EE6E6E;
+}
+.main-collection-product-grid .card-wrapper my-like-button .like:hover {
+  background: #EE6E6E;
+}
+.main-collection-product-grid .card-wrapper my-like-button .like:hover svg path.in {
+  fill: var(--card-background);
+}
+.main-collection-product-grid .card-wrapper my-like-button .like.liked:hover {
+  background: transparent;
+}
+.main-collection-product-grid .card-wrapper my-like-button .like.liked:hover svg path.in {
+  fill: #EE6E6E;
+}
+
+
 @media screen and (max-width: 500px) {
     .main-collection-product-grid .grid__item {
     width: calc(100% - var(--grid-mobile-horizontal-spacing) / 2);

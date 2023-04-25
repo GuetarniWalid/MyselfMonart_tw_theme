@@ -170,6 +170,8 @@ cart-drawer {
   right: 0;
   bottom: 0;
   left: 0;
+  background: var(--drawer-color);
+  opacity: 0.5;
 }
 
 .cart-drawer__overlay:empty {

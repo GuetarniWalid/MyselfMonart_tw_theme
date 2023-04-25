@@ -750,22 +750,6 @@
           "unit": "px",
           "label": "Egendefinert logobredde"
         },
-        "logo_position": {
-          "label": "Logoplassering på datamaskiner",
-          "options__1": {
-            "label": "Midt til venstre"
-          },
-          "options__2": {
-            "label": "Øverst til venstre"
-          },
-          "options__3": {
-            "label": "Toppsentrert"
-          },
-          "info": "Posisjonen optimaliseres automatisk for mobil."
-        },
-        "menu": {
-          "label": "Meny"
-        },
         "show_line_separator": {
           "label": "Vis delelinje"
         },

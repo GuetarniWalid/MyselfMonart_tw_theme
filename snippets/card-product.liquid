@@ -117,10 +117,21 @@
           <p class="price">{{ "sections.main-collection-product-grid.card-product.starting_at" | t }} <strong>€29.99</strong></p>
 
         </div>
-          {%- unless hide_second_quick_add_button -%}
-            <button class="quick-add__submit button button--full-width button--secondary" {% if card_product.selected_or_first_available_variant.available == false %}disabled{% endif %}
-            >{{ 'sections.product_grid.button' | t }}</button>
-          {%- endunless -%}
+        {% unless hide_second_quick_add_button %}
+          <div class="with-like">
+            {%- unless hide_second_quick_add_button -%}
+              <button class="quick-add__submit button button--secondary button--full-width" {% if card_product.selected_or_first_available_variant.available == false %}disabled{% endif %}
+              >{{ 'sections.product_grid.button' | t }}</button>
+            {%- endunless -%}
+            {% if settings.enable_likes %}
+              <my-like-button>
+                <button class="like button" {% if card_product.selected_or_first_available_variant.available == false %}disabled{% endif %}>
+                  {% render 'icon-heart' %}
+                </button>
+              </my-like-button>
+            {% endif %}
+          </div>
+        {% endunless %}
         <div class="card__badge {{ settings.badge_position }}">
           {%- if card_product.available == false -%}
             <span id="Badge-{{ section_id }}-{{ card_product.id }}" class="badge badge--bottom-left color-{{ settings.sold_out_badge_color_scheme }}">{{ 'products.product.sold_out' | t }}</span>

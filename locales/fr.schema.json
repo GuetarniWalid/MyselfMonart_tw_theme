@@ -1,5 +1,62 @@
 {
   "settings_schema": {
+    "badges": {
+      "name": "Badges",
+      "settings": {
+        "position": {
+          "options__1": {
+            "label": "En bas à gauche"
+          },
+          "options__2": {
+            "label": "En bas à droite"
+          },
+          "options__3": {
+            "label": "En haut à gauche"
+          },
+          "options__4": {
+            "label": "En haut à droite"
+          },
+          "label": "Position sur les cartes"
+        },
+        "sale_badge_color_scheme": {
+          "label": "Combinaison de couleurs du badge de vente"
+        },
+        "sold_out_badge_color_scheme": {
+          "label": "Combinaison de couleurs du badge de rupture de stock"
+        }
+      }
+    },
+    "buttons": {
+      "name": "Boutons"
+    },
+    "cards": {
+      "name": "Cartes",
+      "settings": {
+        "header__badge": {
+          "content": "Badge"
+        },
+        "style": {
+          "options__1": {
+            "label": "Standard"
+          },
+          "options__2": {
+            "label": "Carte"
+          },
+          "label": "Style"
+        },
+        "background": {
+          "label": "Couleur de fond"
+        },
+        "text_color": {
+          "label": "Couleur des textes"
+        }
+      },
+      "headings": {
+        "Styles": {
+          "content": "Styles"
+        }
+      }
+    },
     "cart": {
       "name": "Panier",
       "settings": {
@@ -58,46 +115,135 @@
         }
       }
     },
-    "typography": {
-      "name": "Typographie",
+    "content_containers": {
+      "name": "Conteneurs de contenu"
+    },
+    "currency_format": {
+      "name": "Format de devise",
       "settings": {
-        "type_header_font_custom": {
-          "label": "Police personnalisée",
-          "info": "Si sélectionnée, la police ci-dessous ne sera pas appliquée au profit de la police personnalisée"
+        "content": "Codes de devise",
+        "currency_code_enabled": {
+          "label": "Afficher les codes de devise"
         },
-        "type_header_font": {
-          "label": "Police",
-          "info": "La sélection d'une police différente peut influencer la vitesse de votre boutique. [En savoir plus sur les polices système.](https://help.shopify.com/manual/online-store/os/store-speed/improving-speed#fonts)"
-        },
-        "header__1": {
-          "content": "Titres"
-        },
-        "header__2": {
-          "content": "Corps"
-        },
-        "type_body_font": {
-          "label": "Police",
-          "info": "La sélection d'une police différente peut influencer la vitesse de votre boutique. [En savoir plus sur les polices système.](https://help.shopify.com/manual/online-store/os/store-speed/improving-speed#fonts)"
-        },
-        "heading_scale": {
-          "label": "Échelle de taille de police"
-        },
-        "body_scale": {
-          "label": "Échelle de taille de police"
+        "paragraph": "Le panier et les prix au moment du paiement indiquent toujours les codes de devise. Exemple : 1 EUR."
+      }
+    },
+    "drawers": {
+      "name": "Tiroirs"
+    },
+    "favicon": {
+      "name": "Favicon",
+      "settings": {
+        "favicon": {
+          "label": "Image favicon",
+          "info": "Sera réduite à 32 x 32 px"
         }
       }
     },
-    "styles": {
-      "name": "Icônes",
+    "global": {
       "settings": {
-        "accent_icons": {
+        "header__border": {
+          "content": "Bordure"
+        },
+        "header__shadow": {
+          "content": "Ombre"
+        },
+        "blur": {
+          "label": "Flou"
+        },
+        "corner_radius": {
+          "label": "Rayon de coin"
+        },
+        "horizontal_offset": {
+          "label": "Décalage horizontal"
+        },
+        "vertical_offset": {
+          "label": "Décalage vertical"
+        },
+        "thickness": {
+          "label": "Épaisseur"
+        },
+        "opacity": {
+          "label": "Opacité"
+        },
+        "image_padding": {
+          "label": "Marge intérieure de l'image"
+        },
+        "text_alignment": {
+          "options__1": {
+            "label": "Gauche"
+          },
+          "options__2": {
+            "label": "Centre"
+          },
           "options__3": {
-            "label": "Bouton en relief"
+            "label": "Droite"
           },
-          "options__4": {
-            "label": "Texte"
-          },
-          "label": "Couleur"
+          "label": "Alignement du texte"
+        }
+      }
+    },
+    "inputs": {
+      "name": "Entrées"
+    },
+    "layout": {
+      "name": "Mise en page",
+      "settings": {
+        "page_width": {
+          "label": "Largeur de la page"
+        },
+        "spacing_sections": {
+          "label": "Espace vertical entre les sections"
+        },
+        "header__grid": {
+          "content": "Grille"
+        },
+        "paragraph__grid": {
+          "content": "Affecte les zones ayant une mise en page multicolonne."
+        },
+        "spacing_grid_horizontal": {
+          "label": "Espace horizontal"
+        },
+        "spacing_grid_vertical": {
+          "label": "Espace vertical"
+        }
+      }
+    },
+    "likes": {
+      "name": "Mes j'aimes",
+      "settings": {
+        "enable_likes": {
+          "label": "Activer les j'aimes",
+          "info": "Possibilité pour l'utilisateur de liker les produits et de les retrouver sur une page dédiée"
+        }
+      }
+    },
+    "media": {
+      "name": "Support multimédia"
+    },
+    "popups": {
+      "name": "Menus déroulants et pop-ups",
+      "paragraph": "Affecte les zones telles que les menus déroulants de navigation, les fenêtres modales pop-up et les fenêtres pop-up de panier."
+    },
+    "search_input": {
+      "name": "Comportement de recherche",
+      "settings": {
+        "header": {
+          "content": "Suggestions de produits"
+        },
+        "enable_predictive_search": {
+          "label": "Activer la barre de recherche"
+        },
+        "predictive_search_enabled": {
+          "label": "Activer les suggestions de produits"
+        },
+        "predictive_search_show_vendor": {
+          "label": "Afficher le distributeur",
+          "info": "Visible lorsque les suggestions de produits sont activées."
+        },
+        "predictive_search_show_price": {
+          "label": "Afficher le prix",
+          "info": "Visible lorsque les suggestions de produits sont activées."
         }
       }
     },
@@ -145,188 +291,51 @@
         }
       }
     },
-    "currency_format": {
-      "name": "Format de devise",
+    "styles": {
+      "name": "Icônes",
       "settings": {
-        "content": "Codes de devise",
-        "currency_code_enabled": {
-          "label": "Afficher les codes de devise"
-        },
-        "paragraph": "Le panier et les prix au moment du paiement indiquent toujours les codes de devise. Exemple : 1 EUR."
-      }
-    },
-    "favicon": {
-      "name": "Favicon",
-      "settings": {
-        "favicon": {
-          "label": "Image favicon",
-          "info": "Sera réduite à 32 x 32 px"
-        }
-      }
-    },
-    "layout": {
-      "name": "Mise en page",
-      "settings": {
-        "page_width": {
-          "label": "Largeur de la page"
-        },
-        "spacing_sections": {
-          "label": "Espace vertical entre les sections"
-        },
-        "header__grid": {
-          "content": "Grille"
-        },
-        "paragraph__grid": {
-          "content": "Affecte les zones ayant une mise en page multicolonne."
-        },
-        "spacing_grid_horizontal": {
-          "label": "Espace horizontal"
-        },
-        "spacing_grid_vertical": {
-          "label": "Espace vertical"
-        }
-      }
-    },
-    "search_input": {
-      "name": "Comportement de recherche",
-      "settings": {
-        "header": {
-          "content": "Suggestions de produits"
-        },
-        "enable_predictive_search": {
-          "label": "Activer la barre de recherche"
-        },
-        "predictive_search_enabled": {
-          "label": "Activer les suggestions de produits"
-        },
-        "predictive_search_show_vendor": {
-          "label": "Afficher le distributeur",
-          "info": "Visible lorsque les suggestions de produits sont activées."
-        },
-        "predictive_search_show_price": {
-          "label": "Afficher le prix",
-          "info": "Visible lorsque les suggestions de produits sont activées."
-        }
-      }
-    },
-    "global": {
-      "settings": {
-        "header__border": {
-          "content": "Bordure"
-        },
-        "header__shadow": {
-          "content": "Ombre"
-        },
-        "blur": {
-          "label": "Flou"
-        },
-        "corner_radius": {
-          "label": "Rayon de coin"
-        },
-        "horizontal_offset": {
-          "label": "Décalage horizontal"
-        },
-        "vertical_offset": {
-          "label": "Décalage vertical"
-        },
-        "thickness": {
-          "label": "Épaisseur"
-        },
-        "opacity": {
-          "label": "Opacité"
-        },
-        "image_padding": {
-          "label": "Marge intérieure de l'image"
-        },
-        "text_alignment": {
-          "options__1": {
-            "label": "Gauche"
-          },
-          "options__2": {
-            "label": "Centre"
-          },
+        "accent_icons": {
           "options__3": {
-            "label": "Droite"
-          },
-          "label": "Alignement du texte"
-        }
-      }
-    },
-    "cards": {
-      "name": "Cartes",
-      "settings": {
-        "header__badge": {
-          "content": "Badge"
-        },
-        "style": {
-          "options__1": {
-            "label": "Standard"
-          },
-          "options__2": {
-            "label": "Carte"
-          },
-          "label": "Style"
-        },
-        "background": {
-          "label": "Couleur de fond"
-        },
-        "text_color": {
-          "label": "Couleur des textes"
-        }
-      },
-      "headings": {
-        "Styles": {
-          "content": "Styles"
-        }
-      }
-    },
-    "badges": {
-      "name": "Badges",
-      "settings": {
-        "position": {
-          "options__1": {
-            "label": "En bas à gauche"
-          },
-          "options__2": {
-            "label": "En bas à droite"
-          },
-          "options__3": {
-            "label": "En haut à gauche"
+            "label": "Bouton en relief"
           },
           "options__4": {
-            "label": "En haut à droite"
+            "label": "Texte"
           },
-          "label": "Position sur les cartes"
-        },
-        "sale_badge_color_scheme": {
-          "label": "Combinaison de couleurs du badge de vente"
-        },
-        "sold_out_badge_color_scheme": {
-          "label": "Combinaison de couleurs du badge de rupture de stock"
+          "label": "Couleur"
         }
       }
     },
-    "buttons": {
-      "name": "Boutons"
+    "typography": {
+      "name": "Typographie",
+      "settings": {
+        "type_header_font_custom": {
+          "label": "Police personnalisée",
+          "info": "Si sélectionnée, la police ci-dessous ne sera pas appliquée au profit de la police personnalisée"
+        },
+        "type_header_font": {
+          "label": "Police",
+          "info": "La sélection d'une police différente peut influencer la vitesse de votre boutique. [En savoir plus sur les polices système.](https://help.shopify.com/manual/online-store/os/store-speed/improving-speed#fonts)"
+        },
+        "header__1": {
+          "content": "Titres"
+        },
+        "header__2": {
+          "content": "Corps"
+        },
+        "type_body_font": {
+          "label": "Police",
+          "info": "La sélection d'une police différente peut influencer la vitesse de votre boutique. [En savoir plus sur les polices système.](https://help.shopify.com/manual/online-store/os/store-speed/improving-speed#fonts)"
+        },
+        "heading_scale": {
+          "label": "Échelle de taille de police"
+        },
+        "body_scale": {
+          "label": "Échelle de taille de police"
+        }
+      }
     },
     "variant_pills": {
       "name": "Boutons pilule de variante"
-    },
-    "inputs": {
-      "name": "Entrées"
-    },
-    "content_containers": {
-      "name": "Conteneurs de contenu"
-    },
-    "popups": {
-      "name": "Menus déroulants et pop-ups",
-      "paragraph": "Affecte les zones telles que les menus déroulants de navigation, les fenêtres modales pop-up et les fenêtres pop-up de panier."
-    },
-    "media": {
-      "name": "Support multimédia"
-    },
-    "drawers": {
-      "name": "Tiroirs"
     }
   },
   "sections": {
@@ -1608,12 +1617,42 @@
     },
     "header": {
       "name": "En-tête",
+      "blocks": {
+        "menu": {
+          "settings": {
+            "link_list": {
+              "label": "Affichera des sous-menus",
+              "info": "Si vous ne voulez pas afficher de sous-menus sélectionnez plutôt un autre block"
+            },
+            "menu_title": {
+              "label": "Titre du menu",
+              "info": "Si vous ne souhaitez pas afficher de titre de menu, laissez ce champ vide"
+            },
+            "page_link": {
+              "label": "Lien vers une page",
+              "info": "Si vous souhaitez lier le titre du menu à une page"
+            },
+            "image": {
+              "label": "Image",
+              "info": "Si vous souhaitez afficher une image"
+            }
+          }
+        }
+      },
+      "headings": {
+        "general_settings": {
+          "content": "Réglages généraux"
+        },
+        "cart": {
+          "content": "Panier"
+        }
+      },
       "settings": {
         "color_background": {
           "label": "Couleur de fond"
         },
-        "icon_color": {
-          "label": "Couleur des icônes"
+        "text_color": {
+          "label": "Couleur des textes"
         },
         "border_bottom_color": {
           "label": "Couleur de la bordure du bas"
@@ -1638,18 +1677,8 @@
         "cart_width": {
           "label": "Largeur personnalisée du panier"
         },
-        "logo_position": {
-          "label": "Emplacement du logo du bureau",
-          "options__1": {
-            "label": "Centré à gauche"
-          },
-          "options__3": {
-            "label": "En haut au centre"
-          },
-          "info": "L'emplacement est optimisée pour le mobile automatiquement."
-        },
-        "menu": {
-          "label": "Menu"
+        "menu_title": {
+          "label": "Titre du menu"
         },
         "enable_sticky_header": {
           "label": "Activer l'en-tête collé",
@@ -1657,14 +1686,6 @@
         },
         "margin_bottom": {
           "label": "Marge inférieure"
-        }
-      },
-      "headings": {
-        "general_settings": {
-          "content": "Réglages généraux"
-        },
-        "cart": {
-          "content": "Panier"
         }
       }
     },
@@ -2999,6 +3020,15 @@
       },
       "presets": {
         "name": "Multicolonne"
+      }
+    },
+    "my-likes": {
+      "name": "Mes j'aimes",
+      "settings": {
+        "empty_text": {
+          "label": "Texte au format HTML",
+          "info": "S'affiche au cas où il n'y a pas de like"
+        }
       }
     },
     "newsletter": {

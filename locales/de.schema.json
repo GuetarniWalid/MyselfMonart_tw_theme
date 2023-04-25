@@ -750,22 +750,6 @@
           "unit": "Pixel",
           "label": "Breite des benutzerdefinierten Logos"
         },
-        "logo_position": {
-          "label": "Desktop-Logoposition",
-          "options__1": {
-            "label": "Mitte links"
-          },
-          "options__2": {
-            "label": "Oben links"
-          },
-          "options__3": {
-            "label": "Oben zentriert"
-          },
-          "info": "Positionen werden automatisch für die mobile Nutzung optimiert."
-        },
-        "menu": {
-          "label": "Menü"
-        },
         "show_line_separator": {
           "label": "Trennlinie anzeigen"
         },

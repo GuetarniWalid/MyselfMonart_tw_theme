@@ -750,22 +750,6 @@
           "unit": "px",
           "label": "Chiều rộng logo tùy chỉnh"
         },
-        "logo_position": {
-          "label": "Vị trí logo trên màn hình nền",
-          "options__1": {
-            "label": "Ở giữa bên trái"
-          },
-          "options__2": {
-            "label": "Trên cùng bên trái"
-          },
-          "options__3": {
-            "label": "Trên cùng ở giữa"
-          },
-          "info": "Vị trí được tự động tối ưu hóa cho thiết bị di động."
-        },
-        "menu": {
-          "label": "Menu"
-        },
         "show_line_separator": {
           "label": "Hiển thị đường phân cách"
         },

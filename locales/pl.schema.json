@@ -750,22 +750,6 @@
           "unit": "px",
           "label": "Niestandardowa szerokość logo"
         },
-        "logo_position": {
-          "label": "Pozycja logo na komputerze",
-          "options__1": {
-            "label": "Do środka, do lewej"
-          },
-          "options__2": {
-            "label": "Do góry, do lewej"
-          },
-          "options__3": {
-            "label": "Do góry, wyśrodkowany"
-          },
-          "info": "Pozycja jest automatycznie optymalizowana dla urządzeń mobilnych."
-        },
-        "menu": {
-          "label": "Menu"
-        },
         "show_line_separator": {
           "label": "Pokaż linię separatora"
         },

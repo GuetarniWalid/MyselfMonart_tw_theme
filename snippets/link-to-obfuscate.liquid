@@ -1,0 +1,34 @@
+{% comment %}
+    Renders a list of product's price (regular, sale)
+
+    Accepts:
+    - anchor: {String} The anchor text
+    - href: {String} The link href (optional)
+    - image: {Object} The image object (optional)
+    - to_obfuscate: {Boolean} If to obfuscate the link or not
+    - class_name: {Object} A link object
+    - props: {String} Props to add to the link (optional)
+
+    Usage:
+    {% render 'link-to-obfuscate', anchor: {String}, href: {String}, image: {Object}, to_obfuscate: true, class_name: {String}, props: {String} %}
+{% endcomment %}
+
+{%- if to_obfuscate and href != blank -%}
+    <span class="obfuscate {{ class_name }}" data-url64="{{ href | base64_encode }}" {{ props }} tabindex="0">
+        {% if image != blank %}
+            {{ image | image_url: width: 52, height: 52 | image_tag: width: 52, height: 52, alt: image.alt, loading: 'lazy' }}
+        {% endif %}
+        {{ anchor | escape }}
+    </span>
+{%- elsif href != blank -%}
+    <a href="{{ href }}" class="{{ class_name }}" {{ props }}>
+        {{ anchor | escape }}
+    </a>
+{%- else -%}
+    <span class="{{ class_name }}" {{ props }}>
+        {% if image != blank %}
+            {{ image | image_url: width: 52, height: 52 | image_tag: width: 52, height: 52, alt: image.title, loading: 'lazy' }}
+        {% endif %}
+        {{ anchor | escape }}
+    </span>
+{%- endif -%}
