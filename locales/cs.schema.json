@@ -750,22 +750,6 @@
           "unit": "px",
           "label": "Šířka vlastního loga"
         },
-        "logo_position": {
-          "label": "Pozice loga na počítači",
-          "options__1": {
-            "label": "Uprostřed vlevo"
-          },
-          "options__2": {
-            "label": "Nahoře vlevo"
-          },
-          "options__3": {
-            "label": "Nahoře ve středu"
-          },
-          "info": "Pozice se automaticky optimalizuje pro mobilní prostředí."
-        },
-        "menu": {
-          "label": "Nabídka"
-        },
         "show_line_separator": {
           "label": "Zobrazit oddělovací čáru"
         },

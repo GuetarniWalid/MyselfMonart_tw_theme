@@ -750,22 +750,6 @@
           "unit": "像素",
           "label": "自訂標誌寬度"
         },
-        "logo_position": {
-          "label": "桌面版標誌位置",
-          "options__1": {
-            "label": "中央左方"
-          },
-          "options__2": {
-            "label": "左上角"
-          },
-          "options__3": {
-            "label": "中央上方"
-          },
-          "info": "行動版會自動調整為最佳位置。"
-        },
-        "menu": {
-          "label": "選單"
-        },
         "show_line_separator": {
           "label": "顯示不同行"
         },

@@ -750,22 +750,6 @@
           "unit": "piksel",
           "label": "Özel logo genişliği"
         },
-        "logo_position": {
-          "label": "Masaüstü logo konumu",
-          "options__1": {
-            "label": "Orta sol"
-          },
-          "options__2": {
-            "label": "Üst sol"
-          },
-          "options__3": {
-            "label": "Üst orta"
-          },
-          "info": "Konum, mobil cihazlar için otomatik olarak optimize edilir."
-        },
-        "menu": {
-          "label": "Menü"
-        },
         "show_line_separator": {
           "label": "Ayırıcı satırı göster"
         },

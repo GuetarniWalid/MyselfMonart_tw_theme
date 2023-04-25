@@ -25,6 +25,13 @@ class CartDrawer extends HTMLElement {
           this.open(cartLink);
         }
       });
+      cartLink.addEventListener('mouseenter', () => {
+        document.cursorInCartButton = true
+      });
+      cartLink.addEventListener('mouseleave', () => {
+        document.cursorInCartButton = false
+        document.querySelector('header-drawer')?.onMouseEnter()
+      });
     });
   }
 

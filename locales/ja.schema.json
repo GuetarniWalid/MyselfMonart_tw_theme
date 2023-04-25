@@ -750,22 +750,6 @@
           "unit": "ピクセル",
           "label": "ロゴの幅をカスタマイズする"
         },
-        "logo_position": {
-          "label": "デスクトップのロゴ位置",
-          "options__1": {
-            "label": "中央部左側"
-          },
-          "options__2": {
-            "label": "左上"
-          },
-          "options__3": {
-            "label": "上部中央"
-          },
-          "info": "位置はモバイル用に自動で最適化されます。"
-        },
-        "menu": {
-          "label": "メニュー"
-        },
         "show_line_separator": {
           "label": "区切り線を表示する"
         },

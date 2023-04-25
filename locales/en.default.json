@@ -231,7 +231,8 @@
       "cart_count": {
         "one": "{{ count }} item",
         "other": "{{ count }} items"
-      }
+      },
+      "my_likes": "My likes"
     },
     "cart": {
       "title": "Your cart",

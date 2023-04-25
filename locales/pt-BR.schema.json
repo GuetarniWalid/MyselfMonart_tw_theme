@@ -750,22 +750,6 @@
           "unit": "px",
           "label": "Largura personalizada do logo"
         },
-        "logo_position": {
-          "label": "Posição do logo no desktop",
-          "options__1": {
-            "label": "Centralizado à esquerda"
-          },
-          "options__2": {
-            "label": "Canto superior esquerdo"
-          },
-          "options__3": {
-            "label": "Centralizado na parte superior"
-          },
-          "info": "A posição é otimizada automaticamente para dispositivos móveis."
-        },
-        "menu": {
-          "label": "Menu"
-        },
         "show_line_separator": {
           "label": "Exibir linha separadora"
         },

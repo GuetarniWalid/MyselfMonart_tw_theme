@@ -7,10 +7,11 @@
 
   .drawer {
     visibility: hidden;
-    --drawer-background: {{ section.settings.cart_drawer_background }};
-    --drawer-color: {{ section.settings.cart_drawer_text_color }};
+    --drawer-background: rgb(var(--header-background));
+    --drawer-color: rgb(var(--header-color));
     --drawer-item-background: {{ section.settings.cart_drawer_item_background }};
-    --scrollbar-thumb: {{ section.settings.cart_drawer_text_color }}40;
+    --scrollbar-thumb: rgba(var(--header-color), 0.4);
+    --color-foreground: rgb(var(--header-color)); 
   }
 </style>
 
@@ -360,18 +361,6 @@
     {
       "type": "header",
       "content": "t:sections.cart-drawer.headings.styles.content"
-    },
-    {
-      "type": "color",
-      "id": "cart_drawer_background",
-      "label": "t:sections.cart-drawer.settings.background.label",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "cart_drawer_text_color",
-      "label": "t:sections.cart-drawer.settings.text_color.label",
-      "default": "#121212"
     },
     {
       "type": "color",

@@ -315,3 +315,13 @@
 .card-article-info {
   margin-top: 1rem;
 }
+
+.card-wrapper > .card .with-like {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.8rem;
+}
+
+.card-wrapper > .card .with-like > button:first-child {
+  flex-grow: 1;
+}

@@ -11,6 +11,16 @@ class DetailsModal extends HTMLElement {
     this.summaryToggle.setAttribute('role', 'button');
   }
 
+  connectedCallback() {
+    const overlay = this.querySelector('.modal-overlay')
+    overlay.addEventListener('mouseenter', () => {
+      document.cursorInCartButton = true
+    });
+    overlay.addEventListener('mouseleave', () => {
+      document.cursorInCartButton = false
+    });
+  }
+
   isOpen() {
     return this.detailsContainer.hasAttribute('open');
   }
@@ -29,7 +39,7 @@ class DetailsModal extends HTMLElement {
     event.target.closest('details').setAttribute('open', true);
     document.body.addEventListener('click', this.onBodyClickEvent);
     document.body.classList.add('overflow-hidden');
-    this.closest('.header__icons').nextElementSibling.classList.add('hidden');
+    this.closest('.header__icons').nextElementSibling?.classList.add('hidden');
 
     trapFocus(this.detailsContainer.querySelector('[tabindex="-1"]'), this.detailsContainer.querySelector('input:not([type="hidden"])'));
   }
@@ -39,7 +49,7 @@ class DetailsModal extends HTMLElement {
     this.detailsContainer.removeAttribute('open');
     document.body.removeEventListener('click', this.onBodyClickEvent);
     document.body.classList.remove('overflow-hidden');
-    this.closest('.header__icons').nextElementSibling.classList.remove('hidden');
+    this.closest('.header__icons').nextElementSibling?.classList.remove('hidden');
   }
 }
 customElements.define('details-modal', DetailsModal);

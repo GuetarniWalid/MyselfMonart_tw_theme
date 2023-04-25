@@ -1095,6 +1095,18 @@
     ]
   },
   {
+    "name": "t:settings_schema.likes.name",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_likes",
+        "default": true,
+        "label": "t:settings_schema.likes.settings.enable_likes.label",
+        "info": "t:settings_schema.likes.settings.enable_likes.info"
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.search_input.name",
     "settings": [
       {

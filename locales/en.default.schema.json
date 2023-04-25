@@ -1,73 +1,5 @@
 {
   "settings_schema": {
-    "global": {
-      "settings": {
-        "header__border": {
-          "content": "Border"
-        },
-        "header__shadow": {
-          "content": "Shadow"
-        },
-        "blur": {
-          "label": "Blur"
-        },
-        "corner_radius": {
-          "label": "Corner radius"
-        },
-        "horizontal_offset": {
-          "label": "Horizontal offset"
-        },
-        "vertical_offset": {
-          "label": "Vertical offset"
-        },
-        "thickness": {
-          "label": "Thickness"
-        },
-        "opacity": {
-          "label": "Opacity"
-        },
-        "image_padding": {
-          "label": "Image padding"
-        },
-        "text_alignment": {
-          "options__1": {
-            "label": "Left"
-          },
-          "options__2": {
-            "label": "Center"
-          },
-          "options__3": {
-            "label": "Right"
-          },
-          "label": "Text alignment"
-        }
-      }
-    },
-    "cards": {
-      "name": "Cards",
-      "settings": {
-        "header__badge": {
-          "content": "Badge"
-        },
-        "style": {
-          "options__1": {
-            "label": "Standard"
-          },
-          "options__2": {
-            "label": "Card"
-          },
-          "label": "Style"
-        }
-      }
-    },
-    "cart": {
-      "name": "Cart",
-      "settings": {
-        "show_cart_note": {
-          "label": "Enable cart note"
-        }
-      }
-    },
     "badges": {
       "name": "Badges",
       "settings": {
@@ -91,6 +23,34 @@
         },
         "sold_out_badge_color_scheme": {
           "label": "Sold out badge color scheme"
+        }
+      }
+    },
+    "buttons": {
+      "name": "Buttons"
+    },
+    "cards": {
+      "name": "Cards",
+      "settings": {
+        "header__badge": {
+          "content": "Badge"
+        },
+        "style": {
+          "options__1": {
+            "label": "Standard"
+          },
+          "options__2": {
+            "label": "Card"
+          },
+          "label": "Style"
+        }
+      }
+    },
+    "cart": {
+      "name": "Cart",
+      "settings": {
+        "show_cart_note": {
+          "label": "Enable cart note"
         }
       }
     },
@@ -144,68 +104,135 @@
         }
       }
     },
-    "typography": {
-      "name": "Typography",
+    "content_containers": {
+      "name": "Content containers"
+    },
+    "currency_format": {
+      "name": "Currency format",
       "settings": {
-        "type_header_font_custom": {
-          "label": "Custom header font",
-          "info": "If selected, the font below will not be applied in favor of the custom font"
-        },
-        "type_header_font": {
-          "label": "Font",
-          "info": "Selecting a different font can affect the speed of your store. [Learn more about system fonts.](https://help.shopify.com/manual/online-store/os/store-speed/improving-speed#fonts)"
-        },
-        "heading_scale": {
-          "label": "Font size scale"
-        },
-        "header__1": {
-          "content": "Headings"
-        },
-        "header__2": {
-          "content": "Body"
-        },
-        "type_body_font": {
-          "label": "Font",
-          "info": "Selecting a different font can affect the speed of your store. [Learn more about system fonts.](https://help.shopify.com/manual/online-store/os/store-speed/improving-speed#fonts)"
-        },
-        "body_scale": {
-          "label": "Font size scale"
+        "content": "Currency codes",
+        "paragraph": "Cart and checkout prices always show currency codes. Example: $1.00 USD.",
+        "currency_code_enabled": {
+          "label": "Show currency codes"
         }
       }
     },
-    "buttons": {
-      "name": "Buttons"
+    "drawers": {
+      "name": "Drawers"
     },
-    "variant_pills": {
-      "name": "Variant pills"
+    "favicon": {
+      "name": "Favicon",
+      "settings": {
+        "favicon": {
+          "label": "Favicon image",
+          "info": "Will be scaled down to 32 x 32px"
+        }
+      }
+    },
+    "global": {
+      "settings": {
+        "header__border": {
+          "content": "Border"
+        },
+        "header__shadow": {
+          "content": "Shadow"
+        },
+        "blur": {
+          "label": "Blur"
+        },
+        "corner_radius": {
+          "label": "Corner radius"
+        },
+        "horizontal_offset": {
+          "label": "Horizontal offset"
+        },
+        "vertical_offset": {
+          "label": "Vertical offset"
+        },
+        "thickness": {
+          "label": "Thickness"
+        },
+        "opacity": {
+          "label": "Opacity"
+        },
+        "image_padding": {
+          "label": "Image padding"
+        },
+        "text_alignment": {
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Center"
+          },
+          "options__3": {
+            "label": "Right"
+          },
+          "label": "Text alignment"
+        }
+      }
     },
     "inputs": {
       "name": "Inputs"
     },
-    "content_containers": {
-      "name": "Content containers"
+    "layout": {
+      "name": "Layout",
+      "settings": {
+        "page_width": {
+          "label": "Page width"
+        },
+        "spacing_sections": {
+          "label": "Vertical space between sections"
+        },
+        "header__grid": {
+          "content": "Grid"
+        },
+        "paragraph__grid": {
+          "content": "Affects areas with a multicolumn layout."
+        },
+        "spacing_grid_horizontal": {
+          "label": "Horizontal space"
+        },
+        "spacing_grid_vertical": {
+          "label": "Vertical space"
+        }
+      }
+    },
+    "likes": {
+      "name": "Likes",
+      "settings": {
+        "enable_likes": {
+          "label": "Enable likes",
+          "info": "Possibility for the user to like products and find them on a dedicated page"
+        }
+      }
+    },
+    "media": {
+      "name": "Media"
     },
     "popups": {
       "name": "Dropdowns and pop-ups",
       "paragraph": "Affects areas like navigation dropdowns, pop-up modals, and cart pop-ups."
     },
-    "media": {
-      "name": "Media"
-    },
-    "drawers": {
-      "name": "Drawers"
-    },
-    "styles": {
-      "name": "Icons",
+    "search_input": {
+      "name": "Search behavior",
       "settings": {
-        "accent_icons": {
-          "options__3": {
-            "label": "Outline button"
-          },
-          "options__4": {
-            "label": "Text"
-          },
-          "label": "Color"
+        "header": {
+          "content": "Product suggestions"
+        },
+        "enable_predictive_search": {
+          "label": "Enable search bar"
+        },
+        "predictive_search_enabled": {
+          "label": "Enable product suggestions"
+        },
+        "predictive_search_show_vendor": {
+          "label": "Show vendor",
+          "info": "Visible when product suggestions enabled."
+        },
+        "predictive_search_show_price": {
+          "label": "Show price",
+          "info": "Visible when product suggestions enabled."
         }
       }
     },
@@ -253,69 +280,51 @@
         }
       }
     },
-    "search_input": {
-      "name": "Search behavior",
+    "styles": {
+      "name": "Icons",
       "settings": {
-        "header": {
-          "content": "Product suggestions"
-        },
-        "enable_predictive_search": {
-          "label": "Enable search bar"
-        },
-        "predictive_search_enabled": {
-          "label": "Enable product suggestions"
-        },
-        "predictive_search_show_vendor": {
-          "label": "Show vendor",
-          "info": "Visible when product suggestions enabled."
-        },
-        "predictive_search_show_price": {
-          "label": "Show price",
-          "info": "Visible when product suggestions enabled."
+        "accent_icons": {
+          "options__3": {
+            "label": "Outline button"
+          },
+          "options__4": {
+            "label": "Text"
+          },
+          "label": "Color"
         }
       }
     },
-    "favicon": {
-      "name": "Favicon",
+    "typography": {
+      "name": "Typography",
       "settings": {
-        "favicon": {
-          "label": "Favicon image",
-          "info": "Will be scaled down to 32 x 32px"
+        "type_header_font_custom": {
+          "label": "Custom header font",
+          "info": "If selected, the font below will not be applied in favor of the custom font"
+        },
+        "type_header_font": {
+          "label": "Font",
+          "info": "Selecting a different font can affect the speed of your store. [Learn more about system fonts.](https://help.shopify.com/manual/online-store/os/store-speed/improving-speed#fonts)"
+        },
+        "heading_scale": {
+          "label": "Font size scale"
+        },
+        "header__1": {
+          "content": "Headings"
+        },
+        "header__2": {
+          "content": "Body"
+        },
+        "type_body_font": {
+          "label": "Font",
+          "info": "Selecting a different font can affect the speed of your store. [Learn more about system fonts.](https://help.shopify.com/manual/online-store/os/store-speed/improving-speed#fonts)"
+        },
+        "body_scale": {
+          "label": "Font size scale"
         }
       }
     },
-    "currency_format": {
-      "name": "Currency format",
-      "settings": {
-        "content": "Currency codes",
-        "paragraph": "Cart and checkout prices always show currency codes. Example: $1.00 USD.",
-        "currency_code_enabled": {
-          "label": "Show currency codes"
-        }
-      }
-    },
-    "layout": {
-      "name": "Layout",
-      "settings": {
-        "page_width": {
-          "label": "Page width"
-        },
-        "spacing_sections": {
-          "label": "Vertical space between sections"
-        },
-        "header__grid": {
-          "content": "Grid"
-        },
-        "paragraph__grid": {
-          "content": "Affects areas with a multicolumn layout."
-        },
-        "spacing_grid_horizontal": {
-          "label": "Horizontal space"
-        },
-        "spacing_grid_vertical": {
-          "label": "Vertical space"
-        }
-      }
+    "variant_pills": {
+      "name": "Variant pills"
     }
   },
   "sections": {
@@ -1241,12 +1250,42 @@
     },
     "header": {
       "name": "Header",
+      "blocks": {
+        "menu": {
+          "settings": {
+            "link_list": {
+              "label": "Will display submenus",
+              "info": "If you don't want to display submenus select another block instead"
+            },
+            "menu_title": {
+              "label": "Menu title",
+              "info": "If you don't want to display a menu title, leave this field blank"
+            },
+            "page_link": {
+              "label": "Page link",
+              "info": "If you want to link the menu title to a page"
+            },
+            "image": {
+              "label": "Image",
+              "info": "If you want to display an image"
+            }
+          }
+        }
+      },
+      "headings": {
+        "general_settings": {
+          "content": "General settings"
+        },
+        "cart": {
+          "content": "Cart"
+        }
+      },
       "settings": {
         "color_background": {
           "label": "Background color"
         },
-        "icon_color": {
-          "label": "Icon color"
+        "text_color": {
+          "label": "Text color"
         },
         "border_bottom_color": {
           "label": "Border bottom color"
@@ -1271,18 +1310,8 @@
         "cart_width": {
           "label": "Custom cart width"
         },
-        "logo_position": {
-          "label": "Desktop logo position",
-          "options__1": {
-            "label": "Middle left"
-          },
-          "options__3": {
-            "label": "Top center"
-          },
-          "info": "Position is automatically optimized for mobile."
-        },
-        "menu": {
-          "label": "Menu"
+        "menu_title": {
+          "label": "Menu title"
         },
         "enable_sticky_header": {
           "label": "Enable sticky header",
@@ -1290,14 +1319,6 @@
         },
         "margin_bottom": {
           "label": "Bottom margin"
-        }
-      },
-      "headings": {
-        "general_settings": {
-          "content": "General settings"
-        },
-        "cart": {
-          "content": "Cart"
         }
       }
     },
@@ -2642,6 +2663,15 @@
         },
         "text_color": {
           "label": "Description color"
+        }
+      }
+    },
+    "my-likes": {
+      "name": "My likes",
+      "settings": {
+        "empty_text": {
+          "label": "Text in HTML format",
+          "info": "Displays in case there is no like"
         }
       }
     },

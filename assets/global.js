@@ -22,9 +22,9 @@ document.querySelectorAll('[id^="Details-"] summary').forEach(summary => {
 const trapFocusHandlers = {};
 
 function trapFocus(container, elementToFocus = container) {
-  var elements = getFocusableElements(container);
-  var first = elements[0];
-  var last = elements[elements.length - 1];
+  const elements = getFocusableElements(container);
+  const first = elements[0];
+  const last = elements[elements.length - 1];
 
   removeTrapFocus();
 
@@ -399,9 +399,40 @@ customElements.define('menu-drawer', MenuDrawer);
 class HeaderDrawer extends MenuDrawer {
   constructor() {
     super();
+    this.header = this.closest('header');
+    this.toggleButton = this.closest('header').querySelector('.toggle-menu');
+    this.chevron = this.toggleButton.querySelector('svg');
+    this.details = this.querySelector('details');
+    this.summary = this.details.querySelector('summary');
+    this.overlay = this.querySelector('.overlay');
+    this.timer = null;
+    this.toggleTimer = null;
+    this.toggleButtonActive = false;
   }
 
-  openMenuDrawer(summaryElement) {
+  connectedCallback() {
+    this.header.addEventListener('mouseenter', this.onMouseEnter.bind(this));
+    this.toggleButton.addEventListener('click', e => {
+      if (this.details.hasAttribute('open') && this.toggleButtonActive) {
+        this.closeMenuDrawer(e, this.summary);
+      } else if (!this.details.hasAttribute('open')) {
+        this.details.setAttribute('open', true);
+        this.openMenuDrawer();
+      }
+    });
+    this.summary.addEventListener('touchstart', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.summary.click();
+    });
+    this.header.addEventListener('mouseleave', e => this.closeMenuDrawer(e, document.activeElement));
+    this.overlay.addEventListener('mouseenter', e => this.closeMenuDrawer(e, document.activeElement));
+  }
+
+  openMenuDrawer() {
+    document.body.classList.add('overflow-hidden');
+    this.overlay.classList.add('visible');
+    this.chevron.classList.add('rotate');
     this.header = this.header || document.getElementById('shopify-section-header');
     this.borderOffset = this.borderOffset ? 1 : 0;
     document.documentElement.style.setProperty('--header-bottom-position', `${parseInt(this.header.getBoundingClientRect().bottom - this.borderOffset)}px`);
@@ -411,15 +442,40 @@ class HeaderDrawer extends MenuDrawer {
       this.mainDetailsToggle.classList.add('menu-opening');
     });
 
-    summaryElement.setAttribute('aria-expanded', true);
-    trapFocus(this.mainDetailsToggle, summaryElement);
-    document.body.classList.add(`overflow-hidden-${this.dataset.breakpoint}`);
+    this.summary.setAttribute('aria-expanded', true);
+    trapFocus(this, this.querySelector('.menu-drawer__navigation li span'));
+
+    this.toggleTimer = setTimeout(() => {
+      if(document.cursorInCartButton) return
+      this.toggleButtonActive = true;
+    }, 500);
   }
 
   closeMenuDrawer(event, elementToFocus) {
     if (!event && !elementToFocus) return;
+    document.body.classList.remove('overflow-hidden');
+    if (this.timer) {
+      clearTimeout(this.timer);
+      clearTimeout(this.toggleTimer);
+    }
+    this.overlay.classList.remove('visible');
+    this.chevron.classList.remove('rotate');
     super.closeMenuDrawer(event, elementToFocus);
     this.header.classList.remove('menu-open');
+  }
+
+  onMouseEnter() {
+    this.toggleButtonActive = false;
+    setTimeout(() => {
+      if(!document.cursorInCartButton) return
+      clearTimeout(this.timer);
+      clearTimeout(this.toggleTimer);
+    });
+    this.timer = setTimeout(() => {
+      this.details.setAttribute('open', true);
+      this.openMenuDrawer();
+    }, 200);
+    
   }
 }
 customElements.define('header-drawer', HeaderDrawer);
@@ -1026,6 +1082,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const links = document.querySelectorAll('.obfuscate');
   links.forEach(link => {
     link.addEventListener('click', navigate, false);
+    link.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        navigate.call(link);
+      }
+    });
   });
 });
 
@@ -1053,10 +1114,9 @@ function replacePlaceholderImages() {
   medias.forEach(media => {
     media.setAttribute('srcset', media.getAttribute('data-srcset'));
     media.removeAttribute('data-srcset');
-    if(media.tagName === 'SOURCE') {
+    if (media.tagName === 'SOURCE') {
       media.closest('picture').classList.remove('placeholder');
-    }
-    else {
+    } else {
       media.onload = () => {
         media.classList.remove('placeholder');
       };

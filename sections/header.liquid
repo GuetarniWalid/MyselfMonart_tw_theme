@@ -18,18 +18,20 @@
 <noscript>{{ 'component-cart-items.css' | asset_url | stylesheet_tag }}</noscript>
 
 {%- style -%}
+  :root {
+    --header-color: {{ section.settings.text_color.red }}, {{ section.settings.text_color.green }}, {{ section.settings.text_color.blue }};
+    --header-background: {{ section.settings.background_color.red }}, {{ section.settings.background_color.green }}, {{ section.settings.background_color.blue }};
+  }
   #shopify-section-header {
-    --background: {{ section.settings.background_color }};
     --header-padding-top: {{ section.settings.padding_top }}px;
     --header-padding-bottom: {{ section.settings.padding_bottom }}px;
     --header-padding-top-mobile: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px;
     --header-padding-bottom-mobile: {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px;
     --logo-size: {{ section.settings.logo_width }}px;
     --cart-size: {{ section.settings.cart_width }}px;
-    --icons-color: {{ section.settings.icons_color }};
-    --icons-border-color: {{ section.settings.border_color }};
     --shadow-on-colored: {% if section.settings.add_shadow %}1px 12px 30px -1px rgba(0,0,0,0.1){% else %}none{% endif %};
     --header-position: {% if section.settings.enable_sticky_header %}sticky{% else %}relative{% endif %};
+    --color-button-text: var(--header-color);
   }
 {%- endstyle -%}
 
@@ -103,21 +105,15 @@
   "class": "section-header",
   "settings": [
     {
-      "type": "color_background",
+      "type": "color",
       "id": "background_color",
       "label": "t:sections.header.settings.color_background.label",
       "default": "#ffffff"
     },
     {
       "type": "color",
-      "id": "icons_color",
-      "label": "t:sections.header.settings.icon_color.label",
-      "default": "#121212"
-    },
-    {
-      "type": "color",
-      "id": "border_color",
-      "label": "t:sections.header.settings.border_bottom_color.label",
+      "id": "text_color",
+      "label": "t:sections.header.settings.text_color.label",
       "default": "#121212"
     },
     {
@@ -147,23 +143,6 @@
       "label": "t:sections.header.settings.logo_width.label"
     },
     {
-      "type": "select",
-      "id": "logo_position",
-      "options": [
-        {
-          "value": "middle-left",
-          "label": "t:sections.header.settings.logo_position.options__1.label"
-        },
-        {
-          "value": "top-center",
-          "label": "t:sections.header.settings.logo_position.options__3.label"
-        }
-      ],
-      "default": "middle-left",
-      "label": "t:sections.header.settings.logo_position.label",
-      "info": "t:sections.header.settings.logo_position.info"
-    },
-    {
       "type": "header",
       "content": "t:sections.header.headings.cart.content"
     },
@@ -188,10 +167,10 @@
       "content": "t:sections.header.headings.general_settings.content"
     },
     {
-      "type": "link_list",
-      "id": "menu",
-      "default": "main-menu",
-      "label": "t:sections.header.settings.menu.label"
+      "type": "text",
+      "id": "menu_title",
+      "default": "Menu title",
+      "label": "t:sections.header.settings.menu_title.label"
     },
     {
       "type": "checkbox",
@@ -240,6 +219,49 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 20
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Menu",
+      "type": "menu",
+      "settings":[
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "t:sections.header.blocks.menu.settings.link_list.label",
+          "info": "t:sections.header.blocks.menu.settings.link_list.info",
+          "default": "main-menu"
+        },
+        {
+          "type": "text",
+          "id": "menu_title",
+          "label": "t:sections.header.blocks.menu.settings.menu_title.label",
+          "info": "t:sections.header.blocks.menu.settings.menu_title.info"
+        },
+        {
+          "type": "url",
+          "id": "page_link",
+          "label": "t:sections.header.blocks.menu.settings.page_link.label",
+          "info": "t:sections.header.blocks.menu.settings.page_link.info"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.header.blocks.menu.settings.image.label"
+        }
+      ]
+    },
+    {
+      "name": "Collection",
+      "type": "collection",
+      "settings":[
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "t:sections.header.settings.menu.label"
+        }
+      ]
     }
   ]
 }

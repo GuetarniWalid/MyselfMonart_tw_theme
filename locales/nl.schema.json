@@ -750,22 +750,6 @@
           "unit": "px",
           "label": "Aangepaste logo-breedte"
         },
-        "logo_position": {
-          "label": "Positie van logo voor desktop",
-          "options__1": {
-            "label": "Midden links"
-          },
-          "options__2": {
-            "label": "Linksboven"
-          },
-          "options__3": {
-            "label": "Centraal boven"
-          },
-          "info": "De positie wordt automatisch geoptimaliseerd voor mobiel."
-        },
-        "menu": {
-          "label": "Menu"
-        },
         "show_line_separator": {
           "label": "Scheidingsregel tonen"
         },
