@@ -210,7 +210,7 @@
             "type": "reduction",
             "settings": {
               "description": "Livraison offerte",
-              "price_to_reach": 7000
+              "price_to_reach": 15000
             }
           }
         },
@@ -220,7 +220,7 @@
         "settings": {
           "keep_shopping_url": "shopify:\/\/collections",
           "cart_drawer_collection": "nos-oeuvres-dart",
-          "outline_button_link": "shopify:\/\/collections\/nos-oeuvres-dart",
+          "outline_button_link": "shopify:\/\/collections\/tableau-salon",
           "cart_drawer_background": "#f6f2ec",
           "cart_drawer_text_color": "#002e5d",
           "cart_drawer_item_background": "#ffffff",
