@@ -17,7 +17,7 @@
         "show_secondary_image": true,
         "show_price": true,
         "columns_mobile": "2",
-        "empty_text": "",
+        "empty_text": "<p>\n  Pour l'heure, aucun tableau n'a retenu votre cœur,<br>\n  Relâchez vos soucis, goûtez à ce bonheur,<br>\n  Laissez l'art embellir votre journée,<br>\n  Et vos murs une fois l'œuvre trouvé.\n<\/p>",
         "padding_top": 16,
         "padding_bottom": 36
       }

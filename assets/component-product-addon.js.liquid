@@ -915,15 +915,18 @@ class AluminiumOptionsSelector extends OptionsSelector {
 
     //Bonded listeners
     this.sizeSelectorBoundListener = this.handleSizeChange.bind(this);
+    this.radioBoundListener = this.handleRadioChange.bind(this);
   }
 
   connectedCallback() {
+    this.radios.forEach(radio => radio.addEventListener('change', this.radioBoundListener));
     this.mainVariants.sizeSelector.addEventListener('change', this.sizeSelectorBoundListener);
     this.hideForbiddenShine(this.mainVariants.sizeSelector.value);
   }
 
   disconnectedCallback() {
     this.mainVariants.sizeSelector.removeEventListener('change', this.sizeSelectorBoundListener);
+    this.radios.forEach(radio => radio.removeEventListener('change', this.radioBoundListener));
   }
 
   handleSizeChange() {

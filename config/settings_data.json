@@ -92,6 +92,7 @@
     "social_snapchat_link": "",
     "social_youtube_link": "",
     "social_vimeo_link": "",
+    "heart_color": "#e96161",
     "likes_page": "mes-j-aimes",
     "obfuscate_likes_bottom_button": true,
     "enable_predictive_search": true,
