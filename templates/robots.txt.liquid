@@ -9,8 +9,8 @@
       {{ 'Disallow: /*?q=*' }}
     {%- endif -%}
 
-    {{- 'Disallow: /blogs/infos' }}
-    {{- 'Disallow: /blogs/tableau-cuisine' }}
+    {{- 'Disallow: /blogs/infos$' }}
+    {{- 'Disallow: /blogs/tableau-cuisine$' }}
     {{- 'Disallow: /collections/all' }}
     {{- 'Disallow: /collections/famille*' }}
     {{- 'Disallow: /pages/conditions-generales-de-vente-1' }}
@@ -18,10 +18,13 @@
     {{- 'Disallow: /pages/conditions-dutilisation' }}
     {{- 'Disallow: /pages/mentions-legales' }}
     {{- 'Disallow: /pages/politique-de-remboursement' }}
-    {{- 'Disallow: /pages/contactez-nous' }}
-    {{- 'Disallow: /pages/guide-de-tailles' }}
-    {{- 'Disallow: /pages/mes-j-aimes' }}
-    {{- 'Disallow: /search?*' }}
+    {{- 'Disallow: /pages/contactez-nous$' }}
+    {{- 'Disallow: /pages/guide-de-tailles$' }}
+    {{- 'Disallow: /pages/mes-j-aimes$' }}
+    {{- 'Disallow: /search*' }}
+    {{- 'Disallow: /checkout$' }}
+    {{- 'Disallow: /cart*' }}
+    {{- 'Disallow: /.*' }}
     
   
     {%- if group.sitemap != blank -%}
