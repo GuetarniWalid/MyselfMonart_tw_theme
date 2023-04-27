@@ -56,7 +56,7 @@ function trapFocus(container, elementToFocus = container) {
   document.addEventListener('focusout', trapFocusHandlers.focusout);
   document.addEventListener('focusin', trapFocusHandlers.focusin);
 
-  elementToFocus.focus();
+  elementToFocus?.focus();
 }
 
 // Here run the querySelector to figure out if the browser supports :focus-visible or not and run code based on it.
