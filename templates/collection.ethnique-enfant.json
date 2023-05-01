@@ -44,50 +44,22 @@
         "f68915d1-93be-46c1-878a-5df7b674c747": {
           "type": "featured_collection",
           "settings": {
-            "collection": "tableau-salon"
+            "collection": "tableau-africain-1"
           }
         },
         "template--16404731756799__0a4d0ad2-05f5-4939-8b62-ad000c188ded-1682929193c7effb00-0": {
           "type": "featured_collection",
           "settings": {
-            "collection": "tableau-bureau"
-          }
-        },
-        "e964a270-02f8-4c19-9b0c-dc612dc45735": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "tableau-animaux"
-          }
-        },
-        "template--16404731756799__0a4d0ad2-05f5-4939-8b62-ad000c188ded-1682929193c7effb00-2": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "tableau-ethnique"
-          }
-        },
-        "template--16404731756799__0a4d0ad2-05f5-4939-8b62-ad000c188ded-1682929193c7effb00-1": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "tableau-chambre"
-          }
-        },
-        "db38a57f-8d13-45d1-bb24-c03a4a6aca35": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "tableau-cuisine"
+            "collection": "tableau-japonais"
           }
         }
       },
       "block_order": [
         "f68915d1-93be-46c1-878a-5df7b674c747",
-        "template--16404731756799__0a4d0ad2-05f5-4939-8b62-ad000c188ded-1682929193c7effb00-0",
-        "e964a270-02f8-4c19-9b0c-dc612dc45735",
-        "template--16404731756799__0a4d0ad2-05f5-4939-8b62-ad000c188ded-1682929193c7effb00-2",
-        "template--16404731756799__0a4d0ad2-05f5-4939-8b62-ad000c188ded-1682929193c7effb00-1",
-        "db38a57f-8d13-45d1-bb24-c03a4a6aca35"
+        "template--16404731756799__0a4d0ad2-05f5-4939-8b62-ad000c188ded-1682929193c7effb00-0"
       ],
       "settings": {
-        "title": "NOS AUTRES COLLECTIONS",
+        "title": "NOS AUTRES COLLECTIONS DE TABLEAU ETHNIQUES",
         "heading_size": "h1",
         "image_ratio": "square",
         "columns_desktop": 4,

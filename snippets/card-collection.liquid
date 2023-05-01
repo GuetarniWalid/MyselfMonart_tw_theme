@@ -24,7 +24,7 @@
   endif
 -%}
 
-<div class="card-wrapper animate-arrow">
+<div class="card-wrapper animate-arrow -----{{is_in_card_drawer}}-------">
   <div class="card
     card--{{ settings.card_style }}
     {% if card_collection.featured_image %} card--media{% else %} card--text{% endif %}
@@ -40,21 +40,19 @@
             <img
               srcset="{%- if card_collection.featured_image.width >= 165 -%}{{ card_collection.featured_image | image_url: width: 165 }} 165w,{%- endif -%}
                 {%- if card_collection.featured_image.width >= 330 -%}{{ card_collection.featured_image | image_url: width: 330 }} 330w,{%- endif -%}
-                {%- if card_collection.featured_image.width >= 535 -%}{{ card_collection.featured_image | image_url: width: 535 }} 535w,{%- endif -%}
-                {%- if card_collection.featured_image.width >= 750 -%}{{ card_collection.featured_image | image_url: width: 750 }} 750w,{%- endif -%}
-                {%- if card_collection.featured_image.width >= 1000 and is_in_card_drawer != true -%}{{ card_collection.featured_image | image_url: width: 1000 }} 1000w,{%- endif -%}
-                {%- if card_collection.featured_image.width >= 1500 and is_in_card_drawer != true -%}{{ card_collection.featured_image | image_url: width: 1500 }} 1500w,{%- endif -%}
-                {%- if card_collection.featured_image.width >= 3000 and is_in_card_drawer != true -%}{{ card_collection.featured_image | image_url: width: 3000 }} 3000w,{%- endif -%}
-                {{ card_collection.featured_image | image_url }} {{ card_collection.featured_image.width }}w"
-              src="{{ card_collection.featured_image | image_url: width: 1500 }}"
+                {%- if card_collection.featured_image.width >= 400 -%}{{ card_collection.featured_image | image_url: width: 400 }} 400w,{%- endif -%}
+                {%- if card_collection.featured_image.width >= 500 -%}{{ card_collection.featured_image | image_url: width: 500 }} 500w,{%- endif -%}
+                {{ card_collection.featured_image | image_url: width: 500 }} {{ card_collection.featured_image.width }}w"
+              src="{{ card_collection.featured_image | image_url: width: 500 }}"
               {%- if is_in_card_drawer -%}
                 sizes="
                 (min-width: 750px) 390px, 90vw"
               {%- else -%}
                 sizes="
-                (min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: columns }}px,
-                (min-width: 750px) {% if columns > 1 %}calc((100vw - 10rem) / 2){% else %}calc(100vw - 10rem){% endif %},
-                calc(100vw - 3rem)"
+                (min-width: 990px) 260px,
+                (min-width: 571px) and (max-width: 989px) 500px,
+                (max-width: 570px) 90vw
+                "
               {%- endif -%}
               alt="{{ card_collection.featured_image.alt }}"
               height="{{ card_collection.featured_image.height }}"
