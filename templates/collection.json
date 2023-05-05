@@ -9,6 +9,46 @@
         "padding_bottom": 8
       }
     },
+    "c79dd578-e5af-4f8a-a396-a98b03af1ee4": {
+      "type": "collections-grid",
+      "blocks": {
+        "template--16404731756799__c79dd578-e5af-4f8a-a396-a98b03af1ee4-16832390367feceec2-0": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-noir-et-blanc_7259e3b9-7a71-4c76-bb7f-e33f4492cad8.jpg",
+            "collection": "tableau-noir-et-blanc",
+            "paragraph": ""
+          }
+        },
+        "template--16404731756799__c79dd578-e5af-4f8a-a396-a98b03af1ee4-16832390367feceec2-1": {
+          "type": "image_text",
+          "disabled": true,
+          "settings": {
+            "collection": "",
+            "paragraph": ""
+          }
+        },
+        "template--16404731756799__c79dd578-e5af-4f8a-a396-a98b03af1ee4-16832390367feceec2-2": {
+          "type": "image_text",
+          "disabled": true,
+          "settings": {
+            "collection": "",
+            "paragraph": ""
+          }
+        }
+      },
+      "block_order": [
+        "template--16404731756799__c79dd578-e5af-4f8a-a396-a98b03af1ee4-16832390367feceec2-0",
+        "template--16404731756799__c79dd578-e5af-4f8a-a396-a98b03af1ee4-16832390367feceec2-1",
+        "template--16404731756799__c79dd578-e5af-4f8a-a396-a98b03af1ee4-16832390367feceec2-2"
+      ],
+      "settings": {
+        "lazy_load": true,
+        "color_text": "#fff",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
     "main-collection-product-grid": {
       "type": "main-collection-product-grid",
       "settings": {
@@ -102,6 +142,7 @@
   },
   "order": [
     "cf6565ea-5338-4b92-985b-b5b0824700db",
+    "c79dd578-e5af-4f8a-a396-a98b03af1ee4",
     "main-collection-product-grid",
     "main-collection-banner",
     "0a4d0ad2-05f5-4939-8b62-ad000c188ded"

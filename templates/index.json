@@ -39,7 +39,7 @@
         "template--16404732051711__1198c25f-e6b6-405b-aa76-db2afd719caf-167457706007ac71a1-1": {
           "type": "text",
           "settings": {
-            "text": "<p>Découvrez nos collections de tableaux décoratifs muraux pour toutes les pièces de votre maison.<\/p>"
+            "text": "<p>Révélez votre style unique avec des <strong>œuvres d'art<\/strong> irrésistibles qui donneront vie à votre <strong>intérieur<\/strong>  - Découvrez nos collections de <strong>tableaux décoratifs <\/strong>et laissez-vous transporter dans un monde de couleurs, de formes et d'émotions.<\/p>"
           }
         }
       },
@@ -171,6 +171,14 @@
             "collection": "tableau-ethnique",
             "paragraph": "<h3>DÉCOUVREZ NOTRE COLLECTION DE TABLEAUX ETHNIQUE<\/h3>\n\n<p>La culture à travers le monde. Avec des représentations de l'art japonais, africain et islamique, notre collection propose des tableaux qui transportent les spectateurs dans des mondes fascinants et mystérieux.<\/p>\n\n<p>Les tableaux japonais, par exemple, dépeignent les paysages traditionnels, les geishas et les samouraïs, et sont caractérisés par leurs couleurs vibrantes et leurs détails minutieux. Les tableaux africains, quant à eux, reflètent les traditions tribales et les paysages sauvages du continent, avec des motifs abstraits, des couleurs chaudes et des formes organiques qui plongent les spectateurs dans un univers envoûtant.<\/p>\n\n<p>Les tableaux islamiques, avec leurs calligraphies sublimes et leurs motifs géométriques complexes, permettent aux spectateurs de découvrir l'art qui a marqué l'histoire de la civilisation et d'explorer les couleurs, les formes et les textures de ces œuvres uniques.<\/p>\n\n<p>Mais notre collection ne s'arrête pas là. Nous proposons également des tableaux représentant d'autres cultures et paysages du monde entier, tels que les tribus amérindiennes avec leurs costumes traditionnels et leurs motifs géométriques caractéristiques, ou la culture hindoue avec ses divinités, mandalas et symboles riches et colorés.<\/p>\n\n<p>Et pour ceux qui cherchent des tableaux qui représentent des paysages époustouflants, notre collection de tableaux ethnique offre des représentations sauvage et exotique du monde, des plages de sable blanc, des champs de fleurs colorées et des forêts verdoyantes.<\/p>\n\n<p>Notre collection de tableaux est une invitation à un voyage artistique à travers différentes cultures et paysages du monde. Les œuvres d'art que nous proposons sont uniques, riches en histoire et en symbolique, et ne manqueront pas de vous émerveiller. Chaque tableau est une invitation à se laisser subjuguer par la beauté et la diversité de notre monde.<\/p>"
           }
+        },
+        "5563c0e4-5568-40a6-8f33-2a6014cde099": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-couleur.jpg",
+            "collection": "tableau-couleur",
+            "paragraph": "<h3>DÉCOUVREZ NOTRE GAMME DE TABLEAU COULEUR<\/h3>\n<p>Faites de votre maison un lieu qui respire la créativité et la beauté avec nos tableaux colorés. Parfaits pour décorer votre intérieur, ces œuvres d'art magnifiques célèbrent chaque couleur avec poésie, subtilité et dynamisme. Que vous préfériez des tableaux abstraits en noir et blanc, des couchers de soleil orangés ou des paysages exotiques aux teintes vertes et jaunes, vous trouverez certainement une toile murale qui apportera élégance et vitalité à votre espace.<\/p>\n<p>Les tableaux colorés sont de véritables joyaux qui ajoutent une touche d'originalité et de caractère à votre décoration intérieure. Ils peuvent transformer complètement l'ambiance d'une pièce en lui apportant une dose d'énergie et de créativité. Les couleurs vibrantes et lumineuses captent le regard et créent une atmosphère chaleureuse et accueillante.<\/p>\n<p>Laissez-vous séduire par notre collection de tableaux colorés et apportez une nouvelle dimension à votre intérieur. Que vous souhaitiez créer une ambiance moderne, apaisante ou exotique, notre collection de tableaux colorés offre une multitude de choix pour répondre à tous les goûts et styles de décoration.<\/p>"
+          }
         }
       },
       "block_order": [
@@ -179,7 +187,8 @@
         "template--16404732051711__e2edd939-3626-48bb-a1b3-68b7d45d2b13-167457071323298b01-2",
         "cd2ff1e5-67ff-4ddc-a4bf-e05ca75d0144",
         "4fe0edd9-6e76-4900-b7e2-782666024e27",
-        "a0b4d159-619c-4d0f-a072-c6c0ae99a54d"
+        "a0b4d159-619c-4d0f-a072-c6c0ae99a54d",
+        "5563c0e4-5568-40a6-8f33-2a6014cde099"
       ],
       "settings": {
         "lazy_load": false,
@@ -194,7 +203,7 @@
         "template--16404732051711__20c0c98e-ed16-4069-b89a-bb18d96ee241-1666624599c69c0f87-0": {
           "type": "heading",
           "settings": {
-            "heading": "Habillez vos murs d’émotions, découvrez le portrait de famille personnalisé",
+            "heading": "Habillez vos murs d’émotions.",
             "heading_size": "h1",
             "markup": "h2"
           }
@@ -202,7 +211,7 @@
         "template--16404732051711__20c0c98e-ed16-4069-b89a-bb18d96ee241-1666624599c69c0f87-1": {
           "type": "text",
           "settings": {
-            "text": "<p>Habillez votre mur avec de superbes <strong>impressions sur toile<\/strong>. Succombez aux tableaux de nos graphistes, en transformant<strong> une photo<\/strong> en magnifique <strong>portrait de famille original<\/strong>. Personnaliser la taille, le support et le cadre pour devenir l'œuvre d’art qui sublimera <strong>votre intérieur. <\/strong><\/p><p>Arrêtez le temps et contemplez la beauté de votre souvenir. Étonnez-vous par votre créativité et prenez plaisir à partager un moment qui vous est cher. Revivez<strong> l'émotion, le rire et l’amour<\/strong> en offrant <strong>le cadeau <\/strong>parfait à une personne spéciale. <\/p>"
+            "text": "<p>Laissez-vous emporter par l'univers <strong>artistique<\/strong> et habillez votre mur avec de superbes<strong> impressions sur toile<\/strong>. Succombez au charme des<strong> tableaux<\/strong> imaginés par nos graphistes talentueux et créez des ambiances accueillantes et inspirantes dans chaque coin de votre <strong>intérieur<\/strong>. Personnalisez la taille, le support et l'encadrement pour refléter votre style inimitable. <\/p><p>Arrêtez le temps et contemplez la beauté de chaque <strong>tableau<\/strong>. Laissez-vous surprendre par votre propre créativité et ressentez les <strong>émotions<\/strong>, les <strong>couleurs et les formes<\/strong> qui se dévoilent devant vos yeux. Savourez le bonheur de partager une œuvre d'art qui vous tient à cœur en offrant un <strong>cadeau<\/strong> idéal et touchant à quelqu'un d'exceptionnel dans votre vie.<\/p><p><\/p>"
           }
         }
       },
@@ -372,7 +381,7 @@
             "lottie_size": 15,
             "range_under_lottie": 6,
             "heading": "Fabrication de haute qualité",
-            "text": "La conception, l'impression, ainsi que le service client sont basés en France",
+            "text": "La conception, ainsi que le service client sont basés en France",
             "text_arrangement": "unset"
           }
         },
