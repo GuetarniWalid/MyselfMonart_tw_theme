@@ -17,10 +17,10 @@
 
 {%- liquid
 
-    assign mattter_images = "toile_forme.jpg,plexiglas_forme.jpg,aluminium_forme.jpg" | split: ','
-    assign matter_info_titles = "LA TOILE 100% POLYESTER : mate et texturée|LE PLEXIGLAS : brillant et transparent|L'ALUMINIUM : contraste et éclat" | split: '|'
-    assign matter_info_txt = "La toile offre une prise en main agréable. Le grain du papier est visible principalement dans les zones claires de l’image, tandis que les noirs auront tendance à gommer le grain. Sa surface ajoute du relief et de la profondeur à vos tableaux. La toile apporte une touche artistique et dote les tableaux d’une incroyable intensité.|Le verre acrylique, également appelé Plexiglas, est un matériau synthétique rigide et transparent haut de gamme. Son aspect est similaire à du verre. Le plexiglas offrira une profondeur et une luminosité extraordinaire à vos tableaux. Les couleurs du tableau seront vives et éclatantes. Il est particulièrement recommandé pour les tableaux lumineux.|L'aluminium permet une présentation sobre, moderne et sans reflet. La densité des couleurs et les contrastes sont très forts. L'aluminium est un support très résistant et de qualitaté. Il n'est pas sensible aux traces de doigts, ni à l'humidité. Son entretien est très facile. Vous pouvez le nettoyer avec un tissu légèrement humide." | split: '|'
-    assign matter_info_images = "toile_coin_forme.jpg,plexiglas_coin_forme.jpg,aluminium_coin_forme.jpg" | split: ','
+    assign mattter_images = "toile_forme.jpg,aluminium_forme.jpg,plexiglas_forme.jpg" | split: ','
+    assign matter_info_titles = "LA TOILE 100% POLYESTER : mate et texturée|L'ALUMINIUM : contraste et éclat|ALUMINIUM + PLEXIGLAS : Élégant et transparent" | split: '|'
+    assign matter_info_txt = "La toile offre une prise en main agréable. Le grain du papier est visible principalement dans les zones claires de l’image, tandis que les noirs auront tendance à gommer le grain. Sa surface ajoute du relief et de la profondeur à vos tableaux. La toile apporte une touche artistique et dote les tableaux d’une incroyable intensité.|L'aluminium permet une présentation sobre, moderne et sans reflet. La densité des couleurs et les contrastes sont très forts. L'aluminium est un support très résistant et de qualitaté. Il n'est pas sensible aux traces de doigts, ni à l'humidité. Son entretien est très facile. Vous pouvez le nettoyer avec un tissu légèrement humide.|Notre impression acrylique + aluminium est une combinaison de deux produits de décoration haut de gamme qui offre une expérience visuelle captivante. Le Plexiglas est un matériau synthétique rigide. Son aspect similaire à celui du verre offre une profondeur et une luminosité extraordinaires à vos tableaux. Les couleurs sont vives et éclatantes. Le support en aluminium, quant à lui, assure la stabilité et la légèreté du tableau, sa finition argentée apportant élégance et modernité. De plus, le design sans cadre ajoute une profondeur supplémentaire à vos images, créant un impact visuel encore plus fort et rendant votre pièce plus spacieuse." | split: '|'
+    assign matter_info_images = "toile_coin_forme.jpg,aluminium_coin_forme.jpg,plexiglas_coin_forme.jpg" | split: ','
 
     assign support_images = "sans-fixation.jpg,decoration-murale-corde.jpg,support_crochet.jpg,decoration_murale_RAIL-2.jpg,support_entretoise.jpg" | split: ','
     assign support_info_titles = "SANS SYSTÈME DE FIXATION|FIXATION POUR TOILE|CROCHET AVEC SYSTÈME ADHÉSIF|RAILS EN ALUMINIUM|ENTRETOISES + TROUS" | split: '|'
@@ -49,7 +49,7 @@
 
         <form id="painting-addon">
             <div class="c-grid">
-                <div class="grid-left">
+                <div class="grid-left scrollbar-custom">
                     <div class="sticky">
                         <painting-settings>
                             <div class="painting-container">
@@ -124,7 +124,29 @@
                 <div class="addon">
 
                     {%- comment -%} Main product's variant part {%- endcomment -%}
-                    <main-variants>
+                    {% liquid
+                        assign variants_with_default_support = product.variants | where: "option3", suppot_by_default
+                        assign size_list = variants_with_default_support | map: 'option1' | uniq
+
+                        assign array_size_matter_price = "["
+                        for size in size_list
+                            assign array_size_matter_price = array_size_matter_price | append: "['" | append: size | split: " cm" | first | append: "'"
+                            for i in (0..2)
+                                assign default_item = forloop.parentloop.index0 | times: 3
+                                assign current_item = default_item | plus: i
+                                assign addon_price = variants_with_default_support[current_item].price | minus: variants_with_default_support[default_item].price | money
+                                assign addon_price_format = "'" | append: addon_price | append: "'"
+                                assign array_size_matter_price = array_size_matter_price | append: ", " | append: addon_price_format
+                            endfor
+                            assign array_size_matter_price = array_size_matter_price | append: "]"
+                            unless forloop.last
+                                assign array_size_matter_price = array_size_matter_price | append: ","
+                            endunless
+                        endfor
+                        assign array_size_matter_price = array_size_matter_price | append: "]"
+
+                    %}
+                    <main-variants data-size-matter-price="{{ array_size_matter_price }}">
                         <main-options-selector data-item-id="{{ product.variants.first.id }}">
                             {%- for option in product.options_with_values -%}
                                 {%- if forloop.first -%}
@@ -177,29 +199,31 @@
                                                         <input type="radio" id="addon-{{ option.name | handleize }}-{{ value | downcase }}" name="{{ option.name | handleize }}" value="{{ value | downcase }}" hidden {% if forloop.first %}checked{% endif %} data-price="{{ prices[forloop.index0] | minus: prices.first }}" data-order="{{ forloop.parentloop.index }}">
                                                         <span class="validator"></span>
                                                         <p>{{ value }}</p>
-                                                        <p>+ {{ prices[forloop.index0] | minus: prices.first | money }}</p>
                                                     </div>
-                                                    <button class="button">
-                                                        <svg width="25" height="25" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 7h.01"/><path stroke-linecap="round" stroke-linejoin="round" d="M10 11h2v5m-2 0h4"/></g></svg>&nbsp;Info
-                                                    </button>
-                                                    <hr>
-                                                    <span class="popup-overlay"></span>
-                                                    <div class="popup">
-                                                        <img 
-                                                            src="{{ info_images[forloop.index0] | file_img_url: '348x340' }}" 
-                                                            alt="le coin d'un tableau en {{ value }}, vu de près" 
-                                                            width="348" 
-                                                            height="348" 
-                                                            loading="lazy"
-                                                            srcset="
-                                                            {{ info_images[forloop.index0] | file_img_url: '280x280' }} 280w,
-                                                            {{ info_images[forloop.index0] | file_img_url: '348x340' }}
-                                                            "
-                                                            sizes="(max-width: 363px) 280px,348px"
-                                                            class="skeleton"
-                                                        >
-                                                        <h4 class="h2">{{ info_titles[forloop.index0] }}</h4>
-                                                        <p>{{ info_txts[forloop.index0] }}</p>
+                                                    <div>
+                                                        <p class="addon-price">+ {{ prices[forloop.index0] | minus: prices.first | money }}</p>
+                                                        <button class="button">
+                                                            <svg width="25" height="25" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 7h.01"/><path stroke-linecap="round" stroke-linejoin="round" d="M10 11h2v5m-2 0h4"/></g></svg>&nbsp;Info
+                                                        </button>
+                                                        <hr>
+                                                        <span class="popup-overlay"></span>
+                                                        <div class="popup scrollbar-custom">
+                                                            <img 
+                                                                src="{{ info_images[forloop.index0] | file_img_url: '348x340' }}" 
+                                                                alt="le coin d'un tableau en {{ value }}, vu de près" 
+                                                                width="348" 
+                                                                height="348" 
+                                                                loading="lazy"
+                                                                srcset="
+                                                                {{ info_images[forloop.index0] | file_img_url: '280x280' }} 280w,
+                                                                {{ info_images[forloop.index0] | file_img_url: '348x340' }}
+                                                                "
+                                                                sizes="(max-width: 363px) 280px,348px"
+                                                                class="skeleton"
+                                                            >
+                                                            <h4 class="h2">{{ info_titles[forloop.index0] }}</h4>
+                                                            <p>{{ info_txts[forloop.index0] }}</p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             {%- endfor -%}
@@ -259,7 +283,7 @@
                                                             <span class="validator"></span>
                                                         </div>
                                                         <p>{{ value }}</p>
-                                                        <p>+ {{ prices[forloop.index0] | money }}</p>
+                                                        <p class="addon-price">+ {{ prices[forloop.index0] | money }}</p>
                                                         {%- assign meta_info_title = option.name | append: '-' | append: value | append: '-' | append: 'title' -%}
                                                         {%- assign meta_info_description = option.name | append: '-' | append: value | append: '-' | append: 'description' -%}
                                                         {%- if all_products[other_option_name].metafields.info.about.value[meta_info_title] != blank and all_products[other_option_name].metafields.info.about.value[meta_info_description] -%}

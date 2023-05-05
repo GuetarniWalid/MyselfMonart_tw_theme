@@ -402,6 +402,9 @@ show-product-addon .transparent {
 .product-addon .radio {
   text-align: center;
   margin: 2rem auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .product-addon .radio > div {
@@ -449,6 +452,7 @@ show-product-addon .transparent {
 .product-addon .radio button {
   border: 1px solid var(--text-color);
   background: #fff;
+  width: 100%;
 }
 
 .product-addon .radio .popup {
@@ -524,29 +528,32 @@ show-product-addon .transparent {
     top: 0;
     max-height: 100vh;
     overflow-y: auto;
+  }
+
+  .product-addon .scrollbar-custom {
     /** FIREFOX **/
     scrollbar-color: rgba(1, 46, 93, 0.2) #efece8;
     scrollbar-width: 5px;
   }
 
-  .product-addon .grid-left::-webkit-scrollbar {
+  .product-addon .scrollbar-custom::-webkit-scrollbar {
     width: 5px;
   }
 
-  .product-addon .grid-left::-webkit-scrollbar-track {
+  .product-addon .scrollbar-custom::-webkit-scrollbar-track {
     box-shadow: inset 0 0 10px #efece8;
   }
 
-  .product-addon .grid-left::-webkit-scrollbar-thumb {
+  .product-addon .scrollbar-custom::-webkit-scrollbar-thumb {
     background: rgba(1, 46, 93, 0.2);
   }
 
-  .product-addon .grid-left .sticky {
+  .product-addon .scrollbar-custom .sticky {
     width: 100%;
     padding: 7rem 4rem 5rem 5rem;
   }
 
-  .product-addon .grid-left .summary-left-wrapper {
+  .product-addon .scrollbar-custom .summary-left-wrapper {
     display: block;
     min-width: 40rem;
   }

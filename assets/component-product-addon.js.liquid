@@ -220,6 +220,12 @@ class MainVariants extends HTMLElement {
     this.summaries = this.form.querySelectorAll('summary-addon');
     this.sizeSelector = this.querySelector('.addon select');
     this.radios = this.querySelectorAll('input[type="radio"]');
+    this.matterContainer = this.querySelector('.radio-container');
+    this.sizeMatterPriceList = {}
+    JSON.parse(this.dataset.sizeMatterPrice.replaceAll("'", '"')).forEach(array => {
+      const [size, ...prices] = array;
+      this.sizeMatterPriceList[size] = prices;
+    });
   }
 
   connectedCallback() {
@@ -229,6 +235,9 @@ class MainVariants extends HTMLElement {
       const optionSelected = Array.from(e.target.children).filter(option => option.innerHTML.includes(e.target.value))[0];
       const price = optionSelected.dataset.price;
       this.changeSummariesData(e.target, price);
+      this.changeAddonPrices(`${width}x${height}`);
+      const inputMatterSelected = this.matterContainer.querySelector('input:checked')
+      this.changeSummariesData(inputMatterSelected, inputMatterSelected.dataset.price);
     });
 
     this.radios.forEach(radio => {
@@ -256,6 +265,15 @@ class MainVariants extends HTMLElement {
 
   changeSummariesData(input, price) {
     this.summaries.forEach(summary => summary.changeDatas(input, price));
+  }
+
+  changeAddonPrices(size) {
+    this.matterContainer.querySelectorAll('.radio .addon-price').forEach((priceNode, index) => {
+      priceNode.textContent = '+ ' + this.sizeMatterPriceList[size][index];
+    });
+    this.matterContainer.querySelectorAll('.radio input').forEach((input, index) => {
+      input.dataset.price = this.sizeMatterPriceList[size][index].slice(1).split(',').join('');
+    });
   }
 }
 customElements.define('main-variants', MainVariants);
