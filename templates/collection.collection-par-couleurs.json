@@ -9,6 +9,64 @@
         "padding_bottom": 8
       }
     },
+    "69a43f36-c1ce-435d-a4a5-ca1232aaee42": {
+      "type": "collections-grid",
+      "blocks": {
+        "template--18911735382363__69a43f36-c1ce-435d-a4a5-ca1232aaee42-1683455749fe881da7-0": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-noir-et-blanc_7259e3b9-7a71-4c76-bb7f-e33f4492cad8.jpg",
+            "collection": "tableau-noir-et-blanc",
+            "paragraph": ""
+          }
+        },
+        "template--18911735382363__69a43f36-c1ce-435d-a4a5-ca1232aaee42-1683455749fe881da7-1": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-rose_55b9e098-c18b-4b01-a92c-6e4a78007d57.jpg",
+            "collection": "tableau-rose",
+            "paragraph": ""
+          }
+        },
+        "template--18911735382363__69a43f36-c1ce-435d-a4a5-ca1232aaee42-1683455749fe881da7-2": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-jaune.jpg",
+            "collection": "tableau-jaune",
+            "paragraph": ""
+          }
+        },
+        "cbb85c97-19e9-41de-b038-8ceb953ac6fd": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-vert.jpg",
+            "collection": "tableau-vert",
+            "paragraph": ""
+          }
+        },
+        "b021dc61-a8de-4294-941e-f18cb9b65398": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-bleue.jpg",
+            "collection": "tableau-bleue",
+            "paragraph": ""
+          }
+        }
+      },
+      "block_order": [
+        "template--18911735382363__69a43f36-c1ce-435d-a4a5-ca1232aaee42-1683455749fe881da7-0",
+        "template--18911735382363__69a43f36-c1ce-435d-a4a5-ca1232aaee42-1683455749fe881da7-1",
+        "template--18911735382363__69a43f36-c1ce-435d-a4a5-ca1232aaee42-1683455749fe881da7-2",
+        "cbb85c97-19e9-41de-b038-8ceb953ac6fd",
+        "b021dc61-a8de-4294-941e-f18cb9b65398"
+      ],
+      "settings": {
+        "lazy_load": true,
+        "color_text": "#fff",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
     "main-collection-product-grid": {
       "type": "main-collection-product-grid",
       "settings": {
@@ -102,6 +160,7 @@
   },
   "order": [
     "cf6565ea-5338-4b92-985b-b5b0824700db",
+    "69a43f36-c1ce-435d-a4a5-ca1232aaee42",
     "main-collection-product-grid",
     "main-collection-banner",
     "0a4d0ad2-05f5-4939-8b62-ad000c188ded"

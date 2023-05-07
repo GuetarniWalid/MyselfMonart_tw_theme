@@ -356,7 +356,8 @@ body,
 }
 
 .text-body,
-.product__info-container .product__description > h2:first-child {
+.product__info-container .product__description > h2:first-child,
+.product__info-container .product__description > h2:nth-child(2) {
   font-size: 1.5rem;
   letter-spacing: 0.06rem;
   line-height: calc(1 + 0.8 / var(--font-body-scale));
