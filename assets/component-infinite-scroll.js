@@ -8,7 +8,7 @@ class InfiniteScrollStrorage extends HTMLElement {
 
   connectedCallback() {
     window.addEventListener('beforeunload', e => {
-      sessionStorage.setItem(this.createSessionKey('html'), this.innerHTML);
+      this.saveInnerHTML();
       if (e.target.activeElement.tagName === 'A' && e.target.activeElement.hostname === location.hostname && e.target.activeElement.href.includes('/products/')) {
         sessionStorage.setItem(this.createSessionKey('scroll-to-node-id'), e.target.activeElement.closest('li').id);
       }
@@ -53,6 +53,14 @@ class InfiniteScrollStrorage extends HTMLElement {
     }
 
     return { elemToViewId, elemToViewPosition };
+  }
+
+  saveInnerHTML() {
+    const clone = this.cloneNode(true);
+    clone.querySelectorAll('button.liked').forEach(buttonLiked => {
+      buttonLiked.classList.remove('liked');
+    });
+    sessionStorage.setItem(this.createSessionKey('html'), clone.innerHTML);
   }
 }
 customElements.define('infinite-scroll-storage', InfiniteScrollStrorage);
@@ -169,12 +177,12 @@ class InfiniteScroll extends HTMLElement {
     const previousLink = document.querySelector('.pagination__list .pagination__item--next')?.closest('li');
     const previousLinkRemoved = this.removePaginateArrow(previousLink, this.isFirstPage);
     const previousLinkCreated = this.createPaginateArrow(!previousLinkRemoved && !previousLink && !this.isFirstPage, this.page - 1, true);
-    this.changePaginateArrow(!previousLinkRemoved && !previousLinkCreated && previousLink, previousLink, (this.page - 1));
+    this.changePaginateArrow(!previousLinkRemoved && !previousLinkCreated && previousLink, previousLink, this.page - 1);
 
     const nextLink = document.querySelector('.pagination__list .pagination__item--prev')?.closest('li');
     const nextLinkRemoved = this.removePaginateArrow(nextLink, this.isLastPage);
     const nextLinkCreated = this.createPaginateArrow(!nextLinkRemoved && !nextLink && !this.isLastPage, this.page + 1, false);
-    this.changePaginateArrow(!nextLinkRemoved && !nextLinkCreated && nextLink, nextLink, (this.page + 1));
+    this.changePaginateArrow(!nextLinkRemoved && !nextLinkCreated && nextLink, nextLink, this.page + 1);
   }
 
   removePaginateArrow(arrowNode, toRemove) {
@@ -195,7 +203,7 @@ class InfiniteScroll extends HTMLElement {
     const ul = this.paginationNavbar.querySelector('ul');
     if (atFirst) ul.prepend(li);
     else ul.appendChild(li);
-    return true
+    return true;
   }
 
   changePaginateArrow(toChange, arrowNode, page) {

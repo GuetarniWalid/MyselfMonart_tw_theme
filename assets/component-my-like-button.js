@@ -15,21 +15,14 @@ class MyLikeButton extends HTMLElement {
 
       const { likedLisHtml, likedLisString } = this.getLisStorage();
       if (isLiked) {
-        const index = likedLisHtml.findIndex(likedLi => likedLi.id === liParent.id);
-        likedLisString.splice(index, 1);
-        likedLisHtml.splice(index, 1);
-        localStorage.setItem('likedLis', JSON.stringify(likedLisString));
+        this.deleteLiInLocalStorage(likedLisHtml, likedLisString, liParent);
       } else {
-        likedLisString.push(liParent.outerHTML);
-        likedLisHtml.push(liParent);
-        localStorage.setItem('likedLis', JSON.stringify(likedLisString));
+        this.saveLiInLocalStorage(likedLisHtml, likedLisString, liParent);
       }
 
       this.colorButton(likedLisString);
       this.deleteLiInLikedPage(likedLisString.length === 0);
     });
-
-    this.colorButton(likedLisString);
   }
 
   getLisStorage() {
@@ -52,11 +45,24 @@ class MyLikeButton extends HTMLElement {
     }
   }
 
+  saveLiInLocalStorage(likedLisHtml, likedLisString, liParent) {
+    likedLisString.push(liParent.outerHTML);
+    likedLisHtml.push(liParent);
+    localStorage.setItem('likedLis', JSON.stringify(likedLisString));
+  }
+
+  deleteLiInLocalStorage(likedLisHtml, likedLisString, liParent) {
+    const index = likedLisHtml.findIndex(likedLi => likedLi.id === liParent.id);
+    likedLisString.splice(index, 1);
+    likedLisHtml.splice(index, 1);
+    localStorage.setItem('likedLis', JSON.stringify(likedLisString));
+  }
+
   deleteLiInLikedPage(isLastLi) {
     const myLikesComponent = document.querySelector('my-likes');
     if (!myLikesComponent) return;
     this.closest('li').remove();
-    if (isLastLi) myLikesComponent.showEmptyMessage()
+    if (isLastLi) myLikesComponent.showEmptyMessage();
   }
 }
 customElements.define('my-like-button', MyLikeButton);

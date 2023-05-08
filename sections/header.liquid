@@ -44,6 +44,9 @@
 {%- if section.settings.enable_sticky_header -%}
   <script src="{{ 'component-sticky-header.js' | asset_url }}" defer="defer"></script>
 {% endif  %}
+{%- if settings.enable_likes and template.suffix != 'likes' -%}
+  <script src="{{ 'component-my-likes-button.js' | asset_url }}" defer="defer"></script>
+{% endif  %}
 
 <svg xmlns="http://www.w3.org/2000/svg" class="hidden">
   <symbol id="icon-search" viewbox="0 0 18 19" fill="none">
