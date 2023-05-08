@@ -5,8 +5,8 @@
       "settings": {
         "selected_item_background": "#ecd1ce",
         "selected_item_color": "#384031",
-        "padding_top": 36,
-        "padding_bottom": 8
+        "padding_top": 28,
+        "padding_bottom": 28
       }
     },
     "69a43f36-c1ce-435d-a4a5-ca1232aaee42": {
@@ -51,6 +51,14 @@
             "collection": "tableau-bleue",
             "paragraph": ""
           }
+        },
+        "6953528d-a51f-422a-9d1e-b8910d5546d6": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-orange_46837571-ce6c-4a31-b984-f2adb6bd486d.jpg",
+            "collection": "tableau-orange",
+            "paragraph": ""
+          }
         }
       },
       "block_order": [
@@ -58,11 +66,12 @@
         "template--18911735382363__69a43f36-c1ce-435d-a4a5-ca1232aaee42-1683455749fe881da7-1",
         "template--18911735382363__69a43f36-c1ce-435d-a4a5-ca1232aaee42-1683455749fe881da7-2",
         "cbb85c97-19e9-41de-b038-8ceb953ac6fd",
-        "b021dc61-a8de-4294-941e-f18cb9b65398"
+        "b021dc61-a8de-4294-941e-f18cb9b65398",
+        "6953528d-a51f-422a-9d1e-b8910d5546d6"
       ],
       "settings": {
         "lazy_load": true,
-        "color_text": "#fff",
+        "color_text": "#ffffff",
         "padding_top": 0,
         "padding_bottom": 0
       }

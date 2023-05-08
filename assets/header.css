@@ -45,7 +45,6 @@ header-drawer {
   z-index: 10;
   display: flex;
   align-items: center;
-  margin-left: 2rem;
 }
 
 .list-item-wrapper {
@@ -53,6 +52,7 @@ header-drawer {
   grid-column: 3;
   grid-row: 1;
   display: none;
+  white-space: nowrap;
 }
 
 .list-item {
@@ -101,6 +101,7 @@ summary.list-menu__item {
 .header__heading-link {
   z-index: 2;
   text-align: center;
+  white-space: nowrap;
 }
 
 .header__heading-link svg,
@@ -139,7 +140,7 @@ summary.list-menu__item {
 .header .header__icon.header__icon--cart.surrounded {
   position: absolute;
   bottom: 0;
-  right: 5%;
+  right: 7%;
   transform: translateY(50%);
   background: rgb(var(--header-background));
   border: 1px solid rgb(var(--header-color));
@@ -246,6 +247,10 @@ header .list-item.liked svg path.in {
   .list-menu__item--link {
     padding-bottom: 0.5rem;
     padding-top: 0.5rem;
+  }
+
+  .header .header__icon.header__icon--cart.surrounded {
+    right: 5%;
   }
 }
 

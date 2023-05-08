@@ -44,43 +44,37 @@
         "f68915d1-93be-46c1-878a-5df7b674c747": {
           "type": "featured_collection",
           "settings": {
-            "collection": "tableau-salon"
+            "collection": "tableau-noir-et-blanc"
           }
         },
         "template--16404731756799__0a4d0ad2-05f5-4939-8b62-ad000c188ded-1682929193c7effb00-0": {
           "type": "featured_collection",
           "settings": {
-            "collection": "tableau-bureau"
+            "collection": "tableau-rose"
           }
         },
         "e964a270-02f8-4c19-9b0c-dc612dc45735": {
           "type": "featured_collection",
           "settings": {
-            "collection": "tableau-animaux"
+            "collection": "tableau-jaune"
           }
         },
         "template--16404731756799__0a4d0ad2-05f5-4939-8b62-ad000c188ded-1682929193c7effb00-2": {
           "type": "featured_collection",
           "settings": {
-            "collection": "tableau-ethnique"
+            "collection": "tableau-vert"
           }
         },
         "template--16404731756799__0a4d0ad2-05f5-4939-8b62-ad000c188ded-1682929193c7effb00-1": {
           "type": "featured_collection",
           "settings": {
-            "collection": "tableau-chambre"
+            "collection": "tableau-bleue"
           }
         },
         "db38a57f-8d13-45d1-bb24-c03a4a6aca35": {
           "type": "featured_collection",
           "settings": {
-            "collection": "tableau-cuisine"
-          }
-        },
-        "393261cf-2549-49f1-9b14-70a313dddabf": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "tableau-couleur"
+            "collection": "tableau-orange"
           }
         }
       },
@@ -90,8 +84,7 @@
         "e964a270-02f8-4c19-9b0c-dc612dc45735",
         "template--16404731756799__0a4d0ad2-05f5-4939-8b62-ad000c188ded-1682929193c7effb00-2",
         "template--16404731756799__0a4d0ad2-05f5-4939-8b62-ad000c188ded-1682929193c7effb00-1",
-        "db38a57f-8d13-45d1-bb24-c03a4a6aca35",
-        "393261cf-2549-49f1-9b14-70a313dddabf"
+        "db38a57f-8d13-45d1-bb24-c03a4a6aca35"
       ],
       "settings": {
         "title": "NOS AUTRES COLLECTIONS",
