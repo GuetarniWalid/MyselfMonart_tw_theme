@@ -549,6 +549,17 @@
         }
       }
     },
+    "button": {
+      "name": "Bouton",
+      "settings": {
+        "button_text": {
+          "label": "Texte du bouton"
+        },
+        "button_link": {
+          "label": "Lien du bouton"
+        }
+      }
+    },
     "carousel-text": {
       "name": "Carrousel de texte",
       "blocks": {

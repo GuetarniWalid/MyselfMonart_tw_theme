@@ -540,6 +540,17 @@
         }
       }
     },
+    "button": {
+      "name": "Button",
+      "settings": {
+        "button_text": {
+          "label": "Button text"
+        },
+        "button_link": {
+          "label": "Button link"
+        }
+      }
+    },
     "carousel-text": {
       "name": "Text carousel",
       "blocks": {
