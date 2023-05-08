@@ -452,6 +452,7 @@ show-product-addon .transparent {
 .product-addon .radio button {
   border: 1px solid var(--text-color);
   background: #fff;
+  color: var(--text-color);
   width: 100%;
 }
 
