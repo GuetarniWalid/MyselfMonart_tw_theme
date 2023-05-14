@@ -1178,6 +1178,17 @@
     ]
   },
   {
+  "name": "t:settings_schema.cookie_banner.name",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_cookie",
+        "label": "t:settings_schema.cookie_banner.settings.enable_cookie.label",
+        "default": true
+      }      
+    ]
+  },
+  {
     "name": "t:settings_schema.currency_format.name",
     "settings": [
       {

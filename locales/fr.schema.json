@@ -118,6 +118,14 @@
     "content_containers": {
       "name": "Conteneurs de contenu"
     },
+    "cookie_banner": {
+      "name": "Bannière de cookies",
+      "settings": {
+        "enable_cookie": {
+          "label": "Activer la bannière de cookies"
+        }
+      }
+    },
     "currency_format": {
       "name": "Format de devise",
       "settings": {

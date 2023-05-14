@@ -107,6 +107,14 @@
     "content_containers": {
       "name": "Content containers"
     },
+    "cookie_banner": {
+      "name": "Cookie banner",
+      "settings": {
+        "enable_cookie": {
+          "label": "Enable cookie banner"
+        }
+      }
+    },
     "currency_format": {
       "name": "Currency format",
       "settings": {

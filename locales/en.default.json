@@ -262,6 +262,21 @@
         "paragraph_html": "<a href=\"{{ link }}\" class=\"link underlined-link\">Log in</a> to check out faster."
       }
     },
+    "cookie-banner": {
+      "message-1": "Our cookies aren't edible, but they make your visit delicious!",
+      "message-2": "Ready for an enhanced experience?",
+      "parameter": "Configure",
+      "accept": "Accept",
+      "settings": {
+        "title": "Privacy Preferences",
+        "save_button": "Save preferences",
+        "accept_button": "Accept all",
+        "analytics": "Tracking analytics data",
+        "marketing": "Targeted advertising",
+        "preferences": "Collecting data to personalize user experience",
+        "sale_of_data": "Collecting data to improve products and services"
+      }
+    },
     "footer": {
       "payment": "Payment methods",
       "home": "Home"

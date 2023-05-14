@@ -477,5 +477,9 @@
     {%- if settings.predictive_search_enabled -%}
       <script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
+
+    {%- if settings.enable_cookie -%}
+      {% render 'cookie-banner' %}
+    {%- endif -%}
   </body>
 </html>

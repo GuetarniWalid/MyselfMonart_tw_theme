@@ -3,7 +3,7 @@
     "2b3b46e7-881c-4925-96cf-76c7ebf203c4": {
       "type": "image-banner",
       "settings": {
-        "image_desktop": "shopify:\/\/shop_images\/tableau-decoration_6614a093-607b-412d-a38b-5335607be12c.jpg",
+        "image_desktop": "shopify:\/\/shop_images\/tableau-art-deco.jpg",
         "image_desktop_fit": "cover",
         "image_desktop_horizontal_position": "center",
         "image_desktop_vertical_position": "center",
@@ -12,6 +12,7 @@
         "content_horizontal_position_desktop": 50,
         "content_vertical_position_desktop": 100,
         "content_alignment_desktop": "left",
+        "image_mobile": "shopify:\/\/shop_images\/tableau-art-deco-telephone.jpg",
         "image_mobile_fit": "cover",
         "image_mobile_horizontal_position": "center",
         "image_mobile_vertical_position": "center",
@@ -53,72 +54,7 @@
         "color_scheme": "background-1",
         "full_width": true,
         "padding_top": 40,
-        "padding_bottom": 52
-      }
-    },
-    "0400eb0c-febd-4b30-a9fc-23868b723b01": {
-      "type": "badges",
-      "blocks": {
-        "dadd0693-3b95-45ea-91d0-dade5eb6933f": {
-          "type": "number_block",
-          "settings": {
-            "number": 1,
-            "heading": "Choisissez",
-            "text": "Choisissez votre tableau deco parmi la large collection de tableaux",
-            "text_arrangement": "unset"
-          }
-        },
-        "c44537b3-1279-4836-9f93-bd9ff2a05e77": {
-          "type": "number_block",
-          "settings": {
-            "number": 2,
-            "heading": "Personnalisez",
-            "text": "Configurez la taille et le support de votre tableau",
-            "text_arrangement": "unset"
-          }
-        },
-        "a6c21ad7-b53a-477a-9209-290c852bb6e7": {
-          "type": "number_block",
-          "settings": {
-            "number": 3,
-            "heading": "Commandez",
-            "text": "Nous fabriquons votre tableau et nous chargeons de vous l'envoyer.",
-            "text_arrangement": "unset"
-          }
-        },
-        "9bbd06d2-2f00-4f08-9b98-9313305b1a02": {
-          "type": "number_block",
-          "settings": {
-            "number": 4,
-            "heading": "Admirez",
-            "text": "Accrochez votre tableau et profitez du résultat !",
-            "text_arrangement": "unset"
-          }
-        }
-      },
-      "block_order": [
-        "dadd0693-3b95-45ea-91d0-dade5eb6933f",
-        "c44537b3-1279-4836-9f93-bd9ff2a05e77",
-        "a6c21ad7-b53a-477a-9209-290c852bb6e7",
-        "9bbd06d2-2f00-4f08-9b98-9313305b1a02"
-      ],
-      "settings": {
-        "title": "",
-        "heading_size": "h1",
-        "nb_columns_on_computer": "25",
-        "nb_columns_on_mobile": "100",
-        "columns_alignment": "flex-start",
-        "logo_color": "#002e5d",
-        "logo_size": 45,
-        "logo_background": true,
-        "logo_background_color": "#E0E0E0",
-        "logo_border": true,
-        "title_bold": true,
-        "margin_under_logo": 26,
-        "margin_under_title": 12,
-        "section_background_color": "#F6F3EF",
-        "margin_top": 10,
-        "margin_bottom": 35
+        "padding_bottom": 24
       }
     },
     "e2edd939-3626-48bb-a1b3-68b7d45d2b13": {
@@ -234,11 +170,11 @@
         "150ac81d-f4d4-4a1a-a431-e1c732d7b6a5": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-danseuse-ballerine-rose.jpg",
-            "title": "Tableau ballerine",
+            "image": "shopify:\/\/shop_images\/tableau-marilyn-monroe-en-couleur.png",
+            "title": "Tableau pop art : Marilyn Monroe",
             "text": "",
             "link_label": "",
-            "link": "https:\/\/www.myselfmonart.com\/products\/tableau-danseuse-ballerine-rose"
+            "link": "https:\/\/www.myselfmonart.com\/products\/tableau-marilyn-monroe-en-couleur?_pos=1&_psq=MARI&_ss=e&_v=1.0"
           }
         },
         "template--16404732051711__1aaec86d-3d6c-44d8-aaa8-716ea425a598-16665463000e3de778-0": {
@@ -254,21 +190,21 @@
         "template--16404732051711__1aaec86d-3d6c-44d8-aaa8-716ea425a598-16665463000e3de778-2": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-les-cacaos-colores-nathalie-lete.jpg",
-            "title": "Tableau cacaos",
+            "image": "shopify:\/\/shop_images\/tableau-art-echecs_59b4d3c4-3ff0-47fd-a160-a704fca94819.png",
+            "title": "Tableau roi d'échecs",
             "text": "",
             "link_label": "",
-            "link": "https:\/\/www.myselfmonart.com\/products\/les-cacaos-colores-nathalie-lete"
+            "link": ""
           }
         },
         "template--16404732051711__1aaec86d-3d6c-44d8-aaa8-716ea425a598-16665463000e3de778-1": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-salon-leopard.jpg",
-            "title": "Tableau leopard",
+            "image": "shopify:\/\/shop_images\/tableau-renard-portrait-photo.png",
+            "title": "Tableau renard en portrait photo",
             "text": "",
             "link_label": "",
-            "link": "https:\/\/www.myselfmonart.com\/products\/tableau-leopard"
+            "link": "https:\/\/www.myselfmonart.com\/collections\/tableau-salon\/products\/tableau-renard-en-portrait-photo"
           }
         }
       },
@@ -279,7 +215,7 @@
         "template--16404732051711__1aaec86d-3d6c-44d8-aaa8-716ea425a598-16665463000e3de778-1"
       ],
       "settings": {
-        "title": "Les coups de coeur",
+        "title": "NOS TABLEAUX FAVORIS",
         "heading_size": "h1",
         "image_width": "full",
         "image_ratio": "adapt",
@@ -294,8 +230,8 @@
         "columns_mobile": "2",
         "swipe_on_mobile": true,
         "to_obfuscate": true,
-        "padding_top": 20,
-        "padding_bottom": 20
+        "padding_top": 0,
+        "padding_bottom": 36
       }
     },
     "7f048e47-ff73-4ef2-a44d-204a6ad96f65": {
@@ -327,6 +263,71 @@
         "full_width": true,
         "padding_top": 16,
         "padding_bottom": 40
+      }
+    },
+    "0400eb0c-febd-4b30-a9fc-23868b723b01": {
+      "type": "badges",
+      "blocks": {
+        "dadd0693-3b95-45ea-91d0-dade5eb6933f": {
+          "type": "number_block",
+          "settings": {
+            "number": 1,
+            "heading": "Choisissez",
+            "text": "Choisissez votre tableau deco parmi la large collection de tableaux",
+            "text_arrangement": "unset"
+          }
+        },
+        "c44537b3-1279-4836-9f93-bd9ff2a05e77": {
+          "type": "number_block",
+          "settings": {
+            "number": 2,
+            "heading": "Personnalisez",
+            "text": "Configurez la taille et le support de votre tableau",
+            "text_arrangement": "unset"
+          }
+        },
+        "a6c21ad7-b53a-477a-9209-290c852bb6e7": {
+          "type": "number_block",
+          "settings": {
+            "number": 3,
+            "heading": "Commandez",
+            "text": "Nous fabriquons votre tableau et nous chargeons de vous l'envoyer.",
+            "text_arrangement": "unset"
+          }
+        },
+        "9bbd06d2-2f00-4f08-9b98-9313305b1a02": {
+          "type": "number_block",
+          "settings": {
+            "number": 4,
+            "heading": "Admirez",
+            "text": "Accrochez votre tableau et profitez du résultat !",
+            "text_arrangement": "unset"
+          }
+        }
+      },
+      "block_order": [
+        "dadd0693-3b95-45ea-91d0-dade5eb6933f",
+        "c44537b3-1279-4836-9f93-bd9ff2a05e77",
+        "a6c21ad7-b53a-477a-9209-290c852bb6e7",
+        "9bbd06d2-2f00-4f08-9b98-9313305b1a02"
+      ],
+      "settings": {
+        "title": "",
+        "heading_size": "h1",
+        "nb_columns_on_computer": "25",
+        "nb_columns_on_mobile": "100",
+        "columns_alignment": "flex-start",
+        "logo_color": "#002e5d",
+        "logo_size": 45,
+        "logo_background": true,
+        "logo_background_color": "#E0E0E0",
+        "logo_border": true,
+        "title_bold": true,
+        "margin_under_logo": 26,
+        "margin_under_title": 12,
+        "section_background_color": "#F6F3EF",
+        "margin_top": 10,
+        "margin_bottom": 35
       }
     },
     "bc7808a3-010e-4d80-a8f4-053c77379028": {
@@ -436,11 +437,11 @@
   "order": [
     "2b3b46e7-881c-4925-96cf-76c7ebf203c4",
     "1198c25f-e6b6-405b-aa76-db2afd719caf",
-    "0400eb0c-febd-4b30-a9fc-23868b723b01",
     "e2edd939-3626-48bb-a1b3-68b7d45d2b13",
     "20c0c98e-ed16-4069-b89a-bb18d96ee241",
     "1aaec86d-3d6c-44d8-aaa8-716ea425a598",
     "7f048e47-ff73-4ef2-a44d-204a6ad96f65",
+    "0400eb0c-febd-4b30-a9fc-23868b723b01",
     "bc7808a3-010e-4d80-a8f4-053c77379028",
     "490671aa-79b7-40da-8e00-59f7773b6755"
   ]

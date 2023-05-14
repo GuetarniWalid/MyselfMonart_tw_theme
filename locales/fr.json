@@ -231,16 +231,6 @@
     }
   },
   "sections": {
-    "header": {
-      "announcement": "Annonce",
-      "menu": "Menu",
-      "cart_count": {
-        "one": "{{ count }} article",
-        "other": "{{ count }} articles",
-        "many": "{{ count }} articles"
-      },
-      "my_likes": "Mes j'aime"
-    },
     "cart": {
       "title": "Votre panier",
       "caption": "Articles du panier",
@@ -269,9 +259,28 @@
         "paragraph_html": "<a href=\"{{ link }}\" class=\"link underlined-link\">Connectez-vous<\/a> pour payer plus vite."
       }
     },
-    "footer": {
-      "payment": "Moyens de paiement",
-      "home": "Accueil"
+    "collection_list": {
+      "view_all": "Tout afficher"
+    },
+    "collection_template": {
+      "title": "Collection",
+      "empty": "Aucun produit trouvé",
+      "use_fewer_filters_html": "Utiliser moins de filtres ou <a class=\"{{ class }}\" href=\"{{ link }}\">tout supprimer<\/a>"
+    },
+    "cookie-banner": {
+      "message-1": "Nos cookies ne sont pas comestibles, mais ils rendent votre visite délicieuse !",
+      "message-2": "Prêt pour une expérience améliorée ?",
+      "parameter": "Paramétrer",
+      "accept": "Accepter",
+      "settings": {
+        "title": "Préférences de confidentialité",
+        "accept_button": "Tout accepter",
+        "save_button": "Enregistrer les préférences",
+        "analytics": "Suivi des données d’analyse",
+        "marketing": "Publicité ciblée",
+        "preferences": "Collecte de données pour personnaliser l’expérience utilisateur",
+        "sale_of_data": "Collecte de données pour améliorer les produits et services"
+      }
     },
     "featured_blog": {
       "view_all": "Tout afficher",
@@ -283,21 +292,33 @@
       "view_all_label": "Afficher tous les produits de la collection {{ collection_name }}",
       "slider": "Carrousel"
     },
-    "collection_list": {
-      "view_all": "Tout afficher"
+    "footer": {
+      "payment": "Moyens de paiement",
+      "home": "Accueil"
     },
-    "collection_template": {
-      "title": "Collection",
-      "empty": "Aucun produit trouvé",
-      "use_fewer_filters_html": "Utiliser moins de filtres ou <a class=\"{{ class }}\" href=\"{{ link }}\">tout supprimer<\/a>"
+    "header": {
+      "announcement": "Annonce",
+      "menu": "Menu",
+      "cart_count": {
+        "one": "{{ count }} article",
+        "other": "{{ count }} articles",
+        "many": "{{ count }} articles"
+      },
+      "my_likes": "Mes j'aime"
     },
     "main-collection-product-grid": {
       "card-product": {
         "starting_at": "À partir de"
       }
     },
-    "video": {
-      "load_video": "Charger la vidéo : {{ description }}"
+    "page": {
+      "title": "Titre de la page"
+    },
+    "product_grid": {
+      "button": "Voir le tableau"
+    },
+    "sibling-blog-links": {
+      "complementary_blog_posts": "Articles complémentaires"
     },
     "slideshow": {
       "load_slide": "Charger la diapositive",
@@ -308,14 +329,8 @@
       "carousel": "Carrousel",
       "slide": "Diapositive"
     },
-    "page": {
-      "title": "Titre de la page"
-    },
-    "product_grid": {
-      "button": "Voir le tableau"
-    },
-    "sibling-blog-links": {
-      "complementary_blog_posts": "Articles complémentaires"
+    "video": {
+      "load_video": "Charger la vidéo : {{ description }}"
     }
   },
   "localization": {
