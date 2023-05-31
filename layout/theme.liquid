@@ -420,7 +420,9 @@
     {%- if request.design_mode -%}
       <script src="{{ 'theme-editor.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
-  </head>
+  
+{% render 'gsf-conversion-pixels' %}
+</head>
 
   <body>
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">

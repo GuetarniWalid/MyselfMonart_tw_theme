@@ -2209,6 +2209,10 @@
         "show_price": {
           "label": "Afficher le prix"
         },
+        "minimum_price": {
+          "label": "Prix minimum",
+          "info": "Le prix à indiquer doit être sans virgule et avec les centimes. Exemple : 1999 pour 19,99€"
+        },
         "show_secondary_image": {
           "label": "Afficher la deuxième image en survol"
         },
