@@ -24,7 +24,7 @@
         "template--16404731756799__6b217ec2-fb95-4b03-b3da-987ecf1dd229-1675176260b6aab62b-0": {
           "type": "image_text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-chambre-adulte.jpg",
+            "image": "shopify:\/\/shop_images\/tableau-chambre-adulte_8ed37f59-d8a6-401f-8818-433b0de07158.jpg",
             "collection": "tableau-chambre-adulte",
             "paragraph": ""
           }
@@ -32,24 +32,24 @@
         "template--16404731756799__6b217ec2-fb95-4b03-b3da-987ecf1dd229-1675176260b6aab62b-1": {
           "type": "image_text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-chambre-enfant.jpg",
+            "image": "shopify:\/\/shop_images\/Tableau-chambre-enfant_e3437408-1922-469a-abe1-e4198f27818d.jpg",
             "collection": "tableau-chambre-enfant",
-            "paragraph": ""
-          }
-        },
-        "template--16404731756799__6b217ec2-fb95-4b03-b3da-987ecf1dd229-1675176260b6aab62b-2": {
-          "type": "image_text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-chambre-ado_404a2bc9-e107-4689-a81b-0142fc90fb3d.jpg",
-            "collection": "tableau-chambre-ado",
             "paragraph": ""
           }
         },
         "dd369175-596c-4f5a-99c2-41bf3cf8acb2": {
           "type": "image_text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-chambre-bebe.jpg",
+            "image": "shopify:\/\/shop_images\/tableau-chambre-bebe_de4822a8-1ce7-4764-93d7-9f6a04cf5548.jpg",
             "collection": "tableaux-chambre-bebe",
+            "paragraph": ""
+          }
+        },
+        "template--16404731756799__6b217ec2-fb95-4b03-b3da-987ecf1dd229-1675176260b6aab62b-2": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-chambre-ado_e90cd531-5782-425e-8186-824a9deb4e78.jpg",
+            "collection": "tableau-chambre-ado",
             "paragraph": ""
           }
         }
@@ -57,8 +57,8 @@
       "block_order": [
         "template--16404731756799__6b217ec2-fb95-4b03-b3da-987ecf1dd229-1675176260b6aab62b-0",
         "template--16404731756799__6b217ec2-fb95-4b03-b3da-987ecf1dd229-1675176260b6aab62b-1",
-        "template--16404731756799__6b217ec2-fb95-4b03-b3da-987ecf1dd229-1675176260b6aab62b-2",
-        "dd369175-596c-4f5a-99c2-41bf3cf8acb2"
+        "dd369175-596c-4f5a-99c2-41bf3cf8acb2",
+        "template--16404731756799__6b217ec2-fb95-4b03-b3da-987ecf1dd229-1675176260b6aab62b-2"
       ],
       "settings": {
         "lazy_load": false,
@@ -74,16 +74,17 @@
         "card_background": "#eae7df",
         "button_background": "#002e5d",
         "enable_border": true,
-        "products_per_page": 24,
+        "products_per_page": 20,
         "columns_desktop": 3,
         "image_ratio": "adapt",
         "show_secondary_image": true,
         "show_price": true,
+        "minimum_price": 4950,
         "enable_filtering": false,
         "filter_type": "vertical",
         "enable_sorting": false,
         "columns_mobile": "2",
-        "padding_top": 0,
+        "padding_top": 88,
         "padding_bottom": 0
       }
     },

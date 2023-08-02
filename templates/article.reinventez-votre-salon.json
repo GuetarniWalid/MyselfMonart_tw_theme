@@ -57,7 +57,7 @@
           "type": "button",
           "settings": {
             "button_label": "Lire la suite",
-            "button_link": "https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/7-astuces-pour-relooker-votre-maison"
+            "button_link": "shopify:\/\/blogs\/tableau-salon\/7-astuces-pour-relooker-votre-maison"
           }
         }
       },
@@ -102,7 +102,7 @@
           "type": "button",
           "settings": {
             "button_label": "Lire la suite",
-            "button_link": "https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/ambiance-cocooning-comment-creer-un-salon-confortable-et-chaleureux"
+            "button_link": "https:\/\/www.myselfmonart.com\/blogs\/tableau-salon\/ambiance-cocooning-comment-creer-un-salon-confortable-et-chaleureux"
           }
         }
       },
@@ -147,7 +147,7 @@
           "type": "button",
           "settings": {
             "button_label": "Lire la suite",
-            "button_link": "https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/comment-amenager-un-espace-accueillant-et-pratique-pour-recevoir"
+            "button_link": "https:\/\/www.myselfmonart.com\/blogs\/tableau-salon\/comment-amenager-un-espace-accueillant-et-pratique-pour-recevoir"
           }
         }
       },
@@ -192,7 +192,7 @@
           "type": "button",
           "settings": {
             "button_label": "Lire la suite",
-            "button_link": "https:\/\/jh985z10es9ousxc-62323884287.shopifypreview.com\/blogs\/tableau-cuisine\/articles?preview_key=12c2cf732304d0ebbe6d02b17fa9a31e"
+            "button_link": "https:\/\/www.myselfmonart.com\/blogs\/tableau-salon\/chic-et-elegant-des-idees-de-decoration-pour-sublimer-votre-salon"
           }
         }
       },
@@ -216,6 +216,51 @@
         "padding_bottom": 36
       }
     },
+    "4aca8a5e-f16a-4dd2-aebd-c8afbb747dcd": {
+      "type": "image-with-text",
+      "blocks": {
+        "template--18497491665243__4aca8a5e-f16a-4dd2-aebd-c8afbb747dcd-168854201755f57caa-0": {
+          "type": "heading",
+          "settings": {
+            "heading": "Décoration africaine-voyager de votre salon",
+            "heading_size": "h1"
+          }
+        },
+        "template--18497491665243__4aca8a5e-f16a-4dd2-aebd-c8afbb747dcd-168854201755f57caa-1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Voyagez au cœur de l'Afrique avec notre blog déco ! Couleurs chaudes, motifs vibrants, matériaux naturels et art ancestral vous attendent. Découvrez comment créer une décoration authentique, trouvez des tableaux uniques et apprenez à intégrer des éléments africains sans vous ruiner. Osez l'exotisme et transformez votre intérieur en un véritable sanctuaire africain. Plongez dans notre blog et laissez-vous inspirer <\/p>",
+            "text_style": "body"
+          }
+        },
+        "template--18497491665243__4aca8a5e-f16a-4dd2-aebd-c8afbb747dcd-168854201755f57caa-2": {
+          "type": "button",
+          "settings": {
+            "button_label": "Lire la suite",
+            "button_link": "https:\/\/www.myselfmonart.com\/blogs\/tableau-salon\/voyagez-depuis-votre-salon-guide-pratique-pour-une-decoration-africaine-reussi-et-abordable"
+          }
+        }
+      },
+      "block_order": [
+        "template--18497491665243__4aca8a5e-f16a-4dd2-aebd-c8afbb747dcd-168854201755f57caa-0",
+        "template--18497491665243__4aca8a5e-f16a-4dd2-aebd-c8afbb747dcd-168854201755f57caa-1",
+        "template--18497491665243__4aca8a5e-f16a-4dd2-aebd-c8afbb747dcd-168854201755f57caa-2"
+      ],
+      "settings": {
+        "image": "shopify:\/\/shop_images\/inspiration-decoration-africaine-pour-salon-pas-chere.jpg",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "content_layout": "no-overlap",
+        "color_scheme": "background-1",
+        "mobile_content_alignment": "left",
+        "enable_blob": true,
+        "padding_top": 0,
+        "padding_bottom": 36
+      }
+    },
     "11ed1855-d812-4ccc-8f80-65a14ff1c6bd": {
       "type": "sibling-blog-links",
       "settings": {
@@ -229,6 +274,7 @@
     "fc528c4b-187f-4367-bc91-6aa859abb94b",
     "238f99d8-a2c2-4492-981d-c20ea55301f9",
     "556a8432-4d1b-4684-9d44-adb04332a6e1",
+    "4aca8a5e-f16a-4dd2-aebd-c8afbb747dcd",
     "11ed1855-d812-4ccc-8f80-65a14ff1c6bd"
   ]
 }

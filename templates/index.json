@@ -115,6 +115,14 @@
             "collection": "tableau-couleur",
             "paragraph": "<h3>DÉCOUVREZ NOTRE GAMME DE TABLEAU COULEUR<\/h3>\n<p>Faites de votre maison un lieu qui respire la créativité et la beauté avec nos tableaux colorés. Parfaits pour décorer votre intérieur, ces œuvres d'art magnifiques célèbrent chaque couleur avec poésie, subtilité et dynamisme. Que vous préfériez des tableaux abstraits en noir et blanc, des couchers de soleil orangés ou des paysages exotiques aux teintes vertes et jaunes, vous trouverez certainement une toile murale qui apportera élégance et vitalité à votre espace.<\/p>\n<p>Les tableaux colorés sont de véritables joyaux qui ajoutent une touche d'originalité et de caractère à votre décoration intérieure. Ils peuvent transformer complètement l'ambiance d'une pièce en lui apportant une dose d'énergie et de créativité. Les couleurs vibrantes et lumineuses captent le regard et créent une atmosphère chaleureuse et accueillante.<\/p>\n<p>Laissez-vous séduire par notre collection de tableaux colorés et apportez une nouvelle dimension à votre intérieur. Que vous souhaitiez créer une ambiance moderne, apaisante ou exotique, notre collection de tableaux colorés offre une multitude de choix pour répondre à tous les goûts et styles de décoration.<\/p>"
           }
+        },
+        "0e8332e6-ae86-4667-915a-557bdde5236f": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableaux-pop-art_89063306-5535-43ba-b313-090292d1bde9.jpg",
+            "collection": "tableau-pop-art",
+            "paragraph": "<h3>DÉCOUVREZ NOTRE GAMME DE TABLEAU POP ART<\/h3>\n<p>Les tableaux Pop Art sont un excellent moyen de donner vie à votre espace et de créer une ambiance décalée et créative. Chez Myslemonart, nous sommes fiers de proposer une large gamme de tableaux Pop Art, pour enrichir votre intérieur avec des couleurs intenses et des formes audacieuses.<\/p>\n<p>Nos tableaux mettant en scène des célébrités, des objets du quotidien ou des animaux, captiveront votre imagination et apporteront un éclat de couleur à votre pièce. Quel que soit votre style de décoration, chaque tableau Pop Art est conçu pour répondre à toutes les envies. Que vous cherchiez à accentuer le caractère de votre salon avec un tableau inspiré des icônes de la culture pop, un tableau inspiré des bandes dessinées ou un tableau qui illustre la vie quotidienne sous un angle artistique, nous avons ce qu'il vous faut.<\/p>\n<p>Nos tableaux sont imprimés sur des supports de haute qualité tels que la toile, l'aluminium et le plexiglas, pour une finition durable et résistante. Avec nos tableaux décoratifs Pop Art, vous pourrez rendre votre pièce encore plus audacieuse, pour en faire un véritable havre de créativité et de style que vous ne voudrez plus quitter. Découvrez notre collection de tableaux Pop Art. Choisissez parmi une variété de styles et de motifs pour trouver celui qui conviendra parfaitement à votre intérieur et à votre personnalité.<\/p>"
+          }
         }
       },
       "block_order": [
@@ -124,7 +132,8 @@
         "cd2ff1e5-67ff-4ddc-a4bf-e05ca75d0144",
         "4fe0edd9-6e76-4900-b7e2-782666024e27",
         "a0b4d159-619c-4d0f-a072-c6c0ae99a54d",
-        "5563c0e4-5568-40a6-8f33-2a6014cde099"
+        "5563c0e4-5568-40a6-8f33-2a6014cde099",
+        "0e8332e6-ae86-4667-915a-557bdde5236f"
       ],
       "settings": {
         "lazy_load": false,
@@ -170,56 +179,67 @@
         "150ac81d-f4d4-4a1a-a431-e1c732d7b6a5": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-marilyn-monroe-en-couleur.png",
-            "title": "Tableau pop art : Marilyn Monroe",
+            "image": "shopify:\/\/shop_images\/tableau-singe-au-toilette_3977da4c-d38d-4410-b722-c0b88766e3f0.jpg",
+            "title": "Tableau singe au toilette",
             "text": "",
             "link_label": "",
-            "link": "https:\/\/www.myselfmonart.com\/products\/tableau-marilyn-monroe-en-couleur?_pos=1&_psq=MARI&_ss=e&_v=1.0"
-          }
-        },
-        "template--16404732051711__1aaec86d-3d6c-44d8-aaa8-716ea425a598-16665463000e3de778-0": {
-          "type": "column",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-bouddha.png",
-            "title": "Tableau bouddha",
-            "text": "",
-            "link_label": "",
-            "link": "https:\/\/www.myselfmonart.com\/products\/tableau-bouddha"
+            "link": "https:\/\/www.myselfmonart.com\/collections\/tableau-salon\/products\/tableau-singe-au-toilette"
           }
         },
         "template--16404732051711__1aaec86d-3d6c-44d8-aaa8-716ea425a598-16665463000e3de778-2": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-art-echecs_59b4d3c4-3ff0-47fd-a160-a704fca94819.png",
-            "title": "Tableau roi d'échecs",
+            "image": "shopify:\/\/shop_images\/Tableau-Revolver_21f7105d-82bd-4001-a645-03b36a87323b.jpg",
+            "title": "Tableau Revolver",
             "text": "",
             "link_label": "",
-            "link": ""
+            "link": "https:\/\/www.myselfmonart.com\/collections\/tableau-salon\/products\/tableau-revolver"
+          }
+        },
+        "template--16404732051711__1aaec86d-3d6c-44d8-aaa8-716ea425a598-16665463000e3de778-0": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/Tabbleau-femme-africaine-nue_d25c6d6b-ca2a-48eb-8d6c-1ec4c9e9fd8a.jpg",
+            "title": "Tableau femme africaine nue",
+            "text": "",
+            "link_label": "",
+            "link": "https:\/\/www.myselfmonart.com\/products\/tableau-femme-africaine-nue?_pos=1&_sid=c0ad0c193&_ss=r"
           }
         },
         "template--16404732051711__1aaec86d-3d6c-44d8-aaa8-716ea425a598-16665463000e3de778-1": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-renard-portrait-photo.png",
-            "title": "Tableau renard en portrait photo",
+            "image": "shopify:\/\/shop_images\/tableau-dique-vinyle_30f06eff-6539-4b7f-86db-a5afec1c7631.png",
+            "title": "Tableau disque vinyle",
             "text": "",
             "link_label": "",
-            "link": "https:\/\/www.myselfmonart.com\/collections\/tableau-salon\/products\/tableau-renard-en-portrait-photo"
+            "link": "https:\/\/www.myselfmonart.com\/collections\/tableau-salon\/products\/tableau-disque-vinyle"
+          }
+        },
+        "46f6a2c1-70af-496f-8a66-1f51ae198f52": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tabeau-jaune-velo_0ceb92fb-fca2-4331-9341-fbe08c2ca6ee.jpg",
+            "title": "Tableau bicyclette",
+            "text": "",
+            "link_label": "",
+            "link": "https:\/\/www.myselfmonart.com\/collections\/tableau-salon\/products\/tableau-bicyclette"
           }
         }
       },
       "block_order": [
         "150ac81d-f4d4-4a1a-a431-e1c732d7b6a5",
-        "template--16404732051711__1aaec86d-3d6c-44d8-aaa8-716ea425a598-16665463000e3de778-0",
         "template--16404732051711__1aaec86d-3d6c-44d8-aaa8-716ea425a598-16665463000e3de778-2",
-        "template--16404732051711__1aaec86d-3d6c-44d8-aaa8-716ea425a598-16665463000e3de778-1"
+        "template--16404732051711__1aaec86d-3d6c-44d8-aaa8-716ea425a598-16665463000e3de778-0",
+        "template--16404732051711__1aaec86d-3d6c-44d8-aaa8-716ea425a598-16665463000e3de778-1",
+        "46f6a2c1-70af-496f-8a66-1f51ae198f52"
       ],
       "settings": {
-        "title": "NOS TABLEAUX FAVORIS",
+        "title": "❤️ Top ventes de la semaine !",
         "heading_size": "h1",
         "image_width": "full",
         "image_ratio": "adapt",
-        "columns_desktop": 4,
+        "columns_desktop": 5,
         "column_alignment": "left",
         "background_style": "none",
         "title_color": "#002e5d",

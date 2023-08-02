@@ -51,7 +51,7 @@ if (!window.LottieWrapperDeclared) {
         try {
           const scriptEle = document.createElement('script');
           scriptEle.type = 'text/javascript';
-          scriptEle.async = true;
+          scriptEle.defer = true;
           scriptEle.src = FILE_URL;
 
           scriptEle.addEventListener('load', ev => {

@@ -23,7 +23,13 @@
   <h2 class="page-width {{ section.settings.heading_size }}">{{ section.settings.title }}</h2>
 {%- endif -%}
 <div class="page-width">
+  {% assign lottie_blocks = 0 %}
   {%- for block in section.blocks -%}
+    {% liquid  
+      if block.type == "lottie"
+        assign lottie_blocks = lottie_blocks | plus: 1 
+      endif
+    %}
     <div class="badge-column">
       {% case block.type %}
         {%- when "svg_block" -%}
@@ -57,7 +63,9 @@
   {%- endfor -%}
 </div>
 
-<script src="{{ 'component-lottie-wrapper.js' | asset_url }}" defer="defer"></script>
+{% if lottie_blocks > 0 %}
+  <script src="{{ 'component-lottie-wrapper.js' | asset_url }}" defer="defer"></script>
+{% endif %}
 
 {% schema %}
 {

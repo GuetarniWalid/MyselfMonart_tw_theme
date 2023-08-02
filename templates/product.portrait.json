@@ -26,8 +26,14 @@
         "9f20570b-1a97-4c34-8758-c5af9b8d2cfc": {
           "type": "price",
           "settings": {
-            "size": "",
+            "size": "h2",
             "spacing": 1.6
+          }
+        },
+        "ee6e4064-ed33-4a00-b99f-f6109fbb4092": {
+          "type": "text",
+          "settings": {
+            "text": "<p>🚚  <strong>DERNIERS JOURS<\/strong> pour bénéficier de la <strong>LIVRAISON GRATUITE !<\/strong> <\/p><p>🎁 <strong>ÉCONOMISEZ<\/strong> jusqu'à 9,99€. Offre valable jusqu'au 31 juillet.<br\/><\/p>"
           }
         },
         "caption": {
@@ -46,15 +52,30 @@
             "border_size": 2
           }
         },
-        "description": {
-          "type": "description",
-          "settings": {
-          }
-        },
         "09bd0ce8-dfec-4d37-9f99-b06e314b81fa": {
           "type": "text",
           "settings": {
-            "text": "<p>🖼️ Laissez-vous transporter par nos tableau cuisine. Une sensation unique et singulière à transposer dans votre  décoration intérieur.<br\/>📏 Possibilité de choisir la taille et le support de l’œuvre.<br\/><\/p>"
+            "text": "<p>🖼️ Laissez-vous transporter par nos œuvres d'arts. Une sensation unique et singulière à transposer dans votre intérieur.<br\/>📏 Possibilité de choisir la taille et le support de l’œuvre<\/p>"
+          }
+        },
+        "01739746-0e53-4617-8010-ea37a29a1133": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Livraison",
+            "icon": "truck",
+            "icon_color": "#002e5d",
+            "content": "<p>🎨 Toile personnalisée : Fabrication en 3-4 jours <\/p><p>🚚  expédition en 3-5 jours ouvrables en colis suivi à votre domicile.<\/p>",
+            "page": ""
+          }
+        },
+        "collapsible-content-2": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Materiaux",
+            "icon": "leather",
+            "icon_color": "#002e5d",
+            "content": "<p><strong>- La Toile<\/strong> est composée de fibres 100% polyester d'une épaisseur de 285g\/m².<\/p><p>L'épaisseur du châssis au choix 2 ou 4 cm <\/p><p><strong>- Le Plexiglass<\/strong> est composé de  <strong>verre acrylique<\/strong> + <strong>plaques aluminium . <\/strong>Épaisseur: 6 mm<\/p><p>Bord: noir entre les plaques métalliques + verre acrylique transparent sur le dessus, coins arrondis<\/p><p>- <strong>L'aluminium argent brossé, <\/strong>dit Alupanel, est une plaque composite en aluminium d'une épaisseur de 3mm. Il est <strong>résistant aux UV et à l'humidité. <\/strong><\/p><p>Bord: noir entre les plaques métalliques, coins arrondis<\/p>",
+            "page": ""
           }
         },
         "collapsible-content-0": {
@@ -67,24 +88,9 @@
             "page": "guide-de-tailles"
           }
         },
-        "collapsible-content-2": {
-          "type": "collapsible_tab",
+        "description": {
+          "type": "description",
           "settings": {
-            "heading": "Materiaux",
-            "icon": "leather",
-            "icon_color": "#002e5d",
-            "content": "<p><strong>- La Toile<\/strong> est composée de fibres 100% polyester d'une épaisseur de 285g\/m².<\/p><p>L'épaisseur du châssis est de 4cm pour les produits les plus imposants. Elle est de 2cm pour les tableaux les plus petits.<\/p><p><strong>- Le Plexiglass<\/strong> est composé de <strong>PMMA coulé, <\/strong>d'une épaisseur de 3 mm pour les produits les plus petits, et 5 mm pour les grandes toiles.<\/p><p>- <strong>L'aluminium argent brossé, <\/strong>dit Alupanel, est une plaque composite en aluminium d'une épaisseur de 3mm. Il est <strong>résistant aux UV et à l'humidité.<\/strong><\/p>",
-            "page": ""
-          }
-        },
-        "01739746-0e53-4617-8010-ea37a29a1133": {
-          "type": "collapsible_tab",
-          "settings": {
-            "heading": "Livraison",
-            "icon": "truck",
-            "icon_color": "#002e5d",
-            "content": "<p>En raison de la personnalisation de la toile, il vous faut compter 48h pour le traitement de la commande, 2 à 4 jours pour la fabrication et un temps d'expédition de 10 jours ouvrables.<\/p>",
-            "page": ""
           }
         }
       },
@@ -92,13 +98,14 @@
         "vendor",
         "title",
         "9f20570b-1a97-4c34-8758-c5af9b8d2cfc",
+        "ee6e4064-ed33-4a00-b99f-f6109fbb4092",
         "caption",
         "5dccdf4a-5644-4f0d-be8c-c01c7d538494",
-        "description",
         "09bd0ce8-dfec-4d37-9f99-b06e314b81fa",
-        "collapsible-content-0",
+        "01739746-0e53-4617-8010-ea37a29a1133",
         "collapsible-content-2",
-        "01739746-0e53-4617-8010-ea37a29a1133"
+        "collapsible-content-0",
+        "description"
       ],
       "settings": {
         "section_background": "#f6f2ec",
@@ -291,7 +298,7 @@
         "template--16552086012159__67d24d9b-48a4-46a1-9b04-c6c9e33c16bb-1666165334b636ae96-1": {
           "type": "text",
           "settings": {
-            "text": "<p>L’art au pays de l’art. Pour soutenir l'industrie, réduire l'empreinte carbone et vous offrir un service de qualité, nos tableaux sont conçus en la France.<\/p>",
+            "text": "<p>Une touche d'art à la française. Enracinés dans notre cher pays, nous mettons l'accent sur votre satisfaction en offrant un service client de qualité supérieure.<\/p>",
             "text_style": "body"
           }
         }
@@ -325,7 +332,7 @@
             "lottie_size": 17,
             "range_under_lottie": 4,
             "heading": "SATISFACTION",
-            "text": "Nous faisons tout pour que notre travail vous donne entière satisfaction.  Nos décoration murale cuisine sont fabriqués, vérifiés, emballés et expédiés avec le plus grand soin.",
+            "text": "Nous faisons tout pour que notre travail vous donne entière satisfaction. Nos produits sont fabriqués, vérifiés et emballés avec le plus grand soin, avant d'être livré directement à votre domicile.",
             "text_arrangement": "unset"
           }
         },
@@ -336,7 +343,7 @@
             "lottie_size": 17,
             "range_under_lottie": 4,
             "heading": "REMBOURSEMENT",
-            "text": "Nos tableau pour cuisine sont spécialement protégés pour le transport. Si toutefois il venait à être endommagé, nous nous engageons à vous rembourser en moins de 5 jours.",
+            "text": "Nos tableaux sont spécialement protégés pour le transport. Si toutefois il venait à être endommagé, nous nous engageons à vous rembourser en moins de 5 jours.",
             "text_arrangement": "unset"
           }
         },
@@ -384,7 +391,7 @@
           "settings": {
             "heading": "Quels supports choisir, le rendu est-il différent ?",
             "icon": "none",
-            "row_content": "<p>- Tableau toile 100% polyester (285g\/m²) : <strong>Mate et texturée<\/strong><\/p><p>Le tableau cuisine en toile offre une prise en main agréable. Le grain<strong> <\/strong>du papier est visible principalement dans les zones claires de l’image, tandis que les noirs auront tendance à les gommer. La surface de toile cuisine ajoute du relief et de la profondeur à vos tableaux. Il apporte une touche artistique et les dote d’une <strong>incroyable intensité.<\/strong><\/p><p>- tableau plexiglas ou tableau en verre acrylique :<strong> Brillant et transparent<\/strong><\/p><p>Le tableau mural cuisine en <strong>verre acrylique<\/strong>, également appelé <strong>tableau plexiglas,<\/strong> est un matériau synthétique rigide et transparent haut de gamme, son aspect est similaire à du verre.<\/p><p>Le tableau en verre pour cuisine  offrira <strong>une profondeur <\/strong>et <strong>une luminosité extraordinaire <\/strong>à vos tableaux. Les couleurs de votre photo seront vives et éclatantes il est particulièrement recommandé pour la réalisation de tableaux lumineux.<\/p><p>- Tableau aluminium argent brossé ou tableau métal : <strong>Contraste et éclat.<\/strong><\/p><p>Le tableau deco pour cuisine en aluminium permet une <strong>présentation sobre, moderne et sans reflet<\/strong>. La densité des couleurs et les contrastes sont très forts.<\/p><p>L'aluminium est un support très résistant et de qualité il n'est pas sensible aux traces de doigts ou à l'humidité et l’entretien de vos toiles est facile. Vous pouvez les nettoyer avec un tissu légèrement humide.<\/p>",
+            "row_content": "<p>- Tableau toile 100% polyester (285g\/m²) : <strong>Mate et texturée<\/strong><\/p><p>Le tableau en toile offre une prise en main agréable. Le grain<strong> <\/strong>du papier est visible principalement dans les zones claires de l’image, tandis que les noirs auront tendance à les gommer. La surface de toile cuisine ajoute du relief et de la profondeur à vos tableaux. Il apporte une touche artistique et les dote d’une <strong>incroyable intensité.<\/strong><\/p><p>- tableau plexiglas ou tableau en verre acrylique :<strong> Brillant et transparent<\/strong><\/p><p>Le tableau mural en <strong>verre acrylique<\/strong>, également appelé <strong>tableau plexiglas,<\/strong> est un matériau synthétique rigide et transparent haut de gamme, son aspect est similaire à du verre.<\/p><p>Le plexiglas offre <strong>une profondeur <\/strong>et <strong>une luminosité extraordinaire <\/strong>à vos tableaux. Les couleurs de votre photo seront vives et éclatantes il est particulièrement recommandé pour la réalisation de tableaux lumineux.<\/p><p>- Tableau aluminium argent brossé ou tableau métal : <strong>Contraste et éclat.<\/strong><\/p><p>Le tableau deco en aluminium permet une <strong>présentation sobre, moderne et sans reflet<\/strong>. La densité des couleurs et les contrastes sont très forts.<\/p><p>L'aluminium est un support très résistant et de qualité il n'est pas sensible aux traces de doigts ou à l'humidité et l’entretien de vos toiles est facile. Vous pouvez les nettoyer avec un tissu légèrement humide.<\/p>",
             "page": ""
           }
         },
@@ -393,16 +400,16 @@
           "settings": {
             "heading": "Avec quoi et comment accrochez mon tableau",
             "icon": "none",
-            "row_content": "<p>Pour une finition à la hauteur de votre décoration cuisine  il est important de prendre en compte le support d'impression. <\/p><p>- Les supports tels que le plexiglas coulé et l'aluminium nécessitent un espacement entre le tableau et le mur. <\/p><p>Nous vous recommandons d'utiliser notres système d'accrochage de cadres ou les entretoises, nos équipes s'occupent de percer le tableau les 2 systeme d'accroche sont disponibles en supplément sur notre site. <\/p><p>- Pour accrocher les tableaux en toile montés sur châssis il est recommandé d'utiliser des crochets. Attention, il vous faudra prendre en compte le poids du tableau avant tout achat. <br\/><\/p><p>Enfin, pour ne pas abîmer votre mur il vous faudra également faire attention aux chevilles qui sont différentes selon les murs en placo, brique ou béton.<\/p><p>En raison de la particularité de chaque mur nos entretoises sont livrées sans visserie.<\/p>",
+            "row_content": "<p>Pour une finition à la hauteur de votre décoration  il est important de prendre en compte le support d'impression. <\/p><p>- Les supports tels que le plexiglas coulé et l'aluminium nécessitent un espacement entre le tableau et le mur. <\/p><p>Nous vous recommandons d'utiliser notre système d'accrochage, nos équipes s'occupent d'installer le kit de fixation directement sur le tableau. Nos kit de fixation sont disponibles en supplément sur notre site. <\/p><p>- Pour accrocher les tableaux en toile montés sur châssis il est recommandé d'utiliser des crochets. Attention, il vous faudra prendre en compte le poids du tableau avant tout achat. <br\/><\/p><p>Enfin, pour ne pas abîmer votre mur il vous faudra également faire attention aux chevilles qui sont différentes selon les murs en placo, brique ou béton.<\/p><p>En raison de la particularité de chaque mur nos kits de fixation sont livrées sans visserie.<\/p>",
             "page": ""
           }
         },
         "template--16552086012159__68e53d05-fcb9-4a24-82ef-09ab77bd6b35-1666165326c09dc4b2-2": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "Pourquoi acheter chez vous ?",
+            "heading": "Pourquoi acheter chez nous ?",
             "icon": "none",
-            "row_content": "<p>Nos graphistes travaillent chaque jour pour créer de nouveau tableau déco cuisine. Chaque semaine, nous mettons à jour notre site et ajoutons les nouveaux tableau pour cuisine .<\/p><p>Vous avez la possibilité de choisir le support et la taille pour un accord parfait avec votre intérieur.<\/p><p>Si toutefois aucune taille de tableau décoration cuisine ne vous convient, vous avez la possibilité de demander à nos graphistes de modifier la taille  cadre pour cuisine.  Sur certain tableau, nos graphistes ont la possibilité de modifier le formats. Pour cela, rien de plus simple, il vous suffit de vous rendre à la page contacte.<\/p>",
+            "row_content": "<p>Nos graphistes travaillent chaque jour pour créer de nouveau tableau de décoration. Chaque semaine, nous mettons à jour notre site et ajoutons les nouveaux tableau pour cuisine .<\/p><p>Vous avez la possibilité de choisir le support et la taille pour un accord parfait avec votre intérieur.<\/p><p>Si toutefois aucune taille de tableau décoration cuisine ne vous convient, vous avez la possibilité de demander à nos graphistes de modifier la taille  cadre pour cuisine.  Sur certain tableau, nos graphistes ont la possibilité de modifier le formats. Pour cela, rien de plus simple, il vous suffit de vous rendre à la page contacte.<\/p>",
             "page": ""
           }
         },
@@ -437,6 +444,12 @@
         "padding_top": 64,
         "padding_bottom": 48
       }
+    },
+    "widereview-product-section": {
+      "type": "widereview-product-section",
+      "settings": {
+        "logo_aligment": "product_page_reviews"
+      }
     }
   },
   "order": [
@@ -449,6 +462,7 @@
     "02cc24e2-3446-42db-930a-0c53de878193",
     "67d24d9b-48a4-46a1-9b04-c6c9e33c16bb",
     "6bd56e22-4595-4e85-8fb7-552905648722",
-    "68e53d05-fcb9-4a24-82ef-09ab77bd6b35"
+    "68e53d05-fcb9-4a24-82ef-09ab77bd6b35",
+    "widereview-product-section"
   ]
 }
