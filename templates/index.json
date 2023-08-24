@@ -123,6 +123,14 @@
             "collection": "tableau-pop-art",
             "paragraph": "<h3>DÉCOUVREZ NOTRE GAMME DE TABLEAU POP ART<\/h3>\n<p>Les tableaux Pop Art sont un excellent moyen de donner vie à votre espace et de créer une ambiance décalée et créative. Chez Myslemonart, nous sommes fiers de proposer une large gamme de tableaux Pop Art, pour enrichir votre intérieur avec des couleurs intenses et des formes audacieuses.<\/p>\n<p>Nos tableaux mettant en scène des célébrités, des objets du quotidien ou des animaux, captiveront votre imagination et apporteront un éclat de couleur à votre pièce. Quel que soit votre style de décoration, chaque tableau Pop Art est conçu pour répondre à toutes les envies. Que vous cherchiez à accentuer le caractère de votre salon avec un tableau inspiré des icônes de la culture pop, un tableau inspiré des bandes dessinées ou un tableau qui illustre la vie quotidienne sous un angle artistique, nous avons ce qu'il vous faut.<\/p>\n<p>Nos tableaux sont imprimés sur des supports de haute qualité tels que la toile, l'aluminium et le plexiglas, pour une finition durable et résistante. Avec nos tableaux décoratifs Pop Art, vous pourrez rendre votre pièce encore plus audacieuse, pour en faire un véritable havre de créativité et de style que vous ne voudrez plus quitter. Découvrez notre collection de tableaux Pop Art. Choisissez parmi une variété de styles et de motifs pour trouver celui qui conviendra parfaitement à votre intérieur et à votre personnalité.<\/p>"
           }
+        },
+        "82fad791-ef01-4b08-86c9-9fee5e7cbe78": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableaux-zen.jpg",
+            "collection": "tableau-zen",
+            "paragraph": "<h3>DÉCOUVREZ NOTRE SUBLIME COLLECTION DE TABLEAUX ZEN<\/h3>\n<p>Les tableaux Zen incarnent la quête d’harmonie et d’équilibre, transmettant une sensation apaisante et méditative à votre intérieur. Chez Myslemonart, nous avons le privilège de vous présenter notre collection minutieusement conçue de tableaux Zen, pour vous aider à instaurer une atmosphère sereine, emplie de douceur et de poésie.<\/p>\n<p>Inspirés de la beauté naturelle et des traditions orientales, nos tableaux mettent en lumière des éléments tels que les fleurs de lotus, les paysages sereins ou encore des silhouettes en méditation. Que vous souhaitiez un espace invitant à la relaxation profonde ou une oasis de tranquillité au cœur de votre maison, chaque tableau Zen est créé pour élever l'âme et apaiser l'esprit. Que vous soyez séduit par la simplicité du minimalisme japonais, les motifs du feng shui ou le reflet d'un étang paisible, notre collection saura répondre à vos aspirations.<\/p><p>En invitant nos tableaux Zen chez vous, vous ouvrez la porte à un monde de quiétude et d'harmonie, créant ainsi un sanctuaire de bien-être où chaque regard apporte paix et sérénité. Laissez-vous séduire par notre gamme de tableaux Zen et trouvez l'œuvre parfaite qui résonnera avec votre essence et votre espace.<\/p><p><\/p>"
+          }
         }
       },
       "block_order": [
@@ -133,7 +141,8 @@
         "4fe0edd9-6e76-4900-b7e2-782666024e27",
         "a0b4d159-619c-4d0f-a072-c6c0ae99a54d",
         "5563c0e4-5568-40a6-8f33-2a6014cde099",
-        "0e8332e6-ae86-4667-915a-557bdde5236f"
+        "0e8332e6-ae86-4667-915a-557bdde5236f",
+        "82fad791-ef01-4b08-86c9-9fee5e7cbe78"
       ],
       "settings": {
         "lazy_load": false,

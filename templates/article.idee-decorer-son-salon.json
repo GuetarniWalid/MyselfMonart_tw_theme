@@ -126,6 +126,51 @@
         "padding_bottom": 36
       }
     },
+    "c443790e-e3c2-4b2d-a004-1c91af633bc2": {
+      "type": "image-with-text",
+      "blocks": {
+        "template--19140770890075__c443790e-e3c2-4b2d-a004-1c91af633bc2-heading-1": {
+          "type": "heading",
+          "settings": {
+            "heading": "Transformer votre salon avec un tableau zen.",
+            "heading_size": "h1"
+          }
+        },
+        "template--19140770890075__c443790e-e3c2-4b2d-a004-1c91af633bc2-text-1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Découvrez la quête de sérénité sur notre blog dédié aux tableaux zen. Laissez-vous envahir par des œuvres et astuces qui métamorphoseront votre intérieur en un sanctuaire de sérénité.<\/p>",
+            "text_style": "body"
+          }
+        },
+        "template--19140770890075__c443790e-e3c2-4b2d-a004-1c91af633bc2-button-1": {
+          "type": "button",
+          "settings": {
+            "button_label": "En savoir plus",
+            "button_link": "https:\/\/www.myselfmonart.com\/blogs\/tableau-salon\/la-quete-de-la-serenite-comment-les-tableaux-z"
+          }
+        }
+      },
+      "block_order": [
+        "template--19140770890075__c443790e-e3c2-4b2d-a004-1c91af633bc2-heading-1",
+        "template--19140770890075__c443790e-e3c2-4b2d-a004-1c91af633bc2-text-1",
+        "template--19140770890075__c443790e-e3c2-4b2d-a004-1c91af633bc2-button-1"
+      ],
+      "settings": {
+        "image": "shopify:\/\/shop_images\/ambiance-zen-pour-salon-tableau-deco.jpg",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "content_layout": "no-overlap",
+        "color_scheme": "background-1",
+        "mobile_content_alignment": "left",
+        "enable_blob": true,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
     "11ed1855-d812-4ccc-8f80-65a14ff1c6bd": {
       "type": "sibling-blog-links",
       "settings": {
@@ -137,6 +182,7 @@
     "main",
     "6ffd3b91-4894-4048-b644-36e09187103d",
     "de6ebecd-60b3-47d6-ab6e-9c3032245f02",
+    "c443790e-e3c2-4b2d-a004-1c91af633bc2",
     "11ed1855-d812-4ccc-8f80-65a14ff1c6bd"
   ]
 }

@@ -33,7 +33,7 @@
         "ee6e4064-ed33-4a00-b99f-f6109fbb4092": {
           "type": "text",
           "settings": {
-            "text": "<p>🚚  <strong>DERNIERS JOURS<\/strong> pour bénéficier de la <strong>LIVRAISON GRATUITE !<\/strong> <\/p><p>🎁 <strong>ÉCONOMISEZ<\/strong> jusqu'à 9,99€. Offre valable jusqu'au 31 juillet.<br\/><\/p>"
+            "text": "<p>✅ <strong>FACILITÉ DE PAIEMENT avec KLARNA<\/strong><\/p><p>💳 <strong>PAIEMENT EN 3X SANS FRAIS !<\/strong><\/p><p>🕒 <strong>COMMANDEZ MAINTENANT, PAYEZ PLUS TARD !<\/strong> <br\/><\/p>"
           }
         },
         "caption": {
@@ -55,7 +55,7 @@
         "09bd0ce8-dfec-4d37-9f99-b06e314b81fa": {
           "type": "text",
           "settings": {
-            "text": "<p>🖼️ Laissez-vous transporter par nos œuvres d'arts. Une sensation unique et singulière à transposer dans votre intérieur.<br\/>📏 Possibilité de choisir la taille et le support de l’œuvre<\/p>"
+            "text": "<p>- Laissez-vous transporter par nos œuvres d'arts. Une sensation unique et singulière à transposer dans votre intérieur.<br\/>- Possibilité de choisir la taille et le support de l’œuvre<\/p>"
           }
         },
         "01739746-0e53-4617-8010-ea37a29a1133": {
@@ -444,12 +444,6 @@
         "padding_top": 64,
         "padding_bottom": 48
       }
-    },
-    "widereview-product-section": {
-      "type": "widereview-product-section",
-      "settings": {
-        "logo_aligment": "product_page_reviews"
-      }
     }
   },
   "order": [
@@ -462,7 +456,6 @@
     "02cc24e2-3446-42db-930a-0c53de878193",
     "67d24d9b-48a4-46a1-9b04-c6c9e33c16bb",
     "6bd56e22-4595-4e85-8fb7-552905648722",
-    "68e53d05-fcb9-4a24-82ef-09ab77bd6b35",
-    "widereview-product-section"
+    "68e53d05-fcb9-4a24-82ef-09ab77bd6b35"
   ]
 }

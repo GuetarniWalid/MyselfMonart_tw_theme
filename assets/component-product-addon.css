@@ -588,5 +588,5 @@ show-product-addon .transparent {
 }
 
 .hidden2 {
-  display: none;
+  display: none !important;
 }

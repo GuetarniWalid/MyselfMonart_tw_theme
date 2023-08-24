@@ -897,6 +897,7 @@ class CanvasOptionsSelector extends OptionsSelector {
   hideForbiddenBorderNoFoldedBySize(size) {
     const sizeIsForbidden = this.forbiddenSizes.borderNoFolded.includes(size);
     const borderInputs = this.radios.filter(radio => radio.name === this.borderColor.radioName);
+
     if (sizeIsForbidden) {
       borderInputs.forEach(input => {
         if (input.value.toLowerCase() !== this.borderColor.folded) {
