@@ -148,7 +148,10 @@
       "include_taxes": "inkl. MwSt.",
       "shipping_policy_html": "<a href=\"{{ link }}\">Versand<\/a> wird beim Checkout berechnet",
       "choose_options": "Optionen auswählen",
-      "choose_product_options": "Optionen für {{ product_name }} auswählen"
+      "choose_product_options": "Optionen für {{ product_name }} auswählen",
+      "bundle": {
+        "instead_of": "anstatt"
+      }
     },
     "modal": {
       "label": "Medien-Galerie"
@@ -212,7 +215,9 @@
         "send": "Senden",
         "post_success": "Danke, dass du uns kontaktiert hast. Wir werden uns so schnell wie möglich bei dir melden.",
         "error_heading": "Bitte passe Folgendes an:",
-        "title": "Kontaktformular"
+        "title": "Kontaktformular",
+        "lastname": "Name",
+        "firstname": "Vorname"
       }
     },
     "404": {
@@ -227,7 +232,8 @@
       "cart_count": {
         "one": "{{ count }} Artikel",
         "other": "{{ count }} Artikel"
-      }
+      },
+      "my_likes": "Meine Vorlieben"
     },
     "cart": {
       "title": "Dein Warenkorb",
@@ -257,8 +263,12 @@
         "paragraph_html": "<a href=\"{{ link }}\" class=\"link underlined-link\">Logge dich ein<\/a>, damit es beim Checkout schneller geht."
       }
     },
+    "collections_grid": {
+      "find_out_more": "Mehr erfahren..."
+    },
     "footer": {
-      "payment": "Zahlungsmethoden"
+      "payment": "Zahlungsmethoden",
+      "home": "Willkommen"
     },
     "featured_blog": {
       "view_all": "Alle anzeigen",
@@ -292,6 +302,95 @@
     },
     "page": {
       "title": "Seitentitel"
+    },
+    "product_addon": {
+      "add_to_cart": "In den Warenkorb legen",
+      "summary": "Zusammenfassung",
+      "price": "Preis",
+      "title_container": {
+        "size": "Wählen Sie die Größe",
+        "matter": "Wählen Sie das Material",
+        "system": "Wählen Sie das Aufhängesystem",
+        "thickness": "Wählen Sie die Gehäusestärke",
+        "color": "Wählen Sie Rahmenfarbe",
+        "frame": "Wählen Sie den Rahmen",
+        "finishes": "Wählen Sie das Finish"
+      },
+      "info": {
+        "button_name": "Info",
+        "matter": {
+            "canvas": {
+              "title": "DIE 100%ige POLYESTER-LEINWAND: matt und strukturiert",
+              "description": "Die Leinwand bietet einen angenehmen Griff. Die Körnung des Papiers ist vor allem in den hellen Bereichen des Bildes sichtbar, während Schwarz dazu neigt, die Körnung zu verwischen. Seine Oberfläche verleiht Ihren Bildern Relief und Tiefe. Die Leinwand verleiht einen künstlerischen Touch und stattet die Bilder mit einer unglaublichen Intensität aus."
+            },
+            "aluminum": {
+              "title": "ALUMINIUM: Kontrast und Glanz",
+              "description": "Aluminium ermöglicht eine schlichte, moderne und blendfreie Präsentation. Die Farbdichte und die Kontraste sind sehr stark. Aluminium ist ein sehr widerstandsfähiges und qualitativ hochwertiges Material. Es ist unempfindlich gegen Fingerabdrücke und Feuchtigkeit. Seine Pflege ist sehr einfach. Sie können es mit einem leicht feuchten Tuch reinigen."
+            },
+            "plexiglass": {
+              "title": "ALUMINIUM + PLEXIGLAS: Elegant und transparent",
+              "description": "Unser Acryldruck + Aluminium ist eine Kombination aus zwei hochwertigen Dekorationsprodukten, die ein fesselndes visuelles Erlebnis bieten. Plexiglas ist ein steifes synthetisches Material. Sein glasähnliches Aussehen verleiht Ihren Bildern eine außergewöhnliche Tiefe und Leuchtkraft. Die Farben sind kräftig und leuchtend. Der Aluminiumträger hingegen sorgt für Stabilität und Leichtigkeit des Bildes, wobei sein silbernes Finish Eleganz und Modernität verleiht. Darüber hinaus verleiht das rahmenlose Design Ihren Bildern zusätzliche Tiefe, wodurch ein noch stärkerer visueller Eindruck entsteht und Ihr Raum geräumiger wirkt."
+            }
+        },
+        "support": {
+          "none": {
+            "title": "OHNE BEFESTIGUNGSSYSTEM",
+            "description": "Tafel allein, geliefert ohne Befestigungssystem"
+          },
+          "for_canvas": {
+            "title": "LEINWANDBEFESTIGUNG",
+            "description": "■ Von vorne nicht sichtbar<br>■ Einfach zu installieren<br><br>Hängen Sie Ihr Gemälde schnell und einfach mit unserem Leinwandmontageset auf. Unser Kit umfasst zwei verschiedene Installationsarten:<br><br>● <b>Der Sägezahnhaken:</b> Suchen Sie mit einem Meter entlang der Breite die Mitte Ihres Gemäldes und platzieren Sie Ihren Sägezahnhaken mit einem Hammer und die mitgelieferten Nägel. Alles, was Sie tun müssen, ist, Ihre Leinwand an die Wand Ihrer Wahl zu hängen.<br><br>● <b>Das Seil und die 2 dreieckigen Ringe:</b> Dieses System empfiehlt sich besonders für große Leinwände, da es die Verteilung erleichtert das Gewicht auf dem Seil. Befestigen Sie die beiden dreieckigen Ringe mit einem Schraubendreher und den mitgelieferten Schrauben in der Mitte jeder Höhe (siehe Abbildung oben). Befestigen Sie das Seil fest an jedem Ring. Alles, was Sie tun müssen, ist, Ihre Leinwand an die Wand Ihrer Wahl zu hängen."
+          },
+          "hook": {
+            "title": "HAKEN MIT KLEBESYSTEM",
+            "description": "■ Von vorne nicht sichtbar ■ Nicht für den Außenbereich geeignet<br><br>Hängen Sie Ihr Gemälde schnell und einfach mit unserem Klebehaken auf. Es besteht aus zwei Seiten, einer Seite, die an der Oberfläche des Bretts haftet, und der anderen, die den Haken bildet. Zum Anbringen entfernen Sie einfach die Schutzfolie von der Klebefläche und kleben dann den Haken in die Mitte des Bretts. Ein leichter Druck von 10 Sekunden reicht aus. Bringen Sie eine Schraube an der Wand an, Sie müssen Ihr Gemälde nur noch an der Wand Ihrer Wahl aufhängen"
+          },
+          "rails": {
+            "title": "ALUMINIUMSCHIENEN",
+            "description": "■ von vorne nicht sichtbar<br>■ 1 cm Abstand zur Wand für einen schwebenden Effekt<br><br>Die Aluminiumschiene ist die Lösung, wenn Sie Ihr Gemälde schnell und einfach aufhängen möchten. Bei Erhalt ist das System bereits auf der Platine montiert. Platzieren Sie die Dübel entsprechend der Art der Wand, an der Sie das Gemälde aufhängen möchten, und berücksichtigen Sie dabei auch das Gewicht des Gemäldes. Alles, was Sie tun müssen, ist, Ihr Gemälde an die Wand Ihrer Wahl zu hängen."
+          },
+          "spacers": {
+            "title": "ABSTANDSHALTER + LÖCHER",
+            "description": "■ die Abstandshalter sind von vorne sichtbar<br>■ schlicht und stilvoll<br><br>Die Metallabstandshalter eignen sich besonders für Aluminium- oder Plexiglasplatten. Dieses Aufhängesystem ist auf der Vorderseite des Gemäldes sichtbar. Perfekt für eine elegante und Designer-Atmosphäre, da Ihr Gemälde nur wenige Millimeter von der Wand entfernt schwebt. Zur Aufnahme der Abstandshalter wird die Platine vorab von uns gelocht. Bringen Sie für die Wandhalterung geeignete Dübel an und berücksichtigen Sie dabei den Abstand zwischen den Löchern im Gemälde. Sie müssen Ihr Gemälde nur noch an der Wand Ihrer Wahl aufhängen."
+          }
+        },
+        "thickness": {
+          "2cm": {
+            "title": "Fahrgestell 2 cm",
+            "description": "Wir verwenden einen hochwertigen, handgefertigten Holzrahmen. Der Rahmen ist mit einer Dicke von 2 cm extrem leicht und ermöglicht ein einfaches Aufhängen. Für eine schnelle Montage empfehlen wir das Leinwand-Befestigungsset."
+          },
+          "4cm": {
+            "title": "Fahrgestell 4 cm",
+            "description": "Der XL-Rahmen ist aus hochwertigem Holz gefertigt und handgefertigt. Es ist robuster und verleiht Ihrer Leinwand mehr Tiefe, um sie hervorzuheben. Wenn Sie Ihre Leinwand in einem großen Raum platzieren, ist dieses Format besonders zu empfehlen. Durch das höhere Gewicht sorgt es auch für eine bessere Stabilität in besonders belebten Räumen wie Eingangsbereichen oder Wohnzimmern. Für eine schnelle und einfache Montage empfehlen wir das Leinwand-Befestigungsset."
+          }
+        }
+      }
+    },
+    "cookie-banner": {
+      "message-1": "Unsere Kekse sind nicht essbar, aber sie machen Ihren Besuch köstlich!",
+      "message-2": "Bereit für ein erweitertes Erlebnis?",
+      "parameter": "Konfigurieren",
+      "accept": "Akzeptieren",
+      "settings": {
+        "title": "Datenschutzeinstellungen",
+        "save_button": "Einstellungen speichern",
+        "accept_button": "Akzeptiere alle",
+        "analytics": "Analytics-Datenverfolgung",
+        "marketing": "Gezielte Werbung",
+        "preferences": "Datenerfassung zur Personalisierung des Benutzererlebnisses",
+        "sale_of_data": "Datenerfassung zur Verbesserung von Produkten und Dienstleistungen"
+      }
+    },
+    "main-collection-product-grid": {
+      "card-product": {
+        "starting_at": "Aus"
+      }
+    },
+    "product_grid": {
+      "button": "Siehe Tabelle"
+    },
+    "sibling-blog-links": {
+      "complementary_blog_posts": "Ergänzende Artikel"
     }
   },
   "localization": {
@@ -423,5 +522,341 @@
       "copy_code_success": "Code erfolgreich kopiert",
       "print_gift_card": "Drucken"
     }
+  },
+  "shopify": {
+    "checkout": {
+      "stock": {
+        "unshippable_product": {
+          "header": {
+            "many": "Für %{count} Artikel ist keine Zustellung verfügbar"
+          },
+          "message": {
+            "many": "Diese Artikel werden aus deinem Warenkorb entfernt, da für deine Adresse keine Zustellmethoden verfügbar sind."
+          }
+        }
+      },
+      "order_summary": {
+        "expand_component_information": {
+          "many": "%{count} Artikel anzeigen"
+        },
+        "collapse_component_information": {
+          "many": "%{count} Artikel ausblenden"
+        },
+        "discount_discovery": {
+          "merchandise_quantity_label": {
+            "many": "%{count} Artikel"
+          }
+        },
+        "discount_title_stacking": {
+          "many": "Rabatte"
+        },
+        "discount_order_stacking": {
+          "many": "Bestellungsrabatte"
+        }
+      },
+      "shipping": {
+        "estimated_delivery_date": {
+          "many": "%{count} Werktage"
+        },
+        "other_method": {
+          "many": "%{count} andere Methoden verfügbar beginnend bei"
+        },
+        "subscription_delivery_description": {
+          "prepaid_delivery_frequency": {
+            "many": "für %{count} Zustellungen"
+          },
+          "subscription_delivery_frequency": {
+            "day": {
+              "many": "alle %{count} Tage"
+            },
+            "week": {
+              "many": "alle %{count} Wochen"
+            },
+            "month": {
+              "many": "alle %{count} Monate"
+            },
+            "year": {
+              "many": "alle %{count} Jahre"
+            }
+          },
+          "first_n_order_free": {
+            "many": "Die ersten %{count} Bestellungen sind kostenlos"
+          },
+          "free_for_first_n_order": {
+            "many": "Für die ersten %{count} Bestellungen"
+          }
+        }
+      },
+      "payment": {
+        "order_covered_by_gift_cards_notice": {
+          "many": "Deine Bestellung wird von deinen Gutscheinen abgedeckt."
+        },
+        "card_fields_unavailable_html": {
+          "many": "Zahlungen mit Kredit- und Debitkarten sind derzeit nicht möglich.<br><a href=\"%{current_url}\">Aktualisieren Sie diese Seite<\/a> oder versuchen Sie eine andere Zahlungsmethode."
+        },
+        "expired_cards_info": {
+          "many": "Es gibt %{count} abgelaufene Karten, die du anzeigen und in deinem Konto bearbeiten kannst."
+        },
+        "order_edit_banner_items_added": {
+          "many": "%{count} hinzugefügt"
+        }
+      },
+      "shipping_errors": {
+        "shipping_method_not_available_generic": {
+          "many": "Einige Artikel in deinem Warenkorb können nicht an die von dir angegebene Adresse versendet werden. Überprüfe deine Adresse, um sicherzustellen, dass alle Felder richtig eingegeben wurden, und versuche es erneut."
+        },
+        "shipping_method_not_available_updated": {
+          "many": "Mindestens einer der von dir hinzugefügten Artikel wird nicht an deinen Standort versendet. Entferne ihn vor dem Checkout, oder kontaktiere den Shop."
+        }
+      },
+      "processing": {
+        "wait": {
+          "medium": {
+            "many": "Deine Bestellung wird bearbeitet. Die geschätzte Wartezeit beträgt %{count} Minuten."
+          }
+        }
+      },
+      "thank_you": {
+        "login_reorder_link_text": {
+          "many": "diese Produkte ebenfalls kaufen"
+        },
+        "gift_card_confirmation_by_text_typ": {
+          "many": "Sie erhalten in wenigen Minuten eine SMS mit Ihren Geschenkkarten."
+        },
+        "gift_card_confirmation_by_email_typ": {
+          "many": "Du erhältst in einigen Minuten eine E-Mail mit deinen Geschenkgutscheinen."
+        },
+        "gift_card_email_title": {
+          "many": "Geschenkgutscheine wurden per E-Mail gesendet"
+        },
+        "gift_card_text_title": {
+          "many": "Geschenkgutscheine wurden per Textnachricht gesendet"
+        },
+        "gift_card_resent_confirmation": {
+          "many": "Geschenkgutscheine wurden erneut gesendet."
+        },
+        "gift_card_resend_failure": {
+          "many": "Beim erneuten Senden deiner Geschenkgutscheine ist ein Problem aufgetreten. Versuche es erneut oder wende dich an uns."
+        }
+      },
+      "order_payment_collection": {
+        "changes_summary": {
+          "added": {
+            "many": "%{count} hinzugefügt"
+          }
+        }
+      },
+      "open_graph_meta_tag": {
+        "title_with_products": {
+          "many": "%{product_name} und %{count} weitere Artikel kaufen"
+        }
+      },
+      "subscriptions": {
+        "recurring_totals_with_policies": {
+          "first_cycles": {
+            "many": "Erste %{count} Zahlungen von je %{total_price}"
+          }
+        },
+        "recurring_total_intervals": {
+          "day": {
+            "many": "%{count} Tage"
+          },
+          "week": {
+            "many": "%{count} Wochen"
+          },
+          "month": {
+            "many": "%{count} Monate"
+          },
+          "year": {
+            "many": "%{count} Jahre"
+          }
+        },
+        "recurring_totals_with_initial_order_shipping_discount_with_policies": {
+          "first_cycles": {
+            "many": ", anschließend %{count} Zahlungen über je %{total_price}"
+          }
+        }
+      },
+      "contextual_availability": {
+        "title": {
+          "many": "Nicht verfügbare Produkte"
+        },
+        "products_not_available": {
+          "many": "Diese Produkte werden aus deinem Warenkorb entfernt, weil sie in deinem Land\/deiner Region nicht verfügbar sind."
+        },
+        "all_products_in_cart_unavailable": {
+          "many": "Diese Produkte sind in deinem Land \/ deiner Region nicht verfügbar."
+        }
+      },
+      "throttle": {
+        "estimated_wait_time": {
+          "many": "Die geschätzte Wartezeit beträgt {{count}} Minuten"
+        }
+      },
+      "deliverability": {
+        "not_deliverable": {
+          "title": {
+            "many": "Für %{count} Artikel ist keine Zustellung verfügbar"
+          },
+          "message": {
+            "many": "Diese Artikel werden aus deinem Warenkorb entfernt, da für deine Adresse keine Zustellmethoden verfügbar sind."
+          }
+        }
+      },
+      "pickup_point": {
+        "paginator": {
+          "header": {
+            "many": "%{first} - %{last} von %{count} Standorten anzeigen"
+          },
+          "selected_pickup_point_label": {
+            "many": "%{pickup_point_index} Standorte von %{count}"
+          },
+          "selected_page": {
+            "many": "%{first}–%{last} Standorte von %{count}"
+          }
+        },
+        "number_of_pickup_points_near_location": {
+          "many": "%{count} Abholpunkte in der Nähe deines Standorts gefunden"
+        }
+      },
+      "local_pickup": {
+        "location_information": {
+          "many": "Es sind %{count} Shops mit verfügbarem Lagerbestand in der Nähe von %{address}"
+        },
+        "paginator": {
+          "label": {
+            "many": "%{first}–%{last} von %{count} Shops"
+          }
+        },
+        "reveal_more_label": {
+          "many": "%{count} weitere Standorte anzeigen"
+        }
+      }
+    },
+    "notices": {
+      "order": {
+        "cancel_reason": {
+          "many": "Sonstiges"
+        }
+      }
+    },
+    "page_titles": {
+      "search_results": {
+        "many": "Suche: %{count} Ergebnisse gefunden für \"%{terms}\""
+      }
+    }
+  },
+  "customer_accounts": {
+    "orders": {
+      "order_list": {
+        "items": {
+          "many": "{{count}} Artikel"
+        }
+      },
+      "order_status": {
+        "delivered_description_gift_card": {
+          "many": "Geschenkgutscheine wurden per E-Mail gesendet."
+        },
+        "gift_card_label": {
+          "many": "Geschenkgutscheine"
+        },
+        "gift_card_resend": {
+          "many": "E-Mails erneut senden"
+        },
+        "gift_card_resend_description": {
+          "many": "Falls du sie nicht erhalten hast, sende die E-Mails erneut oder"
+        },
+        "confirmed_gift_card_additional_description": {
+          "many": "Jeder Geschenkgutschein wird in einer separaten E-Mail versendet."
+        },
+        "delivered_description_gift_card_text": {
+          "many": "Geschenkgutscheine wurden per SMS gesendet."
+        },
+        "gift_card_resend_text": {
+          "many": "SMS erneut senden",
+          "other": "SMS erneut senden"
+        },
+        "gift_card_resend_description_text": {
+          "many": "Falls du sie nicht erhalten hast, sende die SMS erneut oder",
+          "other": "Falls du sie nicht erhalten hast, sende die SMS erneut oder"
+        },
+        "confirmed_gift_card_additional_description_text": {
+          "many": "Jeder Geschenkgutschein wird in einer separaten SMS versendet."
+        },
+        "gift_resend_success": {
+          "many": "Geschenkgutscheine erneut gesendet"
+        },
+        "gift_resend_failure": {
+          "many": "Beim erneuten Senden deiner Geschenkgutscheine ist ein Problem aufgetreten. Versuche es erneut oder wende dich an uns."
+        }
+      },
+      "if_not_received": {
+        "many": "Falls sie nicht erhalten wurden,"
+      }
+    },
+    "B2B": {
+      "orders": {
+        "draft_order_list": {
+          "pending_tab_accessibility_label": {
+            "pending_orders": {
+              "many": "Sie haben {{count}} Bestellungen in der Warteschlange"
+            }
+          }
+        }
+      },
+      "draft_order_details": {
+        "payment_status": {
+          "pending": {
+            "banner_overdue": {
+              "many": "Sie sind mit der Zahlung {{count}} Tage im Rückstand"
+            },
+            "banner_due": {
+              "many": "Ihre Zahlung ist in {{count}} Tagen fällig"
+            }
+          }
+        }
+      }
+    },
+    "errors": {
+      "banner_title": {
+        "many": "Es gibt {{count}} Fehler"
+      }
+    },
+    "ui_components": {
+      "autocompleteOptionsAvailable": {
+        "many": "{{count}} verfügbare Artikel"
+      },
+      "month": {
+        "many": "Monate"
+      }
+    }
+  },
+  "components": {
+    "countdown": {
+      "days": "Tage",
+      "hours": "Std.",
+      "minutes": "Protokoll",
+      "day": "Tag",
+      "hour": "Stunde",
+      "promo_begin": "Die Aktion beginnt in:",
+      "promo_remaining": "Es bleibt nur übrig:",
+      "promo_ended": "Vollendet",
+      "minute": "Minute"
+    },
+    "uploader": {
+      "errors": {
+        "wrongType": "Die Datei, die Sie importieren möchten, wird nicht akzeptiert. Es sind nur Bilder im PNG-, JPEG- oder JPG-Format erlaubt",
+        "tooLarge": "Das Foto, das Sie importieren möchten, ist zu groß. Die maximale Größe beträgt 10 MB",
+        "serverError": "Es tut uns leid, aber wir haben derzeit ein Problem. Wir tun unser Bestes, um das Problem zu beheben. Wir laden Sie ein, uns eine E-Mail zu senden, um den Prozess zu beschleunigen."
+      }
+    }
+  },
+  "cart_drawer": {
+    "keep_shopping": "Andere Produkte",
+    "more_than": "mehr als",
+    "to_get": "davon zu profitieren",
+    "add": "Hinzufügen",
+    "one_click": "An deinen Fingerspitzen!",
+    "at": " "
   }
 }

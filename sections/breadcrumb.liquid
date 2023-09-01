@@ -27,7 +27,7 @@
         assign itemListElement_names = mobile_text
         assign itemListElement_urls = mobile_url
       -%}
-      <a href="/" class="first">{{ 'sections.footer.home' | t }}</a>
+      <a href="/{% unless request.locale.primary %}{{ request.locale.iso_code }}/{% endunless %}" class="first">{{ 'sections.footer.home' | t }}</a>
         {% if template contains 'page' %}
           {%- assign itemListElement_names = itemListElement_names | append: '|,|' | append: page.title -%}
           {%- assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: page.url -%}

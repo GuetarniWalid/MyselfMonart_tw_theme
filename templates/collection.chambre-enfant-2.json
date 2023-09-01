@@ -21,7 +21,7 @@
         "image_ratio": "adapt",
         "show_secondary_image": true,
         "show_price": true,
-        "minimum_price": 4950,
+        "minimum_price": 5950,
         "enable_filtering": false,
         "filter_type": "vertical",
         "enable_sorting": false,

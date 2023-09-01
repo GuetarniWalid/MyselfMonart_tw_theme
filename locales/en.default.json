@@ -8,7 +8,7 @@
       "login_form_error": "Wrong password!",
       "login_form_submit": "Enter",
       "admin_link_html": "Are you the store owner? <a href=\"/admin\" class=\"link underlined-link\">Log in here</a>",
-      "powered_by_shopify_html": "This shop will be powered by {{ shopify }}"
+      "powered_by_shopify_html": ""
     },
     "social": {
       "alt_text": {
@@ -262,6 +262,9 @@
         "paragraph_html": "<a href=\"{{ link }}\" class=\"link underlined-link\">Log in</a> to check out faster."
       }
     },
+    "collections_grid": {
+      "find_out_more": "Find out more..."
+    },
     "cookie-banner": {
       "message-1": "Our cookies aren't edible, but they make your visit delicious!",
       "message-2": "Ready for an enhanced experience?",
@@ -318,6 +321,69 @@
     },
     "page": {
       "title": "Page title"
+    },
+    "product_addon": {
+      "add_to_cart": "Add to cart",
+      "summary": "Summary",
+      "price": "Price",
+      "title_container": {
+        "size": "Choose the Size",
+        "matter": "Choose the Matter",
+        "system": "Choose the Hanging System",
+        "thickness": "Choose the Chassis Thickness",
+        "color": "Choose Border Color",
+        "frame": "Choose the Frame",
+        "finishes": "Choose the Finishes"
+      },
+      "info": {
+        "button_name": "Info",
+        "matter": {
+            "canvas": {
+              "title": "100% POLYESTER CANVAS: matte and textured",
+              "description": "The canvas is comfortable to hold. The grain of the paper is visible mainly in the lighter areas of the image, while the blacks will tend to erase the grain. Its surface adds relief and depth to your paintings. Canvas adds an artistic touch and gives paintings an incredible intensity."
+            },
+            "aluminum": {
+              "title": "ALUMINIUM: contrast and sparkle",
+              "description": "Aluminium provides a sober, modern and reflection-free presentation. The density of the colours and the contrasts are very strong. Aluminium is a highly resistant, high-quality material. It is not sensitive to fingerprints or moisture. It's very easy to maintain. You can clean it with a slightly damp cloth."
+            },
+            "plexiglass": {
+              "title": "ALUMINIUM + PLEXIGLAS: Elegant and transparent",
+              "description": "Our acrylic + aluminium print is a combination of two top-of-the-range decorative products that offer a captivating visual experience. Plexiglas is a rigid synthetic material. Its glass-like appearance gives your pictures extraordinary depth and luminosity. The colours are bright and vibrant. The aluminium support, meanwhile, ensures that the picture is stable and light, its silver finish adding elegance and modernity. What's more, the frameless design adds extra depth to your images, creating an even stronger visual impact and making your room feel more spacious."
+            }
+        },
+        "support": {
+          "none": {
+            "title": "WITHOUT FASTENING SYSTEM",
+            "description": "Panel only, supplied without fixing system"
+          },
+          "for_canvas": {
+            "title": "CANVAS MOUNT",
+            "description": "■ Not visible from the front<br>■ Easy to install<br><br>Hang your painting quickly and simply with our canvas mounting set. Our kit includes 2 different types of installation:<br><br>● <b>The sawtooth hook:</b> Along the width, using a meter, locate the center of your painting and place your sawtooth hook on it using a hammer and the nails provided. All you have to do is hang your canvas on the wall of your choice.<br><br>● <b>The rope and the 2 triangular rings:</b> This system is particularly recommended for large canvases because it helps distribute the weight on the rope. Using a screwdriver and the screws provided, attach the 2 triangular rings to the center of each height (see image above). Tie the rope securely to each ring. All you have to do is hang your canvas on the wall of your choice."
+          },
+          "hook": {
+            "title": "HOOK WITH ADHESIVE SYSTEM",
+            "description": "■ Not visible from the front ■ Not suitable for outdoor use<br><br>Hang your painting quickly and simply using our adhesive hook. It is made up of two sides, one adhesive which sticks to the surface of the board and the other forms the hook. To install, simply remove the protective film from the adhesive surface, then stick the hook in the center of the board. A light pressure of 10 seconds is enough. Place a screw on the wall, all you have to do is hang your painting on the wall of your choice"
+          },
+          "rails": {
+            "title": "ALUMINUM TRACKS",
+            "description": "■ not visible from the front<br>■ 1 cm distance from the wall for a floating effect<br><br>The aluminum rail is the solution if you want to hang your painting quickly and easily. The system is already mounted on the board when you receive it. Place the dowels suitable for the type of wall on which you want to hang it, also taking into account the weight of the painting. All you have to do is hang your painting on the wall of your choice."
+          },
+          "spacers": {
+            "title": "SPACERS + HOLES",
+            "description": "■ the spacers are visible from the front<br>■ sleek and stylish<br><br>The metal spacers are particularly suitable for aluminum or plexiglass boards. This hanging system is visible on the front of the painting. Perfect for an elegant and designer atmosphere, your painting floats a few millimeters from the wall. The board is perforated upstream by us to accommodate the spacers. Install dowels suitable for the wall support, taking into account the distance between the holes in the painting. All you have to do is hang your painting on the wall of your choice."
+          }
+        },
+        "thickness": {
+          "2cm": {
+            "title": "Chassis 2 cm",
+            "description": "We use a high quality, handcrafted wooden frame. The frame, with a thickness of 2 cm, is extremely light which allows you to hang it easily. For quick installation, we recommend the canvas mounting kit."
+          },
+          "4cm": {
+            "title": "Chassis 4 cm",
+            "description": "The XL chassis is made of high quality wood and handcrafted. More robust, it gives more depth to your canvas in order to highlight it. If you place your canvas in a large room, this format is particularly recommended. Heavier, it also allows better stability for particularly lively spaces such as entrances or living rooms. For an easy and quick installation we recommend the canvas fixing kit."
+          }
+        }
+      }
     },
     "product_grid": {
       "button": "See the product"

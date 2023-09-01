@@ -34,7 +34,7 @@
               <h2 class="h1" id="section-collections-grid-h2-{{ forloop.index }}">{{ block.settings.collection.title }}</h2>
             {% endif %}
             {% if block.settings.paragraph != blank %}
-              <button class="pointer">En savoir plus...</button>
+              <button class="pointer">{{ "sections.collections_grid.find_out_more" | t }}</button>
             {% endif %}
           </div>
         {% endif %}

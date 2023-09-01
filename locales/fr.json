@@ -8,7 +8,7 @@
       "login_form_error": "Mot de passe incorrect !",
       "login_form_submit": "Saisir",
       "admin_link_html": "La boutique vous appartient-elle ? <a href=\"\/admin\" class=\"link underlined-link\">Se connecter ici<\/a>",
-      "powered_by_shopify_html": ""
+      "powered_by_shopify_html": "■ test visible de face<br>■ Facile d'installation<br><br>Accrochez votre tableau rapidement et simplement avec notre set de fixation pour toile. Notre kit comprend 2 types d’installation différentes:<br><br>● <b>Le crochet en dent de scie:</b> Sur la largeur, à l’aide d’un mètre, repérez le centre de votre tableau et placez-y votre crochet en dent de scie à l’aide d’un marteau et des clous fournis. Il ne vous reste plus qu'à suspendre votre toile sur le mur de votre choix.<br><br>● <b>La corde et les 2 anneaux triangulaires:</b> Ce système est particulièrement recommandé pour les grandes toiles car il permet de répartir le poids sur la corde. À l’aide d’un tournevis et des vis fournis fixez les 2 anneaux triangulaires au centre de chacune des hauteurs (voir image ci-dessus). Attachez la corde  solidement sur chaque anneau. Il ne vous reste plus qu'à suspendre votre toile sur le mur de votre choix."
     },
     "social": {
       "alt_text": {
@@ -259,6 +259,9 @@
         "paragraph_html": "<a href=\"{{ link }}\" class=\"link underlined-link\">Connectez-vous<\/a> pour payer plus vite."
       }
     },
+    "collections_grid": {
+      "find_out_more": "En savoir plus..."
+    },
     "collection_list": {
       "view_all": "Tout afficher"
     },
@@ -313,6 +316,69 @@
     },
     "page": {
       "title": "Titre de la page"
+    },
+    "product_addon": {
+      "add_to_cart": "Ajouter au panier",
+      "summary": "Résumé",
+      "price": "Prix",
+      "title_container": {
+        "size": "Choisissez la Taille",
+        "matter": "Choisissez la Matière",
+        "system": "Choisissez le Système d'accroche",
+        "thickness": "Choisissez l'Épaisseur du chassis",
+        "color": "Choisissez la Couleur de bordure",
+        "frame": "Choisissez le Cadre",
+        "finishes": "Choisissez la Finition"
+      },
+      "info": {
+        "button_name": "Info",
+        "matter": {
+            "canvas": {
+              "title": "LA TOILE 100% POLYESTER : mate et texturée",
+              "description": "La toile offre une prise en main agréable. Le grain du papier est visible principalement dans les zones claires de l’image, tandis que les noirs auront tendance à gommer le grain. Sa surface ajoute du relief et de la profondeur à vos tableaux. La toile apporte une touche artistique et dote les tableaux d’une incroyable intensité."
+            },
+            "aluminum": {
+              "title": "L'ALUMINIUM : contraste et éclat",
+              "description": "L'aluminium permet une présentation sobre, moderne et sans reflet. La densité des couleurs et les contrastes sont très forts. L'aluminium est un support très résistant et de qualitaté. Il n'est pas sensible aux traces de doigts, ni à l'humidité. Son entretien est très facile. Vous pouvez le nettoyer avec un tissu légèrement humide."
+            },
+            "plexiglass": {
+              "title": "ALUMINIUM + PLEXIGLAS : Élégant et transparent",
+              "description": "Notre impression acrylique + aluminium est une combinaison de deux produits de décoration haut de gamme qui offre une expérience visuelle captivante. Le Plexiglas est un matériau synthétique rigide. Son aspect similaire à celui du verre offre une profondeur et une luminosité extraordinaires à vos tableaux. Les couleurs sont vives et éclatantes. Le support en aluminium, quant à lui, assure la stabilité et la légèreté du tableau, sa finition argentée apportant élégance et modernité. De plus, le design sans cadre ajoute une profondeur supplémentaire à vos images, créant un impact visuel encore plus fort et rendant votre pièce plus spacieuse."
+            }
+        },
+        "support": {
+          "none": {
+            "title": "SANS SYSTÈME DE FIXATION",
+            "description": "Tableau seul, livré sans système de fixation"
+          },
+          "for_canvas": {
+            "title": "FIXATION POUR TOILE",
+            "description": "■ Non visible de face<br>■ Facile d'installation<br><br>Accrochez votre tableau rapidement et simplement avec notre set de fixation pour toile. Notre kit comprend 2 types d’installation différentes:<br><br>● <b>Le crochet en dent de scie:</b> Sur la largeur, à l’aide d’un mètre, repérez le centre de votre tableau et placez-y votre crochet en dent de scie à l’aide d’un marteau et des clous fournis. Il ne vous reste plus qu'à suspendre votre toile sur le mur de votre choix.<br><br>● <b>La corde et les 2 anneaux triangulaires:</b> Ce système est particulièrement recommandé pour les grandes toiles car il permet de répartir le poids sur la corde. À l’aide d’un tournevis et des vis fournis fixez les 2 anneaux triangulaires au centre de chacune des hauteurs (voir image ci-dessus). Attachez la corde  solidement sur chaque anneau. Il ne vous reste plus qu'à suspendre votre toile sur le mur de votre choix."
+          },
+          "hook": {
+            "title": "CROCHET AVEC SYSTÈME ADHÉSIF",
+            "description": "■ Non visible de face ■ Ne convient pas à un usage extérieur<br><br>Accrochez votre tableau rapidement et simplement grâce à notre crochet adhésif. Il est constitué de deux faces, l'une adhesive qui se colle sur la surface du tableau et l'autre forme le crochet. Pour l'installation il suffit d'enlever le film protecteur de la surface adhésive, puis de coller le crochet au centre du tableau. Une légère pression de 10 secondes suffit. Placez une vis sur le mur, il ne vous reste plus qu'à suspendre votre tableau sur le mur de votre choix"
+          },
+          "rails": {
+            "title": "RAILS EN ALUMINIUM",
+            "description": "■ non visible de face<br>■ 1 cm de distance par rapport au mur pour un effet flottant<br><br>Le rail en aluminium est la solution si vous souhaitez accrocher votre tableau rapidement et facilement. Le système est déjà monté sur tableau quand vous le recevrez. Placez les chevilles adaptées au type de mur sur lequel vous voulez l'accrocher en prenant aussi en compte le poids du tableau. Il ne vous reste plus qu'à suspendre votre tableau sur le mur de votre choix."
+          },
+          "spacers": {
+            "title": "ENTRETOISES + TROUS",
+            "description": "■ les entretoises sont visibles de face<br>■ épuré et design<br><br>Les entretoises métalliques sont particulièrement adaptées au tableau en aluminium ou en plexiglas. Ce système d'accroche est visible sur le devant du tableau. Parfait pour une ambiance élégante et design, votre tableau flotte à quelques millimètres dur mur. Le tableau est perforé en amont par nos soins pour y accueillir les entretoises. Installez des chevilles adaptées au support du mur en y reportant la distance entre les trous du tableau.Il ne vous reste plus qu'à suspendre votre tableau sur le mur de votre choix."
+          }
+        },
+        "thickness": {
+          "2cm": {
+            "title": "Châssis 2 cm",
+            "description": "Nous utilisons un châssis en bois fabriqué à la main et de qualité supérieure. Le cadre, d'une épaisseur de 2 cm, est extrêmement léger ce qui vous permet de l'accrocher facilement. Pour une installation rapide, nous vous recommandons le kit de fixation pour toile."
+          },
+          "4cm": {
+            "title": "Châssis 4 cm",
+            "description": "Le châssis XL est en bois de qualité supérieur et fabriqué à la main. Plus robuste, il donne plus de profondeur à votre toile afin de la mettre en valeur. Si vous placez votre toile dans une grande pièce ce format est particulièrement recommandé. Plus lourd, il permet aussi une meilleure stabilité pour les espaces particulièrement vivants comme les entrées ou le salon. Pour une installation facile et rapide nous vous recommandons le kit de fixation pour toile."
+          }
+        }
+      }
     },
     "product_grid": {
       "button": "Voir le tableau"

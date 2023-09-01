@@ -69,6 +69,7 @@ header-drawer {
   font-family: var(--font-body-family);
   letter-spacing: 0.06rem;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .header__inline-menu {

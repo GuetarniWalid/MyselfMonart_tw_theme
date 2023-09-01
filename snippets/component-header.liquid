@@ -154,9 +154,8 @@
           <a href="{{ routes.root_url }}" class="header__heading-link link link--text focus-inset">
             {%- if section.settings.logo_svg != blank -%}
               {{ section.settings.logo_svg }}
-            {%- else -%}
-              <span class="h2">{{ shop.name }}</span>
             {%- endif -%}
+              <span class="h2">{{ shop.name }}</span>
           </a>
         {%- endif -%}
       </h2>
@@ -169,14 +168,21 @@
         {% endif %}
         {%- if settings.enable_likes and toObfuscate and template.suffix != 'likes' -%}
             <my-likes-button>
-              <span class="list-item obfuscate likes" data-url64="{{ "/pages/" | append: settings.likes_page | base64_encode }}">
+              {% liquid
+                if request.locale.primary
+                    assign likes_page = "/pages/" | append: settings.likes_page | base64_encode
+                else
+                    assign likes_page = "/" | append: request.locale.iso_code | append: "/pages/" | append: settings.likes_page | base64_encode
+                endif
+              %}
+              <span class="list-item obfuscate likes" data-url64="{{ likes_page }}">
                 <span>{{ 'sections.header.my_likes' | t }}</span>&nbsp;&nbsp;
                 {% render 'icon-heart' %}
               </span>
             </my-likes-button>
         {%- elsif settings.enable_likes and template.suffix != 'likes' -%}
             <my-likes-button>
-              <a class="list-item" href="/pages/{{ settings.likes_page }}">
+        <a class="list-item" href="{% unless request.locale.primary %}/{{ request.locale.iso_code }}{% endunless %}/pages/{{ settings.likes_page }}">
                 <span>{{ 'sections.header.my_likes' | t }}</span>&nbsp;&nbsp;
                 {% render 'icon-heart' %}
               </a>

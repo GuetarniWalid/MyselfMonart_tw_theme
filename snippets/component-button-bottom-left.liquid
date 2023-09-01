@@ -49,11 +49,18 @@
         }
     {% endstyle %}
     {% if settings.obfuscate_likes_bottom_button %}
-        <span class="button-bottom-right obfuscate" data-url64="{{ "/pages/" | append: settings.likes_page | base64_encode }}">
+        {% liquid
+            if request.locale.primary
+                assign likes_page = "/pages/" | append: settings.likes_page | base64_encode
+            else
+                assign likes_page = "/" | append: request.locale.iso_code | append: "/pages/" | append: settings.likes_page | base64_encode
+            endif
+        %}
+        <span class="button-bottom-right obfuscate" data-url64="{{ likes_page }}">
             {% render 'icon-heart' %}
         </span>
     {% else %}
-        <a class="button-bottom-right" href="/pages/{{ settings.likes_page }}">
+        <a class="button-bottom-right" href="/{% unless request.locale.primary %}{{ request.locale.iso_code }}{% endunless %}/pages/{{ settings.likes_page }}">
             {% render 'icon-heart' %}
         </a>
     {% endif %}
@@ -138,11 +145,18 @@
         </fixed-loup>
 
         {% if settings.obfuscate_likes_bottom_button %}
-            <span class="button obfuscate" data-url64="{{ "/pages/" | append: settings.likes_page | base64_encode }}">
+            {% liquid
+                if request.locale.primary
+                    assign likes_page = "/pages/" | append: settings.likes_page | base64_encode
+                else
+                    assign likes_page = "/" | append: request.locale.iso_code | append: "/pages/" | append: settings.likes_page | base64_encode
+                endif
+            %}
+            <span class="button obfuscate" data-url64="{{ likes_page }}">
                 {% render 'icon-heart' %}
             </span>
         {% else %}
-            <a class="button" href="/pages/{{ settings.likes_page }}">
+            <a class="button" href="/{% unless request.locale.primary %}{{ request.locale.iso_code }}{% endunless %}/pages/{{ settings.likes_page }}">
                 {% render 'icon-heart' %}
             </a>
         {% endif %}

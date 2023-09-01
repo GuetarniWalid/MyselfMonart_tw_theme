@@ -429,12 +429,6 @@
         "padding_top": 36,
         "padding_bottom": 36
       }
-    },
-    "widereview-product-section": {
-      "type": "widereview-product-section",
-      "settings": {
-        "logo_aligment": "product_page_reviews"
-      }
     }
   },
   "order": [
@@ -446,7 +440,6 @@
     "b5027902-4240-44cf-8660-b6e754562c52",
     "556b5926-5cdb-4c50-a817-c79f15894cdd",
     "11956137-37cc-4134-a10b-f99541980b06",
-    "7ae13aad-330c-4fa7-94cf-fafc1c13cf60",
-    "widereview-product-section"
+    "7ae13aad-330c-4fa7-94cf-fafc1c13cf60"
   ]
 }

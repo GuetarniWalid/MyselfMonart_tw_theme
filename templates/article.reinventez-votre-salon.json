@@ -177,14 +177,14 @@
         "template--18497491665243__556a8432-4d1b-4684-9d44-adb04332a6e1-1681820260c3ce292c-0": {
           "type": "heading",
           "settings": {
-            "heading": "Chic et élégant sublimer votre salon",
+            "heading": "6 astuces pour décorer un salon avec un petit budget",
             "heading_size": "h1"
           }
         },
         "template--18497491665243__556a8432-4d1b-4684-9d44-adb04332a6e1-1681820260c3ce292c-1": {
           "type": "text",
           "settings": {
-            "text": "<p>Explorez notre blog pour des idées déco inédites qui transformeront votre salon en un espace chic et élégant ! Des astuces pour marier confort et esthétique, des conseils sur les meubles et les ambiances tendances. Plongez dans un univers raffiné et créez un intérieur qui vous ressemble !<\/p>",
+            "text": "<p>Découvrez des astuces déco inattendues pour métamorphoser votre salon sans vider votre portefeuille. De la magie des couleurs au charme des brocantes, embarquez dans une aventure créative et économique. Prêt à être ébloui<\/p>",
             "text_style": "body"
           }
         },
@@ -192,7 +192,7 @@
           "type": "button",
           "settings": {
             "button_label": "Lire la suite",
-            "button_link": "https:\/\/www.myselfmonart.com\/blogs\/tableau-salon\/chic-et-elegant-des-idees-de-decoration-pour-sublimer-votre-salon"
+            "button_link": "https:\/\/www.myselfmonart.com\/blogs\/tableau-salon\/6-astuces-pour-decorer-un-salon-avec-un-petit-budget-idee-deco-pas-chere"
           }
         }
       },
@@ -202,7 +202,7 @@
         "template--18497491665243__556a8432-4d1b-4684-9d44-adb04332a6e1-1681820260c3ce292c-2"
       ],
       "settings": {
-        "image": "shopify:\/\/shop_images\/salon-chic-astuce-decoration-interieur.jpg",
+        "image": "shopify:\/\/shop_images\/relloker-salon-budget-pas-chere.png",
         "height": "adapt",
         "desktop_image_width": "medium",
         "layout": "text_first",

@@ -110,7 +110,7 @@
       <div class="card__content">
         <div class="card__information">
           <h3 class="card__heading"{% if card_product.featured_media or settings.card_style == 'card' %} id="title-{{ section_id }}-{{ card_product.id }}"{% endif %}>
-        <a href="{% if item_product %}{{ item_product.url }}{% else %}/collections/{{ collection.handle }}/products/{{ card_product.handle }}{% endif %}" id="CardLink-{{ section_id }}-{{ card_product.id }}" class="full-unstyled-link" aria-labelledby="CardLink-{{ section_id }}-{{ card_product.id }} Badge-{{ section_id }}-{{ card_product.id }}">
+        <a href="{% if item_product %}{{ item_product.url }}{% else %}{% unless request.locale.primary %}/{{ request.locale.iso_code }}{% endunless %}/collections/{{ collection.handle }}/products/{{ card_product.handle }}{% endif %}" id="CardLink-{{ section_id }}-{{ card_product.id }}" class="full-unstyled-link" aria-labelledby="CardLink-{{ section_id }}-{{ card_product.id }} Badge-{{ section_id }}-{{ card_product.id }}">
               {{ card_product.title | escape }}<span class="icon-wrap">{% render 'icon-arrow' %}</span> 
             </a>
           </h3>

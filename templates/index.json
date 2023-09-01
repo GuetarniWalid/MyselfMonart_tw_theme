@@ -3,7 +3,7 @@
     "2b3b46e7-881c-4925-96cf-76c7ebf203c4": {
       "type": "image-banner",
       "settings": {
-        "image_desktop": "shopify:\/\/shop_images\/tableau-art-deco.jpg",
+        "image_desktop": "shopify:\/\/shop_images\/decoration-murale-salon_89e0641c-c3f8-490b-a1e0-b6a82a1e1f0e.png",
         "image_desktop_fit": "cover",
         "image_desktop_horizontal_position": "center",
         "image_desktop_vertical_position": "center",
@@ -12,7 +12,7 @@
         "content_horizontal_position_desktop": 50,
         "content_vertical_position_desktop": 100,
         "content_alignment_desktop": "left",
-        "image_mobile": "shopify:\/\/shop_images\/tableau-art-deco-telephone.jpg",
+        "image_mobile": "shopify:\/\/shop_images\/decoration-murale-tableau-africain-pour-salon.jpg",
         "image_mobile_fit": "cover",
         "image_mobile_horizontal_position": "center",
         "image_mobile_vertical_position": "center",
@@ -188,51 +188,51 @@
         "150ac81d-f4d4-4a1a-a431-e1c732d7b6a5": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-singe-au-toilette_3977da4c-d38d-4410-b722-c0b88766e3f0.jpg",
-            "title": "Tableau singe au toilette",
+            "image": "shopify:\/\/shop_images\/tableau-ballerine-fleurs.png",
+            "title": "Tableau ballerine fleur",
             "text": "",
             "link_label": "",
-            "link": "https:\/\/www.myselfmonart.com\/collections\/tableau-salon\/products\/tableau-singe-au-toilette"
+            "link": "shopify:\/\/products\/tableau-ballerine-fleur"
           }
         },
         "template--16404732051711__1aaec86d-3d6c-44d8-aaa8-716ea425a598-16665463000e3de778-2": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/Tableau-Revolver_21f7105d-82bd-4001-a645-03b36a87323b.jpg",
-            "title": "Tableau Revolver",
+            "image": "shopify:\/\/shop_images\/Tableau-macarons.png",
+            "title": "Tableau macarons",
             "text": "",
             "link_label": "",
-            "link": "https:\/\/www.myselfmonart.com\/collections\/tableau-salon\/products\/tableau-revolver"
+            "link": "shopify:\/\/products\/tableau-macarons-gourmands"
           }
         },
         "template--16404732051711__1aaec86d-3d6c-44d8-aaa8-716ea425a598-16665463000e3de778-0": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/Tabbleau-femme-africaine-nue_d25c6d6b-ca2a-48eb-8d6c-1ec4c9e9fd8a.jpg",
-            "title": "Tableau femme africaine nue",
+            "image": "shopify:\/\/shop_images\/tableau-tournesol_7e37a292-08fb-4d89-a12c-f30629996c32.png",
+            "title": "Tableau tournesol",
             "text": "",
             "link_label": "",
-            "link": "https:\/\/www.myselfmonart.com\/products\/tableau-femme-africaine-nue?_pos=1&_sid=c0ad0c193&_ss=r"
+            "link": "shopify:\/\/products\/tableau-tournesol-rayonnant"
           }
         },
         "template--16404732051711__1aaec86d-3d6c-44d8-aaa8-716ea425a598-16665463000e3de778-1": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-dique-vinyle_30f06eff-6539-4b7f-86db-a5afec1c7631.png",
-            "title": "Tableau disque vinyle",
+            "image": "shopify:\/\/shop_images\/Tableau-decoratif-Femme-dans-le-desert.jpg",
+            "title": "Tableau désert",
             "text": "",
             "link_label": "",
-            "link": "https:\/\/www.myselfmonart.com\/collections\/tableau-salon\/products\/tableau-disque-vinyle"
+            "link": "shopify:\/\/products\/tableau-femme-africaine-dans-le-desert"
           }
         },
         "46f6a2c1-70af-496f-8a66-1f51ae198f52": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tabeau-jaune-velo_0ceb92fb-fca2-4331-9341-fbe08c2ca6ee.jpg",
-            "title": "Tableau bicyclette",
+            "image": "shopify:\/\/shop_images\/TABLEAU-PORTRAIT-AFRICAIN.jpg",
+            "title": "Tableau femme africaine",
             "text": "",
             "link_label": "",
-            "link": "https:\/\/www.myselfmonart.com\/collections\/tableau-salon\/products\/tableau-bicyclette"
+            "link": "shopify:\/\/products\/tableau-portrait-femme-africaine-1"
           }
         }
       },
