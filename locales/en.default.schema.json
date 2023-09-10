@@ -1882,10 +1882,6 @@
         "show_price": {
           "label": "Show price"
         },
-        "minimum_price": {
-          "label": "Minimum price",
-          "info": "The price to be indicated must be without commas and with cents. Example: 1999 for $19.99"
-        },
         "show_secondary_image": {
           "label": "Show second image on hover"
         },

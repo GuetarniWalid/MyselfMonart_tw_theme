@@ -114,7 +114,12 @@
               {{ card_product.title | escape }}<span class="icon-wrap">{% render 'icon-arrow' %}</span> 
             </a>
           </h3>
-          <p class="price">{{ "sections.main-collection-product-grid.card-product.starting_at" | t }} <strong>{{ section.settings.minimum_price | money }}</strong></p>
+          <p class="price">
+            {{ "sections.main-collection-product-grid.card-product.starting_at" | t }} 
+            <strong>
+              {{ card_product.price_min | money }}
+            </strong>
+          </p>
 
         </div>
         {% unless hide_second_quick_add_button %}
