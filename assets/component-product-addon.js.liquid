@@ -162,6 +162,7 @@ class SummaryAddon extends HTMLElement {
   constructor() {
     super();
     this.template = this.querySelector('template.line');
+    this.currencySymbol = this.dataset.currencySymbol;
   }
 
   changeDatas(input, price) {
@@ -175,16 +176,16 @@ class SummaryAddon extends HTMLElement {
   }
 
   changeLinePrice(input, price) {
-    this.querySelector(`.${input.name} > span:last-child`).innerHTML = parseInt(price) ? `€${this.formatPrice(price)}` : '€0,00';
+    this.querySelector(`.${input.name} > span:last-child`).innerHTML = parseInt(price) ? `${this.currencySymbol}${this.formatPrice(price)}` : `${this.currencySymbol}0,00`;
   }
 
   calculateTotalPrice() {
     let price = 0;
     this.querySelectorAll('p.line-item > span:last-child').forEach(span => {
-      const priceString = span.innerHTML.replace('€', '').replace(',', '');
+      const priceString = span.innerHTML.replace(this.currencySymbol, '').replace(',', '').replace('.', '')
       price += parseInt(priceString);
     });
-    this.querySelector('.final-price').innerHTML = '€' + (price / 100).toFixed(2);
+    this.querySelector('.final-price').innerHTML = this.currencySymbol + (price / 100).toFixed(2);
   }
 
   formatPrice(price) {

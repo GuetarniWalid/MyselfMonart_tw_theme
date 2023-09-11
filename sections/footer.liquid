@@ -4,6 +4,14 @@
   class LocalizationForm extends HTMLElement {
     constructor() {
       super();
+      const availableCountries = this.dataset.availableCountries?.trim()
+      if(availableCountries) {
+        this.localeByCurency = {}
+        availableCountries.split(' ').forEach(item => {
+          const [currency, localeCode] = item.split(',')
+          this.localeByCurency[currency] = localeCode
+        })
+      }
       this.elements = {
         input: this.querySelector('input[name="locale_code"], input[name="country_code"]'),
         button: this.querySelector('button'),
@@ -30,8 +38,10 @@
 
     onItemClick(event) {
       event.preventDefault();
+      if(event.currentTarget.getAttribute('aria-disabled') === 'true') return;
       const form = this.querySelector('form');
-      this.elements.input.value = event.currentTarget.dataset.value;
+      if(this.localeByCurency) this.elements.input.value = this.localeByCurency[event.currentTarget.dataset.value];
+      else this.elements.input.value = event.currentTarget.dataset.value;
       if (form) form.submit();
     }
 

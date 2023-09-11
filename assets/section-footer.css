@@ -204,8 +204,26 @@ footer .footer-block.grid__item:first-child {
   flex-direction: row;
   justify-content: center;
   align-content: center;
-  flex-wrap: wrap;
+  gap: 20px;
   padding: 1rem 1rem 0;
+}
+
+.footer__localization .localization-selector.localization-form__select {
+  background: var(--text-color);
+}
+
+.footer__localization .localization-selector.localization-form__select::after {
+  content: none;
+}
+
+.footer__localization .localization-selector.localization-form__select,
+.footer__localization #FooterLanguageList a,
+  .footer__localization #FooterCountryList a {
+  color: rgb(var(--color-foreground));
+}
+
+.footer .footer__localization a.disabled {
+  background: rgba(var(--color-foreground), 0.09);
 }
 
 .footer__localization:empty {
@@ -233,7 +251,8 @@ footer .footer-block.grid__item:first-child {
   flex-grow: 1;
 }
 
-.footer__localization h2 {
+.footer__localization h2,
+.footer .footer__localization h3 {
   margin: 1rem 1rem 0.5rem;
   color: var(--text-color);
 }

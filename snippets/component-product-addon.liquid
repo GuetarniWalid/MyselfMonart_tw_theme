@@ -49,12 +49,10 @@
     assign support_info_images = "sans-fixation.jpg,decoration-murale-corde.jpg,support_crochet.jpg,decoration_murale_RAIL-2.jpg,support_entretoise_mur.jpg" | split: ','
 
     assign matter_by_default = product.first_available_variant.option2
-    assign suppot_by_default = product.first_available_variant.option3
-    assign default_size_variants = product.variants | where: "option2", matter_by_default | where: "option3", suppot_by_default
-    assign default_matter_variants = product.variants | where: "option1", default_size_variants.first.option1 | where: "option3", suppot_by_default
-    comment
-        default_support_variants = "aucun:0,set:6,crochet:8,rails:15,entretoise:30"
-    endcomment
+    assign support_by_default = product.first_available_variant.option3
+
+    assign default_size_variants = product.variants | where: "option2", matter_by_default | where: "option3", support_by_default
+    assign default_matter_variants = product.variants | where: "option1", default_size_variants.first.option1 | where: "option3", support_by_default
     assign default_support_variants = "0,600,800,1500,3000" | split: ','
     -%}
 
@@ -100,7 +98,7 @@
                                 </div>
                             </div>
                         </painting-settings>
-                        <summary-addon>
+                        <summary-addon data-currency-symbol="{{ cart.currency.symbol }}">
                             <template class="line">
                                 <p class="line-item">
                                     <span>
@@ -146,7 +144,7 @@
 
                     {%- comment -%} Main product's variant part {%- endcomment -%}
                     {% liquid
-                        assign variants_with_default_support = product.variants | where: "option3", suppot_by_default
+                        assign variants_with_default_support = product.variants | where: "option3", support_by_default
                         assign size_list = variants_with_default_support | map: 'option1' | uniq
 
                         assign array_size_matter_price = "["
@@ -382,7 +380,7 @@
                         </template>
                     {%- endfor -%}
 
-                    <summary-addon>
+                    <summary-addon data-currency-symbol="{{ cart.currency.symbol }}">
                         <template class="line">
                             <p class="line-item">
                                 <span>
