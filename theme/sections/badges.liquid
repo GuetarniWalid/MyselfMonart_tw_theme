@@ -1,0 +1,179 @@
+{%- if section.settings.title != blank -%}
+  <h2 class="text-center mb-16">{{ section.settings.title }}</h2>
+{%- endif -%}
+<div class="grid grid-cols-{{ section.settings.nb_columns_on_mobile }} md:grid-cols-{{ section.settings.nb_columns_on_computer }} gap-16 mx-4">
+  {%- for block in section.blocks -%}
+    <div>
+      {% case block.type %}
+        {%- when "svg_block" -%}
+          <div class="mx-auto flex justify-center items-center text-5xl mb-7{% if block.settings.background_plus_border %} border border-main rounded-full w-28 h-28 bg-main/5{% endif %}">
+            {% style %}
+              .badge-svg-{{ forloop.index }} svg {
+                width: {{ block.settings.logo_size }}px;
+                height: {{ block.settings.logo_size }}px;
+              }
+            {% endstyle %} 
+            {%- if block.settings.badge_logo == blank -%}
+              <span class="badge-svg-{{ forloop.index }}">{%- render "icon-truck-full" -%}</span>
+            {%- else -%}
+              <span class="badge-svg-{{ forloop.index }}">{{ block.settings.badge_logo }}</span>
+            {%- endif -%}
+          </div>
+        {%- when "number_block" -%}
+          <div class="mx-auto flex justify-center items-center border border-main rounded-full w-28 h-28 bg-main/5 text-5xl mb-7">
+            {{ block.settings.number }}
+          </div>
+        {% endcase %}
+          {%- if block.settings.heading != blank -%}
+            <h3 class="text-xl mb-4 text-center">{{ block.settings.heading }}</h3>
+          {%- endif -%}
+          {%- if block.settings.text != blank -%}
+            <p class="text-lg leading-relaxed px-2 mx-auto max-w-[450px]">{{ block.settings.text }}</p>
+          {%- endif -%}
+    </div>
+  {%- endfor -%}
+</div>
+
+{% schema %}
+{
+  "name": "BADGES",
+  "tag": "section",
+  "class": "page-width my-12",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:sections.badges.settings.title.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.badges.headings.columns_settings"
+    },
+    {
+      "type": "select",
+      "id": "nb_columns_on_computer",
+      "label": "t:sections.badges.settings.nb_columns_on_computer.label",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "select",
+      "id": "nb_columns_on_mobile",
+      "label": "t:sections.badges.settings.nb_columns_on_mobile.label",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "svg_block",
+      "name": "t:sections.badges.blocks.svg_block.name",
+      "settings": [
+        {
+          "type": "html",
+          "id": "badge_logo",
+          "label": "Logo",
+          "info": "t:sections.badges.blocks.svg_block.settings.logo.info"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:sections.badges.blocks.svg_block.settings.title.label",
+          "default": "Badge title"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "t:sections.badges.blocks.svg_block.settings.text.label",
+          "default": "Lorem ipsum dolor sit amet, consectetur adipisicing elit."
+        },
+        {
+          "type": "range",
+          "id": "logo_size",
+          "min": 40,
+          "max": 80,
+          "step": 5,
+          "unit": "px",
+          "label": "t:sections.badges.blocks.svg_block.settings.logo_size.label",
+          "default": 45
+        },
+        {
+          "type": "checkbox",
+          "id": "background_plus_border",
+          "label": "t:sections.badges.blocks.svg_block.settings.background_plus_border.label",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "number_block",
+      "name": "t:sections.badges.blocks.number_block.name",
+      "settings": [
+        {
+          "type": "number",
+          "id": "number",
+          "label": "t:sections.badges.blocks.number_block.settings.number.label",
+          "default": 1
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:sections.badges.blocks.svg_block.settings.title.label",
+          "default": "Badge title"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "t:sections.badges.blocks.svg_block.settings.text.label",
+          "default": "Lorem ipsum dolor sit amet, consectetur adipisicing elit."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Badges",
+      "blocks": [
+        {
+          "type": "svg_block"
+        },
+        {
+          "type": "svg_block"
+        },
+        {
+          "type": "svg_block"
+        },
+        {
+          "type": "svg_block"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

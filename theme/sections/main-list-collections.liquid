@@ -1,0 +1,95 @@
+<div>
+  <h1 class="mt-10">{{ section.settings.title | escape }}</h1>
+
+  {%- liquid
+    case section.settings.sort
+      when 'products_high' or 'products_low'
+        assign collections = collections | sort: 'all_products_count'
+      when 'date' or 'date_reversed'
+        assign collections = collections | sort: 'published_at'
+    endcase
+
+    if section.settings.sort == 'products_high' or section.settings.sort == 'date_reversed' or section.settings.sort == 'alphabetical_reversed'
+      assign collections = collections | reverse
+    endif
+  -%}
+  <ul role="list" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 py-6">
+    {%- for collection in collections -%}
+      <li class="group relative max-w-[350px] text-center pb-2 flex flex-col md:max-w-none">
+        {%- if collection.featured_image -%}
+          <div class="cursor-pointer h-max grow">
+            <img
+              srcset="{%- if collection.featured_image.width >= 300 -%}{{ collection.featured_image | image_url: width: 300 }} 300w,{%- endif -%}
+              {%- if collection.featured_image.width >= 350 -%}{{ collection.featured_image | image_url: width: 350 }} 350w,{%- endif -%}"
+              src="{{ collection.featured_image | image_url: width: 500 }}"
+              sizes="(max-width: 356px) 300px, 350px"
+              alt="{{ collection.featured_image.alt }}"
+              width="350"
+              height="auto"
+              loading="lazy"
+              class="skeleton w-full h-full object-cover"
+            >
+          </div>
+          <h3 class="text-xl inline-block mx-auto truncate text-ellipsis w-full py-6 grow-0">
+            <a href="{{ collection.url }}" class="after:absolute after:inset-0">
+              {%- if collection.title != blank -%}
+                {{- collection.title | escape -}}
+              {%- endif -%}
+              <span>{% render 'tw-icon-arrow' %}</span>
+            </a>
+          </h3>
+        {% else %}
+          {% assign count = forloop.index0 | modulo: 6 |  plus: 1 %}
+          {{  'collection-' |  append: count | placeholder_svg_tag: 'w-full h-full bg-gray-200' }}
+        {% endif %}
+      </li>
+    {%- endfor -%}
+  </ul>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.main-list-collections.name",
+  "class": "page-width px-4",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:sections.main-list-collections.settings.title.label",
+      "default": "Collections"
+    },
+    {
+      "type": "select",
+      "id": "sort",
+      "options": [
+        {
+          "value": "alphabetical",
+          "label": "t:sections.main-list-collections.settings.sort.options__1.label"
+        },
+        {
+          "value": "alphabetical_reversed",
+          "label": "t:sections.main-list-collections.settings.sort.options__2.label"
+        },
+        {
+          "value": "date_reversed",
+          "label": "t:sections.main-list-collections.settings.sort.options__3.label"
+        },
+        {
+          "value": "date",
+          "label": "t:sections.main-list-collections.settings.sort.options__4.label"
+        },
+        {
+          "value": "products_high",
+          "label": "t:sections.main-list-collections.settings.sort.options__5.label"
+        },
+        {
+          "value": "products_low",
+          "label": "t:sections.main-list-collections.settings.sort.options__6.label"
+        }
+      ],
+      "default": "alphabetical",
+      "label": "t:sections.main-list-collections.settings.sort.label"
+    }
+  ]
+}
+{% endschema %}

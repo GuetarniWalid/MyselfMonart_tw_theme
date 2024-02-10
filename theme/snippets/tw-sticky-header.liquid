@@ -1,0 +1,70 @@
+<sticky-header class="bg-secondary py-4 px-7 flex items-center justify-center md:justify-between border-b border-solid border-main relative shadow-3xl">
+  <h2 class="header__heading cursor-pointer inline-flex items-center obfuscate translate-x-10 md:translate-x-0 text-2xl sm:text-3xl" data-url64="Lw==">
+    {% render 'tw-icon-logo-round' %}
+    <span class="ml-3 hidden xs:inline">MyselfMonArt</span>
+  </h2>
+  
+  <div class="mr-[15%]">
+    <details class="inline-block h-full">
+      <summary class="group menu-opener list-none cursor-pointer">
+        <span class="hidden md:inline-block">{{ "tw.header.open_menu" | t }} &nbsp;{% render 'tw-icon-caret' %}</span>
+        <span class="group-focus-visible:border-2 group-focus-visible:border-main rounded mobile-menu md:hidden absolute left-5 top-1/2 -translate-y-1/2">
+          <span class="hamburger" aria-hidden="false">{% render 'tw-icon-hamburger' %}</span>
+          <span class="close hidden" aria-hidden="true">{% render 'tw-icon-close' %}</span>
+        </span>
+      </summary>
+      <nav class="bg-secondary absolute bottom-0 left-0 right-0 border-t border-solid border-main close-nav transition-all duration-150 -z-10 h-[calc(100vh-80px)] md:h-fit overflow-y-auto scrollbar grid grid-rows-[1fr_auto]" role="dialog" aria-modal="true" aria-label="{{ "tw.header.accessibility.navigation" | t }}">
+        <ul class="py-8 px-5 md:grid md:grid-cols-3 gap-y-3 relative">
+          {% for block in section.blocks %}
+            {% if block.type == "collection_only" %}
+              <li class="obfuscate flex items-center gap-3 hover:bg-main/5 p-3 rounded-lg cursor-pointer" data-url64="{{ block.settings.collection.url | base64_encode }}" tabindex="0">
+                {% if block.settings.collection.featured_image != blank %}
+                  {{ block.settings.collection.featured_image | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: block.settings.collection.featured_image.alt,loading: 'lazy', class: 'rounded-md' }}
+                {% endif %}
+                {{ block.settings.collection.title | escape }}
+              </li>
+            {% else %}
+              <li class="details-wrapper group/one hover:bg-main/5 p-3 rounded-lg cursor-pointer">
+                <details>
+                  <summary class="list-none flex items-center gap-3">
+                    {% if block.settings.product.images[1] != blank %}
+                      {{ block.settings.product.images[1] | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: block.settings.product.images[1].alt, loading: 'lazy', class: 'rounded-md' }}
+                    {% endif %}
+                    {{ block.settings.title | escape }}
+                    {% render 'tw-icon-arrow', group_one: true %}
+                  </summary>
+                  <div class="absolute inset-0 bg-secondary py-8 px-5 transition-all duration-150 translate-x-full">
+                    <h3 class="group bg-main/5 cursor-pointer py-2 px-4 rounded-md mb-2" tabindex="0" role="button" aria-label="{{ "tw.header.back" | t }}">
+                      <span class="mr-2">{% render 'tw-icon-arrow', direction: "left" %}</span>
+                      {{ block.settings.title }}
+                    </h3>
+                    <ul class="md:grid md:grid-cols-3 gap-y-3 ">
+                      {% for collection in block.settings.child_collection_list %}
+                        <li class="obfuscate flex items-center gap-3 hover:bg-main/5 p-3 rounded-lg cursor-pointer" data-url64="{{ collection.url | base64_encode }}" tabindex="0">
+                          {% if collection.featured_image != blank %}
+                            {{ collection.featured_image | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: collection.featured_image.alt, loading: 'lazy', class: 'rounded-md' }}
+                          {% endif %}
+                          {{ collection.title | escape }}
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                </details>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+        <div class="pb-16 pt-6 bg-main text-secondary">
+          {% render 'tw-list-social' %}
+        </div>
+      </nav>
+    </details>
+    <span class="obfuscate ml-6 cursor-pointer" data-url64="{{ pages["mes-j-aimes"].url | base64_encode }}">
+      <span class="hidden md:inline-block">{{ "tw.header.my_likes" | t }} &nbsp;{% render 'tw-icon-heart' %}</span>
+    </span>
+  </div>
+  
+  <button id="cart-button" class="absolute right-[5%] bottom-0 translate-y-1/2 bg-secondary border border-solid border-main w-16 h-[45px] xs:w-20 xs:h-[50px] rounded-[50px] flex justify-center items-center transition-all duration-75" role="button" aria-label="{{ "tw.header.open_cart" | t }}">
+    {% render 'tw-icon-bag' %}
+  </button>
+</sticky-header>

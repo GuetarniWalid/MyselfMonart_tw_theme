@@ -1,0 +1,52 @@
+{% comment %}
+  Renders list social obfuscated or not.
+
+    Usage:
+    {% render 'tw-list-social', balise: 'a' %}
+{% endcomment %}
+
+{% liquid
+  if balise == 'a'
+    assign balise = 'a'
+  else
+    assign balise = 'span'
+  endif
+%}
+
+<ul class="flex px-6 gap-5" role="list">
+  {%- if settings.social_facebook_link != blank -%}
+    <li>
+      {% render 'tw-social-link-start', network: settings.social_facebook_link, balise: balise %}
+        {% render 'icon-facebook' %}
+      {% render 'tw-link-end', balise: balise %}
+    </li>
+  {%- endif -%}
+  {%- if settings.social_pinterest_link != blank -%}
+    <li>
+      {% render 'tw-social-link-start', network: settings.social_pinterest_link, balise: balise %}
+        {% render 'icon-pinterest' %}
+      {% render 'tw-link-end', balise: balise %}
+    </li>
+  {%- endif -%}
+  {%- if settings.social_instagram_link != blank -%}
+    <li>
+      {% render 'tw-social-link-start', network: settings.social_instagram_link, balise: balise %}
+        {% render 'icon-instagram' %}
+      {% render 'tw-link-end', balise: balise %}
+    </li>
+  {%- endif -%}
+  {%- if settings.social_tiktok_link != blank -%}
+    <li>
+      {% render 'tw-social-link-start', network: settings.social_tiktok_link, balise: balise %}
+        {% render 'icon-tiktok' %}
+      {% render 'tw-link-end', balise: balise %}
+    </li>
+  {%- endif -%}
+  {%- if settings.social_youtube_link != blank -%}
+    <li>
+      {% render 'tw-social-link-start', network: settings.social_youtube_link, balise: balise %}
+        {% render 'icon-youtube' %}
+      {% render 'tw-link-end', balise: balise %}
+    </li>
+  {%- endif -%}
+</ul>

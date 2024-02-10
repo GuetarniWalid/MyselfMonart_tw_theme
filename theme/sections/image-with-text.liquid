@@ -1,0 +1,88 @@
+<blob-shape-media>
+  <div class="px-4 flex gap-12 md:gap-5 flex-col {% if section.settings.layout == "text_first" %}md:flex-row-reverse{% else %}md:flex-row{% endif %}">
+    <div class="{% if section.settings.enable_blob %}blob{% endif %} w-full md:w-1/2 max-w-[600px] mx-auto overflow-hidden transition-all duration-200">
+      {%- if section.settings.image != blank -%}
+        <img
+          srcset="{%- if section.settings.image.width >= 165 -%}{{ section.settings.image | image_url: width: 165 }} 165w,{%- endif -%}
+            {%- if section.settings.image.width >= 360 -%}{{ section.settings.image | image_url: width: 360 }} 360w,{%- endif -%}
+            {%- if section.settings.image.width >= 480 -%}{{ section.settings.image | image_url: width: 480 }} 480w,{%- endif -%}
+            {%- if section.settings.image.width >= 600 -%}{{ section.settings.image | image_url: width: 600 }} 600w,{%- endif -%}"
+            src="{{ section.settings.image | image_url: width: 600 }}"
+            sizes="(max-width: 767px) 100vw, 50vw"
+            alt="{{ section.settings.image.alt | escape }}"
+            loading="lazy"
+            width="{{ section.settings.image.width }}"
+            height="auto"
+            class="skeleton w-full h-full object-cover">
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+      {%- endif -%}
+    </div>
+    <div class="flex flex-col justify-center w-full md:w-1/2 px-6 lg:px-24 max-w-[600px] mx-auto">
+      <h2 class="text-4xl lg:text-5xl mb-6">{{ section.settings.title }}</h2>
+      <div class="text-lg">{{ section.settings.description }}</div>
+    </div>
+  </div>
+</blob-shape-media>
+
+{% if section.settings.enable_blob %}
+  <script src="{{ 'component-image-with-text.js' | asset_url }}" defer="defer"></script> 
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:sections.image-with-text.name",
+  "class": "page-width my-20",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.image-with-text.settings.image.label"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:sections.image-with-text.settings.title.label",
+      "default": "Title"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "t:sections.image-with-text.settings.description.label",
+      "default": "Description ..."
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        {
+          "value": "image_first",
+          "label": "t:sections.image-with-text.settings.layout.options__1.label"
+        },
+        {
+          "value": "text_first",
+          "label": "t:sections.image-with-text.settings.layout.options__2.label"
+        }
+      ],
+      "default": "image_first",
+      "label": "t:sections.image-with-text.settings.layout.label",
+      "info": "t:sections.image-with-text.settings.layout.info"
+    },
+    {
+      "type": "header",
+      "content": "Blob"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_blob",
+      "label": "t:sections.image-with-text.settings.enable_blob.label",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.image-with-text.presets.name"
+    }
+  ]
+}
+{% endschema %}

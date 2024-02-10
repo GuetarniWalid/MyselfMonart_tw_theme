@@ -1,0 +1,40 @@
+{%- liquid
+    assign first_handle = article.handle | split: '/' | first
+    assign same_articles = blogs[first_handle].articles
+    assign parent_article = article.metafields.firstBlogLink.blogParent
+-%}
+
+{%- assign is_empty = true -%}
+<h3 class="my-6">{{ 'sections.sibling-blog-links.complementary_blog_posts' | t }} :</h3>
+<ul class="list-disc px-10">
+    {% for same_article in same_articles %}
+      {%- if same_article.metafields.firstBlogLink.parentCollection == blank and article.handle != same_article.handle and same_article.metafields.firstBlogLink.blogParent == parent_article -%}
+        {%- assign is_empty = false -%}
+          <li class="my-3">
+            <a href="{{ same_article.url }}" class="relative after:bg-main/10 after:absolute after:top-0 after:bottom-0 after:-right-1 after:-left-1 after:-skew-x-12 inline-block">{{ same_article.title }}</a>
+          </li>      
+      {%- elsif article.metafields.firstBlogLink.parentCollection != blank and article.handle != same_article.handle and article.metafields.firstBlogLink.parentCollection.value.id == same_article.metafields.firstBlogLink.parentCollection.value.id -%}
+        {%- assign is_empty = false -%}
+          <li class="my-3">
+            <a href="{{ same_article.url }}" class="relative after:bg-main/10 after:absolute after:top-0 after:bottom-0 after:-right-2 after:-left-2 after:-skew-x-12 inline-block">{{ same_article.title }}</a>
+          </li> 
+      {%- endif -%}
+    {% endfor %}
+</ul>
+
+{% schema %}
+{
+  "name": "t:sections.sibling-blog-links.name",
+  "class": "page-width",
+  "tag": "div",
+  "limit": 1,
+  "templates": [
+    "article"
+  ],
+  "presets": [
+    {
+      "name": "t:sections.sibling-blog-links.name"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,122 @@
+{%- unless section.settings.title == blank -%}
+  <h2 class="py-6">{{ section.settings.title | escape }}</h2>
+{%- endunless -%}
+
+<snap-carrousel>
+<ul role="list" class="component-carroussel flex gap-4 overflow-x-auto snap-mandatory snap-x scroll-smooth scrollbar py-6 sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4" tabindex="-1">
+  {%- for block in section.blocks -%}
+    <li class="group relative max-w-[350px] shrink-0 text-center snap-start pb-2 flex flex-col md:max-w-none">
+      {%- if block.settings.product.images[1] != blank -%}
+        <div class="cursor-pointer max-h-[350px] grow">
+          <img
+            srcset="{%- if block.settings.product.images[1].width >= 300 -%}{{ block.settings.product.images[1] | image_url: width: 300 }} 300w,{%- endif -%}
+            {%- if block.settings.product.images[1].width >= 350 -%}{{ block.settings.product.images[1] | image_url: width: 350 }} 350w,{%- endif -%}"
+            src="{{ block.settings.product.images[1] | image_url: width: 500 }}"
+            sizes="(max-width: 356px) 300px, 350px"
+            alt="{{ block.settings.product.images[1].alt }}"
+            width="350"
+            height="auto"
+            loading="lazy"
+            class="skeleton w-full h-full object-cover"
+          >
+        </div>
+        <h3 class="text-xl inline-block mx-auto truncate text-ellipsis w-full py-6 grow-0">
+          <a href="{{ block.settings.product.url }}" class="after:absolute after:inset-0" tabindex="0">
+            {%- if block.settings.product.title != blank -%}
+              {{- block.settings.product.title | escape -}}
+            {%- endif -%}
+            <span>{% render 'tw-icon-arrow' %}</span>
+          </a>
+        </h3>
+      {% else %}
+        {% assign count = forloop.index0 | modulo: 6 |  plus: 1 %}
+        {{  'product-' |  append: count | placeholder_svg_tag: 'w-full h-full bg-gray-200' }}
+      {% endif %}
+    </li>
+  {%- endfor -%}
+</ul>
+</snap-carrousel>
+
+{% if section.settings.button_text != blank %}
+  <div class="text-center mt-6">
+    {% if section.settings.to_obfuscate %}
+      <button data-url64="{{ section.settings.button_link | base64_encode }}" class="obfuscate border-2 border-main py-3 px-6 rounded-md mx-auto inline-block bg-main/5 hover:bg-main/10 transition-all duration-100 w-full xs:w-auto">
+        {{ section.settings.button_text | escape }}
+      </button>
+    {% else %}
+      <a class="border-2 border-main py-3 px-9 rounded-md mx-auto inline-block bg-main/5 hover:bg-main/10 transition-all duration-100 w-full xs:w-auto"
+      href="{{ section.settings.button_link }}">
+        {{ section.settings.button_text | escape }}
+      </a>
+    {% endif %}
+  </div>
+{% endif %}
+
+<script src="{{ 'component-carrousel.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+"name": "t:sections.product-list.name",
+"tag": "section",
+"class": "page-width px-4 my-16",
+"max_blocks": 15,
+"settings": [
+  {
+    "type": "text",
+    "id": "title",
+    "default": "Products",
+    "label": "t:sections.product-list.settings.title.label"
+  },
+  {
+    "type": "header",
+    "content": "t:sections.product-list.headings.button.content"
+  },
+  {
+    "type": "text",
+    "id": "button_text",
+    "default": "See all products",
+    "label": "t:sections.product-list.settings.button_text.label"
+  },
+  {
+    "type": "url",
+    "id": "button_link",
+    "label": "t:sections.product-list.settings.button_link.label"
+  },
+  {
+    "type": "checkbox",
+    "id": "to_obfuscate",
+    "label": "t:sections.product-list.settings.to_obfuscate.label",
+    "default": true
+  }
+],
+"blocks": [
+  {
+    "type": "featured_product",
+    "name": "t:sections.product-list.blocks.featured_product.name",
+    "settings": [
+      {
+        "type": "product",
+        "id": "product",
+        "label": "t:sections.product-list.blocks.featured_product.settings.product.label"
+      }
+    ]
+  }
+],
+"presets": [
+  {
+    "name": "t:sections.product-list.presets.name",
+    "blocks": [
+      {
+        "type": "featured_product"
+      },
+      {
+        "type": "featured_product"
+      },
+      {
+        "type": "featured_product"
+      }
+    ]
+  }
+]
+}
+{% endschema %}

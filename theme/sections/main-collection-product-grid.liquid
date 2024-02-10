@@ -1,0 +1,67 @@
+{%- paginate collection.products by 24 -%}
+  {%- if collection.products.size == 0 -%} 
+    <h2 class="my-40 text-center">
+      {{ 'tw.main-collection-product-grid.empty' | t }}
+    </h2>
+  {%- else -%}
+    <div>
+      {%- if paginate.pages > 1 -%}
+        <infinite-scroll-storage data-page="{{ paginate.current_page }}">
+          <infinite-scroll id="infinite-scroll-{{ collection.id }}-{{ paginate.current_page }}" data-pages="{{ paginate.pages }}" data-page="{{ paginate.current_page }}" data-section-id="{{ section.id }}" data-paginate-previous-url="{{ paginate.previous.url }}" data-paginate-next-url="{{ paginate.next.url }}">
+            <ul id="product-grid" data-id="{{ section.id }}" class="grid sm:grid-cols-2 gap-3 lg:grid-cols-3 pb-3">
+              {%- for product in collection.products -%}
+                {% assign lazy_load = false %}
+                {%- if forloop.index > 2 -%}
+                  {%- assign lazy_load = true -%}
+                {%- endif -%}
+                <li id="{{ product.id }}" class="relative group border-main border-1 h-full">
+                  {% render 'card-product',
+                    product: product,
+                    show_secondary_image: section.settings.show_secondary_image,
+                    lazy_load: lazy_load,
+                    section_id: section.id,
+                  %}
+                </li>
+              {%- endfor -%}
+            </ul>
+          </infinite-scroll>
+        </infinite-scroll-storage>
+        {% render 'pagination', paginate: paginate, anchor: '' %}
+      {%- else -%}
+        <ul id="product-grid" data-id="{{ section.id }}" class="grid sm:grid-cols-2 gap-3 lg:grid-cols-3 pb-3 mb-14">
+          {%- for product in collection.products -%}
+            {% assign lazy_load = false %}
+            {%- if forloop.index > 2 -%}
+              {%- assign lazy_load = true -%}
+            {%- endif -%}
+            <li id="{{ product.id }}" class="relative group border-main border-1 h-full">
+              {% render 'card-product',
+                product: product,
+                show_secondary_image: section.settings.show_secondary_image,
+                lazy_load: lazy_load,
+                section_id: section.id,
+              %}
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "t:sections.main-collection-product-grid.name",
+  "class": "page-width px-4",
+  "tag": "section",
+  "templates": ["collection"],
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "default": false,
+      "label": "t:sections.main-collection-product-grid.settings.show_secondary_image.label"
+    }
+  ]
+}
+{% endschema %}

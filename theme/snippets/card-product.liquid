@@ -1,0 +1,107 @@
+{% comment %}
+    Renders a product card
+
+    Accepts:
+    - product: {Object} The product object
+    - show_secondary_image: {Boolean} Show the secondary image on hover. Default: false (optional)
+    - lazy_load: {Boolean} Image should be lazy loaded. Default: true (optional)
+    - section_id: {String} The ID of the section that contains this card.
+
+    Usage:
+    {% render 'card-product' %}
+{% endcomment %}
+
+<div class="h-full flex flex-col">
+  {%- if product.featured_media -%}
+    <div class="relative">
+      {% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
+      <img
+        srcset="{%- if product.featured_media.width >= 380 -%}{{ product.featured_media | image_url: width: 380 }} 380w,{%- endif -%}
+          {%- if product.featured_media.width >= 430 -%}{{ product.featured_media | image_url: width: 430 }} 430w,{%- endif -%}
+          {%- if product.featured_media.width >= 500 -%}{{ product.featured_media | image_url: width: 500 }} 500w,{%- endif -%}
+          {%- if product.featured_media.width >= 700 -%}{{ product.featured_media | image_url: width: 700 }} 700w,{%- endif -%}
+          {%- if product.featured_media.width >= 940 -%}{{ product.featured_media | image_url: width: 940 }} 940w,{%- endif -%}
+          {%- if product.featured_media.width >= 1066 -%}{{ product.featured_media | image_url: width: 1066 }} 1066w,{%- endif -%}
+          {{ product.featured_media | image_url }} {{ product.featured_media.width }}w"
+        src="{{ product.featured_media | image_url: width: 533 }}"
+        sizes="(min-width: 990px) 357px, (min-width: 900px) 425px, (min-width: 637px) 376px, (min-width: 500px) 295px, 100%"
+        alt="{{ product.featured_media.alt | escape }}"
+      {% unless lazy_load == false %}loading="lazy"{% endunless %}
+        width="{{ product.featured_media.width }}"
+        height="{{ product.featured_media.height }}"
+        class="skeleton w-full h-full object-cover"
+      >
+      {% comment %}theme-check-enable ImgLazyLoading{% endcomment %}
+
+      {%- if product.media[1] != nil and show_secondary_image -%}
+        {% if product.media[1].width <= product.media[1].height %}
+          <img
+            srcset="{%- if product.media[1].width >= 380 -%}{{ product.media[1] | image_url: width: 380 }} 380w,{%- endif -%}
+              {%- if product.media[1].width >= 430 -%}{{ product.media[1] | image_url: width: 430 }} 430w,{%- endif -%}
+              {%- if product.media[1].width >= 500 -%}{{ product.media[1] | image_url: width: 500 }} 500w,{%- endif -%}
+              {%- if product.media[1].width >= 700 -%}{{ product.media[1] | image_url: width: 700 }} 700w,{%- endif -%}
+              {%- if product.media[1].width >= 940 -%}{{ product.media[1] | image_url: width: 940 }} 940w,{%- endif -%}
+              {%- if product.media[1].width >= 1066 -%}{{ product.media[1] | image_url: width: 1066 }} 1066w,{%- endif -%}
+              {{ product.media[1] | image_url }} {{ product.media[1].width }}w"
+            src="{{ product.media[1] | image_url: width: 533 }}"
+            sizes="(min-width: 990px) 357px, (min-width: 900px) 425px, (min-width: 637px) 376px, (min-width: 500px) 295px, 100%"
+            alt="{{ product.media[1].alt | escape }}"
+            loading="lazy"
+            width="{{ product.media[1].width }}"
+            height="{{ product.media[1].height }}"
+            class="skeleton absolute top-0 left-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 duration-300"
+          >
+        {% else %}
+          <img
+            srcset="{%- if product.media[1].width >= 380 -%}{{ product.media[1] | image_url: width: 380, height: 456, crop: 'center' }} 380w,{%- endif -%}
+              {%- if product.media[1].width >= 430 -%}{{ product.media[1] | image_url: width: 430, height: 456, crop: 'center' }} 430w,{%- endif -%}
+              {%- if product.media[1].width >= 500 -%}{{ product.media[1] | image_url: width: 500, height: 456, crop: 'center' }} 500w,{%- endif -%}
+              {%- if product.media[1].width >= 700 -%}{{ product.media[1] | image_url: width: 700, height: 456, crop: 'center' }} 700w,{%- endif -%}
+              {%- if product.media[1].width >= 940 -%}{{ product.media[1] | image_url: width: 940, height: 456, crop: 'center' }} 940w,{%- endif -%}
+              {%- if product.media[1].width >= 1066 -%}{{ product.media[1] | image_url: width: 1066, height: 456, crop: 'center' }} 1066w,{%- endif -%}
+              {{ product.media[1] | image_url }} {{ product.media[1].width }}w"
+            src="{{ product.media[1] | image_url: width: 533, height: 456, crop: 'center' }}"
+            sizes="(min-width: 990px) 357px, (min-width: 900px) 425px, (min-width: 637px) 376px, (min-width: 500px) 295px, 100%"
+            alt="{{ product.media[1].alt | escape }}"
+            loading="lazy"
+            width="{{ product.media[1].width }}"
+            height="{{ product.media[1].height }}"
+            class="skeleton absolute top-0 left-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 duration-300"
+          >
+        {% endif %}
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+  <div class="p-3 flex-grow flex flex-col justify-between">
+    <div>
+      <h3>
+        <a href="{{ product.url }}" class="after:absolute after:top-0 after:left-0 after:right-0 after:inset-20" tabindex="-1">
+          {{ product.title | escape | upcase }}
+          <span class="inline-flex items-center">
+            {% render 'tw-icon-arrow' %}
+          </span>
+        </a>
+      </h3>
+      <p class="mb-3 mt-1 inline-flex items-center">
+        {{ "sections.main-collection-product-grid.card-product.starting_at" | t }}&nbsp;
+          <strong>
+            {{ product.price_min | money }}
+          </strong>
+      </p>
+    </div>
+
+    <div class="flex gap-3 mt-5">
+      <button class="bg-main/5 border-1 border-main py-3 rounded w-full" {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}>
+        {{ 'sections.product_grid.button' | t }}
+      </button>
+      <my-like-button>
+        <button class="like border-main border-1 rounded h-full px-3 group/heart" {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}>
+          <svg width="21" height="21" viewBox="0 0 21 17" fill="none" xmlns="http://www.w3.org/2000/svg" class="heart">
+            <path d="M10.5 3L6.5 1L1.5 5L3 9.5L10.5 16L18 9.5L19.5 5L15 1L10.5 3Z" class="group-hover/heart:fill-red-400"></path>
+            <path d="M14.6016 0.296875C12.9536 0.296875 11.4909 0.947383 10.5 2.06547C9.50906 0.947383 8.04645 0.296875 6.39844 0.296875C4.96307 0.298612 3.58699 0.869578 2.57204 1.88454C1.55708 2.89949 0.986112 4.27557 0.984375 5.71094C0.984375 11.6451 9.6641 16.3865 10.0332 16.5858C10.1767 16.6631 10.3371 16.7035 10.5 16.7035C10.6629 16.7035 10.8233 16.6631 10.9668 16.5858C11.3359 16.3865 20.0156 11.6451 20.0156 5.71094C20.0139 4.27557 19.4429 2.89949 18.428 1.88454C17.413 0.869578 16.0369 0.298612 14.6016 0.296875ZM14.1512 11.9748C13.0087 12.9443 11.7874 13.8169 10.5 14.5834C9.21256 13.8169 7.99126 12.9443 6.84879 11.9748C5.07117 10.4499 2.95312 8.1243 2.95312 5.71094C2.95312 4.79718 3.31611 3.92085 3.96223 3.27473C4.60835 2.62861 5.48468 2.26562 6.39844 2.26562C7.85859 2.26562 9.08086 3.03672 9.58863 4.27867C9.66254 4.45972 9.78869 4.61465 9.95101 4.72372C10.1133 4.83278 10.3044 4.89102 10.5 4.89102C10.6956 4.89102 10.8867 4.83278 11.049 4.72372C11.2113 4.61465 11.3375 4.45972 11.4114 4.27867C11.9191 3.03672 13.1414 2.26562 14.6016 2.26562C15.5153 2.26562 16.3916 2.62861 17.0378 3.27473C17.6839 3.92085 18.0469 4.79718 18.0469 5.71094C18.0469 8.1243 15.9288 10.4499 14.1512 11.9748Z" fill="currentColor"></path>
+          </svg>
+        </button>
+      </my-like-button>
+    </div>
+  </div>
+</div>

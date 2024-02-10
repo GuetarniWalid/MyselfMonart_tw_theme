@@ -1,0 +1,12 @@
+{
+  "sections": {
+    "custom-liquid": {
+      "type": "custom-liquid",
+      "settings": {}
+    }
+  },
+  "order": [
+    "custom-liquid"
+  ],
+  "layout": "cart"
+}

@@ -1,0 +1,75 @@
+{%- paginate blog.articles by 6 -%}
+  <h1 class="my-10">{{ blog.title | escape }}</h1>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-6">
+    {%- for article in blog.articles -%}
+      {%- if article and article != empty -%}
+        <div class="relative">
+          {%- if article.image -%}
+            <div class="">
+              {% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
+              <img
+                srcset="{%- if article.image.src.width >= 165 -%}{{ article.image.src | image_url: width: 165 }} 165w,{%- endif -%}
+                  {%- if article.image.src.width >= 360 -%}{{ article.image.src | image_url: width: 360 }} 360w,{%- endif -%}
+                  {%- if article.image.src.width >= 533 -%}{{ article.image.src | image_url: width: 533 }} 533w,{%- endif -%}
+                  {%- if article.image.src.width >= 720 -%}{{ article.image.src | image_url: width: 720 }} 720w,{%- endif -%}
+                  {%- if article.image.src.width >= 1000 -%}{{ article.image.src | image_url: width: 1000 }} 1000w,{%- endif -%}
+                  {%- if article.image.src.width >= 1500 -%}{{ article.image.src | image_url: width: 1500 }} 1500w,{%- endif -%}
+                  {{ article.image.src | image_url }} {{ article.image.src.width }}w"
+                src="{{ article.image.src | image_url: width: 533 }}"
+                sizes="(max-width: 767px) 100vw, (max-width: 1300px) 50vw, 600px"
+                alt="{{ article.image.src.alt | escape }}"
+                class="skeleton h-full w-full object-cover"
+                {% unless lazy_load == false %}loading="lazy"{% endunless %}
+                width="600px"
+                height="409px"
+              >
+              {% comment %}theme-check-enable ImgLazyLoading{% endcomment %}
+            </div>
+          {%- endif -%}
+          <div>
+            <h3 class="mt-5 mb-2">
+              <a href="{{ article.url }}" class="after:absolute after:inset-0">
+                {{ article.title | truncate: 50 | escape }}
+              </a>
+            </h3>
+            {%- if section.settings.show_date -%}
+              <div class="mb-5 font-heading text-sm">
+                {{ article.published_at | time_tag: format: 'date' |  upcase }}
+              </div>
+            {%- endif -%}
+            {%- if article.excerpt.size > 0 or article.content.size > 0 -%}
+              <p class="text-main/90">
+                {%- if article.excerpt.size > 0 -%}
+                  {{ article.excerpt | strip_html | truncatewords: 30 }}
+                {%- else -%}
+                  {{ article.content | strip_html | truncatewords: 30 }}
+                {%- endif -%}
+              </p>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+  {%- if paginate.pages > 1 -%}
+    {%- render 'pagination', paginate: paginate -%}
+  {%- endif -%}
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "t:sections.main-blog.name",
+  "tag": "section",
+  "class": "page-width px-4",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "default": true,
+      "label": "t:sections.main-blog.settings.show_date.label"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,12 @@
+{% comment %}
+    Renders a start balise of a social link.
+
+    Usage:
+    {% render 'tw-social-link-start', network: settings.social_facebook_link, balise: 'a' %}
+{% endcomment %}
+
+{% if balise == 'a' %}
+  <a href="{{ network }}" target="_blank" rel="noopener noreferrer">
+{% else %}
+  <span class="obfuscate" data-url64="{{ network | base64_encode }}" data-blank="true" tabindex="0">
+{% endif %}

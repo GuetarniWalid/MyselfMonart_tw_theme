@@ -1,0 +1,88 @@
+{
+  "layout": "article",
+  "sections": {
+    "ce4595e5-01e5-472d-ac56-563a87ef335c": {
+      "type": "first-blog-link",
+      "settings": {
+      }
+    },
+    "main": {
+      "type": "main-article",
+      "settings": {
+      }
+    },
+    "06022fe6-1e32-4b24-add6-72599d77b804": {
+      "type": "collapsible-content",
+      "blocks": {
+        "template--16652199854335__06022fe6-1e32-4b24-add6-72599d77b804-16732707135644ea88-0": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Quelle est la plus originale des décorations murales pour ma cuisine ?",
+            "icon": "none",
+            "row_content": "<p>Il existe de nombreuses idées originales pour décorer votre cuisine. Vous pouvez par exemple opter pour un tableau en bois, un tableau original représentant une ville ou des paysages, un tableau d'art contemporain, un tableau réalisé à partir de matériaux recyclés, etc.<\/p>",
+            "page": ""
+          }
+        },
+        "template--16652199854335__06022fe6-1e32-4b24-add6-72599d77b804-16732707135644ea88-1": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Quels matériaux choisir pour mes tableaux de décoration cuisine ?",
+            "icon": "none",
+            "row_content": "<p>Vous pouvez choisir entre différents matériaux : bois, aluminium, verre, toile, le plexiglass et même le papier photo. Chaque matériau a ses propres caractéristiques ses avantages et ses inconvénients. Vous pouvez donc choisir le matériau qui convient le mieux à votre cuisine et à votre style décoration d'intérieur<\/p>",
+            "page": ""
+          }
+        },
+        "template--16652199854335__06022fe6-1e32-4b24-add6-72599d77b804-16732707135644ea88-2": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Ou puis-je trouver des tableaux prêts à poser ?",
+            "icon": "none",
+            "row_content": "<p>Vous trouverez une large collection de tableau pour cuisine sur le site en ligne <a href=\"https:\/\/www.myselfmonart.com\/collections\/tableau-cuisine\" title=\"https:\/\/www.myselfmonart.com\/collections\/tableau-cuisine\"><strong>MyselfMonart<\/strong><\/a>, des tableaux originaux et tendances qui s'harmoniseront parfaitement avec votre intérieur. Vous y trouverez également des kits de fixation muraux pour vous aider à installer vos tableaux rapidement et facilement.<\/p>",
+            "page": ""
+          }
+        },
+        "template--16652199854335__06022fe6-1e32-4b24-add6-72599d77b804-16732707135644ea88-3": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Quels conseils puis-je suivre pour bien choisir mon tableau ?",
+            "icon": "none",
+            "row_content": "<p>Lorsque vous choisissez un tableau pour votre cuisine, veillez à ce qu’il soit en harmonie avec le reste du décor, assurez-vous que le thème du tableau s’accorde avec le style de votre pièce. Vérifiez également la qualité du matériau ainsi que la taille du tableau afin qu'il ne soit ni trop petit ou trop grand.<\/p>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "template--16652199854335__06022fe6-1e32-4b24-add6-72599d77b804-16732707135644ea88-0",
+        "template--16652199854335__06022fe6-1e32-4b24-add6-72599d77b804-16732707135644ea88-1",
+        "template--16652199854335__06022fe6-1e32-4b24-add6-72599d77b804-16732707135644ea88-2",
+        "template--16652199854335__06022fe6-1e32-4b24-add6-72599d77b804-16732707135644ea88-3"
+      ],
+      "settings": {
+        "caption": "",
+        "heading": "FAQ",
+        "heading_size": "h1",
+        "heading_alignment": "center",
+        "layout": "none",
+        "logo_color": "#000000",
+        "color_scheme": "background-1",
+        "container_color_scheme": "background-2",
+        "open_first_collapsible_row": false,
+        "image_ratio": "adapt",
+        "desktop_layout": "image_second",
+        "padding_top": 0,
+        "padding_bottom": 36
+      }
+    },
+    "11ed1855-d812-4ccc-8f80-65a14ff1c6bd": {
+      "type": "sibling-blog-links",
+      "settings": {
+      }
+    }
+  },
+  "order": [
+    "ce4595e5-01e5-472d-ac56-563a87ef335c",
+    "main",
+    "06022fe6-1e32-4b24-add6-72599d77b804",
+    "11ed1855-d812-4ccc-8f80-65a14ff1c6bd"
+  ]
+}

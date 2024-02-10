@@ -1,0 +1,31 @@
+{% comment %}
+    Renders product media
+
+    Accepts:
+      - media: {Object} Product Media object
+      - loop: {Object} Forloop object
+
+    Usage:
+    {% render 'product-media', media: media %}
+{% endcomment %}
+
+<span class="img-wrapper skeleton flex-none w-full h-full group cursor-pointer flex justify-center items-center snap-center relative md:border-secondary md:border-x-2">
+  <img
+    srcset="{%- if media.preview_image.width >= 400 -%}{{ media.preview_image | image_url: width: 1100 }} 400w,{%- endif -%}
+            {%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}
+            {{ media.preview_image | image_url }} {{ media.preview_image.width }}w"
+    src="{{ media.preview_image | image_url: width: 550 }}"
+    sizes="(min-width: 548px) 550px, 100vw"
+    alt="{{ media.alt | escape }}"
+    {% unless loop.first %}
+      loading="lazy"
+    {% endunless %}
+    width="550"
+    height="auto"
+    data-media-id="{{ media.id }}"
+    class="w-full h-full {% if loop.index == 2 %}object-contain{% else %}object-cover object-center{% endif %}"
+  >
+    <button class="zoom absolute top-3 right-3 bg-secondary p-[9px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-100 focus-visible:opacity-100 outline-none border-1 border-main" {% unless loop.first %}tabindex="-1"{% endunless %}>
+    {% render 'tw-icon-zoom' %}
+  </button>
+</span>

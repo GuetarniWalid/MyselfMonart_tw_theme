@@ -1,0 +1,316 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {
+          }
+        },
+        "8600f603-2d6f-4191-8020-3678432ba1e5": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Vous recevez nos propositions gratuitement par mail. Si l'une d'entre elles vous plaît, il vous suffit de cliquer sur le lien présent dans le mail qui redirige vers la page de paiement présent sur notre site. Ci-dessous, vous pouvez consulter les prix selon la taille et le support choisi.<\/p>"
+          }
+        },
+        "9f20570b-1a97-4c34-8758-c5af9b8d2cfc": {
+          "type": "price",
+          "settings": {
+            "size": "h2",
+            "spacing": 1.6
+          }
+        },
+        "a70160ee-79ef-4eb9-8e65-ec87f898b506": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Guide des tailles",
+            "icon": "ruler",
+            "icon_color": "#002e5d",
+            "content": "",
+            "page": "guide-de-tailles"
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "8600f603-2d6f-4191-8020-3678432ba1e5",
+        "9f20570b-1a97-4c34-8758-c5af9b8d2cfc",
+        "a70160ee-79ef-4eb9-8e65-ec87f898b506"
+      ],
+      "settings": {
+        "section_background": "#f6f2ec",
+        "text_color": "#002e5d",
+        "slider_border": false,
+        "media_full_horizontal": false,
+        "gallery_layout": "thumbnail",
+        "media_size": "small",
+        "enable_sticky_info": true,
+        "padding_top": 44,
+        "padding_bottom": 24,
+        "with_border": false,
+        "mobile_image_height": 55,
+        "slider_buttons_color": "#0b50b5",
+        "hide_variants": false,
+        "enable_video_looping": false,
+        "enable_zoom": true
+      }
+    },
+    "main-product-recommendations": {
+      "type": "product-recommendations",
+      "disabled": true,
+      "settings": {
+        "heading": "",
+        "heading_size": "h2",
+        "products_to_show": 10,
+        "columns_desktop": 4,
+        "color_scheme": "background-1",
+        "image_ratio": "adapt",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": false,
+        "columns_mobile": "2",
+        "padding_top": 36,
+        "padding_bottom": 24
+      }
+    },
+    "bf44dcab-c1df-4c80-b75a-9ee39a6bfe2e": {
+      "type": "badges",
+      "blocks": {
+        "ef364299-4b9c-463a-a50d-210af473e95e": {
+          "type": "number_block",
+          "settings": {
+            "number": 1,
+            "heading": "Ne perdez plus votre temps à chercher",
+            "text": "Une infinité de possibilités s’offrent à vous, écrivez simplement ce dont vous rêvez.",
+            "text_arrangement": "unset"
+          }
+        },
+        "434fa092-b676-4395-a95a-9922006fa7db": {
+          "type": "number_block",
+          "settings": {
+            "number": 2,
+            "heading": "L’art de sortir de l’ordinaire",
+            "text": "À l’ère de la production de masse, les tableaux vides de personnalité sont courants.",
+            "text_arrangement": "unset"
+          }
+        },
+        "dc1cd24a-b307-4124-abb9-b1ac55ba1e6b": {
+          "type": "number_block",
+          "settings": {
+            "number": 3,
+            "heading": "Trouvez l'accord parfait",
+            "text": "Petit ou grand espace, vintage ou moderne, personnalisez taille et matière pour un accord parfait.",
+            "text_arrangement": "unset"
+          }
+        }
+      },
+      "block_order": [
+        "ef364299-4b9c-463a-a50d-210af473e95e",
+        "434fa092-b676-4395-a95a-9922006fa7db",
+        "dc1cd24a-b307-4124-abb9-b1ac55ba1e6b"
+      ],
+      "settings": {
+        "title": "",
+        "heading_size": "h1",
+        "nb_columns_on_computer": "33.33",
+        "nb_columns_on_mobile": "100",
+        "columns_alignment": "flex-start",
+        "logo_color": "#012e5d",
+        "logo_size": 45,
+        "logo_background": true,
+        "logo_background_color": "#E0E0E0",
+        "logo_border": true,
+        "title_bold": true,
+        "margin_under_logo": 26,
+        "margin_under_title": 12,
+        "section_background_color": "#F5F3EE",
+        "margin_top": 25,
+        "margin_bottom": 35
+      }
+    },
+    "1424ddf1-df7a-4059-a11f-0f1a837e4b6d": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/femme_portrait.jpg",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "text_first",
+        "desktop_content_position": "middle",
+        "desktop_content_alignment": "left",
+        "content_layout": "no-overlap",
+        "color_scheme": "background-1",
+        "mobile_content_alignment": "left",
+        "enable_blob": true,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "afe2a87a-371e-4c67-93b7-8c6b2244f43b": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/metre.jpg",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "desktop_content_position": "middle",
+        "desktop_content_alignment": "left",
+        "content_layout": "no-overlap",
+        "color_scheme": "background-1",
+        "mobile_content_alignment": "left",
+        "enable_blob": true,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "b5027902-4240-44cf-8660-b6e754562c52": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/texture_x3_70ae7c8b-712c-4c74-bb93-e76a2eddc37b.jpg",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "text_first",
+        "desktop_content_position": "middle",
+        "desktop_content_alignment": "left",
+        "content_layout": "no-overlap",
+        "color_scheme": "background-1",
+        "mobile_content_alignment": "left",
+        "enable_blob": true,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "556b5926-5cdb-4c50-a817-c79f15894cdd": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/tour_eiffel.jpg",
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "desktop_content_position": "middle",
+        "desktop_content_alignment": "left",
+        "content_layout": "no-overlap",
+        "color_scheme": "background-1",
+        "mobile_content_alignment": "left",
+        "enable_blob": true,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "11956137-37cc-4134-a10b-f99541980b06": {
+      "type": "badges",
+      "settings": {
+        "title": "NOS GARANTIES",
+        "heading_size": "h1",
+        "nb_columns_on_computer": "33.33",
+        "nb_columns_on_mobile": "100",
+        "columns_alignment": "flex-start",
+        "logo_color": "#121212",
+        "logo_size": 80,
+        "logo_background": false,
+        "logo_background_color": "#E0E0E0",
+        "logo_border": false,
+        "title_bold": true,
+        "margin_under_logo": 30,
+        "margin_under_title": 12,
+        "section_background_color": "#F5F3EE",
+        "margin_top": 50,
+        "margin_bottom": 50
+      }
+    },
+    "7ae13aad-330c-4fa7-94cf-fafc1c13cf60": {
+      "type": "collapsible-content",
+      "blocks": {
+        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-0": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Et si vos propositions ne me plaisent pas ?",
+            "icon": "none",
+            "row_content": "<p>Aucun problème, nous vous envoyons nos propositions par mail sous 2 jours en moyenne. Si celles-ci ne vous conviennent pas, il vous suffit de simplement effacer le mail et le tour est joué. Nous sommes avant tout des passionnés d’art et non des vendeurs chevronné. Aucune relance, ni intrusion de notre part, si vous décidiez de ne pas poursuivre.<\/p>",
+            "page": ""
+          }
+        },
+        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-1": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Quels supports choisir, le rendu est-il différent ?",
+            "icon": "none",
+            "row_content": "<p>- La toile 100% coton : <strong>mate et texturée<\/strong><\/p><p>La toile offre une prise en main agréable. Le grain est visible principalement dans les zones claires de l’image. La surface de<strong> la toile <\/strong>ajoute relief et profondeur à vos tableaux. Elle apporte une touche artistique et dote les tableaux d’une <strong>incroyable intensité.<\/strong><\/p><p>Pour un résultat optimal, nous vous conseillons de transmettre un <strong>fichier <\/strong>JPEG avec la résolution maximale (comprise entre 72 et 300 Dpi).<\/p><p><\/p><p>- Le plexiglas :<strong> Brillant et transparent<\/strong><\/p><p>Le <strong>verre acrylique<\/strong>, également appelé <strong>Plexiglas<\/strong>, est un matériau synthétique rigide et transparent haut de gamme. Son aspect est similaire à du verre.<\/p><p>Le verre acrylique offrira <strong>une profondeur <\/strong>et <strong>une luminosité extraordinaire <\/strong>à vos tableaux. Les couleurs de votre photo seront vives et éclatantes. Il est particulièrement recommandé pour la réalisation de tableaux lumineux.<\/p><p><\/p><p>- L'aluminium argent brossé : <strong>contraste et éclat.<\/strong><\/p><p>L'aluminium permet une <strong>présentation sobre, moderne et sans reflet<\/strong>. La densité des couleurs et les contrastes sont forts.<\/p><p>L'aluminium est un support très résistant. Il n'est pas sensible aux traces de doigts ou à l'humidité, et l’entretien de vos tableaux est facile. Vous pouvez le nettoyer avec un tissu légèrement humide.<\/p>",
+            "page": ""
+          }
+        },
+        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-2": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Pourquoi acheter chez vous ?",
+            "icon": "none",
+            "row_content": "<p>Une grande partie des tableaux décoratifs que vous pouvez trouver sur le marché sont conçus en masse afin de réduire le prix. <\/p><p>De l'autre côté, les œuvres uniques peuvent coûter jusqu’à plusieurs milliers d’euros. <\/p><p>De notre côté, nous comprenons que l’art doit rester accessible, mais pas au prix d’être conçu en masse. Nous effectuons donc un travail d'échange pour concevoir l'œuvre unique dont vous rêvez à un prix ultra-compétitif.<\/p>",
+            "page": ""
+          }
+        },
+        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-3": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Que puis-je demander, avez-vous des exemples ?",
+            "icon": "none",
+            "row_content": "<p>Littéralement ce que vous voulez. Quelque règle toutefois, nous ne pouvons créer des œuvres à caractère sexuel ou violent. Soyez libre de soumettre un texte, si celui-ci enfreint l’une de ces 2 règles, nous vous tiendrons informé par mail. <\/p><p>Nous pouvons traiter tous type de sujet. Certains concepts vague ou poétique comme la mort, l’amour, le bien ou le mal. Vous seriez surpris des propositions que vous obtiendriez. Cela peut aussi être des personnes ou des animaux. De notre expérience, les œuvres les plus surprenantes, et souvent les plus aimées, sont celles mélangeant 2 concepts très contrasté, comme par exemple “Un sorcier cyberpunk” ou “la pollution en couleur”. Une page entière ne comblerait pas le sujet, voici donc quelques exemples : <\/p><p>- Un sentiment de crainte <\/p><p>- La naissance du temps <\/p><p>- Le Louvre selon Van Gogh <\/p><p>- Un chevalier lion dans une armure dorée <\/p><p>- Le Taj Mahal en multicouleur, dans le style pointillisme<\/p><p>Vous l’aurez compris, seule votre imagination est la limite.<\/p>",
+            "page": ""
+          }
+        },
+        "a603c2c1-59a1-4067-9d4b-dc8591ddc1f8": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Quelle taille de toile choisir ?",
+            "icon": "none",
+            "row_content": "<p>Pour ne pas vous tromper, mesurez la largeur de votre pan de mur. Multipliez le résultat par 0,57 pour obtenir le ratio idéal.<\/p><p>Sachez qu'il est également recommandé d'accrocher le centre du tableau à environ 1,65 mètre du sol (ce qui correspond à peu près à la hauteur des yeux). Il est aussi recommandé de laisser environ 30 centimètres d'espace entre un meuble et un tableau. <\/p>",
+            "page": ""
+          }
+        },
+        "e20d3253-d757-4a99-9237-128916cc9ffb": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Avec quoi et comment accrochez mon tableau ?",
+            "icon": "none",
+            "row_content": "<p>Pour une finition à la hauteur de votre tableau il est important de prendre en compte le support d'impression.<\/p><p>- Les supports tels que le plexiglas coulé et l'aluminium nécessitent un espacement entre le tableau et le mur.<\/p><p>Nous vous recommandons d'utiliser des entretoises qui sont disponibles en supplément sur notre site. Nos équipes s'occupent de percer le tableau et nous vous livrons 2 paires entretoises avec votre commande.<br\/><\/p><p>- Pour accrocher les tableaux montés sur châssis il est recommandé d'utilisé des crochets, attention il vous faudra prendre en compte le poids du tableau avant tout achat.<br\/><\/p><p>Enfin, pour ne pas abîmer votre mur il vous faudra également faire attention aux chevilles qui sont différentes selon si le mur est en placo, brique ou béton.<\/p><p>En raison de la particularité de chaque mur nos entretoises sont livrées sans visserie.<\/p>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-0",
+        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-1",
+        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-2",
+        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-3",
+        "a603c2c1-59a1-4067-9d4b-dc8591ddc1f8",
+        "e20d3253-d757-4a99-9237-128916cc9ffb"
+      ],
+      "settings": {
+        "caption": "",
+        "heading": "QUESTIONS FRÉQUENTES",
+        "heading_size": "h1",
+        "heading_alignment": "center",
+        "layout": "none",
+        "logo_color": "#000000",
+        "color_scheme": "background-1",
+        "container_color_scheme": "background-2",
+        "open_first_collapsible_row": false,
+        "image_ratio": "adapt",
+        "desktop_layout": "image_second",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "main",
+    "main-product-recommendations",
+    "bf44dcab-c1df-4c80-b75a-9ee39a6bfe2e",
+    "1424ddf1-df7a-4059-a11f-0f1a837e4b6d",
+    "afe2a87a-371e-4c67-93b7-8c6b2244f43b",
+    "b5027902-4240-44cf-8660-b6e754562c52",
+    "556b5926-5cdb-4c50-a817-c79f15894cdd",
+    "11956137-37cc-4134-a10b-f99541980b06",
+    "7ae13aad-330c-4fa7-94cf-fafc1c13cf60"
+  ],
+  "layout": "product"
+}

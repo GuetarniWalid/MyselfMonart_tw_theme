@@ -1,0 +1,700 @@
+{
+  "general": {
+    "password_page": {
+      "login_form_heading": "Accéder à la boutique à l'aide d'un mot de passe :",
+      "login_password_button": "Saisir avec un mot de passe",
+      "login_form_password_label": "Mot de passe",
+      "login_form_password_placeholder": "Votre mot de passe",
+      "login_form_error": "Mot de passe incorrect !",
+      "login_form_submit": "Saisir",
+      "admin_link_html": "La boutique vous appartient-elle ? <a href=\"/admin\" class=\"link underlined-link\">Se connecter ici</a>",
+      "powered_by_shopify_html": "■ test visible de face<br>■ Facile d'installation<br><br>Accrochez votre tableau rapidement et simplement avec notre set de fixation pour toile. Notre kit comprend 2 types d’installation différentes:<br><br>● <b>Le crochet en dent de scie:</b> Sur la largeur, à l’aide d’un mètre, repérez le centre de votre tableau et placez-y votre crochet en dent de scie à l’aide d’un marteau et des clous fournis. Il ne vous reste plus qu'à suspendre votre toile sur le mur de votre choix.<br><br>● <b>La corde et les 2 anneaux triangulaires:</b> Ce système est particulièrement recommandé pour les grandes toiles car il permet de répartir le poids sur la corde. À l’aide d’un tournevis et des vis fournis fixez les 2 anneaux triangulaires au centre de chacune des hauteurs (voir image ci-dessus). Attachez la corde  solidement sur chaque anneau. Il ne vous reste plus qu'à suspendre votre toile sur le mur de votre choix."
+    },
+    "social": {
+      "alt_text": {
+        "share_on_facebook": "Partager sur Facebook",
+        "share_on_twitter": "Tweeter sur Twitter",
+        "share_on_pinterest": "Épingler sur Pinterest"
+      },
+      "links": {
+        "twitter": "Twitter",
+        "facebook": "Facebook",
+        "pinterest": "Pinterest",
+        "instagram": "Instagram",
+        "tumblr": "Tumblr",
+        "snapchat": "Snapchat",
+        "youtube": "YouTube",
+        "vimeo": "Vimeo",
+        "tiktok": "TikTok"
+      }
+    },
+    "pagination": {
+      "label": "Pagination",
+      "page": "Page {{ number }}",
+      "next": "Page suivante",
+      "previous": "Page précédente"
+    },
+    "search": {
+      "search": "Recherche"
+    },
+    "cart": {
+      "view": "Afficher mon panier ({{ count }})",
+      "item_added": "Article ajouté au panier"
+    },
+    "share": {
+      "copy_to_clipboard": "Copier le lien",
+      "share_url": "Lien",
+      "success_message": "Lien copié dans le presse-papiers",
+      "close": "Fermer le partage"
+    },
+    "slider": {
+      "of": "de",
+      "next_slide": "Faire glisser vers la droite",
+      "previous_slide": "Faire glisser vers la gauche"
+    }
+  },
+  "newsletter": {
+    "label": "E-mail",
+    "success": "Merci de votre inscription",
+    "button_label": "S'inscrire"
+  },
+  "accessibility": {
+    "skip_to_text": "Ignorer et passer au contenu",
+    "close": "Fermer",
+    "unit_price_separator": "par",
+    "vendor": "Distributeur :",
+    "error": "Erreur",
+    "refresh_page": "Le choix d'une sélection entraîne l'actualisation de la page entière.",
+    "link_messages": {
+      "new_window": "S'ouvre dans une nouvelle fenêtre.",
+      "external": "Ouvre un site web externe."
+    },
+    "loading": "Chargement en cours...",
+    "skip_to_product_info": "Passer aux informations produits",
+    "total_reviews": "total des critiques",
+    "star_reviews_info": "{{ rating_value }} sur {{ rating_max }} étoiles",
+    "collapsible_content_title": "Contenu réductible"
+  },
+  "blogs": {
+    "article": {
+      "blog": "Blog",
+      "read_more_title": "Lire la suite : {{ title }}",
+      "comments": {
+        "one": "{{ count }} commentaire",
+        "other": "{{ count }} commentaires",
+        "many": "{{ count }} commentaires"
+      },
+      "moderated": "Veuillez noter que les commentaires doivent être approuvés avant d'être publiés.",
+      "comment_form_title": "Laisser un commentaire",
+      "name": "Nom",
+      "email": "E-mail",
+      "message": "Commentaire",
+      "post": "Publier le commentaire",
+      "back_to_blog": "Retour au blog",
+      "share": "Partager cet article",
+      "success": "Votre commentaire a bien été publié ! Merci !",
+      "success_moderated": "Votre commentaire a bien été publié. Nous le publierons sous peu, conformément au processus de modération de notre blog."
+    }
+  },
+  "onboarding": {
+    "product_title": "Titre du produit",
+    "collection_title": "Le nom de votre collection"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Ajouter au panier",
+      "description": "Description",
+      "on_sale": "Vente",
+      "product_variants": "Variantes de produits",
+      "quantity": {
+        "label": "Quantité",
+        "input_label": "Quantité pour {{ product }}",
+        "increase": "Augmenter la quantité de {{ product }}",
+        "decrease": "Réduire la quantité de {{ product }}"
+      },
+      "price": {
+        "from_price_html": "Du {{ price }}",
+        "regular_price": "Prix habituel",
+        "sale_price": "Prix soldé",
+        "unit_price": "Prix unitaire"
+      },
+      "bundle": {
+        "instead_of": "au lieu de"
+      },
+      "share": "Partager ce produit",
+      "sold_out": "Épuisé",
+      "unavailable": "Non disponible",
+      "vendor": "Distributeur",
+      "video_exit_message": "{{ title }} ouvre la vidéo en plein écran dans la même fenêtre.",
+      "xr_button": "Afficher dans son espace",
+      "xr_button_label": "Affichage dans votre espace, charge l'article dans une fenêtre de réalité augmentée",
+      "pickup_availability": {
+        "view_store_info": "Afficher les informations de la boutique",
+        "check_other_stores": "Vérifier la disponibilité dans d'autres boutiques",
+        "pick_up_available": "Service de retrait disponible",
+        "pick_up_available_at_html": "Service de retrait disponible à <span class=\"color-foreground\">{{ location_name }}</span>",
+        "pick_up_unavailable_at_html": "Service de retrait non disponible actuellement à <span class=\"color-foreground\">{{ location_name }}</span>",
+        "unavailable": "Impossible de charger la disponibilité du service de retrait",
+        "refresh": "Actualiser"
+      },
+      "media": {
+        "open_media": "Ouvrir le média {{ index }} dans une fenêtre modale",
+        "play_model": "Lire la visionneuse 3D",
+        "play_video": "Lire la vidéo",
+        "gallery_viewer": "Visionneuse de la galerie",
+        "load_image": "Charger l'image {{ index }} dans la galerie",
+        "load_model": "Charger le modèle 3D {{ index }} dans la galerie",
+        "load_video": "Lire la vidéo {{ index }} dans la galerie",
+        "image_available": "L'image {{ index }} est maintenant disponible dans la galerie"
+      },
+      "view_full_details": "Afficher tous les détails",
+      "include_taxes": "",
+      "shipping_policy_html": "<a href=\"{{ link }}\">Frais d'expédition</a> calculés à l'étape de paiement.",
+      "choose_options": "Choisir des options",
+      "choose_product_options": "Choisir des options pour {{ product_name }}"
+    },
+    "modal": {
+      "label": "Galerie de supports multimédias"
+    },
+    "facets": {
+      "apply": "Appliquer",
+      "clear": "Effacer",
+      "clear_all": "Tout supprimer",
+      "from": "De",
+      "filter_and_sort": "Filtrer et trier",
+      "filter_by_label": "Filtre :",
+      "filter_button": "Filtrer",
+      "filters_selected": {
+        "one": "{{ count }} sélectionné",
+        "other": "{{ count }} sélectionnés",
+        "many": "{{ count }} sélectionnés"
+      },
+      "max_price": "Le prix le plus élevé est de {{ price }}",
+      "product_count": {
+        "one": "{{ product_count }} produit sur {{ count }}",
+        "other": "{{ product_count }} produits sur {{ count }}",
+        "many": "{{ product_count }} produits sur {{ count }}"
+      },
+      "product_count_simple": {
+        "one": "{{ count }} produit",
+        "other": "{{ count }} produits",
+        "many": "{{ count }} produits"
+      },
+      "reset": "Réinitialiser",
+      "sort_button": "Trier",
+      "sort_by_label": "Trier par :",
+      "to": "À",
+      "clear_filter": "Supprimer le filtre",
+      "filter_selected_accessibility": "{{ type }} ({{ count }} filtres sélectionnés)",
+      "show_more": "Afficher plus",
+      "show_less": "Afficher moins"
+    }
+  },
+  "templates": {
+    "search": {
+      "no_results": "Aucun résultat trouvé pour « {{ terms }} ». Vérifiez l'orthographe ou utilisez un autre mot ou une autre expression.",
+      "results_with_count": {
+        "one": "{{ count }} résultat",
+        "other": "{{ count }} résultats",
+        "many": "{{ count }} résultats"
+      },
+      "title": "Résultats de la recherche",
+      "page": "Page",
+      "products": "Produits",
+      "search_for": "Rechercher « {{ terms }} »",
+      "results_with_count_and_term": {
+        "one": "{{ count }} résultat trouvé pour « {{ terms }} »",
+        "other": "{{ count }} résultats trouvés pour « {{ terms }} »",
+        "many": "{{ count }} résultats trouvés pour « {{ terms }} »"
+      }
+    }
+  },
+  "sections": {
+    "collections_grid": {
+      "find_out_more": "En savoir plus..."
+    },
+    "collection_list": {
+      "view_all": "Tout afficher"
+    },
+    "collection_template": {
+      "title": "Collection",
+      "empty": "Aucun produit trouvé",
+      "use_fewer_filters_html": "Utiliser moins de filtres ou <a class=\"{{ class }}\" href=\"{{ link }}\">tout supprimer</a>"
+    },
+    "cookie-banner": {
+      "message-1": "Nos cookies ne sont pas comestibles, mais ils rendent votre visite délicieuse !",
+      "message-2": "Prêt pour une expérience améliorée ?",
+      "parameter": "Paramétrer",
+      "accept": "Accepter",
+      "settings": {
+        "title": "Préférences de confidentialité",
+        "accept_button": "Tout accepter",
+        "save_button": "Enregistrer les préférences",
+        "analytics": "Suivi des données d’analyse",
+        "marketing": "Publicité ciblée",
+        "preferences": "Collecte de données pour personnaliser l’expérience utilisateur",
+        "sale_of_data": "Collecte de données pour améliorer les produits et services"
+      }
+    },
+    "featured_blog": {
+      "view_all": "Tout afficher",
+      "onboarding_title": "Article de blog",
+      "onboarding_content": "Donnez à vos clients un résumé de votre article de blog"
+    },
+    "featured_collection": {
+      "view_all": "Tout afficher",
+      "view_all_label": "Afficher tous les produits de la collection {{ collection_name }}",
+      "slider": "Carrousel"
+    },
+    "footer": {
+      "payment": "Moyens de paiement",
+      "home": "Accueil"
+    },
+    "header": {
+      "announcement": "Annonce",
+      "menu": "Menu",
+      "cart_count": {
+        "one": "{{ count }} article",
+        "other": "{{ count }} articles",
+        "many": "{{ count }} articles"
+      },
+      "my_likes": "Mes j'aime"
+    },
+    "main-collection-product-grid": {
+      "card-product": {
+        "starting_at": "À partir de"
+      }
+    },
+    "page": {
+      "title": "Titre de la page"
+    },
+    "product_addon": {
+      "add_to_cart": "Ajouter au panier",
+      "summary": "Résumé",
+      "price": "Prix",
+      "title_container": {
+        "size": "Choisissez la Taille",
+        "matter": "Choisissez la Matière",
+        "system": "Choisissez le Système d'accroche",
+        "thickness": "Choisissez l'Épaisseur du chassis",
+        "color": "Choisissez la Couleur de bordure",
+        "frame": "Choisissez le Cadre",
+        "finishes": "Choisissez la Finition"
+      },
+      "info": {
+        "button_name": "Info",
+        "matter": {
+          "canvas": {
+            "title": "LA TOILE 100% POLYESTER : mate et texturée",
+            "description": "La toile offre une prise en main agréable. Le grain du papier est visible principalement dans les zones claires de l’image, tandis que les noirs auront tendance à gommer le grain. Sa surface ajoute du relief et de la profondeur à vos tableaux. La toile apporte une touche artistique et dote les tableaux d’une incroyable intensité."
+          },
+          "aluminum": {
+            "title": "L'ALUMINIUM : contraste et éclat",
+            "description": "L'aluminium permet une présentation sobre, moderne et sans reflet. La densité des couleurs et les contrastes sont très forts. L'aluminium est un support très résistant et de qualitaté. Il n'est pas sensible aux traces de doigts, ni à l'humidité. Son entretien est très facile. Vous pouvez le nettoyer avec un tissu légèrement humide."
+          },
+          "plexiglass": {
+            "title": "ALUMINIUM + PLEXIGLAS : Élégant et transparent",
+            "description": "Notre impression acrylique + aluminium est une combinaison de deux produits de décoration haut de gamme qui offre une expérience visuelle captivante. Le Plexiglas est un matériau synthétique rigide. Son aspect similaire à celui du verre offre une profondeur et une luminosité extraordinaires à vos tableaux. Les couleurs sont vives et éclatantes. Le support en aluminium, quant à lui, assure la stabilité et la légèreté du tableau, sa finition argentée apportant élégance et modernité. De plus, le design sans cadre ajoute une profondeur supplémentaire à vos images, créant un impact visuel encore plus fort et rendant votre pièce plus spacieuse."
+          }
+        },
+        "support": {
+          "none": {
+            "title": "SANS SYSTÈME DE FIXATION",
+            "description": "Tableau seul, livré sans système de fixation"
+          },
+          "for_canvas": {
+            "title": "FIXATION POUR TOILE",
+            "description": "■ Non visible de face<br>■ Facile d'installation<br><br>Accrochez votre tableau rapidement et simplement avec notre set de fixation pour toile. Notre kit comprend 2 types d’installation différentes:<br><br>● <b>Le crochet en dent de scie:</b> Sur la largeur, à l’aide d’un mètre, repérez le centre de votre tableau et placez-y votre crochet en dent de scie à l’aide d’un marteau et des clous fournis. Il ne vous reste plus qu'à suspendre votre toile sur le mur de votre choix.<br><br>● <b>La corde et les 2 anneaux triangulaires:</b> Ce système est particulièrement recommandé pour les grandes toiles car il permet de répartir le poids sur la corde. À l’aide d’un tournevis et des vis fournis fixez les 2 anneaux triangulaires au centre de chacune des hauteurs (voir image ci-dessus). Attachez la corde  solidement sur chaque anneau. Il ne vous reste plus qu'à suspendre votre toile sur le mur de votre choix."
+          },
+          "hook": {
+            "title": "CROCHET AVEC SYSTÈME ADHÉSIF",
+            "description": "■ Non visible de face ■ Ne convient pas à un usage extérieur<br><br>Accrochez votre tableau rapidement et simplement grâce à notre crochet adhésif. Il est constitué de deux faces, l'une adhesive qui se colle sur la surface du tableau et l'autre forme le crochet. Pour l'installation il suffit d'enlever le film protecteur de la surface adhésive, puis de coller le crochet au centre du tableau. Une légère pression de 10 secondes suffit. Placez une vis sur le mur, il ne vous reste plus qu'à suspendre votre tableau sur le mur de votre choix"
+          },
+          "rails": {
+            "title": "RAILS EN ALUMINIUM",
+            "description": "■ non visible de face<br>■ 1 cm de distance par rapport au mur pour un effet flottant<br><br>Le rail en aluminium est la solution si vous souhaitez accrocher votre tableau rapidement et facilement. Le système est déjà monté sur tableau quand vous le recevrez. Placez les chevilles adaptées au type de mur sur lequel vous voulez l'accrocher en prenant aussi en compte le poids du tableau. Il ne vous reste plus qu'à suspendre votre tableau sur le mur de votre choix."
+          },
+          "spacers": {
+            "title": "ENTRETOISES + TROUS",
+            "description": "■ les entretoises sont visibles de face<br>■ épuré et design<br><br>Les entretoises métalliques sont particulièrement adaptées au tableau en aluminium ou en plexiglas. Ce système d'accroche est visible sur le devant du tableau. Parfait pour une ambiance élégante et design, votre tableau flotte à quelques millimètres dur mur. Le tableau est perforé en amont par nos soins pour y accueillir les entretoises. Installez des chevilles adaptées au support du mur en y reportant la distance entre les trous du tableau.Il ne vous reste plus qu'à suspendre votre tableau sur le mur de votre choix."
+          }
+        },
+        "thickness": {
+          "2cm": {
+            "title": "Châssis 2 cm",
+            "description": "Nous utilisons un châssis en bois fabriqué à la main et de qualité supérieure. Le cadre, d'une épaisseur de 2 cm, est extrêmement léger ce qui vous permet de l'accrocher facilement. Pour une installation rapide, nous vous recommandons le kit de fixation pour toile."
+          },
+          "4cm": {
+            "title": "Châssis 4 cm",
+            "description": "Le châssis XL est en bois de qualité supérieur et fabriqué à la main. Plus robuste, il donne plus de profondeur à votre toile afin de la mettre en valeur. Si vous placez votre toile dans une grande pièce ce format est particulièrement recommandé. Plus lourd, il permet aussi une meilleure stabilité pour les espaces particulièrement vivants comme les entrées ou le salon. Pour une installation facile et rapide nous vous recommandons le kit de fixation pour toile."
+          }
+        }
+      }
+    },
+    "product_grid": {
+      "button": "Voir le tableau"
+    },
+    "sibling-blog-links": {
+      "complementary_blog_posts": "Articles complémentaires"
+    },
+    "slideshow": {
+      "load_slide": "Charger la diapositive",
+      "previous_slideshow": "Diapositive précédente",
+      "next_slideshow": "Diapositive suivante",
+      "pause_slideshow": "Interrompre le diaporama",
+      "play_slideshow": "Lire le diaporama",
+      "carousel": "Carrousel",
+      "slide": "Diapositive"
+    },
+    "video": {
+      "load_video": "Charger la vidéo : {{ description }}"
+    }
+  },
+  "localization": {
+    "country_label": "Devise",
+    "language_label": "Langue",
+    "update_language": "Mettre à jour la langue",
+    "update_country": "Mettre à jour le pays/la région"
+  },
+  "customer": {
+    "account": {
+      "title": "Compte",
+      "details": "Détails du compte",
+      "view_addresses": "Voir les adresses",
+      "return": "Retour aux détails du compte"
+    },
+    "account_fallback": "Compte",
+    "activate_account": {
+      "title": "Activer le compte",
+      "subtext": "Créez votre mot de passe pour activer le compte.",
+      "password": "Mot de passe",
+      "password_confirm": "Confirmer le mot de passe",
+      "submit": "Activer le compte",
+      "cancel": "Décliner l'invitation"
+    },
+    "addresses": {
+      "title": "Adresses",
+      "default": "Par défaut",
+      "add_new": "Ajouter une nouvelle adresse",
+      "edit_address": "Modifier l'adresse",
+      "first_name": "Prénom",
+      "last_name": "Nom de famille",
+      "company": "Entreprise",
+      "address1": "Adresse 1",
+      "address2": "Adresse 2",
+      "city": "Ville",
+      "country": "Pays/région",
+      "province": "Province",
+      "zip": "Code postal",
+      "phone": "Téléphone",
+      "set_default": "Définir comme adresse par défaut",
+      "add": "Ajouter l'adresse",
+      "update": "Mettre à jour l'adresse",
+      "cancel": "Annuler",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "delete_confirm": "Êtes-vous certain(e) de vouloir supprimer cette adresse ?"
+    },
+    "log_in": "Connexion",
+    "log_out": "Déconnexion",
+    "login_page": {
+      "cancel": "Annuler",
+      "create_account": "Créer un compte",
+      "email": "E-mail",
+      "forgot_password": "Mot de passe oublié ?",
+      "guest_continue": "Continuer",
+      "guest_title": "Continuer en tant qu'invité(e)",
+      "password": "Mot de passe",
+      "title": "Connexion",
+      "sign_in": "Connexion",
+      "submit": "Envoyer"
+    },
+    "orders": {
+      "title": "Historique des commandes",
+      "order_number": "Commande",
+      "order_number_link": "Numéro de commande {{ number }}",
+      "date": "Date",
+      "payment_status": "Statut des paiements",
+      "fulfillment_status": "Statut des commandes",
+      "total": "Total",
+      "none": "Vous n'avez encore passé aucune commande."
+    },
+    "recover_password": {
+      "title": "Réinitialiser son mot de passe",
+      "subtext": "Nous vous ferons parvenir un e-mail pour réinitialiser votre mot de passe",
+      "success": "Nous vous avons envoyé un e-mail contenant un lien pour mettre à jour votre mot de passe."
+    },
+    "register": {
+      "title": "Créer un compte",
+      "first_name": "Prénom",
+      "last_name": "Nom de famille",
+      "email": "E-mail",
+      "password": "Mot de passe",
+      "submit": "Créer"
+    },
+    "reset_password": {
+      "title": "Réinitialiser le mot de passe du compte",
+      "subtext": "Saisir un nouveau mot de passe pour {{ email }}",
+      "password": "Mot de passe",
+      "password_confirm": "Confirmer le mot de passe",
+      "submit": "Réinitialiser le mot de passe"
+    },
+    "order": {
+      "title": "Commande {{ name }}",
+      "date_html": "Passée le {{ date }}",
+      "cancelled_html": "Commande annulée le {{ date }}",
+      "cancelled_reason": "Motif : {{ reason }}",
+      "billing_address": "Adresse de facturation",
+      "payment_status": "Statut de paiement",
+      "shipping_address": "Adresse d'expédition",
+      "fulfillment_status": "Statut des commandes",
+      "discount": "Réduction",
+      "shipping": "Expédition",
+      "tax": "Taxes",
+      "product": "Produit",
+      "sku": "SKU",
+      "price": "Prix",
+      "quantity": "Quantité",
+      "total": "Total",
+      "fulfilled_at_html": "Traitée le {{ date }}",
+      "track_shipment": "Suivre l'envoi",
+      "tracking_url": "Lien de suivi",
+      "tracking_company": "Transporteur",
+      "tracking_number": "Numéro de suivi",
+      "subtotal": "Sous-total",
+      "total_duties": "Frais de douane"
+    }
+  },
+  "gift_cards": {
+    "issued": {
+      "title": "Voici votre carte-cadeau {{ shop }} d'une valeur de {{ value }} !",
+      "subtext": "Votre carte-cadeau",
+      "gift_card_code": "Code de la carte-cadeau",
+      "shop_link": "Continuer les achats",
+      "remaining_html": "Reste {{ balance }}",
+      "add_to_apple_wallet": "Ajouter à Apple Wallet",
+      "qr_image_alt": "Code QR : scannez-le pour utiliser votre carte-cadeau",
+      "copy_code": "Copier le code",
+      "expired": "Expiré",
+      "copy_code_success": "Le code a bien été copié",
+      "print_gift_card": "Imprimer"
+    }
+  },
+  "components": {
+    "countdown": {
+      "days": "jours",
+      "hours": "heures",
+      "minutes": "minutes",
+      "day": "jour",
+      "hour": "heure",
+      "minute": "minute",
+      "promo_begin": "La promotion commence dans:",
+      "promo_remaining": "Il ne reste que:",
+      "promo_ended": "Terminée"
+    },
+    "uploader": {
+      "errors": {
+        "wrongType": "Le fichier que vous tentez d'importer n'est pas acceptés. Seules les images en png, jpeg ou jpg sont autorisés",
+        "tooLarge": "La photo que vous tentez d'importer est trop volumineuse. La taille maximale est de 10Mo",
+        "serverError": "Nous sommes désolé mais nous rencontrons actuellement un problème. Nous faisons notre maximum pour le régler. Nous vous invitons à nous envoyer un mail pour accélérer le processus."
+      }
+    }
+  },
+  "tw": {
+    "404": {
+      "title": "404 Page non trouvée",
+      "see_all_products": "Voir tous les produits"
+    },
+    "annoncement_bar": {
+      "message": "💳 PAIEMENT EN 3X SANS FRAIS ! ou COMMANDEZ AUJOURD'HUI, PAYEZ PLUS TARD ! ✨"
+    },
+    "cart": {
+      "continue_shopping": "Continuer les achats",
+      "empty_message": "Votre panier est vide",
+      "empty_img_cart_alt": "Panier vide",
+      "title": "Votre panier",
+
+      "caption": "Articles du panier",
+      "remove_title": "Supprimer {{ title }}",
+      "subtotal": "Sous-total",
+      "new_subtotal": "Nouveau sous-total",
+      "note": "Instructions spéciales concernant la commande",
+      "checkout": "Procéder au paiement",
+      "cart_error": "Une erreur est survenue lors de l’actualisation de votre panier. Veuillez réessayer.",
+      "cart_quantity_error_html": "Vous ne pouvez pas ajouter plus de {{ quantity }} de ce produit à votre panier.",
+      "taxes_and_shipping_policy_at_checkout_html": "Taxes et <a href=\"{{ link }}\">frais d'expédition</a> calculés lors du paiement",
+      "taxes_included_but_shipping_at_checkout": "Taxes incluses et frais d'expédition calculés lors du paiement",
+      "taxes_included_and_shipping_policy_html": "Taxes incluses. <a href=\"{{ link }}\">Frais d'expédition</a> calculés à l'étape de paiement.",
+      "taxes_and_shipping_at_checkout": "Taxes et frais d'expédition calculés lors du paiement",
+      "headings": {
+        "product": "Produit",
+        "price": "Prix",
+        "total": "Total",
+        "quantity": "Quantité",
+        "image": "Image de produit"
+      },
+      "update": "Mettre à jour",
+      "login": {
+        "title": "Vous possédez un compte ?",
+        "paragraph_html": "<a href=\"{{ link }}\" class=\"link underlined-link\">Connectez-vous</a> pour payer plus vite."
+      }
+    },
+    "cart_drawer": {
+      "close": "Fermer",
+      "continue_shopping": "Voir tous nos tableaux",
+      "empty_message": "Votre panier est vide",
+      "remove": "Enlever {{article}} du panier",
+      "keep_shopping": "Autres produits",
+      "loading": "Chargement en cours",
+      "minus": "Enlever un {{article}} du panier",
+      "plus": "Ajouter {{article}} au panier",
+      "subtotal": "Sous-total",
+      "title": "Votre panier"
+    },
+    "contact-form": {
+      "title": "Contactez-nous",
+      "lastname": "Nom",
+      "email": "Email",
+      "phone": "Téléphone",
+      "send": "Envoyer",
+      "post_success": "Votre message a bien été envoyé !",
+      "error": "Une erreur s'est produite lors de l'envoi du message",
+      "textarea": "Votre message"
+    },
+    "footer": {
+      "accessibility": {
+        "payment": "Moyens de paiement"
+      },
+      "localization": {
+        "country_label": "Devise",
+        "language_label": "Langue"
+      },
+      "newsletter": {
+        "error": "Une erreur s'est produite lors de l'inscription",
+        "placeholder": "Email",
+        "subscribe": "S'inscrire",
+        "success": "Vous êtes bien inscrit !"
+      }
+    },
+    "header": {
+      "accessibility": {
+        "loading": "Chargement en cours...",
+        "navigation": "Menu de navigation"
+      },
+      "logo": {
+        "title": "Logo géométrique inspiré de Picasso",
+        "desc": "Logo représentant une tête rouge et jaune en formes géométriques, évoquant le style avant-gardiste de Picasso."
+      },
+      "svg": {
+        "bag": {
+          "title": "Sac panier d'achat"
+        },
+        "close": {
+          "title": "Fermer"
+        },
+        "hamburger": {
+          "title": "Menu de navigation"
+        },
+        "heart": {
+          "title": "Cœur j'aime"
+        },
+        "loup": {
+          "title": "Loupe pour la recherche"
+        }
+      },
+      "my_likes": "Mes j'aime",
+      "open_cart": "Ouvrir le panier",
+      "open_menu": "Voir les collections",
+      "search": {
+        "input_placeholder": "Recherche",
+        "results": {
+          "title": "TABLEAUX",
+          "all": "Voir tous les tableaux pour «{{ terms }}»",
+          "none": "Aucun tableaux pour «{{ terms }}»"
+        }
+      }
+    },
+    "main_collection_banner": {
+      "learn_more": "En savoir plus",
+      "fewer_details": "Moins de détails"
+    },
+    "main-collection-product-grid": {
+      "empty": "Aucun produit trouvé"
+    },
+    "main_product": {
+      "accessibility": {
+        "skip_to_product_info": "Passer aux informations produits",
+        "see_image_number": "Voir l'image {{ number }} du produit",
+        "loading-handler": "Main qui tapote sur la table pour indiquer que le produit est en cours de chargement"
+      },
+      "carousel": {
+        "popup": {
+          "title": "Vue détaillée de l'image du produit",
+          "close": "Fermer"
+        }
+      },
+      "painting": {
+        "canvas_texture": "Texture de toile en lin"
+      }
+    },
+    "likes_page": {
+      "title": "Mes j'aime",
+      "empty_text": "Vous n'avez pas encore de j'aime",
+      "continue_shopping": "Continuer les achats"
+    },
+    "pagination": {
+      "label": "Pagination",
+      "page": "Page {{ number }}",
+      "next": "Page suivante",
+      "previous": "Page précédente"
+    },
+    "social": {
+      "facebook": "Logo Facebook",
+      "twitter": "Logo Twitter",
+      "pinterest": "Logo Pinterest",
+      "instagram": "Logo Instagram",
+      "tiktok": "Logo TikTok",
+      "youtube": "Logo YouTube"
+    }
+  },
+  "localeImported": {
+    "40x40_cm": "40x40 cm",
+    "toile": "Toile",
+    "sans_systme_de_fixation": "Sans système de fixation",
+    "set_de_fixation": "Set de fixation",
+    "chassis_de_2cm": "Chassis de 2cm",
+    "chassis_de_4cm": "Chassis de 4cm",
+    "bordure_blanche": "Bordure blanche",
+    "bordure_noire": "Bordure noire",
+    "bordure_tire": "Bordure étirée",
+    "bordure_miroir": "Bordure miroir",
+    "mirror": "mirror",
+    "bordure_plie": "Bordure pliée",
+    "sans_cadre": "Sans cadre",
+    "cadre_blanc": "Cadre blanc",
+    "cadre_noir_mat": "Cadre noir Mat",
+    "cadre_argent_ancien": "Cadre argent ancien",
+    "cadre_chne_clair": "Cadre chêne clair",
+    "cadre_noyer": "Cadre noyer",
+    "crochet": "Crochet",
+    "brillant": "Brillant",
+    "aluminium__plexiglas": "Aluminium + Plexiglas",
+    "60x60_cm": "60x60 cm",
+    "rails": "Rails",
+    "80x80_cm": "80x80 cm",
+    "100x100_cm": "100x100 cm",
+    "30x40_cm": "30x40 cm",
+    "60x80_cm": "60x80 cm",
+    "75x100_cm": "75x100 cm",
+    "90x120_cm": "90x120 cm",
+    "120x160_cm": "120x160 cm",
+    "40x30_cm": "40x30 cm",
+    "aluminium": "Aluminium",
+    "mat": "Mat",
+    "80x60_cm": "80x60 cm",
+    "100x75_cm": "100x75 cm",
+    "120x90_cm": "120x90 cm",
+    "160x120_cm": "160x120 cm",
+    "120x120_cm": "120x120 cm"
+  }
+}

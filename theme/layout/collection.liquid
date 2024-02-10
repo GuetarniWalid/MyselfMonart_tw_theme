@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="" />
+    <link rel="canonical" href="{{ canonical_url }}" />
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin />
+    <meta name="p:domain_verify" content="df84d648bc3332c06767fb16e0fb142e"/>
+
+    {%- if template.name == 'page' and page.metafields.robots.noindex.value -%}
+      <meta name="robots" content="noindex,nofollow">
+    {%- endif -%}
+
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}" />
+    {%- endif -%} 
+
+    <title>
+      {{ page_title }}
+      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%} {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%} {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    </title>
+
+    {% if page_description %}
+      <meta name="description" content="{{ page_description | escape }}" />
+    {% endif %} {% render 'meta-tags' %}
+
+    <script src="{{ 'tw-global.js' | asset_url }}" defer="defer"></script>
+    {{
+      content_for_header
+    }}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    {% style %}
+        @font-face {
+          font-family: "heading";
+          src: url({{ "heading.woff2" | asset_url }}) format("woff2");
+          font-display: swap;
+        }
+
+    {% endstyle %}
+
+    {{ 'style.css' | asset_url | stylesheet_tag }}
+
+    <script src="{{ 'collection.js' | asset_url }}" defer="defer"></script>
+
+    <script>
+      if (Shopify.designMode) {
+        document.documentElement.classList.add('shopify-design-mode');
+      }
+    </script>
+
+    {%- if request.design_mode -%}
+      <script src="{{ 'theme-editor.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+  
+    {% render 'gsf-conversion-pixels' %}
+  </head>
+
+  <body class="w-screen overflow-x-hidden text-main bg-secondary z-10 scrollbar relative min-h-screen">
+    <a class="sr-only focus:not-sr-only" href="#MainContent">
+      {{ 'accessibility.skip_to_text' | t }}
+    </a>
+
+    {% render 'tw-announcement-bar' %}
+    {% section 'tw-header' %}
+    {% section 'tw-cart-drawer' %}
+
+
+    <div id="wrapper-overlay" class="relative">
+      <main id="MainContent" role="main">
+        {{ content_for_layout }}
+      </main>
+      {% section 'tw-footer' %}
+      <div id="overlay-content" class="absolute inset-0 bg-[rgba(0,46,93,0)] shadow-[shadow-[0_8px_32px_0_rgba(31,38,135,0.37)]] backdrop-blur-[2px] hidden"> </div>
+      {% render 'tw-loup-like-button' %}
+    </div>
+
+    <script>
+      window.shopUrl = '{{ request.origin }}';
+      window.routes = {
+        cart_add_url: '{{ routes.cart_add_url }}',
+        cart_change_url: '{{ routes.cart_change_url }}',
+        cart_update_url: '{{ routes.cart_update_url }}',
+        cart_url: '{{ routes.cart_url }}',
+        predictive_search_url: '{{ routes.predictive_search_url }}',
+      };
+
+      window.cartStrings = {
+        error: `{{ 'sections.cart.cart_error' | t }}`,
+        quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`,
+      };
+
+      window.variantStrings = {
+        addToCart: `{{ 'products.product.add_to_cart' | t }}`,
+        soldOut: `{{ 'products.product.sold_out' | t }}`,
+        unavailable: `{{ 'products.product.unavailable' | t }}`,
+      };
+
+      window.accessibilityStrings = {
+        imageAvailable: `{{ 'products.product.media.image_available' | t: index: '[index]' }}`,
+        shareSuccess: `{{ 'general.share.success_message' | t }}`,
+        pauseSlideshow: `{{ 'sections.slideshow.pause_slideshow' | t }}`,
+        playSlideshow: `{{ 'sections.slideshow.play_slideshow' | t }}`,
+      };
+    </script>
+
+    {% comment %}
+    {% render 'cookie-banner' %}
+      
+    {% endcomment %}
+  </body>
+</html>

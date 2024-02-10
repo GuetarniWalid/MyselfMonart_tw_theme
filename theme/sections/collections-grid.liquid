@@ -1,0 +1,155 @@
+<nav role="navigation">
+  <ul class="grid grid-cols-12 gap-3">
+    {% for block in section.blocks %}
+      <li class="one-collection relative overflow-hidden h-[40vh] md:h-[60vh] md:{{ block.settings.nb_columns }} flex items-end col-span-12{% if block.settings.image != blank %} after:absolute after:inset-0 after:bg-gradient-to-b after:from-transparent after:from-60% after:to-black/70{% endif %}"> 
+        {% if block.settings.image != blank %}
+          <img
+            data-srcset="{{ block.settings.image | image_url: width: 375 }} 375w,
+            {{ block.settings.image | image_url: width: 550 }} 550w,
+            {{ block.settings.image | image_url: width: 750 }} 750w,
+            {{ block.settings.image | image_url: width: 1100 }} 1100w,
+            {{ block.settings.image | image_url: width: 1300 }} 1300w,
+            {{ block.settings.image | image_url: width: 1500 }} 1500w,
+            {{ block.settings.image | image_url: width: 2000 }} 2000w"
+            sizes="           
+            {% if block.settings.nb_columns == "col-span-9" %}
+              (max-width: 767px) 100vw, (max-width: 1300px) 75vw, 940px
+            {% else if block.settings.nb_columns == "col-span-8" %}
+              (max-width: 767px) 100vw, (max-width: 1300px) 67vw, 830px
+            {% else if block.settings.nb_columns == "col-span-6" %}
+              (max-width: 767px) 100vw, (max-width: 1300px) 50vw, 650px
+            {% else if block.settings.nb_columns == "col-span-4" %}
+              (max-width: 767px) 100vw, (max-width: 1300px) 34vw, 410px
+            {% else if block.settings.nb_columns == "col-span-3" %}
+              (max-width: 767px) 100vw, (max-width: 1300px) 25vw, 310px
+            {% else %}
+              (max-width: 1300px) 100vw, 1300px
+            {% endif %}
+            "
+            src="{{ block.settings.image | image_url: width: 40 }}"
+            loading="{% if block.settings.lazy_load %}lazy{% else %}eager{% endif %}"
+            width="500"
+            alt="{{ block.settings.image.alt | escape }}"
+            class="skeleton placeholder blur-lg absolute top-0 left-0 w-full h-full object-cover"
+          >
+        {% else %}
+          {{ 'collection-1' | placeholder_svg_tag: 'absolute top-0 left-0 w-full h-full object-cover bg-gray-200' }}
+        {% endif %}
+        {% if block.settings.collection.title != blank or block.settings.paragraph != blank %}
+          <div class="text-secondary p-7 z-10">
+            {% if block.settings.collection.title != blank %}
+              <h2 class="-z-20">
+                {% if block.settings.collection.url != blank %}
+                  <a href="{{ block.settings.collection.url }}" class="after:absolute after:inset-0 after:-z-10">{{ block.settings.collection.title }}</a>
+                {% else %}
+                  {{ block.settings.collection.title }}
+                {% endif %}
+              </h2>
+            {% endif %}
+            {% if block.settings.paragraph != blank %}
+              <button class="show-more pl-1 mt-2 z-20">{{ "sections.collections_grid.find_out_more" | t }}</button>
+            {% endif %}
+          </div>
+        {% endif %}
+        {% if block.settings.paragraph != blank %}
+          <div class="paragraph hidden absolute inset-0 bg-secondary border-2 border-main p-6 overflow-y-auto z-20">
+            <button class="close float-right ml-3 mb-3 bg-main/10 rounded p-2 border-main border-1">
+              {% render 'tw-icon-close' %}
+            </button>
+            {{ block.settings.paragraph }}
+          </div>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</nav>
+
+<script src="{{ 'section-collections-grid.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "t:sections.collections-grid.name",
+  "tag": "section",
+  "class": "collections-grid page-width py-16",
+  "blocks":[
+    {
+        "type": "collection",
+        "name": "Collection",
+        "limit": 14,
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection"
+          },
+          {
+            "type": "select",
+            "id": "nb_columns",
+            "label": "t:sections.collections-grid.blocks.collection.settings.nb_columns.label",
+            "options": [
+              {
+                "value": "col-span-3",
+                "label": "1/4"
+              },
+              {
+                "value": "col-span-4",
+                "label": "1/3"
+              },
+              {
+                "value": "col-span-6",
+                "label": "1/2"
+              },
+              {
+                "value": "col-span-8",
+                "label": "2/3"
+              },
+              {
+                "value": "col-span-9",
+                "label": "3/4"
+              },
+              {
+                "value": "col-span-12",
+                "label": "t:sections.collections-grid.blocks.collection.settings.nb_columns.full-width.label"
+              }
+            ],
+            "default": "col-span-12"
+          },
+          {
+            "type": "checkbox",
+            "id": "lazy_load",
+            "default": true,
+            "label": "t:sections.collections-grid.blocks.collection.settings.lazy_load.label",
+            "info": "t:sections.collections-grid.blocks.collection.settings.lazy_load.info"
+          },
+          {
+            "type": "richtext",
+            "id": "paragraph",
+            "label": "t:sections.collections-grid.blocks.collection.settings.paragraph.label"
+          }
+        ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.collections-grid.name",
+      "blocks": [
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+

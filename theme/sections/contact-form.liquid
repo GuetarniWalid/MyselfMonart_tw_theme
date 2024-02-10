@@ -1,0 +1,126 @@
+{%- if section.settings.heading != blank -%}
+  <h2 class="py-6">{{ section.settings.heading | escape }}</h2>
+{%- else -%}
+  <h2>{{ 'tw.contact-form.title' | t }}</h2>
+{%- endif -%}
+{%- form 'contact', id: 'ContactForm' -%}
+  {%- if form.posted_successfully? -%}
+    <h2 tabindex="-1" autofocus>{% render 'tw-icon-success' %} {{ 'tw.contact-form.post_success' | t }}</h2>
+  {%- elsif form.errors -%}
+    <div>
+      <h2 role="alert" tabindex="-1" autofocus>{% render 'tw-icon-error' %} {{ 'tw.contact-form.error' | t }}</h2>
+    </div>
+    <ul role="list">
+      <li>
+        <a href="#ContactForm-email">
+          {{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}
+        </a>
+      </li>
+    </ul>
+  {%- endif -%}
+  <div class="md:flex md:gap-5">
+    <div class="relative h-12 group my-4 w-full">
+      {%- assign name = 'tw.contact-form.lastname' | t -%}
+      <input autocomplete="name" type="text" id="ContactForm-name" name="contact[{{ name }}]" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}" class="bg-secondary pl-5 pr-9 border hover:border-2 focus:border-2 w-full h-full rounded-lg peer/search placeholder:text-transparent outline-none border-main" placeholder="{{ name }}">
+      <label class="bg-secondary text-main/70 px-1 absolute -translate-y-1/2 left-4 top-0 text-xs tracking-normal peer-focus/search:top-0 peer-focus/search:text-xs peer-focus/search:tracking-normal peer-placeholder-shown/search:top-1/2 peer-placeholder-shown/search:text-sm peer-placeholder-shown/search:tracking-widest transition-all duration-75" for="ContactForm-name">{{ name }}</label>
+    </div>
+    <div class="relative h-12 group my-4 w-full">
+      <input
+        autocomplete="email"
+        type="email"
+        id="ContactForm-email"
+        class="bg-secondary pl-5 pr-9 border hover:border-2 focus:border-2 w-full h-full rounded-lg peer/search placeholder:text-transparent outline-none border-main"
+        name="contact[email]"
+        spellcheck="false"
+        autocapitalize="off"
+        value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+        aria-required="true"
+        {% if form.errors contains 'email' %}
+          aria-invalid="true"
+          aria-describedby="ContactForm-email-error"
+        {% endif %}
+        placeholder="{{ 'tw.contact-form.email' | t }}"
+      >
+      <label for="ContactForm-email" class="bg-secondary text-main/70 px-1 absolute -translate-y-1/2 left-4 top-0 text-xs tracking-normal peer-focus/search:top-0 peer-focus/search:text-xs peer-focus/search:tracking-normal peer-placeholder-shown/search:top-1/2 peer-placeholder-shown/search:text-sm peer-placeholder-shown/search:tracking-widest transition-all duration-75">{{ 'tw.contact-form.email' | t }}</label>
+      {%- if form.errors contains 'email' -%}
+        <small id="ContactForm-email-error">
+          <span>{{ 'tw.contact-form.error' | t }}</span>
+          <span>{% render 'tw-icon-error' %}{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}</span>
+        </small>
+      {%- endif -%}
+    </div>
+  </div>
+  {%- if section.settings.show_mobile_input -%}
+    <div class="relative h-12 group my-4">
+      <input type="tel" id="ContactForm-phone" autocomplete="tel" name="contact[{{ 'tw.contact-form.phone' | t }}]" pattern="[0-9\-]*" value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}" placeholder="{{ 'tw.contact-form.phone' | t }}" class="bg-secondary pl-5 pr-9 border hover:border-2 focus:border-2 w-full h-full rounded-lg peer/search placeholder:text-transparent outline-none border-main">
+      <label for="ContactForm-phone" class="bg-secondary text-main/70 px-1 absolute -translate-y-1/2 left-4 top-0 text-xs tracking-normal peer-focus/search:top-0 peer-focus/search:text-xs peer-focus/search:tracking-normal peer-placeholder-shown/search:top-1/2 peer-placeholder-shown/search:text-sm peer-placeholder-shown/search:tracking-widest transition-all duration-75">{{ 'tw.contact-form.phone' | t }}</label>
+    </div>
+  {%- endif -%}
+  <div class="relative group my-4 md:my-8">
+    {%- if section.settings.input_textarea != blank -%}
+      {%- assign textarea = section.settings.input_textarea -%}
+    {%- else -%}
+      {%- assign textarea = 'tw.contact-form.textarea' | t -%}
+    {%- endif -%}
+    <textarea
+      rows="10"
+      id="ContactForm-body"
+      name="contact[{{ textarea }}]"
+      placeholder="{{ textarea }}"
+      class="bg-secondary pl-5 pr-9 outline outline-1 hover:outline-2 focus:outline-2 w-full h-full rounded-lg peer/search placeholder:text-transparent outline-main py-3"
+    >
+      {{- form.body -}}
+    </textarea>
+    <label for="ContactForm-body" class="bg-secondary text-main/70 px-1 absolute -translate-y-1/2 left-4 top-0 text-xs tracking-normal peer-focus/search:top-0 peer-focus/search:text-xs peer-focus/search:tracking-normal peer-placeholder-shown/search:top-8 peer-placeholder-shown/search:text-sm peer-placeholder-shown/search:tracking-widest transition-all duration-75">{{ textarea }}</label>
+  </div>
+  <div>
+    <button type="submit" class="bg-main/5 border-2 border-main py-3 px-14 rounded-lg hover:bg-main/10 mt-5">
+      {%- if section.settings.button_text != blank -%}
+        {{ section.settings.button_text }}
+      {%- else -%}
+        {{ 'tw.contact-form.send' | t }}
+      {%- endif -%}
+    </button>
+  </div>
+{%- endform -%}
+
+{% schema %}
+{
+  "name": "t:sections.contact-form.name",
+  "tag": "section",
+  "class": "page-width px-4 py-12",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Contact form",
+      "label": "t:sections.contact-form.settings.heading.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.contact-form.headings.inputs.content"
+    },
+    {
+      "type": "text",
+      "id": "input_textarea",
+      "label": "t:sections.contact-form.settings.input_textarea.label"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "t:sections.contact-form.settings.button_text.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mobile_input",
+      "label": "t:sections.contact-form.settings.show_mobile_input.label",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.contact-form.presets.name"
+    }
+  ]
+}
+{% endschema %}

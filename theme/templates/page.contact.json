@@ -1,0 +1,51 @@
+{
+  "sections": {
+    "1659971223ecf8c3c8": {
+      "type": "image-banner",
+      "settings": {
+        "image_desktop": "shopify:\/\/shop_images\/serviceclient_ordi.jpg",
+        "image_desktop_fit": "contain",
+        "image_desktop_horizontal_position": "center",
+        "image_desktop_vertical_position": "center",
+        "image_desktop_height": 40,
+        "content_width_desktop": 50,
+        "content_horizontal_position_desktop": 50,
+        "content_vertical_position_desktop": 50,
+        "content_alignment_desktop": "left",
+        "image_mobile": "shopify:\/\/shop_images\/service_client.jpg",
+        "image_mobile_fit": "cover",
+        "image_mobile_horizontal_position": "center",
+        "image_mobile_vertical_position": "center",
+        "image_mobile_height": 85,
+        "content_width_mobile": 50,
+        "content_horizontal_position_mobile": 50,
+        "content_vertical_position_mobile": 80,
+        "content_alignment_mobile": "right",
+        "overlay_opacity": 0,
+        "body_text": "#ffffff"
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "form": {
+      "type": "contact-form",
+      "settings": {
+        "heading": "Contactez-nous",
+        "input_textarea": "Votre message",
+        "button_text": "",
+        "show_mobile_input": true
+      }
+    }
+  },
+  "order": [
+    "1659971223ecf8c3c8",
+    "main",
+    "form"
+  ]
+}

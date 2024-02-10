@@ -1,0 +1,112 @@
+{%- if section.settings.image_desktop != blank -%}
+  <img
+    {% if section.settings.enable_lazy_loading %}srcset{% else %}data-srcset{% endif %}="
+        {%- if section.settings.image_desktop.width >= 375 -%}{{ section.settings.image_desktop | image_url: width: 375 }} 375w,{%- endif -%}
+        {%- if section.settings.image_desktop.width >= 550 -%}{{ section.settings.image_desktop | image_url: width: 550 }} 550w,{%- endif -%}
+        {%- if section.settings.image_desktop.width >= 750 -%}{{ section.settings.image_desktop | image_url: width: 750 }} 750w,{%- endif -%}
+        {%- if section.settings.image_desktop.width >= 1100 -%}{{ section.settings.image_desktop | image_url: width: 1100 }} 1100w,{%- endif -%}
+        {%- if section.settings.image_desktop.width >= 1500 -%}{{ section.settings.image_desktop | image_url: width: 1500 }} 1500w,{%- endif -%}
+        {%- if section.settings.image_desktop.width >= 1780 -%}{{ section.settings.image_desktop | image_url: width: 1780 }} 1780w,{%- endif -%}
+        {%- if section.settings.image_desktop.width >= 2000 -%}{{ section.settings.image_desktop | image_url: width: 2000 }} 2000w,{%- endif -%}
+        {%- if section.settings.image_desktop.width >= 3000 -%}{{ section.settings.image_desktop | image_url: width: 3000 }} 3000w,{%- endif -%}
+        {%- if section.settings.image_desktop.width >= 3840 -%}{{ section.settings.image_desktop | image_url: width: 3840 }} 3840w,{%- endif -%}
+        {{ section.settings.image_desktop | image_url }} {{ section.settings.image_desktop.width }}w"
+      sizes="100vw"
+      src="{{ section.settings.image_desktop | image_url: width: 40 }}"
+      loading="{% if section.settings.enable_lazy_loading %}lazy{% else %}eager{% endif %}"
+      alt="{{ section.settings.image_desktop.alt | escape }}"
+      width="2000"
+      height="{{ section.settings.image_desktop.width | divided_by: section.settings.image_desktop.aspect_ratio }}"
+      class="hidden sm:inline-block object-cover w-full h-full skeleton{% unless section.settings.enable_lazy_loading %} placeholder blur-lg{% endunless %}"
+  >
+{%- endif -%}
+{%- if section.settings.image_mobile != blank -%}
+  <img
+    {% if section.settings.enable_lazy_loading %}srcset{% else %}data-srcset{% endif %}="
+      {%- if section.settings.image_mobile.width >= 375 -%}{{ section.settings.image_mobile | image_url: width: 375 }} 375w,{%- endif -%}
+      {%- if section.settings.image_mobile.width >= 550 -%}{{ section.settings.image_mobile | image_url: width: 550 }} 550w,{%- endif -%}
+      {%- if section.settings.image_mobile.width >= 750 -%}{{ section.settings.image_mobile | image_url: width: 750 }} 750w,{%- endif -%}
+      {%- if section.settings.image_mobile.width >= 1100 -%}{{ section.settings.image_mobile | image_url: width: 1100 }} 1100w,{%- endif -%}
+      {{ section.settings.image_mobile | image_url }} {{ section.settings.image_mobile.width }}w"
+    sizes="100vh"
+    src="{{ section.settings.image_mobile | image_url: width: 40 }}"
+    loading="{% if section.settings.enable_lazy_loading %}lazy{% else %}eager{% endif %}"
+    alt="{{ section.settings.image_mobile.alt | escape }}"
+    width="500"
+    height="{{ section.settings.image_mobile.width | divided_by: section.settings.image_mobile.aspect_ratio }}"
+    class="sm:hidden object-cover w-full h-full skeleton{% unless section.settings.enable_lazy_loading %} placeholder blur-lg{% endunless %}"
+  >
+{%- endif -%}
+{%- if section.settings.image_desktop == blank -%}
+  {{ 'lifestyle-2' | placeholder_svg_tag }}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.image-banner.name",
+  "tag": "section",
+  "class": "image-banner",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.image-banner.headings.image_desktop.header"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_desktop",
+      "label": "Image"
+    },
+    {
+      "type": "range",
+      "id": "image_desktop_height",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "t:sections.image-banner.settings.image_height.label",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "t:sections.image-banner.headings.image_mobile.header"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Image"
+    },
+    {
+      "type": "range",
+      "id": "image_mobile_height",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "t:sections.image-banner.settings.image_height.label",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "t:sections.image-banner.headings.content_mobile.header"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.image-banner.headings.desktop_and_mobile.header"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_lazy_loading",
+      "label": "t:sections.image-banner.settings.enable_lazy_loading.label",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.image-banner.name"
+    }
+  ]
+}
+{% endschema %}
+
+
+

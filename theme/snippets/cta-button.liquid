@@ -1,0 +1,13 @@
+{% comment %}
+    Renders call to action button.
+
+    Accepts:
+    - block: {Object} block object
+
+    Usage:
+    {% render 'cta-button', block: block %}
+{% endcomment %}
+
+<button
+        class="bg-gray-950 hover:bg-{{ block.settings.background_color_hover }} text-{{ block.settings.text_color }} hover:text-{{ block.settings.text_color_hover }} font-bold py-2 px-4 rounded-full"
+>{{ block.settings.text }}</button>

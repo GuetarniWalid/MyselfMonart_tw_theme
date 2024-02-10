@@ -1,0 +1,15 @@
+{% comment %}
+    Renders a loader.
+
+    Accepts:
+    - color: {String} - The color of the loader. Defaults to "dark". Can be "light" or "dark".
+
+    Usage:
+    {% render 'tw-icon-loading', color: "light" %}
+{% endcomment %}
+
+<div aria-hidden="true" focusable="false" role="presentation" class="-translate-y-2">
+    <span class="rounded-full inline-block w-1 h-1 {% if color == 'light' %}bg-secondary/50{% else %}bg-main/75{% endif %} animate-loading"> </span>
+    <span class="rounded-full inline-block w-1 h-1 {% if color == 'light' %}bg-secondary/50{% else %}bg-main/75{% endif %} animate-[loading_0.6s_0.2s_linear_infinite]"> </span>
+    <span class="rounded-full inline-block w-1 h-1 {% if color == 'light' %}bg-secondary/50{% else %}bg-main/75{% endif %} animate-[loading_0.6s_0.3s_linear_infinite]"> </span>
+</div>

@@ -1,0 +1,15 @@
+{% comment %}
+    Renders an arrow.
+
+    Accepts:
+    - direction: {String = left} - The number of degrees to rotate the arrow. Defaults to right.
+    - group_one: {Boolean} - True if the arrow should be in group one.
+
+    Usage:
+    {% render 'icon-arrow', direction: "left" %}
+{% endcomment %}
+
+
+<svg viewBox="0 0 60 22" fill="none" aria-hidden="true" focusable="false" role="presentation" class="inline-block {% if direction == "left" %}rotate-180{% endif %}" width="30">
+<path class="{% if group_one %}group-hover/one:elong-arrow group-focus-within/one:elong-arrow{% else %}group-hover:elong-arrow group-focus-within:elong-arrow{% endif %} transition-all duration-200 ease-out" d="M0.5 9.35772H20.9956L14.2001 2.29941L16.4134 0L27 11L16.4134 22L14.2001 19.7006L20.9956 12.6423H0.5V9.35772Z" fill="currentColor"></path>
+</svg>

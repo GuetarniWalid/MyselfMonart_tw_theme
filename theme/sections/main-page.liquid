@@ -1,0 +1,34 @@
+<div>
+  <h1 class="my-10 {{ section.settings.title_alignment }}">
+    {{ page.title | escape }}
+  </h1>
+  <div class="page-description">
+    {{ page.content }}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.main-page.name",
+  "tag": "section",
+  "class": "main-page",
+  "settings": [
+    {
+      "type": "select",
+      "id": "title_alignment",
+      "label": "t:sections.main-page.settings.title_alignment.label",
+      "options": [
+        {
+          "value": "text-left",
+          "label": "t:sections.main-page.settings.title_alignment.options.left.label"
+        },
+        {
+          "value": "text-center",
+          "label": "t:sections.main-page.settings.title_alignment.options.center.label"
+        }
+      ],
+      "default": "text-left"
+    }
+  ]
+}
+{% endschema %}
