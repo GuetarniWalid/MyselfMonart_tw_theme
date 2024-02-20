@@ -1,8 +1,14 @@
-import React from 'react';
+import { useContext } from 'react';
+import { InfoToShowContext } from '../App';
 
-export default function SelectInfoButton() {
+export default function SelectInfoButton({ technicalName, technicalType }) {
+  const setInfoToShow = useContext(InfoToShowContext);
+
   function handleClick() {
-    console.log('SelectInfoButton clicked');
+    setInfoToShow({
+      technicalName,
+      technicalType,
+    });
   }
 
   return (

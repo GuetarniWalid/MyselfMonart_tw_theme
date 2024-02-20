@@ -3,7 +3,6 @@ export default function useImagePNGToShow(currentOption) {
 
   return {
     showGirl: currentOptionIsSize,
-    showPlant: !currentOptionIsSize,
-    showCouch: !currentOptionIsSize,
+    showFurniture: !currentOptionIsSize,
   };
 }

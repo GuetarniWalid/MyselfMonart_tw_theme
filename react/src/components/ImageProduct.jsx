@@ -1,17 +1,11 @@
-import usePositionDependingSize from '../hooks/usePositionDependingSize';
+import { forwardRef } from 'react';
 import ImageProductFilter from './ImageProductFilter';
 
-export default function ImageProduct({
-  size,
-  matter,
-  shine,
-  width,
-}) {
-  const positionClasses = usePositionDependingSize(size);
-
+const ImageProduct = forwardRef(({ matter, shine, width }, ref) => {
   return (
     <div
-      className={`absolute shadow-2xl transition-all duration-200 ease-out ${positionClasses} rounded overflow-hidden`}
+      className={`relative inline-block shadow-2xl transition-all duration-200 ease-out rounded overflow-hidden`}
+      ref={ref}
     >
       <img
         src={window.productImageSRC}
@@ -30,4 +24,5 @@ export default function ImageProduct({
       <ImageProductFilter width={width} matter={matter} shine={shine} />
     </div>
   );
-}
+});
+export default ImageProduct;

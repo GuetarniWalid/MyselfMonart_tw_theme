@@ -325,7 +325,7 @@ main-product-blocks .description h2 span {
   }
 
   .cart-drawer {
-    @apply fixed top-0 h-screen right-0 z-50 w-full xs:w-80 bg-secondary transition-transform duration-100 overflow-y-auto scrollbar;
+    @apply fixed top-0 h-dvh right-0 z-50 w-full xs:w-80 bg-secondary transition-transform duration-100 overflow-y-auto scrollbar;
   }
 
   .collection-description h2,

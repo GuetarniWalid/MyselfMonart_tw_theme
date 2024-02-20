@@ -298,7 +298,7 @@ main-product-blocks .description h2 span {
 }
 
 /*
-! tailwindcss v3.3.3 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.1 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -331,9 +331,11 @@ main-product-blocks .description h2 span {
 4. Use the user's configured `sans` font-family by default.
 5. Use the user's configured `sans` font-feature-settings by default.
 6. Use the user's configured `sans` font-variation-settings by default.
+7. Disable tap highlights on iOS
 */
 
-html {
+html,
+:host {
   line-height: 1.5;
   /* 1 */
   -webkit-text-size-adjust: 100%;
@@ -343,12 +345,14 @@ html {
   -o-tab-size: 4;
      tab-size: 4;
   /* 3 */
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   /* 4 */
   font-feature-settings: normal;
   /* 5 */
   font-variation-settings: normal;
   /* 6 */
+  -webkit-tap-highlight-color: transparent;
+  /* 7 */
 }
 
 /*
@@ -420,8 +424,10 @@ strong {
 }
 
 /*
-1. Use the user's configured `mono` font family by default.
-2. Correct the odd `em` font sizing in all browsers.
+1. Use the user's configured `mono` font-family by default.
+2. Use the user's configured `mono` font-feature-settings by default.
+3. Use the user's configured `mono` font-variation-settings by default.
+4. Correct the odd `em` font sizing in all browsers.
 */
 
 code,
@@ -430,8 +436,12 @@ samp,
 pre {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   /* 1 */
-  font-size: 1em;
+  font-feature-settings: normal;
   /* 2 */
+  font-variation-settings: normal;
+  /* 3 */
+  font-size: 1em;
+  /* 4 */
 }
 
 /*
@@ -1028,7 +1038,7 @@ h6 {
   top: 0px;
   right: 0px;
   z-index: 50;
-  height: 100vh;
+  height: 100dvh;
   width: 100%;
   overflow-y: auto;
   --tw-bg-opacity: 1;
@@ -1290,32 +1300,8 @@ h6 {
   bottom: -0.75rem;
 }
 
-.-left-1\/4 {
-  left: -25%;
-}
-
 .-left-10 {
   left: -2.5rem;
-}
-
-.-right-1\/4 {
-  right: -25%;
-}
-
-.-right-10 {
-  right: -2.5rem;
-}
-
-.-right-14 {
-  right: -3.5rem;
-}
-
-.-right-20 {
-  right: -5rem;
-}
-
-.-right-32 {
-  right: -8rem;
 }
 
 .-top-10 {
@@ -1410,20 +1396,8 @@ h6 {
   top: 0.75rem;
 }
 
-.top-32 {
-  top: 8rem;
-}
-
-.top-36 {
-  top: 9rem;
-}
-
 .top-6 {
   top: 1.5rem;
-}
-
-.top-8 {
-  top: 2rem;
 }
 
 .isolate {
@@ -1492,6 +1466,11 @@ h6 {
 
 .m-0 {
   margin: 0px;
+}
+
+.mx-3 {
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
 }
 
 .mx-4 {
@@ -1709,10 +1688,6 @@ h6 {
   height: 3rem;
 }
 
-.h-2\/5 {
-  height: 40%;
-}
-
 .h-28 {
   height: 7rem;
 }
@@ -1757,10 +1732,6 @@ h6 {
   height: 40vh;
 }
 
-.h-\[45\%\] {
-  height: 45%;
-}
-
 .h-\[45px\] {
   height: 45px;
 }
@@ -1789,6 +1760,10 @@ h6 {
   height: auto;
 }
 
+.h-dvh {
+  height: 100dvh;
+}
+
 .h-full {
   height: 100%;
 }
@@ -1798,20 +1773,16 @@ h6 {
   height: max-content;
 }
 
-.h-screen {
-  height: 100vh;
-}
-
 .max-h-\[350px\] {
   max-height: 350px;
 }
 
-.min-h-\[230px\] {
-  min-height: 230px;
+.max-h-\[90\%\] {
+  max-height: 90%;
 }
 
-.min-h-\[270px\] {
-  min-height: 270px;
+.min-h-full {
+  min-height: 100%;
 }
 
 .min-h-screen {
@@ -1932,6 +1903,10 @@ h6 {
 
 .max-w-none {
   max-width: none;
+}
+
+.max-w-sm {
+  max-width: 24rem;
 }
 
 .flex-1 {
@@ -2495,6 +2470,10 @@ h6 {
   background-color: rgba(0,46,93,0);
 }
 
+.bg-black\/30 {
+  background-color: rgb(0 0 0 / 0.3);
+}
+
 .bg-breadcrumb-main {
   --tw-bg-opacity: 1;
   background-color: rgb(26 46 5 / var(--tw-bg-opacity));
@@ -2646,12 +2625,20 @@ h6 {
   padding: 1rem;
 }
 
+.p-5 {
+  padding: 1.25rem;
+}
+
 .p-6 {
   padding: 1.5rem;
 }
 
 .p-7 {
   padding: 1.75rem;
+}
+
+.p-8 {
+  padding: 2rem;
 }
 
 .p-\[9px\] {
@@ -2936,6 +2923,10 @@ h6 {
   line-height: .75rem;
 }
 
+.leading-loose {
+  line-height: 2;
+}
+
 .leading-relaxed {
   line-height: 1.625;
 }
@@ -3029,6 +3020,12 @@ h6 {
 .shadow-3xl {
   --tw-shadow: 1px 12px 50px -1px rgba(0,0,0,0.1);
   --tw-shadow-colored: 1px 12px 50px -1px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.shadow-\[0_-13px_28px_5px_rgba\(0\2c 0\2c 0\2c 0\.1\)\] {
+  --tw-shadow: 0 -13px 28px 5px rgba(0,0,0,0.1);
+  --tw-shadow-colored: 0 -13px 28px 5px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
@@ -3759,11 +3756,6 @@ h6 {
     flex-direction: row;
   }
 
-  .xs\:px-0 {
-    padding-left: 0px;
-    padding-right: 0px;
-  }
-
   .xs\:text-xl {
     font-size: 1.25rem;
     line-height: 1.75rem;
@@ -3929,12 +3921,12 @@ h6 {
     width: auto;
   }
 
-  .md\:max-w-none {
-    max-width: none;
-  }
-
   .md\:max-w-lg {
     max-width: 32rem;
+  }
+
+  .md\:max-w-none {
+    max-width: none;
   }
 
   .md\:flex-1 {
@@ -4004,6 +3996,11 @@ h6 {
     border-color: rgb(246 243 238 / var(--tw-border-opacity));
   }
 
+  .md\:px-0 {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
   .md\:px-6 {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
@@ -4012,11 +4009,6 @@ h6 {
   .md\:py-4 {
     padding-top: 1rem;
     padding-bottom: 1rem;
-  }
-
-  .md\:px-0 {
-    padding-left: 0px;
-    padding-right: 0px;
   }
 
   .md\:text-2xl {

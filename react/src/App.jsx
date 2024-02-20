@@ -1,10 +1,15 @@
-import { useState, useMemo, useRef, useEffect } from 'react';
+import { useState, useMemo, useRef, useEffect, createContext } from 'react';
+import { createPortal } from 'react-dom';
 import useFormatOptions from './hooks/useFormatOptions';
 import useFormatOptionIndexListSelected from './hooks/useFormatOptionIndexListSelected';
+import useIsMobile from './hooks/useIsMobile';
 import Painting from './components/Painting';
-import BuyButton from './components/BuyButton';
-import Summary from './components/Summary';
+import MobileBottom from './components/MobileBottom';
 import CloseButton from './components/CloseButton';
+import PopupInfo from './components/PopupInfo';
+import DesktopRight from './components/DesktopRight';
+
+export const InfoToShowContext = createContext();
 
 export default function App() {
   const initialoptionSets = useMemo(() => useFormatOptions(0, 0), []);
@@ -14,6 +19,7 @@ export default function App() {
   );
   const [currentOption, setCurrentOption] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(null);
+  const [infoToShow, setInfoToShow] = useState(null);
   const optionSets = useFormatOptions(
     optionIndexListSelected[0],
     optionIndexListSelected[1],
@@ -22,7 +28,8 @@ export default function App() {
     optionIndexListSelected,
     optionSets,
   );
-  const SummaryRef = useRef(null);
+  const isMobile = useIsMobile();
+  const mobileSummaryRef = useRef(null);
   const addonsDrawerRef = useRef(document.getElementById('addonsDrawer'));
   const CloseButtonRef = useRef(null);
 
@@ -53,46 +60,65 @@ export default function App() {
   }, []);
 
   function handleClick(event) {
-    if (!SummaryRef.current.contains(event.target)) {
+    if (
+      mobileSummaryRef.current &&
+      !mobileSummaryRef.current.contains(event.target)
+    ) {
       setSelectIndexSelected(null);
     }
   }
 
   return (
-    <div
-      className="relative w-full h-full flex flex-col gap-6 md:flex-row md:h-4/5 justify-center max-w-6xl"
-      onClick={handleClick}
-    >
-      <CloseButton
-        addonsDrawerRef={addonsDrawerRef}
-        drawerOpen={drawerOpen}
-        CloseButtonRef={CloseButtonRef}
-      />
-      <Painting
-        currentOption={currentOption}
-        optionSets={optionSets}
-        optionIndexListSelected={newOptionIndexListSelectedFormatted}
-      />
-      <div className="sm:flex items-center md:flex-1">
-        <div className="w-full px-4 md:px-0">
-          <BuyButton
-            optionSets={optionSets}
-            optionIndexListSelected={newOptionIndexListSelectedFormatted}
-            drawerOpen={drawerOpen}
-          />
-          <Summary
-            optionIndexListSelected={newOptionIndexListSelectedFormatted}
-            setOptionIndexListSelected={setOptionIndexListSelected}
-            optionSets={optionSets}
-            selectIndexSelected={selectIndexSelected}
-            setSelectIndexSelected={setSelectIndexSelected}
-            SummaryRef={SummaryRef}
-            setCurrentOption={setCurrentOption}
-            drawerOpen={drawerOpen}
-            CloseButtonRef={CloseButtonRef}
-          />
+    <InfoToShowContext.Provider value={setInfoToShow}>
+      <div
+        className="relative w-full h-full flex flex-col gap-6 md:flex-row md:h-4/5 justify-center max-w-6xl"
+        onClick={handleClick}
+      >
+        <CloseButton
+          addonsDrawerRef={addonsDrawerRef}
+          drawerOpen={drawerOpen}
+          CloseButtonRef={CloseButtonRef}
+        />
+        <Painting
+          currentOption={currentOption}
+          optionSets={optionSets}
+          optionIndexListSelected={newOptionIndexListSelectedFormatted}
+          setCurrentOption={setCurrentOption}
+        />
+        <div className="sm:flex items-center md:flex-1">
+          <div className="w-full px-4 md:px-0">
+            {isMobile ? (
+              <MobileBottom
+                optionIndexListSelected={newOptionIndexListSelectedFormatted}
+                setOptionIndexListSelected={setOptionIndexListSelected}
+                optionSets={optionSets}
+                selectIndexSelected={selectIndexSelected}
+                setSelectIndexSelected={setSelectIndexSelected}
+                mobileSummaryRef={mobileSummaryRef}
+                setCurrentOption={setCurrentOption}
+                drawerOpen={drawerOpen}
+                CloseButtonRef={CloseButtonRef}
+              />
+            ) : (
+              <DesktopRight
+                optionSets={optionSets}
+                optionIndexListSelected={newOptionIndexListSelectedFormatted}
+                selectIndexSelected={selectIndexSelected}
+                setSelectIndexSelected={setSelectIndexSelected}
+                setOptionIndexListSelected={setOptionIndexListSelected}
+                setCurrentOption={setCurrentOption}
+                drawerOpen={drawerOpen}
+                CloseButtonRef={CloseButtonRef}
+              />
+            )}
+          </div>
         </div>
+        {infoToShow &&
+          createPortal(
+            <PopupInfo infoToShow={infoToShow} setInfoToShow={setInfoToShow} />,
+            document.getElementById('addonsDrawer'),
+          )}
       </div>
-    </div>
+    </InfoToShowContext.Provider>
   );
 }

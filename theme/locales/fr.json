@@ -660,7 +660,6 @@
   "localeImported": {
     "40x40_cm": "40x40 cm",
     "toile": "Toile",
-    "sans_systme_de_fixation": "Sans système de fixation",
     "set_de_fixation": "Set de fixation",
     "chassis_de_2cm": "Chassis de 2cm",
     "chassis_de_4cm": "Chassis de 4cm",
@@ -695,6 +694,7 @@
     "100x75_cm": "100x75 cm",
     "120x90_cm": "120x90 cm",
     "160x120_cm": "160x120 cm",
-    "120x120_cm": "120x120 cm"
+    "120x120_cm": "120x120 cm",
+    "sans_fixation": "Sans fixation"
   }
 }

@@ -1,45 +1,39 @@
 import { useState } from 'react';
+import RadioContainer from './RadioContainer';
 import Select from './Select';
 import { v4 } from 'uuid';
 
-export default function Summary({
-  optionIndexListSelected,
-  setOptionIndexListSelected,
+export default function DesktopRight({
   optionSets,
+  optionIndexListSelected,
   selectIndexSelected,
   setSelectIndexSelected,
-  SummaryRef,
+  setOptionIndexListSelected,
   setCurrentOption,
   drawerOpen,
-  CloseButtonRef
+  CloseButtonRef,
 }) {
   const [selectFocused, setSelectFocused] = useState(null);
+  
 
-  const selects = optionSets.map((optionSet, index) => {
-    const isOpen = selectIndexSelected === index;
-    return (
+  return (
+    <RadioContainer>
       <Select
         key={v4()}
-        optionSet={optionSet}
-        optionIndexSelected={optionIndexListSelected[index]}
+        optionSet={optionSets[0]}
+        optionIndexSelected={optionIndexListSelected[0]}
         setOptionIndexListSelected={setOptionIndexListSelected}
         optionIndexListSelected={optionIndexListSelected}
-        selectIndex={index}
+        selectIndex={0}
         setSelectIndexSelected={setSelectIndexSelected}
-        isOpen={isOpen}
+        isOpen={selectIndexSelected === 0}
         setSelectFocused={setSelectFocused}
-        isFocused={selectFocused === index && !isOpen}
+        isFocused={selectFocused === 0 && !(selectIndexSelected === 0)}
         setCurrentOption={setCurrentOption}
         drawerOpen={drawerOpen}
         CloseButtonRef={CloseButtonRef}
-        isLast={index === optionSets.length - 1}
+        isLast={false}
       />
-    );
-  });
-
-  return (
-    <div className="flex-none" ref={SummaryRef}>
-      {selects}
-    </div>
+    </RadioContainer>
   );
 }

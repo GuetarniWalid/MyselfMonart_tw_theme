@@ -49,8 +49,7 @@ export default function Select({
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       handleSelectClick();
-    }
-    else if (event.key === 'Tab' && isLast) {
+    } else if (event.key === 'Tab' && isLast) {
       event.preventDefault();
       CloseButtonRef.current.focus();
     }
@@ -78,10 +77,10 @@ export default function Select({
   });
 
   return (
-    <div className='flex gap-3 h-12 mb-3'>
+    <div className="flex gap-3 h-12 mb-3">
       <div className="relative flex-1 h-full">
         <div
-          className={`relative flex justify-between items-center bg-white rounded-lg px-3 h-full ${
+          className={`relative flex justify-between items-center  rounded-lg px-3 h-full bg-white ${
             isOpen && 'border-main border-1'
           }`}
           role="button"
@@ -94,7 +93,7 @@ export default function Select({
         >
           <span>{optionSet[optionIndexSelected].name}</span>
           <div className="flex items-center gap-5">
-            <span className="bg-main/10 rounded-lg px-2 py-1">
+            <span className="bg-main/10 rounded-lg px-2 py-1 whitespace-nowrap">
               {optionSet[optionIndexSelected].price} {moneySymbol}
             </span>
             <div className="w-6 h-6 bg-main/10 rounded-full flex justify-center items-center">
@@ -115,14 +114,17 @@ export default function Select({
         {isOpen && (
           <ul
             role="listbox"
-            className="absolute bg-white -top-3 -translate-y-full w-full rounded-lg p-3"
+            className="absolute bg-white -top-3 -translate-y-full w-full rounded-lg p-3 shadow-[0_-13px_28px_5px_rgba(0,0,0,0.1)]"
             aria-activedescendant={`${optionIdBase}-${optionIndexSelected}`}
           >
             {options}
           </ul>
         )}
       </div>
-      <SelectInfoButton />
+      <SelectInfoButton
+        technicalName={optionSet[optionIndexSelected].technicalName}
+        technicalType={optionSet[optionIndexSelected].technicalType}
+      />
     </div>
   );
 }
