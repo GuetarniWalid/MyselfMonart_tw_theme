@@ -11,7 +11,7 @@
 
 <span class="img-wrapper skeleton flex-none w-full h-full group cursor-pointer flex justify-center items-center snap-center relative md:border-secondary md:border-x-2">
   <img
-    srcset="{%- if media.preview_image.width >= 400 -%}{{ media.preview_image | image_url: width: 1100 }} 400w,{%- endif -%}
+    srcset="{%- if media.preview_image.width >= 400 -%}{{ media.preview_image | image_url: width: 400 }} 400w,{%- endif -%}
             {%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}
             {{ media.preview_image | image_url }} {{ media.preview_image.width }}w"
     src="{{ media.preview_image | image_url: width: 550 }}"

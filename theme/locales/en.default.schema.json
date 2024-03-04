@@ -1,51 +1,5 @@
 {
   "settings_schema": {
-    "badges": {
-      "name": "Badges",
-      "settings": {
-        "position": {
-          "options__1": {
-            "label": "Bottom left"
-          },
-          "options__2": {
-            "label": "Bottom right"
-          },
-          "options__3": {
-            "label": "Top left"
-          },
-          "options__4": {
-            "label": "Top right"
-          },
-          "label": "Position on cards"
-        },
-        "sale_badge_color_scheme": {
-          "label": "Sale badge color scheme"
-        },
-        "sold_out_badge_color_scheme": {
-          "label": "Sold out badge color scheme"
-        }
-      }
-    },
-    "buttons": {
-      "name": "Buttons"
-    },
-    "cards": {
-      "name": "Cards",
-      "settings": {
-        "header__badge": {
-          "content": "Badge"
-        },
-        "style": {
-          "options__1": {
-            "label": "Standard"
-          },
-          "options__2": {
-            "label": "Card"
-          },
-          "label": "Style"
-        }
-      }
-    },
     "cart": {
       "name": "Cart",
       "settings": {
@@ -53,59 +7,6 @@
           "label": "Enable cart note"
         }
       }
-    },
-    "colors": {
-      "name": "Colors",
-      "settings": {
-        "colors_solid_button_labels": {
-          "label": "Solid button label",
-          "info": "Used as foreground color on accent colors."
-        },
-        "colors_accent_1": {
-          "label": "Accent 1",
-          "info": "Used for solid button background."
-        },
-        "colors_accent_2": {
-          "label": "Accent 2"
-        },
-        "gradient_accent_2": {
-          "label": "Accent 2 gradient"
-        },
-        "header__1": {
-          "content": "Primary colors"
-        },
-        "header__2": {
-          "content": "Secondary colors"
-        },
-        "colors_text": {
-          "label": "Text",
-          "info": "Used as foreground color on background colors."
-        },
-        "colors_outline_button_labels": {
-          "label": "Outline button",
-          "info": "Also used for text links."
-        },
-        "colors_background_1": {
-          "label": "Background 1"
-        },
-        "colors_background_2": {
-          "label": "Background 2"
-        },
-        "gradient_background_2": {
-          "label": "Background 2 gradient"
-        },
-        "page_color_link": {
-          "label": "Page link color"
-        }
-      },
-      "headings": {
-        "pages": {
-          "content": "Pages"
-        }
-      }
-    },
-    "content_containers": {
-      "name": "Content containers"
     },
     "cookie_banner": {
       "name": "Cookie banner",
@@ -124,9 +25,6 @@
           "label": "Show currency codes"
         }
       }
-    },
-    "drawers": {
-      "name": "Drawers"
     },
     "favicon": {
       "name": "Favicon",
@@ -180,32 +78,6 @@
         }
       }
     },
-    "inputs": {
-      "name": "Inputs"
-    },
-    "layout": {
-      "name": "Layout",
-      "settings": {
-        "page_width": {
-          "label": "Page width"
-        },
-        "spacing_sections": {
-          "label": "Vertical space between sections"
-        },
-        "header__grid": {
-          "content": "Grid"
-        },
-        "paragraph__grid": {
-          "content": "Affects areas with a multicolumn layout."
-        },
-        "spacing_grid_horizontal": {
-          "label": "Horizontal space"
-        },
-        "spacing_grid_vertical": {
-          "label": "Vertical space"
-        }
-      }
-    },
     "likes": {
       "name": "Likes",
       "settings": {
@@ -213,13 +85,6 @@
           "label": "Link to like page"
         }
       }
-    },
-    "media": {
-      "name": "Media"
-    },
-    "popups": {
-      "name": "Dropdowns and pop-ups",
-      "paragraph": "Affects areas like navigation dropdowns, pop-up modals, and cart pop-ups."
     },
     "search_input": {
       "name": "Search behavior",
@@ -287,20 +152,6 @@
         }
       }
     },
-    "styles": {
-      "name": "Icons",
-      "settings": {
-        "accent_icons": {
-          "options__3": {
-            "label": "Outline button"
-          },
-          "options__4": {
-            "label": "Text"
-          },
-          "label": "Color"
-        }
-      }
-    },
     "typography": {
       "name": "Typography",
       "settings": {
@@ -329,9 +180,6 @@
           "label": "Font size scale"
         }
       }
-    },
-    "variant_pills": {
-      "name": "Variant pills"
     }
   },
   "sections": {

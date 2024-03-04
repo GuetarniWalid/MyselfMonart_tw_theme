@@ -1,62 +1,5 @@
 {
   "settings_schema": {
-    "badges": {
-      "name": "Badges",
-      "settings": {
-        "position": {
-          "options__1": {
-            "label": "En bas à gauche"
-          },
-          "options__2": {
-            "label": "En bas à droite"
-          },
-          "options__3": {
-            "label": "En haut à gauche"
-          },
-          "options__4": {
-            "label": "En haut à droite"
-          },
-          "label": "Position sur les cartes"
-        },
-        "sale_badge_color_scheme": {
-          "label": "Combinaison de couleurs du badge de vente"
-        },
-        "sold_out_badge_color_scheme": {
-          "label": "Combinaison de couleurs du badge de rupture de stock"
-        }
-      }
-    },
-    "buttons": {
-      "name": "Boutons"
-    },
-    "cards": {
-      "name": "Cartes",
-      "settings": {
-        "header__badge": {
-          "content": "Badge"
-        },
-        "style": {
-          "options__1": {
-            "label": "Standard"
-          },
-          "options__2": {
-            "label": "Carte"
-          },
-          "label": "Style"
-        },
-        "background": {
-          "label": "Couleur de fond"
-        },
-        "text_color": {
-          "label": "Couleur des textes"
-        }
-      },
-      "headings": {
-        "Styles": {
-          "content": "Styles"
-        }
-      }
-    },
     "cart": {
       "name": "Panier",
       "settings": {
@@ -64,59 +7,6 @@
           "label": "Afficher la note du panier"
         }
       }
-    },
-    "colors": {
-      "name": "Couleurs",
-      "settings": {
-        "colors_solid_button_labels": {
-          "label": "Texte de bouton plein",
-          "info": "Utilisé comme couleur de premier plan sur les couleurs d'accentuation."
-        },
-        "colors_accent_1": {
-          "label": "Accentuation 1",
-          "info": "Utilisé pour l'arrière-plan de bouton uni."
-        },
-        "colors_accent_2": {
-          "label": "Accentuation 2"
-        },
-        "header__1": {
-          "content": "Couleurs primaires"
-        },
-        "header__2": {
-          "content": "Couleurs secondaires"
-        },
-        "colors_text": {
-          "label": "Texte",
-          "info": "Utilisé comme couleur de premier plan sur les couleurs d'arrière-plan."
-        },
-        "colors_outline_button_labels": {
-          "label": "Bouton en relief",
-          "info": "Utilisé également pour les liens de texte."
-        },
-        "colors_background_1": {
-          "label": "Arrière-plan 1"
-        },
-        "colors_background_2": {
-          "label": "Arrière-plan 2"
-        },
-        "gradient_accent_2": {
-          "label": "Dégradé accent 2"
-        },
-        "gradient_background_2": {
-          "label": "Dégradé arrière-plan 2"
-        },
-        "page_color_link": {
-          "label": "Couleur des liens des pages"
-        }
-      },
-      "headings": {
-        "pages": {
-          "content": "Pages"
-        }
-      }
-    },
-    "content_containers": {
-      "name": "Conteneurs de contenu"
     },
     "cookie_banner": {
       "name": "Bannière de cookies",
@@ -135,9 +25,6 @@
         },
         "paragraph": "Le panier et les prix au moment du paiement indiquent toujours les codes de devise. Exemple : 1 EUR."
       }
-    },
-    "drawers": {
-      "name": "Tiroirs"
     },
     "favicon": {
       "name": "Favicon",
@@ -191,32 +78,6 @@
         }
       }
     },
-    "inputs": {
-      "name": "Entrées"
-    },
-    "layout": {
-      "name": "Mise en page",
-      "settings": {
-        "page_width": {
-          "label": "Largeur de la page"
-        },
-        "spacing_sections": {
-          "label": "Espace vertical entre les sections"
-        },
-        "header__grid": {
-          "content": "Grille"
-        },
-        "paragraph__grid": {
-          "content": "Affecte les zones ayant une mise en page multicolonne."
-        },
-        "spacing_grid_horizontal": {
-          "label": "Espace horizontal"
-        },
-        "spacing_grid_vertical": {
-          "label": "Espace vertical"
-        }
-      }
-    },
     "likes": {
       "name": "Mes j'aimes",
       "settings": {
@@ -224,13 +85,6 @@
           "label": "Lien vers la page j'aime"
         }
       }
-    },
-    "media": {
-      "name": "Support multimédia"
-    },
-    "popups": {
-      "name": "Menus déroulants et pop-ups",
-      "paragraph": "Affecte les zones telles que les menus déroulants de navigation, les fenêtres modales pop-up et les fenêtres pop-up de panier."
     },
     "search_input": {
       "name": "Comportement de recherche",
@@ -298,20 +152,6 @@
         }
       }
     },
-    "styles": {
-      "name": "Icônes",
-      "settings": {
-        "accent_icons": {
-          "options__3": {
-            "label": "Bouton en relief"
-          },
-          "options__4": {
-            "label": "Texte"
-          },
-          "label": "Couleur"
-        }
-      }
-    },
     "typography": {
       "name": "Typographie",
       "settings": {
@@ -340,9 +180,6 @@
           "label": "Échelle de taille de police"
         }
       }
-    },
-    "variant_pills": {
-      "name": "Boutons pilule de variante"
     }
   },
   "sections": {

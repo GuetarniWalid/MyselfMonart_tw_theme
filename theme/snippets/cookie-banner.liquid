@@ -1,227 +1,33 @@
-<style>
-  #cookies-banner {
-    --img-width: 280px;
-    --checkbox-color: rgb(var(--color-foreground));
-    position: fixed;
-    bottom: 3rem;
-    left: 5%;
-    padding: 3rem 2.5rem;
-    border-radius: 15px;
-    width: 90%;
-    max-width: calc(var(--img-width) + 300px);
-    background: rgb(var(--color-background));
-    border: 1px solid rgb(var(--color-foreground));
-    z-index: 9999;
-    display: none;
-  }
-
-  #cookies-banner.bounce {
-    display: block;
-    animation: bounceFromLeft 0.5s linear forwards;
-  }
-
-  @keyframes bounceFromLeft {
-    0% {
-      transform: translateX(-100%);
-    }
-    40% {
-      transform: translateX(0);
-    }
-    70% {
-      transform: translateX(-8%);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  #cookies-banner > div.first,
-  #cookies-banner > .second {
-    margin-top: 65%;
-  }
-
-  #cookies-banner > .second {
-    display: none;
-  }
-
-  #cookies-banner img {
-    position: absolute;
-    top: -70px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    max-width: 300px;
-  }
-
-  #cookies-banner p {
-    font-size: 1.6rem;
-    color: rgba(var(--color-foreground), 0.9);
-    line-height: normal;
-    width: 90%;
-    margin: 0.7rem auto 3rem;
-  }
-
-  #cookies-banner > div.first > div {
-    text-align: center;
-  }
-
-  #cookies-banner .decline {
-    background: none;
-    color: rgb(var(--color-foreground));
-    text-decoration: underline;
-    padding: 0;
-    min-width: 0;
-    margin-right: 3rem;
-    margin-left: 3rem;
-  }
-
-  #cookies-banner .decline::before,
-  #cookies-banner .decline::after {
-    content: none;
-  }
-
-  #cookies-banner .second .form-control.last {
-    margin-bottom: 3rem;
-  }
-
-  .form-control {
-    font-size: 2rem;
-    line-height: 1.1;
-    display: grid;
-    grid-template-columns: 1em auto;
-    gap: 0.5em;
-  }
-
-  .form-control + .form-control {
-    margin-top: 1em;
-  }
-
-  input[type="checkbox"] {
-    -webkit-appearance: none;
-    appearance: none;
-    margin: 0;
-    font: inherit;
-    color: currentColor;
-    width: 1.15em;
-    height: 1.15em;
-    border: 0.15em solid currentColor;
-    border-radius: 0.15em;
-    transform: translateY(-0.075em);
-    display: grid;
-    place-content: center;
-  }
-
-  input[type="checkbox"]::before {
-    content: "";
-    width: 0.65em;
-    height: 0.65em;
-    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
-    transform: scale(0);
-    transform-origin: bottom left;
-    transition: 120ms transform ease-in-out;
-    box-shadow: inset 1em 1em var(--checkbox-color);
-    background-color: CanvasText;
-  }
-
-  input[type="checkbox"]:checked::before {
-    transform: scale(1);
-  }
-
-  input[type="checkbox"]:focus {
-    outline: max(2px, 0.15em) solid currentColor;
-    outline-offset: max(2px, 0.15em);
-  }
-
-  #cookies-banner .second button {
-    width: 100%;
-  }
-
-  #cookies-banner .second button.preferences {
-    background: rgb(var(--color-background));
-    color: rgb(var(--color-foreground));
-    border: 1px solid rgb(var(--color-foreground));
-    margin-top: 1rem;
-  }
-
-  @media screen and (max-width: 386px) {
-    #cookies-banner .second button {
-      padding-top: 1rem;
-      padding-bottom: 1rem;
-    }
-  }
-
-  @media screen and (min-width: 390px) {
-    #cookies-banner > div.first,
-    #cookies-banner > .second {
-      margin-top: calc(var(--img-width) - 80px);
-    }
-
-    #cookies-banner p {
-      font-size: 1.85rem;
-    }
-
-    #cookies-banner .decline {
-      margin-left: 0;
-    }
-  }
-
-  @media screen and (min-width: 670px) {
-    #cookies-banner {
-      --img-width: 330px;
-      left: 60px;
-    }
-
-    #cookies-banner > div.first,
-    #cookies-banner > .second {
-      width: 50%;
-      margin-left: auto;
-      margin-top: 0;
-    }
-
-    #cookies-banner img {
-      top: -70px;
-      left: -60px;
-      transform: none;
-      width: var(--img-width);
-      max-width: unset;
-    }
-
-    #cookies-banner p {
-      width: auto;
-    }
-  }
-</style>
 
 <div id="cookies-banner">
   <img src="{{ "cookie.png" | file_img_url: '330x' }}" />
   <div class="first">
     <p>{{ 'sections.cookie-banner.message-1' | t }}<br>{{ 'sections.cookie-banner.message-2' | t }}</p>
     <div>
-      <button class="decline button" onclick="showSettings()">{{ 'sections.cookie-banner.parameter' | t }}</button>
-      <button class="button" onclick="handleAccept()">{{ 'sections.cookie-banner.accept' | t }}</button>
+      <button onclick="showSettings()">{{ 'sections.cookie-banner.parameter' | t }}</button>
+      <button onclick="handleAccept()">{{ 'sections.cookie-banner.accept' | t }}</button>
     </div>
   </div>
   <form class="second" onsubmit="handleSettings(event)">
-    <p class="h3">{{ 'sections.cookie-banner.settings.title' | t }}</p>
-    <label class="form-control">
+    <p>{{ 'sections.cookie-banner.settings.title' | t }}</p>
+    <label>
       <input type="checkbox" name="analytics" checked/>
       {{ 'sections.cookie-banner.settings.analytics' | t }}
     </label>
-    <label class="form-control">
+    <label>
       <input type="checkbox" name="marketing" checked/>
       {{ 'sections.cookie-banner.settings.marketing' | t }}
     </label>
-    <label class="form-control">
+    <label>
       <input type="checkbox" name="preferences" checked/>
       {{ 'sections.cookie-banner.settings.preferences' | t }}
     </label>
-    <label class="form-control last">
+    <label>
       <input type="checkbox" name="sale_of_data" checked />
       {{ 'sections.cookie-banner.settings.sale_of_data' | t }}
     </label>
-    <button class="button" onclick="handleAccept()">{{ 'sections.cookie-banner.settings.accept_button' | t }}</button>
-    <button class="button preferences" type="submit">{{ 'sections.cookie-banner.settings.save_button' | t }}</button>
+    <button onclick="handleAccept()">{{ 'sections.cookie-banner.settings.accept_button' | t }}</button>
+    <button type="submit">{{ 'sections.cookie-banner.settings.save_button' | t }}</button>
   </form>
 </div>
 
