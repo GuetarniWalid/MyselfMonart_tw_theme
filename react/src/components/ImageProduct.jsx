@@ -9,16 +9,17 @@ const ImageProduct = forwardRef(({ matter, shine, width }, ref) => {
     >
       <img
         src={window.productImageSRC}
-        srcSet={`${window.productImageSRC}?width=250 250w,
-          ${window.productImageSRC}?width=400 400w,
-          ${window.productImageSRC}?width=600 600w,
-          ${window.productImageSRC}?width=800 800w,
-          ${window.productImageSRC}?width=1000 1000w,
-          ${window.productImageSRC}?width=1200 1200w,`}
-        sizes="90vw"
+        srcSet={`${window.productImageSRC}&width=250 250w,
+          ${window.productImageSRC}&width=400 400w,
+          ${window.productImageSRC}&width=600 600w,
+          ${window.productImageSRC}&width=800 800w,
+          ${window.productImageSRC}&width=1000 1000w,
+          ${window.productImageSRC}&width=1200 1200w,`}
+        sizes="(max-width: 767px) 90vw, 45vw"
         alt={window.productImageAlt}
         width={width}
         height="auto"
+        loading="lazy"
         className="max-w-none"
       />
       <ImageProductFilter width={width} matter={matter} shine={shine} />

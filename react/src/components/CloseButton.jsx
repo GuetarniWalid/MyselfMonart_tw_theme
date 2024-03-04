@@ -28,7 +28,7 @@ export default function CloseButton({
 
   return (
     <button
-      className="absolute right-3 top-3 flex justify-center items-center bg-main/10 rounded-lg w-10 h-10"
+      className="absolute right-3 top-3 flex justify-center items-center bg-main/10 md:bg-secondary rounded-lg w-10 h-10 overflow-hidden z-10 md:after:inset-0 md:after:bg-main/10 md:after:-z-10 md:after:absolute"
       ref={CloseButtonRef}
       onClick={handleClick}
       tabIndex={drawerOpen ? 0 : -1}

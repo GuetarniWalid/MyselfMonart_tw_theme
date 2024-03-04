@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { v4 } from 'uuid';
 import Option from './Option';
-import SelectInfoButton from './SelectInfoButton';
+import InfoButton from './InfoButton';
 
 export default function Select({
   optionSet,
@@ -15,11 +15,13 @@ export default function Select({
   isFocused,
   setCurrentOption,
   drawerOpen,
+  popupDirection,
   CloseButtonRef,
-  isLast,
+  isLastSelect,
 }) {
   const selectRef = useRef(null);
   const firstOptionRef = useRef(null);
+  const ariaControlsIdRef = useRef(v4());
 
   useEffect(() => {
     if (isFocused) {
@@ -49,9 +51,6 @@ export default function Select({
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       handleSelectClick();
-    } else if (event.key === 'Tab' && isLast) {
-      event.preventDefault();
-      CloseButtonRef.current.focus();
     }
   }
 
@@ -81,11 +80,12 @@ export default function Select({
       <div className="relative flex-1 h-full">
         <div
           className={`relative flex justify-between items-center  rounded-lg px-3 h-full bg-white ${
-            isOpen && 'border-main border-1'
+            isOpen && 'outline outline-main outline-1'
           }`}
           role="button"
           aria-haspopup="listbox"
           aria-expanded={isOpen}
+          aria-controls={ariaControlsIdRef.current}
           onClick={handleSelectClick}
           tabIndex={isOpen || !drawerOpen ? '-1' : '0'}
           onKeyDown={handleKeyDown}
@@ -113,17 +113,26 @@ export default function Select({
         </div>
         {isOpen && (
           <ul
+            aria-label={optionSet[optionIndexSelected].technicalType}
             role="listbox"
-            className="absolute bg-white -top-3 -translate-y-full w-full rounded-lg p-3 shadow-[0_-13px_28px_5px_rgba(0,0,0,0.1)]"
+            id={ariaControlsIdRef.current}
+            className={`absolute bg-white w-full rounded-lg p-3 ${
+              popupDirection === 'top'
+                ? '-top-3 -translate-y-full shadow-[0_-13px_28px_5px_rgba(0,0,0,0.1)]'
+                : '-bottom-3 translate-y-full shadow-[0_13px_28px_5px_rgba(0,0,0,0.1)]'
+            }`}
             aria-activedescendant={`${optionIdBase}-${optionIndexSelected}`}
           >
             {options}
           </ul>
         )}
       </div>
-      <SelectInfoButton
+      <InfoButton
         technicalName={optionSet[optionIndexSelected].technicalName}
         technicalType={optionSet[optionIndexSelected].technicalType}
+        nextToRadio={false}
+        CloseButtonRef={CloseButtonRef}
+        isLast={isLastSelect}
       />
     </div>
   );

@@ -10,8 +10,8 @@ export default function Selects({
   setSelectIndexSelected,
   setCurrentOption,
   drawerOpen,
-  CloseButtonRef,
   mobileSummaryRef,
+  CloseButtonRef,
 }) {
   const [selectFocused, setSelectFocused] = useState(null);
 
@@ -31,8 +31,9 @@ export default function Selects({
         isFocused={selectFocused === index && !isOpen}
         setCurrentOption={setCurrentOption}
         drawerOpen={drawerOpen}
+        popupDirection="top"
         CloseButtonRef={CloseButtonRef}
-        isLast={index === optionSets.length - 1}
+        isLastSelect={index === optionSets.length - 1}
       />
     );
   });

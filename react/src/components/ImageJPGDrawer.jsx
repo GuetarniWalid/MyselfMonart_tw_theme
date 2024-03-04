@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import data from '../data/data';
 import { getTechnicalKey } from '../utils/functions';
+import useIsMobile from '../hooks/useIsMobile';
 
 export default function ImageJPGDrawer({
   option,
   currentOption,
   setCurrentOption,
 }) {
+  const isMobile = useIsMobile();
   const [startX, setStartX] = useState(0);
 
   function getInitialTwClasses(from) {
@@ -31,9 +33,10 @@ export default function ImageJPGDrawer({
     currentOption?.technicalName,
   );
   const visible = technicalKey === option;
-  const twClasses = visible
-    ? data[option].image.position
-    : getInitialTwClasses(data[option].image.from);
+  const twClasses =
+    visible && isMobile
+      ? data[option].image.position
+      : getInitialTwClasses(data[option].image.from);
 
   function handleTouchStart(e) {
     setStartX(e.touches[0].clientX);
@@ -58,6 +61,12 @@ export default function ImageJPGDrawer({
         width={data[option].image.width}
         height={data[option].image.height}
         className={`${data[option].image.initClasses}`}
+        loading="lazy"
+        srcSet={`
+      ${data[option].image.src}&width=375 375w,
+      ${data[option].image.src}&width=500 500w,
+      ${data[option].image.src}&width=767 767w`}
+        sizes="100vw"
       />
     </div>
   );

@@ -29,8 +29,8 @@ export default function MobileBottom({
         setSelectIndexSelected={setSelectIndexSelected}
         setCurrentOption={setCurrentOption}
         drawerOpen={drawerOpen}
-        CloseButtonRef={CloseButtonRef}
         mobileSummaryRef={mobileSummaryRef}
+        CloseButtonRef={CloseButtonRef}
       />
     </>
   );

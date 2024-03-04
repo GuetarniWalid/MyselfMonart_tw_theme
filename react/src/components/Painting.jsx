@@ -1,11 +1,13 @@
 import { useRef } from 'react';
-import ImagePNGDrawer from './ImagePNGDrawer/ImagePNGDrawer';
+import FurniturePNGDrawer from './ImagePNGDrawer/FurniturePNGDrawer';
 import useImagePNGToShow from '../hooks/useImagePNGToShow';
 import ImageProduct from './ImageProduct';
 import useProductData from '../hooks/useProductData';
 import useProductDimensions from '../hooks/useProductDimensions';
 import ImageJPGDrawer from './ImageJPGDrawer';
 import data from '../data/data';
+import useIsMobile from '../hooks/useIsMobile';
+import GirlPNGDrawer from './ImagePNGDrawer/GirlPNGDrawer';
 const { background, furniture, girl } = data;
 
 export default function Painting({
@@ -20,10 +22,14 @@ export default function Painting({
   const { size, matter, fixation, chassis, frame, shine, border } =
     useProductData(optionIndexListSelected, optionSets);
   const productWidthInPx = useProductDimensions(size, sceneRef);
+  const isMobile = useIsMobile();
 
   return (
-    <div className='flex-1 overflow-y-auto'>
-      <div className="relative overflow-hidden md:max-w-lg py-10 text-center min-h-full" ref={sceneRef}>
+    <div className="flex-1 overflow-y-auto">
+      <div
+        className="relative overflow-hidden py-10 text-center min-h-full"
+        ref={sceneRef}
+      >
         <img
           src={background.image.src}
           srcSet={background.image.srcSet}
@@ -32,6 +38,7 @@ export default function Painting({
           width={background.image.width}
           height={background.image.height}
           className="skeleton -z-10 absolute top-0 left-0 w-full h-full object-cover"
+          loading="lazy"
         />
         <ImageProduct
           matter={matter}
@@ -39,7 +46,7 @@ export default function Painting({
           width={productWidthInPx}
           ref={productRef}
         />
-        <ImagePNGDrawer
+        <FurniturePNGDrawer
           src={furniture.image.src}
           alt={furniture.image.alt}
           width={furniture.image.width}
@@ -47,7 +54,6 @@ export default function Painting({
           position={furniture.image.position}
           from={furniture.image.from}
           initClasses={furniture.image.initClasses}
-          stickyTo={furniture.image.stickyTo}
           visible={showFurniture}
           productSize={size}
           productWidthInPx={productWidthInPx}
@@ -55,8 +61,9 @@ export default function Painting({
           productRef={productRef}
           sceneRef={sceneRef}
           nbOfOptions={optionIndexListSelected.length}
+          isMobile={isMobile}
         />
-        <ImagePNGDrawer
+        <GirlPNGDrawer
           src={girl.image.src}
           alt={girl.image.alt}
           width={girl.image.width}
@@ -64,14 +71,15 @@ export default function Painting({
           position={girl.image.position}
           from={girl.image.from}
           initClasses={girl.image.initClasses}
-          stickyTo={girl.image.stickyTo}
           visible={showGirl}
+          productSize={size}
           size={size}
           productWidthInPx={productWidthInPx}
           imageWidthInCm={93.4}
           productRef={productRef}
           sceneRef={sceneRef}
           nbOfOptions={optionIndexListSelected.length}
+          isMobile={isMobile}
         />
         {[
           'fixationSet',

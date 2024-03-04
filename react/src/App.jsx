@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useEffect, createContext } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import useFormatOptions from './hooks/useFormatOptions';
 import useFormatOptionIndexListSelected from './hooks/useFormatOptionIndexListSelected';
@@ -8,8 +8,7 @@ import MobileBottom from './components/MobileBottom';
 import CloseButton from './components/CloseButton';
 import PopupInfo from './components/PopupInfo';
 import DesktopRight from './components/DesktopRight';
-
-export const InfoToShowContext = createContext();
+import BuyButton from './components/BuyButton';
 
 export default function App() {
   const initialoptionSets = useMemo(() => useFormatOptions(0, 0), []);
@@ -19,7 +18,6 @@ export default function App() {
   );
   const [currentOption, setCurrentOption] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(null);
-  const [infoToShow, setInfoToShow] = useState(null);
   const optionSets = useFormatOptions(
     optionIndexListSelected[0],
     optionIndexListSelected[1],
@@ -30,8 +28,10 @@ export default function App() {
   );
   const isMobile = useIsMobile();
   const mobileSummaryRef = useRef(null);
+  const desktopSelectorRef = useRef(null);
   const addonsDrawerRef = useRef(document.getElementById('addonsDrawer'));
   const CloseButtonRef = useRef(null);
+  const radiosContainerRef = useRef(null);
 
   useEffect(() => {
     const config = {
@@ -59,34 +59,82 @@ export default function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!drawerOpen) {
+      const focusableElements = Array.from(
+        document
+          .getElementById('addonsDrawer')
+          .querySelectorAll('button, [tabindex]:not([tabindex="-1"])'),
+      );
+      focusableElements.forEach((element) => {
+        element.setAttribute('tabindex', '-1');
+      });
+    }
+  }, [drawerOpen]);
+
   function handleClick(event) {
     if (
+      isMobile &&
       mobileSummaryRef.current &&
       !mobileSummaryRef.current.contains(event.target)
     ) {
       setSelectIndexSelected(null);
     }
+    if (
+      !isMobile &&
+      desktopSelectorRef.current &&
+      !desktopSelectorRef.current.contains(event.target)
+    ) {
+      setSelectIndexSelected(null);
+    }
   }
 
+  //Desktop logic
+  const scrollPosition = radiosContainerRef.current?.scrollTop;
+  useEffect(() => {
+    if (scrollPosition) {
+      radiosContainerRef.current.scrollTop = scrollPosition;
+    }
+  }, [isMobile, radiosContainerRef]);
+
   return (
-    <InfoToShowContext.Provider value={setInfoToShow}>
-      <div
-        className="relative w-full h-full flex flex-col gap-6 md:flex-row md:h-4/5 justify-center max-w-6xl"
-        onClick={handleClick}
-      >
-        <CloseButton
-          addonsDrawerRef={addonsDrawerRef}
-          drawerOpen={drawerOpen}
-          CloseButtonRef={CloseButtonRef}
-        />
-        <Painting
-          currentOption={currentOption}
-          optionSets={optionSets}
-          optionIndexListSelected={newOptionIndexListSelectedFormatted}
-          setCurrentOption={setCurrentOption}
-        />
-        <div className="sm:flex items-center md:flex-1">
-          <div className="w-full px-4 md:px-0">
+    <div
+      className="relative w-full h-full flex justify-center items-center md:px-8"
+      onClick={handleClick}
+    >
+      <CloseButton
+        addonsDrawerRef={addonsDrawerRef}
+        drawerOpen={drawerOpen}
+        CloseButtonRef={CloseButtonRef}
+      />
+      <div className="flex flex-col gap-6 md:gap-8 md:flex-row md:items-center justify-center h-full w-full max-w-6xl">
+        {isMobile ? (
+          <Painting
+            currentOption={currentOption}
+            optionSets={optionSets}
+            optionIndexListSelected={newOptionIndexListSelectedFormatted}
+            setCurrentOption={setCurrentOption}
+          />
+        ) : (
+          <div className="h-5/6 flex flex-col gap-5 w-1/2">
+            <Painting
+              currentOption={currentOption}
+              optionSets={optionSets}
+              optionIndexListSelected={newOptionIndexListSelectedFormatted}
+              setCurrentOption={setCurrentOption}
+            />
+            <BuyButton
+              optionSets={optionSets}
+              optionIndexListSelected={newOptionIndexListSelectedFormatted}
+              drawerOpen={drawerOpen}
+            />
+          </div>
+        )}
+        <div className="sm:flex items-center md:flex-1 md:h-full">
+          <div
+            className="w-full px-4 md:h-full md:px-0 md:overflow-y-auto md:py-20 scrollbar-hidden"
+            ref={radiosContainerRef}
+          >
             {isMobile ? (
               <MobileBottom
                 optionIndexListSelected={newOptionIndexListSelectedFormatted}
@@ -109,16 +157,12 @@ export default function App() {
                 setCurrentOption={setCurrentOption}
                 drawerOpen={drawerOpen}
                 CloseButtonRef={CloseButtonRef}
+                desktopSelectorRef={desktopSelectorRef}
               />
             )}
           </div>
         </div>
-        {infoToShow &&
-          createPortal(
-            <PopupInfo infoToShow={infoToShow} setInfoToShow={setInfoToShow} />,
-            document.getElementById('addonsDrawer'),
-          )}
       </div>
-    </InfoToShowContext.Provider>
+    </div>
   );
 }

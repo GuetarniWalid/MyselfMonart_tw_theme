@@ -24,7 +24,8 @@ module.exports = {
       },
       colors: {
         main: '#002E5D',
-        secondary: '#F6F3EE',
+        secondary: '#F6F3EE', 
+        action: '#04A777',
         'breadcrumb-main': colors.lime[950],
         'breadcrumb-secondary': '#EBD0CD',
       },
