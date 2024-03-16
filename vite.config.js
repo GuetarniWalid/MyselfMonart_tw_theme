@@ -11,7 +11,7 @@ export default defineConfig({
       // Front-end source code directory
       sourceCodeDir: './react/src',
       // Front-end entry points directory
-      entrypointsDir: './react/src',
+      entrypointsDir: './react/src/entrypoints',
       // Additional files to use as entry points (accepts an array of file paths or glob patterns)
       additionalEntrypoints: [],
       // Specifies the file name of the snippet that loads your assets

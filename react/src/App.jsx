@@ -1,12 +1,10 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
-import { createPortal } from 'react-dom';
 import useFormatOptions from './hooks/useFormatOptions';
 import useFormatOptionIndexListSelected from './hooks/useFormatOptionIndexListSelected';
 import useIsMobile from './hooks/useIsMobile';
 import Painting from './components/Painting';
 import MobileBottom from './components/MobileBottom';
 import CloseButton from './components/CloseButton';
-import PopupInfo from './components/PopupInfo';
 import DesktopRight from './components/DesktopRight';
 import BuyButton from './components/BuyButton';
 

@@ -66,5 +66,13 @@
   
   <button id="cart-button" class="absolute right-[5%] bottom-0 translate-y-1/2 bg-secondary border border-solid border-main w-16 h-[45px] xs:w-20 xs:h-[50px] rounded-[50px] flex justify-center items-center transition-all duration-75" role="button" aria-label="{{ "tw.header.open_cart" | t }}">
     {% render 'tw-icon-bag' %}
+    <div id="bubble-nb-product">
+      {%- if cart != empty -%}
+        {%- if cart.item_count < 100 -%}
+          <span aria-hidden="true">{{ cart.item_count }}</span>
+        {%- endif -%}
+        <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
+      {%- endif -%}
+    </div>
   </button>
 </sticky-header>

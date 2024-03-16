@@ -3,13 +3,14 @@ export default function useProductFormatter(
   optionIndexListSelected,
 ) {
   const product = {
+    ratio: window.productRatio,
     title: window.productTitle,
     status: 'draft',
     images: [
       {
         src: window.productImageSRC,
         filename: window.filename,
-        alt: window.alt,
+        alt: window.productImageAlt,
         position: 1,
       },
     ],

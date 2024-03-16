@@ -1,44 +1,6 @@
-{{ 'template-collection.css' | asset_url | stylesheet_tag }}
-{{ 'component-card.css' | asset_url | stylesheet_tag }}
-{{ 'component-price.css' | asset_url | stylesheet_tag }}
-{{ 'section-main-collection-product-grid.css' | asset_url | stylesheet_tag }}
-
-
-<noscript>{{ 'component-search.css' | asset_url | stylesheet_tag }}</noscript>
-
 {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
-  {{ 'component-facets.css' | asset_url | stylesheet_tag }}
   <script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
 {%- endif -%}
-
-<style>
-  .template-search__header {
-    margin-bottom: 3rem;
-  }
-
-  .template-search__search {
-    margin: 0 auto 3.5rem;
-    max-width: 47.8rem;
-  }
-
-  .template-search__search .search {
-    margin-top: 3rem;
-  }
-
-  .template-search--empty {
-    padding-bottom: 18rem;
-  }
-
-  @media screen and (min-width: 750px) {
-    .template-search__header {
-      margin-bottom: 5rem;
-    }
-  }
-
-  .search__button .icon {
-    height: 1.8rem;
-  }
-</style>
 
 {%- liquid
   assign sort_by = search.sort_by | default: search.default_sort_by
@@ -46,35 +8,14 @@
   assign search_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
 -%}
 
-{%- style -%}
-  #shopify-section-{{ section.id }} {
-    --background: {{ section.settings.background }};
-    --card-background: {{ section.settings.card_background }};
-    --button-background: {{ section.settings.button_background }};
-    --card-border: {% if section.settings.enable_border %}1px solid {{ section.settings.button_background }}{% else %}none{% endif %};
-  }
-
-  .section-{{ section.id }}-padding {
-    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
-    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
-  }
-
-  @media screen and (min-width: 750px) {
-    .section-{{ section.id }}-padding {
-      padding-top: {{ section.settings.padding_top }}px;
-      padding-bottom: {{ section.settings.padding_bottom }}px;
-    }
-  }
-{%- endstyle -%}
-
-<div class="template-search{% unless search.performed and search.results_count > 0 %} template-search--empty{% endunless %} section-{{ section.id }}-padding">
+<div>
   <div class="template-search__header page-width center">
     {%- if search.performed -%}
-      <h1 class="h2">{{ 'templates.search.title' | t }}</h1>
+      <h1>{{ 'templates.search.title' | t }}</h1>
     {%- else -%}
-      <h1 class="h2">{{ 'general.search.search' | t }}</h1>
+      <h1>{{ 'general.search.search' | t }}</h1>
     {%- endif -%}
-    <div class="template-search__search">
+    <div>
       {%- if settings.predictive_search_enabled -%}
         <predictive-search data-loading-text="{{ 'accessibility.loading' | t }}">
       {%- endif -%}

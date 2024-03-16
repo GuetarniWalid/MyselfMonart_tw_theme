@@ -99,8 +99,8 @@
       };
     </script>
 
-    {% comment %}
-      {% render 'cookie-banner' %}  
-    {% endcomment %}
+    {%- if settings.enable_cookie -%}
+      {% render 'cookie-banner' %}
+    {%- endif -%}
   </body>
 </html>
