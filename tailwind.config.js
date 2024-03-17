@@ -3,7 +3,7 @@ const colors = require('tailwindcss/colors');
 const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
-  content: ['./theme/**/*.{liquid,js}', './react/src/**/*.{js,jsx,ts,tsx}'],
+  content: ['./**/*.{liquid,js,jsx,ts,tsx}'],
   theme: {
     screens: {
       '2xs': '410px',

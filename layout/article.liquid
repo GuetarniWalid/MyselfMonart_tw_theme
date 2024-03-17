@@ -43,9 +43,7 @@
 
     {% endstyle %}
 
-    {{ 'style.css' | asset_url | stylesheet_tag }}
-
-    <script src="{{ 'collection.js' | asset_url }}" defer="defer"></script>
+    {{ 'output.css' | asset_url | stylesheet_tag }}
 
     <script>
       if (Shopify.designMode) {
@@ -65,18 +63,11 @@
       {{ 'accessibility.skip_to_text' | t }}
     </a>
 
-    {% render 'tw-announcement-bar' %}
-    {% section 'tw-header' %}
-    {% section 'tw-cart-drawer' %}
-
-
     <div id="wrapper-overlay" class="relative">
       <main id="MainContent" role="main">
         {{ content_for_layout }}
       </main>
       {% section 'tw-footer' %}
-      <div id="overlay-content" class="absolute inset-0 bg-[rgba(0,46,93,0)] shadow-[shadow-[0_8px_32px_0_rgba(31,38,135,0.37)]] backdrop-blur-[2px] hidden"> </div>
-      {% render 'tw-loup-like-button' %}
     </div>
 
     <script>
@@ -107,7 +98,7 @@
         playSlideshow: `{{ 'sections.slideshow.play_slideshow' | t }}`,
       };
     </script>
-    
+
     {%- if settings.enable_cookie -%}
       {% render 'cookie-banner' %}
     {%- endif -%}

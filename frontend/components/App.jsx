@@ -1,12 +1,12 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
-import useFormatOptions from './hooks/useFormatOptions';
-import useFormatOptionIndexListSelected from './hooks/useFormatOptionIndexListSelected';
-import useIsMobile from './hooks/useIsMobile';
-import Painting from './components/Painting';
-import MobileBottom from './components/MobileBottom';
-import CloseButton from './components/CloseButton';
-import DesktopRight from './components/DesktopRight';
-import BuyButton from './components/BuyButton';
+import useFormatOptions from '../hooks/useFormatOptions';
+import useFormatOptionIndexListSelected from '../hooks/useFormatOptionIndexListSelected';
+import useIsMobile from '../hooks/useIsMobile';
+import Painting from './Painting';
+import MobileBottom from './MobileBottom';
+import CloseButton from './CloseButton';
+import DesktopRight from './DesktopRight';
+import BuyButton from './BuyButton';
 
 export default function App() {
   const initialoptionSets = useMemo(() => useFormatOptions(0, 0), []);

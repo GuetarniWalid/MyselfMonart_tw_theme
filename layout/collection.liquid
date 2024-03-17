@@ -43,7 +43,9 @@
 
     {% endstyle %}
 
-    {{ 'style.css' | asset_url | stylesheet_tag }}
+    {{ 'output.css' | asset_url | stylesheet_tag }}
+
+    <script src="{{ 'collection.js' | asset_url }}" defer="defer"></script>
 
     <script>
       if (Shopify.designMode) {
@@ -70,10 +72,6 @@
 
     <div id="wrapper-overlay" class="relative">
       <main id="MainContent" role="main">
-        {% section 'main-cart-items' %}
-        {% if cart.items > 0 %}
-          {% section 'main-cart-footer' %}
-        {% endif %}
         {{ content_for_layout }}
       </main>
       {% section 'tw-footer' %}
@@ -109,7 +107,7 @@
         playSlideshow: `{{ 'sections.slideshow.play_slideshow' | t }}`,
       };
     </script>
-
+    
     {%- if settings.enable_cookie -%}
       {% render 'cookie-banner' %}
     {%- endif -%}

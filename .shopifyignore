@@ -1,0 +1,10 @@
+package.json
+node_modules/
+.vscode
+frontend
+.gitignore
+input.css
+.prettierrc
+package-lock.json
+vite.config.json
+tailwind.config.js

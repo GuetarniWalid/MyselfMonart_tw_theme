@@ -43,7 +43,7 @@
 
     {% endstyle %}
 
-    {{ 'style.css' | asset_url | stylesheet_tag }}
+    {{ 'output.css' | asset_url | stylesheet_tag }}
 
     <script>
       if (Shopify.designMode) {
@@ -70,6 +70,10 @@
 
     <div id="wrapper-overlay" class="relative">
       <main id="MainContent" role="main">
+        {% section 'main-cart-items' %}
+        {% if cart.items > 0 %}
+          {% section 'main-cart-footer' %}
+        {% endif %}
         {{ content_for_layout }}
       </main>
       {% section 'tw-footer' %}
