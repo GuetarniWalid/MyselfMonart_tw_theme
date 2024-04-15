@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://cdn.shopify.com" crossorigin />
     <meta name="p:domain_verify" content="df84d648bc3332c06767fb16e0fb142e"/>
 
-    {%- if template.name == 'page' and page.metafields.robots.noindex.value -%}
+    {%- if template.name == 'page' and page.fields.robots.noindex.value -%}
       <meta name="robots" content="noindex,nofollow">
     {%- endif -%}
 

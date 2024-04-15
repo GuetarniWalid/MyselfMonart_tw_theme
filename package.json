@@ -6,8 +6,8 @@
   "scripts": {
     "tw": "npx tailwindcss -i ./input.css -o ./assets/output.css --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "vite dev",
-    "build": "vite build"
+    "dev": "NODE_ENV=development vite dev",
+    "build": "NODE_ENV=production vite build"
   },
   "author": "",
   "license": "ISC",

@@ -56,12 +56,6 @@
     {%- endif -%}
   
     {% render 'gsf-conversion-pixels' %}
-
-    {%- liquid
-      render 'vite-tag' with 'index.jsx'
-    -%}
-
-
   </head>
 
   <body class="w-screen overflow-x-hidden text-main bg-secondary z-10 scrollbar relative min-h-screen">
@@ -79,7 +73,7 @@
         {{ content_for_layout }}
       </main>
       {% section 'tw-footer' %}
-      <div id="overlay-content" class="absolute inset-0 bg-[rgba(0,46,93,0)] shadow-[shadow-[0_8px_32px_0_rgba(31,38,135,0.37)]] backdrop-blur-[2px] hidden"> </div>
+      <div id="overlay-content" class="absolute inset-0 bg-[rgba(0,46,93,0)] backdrop-blur-[2px] hidden"> </div>
       {% render 'tw-loup-like-button' %}
     </div>
 

@@ -527,6 +527,7 @@
     "cart_drawer": {
       "close": "Fermer",
       "continue_shopping": "Voir tous nos tableaux",
+      "checkout": "Procéder au paiement",
       "empty_message": "Votre panier est vide",
       "remove": "Enlever {{article}} du panier",
       "keep_shopping": "Autres produits",

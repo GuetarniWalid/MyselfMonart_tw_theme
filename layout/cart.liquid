@@ -24,7 +24,8 @@
 
     {% if page_description %}
       <meta name="description" content="{{ page_description | escape }}" />
-    {% endif %} {% render 'meta-tags' %}
+    {% endif %} 
+    {% render 'meta-tags' %}
 
     <script src="{{ 'tw-global.js' | asset_url }}" defer="defer"></script>
     {{

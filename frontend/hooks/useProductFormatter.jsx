@@ -4,16 +4,7 @@ export default function useProductFormatter(
 ) {
   const product = {
     ratio: window.productRatio,
-    title: window.productTitle,
-    status: 'draft',
-    images: [
-      {
-        src: window.productImageSRC,
-        filename: window.filename,
-        alt: window.productImageAlt,
-        position: 1,
-      },
-    ],
+    productId: window.productId,
   };
 
   const variants = optionIndexListSelected.map((indexOptionSelected, index) => {
@@ -21,7 +12,7 @@ export default function useProductFormatter(
     const optionSelected = optionSet[indexOptionSelected];
     return optionSelected.name;
   });
-  product.variants = [{ option1: variants.join('/') }];
+  product.variant = { title: variants.join('/') };
 
   return product;
 }

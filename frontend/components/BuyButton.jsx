@@ -26,21 +26,23 @@ export default function BuyButton({
     return () => clearInterval(intervalId);
   }, []);
 
-  async function createProduct() {
-    const response = await fetch('http://127.0.0.1:3333/api/product/create', {
+  async function updateProduct() {
+    const serverUrl =
+    process.env.NODE_ENV === 'development' ? 'http://localhost:3333' : 'https://backend.myselfmonart.com';
+    const response = await fetch(serverUrl + '/api/product/update', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(product),
     });
-    const productCreated = await response.json();
-    return productCreated.variantID;
+    const json = await response.json();
+    return json.newVariantId;
   }
 
   async function makeOrder(variantID) {
-    console.log('shopify = ', Shopify);
-    console.log('shopify = ', Shopify.routes.root);
     const response = await fetch(
-      'https://' + Shopify.shop + '/cart/add.js?sections=tw-cart-drawer,tw-header',
+      'https://' +
+        Shopify.shop +
+        '/cart/add.js?sections=tw-cart-drawer,tw-header',
       {
         method: 'POST',
         headers: {
@@ -53,14 +55,19 @@ export default function BuyButton({
     );
     if (!response.ok) throw new Error("Une erreur inattendu s'est produite.");
     const json = await response.json();
-    console.log('🚀 ~ json:', json);
     renderNewSections(json);
+    const closeButton = document.getElementById('addons-drawer-close-button');
+    closeButton.click();
+    setTimeout(() => {
+      const cartDrawerButton = document.getElementById('cart-button');
+      cartDrawerButton.click();
+    }, 300);
   }
 
   async function handleClick() {
     setIdle(true);
     try {
-      const variantCreatedID = await createProduct();
+      const variantCreatedID = await updateProduct();
       await makeOrder(variantCreatedID);
     } catch (error) {
       console.log(error);
@@ -70,21 +77,21 @@ export default function BuyButton({
   }
 
   function renderNewSections(json) {
-    const sectionHeader = document.getElementById('bubble-nb-product');
-    sectionHeader.innerHTML = getSectionInnerJSON(
-      json.sections[section.id],
-      section.selector,
+    const bubble = document.getElementById('bubble-nb-product');
+    const newBubble = getSectionInnerJSON(
+      json.sections['tw-header'],
+      '#bubble-nb-product',
     );
+    bubble.innerHTML = newBubble;
 
-    this.getSectionsToRender().forEach((section) => {
-      const sectionElement = section.selector
-        ? document.querySelector(section.selector)
-        : document.getElementById(section.id);
-      sectionElement.innerHTML = this.getSectionInnerHTML(
-        json.sections[section.id],
-        section.selector,
-      );
-    });
+    const sectionDrawer = document.getElementById(
+      'shopify-section-tw-cart-drawer',
+    );
+    const newSectionDrawer = getSectionInnerJSON(
+      json.sections['tw-cart-drawer'],
+      '#shopify-section-tw-cart-drawer',
+    );
+    sectionDrawer.innerHTML = newSectionDrawer;
   }
 
   function getSectionInnerJSON(json, selector) {

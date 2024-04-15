@@ -147,6 +147,9 @@
                 {% render 'tw-loading-hand' %}
               </div>
             </div>
+            {%- liquid
+              render 'vite-tag' with 'index.jsx'
+            -%}
           {%- when 'description' -%}
             {%- if product.description != blank -%}
               <div class="description flex flex-col gap-5 text-lg leading-relaxed mb-5">
@@ -234,11 +237,11 @@
 
 <script id="product-data">
   window.productRatio = "{% if template.suffix != 'carre' %}{{ template.suffix }}{% else %}square{% endif %}";
-  window.productTitle = "{{ product.title }}";
   window.productImageSRC = "{{ product.images[1] | image_url | prepend: 'https:' }}";
-  window.filename = "{{ product.title | handleize }}";
   window.productImageAlt = "{{ product.images[1].alt }}";
-  window.canvasTexture = "{{ 'tw.main_product.painting.canvas_texture' | t }}"
+  window.canvasTexture = "{{ 'tw.main_product.painting.canvas_texture' | t }}";
+  window.productId = "{{ product.id }}";
+  window.productAll = {{ product | json }};
 </script>
 
 
