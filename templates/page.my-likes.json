@@ -3,23 +3,13 @@
     "main": {
       "type": "main-page",
       "settings": {
-        "padding_top": 64,
-        "padding_bottom": 36
       }
     },
     "231f3e05-e896-4fc3-8b26-daf4b23dfbe4": {
       "type": "my-likes",
       "settings": {
-        "card_background": "#eae7df",
-        "button_background": "#002e5d",
-        "enable_border": true,
-        "columns_desktop": 3,
         "show_secondary_image": true,
-        "show_price": true,
-        "columns_mobile": "2",
-        "empty_text": "<p>\n  Pas de tableau aimé pour l'instant,<br>\n  Installez-vous et profitez du moment,<br>\n  Laissez l'art embellir votre journée,<br>\n  Et vos murs, une fois l'œuvre trouvée.\n<\/p>",
-        "padding_top": 16,
-        "padding_bottom": 36
+        "empty_text": "<p>\n  Pas de tableau aimé pour l'instant,<br>\n  Installez-vous et profitez du moment,<br>\n  Laissez l'art embellir votre journée,<br>\n  Et vos murs, une fois l'œuvre trouvée.\n<\/p>"
       }
     }
   },

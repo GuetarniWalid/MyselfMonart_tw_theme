@@ -15,85 +15,40 @@
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/relooker-salon-2.jpg",
-        "height": "adapt",
-        "desktop_image_width": "medium",
         "layout": "image_first",
-        "desktop_content_position": "top",
-        "desktop_content_alignment": "left",
-        "content_layout": "no-overlap",
-        "color_scheme": "background-1",
-        "mobile_content_alignment": "left",
-        "enable_blob": true,
-        "padding_top": 20,
-        "padding_bottom": 0
+        "enable_blob": true
       }
     },
     "fc528c4b-187f-4367-bc91-6aa859abb94b": {
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/idee-Ambiance-cocoonind-salon_1a4d5be5-4eb8-4b1a-9fab-959f9ac1fbec.jpg",
-        "height": "adapt",
-        "desktop_image_width": "medium",
         "layout": "text_first",
-        "desktop_content_position": "middle",
-        "desktop_content_alignment": "left",
-        "content_layout": "no-overlap",
-        "color_scheme": "background-1",
-        "mobile_content_alignment": "left",
-        "enable_blob": true,
-        "padding_top": 0,
-        "padding_bottom": 0
+        "enable_blob": true
       }
     },
     "238f99d8-a2c2-4492-981d-c20ea55301f9": {
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/salon-pour-accueillir.jpg",
-        "height": "adapt",
-        "desktop_image_width": "medium",
         "layout": "image_first",
-        "desktop_content_position": "top",
-        "desktop_content_alignment": "left",
-        "content_layout": "no-overlap",
-        "color_scheme": "background-1",
-        "mobile_content_alignment": "left",
-        "enable_blob": true,
-        "padding_top": 0,
-        "padding_bottom": 0
+        "enable_blob": true
       }
     },
     "556a8432-4d1b-4684-9d44-adb04332a6e1": {
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/relloker-salon-budget-pas-chere.png",
-        "height": "adapt",
-        "desktop_image_width": "medium",
         "layout": "text_first",
-        "desktop_content_position": "top",
-        "desktop_content_alignment": "left",
-        "content_layout": "no-overlap",
-        "color_scheme": "background-1",
-        "mobile_content_alignment": "left",
-        "enable_blob": true,
-        "padding_top": 0,
-        "padding_bottom": 36
+        "enable_blob": true
       }
     },
     "4aca8a5e-f16a-4dd2-aebd-c8afbb747dcd": {
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/inspiration-decoration-africaine-pour-salon-pas-chere.jpg",
-        "height": "adapt",
-        "desktop_image_width": "medium",
         "layout": "image_first",
-        "desktop_content_position": "top",
-        "desktop_content_alignment": "left",
-        "content_layout": "no-overlap",
-        "color_scheme": "background-1",
-        "mobile_content_alignment": "left",
-        "enable_blob": true,
-        "padding_top": 0,
-        "padding_bottom": 36
+        "enable_blob": true
       }
     },
     "11ed1855-d812-4ccc-8f80-65a14ff1c6bd": {

@@ -15,51 +15,24 @@
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/tableau-animaux.jpg",
-        "height": "adapt",
-        "desktop_image_width": "medium",
         "layout": "image_first",
-        "desktop_content_position": "top",
-        "desktop_content_alignment": "left",
-        "content_layout": "no-overlap",
-        "color_scheme": "background-1",
-        "mobile_content_alignment": "left",
-        "enable_blob": true,
-        "padding_top": 36,
-        "padding_bottom": 36
+        "enable_blob": true
       }
     },
     "de6ebecd-60b3-47d6-ab6e-9c3032245f02": {
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/tableau-pop-art_ce18a530-00da-49c0-92b3-406ca70482b2.jpg",
-        "height": "adapt",
-        "desktop_image_width": "medium",
         "layout": "text_first",
-        "desktop_content_position": "top",
-        "desktop_content_alignment": "left",
-        "content_layout": "no-overlap",
-        "color_scheme": "background-1",
-        "mobile_content_alignment": "left",
-        "enable_blob": true,
-        "padding_top": 36,
-        "padding_bottom": 36
+        "enable_blob": true
       }
     },
     "c443790e-e3c2-4b2d-a004-1c91af633bc2": {
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/ambiance-zen-pour-salon-tableau-deco.jpg",
-        "height": "adapt",
-        "desktop_image_width": "medium",
         "layout": "image_first",
-        "desktop_content_position": "top",
-        "desktop_content_alignment": "left",
-        "content_layout": "no-overlap",
-        "color_scheme": "background-1",
-        "mobile_content_alignment": "left",
-        "enable_blob": true,
-        "padding_top": 36,
-        "padding_bottom": 36
+        "enable_blob": true
       }
     },
     "11ed1855-d812-4ccc-8f80-65a14ff1c6bd": {

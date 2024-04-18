@@ -15,65 +15,29 @@
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/credence-tapisserie-colore-cusisine.jpg",
-        "height": "adapt",
-        "desktop_image_width": "medium",
         "layout": "image_first",
-        "desktop_content_position": "top",
-        "desktop_content_alignment": "left",
-        "content_layout": "no-overlap",
-        "color_scheme": "background-1",
-        "mobile_content_alignment": "left",
-        "enable_blob": true,
-        "padding_top": 0,
-        "padding_bottom": 0
+        "enable_blob": true
       }
     },
     "e7bbe058-9aee-4e29-b923-846f77b7f084": {
       "type": "image-with-text",
       "settings": {
-        "height": "adapt",
-        "desktop_image_width": "medium",
         "layout": "text_first",
-        "desktop_content_position": "top",
-        "desktop_content_alignment": "left",
-        "content_layout": "no-overlap",
-        "color_scheme": "background-1",
-        "mobile_content_alignment": "left",
-        "enable_blob": true,
-        "padding_top": 0,
-        "padding_bottom": 0
+        "enable_blob": true
       }
     },
     "06633d81-0a12-49a8-a462-880b65d64464": {
       "type": "image-with-text",
       "settings": {
-        "height": "adapt",
-        "desktop_image_width": "medium",
         "layout": "image_first",
-        "desktop_content_position": "top",
-        "desktop_content_alignment": "left",
-        "content_layout": "no-overlap",
-        "color_scheme": "background-1",
-        "mobile_content_alignment": "left",
-        "enable_blob": true,
-        "padding_top": 0,
-        "padding_bottom": 0
+        "enable_blob": true
       }
     },
     "0ce687f7-c459-476c-be8f-093aec6781a4": {
       "type": "image-with-text",
       "settings": {
-        "height": "adapt",
-        "desktop_image_width": "medium",
         "layout": "text_first",
-        "desktop_content_position": "top",
-        "desktop_content_alignment": "left",
-        "content_layout": "no-overlap",
-        "color_scheme": "background-1",
-        "mobile_content_alignment": "left",
-        "enable_blob": true,
-        "padding_top": 0,
-        "padding_bottom": 0
+        "enable_blob": true
       }
     },
     "ffdacac5-aa4b-4417-945c-5a80065fcc93": {
@@ -92,10 +56,7 @@
       "settings": {
         "desktop_content_position": "center",
         "content_alignment": "center",
-        "color_scheme": "background-1",
-        "full_width": true,
-        "padding_top": 0,
-        "padding_bottom": 52
+        "full_width": true
       }
     },
     "0044807a-507c-4948-b3c5-72a90229ca34": {
@@ -106,8 +67,7 @@
           "settings": {
             "heading": "Quel est le coût moyen de la rénovation d'une cuisine ?",
             "icon": "none",
-            "row_content": "<p>Le coût de la rénovation d'une cuisine peut considérablement fluctuer en fonction de divers facteurs tels que la superficie de la cuisine, les matériaux sélectionnés et l'ampleur des travaux. Il est recommandé de demander des devis à des professionnels pour obtenir une estimation précise.<\/p>",
-            "page": ""
+            "row_content": "<p>Le coût de la rénovation d'une cuisine peut considérablement fluctuer en fonction de divers facteurs tels que la superficie de la cuisine, les matériaux sélectionnés et l'ampleur des travaux. Il est recommandé de demander des devis à des professionnels pour obtenir une estimation précise.<\/p>"
           }
         },
         "template--18952696496475__0044807a-507c-4948-b3c5-72a90229ca34-16841470335edb145d-1": {
@@ -115,8 +75,7 @@
           "settings": {
             "heading": "Où puis-je trouver des idées de décoration pour ma cuisine ?",
             "icon": "none",
-            "row_content": "<p>Vous pouvez trouver des idées de décoration pour votre cuisine dans des magazines spécialisés, des sites web consacrés à la décoration intérieure, des plateformes de médias sociaux comme Pinterest et Instagram, ainsi que dans des blogs spécialisés en décoration d'intérieur.<\/p>",
-            "page": ""
+            "row_content": "<p>Vous pouvez trouver des idées de décoration pour votre cuisine dans des magazines spécialisés, des sites web consacrés à la décoration intérieure, des plateformes de médias sociaux comme Pinterest et Instagram, ainsi que dans des blogs spécialisés en décoration d'intérieur.<\/p>"
           }
         },
         "template--18952696496475__0044807a-507c-4948-b3c5-72a90229ca34-16841470335edb145d-2": {
@@ -124,8 +83,7 @@
           "settings": {
             "heading": "Comment choisir le bon éclairage pour ma cuisine ?",
             "icon": "none",
-            "row_content": "<p>Le choix du bon éclairage dépend de la taille de votre cuisine, de sa disposition et de son utilisation. Un bon éclairage doit être à la fois fonctionnel et agréable à l'œil. Assurez-vous de choisir des ampoules avec une température de couleur qui convient à votre cuisine. Les ampoules plus chaudes (2700K à 3000K) créent une atmosphère chaleureuse et accueillante, tandis que les ampoules plus froides (3500K à 4100K) sont excellentes pour l'éclairage de travail car elles produisent une lumière claire et nette. Il est recommandé de combiner différents types d'éclairage : général, de travail et d'ambiance pour obtenir le meilleur résultat.<\/p>",
-            "page": ""
+            "row_content": "<p>Le choix du bon éclairage dépend de la taille de votre cuisine, de sa disposition et de son utilisation. Un bon éclairage doit être à la fois fonctionnel et agréable à l'œil. Assurez-vous de choisir des ampoules avec une température de couleur qui convient à votre cuisine. Les ampoules plus chaudes (2700K à 3000K) créent une atmosphère chaleureuse et accueillante, tandis que les ampoules plus froides (3500K à 4100K) sont excellentes pour l'éclairage de travail car elles produisent une lumière claire et nette. Il est recommandé de combiner différents types d'éclairage : général, de travail et d'ambiance pour obtenir le meilleur résultat.<\/p>"
           }
         },
         "template--18952696496475__0044807a-507c-4948-b3c5-72a90229ca34-16841470335edb145d-3": {
@@ -133,8 +91,7 @@
           "settings": {
             "heading": "Quel type de revêtement mural est le plus durable pour une cuisine ?",
             "icon": "none",
-            "row_content": "<p>Plusieurs options sont disponibles, comme la peinture, le carrelage, le papier peint, le bois, etc. Le choix dépend de votre budget, de votre style et de la facilité d'entretien. Le carrelage, par exemple, est très durable et facile à nettoyer, ce qui en fait un choix populaire pour les cuisines.<\/p>",
-            "page": ""
+            "row_content": "<p>Plusieurs options sont disponibles, comme la peinture, le carrelage, le papier peint, le bois, etc. Le choix dépend de votre budget, de votre style et de la facilité d'entretien. Le carrelage, par exemple, est très durable et facile à nettoyer, ce qui en fait un choix populaire pour les cuisines.<\/p>"
           }
         },
         "a12d499a-5122-4061-8da5-a26a45536162": {
@@ -142,8 +99,7 @@
           "settings": {
             "heading": "Comment optimiser l'espace de rangement dans ma cuisine ?",
             "icon": "none",
-            "row_content": "<p>Il existe plusieurs façons d'optimiser l'espace de rangement dans votre cuisine. Vous pouvez utiliser des étagères ouvertes, des tiroirs profonds, des armoires jusqu'au plafond, et même utiliser l'espace sur les appareils électroménagers. De plus, l'organisation interne de vos armoires peut jouer un grand rôle dans l'optimisation de l'espace.<\/p>",
-            "page": ""
+            "row_content": "<p>Il existe plusieurs façons d'optimiser l'espace de rangement dans votre cuisine. Vous pouvez utiliser des étagères ouvertes, des tiroirs profonds, des armoires jusqu'au plafond, et même utiliser l'espace sur les appareils électroménagers. De plus, l'organisation interne de vos armoires peut jouer un grand rôle dans l'optimisation de l'espace.<\/p>"
           }
         },
         "68ca31cc-f326-4642-b3bc-475e9a1c0abd": {
@@ -151,8 +107,7 @@
           "settings": {
             "heading": "Dois-je engager un professionnel pour rénover ma cuisine ?",
             "icon": "none",
-            "row_content": "<p>Cela dépend de l'ampleur de la rénovation et de vos compétences en bricolage. Pour des rénovations majeures qui impliquent des travaux d'électricité ou de plomberie, il est généralement recommandé de faire appel à un professionnel.<\/p>",
-            "page": ""
+            "row_content": "<p>Cela dépend de l'ampleur de la rénovation et de vos compétences en bricolage. Pour des rénovations majeures qui impliquent des travaux d'électricité ou de plomberie, il est généralement recommandé de faire appel à un professionnel.<\/p>"
           }
         }
       },
@@ -165,19 +120,7 @@
         "68ca31cc-f326-4642-b3bc-475e9a1c0abd"
       ],
       "settings": {
-        "caption": "",
-        "heading": "FAQ",
-        "heading_size": "h1",
-        "heading_alignment": "center",
-        "layout": "none",
-        "logo_color": "#000000",
-        "color_scheme": "background-1",
-        "container_color_scheme": "background-2",
-        "open_first_collapsible_row": false,
-        "image_ratio": "adapt",
-        "desktop_layout": "image_second",
-        "padding_top": 36,
-        "padding_bottom": 36
+        "heading": "FAQ"
       }
     },
     "11ed1855-d812-4ccc-8f80-65a14ff1c6bd": {

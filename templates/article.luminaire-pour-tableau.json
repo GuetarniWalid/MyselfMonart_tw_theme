@@ -15,17 +15,8 @@
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/ampoule.jpg",
-        "height": "adapt",
-        "desktop_image_width": "medium",
         "layout": "image_first",
-        "desktop_content_position": "middle",
-        "desktop_content_alignment": "left",
-        "content_layout": "no-overlap",
-        "color_scheme": "background-1",
-        "mobile_content_alignment": "left",
-        "enable_blob": true,
-        "padding_top": 36,
-        "padding_bottom": 0
+        "enable_blob": true
       }
     },
     "383ee9d3-91a0-446f-b0c2-093c5372796e": {
@@ -44,27 +35,15 @@
       "settings": {
         "desktop_content_position": "center",
         "content_alignment": "left",
-        "color_scheme": "background-1",
-        "full_width": true,
-        "padding_top": 20,
-        "padding_bottom": 0
+        "full_width": true
       }
     },
     "23a43a26-7952-47aa-ae44-f382b92ccc75": {
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/applique-murale-pour-tableaujpg.jpg",
-        "height": "adapt",
-        "desktop_image_width": "medium",
         "layout": "text_first",
-        "desktop_content_position": "middle",
-        "desktop_content_alignment": "left",
-        "content_layout": "no-overlap",
-        "color_scheme": "background-1",
-        "mobile_content_alignment": "left",
-        "enable_blob": true,
-        "padding_top": 36,
-        "padding_bottom": 0
+        "enable_blob": true
       }
     },
     "e3e5fd50-b846-4d69-a333-47d313f75e35": {
@@ -83,27 +62,15 @@
       "settings": {
         "desktop_content_position": "center",
         "content_alignment": "left",
-        "color_scheme": "background-1",
-        "full_width": true,
-        "padding_top": 20,
-        "padding_bottom": 0
+        "full_width": true
       }
     },
     "31a3345b-54d3-419f-9fcb-4e6e41948771": {
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/projecteur-luminaire_pour-tableau.jpg",
-        "height": "adapt",
-        "desktop_image_width": "medium",
         "layout": "image_first",
-        "desktop_content_position": "top",
-        "desktop_content_alignment": "left",
-        "content_layout": "no-overlap",
-        "color_scheme": "background-1",
-        "mobile_content_alignment": "left",
-        "enable_blob": true,
-        "padding_top": 20,
-        "padding_bottom": 0
+        "enable_blob": true
       }
     },
     "91fe4963-90f8-428f-bdcf-e3268b519267": {
@@ -122,27 +89,15 @@
       "settings": {
         "desktop_content_position": "center",
         "content_alignment": "left",
-        "color_scheme": "background-1",
-        "full_width": true,
-        "padding_top": 0,
-        "padding_bottom": 0
+        "full_width": true
       }
     },
     "a442fcad-68f4-4267-a8f1-da256e86408e": {
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/sublimer-un-tableau-sur-cadre.jpg",
-        "height": "adapt",
-        "desktop_image_width": "medium",
         "layout": "text_first",
-        "desktop_content_position": "top",
-        "desktop_content_alignment": "center",
-        "content_layout": "no-overlap",
-        "color_scheme": "background-1",
-        "mobile_content_alignment": "left",
-        "enable_blob": true,
-        "padding_top": 36,
-        "padding_bottom": 0
+        "enable_blob": true
       }
     },
     "82bae5a1-71d9-473d-9add-6d1b3b6ab3ed": {
@@ -161,10 +116,7 @@
       "settings": {
         "desktop_content_position": "center",
         "content_alignment": "left",
-        "color_scheme": "background-1",
-        "full_width": true,
-        "padding_top": 0,
-        "padding_bottom": 0
+        "full_width": true
       }
     },
     "11ed1855-d812-4ccc-8f80-65a14ff1c6bd": {

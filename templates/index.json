@@ -3,26 +3,10 @@
     "2b3b46e7-881c-4925-96cf-76c7ebf203c4": {
       "type": "image-banner",
       "settings": {
-        "image_desktop": "shopify:\/\/shop_images\/decoration-murale-salon_89e0641c-c3f8-490b-a1e0-b6a82a1e1f0e.png",
-        "image_desktop_fit": "cover",
-        "image_desktop_horizontal_position": "center",
-        "image_desktop_vertical_position": "center",
+        "image_desktop": "shopify:\/\/shop_images\/tableau-deco-nature-promotion-15_f66e8c99-e341-481c-a23f-46898cf7b73c.png",
         "image_desktop_height": 80,
-        "content_width_desktop": 60,
-        "content_horizontal_position_desktop": 50,
-        "content_vertical_position_desktop": 100,
-        "content_alignment_desktop": "left",
-        "image_mobile": "shopify:\/\/shop_images\/decoration-murale-tableau-africain-pour-salon.jpg",
-        "image_mobile_fit": "cover",
-        "image_mobile_horizontal_position": "center",
-        "image_mobile_vertical_position": "center",
-        "image_mobile_height": 60,
-        "content_width_mobile": 90,
-        "content_horizontal_position_mobile": 50,
-        "content_vertical_position_mobile": 100,
-        "content_alignment_mobile": "center",
-        "overlay_opacity": 0,
-        "body_text": "#104173",
+        "image_mobile": "shopify:\/\/shop_images\/tableau-deco-nature-promotion-15-printemps.png",
+        "image_mobile_height": 100,
         "enable_lazy_loading": false
       }
     },
@@ -32,15 +16,15 @@
         "template--16404732051711__1198c25f-e6b6-405b-aa76-db2afd719caf-167457706007ac71a1-0": {
           "type": "heading",
           "settings": {
-            "heading": "TABLEAU ART DECO",
-            "heading_size": "h0",
+            "heading": "DÉCORATION MURALE ET TABLEAUX UNIQUES POUR SUBLIMER VOTRE INTÉRIEUR.",
             "markup": "h1"
           }
         },
         "template--16404732051711__1198c25f-e6b6-405b-aa76-db2afd719caf-167457706007ac71a1-1": {
           "type": "text",
           "settings": {
-            "text": "<p>Révélez votre style unique avec des <strong>œuvres d'art<\/strong> irrésistibles qui donneront vie à votre <strong>intérieur<\/strong>  - Découvrez nos collections de <strong>tableaux décoratifs <\/strong>et laissez-vous transporter dans un monde de couleurs, de formes et d'émotions.<\/p>"
+            "text": "<p>Révélez votre style unique avec des <strong>œuvres d'art <\/strong>irrésistibles qui donneront vie à votre <strong>intérieur<\/strong>- Découvrez nos collections de <strong>tableaux décoratifs <\/strong>et laissez-vous transporter dans un monde de couleurs, de formes et d'émotions.<\/p>",
+            "text_size": "text-xl"
           }
         }
       },
@@ -51,19 +35,71 @@
       "settings": {
         "desktop_content_position": "center",
         "content_alignment": "center",
-        "color_scheme": "background-1",
-        "full_width": true,
-        "padding_top": 40,
-        "padding_bottom": 24
+        "full_width": true
       }
     },
     "e2edd939-3626-48bb-a1b3-68b7d45d2b13": {
       "type": "collections-grid",
+      "blocks": {
+        "collection_fkXrTx": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-salon-2.jpg",
+            "collection": "tableau-salon",
+            "nb_columns": "col-span-12",
+            "lazy_load": true,
+            "paragraph": "<h3>DÉCOUVREZ NOTRE GAMME DE TABLEAU POUR SALON<\/h3><p>Découvrez des designs uniques pour sublimer votre décoration d'intérieur ! La pièce de vie par excellence, le salon est le reflet de votre personnalité et de votre style de vie. Chez MyselfMonart, nous avons sélectionné pour vous une gamme de tableaux modernes pour salon pour tous les goûts, que ce soit un tableau abstrait, une toile multicolore , ou encore un tableau paysage, vous trouverez forcément le tableau art deco pour personnaliser votre espace.<\/p><p>Offrez-vous une décoration originale et tendance avec nos tableaux pour salon. Que ce soit pour une ambiance chic, design, moderne ou minimaliste, Vous découvrirez certainement le tableau de décoration de salon qui convient à votre intérieur. N'attendez plus pour donner vie à vos murs avec nos plus beaux tableaux.<\/p>"
+          }
+        },
+        "collection_UWV9wc": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-chambre_f0a43251-6f8a-457c-be11-695c1441e668.jpg",
+            "collection": "tableau-chambre",
+            "nb_columns": "col-span-8",
+            "lazy_load": true,
+            "paragraph": "<h3>DÉCOUVREZ NOTRE GAMME DE TABLEAU POUR CHAMBRE<\/h3><p>Les tableaux pour chambre sont un excellent moyen de personnaliser votre espace et de créer une ambiance confortable et relaxante. Chez Myselfmonart, nous sommes fiers de proposer une large gamme de tableau murale chambre, pour sublimer votre intérieure.<\/p><p>Quel que soit votre style de décoration, Chaque tableau chambre est conçu pour répondre à toutes les envies. Que vous cherchiez à accentuer le caractère de votre chambre adulte avec un tableau de paysages romantiques, un tableau abstrait moderne ou un tableau de nus sensuels, ou que vous cherchiez à créer une ambiance joyeuse dans la chambre de votre enfant avec des tableaux colorés et amusants, nous avons ce qu'il vous faut. Nous avons également des tableaux avec des motifs doux et apaisants pour les chambres de bébés qui aiderons votre enfant a s'endormir paisiblement.<\/p><p>Nos tableaux chambre à coucher sont imprimés sur des supports de haute qualité tels que la toile, l'aluminium et le plexiglas, pour une finition durable et résistante. Avec nos tableaux décoratifs pour chambre, vous pourrez rendre votre chambre encore plus confortable, et en faire un véritable refuge que vous ne voudrez plus quitter. Découvrez notre collection de tableaux pour chambre adulte, tableaux pour chambre enfant et tableaux pour chambre bébé. Choisissez parmi une variété de styles et de motifs pour trouver celui qui conviendra parfaitement à votre intérieur et à votre personnalité.<\/p>"
+          }
+        },
+        "collection_nyzb4A": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-cuisine_3b013012-784a-4a2f-89da-06986c95e2bc.jpg",
+            "collection": "tableau-cuisine",
+            "nb_columns": "col-span-4",
+            "lazy_load": true,
+            "paragraph": "<h3>DÉCOUVREZ NOTRE GAMME DE TABLEAU POUR CUISINE<\/h3><p>En quête d'une cuisine originale ? Notre collection de tableaux pour cuisine saura sublimer votre décoration d'intérieure.<\/p><p>Souvent négligée, la cuisine est aujourd’hui devenue l’une des pièces principales de notre maison. Ambiance rustique, décoration design ou cuisine moderne, on ne néglige plus aucun détail pour faire de cette pièce un endroit à notre image.<\/p><p>De l'électroménager à l'étagère en bois, en passant par les petits objets déco, tout est bon pour affirmer votre personnalité.<\/p><p>Chez MyselfMonart nous proposons une large gamme de tableau pour cuisine, des illustrations rétro, des toiles multicolores, et même des tableaux photos de vos pâtisseries préférées. Si vous êtes à la recherche d’idées déco originales ou simplement d’un cadeau créatif vous trouverez forcément parmi nos impressions sur toile une façon d’habiller vos murs.<\/p>"
+          }
+        },
+        "collection_QanAte": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/Tableaux-bureau.jpg",
+            "collection": "tableau-bureau",
+            "nb_columns": "col-span-4",
+            "lazy_load": true,
+            "paragraph": "<h3>DÉCOUVREZ NOTRE COLLECTION DE TABLEAUX POUR BUREAU<\/h3><p>Vous cherchez à apporter une touche de style et de personnalité à votre espace de travail ? Ne cherchez pas plus loin que notre collection de tableaux pour bureau. Chez Myselfmonart, nous avons une variété de tableaux qui ajouteront une touche d'élégance à votre espace de travail.<\/p><p>Que vous soyez à la recherche d'un tableau abstrait pour donner une touche d'originalité à votre bureau ou d'un tableau inspirant pour vous motiver, nous avons ce qu'il vous faut. Nous avons également des tableaux avec des motifs apaisants et relaxants pour créer une ambiance zen dans votre espace de travail.<\/p><p>Nos tableaux pour bureau sont imprimés sur des supports de haute qualité pour une finition durable et résistante. Ils sont disponibles dans une variété de tailles pour s'adapter à n'importe quel espace de bureau.<\/p><p>Avec nos tableaux décoratifs pour bureau, vous pourrez créer un espace de travail qui vous inspirera et vous aidera à vous concentrer. Découvrez notre collection de tableaux pour bureau et trouvez celui qui conviendra parfaitement à votre style et à votre personnalité.<\/p>"
+          }
+        },
+        "collection_jBdfGn": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-couleur.jpg",
+            "collection": "tableau-couleur",
+            "nb_columns": "col-span-8",
+            "lazy_load": true,
+            "paragraph": "<h3>DÉCOUVREZ NOTRE GAMME DE TABLEAU COLORÉ<\/h3><p>Faites de votre maison un lieu qui respire la créativité et la beauté avec nos tableaux colorés. Parfaits pour décorer votre intérieur, ces œuvres d'art magnifiques célèbrent chaque couleur avec poésie, subtilité et dynamisme. Que vous préfériez des tableaux abstraits en noir et blanc, des couchers de soleil orangés ou des paysages exotiques aux teintes vertes et jaunes, vous trouverez certainement une toile murale qui apportera élégance et vitalité à votre espace.<\/p><p>Les tableaux colorés sont de véritables joyaux qui ajoutent une touche d'originalité et de caractère à votre décoration intérieure. Ils peuvent transformer complètement l'ambiance d'une pièce en lui apportant une dose d'énergie et de créativité. Les couleurs vibrantes et lumineuses captent le regard et créent une atmosphère chaleureuse et accueillante.<\/p><p>Laissez-vous séduire par notre collection de tableaux colorés et apportez une nouvelle dimension à votre intérieur. Que vous souhaitiez créer une ambiance moderne, apaisante ou exotique, notre collection de tableaux colorés offre une multitude de choix pour répondre à tous les goûts et styles de décoration.<\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "collection_fkXrTx",
+        "collection_UWV9wc",
+        "collection_nyzb4A",
+        "collection_QanAte",
+        "collection_jBdfGn"
+      ],
       "settings": {
-        "lazy_load": false,
-        "color_text": "#f6f3ef",
-        "padding_top": 0,
-        "padding_bottom": 0
       }
     },
     "20c0c98e-ed16-4069-b89a-bb18d96ee241": {
@@ -72,15 +108,15 @@
         "template--16404732051711__20c0c98e-ed16-4069-b89a-bb18d96ee241-1666624599c69c0f87-0": {
           "type": "heading",
           "settings": {
-            "heading": "Habillez vos murs d’émotions.",
-            "heading_size": "h1",
+            "heading": "TABLEAU DÉCORATION : L'ART DE PERSONNALISER VOTRE ESPACE.",
             "markup": "h2"
           }
         },
         "template--16404732051711__20c0c98e-ed16-4069-b89a-bb18d96ee241-1666624599c69c0f87-1": {
           "type": "text",
           "settings": {
-            "text": "<p>Laissez-vous emporter par l'univers <strong>artistique<\/strong> et habillez votre mur avec de superbes<strong> impressions sur toile<\/strong>. Succombez au charme des<strong> tableaux<\/strong> imaginés par nos graphistes talentueux et créez des ambiances accueillantes et inspirantes dans chaque coin de votre <strong>intérieur<\/strong>. Personnalisez la taille, le support et l'encadrement pour refléter votre style inimitable. <\/p><p>Arrêtez le temps et contemplez la beauté de chaque <strong>tableau<\/strong>. Laissez-vous surprendre par votre propre créativité et ressentez les <strong>émotions<\/strong>, les <strong>couleurs et les formes<\/strong> qui se dévoilent devant vos yeux. Savourez le bonheur de partager une œuvre d'art qui vous tient à cœur en offrant un <strong>cadeau<\/strong> idéal et touchant à quelqu'un d'exceptionnel dans votre vie.<\/p><p><\/p>"
+            "text": "<p>Laissez-vous emporter par l'univers <strong>artistique<\/strong> et habillez votre mur avec de superbes<strong> impressions sur toile<\/strong>. Succombez au charme des<strong> tableaux<\/strong> imaginés par nos graphistes talentueux et créez des ambiances accueillantes et inspirantes dans chaque coin de votre <strong>intérieur<\/strong>. Personnalisez la taille, le support et l'encadrement pour refléter votre style inimitable.<\/p><p>Arrêtez le temps et contemplez la beauté de chaque <strong>tableau<\/strong>. Laissez-vous surprendre par votre propre créativité et ressentez les <strong>émotions<\/strong>, les <strong>couleurs et les formes<\/strong> qui se dévoilent devant vos yeux. Savourez le bonheur de partager une œuvre d'art qui vous tient à cœur en offrant un <strong>cadeau<\/strong> idéal et touchant à quelqu'un d'exceptionnel dans votre vie.<\/p>",
+            "text_size": "text-xl"
           }
         }
       },
@@ -89,12 +125,9 @@
         "template--16404732051711__20c0c98e-ed16-4069-b89a-bb18d96ee241-1666624599c69c0f87-1"
       ],
       "settings": {
-        "desktop_content_position": "center",
-        "content_alignment": "left",
-        "color_scheme": "background-1",
-        "full_width": true,
-        "padding_top": 40,
-        "padding_bottom": 20
+        "desktop_content_position": "right",
+        "content_alignment": "right",
+        "full_width": true
       }
     },
     "7f048e47-ff73-4ef2-a44d-204a6ad96f65": {
@@ -104,14 +137,14 @@
           "type": "heading",
           "settings": {
             "heading": "Trouvez l'accord parfait. Personnalisez vos envies",
-            "heading_size": "h1",
             "markup": "h2"
           }
         },
         "template--16404732051711__7f048e47-ff73-4ef2-a44d-204a6ad96f65-16666290841ff88433-1": {
           "type": "text",
           "settings": {
-            "text": "<p>Vous avez le souci du détail ? Allez plus loin en personnalisant la taille et le support. Petit tableau, grand tableau,  tableau sur toile, tableau plexiglas ou  tableau aluminium, choisissez l’aspect qui s’accorde le mieux à votre intérieur.<\/p>"
+            "text": "<p>Vous avez le souci du détail ? Allez plus loin en personnalisant la taille et le support. Petit tableau, grand tableau,  tableau sur toile, tableau plexiglas ou  tableau aluminium, choisissez l’aspect qui s’accorde le mieux à votre intérieur.<\/p>",
+            "text_size": "text-xl"
           }
         }
       },
@@ -122,10 +155,7 @@
       "settings": {
         "desktop_content_position": "center",
         "content_alignment": "left",
-        "color_scheme": "background-2",
-        "full_width": true,
-        "padding_top": 16,
-        "padding_bottom": 40
+        "full_width": true
       }
     },
     "0400eb0c-febd-4b30-a9fc-23868b723b01": {
@@ -136,8 +166,7 @@
           "settings": {
             "number": 1,
             "heading": "Choisissez",
-            "text": "Choisissez votre tableau deco parmi la large collection de tableaux",
-            "text_arrangement": "unset"
+            "text": "Choisissez votre tableau deco parmi la large collection de tableaux"
           }
         },
         "c44537b3-1279-4836-9f93-bd9ff2a05e77": {
@@ -145,8 +174,7 @@
           "settings": {
             "number": 2,
             "heading": "Personnalisez",
-            "text": "Configurez la taille et le support de votre tableau",
-            "text_arrangement": "unset"
+            "text": "Configurez la taille et le support de votre tableau"
           }
         },
         "a6c21ad7-b53a-477a-9209-290c852bb6e7": {
@@ -154,8 +182,7 @@
           "settings": {
             "number": 3,
             "heading": "Commandez",
-            "text": "Nous fabriquons votre tableau et nous chargeons de vous l'envoyer.",
-            "text_arrangement": "unset"
+            "text": "Nous fabriquons votre tableau et nous chargeons de vous l'envoyer."
           }
         },
         "9bbd06d2-2f00-4f08-9b98-9313305b1a02": {
@@ -163,8 +190,7 @@
           "settings": {
             "number": 4,
             "heading": "Admirez",
-            "text": "Accrochez votre tableau et profitez du résultat !",
-            "text_arrangement": "unset"
+            "text": "Accrochez votre tableau et profitez du résultat !"
           }
         }
       },
@@ -176,21 +202,8 @@
       ],
       "settings": {
         "title": "",
-        "heading_size": "h1",
         "nb_columns_on_computer": "25",
-        "nb_columns_on_mobile": "100",
-        "columns_alignment": "flex-start",
-        "logo_color": "#002e5d",
-        "logo_size": 45,
-        "logo_background": true,
-        "logo_background_color": "#E0E0E0",
-        "logo_border": true,
-        "title_bold": true,
-        "margin_under_logo": 26,
-        "margin_under_title": 12,
-        "section_background_color": "#F6F3EF",
-        "margin_top": 10,
-        "margin_bottom": 35
+        "nb_columns_on_mobile": "100"
       }
     },
     "bc7808a3-010e-4d80-a8f4-053c77379028": {
@@ -200,14 +213,14 @@
           "type": "heading",
           "settings": {
             "heading": "Un doute sur la taille ?",
-            "heading_size": "h1",
             "markup": "h2"
           }
         },
         "template--16404732051711__bc7808a3-010e-4d80-a8f4-053c77379028-16666290841ff88433-1": {
           "type": "text",
           "settings": {
-            "text": "<p>Consultez notre guide des tailles ou prenez contacte avec nous. Nous serons heureux de pouvoir vous aider à harmoniser votre intérieur.<\/p>"
+            "text": "<p>Consultez notre guide des tailles ou prenez contacte avec nous. Nous serons heureux de pouvoir vous aider à harmoniser votre intérieur.<\/p>",
+            "text_size": "text-xl"
           }
         },
         "template--16404732051711__bc7808a3-010e-4d80-a8f4-053c77379028-16666290841ff88433-2": {
@@ -229,31 +242,15 @@
       "settings": {
         "desktop_content_position": "center",
         "content_alignment": "left",
-        "color_scheme": "background-2",
-        "full_width": true,
-        "padding_top": 40,
-        "padding_bottom": 72
+        "full_width": true
       }
     },
     "490671aa-79b7-40da-8e00-59f7773b6755": {
       "type": "badges",
       "settings": {
         "title": "NOS GARANTIES",
-        "heading_size": "h1",
         "nb_columns_on_computer": "33.33",
-        "nb_columns_on_mobile": "100",
-        "columns_alignment": "flex-start",
-        "logo_color": "#121212",
-        "logo_size": 45,
-        "logo_background": false,
-        "logo_background_color": "#E0E0E0",
-        "logo_border": false,
-        "title_bold": true,
-        "margin_under_logo": 26,
-        "margin_under_title": 12,
-        "section_background_color": "#F6F3EE",
-        "margin_top": 25,
-        "margin_bottom": 35
+        "nb_columns_on_mobile": "100"
       }
     }
   },
