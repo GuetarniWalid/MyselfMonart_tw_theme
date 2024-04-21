@@ -1,10 +1,10 @@
-if (!customElements.get('dynamic-image-text')) {
-  class DynamicImageText extends HTMLElement {
+if (!customElements.get('customer-testimonial')) {
+  class CustomerTestimonial extends HTMLElement {
     constructor() {
       super();
       this.message = this.querySelector('.message p');
-      this.image = this.querySelector('img');
-      this.durationImageAppearanceInMs = Number(this.querySelector('.wrapper-image-message').dataset.durationAppearance + '000');
+      this.image = this.querySelector('img,svg');
+      this.durationImageAppearanceInMs = Number(this.querySelector('div[data-duration-appearance]').dataset.durationAppearance + '000');
       this.currentIndex = 0;
       this.extractDynamicContent();
       setTimeout(() => {
@@ -15,10 +15,10 @@ if (!customElements.get('dynamic-image-text')) {
     extractDynamicContent() {
       const bindStrings = JSON.parse(this.querySelector('.content').textContent);
       const content = bindStrings.map(bindString => {
-        const separeteString = bindString.split('|');
+        const separeteString = bindString.split('|||');
         return {
-          text: separeteString[0].slice(1),
-          image: separeteString[1],
+          text: separeteString[0].slice(1).trim(),
+          image: separeteString[1].trim(),
         };
       });
       this.content = content;
@@ -33,14 +33,14 @@ if (!customElements.get('dynamic-image-text')) {
       const { text, image } = this.content[this.currentIndex];
       this.blurImage();
       this.downloadImage(image);
-      await this.simulateHumanWriting(text);
       this.unblurImage(image);
+      await this.simulateHumanWriting(text);
       await this.wait(this.durationImageAppearanceInMs);
       this.startLoop();
     }
 
     blurImage() {
-      this.image.classList.remove('active');
+      this.image.classList.add('blur-lg');
     }
 
     downloadImage(image) {
@@ -61,8 +61,9 @@ if (!customElements.get('dynamic-image-text')) {
       });
     }
 
-    unblurImage() {
-      this.image.classList.add('active');
+    async unblurImage() {
+      await this.wait(2000);
+      this.image.classList.remove('blur-lg');
     }
 
     wait(ms) {
@@ -74,5 +75,5 @@ if (!customElements.get('dynamic-image-text')) {
     }
   }
 
-  customElements.define('dynamic-image-text', DynamicImageText);
+  customElements.define('customer-testimonial', CustomerTestimonial);
 }

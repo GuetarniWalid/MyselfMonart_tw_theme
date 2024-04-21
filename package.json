@@ -4,7 +4,7 @@
   "description": "Shopify theme for myselmonart.com",
   "main": "index.js",
   "scripts": {
-    "tw": "npx tailwindcss -i ./input.css -o ./assets/output.css --watch",
+    "tw": "npx tailwindcss -i ./input.css -o ./assets/output.css --watch --minify",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "NODE_ENV=development vite dev",
     "build": "NODE_ENV=production vite build"

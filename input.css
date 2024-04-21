@@ -377,6 +377,14 @@ main-product-blocks .description h2 span {
     @apply max-w-7xl mx-auto sm:px-4;
   }
 
+  .paragraph :is(p, h3, h4, h5, h6, div) {
+    @apply mb-8;
+  }
+
+  .rich-text {
+    @apply my-16 px-6 sm:px-24;
+  }
+
   .scrollbar {
     scrollbar-color: rgba(1, 46, 93, 0.2) #efece8;
     scrollbar-width: 5px;

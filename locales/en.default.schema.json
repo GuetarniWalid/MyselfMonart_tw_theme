@@ -332,6 +332,14 @@
         }
       }
     },
+    "banner": {
+      "name": "Announcement bar",
+      "settings": {
+        "message": {
+          "label": "Message"
+        }
+      }
+    },
     "blocks": {
       "column": {
         "name": "Column",
@@ -450,6 +458,32 @@
     },
     "collections-grid": {
       "name": "Collections grid",
+      "settings": {
+        "padding_top": {
+          "label": "Top padding",
+          "options": {
+            "none": {
+              "label": "None"
+            },
+            "small": {
+              "label": "Small"
+            },
+            "medium": {
+              "label": "Medium"
+            },
+            "large": {
+              "label": "Large"
+            }
+          }
+        },
+        "padding_bottom": {
+          "label": "Bottom padding"
+        },
+        "title": {
+          "label": "Title",
+          "info": "Leave blank to not display a title"
+        }
+      },
       "blocks": {
         "collection": {
           "settings": {
@@ -529,24 +563,11 @@
         "name": "Custom Liquid"
       }
     },
-    "dynamic-image-text": {
-      "name": "Dynamic texts and images",
+    "customer-testimonial": {
+      "name": "Customer testimonial",
       "settings": {
         "title": {
           "label": "Title"
-        },
-        "background_image": {
-          "label": "URL to an image for background",
-          "info": "Optional"
-        },
-        "background_repeat": {
-          "label": "Background image behavior",
-          "options__1": {
-            "label": "No repeat"
-          },
-          "options__2": {
-            "label": "Repeat"
-          }
         },
         "duration_image_appearance": {
           "label": "Duration of image appearance",
@@ -554,7 +575,7 @@
         }
       },
       "blocks": {
-        "dynamic-image-text": {
+        "image-text": {
           "name": "Dynamic text and image",
           "settings": {
             "message": {
@@ -798,21 +819,33 @@
         }
       },
       "settings": {
-        "image_cover": {
-          "label": "Image cover the section"
-        },
-        "image_contain": {
-          "label": "Image is contain in the section"
-        },
-        "image_height": {
-          "label": "Image height"
-        },
-        "image_2": {
-          "label": "Second image"
-        },
         "enable_lazy_loading": {
           "label": "Enable lazy loading",
           "info": "The image will be loaded only when it appears on the screen, useful for performance. Uncheck if the image appears in the first fold."
+        },
+        "image_desktop_horizontal_position": {
+          "label": "Horizontal image position on desktop",
+          "left": {
+            "label": "Left"
+          },
+          "center": {
+            "label": "Center"
+          },
+          "right": {
+            "label": "Right"
+          }
+        },
+        "image_mobile_vertical_position": {
+          "label": "Vertical image position on mobile",
+          "top": {
+            "label": "Top"
+          },
+          "center": {
+            "label": "Center"
+          },
+          "bottom": {
+            "label": "Bottom"
+          }
         }
       },
       "presets": {
@@ -1299,19 +1332,6 @@
     "rich-text": {
       "name": "Rich text",
       "settings": {
-        "desktop_content_position": {
-          "options__1": {
-            "label": "Left"
-          },
-          "options__2": {
-            "label": "Center"
-          },
-          "options__3": {
-            "label": "Right"
-          },
-          "label": "Desktop content position",
-          "info": "Position is automatically optimized for mobile."
-        },
         "content_alignment": {
           "options__1": {
             "label": "Left"
@@ -1337,6 +1357,9 @@
             },
             "markup": {
               "label": "Heading type"
+            },
+            "heading_size": {
+              "label": "Heading size"
             }
           }
         },

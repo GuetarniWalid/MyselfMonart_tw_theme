@@ -1,4 +1,7 @@
-<nav role="navigation">
+{% if section.settings.title != blank %}
+  <h2 class="mb-10 md:text-center mx-5 {{ section.settings.padding_top }}">{{ section.settings.title }}</h2>
+{% endif %}
+<nav role="navigation" class="{% if section.settings.title == blank %}{{ section.settings.padding_top }}{% endif %} {{ section.settings.padding_bottom }}">
   <ul class="grid grid-cols-12 gap-3">
     {% for block in section.blocks %}
       <li class="one-collection relative overflow-hidden h-[40vh] md:h-[60vh] md:{{ block.settings.nb_columns }} flex items-end col-span-12{% if block.settings.image != blank %} after:absolute after:inset-0 after:bg-gradient-to-b after:from-transparent after:from-60% after:to-black/70{% endif %}"> 
@@ -70,7 +73,63 @@
 {
   "name": "t:sections.collections-grid.name",
   "tag": "section",
-  "class": "collections-grid page-width py-16",
+  "class": "collections-grid page-width",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:sections.collections-grid.settings.title.label",
+      "info": "t:sections.collections-grid.settings.title.info"
+    },
+    {
+      "type": "select",
+      "id": "padding_top",
+      "label": "t:sections.collections-grid.settings.padding_top.label",
+      "options": [
+        {
+          "value": "pt-0",
+          "label": "t:sections.collections-grid.settings.padding_top.options.none.label"
+        },
+        {
+          "value": "pt-8",
+          "label": "t:sections.collections-grid.settings.padding_top.options.small.label"
+        },
+        {
+          "value": "pt-16",
+          "label": "t:sections.collections-grid.settings.padding_top.options.medium.label"
+        },
+        {
+          "value": "pt-24",
+          "label": "t:sections.collections-grid.settings.padding_top.options.large.label"
+        }
+      ],
+      "default": "pt-0"
+    },
+    {
+      "type": "select",
+      "id": "padding_bottom",
+      "label": "t:sections.collections-grid.settings.padding_bottom.label",
+      "options": [
+        {
+          "value": "pb-0",
+          "label": "t:sections.collections-grid.settings.padding_top.options.none.label"
+        },
+        {
+          "value": "pb-8",
+          "label": "t:sections.collections-grid.settings.padding_top.options.small.label"
+        },
+        {
+          "value": "pb-16",
+          "label": "t:sections.collections-grid.settings.padding_top.options.medium.label"
+        },
+        {
+          "value": "pb-24",
+          "label": "t:sections.collections-grid.settings.padding_top.options.large.label"
+        }
+      ],
+      "default": "pb-0"
+    }
+  ],
   "blocks":[
     {
         "type": "collection",

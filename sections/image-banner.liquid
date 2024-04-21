@@ -17,7 +17,7 @@
       alt="{{ section.settings.image_desktop.alt | escape }}"
       width="2000"
       height="{{ section.settings.image_desktop.width | divided_by: section.settings.image_desktop.aspect_ratio }}"
-      class="hidden sm:inline-block object-cover w-full h-full skeleton{% unless section.settings.enable_lazy_loading %} placeholder blur-lg{% endunless %}"
+      class="hidden md:inline-block object-cover object-{{ section.settings.image_desktop_horizontal_position }} w-full h-full skeleton{% unless section.settings.enable_lazy_loading %} placeholder blur-lg{% endunless %}"
   >
 {%- endif -%}
 {%- if section.settings.image_mobile != blank -%}
@@ -34,7 +34,7 @@
     alt="{{ section.settings.image_mobile.alt | escape }}"
     width="500"
     height="{{ section.settings.image_mobile.width | divided_by: section.settings.image_mobile.aspect_ratio }}"
-    class="sm:hidden object-cover w-full h-full skeleton{% unless section.settings.enable_lazy_loading %} placeholder blur-lg{% endunless %}"
+    class="md:hidden object-cover object-{{ section.settings.image_mobile_vertical_position }} w-full h-full skeleton{% unless section.settings.enable_lazy_loading %} placeholder blur-lg{% endunless %}"
   >
 {%- endif -%}
 {%- if section.settings.image_desktop == blank -%}
@@ -57,14 +57,24 @@
       "label": "Image"
     },
     {
-      "type": "range",
-      "id": "image_desktop_height",
-      "min": 40,
-      "max": 100,
-      "step": 5,
-      "unit": "%",
-      "label": "t:sections.image-banner.settings.image_height.label",
-      "default": 80
+      "type": "select",
+      "id": "image_desktop_horizontal_position",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.image-banner.settings.image_desktop_horizontal_position.left.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.image-banner.settings.image_desktop_horizontal_position.center.label"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.image-banner.settings.image_desktop_horizontal_position.right.label"
+        }
+      ],
+      "default": "center",
+      "label": "t:sections.image-banner.settings.image_desktop_horizontal_position.label"
     },
     {
       "type": "header",
@@ -76,18 +86,24 @@
       "label": "Image"
     },
     {
-      "type": "range",
-      "id": "image_mobile_height",
-      "min": 40,
-      "max": 100,
-      "step": 5,
-      "unit": "%",
-      "label": "t:sections.image-banner.settings.image_height.label",
-      "default": 80
-    },
-    {
-      "type": "header",
-      "content": "t:sections.image-banner.headings.content_mobile.header"
+      "type": "select",
+      "id": "image_mobile_vertical_position",
+      "options": [
+        {
+          "value": "top",
+          "label": "t:sections.image-banner.settings.image_mobile_vertical_position.top.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.image-banner.settings.image_mobile_vertical_position.center.label"
+        },
+        {
+          "value": "bottom",
+          "label": "t:sections.image-banner.settings.image_mobile_vertical_position.bottom.label"
+        }
+      ],
+      "default": "center",
+      "label": "t:sections.image-banner.settings.image_mobile_vertical_position.label"
     },
     {
       "type": "header",

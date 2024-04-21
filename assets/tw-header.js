@@ -4,6 +4,7 @@ class StickyHeader extends HTMLElement {
     this.menuOpener = this.querySelector('.menu-opener');
     this.detailsParent = this.menuOpener.parentNode;
     this.menu = this.menuOpener.nextElementSibling;
+    this.menuOpenTopElem = this.menu.querySelector('ul');
     this.menuFirstLis = Array.from(this.menu.firstElementChild.children);
     this.subDetails = this.menu.querySelectorAll('details');
     this.titleSubCollections = this.querySelectorAll('li ul h3');
@@ -21,6 +22,7 @@ class StickyHeader extends HTMLElement {
     this.lastFocusableElement = this.querySelector(
       'nav ul:last-of-type li:last-of-type span:last-of-type',
     );
+    this.menuOpenTopElemHeight = this.menuOpenTopElem.offsetHeight;
   }
 
   connectedCallback() {
@@ -119,7 +121,12 @@ class StickyHeader extends HTMLElement {
     this.changeParentLinkFocusable(true);
     await waitAnimEnd(subMenu);
     if (subDetails) subDetails.open = false;
+    this.resizeHeaderHeightToFitTopElemMenu();
   };
+
+  resizeHeaderHeightToFitTopElemMenu() {
+    this.menuOpenTopElem.style.height = '';
+  }
 
   resetMenuDisplay = () => {
     this.closeSubMenu(this.subMenuOpen);
@@ -177,7 +184,22 @@ class StickyHeader extends HTMLElement {
     subMenu.classList.replace('translate-x-full', 'translate-x-0');
     this.changeParentLinkFocusable(false);
     this.subMenuOpen = subDetails;
+    this.resizeHeaderHeightToFitSubmenu(subMenu);
   };
+
+  resizeHeaderHeightToFitSubmenu(subMenu) {
+    const subMenuHeightWithoutPadding = Array.from(subMenu.children).reduce(
+      (acc, elem) => acc + elem.offsetHeight,
+      0,
+    );
+    var subMenuStyles = window.getComputedStyle(subMenu);
+    const subMenuHeight =
+      subMenuHeightWithoutPadding +
+      parseFloat(subMenuStyles.paddingTop) +
+      parseFloat(subMenuStyles.paddingBottom);
+
+    this.menuOpenTopElem.style.height = `${subMenuHeight}px`;
+  }
 
   measureFixHeaderHeight() {
     this.headerBounds.bottom = this.header.offsetHeight;
@@ -609,7 +631,8 @@ customElements.define('cart-drawer', CartDrawer);
 class CartItem extends HTMLElement {
   constructor() {
     super();
-    this.totalPriceElem = this.closest('cart-drawer').querySelector('#total-price');
+    this.totalPriceElem =
+      this.closest('cart-drawer').querySelector('#total-price');
     this.cartDrawerSectionId = this.dataset.sectionId;
     this.index = Number(this.dataset.index);
   }
@@ -679,10 +702,10 @@ class CartItem extends HTMLElement {
     const parentToFocus =
       newCartDrawer.querySelector(`[data-index="${this.index}"]`) ??
       newCartDrawer.querySelector(`[data-index="${this.index - 1}"]`);
-      if (parentToFocus) parentToFocus.querySelector('h3 a').focus();
-      else this.closest('cart-drawer').querySelector('.close').focus();
-      newCartDrawer.trapFocus({});
-      newCartDrawer.scopeFocusElements();
+    if (parentToFocus) parentToFocus.querySelector('h3 a').focus();
+    else this.closest('cart-drawer').querySelector('.close').focus();
+    newCartDrawer.trapFocus({});
+    newCartDrawer.scopeFocusElements();
   }
 }
 customElements.define('cart-item', CartItem);

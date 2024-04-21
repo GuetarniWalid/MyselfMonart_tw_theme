@@ -330,6 +330,14 @@
         }
       }
     },
+    "banner": {
+      "name": "Barre d'annonces",
+      "settings": {
+        "message": {
+          "label": "Message"
+        }
+      }
+    },
     "breadcrumb": {
       "name": "Breadcrumb",
       "settings": {
@@ -584,6 +592,54 @@
         "name": "Contenu réductible"
       }
     },
+    "collections-grid": {
+      "name": "Grille de collection",
+      "settings": {
+        "padding_top": {
+          "label": "Marge supérieure",
+          "options": {
+            "none": {
+              "label": "Aucune"
+            },
+            "small": {
+              "label": "Petite"
+            },
+            "medium": {
+              "label": "Moyenne"
+            },
+            "large": {
+              "label": "Grande"
+            }
+          }
+        },
+        "padding_bottom": {
+          "label": "Marge inférieure"
+        },
+        "title": {
+          "label": "Titre",
+          "info": "Laissez vide pour ne pas afficher de titre"
+        }
+      },
+      "blocks": {
+        "collection": {
+          "settings": {
+            "lazy_load": {
+              "label": "Chargement différé de l'image",
+              "info": "L'image ne sera chargée que lorsque l'utilisateur la verra. Il est conseillé de décocher cette option si l'image est visible dès le chargement de la page"
+            },
+            "nb_columns": {
+              "label": "Nombre de colonnes",
+              "full-width": {
+                "label": "Pleine largeur"
+              }
+            },
+            "paragraph": {
+              "label": "Paragraphe"
+            }
+          }
+        }
+      }
+    },
     "collection-list": {
       "name": "Liste des collections",
       "settings": {
@@ -643,24 +699,11 @@
         "name": "Liquid personnalisé"
       }
     },
-    "dynamic-image-text": {
-      "name": "Texte et image dynamiques",
+    "customer-testimonial": {
+      "name": "Témoignage client",
       "settings": {
         "title": {
           "label": "Titre"
-        },
-        "background_image": {
-          "label": "URL vers une image pour le background",
-          "info": "Facultatif"
-        },
-        "background_repeat": {
-          "label": "Répéter l'image de fond",
-          "options__1": {
-            "label": "Ne pas répéter"
-          },
-          "options__2": {
-            "label": "Répéter"
-          }
         },
         "duration_image_appearance": {
           "label": "Durée de l'apparition de l'image",
@@ -668,7 +711,7 @@
         }
       },
       "blocks": {
-        "dynamic-image-text": {
+        "image-text": {
           "name": "Textes et images dynamiques",
           "settings": {
             "message": {
@@ -846,7 +889,7 @@
       "presets": {
         "name": "Articles de blog"
       }
-    }, 
+    },
     "first-blog-link": {
       "name": "Premier lien du blog"
     },
@@ -954,28 +997,6 @@
         }
       }
     },
-    "collections-grid": {
-      "name": "Grille de collection",
-      "blocks": {
-        "collection": {
-          "settings": {
-            "lazy_load": {
-              "label": "Chargement différé de l'image",
-              "info": "L'image ne sera chargée que lorsque l'utilisateur la verra. Il est conseillé de décocher cette option si l'image est visible dès le chargement de la page"
-            },
-            "nb_columns": {
-              "label": "Nombre de colonnes",
-              "full-width": {
-                "label": "Pleine largeur"
-              }
-            },
-            "paragraph": {
-              "label": "Paragraphe"
-            }
-          }
-        }
-      }
-    },
     "header": {
       "name": "En-tête",
       "blocks": {
@@ -1067,21 +1088,33 @@
         }
       },
       "settings": {
-        "image_cover": {
-          "label": "L'image couvre la section"
-        },
-        "image_contain": {
-          "label": "L'image est contenu dans la section"
-        },
-        "image_height": {
-          "label": "Hauteur de l'image"
-        },
-        "image_2": {
-          "label": "Deuxième image"
-        },
         "enable_lazy_loading": {
           "label": "Activer le chargement différé",
           "info": "L'image ne sera chargée que lorsqu'elle apparaîtra à l'écran, utile pour les performances. Décoché si l'image apparaît en premier."
+        },
+        "image_desktop_horizontal_position": {
+          "label": "Position horizontale de l'image sur ordinateur",
+          "left": {
+            "label": "Gauche"
+          },
+          "center": {
+            "label": "Centre"
+          },
+          "right": {
+            "label": "Droite"
+          }
+        },
+        "image_mobile_vertical_position": {
+          "label": "Position verticale de l'image sur mobile",
+          "top": {
+            "label": "Haut"
+          },
+          "center": {
+            "label": "Centre"
+          },
+          "bottom": {
+            "label": "Bas"
+          }
         }
       },
       "presets": {
@@ -1491,7 +1524,7 @@
       "name": "Mes j'aimes",
       "headings": {
         "empty": {
-          "content": "En cas de liste vide" 
+          "content": "En cas de liste vide"
         },
         "full": {
           "content": "En cas de liste non vide"
@@ -1659,19 +1692,6 @@
         "full_width": {
           "label": "Rendre la section pleine largeur"
         },
-        "desktop_content_position": {
-          "options__1": {
-            "label": "Gauche"
-          },
-          "options__2": {
-            "label": "Centre"
-          },
-          "options__3": {
-            "label": "Droite"
-          },
-          "label": "Position du contenu sur ordinateur",
-          "info": "La position est automatiquement optimisée pour les mobiles."
-        },
         "content_alignment": {
           "options__1": {
             "label": "Gauche"
@@ -1694,6 +1714,9 @@
             },
             "markup": {
               "label": "Niveau de titre"
+            },
+            "heading_size": {
+              "label": "Taille du titre"
             }
           }
         },

@@ -13,7 +13,7 @@
           <span class="close hidden" aria-hidden="true">{% render 'tw-icon-close' %}</span>
         </span>
       </summary>
-      <nav class="bg-secondary absolute bottom-0 left-0 right-0 border-t border-solid border-main close-nav transition-all duration-150 -z-10 h-[calc(100vh-80px)] md:h-fit overflow-y-auto scrollbar grid grid-rows-[1fr_auto]" role="dialog" aria-modal="true" aria-label="{{ "tw.header.accessibility.navigation" | t }}">
+      <nav class="bg-secondary absolute bottom-0 left-0 right-0 border-t border-solid border-main close-nav transition-all duration-150 -z-10 h-[calc(100vh-80px)] md:h-fit overflow-y-auto scrollbar md:scrollbar-hidden grid grid-rows-[1fr_auto]" role="dialog" aria-modal="true" aria-label="{{ "tw.header.accessibility.navigation" | t }}">
         <ul class="py-8 px-5 md:grid md:grid-cols-3 gap-y-3 relative">
           {% for block in section.blocks %}
             {% if block.type == "collection_only" %}

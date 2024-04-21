@@ -2,18 +2,18 @@
 {%- for block in section.blocks -%}
   {%- case block.type -%}
     {%- when 'heading' -%}
-      <{{ block.settings.markup }} class="my-6">
+      <{{ block.settings.markup }} class="my-6 {{ block.settings.heading_size }} {{ section.settings.content_alignment }}">
         {{ block.settings.heading | escape }}
       </{{ block.settings.markup }}>
     {%- when 'text' -%}
-      <div class="{{ block.settings.text_size }} my-4">
+      <div class="{{ block.settings.text_size }} my-4 {{ section.settings.content_alignment }}">
         {{ block.settings.text }}
       </div>
     {%- when 'button' -%}
       <div>
         {%- if block.settings.button_label != blank -%}
           {% if block.settings.to_obfuscate %}
-            <button data-url64="{{ block.settings.button_link | base64_encode }}" class="obfuscate w-full xs:w-auto bg-main/5 text-center py-3 px-14 rounded my-4 border-main border-2 hover:bg-main/10 transition-all duration-100">{{ block.settings.button_label | escape }}</button> 
+            <button data-url64="{{ block.settings.button_link | base64_encode }}" class="obfuscate w-full xs:w-auto bg-main/5 text-center py-3 px-14 rounded my-4 border-main border-2 hover:bg-main/10 transition-all duration-100">{{ block.settings.button_label | escape }}</button>  
           {% else %}
             <a{% if block.settings.button_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ block.settings.button_link }}"{% endif %} class="inline-block w-full xs:w-auto bg-main/5 text-center py-3 px-14 rounded my-4 border-2 border-main hover:bg-main/10 transition-all duration-100">
               {{ block.settings.button_label | escape }}
@@ -38,47 +38,26 @@
 {
   "name": "t:sections.rich-text.name",
   "tag": "section",
-  "class": "page-width my-16 px-6",
+  "class": "page-width rich-text",
   "settings": [
-    {
-      "type": "select",
-      "id": "desktop_content_position",
-      "options": [
-        {
-          "value": "left",
-          "label": "t:sections.rich-text.settings.desktop_content_position.options__1.label"
-        },
-        {
-          "value": "center",
-          "label": "t:sections.rich-text.settings.desktop_content_position.options__2.label"
-        },
-        {
-          "value": "right",
-          "label": "t:sections.rich-text.settings.desktop_content_position.options__3.label"
-        }
-      ],
-      "default": "center",
-      "label": "t:sections.rich-text.settings.desktop_content_position.label",
-      "info": "t:sections.rich-text.settings.desktop_content_position.info"
-    },
     {
       "type": "select",
       "id": "content_alignment",
       "options": [
         {
-          "value": "left",
+          "value": "text-left",
           "label": "t:sections.rich-text.settings.content_alignment.options__1.label"
         },
         {
-          "value": "center",
+          "value": "text-center",
           "label": "t:sections.rich-text.settings.content_alignment.options__2.label"
         },
         {
-          "value": "right",
+          "value": "text-right",
           "label": "t:sections.rich-text.settings.content_alignment.options__3.label"
         }
       ],
-      "default": "center",
+      "default": "text-left",
       "label": "t:sections.rich-text.settings.content_alignment.label"
     },
     {
@@ -131,6 +110,38 @@
             }
           ],
           "default": "h2"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "options": [
+            {
+              "value": "text-lg",
+              "label": "LG"
+            },
+            {
+              "value": "text-xl",
+              "label": "XL"
+            },
+            {
+              "value": "text-2xl",
+              "label": "2 XL"
+            },
+            {
+              "value": "text-3xl",
+              "label": "3 XL"
+            },
+            {
+              "value": "text-4xl",
+              "label": "4 XL"
+            },
+            {
+              "value": "text-5xl",
+              "label": "5 XL"
+            }
+          ],
+          "default": "text-3xl",
+          "label": "t:sections.rich-text.blocks.heading.settings.heading_size.label"
         }
       ]
     },

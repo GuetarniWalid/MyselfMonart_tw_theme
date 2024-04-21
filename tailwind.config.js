@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 const colors = require('tailwindcss/colors');
-const defaultTheme = require('tailwindcss/defaultTheme')
+const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
   content: ['./**/*.{liquid,js,jsx,ts,tsx}'],
@@ -13,18 +13,18 @@ module.exports = {
     extend: {
       animation: {
         moveToLeft: 'moveToLeft infinite 8s linear',
-        loading: 'loading 0.6s 0.1s linear infinite'
+        loading: 'loading 0.6s 0.1s linear infinite',
       },
       borderWidth: {
-        '1': '1px',
+        1: '1px',
       },
       boxShadow: {
         '3xl': '1px 12px 50px -1px rgba(0,0,0,0.1)',
-        'button': '0px 0px 0px 1px #002E5D'
+        button: '0px 0px 0px 1px #002E5D',
       },
       colors: {
         main: '#002E5D',
-        secondary: '#F6F3EE', 
+        secondary: '#F6F3EE',
         action: '#04A777',
         'breadcrumb-main': colors.lime[950],
         'breadcrumb-secondary': '#EBD0CD',
@@ -48,15 +48,15 @@ module.exports = {
         },
         loading: {
           '0%': {
-            transform: 'translate(0, 0)'
+            transform: 'translate(0, 0)',
           },
           '50%': {
-            transform: 'translate(0, 15px)'
+            transform: 'translate(0, 15px)',
           },
           '100%': {
-            transform: 'translate(0, 0)'
-          }
-        }
+            transform: 'translate(0, 0)',
+          },
+        },
       },
     },
   },
@@ -73,5 +73,9 @@ module.exports = {
     'md:col-span-6',
     'md:col-span-8',
     'md:col-span-9',
+    'object-top',
+    'object-bottom',
+    'object-left',
+    'object-right',
   ],
 };

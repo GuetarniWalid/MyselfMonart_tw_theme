@@ -1,0 +1,24 @@
+<div class="overflow-hidden relative z-40" role="region" aria-label="{{ 'sections.header.announcement' | t }}">
+    <p class="whitespace-nowrap text-xs py-2 text-secondary bg-main font-heading font-bold">
+      <span class="animate-moveToLeft inline-block px-4">{{ section.settings.message }}</span>
+      <span class="animate-moveToLeft inline-block px-4" aria-hidden="true">{{ section.settings.message }}</span>
+      <span class="animate-moveToLeft inline-block px-4" aria-hidden="true">{{ section.settings.message }}</span>
+      <span class="animate-moveToLeft inline-block px-4" aria-hidden="true">{{ section.settings.message }}</span>
+      <span class="animate-moveToLeft inline-block px-4" aria-hidden="true">{{ section.settings.message }}</span>
+    </p>
+</div>
+
+{% schema %}
+  {
+    "name": "t:sections.banner.name",
+    "tag": "section",
+    "settings": [
+      {
+        "type": "text",
+        "id": "message",
+        "label": "t:sections.banner.settings.message.label",
+        "default": "Grab the offer now: -15% 🌟 and FREE delivery 🚀 until April 21 only! Do not miss this chance ! 📆🛍️"
+      }
+    ]
+  }
+{% endschema %}
