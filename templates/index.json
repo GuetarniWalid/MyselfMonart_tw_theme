@@ -4,9 +4,9 @@
       "type": "image-banner",
       "settings": {
         "image_desktop": "shopify:\/\/shop_images\/tableau-deco-nature-promotion-15_f66e8c99-e341-481c-a23f-46898cf7b73c.png",
-        "image_desktop_height": 80,
+        "image_desktop_horizontal_position": "left",
         "image_mobile": "shopify:\/\/shop_images\/tableau-deco-nature-promotion-15-printemps.png",
-        "image_mobile_height": 100,
+        "image_mobile_vertical_position": "bottom",
         "enable_lazy_loading": false
       }
     },
@@ -17,7 +17,8 @@
           "type": "heading",
           "settings": {
             "heading": "DÉCORATION MURALE ET TABLEAUX UNIQUES POUR SUBLIMER VOTRE INTÉRIEUR.",
-            "markup": "h1"
+            "markup": "h1",
+            "heading_size": "text-3xl"
           }
         },
         "template--16404732051711__1198c25f-e6b6-405b-aa76-db2afd719caf-167457706007ac71a1-1": {
@@ -33,7 +34,6 @@
         "template--16404732051711__1198c25f-e6b6-405b-aa76-db2afd719caf-167457706007ac71a1-1"
       ],
       "settings": {
-        "desktop_content_position": "center",
         "content_alignment": "center",
         "full_width": true
       }
@@ -100,6 +100,9 @@
         "collection_jBdfGn"
       ],
       "settings": {
+        "title": "COLLECTIONS DE TABLEAUX PAR CATÉGORIE",
+        "padding_top": "pt-8",
+        "padding_bottom": "pb-0"
       }
     },
     "20c0c98e-ed16-4069-b89a-bb18d96ee241": {
@@ -109,7 +112,8 @@
           "type": "heading",
           "settings": {
             "heading": "TABLEAU DÉCORATION : L'ART DE PERSONNALISER VOTRE ESPACE.",
-            "markup": "h2"
+            "markup": "h2",
+            "heading_size": "text-3xl"
           }
         },
         "template--16404732051711__20c0c98e-ed16-4069-b89a-bb18d96ee241-1666624599c69c0f87-1": {
@@ -125,105 +129,357 @@
         "template--16404732051711__20c0c98e-ed16-4069-b89a-bb18d96ee241-1666624599c69c0f87-1"
       ],
       "settings": {
-        "desktop_content_position": "right",
         "content_alignment": "right",
         "full_width": true
       }
     },
-    "7f048e47-ff73-4ef2-a44d-204a6ad96f65": {
-      "type": "rich-text",
+    "collections_grid_7QtQTB": {
+      "type": "collections-grid",
       "blocks": {
-        "template--16404732051711__7f048e47-ff73-4ef2-a44d-204a6ad96f65-16666290841ff88433-0": {
-          "type": "heading",
+        "collection_traEnd": {
+          "type": "collection",
           "settings": {
-            "heading": "Trouvez l'accord parfait. Personnalisez vos envies",
-            "markup": "h2"
+            "image": "shopify:\/\/shop_images\/tableaux-nature.jpg",
+            "collection": "tableaux-nature-sauvage",
+            "nb_columns": "col-span-12",
+            "lazy_load": true,
+            "paragraph": "<h3>DÉCOUVREZ LA COLLECTION DE TABLEAUX NATURE<\/h3><p>Sublimez votre décoration avec un tableau de notre collection nature et invitez l'essence de la Terre dans votre foyer. Que vous soyez captivé par la grandeur d'une forêt ancienne, la tranquillité d'une plage au crépuscule ou l'éclat d'un jardin en fleurs, nos œuvres sont une célébration de la diversité et de la beauté de la nature.<\/p><p>Imprimés sur des supports de haute qualité tels que la toile, l'aluminium, ou le plexiglas, nos tableaux nature transforment votre intérieur avec des images qui allient couleur vibrante et finesse extraordinaire. Ils sont disponibles en différentes tailles pour s'intégrer à chaque espace de votre maison, que ce soit un grand format pour un salon ou une petite toile pour une chambre.<\/p><p>Emportez un morceau de la beauté sauvage du monde naturel chez vous ou faites-en cadeau pour surprendre et charmer. Chaque tableau est une fenêtre ouverte sur les merveilles du monde, ajoutant une touche d'évasion et de fraîcheur à votre quotidien.<\/p>"
           }
         },
-        "template--16404732051711__7f048e47-ff73-4ef2-a44d-204a6ad96f65-16666290841ff88433-1": {
-          "type": "text",
+        "collection_wrJLjN": {
+          "type": "collection",
           "settings": {
-            "text": "<p>Vous avez le souci du détail ? Allez plus loin en personnalisant la taille et le support. Petit tableau, grand tableau,  tableau sur toile, tableau plexiglas ou  tableau aluminium, choisissez l’aspect qui s’accorde le mieux à votre intérieur.<\/p>",
-            "text_size": "text-xl"
+            "image": "shopify:\/\/shop_images\/tableaux-zen_ebc265f5-849d-40cc-b598-7f5d3a451bda.jpg",
+            "collection": "tableau-zen",
+            "nb_columns": "col-span-8",
+            "lazy_load": true,
+            "paragraph": "<h3>DÉCOUVREZ NOTRE SUBLIME COLLECTION DE TABLEAUX ZEN<\/h3><p>Les tableaux Zen incarnent la quête d’harmonie et d’équilibre, transmettant une sensation apaisante et méditative à votre intérieur. Chez Myslemonart, nous avons le privilège de vous présenter notre collection minutieusement conçue de tableaux Zen, pour vous aider à instaurer une atmosphère sereine, emplie de douceur et de poésie.<\/p><p>Inspirés de la beauté naturelle et des traditions orientales, nos tableaux mettent en lumière des éléments tels que les fleurs de lotus, les paysages sereins ou encore des silhouettes en méditation. Que vous souhaitiez un espace invitant à la relaxation profonde ou une oasis de tranquillité au cœur de votre maison, chaque tableau Zen est créé pour élever l'âme et apaiser l'esprit. Que vous soyez séduit par la simplicité du minimalisme japonais, les motifs du feng shui ou le reflet d'un étang paisible, notre collection saura répondre à vos aspirations.<\/p><p>En invitant nos tableaux Zen chez vous, vous ouvrez la porte à un monde de quiétude et d'harmonie, créant ainsi un sanctuaire de bien-être où chaque regard apporte paix et sérénité. Laissez-vous séduire par notre gamme de tableaux Zen et trouvez l'œuvre parfaite qui résonnera avec votre essence et votre espace.<\/p><p><\/p>"
+          }
+        },
+        "collection_74VLGb": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/Tableau_ethnique_3b69cac1-11aa-42c6-8a76-4ea719a33972.jpg",
+            "collection": "tableau-ethnique",
+            "nb_columns": "col-span-4",
+            "lazy_load": true,
+            "paragraph": "<h3>DÉCOUVREZ NOTRE COLLECTION DE TABLEAUX ETHNIQUE<\/h3><p>La culture à travers le monde. Avec des représentations de l'art japonais, africain et islamique, notre collection propose des tableaux qui transportent les spectateurs dans des mondes fascinants et mystérieux.<\/p><p>Les tableaux japonais, par exemple, dépeignent les paysages traditionnels, les geishas et les samouraïs, et sont caractérisés par leurs couleurs vibrantes et leurs détails minutieux. Les tableaux africains, quant à eux, reflètent les traditions tribales et les paysages sauvages du continent, avec des motifs abstraits, des couleurs chaudes et des formes organiques qui plongent les spectateurs dans un univers envoûtant.<\/p><p>Les tableaux islamiques, avec leurs calligraphies sublimes et leurs motifs géométriques complexes, permettent aux spectateurs de découvrir l'art qui a marqué l'histoire de la civilisation et d'explorer les couleurs, les formes et les textures de ces œuvres uniques.<\/p><p>Mais notre collection ne s'arrête pas là. Nous proposons également des tableaux représentant d'autres cultures et paysages du monde entier, tels que les tribus amérindiennes avec leurs costumes traditionnels et leurs motifs géométriques caractéristiques, ou la culture hindoue avec ses divinités, mandalas et symboles riches et colorés.<\/p><p>Et pour ceux qui cherchent des tableaux qui représentent des paysages époustouflants, notre collection de tableaux ethnique offre des représentations sauvage et exotique du monde, des plages de sable blanc, des champs de fleurs colorées et des forêts verdoyantes.<\/p><p> Notre collection de tableaux est une invitation à un voyage artistique à travers différentes cultures et paysages du monde. Les œuvres d'art que nous proposons sont uniques, riches en histoire et en symbolique, et ne manqueront pas de vous émerveiller. Chaque tableau est une invitation à se laisser subjuguer par la beauté et la diversité de notre monde.<\/p>"
+          }
+        },
+        "collection_zJwXYN": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-animaux_pg_911b0a37-8ca2-49e6-8fbb-f99070c79220.jpg",
+            "collection": "tableau-animaux",
+            "nb_columns": "col-span-4",
+            "lazy_load": true,
+            "paragraph": "<h3>DÉCOUVREZ NOTRE COLLECTION DE TABLEAUX ANIMAUX<\/h3><p><br\/>  Pour habiller les murs de votre maison ou offrir un cadeau original à vos proches,découvrez notre collection impressionnante de tableaux design et moderne et optez pour un tableau d'art sur le thème des animaux. Vous trouverez celui qui correspond le mieux à votre intérieur et vos envies, que vous<br\/>  préfériez un tableau de loup sauvage, un tableau de lion dominant, un tableau de cerf sauvage, ou encore un tableau de chaton mignon. Nous proposons une variété d'animaux pour répondre à toutes vos préférences et passions.<br\/><\/p><p><br\/>  Nos tableaux d'animaux sont imprimés sur toile, aluminium, ou plexiglas de haute qualité avec des couleurs éclatantes et une netteté exceptionnelle pour donner vie à chaque détail. De plus, nous offrons différentes tailles pour s'adapter à tous les espaces, grands ou petits. Que vous souhaitiez un<br\/>  tableau imposant pour habiller votre salon ou une petite toile pour votre bureau, nous avons tout ce qu'il vous faut pour embellir votre espace de vie.<br\/><\/p><p><br\/>  Offrez à vos proches un cadeau unique et personnalisé en choisissant l'animal qui correspond le mieux à leur personnalité et à leur goût. Ils seront ravis de recevoir un tel cadeau original et de pouvoir ajouter une touche d'exotisme et de créativité à leur décoration intérieure. Avec notre<br\/>  collection de tableaux animaux, offrez des cadeaux qui sortent de l'ordinaire, ajoutez une touche de nature et une atmosphère sauvage à votre maison.<br\/><\/p>"
+          }
+        },
+        "collection_MdyCbg": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableaux-pop-art_ebc249e5-cd39-4191-aa6b-c1467e953ab3.jpg",
+            "collection": "tableau-pop-art",
+            "nb_columns": "col-span-8",
+            "lazy_load": true,
+            "paragraph": "<h3>DÉCOUVREZ NOTRE GAMME DE TABLEAU POP ART<\/h3><p>Les tableaux Pop Art sont un excellent moyen de donner vie à votre espace et de créer une ambiance décalée et créative. Chez Myslemonart, nous sommes fiers de proposer une large gamme de tableaux Pop Art, pour enrichir votre intérieur avec des couleurs intenses et des formes audacieuses.<\/p><p>Nos tableaux mettant en scène des célébrités, des objets du quotidien ou des animaux, captiveront votre imagination et apporteront un éclat de couleur à votre pièce. Quel que soit votre style de décoration, chaque tableau Pop Art est conçu pour répondre à toutes les envies. Que vous cherchiez à accentuer le caractère de votre salon avec un tableau inspiré des icônes de la culture pop, un tableau inspiré des bandes dessinées ou un tableau qui illustre la vie quotidienne sous un angle artistique, nous avons ce qu'il vous faut.<\/p><p>Nos tableaux sont imprimés sur des supports de haute qualité tels que la toile, l'aluminium et le plexiglas, pour une finition durable et résistante. Avec nos tableaux décoratifs Pop Art, vous pourrez rendre votre pièce encore plus audacieuse, pour en faire un véritable havre de créativité et de style que vous ne voudrez plus quitter. Découvrez notre collection de tableaux Pop Art. Choisissez parmi une variété de styles et de motifs pour trouver celui qui conviendra parfaitement à votre intérieur et à votre personnalité.<\/p>"
           }
         }
       },
       "block_order": [
-        "template--16404732051711__7f048e47-ff73-4ef2-a44d-204a6ad96f65-16666290841ff88433-0",
-        "template--16404732051711__7f048e47-ff73-4ef2-a44d-204a6ad96f65-16666290841ff88433-1"
+        "collection_traEnd",
+        "collection_wrJLjN",
+        "collection_74VLGb",
+        "collection_zJwXYN",
+        "collection_MdyCbg"
       ],
       "settings": {
-        "desktop_content_position": "center",
-        "content_alignment": "left",
+        "title": "STYLES UNIQUES DE TABLEAUX",
+        "padding_top": "pt-8",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "customer_testimonial_dKrfKQ": {
+      "type": "customer-testimonial",
+      "blocks": {
+        "image_text_9zzMap": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/Tableau-chambre-bebe_f6e62e6e-707b-41df-aa17-bdad25ef3385.jpg",
+            "message": "Juste une petite photo avec le cadre mis en place encore un grand merci à vous 🥰. \nElodie G"
+          }
+        },
+        "image_text_nHhVKU": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau_marylin.jpg",
+            "message": "Envoie très rapide et tableau encore plus beau que sur le site.\nParfait je recommande !!!\nJessica S"
+          }
+        },
+        "image_text_redkMj": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/ananas.jpg",
+            "message": "Trop contente de mon tableau, les couleurs sont aussi flashy que sur les photo du site.\nSarah F"
+          }
+        },
+        "image_text_WLJhje": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/Tableau-chambre.png",
+            "message": "Le tableau est super, et encore plus beau en vrai ! Arrivé rapidement et bien protégé. Alain N"
+          }
+        },
+        "image_text_7jPNHU": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/Tableau-decoration.png",
+            "message": "Très belle toile, les couleurs sont super et brillante. Marie K"
+          }
+        },
+        "image_text_Y8Nfjb": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/Tableau-deco-noir-et-blanc.jpg",
+            "message": "Top, rien à dire de plus. \nGuillaume H"
+          }
+        },
+        "image_text_EVECCa": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-salon-femme-africaine.png",
+            "message": "Magnifique tableau et très design, correspond parfaitement à la description.  Morel E"
+          }
+        },
+        "image_text_GUbgKA": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-comics-super-man.jpg",
+            "message": "Nickel, très satisfait c'est ma 3e commande. Hugo G"
+          }
+        },
+        "image_text_TmDy39": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-superman-aquarelle.jpg",
+            "message": "TOP, tableau reçu rapidement avec suivie. Hugo G"
+          }
+        }
+      },
+      "block_order": [
+        "image_text_9zzMap",
+        "image_text_nHhVKU",
+        "image_text_redkMj",
+        "image_text_WLJhje",
+        "image_text_7jPNHU",
+        "image_text_Y8Nfjb",
+        "image_text_EVECCa",
+        "image_text_GUbgKA",
+        "image_text_TmDy39"
+      ],
+      "settings": {
+        "title": "Nos photos à travers vos yeux ❤️",
+        "duration_image_appearance": 3
+      }
+    },
+    "rich_text_NzY43f": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_tRTEt8": {
+          "type": "heading",
+          "settings": {
+            "heading": "PERSONNALISATION ET IMPRESSION SUR MESURE.",
+            "markup": "h2",
+            "heading_size": "text-3xl"
+          }
+        },
+        "heading_AwiBJd": {
+          "type": "heading",
+          "settings": {
+            "heading": "Tableau Toile, Aluminium, Plexiglass.",
+            "markup": "h3",
+            "heading_size": "text-xl"
+          }
+        },
+        "heading_9PiFhn": {
+          "type": "heading",
+          "settings": {
+            "heading": "Trouvez l'Accord Parfait : Personnalisez Vos Envies et Vos Tableaux",
+            "markup": "h4",
+            "heading_size": "text-xl"
+          }
+        },
+        "text_nYVR63": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Vous avez le souci du détail ? Allez plus loin en personnalisant la taille et le support. Que vous préfériez un petit tableau discret ou un grand tableau xxl imposant, nous avons ce qu'il vous faut. Optez pour un <strong>tableau sur toile<\/strong> et profitez d'un rendu traditionnel et classique, légèrement texturé. Si vous visez plutôt un style moderne et épuré, notre <a href=\"https:\/\/www.myselfmonart.com\/collections\/tableau-plexiglass?page=1\" title=\"https:\/\/www.myselfmonart.com\/collections\/tableau-plexiglass?page=1\">tableau plexiglass<\/a>, avec sa surface lisse et brillante, est parfait pour vous. Et pour une touche d'élégance industrielle et contemporaine, laissez-vous séduire par notre <strong>tableau en aluminium<\/strong>, dont la surface métallique lisse et l'éclat subtil sauront sublimer votre intérieur. Faites votre choix et harmonisez votre espace avec style.<\/p>",
+            "text_size": "text-lg"
+          }
+        }
+      },
+      "block_order": [
+        "heading_tRTEt8",
+        "heading_AwiBJd",
+        "heading_9PiFhn",
+        "text_nYVR63"
+      ],
+      "settings": {
+        "content_alignment": "text-left",
         "full_width": true
       }
     },
-    "0400eb0c-febd-4b30-a9fc-23868b723b01": {
-      "type": "badges",
+    "product_list_NJTY7V": {
+      "type": "product-list",
       "blocks": {
-        "dadd0693-3b95-45ea-91d0-dade5eb6933f": {
-          "type": "number_block",
+        "featured_product_6DGGqE": {
+          "type": "featured_product",
           "settings": {
-            "number": 1,
-            "heading": "Choisissez",
-            "text": "Choisissez votre tableau deco parmi la large collection de tableaux"
+            "product": "tableau-paysage-cactus-desertique"
           }
         },
-        "c44537b3-1279-4836-9f93-bd9ff2a05e77": {
-          "type": "number_block",
+        "featured_product_VQKByi": {
+          "type": "featured_product",
           "settings": {
-            "number": 2,
-            "heading": "Personnalisez",
-            "text": "Configurez la taille et le support de votre tableau"
+            "product": "tableau-ananas-arc-en-ciel"
           }
         },
-        "a6c21ad7-b53a-477a-9209-290c852bb6e7": {
-          "type": "number_block",
+        "featured_product_mgr4b7": {
+          "type": "featured_product",
           "settings": {
-            "number": 3,
-            "heading": "Commandez",
-            "text": "Nous fabriquons votre tableau et nous chargeons de vous l'envoyer."
+            "product": "tableau-cerisiers-japonais"
           }
         },
-        "9bbd06d2-2f00-4f08-9b98-9313305b1a02": {
-          "type": "number_block",
+        "featured_product_xDFjUz": {
+          "type": "featured_product",
           "settings": {
-            "number": 4,
-            "heading": "Admirez",
-            "text": "Accrochez votre tableau et profitez du résultat !"
+            "product": "tableau-tour-eiffel-1"
+          }
+        },
+        "featured_product_bpba9X": {
+          "type": "featured_product",
+          "settings": {
+            "product": "tableau-chambre-foret-coloree"
+          }
+        },
+        "featured_product_xwFUfk": {
+          "type": "featured_product",
+          "settings": {
+            "product": "tableau-bouddha-or"
+          }
+        },
+        "featured_product_zmNJKH": {
+          "type": "featured_product",
+          "settings": {
+            "product": "tableau-cuisine-macaron"
+          }
+        },
+        "featured_product_HWtxFt": {
+          "type": "featured_product",
+          "settings": {
+            "product": "tableau-zebre-en-photographie"
+          }
+        },
+        "featured_product_B7PQjn": {
+          "type": "featured_product",
+          "settings": {
+            "product": "tableau-oiseaux-japonais"
           }
         }
       },
       "block_order": [
-        "dadd0693-3b95-45ea-91d0-dade5eb6933f",
-        "c44537b3-1279-4836-9f93-bd9ff2a05e77",
-        "a6c21ad7-b53a-477a-9209-290c852bb6e7",
-        "9bbd06d2-2f00-4f08-9b98-9313305b1a02"
+        "featured_product_6DGGqE",
+        "featured_product_VQKByi",
+        "featured_product_mgr4b7",
+        "featured_product_xDFjUz",
+        "featured_product_bpba9X",
+        "featured_product_xwFUfk",
+        "featured_product_zmNJKH",
+        "featured_product_HWtxFt",
+        "featured_product_B7PQjn"
+      ],
+      "settings": {
+        "title": "❤️Nos Best-Sellers : Top ventes de la semaine !",
+        "button_text": "Voir les autres œuvres",
+        "button_link": "shopify:\/\/collections\/tableau-salon",
+        "to_obfuscate": true
+      }
+    },
+    "badges_cHPDPq": {
+      "type": "badges",
+      "blocks": {
+        "svg_block_kPN934": {
+          "type": "svg_block",
+          "settings": {
+            "badge_logo": "<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 256 256\"><path fill=\"currentColor\" d=\"M148 48v160a12 12 0 0 1-24 0V69.19l-21.83 13.1a12 12 0 0 1-12.34-20.58l40-24A12 12 0 0 1 148 48\"><\/path><\/svg>",
+            "heading": "CHOISISSEZ",
+            "text": "Choisissez votre tableau deco parmi la large collection de tableaux",
+            "logo_size": 45,
+            "background_plus_border": true
+          }
+        },
+        "svg_block_UtVXBA": {
+          "type": "svg_block",
+          "settings": {
+            "badge_logo": "<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M14.121 5.879A3 3 0 0 0 9 8a1 1 0 0 1-2 0a5 5 0 1 1 8.535 3.535L9.88 17.193A3 3 0 0 0 9.016 19H16a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1v-.686a5 5 0 0 1 1.464-3.536l5.657-5.657a3 3 0 0 0 0-4.242\" clip-rule=\"evenodd\"><\/path><\/svg>",
+            "heading": "PERSONNALISEZ",
+            "text": "Configurez la taille et le support de votre tableau",
+            "logo_size": 45,
+            "background_plus_border": true
+          }
+        },
+        "svg_block_pTNkWn": {
+          "type": "svg_block",
+          "settings": {
+            "badge_logo": "<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2.5\" d=\"M8 19a5 5 0 1 0 3-9l5-6H8\"><\/path><\/svg>",
+            "heading": "COMMANDEZ",
+            "text": "Nous fabriquons votre tableau et nous chargeons de vous l'envoyer.",
+            "logo_size": 45,
+            "background_plus_border": true
+          }
+        },
+        "svg_block_mLd4kz": {
+          "type": "svg_block",
+          "settings": {
+            "badge_logo": "<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2.5\" d=\"m10 4l-1.522 7.608A2 2 0 0 0 10.44 14H16m0 0V8m0 6v6\"><\/path><\/svg>",
+            "heading": "ADMIREZ",
+            "text": "Accrochez votre tableau et profitez du résultat !",
+            "logo_size": 45,
+            "background_plus_border": true
+          }
+        }
+      },
+      "block_order": [
+        "svg_block_kPN934",
+        "svg_block_UtVXBA",
+        "svg_block_pTNkWn",
+        "svg_block_mLd4kz"
       ],
       "settings": {
         "title": "",
-        "nb_columns_on_computer": "25",
-        "nb_columns_on_mobile": "100"
+        "nb_columns_on_computer": "4",
+        "nb_columns_on_mobile": "1"
       }
     },
-    "bc7808a3-010e-4d80-a8f4-053c77379028": {
+    "rich_text_83wpVf": {
       "type": "rich-text",
       "blocks": {
-        "template--16404732051711__bc7808a3-010e-4d80-a8f4-053c77379028-16666290841ff88433-0": {
+        "heading_r8rBrU": {
           "type": "heading",
           "settings": {
-            "heading": "Un doute sur la taille ?",
-            "markup": "h2"
+            "heading": "CONSEILS POUR CHOISIR LA TAILLE IDÉALE DE VOTRE TABLEAU.",
+            "markup": "h3",
+            "heading_size": "text-3xl"
           }
         },
-        "template--16404732051711__bc7808a3-010e-4d80-a8f4-053c77379028-16666290841ff88433-1": {
+        "text_4zdheU": {
           "type": "text",
           "settings": {
             "text": "<p>Consultez notre guide des tailles ou prenez contacte avec nous. Nous serons heureux de pouvoir vous aider à harmoniser votre intérieur.<\/p>",
             "text_size": "text-xl"
           }
         },
-        "template--16404732051711__bc7808a3-010e-4d80-a8f4-053c77379028-16666290841ff88433-2": {
+        "button_tXJiiB": {
           "type": "button",
           "settings": {
             "button_label": "Guide des tailles",
@@ -235,22 +491,51 @@
         }
       },
       "block_order": [
-        "template--16404732051711__bc7808a3-010e-4d80-a8f4-053c77379028-16666290841ff88433-0",
-        "template--16404732051711__bc7808a3-010e-4d80-a8f4-053c77379028-16666290841ff88433-1",
-        "template--16404732051711__bc7808a3-010e-4d80-a8f4-053c77379028-16666290841ff88433-2"
+        "heading_r8rBrU",
+        "text_4zdheU",
+        "button_tXJiiB"
       ],
       "settings": {
-        "desktop_content_position": "center",
-        "content_alignment": "left",
+        "content_alignment": "text-left",
         "full_width": true
       }
     },
-    "490671aa-79b7-40da-8e00-59f7773b6755": {
-      "type": "badges",
+    "image_with_text_QNwYQY": {
+      "type": "image-with-text",
       "settings": {
-        "title": "NOS GARANTIES",
-        "nb_columns_on_computer": "33.33",
-        "nb_columns_on_mobile": "100"
+        "image": "shopify:\/\/shop_images\/equipe-de-graphiste-et-decorateur-interieur.png",
+        "title": "- NOS VALEURS -",
+        "description": "Description ...Nous croyons en l'importance de permettre à chacun d'exprimer sa personnalité et son histoire à travers sa décoration intérieure. Avec nos tableaux de décoration, chaque mur devient le narrateur de votre histoire.",
+        "layout": "image_first",
+        "enable_blob": true
+      }
+    },
+    "rich_text_3KDqpQ": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_H4krGL": {
+          "type": "heading",
+          "settings": {
+            "heading": "HARMONISEZ VOTRE ESPACE AVEC NOS ŒUVRES D'ART",
+            "markup": "h2",
+            "heading_size": "text-3xl"
+          }
+        },
+        "text_zNBUgW": {
+          "type": "text",
+          "settings": {
+            "text": "<h3><strong>MyselfMonart – Votre Compagnon dans l'Aventure Décorative<\/strong><\/h3><p>MyselfMonart, votre guide fiable et élégant où chaque pièce sera sublimée. Notre mission est claire : faire de votre <strong>maison<\/strong> un lieu original, chic, et résolument dans l'air du temps. L'art de la <strong>décoration<\/strong> réside dans le choix délibéré et soigné de chaque élément, et c'est là que nous intervenons. Nous ne parlons pas seulement de toiles ou de <strong>tableaux<\/strong>, nous parlons de créer un environnement qui reflète la modernité, l'élégance, et une pincée d'audace. Avec nos collections variées de <strong>décoration<\/strong> <strong>murale<\/strong>, de <strong>tableaux<\/strong> <strong>contemporains<\/strong> aux <strong>palettes colorées<\/strong>, en passant par des designs plus subtils et raffinés, votre intérieur sera transformé en un lieu qui respire la<strong> tendance et le confort<\/strong>. Découvrez l’exclusivité avec MyselfMonart et donnons ensemble une nouvelle dimension à votre <strong>décoration<\/strong>. <\/p><h3><strong>Décorer un Intérieur n’est Jamais Simple<\/strong><\/h3><p>Décorer un Intérieur n’est Jamais Simple, décorer les murs de votre <strong>maison<\/strong> peut souvent se transformer en un casse-tête exigeant. La recherche du <strong>tableau<\/strong> parfait, qui habille vos murs, reflète votre personnalité et s'harmonise avec votre style de <strong>décoration<\/strong>, est un véritable défi. Entre les différentes palettes de couleurs, les styles et les formats, le choix peut vite devenir écrasant et la peur de mal faire, omniprésente. Imaginez un lieu où chaque intérieur, chaque personnalité trouve à coup sûr le <strong>tableau<\/strong> qui va illuminer la <strong>décoration<\/strong> et créer une ambiance où l’on se sent vraiment bien.<\/p><h3><strong>Explorer une Richesse de Choix avec Nos Catégories Variées<\/strong><\/h3><p>Plongez-vous dans un océan de possibilités avec les <strong>collections diversifiées<\/strong> de <strong>MyselfMonart<\/strong>. Notre <strong>gamme variée de décorations murales<\/strong> est spécialement conçue pour apporter ce petit \"plus\" à chaque recoin de votre espace. Que vous soyez fan des <strong>photos réalistes<\/strong>, de <strong>portrait de personnalité<\/strong>, ou que votre cœur balance pour des <strong>œuvres abstraites<\/strong>, capables de susciter la réflexion et l'admiration, nous avons quelque chose pour chaque goût et chaque mur. Pour les adeptes des nuances et des contrastes, nos <strong>options colorées<\/strong> ou <strong>monochromes<\/strong> sont là pour mettre en lumière votre espace avec subtilité ou audace. Et pour une touche d’originalité, nos <strong>motifs animaux<\/strong> insuffleront une vie et une énergie uniques à vos pièces. Chez <strong>MyselfMonart<\/strong>, chaque choix est une promesse d’unicité et de style.Chaque pièce mérite une parure qui le distingue et le fait briller, explorons ensemble les possibilités infinies.<\/p><h3><strong>L’Impression selon Vos Envies – Toile, Aluminium, et Plexiglass<\/strong><\/h3><ul><li><strong>Les Options<\/strong> : Chez <strong>MyselfMonart<\/strong>, votre souhait devient réalité avec notre spectre de choix en matière d’<strong>impression<\/strong>. La <strong>toile<\/strong>, véritable classique, offre une texture chaleureuse et traditionnelle, mettant en lumière chaque détail vibrant des couleurs et des nuances parfait pour une <strong>ambiance moderne<\/strong>. Ensuite, l’<strong>aluminium<\/strong>, réputé pour sa durabilité et son aspect contemporain, propose une finesse visuelle et une élégance qui traversent le temps. Enfin, le <strong>plexiglass<\/strong> évoque une <strong>modernité épurée<\/strong>, apportant une brillance exceptionnelle et une profondeur aux images et au photos, pour une touche de luxe dans votre intérieur et une <strong>ambiance design<\/strong>. Chacun de ces supports possède ses propres charmes et avantages, à vous de choisir celui qui <strong>sublimera votre espace<\/strong> avec le plus de justesse.<\/li><li><strong>Personnalisation<\/strong> : Et parce que chez <strong>MyselfMonart<\/strong> nous croyons que chaque détail compte, la personnalisation va encore plus loin avec des <strong>options d'encadrement<\/strong> pour les toiles et des <strong>kits de fixation<\/strong>, vous assurant ainsi un ajustement parfait à votre espace et une <strong>installation<\/strong> en toute simplicité. Faites de vos murs un reflet de vos préférences et de votre style, en optant pour une finition et une fixation qui vous parlent.<\/li><\/ul><h3><strong>Harmonisez Vos Lieux de Vie avec Nos Œuvres d'Art<\/strong><\/h3><p>Laissez-vous guider par la beauté des œuvres que propose <strong>MyselfMonart<\/strong>, véritable célébration de <strong>diversité<\/strong> et d’<strong>adaptabilité<\/strong>. Nos créations s’inscrivent avec aisance et distinction dans toutes les pièces de votre domicile. En effet, chaque <strong>toile<\/strong>, chaque <strong>image<\/strong>, a la capacité de fusionner avec les ambiances, qu'elles soient <strong>cocooning<\/strong> dans votre <strong>salon<\/strong>, <strong>dynamiques<\/strong> dans votre <strong>cuisine<\/strong>, ou <strong>apaisantes<\/strong> dans vos <strong>chambres<\/strong>. Nos <strong>œuvres d'art <\/strong>transcendent les styles - qu’ils soient <strong>design<\/strong>, <strong>moderne<\/strong>, <strong>vintage<\/strong>, ou <strong>pop art<\/strong> – en s’alliant avec habileté et finesse aux différentes atmosphères de votre intérieur. Imaginez une <strong>toile abstraite colorée<\/strong> qui éclaire et ravive une cuisine au <strong>style moderne<\/strong> et <strong>épuré<\/strong>. Ou encore, un tableau avec un <strong>motif animal<\/strong> qui ajoute une note à la fois majestueuse et sauvage à votre salon de<strong> style vintage<\/strong>. Peut-être une <strong>photographie en noir et blanc<\/strong>, empreinte de nostalgie, qui viendrait adoucir l'ambiance d’une chambre au design <strong>pop art <\/strong>audacieux. Et n'oublions pas la <strong>chambre enfant<\/strong>, où une toile joyeuse et imaginative pourrait éveiller la <strong>créativité<\/strong> et les rêves de nos petits explorateurs. Ces mariages d’<strong>art<\/strong> et de <strong>style<\/strong> ouvrent un monde de possibilités, créant des atmosphères qui respirent l'originalité et l'équilibre.<\/p><h3><strong>L’Expérience MyselfMonart – Bien Plus que de Simples Achats<\/strong><\/h3><p><strong>Service Client :<\/strong> L’expérience <strong>MyselfMonart<\/strong> transcende le simple acte d’achat. Nous sommes fiers de vous accompagner à chaque étape de votre parcours <strong>décoratif mural<\/strong> avec un <strong>service client<\/strong> réputé pour son écoute, sa réactivité et son efficacité. Qu’il s’agisse de vous guider à travers notre riche <strong>collection de tableaux<\/strong>, de vous conseiller sur les <strong>couleurs<\/strong> qui sublimeront votre <strong>maison<\/strong>, ou simplement de répondre à vos <strong>interrogations<\/strong>, notre <strong>équipe<\/strong> se tient prête à transformer vos projets de <strong>déco<\/strong> en réalités éblouissantes.<\/p><h3><strong>Passez à l’Action – Transformez Votre déco dès Aujourd'hui<\/strong><\/h3><p>N'attendez plus un instant ! Le Le <strong>moment<\/strong> est venu d’insuffler une nouvelle vie à votre déco avec <strong>MyselfMonart<\/strong>. Commencez dès maintenant votre voyage à travers notre collection époustouflante, riche en <strong>couleurs<\/strong>, en <strong>émotions<\/strong> et en <strong>styles diversifiés<\/strong>, chacune de nos pièces étant minutieusement conçue pour apporter cette touche finale qui fera toute la différence dans votre décoration.Parcourir notre <strong>galerie<\/strong>, c’est se laisser transporter dans un univers où chaque œuvre vous invite à imaginer, à rêver et à créer votre propre oasis de <strong>bien-être<\/strong> et d’<strong>élégance<\/strong>. C’est la promesse de <strong>MyselfMonart<\/strong> de vous offrir bien plus qu’un simple tableau d'art, mais une source d’<strong>inspiration<\/strong> quotidienne directement dans votre espace de vie.<\/p><p>Alors, prêt(e) à faire le premier pas ? Explorez notre <strong>collection<\/strong>, laissez-vous séduire par l’étendue et la <strong>qualité<\/strong> de <strong>nos œuvres<\/strong>, et faites de votre<strong> interieur<\/strong> le reflet de votre <strong>personnalité<\/strong> et de vos <strong>aspirations<\/strong>. <strong>MyselfMonart<\/strong> est là pour vous accompagner dans chaque étape de cette transformation merveilleuse.<\/p>",
+            "text_size": "text-xl"
+          }
+        }
+      },
+      "block_order": [
+        "heading_H4krGL",
+        "text_zNBUgW"
+      ],
+      "settings": {
+        "content_alignment": "text-left",
+        "full_width": true
       }
     }
   },
@@ -259,9 +544,13 @@
     "1198c25f-e6b6-405b-aa76-db2afd719caf",
     "e2edd939-3626-48bb-a1b3-68b7d45d2b13",
     "20c0c98e-ed16-4069-b89a-bb18d96ee241",
-    "7f048e47-ff73-4ef2-a44d-204a6ad96f65",
-    "0400eb0c-febd-4b30-a9fc-23868b723b01",
-    "bc7808a3-010e-4d80-a8f4-053c77379028",
-    "490671aa-79b7-40da-8e00-59f7773b6755"
+    "collections_grid_7QtQTB",
+    "customer_testimonial_dKrfKQ",
+    "rich_text_NzY43f",
+    "product_list_NJTY7V",
+    "badges_cHPDPq",
+    "rich_text_83wpVf",
+    "image_with_text_QNwYQY",
+    "rich_text_3KDqpQ"
   ]
 }
