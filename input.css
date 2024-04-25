@@ -385,6 +385,16 @@ main-product-blocks .description h2 span {
     @apply my-16 px-6 sm:px-24;
   }
 
+  .rich-text .description :is(h1, h2, h3, h4, h5, h6) {
+    @apply mb-6 mt-12;
+  }
+  .rich-text .description p {
+    @apply mb-6;
+  }
+  .rich-text .description li {
+    @apply mb-4;
+  }
+
   .scrollbar {
     scrollbar-color: rgba(1, 46, 93, 0.2) #efece8;
     scrollbar-width: 5px;

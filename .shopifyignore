@@ -8,3 +8,4 @@ input.css
 package-lock.json
 vite.config.json
 tailwind.config.js
+shopify.theme.toml

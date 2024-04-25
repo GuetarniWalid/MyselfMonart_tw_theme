@@ -1263,6 +1263,45 @@
         }
       }
     },
+    "multicolumn": {
+      "name": "Multicolumn",
+      "settings": {
+        "title": {
+          "label": "Heading"
+        },
+        "image_shape": {
+          "label": "Image shape",
+          "square": {
+            "label": "Square"
+          },
+          "portrait": {
+            "label": "Portrait"
+          },
+          "circle": {
+            "label": "Circle"
+          },
+          "original": {
+            "label": "Original"
+          }
+        },
+        "columns_desktop": {
+          "label": "Number of columns on desktop"
+        },
+        "show_backgounds": {
+          "label": "Show backgrounds to columns"
+        },
+        "button_label": {
+          "label": "Button label",
+          "info": "Leave blank to hide the button"
+        },
+        "button_link": {
+          "label": "Button link"
+        },
+        "header_mobile": {
+          "content": "Mobile Layout"
+        }
+      }
+    },
     "my-likes": {
       "name": "My likes",
       "headings": {
@@ -1343,9 +1382,6 @@
             "label": "Right"
           },
           "label": "Content alignment"
-        },
-        "full_width": {
-          "label": "Make section full width"
         }
       },
       "blocks": {

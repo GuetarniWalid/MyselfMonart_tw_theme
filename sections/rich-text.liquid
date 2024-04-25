@@ -6,7 +6,7 @@
         {{ block.settings.heading | escape }}
       </{{ block.settings.markup }}>
     {%- when 'text' -%}
-      <div class="{{ block.settings.text_size }} my-4 {{ section.settings.content_alignment }}">
+      <div class="description {{ block.settings.text_size }} my-4 {{ section.settings.content_alignment }}">
         {{ block.settings.text }}
       </div>
     {%- when 'button' -%}
@@ -59,12 +59,6 @@
       ],
       "default": "text-left",
       "label": "t:sections.rich-text.settings.content_alignment.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "full_width",
-      "default": true,
-      "label": "t:sections.rich-text.settings.full_width.label"
     }
   ],
   "blocks": [

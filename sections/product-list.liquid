@@ -3,7 +3,7 @@
 {%- endunless -%}
 
 <snap-carrousel>
-<ul role="list" class="component-carroussel flex gap-4 overflow-x-auto snap-mandatory snap-x scroll-smooth scrollbar py-6 sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4" tabindex="-1">
+<ul role="list" class="component-carroussel flex gap-4 overflow-x-auto snap-mandatory snap-x scroll-smooth scrollbar pt-6 sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4" tabindex="-1">
   {%- for block in section.blocks -%}
     <li class="group relative max-w-[350px] shrink-0 text-center snap-start pb-2 flex flex-col md:max-w-none">
       {%- if block.settings.product.images[1] != blank -%}
@@ -38,7 +38,7 @@
 </snap-carrousel>
 
 {% if section.settings.button_text != blank %}
-  <div class="text-center mt-6">
+  <div class="text-center mt-10 sm:mt-3">
     {% if section.settings.to_obfuscate %}
       <button data-url64="{{ section.settings.button_link | base64_encode }}" class="obfuscate border-2 border-main py-3 px-6 rounded-md mx-auto inline-block bg-main/5 hover:bg-main/10 transition-all duration-100 w-full xs:w-auto">
         {{ section.settings.button_text | escape }}
