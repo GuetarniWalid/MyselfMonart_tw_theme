@@ -6,9 +6,49 @@
       "settings": {
       }
     },
-    "1a11d62a-6f3c-40ac-8f0f-ecbbe37c5f3a": {
+    "collections_grid_JwVcHB": {
       "type": "collections-grid",
+      "blocks": {
+        "collection_mQDfGC": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-chambre-garcon.jpg",
+            "collection": "tableau-chambre-garcon",
+            "nb_columns": "col-span-12",
+            "lazy_load": false,
+            "paragraph": ""
+          }
+        },
+        "collection_eKHRLg": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-chambre-fille_8ca67c81-b66a-4a8c-a573-c7dd3f43ecb9.jpg",
+            "collection": "tableau-chambre-fille",
+            "nb_columns": "col-span-8",
+            "lazy_load": false,
+            "paragraph": ""
+          }
+        },
+        "collection_pkn49k": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-chambre-filette_c4ebc9ac-6b26-4952-9340-8945174c0338.jpg",
+            "collection": "tableau-chambre-fillette",
+            "nb_columns": "col-span-4",
+            "lazy_load": true,
+            "paragraph": ""
+          }
+        }
+      },
+      "block_order": [
+        "collection_mQDfGC",
+        "collection_eKHRLg",
+        "collection_pkn49k"
+      ],
       "settings": {
+        "title": "",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-16"
       }
     },
     "main-collection-product-grid": {
@@ -57,7 +97,7 @@
   },
   "order": [
     "cf6565ea-5338-4b92-985b-b5b0824700db",
-    "1a11d62a-6f3c-40ac-8f0f-ecbbe37c5f3a",
+    "collections_grid_JwVcHB",
     "main-collection-product-grid",
     "main-collection-banner",
     "9028de85-ce74-4280-ad18-f54059ace6c2"

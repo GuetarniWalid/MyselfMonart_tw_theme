@@ -15,7 +15,7 @@
     "main-collection-banner": {
       "type": "main-collection-banner",
       "settings": {
-        "show_collapse_button": false
+        "show_collapse_button": true
       }
     },
     "0a4d0ad2-05f5-4939-8b62-ad000c188ded": {

@@ -1,19 +1,8 @@
 {
   "sections": {
-    "breadcrumb_RCxFAG": {
-      "type": "breadcrumb",
-      "settings": {
-      }
-    },
     "main": {
       "type": "main-product",
       "blocks": {
-        "text_CzWnEd": {
-          "type": "text",
-          "settings": {
-            "text": "<p>{{ product.vendor }}<\/p>"
-          }
-        },
         "title": {
           "type": "title",
           "settings": {
@@ -63,124 +52,18 @@
             "content": "",
             "page": "guide-de-tailles"
           }
-        },
-        "description_Fw7xRB": {
-          "type": "description",
-          "settings": {
-          }
         }
       },
       "block_order": [
-        "text_CzWnEd",
         "title",
         "9f20570b-1a97-4c34-8758-c5af9b8d2cfc",
         "buy_qrRzcg",
         "8600f603-2d6f-4191-8020-3678432ba1e5",
         "collapsible_tab_HAUcNw",
         "collapsible_tab_4UhrbY",
-        "a70160ee-79ef-4eb9-8e65-ec87f898b506",
-        "description_Fw7xRB"
+        "a70160ee-79ef-4eb9-8e65-ec87f898b506"
       ],
       "settings": {
-      }
-    },
-    "customer_testimonial_myiwee": {
-      "type": "customer-testimonial",
-      "blocks": {
-        "image_text_Riirzd": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/Tableau-chambre-bebe_f6e62e6e-707b-41df-aa17-bdad25ef3385.jpg",
-            "message": "Juste une petite photo avec le cadre mis en place encore un grand merci à vous 🥰. \nElodie G"
-          }
-        },
-        "image_text_qM9rBh": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau_marylin.jpg",
-            "message": "Envoie très rapide et tableau encore plus beau que sur le site.\nParfait je recommande !!!\nJessica S"
-          }
-        },
-        "image_text_NnGTgN": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/ananas.jpg",
-            "message": "Trop contente de mon tableau, les couleurs sont aussi flashy que sur les photos du site.\nSarah F"
-          }
-        },
-        "image_text_hCDnam": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/Tableau-chambre.png",
-            "message": "Le tableau est super, et encore plus beau en vrai ! Arrivé rapidement et bien protégé. Alain N"
-          }
-        },
-        "image_text_XaycRQ": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/Tableau-decoration.png",
-            "message": "Très belle toile, les couleurs sont super et brillante. Marie K"
-          }
-        },
-        "image_text_QfHTN6": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/Tableau-deco-noir-et-blanc.jpg",
-            "message": "Top, rien à dire de plus. \nGuillaume H"
-          }
-        },
-        "image_text_ragCcn": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-salon-femme-africaine.jpg",
-            "message": "Magnifique tableau et très design, correspond parfaitement à la description.  Morel E"
-          }
-        },
-        "image_text_eAxGcM": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-comics-super-man.jpg",
-            "message": "Nickel, très satisfait c'est ma 3e commande. Hugo G"
-          }
-        },
-        "image_text_DbNc9D": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-superman-aquarelle.jpg",
-            "message": "TOP, tableau reçu rapidement avec suivie. Hugo G"
-          }
-        },
-        "image_text_DCdKLC": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-animaux-zebre_383f6477-a1c6-4c30-b8cc-637fe67fde0a.jpg",
-            "message": "L animal, majestueux et solitaire trône dans mon salon au dessus de ma console... Peut on dire qu il est magnifique ? Assurément oui et je l adore!\nPatricia G."
-          }
-        },
-        "image_text_YKpN4r": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-deco-impression-alluminium-nike.jpg",
-            "message": "Très beau tableau que nous vous avons acheté en août dernier et qui a fait très plaisir à un jeune de 20 ans. \nNous sommes ravis et nous reviendrons vers vous.\nJacqueline R."
-          }
-        }
-      },
-      "block_order": [
-        "image_text_Riirzd",
-        "image_text_qM9rBh",
-        "image_text_NnGTgN",
-        "image_text_hCDnam",
-        "image_text_XaycRQ",
-        "image_text_QfHTN6",
-        "image_text_ragCcn",
-        "image_text_eAxGcM",
-        "image_text_DbNc9D",
-        "image_text_DCdKLC",
-        "image_text_YKpN4r"
-      ],
-      "settings": {
-        "title": "Our customers are delighted",
-        "duration_image_appearance": 5
       }
     },
     "product_carrousel_a4kUVw": {
@@ -278,52 +161,49 @@
         "enable_blob": true
       }
     },
-    "multicolumn_aLxMGX": {
-      "type": "multicolumn",
+    "badges_wi7YGp": {
+      "type": "badges",
       "blocks": {
-        "column_zAm3tT": {
-          "type": "column",
+        "svg_block_gViHQf": {
+          "type": "svg_block",
           "settings": {
-            "image": "shopify:\/\/shop_images\/cliente-satisfaite-souriante.jpg",
-            "title": "SATISFACTION",
-            "text": "<p>Nous faisons tout pour que notre travail vous donne entière satisfaction. Nos produits sont fabriqués, vérifiés et emballés avec le plus grand soin, avant d'être livré directement à votre domicile.<\/p>",
-            "link_label": "",
-            "link": ""
+            "badge_logo": "",
+            "heading": "SATISFACTION",
+            "text": "Nous faisons tout pour que notre travail vous donne entière satisfaction. Nos produits sont fabriqués, vérifiés et emballés avec le plus grand soin, avant d'être livré directement à votre domicile.",
+            "logo_size": 45,
+            "background_plus_border": false
           }
         },
-        "column_U3DQjE": {
-          "type": "column",
+        "svg_block_ETCReA": {
+          "type": "svg_block",
           "settings": {
-            "title": "REMBOURSEMENT",
-            "text": "<p>Nos tableaux sont spécialement protégés pour le transport. Si toutefois il venait à être endommagé, nous nous engageons à vous rembourser en moins de 5 jours.<\/p>",
-            "link_label": "",
-            "link": ""
+            "badge_logo": "",
+            "heading": "REMBOURSEMENT",
+            "text": "Nos tableaux sont spécialement protégés pour le transport. Si toutefois il venait à être endommagé, nous nous engageons à vous rembourser en moins de 5 jours.",
+            "logo_size": 45,
+            "background_plus_border": false
           }
         },
-        "column_fN6DfA": {
-          "type": "column",
+        "svg_block_yeVqVB": {
+          "type": "svg_block",
           "settings": {
-            "image": "shopify:\/\/shop_images\/femme-service-client-call.jpg",
-            "title": "SERVICE CLIENT",
-            "text": "<p>Par mail ou téléphone, c’est toujours avec joie que nous échangeons avec vous.<\/p>",
-            "link_label": "",
-            "link": ""
+            "badge_logo": "",
+            "heading": "SERVICE CLIENT",
+            "text": "Par mail ou téléphone, c’est toujours avec joie que nous échangeons avec vous.",
+            "logo_size": 45,
+            "background_plus_border": false
           }
         }
       },
       "block_order": [
-        "column_zAm3tT",
-        "column_U3DQjE",
-        "column_fN6DfA"
+        "svg_block_gViHQf",
+        "svg_block_ETCReA",
+        "svg_block_yeVqVB"
       ],
       "settings": {
-        "title": "Multicolumn",
-        "image_shape": "rounded-full aspect-square object-cover",
-        "columns_desktop": 3,
-        "show_backgounds": false,
-        "button_label": "",
-        "button_link": "",
-        "to_obfuscate": false
+        "title": "",
+        "nb_columns_on_computer": "3",
+        "nb_columns_on_mobile": "1"
       }
     },
     "7ae13aad-330c-4fa7-94cf-fafc1c13cf60": {
@@ -374,16 +254,14 @@
     }
   },
   "order": [
-    "breadcrumb_RCxFAG",
     "main",
-    "customer_testimonial_myiwee",
     "product_carrousel_a4kUVw",
     "main-product-recommendations",
     "bf44dcab-c1df-4c80-b75a-9ee39a6bfe2e",
     "b5027902-4240-44cf-8660-b6e754562c52",
     "afe2a87a-371e-4c67-93b7-8c6b2244f43b",
     "556b5926-5cdb-4c50-a817-c79f15894cdd",
-    "multicolumn_aLxMGX",
+    "badges_wi7YGp",
     "7ae13aad-330c-4fa7-94cf-fafc1c13cf60"
   ],
   "layout": "product"

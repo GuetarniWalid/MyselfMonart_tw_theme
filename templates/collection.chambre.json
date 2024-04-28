@@ -12,9 +12,60 @@
       "settings": {
       }
     },
-    "6b217ec2-fb95-4b03-b3da-987ecf1dd229": {
+    "collections_grid_7knPWq": {
       "type": "collections-grid",
+      "blocks": {
+        "collection_e4aytH": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-chambre-adulte_8ed37f59-d8a6-401f-8818-433b0de07158.jpg",
+            "collection": "tableau-chambre-adulte",
+            "nb_columns": "col-span-12",
+            "lazy_load": false,
+            "paragraph": ""
+          }
+        },
+        "collection_JzfYie": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/Tableau-chambre-enfant_e3437408-1922-469a-abe1-e4198f27818d.jpg",
+            "collection": "tableau-chambre-enfant",
+            "nb_columns": "col-span-8",
+            "lazy_load": true,
+            "paragraph": ""
+          }
+        },
+        "collection_dgikmt": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-chambre-bebe_de4822a8-1ce7-4764-93d7-9f6a04cf5548.jpg",
+            "collection": "tableaux-chambre-bebe",
+            "nb_columns": "col-span-4",
+            "lazy_load": true,
+            "paragraph": ""
+          }
+        },
+        "collection_dBW9UB": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-chambre-ado_e90cd531-5782-425e-8186-824a9deb4e78.jpg",
+            "collection": "tableau-chambre-ado",
+            "nb_columns": "col-span-12",
+            "lazy_load": true,
+            "paragraph": ""
+          }
+        }
+      },
+      "block_order": [
+        "collection_e4aytH",
+        "collection_JzfYie",
+        "collection_dgikmt",
+        "collection_dBW9UB"
+      ],
       "settings": {
+        "title": "",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-16"
       }
     },
     "main-collection-product-grid": {
@@ -79,7 +130,7 @@
   "order": [
     "main-collection-banner",
     "cf6565ea-5338-4b92-985b-b5b0824700db",
-    "6b217ec2-fb95-4b03-b3da-987ecf1dd229",
+    "collections_grid_7knPWq",
     "main-collection-product-grid",
     "4fdd2cd7-6d03-494d-a7c0-3d6edc8b45cd"
   ]

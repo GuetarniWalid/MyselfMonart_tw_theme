@@ -23,9 +23,8 @@
     "enable_cookie": false,
     "currency_code_enabled": true,
     "show_cart_note": false,
-    "checkout_header_image": "shopify:\/\/shop_images\/panier_fond.webp",
-    "checkout_logo_image": "shopify:\/\/shop_images\/Logo_b6d42f00-14ca-4a39-8e94-e7f021ab4ca1.png",
-    "checkout_logo_position": "left",
+    "checkout_logo_image": "shopify:\/\/shop_images\/logo-myselfmonart-512x512.png",
+    "checkout_logo_position": "center",
     "checkout_logo_size": "large",
     "checkout_body_background_color": "#f6f3ee",
     "checkout_input_background_color_mode": "transparent",
@@ -146,10 +145,41 @@
       },
       "tw-footer": {
         "type": "tw-footer",
+        "blocks": {
+          "menu_list_HXi9M9": {
+            "type": "menu_list",
+            "settings": {
+              "heading": "Menu",
+              "menu": "footer"
+            }
+          },
+          "menu_list_cazaD3": {
+            "type": "menu_list",
+            "settings": {
+              "heading": "Un problèmes ?",
+              "menu": "un-probleme"
+            }
+          }
+        },
+        "block_order": [
+          "menu_list_HXi9M9",
+          "menu_list_cazaD3"
+        ],
         "settings": {
-          "newsletter_heading": "Subscribe to our emails",
+          "newsletter_heading": "Recevez des offres exclusives via notre newsletter !",
           "enable_country_selector": true,
           "enable_language_selector": true
+        }
+      },
+      "tw-announcement-bar": {
+        "type": "tw-announcement-bar",
+        "settings": {
+          "message": "Grab the offer now: -15% 🌟 and FREE delivery 🚀 until April 21 only! Do not miss this chance ! 📆🛍️"
+        }
+      },
+      "main-cart-items": {
+        "type": "main-cart-items",
+        "settings": {
         }
       }
     },

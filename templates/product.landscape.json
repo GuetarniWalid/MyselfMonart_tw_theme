@@ -1,22 +1,40 @@
 {
   "sections": {
+    "breadcrumb_jyJ9mr": {
+      "type": "breadcrumb",
+      "settings": {
+      }
+    },
     "main": {
       "type": "main-product",
       "blocks": {
+        "text_J9CtBN": {
+          "type": "text",
+          "settings": {
+            "text": "<p>{{ product.vendor }}<\/p>"
+          }
+        },
         "title": {
           "type": "title",
           "settings": {
+          }
+        },
+        "9f20570b-1a97-4c34-8758-c5af9b8d2cfc": {
+          "type": "price",
+          "settings": {
+          }
+        },
+        "buy_dctfBh": {
+          "type": "buy",
+          "settings": {
+            "top_text": "Choix des options",
+            "bottom_text": "Personnaliser le tableau"
           }
         },
         "8600f603-2d6f-4191-8020-3678432ba1e5": {
           "type": "text",
           "settings": {
             "text": "<p>Vous recevez nos propositions gratuitement par mail. Si l'une d'entre elles vous plaît, il vous suffit de cliquer sur le lien présent dans le mail qui redirige vers la page de paiement présent sur notre site. Ci-dessous, vous pouvez consulter les prix selon la taille et le support choisi.<\/p>"
-          }
-        },
-        "9f20570b-1a97-4c34-8758-c5af9b8d2cfc": {
-          "type": "price",
-          "settings": {
           }
         },
         "a70160ee-79ef-4eb9-8e65-ec87f898b506": {
@@ -30,9 +48,11 @@
         }
       },
       "block_order": [
+        "text_J9CtBN",
         "title",
-        "8600f603-2d6f-4191-8020-3678432ba1e5",
         "9f20570b-1a97-4c34-8758-c5af9b8d2cfc",
+        "buy_dctfBh",
+        "8600f603-2d6f-4191-8020-3678432ba1e5",
         "a70160ee-79ef-4eb9-8e65-ec87f898b506"
       ],
       "settings": {
@@ -99,6 +119,8 @@
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/femme_portrait.jpg",
+        "title": "Title",
+        "description": "Description ...",
         "layout": "text_first",
         "enable_blob": true
       }
@@ -107,6 +129,8 @@
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/metre.jpg",
+        "title": "Title",
+        "description": "Description ...",
         "layout": "image_first",
         "enable_blob": true
       }
@@ -115,6 +139,8 @@
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/texture_x3_70ae7c8b-712c-4c74-bb93-e76a2eddc37b.jpg",
+        "title": "Title",
+        "description": "Description ...",
         "layout": "text_first",
         "enable_blob": true
       }
@@ -123,6 +149,8 @@
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/tour_eiffel.jpg",
+        "title": "Title",
+        "description": "Description ...",
         "layout": "image_first",
         "enable_blob": true
       }
@@ -201,6 +229,7 @@
     }
   },
   "order": [
+    "breadcrumb_jyJ9mr",
     "main",
     "main-product-recommendations",
     "bf44dcab-c1df-4c80-b75a-9ee39a6bfe2e",
