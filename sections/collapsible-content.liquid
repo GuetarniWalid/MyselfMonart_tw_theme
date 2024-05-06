@@ -3,7 +3,7 @@
 {% endif %}
 <collapsible-tab>
   {%- for block in section.blocks -%}
-    <details class="accordion group border-t border-main/10 first-of-type:mt-5 last-of-type:border-b last-of-type:border-b-main/10 last-of-type:mb-5 max-w-[900px] mx-auto">
+    <details class="accordion group border-t border-main-10 first-of-type:mt-5 last-of-type:border-b last-of-type:border-b-main-10 last-of-type:mb-5 max-w-[900px] mx-auto">
       <summary class="list-none flex justify-between py-3 select-none cursor-pointer">
         <div class="flex gap-3">
           {% render 'icon-accordion', icon: block.settings.icon, color: block.settings.icon_color %}

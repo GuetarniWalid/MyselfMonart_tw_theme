@@ -41,6 +41,12 @@
           font-display: swap;
         }
 
+        :root {
+          --color-main: {{ settings.main_color | color_to_hex }};
+          --color-main-rgb: {{ settings.main_color | color_extract: 'red' }}, {{ settings.main_color | color_extract: 'green' }}, {{ settings.main_color | color_extract: 'blue' }};
+          --color-secondary: {{ settings.secondary_color | color_to_hex }};
+          --color-like: {{ settings.like_color | color_to_hex }};
+        }
     {% endstyle %}
 
     {{ 'output.css' | asset_url | stylesheet_tag }}

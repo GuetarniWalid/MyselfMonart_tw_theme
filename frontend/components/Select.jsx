@@ -93,10 +93,10 @@ export default function Select({
         >
           <span>{optionSet[optionIndexSelected].name}</span>
           <div className="flex items-center gap-5">
-            <span className="bg-main/10 rounded-lg px-2 py-1 whitespace-nowrap">
+            <span className="bg-main-10 rounded-lg px-2 py-1 whitespace-nowrap">
               {optionSet[optionIndexSelected].price} {moneySymbol}
             </span>
-            <div className="w-6 h-6 bg-main/10 rounded-full flex justify-center items-center">
+            <div className="w-6 h-6 bg-main-10 rounded-full flex justify-center items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="25"

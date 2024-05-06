@@ -7,18 +7,37 @@
   </dropdown-button>
 {%- endif -%}
 
+{% if section.settings.to_place_first %}
+  <style>
+    .main-collection-banner {
+      order: 1;
+    }
+  </style>
+{% endif %}
 
 {% schema %}
 {
   "name": "t:sections.main-collection-banner.name",
-  "class": "page-width mb-14 px-4",
+  "class": "main-collection-banner page-width mb-14 px-4",
   "tag": "section",
   "settings": [
     {
       "type": "checkbox",
       "id": "show_collapse_button",
       "default": false,
-      "label": "t:sections.main-collection-banner.settings.show_collapse_button.label"
+      "label": "t:sections.main-collection-banner.settings.show_collapse_button.label",
+      "info": "t:sections.main-collection-banner.settings.show_collapse_button.info"
+    },
+    {
+      "type": "header",
+      "content": "SEO"
+    },
+    {
+      "type": "checkbox",
+      "id": "to_place_first",
+      "default": false,
+      "label": "t:sections.main-collection-banner.settings.to_place_first.label",
+      "info": "t:sections.main-collection-banner.settings.to_place_first.info"
     }
   ]
 }

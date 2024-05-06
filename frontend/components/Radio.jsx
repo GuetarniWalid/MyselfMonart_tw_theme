@@ -30,9 +30,9 @@ export default function Radio({
     <div className="lg:w-1/2 p-1">
       <div
         onClick={handleRadioClick}
-        className={`flex flex-col justify-between hover:bg-main/5 px-4 py-5 rounded h-full text-center cursor-pointer ${
+        className={`flex flex-col justify-between hover:bg-main-5 px-4 py-5 rounded h-full text-center cursor-pointer ${
           isChecked &&
-          'bg-main/5 outline outline-main/20 outline-1 focus:outline-main/50 focus:outline-2'
+          'bg-main-5 outline outline-main-20 outline-1 focus:outline-main-50 focus:outline-2'
         }`}
         tabIndex={drawerOpen ? 0 : -1}
         role="radio"
@@ -55,7 +55,7 @@ export default function Radio({
           </p>
         </div>
         <div>
-          <p className="inline-block bg-main/5 rounded-lg px-4 py-1 whitespace-nowrap my-4">
+          <p className="inline-block bg-main-5 rounded-lg px-4 py-1 whitespace-nowrap my-4">
             {option.price}
             {moneySymbol}
           </p>

@@ -28,17 +28,19 @@ export default function BuyButton({
 
   async function updateProduct() {
     const serverUrl =
-    process.env.NODE_ENV === 'development' ? 'http://localhost:3333' : 'https://backend.myselfmonart.com';
+      process.env.NODE_ENV === 'development'
+        ? 'http://localhost:3333'
+        : 'https://backend.myselfmonart.com';
     const response = await fetch(serverUrl + '/api/product/update', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(product),
     });
     const json = await response.json();
-    return json.newVariantId;
+    return json;
   }
 
-  async function makeOrder(variantID) {
+  async function makeOrder(variantData) {
     const response = await fetch(
       'https://' +
         Shopify.shop +
@@ -49,7 +51,7 @@ export default function BuyButton({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          items: [{ id: variantID, quantity: 1 }],
+          items: [{ id: variantData.id, quantity: 1 }],
         }),
       },
     );
@@ -67,8 +69,8 @@ export default function BuyButton({
   async function handleClick() {
     setIdle(true);
     try {
-      const variantCreatedID = await updateProduct();
-      await makeOrder(variantCreatedID);
+      const variantData = await updateProduct();
+      await makeOrder(variantData);
     } catch (error) {
       console.log(error);
     } finally {
@@ -76,10 +78,10 @@ export default function BuyButton({
     }
   }
 
-  function renderNewSections(json) {
+  function renderNewSections({ items, sections }) {
     const bubble = document.getElementById('bubble-nb-product');
     const newBubble = getSectionInnerJSON(
-      json.sections['tw-header'],
+      sections['tw-header'],
       '#bubble-nb-product',
     );
     bubble.innerHTML = newBubble;
@@ -88,10 +90,25 @@ export default function BuyButton({
       'shopify-section-tw-cart-drawer',
     );
     const newSectionDrawer = getSectionInnerJSON(
-      json.sections['tw-cart-drawer'],
+      sections['tw-cart-drawer'],
       '#shopify-section-tw-cart-drawer',
     );
     sectionDrawer.innerHTML = newSectionDrawer;
+
+    const variantTitleToFillElem = sectionDrawer.querySelector(
+      '.variant-title-to-fill',
+    );
+    if (variantTitleToFillElem) {
+      variantTitleToFillElem.textContent = items[0].variant_title;
+    }
+
+    const variantPriceToFillElem = sectionDrawer.querySelector(
+      '.variant-price-to-fill',
+    );
+    if (variantPriceToFillElem) {
+      const moneySymbol1 = variantPriceToFillElem.textContent.split('0')[0];
+      variantPriceToFillElem.textContent = moneySymbol + items[0].price / 100;
+    }
   }
 
   function getSectionInnerJSON(json, selector) {

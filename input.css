@@ -325,7 +325,7 @@ main-product-blocks .description h2 span {
   }
 
   .cart-drawer {
-    @apply fixed top-0 h-dvh right-0 z-50 w-full xs:w-80 bg-secondary transition-transform duration-100 overflow-y-auto scrollbar;
+    @apply fixed top-0 h-dvh right-0 z-50 w-full xs:w-96 bg-secondary transition-transform duration-100 overflow-y-auto scrollbar;
   }
 
   .collection-description h2,
@@ -334,12 +334,12 @@ main-product-blocks .description h2 span {
   }
   .collection-description p,
   .page-description p {
-    @apply my-5 text-xl text-main/80 overflow-hidden;
+    @apply my-5 text-xl text-main-80 overflow-hidden;
   }
   .article-content a,
   .collection-description a,
   .page-description a {
-    @apply relative after:bg-main/10 after:absolute after:top-0 after:bottom-0 after:-right-1 after:-left-1 after:-skew-x-12 inline-block;
+    @apply relative after:bg-main-10 after:absolute after:top-0 after:bottom-0 after:-right-1 after:-left-1 after:-skew-x-12 inline-block;
   }
 
   .close-nav {

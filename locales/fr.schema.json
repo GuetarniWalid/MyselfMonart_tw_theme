@@ -1,10 +1,16 @@
 {
   "settings_schema": {
-    "cart": {
-      "name": "Panier",
+    "color": {
+      "name": "Couleur",
       "settings": {
-        "show_cart_note": {
-          "label": "Afficher la note du panier"
+        "like_color": {
+          "label": "Couleur des j'aime"
+        },
+        "main_color": {
+          "label": "Couleur principale"
+        },
+        "secondary_color": {
+          "label": "Couleur de fond"
         }
       }
     },
@@ -288,6 +294,14 @@
       "blocks": {
         "svg_block": {
           "name": "SVG",
+          "headings": {
+            "logo": {
+              "content": "Logo"
+            },
+            "text": {
+              "content": "Texte"
+            }
+          },
           "settings": {
             "logo": {
               "info": "Seuls les svg sont autorisés"
@@ -313,20 +327,6 @@
               "label": "Le chiffre visible en grand"
             }
           }
-        },
-        "lottie": {
-          "name": "Lottie",
-          "settings": {
-            "json_link": {
-              "label": "Lien vers un fichier Lottie en JSON"
-            },
-            "lottie_size": {
-              "label": "Taille"
-            },
-            "range_under_lottie": {
-              "label": "Marge sous le l'animation"
-            }
-          }
         }
       }
     },
@@ -341,11 +341,17 @@
     "breadcrumb": {
       "name": "Breadcrumb",
       "settings": {
-        "selected_item_background": {
-          "label": "Fond de l'élément sélectionné"
+        "headings": {
+          "current_page_color": {
+            "content": "Couleur pour la page actuelle",
+            "info": "Visible uniquement sur ordinateur, marque la page actuelle"
+          }
         },
-        "selected_item_color": {
-          "label": "Couleur du text del'élément sélectionné"
+        "main_color": {
+          "label": "Couleur principale"
+        },
+        "secondary_color": {
+          "label": "Couleur de fond"
         }
       }
     },
@@ -371,9 +377,6 @@
         },
         "show_vendor": {
           "label": "Afficher le distributeur"
-        },
-        "show_cart_note": {
-          "label": "Activer la note de panier"
         },
         "cart_drawer": {
           "header": "Panier coulissant",
@@ -997,77 +1000,41 @@
         }
       }
     },
+    "gift-image": {
+      "name": "Image du cadeau"
+    },
     "header": {
       "name": "En-tête",
       "blocks": {
-        "menu": {
+        "collection_only": {
+          "name": "Collection seule",
           "settings": {
-            "link_list": {
-              "label": "Affichera des sous-menus",
-              "info": "Si vous ne voulez pas afficher de sous-menus sélectionnez plutôt un autre block"
-            },
-            "menu_title": {
-              "label": "Titre du menu",
-              "info": "Si vous ne souhaitez pas afficher de titre de menu, laissez ce champ vide"
-            },
-            "page_link": {
-              "label": "Lien vers une page",
-              "info": "Si vous souhaitez lier le titre du menu à une page"
-            },
-            "image": {
-              "label": "Image",
-              "info": "Si vous souhaitez afficher une image"
+            "collection": {
+              "label": "Collection"
             }
           }
-        }
-      },
-      "headings": {
-        "general_settings": {
-          "content": "Réglages généraux"
         },
-        "cart": {
-          "content": "Panier"
-        }
-      },
-      "settings": {
-        "color_background": {
-          "label": "Couleur de fond"
+        "parent_collection": {
+          "name": "Collection parente",
+          "settings": {
+            "title": {
+              "label": "Titre"
+            },
+            "product": {
+              "label": "Image de representation"
+            },
+            "child_collection_list": {
+              "label": "Collections enfants"
+            }
+          }
         },
-        "text_color": {
-          "label": "Couleur des textes"
-        },
-        "border_bottom_color": {
-          "label": "Couleur de la bordure du bas"
-        },
-        "add_shadow": {
-          "label": "Ajouter une ombre"
-        },
-        "logo_svg": {
-          "label": "Logo en svg",
-          "info": "Ex: <svg ...></svg>"
-        },
-        "cart_svg": {
-          "label": "Panier en svg",
-          "info": "Ex: <svg ...></svg>"
-        },
-        "logo": {
-          "label": "Image du logo"
-        },
-        "logo_width": {
-          "label": "Largeur personnalisée du logo"
-        },
-        "cart_width": {
-          "label": "Largeur personnalisée du panier"
-        },
-        "menu_title": {
-          "label": "Titre du menu"
-        },
-        "enable_sticky_header": {
-          "label": "Activer l'en-tête collé",
-          "info": "L'en-tête s'affiche à l'écran lorsque les clients font défiler vers le haut."
-        },
-        "margin_bottom": {
-          "label": "Marge inférieure"
+        "product_only": {
+          "name": "Produit seul",
+          "settings": {
+            "product": {
+              "label": "Produit"
+            }
+          }
         }
       }
     },
@@ -1178,14 +1145,22 @@
         }
       }
     },
-    "main-cart-items": {
+    "page-cart-items": {
       "name": "Articles"
     },
+    "page-cart-subtotal": {
+      "name": "Sous-total"
+    },
     "main-collection-banner": {
-      "name": "Bannière de collection",
+      "name": "Description de la collection",
       "settings": {
         "show_collapse_button": {
-          "label": "Afficher le bouton de réduction"
+          "label": "Bouton en savoir plus",
+          "info": "Laisse le choix à l'utilisateur de voir ou non le contenu complet de la collection"
+        },
+        "to_place_first": {
+          "label": "Placer dernier",
+          "info": "Visible en fin de page même si ce n'est pas son emplacement dans le thème. Utile pour optimiser le SEO sans gener l'expérience utilisateur"
         }
       }
     },
@@ -1314,6 +1289,9 @@
             },
             "bottom_text": {
               "label": "Texte du bas"
+            },
+            "main_color": {
+              "label": "Couleur de fond"
             }
           }
         },
@@ -1523,11 +1501,16 @@
     "multicolumn": {
       "name": "Multicolonne",
       "settings": {
+        "headings": {
+          "button": {
+            "content": "Bouton principale"
+          }
+        },
         "title": {
           "label": "Titre"
         },
         "image_shape": {
-          "label": "Forme de l'image",
+          "label": "Forme des l'image",
           "square": {
             "label": "Carré"
           },
@@ -1553,14 +1536,16 @@
         },
         "columns_desktop": {
           "label": "Nombre de colonnes sur ordinateur"
-        },
-        "header_mobile": {
-          "content": "Mise en page sur mobile"
         }
       },
       "blocks": {
         "column": {
           "name": "Colonne",
+          "headings": {
+            "button": {
+              "content": "Bouton"
+            }
+          },
           "settings": {
             "image": {
               "label": "Image"
@@ -1572,10 +1557,13 @@
               "label": "Description"
             },
             "link_label": {
-              "label": "Étiquette de lien"
+              "label": "Texte du bouton"
             },
             "link": {
               "label": "Lien"
+            },
+            "to_obfuscate": {
+              "label": "Obfusquer le bouton"
             }
           }
         }
@@ -1798,6 +1786,9 @@
             },
             "text": {
               "label": "Description"
+            },
+            "is_lighten": {
+              "label": "Éclaircir le texte"
             }
           }
         },

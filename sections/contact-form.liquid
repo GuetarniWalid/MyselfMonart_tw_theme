@@ -22,7 +22,7 @@
     <div class="relative h-12 group my-4 w-full">
       {%- assign name = 'tw.contact-form.lastname' | t -%}
       <input autocomplete="name" type="text" id="ContactForm-name" name="contact[{{ name }}]" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}" class="bg-secondary pl-5 pr-9 border hover:border-2 focus:border-2 w-full h-full rounded-lg peer/search placeholder:text-transparent outline-none border-main" placeholder="{{ name }}">
-      <label class="bg-secondary text-main/70 px-1 absolute -translate-y-1/2 left-4 top-0 text-xs tracking-normal peer-focus/search:top-0 peer-focus/search:text-xs peer-focus/search:tracking-normal peer-placeholder-shown/search:top-1/2 peer-placeholder-shown/search:text-sm peer-placeholder-shown/search:tracking-widest transition-all duration-75" for="ContactForm-name">{{ name }}</label>
+      <label class="bg-secondary text-main-70 px-1 absolute -translate-y-1/2 left-4 top-0 text-xs tracking-normal peer-focus/search:top-0 peer-focus/search:text-xs peer-focus/search:tracking-normal peer-placeholder-shown/search:top-1/2 peer-placeholder-shown/search:text-sm peer-placeholder-shown/search:tracking-widest transition-all duration-75" for="ContactForm-name">{{ name }}</label>
     </div>
     <div class="relative h-12 group my-4 w-full">
       <input
@@ -41,7 +41,7 @@
         {% endif %}
         placeholder="{{ 'tw.contact-form.email' | t }}"
       >
-      <label for="ContactForm-email" class="bg-secondary text-main/70 px-1 absolute -translate-y-1/2 left-4 top-0 text-xs tracking-normal peer-focus/search:top-0 peer-focus/search:text-xs peer-focus/search:tracking-normal peer-placeholder-shown/search:top-1/2 peer-placeholder-shown/search:text-sm peer-placeholder-shown/search:tracking-widest transition-all duration-75">{{ 'tw.contact-form.email' | t }}</label>
+      <label for="ContactForm-email" class="bg-secondary text-main-70 px-1 absolute -translate-y-1/2 left-4 top-0 text-xs tracking-normal peer-focus/search:top-0 peer-focus/search:text-xs peer-focus/search:tracking-normal peer-placeholder-shown/search:top-1/2 peer-placeholder-shown/search:text-sm peer-placeholder-shown/search:tracking-widest transition-all duration-75">{{ 'tw.contact-form.email' | t }}</label>
       {%- if form.errors contains 'email' -%}
         <small id="ContactForm-email-error">
           <span>{{ 'tw.contact-form.error' | t }}</span>
@@ -53,7 +53,7 @@
   {%- if section.settings.show_mobile_input -%}
     <div class="relative h-12 group my-4">
       <input type="tel" id="ContactForm-phone" autocomplete="tel" name="contact[{{ 'tw.contact-form.phone' | t }}]" pattern="[0-9\-]*" value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}" placeholder="{{ 'tw.contact-form.phone' | t }}" class="bg-secondary pl-5 pr-9 border hover:border-2 focus:border-2 w-full h-full rounded-lg peer/search placeholder:text-transparent outline-none border-main">
-      <label for="ContactForm-phone" class="bg-secondary text-main/70 px-1 absolute -translate-y-1/2 left-4 top-0 text-xs tracking-normal peer-focus/search:top-0 peer-focus/search:text-xs peer-focus/search:tracking-normal peer-placeholder-shown/search:top-1/2 peer-placeholder-shown/search:text-sm peer-placeholder-shown/search:tracking-widest transition-all duration-75">{{ 'tw.contact-form.phone' | t }}</label>
+      <label for="ContactForm-phone" class="bg-secondary text-main-70 px-1 absolute -translate-y-1/2 left-4 top-0 text-xs tracking-normal peer-focus/search:top-0 peer-focus/search:text-xs peer-focus/search:tracking-normal peer-placeholder-shown/search:top-1/2 peer-placeholder-shown/search:text-sm peer-placeholder-shown/search:tracking-widest transition-all duration-75">{{ 'tw.contact-form.phone' | t }}</label>
     </div>
   {%- endif -%}
   <div class="relative group my-4 md:my-8">
@@ -71,10 +71,10 @@
     >
       {{- form.body -}}
     </textarea>
-    <label for="ContactForm-body" class="bg-secondary text-main/70 px-1 absolute -translate-y-1/2 left-4 top-0 text-xs tracking-normal peer-focus/search:top-0 peer-focus/search:text-xs peer-focus/search:tracking-normal peer-placeholder-shown/search:top-8 peer-placeholder-shown/search:text-sm peer-placeholder-shown/search:tracking-widest transition-all duration-75">{{ textarea }}</label>
+    <label for="ContactForm-body" class="bg-secondary text-main-70 px-1 absolute -translate-y-1/2 left-4 top-0 text-xs tracking-normal peer-focus/search:top-0 peer-focus/search:text-xs peer-focus/search:tracking-normal peer-placeholder-shown/search:top-8 peer-placeholder-shown/search:text-sm peer-placeholder-shown/search:tracking-widest transition-all duration-75">{{ textarea }}</label>
   </div>
   <div>
-    <button type="submit" class="bg-main/5 border-2 border-main py-3 px-14 rounded-lg hover:bg-main/10 mt-5">
+    <button type="submit" class="bg-main-5 border-2 border-main py-3 px-14 rounded-lg hover:bg-main-10 mt-5">
       {%- if section.settings.button_text != blank -%}
         {{ section.settings.button_text }}
       {%- else -%}

@@ -1,0 +1,23 @@
+{%- if section.settings.image != blank -%}
+    {{ section.settings.image | image_url: height: 350 | image_tag: loading: 'lazy', class: 'skeleton mx-auto' }}
+{%- else -%}
+    <img src="{{ 'gift-card/card.svg' | shopify_asset_url }}" alt="" class="skeleton mx-auto" height="{{ 570 | divided_by: 1.5 }}" width="570" loading="lazy">
+{%- endif -%}
+
+{% schema %}
+    {
+        "name": "t:sections.gift-image.name",
+        "limit": 1,
+        "tag": "div",
+        "enabled_on": {
+            "templates": ["gift_card"]
+        },
+        "settings": [
+            {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+            }
+        ]
+    }
+{% endschema %}

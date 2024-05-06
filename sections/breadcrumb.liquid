@@ -1,3 +1,10 @@
+{% style %}
+  :root {
+    --color-breadcrumb-main: {{ section.settings.main_color }};
+    --color-breadcrumb-secondary: {{ section.settings.secondary_color }};
+  }
+{% endstyle %}
+
 {% liquid
   assign itemListElement_names = ''
   assign itemListElement_urls = ''
@@ -109,13 +116,32 @@
 {% schema %}
 {
   "name": "t:sections.breadcrumb.name",
-  "class": "page-width",
+  "class": "page-width w-full",
   "tag": "div",
   "limit": 1,
   "templates": [
     "collection",
     "page",
     "product"
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.breadcrumb.settings.headings.current_page_color.content",
+      "info": "t:sections.breadcrumb.settings.headings.current_page_color.info"
+    },
+    {
+        "type": "color",
+        "id": "main_color",
+        "label": "t:sections.breadcrumb.settings.main_color.label",
+        "default": "#1A2E05"
+      },
+      {
+        "type": "color",
+        "id": "secondary_color",
+        "label": "t:sections.breadcrumb.settings.secondary_color.label",
+        "default": "#EBD0CD"
+      }
   ],
   "presets": [
     {

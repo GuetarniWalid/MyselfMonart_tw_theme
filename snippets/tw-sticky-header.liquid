@@ -14,17 +14,24 @@
         </span>
       </summary>
       <nav class="bg-secondary absolute bottom-0 left-0 right-0 border-t border-solid border-main close-nav transition-all duration-150 -z-10 h-[calc(100vh-80px)] md:h-fit overflow-y-auto scrollbar md:scrollbar-hidden grid grid-rows-[1fr_auto]" role="dialog" aria-modal="true" aria-label="{{ "tw.header.accessibility.navigation" | t }}">
-        <ul class="py-8 px-5 md:grid md:grid-cols-3 gap-y-3 relative">
+        <ul class="py-8 px-5 md:grid md:grid-cols-3 gap-y-3 relative overflow-hidden">
           {% for block in section.blocks %}
             {% if block.type == "collection_only" %}
-              <li class="obfuscate flex items-center gap-3 hover:bg-main/5 p-3 rounded-lg cursor-pointer" data-url64="{{ block.settings.collection.url | base64_encode }}" tabindex="0">
+              <li class="obfuscate flex items-center gap-3 hover:bg-main-5 p-3 rounded-lg cursor-pointer" data-url64="{{ block.settings.collection.url | base64_encode }}" tabindex="0">
                 {% if block.settings.collection.featured_image != blank %}
                   {{ block.settings.collection.featured_image | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: block.settings.collection.featured_image.alt,loading: 'lazy', class: 'rounded-md' }}
                 {% endif %}
                 {{ block.settings.collection.title | escape }}
               </li>
+            {% elsif block.type == "product_only" %}
+              <li class="obfuscate flex items-center gap-3 hover:bg-main-5 p-3 rounded-lg cursor-pointer" data-url64="{{ block.settings.product.url | base64_encode }}" tabindex="0">
+                {% if block.settings.product.images[1] != blank %}
+                  {{ block.settings.product.images[1] | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: block.settings.product.images[1].alt,loading: 'lazy', class: 'rounded-md' }}
+                {% endif %}
+                {{ block.settings.product.title | escape }}
+              </li>
             {% else %}
-              <li class="details-wrapper group/one hover:bg-main/5 p-3 rounded-lg cursor-pointer">
+              <li class="details-wrapper group/one hover:bg-main-5 p-3 rounded-lg cursor-pointer">
                 <details>
                   <summary class="list-none flex items-center gap-3">
                     {% if block.settings.product.images[1] != blank %}
@@ -34,13 +41,13 @@
                     {% render 'tw-icon-arrow', group_one: true %}
                   </summary>
                   <div class="absolute inset-0 bg-secondary py-8 px-5 transition-all duration-150 translate-x-full">
-                    <h3 class="group bg-main/5 cursor-pointer py-2 px-4 rounded-md mb-2" tabindex="0" role="button" aria-label="{{ "tw.header.back" | t }}">
+                    <h3 class="group bg-main-5 cursor-pointer py-2 px-4 rounded-md mb-2" tabindex="0" role="button" aria-label="{{ "tw.header.back" | t }}">
                       <span class="mr-2">{% render 'tw-icon-arrow', direction: "left" %}</span>
                       {{ block.settings.title }}
                     </h3>
                     <ul class="md:grid md:grid-cols-3 gap-y-3 ">
                       {% for collection in block.settings.child_collection_list %}
-                        <li class="obfuscate flex items-center gap-3 hover:bg-main/5 p-3 rounded-lg cursor-pointer" data-url64="{{ collection.url | base64_encode }}" tabindex="0">
+                        <li class="obfuscate flex items-center gap-3 hover:bg-main-5 p-3 rounded-lg cursor-pointer" data-url64="{{ collection.url | base64_encode }}" tabindex="0">
                           {% if collection.featured_image != blank %}
                             {{ collection.featured_image | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: collection.featured_image.alt, loading: 'lazy', class: 'rounded-md' }}
                           {% endif %}
@@ -64,15 +71,17 @@
     </span>
   </div>
   
-  <button id="cart-button" class="absolute right-[5%] bottom-0 translate-y-1/2 bg-secondary border border-solid border-main w-16 h-[45px] xs:w-20 xs:h-[50px] rounded-[50px] flex justify-center items-center transition-all duration-75" role="button" aria-label="{{ "tw.header.open_cart" | t }}">
-    {% render 'tw-icon-bag' %}
-    <div class="absolute top-1/2 left-1/2 -translate-y-1 bg-secondary text-sm w-5 h-5 rounded-full overflow-hidden after:bg-main/10 after:absolute after:inset-0" id="bubble-nb-product">
-      {%- if cart != empty -%}
-        {%- if cart.item_count < 100 -%}
-          <span aria-hidden="true">{{ cart.item_count }}</span>
+  {% if template.name != 'cart' %}
+    <button id="cart-button" class="absolute right-[5%] bottom-0 translate-y-1/2 bg-secondary border border-solid border-main w-16 h-[45px] xs:w-20 xs:h-[50px] rounded-[50px] flex justify-center items-center transition-all duration-75" role="button" aria-label="{{ "tw.header.open_cart" | t }}">
+      {% render 'tw-icon-bag' %}
+      <div class="absolute top-1/2 left-1/2 -translate-y-1 bg-secondary text-sm w-5 h-5 rounded-full overflow-hidden after:bg-main-10 after:absolute after:inset-0" id="bubble-nb-product">
+        {%- if cart != empty -%}
+          {%- if cart.item_count < 100 -%}
+            <span aria-hidden="true">{{ cart.item_count }}</span>
+          {%- endif -%}
+          <span class="sr-only">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
         {%- endif -%}
-        <span class="sr-only">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
-      {%- endif -%}
-      </div>
-  </button>
+        </div>
+    </button>
+  {% endif %}
 </sticky-header>

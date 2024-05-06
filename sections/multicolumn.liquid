@@ -1,5 +1,5 @@
 {%- unless section.settings.title == blank -%}
-    <h2 class="px-4 mb-6">
+    <h2 class="px-4 mb-7 text-center md:text-left">
         {{ section.settings.title | escape }}
     </h2>
 {%- endunless -%}
@@ -9,22 +9,26 @@
         assign nb_of_column = section.blocks.size
     endif
 %}
-<ul role="list" class="grid grid-cols-1 md:grid-cols-{{ nb_of_column }} gap-4">
+<ul role="list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-{{ nb_of_column }} gap-4">
   {%- for block in section.blocks -%}
     {% liquid
       assign li_class = ""
       assign odd_result = forloop.index | modulo: 2
-      if section.settings.columns_desktop == 2 
+      if section.settings.columns_desktop == 3
+        if odd_result == 0
+          assign li_class = 'md:justify-self-start lg:justify-self-center'
+        else
+          assign li_class = 'md:justify-self-end lg:justify-self-center'
+        endif
+      elsif section.settings.columns_desktop == 2 
         if odd_result == 0
           assign li_class = 'justify-self-start'
         else
           assign li_class = 'justify-self-end'
         endif
-      else if section.settings.columns_desktop == 1
-        assign li_class = 'justify-self-center'
       endif
     %}
-    <li class="max-w-96 p-6 mb-8 {% if section.settings.show_backgounds %}bg-main/5{% endif %} {{ li_class }}">            
+    <li class="max-w-96 p-6 mb-8 w-full {% if section.settings.show_backgounds %}bg-main-5{% endif %} justify-self-center {{ li_class }}">            
       {%- if block.settings.image != blank -%}
         <img
             class="skeleton mb-6 {{ section.settings.image_shape }}"
@@ -47,7 +51,7 @@
         {{ 'image' | placeholder_svg_tag: svg_class }}
       {%- endif -%}
       {%- if block.settings.title != blank -%}
-        <h3 class="mb-3">
+        <h3 class="mb-3 overflow-hidden text-ellipsis">
           {%- if block.settings.link != blank -%}
             {% if section.settings.to_obfuscate %}
               <span data-url64="{{ block.settings.link | base64_encode }}" class="obfuscate">
@@ -62,10 +66,20 @@
         </h3>
       {%- endif -%}
       {%- if block.settings.text != blank -%}
-        <div class="leading-relaxed text-lg">{{ block.settings.text }}</div>
+        <div class="leading-relaxed text-lg mb-3">{{ block.settings.text }}</div>
       {%- endif -%}
       {%- if block.settings.link != blank and block.settings.link_label != blank -%}
-        <p>{{ block.settings.link_label | escape }}<span>&nbsp;{% render 'icon-arrow' %}</p>
+        <div class="text-center my-6">
+          {% if block.settings.to_obfuscate %}
+            <button class="obfuscate inline-block py-3 px-14 border-main border-2 bg-main-5 rounded hover:bg-main-10 transition-all duration-100 cursor-pointer" data-url64="{{ block.settings.link | base64_encode }}">
+              {{ block.settings.link_label | escape }}
+            </button>
+          {% else %}
+            <a class="inline-block py-3 px-14 border-main border-2 bg-main-5 rounded hover:bg-main-10 transition-all duration-100 cursor-pointer" href="{{ block.settings.link }}">
+              {{ block.settings.link_label | escape }}
+            </a>
+          {% endif %}
+        </div>
       {%- endif -%}
     </li>
   {%- endfor -%}
@@ -73,11 +87,11 @@
 <div class="text-center">
   {%- if section.settings.button_label != blank -%}
     {% if section.settings.to_obfuscate %}
-      <button class="obfuscate py-3 px-14 border-main border-2 bg-main/5 rounded hover:bg-main/10 transition-all duration-100 cursor-pointer" data-url64="{{ section.settings.button_link | base64_encode }}">
+      <button class="obfuscate inline-block py-3 px-14 border-main border-2 bg-main-5 rounded hover:bg-main-10 transition-all duration-100 cursor-pointer" data-url64="{{ section.settings.button_link | base64_encode }}">
         {{ section.settings.button_label | escape }}
       </button>
     {% else %}
-      <a class="py-3 px-14 border-main border-2 bg-main/5 rounded hover:bg-main/10 transition-all duration-100 cursor-pointer" {% if section.settings.button_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.button_link }}"{% endif %}>
+      <a class="inline-block py-3 px-14 border-main border-2 bg-main-5 rounded hover:bg-main-10 transition-all duration-100 cursor-pointer" {% if section.settings.button_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ section.settings.button_link }}"{% endif %}>
         {{ section.settings.button_label | escape }}
       </a>
     {% endif %}
@@ -137,6 +151,10 @@
         "default": true
     },
     {
+      "type": "header",
+      "content": "t:sections.multicolumn.settings.headings.button.content"
+    },
+    {
       "type": "text",
       "id": "button_label",
       "label": "t:sections.multicolumn.settings.button_label.label",
@@ -146,10 +164,6 @@
       "type": "url",
       "id": "button_link",
       "label": "t:sections.multicolumn.settings.button_link.label"
-    },
-    {
-      "type": "header",
-      "content": "t:sections.multicolumn.settings.header_mobile.content"
     },
     {
       "type": "header",
@@ -185,6 +199,10 @@
           "label": "t:sections.multicolumn.blocks.column.settings.text.label"
         },
         {
+          "type": "header",
+          "content": "t:sections.multicolumn.blocks.column.headings.button.content"
+        },
+        {
           "type": "text",
           "id": "link_label",
           "label": "t:sections.multicolumn.blocks.column.settings.link_label.label"
@@ -193,6 +211,12 @@
           "type": "url",
           "id": "link",
           "label": "t:sections.multicolumn.blocks.column.settings.link.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "to_obfuscate",
+          "default": false,
+          "label": "t:sections.multicolumn.blocks.column.settings.to_obfuscate.label"
         }
       ]
     }

@@ -4,14 +4,14 @@
   <svg class="absolute top-2 right-0 left-0 -translate-y-full w-full" width="320" viewBox="0 0 1470 89" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true">
   <path class="fill-main" fill-rule="evenodd" clip-rule="evenodd" d="M0 39.9244V89H1470V39.9244C1469.35 39.9532 1294.17 47.642 1150.17 39.9244C1072.84 35.7789 992.978 29.4304 912.212 23.0096C769.252 11.6444 623.445 0.0530014 483.721 0.0530014C116.221 0.0530014 0 39.9244 0 39.9244Z" fill="transparent"/>
   </svg>
-  <h2 class="text-center mb-10">
+  <h2 class="text-center mb-14">
     <span class="block mb-4">{% render 'tw-icon-logo-unfilled' %}</span>
     <br>
     {{ shop.name }}
   </h2>
-  {%- if section.blocks.size > 0 or section.settings.newsletter_enable -%}
-    <div class="flex justify-center mx-auto mb-8">
-      <div class="flex gap-x-16 gap-y-10 px-14 flex-col min-[465px]:flex-row min-[465px]:justify-around max-w-5xl min-[465px]:w-full">
+  <div class="px-10 sm:px-20 max-w-7xl mx-auto">
+    {%- if section.blocks.size > 0 or section.settings.newsletter_enable -%}
+      <div class="flex gap-x-16 gap-y-10 flex-col sm:flex-row sm:justify-between mb-14 px-8">
         {%- if section.blocks.size > 0 -%}
           {%- for block in section.blocks -%}
             <nav>
@@ -36,138 +36,136 @@
           {%- endfor -%}
         {%- endif -%}
       </div>
-    </div>
     {%- endif -%}
-  
-  <div class="flex flex-wrap justify-around items-end gapx-x-5 gap-y-8 px-8 mb-8 sm:mb-16">
-    <div class="w-full max-w-md min-w-sm">
-      {%- if section.settings.newsletter_heading != blank -%}
-      <h3 class="mb-3 ml-3">{{ section.settings.newsletter_heading | escape }}</h3>
-      {%- endif -%}
-      {%- form 'customer', id: 'ContactFooter'-%}
-        <div class="relative h-10 group">
-          <input type="hidden" name="contact[tags]" value="newsletter">
-          <input
-            id="NewsletterForm--{{ section.id }}"
-            type="email"
-            name="contact[email]"
-            class="bg-main pl-5 pr-9 border hover:border-2 focus:border-2 w-full h-full rounded-lg peer/search placeholder:text-transparent outline-none{% if form.errors %} border-red-400{% else %} border-secondary{% endif %}"
-            value="{{ form.email }}"
-            aria-required="true"
-            autocorrect="off"
-            autocapitalize="off"
-            autocomplete="email"
-            {% if form.errors %}
-              autofocus
-              aria-invalid="true"
-              aria-describedby="ContactFooter-error"
-            {% elsif form.posted_successfully? %}
-              aria-describedby="ContactFooter-success"
-            {% endif %}
-            placeholder="{{ 'tw.footer.newsletter.placeholder' | t }}"
-            required
-          >
-          <label for="NewsletterForm--{{ section.id }}" class="bg-main text-secondary/70 px-1 absolute -translate-y-1/2 left-4 top-0 text-xs tracking-normal peer-focus/search:top-0 peer-focus/search:text-xs peer-focus/search:tracking-normal peer-placeholder-shown/search:top-1/2 peer-placeholder-shown/search:text-sm peer-placeholder-shown/search:tracking-widest transition-all duration-75{% if form.errors %} text-red-400{% endif %}">
-            {{ 'tw.footer.newsletter.placeholder' | t }}
-          </label>
-          <button type="submit" name="commit" id="Subscribe" aria-label="{{ 'tw.footer.newsletter.subscribe' | t }}" class="absolute right-3 top-1/2 -translate-y-1/2{% if form.errors %} text-red-400{% endif %}">
-            {% render 'tw-icon-arrow' %}
-          </button>
-        </div>
-  
-        {% if form.errors %}
-          <small id="ContactFooter-error" class="ml-2 flex items-center gap-2 mt-2">
-            {% render 'tw-icon-error' %}
-            {{ 'tw.footer.newsletter.error' | t }}
-          </small>
-        {% endif %}
-        {%- if form.posted_successfully? -%}
-          <small id="ContactFooter-success" tabindex="-1" autofocus class="pl-2 flex items-center gap-2 mt-2">
-            {% render 'tw-icon-success' %}
-            {{ 'tw.footer.newsletter.success' | t }}
-          </small>
+    <h3 class="mb-4">{{ section.settings.newsletter_heading | escape }}</h3>
+    <div class="flex flex-wrap justify-between items-end gapx-x-5 gap-y-8 mb-14 sm:mb-16">
+      <div class="w-full max-w-md min-w-sm">
+        {%- if section.settings.newsletter_heading != blank -%}
         {%- endif -%}
-      {%- endform -%}
+        {%- form 'customer', id: 'ContactFooter'-%}
+          <div class="relative h-10 group">
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <input
+              id="NewsletterForm--{{ section.id }}"
+              type="email"
+              name="contact[email]"
+              class="bg-main pl-5 pr-9 border hover:border-2 focus:border-2 w-full h-full rounded-lg peer/search placeholder:text-transparent outline-none{% if form.errors %} border-like{% else %} border-secondary{% endif %}"
+              value="{{ form.email }}"
+              aria-required="true"
+              autocorrect="off"
+              autocapitalize="off"
+              autocomplete="email"
+              {% if form.errors %}
+                autofocus
+                aria-invalid="true"
+                aria-describedby="ContactFooter-error"
+              {% elsif form.posted_successfully? %}
+                aria-describedby="ContactFooter-success"
+              {% endif %}
+              placeholder="{{ 'tw.footer.newsletter.placeholder' | t }}"
+              required
+            >
+            <label for="NewsletterForm--{{ section.id }}" class="bg-main text-secondary/70 px-1 absolute -translate-y-1/2 left-4 top-0 text-xs tracking-normal peer-focus/search:top-0 peer-focus/search:text-xs peer-focus/search:tracking-normal peer-placeholder-shown/search:top-1/2 peer-placeholder-shown/search:text-sm peer-placeholder-shown/search:tracking-widest transition-all duration-75{% if form.errors %} text-like{% endif %}">
+              {{ 'tw.footer.newsletter.placeholder' | t }}
+            </label>
+            <button type="submit" name="commit" id="Subscribe" aria-label="{{ 'tw.footer.newsletter.subscribe' | t }}" class="absolute right-3 top-1/2 -translate-y-1/2{% if form.errors %} text-like{% endif %}">
+              {% render 'tw-icon-arrow' %}
+            </button>
+          </div>
+    
+          {% if form.errors %}
+            <small id="ContactFooter-error" class="ml-2 flex items-center gap-2 mt-2">
+              {% render 'tw-icon-error' %}
+              {{ 'tw.footer.newsletter.error' | t }}
+            </small>
+          {% endif %}
+          {%- if form.posted_successfully? -%}
+            <small id="ContactFooter-success" tabindex="-1" autofocus class="pl-2 flex items-center gap-2 mt-2">
+              {% render 'tw-icon-success' %}
+              {{ 'tw.footer.newsletter.success' | t }}
+            </small>
+          {%- endif -%}
+        {%- endform -%}
+      </div>
+      <div class="flex justify-center pb-1">
+        {% render 'tw-list-social', balise: 'a' %}
+      </div>
     </div>
-    <div class="flex justify-center pb-1">
-      {% render 'tw-list-social', balise: 'a' %}
-    </div>
-  </div>
-  
-  <div class="sm:flex sm:justify-around sm:items-center sm:px-5 sm:mx-auto">
-    <div class="text-sm flex flex-wrap gap-6 justify-center mb-8 px-3">
-      {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
-        {% liquid
-          assign available_countries = ""
-          for country in localization.available_countries
-            assign available_countries = available_countries | append: country.currency.iso_code | append: "," | append: country.iso_code | append: " "
-          endfor
-        %}
-        <localization-form data-available-countries="{{ available_countries }}">
-          {%- form 'localization', id: 'FooterCountryForm' -%}
-            <div>
-              <p id="FooterCountryLabel" class="pl-2 mb-2">{{ 'tw.footer.localization.country_label' | t }}</p>
-              <div class="bg-secondary text-main inline-block min-w-[130px] h-10 rounded-md relative">
-                <button type="button" aria-describedby="FooterCountryLabel" class="first-focusable flex justify-between items-center w-full h-full px-3">
-                  {{ cart.currency.name }}
-                  {% render 'tw-icon-caret' %}
-                </button>
-                <div class="disclosure__list-wrapper" hidden>
-                  <ul id="FooterCountryList" role="list" class="bg-secondary absolute -top-2 left-0 right-0 rounded-md -translate-y-full py-2">
-                    {%- for currency in shop.enabled_currencies -%}
-                      <li tabindex="-1">
-                        <a class="{% if forloop.last %}last-focusable {% endif %}hover:bg-main/5 inline-block w-full py-2 mb-1 px-3{% if currency.iso_code == cart.currency.iso_code %} bg-main/5 cursor-not-allowed" role="link" aria-disabled="true"{% else %}" href="#"{% endif %}{% if currency.iso_code == cart.currency.iso_code %} aria-current="true"{% endif %} data-value="{{ currency.iso_code }}">
-                          {{ currency.name }}
-                        </a>
-                      </li>
-                    {%- endfor -%}
-                  </ul>
+    <div class="sm:flex sm:justify-between sm:items-center sm:mx-auto">
+      <div class="text-sm flex flex-wrap gap-6 justify-center mb-8 px-3">
+        {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
+          {% liquid
+            assign available_countries = ""
+            for country in localization.available_countries
+              assign available_countries = available_countries | append: country.currency.iso_code | append: "," | append: country.iso_code | append: " "
+            endfor
+          %}
+          <localization-form data-available-countries="{{ available_countries }}">
+            {%- form 'localization', id: 'FooterCountryForm' -%}
+              <div>
+                <p id="FooterCountryLabel" class="pl-2 mb-2">{{ 'tw.footer.localization.country_label' | t }}</p>
+                <div class="bg-secondary text-main inline-block min-w-[130px] h-10 rounded-md relative">
+                  <button type="button" aria-describedby="FooterCountryLabel" class="first-focusable flex justify-between items-center w-full h-full px-3">
+                    {{ cart.currency.name }}
+                    {% render 'tw-icon-caret' %}
+                  </button>
+                  <div class="disclosure__list-wrapper" hidden>
+                    <ul id="FooterCountryList" role="list" class="bg-secondary absolute -top-2 left-0 right-0 rounded-md -translate-y-full py-2">
+                      {%- for currency in shop.enabled_currencies -%}
+                        <li tabindex="-1">
+                          <a class="{% if forloop.last %}last-focusable {% endif %}hover:bg-main-5 inline-block w-full py-2 mb-1 px-3{% if currency.iso_code == cart.currency.iso_code %} bg-main-5 cursor-not-allowed" role="link" aria-disabled="true"{% else %}" href="#"{% endif %}{% if currency.iso_code == cart.currency.iso_code %} aria-current="true"{% endif %} data-value="{{ currency.iso_code }}">
+                            {{ currency.name }}
+                          </a>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
                 </div>
+                <input type="hidden" name="country_code" value="{{ localization.country.iso_code }}">
               </div>
-              <input type="hidden" name="country_code" value="{{ localization.country.iso_code }}">
-            </div>
-          {%- endform -%}
-        </localization-form>
-      {%- endif -%}
-  
-      {%- if section.settings.enable_language_selector and localization.available_languages.size > 1 -%}
-        <localization-form>
-          {%- form 'localization', id: 'FooterLanguageForm', class: 'localization-form' -%}
-            <div>
-              <p class="pl-2 mb-2" id="FooterLanguageLabel">{{ 'tw.footer.localization.language_label' | t }}</p>
-              <div class="bg-secondary text-main inline-block min-w-[130px] h-10 rounded-md relative">
-                <button class="first-focusable flex justify-between items-center w-full h-full px-3" type="button" aria-expanded="false" aria-controls="FooterLanguageList" aria-describedby="FooterLanguageLabel">
-                  {{ localization.language.endonym_name | capitalize }}
-                  {% render 'tw-icon-caret' %}
-                </button>
-                <div class="disclosure__list-wrapper" hidden>
-                  <ul id="FooterLanguageList" role="list" class="bg-secondary absolute -top-2 left-0 right-0 rounded-md -translate-y-full py-2">
-                    {%- for language in localization.available_languages -%}
-                      <li tabindex="-1">
-                        <a class="{% if forloop.last %}last-focusable {% endif %}hover:bg-main/5 inline-block w-full py-2 mb-1 px-3{% if language.iso_code == localization.language.iso_code %} bg-main/5 cursor-not-allowed" role="link" aria-disabled="true"{% else %}" href="#"{% endif %} hreflang="{{ language.iso_code }}" lang="{{ language.iso_code }}"{% if language.iso_code == localization.language.iso_code %} aria-current="true"{% endif %} data-value="{{ language.iso_code }}">
-                          {{ language.endonym_name | capitalize }}
-                        </a>
-                      </li>
-                    {%- endfor -%}
-                  </ul>
+            {%- endform -%}
+          </localization-form>
+        {%- endif -%}
+    
+        {%- if section.settings.enable_language_selector and localization.available_languages.size > 1 -%}
+          <localization-form>
+            {%- form 'localization', id: 'FooterLanguageForm', class: 'localization-form' -%}
+              <div>
+                <p class="pl-2 mb-2" id="FooterLanguageLabel">{{ 'tw.footer.localization.language_label' | t }}</p>
+                <div class="bg-secondary text-main inline-block min-w-[130px] h-10 rounded-md relative">
+                  <button class="first-focusable flex justify-between items-center w-full h-full px-3" type="button" aria-expanded="false" aria-controls="FooterLanguageList" aria-describedby="FooterLanguageLabel">
+                    {{ localization.language.endonym_name | capitalize }}
+                    {% render 'tw-icon-caret' %}
+                  </button>
+                  <div class="disclosure__list-wrapper" hidden>
+                    <ul id="FooterLanguageList" role="list" class="bg-secondary absolute -top-2 left-0 right-0 rounded-md -translate-y-full py-2">
+                      {%- for language in localization.available_languages -%}
+                        <li tabindex="-1">
+                          <a class="{% if forloop.last %}last-focusable {% endif %}hover:bg-main-5 inline-block w-full py-2 mb-1 px-3{% if language.iso_code == localization.language.iso_code %} bg-main-5 cursor-not-allowed" role="link" aria-disabled="true"{% else %}" href="#"{% endif %} hreflang="{{ language.iso_code }}" lang="{{ language.iso_code }}"{% if language.iso_code == localization.language.iso_code %} aria-current="true"{% endif %} data-value="{{ language.iso_code }}">
+                            {{ language.endonym_name | capitalize }}
+                          </a>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
                 </div>
+                <input type="hidden" name="locale_code" value="{{ localization.language.iso_code }}">
               </div>
-              <input type="hidden" name="locale_code" value="{{ localization.language.iso_code }}">
-            </div>
-          {%- endform -%}
-        </localization-form>
-      {%- endif -%}
-    </div>
-  
-    <div>
-      <span class="sr-only">{{ 'tw.footer.accessibility.payment' | t }}</span>
+            {%- endform -%}
+          </localization-form>
+        {%- endif -%}
+      </div>
+    
+      <div>
+        <span class="sr-only">{{ 'tw.footer.accessibility.payment' | t }}</span>
       <ul class="flex justify-center flex-wrap gap-2 px-3" role="list">
-        {%- for type in shop.enabled_payment_types -%}
-          <li>
-            {{ type | payment_type_svg_tag }}
-          </li>
-        {%- endfor -%}
-      </ul>
+          {%- for type in shop.enabled_payment_types -%}
+            <li>
+              {{ type | payment_type_svg_tag }}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
     </div>
   </div>
 </footer-logic>

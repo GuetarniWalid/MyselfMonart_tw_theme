@@ -34,13 +34,13 @@ class MyLikeButton extends HTMLElement {
     likedLisHtml.forEach(likedLi => {
       const id = likedLi.id;
       const liToLiked = document.getElementById(id);
-      liToLiked?.querySelector('button.like').classList.add('bg-red-400');
+      liToLiked?.querySelector('button.like').classList.add('bg-like');
     });
 
     this.addEventListener('click', () => {
       const likeButton = this.firstElementChild;
-      const isLiked = likeButton.classList.contains('bg-red-400');
-      likeButton.classList.toggle('bg-red-400', !isLiked);
+      const isLiked = likeButton.classList.contains('bg-like');
+      likeButton.classList.toggle('bg-like', !isLiked);
       const liParent = this.closest('li');
 
       const { likedLisHtml, likedLisString } = this.getLisStorage();
@@ -70,9 +70,9 @@ class MyLikeButton extends HTMLElement {
   colorButton(likedLisString) {
     this.likesHeart = this.likesHeart ?? document.getElementById('likes');
     if (likedLisString.length > 0) {
-      this.likesHeart?.classList.add('fill-red-400');
+      this.likesHeart?.classList.add('fill-like');
     } else {
-      this.likesHeart?.classList.remove('fill-red-400');
+      this.likesHeart?.classList.remove('fill-like');
     }
   }
 

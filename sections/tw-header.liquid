@@ -1,4 +1,7 @@
 <script src="{{ 'tw-header.js' | asset_url }}" defer="defer"></script>
+{% if template.name != 'cart' %}
+  <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
+{% endif %}
 
 {% render 'tw-sticky-header' %}
 {% render 'tw-predictive-search' %}
@@ -48,34 +51,45 @@
   "blocks": [
     {
       "type": "collection_only",
-      "name": "Collection seule",
+      "name": "t:sections.header.blocks.collection_only.name",
       "settings": [
         {
           "type": "collection",
           "id": "collection",
-          "label": "Collection"
+          "label": "t:sections.header.blocks.collection_only.settings.collection.label"
+        }
+      ]
+    },
+    {
+      "type": "product_only",
+      "name": "t:sections.header.blocks.product_only.name",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "t:sections.header.blocks.product_only.settings.product.label"
         }
       ]
     },
     {
       "type": "parent_collection",
-      "name": "Collection parent",
+      "name": "t:sections.header.blocks.parent_collection.name",
       "settings": [
         {
           "type": "text",
           "id": "title",
-          "label": "Titre",
-          "default": "Titre des collections"
+          "label": "t:sections.header.blocks.parent_collection.settings.title.label",
+          "default": "Title of collections"
         },
         {
           "type": "product",
           "id": "product",
-          "label": "Image de representation"
+          "label": "t:sections.header.blocks.parent_collection.settings.product.label"
         },
         {
           "type": "collection_list",
           "id": "child_collection_list",
-          "label": "Collections enfants"
+          "label": "t:sections.header.blocks.parent_collection.settings.child_collection_list.label"
         }
       ]
     }

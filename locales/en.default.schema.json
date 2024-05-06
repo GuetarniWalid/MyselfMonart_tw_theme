@@ -1,10 +1,13 @@
 {
   "settings_schema": {
-    "cart": {
-      "name": "Cart",
+    "color": {
+      "name": "Color",
       "settings": {
-        "show_cart_note": {
-          "label": "Enable cart note"
+        "main_color": {
+          "label": "Main color"
+        },
+        "secondary_color": {
+          "label": "Background color"
         }
       }
     },
@@ -290,6 +293,14 @@
       "blocks": {
         "svg_block": {
           "name": "SVG",
+          "headings": {
+            "logo": {
+              "content": "Logo"
+            },
+            "text": {
+              "content": "Text"
+            }
+          },
           "settings": {
             "logo": {
               "info": "Only svg are allowed"
@@ -313,20 +324,6 @@
           "settings": {
             "number": {
               "label": "The number visible in large"
-            }
-          }
-        },
-        "lottie": {
-          "name": "Lottie",
-          "settings": {
-            "json_link": {
-              "label": "Link to a Lottie json"
-            },
-            "lottie_size": {
-              "label": "Size"
-            },
-            "range_under_lottie": {
-              "label": "Margin under animation"
             }
           }
         }
@@ -365,11 +362,17 @@
     "breadcrumb": {
       "name": "Breadcrumb",
       "settings": {
-        "selected_item_background": {
-          "label": "Background color of the selected item"
+        "headings": {
+          "current_page_color": {
+            "content": "Color for current page",
+            "info": "Visible only on computer, mark the current page"
+          }
         },
-        "selected_item_color": {
-          "label": "Text color of the selected item"
+        "main_color": {
+          "label": "Main color"
+        },
+        "secondary_color": {
+          "label": "Background color"
         }
       }
     },
@@ -395,9 +398,6 @@
         },
         "show_vendor": {
           "label": "Show vendor"
-        },
-        "show_cart_note": {
-          "label": "Enable cart note"
         },
         "cart_drawer": {
           "header": "Cart drawer",
@@ -728,77 +728,41 @@
         }
       }
     },
+    "gift-image": {
+      "name": "Gift image"
+    },
     "header": {
       "name": "Header",
       "blocks": {
-        "menu": {
+        "collection_only": {
+          "name": "Collection only",
           "settings": {
-            "link_list": {
-              "label": "Will display submenus",
-              "info": "If you don't want to display submenus select another block instead"
-            },
-            "menu_title": {
-              "label": "Menu title",
-              "info": "If you don't want to display a menu title, leave this field blank"
-            },
-            "page_link": {
-              "label": "Page link",
-              "info": "If you want to link the menu title to a page"
-            },
-            "image": {
-              "label": "Image",
-              "info": "If you want to display an image"
+            "collection": {
+              "label": "Collection"
             }
           }
-        }
-      },
-      "headings": {
-        "general_settings": {
-          "content": "General settings"
         },
-        "cart": {
-          "content": "Cart"
-        }
-      },
-      "settings": {
-        "color_background": {
-          "label": "Background color"
+        "parent_collection": {
+          "name": "Parent collection",
+          "settings": {
+            "title": {
+              "label": "Title"
+            },
+            "product": {
+              "label": "Representation image"
+            },
+            "child_collection_list": {
+              "label": "Children's collections"
+            }
+          }
         },
-        "text_color": {
-          "label": "Text color"
-        },
-        "border_bottom_color": {
-          "label": "Border bottom color"
-        },
-        "add_shadow": {
-          "label": "Add shadow"
-        },
-        "logo_svg": {
-          "label": "Logo in svg",
-          "info": "Ex: <svg ...></svg>"
-        },
-        "cart_svg": {
-          "label": "Cart in svg",
-          "info": "Ex: <svg ...></svg>"
-        },
-        "logo": {
-          "label": "Logo image"
-        },
-        "logo_width": {
-          "label": "Custom logo width"
-        },
-        "cart_width": {
-          "label": "Custom cart width"
-        },
-        "menu_title": {
-          "label": "Menu title"
-        },
-        "enable_sticky_header": {
-          "label": "Enable sticky header",
-          "info": "Header shows on the screen as customers scroll up."
-        },
-        "margin_bottom": {
-          "label": "Bottom margin"
+        "product_only": {
+          "name": "Product only",
+          "settings": {
+            "product": {
+              "label": "Product"
+            }
+          }
         }
       }
     },
@@ -909,14 +873,22 @@
         }
       }
     },
-    "main-cart-items": {
+    "page-cart-items": {
       "name": "Items"
     },
+    "page-cart-subtotal": {
+      "name": "Subtotal"
+    },
     "main-collection-banner": {
-      "name": "Collection banner",
+      "name": "Description of the collection",
       "settings": {
         "show_collapse_button": {
-          "label": "Show collapse button"
+          "label": "Show more button",
+          "info": "Leaves the choice to the user to see the full content of the collection or not"
+        },
+        "to_place_first": {
+          "label": "Place last",
+          "info": "Visible at the bottom of the page even if it is not its location in the theme. Useful for optimizing SEO without hampering the user experience"
         }
       }
     },
@@ -1057,6 +1029,9 @@
             },
             "bottom_text": {
               "label": "Bottom text"
+            },
+            "main_color": {
+              "label": "Background color"
             }
           }
         },
@@ -1266,11 +1241,16 @@
     "multicolumn": {
       "name": "Multicolumn",
       "settings": {
+        "headings": {
+          "button": {
+            "content": "Main button"
+          }
+        },
         "title": {
           "label": "Heading"
         },
         "image_shape": {
-          "label": "Image shape",
+          "label": "Shape of images",
           "square": {
             "label": "Square"
           },
@@ -1296,9 +1276,36 @@
         },
         "button_link": {
           "label": "Button link"
-        },
-        "header_mobile": {
-          "content": "Mobile Layout"
+        }
+      },
+      "blocks": {
+        "column": {
+          "name": "Column",
+          "headings": {
+            "button": {
+              "content": "Button"
+            }
+          },
+          "settings": {
+            "image": {
+              "label": "Image"
+            },
+            "title": {
+              "label": "Heading"
+            },
+            "text": {
+              "label": "Description"
+            },
+            "link_label": {
+              "label": "Button label"
+            },
+            "link": {
+              "label": "Lien"
+            },
+            "to_obfuscate": {
+              "label": "Obfuscate link"
+            }
+          }
         }
       }
     },
@@ -1416,6 +1423,9 @@
             },
             "text": {
               "label": "Description"
+            },
+            "is_lighten": {
+              "label": "Éclaircir le texte"
             }
           }
         },

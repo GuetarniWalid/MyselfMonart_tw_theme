@@ -40,11 +40,11 @@
 {% if section.settings.button_text != blank %}
   <div class="text-center mt-10 sm:mt-3">
     {% if section.settings.to_obfuscate %}
-      <button data-url64="{{ section.settings.button_link | base64_encode }}" class="obfuscate border-2 border-main py-3 px-6 rounded-md mx-auto inline-block bg-main/5 hover:bg-main/10 transition-all duration-100 w-full xs:w-auto">
+      <button data-url64="{{ section.settings.button_link | base64_encode }}" class="obfuscate border-2 border-main py-3 px-6 rounded-md mx-auto inline-block bg-main-5 hover:bg-main-10 transition-all duration-100 w-full xs:w-auto">
         {{ section.settings.button_text | escape }}
       </button>
     {% else %}
-      <a class="border-2 border-main py-3 px-9 rounded-md mx-auto inline-block bg-main/5 hover:bg-main/10 transition-all duration-100 w-full xs:w-auto"
+      <a class="border-2 border-main py-3 px-9 rounded-md mx-auto inline-block bg-main-5 hover:bg-main-10 transition-all duration-100 w-full xs:w-auto"
       href="{{ section.settings.button_link }}">
         {{ section.settings.button_text | escape }}
       </a>

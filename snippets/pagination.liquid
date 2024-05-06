@@ -17,7 +17,7 @@
     {%- if paginate.previous -%}
       <li>
         <a href="{{ paginate.previous.url }}{{ anchor }}" aria-label="{{ 'tw.pagination.previous' | t }}" class="previous-arrow">
-          <span class="hover:bg-main/10 inline-flex items-center justify-center w-10 h-10 rounded rotate-90">{% render 'tw-icon-caret' %}</span>
+          <span class="hover:bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded rotate-90">{% render 'tw-icon-caret' %}</span>
         </a>
       </li>
     {%- endif -%}
@@ -25,10 +25,10 @@
     {%- for part in paginate.parts -%}
       <li>
         {%- if part.is_link -%}
-          <a href="{{ part.url }}{{ anchor }}" aria-label="{{ 'tw.pagination.page' | t: number: part.title }}" class="hover:bg-main/10 inline-flex items-center justify-center w-10 h-10 rounded transition-colors duration-200">{{ part.title }}</a>
+          <a href="{{ part.url }}{{ anchor }}" aria-label="{{ 'tw.pagination.page' | t: number: part.title }}" class="hover:bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded transition-colors duration-200">{{ part.title }}</a>
         {%- else -%}
           {%- if part.title == paginate.current_page -%}
-            <a role="link" aria-disabled="true" aria-current="page" aria-label="{{ 'tw.pagination.page' | t: number: part.title }}" class="bg-main/10 inline-flex items-center justify-center w-10 h-10 rounded">{{ part.title }}</a>
+            <a role="link" aria-disabled="true" aria-current="page" aria-label="{{ 'tw.pagination.page' | t: number: part.title }}" class="bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded">{{ part.title }}</a>
           {%- else -%}
             <span>{{ part.title }}</span>
           {%- endif -%}
@@ -39,14 +39,14 @@
     {%- if paginate.next -%}
       <li>
         <a href="{{ paginate.next.url }}{{ anchor }}" aria-label="{{ 'tw.pagination.next' | t }}" class="next-arrow">
-          <span class="-rotate-90 hover:bg-main/10 inline-flex items-center justify-center w-10 h-10 rounded">{%- render 'tw-icon-caret' -%}</span>
+          <span class="-rotate-90 hover:bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded">{%- render 'tw-icon-caret' -%}</span>
         </a>
       </li>
     {%- endif -%}
     <template id="pagination-arrow">
       <li>
         <a href="" data-prev-label="{{ 'tw.pagination.previous' | t }}" data-next-label="{{ 'tw.pagination.next' | t }}">
-          <span class="hover:bg-main/10 inline-flex items-center justify-center w-10 h-10 rounded">{%- render 'tw-icon-caret' -%}</span>
+          <span class="hover:bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded">{%- render 'tw-icon-caret' -%}</span>
         </a>
       </li>
     </template>

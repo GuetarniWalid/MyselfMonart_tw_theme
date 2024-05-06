@@ -48,6 +48,7 @@ export default function FurniturePNGDrawer({
     sceneRef.current,
     productRef.current,
     ref.current,
+    ref.current?.naturalHeight,
     productWidthInPx,
     nbOfOptions,
     visible,

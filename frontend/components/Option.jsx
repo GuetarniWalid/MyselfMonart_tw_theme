@@ -37,8 +37,8 @@ export default function Option({
     <li
       id={id}
       className={`${
-        selected && 'bg-main/5'
-      } flex justify-between py-3 px-5 mb-2 hover:bg-main/5 cursor-pointer`}
+        selected && 'bg-main-5'
+      } flex justify-between py-3 px-5 mb-2 hover:bg-main-5 cursor-pointer`}
       role="option"
       aria-selected={selected}
       onClick={() => handleOptionClick(value)}

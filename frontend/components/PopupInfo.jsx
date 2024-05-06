@@ -51,7 +51,7 @@ export default function PopupInfo({ infoToShow, setInfoToShow, setToFocus }) {
         />
         <h4 className="my-8 text-xl">{data[technicalKey].popup.title}</h4>
         <p
-          className="leading-loose text-main/90"
+          className="leading-loose text-main-90"
           dangerouslySetInnerHTML={{
             __html: data[technicalKey].popup.description,
           }}

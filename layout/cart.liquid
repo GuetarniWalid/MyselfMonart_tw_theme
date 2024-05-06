@@ -42,6 +42,12 @@
           font-display: swap;
         }
 
+        :root {
+          --color-main: {{ settings.main_color | color_to_hex }};
+          --color-main-rgb: {{ settings.main_color | color_extract: 'red' }}, {{ settings.main_color | color_extract: 'green' }}, {{ settings.main_color | color_extract: 'blue' }};
+          --color-secondary: {{ settings.secondary_color | color_to_hex }};
+          --color-like: {{ settings.like_color | color_to_hex }};
+        }
     {% endstyle %}
 
     {{ 'output.css' | asset_url | stylesheet_tag }}
@@ -66,12 +72,11 @@
 
     {% section 'tw-announcement-bar' %}
     {% section 'tw-header' %}
-    {% section 'tw-cart-drawer' %}
-
 
     <div id="wrapper-overlay" class="relative">
       <main id="MainContent" role="main">
-        {% section 'main-cart-items' %}
+        {% section 'page-cart-items' %}
+        {% section 'page-cart-subtotal' %}
         {% if cart.items > 0 %}
           {% section 'main-cart-footer' %}
         {% endif %}
@@ -79,7 +84,6 @@
       </main>
       {% section 'tw-footer' %}
       <div id="overlay-content" class="absolute inset-0 bg-[rgba(0,46,93,0)] shadow-[shadow-[0_8px_32px_0_rgba(31,38,135,0.37)]] backdrop-blur-[2px] hidden"> </div>
-      {% render 'tw-loup-like-button' %}
     </div>
 
     <script>

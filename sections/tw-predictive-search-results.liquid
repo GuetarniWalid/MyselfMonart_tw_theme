@@ -2,13 +2,13 @@
 {%- if predictive_search.performed -%}
   <div id="predictive-search-results" class="bg-secondary px-5 shadow rounded-xl mt-1">
     {%- if predictive_search.resources.products.size > 0 -%} 
-      <h2 class="predictive-search__heading text-main/75 text-2xs py-1 tracking-widest flex justify-between font-light">
+      <h2 class="predictive-search__heading text-main-75 text-2xs py-1 tracking-widest flex justify-between font-light">
         {{ 'tw.header.search.results.title' | t }}
       </h2>
       <hr>
       <ul class="predictive-search-results pt-2 pb-2" role="listbox">      
         {%- for product in predictive_search.resources.products -%}
-          <li role="option" class="p-2 hover:bg-main/5 rounded-md">
+          <li role="option" class="p-2 hover:bg-main-5 rounded-md">
             <a href="{{ product.url }}" tabindex="0" class="flex gap-3">
               {%- if product.featured_media != blank -%}
                 <img
@@ -27,7 +27,7 @@
           </li>
         {%- endfor -%}
         <hr class="mt-2">
-        <li id="predictive-search-option-search-keywords" class="group pt-2 hover:bg-main/5 rounded-md p-2" role="option">
+        <li id="predictive-search-option-search-keywords" class="group pt-2 hover:bg-main-5 rounded-md p-2" role="option">
           <button tabindex="0" class="text-sm">
             {{ 'tw.header.search.results.all' | t: terms: predictive_search.terms }}
             &nbsp;{% render 'tw-icon-arrow' %}

@@ -22,7 +22,6 @@
     "favicon": "shopify:\/\/shop_images\/logo-myselfmonart.png",
     "enable_cookie": false,
     "currency_code_enabled": true,
-    "show_cart_note": false,
     "checkout_logo_image": "shopify:\/\/shop_images\/logo-myselfmonart-512x512.png",
     "checkout_logo_position": "center",
     "checkout_logo_size": "large",
@@ -177,8 +176,8 @@
           "message": "Grab the offer now: -15% 🌟 and FREE delivery 🚀 until April 21 only! Do not miss this chance ! 📆🛍️"
         }
       },
-      "main-cart-items": {
-        "type": "main-cart-items",
+      "page-cart-items": {
+        "type": "page-cart-items",
         "settings": {
         }
       }
@@ -208,7 +207,6 @@
       "currency_code_enabled": true,
       "cart_type": "notification",
       "show_vendor": false,
-      "show_cart_note": true,
       "sections": {
         "main-password-header": {
           "type": "main-password-header",

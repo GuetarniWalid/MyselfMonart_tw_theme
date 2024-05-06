@@ -19,8 +19,10 @@ export default function Painting({
   const sceneRef = useRef(null);
   const productRef = useRef(null);
   const { showGirl, showFurniture } = useImagePNGToShow(currentOption);
-  const { size, matter, fixation, chassis, frame, shine, border } =
-    useProductData(optionIndexListSelected, optionSets);
+  const { size, matter, shine } = useProductData(
+    optionIndexListSelected,
+    optionSets,
+  );
   const productWidthInPx = useProductDimensions(size, sceneRef);
   const isMobile = useIsMobile();
 

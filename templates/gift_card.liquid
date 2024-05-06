@@ -2,68 +2,69 @@
 
 <!doctype html>
 <html lang="{{ request.locale.iso_code }}">
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <meta name="theme-color" content="" />
-        <link rel="canonical" href="{{ canonical_url }}" />
-        <link rel="preconnect" href="https://cdn.shopify.com" crossorigin />
-        <meta name="p:domain_verify" content="df84d648bc3332c06767fb16e0fb142e"/>
-    
-        {%- if template.name == 'page' and page.metafields.robots.noindex.value -%}
-          <meta name="robots" content="noindex,nofollow">
-        {%- endif -%}
-    
-        {%- if settings.favicon != blank -%}
-          <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}" />
-        {%- endif -%} 
-    
-        <title>
-          {{ page_title }}
-          {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%} {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%} {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
-        </title>
-    
-        {% if page_description %}
-          <meta name="description" content="{{ page_description | escape }}" />
-        {% endif %} {% render 'meta-tags' %}
-    
-        <script src="{{ 'tw-global.js' | asset_url }}" defer="defer"></script>
-        {{
-          content_for_header
-        }}
-    
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-        {% style %}
-            @font-face {
-              font-family: "heading";
-              src: url({{ "heading.woff2" | asset_url }}) format("woff2");
-              font-display: swap;
-            }
-    
-        {% endstyle %}
-    
-        {{ 'output.css' | asset_url | stylesheet_tag }}
-    
-        <script>
-          if (Shopify.designMode) {
-            document.documentElement.classList.add('shopify-design-mode');
-          }
-        </script>
-    
-        {%- if request.design_mode -%}
-          <script src="{{ 'theme-editor.js' | asset_url }}" defer="defer"></script>
-        {%- endif -%}
-      
-        {% render 'gsf-conversion-pixels' %}
-      </head>
+  <head>
+    <script src="{{ 'vendor/qrcode.js' | shopify_asset_url }}" defer></script>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="" />
+    <link rel="canonical" href="{{ canonical_url }}" />
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin />
+    <meta name="p:domain_verify" content="df84d648bc3332c06767fb16e0fb142e"/>
+  
+    {%- if template.name == 'page' and page.metafields.robots.noindex.value -%}
+      <meta name="robots" content="noindex,nofollow">
+    {%- endif -%}
 
-  <body class="text-main py-16   bg-secondary">
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}" />
+    {%- endif -%} 
+  
+    <title>
+      {{ page_title }}
+      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%} {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%} {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    </title>
+  
+    {% if page_description %}
+      <meta name="description" content="{{ page_description | escape }}" />
+    {% endif %} {% render 'meta-tags' %}
+
+    <script src="{{ 'tw-global.js' | asset_url }}" defer="defer"></script>
+    {{
+      content_for_header
+    }}
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    {% style %}
+        @font-face {
+          font-family: "heading";
+          src: url({{ "heading.woff2" | asset_url }}) format("woff2");
+          font-display: swap;
+        }
+
+    {% endstyle %}
+
+    {{ 'output.css' | asset_url | stylesheet_tag }}
+  
+    <script>
+      if (Shopify.designMode) {
+        document.documentElement.classList.add('shopify-design-mode');
+      }
+    </script>
+
+    {%- if request.design_mode -%}
+      <script src="{{ 'theme-editor.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+  
+    {% render 'gsf-conversion-pixels' %}
+  </head>
+
+  <body class="text-main py-16 bg-secondary">
     <header class="text-center">
       <span class="text-2xl text-bold font-heading">{{ shop.name }}</span>
-      <h1 class="my-12 text-4xl">{{ 'tw.gift_cards.issued.subtext' | t }}</h1>
+      <h1 class="my-10 text-4xl">{{ 'tw.gift_cards.issued.subtext' | t }}</h1>
       <div class="my-10 text-lg">
         <p>
           {% if settings.currency_code_enabled %}
@@ -88,10 +89,8 @@
     </header>
 
     <main class="gift-card text-center">
-      <div>
-        <img src="{{ 'gift-card/card.svg' | shopify_asset_url }}" alt="" class="skeleton mx-auto" height="{{ 570 | divided_by: 1.5 }}" width="570" loading="lazy">
-      </div>
-      <div class="gift-card__qr-code text-center" data-identifier="{{ gift_card.qr_identifier }}"></div>
+      {% section 'gift-image' %}
+      <div class="gift-card__qr-code flex justify-center mt-10" data-identifier="{{ gift_card.qr_identifier }}"></div>
       <div>
         <input
           type="text"
@@ -100,7 +99,7 @@
           aria-label="{{ 'tw.gift_cards.issued.gift_card_code' | t }}"
           readonly
         >
-        <div class="mb-12">
+        <div class="mb-12 print:hidden">
           <button class="gift-card__copy-link border-1 border-main py-4 px-8 hover:bg-main hover:text-secondary transition-colors duration-300">{{ 'tw.gift_cards.issued.copy_code' | t }}</button>
           <span class="gift-card__copy-success" role="status"></span>
           <template>
@@ -112,7 +111,7 @@
             <img src="{{ 'gift-card/add-to-apple-wallet.svg' | shopify_asset_url }}" width="120" height="40" alt="{{ 'tw.gift_cards.issued.add_to_apple_wallet' | t }}" loading="lazy" class="skeleton">
           </a>
         {%- endif -%}
-        <div>
+        <div class="print:hidden">
           <a
             href="{{ shop.url }}"
             target="_blank"
@@ -139,20 +138,19 @@
 </html>
 
 <script>
-  var string = { qrImageAlt: {{ 'tw.gift_cards.issued.qr_image_alt' | t | json }} };
   document.addEventListener('DOMContentLoaded', function() {
    new QRCode( document.querySelector('.gift-card__qr-code'), {
     text: document.querySelector('.gift-card__qr-code').dataset.identifier,
     width: 120,
     height: 120,
-    imageAltText: string.qrImageAlt
+      AltText: {{ 'tw.gift_cards.issued.qr_image_alt' | t | json }}
     });
   });
 
-  var template = document.getElementsByTagName("template")[0];
-  var clonedTemplate = template.content.cloneNode(true);
+  const template = document.getElementsByTagName("template")[0];
+  const clonedTemplate = template.content.cloneNode(true);
 
-  var isMessageDisplayed = false
+  const isMessageDisplayed = false
   document
   .querySelector('.gift-card__copy-link')
   .addEventListener('click', () => {
@@ -164,3 +162,4 @@
     });
   });
 </script>
+

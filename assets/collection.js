@@ -168,7 +168,7 @@ class InfiniteScroll extends HTMLElement {
     if(obsoleteLink) {
       obsoleteLink.removeAttribute('aria-disabled');
       obsoleteLink.removeAttribute('aria-current');
-      obsoleteLink.classList.replace('bg-main/10', 'hover:bg-main/10');
+      obsoleteLink.classList.replace('bg-main-10', 'hover:bg-main-10');
       obsoleteLink.href = this.baseUrl + obsoleteLink.textContent;
     }
 
@@ -224,11 +224,23 @@ class InfiniteScroll extends HTMLElement {
     if(!currentLink) return;
     currentLink.setAttribute('aria-disabled', 'true');
     currentLink.setAttribute('aria-current', 'page');
-    currentLink.classList.replace('hover:bg-main/10', 'bg-main/10');
+    currentLink.classList.replace('hover:bg-main-10', 'bg-main-10');
     currentLink.removeAttribute('href');
   }
 }
 customElements.define('infinite-scroll', InfiniteScroll);
+
+class ClickProduct extends HTMLElement {
+  connectedCallback() {
+    this.addEventListener('keypress', e => {
+      if (e.key === 'Enter') {
+        const link = this.closest('li').querySelector('a');
+        link.click();
+      }
+    });
+  }
+}
+customElements.define('click-product', ClickProduct);
 
 class MyLikeButton extends HTMLElement {
   connectedCallback() {
@@ -236,13 +248,13 @@ class MyLikeButton extends HTMLElement {
     likedLisHtml.forEach(likedLi => {
       const id = likedLi.id;
       const liToLiked = document.getElementById(id);
-      liToLiked?.querySelector('button.like').classList.add('bg-red-400');
+      liToLiked?.querySelector('button.like').classList.add('bg-like');
     });
 
     this.addEventListener('click', () => {
       const likeButton = this.firstElementChild;
-      const isLiked = likeButton.classList.contains('bg-red-400');
-      likeButton.classList.toggle('bg-red-400', !isLiked);
+      const isLiked = likeButton.classList.contains('bg-like');
+      likeButton.classList.toggle('bg-like', !isLiked);
       const liParent = this.closest('li');
 
       const { likedLisHtml, likedLisString } = this.getLisStorage();
@@ -272,9 +284,9 @@ class MyLikeButton extends HTMLElement {
   colorButton(likedLisString) {
     this.likesHeart = this.likesHeart ?? document.getElementById('likes');
     if (likedLisString.length > 0) {
-      this.likesHeart.classList.add('fill-red-400');
+      this.likesHeart.classList.add('fill-like');
     } else {
-      this.likesHeart.classList.remove('fill-red-400');
+      this.likesHeart.classList.remove('fill-like');
     }
   }
 

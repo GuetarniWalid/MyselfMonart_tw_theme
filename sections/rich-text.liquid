@@ -1,37 +1,38 @@
-
-{%- for block in section.blocks -%}
-  {%- case block.type -%}
-    {%- when 'heading' -%}
-      <{{ block.settings.markup }} class="my-6 {{ block.settings.heading_size }} {{ section.settings.content_alignment }}">
-        {{ block.settings.heading | escape }}
-      </{{ block.settings.markup }}>
-    {%- when 'text' -%}
-      <div class="description {{ block.settings.text_size }} my-4 {{ section.settings.content_alignment }}">
-        {{ block.settings.text }}
-      </div>
-    {%- when 'button' -%}
-      <div>
-        {%- if block.settings.button_label != blank -%}
-          {% if block.settings.to_obfuscate %}
-            <button data-url64="{{ block.settings.button_link | base64_encode }}" class="obfuscate w-full xs:w-auto bg-main/5 text-center py-3 px-14 rounded my-4 border-main border-2 hover:bg-main/10 transition-all duration-100">{{ block.settings.button_label | escape }}</button>  
-          {% else %}
-            <a{% if block.settings.button_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ block.settings.button_link }}"{% endif %} class="inline-block w-full xs:w-auto bg-main/5 text-center py-3 px-14 rounded my-4 border-2 border-main hover:bg-main/10 transition-all duration-100">
-              {{ block.settings.button_label | escape }}
-            </a> 
-          {% endif %}
-        {%- endif -%}
-        {%- if block.settings.button_label_2 != blank -%}
-          {% if block.settings.to_obfuscate %}
-            <button data-url64="{{ block.settings.button_link_2 | base64_encode }}" class="obfuscate w-full xs:w-auto bg-main/5 text-center py-3 px-14 rounded border-main border-2 xs:ml-3 hover:bg-main/10 transition-all duration-100">{{ block.settings.button_label_2 | escape }}</button> 
-          {% else %}
-            <a{% if block.settings.button_link_2 == blank %} role="link" aria-disabled="true"{% else %} href="{{ block.settings.button_link_2 }}"{% endif %} class="inline-block w-full xs:w-auto bg-main/5 text-center py-3 px-14 rounded border-main border-2 xs:ml-3 hover:bg-main/10 transition-all duration-100">
-              {{ block.settings.button_label_2 | escape }}
-            </a>
+<div class="{% if section.settings.title == blank %}{{ section.settings.padding_top }}{% endif %} {% if section.settings.title == blank %}{{ section.settings.padding_bottom }}{% endif %}">
+  {%- for block in section.blocks -%}
+    {%- case block.type -%}
+      {%- when 'heading' -%}
+        <{{ block.settings.markup }} class="my-6 {{ block.settings.heading_size }} {{ section.settings.content_alignment }}">
+          {{ block.settings.heading | escape }}
+        </{{ block.settings.markup }}>
+      {%- when 'text' -%}
+      <div class="description {{ block.settings.text_size }} my-4 {{ section.settings.content_alignment }}{% if block.settings.is_lighten %} text-main-80{% endif %}">
+          {{ block.settings.text }}
+        </div>
+      {%- when 'button' -%}
+        <div>
+          {%- if block.settings.button_label != blank -%}
+            {% if block.settings.to_obfuscate %}
+              <button data-url64="{{ block.settings.button_link | base64_encode }}" class="obfuscate w-full xs:w-auto bg-main-5 text-center py-3 px-14 rounded my-4 border-main border-2 hover:bg-main-10 transition-all duration-100">{{ block.settings.button_label | escape }}</button>
+            {% else %}
+              <a{% if block.settings.button_link == blank %} role="link" aria-disabled="true"{% else %} href="{{ block.settings.button_link }}"{% endif %} class="inline-block w-full xs:w-auto bg-main-5 text-center py-3 px-14 rounded my-4 border-2 border-main hover:bg-main-10 transition-all duration-100">
+                {{ block.settings.button_label | escape }}
+              </a>
+            {% endif %}
           {%- endif -%}
-        {%- endif -%}
-      </div>
-  {%- endcase -%}
-{%- endfor -%}
+          {%- if block.settings.button_label_2 != blank -%}
+            {% if block.settings.to_obfuscate %}
+              <button data-url64="{{ block.settings.button_link_2 | base64_encode }}" class="obfuscate w-full xs:w-auto bg-main-5 text-center py-3 px-14 rounded border-main border-2 xs:ml-3 hover:bg-main-10 transition-all duration-100">{{ block.settings.button_label_2 | escape }}</button>
+            {% else %}
+              <a{% if block.settings.button_link_2 == blank %} role="link" aria-disabled="true"{% else %} href="{{ block.settings.button_link_2 }}"{% endif %} class="inline-block w-full xs:w-auto bg-main-5 text-center py-3 px-14 rounded border-main border-2 xs:ml-3 hover:bg-main-10 transition-all duration-100">
+                {{ block.settings.button_label_2 | escape }}
+              </a>
+            {%- endif -%}
+          {%- endif -%}
+        </div>
+    {%- endcase -%}
+  {%- endfor -%}
+</div>
 
 
 {% schema %}
@@ -59,6 +60,54 @@
       ],
       "default": "text-left",
       "label": "t:sections.rich-text.settings.content_alignment.label"
+    },
+    {
+      "type": "select",
+      "id": "padding_top",
+      "label": "t:sections.collections-grid.settings.padding_top.label",
+      "options": [
+        {
+          "value": "pt-0",
+          "label": "t:sections.collections-grid.settings.padding_top.options.none.label"
+        },
+        {
+          "value": "pt-8",
+          "label": "t:sections.collections-grid.settings.padding_top.options.small.label"
+        },
+        {
+          "value": "pt-16",
+          "label": "t:sections.collections-grid.settings.padding_top.options.medium.label"
+        },
+        {
+          "value": "pt-24",
+          "label": "t:sections.collections-grid.settings.padding_top.options.large.label"
+        }
+      ],
+      "default": "pt-0"
+    },
+    {
+      "type": "select",
+      "id": "padding_bottom",
+      "label": "t:sections.collections-grid.settings.padding_bottom.label",
+      "options": [
+        {
+          "value": "pb-0",
+          "label": "t:sections.collections-grid.settings.padding_top.options.none.label"
+        },
+        {
+          "value": "pb-8",
+          "label": "t:sections.collections-grid.settings.padding_top.options.small.label"
+        },
+        {
+          "value": "pb-16",
+          "label": "t:sections.collections-grid.settings.padding_top.options.medium.label"
+        },
+        {
+          "value": "pb-24",
+          "label": "t:sections.collections-grid.settings.padding_top.options.large.label"
+        }
+      ],
+      "default": "pb-0"
     }
   ],
   "blocks": [
@@ -169,6 +218,12 @@
           ],
           "default": "text-xl",
           "label": "t:sections.rich-text.blocks.text.settings.text_size.name"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_lighten",
+          "label": "t:sections.rich-text.blocks.text.settings.is_lighten.label",
+          "default": false
         }
       ]
     },

@@ -83,7 +83,7 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/set-fixation-tableau-toile.jpg?v=1707667192',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/set-fixation-tableau-toile-no-background.png?v=1714571170',
         alt: 'Set de fixation pour tableau toile',
         width: '500',
         height: '500',
@@ -113,7 +113,7 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/crochet-fixation-plexiglas.jpg?v=1707668003',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/crochet-fixation-plexiglas-no-background.png?v=1714571170',
         alt: 'Crochet de fixation pour tableau aluminium et plexiglas',
         width: '500',
         height: '500',
@@ -143,7 +143,7 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/rail-fixation-plexiglas-aluminium.jpg?v=1707667953',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/rail-fixation-no-background.png?v=1714571169',
         alt: 'Rail de fixation pour tableau aluminium et plexiglas',
         width: '500',
         height: '500',
@@ -178,7 +178,7 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/chassis-bois-2cm-toile.jpg?v=1707677404',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/chassis-bois-2cm-toile.png?v=1714571169',
         alt: 'Chassis bois 2cm pour tableau toile',
         width: '500',
         height: '500',
@@ -208,7 +208,7 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/chassis-bois-4cm-toile.jpg?v=1707675498',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/chassis-bois-4cm-toile.png?v=1714571170',
         alt: 'Chassis bois 4cm pour tableau toile',
         width: '500',
         height: '500',
@@ -243,7 +243,7 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/products/bordtoileblancbackgroundgris.jpg?v=1669908195',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/bordtoileblanc.png?v=1714571170',
         alt: 'Bordure blanche pour tableau toile',
         width: '500',
         height: '500',
@@ -273,7 +273,7 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/products/bordtoilenoirbackgroundnoir.jpg?v=1669908195',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/bordtoilenoirbackgroundnoir.png?v=1714571168',
         alt: 'Bordure noire pour tableau toile',
         width: '500',
         height: '500',
@@ -303,7 +303,7 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/products/bordtoileetirebackgroundgris.jpg?v=1669908195',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/bordtoileetiree.png?v=1714571168',
         alt: 'Bordure étirée pour tableau toile',
         width: '500',
         height: '500',
@@ -333,7 +333,7 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/products/bordtoilemiroirbackgroundgris.jpg?v=1669908195',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/bordtoilemiroirbackgroundgris.png?v=1714571169',
         alt: 'Bordure miroir pour tableau toile',
         width: '500',
         height: '500',
@@ -363,7 +363,7 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/products/bordtoilepliebackgroundgris.jpg?v=1669908195',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/bordtoileplie.png?v=1714571168',
         alt: 'Bordure pliée pour tableau toile',
         width: '500',
         height: '500',
@@ -419,7 +419,7 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/products/Cadre-decoration-blanc-backgroundgris422PX.jpg?v=1670230080',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-decoration-blanc-backgroundgris422PX.png?v=1714571169',
         alt: 'Cadre blanc pour tableau toile',
         width: '500',
         height: '500',
@@ -449,7 +449,7 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/products/Cadre-cuisine-noir-mat-backgroung-gris422PX.jpg?v=1670230080',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-cuisine-noir-mat-backgroung-gris422PX.png?v=1714571170',
         alt: 'Cadre noir mat pour tableau toile',
         width: '500',
         height: '500',
@@ -479,7 +479,7 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/products/Cadre-deco-argent-backgroundgris422PX.jpg?v=1670272270',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-deco-argent-backgroundgris422PX.png?v=1714571170',
         alt: 'Cadre argent ancien pour tableau toile',
         width: '500',
         height: '500',
@@ -509,7 +509,7 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/products/Cadre-tableau-chene-background-gris422PX.jpg?v=1670272270',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-tableau-chene-background-gris422PX.png?v=1714571169',
         alt: 'Cadre chêne clair pour tableau toile',
         width: '500',
         height: '500',
@@ -539,7 +539,7 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/products/Cadre-photo-noyer-backgroun-gris422PX.jpg?v=1670272270',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-photo-noyer-backgroun-gris422PX.png?v=1714571169',
         alt: 'Cadre noyer pour tableau toile',
         width: '500',
         height: '500',
@@ -565,7 +565,7 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://www.myselfmonart.com/cdn/shop/files/toile_forme.jpg?v=9114814426279099406',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/toile_forme-no-background.png?v=1714571169',
         alt: "Coin d'un tableau en toile",
         width: '500',
         height: '500',
@@ -586,7 +586,7 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://www.myselfmonart.com/cdn/shop/files/aluminium_forme.jpg?v=857855755592868642',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/aluminium_forme.png?v=1714571169',
         alt: "Coin d'un tableau en aluminium",
         width: '500',
         height: '500',
@@ -607,7 +607,7 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://www.myselfmonart.com/cdn/shop/files/plexiglas_forme.jpg?v=17117266480896521427',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/plexiglas_forme.png?v=1714571169',
         alt: "Coin d'un tableau en aluminium + plexiglas",
         width: '500',
         height: '500',
@@ -633,7 +633,7 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://www.myselfmonart.com/cdn/shop/files/aluminium_coin_forme.jpg?v=953181947818535174',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/aluminium_coin_forme.png?v=1714571169',
         alt: "Coin d'un tableau en aluminium mat",
         width: '500',
         height: '500',
@@ -654,7 +654,7 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/products/aluminium-brillant.jpg?v=1669903410',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/aluminium-brillant.png?v=1714570866',
         alt: "Coin d'un tableau en aluminium brillant",
         width: '500',
         height: '500',

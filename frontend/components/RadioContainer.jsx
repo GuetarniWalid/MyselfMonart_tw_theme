@@ -7,7 +7,7 @@ export default function RadioContainer({
 }) {
   return (
     <div
-      className={`py-5 bg-main/5 border-main border-1 mb-8 max-w-xl ${
+      className={`py-5 bg-main-5 border-main border-1 mb-8 max-w-xl ${
         hasSelector ? 'px-5' : 'px-2'
       }`}
     >

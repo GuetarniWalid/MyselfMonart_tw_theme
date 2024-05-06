@@ -8,6 +8,29 @@
     "theme_support_url": "https:\/\/support.shopify.com\/"
   },
   {
+    "name": "t:settings_schema.color.name",
+    "settings": [
+      {
+        "type": "color",
+        "id": "main_color",
+        "label": "t:settings_schema.color.settings.main_color.label",
+        "default": "#002E5D"
+      },
+      {
+        "type": "color",
+        "id": "secondary_color",
+        "label": "t:settings_schema.color.settings.secondary_color.label",
+        "default": "#F6F3EE"
+      },
+      {
+        "type": "color",
+        "id": "like_color",
+        "label": "t:settings_schema.color.settings.like_color.label",
+        "default": "#EC4D4D"
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.typography.name",
     "settings": [
       {
@@ -207,17 +230,6 @@
         "id": "currency_code_enabled",
         "label": "t:settings_schema.currency_format.settings.currency_code_enabled.label",
         "default": true
-      }
-    ]
-  },
-  {
-    "name": "t:settings_schema.cart.name",
-    "settings": [
-      {
-        "type": "checkbox",
-        "id": "show_cart_note",
-        "label": "t:settings_schema.cart.settings.show_cart_note.label",
-        "default": false
       }
     ]
   }

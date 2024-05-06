@@ -1,16 +1,16 @@
 {% if section.settings.button_text != blank %}
     {% if section.settings.button_link != blank %}
       {% if section.settings.to_obfuscate %}
-        <button class="obfuscate bg-main/5 hover:bg-main/10 py-4 px-8 border-main border-2 rounded-lg" data-url64="{{ section.settings.button_link | base64_encode }}">
+        <button class="obfuscate bg-main-5 hover:bg-main-10 py-4 px-8 border-main border-2 rounded-lg" data-url64="{{ section.settings.button_link | base64_encode }}">
             {{ section.settings.button_text }}
         </button>
       {% else %}
-        <a href="{{ section.settings.button_link }}" class="bg-main/5 hover:bg-main/10 py-4 px-8 border-main border-2 rounded-lg">
+        <a href="{{ section.settings.button_link }}" class="bg-main-5 hover:bg-main-10 py-4 px-8 border-main border-2 rounded-lg">
             {{ section.settings.button_text }}
         </a>
       {% endif %}
     {% else %}
-        <button class="bg-main/5 hover:bg-main/10 py-4 px-8 border-main border-2 rounded-lg">
+        <button class="bg-main-5 hover:bg-main-10 py-4 px-8 border-main border-2 rounded-lg">
             {{ section.settings.button_text }}
         </button>
     {% endif %}

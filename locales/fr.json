@@ -491,11 +491,11 @@
       "see_all_products": "Voir tous les produits"
     },
     "cart": {
+      "before_promo": "Avant promotion",
       "continue_shopping": "Continuer les achats",
       "empty_message": "Votre panier est vide",
       "empty_img_cart_alt": "Panier vide",
       "title": "Votre panier",
-
       "caption": "Articles du panier",
       "remove_title": "Supprimer {{ title }}",
       "subtotal": "Sous-total",
@@ -504,28 +504,30 @@
       "checkout": "Procéder au paiement",
       "cart_error": "Une erreur est survenue lors de l’actualisation de votre panier. Veuillez réessayer.",
       "cart_quantity_error_html": "Vous ne pouvez pas ajouter plus de {{ quantity }} de ce produit à votre panier.",
-      "taxes_and_shipping_policy_at_checkout_html": "Taxes et <a href=\"{{ link }}\">frais d'expédition</a> calculés lors du paiement",
-      "taxes_included_but_shipping_at_checkout": "Taxes incluses et frais d'expédition calculés lors du paiement",
-      "taxes_included_and_shipping_policy_html": "Taxes incluses. <a href=\"{{ link }}\">Frais d'expédition</a> calculés à l'étape de paiement.",
-      "taxes_and_shipping_at_checkout": "Taxes et frais d'expédition calculés lors du paiement",
       "headings": {
-        "product": "Produit",
+        "articles": "Vos articles",
         "price": "Prix",
         "total": "Total",
         "quantity": "Quantité",
         "image": "Image de produit"
       },
-      "update": "Mettre à jour",
       "login": {
         "title": "Vous possédez un compte ?",
         "paragraph_html": "<a href=\"{{ link }}\" class=\"link underlined-link\">Connectez-vous</a> pour payer plus vite."
-      }
+      },
+      "taxes_and_shipping_policy_at_checkout_html": "Taxes et <a href=\"{{ link }}\">frais d'expédition</a> calculés lors du paiement",
+      "taxes_included_but_shipping_at_checkout": "Taxes incluses et frais d'expédition calculés lors du paiement",
+      "taxes_included_and_shipping_policy_html": "Taxes incluses. <a href=\"{{ link }}\">Frais d'expédition</a> calculés à l'étape de paiement.",
+      "taxes_and_shipping_at_checkout": "Taxes et frais d'expédition calculés lors du paiement",
+      "total": "Total",
+      "update": "Mettre à jour"
     },
     "cart_drawer": {
       "close": "Fermer",
       "continue_shopping": "Voir tous nos tableaux",
       "checkout": "Procéder au paiement",
       "empty_message": "Votre panier est vide",
+      "promotion": "Promotions",
       "remove": "Enlever {{article}} du panier",
       "keep_shopping": "Autres produits",
       "loading": "Chargement en cours",

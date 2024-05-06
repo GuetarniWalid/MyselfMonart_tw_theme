@@ -45,11 +45,11 @@
         %}
       </div>
       <div class="absolute bg-secondary rounded-full left-1/2 -translate-x-1/2 bottom-3 border-main border-1 md:hidden flex justify-center items-center h-[47px] overflow-hidden">
-          <button class="previous pl-5 pr-3 h-full focus-visible:outline-none focus-visible:bg-main/10 hover:bg-main/10">
+          <button class="previous pl-5 pr-3 h-full focus-visible:outline-none focus-visible:bg-main-10 hover:bg-main-10">
             <div class="rotate-90">{% render 'tw-icon-caret', width: '18' %}</div>
           </button>
           <span class="px-3"><span class="image-counter">1</span>/{{ nbOfMedia }}</span>
-          <button class="next pr-5 pl-3 h-full focus-visible:outline-none focus-visible:bg-main/10 hover:bg-main/10">
+          <button class="next pr-5 pl-3 h-full focus-visible:outline-none focus-visible:bg-main-10 hover:bg-main-10">
             <div class="-rotate-90">{% render 'tw-icon-caret', width: '18' %}</div>
           </button>
         </div>
@@ -99,12 +99,15 @@
           {%- when 'text' -%}
             <div class="flex flex-col gap-4 mb-4 text-lg">{{- block.settings.text -}}</div>
           {%- when 'title' -%}
-            <div class="text-xs mb-5">
-              <h1 class="text-4xl my-8">{{ product.title | escape }}</h1>
-            </div>
+            <h1 class="text-4xl mb-8">{{ product.title | escape }}</h1>
           {%- when 'price' -%}
             <span class="block text-xl font-bold font-heading mb-4">{{ product.selected_or_first_available_variant.price | money_with_currency }}</span>
           {%- when 'buy' -%}
+            {% style %}
+              :root {
+                --color-action: {{ block.settings.main_color }};
+              }
+            {% endstyle %}
             <button class="buy-button relative flex w-full items-center gap-x-5 gap-y-2 2xs:gap-4 md:gap-5 py-2 lg:py-3 bg-action text-secondary shadow-lg rounded-xl px-5 lg:px-6 mb-4 before:w-12 before:h-40 before:bg-white/50 before:absolute before:-top-4 before:right-[-60px] before:rotate-12 after:w-12 after:h-40 after:bg-white/20 after:absolute after:-top-4 after:rotate-12 after:right-[-60px] overflow-hidden">
               <svg viewBox="0 0 50 53" class="shrink-0 w-10 lg:w-auto fill-secondary" width="55" fill="none" xmlns="http://www.w3.org/2000/svg" role="presentation" aria-hidden="true">
                 <path d="M21.4157 2.84998V32.5974H1.89111C2.5125 8.54724 21.4157 2.84998 21.4157 2.84998Z" />
@@ -157,7 +160,7 @@
               </div>
             {%- endif -%}
           {%- when 'collapsible_tab' -%}
-            <details class="accordion group border-t border-main/10 first-of-type:mt-5 last-of-type:border-b last-of-type:border-b-main/10 last-of-type:mb-5">
+            <details class="accordion group border-t border-main-10 first-of-type:mt-5 last-of-type:border-b last-of-type:border-b-main-10 last-of-type:mb-5">
               <summary class="list-none flex justify-between py-3 select-none cursor-pointer">
                 <div class="flex gap-3">
                   {% render 'icon-accordion', icon: block.settings.icon, color: block.settings.icon_color %}
@@ -238,7 +241,7 @@
 <script id="product-data">
   window.productRatio = "{% if template.suffix != 'carre' %}{{ template.suffix }}{% else %}square{% endif %}";
   window.productImageSRC = "{{ product.images[1] | image_url | prepend: 'https:' }}";
-  window.productImageAlt = "{{ product.images[1].alt }}";
+  window.productImageAlt = "{{ product.images[1].alt | escape }}";
   window.canvasTexture = "{{ 'tw.main_product.painting.canvas_texture' | t }}";
   window.productId = "{{ product.id }}";
   window.productAll = {{ product | json }};
@@ -520,6 +523,12 @@
           "id": "bottom_text",
           "default": "Personnaliser le tableau",
           "label": "t:sections.main-product.blocks.buy.settings.bottom_text.label"
+        },
+        {
+          "type": "color",
+          "id": "main_color",
+          "label": "t:sections.main-product.blocks.buy.settings.main_color.label",
+          "default": "#04A777"
         }
       ]
     }
