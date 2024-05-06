@@ -3,6 +3,8 @@
     "breadcrumb_RCxFAG": {
       "type": "breadcrumb",
       "settings": {
+        "main_color": "#1a2e05",
+        "secondary_color": "#ebd0cd"
       }
     },
     "main": {
@@ -28,7 +30,8 @@
           "type": "buy",
           "settings": {
             "top_text": "Choix des options",
-            "bottom_text": "Personnaliser le tableau"
+            "bottom_text": "Personnaliser le tableau",
+            "main_color": "#04a777"
           }
         },
         "8600f603-2d6f-4191-8020-3678432ba1e5": {
@@ -154,7 +157,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify:\/\/shop_images\/tableau-animaux-zebre_383f6477-a1c6-4c30-b8cc-637fe67fde0a.jpg",
-            "message": "L animal, majestueux et solitaire trône dans mon salon au dessus de ma console... Peut on dire qu il est magnifique ? Assurément oui et je l adore!\nPatricia G."
+            "message": "L'animal, majestueux et solitaire trône dans mon salon au dessus de ma console... Peut on dire qu il est magnifique ? Assurément oui et je l adore!\nPatricia G."
           }
         },
         "image_text_YKpN4r": {
@@ -179,7 +182,7 @@
         "image_text_YKpN4r"
       ],
       "settings": {
-        "title": "Our customers are delighted",
+        "title": "Nos tableaux à travers vos yeux ❤️",
         "duration_image_appearance": 5
       }
     },
@@ -288,7 +291,8 @@
             "title": "SATISFACTION",
             "text": "<p>Nous faisons tout pour que notre travail vous donne entière satisfaction. Nos produits sont fabriqués, vérifiés et emballés avec le plus grand soin, avant d'être livré directement à votre domicile.<\/p>",
             "link_label": "",
-            "link": ""
+            "link": "",
+            "to_obfuscate": false
           }
         },
         "column_U3DQjE": {
@@ -297,7 +301,8 @@
             "title": "REMBOURSEMENT",
             "text": "<p>Nos tableaux sont spécialement protégés pour le transport. Si toutefois il venait à être endommagé, nous nous engageons à vous rembourser en moins de 5 jours.<\/p>",
             "link_label": "",
-            "link": ""
+            "link": "",
+            "to_obfuscate": false
           }
         },
         "column_fN6DfA": {
@@ -307,7 +312,8 @@
             "title": "SERVICE CLIENT",
             "text": "<p>Par mail ou téléphone, c’est toujours avec joie que nous échangeons avec vous.<\/p>",
             "link_label": "",
-            "link": ""
+            "link": "",
+            "to_obfuscate": false
           }
         }
       },
@@ -317,7 +323,7 @@
         "column_fN6DfA"
       ],
       "settings": {
-        "title": "Multicolumn",
+        "title": "NOS GARANTIES",
         "image_shape": "rounded-full aspect-square object-cover",
         "columns_desktop": 3,
         "show_backgounds": false,

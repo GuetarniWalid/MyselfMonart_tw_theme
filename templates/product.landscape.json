@@ -3,6 +3,8 @@
     "breadcrumb_jyJ9mr": {
       "type": "breadcrumb",
       "settings": {
+        "main_color": "#1a2e05",
+        "secondary_color": "#ebd0cd"
       }
     },
     "main": {
@@ -28,13 +30,32 @@
           "type": "buy",
           "settings": {
             "top_text": "Choix des options",
-            "bottom_text": "Personnaliser le tableau"
+            "bottom_text": "Personnaliser le tableau",
+            "main_color": "#04a777"
           }
         },
         "8600f603-2d6f-4191-8020-3678432ba1e5": {
           "type": "text",
           "settings": {
-            "text": "<p>Vous recevez nos propositions gratuitement par mail. Si l'une d'entre elles vous plaît, il vous suffit de cliquer sur le lien présent dans le mail qui redirige vers la page de paiement présent sur notre site. Ci-dessous, vous pouvez consulter les prix selon la taille et le support choisi.<\/p>"
+            "text": "<p>- Laissez-vous transporter par nos œuvres d'arts. Une sensation unique et singulière à transposer dans votre intérieur.<br\/>- Possibilité de choisir la taille et le support de l’œuvre.<br\/><\/p>"
+          }
+        },
+        "collapsible_tab_K6tRQQ": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Livraison",
+            "icon": "truck",
+            "content": "<p>🎨 Toile personnalisée : Fabrication en 3-4 jours <\/p><p>🚚  expédition en 3-5 jours ouvrables en colis suivi à votre domicile.<\/p>",
+            "page": ""
+          }
+        },
+        "collapsible_tab_kUH4wX": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Materiaux",
+            "icon": "leather",
+            "content": "<p><strong>- La Toile<\/strong> est composée de fibres 100% polyester d'une épaisseur de 285g\/m².<\/p><p>L'épaisseur du châssis au choix 2 ou 4 cm <\/p><p><strong>- Le Plexiglass<\/strong> est composé de  <strong>verre acrylique<\/strong> + <strong>plaques aluminium . <\/strong>Épaisseur: 6 mm<\/p><p>Bord: noir entre les plaques métalliques + verre acrylique transparent sur le dessus, coins arrondis<\/p><p>- <strong>L'aluminium argent brossé, <\/strong>dit Alupanel, est une plaque composite en aluminium d'une épaisseur de 3mm. Il est <strong>résistant aux UV et à l'humidité. <\/strong><\/p><p>Bord: noir entre les plaques métalliques, coins arrondis<\/p>",
+            "page": ""
           }
         },
         "a70160ee-79ef-4eb9-8e65-ec87f898b506": {
@@ -45,6 +66,11 @@
             "content": "",
             "page": "guide-de-tailles"
           }
+        },
+        "description_NdhPt7": {
+          "type": "description",
+          "settings": {
+          }
         }
       },
       "block_order": [
@@ -53,9 +79,119 @@
         "9f20570b-1a97-4c34-8758-c5af9b8d2cfc",
         "buy_dctfBh",
         "8600f603-2d6f-4191-8020-3678432ba1e5",
-        "a70160ee-79ef-4eb9-8e65-ec87f898b506"
+        "collapsible_tab_K6tRQQ",
+        "collapsible_tab_kUH4wX",
+        "a70160ee-79ef-4eb9-8e65-ec87f898b506",
+        "description_NdhPt7"
       ],
       "settings": {
+      }
+    },
+    "customer_testimonial_BDK3a8": {
+      "type": "customer-testimonial",
+      "blocks": {
+        "image_text_yRpeRC": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/Tableau-chambre-bebe_f6e62e6e-707b-41df-aa17-bdad25ef3385.jpg",
+            "message": "Juste une petite photo avec le cadre mis en place encore un grand merci à vous 🥰. \nElodie G"
+          }
+        },
+        "image_text_j7bxNx": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau_marylin.jpg",
+            "message": "Envoie très rapide et tableau encore plus beau que sur le site.\nParfait je recommande !!!\nJessica S"
+          }
+        },
+        "image_text_FcQFgK": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/ananas.jpg",
+            "message": "Trop contente de mon tableau, les couleurs sont aussi flashy que sur les photos du site.\nSarah F"
+          }
+        },
+        "image_text_U83nbW": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/Tableau-chambre.png",
+            "message": "Le tableau est super, et encore plus beau en vrai ! Arrivé rapidement et bien protégé. Alain N"
+          }
+        },
+        "image_text_4rUa7p": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/Tableau-decoration.png",
+            "message": "Très belle toile, les couleurs sont super et brillante. Marie K"
+          }
+        },
+        "image_text_TtBQWC": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/Tableau-deco-noir-et-blanc.jpg",
+            "message": "Top, rien à dire de plus. \nGuillaume H"
+          }
+        },
+        "image_text_wPW9iC": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-salon-femme-africaine.jpg",
+            "message": "Magnifique tableau et très design, correspond parfaitement à la description.  Morel E"
+          }
+        },
+        "image_text_YmEJQk": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-comics-super-man.jpg",
+            "message": "Nickel, très satisfait c'est ma 3e commande. Hugo G"
+          }
+        },
+        "image_text_KrPGQ3": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-superman-aquarelle.jpg",
+            "message": "TOP, tableau reçu rapidement avec suivie. Hugo G"
+          }
+        },
+        "image_text_CJRWJK": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-animaux-zebre_383f6477-a1c6-4c30-b8cc-637fe67fde0a.jpg",
+            "message": "L'animal, majestueux et solitaire trône dans mon salon au dessus de ma console... Peut on dire qu il est magnifique ? Assurément oui et je l adore!\nPatricia G."
+          }
+        },
+        "image_text_NWEmhH": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-deco-impression-alluminium-nike.jpg",
+            "message": "Très beau tableau que nous vous avons acheté en août dernier et qui a fait très plaisir à un jeune de 20 ans. \nNous sommes ravis et nous reviendrons vers vous.\nJacqueline R."
+          }
+        }
+      },
+      "block_order": [
+        "image_text_yRpeRC",
+        "image_text_j7bxNx",
+        "image_text_FcQFgK",
+        "image_text_U83nbW",
+        "image_text_4rUa7p",
+        "image_text_TtBQWC",
+        "image_text_wPW9iC",
+        "image_text_YmEJQk",
+        "image_text_KrPGQ3",
+        "image_text_CJRWJK",
+        "image_text_NWEmhH"
+      ],
+      "settings": {
+        "title": "Nos tableaux à travers vos yeux ❤️",
+        "duration_image_appearance": 5
+      }
+    },
+    "product_carrousel_Y9Fnc6": {
+      "type": "product-carrousel",
+      "settings": {
+        "heading": "VOUS POURRIEZ AIMER",
+        "button_text": "Voir le tableau",
+        "number_products_to_display": 4
       }
     },
     "main-product-recommendations": {
@@ -84,7 +220,7 @@
           "settings": {
             "number": 1,
             "heading": "Ne perdez plus votre temps à chercher",
-            "text": "Une infinité de possibilités s’offrent à vous, écrivez simplement ce dont vous rêvez."
+            "text": "Chaque mois, nous enrichissons notre assortiment de nouvelles créations."
           }
         },
         "434fa092-b676-4395-a95a-9922006fa7db": {
@@ -92,7 +228,7 @@
           "settings": {
             "number": 2,
             "heading": "L’art de sortir de l’ordinaire",
-            "text": "À l’ère de la production de masse, les tableaux vides de personnalité sont courants."
+            "text": "En manque d'imagination ? Nos graphistes créent pour vous des œuvres originales"
           }
         },
         "dc1cd24a-b307-4124-abb9-b1ac55ba1e6b": {
@@ -111,17 +247,17 @@
       ],
       "settings": {
         "title": "",
-        "nb_columns_on_computer": "33.33",
-        "nb_columns_on_mobile": "100"
+        "nb_columns_on_computer": "3",
+        "nb_columns_on_mobile": "1"
       }
     },
-    "1424ddf1-df7a-4059-a11f-0f1a837e4b6d": {
+    "b5027902-4240-44cf-8660-b6e754562c52": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify:\/\/shop_images\/femme_portrait.jpg",
-        "title": "Title",
-        "description": "Description ...",
-        "layout": "text_first",
+        "image": "shopify:\/\/shop_images\/texture_x3_70ae7c8b-712c-4c74-bb93-e76a2eddc37b.jpg",
+        "title": "EN HARMONIE",
+        "description": "Vous avez le souci du détail ? Allez plus loin en personnalisant aussi le support. Sur toile, plexiglas ou aluminium, choisissez l’aspect qui s’accorde le mieux à votre intérieur.",
+        "layout": "image_first",
         "enable_blob": true
       }
     },
@@ -129,18 +265,8 @@
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/metre.jpg",
-        "title": "Title",
-        "description": "Description ...",
-        "layout": "image_first",
-        "enable_blob": true
-      }
-    },
-    "b5027902-4240-44cf-8660-b6e754562c52": {
-      "type": "image-with-text",
-      "settings": {
-        "image": "shopify:\/\/shop_images\/texture_x3_70ae7c8b-712c-4c74-bb93-e76a2eddc37b.jpg",
-        "title": "Title",
-        "description": "Description ...",
+        "title": "DU SUR-MESURE",
+        "description": "Choisissez la taille de votre tableau. En paysage, portrait, carré, petit ou grand, à vous de voir selon votre espace.",
         "layout": "text_first",
         "enable_blob": true
       }
@@ -149,61 +275,72 @@
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/tour_eiffel.jpg",
-        "title": "Title",
-        "description": "Description ...",
+        "title": "MADE IN FRANCE",
+        "description": "Une touche d'art à la française. Enracinés dans notre cher pays, nous mettons l'accent sur votre satisfaction en offrant un service client de qualité supérieure.",
         "layout": "image_first",
         "enable_blob": true
       }
     },
-    "11956137-37cc-4134-a10b-f99541980b06": {
-      "type": "badges",
+    "multicolumn_nDcdqV": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_zCD7T7": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/cliente-satisfaite-souriante.jpg",
+            "title": "SATISFACTION",
+            "text": "<p>Nous faisons tout pour que notre travail vous donne entière satisfaction. Nos produits sont fabriqués, vérifiés et emballés avec le plus grand soin, avant d'être livré directement à votre domicile.<\/p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
+          }
+        },
+        "column_cKqkbQ": {
+          "type": "column",
+          "settings": {
+            "title": "REMBOURSEMENT",
+            "text": "<p>Nos tableaux sont spécialement protégés pour le transport. Si toutefois il venait à être endommagé, nous nous engageons à vous rembourser en moins de 5 jours.<\/p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
+          }
+        },
+        "column_EaGCja": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/femme-service-client-call.jpg",
+            "title": "SERVICE CLIENT",
+            "text": "<p>Par mail ou téléphone, c’est toujours avec joie que nous échangeons avec vous.<\/p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
+          }
+        }
+      },
+      "block_order": [
+        "column_zCD7T7",
+        "column_cKqkbQ",
+        "column_EaGCja"
+      ],
       "settings": {
         "title": "NOS GARANTIES",
-        "nb_columns_on_computer": "33.33",
-        "nb_columns_on_mobile": "100"
+        "image_shape": "rounded-full aspect-square object-cover",
+        "columns_desktop": 3,
+        "show_backgounds": false,
+        "button_label": "",
+        "button_link": "",
+        "to_obfuscate": false
       }
     },
     "7ae13aad-330c-4fa7-94cf-fafc1c13cf60": {
       "type": "collapsible-content",
       "blocks": {
-        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-0": {
-          "type": "collapsible_row",
-          "settings": {
-            "heading": "Et si vos propositions ne me plaisent pas ?",
-            "icon": "none",
-            "row_content": "<p>Aucun problème, nous vous envoyons nos propositions par mail sous 2 jours en moyenne. Si celles-ci ne vous conviennent pas, il vous suffit de simplement effacer le mail et le tour est joué. Nous sommes avant tout des passionnés d’art et non des vendeurs chevronné. Aucune relance, ni intrusion de notre part, si vous décidiez de ne pas poursuivre.<\/p>"
-          }
-        },
         "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-1": {
           "type": "collapsible_row",
           "settings": {
             "heading": "Quels supports choisir, le rendu est-il différent ?",
             "icon": "none",
-            "row_content": "<p>- La toile 100% coton : <strong>mate et texturée<\/strong><\/p><p>La toile offre une prise en main agréable. Le grain est visible principalement dans les zones claires de l’image. La surface de<strong> la toile <\/strong>ajoute relief et profondeur à vos tableaux. Elle apporte une touche artistique et dote les tableaux d’une <strong>incroyable intensité.<\/strong><\/p><p>Pour un résultat optimal, nous vous conseillons de transmettre un <strong>fichier <\/strong>JPEG avec la résolution maximale (comprise entre 72 et 300 Dpi).<\/p><p><\/p><p>- Le plexiglas :<strong> Brillant et transparent<\/strong><\/p><p>Le <strong>verre acrylique<\/strong>, également appelé <strong>Plexiglas<\/strong>, est un matériau synthétique rigide et transparent haut de gamme. Son aspect est similaire à du verre.<\/p><p>Le verre acrylique offrira <strong>une profondeur <\/strong>et <strong>une luminosité extraordinaire <\/strong>à vos tableaux. Les couleurs de votre photo seront vives et éclatantes. Il est particulièrement recommandé pour la réalisation de tableaux lumineux.<\/p><p><\/p><p>- L'aluminium argent brossé : <strong>contraste et éclat.<\/strong><\/p><p>L'aluminium permet une <strong>présentation sobre, moderne et sans reflet<\/strong>. La densité des couleurs et les contrastes sont forts.<\/p><p>L'aluminium est un support très résistant. Il n'est pas sensible aux traces de doigts ou à l'humidité, et l’entretien de vos tableaux est facile. Vous pouvez le nettoyer avec un tissu légèrement humide.<\/p>"
-          }
-        },
-        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-2": {
-          "type": "collapsible_row",
-          "settings": {
-            "heading": "Pourquoi acheter chez vous ?",
-            "icon": "none",
-            "row_content": "<p>Une grande partie des tableaux décoratifs que vous pouvez trouver sur le marché sont conçus en masse afin de réduire le prix. <\/p><p>De l'autre côté, les œuvres uniques peuvent coûter jusqu’à plusieurs milliers d’euros. <\/p><p>De notre côté, nous comprenons que l’art doit rester accessible, mais pas au prix d’être conçu en masse. Nous effectuons donc un travail d'échange pour concevoir l'œuvre unique dont vous rêvez à un prix ultra-compétitif.<\/p>"
-          }
-        },
-        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-3": {
-          "type": "collapsible_row",
-          "settings": {
-            "heading": "Que puis-je demander, avez-vous des exemples ?",
-            "icon": "none",
-            "row_content": "<p>Littéralement ce que vous voulez. Quelque règle toutefois, nous ne pouvons créer des œuvres à caractère sexuel ou violent. Soyez libre de soumettre un texte, si celui-ci enfreint l’une de ces 2 règles, nous vous tiendrons informé par mail. <\/p><p>Nous pouvons traiter tous type de sujet. Certains concepts vague ou poétique comme la mort, l’amour, le bien ou le mal. Vous seriez surpris des propositions que vous obtiendriez. Cela peut aussi être des personnes ou des animaux. De notre expérience, les œuvres les plus surprenantes, et souvent les plus aimées, sont celles mélangeant 2 concepts très contrasté, comme par exemple “Un sorcier cyberpunk” ou “la pollution en couleur”. Une page entière ne comblerait pas le sujet, voici donc quelques exemples : <\/p><p>- Un sentiment de crainte <\/p><p>- La naissance du temps <\/p><p>- Le Louvre selon Van Gogh <\/p><p>- Un chevalier lion dans une armure dorée <\/p><p>- Le Taj Mahal en multicouleur, dans le style pointillisme<\/p><p>Vous l’aurez compris, seule votre imagination est la limite.<\/p>"
-          }
-        },
-        "a603c2c1-59a1-4067-9d4b-dc8591ddc1f8": {
-          "type": "collapsible_row",
-          "settings": {
-            "heading": "Quelle taille de toile choisir ?",
-            "icon": "none",
-            "row_content": "<p>Pour ne pas vous tromper, mesurez la largeur de votre pan de mur. Multipliez le résultat par 0,57 pour obtenir le ratio idéal.<\/p><p>Sachez qu'il est également recommandé d'accrocher le centre du tableau à environ 1,65 mètre du sol (ce qui correspond à peu près à la hauteur des yeux). Il est aussi recommandé de laisser environ 30 centimètres d'espace entre un meuble et un tableau. <\/p>"
+            "row_content": "<p>- Tableau toile 100% polyester (285g\/m²) : <strong>Mate et texturée<\/strong><\/p><p>Le tableau en toile offre une prise en main agréable. Le grain<strong> <\/strong>du papier est visible principalement dans les zones claires de l’image, tandis que les noirs auront tendance à les gommer. La surface de toile cuisine ajoute du relief et de la profondeur à vos tableaux. Il apporte une touche artistique et les dote d’une <strong>incroyable intensité.<\/strong><\/p><p>- tableau plexiglas ou tableau en verre acrylique :<strong> Brillant et transparent<\/strong><\/p><p>Le tableau mural en <strong>verre acrylique<\/strong>, également appelé <strong>tableau plexiglas,<\/strong> est un matériau synthétique rigide et transparent haut de gamme, son aspect est similaire à du verre.<\/p><p>Le plexiglas offre <strong>une profondeur <\/strong>et <strong>une luminosité extraordinaire <\/strong>à vos tableaux. Les couleurs de votre photo seront vives et éclatantes il est particulièrement recommandé pour la réalisation de tableaux lumineux.<\/p><p>- Tableau aluminium argent brossé ou tableau métal : <strong>Contraste et éclat.<\/strong><\/p><p>Le tableau deco en aluminium permet une <strong>présentation sobre, moderne et sans reflet<\/strong>. La densité des couleurs et les contrastes sont très forts.<\/p><p>L'aluminium est un support très résistant et de qualité il n'est pas sensible aux traces de doigts ou à l'humidité et l’entretien de vos toiles est facile. Vous pouvez les nettoyer avec un tissu légèrement humide.<\/p>"
           }
         },
         "e20d3253-d757-4a99-9237-128916cc9ffb": {
@@ -211,17 +348,31 @@
           "settings": {
             "heading": "Avec quoi et comment accrochez mon tableau ?",
             "icon": "none",
-            "row_content": "<p>Pour une finition à la hauteur de votre tableau il est important de prendre en compte le support d'impression.<\/p><p>- Les supports tels que le plexiglas coulé et l'aluminium nécessitent un espacement entre le tableau et le mur.<\/p><p>Nous vous recommandons d'utiliser des entretoises qui sont disponibles en supplément sur notre site. Nos équipes s'occupent de percer le tableau et nous vous livrons 2 paires entretoises avec votre commande.<br\/><\/p><p>- Pour accrocher les tableaux montés sur châssis il est recommandé d'utilisé des crochets, attention il vous faudra prendre en compte le poids du tableau avant tout achat.<br\/><\/p><p>Enfin, pour ne pas abîmer votre mur il vous faudra également faire attention aux chevilles qui sont différentes selon si le mur est en placo, brique ou béton.<\/p><p>En raison de la particularité de chaque mur nos entretoises sont livrées sans visserie.<\/p>"
+            "row_content": "<p>Pour une finition à la hauteur de votre décoration  il est important de prendre en compte le support d'impression. <\/p><p>- Les supports tels que le plexiglas coulé et l'aluminium nécessitent un espacement entre le tableau et le mur. <\/p><p>Nous vous recommandons d'utiliser notre système d'accrochage, nos équipes s'occupent d'installer le kit de fixation directement sur le tableau. Nos kit de fixation sont disponibles en supplément sur notre site. <\/p><p>- Pour accrocher les tableaux en toile montés sur châssis il est recommandé d'utiliser des crochets. Attention, il vous faudra prendre en compte le poids du tableau avant tout achat. <br\/><\/p><p>Enfin, pour ne pas abîmer votre mur il vous faudra également faire attention aux chevilles qui sont différentes selon les murs en placo, brique ou béton.<\/p><p>En raison de la particularité de chaque mur nos kits de fixation sont livrées sans visserie.<\/p>"
+          }
+        },
+        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-2": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Pourquoi acheter chez nous ?",
+            "icon": "none",
+            "row_content": "<p>Nos graphistes travaillent chaque jour pour créer de nouvelles œuvres. Chaque semaine, nous mettons à jour notre site et ajoutons les nouveaux tableaux.<\/p><p>Vous avez la possibilité de choisir le support et la taille pour un accord parfait avec votre intérieur.<\/p><p>Si toutefois aucun tableau ne vous plaît, vous avez la possibilité de demander à nos graphistes de façonner l'œuvre de vos rêves.<\/p>"
+          }
+        },
+        "a603c2c1-59a1-4067-9d4b-dc8591ddc1f8": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Quelle taille de toile choisir ?",
+            "icon": "none",
+            "row_content": "<p>Pour ne pas vous tromper, mesurez la largeur de votre pan de mur. Multipliez le résultat par 0,57 pour obtenir le ratio idéal.<\/p><p>Sachez qu'il est également recommandé d'accrocher le centre du tableau à environ 1,65 mètre du sol (ce qui correspond à peu près à la hauteur des yeux). Il est aussi recommandé de laisser environ 30 centimètres d'espace entre un meuble et un tableau.<\/p>"
           }
         }
       },
       "block_order": [
-        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-0",
         "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-1",
+        "e20d3253-d757-4a99-9237-128916cc9ffb",
         "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-2",
-        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-3",
-        "a603c2c1-59a1-4067-9d4b-dc8591ddc1f8",
-        "e20d3253-d757-4a99-9237-128916cc9ffb"
+        "a603c2c1-59a1-4067-9d4b-dc8591ddc1f8"
       ],
       "settings": {
         "heading": "QUESTIONS FRÉQUENTES"
@@ -231,13 +382,14 @@
   "order": [
     "breadcrumb_jyJ9mr",
     "main",
+    "customer_testimonial_BDK3a8",
+    "product_carrousel_Y9Fnc6",
     "main-product-recommendations",
     "bf44dcab-c1df-4c80-b75a-9ee39a6bfe2e",
-    "1424ddf1-df7a-4059-a11f-0f1a837e4b6d",
-    "afe2a87a-371e-4c67-93b7-8c6b2244f43b",
     "b5027902-4240-44cf-8660-b6e754562c52",
+    "afe2a87a-371e-4c67-93b7-8c6b2244f43b",
     "556b5926-5cdb-4c50-a817-c79f15894cdd",
-    "11956137-37cc-4134-a10b-f99541980b06",
+    "multicolumn_nDcdqV",
     "7ae13aad-330c-4fa7-94cf-fafc1c13cf60"
   ],
   "layout": "product"
