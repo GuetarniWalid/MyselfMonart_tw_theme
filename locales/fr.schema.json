@@ -1005,6 +1005,12 @@
     },
     "header": {
       "name": "En-tête",
+      "settings": {
+        "logo_svg": {
+          "label": "Logo en svg",
+          "info": "Ex: <svg ...></svg>"
+        }
+      },
       "blocks": {
         "collection_only": {
           "name": "Collection seule",

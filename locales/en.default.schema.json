@@ -733,6 +733,12 @@
     },
     "header": {
       "name": "Header",
+      "settings": {
+        "logo_svg": {
+          "label": "Logo in svg",
+          "info": "Ex: <svg ...></svg>"
+        }
+      },
       "blocks": {
         "collection_only": {
           "name": "Collection only",

@@ -1,6 +1,10 @@
 <sticky-header class="bg-secondary py-4 px-7 flex items-center justify-center md:justify-between border-b border-solid border-main relative shadow-3xl">
   <h2 class="header__heading cursor-pointer inline-flex items-center obfuscate translate-x-10 md:translate-x-0 text-2xl sm:text-3xl" data-url64="Lw==">
-    {% render 'tw-icon-logo-round' %}
+    {% if section.settings.logo_svg != blank %}
+      {{ section.settings.logo_svg }}
+    {% else %}
+      {% render 'tw-default-logo' %}
+    {% endif %}
     <span class="ml-3 hidden xs:inline">MyselfMonArt</span>
   </h2>
   
