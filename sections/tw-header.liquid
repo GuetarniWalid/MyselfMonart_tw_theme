@@ -4,7 +4,9 @@
 {% endif %}
 
 {% render 'tw-sticky-header' %}
-{% render 'tw-predictive-search' %}
+{% if template.name != 'search' %}
+  {% render 'tw-predictive-search', in_header: true %}
+{% endif %}
 
 {%- if request.page_type == 'index' -%}
   {% assign potential_action_target = request.origin | append: routes.search_url | append: "?q={search_term_string}" %}

@@ -1,5 +1,11 @@
-<predictive-search class="bg-secondary absolute inset-0 flex justify-center items-center transition-all duration-100 -translate-y-full px-5" data-loading-text="{{ 'tw.header.accessibility.loading' | t }}" aria-hidden="true">
+{% comment %}
+    Accepts:
+    - in_header: {Boolean}
+{% endcomment %}
+
+<predictive-search class="bg-secondary flex justify-center items-center transition-all duration-100 px-5 absolute inset-0 {% if in_header %}-translate-y-full{% else %}z-10{% endif %}" data-loading-text="{{ 'tw.header.accessibility.loading' | t }}" {% if in_header %}aria-hidden="true"{% endif %} data-is-in-header="{{ in_header }}">
   <form action="{{ routes.search_url }}" method="get" role="search" class="relative w-full md:w-3/5 max-w-md h-10 p-0 m-0">
+    <input type="hidden" name="type" value="product" />
     <input
     id="search"
     class="bg-secondary pl-5 pr-9 border border-main hover:border-2 focus:border-2 w-full h-full rounded-lg peer/search placeholder:text-transparent outline-none"
@@ -18,7 +24,7 @@
     autocomplete="off"
     autocapitalize="off"
     spellcheck="false"
-    tabindex="-1"
+    tabindex="{% if in_header %}-1{% else %}0{% endif %}"
     >
     <label for="search" class="text-main-70 px-1 absolute -translate-y-1/2 left-4 top-0 text-xs tracking-normal peer-focus/search:top-0 peer-focus/search:text-xs peer-focus/search:tracking-normal peer-placeholder-shown/search:top-1/2 peer-placeholder-shown/search:text-sm peer-placeholder-shown/search:tracking-widest transition-all duration-75" tabindex="-1">
     {{ "tw.header.search.input_placeholder" | t }}
@@ -27,10 +33,10 @@
     <button class="loup absolute top-1/2 -translate-y-1/2 right-3 transition-all duration-75" aria-hidden="true" focusable="false" role="presentation" tabindex="-1">
       {% render 'tw-icon-loup' %}
     </button>
-    <button class="delete absolute top-1/2 -translate-y-1/2 right-3 transition-all duration-75 translate-x-full opacity-0 focus-visible:shadow-button" disabled aria-hidden="true" focusable="false" role="presentation" tabindex="-1">
+    <button class="delete absolute top-1/2 -translate-y-1/2 right-3 transition-all duration-75 translate-x-full opacity-0 focus-visible:shadow-button" disabled aria-hidden="true" focusable="false" role="presentation" tabindex="{% if in_header %}-1{% else %}0{% endif %}">
       {% render 'tw-icon-close', width: "25" %}
     </button>
-    <div tabindex="-1" data-predictive-search wawa></div>
+    <div tabindex="-1" data-predictive-search></div>
     <span class="predictive-search-status hidden" role="status" aria-hidden="true"></span>
     </form>
     <button class="close sr-only !w-10 !ml-2 !h-10 focus:not-sr-only border border-main rounded flex justify-center items-center hover:shadow-button" tabindex="-1">

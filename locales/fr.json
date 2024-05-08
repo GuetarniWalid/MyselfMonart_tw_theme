@@ -35,7 +35,8 @@
       "previous": "Page précédente"
     },
     "search": {
-      "search": "Recherche"
+      "search": "Recherche",
+      "search_performed": "Résultats de la recherche"
     },
     "cart": {
       "view": "Afficher mon panier ({{ count }})",
@@ -198,7 +199,7 @@
         "other": "{{ count }} résultats",
         "many": "{{ count }} résultats"
       },
-      "title": "Résultats de la recherche",
+      
       "page": "Page",
       "products": "Produits",
       "search_for": "Rechercher « {{ terms }} »",

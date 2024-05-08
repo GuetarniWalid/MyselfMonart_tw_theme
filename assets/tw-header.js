@@ -292,6 +292,7 @@ class PredictiveSearch extends HTMLElement {
     this.openLoup = document.getElementById('open-search-loup');
     this.body = document.body;
     this.setupEventListeners();
+    this.isInHeader = this.dataset.isInHeader === 'true';
   }
 
   setupEventListeners() {
@@ -316,17 +317,20 @@ class PredictiveSearch extends HTMLElement {
       this.input.value = '';
       this.input.focus();
     });
-    this.addEventListener(
-      'keyup',
-      (evt) => evt.code === 'Escape' && this.close(),
-    );
-    this.closeButton.addEventListener(
+    this.addEventListener('keyup', (evt) => {
+      if (this.isInHeader && evt.code === 'Escape') {
+        this.close();
+      }
+      evt.code === 'Enter' && form.submit();
+    });
+    this.closeButton?.addEventListener(
       'keyup',
       (evt) => evt.code === 'Enter' && this.close(),
     );
-    this.addEventListener('keydown', (e) =>
-      trapFocus(e, this.input, this.closeButton),
-    );
+    this.addEventListener('keydown', (e) => {
+      if (!this.isInHeader) return
+      trapFocus(e, this.input, this.closeButton);
+    });
   }
 
   getQuery() {
@@ -519,6 +523,8 @@ class PredictiveSearch extends HTMLElement {
   }
 
   open = () => {
+    if (this.isInHeader) {
+    }
     document.dispatchEvent(new CustomEvent('PredictiveSearchOpen'));
     this.overlay.classList.remove('hidden');
     this.input.removeAttribute('tabindex');

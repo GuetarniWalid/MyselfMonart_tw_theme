@@ -1145,12 +1145,6 @@
         }
       }
     },
-    "page-cart-items": {
-      "name": "Articles"
-    },
-    "page-cart-subtotal": {
-      "name": "Sous-total"
-    },
     "main-collection-banner": {
       "name": "Description de la collection",
       "settings": {
@@ -1456,18 +1450,6 @@
     "main-search": {
       "name": "Résultats de la recherche",
       "settings": {
-        "image_ratio": {
-          "label": "Rapport d'image",
-          "options__1": {
-            "label": "Adapter à l'image"
-          },
-          "options__2": {
-            "label": "Portrait"
-          },
-          "options__3": {
-            "label": "Square"
-          }
-        },
         "show_secondary_image": {
           "label": "Afficher la deuxième image en survol"
         },
@@ -1481,20 +1463,8 @@
           "label": "Afficher la note du produit",
           "info": "Pour afficher une note, ajoutez une application d'évaluation de produits. [En savoir plus](https://help.shopify.com/manual/online-store/themes/theme-structure/page-types#search-results-section-settings)"
         },
-        "columns_desktop": {
-          "label": "Nombre de colonnes sur ordinateur"
-        },
         "header_mobile": {
           "content": "Mise en page sur mobile"
-        },
-        "columns_mobile": {
-          "label": "Nombre de colonnes sur mobile",
-          "options__1": {
-            "label": "1 colonne"
-          },
-          "options__2": {
-            "label": "2 colonnes"
-          }
         }
       }
     },
@@ -1637,6 +1607,12 @@
       "presets": {
         "name": "Page"
       }
+    },
+    "page-cart-items": {
+      "name": "Articles"
+    },
+    "page-cart-subtotal": {
+      "name": "Sous-total"
     },
     "product-carrousel": {
       "name": "Carrousel de produits",

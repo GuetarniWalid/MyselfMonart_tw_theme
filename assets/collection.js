@@ -264,7 +264,6 @@ class MyLikeButton extends HTMLElement {
         this.saveLiInLocalStorage(likedLisHtml, likedLisString, liParent);
       }
 
-      this.colorButton(likedLisString);
       this.deleteLiInLikedPage(likedLisString.length === 0);
     });
   }
@@ -279,15 +278,6 @@ class MyLikeButton extends HTMLElement {
       return li;
     });
     return { likedLisHtml, likedLisString };
-  }
-
-  colorButton(likedLisString) {
-    this.likesHeart = this.likesHeart ?? document.getElementById('likes');
-    if (likedLisString.length > 0) {
-      this.likesHeart.classList.add('fill-like');
-    } else {
-      this.likesHeart.classList.remove('fill-like');
-    }
   }
 
   saveLiInLocalStorage(likedLisHtml, likedLisString, liParent) {
