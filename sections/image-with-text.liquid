@@ -1,29 +1,31 @@
-<blob-shape-media>
-  <div class="px-4 flex gap-12 md:gap-5 flex-col {% if section.settings.layout == "text_first" %}md:flex-row-reverse{% else %}md:flex-row{% endif %}">
-    <div class="{% if section.settings.enable_blob %}blob{% endif %} w-full md:w-1/2 max-w-[600px] mx-auto overflow-hidden transition-all duration-200">
-      {%- if section.settings.image != blank -%}
-        <img
-          srcset="{%- if section.settings.image.width >= 165 -%}{{ section.settings.image | image_url: width: 165 }} 165w,{%- endif -%}
-            {%- if section.settings.image.width >= 360 -%}{{ section.settings.image | image_url: width: 360 }} 360w,{%- endif -%}
-            {%- if section.settings.image.width >= 480 -%}{{ section.settings.image | image_url: width: 480 }} 480w,{%- endif -%}
-            {%- if section.settings.image.width >= 600 -%}{{ section.settings.image | image_url: width: 600 }} 600w,{%- endif -%}"
-            src="{{ section.settings.image | image_url: width: 600 }}"
-            sizes="(max-width: 767px) 100vw, 50vw"
-            alt="{{ section.settings.image.alt | escape }}"
-            loading="lazy"
-            width="{{ section.settings.image.width }}"
-            height="auto"
-            class="skeleton w-full h-full object-cover">
-      {%- else -%}
-        {{ 'image' | placeholder_svg_tag: 'placeholder-svg bg-gray-300' }}
-      {%- endif -%}
+<div class="{{ section.settings.padding_top }} {{ section.settings.padding_bottom }}">
+  <blob-shape-media>
+    <div class="px-4 flex gap-12 md:gap-5 flex-col {% if section.settings.layout == "text_first" %}md:flex-row-reverse{% else %}md:flex-row{% endif %}">
+      <div class="{% if section.settings.enable_blob %}blob{% endif %} w-full md:w-1/2 max-w-[600px] mx-auto overflow-hidden transition-all duration-200">
+        {%- if section.settings.image != blank -%}
+          <img
+            srcset="{%- if section.settings.image.width >= 165 -%}{{ section.settings.image | image_url: width: 165 }} 165w,{%- endif -%}
+              {%- if section.settings.image.width >= 360 -%}{{ section.settings.image | image_url: width: 360 }} 360w,{%- endif -%}
+              {%- if section.settings.image.width >= 480 -%}{{ section.settings.image | image_url: width: 480 }} 480w,{%- endif -%}
+              {%- if section.settings.image.width >= 600 -%}{{ section.settings.image | image_url: width: 600 }} 600w,{%- endif -%}"
+              src="{{ section.settings.image | image_url: width: 600 }}"
+              sizes="(max-width: 767px) 100vw, 50vw"
+              alt="{{ section.settings.image.alt | escape }}"
+              loading="lazy"
+              width="{{ section.settings.image.width }}"
+              height="auto"
+              class="skeleton w-full h-full object-cover">
+        {%- else -%}
+          {{ 'image' | placeholder_svg_tag: 'placeholder-svg bg-gray-300' }}
+        {%- endif -%}
+      </div>
+      <div class="flex flex-col justify-center w-full md:w-1/2 px-6 lg:px-24 max-w-[600px] mx-auto">
+        <h2 class="text-4xl lg:text-5xl mb-6">{{ section.settings.title }}</h2>
+        <div class="text-lg">{{ section.settings.description }}</div>
+      </div>
     </div>
-    <div class="flex flex-col justify-center w-full md:w-1/2 px-6 lg:px-24 max-w-[600px] mx-auto">
-      <h2 class="text-4xl lg:text-5xl mb-6">{{ section.settings.title }}</h2>
-      <div class="text-lg">{{ section.settings.description }}</div>
-    </div>
-  </div>
-</blob-shape-media>
+  </blob-shape-media>
+</div>
 
 {% if section.settings.enable_blob %}
   <script src="{{ 'component-image-with-text.js' | asset_url }}" defer="defer"></script> 
@@ -32,7 +34,7 @@
 {% schema %}
 {
   "name": "t:sections.image-with-text.name",
-  "class": "page-width my-20",
+  "class": "image-with-text page-width",
   "settings": [
     {
       "type": "image_picker",
@@ -46,10 +48,10 @@
       "default": "Title"
     },
     {
-      "type": "textarea",
+      "type": "richtext",
       "id": "description",
       "label": "t:sections.image-with-text.settings.description.label",
-      "default": "Description ..."
+      "default": "<p>Description ...</p>"
     },
     {
       "type": "select",
@@ -77,6 +79,58 @@
       "id": "enable_blob",
       "label": "t:sections.image-with-text.settings.enable_blob.label",
       "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "select",
+      "id": "padding_top",
+      "label": "t:sections.collections-grid.settings.padding_top.label",
+      "options": [
+        {
+          "value": "pt-0",
+          "label": "t:sections.collections-grid.settings.padding_top.options.none.label"
+        },
+        {
+          "value": "pt-8",
+          "label": "t:sections.collections-grid.settings.padding_top.options.small.label"
+        },
+        {
+          "value": "pt-16",
+          "label": "t:sections.collections-grid.settings.padding_top.options.medium.label"
+        },
+        {
+          "value": "pt-24",
+          "label": "t:sections.collections-grid.settings.padding_top.options.large.label"
+        }
+      ],
+      "default": "pt-16"
+    },
+    {
+      "type": "select",
+      "id": "padding_bottom",
+      "label": "t:sections.collections-grid.settings.padding_bottom.label",
+      "options": [
+        {
+          "value": "pb-0",
+          "label": "t:sections.collections-grid.settings.padding_top.options.none.label"
+        },
+        {
+          "value": "pb-8",
+          "label": "t:sections.collections-grid.settings.padding_top.options.small.label"
+        },
+        {
+          "value": "pb-16",
+          "label": "t:sections.collections-grid.settings.padding_top.options.medium.label"
+        },
+        {
+          "value": "pb-24",
+          "label": "t:sections.collections-grid.settings.padding_top.options.large.label"
+        }
+      ],
+      "default": "pb-16"
     }
   ],
   "presets": [

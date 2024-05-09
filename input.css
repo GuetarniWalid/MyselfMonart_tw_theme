@@ -274,11 +274,17 @@ main-product-blocks .description h2 span {
 }
 
 @layer components {
+  .article-content {
+    @apply w-screen overflow-x-hidden;
+  }
   .article-content :is(h1, h2, h3, h4, h5, h6) {
     @apply mt-10 mb-5;
   }
   .article-content img {
-    @apply !my-5;
+    @apply !my-5 inline-block;
+  }
+  .article-content p {
+    @apply leading-relaxed text-xl;
   }
 
   .blob.active {
@@ -338,7 +344,8 @@ main-product-blocks .description h2 span {
   }
   .article-content a,
   .collection-description a,
-  .page-description a {
+  .page-description a,
+  .image-with-text a {
     @apply relative after:bg-main-10 after:absolute after:top-0 after:bottom-0 after:-right-1 after:-left-1 after:-skew-x-12 inline-block;
   }
 
@@ -358,7 +365,7 @@ main-product-blocks .description h2 span {
   }
 
   .main-page {
-    @apply page-width px-4 mt-16 max-w-[100vw];
+    @apply px-4 mt-16 max-w-[100vw];
   }
 
   .open-nav {

@@ -191,7 +191,7 @@
   "sections": {
     "all": {
       "padding": {
-        "section_padding_heading": "Marge de la section",
+        "section_padding_heading": "Marges de la section",
         "padding_top": "Marge supérieure",
         "padding_bottom": "Marge inférieure"
       },

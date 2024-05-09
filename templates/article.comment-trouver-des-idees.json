@@ -1,0 +1,25 @@
+{
+  "layout": "article",
+  "sections": {
+    "ce4595e5-01e5-472d-ac56-563a87ef335c": {
+      "type": "first-blog-link",
+      "settings": {
+      }
+    },
+    "main": {
+      "type": "main-article",
+      "settings": {
+      }
+    },
+    "11ed1855-d812-4ccc-8f80-65a14ff1c6bd": {
+      "type": "sibling-blog-links",
+      "settings": {
+      }
+    }
+  },
+  "order": [
+    "ce4595e5-01e5-472d-ac56-563a87ef335c",
+    "main",
+    "11ed1855-d812-4ccc-8f80-65a14ff1c6bd"
+  ]
+}

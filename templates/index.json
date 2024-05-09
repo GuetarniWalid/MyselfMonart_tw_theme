@@ -391,40 +391,40 @@
           "type": "svg_block",
           "settings": {
             "badge_logo": "<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 256 256\"><path fill=\"currentColor\" d=\"M148 48v160a12 12 0 0 1-24 0V69.19l-21.83 13.1a12 12 0 0 1-12.34-20.58l40-24A12 12 0 0 1 148 48\"><\/path><\/svg>",
-            "heading": "CHOISISSEZ",
-            "text": "Choisissez votre tableau deco parmi la large collection de tableaux",
             "logo_size": 45,
-            "background_plus_border": true
+            "background_plus_border": true,
+            "heading": "CHOISISSEZ",
+            "text": "Choisissez votre tableau deco parmi la large collection de tableaux"
           }
         },
         "svg_block_UtVXBA": {
           "type": "svg_block",
           "settings": {
             "badge_logo": "<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M14.121 5.879A3 3 0 0 0 9 8a1 1 0 0 1-2 0a5 5 0 1 1 8.535 3.535L9.88 17.193A3 3 0 0 0 9.016 19H16a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1v-.686a5 5 0 0 1 1.464-3.536l5.657-5.657a3 3 0 0 0 0-4.242\" clip-rule=\"evenodd\"><\/path><\/svg>",
-            "heading": "PERSONNALISEZ",
-            "text": "Configurez la taille et le support de votre tableau",
             "logo_size": 45,
-            "background_plus_border": true
+            "background_plus_border": true,
+            "heading": "PERSONNALISEZ",
+            "text": "Configurez la taille et le support de votre tableau"
           }
         },
         "svg_block_pTNkWn": {
           "type": "svg_block",
           "settings": {
             "badge_logo": "<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2.5\" d=\"M8 19a5 5 0 1 0 3-9l5-6H8\"><\/path><\/svg>",
-            "heading": "COMMANDEZ",
-            "text": "Nous fabriquons votre tableau et nous chargeons de vous l'envoyer.",
             "logo_size": 45,
-            "background_plus_border": true
+            "background_plus_border": true,
+            "heading": "COMMANDEZ",
+            "text": "Nous fabriquons votre tableau et nous chargeons de vous l'envoyer."
           }
         },
         "svg_block_mLd4kz": {
           "type": "svg_block",
           "settings": {
             "badge_logo": "<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2.5\" d=\"m10 4l-1.522 7.608A2 2 0 0 0 10.44 14H16m0 0V8m0 6v6\"><\/path><\/svg>",
-            "heading": "ADMIREZ",
-            "text": "Accrochez votre tableau et profitez du résultat !",
             "logo_size": 45,
-            "background_plus_border": true
+            "background_plus_border": true,
+            "heading": "ADMIREZ",
+            "text": "Accrochez votre tableau et profitez du résultat !"
           }
         }
       },
@@ -483,7 +483,7 @@
       "settings": {
         "image": "shopify:\/\/shop_images\/equipe-de-graphiste-et-decorateur-interieur.png",
         "title": "- NOS VALEURS -",
-        "description": "Description ...Nous croyons en l'importance de permettre à chacun d'exprimer sa personnalité et son histoire à travers sa décoration intérieure. Avec nos tableaux de décoration, chaque mur devient le narrateur de votre histoire.",
+        "description": "<p>Nous croyons en l'importance de permettre à chacun d'exprimer sa personnalité et son histoire à travers sa décoration intérieure. Avec nos tableaux de décoration, chaque mur devient le narrateur de votre histoire.<\/p>",
         "layout": "image_first",
         "enable_blob": true
       }

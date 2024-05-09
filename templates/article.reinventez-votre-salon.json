@@ -9,62 +9,97 @@
     "main": {
       "type": "main-article",
       "settings": {
+        "show_date": true
       }
     },
-    "51e66a90-65d9-405b-bfa3-873aff5a94ab": {
-      "type": "image-with-text",
+    "multicolumn_wxYqP8": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_7ReQ6Y": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/relooker-salon-2_0b50463d-0b2d-4a15-b826-509ce10b7f13.jpg",
+            "title": "7 astuces pour relooker votre maison",
+            "text": "<p>Donnez une touche de fraîcheur à votre maison avec astuces simples et abordables de relooking d'intérieur. Transformez votre espace en un lieu confortable, élégant et moderne sans dépenser une fortune. Découvrez nos 7 astuces pratiques pour une décoration créative et inspirante.<\/p>",
+            "link_label": "Lire la suite",
+            "link": "shopify:\/\/blogs\/tableau-salon\/7-astuces-pour-relooker-votre-maison",
+            "to_obfuscate": false
+          }
+        },
+        "column_LfJP3J": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/relloker-salon-budget-pas-chere_c9523088-0a33-47ca-a55b-e12960200927.png",
+            "title": "6 astuces pour décorer un salon avec un petit budget",
+            "text": "<p>Découvrez des astuces déco inattendues pour métamorphoser votre salon sans vider votre portefeuille. De la magie des couleurs au charme des brocantes, embarquez dans une aventure créative et économique. Prêt à être ébloui<\/p>",
+            "link_label": "Lire la suite",
+            "link": "https:\/\/www.myselfmonart.com\/blogs\/tableau-salon\/6-astuces-pour-decorer-un-salon-avec-un-petit-budget-idee-deco-pas-chere",
+            "to_obfuscate": false
+          }
+        },
+        "column_TJMEYm": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/salon-pour-accueillir_b534c7fe-1406-4f8e-b688-7abfdb2f382b.jpg",
+            "title": "Comment aménager un salon pour recevoir",
+            "text": "<p>Découvrez nos astuces pour transformer votre salon en un espace accueillant et pratique pour recevoir vos invités. Éclairage, meubles, décoration et rangements pratiques : tout pour créer une atmosphère conviviale et chaleureuse chez vous. Avec notre guide d'aménagement, vous pourrez profiter pleinement de moments inoubliables en famille ou entre amis.<\/p>",
+            "link_label": "Lire la suite",
+            "link": "https:\/\/www.myselfmonart.com\/blogs\/tableau-salon\/comment-amenager-un-espace-accueillant-et-pratique-pour-recevoir",
+            "to_obfuscate": false
+          }
+        },
+        "column_Hhkfcd": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/idee-Ambiance-cocoonind-salon_083885bd-07bb-4341-9560-b2c5fccbef11.jpg",
+            "title": "Ambiance cocooning",
+            "text": "<p>Vous rêvez d'un salon chaleureux et confortable pour vous ressourcer ? Laissez-nous vous guider avec nos astuces de décoration pour créer une ambiance cocooning. Transformez votre salon en un havre de paix où vous pourrez vous détendre pleinement. Prêt à plonger dans notre univers douillet ? Cliquez ci-dessous découvrir nos conseils !<\/p>",
+            "link_label": "Lire la suite",
+            "link": "https:\/\/www.myselfmonart.com\/blogs\/tableau-salon\/ambiance-cocooning-comment-creer-un-salon-confortable-et-chaleureux",
+            "to_obfuscate": false
+          }
+        },
+        "column_3T4X3B": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/inspiration-decoration-africaine-pour-salon-pas-chere_9c1dc9cb-5e9d-40de-8b49-c27f0e373544.jpg",
+            "title": "Décoration africaine - voyager de votre salon",
+            "text": "<p>Voyagez au cœur de l'Afrique avec notre blog déco ! Couleurs chaudes, motifs vibrants, matériaux naturels et art ancestral vous attendent. Découvrez comment créer une décoration authentique, trouvez des tableaux uniques et apprenez à intégrer des éléments africains sans vous ruiner. Osez l'exotisme et transformez votre intérieur en un véritable sanctuaire africain. Plongez dans notre blog et laissez-vous inspirer <\/p>",
+            "link_label": "Lire la suite",
+            "link": "https:\/\/www.myselfmonart.com\/blogs\/tableau-salon\/voyagez-depuis-votre-salon-guide-pratique-pour-une-decoration-africaine-reussi-et-abordable",
+            "to_obfuscate": false
+          }
+        }
+      },
+      "block_order": [
+        "column_7ReQ6Y",
+        "column_LfJP3J",
+        "column_TJMEYm",
+        "column_Hhkfcd",
+        "column_3T4X3B"
+      ],
       "settings": {
-        "image": "shopify:\/\/shop_images\/relooker-salon-2.jpg",
-        "layout": "image_first",
-        "enable_blob": true
-      }
-    },
-    "fc528c4b-187f-4367-bc91-6aa859abb94b": {
-      "type": "image-with-text",
-      "settings": {
-        "image": "shopify:\/\/shop_images\/idee-Ambiance-cocoonind-salon_1a4d5be5-4eb8-4b1a-9fab-959f9ac1fbec.jpg",
-        "layout": "text_first",
-        "enable_blob": true
-      }
-    },
-    "238f99d8-a2c2-4492-981d-c20ea55301f9": {
-      "type": "image-with-text",
-      "settings": {
-        "image": "shopify:\/\/shop_images\/salon-pour-accueillir.jpg",
-        "layout": "image_first",
-        "enable_blob": true
-      }
-    },
-    "556a8432-4d1b-4684-9d44-adb04332a6e1": {
-      "type": "image-with-text",
-      "settings": {
-        "image": "shopify:\/\/shop_images\/relloker-salon-budget-pas-chere.png",
-        "layout": "text_first",
-        "enable_blob": true
-      }
-    },
-    "4aca8a5e-f16a-4dd2-aebd-c8afbb747dcd": {
-      "type": "image-with-text",
-      "settings": {
-        "image": "shopify:\/\/shop_images\/inspiration-decoration-africaine-pour-salon-pas-chere.jpg",
-        "layout": "image_first",
-        "enable_blob": true
+        "title": "Découvrir nos autres blogs",
+        "image_shape": "aspect-square object-cover",
+        "columns_desktop": 3,
+        "show_backgounds": true,
+        "button_label": "",
+        "button_link": "",
+        "to_obfuscate": false
       }
     },
     "11ed1855-d812-4ccc-8f80-65a14ff1c6bd": {
       "type": "sibling-blog-links",
       "settings": {
+        "padding_top": "pt-8",
+        "padding_bottom": "pb-8"
       }
     }
   },
   "order": [
     "ce4595e5-01e5-472d-ac56-563a87ef335c",
     "main",
-    "51e66a90-65d9-405b-bfa3-873aff5a94ab",
-    "fc528c4b-187f-4367-bc91-6aa859abb94b",
-    "238f99d8-a2c2-4492-981d-c20ea55301f9",
-    "556a8432-4d1b-4684-9d44-adb04332a6e1",
-    "4aca8a5e-f16a-4dd2-aebd-c8afbb747dcd",
+    "multicolumn_wxYqP8",
     "11ed1855-d812-4ccc-8f80-65a14ff1c6bd"
   ]
 }

@@ -31,6 +31,8 @@
               <li class="obfuscate flex items-center gap-3 hover:bg-main-5 p-3 rounded-lg cursor-pointer" data-url64="{{ block.settings.product.url | base64_encode }}" tabindex="0">
                 {% if block.settings.product.images[1] != blank %}
                   {{ block.settings.product.images[1] | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: block.settings.product.images[1].alt,loading: 'lazy', class: 'rounded-md' }}
+                {% elsif block.settings.product.images[0] != blank %}
+                  {{ block.settings.product.images[0] | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: block.settings.product.images[0].alt,loading: 'lazy', class: 'rounded-md' }}
                 {% endif %}
                 {{ block.settings.product.title | escape }}
               </li>

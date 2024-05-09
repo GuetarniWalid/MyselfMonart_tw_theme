@@ -4,6 +4,15 @@
     "cf6565ea-5338-4b92-985b-b5b0824700db": {
       "type": "breadcrumb",
       "settings": {
+        "main_color": "#1a2e05",
+        "secondary_color": "#ebd0cd"
+      }
+    },
+    "main-collection-banner": {
+      "type": "main-collection-banner",
+      "settings": {
+        "show_collapse_button": true,
+        "to_place_first": true
       }
     },
     "5ad0ce2c-dd68-4586-b27a-fe8e866d0740": {
@@ -15,7 +24,7 @@
             "image": "shopify:\/\/shop_images\/tableaux-africain.jpg",
             "collection": "tableau-africain",
             "nb_columns": "col-span-12",
-            "lazy_load": true,
+            "lazy_load": false,
             "paragraph": "<h3>DÉCOUVREZ NOTRE COLLECTION DE TABLEAUX AFRICAIN<\/h3><p>Plongez au cœur de l'Afrique et laissez-vous envoûter par la diversité époustouflante de notre collection de tableaux africains. Explorez les paysages majestueux, les animaux emblématiques et les cultures fascinantes de ce continent extraordinaire.<\/p><p>Nos tableaux africains capturent la splendeur des savanes dorées, des jungles luxuriantes et des déserts arides. Les couleurs chaudes et envoûtantes évoquent le soleil brûlant, les couchers de soleil enflammés et les éclats de vie qui animent chaque coin de l'Afrique.<\/p><p>Les animaux sauvages, tels que les lions majestueux, les éléphants imposants et les girafes gracieuses, prennent vie sous le pinceau de nos artistes. Chaque détail est minutieusement rendu pour capturer la puissance et la beauté de ces créatures emblématiques.<\/p><p>Plongez dans l'univers des tribus africaines, avec des portraits captivants qui reflètent la richesse des traditions et des coutumes ancestrales. Les visages expressifs et les vêtements colorés témoignent de l'héritage culturel profondément enraciné dans chaque communauté.<\/p><p><br\/>  Nos tableaux africains vous transportent également dans les villes animées et les marchés pittoresques, où l'effervescence et la diversité règnent en maîtres. Les scènes de vie quotidienne, les danses traditionnelles et les festivités vibrantes vous immergent dans l'atmosphère vibrante de<br\/>  l'Afrique.<br\/><\/p><p>Que vous recherchiez une touche de mystère et de magie, une ambiance chaleureuse et accueillante, ou encore une célébration de la nature sauvage, notre collection de tableaux africains offre un éventail de choix pour satisfaire tous les goûts et toutes les envies.<\/p><p>Ces œuvres d'art uniques sont réalisées avec passion et savoir-faire, utilisant des techniques artistiques traditionnelles pour capturer l'essence même de l'Afrique. Chaque tableau est une véritable invitation à l'évasion, à la découverte et à l'émerveillement.<\/p><p><br\/>  Apportez une part de l'Afrique chez vous avec notre collection de tableaux africains. Laissez ces œuvres d'art évoquer des souvenirs de voyages lointains, inspirer votre imagination et créer une atmosphère empreinte de l'âme de l'Afrique. Commandez dès maintenant et laissez-vous transporter dans<br\/>  un voyage artistique inoubliable à travers ce continent envoûtant.<br\/><\/p>"
           }
         },
@@ -25,7 +34,7 @@
             "image": "shopify:\/\/shop_images\/tableau-japonais_b690092e-26f0-4eb2-94e7-020fc68fa272.jpg",
             "collection": "tableau-japonais",
             "nb_columns": "col-span-12",
-            "lazy_load": true,
+            "lazy_load": false,
             "paragraph": "<h3>DÉCOUVREZ NOTRE COLLECTION DE TABLEAUX JAPONAIS<\/h3><p><br\/>  Si vous aspirez à ajouter une touche d'exotisme et de splendeur à votre intérieur, nul besoin de chercher plus loin que notre collection d'œuvres d'art inspirées de l'art japonais. Les tableaux japonais uniques que vous trouverez dans notre boutique sont une façon authentique de sublimer vos murs<br\/>  et d'exprimer votre personnalité et votre sens artistique.<br\/><\/p><p><br\/>  Nos créations artistiques s'inspirent de la culture japonaise, mettant en scène des paysages à couper le souffle, des portraits délicats de geishas, des scènes de vie quotidienne animée à Tokyo, ainsi que des jardins japonais enchanteurs, et bien d'autres encore. Les motifs les plus prisés de<br\/>  notre collection incluent la fleur de cerisier, symbole intemporel de l'éphémère beauté de la nature, les samouraïs, avec leur code d'honneur chevaleresque, ainsi que le concept de zen, prônant l'harmonie et la sérénité.<br\/><\/p><p><br\/>  Quel que soit votre style personnel, notre collection de tableaux japonais est conçue pour combler toutes les attentes et tous les budgets. Nous vous offrons une vaste gamme de styles et de formats, des pièces maîtresses imposantes pour votre salon jusqu'aux tableaux plus modestes qui trouveront<br\/>  leur place dans votre bureau. De plus, nous vous proposons également des options de personnalisation sur mesure, telles que l'impression sur toile, le plexiglas ou l'aluminium, afin de répondre à vos besoins spécifiques. Ajoutez une touche d'élégance et de modernité à votre décoration intérieure,<br\/>  tout en créant une atmosphère chaleureuse et accueillante dans votre foyer grâce à nos tableaux d'exception.<br\/><\/p><p><br\/>  Commandez dès maintenant et bénéficiez d'une livraison rapide pour vivre une expérience inoubliable en matière de décoration intérieure. Laissez-vous séduire par la beauté envoûtante et l'exotisme captivant de nos tableaux japonais uniques, qui sauront magnifier votre intérieur et refléter avec<br\/>  éclat votre sens artistique.<br\/><\/p>"
           }
         }
@@ -44,12 +53,6 @@
       "type": "main-collection-product-grid",
       "settings": {
         "show_secondary_image": true
-      }
-    },
-    "main-collection-banner": {
-      "type": "main-collection-banner",
-      "settings": {
-        "show_collapse_button": false
       }
     },
     "0a4d0ad2-05f5-4939-8b62-ad000c188ded": {
@@ -107,9 +110,9 @@
   },
   "order": [
     "cf6565ea-5338-4b92-985b-b5b0824700db",
+    "main-collection-banner",
     "5ad0ce2c-dd68-4586-b27a-fe8e866d0740",
     "main-collection-product-grid",
-    "main-collection-banner",
     "0a4d0ad2-05f5-4939-8b62-ad000c188ded"
   ]
 }

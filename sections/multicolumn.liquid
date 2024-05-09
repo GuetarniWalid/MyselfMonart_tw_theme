@@ -28,7 +28,7 @@
         endif
       endif
     %}
-    <li class="max-w-96 p-6 mb-8 w-full {% if section.settings.show_backgounds %}bg-main-5{% endif %} justify-self-center {{ li_class }}">            
+    <li class="flex flex-col max-w-96 p-6 mb-8 w-full {% if section.settings.show_backgounds %}bg-main-5{% endif %} justify-self-center {{ li_class }}">            
       {%- if block.settings.image != blank -%}
         <img
             class="skeleton mb-6 {{ section.settings.image_shape }}"
@@ -51,7 +51,7 @@
         {{ 'image' | placeholder_svg_tag: svg_class }}
       {%- endif -%}
       {%- if block.settings.title != blank -%}
-        <h3 class="mb-3 overflow-hidden text-ellipsis">
+        <h3 class="mb-4 overflow-hidden text-ellipsis">
           {%- if block.settings.link != blank -%}
             {% if section.settings.to_obfuscate %}
               <span data-url64="{{ block.settings.link | base64_encode }}" class="obfuscate">
@@ -69,7 +69,7 @@
         <div class="leading-relaxed text-lg mb-3">{{ block.settings.text }}</div>
       {%- endif -%}
       {%- if block.settings.link != blank and block.settings.link_label != blank -%}
-        <div class="text-center my-6">
+        <div class="flex-grow my-6 flex justify-center items-end">
           {% if block.settings.to_obfuscate %}
             <button class="obfuscate inline-block py-3 px-14 border-main border-2 bg-main-5 rounded hover:bg-main-10 transition-all duration-100 cursor-pointer" data-url64="{{ block.settings.link | base64_encode }}">
               {{ block.settings.link_label | escape }}
@@ -101,9 +101,9 @@
 {% schema %}
 {
   "name": "t:sections.multicolumn.name",
-  "class": "page-width py-6",
+  "class": "page-width py-6 px-3",
   "tag": "section",
-  "max_blocks": 3,
+  "max_blocks": 6,
   "settings": [
     {
       "type": "text",

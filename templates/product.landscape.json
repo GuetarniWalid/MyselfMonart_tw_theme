@@ -256,7 +256,7 @@
       "settings": {
         "image": "shopify:\/\/shop_images\/texture_x3_70ae7c8b-712c-4c74-bb93-e76a2eddc37b.jpg",
         "title": "EN HARMONIE",
-        "description": "Vous avez le souci du détail ? Allez plus loin en personnalisant aussi le support. Sur toile, plexiglas ou aluminium, choisissez l’aspect qui s’accorde le mieux à votre intérieur.",
+        "description": "<p>Vous avez le souci du détail ? Allez plus loin en personnalisant aussi le support. Sur toile, plexiglas ou aluminium, choisissez l’aspect qui s’accorde le mieux à votre intérieur.</p>",
         "layout": "image_first",
         "enable_blob": true
       }
@@ -266,7 +266,7 @@
       "settings": {
         "image": "shopify:\/\/shop_images\/metre.jpg",
         "title": "DU SUR-MESURE",
-        "description": "Choisissez la taille de votre tableau. En paysage, portrait, carré, petit ou grand, à vous de voir selon votre espace.",
+        "description": "<p>Choisissez la taille de votre tableau. En paysage, portrait, carré, petit ou grand, à vous de voir selon votre espace.</p>",
         "layout": "text_first",
         "enable_blob": true
       }
@@ -276,7 +276,7 @@
       "settings": {
         "image": "shopify:\/\/shop_images\/tour_eiffel.jpg",
         "title": "MADE IN FRANCE",
-        "description": "Une touche d'art à la française. Enracinés dans notre cher pays, nous mettons l'accent sur votre satisfaction en offrant un service client de qualité supérieure.",
+        "description": "<p>Une touche d'art à la française. Enracinés dans notre cher pays, nous mettons l'accent sur votre satisfaction en offrant un service client de qualité supérieure.</p>",
         "layout": "image_first",
         "enable_blob": true
       }

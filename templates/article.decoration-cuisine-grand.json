@@ -9,35 +9,31 @@
     "main": {
       "type": "main-article",
       "settings": {
+        "show_date": true
       }
     },
     "ae1ee69f-f7ac-4c83-b2ed-4a6e579abe24": {
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/credence-tapisserie-colore-cusisine.jpg",
+        "title": "Comment décorer les murs de sa cuisine ?",
+        "description": "<p>Vous cherchez des idées pour habiller les murs de votre cuisine ? Dans ce blog, découvrez des conseils sur l'utilisation de revêtements muraux, de dosserets colorés ou encore d'étagères décoratives. Transformez vos murs en véritables éléments de décoration et créez une ambiance unique dans votre cuisine.<\/p>",
         "layout": "image_first",
-        "enable_blob": true
+        "enable_blob": true,
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
       }
     },
     "e7bbe058-9aee-4e29-b923-846f77b7f084": {
       "type": "image-with-text",
       "settings": {
+        "image": "shopify:\/\/shop_images\/8-idees-decoration-cuisine.png",
+        "title": "Comment sublimer une cuisine ?",
+        "description": "<p>Votre cuisine mérite d'être sublimée et de devenir un véritable joyau dans votre maison. Dans ce blog, nous vous donnerons des astuces pour optimiser l'espace de rangement, choisir les bonnes couleurs, sélectionner des matériaux de qualité et mettre en valeur votre éclairage. Donnez une nouvelle vie à votre cuisine en la rendant à la fois fonctionnelle et esthétique.<\/p>",
         "layout": "text_first",
-        "enable_blob": true
-      }
-    },
-    "06633d81-0a12-49a8-a462-880b65d64464": {
-      "type": "image-with-text",
-      "settings": {
-        "layout": "image_first",
-        "enable_blob": true
-      }
-    },
-    "0ce687f7-c459-476c-be8f-093aec6781a4": {
-      "type": "image-with-text",
-      "settings": {
-        "layout": "text_first",
-        "enable_blob": true
+        "enable_blob": true,
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
       }
     },
     "ffdacac5-aa4b-4417-945c-5a80065fcc93": {
@@ -46,7 +42,9 @@
         "template--18952696496475__ffdacac5-aa4b-4417-945c-5a80065fcc93-168414696213c85d90-1": {
           "type": "text",
           "settings": {
-            "text": "<p><strong>La décoration de votre cuisine est une occasion de laisser libre cours à votre créativité et de refléter votre style personnel. Qu'il s'agisse d'habiller les murs, de sublimer l'espace, de choisir les bonnes couleurs ou de faire du Home-staging, il existe une multitude de possibilités pour créer une cuisine à la fois fonctionnelle et esthétique. Inspirez-vous des blogs spécialisés mentionnés pour approfondir vos connaissances et réaliser la cuisine de vos rêves !<\/strong><\/p>"
+            "text": "<p>La décoration de votre cuisine est une occasion de laisser libre cours à votre créativité et de refléter votre style personnel. Qu'il s'agisse d'habiller les murs, de sublimer l'espace, de choisir les bonnes couleurs ou de faire du Home-staging, il existe une multitude de possibilités pour créer une cuisine à la fois fonctionnelle et esthétique. Inspirez-vous des blogs spécialisés mentionnés pour approfondir vos connaissances et réaliser la cuisine de vos rêves !<\/p>",
+            "text_size": "text-xl",
+            "is_lighten": false
           }
         }
       },
@@ -54,9 +52,9 @@
         "template--18952696496475__ffdacac5-aa4b-4417-945c-5a80065fcc93-168414696213c85d90-1"
       ],
       "settings": {
-        "desktop_content_position": "center",
         "content_alignment": "center",
-        "full_width": true
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
       }
     },
     "0044807a-507c-4948-b3c5-72a90229ca34": {
@@ -126,6 +124,8 @@
     "11ed1855-d812-4ccc-8f80-65a14ff1c6bd": {
       "type": "sibling-blog-links",
       "settings": {
+        "padding_top": "pt-8",
+        "padding_bottom": "pb-8"
       }
     }
   },
@@ -134,8 +134,6 @@
     "main",
     "ae1ee69f-f7ac-4c83-b2ed-4a6e579abe24",
     "e7bbe058-9aee-4e29-b923-846f77b7f084",
-    "06633d81-0a12-49a8-a462-880b65d64464",
-    "0ce687f7-c459-476c-be8f-093aec6781a4",
     "ffdacac5-aa4b-4417-945c-5a80065fcc93",
     "0044807a-507c-4948-b3c5-72a90229ca34",
     "11ed1855-d812-4ccc-8f80-65a14ff1c6bd"

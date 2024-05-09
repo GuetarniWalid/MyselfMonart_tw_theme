@@ -1,0 +1,154 @@
+{
+  "layout": "collection",
+  "sections": {
+    "cf6565ea-5338-4b92-985b-b5b0824700db": {
+      "type": "breadcrumb",
+      "settings": {
+        "main_color": "#1a2e05",
+        "secondary_color": "#ebd0cd"
+      }
+    },
+    "main-collection-banner": {
+      "type": "main-collection-banner",
+      "settings": {
+        "show_collapse_button": true,
+        "to_place_first": true
+      }
+    },
+    "collections_grid_Hz3KRG": {
+      "type": "collections-grid",
+      "blocks": {
+        "collection_49e7fq": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-paysage_8e1c68fe-763d-4c8b-94cb-85e6d50f362c.jpg",
+            "collection": "tableau-paysage",
+            "nb_columns": "col-span-12",
+            "lazy_load": false,
+            "paragraph": "<h3>Embarquez pour un Voyage Visuel avec Nos Tableaux de Paysages<\/h3><p><br\/>    Perdez-vous dans l’immensité des horizons avec notre gamme de tableaux de paysages du monde. Chaque œuvre est une invitation au voyage, offrant des escapades visuelles à travers des terrains montagneux, des déserts arides, et des cités pittoresques. Ces paysages méticuleusement capturés sont à la fois un hommage à la terre et une opportunité pour vous de vous immerger dans des panoramas lointains depuis le confort de votre foyer.<br\/><\/p><p><br\/>    Chacune de ces collections est soigneusement conçue pour apporter équilibre, beauté, et serenité à votre décoration d'interieur transformant ainsi vos pièces en sanctuaires de nature, d'évasion et d'exploration visuelle. Choisir nos tableaux de paysages, c’est adopter des fragments du monde naturel, des pépites de la splendeur de la Terre, et les intégrer dans votre quotidien pour une expérience quotidienne enrichissante et inspirante. Invitez la nature, l'aventure et l'émerveillement dans votre maison avec nos œuvres qui parlent à votre être et résonnent avec vos espaces.<br\/><\/p>"
+          }
+        },
+        "collection_cWitXL": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableaux-animaux.jpg",
+            "collection": "tableau-animaux",
+            "nb_columns": "col-span-8",
+            "lazy_load": false,
+            "paragraph": "<h3>DÉCOUVREZ NOTRE COLLECTION DE TABLEAUX ANIMAUX<\/h3><p><br\/>  Pour habiller les murs de votre maison ou offrir un cadeau original à vos proches,découvrez notre collection impressionnante de tableaux design et moderne et optez pour un tableau d'art sur le thème des animaux. Vous trouverez celui qui correspond le mieux à votre intérieur et vos envies, que vous<br\/>  préfériez un tableau de loup sauvage, un tableau de lion dominant, un tableau de cerf sauvage, ou encore un tableau de chaton mignon. Nous proposons une variété d'animaux pour répondre à toutes vos préférences et passions.<br\/><\/p><p><br\/>  Nos tableaux d'animaux sont imprimés sur toile, aluminium, ou plexiglas de haute qualité avec des couleurs éclatantes et une netteté exceptionnelle pour donner vie à chaque détail. De plus, nous offrons différentes tailles pour s'adapter à tous les espaces, grands ou petits. Que vous souhaitiez un<br\/>  tableau imposant pour habiller votre salon ou une petite toile pour votre bureau, nous avons tout ce qu'il vous faut pour embellir votre espace de vie.<br\/><\/p><p><br\/>  Offrez à vos proches un cadeau unique et personnalisé en choisissant l'animal qui correspond le mieux à leur personnalité et à leur goût. Ils seront ravis de recevoir un tel cadeau original et de pouvoir ajouter une touche d'exotisme et de créativité à leur décoration intérieure. Avec notre<br\/>  collection de tableaux animaux, offrez des cadeaux qui sortent de l'ordinaire, ajoutez une touche de nature et une atmosphère sauvage à votre maison.<br\/><\/p>"
+          }
+        },
+        "collection_rFHRLY": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableaux-fleurs.jpg",
+            "collection": "tableau-fleurs",
+            "nb_columns": "col-span-4",
+            "lazy_load": false,
+            "paragraph": "<h3>PARCOUREZ NOTRE SÉLECTION ÉLÉGANTE DE TABLEAUX FLORAUX<\/h3><p><br\/>Ornez vos murs avec la délicatesse de nos tableaux fleurs, et apportez un souffle de nature à votre intérieur. Découvrez la finesse d'une tulipe, la tendresse d'une rose ou la sérénité d'un champ de lavande à travers notre collection. Chaque toile est une célébration de la beauté florale, invitant à la détente et à la rêverie.<br\/><\/p><p><br\/>Réalisés avec soin, nos tableaux se déclinent sur toile, aluminium et plexiglas pour une qualité d'image exceptionnelle qui fait ressortir chaque nuance. Petits ou grands formats, ils s'intègrent harmonieusement dans tous les espaces, que ce soit pour une note de couleur dans un bureau ou un élément central dans votre salon.<br\/><\/p><p><br\/>Offrez ou offrez-vous un tableau de cette collection pour introduire élégance et poésie dans votre décor. Chaque pièce, chargée de sens et d'émotion, est une façon subtile d'enrichir son environnement quotidien.<br\/><\/p>"
+          }
+        },
+        "collection_w4BEEU": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-mer_5d411c3e-8dbd-4fa7-8ea1-1a580d034068.jpg",
+            "collection": "tableau-mer-1",
+            "nb_columns": "col-span-12",
+            "lazy_load": true,
+            "paragraph": "<h3>Naviguez Vers l'Horizon avec Nos Tableaux Marins<\/h3><p><br\/>Plongez dans l'immensité bleue et l'apaisante tranquillité de l'océan avec notre collection de tableaux marins. Chaque pièce est une fenêtre ouverte sur le vaste monde aquatique, proposant des évasions uniques à travers des plages sereines, des vagues tumultueuses, et des horizons lointains. Ces œuvres, capturant l'immensité de la mer, sont un hommage à sa puissance et à sa douceur, offrant à votre intérieur une touche de calme et d'évasion.<br\/><br\/>Notre sélection est minutieusement choisie pour infuser harmonie, beauté, et sérénité dans votre décoration intérieure, transformant vos pièces en havres de paix où nature, rêve et découverte visuelle s'entremêlent. Embrasser nos tableaux de la mer, c'est intégrer l'esprit de l'océan dans votre quotidien, une invitation à accueillir la tranquillité, l'aventure, et l'émerveillement au sein de votre foyer. Laissez ces paysages maritimes dialoguer avec votre âme et harmoniser votre décoration, pour une expérience quotidienne à la fois enrichissante et inspirante.<\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "collection_49e7fq",
+        "collection_cWitXL",
+        "collection_rFHRLY",
+        "collection_w4BEEU"
+      ],
+      "settings": {
+        "title": "",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-8"
+      }
+    },
+    "main-collection-product-grid": {
+      "type": "main-collection-product-grid",
+      "settings": {
+        "show_secondary_image": true
+      }
+    },
+    "0a4d0ad2-05f5-4939-8b62-ad000c188ded": {
+      "type": "collection-list",
+      "blocks": {
+        "f68915d1-93be-46c1-878a-5df7b674c747": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "tableau-salon"
+          }
+        },
+        "template--16404731756799__0a4d0ad2-05f5-4939-8b62-ad000c188ded-1682929193c7effb00-0": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "tableau-bureau"
+          }
+        },
+        "e964a270-02f8-4c19-9b0c-dc612dc45735": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "tableau-animaux"
+          }
+        },
+        "template--16404731756799__0a4d0ad2-05f5-4939-8b62-ad000c188ded-1682929193c7effb00-2": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "tableau-ethnique"
+          }
+        },
+        "template--16404731756799__0a4d0ad2-05f5-4939-8b62-ad000c188ded-1682929193c7effb00-1": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "tableau-chambre"
+          }
+        },
+        "db38a57f-8d13-45d1-bb24-c03a4a6aca35": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "tableau-cuisine"
+          }
+        },
+        "393261cf-2549-49f1-9b14-70a313dddabf": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "tableau-couleur"
+          }
+        },
+        "featured_collection_C3UaPe": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "tableau-marvel"
+          }
+        }
+      },
+      "block_order": [
+        "f68915d1-93be-46c1-878a-5df7b674c747",
+        "template--16404731756799__0a4d0ad2-05f5-4939-8b62-ad000c188ded-1682929193c7effb00-0",
+        "e964a270-02f8-4c19-9b0c-dc612dc45735",
+        "template--16404731756799__0a4d0ad2-05f5-4939-8b62-ad000c188ded-1682929193c7effb00-2",
+        "template--16404731756799__0a4d0ad2-05f5-4939-8b62-ad000c188ded-1682929193c7effb00-1",
+        "db38a57f-8d13-45d1-bb24-c03a4a6aca35",
+        "393261cf-2549-49f1-9b14-70a313dddabf",
+        "featured_collection_C3UaPe"
+      ],
+      "settings": {
+        "title": "NOS AUTRES COLLECTIONS"
+      }
+    }
+  },
+  "order": [
+    "cf6565ea-5338-4b92-985b-b5b0824700db",
+    "main-collection-banner",
+    "collections_grid_Hz3KRG",
+    "main-collection-product-grid",
+    "0a4d0ad2-05f5-4939-8b62-ad000c188ded"
+  ]
+}
