@@ -10,18 +10,17 @@ import BuyButton from './BuyButton';
 
 export default function App() {
   const initialoptionSets = useMemo(() => useFormatOptions(0, 0), []);
-  const [selectIndexSelected, setSelectIndexSelected] = useState(null);
-  const [optionIndexListSelected, setOptionIndexListSelected] = useState(
+  const [optionIndecesSelected, setOptionIndecesSelected] = useState(
     new Array(initialoptionSets.length).fill(0),
   );
   const [currentOption, setCurrentOption] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(null);
   const optionSets = useFormatOptions(
-    optionIndexListSelected[0],
-    optionIndexListSelected[1],
+    optionIndecesSelected[0],
+    optionIndecesSelected[1],
   );
-  const newOptionIndexListSelectedFormatted = useFormatOptionIndexListSelected(
-    optionIndexListSelected,
+  const newOptionIndecesSelected = useFormatOptionIndexListSelected(
+    optionIndecesSelected,
     optionSets,
   );
   const isMobile = useIsMobile();
@@ -30,6 +29,8 @@ export default function App() {
   const addonsDrawerRef = useRef(document.getElementById('addonsDrawer'));
   const CloseButtonRef = useRef(null);
   const radiosContainerRef = useRef(null);
+  const focusedElemRef = useRef(null);
+  const openElemRef = useRef(null);
 
   useEffect(() => {
     const config = {
@@ -76,24 +77,22 @@ export default function App() {
       mobileSummaryRef.current &&
       !mobileSummaryRef.current.contains(event.target)
     ) {
-      setSelectIndexSelected(null);
     }
     if (
       !isMobile &&
       desktopSelectorRef.current &&
       !desktopSelectorRef.current.contains(event.target)
     ) {
-      setSelectIndexSelected(null);
     }
   }
 
   //Desktop logic
-  const scrollPosition = radiosContainerRef.current?.scrollTop;
   useEffect(() => {
+    const scrollPosition = radiosContainerRef.current?.scrollTop;
     if (scrollPosition) {
       radiosContainerRef.current.scrollTop = scrollPosition;
     }
-  }, [isMobile, radiosContainerRef]);
+  }, [isMobile, radiosContainerRef.current]);
 
   return (
     <div
@@ -110,7 +109,7 @@ export default function App() {
           <Painting
             currentOption={currentOption}
             optionSets={optionSets}
-            optionIndexListSelected={newOptionIndexListSelectedFormatted}
+            optionIndecesSelected={newOptionIndecesSelected}
             setCurrentOption={setCurrentOption}
           />
         ) : (
@@ -118,12 +117,12 @@ export default function App() {
             <Painting
               currentOption={currentOption}
               optionSets={optionSets}
-              optionIndexListSelected={newOptionIndexListSelectedFormatted}
+              optionIndecesSelected={newOptionIndecesSelected}
               setCurrentOption={setCurrentOption}
             />
             <BuyButton
               optionSets={optionSets}
-              optionIndexListSelected={newOptionIndexListSelectedFormatted}
+              optionIndecesSelected={newOptionIndecesSelected}
               drawerOpen={drawerOpen}
             />
           </div>
@@ -135,27 +134,27 @@ export default function App() {
           >
             {isMobile ? (
               <MobileBottom
-                optionIndexListSelected={newOptionIndexListSelectedFormatted}
-                setOptionIndexListSelected={setOptionIndexListSelected}
+                optionIndecesSelected={newOptionIndecesSelected}
+                setOptionIndecesSelected={setOptionIndecesSelected}
                 optionSets={optionSets}
-                selectIndexSelected={selectIndexSelected}
-                setSelectIndexSelected={setSelectIndexSelected}
                 mobileSummaryRef={mobileSummaryRef}
                 setCurrentOption={setCurrentOption}
                 drawerOpen={drawerOpen}
                 CloseButtonRef={CloseButtonRef}
+                focusedElemRef={focusedElemRef}
+                openElemRef={openElemRef}
               />
             ) : (
               <DesktopRight
                 optionSets={optionSets}
-                optionIndexListSelected={newOptionIndexListSelectedFormatted}
-                selectIndexSelected={selectIndexSelected}
-                setSelectIndexSelected={setSelectIndexSelected}
-                setOptionIndexListSelected={setOptionIndexListSelected}
+                optionIndecesSelected={newOptionIndecesSelected}
+                setOptionIndecesSelected={setOptionIndecesSelected}
                 setCurrentOption={setCurrentOption}
                 drawerOpen={drawerOpen}
                 CloseButtonRef={CloseButtonRef}
                 desktopSelectorRef={desktopSelectorRef}
+                focusedElemRef={focusedElemRef}
+                openElemRef={openElemRef}
               />
             )}
           </div>

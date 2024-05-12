@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import data from '../data/data';
 import { getTechnicalKey } from '../utils/functions';
 import InfoButton from './InfoButton';
@@ -5,31 +6,49 @@ import InfoButton from './InfoButton';
 export default function Radio({
   option,
   index,
-  optionIndexListSelected,
-  setOptionIndexListSelected,
+  optionIndecesSelected,
+  setOptionIndecesSelected,
   indexContainer,
   setCurrentOption,
   drawerOpen,
   CloseButtonRef,
   isLastRadio,
   isChecked,
+  focusedElemRef,
 }) {
+  const ref = useRef(null);
   const technicalKey = getTechnicalKey(
     option.technicalType,
     option.technicalName,
   );
 
+  useEffect(() => {
+    if(focusedElemRef.current && focusedElemRef.current[0] === indexContainer && focusedElemRef.current[1] === index) {
+      ref.current.focus();
+      focusedElemRef.current = null;
+    }
+  }, []);
+
   function handleRadioClick() {
-    const newOptionIndexListSelected = [...optionIndexListSelected];
-    newOptionIndexListSelected[indexContainer] = index;
-    setOptionIndexListSelected(newOptionIndexListSelected);
+    const newOptionIndecesSelected = [...optionIndecesSelected];
+    newOptionIndecesSelected[indexContainer] = index;
+    setOptionIndecesSelected(newOptionIndecesSelected);
     setCurrentOption(option);
+    focusedElemRef.current = [indexContainer, index]
+  }
+
+  function handleKeyDown(event) {
+    if (event.key === 'Enter') {
+      handleRadioClick();
+    }
   }
 
   return (
     <div className="lg:w-1/2 p-1">
       <div
+        ref={ref}
         onClick={handleRadioClick}
+        onKeyDown={handleKeyDown}
         className={`flex flex-col justify-between hover:bg-main-5 px-4 py-5 rounded h-full text-center cursor-pointer ${
           isChecked &&
           'bg-main-5 outline outline-main-20 outline-1 focus:outline-main-50 focus:outline-2'

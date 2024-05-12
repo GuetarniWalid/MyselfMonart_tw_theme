@@ -17,7 +17,6 @@ export default function InfoButton({
     if (toFocus) {
       ref.current.focus();
       setToFocus(false);
-      console.log(document.activeElement);
     }
   }, [toFocus]);
 
@@ -31,7 +30,10 @@ export default function InfoButton({
   }
 
   function handleKeyDown(event) {
-    if (event.key === 'Tab' && isLast) {
+    if(event.key === 'Enter') {
+      handleClick(event);
+    }
+    else if (event.key === 'Tab' && isLast) {
       event.preventDefault();
       CloseButtonRef.current.focus();
     }

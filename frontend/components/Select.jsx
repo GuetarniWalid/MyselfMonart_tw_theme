@@ -6,45 +6,48 @@ import InfoButton from './InfoButton';
 export default function Select({
   optionSet,
   optionIndexSelected,
-  setOptionIndexListSelected,
-  optionIndexListSelected,
+  setOptionIndecesSelected,
+  optionIndecesSelected,
   selectIndex,
-  setSelectIndexSelected,
   isOpen,
-  setSelectFocused,
-  isFocused,
   setCurrentOption,
   drawerOpen,
   popupDirection,
   CloseButtonRef,
   isLastSelect,
+  focusedElemRef,
+  openElemRef,
+  selectId,
 }) {
   const selectRef = useRef(null);
   const firstOptionRef = useRef(null);
   const ariaControlsIdRef = useRef(v4());
-
+  
   useEffect(() => {
-    if (isFocused) {
-      selectRef.current.focus();
+    if(focusedElemRef.current && focusedElemRef.current == selectId) {
+      selectRef.current.focus()
+      focusedElemRef.current == null
     }
-  }, [isFocused]);
+  }, [])
 
   function handleSelectClick() {
     if (isOpen) {
-      setSelectIndexSelected(null);
+      setCurrentOption(null);
+      focusedElemRef.current = selectId
+      openElemRef.current = null;
       return;
     }
+    focusedElemRef.current = selectId + '-option-0';
+    openElemRef.current = selectId;
     setCurrentOption(optionSet[optionIndexSelected]);
-    setSelectFocused(selectIndex);
-    setSelectIndexSelected(selectIndex);
   }
 
-  function handleOptionClick(value) {
-    setSelectIndexSelected(null);
-    const newOptionIndexListSelected = [...optionIndexListSelected];
+  function handleOptionClick(value, event) {
+    const newOptionIndexListSelected = [...optionIndecesSelected];
     newOptionIndexListSelected[selectIndex] = value;
-    setOptionIndexListSelected(newOptionIndexListSelected);
+    setOptionIndecesSelected(newOptionIndexListSelected);
     setCurrentOption(optionSet[value]);
+    focusedElemRef.current = event.target.id;
   }
 
   function handleKeyDown(event) {
@@ -54,8 +57,6 @@ export default function Select({
     }
   }
 
-  const optionIdBase = `option-${selectIndex}`;
-
   const options = optionSet.map((option, index) => {
     return (
       <Option
@@ -64,13 +65,15 @@ export default function Select({
         option={option}
         value={index}
         selected={index === optionIndexSelected}
-        id={`${optionIdBase}-${index}`}
+        id={`${selectId}-option-${index}`}
         isOpen={isOpen}
         isFirst={index === 0}
         isLast={index === optionSet.length - 1}
         firstOptionRef={firstOptionRef}
-        setSelectIndexSelected={setSelectIndexSelected}
-        selectRef={selectRef}
+        focusedElemRef={focusedElemRef}
+        openElemRef={openElemRef}
+        selectId={selectId}
+        handleSelectClick={handleSelectClick}
       />
     );
   });
@@ -90,6 +93,7 @@ export default function Select({
           tabIndex={isOpen || !drawerOpen ? '-1' : '0'}
           onKeyDown={handleKeyDown}
           ref={selectRef}
+          id={selectId}
         >
           <span>{optionSet[optionIndexSelected].name}</span>
           <div className="flex items-center gap-5">
@@ -121,7 +125,7 @@ export default function Select({
                 ? '-top-3 -translate-y-full shadow-[0_-13px_28px_5px_rgba(0,0,0,0.1)]'
                 : '-bottom-3 translate-y-full shadow-[0_13px_28px_5px_rgba(0,0,0,0.1)]'
             }`}
-            aria-activedescendant={`${optionIdBase}-${optionIndexSelected}`}
+            aria-activedescendant={`${selectId}-option-${optionIndexSelected}`}
           >
             {options}
           </ul>

@@ -1,6 +1,6 @@
 {
   "sections": {
-    "breadcrumb_jyJ9mr": {
+    "breadcrumb_RCxFAG": {
       "type": "breadcrumb",
       "settings": {
         "main_color": "#1a2e05",
@@ -10,7 +10,7 @@
     "main": {
       "type": "main-product",
       "blocks": {
-        "text_J9CtBN": {
+        "text_CzWnEd": {
           "type": "text",
           "settings": {
             "text": "<p>{{ product.vendor }}<\/p>"
@@ -26,7 +26,7 @@
           "settings": {
           }
         },
-        "buy_dctfBh": {
+        "buy_qrRzcg": {
           "type": "buy",
           "settings": {
             "top_text": "Choix des options",
@@ -40,7 +40,7 @@
             "text": "<p>- Laissez-vous transporter par nos œuvres d'arts. Une sensation unique et singulière à transposer dans votre intérieur.<br\/>- Possibilité de choisir la taille et le support de l’œuvre.<br\/><\/p>"
           }
         },
-        "collapsible_tab_K6tRQQ": {
+        "collapsible_tab_HAUcNw": {
           "type": "collapsible_tab",
           "settings": {
             "heading": "Livraison",
@@ -49,7 +49,7 @@
             "page": ""
           }
         },
-        "collapsible_tab_kUH4wX": {
+        "collapsible_tab_4UhrbY": {
           "type": "collapsible_tab",
           "settings": {
             "heading": "Materiaux",
@@ -67,100 +67,100 @@
             "page": "guide-de-tailles"
           }
         },
-        "description_NdhPt7": {
+        "description_Fw7xRB": {
           "type": "description",
           "settings": {
           }
         }
       },
       "block_order": [
-        "text_J9CtBN",
+        "text_CzWnEd",
         "title",
         "9f20570b-1a97-4c34-8758-c5af9b8d2cfc",
-        "buy_dctfBh",
+        "buy_qrRzcg",
         "8600f603-2d6f-4191-8020-3678432ba1e5",
-        "collapsible_tab_K6tRQQ",
-        "collapsible_tab_kUH4wX",
+        "collapsible_tab_HAUcNw",
+        "collapsible_tab_4UhrbY",
         "a70160ee-79ef-4eb9-8e65-ec87f898b506",
-        "description_NdhPt7"
+        "description_Fw7xRB"
       ],
       "settings": {
       }
     },
-    "customer_testimonial_BDK3a8": {
+    "customer_testimonial_myiwee": {
       "type": "customer-testimonial",
       "blocks": {
-        "image_text_yRpeRC": {
+        "image_text_Riirzd": {
           "type": "image-text",
           "settings": {
             "image": "shopify:\/\/shop_images\/Tableau-chambre-bebe_f6e62e6e-707b-41df-aa17-bdad25ef3385.jpg",
             "message": "Juste une petite photo avec le cadre mis en place encore un grand merci à vous 🥰. \nElodie G"
           }
         },
-        "image_text_j7bxNx": {
+        "image_text_qM9rBh": {
           "type": "image-text",
           "settings": {
             "image": "shopify:\/\/shop_images\/tableau_marylin.jpg",
             "message": "Envoie très rapide et tableau encore plus beau que sur le site.\nParfait je recommande !!!\nJessica S"
           }
         },
-        "image_text_FcQFgK": {
+        "image_text_NnGTgN": {
           "type": "image-text",
           "settings": {
             "image": "shopify:\/\/shop_images\/ananas.jpg",
             "message": "Trop contente de mon tableau, les couleurs sont aussi flashy que sur les photos du site.\nSarah F"
           }
         },
-        "image_text_U83nbW": {
+        "image_text_hCDnam": {
           "type": "image-text",
           "settings": {
             "image": "shopify:\/\/shop_images\/Tableau-chambre.png",
             "message": "Le tableau est super, et encore plus beau en vrai ! Arrivé rapidement et bien protégé. Alain N"
           }
         },
-        "image_text_4rUa7p": {
+        "image_text_XaycRQ": {
           "type": "image-text",
           "settings": {
             "image": "shopify:\/\/shop_images\/Tableau-decoration.png",
             "message": "Très belle toile, les couleurs sont super et brillante. Marie K"
           }
         },
-        "image_text_TtBQWC": {
+        "image_text_QfHTN6": {
           "type": "image-text",
           "settings": {
             "image": "shopify:\/\/shop_images\/Tableau-deco-noir-et-blanc.jpg",
             "message": "Top, rien à dire de plus. \nGuillaume H"
           }
         },
-        "image_text_wPW9iC": {
+        "image_text_ragCcn": {
           "type": "image-text",
           "settings": {
             "image": "shopify:\/\/shop_images\/tableau-salon-femme-africaine.jpg",
             "message": "Magnifique tableau et très design, correspond parfaitement à la description.  Morel E"
           }
         },
-        "image_text_YmEJQk": {
+        "image_text_eAxGcM": {
           "type": "image-text",
           "settings": {
             "image": "shopify:\/\/shop_images\/tableau-comics-super-man.jpg",
             "message": "Nickel, très satisfait c'est ma 3e commande. Hugo G"
           }
         },
-        "image_text_KrPGQ3": {
+        "image_text_DbNc9D": {
           "type": "image-text",
           "settings": {
             "image": "shopify:\/\/shop_images\/tableau-superman-aquarelle.jpg",
             "message": "TOP, tableau reçu rapidement avec suivie. Hugo G"
           }
         },
-        "image_text_CJRWJK": {
+        "image_text_DCdKLC": {
           "type": "image-text",
           "settings": {
             "image": "shopify:\/\/shop_images\/tableau-animaux-zebre_383f6477-a1c6-4c30-b8cc-637fe67fde0a.jpg",
             "message": "L'animal, majestueux et solitaire trône dans mon salon au dessus de ma console... Peut on dire qu il est magnifique ? Assurément oui et je l adore!\nPatricia G."
           }
         },
-        "image_text_NWEmhH": {
+        "image_text_YKpN4r": {
           "type": "image-text",
           "settings": {
             "image": "shopify:\/\/shop_images\/tableau-deco-impression-alluminium-nike.jpg",
@@ -169,24 +169,24 @@
         }
       },
       "block_order": [
-        "image_text_yRpeRC",
-        "image_text_j7bxNx",
-        "image_text_FcQFgK",
-        "image_text_U83nbW",
-        "image_text_4rUa7p",
-        "image_text_TtBQWC",
-        "image_text_wPW9iC",
-        "image_text_YmEJQk",
-        "image_text_KrPGQ3",
-        "image_text_CJRWJK",
-        "image_text_NWEmhH"
+        "image_text_Riirzd",
+        "image_text_qM9rBh",
+        "image_text_NnGTgN",
+        "image_text_hCDnam",
+        "image_text_XaycRQ",
+        "image_text_QfHTN6",
+        "image_text_ragCcn",
+        "image_text_eAxGcM",
+        "image_text_DbNc9D",
+        "image_text_DCdKLC",
+        "image_text_YKpN4r"
       ],
       "settings": {
         "title": "Nos tableaux à travers vos yeux ❤️",
         "duration_image_appearance": 5
       }
     },
-    "product_carrousel_Y9Fnc6": {
+    "product_carrousel_a4kUVw": {
       "type": "product-carrousel",
       "settings": {
         "heading": "VOUS POURRIEZ AIMER",
@@ -256,7 +256,7 @@
       "settings": {
         "image": "shopify:\/\/shop_images\/texture_x3_70ae7c8b-712c-4c74-bb93-e76a2eddc37b.jpg",
         "title": "EN HARMONIE",
-        "description": "<p>Vous avez le souci du détail ? Allez plus loin en personnalisant aussi le support. Sur toile, plexiglas ou aluminium, choisissez l’aspect qui s’accorde le mieux à votre intérieur.</p>",
+        "description": "<p>Vous avez le souci du détail ? Allez plus loin en personnalisant aussi le support. Sur toile, plexiglas ou aluminium, choisissez l’aspect qui s’accorde le mieux à votre intérieur.<\/p>",
         "layout": "image_first",
         "enable_blob": true
       }
@@ -266,7 +266,7 @@
       "settings": {
         "image": "shopify:\/\/shop_images\/metre.jpg",
         "title": "DU SUR-MESURE",
-        "description": "<p>Choisissez la taille de votre tableau. En paysage, portrait, carré, petit ou grand, à vous de voir selon votre espace.</p>",
+        "description": "<p>Choisissez la taille de votre tableau. En paysage, portrait, carré, petit ou grand, à vous de voir selon votre espace.<\/p>",
         "layout": "text_first",
         "enable_blob": true
       }
@@ -276,15 +276,15 @@
       "settings": {
         "image": "shopify:\/\/shop_images\/tour_eiffel.jpg",
         "title": "MADE IN FRANCE",
-        "description": "<p>Une touche d'art à la française. Enracinés dans notre cher pays, nous mettons l'accent sur votre satisfaction en offrant un service client de qualité supérieure.</p>",
+        "description": "<p>Une touche d'art à la française. Enracinés dans notre cher pays, nous mettons l'accent sur votre satisfaction en offrant un service client de qualité supérieure.<\/p>",
         "layout": "image_first",
         "enable_blob": true
       }
     },
-    "multicolumn_nDcdqV": {
+    "multicolumn_aLxMGX": {
       "type": "multicolumn",
       "blocks": {
-        "column_zCD7T7": {
+        "column_zAm3tT": {
           "type": "column",
           "settings": {
             "image": "shopify:\/\/shop_images\/cliente-satisfaite-souriante.jpg",
@@ -295,7 +295,7 @@
             "to_obfuscate": false
           }
         },
-        "column_cKqkbQ": {
+        "column_U3DQjE": {
           "type": "column",
           "settings": {
             "title": "REMBOURSEMENT",
@@ -305,7 +305,7 @@
             "to_obfuscate": false
           }
         },
-        "column_EaGCja": {
+        "column_fN6DfA": {
           "type": "column",
           "settings": {
             "image": "shopify:\/\/shop_images\/femme-service-client-call.jpg",
@@ -318,9 +318,9 @@
         }
       },
       "block_order": [
-        "column_zCD7T7",
-        "column_cKqkbQ",
-        "column_EaGCja"
+        "column_zAm3tT",
+        "column_U3DQjE",
+        "column_fN6DfA"
       ],
       "settings": {
         "title": "NOS GARANTIES",
@@ -380,16 +380,16 @@
     }
   },
   "order": [
-    "breadcrumb_jyJ9mr",
+    "breadcrumb_RCxFAG",
     "main",
-    "customer_testimonial_BDK3a8",
-    "product_carrousel_Y9Fnc6",
+    "customer_testimonial_myiwee",
+    "product_carrousel_a4kUVw",
     "main-product-recommendations",
     "bf44dcab-c1df-4c80-b75a-9ee39a6bfe2e",
     "b5027902-4240-44cf-8660-b6e754562c52",
     "afe2a87a-371e-4c67-93b7-8c6b2244f43b",
     "556b5926-5cdb-4c50-a817-c79f15894cdd",
-    "multicolumn_nDcdqV",
+    "multicolumn_aLxMGX",
     "7ae13aad-330c-4fa7-94cf-fafc1c13cf60"
   ],
   "layout": "product"

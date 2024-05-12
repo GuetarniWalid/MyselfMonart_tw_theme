@@ -1,9 +1,9 @@
 import { getProductSize } from '../utils/functions';
 
-export default function useProductData(optionIndexListSelected, optionSets) {
+export default function useProductData(optionIndecesSelected, optionSets) {
   const optionsSelected = {};
 
-  optionIndexListSelected.forEach((optionIndexSelected, i) => {
+  optionIndecesSelected.forEach((optionIndexSelected, i) => {
     if (
       optionSets[i][optionIndexSelected].technicalType ===
       'size'

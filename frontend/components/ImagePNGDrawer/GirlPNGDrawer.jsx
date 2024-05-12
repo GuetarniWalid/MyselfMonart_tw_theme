@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect } from 'react';
+import { useRef, useLayoutEffect, useState } from 'react';
 import { getRelativeImageSize } from '../../utils/functions';
 
 export default function GirlPNGDrawer({
@@ -19,9 +19,10 @@ export default function GirlPNGDrawer({
   isMobile,
 }) {
   const ref = useRef(null);
+  const [isImageLoaded, setImageLoaded] = useState(false);
 
   useLayoutEffect(() => {
-    if (!visible) return;
+    if (!visible || !isImageLoaded) return;
     const sceneRect = sceneRef.current?.getBoundingClientRect();
     const productRect = productRef.current?.getBoundingClientRect();
     const girlRect = ref.current?.getBoundingClientRect();
@@ -53,10 +54,12 @@ export default function GirlPNGDrawer({
     sceneRef.current,
     productRef.current,
     ref.current,
+    isImageLoaded,
     productWidthInPx,
     nbOfOptions,
     visible,
     isMobile,
+    productSize
   ]);
 
   function getInitialTwClasses(from) {
@@ -90,6 +93,7 @@ export default function GirlPNGDrawer({
       )} ${initClasses}`}
       ref={ref}
       loading="lazy"
+      onLoad={() => setImageLoaded(true)}
       srcSet={`
       ${src}&width=400 400w,
       ${src}&width=550 550w,

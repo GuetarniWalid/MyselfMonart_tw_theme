@@ -6,14 +6,14 @@ import RadioContainers from './RadioContainers';
 
 export default function DesktopRight({
   optionSets,
-  optionIndexListSelected,
-  selectIndexSelected,
-  setSelectIndexSelected,
-  setOptionIndexListSelected,
+  optionIndecesSelected,
+  setOptionIndecesSelected,
   setCurrentOption,
   drawerOpen,
   desktopSelectorRef,
   CloseButtonRef,
+  focusedElemRef,
+  openElemRef,
 }) {
   const [selectFocused, setSelectFocused] = useState(null);
   return (
@@ -27,26 +27,31 @@ export default function DesktopRight({
           <Select
             key={v4()}
             optionSet={optionSets[0]}
-            optionIndexSelected={optionIndexListSelected[0]}
-            setOptionIndexListSelected={setOptionIndexListSelected}
-            optionIndexListSelected={optionIndexListSelected}
+            optionIndexSelected={optionIndecesSelected[0]}
+            setOptionIndecesSelected={setOptionIndecesSelected}
+            optionIndecesSelected={optionIndecesSelected}
             selectIndex={0}
-            setSelectIndexSelected={setSelectIndexSelected}
-            isOpen={selectIndexSelected === 0}
+            isOpen={
+              focusedElemRef.current?.includes('select-0') &&
+              openElemRef.current === 'select-0'
+            }
             setSelectFocused={setSelectFocused}
-            isFocused={selectFocused === 0 && !(selectIndexSelected === 0)}
             setCurrentOption={setCurrentOption}
             drawerOpen={drawerOpen}
+            focusedElemRef={focusedElemRef}
+            openElemRef={openElemRef}
+            selectId="select-0"
           />
         </div>
       </RadioContainer>
       <RadioContainers
         optionSets={optionSets}
-        optionIndexListSelected={optionIndexListSelected}
-        setOptionIndexListSelected={setOptionIndexListSelected}
+        optionIndecesSelected={optionIndecesSelected}
+        setOptionIndecesSelected={setOptionIndecesSelected}
         setCurrentOption={setCurrentOption}
         drawerOpen={drawerOpen}
         CloseButtonRef={CloseButtonRef}
+        focusedElemRef={focusedElemRef}
       />
     </>
   );

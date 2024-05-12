@@ -13,14 +13,14 @@ const { background, furniture, girl } = data;
 export default function Painting({
   currentOption,
   optionSets,
-  optionIndexListSelected,
+  optionIndecesSelected,
   setCurrentOption,
 }) {
   const sceneRef = useRef(null);
   const productRef = useRef(null);
   const { showGirl, showFurniture } = useImagePNGToShow(currentOption);
   const { size, matter, shine } = useProductData(
-    optionIndexListSelected,
+    optionIndecesSelected,
     optionSets,
   );
   const productWidthInPx = useProductDimensions(size, sceneRef);
@@ -62,7 +62,7 @@ export default function Painting({
           imageWidthInCm={150}
           productRef={productRef}
           sceneRef={sceneRef}
-          nbOfOptions={optionIndexListSelected.length}
+          nbOfOptions={optionIndecesSelected.length}
           isMobile={isMobile}
         />
         <GirlPNGDrawer
@@ -80,7 +80,7 @@ export default function Painting({
           imageWidthInCm={93.4}
           productRef={productRef}
           sceneRef={sceneRef}
-          nbOfOptions={optionIndexListSelected.length}
+          nbOfOptions={optionIndecesSelected.length}
           isMobile={isMobile}
         />
         {[

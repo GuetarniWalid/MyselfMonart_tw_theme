@@ -2,15 +2,15 @@ import BuyButton from './BuyButton';
 import Selects from './Selects';
 
 export default function MobileBottom({
-  optionIndexListSelected,
-  setOptionIndexListSelected,
+  optionIndecesSelected,
+  setOptionIndecesSelected,
   optionSets,
-  selectIndexSelected,
-  setSelectIndexSelected,
   mobileSummaryRef,
   setCurrentOption,
   drawerOpen,
   CloseButtonRef,
+  focusedElemRef,
+  openElemRef,
 }) {
   
 
@@ -18,19 +18,19 @@ export default function MobileBottom({
     <>
       <BuyButton
         optionSets={optionSets}
-        optionIndexListSelected={optionIndexListSelected}
+        optionIndecesSelected={optionIndecesSelected}
         drawerOpen={drawerOpen}
       />
       <Selects 
         optionSets={optionSets}
-        optionIndexListSelected={optionIndexListSelected}
-        setOptionIndexListSelected={setOptionIndexListSelected}
-        selectIndexSelected={selectIndexSelected}
-        setSelectIndexSelected={setSelectIndexSelected}
+        optionIndecesSelected={optionIndecesSelected}
+        setOptionIndecesSelected={setOptionIndecesSelected}
         setCurrentOption={setCurrentOption}
         drawerOpen={drawerOpen}
         mobileSummaryRef={mobileSummaryRef}
         CloseButtonRef={CloseButtonRef}
+        focusedElemRef={focusedElemRef}
+        openElemRef={openElemRef}
       />
     </>
   );

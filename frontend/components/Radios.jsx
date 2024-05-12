@@ -4,14 +4,15 @@ import { v4 } from 'uuid';
 export default function Radios({
   optionSet,
   optionIndexSelected,
-  optionIndexListSelected,
-  setOptionIndexListSelected,
+  optionIndecesSelected,
+  setOptionIndecesSelected,
   indexContainer,
   setCurrentOption,
   drawerOpen,
   CloseButtonRef,
   isLastContainer,
   labelGroupId,
+  focusedElemRef,
 }) {
   return (
     <div
@@ -25,14 +26,15 @@ export default function Radios({
             key={v4()}
             option={option}
             index={index}
-            optionIndexListSelected={optionIndexListSelected}
-            setOptionIndexListSelected={setOptionIndexListSelected}
+            optionIndecesSelected={optionIndecesSelected}
+            setOptionIndecesSelected={setOptionIndecesSelected}
             indexContainer={indexContainer}
             setCurrentOption={setCurrentOption}
             drawerOpen={drawerOpen}
             CloseButtonRef={CloseButtonRef}
             isLastRadio={index === optionSet.length - 1 && isLastContainer}
             isChecked={optionIndexSelected === index}
+            focusedElemRef={focusedElemRef}
           />
         );
       })}

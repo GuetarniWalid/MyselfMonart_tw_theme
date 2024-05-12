@@ -4,16 +4,16 @@ import useProductFormatter from '../hooks/useProductFormatter';
 
 export default function BuyButton({
   optionSets,
-  optionIndexListSelected,
+  optionIndecesSelected,
   drawerOpen,
 }) {
   const [idle, setIdle] = useState(false);
   const buttonRef = useRef(null);
   const totalPrice = useCalculateTotalPrice(
     optionSets,
-    optionIndexListSelected,
+    optionIndecesSelected,
   );
-  const product = useProductFormatter(optionSets, optionIndexListSelected);
+  const product = useProductFormatter(optionSets, optionIndecesSelected);
 
   useEffect(() => {
     const intervalId = setInterval(() => {

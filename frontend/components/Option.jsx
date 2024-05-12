@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 export default function Option({
   handleOptionClick,
@@ -10,18 +10,30 @@ export default function Option({
   isFirst,
   isLast,
   firstOptionRef,
-  setSelectIndexSelected,
+  focusedElemRef,
+  handleSelectClick,
 }) {
+  const ref = useRef(null)
+
+  useEffect(() => {
+    if(focusedElemRef.current && focusedElemRef.current == id) {
+      ref.current.focus()
+      focusedElemRef.current == null
+    }
+  }, [])
+  
+
   useEffect(() => {
     if (isOpen && isFirst) {
-      firstOptionRef.current.focus();
+      ref.current.focus();
+      firstOptionRef.current = ref.current;
     }
   }, [isOpen]);
 
   function handleKeyDown(event) {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      handleOptionClick(value);
+      handleOptionClick(value, event);
     }
     if (event.key === 'Tab' && isLast) {
       event.preventDefault();
@@ -29,7 +41,7 @@ export default function Option({
     }
     if (event.key === 'Escape') {
       event.preventDefault();
-      setSelectIndexSelected(null);
+      handleSelectClick()
     }
   };
 
@@ -41,13 +53,13 @@ export default function Option({
       } flex justify-between py-3 px-5 mb-2 hover:bg-main-5 cursor-pointer`}
       role="option"
       aria-selected={selected}
-      onClick={() => handleOptionClick(value)}
+      onClick={(e) => handleOptionClick(value, e)}  
       tabIndex={isOpen ? '0' : '-1'}
-      ref={isFirst ? firstOptionRef : null}
+      ref={ref}
       onKeyDown={handleKeyDown}
     >
-      <span>{option.name}</span>
-      <span>
+      <span className='pointer-events-none'>{option.name}</span>
+      <span className='pointer-events-none'>
         {option.price} {moneySymbol}
       </span>
     </li>

@@ -5,11 +5,12 @@ import { v4 } from 'uuid';
 
 export default function RadioContainers({
   optionSets,
-  optionIndexListSelected,
-  setOptionIndexListSelected,
+  optionIndecesSelected,
+  setOptionIndecesSelected,
   setCurrentOption,
   drawerOpen,
   CloseButtonRef,
+  focusedElemRef,
 }) {
   //without sizes
   const radios = optionSets.slice(1).map((optionSet, index) => {
@@ -25,15 +26,16 @@ export default function RadioContainers({
       >
         <Radios
           optionSet={optionSet}
-          optionIndexSelected={optionIndexListSelected[index + 1]}
-          optionIndexListSelected={optionIndexListSelected}
-          setOptionIndexListSelected={setOptionIndexListSelected}
+          optionIndexSelected={optionIndecesSelected[index + 1]}
+          optionIndecesSelected={optionIndecesSelected}
+          setOptionIndecesSelected={setOptionIndecesSelected}
           indexContainer={index + 1}
           setCurrentOption={setCurrentOption}
           drawerOpen={drawerOpen}
           CloseButtonRef={CloseButtonRef}
           isLastContainer={index === optionSets.length - 2}
           labelGroupId={labelGroupId}
+          focusedElemRef={focusedElemRef}
         />
       </RadioContainer>
     );

@@ -1,39 +1,39 @@
-import { useState } from 'react';
 import Select from './Select';
 import { v4 } from 'uuid';
 
 export default function Selects({
   optionSets,
-  optionIndexListSelected,
-  setOptionIndexListSelected,
-  selectIndexSelected,
-  setSelectIndexSelected,
+  optionIndecesSelected,
+  setOptionIndecesSelected,
   setCurrentOption,
   drawerOpen,
   mobileSummaryRef,
   CloseButtonRef,
+  focusedElemRef,
+  openElemRef,
 }) {
-  const [selectFocused, setSelectFocused] = useState(null);
-
   const selects = optionSets.map((optionSet, index) => {
-    const isOpen = selectIndexSelected === index;
+    const selectId = `select-${index}`;
     return (
       <Select
         key={v4()}
         optionSet={optionSet}
-        optionIndexSelected={optionIndexListSelected[index]}
-        setOptionIndexListSelected={setOptionIndexListSelected}
-        optionIndexListSelected={optionIndexListSelected}
+        optionIndexSelected={optionIndecesSelected[index]}
+        setOptionIndecesSelected={setOptionIndecesSelected}
+        optionIndecesSelected={optionIndecesSelected}
         selectIndex={index}
-        setSelectIndexSelected={setSelectIndexSelected}
-        isOpen={isOpen}
-        setSelectFocused={setSelectFocused}
-        isFocused={selectFocused === index && !isOpen}
+        focusedElemRef={focusedElemRef}
+        openElemRef={openElemRef}
+        isOpen={
+          focusedElemRef.current?.includes(selectId) &&
+          openElemRef.current === selectId
+        }
         setCurrentOption={setCurrentOption}
         drawerOpen={drawerOpen}
         popupDirection="top"
         CloseButtonRef={CloseButtonRef}
         isLastSelect={index === optionSets.length - 1}
+        selectId={selectId}
       />
     );
   });

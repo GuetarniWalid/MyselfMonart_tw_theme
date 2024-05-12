@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect } from 'react';
+import { useRef, useLayoutEffect, useState } from 'react';
 import { getRelativeImageSize } from '../../utils/functions';
 
 export default function FurniturePNGDrawer({
@@ -19,9 +19,10 @@ export default function FurniturePNGDrawer({
   isMobile,
 }) {
   const ref = useRef(null);
+  const [isImageLoaded, setImageLoaded] = useState(false);
 
   useLayoutEffect(() => {
-    if (!visible) return;
+    if (!visible || !isImageLoaded) return;
     const sceneRect = sceneRef.current?.getBoundingClientRect();
     const productRect = productRef.current?.getBoundingClientRect();
     const furnitureRect = ref.current?.getBoundingClientRect();
@@ -39,7 +40,8 @@ export default function FurniturePNGDrawer({
     //image height + vertical position
     const ratio = ref.current.naturalWidth / ref.current.naturalHeight;
     const furnitureHeightInPx = furnitureWidthInPx / ratio;
-    if (furnitureHeightInPx > sceneRect.height - productRect.bottom) {
+    //40 is the padding of the scene
+    if (furnitureHeightInPx > sceneRect.height - productRect.height - 40) {
       ref.current.style.top = productRect.bottom - sceneRect.top + 'px';
     } else {
       ref.current.style.top = '';
@@ -48,7 +50,7 @@ export default function FurniturePNGDrawer({
     sceneRef.current,
     productRef.current,
     ref.current,
-    ref.current?.naturalHeight,
+    isImageLoaded,
     productWidthInPx,
     nbOfOptions,
     visible,
@@ -86,11 +88,12 @@ export default function FurniturePNGDrawer({
         from,
       )} ${initClasses}`}
       loading="lazy"
+      onLoad={() => setImageLoaded(true)}
       srcSet={`
-      ${src}&width=700 700w,
       ${src}&width=900 900w,
-      ${src}&width=1150 1150w`}
-      sizes="(max-width: 465px) 700px, (max-width: 600px) 900px, (max-width: 767px) 1150px, 864px"
+      ${src}&width=1000 1000w,
+      ${src}&width=1150 1200w`}
+      sizes="(max-width: 465px) 930px, (max-width: 767px) 1200px, 1160px"
     />
   );
 }
