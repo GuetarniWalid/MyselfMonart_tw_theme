@@ -258,7 +258,9 @@
         "title": "EN HARMONIE",
         "description": "<p>Vous avez le souci du détail ? Allez plus loin en personnalisant aussi le support. Sur toile, plexiglas ou aluminium, choisissez l’aspect qui s’accorde le mieux à votre intérieur.<\/p>",
         "layout": "image_first",
-        "enable_blob": true
+        "enable_blob": true,
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
       }
     },
     "afe2a87a-371e-4c67-93b7-8c6b2244f43b": {
@@ -268,7 +270,9 @@
         "title": "DU SUR-MESURE",
         "description": "<p>Choisissez la taille de votre tableau. En paysage, portrait, carré, petit ou grand, à vous de voir selon votre espace.<\/p>",
         "layout": "text_first",
-        "enable_blob": true
+        "enable_blob": true,
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
       }
     },
     "556b5926-5cdb-4c50-a817-c79f15894cdd": {
@@ -278,12 +282,25 @@
         "title": "MADE IN FRANCE",
         "description": "<p>Une touche d'art à la française. Enracinés dans notre cher pays, nous mettons l'accent sur votre satisfaction en offrant un service client de qualité supérieure.<\/p>",
         "layout": "image_first",
-        "enable_blob": true
+        "enable_blob": true,
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
       }
     },
     "multicolumn_aLxMGX": {
       "type": "multicolumn",
       "blocks": {
+        "column_fN6DfA": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/femme-service-client-call.jpg",
+            "title": "SERVICE CLIENT",
+            "text": "<p>Par mail ou téléphone, c’est toujours avec joie que nous échangeons avec vous, pour vous offrir une expérience exceptionnelle<\/p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
+          }
+        },
         "column_zAm3tT": {
           "type": "column",
           "settings": {
@@ -298,19 +315,9 @@
         "column_U3DQjE": {
           "type": "column",
           "settings": {
-            "title": "REMBOURSEMENT",
-            "text": "<p>Nos tableaux sont spécialement protégés pour le transport. Si toutefois il venait à être endommagé, nous nous engageons à vous rembourser en moins de 5 jours.<\/p>",
-            "link_label": "",
-            "link": "",
-            "to_obfuscate": false
-          }
-        },
-        "column_fN6DfA": {
-          "type": "column",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/femme-service-client-call.jpg",
-            "title": "SERVICE CLIENT",
-            "text": "<p>Par mail ou téléphone, c’est toujours avec joie que nous échangeons avec vous.<\/p>",
+            "image": "shopify:\/\/shop_images\/tableau-deco-femme-satisfaction-garantie.jpg",
+            "title": "GARANTIE",
+            "text": "<p>Chaque tableau que nous créons est le reflet de notre engagement envers l'excellence et la durabilité. Pour vous le prouver, nous offrons une garantie de 10 ans sur toutes nos œuvres.<\/p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -318,9 +325,9 @@
         }
       },
       "block_order": [
+        "column_fN6DfA",
         "column_zAm3tT",
-        "column_U3DQjE",
-        "column_fN6DfA"
+        "column_U3DQjE"
       ],
       "settings": {
         "title": "NOS GARANTIES",

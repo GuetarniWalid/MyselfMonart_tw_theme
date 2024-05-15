@@ -20,7 +20,7 @@
     "predictive_search_show_vendor": false,
     "predictive_search_show_price": true,
     "favicon": "shopify:\/\/shop_images\/logo-myselfmonart.png",
-    "enable_cookie": true,
+    "enable_cookie": false,
     "currency_code_enabled": true,
     "checkout_logo_image": "shopify:\/\/shop_images\/logo-myselfmonart-512x512.png",
     "checkout_logo_position": "center",
@@ -174,7 +174,7 @@
       "tw-announcement-bar": {
         "type": "tw-announcement-bar",
         "settings": {
-          "message": "Grab the offer now: -15% 🌟 and FREE delivery 🚀 until April 21 only! Do not miss this chance ! 📆🛍️"
+          "message": "Le grand ménage est fait, il est temps de redécorer ! Découvrez les tableaux"
         }
       },
       "page-cart-items": {
