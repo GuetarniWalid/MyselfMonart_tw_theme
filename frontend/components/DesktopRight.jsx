@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import RadioContainer from './RadioContainer';
 import Select from './Select';
 import { v4 } from 'uuid';
@@ -13,9 +12,9 @@ export default function DesktopRight({
   desktopSelectorRef,
   CloseButtonRef,
   focusedElemRef,
-  openElemRef,
+  openSelectId,
+  setOpenSelectId,
 }) {
-  const [selectFocused, setSelectFocused] = useState(null);
   return (
     <>
       <RadioContainer
@@ -33,13 +32,12 @@ export default function DesktopRight({
             selectIndex={0}
             isOpen={
               focusedElemRef.current?.includes('select-0') &&
-              openElemRef.current === 'select-0'
+              openSelectId === 'select-0'
             }
-            setSelectFocused={setSelectFocused}
             setCurrentOption={setCurrentOption}
             drawerOpen={drawerOpen}
             focusedElemRef={focusedElemRef}
-            openElemRef={openElemRef}
+            setOpenSelectId={setOpenSelectId}
             selectId="select-0"
           />
         </div>

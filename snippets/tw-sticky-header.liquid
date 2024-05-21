@@ -39,16 +39,18 @@
             {% else %}
               <li class="details-wrapper group/one hover:bg-main-5 p-3 rounded-lg cursor-pointer">
                 <details>
-                  <summary class="list-none flex items-center gap-3">
-                    {% if block.settings.product.images[1] != blank %}
-                      {{ block.settings.product.images[1] | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: block.settings.product.images[1].alt, loading: 'lazy', class: 'rounded-md' }}
-                    {% endif %}
-                    {{ block.settings.title | escape }}
+                  <summary class="list-none flex items-center justify-between md:justify-start gap-3">
+                    <div class="flex items-center gap-3">
+                      {% if block.settings.product.images[1] != blank %}
+                        {{ block.settings.product.images[1] | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: block.settings.product.images[1].alt, loading: 'lazy', class: 'rounded-md' }}
+                      {% endif %}
+                      {{ block.settings.title | escape }}
+                    </div>
                     {% render 'tw-icon-arrow', group_one: true %}
                   </summary>
                   <div class="absolute inset-0 bg-secondary py-8 px-5 transition-all duration-150 translate-x-full">
-                    <h3 class="group bg-main-5 cursor-pointer py-2 px-4 rounded-md mb-2" tabindex="0" role="button" aria-label="{{ "tw.header.back" | t }}">
-                      <span class="mr-2">{% render 'tw-icon-arrow', direction: "left" %}</span>
+                    <h3 class="group bg-main-5 cursor-pointer py-2 px-4 rounded-md mb-2 text-xl md:text-3xl" tabindex="0" role="button" aria-label="{{ "tw.header.back" | t }}">
+                      <span class="mr-2">{% render 'tw-icon-arrow', direction: "left", width: "40" %}</span>
                       {{ block.settings.title }}
                     </h3>
                     <ul class="md:grid md:grid-cols-3 gap-y-3 ">

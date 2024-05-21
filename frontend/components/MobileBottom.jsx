@@ -10,7 +10,8 @@ export default function MobileBottom({
   drawerOpen,
   CloseButtonRef,
   focusedElemRef,
-  openElemRef,
+  openSelectId,
+  setOpenSelectId,
 }) {
   
 
@@ -30,7 +31,8 @@ export default function MobileBottom({
         mobileSummaryRef={mobileSummaryRef}
         CloseButtonRef={CloseButtonRef}
         focusedElemRef={focusedElemRef}
-        openElemRef={openElemRef}
+        openSelectId={openSelectId}
+        setOpenSelectId={setOpenSelectId}
       />
     </>
   );

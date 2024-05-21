@@ -12,6 +12,7 @@ module.exports = {
     },
     extend: {
       animation: {
+        bounceFromLeft: 'bounceFromLeft 0.5s linear forwards',
         moveToLeft: 'moveToLeft infinite 8s linear',
         loading: 'loading 0.6s 0.1s linear infinite',
       },
@@ -67,6 +68,12 @@ module.exports = {
           '100%': {
             transform: 'translate(0, 0)',
           },
+        },
+        bounceFromLeft: {
+          '0%': { transform: 'translateX(-100%)' },
+          '40%': { transform: 'translateX(0)' },
+          '70%': { transform: 'translateX(-8%)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
         },
       },
     },

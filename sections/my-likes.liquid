@@ -1,7 +1,7 @@
 <my-likes data-currency="{{ cart.currency.symbol }}">
   <template>
     <nav role="navigation">
-      <ul id="product-grid" data-id="{{ section.id }}" class="grid sm:grid-cols-2 gap-3 lg:grid-cols-3 pb-3 mb-14">
+      <ul data-id="{{ section.id }}" class="grid sm:grid-cols-2 gap-3 lg:grid-cols-3 pb-3 mb-14">
         <li id="{{ product.id }}" class="relative group border-main border-1 h-full">
           {% render 'card-product',
             product: product,

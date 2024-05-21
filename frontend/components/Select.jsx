@@ -16,7 +16,7 @@ export default function Select({
   CloseButtonRef,
   isLastSelect,
   focusedElemRef,
-  openElemRef,
+  setOpenSelectId,
   selectId,
 }) {
   const selectRef = useRef(null);
@@ -30,15 +30,16 @@ export default function Select({
     }
   }, [])
 
-  function handleSelectClick() {
+  function handleSelectClick(e) {
+    e.stopPropagation();
     if (isOpen) {
       setCurrentOption(null);
       focusedElemRef.current = selectId
-      openElemRef.current = null;
+      setOpenSelectId(null);
       return;
     }
     focusedElemRef.current = selectId + '-option-0';
-    openElemRef.current = selectId;
+    setOpenSelectId(selectId);
     setCurrentOption(optionSet[optionIndexSelected]);
   }
 
@@ -71,7 +72,6 @@ export default function Select({
         isLast={index === optionSet.length - 1}
         firstOptionRef={firstOptionRef}
         focusedElemRef={focusedElemRef}
-        openElemRef={openElemRef}
         selectId={selectId}
         handleSelectClick={handleSelectClick}
       />
@@ -95,8 +95,8 @@ export default function Select({
           ref={selectRef}
           id={selectId}
         >
-          <span>{optionSet[optionIndexSelected].name}</span>
-          <div className="flex items-center gap-5">
+          <span className='pointer-events-none'>{optionSet[optionIndexSelected].name}</span>
+          <div className="flex items-center gap-5 pointer-events-none">
             <span className="bg-main-10 rounded-lg px-2 py-1 whitespace-nowrap">
               {optionSet[optionIndexSelected].price} {moneySymbol}
             </span>

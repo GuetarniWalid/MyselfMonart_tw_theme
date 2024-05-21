@@ -15,6 +15,8 @@ export default function App() {
   );
   const [currentOption, setCurrentOption] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(null);
+  const [openSelectId, setOpenSelectId] = useState(null);
+
   const optionSets = useFormatOptions(
     optionIndecesSelected[0],
     optionIndecesSelected[1],
@@ -30,7 +32,6 @@ export default function App() {
   const CloseButtonRef = useRef(null);
   const radiosContainerRef = useRef(null);
   const focusedElemRef = useRef(null);
-  const openElemRef = useRef(null);
 
   useEffect(() => {
     const config = {
@@ -71,21 +72,6 @@ export default function App() {
     }
   }, [drawerOpen]);
 
-  function handleClick(event) {
-    if (
-      isMobile &&
-      mobileSummaryRef.current &&
-      !mobileSummaryRef.current.contains(event.target)
-    ) {
-    }
-    if (
-      !isMobile &&
-      desktopSelectorRef.current &&
-      !desktopSelectorRef.current.contains(event.target)
-    ) {
-    }
-  }
-
   //Desktop logic
   useEffect(() => {
     const scrollPosition = radiosContainerRef.current?.scrollTop;
@@ -93,6 +79,16 @@ export default function App() {
       radiosContainerRef.current.scrollTop = scrollPosition;
     }
   }, [isMobile, radiosContainerRef.current]);
+
+  //To close select when clicking outside
+  function handleClick(event) {
+    if (
+      !event.target.id?.includes(openSelectId) &&
+      !event.target.ariaActiveDescendantElement?.id?.includes(openSelectId)
+    ) {
+      setOpenSelectId(null);
+    }
+  }
 
   return (
     <div
@@ -142,7 +138,8 @@ export default function App() {
                 drawerOpen={drawerOpen}
                 CloseButtonRef={CloseButtonRef}
                 focusedElemRef={focusedElemRef}
-                openElemRef={openElemRef}
+                openSelectId={openSelectId}
+                setOpenSelectId={setOpenSelectId}
               />
             ) : (
               <DesktopRight
@@ -154,7 +151,8 @@ export default function App() {
                 CloseButtonRef={CloseButtonRef}
                 desktopSelectorRef={desktopSelectorRef}
                 focusedElemRef={focusedElemRef}
-                openElemRef={openElemRef}
+                openSelectId={openSelectId}
+                setOpenSelectId={setOpenSelectId}
               />
             )}
           </div>

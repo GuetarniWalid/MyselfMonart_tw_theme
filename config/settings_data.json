@@ -20,7 +20,7 @@
     "predictive_search_show_vendor": false,
     "predictive_search_show_price": true,
     "favicon": "shopify:\/\/shop_images\/logo-myselfmonart.png",
-    "enable_cookie": false,
+    "enable_cookie": true,
     "currency_code_enabled": true,
     "checkout_logo_image": "shopify:\/\/shop_images\/logo-myselfmonart-512x512.png",
     "checkout_logo_position": "center",

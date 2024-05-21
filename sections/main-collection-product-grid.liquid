@@ -8,7 +8,7 @@
       {%- if paginate.pages > 1 -%}
         <infinite-scroll-storage data-page="{{ paginate.current_page }}">
           <infinite-scroll id="infinite-scroll-{{ collection.id }}-{{ paginate.current_page }}" data-pages="{{ paginate.pages }}" data-page="{{ paginate.current_page }}" data-section-id="{{ section.id }}" data-paginate-previous-url="{{ paginate.previous.url }}" data-paginate-next-url="{{ paginate.next.url }}">
-            <ul id="product-grid" data-id="{{ section.id }}" class="grid sm:grid-cols-2 gap-3 lg:grid-cols-3 pb-3">
+            <ul data-id="{{ section.id }}" class="grid sm:grid-cols-2 gap-3 lg:grid-cols-3 pb-3">
               {%- for product in collection.products -%}
                 {% assign lazy_load = false %}
                 {%- if forloop.index > 2 -%}

@@ -321,14 +321,14 @@ class PredictiveSearch extends HTMLElement {
       if (this.isInHeader && evt.code === 'Escape') {
         this.close();
       }
-      evt.code === 'Enter' && form.submit();
+      if (evt.code === 'Enter' && evt.target.id === 'search') form.submit();
     });
     this.closeButton?.addEventListener(
       'keyup',
       (evt) => evt.code === 'Enter' && this.close(),
     );
     this.addEventListener('keydown', (e) => {
-      if (!this.isInHeader) return
+      if (!this.isInHeader) return;
       trapFocus(e, this.input, this.closeButton);
     });
   }

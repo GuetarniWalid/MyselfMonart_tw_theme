@@ -33,7 +33,7 @@ export default function PopupInfo({ infoToShow, setInfoToShow, setToFocus }) {
 
   return (
     <div
-      className="absolute inset-0 bg-black/30 flex justify-center items-center"
+      className="absolute inset-0 bg-black/30 flex justify-center items-center z-10"
       onClick={handleClick}
     >
       <div

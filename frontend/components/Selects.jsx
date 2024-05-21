@@ -10,7 +10,8 @@ export default function Selects({
   mobileSummaryRef,
   CloseButtonRef,
   focusedElemRef,
-  openElemRef,
+  openSelectId,
+  setOpenSelectId,
 }) {
   const selects = optionSets.map((optionSet, index) => {
     const selectId = `select-${index}`;
@@ -23,10 +24,10 @@ export default function Selects({
         optionIndecesSelected={optionIndecesSelected}
         selectIndex={index}
         focusedElemRef={focusedElemRef}
-        openElemRef={openElemRef}
+        setOpenSelectId={setOpenSelectId}
         isOpen={
           focusedElemRef.current?.includes(selectId) &&
-          openElemRef.current === selectId
+          openSelectId === selectId
         }
         setCurrentOption={setCurrentOption}
         drawerOpen={drawerOpen}
