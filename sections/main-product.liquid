@@ -255,6 +255,7 @@
     window.canvasTexture = "{{ 'tw.main_product.painting.canvas_texture' | t }}";
     window.productId = "{{ product.id }}";
     window.productAll = {{ product | json }};
+    window.shopUrl = window.Shopify.routes.root
   </script>
 
   {% if ratio == 'portrait' %}  

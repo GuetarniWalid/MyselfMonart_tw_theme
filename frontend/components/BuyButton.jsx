@@ -9,10 +9,7 @@ export default function BuyButton({
 }) {
   const [idle, setIdle] = useState(false);
   const buttonRef = useRef(null);
-  const totalPrice = useCalculateTotalPrice(
-    optionSets,
-    optionIndecesSelected,
-  );
+  const totalPrice = useCalculateTotalPrice(optionSets, optionIndecesSelected);
   const product = useProductFormatter(optionSets, optionIndecesSelected);
 
   useEffect(() => {
@@ -42,9 +39,7 @@ export default function BuyButton({
 
   async function makeOrder(variantData) {
     const response = await fetch(
-      'https://' +
-        Shopify.shop +
-        '/cart/add.js?sections=tw-cart-drawer,tw-header',
+      window.shopUrl + '/cart/add.js?sections=tw-cart-drawer,tw-header',
       {
         method: 'POST',
         headers: {
