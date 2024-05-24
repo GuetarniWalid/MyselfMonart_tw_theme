@@ -31,7 +31,7 @@
           "settings": {
             "top_text": "Choix des options",
             "bottom_text": "Personnaliser le tableau",
-            "main_color": "#04a777"
+            "main_color": "#b92700"
           }
         },
         "8600f603-2d6f-4191-8020-3678432ba1e5": {
@@ -45,7 +45,7 @@
           "settings": {
             "heading": "Livraison",
             "icon": "truck",
-            "content": "<p>🎨 Toile personnalisée : Fabrication en 3-4 jours <\/p><p>🚚  expédition en 3-5 jours ouvrables en colis suivi à votre domicile.<\/p>",
+            "content": "<p>🎨 Toile personnalisée : Fabrication en 3-4 jours <\/p><p>🚚  Expédition en 3-5 jours ouvrables en colis suivi à votre domicile.<\/p><p>🎁 Livraison gratuite <\/p>",
             "page": ""
           }
         },
