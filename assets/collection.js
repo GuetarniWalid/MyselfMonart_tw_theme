@@ -423,31 +423,3 @@ class MyLikesButton extends HTMLElement {
   }
 }
 customElements.define('my-likes-button', MyLikesButton);
-
-class DropdownButton extends HTMLElement {
-  constructor() {
-    super();
-    this.collectionDescription = document.querySelector(
-      '.collection-description',
-    );
-    this.showButton = this.firstElementChild;
-    this.hideButton = this.lastElementChild;
-  }
-
-  connectedCallback() {
-    this.showButton.addEventListener('click', () => {
-      this.collectionDescription.classList.remove('h-56');
-      this.collectionDescription.classList.remove('after:bg-gradient-to-t');
-      this.showButton.classList.add('hidden');
-      this.hideButton.classList.remove('hidden');
-    });
-
-    this.hideButton.addEventListener('click', () => {
-      this.collectionDescription.classList.add('h-56');
-      this.collectionDescription.classList.add('after:bg-gradient-to-t');
-      this.showButton.classList.remove('hidden');
-      this.hideButton.classList.add('hidden');
-    });
-  }
-}
-customElements.define('dropdown-button', DropdownButton);

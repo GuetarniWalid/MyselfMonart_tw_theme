@@ -26,7 +26,6 @@
       <meta name="description" content="{{ page_description | escape }}" />
     {% endif %} {% render 'meta-tags' %}
 
-    <script src="{{ 'tw-global.js' | asset_url }}" defer="defer"></script>
     {{
       content_for_header
     }}
@@ -51,7 +50,9 @@
 
     {{ 'output.css' | asset_url | stylesheet_tag }}
 
+    <script src="{{ 'tw-global.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'collection.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'dropdown-button.js' | asset_url }}" defer="defer"></script>
 
     <script>
       if (Shopify.designMode) {

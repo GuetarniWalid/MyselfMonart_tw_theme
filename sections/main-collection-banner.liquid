@@ -1,5 +1,5 @@
 <h1 class="py-8">{{ collection.title | escape }}</h1>
-<div class="collection-description{% if section.settings.show_collapse_button %} h-56 overflow-hidden relative after:absolute after:bottom-0 after:w-full after:h-20 after:bg-gradient-to-t after:from-secondary{% endif %}">{{ collection.description }}</div>
+<div class="collection-description dropdown-button-target{% if section.settings.show_collapse_button %} h-56 overflow-hidden relative after:absolute after:bottom-0 after:w-full after:h-20 after:bg-gradient-to-t after:from-secondary{% endif %}">{{ collection.description }}</div>
 {%- if section.settings.show_collapse_button -%}
   <dropdown-button>
     <button class="group mt-6">{{ 'tw.main_collection_banner.learn_more' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>

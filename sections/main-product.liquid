@@ -155,9 +155,13 @@
             -%}
           {%- when 'description' -%}
             {%- if product.description != blank -%}
-              <div class="description flex flex-col gap-5 text-lg leading-relaxed mb-5">
+              <div class="dropdown-button-target description flex flex-col gap-5 text-lg leading-relaxed h-56 overflow-hidden relative after:absolute after:bottom-0 after:w-full after:h-20 after:from-secondary after:bg-gradient-to-t">
                 {{ product.description }}
               </div>
+              <dropdown-button>
+                <button class="group mt-6 mb-5">{{ 'tw.main_collection_banner.learn_more' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
+                <button class="group hidden mb-5">{{ 'tw.main_collection_banner.fewer_details' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
+              </dropdown-button>
             {%- endif -%}
           {%- when 'collapsible_tab' -%}
             <details class="accordion group border-t border-main-10 first-of-type:mt-5 last-of-type:border-b last-of-type:border-b-main-10 last-of-type:mb-5">
