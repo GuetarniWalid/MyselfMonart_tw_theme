@@ -19,6 +19,7 @@ if (!customElements.get('customer-testimonial')) {
         return {
           text: separeteString[0].slice(1).trim(),
           image: separeteString[1].trim(),
+          alt: separeteString[2].trim(),
         };
       });
       this.content = content;
@@ -30,9 +31,9 @@ if (!customElements.get('customer-testimonial')) {
     }
 
     async render() {
-      const { text, image } = this.content[this.currentIndex];
+      const { text, image, alt } = this.content[this.currentIndex];
       this.blurImage();
-      this.downloadImage(image);
+      this.downloadImage(image, alt);
       this.unblurImage(image);
       await this.simulateHumanWriting(text);
       await this.wait(this.durationImageAppearanceInMs);
@@ -43,8 +44,9 @@ if (!customElements.get('customer-testimonial')) {
       this.image.classList.add('blur-lg');
     }
 
-    downloadImage(image) {
+    downloadImage(image, alt) {
       this.image.src = image;
+      this.image.alt = alt;
     }
 
     simulateHumanWriting(text) {

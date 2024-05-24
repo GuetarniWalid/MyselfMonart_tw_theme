@@ -11,7 +11,7 @@
         {{ 'image' | placeholder_svg_tag: 'blur-sm' }}
       </div>
     {%- else -%}
-      <div class="max-w-full w-[400px] h-[400px] mx-auto md:mx-0 overflow-hidden"><img src="{{ section.blocks.first.settings.image | image_url: width: 400 }}" class="h-full w-full object-cover active skeleton" width="400" height="400" loading="lazy"></div>
+      <div class="max-w-full w-[400px] h-[400px] mx-auto md:mx-0 overflow-hidden"><img src="{{ section.blocks.first.settings.image | image_url: width: 400 }}" alt="{{ section.blocks.first.settings.image.alt }}" class="h-full w-full object-cover active skeleton" width="400" height="400" loading="lazy"></div>
     {%- endif -%}
   </div>
 
@@ -20,7 +20,7 @@
       {%- if block.settings.message != blank -%}
         {{ block.settings.message }}|||
         {%- if block.settings.image != blank -%}
-          {{ block.settings.image | image_url: width: 400 }}
+          {{ block.settings.image | image_url: width: 400 }}|||{{ block.settings.image.alt }}
         {%- else -%}
           false
         {%- endif -%}
