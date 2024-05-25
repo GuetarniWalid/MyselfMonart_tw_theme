@@ -92,7 +92,11 @@
 
     <div class="flex gap-3 mt-5">
       <click-product class="w-full">
-        <button class="bg-main-5 border-1 border-main py-3 rounded w-full" {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}>
+        <button class="bg-main-5 border-1 border-main-5 py-3 rounded w-full group relative inline-block overflow-hidden focus:outline-none focus:ring active:bg-main active:text-secondary pointer-events-none" {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}>
+          <span class="ease absolute left-0 top-0 h-0 w-0 border-t-2 border-main transition-all duration-200 group-hover:w-full"> </span>
+          <span class="ease absolute right-0 top-0 h-0 w-0 border-r-2 border-main transition-all duration-200 group-hover:h-full"> </span>
+          <span class="ease absolute bottom-0 right-0 h-0 w-0 border-b-2 border-main transition-all duration-200 group-hover:w-full"> </span>
+          <span class="ease absolute bottom-0 left-0 h-0 w-0 border-l-2 border-main transition-all duration-200 group-hover:h-full"> </span>
           {{ 'sections.product_grid.button' | t }}
         </button>
       </click-product>

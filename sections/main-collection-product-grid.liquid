@@ -14,14 +14,16 @@
                 {%- if forloop.index > 2 -%}
                   {%- assign lazy_load = true -%}
                 {%- endif -%}
-                <li id="{{ product.id }}" class="relative group border-main border-1 h-full">
-                  {% render 'card-product',
-                    product: product,
-                    show_secondary_image: section.settings.show_secondary_image,
-                    lazy_load: lazy_load,
-                    section_id: section.id,
-                  %}
-                </li>
+                <anime-product-card>
+                  <li id="{{ product.id }}" class="relative group border-main border-1 h-full">
+                    {% render 'card-product',
+                      product: product,
+                      show_secondary_image: section.settings.show_secondary_image,
+                      lazy_load: lazy_load,
+                      section_id: section.id,
+                    %}
+                  </li>
+                </anime-product-card>
               {%- endfor -%}
             </ul>
           </infinite-scroll>

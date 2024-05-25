@@ -297,7 +297,9 @@ class InfiniteScroll extends HTMLElement {
     a.href = this.baseUrl + this.page;
     a.textContent = this.page;
     a.ariaLabel = a.ariaLabel.replace('#', this.page);
-    const etcElem = this.paginationNavbar.querySelector('.etc')?.parentElement.cloneNode(true);
+    const etcElem = this.paginationNavbar
+      .querySelector('.etc')
+      ?.parentElement.cloneNode(true);
     const lis = this.paginationNavbar.querySelectorAll('ul li');
 
     for (const li of lis) {
@@ -423,3 +425,63 @@ class MyLikesButton extends HTMLElement {
   }
 }
 customElements.define('my-likes-button', MyLikesButton);
+
+class animeProductCard extends HTMLElement {
+  constructor() {
+    super();
+    this.li = this.querySelector('li');
+    this.secondImage = this.querySelector('img+img');
+    this.buttonSpans = this.querySelectorAll('click-product button span');
+  }
+
+  connectedCallback() {
+    const options = {
+      root: document.root,
+      rootMargin: '0px',
+      threshold: [0, 1],
+    };
+    const observer = new IntersectionObserver(this.animate.bind(this), options);
+    observer.observe(this.li);
+  }
+
+  animate(entries) {
+    if (entries[0].intersectionRatio === 1) {
+      if(window.innerWidth > 639) return;
+      this.revealImage();
+      this.showButtonBorder();
+    } else if (!entries[0].isIntersecting) {
+      if(window.innerWidth > 639) return;
+      this.hideImage();
+      this.hideButtonBorder();
+    }
+  }
+
+  revealImage() {
+    if (!this.secondImage) return;
+    this.secondImage.classList.add('opacity-100');
+  }
+
+  hideImage() {
+    if (!this.secondImage) return;
+    this.secondImage.classList.remove('opacity-100');
+  }
+
+  showButtonBorder() {
+    this.buttonSpans.forEach((span) => {
+      span.classList.add('delay-200')
+      if (span.classList.contains('group-hover:w-full'))
+        span.classList.replace('w-0', 'w-full');
+      else span.classList.replace('h-0', 'h-full');
+    });
+  }
+
+  hideButtonBorder() {
+    this.buttonSpans.forEach((span) => {
+      span.classList.remove('delay-200')
+      if (span.classList.contains('group-hover:w-full'))
+        span.classList.replace('w-full', 'w-0');
+      else span.classList.replace('h-full', 'h-0');
+    });
+  }
+}
+customElements.define('anime-product-card', animeProductCard);
