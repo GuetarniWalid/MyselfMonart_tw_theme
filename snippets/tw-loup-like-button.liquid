@@ -19,6 +19,28 @@
                 </svg>
                 <span class="group-focus:scale-125 -translate-x-1 inline-block">{% render 'tw-icon-heart' %}</span>
             </span>
+            <likes-count>
+                <span class="absolute flex justify-center items-center text-xs font-bold bg-secondary rounded-full h-5 w-5 text-like  bottom-1 right-2">0</span>
+            </likes-count>
         </li>
     </ul>
 {%- endif -%}
+
+<script defer>
+    class LikesCount extends HTMLElement {
+        connectedCallback() {
+            this.updateCount();
+        }
+
+        updateCount() {
+            const likedLis = localStorage.getItem('likedLis');
+            const likedLisArr = JSON.parse(likedLis) || [];
+            const count = likedLisArr.length;
+            this.likeCount = this.likeCount || this.querySelector('span')
+            if(!this.likeCount) return;
+            if(count > 0) this.likeCount.textContent = count;
+            else this.likeCount.classList.add('hidden');
+        }
+    }
+    customElements.define('likes-count', LikesCount);
+</script>
