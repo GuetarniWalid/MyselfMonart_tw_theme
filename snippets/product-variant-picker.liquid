@@ -1,0 +1,35 @@
+{% comment %}
+  Accepts:
+  - product: {Object} product object.
+  - block: {Object} passing the block information.
+  - product_form_id: {String} Id of the product form to which the variant picker is associated.
+{% endcomment %}
+
+{%- unless product.has_only_default_variant -%}
+    <div class="pt-2 mb-6">
+        {%- for option in product.options_with_values -%}
+            <div class="container flex gap-3 flex-wrap font-heading font-semibold py-4">
+                {%- for value in option.values -%}
+                    {% if value.available %}
+                        {% if value.selected %}
+                            <variant-picker data-selected="true" data-option="option{{ option.position }}" data-option-value="{{ value }}">
+                                <button class="px-4 py-2 rounded-lg bg-main text-secondary">{{ value }}</button>
+                            </variant-picker>
+                        {% else %}
+                            <variant-picker data-option="option{{ option.position }}" data-option-value="{{ value }}">
+                                <button class="px-4 py-2 rounded-lg bg-main-5" data-id="{{ value.id }}">{{ value }}</button>
+                            </variant-picker>
+                        {% endif %}              
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% unless forloop.last %}
+                <hr>
+            {% endunless %}
+        {%- endfor -%}
+    </div>
+    <script type="application/json" id="variants-data-json">
+      {{ product.variants | json }}
+    </script>
+{%- endunless -%}
+  

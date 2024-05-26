@@ -1,4 +1,4 @@
-<script src="{{ 'main-product-carousel.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'main-product.js' | asset_url }}" defer="defer"></script>
  
 {% liquid
   assign first_3d_model = product.media | where: "media_type", "model" | first | default: product.metafields.files["3d_file_name"].value
@@ -44,7 +44,8 @@
           endfor
         %}
       </div>
-      <div class="absolute bg-secondary rounded-full left-1/2 -translate-x-1/2 bottom-3 border-main border-1 md:hidden flex justify-center items-center h-[47px] overflow-hidden">
+      {% if product.media.size > 1 %}
+        <div class="absolute bg-secondary rounded-full left-1/2 -translate-x-1/2 bottom-3 border-main border-1 md:hidden flex justify-center items-center h-[47px] overflow-hidden">
           <button class="previous pl-5 pr-3 h-full focus-visible:outline-none focus-visible:bg-main-10 hover:bg-main-10">
             <div class="rotate-90">{% render 'tw-icon-caret', width: '18' %}</div>
           </button>
@@ -53,6 +54,7 @@
             <div class="-rotate-90">{% render 'tw-icon-caret', width: '18' %}</div>
           </button>
         </div>
+      {% endif %}
       <div class="hidden md:flex flex-wrap gap-2">
         {% liquid
             for media in product.media
@@ -89,7 +91,7 @@
     </div>
   </main-product-carousel>
   
-  <main-product-blocks class="grow" id="ProductInfo-{{ section.id }}">
+  <main-product-blocks class="grow" id="ProductInfo-{{ section.id }}" data-layout="{{ template.suffix }}">
     <div class="max-w-lg px-4 sm:px-0 mx-auto my-4">
       {% comment %} {%- assign product_form_id = 'product-form-' | append: section.id -%} {% endcomment %}
       {%- for block in section.blocks -%}
@@ -102,14 +104,16 @@
             <h1 class="text-4xl mb-8">{{ product.title | escape }}</h1>
           {%- when 'price' -%}
             <span class="block text-xl font-bold font-heading mb-4">{{ product.selected_or_first_available_variant.price | money_with_currency }}</span>
+          {%- when 'variant_picker' -%}
+            {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
           {%- when 'buy' -%}
             {% style %}
               :root {
                 --color-action: {{ block.settings.main_color }};
               }
             {% endstyle %}
-            <button class="buy-button relative flex w-full items-center gap-x-5 gap-y-2 2xs:gap-4 md:gap-5 py-2 lg:py-3 bg-action text-secondary shadow-lg rounded-xl px-5 lg:px-6 mb-4 before:w-12 before:h-40 before:bg-white/50 before:absolute before:-top-4 before:right-[-60px] before:rotate-12 after:w-12 after:h-40 after:bg-white/20 after:absolute after:-top-4 after:rotate-12 after:right-[-60px] overflow-hidden">
-              <svg viewBox="0 0 50 53" class="shrink-0 w-10 lg:w-auto fill-secondary" width="55" fill="none" xmlns="http://www.w3.org/2000/svg" role="presentation" aria-hidden="true">
+            <button class="buy-button relative flex w-full items-center gap-x-5 gap-y-2 2xs:gap-4 md:gap-5 py-2 lg:py-3 bg-action text-secondary shadow-lg rounded-xl px-5 lg:px-6 mb-4 before:w-12 before:h-40 before:bg-white/50 before:absolute before:-top-4 before:right-[-60px] before:rotate-12 after:w-12 after:h-40 after:bg-white/20 after:absolute after:-top-4 after:rotate-12 after:right-[-60px] overflow-hidden" data-variant-id="{{ product.first_available_variant.id }}">
+              <svg viewBox="0 0 50 53" class="shrink-0 w-10 lg:w-auto fill-secondary pointer-events-none" width="55" fill="none" xmlns="http://www.w3.org/2000/svg" role="presentation" aria-hidden="true">
                 <path d="M21.4157 2.84998V32.5974H1.89111C2.5125 8.54724 21.4157 2.84998 21.4157 2.84998Z" />
                 <path d="M11.7325 28.7466C14.5357 28.7466 16.8082 27.7727 16.8082 26.5713C16.8082 25.3699 14.5357 24.396 11.7325 24.396C8.92922 24.396 6.65674 25.3699 6.65674 26.5713C6.65674 27.7727 8.92922 28.7466 11.7325 28.7466Z" />
                 <path d="M21.5747 2.64282H45.1924V34.3403L48.3001 37.8622L46.0212 40.4519L47.7821 43.5594L45.1924 46.3563V49.8782H21.5747V2.64282Z" />
@@ -119,7 +123,7 @@
                 <path d="M5.74463 26.3601C8.08567 30.3275 14.6199 30.833 17.4747 26.4243C15.1275 22.7822 9.136 21.9598 5.74463 26.3601ZM10.2444 28.2288C8.79217 27.9326 7.9324 27.4002 7.18034 26.4306C7.93654 25.4631 8.83974 24.9866 10.2693 24.6343C9.31212 25.8899 9.29141 26.9712 10.2444 28.2288ZM11.7009 27.4809C11.1498 27.5162 10.6049 27.0272 10.5841 26.4761C10.5634 25.9313 11.0835 25.3761 11.6283 25.4071C12.2084 25.4382 12.5668 25.7821 12.6683 26.3394C12.7658 26.8635 12.2478 27.4436 11.7009 27.4809ZM13.0972 28.202C13.8678 26.9878 14.0066 25.9355 13.2463 24.827C14.4023 25.0114 15.3243 25.4692 16.0307 26.4057C15.3802 27.4043 14.4666 27.9016 13.0952 28.202H13.0972Z" class="fill-action"/>
                 <path d="M28.2568 16.5402C30.9044 21.0275 38.2944 21.5993 41.522 16.6126C38.8682 12.4941 32.0916 11.5639 28.2568 16.5402ZM33.345 18.6533C31.7021 18.3177 30.7304 17.7169 29.879 16.6189C30.7304 15.5229 31.7559 14.9842 33.3719 14.5886C32.2904 16.0077 32.2656 17.2321 33.345 18.6533ZM34.992 17.8081C34.3663 17.8495 33.7531 17.2943 33.7303 16.6728C33.7076 16.0595 34.2959 15.4297 34.9112 15.4629C35.5659 15.498 35.9699 15.8896 36.0879 16.5195C36.1977 17.112 35.6115 17.7666 34.992 17.8081ZM36.5707 18.6264C37.4429 17.2528 37.5983 16.0615 36.7405 14.8061C38.0478 15.0154 39.0899 15.5312 39.8896 16.5941C39.152 17.7211 38.1203 18.2846 36.5707 18.6243V18.6264Z" class="fill-action"/>
               </svg>
-              <span class="inline-flex flex-col gap-2 text-left shrink-0">
+              <span class="inline-flex flex-col gap-2 text-left shrink-0 pointer-events-none">
                 <span class="font-thin text-base 2xs:text-lg ">{{ block.settings.top_text }}</span>
                 <span class="font-bold font-heading text-base 2xs:text-lg xs:text-xl md:text-lg lg:text-xl">{{ block.settings.bottom_text }}</span>
               </span>
@@ -150,9 +154,9 @@
                 {% render 'tw-loading-hand' %}
               </div>
             </div>
-            {%- liquid
-              render 'vite-tag' with 'index.jsx'
-            -%}
+            {% if template.suffix == 'painting' %}
+              {% render 'painting-addons-drawer' %}     
+            {% endif %}
           {%- when 'description' -%}
             {%- if product.description != blank -%}
               <div class="dropdown-button-target description flex flex-col gap-5 text-lg leading-relaxed h-56 overflow-hidden relative after:absolute after:bottom-0 after:w-full after:h-20 after:from-secondary after:bg-gradient-to-t">
@@ -309,6 +313,11 @@
     {
       "type": "price",
       "name": "t:sections.main-product.blocks.price.name",
+      "limit": 1
+    },
+    {
+      "type": "variant_picker",
+      "name": "t:sections.main-product.blocks.variant_picker.name",
       "limit": 1
     },
     {

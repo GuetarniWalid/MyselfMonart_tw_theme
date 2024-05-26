@@ -2,7 +2,9 @@ class MainProductCarousel extends HTMLElement {
   constructor() {
     super();
     this.medias = Array.from(this.querySelectorAll('.img-wrapper'));
-    this.thumbnailMedias = Array.from(this.querySelectorAll('.thumb-img-wrapper'));
+    this.thumbnailMedias = Array.from(
+      this.querySelectorAll('.thumb-img-wrapper'),
+    );
     this.currentMediaIndex = 0;
     this.popup = this.querySelector('.popup');
     this.closePopupButton = this.popup.querySelector('button');
@@ -14,18 +16,18 @@ class MainProductCarousel extends HTMLElement {
   }
 
   connectedCallback() {
-    this.medias.forEach(media => {
+    this.medias.forEach((media) => {
       media.addEventListener('click', () => {
         this.openPopup();
       });
-      media.querySelector('.zoom')?.addEventListener('keydown', e => {
+      media.querySelector('.zoom')?.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !this.popupOpen) {
           this.openPopup();
         }
       });
     });
 
-    this.thumbnailMedias.forEach(media => {
+    this.thumbnailMedias.forEach((media) => {
       media.addEventListener('click', () => {
         const index = this.thumbnailMedias.indexOf(media);
         const diffFromCurrentMedia = index - this.currentMediaIndex;
@@ -33,14 +35,14 @@ class MainProductCarousel extends HTMLElement {
       });
     });
 
-    this.closePopupButton.addEventListener('keydown', e => {
+    this.closePopupButton.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         this.closePopup();
       }
     });
 
     this.closePopupButton.addEventListener('click', this.closePopup);
-    this.popup.addEventListener('keydown', e => {
+    this.popup.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         this.closePopup();
       }
@@ -68,15 +70,19 @@ class MainProductCarousel extends HTMLElement {
     });
   }
 
-  displayNextMedia = diffFromCurrentMedia => {
-    if (this.currentMediaIndex + diffFromCurrentMedia < 0 || this.currentMediaIndex + diffFromCurrentMedia > this.medias.length - 1) return;
+  displayNextMedia = (diffFromCurrentMedia) => {
+    if (
+      this.currentMediaIndex + diffFromCurrentMedia < 0 ||
+      this.currentMediaIndex + diffFromCurrentMedia > this.medias.length - 1
+    )
+      return;
     this.renderOldZoomDefocusable();
     this.scrollToNextMedia(diffFromCurrentMedia);
     this.currentMediaIndex += diffFromCurrentMedia;
     this.renderCurrentZoomFocusable();
   };
 
-  scrollToNextMedia = diffFromCurrentMedia => {
+  scrollToNextMedia = (diffFromCurrentMedia) => {
     this.imageWidth = this.imageWidth || this.mesureImageWidth();
     const nextPosition = this.imageWidth * diffFromCurrentMedia;
     this.carousel.scrollBy({ left: nextPosition, behavior: 'smooth' });
@@ -88,20 +94,25 @@ class MainProductCarousel extends HTMLElement {
   };
 
   renderOldZoomDefocusable = () => {
-    this.medias[this.currentMediaIndex].querySelector('.zoom')?.removeAttribute('tabindex');
+    this.medias[this.currentMediaIndex]
+      .querySelector('.zoom')
+      ?.removeAttribute('tabindex');
   };
 
   renderCurrentZoomFocusable = () => {
-    if (this.medias[this.currentMediaIndex].classList.contains('model-3d')) return;
+    if (this.medias[this.currentMediaIndex].classList.contains('model-3d'))
+      return;
     this.medias[this.currentMediaIndex].querySelector('.zoom').tabIndex = 0;
   };
 
   openPopup = () => {
-    if (this.medias[this.currentMediaIndex].classList.contains('model-3d')) return;
+    if (this.medias[this.currentMediaIndex].classList.contains('model-3d'))
+      return;
     this.popup.classList.remove('hidden');
     this.popup.setAttribute('aria-modal', 'true');
     this.popupOpen = true;
-    this.template = this.template || document.getElementById('main-product-popup');
+    this.template =
+      this.template || document.getElementById('main-product-popup');
     const clone = this.template.content.cloneNode(true);
     this.popupMediaChild = clone.children[this.currentMediaIndex];
     this.popup.appendChild(this.popupMediaChild);
@@ -133,7 +144,9 @@ class PopupImage extends HTMLElement {
   }
   connectedCallback() {
     this.popup.focus();
-    this.popup.addEventListener('keydown', e => trapFocus(e, this.closePopupButton));
+    this.popup.addEventListener('keydown', (e) =>
+      trapFocus(e, this.closePopupButton),
+    );
   }
 }
 customElements.define('popup-image', PopupImage);
@@ -156,11 +169,14 @@ class MainProductBlocks extends CollapsibleTab {
 
     if (this.blockBuyButton) {
       this.animBlockButton();
-      this.blockBuyButton.addEventListener('click', this.onBuyButtonClick);
+      this.blockBuyButton.addEventListener('click', (e) => {
+        if (this.dataset.layout === 'painting') this.onPaintingBuyButtonClick();
+        else this.onBuyButtonClick(e);
+      });
     }
   }
 
-  initObserver = observed => {
+  initObserver = (observed) => {
     const options = {
       root: null,
       rootMargin: '0px',
@@ -168,8 +184,8 @@ class MainProductBlocks extends CollapsibleTab {
     };
 
     let isFirstCallback = true;
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
         if (entry.target === observed) {
           if (entry.isIntersecting) {
             this.hideBuyButton();
@@ -186,12 +202,14 @@ class MainProductBlocks extends CollapsibleTab {
   };
 
   hideBuyButton = () => {
-    this.buyButton = this.buyButton || document.body.querySelector('.float-buy-button');
+    this.buyButton =
+      this.buyButton || document.body.querySelector('.float-buy-button');
     this.buyButton?.classList.add('hidden');
   };
 
   showBuyButton = () => {
-    this.buyButton = this.buyButton || document.body.querySelector('.float-buy-button');
+    this.buyButton =
+      this.buyButton || document.body.querySelector('.float-buy-button');
     if (!this.buyButton) {
       this.createBuyButton();
     }
@@ -215,11 +233,126 @@ class MainProductBlocks extends CollapsibleTab {
     }, 11000);
   };
 
-  onBuyButtonClick = () => {
-    this.addonsDrawer = this.addonsDrawer || document.getElementById('addonsDrawer');
-    this.addonsDrawer.classList.replace("translate-x-full", "translate-x-0");
+  onBuyButtonClick = async (e) => {
+    const button = e.target;
+    const variantId = button.dataset.variantId;
+    const response = await fetch('/cart/add.js?sections=tw-cart-drawer,tw-header',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          items: [{ id: variantId, quantity: 1 }],
+        }),
+      },
+    );
+    if (!response.ok) throw new Error("Une erreur inattendu s'est produite.");
+    const json = await response.json();
+    this.renderNewSections(json);
+    setTimeout(() => {
+      const cartDrawerButton = document.getElementById('cart-button');
+      cartDrawerButton.click();
+    }, 300);
+  };
+
+  renderNewSections({ items, sections }) {
+    const bubble = document.getElementById('bubble-nb-product');
+    const newBubble = this.getSectionInnerJSON(
+      sections['tw-header'],
+      '#bubble-nb-product',
+    );
+    bubble.innerHTML = newBubble;
+
+    const sectionDrawer = document.getElementById(
+      'shopify-section-tw-cart-drawer',
+    );
+    const newSectionDrawer = this.getSectionInnerJSON(
+      sections['tw-cart-drawer'],
+      '#shopify-section-tw-cart-drawer',
+    );
+    sectionDrawer.innerHTML = newSectionDrawer;
+
+    const variantTitleToFillElem = sectionDrawer.querySelector(
+      '.variant-title-to-fill',
+    );
+    if (variantTitleToFillElem) {
+      variantTitleToFillElem.textContent = items[0].variant_title;
+    }
+
+    const variantPriceToFillElem = sectionDrawer.querySelector(
+      '.variant-price-to-fill',
+    );
+    if (variantPriceToFillElem) {
+      const moneySymbol = variantPriceToFillElem.textContent.split('0')[0];
+      variantPriceToFillElem.textContent = moneySymbol + items[0].price / 100;
+    }
+  }
+
+  getSectionInnerJSON(json, selector) {
+    return new DOMParser()
+      .parseFromString(json, 'text/html')
+      .querySelector(selector).innerHTML;
+  }
+
+  onPaintingBuyButtonClick = () => {
+    this.addonsDrawer =
+      this.addonsDrawer || document.getElementById('addonsDrawer');
+    this.addonsDrawer.classList.replace('translate-x-full', 'translate-x-0');
     this.addonsDrawer.setAttribute('aria-hidden', 'false');
     document.body.classList.add('overflow-hidden');
   };
 }
 customElements.define('main-product-blocks', MainProductBlocks);
+
+class VariantPicker extends HTMLElement {
+  constructor() {
+    super();
+    this.button = this.querySelector('button');
+    this.buyButton = document.querySelector('.buy-button');
+    this.variantsData = JSON.parse(document.getElementById('variants-data-json').textContent);
+  }
+
+  connectedCallback() {
+    this.button.addEventListener('click', this.onButtonClick);
+  }
+
+  onButtonClick = () => {
+    this.unColorPreviousButtonSelected();
+    this.colorButtonSelected();
+    const variantId = this.getVariantId();
+    if(!this.buyButton) return;
+    this.buyButton.dataset.variantId = variantId;
+  };
+
+  colorButtonSelected() {
+    this.button.classList.replace('bg-main-5', 'bg-main');
+    this.button.classList.add('text-secondary');
+    this.dataset.selected = 'true';
+  }
+
+  unColorPreviousButtonSelected() {
+    const container = this.closest('.container');
+    const previousVariantPickerSelected = container.querySelector('variant-picker[data-selected="true"]');
+    if (previousVariantPickerSelected) {
+      previousVariantPickerSelected.dataset.selected = 'false';
+      const previousButton = previousVariantPickerSelected.querySelector('button');
+      previousButton.classList.replace('bg-main', 'bg-main-5');
+      previousButton.classList.remove('text-secondary');
+    }
+  
+  }
+
+  getVariantId() {
+    const [option1, option2, option3] = this.getOptions();
+    const currentVariant = this.variantsData.find(variant => variant.option1 === option1 && variant.option2 === option2 && variant.option3 === option3);
+    return currentVariant.id;
+  }
+
+  getOptions() {
+    const variantPickersSelected = document.querySelectorAll('variant-picker[data-selected="true"]');
+    const options = [variantPickersSelected[0]?.dataset.optionValue || null, variantPickersSelected[1]?.dataset.optionValue || null, variantPickersSelected[2]?.dataset.optionValue || null];
+    return options;
+  }
+}
+customElements.define('variant-picker', VariantPicker);

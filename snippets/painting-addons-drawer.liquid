@@ -1,0 +1,8 @@
+<div aria-modal="true" role="dialog" aria-hidden="true" id="addonsDrawer" class="fixed top-0 left-0 w-screen h-dvh bg-secondary z-50 transition-transform translate-x-full duration-300">
+    <div class="w-full h-full flex justify-center items-center">
+        {% render 'tw-loading-hand' %}
+    </div>
+</div>
+{%- liquid
+    render 'vite-tag' with 'index.jsx'
+-%}

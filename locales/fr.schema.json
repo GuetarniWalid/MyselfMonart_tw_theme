@@ -1239,48 +1239,6 @@
     "main-product": {
       "name": "Informations produits",
       "blocks": {
-        "text": {
-          "name": "Texte",
-          "settings": {
-            "text": {
-              "label": "Texte"
-            }
-          }
-        },
-        "title": {
-          "name": "Titre",
-          "settings": {
-            "alignment": {
-              "label": "Alignement",
-              "options__1": {
-                "label": "Au centre"
-              },
-              "options__2": {
-                "label": "À gauche"
-              }
-            }
-          }
-        },
-        "price": {
-          "name": "Prix",
-          "settings": {
-            "size": {
-              "label": "Taille",
-              "options__1": {
-                "label": "Petit"
-              },
-              "options__2": {
-                "label": "Moyen"
-              },
-              "options__3": {
-                "label": "Grand"
-              }
-            },
-            "spacing": {
-              "label": "Spacing"
-            }
-          }
-        },
         "buy": {
           "name": "Boutons d'achat",
           "settings": {
@@ -1450,6 +1408,51 @@
               "label": "Couleur de l'îcone"
             }
           }
+        },
+        "price": {
+          "name": "Prix",
+          "settings": {
+            "size": {
+              "label": "Taille",
+              "options__1": {
+                "label": "Petit"
+              },
+              "options__2": {
+                "label": "Moyen"
+              },
+              "options__3": {
+                "label": "Grand"
+              }
+            },
+            "spacing": {
+              "label": "Spacing"
+            }
+          }
+        },
+        "text": {
+          "name": "Texte",
+          "settings": {
+            "text": {
+              "label": "Texte"
+            }
+          }
+        },
+        "title": {
+          "name": "Titre",
+          "settings": {
+            "alignment": {
+              "label": "Alignement",
+              "options__1": {
+                "label": "Au centre"
+              },
+              "options__2": {
+                "label": "À gauche"
+              }
+            }
+          }
+        },
+        "variant_picker": {
+          "name": "Sélecteur de variantes"
         }
       }
     },

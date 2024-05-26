@@ -60,12 +60,12 @@
         {% for item in cart.items %}
           {% liquid
             if item.product != blank
-              assign item_image = item.product.images[1]
+              assign item_image = item.product.images[1] | default: item.product.featured_image
               assign item_url = item.url
               assign item_title = item.product.title
               assign has_variant_data = true
             else
-              assign item_image = product.images[1]
+              assign item_image = product.images[1] | default: product.featured_image
               assign item_url = product.url
               assign item_title = product.title
               assign has_variant_data = false

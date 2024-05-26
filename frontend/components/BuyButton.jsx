@@ -101,7 +101,7 @@ export default function BuyButton({
       '.variant-price-to-fill',
     );
     if (variantPriceToFillElem) {
-      const moneySymbol1 = variantPriceToFillElem.textContent.split('0')[0];
+      const moneySymbol = variantPriceToFillElem.textContent.split('0')[0];
       variantPriceToFillElem.textContent = moneySymbol + items[0].price / 100;
     }
   }
