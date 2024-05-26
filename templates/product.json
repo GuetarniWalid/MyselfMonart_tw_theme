@@ -14,26 +14,31 @@
             "text": "<p>Vous recevez nos propositions gratuitement par mail. Si l'une d'entre elles vous plaît, il vous suffit de cliquer sur le lien présent dans le mail qui redirige vers la page de paiement présent sur notre site. Ci-dessous, vous pouvez consulter les prix selon la taille et le support choisi.<\/p>"
           }
         },
+        "variant_picker_QxUgdP": {
+          "type": "variant_picker",
+          "settings": {
+          }
+        },
         "9f20570b-1a97-4c34-8758-c5af9b8d2cfc": {
           "type": "price",
           "settings": {
           }
         },
-        "a70160ee-79ef-4eb9-8e65-ec87f898b506": {
-          "type": "collapsible_tab",
+        "buy_bW8TLN": {
+          "type": "buy",
           "settings": {
-            "heading": "Guide des tailles",
-            "icon": "ruler",
-            "content": "",
-            "page": "guide-de-tailles"
+            "top_text": "Mettre dans le panier",
+            "bottom_text": "Une carte cadeau à offrir",
+            "main_color": "#07364d"
           }
         }
       },
       "block_order": [
         "title",
         "8600f603-2d6f-4191-8020-3678432ba1e5",
+        "variant_picker_QxUgdP",
         "9f20570b-1a97-4c34-8758-c5af9b8d2cfc",
-        "a70160ee-79ef-4eb9-8e65-ec87f898b506"
+        "buy_bW8TLN"
       ],
       "settings": {
       }
@@ -99,32 +104,48 @@
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/femme_portrait.jpg",
+        "title": "Title",
+        "description": "<p>Description ...<\/p>",
         "layout": "text_first",
-        "enable_blob": true
+        "enable_blob": true,
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
       }
     },
     "afe2a87a-371e-4c67-93b7-8c6b2244f43b": {
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/metre.jpg",
+        "title": "Title",
+        "description": "<p>Description ...<\/p>",
         "layout": "image_first",
-        "enable_blob": true
+        "enable_blob": true,
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
       }
     },
     "b5027902-4240-44cf-8660-b6e754562c52": {
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/texture_x3_70ae7c8b-712c-4c74-bb93-e76a2eddc37b.jpg",
+        "title": "Title",
+        "description": "<p>Description ...<\/p>",
         "layout": "text_first",
-        "enable_blob": true
+        "enable_blob": true,
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
       }
     },
     "556b5926-5cdb-4c50-a817-c79f15894cdd": {
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/tour_eiffel.jpg",
+        "title": "Title",
+        "description": "<p>Description ...<\/p>",
         "layout": "image_first",
-        "enable_blob": true
+        "enable_blob": true,
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
       }
     },
     "11956137-37cc-4134-a10b-f99541980b06": {

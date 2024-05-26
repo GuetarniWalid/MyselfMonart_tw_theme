@@ -236,7 +236,8 @@ class MainProductBlocks extends CollapsibleTab {
   onBuyButtonClick = async (e) => {
     const button = e.target;
     const variantId = button.dataset.variantId;
-    const response = await fetch('/cart/add.js?sections=tw-cart-drawer,tw-header',
+    const response = await fetch(
+      '/cart/add.js?sections=tw-cart-drawer,tw-header',
       {
         method: 'POST',
         headers: {
@@ -310,7 +311,9 @@ class VariantPicker extends HTMLElement {
     super();
     this.button = this.querySelector('button');
     this.buyButton = document.querySelector('.buy-button');
-    this.variantsData = JSON.parse(document.getElementById('variants-data-json').textContent);
+    this.variantsData = JSON.parse(
+      document.getElementById('variants-data-json').textContent,
+    );
   }
 
   connectedCallback() {
@@ -320,9 +323,10 @@ class VariantPicker extends HTMLElement {
   onButtonClick = () => {
     this.unColorPreviousButtonSelected();
     this.colorButtonSelected();
-    const variantId = this.getVariantId();
-    if(!this.buyButton) return;
+    const [variantId, variantPrice] = this.getVariantData();
+    if (!this.buyButton) return;
     this.buyButton.dataset.variantId = variantId;
+    this.updateDisplayedPrice(variantPrice);
   };
 
   colorButtonSelected() {
@@ -333,26 +337,51 @@ class VariantPicker extends HTMLElement {
 
   unColorPreviousButtonSelected() {
     const container = this.closest('.container');
-    const previousVariantPickerSelected = container.querySelector('variant-picker[data-selected="true"]');
+    const previousVariantPickerSelected = container.querySelector(
+      'variant-picker[data-selected="true"]',
+    );
     if (previousVariantPickerSelected) {
       previousVariantPickerSelected.dataset.selected = 'false';
-      const previousButton = previousVariantPickerSelected.querySelector('button');
+      const previousButton =
+        previousVariantPickerSelected.querySelector('button');
       previousButton.classList.replace('bg-main', 'bg-main-5');
       previousButton.classList.remove('text-secondary');
     }
-  
   }
 
-  getVariantId() {
+  getVariantData() {
     const [option1, option2, option3] = this.getOptions();
-    const currentVariant = this.variantsData.find(variant => variant.option1 === option1 && variant.option2 === option2 && variant.option3 === option3);
-    return currentVariant.id;
+    const currentVariant = this.variantsData.find(
+      (variant) =>
+        variant.option1 === option1 &&
+        variant.option2 === option2 &&
+        variant.option3 === option3,
+    );
+    return [currentVariant.id, currentVariant.price];
   }
 
   getOptions() {
-    const variantPickersSelected = document.querySelectorAll('variant-picker[data-selected="true"]');
-    const options = [variantPickersSelected[0]?.dataset.optionValue || null, variantPickersSelected[1]?.dataset.optionValue || null, variantPickersSelected[2]?.dataset.optionValue || null];
+    const variantPickersSelected = document.querySelectorAll(
+      'variant-picker[data-selected="true"]',
+    );
+    const options = [
+      variantPickersSelected[0]?.dataset.optionValue || null,
+      variantPickersSelected[1]?.dataset.optionValue || null,
+      variantPickersSelected[2]?.dataset.optionValue || null,
+    ];
     return options;
+  }
+
+  updateDisplayedPrice(newPrice) {
+    const priceElem = document.getElementById('main-price');
+    if (!priceElem) return;
+    const moneySymbol = priceElem.dataset.moneySymbol;
+    const moneyTrigram = priceElem.textContent.split(' ')[1];
+    let newPriceString = '';
+    if (moneyTrigram) newPriceString = moneySymbol;
+    newPriceString += (Number(newPrice) / 100).toFixed(2);
+    if (moneyTrigram) newPriceString += ' ' + moneyTrigram;
+    priceElem.textContent = newPriceString;
   }
 }
 customElements.define('variant-picker', VariantPicker);

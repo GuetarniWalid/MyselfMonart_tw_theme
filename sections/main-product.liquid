@@ -103,7 +103,7 @@
           {%- when 'title' -%}
             <h1 class="text-4xl mb-8">{{ product.title | escape }}</h1>
           {%- when 'price' -%}
-            <span class="block text-xl font-bold font-heading mb-4">{{ product.selected_or_first_available_variant.price | money_with_currency }}</span>
+            <span id="main-price" class="block text-xl font-bold font-heading mb-4" data-money-symbol="{{ cart.currency.symbol }}">{{ product.selected_or_first_available_variant.price | money_with_currency }}</span>
           {%- when 'variant_picker' -%}
             {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
           {%- when 'buy' -%}
