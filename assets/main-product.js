@@ -61,11 +61,11 @@ class MainProductCarousel extends HTMLElement {
       }, 100);
     });
 
-    this.nextMediaButton.addEventListener('click', () => {
+    this.nextMediaButton?.addEventListener('click', () => {
       this.displayNextMedia(1);
     });
 
-    this.previousMediaButton.addEventListener('click', () => {
+    this.previousMediaButton?.addEventListener('click', () => {
       this.displayNextMedia(-1);
     });
   }
@@ -235,26 +235,33 @@ class MainProductBlocks extends CollapsibleTab {
 
   onBuyButtonClick = async (e) => {
     const button = e.target;
-    const variantId = button.dataset.variantId;
-    const response = await fetch(
-      '/cart/add.js?sections=tw-cart-drawer,tw-header',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+    try {
+      this.displayLoader(button);
+      const variantId = button.dataset.variantId;
+      const response = await fetch(
+        '/cart/add.js?sections=tw-cart-drawer,tw-header',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            items: [{ id: variantId, quantity: 1 }],
+          }),
         },
-        body: JSON.stringify({
-          items: [{ id: variantId, quantity: 1 }],
-        }),
-      },
-    );
-    if (!response.ok) throw new Error("Une erreur inattendu s'est produite.");
-    const json = await response.json();
-    this.renderNewSections(json);
-    setTimeout(() => {
-      const cartDrawerButton = document.getElementById('cart-button');
-      cartDrawerButton.click();
-    }, 300);
+      );
+      if (!response.ok) throw new Error("Une erreur inattendu s'est produite.");
+      const json = await response.json();
+      this.renderNewSections(json);
+      setTimeout(() => {
+        const cartDrawerButton = document.getElementById('cart-button');
+        cartDrawerButton.click();
+      }, 300);
+    } catch (e) {
+      throw new Error("Une erreur inattendu s'est produite.");
+    } finally {
+      this.hideLoader(button);
+    }
   };
 
   renderNewSections({ items, sections }) {
@@ -303,6 +310,25 @@ class MainProductBlocks extends CollapsibleTab {
     this.addonsDrawer.setAttribute('aria-hidden', 'false');
     document.body.classList.add('overflow-hidden');
   };
+
+  displayLoader(button) {
+    const buttonHeight = button.clientHeight;
+    button.style.height = buttonHeight + 'px';
+    button.classList.add('justify-center');
+    Array.from(button.children).forEach((child) => {
+      if (child.classList.contains('loader')) child.classList.remove('hidden');
+      else child.classList.add('hidden');
+    });
+  }
+
+  hideLoader(button) {
+    button.style.height = '';
+    button.classList.remove('justify-center');
+    Array.from(button.children).forEach((child) => {
+      if (child.classList.contains('loader')) child.classList.add('hidden');
+      else child.classList.remove('hidden');
+    });
+  }
 }
 customElements.define('main-product-blocks', MainProductBlocks);
 
@@ -326,6 +352,7 @@ class VariantPicker extends HTMLElement {
     const [variantId, variantPrice] = this.getVariantData();
     if (!this.buyButton) return;
     this.buyButton.dataset.variantId = variantId;
+    this.updateFloatBuyButton(variantId);
     this.updateDisplayedPrice(variantPrice);
   };
 
@@ -382,6 +409,17 @@ class VariantPicker extends HTMLElement {
     newPriceString += (Number(newPrice) / 100).toFixed(2);
     if (moneyTrigram) newPriceString += ' ' + moneyTrigram;
     priceElem.textContent = newPriceString;
+  }
+
+  updateFloatBuyButton(variantId) {
+    const floatBuyButton = document.querySelector('.float-buy-button');
+    if (floatBuyButton) floatBuyButton.dataset.variantId = variantId;
+    else {
+      const templateFloatBuyButton = document.getElementById('float-buy-button');
+      const content = templateFloatBuyButton.content;
+      const floatBuyButton = content.querySelector('.float-buy-button');
+      floatBuyButton.dataset.variantId = variantId;
+    }
   }
 }
 customElements.define('variant-picker', VariantPicker);

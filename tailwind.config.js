@@ -39,7 +39,10 @@ module.exports = {
           5: 'rgba(var(--color-main-rgb), 0.05)',
         },
         like: 'var(--color-like)',
-        secondary: 'var(--color-secondary)',
+        secondary: {
+          DEFAULT: 'var(--color-secondary)',
+          50: 'rgba(var(--color-secondary-rgb), 0.5)',
+        },
       },
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],

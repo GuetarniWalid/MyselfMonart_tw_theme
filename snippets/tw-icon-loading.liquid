@@ -5,11 +5,16 @@
     - color: {String} - The color of the loader. Defaults to "dark". Can be "light" or "dark".
 
     Usage:
-    {% render 'tw-icon-loading', color: "light" %}
+    {% render 'tw-icon-loading', color: "light", hidden: true, size: 2 %}
 {% endcomment %}
 
-<div aria-hidden="true" focusable="false" role="presentation" class="-translate-y-2">
-    <span class="rounded-full inline-block w-1 h-1 {% if color == 'light' %}bg-secondary/50{% else %}bg-main-75{% endif %} animate-loading"> </span>
-    <span class="rounded-full inline-block w-1 h-1 {% if color == 'light' %}bg-secondary/50{% else %}bg-main-75{% endif %} animate-[loading_0.6s_0.2s_linear_infinite]"> </span>
-    <span class="rounded-full inline-block w-1 h-1 {% if color == 'light' %}bg-secondary/50{% else %}bg-main-75{% endif %} animate-[loading_0.6s_0.3s_linear_infinite]"> </span>
+{% liquid
+    assign finalSize = size | default: 1
+    assign sizeClass = 'w-' | append: finalSize | append: ' h-' | append: finalSize
+%}
+
+<div aria-hidden="true" focusable="false" role="presentation" class="loader -translate-y-2 {% if hidden %}hidden{% endif %}">
+    <span class="rounded-full inline-block {{ sizeClass }} {% if color == 'light' %}bg-secondary{% else %}bg-main-75{% endif %} animate-loading"> </span>
+    <span class="rounded-full inline-block {{ sizeClass }} {% if color == 'light' %}bg-secondary{% else %}bg-main-75{% endif %} animate-[loading_0.6s_0.2s_linear_infinite]"> </span>
+    <span class="rounded-full inline-block {{ sizeClass }} {% if color == 'light' %}bg-secondary{% else %}bg-main-75{% endif %} animate-[loading_0.6s_0.3s_linear_infinite]"> </span>
 </div>

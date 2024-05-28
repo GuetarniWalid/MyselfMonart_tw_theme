@@ -47,6 +47,7 @@
           --color-main: {{ settings.main_color | color_to_hex }};
           --color-main-rgb: {{ settings.main_color | color_extract: 'red' }}, {{ settings.main_color | color_extract: 'green' }}, {{ settings.main_color | color_extract: 'blue' }};
           --color-secondary: {{ settings.secondary_color | color_to_hex }};
+          --color-secondary-rgb: {{ settings.secondary_color | color_extract: 'red' }}, {{ settings.secondary_color | color_extract: 'green' }}, {{ settings.secondary_color | color_extract: 'blue' }};
           --color-like: {{ settings.like_color | color_to_hex }};
         }
     {% endstyle %}
