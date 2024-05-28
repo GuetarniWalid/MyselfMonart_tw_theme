@@ -30,6 +30,8 @@ class MyLikeButton extends HTMLElement {
       const likeButton = this.firstElementChild;
       const isLiked = likeButton.classList.contains('bg-like');
       likeButton.classList.toggle('bg-like', !isLiked);
+      likeButton.classList.toggle('text-secondary', !isLiked);
+      likeButton.classList.toggle('border-main', isLiked);
       const liParent = this.closest('li');
 
       const { likedLisHtml, likedLisString } = this.getLisStorage();
