@@ -587,6 +587,16 @@ class CartDrawer extends HTMLElement {
     document.addEventListener('openCartDrawer', this.open);
     this.closeButton.addEventListener('click', this.close);
     document.addEventListener('overlayClick', this.close);
+
+    const links = this.querySelectorAll('.obfuscate');
+    links.forEach((link) => {
+    link.addEventListener('click', () => makesLinksNavigable(link), false);
+    link.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        makesLinksNavigable(link);
+      }
+    });
+  });
   }
 
   open = () => {

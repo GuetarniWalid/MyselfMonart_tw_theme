@@ -1,19 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
   const links = document.querySelectorAll('.obfuscate');
   links.forEach((link) => {
-    link.addEventListener('click', navigate, false);
+    link.addEventListener('click', () => makesLinksNavigable(link), false);
     link.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
-        navigate.call(link);
+        makesLinksNavigable(link);
       }
     });
   });
 });
 
-function navigate() {
-  const urlInBase64 = this.dataset.url64;
+function makesLinksNavigable(link) {
+  const urlInBase64 = link.dataset.url64;
   const detination = decodeURIComponent(window.atob(urlInBase64));
-  if (this.dataset.blank === 'true') {
+  if (link.dataset.blank === 'true') {
     window.open(detination, '_blank');
   } else {
     document.location.href = detination;
@@ -70,14 +70,6 @@ function removeSkeletonOnImagesLoad() {
   });
 }
 removeSkeletonOnImagesLoad();
-
-// function loadCSS(href) {
-//   var cssLink = document.createElement('link');
-//   cssLink.rel = 'stylesheet';
-//   cssLink.href = href;
-//   cssLink.type = 'text/css';
-//   document.head.appendChild(cssLink);
-// }
 
 function replacePlaceholderImages() {
   const medias = document.querySelectorAll(

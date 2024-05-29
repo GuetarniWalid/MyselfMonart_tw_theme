@@ -395,35 +395,6 @@
       "settings": {
         "keep_shopping_url": {
           "label": "Button link to keep shopping"
-        },
-        "show_vendor": {
-          "label": "Show vendor"
-        },
-        "cart_drawer": {
-          "header": "Cart drawer",
-          "collection": {
-            "label": "Visible collection"
-          }
-        },
-        "background": {
-          "label": "Background color"
-        },
-        "text_color": {
-          "label": "Text color"
-        },
-        "cart_drawer_item_background": {
-          "label": "Item background color"
-        },
-        "outline_button_link": {
-          "label": "Outline button link"
-        },
-        "product_list": {
-          "label": "Product list",
-          "info": "Visible only if all promotions have not been reached"
-        },
-        "additional_products_title": {
-          "label": "Title",
-          "info": "Leave empty if you prefer the default title"
         }
       },
       "blocks": {
