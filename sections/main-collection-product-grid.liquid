@@ -10,10 +10,12 @@
           <infinite-scroll id="infinite-scroll-{{ collection.id }}-{{ paginate.current_page }}" data-pages="{{ paginate.pages }}" data-page="{{ paginate.current_page }}" data-section-id="{{ section.id }}" data-paginate-previous-url="{{ paginate.previous.url }}" data-paginate-next-url="{{ paginate.next.url }}">
             <ul data-id="{{ section.id }}" class="grid sm:grid-cols-2 gap-3 lg:grid-cols-3 pb-3">
               {%- for product in collection.products -%}
-                {% assign lazy_load = false %}
-                {%- if forloop.index > 2 -%}
-                  {%- assign lazy_load = true -%}
-                {%- endif -%}
+                {% liquid
+                  assign lazy_load = false
+                  if forloop.index > 2
+                    assign lazy_load = true
+                  endif
+                %}
                 <anime-product-card>
                   <li id="{{ product.id }}" class="relative group border-main border-1 h-full">
                     {% render 'card-product',
@@ -63,6 +65,30 @@
       "id": "show_secondary_image",
       "default": true,
       "label": "t:sections.main-collection-product-grid.settings.show_secondary_image.label"
+    },
+    {
+      "type": "number",
+      "id": "square_lowest_price",
+      "label": "t:sections.main-collection-product-grid.settings.square_lowest_price.label",
+      "default": 5950
+    },
+    {
+      "type": "number",
+      "id": "portrait_lowest_price",
+      "label": "t:sections.main-collection-product-grid.settings.portrait_lowest_price.label",
+      "default": 2490
+    },
+    {
+      "type": "number",
+      "id": "landscape_lowest_price",
+      "label": "t:sections.main-collection-product-grid.settings.landscape_lowest_price.label",
+      "default": 5350
+    },
+    {
+      "type": "number",
+      "id": "personalized_portrait_lowest_price",
+      "label": "t:sections.main-collection-product-grid.settings.personalized_portrait_lowest_price.label",
+      "default": 1990
     }
   ]
 }

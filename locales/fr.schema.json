@@ -1141,9 +1141,17 @@
         "show_secondary_image": {
           "label": "Afficher la deuxième image en survol"
         },
-        "enable_tags": {
-          "label": "Activer le filtrage",
-          "info": "[Personnaliser les filtres](/admin/menus)"
+        "square_lowest_price": {
+          "label": "Prix le plus bas pour les ratios carré"
+        },
+        "portrait_lowest_price": {
+          "label": "Prix le plus bas pour les portrait"
+        },
+        "landscape_lowest_price": {
+          "label": "Prix le plus bas pour les paysage"
+        },
+        "personalized_portrait_lowest_price": {
+          "label": "Prix le plus bas pour les portrait personnalisés"
         }
       }
     },

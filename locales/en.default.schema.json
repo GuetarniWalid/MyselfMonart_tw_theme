@@ -868,10 +868,6 @@
       "settings": {
         "show_secondary_image": {
           "label": "Show second image on hover"
-        },
-        "enable_tags": {
-          "label": "Enable filtering",
-          "info": "[Customize filters](/admin/menus)"
         }
       }
     },
