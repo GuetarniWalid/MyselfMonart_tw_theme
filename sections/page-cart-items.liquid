@@ -55,6 +55,18 @@
                     </li>
                   {% endfor %}
                 </ul>
+                {% if item.properties != blank %}
+                  <p class="text-main-90 mt-3 underline underline-offset-2">
+                    {{ 'tw.cart.personalization' | t }} :
+                  </p>
+                  <ul>
+                    {%- for property in item.properties -%}
+                      <li class="text-main-70 list-inside list-disc pl-1">
+                        {{ property.last }}
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {% endif %}
               </div>
               <div class="gap-4 h-10">
                 <label for="Quantity-{{ item.index | plus: 1 }}" class="sr-only">

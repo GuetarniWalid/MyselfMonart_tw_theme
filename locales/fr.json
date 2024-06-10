@@ -493,33 +493,35 @@
     },
     "cart": {
       "before_promo": "Avant promotion",
+      "caption": "Articles du panier",
+      "cart_error": "Une erreur est survenue lors de l’actualisation de votre panier. Veuillez réessayer.",
+      "cart_quantity_error_html": "Vous ne pouvez pas ajouter plus de {{ quantity }} de ce produit à votre panier.",
+      "checkout": "Procéder au paiement",
+      "info": "Info",
       "continue_shopping": "Continuer les achats",
       "empty_message": "Votre panier est vide",
       "empty_img_cart_alt": "Panier vide",
-      "title": "Votre panier",
-      "caption": "Articles du panier",
-      "remove_title": "Supprimer {{ title }}",
-      "subtotal": "Sous-total",
-      "new_subtotal": "Nouveau sous-total",
-      "note": "Instructions spéciales concernant la commande",
-      "checkout": "Procéder au paiement",
-      "cart_error": "Une erreur est survenue lors de l’actualisation de votre panier. Veuillez réessayer.",
-      "cart_quantity_error_html": "Vous ne pouvez pas ajouter plus de {{ quantity }} de ce produit à votre panier.",
       "headings": {
         "articles": "Vos articles",
+        "image": "Image de produit",
         "price": "Prix",
-        "total": "Total",
         "quantity": "Quantité",
-        "image": "Image de produit"
+        "total": "Total"
       },
       "login": {
-        "title": "Vous possédez un compte ?",
-        "paragraph_html": "<a href=\"{{ link }}\" class=\"link underlined-link\">Connectez-vous</a> pour payer plus vite."
+        "paragraph_html": "<a href=\"{{ link }}\" class=\"link underlined-link\">Connectez-vous</a> pour payer plus vite.",
+        "title": "Vous possédez un compte ?"
       },
+      "new_subtotal": "Nouveau sous-total",
+      "note": "Instructions spéciales concernant la commande",
+      "remove_title": "Supprimer {{ title }}",
+      "subtotal": "Sous-total",
+      "personalization": "Personnalisation",
       "taxes_and_shipping_policy_at_checkout_html": "Taxes et <a href=\"{{ link }}\">frais d'expédition</a> calculés lors du paiement",
       "taxes_included_but_shipping_at_checkout": "Taxes incluses et frais d'expédition calculés lors du paiement",
       "taxes_included_and_shipping_policy_html": "Taxes incluses. <a href=\"{{ link }}\">Frais d'expédition</a> calculés à l'étape de paiement.",
       "taxes_and_shipping_at_checkout": "Taxes et frais d'expédition calculés lors du paiement",
+      "title": "Votre panier",
       "total": "Total",
       "update": "Mettre à jour"
     },
@@ -700,6 +702,8 @@
     "80x60_cm": "80x60 cm",
     "120x90_cm": "120x90 cm",
     "60x80_cm": "60x80 cm",
-    "90x120_cm": "90x120 cm"
+    "90x120_cm": "90x120 cm",
+    "20x30_cm": "20x30 cm",
+    "poster": "Poster"
   }
 }

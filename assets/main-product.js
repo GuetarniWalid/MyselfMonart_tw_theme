@@ -170,7 +170,7 @@ class MainProductBlocks extends CollapsibleTab {
     if (this.blockBuyButton) {
       this.animBlockButton();
       this.blockBuyButton.addEventListener('click', (e) => {
-        if (this.dataset.layout === 'painting') this.onPaintingBuyButtonClick();
+        if (this.querySelector('#addonsDrawer')) this.onAddonsBuyButtonClick();
         else this.onBuyButtonClick(e);
       });
     }
@@ -303,7 +303,7 @@ class MainProductBlocks extends CollapsibleTab {
       .querySelector(selector).innerHTML;
   }
 
-  onPaintingBuyButtonClick = () => {
+  onAddonsBuyButtonClick = () => {
     this.addonsDrawer =
       this.addonsDrawer || document.getElementById('addonsDrawer');
     this.addonsDrawer.classList.replace('translate-x-full', 'translate-x-0');

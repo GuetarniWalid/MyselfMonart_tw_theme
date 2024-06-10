@@ -120,6 +120,7 @@ export default function App() {
               optionSets={optionSets}
               optionIndecesSelected={newOptionIndecesSelected}
               drawerOpen={drawerOpen}
+              withCustomerDetails={window.buyingWithCustomization}
             />
           </div>
         )}

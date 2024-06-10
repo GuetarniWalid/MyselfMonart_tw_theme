@@ -83,16 +83,25 @@
                 >
               </a>
               <div class="pt-2">
-                <h3 class="leading-3 text-sm mb-1">
+                <h3 class="leading-5 text-sm mb-1">
                   <a href="{{ item_url }}" tabindex="-1">{{ item_title | escape }}</a>
                 </h3>
-                {%- if item.product.has_only_default_variant == false or item.properties.size != 0 -%}
-                <p class="text-xs {% unless has_variant_data %}variant-title-to-fill{% endunless %}">
+                {%- if item.product.has_only_default_variant == false -%}
+                  <p class="text-xs {% unless has_variant_data %}variant-title-to-fill{% endunless %}">
                     {%- for option in item.options_with_values -%}
                       {{ option.value }}{% unless forloop.last %}, {% endunless %}
                     {%- endfor -%}
                   </p>
                 {%- endif -%}
+                {% if item.properties != blank %}
+                  <p class="text-xs">
+                    <span class="font-bold">{{ 'tw.cart.info' | t }} : </span>
+                    {%- for property in item.properties -%}
+                      {{ property.last }}
+                      {% unless forloop.last %}/ {% endunless %}
+                    {%- endfor -%}
+                  </p>
+                {% endif %}
                 <ul role="list" aria-label="{{ 'customer.order.discount' | t }}">
                   {%- for discount in item.discounts -%}
                     <li class="text-xs inline-flex items-center gap-1 bg-main-5 rounded-sm py-1 px-2 mr-1">

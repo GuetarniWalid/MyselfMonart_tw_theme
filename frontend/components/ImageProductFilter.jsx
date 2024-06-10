@@ -24,6 +24,13 @@ export default function ImageProductFilter({ width, matter, shine }) {
           {' '}
         </span>
       )}
+      {(matter === 'poster') && (
+        <span
+          className={`block absolute top-1/2 -left-10 -right-10 h-1/3 bg-gradient-to-b from-white/20 via-white/60 to-white/20'`}
+        >
+          {' '}
+        </span>
+      )}
     </>
   );
 }

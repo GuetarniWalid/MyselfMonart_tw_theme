@@ -21,6 +21,7 @@ export default function MobileBottom({
         optionSets={optionSets}
         optionIndecesSelected={optionIndecesSelected}
         drawerOpen={drawerOpen}
+        withCustomerDetails={window.buyingWithCustomization}
       />
       <Selects 
         optionSets={optionSets}

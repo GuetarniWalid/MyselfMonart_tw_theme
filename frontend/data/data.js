@@ -551,6 +551,27 @@ const data = {
       title: 'Choisissez la Matière',
     },
   },
+  matterPoster: {
+    popup: {
+      image: {
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/poster-enroule.png?v=1717351944',
+        alt: "la forme d'un poster, vu de près",
+        width: '500',
+        height: '500',
+      },
+      title: 'LE POSTER : papier photo brillant',
+      description:
+        "Imprimé sur du papier photo brillant de haute qualité, ce poster offre des couleurs vives et des détails nets à un excellent rapport qualité-prix. Léger, il est facile à manipuler et à accrocher, idéal pour rehausser instantanément tout espace avec une touche d'éclat. Parfait pour ceux qui cherchent à embellir leur décor sans alourdir leurs murs.",
+    },
+    radio: {
+      image: {
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/poster-forme.png?v=1717351726',
+        alt: "Zoom sur un poster enroulé",
+        width: '500',
+        height: '500',
+      },
+    },
+  },
   matterCanvas: {
     popup: {
       image: {

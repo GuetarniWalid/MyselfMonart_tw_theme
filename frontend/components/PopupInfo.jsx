@@ -37,7 +37,7 @@ export default function PopupInfo({ infoToShow, setInfoToShow, setToFocus }) {
       onClick={handleClick}
     >
       <div
-        className="mx-3 bg-secondary p-8 rounded-xl border-main border-1 wt-full max-w-sm max-h-[90%] overflow-y-auto scrollbar-hidden"
+        className="mx-3 bg-secondary p-8 rounded-xl border-main border-1 w-full max-w-sm max-h-[90%] overflow-y-auto scrollbar-hidden"
         tabIndex={0}
         onKeyDown={handleKeyDown}
         ref={ref}
