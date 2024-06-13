@@ -92,6 +92,23 @@
         }
       }
     },
+    "lowest_price": {
+      "name": "Prix les plus bas",
+      "settings": {
+        "square": {
+          "label": "Prix le plus bas pour les ratios carrés"
+        },
+        "portrait": {
+          "label": "Prix le plus bas pour les portraits"
+        },
+        "landscape": {
+          "label": "Prix le plus bas pour les paysages"
+        },
+        "personalized_portrait": {
+          "label": "Prix le plus bas pour les portraits personnalisés"
+        }
+      }
+    },
     "search_input": {
       "name": "Comportement de recherche",
       "settings": {
@@ -1140,18 +1157,6 @@
       "settings": {
         "show_secondary_image": {
           "label": "Afficher la deuxième image en survol"
-        },
-        "square_lowest_price": {
-          "label": "Prix le plus bas pour les ratios carré"
-        },
-        "portrait_lowest_price": {
-          "label": "Prix le plus bas pour les portrait"
-        },
-        "landscape_lowest_price": {
-          "label": "Prix le plus bas pour les paysage"
-        },
-        "personalized_portrait_lowest_price": {
-          "label": "Prix le plus bas pour les portrait personnalisés"
         }
       }
     },

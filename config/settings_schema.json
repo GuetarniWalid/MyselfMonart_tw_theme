@@ -232,5 +232,34 @@
         "default": true
       }
     ]
+  },
+  {
+    "name": "t:settings_schema.lowest_price.name",
+    "settings": [
+      {
+        "type": "number",
+        "id": "square_lowest_price",
+        "label": "t:settings_schema.lowest_price.settings.square.label",
+        "default": 5950
+      },
+      {
+        "type": "number",
+        "id": "portrait_lowest_price",
+        "label": "t:settings_schema.lowest_price.settings.portrait.label",
+        "default": 2490
+      },
+      {
+        "type": "number",
+        "id": "landscape_lowest_price",
+        "label": "t:settings_schema.lowest_price.settings.landscape.label",
+        "default": 5350
+      },
+      {
+        "type": "number",
+        "id": "personalized_portrait_lowest_price",
+        "label": "t:settings_schema.lowest_price.settings.personalized_portrait.label",
+        "default": 1990
+      }
+    ]
   }
 ]

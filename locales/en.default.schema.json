@@ -89,6 +89,23 @@
         }
       }
     },
+    "lowest_price": {
+      "name": "Lowest price",
+      "settings": {
+        "square": {
+          "label": "Lowest price for squares"
+        },
+        "portrait": {
+          "label": "Lowest price for portraits"
+        },
+        "landscape": {
+          "label": "Lowest price for landscapes"
+        },
+        "personalized_portraite": {
+          "label": "Lowest price for personalized portraits"
+        }
+      }
+    },
     "search_input": {
       "name": "Search behavior",
       "settings": {

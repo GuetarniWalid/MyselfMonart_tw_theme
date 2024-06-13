@@ -14,15 +14,15 @@
 {% liquid
   if product.template_suffix == "painting"
     if product.images[1].aspect_ratio < 1
-      assign price_min = section.settings.portrait_lowest_price
+      assign price_min = settings.portrait_lowest_price
     elsif product.images[1].aspect_ratio > 1
-      assign price_min = section.settings.landscape_lowest_price
+      assign price_min = settings.landscape_lowest_price
     else
-      assign price_min = section.settings.square_lowest_price
+      assign price_min = settings.square_lowest_price
     endif
   else if template.suffix == 'personalized'
     if product.images[1].aspect_ratio < 1
-      assign price_min = section.settings.personalized_portrait_lowest_price
+      assign price_min = settings.personalized_portrait_lowest_price
     endif
   else
     assign price_min = product.price_min
