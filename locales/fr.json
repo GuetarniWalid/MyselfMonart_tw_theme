@@ -351,6 +351,11 @@
       "load_video": "Charger la vidéo : {{ description }}"
     }
   },
+  "snippet": {
+    "card-product": {
+      "likes": "likes"
+    }
+  },
   "localization": {
     "country_label": "Devise",
     "language_label": "Langue",

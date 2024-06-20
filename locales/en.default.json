@@ -392,6 +392,11 @@
       "complementary_blog_posts": "Complementary blog posts"
     }
   },
+  "snippet": {
+    "card-product": {
+      "likes": "likes"
+    }
+  },
   "localization": {
     "country_label": "Currency",
     "language_label": "Language",

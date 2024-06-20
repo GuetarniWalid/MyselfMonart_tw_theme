@@ -353,6 +353,10 @@ main-product-blocks .description h2 span {
     @apply translate-y-full -translate-x-full md:translate-y-0 md:translate-x-0;
   }
 
+  .default {
+    @apply grid-cols-2;
+  }
+
   .elong-arrow {
     d: path(
       'M0 9.35772H50.9956L44.2001 2.29941L46.4134 0L57 11L46.4134 22L44.2001 19.7006L50.9956 12.6423H0V9.35772Z'
@@ -360,8 +364,16 @@ main-product-blocks .description h2 span {
     d: 'M0 9.35772H50.9956L44.2001 2.29941L46.4134 0L57 11L46.4134 22L44.2001 19.7006L50.9956 12.6423H0V9.35772Z';
   }
 
+  .footer {
+    @apply bg-main text-secondary relative pb-24 pt-12 mt-28 xl:mt-48;
+  }
+
   .image-banner {
     @apply overflow-hidden h-[80vh];
+  }
+
+  .is-liked {
+    @apply bg-like text-secondary !border-secondary;
   }
 
   .main-page {
@@ -374,10 +386,6 @@ main-product-blocks .description h2 span {
 
   .page-description img {
     @apply inline-block;
-  }
-
-  .footer {
-    @apply bg-main text-secondary relative pb-24 pt-12 mt-28 xl:mt-48;
   }
 
   .page-width {
@@ -443,9 +451,5 @@ main-product-blocks .description h2 span {
 
   .skeleton {
     @apply relative before:absolute before:inset-0 before:-z-10 before:bg-gray-300 before:animate-pulse;
-  }
-
-  .default {
-    @apply grid-cols-2;
   }
 }

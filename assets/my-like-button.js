@@ -23,22 +23,22 @@ class MyLikeButton extends HTMLElement {
     likedLisHtml.forEach((likedLi) => {
       const id = likedLi.id;
       const liToLiked = document.getElementById(id);
-      liToLiked?.querySelector('button.like').classList.add('bg-like');
+      liToLiked?.querySelector('button.like').classList.add('is-liked');
     });
 
-    this.addEventListener('click', () => {
+    this.addEventListener('click', async () => {
       const likeButton = this.firstElementChild;
-      const isLiked = likeButton.classList.contains('bg-like');
-      likeButton.classList.toggle('bg-like', !isLiked);
-      likeButton.classList.toggle('text-secondary', !isLiked);
-      likeButton.classList.toggle('border-main', isLiked);
+      const isLiked = likeButton.classList.contains('is-liked');
+      likeButton.classList.toggle('is-liked', !isLiked);
       const liParent = this.closest('li');
 
       const { likedLisHtml, likedLisString } = this.getLisStorage();
       if (isLiked) {
         this.deleteLiInLocalStorage(likedLisHtml, likedLisString, liParent);
+        await this.updateLikesCountOnServer(liParent.id, 'decrement');
       } else {
         this.saveLiInLocalStorage(likedLisHtml, likedLisString, liParent);
+        await this.updateLikesCountOnServer(liParent.id, 'increment');
       }
 
       this.deleteLiInLikedPage(likedLisString.length === 0);
@@ -82,6 +82,89 @@ class MyLikeButton extends HTMLElement {
 
   updateLikeButtonCount() {
     document.querySelector('likes-count').updateCount();
+  }
+
+  async updateLikesCountOnServer(id, action) {
+    const likesCountContainer = this.getLikesCountContainerOnLayout();
+    this.showLoader(likesCountContainer);
+    let newCount;
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:3333/api/product/update/metafield/likes-count`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ productId: id, action }),
+        },
+      );
+      newCount = await response.json();
+      this.updateLikesCountOnLayout(likesCountContainer, newCount);
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      this.hideLoader(likesCountContainer);
+    }
+  }
+
+  updateLikesCountOnLayout(likesCountContainer, newCount) {
+    const likesCountElem = likesCountContainer.querySelector(
+      '.total-users-likes-count',
+    );
+    likesCountElem.textContent = newCount;
+    if (newCount <= 0) {
+      this.deleteLikesCountOnLayout(likesCountElem);
+    }
+  }
+
+  getLikesCountContainerOnLayout() {
+    const likesCountContainer = this.closest('li').querySelector(
+      '.likes-count-container',
+    );
+    if (likesCountContainer) {
+      return likesCountContainer;
+    } else {
+      this.createLikesCountContainerOnLayout();
+      const likesCountContainer = this.closest('li').querySelector(
+        '.likes-count-container',
+      );
+      return likesCountContainer;
+    }
+  }
+
+  createLikesCountContainerOnLayout() {
+    const template = this.closest('li').querySelector(
+      '.likes-count-container-template',
+    );
+    const container = template.content.cloneNode(true);
+    this.closest('li').querySelector('.price-and-likes').appendChild(container);
+  }
+
+  deleteLikesCountOnLayout(likesCountElem) {
+    likesCountElem.closest('div').remove();
+  }
+
+  showLoader(likesCountElem) {
+    likesCountElem
+      .querySelector('.total-users-likes-count')
+      .classList.add('hidden');
+    likesCountElem.querySelector('.animate-spin').classList.remove('hidden');
+  }
+
+  hideLoader(likesCountElem) {
+    likesCountElem.querySelector('.animate-spin').classList.add('hidden');
+    likesCountElem
+      .querySelector('.total-users-likes-count')
+      .classList.remove('hidden');
+  }
+
+  updateLikesCountOnLocalStorage(id, action) {
+    const products = JSON.parse(localStorage.getItem('products'));
+    const product = products.find((product) => product.id === id);
+    product.likesCount =
+      action === 'increment' ? product.likesCount + 1 : product.likesCount - 1;
+    localStorage.setItem('products', JSON.stringify(products));
   }
 }
 customElements.define('my-like-button', MyLikeButton);
