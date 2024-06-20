@@ -1121,6 +1121,9 @@
             }
           }
         },
+        "likes": {
+          "name": "Likes"
+        },
         "price": {
           "name": "Price",
           "settings": {

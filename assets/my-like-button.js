@@ -90,7 +90,7 @@ class MyLikeButton extends HTMLElement {
     let newCount;
     try {
       const response = await fetch(
-        `http://127.0.0.1:3333/api/product/update/metafield/likes-count`,
+        `https://backend.myselfmonart.com//api/product/update/metafield/likes-count`,
         {
           method: 'POST',
           headers: {

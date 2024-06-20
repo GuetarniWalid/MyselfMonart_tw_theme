@@ -1393,6 +1393,9 @@
             }
           }
         },
+        "likes": {
+          "name": "J'aimes"
+        },
         "price": {
           "name": "Prix",
           "settings": {
