@@ -19,6 +19,13 @@
         "title": {
           "type": "title",
           "settings": {
+            "margin_bottom": "mb-2"
+          }
+        },
+        "likes_t9U7Ay": {
+          "type": "likes",
+          "settings": {
+            "margin_bottom": "mb-8"
           }
         },
         "9f20570b-1a97-4c34-8758-c5af9b8d2cfc": {
@@ -76,6 +83,7 @@
       "block_order": [
         "text_CzWnEd",
         "title",
+        "likes_t9U7Ay",
         "9f20570b-1a97-4c34-8758-c5af9b8d2cfc",
         "buy_qrRzcg",
         "8600f603-2d6f-4191-8020-3678432ba1e5",
