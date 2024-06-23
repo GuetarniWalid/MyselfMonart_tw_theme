@@ -39,14 +39,12 @@
         "type": "main-password-header",
         "settings": {
           "logo": "{{ shop.brand.logo }}",
-          "logo_max_width": 100,
-          "color_scheme": "background-1"
+          "logo_max_width": 100
         }
       },
       "main-password-footer": {
         "type": "main-password-footer",
         "settings": {
-          "color_scheme": "background-1"
         }
       },
       "tw-header": {

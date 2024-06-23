@@ -3,9 +3,9 @@
     "2b3b46e7-881c-4925-96cf-76c7ebf203c4": {
       "type": "image-banner",
       "settings": {
-        "image_desktop": "shopify:\/\/shop_images\/decoration-murale-tableau-fleurs.png",
+        "image_desktop": "shopify:\/\/shop_images\/decoration-murale-tableau-fleurs_1.jpg",
         "image_desktop_horizontal_position": "left",
-        "image_mobile": "shopify:\/\/shop_images\/TABLEAU-DECO-NATURE.png",
+        "image_mobile": "shopify:\/\/shop_images\/TABLEAU-DECO-NATURE.jpg",
         "image_mobile_vertical_position": "bottom",
         "enable_lazy_loading": false
       }
@@ -498,6 +498,9 @@
         "description": "<p>Nous croyons en l'importance de permettre à chacun d'exprimer sa personnalité et son histoire à travers sa décoration intérieure. Avec nos tableaux de décoration, chaque mur devient le narrateur de votre histoire.<\/p>",
         "layout": "image_first",
         "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#E3FAE1",
         "padding_top": "pt-16",
         "padding_bottom": "pb-16"
       }
