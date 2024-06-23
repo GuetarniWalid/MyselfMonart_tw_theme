@@ -85,7 +85,7 @@
                     min="0"
                     aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
                     data-index="{{ item.index | plus: 1 }}"
-                    class="focus:outline-none text-center w-12 bg-secondary"
+                    class="focus:outline-none text-center w-12 bg-secondary transition-colors duration-500"
                   >
                   <button name="plus" type="button" class="flex w-10 h-full justify-center items-center">
                     <span class="sr-only">{{ 'products.product.quantity.increase' | t: product: item.product.title | escape }}</span>

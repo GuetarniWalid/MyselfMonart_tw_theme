@@ -18,7 +18,7 @@
       assign itemListElement_urls = mobile_url
     -%}
 
-    <a href="/{% unless request.locale.primary %}{{ request.locale.iso_code }}/{% endunless %}" class="inline-block relative text-center text-sm breadcrumb-first bg-main pl-4 pr-6 py-[6px] rounded-md before:absolute before:inset-[2px] before:block before:-z-10 before:bg-secondary before:breadcrumb-first-before before:rounded focus-visible:outline-none focus-visible:bg-breadcrumb-main focus-visible:before:bg-breadcrumb-secondary focus-visible:text-breadcrumb-main">
+    <a href="/{% unless request.locale.primary %}{{ request.locale.iso_code }}/{% endunless %}" class="inline-block relative text-center text-sm breadcrumb-first bg-main pl-4 pr-6 py-[6px] rounded-md before:absolute before:inset-[2px] before:block before:-z-10 before:bg-secondary before:transition-colors before:duration-500 before:breadcrumb-first-before before:rounded focus-visible:outline-none focus-visible:bg-breadcrumb-main focus-visible:before:bg-breadcrumb-secondary focus-visible:text-breadcrumb-main">
         {{ 'sections.footer.home' | t }}
     </a>
       {% if template contains 'page' %}
@@ -37,7 +37,7 @@
             assign itemListElement_names = itemListElement_names | append: '|,|' | append: mobile_text
             assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: mobile_url
           -%}
-          <a href="{{ collection.url }}" class="inline-block relative text-center text-sm breadcrumb-box bg-main pl-5 pr-6 py-[6px] -translate-x-[10px] before:absolute before:inset-[2px] before:block before:-z-10 before:bg-secondary before:breadcrumb-box-before focus-visible:outline-none focus-visible:bg-breadcrumb-main focus-visible:before:bg-breadcrumb-secondary focus-visible:text-breadcrumb-main"> 
+          <a href="{{ collection.url }}" class="inline-block relative text-center text-sm breadcrumb-box bg-main pl-5 pr-6 py-[6px] -translate-x-[10px] before:absolute before:inset-[2px] before:block before:-z-10 before:bg-secondary before:transition-colors before:duration-500 before:breadcrumb-box-before focus-visible:outline-none focus-visible:bg-breadcrumb-main focus-visible:before:bg-breadcrumb-secondary focus-visible:text-breadcrumb-main"> 
             {{ collection.title }}
           </a>
         {% elsif product.metafields.link.mother_collection != blank %}
@@ -47,7 +47,7 @@
             assign itemListElement_names = itemListElement_names | append: '|,|' | append: mobile_text
             assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: mobile_url
           -%}
-          <a href="{{ product.metafields.link.mother_collection.value.url }}" class="inline-block relative text-center text-sm breadcrumb-box bg-main pl-5 pr-6 py-[6px] -translate-x-[10px] before:absolute before:inset-[2px] before:block before:-z-10 before:bg-secondary before:breadcrumb-box-before focus-visible:outline-none focus-visible:bg-breadcrumb-main focus-visible:before:bg-breadcrumb-secondary focus-visible:text-breadcrumb-main"> 
+          <a href="{{ product.metafields.link.mother_collection.value.url }}" class="inline-block relative text-center text-sm breadcrumb-box bg-main pl-5 pr-6 py-[6px] -translate-x-[10px] before:absolute before:inset-[2px] before:block before:-z-10 before:bg-secondary before:transition-colors before:duration-500 before:breadcrumb-box-before focus-visible:outline-none focus-visible:bg-breadcrumb-main focus-visible:before:bg-breadcrumb-secondary focus-visible:text-breadcrumb-main"> 
             {{ product.metafields.link.mother_collection.value.title }}
           </a>
         {% endif %}
@@ -66,7 +66,7 @@
             assign itemListElement_names = itemListElement_names | append: '|,|' | append: collection.metafields.breadcrumb.parentCollection.value.metafields.breadcrumb.parentCollection.value.title
             assign gap = 10
           %}
-          <a href="{{ collection.metafields.breadcrumb.parentCollection.value.metafields.breadcrumb.parentCollection.value.url }}" class="inline-block relative text-center text-sm breadcrumb-box bg-main pl-5 pr-6 py-[6px] -translate-x-[10px] before:absolute before:inset-[2px] before:block before:-z-10 before:bg-secondary before:breadcrumb-box-before focus-visible:outline-none focus-visible:bg-breadcrumb-main focus-visible:before:bg-breadcrumb-secondary focus-visible:text-breadcrumb-main">
+          <a href="{{ collection.metafields.breadcrumb.parentCollection.value.metafields.breadcrumb.parentCollection.value.url }}" class="inline-block relative text-center text-sm breadcrumb-box bg-main pl-5 pr-6 py-[6px] -translate-x-[10px] before:absolute before:inset-[2px] before:block before:-z-10 before:bg-secondary before:transition-colors before:duration-500 before:breadcrumb-box-before focus-visible:outline-none focus-visible:bg-breadcrumb-main focus-visible:before:bg-breadcrumb-secondary focus-visible:text-breadcrumb-main">
             {{ collection.metafields.breadcrumb.parentCollection.value.metafields.breadcrumb.parentCollection.value.title }}
           </a>
         {% endif %}
@@ -77,7 +77,7 @@
             assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: collection.metafields.breadcrumb.parentCollection.value.url
             assign gap = gap | plus: 10
           %}
-          <a href="{{ collection.metafields.breadcrumb.parentCollection.value.url }}" class="inline-block relative text-center text-sm breadcrumb-box bg-main pl-5 pr-6 py-[6px] -translate-x-[{{ gap }}px] before:absolute before:inset-[2px] before:block before:-z-10 before:bg-secondary before:breadcrumb-box-before focus-visible:outline-none focus-visible:bg-breadcrumb-main focus-visible:before:bg-breadcrumb-secondary focus-visible:text-breadcrumb-main">
+          <a href="{{ collection.metafields.breadcrumb.parentCollection.value.url }}" class="inline-block relative text-center text-sm breadcrumb-box bg-main pl-5 pr-6 py-[6px] -translate-x-[{{ gap }}px] before:absolute before:inset-[2px] before:block before:-z-10 before:bg-secondary before:transition-colors before:duration-500 before:breadcrumb-box-before focus-visible:outline-none focus-visible:bg-breadcrumb-main focus-visible:before:bg-breadcrumb-secondary focus-visible:text-breadcrumb-main">
             {{ collection.metafields.breadcrumb.parentCollection.value.title }}
           </a>
         {% endif %}

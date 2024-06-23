@@ -365,7 +365,7 @@ main-product-blocks .description h2 span {
   }
 
   .footer {
-    @apply bg-main text-secondary relative pb-24 pt-12 mt-28 xl:mt-48;
+    @apply bg-main text-secondary transition-colors duration-500 relative pb-24 pt-12 mt-28 xl:mt-48;
   }
 
   .image-banner {
@@ -373,7 +373,7 @@ main-product-blocks .description h2 span {
   }
 
   .is-liked {
-    @apply bg-like text-secondary !border-secondary;
+    @apply bg-like text-secondary !border-secondary transition-colors duration-500;
   }
 
   .main-page {

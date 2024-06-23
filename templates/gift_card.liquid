@@ -61,7 +61,7 @@
     {% render 'gsf-conversion-pixels' %}
   </head>
 
-  <body class="text-main py-16 bg-secondary">
+  <body class="text-main py-16 bg-secondary transition-colors duration-500">
     <header class="text-center">
       <span class="text-2xl text-bold font-heading">{{ shop.name }}</span>
       <h1 class="my-10 text-4xl">{{ 'tw.gift_cards.issued.subtext' | t }}</h1>
@@ -94,7 +94,7 @@
       <div>
         <input
           type="text"
-          class="gift-card__number text-xl bg-secondary text-center py-6"
+          class="gift-card__number text-xl bg-secondary transition-colors duration-500 text-center py-6"
           value="{{ gift_card.code | format_code }}"
           aria-label="{{ 'tw.gift_cards.issued.gift_card_code' | t }}"
           readonly
@@ -117,7 +117,7 @@
             target="_blank"
             rel="noopener"
             aria-describedby="a11y-new-window-message"
-            class="bg-main py-4 px-8 text-secondary block mx-auto max-w-72 mb-6"
+            class="bg-main py-4 px-8 text-secondary transition-colors duration-500 block mx-auto max-w-72 mb-6"
           >
             {{ 'tw.gift_cards.issued.shop_link' | t }}
           </a>

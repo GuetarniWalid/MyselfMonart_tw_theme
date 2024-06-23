@@ -28,7 +28,7 @@ module.exports = {
         'breadcrumb-main': 'var(--color-breadcrumb-main)',
         'breadcrumb-secondary': 'var(--color-breadcrumb-secondary)',
         main: {
-          DEFAULT: 'var(--color-main)',
+          DEFAULT: 'rgb(var(--color-main-rgb))',
           90: 'rgba(var(--color-main-rgb), 0.9)',
           80: 'rgba(var(--color-main-rgb), 0.8)',
           75: 'rgba(var(--color-main-rgb), 0.75)',
@@ -40,7 +40,7 @@ module.exports = {
         },
         like: 'var(--color-like)',
         secondary: {
-          DEFAULT: 'var(--color-secondary)',
+          DEFAULT: 'rgb(var(--color-secondary-rgb))',
           50: 'rgba(var(--color-secondary-rgb), 0.5)',
         },
       },

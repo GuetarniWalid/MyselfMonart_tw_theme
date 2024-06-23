@@ -1,7 +1,7 @@
 {%- if settings.enable_predictive_search and template.suffix != "likes" -%}
-    <ul class="fixed bottom-5 right-5 flex items-center border-solid border-secondary border-2 rounded-3xl overflow-hidden cursor-pointer">
+    <ul class="fixed bottom-5 right-5 flex items-center border-solid border-secondary transition-colors duration-500 border-2 rounded-3xl overflow-hidden cursor-pointer">
         <li>
-            <button id="open-search-loup" class="focus:scale-125 pl-4 pr-6 py-3 bg-main text-secondary flex justify-center items-center">
+            <button id="open-search-loup" class="focus:scale-125 pl-4 pr-6 py-3 bg-main text-secondary transition-colors duration-500 flex justify-center items-center">
                 <span class="translate-x-[3px] inline-block">{% render 'tw-icon-loup' %}</span>
             </button>
         </li>
@@ -13,14 +13,14 @@
                     assign likes_page = "/" | append: request.locale.iso_code | append: "/pages/" | append: settings.likes_page | base64_encode
                 endif
             %}
-            <span tabindex="0" class="group obfuscate px-4 py-3 bg-like text-secondary relative" data-url64="{{ likes_page }}">
+            <span tabindex="0" class="group obfuscate px-4 py-3 bg-like text-secondary transition-colors duration-500 relative" data-url64="{{ likes_page }}">
                 <svg width="22" height="55" viewBox="0 0 22 55" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute left-0 top-0 bottom-0 -translate-x-2 text-like">
                     <path d="M22 55H3.11475L4.94852 49.4037C6.28451 45.3266 5.81064 40.8725 3.64671 37.1676L2.36472 34.9728C-0.336437 30.3482 -0.366971 24.6342 2.2846 19.981L3.71299 17.4744C5.83497 13.7505 6.26264 9.29681 4.88807 5.23721L3.11475 -2.98023e-07H22L22 55Z" fill="currentColor"></path>
                 </svg>
                 <span class="group-focus:scale-125 -translate-x-1 inline-block">{% render 'tw-icon-heart' %}</span>
             </span>
             <likes-count>
-                <span class="absolute flex justify-center items-center text-xs font-bold bg-secondary rounded-full h-5 w-5 text-like  bottom-1 right-2">0</span>
+                <span class="absolute flex justify-center items-center text-xs font-bold bg-secondary transition-colors duration-500 rounded-full h-5 w-5 text-like  bottom-1 right-2">0</span>
             </likes-count>
         </li>
     </ul>

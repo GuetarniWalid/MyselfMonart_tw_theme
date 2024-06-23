@@ -1,0 +1,13 @@
+{% style %}
+    @font-face {
+        font-family: "heading";
+        src: url({{ "heading.woff2" | asset_url }}) format("woff2");
+        font-display: swap;
+    }
+    
+    :root {
+      --color-main-rgb: {{ settings.main_color | color_extract: 'red' }}, {{ settings.main_color | color_extract: 'green' }}, {{ settings.main_color | color_extract: 'blue' }};
+      --color-secondary-rgb: {{ settings.secondary_color | color_extract: 'red' }}, {{ settings.secondary_color | color_extract: 'green' }}, {{ settings.secondary_color | color_extract: 'blue' }};
+      --color-like: {{ settings.like_color | color_to_hex }};
+    }
+{% endstyle %}

@@ -213,27 +213,19 @@
         "padding_bottom": "Marge inférieure"
       },
       "spacing": "Espacement",
-      "colors": {
-        "text_color": {
-          "label": "Couleur du texte"
+      "dynamic_color": {
+        "heading": {
+          "content": "Couleur dynamique"
         },
-        "accent_1": {
-          "label": "Accent 1"
+        "activate": {
+          "label": "Activer la couleur dynamique"
         },
-        "accent_2": {
-          "label": "Accent 2"
+        "primary_color": {
+          "label": "Couleur des textes"
         },
-        "background_1": {
-          "label": "Arrière-plan 1"
-        },
-        "background_2": {
-          "label": "Arrière-plan 2"
-        },
-        "inverse": {
-          "label": "Inverser"
-        },
-        "label": "Combinaison de couleurs",
-        "has_cards_info": "Pour modifier le schéma de la carte de couleur, mettez à jour les paramètres de votre thème."
+        "secondary_color": {
+          "label": "Couleur de fond"
+        }
       },
       "heading_size": {
         "label": "Taille du titre",

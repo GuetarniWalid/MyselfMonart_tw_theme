@@ -14,7 +14,7 @@
 %}
 
 <div aria-hidden="true" focusable="false" role="presentation" class="loader -translate-y-2 {% if hidden %}hidden{% endif %}">
-    <span class="rounded-full inline-block {{ sizeClass }} {% if color == 'light' %}bg-secondary{% else %}bg-main-75{% endif %} animate-loading"> </span>
-    <span class="rounded-full inline-block {{ sizeClass }} {% if color == 'light' %}bg-secondary{% else %}bg-main-75{% endif %} animate-[loading_0.6s_0.2s_linear_infinite]"> </span>
-    <span class="rounded-full inline-block {{ sizeClass }} {% if color == 'light' %}bg-secondary{% else %}bg-main-75{% endif %} animate-[loading_0.6s_0.3s_linear_infinite]"> </span>
+    <span class="rounded-full inline-block {{ sizeClass }} {% if color == 'light' %}bg-secondary{% else %}bg-main-75{% endif %} transition-colors duration-500 animate-loading"> </span>
+    <span class="rounded-full inline-block {{ sizeClass }} {% if color == 'light' %}bg-secondary{% else %}bg-main-75{% endif %} transition-colors duration-500 animate-[loading_0.6s_0.2s_linear_infinite]"> </span>
+    <span class="rounded-full inline-block {{ sizeClass }} {% if color == 'light' %}bg-secondary{% else %}bg-main-75{% endif %} transition-colors duration-500 animate-[loading_0.6s_0.3s_linear_infinite]"> </span>
 </div>

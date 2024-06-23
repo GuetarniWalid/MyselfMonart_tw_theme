@@ -1,11 +1,11 @@
 
-<div id="cookies-banner" class="fixed bottom-6 left-5 md:left-16 right-5 bg-secondary border-1 border-main rounded-xl max-w-[550px] px-6 z-50 hidden">
+<div id="cookies-banner" class="fixed bottom-6 left-5 md:left-16 right-5 bg-secondary transition-colors duration-500 border-1 border-main rounded-xl max-w-[550px] px-6 z-50 hidden">
   <img src="{{ "cookie.png" | file_img_url: '280x' }}" class="absolute -top-20 left-1/2 -translate-x-1/2 md:-top-16 md:-left-16 md:translate-x-0" loading="lazy"/>
   <div class="first ml-auto py-7 pt-52 md:w-1/2 md:pt-7">
     <p>{{ 'sections.cookie-banner.message-1' | t }}<br>{{ 'sections.cookie-banner.message-2' | t }}</p>
     <div class="flex gap-6 md:justify-between mt-6">
       <button onclick="showSettings()" class="underline">{{ 'sections.cookie-banner.parameter' | t }}</button>
-      <button onclick="handleAccept()" class="bg-main text-secondary py-3 px-6 rounded-lg">{{ 'sections.cookie-banner.accept' | t }}</button>
+      <button onclick="handleAccept()" class="bg-main text-secondary transition-colors duration-500 py-3 px-6 rounded-lg">{{ 'sections.cookie-banner.accept' | t }}</button>
     </div>
   </div>
   <form class="second hidden py-7 pt-52 md:w-7/12 ml-auto md:pt-7" onsubmit="handleSettings(event)">
@@ -14,7 +14,7 @@
       <div class="inline-block relative w-5 h-5 rounded overflow-hidden cursor-pointer" role="checkbox" aria-checked="true" onclick="handleCheck(this)">
         <input id="cookie-analyse" class="h-full w-full appearance-none border-2 border-main checked:border-0 peer" type="checkbox" name="analytics" checked/>
         <div class="absolute top-0 left-0 h-full w-full -z-10 peer-checked:bg-main"> </div>
-        <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute text-secondary top-1 left-1 block -z-10">
+        <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute text-secondary transition-colors duration-500 top-1 left-1 block -z-10">
           <path d="M4.5 9.20078L0.5 5.20078L1.9 3.80078L4.5 6.40078L10.1 0.800781L11.5 2.20078L4.5 9.20078Z" fill="currentColor"/>
         </svg>
       </div>
@@ -26,7 +26,7 @@
       <div class="inline-block relative w-5 h-5 rounded overflow-hidden cursor-pointer" role="checkbox" aria-checked="true" onclick="handleCheck(this)">
         <input id="cookie-marketing" class="h-full w-full appearance-none border-2 border-main checked:border-0 peer" type="checkbox" name="marketing" checked/>
         <div class="absolute top-0 left-0 h-full w-full -z-10 peer-checked:bg-main"> </div>
-        <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute text-secondary top-1 left-1 block -z-10">
+        <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute text-secondary transition-colors duration-500 top-1 left-1 block -z-10">
           <path d="M4.5 9.20078L0.5 5.20078L1.9 3.80078L4.5 6.40078L10.1 0.800781L11.5 2.20078L4.5 9.20078Z" fill="currentColor"/>
         </svg>
       </div>
@@ -38,7 +38,7 @@
       <div class="inline-block relative w-5 h-5 rounded overflow-hidden cursor-pointer mr-1" role="checkbox" aria-checked="true" onclick="handleCheck(this)">
         <input id="cookie-preferences" class="h-full w-full appearance-none border-2 border-main checked:border-0 peer" type="checkbox" name="preferences" checked/>
         <div class="absolute top-0 left-0 h-full w-full -z-10 peer-checked:bg-main"> </div>
-        <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute text-secondary top-1 left-1 block -z-10">
+        <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute text-secondary transition-colors duration-500 top-1 left-1 block -z-10">
           <path d="M4.5 9.20078L0.5 5.20078L1.9 3.80078L4.5 6.40078L10.1 0.800781L11.5 2.20078L4.5 9.20078Z" fill="currentColor"/>
         </svg>
       </div>
@@ -50,7 +50,7 @@
       <div class="inline-block relative w-5 h-5 rounded overflow-hidden cursor-pointer mr-1" role="checkbox" aria-checked="true" onclick="handleCheck(this)">
         <input id="cookie-sale_of_data" class="h-full w-full appearance-none border-2 border-main checked:border-0 peer" type="checkbox" name="sale_of_data" checked/>
         <div class="absolute top-0 left-0 h-full w-full -z-10 peer-checked:bg-main"> </div>
-        <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute text-secondary top-1 left-1 block -z-10">
+        <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute text-secondary transition-colors duration-500 top-1 left-1 block -z-10">
           <path d="M4.5 9.20078L0.5 5.20078L1.9 3.80078L4.5 6.40078L10.1 0.800781L11.5 2.20078L4.5 9.20078Z" fill="currentColor"/>
         </svg>
       </div>
@@ -58,7 +58,7 @@
         {{ 'sections.cookie-banner.settings.sale_of_data' | t }}
       </label>
     </div>
-    <button class="block bg-main py-3 text-center text-secondary w-full rounded mb-2" onclick="handleAccept()">{{ 'sections.cookie-banner.settings.accept_button' | t }}</button>
+    <button class="block bg-main py-3 text-center text-secondary transition-colors duration-500 w-full rounded mb-2" onclick="handleAccept()">{{ 'sections.cookie-banner.settings.accept_button' | t }}</button>
     <button class="block border-main border-1 py-3 text-center w-full rounded" type="submit">{{ 'sections.cookie-banner.settings.save_button' | t }}</button>
   </form>
 </div>

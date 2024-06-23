@@ -21,7 +21,7 @@
   <div class="md:flex md:gap-5">
     <div class="relative h-12 group my-4 w-full">
       {%- assign name = 'tw.contact-form.lastname' | t -%}
-      <input autocomplete="name" type="text" id="ContactForm-name" name="contact[{{ name }}]" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}" class="bg-secondary pl-5 pr-9 border hover:border-2 focus:border-2 w-full h-full rounded-lg peer/search placeholder:text-transparent outline-none border-main" placeholder="{{ name }}">
+      <input autocomplete="name" type="text" id="ContactForm-name" name="contact[{{ name }}]" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}" class="bg-secondary transition-colors duration-500 pl-5 pr-9 border hover:border-2 focus:border-2 w-full h-full rounded-lg peer/search placeholder:text-transparent outline-none border-main" placeholder="{{ name }}">
       <label class="bg-secondary text-main-70 px-1 absolute -translate-y-1/2 left-4 top-0 text-xs tracking-normal peer-focus/search:top-0 peer-focus/search:text-xs peer-focus/search:tracking-normal peer-placeholder-shown/search:top-1/2 peer-placeholder-shown/search:text-sm peer-placeholder-shown/search:tracking-widest transition-all duration-75" for="ContactForm-name">{{ name }}</label>
     </div>
     <div class="relative h-12 group my-4 w-full">
@@ -29,7 +29,7 @@
         autocomplete="email"
         type="email"
         id="ContactForm-email"
-        class="bg-secondary pl-5 pr-9 border hover:border-2 focus:border-2 w-full h-full rounded-lg peer/search placeholder:text-transparent outline-none border-main"
+        class="bg-secondary transition-colors duration-500 pl-5 pr-9 border hover:border-2 focus:border-2 w-full h-full rounded-lg peer/search placeholder:text-transparent outline-none border-main"
         name="contact[email]"
         spellcheck="false"
         autocapitalize="off"
@@ -52,7 +52,7 @@
   </div>
   {%- if section.settings.show_mobile_input -%}
     <div class="relative h-12 group my-4">
-      <input type="tel" id="ContactForm-phone" autocomplete="tel" name="contact[{{ 'tw.contact-form.phone' | t }}]" pattern="[0-9\-]*" value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}" placeholder="{{ 'tw.contact-form.phone' | t }}" class="bg-secondary pl-5 pr-9 border hover:border-2 focus:border-2 w-full h-full rounded-lg peer/search placeholder:text-transparent outline-none border-main">
+      <input type="tel" id="ContactForm-phone" autocomplete="tel" name="contact[{{ 'tw.contact-form.phone' | t }}]" pattern="[0-9\-]*" value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}" placeholder="{{ 'tw.contact-form.phone' | t }}" class="bg-secondary transition-colors duration-500 pl-5 pr-9 border hover:border-2 focus:border-2 w-full h-full rounded-lg peer/search placeholder:text-transparent outline-none border-main">
       <label for="ContactForm-phone" class="bg-secondary text-main-70 px-1 absolute -translate-y-1/2 left-4 top-0 text-xs tracking-normal peer-focus/search:top-0 peer-focus/search:text-xs peer-focus/search:tracking-normal peer-placeholder-shown/search:top-1/2 peer-placeholder-shown/search:text-sm peer-placeholder-shown/search:tracking-widest transition-all duration-75">{{ 'tw.contact-form.phone' | t }}</label>
     </div>
   {%- endif -%}

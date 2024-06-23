@@ -210,27 +210,19 @@
         "padding_bottom": "Bottom padding"
       },
       "spacing": "Spacing",
-      "colors": {
-        "text_color": {
+      "dynamic_color": {
+        "heading": {
+          "content": "Dynamic color"
+        },
+        "activate": {
+          "label": "Activate dynamic color"
+        },
+        "primary_color": {
           "label": "Text color"
         },
-        "accent_1": {
-          "label": "Accent 1"
-        },
-        "accent_2": {
-          "label": "Accent 2"
-        },
-        "background_1": {
-          "label": "Background 1"
-        },
-        "background_2": {
-          "label": "Background 2"
-        },
-        "inverse": {
-          "label": "Inverse"
-        },
-        "label": "Color scheme",
-        "has_cards_info": "To change the card color scheme, update your theme settings."
+        "secondary_color": {
+          "label": "Background color"
+        }
       },
       "heading_size": {
         "label": "Heading size",

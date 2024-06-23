@@ -49,7 +49,7 @@
               id="NewsletterForm--{{ section.id }}"
               type="email"
               name="contact[email]"
-              class="bg-main pl-5 pr-9 border hover:border-2 focus:border-2 w-full h-full rounded-lg peer/search placeholder:text-transparent outline-none{% if form.errors %} border-like{% else %} border-secondary{% endif %}"
+              class="bg-main pl-5 pr-9 border hover:border-2 focus:border-2 w-full h-full rounded-lg peer/search placeholder:text-transparent outline-none{% if form.errors %} border-like{% else %} border-secondary transition-colors duration-500{% endif %}"
               value="{{ form.email }}"
               aria-required="true"
               autocorrect="off"
@@ -104,13 +104,13 @@
             {%- form 'localization', id: 'FooterCountryForm' -%}
               <div>
                 <p id="FooterCountryLabel" class="pl-2 mb-2">{{ 'tw.footer.localization.country_label' | t }}</p>
-                <div class="bg-secondary text-main inline-block min-w-[130px] h-10 rounded-md relative">
+                <div class="bg-secondary transition-colors duration-500 text-main inline-block min-w-[130px] h-10 rounded-md relative">
                   <button type="button" aria-describedby="FooterCountryLabel" class="first-focusable flex justify-between items-center w-full h-full px-3">
                     {{ cart.currency.name }}
                     {% render 'tw-icon-caret' %}
                   </button>
                   <div class="disclosure__list-wrapper" hidden>
-                    <ul id="FooterCountryList" role="list" class="bg-secondary absolute -top-2 left-0 right-0 rounded-md -translate-y-full py-2">
+                    <ul id="FooterCountryList" role="list" class="bg-secondary transition-colors duration-500 absolute -top-2 left-0 right-0 rounded-md -translate-y-full py-2">
                       {%- for currency in shop.enabled_currencies -%}
                         <li tabindex="-1">
                           <a class="{% if forloop.last %}last-focusable {% endif %}hover:bg-main-5 inline-block w-full py-2 mb-1 px-3{% if currency.iso_code == cart.currency.iso_code %} bg-main-5 cursor-not-allowed" role="link" aria-disabled="true"{% else %}" href="#"{% endif %}{% if currency.iso_code == cart.currency.iso_code %} aria-current="true"{% endif %} data-value="{{ currency.iso_code }}">
@@ -132,13 +132,13 @@
             {%- form 'localization', id: 'FooterLanguageForm', class: 'localization-form' -%}
               <div>
                 <p class="pl-2 mb-2" id="FooterLanguageLabel">{{ 'tw.footer.localization.language_label' | t }}</p>
-                <div class="bg-secondary text-main inline-block min-w-[130px] h-10 rounded-md relative">
+                <div class="bg-secondary transition-colors duration-500 text-main inline-block min-w-[130px] h-10 rounded-md relative">
                   <button class="first-focusable flex justify-between items-center w-full h-full px-3" type="button" aria-expanded="false" aria-controls="FooterLanguageList" aria-describedby="FooterLanguageLabel">
                     {{ localization.language.endonym_name | capitalize }}
                     {% render 'tw-icon-caret' %}
                   </button>
                   <div class="disclosure__list-wrapper" hidden>
-                    <ul id="FooterLanguageList" role="list" class="bg-secondary absolute -top-2 left-0 right-0 rounded-md -translate-y-full py-2">
+                    <ul id="FooterLanguageList" role="list" class="bg-secondary transition-colors duration-500 absolute -top-2 left-0 right-0 rounded-md -translate-y-full py-2">
                       {%- for language in localization.available_languages -%}
                         <li tabindex="-1">
                           <a class="{% if forloop.last %}last-focusable {% endif %}hover:bg-main-5 inline-block w-full py-2 mb-1 px-3{% if language.iso_code == localization.language.iso_code %} bg-main-5 cursor-not-allowed" role="link" aria-disabled="true"{% else %}" href="#"{% endif %} hreflang="{{ language.iso_code }}" lang="{{ language.iso_code }}"{% if language.iso_code == localization.language.iso_code %} aria-current="true"{% endif %} data-value="{{ language.iso_code }}">

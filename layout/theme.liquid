@@ -34,21 +34,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    {% style %}
-        @font-face {
-          font-family: "heading";
-          src: url({{ "heading.woff2" | asset_url }}) format("woff2");
-          font-display: swap;
-        }
 
-        :root {
-          --color-main: {{ settings.main_color | color_to_hex }};
-          --color-main-rgb: {{ settings.main_color | color_extract: 'red' }}, {{ settings.main_color | color_extract: 'green' }}, {{ settings.main_color | color_extract: 'blue' }};
-          --color-secondary: {{ settings.secondary_color | color_to_hex }};
-          --color-secondary-rgb: {{ settings.secondary_color | color_extract: 'red' }}, {{ settings.secondary_color | color_extract: 'green' }}, {{ settings.secondary_color | color_extract: 'blue' }};
-          --color-like: {{ settings.like_color | color_to_hex }};
-        }
-    {% endstyle %}
+    {% render 'fonts-and-colors' %}
 
     {{ 'output.css' | asset_url | stylesheet_tag }}
 
@@ -65,7 +52,7 @@
     {% render 'gsf-conversion-pixels' %}
   </head>
 
-  <body class="w-screen overflow-x-hidden text-main bg-secondary z-10 scrollbar relative min-h-screen">
+  <body class="w-screen overflow-x-hidden text-main bg-secondary transition-colors duration-500 z-10 scrollbar relative min-h-screen">
     <a class="sr-only focus:not-sr-only" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>
