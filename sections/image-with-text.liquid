@@ -33,7 +33,7 @@
   </dynamic-color>
 {%- endif -%}
 
-{% if section.settings.enable_blob %}
+{% if section.settings.enable_blob or section.settings.activate_dynamic_color %}
   <script src="{{ 'component-image-with-text.js' | asset_url }}" defer="defer"></script> 
 {% endif %}
 
