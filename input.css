@@ -4,7 +4,9 @@
 *:empty:not(svg *, img, input, textarea, hr, model-viewer, br) {
   display: none;
 }
-
+summary::-webkit-details-marker {
+  display: none;
+}
 .finger-tap {
   animation: fingerTap 1.5s linear infinite;
 }
