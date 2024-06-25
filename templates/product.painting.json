@@ -143,7 +143,7 @@
         "image_text_ragCcn": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-salon-femme-africaine.jpg",
+            "image": "shopify:\/\/shop_images\/tableau-salon-femme-africaine_03a72a0a-4a4d-4822-8824-a48b09af1eb3.jpg",
             "message": "Magnifique tableau et très design, correspond parfaitement à la description.  Morel E"
           }
         },
@@ -210,7 +210,6 @@
         "heading_size": "h2",
         "products_to_show": 10,
         "columns_desktop": 4,
-        "color_scheme": "background-1",
         "image_ratio": "adapt",
         "show_secondary_image": false,
         "show_vendor": false,
@@ -267,6 +266,9 @@
         "description": "<p>Vous avez le souci du détail ? Allez plus loin en personnalisant aussi le support. Sur toile, plexiglas ou aluminium, choisissez l’aspect qui s’accorde le mieux à votre intérieur.<\/p>",
         "layout": "image_first",
         "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#E3FAE1",
         "padding_top": "pt-16",
         "padding_bottom": "pb-16"
       }
@@ -279,6 +281,9 @@
         "description": "<p>Choisissez la taille de votre tableau. En paysage, portrait, carré, petit ou grand, à vous de voir selon votre espace.<\/p>",
         "layout": "text_first",
         "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#E3FAE1",
         "padding_top": "pt-16",
         "padding_bottom": "pb-16"
       }
@@ -291,6 +296,9 @@
         "description": "<p>Une touche d'art à la française. Enracinés dans notre cher pays, nous mettons l'accent sur votre satisfaction en offrant un service client de qualité supérieure.<\/p>",
         "layout": "image_first",
         "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#E3FAE1",
         "padding_top": "pt-16",
         "padding_bottom": "pb-16"
       }
