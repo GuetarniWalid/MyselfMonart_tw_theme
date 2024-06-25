@@ -415,7 +415,8 @@ class VariantPicker extends HTMLElement {
     const floatBuyButton = document.querySelector('.float-buy-button');
     if (floatBuyButton) floatBuyButton.dataset.variantId = variantId;
     else {
-      const templateFloatBuyButton = document.getElementById('float-buy-button');
+      const templateFloatBuyButton =
+        document.getElementById('float-buy-button');
       const content = templateFloatBuyButton.content;
       const floatBuyButton = content.querySelector('.float-buy-button');
       floatBuyButton.dataset.variantId = variantId;

@@ -347,7 +347,8 @@ main-product-blocks .description h2 span {
   .article-content a,
   .collection-description a,
   .page-description a,
-  .image-with-text a {
+  .image-with-text a, 
+  .product-description a {
     @apply relative after:bg-main-10 after:absolute after:top-0 after:bottom-0 after:-right-1 after:-left-1 after:-skew-x-12 inline-block;
   }
 
