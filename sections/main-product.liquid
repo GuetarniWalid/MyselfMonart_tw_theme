@@ -64,6 +64,9 @@
                 assign nbOfMedia = nbOfMedia | default: 0 | plus: 1
                 render 'tw-main-product-model-3d', url: 3d_model_url, alt: 3d_model_alt, poster: 3d_model_poster
               endif
+            else if media.media_type == 'image'
+              assign nbOfMedia = nbOfMedia | default: 0 | plus: 1
+              render 'tw-main-product-image', media: media, loop: forloop
             endif
           endfor
         %}
@@ -95,6 +98,9 @@
                   assign image_number = image_number | default: 0 | plus: 1
                   render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media.alt, object-fit: 'cover', file: 'glb', image_number: image_number
                 endif
+              else if media.media_type == 'image'
+                assign image_number = image_number | default: 0 | plus: 1
+                render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media.alt, object-fit: 'cover', image_number: image_number
               endif
             endfor
           %}
