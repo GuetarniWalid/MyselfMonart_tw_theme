@@ -1789,6 +1789,27 @@
     "sibling-blog-links": {
       "name": "Articles frères"
     },
+    "shifted-image-carousel": {
+      "name": "Carrousel d'images décalées",
+      "settings": {
+        "heading": {
+          "label": "Titre"
+        },
+        "description": {
+          "label": "Texte"
+        }
+      },
+      "blocks": {
+        "image": {
+          "name": "Image",
+          "settings": {
+            "image": {
+              "label": "Image"
+            }
+          }
+        }
+      }
+    },
     "video": {
       "name": "Vidéo",
       "settings": {

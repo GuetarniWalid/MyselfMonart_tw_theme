@@ -1450,6 +1450,27 @@
     "sibling-blog-links": {
       "name": "Sibling blog links"
     },
+    "shifted-image-carousel": {
+      "name": "Shifted image carousel",
+      "settings": {
+        "heading": {
+          "label": "Heading"
+        },
+        "description": {
+          "label": "Text"
+        }
+      },
+      "blocks": {
+        "image": {
+          "name": "Image",
+          "settings": {
+            "image": {
+              "label": "Image"
+            }
+          }
+        }
+      }
+    },
     "video-banner": {
       "name": "Video banner",
       "settings": {
