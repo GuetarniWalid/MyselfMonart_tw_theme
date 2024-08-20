@@ -64,7 +64,7 @@ function removeSkeletonOnImagesLoad() {
       image.parentElement.classList.remove('skeleton');
     } else {
       image.addEventListener('load', () => {
-        image.parentElement.classList.remove('skeleton');
+        image.parentElement?.classList.remove('skeleton');
       });
     }
   });

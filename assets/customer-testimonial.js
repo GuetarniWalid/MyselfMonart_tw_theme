@@ -17,9 +17,9 @@ if (!customElements.get('customer-testimonial')) {
       const content = bindStrings.map(bindString => {
         const separeteString = bindString.split('|||');
         return {
-          text: separeteString[0].slice(1).trim(),
-          image: separeteString[1].trim(),
-          alt: separeteString[2].trim(),
+          text: separeteString[0].slice(1)?.trim(),
+          image: separeteString[1]?.trim(),
+          alt: separeteString[2]?.trim(),
         };
       });
       this.content = content;
