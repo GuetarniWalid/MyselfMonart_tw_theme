@@ -1,0 +1,470 @@
+{
+  "layout": "article",
+  "sections": {
+    "ce4595e5-01e5-472d-ac56-563a87ef335c": {
+      "type": "first-blog-link",
+      "settings": {
+      }
+    },
+    "main": {
+      "type": "main-article",
+      "settings": {
+        "show_date": true
+      }
+    },
+    "11ed1855-d812-4ccc-8f80-65a14ff1c6bd": {
+      "type": "sibling-blog-links",
+      "disabled": true,
+      "settings": {
+        "padding_top": "pt-8",
+        "padding_bottom": "pb-8"
+      }
+    },
+    "rich_text_NEejwz": {
+      "type": "rich-text",
+      "blocks": {
+        "text_JgFYRF": {
+          "type": "text",
+          "settings": {
+            "text": "<p><strong>Dans un monde où tout va vite<\/strong>, il est très important de trouver un endroit où vous pourrez vous ressourcer et vous détendre. Une décoration zen transforme votre intérieur en un véritable havre de paix. Elle vous invite à la détente et à l'évasion, et vous permet de vous reconnecter à l'essentiel<\/p>",
+            "text_size": "text-lg",
+            "is_lighten": false
+          }
+        }
+      },
+      "block_order": [
+        "text_JgFYRF"
+      ],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "customer_testimonial_Dxtnn3": {
+      "type": "customer-testimonial",
+      "blocks": {
+        "image_text_MkKxkA": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/salon-inspiration-japonaise-salle-de-the.jpg",
+            "message": "Salon Thé Japonais : Sérénité et Harmonie\nUn espace de thé d'inspiration japonaise avec une vue sur des montagnes embrumées, créant une atmosphère paisible et méditative."
+          }
+        },
+        "image_text_KRGHyc": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/chambre-ambiance-chaleureux-vert-sauge-plante-verte.jpg",
+            "message": "Coin Douillet Zen en Vert : \nUne chambre apaisante avec des teintes vert sauge, des branches fleuries et un éclairage doux, invitant à la détente."
+          }
+        },
+        "image_text_TmRr3T": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/salle-de-bain-zen-pierre-plante-verte.jpg",
+            "message": "Une salle de bain épurée avec une baignoire en pierre naturelle, baignée de lumière douce, idéale pour se ressourcer."
+          }
+        }
+      },
+      "block_order": [
+        "image_text_MkKxkA",
+        "image_text_KRGHyc",
+        "image_text_TmRr3T"
+      ],
+      "settings": {
+        "title": "",
+        "duration_image_appearance": 3
+      }
+    },
+    "rich_text_JqtgDR": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_6wPLxh": {
+          "type": "heading",
+          "settings": {
+            "heading": "Comprendre la Philosophie de la Décoration Zen",
+            "markup": "h2",
+            "heading_size": "text-3xl"
+          }
+        },
+        "text_9QBzBj": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Le style zen s'inspire de la philosophie japonaise. Cette philosophie, profondément ancrée dans la culture japonaise, met l'accent sur l'importance de vivre en accord avec la nature et de cultiver un esprit calme et équilibré. Elle incarne la simplicité, la quête entre l'harmonie et la sérénité. Optez pour une décoration zen, c'est faire le choix d’une approche minimaliste, où chaque élément trouve sa place pour créer une ambiance apaisante. Ce style vous invite à laisser de côté le superflu pour ne garder que l'essentiel.<\/p><p>Pour aller plus loin dans cette quête d'harmonie, vous pouvez intégrer les principes du Feng Shui. Cette pratique chinoise se concentre sur l'organisation de l'espace pour permettre à l'énergie positive, appelée \"Chi\", de circuler librement, ce qui renforce le bien-être dans votre maison.   Voici les principes clé : <\/p><p><strong>L’orientation et la disposition des meubles :<\/strong><\/p><ul><li><strong>Principe :<\/strong> Les meubles doivent être placés de manière à permettre une circulation fluide de l’énergie.<\/li><li><strong>Exemple :<\/strong> Dans la chambre, le lit doit être placé de façon à ce que vous puissiez voir la porte, mais sans être directement aligné avec elle. Il est également conseillé de ne pas avoir de miroir en face du lit, car cela peut perturber le sommeil en \"réfléchissant\" l'énergie.<\/li><\/ul><p><strong>L’importance des cinq éléments :<\/strong><\/p><ul><li><strong>Principe :<\/strong> Le Feng Shui repose sur l’équilibre des cinq éléments : le bois, le feu, la terre, le métal, et l’eau. Chaque élément a un impact sur l'énergie d'une pièce.<\/li><li><strong>Exemple :<\/strong> Dans un salon, vous pouvez introduire ces éléments en ajoutant une plante (bois), une bougie (feu), un bol en céramique (terre), une sculpture en métal (métal), et une fontaine ou un aquarium (eau) pour équilibrer l’énergie.<\/li><\/ul><p><strong>Le désencombrement :<\/strong><\/p><ul><li><strong>Principe :<\/strong> Un espace encombré bloque la circulation du Chi. Le désencombrement est donc essentiel pour permettre à l'énergie de circuler librement.<\/li><li><strong>Exemple :<\/strong> Rangez régulièrement vos affaires, éliminez les objets cassés ou inutilisés, et optez pour un mobilier minimaliste. Par exemple, dans l’entrée, un espace dégagé sans chaussures éparpillées ni objets inutiles permet à l'énergie de bien circuler dès l'entrée dans la maison.<\/li><\/ul><p><strong>L’équilibre Yin et Yang :<\/strong><\/p><ul><li><strong>Principe :<\/strong> Le Feng Shui vise à équilibrer les forces opposées, le Yin (énergie passive) et le Yang (énergie active), dans l’aménagement de l’espace.<\/li><li><strong>Exemple :<\/strong> Dans un bureau, on peut équilibrer le Yin et le Yang en combinant des éléments de repos (comme une chaise confortable et une lumière douce) avec des éléments dynamiques (comme des couleurs vives ou des objets métalliques).<\/li><\/ul><ol><li><strong>Les couleurs :<\/strong><\/li><\/ol><ul><li><strong>Principe :<\/strong> Chaque couleur est associée à un élément du Feng Shui et influence l’énergie d’une pièce.<\/li><\/ul><p><strong>Exemple :<\/strong> Utiliser du vert (représentant le bois) dans une salle de séjour peut promouvoir la croissance et la vitalité, tandis que le bleu (représentant l’eau) dans une chambre favorise la tranquillité et le calme.<\/p>",
+            "text_size": "text-lg",
+            "is_lighten": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_6wPLxh",
+        "text_9QBzBj"
+      ],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "image_with_text_V7Dx9L": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/salon-moderne-feng-shui.png",
+        "title": "Les 3 Principes Fondamentaux pour un Intérieur Zen",
+        "description": "",
+        "layout": "image_first",
+        "enable_blob": true,
+        "activate_dynamic_color": true,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#d1c7b7",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "rich_text_9xgjdM": {
+      "type": "rich-text",
+      "blocks": {
+        "text_JBEiXG": {
+          "type": "text",
+          "settings": {
+            "text": "<ol><li><strong> L’épuration<\/strong>:  Pour aménager un intérieur zen, vous devez vous débarrasser de ce qui encombre votre intérieur. Vous gardez uniquement ce qui est nécessaire et ce qui vous procure du bien-être. <\/li><li><strong>Les meubles<\/strong> : Les meubles sont simples, fonctionnels, et fabriqués avec des matériaux naturels comme le bois ou le bambou. Ces matériaux apportent une chaleur naturelle à votre intérieur, créant une ambiance accueillante et réconfortante. Le design doit être épuré et les formes douces, pour renforcer l'équilibre de la pièce et instaurer un sentiment de sérénité. Une pièce aménagée de manière fluide, sans angles vifs ni encombrement visuel, vous invite à la détente et réduit votre stress.<\/li><li><strong> La palette de couleurs <\/strong>: Elle doit se concentrer sur des teintes neutres ou pastel. Les couleurs claires apportent une atmosphère apaisante et éclairent l'espace, le rendant plus aéré. La lumière naturelle, combinée à ces tons doux, crée une sensation d'ouverture. Vous vous sentirez ainsi plus libre, plus léger, avec un esprit plus clair et apaisé.<\/li><\/ol><h3><strong>Couleurs et Textures : Créer une Ambiance Apaisante<\/strong><\/h3><p>Les couleurs jouent un rôle crucial dans la création d’une atmosphère zen. Choisissez des teintes douces et naturelles. Les couleurs claires, comme le blanc, le beige, et le gris, apportent calme et sérénité. Les nuances pastel, comme le rose pâle ou le bleu ciel, adoucissent l'atmosphère et créent une ambiance apaisante, pour un espace plus lumineux et accueillant.<\/p><p>Le bleu, en particulier, est la couleur par excellence. Elle évoque le ciel et la mer, et son effet sur l'esprit est bien connu. Le bleu aide à ralentir la respiration et favorise la relaxation, ce qui le rend idéal pour les espaces où vous cherchez à instaurer une ambiance calme et de détente, comme les chambres ou les salles de bains.<\/p><p>Pour ajouter une touche de nature, intégrez des nuances de vert ou des tons terreux comme la terre cuite. Les matériaux naturels, tels que le bois, la pierre, ou le lin, renforcent cette connexion avec la nature et apportent une sensation de chaleur et de réconfort. Ensemble, ces éléments créent un environnement où il fait bon se ressourcer, loin du stress quotidien. Pour en savoir plus sur les nuances qui apaise découvrez <a href=\"\/blogs\/tableau-zen\/quelles-couleurs-choisir-pour-un-interieur-zen-decouvrez-les-nuances-qui-apaisent-lesprit\" target=\"_blank\" title=\"Quelles Couleurs Choisir pour un Intérieur Zen ? Découvrez les Nuances qui Apaisent l'Esprit\">notre article ici .<\/a><\/p>",
+            "text_size": "text-lg",
+            "is_lighten": false
+          }
+        }
+      },
+      "block_order": [
+        "text_JBEiXG"
+      ],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "multicolumn_EenkE4": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_cXjVLy": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/mood-board-minimaliste-couleurs-neutre.jpg",
+            "title": "Neutre et Naturelle",
+            "text": "<p>Teintes neutres et matériaux bruts pour une décoration minimaliste, évoquant calme et simplicité.<\/p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
+          }
+        },
+        "column_UJkJb8": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/mood-board-plante-verte.jpg",
+            "title": "Vert et Vitalité",
+            "text": "<p>Nuances de vert et textures boisées pour une déco connectée à la nature, fraîche et apaisante.<\/p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
+          }
+        },
+        "column_LVJwQU": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/mood-board-ton-chaleureux-couleur-orange-vitamine.jpg",
+            "title": "Chaleur Orange",
+            "text": "<p>Tons chauds et textiles doux pour une ambiance cosy et dynamique, parfaite pour un intérieur accueillant.<\/p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
+          }
+        }
+      },
+      "block_order": [
+        "column_cXjVLy",
+        "column_UJkJb8",
+        "column_LVJwQU"
+      ],
+      "settings": {
+        "title": "",
+        "image_shape": "rounded-none",
+        "columns_desktop": 3,
+        "show_backgounds": true,
+        "button_label": "",
+        "button_link": "",
+        "to_obfuscate": false
+      }
+    },
+    "rich_text_pechHt": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_mB7PeF": {
+          "type": "heading",
+          "settings": {
+            "heading": "Lumière et Ambiance : Le Pouvoir de la Lumière Naturelle",
+            "markup": "h2",
+            "heading_size": "text-3xl"
+          }
+        },
+        "text_tfgdXQ": {
+          "type": "text",
+          "settings": {
+            "text": "<h3><\/h3><p>La lumière est un élément essentiel de la décoration zen. Laissez entrer la lumière naturelle autant que possible. Utilisez des rideaux légers pour ne pas bloquer la luminosité. Le soir, optez pour un éclairage doux et modulable, grâce à des lampes à intensité réglable ou des bougies. Préférez des lumières chaudes, avec une température de couleur autour de 2700 à 3000 Kelvin, pour créer une ambiance apaisante et intime. Ces lumières, qui émettent une teinte chaleureuse et dorée, sont idéales pour la détente, car elles reproduisent l'effet relaxant du coucher de soleil. Elles ne dépassent généralement pas 400 lumens, ce qui est parfait pour un éclairage tamisé en soirée.<\/p><h3>Intégrer la Nature : Plantes et Éléments Naturels<\/h3><p>Les plantes sont indispensables dans un intérieur zen. Elles apportent une touche de verdure et contribuent à purifier l'air. Choisissez des plantes faciles à entretenir, comme le bonsaï, le bambou, ou encore des plantes grasses. Vous pouvez aussi ajouter des éléments naturels, comme des galets, des coquillages, ou des branches, pour renforcer cette connexion avec la nature. Ces touches naturelles apportent vie et douceur à votre intérieur.<\/p>",
+            "text_size": "text-xl",
+            "is_lighten": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_mB7PeF",
+        "text_tfgdXQ"
+      ],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "shifted_image_carousel_PMJmE7": {
+      "type": "shifted-image-carousel",
+      "blocks": {
+        "image_mAHK9W": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/chambre-tableau-decoration-boudhha.jpg"
+          }
+        },
+        "image_tLz8rj": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/luxet_serenite-salon-beige.jpg"
+          }
+        },
+        "image_XrMfTf": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/salle-eau-colore-nature.jpg"
+          }
+        },
+        "image_ni3RHy": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/bureau-zen.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "image_mAHK9W",
+        "image_tLz8rj",
+        "image_XrMfTf",
+        "image_ni3RHy"
+      ],
+      "settings": {
+        "heading": "Créez des Espaces Zen dans Chaque Pièce de Votre Maison",
+        "description": ""
+      }
+    },
+    "image_with_text_P3cPEY": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/luxet_serenite-salon-beige.jpg",
+        "title": "Le Salon Zen : Espace de Détente et de Ressourcement",
+        "description": "<p>Votre salon est le cœur de votre maison. Pour en faire un espace zen, optez pour un mobilier minimaliste et confortable. Un canapé en lin beige, accompagné de coussins moelleux dans des teintes douces, comme le gris clair ou le vert sauge. Privilégiez des meubles bas, comme une table basse en bois clair aux lignes scandinave, où vous posez quelques livres et une petite bougie parfumée.<\/p>",
+        "layout": "image_first",
+        "enable_blob": true,
+        "activate_dynamic_color": true,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#d1c7b7",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "rich_text_47VkaX": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_4mR7MY": {
+          "type": "heading",
+          "settings": {
+            "heading": "Invitez la Lumière et la Nature",
+            "markup": "h3",
+            "heading_size": "text-3xl"
+          }
+        },
+        "text_Xi7UNy": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Les grandes ouvertures, comme des baies vitrées, laissent entrer la lumière naturelle, pour créer une connexion entre l'intérieur et l'extérieur. Choisissez des rideaux légers en lin blanc, qui laissent passer la lumière du jour sans l'atténuer. <\/p><p>Vous pouvez également ajouter des éléments naturels. Une petite fontaine d'eau sur un buffet diffuse un son apaisant, tandis qu'une plante verte, comme un ficus ou un bonsaï, apporte une touche de verdure et de vie. Sur les murs, accrochez un <a href=\"https:\/\/www.myselfmonart.com\/collections\/tableau-zen?page=1\" title=\"https:\/\/www.myselfmonart.com\/collections\/tableau-zen?page=1\">tableau de décoration<\/a> ou cadre avec une illustration minimaliste ou une photo en noir et blanc, pour garder l’espace épuré.<\/p><p>Veillez à garder l'espace toujours dégagé, sans excès de décoration. Placez simplement un tapis en laine aux tons neutres sous la table basse, et quelques galets décoratifs sur une étagère. Cette simplicité favorise la fluidité et la détente, et vous invite à la relaxation dès que vous entrez dans la pièce.<\/p>",
+            "text_size": "text-lg",
+            "is_lighten": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_4mR7MY",
+        "text_Xi7UNy"
+      ],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "image_with_text_eT4UUC": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/appartement-urbain-decoration-murale-yoga.jpg",
+        "title": "La Chambre Zen : Un Sanctuaire de Sérénité",
+        "description": "<p>Description Votre chambre est un lieu où règne la paix. Pour cela, optez pour des couleurs douces comme le beige, le blanc cassé, ou le bleu qui apaisent l'esprit. Privilégiez des tissus naturels, comme le coton ou le lin, pour le linge de lit. Un lit en bois clair, aux lignes épurées, accompagné de tables de chevet minimalistes, pour compléter l’ensemble. Pour favoriser le repos, placez le lit de manière à ce qu'il soit éloigné des fenêtres, mais orienté face à elle pour capter la lumière douce du matin....<\/p>",
+        "layout": "image_first",
+        "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#e3fae1",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "rich_text_Ukjprn": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_pTrr7r": {
+          "type": "heading",
+          "settings": {
+            "heading": "Astuces pour une Ambiance Apaisante et Sécurisée",
+            "markup": "h3",
+            "heading_size": "text-3xl"
+          }
+        },
+        "text_4XeFAP": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Vous pouvez également accrocher une tapisserie panoramique avec un paysage naturel comme des montagnes enneigées ou une mer agitée sur les murs. Ce type de décoration, avec ses teintes naturelles et apaisantes, vous transportera dans un environnement calme chaque fois que vous entrerez dans la pièce.<\/p><p>Laissez la lumière naturelle entrer durant la journée, grâce à des rideaux légers qui diffusent une clarté douce et naturelle. Le soir, optez pour un éclairage tamisé, avec des lampes de chevet avec abat-jours en tissu,  qui diffusent une lumière chaude et apaisante. <\/p><p>Contrairement aux idées reçues, il vaut mieux éviter les bougies dans la chambre. Certaines bougies libèrent des substances nocives et présentent un risque d'incendie. Préférez des bougies électroniques, qui reproduisent la chaleur et la lumière sans danger. Vous pouvez également utiliser un diffuseur d’huiles essentielles, comme la lavande, le bois de cèdre ou la camomille, qui favorisent la relaxation et améliorent la qualité du sommeil en toute sécurité.<\/p><p>Veillez à garder l'espace dégagé, sans excès de décoration. Un petit tapis, un panier en osier et un vase en céramique suffisent pour apporter une touche personnelle sans risquer de surcharger l'atmosphère. Pensez aussi aux bruits blancs, ces sons doux de la nature ou du quotidien, comme le murmure d'un ruisseau ou le souffle du vent, qui ont un réel pouvoir pour nous aider à nous relaxer et à lâcher prise.<\/p>",
+            "text_size": "text-lg",
+            "is_lighten": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_pTrr7r",
+        "text_4XeFAP"
+      ],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "image_with_text_bMFQ3G": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/salle-de-bain-design-moderne-teint-chaud_347d4f1b-69b6-491c-a4c5-75347f4b6b16.jpg",
+        "title": "La Salle de Bains Zen : Un Espace de Bien-Être au Quotidien",
+        "description": "<p>Votre salle de bains peut devenir un véritable sanctuaire de détente. C'est la pièce par excellence dédiée au bien-être, où chaque détail compte pour vous offrir des moments de relaxation profonde. Commencez par choisir des couleurs sablées ou pastel pour les murs, pour creer une ambiance apaisante qui vous enveloppe dès que vous entrez. Pour le sol et les murs, privilégiez un revêtement en pierre naturelle, du carrelage ou une mosaïque dans des teintes neutres et terreuses. Ces matériaux apportent une touche organique, qui rappelle les bains thermaux traditionnels, et renforcent l'atmosphère zen.<\/p>",
+        "layout": "image_first",
+        "enable_blob": true,
+        "activate_dynamic_color": true,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#ccd6bb",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "rich_text_8RkyH6": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_FAh4bn": {
+          "type": "heading",
+          "settings": {
+            "heading": "Créer un Spa Personnel à Domicile",
+            "markup": "h3",
+            "heading_size": "text-3xl"
+          }
+        },
+        "text_h4EGtL": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Installez des éléments en bois ou en bambou, qui apportent chaleur et naturel, et transforme votre espace en un spa personnel. Optez pour une baignoire si possible, idéale pour des bains longs et relaxants, où vous pouvez laisser le stress se dissoudre dans l'eau chaude.<\/p><p>Un éclairage doux et tamisé, accompagné de quelques bougies parfumées (ou mieux, un diffuseur d’huiles essentielles), transforme la salle de bains en un véritable refuge où vous vous ressourcer pleinement. Ajoutez des touches de verdure avec des plantes adaptées à l’humidité, comme une petite fougère ou un bambou, pour renforcer le sentiment de connexion avec la nature. <\/p><p>Chaque fois que vous entrez dans cette pièce, vous ressentez immédiatement une sensation de calme et de sérénité, un espace où vous pouvez réellement prendre soin de vous et retrouver votre équilibre.<\/p>",
+            "text_size": "text-lg",
+            "is_lighten": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_FAh4bn",
+        "text_h4EGtL"
+      ],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "badges_tdCpWx": {
+      "type": "badges",
+      "blocks": {
+        "number_block_LX4rmP": {
+          "type": "number_block",
+          "settings": {
+            "number": 1,
+            "heading": "Simplicité et Épure",
+            "text": "La décoration zen met l'accent sur le minimalisme en gardant uniquement les éléments essentiels."
+          }
+        },
+        "number_block_LJFnMj": {
+          "type": "number_block",
+          "settings": {
+            "number": 2,
+            "heading": "Équilibre des Énergies",
+            "text": "L'importance d'équilibrer les cinq éléments (bois, feu, terre, métal, eau)et le Yin et Yang pour une circulation fluide"
+          }
+        },
+        "number_block_THJGbz": {
+          "type": "number_block",
+          "settings": {
+            "number": 3,
+            "heading": "Importance de la Lumière Naturelle",
+            "text": "Utiliser la lumière naturelle au maximum et compléter avec un éclairage doux pour une ambiance apaisante."
+          }
+        },
+        "number_block_WBrqnL": {
+          "type": "number_block",
+          "settings": {
+            "number": 4,
+            "heading": "Intégration de la Nature",
+            "text": "Incorporer des plantes et des matériaux naturels pour renforcer la connexion avec la nature"
+          }
+        }
+      },
+      "block_order": [
+        "number_block_LX4rmP",
+        "number_block_LJFnMj",
+        "number_block_THJGbz",
+        "number_block_WBrqnL"
+      ],
+      "settings": {
+        "title": "Ce qu'il faut retenir : petit mémo",
+        "nb_columns_on_computer": "4",
+        "nb_columns_on_mobile": "2"
+      }
+    }
+  },
+  "order": [
+    "ce4595e5-01e5-472d-ac56-563a87ef335c",
+    "main",
+    "11ed1855-d812-4ccc-8f80-65a14ff1c6bd",
+    "rich_text_NEejwz",
+    "customer_testimonial_Dxtnn3",
+    "rich_text_JqtgDR",
+    "image_with_text_V7Dx9L",
+    "rich_text_9xgjdM",
+    "multicolumn_EenkE4",
+    "rich_text_pechHt",
+    "shifted_image_carousel_PMJmE7",
+    "image_with_text_P3cPEY",
+    "rich_text_47VkaX",
+    "image_with_text_eT4UUC",
+    "rich_text_Ukjprn",
+    "image_with_text_bMFQ3G",
+    "rich_text_8RkyH6",
+    "badges_tdCpWx"
+  ]
+}

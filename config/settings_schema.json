@@ -43,7 +43,7 @@
         "label": "t:settings_schema.typography.settings.type_header_font_custom.label",
         "info": "t:settings_schema.typography.settings.type_header_font_custom.info",
         "default": false
-      },      
+      },
       {
         "type": "font_picker",
         "id": "type_header_font",
@@ -154,7 +154,7 @@
         "type": "page",
         "id": "likes_page",
         "label": "t:settings_schema.likes.settings.likes_page.label"
-      }     
+      }
     ]
   },
   {
@@ -204,14 +204,14 @@
     ]
   },
   {
-  "name": "t:settings_schema.cookie_banner.name",
+    "name": "t:settings_schema.cookie_banner.name",
     "settings": [
       {
         "type": "checkbox",
         "id": "enable_cookie",
         "label": "t:settings_schema.cookie_banner.settings.enable_cookie.label",
         "default": true
-      }      
+      }
     ]
   },
   {

@@ -1,0 +1,395 @@
+{
+  "layout": "article",
+  "sections": {
+    "ce4595e5-01e5-472d-ac56-563a87ef335c": {
+      "type": "first-blog-link",
+      "settings": {
+      }
+    },
+    "main": {
+      "type": "main-article",
+      "settings": {
+        "show_date": true
+      }
+    },
+    "image_banner_nL9pYT": {
+      "type": "image-banner",
+      "disabled": true,
+      "settings": {
+        "image_desktop": "shopify:\/\/shop_images\/deco-zen-nuance-neutre.jpg",
+        "image_desktop_horizontal_position": "center",
+        "image_mobile": "shopify:\/\/shop_images\/decoration-interieur-zen-couleur-neutre.jpg",
+        "image_mobile_vertical_position": "center",
+        "enable_lazy_loading": true
+      }
+    },
+    "rich_text_gPCBcK": {
+      "type": "rich-text",
+      "blocks": {
+        "text_RmfNrX": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Les couleurs jouent un rôle crucial dans la création d'une décoration zen. Elles peuvent transformer votre espace en un véritable havre de paix. Dans ce blog, découvrez cinq teintes idéales pour instaurer une ambiance apaisante chez vous, ainsi que des conseils pour les associer harmonieusement.<\/p>",
+            "text_size": "text-lg",
+            "is_lighten": false
+          }
+        }
+      },
+      "block_order": [
+        "text_RmfNrX"
+      ],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "shifted_image_carousel_Rx3dzD": {
+      "type": "shifted-image-carousel",
+      "blocks": {
+        "image_4H9cbm": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/couleur-bleu.jpg"
+          }
+        },
+        "image_FEhhTg": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/teinte-bleu-fonce.jpg"
+          }
+        },
+        "image_YChUDg": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/teinte-bleu-pastel.jpg"
+          }
+        },
+        "image_PkPmK8": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/teinte-bleue-ciel.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "image_4H9cbm",
+        "image_FEhhTg",
+        "image_YChUDg",
+        "image_PkPmK8"
+      ],
+      "settings": {
+        "heading": "Les Nuances de Bleu",
+        "description": "Le bleu est souvent associé à la tranquillité, à la paix et à la sérénité"
+      }
+    },
+    "rich_text_F38Ndg": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_wPgEQY": {
+          "type": "heading",
+          "settings": {
+            "heading": "Le bleu est une couleur froide reconnu pour sa faculté à ralentir le rythme cardiaque et lutter contre l'anxiété.",
+            "markup": "h2",
+            "heading_size": "text-3xl"
+          }
+        },
+        "text_jq6cVm": {
+          "type": "text",
+          "settings": {
+            "text": "<p><strong>Le bleu clair ou pâle<\/strong>, avec des nuances de gris, évoque pureté et sérénité. Il est souvent lié à la tranquillité, ce qui en fait un excellent choix pour les chambres à coucher ou les espaces de méditation. Il favorise le sommeil et la relaxation.<\/p><p><strong>Le bleu foncé<\/strong>, comme le bleu marine, apporte stabilité et profondeur, idéal pour les espaces de réflexion comme un bureau de travail, mais à utiliser avec modération pour éviter une ambiance trop lourde. <\/p><p><strong>Le bleu turquoise<\/strong>, avec sa fraîcheur et son énergie, est parfait pour les salles de bains. <\/p><p><strong>Matériaux avec lesquels il se marient  le mieux  :<\/strong><br\/>Quelle que soit sa nuance, le bleu se marie bien avec des matériaux comme le bois (particulièrement le bois blond pour les teintes claires), la pierre, et le verre. Ensemble, ils créent une atmosphère à la fois calme, raffinée, et élégante.<\/p>",
+            "text_size": "text-lg",
+            "is_lighten": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_wPgEQY",
+        "text_jq6cVm"
+      ],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "shifted_image_carousel_edCYgP": {
+      "type": "shifted-image-carousel",
+      "blocks": {
+        "image_JcTV7C": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/vert-sauge.jpg"
+          }
+        },
+        "image_XwgfUD": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/vert-marron.jpg"
+          }
+        },
+        "image_crKtrL": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/verre-eau.jpg"
+          }
+        },
+        "image_fmAtAK": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/vert-menthe.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "image_JcTV7C",
+        "image_XwgfUD",
+        "image_crKtrL",
+        "image_fmAtAK"
+      ],
+      "settings": {
+        "heading": "Les Nuances de Vert",
+        "description": "Le vert est une couleur douce qui rappelle la nature."
+      }
+    },
+    "rich_text_efBeLp": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_wVdn9W": {
+          "type": "heading",
+          "settings": {
+            "heading": "Le vert, symbole de nature et de renouveau, est reconnu pour ses propriétés apaisantes et revitalisantes.",
+            "markup": "h2",
+            "heading_size": "text-3xl"
+          }
+        },
+        "text_zm83g4": {
+          "type": "text",
+          "settings": {
+            "text": "<p><strong>Le Vert Sauge<\/strong> : Doux et apaisant, il est parfait pour une ambiance relaxante. Il favorise la détente et réduit l’anxiété, ce qui en fait un excellent choix pour un bureau ou une chambre.<\/p><p><strong>Le Vert Foncé<\/strong> : Le vert des forêts, riche et profond, apporte stabilité et confort. Il crée une ambiance chaleureuse et réconfortante, idéale pour une atmosphère introspective, bien qu'il doive être équilibré par des teintes plus claires.<\/p><p><strong>Le Vert Vif<\/strong> : Ce vert énergique, tel que celui de la jungle, est revitalisant et dynamisant. Bien que plus stimulant, il peut être utilisé en touches pour apporter fraîcheur et vitalité à un espace sans compromettre l'ambiance zen.<\/p><p><strong>Matériaux avec lesquels il se marie bien :<\/strong><br\/>Le vert se marie magnifiquement avec des matériaux naturels comme la pierre et le bois brut, ce qui crée une ambiance harmonieuse et équilibrée. Le métal mat pourrait également s’ajouter pour apporter une touche moderne et épurée.<\/p>",
+            "text_size": "text-lg",
+            "is_lighten": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_wVdn9W",
+        "text_zm83g4"
+      ],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "shifted_image_carousel_eic9JX": {
+      "type": "shifted-image-carousel",
+      "blocks": {
+        "image_Fkyt7w": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/couleur-ivoire.jpg"
+          }
+        },
+        "image_MbnTxK": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/couleur-taupe.jpg"
+          }
+        },
+        "image_4eKmeH": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/couleur-lin.jpg"
+          }
+        },
+        "image_Hri9Tr": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/couleurs-sable.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "image_Fkyt7w",
+        "image_MbnTxK",
+        "image_4eKmeH",
+        "image_Hri9Tr"
+      ],
+      "settings": {
+        "heading": "Les Nuances de beige",
+        "description": "Le beige est une couleur neutre qui évoque la simplicité et le confort."
+      }
+    },
+    "rich_text_pGREny": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_jVPFW6": {
+          "type": "heading",
+          "settings": {
+            "heading": "Le beige est une couleur neutre et chaleureuse qui évoque la simplicité et l'authenticité.",
+            "markup": "h2",
+            "heading_size": "text-3xl"
+          }
+        },
+        "text_8fkb7x": {
+          "type": "text",
+          "settings": {
+            "text": "<p><strong>Le beige clair,<\/strong> comme les nuances sable ou  lin, t sont doux et lumineux, idéal pour créer un espace épuré et aéré. Ces teintes reflètent la lumière,  et agrandissent visuellement la pièce. Elles conviennent parfaitement aux espaces où l’on souhaite ressentir une sensation de clarté et de légèreté, comme les salons, entrée et couloirs.<\/p><p><strong>Le beige foncé<\/strong>, tel que le taupe ou le grège, est plus profond et enveloppant,  ces nuances apporte une sensation de confort et de convivialité. Ces teintes sont parfaites pour créer une atmosphère cosy et intimiste, idéale pour les espaces où l’on cherche à se détendre et se sentir protégé, comme un coin lecture ou un bureau. Le beige foncé instaure un style élégant et discrète tout en maintenant une ambiance zen et apaisante.<\/p><p><strong>Matériaux avec lesquels il se marie bien :<\/strong> Les nuances de beige se marient parfaitement avec le bois blanchâtre, comme le chêne blanchi, ainsi qu'avec le bois brut ou foncé, comme le noyer. La pierre naturelle et le verre complètent également cette palette, créant une ambiance pure et lumineuse..<\/p>",
+            "text_size": "text-lg",
+            "is_lighten": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_jVPFW6",
+        "text_8fkb7x"
+      ],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "shifted_image_carousel_tk3ezD": {
+      "type": "shifted-image-carousel",
+      "blocks": {
+        "image_dxV8g8": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/gris-souris.jpg"
+          }
+        },
+        "image_URHFNN": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/gris-ardoise.jpg"
+          }
+        },
+        "image_hhjEx8": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/couleurs-gris-fonce-anthracite.jpg"
+          }
+        },
+        "image_r6BAY3": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/gris.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "image_dxV8g8",
+        "image_URHFNN",
+        "image_hhjEx8",
+        "image_r6BAY3"
+      ],
+      "settings": {
+        "heading": "Les Nuances de Gris",
+        "description": "Polyvalent et élégant, le gris est une couleur neutre qui s'adapte facilement à tous les styles de décoration"
+      }
+    },
+    "rich_text_67ebfX": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_NapMmD": {
+          "type": "heading",
+          "settings": {
+            "heading": "Le gris instaure une ambiance apaisante tout en mettant en valeur les éléments de votre intérieur",
+            "markup": "h2",
+            "heading_size": "text-3xl"
+          }
+        },
+        "text_KYNpa3": {
+          "type": "text",
+          "settings": {
+            "text": "<p><strong>Le Gris Perle est doux<\/strong>, lumineux, il respire l'élégance. Il crée une ambiance claire et apaisante, idéale pour un environnement minimaliste. Sa capacité à refléter la lumière rend l'espace plus serein, parfait pour favoriser la concentration et la tranquillité.  Le Gris Souris, un peu plus profond, ajoute une touche de chaleur tout en maintenant cette douceur. Il convient parfaitement aux salons ou aux bureaux, où l'on souhaite une atmosphère à la fois discrète et accueillante.<\/p><p><strong>Le Gris Ardoise<\/strong>, avec son intensité, apporte du caractère et de la profondeur à votre décoration. Il crée une ambiance intime et réconfortante, tout en restant moderne et élégant, idéal pour les chambres ou les salons. <\/p><p><strong>Le Gris Anthracite<\/strong>, plus sombre et puissant, évoque force et modernité. Utilisé en accent ou sur des murs entiers, il donne ude la profondeur à l'espace tout en conservant une ambiance zen, idéale pour un salon ou une cuisine moderne.<\/p><p><strong>Matériaux avec lesquels elles se marient bien<\/strong> : Les nuances de gris, qu’elles soient claires ou foncées, s'harmonisent parfaitement avec des matériaux modernes tels que le métal brossé, le verre, et le marbre. Par exemple, un gris perle ou souris s'associe idéalement avec un mobilier en métal et des accents en verre, pour crée une ambiance légère et aérée. En revanche, le gris ardoise et le gris anthracite se marient parfaitement avec du marbre sombre ou des éléments en acier, pour apporter une touche raffiné et  à votre décoration d'intérieur.<\/p><p><\/p>",
+            "text_size": "text-xl",
+            "is_lighten": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_NapMmD",
+        "text_KYNpa3"
+      ],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "badges_px3H6E": {
+      "type": "badges",
+      "blocks": {
+        "svg_block_J7nX87": {
+          "type": "svg_block",
+          "settings": {
+            "badge_logo": "<svg width=\"100\" height=\"100\" xmlns=\"http:\/\/www.w3.org\/2000\/svg\">\n  <rect width=\"100\" height=\"100\" fill=\"#D2B48C\"><\/rect>\n<\/svg>",
+            "logo_size": 45,
+            "background_plus_border": true,
+            "heading": "le beige pour illuminer",
+            "text": ""
+          }
+        },
+        "svg_block_eEcHtg": {
+          "type": "svg_block",
+          "settings": {
+            "badge_logo": "<svg width=\"100\" height=\"100\" xmlns=\"http:\/\/www.w3.org\/2000\/svg\">\n  <rect width=\"100\" height=\"100\" fill=\"#1A237E\"><\/rect>\n<\/svg>",
+            "logo_size": 45,
+            "background_plus_border": true,
+            "heading": "Le bleu pour apaiser",
+            "text": ""
+          }
+        },
+        "svg_block_rDtXFR": {
+          "type": "svg_block",
+          "settings": {
+            "badge_logo": "<svg width=\"100\" height=\"100\" xmlns=\"http:\/\/www.w3.org\/2000\/svg\">\n  <rect width=\"100\" height=\"100\" fill=\"#2E7D32\"><\/rect>\n<\/svg>",
+            "logo_size": 45,
+            "background_plus_border": true,
+            "heading": "le vert pour revigorer",
+            "text": ""
+          }
+        },
+        "svg_block_NGKTGw": {
+          "type": "svg_block",
+          "settings": {
+            "badge_logo": "<svg width=\"100\" height=\"100\" xmlns=\"http:\/\/www.w3.org\/2000\/svg\">\n  <rect width=\"100\" height=\"100\" fill=\"#4B4B4B\"><\/rect>\n<\/svg>",
+            "logo_size": 45,
+            "background_plus_border": true,
+            "heading": "le gris pour équilibrer",
+            "text": ""
+          }
+        }
+      },
+      "block_order": [
+        "svg_block_J7nX87",
+        "svg_block_eEcHtg",
+        "svg_block_rDtXFR",
+        "svg_block_NGKTGw"
+      ],
+      "settings": {
+        "title": "Ce qu'il faut retenir : petit mémo",
+        "nb_columns_on_computer": "4",
+        "nb_columns_on_mobile": "2"
+      }
+    }
+  },
+  "order": [
+    "ce4595e5-01e5-472d-ac56-563a87ef335c",
+    "main",
+    "image_banner_nL9pYT",
+    "rich_text_gPCBcK",
+    "shifted_image_carousel_Rx3dzD",
+    "rich_text_F38Ndg",
+    "shifted_image_carousel_edCYgP",
+    "rich_text_efBeLp",
+    "shifted_image_carousel_eic9JX",
+    "rich_text_pGREny",
+    "shifted_image_carousel_tk3ezD",
+    "rich_text_67ebfX",
+    "badges_px3H6E"
+  ]
+}

@@ -7,7 +7,9 @@
       }
     },
     "main": {
-      "type": "main-article"
+      "type": "main-article",
+      "settings": {
+      }
     },
     "11ed1855-d812-4ccc-8f80-65a14ff1c6bd": {
       "type": "sibling-blog-links",

@@ -22,15 +22,43 @@
             "margin_bottom": "mb-2"
           }
         },
+        "8600f603-2d6f-4191-8020-3678432ba1e5": {
+          "type": "text",
+          "settings": {
+            "text": "<p><strong>🌞 Soldes d'été 🌞<\/strong><\/p><ul><li><strong>🛍️ -15% sur toute commande !<\/strong><\/li><li><strong>🚚 Livraison gratuite !<\/strong><\/li><li><strong>⏳ Offre limitée, dépêchez-vous !<\/strong><\/li><\/ul>"
+          }
+        },
         "likes_t9U7Ay": {
           "type": "likes",
           "settings": {
             "margin_bottom": "mb-8"
           }
         },
+        "tapestry_options_4AnMD4": {
+          "type": "tapestry_options",
+          "settings": {
+            "tapestry_texture_landscape": "shopify:\/\/shop_images\/tapisserie-texture.png",
+            "tapestry_texture_portrait": "shopify:\/\/shop_images\/tapisserie-texture-portrait.png",
+            "tapestry_texture_square": "shopify:\/\/shop_images\/tapisserie-texture-carre.png",
+            "tapestry_default_width_landscape": 250,
+            "tapestry_default_width_portrait": 150,
+            "tapestry_default_width_square": 200,
+            "tapestry_default_height": 250,
+            "tapestry_strips_width": 50,
+            "tapestry_min_width": 50,
+            "tapestry_max_width": 300,
+            "tapestry_min_height": 50,
+            "tapestry_max_height": 300
+          }
+        },
         "9f20570b-1a97-4c34-8758-c5af9b8d2cfc": {
           "type": "price",
           "settings": {
+            "style": "tapestry",
+            "background": "linear-gradient(135deg, rgba(255, 247, 220, 1), rgba(254, 206, 218, 1) 61%, rgba(214, 208, 253, 1) 100%)",
+            "second_key_benefit": "Deuxième bénéficie clé",
+            "third_key_benefit": "Troisième bénéficie clé",
+            "fourth_key_benefit": "Quatrième bénéficie clé"
           }
         },
         "buy_qrRzcg": {
@@ -41,27 +69,12 @@
             "main_color": "#b92700"
           }
         },
-        "8600f603-2d6f-4191-8020-3678432ba1e5": {
-          "type": "text",
-          "settings": {
-            "text": "<p>- Laissez-vous transporter par nos œuvres d'arts. Une sensation unique et singulière à transposer dans votre intérieur.<br\/>- Possibilité de choisir la taille et le support de l’œuvre.<br\/><\/p>"
-          }
-        },
         "collapsible_tab_HAUcNw": {
           "type": "collapsible_tab",
           "settings": {
-            "heading": "Livraison",
+            "heading": "Livraison Gratuit",
             "icon": "truck",
             "content": "<p>🎨 Toile personnalisée : Fabrication en 3-4 jours <\/p><p>🚚  Expédition en 3-5 jours ouvrables en colis suivi à votre domicile.<\/p><p>🎁 Livraison gratuite <\/p>",
-            "page": ""
-          }
-        },
-        "collapsible_tab_4UhrbY": {
-          "type": "collapsible_tab",
-          "settings": {
-            "heading": "Materiaux",
-            "icon": "leather",
-            "content": "<p><strong>- La Toile<\/strong> est composée de fibres 100% polyester d'une épaisseur de 285g\/m².<\/p><p>L'épaisseur du châssis au choix 2 ou 4 cm <\/p><p><strong>- Le Plexiglass<\/strong> est composé de  <strong>verre acrylique<\/strong> + <strong>plaques aluminium . <\/strong>Épaisseur: 6 mm<\/p><p>Bord: noir entre les plaques métalliques + verre acrylique transparent sur le dessus, coins arrondis<\/p><p>- <strong>L'aluminium argent brossé, <\/strong>dit Alupanel, est une plaque composite en aluminium d'une épaisseur de 3mm. Il est <strong>résistant aux UV et à l'humidité. <\/strong><\/p><p>Bord: noir entre les plaques métalliques, coins arrondis<\/p>",
             "page": ""
           }
         },
@@ -83,12 +96,12 @@
       "block_order": [
         "text_CzWnEd",
         "title",
+        "8600f603-2d6f-4191-8020-3678432ba1e5",
         "likes_t9U7Ay",
+        "tapestry_options_4AnMD4",
         "9f20570b-1a97-4c34-8758-c5af9b8d2cfc",
         "buy_qrRzcg",
-        "8600f603-2d6f-4191-8020-3678432ba1e5",
         "collapsible_tab_HAUcNw",
-        "collapsible_tab_4UhrbY",
         "a70160ee-79ef-4eb9-8e65-ec87f898b506",
         "description_Fw7xRB"
       ],
@@ -122,14 +135,12 @@
         "image_text_hCDnam": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/Tableau-chambre.png",
             "message": "Le tableau est super, et encore plus beau en vrai ! Arrivé rapidement et bien protégé. Alain N"
           }
         },
         "image_text_XaycRQ": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/Tableau-decoration.png",
             "message": "Très belle toile, les couleurs sont super et brillante. Marie K"
           }
         },
@@ -252,6 +263,7 @@
         "434fa092-b676-4395-a95a-9922006fa7db",
         "dc1cd24a-b307-4124-abb9-b1ac55ba1e6b"
       ],
+      "disabled": true,
       "settings": {
         "title": "",
         "nb_columns_on_computer": "3",
@@ -260,6 +272,7 @@
     },
     "b5027902-4240-44cf-8660-b6e754562c52": {
       "type": "image-with-text",
+      "disabled": true,
       "settings": {
         "image": "shopify:\/\/shop_images\/texture_x3_70ae7c8b-712c-4c74-bb93-e76a2eddc37b.jpg",
         "title": "EN HARMONIE",
@@ -268,13 +281,14 @@
         "enable_blob": true,
         "activate_dynamic_color": false,
         "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#E3FAE1",
+        "dynamic_secondary_color": "#e3fae1",
         "padding_top": "pt-16",
         "padding_bottom": "pb-16"
       }
     },
     "afe2a87a-371e-4c67-93b7-8c6b2244f43b": {
       "type": "image-with-text",
+      "disabled": true,
       "settings": {
         "image": "shopify:\/\/shop_images\/metre.jpg",
         "title": "DU SUR-MESURE",
@@ -283,13 +297,14 @@
         "enable_blob": true,
         "activate_dynamic_color": false,
         "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#E3FAE1",
+        "dynamic_secondary_color": "#e3fae1",
         "padding_top": "pt-16",
         "padding_bottom": "pb-16"
       }
     },
     "556b5926-5cdb-4c50-a817-c79f15894cdd": {
       "type": "image-with-text",
+      "disabled": true,
       "settings": {
         "image": "shopify:\/\/shop_images\/tour_eiffel.jpg",
         "title": "MADE IN FRANCE",
@@ -298,7 +313,7 @@
         "enable_blob": true,
         "activate_dynamic_color": false,
         "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#E3FAE1",
+        "dynamic_secondary_color": "#e3fae1",
         "padding_top": "pt-16",
         "padding_bottom": "pb-16"
       }
@@ -319,6 +334,7 @@
         },
         "column_zAm3tT": {
           "type": "column",
+          "disabled": true,
           "settings": {
             "image": "shopify:\/\/shop_images\/cliente-satisfaite-souriante.jpg",
             "title": "SATISFACTION",
@@ -330,6 +346,7 @@
         },
         "column_U3DQjE": {
           "type": "column",
+          "disabled": true,
           "settings": {
             "image": "shopify:\/\/shop_images\/tableau-deco-femme-satisfaction-garantie.jpg",
             "title": "GARANTIE",
@@ -345,6 +362,7 @@
         "column_zAm3tT",
         "column_U3DQjE"
       ],
+      "disabled": true,
       "settings": {
         "title": "NOS GARANTIES",
         "image_shape": "rounded-full aspect-square object-cover",
@@ -397,8 +415,49 @@
         "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-2",
         "a603c2c1-59a1-4067-9d4b-dc8591ddc1f8"
       ],
+      "disabled": true,
       "settings": {
         "heading": "QUESTIONS FRÉQUENTES"
+      }
+    },
+    "shifted_image_carousel_mwTU9T": {
+      "type": "shifted-image-carousel",
+      "blocks": {
+        "image_Vby3MD": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/impression_encre.jpg"
+          }
+        },
+        "image_CgQFPt": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/graphiste-designer-creation-tableau-decoration.jpg"
+          }
+        },
+        "image_bDpkF3": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/impression-poster-haute-qualite.jpg"
+          }
+        },
+        "image_TAPgwV": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/cadre-bois-pour-tableau.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "image_Vby3MD",
+        "image_CgQFPt",
+        "image_bDpkF3",
+        "image_TAPgwV"
+      ],
+      "disabled": true,
+      "settings": {
+        "heading": "Le Détail Qui Change Tout",
+        "description": "Des œuvres, conçues avec passion et précision, pour embellir chaque pièce de votre maison."
       }
     }
   },
@@ -413,7 +472,8 @@
     "afe2a87a-371e-4c67-93b7-8c6b2244f43b",
     "556b5926-5cdb-4c50-a817-c79f15894cdd",
     "multicolumn_aLxMGX",
-    "7ae13aad-330c-4fa7-94cf-fafc1c13cf60"
+    "7ae13aad-330c-4fa7-94cf-fafc1c13cf60",
+    "shifted_image_carousel_mwTU9T"
   ],
   "layout": "product"
 }
