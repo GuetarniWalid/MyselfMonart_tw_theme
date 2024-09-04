@@ -3,5 +3,9 @@
         "": true,
         "**/.git": true,
         "node_modules": true
+    },
+    "[liquid]": {
+        "editor.defaultFormatter": "sissel.shopify-liquid",
+        "editor.formatOnSave": true
     }
 }

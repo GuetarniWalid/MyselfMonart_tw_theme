@@ -1,7 +1,7 @@
 :root {
   --anim-motion: cubic-bezier(0.17, 0.67, 0.61, 1.06);
 }
-*:empty:not(svg *, img, input, textarea, hr, model-viewer, br) {
+*:empty:not(svg *, img, input, textarea, hr, model-viewer, br, .croppr-region, .croppr-overlay, .croppr-handleContainer) {
   display: none;
 }
 summary::-webkit-details-marker {
@@ -247,6 +247,43 @@ main-product-blocks .description h2 span {
   }
 }
 
+.finger-x-touch {
+  animation: XfingerTouch 9s normal infinite 3s forwards;
+}
+.finger-y-touch {
+  animation: YfingerTouch 9s normal infinite 3s forwards;
+}
+@keyframes XfingerTouch {
+  0%, 33%, 100% {
+      opacity: 0;
+      transform: translateX(-20px);
+  }
+  3%, 30% {
+      opacity: 1;
+  }
+  10%, 23% {
+      transform: translateX(0);
+  }
+  17% {
+      transform: translateX(+20px);
+  }
+}
+@keyframes YfingerTouch {
+  0%, 33%, 100% {
+      opacity: 0;
+      transform: translateY(-20px);
+  }
+  3%, 30% {
+      opacity: 1;
+  }
+  10%, 23% {
+      transform: translateY(0);
+  }
+  17% {
+      transform: translateY(+20px);
+  }
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -336,6 +373,10 @@ main-product-blocks .description h2 span {
     @apply fixed top-0 h-dvh right-0 z-50 w-full xs:w-96 bg-secondary transition-transform duration-100 overflow-y-auto scrollbar;
   }
 
+  .croppr-overlay {
+    @apply pointer-events-none;
+  }
+
   .collection-description h2,
   .page-description h2 {
     @apply mb-6 text-3xl mt-10;
@@ -381,6 +422,15 @@ main-product-blocks .description h2 span {
 
   .main-page {
     @apply px-4 mt-16 max-w-[100vw];
+  }
+
+  .no-spin::-webkit-outer-spin-button,
+  .no-spin::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .no-spin {
+    -moz-appearance: textfield;
   }
 
   .open-nav {

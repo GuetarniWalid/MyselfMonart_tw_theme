@@ -1218,14 +1218,14 @@
         "buy": {
           "name": "Boutons d'achat",
           "settings": {
-            "top_text": {
-              "label": "Texte du haut"
-            },
             "bottom_text": {
               "label": "Texte du bas"
             },
             "main_color": {
               "label": "Couleur de fond"
+            },
+            "top_text": {
+              "label": "Texte du haut"
             }
           }
         },
@@ -1390,21 +1390,103 @@
         },
         "price": {
           "name": "Prix",
+          "headings": {
+            "tapestry_info": {
+              "content": "Informations sur la tapisserie",
+              "info": "Uniquement visible si le style est défini sur tapisserie"
+            }
+          },
           "settings": {
-            "size": {
-              "label": "Taille",
-              "options__1": {
-                "label": "Petit"
-              },
-              "options__2": {
-                "label": "Moyen"
-              },
-              "options__3": {
-                "label": "Grand"
-              }
+            "background": {
+              "label": "Couleur de fond"
             },
-            "spacing": {
-              "label": "Spacing"
+            "second_key_benefit": {
+              "label": "Deuxième bénéficie clé",
+              "default": "Deuxième bénéficie clé"
+            },
+            "third_key_benefit": {
+              "label": "Troisième bénéficie clé",
+              "default": "Troisième bénéficie clé"
+            },
+            "fourth_key_benefit": {
+              "label": "Quatrième bénéficie clé",
+              "default": "Quatrième bénéficie clé"
+            },
+            "style": {
+              "label": "Style",
+              "default": {
+                "label": "Par default"
+              },
+              "tapestry": {
+                "label": "Tapisserie"
+              }
+            }
+          }
+        },
+        "tapestry_options": {
+          "name": "Options de tapisserie",
+          "headings": {
+            "default_width": {
+              "content": "Largeur par défaut"
+            },
+            "default_height": {
+              "content": "Hauteur par défaut"
+            },
+            "limitations": {
+              "content": "Limitations"
+            },
+            "tapestry_strips": {
+              "content": "Lés de tapisserie"
+            },
+            "style": {
+              "content": "Style"
+            }
+          },
+          "settings" : {
+            "tapestry_default_width_landscape": {
+              "label": "Largeur par défaut de la tapisserie pour paysage",
+              "info": "En cm"
+            },
+            "tapestry_default_width_portrait": {
+              "label": "Largeur par défaut de la tapisserie pour portrait",
+              "info": "En cm"
+            },
+            "tapestry_default_width_square": {
+              "label": "Largeur par défaut de la tapisserie pour carré",
+              "info": "En cm"
+            },
+            "tapestry_default_height": {
+              "label": "Hauteur par défaut de la tapisserie",
+              "info": "En cm"
+            },
+            "tapestry_min_width" : {
+              "label": "Largeur minimale de la tapisserie",
+              "info": "En cm"
+            },
+            "tapestry_max_width" : {
+              "label": "Largeur maximale de la tapisserie",
+              "info": "En cm"
+            },
+            "tapestry_min_height" : {
+              "label": "Hauteur minimale de la tapisserie",
+              "info": "En cm"
+            },
+            "tapestry_max_height" : {
+              "label": "Hauteur maximale de la tapisserie",
+              "info": "En cm"
+            },
+            "tapestry_strips_width" : {
+              "label": "Largeur des lés de tapisserie",
+              "info": "En cm"
+            },
+            "tapestry_texture_landscape" : {
+              "label": "Texture de la tapisserie pour paysage"
+            },
+            "tapestry_texture_portrait" : {
+              "label": "Texture de la tapisserie pour portrait"
+            },
+            "tapestry_texture_square" : {
+              "label": "Texture de la tapisserie pour carré"
             }
           }
         },

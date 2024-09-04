@@ -6,19 +6,22 @@
   "scripts": {
     "tw": "npx tailwindcss -i ./input.css -o ./assets/output.css --watch --minify",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "NODE_ENV=development vite dev",
-    "build": "NODE_ENV=production vite build"
+    "dev": "cross-env NODE_ENV=development vite dev",
+    "build": "cross-env NODE_ENV=production vite build"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@by-association-only/vite-plugin-shopify-clean": "^1.1.0",
     "@vitejs/plugin-react": "^4.2.0",
+    "cross-env": "^7.0.3",
     "tailwindcss": "^3.4.1",
     "vite": "^4.0.4",
     "vite-plugin-shopify": "^2.2.1"
   },
   "dependencies": {
+    "cropperjs": "^2.0.0-rc.2",
+    "myselfmonar_shopify_theme": "file:",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "uuid": "^9.0.1"

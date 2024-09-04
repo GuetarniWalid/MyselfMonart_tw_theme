@@ -1118,21 +1118,100 @@
         },
         "price": {
           "name": "Price",
+          "headings": {
+            "tapestry_info": {
+              "content": "Tapestry informations",
+              "info": "Only visible if the style is set to tapestry"
+            }
+          },
           "settings": {
-            "size": {
-              "label": "Size",
-              "options__1": {
-                "label": "Small"
-              },
-              "options__2": {
-                "label": "Medium"
-              },
-              "options__3": {
-                "label": "Large"
-              }
+            "background": {
+              "label": "Background color"
             },
-            "spacing": {
-              "label": "Spacing"
+            "second_key_benefit": {
+              "label": "Second key benefit",
+              "default": "Second key benefit"
+            },
+            "third_key_benefit": {
+              "label": "Third key benefit",
+              "default": "Third key benefit"
+            },
+            "fourth_key_benefit": {
+              "label": "Fourth key benefit",
+              "default": "Fourth key benefit"
+            },
+            "style": {
+              "label": "Style",
+              "default": {
+                "label": "By default"
+              },
+              "tapestry": {
+                "label": "Tapestry"
+              }
+            }
+          }
+        },
+        "tapestry_options": {
+          "name": "Tapestry options",
+          "headings": {
+            "default_width": {
+              "content": "Default width"
+            },
+            "default_height": {
+              "content": "Default height"
+            },
+            "limitations": {
+              "content": "Limitations"
+            },
+            "style": {
+              "content": "Style"
+            }
+          },
+          "settings": {
+            "tapestry_default_width_landscape": {
+              "label": "Default tapestry width for landscape",
+              "info": "In cm"
+            },
+            "tapestry_default_width_portrait": {
+              "label": "Default tapestry width for portrait",
+              "info": "In cm"
+            },
+            "tapestry_default_width_square": {
+              "label": "Default tapestry width for square",
+              "info": "In cm"
+            },
+            "tapestry_default_height": {
+              "label": "Default tapestry height",
+              "info": "In cm"
+            },
+            "tapestry_min_width": {
+              "label": "Minimum tapestry width",
+              "info": "In cm"
+            },
+            "tapestry_max_width": {
+              "label": "Maximum tapestry width",
+              "info": "In cm"
+            },
+            "tapestry_min_height": {
+              "label": "Minimum tapestry height",
+              "info": "In cm"
+            },
+            "tapestry_max_height": {
+              "label": "Maximum tapestry height",
+              "info": "In cm"
+            },
+            "tapestry_strips_width" : {
+              "label": "Width of tapestry strips",
+              "info": "In cm"
+            },
+            "tapestry_texture_landscape" : {
+              "label": "Texture for landscape"
+            },
+            "tapestry_texture_portrait" : {
+              "label": "Texture for portrait"
+            },
+            "tapestry_texture_square" : {
+              "label": "Texture for square"
             }
           }
         },

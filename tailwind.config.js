@@ -3,7 +3,14 @@ const colors = require('tailwindcss/colors');
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
-  content: ['./**/*.{liquid,js,jsx,ts,tsx}'],
+  content: [
+    './assets/**/*.{liquid,js}',
+    './frontend/**/*.{js,jsx}',
+    './layout/**/*.liquid',
+    './sections/**/*.liquid',
+    './snippets/**/*.liquid',
+    './templates/**/*.liquid',
+  ],
   theme: {
     screens: {
       '2xs': '410px',
@@ -24,7 +31,10 @@ module.exports = {
         button: '0px 0px 0px 1px #002E5D',
       },
       colors: {
-        action: 'var(--color-action)',
+        action: {
+          DEFAULT: 'rgb(var(--color-action))',
+          80: 'rgba(var(--color-action), 0.8)',
+        },
         'breadcrumb-main': 'var(--color-breadcrumb-main)',
         'breadcrumb-secondary': 'var(--color-breadcrumb-secondary)',
         main: {
@@ -81,7 +91,6 @@ module.exports = {
       },
     },
   },
-  plugins: [],
   safelist: [
     'grid-cols-1',
     'grid-cols-2',

@@ -212,6 +212,8 @@ class MainProductBlocks extends CollapsibleTab {
       this.buyButton || document.body.querySelector('.float-buy-button');
     if (!this.buyButton) {
       this.createBuyButton();
+      const floatButtonAppears = new Event('floatButtonAppears');
+      document.dispatchEvent(floatButtonAppears);
     }
     this.buyButton.classList.remove('hidden');
   };
@@ -235,34 +237,84 @@ class MainProductBlocks extends CollapsibleTab {
 
   onBuyButtonClick = async (e) => {
     const button = e.target;
+    const customFetch = this.customFetch(button).bind(this);
     try {
       this.displayLoader(button);
-      const variantId = button.dataset.variantId;
-      const response = await fetch(
-        '/cart/add.js?sections=tw-cart-drawer,tw-header',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            items: [{ id: variantId, quantity: 1 }],
-          }),
-        },
-      );
-      if (!response.ok) throw new Error("Une erreur inattendu s'est produite.");
-      const json = await response.json();
+      const productProperties = this.getproductProperties();
+      const json = await customFetch(button, productProperties);
       this.renderNewSections(json);
       setTimeout(() => {
         const cartDrawerButton = document.getElementById('cart-button');
         cartDrawerButton.click();
       }, 300);
     } catch (e) {
+      console.log('🚀 ~ e:', e);
       throw new Error("Une erreur inattendu s'est produite.");
     } finally {
       this.hideLoader(button);
     }
   };
+
+  customFetch(button) {
+    const template = button.dataset.template;
+    if (template === 'tapestry') {
+      return this.tapestryBuyFetch;
+    }
+    return this.defaultBuyFetch;
+  }
+
+  async defaultBuyFetch(button, productProperties) {
+    const variantId = button.dataset.variantId;
+    const response = await fetch(
+      '/cart/add.js?sections=tw-cart-drawer,tw-header',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          items: [{ id: variantId, quantity: 1 }],
+          productProperties,
+        }),
+      },
+    );
+    if (!response.ok) throw new Error("Une erreur inattendu s'est produite.");
+    return await response.json();
+  }
+
+  async tapestryBuyFetch(button, productProperties) {
+    const productId = button.dataset.productId;
+    const variant = await this.updateProductTapestry(productId, productProperties);
+    button.dataset.variantId = variant.id;
+    await this.defaultBuyFetch(button, productProperties);
+  }
+
+  async updateProductTapestry(productId, productProperties) {
+    const width = document.getElementById('tapestry-width').value;
+    const height = document.getElementById('tapestry-height').value;
+    const title = `${width}cm x ${height}cm`;
+    const product = {
+      type: 'tapestry',
+      productId,
+      variant: {
+        title,
+      },
+      cm2: productProperties['tapestry-cm2'],
+    };
+
+    const mode = 'dev';
+    const serverUrl =
+      mode === 'dev'
+        ? 'http://localhost:3333'
+        : 'https://backend.myselfmonart.com';
+    const response = await fetch(serverUrl + '/api/product/update/tapestry', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(product),
+    });
+    const json = await response.json();
+    return json;
+  }
 
   renderNewSections({ items, sections }) {
     const bubble = document.getElementById('bubble-nb-product');
@@ -328,6 +380,15 @@ class MainProductBlocks extends CollapsibleTab {
       if (child.classList.contains('loader')) child.classList.add('hidden');
       else child.classList.remove('hidden');
     });
+  }
+
+  getproductProperties() {
+    const inputs = this.querySelectorAll('.product-properties input');
+    const productProperties = {};
+    inputs.forEach((input) => {
+      productProperties[input.name] = input.value;
+    });
+    return productProperties;
   }
 }
 customElements.define('main-product-blocks', MainProductBlocks);

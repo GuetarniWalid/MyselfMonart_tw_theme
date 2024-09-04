@@ -47,83 +47,104 @@
 </a>
 
 <div class="md:flex md:justify-center md:gap-12">
-  <main-product-carousel>
-    <div class="md:sticky md:top-[120px] relative max-w-[550px] mx-auto">
-      <div class="carousel flex justify-start items-center transition-transform duration-300 mx-auto my-4 snap-x snap-mandatory overflow-y-hidden overflow-x-auto scrollbar-hidden h-[55vh] xs:h-[65vh] md:h-[55vh] lg:h-[70vh]">
-        {% liquid
-          for media in product.media
-            if media.media_type == 'image' and forloop.index != 3
-              assign nbOfMedia = nbOfMedia | default: 0 | plus: 1
-              render 'tw-main-product-image', media: media, loop: forloop
-            elsif forloop.index == 3 and first_3d_model != blank
-              if first_3d_model.url != blank
-                assign nbOfMedia = nbOfMedia | default: 0 | plus: 2
-                render 'tw-main-product-model-3d', url: 3d_model_url, alt: 3d_model_alt, poster: 3d_model_poster
-                render 'tw-main-product-image', media: media, loop: forloop
-              else
-                assign nbOfMedia = nbOfMedia | default: 0 | plus: 1
-                render 'tw-main-product-model-3d', url: 3d_model_url, alt: 3d_model_alt, poster: 3d_model_poster
-              endif
-            else if media.media_type == 'image'
-              assign nbOfMedia = nbOfMedia | default: 0 | plus: 1
-              render 'tw-main-product-image', media: media, loop: forloop
-            endif
-          endfor
-        %}
+  {% if product.template_suffix == "tapestry" %}
+    <div id="croppr-top-container" class="flex-grow">
+      <div class="md:sticky md:top-[120px] max-w-[550px] mx-auto relative">
+        <img
+          srcset="{%- if product.media[1].preview_image.width >= 400 -%}{{ product.media[1].preview_image | image_url: width: 400 }} 400w,{%- endif -%}
+                  {%- if product.media[1].preview_image.width >= 550 -%}{{ product.media[1].preview_image | image_url: width: 550 }} 550w,{%- endif -%}
+                  {{ product.media[1].preview_image | image_url }} {{ product.media[1].preview_image.width }}w"
+          src="{{ product.media[1].preview_image | image_url: width: 550 }}"
+          sizes="(min-width: 548px) 550px, 100vw"
+          alt="{{ product.media[1].alt | escape }}"
+          {% unless loop.first %}
+            loading="lazy"
+          {% endunless %}
+          width="550"
+          height="auto"
+          data-media-id="{{ product.media[1].id }}"
+            id="croppr"
+        >
+        {% render 'finger-touch' %}
       </div>
-      {% if product.media.size > 1 %}
-        <div class="absolute bg-secondary transition-colors duration-500 rounded-full left-1/2 -translate-x-1/2 bottom-3 border-main border-1 md:hidden flex justify-center items-center h-[47px] overflow-hidden">
-          <button class="previous pl-5 pr-3 h-full focus-visible:outline-none focus-visible:bg-main-10 hover:bg-main-10">
-            <div class="rotate-90">{% render 'tw-icon-caret', width: '18' %}</div>
-          </button>
-          <span class="px-3"><span class="image-counter">1</span>/{{ nbOfMedia }}</span>
-          <button class="next pr-5 pl-3 h-full focus-visible:outline-none focus-visible:bg-main-10 hover:bg-main-10">
-            <div class="-rotate-90">{% render 'tw-icon-caret', width: '18' %}</div>
-          </button>
-        </div>
-      {% endif %}
-      <div class="hidden md:flex flex-wrap gap-2">
-        {% liquid
+    </div>
+  {% else %}
+    <main-product-carousel>
+      <div class="md:sticky md:top-[120px] relative max-w-[550px] mx-auto">
+        <div class="carousel flex justify-start items-center transition-transform duration-300 mx-auto my-4 snap-x snap-mandatory overflow-y-hidden overflow-x-auto scrollbar-hidden h-[55vh] xs:h-[65vh] md:h-[55vh] lg:h-[70vh]">
+          {% liquid
             for media in product.media
               if media.media_type == 'image' and forloop.index != 3
-                assign image_number = image_number | default: 0 | plus: 1
-                render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media.alt, object-fit: 'cover', image_number: image_number
+                assign nbOfMedia = nbOfMedia | default: 0 | plus: 1
+                render 'tw-main-product-image', media: media, loop: forloop
               elsif forloop.index == 3 and first_3d_model != blank
                 if first_3d_model.url != blank
-                  assign image_number = image_number | default: 0 | plus: 1
-                  render 'tw-main-product-thumbnail-image', image: product.media[1].preview_image, object-fit: 'contain', alt: 3d_model_alt, file: 'glb', image_number: image_number
-                  assign image_number = image_number | default: 0 | plus: 1
-                  render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media.alt, object-fit: 'cover', image_number: image_number
+                  assign nbOfMedia = nbOfMedia | default: 0 | plus: 2
+                  render 'tw-main-product-model-3d', url: 3d_model_url, alt: 3d_model_alt, poster: 3d_model_poster
+                  render 'tw-main-product-image', media: media, loop: forloop
                 else
-                  assign image_number = image_number | default: 0 | plus: 1
-                  render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media.alt, object-fit: 'cover', file: 'glb', image_number: image_number
+                  assign nbOfMedia = nbOfMedia | default: 0 | plus: 1
+                  render 'tw-main-product-model-3d', url: 3d_model_url, alt: 3d_model_alt, poster: 3d_model_poster
                 endif
               else if media.media_type == 'image'
-                assign image_number = image_number | default: 0 | plus: 1
-                render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media.alt, object-fit: 'cover', image_number: image_number
+                assign nbOfMedia = nbOfMedia | default: 0 | plus: 1
+                render 'tw-main-product-image', media: media, loop: forloop
               endif
             endfor
           %}
+        </div>
+        {% if product.media.size > 1 %}
+          <div class="absolute bg-secondary transition-colors duration-500 rounded-full left-1/2 -translate-x-1/2 bottom-3 border-main border-1 md:hidden flex justify-center items-center h-[47px] overflow-hidden">
+            <button class="previous pl-5 pr-3 h-full focus-visible:outline-none focus-visible:bg-main-10 hover:bg-main-10">
+              <div class="rotate-90">{% render 'tw-icon-caret', width: '18' %}</div>
+            </button>
+            <span class="px-3"><span class="image-counter">1</span>/{{ nbOfMedia }}</span>
+            <button class="next pr-5 pl-3 h-full focus-visible:outline-none focus-visible:bg-main-10 hover:bg-main-10">
+              <div class="-rotate-90">{% render 'tw-icon-caret', width: '18' %}</div>
+            </button>
+          </div>
+        {% endif %}
+        <div class="hidden md:flex flex-wrap gap-2">
+          {% liquid
+              for media in product.media
+                if media.media_type == 'image' and forloop.index != 3
+                  assign image_number = image_number | default: 0 | plus: 1
+                  render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media.alt, object-fit: 'cover', image_number: image_number
+                elsif forloop.index == 3 and first_3d_model != blank
+                  if first_3d_model.url != blank
+                    assign image_number = image_number | default: 0 | plus: 1
+                    render 'tw-main-product-thumbnail-image', image: product.media[1]preview_image, object-fit: 'contain', alt: 3d_model_alt, file: 'glb', image_number: image_number
+                    assign image_number = image_number | default: 0 | plus: 1
+                    render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media.alt, object-fit: 'cover', image_number: image_number
+                  else
+                    assign image_number = image_number | default: 0 | plus: 1
+                    render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media.alt, object-fit: 'cover', file: 'glb', image_number: image_number
+                  endif
+                else if media.media_type == 'image'
+                  assign image_number = image_number | default: 0 | plus: 1
+                  render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media.alt, object-fit: 'cover', image_number: image_number
+                endif
+              endfor
+            %}
+        </div>
       </div>
-    </div>
-  
-    <div class="popup fixed top-0 left-0 w-full h-dvh overflow-auto scrollbar bg-secondary transition-colors duration-500 z-50 hidden p-0 focus:outline-none" role="dialog" aria-modal="false" aria-label="{{ 'tw.main_product.carousel.popup.title' | t }}" tabindex="0">
-      <button class="absolute z-10 top-3 right-3 bg-secondary-50 transition-colors duration-500 rounded-full p-2 focus-visible:outline-main" type="button" aria-label="{{ 'tw.main_product.carousel.popup.close' | t }}" tabindex="-1">
-      {% render 'tw-icon-close', width: '22' %}
-      </button>
-      <template id="main-product-popup">
-      {%- for media in product.media -%}
-        <popup-image>
-          {%- render 'tw-main-product-popup-image', media: media, loop: forloop -%}
-        </popup-image>
-      {%- endfor -%}
-      </template>
-    </div>
-  </main-product-carousel>
-  
+
+      <div class="popup fixed top-0 left-0 w-full h-dvh overflow-auto scrollbar bg-secondary transition-colors duration-500 z-50 hidden p-0 focus:outline-none" role="dialog" aria-modal="false" aria-label="{{ 'tw.main_product.carousel.popup.title' | t }}" tabindex="0">
+        <button class="absolute z-10 top-3 right-3 bg-secondary-50 transition-colors duration-500 rounded-full p-2 focus-visible:outline-main" type="button" aria-label="{{ 'tw.main_product.carousel.popup.close' | t }}" tabindex="-1">
+        {% render 'tw-icon-close', width: '22' %}
+        </button>
+        <template id="main-product-popup">
+        {%- for media in product.media -%}
+          <popup-image>
+            {%- render 'tw-main-product-popup-image', media: media, loop: forloop -%}
+          </popup-image>
+        {%- endfor -%}
+        </template>
+      </div>
+    </main-product-carousel>
+  {% endif %}
   <main-product-blocks class="grow" id="ProductInfo-{{ section.id }}" data-layout="{{ template.suffix }}">
     <div class="max-w-lg px-4 sm:px-0 mx-auto my-4">
-      {% comment %} {%- assign product_form_id = 'product-form-' | append: section.id -%} {% endcomment %}
       {%- for block in section.blocks -%}
         {%- case block.type -%}
           {%- when '@app' -%}
@@ -133,16 +154,37 @@
           {%- when 'title' -%}
             <h1 class="text-4xl {{ block.settings.margin_bottom }}">{{ product.title | escape }}</h1>
           {%- when 'price' -%}
-            <span id="main-price" class="block text-xl font-bold font-heading mb-4" data-money-symbol="{{ cart.currency.symbol }}">{{ price_min | money_with_currency }}</span>
+            {% if block.settings.style == 'default' %}
+              <span id="main-price" class="block text-xl font-bold font-heading mb-4" data-money-symbol="{{ cart.currency.symbol }}">{{ price_min | money_with_currency }}</span>
+            {% elsif block.settings.style == 'tapestry' %}
+              <div class="flex gap-4 mb-4 py-6 rounded-2xl px-7 min-h-20 mt-5" style="background: {{ block.settings.background }}" data-money-symbol="{{ cart.currency.symbol }}">
+                <div id="main-price" class=" flex items-center text-5xl font-bold font-heading border-r-2 border-black/5 pr-7">{{ price_min | money_with_currency }}</div>
+                <div class="flex items-center overflow-hidden">
+                  <ul class="max-w-full">
+                    <li class="flex items-center mb-2 overflow-hidden text-ellipsis whitespace-nowrap">{%  render 'icon-check' %}&nbsp;&nbsp;<span class="overflow-hidden text-ellipsis whitespace-nowrap"><span id="nb-tapestry-strips">3</span> lés</span></li>
+                    {% if block.settings.second_key_benefit != blank %}
+                      <li class="flex items-center mb-2 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">{%  render 'icon-check' %}&nbsp;&nbsp;<span class="overflow-hidden text-ellipsis whitespace-nowrap">{{ block.settings.second_key_benefit }}</span></li>
+                    {% endif %}
+                    {% if block.settings.third_key_benefit != blank %}
+                      <li class="flex items-center mb-2">{%  render 'icon-check' %}&nbsp;&nbsp;<span class="overflow-hidden text-ellipsis whitespace-nowrap">{{ block.settings.third_key_benefit }}</span></li>
+                    {% endif %}
+                    {% if block.settings.fourth_key_benefit != blank %}
+                      <li class="flex items-center overflow-hidden text-ellipsis whitespace-nowrap">{%  render 'icon-check' %}&nbsp;&nbsp;<span class="overflow-hidden text-ellipsis whitespace-nowrap">{{ block.settings.fourth_key_benefit }}</span></li>
+                    {% endif %}
+                  </ul>
+                </div>
+              </div>
+            {% endif %}
           {%- when 'variant_picker' -%}
             {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
           {%- when 'buy' -%}
             {% style %}
               :root {
-                --color-action: {{ block.settings.main_color }};
+                --color-action: {{ block.settings.main_color.red }}, {{ block.settings.main_color.green }}, {{ block.settings.main_color.blue }};
+                --color-action-hover: {{ block.settings.hover_color }};
               }
             {% endstyle %}
-            <button class="buy-button relative flex w-full items-center gap-x-5 gap-y-2 2xs:gap-4 md:gap-5 py-2 lg:py-3 bg-action text-secondary transition-colors duration-500 shadow-lg rounded-xl px-5 lg:px-6 mb-4 before:w-12 before:h-40 before:bg-white/50 before:absolute before:-top-4 before:right-[-60px] before:rotate-12 after:w-12 after:h-40 after:bg-white/20 after:absolute after:-top-4 after:rotate-12 after:right-[-60px] overflow-hidden" data-variant-id="{{ product.first_available_variant.id }}">
+            <button class="buy-button relative flex w-full items-center gap-x-5 gap-y-2 2xs:gap-4 md:gap-5 py-2 lg:py-3 bg-action text-secondary transition-colors duration-500 shadow-lg rounded-xl px-5 lg:px-6 mb-4 before:w-12 before:h-40 before:bg-white/50 before:absolute before:-top-4 before:right-[-60px] before:rotate-12 after:w-12 after:h-40 after:bg-white/20 after:absolute after:-top-4 after:rotate-12 after:right-[-60px] overflow-hidden" data-variant-id="{{ product.first_available_variant.id }}" data-template="{{ template.suffix }}" data-product-id="{{ product.id }}">
               <svg viewBox="0 0 50 53" class="shrink-0 w-10 lg:w-auto fill-secondary transition-colors duration-500 pointer-events-none" width="55" fill="none" xmlns="http://www.w3.org/2000/svg" role="presentation" aria-hidden="true">
                 <path d="M21.4157 2.84998V32.5974H1.89111C2.5125 8.54724 21.4157 2.84998 21.4157 2.84998Z" />
                 <path d="M11.7325 28.7466C14.5357 28.7466 16.8082 27.7727 16.8082 26.5713C16.8082 25.3699 14.5357 24.396 11.7325 24.396C8.92922 24.396 6.65674 25.3699 6.65674 26.5713C6.65674 27.7727 8.92922 28.7466 11.7325 28.7466Z" />
@@ -160,7 +202,7 @@
               {% render 'tw-icon-loading', color: 'light', hidden: true, size: 2 %}
             </button>
             <template id="float-buy-button">
-              <button class="float-buy-button fixed bottom-20 md:bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3 shadow-lg 2xs:gap-5 md:gap-6 w-[100px] py-3 md:py-4 max-w-[90%] xs:max-w-[450px] md:xs:max-w-[90%] bg-action text-secondary transition-colors duration-500 rounded-xl px-5 md:px-6 mb-4 before:w-12 before:h-40 before:bg-white/50 before:absolute before:-top-4 before:right-[-60px] before:rotate-12 after:w-12 after:h-40 after:bg-white/20 after:absolute after:-top-4 after:rotate-12 after:right-[-60px] overflow-hidden scale-0" data-variant-id="{{ product.first_available_variant.id }}">
+              <button class="float-buy-button fixed bottom-20 md:bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3 shadow-lg 2xs:gap-5 md:gap-6 w-[100px] py-3 md:py-4 max-w-[90%] xs:max-w-[450px] md:xs:max-w-[90%] bg-action text-secondary transition-colors duration-500 rounded-xl px-5 md:px-6 mb-4 before:w-12 before:h-40 before:bg-white/50 before:absolute before:-top-4 before:right-[-60px] before:rotate-12 after:w-12 after:h-40 after:bg-white/20 after:absolute after:-top-4 after:rotate-12 after:right-[-60px] overflow-hidden scale-0" data-variant-id="{{ product.first_available_variant.id }}" data-template="{{ template.suffix }}" data-product-id="{{ product.id }}">
                 <svg viewBox="0 0 50 53" class="shrink-0 opacity0 scale-0 w-10 md:w-auto fill-secondary transition-colors duration-500 pointer-events-none" width="55" fill="none" xmlns="http://www.w3.org/2000/svg" role="presentation" aria-hidden="true">
                   <path d="M21.4157 2.84998V32.5974H1.89111C2.5125 8.54724 21.4157 2.84998 21.4157 2.84998Z" />
                   <path d="M11.7325 28.7466C14.5357 28.7466 16.8082 27.7727 16.8082 26.5713C16.8082 25.3699 14.5357 24.396 11.7325 24.396C8.92922 24.396 6.65674 25.3699 6.65674 26.5713C6.65674 27.7727 8.92922 28.7466 11.7325 28.7466Z" />
@@ -222,6 +264,91 @@
                 </svg> {{ 'snippet.card-product.likes' | t }}</span>
               </div>
             {% endif %}
+          {%- when 'tapestry_options' -%}
+            {% if template.suffix == 'tapestry' %}
+              {% liquid
+                if product.images[1].aspect_ratio < 1
+                  assign tapestry_width = block.settings.tapestry_default_width_portrait
+                  assign texture_img = block.settings.tapestry_texture_portrait
+                elsif product.images[1].aspect_ratio > 1
+                  assign tapestry_width = block.settings.tapestry_default_width_landscape
+                  assign texture_img = block.settings.tapestry_texture_landscape
+                else
+                  assign tapestry_width = block.settings.tapestry_default_width_square
+                  assign texture_img = block.settings.tapestry_texture_square
+                endif
+              %}
+              {{ 'croppr.min.css' | asset_url | stylesheet_tag }}
+              <script src="{{ 'croppr.min.js' | asset_url }}" defer="defer"></script>
+            {% endif %}
+            {% if texture_img %}
+              <template id="tapestry-texture">
+                <img src="{{ texture_img | image_url: width: 600}}"
+                  srcset="{%- if texture_img.width >= 400 -%}{{ texture_img | image_url: width: 400 }} 400w,{%- endif -%}
+                  {%- if texture_img.width >= 500 -%}{{ texture_img | image_url: width: 500 }} 500w,{%- endif -%}
+                  {%- if texture_img.width >= 600 -%}{{ texture_img | image_url: width: 600 }} 600w,{%- endif -%}"
+                  width="620"
+                  height="1200"
+                  loading="lazy"
+                  alt="{{ tapestry_width.alt }}"
+                  class="absolute w-full h-full top-0 left-0 object-cover opacity-30 pointer-events-none"
+                  sizes="(max-width: 400px) 400px, (max-width: 500px) 500px, (max-width: 767px) 767px, (max-width: 850px) 400px, (max-width: 1040px) 500px, 600px"
+                >
+              </template>
+            {% endif %}
+            <div class="my-5 product-properties">
+              <label class="block text-xl mt-5 ml-1" for="tapestry-width">Largeur :</label>
+              <div class="relative flex mt-1">
+                <tapestry-select data-money-symbol="{{ cart.currency.symbol }}" data-orientation="width" data-tapestry-strips-width="{{ block.settings.tapestry_strips_width }}" data-texture-img-src="{{ texture_img }}">
+                  <select 
+                    class="min-w-32 rounded-l-lg p-3"
+                    type="number"
+                    id="tapestry-width"
+                    name="tapestry-width"
+                  >
+                    {% for i in (block.settings.tapestry_min_width..block.settings.tapestry_max_width) %}
+                      {% liquid
+                        assign modulo_result = i | modulo: 10
+                        if modulo_result != 0
+                          continue
+                        endif
+                      %}
+                      <option value="{{ i }}" {% if i == tapestry_width %}selected{% endif %}>{{ i }}</option>
+                    {% endfor %}
+                  </select>
+                </tapestry-select>
+                <div class="pl-5 bg-white rounded-r-lg text-gray-600 text-lg flex justify-center items-center">
+                  <span class="px-5 border-l-1 border-gray-300 ">cm</span>
+                </div>
+              </div>
+              <label class="block text-xl mt-5 ml-1" for="tapestry-height">Hauteur :</label>
+              <div class="relative flex mt-1 mb-6">
+                <tapestry-select data-money-symbol="{{ cart.currency.symbol }}" data-orientation="height" data-tapestry-strips-width="{{ block.settings.tapestry_strips_width }}">
+                  <select 
+                    class="min-w-32 rounded-l-lg p-3"
+                    type="number"
+                    id="tapestry-height"
+                    name="tapestry-height"
+                  >
+                    {% for i in (block.settings.tapestry_min_height..block.settings.tapestry_max_height) %}
+                      {% liquid
+                        assign modulo_result = i | modulo: 10
+                        if modulo_result != 0
+                          continue
+                        endif
+                      %}
+                      <option value="{{ i }}" {% if i == block.settings.tapestry_default_height %}selected{% endif %}>{{ i }}</option>
+                    {% endfor %}
+                  </select>  
+                </tapestry-select>
+                <div class="pl-5 bg-white rounded-r-lg text-gray-600 text-lg flex justify-center items-center">
+                  <span class="px-5 border-l-1 border-gray-300 ">cm</span>
+                </div>
+                <input type="hidden" name="tapestry-ratio">
+                <input type="hidden" name="tapestry-x-position">
+                <input type="hidden" name="tapestry-y-position">
+                <input type="hidden" name="tapestry-cm2">
+              </div>
         {%- endcase -%}
       {%- endfor -%}
     </div>
@@ -338,7 +465,54 @@
     {
       "type": "price",
       "name": "t:sections.main-product.blocks.price.name",
-      "limit": 1
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "style",
+          "label": "t:sections.main-product.blocks.price.settings.style.label",
+          "options": [
+            {
+              "value": "default",
+              "label": "t:sections.main-product.blocks.price.settings.style.default.label"
+            },
+            {
+              "value": "tapestry",
+              "label": "t:sections.main-product.blocks.price.settings.style.tapestry.label"
+            }
+          ],
+          "default": "default"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.main-product.blocks.price.headings.tapestry_info.content",
+          "info": "t:sections.main-product.blocks.price.headings.tapestry_info.info"
+        },
+        {
+          "type": "color_background",
+          "id": "background",
+          "label": "t:sections.main-product.blocks.price.settings.background.label",
+          "default": "linear-gradient(135deg, rgba(255,247,220,1) 0%, rgba(254,206,218,1) 61%, rgba(214,208,253,1) 100%)"
+        },
+        {
+          "type": "text",
+          "id": "second_key_benefit",
+          "label": "t:sections.main-product.blocks.price.settings.second_key_benefit.label",
+          "default": "t:sections.main-product.blocks.price.settings.second_key_benefit.default"
+        },
+        {
+          "type": "text",
+          "id": "third_key_benefit",
+          "label": "t:sections.main-product.blocks.price.settings.third_key_benefit.label",
+          "default": "t:sections.main-product.blocks.price.settings.third_key_benefit.default"
+        },
+        {
+          "type": "text",
+          "id": "fourth_key_benefit",
+          "label": "t:sections.main-product.blocks.price.settings.fourth_key_benefit.label",
+          "default": "t:sections.main-product.blocks.price.settings.fourth_key_benefit.default"
+        }
+      ]
     },
     {
       "type": "variant_picker",
@@ -605,6 +779,111 @@
             }
           ],
           "default": "mb-8"
+        }
+      ]
+    },
+    {
+      "type": "tapestry_options",
+      "name": "t:sections.main-product.blocks.tapestry_options.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "t:sections.main-product.blocks.tapestry_options.headings.style.content"
+        },
+        {
+          "type": "image_picker",
+          "id": "tapestry_texture_landscape",
+          "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_texture_landscape.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "tapestry_texture_portrait",
+          "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_texture_portrait.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "tapestry_texture_square",
+          "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_texture_square.label"
+        },        
+        {
+          "type": "header",
+          "content": "t:sections.main-product.blocks.tapestry_options.headings.default_width.content"
+        },
+        {
+          "type": "number",
+          "id": "tapestry_default_width_landscape",
+          "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_default_width_landscape.label",
+          "info": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_default_width_landscape.info",
+          "default": 250
+        },
+        {
+          "type": "number",
+          "id": "tapestry_default_width_portrait",
+          "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_default_width_portrait.label",
+          "info": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_default_width_portrait.info",
+          "default": 150
+        },
+        {
+          "type": "number",
+          "id": "tapestry_default_width_square",
+          "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_default_width_square.label",
+          "info": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_default_width_square.info",
+          "default": 200
+        },
+        {
+          "type": "header",
+          "content": "t:sections.main-product.blocks.tapestry_options.headings.default_height.content"
+        },
+        {
+          "type": "number",
+          "id": "tapestry_default_height",
+          "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_default_height.label",
+          "info": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_default_height.info",
+          "default": 250
+        },
+        {
+          "type": "header",
+          "content": "t:sections.main-product.blocks.tapestry_options.headings.tapestry_strips.content"
+        },
+        {
+          "type": "number",
+          "id": "tapestry_strips_width",
+          "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_strips_width.label",
+          "info": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_strips_width.info",
+          "default": 50
+        },
+        {
+          "type": "header",
+          "content": "t:sections.main-product.blocks.tapestry_options.headings.limitations.content"
+        },
+        {
+          "type": "number",
+          "id": "tapestry_min_width",
+          "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_min_width.label",
+          "info": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_min_width.info",
+          "default": 50
+        },
+        {
+          "type": "number",
+          "id": "tapestry_max_width",
+          "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_max_width.label",
+          "info": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_max_width.info",
+          "default": 300
+        },
+        {
+          "type": "number",
+          "id": "tapestry_min_height",
+          "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_min_height.label",
+          "info": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_min_height.info",
+          "default": 50
+        },
+        {
+          "type": "number",
+          "id": "tapestry_max_height",
+          "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_max_height.label",
+          "info": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_max_height.info",
+          "default": 300
         }
       ]
     }

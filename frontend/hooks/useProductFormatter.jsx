@@ -3,6 +3,7 @@ export default function useProductFormatter(
   optionIndecesSelected,
 ) {
   const product = {
+    type: 'painting',
     ratio: window.productRatio,
     productId: window.productId,
   };
