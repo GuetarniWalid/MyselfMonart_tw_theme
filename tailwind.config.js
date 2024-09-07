@@ -34,6 +34,7 @@ module.exports = {
         action: {
           DEFAULT: 'rgb(var(--color-action))',
           80: 'rgba(var(--color-action), 0.8)',
+          70: 'rgba(var(--color-action), 0.7)',
         },
         'breadcrumb-main': 'var(--color-breadcrumb-main)',
         'breadcrumb-secondary': 'var(--color-breadcrumb-secondary)',

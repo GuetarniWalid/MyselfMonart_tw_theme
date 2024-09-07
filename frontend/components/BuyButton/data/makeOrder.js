@@ -1,6 +1,6 @@
 export async function makeOrder(variantData, productProperties) {
   const response = await fetch(
-    window.shopUrl + '/cart/add.js?sections=tw-cart-drawer,tw-header',
+    '/cart/add.js?sections=tw-cart-drawer,tw-header',
     {
       method: 'POST',
       headers: {
