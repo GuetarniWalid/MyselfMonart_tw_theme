@@ -1249,6 +1249,18 @@
             }
           }
         },
+        "trustpilot_review": {
+          "name": "Trustpilot review",
+          "settings": {
+            "link": {
+              "label": "Link to Trustpilot"
+            },
+            "trustpilot_score": {
+              "label": "Trustpilot score",
+              "info": "Rated out of 50. For a rating of 4.3 out of 5, enter 43"
+            }
+          }
+        },
         "variant_picker": {
           "name": "Variant picker"
         }

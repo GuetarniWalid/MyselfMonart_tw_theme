@@ -108,5 +108,12 @@ module.exports = {
     'object-bottom',
     'object-left',
     'object-right',
+    'before:w-full',
+    'before:w-[25%]',
+    'before:w-1/2',
+    'before:w-[60%]',
+    'before:w-[70%]',
+    'before:w-[80%]',
+    'before:w-[90%]',
   ],
 };

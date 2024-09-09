@@ -643,6 +643,10 @@
       },
       "painting": {
         "canvas_texture": "Texture de toile en lin"
+      },
+      "trustpilot": {
+        "excellent": "Excellent",
+        "score": "Score"
       }
     },
     "likes_page": {
