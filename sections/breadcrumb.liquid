@@ -18,75 +18,89 @@
       assign itemListElement_urls = mobile_url
     -%}
 
-      {% if template contains 'page' %}
-        {% liquid
-          assign itemListElement_names = itemListElement_names | append: '|,|' | append: page.title
-          assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: page.url
-        %}
-        <span class="hidden sm:inline-block relative text-center text-sm breadcrumb-box bg-breadcrumb-main pl-5 pr-6 py-[6px] -translate-x-[20px] before:absolute before:inset-[2px] before:block before:-z-10 before:breadcrumb-box-before cursor-default before:bg-breadcrumb-secondary text-lime-950 text-ellipsis overflow-hidden">
-          {{ page.title }}
-          </span>
-      {% elsif template contains 'product' %}
-        {% if collection.url %}
-          {%- liquid
-            assign mobile_url = collection.url
-            assign mobile_text = collection.title
-            assign itemListElement_names = itemListElement_names | append: '|,|' | append: mobile_text
-            assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: mobile_url
-          -%}
-          <a href="{{ collection.url }}" class="inline-block relative text-center text-sm breadcrumb-box bg-main pl-5 pr-6 py-[6px] -translate-x-[10px] before:absolute before:inset-[2px] before:block before:-z-10 before:bg-secondary before:transition-colors before:duration-500 before:breadcrumb-box-before focus-visible:outline-none focus-visible:bg-breadcrumb-main focus-visible:before:bg-breadcrumb-secondary focus-visible:text-breadcrumb-main"> 
-            {{ collection.title }}
-          </a>
-        {% elsif product.metafields.link.mother_collection != blank %}
-          {%- liquid
-            assign mobile_url = product.metafields.link.mother_collection.value.url
-            assign mobile_text = product.metafields.link.mother_collection.value.title
-            assign itemListElement_names = itemListElement_names | append: '|,|' | append: mobile_text
-            assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: mobile_url
-          -%}
-          <a href="{{ product.metafields.link.mother_collection.value.url }}" class="inline-block relative text-center text-sm breadcrumb-box bg-main pl-5 pr-6 py-[6px] -translate-x-[10px] before:absolute before:inset-[2px] before:block before:-z-10 before:bg-secondary before:transition-colors before:duration-500 before:breadcrumb-box-before focus-visible:outline-none focus-visible:bg-breadcrumb-main focus-visible:before:bg-breadcrumb-secondary focus-visible:text-breadcrumb-main"> 
-            {{ product.metafields.link.mother_collection.value.title }}
-          </a>
-        {% endif %}
-        {% liquid
-          assign itemListElement_names = itemListElement_names | append: '|,|' | append: product.title
-          assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: product.url
-        %}
-        <span class="hidden sm:inline-block relative text-center text-sm breadcrumb-box bg-breadcrumb-main pl-5 pr-6 py-[6px] -translate-x-[20px] before:absolute before:inset-[2px] before:block before:-z-10 before:breadcrumb-box-before cursor-default before:bg-breadcrumb-secondary text-lime-950 text-ellipsis overflow-hidden">
-          {{ product.title }}
+    {% if template contains 'page' %}
+      {% liquid
+        assign itemListElement_names = itemListElement_names | append: '|,|' | append: page.title
+        assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: page.url
+      %}
+      <span class="hidden sm:inline-block relative text-center text-sm breadcrumb-box bg-breadcrumb-main pl-5 pr-6 py-[6px] -translate-x-[20px] before:absolute before:inset-[2px] before:block before:-z-10 before:breadcrumb-box-before cursor-default before:bg-breadcrumb-secondary text-lime-950 text-ellipsis overflow-hidden">
+        {{ page.title }}
         </span>
-      {% elsif template contains 'collection' and collection.handle %}
-        {% assign gap = 0 %}
-        {% if collection.metafields.breadcrumb.parentCollection.value.metafields.breadcrumb.parentCollection != blank %}
-          {% liquid
-            assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: collection.metafields.breadcrumb.parentCollection.value.metafields.breadcrumb.parentCollection.value.url
-            assign itemListElement_names = itemListElement_names | append: '|,|' | append: collection.metafields.breadcrumb.parentCollection.value.metafields.breadcrumb.parentCollection.value.title
-          %}
-          <a href="{{ collection.metafields.breadcrumb.parentCollection.value.metafields.breadcrumb.parentCollection.value.url }}" class="inline-block relative text-center text-sm breadcrumb-first bg-main pl-4 pr-6 py-[6px] rounded-md before:absolute before:inset-[2px] before:block before:-z-10 before:bg-secondary before:transition-colors before:duration-500 before:breadcrumb-first-before before:rounded focus-visible:outline-none focus-visible:bg-breadcrumb-main focus-visible:before:bg-breadcrumb-secondary focus-visible:text-breadcrumb-main">
-            {{ collection.metafields.breadcrumb.parentCollection.value.metafields.breadcrumb.parentCollection.value.title }}
+    {% elsif template contains 'product' %}
+      {% if collection.url %}
+        {%- liquid
+          assign mobile_url = collection.url
+          assign mobile_text = collection.title
+          assign itemListElement_names = itemListElement_names | append: '|,|' | append: mobile_text
+          assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: mobile_url
+        -%}
+        <a href="{{ collection.url }}" class="inline-block relative text-center text-sm breadcrumb-box bg-main pl-5 pr-6 py-[6px] -translate-x-[10px] before:absolute before:inset-[2px] before:block before:-z-10 before:bg-secondary before:transition-colors before:duration-500 before:breadcrumb-box-before focus-visible:outline-none focus-visible:bg-breadcrumb-main focus-visible:before:bg-breadcrumb-secondary focus-visible:text-breadcrumb-main"> 
+          {{ collection.title }}
+        </a>
+      {% elsif product.metafields.link.mother_collection != blank %}
+        {%- liquid
+          assign mobile_url = product.metafields.link.mother_collection.value.url
+          assign mobile_text = product.metafields.link.mother_collection.value.title
+          assign itemListElement_names = itemListElement_names | append: '|,|' | append: mobile_text
+          assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: mobile_url
+        -%}
+        {% if  product.metafields.link.mother_collection.value.metafields.breadcrumb.parentCollection.value.url %}
+          <a href="{{ product.metafields.link.mother_collection.value.metafields.breadcrumb.parentCollection.value.url }}" class="inline-block relative text-center text-sm breadcrumb-first bg-main pl-4 pr-6 py-[6px] rounded-md before:absolute before:inset-[2px] before:block before:-z-10 before:bg-secondary before:transition-colors before:duration-500 before:breadcrumb-first-before before:rounded focus-visible:outline-none focus-visible:bg-breadcrumb-main focus-visible:before:bg-breadcrumb-secondary focus-visible:text-breadcrumb-main">
+            {{ product.metafields.link.mother_collection.value.metafields.breadcrumb.parentCollection.value.title }}
           </a>
         {% endif %}
+  
+        <a href="{{ product.metafields.link.mother_collection.value.url }}" class="inline-block relative text-center text-sm breadcrumb-box bg-main pl-5 pr-6 py-[6px] -translate-x-[10px] before:absolute before:inset-[2px] before:block before:-z-10 before:bg-secondary before:transition-colors before:duration-500 before:breadcrumb-box-before focus-visible:outline-none focus-visible:bg-breadcrumb-main focus-visible:before:bg-breadcrumb-secondary focus-visible:text-breadcrumb-main"> 
+          {{ product.metafields.link.mother_collection.value.title }}
+        </a>
+      {% endif %}
+      {% liquid
+        assign itemListElement_names = itemListElement_names | append: '|,|' | append: product.title
+        assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: product.url
+      %}
+      <span class="hidden sm:inline-block relative text-center text-sm breadcrumb-box bg-breadcrumb-main pl-5 pr-6 py-[6px] -translate-x-[20px] before:absolute before:inset-[2px] before:block before:-z-10 before:breadcrumb-box-before cursor-default before:bg-breadcrumb-secondary text-lime-950 text-ellipsis overflow-hidden">
+        {{ product.title }}
+      </span>
+    {% elsif template contains 'collection' and collection.handle %}
+      {% assign gap = 0 %}
+      {% if collection.metafields.breadcrumb.parentCollection.value.metafields.breadcrumb.parentCollection != blank %}
+        {% liquid
+          assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: collection.metafields.breadcrumb.parentCollection.value.metafields.breadcrumb.parentCollection.value.url
+          assign itemListElement_names = itemListElement_names | append: '|,|' | append: collection.metafields.breadcrumb.parentCollection.value.metafields.breadcrumb.parentCollection.value.title
+          assign has_grand_parent = true
+        %}
+        <a href="{{ collection.metafields.breadcrumb.parentCollection.value.metafields.breadcrumb.parentCollection.value.url }}" class="inline-block relative text-center text-sm breadcrumb-first bg-main pl-4 pr-6 py-[6px] rounded-md before:absolute before:inset-[2px] before:block before:-z-10 before:bg-secondary before:transition-colors before:duration-500 before:breadcrumb-first-before before:rounded focus-visible:outline-none focus-visible:bg-breadcrumb-main focus-visible:before:bg-breadcrumb-secondary focus-visible:text-breadcrumb-main">
+          {{ collection.metafields.breadcrumb.parentCollection.value.metafields.breadcrumb.parentCollection.value.title }}
+        </a>
+      {% endif %}
 
-        {% if collection.metafields.breadcrumb.parentCollection != blank %}
-          {% liquid
-            assign itemListElement_names = itemListElement_names | append: '|,|' | append: collection.metafields.breadcrumb.parentCollection.value.title
-            assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: collection.metafields.breadcrumb.parentCollection.value.url
-            assign gap = gap | plus: 10
-          %}
+      {% if collection.metafields.breadcrumb.parentCollection != blank %}
+        {% liquid
+          assign itemListElement_names = itemListElement_names | append: '|,|' | append: collection.metafields.breadcrumb.parentCollection.value.title
+          assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: collection.metafields.breadcrumb.parentCollection.value.url
+          
+        %}
+        {% if has_grand_parent %}
+          {% assign gap = gap | plus: 10 %}
           <a href="{{ collection.metafields.breadcrumb.parentCollection.value.url }}" class="inline-block relative text-center text-sm breadcrumb-box bg-main pl-5 pr-6 py-[6px] -translate-x-[{{ gap }}px] before:absolute before:inset-[2px] before:block before:-z-10 before:bg-secondary before:transition-colors before:duration-500 before:breadcrumb-box-before focus-visible:outline-none focus-visible:bg-breadcrumb-main focus-visible:before:bg-breadcrumb-secondary focus-visible:text-breadcrumb-main">
             {{ collection.metafields.breadcrumb.parentCollection.value.title }}
           </a>
+        {% else %}
+          <a href="{{ collection.metafields.breadcrumb.parentCollection.value.url }}" class="inline-block relative text-center text-sm breadcrumb-first bg-main pl-4 pr-6 py-[6px] rounded-md before:absolute before:inset-[2px] before:block before:-z-10 before:bg-secondary before:transition-colors before:duration-500 before:breadcrumb-first-before before:rounded focus-visible:outline-none focus-visible:bg-breadcrumb-main focus-visible:before:bg-breadcrumb-secondary focus-visible:text-breadcrumb-main">
+            {{ collection.metafields.breadcrumb.parentCollection.value.title }}
+          </a>
         {% endif %}
-
-        {% liquid
-          assign itemListElement_names = itemListElement_names | append: '|,|' | append: collection.title
-          assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: collection.url
-          assign gap = gap | plus: 10
-        %}
-        <span class="hidden sm:inline-block relative text-center text-sm breadcrumb-box bg-breadcrumb-main pl-5 pr-6 py-[6px] -translate-x-[{{ gap }}px] before:absolute before:inset-[2px] before:block before:-z-10 before:breadcrumb-box-before cursor-default before:bg-breadcrumb-secondary text-lime-950 text-ellipsis overflow-hidden">
-          {{ collection.title }}
-        </span>
       {% endif %}
+
+      {% liquid
+        assign itemListElement_names = itemListElement_names | append: '|,|' | append: collection.title
+        assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: collection.url
+        assign gap = gap | plus: 10
+      %}
+      <span class="hidden sm:inline-block relative text-center text-sm breadcrumb-box bg-breadcrumb-main pl-5 pr-6 py-[6px] -translate-x-[{{ gap }}px] before:absolute before:inset-[2px] before:block before:-z-10 before:breadcrumb-box-before cursor-default before:bg-breadcrumb-secondary text-lime-950 text-ellipsis overflow-hidden">
+        {{ collection.title }}
+      </span>
+    {% endif %}
   </nav>
 {% endunless %}
 
