@@ -1,11 +1,13 @@
 {
   "current": {
+    "enable_cookie": true,
+    "enable_predictive_search": true,
+    "predictive_search_enabled": true,
+    "predictive_search_show_vendor": false,
+    "predictive_search_show_price": true,
     "main_color": "#070525",
-    "type_header_font_custom": true,
-    "type_header_font": "harmonia_sans_n7",
-    "heading_scale": 100,
-    "type_body_font": "roboto_n4",
-    "body_scale": 105,
+    "favicon": "shopify:\/\/shop_images\/logo-myselfmonart.png",
+    "currency_code_enabled": true,
     "social_twitter_link": "",
     "social_facebook_link": "https:\/\/www.facebook.com\/profile.php?id=100086313005015",
     "social_pinterest_link": "https:\/\/www.pinterest.fr\/MyselfMonArt\/",
@@ -16,13 +18,11 @@
     "social_youtube_link": "",
     "social_vimeo_link": "",
     "likes_page": "mes-j-aimes",
-    "enable_predictive_search": true,
-    "predictive_search_enabled": true,
-    "predictive_search_show_vendor": false,
-    "predictive_search_show_price": true,
-    "favicon": "shopify:\/\/shop_images\/logo-myselfmonart.png",
-    "enable_cookie": true,
-    "currency_code_enabled": true,
+    "type_header_font_custom": true,
+    "type_header_font": "harmonia_sans_n7",
+    "heading_scale": 100,
+    "type_body_font": "roboto_n4",
+    "body_scale": 105,
     "checkout_logo_image": "shopify:\/\/shop_images\/logo-myselfmonart-512x512.png",
     "checkout_logo_position": "center",
     "checkout_logo_size": "large",
@@ -253,14 +253,12 @@
           "type": "main-password-header",
           "settings": {
             "logo": "{{ shop.brand.logo }}",
-            "logo_max_width": 100,
-            "color_scheme": "background-1"
+            "logo_max_width": 100
           }
         },
         "main-password-footer": {
           "type": "main-password-footer",
           "settings": {
-            "color_scheme": "background-1"
           }
         }
       }

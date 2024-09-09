@@ -10,10 +10,10 @@
     "main": {
       "type": "main-product",
       "blocks": {
-        "text_CzWnEd": {
-          "type": "text",
+        "likes_mgUwJx": {
+          "type": "likes",
           "settings": {
-            "text": "<p>{{ product.vendor }}<\/p>"
+            "margin_bottom": "mb-4"
           }
         },
         "title": {
@@ -22,15 +22,22 @@
             "margin_bottom": "mb-2"
           }
         },
-        "likes_mgUwJx": {
-          "type": "likes",
+        "trustpilot_review_nXpwkL": {
+          "type": "trustpilot_review",
           "settings": {
+            "trustpilot_score": 43,
+            "link": "https:\/\/fr.trustpilot.com\/review\/myselfmonart.com",
             "margin_bottom": "mb-8"
           }
         },
         "9f20570b-1a97-4c34-8758-c5af9b8d2cfc": {
           "type": "price",
           "settings": {
+            "style": "default",
+            "background": "linear-gradient(135deg, rgba(255,247,220,1) 0%, rgba(254,206,218,1) 61%, rgba(214,208,253,1) 100%)",
+            "second_key_benefit": "Deuxième bénéficie clé",
+            "third_key_benefit": "Troisième bénéficie clé",
+            "fourth_key_benefit": "Quatrième bénéficie clé"
           }
         },
         "buy_qrRzcg": {
@@ -81,9 +88,9 @@
         }
       },
       "block_order": [
-        "text_CzWnEd",
-        "title",
         "likes_mgUwJx",
+        "title",
+        "trustpilot_review_nXpwkL",
         "9f20570b-1a97-4c34-8758-c5af9b8d2cfc",
         "buy_qrRzcg",
         "8600f603-2d6f-4191-8020-3678432ba1e5",
@@ -122,14 +129,12 @@
         "image_text_hCDnam": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/Tableau-chambre.png",
             "message": "Le tableau est super, et encore plus beau en vrai ! Arrivé rapidement et bien protégé. Alain N"
           }
         },
         "image_text_XaycRQ": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/Tableau-decoration.png",
             "message": "Très belle toile, les couleurs sont super et brillante. Marie K"
           }
         },
@@ -210,7 +215,6 @@
         "heading_size": "h2",
         "products_to_show": 10,
         "columns_desktop": 4,
-        "color_scheme": "background-1",
         "image_ratio": "adapt",
         "show_secondary_image": false,
         "show_vendor": false,
@@ -267,6 +271,9 @@
         "description": "<p>Vous avez le souci du détail ? Allez plus loin en personnalisant aussi le support. Sur toile, plexiglas ou aluminium, choisissez l’aspect qui s’accorde le mieux à votre intérieur.<\/p>",
         "layout": "image_first",
         "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#E3FAE1",
         "padding_top": "pt-16",
         "padding_bottom": "pb-16"
       }
@@ -279,6 +286,9 @@
         "description": "<p>Choisissez la taille de votre tableau. En paysage, portrait, carré, petit ou grand, à vous de voir selon votre espace.<\/p>",
         "layout": "text_first",
         "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#E3FAE1",
         "padding_top": "pt-16",
         "padding_bottom": "pb-16"
       }
@@ -291,6 +301,9 @@
         "description": "<p>Une touche d'art à la française. Enracinés dans notre cher pays, nous mettons l'accent sur votre satisfaction en offrant un service client de qualité supérieure.<\/p>",
         "layout": "image_first",
         "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#E3FAE1",
         "padding_top": "pt-16",
         "padding_bottom": "pb-16"
       }

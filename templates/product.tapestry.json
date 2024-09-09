@@ -10,10 +10,10 @@
     "main": {
       "type": "main-product",
       "blocks": {
-        "text_CzWnEd": {
-          "type": "text",
+        "likes_t9U7Ay": {
+          "type": "likes",
           "settings": {
-            "text": "<p>{{ product.vendor }}<\/p>"
+            "margin_bottom": "mb-4"
           }
         },
         "title": {
@@ -22,16 +22,18 @@
             "margin_bottom": "mb-2"
           }
         },
+        "trustpilot_review_hXwdf3": {
+          "type": "trustpilot_review",
+          "settings": {
+            "trustpilot_score": 43,
+            "link": "https:\/\/fr.trustpilot.com\/review\/myselfmonart.com",
+            "margin_bottom": "mb-8"
+          }
+        },
         "8600f603-2d6f-4191-8020-3678432ba1e5": {
           "type": "text",
           "settings": {
             "text": "<p><strong>🌞 Soldes d'été 🌞<\/strong><\/p><ul><li><strong>🛍️ -15% sur toute commande !<\/strong><\/li><li><strong>🚚 Livraison gratuite !<\/strong><\/li><li><strong>⏳ Offre limitée, dépêchez-vous !<\/strong><\/li><\/ul>"
-          }
-        },
-        "likes_t9U7Ay": {
-          "type": "likes",
-          "settings": {
-            "margin_bottom": "mb-8"
           }
         },
         "tapestry_options_4AnMD4": {
@@ -94,10 +96,10 @@
         }
       },
       "block_order": [
-        "text_CzWnEd",
-        "title",
-        "8600f603-2d6f-4191-8020-3678432ba1e5",
         "likes_t9U7Ay",
+        "title",
+        "trustpilot_review_hXwdf3",
+        "8600f603-2d6f-4191-8020-3678432ba1e5",
         "tapestry_options_4AnMD4",
         "9f20570b-1a97-4c34-8758-c5af9b8d2cfc",
         "buy_qrRzcg",
