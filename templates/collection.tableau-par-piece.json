@@ -16,36 +16,6 @@
         "to_place_first": true
       }
     },
-    "rich_text_PLYt7c": {
-      "type": "rich-text",
-      "blocks": {
-        "heading_3Aq7D9": {
-          "type": "heading",
-          "settings": {
-            "heading": "Sublimez Votre Intérieur avec Nos Tableaux.",
-            "markup": "h2",
-            "heading_size": "text-3xl"
-          }
-        },
-        "text_nAPPaR": {
-          "type": "text",
-          "settings": {
-            "text": "<p>À travers nos tableaux de décoration, découvrez un univers riche en couleurs et en émotions. Habillez chaque pièce de votre maison avec des œuvres qui captivent, inspirent et décorent.<\/p>",
-            "text_size": "text-xl",
-            "is_lighten": false
-          }
-        }
-      },
-      "block_order": [
-        "heading_3Aq7D9",
-        "text_nAPPaR"
-      ],
-      "settings": {
-        "content_alignment": "text-left",
-        "padding_top": "pt-0",
-        "padding_bottom": "pb-0"
-      }
-    },
     "collections_grid_pt8R8R": {
       "type": "collections-grid",
       "blocks": {
@@ -110,7 +80,7 @@
       "settings": {
         "title": "",
         "padding_top": "pt-0",
-        "padding_bottom": "pb-0"
+        "padding_bottom": "pb-24"
       }
     },
     "main-collection-product-grid": {
@@ -161,7 +131,6 @@
   "order": [
     "cf6565ea-5338-4b92-985b-b5b0824700db",
     "main-collection-banner",
-    "rich_text_PLYt7c",
     "collections_grid_pt8R8R",
     "main-collection-product-grid",
     "0a4d0ad2-05f5-4939-8b62-ad000c188ded"
