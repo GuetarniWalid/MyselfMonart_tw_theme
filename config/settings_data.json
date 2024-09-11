@@ -74,6 +74,21 @@
               ]
             }
           },
+          "parent_collection_fTjgF8": {
+            "type": "parent_collection",
+            "settings": {
+              "title": "Thèmes de Tableaux",
+              "product": "",
+              "child_collection_list": [
+                "tableau-abstrait",
+                "tableau-ethnique",
+                "tableau-pop-art",
+                "tableau-street-art",
+                "tableau-zen",
+                "tableau-plexiglass"
+              ]
+            }
+          },
           "parent_collection_xnc6qR": {
             "type": "parent_collection",
             "settings": {
@@ -103,20 +118,6 @@
               ]
             }
           },
-          "parent_collection_AE8ANV": {
-            "type": "parent_collection",
-            "settings": {
-              "title": "Thèmes de Tableaux",
-              "product": "",
-              "child_collection_list": [
-                "tableau-abstrait",
-                "tableau-marvel",
-                "tableau-pop-art",
-                "tableau-street-art",
-                "tableau-zen"
-              ]
-            }
-          },
           "parent_collection_epKXXW": {
             "type": "parent_collection",
             "settings": {
@@ -124,16 +125,6 @@
               "product": "",
               "child_collection_list": [
                 "tableau-personnalise-famille"
-              ]
-            }
-          },
-          "parent_collection_wEPyXi": {
-            "type": "parent_collection",
-            "settings": {
-              "title": "Bestsellers",
-              "product": "",
-              "child_collection_list": [
-                "bestsellers"
               ]
             }
           },
@@ -155,11 +146,10 @@
         "block_order": [
           "parent_collection_CKrirY",
           "parent_collection_nGAFUn",
+          "parent_collection_fTjgF8",
           "parent_collection_xnc6qR",
           "parent_collection_MRr679",
-          "parent_collection_AE8ANV",
           "parent_collection_epKXXW",
-          "parent_collection_wEPyXi",
           "parent_collection_8gdGDj"
         ],
         "settings": {

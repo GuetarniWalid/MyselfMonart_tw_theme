@@ -153,7 +153,7 @@
         "collection_AWPAim"
       ],
       "settings": {
-        "title": "",
+        "title": "Explorez nos Collections",
         "padding_top": "pt-0",
         "padding_bottom": "pb-0"
       }
@@ -249,6 +249,36 @@
         "duration_image_appearance": 3
       }
     },
+    "rich_text_DUh7mV": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_7W8ATM": {
+          "type": "heading",
+          "settings": {
+            "heading": "Créez une Ambiance Unique, Qui Vous Ressemble",
+            "markup": "h2",
+            "heading_size": "text-3xl"
+          }
+        },
+        "text_tPENCP": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Votre intérieur ne se limite pas à un simple espace de vie. Chez Myselfmonart, nous vous invitons à habiller vos murs avec émotion. Chacune de nos créations est pensée pour transformer votre intérieur en un véritable reflet de vous-même.<\/p>",
+            "text_size": "text-xl",
+            "is_lighten": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_7W8ATM",
+        "text_tPENCP"
+      ],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
+      }
+    },
     "multicolumn_dWGLnx": {
       "type": "multicolumn",
       "blocks": {
@@ -299,6 +329,134 @@
         "button_label": "",
         "button_link": "",
         "to_obfuscate": false
+      }
+    },
+    "image_with_text_QNwYQY": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/equipe-de-graphiste-et-decorateur-interieur.png",
+        "title": "- NOS VALEURS",
+        "description": "<p>Nous croyons en l'importance de permettre à chacun d'exprimer sa personnalité et son histoire à travers sa décoration intérieure. Avec nos tableaux de décoration, chaque mur devient le narrateur de votre histoire.<\/p>",
+        "layout": "image_first",
+        "enable_blob": false,
+        "activate_dynamic_color": true,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#91ced7",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "multicolumn_JK6fxJ": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_V3BE8r": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/toile-murale.png",
+            "title": "ENCRE PARFAITE",
+            "text": "<p>Dans l'univers de MyselfMonArt, nous œuvrons avec détermination pour que chaque goutte d'encre traduise fidèlement la beauté de vos créations visuelles à l'écran.<\/p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
+          }
+        },
+        "column_JRdTtx": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/cadre-bois-pour-tableau.png",
+            "title": "ENCADREZ L'EXCEPTIONNEL",
+            "text": "<p>Chez MyselfMonArt, nos cadres allient élégance et durabilité, sublimant chaque toile en véritable chef-d'œuvre. Une harmonie parfaite où la qualité rencontre l’art.<\/p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
+          }
+        },
+        "column_b8CP9L": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/toile-deco-elephant_4acaada7-ed8a-490f-a02b-89c82a272d29.jpg",
+            "title": "COULEURS & ÉMOTIONS",
+            "text": "<p>Vivez l'expérience MyselfMonArt, créez des espaces qui vous ressemblent, qui parlent et touchent le cœur, et habillez vos murs d'émotions et de couleurs.<\/p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
+          }
+        }
+      },
+      "block_order": [
+        "column_V3BE8r",
+        "column_JRdTtx",
+        "column_b8CP9L"
+      ],
+      "settings": {
+        "title": "NOTRE SAVOIR-FAIRE",
+        "image_shape": "aspect-[3\/4] object-cover",
+        "columns_desktop": 3,
+        "show_backgounds": true,
+        "button_label": "",
+        "button_link": "shopify:\/\/pages\/a-propos-de-myselfmonart",
+        "to_obfuscate": false
+      }
+    },
+    "rich_text_83wpVf": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_r8rBrU": {
+          "type": "heading",
+          "settings": {
+            "heading": "CONSEILS POUR CHOISIR LA TAILLE IDÉALE DE VOTRE TABLEAU.",
+            "markup": "h3",
+            "heading_size": "text-3xl"
+          }
+        },
+        "text_4zdheU": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Consultez notre guide des tailles ou prenez contacte avec nous. Nous serons heureux de pouvoir vous aider à harmoniser votre intérieur.<\/p>",
+            "text_size": "text-xl",
+            "is_lighten": false
+          }
+        },
+        "button_tXJiiB": {
+          "type": "button",
+          "settings": {
+            "button_label": "Guide des tailles",
+            "button_link": "shopify:\/\/pages\/guide-de-tailles",
+            "button_label_2": "Inspirations",
+            "button_link_2": "shopify:\/\/pages\/contactez-nous",
+            "to_obfuscate": false
+          }
+        },
+        "heading_NxJd7H": {
+          "type": "heading",
+          "settings": {
+            "heading": "Besoin d'Aide",
+            "markup": "h3",
+            "heading_size": "text-3xl"
+          }
+        },
+        "button_YAaw3C": {
+          "type": "button",
+          "settings": {
+            "button_label": "Contactez-nous",
+            "button_link": "shopify:\/\/pages\/contactez-nous",
+            "button_label_2": "",
+            "button_link_2": "",
+            "to_obfuscate": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_r8rBrU",
+        "text_4zdheU",
+        "button_tXJiiB",
+        "heading_NxJd7H",
+        "button_YAaw3C"
+      ],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
       }
     },
     "badges_cHPDPq": {
@@ -357,112 +515,34 @@
         "nb_columns_on_mobile": "1"
       }
     },
-    "rich_text_83wpVf": {
+    "rich_text_VQq9NW": {
       "type": "rich-text",
       "blocks": {
-        "heading_r8rBrU": {
+        "heading_nakN6p": {
           "type": "heading",
           "settings": {
-            "heading": "CONSEILS POUR CHOISIR LA TAILLE IDÉALE DE VOTRE TABLEAU.",
-            "markup": "h3",
+            "heading": "Décoration Murale",
+            "markup": "h2",
             "heading_size": "text-3xl"
           }
         },
-        "text_4zdheU": {
+        "text_xU7G8z": {
           "type": "text",
           "settings": {
-            "text": "<p>Consultez notre guide des tailles ou prenez contacte avec nous. Nous serons heureux de pouvoir vous aider à harmoniser votre intérieur.<\/p>",
+            "text": "<h3>Sublimez Votre Intérieur avec Nos Créations Uniques<\/h3><p>Chez MyselfMonArt, chaque mur devient une toile vierge, prête à accueillir l’œuvre qui transformera votre espace. Nos produits, qu’il s’agisse de tableaux sur toile, de papiers peints panoramiques ou de posters encadrés, sont bien plus que de simples décorations : Ce sont des expressions artistiques qui personnalisent votre intérieur.<\/p><h3>Des Créations pour Tous les Styles<\/h3><p>Notre collection répond à toutes vos besoins décoratives. Des motifs modernes aux designs classiques, chaque pièce est conçue pour s'intégrer harmonieusement à votre intérieur. Que vous recherchiez à apporter une touche d'audace ou de douceur, nos œuvres sont là pour sublimer votre espace.<\/p><h3>La Qualité au Service de Votre Intérieur<\/h3><p>Nous mettons un point d’honneur à offrir des produits de qualité, fabriqués avec soin et amour. Chaque œuvre est réalisée sur commande, garantissant une attention particulière à chaque détail. Chaque création est faite spécialement pour vous.<\/p><h3>Un Service Client Dédié à Vos Besoins<\/h3><p>Votre satisfaction est notre priorité. C’est pourquoi notre service client est à votre disposition pour vous accompagner dans chaque étape de votre projet de décoration. Que vous ayez besoin de conseils pour choisir l’œuvre parfaite ou d’assistance pour personnaliser une pièce, nous sommes là pour vous offrir une expérience d'achat agréable et sans souci.<\/p><h3>Livraison Rapide et Sûre<\/h3><p>Nous savons que vous êtes impatient de voir votre intérieur transformé. C’est pourquoi nous garantissons une livraison rapide et fiable, pour que vos créations soient chez vous en quelques jours seulement. Avec MyselfMonArt, votre projet de décoration prend vie sans attendre.<\/p>",
             "text_size": "text-xl",
             "is_lighten": false
-          }
-        },
-        "button_tXJiiB": {
-          "type": "button",
-          "settings": {
-            "button_label": "Guide des tailles",
-            "button_link": "shopify:\/\/pages\/guide-de-tailles",
-            "button_label_2": "Contactez-nous",
-            "button_link_2": "shopify:\/\/pages\/contactez-nous",
-            "to_obfuscate": false
           }
         }
       },
       "block_order": [
-        "heading_r8rBrU",
-        "text_4zdheU",
-        "button_tXJiiB"
+        "heading_nakN6p",
+        "text_xU7G8z"
       ],
       "settings": {
         "content_alignment": "text-left",
         "padding_top": "pt-0",
         "padding_bottom": "pb-0"
-      }
-    },
-    "multicolumn_JK6fxJ": {
-      "type": "multicolumn",
-      "blocks": {
-        "column_V3BE8r": {
-          "type": "column",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/toile-murale.png",
-            "title": "ENCRE PARFAITE",
-            "text": "<p>Dans l'univers de MyselfMonArt, nous œuvrons avec détermination pour que chaque goutte d'encre traduise fidèlement la beauté de vos créations visuelles à l'écran.<\/p>",
-            "link_label": "",
-            "link": "",
-            "to_obfuscate": false
-          }
-        },
-        "column_JRdTtx": {
-          "type": "column",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/cadre-bois-pour-tableau.png",
-            "title": "ENCADREZ L'EXCEPTIONNEL",
-            "text": "<p>Chez MyselfMonArt, nos cadres allient élégance et durabilité, sublimant chaque toile en véritable chef-d'œuvre. Une harmonie parfaite où la qualité rencontre l’art.<\/p>",
-            "link_label": "",
-            "link": "",
-            "to_obfuscate": false
-          }
-        },
-        "column_b8CP9L": {
-          "type": "column",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/toile-deco-elephant_4acaada7-ed8a-490f-a02b-89c82a272d29.jpg",
-            "title": "COULEURS & ÉMOTIONS",
-            "text": "<p>Vivez l'expérience MyselfMonArt, créez des espaces qui vous ressemblent, qui parlent et touchent le cœur, et habillez vos murs d'émotions et de couleurs.<\/p>",
-            "link_label": "",
-            "link": "",
-            "to_obfuscate": false
-          }
-        }
-      },
-      "block_order": [
-        "column_V3BE8r",
-        "column_JRdTtx",
-        "column_b8CP9L"
-      ],
-      "settings": {
-        "title": "NOTRE SAVOIR-FAIRE",
-        "image_shape": "aspect-[3\/4] object-cover",
-        "columns_desktop": 3,
-        "show_backgounds": true,
-        "button_label": "Notre histoire",
-        "button_link": "shopify:\/\/pages\/a-propos-de-myselfmonart",
-        "to_obfuscate": false
-      }
-    },
-    "image_with_text_QNwYQY": {
-      "type": "image-with-text",
-      "settings": {
-        "image": "shopify:\/\/shop_images\/equipe-de-graphiste-et-decorateur-interieur.png",
-        "title": "- NOS VALEURS -",
-        "description": "<p>Nous croyons en l'importance de permettre à chacun d'exprimer sa personnalité et son histoire à travers sa décoration intérieure. Avec nos tableaux de décoration, chaque mur devient le narrateur de votre histoire.<\/p>",
-        "layout": "image_first",
-        "enable_blob": true,
-        "activate_dynamic_color": false,
-        "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#e3fae1",
-        "padding_top": "pt-16",
-        "padding_bottom": "pb-16"
       }
     }
   },
@@ -473,10 +553,12 @@
     "shifted_image_carousel_cJeF34",
     "collections_grid_DXKnVN",
     "customer_testimonial_dKrfKQ",
+    "rich_text_DUh7mV",
     "multicolumn_dWGLnx",
-    "badges_cHPDPq",
-    "rich_text_83wpVf",
+    "image_with_text_QNwYQY",
     "multicolumn_JK6fxJ",
-    "image_with_text_QNwYQY"
+    "rich_text_83wpVf",
+    "badges_cHPDPq",
+    "rich_text_VQq9NW"
   ]
 }
