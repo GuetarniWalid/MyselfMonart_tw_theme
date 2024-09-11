@@ -173,7 +173,7 @@
       }
     },
     "collections_grid_8Qazmf": {
-      "type": "collections-grid",
+      "type": "collections-pages-grid.liquid",
       "blocks": {
         "collection_PMNgA8": {
           "type": "collection",

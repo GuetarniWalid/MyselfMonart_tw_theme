@@ -114,7 +114,7 @@
       }
     },
     "collections_grid_DXKnVN": {
-      "type": "collections-grid",
+      "type": "collections-pages-grid.liquid",
       "blocks": {
         "collection_NrqYi4": {
           "type": "collection",

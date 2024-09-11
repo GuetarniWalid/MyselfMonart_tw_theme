@@ -132,7 +132,7 @@
       }
     },
     "collections_grid_qHxK9B": {
-      "type": "collections-grid",
+      "type": "collections-pages-grid.liquid",
       "blocks": {
         "collection_Uf6xGd": {
           "type": "collection",

@@ -436,8 +436,8 @@
         }
       }
     },
-    "collections-grid": {
-      "name": "Collections grid",
+    "collections-pages-grid": {
+      "name": "Collections/Pages grid",
       "settings": {
         "padding_top": {
           "label": "Top padding",

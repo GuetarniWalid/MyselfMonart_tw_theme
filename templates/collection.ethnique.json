@@ -16,7 +16,7 @@
       }
     },
     "5ad0ce2c-dd68-4586-b27a-fe8e866d0740": {
-      "type": "collections-grid",
+      "type": "collections-pages-grid.liquid",
       "blocks": {
         "collection_Y8DCcB": {
           "type": "collection",

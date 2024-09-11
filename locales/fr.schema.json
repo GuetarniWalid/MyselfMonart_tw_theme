@@ -575,8 +575,8 @@
         "name": "Contenu réductible"
       }
     },
-    "collections-grid": {
-      "name": "Grille de collection",
+    "collections-pages-grid": {
+      "name": "Grille de collections/pages",
       "settings": {
         "padding_top": {
           "label": "Marge supérieure",

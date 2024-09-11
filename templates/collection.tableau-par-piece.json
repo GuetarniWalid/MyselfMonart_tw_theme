@@ -17,7 +17,7 @@
       }
     },
     "collections_grid_pt8R8R": {
-      "type": "collections-grid",
+      "type": "collections-pages-grid.liquid",
       "blocks": {
         "collection_WGfzmy": {
           "type": "collection",

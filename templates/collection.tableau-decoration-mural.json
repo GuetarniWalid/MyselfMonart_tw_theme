@@ -9,7 +9,7 @@
       }
     },
     "collections_grid_tghmpm": {
-      "type": "collections-grid",
+      "type": "collections-pages-grid.liquid",
       "blocks": {
         "collection_aGEKXi": {
           "type": "collection",
@@ -132,7 +132,7 @@
       }
     },
     "collections_grid_3YzQFR": {
-      "type": "collections-grid",
+      "type": "collections-pages-grid.liquid",
       "blocks": {
         "collection_YaJz3C": {
           "type": "collection",
@@ -229,7 +229,7 @@
       }
     },
     "collections_grid_iBYJzA": {
-      "type": "collections-grid",
+      "type": "collections-pages-grid.liquid",
       "blocks": {
         "collection_LiL6Ma": {
           "type": "collection",

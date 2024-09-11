@@ -1,7 +1,7 @@
 if (!window.collectionGridExist) {
   if (!window.boxes) {
     window.collectionGridExist = true
-    window.boxes = document.querySelectorAll('.collections-grid .one-collection');
+    window.boxes = document.querySelectorAll('.collections-pages-grid .one-collection');
 
     window.boxes.forEach((box) => {
       box
