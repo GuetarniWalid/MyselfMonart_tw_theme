@@ -16,7 +16,7 @@
       }
     },
     "collections_grid_Hz3KRG": {
-      "type": "collections-pages-grid.liquid",
+      "type": "collections-pages-grid",
       "blocks": {
         "collection_49e7fq": {
           "type": "collection",

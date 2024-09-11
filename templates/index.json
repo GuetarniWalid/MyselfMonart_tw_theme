@@ -114,23 +114,23 @@
       }
     },
     "collections_grid_DXKnVN": {
-      "type": "collections-pages-grid.liquid",
+      "type": "collections-pages-grid",
       "blocks": {
-        "collection_NrqYi4": {
-          "type": "collection",
+        "page_DGiw97": {
+          "type": "page",
           "settings": {
             "image": "shopify:\/\/shop_images\/panneau-mural_decoratif-interieur.jpg",
-            "collection": "",
+            "page": "poster-et-affiche",
             "nb_columns": "col-span-6",
             "lazy_load": true,
             "paragraph": "<h3>Sublimez Vos Murs avec Notre Collection de Posters et Affiches<\/h3><p>Découvrez notre collection variée de posters et affiches, idéale pour toutes les pièces de votre maison. Que ce soit pour le salon, la chambre, ou le bureau, nos designs uniques apportent une touche artistique à chaque espace. Choisissez parmi une gamme de styles et harmonisez votre intérieur avec nos cadres en bois<strong><br\/><\/strong><\/p>"
           }
         },
-        "collection_pwwCcc": {
-          "type": "collection",
+        "page_RLddx7": {
+          "type": "page",
           "settings": {
             "image": "shopify:\/\/shop_images\/deco-murale-colore-tableau-toile_36ffa478-1226-49d0-ae81-b15e87569172.jpg",
-            "collection": "",
+            "page": "tableau-decoration",
             "nb_columns": "col-span-6",
             "lazy_load": true,
             "paragraph": "<h3>Sublimez Votre Intérieur avec Nos Tableaux en Plexiglas, Aluminium et Toile<\/h3><p>Découvrez notre collection de <strong>tableaux de décoration<\/strong> en plexiglas, aluminium et toile, conçus pour s'adapter à tous les styles d'intérieur. Le plexiglas apporte une brillance éclatante et moderne, l'aluminium offre une finition métallique subtile et durable, tandis que la toile traditionnelle ajoute une texture chaleureuse et artistique. Chaque matériau transforme vos murs en œuvres d'art uniques, que vous préfériez un style minimaliste, industriel, ou classique. Nos tableaux, légers et résistants, sont parfaits pour sublimer n'importe quel espace de votre maison.<\/p>"
@@ -148,8 +148,8 @@
         }
       },
       "block_order": [
-        "collection_NrqYi4",
-        "collection_pwwCcc",
+        "page_DGiw97",
+        "page_RLddx7",
         "collection_AWPAim"
       ],
       "settings": {

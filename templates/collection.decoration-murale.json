@@ -2,7 +2,7 @@
   "layout": "collection",
   "sections": {
     "collections_grid_q33zjw": {
-      "type": "collections-pages-grid.liquid",
+      "type": "collections-pages-grid",
       "blocks": {
         "collection_3thMDa": {
           "type": "collection",
@@ -108,7 +108,7 @@
       }
     },
     "collections_grid_n4kwdL": {
-      "type": "collections-pages-grid.liquid",
+      "type": "collections-pages-grid",
       "blocks": {
         "collection_LnHrpt": {
           "type": "collection",

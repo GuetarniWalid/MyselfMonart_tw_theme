@@ -162,7 +162,7 @@
       }
     },
     "collections_grid_CTRaYt": {
-      "type": "collections-pages-grid.liquid",
+      "type": "collections-pages-grid",
       "blocks": {
         "collection_XzHRtf": {
           "type": "collection",
@@ -259,7 +259,7 @@
       }
     },
     "collections_grid_3hcJVC": {
-      "type": "collections-pages-grid.liquid",
+      "type": "collections-pages-grid",
       "blocks": {
         "collection_RnCHcM": {
           "type": "collection",
