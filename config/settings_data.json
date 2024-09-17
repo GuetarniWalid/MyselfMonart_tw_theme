@@ -48,11 +48,11 @@
         "settings": {
         }
       },
-      "tw-header": {
-        "type": "tw-header",
+      "tw-header-painting": {
+        "type": "tw-header-painting",
         "blocks": {
           "parent_collection_CKrirY": {
-            "type": "parent_collection",
+            "type": "parent_collection_images",
             "settings": {
               "title": "Poster et Affiche",
               "product": "",
@@ -62,7 +62,7 @@
             }
           },
           "parent_collection_nGAFUn": {
-            "type": "parent_collection",
+            "type": "parent_collection_images",
             "settings": {
               "title": "Tableau par Pièce",
               "product": "",
@@ -75,7 +75,7 @@
             }
           },
           "parent_collection_fTjgF8": {
-            "type": "parent_collection",
+            "type": "parent_collection_images",
             "settings": {
               "title": "Thèmes de Tableaux",
               "product": "",
@@ -90,7 +90,7 @@
             }
           },
           "parent_collection_xnc6qR": {
-            "type": "parent_collection",
+            "type": "parent_collection_images",
             "settings": {
               "title": "Tableau par Couleur",
               "product": "",
@@ -106,7 +106,7 @@
             }
           },
           "parent_collection_MRr679": {
-            "type": "parent_collection",
+            "type": "parent_collection_images",
             "settings": {
               "title": "Tableaux Nature & Sauvage",
               "product": "",
@@ -119,7 +119,7 @@
             }
           },
           "parent_collection_epKXXW": {
-            "type": "parent_collection",
+            "type": "parent_collection_images",
             "settings": {
               "title": "Tableau Personnalisé",
               "product": "",
@@ -129,7 +129,7 @@
             }
           },
           "parent_collection_8gdGDj": {
-            "type": "parent_collection",
+            "type": "parent_collection_images",
             "disabled": true,
             "settings": {
               "title": "Tableau Décoration",

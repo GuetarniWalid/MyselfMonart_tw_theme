@@ -20,7 +20,7 @@ class CartItem extends HTMLElement {
         body: JSON.stringify({
           line: this.index,
           quantity,
-          sections: `${this.cartDrawerSectionId},tw-header`,
+          sections: `${this.cartDrawerSectionId},tw-header-painting`,
         }),
       });
       const json = await response.json();
@@ -36,7 +36,7 @@ class CartItem extends HTMLElement {
   renderNewSections(json) {
     const bubble = document.getElementById('bubble-nb-product');
     const newBubble = this.getSectionInnerJSON(
-      json.sections['tw-header'],
+      json.sections['tw-header-painting'],
       '#bubble-nb-product',
     );
     bubble.innerHTML = newBubble;

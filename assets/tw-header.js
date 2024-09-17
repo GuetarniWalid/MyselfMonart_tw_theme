@@ -23,13 +23,14 @@ class StickyHeader extends HTMLElement {
       'nav ul:last-of-type li:last-of-type span:last-of-type',
     );
     this.menuOpenTopElemHeight = this.menuOpenTopElem.offsetHeight;
+    this.desktopUpperNavLis = this.querySelectorAll('#desktop-upper-nav > li');
   }
 
   connectedCallback() {
     document.addEventListener('overlayClick', async (e) => {
       if (!this.detailsParent.contains(e.target) && this.detailsParent.open) {
         this.renderBodyScrollable(true);
-        await this.closeMenu();
+        await this.closeMobileMenu();
       }
     });
 
@@ -38,10 +39,43 @@ class StickyHeader extends HTMLElement {
       const isOpen = this.detailsParent.open;
       if (isOpen) {
         this.renderBodyScrollable(true);
-        await this.closeMenu();
+        await this.closeMobileMenu();
       } else {
-        this.openMenu(e);
+        this.openMobileMenu(e);
       }
+    });
+
+    this.desktopUpperNavLis.forEach((li) => {
+      li.addEventListener('mouseenter', (e) => {
+        const ul = e.target.querySelector('ul');
+        if (!ul) return
+        this.openDesktopMenu(ul);
+      });
+      li.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape') {
+          this.closeDesktopMenu(e.target.closest('ul[role="menu"]'));
+        }
+
+        const ul = e.target.querySelector('ul');
+        if (!ul) return;
+
+        if (e.key === 'Enter') {
+          this.openDesktopMenu(ul);
+        }
+
+        ul.querySelector('li.last-elem')?.addEventListener(
+          'keydown',
+          this.closeDesktopMenuWithKeyboard,
+        );
+        ul.querySelector('li.first-elem')?.addEventListener(
+          'keydown',
+          this.closeDesktopMenuWithKeyboard,
+        );
+      });
+
+      li.addEventListener('mouseleave', (e) => {
+        this.closeDesktopMenu(e.target.querySelector('ul'));
+      });
     });
 
     this.subDetails.forEach((subDetail) => {
@@ -67,7 +101,7 @@ class StickyHeader extends HTMLElement {
     });
     document.addEventListener('PredictiveSearchOpen', async () => {
       this.renderBodyScrollable(false);
-      this.closeMenu();
+      this.closeMobileMenu();
       this.reveal();
       this.cartButton?.classList.replace('translate-y-1/2', 'translate-y-0');
       await waitAnimEnd(this.cartButton);
@@ -76,7 +110,7 @@ class StickyHeader extends HTMLElement {
 
     this.cartButton?.addEventListener('click', () => {
       this.renderBodyScrollable(false);
-      this.closeMenu();
+      this.closeMobileMenu();
       this.setOverlayAboveHeader(true);
       document.dispatchEvent(new CustomEvent('openCartDrawer'));
     });
@@ -94,21 +128,16 @@ class StickyHeader extends HTMLElement {
     this.addEventListener('keyup', (evt) => {
       if (evt.code === 'Escape') {
         this.renderBodyScrollable(true);
-        this.closeMenu();
+        this.closeMobileMenu();
       }
     });
     this.measureFixHeaderHeight();
   }
 
-  closeMenu = async () => {
+  closeMobileMenu = async () => {
     if (!this.detailsParent.open) return;
-    this.menuOpener.firstElementChild
-      .querySelector('svg')
-      .classList.replace('rotate-180', 'rotate-0');
-    this.classList.add('shadow-3xl');
     this.switchMobileMenuLogo(true);
-    if (!this.overlay.classList.contains('hidden'))
-      this.overlay.classList.add('hidden');
+    this.showOverlay(false);
     this.menu.classList.replace('open-nav', 'close-nav');
     await waitAnimEnd(this.menu);
     this.detailsParent.open = false;
@@ -161,18 +190,13 @@ class StickyHeader extends HTMLElement {
     e.target.closest('details').open = false;
   };
 
-  openMenu = () => {
+  openMobileMenu = () => {
     if (this.detailsParent.open) return;
     this.detailsParent.open = true;
     this.menu.classList.replace('close-nav', 'open-nav');
-    this.classList.remove('shadow-3xl');
-    this.menuOpener.firstElementChild
-      .querySelector('svg')
-      .classList.replace('rotate-0', 'rotate-180');
     this.body.classList.add('overflow-hidden');
     this.switchMobileMenuLogo(false);
-    if (this.overlay.classList.contains('hidden'))
-      this.overlay.classList.remove('hidden');
+    this.showOverlay(true);
     this.elemToFocus =
       this.elemToFocus || this.menu.querySelector('[tabindex="0"]');
     this.elemToFocus.focus();
@@ -248,7 +272,7 @@ class StickyHeader extends HTMLElement {
 
   hide = () => {
     if (this.isHide) return;
-    this.closeMenu(true);
+    this.closeMobileMenu(true);
     this.header.classList.replace('translate-y-0', '-translate-y-full');
     this.cartButton?.classList.replace('translate-y-1/2', 'translate-y-0');
     this.preventReveal = true;
@@ -272,6 +296,53 @@ class StickyHeader extends HTMLElement {
       this.wrapperOverlay || document.getElementById('wrapper-overlay');
     this.wrapperOverlay.classList.toggle('relative', !bool);
     this.overlay.classList.toggle('z-40', bool);
+  };
+
+  closeDesktopMenu = (ul) => {
+    this.showOverlay(false);
+
+    if(!ul) return;
+    ul.querySelectorAll('li').forEach((li) => {
+      li.tabIndex = '-1';
+    });
+    ul.classList.replace('grid', 'hidden');
+    ul.closest('li')?.setAttribute('aria-expanded', 'false');
+  };
+
+  closeDesktopMenuWithKeyboard = (e) => {
+    const ul = e.target.closest('ul[role="menu"]');
+    const firstLi = ul.querySelector('li.first-elem');
+    const lastLi = ul.querySelector('li.last-elem');
+
+    if (e.key === 'Tab') {
+      if (e.shiftKey && e.target === firstLi) {
+        this.closeDesktopMenu(ul);
+      } else if (!e.shiftKey && e.target === lastLi) {
+        this.closeDesktopMenu(ul);
+      }
+    }
+    if(e.key === 'Escape') {
+      this.closeDesktopMenu(ul);
+    }
+  };
+
+  openDesktopMenu = (ul) => {
+    this.showOverlay(true);
+
+    if(!ul) return;
+    ul.classList.replace('hidden', 'grid');
+    ul.querySelectorAll('li').forEach((li) => {
+      if(li.classList.contains('no-focusable')) return;
+      li.tabIndex = '0';
+    });
+    ul.querySelector('li.first-elem')?.focus();
+    ul.closest('li').setAttribute('aria-expanded', 'true');
+  };
+
+  showOverlay = (bool) => {
+    this.overlay.classList.toggle('hidden', !bool);
+    this.overlay.classList.toggle('!block', bool);
+    this.closest('header').classList.toggle('shadow-3xl', !bool);
   };
 }
 customElements.define('sticky-header', StickyHeader);
@@ -590,13 +661,13 @@ class CartDrawer extends HTMLElement {
 
     const links = this.querySelectorAll('.obfuscate');
     links.forEach((link) => {
-    link.addEventListener('click', () => makesLinksNavigable(link), false);
-    link.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        makesLinksNavigable(link);
-      }
+      link.addEventListener('click', () => makesLinksNavigable(link), false);
+      link.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          makesLinksNavigable(link);
+        }
+      });
     });
-  });
   }
 
   open = () => {

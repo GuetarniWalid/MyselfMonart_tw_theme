@@ -242,7 +242,8 @@ class MainProductBlocks extends CollapsibleTab {
       this.displayLoader(button);
       const productProperties = this.getproductProperties();
       const json = await customFetch(button, productProperties);
-      this.renderNewSections(json);
+      const headerId = this.getHeaderId(button);
+      this.renderNewSections(json, headerId);
       setTimeout(() => {
         const cartDrawerButton = document.getElementById('cart-button');
         cartDrawerButton.click();
@@ -265,8 +266,9 @@ class MainProductBlocks extends CollapsibleTab {
 
   async defaultBuyFetch(button, productProperties) {
     const variantId = button.dataset.variantId;
+    const headerId = this.getHeaderId(button);
     const response = await fetch(
-      '/cart/add.js?sections=tw-cart-drawer,tw-header',
+      `/cart/add.js?sections=tw-cart-drawer,${headerId}`,
       {
         method: 'POST',
         headers: {
@@ -280,6 +282,14 @@ class MainProductBlocks extends CollapsibleTab {
     );
     if (!response.ok) throw new Error("Une erreur inattendu s'est produite.");
     return await response.json();
+  }
+
+  getHeaderId = (button) => {
+    const template = button.dataset.template;
+    if (template === 'tapestry') {
+      return 'tw-header-tapestry';
+    }
+    return 'tw-header-painting';
   }
 
   async tapestryBuyFetch(button, productProperties) {
@@ -316,10 +326,10 @@ class MainProductBlocks extends CollapsibleTab {
     return json;
   }
 
-  renderNewSections({ items, sections }) {
+  renderNewSections({ items, sections }, headerId) {
     const bubble = document.getElementById('bubble-nb-product');
     const newBubble = this.getSectionInnerJSON(
-      sections['tw-header'],
+      sections[headerId],
       '#bubble-nb-product',
     );
     bubble.innerHTML = newBubble;

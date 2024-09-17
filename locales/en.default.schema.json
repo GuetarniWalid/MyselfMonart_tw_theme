@@ -712,7 +712,11 @@
       "name": "Gift image"
     },
     "header": {
-      "name": "Header",
+      "name": {
+        "painting": "Header for paintings",
+        "poster": "Header for posters",
+        "tapestry": "Header for tapestries"
+      },
       "settings": {
         "logo_svg": {
           "label": "Logo in svg",
@@ -729,7 +733,30 @@
           }
         },
         "parent_collection": {
-          "name": "Parent collection",
+          "name": {
+            "images": "Parent collection with images",
+            "text": "Parent collection with text"
+          },
+          "header": {
+            "first_section": {
+              "content": "First section"
+            },
+            "second_section": {
+              "content": "Second section"
+            },
+            "third_section": {
+              "content": "Third section"
+            },
+            "fourth_section": {
+              "content": "Fourth section"
+            },
+            "fifth_section": {
+              "content": "Fifth section"
+            },
+            "sixth_section": {
+              "content": "Sixth section"
+            }
+          },
           "settings": {
             "title": {
               "label": "Title"

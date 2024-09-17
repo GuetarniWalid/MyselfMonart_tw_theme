@@ -984,7 +984,11 @@
       "name": "Image du cadeau"
     },
     "header": {
-      "name": "En-tête",
+      "name": {
+        "painting": "En-tête pour tableaux",
+        "page": "En-tête pour page",
+        "tapestry": "En-tête pour tapisseries"
+      },
       "settings": {
         "logo_svg": {
           "label": "Logo en svg",
@@ -1001,7 +1005,30 @@
           }
         },
         "parent_collection": {
-          "name": "Collection parente",
+          "name": {
+            "images": "Collection parente avec images",
+            "text": "Collection parente avec texte"
+          },
+          "header": {
+            "first_section": {
+              "content": "Première section"
+            },
+            "second_section": {
+              "content": "Deuxième section"
+            },
+            "third_section": {
+              "content": "Troisième section"
+            },
+            "fourth_section": {
+              "content": "Quatrième section"
+            },
+            "fifth_section": {
+              "content": "Cinquième section"
+            },
+            "sixth_section": {
+              "content": "Sixième section"
+            }
+          },
           "settings": {
             "title": {
               "label": "Titre"

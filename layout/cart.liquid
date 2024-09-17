@@ -6,25 +6,36 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="" />
     <link rel="canonical" href="{{ canonical_url }}" />
-    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin />
-    <meta name="p:domain_verify" content="df84d648bc3332c06767fb16e0fb142e"/>
+    <link
+      rel="preconnect"
+      href="https://cdn.shopify.com"
+      crossorigin />
+    <meta name="p:domain_verify" content="df84d648bc3332c06767fb16e0fb142e" />
 
     {%- if template.name == 'page' and page.metafields.robots.noindex.value -%}
       <meta name="robots" content="noindex,nofollow">
     {%- endif -%}
 
     {%- if settings.favicon != blank -%}
-      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}" />
-    {%- endif -%} 
+      <link
+        rel="icon"
+        type="image/png"
+        href="{{ settings.favicon | image_url: width: 32, height: 32 }}" />
+    {%- endif -%}
 
     <title>
       {{ page_title }}
-      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%} {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%} {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+      {%- if current_tags %}
+        &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+      {%- if current_page != 1 %}
+        &ndash; Page {{ current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %}
+        &ndash; {{ shop.name }}{% endunless -%}
     </title>
 
     {% if page_description %}
       <meta name="description" content="{{ page_description | escape }}" />
-    {% endif %} 
+    {% endif %}
     {% render 'meta-tags' %}
 
     <script src="{{ 'tw-global.js' | asset_url }}" defer="defer"></script>
@@ -33,7 +44,10 @@
     }}
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
     {% render 'fonts-and-colors' %}
@@ -49,7 +63,7 @@
     {%- if request.design_mode -%}
       <script src="{{ 'theme-editor.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
-  
+
     {% render 'gsf-conversion-pixels' %}
   </head>
 
@@ -59,7 +73,7 @@
     </a>
 
     {% section 'tw-announcement-bar' %}
-    {% section 'tw-header' %}
+    {% section 'tw-header-page' %}
 
     <div id="wrapper-overlay" class="relative">
       <main id="MainContent" role="main">
@@ -71,7 +85,7 @@
         {{ content_for_layout }}
       </main>
       {% section 'tw-footer' %}
-      <div id="overlay-content" class="absolute inset-0 bg-[rgba(0,46,93,0)] shadow-[shadow-[0_8px_32px_0_rgba(31,38,135,0.37)]] backdrop-blur-[2px] hidden"> </div>
+      <div id="overlay-content" class="absolute inset-0 bg-[rgba(0,46,93,0)] shadow-[shadow-[0_8px_32px_0_rgba(31,38,135,0.37)]] backdrop-blur-[2px] hidden"></div>
     </div>
 
     <script>
