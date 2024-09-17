@@ -1,12 +1,82 @@
 {
   "sections": {
+    "image_with_text_FBQrrx": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/equipe-de-graphiste-et-decorateur-interieur.png",
+        "title": "NOS VALEURS",
+        "description": "<p>Nous croyons en l'importance de permettre à chacun d'exprimer sa personnalité et son histoire à travers sa décoration intérieure. Avec nos tableaux de décoration, chaque mur devient le narrateur de votre histoire.n ...<\/p>",
+        "layout": "image_first",
+        "enable_blob": true,
+        "activate_dynamic_color": true,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#91ced7",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "multicolumn_9dc8an": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_LpXCLJ": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/toile-murale.png",
+            "title": "ENCRE PARFAITE",
+            "text": "<p>Dans l'univers de MyselfMonArt, nous œuvrons avec détermination pour que chaque goutte d'encre traduise fidèlement la beauté de vos créations visuelles à l'écran.<\/p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
+          }
+        },
+        "column_jDQye6": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/cadre-bois-pour-tableau.png",
+            "title": "ENCADREZ L'EXCEPTIONNEL",
+            "text": "<p>Chez MyselfMonArt, nos cadres allient élégance et durabilité, sublimant chaque toile en véritable chef-d'œuvre. Une harmonie parfaite où la qualité rencontre l’art.<\/p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
+          }
+        },
+        "column_kb64Ji": {
+          "type": "column",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/toile-deco-elephant_4acaada7-ed8a-490f-a02b-89c82a272d29.jpg",
+            "title": "COULEURS & ÉMOTIONS",
+            "text": "<p>Vivez l'expérience MyselfMonArt, créez des espaces qui vous ressemblent, qui parlent et touchent le cœur, et habillez vos murs d'émotions et de couleurs.<\/p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
+          }
+        }
+      },
+      "block_order": [
+        "column_LpXCLJ",
+        "column_jDQye6",
+        "column_kb64Ji"
+      ],
+      "settings": {
+        "title": "NOTRE SAVOIR-FAIRE",
+        "image_shape": "rounded-none",
+        "columns_desktop": 3,
+        "show_backgounds": true,
+        "button_label": "",
+        "button_link": "",
+        "to_obfuscate": false
+      }
+    },
     "main": {
       "type": "main-page",
       "settings": {
+        "title_alignment": "text-left"
       }
     }
   },
   "order": [
+    "image_with_text_FBQrrx",
+    "multicolumn_9dc8an",
     "main"
   ]
 }

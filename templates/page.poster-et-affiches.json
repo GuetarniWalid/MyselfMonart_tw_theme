@@ -179,30 +179,30 @@
           "type": "collection",
           "settings": {
             "image": "shopify:\/\/shop_images\/poster-salon-bleue.jpg",
-            "collection": "tableau-abstrait",
+            "collection": "posters-affiches-abstrait",
             "nb_columns": "col-span-6",
             "lazy_load": true,
-            "paragraph": ""
+            "paragraph": "<h3>DÉCOUVREZ NOS POSTERS ABSTRAITS POUR UN INTÉRIEUR UNIQUE<\/h3><p>Transformez votre espace avec l'énergie et la profondeur de l'art abstrait. Notre collection de posters  est une invitation à l'imagination, où les couleurs et les formes se combinent pour créer un langage visuel puissant. Que ce soit des formes géométriques audacieuses, des éclats de couleurs vives, ou des compositions fluides et organiques, chaque affiche est conçue pour stimuler l'esprit et toucher l'âme.<\/p><p>Nos posters abstraits s’adaptent à tous les intérieurs, que vous souhaitiez créer un mur de cadre saisissant dans le salon, ajouter une touche de réflexion dans votre bureau, ou instaurer une ambiance sereine dans la chambre. Grâce à notre variété de designs, allant du minimalisme épuré aux textures plus complexes, chaque œuvre trouve sa place dans votre décoration. En choisissant l’art abstrait, vous faites de votre intérieur un lieu d’inspiration, où chaque mur raconte une histoire.<\/p>"
           }
         },
         "collection_bmfQVi": {
           "type": "collection",
           "settings": {
             "image": "shopify:\/\/shop_images\/poster-boudha-colore.jpg",
-            "collection": "tableau-zen",
+            "collection": "posters-affiches-zen",
             "nb_columns": "col-span-6",
             "lazy_load": true,
-            "paragraph": ""
+            "paragraph": "<h3>DÉCOUVREZ NOS POSTERS ZEN POUR UN INTÉRIEUR APAISANT<\/h3><p>Apportez calme et sérénité à votre intérieur avec notre collection de posters Zen. Chaque affiche est conçue pour transformer votre espace en un véritable havre de paix. Que ce soit pour votre salon, chambre, ou coin méditation, nos posters capturent l'essence de la tranquillité et de l'évasion.<\/p><p>Plongez dans des paysages naturels enveloppés de brume, des jardins zen japonais, ou des images méditatives comme Bouddha et le yoga. Avec des couleurs douces et des motifs apaisants, chaque poster est une invitation à se recentrer et à savourer l'instant présent. Transformez votre espace en un refuge de calme et de bien-être avec nos posters zen.<\/p>"
           }
         },
         "collection_NKrAJ3": {
           "type": "collection",
           "settings": {
             "image": "shopify:\/\/shop_images\/collection-poster-bestseller-salon.jpg",
-            "collection": "bestsellers-1",
+            "collection": "posters-affiches-salon",
             "nb_columns": "col-span-12",
             "lazy_load": true,
-            "paragraph": ""
+            "paragraph": "<h3>DÉCOUVREZ NOS POSTERS POUR SUBLIMER VOTRE SALON<\/h3><p>Envie de donner un nouveau souffle à votre salon ? Nos posters sont là pour transformer votre espace en un véritable théâtre de vie. Chaque affiche apporte une touche de couleur, de créativité et de caractère à vos murs pour raconter une histoire unique, qu'elle soit poétique, abstraite ou pleine de charme.<\/p><p>Notre collection s'adapte à toutes les ambiances : des paysages urbains pour les amateurs de la ville, des citations inspirantes pour les rêveurs, et des illustrations artistiques pour les esprits créatifs. Chaque image est conçue pour stimuler l'esprit, apaiser l'âme et captiver le regard. <\/p><p>Chez Myselfmonart, nous croyons que le salon est bien plus qu'un simple espace de détente, c’est un lieu d'expression où chaque élément compte. Avec nos posters prêts à être accrochés, faites de votre salon un espace qui vous ressemble, , pour ajouter ce petit \"plus\" qui fait toute la différence.<\/p>"
           }
         }
       },

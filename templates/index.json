@@ -158,97 +158,6 @@
         "padding_bottom": "pb-0"
       }
     },
-    "customer_testimonial_dKrfKQ": {
-      "type": "customer-testimonial",
-      "blocks": {
-        "image_text_9zzMap": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/Tableau-chambre-bebe_f6e62e6e-707b-41df-aa17-bdad25ef3385.jpg",
-            "message": "Juste une petite photo avec le cadre mis en place encore un grand merci à vous 🥰. \nElodie G"
-          }
-        },
-        "image_text_nHhVKU": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau_marylin.jpg",
-            "message": "Envoie très rapide et tableau encore plus beau que sur le site.\nParfait je recommande !!!\nJessica S"
-          }
-        },
-        "image_text_redkMj": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/ananas.jpg",
-            "message": "Trop contente de mon tableau, les couleurs sont aussi flashy que sur les photo du site.\nSarah F"
-          }
-        },
-        "image_text_WLJhje": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/Tableau-decoration_44dcf7be-75b3-46aa-810b-3020d3b9dc06.jpg",
-            "message": "Le tableau est super, et encore plus beau en vrai ! Arrivé rapidement et bien protégé. Alain N"
-          }
-        },
-        "image_text_7jPNHU": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/Tableau-chambre_a164de8b-ed28-4326-926b-92bbe380279b.jpg",
-            "message": "Très belle toile, les couleurs sont super et brillante. Marie K"
-          }
-        },
-        "image_text_Y8Nfjb": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/Tableau-deco-noir-et-blanc.jpg",
-            "message": "Top, rien à dire de plus. \nGuillaume H"
-          }
-        },
-        "image_text_EVECCa": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/avis-tableau-plexi_2.jpg",
-            "message": "Magnifique tableau et très design, correspond parfaitement à la description.  Morel E"
-          }
-        },
-        "image_text_GUbgKA": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-comics-super-man.jpg",
-            "message": "Nickel, très satisfait c'est ma 3e commande. Hugo G"
-          }
-        },
-        "image_text_TmDy39": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-superman-aquarelle.jpg",
-            "message": "TOP, tableau reçu rapidement avec suivie. Hugo G"
-          }
-        },
-        "image_text_FQD64d": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-lion-impression-alluminuim.jpg",
-            "message": "Reçu aujourd'hui, le tableau est trop beaux est bien emballer 🥰. Sonia F"
-          }
-        }
-      },
-      "block_order": [
-        "image_text_9zzMap",
-        "image_text_nHhVKU",
-        "image_text_redkMj",
-        "image_text_WLJhje",
-        "image_text_7jPNHU",
-        "image_text_Y8Nfjb",
-        "image_text_EVECCa",
-        "image_text_GUbgKA",
-        "image_text_TmDy39",
-        "image_text_FQD64d"
-      ],
-      "settings": {
-        "title": "Nos photos à travers vos yeux ❤️",
-        "duration_image_appearance": 3
-      }
-    },
     "rich_text_DUh7mV": {
       "type": "rich-text",
       "blocks": {
@@ -286,7 +195,7 @@
           "type": "column",
           "settings": {
             "image": "shopify:\/\/shop_images\/poster-encadrer.jpg",
-            "title": "Poster",
+            "title": "Poster & Affiche",
             "text": "<p>Ajoutez une touche chaleureuse et personnalisée à vos murs avec nos posters encadrés, parfaits pour créer une atmosphère accueillante et conviviale.<\/p>",
             "link_label": "",
             "link": "",
@@ -297,7 +206,7 @@
           "type": "column",
           "settings": {
             "image": "shopify:\/\/shop_images\/tableau-toile.jpg",
-            "title": "Tableau",
+            "title": "Tableau Décoration",
             "text": "<p>Apportez une touche moderne et élégante à votre intérieur grâce à nos tableaux de décoration, alliant style contemporain et finitions impeccables.<\/p>",
             "link_label": "",
             "link": "",
@@ -308,7 +217,7 @@
           "type": "column",
           "settings": {
             "image": "shopify:\/\/shop_images\/impression-poster.jpg",
-            "title": "Tapisserie",
+            "title": "Papier Peint",
             "text": "<p>Transformez vos espaces avec du papier peint aux couleurs éclatantes et au design brillant, pour un rendu haut de gamme qui illumine vos murs.<\/p>",
             "link_label": "",
             "link": "",
@@ -328,73 +237,6 @@
         "show_backgounds": true,
         "button_label": "",
         "button_link": "",
-        "to_obfuscate": false
-      }
-    },
-    "image_with_text_QNwYQY": {
-      "type": "image-with-text",
-      "settings": {
-        "image": "shopify:\/\/shop_images\/equipe-de-graphiste-et-decorateur-interieur.png",
-        "title": "- NOS VALEURS",
-        "description": "<p>Nous croyons en l'importance de permettre à chacun d'exprimer sa personnalité et son histoire à travers sa décoration intérieure. Avec nos tableaux de décoration, chaque mur devient le narrateur de votre histoire.<\/p>",
-        "layout": "image_first",
-        "enable_blob": false,
-        "activate_dynamic_color": true,
-        "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#91ced7",
-        "padding_top": "pt-16",
-        "padding_bottom": "pb-16"
-      }
-    },
-    "multicolumn_JK6fxJ": {
-      "type": "multicolumn",
-      "blocks": {
-        "column_V3BE8r": {
-          "type": "column",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/toile-murale.png",
-            "title": "ENCRE PARFAITE",
-            "text": "<p>Dans l'univers de MyselfMonArt, nous œuvrons avec détermination pour que chaque goutte d'encre traduise fidèlement la beauté de vos créations visuelles à l'écran.<\/p>",
-            "link_label": "",
-            "link": "",
-            "to_obfuscate": false
-          }
-        },
-        "column_JRdTtx": {
-          "type": "column",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/cadre-bois-pour-tableau.png",
-            "title": "ENCADREZ L'EXCEPTIONNEL",
-            "text": "<p>Chez MyselfMonArt, nos cadres allient élégance et durabilité, sublimant chaque toile en véritable chef-d'œuvre. Une harmonie parfaite où la qualité rencontre l’art.<\/p>",
-            "link_label": "",
-            "link": "",
-            "to_obfuscate": false
-          }
-        },
-        "column_b8CP9L": {
-          "type": "column",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/toile-deco-elephant_4acaada7-ed8a-490f-a02b-89c82a272d29.jpg",
-            "title": "COULEURS & ÉMOTIONS",
-            "text": "<p>Vivez l'expérience MyselfMonArt, créez des espaces qui vous ressemblent, qui parlent et touchent le cœur, et habillez vos murs d'émotions et de couleurs.<\/p>",
-            "link_label": "",
-            "link": "",
-            "to_obfuscate": false
-          }
-        }
-      },
-      "block_order": [
-        "column_V3BE8r",
-        "column_JRdTtx",
-        "column_b8CP9L"
-      ],
-      "settings": {
-        "title": "NOTRE SAVOIR-FAIRE",
-        "image_shape": "aspect-[3\/4] object-cover",
-        "columns_desktop": 3,
-        "show_backgounds": true,
-        "button_label": "",
-        "button_link": "shopify:\/\/pages\/a-propos-de-myselfmonart",
         "to_obfuscate": false
       }
     },
@@ -440,8 +282,8 @@
           "settings": {
             "button_label": "Contactez-nous",
             "button_link": "shopify:\/\/pages\/contactez-nous",
-            "button_label_2": "",
-            "button_link_2": "",
+            "button_label_2": "F.A.Q",
+            "button_link_2": "shopify:\/\/pages\/faq",
             "to_obfuscate": false
           }
         }
@@ -552,11 +394,8 @@
     "badges_QiyDmQ",
     "shifted_image_carousel_cJeF34",
     "collections_grid_DXKnVN",
-    "customer_testimonial_dKrfKQ",
     "rich_text_DUh7mV",
     "multicolumn_dWGLnx",
-    "image_with_text_QNwYQY",
-    "multicolumn_JK6fxJ",
     "rich_text_83wpVf",
     "badges_cHPDPq",
     "rich_text_VQq9NW"
