@@ -27,6 +27,13 @@
                 {% endif %}
                 {{ block.settings.product.title | escape }}
               </li>
+            {% elsif block.type == "page_only" %}
+              <li class="obfuscate flex items-center gap-3 hover:bg-main-5 p-3 rounded-lg cursor-pointer" data-url64="{{ block.settings.page.url | base64_encode }}" tabindex="0">
+                {% if block.settings.image != blank %}
+                  {{ block.settings.image | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: block.settings.image.alt, loading: 'lazy', class: 'rounded-md' }}
+                {% endif %}
+                {{ block.settings.page.title | escape }}
+              </li>
             {% elsif block.type == "parent_collection_images" %}
               <li class="details-wrapper group/one hover:bg-main-5 p-3 rounded-lg cursor-pointer">
                 <details>
@@ -158,12 +165,16 @@
     <ul id="desktop-upper-nav" class="flex justify-center items-center gap-4 2xl:gap-9" role="menu">
       {% for block in section.blocks %}
         {% if block.type == "collection_only" %}
-          <li class="obfuscate cursor-pointer" data-url64="{{ block.settings.collection.url | base64_encode }}" tabindex="0">
+          <li class="obfuscate cursor-pointer p-3 outline-none hover:bg-main-5 focus:bg-main-5" data-url64="{{ block.settings.collection.url | base64_encode }}" tabindex="0">
             {{ block.settings.collection.title | escape }}
           </li>
         {% elsif block.type == "product_only" %}
-          <li class="obfuscate cursor-pointer" data-url64="{{ block.settings.product.url | base64_encode }}" tabindex="0">
+          <li class="obfuscate cursor-pointer p-3 outline-none hover:bg-main-5 focus:bg-main-5" data-url64="{{ block.settings.product.url | base64_encode }}" tabindex="0">
             {{ block.settings.product.title | escape }}
+          </li>
+        {% elsif block.type == "page_only" %}
+          <li class="obfuscate cursor-pointer p-3 outline-none hover:bg-main-5 focus:bg-main-5" data-url64="{{ block.settings.page.url | base64_encode }}" tabindex="0">
+            {{ block.settings.page.title | escape }}
           </li>
         {% elsif block.type == "parent_collection_images" %}
           {% liquid
@@ -178,7 +189,9 @@
             endif
           %}
           <li class="group relative cursor-pointer p-3 outline-none hover:bg-main-5 focus:bg-main-5" tabindex="0" aria-haspopup="true" aria-expanded="false">
-            {{ block.settings.title | escape }}
+            <span {% if block.settings.link != blank %}class="obfuscate before:absolute before:inset-0" data-url64="{{ block.settings.link | base64_encode }}" tabindex="0"{% endif %}>
+              {{ block.settings.title | escape }}
+            </span>
             <ul class="hidden group-hover:grid absolute -bottom-[1px] bg-secondary p-3 gap-3 min-w-max cursor-default rounded-b" style="transform:translate(-{{ transform_shift }}%,100%);left:{{ leftShift }};grid-template-columns:var(--desktop-nav-cols-{{ id }});grid-template-rows:var(--desktop-nav-rows-{{ id }});" role="menu">
               {% for collection in block.settings.child_collection_list %}
                 {% liquid
@@ -222,9 +235,22 @@
               </ul>
           </li>
         {% else %}
+          {% liquid
+              assign id = forloop.index
+              assign li_count = section.blocks | size
+              assign transform_shift = forloop.index | times: 100 | divided_by: li_count
+              if transform_shift > 50
+                assign leftShift = '100%'
+              else
+                assign leftShift = '0'
+                assign transform_shift = transform_shift | divided_by: 2
+              endif
+            %}
           <li class="group relative cursor-pointer p-3 outline-none hover:bg-main-5 focus:bg-main-5" tabindex="0" aria-haspopup="true" aria-expanded="false">
-            {{ block.settings.title | escape }}
-            <ul class="hidden group-hover:grid grid-cols-[auto_auto_auto] grid-rows-[auto_auto_auto] absolute translate-y-full -bottom-[1px] bg-secondary p-3 gap-3 min-w-max cursor-default rounded-b" role="menu">
+            <span {% if block.settings.link != blank %}class="obfuscate before:absolute before:inset-0" data-url64="{{ block.settings.link | base64_encode }}" tabindex="0"{% endif %}>
+              {{ block.settings.title | escape }}
+            </span>
+            <ul class="hidden group-hover:grid grid-cols-[auto_auto_auto] grid-rows-[auto_auto_auto] absolute translate-y-full -bottom-[1px] bg-secondary p-3 gap-x-5 gap-y-3 min-w-max cursor-default rounded-b" style="transform:translate(-{{ transform_shift }}%,100%);left:{{ leftShift }};" role="menu">
               {% liquid
                 assign sections_count = 0
                 if block.settings.child_collection_list_1_section != blank
@@ -243,7 +269,7 @@
               {% for id in (1..sections_count) %}
                 {% liquid
                   assign collection_id = "child_collection_list_" | append: id | append: '_section'
-                                       assign collection_list = block.settings[collection_id]
+                  assign collection_list = block.settings[collection_id]
                   assign title_id = "title_" | append: id | append: '_section'
                 %}
                 <li class="no-focusable">

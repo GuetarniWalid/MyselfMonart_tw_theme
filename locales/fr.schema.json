@@ -1033,6 +1033,9 @@
             }
           },
           "settings": {
+            "link": {
+              "label": "Lien vers la page principale"
+            },
             "title": {
               "label": "Titre"
             },
@@ -1041,6 +1044,17 @@
             },
             "child_collection_list": {
               "label": "Collections enfants"
+            }
+          }
+        },
+        "page_only": {
+          "name": "Page seule",
+          "settings": {
+            "image": {
+              "info": "Pas obligatoire, seulement si vous souhaitez une image dans le menu mobile"
+            },
+            "page": {
+              "label": "Page"
             }
           }
         },

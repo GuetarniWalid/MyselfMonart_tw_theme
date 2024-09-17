@@ -761,6 +761,9 @@
             }
           },
           "settings": {
+            "link": {
+              "label": "Link to main page"
+            },
             "title": {
               "label": "Title"
             },
@@ -769,6 +772,17 @@
             },
             "child_collection_list": {
               "label": "Children's collections"
+            }
+          }
+        },
+        "page_only": {
+          "name": "Page only",
+          "settings": {
+            "image": {
+              "info": "Not required, only if you want an image in the mobile menu"
+            },
+            "page": {
+              "label": "Page"
             }
           }
         },
