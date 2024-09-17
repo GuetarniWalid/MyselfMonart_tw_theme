@@ -987,6 +987,9 @@
       "name": {
         "painting": "En-tête pour tableaux",
         "page": "En-tête pour page",
+        "page_painting": "En-tête pour page tableaux",
+        "page_poster": "En-tête pour page posters",
+        "page_tapestry": "En-tête pour page tapisseries",
         "tapestry": "En-tête pour tapisseries"
       },
       "settings": {

@@ -73,7 +73,15 @@
     </a>
 
     {% section 'tw-announcement-bar' %}
-    {% section 'tw-header-page' %}
+    {% if template.suffix == "tableau-decoration" %}
+      {% section 'tw-header-page-painting' %}
+    {% elsif template.suffix == "poster-et-affiches" %}
+      {% section 'tw-header-page-poster' %}
+    {% elsif template.suffix == "papier-peint" %}
+      {% section 'tw-header-page-tapestry' %}
+    {% else %}
+      {% section 'tw-header-page' %}
+    {% endif %}
     {% section 'tw-cart-drawer' %}
 
 

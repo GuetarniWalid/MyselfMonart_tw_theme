@@ -714,7 +714,10 @@
     "header": {
       "name": {
         "painting": "Header for paintings",
-        "poster": "Header for posters",
+        "page": "Header for page",
+        "page_painting": "Header for page paintings",
+        "page_poster": "Header for page posters",
+        "page_tapestry": "Header for page tapestries",
         "tapestry": "Header for tapestries"
       },
       "settings": {
