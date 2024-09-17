@@ -5,9 +5,7 @@
       "type": "image-banner",
       "settings": {
         "image_desktop": "shopify:\/\/shop_images\/serviceclient_ordi.jpg",
-        "image_desktop_height": 40,
-        "image_mobile": "shopify:\/\/shop_images\/service_client.jpg",
-        "image_mobile_height": 85
+        "image_mobile": "shopify:\/\/shop_images\/service_client.jpg"
       }
     },
     "main": {

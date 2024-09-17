@@ -4,9 +4,7 @@
     "2ec79988-c5e9-407a-9a25-f86242ee749d": {
       "type": "image-banner",
       "settings": {
-        "image_desktop": "shopify:\/\/shop_images\/FAQ_ORDI.jpg",
-        "image_desktop_height": 60,
-        "image_mobile_height": 45
+        "image_desktop": "shopify:\/\/shop_images\/FAQ_ORDI.jpg"
       }
     },
     "main": {
