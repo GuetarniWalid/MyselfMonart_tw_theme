@@ -4,6 +4,7 @@
     Accepts:
     - product: {Object}
     - ratio: {String}
+    - reviews_structured_data: {String}
 {% endcomment %}
 
 
@@ -17,22 +18,735 @@
   window.shopUrl = window.Shopify.routes.root
 </script>
 
+{%- liquid
+  if product.images[1]
+    assign seo_media = product.images[1]
+  elsif product.selected_or_first_available_variant.featured_media
+    assign seo_media = product.selected_or_first_available_variant.featured_media
+  else
+    assign seo_media = product.featured_media
+  endif
+-%}
+
 {% if template.suffix == 'painting' %}
   {% if ratio == 'portrait' %}  
     <script id="variants-available">
       window.variants = [{"name":"{{ 'localeImported.30x40_cm' | t }}","price":24.9,"technicalType":"size","technicalName":"30x40","children":[{"name":"{{ 'localeImported.poster' | t }}","price":0,"technicalType":"matter","technicalName":"poster","children":[[{"name":"{{ 'localeImported.sans_cadre' | t }}","price":0,"technicalType":"frame","technicalName":"null"},{"name":"{{ 'localeImported.cadre_blanc' | t }}","price":25,"technicalType":"frame","technicalName":"white"},{"name":"{{ 'localeImported.cadre_noir_mat' | t }}","price":25,"technicalType":"frame","technicalName":"black-mat"},{"name":"{{ 'localeImported.cadre_argent_ancien' | t }}","price":30,"technicalType":"frame","technicalName":"silver-old"},{"name":"{{ 'localeImported.cadre_chne_clair' | t }}","price":30,"technicalType":"frame","technicalName":"oak-light"},{"name":"{{ 'localeImported.cadre_noyer' | t }}","price":30,"technicalType":"frame","technicalName":"walnut"}]]},{"name":"{{ 'localeImported.toile' | t }}","price":28.6,"technicalType":"matter","technicalName":"canvas","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.set_de_fixation' | t }}","price":6,"technicalType":"fixation","technicalName":"set"}],[{"name":"{{ 'localeImported.chassis_de_2cm' | t }}","price":0,"technicalType":"chassis","technicalName":2},{"name":"{{ 'localeImported.chassis_de_2cm' | t }}","price":15,"technicalType":"chassis","technicalName":4}],[{"name":"{{ 'localeImported.bordure_blanche' | t }}","price":0,"technicalType":"border","technicalName":"white"},{"name":"{{ 'localeImported.bordure_noire' | t }}","price":2,"technicalType":"border","technicalName":"black"},{"name":"{{ 'localeImported.bordure_tire' | t }}","price":4,"technicalType":"border","technicalName":"stretched"},{"name":"{{ 'localeImported.bordure_miroir' | t }}","price":6,"technicalType":"border","technicalName":"mirror"},{"name":"{{ 'localeImported.bordure_plie' | t }}","price":8,"technicalType":"border","technicalName":"folded"}],[{"name":"{{ 'localeImported.sans_cadre' | t }}","price":0,"technicalType":"frame","technicalName":"null"},{"name":"{{ 'localeImported.cadre_blanc' | t }}","price":25,"technicalType":"frame","technicalName":"white"},{"name":"{{ 'localeImported.cadre_noir_mat' | t }}","price":25,"technicalType":"frame","technicalName":"black-mat"},{"name":"{{ 'localeImported.cadre_argent_ancien' | t }}","price":30,"technicalType":"frame","technicalName":"silver-old"},{"name":"{{ 'localeImported.cadre_chne_clair' | t }}","price":30,"technicalType":"frame","technicalName":"oak-light"},{"name":"{{ 'localeImported.cadre_noyer' | t }}","price":30,"technicalType":"frame","technicalName":"walnut"}]]},{"name":"{{ 'localeImported.aluminium' | t }}","price":44.9,"technicalType":"matter","technicalName":"aluminium","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.sans_fixation' | t }}","price":8,"technicalType":"fixation","technicalName":"hook"}],[{"name":"{{ 'localeImported.mat' | t }}","price":0,"technicalType":"shine","technicalName":"mat"},{"name":"{{ 'localeImported.brillant' | t }}","price":4.9,"technicalType":"shine","technicalName":"shine"}]]},{"name":"{{ 'localeImported.aluminium__plexiglas' | t }}","price":88.1,"technicalType":"matter","technicalName":"aluminium-plexi","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.set_de_fixation' | t }}","price":8,"technicalType":"fixation","technicalName":"set"}]]}]},{"name":"{{ 'localeImported.60x80_cm' | t }}","price":45.6,"technicalType":"size","technicalName":"60x80","children":[{"name":"{{ 'localeImported.poster' | t }}","price":0,"technicalType":"matter","technicalName":"poster","children":[[{"name":"{{ 'localeImported.sans_cadre' | t }}","price":0,"technicalType":"frame","technicalName":"null"},{"name":"{{ 'localeImported.cadre_blanc' | t }}","price":30,"technicalType":"frame","technicalName":"white"},{"name":"{{ 'localeImported.cadre_noir_mat' | t }}","price":30,"technicalType":"frame","technicalName":"black-mat"},{"name":"{{ 'localeImported.cadre_argent_ancien' | t }}","price":35,"technicalType":"frame","technicalName":"silver-old"},{"name":"{{ 'localeImported.cadre_chne_clair' | t }}","price":35,"technicalType":"frame","technicalName":"oak-light"},{"name":"{{ 'localeImported.cadre_noyer' | t }}","price":35,"technicalType":"frame","technicalName":"walnut"}]]},{"name":"{{ 'localeImported.toile' | t }}","price":39.4,"technicalType":"matter","technicalName":"canvas","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.set_de_fixation' | t }}","price":6,"technicalType":"fixation","technicalName":"set"}],[{"name":"{{ 'localeImported.chassis_de_2cm' | t }}","price":0,"technicalType":"chassis","technicalName":2},{"name":"{{ 'localeImported.chassis_de_4cm' | t }}","price":15,"technicalType":"chassis","technicalName":4}],[{"name":"{{ 'localeImported.bordure_blanche' | t }}","price":0,"technicalType":"border","technicalName":"white"},{"name":"{{ 'localeImported.bordure_noire' | t }}","price":2,"technicalType":"border","technicalName":"black"},{"name":"{{ 'localeImported.bordure_tire' | t }}","price":4,"technicalType":"border","technicalName":"stretched"},{"name":"{{ 'localeImported.bordure_miroir' | t }}","price":6,"technicalType":"border","technicalName":"mirror"},{"name":"{{ 'localeImported.bordure_plie' | t }}","price":8,"technicalType":"border","technicalName":"folded"}],[{"name":"{{ 'localeImported.sans_cadre' | t }}","price":0,"technicalType":"frame","technicalName":"null"},{"name":"{{ 'localeImported.cadre_blanc' | t }}","price":30,"technicalType":"frame","technicalName":"white"},{"name":"{{ 'localeImported.cadre_noir_mat' | t }}","price":30,"technicalType":"frame","technicalName":"black-mat"},{"name":"{{ 'localeImported.cadre_argent_ancien' | t }}","price":35,"technicalType":"frame","technicalName":"silver-old"},{"name":"{{ 'localeImported.cadre_chne_clair' | t }}","price":35,"technicalType":"frame","technicalName":"oak-light"},{"name":"{{ 'localeImported.cadre_noyer' | t }}","price":35,"technicalType":"frame","technicalName":"walnut"}]]},{"name":"{{ 'localeImported.aluminium' | t }}","price":89.4,"technicalType":"matter","technicalName":"aluminium","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}],[{"name":"{{ 'localeImported.mat' | t }}","price":0,"technicalType":"shine","technicalName":"mat"},{"name":"{{ 'localeImported.brillant' | t }}","price":4.9,"technicalType":"shine","technicalName":"shine"}]]},{"name":"{{ 'localeImported.aluminium__plexiglas' | t }}","price":149.4,"technicalType":"matter","technicalName":"aluminium-plexi","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}]]}]},{"name":"{{ 'localeImported.75x100_cm' | t }}","price":55,"technicalType":"size","technicalName":"75x100","children":[{"name":"{{ 'localeImported.poster' | t }}","price":0,"technicalType":"matter","technicalName":"poster","children":[]},{"name":"{{ 'localeImported.toile' | t }}","price":57.6,"technicalType":"matter","technicalName":"canvas","children":[[{"name":"{{ 'localeImported._sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.set_de_fixation' | t }}","price":6,"technicalType":"fixation","technicalName":"set"}],[{"name":"{{ 'localeImported._chassis_de_2cm' | t }}","price":0,"technicalType":"chassis","technicalName":2},{"name":"{{ 'localeImported._chassis_de_4cm' | t }}","price":15,"technicalType":"chassis","technicalName":4}],[{"name":"{{ 'localeImported.bordure_blanche' | t }}","price":0,"technicalType":"border","technicalName":"white"},{"name":"{{ 'localeImported.bordure_noire' | t }}","price":2,"technicalType":"border","technicalName":"black"},{"name":"{{ 'localeImported.bordure_tire' | t }}","price":4,"technicalType":"border","technicalName":"stretched"},{"name":"{{ 'localeImported.bordure_miroir' | t }}","price":6,"technicalType":"border","technicalName":"mirror"},{"name":"{{ 'localeImported.bordure_plie' | t }}","price":8,"technicalType":"border","technicalName":"folded"}],[{"name":"{{ 'localeImported.sans_cadre' | t }}","price":0,"technicalType":"frame","technicalName":"null"},{"name":"{{ 'localeImported.cadre_blanc' | t }}","price":35,"technicalType":"frame","technicalName":"white"},{"name":"{{ 'localeImported.cadre_noir_mat' | t }}","price":35,"technicalType":"frame","technicalName":"black-mat"},{"name":"{{ 'localeImported.cadre_argent_ancien' | t }}","price":40,"technicalType":"frame","technicalName":"silver-old"},{"name":"{{ 'localeImported.cadre_chne_clair' | t }}","price":40,"technicalType":"frame","technicalName":"oak-light"},{"name":"{{ 'localeImported.cadre_noyer' | t }}","price":40,"technicalType":"frame","technicalName":"walnut"}]]},{"name":"{{ 'localeImported.aluminium' | t }}","price":125.2,"technicalType":"matter","technicalName":"aluminium","children":[[{"name":"{{ 'localeImported._sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}],[{"name":"{{ 'localeImported.mat' | t }}","price":0,"technicalType":"shine","technicalName":"mat"},{"name":"{{ 'localeImported.brillant' | t }}","price":4.9,"technicalType":"shine","technicalName":"shine"}]]},{"name":"{{ 'localeImported.aluminium__plexiglas' | t }}","price":196,"technicalType":"matter","technicalName":"aluminium-plexi","children":[[{"name":"{{ 'localeImported._sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}]]}]},{"name":"{{ 'localeImported.90x120_cm' | t }}","price":165,"technicalType":"size","technicalName":"90x120","children":[{"name":"{{ 'localeImported.toile' | t }}","price":0,"technicalType":"matter","technicalName":"canvas","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.set_de_fixation' | t }}","price":6,"technicalType":"fixation","technicalName":"set"}],[{"name":"{{ 'localeImported.chassis_de_2cm' | t }}","price":0,"technicalType":"chassis","technicalName":2},{"name":"{{ 'localeImported.chassis_de_4cm' | t }}","price":15,"technicalType":"chassis","technicalName":4}],[{"name":"{{ 'localeImported.bordure_blanche' | t }}","price":0,"technicalType":"border","technicalName":"white"},{"name":"{{ 'localeImported.bordure_noire' | t }}","price":2,"technicalType":"border","technicalName":"black"},{"name":"{{ 'localeImported.bordure_tire' | t }}","price":4,"technicalType":"border","technicalName":"stretched"},{"name":"{{ 'localeImported.bordure_miroir' | t }}","price":6,"technicalType":"border","technicalName":"mirror"},{"name":"{{ 'localeImported.bordure_plie' | t }}","price":8,"technicalType":"border","technicalName":"folded"}]]},{"name":"{{ 'localeImported.aluminium' | t }}","price":73.3,"technicalType":"matter","technicalName":"aluminium","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}],[{"name":"{{ 'localeImported.mat' | t }}","price":0,"technicalType":"shine","technicalName":"mat"},{"name":"{{ 'localeImported.brillant' | t }}","price":4.9,"technicalType":"shine","technicalName":"shine"}]]},{"name":"{{ 'localeImported.aluminium__plexiglas' | t }}","price":115,"technicalType":"matter","technicalName":"aluminium-plexi","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}]]}]}];
       window.moneySymbol = "{{ localization.country.currency.symbol }}";
+    </script>     
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org/",
+        "@type": "Product",
+        "@id": "{{ request.origin | append: product.url }}",
+        "name": "{{ product.title }}",
+        "logo": "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/logo-myselfmonart.svg?v=1727019678",
+        "url": "{{ request.origin | append: product.url }}",
+        {% if product.metafields.link.mother_collection.value.title != blank %}
+          "category": "{{ product.metafields.link.mother_collection.value.title }}",
+        {% endif %}
+        {%- if seo_media -%}
+          "image": [
+            "{{ seo_media | image_url: width: seo_media.preview_image.width | prepend: "https:" }}"
+          ],
+        {%- endif -%}
+        "description": "{{ product.description | strip_html }}",
+        "brand": {
+          "@type": "Brand",
+          "name": "{{ product.vendor }}"
+        },
+        "offers": [
+          {
+            "@type": "Offer",
+            "price": 24.9,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 53.5,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 69.8,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 113,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 45.6,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 85,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 135,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 195,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 55,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 112.6,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 180.2,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 251,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 165,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 238.3,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 280,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ]
+      }
     </script>
   {% elsif ratio == 'landscape' %}{% comment %}landscape{% endcomment %}     
     <script id="variants-available">
       window.variants = [{"name":"{{ 'localeImported.40x30_cm' | t }}","price":24.9,"technicalType":"size","technicalName":"40x30","children":[{"name":"{{ 'localeImported.poster' | t }}","price":0,"technicalType":"matter","technicalName":"poster","children":[[{"name":"{{ 'localeImported.sans_cadre' | t }}","price":0,"technicalType":"frame","technicalName":"null"},{"name":"{{ 'localeImported.cadre_blanc' | t }}","price":25,"technicalType":"frame","technicalName":"white"},{"name":"{{ 'localeImported.cadre_noir_mat' | t }}","price":25,"technicalType":"frame","technicalName":"black-mat"},{"name":"{{ 'localeImported.cadre_argent_ancien' | t }}","price":30,"technicalType":"frame","technicalName":"silver-old"},{"name":"{{ 'localeImported.cadre_chne_clair' | t }}","price":30,"technicalType":"frame","technicalName":"oak-light"},{"name":"{{ 'localeImported.cadre_noyer' | t }}","price":30,"technicalType":"frame","technicalName":"walnut"}]]},{"name":"{{ 'localeImported.toile' | t }}","price":28.6,"technicalType":"matter","technicalName":"canvas","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.set_de_fixation' | t }}","price":6,"technicalType":"fixation","technicalName":"set"}],[{"name":"{{ 'localeImported.chassis_de_2cm' | t }}","price":0,"technicalType":"chassis","technicalName":2},{"name":"{{ 'localeImported.chassis_de_4cm' | t }}","price":15,"technicalType":"chassis","technicalName":4}],[{"name":"{{ 'localeImported.bordure_blanche' | t }}","price":0,"technicalType":"border","technicalName":"white"},{"name":"{{ 'localeImported.bordure_noire' | t }}","price":2,"technicalType":"border","technicalName":"black"},{"name":"{{ 'localeImported.bordure_tire' | t }}","price":4,"technicalType":"border","technicalName":"stretched"},{"name":"{{ 'localeImported.bordure_miroir' | t }}","price":6,"technicalType":"border","technicalName":"mirror"},{"name":"{{ 'localeImported.bordure_plie' | t }}","price":8,"technicalType":"border","technicalName":"folded"}],[{"name":"{{ 'localeImported.sans_cadre' | t }}","price":0,"technicalType":"frame","technicalName":"null"},{"name":"{{ 'localeImported.cadre_blanc' | t }}","price":25,"technicalType":"frame","technicalName":"white"},{"name":"{{ 'localeImported.cadre_noir_mat' | t }}","price":25,"technicalType":"frame","technicalName":"black-mat"},{"name":"{{ 'localeImported.cadre_argent_ancien' | t }}","price":30,"technicalType":"frame","technicalName":"silver-old"},{"name":"{{ 'localeImported.cadre_chne_clair' | t }}","price":30,"technicalType":"frame","technicalName":"oak-light"},{"name":"{{ 'localeImported.cadre_noyer' | t }}","price":30,"technicalType":"frame","technicalName":"walnut"}]]},{"name":"{{ 'localeImported.aluminium' | t }}","price":44.9,"technicalType":"matter","technicalName":"aluminium","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.crochet' | t }}","price":8,"technicalType":"fixation","technicalName":"hook"}],[{"name":"{{ 'localeImported.mat' | t }}","price":0,"technicalType":"shine","technicalName":"mat"},{"name":"{{ 'localeImported.brillant' | t }}","price":4.9,"technicalType":"shine","technicalName":"shine"}]]},{"name":"{{ 'localeImported.aluminium__plexiglas' | t }}","price":88.1,"technicalType":"matter","technicalName":"aluminium-plexi","children":[[{"name":"{{ 'localeImported.sans_systme_de_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.crochet' | t }}","price":8,"technicalType":"fixation","technicalName":"hook"}]]}]},{"name":"{{ 'localeImported.80x60_cm' | t }}","price":45.6,"technicalType":"size","technicalName":"80x60","children":[{"name":"{{ 'localeImported.poster' | t }}","price":0,"technicalType":"matter","technicalName":"poster","children":[[{"name":"{{ 'localeImported.sans_cadre' | t }}","price":0,"technicalType":"frame","technicalName":"null"},{"name":"{{ 'localeImported.cadre_blanc' | t }}","price":30,"technicalType":"frame","technicalName":"white"},{"name":"{{ 'localeImported.cadre_noir_mat' | t }}","price":30,"technicalType":"frame","technicalName":"black-mat"},{"name":"{{ 'localeImported.cadre_argent_ancien' | t }}","price":35,"technicalType":"frame","technicalName":"silver-old"},{"name":"{{ 'localeImported.cadre_chne_clair' | t }}","price":35,"technicalType":"frame","technicalName":"oak-light"},{"name":"{{ 'localeImported.cadre_noyer' | t }}","price":35,"technicalType":"frame","technicalName":"walnut"}]]},{"name":"{{ 'localeImported.toile' | t }}","price":39.4,"technicalType":"matter","technicalName":"canvas","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.set_de_fixation' | t }}","price":6,"technicalType":"fixation","technicalName":"set"}],[{"name":"{{ 'localeImported.chassis_de_2cm' | t }}","price":0,"technicalType":"chassis","technicalName":2},{"name":"{{ 'localeImported.chassis_de_4cm' | t }}","price":15,"technicalType":"chassis","technicalName":4}],[{"name":"{{ 'localeImported.bordure_blanche' | t }}","price":0,"technicalType":"border","technicalName":"white"},{"name":"{{ 'localeImported.bordure_noire' | t }}","price":2,"technicalType":"border","technicalName":"black"},{"name":"{{ 'localeImported.bordure_tire' | t }}","price":4,"technicalType":"border","technicalName":"stretched"},{"name":"{{ 'localeImported.bordure_miroir' | t }}","price":6,"technicalType":"border","technicalName":"mirror"},{"name":"{{ 'localeImported.bordure_plie' | t }}","price":8,"technicalType":"border","technicalName":"folded"}],[{"name":"{{ 'localeImported.sans_cadre' | t }}","price":0,"technicalType":"frame","technicalName":"null"},{"name":"{{ 'localeImported.cadre_blanc' | t }}","price":30,"technicalType":"frame","technicalName":"white"},{"name":"{{ 'localeImported.cadre_noir_mat' | t }}","price":30,"technicalType":"frame","technicalName":"black-mat"},{"name":"{{ 'localeImported.cadre_argent_ancien' | t }}","price":35,"technicalType":"frame","technicalName":"silver-old"},{"name":"{{ 'localeImported.cadre_chne_clair' | t }}","price":35,"technicalType":"frame","technicalName":"oak-light"},{"name":"{{ 'localeImported.cadre_noyer' | t }}","price":35,"technicalType":"frame","technicalName":"walnut"}]]},{"name":"{{ 'localeImported.aluminium' | t }}","price":89.4,"technicalType":"matter","technicalName":"aluminium","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}],[{"name":"{{ 'localeImported.mat' | t }}","price":0,"technicalType":"shine","technicalName":"mat"},{"name":"{{ 'localeImported.brillant' | t }}","price":4.9,"technicalType":"shine","technicalName":"shine"}]]},{"name":"{{ 'localeImported.aluminium__plexiglas' | t }}","price":149.4,"technicalType":"matter","technicalName":"aluminium-plexi","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}]]}]},{"name":"{{ 'localeImported.100x75_cm' | t }}","price":55,"technicalType":"size","technicalName":"100x75","children":[{"name":"{{ 'localeImported.poster' | t }}","price":0,"technicalType":"matter","technicalName":"poster","children":[]},{"name":"{{ 'localeImported.toile' | t }}","price":57.6,"technicalType":"matter","technicalName":"canvas","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.set_de_fixation' | t }}","price":6,"technicalType":"fixation","technicalName":"set"}],[{"name":"{{ 'localeImported.chassis_de_2cm' | t }}","price":0,"technicalType":"chassis","technicalName":2},{"name":"{{ 'localeImported.chassis_de_4cm' | t }}","price":15,"technicalType":"chassis","technicalName":4}],[{"name":"{{ 'localeImported.bordure_blanche' | t }}","price":0,"technicalType":"border","technicalName":"white"},{"name":"{{ 'localeImported.bordure_noire' | t }}","price":2,"technicalType":"border","technicalName":"black"},{"name":"{{ 'localeImported.bordure_tire' | t }}","price":4,"technicalType":"border","technicalName":"stretched"},{"name":"{{ 'localeImported.bordure_miroir' | t }}","price":6,"technicalType":"border","technicalName":"mirror"},{"name":"{{ 'localeImported.bordure_plie' | t }}","price":8,"technicalType":"border","technicalName":"folded"}],[{"name":"{{ 'localeImported.sans_cadre' | t }}","price":0,"technicalType":"frame","technicalName":"null"},{"name":"{{ 'localeImported.cadre_blanc' | t }}","price":35,"technicalType":"frame","technicalName":"white"},{"name":"{{ 'localeImported.cadre_noir_mat' | t }}","price":35,"technicalType":"frame","technicalName":"black-mat"},{"name":"{{ 'localeImported.cadre_argent_ancien' | t }}","price":40,"technicalType":"frame","technicalName":"silver-old"},{"name":"{{ 'localeImported.cadre_chne_clair' | t }}","price":40,"technicalType":"frame","technicalName":"oak-light"},{"name":"{{ 'localeImported.cadre_noyer' | t }}","price":40,"technicalType":"frame","technicalName":"walnut"}]]},{"name":"{{ 'localeImported.aluminium' | t }}","price":125.2,"technicalType":"matter","technicalName":"aluminium","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}],[{"name":"{{ 'localeImported.mat' | t }}","price":0,"technicalType":"shine","technicalName":"mat"},{"name":"{{ 'localeImported.brillant' | t }}","price":4.9,"technicalType":"shine","technicalName":"shine"}]]},{"name":"{{ 'localeImported.aluminium__plexiglas' | t }}","price":196,"technicalType":"matter","technicalName":"aluminium-plexi","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}]]}]},{"name":"{{ 'localeImported.120x90_cm' | t }}","price":165,"technicalType":"size","technicalName":"120x90","children":[{"name":"{{ 'localeImported.toile' | t }}","price":0,"technicalType":"matter","technicalName":"canvas","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.set_de_fixation' | t }}","price":6,"technicalType":"fixation","technicalName":"set"}],[{"name":"{{ 'localeImported.chassis_de_2cm' | t }}","price":0,"technicalType":"chassis","technicalName":2},{"name":"{{ 'localeImported.chassis_de_4cm' | t }}","price":15,"technicalType":"chassis","technicalName":4}],[{"name":"{{ 'localeImported.bordure_blanche' | t }}","price":0,"technicalType":"border","technicalName":"white"},{"name":"{{ 'localeImported.bordure_noire' | t }}","price":2,"technicalType":"border","technicalName":"black"},{"name":"{{ 'localeImported.bordure_tire' | t }}","price":4,"technicalType":"border","technicalName":"stretched"},{"name":"{{ 'localeImported.bordure_miroir' | t }}","price":6,"technicalType":"border","technicalName":"mirror"},{"name":"{{ 'localeImported.bordure_plie' | t }}","price":8,"technicalType":"border","technicalName":"folded"}]]},{"name":"{{ 'localeImported.aluminium' | t }}","price":73.3,"technicalType":"matter","technicalName":"aluminium","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}],[{"name":"{{ 'localeImported.mat' | t }}","price":0,"technicalType":"shine","technicalName":"mat"},{"name":"{{ 'localeImported.brillant' | t }}","price":4.9,"technicalType":"shine","technicalName":"shine"}]]},{"name":"{{ 'localeImported.aluminium__plexiglas' | t }}","price":115,"technicalType":"matter","technicalName":"aluminium-plexi","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}]]}]}];
       window.moneySymbol = "{{ localization.country.currency.symbol }}";
-    </script>  
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org/",
+        "@type": "Product",
+        "@id": "{{ request.origin | append: product.url }}",
+        "name": "{{ product.title }}",
+        "logo": "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/logo-myselfmonart.svg?v=1727019678",
+        "url": "{{ request.origin | append: product.url }}",
+        {% if product.metafields.link.mother_collection.value.title != blank %}
+          "category": "{{ product.metafields.link.mother_collection.value.title }}",
+        {% endif %}
+        {%- if seo_media -%}
+          "image": [
+            "{{ seo_media | image_url: width: seo_media.preview_image.width | prepend: "https:" }}"
+          ],
+        {%- endif -%}
+        "description": "{{ product.description | strip_html }}",
+        "brand": {
+          "@type": "Brand",
+          "name": "{{ product.vendor }}"
+        },
+        "offers": [
+          {
+            "@type": "Offer",
+            "price": 24.9,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 53.5,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 69.8,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 113,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 45.6,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 85,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 135,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 195,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 55,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 112.6,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 180.2,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 251,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 165,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 238.3,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 280,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ]
+      }
+    </script>
   {% else %}{% comment %}square{% endcomment %}
     <script id="variants-available">
       window.variants = [{"name":"{{ 'localeImported.40x40_cm' | t }}","price":59.5,"technicalType":"size","technicalName":"40x40","children":[{"name":"{{ 'localeImported.toile' | t }}","price":0,"technicalType":"matter","technicalName":"canvas","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.set_de_fixation' | t }}","price":6,"technicalType":"fixation","technicalName":"set"}],[{"name":"{{ 'localeImported.chassis_de_2cm' | t }}","price":0,"technicalType":"chassis","technicalName":2},{"name":"{{ 'localeImported.chassis_de_4cm' | t }}","price":15,"technicalType":"chassis","technicalName":4}],[{"name":"{{ 'localeImported.bordure_blanche' | t }}","price":0,"technicalType":"border","technicalName":"white"},{"name":"{{ 'localeImported.bordure_noire' | t }}","price":2,"technicalType":"border","technicalName":"black"},{"name":"{{ 'localeImported.bordure_tire' | t }}","price":4,"technicalType":"border","technicalName":"stretched"},{"name":"{{ 'localeImported.bordure_miroir' | t }}","price":6,"technicalType":"border","technicalName":"mirror"},{"name":"{{ 'localeImported.bordure_plie' | t }}","price":8,"technicalType":"border","technicalName":"folded"}],[{"name":"{{ 'localeImported.sans_cadre' | t }}","price":0,"technicalType":"frame","technicalName":"null"},{"name":"{{ 'localeImported.cadre_blanc' | t }}","price":25,"technicalType":"frame","technicalName":"white"},{"name":"{{ 'localeImported.cadre_noir_mat' | t }}","price":25,"technicalType":"frame","technicalName":"black-mat"},{"name":"{{ 'localeImported.cadre_argent_ancien' | t }}","price":30,"technicalType":"frame","technicalName":"silver-old"},{"name":"{{ 'localeImported.cadre_chne_clair' | t }}","price":30,"technicalType":"frame","technicalName":"oak-light"},{"name":"{{ 'localeImported.cadre_noyer' | t }}","price":30,"technicalType":"frame","technicalName":"walnut"}]]},{"name":"{{ 'localeImported.aluminium' | t }}","price":22.1,"technicalType":"matter","technicalName":"aluminium","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.crochet' | t }}","price":8,"technicalType":"fixation","technicalName":"hook"}],[{"name":"{{ 'localeImported.mat' | t }}","price":0,"technicalType":"shine","technicalName":"mat"},{"name":"{{ 'localeImported.brillant' | t }}","price":4.9,"technicalType":"shine","technicalName":"shine"}]]},{"name":"{{ 'localeImported.aluminium__plexiglas' | t }}","price":53.5,"technicalType":"matter","technicalName":"aluminium-plexi","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.crochet' | t }}","price":8,"technicalType":"fixation","technicalName":"hook"}]]}]},{"name":"{{ 'localeImported.60x60_cm' | t }}","price":93.99,"technicalType":"size","technicalName":"60x60","children":[{"name":"{{ 'localeImported.toile' | t }}","price":0,"technicalType":"matter","technicalName":"canvas","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.set_de_fixation' | t }}","price":6,"technicalType":"fixation","technicalName":"set"}],[{"name":"{{ 'localeImported.chassis_de_2cm' | t }}","price":0,"technicalType":"chassis","technicalName":2},{"name":"{{ 'localeImported.chassis_de_4cm' | t }}","price":15,"technicalType":"chassis","technicalName":4}],[{"name":"{{ 'localeImported.bordure_blanche' | t }}","price":0,"technicalType":"border","technicalName":"white"},{"name":"{{ 'localeImported.bordure_noire' | t }}","price":2,"technicalType":"border","technicalName":"black"},{"name":"{{ 'localeImported.bordure_tire' | t }}","price":4,"technicalType":"border","technicalName":"stretched"},{"name":"{{ 'localeImported.bordure_miroir' | t }}","price":6,"technicalType":"border","technicalName":"mirror"},{"name":"{{ 'localeImported.bordure_plie' | t }}","price":8,"technicalType":"border","technicalName":"folded"}]]},{"name":"{{ 'localeImported.aluminium' | t }}","price":33.5,"technicalType":"matter","technicalName":"aluminium","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.crochet' | t }}","price":8,"technicalType":"fixation","technicalName":"hook"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}],[{"name":"{{ 'localeImported.mat' | t }}","price":0,"technicalType":"shine","technicalName":"mat"},{"name":"{{ 'localeImported.brillant' | t }}","price":4.9,"technicalType":"shine","technicalName":"shine"}]]},{"name":"{{ 'localeImported.aluminium__plexiglas' | t }}","price":95.4,"technicalType":"matter","technicalName":"aluminium-plexi","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.crochet' | t }}","price":8,"technicalType":"fixation","technicalName":"hook"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}]]}]},{"name":"{{ 'localeImported.80x80_cm' | t }}","price":114,"technicalType":"size","technicalName":"80x80","children":[{"name":"{{ 'localeImported.toile' | t }}","price":0,"technicalType":"matter","technicalName":"canvas","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.set_de_fixation' | t }}","price":6,"technicalType":"fixation","technicalName":"set"}],[{"name":"{{ 'localeImported.chassis_de_2cm' | t }}","price":0,"technicalType":"chassis","technicalName":2},{"name":"{{ 'localeImported.chassis_de_4cm' | t }}","price":15,"technicalType":"chassis","technicalName":4}],[{"name":"{{ 'localeImported.bordure_blanche' | t }}","price":0,"technicalType":"border","technicalName":"white"},{"name":"{{ 'localeImported.bordure_noire' | t }}","price":2,"technicalType":"border","technicalName":"black"},{"name":"{{ 'localeImported.bordure_tire' | t }}","price":4,"technicalType":"border","technicalName":"stretched"},{"name":"{{ 'localeImported.bordure_miroir' | t }}","price":6,"technicalType":"border","technicalName":"mirror"},{"name":"{{ 'localeImported.bordure_plie' | t }}","price":8,"technicalType":"border","technicalName":"folded"}]]},{"name":"{{ 'localeImported.aluminium' | t }}","price":70.6,"technicalType":"matter","technicalName":"aluminium","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}],[{"name":"{{ 'localeImported.mat' | t }}","price":0,"technicalType":"shine","technicalName":"mat"},{"name":"{{ 'localeImported.brillant' | t }}","price":4.9,"technicalType":"shine","technicalName":"shine"}]]},{"name":"{{ 'localeImported.aluminium__plexiglas' | t }}","price":113,"technicalType":"matter","technicalName":"aluminium-plexi","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}]]}]},{"name":"{{ 'localeImported.100x100_cm' | t }}","price":215.98,"technicalType":"size","technicalName":"100x100","children":[{"name":"{{ 'localeImported.toile' | t }}","price":0,"technicalType":"matter","technicalName":"canvas","children":[[{"name":"{{ 'localeImported.bordure_blanche' | t }}","price":0,"technicalType":"border","technicalName":"white"},{"name":"{{ 'localeImported.bordure_noire' | t }}","price":2,"technicalType":"border","technicalName":"black"},{"name":"{{ 'localeImported.bordure_tire' | t }}","price":4,"technicalType":"border","technicalName":"stretched"},{"name":"{{ 'localeImported.bordure_miroir' | t }}","price":6,"technicalType":"border","technicalName":"mirror"},{"name":"{{ 'localeImported.bordure_plie' | t }}","price":8,"technicalType":"border","technicalName":"folded"}]]},{"name":"{{ 'localeImported.aluminium' | t }}","price":45.1,"technicalType":"matter","technicalName":"aluminium","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}],[{"name":"{{ 'localeImported.mat' | t }}","price":0,"technicalType":"shine","technicalName":"mat"},{"name":"{{ 'localeImported.brillant' | t }}","price":4.9,"technicalType":"shine","technicalName":"shine"}]]},{"name":"{{ 'localeImported.aluminium__plexiglas' | t }}","price":87.1,"technicalType":"matter","technicalName":"aluminium-plexi","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}]]}]}];
       window.moneySymbol = "{{ localization.country.currency.symbol }}";
     </script>
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org/",
+        "@type": "Product",
+        "@id": "{{ request.origin | append: product.url }}",
+        "name": "{{ product.title }}",
+        "logo": "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/logo-myselfmonart.svg?v=1727019678",
+        "url": "{{ request.origin | append: product.url }}",
+        {% if product.metafields.link.mother_collection.value.title != blank %}
+          "category": "{{ product.metafields.link.mother_collection.value.title }}",
+        {% endif %}
+        {%- if seo_media -%}
+          "image": [
+            "{{ seo_media | image_url: width: seo_media.preview_image.width | prepend: "https:" }}"
+          ],
+        {%- endif -%}
+        "description": "{{ product.description | strip_html }}",
+        "brand": {
+          "@type": "Brand",
+          "name": "{{ product.vendor }}"
+        },
+        "offers": [
+          {
+            "@type": "Offer",
+            "price": 59.5,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 81.6,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 113,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 93.99,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 127.49,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 189.39,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 114,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 184.6,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 227,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 215.98,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 261.08,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ,
+          {
+            "@type": "Offer",
+            "price": 303.08,
+            "priceCurrency": "{{ cart.currency.iso_code }}",
+            "availability": "http://schema.org/InStock",
+            "url" : "{{ request.origin | append: product.url }}",
+            "seller": {
+                "@type": "Organization",
+                "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }
+          ]
+      }
+    </script>
+
   {% endif %}
 {% else if template.suffix == 'personalized' %} 
   <script id="variants-available">
@@ -41,5 +755,374 @@
     window.isoLang = "{{ localization.shop_locale }}";
     window.variants = [{"name":"{{ 'localeImported.20x30_cm' | t }}","price":19.9,"technicalType":"size","technicalName":"20x30","children":[{"name":"{{ 'localeImported.poster' | t }}","price":0,"technicalType":"matter","technicalName":"poster","children":[[{"name":"{{ 'localeImported.sans_cadre' | t }}","price":0,"technicalType":"frame","technicalName":"null"},{"name":"{{ 'localeImported.cadre_blanc' | t }}","price":20,"technicalType":"frame","technicalName":"white"},{"name":"{{ 'localeImported.cadre_noir_mat' | t }}","price":20,"technicalType":"frame","technicalName":"black-mat"},{"name":"{{ 'localeImported.cadre_argent_ancien' | t }}","price":25,"technicalType":"frame","technicalName":"silver-old"},{"name":"{{ 'localeImported.cadre_chne_clair' | t }}","price":25,"technicalType":"frame","technicalName":"oak-light"},{"name":"{{ 'localeImported.cadre_noyer' | t }}","price":25,"technicalType":"frame","technicalName":"walnut"}]]},{"name":"{{ 'localeImported.toile' | t }}","price":12.6,"technicalType":"matter","technicalName":"canvas","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.set_de_fixation' | t }}","price":6,"technicalType":"fixation","technicalName":"set"}],[{"name":"{{ 'localeImported.chassis_de_2cm' | t }}","price":0,"technicalType":"chassis","technicalName":2},{"name":"{{ 'localeImported.chassis_de_4cm' | t }}","price":15,"technicalType":"chassis","technicalName":4}],[{"name":"{{ 'localeImported.bordure_blanche' | t }}","price":0,"technicalType":"border","technicalName":"white"},{"name":"{{ 'localeImported.bordure_noire' | t }}","price":2,"technicalType":"border","technicalName":"black"},{"name":"{{ 'localeImported.bordure_tire' | t }}","price":4,"technicalType":"border","technicalName":"stretched"},{"name":"{{ 'localeImported.bordure_miroir' | t }}","price":6,"technicalType":"border","technicalName":"mirror"},{"name":"{{ 'localeImported.bordure_plie' | t }}","price":8,"technicalType":"border","technicalName":"folded"}]]},{"name":"{{ 'localeImported.aluminium' | t }}","price":25.1,"technicalType":"matter","technicalName":"aluminium","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.crochet' | t }}","price":8,"technicalType":"fixation","technicalName":"hook"}],[{"name":"{{ 'localeImported.mat' | t }}","price":0,"technicalType":"shine","technicalName":"mat"},{"name":"{{ 'localeImported.brillant' | t }}","price":4.9,"technicalType":"shine","technicalName":"shine"}]]},{"name":"{{ 'localeImported.aluminium__plexiglas' | t }}","price":47.1,"technicalType":"matter","technicalName":"aluminium-plexi","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.crochet' | t }}","price":8,"technicalType":"fixation","technicalName":"hook"}]]}]},{"name":"{{ 'localeImported.30x40_cm' | t }}","price":24.9,"technicalType":"size","technicalName":"30x40","children":[{"name":"{{ 'localeImported.poster' | t }}","price":0,"technicalType":"matter","technicalName":"poster","children":[[{"name":"{{ 'localeImported.sans_cadre' | t }}","price":0,"technicalType":"frame","technicalName":"null"},{"name":"{{ 'localeImported.cadre_blanc' | t }}","price":25,"technicalType":"frame","technicalName":"white"},{"name":"{{ 'localeImported.cadre_noir_mat' | t }}","price":25,"technicalType":"frame","technicalName":"black-mat"},{"name":"{{ 'localeImported.cadre_argent_ancien' | t }}","price":30,"technicalType":"frame","technicalName":"silver-old"},{"name":"{{ 'localeImported.cadre_chne_clair' | t }}","price":30,"technicalType":"frame","technicalName":"oak-light"},{"name":"{{ 'localeImported.cadre_noyer' | t }}","price":30,"technicalType":"frame","technicalName":"walnut"}]]},{"name":"{{ 'localeImported.toile' | t }}","price":28.6,"technicalType":"matter","technicalName":"canvas","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.set_de_fixation' | t }}","price":6,"technicalType":"fixation","technicalName":"set"}],[{"name":"{{ 'localeImported.chassis_de_2cm' | t }}","price":0,"technicalType":"chassis","technicalName":2},{"name":"{{ 'localeImported.chassis_de_4cm' | t }}","price":15,"technicalType":"chassis","technicalName":4}],[{"name":"{{ 'localeImported.bordure_blanche' | t }}","price":0,"technicalType":"border","technicalName":"white"},{"name":"{{ 'localeImported.bordure_noire' | t }}","price":2,"technicalType":"border","technicalName":"black"},{"name":"{{ 'localeImported.bordure_tire' | t }}","price":4,"technicalType":"border","technicalName":"stretched"},{"name":"{{ 'localeImported.bordure_miroir' | t }}","price":6,"technicalType":"border","technicalName":"mirror"},{"name":"{{ 'localeImported.bordure_plie' | t }}","price":8,"technicalType":"border","technicalName":"folded"}],[{"name":"{{ 'localeImported.sans_cadre' | t }}","price":0,"technicalType":"frame","technicalName":"null"},{"name":"{{ 'localeImported.cadre_blanc' | t }}","price":25,"technicalType":"frame","technicalName":"white"},{"name":"{{ 'localeImported.cadre_noir_mat' | t }}","price":25,"technicalType":"frame","technicalName":"black-mat"},{"name":"{{ 'localeImported.cadre_argent_ancien' | t }}","price":30,"technicalType":"frame","technicalName":"silver-old"},{"name":"{{ 'localeImported.cadre_chne_clair' | t }}","price":30,"technicalType":"frame","technicalName":"oak-light"},{"name":"{{ 'localeImported.cadre_noyer' | t }}","price":30,"technicalType":"frame","technicalName":"walnut"}]]},{"name":"{{ 'localeImported.aluminium' | t }}","price":44.9,"technicalType":"matter","technicalName":"aluminium","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.crochet' | t }}","price":8,"technicalType":"fixation","technicalName":"hook"}],[{"name":"{{ 'localeImported.mat' | t }}","price":0,"technicalType":"shine","technicalName":"mat"},{"name":"{{ 'localeImported.brillant' | t }}","price":4.9,"technicalType":"shine","technicalName":"shine"}]]},{"name":"{{ 'localeImported.aluminium__plexiglas' | t }}","price":88.1,"technicalType":"matter","technicalName":"aluminium-plexi","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.crochet' | t }}","price":8,"technicalType":"fixation","technicalName":"hook"}]]}]},{"name":"{{ 'localeImported.40x60_cm' | t }}","price":35.9,"technicalType":"size","technicalName":"40x60","children":[{"name":"{{ 'localeImported.poster' | t }}","price":0,"technicalType":"matter","technicalName":"poster","children":[[{"name":"{{ 'localeImported.sans_cadre' | t }}","price":0,"technicalType":"frame","technicalName":"null"},{"name":"{{ 'localeImported.cadre_blanc' | t }}","price":25,"technicalType":"frame","technicalName":"white"},{"name":"{{ 'localeImported.cadre_noir_mat' | t }}","price":25,"technicalType":"frame","technicalName":"black-mat"},{"name":"{{ 'localeImported.cadre_argent_ancien' | t }}","price":30,"technicalType":"frame","technicalName":"silver-old"},{"name":"{{ 'localeImported.cadre_chne_clair' | t }}","price":30,"technicalType":"frame","technicalName":"oak-light"},{"name":"{{ 'localeImported.cadre_noyer' | t }}","price":30,"technicalType":"frame","technicalName":"walnut"}]]},{"name":"{{ 'localeImported.toile' | t }}","price":20.1,"technicalType":"matter","technicalName":"canvas","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.set_de_fixation' | t }}","price":6,"technicalType":"fixation","technicalName":"set"}],[{"name":"{{ 'localeImported.chassis_de_2cm' | t }}","price":0,"technicalType":"chassis","technicalName":2},{"name":"{{ 'localeImported.chassis_de_4cm' | t }}","price":15,"technicalType":"chassis","technicalName":4}],[{"name":"{{ 'localeImported.bordure_blanche' | t }}","price":0,"technicalType":"border","technicalName":"white"},{"name":"{{ 'localeImported.bordure_noire' | t }}","price":2,"technicalType":"border","technicalName":"black"},{"name":"{{ 'localeImported.bordure_tire' | t }}","price":4,"technicalType":"border","technicalName":"stretched"},{"name":"{{ 'localeImported.bordure_miroir' | t }}","price":6,"technicalType":"border","technicalName":"mirror"},{"name":"{{ 'localeImported.bordure_plie' | t }}","price":8,"technicalType":"border","technicalName":"folded"}],[{"name":"{{ 'localeImported.sans_cadre' | t }}","price":0,"technicalType":"frame","technicalName":"null"},{"name":"{{ 'localeImported.cadre_blanc' | t }}","price":25,"technicalType":"frame","technicalName":"white"},{"name":"{{ 'localeImported.cadre_noir_mat' | t }}","price":25,"technicalType":"frame","technicalName":"black-mat"},{"name":"{{ 'localeImported.cadre_argent_ancien' | t }}","price":30,"technicalType":"frame","technicalName":"silver-old"},{"name":"{{ 'localeImported.cadre_chne_clair' | t }}","price":30,"technicalType":"frame","technicalName":"oak-light"},{"name":"{{ 'localeImported.cadre_noyer' | t }}","price":30,"technicalType":"frame","technicalName":"walnut"}]]},{"name":"{{ 'localeImported.aluminium' | t }}","price":45.1,"technicalType":"matter","technicalName":"aluminium","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.crochet' | t }}","price":8,"technicalType":"fixation","technicalName":"hook"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}],[{"name":"{{ 'localeImported.mat' | t }}","price":0,"technicalType":"shine","technicalName":"mat"},{"name":"{{ 'localeImported.brillant' | t }}","price":4.9,"technicalType":"shine","technicalName":"shine"}]]},{"name":"{{ 'localeImported.aluminium__plexiglas' | t }}","price":84.2,"technicalType":"matter","technicalName":"aluminium-plexi","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.crochet' | t }}","price":8,"technicalType":"fixation","technicalName":"hook"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}]]}]},{"name":"{{ 'localeImported.60x80_cm' | t }}","price":45.6,"technicalType":"size","technicalName":"60x80","children":[{"name":"{{ 'localeImported.poster' | t }}","price":0,"technicalType":"matter","technicalName":"poster","children":[[{"name":"{{ 'localeImported.sans_cadre' | t }}","price":0,"technicalType":"frame","technicalName":"null"},{"name":"{{ 'localeImported.cadre_blanc' | t }}","price":30,"technicalType":"frame","technicalName":"white"},{"name":"{{ 'localeImported.cadre_noir_mat' | t }}","price":30,"technicalType":"frame","technicalName":"black-mat"},{"name":"{{ 'localeImported.cadre_argent_ancien' | t }}","price":35,"technicalType":"frame","technicalName":"silver-old"},{"name":"{{ 'localeImported.cadre_chne_clair' | t }}","price":35,"technicalType":"frame","technicalName":"oak-light"},{"name":"{{ 'localeImported.cadre_noyer' | t }}","price":35,"technicalType":"frame","technicalName":"walnut"}]]},{"name":"{{ 'localeImported.toile' | t }}","price":39.4,"technicalType":"matter","technicalName":"canvas","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.set_de_fixation' | t }}","price":6,"technicalType":"fixation","technicalName":"set"}],[{"name":"{{ 'localeImported.chassis_de_2cm' | t }}","price":0,"technicalType":"chassis","technicalName":2},{"name":"{{ 'localeImported.chassis_de_4cm' | t }}","price":15,"technicalType":"chassis","technicalName":4}],[{"name":"{{ 'localeImported.bordure_blanche' | t }}","price":0,"technicalType":"border","technicalName":"white"},{"name":"{{ 'localeImported.bordure_noire' | t }}","price":2,"technicalType":"border","technicalName":"black"},{"name":"{{ 'localeImported.bordure_tire' | t }}","price":4,"technicalType":"border","technicalName":"stretched"},{"name":"{{ 'localeImported.bordure_miroir' | t }}","price":6,"technicalType":"border","technicalName":"mirror"},{"name":"{{ 'localeImported.bordure_plie' | t }}","price":8,"technicalType":"border","technicalName":"folded"}],[{"name":"{{ 'localeImported.sans_cadre' | t }}","price":0,"technicalType":"frame","technicalName":"null"},{"name":"{{ 'localeImported.cadre_blanc' | t }}","price":30,"technicalType":"frame","technicalName":"white"},{"name":"{{ 'localeImported.cadre_noir_mat' | t }}","price":30,"technicalType":"frame","technicalName":"black-mat"},{"name":"{{ 'localeImported.cadre_argent_ancien' | t }}","price":35,"technicalType":"frame","technicalName":"silver-old"},{"name":"{{ 'localeImported.cadre_chne_clair' | t }}","price":35,"technicalType":"frame","technicalName":"oak-light"},{"name":"{{ 'localeImported.cadre_noyer' | t }}","price":35,"technicalType":"frame","technicalName":"walnut"}]]},{"name":"{{ 'localeImported.aluminium' | t }}","price":89.4,"technicalType":"matter","technicalName":"aluminium","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}],[{"name":"{{ 'localeImported.mat' | t }}","price":0,"technicalType":"shine","technicalName":"mat"},{"name":"{{ 'localeImported.brillant' | t }}","price":4.9,"technicalType":"shine","technicalName":"shine"}]]},{"name":"{{ 'localeImported.aluminium__plexiglas' | t }}","price":149.4,"technicalType":"matter","technicalName":"aluminium-plexi","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}]]}]},{"name":"{{ 'localeImported.75x100_cm' | t }}","price":55,"technicalType":"size","technicalName":"75x100","children":[{"name":"{{ 'localeImported.poster' | t }}","price":0,"technicalType":"matter","technicalName":"poster","children":[]},{"name":"{{ 'localeImported.toile' | t }}","price":57.6,"technicalType":"matter","technicalName":"canvas","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.set_de_fixation' | t }}","price":6,"technicalType":"fixation","technicalName":"set"}],[{"name":"{{ 'localeImported.chassis_de_2cm' | t }}","price":0,"technicalType":"chassis","technicalName":2},{"name":"{{ 'localeImported.chassis_de_4cm' | t }}","price":15,"technicalType":"chassis","technicalName":4}],[{"name":"{{ 'localeImported.bordure_blanche' | t }}","price":0,"technicalType":"border","technicalName":"white"},{"name":"{{ 'localeImported.bordure_noire' | t }}","price":2,"technicalType":"border","technicalName":"black"},{"name":"{{ 'localeImported.bordure_tire' | t }}","price":4,"technicalType":"border","technicalName":"stretched"},{"name":"{{ 'localeImported.bordure_miroir' | t }}","price":6,"technicalType":"border","technicalName":"mirror"},{"name":"{{ 'localeImported.bordure_plie' | t }}","price":8,"technicalType":"border","technicalName":"folded"}],[{"name":"{{ 'localeImported.sans_cadre' | t }}","price":0,"technicalType":"frame","technicalName":"null"},{"name":"{{ 'localeImported.cadre_blanc' | t }}","price":35,"technicalType":"frame","technicalName":"white"},{"name":"{{ 'localeImported.cadre_noir_mat' | t }}","price":35,"technicalType":"frame","technicalName":"black-mat"},{"name":"{{ 'localeImported.cadre_argent_ancien' | t }}","price":40,"technicalType":"frame","technicalName":"silver-old"},{"name":"{{ 'localeImported.cadre_chne_clair' | t }}","price":40,"technicalType":"frame","technicalName":"oak-light"},{"name":"{{ 'localeImported.cadre_noyer' | t }}","price":40,"technicalType":"frame","technicalName":"walnut"}]]},{"name":"{{ 'localeImported.aluminium' | t }}","price":125.2,"technicalType":"matter","technicalName":"aluminium","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}],[{"name":"{{ 'localeImported.mat' | t }}","price":0,"technicalType":"shine","technicalName":"mat"},{"name":"{{ 'localeImported.brillant' | t }}","price":4.9,"technicalType":"shine","technicalName":"shine"}]]},{"name":"{{ 'localeImported.aluminium__plexiglas' | t }}","price":196,"technicalType":"matter","technicalName":"aluminium-plexi","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}]]}]},{"name":"{{ 'localeImported.90x120_cm' | t }}","price":165,"technicalType":"size","technicalName":"90x120","children":[{"name":"{{ 'localeImported.toile' | t }}","price":0,"technicalType":"matter","technicalName":"canvas","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.set_de_fixation' | t }}","price":6,"technicalType":"fixation","technicalName":"set"}],[{"name":"{{ 'localeImported.chassis_de_2cm' | t }}","price":0,"technicalType":"chassis","technicalName":2},{"name":"{{ 'localeImported.chassis_de_4cm' | t }}","price":15,"technicalType":"chassis","technicalName":4}],[{"name":"{{ 'localeImported.bordure_blanche' | t }}","price":0,"technicalType":"border","technicalName":"white"},{"name":"{{ 'localeImported.bordure_noire' | t }}","price":2,"technicalType":"border","technicalName":"black"},{"name":"{{ 'localeImported.bordure_tire' | t }}","price":4,"technicalType":"border","technicalName":"stretched"},{"name":"{{ 'localeImported.bordure_miroir' | t }}","price":6,"technicalType":"border","technicalName":"mirror"},{"name":"{{ 'localeImported.bordure_plie' | t }}","price":8,"technicalType":"border","technicalName":"folded"}]]},{"name":"{{ 'localeImported.aluminium' | t }}","price":73.3,"technicalType":"matter","technicalName":"aluminium","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}],[{"name":"{{ 'localeImported.mat' | t }}","price":0,"technicalType":"shine","technicalName":"mat"},{"name":"{{ 'localeImported.brillant' | t }}","price":4.9,"technicalType":"shine","technicalName":"shine"}]]},{"name":"{{ 'localeImported.aluminium__plexiglas' | t }}","price":115,"technicalType":"matter","technicalName":"aluminium-plexi","children":[[{"name":"{{ 'localeImported.sans_fixation' | t }}","price":0,"technicalType":"fixation","technicalName":"null"},{"name":"{{ 'localeImported.rails' | t }}","price":15,"technicalType":"fixation","technicalName":"rail"}]]}]}];
     window.moneySymbol = "{{ localization.country.currency.symbol }}";
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org/",
+      "@type": "Product",
+      "@id": "{{ request.origin | append: product.url }}",
+      "name": "{{ product.title }}",
+      "logo": "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/logo-myselfmonart.svg?v=1727019678",
+      "url": "{{ request.origin | append: product.url }}",
+      {% if product.metafields.link.mother_collection.value.title != blank %}
+        "category": "{{ product.metafields.link.mother_collection.value.title }}",
+      {% endif %}
+      {%- if seo_media -%}
+        "image": [
+          "{{ seo_media | image_url: width: seo_media.preview_image.width | prepend: "https:" }}"
+        ],
+      {%- endif -%}
+      "description": "{{ product.description | strip_html }}",
+      "brand": {
+        "@type": "Brand",
+        "name": "{{ product.vendor }}"
+      },
+      "offers": [
+        {
+          "@type": "Offer",
+          "price": 19.9,
+          "priceCurrency": "{{ cart.currency.iso_code }}",
+          "availability": "http://schema.org/InStock",
+          "url" : "{{ request.origin | append: product.url }}",
+          "seller": {
+              "@type": "Organization",
+              "name": "{{ product.vendor }}"
+          }
+          {%- if reviews_structured_data != blank -%}
+            ,{{ reviews_structured_data }}
+          {%- endif -%}
+        }
+        ,
+        {
+          "@type": "Offer",
+          "price": 32.5,
+          "priceCurrency": "{{ cart.currency.iso_code }}",
+          "availability": "http://schema.org/InStock",
+          "url" : "{{ request.origin | append: product.url }}",
+          "seller": {
+              "@type": "Organization",
+              "name": "{{ product.vendor }}"
+          }
+          {%- if reviews_structured_data != blank -%}
+            ,{{ reviews_structured_data }}
+          {%- endif -%}
+        }
+        ,
+        {
+          "@type": "Offer",
+          "price": 45,
+          "priceCurrency": "{{ cart.currency.iso_code }}",
+          "availability": "http://schema.org/InStock",
+          "url" : "{{ request.origin | append: product.url }}",
+          "seller": {
+              "@type": "Organization",
+              "name": "{{ product.vendor }}"
+          }
+          {%- if reviews_structured_data != blank -%}
+            ,{{ reviews_structured_data }}
+          {%- endif -%}
+        }
+        ,
+        {
+          "@type": "Offer",
+          "price": 67,
+          "priceCurrency": "{{ cart.currency.iso_code }}",
+          "availability": "http://schema.org/InStock",
+          "url" : "{{ request.origin | append: product.url }}",
+          "seller": {
+              "@type": "Organization",
+              "name": "{{ product.vendor }}"
+          }
+          {%- if reviews_structured_data != blank -%}
+            ,{{ reviews_structured_data }}
+          {%- endif -%}
+        }
+        ,
+        {
+          "@type": "Offer",
+          "price": 24.9,
+          "priceCurrency": "{{ cart.currency.iso_code }}",
+          "availability": "http://schema.org/InStock",
+          "url" : "{{ request.origin | append: product.url }}",
+          "seller": {
+              "@type": "Organization",
+              "name": "{{ product.vendor }}"
+          }
+          {%- if reviews_structured_data != blank -%}
+            ,{{ reviews_structured_data }}
+          {%- endif -%}
+        }
+        ,
+        {
+          "@type": "Offer",
+          "price": 53.5,
+          "priceCurrency": "{{ cart.currency.iso_code }}",
+          "availability": "http://schema.org/InStock",
+          "url" : "{{ request.origin | append: product.url }}",
+          "seller": {
+              "@type": "Organization",
+              "name": "{{ product.vendor }}"
+          }
+          {%- if reviews_structured_data != blank -%}
+            ,{{ reviews_structured_data }}
+          {%- endif -%}
+        }
+        ,
+        {
+          "@type": "Offer",
+          "price": 69.8,
+          "priceCurrency": "{{ cart.currency.iso_code }}",
+          "availability": "http://schema.org/InStock",
+          "url" : "{{ request.origin | append: product.url }}",
+          "seller": {
+              "@type": "Organization",
+              "name": "{{ product.vendor }}"
+          }
+          {%- if reviews_structured_data != blank -%}
+            ,{{ reviews_structured_data }}
+          {%- endif -%}
+        }
+        ,
+        {
+          "@type": "Offer",
+          "price": 113,
+          "priceCurrency": "{{ cart.currency.iso_code }}",
+          "availability": "http://schema.org/InStock",
+          "url" : "{{ request.origin | append: product.url }}",
+          "seller": {
+              "@type": "Organization",
+              "name": "{{ product.vendor }}"
+          }
+          {%- if reviews_structured_data != blank -%}
+            ,{{ reviews_structured_data }}
+          {%- endif -%}
+        }
+        ,
+        {
+          "@type": "Offer",
+          "price": 35.9,
+          "priceCurrency": "{{ cart.currency.iso_code }}",
+          "availability": "http://schema.org/InStock",
+          "url" : "{{ request.origin | append: product.url }}",
+          "seller": {
+              "@type": "Organization",
+              "name": "{{ product.vendor }}"
+          }
+          {%- if reviews_structured_data != blank -%}
+            ,{{ reviews_structured_data }}
+          {%- endif -%}
+        }
+        ,
+        {
+          "@type": "Offer",
+          "price": 56,
+          "priceCurrency": "{{ cart.currency.iso_code }}",
+          "availability": "http://schema.org/InStock",
+          "url" : "{{ request.origin | append: product.url }}",
+          "seller": {
+              "@type": "Organization",
+              "name": "{{ product.vendor }}"
+          }
+          {%- if reviews_structured_data != blank -%}
+            ,{{ reviews_structured_data }}
+          {%- endif -%}
+        }
+        ,
+        {
+          "@type": "Offer",
+          "price": 81,
+          "priceCurrency": "{{ cart.currency.iso_code }}",
+          "availability": "http://schema.org/InStock",
+          "url" : "{{ request.origin | append: product.url }}",
+          "seller": {
+              "@type": "Organization",
+              "name": "{{ product.vendor }}"
+          }
+          {%- if reviews_structured_data != blank -%}
+            ,{{ reviews_structured_data }}
+          {%- endif -%}
+        }
+        ,
+        {
+          "@type": "Offer",
+          "price": 120.1,
+          "priceCurrency": "{{ cart.currency.iso_code }}",
+          "availability": "http://schema.org/InStock",
+          "url" : "{{ request.origin | append: product.url }}",
+          "seller": {
+              "@type": "Organization",
+              "name": "{{ product.vendor }}"
+          }
+          {%- if reviews_structured_data != blank -%}
+            ,{{ reviews_structured_data }}
+          {%- endif -%}
+        }
+        ,
+        {
+          "@type": "Offer",
+          "price": 45.6,
+          "priceCurrency": "{{ cart.currency.iso_code }}",
+          "availability": "http://schema.org/InStock",
+          "url" : "{{ request.origin | append: product.url }}",
+          "seller": {
+              "@type": "Organization",
+              "name": "{{ product.vendor }}"
+          }
+          {%- if reviews_structured_data != blank -%}
+            ,{{ reviews_structured_data }}
+          {%- endif -%}
+        }
+        ,
+        {
+          "@type": "Offer",
+          "price": 85,
+          "priceCurrency": "{{ cart.currency.iso_code }}",
+          "availability": "http://schema.org/InStock",
+          "url" : "{{ request.origin | append: product.url }}",
+          "seller": {
+              "@type": "Organization",
+              "name": "{{ product.vendor }}"
+          }
+          {%- if reviews_structured_data != blank -%}
+            ,{{ reviews_structured_data }}
+          {%- endif -%}
+        }
+        ,
+        {
+          "@type": "Offer",
+          "price": 135,
+          "priceCurrency": "{{ cart.currency.iso_code }}",
+          "availability": "http://schema.org/InStock",
+          "url" : "{{ request.origin | append: product.url }}",
+          "seller": {
+              "@type": "Organization",
+              "name": "{{ product.vendor }}"
+          }
+          {%- if reviews_structured_data != blank -%}
+            ,{{ reviews_structured_data }}
+          {%- endif -%}
+        }
+        ,
+        {
+          "@type": "Offer",
+          "price": 195,
+          "priceCurrency": "{{ cart.currency.iso_code }}",
+          "availability": "http://schema.org/InStock",
+          "url" : "{{ request.origin | append: product.url }}",
+          "seller": {
+              "@type": "Organization",
+              "name": "{{ product.vendor }}"
+          }
+          {%- if reviews_structured_data != blank -%}
+            ,{{ reviews_structured_data }}
+          {%- endif -%}
+        }
+        ,
+        {
+          "@type": "Offer",
+          "price": 55,
+          "priceCurrency": "{{ cart.currency.iso_code }}",
+          "availability": "http://schema.org/InStock",
+          "url" : "{{ request.origin | append: product.url }}",
+          "seller": {
+              "@type": "Organization",
+              "name": "{{ product.vendor }}"
+          }
+          {%- if reviews_structured_data != blank -%}
+            ,{{ reviews_structured_data }}
+          {%- endif -%}
+        }
+        ,
+        {
+          "@type": "Offer",
+          "price": 112.6,
+          "priceCurrency": "{{ cart.currency.iso_code }}",
+          "availability": "http://schema.org/InStock",
+          "url" : "{{ request.origin | append: product.url }}",
+          "seller": {
+              "@type": "Organization",
+              "name": "{{ product.vendor }}"
+          }
+          {%- if reviews_structured_data != blank -%}
+            ,{{ reviews_structured_data }}
+          {%- endif -%}
+        }
+        ,
+        {
+          "@type": "Offer",
+          "price": 180.2,
+          "priceCurrency": "{{ cart.currency.iso_code }}",
+          "availability": "http://schema.org/InStock",
+          "url" : "{{ request.origin | append: product.url }}",
+          "seller": {
+              "@type": "Organization",
+              "name": "{{ product.vendor }}"
+          }
+          {%- if reviews_structured_data != blank -%}
+            ,{{ reviews_structured_data }}
+          {%- endif -%}
+        }
+        ,
+        {
+          "@type": "Offer",
+          "price": 251,
+          "priceCurrency": "{{ cart.currency.iso_code }}",
+          "availability": "http://schema.org/InStock",
+          "url" : "{{ request.origin | append: product.url }}",
+          "seller": {
+              "@type": "Organization",
+              "name": "{{ product.vendor }}"
+          }
+          {%- if reviews_structured_data != blank -%}
+            ,{{ reviews_structured_data }}
+          {%- endif -%}
+        }
+        ,
+        {
+          "@type": "Offer",
+          "price": 165,
+          "priceCurrency": "{{ cart.currency.iso_code }}",
+          "availability": "http://schema.org/InStock",
+          "url" : "{{ request.origin | append: product.url }}",
+          "seller": {
+              "@type": "Organization",
+              "name": "{{ product.vendor }}"
+          }
+          {%- if reviews_structured_data != blank -%}
+            ,{{ reviews_structured_data }}
+          {%- endif -%}
+        }
+        ,
+        {
+          "@type": "Offer",
+          "price": 238.3,
+          "priceCurrency": "{{ cart.currency.iso_code }}",
+          "availability": "http://schema.org/InStock",
+          "url" : "{{ request.origin | append: product.url }}",
+          "seller": {
+              "@type": "Organization",
+              "name": "{{ product.vendor }}"
+          }
+          {%- if reviews_structured_data != blank -%}
+            ,{{ reviews_structured_data }}
+          {%- endif -%}
+        }
+        ,
+        {
+          "@type": "Offer",
+          "price": 280,
+          "priceCurrency": "{{ cart.currency.iso_code }}",
+          "availability": "http://schema.org/InStock",
+          "url" : "{{ request.origin | append: product.url }}",
+          "seller": {
+              "@type": "Organization",
+              "name": "{{ product.vendor }}"
+          }
+          {%- if reviews_structured_data != blank -%}
+            ,{{ reviews_structured_data }}
+          {%- endif -%}
+        }
+        ]
+    }
   </script>
 {% endif %}

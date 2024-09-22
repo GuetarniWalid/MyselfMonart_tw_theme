@@ -38,8 +38,6 @@
       endif
     endif
   %}
-
-  {% render 'paintings-data-script', product: product, ratio: ratio %}
 {% endif %}
 
 <a class="px-4 py-2 opacity-0 focus-visible:opacity-100 absolute top-6 left-10 z-10 bg-secondary transition-colors duration-500" href="#ProductInfo-{{ section.id }}">
@@ -382,66 +380,80 @@
                 <p class="flex items-center ml-2">{{ 'tw.main_product.trustpilot.score' | t }}:  {{ block.settings.trustpilot_score |  divided_by: 10.0 }}</p>
               </div>
             </div>
+            {% capture reviews_structured_data %}
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "{{ block.settings.trustpilot_score | divided_by: 10.0 }}",
+                "ratingCount": "30",
+                "worstRating": "1",
+                "bestRating": "5"
+              }
+            {% endcapture %}
+
         {%- endcase -%}
       {%- endfor -%}
     </div>
   </main-product-blocks>
 </div>
 
-{%- liquid
-  if product.images[1]
-    assign seo_media = product.images[1]
-  elsif product.selected_or_first_available_variant.featured_media
-    assign seo_media = product.selected_or_first_available_variant.featured_media
-  else
-    assign seo_media = product.featured_media
-  endif
--%}
-
-<script type="application/ld+json">
-  {
-    "@context": "http://schema.org/",
-    "@type": "Product",
-    "name": {{ product.title | json }},
-    "url": {{ request.origin | append: product.url | json }},
-    {% if seo_media -%}
-      "image": [
-        {{ seo_media | image_url: width: seo_media.preview_image.width | prepend: "https:" | json }}
-      ],
-    {%- endif %}
-    "description": {{ product.description | strip_html | json }},
-    {% if product.selected_or_first_available_variant.sku != blank -%}
-      "sku": {{ product.selected_or_first_available_variant.sku | json }},
-    {%- endif %}
-    "brand": {
-      "@type": "Brand",
-      "name": {{ product.vendor | json }}
-    },
-    "offers": [
-      {%- for variant in product.variants -%}
-        {
-          "@type" : "Offer",
-          {%- if variant.sku != blank -%}
-            "sku": {{ variant.sku | json }},
-          {%- endif -%}
-          {%- if variant.barcode.size == 12 -%}
-            "gtin12": {{ variant.barcode }},
-          {%- endif -%}
-          {%- if variant.barcode.size == 13 -%}
-            "gtin13": {{ variant.barcode }},
-          {%- endif -%}
-          {%- if variant.barcode.size == 14 -%}
-            "gtin14": {{ variant.barcode }},
-          {%- endif -%}
-          "availability" : "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
-          "price" : {{ variant.price | divided_by: 100.00 | json }},
-          "priceCurrency" : {{ cart.currency.iso_code | json }},
-          "url" : {{ request.origin | append: variant.url | json }}
-        }{% unless forloop.last %},{% endunless %}
-      {%- endfor -%}
-    ]
-  }
-</script>
+{% if template.suffix == 'painting' or template.suffix == 'personalized' %}
+  {% render 'paintings-data-script', product: product, ratio: ratio, reviews_structured_data: reviews_structured_data %}
+{% else %}
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org/",
+      "@type": "Product",
+      "@id": "{{ request.origin | append: product.url }}",
+      "name": {{ product.title | json }},
+      "logo": "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/logo-myselfmonart.svg?v=1727019678",
+      "url": {{ request.origin | append: product.url | json }},
+      {% if product.metafields.link.mother_collection.value.title != blank %}
+        "category": "{{ product.metafields.link.mother_collection.value.title }}",
+      {% endif %}
+        "image": [
+          {{ product.featured_media | image_url: width: product.featured_media.preview_image.width | prepend: "https:" | json }}
+        ],
+      "description": {{ product.description | strip_html | json }},
+      {% if product.selected_or_first_available_variant.sku != blank -%}
+        "sku": {{ product.selected_or_first_available_variant.sku | json }},
+      {%- endif %}
+      "brand": {
+        "@type": "Brand",
+        "name": {{ product.vendor | json }}
+      },
+      "offers": [
+        {%- for variant in product.variants -%}
+          {
+            "@type" : "Offer",
+            {%- if variant.sku != blank -%}
+              "sku": {{ variant.sku | json }},
+            {%- endif -%}
+            {%- if variant.barcode.size == 12 -%}
+              "gtin12": {{ variant.barcode }},
+            {%- endif -%}
+            {%- if variant.barcode.size == 13 -%}
+              "gtin13": {{ variant.barcode }},
+            {%- endif -%}
+            {%- if variant.barcode.size == 14 -%}
+              "gtin14": {{ variant.barcode }},
+            {%- endif -%}
+            "availability" : "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+            "price" : {{ variant.price | divided_by: 100.00 | json }},
+            "priceCurrency" : {{ cart.currency.iso_code | json }},
+            "url" : {{ request.origin | append: variant.url | json }},
+            "seller": {
+              "@type": "Organization",
+              "name": "{{ product.vendor }}"
+            }
+            {%- if reviews_structured_data != blank -%}
+              ,{{ reviews_structured_data }}
+            {%- endif -%}
+          }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{% endif %}
 
 {% schema %}
 {
