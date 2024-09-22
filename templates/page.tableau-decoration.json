@@ -159,7 +159,10 @@
       ],
       "settings": {
         "heading": "Révélez Votre Intérieur avec des Tableaux Uniques",
-        "description": "Révélez votre style unique avec des œuvres d'art irrésistibles qui donneront vie à votre intérieur- Découvrez nos collections de tableaux décoratifs et laissez-vous transporter dans un monde de couleurs, de formes et d'émotions."
+        "description": "Révélez votre style unique avec des œuvres d'art irrésistibles qui donneront vie à votre intérieur- Découvrez nos collections de tableaux décoratifs et laissez-vous transporter dans un monde de couleurs, de formes et d'émotions.",
+        "activate_dynamic_color": true,
+        "dynamic_primary_color": "#02422b",
+        "dynamic_secondary_color": "#ffdfe9"
       }
     },
     "collections_grid_CTRaYt": {
