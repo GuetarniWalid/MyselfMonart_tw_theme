@@ -772,7 +772,7 @@
           "{{ seo_media | image_url: width: seo_media.preview_image.width | prepend: "https:" }}"
         ],
       {%- endif -%}
-      "description": "{{ product.description | strip_html }}",
+      "description": "{{ product.description | strip_html | escape }}",
       "brand": {
         "@type": "Brand",
         "name": "{{ product.vendor }}"

@@ -53,6 +53,61 @@
   {%- endif -%}
 {%- endpaginate -%}
 
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "{{ collection.title }}",
+    "url": "{{ shop.url }}{{ collection.url }}",
+    "itemListElement": [
+      {%- for product in collection.products -%}
+        {
+          "@type": "ListItem",
+          "position": {{ forloop.index }},
+          "url": "{{ shop.url }}{{ product.url }}",
+          "item": {
+            "@type": "Product",
+            "name": "{{ product.title }}",
+            {%- liquid
+              if product.template_suffix == "painting"
+                if product.images[1].aspect_ratio < 1
+                  assign price_min = settings.portrait_lowest_price
+                elsif product.images[1].aspect_ratio > 1
+                  assign price_min = settings.landscape_lowest_price
+                else
+                  assign price_min = settings.square_lowest_price
+                endif
+                assign product_image = product.images[1] | image_url: width: product.images[1].preview_image.width | prepend: "https:"
+              else if template.suffix == 'personalized'
+                if product.images[1].aspect_ratio < 1
+                  assign price_min = settings.personalized_portrait_lowest_price
+                endif
+                assign product_image = product.images[1] | image_url: width: product.images[1].preview_image.width | prepend: "https:"
+              else
+                assign price_min = product.price_min
+                assign product_image = product.featured_image | image_url: width: product.featured_image.preview_image.width | prepend: "https:"
+              endif
+            -%}
+            "image": "{{ product_image }}",
+            "description": "{{ product.description | strip_html | escape }}",
+            "brand": {
+              "@type": "Brand",
+              "name": "{{ shop.name }}"
+            },
+            "offers": {
+              "@type": "Offer",
+              "priceCurrency": "{{ shop.currency }}",
+              "price": "{{ price_min |  divided_by: 100.00 }}",
+              "availability": "https://schema.org/InStock",
+              "url": "{{ shop.url }}{{ product.url }}"
+            }
+          }
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ]
+  }
+</script>
+
 {% schema %}
 {
   "name": "t:sections.main-collection-product-grid.name",
