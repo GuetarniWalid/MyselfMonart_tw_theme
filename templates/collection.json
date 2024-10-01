@@ -16,7 +16,6 @@
     },
     "main-collection-banner": {
       "type": "main-collection-banner",
-      "disabled": true,
       "settings": {
         "show_collapse_button": true,
         "to_place_first": true

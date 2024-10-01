@@ -18,6 +18,7 @@
     "social_youtube_link": "",
     "social_vimeo_link": "",
     "likes_page": "mes-j-aimes",
+    "landscape_lowest_price": 2490,
     "type_header_font_custom": true,
     "type_header_font": "harmonia_sans_n7",
     "heading_scale": 100,
@@ -170,7 +171,7 @@
 
         ],
         "settings": {
-          "message": "Habillez vos murs d'émotions. Découvrez nos collections de tableaux de décoration et décorez avec originalité"
+          "message": "Les 15 Jours de Style - 15% de réduction pendant 15 jours, c’est le moment de craquer !"
         }
       },
       "page-cart-items": {
