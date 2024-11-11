@@ -223,7 +223,10 @@ class MainProductBlocks extends CollapsibleTab {
     const clone = this.buttonTemplate.content.cloneNode(true);
     document.body.appendChild(clone);
     this.buyButton = document.body.querySelector('.float-buy-button');
-    this.buyButton.addEventListener('click', this.onBuyButtonClick);
+
+    if (this.querySelector('#addonsDrawer'))
+      this.buyButton.addEventListener('click', this.onAddonsBuyButtonClick);
+    else this.buyButton.addEventListener('click', this.onBuyButtonClick);
   };
 
   animBlockButton = () => {
@@ -290,11 +293,14 @@ class MainProductBlocks extends CollapsibleTab {
       return 'tw-header-tapestry';
     }
     return 'tw-header-painting';
-  }
+  };
 
   async tapestryBuyFetch(button, productProperties) {
     const productId = button.dataset.productId;
-    const variant = await this.updateProductTapestry(productId, productProperties);
+    const variant = await this.updateProductTapestry(
+      productId,
+      productProperties,
+    );
     button.dataset.variantId = variant.id;
     await this.defaultBuyFetch(button, productProperties);
   }
