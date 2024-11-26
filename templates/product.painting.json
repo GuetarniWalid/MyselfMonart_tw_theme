@@ -25,7 +25,7 @@
         "trustpilot_review_9q3NVM": {
           "type": "trustpilot_review",
           "settings": {
-            "trustpilot_score": 44,
+            "trustpilot_score": 45,
             "link": "https:\/\/fr.trustpilot.com\/review\/myselfmonart.com",
             "margin_bottom": "mb-8"
           }
@@ -74,8 +74,7 @@
         },
         "description_Fw7xRB": {
           "type": "description",
-          "settings": {
-          }
+          "settings": {}
         }
       },
       "block_order": [
@@ -89,8 +88,7 @@
         "a70160ee-79ef-4eb9-8e65-ec87f898b506",
         "description_Fw7xRB"
       ],
-      "settings": {
-      }
+      "settings": {}
     },
     "badges_CQWfDx": {
       "type": "badges",
@@ -395,6 +393,13 @@
             "image": "shopify:\/\/shop_images\/tableau-lion-impression-alluminuim.jpg",
             "message": "TOP QUALITÉ,  j'ai choisi l'impression sur aluminium et l'image est vraiment top. Ethan V"
           }
+        },
+        "image_text_UfccPh": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-cuisine-epices.jpg",
+            "message": "Ravie de mon achat,\ntrès beau rendu des couleurs qui sont éclatantes. \nYannick R."
+          }
         }
       },
       "block_order": [
@@ -410,7 +415,8 @@
         "image_text_DCdKLC",
         "image_text_YKpN4r",
         "image_text_jLAVDk",
-        "image_text_pFY7GA"
+        "image_text_pFY7GA",
+        "image_text_UfccPh"
       ],
       "settings": {
         "title": "Nos tableaux à travers vos yeux ❤️",
@@ -451,13 +457,22 @@
             "icon": "none",
             "row_content": "<p>Pour ne pas vous tromper, mesurez la largeur de votre pan de mur. Multipliez le résultat par 0,57 pour obtenir le ratio idéal.<\/p><p>Sachez qu'il est également recommandé d'accrocher le centre du tableau à environ 1,65 mètre du sol (ce qui correspond à peu près à la hauteur des yeux). Il est aussi recommandé de laisser environ 30 centimètres d'espace entre un meuble et un tableau.<\/p>"
           }
+        },
+        "collapsible_row_6q4PMJ": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Que faire si l'article ne me convient pas ?",
+            "icon": "none",
+            "row_content": "<p>Pas de souci ! Si l'article ne répond pas à vos attentes, vous avez <strong>14 jours ouvrables<\/strong> après réception pour le retourner. Nous voulons que vous soyez totalement satisfait(e). Contactez-nous dans les 3 jours suivant la réception, et nous vous guiderons dans le processus de retour. <\/p>"
+          }
         }
       },
       "block_order": [
         "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-1",
         "e20d3253-d757-4a99-9237-128916cc9ffb",
         "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-2",
-        "a603c2c1-59a1-4067-9d4b-dc8591ddc1f8"
+        "a603c2c1-59a1-4067-9d4b-dc8591ddc1f8",
+        "collapsible_row_6q4PMJ"
       ],
       "settings": {
         "heading": "QUESTIONS FRÉQUENTES"
