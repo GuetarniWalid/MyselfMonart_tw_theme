@@ -4,10 +4,10 @@
     "image_banner_inXPiM": {
       "type": "image-banner",
       "settings": {
-        "image_desktop": "shopify:\/\/shop_images\/promo-black-friday-deco-mural-15_-web_gif.gif",
+        "image_desktop": "shopify:\/\/shop_images\/illutration-joyeux-noel.jpg",
         "image_desktop_horizontal_position": "center",
-        "image_mobile": "shopify:\/\/shop_images\/black-friday-deco-mural-15-phone.gif",
-        "image_mobile_vertical_position": "center",
+        "image_mobile": "shopify:\/\/shop_images\/illustration-noel-bonnes-fetes.jpg",
+        "image_mobile_vertical_position": "bottom",
         "enable_lazy_loading": true
       }
     },

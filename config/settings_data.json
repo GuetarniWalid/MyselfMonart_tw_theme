@@ -55,6 +55,7 @@
             "type": "parent_collection_images",
             "settings": {
               "title": "Par Pièce",
+              "link": "",
               "product": "",
               "child_collection_list": [
                 "tableau-salon",
@@ -68,6 +69,7 @@
             "type": "parent_collection_images",
             "settings": {
               "title": "Par Thème",
+              "link": "",
               "product": "",
               "child_collection_list": [
                 "tableau-abstrait",
@@ -83,6 +85,7 @@
             "type": "parent_collection_images",
             "settings": {
               "title": "Par Couleur",
+              "link": "",
               "product": "",
               "child_collection_list": [
                 "tableau-bleue",
@@ -99,6 +102,7 @@
             "type": "parent_collection_images",
             "settings": {
               "title": "Nature & Sauvage",
+              "link": "",
               "product": "",
               "child_collection_list": [
                 "tableau-animaux",
@@ -112,6 +116,7 @@
             "type": "parent_collection_images",
             "settings": {
               "title": "Personnalisé",
+              "link": "",
               "product": "",
               "child_collection_list": [
                 "tableau-personnalise-famille"
@@ -168,7 +173,7 @@
         "type": "tw-announcement-bar",
         "custom_css": [],
         "settings": {
-          "message": "Black Friday : -15% sur tout le site ! Habillez vos murs d'émotion à prix réduit. Profitez-en maintenant !"
+          "message": "✨ Merci pour votre confiance et joyeuses fêtes de fin d’année ! ✨🎄"
         }
       },
       "page-cart-items": {

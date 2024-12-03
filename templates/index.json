@@ -3,9 +3,9 @@
     "2b3b46e7-881c-4925-96cf-76c7ebf203c4": {
       "type": "image-banner",
       "settings": {
-        "image_desktop": "shopify:\/\/shop_images\/promo-black-friday-deco-mural-15_-web_gif.gif",
+        "image_desktop": "shopify:\/\/shop_images\/illutration-joyeux-noel.jpg",
         "image_desktop_horizontal_position": "left",
-        "image_mobile": "shopify:\/\/shop_images\/black-friday-deco-mural-15-phone.gif",
+        "image_mobile": "shopify:\/\/shop_images\/illustration-noel-bonnes-fetes.jpg",
         "image_mobile_vertical_position": "bottom",
         "enable_lazy_loading": true
       }

@@ -400,6 +400,13 @@
             "image": "shopify:\/\/shop_images\/tableau-cuisine-epices.jpg",
             "message": "Ravie de mon achat,\ntrès beau rendu des couleurs qui sont éclatantes. \nYannick R."
           }
+        },
+        "image_text_7ERwAp": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-marvel-iron-man.jpg",
+            "message": "Très content de mon achat ! Mon fils est ravi il va faire de beaux rêves de super-héros\n. EUGENE D"
+          }
         }
       },
       "block_order": [
@@ -416,7 +423,8 @@
         "image_text_YKpN4r",
         "image_text_jLAVDk",
         "image_text_pFY7GA",
-        "image_text_UfccPh"
+        "image_text_UfccPh",
+        "image_text_7ERwAp"
       ],
       "settings": {
         "title": "Nos tableaux à travers vos yeux ❤️",
