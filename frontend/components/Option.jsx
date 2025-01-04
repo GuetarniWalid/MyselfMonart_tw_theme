@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-export default function Option({
+export default function   Option({
   handleOptionClick,
   option,
   value,
@@ -49,8 +49,8 @@ export default function Option({
     <li
       id={id}
       className={`${
-        selected && 'bg-main-5'
-      } flex justify-between py-3 px-5 mb-2 hover:bg-main-5 cursor-pointer`}
+        selected ? 'bg-white/50 md:bg-main-5 backdrop-blur-xl rounded-lg' : ''
+      } flex justify-between py-3 px-5 mb-2 hover:bg-white/30 md:hover:bg-main-5 hover:backdrop-blur-xl md:hover:backdrop-blur-none rounded-lg cursor-pointer`}
       role="option"
       aria-selected={selected}
       onClick={(e) => handleOptionClick(value, e)}  

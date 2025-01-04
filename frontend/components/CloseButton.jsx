@@ -29,7 +29,7 @@ export default function CloseButton({
   return (
     <button
       id='addons-drawer-close-button'
-      className="absolute right-3 top-3 flex justify-center items-center bg-main-10 md:bg-secondary rounded-lg w-10 h-10 overflow-hidden z-10 md:after:inset-0 md:after:bg-main-10 md:after:-z-10 md:after:absolute"
+      className="absolute right-3 top-3 flex justify-center items-center rounded-lg w-10 h-10 overflow-hidden z-10 bg-white/30 backdrop-blur-xl md:backdrop-blur-none mobile:text-white md:bg-main-10 outline outline-1 outline-white/90 after:absolute after:inset-0 after:rounded-lg mobile:after:bg-[#848484]/40 mobile:after:backdrop-blur-xl after:-z-10"
       ref={CloseButtonRef}
       onClick={handleClick}
       tabIndex={drawerOpen ? 0 : -1}

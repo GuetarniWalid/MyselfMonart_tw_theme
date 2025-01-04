@@ -16,7 +16,7 @@ export default function DesktopRight({
   setOpenSelectId,
 }) {
   return (
-    <>
+    <div className='hidden md:block h-full overflow-y-auto custom-scrollbar pr-5'>
       <RadioContainer
         bulletNb={1}
         title="Choisissez votre taille"
@@ -51,6 +51,6 @@ export default function DesktopRight({
         CloseButtonRef={CloseButtonRef}
         focusedElemRef={focusedElemRef}
       />
-    </>
+    </div>
   );
 }

@@ -5,6 +5,7 @@ import AddCustomerDetailsPopup from '../AddCustomerDetailsPopup';
 import Button from './ui/Button';
 import { updateProduct } from './data/updateProduct';
 import { makeOrder } from './data/makeOrder';
+import useIsMobile from '../../hooks/useIsMobile';
 
 export default function BuyButton({
   optionSets,
@@ -13,12 +14,18 @@ export default function BuyButton({
   withCustomerDetails = false,
   beforeAddProductToCartFunction = () => true,
   getProductProperties = () => null,
+  inMobileBottom = false,
 }) {
+  const isMobile = useIsMobile();
   const [idle, setIdle] = useState(false);
   const [showAddCustomerDetailsPopup, setShowAddCustomerDetailsPopup] =
     useState(false);
   const buttonRef = useRef(null);
   const product = useProductFormatter(optionSets, optionIndecesSelected);
+
+  if ((isMobile && !inMobileBottom) || (!isMobile && inMobileBottom)) {
+    return null;
+  }
 
   function showCustomerDetailsPopup() {
     buttonRef.current.classList.add('hidden')

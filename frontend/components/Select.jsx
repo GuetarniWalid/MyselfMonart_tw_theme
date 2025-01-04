@@ -82,9 +82,8 @@ export default function Select({
     <div className="flex gap-3 h-12 mb-3">
       <div className="relative flex-1 h-full">
         <div
-          className={`relative flex justify-between items-center  rounded-lg px-3 h-full bg-white ${
-            isOpen && 'outline outline-main outline-1'
-          }`}
+          className={`relative flex justify-between items-center rounded-lg px-3 h-full bg-white/30 md:bg-white backdrop-blur-xl md:backdrop-blur-none text-white md:text-main outline outline-1 outline-white/90 ${
+            isOpen ? 'outline-white' : ''}`}
           role="button"
           aria-haspopup="listbox"
           aria-expanded={isOpen}
@@ -95,12 +94,15 @@ export default function Select({
           ref={selectRef}
           id={selectId}
         >
+          <span className="absolute inset-0 rounded-lg bg-[#848484]/30 backdrop-blur-xl -z-10 md:hidden"> </span>
           <span className='pointer-events-none'>{optionSet[optionIndexSelected].name}</span>
           <div className="flex items-center gap-5 pointer-events-none">
-            <span className="bg-main-10 rounded-lg px-2 py-1 whitespace-nowrap">
-              {optionSet[optionIndexSelected].price} {moneySymbol}
+            <span className="rounded-lg px-2 py-1 whitespace-nowrap mobile:backdrop-blur-xl md:bg-main-10 border-1 mobile:border-white/50">
+              {optionSet[optionIndexSelected].price.toString().includes('.') 
+                ? Number(optionSet[optionIndexSelected].price).toFixed(2) 
+                : optionSet[optionIndexSelected].price} {moneySymbol}
             </span>
-            <div className="w-6 h-6 bg-main-10 rounded-full flex justify-center items-center">
+            <div className="w-6 h-6 rounded-full flex justify-center items-center backdrop-blur border-1 border-white/50">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="25"
@@ -120,13 +122,14 @@ export default function Select({
             aria-label={optionSet[optionIndexSelected].technicalType}
             role="listbox"
             id={ariaControlsIdRef.current}
-            className={`absolute bg-white w-full rounded-lg p-3 ${
+            className={`absolute w-full rounded-lg p-3 bg-white/30 md:bg-white backdrop-blur-3xl md:backdrop-blur-none text-black md:text-main border-1 border-white/90 ${
               popupDirection === 'top'
                 ? '-top-3 -translate-y-full shadow-[0_-13px_28px_5px_rgba(0,0,0,0.1)]'
                 : '-bottom-3 translate-y-full shadow-[0_13px_28px_5px_rgba(0,0,0,0.1)]'
             }`}
             aria-activedescendant={`${selectId}-option-${optionIndexSelected}`}
           >
+            <span className='absolute block inset-0 rounded bg-[#848484]/40 backdrop-blur-xl -z-10 md:hidden' > </span>
             {options}
           </ul>
         )}

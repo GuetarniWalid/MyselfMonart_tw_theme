@@ -1,26 +1,23 @@
 const data = {
   background: {
     image: {
-      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/mur-brique-blanc-dans-galerie-minimaliste.jpg?width=800',
+      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/mur-beton-brute-galerie-minimalist.jpg?v=1736012108&width=400',
       srcSet:
-        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/mur-brique-blanc-dans-galerie-minimaliste.jpg?width=360 360w,https://cdn.shopify.com/s/files/1/0623/2388/4287/files/mur-brique-blanc-dans-galerie-minimaliste.jpg?width=480 480w,https://cdn.shopify.com/s/files/1/0623/2388/4287/files/mur-brique-blanc-dans-galerie-minimaliste.jpg?width=600 600w,https://cdn.shopify.com/s/files/1/0623/2388/4287/files/mur-brique-blanc-dans-galerie-minimaliste.jpg?width=800 800w, https://cdn.shopify.com/s/files/1/0623/2388/4287/files/mur-brique-blanc-dans-galerie-minimaliste.jpg?width=1000 1000w, https://cdn.shopify.com/s/files/1/0623/2388/4287/files/mur-brique-blanc-dans-galerie-minimaliste.jpg?width=1200 1200w',
+        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/mur-beton-brute-galerie-minimalist.jpg?v=1736012108&width=360 360whttps://cdn.shopify.com/s/files/1/0623/2388/4287/files/mur-beton-brute-galerie-minimalist.jpg?v=1733176426&width=480 480w,https://cdn.shopify.com/s/files/1/0623/2388/4287/files/mur-beton-brute-galerie-minimalist.jpg?v=1736012108&width=600 600w,https://cdn.shopify.com/s/files/1/0623/2388/4287/files/mur-beton-brute-galerie-minimalist.jpg?v=1736012108&width=800 800w, https://cdn.shopify.com/s/files/1/0623/2388/4287/files/mur-beton-brute-galerie-minimalist.jpg?v=1736012108&width=1000 1000w, https://cdn.shopify.com/s/files/1/0623/2388/4287/files/mur-beton-brute-galerie-minimalist.jpg?v=1736012108&width=1200 1200w',
       sizes: '(max-width: 767px) 100vw, 50vw',
-      alt: 'Mur de brique blanche dans galerie minimaliste',
+      alt: 'Mur de béton brute dans galerie minimaliste',
       width: '800',
       height: 'auto',
       position: 'bottom-6 right-1',
       from: 'right',
     },
   },
-  furniture: {
+  cat: {
     image: {
-      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/meuble-bas-salon-chaine-claire.png?v=1715528461',
-      alt: 'Meuble bas de salon en chaîne claire',
+      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/chat-ratio.png?v=1735488839&height=555',
+      alt: 'chat assis servant de ratio pour evaluer la taille du tableau',
       width: 'auto',
-      height: 'auto',
-      position: 'bottom-0 left-1/2 -translate-x-1/2',
-      from: 'right',
-      initClasses: '',
+      height: '555',
     },
   },
   girl: {
@@ -29,9 +26,6 @@ const data = {
       alt: 'Femme qui présente un tableau de décoration',
       width: 'auto',
       height: '800',
-      position: 'bottom-0 right-0',
-      from: 'right',
-      initClasses: 'max-w-none',
     },
   },
   fixation: {
