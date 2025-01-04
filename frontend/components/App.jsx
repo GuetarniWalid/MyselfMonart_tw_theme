@@ -6,7 +6,7 @@ import Painting from './Painting';
 import MobileBottom from './MobileBottom';
 import CloseButton from './CloseButton';
 import DesktopRight from './DesktopRight';
-import BuyButton from './BuyButton';
+import BackgroundImage from './BackgroundImage';
 
 export default function App() {
   const initialoptionSets = useMemo(() => useFormatOptions(0, 0), []);
@@ -80,85 +80,43 @@ export default function App() {
     }
   }, [isMobile, radiosContainerRef.current]);
 
-  //To close select when clicking outside
-  function handleClick(event) {
-    if (
-      !event.target.id?.includes(openSelectId) &&
-      !event.target.ariaActiveDescendantElement?.id?.includes(openSelectId)
-    ) {
-      setOpenSelectId(null);
-    }
-  }
-
   return (
-    <div
-      className="relative w-full h-full flex justify-center items-center md:px-8"
-      onClick={handleClick}
-    >
+    <BackgroundImage>
       <CloseButton
         addonsDrawerRef={addonsDrawerRef}
         drawerOpen={drawerOpen}
         CloseButtonRef={CloseButtonRef}
       />
-      <div className="flex flex-col gap-6 md:gap-8 md:flex-row md:items-center justify-center h-full w-full max-w-6xl">
-        {isMobile ? (
-          <Painting
-            currentOption={currentOption}
-            optionSets={optionSets}
-            optionIndecesSelected={newOptionIndecesSelected}
-            setCurrentOption={setCurrentOption}
-          />
-        ) : (
-          <div className="h-5/6 flex flex-col gap-5 w-1/2">
-            <Painting
-              currentOption={currentOption}
-              optionSets={optionSets}
-              optionIndecesSelected={newOptionIndecesSelected}
-              setCurrentOption={setCurrentOption}
-            />
-            <BuyButton
-              optionSets={optionSets}
-              optionIndecesSelected={newOptionIndecesSelected}
-              drawerOpen={drawerOpen}
-              withCustomerDetails={window.buyingWithCustomization}
-            />
-          </div>
-        )}
-        <div className="sm:flex items-center md:flex-1 md:h-full">
-          <div
-            className="w-full px-4 md:h-full md:px-0 md:overflow-y-auto md:py-20 scrollbar-hidden"
-            ref={radiosContainerRef}
-          >
-            {isMobile ? (
-              <MobileBottom
-                optionIndecesSelected={newOptionIndecesSelected}
-                setOptionIndecesSelected={setOptionIndecesSelected}
-                optionSets={optionSets}
-                mobileSummaryRef={mobileSummaryRef}
-                setCurrentOption={setCurrentOption}
-                drawerOpen={drawerOpen}
-                CloseButtonRef={CloseButtonRef}
-                focusedElemRef={focusedElemRef}
-                openSelectId={openSelectId}
-                setOpenSelectId={setOpenSelectId}
-              />
-            ) : (
-              <DesktopRight
-                optionSets={optionSets}
-                optionIndecesSelected={newOptionIndecesSelected}
-                setOptionIndecesSelected={setOptionIndecesSelected}
-                setCurrentOption={setCurrentOption}
-                drawerOpen={drawerOpen}
-                CloseButtonRef={CloseButtonRef}
-                desktopSelectorRef={desktopSelectorRef}
-                focusedElemRef={focusedElemRef}
-                openSelectId={openSelectId}
-                setOpenSelectId={setOpenSelectId}
-              />
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
+      <Painting
+        currentOption={currentOption}
+        optionSets={optionSets}
+        optionIndecesSelected={newOptionIndecesSelected}
+        setCurrentOption={setCurrentOption}
+      />
+      <MobileBottom
+        optionIndecesSelected={newOptionIndecesSelected}
+        setOptionIndecesSelected={setOptionIndecesSelected}
+        optionSets={optionSets}
+        mobileSummaryRef={mobileSummaryRef}
+        setCurrentOption={setCurrentOption}
+        drawerOpen={drawerOpen}
+        CloseButtonRef={CloseButtonRef}
+        focusedElemRef={focusedElemRef}
+        openSelectId={openSelectId}
+        setOpenSelectId={setOpenSelectId}
+      />
+      <DesktopRight
+        optionSets={optionSets}
+        optionIndecesSelected={newOptionIndecesSelected}
+        setOptionIndecesSelected={setOptionIndecesSelected}
+        setCurrentOption={setCurrentOption}
+        drawerOpen={drawerOpen}
+        CloseButtonRef={CloseButtonRef}
+        desktopSelectorRef={desktopSelectorRef}
+        focusedElemRef={focusedElemRef}
+        openSelectId={openSelectId}
+        setOpenSelectId={setOpenSelectId}
+      />
+    </BackgroundImage>
   );
 }

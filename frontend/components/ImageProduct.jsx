@@ -1,11 +1,21 @@
-import { forwardRef } from 'react';
+import { forwardRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import ImageProductFilter from './ImageProductFilter';
+import useIsMobile from '../hooks/useIsMobile';
 
-const ImageProduct = forwardRef(({ matter, shine, width }, ref) => {
-  return (
+const ImageProduct = forwardRef(({ matter, shine }, ref) => {
+  const [isClicked, setIsClicked] = useState(false);
+  const isMobile = useIsMobile();
+
+  function handleClick() {
+    setIsClicked(!isClicked);
+  }
+
+  const imageContent = (
     <div
-      className={`relative inline-block shadow-2xl transition-all duration-200 ease-out rounded overflow-hidden`}
-      ref={ref}
+      className="relative inline-block transition-all duration-200 ease-out rounded overflow-hidden w-[95%]"
+      onClick={handleClick}
+      ref={!isClicked ? ref : null}
     >
       <img
         src={window.productImageSRC}
@@ -15,15 +25,27 @@ const ImageProduct = forwardRef(({ matter, shine, width }, ref) => {
           ${window.productImageSRC}&width=800 800w,
           ${window.productImageSRC}&width=1000 1000w,
           ${window.productImageSRC}&width=1200 1200w,`}
-        sizes="(max-width: 767px) 90vw, 45vw"
+        sizes="95vw"
         alt={window.productImageAlt}
-        width={width}
+        width="728"
         height="auto"
         loading="lazy"
-        className="max-w-none"
+        className="md:max-h-[90vh] w-auto"
       />
-      <ImageProductFilter width={width} matter={matter} shine={shine} />
+      <ImageProductFilter width={728} matter={matter} shine={shine} />
     </div>
   );
+
+  return isClicked && isMobile
+    ? createPortal(
+        <div className="absolute z-10 inset-0 bg-black/50 flex items-center justify-center"
+          onClick={handleClick}
+        >
+          {imageContent}
+        </div>,
+        document.getElementById('addonsDrawer'),
+      )
+    : imageContent;
 });
+
 export default ImageProduct;

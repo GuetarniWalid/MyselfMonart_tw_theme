@@ -42,13 +42,14 @@ export default function InfoButton({
   return (
     <>
       <button
-        className={`bg-white h-full w-12 rounded flex justify-center items-center ${
+        className={`relative h-full w-12 rounded flex justify-center items-center bg-white/30 md:bg-white backdrop-blur-xl md:backdrop-blur-none text-white md:text-main outline outline-1 outline-white/90 ${
           nextToRadio ? 'md:h-auto md:w-full gap-1 md:py-2 md:shadow' : ''
         } `}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
         ref={ref}
       >
+        <span className='absolute inset-0 rounded bg-[#848484]/40 backdrop-blur-xl -z-10 md:hidden'> </span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"

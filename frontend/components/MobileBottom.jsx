@@ -16,12 +16,13 @@ export default function MobileBottom({
   
 
   return (
-    <>
+    <div className='absolute bottom-0 w-full px-3 md:hidden'>
       <BuyButton
         optionSets={optionSets}
         optionIndecesSelected={optionIndecesSelected}
         drawerOpen={drawerOpen}
         withCustomerDetails={window.buyingWithCustomization}
+        inMobileBottom={true}
       />
       <Selects 
         optionSets={optionSets}
@@ -35,6 +36,6 @@ export default function MobileBottom({
         openSelectId={openSelectId}
         setOpenSelectId={setOpenSelectId}
       />
-    </>
+    </div>
   );
 }

@@ -13,6 +13,7 @@ module.exports = {
   ],
   theme: {
     screens: {
+      'mobile': {'max': '767px'},
       '2xs': '410px',
       xs: '480px',
       ...defaultTheme.screens,
@@ -115,5 +116,7 @@ module.exports = {
     'before:w-[70%]',
     'before:w-[80%]',
     'before:w-[90%]',
+    '-right-0',
+    '-right-1/4',
   ],
 };
