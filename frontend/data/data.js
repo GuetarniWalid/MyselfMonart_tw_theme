@@ -645,7 +645,7 @@ const data = {
     },
     popup: {
       image: {
-        src: 'https://www.myselfmonart.com/cdn/shop/files/metre.jpg?v=1665664842',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/affiche-street-art-40X40cm.jpg?v=1736256672',
         alt: 'Tableau 40x40cm',
         width: '500',
         height: '500',
@@ -664,7 +664,7 @@ const data = {
     },
     popup: {
       image: {
-        src: 'https://www.myselfmonart.com/cdn/shop/files/metre.jpg?v=1665664842',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-japonais-60X60cm.jpg?v=1736256672',
         alt: 'Tableau 60x60cm',
         width: '500',
         height: '500',
@@ -683,7 +683,7 @@ const data = {
     },
     popup: {
       image: {
-        src: 'https://www.myselfmonart.com/cdn/shop/files/metre.jpg?v=1665664842',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-colore-80X80cm.jpg?v=1736256672',
         alt: 'Tableau 80x80cm',
         width: '500',
         height: '500',
@@ -702,7 +702,7 @@ const data = {
     },
     popup: {
       image: {
-        src: 'https://www.myselfmonart.com/cdn/shop/files/metre.jpg?v=1665664842',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-carre-XXL-100X100cm.jpg?v=1736256672',
         alt: 'Tableau 100x100cm',
         width: '500',
         height: '500',
@@ -722,7 +722,11 @@ data.size30x20 = {
     height: '500',
   },
   popup: {
-    image: data.size40x40.popup.image,
+    image: {
+      ...data.size40x40.popup.image,
+      src:
+        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/poster-paysage-abstrait30X20cm.jpg?v=1736278747',
+    },
     title: '30 X 20 CM',
     description: data.size40x40.popup.description.replaceAll(
       '40 x 40',
@@ -739,7 +743,11 @@ data.size40x30 = {
     height: '500',
   },
   popup: {
-    image: data.size40x40.popup.image,
+    image: {
+      ...data.size40x40.popup.image,
+      src:
+        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/petit-tableau-format-paysage-40X30cm.jpg?v=1736278699',
+    },
     title: '40 X 30 CM',
     description: data.size40x40.popup.description.replaceAll(
       '40 x 40',
@@ -756,7 +764,11 @@ data.size60x40 = {
     height: '500',
   },
   popup: {
-    image: data.size40x40.popup.image,
+    image: {
+      ...data.size60x60.popup.image,
+      src:
+        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-sur-toile-abstrait-60X40cm.jpg?v=1736278832',
+    },
     title: '60 X 40 CM',
     description: data.size60x60.popup.description.replaceAll(
       '60 x 60',
@@ -773,7 +785,11 @@ data.size80x60 = {
     height: '500',
   },
   popup: {
-    image: data.size40x40.popup.image,
+    image: {
+      ...data.size60x60.popup.image,
+      src:
+        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/impression-toile-80X60cm.jpg?v=1736278788',
+    },
     title: '80 X 60 CM',
     description: data.size60x60.popup.description.replaceAll(
       '60 x 60',
@@ -790,7 +806,11 @@ data.size100x75 = {
     height: '500',
   },
   popup: {
-    image: data.size40x40.popup.image,
+    image: {
+      ...data.size80x80.popup.image,
+      src:
+        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-abstrait-bleu-100X75cm.jpg?v=1736278908',
+    },
     title: '100 X 75 CM',
     description: data.size80x80.popup.description.replaceAll(
       '80 x 80',
@@ -807,7 +827,11 @@ data.size120x90 = {
     height: '500',
   },
   popup: {
-    image: data.size40x40.popup.image,
+    image: {
+      ...data.size100x100.popup.image,
+      src:
+        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-XXL-paysage-120X90cm.jpg?v=1736278867',
+    },
     title: '120 X 90 CM',
     description: data.size100x100.popup.description.replaceAll(
       '100 x 100',
@@ -824,7 +848,11 @@ data.size20x30 = {
     height: '500',
   },
   popup: {
-    image: data.size40x40.popup.image,
+    image: {
+      ...data.size40x40.popup.image,
+      src:
+        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/poster-20X30cm.jpg?v=1736278661',
+    },
     title: '20 X 30 CM',
     description: data.size40x40.popup.description.replaceAll(
       '40 x 40',
@@ -841,7 +869,11 @@ data.size30x40 = {
     height: '500',
   },
   popup: {
-    image: data.size40x40.popup.image,
+    image: {
+      ...data.size40x40.popup.image,
+      src:
+        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/petit-tableau-30X40cm.jpg?v=1736278625',
+    },
     title: '30 X 40 CM',
     description: data.size40x40.popup.description.replaceAll(
       '40 x 40',
@@ -858,7 +890,11 @@ data.size40x60 = {
     height: '500',
   },
   popup: {
-    image: data.size40x40.popup.image,
+    image: {
+      ...data.size60x60.popup.image,
+      src:
+        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/toile-murale-40X60cm.jpg?v=1736278590',
+    },
     title: '40 X 60 CM',
     description: data.size60x60.popup.description.replaceAll(
       '60 x 60',
@@ -875,7 +911,11 @@ data.size60x80 = {
     height: '500',
   },
   popup: {
-    image: data.size40x40.popup.image,
+    image: {
+      ...data.size60x60.popup.image,
+      src:
+        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-deco-60X80cm.jpg?v=1736278555',
+    },
     title: '60 x 80 CM',
     description: data.size60x60.popup.description.replaceAll(
       '60 x 60',
@@ -892,7 +932,11 @@ data.size75x100 = {
     height: '500',
   },
   popup: {
-    image: data.size40x40.popup.image,
+    image: {
+      ...data.size80x80.popup.image,
+      src:
+        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-noir-et-blanc-75X100cm.jpg?v=1736278523',
+    },
     title: '75 x 100 CM',
     description: data.size80x80.popup.description.replaceAll(
       '80 x 80',
@@ -909,7 +953,11 @@ data.size90x120 = {
     height: '500',
   },
   popup: {
-    image: data.size40x40.popup.image,
+    image: {
+      ...data.size100x100.popup.image,
+      src:
+        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/toile-XXL-90X120cm.jpg?v=1736278478',
+    },
     title: '90 x 120 CM',
     description: data.size100x100.popup.description.replaceAll(
       '100 x 100',

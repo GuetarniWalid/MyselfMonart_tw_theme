@@ -43,7 +43,7 @@ export default function PopupInfo({ infoToShow, setInfoToShow, setToFocus }) {
         ref={ref}
       >
         <img
-          src={`${data[technicalKey].popup.image.src}&width=340`}
+          src={`${data[technicalKey].popup.image.src}&width=500`}
           alt={data[technicalKey].popup.image.alt}
           width={data[technicalKey].popup.image.width}
           height={data[technicalKey].popup.image.height}
