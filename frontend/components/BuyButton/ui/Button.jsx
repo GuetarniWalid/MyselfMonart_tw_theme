@@ -1,12 +1,14 @@
 import { forwardRef, useEffect } from 'react';
 import useCalculateTotalPrice from '../../../hooks/useCalculateTotalPrice';
+import useIsMobile from '../../../hooks/useIsMobile';
 
 const Button = forwardRef(
-  ({ optionSets, optionIndecesSelected, drawerOpen, handleClick, idle, message }, ref) => {
+  ({ optionSets, optionIndecesSelected, drawerOpen, handleClick, idle, message, CloseButtonRef }, ref) => {
     const totalPrice = useCalculateTotalPrice(
       optionSets,
       optionIndecesSelected,
     );
+    const isMobile = useIsMobile();
 
     useEffect(() => {
       const intervalId = setInterval(() => {
@@ -19,13 +21,24 @@ const Button = forwardRef(
       return () => clearInterval(intervalId);
     }, []);
 
+    function handleKeyDown(event) {
+      // if(event.key === 'Enter') {
+      //   handleClick(event);
+      // }
+      if (event.key === 'Tab' && isMobile) {
+        event.preventDefault();
+        CloseButtonRef.current.focus();
+      }
+    }
+
     return (
       <div className="flex-none font-bold">
         <button
           onClick={handleClick}
+          onKeyDown={handleKeyDown}
           ref={ref}
           tabIndex={drawerOpen ? 0 : -1}
-          className="relative flex w-full md:w-[95%] md:mx-auto justify-between items-center gap-3 bg-white/80 md:bg-action md:text-secondary backdrop-blur-xl text-[#48423B] outline outline-1 outline-white rounded-lg px-8 focus:outline focus:outline-orange-300 focus:outline-4 mb-4 md:mb-0 md:py-2 md:text-md lg:text-lg before:w-12 before:bg-white/50 before:absolute before:-top-4 before:-bottom-4 before:right-[-60px] before:rotate-12 after:w-12 after:bg-white/20 after:absolute after:-top-4 after:-bottom-4 after:rotate-12 after:right-[-60px] overflow-hidden disabled:bg-action-70 disabled:cursor-wait"
+          className="relative flex w-full md:mx-auto justify-between items-center gap-3 bg-action outline outline-1 outline-action text-secondary backdrop-blur-xl rounded-lg px-8 focus:outline focus:outline-orange-500 focus:outline-2 mb-4 md:mb-0 md:py-2 md:text-md lg:text-lg before:w-12 before:bg-white/50 before:absolute before:-top-4 before:-bottom-4 before:right-[-60px] before:rotate-12 after:w-12 after:bg-white/20 after:absolute after:-top-4 after:-bottom-4 after:rotate-12 after:right-[-60px] overflow-hidden disabled:bg-action-70 disabled:outline-none disabled:cursor-wait"
           disabled={idle}
         >
           {idle ? (

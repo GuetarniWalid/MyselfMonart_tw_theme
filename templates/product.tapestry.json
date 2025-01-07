@@ -66,8 +66,8 @@
         "buy_qrRzcg": {
           "type": "buy",
           "settings": {
-            "top_text": "Choix des options",
-            "bottom_text": "Personnaliser le tableau",
+            "top_text": "Choisir mes options",
+            "bottom_text": "Je personnalise mon tableau",
             "main_color": "#b92700"
           }
         },

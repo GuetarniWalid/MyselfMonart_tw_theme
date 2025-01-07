@@ -8,7 +8,6 @@ export default function Selects({
   setCurrentOption,
   drawerOpen,
   mobileSummaryRef,
-  CloseButtonRef,
   focusedElemRef,
   openSelectId,
   setOpenSelectId,
@@ -32,8 +31,6 @@ export default function Selects({
         setCurrentOption={setCurrentOption}
         drawerOpen={drawerOpen}
         popupDirection="top"
-        CloseButtonRef={CloseButtonRef}
-        isLastSelect={index === optionSets.length - 1}
         selectId={selectId}
       />
     );

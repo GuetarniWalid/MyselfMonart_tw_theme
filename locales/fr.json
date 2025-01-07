@@ -501,7 +501,7 @@
       "caption": "Articles du panier",
       "cart_error": "Une erreur est survenue lors de l’actualisation de votre panier. Veuillez réessayer.",
       "cart_quantity_error_html": "Vous ne pouvez pas ajouter plus de {{ quantity }} de ce produit à votre panier.",
-      "checkout": "Procéder au paiement",
+      "checkout": "Je commande !",
       "info": "Info",
       "continue_shopping": "Continuer les achats",
       "empty_message": "Votre panier est vide",
@@ -533,7 +533,7 @@
     "cart_drawer": {
       "close": "Fermer",
       "continue_shopping": "Voir tous nos tableaux",
-      "checkout": "Procéder au paiement",
+      "checkout": "Je commande !",
       "empty_message": "Votre panier est vide",
       "promotion": "Promotions",
       "remove": "Enlever {{article}} du panier",

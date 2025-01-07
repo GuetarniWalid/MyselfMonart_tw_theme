@@ -7,6 +7,7 @@ import MobileBottom from './MobileBottom';
 import CloseButton from './CloseButton';
 import DesktopRight from './DesktopRight';
 import BackgroundImage from './BackgroundImage';
+import BuyButton from './BuyButton';
 
 export default function App() {
   const initialoptionSets = useMemo(() => useFormatOptions(0, 0), []);
@@ -81,18 +82,33 @@ export default function App() {
   }, [isMobile, radiosContainerRef.current]);
 
   return (
-    <BackgroundImage>
+    <BackgroundImage
+      focusedElemRef={focusedElemRef}
+      setOpenSelectId={setOpenSelectId}
+      setCurrentOption={setCurrentOption}
+    >
       <CloseButton
         addonsDrawerRef={addonsDrawerRef}
         drawerOpen={drawerOpen}
         CloseButtonRef={CloseButtonRef}
       />
-      <Painting
-        currentOption={currentOption}
-        optionSets={optionSets}
-        optionIndecesSelected={newOptionIndecesSelected}
-        setCurrentOption={setCurrentOption}
-      />
+      <div className="max-h-full overflow-hidden mx-3">
+        <Painting
+          currentOption={currentOption}
+          optionSets={optionSets}
+          optionIndecesSelected={newOptionIndecesSelected}
+          setCurrentOption={setCurrentOption}
+        />
+        {!isMobile && (
+          <BuyButton
+            optionSets={optionSets}
+            optionIndecesSelected={newOptionIndecesSelected}
+            drawerOpen={true}
+            withCustomerDetails={window.buyingWithCustomization}
+            CloseButtonRef={CloseButtonRef}
+          />
+        )}
+      </div>
       <MobileBottom
         optionIndecesSelected={newOptionIndecesSelected}
         setOptionIndecesSelected={setOptionIndecesSelected}

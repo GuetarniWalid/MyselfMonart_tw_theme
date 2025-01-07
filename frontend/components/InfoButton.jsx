@@ -6,8 +6,6 @@ export default function InfoButton({
   technicalName,
   technicalType,
   nextToRadio,
-  CloseButtonRef,
-  isLast,
 }) {
   const [infoToShow, setInfoToShow] = useState(null);
   const [toFocus, setToFocus] = useState(false);
@@ -33,17 +31,13 @@ export default function InfoButton({
     if(event.key === 'Enter') {
       handleClick(event);
     }
-    else if (event.key === 'Tab' && isLast) {
-      event.preventDefault();
-      CloseButtonRef.current.focus();
-    }
   }
 
   return (
     <>
       <button
-        className={`relative h-full w-12 rounded flex justify-center items-center bg-white/30 md:bg-white backdrop-blur-xl md:backdrop-blur-none text-white md:text-main outline outline-1 outline-white/90 ${
-          nextToRadio ? 'md:h-auto md:w-full gap-1 md:py-2 md:shadow' : ''
+        className={`relative h-full w-12 rounded flex justify-center items-center bg-white/30 md:bg-white backdrop-blur-xl md:backdrop-blur-none text-white md:text-main outline outline-1 outline-white/90 focus:outline-orange-500 focus:outline-2${
+          nextToRadio ? ' md:h-auto md:w-full gap-1 md:py-2 md:shadow' : ''
         } `}
         onClick={handleClick}
         onKeyDown={handleKeyDown}

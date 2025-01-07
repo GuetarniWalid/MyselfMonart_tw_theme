@@ -50,7 +50,7 @@
           "type": "buy",
           "settings": {
             "top_text": "AJOUTER AU PANIER",
-            "bottom_text": "Personnaliser le tableau",
+            "bottom_text": "Je personnalise mon tableau",
             "main_color": "#b92700"
           }
         },

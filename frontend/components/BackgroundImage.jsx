@@ -2,16 +2,12 @@ import { useState } from 'react';
 import data from '../data/data';
 const { background } = data;
 
-const BackgroundImage = ({children}) => {
-  const [openSelectId, setOpenSelectId] = useState(null);
-
-  //To close select when clicking outside
+const BackgroundImage = ({children, focusedElemRef, setOpenSelectId, setCurrentOption}) => {
   function handleClick(event) {
-    if (
-      !event.target.id?.includes(openSelectId) &&
-      !event.target.ariaActiveDescendantElement?.id?.includes(openSelectId)
-    ) {
+    if(!event.target.closest('#product-drawer-selector')) {
+      focusedElemRef.current = null;
       setOpenSelectId(null);
+      setCurrentOption(null);
     }
   }
 

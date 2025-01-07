@@ -13,8 +13,6 @@ export default function Select({
   setCurrentOption,
   drawerOpen,
   popupDirection,
-  CloseButtonRef,
-  isLastSelect,
   focusedElemRef,
   setOpenSelectId,
   selectId,
@@ -31,7 +29,7 @@ export default function Select({
   }, [])
 
   function handleSelectClick(e) {
-    e.stopPropagation();
+    e?.stopPropagation();
     if (isOpen) {
       setCurrentOption(null);
       focusedElemRef.current = selectId
@@ -79,10 +77,10 @@ export default function Select({
   });
 
   return (
-    <div className="flex gap-3 h-12 mb-3">
+    <div className="flex gap-3 h-12 mb-3" id="product-drawer-selector">
       <div className="relative flex-1 h-full">
         <div
-          className={`relative flex justify-between items-center rounded-lg px-3 h-full bg-white/30 md:bg-white backdrop-blur-xl md:backdrop-blur-none text-white md:text-main outline outline-1 outline-white/90 ${
+          className={`relative flex justify-between items-center rounded-lg px-3 h-full bg-white/30 md:bg-white backdrop-blur-xl md:backdrop-blur-none text-white md:text-main outline outline-1 outline-white/90 focus:outline-orange-500 focus:outline-2 ${
             isOpen ? 'outline-white' : ''}`}
           role="button"
           aria-haspopup="listbox"
@@ -138,8 +136,6 @@ export default function Select({
         technicalName={optionSet[optionIndexSelected].technicalName}
         technicalType={optionSet[optionIndexSelected].technicalType}
         nextToRadio={false}
-        CloseButtonRef={CloseButtonRef}
-        isLast={isLastSelect}
       />
     </div>
   );

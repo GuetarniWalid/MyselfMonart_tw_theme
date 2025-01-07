@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import data from '../data/data';
 import { getTechnicalKey } from '../utils/functions';
 import useIsMobile from '../hooks/useIsMobile';
@@ -8,35 +8,32 @@ export default function ImageJPGDrawer({
   currentOption,
   setCurrentOption,
 }) {
-  const isMobile = useIsMobile();
   const [startX, setStartX] = useState(0);
+  const [visible, setVisible] = useState(false);
+  const isMobile = useIsMobile();
 
-  function getInitialTwClasses(from) {
-    const positions = data[option].image.position.split(' ');
-    const positionsWithoutFrom = positions.filter((p) => !p.includes(from));
+  useEffect(() => {
+    const technicalKey = getTechnicalKey(
+      currentOption?.technicalType,
+      currentOption?.technicalName,
+    );
 
-    switch (from) {
-      case 'left':
-        return 'left-0';
-      case 'right':
-        return `right-0 translate-x-full ${positionsWithoutFrom.join(' ')}`;
-      case 'top':
-        return 'top-0';
-      case 'bottom':
-        return 'bottom-0';
-      default:
-        return '';
+    if (technicalKey === option) {
+      setVisible(true);
+    } else if (currentOption) {
+      setVisible(false);
+    } else {
+      if (isMobile) {
+        const timeout = setTimeout(() => {
+          setVisible(false);
+        }, 2500);
+        
+        return () => clearTimeout(timeout);
+      } else {
+        setVisible(false);
+      }
     }
-  }
-  const technicalKey = getTechnicalKey(
-    currentOption?.technicalType,
-    currentOption?.technicalName,
-  );
-  const visible = technicalKey === option;
-  const twClasses =
-    visible && isMobile
-      ? data[option].image.position
-      : getInitialTwClasses(data[option].image.from);
+  }, [currentOption]);
 
   function handleTouchStart(e) {
     setStartX(e.touches[0].clientX);
@@ -51,7 +48,9 @@ export default function ImageJPGDrawer({
 
   return (
     <div
-      className={`h-full w-full absolute transition-transform duration-300 ease-in-out bg-secondary  ${twClasses}`}
+      className={`h-full w-full absolute top-0 -right-[1px] transition-transform duration-300 ease-in-out md:z-10${
+        visible ? '' : ' translate-x-full'
+      }`}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
@@ -60,13 +59,18 @@ export default function ImageJPGDrawer({
         alt={data[option].image.alt}
         width={data[option].image.width}
         height={data[option].image.height}
-        className={`${data[option].image.initClasses}`}
+        className="inline-block w-full object-contain"
         loading="lazy"
         srcSet={`
       ${data[option].image.src}&width=375 375w,
       ${data[option].image.src}&width=500 500w,
-      ${data[option].image.src}&width=767 767w`}
-        sizes="100vw"
+      ${data[option].image.src}&width=767 767w,
+      ${data[option].image.src}&width=1024 1024w,
+      ${data[option].image.src}&width=1280 1280w,
+      ${data[option].image.src}&width=1536 1536w,
+      ${data[option].image.src}&width=1920 1920w
+      `}
+        sizes="(max-width: 768px) 100vw, 50vw"
       />
     </div>
   );
