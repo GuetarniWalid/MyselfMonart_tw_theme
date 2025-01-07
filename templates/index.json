@@ -3,10 +3,10 @@
     "2b3b46e7-881c-4925-96cf-76c7ebf203c4": {
       "type": "image-banner",
       "settings": {
-        "image_desktop": "shopify:\/\/shop_images\/illutration-joyeux-noel.jpg",
+        "image_desktop": "shopify:\/\/shop_images\/soldes-hiver-deco-murale-15.gif",
         "image_desktop_horizontal_position": "left",
-        "image_mobile": "shopify:\/\/shop_images\/illustration-noel-bonnes-fetes.jpg",
-        "image_mobile_vertical_position": "bottom",
+        "image_mobile": "shopify:\/\/shop_images\/solde-15-collection-tableux-poster-affiches-animation-hiver.gif",
+        "image_mobile_vertical_position": "center",
         "enable_lazy_loading": true
       }
     },
