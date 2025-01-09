@@ -371,8 +371,8 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-americain-blanc.png?v=1736282553',
         alt: 'Cadre blanc',
-        width: '340',
-        height: '340',
+        width: '500',
+        height: '500',
       },
       title: 'CADRE BLANC',
       description:
@@ -398,8 +398,8 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-noir-mat.png?v=1736282552',
         alt: 'Cadre noir mat',
-        width: '340',
-        height: '340',
+        width: '500',
+        height: '500',
       },
       title: 'CADRE NOIR MAT',
       description:
@@ -425,8 +425,8 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-bois-argent-ancien.png?v=1736282552',
         alt: 'Cadre argent ancien',
-        width: '340',
-        height: '340',
+        width: '500',
+        height: '500',
       },
       title: 'CADRE ARGENT ANCIEN',
       description:
@@ -452,8 +452,8 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-chene-blanchi.png?v=1736282552',
         alt: 'Cadre chêne clair',
-        width: '340',
-        height: '340',
+        width: '500',
+        height: '500',
       },
       title: 'CADRE CHÊNE CLAIR',
       description:
@@ -479,8 +479,8 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-toile-noyer.png?v=1736282552',
         alt: 'Cadre noyer',
-        width: '340',
-        height: '340',
+        width: '500',
+        height: '500',
       },
       title: 'CADRE NOYER',
       description:

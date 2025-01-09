@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
-import data from '../data/data';
-import { getTechnicalKey } from '../utils/functions';
+import data from '../../data/data';
+import { getTechnicalKey } from '../../utils/functions';
+import Image from './Image';
+import YoutubeVideo from './YoutubeVideo';
 
 export default function PopupInfo({ infoToShow, setInfoToShow, setToFocus }) {
   const ref = useRef(null);
@@ -27,9 +29,15 @@ export default function PopupInfo({ infoToShow, setInfoToShow, setToFocus }) {
     }
   }
 
+  function getYoutubeVideoId(technicalKey) {
+    return data[technicalKey].popup.youtubeVideoId;
+  }
+
   useEffect(() => {
     ref.current.focus();
   }, [infoToShow]);
+
+  const youtubeVideoId = getYoutubeVideoId(technicalKey);
 
   return (
     <div
@@ -37,21 +45,19 @@ export default function PopupInfo({ infoToShow, setInfoToShow, setToFocus }) {
       onClick={handleClick}
     >
       <div
-        className="mx-3 bg-secondary p-8 rounded-xl border-main border-1 w-full max-w-sm max-h-[90%] overflow-y-auto scrollbar-hidden"
+        className="mx-3 bg-secondary rounded-xl w-full max-w-sm max-h-[90%] overflow-y-auto scrollbar-hidden pb-8"
         tabIndex={0}
         onKeyDown={handleKeyDown}
         ref={ref}
       >
-        <img
-          src={`${data[technicalKey].popup.image.src}&width=500`}
-          alt={data[technicalKey].popup.image.alt}
-          width={data[technicalKey].popup.image.width}
-          height={data[technicalKey].popup.image.height}
-          loading="lazy"
-        />
-        <h4 className="my-8 text-xl">{data[technicalKey].popup.title}</h4>
+        {youtubeVideoId ? (
+          <YoutubeVideo technicalKey={technicalKey} data={data} />
+        ) : (
+          <Image technicalKey={technicalKey} data={data} />
+        )}
+        <h4 className="my-8 text-xl px-8">{data[technicalKey].popup.title}</h4>
         <p
-          className="leading-loose text-main-90"
+          className="leading-loose text-main-90 px-8"
           dangerouslySetInnerHTML={{
             __html: data[technicalKey].popup.description,
           }}
