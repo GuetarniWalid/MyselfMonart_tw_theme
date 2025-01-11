@@ -10,6 +10,7 @@ export default function PopupInfo({ infoToShow, setInfoToShow, setToFocus }) {
   const technicalKey = getTechnicalKey(
     infoToShow.technicalType,
     infoToShow.technicalName,
+    infoToShow.matter,
   );
 
   function handleClick(e) {

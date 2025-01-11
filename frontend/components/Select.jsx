@@ -16,6 +16,7 @@ export default function Select({
   focusedElemRef,
   setOpenSelectId,
   selectId,
+  matter,
 }) {
   const selectRef = useRef(null);
   const firstOptionRef = useRef(null);
@@ -136,6 +137,7 @@ export default function Select({
         technicalName={optionSet[optionIndexSelected].technicalName}
         technicalType={optionSet[optionIndexSelected].technicalType}
         nextToRadio={false}
+        matter={matter}
       />
     </div>
   );

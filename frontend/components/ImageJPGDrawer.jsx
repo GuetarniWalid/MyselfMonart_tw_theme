@@ -7,6 +7,7 @@ export default function ImageJPGDrawer({
   option,
   currentOption,
   setCurrentOption,
+  matter,
 }) {
   const [startX, setStartX] = useState(0);
   const [visible, setVisible] = useState(false);
@@ -16,6 +17,7 @@ export default function ImageJPGDrawer({
     const technicalKey = getTechnicalKey(
       currentOption?.technicalType,
       currentOption?.technicalName,
+      matter,
     );
 
     if (technicalKey === option) {
@@ -57,8 +59,8 @@ export default function ImageJPGDrawer({
       <img
         src={data[option].image.src}
         alt={data[option].image.alt}
-        width={data[option].image.width}
-        height={data[option].image.height}
+        width="500"
+        height="500"
         className="inline-block w-full object-contain"
         loading="lazy"
         srcSet={`

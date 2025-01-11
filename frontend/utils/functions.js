@@ -21,7 +21,7 @@ export function getWidthAccordingScene(percent, sceneWidth) {
   return (percent * sceneWidth) / 100;
 }
 
-export function getTechnicalKey(technicaltype = '', technicalName = '') {
+export function getTechnicalKey(technicaltype = '', technicalName = '', matter = '') {
   if (typeof technicalName === 'number') {
     technicalName = String(technicalName);
   }
@@ -36,6 +36,13 @@ export function getTechnicalKey(technicaltype = '', technicalName = '') {
   const technicalNameSplitUppercase = technicalNameSplit.map((word) => {
     return word.charAt(0).toUpperCase() + word.slice(1);
   });
+
+  const matterUppercase = matter.charAt(0).toUpperCase() + matter.slice(1);
+
+  if(technicaltype === "frame" && technicalName !== "null") {
+    return technicaltype + matterUppercase + technicalNameSplitUppercase.join('');
+  }
+
   return technicaltype + technicalNameSplitUppercase.join('');
 }
 

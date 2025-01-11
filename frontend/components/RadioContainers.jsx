@@ -2,6 +2,7 @@ import Radios from './Radios';
 import RadioContainer from './RadioContainer';
 import data from '../data/data';
 import { v4 } from 'uuid';
+import useProductData from '../hooks/useProductData';
 
 export default function RadioContainers({
   optionSets,
@@ -12,6 +13,8 @@ export default function RadioContainers({
   CloseButtonRef,
   focusedElemRef,
 }) {
+  const { matter } = useProductData(optionIndecesSelected, optionSets);
+
   //without sizes
   const radios = optionSets.slice(1).map((optionSet, index) => {
     const labelGroupId =
@@ -36,6 +39,7 @@ export default function RadioContainers({
           isLastContainer={index === optionSets.length - 2}
           labelGroupId={labelGroupId}
           focusedElemRef={focusedElemRef}
+          matter={matter}
         />
       </RadioContainer>
     );

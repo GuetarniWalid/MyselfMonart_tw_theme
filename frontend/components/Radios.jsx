@@ -13,6 +13,7 @@ export default function Radios({
   isLastContainer,
   labelGroupId,
   focusedElemRef,
+  matter,
 }) {
   return (
     <div
@@ -35,6 +36,7 @@ export default function Radios({
             isLastRadio={index === optionSet.length - 1 && isLastContainer}
             isChecked={optionIndexSelected === index}
             focusedElemRef={focusedElemRef}
+            matter={matter}
           />
         );
       })}

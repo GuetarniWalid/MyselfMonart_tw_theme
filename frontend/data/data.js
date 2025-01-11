@@ -12,22 +12,6 @@ const data = {
       from: 'right',
     },
   },
-  cat: {
-    image: {
-      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/chat-ratio.png?v=1735488839&height=555',
-      alt: 'chat assis servant de ratio pour evaluer la taille du tableau',
-      width: 'auto',
-      height: '555',
-    },
-  },
-  girl: {
-    image: {
-      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/femme-presente-tableau-decoration.png?v=1705165332&height=800',
-      alt: 'Femme qui présente un tableau de décoration',
-      width: 'auto',
-      height: '800',
-    },
-  },
   fixation: {
     radio: {
       title: 'Choisissez le Système de fixation',
@@ -38,8 +22,6 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/panier-vide.png?v=1704831823',
         alt: "Panier d'achat vide",
-        width: '500',
-        height: '500',
       },
       title: 'AUCUN SYTÈME DE FIXATION',
       description:
@@ -49,8 +31,6 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/panier-vide.png?v=1704831823',
         alt: "Panier d'achat vide",
-        width: '500',
-        height: '500',
       },
     },
   },
@@ -58,15 +38,11 @@ const data = {
     image: {
       src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/set-fixation-tableau-toile-no-background.png?v=1714571170',
       alt: 'Set de fixation pour tableau toile',
-      width: '500',
-      height: '500',
     },
     popup: {
       image: {
         src: 'https://www.myselfmonart.com/cdn/shop/files/decoration-murale-corde.jpg?v=1861007482740747164',
         alt: "Système d'installation d'un set de fixation ficelle derriere toile",
-        width: '500',
-        height: '500',
       },
       title: 'FIXATION POUR TOILE',
       description:
@@ -76,8 +52,6 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/set-fixation-tableau-toile-no-background.png?v=1714571170',
         alt: 'Set de fixation pour tableau toile',
-        width: '500',
-        height: '500',
       },
     },
   },
@@ -85,15 +59,11 @@ const data = {
     image: {
       src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/crochet-fixation-plexiglas-no-background.png?v=1714571170',
       alt: 'Crochet de fixation pour tableau aluminium et plexiglas',
-      width: '500',
-      height: '500',
     },
     popup: {
       image: {
         src: 'https://www.myselfmonart.com/cdn/shop/files/support_crochet.jpg?v=8936887157261578720',
         alt: "Système d'installation d'un crochet de fixation pour tableau aluminium",
-        width: '500',
-        height: '500',
       },
       title: 'CROCHET AVEC SYSTÈME ADHÉSIF',
       description:
@@ -103,8 +73,6 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/crochet-fixation-plexiglas-no-background.png?v=1714571170',
         alt: 'Crochet de fixation pour tableau aluminium et plexiglas',
-        width: '500',
-        height: '500',
       },
     },
   },
@@ -112,8 +80,6 @@ const data = {
     image: {
       src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/rail-fixation-no-background.png?v=1714571169',
       alt: 'Rail de fixation pour tableau aluminium et plexiglas',
-      width: '500',
-      height: '500',
     },
     popup: {
       image: {
@@ -130,8 +96,6 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/rail-fixation-no-background.png?v=1714571169',
         alt: 'Rail de fixation pour tableau aluminium et plexiglas',
-        width: '500',
-        height: '500',
       },
     },
   },
@@ -144,15 +108,11 @@ const data = {
     image: {
       src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/chassis-bois-2cm-toile.png?v=1714571169',
       alt: 'Chassis bois 2cm pour tableau toile',
-      width: '500',
-      height: '500',
     },
     popup: {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/chassis-bois-tableau-toile.jpg?v=1707945516',
         alt: "Chassis d'un tableau en bois de 2cm d'épaisseur",
-        width: '500',
-        height: '500',
       },
       title: 'CHÂSSIS 2CM EN BOIS',
       description:
@@ -162,8 +122,6 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/chassis-bois-2cm-toile.png?v=1714571169',
         alt: 'Chassis bois 2cm pour tableau toile',
-        width: '500',
-        height: '500',
       },
     },
   },
@@ -171,15 +129,11 @@ const data = {
     image: {
       src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/chassis-bois-4cm-toile_07ee58cb-6941-4afa-9f41-f39e41ad9f37.png?v=1736281674',
       alt: 'Chassis bois 4cm pour tableau toile',
-      width: '500',
-      height: '500',
     },
     popup: {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/chassis-bois-4cm-toile.png?v=1714571170',
         alt: "Chassis d'un tableau en bois de 4cm d'épaisseur",
-        width: '500',
-        height: '500',
       },
       title: 'CHÂSSIS 4CM EN BOIS',
       description:
@@ -189,8 +143,6 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/chassis-bois-4cm-toile.png?v=1714571170',
         alt: 'Chassis bois 4cm pour tableau toile',
-        width: '500',
-        height: '500',
       },
     },
   },
@@ -203,15 +155,11 @@ const data = {
     image: {
       src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/bordtoileblanc.png?v=1714571170',
       alt: 'Bordure blanche pour tableau toile',
-      width: '500',
-      height: '500',
     },
     popup: {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/bordtoileblanc.png?v=1714571170',
         alt: "le coin d'un tableau en Toile, vu de près",
-        width: '500',
-        height: '500',
       },
       title: 'BORDURE BLANCHE',
       description:
@@ -221,8 +169,6 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/bordtoileblanc.png?v=1714571170',
         alt: 'Bordure blanche pour tableau toile',
-        width: '500',
-        height: '500',
       },
     },
   },
@@ -230,15 +176,11 @@ const data = {
     image: {
       src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/bordtoilenoirbackgroundnoir.png?v=1714571168',
       alt: 'Bordure noire pour tableau toile',
-      width: '500',
-      height: '500',
     },
     popup: {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/bordtoilenoirbackgroundnoir.png?v=1714571168',
         alt: 'Bordure noire pour tableau toile',
-        width: '500',
-        height: '500',
       },
       title: 'BORDURE NOIRE',
       description:
@@ -248,8 +190,6 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/bordtoilenoirbackgroundnoir.png?v=1714571168',
         alt: 'Bordure noire pour tableau toile',
-        width: '500',
-        height: '500',
       },
     },
   },
@@ -257,15 +197,11 @@ const data = {
     image: {
       src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/bordtoileetiree.png?v=1714571168',
       alt: 'Bordure étirée pour tableau toile',
-      width: '500',
-      height: '500',
     },
     popup: {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/bordtoileetiree.png?v=1714571168',
         alt: 'Bordure étirée pour tableau toile',
-        width: '500',
-        height: '500',
       },
       title: 'BORDURE ÉTIRÉE',
       description:
@@ -275,8 +211,6 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/bordtoileetiree.png?v=1714571168',
         alt: 'Bordure étirée pour tableau toile',
-        width: '500',
-        height: '500',
       },
     },
   },
@@ -284,15 +218,11 @@ const data = {
     image: {
       src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/bordtoilemiroirbackgroundgris.png?v=1714571169',
       alt: 'Bordure miroir pour tableau toile',
-      width: '500',
-      height: '500',
     },
     popup: {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/bordtoilemiroirbackgroundgris.png?v=1714571169',
         alt: 'Bordure miroir pour tableau toile',
-        width: '500',
-        height: '500',
       },
       title: 'BORDURE MIROIR',
       description:
@@ -302,8 +232,6 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/bordtoilemiroirbackgroundgris.png?v=1714571169',
         alt: 'Bordure miroir pour tableau toile',
-        width: '500',
-        height: '500',
       },
     },
   },
@@ -311,15 +239,11 @@ const data = {
     image: {
       src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/bordtoileplie.png?v=1714571168',
       alt: 'Bordure pliée pour tableau toile',
-      width: '500',
-      height: '500',
     },
     popup: {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/bordtoileplie.png?v=1714571168',
         alt: 'Bordure pliée pour tableau toile',
-        width: '500',
-        height: '500',
       },
       title: 'BORDURE PLIÉE',
       description:
@@ -329,8 +253,6 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/bordtoileplie.png?v=1714571168',
         alt: 'Bordure pliée pour tableau toile',
-        width: '500',
-        height: '500',
       },
     },
   },
@@ -344,8 +266,6 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/panier-vide.png?v=1704831823',
         alt: 'Cadre vide',
-        width: '500',
-        height: '500',
       },
       title: 'SANS CADRE',
       description:
@@ -355,24 +275,18 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/panier-vide.png?v=1704831823',
         alt: 'Cadre vide',
-        width: '500',
-        height: '500',
       },
     },
   },
-  frameWhite: {
+  frameCanvasWhite: {
     image: {
       src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-decoration-blanc-backgroundgris422PX.png?v=1714571169',
       alt: 'Cadre blanc pour tableau toile',
-      width: '500',
-      height: '500',
     },
     popup: {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-americain-blanc.png?v=1736282553',
         alt: 'Cadre blanc',
-        width: '500',
-        height: '500',
       },
       title: 'CADRE BLANC',
       description:
@@ -382,24 +296,18 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-decoration-blanc-backgroundgris422PX.png?v=1714571169',
         alt: 'Cadre blanc pour tableau toile',
-        width: '500',
-        height: '500',
       },
     },
   },
-  frameBlackMat: {
+  frameCanvasBlackMat: {
     image: {
       src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-cuisine-noir-mat-backgroung-gris422PX.png?v=1714571170',
       alt: 'Cadre noir mat pour tableau toile',
-      width: '500',
-      height: '500',
     },
     popup: {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-noir-mat.png?v=1736282552',
         alt: 'Cadre noir mat',
-        width: '500',
-        height: '500',
       },
       title: 'CADRE NOIR MAT',
       description:
@@ -409,24 +317,18 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-cuisine-noir-mat-backgroung-gris422PX.png?v=1714571170',
         alt: 'Cadre noir mat pour tableau toile',
-        width: '500',
-        height: '500',
       },
     },
   },
-  frameSilverOld: {
+  frameCanvasSilverOld: {
     image: {
       src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-deco-argent-backgroundgris422PX.png?v=1714571170',
       alt: 'Cadre argent ancien pour tableau toile',
-      width: '500',
-      height: '500',
     },
     popup: {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-bois-argent-ancien.png?v=1736282552',
         alt: 'Cadre argent ancien',
-        width: '500',
-        height: '500',
       },
       title: 'CADRE ARGENT ANCIEN',
       description:
@@ -436,24 +338,18 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-deco-argent-backgroundgris422PX.png?v=1714571170',
         alt: 'Cadre argent ancien pour tableau toile',
-        width: '500',
-        height: '500',
       },
     },
   },
-  frameOakLight: {
+  frameCanvasOakLight: {
     image: {
       src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-tableau-chene-background-gris422PX.png?v=1714571169',
       alt: 'Cadre chêne clair pour tableau toile',
-      width: '500',
-      height: '500',
     },
     popup: {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-chene-blanchi.png?v=1736282552',
         alt: 'Cadre chêne clair',
-        width: '500',
-        height: '500',
       },
       title: 'CADRE CHÊNE CLAIR',
       description:
@@ -463,24 +359,18 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-tableau-chene-background-gris422PX.png?v=1714571169',
         alt: 'Cadre chêne clair pour tableau toile',
-        width: '500',
-        height: '500',
       },
     },
   },
-  frameWalnut: {
+  frameCanvasWalnut: {
     image: {
       src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-photo-noyer-backgroun-gris422PX.png?v=1714571169',
       alt: 'Cadre noyer pour tableau toile',
-      width: '500',
-      height: '500',
     },
     popup: {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-toile-noyer.png?v=1736282552',
         alt: 'Cadre noyer',
-        width: '500',
-        height: '500',
       },
       title: 'CADRE NOYER',
       description:
@@ -490,8 +380,111 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-photo-noyer-backgroun-gris422PX.png?v=1714571169',
         alt: 'Cadre noyer pour tableau toile',
-        width: '500',
-        height: '500',
+      },
+    },
+  },
+  framePosterWhite: {
+    image: {
+      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-poster-verre-bois-blanc.png?v=1736344093',
+      alt: 'Cadre blanc pour tableau toile',
+    },
+    popup: {
+      image: {
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-poster-verre-bois-blanc.png?v=1736344093',
+        alt: 'Cadre blanc',
+      },
+      title: 'CADRE BLANC',
+      description:
+        "Le cadre blanc est un choix classique et intemporel qui met en valeur l'œuvre d'art sans en détourner l'attention. Il offre une finition épurée et discrète, idéale pour mettre en valeur la toile. Le blanc s'intègre parfaitement dans tous les styles de décoration en apportant une touche de modernité et de luminosité à votre intérieur. Particulièrement adapté aux œuvres aux teintes claires et aux compositions graphiques, le tableau vous est livré monté sur le cadre et prêt à être accrocher.",
+    },
+    radio: {
+      image: {
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-poster-verre-bois-blanc.png?v=1736344093',
+        alt: 'Cadre blanc pour tableau toile',
+      },
+    },
+  },
+  framePosterBlackMat: {
+    image: {
+      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-poster-noir-mat-bois.png?v=1736344092',
+      alt: 'Cadre noir mat pour tableau toile',
+    },
+    popup: {
+      image: {
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-poster-noir-mat-bois.png?v=1736344092',
+        alt: 'Cadre noir mat',
+      },
+      title: 'CADRE NOIR MAT',
+      description:
+        "Le cadre noir mat est un choix audacieux qui met en valeur l'œuvre d'art, offrant un contraste fort qui fait ressortir les couleurs et les détails de la toile. Son fini mat élimine les distractions visuelles, focalisant l'attention sur l'image centrale. Adapté à tous les décors, il apporte une touche de modernité et d'élégance à votre intérieur. Idéal pour des œuvres dynamiques ou des photographies en noir et blanc, le tableau vous est livré monté sur ce cadre et prêt à être accroché, simplifiant son installation.",
+    },
+    radio: {
+      image: {
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-poster-noir-mat-bois.png?v=1736344092',
+        alt: 'Cadre noir mat pour tableau toile',
+      },
+    },
+  },
+  framePosterSilverOld: {
+    image: {
+      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-poster-argent-ancien.png?v=1736344093',
+      alt: 'Cadre argent ancien pour tableau toile',
+    },
+    popup: {
+      image: {
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-poster-argent-ancien.png?v=1736344093',
+        alt: 'Cadre argent ancien',
+      },
+      title: 'CADRE ARGENT ANCIEN',
+      description:
+        "Le cadre couleur argent ancien combine élégance classique et charme vintage, encadrant l'œuvre d'art avec une touche de raffinement. Sa finition subtilement patinée capte la lumière, enrichissant l'image de reflets délicats qui attirent l'œil sans éclipser le tableau. Ce cadre s'harmonise aisément avec différents styles d'intérieur, ajoutant une dimension historique et une profondeur visuelle. Particulièrement adapté pour des œuvres classiques ou des portraits, il offre un contraste doux qui valorise les nuances subtiles de la toile. Livré monté et prêt à accrocher, ce cadre transforme instantanément votre espace en une galerie d'art personnelle.",
+    },
+    radio: {
+      image: {
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-poster-argent-ancien.png?v=1736344093',
+        alt: 'Cadre argent ancien pour tableau toile',
+      },
+    },
+  },
+  framePosterOakLight: {
+    image: {
+      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-bois-poster-chene-blanchi.png?v=1736344092',
+      alt: 'Cadre chêne clair pour tableau toile',
+    },
+    popup: {
+      image: {
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-bois-poster-chene-blanchi.png?v=1736344092',
+        alt: 'Cadre chêne clair',
+      },
+      title: 'CADRE CHÊNE CLAIR',
+      description:
+        "Le cadre en chêne clair apporte une touche de chaleur naturelle et de simplicité élégante à votre œuvre d'art. Sa teinte douce et sa texture veinée enrichissent visuellement l'espace, offrant une harmonie parfaite avec des intérieurs scandinaves, rustiques ou minimalistes. Ce cadre souligne délicatement l'image, ajoutant une dimension organique qui complète sans effort les couleurs et les motifs de la toile. Il est idéal pour des œuvres qui cherchent à créer une atmosphère accueillante et lumineuse, apportant une sensation d'apaisement et de retour aux origines. Livré monté sur le cadre et prêt à être accroché.",
+    },
+    radio: {
+      image: {
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-bois-poster-chene-blanchi.png?v=1736344092',
+        alt: 'Cadre chêne clair pour tableau toile',
+      },
+    },
+  },
+  framePosterWalnut: {
+    image: {
+      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-poster-bois-couleur-marron-noyer.png?v=1736344093',
+      alt: 'Cadre noyer pour tableau toile',
+    },
+    popup: {
+      image: {
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-poster-bois-couleur-marron-noyer.png?v=1736344093',
+        alt: 'Cadre noyer',
+      },
+      title: 'CADRE NOYER',
+      description:
+        "Le cadre en noyer, avec sa teinte sombre et ses veines prononcées, apporte une robustesse visuelle et un caractère rustique à votre œuvre d'art. Cette essence de bois, connue pour sa solidité et sa beauté naturelle, encadre la toile en ajoutant une texture riche et une profondeur qui accentuent l'intensité de l'image. Le cadre en noyer est idéal pour les espaces qui cherchent à incorporer des éléments naturels et des nuances terreuses, offrant une ambiance chaleureuse et accueillante. Il se marie particulièrement bien avec des œuvres aux couleurs profondes ou aux sujets naturels, renforçant l'impact visuel de la toile. Livré monté et prêt à accrocher, ce cadre en noyer est une invitation à ancrer votre décoration dans un esthétisme authentique et durable.",
+    },
+    radio: {
+      image: {
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-poster-bois-couleur-marron-noyer.png?v=1736344093',
+        alt: 'Cadre noyer pour tableau toile',
       },
     },
   },
@@ -505,8 +498,6 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/poster-enroule.png?v=1717351944',
         alt: "la forme d'un poster, vu de près",
-        width: '500',
-        height: '500',
       },
       title: 'LE POSTER : papier photo brillant',
       description:
@@ -516,8 +507,6 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/poster-forme.png?v=1717351726',
         alt: 'Zoom sur un poster enroulé',
-        width: '500',
-        height: '500',
       },
     },
   },
@@ -526,8 +515,6 @@ const data = {
       image: {
         src: 'https://www.myselfmonart.com/cdn/shop/files/toile_coin_forme.jpg?v=1208470841075608900',
         alt: "le coin d'un tableau en Toile, vu de près",
-        width: '500',
-        height: '500',
       },
       title: 'LA TOILE 100% POLYESTER : mate et texturée',
       description:
@@ -537,8 +524,6 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/toile_forme-no-background.png?v=1714571169',
         alt: "Coin d'un tableau en toile",
-        width: '500',
-        height: '500',
       },
     },
   },
@@ -547,8 +532,6 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/aluminium_coin_forme.jpg?v=1668797116',
         alt: "le coin d'un tableau en Aluminium, vu de près",
-        width: '500',
-        height: '500',
       },
       title: "L'ALUMINIUM : contraste et éclat",
       description:
@@ -558,8 +541,6 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/aluminium_forme.png?v=1714571169',
         alt: "Coin d'un tableau en aluminium",
-        width: '500',
-        height: '500',
       },
     },
   },
@@ -568,8 +549,6 @@ const data = {
       image: {
         src: 'https://www.myselfmonart.com/cdn/shop/files/plexiglas_coin_forme.jpg?v=1287005242677975874',
         alt: "le coin d'un tableau en Aluminium + Plexiglas, vu de près",
-        width: '500',
-        height: '500',
       },
       title: 'ALUMINIUM + PLEXIGLAS : Élégant et transparent',
       description:
@@ -579,8 +558,6 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/plexiglas_forme.png?v=1714571169',
         alt: "Coin d'un tableau en aluminium + plexiglas",
-        width: '500',
-        height: '500',
       },
     },
   },
@@ -594,8 +571,6 @@ const data = {
       image: {
         src: 'https://www.myselfmonart.com/cdn/shop/files/aluminium_coin_forme_348x340.jpg?v=953181947818535174',
         alt: "le coin d'un tableau alumium mat, vu de près",
-        width: '500',
-        height: '500',
       },
       title: 'MAT : élégant et sans reflet',
       description:
@@ -605,8 +580,6 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/aluminium_coin_forme.png?v=1714571169',
         alt: "Coin d'un tableau en aluminium mat",
-        width: '500',
-        height: '500',
       },
     },
   },
@@ -615,8 +588,6 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/aluminium-brillant.png?v=1714570866',
         alt: "le coin d'un tableau alumium brillant, vu de près",
-        width: '500',
-        height: '500',
       },
       title: 'BRILLANT : éclat et contraste',
       description:
@@ -626,8 +597,6 @@ const data = {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/aluminium-brillant.png?v=1714570866',
         alt: "Coin d'un tableau en aluminium brillant",
-        width: '500',
-        height: '500',
       },
     },
   },
@@ -640,15 +609,11 @@ const data = {
     image: {
       src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/affiche-street-art-40X40cm.jpg?v=1736256672',
       alt: 'Tableau 40x40cm',
-      width: '500',
-      height: '500',
     },
     popup: {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/affiche-street-art-40X40cm.jpg?v=1736256672',
         alt: 'Tableau 40x40cm',
-        width: '500',
-        height: '500',
       },
       title: '40 X 40 CM',
       description:
@@ -659,15 +624,11 @@ const data = {
     image: {
       src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-japonais-60X60cm.jpg?v=1736256672',
       alt: 'Tableau 60x60cm',
-      width: '500',
-      height: '500',
     },
     popup: {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-japonais-60X60cm.jpg?v=1736256672',
         alt: 'Tableau 60x60cm',
-        width: '500',
-        height: '500',
       },
       title: '60 X 60 CM',
       description:
@@ -678,15 +639,11 @@ const data = {
     image: {
       src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-colore-80X80cm.jpg?v=1736256672',
       alt: 'Tableau 80x80cm',
-      width: '500',
-      height: '500',
     },
     popup: {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-colore-80X80cm.jpg?v=1736256672',
         alt: 'Tableau 80x80cm',
-        width: '500',
-        height: '500',
       },
       title: '80 X 80 CM',
       description:
@@ -697,15 +654,11 @@ const data = {
     image: {
       src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-carre-XXL-100X100cm.jpg?v=1736256672',
       alt: 'Tableau 100x100cm',
-      width: '500',
-      height: '500',
     },
     popup: {
       image: {
         src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-carre-XXL-100X100cm.jpg?v=1736256672',
         alt: 'Tableau 100x100cm',
-        width: '500',
-        height: '500',
       },
       title: '100 X 100 CM',
       description:
@@ -718,14 +671,11 @@ data.size30x20 = {
   image: {
     src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/poster-paysage-abstrait30X20cm.jpg?v=1736278747',
     alt: 'Tableau 30x20cm',
-    width: '500',
-    height: '500',
   },
   popup: {
     image: {
       ...data.size40x40.popup.image,
-      src:
-        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/poster-paysage-abstrait30X20cm.jpg?v=1736278747',
+      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/poster-paysage-abstrait30X20cm.jpg?v=1736278747',
     },
     title: '30 X 20 CM',
     description: data.size40x40.popup.description.replaceAll(
@@ -739,14 +689,11 @@ data.size40x30 = {
   image: {
     src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/petit-tableau-format-paysage-40X30cm.jpg?v=1736278699',
     alt: 'Tableau 40x30cm',
-    width: '500',
-    height: '500',
   },
   popup: {
     image: {
       ...data.size40x40.popup.image,
-      src:
-        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/petit-tableau-format-paysage-40X30cm.jpg?v=1736278699',
+      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/petit-tableau-format-paysage-40X30cm.jpg?v=1736278699',
     },
     title: '40 X 30 CM',
     description: data.size40x40.popup.description.replaceAll(
@@ -760,14 +707,11 @@ data.size60x40 = {
   image: {
     src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-sur-toile-abstrait-60X40cm.jpg?v=1736278832',
     alt: 'Tableau 60x40cm',
-    width: '500',
-    height: '500',
   },
   popup: {
     image: {
       ...data.size60x60.popup.image,
-      src:
-        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-sur-toile-abstrait-60X40cm.jpg?v=1736278832',
+      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-sur-toile-abstrait-60X40cm.jpg?v=1736278832',
     },
     title: '60 X 40 CM',
     description: data.size60x60.popup.description.replaceAll(
@@ -781,14 +725,11 @@ data.size80x60 = {
   image: {
     src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/impression-toile-80X60cm.jpg?v=1736278788',
     alt: 'Tableau 80x60cm',
-    width: '500',
-    height: '500',
   },
   popup: {
     image: {
       ...data.size60x60.popup.image,
-      src:
-        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/impression-toile-80X60cm.jpg?v=1736278788',
+      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/impression-toile-80X60cm.jpg?v=1736278788',
     },
     title: '80 X 60 CM',
     description: data.size60x60.popup.description.replaceAll(
@@ -802,14 +743,11 @@ data.size100x75 = {
   image: {
     src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-abstrait-bleu-100X75cm.jpg?v=1736278908',
     alt: 'Tableau 100x75cm',
-    width: '500',
-    height: '500',
   },
   popup: {
     image: {
       ...data.size80x80.popup.image,
-      src:
-        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-abstrait-bleu-100X75cm.jpg?v=1736278908',
+      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-abstrait-bleu-100X75cm.jpg?v=1736278908',
     },
     title: '100 X 75 CM',
     description: data.size80x80.popup.description.replaceAll(
@@ -823,14 +761,11 @@ data.size120x90 = {
   image: {
     src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-XXL-paysage-120X90cm.jpg?v=1736278867',
     alt: 'Tableau 120x90cm',
-    width: '500',
-    height: '500',
   },
   popup: {
     image: {
       ...data.size100x100.popup.image,
-      src:
-        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-XXL-paysage-120X90cm.jpg?v=1736278867',
+      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-XXL-paysage-120X90cm.jpg?v=1736278867',
     },
     title: '120 X 90 CM',
     description: data.size100x100.popup.description.replaceAll(
@@ -844,14 +779,11 @@ data.size20x30 = {
   image: {
     src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/poster-20X30cm.jpg?v=1736278661',
     alt: 'Tableau 20x30cm',
-    width: '500',
-    height: '500',
   },
   popup: {
     image: {
       ...data.size40x40.popup.image,
-      src:
-        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/poster-20X30cm.jpg?v=1736278661',
+      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/poster-20X30cm.jpg?v=1736278661',
     },
     title: '20 X 30 CM',
     description: data.size40x40.popup.description.replaceAll(
@@ -865,14 +797,11 @@ data.size30x40 = {
   image: {
     src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/petit-tableau-30X40cm.jpg?v=1736278625',
     alt: 'Tableau 30x40cm',
-    width: '500',
-    height: '500',
   },
   popup: {
     image: {
       ...data.size40x40.popup.image,
-      src:
-        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/petit-tableau-30X40cm.jpg?v=1736278625',
+      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/petit-tableau-30X40cm.jpg?v=1736278625',
     },
     title: '30 X 40 CM',
     description: data.size40x40.popup.description.replaceAll(
@@ -886,14 +815,11 @@ data.size40x60 = {
   image: {
     src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/toile-murale-40X60cm.jpg?v=1736278590',
     alt: 'Tableau 40x60cm',
-    width: '500',
-    height: '500',
   },
   popup: {
     image: {
       ...data.size60x60.popup.image,
-      src:
-        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/toile-murale-40X60cm.jpg?v=1736278590',
+      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/toile-murale-40X60cm.jpg?v=1736278590',
     },
     title: '40 X 60 CM',
     description: data.size60x60.popup.description.replaceAll(
@@ -907,14 +833,11 @@ data.size60x80 = {
   image: {
     src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-deco-60X80cm.jpg?v=1736278555',
     alt: 'Tableau 60x80cm',
-    width: '500',
-    height: '500',
   },
   popup: {
     image: {
       ...data.size60x60.popup.image,
-      src:
-        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-deco-60X80cm.jpg?v=1736278555',
+      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-deco-60X80cm.jpg?v=1736278555',
     },
     title: '60 x 80 CM',
     description: data.size60x60.popup.description.replaceAll(
@@ -928,14 +851,11 @@ data.size75x100 = {
   image: {
     src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-noir-et-blanc-75X100cm.jpg?v=1736278523',
     alt: 'Tableau 75x100cm',
-    width: '500',
-    height: '500',
   },
   popup: {
     image: {
       ...data.size80x80.popup.image,
-      src:
-        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-noir-et-blanc-75X100cm.jpg?v=1736278523',
+      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-noir-et-blanc-75X100cm.jpg?v=1736278523',
     },
     title: '75 x 100 CM',
     description: data.size80x80.popup.description.replaceAll(
@@ -949,14 +869,11 @@ data.size90x120 = {
   image: {
     src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/toile-XXL-90X120cm.jpg?v=1736278478',
     alt: 'Tableau 90x120cm',
-    width: '500',
-    height: '500',
   },
   popup: {
     image: {
       ...data.size100x100.popup.image,
-      src:
-        'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/toile-XXL-90X120cm.jpg?v=1736278478',
+      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/toile-XXL-90X120cm.jpg?v=1736278478',
     },
     title: '90 x 120 CM',
     description: data.size100x100.popup.description.replaceAll(

@@ -6,6 +6,7 @@ export default function InfoButton({
   technicalName,
   technicalType,
   nextToRadio,
+  matter,
 }) {
   const [infoToShow, setInfoToShow] = useState(null);
   const [toFocus, setToFocus] = useState(false);
@@ -24,6 +25,7 @@ export default function InfoButton({
     setInfoToShow({
       technicalName,
       technicalType,
+      matter,
     });
   }
 

@@ -15,15 +15,21 @@ export default function Radio({
   isLastRadio,
   isChecked,
   focusedElemRef,
+  matter,
 }) {
   const ref = useRef(null);
   const technicalKey = getTechnicalKey(
     option.technicalType,
     option.technicalName,
+    matter,
   );
 
   useEffect(() => {
-    if(focusedElemRef.current && focusedElemRef.current[0] === indexContainer && focusedElemRef.current[1] === index) {
+    if (
+      focusedElemRef.current &&
+      focusedElemRef.current[0] === indexContainer &&
+      focusedElemRef.current[1] === index
+    ) {
       ref.current.focus();
       focusedElemRef.current = null;
     }
@@ -34,7 +40,7 @@ export default function Radio({
     newOptionIndecesSelected[indexContainer] = index;
     setOptionIndecesSelected(newOptionIndecesSelected);
     setCurrentOption(option);
-    focusedElemRef.current = [indexContainer, index]
+    focusedElemRef.current = [indexContainer, index];
   }
 
   function handleKeyDown(event) {
@@ -75,17 +81,16 @@ export default function Radio({
         </div>
         <div>
           <p className="inline-block bg-main-5 rounded-lg px-4 py-1 whitespace-nowrap my-4">
-            {option.price.toString().includes('.') 
-                ? Number(option.price).toFixed(2) 
-                : option.price}
+            {option.price.toString().includes('.')
+              ? Number(option.price).toFixed(2)
+              : option.price}
             {moneySymbol}
           </p>
           <InfoButton
             technicalName={option.technicalName}
             technicalType={option.technicalType}
             nextToRadio={true}
-            CloseButtonRef={CloseButtonRef}
-            isLast={isLastRadio}
+            matter={matter}
           />
         </div>
       </div>

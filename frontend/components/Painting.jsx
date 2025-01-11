@@ -55,11 +55,16 @@ export default function Painting({
     'borderStretched',
     'borderMirror',
     'borderFolded',
-    'frameWhite',
-    'frameBlackMat',
-    'frameSilverOld',
-    'frameOakLight',
-    'frameWalnut',
+    'frameCanvasWhite',
+    'frameCanvasBlackMat',
+    'frameCanvasSilverOld',
+    'frameCanvasOakLight',
+    'frameCanvasWalnut',
+    'framePosterWhite',
+    'framePosterBlackMat',
+    'framePosterSilverOld',
+    'framePosterOakLight',
+    'framePosterWalnut',
   ];
 
   const options = isMobile ? [...sizesAvailable, ...otherOptions] : sizesAvailable;
@@ -78,6 +83,7 @@ export default function Painting({
           option={option}
           currentOption={currentOption}
           setCurrentOption={setCurrentOption}
+          matter={matter}
         />
       ))}
     </div>

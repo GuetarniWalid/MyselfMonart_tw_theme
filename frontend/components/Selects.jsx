@@ -1,3 +1,4 @@
+import useProductData from '../hooks/useProductData';
 import Select from './Select';
 import { v4 } from 'uuid';
 
@@ -12,6 +13,8 @@ export default function Selects({
   openSelectId,
   setOpenSelectId,
 }) {
+  const { matter } = useProductData(optionIndecesSelected, optionSets);
+
   const selects = optionSets.map((optionSet, index) => {
     const selectId = `select-${index}`;
     return (
@@ -32,6 +35,7 @@ export default function Selects({
         drawerOpen={drawerOpen}
         popupDirection="top"
         selectId={selectId}
+        matter={matter}
       />
     );
   });
