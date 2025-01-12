@@ -280,12 +280,12 @@ const data = {
   },
   frameCanvasWhite: {
     image: {
-      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-decoration-blanc-backgroundgris422PX.png?v=1714571169',
+      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-toile-blanc.png?v=1736681293',
       alt: 'Cadre blanc pour tableau toile',
     },
     popup: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-americain-blanc.png?v=1736282553',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-toile-blanc.png?v=1736681293',
         alt: 'Cadre blanc',
       },
       title: 'CADRE BLANC',
@@ -294,19 +294,19 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-decoration-blanc-backgroundgris422PX.png?v=1714571169',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-toile-blanc.png?v=1736681293',
         alt: 'Cadre blanc pour tableau toile',
       },
     },
   },
   frameCanvasBlackMat: {
     image: {
-      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-cuisine-noir-mat-backgroung-gris422PX.png?v=1714571170',
+      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-toile-noir-mat.png?v=1736681293',
       alt: 'Cadre noir mat pour tableau toile',
     },
     popup: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-noir-mat.png?v=1736282552',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-toile-noir-mat.png?v=1736681293',
         alt: 'Cadre noir mat',
       },
       title: 'CADRE NOIR MAT',
@@ -315,19 +315,19 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-cuisine-noir-mat-backgroung-gris422PX.png?v=1714571170',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-toile-noir-mat.png?v=1736681293',
         alt: 'Cadre noir mat pour tableau toile',
       },
     },
   },
   frameCanvasSilverOld: {
     image: {
-      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-deco-argent-backgroundgris422PX.png?v=1714571170',
+      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-toile-argent-ancien.png?v=1736681293',
       alt: 'Cadre argent ancien pour tableau toile',
     },
     popup: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-bois-argent-ancien.png?v=1736282552',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-toile-argent-ancien.png?v=1736681293',
         alt: 'Cadre argent ancien',
       },
       title: 'CADRE ARGENT ANCIEN',
@@ -336,19 +336,19 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-deco-argent-backgroundgris422PX.png?v=1714571170',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-toile-argent-ancien.png?v=1736681293',
         alt: 'Cadre argent ancien pour tableau toile',
       },
     },
   },
   frameCanvasOakLight: {
     image: {
-      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-tableau-chene-background-gris422PX.png?v=1714571169',
+      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-toile-chene-blanchi.png?v=1736681293',
       alt: 'Cadre chêne clair pour tableau toile',
     },
     popup: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-chene-blanchi.png?v=1736282552',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-toile-chene-blanchi.png?v=1736681293',
         alt: 'Cadre chêne clair',
       },
       title: 'CADRE CHÊNE CLAIR',
@@ -357,19 +357,19 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-tableau-chene-background-gris422PX.png?v=1714571169',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-toile-chene-blanchi.png?v=1736681293',
         alt: 'Cadre chêne clair pour tableau toile',
       },
     },
   },
   frameCanvasWalnut: {
     image: {
-      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-photo-noyer-backgroun-gris422PX.png?v=1714571169',
+      src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-toile-noyer.png?v=1736681293',
       alt: 'Cadre noyer pour tableau toile',
     },
     popup: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-toile-noyer.png?v=1736282552',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-toile-noyer.png?v=1736681293',
         alt: 'Cadre noyer',
       },
       title: 'CADRE NOYER',
@@ -378,7 +378,7 @@ const data = {
     },
     radio: {
       image: {
-        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/Cadre-photo-noyer-backgroun-gris422PX.png?v=1714571169',
+        src: 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/cadre-toile-noyer.png?v=1736681293',
         alt: 'Cadre noyer pour tableau toile',
       },
     },
