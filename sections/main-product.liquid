@@ -71,21 +71,22 @@
       <div class="md:sticky md:top-[120px] relative max-w-[550px] mx-auto">
         <div class="carousel flex justify-start items-center transition-transform duration-300 mx-auto my-4 snap-x snap-mandatory overflow-y-hidden overflow-x-auto scrollbar-hidden h-[55vh] xs:h-[65vh] md:h-[55vh] lg:h-[70vh]">
           {% liquid
+            assign number_of_media = 0
             for media in product.media
               if media.media_type == 'image' and forloop.index != 3
-                assign nbOfMedia = nbOfMedia | default: 0 | plus: 1
+                assign number_of_media = number_of_media | default: 0 | plus: 1
                 render 'tw-main-product-image', media: media, loop: forloop
               elsif forloop.index == 3 and first_3d_model != blank
                 if first_3d_model.url != blank
-                  assign nbOfMedia = nbOfMedia | default: 0 | plus: 2
+                  assign number_of_media = number_of_media | default: 0 | plus: 2
                   render 'tw-main-product-model-3d', url: 3d_model_url, alt: 3d_model_alt, poster: 3d_model_poster
                   render 'tw-main-product-image', media: media, loop: forloop
                 else
-                  assign nbOfMedia = nbOfMedia | default: 0 | plus: 1
+                  assign number_of_media = number_of_media | default: 0 | plus: 1
                   render 'tw-main-product-model-3d', url: 3d_model_url, alt: 3d_model_alt, poster: 3d_model_poster
                 endif
               else if media.media_type == 'image'
-                assign nbOfMedia = nbOfMedia | default: 0 | plus: 1
+                assign number_of_media = number_of_media | default: 0 | plus: 1
                 render 'tw-main-product-image', media: media, loop: forloop
               endif
             endfor
@@ -96,7 +97,7 @@
             <button class="previous pl-5 pr-3 h-full focus-visible:outline-none focus-visible:bg-main-10 hover:bg-main-10">
               <div class="rotate-90">{% render 'tw-icon-caret', width: '18' %}</div>
             </button>
-            <span class="px-3"><span class="image-counter">1</span>/{{ nbOfMedia }}</span>
+            <span class="px-3"><span class="image-counter">1</span>/{{ number_of_media }}</span>
             <button class="next pr-5 pl-3 h-full focus-visible:outline-none focus-visible:bg-main-10 hover:bg-main-10">
               <div class="-rotate-90">{% render 'tw-icon-caret', width: '18' %}</div>
             </button>
@@ -104,26 +105,27 @@
         {% endif %}
         <div class="hidden md:flex flex-wrap gap-2">
           {% liquid
-              for media in product.media
-                if media.media_type == 'image' and forloop.index != 3
+            assign image_number = 0
+            for media in product.media
+              if media.media_type == 'image' and forloop.index != 3
+                assign image_number = image_number | default: 0 | plus: 1
+                render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media.alt, object-fit: 'cover', image_number: image_number
+              elsif forloop.index == 3 and first_3d_model != blank
+                if first_3d_model.url != blank
+                  assign image_number = image_number | default: 0 | plus: 1
+                  render 'tw-main-product-thumbnail-image', image: product.media[1]preview_image, object-fit: 'contain', alt: 3d_model_alt, file: 'glb', image_number: image_number
                   assign image_number = image_number | default: 0 | plus: 1
                   render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media.alt, object-fit: 'cover', image_number: image_number
-                elsif forloop.index == 3 and first_3d_model != blank
-                  if first_3d_model.url != blank
-                    assign image_number = image_number | default: 0 | plus: 1
-                    render 'tw-main-product-thumbnail-image', image: product.media[1]preview_image, object-fit: 'contain', alt: 3d_model_alt, file: 'glb', image_number: image_number
-                    assign image_number = image_number | default: 0 | plus: 1
-                    render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media.alt, object-fit: 'cover', image_number: image_number
-                  else
-                    assign image_number = image_number | default: 0 | plus: 1
-                    render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media.alt, object-fit: 'cover', file: 'glb', image_number: image_number
-                  endif
-                else if media.media_type == 'image'
+                else
                   assign image_number = image_number | default: 0 | plus: 1
-                  render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media.alt, object-fit: 'cover', image_number: image_number
+                  render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media.alt, object-fit: 'cover', file: 'glb', image_number: image_number
                 endif
-              endfor
-            %}
+              else if media.media_type == 'image'
+                assign image_number = image_number | default: 0 | plus: 1
+                render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media.alt, object-fit: 'cover', image_number: image_number
+              endif
+            endfor
+          %}
         </div>
       </div>
 
@@ -363,15 +365,20 @@
                       assign green_width = 'w-full'
                     else
                       assign percent = block.settings.trustpilot_score | plus: 10 | minus: current | times: 10
-                      assign green_width = 'w-[' | append: percent | append: '%]'
-                      if percent < 50 and percent > 25
+                      if percent == 0
+                        assign green_width = 'w-0'
+                      elsif percent > 0 and percent <= 25
+                        assign green_width = 'w-1/4'
+                      elsif percent > 25 and percent <= 50
                         assign green_width = 'w-1/2'
+                      elsif percent > 50 and percent <= 75
+                        assign green_width = 'w-3/4'
                       else
-                        assign green_width = 'w-[25%]'
+                        assign green_width = 'w-full'
                       endif
                     endif
                   %}
-                  <div class="relative flex justify-center items-center bg-gray-300 h-10 w-10 before:absolute before:top-0 before:bottom-0 before:left-0 before:{{ green_width }} before:bg-[#00B67A]" style="">
+                  <div class="relative flex justify-center items-center bg-gray-300 h-10 w-10 before:absolute before:top-0 before:bottom-0 before:left-0 before:{{ green_width }} before:bg-[#00B67A]">
                     <svg class="z-10" width="26" height="25" viewBox="0 0 26 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M18.6626 17.6149L21.0351 25L13.0043 19.0981L18.6626 17.6149ZM26 9.55286H16.0713L13.0054 0L9.92875 9.55505L0 9.54191L8.0405 15.4537L4.96383 24.9989L13.0043 19.0981L17.9693 15.4537L26 9.55286Z" fill="white"/>
                     </svg>

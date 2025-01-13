@@ -554,5 +554,33 @@
     "add": "Add",
     "one_click": "Within reach of your hand!",
     "at": "at"
+  },
+  "tw": {
+    "main_collection_banner": {
+      "learn_more": "Learn more",
+      "fewer_details": "Show less"
+    },
+    "header": {
+      "svg": {
+        "heart": {
+          "title": "Heart icon"
+        }
+      }
+    },
+    "main_product": {
+      "accessibility": {
+        "skip_to_product_info": "Skip to product information"
+      },
+      "carousel": {
+        "popup": {
+          "title": "Product Gallery",
+          "close": "Close gallery"
+        }
+      },
+      "trustpilot": {
+        "score": "Trustpilot Score",
+        "excellent": "Excellent"
+      }
+    }
   }
 }
