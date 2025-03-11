@@ -1,20 +1,25 @@
 {
   "layout": "page",
   "sections": {
-    "2ec79988-c5e9-407a-9a25-f86242ee749d": {
+    "image_banner_UrGxTX": {
       "type": "image-banner",
       "settings": {
-        "image_desktop": "shopify:\/\/shop_images\/FAQ_ORDI.jpg"
+        "image_desktop": "shopify:\/\/shop_images\/tableau-animaux-rigolo-giraphe-noir-blanc.jpg",
+        "image_desktop_horizontal_position": "center",
+        "image_mobile": "shopify:\/\/shop_images\/toilegiraphe-curieuse-animaux-dejante.jpg",
+        "image_mobile_vertical_position": "center",
+        "enable_lazy_loading": true
       }
     },
     "main": {
       "type": "main-page",
       "settings": {
+        "title_alignment": "text-left"
       }
     }
   },
   "order": [
-    "2ec79988-c5e9-407a-9a25-f86242ee749d",
+    "image_banner_UrGxTX",
     "main"
   ]
 }

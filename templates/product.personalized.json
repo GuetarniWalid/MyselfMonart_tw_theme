@@ -51,7 +51,7 @@
         "8600f603-2d6f-4191-8020-3678432ba1e5": {
           "type": "text",
           "settings": {
-            "text": "<p>- Laissez-vous transporter par nos œuvres d'arts. Une sensation unique et singulière à transposer dans votre intérieur.<br\/>- Possibilité de choisir la taille et le support de l’œuvre.<br\/><\/p>"
+            "text": "<p>- Le cadeau parfait qui marque les esprits<\/p><p>- Une touche personnelle qui fait toute la différence<\/p><p>-Un cadeau intemporel qui ne se démode jamais<br\/><\/p>"
           }
         },
         "collapsible_tab_HAUcNw": {
@@ -83,8 +83,7 @@
         },
         "description_Fw7xRB": {
           "type": "description",
-          "settings": {
-          }
+          "settings": {}
         }
       },
       "block_order": [
@@ -99,8 +98,7 @@
         "a70160ee-79ef-4eb9-8e65-ec87f898b506",
         "description_Fw7xRB"
       ],
-      "settings": {
-      }
+      "settings": {}
     },
     "customer_testimonial_myiwee": {
       "type": "customer-testimonial",
@@ -115,27 +113,22 @@
         "image_text_qM9rBh": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau_marylin.jpg",
+            "image": "shopify:\/\/shop_images\/deco-mural-toile-marilyn-monroe-pop-art.jpg",
             "message": "Envoie très rapide et tableau encore plus beau que sur le site.\nParfait je recommande !!!\nJessica S"
+          }
+        },
+        "image_text_4dzVer": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-animaux-rhinoceros_b1022df5-0085-43a4-93b7-011dd579d316.jpg",
+            "message": "AMAZING ! Le poster est magnifique, il fait son effet dans mon salon. Vanessa K"
           }
         },
         "image_text_NnGTgN": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/ananas.jpg",
+            "image": "shopify:\/\/shop_images\/tableau-fruit-legume-cuisine-ananas-colore.jpg",
             "message": "Trop contente de mon tableau, les couleurs sont aussi flashy que sur les photos du site.\nSarah F"
-          }
-        },
-        "image_text_hCDnam": {
-          "type": "image-text",
-          "settings": {
-            "message": "Le tableau est super, et encore plus beau en vrai ! Arrivé rapidement et bien protégé. Alain N"
-          }
-        },
-        "image_text_XaycRQ": {
-          "type": "image-text",
-          "settings": {
-            "message": "Très belle toile, les couleurs sont super et brillante. Marie K"
           }
         },
         "image_text_QfHTN6": {
@@ -159,6 +152,13 @@
             "message": "Nickel, très satisfait c'est ma 3e commande. Hugo G"
           }
         },
+        "image_text_e69XT9": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-gaming-marvel-iron-man.jpg",
+            "message": "Très content de mon achat ! Mon fils est ravi il va faire de beaux rêves de super-héros\n. EUGENE D"
+          }
+        },
         "image_text_DbNc9D": {
           "type": "image-text",
           "settings": {
@@ -169,30 +169,22 @@
         "image_text_DCdKLC": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-animaux-zebre_383f6477-a1c6-4c30-b8cc-637fe67fde0a.jpg",
+            "image": "shopify:\/\/shop_images\/tableauphotographie-zebre-animaux-zebre-sauvage.jpg",
             "message": "L'animal, majestueux et solitaire trône dans mon salon au dessus de ma console... Peut on dire qu il est magnifique ? Assurément oui et je l adore!\nPatricia G."
-          }
-        },
-        "image_text_YKpN4r": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-deco-impression-alluminium-nike.jpg",
-            "message": "Très beau tableau que nous vous avons acheté en août dernier et qui a fait très plaisir à un jeune de 20 ans. \nNous sommes ravis et nous reviendrons vers vous.\nJacqueline R."
           }
         }
       },
       "block_order": [
         "image_text_Riirzd",
         "image_text_qM9rBh",
+        "image_text_4dzVer",
         "image_text_NnGTgN",
-        "image_text_hCDnam",
-        "image_text_XaycRQ",
         "image_text_QfHTN6",
         "image_text_ragCcn",
         "image_text_eAxGcM",
+        "image_text_e69XT9",
         "image_text_DbNc9D",
-        "image_text_DCdKLC",
-        "image_text_YKpN4r"
+        "image_text_DCdKLC"
       ],
       "settings": {
         "title": "Nos tableaux à travers vos yeux ❤️",
@@ -273,7 +265,7 @@
         "enable_blob": true,
         "activate_dynamic_color": false,
         "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#E3FAE1",
+        "dynamic_secondary_color": "#e3fae1",
         "padding_top": "pt-16",
         "padding_bottom": "pb-16"
       }
@@ -288,7 +280,7 @@
         "enable_blob": true,
         "activate_dynamic_color": false,
         "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#E3FAE1",
+        "dynamic_secondary_color": "#e3fae1",
         "padding_top": "pt-16",
         "padding_bottom": "pb-16"
       }
@@ -303,7 +295,7 @@
         "enable_blob": true,
         "activate_dynamic_color": false,
         "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#E3FAE1",
+        "dynamic_secondary_color": "#e3fae1",
         "padding_top": "pt-16",
         "padding_bottom": "pb-16"
       }

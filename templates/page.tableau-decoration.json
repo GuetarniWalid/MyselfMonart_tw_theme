@@ -4,10 +4,10 @@
     "image_banner_inXPiM": {
       "type": "image-banner",
       "settings": {
-        "image_desktop": "shopify:\/\/shop_images\/soldes-hiver-deco-murale-15.gif",
+        "image_desktop": "shopify:\/\/shop_images\/poster-boudha-colore.jpg",
         "image_desktop_horizontal_position": "center",
-        "image_mobile": "shopify:\/\/shop_images\/solde-15-collection-tableux-poster-affiches-animation-hiver.gif",
-        "image_mobile_vertical_position": "bottom",
+        "image_mobile": "shopify:\/\/shop_images\/poster-cadre-bouddha-colore.jpg",
+        "image_mobile_vertical_position": "center",
         "enable_lazy_loading": true
       }
     },
@@ -383,25 +383,25 @@
         "featured_product_Urpept": {
           "type": "featured_product",
           "settings": {
-            "product": "tableau-femme-africaine-nue"
+            "product": "tableau-decoratif-muse-africaine-sublime"
           }
         },
         "featured_product_f89DUQ": {
           "type": "featured_product",
           "settings": {
-            "product": "tableau-femme-ronde-abstraite"
+            "product": "tableau-moderne-femme-ronde-abstraction-coloree"
           }
         },
         "featured_product_4UhMCF": {
           "type": "featured_product",
           "settings": {
-            "product": "tableau-paysage-nippon"
+            "product": "affiche-murale-les-montagnes-au-cur-du-japon"
           }
         },
         "featured_product_7qNmPc": {
           "type": "featured_product",
           "settings": {
-            "product": "tableau-iron-man-futuriste"
+            "product": "toile-murale-iron-man-futurisme-heroique"
           }
         }
       },

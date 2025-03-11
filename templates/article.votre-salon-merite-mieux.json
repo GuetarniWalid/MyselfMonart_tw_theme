@@ -1,0 +1,440 @@
+{
+  "layout": "article",
+  "sections": {
+    "ce4595e5-01e5-472d-ac56-563a87ef335c": {
+      "type": "first-blog-link",
+      "settings": {}
+    },
+    "main": {
+      "type": "main-article",
+      "settings": {
+        "show_date": true
+      }
+    },
+    "image_banner_DkUU9i": {
+      "type": "image-banner",
+      "settings": {
+        "image_desktop": "shopify:\/\/shop_images\/decoration-murale_salon.jpg",
+        "image_desktop_horizontal_position": "center",
+        "image_mobile_vertical_position": "center",
+        "enable_lazy_loading": true
+      }
+    },
+    "rich_text_ex7qtk": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_zpTrDU": {
+          "type": "heading",
+          "settings": {
+            "heading": "Pourquoi s'intéresser à vos murs ?",
+            "markup": "h2",
+            "heading_size": "text-3xl"
+          }
+        },
+        "text_8kgxgm": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Si votre salon vous semble fade, c'est peut-être parce qu'un mur nu occupe une grande partie de votre champ visuel. Et pour cause : un salon aux murs vides, c'est comme un livre sans personnages, il manque une âme. Pourtant, cette vaste surface joue un rôle clé dans l’ambiance de votre intérieur. D’ailleurs, les études montrent qu’un mur bien décoré augmente de 78 % la satisfaction des propriétaires.<\/p><p><strong>J’ai parcouru et analysé une multitude de sources sur la décoration pour vous simplifier la tâche. Aujourd’hui, je vous partage des solutions éprouvées, faciles à appliquer et adaptées à tous les budgets, pour transformer votre mur sans effor<\/strong><\/p>",
+            "text_size": "text-xl",
+            "is_lighten": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_zpTrDU",
+        "text_8kgxgm"
+      ],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "rich_text_WTUVqi": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_KDjLUn": {
+          "type": "heading",
+          "settings": {
+            "heading": "Laquelle choisir ?",
+            "markup": "h3",
+            "heading_size": "text-3xl"
+          }
+        },
+        "text_xwwyAK": {
+          "type": "text",
+          "settings": {
+            "text": "<p>En décoration d’intérieur, il existe plusieurs <strong> approches<\/strong> pour structurer un mur et éviter l’effet vide ou déséquilibré. Le choix dépendra de votre style et de l’espace disponible. <strong>Laquelle choisir ?<\/strong><\/p>",
+            "text_size": "text-xl",
+            "is_lighten": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_KDjLUn",
+        "text_xwwyAK"
+      ],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "image_with_text_zxwqDk": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/idees-deco-mur-cadre-abstrait-blue.jpg",
+        "title": "L’approche \"composition murale\".",
+        "description": "<h4> – la règle des trois<\/h4><p>Si vous aimez les murs décorés de <strong>plusieurs éléments<\/strong> (cadres, miroirs, étagères, objets déco), la <strong>règle des trois<\/strong> est un excellent guide pour une disposition harmonieuse.<\/p>",
+        "layout": "image_first",
+        "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#E3FAE1",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "rich_text_PKcebj": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_hmcPPc": {
+          "type": "heading",
+          "settings": {
+            "heading": "Pourquoi trois ?",
+            "markup": "h4",
+            "heading_size": "text-3xl"
+          }
+        },
+        "text_67iAaU": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Les ensembles de trois créent un <strong>équilibre naturel et dynamique<\/strong>. Contrairement aux nombres pairs, qui peuvent paraître rigides, <strong>le trio apporte du mouvement et de l’intérêt visuel<\/strong>.<\/p><p> <strong>Exemples d’application :<br\/><\/strong>✔ Trois <strong>tableaux alignés<\/strong> horizontalement, parfaits au-dessus d’un canapé ou d’un buffet.<br\/>✔ Un <strong>grand miroir central encadré<\/strong> par deux petites toiles, idéal pour une asymétrie équilibrée.<br\/>✔ Trois <strong>étagères flottantes à différentes hauteurs<\/strong>, pour un effet fluide et aéré.<\/p><p>🔸 <strong>À éviter<\/strong> : Trop d’éléments éparpillés sans logique. Mieux vaut regrouper visuellement plutôt que disperser.<br\/>🔹 <strong>À privilégier<\/strong> : Cette approche fonctionne <strong>particulièrement bien sur les grands murs<\/strong>, en évitant l’effet \"espace vide\".<\/p><p>Si l’espace est restreint ou si vous préférez une déco <strong>minimaliste<\/strong>, il peut être <strong>plus pertinent d’opter pour un élément unique et bien proportionné<\/strong>.<\/p><p>📌 <strong>Pour en savoir plus sur l’habillage des grands murs<\/strong>, découvrez notre guide détaillé ici <\/p>",
+            "text_size": "text-xl",
+            "is_lighten": false
+          }
+        },
+        "button_86DpHy": {
+          "type": "button",
+          "settings": {
+            "button_label": "👉 Comment décorer un grand mur de salon ?",
+            "button_link": "",
+            "button_label_2": "",
+            "button_link_2": "",
+            "to_obfuscate": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_hmcPPc",
+        "text_67iAaU",
+        "button_86DpHy"
+      ],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "image_with_text_MD6aJP": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/tableau-peinture-frida-khalo-xxl-fleurie.jpg",
+        "title": "L’approche \"point focal\".",
+        "description": "<h4>- <strong>l’astuce pour choisir la bonne taille d’un tableau ou d’un miroir.<\/strong><\/h4><p>Trop petit, un tableau se perd sur le mur. Trop grand, il écrase la pièce.<br\/>Les décorateurs utilisent le <strong>ratio 0,57<\/strong> pour déterminer la <strong>taille idéale<\/strong> d’un tableau, d’un miroir ou d’un élément central.<\/p>",
+        "layout": "text_first",
+        "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#E3FAE1",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "rich_text_wPpd46": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_JkUFza": {
+          "type": "heading",
+          "settings": {
+            "heading": "Comment calculer la taille idéale ?",
+            "markup": "h4",
+            "heading_size": "text-3xl"
+          }
+        },
+        "text_iybkWm": {
+          "type": "text",
+          "settings": {
+            "text": "<p>➡ <strong>Multipliez la largeur du mur par 0,57<\/strong><\/p><p>Par exemple, pour un mur de <strong>2 mètres de large<\/strong>, le tableau idéal ferait <strong>1,14 m de large (2 × 0,57)<\/strong>.<\/p><p>✔ <strong>Si un meuble est placé devant le mur<\/strong>, c’est l’espace vide restant qu’il faut prendre en compte.<\/p><p>📌 <strong>Besoin d’un guide plus détaillé ? <\/strong>découvrez notre guide détaillé ici<\/p>",
+            "text_size": "text-xl",
+            "is_lighten": false
+          }
+        },
+        "button_TpgebE": {
+          "type": "button",
+          "settings": {
+            "button_label": "👉 Quelle taille de tableau choisir ?",
+            "button_link": "shopify:\/\/blogs\/tableau-cuisine\/quelle-taille-de-tableau-choisir",
+            "button_label_2": "",
+            "button_link_2": "",
+            "to_obfuscate": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_JkUFza",
+        "text_iybkWm",
+        "button_TpgebE"
+      ],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "image_with_text_wBq3G3": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/tapisserie-pan-de-mur-zen-insipration-japonaise.jpg",
+        "title": "l’astuce: \"Pan de mur\".",
+        "description": "<h4>- I<strong>mmersif ou structurant ?<\/strong><\/h4><p>Tous les murs ne doivent pas être décorés de la même façon. Il faut savoir <strong>décider quel mur doit être mis en avant<\/strong> pour éviter une surcharge visuelle.<\/p><p><\/p>",
+        "layout": "image_first",
+        "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#E3FAE1",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "rich_text_DPDqCt": {
+      "type": "rich-text",
+      "blocks": {
+        "text_d4BGLN": {
+          "type": "text",
+          "settings": {
+            "text": "<h4><strong>👉 Pour un effet structurant : le mur en face du canapé<\/strong><\/h4><p>C’est <strong>le point d’ancrage visuel<\/strong> du salon. On y place généralement un <strong>grand tableau<\/strong>, une <strong>composition murale<\/strong> ou un <strong>papier peint graphique<\/strong>.<\/p><h4><strong>👉 Pour un effet immersif : le mur latéral ou de fond<\/strong><\/h4><p>Si vous voulez <strong>plonger votre salon dans une ambiance unique<\/strong>, choisissez <strong>un mur latéral ou du fond<\/strong> et appliquez une <strong>tapisserie panoramique, une fresque ou un papier peint XXL<\/strong>.<\/p><p>📌 <strong>Découvrez ici comment choisir le bon type de tableau<\/strong><\/p>",
+            "text_size": "text-xl",
+            "is_lighten": false
+          }
+        },
+        "button_QAYQWR": {
+          "type": "button",
+          "settings": {
+            "button_label": "👉 Peinture ou papier peint : lequel choisir ?",
+            "button_link": "shopify:\/\/blogs\/tableau-salon\/quel-type-de-tableau-choisir-pour-decorer-son-salon",
+            "button_label_2": "",
+            "button_link_2": "",
+            "to_obfuscate": false
+          }
+        }
+      },
+      "block_order": [
+        "text_d4BGLN",
+        "button_QAYQWR"
+      ],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "image_with_text_GHPCiF": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/salon-moderne-etagere-murale-poster-affiches-zen-spirutuelle.jpg",
+        "title": "L'astuce : \"étagères murales\"",
+        "description": "<h4>- <strong>la solution parfaite pour les indécis.<\/strong><\/h4><p>Vous aimez souvent <strong>changer de décoration<\/strong> ? Plutôt que d’accrocher des tableaux avec des clous, <strong>les étagères murales<\/strong> offrent une flexibilité totale.<\/p>",
+        "layout": "text_first",
+        "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#E3FAE1",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "rich_text_8wt7BP": {
+      "type": "rich-text",
+      "blocks": {
+        "text_MiUwc8": {
+          "type": "text",
+          "settings": {
+            "text": "<p>✔ <strong>Facile à modifier<\/strong> : Changez vos cadres et objets déco à volonté, sans percer de nouveaux trous.<br\/>✔ <strong>Effet galerie d’art<\/strong> : En alignant plusieurs cadres sur une étagère, vous obtenez une <strong>composition élégante et équilibrée<\/strong>.<br\/>✔ <strong>Pratique et esthétique<\/strong> : Idéal pour combiner déco et rangement en ajoutant <strong>quelques plantes ou livres<\/strong>.<\/p><p>📌 <strong>Vous hésitez encore sur le type de décoration murale ? Trouvez l’inspiration ici <\/strong><\/p>",
+            "text_size": "text-xl",
+            "is_lighten": false
+          }
+        },
+        "button_Dahm9i": {
+          "type": "button",
+          "settings": {
+            "button_label": "👉 Quel type de tableau choisir pour décorer son salon ?",
+            "button_link": "shopify:\/\/blogs\/tableau-salon\/quel-type-de-tableau-choisir-pour-decorer-son-salon",
+            "button_label_2": "",
+            "button_link_2": "",
+            "to_obfuscate": false
+          }
+        }
+      },
+      "block_order": [
+        "text_MiUwc8",
+        "button_Dahm9i"
+      ],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "image_with_text_CB8Hpa": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/lampe-murale-tableau-toile.webp",
+        "title": "L'astuce : éclairage",
+        "description": "<h4><strong>-Un bon éclairage pour sublimer votre décoration murale.<\/strong><\/h4><p>Un beau mur mérite d’être bien <strong>mis en lumière<\/strong>. L’éclairage joue un rôle clé pour <strong>apporter du relief et de la profondeur<\/strong> à votre déco.<\/p>",
+        "layout": "image_first",
+        "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#E3FAE1",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "rich_text_jJwQDF": {
+      "type": "rich-text",
+      "blocks": {
+        "text_N9fKkQ": {
+          "type": "text",
+          "settings": {
+            "text": "<h3><strong>Quels types d’éclairage choisir ?<\/strong><\/h3><p>✔ <strong>Les appliques murales<\/strong> : Elles diffusent une lumière douce et chaleureuse, parfaite pour valoriser un tableau.<br\/>✔ <strong>Les bandeaux LED<\/strong> : Installés derrière un miroir ou sous une étagère, ils créent un <strong>effet moderne et élégant<\/strong>.<br\/>✔ <strong>Les suspensions décalées<\/strong> : Une ou plusieurs suspensions décalées sur un pan de mur donnent une <strong>touche arty et sophistiquée<\/strong>.<\/p><p>📌 <strong>Découvrez ici comment bien entretenir vos tableaux.<\/strong><\/p>",
+            "text_size": "text-xl",
+            "is_lighten": false
+          }
+        },
+        "button_aCGwdC": {
+          "type": "button",
+          "settings": {
+            "button_label": "👉 Comment nettoyer un tableau ?",
+            "button_link": "",
+            "button_label_2": "",
+            "button_link_2": "",
+            "to_obfuscate": false
+          }
+        }
+      },
+      "block_order": [
+        "text_N9fKkQ",
+        "button_aCGwdC"
+      ],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "collapsible_content_YixFY3": {
+      "type": "collapsible-content",
+      "blocks": {
+        "collapsible_row_Tnp9nr": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "✔ Si vous aimez les compositions murales riches en détails",
+            "icon": "none",
+            "row_content": "<p>Appliquez <strong>la règle des 3<\/strong> pour un mur structuré et vivant.<\/p>"
+          }
+        },
+        "collapsible_row_hfyieM": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "✔ Si vous préférez un décor minimaliste",
+            "icon": "none",
+            "row_content": "<p>Utilisez <strong>le ratio 0,57<\/strong> pour choisir <strong>un élément central bien proportionné<\/strong>.<\/p>"
+          }
+        },
+        "collapsible_row_nirVGL": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "✔ Si vous hésitez et aimez changer",
+            "icon": "none",
+            "row_content": "<p>Optez pour <strong>des étagères murales<\/strong> et variez votre déco sans engagement.<\/p>"
+          }
+        },
+        "collapsible_row_femHFz": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "🎨 Avec ces astuces, votre mur sera mis en valeur avec style et harmonie !",
+            "icon": "none",
+            "row_content": ""
+          }
+        }
+      },
+      "block_order": [
+        "collapsible_row_Tnp9nr",
+        "collapsible_row_hfyieM",
+        "collapsible_row_nirVGL",
+        "collapsible_row_femHFz"
+      ],
+      "settings": {
+        "heading": " Quelle approche choisir selon votre style ?"
+      }
+    },
+    "rich_text_A9yF3b": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_xCpCcr": {
+          "type": "heading",
+          "settings": {
+            "heading": "Conclusion : un mur bien décoré change toute l’ambiance d’un salon !",
+            "markup": "h2",
+            "heading_size": "text-3xl"
+          }
+        },
+        "text_k7McTQ": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Un mur blanc <strong>ne doit jamais être une contrainte<\/strong>. Avec les bonnes astuces (jeu de contrastes, composition murale, éclairage adapté...), il devient <strong>un élément fort de la décoration du salon<\/strong>.<\/p><p><strong>À vous de jouer ! Quelle solution allez-vous tester en premier ?<\/strong><\/p>",
+            "text_size": "text-xl",
+            "is_lighten": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_xCpCcr",
+        "text_k7McTQ"
+      ],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "11ed1855-d812-4ccc-8f80-65a14ff1c6bd": {
+      "type": "sibling-blog-links",
+      "settings": {
+        "padding_top": "pt-8",
+        "padding_bottom": "pb-8"
+      }
+    }
+  },
+  "order": [
+    "ce4595e5-01e5-472d-ac56-563a87ef335c",
+    "main",
+    "image_banner_DkUU9i",
+    "rich_text_ex7qtk",
+    "rich_text_WTUVqi",
+    "image_with_text_zxwqDk",
+    "rich_text_PKcebj",
+    "image_with_text_MD6aJP",
+    "rich_text_wPpd46",
+    "image_with_text_wBq3G3",
+    "rich_text_DPDqCt",
+    "image_with_text_GHPCiF",
+    "rich_text_8wt7BP",
+    "image_with_text_CB8Hpa",
+    "rich_text_jJwQDF",
+    "collapsible_content_YixFY3",
+    "rich_text_A9yF3b",
+    "11ed1855-d812-4ccc-8f80-65a14ff1c6bd"
+  ]
+}

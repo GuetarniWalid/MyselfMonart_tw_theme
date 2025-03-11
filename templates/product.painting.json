@@ -25,7 +25,7 @@
         "trustpilot_review_9q3NVM": {
           "type": "trustpilot_review",
           "settings": {
-            "trustpilot_score": 45,
+            "trustpilot_score": 44,
             "link": "https:\/\/fr.trustpilot.com\/review\/myselfmonart.com",
             "margin_bottom": "mb-8"
           }
@@ -33,7 +33,7 @@
         "8600f603-2d6f-4191-8020-3678432ba1e5": {
           "type": "text",
           "settings": {
-            "text": "<p>🎨 <strong>Couleurs éclatantes et fidèles garanties.<\/strong><\/p><p>💡 <strong>Satisfait ou remboursé en 10 jours, sans tracas.<\/strong><\/p><p>.🚛 <strong>Livraison express et sécurisée.<\/strong><\/p><p><\/p><p><\/p>"
+            "text": "<p>✨ <strong>Des détails riches et profonds<\/strong> <\/p><p>✨ <strong>Une œuvre qui attire tous les regards.<\/strong> <\/p><p><strong> <\/strong>✨ <strong>Une qualité qui traverse le temps.<\/strong> <\/p><p><\/p><p><\/p><p><\/p>"
           }
         },
         "9f20570b-1a97-4c34-8758-c5af9b8d2cfc": {
@@ -49,8 +49,8 @@
         "buy_qrRzcg": {
           "type": "buy",
           "settings": {
-            "top_text": "AJOUTER AU PANIER",
-            "bottom_text": "Je personnalise mon tableau",
+            "top_text": "Créez votre œuvre unique",
+            "bottom_text": "PERSONNALISEZ ICI",
             "main_color": "#b92700"
           }
         },
@@ -144,6 +144,241 @@
         "title": "",
         "nb_columns_on_computer": "4",
         "nb_columns_on_mobile": "2"
+      }
+    },
+    "customer_testimonial_myiwee": {
+      "type": "customer-testimonial",
+      "blocks": {
+        "image_text_fxBift": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/toile-moderne-frida-fleurs.jpg",
+            "message": "Dès l’ouverture du carton, j’ai trouvé la toile magnifique.\nEncore plus belle que sur la photo du site.\nJe l’ai installée. Et l’effet est «  waouh ! »\nTrès jolie toile ! Très beau site !\nJe suis ravi de mon achat. Cécile C"
+          }
+        },
+        "image_text_PWRHhc": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-alluminium-japonais-geisha-avis-clien.jpg",
+            "message": "Je suis juste en admiration devant cette œuvre et vous remercie de sortir de l’ordinaire pour habiller nos murs!!!\nUn grand merci. Sandra B"
+          }
+        },
+        "image_text_Wckbj6": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-contemporain-abstrait-femme-ronde.jpg",
+            "message": "Reçu mon tableau et franchement, je ne regrette pas une seconde ! Les couleurs sont incroyables, l’originalité saute aux yeux… Impossible de ne pas s’arrêter devant. Sophie D"
+          }
+        },
+        "image_text_DCdKLC": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableauphotographie-zebre-animaux-zebre-sauvage.jpg",
+            "message": "L'animal, majestueux et solitaire trône dans mon salon au dessus de ma console... Peut on dire qu il est magnifique ? Assurément oui et je l adore!\nPatricia G."
+          }
+        },
+        "image_text_7ERwAp": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-gaming-marvel-iron-man.jpg",
+            "message": "Très content de mon achat ! Mon fils est ravi il va faire de beaux rêves de super-héros\n. Eugene D"
+          }
+        },
+        "image_text_ragCcn": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/peinture-femme-noire-muse.jpg",
+            "message": "Magnifique tableau et très design, correspond parfaitement à la description.  Morel E"
+          }
+        },
+        "image_text_Riirzd": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/Tableau-chambre-bebe_f6e62e6e-707b-41df-aa17-bdad25ef3385.jpg",
+            "message": "Juste une petite photo avec le cadre mis en place encore un grand merci à vous 🥰. \nElodie G"
+          }
+        },
+        "image_text_qM9rBh": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/deco-mural-toile-marilyn-monroe-pop-art.jpg",
+            "message": "Envoie très rapide et tableau encore plus beau que sur le site.\nParfait je recommande !!!\nJessica S"
+          }
+        },
+        "image_text_xLzjRk": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/decoration-mural-cadre-bois-cactus-paysage-colore.jpg",
+            "message": "Super contente du rendu de ces cadres en bois ! 🌵 Ça apporte tellement de chaleur et de gaieté à mon salon, j’adore ! 😍 Lina O"
+          }
+        },
+        "image_text_jLAVDk": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/avis-tableau-plexi_2.jpg",
+            "message": "Tableau magnifique, très contente du support choisi en plexiglas réalisé avec soin. Joëlle N"
+          }
+        },
+        "image_text_yxnGkz": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-animaux-rhinoceros_b1022df5-0085-43a4-93b7-011dd579d316.jpg",
+            "message": "AMAZING ! Le poster est magnifique, il fait son effet dans mon salon. Vanessa K"
+          }
+        },
+        "image_text_PTqtay": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/deco-mural-ying-yang.jpg",
+            "message": "Le tableau est magnifique! Alexandre V"
+          }
+        },
+        "image_text_NnGTgN": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-fruit-legume-cuisine-ananas-colore.jpg",
+            "message": "Trop contente de mon tableau, les couleurs sont aussi flashy que sur les photos du site.\nSarah F"
+          }
+        },
+        "image_text_YVdFr3": {
+          "type": "image-text",
+          "disabled": true,
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-street-art-femme-noire.jpg",
+            "message": "Parfait\nSuper rendu. \tMariane B"
+          }
+        },
+        "image_text_VRyJn9": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-panoramique-payasage-foret-lac.jpg",
+            "message": "Ce tableau est magnifique et tellement immersif ! Il donne une vraie sensation d’évasion et transforme l’ambiance de mon salon. Pierre S"
+          }
+        },
+        "image_text_FpM3Nt": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-zen-japonais-geisha_59746ee5-1329-4a3a-94ad-bc201116687c.jpg",
+            "message": "Nous sommes très satisfait de notre achat\nTrès bonne qualité\nNous ferons d´autres achats chez vous.\nBernard D"
+          }
+        },
+        "image_text_UfccPh": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-pour-cuisine-epices-colore.jpg",
+            "message": "Ravie de mon achat,\ntrès beau rendu des couleurs qui sont éclatantes. \nYannick R."
+          }
+        },
+        "image_text_hCDnam": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/Tableau-chambre_a164de8b-ed28-4326-926b-92bbe380279b.jpg",
+            "message": "Le tableau est super, et encore plus beau en vrai ! Arrivé rapidement et bien protégé. Alain N"
+          }
+        },
+        "image_text_XaycRQ": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/Tableau-decoration_44dcf7be-75b3-46aa-810b-3020d3b9dc06.jpg",
+            "message": "Très belle toile, les couleurs sont super et brillante. Marie K"
+          }
+        },
+        "image_text_QfHTN6": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/Tableau-deco-noir-et-blanc.jpg",
+            "message": "Top, rien à dire de plus. \nGuillaume H"
+          }
+        },
+        "image_text_eAxGcM": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-comics-super-man.jpg",
+            "message": "Nickel, très satisfait c'est ma 3e commande. Hugo G"
+          }
+        },
+        "image_text_DbNc9D": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-superman-aquarelle.jpg",
+            "message": "TOP, tableau reçu rapidement avec suivie. Hugo G"
+          }
+        },
+        "image_text_pFY7GA": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableau-lion-impression-alluminuim.jpg",
+            "message": "TOP QUALITÉ,  j'ai choisi l'impression sur aluminium et l'image est vraiment top. Ethan V"
+          }
+        }
+      },
+      "block_order": [
+        "image_text_fxBift",
+        "image_text_PWRHhc",
+        "image_text_Wckbj6",
+        "image_text_DCdKLC",
+        "image_text_7ERwAp",
+        "image_text_ragCcn",
+        "image_text_Riirzd",
+        "image_text_qM9rBh",
+        "image_text_xLzjRk",
+        "image_text_jLAVDk",
+        "image_text_yxnGkz",
+        "image_text_PTqtay",
+        "image_text_NnGTgN",
+        "image_text_YVdFr3",
+        "image_text_VRyJn9",
+        "image_text_FpM3Nt",
+        "image_text_UfccPh",
+        "image_text_hCDnam",
+        "image_text_XaycRQ",
+        "image_text_QfHTN6",
+        "image_text_eAxGcM",
+        "image_text_DbNc9D",
+        "image_text_pFY7GA"
+      ],
+      "settings": {
+        "title": "Nos tableaux à travers vos yeux ❤️",
+        "duration_image_appearance": 5
+      }
+    },
+    "bf44dcab-c1df-4c80-b75a-9ee39a6bfe2e": {
+      "type": "badges",
+      "blocks": {
+        "ef364299-4b9c-463a-a50d-210af473e95e": {
+          "type": "number_block",
+          "settings": {
+            "number": 1,
+            "heading": "Paiement sécuriser",
+            "text": "Choisissez parmi nos différentes options  : CB - PAYPAL - KLARNA 3X sans frais."
+          }
+        },
+        "dc1cd24a-b307-4124-abb9-b1ac55ba1e6b": {
+          "type": "number_block",
+          "settings": {
+            "number": 2,
+            "heading": "Livraison Rapide",
+            "text": "Recevez votre commande en un clin d'œil, au pied de votre porte !"
+          }
+        },
+        "434fa092-b676-4395-a95a-9922006fa7db": {
+          "type": "number_block",
+          "settings": {
+            "number": 3,
+            "heading": "Retour ou Échange",
+            "text": "10 jours pour changer d'avis : Satisfait ou remboursé."
+          }
+        }
+      },
+      "block_order": [
+        "ef364299-4b9c-463a-a50d-210af473e95e",
+        "dc1cd24a-b307-4124-abb9-b1ac55ba1e6b",
+        "434fa092-b676-4395-a95a-9922006fa7db"
+      ],
+      "settings": {
+        "title": "",
+        "nb_columns_on_computer": "3",
+        "nb_columns_on_mobile": "1"
       }
     },
     "product_carrousel_a4kUVw": {
@@ -261,176 +496,6 @@
         "dynamic_secondary_color": "#112e3b"
       }
     },
-    "bf44dcab-c1df-4c80-b75a-9ee39a6bfe2e": {
-      "type": "badges",
-      "blocks": {
-        "ef364299-4b9c-463a-a50d-210af473e95e": {
-          "type": "number_block",
-          "settings": {
-            "number": 1,
-            "heading": "Paiement sécuriser",
-            "text": "Choisissez parmi nos différentes options  : CB - PAYPAL - KLARNA 3X sans frais."
-          }
-        },
-        "dc1cd24a-b307-4124-abb9-b1ac55ba1e6b": {
-          "type": "number_block",
-          "settings": {
-            "number": 2,
-            "heading": "Livraison Rapide",
-            "text": "Recevez votre commande en un clin d'œil, au pied de votre porte !"
-          }
-        },
-        "434fa092-b676-4395-a95a-9922006fa7db": {
-          "type": "number_block",
-          "settings": {
-            "number": 3,
-            "heading": "Retour ou Échange",
-            "text": "10 jours pour changer d'avis : Satisfait ou remboursé."
-          }
-        }
-      },
-      "block_order": [
-        "ef364299-4b9c-463a-a50d-210af473e95e",
-        "dc1cd24a-b307-4124-abb9-b1ac55ba1e6b",
-        "434fa092-b676-4395-a95a-9922006fa7db"
-      ],
-      "settings": {
-        "title": "",
-        "nb_columns_on_computer": "3",
-        "nb_columns_on_mobile": "1"
-      }
-    },
-    "customer_testimonial_myiwee": {
-      "type": "customer-testimonial",
-      "blocks": {
-        "image_text_Riirzd": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/Tableau-chambre-bebe_f6e62e6e-707b-41df-aa17-bdad25ef3385.jpg",
-            "message": "Juste une petite photo avec le cadre mis en place encore un grand merci à vous 🥰. \nElodie G"
-          }
-        },
-        "image_text_qM9rBh": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau_marylin.jpg",
-            "message": "Envoie très rapide et tableau encore plus beau que sur le site.\nParfait je recommande !!!\nJessica S"
-          }
-        },
-        "image_text_NnGTgN": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/ananas.jpg",
-            "message": "Trop contente de mon tableau, les couleurs sont aussi flashy que sur les photos du site.\nSarah F"
-          }
-        },
-        "image_text_hCDnam": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/Tableau-chambre_a164de8b-ed28-4326-926b-92bbe380279b.jpg",
-            "message": "Le tableau est super, et encore plus beau en vrai ! Arrivé rapidement et bien protégé. Alain N"
-          }
-        },
-        "image_text_XaycRQ": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/Tableau-decoration_44dcf7be-75b3-46aa-810b-3020d3b9dc06.jpg",
-            "message": "Très belle toile, les couleurs sont super et brillante. Marie K"
-          }
-        },
-        "image_text_QfHTN6": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/Tableau-deco-noir-et-blanc.jpg",
-            "message": "Top, rien à dire de plus. \nGuillaume H"
-          }
-        },
-        "image_text_ragCcn": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-salon-femme-africaine_03a72a0a-4a4d-4822-8824-a48b09af1eb3.jpg",
-            "message": "Magnifique tableau et très design, correspond parfaitement à la description.  Morel E"
-          }
-        },
-        "image_text_eAxGcM": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-comics-super-man.jpg",
-            "message": "Nickel, très satisfait c'est ma 3e commande. Hugo G"
-          }
-        },
-        "image_text_DbNc9D": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-superman-aquarelle.jpg",
-            "message": "TOP, tableau reçu rapidement avec suivie. Hugo G"
-          }
-        },
-        "image_text_DCdKLC": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-animaux-zebre_383f6477-a1c6-4c30-b8cc-637fe67fde0a.jpg",
-            "message": "L'animal, majestueux et solitaire trône dans mon salon au dessus de ma console... Peut on dire qu il est magnifique ? Assurément oui et je l adore!\nPatricia G."
-          }
-        },
-        "image_text_YKpN4r": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-deco-impression-alluminium-nike.jpg",
-            "message": "Très beau tableau que nous vous avons acheté en août dernier et qui a fait très plaisir à un jeune de 20 ans. \nNous sommes ravis et nous reviendrons vers vous.\nJacqueline R."
-          }
-        },
-        "image_text_jLAVDk": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/avis-tableau-plexi_2.jpg",
-            "message": "Tableau magnifique, très contente du support choisi en plexiglas réalisé avec soin. Joëlle N"
-          }
-        },
-        "image_text_pFY7GA": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-lion-impression-alluminuim.jpg",
-            "message": "TOP QUALITÉ,  j'ai choisi l'impression sur aluminium et l'image est vraiment top. Ethan V"
-          }
-        },
-        "image_text_UfccPh": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-cuisine-epices.jpg",
-            "message": "Ravie de mon achat,\ntrès beau rendu des couleurs qui sont éclatantes. \nYannick R."
-          }
-        },
-        "image_text_7ERwAp": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-marvel-iron-man.jpg",
-            "message": "Très content de mon achat ! Mon fils est ravi il va faire de beaux rêves de super-héros\n. EUGENE D"
-          }
-        }
-      },
-      "block_order": [
-        "image_text_Riirzd",
-        "image_text_qM9rBh",
-        "image_text_NnGTgN",
-        "image_text_hCDnam",
-        "image_text_XaycRQ",
-        "image_text_QfHTN6",
-        "image_text_ragCcn",
-        "image_text_eAxGcM",
-        "image_text_DbNc9D",
-        "image_text_DCdKLC",
-        "image_text_YKpN4r",
-        "image_text_jLAVDk",
-        "image_text_pFY7GA",
-        "image_text_UfccPh",
-        "image_text_7ERwAp"
-      ],
-      "settings": {
-        "title": "Nos tableaux à travers vos yeux ❤️",
-        "duration_image_appearance": 5
-      }
-    },
     "7ae13aad-330c-4fa7-94cf-fafc1c13cf60": {
       "type": "collapsible-content",
       "blocks": {
@@ -544,14 +609,14 @@
     "breadcrumb_RCxFAG",
     "main",
     "badges_CQWfDx",
+    "customer_testimonial_myiwee",
+    "bf44dcab-c1df-4c80-b75a-9ee39a6bfe2e",
     "product_carrousel_a4kUVw",
     "main-product-recommendations",
     "b5027902-4240-44cf-8660-b6e754562c52",
     "afe2a87a-371e-4c67-93b7-8c6b2244f43b",
     "556b5926-5cdb-4c50-a817-c79f15894cdd",
     "shifted_image_carousel_mwTU9T",
-    "bf44dcab-c1df-4c80-b75a-9ee39a6bfe2e",
-    "customer_testimonial_myiwee",
     "7ae13aad-330c-4fa7-94cf-fafc1c13cf60",
     "multicolumn_aLxMGX"
   ],

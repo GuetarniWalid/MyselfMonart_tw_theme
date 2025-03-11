@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-blog",
+      "settings": {
+        "show_date": true
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}
