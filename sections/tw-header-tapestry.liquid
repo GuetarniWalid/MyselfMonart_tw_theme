@@ -5,15 +5,14 @@
 
 {% render 'tw-sticky-header' %}
 {% if template.name != 'search' %}
-  {% render 'tw-predictive-search'
-    , in_header: true %}
+  {% render 'tw-predictive-search', in_header: true %}
 {% endif %}
 
 {%- if request.page_type == 'index' -%}
   {% assign potential_action_target = request.origin | append: routes.search_url | append: "?q={search_term_string}" %}
   <script type="application/ld+json">
     [
-        {
+      {
         "@context": "http://schema.org",
         "@type": "WebSite",
         "name": {{ shop.name | json }},
@@ -41,7 +40,7 @@
             {{ settings.social_pinterest_link | json }}{%- endif -%}],
           "url": {{ request.origin | append: page.url | json }}
         }
-      ]
+    ]
   </script>
 {%- endif -%}
 

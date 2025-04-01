@@ -302,7 +302,7 @@ class MainProductBlocks extends CollapsibleTab {
       productProperties,
     );
     button.dataset.variantId = variant.id;
-    await this.defaultBuyFetch(button, productProperties);
+    return await this.defaultBuyFetch(button, productProperties);
   }
 
   async updateProductTapestry(productId, productProperties) {
