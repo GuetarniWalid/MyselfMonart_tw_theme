@@ -1,10 +1,26 @@
+{% style %}
+  :root {
+    --color-action: {{ section.settings.buy_button_color.red }}, {{ section.settings.buy_button_color.green }}, {{ section.settings.buy_button_color.blue }};
+    --color-action-hover: {{ section.settings.buy_button_color.red }}, {{ section.settings.buy_button_color.green }}, {{ section.settings.buy_button_color.blue }};
+  }
+{% endstyle %}
+
 {% unless cart.empty? %}
   {% if cart.discount_applications.size > 0 %}
     <div class="flex justify-end px-8">
       <ul>
         {% for discount_application in cart.discount_applications %}
           <li class="text-sm text-main-80 mb-1 px-3 py-1 bg-main-5 rounded">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="inline-block"><path fill="currentColor" d="M12.79 21L3 11.21v2c0 .53.21 1.04.59 1.41l7.79 7.79c.78.78 2.05.78 2.83 0l6.21-6.21c.78-.78.78-2.05 0-2.83z"/><path fill="currentColor" d="M11.38 17.41c.39.39.9.59 1.41.59c.51 0 1.02-.2 1.41-.59l6.21-6.21c.78-.78.78-2.05 0-2.83L12.62.58C12.25.21 11.74 0 11.21 0H5C3.9 0 3 .9 3 2v6.21c0 .53.21 1.04.59 1.41zM5 2h6.21L19 9.79L12.79 16L5 8.21z"/><circle cx="7.25" cy="4.25" r="1.25" fill="currentColor"/></svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              class="inline-block"><path fill="currentColor" d="M12.79 21L3 11.21v2c0 .53.21 1.04.59 1.41l7.79 7.79c.78.78 2.05.78 2.83 0l6.21-6.21c.78-.78.78-2.05 0-2.83z" /><path fill="currentColor" d="M11.38 17.41c.39.39.9.59 1.41.59c.51 0 1.02-.2 1.41-.59l6.21-6.21c.78-.78.78-2.05 0-2.83L12.62.58C12.25.21 11.74 0 11.21 0H5C3.9 0 3 .9 3 2v6.21c0 .53.21 1.04.59 1.41zM5 2h6.21L19 9.79L12.79 16L5 8.21z" /><circle
+                cx="7.25"
+                cy="4.25"
+                r="1.25"
+                fill="currentColor" /></svg>
             {{ discount_application.title }}&nbsp;
             {{ discount_application.total_allocated_amount | money }}
           </li>
@@ -14,18 +30,23 @@
   {% endif %}
   {% if cart.original_total_price != cart.total_price %}
     <p class="text-right px-8 text-lg text-main-80 mb-1">
-      <span class="font-heading">{{ 'tw.cart.before_promo' | t }}&nbsp;&nbsp;</span>
+      <span class="font-heading">{{ 'sections.page_cart_subtotal.before_promo' | t }}&nbsp;&nbsp;</span>
       <s>{{ cart.original_total_price | money }}</s>
     </p>
   {% endif %}
   <p class="text-right pr-8 text-lg">
-    <span class="font-semibold font-heading">{{ 'tw.cart.subtotal' | t }}&nbsp;&nbsp;&nbsp;</span>
+    <span class="font-semibold font-heading">{{ 'sections.page_cart_subtotal.subtotal' | t }}&nbsp;&nbsp;&nbsp;</span>
     <span class="text-main-80">{{ cart.total_price | money_with_currency }}</span>
   </p>
   <div class="text-right mt-6 px-8">
     <a class="py-4 px-8 rounded-md mx-auto inline-block bg-action text-secondary transition-colors duration-500 text-center w-full xs:w-auto font-semibold glass-anim relative before:w-12 before:h-40 before:bg-white/50 before:absolute before:-top-4 before:right-[-60px] before:rotate-12 after:w-12 after:h-40 after:bg-white/20 after:absolute after:-top-4 after:rotate-12 after:right-[-60px] overflow-hidden" href="">
-    <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 32 32" class="inline-block"><path fill="currentColor" d="M6.5 5A4.5 4.5 0 0 0 2 9.5V11h28V9.5A4.5 4.5 0 0 0 25.5 5zM2 22.5V13h28v9.5a4.5 4.5 0 0 1-4.5 4.5h-19A4.5 4.5 0 0 1 2 22.5M21 19a1 1 0 1 0 0 2h3a1 1 0 1 0 0-2z"/></svg>&nbsp;
-    {{ 'tw.cart.checkout' | t }}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="29"
+        height="29"
+        viewBox="0 0 32 32"
+        class="inline-block"><path fill="currentColor" d="M6.5 5A4.5 4.5 0 0 0 2 9.5V11h28V9.5A4.5 4.5 0 0 0 25.5 5zM2 22.5V13h28v9.5a4.5 4.5 0 0 1-4.5 4.5h-19A4.5 4.5 0 0 1 2 22.5M21 19a1 1 0 1 0 0 2h3a1 1 0 1 0 0-2z" /></svg>&nbsp;
+      {{ 'sections.page_cart_subtotal.checkout' | t }}
     </a>
   </div>
 {% endunless %}
@@ -35,9 +56,9 @@
     const blockBuyButton = document.querySelector('.glass-anim');
 
     setInterval(() => {
-      blockBuyButton?.classList.add('glass-anim');
+      blockBuyButton ?. classList.add('glass-anim');
       setTimeout(() => {
-        blockBuyButton?.classList.remove('glass-anim');
+        blockBuyButton ?. classList.remove('glass-anim');
       }, 1500);
     }, 5000);
   };
@@ -47,16 +68,22 @@
   });
 {% endjavascript %}
 
-{% comment %} flex w-full items-center gap-x-5 gap-y-2 2xs:gap-4 md:gap-5 py-2 lg:py-3 bg-action  px-5 lg:px-6 mb-4  {% endcomment %}
-
 {% schema %}
-    {
-      "name": "t:sections.page-cart-subtotal.name",
-      "class": "page-width mt-10",
-      "tag": "section",
-      "limit": 1,
-      "enabled_on": {
-        "templates": ["cart"]
-      }
-    }
+  {
+    "name": "t:sections.page_cart_subtotal.name",
+    "class": "page-width mt-10",
+    "tag": "section",
+    "limit": 1,
+    "enabled_on": {
+      "templates": ["cart"]
+    },
+    "settings": [
+        {
+          "type": "color",
+          "id": "buy_button_color",
+          "label": "t:sections.page_cart_subtotal.settings.buy_button_color.label",
+          "default": "#04A777"
+        }
+      ]
+  }
 {% endschema %}

@@ -12,7 +12,7 @@
   window.productRatio = "{{ ratio }}";
   window.productImageSRC = "{{ product.images[1] | image_url | prepend: 'https:' }}";
   window.productImageAlt = "{{ product.images[1].alt | escape }}";
-  window.canvasTexture = "{{ 'tw.main_product.painting.canvas_texture' | t }}";
+  window.canvasTexture = "{{ 'snippet.paintings_data_script.canvas_texture' | t }}";
   window.productId = "{{ product.id }}";
   window.productAll = {{ product | json }};
   window.shopUrl = window.Shopify.routes.root;

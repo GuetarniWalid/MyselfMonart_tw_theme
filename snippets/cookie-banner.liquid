@@ -7,14 +7,14 @@
     class="absolute -top-20 left-1/2 -translate-x-1/2 md:-top-16 md:-left-16 md:translate-x-0"
     loading="lazy" />
   <div class="first ml-auto py-7 pt-52 md:w-1/2 md:pt-7">
-    <p>{{ 'sections.cookie-banner.message-1' | t }}<br>{{ 'sections.cookie-banner.message-2' | t }}</p>
+    <p>{{ 'sections.cookie_banner.message-1' | t }}<br>{{ 'sections.cookie_banner.message-2' | t }}</p>
     <div class="flex gap-6 md:justify-between mt-6">
-      <button onclick="showSettings()" class="underline">{{ 'sections.cookie-banner.parameter' | t }}</button>
-      <button onclick="handleAccept()" class="bg-main text-secondary transition-colors duration-500 py-3 px-6 rounded-lg">{{ 'sections.cookie-banner.accept' | t }}</button>
+      <button onclick="showSettings()" class="underline">{{ 'sections.cookie_banner.parameter' | t }}</button>
+      <button onclick="handleAccept()" class="bg-main text-secondary transition-colors duration-500 py-3 px-6 rounded-lg">{{ 'sections.cookie_banner.accept' | t }}</button>
     </div>
   </div>
   <form class="second hidden py-7 pt-52 md:w-7/12 ml-auto md:pt-7" onsubmit="handleSettings(event)">
-    <p class="text-xl font-heading font-bold mb-4">{{ 'sections.cookie-banner.settings.title' | t }}</p>
+    <p class="text-xl font-heading font-bold mb-4">{{ 'sections.cookie_banner.settings.title' | t }}</p>
     <div class="flex gap-2 items-center mb-3 cursor-pointer relative">
       <div
         class="inline-block relative w-5 h-5 rounded overflow-hidden cursor-pointer"
@@ -39,7 +39,7 @@
         </svg>
       </div>
       <label for="cookie-analyse" class="cursor-pointer">
-        {{ 'sections.cookie-banner.settings.analytics' | t }}
+        {{ 'sections.cookie_banner.settings.analytics' | t }}
       </label>
     </div>
     <div class="flex gap-2 items-center mb-3 cursor-pointer relative">
@@ -66,7 +66,7 @@
         </svg>
       </div>
       <label for="cookie-marketing" class="cursor-pointer">
-        {{ 'sections.cookie-banner.settings.marketing' | t }}
+        {{ 'sections.cookie_banner.settings.marketing' | t }}
       </label>
     </div>
     <div class="block gap-2 mb-3 cursor-pointer relative">
@@ -93,7 +93,7 @@
         </svg>
       </div>
       <label for="cookie-preferences" class="cursor-pointer">
-        {{ 'sections.cookie-banner.settings.preferences' | t }}
+        {{ 'sections.cookie_banner.settings.preferences' | t }}
       </label>
     </div>
     <div class="block gap-2 mb-3 cursor-pointer relative">
@@ -120,11 +120,11 @@
         </svg>
       </div>
       <label for="cookie-sale_of_data" class="cursor-pointer">
-        {{ 'sections.cookie-banner.settings.sale_of_data' | t }}
+        {{ 'sections.cookie_banner.settings.sale_of_data' | t }}
       </label>
     </div>
-    <button class="block bg-main py-3 text-center text-secondary transition-colors duration-500 w-full rounded mb-2" onclick="handleAccept()">{{ 'sections.cookie-banner.settings.accept_button' | t }}</button>
-    <button class="block border-main border-1 py-3 text-center w-full rounded" type="submit">{{ 'sections.cookie-banner.settings.save_button' | t }}</button>
+    <button class="block bg-main py-3 text-center text-secondary transition-colors duration-500 w-full rounded mb-2" onclick="handleAccept()">{{ 'sections.cookie_banner.settings.accept_button' | t }}</button>
+    <button class="block border-main border-1 py-3 text-center w-full rounded" type="submit">{{ 'sections.cookie_banner.settings.save_button' | t }}</button>
   </form>
 </div>
 
@@ -132,51 +132,51 @@
   function getBannerEl() {
     return document.getElementById('cookies-banner');
   }
-
+  
   function hideBanner(res) {
     getBannerEl().style.display = 'none';
   }
-
+  
   function showBanner() {
    getBannerEl().classList.replace('hidden', 'animate-bounceFromLeft');
   }
-
+  
   function handleCheck(div) {
     const isChecked = div.getAttribute('aria-checked') === 'true';
     div.setAttribute('aria-checked', !isChecked);
   }
-
+  
   function handleAccept(e) {
     window.Shopify.customerPrivacy.setTrackingConsent(true, hideBanner);
-
+  
     document.addEventListener('trackingConsentAccepted',function() {
       console.log('trackingConsentAccepted event fired');
     });
   }
-
+  
   function showSettings() {
     document.querySelector('#cookies-banner > div.first').classList.add('hidden');
     document.querySelector('#cookies-banner > .second').classList.remove('hidden');
   }
-
+  
   function handleSettings(event) {
     event.preventDefault();
     const form = event.target;
     const inputs = Array.from(form.elements);
-
+  
     const formValues = {};
     inputs.forEach(input => {
          if (input.type !== 'submit') {
             formValues[input.name] = input.checked;
         }
     });
-
+  
     window.Shopify.customerPrivacy.setTrackingConsent(formValues,() => {
       hideBanner()
       console.log("Consent captured")
       });
   }
-
+  
   function areVisitorConsentsEmpty(consents) {
     for (let key in consents) {
       if (consents.hasOwnProperty(key)) {
@@ -187,20 +187,20 @@
     }
     return true;
   }
-
+  
   function initCookieBanner() {
     setTimeout(() => {
       const currentVisitorConsent = window.Shopify.customerPrivacy.currentVisitorConsent();
-
+  
       const visitorConsentsEmpty = areVisitorConsentsEmpty(currentVisitorConsent);
       const shouldShowBanner = window.Shopify.customerPrivacy.shouldShowBanner();
-
+  
       if(shouldShowBanner && visitorConsentsEmpty) {
         showBanner();
         }
     }, 2000)
   }
-
+  
   window.Shopify.loadFeatures([
     {
       name: 'consent-tracking-api',

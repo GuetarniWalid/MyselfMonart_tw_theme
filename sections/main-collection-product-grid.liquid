@@ -1,13 +1,19 @@
 {%- paginate collection.products by 24 -%}
-  {%- if collection.products.size == 0 -%} 
+  {%- if collection.products.size == 0 -%}
     <h2 class="my-40 text-center">
-      {{ 'tw.main-collection-product-grid.empty' | t }}
+      {{ 'sections.main_collection_product_grid.empty' | t }}
     </h2>
   {%- else -%}
     <div>
       {%- if paginate.pages > 1 -%}
         <infinite-scroll-storage data-page="{{ paginate.current_page }}">
-          <infinite-scroll id="infinite-scroll-{{ collection.id }}-{{ paginate.current_page }}" data-pages="{{ paginate.pages }}" data-page="{{ paginate.current_page }}" data-section-id="{{ section.id }}" data-paginate-previous-url="{{ paginate.previous.url }}" data-paginate-next-url="{{ paginate.next.url }}">
+          <infinite-scroll
+            id="infinite-scroll-{{ collection.id }}-{{ paginate.current_page }}"
+            data-pages="{{ paginate.pages }}"
+            data-page="{{ paginate.current_page }}"
+            data-section-id="{{ section.id }}"
+            data-paginate-previous-url="{{ paginate.previous.url }}"
+            data-paginate-next-url="{{ paginate.next.url }}">
             <ul data-id="{{ section.id }}" class="grid sm:grid-cols-2 gap-3 lg:grid-cols-3 pb-3">
               {%- for product in collection.products -%}
                 {% liquid
@@ -18,11 +24,12 @@
                 %}
                 <anime-product-card>
                   <li id="{{ product.id }}" class="relative group border-main border-1 h-full">
-                    {% render 'card-product',
-                      product: product,
-                      show_secondary_image: section.settings.show_secondary_image,
-                      lazy_load: lazy_load,
-                      section_id: section.id,
+                    {% render 'card-product'
+                      , product: product
+                      , show_secondary_image: section.settings.show_secondary_image
+                      , lazy_load: lazy_load
+                      , section_id: section.id
+                      ,
                     %}
                   </li>
                 </anime-product-card>
@@ -30,20 +37,26 @@
             </ul>
           </infinite-scroll>
         </infinite-scroll-storage>
-        {% render 'pagination', paginate: paginate, anchor: '' %}
+        {% render 'pagination'
+          , paginate: paginate
+          , anchor: '' %}
       {%- else -%}
-        <ul id="product-grid" data-id="{{ section.id }}" class="grid sm:grid-cols-2 gap-3 lg:grid-cols-3 pb-3 mb-14">
+        <ul
+          id="product-grid"
+          data-id="{{ section.id }}"
+          class="grid sm:grid-cols-2 gap-3 lg:grid-cols-3 pb-3 mb-14">
           {%- for product in collection.products -%}
             {% assign lazy_load = false %}
             {%- if forloop.index > 2 -%}
               {%- assign lazy_load = true -%}
             {%- endif -%}
             <li id="{{ product.id }}" class="relative group border-main border-1 h-full">
-              {% render 'card-product',
-                product: product,
-                show_secondary_image: section.settings.show_secondary_image,
-                lazy_load: lazy_load,
-                section_id: section.id,
+              {% render 'card-product'
+                , product: product
+                , show_secondary_image: section.settings.show_secondary_image
+                , lazy_load: lazy_load
+                , section_id: section.id
+                ,
               %}
             </li>
           {%- endfor -%}
@@ -58,13 +71,13 @@
     "@context": "https://schema.org",
     "@type": "ItemList",
     "name": "{{ collection.title }}",
-    "url": "{{ shop.url }}{{ collection.url }}",
+    "url": "{{ shop.url }} {{ collection.url }}",
     "itemListElement": [
       {%- for product in collection.products -%}
         {
           "@type": "ListItem",
           "position": {{ forloop.index }},
-          "url": "{{ shop.url }}{{ product.url }}",
+          "url": "{{ shop.url }} {{ product.url }}",
           "item": {
             "@type": "Product",
             "name": "{{ product.title }}",
@@ -86,9 +99,7 @@
               else
                 assign price_min = product.price_min
                 assign product_image = product.featured_image | image_url: width: product.featured_image.preview_image.width | prepend: "https:"
-              endif
-            -%}
-            "image": "{{ product_image }}",
+              endif -%} "image": "{{ product_image }}",
             "description": "{{ product.description | strip_html | escape }}",
             "brand": {
               "@type": "Brand",
@@ -99,7 +110,7 @@
               "priceCurrency": "{{ shop.currency }}",
               "price": "{{ price_min |  divided_by: 100.00 }}",
               "availability": "https://schema.org/InStock",
-              "url": "{{ shop.url }}{{ product.url }}"
+              "url": "{{ shop.url }} {{ product.url }}"
             }
           }
         }{% unless forloop.last %},{% endunless %}
@@ -109,18 +120,20 @@
 </script>
 
 {% schema %}
-{
-  "name": "t:sections.main-collection-product-grid.name",
-  "class": "main-collection-product-grid page-width px-4",
-  "tag": "section",
-  "templates": ["collection"],
-  "settings": [
-    {
-      "type": "checkbox",
-      "id": "show_secondary_image",
-      "default": true,
-      "label": "t:sections.main-collection-product-grid.settings.show_secondary_image.label"
-    }
-  ]
-}
+  {
+    "name": "t:sections.main-collection-product-grid.name",
+    "class": "main-collection-product-grid page-width px-4",
+    "tag": "section",
+    "enabled_on": {
+      "templates": ["collection"]
+    },
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_secondary_image",
+        "default": true,
+        "label": "t:sections.main-collection-product-grid.settings.show_secondary_image.label"
+      }
+    ]
+  }
 {% endschema %}

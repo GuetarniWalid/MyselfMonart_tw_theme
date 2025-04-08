@@ -1,11 +1,11 @@
 {%- if predictive_search.performed -%}
   <div id="predictive-search-results" class="bg-secondary transition-colors duration-500 px-5 shadow rounded-xl mt-1">
-    {%- if predictive_search.resources.products.size > 0 -%} 
+    {%- if predictive_search.resources.products.size > 0 -%}
       <h2 class="text-main-75 text-2xs py-1 tracking-widest flex justify-between font-light">
-        {{ 'tw.header.search.results.title' | t }}
+        {{ 'snippet.tw_predictive_search.results.title' | t }}
       </h2>
       <hr>
-      <ul class="predictive-search-results pt-2 pb-2" role="listbox">      
+      <ul class="predictive-search-results pt-2 pb-2" role="listbox">
         {%- for product in predictive_search.resources.products -%}
           {% liquid
             if product.template_suffix == "painting"
@@ -25,15 +25,17 @@
             endif
           %}
           <li role="option" class="p-2 hover:bg-main-5 rounded-md">
-            <a href="{{ product.url }}" tabindex="0" class="flex gap-3">
+            <a
+              href="{{ product.url }}"
+              tabindex="0"
+              class="flex gap-3">
               {%- if product.featured_media != blank -%}
                 <img
-                class="rounded"
+                  class="rounded"
                   src="{{ product.featured_media | image_url: width: 150 }}"
                   alt="{{ product.featured_media.alt }}"
                   width="50"
-                  height="{{ 50 | divided_by: product.featured_media.preview_image.aspect_ratio }}"
-                >
+                  height="{{ 50 | divided_by: product.featured_media.preview_image.aspect_ratio }}">
               {%- endif -%}
               <div>
                 <h3 class="text-sm mb-1">{{ product.title }}</h3>
@@ -43,16 +45,18 @@
           </li>
         {%- endfor -%}
         <hr class="mt-2">
-        <li id="predictive-search-option-search-keywords" class="group pt-2 hover:bg-main-5 rounded-md p-2" role="option">
+        <li
+          id="predictive-search-option-search-keywords"
+          class="group pt-2 hover:bg-main-5 rounded-md p-2"
+          role="option">
           <button tabindex="0" class="text-sm">
-            {{ 'tw.header.search.results.all' | t: terms: predictive_search.terms }}
-            &nbsp;{% render 'tw-icon-arrow' %}
-          </button>
-        </li> 
+            {{ 'snippet.tw_predictive_search.results.all' | t: terms: predictive_search.terms }}
+            &nbsp;{% render 'tw-icon-arrow' %}</button>
+        </li>
       </ul>
     {%- else -%}
       <p class="text-sm py-3">
-        {{ 'tw.header.search.results.none' | t: terms: predictive_search.terms }}
+        {{ 'snippet.tw_predictive_search.results.none' | t: terms: predictive_search.terms }}
       </p>
     {%- endif -%}
   </div>

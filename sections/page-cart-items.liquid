@@ -1,11 +1,14 @@
 {% if cart != empty %}
-  <h1 class="my-16 px-6">{{ 'tw.cart.title' | t }}</h1>
-  <form action="{{ routes.cart_url }}" method="post" id="cart">
+  <h1 class="my-16 px-6">{{ 'sections.page_cart_items.title' | t }}</h1>
+  <form
+    action="{{ routes.cart_url }}"
+    method="post"
+    id="cart">
     <div class="px-6">
       <div class="grid grid-cols-[1fr_auto_auto] gap-4 text-main-70 pb-4">
-        <p class="text-left font-thin text-sm">{{ 'tw.cart.headings.articles' | t }}</p>
-        <p class="text-center font-thin text-sm hidden md:block w-36">{{ 'tw.cart.headings.quantity' | t }}</p>
-        <p class="text-center font-thin text-sm hidden md:block w-24">{{ 'tw.cart.headings.total' | t }}</p>
+        <p class="text-left font-thin text-sm">{{ 'sections.page_cart_items.headings.articles' | t }}</p>
+        <p class="text-center font-thin text-sm hidden md:block w-36">{{ 'sections.page_cart_items.headings.quantity' | t }}</p>
+        <p class="text-center font-thin text-sm hidden md:block w-24">{{ 'sections.page_cart_items.headings.total' | t }}</p>
       </div>
 
       <ul>
@@ -14,29 +17,47 @@
             <li class="grid grid-cols-[auto_1fr] md:grid-cols-[auto_1fr_auto_auto] grid-rows-[auto_auto] gap-x-4 gap-y-8 md:gap-y-0 py-8 first:border-t border-b border-main-10">
               {% if item.product.images[1] %}
                 <div class="relative md:row-span-2">
-                  <img src="{{ item.product.images[1] | image_url: width: 150 }}"
+                  <img
+                    src="{{ item.product.images[1] | image_url: width: 150 }}"
                     class="skeleton w-[120px] sm:w-auto"
                     alt="{{ item.product.images[1].alt | escape }}"
                     loading="lazy"
                     width="150"
-                    height="{{ 150 | divided_by: item.product.images[1].aspect_ratio | ceil }}"
-                  >
-                  <a href="{{ item.url }}" aria-hidden="true" tabindex="-1" class="absolute inset-0"> </a>
+                    height="{{ 150 | divided_by: item.product.images[1].aspect_ratio | ceil }}">
+                  <a
+                    href="{{ item.url }}"
+                    aria-hidden="true"
+                    tabindex="-1"
+                    class="absolute inset-0"></a>
                 </div>
               {% endif %}
               <div>
                 {%- if settings.show_vendor -%}
                   <p>{{ item.product.vendor }}</p>
                 {%- endif -%}
-                <h3 class="text-lg"><a href="{{ item.url }}" class="inline-block mb-2 hover:underline">{{ item.product.title | escape }}</a></h3>
+                <h3 class="text-lg">
+                  <a href="{{ item.url }}" class="inline-block mb-2 hover:underline">{{ item.product.title | escape }}</a>
+                </h3>
                 {% if item.discounts.size > 0 %}
-                  <ul role="list" aria-label="{{ 'customer.order.discount' | t }}" class="text-main-80">
-                  {%- for discount in item.discounts -%}
-                    <li class="inline-block text-sm mb-1 px-3 py-1 bg-main-5 rounded">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" class="inline-block"><path fill="currentColor" d="M12.79 21L3 11.21v2c0 .53.21 1.04.59 1.41l7.79 7.79c.78.78 2.05.78 2.83 0l6.21-6.21c.78-.78.78-2.05 0-2.83z"/><path fill="currentColor" d="M11.38 17.41c.39.39.9.59 1.41.59c.51 0 1.02-.2 1.41-.59l6.21-6.21c.78-.78.78-2.05 0-2.83L12.62.58C12.25.21 11.74 0 11.21 0H5C3.9 0 3 .9 3 2v6.21c0 .53.21 1.04.59 1.41zM5 2h6.21L19 9.79L12.79 16L5 8.21z"/><circle cx="7.25" cy="4.25" r="1.25" fill="currentColor"/></svg>&nbsp;
-                      {{ discount.title }}
-                    </li>
-                  {%- endfor -%}
+                  <ul
+                    role="list"
+                    aria-label="{{ 'customer.order.discount' | t }}"
+                    class="text-main-80">
+                    {%- for discount in item.discounts -%}
+                      <li class="inline-block text-sm mb-1 px-3 py-1 bg-main-5 rounded">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          class="inline-block"><path fill="currentColor" d="M12.79 21L3 11.21v2c0 .53.21 1.04.59 1.41l7.79 7.79c.78.78 2.05.78 2.83 0l6.21-6.21c.78-.78.78-2.05 0-2.83z" /><path fill="currentColor" d="M11.38 17.41c.39.39.9.59 1.41.59c.51 0 1.02-.2 1.41-.59l6.21-6.21c.78-.78.78-2.05 0-2.83L12.62.58C12.25.21 11.74 0 11.21 0H5C3.9 0 3 .9 3 2v6.21c0 .53.21 1.04.59 1.41zM5 2h6.21L19 9.79L12.79 16L5 8.21z" /><circle
+                            cx="7.25"
+                            cy="4.25"
+                            r="1.25"
+                            fill="currentColor" /></svg>&nbsp;
+                        {{ discount.title }}
+                      </li>
+                    {%- endfor -%}
                   </ul>
                 {% endif %}
                 <p class="text-main-90 mb-3">
@@ -47,7 +68,7 @@
                   {%- endif -%}
                   {{ item.final_price | money }}
                 </p>
-                {% assign variant_words =  item.variant.title |  split: '/' %}
+                {% assign variant_words = item.variant.title | split: '/' %}
                 <ul>
                   {% for word in variant_words %}
                     <li class="text-main-70 list-inside list-disc pl-1">
@@ -57,7 +78,7 @@
                 </ul>
                 {% if item.properties != blank %}
                   <p class="text-main-90 mt-3 underline underline-offset-2">
-                    {{ 'tw.cart.personalization' | t }} :
+                    {{ 'sections.page_cart_items.personalization' | t }} :
                   </p>
                   <ul>
                     {%- for property in item.properties -%}
@@ -73,7 +94,10 @@
                   {{ 'products.product.quantity.label' | t }}
                 </label>
                 <quantity-input class="inline-flex items-center h-full border-main border-1">
-                  <button name="minus" type="button" class="flex w-10 h-full justify-center items-center">
+                  <button
+                    name="minus"
+                    type="button"
+                    class="flex w-10 h-full justify-center items-center">
                     <span class="sr-only">{{ 'products.product.quantity.decrease' | t: product: item.product.title | escape }}</span>
                     <span class="pointer-events-none">{% render 'tw-icon-minus' %}</span>
                   </button>
@@ -85,9 +109,11 @@
                     min="0"
                     aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
                     data-index="{{ item.index | plus: 1 }}"
-                    class="focus:outline-none text-center w-12 bg-secondary transition-colors duration-500"
-                  >
-                  <button name="plus" type="button" class="flex w-10 h-full justify-center items-center">
+                    class="focus:outline-none text-center w-12 bg-secondary transition-colors duration-500">
+                  <button
+                    name="plus"
+                    type="button"
+                    class="flex w-10 h-full justify-center items-center">
                     <span class="sr-only">{{ 'products.product.quantity.increase' | t: product: item.product.title | escape }}</span>
                     <span class="pointer-events-none">{% render 'tw-icon-plus' %}</span>
                   </button>
@@ -99,7 +125,7 @@
                     <p class="total-price text-right text-main-70">
                       <s>
                         <span class="md:hidden">
-                          {{ 'tw.cart.total' | t }}:&nbsp;
+                          {{ 'sections.page_cart_items.total' | t }}:&nbsp;
                         </span>
                         {{ item.original_line_price | money }}
                       </s>
@@ -107,13 +133,13 @@
                   {%- endif -%}
                   <p class="total-price text-right">
                     <span class="md:hidden text-main-70">
-                      {{ 'tw.cart.total' | t }}:&nbsp;
+                      {{ 'sections.page_cart_items.total' | t }}:&nbsp;
                     </span>
                     <span>
                       {{ item.final_line_price | money }}
                     </span>
                   </p>
-                    <div aria-hidden="true" class="hidden">{% render 'tw-icon-loading' %}</div>
+                  <div aria-hidden="true" class="hidden">{% render 'tw-icon-loading' %}</div>
                 </div>
               </div>
             </li>
@@ -124,33 +150,33 @@
   </form>
 {% else %}
   <div class="pt-16 text-center">
-    <h1 class="mb-10">{{ 'tw.cart.empty_message' | t |  upcase }}</h1>     
-      <img src="{{ 'panier-vide.png' | asset_img_url: '300x' }}"
-        srcset="{{ 'panier-vide.png' | asset_img_url: '300x' }} 300w,
+    <h1 class="mb-10">{{ 'sections.page_cart_items.empty_message' | t | upcase }}</h1>
+    <img
+      src="{{ 'panier-vide.png' | asset_img_url: '300x' }}"
+      srcset="{{ 'panier-vide.png' | asset_img_url: '300x' }} 300w,
                 {{ 'panier-vide.png' | asset_img_url: '400x' }} 400w,
                 {{ 'panier-vide.png' | asset_img_url: '500x' }} 500w"
-        sizes="(max-width: 450px) 100vw, 450px"
-        alt="{{ 'tw.cart.empty_img_cart_alt' | t }}"
-        class="w-full h-auto md:w-[450px] mx-auto"
-        width="300"
-        height="300"
-      >
-      <div class="mt-10">
-        <a class="bg-main-5 hover:bg-main-10 px-8 py-4 rounded-lg border-2 border-main mt-5" href="{{ routes.all_products_collection_url }}">{{ 'tw.cart.continue_shopping' | t }}</a>
-      </div>
+      sizes="(max-width: 450px) 100vw, 450px"
+      alt="{{ 'sections.page_cart_items.empty_img_cart_alt' | t }}"
+      class="w-full h-auto md:w-[450px] mx-auto"
+      width="300"
+      height="300">
+    <div class="mt-10">
+      <a class="bg-main-5 hover:bg-main-10 px-8 py-4 rounded-lg border-2 border-main mt-5" href="{{ routes.all_products_collection_url }}">{{ 'sections.page_cart_items.info' | t }}</a>
+    </div>
   </div>
 {% endif %}
 
 <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
 
 {% schema %}
-{
-  "name": "t:sections.page-cart-items.name",
-  "class": "page-width",
-  "tag": "section",
-  "limit": 1,
-  "enabled_on": {
-    "templates": ["cart"]
+  {
+    "name": "t:sections.page_cart_items.name",
+    "class": "page-width",
+    "tag": "section",
+    "limit": 1,
+    "enabled_on": {
+      "templates": ["cart"]
+    }
   }
-}
 {% endschema %}

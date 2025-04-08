@@ -41,7 +41,7 @@
 {% endif %}
 
 <a class="px-4 py-2 opacity-0 focus-visible:opacity-100 absolute top-6 left-10 z-10 bg-secondary transition-colors duration-500" href="#ProductInfo-{{ section.id }}">
-  {{ "tw.main_product.accessibility.skip_to_product_info" | t }}
+  {{ "sections.main_product.accessibility.skip_to_product_info" | t }}
 </a>
 
 <div class="md:flex md:justify-center md:gap-12">
@@ -55,9 +55,6 @@
           src="{{ product.media[1].preview_image | image_url: width: 550 }}"
           sizes="(min-width: 548px) 550px, 100vw"
           alt="{{ product.media[1].alt | escape }}"
-          {% unless loop.first %}
-            loading="lazy"
-          {% endunless %}
           width="550"
           height="auto"
           data-media-id="{{ product.media[1].id }}"
@@ -129,8 +126,8 @@
         </div>
       </div>
 
-      <div class="popup fixed top-0 left-0 w-full h-dvh overflow-auto scrollbar bg-secondary transition-colors duration-500 z-50 hidden p-0 focus:outline-none" role="dialog" aria-modal="false" aria-label="{{ 'tw.main_product.carousel.popup.title' | t }}" tabindex="0">
-        <button class="absolute z-10 top-3 right-3 bg-secondary-50 transition-colors duration-500 rounded-full p-2 focus-visible:outline-main" type="button" aria-label="{{ 'tw.main_product.carousel.popup.close' | t }}" tabindex="-1">
+      <div class="popup fixed top-0 left-0 w-full h-dvh overflow-auto scrollbar bg-secondary transition-colors duration-500 z-50 hidden p-0 focus:outline-none" role="dialog" aria-modal="false" aria-label="{{ 'sections.main_product.carousel.popup.title' | t }}" tabindex="0">
+        <button class="absolute z-10 top-3 right-3 bg-secondary-50 transition-colors duration-500 rounded-full p-2 focus-visible:outline-main" type="button" aria-label="{{ 'sections.main_product.carousel.popup.close' | t }}" tabindex="-1">
         {% render 'tw-icon-close', width: '22' %}
         </button>
         <template id="main-product-popup">
@@ -176,7 +173,7 @@
               </div>
             {% endif %}
           {%- when 'variant_picker' -%}
-            {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
+            {% render 'product-variant-picker', product: product, block: block %}
           {%- when 'buy' -%}
             {% style %}
               :root {
@@ -231,8 +228,8 @@
                 {{ product.description }}
               </div>
               <dropdown-button>
-                <button class="group mt-6 mb-5">{{ 'tw.main_collection_banner.learn_more' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
-                <button class="group  mt-6 hidden mb-5">{{ 'tw.main_collection_banner.fewer_details' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
+                <button class="group mt-6 mb-5">{{ 'sections.main_collection_banner.learn_more' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
+                <button class="group  mt-6 hidden mb-5">{{ 'sections.main_collection_banner.fewer_details' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
               </dropdown-button>
             {%- endif -%}
           {%- when 'collapsible_tab' -%}
@@ -256,7 +253,7 @@
           {%- when 'likes' -%}
             {% if product.metafields.likes.number > 0 %}
               <div class="inline-block py-2 px-5 bg-main-5 rounded likes-count-container {{ block.settings.margin_bottom }}">
-                <svg width="24" height="24" viewBox="0 0 21 17" fill="none" xmlns="http://www.w3.org/2000/svg" class="inline-block fill-like" role="img" aria-labelledby="title-heart" focusable="false"><title id="title-heart">{{ "tw.header.svg.heart.title" | t }}</title><path d="M10.5 3L6.5 1L1.5 5L3 9.5L10.5 16L18 9.5L19.5 5L15 1L10.5 3Z" fill="transparent" class="in fill-like"/><path d="M14.6016 0.296875C12.9536 0.296875 11.4909 0.947383 10.5 2.06547C9.50906 0.947383 8.04645 0.296875 6.39844 0.296875C4.96307 0.298612 3.58699 0.869578 2.57204 1.88454C1.55708 2.89949 0.986112 4.27557 0.984375 5.71094C0.984375 11.6451 9.6641 16.3865 10.0332 16.5858C10.1767 16.6631 10.3371 16.7035 10.5 16.7035C10.6629 16.7035 10.8233 16.6631 10.9668 16.5858C11.3359 16.3865 20.0156 11.6451 20.0156 5.71094C20.0139 4.27557 19.4429 2.89949 18.428 1.88454C17.413 0.869578 16.0369 0.298612 14.6016 0.296875ZM14.1512 11.9748C13.0087 12.9443 11.7874 13.8169 10.5 14.5834C9.21256 13.8169 7.99126 12.9443 6.84879 11.9748C5.07117 10.4499 2.95312 8.1243 2.95312 5.71094C2.95312 4.79718 3.31611 3.92085 3.96223 3.27473C4.60835 2.62861 5.48468 2.26562 6.39844 2.26562C7.85859 2.26562 9.08086 3.03672 9.58863 4.27867C9.66254 4.45972 9.78869 4.61465 9.95101 4.72372C10.1133 4.83278 10.3044 4.89102 10.5 4.89102C10.6956 4.89102 10.8867 4.83278 11.049 4.72372C11.2113 4.61465 11.3375 4.45972 11.4114 4.27867C11.9191 3.03672 13.1414 2.26562 14.6016 2.26562C15.5153 2.26562 16.3916 2.62861 17.0378 3.27473C17.6839 3.92085 18.0469 4.79718 18.0469 5.71094C18.0469 8.1243 15.9288 10.4499 14.1512 11.9748Z" fill="fill-like"/></svg>&nbsp;
+                <svg width="24" height="24" viewBox="0 0 21 17" fill="none" xmlns="http://www.w3.org/2000/svg" class="inline-block fill-like" role="img" aria-labelledby="title-heart" focusable="false"><title id="title-heart">{{ "snippet.tw_icon_heart.title" | t }}</title><path d="M10.5 3L6.5 1L1.5 5L3 9.5L10.5 16L18 9.5L19.5 5L15 1L10.5 3Z" fill="transparent" class="in fill-like"/><path d="M14.6016 0.296875C12.9536 0.296875 11.4909 0.947383 10.5 2.06547C9.50906 0.947383 8.04645 0.296875 6.39844 0.296875C4.96307 0.298612 3.58699 0.869578 2.57204 1.88454C1.55708 2.89949 0.986112 4.27557 0.984375 5.71094C0.984375 11.6451 9.6641 16.3865 10.0332 16.5858C10.1767 16.6631 10.3371 16.7035 10.5 16.7035C10.6629 16.7035 10.8233 16.6631 10.9668 16.5858C11.3359 16.3865 20.0156 11.6451 20.0156 5.71094C20.0139 4.27557 19.4429 2.89949 18.428 1.88454C17.413 0.869578 16.0369 0.298612 14.6016 0.296875ZM14.1512 11.9748C13.0087 12.9443 11.7874 13.8169 10.5 14.5834C9.21256 13.8169 7.99126 12.9443 6.84879 11.9748C5.07117 10.4499 2.95312 8.1243 2.95312 5.71094C2.95312 4.79718 3.31611 3.92085 3.96223 3.27473C4.60835 2.62861 5.48468 2.26562 6.39844 2.26562C7.85859 2.26562 9.08086 3.03672 9.58863 4.27867C9.66254 4.45972 9.78869 4.61465 9.95101 4.72372C10.1133 4.83278 10.3044 4.89102 10.5 4.89102C10.6956 4.89102 10.8867 4.83278 11.049 4.72372C11.2113 4.61465 11.3375 4.45972 11.4114 4.27867C11.9191 3.03672 13.1414 2.26562 14.6016 2.26562C15.5153 2.26562 16.3916 2.62861 17.0378 3.27473C17.6839 3.92085 18.0469 4.79718 18.0469 5.71094C18.0469 8.1243 15.9288 10.4499 14.1512 11.9748Z" fill="fill-like"/></svg>&nbsp;
                 <span class="font-semibold font-heading text-sm"><span class="total-users-likes-count">{{ product.metafields.likes.number }}</span>
                 <svg class="animate-spin h-5 w-5 text-main inline-block hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -355,7 +352,7 @@
               <p class="flex items-center mb-1">
                 <a href="{{ block.settings.link }}" target="_blank" class="underline">Trustpilot</a>
                 <span class="!inline-block w-[5px] h-[5px] rounded-full bg-main mx-2"></span>
-                {{ 'tw.main_product.trustpilot.excellent' | t }}
+                {{ 'sections.trustpilot.excellent' | t }}
               </p>
               <div class="flex gap-1">
                 {% for i in (1..5) %}
@@ -384,7 +381,7 @@
                     </svg>
                   </div>
                 {% endfor %}
-                <p class="flex items-center ml-2">{{ 'tw.main_product.trustpilot.score' | t }}:  {{ block.settings.trustpilot_score |  divided_by: 10.0 }}</p>
+                <p class="flex items-center ml-2">{{ 'sections.trustpilot.score' | t }}:  {{ block.settings.trustpilot_score |  divided_by: 10.0 }}</p>
               </div>
             </div>
             {% capture reviews_structured_data %}

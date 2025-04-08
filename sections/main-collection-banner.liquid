@@ -2,8 +2,8 @@
 <div class="collection-description dropdown-button-target{% if section.settings.show_collapse_button %} h-56 overflow-hidden relative after:absolute after:bottom-0 after:w-full after:h-20 after:bg-gradient-to-t after:from-secondary{% endif %}">{{ collection.description }}</div>
 {%- if section.settings.show_collapse_button -%}
   <dropdown-button>
-    <button class="group mt-6">{{ 'tw.main_collection_banner.learn_more' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
-    <button class="group mt-2 hidden">{{ 'tw.main_collection_banner.fewer_details' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
+    <button class="group mt-6">{{ 'sections.main_collection_banner.learn_more' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
+    <button class="group mt-2 hidden">{{ 'sections.main_collection_banner.fewer_details' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
   </dropdown-button>
 {%- endif -%}
 
@@ -16,29 +16,29 @@
 {% endif %}
 
 {% schema %}
-{
-  "name": "t:sections.main-collection-banner.name",
-  "class": "main-collection-banner page-width mb-14 px-4",
-  "tag": "section",
-  "settings": [
-    {
-      "type": "checkbox",
-      "id": "show_collapse_button",
-      "default": false,
-      "label": "t:sections.main-collection-banner.settings.show_collapse_button.label",
-      "info": "t:sections.main-collection-banner.settings.show_collapse_button.info"
-    },
-    {
-      "type": "header",
-      "content": "SEO"
-    },
-    {
-      "type": "checkbox",
-      "id": "to_place_first",
-      "default": false,
-      "label": "t:sections.main-collection-banner.settings.to_place_first.label",
-      "info": "t:sections.main-collection-banner.settings.to_place_first.info"
-    }
-  ]
-}
+  {
+    "name": "t:sections.main-collection-banner.name",
+    "class": "main-collection-banner page-width mb-14 px-4",
+    "tag": "section",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_collapse_button",
+        "default": false,
+        "label": "t:sections.main-collection-banner.settings.show_collapse_button.label",
+        "info": "t:sections.main-collection-banner.settings.show_collapse_button.info"
+      },
+      {
+        "type": "header",
+        "content": "SEO"
+      },
+      {
+        "type": "checkbox",
+        "id": "to_place_first",
+        "default": false,
+        "label": "t:sections.main-collection-banner.settings.to_place_first.label",
+        "info": "t:sections.main-collection-banner.settings.to_place_first.info"
+      }
+    ]
+  }
 {% endschema %}

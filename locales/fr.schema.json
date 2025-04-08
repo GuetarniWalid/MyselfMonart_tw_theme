@@ -207,12 +207,9 @@
   },
   "sections": {
     "all": {
-      "padding": {
-        "section_padding_heading": "Marges de la section",
-        "padding_top": "Marge supérieure",
-        "padding_bottom": "Marge inférieure"
+      "border_radius": {
+        "label": "Arrondi"
       },
-      "spacing": "Espacement",
       "dynamic_color": {
         "heading": {
           "content": "Couleur dynamique"
@@ -242,9 +239,12 @@
           "label": "Très grand"
         }
       },
-      "border_radius": {
-        "label": "Arrondi"
+      "padding": {
+        "section_padding_heading": "Marges de la section",
+        "padding_top": "Marge supérieure",
+        "padding_bottom": "Marge inférieure"
       },
+      "spacing": "Espacement",
       "svg": {
         "info": "Seul un svg est autorisé ici",
         "size": "Taille du svg"
@@ -1486,7 +1486,7 @@
               "content": "Style"
             }
           },
-          "settings" : {
+          "settings": {
             "tapestry_default_width_landscape": {
               "label": "Largeur par défaut de la tapisserie pour paysage",
               "info": "En cm"
@@ -1503,33 +1503,33 @@
               "label": "Hauteur par défaut de la tapisserie",
               "info": "En cm"
             },
-            "tapestry_min_width" : {
+            "tapestry_min_width": {
               "label": "Largeur minimale de la tapisserie",
               "info": "En cm"
             },
-            "tapestry_max_width" : {
+            "tapestry_max_width": {
               "label": "Largeur maximale de la tapisserie",
               "info": "En cm"
             },
-            "tapestry_min_height" : {
+            "tapestry_min_height": {
               "label": "Hauteur minimale de la tapisserie",
               "info": "En cm"
             },
-            "tapestry_max_height" : {
+            "tapestry_max_height": {
               "label": "Hauteur maximale de la tapisserie",
               "info": "En cm"
             },
-            "tapestry_strips_width" : {
+            "tapestry_strips_width": {
               "label": "Largeur des lés de tapisserie",
               "info": "En cm"
             },
-            "tapestry_texture_landscape" : {
+            "tapestry_texture_landscape": {
               "label": "Texture de la tapisserie pour paysage"
             },
-            "tapestry_texture_portrait" : {
+            "tapestry_texture_portrait": {
               "label": "Texture de la tapisserie pour portrait"
             },
-            "tapestry_texture_square" : {
+            "tapestry_texture_square": {
               "label": "Texture de la tapisserie pour carré"
             }
           }
@@ -1734,11 +1734,16 @@
         "name": "Page"
       }
     },
-    "page-cart-items": {
+    "page_cart_items": {
       "name": "Articles"
     },
-    "page-cart-subtotal": {
-      "name": "Sous-total"
+    "page_cart_subtotal": {
+      "name": "Sous-total",
+      "settings": {
+        "buy_button_color": {
+          "label": "Couleur du bouton de commande"
+        }
+      }
     },
     "product-carrousel": {
       "name": "Carrousel de produits",

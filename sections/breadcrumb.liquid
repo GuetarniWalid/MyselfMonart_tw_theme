@@ -6,22 +6,22 @@
 {% endstyle %}
 
 {% liquid
-  assign itemListElement_names = ''
-  assign itemListElement_urls = ''
+  assign item_list_element_names = ''
+  assign item_list_element_urls = ''
 %}
 {% unless template == 'index' or template == 'cart' or template == 'list-collections' %}
   <nav role="navigation" aria-label="breadcrumbs" class="my-4 mr-3 ml-4 md:ml-0 whitespace-nowrap flex gap-2">
     {%- liquid
       assign mobile_url = "/"
       assign mobile_text = 'sections.footer.home' | t
-      assign itemListElement_names = mobile_text
-      assign itemListElement_urls = mobile_url
+      assign item_list_element_names = mobile_text
+      assign item_list_element_urls = mobile_url
     -%}
 
     {% if template contains 'page' %}
       {% liquid
-        assign itemListElement_names = itemListElement_names | append: '|,|' | append: page.title
-        assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: page.url
+        assign item_list_element_names = item_list_element_names | append: '|,|' | append: page.title
+        assign item_list_element_urls = item_list_element_urls | append: '|,|' | append: page.url
       %}
       <span class="hidden sm:inline-block relative text-center text-sm breadcrumb-box bg-breadcrumb-main pl-5 pr-6 py-[6px] -translate-x-[20px] before:absolute before:inset-[2px] before:block before:-z-10 before:breadcrumb-box-before cursor-default before:bg-breadcrumb-secondary text-lime-950 text-ellipsis overflow-hidden">
         {{ page.title }}
@@ -31,8 +31,8 @@
         {%- liquid
           assign mobile_url = collection.url
           assign mobile_text = collection.title
-          assign itemListElement_names = itemListElement_names | append: '|,|' | append: mobile_text
-          assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: mobile_url
+          assign item_list_element_names = item_list_element_names | append: '|,|' | append: mobile_text
+          assign item_list_element_urls = item_list_element_urls | append: '|,|' | append: mobile_url
         -%}
         <a href="{{ collection.url }}" class="inline-block relative text-center text-sm breadcrumb-box bg-main pl-5 pr-6 py-[6px] -translate-x-[10px] before:absolute before:inset-[2px] before:block before:-z-10 before:bg-secondary before:transition-colors before:duration-500 before:breadcrumb-box-before focus-visible:outline-none focus-visible:bg-breadcrumb-main focus-visible:before:bg-breadcrumb-secondary focus-visible:text-breadcrumb-main"> 
           {{ collection.title }}
@@ -41,8 +41,8 @@
         {%- liquid
           assign mobile_url = product.metafields.link.mother_collection.value.url
           assign mobile_text = product.metafields.link.mother_collection.value.title
-          assign itemListElement_names = itemListElement_names | append: '|,|' | append: mobile_text
-          assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: mobile_url
+          assign item_list_element_names = item_list_element_names | append: '|,|' | append: mobile_text
+          assign item_list_element_urls = item_list_element_urls | append: '|,|' | append: mobile_url
           assign gap = 0
         -%}
         {% if  product.metafields.link.mother_collection.value.metafields.breadcrumb.parentCollection.value.url %}
@@ -61,8 +61,8 @@
         {% endif %}
       {% endif %}
       {% liquid
-        assign itemListElement_names = itemListElement_names | append: '|,|' | append: product.title
-        assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: product.url
+        assign item_list_element_names = item_list_element_names | append: '|,|' | append: product.title
+        assign item_list_element_urls = item_list_element_urls | append: '|,|' | append: product.url
       %}
       <span class="hidden sm:inline-block relative text-center text-sm breadcrumb-box bg-breadcrumb-main pl-5 pr-6 py-[6px] -translate-x-[{{ gap}}px] before:absolute before:inset-[2px] before:block before:-z-10 before:breadcrumb-box-before cursor-default before:bg-breadcrumb-secondary text-lime-950 text-ellipsis overflow-hidden">
         {{ product.title }}
@@ -75,8 +75,8 @@
       %}
       {% if grand_parent != blank %}
         {% liquid
-          assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: grand_parent.value.url
-          assign itemListElement_names = itemListElement_names | append: '|,|' | append: grand_parent.value.title
+          assign item_list_element_urls = item_list_element_urls | append: '|,|' | append: grand_parent.value.url
+          assign item_list_element_names = item_list_element_names | append: '|,|' | append: grand_parent.value.title
         %}
         <a href="{{ grand_parent.value.url }}" class="inline-block relative text-center text-sm breadcrumb-first bg-main pl-4 pr-6 py-[6px] rounded-md before:absolute before:inset-[2px] before:block before:-z-10 before:bg-secondary before:transition-colors before:duration-500 before:breadcrumb-first-before before:rounded focus-visible:outline-none focus-visible:bg-breadcrumb-main focus-visible:before:bg-breadcrumb-secondary focus-visible:text-breadcrumb-main">
           {{ grand_parent.value.title }}
@@ -85,8 +85,8 @@
 
       {% if parent != blank %}
         {% liquid
-          assign itemListElement_names = itemListElement_names | append: '|,|' | append: parent.value.title
-          assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: parent.value.url
+          assign item_list_element_names = item_list_element_names | append: '|,|' | append: parent.value.title
+          assign item_list_element_urls = item_list_element_urls | append: '|,|' | append: parent.value.url
         %}
         {% if grand_parent != blank %}
           {% assign gap = gap | plus: 10 %}
@@ -101,8 +101,8 @@
       {% endif %}
 
       {% liquid
-        assign itemListElement_names = itemListElement_names | append: '|,|' | append: collection.title
-        assign itemListElement_urls = itemListElement_urls | append: '|,|' | append: collection.url
+        assign item_list_element_names = item_list_element_names | append: '|,|' | append: collection.title
+        assign item_list_element_urls = item_list_element_urls | append: '|,|' | append: collection.url
         assign gap = gap | plus: 10
       %}
       <span class="hidden sm:inline-block relative text-center text-sm breadcrumb-box bg-breadcrumb-main pl-5 pr-6 py-[6px] -translate-x-[{{ gap }}px] before:absolute before:inset-[2px] before:block before:-z-10 before:breadcrumb-box-before cursor-default before:bg-breadcrumb-secondary text-lime-950 text-ellipsis overflow-hidden">
@@ -112,19 +112,19 @@
   </nav>
 {% endunless %}
 
-{%- assign itemListElement_names = itemListElement_names | split: '|,|' -%}
-{%- assign itemListElement_urls = itemListElement_urls | split: '|,|' -%}
+{%- assign item_list_element_names = item_list_element_names | split: '|,|' -%}
+{%- assign item_list_element_urls = item_list_element_urls | split: '|,|' -%}
 <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-    {%- for itemListElement_name in itemListElement_names -%}
+    {%- for itemListElement_name in item_list_element_names -%}
       {
         "@type": "ListItem",
         "position": {{ forloop.index }},
         "name": "{{ itemListElement_name }}",
-        "item": "{{ shop.secure_url }}{{ itemListElement_urls[forloop.index0] }}"
+        "item": "{{ shop.secure_url }}{{ item_list_element_urls[forloop.index0] }}"
     }{%- if forloop.last == false -%},{%- endif -%}
     {%- endfor -%}
     ]
@@ -137,11 +137,13 @@
   "class": "page-width w-full",
   "tag": "div",
   "limit": 1,
-  "templates": [
-    "collection",
-    "page",
-    "product"
-  ],
+  "enabled_on": {
+    "templates": [
+      "collection",
+      "page",
+      "product"
+    ]
+  },
   "settings": [
     {
       "type": "header",
