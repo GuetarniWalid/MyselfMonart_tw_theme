@@ -1,33 +1,59 @@
-<cart-drawer role="dialog" aria-modal="true" aria-label="{{ 'tw.cart_drawer.title' | t }}" tabindex="-1" aria-expanded="false">
+<cart-drawer
+  role="dialog"
+  aria-modal="true"
+  aria-label="{{ 'sections.tw_cart_drawer.title' | t }}"
+  tabindex="-1"
+  aria-expanded="false">
   {%- if cart == empty -%}
-    <button type="button" class="close absolute top-3 right-4 border border-main p-1 rounded hover:shadow-button transition-shadow duration-100" aria-label="{{ 'tw.cart_drawer.close' | t }}" tabindex="-1">
+    <button
+      type="button"
+      class="close absolute top-3 right-4 border border-main p-1 rounded hover:shadow-button transition-shadow duration-100"
+      aria-label="{{ 'sections.tw_cart_drawer.close' | t }}"
+      tabindex="-1">
       {% render 'tw-icon-close' %}
     </button>
     <div class="absolute top-1/2 -translate-y-1/2 w-full text-center">
-      <p class="heading font-bold text-2xl mb-5">{{ 'tw.cart_drawer.empty_message' | t }}</p>
-      <button data-url64="{% if section.settings.keep_shopping_url != blank %}{{ section.settings.keep_shopping_url | base64_encode }}{% else %}{{ routes.all_products_collection_url | base64_encode }}{% endif %}" class="obfuscate border rounded-md border-main py-2 px-4 hover:shadow-button transition-shadow duration-100" tabindex="-1">
-        {{ 'tw.cart_drawer.continue_shopping' | t }}
+      <p class="heading font-bold text-2xl mb-5">{{ 'sections.tw_cart_drawer.empty_message' | t }}</p>
+      <button
+        data-url64="{% if section.settings.keep_shopping_url != blank %}{{ section.settings.keep_shopping_url | base64_encode }}{% else %}{{ routes.all_products_collection_url | base64_encode }}{% endif %}"
+        class="obfuscate border rounded-md border-main py-2 px-4 hover:shadow-button transition-shadow duration-100"
+        tabindex="-1">
+        {{ 'sections.tw_cart_drawer.continue_shopping' | t }}
       </button>
     </div>
     <div class="loading-wrapper h-full flex justify-center items-center hidden">
-      <p>{{ "tw.cart_drawer.loading" | t }}&nbsp;&nbsp;</p>
+      <p>{{ "sections.tw_cart_drawer.loading" | t }}&nbsp;&nbsp;</p>
       {% render 'tw-icon-loading' %}
     </div>
   {%- else -%}
     <div class="flex justify-between items-center px-4 py-2 border-b border-main">
-      <p class="text-base font-bold heading">{{ 'tw.cart_drawer.title' | t }}({{ cart.item_count }})</p>
-      <button class="close" type="button" aria-label="{{ 'tw.cart_drawer.close' | t }}" tabindex="-1">
-        {% render 'tw-icon-close', width: "23" %}
+      <p class="text-base font-bold heading">{{ 'sections.tw_cart_drawer.title' | t }}({{ cart.item_count }})</p>
+      <button
+        class="close"
+        type="button"
+        aria-label="{{ 'sections.tw_cart_drawer.close' | t }}"
+        tabindex="-1">
+        {% render 'tw-icon-close'
+          , width: "23" %}
       </button>
     </div>
     <div class="px-4 py-4 border-b border-main">
       {%- if cart.discount_applications.size > 0 -%}
         <div class="flex justify-between items-center mb-2">
           <p class="text-[0.8rem] font-bold heading">
-            {{ 'tw.cart_drawer.promotion' | t }}&nbsp;&nbsp;
+            {{ 'sections.tw_cart_drawer.promotion' | t }}&nbsp;&nbsp;
             {% for discount_application in cart.discount_applications %}
               <span class="text-xs bg-main-5 rounded-sm py-1 px-2 mr-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" class="inline-block"><path fill="currentColor" d="M12.79 21L3 11.21v2c0 .53.21 1.04.59 1.41l7.79 7.79c.78.78 2.05.78 2.83 0l6.21-6.21c.78-.78.78-2.05 0-2.83z"/><path fill="currentColor" d="M11.38 17.41c.39.39.9.59 1.41.59c.51 0 1.02-.2 1.41-.59l6.21-6.21c.78-.78.78-2.05 0-2.83L12.62.58C12.25.21 11.74 0 11.21 0H5C3.9 0 3 .9 3 2v6.21c0 .53.21 1.04.59 1.41zM5 2h6.21L19 9.79L12.79 16L5 8.21z"/><circle cx="7.25" cy="4.25" r="1.25" fill="currentColor"/></svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  class="inline-block"><path fill="currentColor" d="M12.79 21L3 11.21v2c0 .53.21 1.04.59 1.41l7.79 7.79c.78.78 2.05.78 2.83 0l6.21-6.21c.78-.78.78-2.05 0-2.83z" /><path fill="currentColor" d="M11.38 17.41c.39.39.9.59 1.41.59c.51 0 1.02-.2 1.41-.59l6.21-6.21c.78-.78.78-2.05 0-2.83L12.62.58C12.25.21 11.74 0 11.21 0H5C3.9 0 3 .9 3 2v6.21c0 .53.21 1.04.59 1.41zM5 2h6.21L19 9.79L12.79 16L5 8.21z" /><circle
+                    cx="7.25"
+                    cy="4.25"
+                    r="1.25"
+                    fill="currentColor" /></svg>
                 {{ discount_application.title }}
               </span>
             {% endfor %}
@@ -39,7 +65,7 @@
         </div>
       {% endif %}
       <div class="flex justify-between items-center">
-        <p class="text-[0.8rem] font-bold heading">{{ 'tw.cart_drawer.subtotal' | t }}</p>
+        <p class="text-[0.8rem] font-bold heading">{{ 'sections.tw_cart_drawer.subtotal' | t }}</p>
         <p id="total-price" class="text-[0.8rem]">{{ cart.total_price | money }}</p>
         <span class="hidden">
           {% render 'tw-icon-loading' %}
@@ -47,15 +73,27 @@
       </div>
     </div>
     <div class="flex justify-around items-center py-3 gap-3 px-4 border-b border-main text-sm">
-      <a href="{{ collections.all }}" class="border border-main rounded py-2 hover:shadow-button w-full text-center" tabindex="-1">
-        {{ "tw.cart_drawer.keep_shopping" | t }}
+      <a
+        href="{{ collections.all }}"
+        class="border border-main rounded py-2 hover:shadow-button w-full text-center"
+        tabindex="-1">
+        {{ "sections.tw_cart_drawer.keep_shopping" | t }}
       </a>
-      <button type="submit" id="CartDrawer-Checkout" name="checkout" form="CartDrawer-Form" class="border bg-main text-secondary transition-colors duration-500 rounded py-2 w-full  hover:shadow-button outline-none focus-visible:outline focus-visible:outline-main" tabindex="-1">
-        {{ 'tw.cart_drawer.checkout' | t }}
+      <button
+        type="submit"
+        id="CartDrawer-Checkout"
+        name="checkout"
+        form="CartDrawer-Form"
+        class="border bg-main text-secondary transition-colors duration-500 rounded py-2 w-full  hover:shadow-button outline-none focus-visible:outline focus-visible:outline-main"
+        tabindex="-1">
+        {{ 'sections.tw_cart_drawer.checkout' | t }}
       </button>
     </div>
 
-    <form action="{{ routes.cart_url }}" id="CartDrawer-Form" method="post">
+    <form
+      action="{{ routes.cart_url }}"
+      id="CartDrawer-Form"
+      method="post">
       <ul class="border-b border-main">
         {% for item in cart.items %}
           {% liquid
@@ -73,14 +111,18 @@
           %}
           <cart-item data-index="{{ item.index | plus: 1 }}" data-section-id="{{ section.id }}">
             <li class="bg-white py-3 px-2 grid grid-rows-[auto_auto] grid-cols-[auto_1fr_auto] gap-y-1 gap-x-4{% unless forloop.last %} border-b-[1.5px] border-dotted border-main{% endunless %}">
-              <a href="{{ item_url }}" tabindex="-1" aria-hidden="true" class="border border-main rounded-lg row-span-2 overflow-hidden w-20 max-h-32">
-                <img class="w-full h-full object-cover"
-                  src="{{ item_image | img_url: '160x' }}"
+              <a
+                href="{{ item_url }}"
+                tabindex="-1"
+                aria-hidden="true"
+                class="border border-main rounded-lg row-span-2 overflow-hidden w-20 max-h-32">
+                <img
+                  class="w-full h-full object-cover"
+                  src="{{ item_image | image_url: width: 160 }}"
                   alt="{{ item_image.alt | escape }}"
                   loading="lazy"
                   width="160"
-                  height="auto"
-                >
+                  height="auto">
               </a>
               <div class="pt-2">
                 <h3 class="leading-5 text-sm mb-1">
@@ -89,16 +131,19 @@
                 {%- if item.product.has_only_default_variant == false -%}
                   <p class="text-xs {% unless has_variant_data %}variant-title-to-fill{% endunless %}">
                     {%- for option in item.options_with_values -%}
-                      {{ option.value }}{% unless forloop.last %}, {% endunless %}
+                      {{ option.value }}{% unless forloop.last %},
+                      {% endunless %}
                     {%- endfor -%}
                   </p>
                 {%- endif -%}
                 {% if item.properties != blank %}
                   <p class="text-xs">
-                    <span class="font-bold">{{ 'tw.cart.info' | t }} : </span>
+                    <span class="font-bold">{{ 'sections.tw_cart_drawer.info' | t }} :
+                    </span>
                     {%- for property in item.properties -%}
                       {{ property.last }}
-                      {% unless forloop.last %}/ {% endunless %}
+                      {% unless forloop.last %}/
+                      {% endunless %}
                     {%- endfor -%}
                   </p>
                 {% endif %}
@@ -134,7 +179,12 @@
               </div>
               <div class="flex items-end gap-1" headers="CartDrawer-ColumnQuantity">
                 <quantity-input class="inline-flex text-sm rounded-md border border-main">
-                  <button name="minus" type="button" aria-label="{{ "tw.cart_drawer.minus" | t: article: item_title }}" class="w-10 h-10 flex justify-center items-center peer/minus" tabindex="-1">
+                  <button
+                    name="minus"
+                    type="button"
+                    aria-label="{{ "sections.tw_cart_drawer.minus" | t: article: item_title }}"
+                    class="w-10 h-10 flex justify-center items-center peer/minus"
+                    tabindex="-1">
                     {% render 'tw-icon-minus' %}
                   </button>
                   <input
@@ -146,24 +196,54 @@
                     aria-label="{{ 'products.product.quantity.input_label' | t: product: item_title | escape }}"
                     id="Drawer-quantity-{{ item.index | plus: 1 }}"
                     data-index="{{ item.index | plus: 1 }}"
-                    tabindex="-1"
-                  >
-                  <button name="plus" type="button" aria-label="{{ "tw.cart_drawer.plus" | t: article: item_title }}" class="w-10 h-10 flex justify-center items-center hover:shadow-[-0.5px_0_0_0_#000] !shadow-main transition-shadow duration-100" tabindex="-1">
+                    tabindex="-1">
+                  <button
+                    name="plus"
+                    type="button"
+                    aria-label="{{ "sections.tw_cart_drawer.plus" | t: article: item_title }}"
+                    class="w-10 h-10 flex justify-center items-center hover:shadow-[-0.5px_0_0_0_#000] !shadow-main transition-shadow duration-100"
+                    tabindex="-1">
                     {% render 'tw-icon-plus' %}
                   </button>
                 </quantity-input>
                 <cart-remove-button>
-                  <button class="w-8 h-8 inline-flex justify-center items-center rounded-md border border-transparent hover:border-main transition-all duration-100" aria-label="{{ 'tw.cart_drawer.remove' | t: article: item_title }}" tabindex="-1">
+                  <button
+                    class="w-8 h-8 inline-flex justify-center items-center rounded-md border border-transparent hover:border-main transition-all duration-100"
+                    aria-label="{{ 'sections.tw_cart_drawer.remove' | t: article: item_title }}"
+                    tabindex="-1">
                     {% render 'tw-icon-remove' %}
                   </button>
                 </cart-remove-button>
-                <div id="CartDrawer-LineItemError-{{ item.index | plus: 1 }}" role="alert" class="hidden">
+                <div
+                  id="CartDrawer-LineItemError-{{ item.index | plus: 1 }}"
+                  role="alert"
+                  class="hidden">
                   <small></small>
-                  <svg aria-hidden="true" focusable="false" role="presentation" viewBox="0 0 13 13" width="20">
-                    <circle cx="6.5" cy="6.50049" r="5.5" stroke="white" stroke-width="2"/>
-                    <circle cx="6.5" cy="6.5" r="5.5" fill="#EB001B" stroke="#EB001B" stroke-width="0.7"/>
-                    <path d="M5.87413 3.52832L5.97439 7.57216H7.02713L7.12739 3.52832H5.87413ZM6.50076 9.66091C6.88091 9.66091 7.18169 9.37267 7.18169 9.00504C7.18169 8.63742 6.88091 8.34917 6.50076 8.34917C6.12061 8.34917 5.81982 8.63742 5.81982 9.00504C5.81982 9.37267 6.12061 9.66091 6.50076 9.66091Z" fill="white"/>
-                    <path d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z" fill="white" stroke="#EB001B" stroke-width="0.7">
+                  <svg
+                    aria-hidden="true"
+                    focusable="false"
+                    role="presentation"
+                    viewBox="0 0 13 13"
+                    width="20">
+                    <circle
+                      cx="6.5"
+                      cy="6.50049"
+                      r="5.5"
+                      stroke="white"
+                      stroke-width="2" />
+                    <circle
+                      cx="6.5"
+                      cy="6.5"
+                      r="5.5"
+                      fill="#EB001B"
+                      stroke="#EB001B"
+                      stroke-width="0.7" />
+                    <path d="M5.87413 3.52832L5.97439 7.57216H7.02713L7.12739 3.52832H5.87413ZM6.50076 9.66091C6.88091 9.66091 7.18169 9.37267 7.18169 9.00504C7.18169 8.63742 6.88091 8.34917 6.50076 8.34917C6.12061 8.34917 5.81982 8.63742 5.81982 9.00504C5.81982 9.37267 6.12061 9.66091 6.50076 9.66091Z" fill="white" />
+                    <path
+                      d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z"
+                      fill="white"
+                      stroke="#EB001B"
+                      stroke-width="0.7">
                   </svg>
                 </div>
               </div>
@@ -176,16 +256,16 @@
 </cart-drawer>
 
 {% schema %}
-{
-  "name": "t:sections.cart-drawer.name",
-  "class": "cart-drawer translate-x-full",
-  "tag": "section",
-  "settings": [
-    {
-      "type": "url",
-      "id": "keep_shopping_url",
-      "label": "t:sections.cart-drawer.settings.keep_shopping_url.label"
-    }
-  ]
-}
+  {
+    "name": "t:sections.cart-drawer.name",
+    "class": "cart-drawer translate-x-full",
+    "tag": "section",
+    "settings": [
+      {
+        "type": "url",
+        "id": "keep_shopping_url",
+        "label": "t:sections.cart-drawer.settings.keep_shopping_url.label"
+      }
+    ]
+  }
 {% endschema %}

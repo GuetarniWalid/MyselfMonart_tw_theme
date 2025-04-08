@@ -1,408 +1,31 @@
 {
-  "general": {
-    "password_page": {
-      "login_form_heading": "Enter store using password:",
-      "login_password_button": "Enter using password",
-      "login_form_password_label": "Password",
-      "login_form_password_placeholder": "Your password",
-      "login_form_error": "Wrong password!",
-      "login_form_submit": "Enter",
-      "admin_link_html": "Are you the store owner? <a href=\"\/admin\" class=\"link underlined-link\">Log in here<\/a>",
-      "powered_by_shopify_html": ""
-    },
-    "social": {
-      "alt_text": {
-        "share_on_facebook": "Share on Facebook",
-        "share_on_twitter": "Tweet on Twitter",
-        "share_on_pinterest": "Pin on Pinterest"
-      },
-      "links": {
-        "twitter": "Twitter",
-        "facebook": "Facebook",
-        "pinterest": "Pinterest",
-        "instagram": "Instagram",
-        "tumblr": "Tumblr",
-        "snapchat": "Snapchat",
-        "youtube": "YouTube",
-        "vimeo": "Vimeo",
-        "tiktok": "TikTok"
-      }
-    },
-    "continue_shopping": "Continue shopping",
-    "pagination": {
-      "label": "Pagination",
-      "page": "Page {{ number }}",
-      "next": "Next page",
-      "previous": "Previous page"
-    },
-    "search": {
-      "search": "Search"
-    },
-    "cart": {
-      "view": "View my cart ({{ count }})",
-      "item_added": "Item added to your cart"
-    },
-    "share": {
-      "close": "Close share",
-      "copy_to_clipboard": "Copy link",
-      "share_url": "Link",
-      "success_message": "Link copied to clipboard"
-    },
-    "slider": {
-      "of": "of",
-      "next_slide": "Slide right",
-      "previous_slide": "Slide left"
-    }
-  },
-  "newsletter": {
-    "label": "Email",
-    "success": "Thanks for subscribing",
-    "button_label": "Subscribe"
-  },
   "accessibility": {
     "skip_to_text": "Skip to content",
     "skip_to_product_info": "Skip to product information",
     "close": "Close",
     "unit_price_separator": "per",
-    "vendor": "Vendor:",
     "error": "Error",
-    "refresh_page": "Choosing a selection results in a full page refresh.",
     "link_messages": {
-      "new_window": "Opens in a new window.",
-      "external": "Opens external website."
+      "new_window": "Opens in a new window."
     },
     "loading": "Loading...",
-    "total_reviews": "total reviews",
-    "star_reviews_info": "{{ rating_value }} out of {{ rating_max }} stars",
-    "collapsible_content_title": "Collapsible content"
+    "star_reviews_info": "{{ rating_value }} out of {{ rating_max }} stars"
   },
-  "blogs": {
-    "article": {
-      "blog": "Blog",
-      "read_more_title": "Read more: {{ title }}",
-      "comments": {
-        "one": "{{ count }} comment",
-        "other": "{{ count }} comments",
-        "many": "{{ count }} comments"
-      },
-      "moderated": "Please note, comments need to be approved before they are published.",
-      "comment_form_title": "Leave a comment",
-      "name": "Name",
-      "email": "Email",
-      "message": "Comment",
-      "post": "Post comment",
-      "back_to_blog": "Back to blog",
-      "share": "Share this article",
-      "success": "Your comment was posted successfully! Thank you!",
-      "success_moderated": "Your comment was posted successfully. We will publish it in a little while, as our blog is moderated."
+  "cart_drawer": {
+    "keep_shopping": "Keep Shopping"
+  },
+  "components": {
+    "countdown": {
+      "days": "days",
+      "hours": "hours",
+      "minutes": "minutes",
+      "day": "day",
+      "hour": "hour",
+      "minute": "minute",
+      "promo_begin": "Promotion starts in:",
+      "promo_remaining": "It remains only:",
+      "promo_ended": "Ended"
     }
-  },
-  "onboarding": {
-    "product_title": "Example product title",
-    "collection_title": "Your collection's name"
-  },
-  "products": {
-    "product": {
-      "add_to_cart": "Add to cart",
-      "choose_options": "Choose options",
-      "choose_product_options": "Choose options for {{ product_name }}",
-      "description": "Description",
-      "on_sale": "Sale",
-      "product_variants": "Product variants",
-      "media": {
-        "gallery_viewer": "Gallery Viewer",
-        "load_image": "Load image {{ index }} in gallery view",
-        "load_model": "Load 3D Model {{ index }} in gallery view",
-        "load_video": "Play video {{ index }} in gallery view",
-        "image_available": "Image {{ index }} is now available in gallery view",
-        "open_media": "Open media {{ index }} in modal",
-        "play_model": "Play 3D Viewer",
-        "play_video": "Play video"
-      },
-      "quantity": {
-        "label": "Quantity",
-        "input_label": "Quantity for {{ product }}",
-        "increase": "Increase quantity for {{ product }}",
-        "decrease": "Decrease quantity for {{ product }}"
-      },
-      "pickup_availability": {
-        "view_store_info": "View store information",
-        "check_other_stores": "Check availability at other stores",
-        "pick_up_available": "Pickup available",
-        "pick_up_available_at_html": "Pickup available at <span class=\"color-foreground\">{{ location_name }}<\/span>",
-        "pick_up_unavailable_at_html": "Pickup currently unavailable at <span class=\"color-foreground\">{{ location_name }}<\/span>",
-        "unavailable": "Couldn't load pickup availability",
-        "refresh": "Refresh"
-      },
-      "price": {
-        "from_price_html": "From {{ price }}",
-        "regular_price": "Regular price",
-        "sale_price": "Sale price",
-        "unit_price": "Unit price"
-      },
-      "bundle": {
-        "instead_of": "instead of"
-      },
-      "share": "Share this product",
-      "sold_out": "Sold out",
-      "unavailable": "Unavailable",
-      "vendor": "Vendor",
-      "video_exit_message": "{{ title }} opens full screen video in same window.",
-      "view_full_details": "View full details",
-      "xr_button": "View in your space",
-      "xr_button_label": "View in your space, loads item in augmented reality window",
-      "include_taxes": "Tax included.",
-      "shipping_policy_html": "<a href=\"{{ link }}\">Shipping<\/a> calculated at checkout."
-    },
-    "modal": {
-      "label": "Media gallery"
-    },
-    "facets": {
-      "apply": "Apply",
-      "clear": "Clear",
-      "clear_all": "Remove all",
-      "from": "From",
-      "filter_and_sort": "Filter and sort",
-      "filter_by_label": "Filter:",
-      "filter_button": "Filter",
-      "filters_selected": {
-        "one": "{{ count }} selected",
-        "other": "{{ count }} selected"
-      },
-      "filter_selected_accessibility": "{{ type }} ({{ count }} filters selected)",
-      "show_more": "Show more",
-      "show_less": "Show less",
-      "max_price": "The highest price is {{ price }}",
-      "product_count": {
-        "one": "{{ product_count }} of {{ count }} product",
-        "other": "{{ product_count }} of {{ count }} products"
-      },
-      "product_count_simple": {
-        "one": "{{ count }} product",
-        "other": "{{ count }} products"
-      },
-      "reset": "Reset",
-      "sort_button": "Sort",
-      "sort_by_label": "Sort by:",
-      "to": "To",
-      "clear_filter": "Remove filter"
-    }
-  },
-  "templates": {
-    "search": {
-      "no_results": "No results found for “{{ terms }}”. Check the spelling or use a different word or phrase.",
-      "page": "Page",
-      "products": "Products",
-      "results_with_count": {
-        "one": "{{ count }} result",
-        "other": "{{ count }} results"
-      },
-      "results_with_count_and_term": {
-        "one": "{{ count }} result found for “{{ terms }}”",
-        "other": "{{ count }} results found for “{{ terms }}”"
-      },
-      "title": "Search results",
-      "search_for": "Search for “{{ terms }}”"
-    },
-    "cart": {
-      "cart": "Cart"
-    },
-    "contact": {
-      "form": {
-        "title": "Contact form",
-        "lastname": "Lastname",
-        "firstname": "Firstname",
-        "email": "Email",
-        "phone": "Phone number",
-        "comment": "Comment",
-        "send": "Send",
-        "post_success": "Thanks for contacting us. We'll get back to you as soon as possible.",
-        "error_heading": "Please adjust the following:"
-      }
-    },
-    "404": {
-      "title": "Page not found",
-      "subtext": "404"
-    }
-  },
-  "sections": {
-    "header": {
-      "announcement": "Announcement",
-      "menu": "Menu",
-      "cart_count": {
-        "one": "{{ count }} item",
-        "other": "{{ count }} items"
-      },
-      "my_likes": "My likes"
-    },
-    "cart": {
-      "title": "Your cart",
-      "caption": "Cart items",
-      "remove_title": "Remove {{ title }}",
-      "subtotal": "Subtotal",
-      "new_subtotal": "New subtotal",
-      "note": "Order special instructions",
-      "checkout": "Check out",
-      "empty": "Your cart is empty",
-      "cart_error": "There was an error while updating your cart. Please try again.",
-      "cart_quantity_error_html": "You can only add {{ quantity }} of this item to your cart.",
-      "taxes_and_shipping_policy_at_checkout_html": "Taxes and <a href=\"{{ link }}\">shipping<\/a> calculated at checkout",
-      "taxes_included_but_shipping_at_checkout": "Tax included and shipping calculated at checkout",
-      "taxes_included_and_shipping_policy_html": "Tax included. <a href=\"{{ link }}\">Shipping<\/a> calculated at checkout.",
-      "taxes_and_shipping_at_checkout": "Taxes and shipping calculated at checkout",
-      "headings": {
-        "product": "Product",
-        "price": "Price",
-        "total": "Total",
-        "quantity": "Quantity",
-        "image": "Product image"
-      },
-      "update": "Update",
-      "login": {
-        "title": "Have an account?",
-        "paragraph_html": "<a href=\"{{ link }}\" class=\"link underlined-link\">Log in<\/a> to check out faster."
-      }
-    },
-    "collections_grid": {
-      "find_out_more": "Find out more..."
-    },
-    "cookie-banner": {
-      "message-1": "Our cookies aren't edible, but they make your visit delicious!",
-      "message-2": "Ready for an enhanced experience?",
-      "parameter": "Configure",
-      "accept": "Accept",
-      "settings": {
-        "title": "Privacy Preferences",
-        "save_button": "Save preferences",
-        "accept_button": "Accept all",
-        "analytics": "Tracking analytics data",
-        "marketing": "Targeted advertising",
-        "preferences": "Collecting data to personalize user experience",
-        "sale_of_data": "Collecting data to improve products and services"
-      }
-    },
-    "footer": {
-      "payment": "Payment methods",
-      "home": "Home"
-    },
-    "featured_blog": {
-      "view_all": "View all",
-      "onboarding_title": "Blog post",
-      "onboarding_content": "Give your customers a summary of your blog post"
-    },
-    "featured_collection": {
-      "view_all": "View all",
-      "view_all_label": "View all products in the {{ collection_name }} collection",
-      "slider": "Slider"
-    },
-    "collection_list": {
-      "view_all": "View all"
-    },
-    "collection_template": {
-      "empty": "No products found",
-      "title": "Collection",
-      "use_fewer_filters_html": "Use fewer filters or <a class=\"{{ class }}\" href=\"{{ link }}\">remove all<\/a>"
-    },
-    "main-collection-product-grid": {
-      "card-product": {
-        "starting_at": "Starting at"
-      }
-    },
-    "video": {
-      "load_video": "Load video: {{ description }}"
-    },
-    "slideshow": {
-      "load_slide": "Load slide",
-      "previous_slideshow": "Previous slide",
-      "next_slideshow": "Next slide",
-      "pause_slideshow": "Pause slideshow",
-      "play_slideshow": "Play slideshow",
-      "carousel": "Carousel",
-      "slide": "Slide"
-    },
-    "page": {
-      "title": "Page title"
-    },
-    "product_addon": {
-      "add_to_cart": "Add to cart",
-      "summary": "Summary",
-      "price": "Price",
-      "title_container": {
-        "size": "Choose the Size",
-        "matter": "Choose the Matter",
-        "system": "Choose the Hanging System",
-        "thickness": "Choose the Chassis Thickness",
-        "color": "Choose Border Color",
-        "frame": "Choose the Frame",
-        "finishes": "Choose the Finishes"
-      },
-      "info": {
-        "button_name": "Info",
-        "matter": {
-          "canvas": {
-            "title": "100% POLYESTER CANVAS: matte and textured",
-            "description": "The canvas is comfortable to hold. The grain of the paper is visible mainly in the lighter areas of the image, while the blacks will tend to erase the grain. Its surface adds relief and depth to your paintings. Canvas adds an artistic touch and gives paintings an incredible intensity."
-          },
-          "aluminum": {
-            "title": "ALUMINIUM: contrast and sparkle",
-            "description": "Aluminium provides a sober, modern and reflection-free presentation. The density of the colours and the contrasts are very strong. Aluminium is a highly resistant, high-quality material. It is not sensitive to fingerprints or moisture. It's very easy to maintain. You can clean it with a slightly damp cloth."
-          },
-          "plexiglass": {
-            "title": "ALUMINIUM + PLEXIGLAS: Elegant and transparent",
-            "description": "Our acrylic + aluminium print is a combination of two top-of-the-range decorative products that offer a captivating visual experience. Plexiglas is a rigid synthetic material. Its glass-like appearance gives your pictures extraordinary depth and luminosity. The colours are bright and vibrant. The aluminium support, meanwhile, ensures that the picture is stable and light, its silver finish adding elegance and modernity. What's more, the frameless design adds extra depth to your images, creating an even stronger visual impact and making your room feel more spacious."
-          }
-        },
-        "support": {
-          "none": {
-            "title": "WITHOUT FASTENING SYSTEM",
-            "description": "Panel only, supplied without fixing system"
-          },
-          "for_canvas": {
-            "title": "CANVAS MOUNT",
-            "description": "■ Not visible from the front<br>■ Easy to install<br><br>Hang your painting quickly and simply with our canvas mounting set. Our kit includes 2 different types of installation:<br><br>● <b>The sawtooth hook:<\/b> Along the width, using a meter, locate the center of your painting and place your sawtooth hook on it using a hammer and the nails provided. All you have to do is hang your canvas on the wall of your choice.<br><br>● <b>The rope and the 2 triangular rings:<\/b> This system is particularly recommended for large canvases because it helps distribute the weight on the rope. Using a screwdriver and the screws provided, attach the 2 triangular rings to the center of each height (see image above). Tie the rope securely to each ring. All you have to do is hang your canvas on the wall of your choice."
-          },
-          "hook": {
-            "title": "HOOK WITH ADHESIVE SYSTEM",
-            "description": "■ Not visible from the front ■ Not suitable for outdoor use<br><br>Hang your painting quickly and simply using our adhesive hook. It is made up of two sides, one adhesive which sticks to the surface of the board and the other forms the hook. To install, simply remove the protective film from the adhesive surface, then stick the hook in the center of the board. A light pressure of 10 seconds is enough. Place a screw on the wall, all you have to do is hang your painting on the wall of your choice"
-          },
-          "rails": {
-            "title": "ALUMINUM TRACKS",
-            "description": "■ not visible from the front<br>■ 1 cm distance from the wall for a floating effect<br><br>The aluminum rail is the solution if you want to hang your painting quickly and easily. The system is already mounted on the board when you receive it. Place the dowels suitable for the type of wall on which you want to hang it, also taking into account the weight of the painting. All you have to do is hang your painting on the wall of your choice."
-          },
-          "spacers": {
-            "title": "SPACERS + HOLES",
-            "description": "■ the spacers are visible from the front<br>■ sleek and stylish<br><br>The metal spacers are particularly suitable for aluminum or plexiglass boards. This hanging system is visible on the front of the painting. Perfect for an elegant and designer atmosphere, your painting floats a few millimeters from the wall. The board is perforated upstream by us to accommodate the spacers. Install dowels suitable for the wall support, taking into account the distance between the holes in the painting. All you have to do is hang your painting on the wall of your choice."
-          }
-        },
-        "thickness": {
-          "2cm": {
-            "title": "Chassis 2 cm",
-            "description": "We use a high quality, handcrafted wooden frame. The frame, with a thickness of 2 cm, is extremely light which allows you to hang it easily. For quick installation, we recommend the canvas mounting kit."
-          },
-          "4cm": {
-            "title": "Chassis 4 cm",
-            "description": "The XL chassis is made of high quality wood and handcrafted. More robust, it gives more depth to your canvas in order to highlight it. If you place your canvas in a large room, this format is particularly recommended. Heavier, it also allows better stability for particularly lively spaces such as entrances or living rooms. For an easy and quick installation we recommend the canvas fixing kit."
-          }
-        }
-      }
-    },
-    "product_grid": {
-      "button": "See the product"
-    },
-    "sibling-blog-links": {
-      "complementary_blog_posts": "Complementary blog posts"
-    }
-  },
-  "snippet": {
-    "card-product": {
-      "likes": "likes"
-    }
-  },
-  "localization": {
-    "country_label": "Currency",
-    "language_label": "Language",
-    "update_language": "Update language",
-    "update_country": "Update country\/region"
   },
   "customer": {
     "account": {
@@ -411,7 +34,6 @@
       "view_addresses": "View addresses",
       "return": "Return to Account details"
     },
-    "account_fallback": "Account",
     "activate_account": {
       "title": "Activate account",
       "subtext": "Create your password to activate your account.",
@@ -431,9 +53,9 @@
       "address1": "Address 1",
       "address2": "Address 2",
       "city": "City",
-      "country": "Country\/region",
+      "country": "Country/region",
       "province": "Province",
-      "zip": "Postal\/ZIP code",
+      "zip": "Postal/ZIP code",
       "phone": "Phone",
       "set_default": "Set as default address",
       "add": "Add address",
@@ -443,7 +65,6 @@
       "delete": "Delete",
       "delete_confirm": "Are you sure you wish to delete this address?"
     },
-    "log_in": "Log in",
     "log_out": "Log out",
     "login_page": {
       "cancel": "Cancel",
@@ -456,6 +77,16 @@
       "title": "Login",
       "sign_in": "Sign in",
       "submit": "Submit"
+    },
+    "orders": {
+      "title": "Order history",
+      "order_number": "Order",
+      "order_number_link": "Order number {{ number }}",
+      "date": "Date",
+      "payment_status": "Payment status",
+      "fulfillment_status": "Fulfillment status",
+      "total": "Total",
+      "none": "You haven't placed any orders yet."
     },
     "order": {
       "title": "Order {{ name }}",
@@ -482,16 +113,6 @@
       "subtotal": "Subtotal",
       "total_duties": "Duties"
     },
-    "orders": {
-      "title": "Order history",
-      "order_number": "Order",
-      "order_number_link": "Order number {{ number }}",
-      "date": "Date",
-      "payment_status": "Payment status",
-      "fulfillment_status": "Fulfillment status",
-      "total": "Total",
-      "none": "You haven't placed any orders yet."
-    },
     "recover_password": {
       "title": "Reset your password",
       "subtext": "We will send you an email to reset your password",
@@ -513,60 +134,157 @@
       "submit": "Reset password"
     }
   },
-  "gift_cards": {
-    "issued": {
-      "title": "Here's your {{ value }} gift card for {{ shop }}!",
-      "subtext": "Your gift card",
-      "gift_card_code": "Gift card code",
-      "shop_link": "Continue shopping",
-      "remaining_html": "Remaining {{ balance }}",
-      "add_to_apple_wallet": "Add to Apple Wallet",
-      "qr_image_alt": "QR code — scan to redeem gift card",
-      "copy_code": "Copy code",
-      "expired": "Expired",
-      "copy_code_success": "Code copied successfully",
-      "print_gift_card": "Print"
-    }
-  },
-  "components": {
-    "countdown": {
-      "days": "days",
-      "hours": "hours",
-      "minutes": "minutes",
-      "day": "day",
-      "hour": "hour",
-      "minute": "minute",
-      "promo_begin": "Promotion starts in:",
-      "promo_remaining": "It remains only:",
-      "promo_ended": "Ended"
+  "general": {
+    "cart": {
+      "cart_error": "You can't add this item to your cart.",
+      "cart_quantity_error_html": "You can only add {{ quantity }} of this item to your cart.",
+      "view": "View my cart ({{ count }})"
     },
-    "uploader": {
-      "errors": {
-        "wrongType": "The file you are trying to import is not accepted. Only images in png, jpeg or jpg are allowed",
-        "tooLarge": "The photo you are trying to import is too large. The maximum size is 10MB",
-        "serverError": "We are sorry but we are currently experiencing a problem. We are doing our best to fix it. We invite you to send us an email to speed up the process"
+    "pagination": {
+      "label": "Pagination",
+      "page": "Page {{ number }}",
+      "next": "Next page",
+      "previous": "Previous page"
+    },
+    "password_page": {
+      "login_form_heading": "Enter store using password:",
+      "login_password_button": "Enter using password",
+      "login_form_password_label": "Password",
+      "login_form_password_placeholder": "Your password",
+      "login_form_error": "Wrong password!",
+      "login_form_submit": "Enter",
+      "admin_link_html": "Are you the store owner? <a href=\"/admin\" class=\"link underlined-link\">Log in here</a>"
+    },
+    "search": {
+      "search": "Search",
+      "search_performed": "Search results"
+    },
+    "share": {
+      "success_message": "Link copied to clipboard"
+    },
+    "social": {
+      "links": {
+        "twitter": "Twitter",
+        "facebook": "Facebook",
+        "pinterest": "Pinterest",
+        "instagram": "Instagram",
+        "tumblr": "Tumblr",
+        "snapchat": "Snapchat",
+        "youtube": "YouTube",
+        "vimeo": "Vimeo",
+        "tiktok": "TikTok"
       }
     }
   },
-  "cart_drawer": {
-    "keep_shopping": "Keep Shopping",
-    "more_than": "more than",
-    "to_get": "to get it",
-    "add": "Add",
-    "one_click": "Within reach of your hand!",
-    "at": "at"
+  "localization": {
+    "country_label": "Currency",
+    "language_label": "Language"
   },
-  "tw": {
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "on_sale": "Sale",
+      "product_variants": "Product variants",
+      "quantity": {
+        "label": "Quantity",
+        "input_label": "Quantity for {{ product }}",
+        "increase": "Increase quantity for {{ product }}",
+        "decrease": "Decrease quantity for {{ product }}"
+      },
+      "price": {
+        "from_price_html": "From {{ price }}",
+        "regular_price": "Regular price",
+        "sale_price": "Sale price",
+        "unit_price": "Unit price"
+      },
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "video_exit_message": "{{ title }} opens full screen video in same window.",
+      "pickup_availability": {
+        "view_store_info": "View store information",
+        "check_other_stores": "Check availability at other stores",
+        "pick_up_available": "Pickup available",
+        "pick_up_available_at_html": "Pickup available at <span class=\"color-foreground\">{{ location_name }}</span>",
+        "pick_up_unavailable_at_html": "Pickup currently unavailable at <span class=\"color-foreground\">{{ location_name }}</span>"
+      },
+      "media": {
+        "load_image": "Load image {{ index }} in gallery view",
+        "load_model": "Load 3D Model {{ index }} in gallery view",
+        "load_video": "Play video {{ index }} in gallery view",
+        "image_available": "Image {{ index }} is now available in gallery view",
+        "open_media": "Open media {{ index }} in modal",
+        "play_model": "Play 3D Viewer",
+        "play_video": "Play video"
+      }
+    }
+  },
+  "sections": {
+    "collections_grid": {
+      "find_out_more": "Find out more..."
+    },
+    "contact_form": {
+      "title": "Contact us",
+      "lastname": "Last name",
+      "email": "Email",
+      "phone": "Phone",
+      "send": "Send",
+      "post_success": "Your message has been sent!",
+      "error": "An error occurred while sending the message",
+      "textarea": "Your message"
+    },
+    "cookie_banner": {
+      "message-1": "Our cookies aren't edible, but they make your visit delicious!",
+      "message-2": "Ready for an enhanced experience?",
+      "parameter": "Configure",
+      "accept": "Accept",
+      "settings": {
+        "title": "Privacy Preferences",
+        "save_button": "Save preferences",
+        "accept_button": "Accept all",
+        "analytics": "Tracking analytics data",
+        "marketing": "Targeted advertising",
+        "preferences": "Collecting data to personalize user experience",
+        "sale_of_data": "Collecting data to improve products and services"
+      }
+    },
+    "footer": {
+      "accessibility": {
+        "payment": "Payment methods"
+      },
+      "home": "Home",
+      "localization": {
+        "country_label": "Currency",
+        "language_label": "Language"
+      },
+      "newsletter": {
+        "error": "An error occurred while subscribing",
+        "placeholder": "Email",
+        "subscribe": "Subscribe",
+        "success": "You are subscribed!"
+      }
+    },
+    "header": {
+      "announcement": "Announcement",
+      "back": "Back to main menu",
+      "cart_count": {
+        "one": "{{ count }} item",
+        "other": "{{ count }} items",
+        "many": "{{ count }} items"
+      },
+      "logo": {
+        "title": "Geometric logo inspired by Picasso",
+        "desc": "Logo representing a red and yellow head in geometric shapes, evoking the avant-garde style of Picasso."
+      }
+    },
     "main_collection_banner": {
       "learn_more": "Learn more",
       "fewer_details": "Show less"
     },
-    "header": {
-      "svg": {
-        "heart": {
-          "title": "Heart icon"
-        }
-      }
+    "main_collection_product_grid": {
+      "card-product": {
+        "starting_at": "Starting at"
+      },
+      "empty": "No products found"
     },
     "main_product": {
       "accessibility": {
@@ -574,14 +292,215 @@
       },
       "carousel": {
         "popup": {
-          "title": "Product Gallery",
-          "close": "Close gallery"
+          "title": "Detailed view of the product image",
+          "close": "Close"
         }
+      }
+    },
+    "my_likes": {
+      "empty_text": "You don't have any likes yet"
+    },
+    "main_404": {
+      "title": "404 Page not found",
+      "see_all_products": "See all products"
+    },
+    "page": {
+      "title": "Page title"
+    },
+    "page_cart_items": {
+      "continue_shopping": "Continue shopping",
+      "empty_message": "Your cart is empty",
+      "empty_img_cart_alt": "Cart empty",
+      "headings": {
+        "articles": "Your articles",
+        "quantity": "Quantity",
+        "total": "Total"
       },
-      "trustpilot": {
-        "score": "Trustpilot Score",
-        "excellent": "Excellent"
+      "info": "Continue shopping",
+      "personalization": "Personalization",
+      "title": "Your cart",
+      "total": "Total"
+    },
+    "page_cart_subtotal": {
+      "before_promo": "Before promotion",
+      "checkout": "Checkout",
+      "subtotal": "Subtotal"
+    },
+    "product_grid": {
+      "button": "See the product"
+    },
+    "sibling_blog_links": {
+      "complementary_blog_posts": "Complementary blog posts"
+    },
+    "slideshow": {
+      "pause_slideshow": "Pause slideshow",
+      "play_slideshow": "Play slideshow"
+    },
+    "trustpilot": {
+      "excellent": "Excellent",
+      "score": "Score"
+    },
+    "tw_cart_drawer": {
+      "checkout": "Order Now!",
+      "close": "Close",
+      "continue_shopping": "View All Wall Art",
+      "empty_message": "Your cart is empty",
+      "info": "Info",
+      "keep_shopping": "Other products",
+      "loading": "Loading",
+      "minus": "Remove one {{article}} from cart",
+      "plus": "Add {{article}} to cart",
+      "promotion": "Promotions",
+      "remove": "Remove {{article}} from cart",
+      "subtotal": "Subtotal",
+      "title": "Your cart"
+    }
+  },
+  "snippet": {
+    "card-product": {
+      "likes": "likes"
+    },
+    "icon_facebook": {
+      "title": "Facebook logo"
+    },
+    "icon_instagram": {
+      "title": "Instagram logo"
+    },
+    "icon_pinterest": {
+      "title": "Pinterest logo"
+    },
+    "icon_twitter": {
+      "title": "Twitter logo"
+    },
+    "icon_tiktok": {
+      "title": "TikTok logo"
+    },
+    "icon_youtube": {
+      "title": "YouTube logo"
+    },
+    "pagination": {
+      "label": "Pagination",
+      "page": "Page {{ number }}",
+      "next": "Next page",
+      "previous": "Previous page"
+    },
+    "paintings_data_script": {
+      "canvas_texture": "Linen canvas texture"
+    },
+    "tw_icon_bag": {
+      "title": "Shopping bag"
+    },
+    "tw_icon_close": {
+      "title": "Close"
+    },
+    "tw_icon_hamburger": {
+      "title": "Navigation"
+    },
+    "tw_icon_heart": {
+      "title": "Heart icon"
+    },
+    "tw_icon_loup": {
+      "title": "Search icon"
+    },
+    "tw_loading_hand": {
+      "loading_handler": "Hand tapping on the table to indicate that the product is loading"
+    },
+    "tw_main_product_thumbnail_image": {
+      "see_image_number": "See image {{ number }} of product"
+    },
+    "tw_predictive_search": {
+      "loading": "Loading...",
+      "input_placeholder": "Search",
+      "results": {
+        "title": "WALL ART",
+        "all": "See all wall art for «{{ terms }}»",
+        "none": "No wall art found for «{{ terms }}»"
+      }
+    },
+    "tw_sticky_header": {
+      "navigation": "Navigation",
+      "my_likes": "My likes",
+      "open_cart": "Open cart"
+    }
+  },
+  "templates": {
+    "contact": {
+      "form": {
+        "error_heading": "Please adjust the following:"
+      }
+    },
+    "gift_cards": {
+      "issued": {
+        "add_to_apple_wallet": "Add to Apple Wallet",
+        "copy_code": "Copy code",
+        "copy_code_success": "Code copied successfully",
+        "expired": "Expired",
+        "gift_card_code": "Gift card code",
+        "print_gift_card": "Print",
+        "qr_image_alt": "QR code — scan to redeem gift card",
+        "remaining_html": "Remaining {{ balance }}",
+        "shop_link": "Continue shopping",
+        "subtext": "Your gift card"
+      }
+    },
+    "search": {
+      "no_results": "No results found for “{{ terms }}”. Check the spelling or use a different word or phrase.",
+      "results_with_count": {
+        "one": "{{ count }} result",
+        "other": "{{ count }} results",
+        "many": "{{ count }} results"
+      },
+      "results_with_count_and_term": {
+        "one": "{{ count }} result found for “{{ terms }}”",
+        "other": "{{ count }} results found for “{{ terms }}”",
+        "many": "{{ count }} results found for “{{ terms }}”"
       }
     }
+  },
+  "localeImported": {
+    "40x30_cm": "40x30 cm",
+    "toile": "Canvas",
+    "sans_fixation": "Without mounting",
+    "set_de_fixation": "Mounting set",
+    "chassis_de_2cm": "2cm frame",
+    "chassis_de_4cm": "4cm frame",
+    "bordure_blanche": "White border",
+    "bordure_noire": "Black border",
+    "bordure_tire": "Stretched border",
+    "bordure_miroir": "Mirror border",
+    "bordure_plie": "Folded border",
+    "sans_cadre": "Without frame",
+    "cadre_blanc": "White frame",
+    "cadre_noir_mat": "Matte black frame",
+    "cadre_argent_ancien": "Vintage silver frame",
+    "cadre_chne_clair": "Light oak frame",
+    "cadre_noyer": "Walnut frame",
+    "aluminium": "Aluminum",
+    "crochet": "Hook",
+    "mat": "Matte",
+    "brillant": "Glossy",
+    "aluminium__plexiglas": "Aluminum + Plexiglas",
+    "sans_systme_de_fixation": "Without hanging system",
+    "60x40_cm": "60x40 cm",
+    "75x50_cm": "75x50 cm",
+    "100x75_cm": "100x75 cm",
+    "30x40_cm": "30x40 cm",
+    "40x60_cm": "40x60 cm",
+    "50x75_cm": "50x75 cm",
+    "_sans_fixation": " Without mounting",
+    "_chassis_de_2cm": " 2 cm frame",
+    "_chassis_de_4cm": " 4 cm frame",
+    "75x100_cm": "75x100 cm",
+    "40x40_cm": "40x40 cm",
+    "60x60_cm": "60x60 cm",
+    "rails": "Rails",
+    "80x80_cm": "80x80 cm",
+    "100x100_cm": "100x100 cm",
+    "80x60_cm": "80x60 cm",
+    "120x90_cm": "120x90 cm",
+    "60x80_cm": "60x80 cm",
+    "90x120_cm": "90x120 cm",
+    "20x30_cm": "20x30 cm",
+    "poster": "Poster"
   }
 }

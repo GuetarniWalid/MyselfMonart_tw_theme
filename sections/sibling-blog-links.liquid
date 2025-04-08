@@ -1,96 +1,93 @@
 {%- liquid
-    assign first_handle = article.handle | split: '/' | first
-    assign same_articles = blogs[first_handle].articles
-    assign parent_article = article.metafields.firstBlogLink.blogParent
+  assign first_handle = article.handle | split: '/' | first
+  assign same_articles = blogs[first_handle].articles
+  assign parent_article = article.metafields.firstBlogLink.blogParent
 -%}
 
-{%- assign is_empty = true -%}
 <div class="{{ section.settings.padding_top }} {{ section.settings.padding_bottom }}">
-  <h3 class="my-6">{{ 'sections.sibling-blog-links.complementary_blog_posts' | t }} :</h3>
+  <h3 class="my-6">{{ 'sections.sibling_blog_links.complementary_blog_posts' | t }} :</h3>
   <ul class="list-disc px-10">
-      {% for same_article in same_articles %}
-        {%- if same_article.metafields.firstBlogLink.parentCollection == blank and article.handle != same_article.handle and same_article.metafields.firstBlogLink.blogParent == parent_article -%}
-          {%- assign is_empty = false -%}
-            <li class="my-3">
-              <a href="{{ same_article.url }}" class="relative after:bg-main-10 after:absolute after:top-0 after:bottom-0 after:-right-1 after:-left-1 after:-skew-x-12 inline-block">{{ same_article.title }}</a>
-            </li>
-        {%- elsif article.metafields.firstBlogLink.parentCollection != blank and article.handle != same_article.handle and article.metafields.firstBlogLink.parentCollection.value.id == same_article.metafields.firstBlogLink.parentCollection.value.id -%}
-          {%- assign is_empty = false -%}
-            <li class="my-3">
-              <a href="{{ same_article.url }}" class="relative after:bg-main-10 after:absolute after:top-0 after:bottom-0 after:-right-2 after:-left-2 after:-skew-x-12 inline-block">{{ same_article.title }}</a>
-            </li>
-        {%- endif -%}
-      {% endfor %}
+    {% for same_article in same_articles %}
+      {%- if same_article.metafields.firstBlogLink.parentCollection == blank and article.handle != same_article.handle and same_article.metafields.firstBlogLink.blogParent == parent_article -%}
+        <li class="my-3">
+          <a href="{{ same_article.url }}" class="relative after:bg-main-10 after:absolute after:top-0 after:bottom-0 after:-right-1 after:-left-1 after:-skew-x-12 inline-block">{{ same_article.title }}</a>
+        </li>
+      {%- elsif article.metafields.firstBlogLink.parentCollection != blank and article.handle != same_article.handle and article.metafields.firstBlogLink.parentCollection.value.id == same_article.metafields.firstBlogLink.parentCollection.value.id -%}
+        <li class="my-3">
+          <a href="{{ same_article.url }}" class="relative after:bg-main-10 after:absolute after:top-0 after:bottom-0 after:-right-2 after:-left-2 after:-skew-x-12 inline-block">{{ same_article.title }}</a>
+        </li>
+      {%- endif -%}
+    {% endfor %}
   </ul>
 </div>
 
 {% schema %}
-{
-  "name": "t:sections.sibling-blog-links.name",
-  "class": "page-width",
-  "tag": "div",
-  "limit": 1,
-  "templates": [
-    "article"
-  ],
-  "settings": [
-    {
-      "type": "header",
-      "content": "t:sections.all.padding.section_padding_heading"
+  {
+    "name": "t:sections.sibling-blog-links.name",
+    "class": "page-width",
+    "tag": "div",
+    "limit": 1,
+    "enabled_on": {
+      "templates": ["article"]
     },
-    {
-      "type": "select",
-      "id": "padding_top",
-      "label": "t:sections.collections-pages-grid.settings.padding_top.label",
-      "options": [
-        {
-          "value": "pt-0",
-          "label": "t:sections.collections-pages-grid.settings.padding_top.options.none.label"
-        },
-        {
-          "value": "pt-8",
-          "label": "t:sections.collections-pages-grid.settings.padding_top.options.small.label"
-        },
-        {
-          "value": "pt-16",
-          "label": "t:sections.collections-pages-grid.settings.padding_top.options.medium.label"
-        },
-        {
-          "value": "pt-24",
-          "label": "t:sections.collections-pages-grid.settings.padding_top.options.large.label"
-        }
-      ],
-      "default": "pt-8"
-    },
-    {
-      "type": "select",
-      "id": "padding_bottom",
-      "label": "t:sections.collections-pages-grid.settings.padding_bottom.label",
-      "options": [
-        {
-          "value": "pb-0",
-          "label": "t:sections.collections-pages-grid.settings.padding_top.options.none.label"
-        },
-        {
-          "value": "pb-8",
-          "label": "t:sections.collections-pages-grid.settings.padding_top.options.small.label"
-        },
-        {
-          "value": "pb-16",
-          "label": "t:sections.collections-pages-grid.settings.padding_top.options.medium.label"
-        },
-        {
-          "value": "pb-24",
-          "label": "t:sections.collections-pages-grid.settings.padding_top.options.large.label"
-        }
-      ],
-      "default": "pb-8"
-    }
-  ],
-  "presets": [
-    {
-      "name": "t:sections.sibling-blog-links.name"
-    }
-  ]
-}
+    "settings": [
+      {
+        "type": "header",
+        "content": "t:sections.all.padding.section_padding_heading"
+      },
+      {
+        "type": "select",
+        "id": "padding_top",
+        "label": "t:sections.collections-pages-grid.settings.padding_top.label",
+        "options": [
+          {
+            "value": "pt-0",
+            "label": "t:sections.collections-pages-grid.settings.padding_top.options.none.label"
+          },
+          {
+            "value": "pt-8",
+            "label": "t:sections.collections-pages-grid.settings.padding_top.options.small.label"
+          },
+          {
+            "value": "pt-16",
+            "label": "t:sections.collections-pages-grid.settings.padding_top.options.medium.label"
+          },
+          {
+            "value": "pt-24",
+            "label": "t:sections.collections-pages-grid.settings.padding_top.options.large.label"
+          }
+        ],
+        "default": "pt-8"
+      },
+      {
+        "type": "select",
+        "id": "padding_bottom",
+        "label": "t:sections.collections-pages-grid.settings.padding_bottom.label",
+        "options": [
+          {
+            "value": "pb-0",
+            "label": "t:sections.collections-pages-grid.settings.padding_top.options.none.label"
+          },
+          {
+            "value": "pb-8",
+            "label": "t:sections.collections-pages-grid.settings.padding_top.options.small.label"
+          },
+          {
+            "value": "pb-16",
+            "label": "t:sections.collections-pages-grid.settings.padding_top.options.medium.label"
+          },
+          {
+            "value": "pb-24",
+            "label": "t:sections.collections-pages-grid.settings.padding_top.options.large.label"
+          }
+        ],
+        "default": "pb-8"
+      }
+    ],
+    "presets": [
+      {
+        "name": "t:sections.sibling-blog-links.name"
+      }
+    ]
+  }
 {% endschema %}

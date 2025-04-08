@@ -42,7 +42,7 @@
             src="{{ block.settings.image | image_url: width: 400 }}"
             sizes="400px"
             alt="{{ block.settings.image.alt }}"
-            height="{%- if section.settings.image_shape == square or section.settings.image_shape == circle %}336{%- else section.settings.image_shape == portrait %}448{%- endif %}"
+            height="{%- if section.settings.image_shape == "square" or section.settings.image_shape == "circle" %}336{%- else section.settings.image_shape == "portrait" %}448{%- endif %}"
             width="336"
             loading="lazy"
         >
