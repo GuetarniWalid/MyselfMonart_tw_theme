@@ -145,24 +145,24 @@
       "tw-footer": {
         "type": "tw-footer",
         "blocks": {
-          "menu_list_HXi9M9": {
+          "menu_list_nYaNwn": {
             "type": "menu_list",
             "settings": {
-              "heading": "Menu",
-              "menu": "footer"
+              "heading": "Mentions Légales",
+              "menu": "mentions-l-gales"
             }
           },
-          "menu_list_cazaD3": {
+          "menu_list_JRx6dW": {
             "type": "menu_list",
             "settings": {
-              "heading": "Un problèmes ?",
-              "menu": "un-probleme"
+              "heading": "Un problème ?",
+              "menu": "footer"
             }
           }
         },
         "block_order": [
-          "menu_list_HXi9M9",
-          "menu_list_cazaD3"
+          "menu_list_nYaNwn",
+          "menu_list_JRx6dW"
         ],
         "settings": {
           "newsletter_heading": "Recevez des offres exclusives via notre newsletter !",
