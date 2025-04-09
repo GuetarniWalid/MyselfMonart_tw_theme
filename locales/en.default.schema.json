@@ -136,39 +136,39 @@
       "settings": {
         "social_twitter_link": {
           "label": "Twitter",
-          "info": "https://twitter.com/shopify"
+          "info": "https:\/\/twitter.com\/shopify"
         },
         "social_facebook_link": {
           "label": "Facebook",
-          "info": "https://facebook.com/shopify"
+          "info": "https:\/\/facebook.com\/shopify"
         },
         "social_pinterest_link": {
           "label": "Pinterest",
-          "info": "https://pinterest.com/shopify"
+          "info": "https:\/\/pinterest.com\/shopify"
         },
         "social_instagram_link": {
           "label": "Instagram",
-          "info": "http://instagram.com/shopify"
+          "info": "http:\/\/instagram.com\/shopify"
         },
         "social_tiktok_link": {
           "label": "TikTok",
-          "info": "https://vimeo.com/shopify"
+          "info": "https:\/\/vimeo.com\/shopify"
         },
         "social_tumblr_link": {
           "label": "Tumblr",
-          "info": "http://shopify.tumblr.com"
+          "info": "http:\/\/shopify.tumblr.com"
         },
         "social_snapchat_link": {
           "label": "Snapchat",
-          "info": "https://www.snapchat.com/add/shopify"
+          "info": "https:\/\/www.snapchat.com\/add\/shopify"
         },
         "social_youtube_link": {
           "label": "YouTube",
-          "info": "https://www.youtube.com/shopify"
+          "info": "https:\/\/www.youtube.com\/shopify"
         },
         "social_vimeo_link": {
           "label": "Vimeo",
-          "info": "https://vimeo.com/shopify"
+          "info": "https:\/\/vimeo.com\/shopify"
         },
         "header": {
           "content": "Social accounts"
@@ -184,7 +184,7 @@
         },
         "type_header_font": {
           "label": "Font",
-          "info": "Selecting a different font may affect your store’s speed. [Learn more about system fonts.](https://help.shopify.com/manual/online-store/os/store-speed/improving-speed#fonts)"
+          "info": "Selecting a different font may affect your store’s speed. [Learn more about system fonts.](https:\/\/help.shopify.com\/manual\/online-store\/os\/store-speed\/improving-speed#fonts)"
         },
         "header__1": {
           "content": "Headings"
@@ -194,7 +194,7 @@
         },
         "type_body_font": {
           "label": "Font",
-          "info": "Selecting a different font may affect your store’s speed. [Learn more about system fonts.](https://help.shopify.com/manual/online-store/os/store-speed/improving-speed#fonts)"
+          "info": "Selecting a different font may affect your store’s speed. [Learn more about system fonts.](https:\/\/help.shopify.com\/manual\/online-store\/os\/store-speed\/improving-speed#fonts)"
         },
         "heading_scale": {
           "label": "Font size scale"
@@ -435,50 +435,138 @@
             },
             "icon": {
               "label": "Icon",
-              "options__1": { "label": "None" },
-              "options__2": { "label": "Apple" },
-              "options__3": { "label": "Banana" },
-              "options__4": { "label": "Bottle" },
-              "options__5": { "label": "Box" },
-              "options__6": { "label": "Carrot" },
-              "options__7": { "label": "Chat bubble" },
-              "options__8": { "label": "Check" },
-              "options__9": { "label": "Clipboard" },
-              "options__10": { "label": "Dairy" },
-              "options__11": { "label": "Dairy free" },
-              "options__12": { "label": "Dryer" },
-              "options__13": { "label": "Eye" },
-              "options__14": { "label": "Fire" },
-              "options__15": { "label": "Gluten free" },
-              "options__16": { "label": "Heart" },
-              "options__17": { "label": "Iron" },
-              "options__18": { "label": "Leaf" },
-              "options__19": { "label": "Leather" },
-              "options__20": { "label": "Lightning" },
-              "options__21": { "label": "Lipstick" },
-              "options__22": { "label": "Lock" },
-              "options__23": { "label": "Map pin" },
-              "options__24": { "label": "Nut free" },
-              "options__25": { "label": "Pants" },
-              "options__26": { "label": "Print" },
-              "options__27": { "label": "Pepper" },
-              "options__28": { "label": "Perfume" },
-              "options__29": { "label": "Plane" },
-              "options__30": { "label": "Plants" },
-              "options__31": { "label": "Price tag" },
-              "options__32": { "label": "Question mark" },
-              "options__33": { "label": "Recycle" },
-              "options__34": { "label": "Return" },
-              "options__35": { "label": "Ruler" },
-              "options__36": { "label": "Serving plate" },
-              "options__37": { "label": "Shirt" },
-              "options__38": { "label": "Shoe" },
-              "options__39": { "label": "Silhouette" },
-              "options__40": { "label": "Snowflake" },
-              "options__41": { "label": "Star" },
-              "options__42": { "label": "Stopwatch" },
-              "options__43": { "label": "Truck" },
-              "options__44": { "label": "Washing" }
+              "options__1": {
+                "label": "None"
+              },
+              "options__2": {
+                "label": "Apple"
+              },
+              "options__3": {
+                "label": "Banana"
+              },
+              "options__4": {
+                "label": "Bottle"
+              },
+              "options__5": {
+                "label": "Box"
+              },
+              "options__6": {
+                "label": "Carrot"
+              },
+              "options__7": {
+                "label": "Chat bubble"
+              },
+              "options__8": {
+                "label": "Check"
+              },
+              "options__9": {
+                "label": "Clipboard"
+              },
+              "options__10": {
+                "label": "Dairy"
+              },
+              "options__11": {
+                "label": "Dairy free"
+              },
+              "options__12": {
+                "label": "Dryer"
+              },
+              "options__13": {
+                "label": "Eye"
+              },
+              "options__14": {
+                "label": "Fire"
+              },
+              "options__15": {
+                "label": "Gluten free"
+              },
+              "options__16": {
+                "label": "Heart"
+              },
+              "options__17": {
+                "label": "Iron"
+              },
+              "options__18": {
+                "label": "Leaf"
+              },
+              "options__19": {
+                "label": "Leather"
+              },
+              "options__20": {
+                "label": "Lightning"
+              },
+              "options__21": {
+                "label": "Lipstick"
+              },
+              "options__22": {
+                "label": "Lock"
+              },
+              "options__23": {
+                "label": "Map pin"
+              },
+              "options__24": {
+                "label": "Nut free"
+              },
+              "options__25": {
+                "label": "Pants"
+              },
+              "options__26": {
+                "label": "Print"
+              },
+              "options__27": {
+                "label": "Pepper"
+              },
+              "options__28": {
+                "label": "Perfume"
+              },
+              "options__29": {
+                "label": "Plane"
+              },
+              "options__30": {
+                "label": "Plants"
+              },
+              "options__31": {
+                "label": "Price tag"
+              },
+              "options__32": {
+                "label": "Question mark"
+              },
+              "options__33": {
+                "label": "Recycle"
+              },
+              "options__34": {
+                "label": "Return"
+              },
+              "options__35": {
+                "label": "Ruler"
+              },
+              "options__36": {
+                "label": "Serving plate"
+              },
+              "options__37": {
+                "label": "Shirt"
+              },
+              "options__38": {
+                "label": "Shoe"
+              },
+              "options__39": {
+                "label": "Silhouette"
+              },
+              "options__40": {
+                "label": "Snowflake"
+              },
+              "options__41": {
+                "label": "Star"
+              },
+              "options__42": {
+                "label": "Stopwatch"
+              },
+              "options__43": {
+                "label": "Truck"
+              },
+              "options__44": {
+                "label": "Washing"
+              }
             }
           }
         }
@@ -488,7 +576,7 @@
       }
     },
     "collections-pages-grid": {
-      "name": "Collections/pages grid",
+      "name": "Collections\/pages grid",
       "settings": {
         "padding_top": {
           "label": "Top margin",
@@ -623,7 +711,7 @@
       "name": "Email signup banner",
       "settings": {
         "paragraph": {
-          "content": "Each email signup creates a customer account. [Learn more](https://help.shopify.com/manual/customers)"
+          "content": "Each email signup creates a customer account. [Learn more](https:\/\/help.shopify.com\/manual\/customers)"
         },
         "image": {
           "label": "Background image"
@@ -642,7 +730,7 @@
         },
         "show_text_below": {
           "label": "Show content below image on mobile",
-          "info": "For best results, use a 16:9 aspect ratio image. [Learn more](https://help.shopify.com/manual/shopify-admin/productivity-tools/image-editor#understanding-image-aspect-ratio)"
+          "info": "For best results, use a 16:9 aspect ratio image. [Learn more](https:\/\/help.shopify.com\/manual\/shopify-admin\/productivity-tools\/image-editor#understanding-image-aspect-ratio)"
         },
         "image_height": {
           "label": "Banner height",
@@ -658,7 +746,7 @@
           "options__4": {
             "label": "Large"
           },
-          "info": "For best results, use a 16:9 aspect ratio image. [Learn more](https://help.shopify.com/manual/shopify-admin/productivity-tools/image-editor#understanding-image-aspect-ratio)"
+          "info": "For best results, use a 16:9 aspect ratio image. [Learn more](https:\/\/help.shopify.com\/manual\/shopify-admin\/productivity-tools\/image-editor#understanding-image-aspect-ratio)"
         },
         "desktop_content_position": {
           "label": "Content position on desktop",
@@ -769,7 +857,7 @@
         },
         "show_image": {
           "label": "Show featured images",
-          "info": "For best results, use a 3:2 aspect ratio image. [Learn more](https://help.shopify.com/manual/shopify-admin/productivity-tools/image-editor#understanding-image-aspect-ratio)"
+          "info": "For best results, use a 3:2 aspect ratio image. [Learn more](https:\/\/help.shopify.com\/manual\/shopify-admin\/productivity-tools\/image-editor#understanding-image-aspect-ratio)"
         },
         "show_date": {
           "label": "Show date"
@@ -831,7 +919,7 @@
         },
         "logo": {
           "label": "SVG logo",
-          "info": "e.g. <svg ...></svg>"
+          "info": "e.g. <svg ...><\/svg>"
         },
         "logo_with_original_color": {
           "label": "Use original logo colors"
@@ -847,7 +935,7 @@
         },
         "header__1": {
           "content": "Newsletter signup",
-          "info": "Subscribers are automatically added to your 'accepts marketing' customer list. [Learn more](https://help.shopify.com/manual/customers/manage-customers)"
+          "info": "Subscribers are automatically added to your 'accepts marketing' customer list. [Learn more](https:\/\/help.shopify.com\/manual\/customers\/manage-customers)"
         },
         "header__2": {
           "content": "Social media icons",
@@ -857,19 +945,19 @@
           "label": "Show social media icons"
         },
         "header__3": {
-          "content": "Country/region selector"
+          "content": "Country\/region selector"
         },
         "header__4": {
-          "info": "To add a country/region, go to your [payment settings](/admin/settings/payments)"
+          "info": "To add a country\/region, go to your [payment settings](\/admin\/settings\/payments)"
         },
         "enable_country_selector": {
-          "label": "Enable country/region selector"
+          "label": "Enable country\/region selector"
         },
         "header__5": {
           "content": "Language selector"
         },
         "header__6": {
-          "info": "To add a language, go to your [language settings](/admin/settings/languages)"
+          "info": "To add a language, go to your [language settings](\/admin\/settings\/languages)"
         },
         "enable_language_selector": {
           "label": "Enable language selector"
@@ -907,7 +995,7 @@
       "settings": {
         "logo_svg": {
           "label": "SVG logo",
-          "info": "e.g. <svg ...></svg>"
+          "info": "e.g. <svg ...><\/svg>"
         }
       },
       "blocks": {
@@ -1202,51 +1290,139 @@
               "label": "Page Row Content"
             },
             "icon": {
-              "options__1": { "label": "None" },
-              "options__2": { "label": "Apple" },
-              "options__3": { "label": "Banana" },
-              "options__4": { "label": "Bottle" },
-              "options__5": { "label": "Box" },
-              "options__6": { "label": "Carrot" },
-              "options__7": { "label": "Chat Bubble" },
-              "options__8": { "label": "Checkmark" },
-              "options__9": { "label": "Clipboard" },
-              "options__10": { "label": "Dairy" },
-              "options__11": { "label": "Dairy-Free" },
-              "options__12": { "label": "Dryer" },
-              "options__13": { "label": "Eye" },
-              "options__14": { "label": "Fire" },
-              "options__15": { "label": "Gluten-Free" },
-              "options__16": { "label": "Heart" },
-              "options__17": { "label": "Iron" },
-              "options__18": { "label": "Leaf" },
-              "options__19": { "label": "Leather" },
-              "options__20": { "label": "Lightning" },
-              "options__21": { "label": "Lipstick" },
-              "options__22": { "label": "Lock" },
-              "options__23": { "label": "Map Pin" },
-              "options__24": { "label": "Nut-Free" },
+              "options__1": {
+                "label": "None"
+              },
+              "options__2": {
+                "label": "Apple"
+              },
+              "options__3": {
+                "label": "Banana"
+              },
+              "options__4": {
+                "label": "Bottle"
+              },
+              "options__5": {
+                "label": "Box"
+              },
+              "options__6": {
+                "label": "Carrot"
+              },
+              "options__7": {
+                "label": "Chat Bubble"
+              },
+              "options__8": {
+                "label": "Checkmark"
+              },
+              "options__9": {
+                "label": "Clipboard"
+              },
+              "options__10": {
+                "label": "Dairy"
+              },
+              "options__11": {
+                "label": "Dairy-Free"
+              },
+              "options__12": {
+                "label": "Dryer"
+              },
+              "options__13": {
+                "label": "Eye"
+              },
+              "options__14": {
+                "label": "Fire"
+              },
+              "options__15": {
+                "label": "Gluten-Free"
+              },
+              "options__16": {
+                "label": "Heart"
+              },
+              "options__17": {
+                "label": "Iron"
+              },
+              "options__18": {
+                "label": "Leaf"
+              },
+              "options__19": {
+                "label": "Leather"
+              },
+              "options__20": {
+                "label": "Lightning"
+              },
+              "options__21": {
+                "label": "Lipstick"
+              },
+              "options__22": {
+                "label": "Lock"
+              },
+              "options__23": {
+                "label": "Map Pin"
+              },
+              "options__24": {
+                "label": "Nut-Free"
+              },
               "label": "Icon",
-              "options__25": { "label": "Pants" },
-              "options__26": { "label": "Footprint" },
-              "options__27": { "label": "Pepper" },
-              "options__28": { "label": "Perfume" },
-              "options__29": { "label": "Plane" },
-              "options__30": { "label": "Plants" },
-              "options__31": { "label": "Price Tag" },
-              "options__32": { "label": "Question Mark" },
-              "options__33": { "label": "Recycling" },
-              "options__34": { "label": "Return" },
-              "options__35": { "label": "Ruler" },
-              "options__36": { "label": "Serving Dish" },
-              "options__37": { "label": "Shirt" },
-              "options__38": { "label": "Shoe" },
-              "options__39": { "label": "Silhouette" },
-              "options__40": { "label": "Snowflake" },
-              "options__41": { "label": "Star" },
-              "options__42": { "label": "Stopwatch" },
-              "options__43": { "label": "Truck" },
-              "options__44": { "label": "Washing" }
+              "options__25": {
+                "label": "Pants"
+              },
+              "options__26": {
+                "label": "Footprint"
+              },
+              "options__27": {
+                "label": "Pepper"
+              },
+              "options__28": {
+                "label": "Perfume"
+              },
+              "options__29": {
+                "label": "Plane"
+              },
+              "options__30": {
+                "label": "Plants"
+              },
+              "options__31": {
+                "label": "Price Tag"
+              },
+              "options__32": {
+                "label": "Question Mark"
+              },
+              "options__33": {
+                "label": "Recycling"
+              },
+              "options__34": {
+                "label": "Return"
+              },
+              "options__35": {
+                "label": "Ruler"
+              },
+              "options__36": {
+                "label": "Serving Dish"
+              },
+              "options__37": {
+                "label": "Shirt"
+              },
+              "options__38": {
+                "label": "Shoe"
+              },
+              "options__39": {
+                "label": "Silhouette"
+              },
+              "options__40": {
+                "label": "Snowflake"
+              },
+              "options__41": {
+                "label": "Star"
+              },
+              "options__42": {
+                "label": "Stopwatch"
+              },
+              "options__43": {
+                "label": "Truck"
+              },
+              "options__44": {
+                "label": "Washing"
+              }
             },
             "icon_color": {
               "label": "Icon Color"
@@ -1411,7 +1587,7 @@
         },
         "show_rating": {
           "label": "Show product rating",
-          "info": "To show a rating, add a product review app. [Learn more](https://help.shopify.com/manual/online-store/themes/theme-structure/page-types#search-results-section-settings)"
+          "info": "To show a rating, add a product review app. [Learn more](https:\/\/help.shopify.com\/manual\/online-store\/themes\/theme-structure\/page-types#search-results-section-settings)"
         },
         "header_mobile": {
           "content": "Mobile layout"
@@ -1519,7 +1695,7 @@
           "label": "Make section full width"
         },
         "paragraph": {
-          "content": "Each email subscription creates a customer account. [Learn more](https://help.shopify.com/manual/customers)"
+          "content": "Each email subscription creates a customer account. [Learn more](https:\/\/help.shopify.com\/manual\/customers)"
         }
       },
       "blocks": {
@@ -1643,11 +1819,11 @@
           "label": "Show vendor"
         },
         "paragraph__1": {
-          "content": "Dynamic recommendations use order and product information to change and improve over time. [Learn more](https://help.shopify.com/themes/development/recommended-products)"
+          "content": "Dynamic recommendations use order and product information to change and improve over time. [Learn more](https:\/\/help.shopify.com\/themes\/development\/recommended-products)"
         },
         "show_rating": {
           "label": "Show product rating",
-          "info": "To show a rating, add a product review app. [Learn more](https://help.shopify.com/manual/online-store/themes/theme-structure/page-types#product-recommendations-section-settings)"
+          "info": "To show a rating, add a product review app. [Learn more](https:\/\/help.shopify.com\/manual\/online-store\/themes\/theme-structure\/page-types#product-recommendations-section-settings)"
         },
         "columns_desktop": {
           "label": "Number of columns on desktop"
@@ -1793,7 +1969,7 @@
         },
         "description": {
           "label": "Video alt text",
-          "info": "Describe the video for customers using screen readers. [Learn more](https://help.shopify.com/manual/online-store/themes/theme-structure/theme-features#video)"
+          "info": "Describe the video for customers using screen readers. [Learn more](https:\/\/help.shopify.com\/manual\/online-store\/themes\/theme-structure\/theme-features#video)"
         },
         "image_padding": {
           "label": "Add padding to image",
