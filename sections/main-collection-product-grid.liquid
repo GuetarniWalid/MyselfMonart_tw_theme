@@ -110,7 +110,7 @@
               "priceCurrency": "{{ shop.currency }}",
               "price": "{{ price_min |  divided_by: 100.00 }}",
               "availability": "https://schema.org/InStock",
-              "url": "{{ shop.url }} {{ product.url }}"
+              "url": "{{ shop.url }}{{ product.url }}"
             }
           }
         }{% unless forloop.last %},{% endunless %}
