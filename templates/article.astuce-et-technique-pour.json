@@ -3,8 +3,7 @@
   "sections": {
     "ce4595e5-01e5-472d-ac56-563a87ef335c": {
       "type": "first-blog-link",
-      "settings": {
-      }
+      "settings": {}
     },
     "main": {
       "type": "main-article",
@@ -41,6 +40,9 @@
         "description": "<p>Si vous êtes en manque d'imagination ou à la recherche d'idées farfelues pour décorer votre cuisine, nous avons déniché pour vous des petites astuces qui permettront de redonner un coup de jeune à votre cuisine. Alors découvrez sans plus attendre les astuces de nos designers pour décorer votre cuisine. Et si vous souhaitez en savoir plus, découvrez l'article complet <a href=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/comment-faire-la-decoration-de-ma-cuisine\" title=\"Comment faire la décoration de ma cuisine\">Comment faire la décoration de ma cuisine ?<\/a><\/p>",
         "layout": "image_first",
         "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#e3fae1",
         "padding_top": "pt-0",
         "padding_bottom": "pb-8"
       }
@@ -74,6 +76,9 @@
         "description": "<p>Pour concevoir ou rénover une cuisine, le choix de la couleur est crucial.<\/p><p>Vous savez probablement à quel point il peut être difficile de choisir la bonne couleur pour les murs, les armoires, et même du plancher. Si vous êtes en quête de conseils pour trouver une couleur qui résiste aux taches, à l'humidité et à la graisse, nous vous invitons à consulter notre blog : \"<a href=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/quelle-est-la-couleur-la-moins-salissante-pour-une-cuisine\" target=\"_blank\" title=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/quelle-est-la-couleur-la-moins-salissante-pour-une-cuisine\">Quelle est la couleur la moins<br\/>salissante pour une cuisine ?<\/a> Alors n'hésitez pas à nous rendre visite pour découvrir nos précieux conseils !<\/p>",
         "layout": "text_first",
         "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#e3fae1",
         "padding_top": "pt-0",
         "padding_bottom": "pb-16"
       }
@@ -107,6 +112,9 @@
         "description": "<p>Besoin de donner un nouveau look à votre cuisine sans tout changer ? <\/p><p>Notre dernier article regorge de conseils pratiques pour transformer votre espace culinaire en un lieu fonctionnel et esthétique. Que vous souhaitiez moderniser vos armoires, changer le revêtement de sol ou ajouter des éléments de décoration, nous avons toutes les astuces pour vous aider à donner un coup de neuf à votre cuisine sans vous ruiner. <\/p><p><strong>Découvrez dès maintenant nos astuces sur notre blog \" <\/strong><a href=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/comment-donner-un-coup-de-neuf-a-sa-cuisine\" target=\"_blank\" title=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/comment-donner-un-coup-de-neuf-a-sa-cuisine\">Comment donner un coup de neuf à sa cuisine ?<\/a><\/p>",
         "layout": "image_first",
         "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#e3fae1",
         "padding_top": "pt-0",
         "padding_bottom": "pb-16"
       }
@@ -140,6 +148,9 @@
         "description": "<p>Vous voulez donner une touche personnelle à votre espace intérieur avec un tableau de décoration, mais choisir la bonne taille peut être un véritable casse-tête. C'est pourquoi notre blog \"<a href=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/quelle-taille-de-tableau-choisir\" target=\"_blank\" title=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/quelle-taille-de-tableau-choisir\">Comment bien choisir la taille de son tableau de décoration ?\"<\/a> est là pour vous aider. <\/p><p>Nous avons rassemblé des astuces pratiques et des conseils d'experts en décoration  pour vous aider à déterminer la taille idéale qui conviendra à votre espace. Laissez-nous vous guider pour trouver le tableau mural parfait pour votre intérieur.<\/p>",
         "layout": "text_first",
         "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#e3fae1",
         "padding_top": "pt-0",
         "padding_bottom": "pb-16"
       }
@@ -173,6 +184,9 @@
         "description": "<p>Choisir le bon matériau pour votre tableau de décoration peut être difficile, que vous préfériez le bois chaleureux, la toile classique ou l'élégance de l'aluminium. Notre blog \"<a href=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/le-guide-ultime-pour-choisir-la-matiere-ideale-pour-votre-tableau-de-decoration\" target=\"_blank\" title=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/le-guide-ultime-pour-choisir-la-matiere-ideale-pour-votre-tableau-de-decoration\">Quelle matière de tableau déco choisir pour son intérieur <\/a>?\" vous guidera à travers les avantages et les inconvénients de chaque matériau, pour que vous puissiez choisir celui qui convient le mieux à votre espace et à votre style. <\/p><p><strong>Trouvez le tableau parfait pour votre décoration murale grâce aux conseils de nos experts en décoration d'intérieur.<\/strong><\/p>",
         "layout": "image_first",
         "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#e3fae1",
         "padding_top": "pt-0",
         "padding_bottom": "pb-16"
       }
@@ -206,6 +220,9 @@
         "description": "<p>Vous avez enfin trouvé le tableau parfait pour votre décoration murale, mais vous ne savez pas comment l'accrocher ? <\/p><p>Pas de panique, notre blog est là pour vous aider ! Dans cet article, nous vous donnons des astuces et des conseils pratiques pour accrocher votre tableau en toute sécurité et de manière esthétique. Suivez nos étapes simples et vous pourrez suspendre votre œuvre d'art en un rien de temps. <\/p><p><strong>Découvrez dès maintenant notre guide complet<\/strong> <a href=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/accrocher-un-tableau-en-toute-securite-nos-solutions-et-astuces-pratiques\" target=\"_blank\" title=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/accrocher-un-tableau-en-toute-securite-nos-solutions-et-astuces-pratiques\">pour accrocher votre tableau comme un pro<\/a><\/p>",
         "layout": "text_first",
         "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#e3fae1",
         "padding_top": "pt-0",
         "padding_bottom": "pb-16"
       }
@@ -239,6 +256,9 @@
         "description": "<p>Si vous êtes passionné d'art, vous savez que l'éclairage joue un rôle crucial dans la mise en valeur d'un tableau.<\/p><p>Un bon éclairage peut révéler les couleurs, les détails et les textures d'une œuvre d'art, alors qu'un mauvais éclairage ou un éclairage trop fort peut entraîner une décoloration ou une modification des pigmentations tout en fragilisant votre tableau décoratif. <\/p><p>Alors, êtes-vous prêt à donner vie à votre art ? Lisez la suite pour en savoir plus ! <a href=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/mettez-votre-art-en-lumiere-conseils-pour-eclairer-un-tableau-decoratif-comme-un-pro\" target=\"_blank\" title=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/mettez-votre-art-en-lumiere-conseils-pour-eclairer-un-tableau-decoratif-comme-un-pro\">Mettez votre art en lumière !<\/a><\/p>",
         "layout": "image_first",
         "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#e3fae1",
         "padding_top": "pt-0",
         "padding_bottom": "pb-16"
       }
@@ -301,6 +321,8 @@
     "11ed1855-d812-4ccc-8f80-65a14ff1c6bd": {
       "type": "sibling-blog-links",
       "settings": {
+        "padding_top": "pt-8",
+        "padding_bottom": "pb-8"
       }
     }
   },
