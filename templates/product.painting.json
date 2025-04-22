@@ -25,15 +25,9 @@
         "trustpilot_review_9q3NVM": {
           "type": "trustpilot_review",
           "settings": {
-            "trustpilot_score": 44,
+            "trustpilot_score": 45,
             "link": "https:\/\/fr.trustpilot.com\/review\/myselfmonart.com",
             "margin_bottom": "mb-8"
-          }
-        },
-        "8600f603-2d6f-4191-8020-3678432ba1e5": {
-          "type": "text",
-          "settings": {
-            "text": "<p>✨ <strong>Des détails riches et profonds<\/strong> <\/p><p>✨ <strong>Une œuvre qui attire tous les regards.<\/strong> <\/p><p><strong> <\/strong>✨ <strong>Une qualité qui traverse le temps.<\/strong> <\/p><p><\/p><p><\/p><p><\/p>"
           }
         },
         "9f20570b-1a97-4c34-8758-c5af9b8d2cfc": {
@@ -81,7 +75,6 @@
         "likes_t9U7Ay",
         "title",
         "trustpilot_review_9q3NVM",
-        "8600f603-2d6f-4191-8020-3678432ba1e5",
         "9f20570b-1a97-4c34-8758-c5af9b8d2cfc",
         "buy_qrRzcg",
         "collapsible_tab_HAUcNw",
@@ -130,7 +123,7 @@
             "logo_size": 55,
             "background_plus_border": true,
             "heading": "Fiable",
-            "text": "Paiement sécurisé - Achetez en toute confiance - Satisfaction garanti.."
+            "text": "10 jours pour changer d'avis : Satisfait ou remboursé."
           }
         }
       },
@@ -342,45 +335,6 @@
         "duration_image_appearance": 5
       }
     },
-    "bf44dcab-c1df-4c80-b75a-9ee39a6bfe2e": {
-      "type": "badges",
-      "blocks": {
-        "ef364299-4b9c-463a-a50d-210af473e95e": {
-          "type": "number_block",
-          "settings": {
-            "number": 1,
-            "heading": "Paiement sécuriser",
-            "text": "Choisissez parmi nos différentes options  : CB - PAYPAL - KLARNA 3X sans frais."
-          }
-        },
-        "dc1cd24a-b307-4124-abb9-b1ac55ba1e6b": {
-          "type": "number_block",
-          "settings": {
-            "number": 2,
-            "heading": "Livraison Rapide",
-            "text": "Recevez votre commande en un clin d'œil, au pied de votre porte !"
-          }
-        },
-        "434fa092-b676-4395-a95a-9922006fa7db": {
-          "type": "number_block",
-          "settings": {
-            "number": 3,
-            "heading": "Retour ou Échange",
-            "text": "10 jours pour changer d'avis : Satisfait ou remboursé."
-          }
-        }
-      },
-      "block_order": [
-        "ef364299-4b9c-463a-a50d-210af473e95e",
-        "dc1cd24a-b307-4124-abb9-b1ac55ba1e6b",
-        "434fa092-b676-4395-a95a-9922006fa7db"
-      ],
-      "settings": {
-        "title": "",
-        "nb_columns_on_computer": "3",
-        "nb_columns_on_mobile": "1"
-      }
-    },
     "product_carrousel_a4kUVw": {
       "type": "product-carrousel",
       "settings": {
@@ -550,59 +504,6 @@
       "settings": {
         "heading": "QUESTIONS FRÉQUENTES"
       }
-    },
-    "multicolumn_aLxMGX": {
-      "type": "multicolumn",
-      "blocks": {
-        "column_fN6DfA": {
-          "type": "column",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/service-client.jpg",
-            "title": "Service client réactif",
-            "text": "<p>Par mail ou téléphone, c’est toujours avec joie que nous échangeons avec vous, pour vous offrir une expérience exceptionnelle<\/p>",
-            "link_label": "",
-            "link": "",
-            "to_obfuscate": false
-          }
-        },
-        "column_zAm3tT": {
-          "type": "column",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/abstrait_0813b814-d296-4836-9cd6-7fee7cbc58dd.jpg",
-            "title": "Créations originales et sur-mesure",
-            "text": "<p>Nos graphistes sont prêts à transformer vos idées en créations uniques et sur-mesure !<\/p>",
-            "link_label": "",
-            "link": "",
-            "to_obfuscate": false
-          }
-        },
-        "column_U3DQjE": {
-          "type": "column",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/fabrixation-francaise.jpg",
-            "title": "Fabrication Française",
-            "text": "<p>Chaque tableau que nous créons est le reflet de notre engagement envers l'excellence et la durabilité du savoir-faire français. <\/p>",
-            "link_label": "",
-            "link": "",
-            "to_obfuscate": false
-          }
-        }
-      },
-      "block_order": [
-        "column_fN6DfA",
-        "column_zAm3tT",
-        "column_U3DQjE"
-      ],
-      "disabled": true,
-      "settings": {
-        "title": "NOS GARANTIES",
-        "image_shape": "aspect-square object-cover",
-        "columns_desktop": 3,
-        "show_backgounds": false,
-        "button_label": "",
-        "button_link": "",
-        "to_obfuscate": false
-      }
     }
   },
   "order": [
@@ -610,15 +511,13 @@
     "main",
     "badges_CQWfDx",
     "customer_testimonial_myiwee",
-    "bf44dcab-c1df-4c80-b75a-9ee39a6bfe2e",
     "product_carrousel_a4kUVw",
     "main-product-recommendations",
     "b5027902-4240-44cf-8660-b6e754562c52",
     "afe2a87a-371e-4c67-93b7-8c6b2244f43b",
     "556b5926-5cdb-4c50-a817-c79f15894cdd",
     "shifted_image_carousel_mwTU9T",
-    "7ae13aad-330c-4fa7-94cf-fafc1c13cf60",
-    "multicolumn_aLxMGX"
+    "7ae13aad-330c-4fa7-94cf-fafc1c13cf60"
   ],
   "layout": "product"
 }

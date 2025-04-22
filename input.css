@@ -1,7 +1,7 @@
 :root {
   --anim-motion: cubic-bezier(0.17, 0.67, 0.61, 1.06);
 }
-*:empty:not(svg *, img, input, textarea, hr, model-viewer, br, .croppr-region, .croppr-overlay, .croppr-handleContainer) {
+*:empty:not(svg *, img, input, textarea, hr, model-viewer, br, #overlay-content, .croppr-region, .croppr-overlay, .croppr-handleContainer) {
   display: none;
 }
 summary::-webkit-details-marker {
