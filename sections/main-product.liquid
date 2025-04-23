@@ -449,12 +449,12 @@
               "@type": "Organization",
               "name": "{{ product.vendor }}"
             }
-            {%- if reviews_structured_data != blank -%}
-              ,{{ reviews_structured_data }}
-            {%- endif -%}
           }{% unless forloop.last %},{% endunless %}
         {%- endfor -%}
       ]
+      {%- if reviews_structured_data != blank -%}
+        ,{{ reviews_structured_data }}
+      {%- endif -%}
     }
   </script>
 {% endif %}
