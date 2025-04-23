@@ -3,10 +3,10 @@
     "2b3b46e7-881c-4925-96cf-76c7ebf203c4": {
       "type": "image-banner",
       "settings": {
-        "image_desktop": "shopify:\/\/shop_images\/deco-mural-tapisserie-poster-tableau-toile.jpg",
+        "image_desktop": "shopify:\/\/shop_images\/decoration-murale-tableau-fleurs_1.jpg",
         "image_desktop_horizontal_position": "center",
-        "image_mobile": "shopify:\/\/shop_images\/deco-murale-tableau-sur-toile-pop-art-dans-bureau-design_3d9b4ef8-8c73-495e-9203-9b7e9cf26541.jpg",
-        "image_mobile_vertical_position": "center",
+        "image_mobile": "shopify:\/\/shop_images\/TABLEAU-DECO-NATURE.jpg",
+        "image_mobile_vertical_position": "bottom",
         "enable_lazy_loading": true
       }
     },
@@ -197,7 +197,7 @@
         "column_jdnQLQ": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/poster-encadrer.jpg",
+            "image": "shopify:\/\/shop_images\/poster-encadrer-cadre-bois-noir-mat.jpg",
             "title": "Poster & Affiche",
             "text": "<p>Ajoutez une touche chaleureuse et personnalisée à vos murs avec nos posters encadrés, parfaits pour créer une atmosphère accueillante et conviviale.<\/p>",
             "link_label": "",
@@ -219,7 +219,7 @@
         "column_a4RPCk": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/impression-poster.jpg",
+            "image": "shopify:\/\/shop_images\/impression-poster-haute-qualite-resolution-300dpi.jpg",
             "title": "Papier Peint",
             "text": "<p>Transformez vos espaces avec du papier peint aux couleurs éclatantes et au design brillant, pour un rendu haut de gamme qui illumine vos murs.<\/p>",
             "link_label": "",
