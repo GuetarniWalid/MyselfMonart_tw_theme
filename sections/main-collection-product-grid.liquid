@@ -80,7 +80,7 @@
           "url": "{{ shop.url }} {{ product.url }}",
           "item": {
             "@type": "Product",
-            "name": "{{ product.title }}",
+            "name": {{ product.title | strip_html | json }},
             {%- liquid
               if product.template_suffix == "painting"
                 if product.images[1].aspect_ratio < 1
@@ -100,7 +100,7 @@
                 assign price_min = product.price_min
                 assign product_image = product.featured_image | image_url: width: product.featured_image.preview_image.width | prepend: "https:"
               endif -%} "image": "{{ product_image }}",
-            "description": "{{ product.description | strip_html | escape }}",
+            "description": {{ product.description | strip_html | json }},
             "brand": {
               "@type": "Brand",
               "name": "{{ shop.name }}"
