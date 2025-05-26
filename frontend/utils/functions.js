@@ -1,3 +1,24 @@
+export function getOptionsByType(type) {
+  return Object.entries(window.paintingOptions[type]).map(
+    ([key, option]) => option,
+  );
+}
+
+export function getVariantBySizeAndMatter(size, matter) {
+  return window.variants.find(variant => variant.option1 === size && variant.option2 === matter);
+}
+
+export function getOptionsList() {
+  return Object.entries(window.paintingOptions).map(([key, option]) => option);
+}
+
+export function isOptionExisting(option, sizeSelected, matterSelected) {
+  if (option.availableOn === null) return true;
+  return option.availableOn.includes(
+    `${sizeSelected.key}/${matterSelected.key}`,
+  );
+}
+
 export function getProductSize(size) {
   const [width, height] = size.split('x').map(Number);
 
@@ -21,32 +42,11 @@ export function getWidthAccordingScene(percent, sceneWidth) {
   return (percent * sceneWidth) / 100;
 }
 
-export function getTechnicalKey(technicaltype = '', technicalName = '', matter = '') {
-  if (typeof technicalName === 'number') {
-    technicalName = String(technicalName);
-  }
-
-  const technicalNamesWithoutUnderscore = technicalName.split('_');
-  const technicalNamesWithoutDash = technicalNamesWithoutUnderscore.map(
-    (word) => {
-      return word.split('-');
-    },
-  );
-  const technicalNameSplit = technicalNamesWithoutDash.flat();
-  const technicalNameSplitUppercase = technicalNameSplit.map((word) => {
-    return word.charAt(0).toUpperCase() + word.slice(1);
-  });
-
-  const matterUppercase = matter.charAt(0).toUpperCase() + matter.slice(1);
-
-  if(technicaltype === "frame" && technicalName !== "null") {
-    return technicaltype + matterUppercase + technicalNameSplitUppercase.join('');
-  }
-
-  return technicaltype + technicalNameSplitUppercase.join('');
-}
-
-export function getRelativeImageSize(realWidthInCm, productSize, productWidthInPx) {
+export function getRelativeImageSize(
+  realWidthInCm,
+  productSize,
+  productWidthInPx,
+) {
   const productWidthInCm = productSize?.width ?? 40;
   const ratioProductCmToPx = productWidthInPx / productWidthInCm;
   const imageWidthInPx = realWidthInCm * ratioProductCmToPx;

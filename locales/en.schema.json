@@ -987,9 +987,9 @@
       "name": {
         "painting": "Header for paintings",
         "page": "Header for page",
-        "page_painting": "Header for painting page",
-        "page_poster": "Header for poster page",
-        "page_tapestry": "Header for tapestry page",
+        "page_painting": "Header painting page",
+        "page_poster": "Header poster page",
+        "page_tapestry": "Header tapestry page",
         "tapestry": "Header for tapestries"
       },
       "settings": {

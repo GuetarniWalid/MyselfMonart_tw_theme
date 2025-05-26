@@ -1,45 +1,32 @@
 import Radios from './Radios';
 import RadioContainer from './RadioContainer';
-import data from '../data/data';
 import { v4 } from 'uuid';
-import useProductData from '../hooks/useProductData';
+import { getOptionsList, isOptionExisting } from '../utils/functions';
+import { useVariantSelected } from '../store/variantSelected';
 
 export default function RadioContainers({
-  optionSets,
-  optionIndecesSelected,
-  setOptionIndecesSelected,
-  setCurrentOption,
   drawerOpen,
-  CloseButtonRef,
-  focusedElemRef,
 }) {
-  const { matter } = useProductData(optionIndecesSelected, optionSets);
+  const [sizeSelected] = useVariantSelected.size();
+  const [matterSelected] = useVariantSelected.matter();
 
   //without sizes
-  const radios = optionSets.slice(1).map((optionSet, index) => {
-    const labelGroupId =
-      'labelGroupId' + data[optionSet[0].technicalType].radio.title.split(' ').join('');
+  const optionsList = getOptionsList().slice(1);
+  const availableOptionsList = optionsList.filter(options => options.filter(option => isOptionExisting(option, sizeSelected, matterSelected)).length > 1);
+
+  const radios = availableOptionsList.map((options, index) => {
     return (
       <RadioContainer
         key={v4()}
         bulletNb={index + 2}
-        title={data[optionSet[0].technicalType].radio.title}
+        title={options[0].radio.container.title}
         hasSelector={false}
-        labelGroupId={labelGroupId}
       >
         <Radios
-          optionSet={optionSet}
-          optionIndexSelected={optionIndecesSelected[index + 1]}
-          optionIndecesSelected={optionIndecesSelected}
-          setOptionIndecesSelected={setOptionIndecesSelected}
+          options={options}
           indexContainer={index + 1}
-          setCurrentOption={setCurrentOption}
           drawerOpen={drawerOpen}
-          CloseButtonRef={CloseButtonRef}
-          isLastContainer={index === optionSets.length - 2}
-          labelGroupId={labelGroupId}
-          focusedElemRef={focusedElemRef}
-          matter={matter}
+          isLastContainer={index === availableOptionsList.length - 1}
         />
       </RadioContainer>
     );

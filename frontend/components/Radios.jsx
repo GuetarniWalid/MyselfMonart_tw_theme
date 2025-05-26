@@ -1,42 +1,29 @@
 import Radio from './Radio';
 import { v4 } from 'uuid';
+import { useVariantSelected } from '../store/variantSelected';
+import { isOptionExisting } from '../utils/functions';
 
 export default function Radios({
-  optionSet,
-  optionIndexSelected,
-  optionIndecesSelected,
-  setOptionIndecesSelected,
+  options,
   indexContainer,
-  setCurrentOption,
   drawerOpen,
-  CloseButtonRef,
   isLastContainer,
-  labelGroupId,
-  focusedElemRef,
-  matter,
 }) {
+  const [sizeSelected] = useVariantSelected.size();
+  const [matterSelected] = useVariantSelected.matter();
+  const availableOptions = options.filter(option => isOptionExisting(option, sizeSelected, matterSelected));
+
   return (
-    <div
-      className="flex flex-wrap"
-      role="radiogroup"
-      aria-labelledby={labelGroupId}
-    >
-      {optionSet.map((option, index) => {
+    <div className="flex flex-wrap" role="radiogroup">
+      {availableOptions.map((option, index) => {
         return (
           <Radio
             key={v4()}
             option={option}
             index={index}
-            optionIndecesSelected={optionIndecesSelected}
-            setOptionIndecesSelected={setOptionIndecesSelected}
             indexContainer={indexContainer}
-            setCurrentOption={setCurrentOption}
             drawerOpen={drawerOpen}
-            CloseButtonRef={CloseButtonRef}
-            isLastRadio={index === optionSet.length - 1 && isLastContainer}
-            isChecked={optionIndexSelected === index}
-            focusedElemRef={focusedElemRef}
-            matter={matter}
+            isLastRadio={index === options.length - 1 && isLastContainer}
           />
         );
       })}

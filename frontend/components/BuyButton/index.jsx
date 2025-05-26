@@ -1,28 +1,23 @@
 import { useRef, useState } from 'react';
-import useProductFormatter from '../../hooks/useProductFormatter';
 import { createPortal } from 'react-dom';
 import AddCustomerDetailsPopup from '../AddCustomerDetailsPopup';
 import Button from './ui/Button';
-import { updateProduct } from './data/updateProduct';
 import { makeOrder } from './data/makeOrder';
+import { useVariantSelected } from '../../store/variantSelected';
 
 export default function BuyButton({
-  optionSets,
-  optionIndecesSelected,
   drawerOpen,
   withCustomerDetails = false,
-  CloseButtonRef,
   beforeAddProductToCartFunction = () => true,
-  getProductProperties = () => null,
 }) {
   const [idle, setIdle] = useState(false);
   const [showAddCustomerDetailsPopup, setShowAddCustomerDetailsPopup] =
     useState(false);
   const buttonRef = useRef(null);
-  const product = useProductFormatter(optionSets, optionIndecesSelected);
+  const [items] = useVariantSelected.items();
 
   function showCustomerDetailsPopup() {
-    buttonRef.current.classList.add('hidden')
+    buttonRef.current.classList.add('hidden');
     setShowAddCustomerDetailsPopup(true);
   }
 
@@ -32,9 +27,7 @@ export default function BuyButton({
 
     setIdle(true);
     try {
-      const variantData = await updateProduct(product);
-      const productProperties = getProductProperties();
-      await makeOrder(variantData, productProperties);
+      await makeOrder(items);
     } catch (error) {
       console.log(error);
     } finally {
@@ -43,29 +36,28 @@ export default function BuyButton({
   }
 
   function afterClosePopup() {
-    buttonRef.current.classList.remove('hidden')
+    buttonRef.current.classList.remove('hidden');
     buttonRef.current.focus();
   }
 
   return (
     <div>
       <Button
-        optionSets={optionSets}
-        optionIndecesSelected={optionIndecesSelected}
         drawerOpen={drawerOpen}
         handleClick={
           withCustomerDetails ? showCustomerDetailsPopup : addProductToCart
         }
         idle={idle}
-        message={withCustomerDetails ? "J'ajoute mes infos" : "Je le veux !"}
+        message={
+          withCustomerDetails
+            ? window.react.buyButton.addCustomerDetails
+            : window.react.buyButton.addProductToCart
+        }
         ref={buttonRef}
-        CloseButtonRef={CloseButtonRef}
       />
       {showAddCustomerDetailsPopup &&
         createPortal(
           <AddCustomerDetailsPopup
-            optionSets={optionSets}
-            optionIndecesSelected={optionIndecesSelected}
             drawerOpen={drawerOpen}
             setShowAddCustomerDetailsPopup={setShowAddCustomerDetailsPopup}
             afterClosePopup={afterClosePopup}

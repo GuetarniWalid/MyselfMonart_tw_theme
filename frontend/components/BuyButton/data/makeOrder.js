@@ -1,4 +1,4 @@
-export async function makeOrder(variantData, productProperties) {
+export async function makeOrder(items) {
   const response = await fetch(
     '/cart/add.js?sections=tw-cart-drawer,tw-header-painting',
     {
@@ -6,7 +6,7 @@ export async function makeOrder(variantData, productProperties) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: getFetchBody(variantData, productProperties),
+      body: getFetchBody(items),
     },
   );
   if (!response.ok) throw new Error("Une erreur inattendu s'est produite.");
@@ -20,17 +20,15 @@ export async function makeOrder(variantData, productProperties) {
   }, 300);
 }
 
-function getFetchBody(variantData, properties) {
-  const itemData = {
-    id: variantData.id,
+function getFetchBody(items) {
+  const itemsData = items.map(item => ({
+    id: item.variantId,
     quantity: 1,
-  };
-  if (properties) {
-    itemData.properties = properties;
-  }
+    properties: item.properties,
+  }))
 
   return JSON.stringify({
-    items: [itemData],
+    items: itemsData,
   });
 }
 

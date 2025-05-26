@@ -1,14 +1,21 @@
 import { forwardRef, useEffect } from 'react';
-import useCalculateTotalPrice from '../../../hooks/useCalculateTotalPrice';
 import useIsMobile from '../../../hooks/useIsMobile';
+import { useVariantSelected } from '../../../store/variantSelected';
 
 const Button = forwardRef(
-  ({ optionSets, optionIndecesSelected, drawerOpen, handleClick, idle, message, CloseButtonRef }, ref) => {
-    const totalPrice = useCalculateTotalPrice(
-      optionSets,
-      optionIndecesSelected,
-    );
+  ({ drawerOpen, handleClick, idle, message }, ref) => {
     const isMobile = useIsMobile();
+    const [variantPrice] = useVariantSelected.price();
+    const [upsells] = useVariantSelected.upsells();
+    const upsellsPrice = upsells.reduce((acc, curr) => acc + curr.price, 0);
+    const totalPrice = variantPrice + upsellsPrice;
+
+    // Function to unescape HTML entities
+    const unescapeMessage = (text) => {
+      const textarea = document.createElement('textarea');
+      textarea.innerHTML = text;
+      return textarea.value;
+    };
 
     useEffect(() => {
       const intervalId = setInterval(() => {
@@ -22,18 +29,23 @@ const Button = forwardRef(
     }, []);
 
     function handleKeyDown(event) {
-      // if(event.key === 'Enter') {
-      //   handleClick(event);
-      // }
-      if (event.key === 'Tab' && isMobile) {
+      if(event.key === 'Enter') {
+        handleClick(event);
+      }
+      if (event.key === 'Tab' && !event.shiftKey && isMobile) {
         event.preventDefault();
-        CloseButtonRef.current.focus();
+        document.getElementById('addons-drawer-close-button').focus();
+      }
+      if (event.key === 'Tab' && !isMobile) {
+        event.preventDefault();
+        document.getElementById('addons-drawer-close-button').focus();
       }
     }
 
     return (
       <div className="flex-none font-bold">
         <button
+          id='react-buy-button'
           onClick={handleClick}
           onKeyDown={handleKeyDown}
           ref={ref}
@@ -56,10 +68,10 @@ const Button = forwardRef(
               </span>
             </>
           ) : (
-            message
+            unescapeMessage(message)
           )}
-          <span className=" py-4 block h-full">
-            Total:&nbsp;&nbsp; {totalPrice} {moneySymbol}
+          <span className="py-4 block h-full">
+            {unescapeMessage(window.react.buyButton.total)}:&nbsp;&nbsp; {totalPrice.toFixed(2)} {Shopify.currency.symbol}
           </span>
         </button>
       </div>

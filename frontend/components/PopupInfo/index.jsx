@@ -1,22 +1,14 @@
 import { useEffect, useRef } from 'react';
-import data from '../../data/data';
-import { getTechnicalKey } from '../../utils/functions';
 import Image from './Image';
 import YoutubeVideo from './YoutubeVideo';
 
-export default function PopupInfo({ infoToShow, setInfoToShow, setToFocus }) {
+export default function PopupInfo({ option, setShowPopup, setToFocus }) {
   const ref = useRef(null);
-
-  const technicalKey = getTechnicalKey(
-    infoToShow.technicalType,
-    infoToShow.technicalName,
-    infoToShow.matter,
-  );
 
   function handleClick(e) {
     e.preventDefault();
     e.stopPropagation();
-    setInfoToShow(null);
+    setShowPopup(false);
     setToFocus(true);
   }
 
@@ -30,15 +22,17 @@ export default function PopupInfo({ infoToShow, setInfoToShow, setToFocus }) {
     }
   }
 
-  function getYoutubeVideoId(technicalKey) {
-    return data[technicalKey].popup.youtubeVideoId;
+  function getPopupData() {
+    const type = option.type;
+    const [optionSelected] = window.paintingOptions[type].filter(o => o.key === option.key);
+    return optionSelected.popup;
   }
 
   useEffect(() => {
     ref.current.focus();
-  }, [infoToShow]);
+  }, [option]);
 
-  const youtubeVideoId = getYoutubeVideoId(technicalKey);
+  const popup = getPopupData();
 
   return (
     <div
@@ -51,16 +45,16 @@ export default function PopupInfo({ infoToShow, setInfoToShow, setToFocus }) {
         onKeyDown={handleKeyDown}
         ref={ref}
       >
-        {youtubeVideoId ? (
-          <YoutubeVideo technicalKey={technicalKey} data={data} />
+        {popup.youtubeVideoId ? (
+          <YoutubeVideo id={popup.youtubeVideoId} />
         ) : (
-          <Image technicalKey={technicalKey} data={data} />
+          <Image src={popup.image.src} alt={popup.image.alt} />
         )}
-        <h4 className="my-8 text-xl px-8">{data[technicalKey].popup.title}</h4>
+        <h4 className="my-8 text-xl px-8">{popup.title}</h4>
         <p
           className="leading-loose text-main-90 px-8"
           dangerouslySetInnerHTML={{
-            __html: data[technicalKey].popup.description,
+            __html: popup.description,
           }}
         />
       </div>

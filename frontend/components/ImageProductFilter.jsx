@@ -1,7 +1,12 @@
-export default function ImageProductFilter({ width, matter, shine }) {
+import { useVariantSelected } from '../store/variantSelected';
+
+export default function ImageProductFilter({ width }) {
+  const [matter] = useVariantSelected.matter.key();
+  const [shine] = useVariantSelected.shine.key();
+
   return (
     <>
-      {matter === 'canvas' && (
+      {matter === 'matterCanvas' && (
         <img
           src="https://cdn.shopify.com/s/files/1/0623/2388/4287/files/texture-toile.jpg?v=1706818351"
           alt={window.canvasTexture}
@@ -13,10 +18,10 @@ export default function ImageProductFilter({ width, matter, shine }) {
           loading="lazy"
         />
       )}
-      {(matter === 'aluminium' || matter === 'aluminium-plexi') && (
+      {(matter === 'matterAluminium' || matter === 'matterAluminiumPlexi') && (
         <span
           className={`block absolute -top-10 -bottom-3 -left-10 w-1/3 rotate-12 bg-gradient-to-r ${
-            shine === 'shine' || matter === 'aluminium-plexi'
+            shine === 'shineShine' || matter === 'matterAluminiumPlexi'
               ? 'from-white/60 to-white/20'
               : 'from-white/50 to-white/0'
           }`}
@@ -24,7 +29,7 @@ export default function ImageProductFilter({ width, matter, shine }) {
           {' '}
         </span>
       )}
-      {(matter === 'poster') && (
+      {matter === 'matterPoster' && (
         <span
           className={`block absolute top-1/2 -left-10 -right-10 h-2/3 bg-gradient-to-b from-transparent via-white/40 to-white/20'`}
         >

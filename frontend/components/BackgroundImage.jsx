@@ -1,14 +1,16 @@
-import { useState } from 'react';
-import data from '../data/data';
-const { background } = data;
+import { setCurrentOption } from '../store/currentOption';
+import { setOpenSelectId } from '../store/openSelectId';
+import { useFocusedElementRef } from '../store/FocusedElementContext';
 
-const BackgroundImage = ({children, focusedElemRef, setOpenSelectId, setCurrentOption}) => {
+const BackgroundImage = ({children}) => {
+  const focusedElementRef = useFocusedElementRef();
+
   function handleClick(event) {
-    if(!event.target.closest('#product-drawer-selector')) {
-      focusedElemRef.current = null;
-      setOpenSelectId(null);
-      setCurrentOption(null);
-    }
+    event.preventDefault();
+    document.getElementById('addons-drawer-close-button').focus();
+    focusedElementRef.current = null;
+    setOpenSelectId(null);
+    setCurrentOption(null);
   }
 
   return (
@@ -21,7 +23,7 @@ const BackgroundImage = ({children, focusedElemRef, setOpenSelectId, setCurrentO
         {`
           @media (max-width: 767px) {
             #background-image {
-              background-image: url(${background.image.src});
+              background-image: url(https://cdn.shopify.com/s/files/1/0623/2388/4287/files/mur-beton-brute-galerie-minimalist.jpg?v=1736012108&width=400);
             }
           }
         `}

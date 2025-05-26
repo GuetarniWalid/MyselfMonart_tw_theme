@@ -1,90 +1,60 @@
-import { useRef } from 'react';
+import { useRef, useMemo } from 'react';
 import ImageProduct from './ImageProduct';
-import useProductData from '../hooks/useProductData';
 import ImageJPGDrawer from './ImageJPGDrawer';
 import useIsMobile from '../hooks/useIsMobile';
+import { getOptionsByType } from '../utils/functions';
 
-export default function Painting({
-  currentOption,
-  optionSets,
-  optionIndecesSelected,
-  setCurrentOption,
-}) {
+export default function Painting() {
   const isMobile = useIsMobile();
   const sceneRef = useRef(null);
   const productRef = useRef(null);
-  const { matter, shine } = useProductData(optionIndecesSelected, optionSets);
-  const sizesPortrait = ['size30x40', 'size60x80', 'size75x100', 'size90x120'];
-  const sizesPersonnalizedPortrait = [
-    'size20x30',
-    'size30x40',
-    'size40x60',
-    'size60x80',
-    'size75x100',
-    'size90x120',
-  ];
-  const sizesLandscape = ['size40x30', 'size80x60', 'size100x75', 'size120x90'];
-  const sizesPersonnalizedLandscape = [
-    'size20x30',
-    'size30x40',
-    'size40x60',
-    'size60x80',
-    'size75x100',
-    'size90x120',
-  ];
-  const sizesSquare = ['size40x40', 'size60x60', 'size80x80', 'size100x100'];
-  const sizesAvailable =
-    window.productRatio === 'portrait'
-      ? sizesPortrait
-      : window.productRatio === 'personalized portrait'
-      ? sizesPersonnalizedPortrait
-      : window.productRatio === 'landscape'
-      ? sizesLandscape
-      : window.productRatio === 'personalized landscape'
-      ? sizesPersonnalizedLandscape
-      : sizesSquare;
 
-  const otherOptions = [
-    'fixationSet',
-    'fixationHook',
-    'fixationRail',
-    'chassis2',
-    'chassis4',
-    'borderWhite',
-    'borderBlack',
-    'borderStretched',
-    'borderMirror',
-    'borderFolded',
-    'frameCanvasWhite',
-    'frameCanvasBlackMat',
-    'frameCanvasSilverOld',
-    'frameCanvasOakLight',
-    'frameCanvasWalnut',
-    'framePosterWhite',
-    'framePosterBlackMat',
-    'framePosterSilverOld',
-    'framePosterOakLight',
-    'framePosterWalnut',
-  ];
+  const sizes = useMemo(() => getOptionsByType('size'), []);
+  const thicknesses = useMemo(() => getOptionsByType('thickness'), []);
+  const borders = useMemo(() => getOptionsByType('border'), []);
+  const fixations = useMemo(
+    () =>
+      getOptionsByType('fixation').filter((option) =>
+        !option.key.includes('Null'),
+      ),
+    [],
+  );
+  const framesCanvas = useMemo(
+    () =>
+      getOptionsByType('frameCanvas').filter((option) =>
+        !option.key.includes('Null'),
+      ),
+    [],
+  );
+  const framesPoster = useMemo(
+    () =>
+      getOptionsByType('framePoster').filter((option) =>
+        !option.key.includes('Null'),
+      ),
+    [],
+  );
 
-  const options = isMobile ? [...sizesAvailable, ...otherOptions] : sizesAvailable;
+  const otherOptions = useMemo(
+    () => [
+      ...fixations,
+      ...thicknesses,
+      ...borders,
+      ...framesCanvas,
+      ...framesPoster,
+    ],
+    [fixations, thicknesses, borders, framesCanvas, framesPoster],
+  );
+
+  const options = useMemo(
+    () => (isMobile ? [...sizes, ...otherOptions] : sizes),
+    [isMobile, sizes, otherOptions],
+  );
 
   return (
     <div className="relative text-center" ref={sceneRef}>
-      <ImageProduct
-        matter={matter}
-        shine={shine}
-        ref={productRef}
-        currentOption={currentOption}
-      />
+      <ImageProduct ref={productRef} />
       {options.map((option) => (
-        <ImageJPGDrawer
-          key={option}
-          option={option}
-          currentOption={currentOption}
-          setCurrentOption={setCurrentOption}
-          matter={matter}
-        />
+        <ImageJPGDrawer key={option.type + option.key} option={option} />
       ))}
     </div>
   );

@@ -3,10 +3,9 @@ import { useEffect } from 'react';
 export default function CloseButton({
   addonsDrawerRef,
   drawerOpen,
-  CloseButtonRef,
 }) {
   useEffect(() => {
-    if (drawerOpen) CloseButtonRef.current.focus();
+    if (drawerOpen) document.getElementById('addons-drawer-close-button').focus();
   }, [drawerOpen]);
 
   function handleClick() {
@@ -24,13 +23,16 @@ export default function CloseButton({
       event.preventDefault();
       handleClick();
     }
+    if (event.key === 'Tab' && event.shiftKey) {
+      event.preventDefault();
+      document.getElementById('react-buy-button').focus();
+    }
   }
 
   return (
     <button
       id='addons-drawer-close-button'
       className="absolute right-3 top-3 flex justify-center items-center rounded-lg w-10 h-10 overflow-hidden z-10 bg-white/30 backdrop-blur-xl md:backdrop-blur-none mobile:text-white md:bg-main-10 outline outline-1 outline-white/90 focus:outline-orange-500 focus:outline-2 after:absolute after:inset-0 after:rounded-lg mobile:after:bg-[#848484]/40 mobile:after:backdrop-blur-xl after:-z-10"
-      ref={CloseButtonRef}
       onClick={handleClick}
       tabIndex={drawerOpen ? 0 : -1}
       onKeyDown={handleKeyDown}

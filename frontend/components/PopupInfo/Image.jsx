@@ -1,8 +1,8 @@
-export default function Image({ technicalKey, data }) {
+export default function Image({ src, alt }) {
   return (
     <img
-      src={`${data[technicalKey].popup.image.src}&width=500`}
-      alt={data[technicalKey].popup.image.alt}
+      src={`${src}&width=500`}
+      alt={alt}
       width="500"
       height="500"
       loading="lazy"

@@ -1,0 +1,73 @@
+{% comment %} 
+  Renders the scripts containing the paintings data 
+  Accepts: 
+  - product: {Object} 
+{% endcomment %}
+
+
+<script id="product-data">
+  window.variants = {{ product.variants | json }};
+  window.react = {
+    buyButton: {
+      addProductToCart: "{{ 'react.buyButton.addProductToCart' | t }}",
+      addCustomerDetails: "{{ 'react.buyButton.addCustomerDetails' | t }}",
+      total: "{{ 'react.buyButton.total' | t }}",
+    },
+    errorMessage: {
+      notAllowedForThisSize: "{{ 'react.errorMessage.notAllowedForThisSize' | t }}",
+    }
+  };
+  {% if product.metafields.product.customer_details != blank %}
+    window.buyingWithCustomization = true;
+    window.customerDetailsSchema = {{ product.metafields.product.customer_details }};
+  {% endif %}
+  
+  window.productImageSRC = "{{ product.images[1] | image_url | prepend: 'https:' }}";
+  window.productImageAlt = "{{ product.images[1].alt | escape }}";
+  window.canvasTexture = "{{ 'snippet.paintings_data_script.canvas_texture' | t }}";
+  window.productId = "{{ product.id }}";
+  window.shopUrl = window.Shopify.routes.root;
+  window.Shopify.currency.symbol = "{{ shop.money_format }}".split('{')[0];
+  
+  window.paintingOptions = {};
+  window.paintingOptions.size = [];
+  window.paintingOptions.matter = [];
+  window.paintingOptions.thickness = [];
+  window.paintingOptions.border = [];
+  window.paintingOptions.shine = [];
+  window.paintingOptions.fixation = [];
+  window.paintingOptions.frameCanvas = [];
+  window.paintingOptions.framePoster = [];
+
+  {% for option in product.metafields.painting_options.sizes.value %}
+    {% render 'painting-data-script-window-filler', type: 'size', option: option %}
+  {% endfor %}
+
+  {% for option in product.metafields.painting_options.matters.value %}
+    {% render 'painting-data-script-window-filler', type: 'matter', option: option %}
+  {% endfor %}
+
+  {% for option in product.metafields.painting_options.thicknesses.value %}
+    {% render 'painting-data-script-window-filler', type: 'thickness', option: option %}
+  {% endfor %}
+
+  {% for option in product.metafields.painting_options.borders.value %}
+    {% render 'painting-data-script-window-filler', type: 'border', option: option %}
+  {% endfor %}
+
+  {% for option in product.metafields.painting_options.shines.value %}
+    {% render 'painting-data-script-window-filler', type: 'shine', option: option %}
+  {% endfor %}
+
+  {% for option in product.metafields.painting_options.fixations.value %}
+    {% render 'painting-data-script-window-filler', type: 'fixation', option: option %}
+  {% endfor %}
+
+  {% for option in product.metafields.painting_options.frames_canvas.value %}
+    {% render 'painting-data-script-window-filler', type: 'frameCanvas', option: option %}
+  {% endfor %}
+
+  {% for option in product.metafields.painting_options.frames_poster.value %}
+    {% render 'painting-data-script-window-filler', type: 'framePoster', option: option %}
+  {% endfor %}
+</script>

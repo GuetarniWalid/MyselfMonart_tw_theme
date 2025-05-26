@@ -401,7 +401,7 @@
 </div>
 
 {% if template.suffix == 'painting' or template.suffix == 'personalized' %}
-  {% render 'paintings-data-script', product: product, ratio: ratio, reviews_structured_data: reviews_structured_data %}
+  {% render 'painting-data-script', product: product, ratio: ratio %}
 {% else %}
   <script type="application/ld+json">
     {

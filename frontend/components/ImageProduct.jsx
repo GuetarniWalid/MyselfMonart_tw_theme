@@ -2,47 +2,57 @@ import { forwardRef, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import ImageProductFilter from './ImageProductFilter';
 import useIsMobile from '../hooks/useIsMobile';
+import { useCurrentOption } from '../store/currentOption';
 
-const ImageProduct = forwardRef(({ matter, shine, currentOption }, ref) => {
+const ImageProduct = forwardRef(({}, ref) => {
   const [isClicked, setIsClicked] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
   const isMobile = useIsMobile();
+  const [currentOption] = useCurrentOption();
 
   useEffect(() => {
-    if (
-      currentOption &&
-      (currentOption.technicalName === 'null' ||
-        currentOption.technicalType === 'matter' ||
-        currentOption.technicalType === 'shine')
-    ) {
-      setVisible(true);
-      return;
-    } else if (currentOption) {
-      setVisible(false);
-    } else {
-      if (isMobile) {
-        const timeout = setTimeout(() => {
-          setVisible(true);
-        }, 2500);
-
-        return () => clearTimeout(timeout);
-      } else {
+    if (isMobile) {
+      if (
+        currentOption &&
+        (currentOption.key.includes('Null') ||
+          currentOption.type === 'matter' ||
+          currentOption.type === 'shine')
+      ) {
         setVisible(true);
+        return;
+      } else if (currentOption) {
+        setVisible(false);
+        return;
       }
+
+      const timeout = setTimeout(() => {
+        setVisible(true);
+      }, 2500);
+
+      return () => clearTimeout(timeout);
+    } else {
+      setVisible(currentOption?.type !== 'size');
     }
   }, [currentOption]);
+
+  useEffect(() => {
+    if(isClicked) {
+      document.activeElement.blur();
+    }
+  }, [isClicked]);
 
   function handleClick() {
     setIsClicked(!isClicked);
   }
 
   const imageContent = (
-    <div
+    <button
       className={`relative inline-block transition-all duration-200 ease-out rounded overflow-hidden${
         visible ? '' : ' opacity-0'
       }`}
       onClick={handleClick}
       ref={!isClicked ? ref : null}
+      tabIndex={isClicked ? -1 : 0}
     >
       <img
         src={window.productImageSRC}
@@ -59,13 +69,8 @@ const ImageProduct = forwardRef(({ matter, shine, currentOption }, ref) => {
         loading="lazy"
         className="md:max-h-[90vh] w-auto"
       />
-      <ImageProductFilter
-        width={728}
-        matter={matter}
-        shine={shine}
-        currentOption={currentOption}
-      />
-    </div>
+      <ImageProductFilter width={728} />
+    </button>
   );
 
   return isClicked && isMobile

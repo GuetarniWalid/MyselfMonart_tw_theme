@@ -218,6 +218,16 @@
       }
     }
   },
+  "react": {
+    "buyButton": {
+      "addProductToCart": "Je le veux !",
+      "addCustomerDetails": "J'ajoute mes infos",
+      "total": "Total"
+    },
+    "errorMessage": {
+      "notAllowedForThisSize": "Non disponible"
+    }
+  },
   "sections": {
     "cookie_banner": {
       "message-1": "Nos cookies ne sont pas comestibles, mais ils rendent votre visite délicieuse !",

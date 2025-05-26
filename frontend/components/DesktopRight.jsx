@@ -2,54 +2,34 @@ import RadioContainer from './RadioContainer';
 import Select from './Select';
 import { v4 } from 'uuid';
 import RadioContainers from './RadioContainers';
+import { getOptionsByType } from '../utils/functions';
+
 
 export default function DesktopRight({
-  optionSets,
-  optionIndecesSelected,
-  setOptionIndecesSelected,
-  setCurrentOption,
   drawerOpen,
   desktopSelectorRef,
-  CloseButtonRef,
-  focusedElemRef,
-  openSelectId,
-  setOpenSelectId,
 }) {
+  const sizes = getOptionsByType('size');
+
   return (
-    <div className='hidden md:block h-full overflow-y-auto custom-scrollbar pr-5'>
+    <div className="hidden md:block h-full overflow-y-auto custom-scrollbar pr-5">
       <RadioContainer
         bulletNb={1}
-        title="Choisissez votre taille"
+        title={sizes[0].radio.container.title}
         hasSelector={true}
       >
         <div ref={desktopSelectorRef}>
           <Select
             key={v4()}
-            optionSet={optionSets[0]}
-            optionIndexSelected={optionIndecesSelected[0]}
-            setOptionIndecesSelected={setOptionIndecesSelected}
-            optionIndecesSelected={optionIndecesSelected}
-            selectIndex={0}
-            isOpen={
-              focusedElemRef.current?.includes('select-0') &&
-              openSelectId === 'select-0'
-            }
-            setCurrentOption={setCurrentOption}
+            options={sizes}
             drawerOpen={drawerOpen}
-            focusedElemRef={focusedElemRef}
-            setOpenSelectId={setOpenSelectId}
             selectId="select-0"
+            popupDirection="bottom"
           />
         </div>
       </RadioContainer>
       <RadioContainers
-        optionSets={optionSets}
-        optionIndecesSelected={optionIndecesSelected}
-        setOptionIndecesSelected={setOptionIndecesSelected}
-        setCurrentOption={setCurrentOption}
         drawerOpen={drawerOpen}
-        CloseButtonRef={CloseButtonRef}
-        focusedElemRef={focusedElemRef}
       />
     </div>
   );

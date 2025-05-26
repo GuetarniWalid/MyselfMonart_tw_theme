@@ -1,46 +1,37 @@
 import { useEffect, useRef } from 'react';
-import data from '../data/data';
-import { getTechnicalKey } from '../utils/functions';
 import InfoButton from './InfoButton';
+import OptionPrice from './OptionPrice';
+import { useVariantSelected } from '../store/variantSelected';
+import { getVariantBySizeAndMatter } from '../utils/functions';
+import { useFocusedElementRef } from '../store/FocusedElementContext';
 
 export default function Radio({
   option,
   index,
-  optionIndecesSelected,
-  setOptionIndecesSelected,
   indexContainer,
-  setCurrentOption,
   drawerOpen,
-  CloseButtonRef,
   isLastRadio,
-  isChecked,
-  focusedElemRef,
-  matter,
 }) {
   const ref = useRef(null);
-  const technicalKey = getTechnicalKey(
-    option.technicalType,
-    option.technicalName,
-    matter,
-  );
+  const focusedElementRef = useFocusedElementRef();
+  const [sizeSelected] = useVariantSelected.size();
+  const [optionSelected, setOptionSelected] =
+    useVariantSelected[option.type]();
 
   useEffect(() => {
     if (
-      focusedElemRef.current &&
-      focusedElemRef.current[0] === indexContainer &&
-      focusedElemRef.current[1] === index
+      focusedElementRef.current &&
+      focusedElementRef.current[0] === indexContainer &&
+      focusedElementRef.current[1] === index
     ) {
       ref.current.focus();
-      focusedElemRef.current = null;
+      focusedElementRef.current = null;
     }
   }, []);
 
   function handleRadioClick() {
-    const newOptionIndecesSelected = [...optionIndecesSelected];
-    newOptionIndecesSelected[indexContainer] = index;
-    setOptionIndecesSelected(newOptionIndecesSelected);
-    setCurrentOption(option);
-    focusedElemRef.current = [indexContainer, index];
+    setOptionSelected(option);
+    focusedElementRef.current = [indexContainer, index];
   }
 
   function handleKeyDown(event) {
@@ -49,15 +40,27 @@ export default function Radio({
     }
   }
 
+  function isMatterExisting() {
+    return getVariantBySizeAndMatter(sizeSelected.name, option.name);
+  }
+
+  const isChecked = optionSelected.key === option.key;
+  const isMatterExist = option.type === 'matter' ? isMatterExisting() : true;
+
   return (
     <div className="lg:w-1/2 p-1">
       <div
         ref={ref}
-        onClick={handleRadioClick}
-        onKeyDown={handleKeyDown}
-        className={`flex flex-col justify-between hover:bg-main-5 px-4 py-5 rounded h-full text-center cursor-pointer ${
-          isChecked &&
-          'bg-main-5 outline outline-main-20 outline-1 focus:outline-main-50 focus:outline-2'
+        onClick={isMatterExist ? handleRadioClick : undefined}
+        onKeyDown={isMatterExist ? handleKeyDown : undefined}
+        className={`${option.type} ${optionSelected.key} ${option.key} flex flex-col justify-between px-4 py-5 rounded h-full text-center ${
+          isChecked
+            ? 'bg-main-5 outline outline-main-20 outline-1 focus:outline-main-50 focus:outline-2'
+            : ''
+        } ${
+          isMatterExist
+            ? 'cursor-pointer hover:bg-main-5'
+            : 'cursor-not-allowed opacity-50'
         }`}
         tabIndex={drawerOpen ? 0 : -1}
         role="radio"
@@ -66,11 +69,10 @@ export default function Radio({
       >
         <div>
           <img
-            src={data[technicalKey].radio.image.src}
-            alt={data[technicalKey].radio.image.alt}
-            width={data[technicalKey].radio.image.width}
-            height={data[technicalKey].radio.image.height}
-            srcSet={`${data[technicalKey].radio.image.src}&width=200 200w, ${data[technicalKey].radio.image.src}&width=300 300w, ${data[technicalKey].radio.image.src}&width=400 400w`}
+            src={option.radio.image.src}
+            alt={option.radio.image.alt}
+            width={200}
+            srcSet={`${option.radio.image.src}&width=200 200w, ${option.radio.image.src}&width=300 300w, ${option.radio.image.src}&width=400 400w`}
             sizes="(max-width: 836px) 300px, (max-width: 1023px) 400px, (max-width: 1120px) 200px, 300px"
             loading="lazy"
             className="h-36 object-contain"
@@ -81,16 +83,12 @@ export default function Radio({
         </div>
         <div>
           <p className="inline-block bg-main-5 rounded-lg px-4 py-1 whitespace-nowrap my-4">
-            {option.price.toString().includes('.')
-              ? Number(option.price).toFixed(2)
-              : option.price}
-            {moneySymbol}
+            <OptionPrice option={option} />
           </p>
           <InfoButton
-            technicalName={option.technicalName}
-            technicalType={option.technicalType}
+            option={option}
             nextToRadio={true}
-            matter={matter}
+            isLastRadio={isLastRadio}
           />
         </div>
       </div>

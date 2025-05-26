@@ -1,41 +1,32 @@
-import useProductData from '../hooks/useProductData';
 import Select from './Select';
 import { v4 } from 'uuid';
+import { useVariantSelected } from '../store/variantSelected';
+import { getOptionsList, isOptionExisting } from '../utils/functions';
 
 export default function Selects({
-  optionSets,
-  optionIndecesSelected,
-  setOptionIndecesSelected,
-  setCurrentOption,
   drawerOpen,
   mobileSummaryRef,
-  focusedElemRef,
-  openSelectId,
-  setOpenSelectId,
 }) {
-  const { matter } = useProductData(optionIndecesSelected, optionSets);
+  const [sizeSelected] = useVariantSelected.size();
+  const [matterSelected] = useVariantSelected.matter();
 
-  const selects = optionSets.map((optionSet, index) => {
+  const optionsList = getOptionsList();
+  const availableOptionsList = optionsList.filter(
+    (options) =>
+      options.filter((option) =>
+        isOptionExisting(option, sizeSelected, matterSelected),
+      ).length > 1,
+  );
+
+  const selects = availableOptionsList.map((options, index) => {
     const selectId = `select-${index}`;
     return (
       <Select
         key={v4()}
-        optionSet={optionSet}
-        optionIndexSelected={optionIndecesSelected[index]}
-        setOptionIndecesSelected={setOptionIndecesSelected}
-        optionIndecesSelected={optionIndecesSelected}
-        selectIndex={index}
-        focusedElemRef={focusedElemRef}
-        setOpenSelectId={setOpenSelectId}
-        isOpen={
-          focusedElemRef.current?.includes(selectId) &&
-          openSelectId === selectId
-        }
-        setCurrentOption={setCurrentOption}
+        options={options}
+        selectId={selectId}
         drawerOpen={drawerOpen}
         popupDirection="top"
-        selectId={selectId}
-        matter={matter}
       />
     );
   });

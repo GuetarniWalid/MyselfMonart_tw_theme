@@ -3,12 +3,11 @@ import { createPortal } from 'react-dom';
 import PopupInfo from './PopupInfo';
 
 export default function InfoButton({
-  technicalName,
-  technicalType,
+  option,
   nextToRadio,
-  matter,
+  isLastRadio,
 }) {
-  const [infoToShow, setInfoToShow] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
   const [toFocus, setToFocus] = useState(false);
   const ref = useRef(null);
 
@@ -22,16 +21,16 @@ export default function InfoButton({
   function handleClick(e) {
     e.preventDefault();
     e.stopPropagation();
-    setInfoToShow({
-      technicalName,
-      technicalType,
-      matter,
-    });
+    setShowPopup(true);
   }
 
   function handleKeyDown(event) {
     if(event.key === 'Enter') {
       handleClick(event);
+    }
+    if(isLastRadio && event.key === 'Tab' && !event.shiftKey) {
+      event.preventDefault();
+      document.getElementById('react-buy-button').focus();
     }
   }
 
@@ -60,11 +59,11 @@ export default function InfoButton({
         </svg>
         {nextToRadio && <span>Info</span>}
       </button>
-      {infoToShow &&
+      {showPopup &&
         createPortal(
           <PopupInfo
-            infoToShow={infoToShow}
-            setInfoToShow={setInfoToShow}
+            option={option}
+            setShowPopup={setShowPopup}
             setToFocus={setToFocus}
           />,
           document.getElementById('addonsDrawer'),

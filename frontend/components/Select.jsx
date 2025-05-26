@@ -2,52 +2,52 @@ import { useEffect, useRef } from 'react';
 import { v4 } from 'uuid';
 import Option from './Option';
 import InfoButton from './InfoButton';
+import { setCurrentOption } from '../store/currentOption';
+import { useOpenSelectId } from '../store/openSelectId';
+import { useVariantSelected } from '../store/variantSelected';
+import { isOptionExisting } from '../utils/functions';
+import OptionPrice from './OptionPrice';
+import { useFocusedElementRef } from '../store/FocusedElementContext';
 
 export default function Select({
-  optionSet,
-  optionIndexSelected,
-  setOptionIndecesSelected,
-  optionIndecesSelected,
-  selectIndex,
-  isOpen,
-  setCurrentOption,
+  options,
   drawerOpen,
-  popupDirection,
-  focusedElemRef,
-  setOpenSelectId,
   selectId,
-  matter,
+  popupDirection,
 }) {
   const selectRef = useRef(null);
   const firstOptionRef = useRef(null);
   const ariaControlsIdRef = useRef(v4());
+  const focusedElementRef = useFocusedElementRef();
+
+  const [openSelectId, setOpenSelectId] = useOpenSelectId();
+  const [sizeSelected] = useVariantSelected.size();
+  const [matterSelected] = useVariantSelected.matter();
+  const availableOptions = options.filter(option => isOptionExisting(option, sizeSelected, matterSelected))
+
+  const [variantSelected] = useVariantSelected();
+  const optionSelected = variantSelected[options[0].type]
   
+  const isOpen = focusedElementRef.current?.includes(selectId) && openSelectId === selectId
+
   useEffect(() => {
-    if(focusedElemRef.current && focusedElemRef.current == selectId) {
-      selectRef.current.focus()
-      focusedElemRef.current == null
+    if (focusedElementRef.current && focusedElementRef.current == selectId) {
+      selectRef.current.focus();
     }
-  }, [])
+  }, []);
 
   function handleSelectClick(e) {
     e?.stopPropagation();
     if (isOpen) {
+      focusedElementRef.current = selectId;
+      selectRef.current.focus();
       setCurrentOption(null);
-      focusedElemRef.current = selectId
       setOpenSelectId(null);
       return;
     }
-    focusedElemRef.current = selectId + '-option-0';
+    focusedElementRef.current = selectId + '-option-0';
+    setCurrentOption(optionSelected);
     setOpenSelectId(selectId);
-    setCurrentOption(optionSet[optionIndexSelected]);
-  }
-
-  function handleOptionClick(value, event) {
-    const newOptionIndexListSelected = [...optionIndecesSelected];
-    newOptionIndexListSelected[selectIndex] = value;
-    setOptionIndecesSelected(newOptionIndexListSelected);
-    setCurrentOption(optionSet[value]);
-    focusedElemRef.current = event.target.id;
   }
 
   function handleKeyDown(event) {
@@ -57,20 +57,16 @@ export default function Select({
     }
   }
 
-  const options = optionSet.map((option, index) => {
+  const optionList = availableOptions.map((option, index) => {
     return (
       <Option
         key={v4()}
-        handleOptionClick={handleOptionClick}
         option={option}
-        value={index}
-        selected={index === optionIndexSelected}
         id={`${selectId}-option-${index}`}
         isOpen={isOpen}
         isFirst={index === 0}
-        isLast={index === optionSet.length - 1}
+        isLast={index === options.length - 1}
         firstOptionRef={firstOptionRef}
-        focusedElemRef={focusedElemRef}
         selectId={selectId}
         handleSelectClick={handleSelectClick}
       />
@@ -78,11 +74,12 @@ export default function Select({
   });
 
   return (
-    <div className="flex gap-3 h-12 mb-3" id="product-drawer-selector">
+    <div className="flex gap-3 h-12 mb-3">
       <div className="relative flex-1 h-full">
         <div
-          className={`relative flex justify-between items-center rounded-lg px-3 h-full bg-white/30 md:bg-white backdrop-blur-xl md:backdrop-blur-none text-white md:text-main outline outline-1 outline-white/90 focus:outline-orange-500 focus:outline-2 ${
-            isOpen ? 'outline-white' : ''}`}
+          className={`react-select relative flex justify-between items-center rounded-lg px-3 h-full bg-white/30 md:bg-white backdrop-blur-xl md:backdrop-blur-none text-white md:text-main outline outline-1 outline-white/90 focus:outline-orange-500 focus:outline-2 ${
+            isOpen ? 'outline-white' : ''
+          }`}
           role="button"
           aria-haspopup="listbox"
           aria-expanded={isOpen}
@@ -93,13 +90,13 @@ export default function Select({
           ref={selectRef}
           id={selectId}
         >
-          <span className="absolute inset-0 rounded-lg bg-[#848484]/30 backdrop-blur-xl -z-10 md:hidden"> </span>
-          <span className='pointer-events-none'>{optionSet[optionIndexSelected].name}</span>
+          <span className="absolute inset-0 rounded-lg bg-[#848484]/30 backdrop-blur-xl -z-10 md:hidden">
+            {' '}
+          </span>
+          <span className="pointer-events-none">{optionSelected.name}</span>
           <div className="flex items-center gap-5 pointer-events-none">
             <span className="rounded-lg px-2 py-1 whitespace-nowrap mobile:backdrop-blur-xl md:bg-main-10 border-1 mobile:border-white/50">
-              {optionSet[optionIndexSelected].price.toString().includes('.') 
-                ? Number(optionSet[optionIndexSelected].price).toFixed(2) 
-                : optionSet[optionIndexSelected].price} {moneySymbol}
+              <OptionPrice option={optionSelected} />
             </span>
             <div className="w-6 h-6 rounded-full flex justify-center items-center backdrop-blur border-1 border-white/50">
               <svg
@@ -118,7 +115,7 @@ export default function Select({
         </div>
         {isOpen && (
           <ul
-            aria-label={optionSet[optionIndexSelected].technicalType}
+            aria-label={options[0].type}
             role="listbox"
             id={ariaControlsIdRef.current}
             className={`absolute w-full rounded-lg p-3 bg-white/30 md:bg-white backdrop-blur-3xl md:backdrop-blur-none text-black md:text-main border-1 border-white/90 ${
@@ -126,19 +123,16 @@ export default function Select({
                 ? '-top-3 -translate-y-full shadow-[0_-13px_28px_5px_rgba(0,0,0,0.1)]'
                 : '-bottom-3 translate-y-full shadow-[0_13px_28px_5px_rgba(0,0,0,0.1)]'
             }`}
-            aria-activedescendant={`${selectId}-option-${optionIndexSelected}`}
+            aria-activedescendant={`${selectId}-option-0`}
           >
-            <span className='absolute block inset-0 rounded bg-[#848484]/40 backdrop-blur-xl -z-10 md:hidden' > </span>
-            {options}
+            <span className="absolute block inset-0 rounded bg-[#848484]/40 backdrop-blur-xl -z-10 md:hidden">
+              {' '}
+            </span>
+            {optionList}
           </ul>
         )}
       </div>
-      <InfoButton
-        technicalName={optionSet[optionIndexSelected].technicalName}
-        technicalType={optionSet[optionIndexSelected].technicalType}
-        nextToRadio={false}
-        matter={matter}
-      />
+      <InfoButton option={optionSelected} nextToRadio={false} />
     </div>
   );
 }

@@ -3,8 +3,6 @@ import BuyButton from '../BuyButton';
 import Input from './Input';
 
 export default function AddCustomerDetailsPopup({
-  optionSets,
-  optionIndecesSelected,
   drawerOpen,
   setShowAddCustomerDetailsPopup,
   afterClosePopup,
@@ -43,6 +41,7 @@ export default function AddCustomerDetailsPopup({
       }
     }
   }
+
   function getProductProperties() {
     const inputs = inputsContainerRef.current.querySelectorAll('input');
     const productProperties = {};
@@ -57,17 +56,27 @@ export default function AddCustomerDetailsPopup({
   }, []);
 
   const lang = document.querySelector('html').lang;
-  const inputs = window.customerDetailsSchema.map((input, index) => (
-    <Input
-      key={index}
-      type={input.type}
-      name={input.name}
-      label={input.label[lang]}
-      errorMessage={input.errorMessage[lang]}
-      ref={index === 0 ? firstRef : null}
-    />
-  ));
+  const inputs = window.customerDetailsSchema.map((input, index) => {
+    let inputType;
+    switch (input.name) {
+      case 'birthday':
+        inputType = 'date';
+        break;
+      default:
+        inputType = input.type;
+    }
 
+    return (
+      <Input
+        key={index}
+        type={inputType}
+        name={input.name}
+        label={input.label[lang]}
+        errorMessage={input.errorMessage[lang]}
+        ref={index === 0 ? firstRef : null}
+      />
+    );
+  });
 
   return (
     <div
@@ -84,8 +93,6 @@ export default function AddCustomerDetailsPopup({
         {inputs}
         <div className="mt-8">
           <BuyButton
-            optionSets={optionSets}
-            optionIndecesSelected={optionIndecesSelected}
             drawerOpen={drawerOpen}
             withCustomerDetails={false}
             beforeAddProductToCartFunction={verifyCustomerDetails}
