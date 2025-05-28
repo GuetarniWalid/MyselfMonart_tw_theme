@@ -18,27 +18,6 @@
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js" defer></script>
 {% endif %}
 
-{% if template.suffix == 'painting' or template.suffix == 'personalized' %}
-  {% liquid
-    if template.suffix == 'painting'
-      if product.images[1].aspect_ratio < 1
-        assign ratio = 'portrait'
-        assign price_min = settings.portrait_lowest_price
-      elsif product.images[1].aspect_ratio > 1
-        assign ratio = 'landscape'
-        assign price_min = settings.landscape_lowest_price
-      else
-        assign ratio = 'square'
-        assign price_min = settings.square_lowest_price     
-      endif
-    else if template.suffix == 'personalized'
-      if product.images[1].aspect_ratio < 1
-        assign ratio = 'personalized portrait'
-        assign price_min = settings.personalized_portrait_lowest_price
-      endif
-    endif
-  %}
-{% endif %}
 
 <a class="px-4 py-2 opacity-0 focus-visible:opacity-100 absolute top-6 left-10 z-10 bg-secondary transition-colors duration-500" href="#ProductInfo-{{ section.id }}">
   {{ "sections.main_product.accessibility.skip_to_product_info" | t }}
@@ -152,10 +131,10 @@
             <h1 class="text-4xl {{ block.settings.margin_bottom }}">{{ product.title | escape }}</h1>
           {%- when 'price' -%}
             {% if block.settings.style == 'default' %}
-              <span id="main-price" class="block text-xl font-bold font-heading mb-4" data-money-symbol="{{ cart.currency.symbol }}">{{ price_min | money_with_currency }}</span>
+              <span id="main-price" class="block text-xl font-bold font-heading mb-4" data-money-symbol="{{ cart.currency.symbol }}">{{ product.price_min | money_with_currency }}</span>
             {% elsif block.settings.style == 'tapestry' %}
               <div class="flex gap-4 mb-4 py-6 rounded-2xl px-7 min-h-20 mt-5" style="background: {{ block.settings.background }}" data-money-symbol="{{ cart.currency.symbol }}">
-                <div id="main-price" class=" flex items-center text-5xl font-bold font-heading border-r-2 border-black/5 pr-7">{{ price_min | money_with_currency }}</div>
+                <div id="main-price" class=" flex items-center text-5xl font-bold font-heading border-r-2 border-black/5 pr-7">{{ product.price_min | money_with_currency }}</div>
                 <div class="flex items-center overflow-hidden">
                   <ul class="max-w-full">
                     <li class="flex items-center mb-2 overflow-hidden text-ellipsis whitespace-nowrap">{%  render 'icon-check' %}&nbsp;&nbsp;<span class="overflow-hidden text-ellipsis whitespace-nowrap"><span id="nb-tapestry-strips">3</span> lés</span></li>
@@ -401,7 +380,7 @@
 </div>
 
 {% if template.suffix == 'painting' or template.suffix == 'personalized' %}
-  {% render 'painting-data-script', product: product, ratio: ratio %}
+  {% render 'painting-data-script', product: product %}
 {% else %}
   <script type="application/ld+json">
     {

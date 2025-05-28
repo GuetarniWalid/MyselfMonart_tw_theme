@@ -11,23 +11,6 @@
     {% render 'card-product' %}
 {% endcomment %}
 
-{% liquid
-  if product.template_suffix == "painting"
-    if product.images[1].aspect_ratio < 1
-      assign price_min = settings.portrait_lowest_price
-    elsif product.images[1].aspect_ratio > 1
-      assign price_min = settings.landscape_lowest_price
-    else
-      assign price_min = settings.square_lowest_price
-    endif
-  else if template.suffix == 'personalized'
-    if product.images[1].aspect_ratio < 1
-      assign price_min = settings.personalized_portrait_lowest_price
-    endif
-  else
-    assign price_min = product.price_min
-  endif
-%}
 <div class="h-full flex flex-col">
   {%- if product.featured_media -%}
     <div class="relative">
@@ -103,7 +86,7 @@
         <p>
           {{ "sections.main_collection_product_grid.card-product.starting_at" | t }}&nbsp;
             <strong>
-              {{ price_min | money }}
+              {{ product.price_min | money }}
             </strong>
         </p>
         {% if product.metafields.likes.number != blank and product.metafields.likes.number > 0 %}

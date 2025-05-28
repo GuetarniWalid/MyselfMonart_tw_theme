@@ -92,23 +92,6 @@
         }
       }
     },
-    "lowest_price": {
-      "name": "Prix les plus bas",
-      "settings": {
-        "square": {
-          "label": "Prix le plus bas pour les ratios carrés"
-        },
-        "portrait": {
-          "label": "Prix le plus bas pour les portraits"
-        },
-        "landscape": {
-          "label": "Prix le plus bas pour les paysages"
-        },
-        "personalized_portrait": {
-          "label": "Prix le plus bas pour les portraits personnalisés"
-        }
-      }
-    },
     "search_input": {
       "name": "Comportement de recherche",
       "settings": {
