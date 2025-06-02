@@ -13,7 +13,7 @@
               {%- if block.settings.collection.featured_image.width >= 350 -%}{{ block.settings.collection.featured_image | image_url: width: 350 }} 350w,{%- endif -%}"
               src="{{ block.settings.collection.featured_image | image_url: width: 500 }}"
               sizes="(max-width: 356px) 300px, 350px"
-              alt="{{ block.settings.collection.featured_image.alt }}"
+              alt="{% if block.settings.collection.metafields.meta_object.media.value.alts.value[0] %}{{ block.settings.collection.metafields.meta_object.media.value.alts.value[0] | escape }}{% else %}{{ block.settings.collection.featured_image.alt | escape }}{% endif %}"
               width="350"
               height="auto"
               loading="lazy"

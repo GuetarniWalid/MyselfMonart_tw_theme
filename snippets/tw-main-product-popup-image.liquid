@@ -1,3 +1,14 @@
+{% comment %}
+    Renders product media
+
+    Accepts:
+      - media: {Object} Product Media object
+      - loop: {Object} Forloop object
+
+    Usage:
+    {% render 'tw-main-product-popup-image', media: media, loop: forloop %}
+{% endcomment %}
+
 <div class="skeleton block mx-auto">
     <img
       srcset="{%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}
@@ -12,7 +23,7 @@
       class="object-cover object-center w-full h-auto"
       sizes="100vw"
       src="{{ media.preview_image | image_url: width: 550 }}"
-      alt="{{ media.alt | escape }}"
+      alt="{% if product.metafields.meta_object.media.value.alts.value[loop.index0] %}{{ product.metafields.meta_object.media.value.alts.value[loop.index0] | escape }}{% else %}{{ media.alt | escape }}{% endif %}"
       loading="lazy"
       width="1100"
       height="auto"

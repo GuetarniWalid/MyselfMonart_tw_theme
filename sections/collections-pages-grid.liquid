@@ -35,6 +35,7 @@
             src="{{ block.settings.image | image_url: width: 40 }}"
             loading="{% if block.settings.lazy_load %}lazy{% else %}eager{% endif %}"
             width="500"
+            height="auto"
             alt="{{ block.settings.image.alt | escape }}"
             class="skeleton placeholder blur-lg absolute top-0 left-0 w-full h-full object-cover"
           >

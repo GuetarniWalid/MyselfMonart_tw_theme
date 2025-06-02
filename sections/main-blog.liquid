@@ -18,7 +18,7 @@
                   {{ article.image.src | image_url }} {{ article.image.src.width }}w"
                 src="{{ article.image.src | image_url: width: 533 }}"
                 sizes="(max-width: 767px) 100vw, (max-width: 1300px) 50vw, 600px"
-                alt="{{ article.image.src.alt | escape }}"
+                alt="{% if article.metafields.meta_object.media.value.alts.value[0] %}{{ article.metafields.meta_object.media.value.alts.value[0] | escape }}{% else %}{{ article.image.src.alt | escape }}{% endif %}"
                 class="skeleton h-full w-full object-cover"
                 {% unless lazy_load == false %}loading="lazy"{% endunless %}
                 width="600px"

@@ -23,7 +23,7 @@
   {% endif %}
   
   window.productImageSRC = "{{ product.images[1] | image_url | prepend: 'https:' }}";
-  window.productImageAlt = "{{ product.images[1].alt | escape }}";
+  window.productImageAlt = "{{ product.metafields.meta_object.media.value.alts.value[1] | escape }}";
   window.canvasTexture = "{{ 'snippet.paintings_data_script.canvas_texture' | t }}";
   window.productId = "{{ product.id }}";
   window.shopUrl = window.Shopify.routes.root;

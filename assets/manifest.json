@@ -1,7 +1,7 @@
 {
-  "frontend/entrypoints/index.jsx": {
+  "frontend\/entrypoints\/index.jsx": {
     "file": "index-025852cc.js",
     "isEntry": true,
-    "src": "frontend/entrypoints/index.jsx"
+    "src": "frontend\/entrypoints\/index.jsx"
   }
 }

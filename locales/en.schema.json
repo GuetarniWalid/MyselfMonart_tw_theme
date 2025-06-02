@@ -559,7 +559,7 @@
       }
     },
     "collections-pages-grid": {
-      "name": "Collections\/pages grid",
+      "name": "Images grid",
       "settings": {
         "padding_top": {
           "label": "Top margin",

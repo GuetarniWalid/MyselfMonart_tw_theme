@@ -2,22 +2,28 @@
  
 {% liquid
   assign first_3d_model = product.media | where: "media_type", "model" | first | default: product.metafields.files["3d_file_name"].value
+
   if first_3d_model != blank
+    assign model_alt = first_3d_model.alt | escape
+    for media in product.media
+      if media.alt == first_3d_model.alt
+        assign model_alt = product.metafields.meta_object.media.value.alts.value[forloop.index0] | escape
+        break
+      endif
+    endfor
+
     if first_3d_model.url != blank
       assign 3d_model_url = first_3d_model.url
       assign 3d_model_poster = product.media[1]
-      assign 3d_model_alt = first_3d_model.alt
     else
       assign 3d_model_url = first_3d_model.sources[0].url
       assign 3d_model_poster = first_3d_model.preview_image
-      assign 3d_model_alt = first_3d_model.alt
     endif 
   endif
 %}
 {% if first_3d_model != blank %}
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js" defer></script>
 {% endif %}
-
 
 <a class="px-4 py-2 opacity-0 focus-visible:opacity-100 absolute top-6 left-10 z-10 bg-secondary transition-colors duration-500" href="#ProductInfo-{{ section.id }}">
   {{ "sections.main_product.accessibility.skip_to_product_info" | t }}
@@ -33,7 +39,7 @@
                   {{ product.media[1].preview_image | image_url }} {{ product.media[1].preview_image.width }}w"
           src="{{ product.media[1].preview_image | image_url: width: 550 }}"
           sizes="(min-width: 548px) 550px, 100vw"
-          alt="{{ product.media[1].alt | escape }}"
+          alt="{% if product.metafields.meta_object.media.value.alts.value[1] %}{{ product.metafields.meta_object.media.value.alts.value[1] | escape }}{% else %}{{ product.media[1].alt | escape }}{% endif %}"
           width="550"
           height="auto"
           data-media-id="{{ product.media[1].id }}"
@@ -55,11 +61,11 @@
               elsif forloop.index == 3 and first_3d_model != blank
                 if first_3d_model.url != blank
                   assign number_of_media = number_of_media | default: 0 | plus: 2
-                  render 'tw-main-product-model-3d', url: 3d_model_url, alt: 3d_model_alt, poster: 3d_model_poster
+                  render 'tw-main-product-model-3d', url: 3d_model_url, alt: model_alt, poster: 3d_model_poster
                   render 'tw-main-product-image', media: media, loop: forloop
                 else
                   assign number_of_media = number_of_media | default: 0 | plus: 1
-                  render 'tw-main-product-model-3d', url: 3d_model_url, alt: 3d_model_alt, poster: 3d_model_poster
+                  render 'tw-main-product-model-3d', url: 3d_model_url, alt: model_alt, poster: 3d_model_poster
                 endif
               else if media.media_type == 'image'
                 assign number_of_media = number_of_media | default: 0 | plus: 1
@@ -83,22 +89,23 @@
           {% liquid
             assign image_number = 0
             for media in product.media
+              assign media_alt = product.metafields.meta_object.media.value.alts.value[forloop.index0] | default: media.alt
               if media.media_type == 'image' and forloop.index != 3
                 assign image_number = image_number | default: 0 | plus: 1
-                render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media.alt, object-fit: 'cover', image_number: image_number
+                render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media_alt, object-fit: 'cover', image_number: image_number
               elsif forloop.index == 3 and first_3d_model != blank
                 if first_3d_model.url != blank
                   assign image_number = image_number | default: 0 | plus: 1
-                  render 'tw-main-product-thumbnail-image', image: product.media[1]preview_image, object-fit: 'contain', alt: 3d_model_alt, file: 'glb', image_number: image_number
+                  render 'tw-main-product-thumbnail-image', image: product.media[1].preview_image, object-fit: 'contain', alt: model_alt, file: 'glb', image_number: image_number
                   assign image_number = image_number | default: 0 | plus: 1
-                  render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media.alt, object-fit: 'cover', image_number: image_number
+                  render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media_alt, object-fit: 'cover', image_number: image_number
                 else
                   assign image_number = image_number | default: 0 | plus: 1
-                  render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media.alt, object-fit: 'cover', file: 'glb', image_number: image_number
+                  render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media_alt, object-fit: 'cover', file: 'glb', image_number: image_number
                 endif
               else if media.media_type == 'image'
                 assign image_number = image_number | default: 0 | plus: 1
-                render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media.alt, object-fit: 'cover', image_number: image_number
+                render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media_alt, object-fit: 'cover', image_number: image_number
               endif
             endfor
           %}

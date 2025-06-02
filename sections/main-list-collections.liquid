@@ -23,7 +23,7 @@
               {%- if collection.featured_image.width >= 350 -%}{{ collection.featured_image | image_url: width: 350 }} 350w,{%- endif -%}"
               src="{{ collection.featured_image | image_url: width: 500 }}"
               sizes="(max-width: 356px) 300px, 350px"
-              alt="{{ collection.featured_image.alt }}"
+              alt="{% if collection.metafields.meta_object.media.value.alts.value[0] %}{{ collection.metafields.meta_object.media.value.alts.value[0] | escape }}{% else %}{{ collection.featured_image.alt | escape }}{% endif %}"
               width="350"
               height="auto"
               loading="lazy"

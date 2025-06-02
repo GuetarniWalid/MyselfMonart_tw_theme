@@ -13,7 +13,7 @@
               <div class="relative cursor-pointer h-max grow">
                   <img
                       src="{{ first_image | image_url }}"
-                      alt="{{ first_image.alt }}"
+                      alt="{% if recommendation.metafields.meta_object.media.value.alts.value[0] %}{{ recommendation.metafields.meta_object.media.value.alts.value[0] | escape }}{% else %}{{ first_image.alt | escape }}{% endif %}"
                       width="350"
                       height="auto"
                       loading="lazy"
@@ -26,7 +26,7 @@
                   {%- if second_image != blank -%}
                       <img
                           src="{{ second_image | image_url }}"
-                          alt="{{ second_image.alt }}"
+                          alt="{% if recommendation.metafields.meta_object.media.value.alts.value[1] %}{{ recommendation.metafields.meta_object.media.value.alts.value[1] | escape }}{% else %}{{ second_image.alt | escape }}{% endif %}"
                           width="350"
                           height="auto"
                           loading="lazy"

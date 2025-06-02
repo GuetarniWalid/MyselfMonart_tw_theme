@@ -22,7 +22,11 @@
                   data-url64="{{ block.settings.collection.url | base64_encode }}"
                   tabindex="0">
                   {% if block.settings.collection.featured_image != blank %}
-                    {{ block.settings.collection.featured_image | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: block.settings.collection.featured_image.alt, loading: 'lazy', class: 'rounded-md' }}
+                    {% assign image_alt = block.settings.collection.featured_image.alt | escape %}
+                    {% if block.settings.collection.metafields.meta_object.media.value.alts.value[0] %}
+                      {% assign image_alt = block.settings.collection.metafields.meta_object.media.value.alts.value[0] | escape %}
+                    {% endif %}
+                    {{ block.settings.collection.featured_image | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: image_alt, loading: 'lazy', class: 'rounded-md' }}
                   {% endif %}
                   {{ block.settings.collection.title | escape }}
                 </li>
@@ -32,9 +36,17 @@
                   data-url64="{{ block.settings.product.url | base64_encode }}"
                   tabindex="0">
                   {% if block.settings.product.images[1] != blank %}
-                    {{ block.settings.product.images[1] | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: block.settings.product.images[1].alt, loading: 'lazy', class: 'rounded-md' }}
+                    {% assign media_alt = block.settings.product.images[1].alt | escape %}
+                    {% if block.settings.product.metafields.meta_object.media.value.alts.value[1] %}
+                      {% assign media_alt = block.settings.product.metafields.meta_object.media.value.alts.value[1] | escape %}
+                    {% endif %}
+                    {{ block.settings.product.images[1] | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: media_alt, loading: 'lazy', class: 'rounded-md' }}
                   {% elsif block.settings.product.images[0] != blank %}
-                    {{ block.settings.product.images[0] | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: block.settings.product.images[0].alt, loading: 'lazy', class: 'rounded-md' }}
+                    {% assign media_alt = block.settings.product.images[0].alt | escape %}
+                    {% if block.settings.product.metafields.meta_object.media.value.alts.value[0] %}
+                      {% assign media_alt = block.settings.product.metafields.meta_object.media.value.alts.value[0] | escape %}
+                    {% endif %}
+                    {{ block.settings.product.images[0] | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: media_alt, loading: 'lazy', class: 'rounded-md' }}
                   {% endif %}
                   {{ block.settings.product.title | escape }}
                 </li>
@@ -44,7 +56,11 @@
                   data-url64="{{ block.settings.page.url | base64_encode }}"
                   tabindex="0">
                   {% if block.settings.image != blank %}
-                    {{ block.settings.image | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: block.settings.image.alt, loading: 'lazy', class: 'rounded-md' }}
+                    {% assign image_alt = block.settings.image.alt | escape %}
+                    {% if block.settings.image.metafields.meta_object.media.value.alts.value[0] %}
+                      {% assign image_alt = block.settings.image.metafields.meta_object.media.value.alts.value[0] | escape %}
+                    {% endif %}
+                    {{ block.settings.image | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: image_alt, loading: 'lazy', class: 'rounded-md' }}
                   {% endif %}
                   {{ block.settings.page.title | escape }}
                 </li>
@@ -54,7 +70,11 @@
                     <summary class="list-none flex items-center justify-between gap-3">
                       <div class="flex items-center gap-3">
                         {% if block.settings.product.images[1] != blank %}
-                          {{ block.settings.product.images[1] | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: block.settings.product.images[1].alt, loading: 'lazy', class: 'rounded-md' }}
+                          {% assign image_alt = block.settings.product.images[1].alt | escape %}
+                          {% if block.settings.product.metafields.meta_object.media.value.alts.value[1] %}
+                            {% assign image_alt = block.settings.product.metafields.meta_object.media.value.alts.value[1] | escape %}
+                          {% endif %}
+                          {{ block.settings.product.images[1] | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: image_alt, loading: 'lazy', class: 'rounded-md' }}
                         {% endif %}
                         {{ block.settings.title | escape }}
                       </div>
@@ -77,7 +97,11 @@
                             data-url64="{{ collection.url | base64_encode }}"
                             tabindex="0">
                             {% if collection.featured_image != blank %}
-                              {{ collection.featured_image | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: collection.featured_image.alt, loading: 'lazy', class: 'rounded-md' }}
+                              {% assign image_alt = collection.featured_image.alt | escape %}
+                              {% if collection.metafields.meta_object.media.value.alts.value[0] %}
+                                {% assign image_alt = collection.metafields.meta_object.media.value.alts.value[0] | escape %}
+                              {% endif %}
+                              {{ collection.featured_image | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: image_alt, loading: 'lazy', class: 'rounded-md' }}
                             {% endif %}
                             {{ collection.title | escape }}
                           </li>
@@ -92,7 +116,11 @@
                     <summary class="list-none flex items-center justify-between gap-3">
                       <div class="flex items-center gap-3">
                         {% if block.settings.product.images[1] != blank %}
-                          {{ block.settings.product.images[1] | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: block.settings.product.images[1].alt, loading: 'lazy', class: 'rounded-md' }}
+                          {% assign image_alt = block.settings.product.images[1].alt | escape %}
+                          {% if block.settings.product.metafields.meta_object.media.value.alts.value[1] %}
+                            {% assign image_alt = block.settings.product.metafields.meta_object.media.value.alts.value[1] | escape %}
+                          {% endif %}
+                          {{ block.settings.product.images[1] | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: image_alt, loading: 'lazy', class: 'rounded-md' }}
                         {% endif %}
                         {{ block.settings.title | escape }}
                       </div>
@@ -137,7 +165,11 @@
                               <summary class="list-none flex items-center justify-between gap-3">
                                 <div class="flex items-center gap-3">
                                   {% if block.settings.product.images[1] != blank %}
-                                    {{ block.settings.product.images[1] | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: block.settings.product.images[1].alt, loading: 'lazy', class: 'rounded-md' }}
+                                    {% assign image_alt = block.settings.product.images[1].alt | escape %}
+                                    {% if block.settings.product.metafields.meta_object.media.value.alts.value[1] %}
+                                      {% assign image_alt = block.settings.product.metafields.meta_object.media.value.alts.value[1] | escape %}
+                                    {% endif %}
+                                    {{ block.settings.product.images[1] | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: image_alt, loading: 'lazy', class: 'rounded-md' }}
                                   {% endif %}
                                   {{ block.settings[title_id] | escape }}
                                 </div>
@@ -162,7 +194,11 @@
                                       data-url64="{{ collection.url | base64_encode }}"
                                       tabindex="0">
                                       {% if collection.featured_image != blank %}
-                                        {{ collection.featured_image | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: collection.featured_image.alt, loading: 'lazy', class: 'rounded-md' }}
+                                        {% assign image_alt = collection.featured_image.alt | escape %}
+                                        {% if collection.metafields.meta_object.media.value.alts.value[0] %}
+                                          {% assign image_alt = collection.metafields.meta_object.media.value.alts.value[0] | escape %}
+                                        {% endif %}
+                                        {{ collection.featured_image | image_url: width: 45, height: 45 | image_tag: width: 45, height: 45, alt: image_alt, loading: 'lazy', class: 'rounded-md' }}
                                       {% endif %}
                                       {{ collection.title | escape }}
                                     </li>
@@ -185,7 +221,7 @@
         </nav>
       </details>
       {% comment %} end on mobile {% endcomment %}
-      <h2 class="header__heading cursor-pointer inline-flex items-center obfuscate translate-x-10 md:translate-x-0 text-2xl sm:text-3xl" data-url64="Lw==">
+      <h2 class="header__heading cursor-pointer inline-flex items-center obfuscate translate-x-10 md:translate-x-0 text-2xl sm:text-3xl" data-url64="{{ routes.root_url | base64_encode }}">
         {% if section.settings.logo_svg != blank %}
           {{ section.settings.logo_svg }}
         {% else %}
@@ -294,7 +330,11 @@
                   data-url64="{{ collection.url | base64_encode }}"
                   tabindex="-1">
                   {% if collection.featured_image != blank %}
-                    {{ collection.featured_image | image_url: width: img_width, height: img_height | image_tag: width: img_width, height: img_height, alt: collection.featured_image.alt, loading: 'lazy', class: 'max-w-none transition-all duration-300 ease-out group-hover/link:scale-110 group-focus/link:scale-110' }}
+                    {% assign image_alt = collection.featured_image.alt | escape %}
+                    {% if collection.metafields.meta_object.media.value.alts.value[0] %}
+                      {% assign image_alt = collection.metafields.meta_object.media.value.alts.value[0] | escape %}
+                    {% endif %}
+                    {{ collection.featured_image | image_url: width: img_width, height: img_height | image_tag: width: img_width, height: img_height, alt: image_alt, loading: 'lazy', class: 'max-w-none transition-all duration-300 ease-out group-hover/link:scale-110 group-focus/link:scale-110' }}
                   {% endif %}
                   <p class="absolute z-20 bottom-4 text-xl text-secondary text-center w-full">
                     {{ collection.title | escape }}

@@ -20,7 +20,7 @@
         loading="lazy"
         width="{{ article.image.width }}"
         height="{{ article.image.height }}"
-        alt="{{ article.image.alt | escape }}"
+        alt="{% if article.metafields.meta_object.media.value.alts.value[0] %}{{ article.metafields.meta_object.media.value.alts.value[0] | escape }}{% else %}{{ article.image.alt | escape }}{% endif %}"
         class="skeleton placeholder">
     </div>
   {%- endif -%}

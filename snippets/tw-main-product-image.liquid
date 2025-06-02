@@ -16,7 +16,7 @@
             {{ media.preview_image | image_url }} {{ media.preview_image.width }}w"
     src="{{ media.preview_image | image_url: width: 550 }}"
     sizes="(min-width: 548px) 550px, 100vw"
-    alt="{{ media.alt | escape }}"
+    alt="{% if product.metafields.meta_object.media.value.alts.value[loop.index0] %}{{ product.metafields.meta_object.media.value.alts.value[loop.index0] | escape }}{% else %}{{ media.alt | escape }}{% endif %}"
     {% unless loop.first %}
       loading="lazy"
     {% endunless %}

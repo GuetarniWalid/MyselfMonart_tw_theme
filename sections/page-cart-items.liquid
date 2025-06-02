@@ -20,7 +20,7 @@
                   <img
                     src="{{ item.product.images[1] | image_url: width: 150 }}"
                     class="skeleton w-[120px] sm:w-auto"
-                    alt="{{ item.product.images[1].alt | escape }}"
+                    alt="{% if item.product.metafields.meta_object.media.value.alts.value[1] %}{{ item.product.metafields.meta_object.media.value.alts.value[1] | escape }}{% else %}{{ item.product.images[1].alt | escape }}{% endif %}"
                     loading="lazy"
                     width="150"
                     height="{{ 150 | divided_by: item.product.images[1].aspect_ratio | ceil }}">

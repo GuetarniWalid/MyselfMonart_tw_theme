@@ -7,18 +7,20 @@
     assign handle = handle_first_part | append: '/' | append: article.metafields.firstBlogLink.blogParent.value 
     assign parent = articles[handle]
     assign image = parent.image
-  endif
-
+    endif
+    
+    if parent.metafields.meta_object.media.value.alts.value[0] != blank
+      assign alt = parent.metafields.meta_object.media.value.alts.value[0]
+    else
+      assign alt = parent.image.alt
+    endif
   assign url = parent.url
-  assign text = article.metafields.firstBlogLink.parentTitle.value
-  if text == blank
-    assign text = parent.title
-  endif
+  assign text = parent.title
 -%}
 
 <div class="border-main border-1 inline-flex items-center relative mb-10 flex-col xs:flex-row max-w-[600px] w-[200px] xs:w-auto">
   {%- if image != blank -%}
-    {{ image | image_url: width: 200, height: 200 | image_tag: width: 200, height: 200 }}
+    {{ image | image_url: width: 200, height: 200 | image_tag: width: 200, height: 200, alt: alt }}
   {%- endif -%}
     <a href="{{ url }}" class="underline underline-offset-4 p-4 text-2xl after:absolute after:inset-0 after:cursor-pointer">{{ text }}</a>
 </div>

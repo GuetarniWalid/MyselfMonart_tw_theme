@@ -3,9 +3,9 @@
     "2b3b46e7-881c-4925-96cf-76c7ebf203c4": {
       "type": "image-banner",
       "settings": {
-        "image_desktop": "shopify:\/\/shop_images\/decoration-murale-tableau-fleurs_1.jpg",
+        "image_desktop": "shopify:\/\/shop_images\/decoration-murale-printemps-tableaux-fleurs-papillons.jpg",
         "image_desktop_horizontal_position": "center",
-        "image_mobile": "shopify:\/\/shop_images\/TABLEAU-DECO-NATURE.jpg",
+        "image_mobile": "shopify:\/\/shop_images\/tableaux-printemps-decoration-murale-nature-fleurs.jpg",
         "image_mobile_vertical_position": "bottom",
         "enable_lazy_loading": true
       }
@@ -132,7 +132,7 @@
         "page_RLddx7": {
           "type": "page",
           "settings": {
-            "image": "shopify:\/\/shop_images\/deco-murale-colore-tableau-toile_36ffa478-1226-49d0-ae81-b15e87569172.jpg",
+            "image": "shopify:\/\/shop_images\/deco-murale-colore-tableau-toile-femme-africaine.jpg",
             "page": "tableau-decoration",
             "nb_columns": "col-span-6",
             "lazy_load": true,
@@ -142,7 +142,7 @@
         "page_xPBNeE": {
           "type": "page",
           "settings": {
-            "image": "shopify:\/\/shop_images\/panneaux-decoratifs-muraux_b0f09172-b40e-4486-8076-07d1576e2144.jpg",
+            "image": "shopify:\/\/shop_images\/panneaux-decoratifs-muraux.jpg",
             "page": "papier-peint",
             "nb_columns": "col-span-12",
             "lazy_load": true,
@@ -197,7 +197,7 @@
         "column_jdnQLQ": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/poster-encadrer-cadre-bois-noir-mat.jpg",
+            "image": "shopify:\/\/shop_images\/poster-encadrer-cadre-bois-noir-mat_7a12c613-00d0-4408-9d83-de9ab5dc1f94.jpg",
             "title": "Poster & Affiche",
             "text": "<p>Ajoutez une touche chaleureuse et personnalisée à vos murs avec nos posters encadrés, parfaits pour créer une atmosphère accueillante et conviviale.<\/p>",
             "link_label": "",
@@ -208,7 +208,7 @@
         "column_HVEjBP": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-toile.jpg",
+            "image": "shopify:\/\/shop_images\/mpression-toile-angle-tableau-paysage-montagne.jpg",
             "title": "Tableau Décoration",
             "text": "<p>Apportez une touche moderne et élégante à votre intérieur grâce à nos tableaux de décoration, alliant style contemporain et finitions impeccables.<\/p>",
             "link_label": "",
