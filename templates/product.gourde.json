@@ -1,0 +1,279 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {
+            "margin_bottom": "mb-8"
+          }
+        },
+        "description_3Y7KG9": {
+          "type": "description",
+          "settings": {}
+        },
+        "variant_picker_QxUgdP": {
+          "type": "variant_picker",
+          "settings": {}
+        },
+        "9f20570b-1a97-4c34-8758-c5af9b8d2cfc": {
+          "type": "price",
+          "settings": {
+            "style": "default",
+            "background": "linear-gradient(135deg, rgba(255,247,220,1) 0%, rgba(254,206,218,1) 61%, rgba(214,208,253,1) 100%)",
+            "second_key_benefit": "Deuxième bénéficie clé",
+            "third_key_benefit": "Troisième bénéficie clé",
+            "fourth_key_benefit": "Quatrième bénéficie clé"
+          }
+        },
+        "buy_bW8TLN": {
+          "type": "buy",
+          "settings": {
+            "top_text": "Mettre dans le panier",
+            "bottom_text": "Une carte cadeau à offrir",
+            "main_color": "#07364d"
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "description_3Y7KG9",
+        "variant_picker_QxUgdP",
+        "9f20570b-1a97-4c34-8758-c5af9b8d2cfc",
+        "buy_bW8TLN"
+      ],
+      "settings": {}
+    },
+    "main-product-recommendations": {
+      "type": "product-recommendations",
+      "disabled": true,
+      "settings": {
+        "heading": "",
+        "heading_size": "h2",
+        "products_to_show": 10,
+        "columns_desktop": 4,
+        "image_ratio": "adapt",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": false,
+        "columns_mobile": "2",
+        "padding_top": 36,
+        "padding_bottom": 24
+      }
+    },
+    "image_with_text_NeFJ4g": {
+      "type": "image-with-text",
+      "name": "t:sections.image-with-text.presets.name",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/gourde-iconik-frida-caracteristiques.jpg",
+        "title": "Vous méritez mieux qu’une gourde de sport.",
+        "description": "<p>ICÖNIK, c’est un objet <strong>élégant, utile, inspirant.<br\/><\/strong> Pas un gadget. Pas un accessoire. Une <strong>pièce design<\/strong> à emporter partout.<\/p>",
+        "layout": "image_first",
+        "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#e3fae1",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "image_with_text_Gzj9G3": {
+      "type": "image-with-text",
+      "name": "t:sections.image-with-text.presets.name",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/gourde-sac-en-cuir-iconik.jpg",
+        "title": "EXPRIME QUI TU ES !",
+        "description": "<p>On ne boit pas assez quand on n’aime pas l’objet qu’on utilise.<br\/> ICÖNIK, vous donne envie de vous s’hydrater, parce qu’on aime ce qu’on tient en main.<br\/> Frida, c’est la couleur, la force, la liberté.<br\/> Et vous, quelle icône vous inspire au quotidien ?<\/p>",
+        "layout": "text_first",
+        "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#e3fae1",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "image_banner_QQTJhg": {
+      "type": "image-banner",
+      "name": "t:sections.image-banner.name",
+      "settings": {
+        "image_desktop": "shopify:\/\/shop_images\/gourde-iconik-frida-boire-plaisir.jpg",
+        "image_desktop_horizontal_position": "center",
+        "image_mobile": "shopify:\/\/shop_images\/gourde-utilisation-femme-afro-elegant-heureuse.jpg",
+        "image_mobile_vertical_position": "center",
+        "enable_lazy_loading": true
+      }
+    },
+    "image_with_text_fkEcdW": {
+      "type": "image-with-text",
+      "name": "t:sections.image-with-text.presets.name",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/gourde-iconik-frida-bureau.jpg",
+        "title": "UN OBJET D'ART UTILE",
+        "description": "<p>Emmenez-la partout : dans votre sac, au bureau, à un rendez-vous. Parce qu'une gourde peut être un accessoire de caractère.<\/p>",
+        "layout": "image_first",
+        "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#f5e3cd",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "image_with_text_yEBPYa": {
+      "type": "image-with-text",
+      "name": "t:sections.image-with-text.presets.name",
+      "settings": {
+        "image": "shopify:\/\/shop_images\/marque-francaise-iconik.jpg",
+        "title": "À offrir ou à s’offrir",
+        "description": "<p><strong>🎁 Le cadeau original, utile et stylé.<\/strong><\/p><ul><li>Pour dire “Je pense à toi” autrement.<\/li><li>Un objet qu’on garde, qu’on admire, et qu’on utilise vraiment.<\/li><\/ul><p><strong>À offrir à une personne inspirante. Ou à soi-même<\/strong><\/p>",
+        "layout": "text_first",
+        "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#E3FAE1",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "collapsible_content_fpm3qt": {
+      "type": "collapsible-content",
+      "blocks": {
+        "collapsible_row_NhRzh4": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "❓ Pourquoi ce prix -❓C’est juste une gourde ?",
+            "icon": "none",
+            "row_content": "<p>Ce n’est pas “juste une gourde”. C’est un objet personnel, un accessoire de style qui vous suit chaque jour.<br\/><br\/>Fabriquée en inox brossé, peinte avec soin, étanche, durable et unique — elle dure des années.<br\/><br\/>À la fois utile, élégante, et originale… comme un parfum ou un bijou du quotidien.<\/p>"
+          }
+        },
+        "collapsible_row_ygEMwP": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "❓Et si je ne l’aime pas ?",
+            "icon": "none",
+            "row_content": "<p>Retour possible sous 14 jours, sans condition.<\/p>"
+          }
+        },
+        "collapsible_row_gCeBYz": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "❓Est-ce que ça garde vraiment le frais - ❓ Et pour les boissons chaudes ?",
+            "icon": "none",
+            "row_content": "<p>Oui, 24h de fraîcheur ou 12h de chaleur grâce à sa double paroi en acier inoxydable.<\/p>"
+          }
+        },
+        "collapsible_row_HXBUfJ": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "❓Est-ce lourd dans un sac ?",
+            "icon": "none",
+            "row_content": "<p>Non, légère et bien équilibrée (moins de 450 g à vide).<\/p>"
+          }
+        },
+        "collapsible_row_3qckNE": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "❓Et si le bouchon fuit ?",
+            "icon": "none",
+            "row_content": "<p>Aucun risque : vissage précis, joint étanche, testé.<\/p>"
+          }
+        },
+        "collapsible_row_ALwrDL": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "❓Est-ce que ça passe au lave-vaisselle ?",
+            "icon": "none",
+            "row_content": "<p>Le lavage à la main est recommandé pour préserver les couleurs.<\/p>"
+          }
+        },
+        "collapsible_row_JFA3Er": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "❓Peut-on la personnaliser ?",
+            "icon": "none",
+            "row_content": "<p>Pas encore, mais chaque modèle est déjà une déclaration unique de style<\/p>"
+          }
+        },
+        "collapsible_row_64pqjf": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "❓ C’est une vraie marque française ?",
+            "icon": "none",
+            "row_content": "<p>Oui. ICÖNIK est une marque française, pensée avec amour, et expédiée depuis Toulouse.<\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "collapsible_row_NhRzh4",
+        "collapsible_row_ygEMwP",
+        "collapsible_row_gCeBYz",
+        "collapsible_row_HXBUfJ",
+        "collapsible_row_3qckNE",
+        "collapsible_row_ALwrDL",
+        "collapsible_row_JFA3Er",
+        "collapsible_row_64pqjf"
+      ],
+      "name": "t:sections.collapsible_content.presets.name",
+      "settings": {
+        "heading": "❓FAQ"
+      }
+    },
+    "shifted_image_carousel_ECPfpL": {
+      "type": "shifted-image-carousel",
+      "blocks": {
+        "image_zd4F8K": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/goude-prince.jpg"
+          }
+        },
+        "image_xeQebd": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/gourde-bruce-lee.jpg"
+          }
+        },
+        "image_Qx49Hx": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/gourde-coco-chanel.jpg"
+          }
+        },
+        "image_rC8qjW": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/gourde-einstein.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "image_zd4F8K",
+        "image_xeQebd",
+        "image_Qx49Hx",
+        "image_rC8qjW"
+      ],
+      "name": "t:sections.shifted-image-carousel.name",
+      "settings": {
+        "heading": "A more inspiring experience on the Internet",
+        "description": "People come to here looking for ideas. We help them achieve them.",
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#E3FAE1"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "main-product-recommendations",
+    "image_with_text_NeFJ4g",
+    "image_with_text_Gzj9G3",
+    "image_banner_QQTJhg",
+    "image_with_text_fkEcdW",
+    "image_with_text_yEBPYa",
+    "collapsible_content_fpm3qt",
+    "shifted_image_carousel_ECPfpL"
+  ],
+  "layout": "product"
+}
