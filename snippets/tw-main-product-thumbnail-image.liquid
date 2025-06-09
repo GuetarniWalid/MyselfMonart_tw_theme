@@ -17,7 +17,7 @@
     alt="{{ alt | escape }}"
     width="70"
     height="70"
-    class="{% if object-fit == 'contain' or image_number == 2 %}object-contain{% else %}w-full h-full object-cover object-center{% endif %}"
+    class="object-contain"
   >
   {% if file == 'glb' %}
     <span class="bg-white/70 rounded-full w-10 h-10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center">

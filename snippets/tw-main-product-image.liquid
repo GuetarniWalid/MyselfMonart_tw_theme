@@ -23,7 +23,7 @@
     width="550"
     height="auto"
     data-media-id="{{ media.id }}"
-    class="w-full h-full {% if loop.index == 2 %}object-contain{% else %}object-cover object-center{% endif %}"
+    class="w-full h-full {% if loop.index != 2 and template.suffix == 'painting' %}object-cover object-center{% else %}object-contain{% endif %}"
   >
     <button class="zoom absolute top-3 right-3 bg-secondary transition-colors duration-500 p-[9px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-100 focus-visible:opacity-100 outline-none border-1 border-main" {% unless loop.first %}tabindex="-1"{% endunless %}>
     {% render 'tw-icon-zoom' %}

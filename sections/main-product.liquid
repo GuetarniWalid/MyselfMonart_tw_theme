@@ -51,7 +51,7 @@
   {% else %}
     <main-product-carousel>
       <div class="md:sticky md:top-[120px] relative max-w-[550px] mx-auto">
-        <div class="carousel flex justify-start items-center transition-transform duration-300 mx-auto my-4 snap-x snap-mandatory overflow-y-hidden overflow-x-auto scrollbar-hidden h-[55vh] xs:h-[65vh] md:h-[55vh] lg:h-[70vh]">
+        <div class="carousel flex justify-start items-center transition-transform duration-300 mx-auto my-1 snap-x snap-mandatory overflow-y-hidden overflow-x-auto scrollbar-hidden h-[55vh] xs:h-[65vh] md:h-[55vh] lg:h-[70vh]">
           {% liquid
             assign number_of_media = 0
             for media in product.media
@@ -92,20 +92,20 @@
               assign media_alt = product.metafields.meta_object.media.value.alts.value[forloop.index0] | default: media.alt
               if media.media_type == 'image' and forloop.index != 3
                 assign image_number = image_number | default: 0 | plus: 1
-                render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media_alt, object-fit: 'cover', image_number: image_number
+                render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media_alt, image_number: image_number
               elsif forloop.index == 3 and first_3d_model != blank
                 if first_3d_model.url != blank
                   assign image_number = image_number | default: 0 | plus: 1
-                  render 'tw-main-product-thumbnail-image', image: product.media[1].preview_image, object-fit: 'contain', alt: model_alt, file: 'glb', image_number: image_number
+                  render 'tw-main-product-thumbnail-image', image: product.media[1].preview_image, alt: model_alt, file: 'glb', image_number: image_number
                   assign image_number = image_number | default: 0 | plus: 1
-                  render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media_alt, object-fit: 'cover', image_number: image_number
+                  render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media_alt, image_number: image_number
                 else
                   assign image_number = image_number | default: 0 | plus: 1
-                  render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media_alt, object-fit: 'cover', file: 'glb', image_number: image_number
+                  render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media_alt, file: 'glb', image_number: image_number
                 endif
               else if media.media_type == 'image'
                 assign image_number = image_number | default: 0 | plus: 1
-                render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media_alt, object-fit: 'cover', image_number: image_number
+                render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media_alt, image_number: image_number
               endif
             endfor
           %}
