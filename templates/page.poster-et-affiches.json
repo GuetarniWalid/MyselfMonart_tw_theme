@@ -98,7 +98,7 @@
       }
     },
     "shifted_image_carousel_rUMPXU": {
-      "type": "shifted-image-carousel",
+      "type": "shifted-image-text",
       "blocks": {
         "image_TJyYNB": {
           "type": "image",

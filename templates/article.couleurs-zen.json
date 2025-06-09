@@ -45,7 +45,7 @@
       }
     },
     "shifted_image_carousel_Rx3dzD": {
-      "type": "shifted-image-carousel",
+      "type": "shifted-image-text",
       "blocks": {
         "image_4H9cbm": {
           "type": "image",
@@ -114,7 +114,7 @@
       }
     },
     "shifted_image_carousel_edCYgP": {
-      "type": "shifted-image-carousel",
+      "type": "shifted-image-text",
       "blocks": {
         "image_JcTV7C": {
           "type": "image",
@@ -183,7 +183,7 @@
       }
     },
     "shifted_image_carousel_eic9JX": {
-      "type": "shifted-image-carousel",
+      "type": "shifted-image-text",
       "blocks": {
         "image_Fkyt7w": {
           "type": "image",
@@ -252,7 +252,7 @@
       }
     },
     "shifted_image_carousel_tk3ezD": {
-      "type": "shifted-image-carousel",
+      "type": "shifted-image-text",
       "blocks": {
         "image_dxV8g8": {
           "type": "image",

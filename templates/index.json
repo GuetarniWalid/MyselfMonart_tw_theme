@@ -75,7 +75,7 @@
       }
     },
     "shifted_image_carousel_cJeF34": {
-      "type": "shifted-image-carousel",
+      "type": "shifted-image-text",
       "blocks": {
         "image_AaTDCP": {
           "type": "image",

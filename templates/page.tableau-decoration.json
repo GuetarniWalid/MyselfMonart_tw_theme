@@ -124,7 +124,7 @@
       }
     },
     "shifted_image_carousel_GGjziG": {
-      "type": "shifted-image-carousel",
+      "type": "shifted-image-text",
       "blocks": {
         "image_TxEaKM": {
           "type": "image",

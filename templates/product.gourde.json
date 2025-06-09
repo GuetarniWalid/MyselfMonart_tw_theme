@@ -221,7 +221,7 @@
       }
     },
     "shifted_image_carousel_ECPfpL": {
-      "type": "shifted-image-carousel",
+      "type": "shifted-image-text",
       "blocks": {
         "image_zd4F8K": {
           "type": "image",
@@ -254,7 +254,7 @@
         "image_Qx49Hx",
         "image_rC8qjW"
       ],
-      "name": "t:sections.shifted-image-carousel.name",
+      "name": "t:sections.shifted-image-text.name",
       "settings": {
         "heading": "A more inspiring experience on the Internet",
         "description": "People come to here looking for ideas. We help them achieve them.",

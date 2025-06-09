@@ -1915,8 +1915,8 @@
     "sibling-blog-links": {
       "name": "Articles frères"
     },
-    "shifted-image-carousel": {
-      "name": "Carrousel d'images décalées",
+    "shifted-image-text": {
+      "name": "Images décalées / Texte",
       "settings": {
         "heading": {
           "label": "Titre"

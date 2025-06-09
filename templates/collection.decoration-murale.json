@@ -62,7 +62,7 @@
       }
     },
     "shifted_image_carousel_rBCaBw": {
-      "type": "shifted-image-carousel",
+      "type": "shifted-image-text",
       "blocks": {
         "image_tz6pKJ": {
           "type": "image",
