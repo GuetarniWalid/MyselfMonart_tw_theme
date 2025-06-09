@@ -179,7 +179,11 @@
                 <path d="M28.2568 16.5402C30.9044 21.0275 38.2944 21.5993 41.522 16.6126C38.8682 12.4941 32.0916 11.5639 28.2568 16.5402ZM33.345 18.6533C31.7021 18.3177 30.7304 17.7169 29.879 16.6189C30.7304 15.5229 31.7559 14.9842 33.3719 14.5886C32.2904 16.0077 32.2656 17.2321 33.345 18.6533ZM34.992 17.8081C34.3663 17.8495 33.7531 17.2943 33.7303 16.6728C33.7076 16.0595 34.2959 15.4297 34.9112 15.4629C35.5659 15.498 35.9699 15.8896 36.0879 16.5195C36.1977 17.112 35.6115 17.7666 34.992 17.8081ZM36.5707 18.6264C37.4429 17.2528 37.5983 16.0615 36.7405 14.8061C38.0478 15.0154 39.0899 15.5312 39.8896 16.5941C39.152 17.7211 38.1203 18.2846 36.5707 18.6243V18.6264Z" class="fill-action"/>
               </svg>
               <span class="inline-flex flex-col gap-2 text-left shrink-0 pointer-events-none">
-                <span class="font-thin text-base 2xs:text-lg ">{{ block.settings.top_text }}</span>
+                <span class="top-text font-thin text-base 2xs:text-lg ">{% if block.settings.is_dynamic_variant %}
+                  {{ product.selected_or_first_available_variant.title }}
+                {% else %}
+                  {{ block.settings.top_text }}
+                {% endif %}</span>
                 <span class="font-bold font-heading text-base 2xs:text-lg xs:text-xl md:text-lg lg:text-xl">{{ block.settings.bottom_text }}</span>
               </span>
               {% render 'tw-icon-loading', color: 'light', hidden: true, size: 2 %}
@@ -197,7 +201,13 @@
                   <path d="M28.2568 16.5402C30.9044 21.0275 38.2944 21.5993 41.522 16.6126C38.8682 12.4941 32.0916 11.5639 28.2568 16.5402ZM33.345 18.6533C31.7021 18.3177 30.7304 17.7169 29.879 16.6189C30.7304 15.5229 31.7559 14.9842 33.3719 14.5886C32.2904 16.0077 32.2656 17.2321 33.345 18.6533ZM34.992 17.8081C34.3663 17.8495 33.7531 17.2943 33.7303 16.6728C33.7076 16.0595 34.2959 15.4297 34.9112 15.4629C35.5659 15.498 35.9699 15.8896 36.0879 16.5195C36.1977 17.112 35.6115 17.7666 34.992 17.8081ZM36.5707 18.6264C37.4429 17.2528 37.5983 16.0615 36.7405 14.8061C38.0478 15.0154 39.0899 15.5312 39.8896 16.5941C39.152 17.7211 38.1203 18.2846 36.5707 18.6243V18.6264Z" class="fill-action"/>
                 </svg>
                 <span class="inline-flex flex-col gap-2 text-left shrink-0 pointer-events-none">
-                  <span class="top-text font-thin text-base 2xs:text-lg md:text-xl opacity-0 translate-x-[10%]">{{ block.settings.top_text }}</span>
+                  <span class="top-text font-thin text-base 2xs:text-lg md:text-xl opacity-0 translate-x-[10%]">
+                    {% if block.settings.is_dynamic_variant %}
+                      {{ product.selected_or_first_available_variant.title }}
+                    {% else %}
+                      {{ block.settings.top_text }}
+                    {% endif %}
+                  </span>
                   <span class="bottom-text font-bold font-heading text-base 2xs:text-lg xs:text-xl md:text-2xl opacity-0 translate-x-1/3">
                     {{ block.settings.bottom_text }}
                   </span>
@@ -775,6 +785,12 @@
           "id": "top_text",
           "default": "Choisir mes options",
           "label": "t:sections.main-product.blocks.buy.settings.top_text.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_dynamic_variant",
+          "default": false,
+          "label": "t:sections.main-product.blocks.buy.settings.is_dynamic_variant.label"
         },
         {
           "type": "text",

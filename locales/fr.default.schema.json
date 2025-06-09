@@ -1248,6 +1248,10 @@
             "bottom_text": {
               "label": "Texte du bas"
             },
+            "is_dynamic_variant": {
+              "label": "Afficher le nom de la variante",
+              "info": "Si activé, le nom de la variante prendra le dessus sur le texte du haut"
+            },
             "main_color": {
               "label": "Couleur de fond"
             },
@@ -1933,6 +1937,14 @@
               "label": "Image"
             }
           }
+        }
+      }
+    },
+    "variant-carrousel": {
+      "name": "Carrousel de variantes",
+      "settings": {
+        "button_text": {
+          "label": "Texte du bouton"
         }
       }
     },

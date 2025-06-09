@@ -1,0 +1,69 @@
+<div
+  class="px-4"
+  style="display:block">
+  {%- if product.variants.size > 0 -%}
+    <h2 class="mb-2">
+      {{ section.settings.heading | escape }}
+    </h2>
+    <snap-carrousel>
+      <ul class="component-carroussel flex gap-4 overflow-x-auto snap-mandatory snap-x scroll-smooth scrollbar py-6">
+        {%- for variant in product.variants -%}
+          {%- assign first_image = variant.featured_image -%}
+          <li class="group relative max-w-[350px] shrink-0 text-center snap-start pb-2 flex flex-col">
+            <div class="relative cursor-pointer h-max grow">
+              <img
+              src="{{ first_image | image_url }}"
+              alt="{{ first_image.alt | escape }}"
+              width="350"
+              height="auto"
+              loading="lazy"
+              srcset="
+              {{ first_image | image_url: width: 300 }} 300w,
+              {{ first_image | image_url: width: 350 }} 350w"
+              sizes="(max-width: 356px) 300px, 350px"
+              class="skeleton w-full h-full object-cover">
+              </div>
+              <h3 class="relative text-xl inline-block mx-auto truncate text-ellipsis w-full mt-6 mb-2 grow-0 pointer-events-none">{{ variant.title }}</h3>
+              <p class="text-xl mb-6">{{ variant.price | money }}</p>
+              <variant-to-cart data-variant-id="{{ variant.id }}">
+                <button class="grow-0 w-9/12 mx-auto border bg-main text-secondary rounded-lg px-3 py-2 hover:scale-105 transition-all duration-300 before:absolute before:inset-0">{{ section.settings.button_text }}</button>
+              </variant-to-cart>
+              </li>
+        {%- endfor -%}
+      </ul>
+    </snap-carrousel>
+  {%- endif -%}
+</div>
+
+<script src="{{ 'component-carrousel.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+  {
+    "name": "t:sections.variant-carrousel.name",
+    "tag": "section",
+    "class": "page-width mt-20",
+    "limit": 1,
+    "enabled_on": {
+      "templates": ["product"]
+    },
+    "settings": [
+      {
+        "type": "text",
+        "id": "heading",
+        "default": "You may also like",
+        "label": "t:sections.product-recommendations.settings.heading.label"
+      },
+      {
+        "type": "text",
+        "id": "button_text",
+        "default": "Add to cart",
+        "label": "t:sections.product-carrousel.settings.button_text.label"
+      }
+    ],
+    "presets": [
+      {
+        "name": "t:sections.variant-carrousel.name"
+      }
+    ]
+  }
+{% endschema %}

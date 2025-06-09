@@ -426,11 +426,12 @@ class VariantPicker extends HTMLElement {
   onButtonClick = () => {
     this.unColorPreviousButtonSelected();
     this.colorButtonSelected();
-    const [variantId, variantPrice] = this.getVariantData();
+    const { variantId, variantPrice, variantTitle } = this.getVariantData();
     if (!this.buyButton) return;
     this.buyButton.dataset.variantId = variantId;
-    this.updateFloatBuyButton(variantId);
+    this.updateFloatBuyButton(variantId, variantTitle);
     this.updateDisplayedPrice(variantPrice);
+    this.updateTopText(variantTitle);
   };
 
   colorButtonSelected() {
@@ -461,7 +462,11 @@ class VariantPicker extends HTMLElement {
         variant.option2 === option2 &&
         variant.option3 === option3,
     );
-    return [currentVariant.id, currentVariant.price];
+    return {
+      variantId: currentVariant.id,
+      variantPrice: currentVariant.price,
+      variantTitle: currentVariant.title,
+    };
   }
 
   getOptions() {
@@ -488,16 +493,49 @@ class VariantPicker extends HTMLElement {
     priceElem.textContent = newPriceString;
   }
 
-  updateFloatBuyButton(variantId) {
+  updateFloatBuyButton(variantId, variantTitle) {
+    console.log('🚀 ~ variantTitle:', variantTitle)
     const floatBuyButton = document.querySelector('.float-buy-button');
-    if (floatBuyButton) floatBuyButton.dataset.variantId = variantId;
+    if (floatBuyButton) {
+      const topTextElem = floatBuyButton.querySelector('.top-text');
+      floatBuyButton.dataset.variantId = variantId;
+      topTextElem.textContent = variantTitle;
+    }
     else {
       const templateFloatBuyButton =
         document.getElementById('float-buy-button');
       const content = templateFloatBuyButton.content;
       const floatBuyButton = content.querySelector('.float-buy-button');
+      console.log('🚀 ~ floatBuyButton:', floatBuyButton)
+      const topTextElem = floatBuyButton.querySelector('.top-text');
+      console.log('🚀 ~ topTextElem:', topTextElem)
       floatBuyButton.dataset.variantId = variantId;
+      topTextElem.textContent = variantTitle;
     }
+  }
+
+  updateTopText(variantTitle) {
+    const topTextElem = document.querySelector('.top-text');
+    if (!topTextElem) return;
+    topTextElem.textContent = variantTitle;
   }
 }
 customElements.define('variant-picker', VariantPicker);
+
+class VariantToCart extends HTMLElement {
+  constructor() {
+    super();
+    this.button = this.querySelector('button');
+    this.buyButton = document.querySelector('.buy-button');
+  }
+
+  connectedCallback() {
+    this.button.addEventListener('click', this.onButtonClick);
+  }
+
+  onButtonClick = () => {
+    this.buyButton.dataset.variantId = this.dataset.variantId;
+    this.buyButton.click();
+  };
+}
+customElements.define('variant-to-cart', VariantToCart);

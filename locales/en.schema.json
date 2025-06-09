@@ -1248,6 +1248,10 @@
             "bottom_text": {
               "label": "Bottom Text"
             },
+            "is_dynamic_variant": {
+              "label": "Display variant name",
+              "info": "If enabled, the variant name will take precedence over the top text"
+            },
             "main_color": {
               "label": "Background Color"
             },
@@ -1964,6 +1968,14 @@
       },
       "presets": {
         "name": "Video"
+      }
+    },
+    "variant-carrousel": {
+      "name": "Variant Carousel",
+      "settings": {
+        "button_text": {
+          "label": "Button text"
+        }
       }
     },
     "video-banner": {
