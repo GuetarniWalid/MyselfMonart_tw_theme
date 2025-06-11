@@ -195,7 +195,8 @@
         "from_price_html": "Du {{ price }}",
         "regular_price": "Prix habituel",
         "sale_price": "Prix soldé",
-        "unit_price": "Prix unitaire"
+        "unit_price": "Prix unitaire",
+        "total": "Total:"
       },
       "sold_out": "Épuisé",
       "unavailable": "Non disponible",

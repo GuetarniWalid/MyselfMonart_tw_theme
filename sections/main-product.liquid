@@ -138,7 +138,21 @@
             <h1 class="text-4xl {{ block.settings.margin_bottom }}">{{ product.title | escape }}</h1>
           {%- when 'price' -%}
             {% if block.settings.style == 'default' %}
-              <span id="main-price" class="block text-xl font-bold font-heading mb-4" data-money-symbol="{{ cart.currency.symbol }}">{{ product.price_min | money_with_currency }}</span>
+              <div class="flex items-end gap-2 mb-4 text-xl font-bold font-heading">
+                {{ 'products.product.price.total' | t }}
+                <span id="main-price" data-money-symbol="{{ cart.currency.symbol }}">
+                  {{ product.selected_or_first_available_variant.price | money }}
+                </span>
+                {% if product.selected_or_first_available_variant.compare_at_price %}
+                  <span id="crossed-price" class="line-through text-red-600 text-sm pb-1" data-money-symbol="{{ cart.currency.symbol }}">
+                    {{ product.selected_or_first_available_variant.compare_at_price |  money }}
+                  </span>
+                  <span id="reduction-price" class="inline-block bg-red-600 text-sm text-secondary rounded-full px-2 py-1">
+                    {% assign reduction = product.selected_or_first_available_variant.compare_at_price | minus: product.selected_or_first_available_variant.price %}
+                    - {{ reduction | money_without_trailing_zeros }}
+                  </span>
+                {% endif %}
+              </div>
             {% elsif block.settings.style == 'tapestry' %}
               <div class="flex gap-4 mb-4 py-6 rounded-2xl px-7 min-h-20 mt-5" style="background: {{ block.settings.background }}" data-money-symbol="{{ cart.currency.symbol }}">
                 <div id="main-price" class=" flex items-center text-5xl font-bold font-heading border-r-2 border-black/5 pr-7">{{ product.price_min | money_with_currency }}</div>

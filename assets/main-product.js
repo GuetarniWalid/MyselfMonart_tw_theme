@@ -252,7 +252,6 @@ class MainProductBlocks extends CollapsibleTab {
         cartDrawerButton.click();
       }, 300);
     } catch (e) {
-      console.log('🚀 ~ e:', e);
       throw new Error("Une erreur inattendu s'est produite.");
     } finally {
       this.hideLoader(button);
@@ -426,11 +425,13 @@ class VariantPicker extends HTMLElement {
   onButtonClick = () => {
     this.unColorPreviousButtonSelected();
     this.colorButtonSelected();
-    const { variantId, variantPrice, variantTitle } = this.getVariantData();
+    const { variantId, variantPrice, variantTitle, variantCompareAtPrice } = this.getVariantData();
     if (!this.buyButton) return;
     this.buyButton.dataset.variantId = variantId;
     this.updateFloatBuyButton(variantId, variantTitle);
     this.updateDisplayedPrice(variantPrice);
+    this.updateDisplayedCrossedPrice(variantCompareAtPrice);
+    this.updateDisplayedReductionPrice(variantCompareAtPrice, variantPrice);
     this.updateTopText(variantTitle);
   };
 
@@ -465,6 +466,7 @@ class VariantPicker extends HTMLElement {
     return {
       variantId: currentVariant.id,
       variantPrice: currentVariant.price,
+      variantCompareAtPrice: currentVariant.compare_at_price,
       variantTitle: currentVariant.title,
     };
   }
@@ -484,32 +486,92 @@ class VariantPicker extends HTMLElement {
   updateDisplayedPrice(newPrice) {
     const priceElem = document.getElementById('main-price');
     if (!priceElem) return;
-    const moneySymbol = priceElem.dataset.moneySymbol;
-    const moneyTrigram = priceElem.textContent.split(' ')[1];
+    priceElem.textContent = this.formatPrice(newPrice);
+  }
+
+  updateDisplayedCrossedPrice(newPrice) {
+    const crossedPriceElem = document.getElementById('crossed-price');
+    if (!crossedPriceElem) return;
+    if (!newPrice) crossedPriceElem.classList.add('hidden');
+    else {
+      crossedPriceElem.classList.remove('hidden');
+      crossedPriceElem.textContent = this.formatPrice(newPrice);
+    }
+  }
+
+  updateDisplayedReductionPrice(variantCompareAtPrice, variantPrice) {
+    const reductionPriceElem = document.getElementById('reduction-price');
+    if (!reductionPriceElem) return;
+    if (!variantCompareAtPrice || !variantPrice) reductionPriceElem.classList.add('hidden');
+    else {
+      reductionPriceElem.classList.remove('hidden');
+      const reduction = variantCompareAtPrice - variantPrice;
+      reductionPriceElem.textContent = '- ' + this.formatPrice(reduction);
+    }
+  }
+
+  formatPrice(newPrice) {
+    // Convert to decimal and remove trailing zeros
+    const decimalPrice = (newPrice / 100).toFixed(2).replace(/\.?0+$/, '');
+
+    const priceElem = document.getElementById('main-price');
+    if (!priceElem) return decimalPrice;
+
+    const currentPriceText = priceElem.textContent.trim();
+
+    const currencySymbolMatch = currentPriceText.match(/[^\d\s,.]/);
+    const currencySymbol = currencySymbolMatch ? currencySymbolMatch[0] : '';
+
+    const symbolPosition = currentPriceText.indexOf(currencySymbol);
+
+    const hasSpaceBeforeNumber = currentPriceText.match(/\s+\d/);
+    const hasSpaceAfterNumber = currentPriceText.match(/\d\s+/);
+
+    const hasCommaDecimal = currentPriceText.match(/\d,\d/);
+    const hasPointDecimal = currentPriceText.match(/\d\.\d/);
+    const decimalSeparator = hasCommaDecimal
+      ? ','
+      : hasPointDecimal
+      ? '.'
+      : ',';
+
+    // Format the decimal price with the correct separator and remove trailing zeros
+    const formattedDecimalPrice = decimalPrice.replace('.', decimalSeparator);
+
     let newPriceString = '';
-    if (moneyTrigram) newPriceString = moneySymbol;
-    newPriceString += (Number(newPrice) / 100).toFixed(2);
-    if (moneyTrigram) newPriceString += ' ' + moneyTrigram;
-    priceElem.textContent = newPriceString;
+
+    if (currencySymbol) {
+      if (symbolPosition === 0) {
+        newPriceString += currencySymbol;
+        if (hasSpaceBeforeNumber) newPriceString += ' ';
+      }
+    }
+
+    newPriceString += formattedDecimalPrice;
+
+    if (hasSpaceAfterNumber) newPriceString += ' ';
+
+    if (currencySymbol && symbolPosition > 0) {
+      if (hasSpaceBeforeNumber) newPriceString += ' ';
+      newPriceString += currencySymbol;
+    }
+
+    return newPriceString;
   }
 
   updateFloatBuyButton(variantId, variantTitle) {
-    console.log('🚀 ~ variantTitle:', variantTitle)
     const floatBuyButton = document.querySelector('.float-buy-button');
     if (floatBuyButton) {
       const topTextElem = floatBuyButton.querySelector('.top-text');
-      floatBuyButton.dataset.variantId = variantId;
       topTextElem.textContent = variantTitle;
-    }
-    else {
+      floatBuyButton.dataset.variantId = variantId;
+    } else {
       const templateFloatBuyButton =
         document.getElementById('float-buy-button');
       const content = templateFloatBuyButton.content;
       const floatBuyButton = content.querySelector('.float-buy-button');
-      console.log('🚀 ~ floatBuyButton:', floatBuyButton)
-      const topTextElem = floatBuyButton.querySelector('.top-text');
-      console.log('🚀 ~ topTextElem:', topTextElem)
       floatBuyButton.dataset.variantId = variantId;
+      const topTextElem = floatBuyButton.querySelector('.top-text');
       topTextElem.textContent = variantTitle;
     }
   }

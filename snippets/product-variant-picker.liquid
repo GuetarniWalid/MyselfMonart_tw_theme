@@ -11,11 +11,11 @@
                 {%- for value in option.values -%}
                     {% if value.available %}
                         {% if value.selected %}
-                            <variant-picker data-selected="true" data-option="option{{ option.position }}" data-option-value="{{ value }}">
+                            <variant-picker data-selected="true" data-option="option{{ option.position }}" data-option-value="{{ value }}" data-price-pattern="{{ product.price_min | money }}">
                                 <button class="px-4 py-2 rounded-lg bg-main text-secondary transition-colors duration-500">{{ value }}</button>
                             </variant-picker>
                         {% else %}
-                            <variant-picker data-option="option{{ option.position }}" data-option-value="{{ value }}">
+                            <variant-picker data-option="option{{ option.position }}" data-option-value="{{ value }}" data-variant-price="{{ value.price | money }}" data-price-pattern="{{ product.price_min | money }}">
                                 <button class="px-4 py-2 rounded-lg bg-main-5" data-id="{{ value.id }}">{{ value }}</button>
                             </variant-picker>
                         {% endif %}              
