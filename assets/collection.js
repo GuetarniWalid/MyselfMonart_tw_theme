@@ -74,8 +74,8 @@ class InfiniteScrollStrorage extends HTMLElement {
 
   saveInnerHTML() {
     const clone = this.cloneNode(true);
-    clone.querySelectorAll('button.liked').forEach((buttonLiked) => {
-      buttonLiked.classList.remove('liked');
+    clone.querySelectorAll('button.is-liked').forEach((buttonLiked) => {
+      buttonLiked.classList.remove('is-liked');
     });
     sessionStorage.setItem(this.createSessionKey('html'), clone.innerHTML);
   }

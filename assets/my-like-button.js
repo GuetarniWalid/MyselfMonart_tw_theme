@@ -1,14 +1,16 @@
+if (!customElements.get('my-likes-button')) {
 class MyLikesButton extends HTMLElement {
   connectedCallback() {
-    const likedLis = this.getLisStorage();
-    if (likedLis.length > 0) {
+    const productLikedIds = this.getProductLikedIds();
+    if (productLikedIds.length > 0) {
       this.colorButton();
     }
   }
 
-  getLisStorage() {
-    const likedLis = localStorage.getItem('likedLis');
-    return likedLis ? JSON.parse(likedLis) : [];
+  getProductLikedIds() {
+    const unformattedproductLikedIds = localStorage.getItem('productLikedIds');
+    const productLikedIds = JSON.parse(unformattedproductLikedIds) || [];
+    return productLikedIds;
   }
 
   colorButton() {
@@ -18,59 +20,56 @@ class MyLikesButton extends HTMLElement {
 customElements.define('my-likes-button', MyLikesButton);
 
 class MyLikeButton extends HTMLElement {
+  constructor() {
+    super();
+    this.productId = this.dataset.productId;
+  }
+
   connectedCallback() {
-    const { likedLisHtml } = this.getLisStorage();
-    likedLisHtml.forEach((likedLi) => {
-      const id = likedLi.id;
-      const liToLiked = document.getElementById(id);
+    const productLikedIds = this.getProductLikedIds();
+    productLikedIds.forEach((productLikedId) => {
+      const liToLiked = document.getElementById(productLikedId) || document.querySelector(`my-like-button[data-product-id="${productLikedId}"]`);
       liToLiked?.querySelector('button.like').classList.add('is-liked');
     });
 
     this.addEventListener('click', async () => {
+      if (this.querySelector('button.like').classList.contains('disabled')) return;
+
       const likeButton = this.firstElementChild;
       const isLiked = likeButton.classList.contains('is-liked');
       likeButton.classList.toggle('is-liked', !isLiked);
-      const liParent = this.closest('li');
 
-      const { likedLisHtml, likedLisString } = this.getLisStorage();
+      const productLikedIds = this.getProductLikedIds();
       if (isLiked) {
-        this.deleteLiInLocalStorage(likedLisHtml, likedLisString, liParent);
-        await this.updateLikesCountOnServer(liParent.id, 'decrement');
+        this.deleteProductLikedIdInLocalStorage(productLikedIds);
+        await this.updateLikesCountOnServer(this.productId, 'decrement');
       } else {
-        this.saveLiInLocalStorage(likedLisHtml, likedLisString, liParent);
-        await this.updateLikesCountOnServer(liParent.id, 'increment');
+        this.saveProductLikedIdInLocalStorage(productLikedIds);
+        await this.updateLikesCountOnServer(this.productId, 'increment');
       }
 
-      this.deleteLiInLikedPage(likedLisString.length === 0);
+      this.deleteLiInLikedPage(productLikedIds.length === 0);
       this.updateLikeButtonCount();
+      this.updateInfiniteScrollStrorage();
     });
   }
 
-  getLisStorage() {
-    const likedLis = localStorage.getItem('likedLis');
-    const likedLisString = likedLis ? JSON.parse(likedLis) : [];
-    const likedLisHtml = likedLisString.map((likedLi) => {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(likedLi, 'text/html');
-      const li = doc.body.firstChild;
-      return li;
-    });
-    return { likedLisHtml, likedLisString };
+  getProductLikedIds() {
+    const unformattedproductLikedIds = localStorage.getItem('productLikedIds');
+    const productLikedIds = JSON.parse(unformattedproductLikedIds) || [];
+    return productLikedIds;
   }
 
-  saveLiInLocalStorage(likedLisHtml, likedLisString, liParent) {
-    likedLisString.push(liParent.outerHTML);
-    likedLisHtml.push(liParent);
-    localStorage.setItem('likedLis', JSON.stringify(likedLisString));
+  saveProductLikedIdInLocalStorage(productLikedIds) {
+    productLikedIds.push(this.productId);
+    localStorage.setItem('productLikedIds', JSON.stringify(productLikedIds));
   }
 
-  deleteLiInLocalStorage(likedLisHtml, likedLisString, liParent) {
-    const index = likedLisHtml.findIndex(
-      (likedLi) => likedLi.id === liParent.id,
+  deleteProductLikedIdInLocalStorage(productLikedIds) {
+    const productLikedIdsFiltered = productLikedIds.filter(
+      (productLikedId) => productLikedId !== this.productId,
     );
-    likedLisString.splice(index, 1);
-    likedLisHtml.splice(index, 1);
-    localStorage.setItem('likedLis', JSON.stringify(likedLisString));
+    localStorage.setItem('productLikedIds', JSON.stringify(productLikedIdsFiltered));
   }
 
   deleteLiInLikedPage(isLastLi) {
@@ -85,10 +84,9 @@ class MyLikeButton extends HTMLElement {
   }
 
   async updateLikesCountOnServer(id, action) {
-    const likesCountContainer = this.getLikesCountContainerOnLayout();
-    this.showLoader(likesCountContainer);
-    let newCount;
     try {
+      this.disableButton();
+      this.updateLikesCountOnLayout(action);
       const response = await fetch(
         `https://backend.myselfmonart.com/api/product/update/metafield/likes-count`,
         {
@@ -99,64 +97,21 @@ class MyLikeButton extends HTMLElement {
           body: JSON.stringify({ productId: id, action }),
         },
       );
-      newCount = await response.json();
-      this.updateLikesCountOnLayout(likesCountContainer, newCount);
+      const newCount = await response.json();
     } catch (error) {
       console.error('Error:', error);
     } finally {
-      this.hideLoader(likesCountContainer);
+      this.enableButton();
     }
   }
 
-  updateLikesCountOnLayout(likesCountContainer, newCount) {
-    const likesCountElem = likesCountContainer.querySelector(
+  updateLikesCountOnLayout(action) {
+    const likesCountElem = this.querySelector(
       '.total-users-likes-count',
     );
-    likesCountElem.textContent = newCount;
-    if (newCount <= 0) {
-      this.deleteLikesCountOnLayout(likesCountElem);
-    }
-  }
-
-  getLikesCountContainerOnLayout() {
-    const likesCountContainer = this.closest('li').querySelector(
-      '.likes-count-container',
-    );
-    if (likesCountContainer) {
-      return likesCountContainer;
-    } else {
-      this.createLikesCountContainerOnLayout();
-      const likesCountContainer = this.closest('li').querySelector(
-        '.likes-count-container',
-      );
-      return likesCountContainer;
-    }
-  }
-
-  createLikesCountContainerOnLayout() {
-    const template = this.closest('li').querySelector(
-      '.likes-count-container-template',
-    );
-    const container = template.content.cloneNode(true);
-    this.closest('li').querySelector('.price-and-likes').appendChild(container);
-  }
-
-  deleteLikesCountOnLayout(likesCountElem) {
-    likesCountElem.closest('div').remove();
-  }
-
-  showLoader(likesCountElem) {
-    likesCountElem
-      .querySelector('.total-users-likes-count')
-      .classList.add('hidden');
-    likesCountElem.querySelector('.animate-spin').classList.remove('hidden');
-  }
-
-  hideLoader(likesCountElem) {
-    likesCountElem.querySelector('.animate-spin').classList.add('hidden');
-    likesCountElem
-      .querySelector('.total-users-likes-count')
-      .classList.remove('hidden');
+    const count = parseInt(likesCountElem.textContent);
+    const newCount = action === 'increment' ? count + 1 : count - 1;
+    likesCountElem.textContent = newCount.toString();
   }
 
   updateLikesCountOnLocalStorage(id, action) {
@@ -166,5 +121,43 @@ class MyLikeButton extends HTMLElement {
       action === 'increment' ? product.likesCount + 1 : product.likesCount - 1;
     localStorage.setItem('products', JSON.stringify(products));
   }
+
+  disableButton() {
+    this.querySelector('button.like').classList.add('disabled');
+    this.querySelector('button.like').classList.add('cursor-not-allowed');
+  }
+
+  enableButton() {
+    this.querySelector('button.like').classList.remove('disabled');
+    this.querySelector('button.like').classList.remove('cursor-not-allowed');
+  }
+
+  updateInfiniteScrollStrorage() {
+    // Get all session storage entries that start with 'infinite-scroll-storage-'
+    const infiniteScrollEntries = Object.keys(sessionStorage)
+      .filter(key => key.startsWith('infinite-scroll-storage-'))
+      .map(key => ({
+        key,
+        html: sessionStorage.getItem(key)
+      }));
+
+    if (infiniteScrollEntries.length === 0) return;
+
+    // Process each HTML entry
+    infiniteScrollEntries.forEach(entry => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(entry.html, 'text/html');
+      const myLikeButton = doc.querySelector(`my-like-button[data-product-id="${this.productId}"]`);
+      
+      if (myLikeButton) {
+        const likesCountElem = myLikeButton.querySelector('.total-users-likes-count');
+        likesCountElem.textContent = this.querySelector('.total-users-likes-count').textContent;
+        
+        // Save the modified HTML back to session storage
+        sessionStorage.setItem(entry.key, doc.documentElement.outerHTML);
+      }
+    });
+  }
 }
 customElements.define('my-like-button', MyLikeButton);
+}

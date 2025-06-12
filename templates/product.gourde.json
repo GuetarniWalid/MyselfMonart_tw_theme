@@ -3,10 +3,24 @@
     "main": {
       "type": "main-product",
       "blocks": {
+        "likes_mnLGpD": {
+          "type": "likes",
+          "settings": {
+            "margin_bottom": "mb-8"
+          }
+        },
         "title": {
           "type": "title",
           "settings": {
             "margin_bottom": "mb-8"
+          }
+        },
+        "trustpilot_review_WCpBfr": {
+          "type": "trustpilot_review",
+          "settings": {
+            "trustpilot_score": 44,
+            "link": "",
+            "margin_bottom": "mb-2"
           }
         },
         "description_3Y7KG9": {
@@ -30,14 +44,17 @@
         "buy_bW8TLN": {
           "type": "buy",
           "settings": {
-            "top_text": "Mettre dans le panier",
-            "bottom_text": "Une carte cadeau à offrir",
-            "main_color": "#07364d"
+            "top_text": "-20 % Stock en édition limitée.",
+            "is_dynamic_variant": true,
+            "bottom_text": "J'emporte mon icône",
+            "main_color": "#149656"
           }
         }
       },
       "block_order": [
+        "likes_mnLGpD",
         "title",
+        "trustpilot_review_WCpBfr",
         "description_3Y7KG9",
         "variant_picker_QxUgdP",
         "9f20570b-1a97-4c34-8758-c5af9b8d2cfc",
@@ -67,8 +84,8 @@
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
         "image": "shopify:\/\/shop_images\/gourde-iconik-frida-caracteristiques.jpg",
-        "title": "Vous méritez mieux qu’une gourde de sport.",
-        "description": "<p>ICÖNIK, c’est un objet <strong>élégant, utile, inspirant.<br\/><\/strong> Pas un gadget. Pas un accessoire. Une <strong>pièce design<\/strong> à emporter partout.<\/p>",
+        "title": "VOUS MÉRITEZ MIEUX QU’UNE SIMPLE GOURDE.",
+        "description": "<p>ICÖNIK, c’est un objet <strong>élégant, utile et inspirant.<br\/><\/strong>Pas un gadget, pas un accessoire, une <strong>pièce design<\/strong> à emporter partout.<\/p>",
         "layout": "image_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -84,7 +101,7 @@
       "settings": {
         "image": "shopify:\/\/shop_images\/gourde-sac-en-cuir-iconik.jpg",
         "title": "EXPRIME QUI TU ES !",
-        "description": "<p>On ne boit pas assez quand on n’aime pas l’objet qu’on utilise.<br\/> ICÖNIK, vous donne envie de vous s’hydrater, parce qu’on aime ce qu’on tient en main.<br\/> Frida, c’est la couleur, la force, la liberté.<br\/> Et vous, quelle icône vous inspire au quotidien ?<\/p>",
+        "description": "<p>On ne boit pas assez quand on n’aime pas l’objet qu’on utilise.<br\/> ICÖNIK, vous donne envie de vous hydrater, parce qu’on aime ce qu’on tient en main.<br\/> Frida, c’est la couleur, la force et la liberté.<br\/> <strong>Et vous, quelle icône vous inspire au quotidien ?<\/strong><\/p>",
         "layout": "text_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -98,9 +115,9 @@
       "type": "image-banner",
       "name": "t:sections.image-banner.name",
       "settings": {
-        "image_desktop": "shopify:\/\/shop_images\/gourde-iconik-frida-boire-plaisir.jpg",
+        "image_desktop": "shopify:\/\/shop_images\/gourde-iconik-femme-afro-utilistaion-plaisir_9d78dfb6-f179-4a5b-ae48-d30487e14df0.jpg",
         "image_desktop_horizontal_position": "center",
-        "image_mobile": "shopify:\/\/shop_images\/gourde-utilisation-femme-afro-elegant-heureuse.jpg",
+        "image_mobile": "shopify:\/\/shop_images\/gourde-utilisation-femme-afro-heureuse_da2d117b-5ec5-460c-8e9c-34ad84109d9a.jpg",
         "image_mobile_vertical_position": "center",
         "enable_lazy_loading": true
       }
@@ -126,15 +143,58 @@
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
         "image": "shopify:\/\/shop_images\/marque-francaise-iconik.jpg",
-        "title": "À offrir ou à s’offrir",
-        "description": "<p><strong>🎁 Le cadeau original, utile et stylé.<\/strong><\/p><ul><li>Pour dire “Je pense à toi” autrement.<\/li><li>Un objet qu’on garde, qu’on admire, et qu’on utilise vraiment.<\/li><\/ul><p><strong>À offrir à une personne inspirante. Ou à soi-même<\/strong><\/p>",
+        "title": "À OFFRIR OU À S’OFFRIR.",
+        "description": "<p><strong>🎁 Le cadeau original, utile et stylé.<\/strong><\/p><ul><li>Pour dire “Je pense à toi” autrement.<\/li><li>Un objet qu’on garde, qu’on admire, et qu’on utilise vraiment.<\/li><\/ul><p><strong>À offrir à une personne inspirante ou à soi-même<\/strong><\/p>",
         "layout": "text_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
         "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#E3FAE1",
+        "dynamic_secondary_color": "#e3fae1",
         "padding_top": "pt-16",
         "padding_bottom": "pb-16"
+      }
+    },
+    "shifted_image_carousel_ECPfpL": {
+      "type": "shifted-image-text",
+      "blocks": {
+        "image_zd4F8K": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/gourde-marilyn-monroe-icone-mode-cafe_b993dc7e-190c-46b7-aee0-f826bf841b82.jpg"
+          }
+        },
+        "image_xeQebd": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/gourde-karl-lagerfeld-bouteille-design-miroir_f57ed959-5906-4946-8a5a-b437f54d8960.jpg"
+          }
+        },
+        "image_Qx49Hx": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/gourde-frida-kahlo-en-main-style-artistique_58b92f14-3301-40e5-a807-733b071f7254.jpg"
+          }
+        },
+        "image_rC8qjW": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/gourde-coco-chanel-voiture-luxe_87aa6e5f-6da3-4beb-a46e-e7504a2bc8a3.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "image_zd4F8K",
+        "image_xeQebd",
+        "image_Qx49Hx",
+        "image_rC8qjW"
+      ],
+      "name": "t:sections.shifted-image-text.name",
+      "settings": {
+        "heading": "UNE GOURDE À VOTRE IMAGE. ICONIQUE, COMME VOUS.",
+        "description": "Déjà plus de 1300 clients ont trouvé leur icône",
+        "activate_dynamic_color": true,
+        "dynamic_primary_color": "#070525",
+        "dynamic_secondary_color": "#ffd15c"
       }
     },
     "collapsible_content_fpm3qt": {
@@ -220,47 +280,12 @@
         "heading": "❓FAQ"
       }
     },
-    "shifted_image_carousel_ECPfpL": {
-      "type": "shifted-image-text",
-      "blocks": {
-        "image_zd4F8K": {
-          "type": "image",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/goude-prince.jpg"
-          }
-        },
-        "image_xeQebd": {
-          "type": "image",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/gourde-bruce-lee.jpg"
-          }
-        },
-        "image_Qx49Hx": {
-          "type": "image",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/gourde-coco-chanel.jpg"
-          }
-        },
-        "image_rC8qjW": {
-          "type": "image",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/gourde-einstein.jpg"
-          }
-        }
-      },
-      "block_order": [
-        "image_zd4F8K",
-        "image_xeQebd",
-        "image_Qx49Hx",
-        "image_rC8qjW"
-      ],
-      "name": "t:sections.shifted-image-text.name",
+    "variant_carrousel_dk3b4y": {
+      "type": "variant-carrousel",
+      "name": "t:sections.variant-carrousel.name",
       "settings": {
-        "heading": "A more inspiring experience on the Internet",
-        "description": "People come to here looking for ideas. We help them achieve them.",
-        "activate_dynamic_color": false,
-        "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#E3FAE1"
+        "heading": "DÉCOUVREZ NOS ICÔNES",
+        "button_text": "Je la veux !"
       }
     }
   },
@@ -272,8 +297,9 @@
     "image_banner_QQTJhg",
     "image_with_text_fkEcdW",
     "image_with_text_yEBPYa",
+    "shifted_image_carousel_ECPfpL",
     "collapsible_content_fpm3qt",
-    "shifted_image_carousel_ECPfpL"
+    "variant_carrousel_dk3b4y"
   ],
   "layout": "product"
 }

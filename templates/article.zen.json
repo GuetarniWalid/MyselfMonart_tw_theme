@@ -3,8 +3,7 @@
   "sections": {
     "ce4595e5-01e5-472d-ac56-563a87ef335c": {
       "type": "first-blog-link",
-      "settings": {
-      }
+      "settings": {}
     },
     "main": {
       "type": "main-article",

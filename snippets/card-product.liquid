@@ -82,37 +82,34 @@
           </span>
         </a>
       </h3>
-      <div class="mb-1 mt-2 flex justify-between items-center price-and-likes">
+
+    </div>
+
+    <div class="mt-5">
+      <div class="my-4 flex justify-between items-end price-and-likes">
         <p>
           {{ "sections.main_collection_product_grid.card-product.starting_at" | t }}&nbsp;
             <strong>
               {{ product.price_min | money }}
             </strong>
         </p>
-        {% if product.metafields.likes.number != blank and product.metafields.likes.number > 0 %}
-          <div class="py-2 px-3 bg-main-5 rounded inline-block likes-count-container">
-            <svg width="24" height="24" viewBox="0 0 21 17" fill="none" xmlns="http://www.w3.org/2000/svg" class="inline-block fill-like" role="img" aria-labelledby="title-heart" focusable="false"><title id="title-heart">{{ "snippet.tw_icon_heart.title" | t }}</title><path d="M10.5 3L6.5 1L1.5 5L3 9.5L10.5 16L18 9.5L19.5 5L15 1L10.5 3Z" fill="transparent" class="in fill-like"/><path d="M14.6016 0.296875C12.9536 0.296875 11.4909 0.947383 10.5 2.06547C9.50906 0.947383 8.04645 0.296875 6.39844 0.296875C4.96307 0.298612 3.58699 0.869578 2.57204 1.88454C1.55708 2.89949 0.986112 4.27557 0.984375 5.71094C0.984375 11.6451 9.6641 16.3865 10.0332 16.5858C10.1767 16.6631 10.3371 16.7035 10.5 16.7035C10.6629 16.7035 10.8233 16.6631 10.9668 16.5858C11.3359 16.3865 20.0156 11.6451 20.0156 5.71094C20.0139 4.27557 19.4429 2.89949 18.428 1.88454C17.413 0.869578 16.0369 0.298612 14.6016 0.296875ZM14.1512 11.9748C13.0087 12.9443 11.7874 13.8169 10.5 14.5834C9.21256 13.8169 7.99126 12.9443 6.84879 11.9748C5.07117 10.4499 2.95312 8.1243 2.95312 5.71094C2.95312 4.79718 3.31611 3.92085 3.96223 3.27473C4.60835 2.62861 5.48468 2.26562 6.39844 2.26562C7.85859 2.26562 9.08086 3.03672 9.58863 4.27867C9.66254 4.45972 9.78869 4.61465 9.95101 4.72372C10.1133 4.83278 10.3044 4.89102 10.5 4.89102C10.6956 4.89102 10.8867 4.83278 11.049 4.72372C11.2113 4.61465 11.3375 4.45972 11.4114 4.27867C11.9191 3.03672 13.1414 2.26562 14.6016 2.26562C15.5153 2.26562 16.3916 2.62861 17.0378 3.27473C17.6839 3.92085 18.0469 4.79718 18.0469 5.71094C18.0469 8.1243 15.9288 10.4499 14.1512 11.9748Z" fill="fill-like"/></svg>&nbsp;
-            <span class="font-semibold font-heading text-sm"><span class="total-users-likes-count">{{ product.metafields.likes.number }}</span>
-            <svg class="animate-spin h-5 w-5 text-main inline-block hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg> {{ 'snippet.card-product.likes' | t }}</span>
-          </div>
-        {% endif %}
+        <my-like-button data-product-id="{{ product.id }}">
+          <button class="like relative py-2 px-3 bg-main-5 rounded inline-block z-10 after:absolute after:-inset-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" class="inline-block fill-like" role="img" aria-labelledby="title-heart" focusable="false"><title id="title-heart">{{ "snippet.tw_icon_heart.title" | t }}</title><path class="inside-heart" fill="transparent" fill-opacity="0" d="M12 8c0 0 0 0 0.76 -1c0.88 -1.16 2.18 -2 3.74 -2c2.49 0 4.5 2.01 4.5 4.5c0 0.93 -0.28 1.79 -0.76 2.5c-0.81 1.21 -8.24 9 -8.24 9c0 0 -7.43 -7.79 -8.24 -9c-0.48 -0.71 -0.76 -1.57 -0.76 -2.5c0 -2.49 2.01 -4.5 4.5 -4.5c1.56 0 2.87 0.84 3.74 2c0.76 1 0.76 1 0.76 1Z"><animate fill="freeze" attributeName="fill-opacity" begin="0.7s" dur="0.15s" values="0;1"/></path><path fill="none" stroke="currentColor" stroke-dasharray="32" stroke-dashoffset="32" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c0 0 0 0 -0.76 -1c-0.88 -1.16 -2.18 -2 -3.74 -2c-2.49 0 -4.5 2.01 -4.5 4.5c0 0.93 0.28 1.79 0.76 2.5c0.81 1.21 8.24 9 8.24 9M12 8c0 0 0 0 0.76 -1c0.88 -1.16 2.18 -2 3.74 -2c2.49 0 4.5 2.01 4.5 4.5c0 0.93 -0.28 1.79 -0.76 2.5c-0.81 1.21 -8.24 9 -8.24 9"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.7s" values="32;0"/></path></svg>&nbsp;
+            <span class="font-semibold font-heading text-sm"><span class="total-users-likes-count text-main">{{ product.metafields.likes.number | default: 0 }}</span>&nbsp;
+            <span class="text-main">{{ 'snippet.card-product.likes' | t }}</span></span>
+          </button>
+        </my-like-button>
         <template class="likes-count-container-template">
-          <div class="py-2 px-3 bg-main-5 rounded inline-block likes-count-container">
-            <svg width="24" height="24" viewBox="0 0 21 17" fill="none" xmlns="http://www.w3.org/2000/svg" class="inline-block fill-like" role="img" aria-labelledby="title-heart" focusable="false"><title id="title-heart">{{ "snippet.tw_icon_heart.title" | t }}</title><path d="M10.5 3L6.5 1L1.5 5L3 9.5L10.5 16L18 9.5L19.5 5L15 1L10.5 3Z" fill="transparent" class="in fill-like"/><path d="M14.6016 0.296875C12.9536 0.296875 11.4909 0.947383 10.5 2.06547C9.50906 0.947383 8.04645 0.296875 6.39844 0.296875C4.96307 0.298612 3.58699 0.869578 2.57204 1.88454C1.55708 2.89949 0.986112 4.27557 0.984375 5.71094C0.984375 11.6451 9.6641 16.3865 10.0332 16.5858C10.1767 16.6631 10.3371 16.7035 10.5 16.7035C10.6629 16.7035 10.8233 16.6631 10.9668 16.5858C11.3359 16.3865 20.0156 11.6451 20.0156 5.71094C20.0139 4.27557 19.4429 2.89949 18.428 1.88454C17.413 0.869578 16.0369 0.298612 14.6016 0.296875ZM14.1512 11.9748C13.0087 12.9443 11.7874 13.8169 10.5 14.5834C9.21256 13.8169 7.99126 12.9443 6.84879 11.9748C5.07117 10.4499 2.95312 8.1243 2.95312 5.71094C2.95312 4.79718 3.31611 3.92085 3.96223 3.27473C4.60835 2.62861 5.48468 2.26562 6.39844 2.26562C7.85859 2.26562 9.08086 3.03672 9.58863 4.27867C9.66254 4.45972 9.78869 4.61465 9.95101 4.72372C10.1133 4.83278 10.3044 4.89102 10.5 4.89102C10.6956 4.89102 10.8867 4.83278 11.049 4.72372C11.2113 4.61465 11.3375 4.45972 11.4114 4.27867C11.9191 3.03672 13.1414 2.26562 14.6016 2.26562C15.5153 2.26562 16.3916 2.62861 17.0378 3.27473C17.6839 3.92085 18.0469 4.79718 18.0469 5.71094C18.0469 8.1243 15.9288 10.4499 14.1512 11.9748Z" fill="fill-like"/></svg>&nbsp;
-            <span class="font-semibold font-heading text-sm"><span class="total-users-likes-count">0</span>
-            <svg class="animate-spin h-5 w-5 text-main inline-block hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg> {{ 'snippet.card-product.likes' | t }}</span>
-          </div>
+          <my-like-button data-product-id="{{ product.id }}">
+            <button class="like relative py-2 px-3 bg-main-5 rounded inline-block z-20">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" class="inline-block fill-like" role="img" aria-labelledby="title-heart" focusable="false"><title id="title-heart">{{ "snippet.tw_icon_heart.title" | t }}</title><path class="inside-heart" fill="transparent" fill-opacity="0" d="M12 8c0 0 0 0 0.76 -1c0.88 -1.16 2.18 -2 3.74 -2c2.49 0 4.5 2.01 4.5 4.5c0 0.93 -0.28 1.79 -0.76 2.5c-0.81 1.21 -8.24 9 -8.24 9c0 0 -7.43 -7.79 -8.24 -9c-0.48 -0.71 -0.76 -1.57 -0.76 -2.5c0 -2.49 2.01 -4.5 4.5 -4.5c1.56 0 2.87 0.84 3.74 2c0.76 1 0.76 1 0.76 1Z"><animate fill="freeze" attributeName="fill-opacity" begin="0.7s" dur="0.15s" values="0;0.3"/></path><path fill="none" stroke="currentColor" stroke-dasharray="32" stroke-dashoffset="32" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c0 0 0 0 -0.76 -1c-0.88 -1.16 -2.18 -2 -3.74 -2c-2.49 0 -4.5 2.01 -4.5 4.5c0 0.93 0.28 1.79 0.76 2.5c0.81 1.21 8.24 9 8.24 9M12 8c0 0 0 0 0.76 -1c0.88 -1.16 2.18 -2 3.74 -2c2.49 0 4.5 2.01 4.5 4.5c0 0.93 -0.28 1.79 -0.76 2.5c-0.81 1.21 -8.24 9 -8.24 9"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.7s" values="32;0"/></path></svg>&nbsp;
+              <span class="font-semibold font-heading text-sm"><span class="total-users-likes-count">0</span>&nbsp;
+              <span class="text-main">{{ 'snippet.card-product.likes' | t }}</span></span>
+            </button> 
+          </my-like-button>
         </template>
       </div>
-    </div>
-
-    <div class="flex gap-3 mt-5">
       <click-product class="w-full">
         <button class="bg-main-5 border-1 border-main-5 py-3 rounded w-full group relative inline-block overflow-hidden focus:outline-none focus:ring active:bg-main active:text-secondary pointer-events-none" {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}>
           <span class="ease absolute left-0 top-0 h-0 w-0 border-t-2 border-main transition-all duration-200 group-hover:w-full"> </span>
@@ -122,14 +119,6 @@
           {{ 'sections.product_grid.button' | t }}
         </button>
       </click-product>
-      <my-like-button>
-        <button class="like border-main border-1 rounded h-full px-3 group/heart relative after:absolute after:inset-0" {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}>
-          <svg width="21" height="21" viewBox="0 0 21 17" fill="none" xmlns="http://www.w3.org/2000/svg" class="heart">
-            <path d="M10.5 3L6.5 1L1.5 5L3 9.5L10.5 16L18 9.5L19.5 5L15 1L10.5 3Z"></path>
-            <path d="M14.6016 0.296875C12.9536 0.296875 11.4909 0.947383 10.5 2.06547C9.50906 0.947383 8.04645 0.296875 6.39844 0.296875C4.96307 0.298612 3.58699 0.869578 2.57204 1.88454C1.55708 2.89949 0.986112 4.27557 0.984375 5.71094C0.984375 11.6451 9.6641 16.3865 10.0332 16.5858C10.1767 16.6631 10.3371 16.7035 10.5 16.7035C10.6629 16.7035 10.8233 16.6631 10.9668 16.5858C11.3359 16.3865 20.0156 11.6451 20.0156 5.71094C20.0139 4.27557 19.4429 2.89949 18.428 1.88454C17.413 0.869578 16.0369 0.298612 14.6016 0.296875ZM14.1512 11.9748C13.0087 12.9443 11.7874 13.8169 10.5 14.5834C9.21256 13.8169 7.99126 12.9443 6.84879 11.9748C5.07117 10.4499 2.95312 8.1243 2.95312 5.71094C2.95312 4.79718 3.31611 3.92085 3.96223 3.27473C4.60835 2.62861 5.48468 2.26562 6.39844 2.26562C7.85859 2.26562 9.08086 3.03672 9.58863 4.27867C9.66254 4.45972 9.78869 4.61465 9.95101 4.72372C10.1133 4.83278 10.3044 4.89102 10.5 4.89102C10.6956 4.89102 10.8867 4.83278 11.049 4.72372C11.2113 4.61465 11.3375 4.45972 11.4114 4.27867C11.9191 3.03672 13.1414 2.26562 14.6016 2.26562C15.5153 2.26562 16.3916 2.62861 17.0378 3.27473C17.6839 3.92085 18.0469 4.79718 18.0469 5.71094C18.0469 8.1243 15.9288 10.4499 14.1512 11.9748Z" fill="currentColor"></path>
-          </svg>
-        </button>
-      </my-like-button>
     </div>
   </div>
 </div>

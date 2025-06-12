@@ -417,7 +417,10 @@ main-product-blocks .description h2 span {
   }
 
   .is-liked {
-    @apply bg-like text-secondary !border-secondary transition-colors duration-500;
+    @apply !bg-like-40 text-like transition-all duration-300;
+  }
+  .is-liked .inside-heart {
+    @apply fill-like;
   }
 
   .main-page {
