@@ -160,19 +160,19 @@
         "image_zd4F8K": {
           "type": "image",
           "settings": {
-            "image": "shopify:\/\/shop_images\/gourde-marilyn-monroe-icone-mode-cafe_b993dc7e-190c-46b7-aee0-f826bf841b82.jpg"
+            "image": "shopify:\/\/shop_images\/gourde-frida-kahlo-en-main-style-artistique_d1721e62-9422-4b81-9a0f-2cfb2739d6e9.jpg"
           }
         },
         "image_xeQebd": {
           "type": "image",
           "settings": {
-            "image": "shopify:\/\/shop_images\/gourde-karl-lagerfeld-bouteille-design-miroir_f57ed959-5906-4946-8a5a-b437f54d8960.jpg"
+            "image": "shopify:\/\/shop_images\/gourde-marilyn-monroe-icone-mode-cafe_b6e78991-6581-4361-81d6-97e0e415a533.jpg"
           }
         },
         "image_Qx49Hx": {
           "type": "image",
           "settings": {
-            "image": "shopify:\/\/shop_images\/gourde-frida-kahlo-en-main-style-artistique_58b92f14-3301-40e5-a807-733b071f7254.jpg"
+            "image": "shopify:\/\/shop_images\/gourde-karl-lagerfeld-bouteille-design-miroir_e9f733ce-5e33-41a7-a5ef-2b49f958338e.jpg"
           }
         },
         "image_rC8qjW": {
@@ -191,7 +191,7 @@
       "name": "t:sections.shifted-image-text.name",
       "settings": {
         "heading": "UNE GOURDE À VOTRE IMAGE. ICONIQUE, COMME VOUS.",
-        "description": "Déjà plus de 1300 clients ont trouvé leur icône",
+        "description": "14 jours pour changer d’avis, et si besoin, on vous rembourse. Mais plus de 1300 clients n’ont pas eu à le faire. 😍",
         "activate_dynamic_color": true,
         "dynamic_primary_color": "#070525",
         "dynamic_secondary_color": "#ffd15c"
