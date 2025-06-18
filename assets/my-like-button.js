@@ -23,6 +23,7 @@ class MyLikeButton extends HTMLElement {
   constructor() {
     super();
     this.productId = this.dataset.productId;
+    this.productHandle = this.dataset.productHandle;
   }
 
   connectedCallback() {
@@ -40,15 +41,20 @@ class MyLikeButton extends HTMLElement {
       likeButton.classList.toggle('is-liked', !isLiked);
 
       const productLikedIds = this.getProductLikedIds();
+      const productLikedHandles = this.getProductLikedHandles();
+      
       if (isLiked) {
         this.deleteProductLikedIdInLocalStorage(productLikedIds);
+        this.deleteProductLikedHandleInLocalStorage(productLikedHandles);
+        this.deleteLiInLikedPage();
         await this.updateLikesCountOnServer(this.productId, 'decrement');
       } else {
         this.saveProductLikedIdInLocalStorage(productLikedIds);
+        this.saveProductLikedHandleInLocalStorage(productLikedHandles);
+        this.deleteLiInLikedPage();
         await this.updateLikesCountOnServer(this.productId, 'increment');
       }
 
-      this.deleteLiInLikedPage(productLikedIds.length === 0);
       this.updateLikeButtonCount();
       this.updateInfiniteScrollStrorage();
     });
@@ -60,9 +66,20 @@ class MyLikeButton extends HTMLElement {
     return productLikedIds;
   }
 
+  getProductLikedHandles() {
+    const unformattedproductLikedHandles = localStorage.getItem('productLikedHandles');
+    const productLikedHandles = JSON.parse(unformattedproductLikedHandles) || [];
+    return productLikedHandles;
+  }
+
   saveProductLikedIdInLocalStorage(productLikedIds) {
     productLikedIds.push(this.productId);
     localStorage.setItem('productLikedIds', JSON.stringify(productLikedIds));
+  }
+
+  saveProductLikedHandleInLocalStorage(productLikedHandles) {
+    productLikedHandles.push(this.productHandle);
+    localStorage.setItem('productLikedHandles', JSON.stringify(productLikedHandles));
   }
 
   deleteProductLikedIdInLocalStorage(productLikedIds) {
@@ -72,10 +89,19 @@ class MyLikeButton extends HTMLElement {
     localStorage.setItem('productLikedIds', JSON.stringify(productLikedIdsFiltered));
   }
 
-  deleteLiInLikedPage(isLastLi) {
+  deleteProductLikedHandleInLocalStorage(productLikedHandles) {
+    const productLikedHandlesFiltered = productLikedHandles.filter(
+      (productLikedHandle) => productLikedHandle !== this.productHandle,
+    );
+    localStorage.setItem('productLikedHandles', JSON.stringify(productLikedHandlesFiltered));
+  }
+
+  deleteLiInLikedPage() {
     const myLikesComponent = document.querySelector('my-likes');
     if (!myLikesComponent) return;
     this.closest('li').remove();
+    const productLikedIds = this.getProductLikedIds();
+    const isLastLi = productLikedIds.length === 0;
     if (isLastLi) myLikesComponent.showEmptyMessage();
   }
 
@@ -109,6 +135,7 @@ class MyLikeButton extends HTMLElement {
     const likesCountElem = this.querySelector(
       '.total-users-likes-count',
     );
+    if (!likesCountElem) return;
     const count = parseInt(likesCountElem.textContent);
     const newCount = action === 'increment' ? count + 1 : count - 1;
     likesCountElem.textContent = newCount.toString();
