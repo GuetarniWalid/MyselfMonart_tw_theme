@@ -4,9 +4,9 @@
     "image_banner_tbHEWb": {
       "type": "image-banner",
       "settings": {
-        "image_desktop": "shopify:\/\/shop_images\/interieur-deco-asiaique-pan-de-mur-estampe-japonais_ebfee619-421f-4ded-a193-816d8d8bbe8d.jpg",
+        "image_desktop": "shopify:\/\/shop_images\/banniere-solde-ete-tableau-frida-kahlo-decoration-murale.jpg",
         "image_desktop_horizontal_position": "center",
-        "image_mobile": "shopify:\/\/shop_images\/interieur-minimaliste-japonais-tapisserie-paysage-encre_de_chine_88f64744-b30c-4138-988d-3ecc743f6c4d.jpg",
+        "image_mobile": "shopify:\/\/shop_images\/anniere-mobile-solde-frida-kahlo-tableau-deco-murale.jpg",
         "image_mobile_vertical_position": "center",
         "enable_lazy_loading": true
       }
