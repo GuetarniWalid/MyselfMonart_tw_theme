@@ -75,7 +75,7 @@
           %}
         </div>
         {% if product.media.size > 1 %}
-          <div class="absolute bg-secondary transition-colors duration-500 rounded-full left-1/2 -translate-x-1/2 bottom-3 border-main border-1 md:hidden flex justify-center items-center h-[47px] overflow-hidden">
+          <div id="carousel-navigation-controls" class="absolute bg-secondary transition-colors duration-500 rounded-full left-1/2 -translate-x-1/2 bottom-3 border-main border-1 md:hidden flex justify-center items-center h-[47px] overflow-hidden hidden">
             <button class="previous pl-5 pr-3 h-full focus-visible:outline-none focus-visible:bg-main-10 hover:bg-main-10">
               <div class="rotate-90">{% render 'tw-icon-caret', width: '18' %}</div>
             </button>
@@ -135,11 +135,10 @@
           {%- when 'text' -%}
             <div class="flex flex-col gap-4 mb-4 text-lg">{{- block.settings.text -}}</div>
           {%- when 'title' -%}
-            <h1 class="text-4xl {{ block.settings.margin_bottom }}">{{ product.title | escape }}</h1>
+            <h1 class="text-2xl {{ block.settings.margin_bottom }}">{{ product.title | escape }}</h1>
           {%- when 'price' -%}
             {% if block.settings.style == 'default' %}
               <div class="flex items-end gap-2 mb-4 text-xl font-bold font-heading">
-                {{ 'products.product.price.total' | t }}
                 <span id="main-price" data-money-symbol="{{ cart.currency.symbol }}">
                   {{ product.selected_or_first_available_variant.price | money }}
                 </span>
@@ -181,7 +180,7 @@
                 --color-action-hover: {{ block.settings.hover_color }};
               }
             {% endstyle %}
-            <button class="buy-button relative flex w-full items-center gap-x-5 gap-y-2 2xs:gap-4 md:gap-5 py-2 lg:py-3 bg-action text-secondary transition-colors duration-500 shadow-lg rounded-xl px-5 lg:px-6 mb-4 before:w-12 before:h-40 before:bg-white/50 before:absolute before:-top-4 before:right-[-60px] before:rotate-12 after:w-12 after:h-40 after:bg-white/20 after:absolute after:-top-4 after:rotate-12 after:right-[-60px] overflow-hidden" data-variant-id="{{ product.first_available_variant.id }}" data-template="{{ template.suffix }}" data-product-id="{{ product.id }}">
+            <button class="buy-button relative flex w-full items-center gap-x-5 gap-y-2 2xs:gap-4 md:gap-5 py-2 lg:py-3 bg-action text-secondary transition-colors duration-500 shadow-lg rounded px-5 lg:px-6 mb-4 before:w-12 before:h-40 before:bg-white/50 before:absolute before:-top-4 before:right-[-60px] before:rotate-12 after:w-12 after:h-40 after:bg-white/20 after:absolute after:-top-4 after:rotate-12 after:right-[-60px] overflow-hidden" data-variant-id="{{ product.first_available_variant.id }}" data-template="{{ template.suffix }}" data-product-id="{{ product.id }}">
               <svg viewBox="0 0 50 53" class="shrink-0 w-10 lg:w-auto fill-secondary transition-colors duration-500 pointer-events-none" width="55" fill="none" xmlns="http://www.w3.org/2000/svg" role="presentation" aria-hidden="true">
                 <path d="M21.4157 2.84998V32.5974H1.89111C2.5125 8.54724 21.4157 2.84998 21.4157 2.84998Z" />
                 <path d="M11.7325 28.7466C14.5357 28.7466 16.8082 27.7727 16.8082 26.5713C16.8082 25.3699 14.5357 24.396 11.7325 24.396C8.92922 24.396 6.65674 25.3699 6.65674 26.5713C6.65674 27.7727 8.92922 28.7466 11.7325 28.7466Z" />
@@ -203,7 +202,7 @@
               {% render 'tw-icon-loading', color: 'light', hidden: true, size: 2 %}
             </button>
             <template id="float-buy-button">
-              <button class="float-buy-button fixed bottom-20 md:bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3 shadow-lg 2xs:gap-5 md:gap-6 w-[100px] py-3 md:py-4 max-w-[90%] xs:max-w-[450px] md:xs:max-w-[90%] bg-action text-secondary transition-colors duration-500 rounded-xl px-5 md:px-6 mb-4 before:w-12 before:h-40 before:bg-white/50 before:absolute before:-top-4 before:right-[-60px] before:rotate-12 after:w-12 after:h-40 after:bg-white/20 after:absolute after:-top-4 after:rotate-12 after:right-[-60px] overflow-hidden scale-0" data-variant-id="{{ product.first_available_variant.id }}" data-template="{{ template.suffix }}" data-product-id="{{ product.id }}">
+              <button class="float-buy-button fixed bottom-20 md:bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3 shadow-lg 2xs:gap-5 md:gap-6 w-[100px] py-3 md:py-4 max-w-[90%] xs:max-w-[450px] md:xs:max-w-[90%] bg-action text-secondary transition-colors duration-500 rounded px-5 md:px-6 mb-4 before:w-12 before:h-40 before:bg-white/50 before:absolute before:-top-4 before:right-[-60px] before:rotate-12 after:w-12 after:h-40 after:bg-white/20 after:absolute after:-top-4 after:rotate-12 after:right-[-60px] overflow-hidden scale-0" data-variant-id="{{ product.first_available_variant.id }}" data-template="{{ template.suffix }}" data-product-id="{{ product.id }}">
                 <svg viewBox="0 0 50 53" class="shrink-0 opacity0 scale-0 w-10 md:w-auto fill-secondary transition-colors duration-500 pointer-events-none" width="55" fill="none" xmlns="http://www.w3.org/2000/svg" role="presentation" aria-hidden="true">
                   <path d="M21.4157 2.84998V32.5974H1.89111C2.5125 8.54724 21.4157 2.84998 21.4157 2.84998Z" />
                   <path d="M11.7325 28.7466C14.5357 28.7466 16.8082 27.7727 16.8082 26.5713C16.8082 25.3699 14.5357 24.396 11.7325 24.396C8.92922 24.396 6.65674 25.3699 6.65674 26.5713C6.65674 27.7727 8.92922 28.7466 11.7325 28.7466Z" />

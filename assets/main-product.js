@@ -11,6 +11,7 @@ class MainProductCarousel extends HTMLElement {
     this.carousel = this.querySelector('.carousel');
     this.popupOpen = false;
     this.scrollTimeout = null;
+    this.carouselNavigationControls = this.querySelector('#carousel-navigation-controls')
     this.nextMediaButton = this.querySelector('.next');
     this.previousMediaButton = this.querySelector('.previous');
   }
@@ -58,6 +59,11 @@ class MainProductCarousel extends HTMLElement {
         const diff = Math.round(this.carouselScrollFromLeft / this.imageWidth);
         this.currentMediaIndex = diff;
         this.changeImageCounter();
+
+        const currentMedia = this.medias[this.currentMediaIndex].firstElementChild
+        const nextMedia = this.medias[this.currentMediaIndex + 1]?.firstElementChild
+        currentMedia.classList.replace('-translate-x-8', 'translate-x-0')
+        nextMedia?.classList.replace('translate-x-0', '-translate-x-8')
       }, 100);
     });
 
@@ -130,6 +136,11 @@ class MainProductCarousel extends HTMLElement {
   };
 
   changeImageCounter = () => {
+    if (this.medias[this.currentMediaIndex].classList.contains('model-3d')) {
+      this.carouselNavigationControls.classList.remove('hidden')
+    } else {
+      this.carouselNavigationControls.classList.add('hidden')
+    }
     this.imageConter = this.imageConter || this.querySelector('.image-counter');
     this.imageConter.textContent = this.currentMediaIndex + 1;
   };
