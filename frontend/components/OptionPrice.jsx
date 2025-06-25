@@ -21,17 +21,16 @@ export default function OptionPrice({ option, isDisabled }) {
     if (!variant) return null;
     const totalPrice = variant.price;
     const priceDifference = totalPrice - sizePrice;
-    return priceDifference / 100;
+    return Product.formatPrice(priceDifference, false, true);
   }
  
   function getOthersPrice() {
-    return option.price;
+    return Product.formatPrice(option.price, false, false);
   }
 
   function formatPrice(price) {
     if (isDisabled || price === null) return window.react.errorMessage.notAllowedForThisSize;
-    if (price % 1 === 0) return price + ' ' + window.Shopify.currency.symbol;
-    return price.toFixed(2) + ' ' + window.Shopify.currency.symbol;
+    return price;
   }
 
   return (

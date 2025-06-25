@@ -148,7 +148,6 @@ class MainProductCarousel extends HTMLElement {
     const currentMedia = this.medias[this.currentMediaIndex].firstElementChild;
     const nextMedia =
       this.medias[this.currentMediaIndex + 1]?.firstElementChild;
-;
     currentMedia.classList.replace('-translate-x-8', 'translate-x-0');
     nextMedia?.classList.replace('translate-x-0', '-translate-x-8');
   };
@@ -156,13 +155,15 @@ class MainProductCarousel extends HTMLElement {
   centerContainedImage = () => {
     const currentMedia = this.medias[this.currentMediaIndex].firstElementChild;
     currentMedia.classList.remove('object-left');
-    
-    const nextMedia = this.medias[this.currentMediaIndex + 1]?.firstElementChild;
+
+    const nextMedia =
+      this.medias[this.currentMediaIndex + 1]?.firstElementChild;
     if (nextMedia?.classList.contains('object-contain')) {
       nextMedia?.classList.add('object-left');
     }
 
-    const previousMedia = this.medias[this.currentMediaIndex - 1]?.firstElementChild;
+    const previousMedia =
+      this.medias[this.currentMediaIndex - 1]?.firstElementChild;
     if (previousMedia?.classList.contains('object-contain')) {
       previousMedia?.classList.add('object-left');
     }
@@ -521,7 +522,7 @@ class VariantPicker extends HTMLElement {
   updateDisplayedPrice(newPrice) {
     const priceElem = document.getElementById('main-price');
     if (!priceElem) return;
-    priceElem.textContent = this.formatPrice(newPrice);
+    priceElem.textContent = Product.formatPrice(newPrice);
   }
 
   updateDisplayedCrossedPrice(newPrice) {
@@ -530,7 +531,7 @@ class VariantPicker extends HTMLElement {
     if (!newPrice) crossedPriceElem.classList.add('hidden');
     else {
       crossedPriceElem.classList.remove('hidden');
-      crossedPriceElem.textContent = this.formatPrice(newPrice);
+      crossedPriceElem.textContent = Product.formatPrice(newPrice);
     }
   }
 
@@ -542,57 +543,8 @@ class VariantPicker extends HTMLElement {
     else {
       reductionPriceElem.classList.remove('hidden');
       const reduction = variantCompareAtPrice - variantPrice;
-      reductionPriceElem.textContent = '- ' + this.formatPrice(reduction);
+      reductionPriceElem.textContent = '- ' + Product.formatPrice(reduction);
     }
-  }
-
-  formatPrice(newPrice) {
-    // Convert to decimal and remove trailing zeros
-    const decimalPrice = (newPrice / 100).toFixed(2).replace(/\.?0+$/, '');
-
-    const priceElem = document.getElementById('main-price');
-    if (!priceElem) return decimalPrice;
-
-    const currentPriceText = priceElem.textContent.trim();
-
-    const currencySymbolMatch = currentPriceText.match(/[^\d\s,.]/);
-    const currencySymbol = currencySymbolMatch ? currencySymbolMatch[0] : '';
-
-    const symbolPosition = currentPriceText.indexOf(currencySymbol);
-
-    const hasSpaceBeforeNumber = currentPriceText.match(/\s+\d/);
-    const hasSpaceAfterNumber = currentPriceText.match(/\d\s+/);
-
-    const hasCommaDecimal = currentPriceText.match(/\d,\d/);
-    const hasPointDecimal = currentPriceText.match(/\d\.\d/);
-    const decimalSeparator = hasCommaDecimal
-      ? ','
-      : hasPointDecimal
-      ? '.'
-      : ',';
-
-    // Format the decimal price with the correct separator and remove trailing zeros
-    const formattedDecimalPrice = decimalPrice.replace('.', decimalSeparator);
-
-    let newPriceString = '';
-
-    if (currencySymbol) {
-      if (symbolPosition === 0) {
-        newPriceString += currencySymbol;
-        if (hasSpaceBeforeNumber) newPriceString += ' ';
-      }
-    }
-
-    newPriceString += formattedDecimalPrice;
-
-    if (hasSpaceAfterNumber) newPriceString += ' ';
-
-    if (currencySymbol && symbolPosition > 0) {
-      if (hasSpaceBeforeNumber) newPriceString += ' ';
-      newPriceString += currencySymbol;
-    }
-
-    return newPriceString;
   }
 
   updateFloatBuyButton(variantId, variantTitle) {

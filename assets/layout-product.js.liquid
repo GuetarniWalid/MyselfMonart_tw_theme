@@ -1,0 +1,52 @@
+class Product {
+  static formatPrice(price, forceDoubleDecimal = true, isMultipliedBy100 = true) {
+    if (isMultipliedBy100) {
+      price = price / 100;
+    }
+
+    const decimalPrice = forceDoubleDecimal 
+    ? (price).toFixed(2).replace(/\.00$/, '')  // Only remove .00, keep .0
+    : (price).toFixed(2).replace(/\.?0+$/, ''); // Remove optional decimal point and trailing zeros
+
+    const priceModel = window.productPriceModel;
+
+    const currencySymbolMatch = priceModel.match(/[^\d\s,.]/);
+    const currencySymbol = currencySymbolMatch ? currencySymbolMatch[0] : '';
+
+    const symbolPosition = priceModel.indexOf(currencySymbol);
+
+    const hasSpaceBeforeNumber = priceModel.match(/\s+\d/);
+    const hasSpaceAfterNumber = priceModel.match(/\d\s+/);
+
+    const hasCommaDecimal = priceModel.match(/\d,\d/);
+    const hasPointDecimal = priceModel.match(/\d\.\d/);
+    const decimalSeparator = hasCommaDecimal
+      ? ','
+      : hasPointDecimal
+      ? '.'
+      : ',';
+
+    // Format the decimal price with the correct separator and remove trailing zeros
+    const formattedDecimalPrice = decimalPrice.replace('.', decimalSeparator);
+
+    let newPriceString = '';
+
+    if (currencySymbol) {
+      if (symbolPosition === 0) {
+        newPriceString += currencySymbol;
+        if (hasSpaceBeforeNumber) newPriceString += ' ';
+      }
+    }
+
+    newPriceString += formattedDecimalPrice;
+
+    if (hasSpaceAfterNumber) newPriceString += ' ';
+
+    if (currencySymbol && symbolPosition > 0) {
+      if (hasSpaceBeforeNumber) newPriceString += ' ';
+      newPriceString += currencySymbol;
+    }
+
+    return newPriceString;
+  }
+}

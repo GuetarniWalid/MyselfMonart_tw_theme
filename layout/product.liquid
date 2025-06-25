@@ -54,6 +54,7 @@
 
     <script src="{{ 'tw-global.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'dropdown-button.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'layout-product.js' | asset_url }}" defer="defer"></script>
 
     <script>
       if (Shopify.designMode) {
@@ -116,6 +117,8 @@
         pauseSlideshow: `{{ 'sections.slideshow.pause_slideshow' | t }}`,
         playSlideshow: `{{ 'sections.slideshow.play_slideshow' | t }}`,
       };
+
+      window.productPriceModel = '{{ product.price | money }}';
     </script>
 
     {%- if settings.enable_cookie -%}

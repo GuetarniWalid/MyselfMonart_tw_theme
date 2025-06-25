@@ -71,7 +71,7 @@ const Button = forwardRef(
             unescapeMessage(message)
           )}
           <span className="py-4 block h-full">
-            {unescapeMessage(window.react.buyButton.total)}:&nbsp;&nbsp; {totalPrice.toFixed(2)} {Shopify.currency.symbol}
+            {unescapeMessage(window.react.buyButton.total)}:&nbsp;&nbsp; {Product.formatPrice(totalPrice, true, false)}
           </span>
         </button>
       </div>
