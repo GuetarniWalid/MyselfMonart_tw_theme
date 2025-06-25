@@ -11,7 +11,9 @@ class MainProductCarousel extends HTMLElement {
     this.carousel = this.querySelector('.carousel');
     this.popupOpen = false;
     this.scrollTimeout = null;
-    this.carouselNavigationControls = this.querySelector('#carousel-navigation-controls')
+    this.carouselNavigationControls = this.querySelector(
+      '#carousel-navigation-controls',
+    );
     this.nextMediaButton = this.querySelector('.next');
     this.previousMediaButton = this.querySelector('.previous');
   }
@@ -59,11 +61,8 @@ class MainProductCarousel extends HTMLElement {
         const diff = Math.round(this.carouselScrollFromLeft / this.imageWidth);
         this.currentMediaIndex = diff;
         this.changeImageCounter();
-
-        const currentMedia = this.medias[this.currentMediaIndex].firstElementChild
-        const nextMedia = this.medias[this.currentMediaIndex + 1]?.firstElementChild
-        currentMedia.classList.replace('-translate-x-8', 'translate-x-0')
-        nextMedia?.classList.replace('translate-x-0', '-translate-x-8')
+        this.shiftNextMediaToLeft();
+        this.centerContainedImage();
       }, 100);
     });
 
@@ -137,12 +136,36 @@ class MainProductCarousel extends HTMLElement {
 
   changeImageCounter = () => {
     if (this.medias[this.currentMediaIndex].classList.contains('model-3d')) {
-      this.carouselNavigationControls.classList.remove('hidden')
+      this.carouselNavigationControls.classList.remove('hidden');
     } else {
-      this.carouselNavigationControls.classList.add('hidden')
+      this.carouselNavigationControls.classList.add('hidden');
     }
     this.imageConter = this.imageConter || this.querySelector('.image-counter');
     this.imageConter.textContent = this.currentMediaIndex + 1;
+  };
+
+  shiftNextMediaToLeft = () => {
+    const currentMedia = this.medias[this.currentMediaIndex].firstElementChild;
+    const nextMedia =
+      this.medias[this.currentMediaIndex + 1]?.firstElementChild;
+;
+    currentMedia.classList.replace('-translate-x-8', 'translate-x-0');
+    nextMedia?.classList.replace('translate-x-0', '-translate-x-8');
+  };
+
+  centerContainedImage = () => {
+    const currentMedia = this.medias[this.currentMediaIndex].firstElementChild;
+    currentMedia.classList.remove('object-left');
+    
+    const nextMedia = this.medias[this.currentMediaIndex + 1]?.firstElementChild;
+    if (nextMedia?.classList.contains('object-contain')) {
+      nextMedia?.classList.add('object-left');
+    }
+
+    const previousMedia = this.medias[this.currentMediaIndex - 1]?.firstElementChild;
+    if (previousMedia?.classList.contains('object-contain')) {
+      previousMedia?.classList.add('object-left');
+    }
   };
 }
 customElements.define('main-product-carousel', MainProductCarousel);
@@ -436,7 +459,8 @@ class VariantPicker extends HTMLElement {
   onButtonClick = () => {
     this.unColorPreviousButtonSelected();
     this.colorButtonSelected();
-    const { variantId, variantPrice, variantTitle, variantCompareAtPrice } = this.getVariantData();
+    const { variantId, variantPrice, variantTitle, variantCompareAtPrice } =
+      this.getVariantData();
     if (!this.buyButton) return;
     this.buyButton.dataset.variantId = variantId;
     this.updateFloatBuyButton(variantId, variantTitle);
@@ -513,7 +537,8 @@ class VariantPicker extends HTMLElement {
   updateDisplayedReductionPrice(variantCompareAtPrice, variantPrice) {
     const reductionPriceElem = document.getElementById('reduction-price');
     if (!reductionPriceElem) return;
-    if (!variantCompareAtPrice || !variantPrice) reductionPriceElem.classList.add('hidden');
+    if (!variantCompareAtPrice || !variantPrice)
+      reductionPriceElem.classList.add('hidden');
     else {
       reductionPriceElem.classList.remove('hidden');
       const reduction = variantCompareAtPrice - variantPrice;
