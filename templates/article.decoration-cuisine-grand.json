@@ -3,8 +3,7 @@
   "sections": {
     "ce4595e5-01e5-472d-ac56-563a87ef335c": {
       "type": "first-blog-link",
-      "settings": {
-      }
+      "settings": {}
     },
     "main": {
       "type": "main-article",
@@ -20,6 +19,9 @@
         "description": "<p>Vous cherchez des idées pour habiller les murs de votre cuisine ? Dans ce blog, découvrez des conseils sur l'utilisation de revêtements muraux, de dosserets colorés ou encore d'étagères décoratives. Transformez vos murs en véritables éléments de décoration et créez une ambiance unique dans votre cuisine.<\/p>",
         "layout": "image_first",
         "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#e3fae1",
         "padding_top": "pt-16",
         "padding_bottom": "pb-16"
       }
@@ -27,11 +29,14 @@
     "e7bbe058-9aee-4e29-b923-846f77b7f084": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify:\/\/shop_images\/8-idees-decoration-cuisine.png",
+        "image": "shopify:\/\/shop_images\/idees-decoration-cuisine-style-moderne-naturel-couleurs.jpg",
         "title": "Comment sublimer une cuisine ?",
         "description": "<p>Votre cuisine mérite d'être sublimée et de devenir un véritable joyau dans votre maison. Dans ce blog, nous vous donnerons des astuces pour optimiser l'espace de rangement, choisir les bonnes couleurs, sélectionner des matériaux de qualité et mettre en valeur votre éclairage. Donnez une nouvelle vie à votre cuisine en la rendant à la fois fonctionnelle et esthétique.<\/p>",
         "layout": "text_first",
         "enable_blob": true,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#e3fae1",
         "padding_top": "pt-16",
         "padding_bottom": "pb-16"
       }

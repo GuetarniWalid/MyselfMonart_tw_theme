@@ -16,73 +16,6 @@
         "to_place_first": true
       }
     },
-    "collections_grid_pt8R8R": {
-      "type": "collections-pages-grid",
-      "blocks": {
-        "collection_WGfzmy": {
-          "type": "collection",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-salon-2.jpg",
-            "collection": "tableau-salon",
-            "nb_columns": "col-span-12",
-            "lazy_load": true,
-            "paragraph": ""
-          }
-        },
-        "collection_yDn6QT": {
-          "type": "collection",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-chambre_f0a43251-6f8a-457c-be11-695c1441e668.jpg",
-            "collection": "tableau-chambre",
-            "nb_columns": "col-span-6",
-            "lazy_load": true,
-            "paragraph": ""
-          }
-        },
-        "collection_RccxG6": {
-          "type": "collection",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-cuisine_3b013012-784a-4a2f-89da-06986c95e2bc.jpg",
-            "collection": "tableau-cuisine",
-            "nb_columns": "col-span-6",
-            "lazy_load": true,
-            "paragraph": ""
-          }
-        },
-        "collection_kUjfDQ": {
-          "type": "collection",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/Tableaux-bureau.jpg",
-            "collection": "tableau-bureau",
-            "nb_columns": "col-span-4",
-            "lazy_load": true,
-            "paragraph": ""
-          }
-        },
-        "collection_HTVwNx": {
-          "type": "collection",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-couleur.jpg",
-            "collection": "tableau-couleur",
-            "nb_columns": "col-span-8",
-            "lazy_load": true,
-            "paragraph": ""
-          }
-        }
-      },
-      "block_order": [
-        "collection_WGfzmy",
-        "collection_yDn6QT",
-        "collection_RccxG6",
-        "collection_kUjfDQ",
-        "collection_HTVwNx"
-      ],
-      "settings": {
-        "title": "",
-        "padding_top": "pt-0",
-        "padding_bottom": "pb-24"
-      }
-    },
     "main-collection-product-grid": {
       "type": "main-collection-product-grid",
       "settings": {
@@ -131,7 +64,6 @@
   "order": [
     "cf6565ea-5338-4b92-985b-b5b0824700db",
     "main-collection-banner",
-    "collections_grid_pt8R8R",
     "main-collection-product-grid",
     "0a4d0ad2-05f5-4939-8b62-ad000c188ded"
   ]
