@@ -310,6 +310,9 @@ main-product-blocks .description h2 span {
   h6 {
     @apply heading font-bold;
   }
+  #PBarNextFrameWrapper {
+    display: none;
+  }
 }
 
 @layer components {
