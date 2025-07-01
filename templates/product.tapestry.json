@@ -53,21 +53,10 @@
             "tapestry_max_height": 300
           }
         },
-        "9f20570b-1a97-4c34-8758-c5af9b8d2cfc": {
-          "type": "price",
-          "settings": {
-            "style": "tapestry",
-            "background": "linear-gradient(135deg, rgba(255, 247, 220, 1), rgba(254, 206, 218, 1) 61%, rgba(214, 208, 253, 1) 100%)",
-            "second_key_benefit": "Deuxième bénéficie clé",
-            "third_key_benefit": "Troisième bénéficie clé",
-            "fourth_key_benefit": "Quatrième bénéficie clé"
-          }
-        },
         "buy_qrRzcg": {
           "type": "buy",
           "settings": {
-            "top_text": "Choisir mes options",
-            "bottom_text": "Je personnalise mon tableau",
+            "text": "Je personnalise mon tableau",
             "main_color": "#b92700"
           }
         },
@@ -82,7 +71,6 @@
         "trustpilot_review_hXwdf3",
         "8600f603-2d6f-4191-8020-3678432ba1e5",
         "tapestry_options_4AnMD4",
-        "9f20570b-1a97-4c34-8758-c5af9b8d2cfc",
         "buy_qrRzcg",
         "description_Fw7xRB"
       ],

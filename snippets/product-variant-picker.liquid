@@ -12,11 +12,11 @@
                     {% if value.available %}
                         {% if value.selected %}
                             <variant-picker data-selected="true" data-option="option{{ option.position }}" data-option-value="{{ value }}" data-price-pattern="{{ product.price_min | money }}">
-                                <button class="px-4 py-2 rounded-lg bg-main text-secondary transition-colors duration-500">{{ value }}</button>
-                            </variant-picker>
+                                <button class="px-4 py-2 rounded-lg bg-main-90 text-secondary transition-all duration-100 shadow-neu-lg hover:shadow-neu-md border-neu">{{ value }}</button>
+                            </variant-picker>   
                         {% else %}
                             <variant-picker data-option="option{{ option.position }}" data-option-value="{{ value }}" data-variant-price="{{ value.price | money }}" data-price-pattern="{{ product.price_min | money }}">
-                                <button class="px-4 py-2 rounded-lg bg-main-5" data-id="{{ value.id }}">{{ value }}</button>
+                                <button class="px-4 py-2 rounded-lg bg-white shadow-neu-lg hover:shadow-neu-md border-neu border-main transition-all duration-100" data-id="{{ value.id }}">{{ value }}</button>
                             </variant-picker>
                         {% endif %}              
                     {% endif %}

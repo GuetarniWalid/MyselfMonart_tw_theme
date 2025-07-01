@@ -1,0 +1,29 @@
+{% comment %}
+    Renders a regular in cart button
+
+    Accepts:
+    - product: {Object} The product object
+    - block: {Object} The block object
+    Usage:
+    {% render 'regular-in-cart-button', product: product %}
+{% endcomment %}
+
+<span class="regular-in-cart-button inline-flex w-full items-center justify-between gap-2">
+    <span class="cart-button-text pointer-events-none py-4 md:py-5 whitespace-nowrap">
+        {% if block.settings.is_dynamic_variant %}
+            {{ product.selected_or_first_available_variant.title }}
+        {% else %}
+            {{ block.settings.text }}
+        {% endif %}
+    </span>
+    <span class="main-price pr-6 whitespace-nowrap">
+        <span class="hidden lg:inline">
+            {{ 'products.product.price.total' | t }}
+        </span>
+        {% if template.suffix == 'painting' or template.suffix == 'personalized' %}
+            {{ product.price_min | money }}
+        {% else %}
+            {{ product.selected_or_first_available_variant.price | money }}
+        {% endif %}
+    </span>
+</span>

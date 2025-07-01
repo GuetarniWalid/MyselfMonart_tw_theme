@@ -27,6 +27,18 @@
   window.canvasTexture = "{{ 'snippet.paintings_data_script.canvas_texture' | t }}";
   window.productId = "{{ product.id }}";
   window.shopUrl = window.Shopify.routes.root;
+  {%- for block in section.blocks -%}
+    {%- case block.type -%}
+      {%- when 'buy' -%}
+        window.promotion = {
+          show: "{{ block.settings.show_promotion }}",
+          reason: "{{ block.settings.promotion_reason }}",
+          date: "{{ block.settings.promotion_date }}",
+          discount: "{{ block.settings.promotion_discount }}",
+          discountUnit: "{{ block.settings.promotion_discount_unit }}"
+        };
+    {%- endcase -%}
+  {%- endfor -%}
   
   window.paintingOptions = {};
   window.paintingOptions.size = [];

@@ -31,22 +31,11 @@
           "type": "variant_picker",
           "settings": {}
         },
-        "9f20570b-1a97-4c34-8758-c5af9b8d2cfc": {
-          "type": "price",
-          "settings": {
-            "style": "default",
-            "background": "linear-gradient(135deg, rgba(255,247,220,1) 0%, rgba(254,206,218,1) 61%, rgba(214,208,253,1) 100%)",
-            "second_key_benefit": "Deuxième bénéficie clé",
-            "third_key_benefit": "Troisième bénéficie clé",
-            "fourth_key_benefit": "Quatrième bénéficie clé"
-          }
-        },
         "buy_bW8TLN": {
           "type": "buy",
           "settings": {
-            "top_text": "-20 % Stock en édition limitée.",
             "is_dynamic_variant": true,
-            "bottom_text": "J'emporte mon icône",
+            "text": "J'emporte mon icône",
             "main_color": "#149656"
           }
         }
@@ -57,7 +46,6 @@
         "trustpilot_review_WCpBfr",
         "description_3Y7KG9",
         "variant_picker_QxUgdP",
-        "9f20570b-1a97-4c34-8758-c5af9b8d2cfc",
         "buy_bW8TLN"
       ],
       "settings": {}

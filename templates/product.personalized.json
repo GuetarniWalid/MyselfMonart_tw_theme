@@ -30,21 +30,10 @@
             "margin_bottom": "mb-8"
           }
         },
-        "9f20570b-1a97-4c34-8758-c5af9b8d2cfc": {
-          "type": "price",
-          "settings": {
-            "style": "default",
-            "background": "linear-gradient(135deg, rgba(255,247,220,1) 0%, rgba(254,206,218,1) 61%, rgba(214,208,253,1) 100%)",
-            "second_key_benefit": "Deuxième bénéficie clé",
-            "third_key_benefit": "Troisième bénéficie clé",
-            "fourth_key_benefit": "Quatrième bénéficie clé"
-          }
-        },
         "buy_qrRzcg": {
           "type": "buy",
           "settings": {
-            "top_text": "Choisir mes options",
-            "bottom_text": "Je personnalise mon tableau",
+            "text": "Je personnalise mon tableau",
             "main_color": "#b92700"
           }
         },
@@ -90,7 +79,6 @@
         "likes_mgUwJx",
         "title",
         "trustpilot_review_nXpwkL",
-        "9f20570b-1a97-4c34-8758-c5af9b8d2cfc",
         "buy_qrRzcg",
         "8600f603-2d6f-4191-8020-3678432ba1e5",
         "collapsible_tab_HAUcNw",

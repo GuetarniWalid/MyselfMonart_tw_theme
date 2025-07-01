@@ -14,7 +14,7 @@ export default function Radios({
   const availableOptions = options.filter(option => isOptionExisting(option, sizeSelected, matterSelected));
 
   return (
-    <div className="flex flex-wrap" role="radiogroup">
+    <div className="flex flex-wrap md:justify-center" role="radiogroup">
       {availableOptions.map((option, index) => {
         return (
           <Radio

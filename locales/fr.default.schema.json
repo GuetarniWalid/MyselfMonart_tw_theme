@@ -1244,19 +1244,48 @@
       "blocks": {
         "buy": {
           "name": "Boutons d'achat",
+          "headings": {
+            "promotion": {
+              "content": "Promotion"
+            }
+          },
           "settings": {
-            "bottom_text": {
-              "label": "Texte du bas"
+            "text": {
+              "label": "Texte"
             },
             "is_dynamic_variant": {
               "label": "Afficher le nom de la variante",
-              "info": "Si activé, le nom de la variante prendra le dessus sur le texte du haut"
+              "info": "Si activé, le nom de la variante prendra le dessus sur le texte"
             },
             "main_color": {
               "label": "Couleur de fond"
             },
-            "top_text": {
-              "label": "Texte du haut"
+            "promotion_date": {
+              "label": "Date de fin de promotion",
+              "info": "Visible uniquement si le produit est en promotion"
+            },
+            "promotion_discount": {
+              "label": "Montant de la promotion",
+              "info": "Si vide, le discount est calculé sur le prix avant reduction rempli depuis la fiche produit"
+            },
+            "promotion_discount_unit": {
+              "label": "Unité de la promotion",
+              "options": {
+                "percentage": {
+                  "label": "%"
+                },
+                "amount": {
+                  "label": "Montant"
+                }
+              }
+            },
+            "promotion_reason": {
+              "label": "Raison de la promotion",
+              "info": "Visible uniquement si le produit est en promotion"
+            },
+            "show_promotion": {
+              "label": "Afficher la promotion",
+              "info": "Visible uniquement si le produit est en promotion"
             }
           }
         },
@@ -1418,41 +1447,6 @@
         },
         "likes": {
           "name": "J'aimes"
-        },
-        "price": {
-          "name": "Prix",
-          "headings": {
-            "tapestry_info": {
-              "content": "Informations sur la tapisserie",
-              "info": "Uniquement visible si le style est défini sur tapisserie"
-            }
-          },
-          "settings": {
-            "background": {
-              "label": "Couleur de fond"
-            },
-            "second_key_benefit": {
-              "label": "Deuxième bénéficie clé",
-              "default": "Deuxième bénéficie clé"
-            },
-            "third_key_benefit": {
-              "label": "Troisième bénéficie clé",
-              "default": "Troisième bénéficie clé"
-            },
-            "fourth_key_benefit": {
-              "label": "Quatrième bénéficie clé",
-              "default": "Quatrième bénéficie clé"
-            },
-            "style": {
-              "label": "Style",
-              "default": {
-                "label": "Par default"
-              },
-              "tapestry": {
-                "label": "Tapisserie"
-              }
-            }
-          }
         },
         "tapestry_options": {
           "name": "Options de tapisserie",

@@ -1244,19 +1244,48 @@
       "blocks": {
         "buy": {
           "name": "Purchase Buttons",
+          "headings": {
+            "promotion": {
+              "content": "Promotion"
+            }
+          },
           "settings": {
-            "bottom_text": {
-              "label": "Bottom Text"
+            "text": {
+              "label": "Text"
             },
             "is_dynamic_variant": {
               "label": "Display variant name",
-              "info": "If enabled, the variant name will take precedence over the top text"
+              "info": "If enabled, the variant name will take precedence over the text"
             },
             "main_color": {
               "label": "Background Color"
             },
-            "top_text": {
-              "label": "Top Text"
+            "promotion_date": {
+              "label": "Promotion end date",
+              "info": "Visible only if the product is on promotion"
+            },
+            "promotion_discount": {
+              "label": "Promotion discount",
+              "info": "If empty, the discount is calculated on the price before reduction filled from the product sheet"
+            },
+            "promotion_discount_unit": {
+              "label": "Promotion discount unit",
+              "options": {
+                "percentage": {
+                  "label": "%"
+                },
+                "amount": {
+                  "label": "Amount"
+                }
+              }
+            },
+            "promotion_reason": {
+              "label": "Promotion reason",
+              "info": "Visible only if the product is on promotion"
+            },
+            "show_promotion": {
+              "label": "Show promotion",
+              "info": "Visible only if the product is on promotion"
             }
           }
         },
@@ -1418,41 +1447,6 @@
         },
         "likes": {
           "name": "Likes"
-        },
-        "price": {
-          "name": "Price",
-          "headings": {
-            "tapestry_info": {
-              "content": "Tapestry Information",
-              "info": "Only visible if style is set to tapestry"
-            }
-          },
-          "settings": {
-            "background": {
-              "label": "Background Color"
-            },
-            "second_key_benefit": {
-              "label": "Second Key Benefit",
-              "default": "Second Key Benefit"
-            },
-            "third_key_benefit": {
-              "label": "Third Key Benefit",
-              "default": "Third Key Benefit"
-            },
-            "fourth_key_benefit": {
-              "label": "Fourth Key Benefit",
-              "default": "Fourth Key Benefit"
-            },
-            "style": {
-              "label": "Style",
-              "default": {
-                "label": "Default"
-              },
-              "tapestry": {
-                "label": "Tapestry"
-              }
-            }
-          }
         },
         "tapestry_options": {
           "name": "Tapestry Options",

@@ -47,7 +47,7 @@ const ImageProduct = forwardRef(({}, ref) => {
 
   const imageContent = (
     <button
-      className={`relative inline-block transition-all duration-200 ease-out rounded overflow-hidden${
+      className={`relative inline-block h-full transition-all duration-200 ease-out rounded overflow-hidden${
         visible ? '' : ' opacity-0'
       }`}
       onClick={handleClick}
@@ -67,7 +67,7 @@ const ImageProduct = forwardRef(({}, ref) => {
         width="728"
         height="auto"
         loading="lazy"
-        className="md:max-h-[90vh] w-auto"
+        className="md:max-h-[90vh] w-auto lg:h-full"
       />
       <ImageProductFilter width={728} />
     </button>

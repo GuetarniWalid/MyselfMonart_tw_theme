@@ -26,10 +26,16 @@ module.exports = {
       },
       borderWidth: {
         1: '1px',
+        3: '3px',
+        'neu': '4px',
       },
       boxShadow: {
         '3xl': '1px 12px 50px -1px rgba(0,0,0,0.1)',
         button: '0px 0px 0px 1px #002E5D',
+        'neu-xl': '11px 12px 0 rgb(var(--color-main-rgb))',
+        'neu-lg': '6px 7px 0 rgb(var(--color-main-rgb))',
+        'neu-md': '4px 5px 0 rgb(var(--color-main-rgb))',
+        'neu-sm': '2px 3px 0 rgb(var(--color-main-rgb))',
       },
       colors: {
         action: {

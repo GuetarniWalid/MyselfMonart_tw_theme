@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import AddCustomerDetailsPopup from '../AddCustomerDetailsPopup';
 import Button from './ui/Button';
+import PromotionButton from './ui/PromotionButton';
 import { makeOrder } from './data/makeOrder';
 import { useVariantSelected } from '../../store/variantSelected';
 
@@ -40,21 +41,24 @@ export default function BuyButton({
     buttonRef.current.focus();
   }
 
+  // Common props for both button types
+  const buttonProps = {
+    drawerOpen,
+    handleClick: withCustomerDetails ? showCustomerDetailsPopup : addProductToCart,
+    idle,
+    ref: buttonRef,
+    message: withCustomerDetails
+      ? window.react.buyButton.addCustomerDetails
+      : window.react.buyButton.addProductToCart,
+  };
+
+  // Choose component based on window.promotion
+  const showPromotion = window.promotion.show === 'true' && window.promotion.discount > 0;
+  const ButtonComponent = showPromotion ? PromotionButton : Button;
+
   return (
     <div>
-      <Button
-        drawerOpen={drawerOpen}
-        handleClick={
-          withCustomerDetails ? showCustomerDetailsPopup : addProductToCart
-        }
-        idle={idle}
-        message={
-          withCustomerDetails
-            ? window.react.buyButton.addCustomerDetails
-            : window.react.buyButton.addProductToCart
-        }
-        ref={buttonRef}
-      />
+      <ButtonComponent {...buttonProps} />
       {showAddCustomerDetailsPopup &&
         createPortal(
           <AddCustomerDetailsPopup

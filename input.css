@@ -7,6 +7,8 @@
 summary::-webkit-details-marker {
   display: none;
 }
+
+/* Finger Tap Animation start */
 .finger-tap {
   animation: fingerTap 1.5s linear infinite;
 }
@@ -129,7 +131,9 @@ summary::-webkit-details-marker {
     transform: translateX(-30px) rotate(0);
   }
 }
+/* Finger Tap Animation end */
 
+/* Floating Animation start */
 .floating {
   animation: floating 10s ease-in-out infinite;
 }
@@ -151,6 +155,7 @@ summary::-webkit-details-marker {
     transform: translate(-3px, 6px) rotate(2deg);
   }
 }
+/* Floating Animation end */
 
 .heading {
   font-family: 'heading', sans-serif;
@@ -163,6 +168,7 @@ main-product-blocks .description h2 span {
   font-size: inherit !important;
 }
 
+/* Float Buy Button Animation start */
 .float-buy-button {
   animation: buyButton 1s var(--anim-motion) 1 0s forwards;
 }
@@ -246,7 +252,9 @@ main-product-blocks .description h2 span {
     right: calc(100% + 60px);
   }
 }
+/* Float Buy Button Animation end */
 
+/* Finger Touch Animation start */
 .finger-x-touch {
   animation: XfingerTouch 9s normal infinite 3s forwards;
 }
@@ -283,6 +291,56 @@ main-product-blocks .description h2 span {
       transform: translateY(+20px);
   }
 }
+/* Finger Touch Animation end */
+
+/* Price Animation start */
+.buy-button-top-anim {
+  animation: slide-up-compare 7s infinite;
+}
+@keyframes slide-up {
+  0%, 45% {
+    transform: translateY(100%);
+  }
+  50%, 95% {
+    transform:  translateY(0);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+.buy-button-bottom-anim {
+  animation: slide-up 7s infinite;
+}
+@keyframes slide-up-compare {
+  0%, 45% {
+    transform: translateY(0);
+  }
+  50%, 95% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.crossed-line-anim::before {
+  transform-origin: left;
+  animation: crossed-line-anim 7s infinite;
+}
+@keyframes crossed-line-anim {
+  0% {
+    transform: translateY(-100%) scaleX(0);
+  }
+  15%, 60%{
+    transform: translateY(-100%) scaleX(1);
+  }
+  65%,100% {
+    transform: translateY(-100%) scaleX(0);
+  }
+}
+/* Price Animation end */
+
 
 @tailwind base;
 @tailwind components;
@@ -370,6 +428,10 @@ main-product-blocks .description h2 span {
       1px 100%,
       10px 50%
     );
+  }
+
+  .cart-button {
+    @apply relative w-full md:mx-auto bg-action border-main border-[4px] font-bold font-heading 2xs:text-lg xs:text-xl md:text-lg lg:text-xl text-main text-lg backdrop-blur-xl rounded-xl pl-8 pr-4 shadow-neu-xl hover:shadow-neu-lg transition-shadow duration-100 ease-in-out focus:outline focus:outline-orange-500 focus:outline-2 mb-4 md:mb-0 before:w-12 before:bg-white/50 before:absolute before:-top-4 before:-bottom-4 before:right-[-60px] before:rotate-12 after:w-12 after:bg-white/20 after:absolute after:-top-4 after:-bottom-4 after:rotate-12 after:right-[-60px] overflow-hidden disabled:bg-action-70 disabled:outline-none disabled:cursor-wait;
   }
 
   .cart-drawer {

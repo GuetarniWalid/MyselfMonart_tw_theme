@@ -48,7 +48,7 @@ export default function Radio({
   const isMatterExist = option.type === 'matter' ? isMatterExisting() : true;
 
   return (
-    <div className="lg:w-1/2 p-1">
+    <div className="lg:w-1/2 p-1 w-full">
       <div
         ref={ref}
         onClick={isMatterExist ? handleRadioClick : undefined}
@@ -75,7 +75,7 @@ export default function Radio({
             srcSet={`${option.radio.image.src}&width=200 200w, ${option.radio.image.src}&width=300 300w, ${option.radio.image.src}&width=400 400w`}
             sizes="(max-width: 836px) 300px, (max-width: 1023px) 400px, (max-width: 1120px) 200px, 300px"
             loading="lazy"
-            className="h-36 object-contain"
+            className="h-36 object-contain mx-auto"
           />
           <p className="my-2 text-lg" id={'label-' + option.name}>
             {option.name}

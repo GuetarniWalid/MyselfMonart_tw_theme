@@ -43,14 +43,14 @@ const Button = forwardRef(
     }
 
     return (
-      <div className="flex-none font-bold">
+      <div className="flex-none font-bold pr-3">
         <button
           id='react-buy-button'
           onClick={handleClick}
           onKeyDown={handleKeyDown}
           ref={ref}
           tabIndex={drawerOpen ? 0 : -1}
-          className="relative flex w-full md:mx-auto justify-between items-center gap-3 bg-action outline outline-1 outline-action text-secondary backdrop-blur-xl rounded-lg px-8 focus:outline focus:outline-orange-500 focus:outline-2 mb-4 md:mb-0 md:py-2 md:text-md lg:text-lg before:w-12 before:bg-white/50 before:absolute before:-top-4 before:-bottom-4 before:right-[-60px] before:rotate-12 after:w-12 after:bg-white/20 after:absolute after:-top-4 after:-bottom-4 after:rotate-12 after:right-[-60px] overflow-hidden disabled:bg-action-70 disabled:outline-none disabled:cursor-wait"
+          className="cart-button py-0 flex items-center justify-between group"
           disabled={idle}
         >
           {idle ? (

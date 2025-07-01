@@ -30,29 +30,17 @@
             "margin_bottom": "mb-8"
           }
         },
-        "text_aLJN4F": {
-          "type": "text",
-          "settings": {
-            "text": "<p>🎉 <em>Soldes d’été — -15 % appliqués automatiquement dans votre panier<\/em><\/p>"
-          }
-        },
-        "9f20570b-1a97-4c34-8758-c5af9b8d2cfc": {
-          "type": "price",
-          "settings": {
-            "style": "default",
-            "background": "linear-gradient(135deg, rgba(255,247,220,1) 0%, rgba(254,206,218,1) 61%, rgba(214,208,253,1) 100%)",
-            "second_key_benefit": "Deuxième bénéficie clé",
-            "third_key_benefit": "Troisième bénéficie clé",
-            "fourth_key_benefit": "Quatrième bénéficie clé"
-          }
-        },
         "buy_qrRzcg": {
           "type": "buy",
           "settings": {
-            "top_text": "PERSONNALISEZ ICI",
+            "text": "JE COMMANDE",
             "is_dynamic_variant": false,
-            "bottom_text": "Soldes -15 %",
-            "main_color": "#b92700"
+            "main_color": "#fede65",
+            "show_promotion": true,
+            "promotion_discount": 15,
+            "promotion_discount_unit": "%",
+            "promotion_reason": "Soldes d'été ☀️",
+            "promotion_date": "Se termine le 22 juillet"
           }
         },
         "collapsible_tab_HAUcNw": {
@@ -82,8 +70,6 @@
         "likes_t9U7Ay",
         "title",
         "trustpilot_review_9q3NVM",
-        "text_aLJN4F",
-        "9f20570b-1a97-4c34-8758-c5af9b8d2cfc",
         "buy_qrRzcg",
         "collapsible_tab_HAUcNw",
         "a70160ee-79ef-4eb9-8e65-ec87f898b506",

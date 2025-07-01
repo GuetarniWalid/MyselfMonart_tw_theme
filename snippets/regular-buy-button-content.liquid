@@ -1,0 +1,20 @@
+{% comment %}
+    Renders a regular buy button content
+
+    Accepts:
+    - product: {Object} The product object
+    - block: {Object} The block object
+
+    Usage:
+    {% render 'regular-buy-button-content', product: product %}
+{% endcomment %}
+
+{% render 'regular-in-cart-button', product: product, block: block %}
+{% if block.settings.show_promotion %}
+    <template class="template-regular-in-cart-button">
+        {% render 'regular-in-cart-button', product: product, block: block %}
+    </template>
+    <template class="template-promotion-in-cart-button">
+        {% render 'promotion-in-cart-button', product: product, block: block %}
+    </template>
+{% endif %}

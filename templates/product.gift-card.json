@@ -5,24 +5,16 @@
       "blocks": {
         "title": {
           "type": "title",
-          "settings": {
-          }
+          "settings": {}
         },
         "variant_picker_QxUgdP": {
           "type": "variant_picker",
-          "settings": {
-          }
-        },
-        "9f20570b-1a97-4c34-8758-c5af9b8d2cfc": {
-          "type": "price",
-          "settings": {
-          }
+          "settings": {}
         },
         "buy_bW8TLN": {
           "type": "buy",
           "settings": {
-            "top_text": "Mettre dans le panier",
-            "bottom_text": "Une carte cadeau à offrir",
+            "text": "Une carte cadeau à offrir",
             "main_color": "#07364d"
           }
         }
@@ -30,11 +22,9 @@
       "block_order": [
         "title",
         "variant_picker_QxUgdP",
-        "9f20570b-1a97-4c34-8758-c5af9b8d2cfc",
         "buy_bW8TLN"
       ],
-      "settings": {
-      }
+      "settings": {}
     },
     "main-product-recommendations": {
       "type": "product-recommendations",
@@ -44,7 +34,6 @@
         "heading_size": "h2",
         "products_to_show": 10,
         "columns_desktop": 4,
-        "color_scheme": "background-1",
         "image_ratio": "adapt",
         "show_secondary_image": false,
         "show_vendor": false,

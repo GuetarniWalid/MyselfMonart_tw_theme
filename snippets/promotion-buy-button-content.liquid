@@ -1,0 +1,20 @@
+{% comment %}
+    Renders a promotion buy button content
+
+    Accepts:
+    - product: {Object} The product object
+    - block: {Object} The block object
+
+    Usage:
+    {% render 'promotion-buy-button-content', product: product, block: block %}
+{% endcomment %}
+
+{% render 'promotion-in-cart-button', product: product, block: block %}
+{% unless block.settings.promotion_discount > 0 %}
+  <template class="template-regular-in-cart-button">
+    {% render 'regular-in-cart-button', product: product, block: block %}
+  </template>
+  <template class="template-promotion-in-cart-button">
+    {% render 'promotion-in-cart-button', product: product, block: block %}
+  </template>
+{% endunless %}

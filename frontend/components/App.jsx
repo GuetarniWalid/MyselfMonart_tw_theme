@@ -71,7 +71,7 @@ export default function App() {
           addonsDrawerRef={addonsDrawerRef}
           drawerOpen={drawerOpen}
         />
-        <div className="max-h-full overflow-hidden mx-3">
+        <div className="max-h-full overflow-hidden mx-3 min-w-[50%] lg:min-w-0">
           <Painting />
           {!isMobile && (
             <BuyButton

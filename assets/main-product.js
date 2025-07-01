@@ -460,22 +460,12 @@ class VariantPicker extends HTMLElement {
   onButtonClick = () => {
     this.unColorPreviousButtonSelected();
     this.colorButtonSelected();
-    const { variantId, variantPrice, variantTitle, variantCompareAtPrice } =
-      this.getVariantData();
+    const variantData = this.getVariantData();
     if (!this.buyButton) return;
-    this.buyButton.dataset.variantId = variantId;
-    this.updateFloatBuyButton(variantId, variantTitle);
-    this.updateDisplayedPrice(variantPrice);
-    this.updateDisplayedCrossedPrice(variantCompareAtPrice);
-    this.updateDisplayedReductionPrice(variantCompareAtPrice, variantPrice);
-    this.updateTopText(variantTitle);
+    this.buyButton.dataset.variantId = variantData.id;
+    this.updateBuyButtonContent(variantData);
+    this.updatePromotionDateBanner(variantData);
   };
-
-  colorButtonSelected() {
-    this.button.classList.replace('bg-main-5', 'bg-main');
-    this.button.classList.add('text-secondary');
-    this.dataset.selected = 'true';
-  }
 
   unColorPreviousButtonSelected() {
     const container = this.closest('.container');
@@ -486,9 +476,17 @@ class VariantPicker extends HTMLElement {
       previousVariantPickerSelected.dataset.selected = 'false';
       const previousButton =
         previousVariantPickerSelected.querySelector('button');
-      previousButton.classList.replace('bg-main', 'bg-main-5');
+      previousButton.classList.replace('bg-main-90', 'bg-white');
       previousButton.classList.remove('text-secondary');
+      previousButton.classList.add('border-main');
     }
+  }
+
+  colorButtonSelected() {
+    this.button.classList.replace('bg-white', 'bg-main-90');
+    this.button.classList.add('text-secondary');
+    this.button.classList.remove('border-main');
+    this.dataset.selected = 'true';
   }
 
   getVariantData() {
@@ -500,10 +498,10 @@ class VariantPicker extends HTMLElement {
         variant.option3 === option3,
     );
     return {
-      variantId: currentVariant.id,
-      variantPrice: currentVariant.price,
-      variantCompareAtPrice: currentVariant.compare_at_price,
-      variantTitle: currentVariant.title,
+      id: currentVariant.id,
+      compareAtPrice: currentVariant.compare_at_price,
+      price: currentVariant.price,
+      title: currentVariant.title,
     };
   }
 
@@ -519,55 +517,235 @@ class VariantPicker extends HTMLElement {
     return options;
   }
 
-  updateDisplayedPrice(newPrice) {
-    const priceElem = document.getElementById('main-price');
+  updateBuyButtonContent(variantData) {
+    this.updateFloatBuyButtonDatasetVariantId(
+      variantData.id,
+      variantData.title,
+    );
+
+    const scenario = this.getScenario(variantData.compareAtPrice);
+    const promotionClone = document
+      .querySelector('.template-promotion-in-cart-button')
+      ?.content.cloneNode(true);
+    const regularClone = document
+      .querySelector('.template-regular-in-cart-button')
+      ?.content.cloneNode(true);
+
+    switch (scenario) {
+      case 'regularToRegular':
+        this.regularToRegularScenario(variantData);
+        break;
+      case 'regularToPromotion':
+        this.regularToPromotionScenario(variantData, promotionClone);
+        break;
+      case 'promotionToRegular':
+        this.promotionToRegularScenario(variantData, regularClone);
+        break;
+      case 'promotionToPromotion':
+        this.promotionToPromotionScenario(variantData);
+        break;
+      case 'constantPromotion':
+        this.constantPromotionScenario(variantData);
+        break;
+    }
+    this.alignFloatBuyButtonContent();
+  }
+
+  getScenario(variantCompareAtPrice) {
+    const wasRegular = document.querySelector('.regular-in-cart-button');
+    const wasPromotion = document.querySelector('.promotion-in-cart-button');
+    const willBeRegular = !variantCompareAtPrice;
+    const willBePromotion = variantCompareAtPrice;
+    const isConstantPromotion =
+    document.querySelector('.promotion-in-cart-button')?.dataset
+    ?.promotionConstant === 'true';
+
+    if (isConstantPromotion) return 'constantPromotion';
+    if (wasRegular && willBeRegular) return 'regularToRegular';
+    if (wasPromotion && willBePromotion) return 'promotionToPromotion';
+    if (wasRegular && willBePromotion) return 'regularToPromotion';
+    if (wasPromotion && willBeRegular) return 'promotionToRegular';
+  }
+
+  regularToRegularScenario(variantData) {
+    this.updateBuyButtonMainPrice(variantData.price);
+    this.updateBuyButtonText(variantData.title);
+  }
+
+  regularToPromotionScenario(variantData, clone) {
+    this.updateBuyButtonMainPrice(variantData.price, clone);
+    this.updateDisplayedCrossedPrice(variantData.compareAtPrice, clone);
+    this.updateDisplayedReductionPrice(variantData, clone);
+    this.updateBuyButtonText(variantData.title, clone);
+    this.replaceContentByClone(
+      document.querySelector('.regular-in-cart-button'),
+      clone,
+    );
+  }
+
+  promotionToRegularScenario(variantData, clone) {
+    this.updateBuyButtonMainPrice(variantData.price, clone);
+    this.updateBuyButtonText(variantData.title, clone);
+    this.replaceContentByClone(
+      document.querySelector('.promotion-in-cart-button'),
+      clone,
+    );
+  }
+
+  promotionToPromotionScenario(variantData) {
+    this.updateBuyButtonMainPrice(variantData.price);
+    this.updateDisplayedCrossedPrice(variantData.compareAtPrice);
+    this.updateDisplayedReductionPrice(variantData);
+    this.updateBuyButtonText(variantData.title);
+  }
+
+  constantPromotionScenario(variantData) {
+    const { discount, unit } = this.getDiscountData();
+    const newPrice = Product.getPriceDiscounted(
+      variantData.price,
+      discount,
+      unit,
+    );
+    this.updateBuyButtonMainPrice(newPrice);
+    this.updateDisplayedCrossedPrice(variantData.price);
+    this.updateBuyButtonText(variantData.title);
+  }
+
+  updateBuyButtonMainPrice(newPrice, clone) {
+    let priceElem;
+    if (clone) {
+      priceElem = clone.querySelector('.main-price');
+    } else {
+      priceElem = document.querySelector('.main-price');
+    }
     if (!priceElem) return;
     priceElem.textContent = Product.formatPrice(newPrice);
   }
 
-  updateDisplayedCrossedPrice(newPrice) {
-    const crossedPriceElem = document.getElementById('crossed-price');
+  updateDisplayedCrossedPrice(newPrice, clone) {
+    let crossedPriceElem;
+    if (clone) {
+      crossedPriceElem = clone.querySelector('.crossed-price');
+    } else {
+      crossedPriceElem = document.querySelector('.crossed-price');
+    }
+
     if (!crossedPriceElem) return;
-    if (!newPrice) crossedPriceElem.classList.add('hidden');
-    else {
-      crossedPriceElem.classList.remove('hidden');
-      crossedPriceElem.textContent = Product.formatPrice(newPrice);
-    }
+    crossedPriceElem.textContent = Product.formatPrice(newPrice);
   }
 
-  updateDisplayedReductionPrice(variantCompareAtPrice, variantPrice) {
-    const reductionPriceElem = document.getElementById('reduction-price');
+  updateDisplayedReductionPrice(variantData, clone) {
+    let reductionPriceElem;
+    if (clone) {
+      reductionPriceElem = clone.querySelector('.reduction-price');
+    } else {
+      reductionPriceElem = document.querySelector('.reduction-price');
+    }
+
     if (!reductionPriceElem) return;
-    if (!variantCompareAtPrice || !variantPrice)
-      reductionPriceElem.classList.add('hidden');
-    else {
-      reductionPriceElem.classList.remove('hidden');
-      const reduction = variantCompareAtPrice - variantPrice;
-      reductionPriceElem.textContent = '- ' + Product.formatPrice(reduction);
-    }
+    const reduction = variantData.compareAtPrice - variantData.price;
+    reductionPriceElem.textContent = '- ' + Product.formatPrice(reduction);
+
+    const floatBuyButtonElem = this.getFloatBuyButtonElem();
+    const floatBuyButtonReductionPriceElem =
+      floatBuyButtonElem.querySelector('.reduction-price');
+    if (floatBuyButtonReductionPriceElem)
+      floatBuyButtonReductionPriceElem.textContent =
+        reductionPriceElem.textContent;
   }
 
-  updateFloatBuyButton(variantId, variantTitle) {
+  updateBuyButtonText(variantTitle, clone) {
+    const isDynamicVariant = this.buyButton.dataset.isDynamicVariant;
+    if (isDynamicVariant === 'false') return;
+
+    let buyButtonTextElem;
+    if (clone) {
+      buyButtonTextElem = clone.querySelector('.cart-button-text');
+    } else {
+      buyButtonTextElem = document.querySelector('.cart-button-text');
+    }
+
+    if (buyButtonTextElem) buyButtonTextElem.textContent = variantTitle;
+  }
+
+  updateFloatBuyButtonDatasetVariantId(variantId) {
+    const floatBuyButton = this.getFloatBuyButtonElem();
+    floatBuyButton.dataset.variantId = variantId;
+  }
+
+  getFloatBuyButtonElem() {
     const floatBuyButton = document.querySelector('.float-buy-button');
+    let floatBuyButtonElem;
     if (floatBuyButton) {
-      const topTextElem = floatBuyButton.querySelector('.top-text');
-      topTextElem.textContent = variantTitle;
-      floatBuyButton.dataset.variantId = variantId;
+      floatBuyButtonElem = floatBuyButton;
     } else {
       const templateFloatBuyButton =
         document.getElementById('float-buy-button');
       const content = templateFloatBuyButton.content;
-      const floatBuyButton = content.querySelector('.float-buy-button');
-      floatBuyButton.dataset.variantId = variantId;
-      const topTextElem = floatBuyButton.querySelector('.top-text');
-      topTextElem.textContent = variantTitle;
+      floatBuyButtonElem = content.querySelector('.float-buy-button');
+    }
+    return floatBuyButtonElem;
+  }
+
+  replaceContentByClone(contentElem, clone) {
+    if (!clone) return;
+    contentElem.replaceWith(clone);
+  }
+
+  alignFloatBuyButtonContent() {
+    const buyButtonContent = this.buyButton.innerHTML;
+
+    const floatBuyButton = this.getFloatBuyButtonElem();
+    floatBuyButton.innerHTML = buyButtonContent;
+  }
+
+  updatePromotionDateBanner(variantData) {
+    const promotionDateBanner = document.querySelector(
+      '.promotion-date-banner',
+    );
+    if (variantData.compareAtPrice && !promotionDateBanner) {
+      this.createPromotionDateBanner();
+    } else if (!variantData.compareAtPrice) {
+      this.hidePromotionDateBanner();
+    } else {
+      this.showPromotionDateBanner();
     }
   }
 
-  updateTopText(variantTitle) {
-    const topTextElem = document.querySelector('.top-text');
-    if (!topTextElem) return;
-    topTextElem.textContent = variantTitle;
+  createPromotionDateBanner() {
+    const templatePromotionDateBanner = document.getElementById(
+      'promotion-date-banner',
+    );
+    if (!templatePromotionDateBanner) return;
+    const promotionDateBanner =
+      templatePromotionDateBanner.content.cloneNode(true);
+    const parentBuyButton = this.buyButton.parentElement;
+    const bannerElement = promotionDateBanner.firstElementChild;
+    parentBuyButton.insertAdjacentElement('afterend', bannerElement);
+  }
+
+  hidePromotionDateBanner() {
+    const promotionDateBanner = document.querySelector(
+      '.promotion-date-banner',
+    );
+    if (promotionDateBanner?.dataset.promotionConstant) return;
+    if (promotionDateBanner) promotionDateBanner.classList.add('hidden');
+  }
+
+  showPromotionDateBanner() {
+    const promotionDateBanner = document.querySelector(
+      '.promotion-date-banner',
+    );
+    if (promotionDateBanner?.dataset.promotionConstant) return;
+    if (promotionDateBanner) promotionDateBanner.classList.remove('hidden');
+  }
+
+  getDiscountData() {
+    const discount = document.querySelector('.promotion-in-cart-button')
+      ?.dataset?.discount;
+    const unit = document.querySelector('.promotion-in-cart-button')?.dataset
+      ?.unit;
+    return { discount, unit };
   }
 }
 customElements.define('variant-picker', VariantPicker);

@@ -1,0 +1,71 @@
+{% comment %} 
+                Renders a promotion in cart button 
+                Accepts: 
+                - product: {Object} The product object 
+                - block: {Object} The block object
+                Usage: 
+                {% render 'promotion-in-cart-button' %} 
+{% endcomment %}
+
+<span class="promotion-in-cart-button inline-flex w-full items-center justify-between gap-2" data-promotion-constant="{% if block.settings.promotion_discount > 0 %}true{% else %}false{% endif %}" data-discount="{{ block.settings.promotion_discount }}" data-unit="{{ block.settings.promotion_discount_unit }}">
+  <span class="relative inline-block whitespace-nowrap">
+    <span class="cart-button-text inline-block pointer-events-none py-4 md:py-5 whitespace-nowrap {% if block.settings.promotion_reason != blank %}buy-button-top-anim{% endif %} transition-transform duration-300 ease-in-out">
+      {% if block.settings.is_dynamic_variant %}
+        {{ product.selected_or_first_available_variant.title }}
+      {% else %}
+        {{ block.settings.text }}
+      {% endif %}
+    </span>
+    {% if block.settings.promotion_reason != blank %}
+      <span class="promotion-reason-text inline-block py-4 md:py-5 absolute bottom-0 left-0 transition-transform duration-300 ease-in-out buy-button-bottom-anim whitespace-nowrap">
+        {{ block.settings.promotion_reason }}
+      </span>
+    {% endif %}
+  </span>
+  <span class="whitespace-nowrap inline-flex gap-2 items-center">
+    <span class="relative inline-block">
+      <span class="inline-block py-4 md:py-5 transition-transform duration-300 ease-in-out buy-button-top-anim">
+        <span data-money-symbol="{{ cart.currency.symbol }}" class="crossed-price relative crossed-line-anim before:absolute before:top-1/2 before:bg-main before:left-0 before:w-full before:h-[2px] before:rounded-2xl min-w-16 whitespace-nowrap">
+          {% if block.settings.promotion_discount > 0 %}
+            {{ product.selected_or_first_available_variant.price | money }}
+          {% else %}
+            {{ product.selected_or_first_available_variant.compare_at_price | money }}
+          {% endif %}
+        </span>
+      </span>
+      <span data-money-symbol="{{ cart.currency.symbol }}" class="main-price inline-block py-4 md:py-5 transition-transform duration-300 ease-in-out buy-button-bottom-anim absolute bottom-0 right-0 text-right whitespace-nowrap">
+        {% liquid
+          if template.suffix == 'painting' or template.suffix == 'personalized'
+            assign price = product.price_min
+          else
+            assign price = product.selected_or_first_available_variant.price
+          endif
+          if block.settings.promotion_discount > 0
+            if block.settings.promotion_discount_unit == '%'
+              assign discount_multiplier = 100 | minus: block.settings.promotion_discount
+              assign price = price | times: discount_multiplier | divided_by: 100
+            else
+              assign discount_applied = block.settings.promotion_discount | times: 100
+              assign price = price | minus: discount_applied
+            endif
+          endif
+        %}
+        {{ price | money }}
+      </span>
+    </span>
+    <span class="reduction-price inline-block bg-red-600 border-main border-neu text-sm text-secondary rounded-lg px-3 py-2 whitespace-nowrap shadow-neu-sm">
+        {% liquid
+          if block.settings.promotion_discount > 0
+            if block.settings.promotion_discount_unit == '%'
+              assign reduction = block.settings.promotion_discount | append: ' ' | append: block.settings.promotion_discount_unit
+            else
+              assign reduction = block.settings.promotion_discount | times: 100 | money_without_trailing_zeros
+            endif
+          else
+            assign reduction = product.selected_or_first_available_variant.compare_at_price | minus: product.selected_or_first_available_variant.price | money_without_trailing_zeros
+          endif
+        %}
+        - {{ reduction }}
+    </span>
+  </span>
+</span>
