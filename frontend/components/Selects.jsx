@@ -32,7 +32,7 @@ export default function Selects({
   });
 
   return (
-    <div className="flex-none" ref={mobileSummaryRef}>
+    <div id="selects-container" className="flex-none" ref={mobileSummaryRef}>
       {selects}
     </div>
   );

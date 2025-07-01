@@ -36,6 +36,7 @@ module.exports = {
         'neu-lg': '6px 7px 0 rgb(var(--color-main-rgb))',
         'neu-md': '4px 5px 0 rgb(var(--color-main-rgb))',
         'neu-sm': '2px 3px 0 rgb(var(--color-main-rgb))',
+        'neu-xs': '1px 2px 0 rgb(var(--color-main-rgb))',
       },
       colors: {
         action: {

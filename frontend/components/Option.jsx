@@ -83,7 +83,7 @@ export default function Option({
     <li
       id={id}
       className={`${
-        isSelected ? 'bg-white/50 md:bg-main-5 backdrop-blur-xl rounded-lg' : ''
+        isSelected ? 'bg-main-10 rounded-lg border-main border-1' : ''
       }
         ${
           isDisabled

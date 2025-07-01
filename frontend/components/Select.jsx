@@ -23,12 +23,15 @@ export default function Select({
   const [openSelectId, setOpenSelectId] = useOpenSelectId();
   const [sizeSelected] = useVariantSelected.size();
   const [matterSelected] = useVariantSelected.matter();
-  const availableOptions = options.filter(option => isOptionExisting(option, sizeSelected, matterSelected))
+  const availableOptions = options.filter((option) =>
+    isOptionExisting(option, sizeSelected, matterSelected),
+  );
 
   const [variantSelected] = useVariantSelected();
-  const optionSelected = variantSelected[options[0].type]
-  
-  const isOpen = focusedElementRef.current?.includes(selectId) && openSelectId === selectId
+  const optionSelected = variantSelected[options[0].type];
+
+  const isOpen =
+    focusedElementRef.current?.includes(selectId) && openSelectId === selectId;
 
   useEffect(() => {
     if (focusedElementRef.current && focusedElementRef.current == selectId) {
@@ -57,6 +60,13 @@ export default function Select({
     }
   }
 
+  function haveToBeHidden() {
+    const index = Number(selectId.split('-')[1]);
+    const openSelectIndex = Number(openSelectId?.split('-')[1]);
+    return index < openSelectIndex;
+  }
+  const toBeHidden = haveToBeHidden();
+
   const optionList = availableOptions.map((option, index) => {
     return (
       <Option
@@ -74,12 +84,10 @@ export default function Select({
   });
 
   return (
-    <div className="flex gap-3 h-12 mb-3">
+    <div className={`flex gap-3 h-12 mb-3 ${toBeHidden ? 'hidden' : ''}`}>
       <div className="relative flex-1 h-full">
         <div
-          className={`react-select relative flex justify-between items-center rounded-lg px-3 h-full bg-white/30 md:bg-white backdrop-blur-xl md:backdrop-blur-none text-white md:text-main outline outline-1 outline-white/90 focus:outline-orange-500 focus:outline-2 ${
-            isOpen ? 'outline-white' : ''
-          }`}
+          className="react-select relative flex justify-between items-center rounded-lg px-3 h-full bg-white border-main border-neu shadow-neu-sm hover:shadow-neu-xs focus:outline-orange-500 focus:outline-2"
           role="button"
           aria-haspopup="listbox"
           aria-expanded={isOpen}
@@ -94,11 +102,11 @@ export default function Select({
             {' '}
           </span>
           <span className="pointer-events-none">{optionSelected.name}</span>
-          <div className="flex items-center gap-5 pointer-events-none">
-            <span className="rounded-lg px-2 py-1 whitespace-nowrap mobile:backdrop-blur-xl md:bg-main-10 border-1 mobile:border-white/50">
+          <div className="flex items-center gap-2 pointer-events-none">
+            <span className="rounded-lg px-2 py-1 whitespace-nowrap border-1 border-main text-sm">
               <OptionPrice option={optionSelected} />
             </span>
-            <div className="w-6 h-6 rounded-full flex justify-center items-center backdrop-blur border-1 border-white/50">
+            <div className="w-6 h-6 flex justify-center items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="25"
@@ -118,16 +126,13 @@ export default function Select({
             aria-label={options[0].type}
             role="listbox"
             id={ariaControlsIdRef.current}
-            className={`absolute w-full rounded-lg p-3 bg-white/30 md:bg-white backdrop-blur-3xl md:backdrop-blur-none text-black md:text-main border-1 border-white/90 ${
+            className={`absolute w-full rounded-lg p-3 bg-white border-main border-neu shadow-neu-sm ${
               popupDirection === 'top'
-                ? '-top-3 -translate-y-full shadow-[0_-13px_28px_5px_rgba(0,0,0,0.1)]'
-                : '-bottom-3 translate-y-full shadow-[0_13px_28px_5px_rgba(0,0,0,0.1)]'
+                ? '-top-3 -translate-y-full'
+                : '-bottom-3 translate-y-full'
             }`}
             aria-activedescendant={`${selectId}-option-0`}
           >
-            <span className="absolute block inset-0 rounded bg-[#848484]/40 backdrop-blur-xl -z-10 md:hidden">
-              {' '}
-            </span>
             {optionList}
           </ul>
         )}

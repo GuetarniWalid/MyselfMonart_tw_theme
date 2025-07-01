@@ -21,10 +21,8 @@ const BackgroundImage = ({children}) => {
     >
       <style>
         {`
-          @media (max-width: 767px) {
-            #background-image {
-              background-image: url(https://cdn.shopify.com/s/files/1/0623/2388/4287/files/mur-beton-brute-galerie-minimalist.jpg?v=1736012108&width=400);
-            }
+          #background-image {
+            background-image: url(https://cdn.shopify.com/s/files/1/0623/2388/4287/files/background-neubrutalism.jpg?v=1751380458);
           }
         `}
       </style>

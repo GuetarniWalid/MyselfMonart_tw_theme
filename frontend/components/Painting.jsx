@@ -51,7 +51,7 @@ export default function Painting() {
   );
 
   return (
-    <div className="relative text-center lg:h-[80%] lg:mb-2" ref={sceneRef}>
+    <div className="relative text-center lg:h-[80%] md:mb-2 flex items-center justify-center" ref={sceneRef}>
       <ImageProduct ref={productRef} />
       {options.map((option) => (
         <ImageJPGDrawer key={option.type + option.key} option={option} />

@@ -33,8 +33,15 @@ export default function OptionPrice({ option, isDisabled }) {
     return price;
   }
 
+  function showPlus() {
+    if (!option.price) return false;
+    if (option.type === 'size') return false;
+    return true;
+  }
+
   return (
     <>
+      {showPlus() && '+ '}
       {formatPrice(price)}
     </>
   );

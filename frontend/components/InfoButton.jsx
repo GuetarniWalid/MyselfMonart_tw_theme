@@ -37,8 +37,8 @@ export default function InfoButton({
   return (
     <>
       <button
-        className={`relative h-full w-12 rounded flex justify-center items-center bg-white/30 md:bg-white backdrop-blur-xl md:backdrop-blur-none text-white md:text-main outline outline-1 outline-white/90 focus:outline-orange-500 focus:outline-2${
-          nextToRadio ? ' md:h-auto md:w-full gap-1 md:py-2 md:shadow' : ''
+        className={`relative h-full w-12 rounded-md flex justify-center items-center bg-white border-main border-neu shadow-neu-sm hover:shadow-neu-xs focus:outline-orange-500 focus:outline-2${
+          nextToRadio ? ' md:h-auto md:w-full gap-1 md:py-2' : ''
         } `}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
