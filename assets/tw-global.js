@@ -85,8 +85,30 @@ function replacePlaceholderImages() {
 }
 replacePlaceholderImages();
 
-// Classes
+function animBlockButton() {
+  const blockBuyButtons = Array.from(document.querySelectorAll('.glass-anim'));
+  
+  setTimeout(() => {
+    blockBuyButtons.forEach((blockBuyButton) => {
+      blockBuyButton.classList.remove('glass-anim');
+    });
+  }, 1500);
+  setInterval(() => {
+    const newBlockBuyButtons = document.querySelectorAll('.glass-anim');
+    if(newBlockBuyButtons.length > 0) {
+      blockBuyButtons.push(...newBlockBuyButtons)
+    }
+    blockBuyButtons.forEach((blockBuyButton) => {
+      blockBuyButton.classList.add('glass-anim');
+    setTimeout(() => {
+        blockBuyButton.classList.remove('glass-anim');
+      }, 1500);
+    });
+  }, 6000);
+}
+animBlockButton()
 
+// Classes
 if (!customElements.get('collapsible-tab')) {
   class CollapsibleTab extends HTMLElement {
     constructor() {

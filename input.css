@@ -232,17 +232,11 @@ main-product-blocks .description h2 span {
   }
 }
 
-.float-buy-button::before {
-  animation: glass 1.3s var(--anim-motion) 1 0.8s forwards;
-}
-.float-buy-button::after {
-  animation: glass 1.25s var(--anim-motion) 1 1s forwards;
-}
 .glass-anim::before {
-  animation: glass 1.3s var(--anim-motion) 1 0s forwards;
+  animation: glass 1.3s var(--anim-motion) 0s forwards;
 }
 .glass-anim::after {
-  animation: glass 1.25s var(--anim-motion) 1 0.2s forwards;
+  animation: glass 1.25s var(--anim-motion) 0.2s forwards;
 }
 @keyframes glass {
   0% {
@@ -431,7 +425,7 @@ main-product-blocks .description h2 span {
   }
 
   .cart-button {
-    @apply relative w-full md:mx-auto bg-action border-main border-[4px] font-bold font-heading 2xs:text-lg xs:text-xl md:text-lg lg:text-xl text-main text-lg backdrop-blur-xl rounded-xl pl-8 pr-4 shadow-neu-xl hover:shadow-neu-lg transition-shadow duration-100 ease-in-out focus:outline focus:outline-orange-500 focus:outline-2 mb-4 md:mb-0 before:w-12 before:bg-white/50 before:absolute before:-top-4 before:-bottom-4 before:right-[-60px] before:rotate-12 after:w-12 after:bg-white/20 after:absolute after:-top-4 after:-bottom-4 after:rotate-12 after:right-[-60px] overflow-hidden disabled:bg-action-70 disabled:outline-none disabled:cursor-wait;
+    @apply relative w-full md:mx-auto bg-action border-main border-[4px] font-bold font-heading 2xs:text-lg xs:text-xl md:text-lg lg:text-xl text-main text-lg rounded-xl pl-8 pr-4 shadow-neu-xl hover:shadow-neu-lg transition-shadow duration-100 ease-in-out focus:outline focus:outline-orange-500 focus:outline-2 mb-4 md:mb-0 disabled:bg-action-70 disabled:outline-none disabled:cursor-wait overflow-hidden;
   }
 
   .cart-drawer {
@@ -475,6 +469,10 @@ main-product-blocks .description h2 span {
 
   .footer {
     @apply bg-main text-secondary transition-colors duration-500 relative pb-24 pt-12 mt-28 xl:mt-48;
+  }
+
+  .glass-anim {
+    @apply relative before:w-12 before:bg-white/50 before:absolute before:-top-4 before:-bottom-4 before:right-[-60px] before:rotate-12 after:w-12 after:bg-white/20 after:absolute after:-top-4 after:-bottom-4 after:rotate-12 after:right-[-60px] overflow-hidden;
   }
 
   .image-banner {

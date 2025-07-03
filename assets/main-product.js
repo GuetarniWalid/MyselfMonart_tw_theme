@@ -203,7 +203,6 @@ class MainProductBlocks extends CollapsibleTab {
     }
 
     if (this.blockBuyButton) {
-      this.animBlockButton();
       this.blockBuyButton.addEventListener('click', (e) => {
         if (this.querySelector('#addonsDrawer')) this.onAddonsBuyButtonClick();
         else this.onBuyButtonClick(e);
@@ -262,15 +261,6 @@ class MainProductBlocks extends CollapsibleTab {
     if (this.querySelector('#addonsDrawer'))
       this.buyButton.addEventListener('click', this.onAddonsBuyButtonClick);
     else this.buyButton.addEventListener('click', this.onBuyButtonClick);
-  };
-
-  animBlockButton = () => {
-    setInterval(() => {
-      this.blockBuyButton.classList.add('glass-anim');
-      setTimeout(() => {
-        this.blockBuyButton.classList.remove('glass-anim');
-      }, 1500);
-    }, 11000);
   };
 
   onBuyButtonClick = async (e) => {

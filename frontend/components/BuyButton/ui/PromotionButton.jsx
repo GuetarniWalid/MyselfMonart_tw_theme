@@ -1,4 +1,4 @@
-import { forwardRef, useEffect } from 'react';
+import { forwardRef } from 'react';
 import useIsMobile from '../../../hooks/useIsMobile';
 import { useVariantSelected } from '../../../store/variantSelected';
 
@@ -20,17 +20,6 @@ const Button = forwardRef(({ drawerOpen, handleClick, idle, message }, ref) => {
     textarea.innerHTML = text;
     return textarea.value;
   };
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      ref.current.classList.add('glass-anim');
-      setTimeout(() => {
-        ref.current?.classList.remove('glass-anim');
-      }, 1500);
-    }, 11000);
-
-    return () => clearInterval(intervalId);
-  }, []);
 
   function handleKeyDown(event) {
     if (event.key === 'Enter') {
@@ -55,7 +44,7 @@ const Button = forwardRef(({ drawerOpen, handleClick, idle, message }, ref) => {
           onKeyDown={handleKeyDown}
           ref={ref}
           tabIndex={drawerOpen ? 0 : -1}
-          className="cart-button py-0 flex items-center justify-between group"
+          className="cart-button py-0 flex items-center justify-between group glass-anim"
           disabled={idle}
         >
           <span className="promotion-in-cart-button inline-flex w-full items-center justify-between gap-2">

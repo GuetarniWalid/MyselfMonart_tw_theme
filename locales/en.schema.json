@@ -364,6 +364,12 @@
     "cart-drawer": {
       "name": "Cart drawer",
       "settings": {
+        "main_color": {
+          "label": "Main color"
+        },
+        "secondary_color": {
+          "label": "Secondary color"
+        },
         "keep_shopping_url": {
           "label": "Continue shopping button link"
         }
