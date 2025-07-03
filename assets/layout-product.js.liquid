@@ -5,6 +5,9 @@ class Product {
       price = price / 100;
     }
 
+    // Round to 2 decimal places
+    price = Math.round(price * 100) / 100;
+
     const decimalPrice = forceDoubleDecimal 
     ? (price).toFixed(2).replace(/\.00$/, '')  // Only remove .00, keep .0
     : (price).toFixed(2).replace(/\.?0+$/, ''); // Remove optional decimal point and trailing zeros
