@@ -47,6 +47,7 @@
         "column_AFPk3G": {
           "type": "column",
           "settings": {
+            "image": "shopify:\/\/shop_images\/mpression-toile-angle-tableau-paysage-montagne_8e65004f-d0ee-4373-bbc0-0f9ac8b158b6.jpg",
             "title": "Chaleureux",
             "text": "<p>Profitez d'un rendu chaleureux et en relief avec l'impression sur toile, offrant une texture douce qui donne vie à vos œuvres tout en apportant une ambiance cosy à votre intérieur.<\/p>",
             "link_label": "",
@@ -133,11 +134,15 @@
         },
         "image_P8QfR9": {
           "type": "image",
-          "settings": {}
+          "settings": {
+            "image": "shopify:\/\/shop_images\/poster-salon-bleue_cbce0100-497a-46bd-a6e2-80c4daa67c8d.jpg"
+          }
         },
         "image_6dXncL": {
           "type": "image",
-          "settings": {}
+          "settings": {
+            "image": "shopify:\/\/shop_images\/deco-murale-colore-tableau-toile_4a90d0eb-d342-4527-a2f3-e4fd6fe455f8.jpg"
+          }
         },
         "image_PMmU6T": {
           "type": "image",
@@ -166,7 +171,7 @@
         "collection_XzHRtf": {
           "type": "collection",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-salon-2.jpg",
+            "image": "shopify:\/\/shop_images\/galerie-tableaux-portraits-abstraits-pop-street-pour-salon.jpg",
             "collection": "tableau-salon",
             "nb_columns": "col-span-12",
             "lazy_load": true,
@@ -178,7 +183,7 @@
           "settings": {
             "image": "shopify:\/\/shop_images\/tableau-chambre_f0a43251-6f8a-457c-be11-695c1441e668.jpg",
             "collection": "tableau-chambre",
-            "nb_columns": "col-span-8",
+            "nb_columns": "col-span-4",
             "lazy_load": true,
             "paragraph": "<h3>DÉCOUVREZ NOTRE GAMME DE TABLEAU POUR CHAMBRE<\/h3><p>Les tableaux pour chambre sont un excellent moyen de personnaliser votre espace et de créer une ambiance confortable et relaxante. Chez Myselfmonart, nous sommes fiers de proposer une large gamme de tableau murale chambre, pour sublimer votre intérieure.<\/p><p>Quel que soit votre style de décoration, Chaque tableau chambre est conçu pour répondre à toutes les envies. Que vous cherchiez à accentuer le caractère de votre chambre adulte avec un tableau de paysages romantiques, un tableau abstrait moderne ou un tableau de nus sensuels, ou que vous cherchiez à créer une ambiance joyeuse dans la chambre de votre enfant avec des tableaux colorés et amusants, nous avons ce qu'il vous faut. Nous avons également des tableaux avec des motifs doux et apaisants pour les chambres de bébés qui aiderons votre enfant a s'endormir paisiblement.<\/p><p>Nos tableaux chambre à coucher sont imprimés sur des supports de haute qualité tels que la toile, l'aluminium et le plexiglas, pour une finition durable et résistante. Avec nos tableaux décoratifs pour chambre, vous pourrez rendre votre chambre encore plus confortable, et en faire un véritable refuge que vous ne voudrez plus quitter. Découvrez notre collection de tableaux pour chambre adulte, tableaux pour chambre enfant et tableaux pour chambre bébé. Choisissez parmi une variété de styles et de motifs pour trouver celui qui conviendra parfaitement à votre intérieur et à votre personnalité.<\/p>"
           }
@@ -205,6 +210,7 @@
         },
         "collection_ryaFBq": {
           "type": "collection",
+          "disabled": true,
           "settings": {
             "image": "shopify:\/\/shop_images\/tableau-couleur.jpg",
             "collection": "tableau-couleur",
@@ -309,6 +315,16 @@
             "lazy_load": true,
             "paragraph": "<h3>DÉCOUVREZ NOTRE GAMME DE TABLEAU POP ART<\/h3><p>Les tableaux Pop Art sont un excellent moyen de donner vie à votre espace et de créer une ambiance décalée et créative. Chez Myslemonart, nous sommes fiers de proposer une large gamme de tableaux Pop Art, pour enrichir votre intérieur avec des couleurs intenses et des formes audacieuses.<\/p><p>Nos tableaux mettant en scène des célébrités, des objets du quotidien ou des animaux, captiveront votre imagination et apporteront un éclat de couleur à votre pièce. Quel que soit votre style de décoration, chaque tableau Pop Art est conçu pour répondre à toutes les envies. Que vous cherchiez à accentuer le caractère de votre salon avec un tableau inspiré des icônes de la culture pop, un tableau inspiré des bandes dessinées ou un tableau qui illustre la vie quotidienne sous un angle artistique, nous avons ce qu'il vous faut.<\/p><p>Nos tableaux sont imprimés sur des supports de haute qualité tels que la toile, l'aluminium et le plexiglas, pour une finition durable et résistante. Avec nos tableaux décoratifs Pop Art, vous pourrez rendre votre pièce encore plus audacieuse, pour en faire un véritable havre de créativité et de style que vous ne voudrez plus quitter. Découvrez notre collection de tableaux Pop Art. Choisissez parmi une variété de styles et de motifs pour trouver celui qui conviendra parfaitement à votre intérieur et à votre personnalité.<\/p>"
           }
+        },
+        "collection_PBirWc": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/galerie-tableaux-abstraits-couples-femmes-villes-couleurs.jpg",
+            "collection": "tableau-abstrait",
+            "nb_columns": "col-span-12",
+            "lazy_load": true,
+            "paragraph": "<h3><strong>DÉCOUVREZ NOTRE COLLECTION DE TABLEAUX ABSTRAITS<\/strong><\/h3><p>Offrez à vos murs une touche d’élégance contemporaine avec notre collection de tableaux abstraits. Chaque œuvre est une explosion de créativité qui donne du caractère à votre décoration intérieure, que vous aimiez les lignes épurées, les formes libres ou les contrastes puissants.<\/p><p>Du <strong>tableau abstrait moderne<\/strong> aux <strong>tableaux abstraits noir et blanc<\/strong>, en passant par des compositions vibrantes mêlant <strong>bleu et or<\/strong>, cette collection vous propose une large palette de styles. Vous y trouverez des <strong>tableaux colorés<\/strong> dynamiques, des <strong>visages abstraits<\/strong> énigmatiques, des <strong>fleurs abstraites<\/strong> délicates, mais aussi des œuvres inspirées du <strong>pop art abstrait<\/strong>, parfaites pour une décoration design et audacieuse.<\/p><p>Imprimés sur des supports haut de gamme tels que la toile, l’aluminium ou le plexiglas, nos tableaux abstraits sont disponibles en plusieurs formats pour s’intégrer harmonieusement à chaque pièce : un grand modèle pour votre salon, une œuvre plus discrète pour votre chambre ou votre bureau.<\/p><p>Laissez parler vos émotions, jouez avec les contrastes, les textures et les couleurs. Offrez ou offrez-vous un tableau abstrait qui inspire et transforme votre espace. Chaque création est une invitation à ressentir, à imaginer et à redéfinir votre univers déco avec subtilité et modernité.<\/p>"
+          }
         }
       },
       "block_order": [
@@ -316,7 +332,8 @@
         "collection_pNCidz",
         "collection_TqQgKC",
         "collection_pYWay7",
-        "collection_Y7wz3b"
+        "collection_Y7wz3b",
+        "collection_PBirWc"
       ],
       "settings": {
         "title": "DES THÈMES CAPTIVANTS POUR SUBLIMER VOTRE INTÉRIEUR.",
