@@ -33,8 +33,14 @@
         "buy_qrRzcg": {
           "type": "buy",
           "settings": {
-            "text": "Je personnalise mon tableau",
-            "main_color": "#b92700"
+            "text": "JE COMMANDE",
+            "is_dynamic_variant": false,
+            "main_color": "#fede65",
+            "show_promotion": true,
+            "promotion_discount": 15,
+            "promotion_discount_unit": "%",
+            "promotion_reason": "Soldes d'été ☀️",
+            "promotion_date": "Se termine le 22 juillet"
           }
         },
         "8600f603-2d6f-4191-8020-3678432ba1e5": {
