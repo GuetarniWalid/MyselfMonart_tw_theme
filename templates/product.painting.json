@@ -329,52 +329,13 @@
         "duration_image_appearance": 5
       }
     },
-    "b5027902-4240-44cf-8660-b6e754562c52": {
-      "type": "image-with-text",
-      "disabled": true,
+    "product_recommendations_TX9rdQ": {
+      "type": "product-recommendations",
+      "name": "t:sections.product-recommendations.name",
       "settings": {
-        "image": "shopify:\/\/shop_images\/texture_x3_70ae7c8b-712c-4c74-bb93-e76a2eddc37b.jpg",
-        "title": "EN HARMONIE",
-        "description": "<p>Vous avez le souci du détail ? Allez plus loin en personnalisant aussi le support. Sur toile, plexiglas ou aluminium, choisissez l’aspect qui s’accorde le mieux à votre intérieur.<\/p>",
-        "layout": "image_first",
-        "enable_blob": true,
-        "activate_dynamic_color": false,
-        "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#e3fae1",
-        "padding_top": "pt-16",
-        "padding_bottom": "pb-16"
-      }
-    },
-    "afe2a87a-371e-4c67-93b7-8c6b2244f43b": {
-      "type": "image-with-text",
-      "disabled": true,
-      "settings": {
-        "image": "shopify:\/\/shop_images\/metre.jpg",
-        "title": "DU SUR-MESURE",
-        "description": "<p>Choisissez la taille de votre tableau. En paysage, portrait, carré, petit ou grand, à vous de voir selon votre espace.<\/p>",
-        "layout": "text_first",
-        "enable_blob": true,
-        "activate_dynamic_color": false,
-        "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#e3fae1",
-        "padding_top": "pt-16",
-        "padding_bottom": "pb-16"
-      }
-    },
-    "556b5926-5cdb-4c50-a817-c79f15894cdd": {
-      "type": "image-with-text",
-      "disabled": true,
-      "settings": {
-        "image": "shopify:\/\/shop_images\/tour_eiffel.jpg",
-        "title": "MADE IN FRANCE",
-        "description": "<p>Une touche d'art à la française. Enracinés dans notre cher pays, nous mettons l'accent sur votre satisfaction en offrant un service client de qualité supérieure.<\/p>",
-        "layout": "image_first",
-        "enable_blob": true,
-        "activate_dynamic_color": false,
-        "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#e3fae1",
-        "padding_top": "pt-16",
-        "padding_bottom": "pb-16"
+        "heading": "VOUS POURRIEZ AUSSI AIMER",
+        "button_text": "Voir le tableau",
+        "number_products_to_display": 4
       }
     },
     "shifted_image_carousel_mwTU9T": {
@@ -480,9 +441,7 @@
     "main",
     "badges_CQWfDx",
     "customer_testimonial_myiwee",
-    "b5027902-4240-44cf-8660-b6e754562c52",
-    "afe2a87a-371e-4c67-93b7-8c6b2244f43b",
-    "556b5926-5cdb-4c50-a817-c79f15894cdd",
+    "product_recommendations_TX9rdQ",
     "shifted_image_carousel_mwTU9T",
     "7ae13aad-330c-4fa7-94cf-fafc1c13cf60"
   ],

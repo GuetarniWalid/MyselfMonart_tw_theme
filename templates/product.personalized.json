@@ -185,6 +185,15 @@
         "duration_image_appearance": 5
       }
     },
+    "product_recommendations_7Dekqa": {
+      "type": "product-recommendations",
+      "name": "t:sections.product-recommendations.name",
+      "settings": {
+        "heading": "VOUS POURRIEZ AUSSI AIMER",
+        "button_text": "Voir le tableau",
+        "number_products_to_display": 4
+      }
+    },
     "bf44dcab-c1df-4c80-b75a-9ee39a6bfe2e": {
       "type": "badges",
       "blocks": {
@@ -372,6 +381,7 @@
     "breadcrumb_RCxFAG",
     "main",
     "customer_testimonial_myiwee",
+    "product_recommendations_7Dekqa",
     "bf44dcab-c1df-4c80-b75a-9ee39a6bfe2e",
     "b5027902-4240-44cf-8660-b6e754562c52",
     "afe2a87a-371e-4c67-93b7-8c6b2244f43b",

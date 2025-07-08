@@ -160,7 +160,8 @@
       "tw-cart-drawer": {
         "type": "tw-cart-drawer",
         "settings": {
-          "keep_shopping_url": "shopify:\/\/collections"
+          "keep_shopping_url": "shopify:\/\/collections",
+          "bundle_title": "Ils vont si bien ensemble"
         }
       },
       "tw-footer": {

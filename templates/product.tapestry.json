@@ -56,8 +56,14 @@
         "buy_qrRzcg": {
           "type": "buy",
           "settings": {
-            "text": "Je personnalise mon tableau",
-            "main_color": "#b92700"
+            "text": "JE COMMANDE",
+            "is_dynamic_variant": false,
+            "main_color": "#fede65",
+            "show_promotion": false,
+            "promotion_discount": 15,
+            "promotion_discount_unit": "%",
+            "promotion_reason": "Summer sale ☀️",
+            "promotion_date": "Until the 31st of July"
           }
         },
         "description_Fw7xRB": {
@@ -75,94 +81,6 @@
         "description_Fw7xRB"
       ],
       "settings": {}
-    },
-    "bf44dcab-c1df-4c80-b75a-9ee39a6bfe2e": {
-      "type": "badges",
-      "blocks": {
-        "ef364299-4b9c-463a-a50d-210af473e95e": {
-          "type": "number_block",
-          "settings": {
-            "number": 1,
-            "heading": "Ne perdez plus votre temps à chercher",
-            "text": "Chaque mois, nous enrichissons notre assortiment de nouvelles créations."
-          }
-        },
-        "434fa092-b676-4395-a95a-9922006fa7db": {
-          "type": "number_block",
-          "settings": {
-            "number": 2,
-            "heading": "L’art de sortir de l’ordinaire",
-            "text": "En manque d'imagination ? Nos graphistes créent pour vous des œuvres originales"
-          }
-        },
-        "dc1cd24a-b307-4124-abb9-b1ac55ba1e6b": {
-          "type": "number_block",
-          "settings": {
-            "number": 3,
-            "heading": "Trouvez l'accord parfait",
-            "text": "Petit ou grand espace, vintage ou moderne, personnalisez taille et matière pour un accord parfait."
-          }
-        }
-      },
-      "block_order": [
-        "ef364299-4b9c-463a-a50d-210af473e95e",
-        "434fa092-b676-4395-a95a-9922006fa7db",
-        "dc1cd24a-b307-4124-abb9-b1ac55ba1e6b"
-      ],
-      "disabled": true,
-      "settings": {
-        "title": "",
-        "nb_columns_on_computer": "3",
-        "nb_columns_on_mobile": "1"
-      }
-    },
-    "b5027902-4240-44cf-8660-b6e754562c52": {
-      "type": "image-with-text",
-      "disabled": true,
-      "settings": {
-        "image": "shopify:\/\/shop_images\/texture_x3_70ae7c8b-712c-4c74-bb93-e76a2eddc37b.jpg",
-        "title": "EN HARMONIE",
-        "description": "<p>Vous avez le souci du détail ? Allez plus loin en personnalisant aussi le support. Sur toile, plexiglas ou aluminium, choisissez l’aspect qui s’accorde le mieux à votre intérieur.<\/p>",
-        "layout": "image_first",
-        "enable_blob": true,
-        "activate_dynamic_color": false,
-        "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#e3fae1",
-        "padding_top": "pt-16",
-        "padding_bottom": "pb-16"
-      }
-    },
-    "afe2a87a-371e-4c67-93b7-8c6b2244f43b": {
-      "type": "image-with-text",
-      "disabled": true,
-      "settings": {
-        "image": "shopify:\/\/shop_images\/metre.jpg",
-        "title": "DU SUR-MESURE",
-        "description": "<p>Choisissez la taille de votre tableau. En paysage, portrait, carré, petit ou grand, à vous de voir selon votre espace.<\/p>",
-        "layout": "text_first",
-        "enable_blob": true,
-        "activate_dynamic_color": false,
-        "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#e3fae1",
-        "padding_top": "pt-16",
-        "padding_bottom": "pb-16"
-      }
-    },
-    "556b5926-5cdb-4c50-a817-c79f15894cdd": {
-      "type": "image-with-text",
-      "disabled": true,
-      "settings": {
-        "image": "shopify:\/\/shop_images\/tour_eiffel.jpg",
-        "title": "MADE IN FRANCE",
-        "description": "<p>Une touche d'art à la française. Enracinés dans notre cher pays, nous mettons l'accent sur votre satisfaction en offrant un service client de qualité supérieure.<\/p>",
-        "layout": "image_first",
-        "enable_blob": true,
-        "activate_dynamic_color": false,
-        "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#e3fae1",
-        "padding_top": "pt-16",
-        "padding_bottom": "pb-16"
-      }
     },
     "customer_testimonial_myiwee": {
       "type": "customer-testimonial",
@@ -261,6 +179,15 @@
         "duration_image_appearance": 5
       }
     },
+    "product_recommendations_BCHJaq": {
+      "type": "product-recommendations",
+      "name": "t:sections.product-recommendations.name",
+      "settings": {
+        "heading": "VOUS POURRIEZ AUSSI AIMER",
+        "button_text": "Voir la tapisserie",
+        "number_products_to_display": 4
+      }
+    },
     "7ae13aad-330c-4fa7-94cf-fafc1c13cf60": {
       "type": "collapsible-content",
       "blocks": {
@@ -342,61 +269,14 @@
       "settings": {
         "heading": "QUESTIONS FRÉQUENTES"
       }
-    },
-    "shifted_image_carousel_mwTU9T": {
-      "type": "shifted-image-text",
-      "blocks": {
-        "image_Vby3MD": {
-          "type": "image",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/impression_encre.jpg"
-          }
-        },
-        "image_CgQFPt": {
-          "type": "image",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/graphiste-designer-creation-tableau-decoration.jpg"
-          }
-        },
-        "image_bDpkF3": {
-          "type": "image",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/impression-poster-haute-qualite.jpg"
-          }
-        },
-        "image_TAPgwV": {
-          "type": "image",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/cadre-bois-pour-tableau.jpg"
-          }
-        }
-      },
-      "block_order": [
-        "image_Vby3MD",
-        "image_CgQFPt",
-        "image_bDpkF3",
-        "image_TAPgwV"
-      ],
-      "disabled": true,
-      "settings": {
-        "heading": "Le Détail Qui Change Tout",
-        "description": "Des œuvres, conçues avec passion et précision, pour embellir chaque pièce de votre maison.",
-        "activate_dynamic_color": false,
-        "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#E3FAE1"
-      }
     }
   },
   "order": [
     "breadcrumb_RCxFAG",
     "main",
-    "bf44dcab-c1df-4c80-b75a-9ee39a6bfe2e",
-    "b5027902-4240-44cf-8660-b6e754562c52",
-    "afe2a87a-371e-4c67-93b7-8c6b2244f43b",
-    "556b5926-5cdb-4c50-a817-c79f15894cdd",
     "customer_testimonial_myiwee",
-    "7ae13aad-330c-4fa7-94cf-fafc1c13cf60",
-    "shifted_image_carousel_mwTU9T"
+    "product_recommendations_BCHJaq",
+    "7ae13aad-330c-4fa7-94cf-fafc1c13cf60"
   ],
   "layout": "product"
 }
