@@ -147,7 +147,7 @@ class CartItem extends HTMLElement {
   }
 
   async getCartData() {
-    const response = await fetch(`https://team-689.myshopify.com/cart.js`, {
+    const response = await fetch(`${routes.cart_url}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
