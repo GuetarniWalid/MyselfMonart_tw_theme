@@ -296,22 +296,12 @@
             "paragraph": "<h3>DÉCOUVREZ NOTRE COLLECTION DE TABLEAUX ETHNIQUE<\/h3><p>La culture à travers le monde. Avec des représentations de l'art japonais, africain et islamique, notre collection propose des tableaux qui transportent les spectateurs dans des mondes fascinants et mystérieux.<\/p><p>Les tableaux japonais, par exemple, dépeignent les paysages traditionnels, les geishas et les samouraïs, et sont caractérisés par leurs couleurs vibrantes et leurs détails minutieux. Les tableaux africains, quant à eux, reflètent les traditions tribales et les paysages sauvages du continent, avec des motifs abstraits, des couleurs chaudes et des formes organiques qui plongent les spectateurs dans un univers envoûtant.<\/p><p>Les tableaux islamiques, avec leurs calligraphies sublimes et leurs motifs géométriques complexes, permettent aux spectateurs de découvrir l'art qui a marqué l'histoire de la civilisation et d'explorer les couleurs, les formes et les textures de ces œuvres uniques.<\/p><p>Mais notre collection ne s'arrête pas là. Nous proposons également des tableaux représentant d'autres cultures et paysages du monde entier, tels que les tribus amérindiennes avec leurs costumes traditionnels et leurs motifs géométriques caractéristiques, ou la culture hindoue avec ses divinités, mandalas et symboles riches et colorés.<\/p><p>Et pour ceux qui cherchent des tableaux qui représentent des paysages époustouflants, notre collection de tableaux ethnique offre des représentations sauvage et exotique du monde, des plages de sable blanc, des champs de fleurs colorées et des forêts verdoyantes.<\/p><p> Notre collection de tableaux est une invitation à un voyage artistique à travers différentes cultures et paysages du monde. Les œuvres d'art que nous proposons sont uniques, riches en histoire et en symbolique, et ne manqueront pas de vous émerveiller. Chaque tableau est une invitation à se laisser subjuguer par la beauté et la diversité de notre monde.<\/p>"
           }
         },
-        "collection_pYWay7": {
-          "type": "collection",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-animaux_pg_911b0a37-8ca2-49e6-8fbb-f99070c79220.jpg",
-            "collection": "tableau-animaux",
-            "nb_columns": "col-span-4",
-            "lazy_load": true,
-            "paragraph": "<h3>DÉCOUVREZ NOTRE COLLECTION DE TABLEAUX ANIMAUX<\/h3><p><br\/>Pour habiller les murs de votre maison ou offrir un cadeau original à vos proches, découvrez notre collection impressionnante de tableaux design et moderne et optez pour un tableau d'art sur le thème des animaux. Vous trouverez celui qui correspond le mieux à votre intérieur et vos envies, que vous<br\/>  préfériez un tableau de loup sauvage, un tableau de lion dominant, un tableau de cerf sauvage, ou encore un tableau de chaton mignon. Nous proposons une variété d'animaux pour répondre à toutes vos préférences et passions.<br\/><\/p><p><br\/>  Nos tableaux d'animaux sont imprimés sur toile, aluminium, ou plexiglas de haute qualité avec des couleurs éclatantes et une netteté exceptionnelle pour donner vie à chaque détail. De plus, nous offrons différentes tailles pour s'adapter à tous les espaces, grands ou petits. Que vous souhaitiez un<br\/>  tableau imposant pour habiller votre salon ou une petite toile pour votre bureau, nous avons tout ce qu'il vous faut pour embellir votre espace de vie.<br\/><\/p><p><br\/>  Offrez à vos proches un cadeau unique et personnalisé en choisissant l'animal qui correspond le mieux à leur personnalité et à leur goût. Ils seront ravis de recevoir un tel cadeau original et de pouvoir ajouter une touche d'exotisme et de créativité à leur décoration intérieure. Avec notre<br\/>  collection de tableaux animaux, offrez des cadeaux qui sortent de l'ordinaire, ajoutez une touche de nature et une atmosphère sauvage à votre maison.<br\/><\/p>"
-          }
-        },
         "collection_Y7wz3b": {
           "type": "collection",
           "settings": {
             "image": "shopify:\/\/shop_images\/tableaux-pop-art_ebc249e5-cd39-4191-aa6b-c1467e953ab3.jpg",
             "collection": "tableau-pop-art",
-            "nb_columns": "col-span-8",
+            "nb_columns": "col-span-4",
             "lazy_load": true,
             "paragraph": "<h3>DÉCOUVREZ NOTRE GAMME DE TABLEAU POP ART<\/h3><p>Les tableaux Pop Art sont un excellent moyen de donner vie à votre espace et de créer une ambiance décalée et créative. Chez Myslemonart, nous sommes fiers de proposer une large gamme de tableaux Pop Art, pour enrichir votre intérieur avec des couleurs intenses et des formes audacieuses.<\/p><p>Nos tableaux mettant en scène des célébrités, des objets du quotidien ou des animaux, captiveront votre imagination et apporteront un éclat de couleur à votre pièce. Quel que soit votre style de décoration, chaque tableau Pop Art est conçu pour répondre à toutes les envies. Que vous cherchiez à accentuer le caractère de votre salon avec un tableau inspiré des icônes de la culture pop, un tableau inspiré des bandes dessinées ou un tableau qui illustre la vie quotidienne sous un angle artistique, nous avons ce qu'il vous faut.<\/p><p>Nos tableaux sont imprimés sur des supports de haute qualité tels que la toile, l'aluminium et le plexiglas, pour une finition durable et résistante. Avec nos tableaux décoratifs Pop Art, vous pourrez rendre votre pièce encore plus audacieuse, pour en faire un véritable havre de créativité et de style que vous ne voudrez plus quitter. Découvrez notre collection de tableaux Pop Art. Choisissez parmi une variété de styles et de motifs pour trouver celui qui conviendra parfaitement à votre intérieur et à votre personnalité.<\/p>"
           }
@@ -321,9 +311,29 @@
           "settings": {
             "image": "shopify:\/\/shop_images\/galerie-tableaux-abstraits-couples-femmes-villes-couleurs.jpg",
             "collection": "tableau-abstrait",
-            "nb_columns": "col-span-12",
+            "nb_columns": "col-span-4",
             "lazy_load": true,
             "paragraph": "<h3><strong>DÉCOUVREZ NOTRE COLLECTION DE TABLEAUX ABSTRAITS<\/strong><\/h3><p>Offrez à vos murs une touche d’élégance contemporaine avec notre collection de tableaux abstraits. Chaque œuvre est une explosion de créativité qui donne du caractère à votre décoration intérieure, que vous aimiez les lignes épurées, les formes libres ou les contrastes puissants.<\/p><p>Du <strong>tableau abstrait moderne<\/strong> aux <strong>tableaux abstraits noir et blanc<\/strong>, en passant par des compositions vibrantes mêlant <strong>bleu et or<\/strong>, cette collection vous propose une large palette de styles. Vous y trouverez des <strong>tableaux colorés<\/strong> dynamiques, des <strong>visages abstraits<\/strong> énigmatiques, des <strong>fleurs abstraites<\/strong> délicates, mais aussi des œuvres inspirées du <strong>pop art abstrait<\/strong>, parfaites pour une décoration design et audacieuse.<\/p><p>Imprimés sur des supports haut de gamme tels que la toile, l’aluminium ou le plexiglas, nos tableaux abstraits sont disponibles en plusieurs formats pour s’intégrer harmonieusement à chaque pièce : un grand modèle pour votre salon, une œuvre plus discrète pour votre chambre ou votre bureau.<\/p><p>Laissez parler vos émotions, jouez avec les contrastes, les textures et les couleurs. Offrez ou offrez-vous un tableau abstrait qui inspire et transforme votre espace. Chaque création est une invitation à ressentir, à imaginer et à redéfinir votre univers déco avec subtilité et modernité.<\/p>"
+          }
+        },
+        "collection_76JEnh": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/tableaux-street-art-pop-culture-luxe-graffiti.jpg",
+            "collection": "tableau-street-art",
+            "nb_columns": "col-span-4",
+            "lazy_load": true,
+            "paragraph": "<h3><strong>DÉCOUVREZ NOTRE COLLECTION DE TABLEAUX STREET ART<\/strong><\/h3><p>Ajoutez une touche d’audace et de modernité à votre déco avec notre collection de tableaux street art. Inspirée du monde urbain, elle mêle énergie, couleurs vives et clins d’œil à des icônes bien connues.<\/p><p>Vous y trouverez des tableaux <strong>originaux<\/strong> avec des personnages comme <strong>Mickey<\/strong>, des animaux comme le <strong>gorille<\/strong>, ou encore des détournements de <strong>logos de luxe<\/strong> qui apportent une note chic et décalée à vos murs. L’univers du <strong>graffiti<\/strong> y est très présent, avec des œuvres <strong>colorées<\/strong> qui captent le regard et illumine votre pièce.<\/p><p>Imprimés sur toile, plexiglass ou aluminium, nos tableaux s’adaptent à chaque pièce de la maison : un format généreux pour le salon, une version plus discrète pour une entrée ou un bureau.<\/p><p>C’est la collection idéale si vous aimez les ambiances modernes, un peu arty, et que vous souhaitez donner du caractère à votre intérieur sans en faire trop. Chaque tableau street art est une façon simple d’apporter une note créative et contemporaine à votre décoration.<\/p>"
+          }
+        },
+        "collection_pYWay7": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/galerie-tableaux-animaux-artistiques-poetiques.jpg",
+            "collection": "tableau-animaux",
+            "nb_columns": "col-span-12",
+            "lazy_load": true,
+            "paragraph": "<h3>DÉCOUVREZ NOTRE COLLECTION DE TABLEAUX ANIMAUX<\/h3><p><br\/>Pour habiller les murs de votre maison ou offrir un cadeau original à vos proches, découvrez notre collection impressionnante de tableaux design et moderne et optez pour un tableau d'art sur le thème des animaux. Vous trouverez celui qui correspond le mieux à votre intérieur et vos envies, que vous<br\/>  préfériez un tableau de loup sauvage, un tableau de lion dominant, un tableau de cerf sauvage, ou encore un tableau de chaton mignon. Nous proposons une variété d'animaux pour répondre à toutes vos préférences et passions.<br\/><\/p><p><br\/>  Nos tableaux d'animaux sont imprimés sur toile, aluminium, ou plexiglas de haute qualité avec des couleurs éclatantes et une netteté exceptionnelle pour donner vie à chaque détail. De plus, nous offrons différentes tailles pour s'adapter à tous les espaces, grands ou petits. Que vous souhaitiez un<br\/>  tableau imposant pour habiller votre salon ou une petite toile pour votre bureau, nous avons tout ce qu'il vous faut pour embellir votre espace de vie.<br\/><\/p><p><br\/>  Offrez à vos proches un cadeau unique et personnalisé en choisissant l'animal qui correspond le mieux à leur personnalité et à leur goût. Ils seront ravis de recevoir un tel cadeau original et de pouvoir ajouter une touche d'exotisme et de créativité à leur décoration intérieure. Avec notre<br\/>  collection de tableaux animaux, offrez des cadeaux qui sortent de l'ordinaire, ajoutez une touche de nature et une atmosphère sauvage à votre maison.<br\/><\/p>"
           }
         }
       },
@@ -331,9 +341,10 @@
         "collection_RnCHcM",
         "collection_pNCidz",
         "collection_TqQgKC",
-        "collection_pYWay7",
         "collection_Y7wz3b",
-        "collection_PBirWc"
+        "collection_PBirWc",
+        "collection_76JEnh",
+        "collection_pYWay7"
       ],
       "settings": {
         "title": "DES THÈMES CAPTIVANTS POUR SUBLIMER VOTRE INTÉRIEUR.",
