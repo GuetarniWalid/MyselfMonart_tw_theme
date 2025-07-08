@@ -364,43 +364,11 @@
     "cart-drawer": {
       "name": "Panier coulissant",
       "settings": {
-        "main_color": {
-          "label": "Couleur principale"
-        },
-        "secondary_color": {
-          "label": "Couleur de secondaire"
+        "bundle_title": {
+          "label": "Titre du bundle"
         },
         "keep_shopping_url": {
           "label": "Lien du bouton pour continuer les achats"
-        }
-      },
-      "blocks": {
-        "reduction": {
-          "name": "Reduction",
-          "settings": {
-            "description": {
-              "label": "Description"
-            },
-            "price_to_reach": {
-              "label": "Prix à atteindre",
-              "info": "Le prix à atteindre pour bénéficier de la réduction, entrez un nombre sans virgule, ex: au lieu de 29.99, entrez 2999"
-            }
-          }
-        }
-      },
-      "headings": {
-        "empty": {
-          "content": "Quand le panier est vide",
-          "paragraph": "Visible lorsque le panier coulissant est vide"
-        },
-        "full": {
-          "content": "Quand le panier est rempli"
-        },
-        "styles": {
-          "content": "Styles"
-        },
-        "additional_products": {
-          "content": "Produits additionnels"
         }
       }
     },
@@ -1732,8 +1700,8 @@
         }
       }
     },
-    "product-carrousel": {
-      "name": "Carrousel de produits",
+    "product-recommendations": {
+      "name": "Produits recommandés",
       "settings": {
         "button_text": {
           "label": "Texte du bouton"
@@ -1776,60 +1744,6 @@
       },
       "presets": {
         "name": "Liste de produits"
-      }
-    },
-    "product-recommendations": {
-      "name": "Recommandations de produits",
-      "settings": {
-        "heading": {
-          "label": "Titre"
-        },
-        "header__2": {
-          "content": "Carte de produit"
-        },
-        "image_ratio": {
-          "label": "Rapport d'image",
-          "options__1": {
-            "label": "Adapter à l'image"
-          },
-          "options__2": {
-            "label": "Portrait"
-          },
-          "options__3": {
-            "label": "Square"
-          }
-        },
-        "show_secondary_image": {
-          "label": "Afficher la deuxième image en survol"
-        },
-        "show_vendor": {
-          "label": "Afficher le distributeur"
-        },
-        "paragraph__1": {
-          "content": "Les recommandations dynamiques utilisent les informations sur les commandes et les produits pour changer et s'améliorer au fil du temps. [En savoir plus](https:\/\/help.shopify.com\/themes\/development\/recommended-products)"
-        },
-        "show_rating": {
-          "label": "Afficher la note du produit",
-          "info": "Pour afficher une note, ajoutez une application d'évaluation de produits. [En savoir plus](https:\/\/help.shopify.com\/manual\/online-store\/themes\/theme-structure\/page-types#product-recommendations-section-settings)"
-        },
-        "columns_desktop": {
-          "label": "Nombre de colonnes sur ordinateur"
-        },
-        "header_mobile": {
-          "content": "Mise en page sur mobile"
-        },
-        "columns_mobile": {
-          "label": "Nombre de colonnes sur mobile",
-          "options__1": {
-            "label": "1 colonne"
-          },
-          "options__2": {
-            "label": "2 colonnes"
-          }
-        },
-        "products_to_show": {
-          "label": "Quantité maximale de produits à afficher"
-        }
       }
     },
     "rich-text": {

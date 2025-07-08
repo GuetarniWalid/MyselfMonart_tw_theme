@@ -14,7 +14,7 @@ const initialStore = {
   defaultFixation: window.paintingOptions.fixation[0],
   defaultOption3: window.variants[0].option3,
   upsells: [],
-  items: [{ variantId: window.variants[0].id }],
+  items: [{ variantId: window.variants[0].id, properties: {} }],
 };
 
 function onAfterUpdate({ store }) {
@@ -35,8 +35,22 @@ function onAfterUpdate({ store }) {
   const upsells = getUpsells(store);
   if (!arraysShallowEqual(store.upsells, upsells)) {
     setVariantSelected.upsells(upsells);
+    const properties = {}
+    upsells.forEach((u, i) => {
+      properties[`_variantId_${i}`] = u.variantId;
+    });
+    const customerDetailsPopup = document.getElementById('customer-details-popup');
+    if (customerDetailsPopup) {
+      const inputs = customerDetailsPopup.querySelectorAll('input');
+      inputs.forEach((input) => {
+        properties[input.name] = input.value;
+      });
+    }
     setVariantSelected.items([
-      { variantId: newVariant.id },
+      { 
+        variantId: newVariant.id, 
+        properties 
+      },
       ...upsells.map((u) => ({ variantId: u.variantId })),
     ]);
   }
@@ -83,19 +97,32 @@ function getUpsells(store) {
         {
           variantId: store.framePoster.variantId,
           price: store.framePoster.price,
+          name: store.framePoster.name,
+          type: store.framePoster.type,
         },
       ].filter((u) => Boolean(u.variantId));
     case 'matterCanvas':
       return [
-        { variantId: store.fixation.variantId, price: store.fixation.price },
+        { variantId: store.fixation.variantId, 
+          price: store.fixation.price,
+          name: store.fixation.name,
+          type: store.fixation.type,
+        },
         {
           variantId: store.frameCanvas.variantId,
           price: store.frameCanvas.price,
+          name: store.frameCanvas.name,
+          type: store.frameCanvas.type,
         },
       ].filter((u) => Boolean(u.variantId));
     default:
       return [
-        { variantId: store.fixation.variantId, price: store.fixation.price },
+        { 
+          variantId: store.fixation.variantId, 
+          price: store.fixation.price,
+          name: store.fixation.name,
+          type: store.fixation.type,
+        },
       ].filter((u) => Boolean(u.variantId));
   }
 }

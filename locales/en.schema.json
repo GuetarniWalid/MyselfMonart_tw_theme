@@ -364,43 +364,11 @@
     "cart-drawer": {
       "name": "Cart drawer",
       "settings": {
-        "main_color": {
-          "label": "Main color"
-        },
-        "secondary_color": {
-          "label": "Secondary color"
+        "bundle_title": {
+          "label": "Bundle title"
         },
         "keep_shopping_url": {
           "label": "Continue shopping button link"
-        }
-      },
-      "blocks": {
-        "reduction": {
-          "name": "Discount",
-          "settings": {
-            "description": {
-              "label": "Description"
-            },
-            "price_to_reach": {
-              "label": "Price to reach",
-              "info": "The price to reach to get the discount. Enter a number without commas, e.g. use 2999 instead of 29.99."
-            }
-          }
-        }
-      },
-      "headings": {
-        "empty": {
-          "content": "When cart is empty",
-          "paragraph": "Visible when cart drawer is empty"
-        },
-        "full": {
-          "content": "When cart is full"
-        },
-        "styles": {
-          "content": "Styles"
-        },
-        "additional_products": {
-          "content": "Additional products"
         }
       }
     },
@@ -1732,8 +1700,8 @@
         }
       }
     },
-    "product-carrousel": {
-      "name": "Product Carousel",
+    "product-recommendations": {
+      "name": "Product Recommendations",
       "settings": {
         "button_text": {
           "label": "Button text"
@@ -1776,60 +1744,6 @@
       },
       "presets": {
         "name": "Product List"
-      }
-    },
-    "product-recommendations": {
-      "name": "Product Recommendations",
-      "settings": {
-        "heading": {
-          "label": "Title"
-        },
-        "header__2": {
-          "content": "Product card"
-        },
-        "image_ratio": {
-          "label": "Image ratio",
-          "options__1": {
-            "label": "Adapt to image"
-          },
-          "options__2": {
-            "label": "Portrait"
-          },
-          "options__3": {
-            "label": "Square"
-          }
-        },
-        "show_secondary_image": {
-          "label": "Show second image on hover"
-        },
-        "show_vendor": {
-          "label": "Show vendor"
-        },
-        "paragraph__1": {
-          "content": "Dynamic recommendations use order and product information to change and improve over time. [Learn more](https:\/\/help.shopify.com\/themes\/development\/recommended-products)"
-        },
-        "show_rating": {
-          "label": "Show product rating",
-          "info": "To show a rating, add a product review app. [Learn more](https:\/\/help.shopify.com\/manual\/online-store\/themes\/theme-structure\/page-types#product-recommendations-section-settings)"
-        },
-        "columns_desktop": {
-          "label": "Number of columns on desktop"
-        },
-        "header_mobile": {
-          "content": "Mobile layout"
-        },
-        "columns_mobile": {
-          "label": "Number of columns on mobile",
-          "options__1": {
-            "label": "1 column"
-          },
-          "options__2": {
-            "label": "2 columns"
-          }
-        },
-        "products_to_show": {
-          "label": "Maximum number of products to display"
-        }
       }
     },
     "rich-text": {

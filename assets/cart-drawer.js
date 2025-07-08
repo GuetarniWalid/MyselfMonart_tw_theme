@@ -1,36 +1,100 @@
 class CartItem extends HTMLElement {
   constructor() {
     super();
-    this.totalPriceElem = this.closest('cart-drawer').querySelector('#total-price');
-    this.promoPriceElem = this.closest('cart-drawer').querySelector('#promo-price');
+    this.totalPriceElem =
+      this.closest('cart-drawer').querySelector('#total-price');
+    this.promoPriceElem =
+      this.closest('cart-drawer').querySelector('#promo-price');
     this.cartDrawerSectionId = this.dataset.sectionId;
     this.index = Number(this.dataset.index);
+    this.id = this.dataset.id;
+    this.variantLinkedIds = [];
+    this.cartItems = null;
+  }
+
+  connectedCallback() {
+    this.getCartData()
+      .then((json) => {
+        this.cartItems = json.items;
+        const item = json.items.find((item) => item.id == this.id);
+        const properties = item.properties;
+        const variantLinkedKeys = Object.keys(properties).filter((key) =>
+          key.startsWith('_variantId_'),
+        );
+        this.variantLinkedIds = variantLinkedKeys.map((key) => properties[key]);
+      })
+      .catch((error) => {
+        console.log('🚀 ~ error:', error);
+      });
   }
 
   async updateQuantity(quantity) {
     this.activeLoading();
 
     try {
-      const response = await fetch(`${routes.cart_change_url}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: `application/json`,
-        },
-        body: JSON.stringify({
-          line: this.index,
-          quantity,
-          sections: `${this.cartDrawerSectionId},tw-header-painting`,
-        }),
-      });
-      const json = await response.json();
-      this.renderNewSections(json);
-      this.setFocus();
+      if (this.variantLinkedIds.length > 0) {
+        await this.changeItemAndLinkedIdsQuantity(quantity);
+      } else {
+        await this.changeLineQuantity(quantity);
+      }
     } catch (error) {
       console.log('🚀 ~ error:', error);
     } finally {
       this.disableLoading();
     }
+  }
+
+  async changeLineQuantity(quantity) {
+    const response = await fetch(`${routes.cart_change_url}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: `application/json`,
+      },
+      body: JSON.stringify({
+        line: this.index,
+        quantity,
+        sections: `${this.cartDrawerSectionId},tw-header-painting`,
+      }),
+    });
+    const json = await response.json();
+    this.renderNewSections(json);
+    this.setFocus();
+  }
+
+  async changeItemAndLinkedIdsQuantity(quantity) {
+    let updates = {
+      [this.id]: quantity,
+      ...Object.fromEntries(
+        this.variantLinkedIds.map((id) => {
+          const currentVariantQuantity = this.cartItems.find(
+            (item) => item.id == this.id,
+          ).quantity;
+          const variantQuantity = this.cartItems.find(
+            (item) => item.id == id,
+          )?.quantity;
+          if (!variantQuantity) return [id, 0];
+          let newVariantQuantity = variantQuantity - currentVariantQuantity;
+          if (newVariantQuantity < 0) newVariantQuantity = 0;
+          return [id, newVariantQuantity];
+        }),
+      ),
+    };
+
+    const response = await fetch(`${routes.cart_update_url}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: `application/json`,
+      },
+      body: JSON.stringify({
+        updates,
+        sections: `${this.cartDrawerSectionId},tw-header-painting`,
+      }),
+    });
+    const json = await response.json();
+    this.renderNewSections(json);
+    this.setFocus();
   }
 
   renderNewSections(json) {
@@ -81,44 +145,20 @@ class CartItem extends HTMLElement {
     newCartDrawer.trapFocus({});
     newCartDrawer.scopeFocusElements();
   }
+
+  async getCartData() {
+    const response = await fetch(`https://team-689.myshopify.com/cart.js`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: `application/json`,
+      },
+    });
+    const json = await response.json();
+    return json;
+  }
 }
 customElements.define('cart-item', CartItem);
-
-class QuantityInput extends HTMLElement {
-  constructor() {
-    super();
-    this.input = this.querySelector('input');
-    this.cartItem = this.closest('cart-item');
-    this.onButtonClickBound = this.onButtonClick.bind(this);
-    this.timeoutId = null;
-  }
-
-  connectedCallback() {
-    this.querySelectorAll('button').forEach((button) =>
-      button.addEventListener('click', this.onButtonClick),
-    );
-  }
-
-  disconnectedCallback() {
-    clearTimeout(this.timeoutId);
-    this.querySelectorAll('button').forEach((button) =>
-      button.removeEventListener('click', this.onButtonClickBound),
-    );
-  }
-
-  onButtonClick = (e) => {
-    const previousValue = Number(this.input.value);
-    if (e.target.name === 'plus') this.input.value = previousValue + 1;
-    else if (e.target.name === 'minus' && previousValue > 0)
-      this.input.value = previousValue - 1;
-
-    clearTimeout(this.timeoutId);
-    this.timeoutId = setTimeout(() => {
-      this.cartItem.updateQuantity(this.input.value);
-    }, 300);
-  };
-}
-customElements.define('quantity-input', QuantityInput);
 
 class CartRemoveButton extends HTMLElement {
   connectedCallback() {
@@ -129,3 +169,81 @@ class CartRemoveButton extends HTMLElement {
   }
 }
 customElements.define('cart-remove-button', CartRemoveButton);
+
+class QuickAddToCart extends HTMLElement {
+  connectedCallback() {
+    this.addEventListener('click', () => {
+      this.querySelector('button').setAttribute('disabled', 'true');
+      const itemIds = this.dataset.items.split(',');
+      this.makeOrder(itemIds);
+    });
+  }
+
+  async makeOrder(itemIds) {
+    const response = await fetch(
+      '/cart/add.js?sections=tw-cart-drawer,tw-header-painting',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: this.getFetchBody(itemIds),
+      },
+    );
+    if (!response.ok) throw new Error("Une erreur inattendu s'est produite.");
+    const json = await response.json();
+    this.renderNewSections(json);
+    const closeButton = document.getElementById('addons-drawer-close-button');
+    closeButton.click();
+    setTimeout(() => {
+      const cartDrawerButton = document.getElementById('cart-button');
+      cartDrawerButton.click();
+    }, 300);
+  }
+
+  getFetchBody(itemIds) {
+    const itemsData = itemIds.map((id, index) => {
+      const properties = {}
+      if (index === 0) {
+        const remainingIds = itemIds.slice(1);
+        remainingIds.forEach((remainingId, remainingIndex) => {
+          properties[`_variantId_${remainingIndex + 1}`] = remainingId;
+        });
+      }
+      return {
+        id,
+        quantity: 1,
+        properties,
+      };
+    });
+
+    return JSON.stringify({
+      items: itemsData,
+    });
+  }
+
+  renderNewSections({ items, sections }) {
+    const bubble = document.getElementById('bubble-nb-product');
+    const newBubble = this.getSectionInnerJSON(
+      sections['tw-header-painting'],
+      '#bubble-nb-product',
+    );
+    bubble.innerHTML = newBubble;
+
+    const sectionDrawer = document.getElementById(
+      'shopify-section-tw-cart-drawer',
+    );
+    const newSectionDrawer = this.getSectionInnerJSON(
+      sections['tw-cart-drawer'],
+      '#shopify-section-tw-cart-drawer',
+    );
+    sectionDrawer.innerHTML = newSectionDrawer;
+  }
+
+  getSectionInnerJSON(json, selector) {
+    return new DOMParser()
+      .parseFromString(json, 'text/html')
+      .querySelector(selector).innerHTML;
+  }
+}
+customElements.define('quick-add-to-cart', QuickAddToCart);

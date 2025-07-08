@@ -37,13 +37,13 @@
           , width: "23" %}
       </button>
     </div>
-    <div class="px-4 py-4 border-b border-main">
+    <div class="px-4 py-3 border-b border-main">
       {%- if cart.discount_applications.size > 0 -%}
         <div class="flex justify-between items-center mb-2 text-sm">
           <p class="heading">
             <span class="font-bold">{{ 'sections.tw_cart_drawer.promotion' | t }}</span>&nbsp;&nbsp;
             {% for discount_application in cart.discount_applications %}
-              <span class="text-sm bg-action border-main border-1 rounded py-1 px-2 mr-1">
+              <span class="text-sm bg-action rounded py-1 px-2 mr-1">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="13"
@@ -58,7 +58,7 @@
               </span>
             {% endfor %}
           </p>
-          <s id="promo-price" class="text-red-600">{{ cart.original_total_price | money }}</s>
+          <s id="promo-price" class="text-red-600 font-bold">{{ cart.original_total_price | money }}</s>
           <span class="hidden">
             {% render 'tw-icon-loading' %}
           </span>
@@ -66,7 +66,7 @@
       {% endif %}
       <div class="flex justify-between items-center text-sm">
         <p class="font-bold heading">{{ 'sections.tw_cart_drawer.subtotal' | t }}</p>
-        <p id="total-price">{{ cart.total_price | money }}</p>
+        <p id="total-price" class="font-bold">{{ cart.total_price | money }}</p>
         <span class="hidden">
           {% render 'tw-icon-loading' %}
         </span>
@@ -77,45 +77,143 @@
       id="CartDrawer-Form"
       method="post">
       <ul class="border-b border-main">
+        {% liquid
+          assign all_bundle_string = ''
+          assign all_bundle_complement_string = ''
+          assign item_product_ids = ''
+          for item in cart.items
+            assign item_product_ids = item_product_ids | append: item.product.id | append: ';;'
+          endfor
+          assign item_product_ids = item_product_ids | remove_last: ';;'
+        %}
+
         {% for item in cart.items %}
           {% liquid
-            if item.product != blank
-              if item.product.template_suffix == 'painting'
-                assign item_image = item.product.images[1] | default: item.product.featured_image
+            if item.product.template_suffix == 'painting' or item.product.template_suffix == 'personalized'
+              assign item_image = item.product.images[1] | default: item.product.featured_image
+              if item_image.aspect_ratio < 1
+                assign item_largest_size = item.variant.option1 | split: 'x' | last | split: ' ' | first | plus: 0
               else
-                assign item_image = item.variant.image | default: item.product.featured_image
+                assign item_largest_size = item.variant.option1 | split: 'x' | first | plus: 0
               endif
-              assign item_url = item.url
-              assign item_title = item.product.title
-              assign has_variant_data = true
             else
-              assign item_image = product.images[1] | default: product.featured_image
-              assign item_url = product.url
-              assign item_title = product.title
-              assign has_variant_data = false
+              assign item_image = item.variant.image | default: item.product.featured_image
             endif
+            assign bundle_string = ''
+            
+            for bundle in item.product.metafields.bundle.products.value
+              if item_product_ids contains bundle.id
+                continue
+              endif
+              assign bundle_discounts = ''
+              for discount in item.discounts
+                assign bundle_discounts = bundle_discounts | append: discount.title | append: '££'
+              endfor
+
+              assign bundle_ratio = bundle.images[1].aspect_ratio
+              assign bundle_image = bundle.images[1].src | image_url: width: 80 | default: bundle.featured_image.src | image_url: width: 80
+              assign matching_variants_title = null
+              assign matching_variants_id = null
+              
+              for variant in bundle.variants
+                if item.product.template_suffix == 'painting' or item.product.template_suffix == 'personalized'
+                  if bundle_ratio < 1
+                    assign bundle_largest_size = variant.option1 | split: 'x' | last | split: ' ' | first | plus: 0
+                  else
+                    assign bundle_largest_size = variant.option1 | split: 'x' | first | plus: 0
+                  endif
+                  if bundle_largest_size == item_largest_size
+                    assign option_1_match = true
+                  else
+                    assign option_1_match = false
+                  endif
+                else
+                  if variant.option1 == item.variant.option1
+                    assign option_1_match = true
+                  endif
+                endif
+
+                if option_1_match and variant.option2 == item.variant.option2 and variant.option3 == item.variant.option3
+                  assign matching_variants_title = variant.title | remove_last: '/ Null' | lstrip
+                  assign matching_variants_id = variant.id
+                  break
+                endif
+              endfor
+
+              if matching_variants_title == null
+                continue
+              endif
+
+              for property in item.properties
+                assign first_character_in_key = property.first | slice: 0
+                if first_character_in_key == '_'
+                  for item in cart.items
+                    assign property_last = property.last | plus: 0
+                    if item.id == property_last
+                      assign all_bundle_complement_string = all_bundle_complement_string | append: item.product.title | append: ';;'
+                      if item.product.has_only_default_variant
+                        assign bundle_complement_image = item.product.featured_image.src | image_url: width: 80
+                        assign all_bundle_complement_string = all_bundle_complement_string | append: bundle_complement_image | append: ';;'
+                        assign all_bundle_complement_string = all_bundle_complement_string | append: '' | append: ';;'
+                        assign all_bundle_complement_string = all_bundle_complement_string | append: item.product.first_available_variant.id | append: ';;'
+                      else
+                        assign bundle_complement_image = item.variant.featured_image.src | image_url: width: 80
+                        assign all_bundle_complement_string = all_bundle_complement_string | append: bundle_complement_image | append: ';;'
+                        assign all_bundle_complement_string = all_bundle_complement_string | append: item.variant.title | append: ';;'
+                        assign all_bundle_complement_string = all_bundle_complement_string | append: item.variant.id | append: ';;'
+                      endif
+                      assign all_bundle_complement_string = all_bundle_complement_string | append: item.price | append: ';;'
+                      assign all_bundle_complement_string = all_bundle_complement_string | append: item.original_price | append: ';;'
+                      for discount in item.discounts
+                        assign all_bundle_complement_string = all_bundle_complement_string | append: discount.title | append: '££'
+                      endfor
+                      if forloop.parentloop.last
+                        assign all_bundle_complement_string = all_bundle_complement_string | append: '%%%%'
+                      else
+                        assign all_bundle_complement_string = all_bundle_complement_string | append: '$$$$'
+                      endif
+                    endif
+                  endfor
+                endif
+              endfor
+
+              assign bundle_string = bundle.title | append: ';;' | append: bundle.url | append: ';;' | append: bundle_image | append: ';;' | append: matching_variants_title | append: ';;' | append: item.price | append: ';;' | append: item.original_price | append: ';;' | append: matching_variants_id | append: ';;' | append: bundle_discounts
+
+              if bundle_string != blank
+                assign all_bundle_string = all_bundle_string | append: bundle_string | append: '%%%%'
+              endif
+            endfor
           %}
-          <cart-item data-index="{{ item.index | plus: 1 }}" data-section-id="{{ section.id }}">
-            <li class="bg-white py-3 px-2 grid grid-rows-[auto_auto] grid-cols-[auto_1fr_auto] gap-y-1 gap-x-4{% unless forloop.last %} border-b-[1.5px] border-dotted border-main{% endunless %}">
-              <a
-                href="{{ item_url }}"
-                tabindex="-1"
-                aria-hidden="true"
-                class="border border-main rounded-lg row-span-2 overflow-hidden w-20 max-h-32">
-                <img
-                  class="w-full h-full object-cover"
-                  src="{{ item_image | image_url: width: 160 }}"
-                  alt="{{ item_image.alt | escape }}"
-                  loading="lazy"
-                  width="160"
-                  height="auto">
-              </a>
-              <div class="pt-2">
-                <h3 class="leading-5 text-sm mb-1">
-                  <a href="{{ item_url }}" tabindex="-1">{{ item_title | escape }}</a>
+
+          <cart-item
+            data-index="{{ item.index | plus: 1 }}"
+            data-section-id="{{ section.id }}"
+            data-id="{{ item.id }}">
+            <li class="bg-white py-3 px-2 grid grid-cols-[auto_1fr_auto] gap-x-4{% unless forloop.last %} border-b-[1.5px] border-dotted border-main{% endunless %}">
+              <div class="relative row-span-2 w-20 max-h-28">
+                <a
+                  href="{{ item.url }}"
+                  tabindex="-1"
+                  aria-hidden="true"
+                  class="absolute inset-0 rounded-lg overflow-hidden">
+                  <img
+                    class="w-full h-full object-cover"
+                    src="{{ item_image | image_url: width: 160 }}"
+                    alt="{{ item_image.alt | escape }}"
+                    loading="lazy"
+                    width="160"
+                    height="auto">
+                </a>
+                {% if item.quantity > 1 %}
+                  <span class="absolute flex justify-center items-center w-6 h-6 top-0 right-0 translate-x-1/3 -translate-y-1/3 rounded-full bg-white text-main border-main border-1 font-bold text-sm">x{{ item.quantity }}</span>
+                {% endif %}
+              </div>
+              <div>
+                <h3 class="text-sm mb-1 line-clamp-2">
+                  <a href="{{ item.url }}" tabindex="-1">{{ item.product.title | escape }}</a>
                 </h3>
                 {%- if item.product.has_only_default_variant == false -%}
-                  <p class="text-xs {% unless has_variant_data %}variant-title-to-fill{% endunless %}">
+                  <p class="text-xs">
                     {% assign option_value = '' %}
                     {%- for option in item.options_with_values -%}
                       {% if option.value != "Null" %}
@@ -125,117 +223,90 @@
                     {{ option_value | replace_last: '/', '' }}
                   </p>
                 {%- endif -%}
-                {% if item.properties != blank %}
+                {% liquid
+                  assign properties_string = ''
+                  for property in item.properties
+                    assign first_character_in_key = property.first | slice: 0
+                    unless first_character_in_key == '_'
+                      assign properties_string = properties_string | append: property.last | append: '/'
+                    endunless
+                  endfor
+                %}
+                {% if properties_string != blank %}
                   <p class="text-xs">
                     <span class="font-bold">{{ 'sections.tw_cart_drawer.info' | t }} :
                     </span>
-                    {%- for property in item.properties -%}
-                      {{ property.last }}
-                      {% unless forloop.last %}/
-                      {% endunless %}
-                    {%- endfor -%}
+                    {{ properties_string | replace_last: '/', '' }}
                   </p>
                 {% endif %}
                 <ul role="list" aria-label="{{ 'customer.order.discount' | t }}">
                   {%- for discount in item.discounts -%}
-                    <li class="text-sm inline-flex items-center gap-1 bg-action border-main border-1 rounded py-1 px-2 mr-1 my-2">
+                    <li class="text-xs inline-flex items-center gap-1 bg-action rounded py-1 px-2 mr-1 mt-2">
                       {%- render 'tw-icon-discount' -%}
                       {{ discount.title }}
                     </li>
                   {%- endfor -%}
                 </ul>
               </div>
-              <div class="pt-2">
-                <div class="text-sm">
-                  {%- if item.original_line_price != item.final_line_price -%}
-                    <span class="block text-red-600">
-                      <s>
-                        {{ item.original_line_price | money }}
-                      </s>
-                    </span>
-                  {%- endif -%}
-                  {% if has_variant_data %}
+              <div class="flex flex-col justify-between gap-4">
+                <div>
+                  <div class="text-sm font-bold">
+                    {%- if item.original_line_price != item.final_line_price -%}
+                      <span class="block text-red-600">
+                        <s>
+                          {{ item.original_line_price | money }}
+                        </s>
+                      </span>
+                    {%- endif -%}
                     <span class="block">
                       {{ item.final_line_price | money }}
                     </span>
-                  {% else %}
-                    <span class="block variant-price-to-fill">
-                      {{ 0 | money }}
-                    </span>
-                  {% endif %}
+                  </div>
+                  <span class="hidden">
+                    {% render 'tw-icon-loading' %}
+                  </span>
                 </div>
-                <span class="hidden">
-                  {% render 'tw-icon-loading' %}
-                </span>
-              </div>
-              <div class="flex items-end gap-1" headers="CartDrawer-ColumnQuantity">
-                <quantity-input class="inline-flex text-sm rounded-md border border-main">
-                  <button
-                    name="minus"
-                    type="button"
-                    aria-label="{{ "sections.tw_cart_drawer.minus" | t: article: item_title }}"
-                    class="w-10 h-10 flex justify-center items-center peer/minus"
-                    tabindex="-1">
-                    {% render 'tw-icon-minus' %}
-                  </button>
-                  <input
-                    class="focus:outline-none text-center w-10 peer-hover/minus:shadow-[-0.5px_0_0_0_#000] !shadow-main transition-ashadow duration-100"
-                    readonly
-                    type="text"
-                    name="updates[]"
-                    value="{{ item.quantity | default: 4 }}"
-                    aria-label="{{ 'products.product.quantity.input_label' | t: product: item_title | escape }}"
-                    id="Drawer-quantity-{{ item.index | plus: 1 }}"
-                    data-index="{{ item.index | plus: 1 }}"
-                    tabindex="-1">
-                  <button
-                    name="plus"
-                    type="button"
-                    aria-label="{{ "sections.tw_cart_drawer.plus" | t: article: item_title }}"
-                    class="w-10 h-10 flex justify-center items-center hover:shadow-[-0.5px_0_0_0_#000] !shadow-main transition-shadow duration-100"
-                    tabindex="-1">
-                    {% render 'tw-icon-plus' %}
-                  </button>
-                </quantity-input>
-                <cart-remove-button>
-                  <button
-                    class="w-8 h-8 inline-flex justify-center items-center rounded-md border border-transparent hover:border-main transition-all duration-100"
-                    aria-label="{{ 'sections.tw_cart_drawer.remove' | t: article: item_title }}"
-                    tabindex="-1">
-                    {% render 'tw-icon-remove' %}
-                  </button>
-                </cart-remove-button>
-                <div
-                  id="CartDrawer-LineItemError-{{ item.index | plus: 1 }}"
-                  role="alert"
-                  class="hidden">
-                  <small></small>
-                  <svg
-                    aria-hidden="true"
-                    focusable="false"
-                    role="presentation"
-                    viewBox="0 0 13 13"
-                    width="20">
-                    <circle
-                      cx="6.5"
-                      cy="6.50049"
-                      r="5.5"
-                      stroke="white"
-                      stroke-width="2" />
-                    <circle
-                      cx="6.5"
-                      cy="6.5"
-                      r="5.5"
-                      fill="#EB001B"
-                      stroke="#EB001B"
-                      stroke-width="0.7" />
-                    <path d="M5.87413 3.52832L5.97439 7.57216H7.02713L7.12739 3.52832H5.87413ZM6.50076 9.66091C6.88091 9.66091 7.18169 9.37267 7.18169 9.00504C7.18169 8.63742 6.88091 8.34917 6.50076 8.34917C6.12061 8.34917 5.81982 8.63742 5.81982 9.00504C5.81982 9.37267 6.12061 9.66091 6.50076 9.66091Z" fill="white" />
-                    <path
-                      d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z"
-                      fill="white"
-                      stroke="#EB001B"
-                      stroke-width="0.7">
-                  </svg>
+                <div class="text-right" headers="CartDrawer-ColumnQuantity">
+                  <cart-remove-button>
+                    <button
+                      class="w-8 h-8 inline-flex justify-center items-center rounded-md border border-transparent hover:border-main transition-all duration-100"
+                      aria-label="{{ 'sections.tw_cart_drawer.remove' | t: article: item.product.title }}"
+                      tabindex="-1">
+                      {% render 'tw-icon-remove' %}
+                    </button>
+                  </cart-remove-button>
+                  <div
+                    id="CartDrawer-LineItemError-{{ item.index | plus: 1 }}"
+                    role="alert"
+                    class="hidden">
+                    <small></small>
+                    <svg
+                      aria-hidden="true"
+                      focusable="false"
+                      role="presentation"
+                      viewBox="0 0 13 13"
+                      width="20">
+                      <circle
+                        cx="6.5"
+                        cy="6.50049"
+                        r="5.5"
+                        stroke="white"
+                        stroke-width="2" />
+                      <circle
+                        cx="6.5"
+                        cy="6.5"
+                        r="5.5"
+                        fill="#EB001B"
+                        stroke="#EB001B"
+                        stroke-width="0.7" />
+                      <path d="M5.87413 3.52832L5.97439 7.57216H7.02713L7.12739 3.52832H5.87413ZM6.50076 9.66091C6.88091 9.66091 7.18169 9.37267 7.18169 9.00504C7.18169 8.63742 6.88091 8.34917 6.50076 8.34917C6.12061 8.34917 5.81982 8.63742 5.81982 9.00504C5.81982 9.37267 6.12061 9.66091 6.50076 9.66091Z" fill="white" />
+                      <path
+                        d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z"
+                        fill="white"
+                        stroke="#EB001B"
+                        stroke-width="0.7">
+                    </svg>
+                  </div>
                 </div>
               </div>
             </li>
@@ -243,7 +314,35 @@
         {% endfor %}
       </ul>
     </form>
-    <script src="{{ 'component-carrousel.js' | asset_url }}" defer="defer"></script>
+
+    {% if all_bundle_string != blank %}
+      <div class="px-2 py-4">
+        <h2 class="text-sm font-bold heading">
+          {{ section.settings.bundle_title }}
+        </h2>
+
+        {% assign all_bundle_string = all_bundle_string | split: '%%%%' %}
+        {% assign all_bundle_complement_string = all_bundle_complement_string | split: '%%%%' %}
+
+        {% if all_bundle_string.size > 1 %}
+          <snap-carrousel>
+            <ul class="flex gap-4 overflow-x-auto snap-mandatory snap-x scroll-smooth scrollbar pb-3">
+              {% render 'cart-bundle'
+                , all_bundle_string: all_bundle_string
+                , all_bundle_complement_string: all_bundle_complement_string %}
+            </ul>
+          </snap-carrousel>
+          <script src="{{ 'component-carrousel.js' | asset_url }}" defer="defer"></script>
+        {% else %}
+          <ul>
+            {% render 'cart-bundle'
+              , all_bundle_string: all_bundle_string
+              , all_bundle_complement_string: all_bundle_complement_string %}
+          </ul>
+        {% endif %}
+      </div>
+    {% endif %}
+
     <div class="sticky bottom-0 left-0 right-0 py-3 bg-secondary">
       <div class="gap-3 px-4 text-lg">
         <button
@@ -278,6 +377,12 @@
         "type": "url",
         "id": "keep_shopping_url",
         "label": "t:sections.cart-drawer.settings.keep_shopping_url.label"
+      },
+      {
+        "type": "text",
+        "id": "bundle_title",
+        "label": "t:sections.cart-drawer.settings.bundle_title.label",
+        "default": "They go so well together"
       }
     ]
   }

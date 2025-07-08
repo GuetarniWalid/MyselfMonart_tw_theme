@@ -12,7 +12,8 @@
     "star_reviews_info": "{{ rating_value }} out of {{ rating_max }} stars"
   },
   "cart_drawer": {
-    "keep_shopping": "Keep Shopping"
+    "keep_shopping": "Keep Shopping",
+    "quick_add_to_cart": "Quick add"
   },
   "components": {
     "countdown": {
@@ -467,51 +468,5 @@
         "many": "{{ count }} results found for “{{ terms }}”"
       }
     }
-  },
-  "localeImported": {
-    "40x30_cm": "40x30 cm",
-    "toile": "Canvas",
-    "sans_fixation": "Without mounting",
-    "set_de_fixation": "Mounting set",
-    "chassis_de_2cm": "2cm frame",
-    "chassis_de_4cm": "4cm frame",
-    "bordure_blanche": "White border",
-    "bordure_noire": "Black border",
-    "bordure_tire": "Stretched border",
-    "bordure_miroir": "Mirror border",
-    "bordure_plie": "Folded border",
-    "sans_cadre": "Without frame",
-    "cadre_blanc": "White frame",
-    "cadre_noir_mat": "Matte black frame",
-    "cadre_argent_ancien": "Vintage silver frame",
-    "cadre_chne_clair": "Light oak frame",
-    "cadre_noyer": "Walnut frame",
-    "aluminium": "Aluminum",
-    "crochet": "Hook",
-    "mat": "Matte",
-    "brillant": "Glossy",
-    "aluminium__plexiglas": "Aluminum + Plexiglas",
-    "sans_systme_de_fixation": "Without hanging system",
-    "60x40_cm": "60x40 cm",
-    "75x50_cm": "75x50 cm",
-    "100x75_cm": "100x75 cm",
-    "30x40_cm": "30x40 cm",
-    "40x60_cm": "40x60 cm",
-    "50x75_cm": "50x75 cm",
-    "_sans_fixation": " Without mounting",
-    "_chassis_de_2cm": " 2 cm frame",
-    "_chassis_de_4cm": " 4 cm frame",
-    "75x100_cm": "75x100 cm",
-    "40x40_cm": "40x40 cm",
-    "60x60_cm": "60x60 cm",
-    "rails": "Rails",
-    "80x80_cm": "80x80 cm",
-    "100x100_cm": "100x100 cm",
-    "80x60_cm": "80x60 cm",
-    "120x90_cm": "120x90 cm",
-    "60x80_cm": "60x80 cm",
-    "90x120_cm": "90x120 cm",
-    "20x30_cm": "20x30 cm",
-    "poster": "Poster"
   }
 }

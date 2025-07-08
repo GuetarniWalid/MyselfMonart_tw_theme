@@ -1,72 +1,68 @@
-<div class="color-{{ section.settings.color_scheme }} gradient">
-  <product-recommendations class="product-recommendations page-width section-{{ section.id }}-padding isolate" data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.products_to_show }}">
-    {% if recommendations.performed and recommendations.products_count > 0 %}
-      <h2 class="product-recommendations__heading {{ section.settings.heading_size }}">{{ section.settings.heading | escape }}</h2>
-      <ul class="grid grid--{{ section.settings.columns_desktop }}-col-desktop grid--{{ section.settings.columns_mobile }}-col-tablet-down" role="list">
-        {% for recommendation in recommendations.products %}
-          <li class="grid__item">
-            {% render 'card-product',
-              card_product: recommendation,
-              media_aspect_ratio: section.settings.image_ratio,
-              show_secondary_image: section.settings.show_secondary_image,
-              show_vendor: section.settings.show_vendor,
-              show_rating: section.settings.show_rating,
-              show_quick_add: false,
-              hide_second_quick_add_button: true
-            %}
-          </li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-  </product-recommendations>
-</div>
+<product-recommendations data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.number_products_to_display  }}&intent=related">
+  <div class="product-recommendations px-4" style="display:block">
+    {%- if recommendations.performed? and recommendations.products_count > 0 -%}
+      <h2 class="mb-2">
+        {{ section.settings.heading | escape }}
+      </h2>
+      <snap-carrousel>
+        <ul class="component-carroussel flex gap-4 overflow-x-auto snap-mandatory snap-x scroll-smooth scrollbar py-6">
+          {%- for recommendation in recommendations.products -%}
+            {% if recommendation.metafields.info.about.value['hide-in-recommandation'] != true %}
+              {%- assign first_image = recommendation.featured_image -%}
+              {%- assign second_image = recommendation.images[1] -%}
+              <li class="carrousel-item group relative max-w-[350px] shrink-0 text-center snap-start pb-2 flex flex-col">
+                <div class="relative cursor-pointer h-max grow">
+                    <img
+                        src="{{ first_image | image_url }}"
+                        alt="{% if recommendation.metafields.meta_object.media.value.alts.value[0] %}{{ recommendation.metafields.meta_object.media.value.alts.value[0] | escape }}{% else %}{{ first_image.alt | escape }}{% endif %}"
+                        width="350"
+                        height="auto"
+                        loading="lazy"
+                        srcset="
+                            {{ first_image | image_url: width: 300 }} 300w,
+                            {{ first_image | image_url: width: 350 }} 350w"
+                        sizes="(max-width: 356px) 300px, 350px"
+                        class="skeleton w-full h-full object-cover"
+                    >
+                    {%- if second_image != blank -%}
+                        <img
+                            src="{{ second_image | image_url }}"
+                            alt="{% if recommendation.metafields.meta_object.media.value.alts.value[1] %}{{ recommendation.metafields.meta_object.media.value.alts.value[1] | escape }}{% else %}{{ second_image.alt | escape }}{% endif %}"
+                            width="350"
+                            height="auto"
+                            loading="lazy"
+                            srcset="
+                                {{ second_image | image_url: width: 300 }} 300w,
+                                {{ second_image | image_url: width: 350 }} 350w"
+                            sizes="(max-width: 356px) 300px, 350px"
+                            class="skeleton w-full h-full object-cover absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        >
+                    {%- endif -%}
+                </div>
+                <h3 class="relative text-xl inline-block mx-auto truncate text-ellipsis w-full py-6 grow-0 pointer-events-none">{{ recommendation.title }}</h3>
+                <a href="{{ recommendation.url }}" class="grow-0 w-9/12 mx-auto border border-main bg-main-10 rounded px-3 py-2 outline-main hover:outline hover:outline-1 transition-all duration-300 before:absolute before:inset-0">{{ section.settings.button_text }}</a>
+              </li>
+            {% endif %}
+          {%- endfor -%}
+        </ul>
+      </snap-carrousel>
+    {%- endif -%}
+  </div>
+</product-recommendations>
 
-{% javascript %}
-  class ProductRecommendations extends HTMLElement {
-    constructor() {
-      super();
-
-      const handleIntersection = (entries, observer) => {
-        if (!entries[0].isIntersecting) return;
-        observer.unobserve(this);
-
-        fetch(this.dataset.url)
-          .then(response => response.text())
-          .then(text => {
-            const html = document.createElement('div');
-            html.innerHTML = text;
-            const recommendations = html.querySelector('product-recommendations');
-
-            if (recommendations && recommendations.innerHTML.trim().length) {
-              this.innerHTML = recommendations.innerHTML;
-            }
-
-            if (html.querySelector('.grid__item')) {
-              this.classList.add('product-recommendations--loaded');
-            }
-          })
-          .catch(e => {
-            console.error(e);
-          });
-      }
-
-      new IntersectionObserver(handleIntersection.bind(this), {rootMargin: '0px 0px 200px 0px'}).observe(this);
-    }
-  }
-
-  customElements.define('product-recommendations', ProductRecommendations);
-{% endjavascript %}
+<script src="{{ 'product-recommendations.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'component-carrousel.js' | asset_url }}" defer="defer"></script>
 
 {% schema %}
 {
   "name": "t:sections.product-recommendations.name",
   "tag": "section",
-  "class": "section",
+  "class": "page-width mt-20",
+  "limit": 1,
+  "enabled_on": {
+    "templates": ["product"]
+  },
   "settings": [
-    {
-      "type": "paragraph",
-      "content": "t:sections.product-recommendations.settings.paragraph__1.content"
-    },
     {
       "type": "text",
       "id": "heading",
@@ -74,129 +70,21 @@
       "label": "t:sections.product-recommendations.settings.heading.label"
     },
     {
-      "type": "select",
-      "id": "heading_size",
-      "options": [
-        {
-          "value": "h2",
-          "label": "t:sections.all.heading_size.options__1.label"
-        },
-        {
-          "value": "h1",
-          "label": "t:sections.all.heading_size.options__2.label"
-        },
-        {
-          "value": "h0",
-          "label": "t:sections.all.heading_size.options__3.label"
-        }
-      ],
-      "default": "h1",
-      "label": "t:sections.all.heading_size.label"
+      "type": "text",
+      "id": "button_text",
+      "default": "See the product",
+      "label": "t:sections.product-recommendations.settings.button_text.label"
     },
     {
-      "type": "range",
-      "id": "products_to_show",
-      "min": 2,
-      "max": 10,
-      "step": 1,
-      "default": 4,
-      "label": "t:sections.product-recommendations.settings.products_to_show.label"
-    },
+      "type": "number",
+      "id": "number_products_to_display",
+      "label": "t:sections.product-recommendations.settings.number_products_to_display.label",
+      "default": 4
+    }
+  ],
+  "presets": [
     {
-      "type": "range",
-      "id": "columns_desktop",
-      "min": 1,
-      "max": 5,
-      "step": 1,
-      "default": 4,
-      "label": "t:sections.product-recommendations.settings.columns_desktop.label"
-    },
-    {
-      "type": "header",
-      "content": "t:sections.product-recommendations.settings.header__2.content"
-    },
-    {
-      "type": "select",
-      "id": "image_ratio",
-      "options": [
-        {
-          "value": "adapt",
-          "label": "t:sections.product-recommendations.settings.image_ratio.options__1.label"
-        },
-        {
-          "value": "portrait",
-          "label": "t:sections.product-recommendations.settings.image_ratio.options__2.label"
-        },
-        {
-          "value": "square",
-          "label": "t:sections.product-recommendations.settings.image_ratio.options__3.label"
-        }
-      ],
-      "default": "adapt",
-      "label": "t:sections.product-recommendations.settings.image_ratio.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_secondary_image",
-      "default": false,
-      "label": "t:sections.product-recommendations.settings.show_secondary_image.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_vendor",
-      "default": false,
-      "label": "t:sections.product-recommendations.settings.show_vendor.label"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_rating",
-      "default": false,
-      "label": "t:sections.product-recommendations.settings.show_rating.label",
-      "info": "t:sections.product-recommendations.settings.show_rating.info"
-    },
-    {
-      "type": "header",
-      "content": "t:sections.product-recommendations.settings.header_mobile.content"
-    },
-    {
-      "type": "select",
-      "id": "columns_mobile",
-      "default": "2",
-      "label": "t:sections.product-recommendations.settings.columns_mobile.label",
-      "options": [
-        {
-          "value": "1",
-          "label": "t:sections.product-recommendations.settings.columns_mobile.options__1.label"
-        },
-        {
-          "value": "2",
-          "label": "t:sections.product-recommendations.settings.columns_mobile.options__2.label"
-        }
-      ]
-    },
-    {
-      "type": "header",
-      "content": "t:sections.all.padding.section_padding_heading"
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "min": 0,
-      "max": 100,
-      "step": 4,
-      "unit": "px",
-      "label": "t:sections.all.padding.padding_top",
-      "default": 36
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "min": 0,
-      "max": 100,
-      "step": 4,
-      "unit": "px",
-      "label": "t:sections.all.padding.padding_bottom",
-      "default": 36
+      "name": "t:sections.product-recommendations.name"
     }
   ]
 }

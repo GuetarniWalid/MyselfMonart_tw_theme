@@ -33,23 +33,6 @@
       ],
       "settings": {}
     },
-    "main-product-recommendations": {
-      "type": "product-recommendations",
-      "disabled": true,
-      "settings": {
-        "heading": "",
-        "heading_size": "h2",
-        "products_to_show": 10,
-        "columns_desktop": 4,
-        "image_ratio": "adapt",
-        "show_secondary_image": false,
-        "show_vendor": false,
-        "show_rating": false,
-        "columns_mobile": "2",
-        "padding_top": 36,
-        "padding_bottom": 24
-      }
-    },
     "bf44dcab-c1df-4c80-b75a-9ee39a6bfe2e": {
       "type": "badges",
       "blocks": {
@@ -212,7 +195,6 @@
   },
   "order": [
     "main",
-    "main-product-recommendations",
     "bf44dcab-c1df-4c80-b75a-9ee39a6bfe2e",
     "1424ddf1-df7a-4059-a11f-0f1a837e4b6d",
     "afe2a87a-371e-4c67-93b7-8c6b2244f43b",

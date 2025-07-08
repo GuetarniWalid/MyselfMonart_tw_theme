@@ -9,7 +9,7 @@
       <ul class="component-carroussel flex gap-4 overflow-x-auto snap-mandatory snap-x scroll-smooth scrollbar py-6">
         {%- for variant in product.variants -%}
           {%- assign first_image = variant.featured_image -%}
-          <li class="group relative max-w-[350px] shrink-0 text-center snap-start pb-2 flex flex-col">
+          <li class="carrousel-item group relative max-w-[350px] shrink-0 text-center snap-start pb-2 flex flex-col">
             <div class="relative cursor-pointer h-max grow">
               <img
               src="{{ first_image | image_url }}"
@@ -57,7 +57,7 @@
         "type": "text",
         "id": "button_text",
         "default": "Add to cart",
-        "label": "t:sections.product-carrousel.settings.button_text.label"
+        "label": "t:sections.product-recommendations.settings.button_text.label"
       }
     ],
     "presets": [

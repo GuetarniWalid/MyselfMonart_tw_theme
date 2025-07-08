@@ -9,21 +9,22 @@ if (!customElements.get('snap-carrousel')) {
     constructor() {
       super();
       this.ul = this.querySelector('ul');
-      this.liList = this.ul.querySelectorAll('li');
+      this.liList = this.ul.querySelectorAll('.carrousel-item');
+      this.lastLiVisible = this.liList[0];
     }
 
     connectedCallback() {
-      this.liList.forEach(li => {
+      this.liList.forEach((li) => {
         const observer = new IntersectionObserver(
-          entries => {
-            entries.forEach(entry => {
+          (entries) => {
+            entries.forEach((entry) => {
               if (entry.isIntersecting) {
                 clearTimeout(this.timer);
                 this.waitUntilNextScroll(entry);
               }
             });
           },
-          { threshold: 1 }
+          { threshold: 0.9 },
         );
         observer.observe(li);
       });
@@ -34,7 +35,7 @@ if (!customElements.get('snap-carrousel')) {
       this.ul.addEventListener('mouseleave', this.restartScrolling.bind(this));
     }
 
-    waitUntilNextScroll(entry) {
+    waitUntilNextScroll = (entry) => {
       this.lastLiVisible = entry.target;
       if (this.toStopScroll) return;
       this.timer = setTimeout(() => {
@@ -42,84 +43,47 @@ if (!customElements.get('snap-carrousel')) {
       }, this.nextScrollDurationMilli);
     }
 
-    scroll(entry) {
+    scroll = (entry) => {
       const isLastLi = this.checkLiPosition(entry);
       isLastLi ? this.scrollToFirstLi() : this.scrollToNextLi(entry);
     }
 
-    checkLiPosition(entry) {
+    checkLiPosition = (entry) => {
       const { target } = this.getData(entry);
       return target === this.liList[this.liList.length - 1];
     }
 
-    scrollToNextLi(entry) {
+    scrollToNextLi = (entry) => {
       const { liWidth } = this.getData(entry);
       this.ul.scrollLeft = this.ul.scrollLeft + liWidth;
     }
 
-    scrollToFirstLi() {
+    scrollToFirstLi = () => {
       this.ul.scrollLeft = 0;
     }
 
-    getData(entry) {
+    getData = (entry) => {
       return {
         liWidth: entry.boundingClientRect.width,
         target: entry.target,
       };
     }
 
-    stopScrolling() {
+    stopScrolling = () => {
       this.toStopScroll = true;
       clearTimeout(this.timer);
     }
 
-    restartScrolling() {
+    restartScrolling = () => {
       this.toStopScroll = false;
       const entry = {
         target: this.lastLiVisible,
-        boundingClientRect: { width: this.lastLiVisible.getBoundingClientRect().width },
+        boundingClientRect: {
+          width: this.lastLiVisible.getBoundingClientRect().width,
+        },
       };
       this.waitUntilNextScroll(entry);
     }
   }
   customElements.define('snap-carrousel', SnapCarroussel);
-}
-
-// Fetch product recommendations
-const productRecommendations = document.querySelector('.product-recommendations');
-if (productRecommendations) {
-  const handleIntersection = (entries, observer) => {
-    if (!entries[0].isIntersecting) return;
-    
-    observer.unobserve(productRecommendations);
-    
-    const url = productRecommendations.dataset.url;
-  
-    fetch(url)
-      .then(response => response.text())
-      .then(text => {
-        const html = document.createElement('div');
-        html.innerHTML = text;
-        const recommendations = html.querySelector('.product-recommendations');
-  
-        if (recommendations && recommendations.innerHTML.trim().length) {
-          const collection = window.location.pathname.includes('collections') && window.location.pathname.split('collections/')[1].split('/')[0];
-  
-          if(collection) {
-            const aElemList = recommendations.querySelectorAll('a')
-            aElemList.forEach(aElem => {
-              aElem.setAttribute('href', '/collections/' + collection + aElem.getAttribute('href'))
-            })
-          }
-          
-          productRecommendations.innerHTML = recommendations.innerHTML;
-        }
-      })
-      .catch(e => {
-        console.error(e);
-      });
-  };
-  
-  const observer = new IntersectionObserver(handleIntersection, {rootMargin: '0px 0px 200px 0px'});
-  observer.observe(productRecommendations);
 }

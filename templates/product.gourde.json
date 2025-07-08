@@ -50,23 +50,6 @@
       ],
       "settings": {}
     },
-    "main-product-recommendations": {
-      "type": "product-recommendations",
-      "disabled": true,
-      "settings": {
-        "heading": "",
-        "heading_size": "h2",
-        "products_to_show": 10,
-        "columns_desktop": 4,
-        "image_ratio": "adapt",
-        "show_secondary_image": false,
-        "show_vendor": false,
-        "show_rating": false,
-        "columns_mobile": "2",
-        "padding_top": 36,
-        "padding_bottom": 24
-      }
-    },
     "image_with_text_NeFJ4g": {
       "type": "image-with-text",
       "name": "t:sections.image-with-text.presets.name",
@@ -279,7 +262,6 @@
   },
   "order": [
     "main",
-    "main-product-recommendations",
     "image_with_text_NeFJ4g",
     "image_with_text_Gzj9G3",
     "image_banner_QQTJhg",

@@ -12,7 +12,8 @@
     "star_reviews_info": "{{ rating_value }} sur {{ rating_max }} étoiles"
   },
   "cart_drawer": {
-    "keep_shopping": "Continuer les achats"
+    "keep_shopping": "Continuer les achats",
+    "quick_add_to_cart": "Ajout rapide"
   },
   "customer": {
     "account": {
@@ -467,51 +468,5 @@
         "many": "{{ count }} résultats trouvés pour « {{ terms }} »"
       }
     }
-  },
-  "localeImported": {
-    "40x30_cm": "40x30 cm",
-    "toile": "Toile",
-    "sans_fixation": "Sans fixation",
-    "set_de_fixation": "Set de fixation",
-    "chassis_de_2cm": "Chassis de 2cm",
-    "chassis_de_4cm": "Chassis de 4cm",
-    "bordure_blanche": "Bordure blanche",
-    "bordure_noire": "Bordure noire",
-    "bordure_tire": "Bordure étirée",
-    "bordure_miroir": "Bordure miroir",
-    "bordure_plie": "Bordure pliée",
-    "sans_cadre": "Sans cadre",
-    "cadre_blanc": "Cadre blanc",
-    "cadre_noir_mat": "Cadre noir Mat",
-    "cadre_argent_ancien": "Cadre argent ancien",
-    "cadre_chne_clair": "Cadre chêne clair",
-    "cadre_noyer": "Cadre noyer",
-    "aluminium": "Aluminium",
-    "crochet": "Crochet",
-    "mat": "Mat",
-    "brillant": "Brillant",
-    "aluminium__plexiglas": "Aluminium + Plexiglas",
-    "sans_systme_de_fixation": "Sans système de fixation",
-    "60x40_cm": "60x40 cm",
-    "75x50_cm": "75x50 cm",
-    "100x75_cm": "100x75 cm",
-    "30x40_cm": "30x40 cm",
-    "40x60_cm": "40x60 cm",
-    "50x75_cm": "50x75 cm",
-    "_sans_fixation": " Sans fixation",
-    "_chassis_de_2cm": " Chassis de 2cm",
-    "_chassis_de_4cm": " Chassis de 4cm",
-    "75x100_cm": "75x100 cm",
-    "40x40_cm": "40x40 cm",
-    "60x60_cm": "60x60 cm",
-    "rails": "Rails",
-    "80x80_cm": "80x80 cm",
-    "100x100_cm": "100x100 cm",
-    "80x60_cm": "80x60 cm",
-    "120x90_cm": "120x90 cm",
-    "60x80_cm": "60x80 cm",
-    "90x120_cm": "90x120 cm",
-    "20x30_cm": "20x30 cm",
-    "poster": "Poster"
   }
 }

@@ -48,21 +48,6 @@ function renderNewSections({ items, sections }) {
     '#shopify-section-tw-cart-drawer',
   );
   sectionDrawer.innerHTML = newSectionDrawer;
-
-  const variantTitleToFillElem = sectionDrawer.querySelector(
-    '.variant-title-to-fill',
-  );
-  if (variantTitleToFillElem) {
-    variantTitleToFillElem.textContent = items[0].variant_title;
-  }
-
-  const variantPriceToFillElem = sectionDrawer.querySelector(
-    '.variant-price-to-fill',
-  );
-  if (variantPriceToFillElem) {
-    const moneySymbol = variantPriceToFillElem.textContent.split('0')[0];
-    variantPriceToFillElem.textContent = moneySymbol + items[0].price / 100;
-  }
 }
 
 function getSectionInnerJSON(json, selector) {

@@ -1,0 +1,113 @@
+{% comment %}
+    Renders a cart bundle.
+
+    Accepts:
+    - all_bundle_string: {Array} The array of all bundles
+    - all_bundle_complement_string: {Array} The array of all bundle complements
+
+    Usage:
+    {% render 'cart-bundle', all_bundle_string: all_bundle_string, all_bundle_complement_string: all_bundle_complement_string %}
+{% endcomment %}
+
+{% for bundle_string in all_bundle_string %}
+    {% liquid
+        assign bundle = bundle_string | split: ';;'
+        assign bundle_title = bundle[0]
+        assign bundle_url = bundle[1]
+        assign bundle_image = bundle[2]
+        assign bundle_variant_title = bundle[3]
+        assign bundle_price = bundle[4]
+        assign bundle_crossed_price = bundle[5]
+        assign item_to_add_ids = bundle[6]
+        assign bundle_discounts = bundle[7]
+        assign bundle_complements = all_bundle_complement_string[forloop.index0] | split: '$$$$'
+    %}
+
+    {% if bundle != blank %}
+        <li class="carrousel-item p-3 bg-white border-main border-1 rounded-lg mt-2 flex-none{% if all_bundle_string.size > 1 %} w-11/12{% endif %}">
+            <a href="{{ bundle_url }}" class="flex gap-3 mb-4">
+                <div class="w-20 max-h-32 rounded-md overflow-hidden">
+                    <img 
+                    src="{{ bundle_image }}" 
+                    class="w-full h-full object-cover" 
+                    width="80" 
+                    height="auto"
+                    loading="lazy"
+                    >
+                </div>
+                <div class="min-w-0">
+                    <h3 class="text-sm mb-1 line-clamp-2">
+                        {{ bundle_title }}
+                    </h3>
+                    {% if bundle_variant_title != blank %}
+                        <p class="text-xs overflow-hidden text-ellipsis whitespace-nowrap">{{ bundle_variant_title }}</p>
+                    {% endif %}
+                </div>
+            </a>
+            <div class="flex justify-between gap-3">
+                {% assign bundle_price = bundle_price %}
+                {% assign bundle_crossed_price = bundle_crossed_price %}
+                {% for bundle_complement in bundle_complements %}
+                    {% liquid 
+                    assign bundle_complement_items = bundle_complement | split: ';;'
+                    assign bundle_complement_title = bundle_complement_items[0]
+                    assign bundle_complement_image = bundle_complement_items[1]
+                    assign bundle_complement_variant_title = bundle_complement_items[2]
+                    assign item_to_add_ids = item_to_add_ids | append: ',' | append: bundle_complement_items[3]
+                    assign bundle_price = bundle_price | plus: bundle_complement_items[4]
+                    assign bundle_crossed_price = bundle_crossed_price | plus: bundle_complement_items[5]
+                    assign bundle_discounts = bundle_discounts | append: bundle_complement_items[6]
+                    %}
+                    <div class="flex gap-3 w-[45%] min-w-0">
+                        <div class="w-10 h-10 rounded-md overflow-hidden flex-shrink-0">
+                            <img 
+                            src="{{ bundle_complement_image }}" 
+                            class="w-full h-full object-cover" 
+                            width="80" 
+                            height="auto"
+                            loading="lazy"
+                            >
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <h3 class="leading-none text-sm mb-1 line-clamp-2">
+                                {{ bundle_complement_title | capitalize}}
+                            </h3>
+                            <p class="text-xs overflow-hidden text-ellipsis whitespace-nowrap">{{ bundle_complement_variant_title }}</p>
+                        </div>
+                    </div>
+                    {% unless forloop.last %}
+                    <div class="flex justify-center items-center flex-shrink-0">
+                        {% render 'tw-icon-plus'
+                        , width: 15 %}
+                    </div>
+                    {% endunless %}
+                {% endfor %}
+            </div>
+            <div class="flex justify-between mb-4">
+            <ul>
+                {% assign bundle_discounts = bundle_discounts | split: '££' | uniq %}
+                {% for bundle_discount in bundle_discounts %}
+                    {% if bundle_discount != blank %}
+                        <li class="text-xs inline-flex items-center gap-1 bg-action rounded py-1 px-2 mr-1 mt-2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" class="inline-block"><path fill="currentColor" d="M12.79 21L3 11.21v2c0 .53.21 1.04.59 1.41l7.79 7.79c.78.78 2.05.78 2.83 0l6.21-6.21c.78-.78.78-2.05 0-2.83z"></path><path fill="currentColor" d="M11.38 17.41c.39.39.9.59 1.41.59c.51 0 1.02-.2 1.41-.59l6.21-6.21c.78-.78.78-2.05 0-2.83L12.62.58C12.25.21 11.74 0 11.21 0H5C3.9 0 3 .9 3 2v6.21c0 .53.21 1.04.59 1.41zM5 2h6.21L19 9.79L12.79 16L5 8.21z"></path><circle cx="7.25" cy="4.25" r="1.25" fill="currentColor"></circle></svg>
+                        {{ bundle_discount }}
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            <div class="text-sm flex items-end gap-2 font-bold whitespace-nowrap">
+                <span class="text-red-600">
+                <s>{{ bundle_crossed_price | money }}</s>
+                </span>
+                <span class="heading">
+                {{ bundle_price | money }}
+                </span>
+            </div>
+            </div>
+            <quick-add-to-cart data-items="{{ item_to_add_ids }}">
+                <button class="w-full border-main border-1 rounded-md py-2 outline-none focus-visible:outline focus-visible:outline-orange-500 bg-main-5 hover:shadow-button transition-shadow duration-100">
+                    {{ 'cart_drawer.quick_add_to_cart' | t }}
+                </button>
+            </quick-add-to-cart>
+        </li>
+    {% endif %}
+{% endfor %}

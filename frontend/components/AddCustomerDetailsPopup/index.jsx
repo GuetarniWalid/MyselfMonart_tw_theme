@@ -42,15 +42,6 @@ export default function AddCustomerDetailsPopup({
     }
   }
 
-  function getProductProperties() {
-    const inputs = inputsContainerRef.current.querySelectorAll('input');
-    const productProperties = {};
-    inputs.forEach((input) => {
-      productProperties[input.name] = input.value;
-    });
-    return productProperties;
-  }
-
   useEffect(() => {
     firstRef.current.focus();
   }, []);
@@ -84,6 +75,7 @@ export default function AddCustomerDetailsPopup({
       onClick={closePopup}
     >
       <div
+        id="customer-details-popup"
         className="mx-1 bg-secondary p-8 rounded-xl border-main border-1 w-full max-w-lg max-h-[90%] overflow-y-auto scrollbar-hidden"
         tabIndex={0}
         onKeyDown={handleKeyDown}
@@ -96,7 +88,6 @@ export default function AddCustomerDetailsPopup({
             drawerOpen={drawerOpen}
             withCustomerDetails={false}
             beforeAddProductToCartFunction={verifyCustomerDetails}
-            getProductProperties={getProductProperties}
           />
         </div>
       </div>
