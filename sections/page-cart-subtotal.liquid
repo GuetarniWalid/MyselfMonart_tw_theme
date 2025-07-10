@@ -10,7 +10,7 @@
     <div class="flex justify-end px-8">
       <ul>
         {% for discount_application in cart.discount_applications %}
-          <li class="text-sm text-main-80 mb-1 px-3 py-1 bg-main-5 rounded">
+          <li class="text-sm text-main-80 mb-1 px-3 py-1 bg-action rounded">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -21,8 +21,7 @@
                 cy="4.25"
                 r="1.25"
                 fill="currentColor" /></svg>
-            {{ discount_application.title }}&nbsp;
-            {{ discount_application.total_allocated_amount | money }}
+            {{ discount_application.title }}
           </li>
         {% endfor %}
       </ul>
@@ -30,41 +29,50 @@
   {% endif %}
   {% if cart.original_total_price != cart.total_price %}
     <p class="text-right px-8 text-lg text-main-80 mb-1">
-      <span class="font-heading">{{ 'sections.page_cart_subtotal.before_promo' | t }}&nbsp;&nbsp;</span>
-      <s>{{ cart.original_total_price | money }}</s>
+      <span class="font-heading font-bold">{{ 'sections.page_cart_subtotal.before_promo' | t }}&nbsp;&nbsp;</span>
+      <s class="text-red-600 font-bold">{{ cart.original_total_price | money }}</s>
     </p>
   {% endif %}
-  <p class="text-right pr-8 text-lg">
+  <p class="text-right pr-8 text-lg font-bold">
     <span class="font-semibold font-heading">{{ 'sections.page_cart_subtotal.subtotal' | t }}&nbsp;&nbsp;&nbsp;</span>
     <span class="text-main-80">{{ cart.total_price | money_with_currency }}</span>
   </p>
-  <div class="text-right mt-6 px-8">
-    <a class="py-4 px-8 rounded-md mx-auto inline-block bg-action text-secondary transition-colors duration-500 text-center w-full xs:w-auto font-semibold glass-anim relative before:w-12 before:h-40 before:bg-white/50 before:absolute before:-top-4 before:right-[-60px] before:rotate-12 after:w-12 after:h-40 after:bg-white/20 after:absolute after:-top-4 after:rotate-12 after:right-[-60px] overflow-hidden" href="">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="29"
-        height="29"
-        viewBox="0 0 32 32"
-        class="inline-block"><path fill="currentColor" d="M6.5 5A4.5 4.5 0 0 0 2 9.5V11h28V9.5A4.5 4.5 0 0 0 25.5 5zM2 22.5V13h28v9.5a4.5 4.5 0 0 1-4.5 4.5h-19A4.5 4.5 0 0 1 2 22.5M21 19a1 1 0 1 0 0 2h3a1 1 0 1 0 0-2z" /></svg>&nbsp;
-      {{ 'sections.page_cart_subtotal.checkout' | t }}
-    </a>
+  <div class="ml-auto py-3 max-w-xl">
+    <div class="mb-3 px-4">
+      <klarna-placement
+        id="cart-drawer-klarna-placement"
+        data-key="credit-promotion-badge"
+        data-locale=""
+        data-purchase-amount={{ cart.total_price }}
+      ></klarna-placement>
+    </div>
+    <div class="gap-3 px-4 text-lg">
+      <button
+        type="submit"
+        name="checkout"
+        form="cart-form"
+        class="relative glass-anim flex w-full items-center justify-center gap-3 bg-action text-main border-main transition-colors duration-500 rounded-lg py-4 font-bold border-neu shadow-neu-lg hover:shadow-neu-md mb-4 outline-none focus-visible:outline focus-visible:outline-orange-500"
+        tabindex="-1">
+        {% render 'icon-padlock' %}
+        <span class="pt-1">{{ 'sections.tw_cart_drawer.checkout' | t | upcase }}</span>
+      </button>
+    </div>
+    <div class="px-7 flex justify-center items-center gap-2">
+      {% render 'icon-pay-mastercard' %}
+      {% render 'icon-pay-visa' %}
+      {% render 'icon-pay-paypal' %}
+      {% render 'icon-pay-amex' %}
+      {% render 'icon-pay-klarna' %}
+    </div>
   </div>
 {% endunless %}
 
 {% javascript %}
-  function animBlockButton() {
-    const blockBuyButton = document.querySelector('.glass-anim');
-
-    setInterval(() => {
-      blockBuyButton ?. classList.add('glass-anim');
-      setTimeout(() => {
-        blockBuyButton ?. classList.remove('glass-anim');
-      }, 1500);
-    }, 5000);
-  };
-
   document.addEventListener('DOMContentLoaded', function() {
-    animBlockButton();
+    const klarnaPlacement = this.querySelector('klarna-placement');
+    if (!klarnaPlacement) return;
+    const locale = getLocale();
+    klarnaPlacement.setAttribute('data-locale', locale);
   });
 {% endjavascript %}
 

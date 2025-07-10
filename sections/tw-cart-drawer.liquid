@@ -71,6 +71,12 @@
           {% render 'tw-icon-loading' %}
         </span>
       </div>
+      <klarna-placement
+        id="cart-drawer-klarna-placement"
+        data-key="credit-promotion-badge"
+        data-locale=""
+        data-purchase-amount={{ cart.total_price }}
+      ></klarna-placement>
     </div>
     <form
       action="{{ routes.cart_url }}"

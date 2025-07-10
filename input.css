@@ -489,6 +489,10 @@ main-product-blocks .description h2 span {
   klarna-placement::part(osm-container) {
     @apply py-3 rounded-sm border-none;
   }
+
+  #cart-drawer-klarna-placement::part(osm-container) {
+    @apply mt-2 py-2 text-sm;
+  }
   
   klarna-placement::part(osm-cta) {
     @apply font-bold;

@@ -108,6 +108,45 @@ function animBlockButton() {
 }
 animBlockButton()
 
+function shouldDisplayKlarna() {
+  const currency = window.Shopify.currency.active;
+  const locale = getLocale(currency);
+
+  if (locale === 'en-US') return false;
+  if(locale === 'en-CA') return false;
+  return true;
+}
+
+function getLocale() {
+  const currency = window.Shopify.currency.active;
+  
+  if (currency === 'USD') {
+    return 'en-US'; //not yet supported
+  } else if (currency === 'GBP') {
+    return 'en-GB';
+  } else if (currency === 'CHF') {
+    return 'fr-CH';
+  } else if (currency === 'DKK') {
+    return 'da-DK';
+  } else if (currency === 'CAD') {
+    return 'en-CA'; // not yet supported
+  } else {
+    const lang = window.Shopify.locale;
+    switch (lang) {
+      case 'es':
+        return 'es-ES';
+      case 'de':
+        return 'de-DE';
+      case 'it':
+        return 'it-IT';
+      case 'en':
+        return 'en-FR';
+      default:
+        return 'fr-FR';
+    }
+  }
+}
+
 // Classes
 if (!customElements.get('collapsible-tab')) {
   class CollapsibleTab extends HTMLElement {
