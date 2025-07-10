@@ -73,6 +73,12 @@
         "id": "like_color",
         "label": "t:settings_schema.color.settings.like_color.label",
         "default": "#A93514"
+      },
+      {
+        "type": "color",
+        "id": "action_color",
+        "label": "t:settings_schema.color.settings.action_color.label",
+        "default": "#FEDE65"
       }
     ]
   },

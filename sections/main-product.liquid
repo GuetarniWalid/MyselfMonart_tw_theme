@@ -141,8 +141,7 @@
           {%- when 'buy' -%}
             {% style %}
               :root {
-                --color-action: {{ block.settings.main_color.red }}, {{ block.settings.main_color.green }}, {{ block.settings.main_color.blue }};
-                --color-action-hover: {{ block.settings.hover_color }};
+                --color-action-rgb: {{ block.settings.main_color.red }}, {{ block.settings.main_color.green }}, {{ block.settings.main_color.blue }};
               }
             {% endstyle %}
             <div class="relative mt-10 mb-3 md:mb-8">

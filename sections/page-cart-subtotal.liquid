@@ -1,7 +1,8 @@
 {% style %}
-  :root {
-    --color-action: {{ section.settings.buy_button_color.red }}, {{ section.settings.buy_button_color.green }}, {{ section.settings.buy_button_color.blue }};
-    --color-action-hover: {{ section.settings.buy_button_color.red }}, {{ section.settings.buy_button_color.green }}, {{ section.settings.buy_button_color.blue }};
+  :root  {
+    --color-action-rgb: {{ section.settings.buy_button_color.red }}, 
+    {{ section.settings.buy_button_color.green }}, 
+    {{ section.settings.buy_button_color.blue }};
   }
 {% endstyle %}
 
@@ -43,8 +44,7 @@
         id="cart-drawer-klarna-placement"
         data-key="credit-promotion-badge"
         data-locale=""
-        data-purchase-amount={{ cart.total_price }}
-      ></klarna-placement>
+        data-purchase-amount={{ cart.total_price }}></klarna-placement>
     </div>
     <div class="gap-3 px-4 text-lg">
       <button
@@ -70,7 +70,8 @@
 {% javascript %}
   document.addEventListener('DOMContentLoaded', function() {
     const klarnaPlacement = this.querySelector('klarna-placement');
-    if (!klarnaPlacement) return;
+    if (! klarnaPlacement) return;
+    
     const locale = getLocale();
     klarnaPlacement.setAttribute('data-locale', locale);
   });
@@ -86,12 +87,12 @@
       "templates": ["cart"]
     },
     "settings": [
-        {
-          "type": "color",
-          "id": "buy_button_color",
-          "label": "t:sections.page_cart_subtotal.settings.buy_button_color.label",
-          "default": "#04A777"
-        }
-      ]
+      {
+        "type": "color",
+        "id": "buy_button_color",
+        "label": "t:sections.page_cart_subtotal.settings.buy_button_color.label",
+        "default": "#04A777"
+      }
+    ]
   }
 {% endschema %}

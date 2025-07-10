@@ -40,9 +40,9 @@ module.exports = {
       },
       colors: {
         action: {
-          DEFAULT: 'rgb(var(--color-action))',
-          80: 'rgba(var(--color-action), 0.8)',
-          70: 'rgba(var(--color-action), 0.7)',
+          DEFAULT: 'rgb(var(--color-action-rgb))',
+          80: 'rgba(var(--color-action-rgb), 0.8)',
+          70: 'rgba(var(--color-action-rgb), 0.7)',
         },
         'breadcrumb-main': 'var(--color-breadcrumb-main)',
         'breadcrumb-secondary': 'var(--color-breadcrumb-secondary)',

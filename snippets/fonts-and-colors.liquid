@@ -9,5 +9,6 @@
       --color-main-rgb: {{ settings.main_color | color_extract: 'red' }}, {{ settings.main_color | color_extract: 'green' }}, {{ settings.main_color | color_extract: 'blue' }};
       --color-secondary-rgb: {{ settings.secondary_color | color_extract: 'red' }}, {{ settings.secondary_color | color_extract: 'green' }}, {{ settings.secondary_color | color_extract: 'blue' }};
       --color-like-rgb: {{ settings.like_color | color_extract: 'red' }}, {{ settings.like_color | color_extract: 'green' }}, {{ settings.like_color | color_extract: 'blue' }};
+      --color-action-rgb: {{ settings.action_color.red }}, {{ settings.action_color.green }}, {{ settings.action_color.blue }};
     }
 {% endstyle %}
