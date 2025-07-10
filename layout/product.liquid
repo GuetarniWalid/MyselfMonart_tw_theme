@@ -38,8 +38,7 @@
     {% endif %}
     {% render 'meta-tags' %}
 
-    {{ content_for_header
-    }}
+    {{ content_for_header }}
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
@@ -65,6 +64,13 @@
     {%- if request.design_mode -%}
       <script src="{{ 'theme-editor.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
+
+    <script
+      async
+      data-environment="production"
+      src="https://js.klarna.com/web-sdk/v1/klarna.js"
+      data-client-id="klarna_live_client_JTMkM2xkZDhVYnpHRkEqTllvMT9FLXZMZiVnTTB3Q0YsN2VhMWYzNmQtNWQxMi00YjI4LWEwMGYtMzMyZDU2NzgyYTU4LDEsU05qMGlpd2VEWTNsa2ZPTFJoa1RTMWVJdEx1ai83VWZoWWI2ZFE5WFhxVT0"
+    ></script>
   </head>
 
   <body class="w-screen overflow-x-hidden text-main bg-secondary transition-colors duration-500 z-10 scrollbar relative min-h-screen">

@@ -486,6 +486,14 @@ main-product-blocks .description h2 span {
     @apply fill-like;
   }
 
+  klarna-placement::part(osm-container) {
+    @apply py-3 rounded-sm border-none;
+  }
+  
+  klarna-placement::part(osm-cta) {
+    @apply font-bold;
+  }
+
   .main-page {
     @apply px-4 mt-16 max-w-[100vw];
   }

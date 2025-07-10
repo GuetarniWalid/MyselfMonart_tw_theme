@@ -1,6 +1,7 @@
 import { forwardRef } from 'react';
 import useIsMobile from '../../../hooks/useIsMobile';
 import { useVariantSelected } from '../../../store/variantSelected';
+import Klarna from './Klarna';
 
 const Button = forwardRef(
   ({ drawerOpen, handleClick, idle, message }, ref) => {
@@ -32,14 +33,14 @@ const Button = forwardRef(
     }
 
     return (
-      <div className="flex-none font-bold pr-3">
+      <div className="flex-none font-bold pr-3 mb-2">
         <button
           id='react-buy-button'
           onClick={handleClick}
           onKeyDown={handleKeyDown}
           ref={ref}
           tabIndex={drawerOpen ? 0 : -1}
-          className="cart-button py-0 flex items-center justify-between group glass-anim"
+          className="cart-button py-0 flex items-center justify-between group glass-anim lg:mb-5"
           disabled={idle}
         >
           {idle ? (
@@ -63,6 +64,7 @@ const Button = forwardRef(
             {unescapeMessage(window.react.buyButton.total)}:&nbsp;&nbsp; {Product.formatPrice(totalPrice, true, false)}
           </span>
         </button>
+        <Klarna purchaseAmount={totalPrice} />
       </div>
     );
   },

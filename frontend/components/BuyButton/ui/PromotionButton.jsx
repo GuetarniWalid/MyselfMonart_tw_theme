@@ -1,6 +1,7 @@
 import { forwardRef } from 'react';
 import useIsMobile from '../../../hooks/useIsMobile';
 import { useVariantSelected } from '../../../store/variantSelected';
+import Klarna from './Klarna';
 
 const Button = forwardRef(({ drawerOpen, handleClick, idle, message }, ref) => {
   const isMobile = useIsMobile();
@@ -37,7 +38,7 @@ const Button = forwardRef(({ drawerOpen, handleClick, idle, message }, ref) => {
 
   return (
     <div className="flex-none font-bold">
-      <div className="pr-3">
+      <div className="pr-3 lg:mb-5">
         <button
           id="react-buy-button"
           onClick={handleClick}
@@ -87,8 +88,9 @@ const Button = forwardRef(({ drawerOpen, handleClick, idle, message }, ref) => {
           </span>
         </button>
       </div>
+      <Klarna purchaseAmount={totalPrice} />
       {window.promotion.date && (
-        <div className="relative bg-white z-10 flex items-center justify-center py-1 pt-2 md:pt-1 md:border-1 border-main md:rounded-md mt-4 before:absolute before:left-1/2 before:-translate-x-1/2 before:bg-white before:inset-0 before:w-screen before:-z-10 md:before:hidden">
+        <div className="relative bg-white z-10 flex items-center justify-center py-1 pt-2 md:pt-1 md:border-1 border-main md:rounded-md mt-2 before:absolute before:left-1/2 before:-translate-x-1/2 before:bg-white before:inset-0 before:w-screen before:-z-10 md:before:hidden">
           <span>{window.promotion.date}</span>
         </div>
       )}

@@ -14,7 +14,11 @@ class Product {
 
     const priceModel = window.productPriceModel;
 
-    const currencySymbolMatch = priceModel.match(/[^\d\s,.]/);
+    // Try to match currency codes first (2-3 letters, case insensitive), then fall back to single symbols
+    let currencySymbolMatch = priceModel.match(/[A-Za-z]{2,3}/);
+    if (!currencySymbolMatch) {
+      currencySymbolMatch = priceModel.match(/[^\d\s,.]/);
+    }
     const currencySymbol = currencySymbolMatch ? currencySymbolMatch[0] : '';
 
     const symbolPosition = priceModel.indexOf(currencySymbol);
