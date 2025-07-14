@@ -3,23 +3,26 @@
   "sections": {
     "ce4595e5-01e5-472d-ac56-563a87ef335c": {
       "type": "first-blog-link",
-      "settings": {
-      }
+      "settings": {}
     },
     "main": {
       "type": "main-article",
       "settings": {
+        "show_date": true
       }
     },
-    "11ed1855-d812-4ccc-8f80-65a14ff1c6bd": {
+    "sibling_blog_links_DPxRV8": {
       "type": "sibling-blog-links",
+      "name": "t:sections.sibling-blog-links.name",
       "settings": {
+        "padding_top": "pt-8",
+        "padding_bottom": "pb-8"
       }
     }
   },
   "order": [
     "ce4595e5-01e5-472d-ac56-563a87ef335c",
     "main",
-    "11ed1855-d812-4ccc-8f80-65a14ff1c6bd"
+    "sibling_blog_links_DPxRV8"
   ]
 }

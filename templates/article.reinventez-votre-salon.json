@@ -3,8 +3,7 @@
   "sections": {
     "ce4595e5-01e5-472d-ac56-563a87ef335c": {
       "type": "first-blog-link",
-      "settings": {
-      }
+      "settings": {}
     },
     "main": {
       "type": "main-article",
@@ -47,36 +46,12 @@
             "link": "https:\/\/www.myselfmonart.com\/blogs\/tableau-salon\/comment-amenager-un-espace-accueillant-et-pratique-pour-recevoir",
             "to_obfuscate": false
           }
-        },
-        "column_Hhkfcd": {
-          "type": "column",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/idee-Ambiance-cocoonind-salon_083885bd-07bb-4341-9560-b2c5fccbef11.jpg",
-            "title": "Ambiance cocooning",
-            "text": "<p>Vous rêvez d'un salon chaleureux et confortable pour vous ressourcer ? Laissez-nous vous guider avec nos astuces de décoration pour créer une ambiance cocooning. Transformez votre salon en un havre de paix où vous pourrez vous détendre pleinement. Prêt à plonger dans notre univers douillet ? Cliquez ci-dessous découvrir nos conseils !<\/p>",
-            "link_label": "Lire la suite",
-            "link": "https:\/\/www.myselfmonart.com\/blogs\/tableau-salon\/ambiance-cocooning-comment-creer-un-salon-confortable-et-chaleureux",
-            "to_obfuscate": false
-          }
-        },
-        "column_3T4X3B": {
-          "type": "column",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/inspiration-decoration-africaine-pour-salon-pas-chere_9c1dc9cb-5e9d-40de-8b49-c27f0e373544.jpg",
-            "title": "Décoration africaine - voyager de votre salon",
-            "text": "<p>Voyagez au cœur de l'Afrique avec notre blog déco ! Couleurs chaudes, motifs vibrants, matériaux naturels et art ancestral vous attendent. Découvrez comment créer une décoration authentique, trouvez des tableaux uniques et apprenez à intégrer des éléments africains sans vous ruiner. Osez l'exotisme et transformez votre intérieur en un véritable sanctuaire africain. Plongez dans notre blog et laissez-vous inspirer <\/p>",
-            "link_label": "Lire la suite",
-            "link": "https:\/\/www.myselfmonart.com\/blogs\/tableau-salon\/voyagez-depuis-votre-salon-guide-pratique-pour-une-decoration-africaine-reussi-et-abordable",
-            "to_obfuscate": false
-          }
         }
       },
       "block_order": [
         "column_7ReQ6Y",
         "column_LfJP3J",
-        "column_TJMEYm",
-        "column_Hhkfcd",
-        "column_3T4X3B"
+        "column_TJMEYm"
       ],
       "settings": {
         "title": "Découvrir nos autres blogs",

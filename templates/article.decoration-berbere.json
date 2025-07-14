@@ -365,7 +365,7 @@
       "settings": {
         "image": "shopify:\/\/shop_images\/poterie-berbere-tajine-terre-cuite-artisanat-maroc.jpg",
         "title": "POTERIES & CÉRAMIQUES",
-        "description": "<p>iDu plat à tajine à la jarre décorative, les poteries berbères subliment la table et les étagères. Leur charme réside dans leur imperfection assumée.<\/p>",
+        "description": "<p>Du plat à tajine à la jarre décorative, les poteries berbères subliment la table et les étagères. Leur charme réside dans leur imperfection assumée.<\/p>",
         "layout": "text_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -576,13 +576,6 @@
         "padding_top": "pt-0",
         "padding_bottom": "pb-0"
       }
-    },
-    "11ed1855-d812-4ccc-8f80-65a14ff1c6bd": {
-      "type": "sibling-blog-links",
-      "settings": {
-        "padding_top": "pt-8",
-        "padding_bottom": "pb-8"
-      }
     }
   },
   "order": [
@@ -608,7 +601,6 @@
     "multicolumn_YAbhpr",
     "image_with_text_jzb9zt",
     "collapsible_content_J3WLwX",
-    "rich_text_FkktXh",
-    "11ed1855-d812-4ccc-8f80-65a14ff1c6bd"
+    "rich_text_FkktXh"
   ]
 }

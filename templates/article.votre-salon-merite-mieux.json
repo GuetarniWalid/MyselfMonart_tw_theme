@@ -90,7 +90,7 @@
         "enable_blob": true,
         "activate_dynamic_color": false,
         "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#E3FAE1",
+        "dynamic_secondary_color": "#e3fae1",
         "padding_top": "pt-16",
         "padding_bottom": "pb-16"
       }
@@ -146,7 +146,7 @@
         "enable_blob": true,
         "activate_dynamic_color": false,
         "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#E3FAE1",
+        "dynamic_secondary_color": "#e3fae1",
         "padding_top": "pt-16",
         "padding_bottom": "pb-16"
       }
@@ -202,7 +202,7 @@
         "enable_blob": true,
         "activate_dynamic_color": false,
         "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#E3FAE1",
+        "dynamic_secondary_color": "#e3fae1",
         "padding_top": "pt-16",
         "padding_bottom": "pb-16"
       }
@@ -218,11 +218,11 @@
             "is_lighten": false
           }
         },
-        "button_QAYQWR": {
+        "button_z7W4LN": {
           "type": "button",
           "settings": {
-            "button_label": "👉 Peinture ou papier peint : lequel choisir ?",
-            "button_link": "shopify:\/\/blogs\/tableau-salon\/quel-type-de-tableau-choisir-pour-decorer-son-salon",
+            "button_label": "👉 Peinture, papier peint ou tableau : lequel choisir ?",
+            "button_link": "",
             "button_label_2": "",
             "button_link_2": "",
             "to_obfuscate": false
@@ -231,7 +231,7 @@
       },
       "block_order": [
         "text_d4BGLN",
-        "button_QAYQWR"
+        "button_z7W4LN"
       ],
       "settings": {
         "content_alignment": "text-left",
@@ -249,7 +249,7 @@
         "enable_blob": true,
         "activate_dynamic_color": false,
         "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#E3FAE1",
+        "dynamic_secondary_color": "#e3fae1",
         "padding_top": "pt-16",
         "padding_bottom": "pb-16"
       }
@@ -296,7 +296,7 @@
         "enable_blob": true,
         "activate_dynamic_color": false,
         "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#E3FAE1",
+        "dynamic_secondary_color": "#e3fae1",
         "padding_top": "pt-16",
         "padding_bottom": "pb-16"
       }
@@ -311,21 +311,10 @@
             "text_size": "text-xl",
             "is_lighten": false
           }
-        },
-        "button_aCGwdC": {
-          "type": "button",
-          "settings": {
-            "button_label": "👉 Comment nettoyer un tableau ?",
-            "button_link": "",
-            "button_label_2": "",
-            "button_link_2": "",
-            "to_obfuscate": false
-          }
         }
       },
       "block_order": [
-        "text_N9fKkQ",
-        "button_aCGwdC"
+        "text_N9fKkQ"
       ],
       "settings": {
         "content_alignment": "text-left",
