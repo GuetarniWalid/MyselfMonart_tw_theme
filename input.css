@@ -380,6 +380,9 @@ main-product-blocks .description h2 span {
   .article-content p {
     @apply leading-relaxed text-xl;
   }
+  .article-content ul {
+    @apply list-disc my-5 pl-10;
+  }
 
   .blob.active {
     border-radius: 36% 64% 65% 35% / 63% 61% 39% 37%;
