@@ -36,8 +36,8 @@
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/cuisine-tableau.jpg",
-        "title": "",
-        "description": "<p>Si vous êtes en manque d'imagination ou à la recherche d'idées farfelues pour décorer votre cuisine, nous avons déniché pour vous des petites astuces qui permettront de redonner un coup de jeune à votre cuisine. Alors découvrez sans plus attendre les astuces de nos designers pour décorer votre cuisine. Et si vous souhaitez en savoir plus, découvrez l'article complet <a href=\"\/blogs\/tableau-cuisine\/comment-faire-la-decoration-de-ma-cuisine\" title=\"Comment faire la décoration de ma cuisine ?\">Comment faire la décoration de ma cuisine ?<\/a><\/p>",
+        "title": "Idées futées pour une déco de cuisine",
+        "description": "<p>Si vous êtes en manque d'imagination ou à la recherche d'idées farfelues pour décorer votre cuisine, nous avons déniché pour vous des petites astuces qui permettront de redonner un coup de jeune à votre cuisine. Alors découvrez sans plus attendre les astuces de nos designers pour décorer votre cuisine. Et si vous souhaitez en savoir plus, découvrez l'article complet <\/p><p><a href=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/comment-faire-la-decoration-de-ma-cuisine?shpxid=764c9c2f-eacb-4366-b852-8b42d13bc3d9\" title=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/comment-faire-la-decoration-de-ma-cuisine?shpxid=764c9c2f-eacb-4366-b852-8b42d13bc3d9\">👉Comment faire la décoration de ma cuisine ?<\/a><\/p>",
         "layout": "image_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -72,8 +72,8 @@
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/Quelle-est-la-couleur-la-moins-salissante-pour-une-cuisine.jpg",
-        "title": "",
-        "description": "<p>Pour concevoir ou rénover une cuisine, le choix de la couleur est crucial.<\/p><p>Vous savez probablement à quel point il peut être difficile de choisir la bonne couleur pour les murs, les armoires, et même du plancher. Si vous êtes en quête de conseils pour trouver une couleur qui résiste aux taches, à l'humidité et à la graisse, nous vous invitons à consulter notre blog : \"<a href=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/quelle-est-la-couleur-la-moins-salissante-pour-une-cuisine\" target=\"_blank\" title=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/quelle-est-la-couleur-la-moins-salissante-pour-une-cuisine\">Quelle est la couleur la moins<br\/>salissante pour une cuisine ?<\/a> Alors n'hésitez pas à nous rendre visite pour découvrir nos précieux conseils !<\/p>",
+        "title": "La bonne couleur pour une cuisine propre plus longtemps",
+        "description": "<p>Pour concevoir ou rénover une cuisine, le choix de la couleur est crucial.<\/p><p>Vous savez probablement à quel point il peut être difficile de choisir la bonne couleur pour les murs, les armoires, et même du plancher. Si vous êtes en quête de conseils pour trouver une couleur qui résiste aux taches, à l'humidité et à la graisse, nous vous invitons à consulter notre blog : \"<\/p><p><a href=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/quelle-est-la-couleur-la-moins-salissante-pour-une-cuisine\" target=\"_blank\" title=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/quelle-est-la-couleur-la-moins-salissante-pour-une-cuisine\">👉 Quelle est la couleur la moins<br\/>salissante pour une cuisine ? <\/a><\/p><p>Alors n'hésitez pas à nous rendre visite pour découvrir nos précieux conseils !<\/p>",
         "layout": "text_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -108,45 +108,9 @@
       "type": "image-with-text",
       "settings": {
         "image": "shopify:\/\/shop_images\/Comment-donner-un-coup-de-neuf_a-sa-cuisine.jpg",
-        "title": "",
-        "description": "<p>Besoin de donner un nouveau look à votre cuisine sans tout changer ? <\/p><p>Notre dernier article regorge de conseils pratiques pour transformer votre espace culinaire en un lieu fonctionnel et esthétique. Que vous souhaitiez moderniser vos armoires, changer le revêtement de sol ou ajouter des éléments de décoration, nous avons toutes les astuces pour vous aider à donner un coup de neuf à votre cuisine sans vous ruiner. <\/p><p><strong>Découvrez dès maintenant nos astuces sur notre blog \" <\/strong><a href=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/comment-donner-un-coup-de-neuf-a-sa-cuisine\" target=\"_blank\" title=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/comment-donner-un-coup-de-neuf-a-sa-cuisine\">Comment donner un coup de neuf à sa cuisine ?<\/a><\/p>",
+        "title": "Relookez votre cuisine facilement",
+        "description": "<p>Besoin de donner un nouveau look à votre cuisine sans tout changer ? <\/p><p>Notre dernier article regorge de conseils pratiques pour transformer votre espace culinaire en un lieu fonctionnel et esthétique. Que vous souhaitiez moderniser vos armoires, changer le revêtement de sol ou ajouter des éléments de décoration, nous avons toutes les astuces pour vous aider à donner un coup de neuf à votre cuisine sans vous ruiner. <strong>Découvrez dès maintenant nos astuces sur notre blog \"  <\/strong><\/p><p><a href=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/comment-donner-un-coup-de-neuf-a-sa-cuisine\" target=\"_blank\" title=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/comment-donner-un-coup-de-neuf-a-sa-cuisine\">👉Comment donner un coup de neuf à sa cuisine ?<\/a><\/p>",
         "layout": "image_first",
-        "enable_blob": true,
-        "activate_dynamic_color": false,
-        "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#e3fae1",
-        "padding_top": "pt-0",
-        "padding_bottom": "pb-16"
-      }
-    },
-    "570c672b-73bb-4931-9a58-7d6de5b8c87e": {
-      "type": "rich-text",
-      "blocks": {
-        "template--16684094587135__570c672b-73bb-4931-9a58-7d6de5b8c87e-1677450967a693f042-0": {
-          "type": "heading",
-          "settings": {
-            "heading": "Comment bien choisir la taille de son tableau de décoration ?",
-            "markup": "h2",
-            "heading_size": "text-3xl"
-          }
-        }
-      },
-      "block_order": [
-        "template--16684094587135__570c672b-73bb-4931-9a58-7d6de5b8c87e-1677450967a693f042-0"
-      ],
-      "settings": {
-        "content_alignment": "text-center",
-        "padding_top": "pt-0",
-        "padding_bottom": "pb-0"
-      }
-    },
-    "993b4bd8-65af-47ef-a665-a0dad63c9668": {
-      "type": "image-with-text",
-      "settings": {
-        "image": "shopify:\/\/shop_images\/comment-choisir-la-taille-de-mon-tableau-mural.jpg",
-        "title": "",
-        "description": "<p>Vous voulez donner une touche personnelle à votre espace intérieur avec un tableau de décoration, mais choisir la bonne taille peut être un véritable casse-tête. C'est pourquoi notre blog \"<a href=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/quelle-taille-de-tableau-choisir\" target=\"_blank\" title=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/quelle-taille-de-tableau-choisir\">Comment bien choisir la taille de son tableau de décoration ?\"<\/a> est là pour vous aider. <\/p><p>Nous avons rassemblé des astuces pratiques et des conseils d'experts en décoration  pour vous aider à déterminer la taille idéale qui conviendra à votre espace. Laissez-nous vous guider pour trouver le tableau mural parfait pour votre intérieur.<\/p>",
-        "layout": "text_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
         "dynamic_primary_color": "#111111",
@@ -161,7 +125,7 @@
         "template--16684094587135__9db3f75f-5dc3-4466-91ce-6b35f2e2e3d3-1677450967a693f042-0": {
           "type": "heading",
           "settings": {
-            "heading": "Quelle matière de tableau déco choisir pour son intérieur ?",
+            "heading": "Et si un tableau changeait tout dans votre cuisine ?",
             "markup": "h2",
             "heading_size": "text-3xl"
           }
@@ -179,46 +143,10 @@
     "bd8905d9-2e3f-417a-bd29-62ee386a63c9": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify:\/\/shop_images\/tableaux-pour-cuisine.webp",
-        "title": "",
-        "description": "<p>Choisir le bon matériau pour votre tableau de décoration peut être difficile, que vous préfériez le bois chaleureux, la toile classique ou l'élégance de l'aluminium. Notre blog \"<a href=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/le-guide-ultime-pour-choisir-la-matiere-ideale-pour-votre-tableau-de-decoration\" target=\"_blank\" title=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/le-guide-ultime-pour-choisir-la-matiere-ideale-pour-votre-tableau-de-decoration\">Quelle matière de tableau déco choisir pour son intérieur <\/a>?\" vous guidera à travers les avantages et les inconvénients de chaque matériau, pour que vous puissiez choisir celui qui convient le mieux à votre espace et à votre style. <\/p><p><strong>Trouvez le tableau parfait pour votre décoration murale grâce aux conseils de nos experts en décoration d'intérieur.<\/strong><\/p>",
+        "image": "shopify:\/\/shop_images\/decoration-cuisine-cadres-fruits-style-mediterraneen.jpg",
+        "title": "La cuisine est bien plus qu’un lieu de préparation :",
+        "description": "<p> C’est un espace de vie, de partage et de chaleur. Et parfois, il suffit d’un seul tableau pour lui donner une toute nouvelle ambiance. Dans cet article, découvrez des idées simples et inspirantes pour décorer votre cuisine avec goût : natures mortes gourmandes, citations pleines de bonne humeur, souvenirs de famille ou œuvres plus contemporaines. Des conseils concrets, pensés pour celles qui aiment les intérieurs harmonieux, épurés et empreints d’émotion.<\/p><p><a href=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/quels-tableaux-mettre-dans-une-cuisine-un-guide-pratique-et-esthetique\" target=\"_blank\" title=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/quels-tableaux-mettre-dans-une-cuisine-un-guide-pratique-et-esthetique\">👉 <strong>Un guide à ne pas manquer pour faire entrer la douceur et la personnalité dans votre cuisine.<\/strong><\/a><\/p>",
         "layout": "image_first",
-        "enable_blob": true,
-        "activate_dynamic_color": false,
-        "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#e3fae1",
-        "padding_top": "pt-0",
-        "padding_bottom": "pb-16"
-      }
-    },
-    "59f57207-7352-4b20-8997-6150043274fb": {
-      "type": "rich-text",
-      "blocks": {
-        "template--16684094587135__59f57207-7352-4b20-8997-6150043274fb-1677450967a693f042-0": {
-          "type": "heading",
-          "settings": {
-            "heading": "Comment Accrocher Un Tableau ?",
-            "markup": "h2",
-            "heading_size": "text-3xl"
-          }
-        }
-      },
-      "block_order": [
-        "template--16684094587135__59f57207-7352-4b20-8997-6150043274fb-1677450967a693f042-0"
-      ],
-      "settings": {
-        "content_alignment": "text-center",
-        "padding_top": "pt-0",
-        "padding_bottom": "pb-0"
-      }
-    },
-    "9a82c12f-f7fe-411b-846b-80ad0e58b58f": {
-      "type": "image-with-text",
-      "settings": {
-        "image": "shopify:\/\/shop_images\/Comment-Accrocher-Un-Tableau-deco-mur.jpg",
-        "title": "",
-        "description": "<p>Vous avez enfin trouvé le tableau parfait pour votre décoration murale, mais vous ne savez pas comment l'accrocher ? <\/p><p>Pas de panique, notre blog est là pour vous aider ! Dans cet article, nous vous donnons des astuces et des conseils pratiques pour accrocher votre tableau en toute sécurité et de manière esthétique. Suivez nos étapes simples et vous pourrez suspendre votre œuvre d'art en un rien de temps. <\/p><p><strong>Découvrez dès maintenant notre guide complet<\/strong> <a href=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/accrocher-un-tableau-en-toute-securite-nos-solutions-et-astuces-pratiques\" target=\"_blank\" title=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/accrocher-un-tableau-en-toute-securite-nos-solutions-et-astuces-pratiques\">pour accrocher votre tableau comme un pro<\/a><\/p>",
-        "layout": "text_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
         "dynamic_primary_color": "#111111",
@@ -229,38 +157,10 @@
     },
     "a7d1451c-e6ce-43d5-a98b-f5727aec67e6": {
       "type": "rich-text",
-      "blocks": {
-        "template--16684094587135__a7d1451c-e6ce-43d5-a98b-f5727aec67e6-167861931592fdd33d-0": {
-          "type": "heading",
-          "settings": {
-            "heading": "Conseils pour éclairer un tableau décoratif comme un pro",
-            "markup": "h2",
-            "heading_size": "text-3xl"
-          }
-        }
-      },
-      "block_order": [
-        "template--16684094587135__a7d1451c-e6ce-43d5-a98b-f5727aec67e6-167861931592fdd33d-0"
-      ],
       "settings": {
         "content_alignment": "text-center",
         "padding_top": "pt-0",
         "padding_bottom": "pb-0"
-      }
-    },
-    "16005790-41fe-4d8e-9c68-622a054db9a4": {
-      "type": "image-with-text",
-      "settings": {
-        "image": "shopify:\/\/shop_images\/applique-murale-pour-tableaujpg.jpg",
-        "title": "",
-        "description": "<p>Si vous êtes passionné d'art, vous savez que l'éclairage joue un rôle crucial dans la mise en valeur d'un tableau.<\/p><p>Un bon éclairage peut révéler les couleurs, les détails et les textures d'une œuvre d'art, alors qu'un mauvais éclairage ou un éclairage trop fort peut entraîner une décoloration ou une modification des pigmentations tout en fragilisant votre tableau décoratif. <\/p><p>Alors, êtes-vous prêt à donner vie à votre art ? Lisez la suite pour en savoir plus ! <a href=\"\/blogs\/tableau-cuisine\/mettez-votre-art-en-lumiere-conseils-pour-eclairer-un-tableau-decoratif-comme-un-pro\" title=\"Mettez votre art en lumière : Conseils pour éclairer un tableau décoratif comme un pro\">Mettez votre art en lumière !<\/a><\/p>",
-        "layout": "image_first",
-        "enable_blob": true,
-        "activate_dynamic_color": false,
-        "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#e3fae1",
-        "padding_top": "pt-0",
-        "padding_bottom": "pb-16"
       }
     },
     "8babb80d-11ea-47b3-9fd7-4547747a9d48": {
@@ -335,14 +235,9 @@
     "df039cca-e85c-4e48-87c9-1ed5d5acc453",
     "3a12fc94-07a1-405a-b0df-fa6775a6a822",
     "ec782ce3-8f63-4911-9804-8f480f2d5b52",
-    "570c672b-73bb-4931-9a58-7d6de5b8c87e",
-    "993b4bd8-65af-47ef-a665-a0dad63c9668",
     "9db3f75f-5dc3-4466-91ce-6b35f2e2e3d3",
     "bd8905d9-2e3f-417a-bd29-62ee386a63c9",
-    "59f57207-7352-4b20-8997-6150043274fb",
-    "9a82c12f-f7fe-411b-846b-80ad0e58b58f",
     "a7d1451c-e6ce-43d5-a98b-f5727aec67e6",
-    "16005790-41fe-4d8e-9c68-622a054db9a4",
     "8babb80d-11ea-47b3-9fd7-4547747a9d48",
     "11ed1855-d812-4ccc-8f80-65a14ff1c6bd"
   ]

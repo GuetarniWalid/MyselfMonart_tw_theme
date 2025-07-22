@@ -11,7 +11,7 @@
         "show_date": true
       }
     },
-    "sibling_blog_links_DPxRV8": {
+    "sibling_blog_links_CNP7PR": {
       "type": "sibling-blog-links",
       "name": "t:sections.sibling-blog-links.name",
       "settings": {
@@ -23,6 +23,6 @@
   "order": [
     "ce4595e5-01e5-472d-ac56-563a87ef335c",
     "main",
-    "sibling_blog_links_DPxRV8"
+    "sibling_blog_links_CNP7PR"
   ]
 }
