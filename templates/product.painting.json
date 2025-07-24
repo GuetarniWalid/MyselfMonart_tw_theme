@@ -36,7 +36,7 @@
             "text": "JE COMMANDE",
             "is_dynamic_variant": false,
             "main_color": "#fede65",
-            "show_promotion": true,
+            "show_promotion": false,
             "promotion_discount": 15,
             "promotion_discount_unit": "%",
             "promotion_reason": "Soldes d'été ☀️",

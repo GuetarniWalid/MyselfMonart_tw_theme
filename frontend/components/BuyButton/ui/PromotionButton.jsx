@@ -38,7 +38,7 @@ const Button = forwardRef(({ drawerOpen, handleClick, idle, message }, ref) => {
 
   return (
     <div className="flex-none font-bold">
-      <div className="pr-3 lg:mb-5">
+      <div className="pr-3 md:mb-5">
         <button
           id="react-buy-button"
           onClick={handleClick}

@@ -283,6 +283,9 @@
         "other": "{{ count }} articles",
         "many": "{{ count }} articles"
       },
+      "country_selector": {
+        "world": "Monde"
+      },
       "logo": {
         "title": "Logo géométrique inspiré de Picasso",
         "desc": "Logo représentant une tête rouge et jaune en formes géométriques, évoquant le style avant-gardiste de Picasso."

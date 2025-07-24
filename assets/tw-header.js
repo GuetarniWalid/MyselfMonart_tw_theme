@@ -629,3 +629,31 @@ class PredictiveSearch extends HTMLElement {
   };
 }
 customElements.define('predictive-search', PredictiveSearch);
+
+class LocalizationFlag extends HTMLElement {
+  connectedCallback() {
+    const link = this.querySelector('a');
+    if (!link) return;
+
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      if (window.location.pathname.includes('search')) {
+        const currentSearch = window.location.search;
+        const url = new URL(link.href, window.location.origin);
+
+        const currentParams = new URLSearchParams(currentSearch);
+        for (const [key, value] of currentParams.entries()) {
+          if (!url.searchParams.has(key)) {
+            url.searchParams.set(key, value);
+          }
+        }
+
+        window.location.href = url.toString();
+      } else {
+        window.location.href = link.href;
+      }
+    });
+  }
+}
+customElements.define('localization-flag', LocalizationFlag);

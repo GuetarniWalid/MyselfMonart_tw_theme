@@ -133,9 +133,7 @@
                         tabindex="0"
                         role="button"
                         aria-label="{{ "sections.header.back" | t }}">
-                        <span class="mr-2">{% render 'tw-icon-arrow'
-, direction: "left"
-, width: "40" %}</span>
+                        <span class="mr-2">{% render 'tw-icon-arrow', direction: "left", width: "40" %}</span>
                         {{ block.settings.title | escape }}
                       </h3>
                       <ul class="gap-y-3">
@@ -182,9 +180,7 @@
                                   tabindex="0"
                                   role="button"
                                   aria-label="{{ "sections.header.back" | t }}">
-                                  <span class="mr-2">{% render 'tw-icon-arrow'
-, direction: "left"
-, width: "40" %}</span>
+                                  <span class="mr-2">{% render 'tw-icon-arrow', direction: "left", width: "40" %}</span>
                                   {{ block.settings[title_id] | escape }}
                                 </h3>
                                 <ul class="gap-y-3">
@@ -221,7 +217,7 @@
         </nav>
       </details>
       {% comment %} end on mobile {% endcomment %}
-      <h2 class="header__heading cursor-pointer inline-flex items-center obfuscate translate-x-10 md:translate-x-0 text-2xl sm:text-3xl" data-url64="{{ routes.root_url | base64_encode }}">
+      <h2 class="cursor-pointer inline-flex items-center obfuscate text-2xl sm:text-3xl" data-url64="{{ routes.root_url | base64_encode }}">
         {% if section.settings.logo_svg != blank %}
           {{ section.settings.logo_svg }}
         {% else %}
@@ -230,9 +226,241 @@
         <span class="ml-3 hidden xs:inline">MyselfMonArt</span>
       </h2>
 
-      <span class="obfuscate ml-6 cursor-pointer" data-url64="{{ pages["mes-j-aimes"].url | base64_encode }}">
-        <span class="hidden md:inline-block">{{ "snippet.tw_sticky_header.my_likes" | t }} &nbsp;{% render 'tw-icon-heart' %}</span>
-      </span>
+      <div class="mobile:absolute right-4 top-1/2 mobile:-translate-y-1/2 md:flex items-center z-10" test="{{ request.path }}">
+        <details class="relative">
+          <summary class="flex items-center justify-center px-3 text-secondary cursor-pointer w-16 xs:w-20 h-16 xs:h-20">
+            {% if localization.country.currency.iso_code == 'CAD' and localization.language.iso_code == 'en' %}
+              {% render 'icon-flag-ca' %}
+            {% elsif localization.country.currency.iso_code == 'CHF' and localization.language.iso_code == 'fr' %}
+              {% render 'icon-flag-ch' %}
+            {% elsif localization.country.currency.iso_code == 'DKK' and localization.language.iso_code == 'en' %}
+              {% render 'icon-flag-dk' %}
+            {% elsif localization.country.currency.iso_code == 'EUR' and localization.language.iso_code == 'fr' %}
+              {% render 'icon-flag-fr' %}
+            {% elsif localization.country.currency.iso_code == 'GBP' and localization.language.iso_code == 'en' %}
+              {% render 'icon-flag-uk' %}
+            {% elsif localization.country.currency.iso_code == 'USD' and localization.language.iso_code == 'en' %}
+              {% render 'icon-flag-us' %}
+            {% else %}
+              {% render 'icon-flag-world' %}
+            {% endif %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="32" viewBox="0 0 24 24" class="inline-block text-main"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 10l4 4l4-4"/></svg>
+          </summary>
+          <ul class="absolute right-0 top-full z-50 bg-white rounded shadow-lg">
+            {% liquid
+              if template.name == 'product'
+                assign resource = product
+              elsif template.name == 'collection'
+                assign resource = collection
+              elsif template.name == 'page'
+                assign resource = page
+              else
+                assign resource = nil
+              endif
+            %}
+            {%- for language in localization.available_languages -%}
+              {%- for currency in shop.enabled_currencies -%}
+                {% if currency.iso_code == 'CAD' and language.iso_code == 'en' %}
+                  <li tabindex="-1">
+                    <localization-flag>
+                      <a
+                        class="inline-flex items-center hover:bg-main-5 w-full py-2 mb-1 px-3 whitespace-nowrap {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'CAD' %} bg-main-5 cursor-not-allowed{% endif %}"
+                        {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'CAD' %}
+                          role="link"
+                          aria-disabled="true"
+                        {% else %}
+                          {% liquid
+                            if template.name == 'index'
+                              assign url = routes.root_url | remove_last: 'en' | append: 'en'
+                            elsif template.name == 'search'
+                              assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/search'
+                            elsif template.name == 'cart'
+                              assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/cart'
+                            else
+                              assign url = resource.metafields.translation.handle.value[language.iso_code]
+                            endif
+                          %}
+                          href="{{ url }}?currency={{ currency.iso_code }}"
+                        {% endif %}
+                        hreflang="{{ language.iso_code }}"
+                        lang="{{ language.iso_code }}"
+                        {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'CAD' %}
+                          aria-current="true"
+                        {% endif %}
+                        data-value="{{ language.iso_code }}">
+                        {% render 'icon-flag-ca' %}&nbsp;Canada
+                      </a>
+                    </localization-flag>
+                  </li>
+                {% elsif currency.iso_code == 'CHF' and language.iso_code == 'fr' %}
+                  <li tabindex="-1">
+                    <localization-flag>
+                      <a
+                        class="inline-flex items-center hover:bg-main-5 w-full py-2 mb-1 px-3 whitespace-nowrap {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'CHF' %} bg-main-5 cursor-not-allowed{% endif %}"
+                        {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'CHF' %}
+                        role="link"
+                        aria-disabled="true"
+                        {% else %}
+                          {% liquid
+                            if template.name == 'index'
+                              assign url = routes.root_url | remove_last: 'en'
+                            elsif template.name == 'search'
+                              assign url = routes.root_url | remove_last: 'en' | append: 'search'
+                            elsif template.name == 'cart'
+                              assign url = routes.root_url | remove_last: 'en' | append: 'cart'
+                            else
+                              assign url = resource.metafields.translation.handle.value[language.iso_code]
+                            endif
+                          %}
+                          href="{{ url }}?currency={{ currency.iso_code }}"
+                        {% endif %}
+                        hreflang="{{ language.iso_code }}"
+                        lang="{{ language.iso_code }}"
+                        {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'CHF' %}
+                        aria-current="true"
+                        {% endif %}
+                        data-value="{{ language.iso_code }}">
+                        {% render 'icon-flag-ch' %}&nbsp;&nbsp;Suisse
+                      </a>
+                    </localization-flag>
+                  </li>
+                {% elsif currency.iso_code == 'DKK' and language.iso_code == 'en' %}
+                  <li tabindex="-1">
+                    <localization-flag>
+                      <a
+                        class="inline-flex items-center hover:bg-main-5 w-full py-2 mb-1 px-3 whitespace-nowrap {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'DDK' %} bg-main-5 cursor-not-allowed{% endif %}"
+                        {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'DDK' %}
+                        role="link"
+                        aria-disabled="true"
+                        {% else %}
+                        {% liquid
+                            if template.name == 'index'
+                              assign url = routes.root_url | remove_last: 'en' | append: 'en'
+                            elsif template.name == 'search'
+                              assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/search'
+                            elsif template.name == 'cart'
+                              assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/cart'
+                            else
+                              assign url = resource.metafields.translation.handle.value[language.iso_code]
+                            endif
+                          %}
+                          href="{{ url }}?currency={{ currency.iso_code }}"
+                        {% endif %}
+                        hreflang="{{ language.iso_code }}"
+                        lang="{{ language.iso_code }}"
+                        {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'DDK' %}
+                        aria-current="true"
+                        {% endif %}
+                        data-value="{{ language.iso_code }}">
+                        {% render 'icon-flag-dk' %}&nbsp;&nbsp;Danmark
+                      </a>
+                    </localization-flag>
+                  </li>
+                {% elsif currency.iso_code == 'EUR' and language.iso_code == 'fr' %}
+                  <li tabindex="-1">
+                    <localization-flag>
+                      <a
+                        class="inline-flex items-center hover:bg-main-5 w-full py-2 mb-1 px-3 whitespace-nowrap {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'EUR' %} bg-main-5 cursor-not-allowed{% endif %}"
+                        {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'EUR' %}
+                        role="link"
+                        aria-disabled="true"
+                        {% else %}
+                        {% liquid
+                            if template.name == 'index'
+                              assign url = routes.root_url | remove_last: 'en'
+                            elsif template.name == 'search'
+                              assign url = routes.root_url | remove_last: 'en' | append: 'search'
+                            elsif template.name == 'cart'
+                              assign url = routes.root_url | remove_last: 'en' | append: 'cart'
+                            else
+                              assign url = resource.metafields.translation.handle.value[language.iso_code]
+                            endif
+                          %}
+                          href="{{ url }}?currency={{ currency.iso_code }}"
+                        {% endif %}
+                        hreflang="{{ language.iso_code }}"
+                        lang="{{ language.iso_code }}"
+                        {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'EUR' %}
+                        aria-current="true"
+                        {% endif %}
+                        data-value="{{ language.iso_code }}">
+                        {% render 'icon-flag-fr' %}&nbsp;&nbsp;France
+                      </a>
+                    </localization-flag>
+                  </li>
+                {% elsif currency.iso_code == 'GBP' and language.iso_code == 'en' %}
+                  <li tabindex="-1">
+                    <localization-flag>
+                      <a
+                        class="inline-flex items-center hover:bg-main-5 w-full py-2 mb-1 px-3 whitespace-nowrap {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'GBP' %} bg-main-5 cursor-not-allowed{% endif %}"
+                        {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'GBP' %}
+                        role="link"
+                        aria-disabled="true"
+                        {% else %}
+                        {% liquid
+                            if template.name == 'index'
+                              assign url = routes.root_url | remove_last: 'en' | append: 'en'
+                            elsif template.name == 'search'
+                              assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/search'
+                            elsif template.name == 'cart'
+                              assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/cart'
+                            else
+                              assign url = resource.metafields.translation.handle.value[language.iso_code]
+                            endif
+                          %}
+                          href="{{ url }}?currency={{ currency.iso_code }}"
+                        {% endif %}
+                        hreflang="{{ language.iso_code }}"
+                        lang="{{ language.iso_code }}"
+                        {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'GBP' %}
+                        aria-current="true"
+                        {% endif %}
+                        data-value="{{ language.iso_code }}">
+                        {% render 'icon-flag-uk' %}&nbsp;&nbsp;UK
+                      </a>
+                    </localization-flag>
+                  </li>
+                {% elsif currency.iso_code == 'USD' and language.iso_code == 'en' %}
+                  <li tabindex="-1">
+                    <localization-flag>
+                      <a
+                        class="inline-flex items-center last-focusable hover:bg-main-5 w-full py-2 mb-1 px-3 whitespace-nowrap {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'USD' %} bg-main-5 cursor-not-allowed{% endif %}"
+                        {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'USD' %}
+                          role="link"
+                          aria-disabled="true"
+                        {% else %}
+                          {% liquid
+                            if template.name == 'index'
+                              assign url = routes.root_url | remove_last: 'en' | append: 'en'
+                            elsif template.name == 'search'
+                              assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/search'
+                            elsif template.name == 'cart'
+                              assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/cart'
+                            else
+                              assign url = resource.metafields.translation.handle.value[language.iso_code]
+                            endif
+                          %}
+                          href="{{ url }}?currency={{ currency.iso_code }}"
+                        {% endif %}
+                        hreflang="{{ language.iso_code }}"
+                        lang="{{ language.iso_code }}"
+                        {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'USD' %}
+                          aria-current="true"
+                        {% endif %}
+                        data-value="{{ language.iso_code }}">
+                        {% render 'icon-flag-us' %}&nbsp;&nbsp;USA
+                      </a>
+                    </localization-flag>
+                  </li>
+                {% endif %}
+              {%- endfor -%}
+            {%- endfor -%}
+          </ul>
+        </details>
+        <span class="obfuscate ml-6 cursor-pointer" data-url64="{{ pages["mes-j-aimes"].url | base64_encode }}">
+          <span class="hidden md:inline-block">{{ "snippet.tw_sticky_header.my_likes" | t }} &nbsp;{% render 'tw-icon-heart' %}</span>
+        </span>
+      </div>
     </div>
     {% comment %} start on desktop {% endcomment %}
     <nav
@@ -418,7 +646,7 @@
   {% if template.name != 'cart' %}
     <button
       id="cart-button"
-      class="absolute right-[5%] bottom-0 translate-y-1/2 bg-secondary border border-solid border-main w-16 h-[45px] xs:w-20 xs:h-[50px] rounded-[50px] flex justify-center items-center transition-all duration-75"
+      class="absolute right-4 bottom-0 translate-y-1/2 bg-secondary border border-solid border-main w-16 h-[45px] xs:w-20 xs:h-[50px] rounded-[50px] flex justify-center items-center transition-all duration-75"
       role="button"
       aria-label="{{ "snippet.tw_sticky_header.open_cart" | t }}">
       {% render 'tw-icon-bag' %}

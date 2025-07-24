@@ -29,7 +29,7 @@
                     class="absolute inset-0">
                       <img
                         src="{{ image | image_url: width: 150 }}"
-                        class="skeleton w-full object-contain rounded-lg"
+                        class="skeleton w-full h-full object-contain rounded-lg"
                         alt="{% if item.product.metafields.meta_object.media.value.alts.value[1] %}{{ item.product.metafields.meta_object.media.value.alts.value[1] | escape }}{% else %}{{ item.product.images[1].alt | escape }}{% endif %}"
                         loading="lazy"
                         width="150"

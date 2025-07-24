@@ -40,7 +40,7 @@ const Button = forwardRef(
           onKeyDown={handleKeyDown}
           ref={ref}
           tabIndex={drawerOpen ? 0 : -1}
-          className="cart-button py-0 flex items-center justify-between group glass-anim lg:mb-5"
+          className="cart-button py-0 flex items-center justify-between group glass-anim md:mb-5"
           disabled={idle}
         >
           {idle ? (

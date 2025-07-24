@@ -283,6 +283,9 @@
         "other": "{{ count }} items",
         "many": "{{ count }} items"
       },
+      "country_selector": {
+        "world": "World"
+      },
       "logo": {
         "title": "Geometric logo inspired by Picasso",
         "desc": "Logo representing a red and yellow head in geometric shapes, evoking the avant-garde style of Picasso."
