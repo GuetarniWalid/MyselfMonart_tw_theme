@@ -9,10 +9,11 @@ const initialStore = {
   border: window.paintingOptions.border[0],
   shine: window.paintingOptions.shine[0],
   fixation: window.paintingOptions.fixation[0],
-  frameCanvas: window.paintingOptions.frameCanvas[0],
-  framePoster: window.paintingOptions.framePoster[0],
-  defaultFixation: window.paintingOptions.fixation[0],
-  defaultOption3: window.variants[0].option3,
+  frameCanvas: getDefaultOption(window.paintingOptions.frameCanvas),
+  framePoster: getDefaultOption(window.paintingOptions.framePoster),
+  frameHandmade: getDefaultOption(window.paintingOptions.frameHandmade),
+  defaultFixation: getDefaultOption(window.paintingOptions.fixation),
+  defaultOption3: getDefaultOption(window.variants).option3,
   upsells: [],
   items: [{ variantId: window.variants[0].id, properties: {} }],
 };
@@ -56,6 +57,13 @@ function onAfterUpdate({ store }) {
   }
 }
 
+function getDefaultOption(options) {
+  const lowestPriceOption = options.reduce((lowest, current) => {
+    return current.price < lowest.price ? current : lowest;
+  }, options[0]);
+  return lowestPriceOption;
+}
+
 function getSizeAndMatterNames(store) {
   return {
     size: store.size.name,
@@ -70,7 +78,7 @@ function getOption3(store) {
     case 'matterAluminium':
       return `${store.shine.name}`;
     default:
-      return store.defaultOption3;
+      return 'Null';
   }
 }
 
@@ -113,6 +121,15 @@ function getUpsells(store) {
           price: store.frameCanvas.price,
           name: store.frameCanvas.name,
           type: store.frameCanvas.type,
+        },
+      ].filter((u) => Boolean(u.variantId));
+    case 'matterHandmade':
+      return [
+        {
+          variantId: store.frameHandmade.variantId,
+          price: store.frameHandmade.price,
+          name: store.frameHandmade.name,
+          type: store.frameHandmade.type,
         },
       ].filter((u) => Boolean(u.variantId));
     default:

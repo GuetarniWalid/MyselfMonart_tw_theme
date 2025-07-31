@@ -50,7 +50,7 @@ export default function ImageJPGDrawer({ option }) {
         alt={option.image.alt}
         width="500"
         height="500"
-        className="inline-block w-full object-contain"
+        className="inline-block w-full md:h-full object-contain"
         loading="lazy"
         srcSet={`
       ${option.image.src}&width=375 375w,

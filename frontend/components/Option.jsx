@@ -62,6 +62,15 @@ export default function Option({
     return getVariantBySizeAndMatter(sizeSelected.name, option.name);
   }
 
+  function getReason() {
+    if (option.type === 'size') return window.react.errorMessage.poster;
+    return formatSizeName(sizeSelected.name);
+  }
+
+  function formatSizeName(sizeName) {
+    return sizeName.replace(/\s/g, '');
+  }
+
   const isSelected = option.key === optionSelected.key;
   const isExisting = useMemo(() => {
     if (option.type === 'matter') return true;
@@ -92,7 +101,7 @@ export default function Option({
               : 'bg-gray-200 rounded-lg cursor-not-allowed text-gray-600'
             : 'cursor-pointer hover:bg-white/30 md:hover:bg-main-5 hover:backdrop-blur-xl md:hover:backdrop-blur-none'
         }
-      flex justify-between py-3 px-5 mb-2 rounded-lg`}
+      flex justify-between items-center py-3 px-5 mb-2 rounded-lg`}
       role="option"
       aria-selected={isSelected}
       onClick={isDisabled ? undefined : handleClick}
@@ -102,8 +111,8 @@ export default function Option({
       disabled={isDisabled}
     >
       <span className={`${isDisabled ? 'line-through' : ''} pointer-events-none`}>{option.name}</span>
-      <span className="pointer-events-none">
-        <OptionPrice option={option} isDisabled={isDisabled}/>
+      <span className="pointer-events-none max-w-20">
+        <OptionPrice option={option} isDisabled={isDisabled} reason={getReason()} />
       </span>
     </li>
   );

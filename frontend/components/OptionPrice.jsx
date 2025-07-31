@@ -1,7 +1,7 @@
 import { useVariantSelected } from '../store/variantSelected';
 import { getVariantBySizeAndMatter } from '../utils/functions';
 
-export default function OptionPrice({ option, isDisabled }) {
+export default function OptionPrice({ option, isDisabled, reason }) {
   const [sizeSelected] = useVariantSelected.size();
 
   let price;
@@ -29,20 +29,21 @@ export default function OptionPrice({ option, isDisabled }) {
   }
 
   function formatPrice(price) {
-    if (isDisabled || price === null) return window.react.errorMessage.notAllowedForThisSize;
+    if (isDisabled || price === null) return window.react.errorMessage.notAvailableFor + reason;
     return price;
   }
 
   function showPlus() {
     if (!option.price) return false;
     if (option.type === 'size') return false;
+    if (isDisabled || price === null) return false;
     return true;
   }
 
   return (
-    <>
+    <span className={showPlus() ? 'whitespace-nowrap' : ''}>
       {showPlus() && '+ '}
       {formatPrice(price)}
-    </>
+    </span>
   );
 }

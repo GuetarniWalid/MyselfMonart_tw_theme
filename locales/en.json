@@ -227,7 +227,8 @@
       "total": "Total"
     },
     "errorMessage": {
-      "notAllowedForThisSize": "Not available"
+      "notAvailableFor": "Not available for ",
+      "poster": "poster"
     }
   },
   "sections": {

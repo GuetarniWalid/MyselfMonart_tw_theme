@@ -1,5 +1,5 @@
 export default function Klarna({ purchaseAmount }) {
-  const amountFormatted = purchaseAmount * 100;
+  const amountFormatted = Math.round(purchaseAmount * 100);
   const locale = getLocale();
   const toDisplay = shouldDisplayKlarna();
   

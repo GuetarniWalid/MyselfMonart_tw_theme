@@ -83,7 +83,7 @@ export default function Radio({
         </div>
         <div>
           <p className="inline-block bg-main-5 rounded-lg px-4 py-1 whitespace-nowrap my-4">
-            <OptionPrice option={option} />
+            <OptionPrice option={option} reason={sizeSelected.name} />
           </p>
           <InfoButton
             option={option}

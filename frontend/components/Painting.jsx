@@ -33,7 +33,14 @@ export default function Painting() {
       ),
     [],
   );
-
+  const framesHandmade = useMemo(
+    () =>
+      getOptionsByType('frameHandmade').filter((option) =>
+        !option.key.includes('Null'),
+      ),
+    [],
+  );
+  
   const otherOptions = useMemo(
     () => [
       ...fixations,
@@ -41,8 +48,9 @@ export default function Painting() {
       ...borders,
       ...framesCanvas,
       ...framesPoster,
+      ...framesHandmade,
     ],
-    [fixations, thicknesses, borders, framesCanvas, framesPoster],
+    [fixations, thicknesses, borders, framesCanvas, framesPoster, framesHandmade],
   );
 
   const options = useMemo(

@@ -101,10 +101,10 @@ export default function Select({
           <span className="absolute inset-0 rounded-lg bg-[#848484]/30 backdrop-blur-xl -z-10 md:hidden">
             {' '}
           </span>
-          <span className="pointer-events-none">{optionSelected.name}</span>
+          <span className="inline-block max-w-48 pointer-events-none truncate overflow-hidden text-ellipsis whitespace-nowrap">{optionSelected.name}</span>
           <div className="flex items-center gap-2 pointer-events-none">
             <span className="rounded-lg px-2 py-1 whitespace-nowrap border-1 border-main text-sm">
-              <OptionPrice option={optionSelected} />
+              <OptionPrice option={optionSelected} reason={window.react.errorMessage.poster} />
             </span>
             <div className="w-6 h-6 flex justify-center items-center">
               <svg
