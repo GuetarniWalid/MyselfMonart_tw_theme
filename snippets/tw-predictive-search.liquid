@@ -4,7 +4,7 @@
 {% endcomment %}
 
 <predictive-search
-  class="bg-secondary flex justify-center items-center transition-all duration-100 px-5 absolute inset-0 {% if in_header %}-translate-y-full{% else %}z-10{% endif %}"
+  class="bg-secondary flex justify-center items-center transition-all duration-100 px-5 absolute inset-0 {% if in_header %}-translate-y-full{% endif %} z-10"
   data-loading-text="{{ 'snippet.tw_predictive_search.loading' | t }}"
   {% if in_header %}
   aria-hidden="true"
