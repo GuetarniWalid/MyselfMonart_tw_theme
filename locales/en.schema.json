@@ -1461,22 +1461,6 @@
               "label": "Default Tapestry Height",
               "info": "In cm"
             },
-            "tapestry_min_width": {
-              "label": "Minimum Tapestry Width",
-              "info": "In cm"
-            },
-            "tapestry_max_width": {
-              "label": "Maximum Tapestry Width",
-              "info": "In cm"
-            },
-            "tapestry_min_height": {
-              "label": "Minimum Tapestry Height",
-              "info": "In cm"
-            },
-            "tapestry_max_height": {
-              "label": "Maximum Tapestry Height",
-              "info": "In cm"
-            },
             "tapestry_strips_width": {
               "label": "Tapestry Strips Width",
               "info": "In cm"

@@ -265,11 +265,10 @@ class MainProductBlocks extends CollapsibleTab {
 
   onBuyButtonClick = async (e) => {
     const button = e.target;
-    const customFetch = this.customFetch(button).bind(this);
     try {
       this.displayLoader(button);
       const productProperties = this.getproductProperties();
-      const json = await customFetch(button, productProperties);
+      const json = await this.buyFetch(button, productProperties);
       const headerId = this.getHeaderId(button);
       this.renderNewSections(json, headerId);
       setTimeout(() => {
@@ -283,15 +282,7 @@ class MainProductBlocks extends CollapsibleTab {
     }
   };
 
-  customFetch(button) {
-    const template = button.dataset.template;
-    if (template === 'tapestry') {
-      return this.tapestryBuyFetch;
-    }
-    return this.defaultBuyFetch;
-  }
-
-  async defaultBuyFetch(button, productProperties) {
+  async buyFetch(button, productProperties) {
     const variantId = button.dataset.variantId;
     const headerId = this.getHeaderId(button);
     const response = await fetch(
@@ -318,43 +309,6 @@ class MainProductBlocks extends CollapsibleTab {
     }
     return 'tw-header-painting';
   };
-
-  async tapestryBuyFetch(button, productProperties) {
-    const productId = button.dataset.productId;
-    const variant = await this.updateProductTapestry(
-      productId,
-      productProperties,
-    );
-    button.dataset.variantId = variant.id;
-    return await this.defaultBuyFetch(button, productProperties);
-  }
-
-  async updateProductTapestry(productId, productProperties) {
-    const width = document.getElementById('tapestry-width').value;
-    const height = document.getElementById('tapestry-height').value;
-    const title = `${width}cm x ${height}cm`;
-    const product = {
-      type: 'tapestry',
-      productId,
-      variant: {
-        title,
-      },
-      cm2: productProperties['tapestry-cm2'],
-    };
-
-    const mode = 'dev';
-    const serverUrl =
-      mode === 'dev'
-        ? 'http://localhost:3333'
-        : 'https://backend.myselfmonart.com';
-    const response = await fetch(serverUrl + '/api/product/update/tapestry', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(product),
-    });
-    const json = await response.json();
-    return json;
-  }
 
   renderNewSections({ items, sections }, headerId) {
     const bubble = document.getElementById('bubble-nb-product');

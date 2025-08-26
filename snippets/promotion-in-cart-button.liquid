@@ -7,7 +7,7 @@
                 {% render 'promotion-in-cart-button' %} 
 {% endcomment %}
 
-<span class="promotion-in-cart-button inline-flex w-full items-center justify-between gap-2" data-promotion-constant="{% if block.settings.promotion_discount > 0 %}true{% else %}false{% endif %}" data-discount="{{ block.settings.promotion_discount }}" data-unit="{{ block.settings.promotion_discount_unit }}">
+<span class="promotion-in-cart-button inline-flex w-full items-center justify-between gap-2 pointer-events-none" data-promotion-constant="{% if block.settings.promotion_discount > 0 %}true{% else %}false{% endif %}" data-discount="{{ block.settings.promotion_discount }}" data-unit="{{ block.settings.promotion_discount_unit }}">
   <span class="relative inline-block whitespace-nowrap">
     <span class="cart-button-text inline-block pointer-events-none py-4 md:py-5 whitespace-nowrap {% if block.settings.promotion_reason != blank %}buy-button-top-anim{% endif %} transition-transform duration-300 ease-in-out">
       {% if block.settings.is_dynamic_variant %}

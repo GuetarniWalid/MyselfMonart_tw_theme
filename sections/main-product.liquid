@@ -1,4 +1,7 @@
 <script src="{{ 'main-product.js' | asset_url }}" defer="defer"></script>
+<script>
+  window.variants = {{ product.variants | json }};
+</script>
  
 {% liquid
   assign first_3d_model = product.media | where: "media_type", "model" | first | default: product.metafields.files["3d_file_name"].value
@@ -240,58 +243,48 @@
                 >
               </template>
             {% endif %}
+            {% liquid
+              assign  unit = product.options_with_values.first.values.first |  split: ' ' |  last
+            %}
             <div class="my-5 product-properties">
-              <label class="block text-xl mt-5 ml-1" for="tapestry-width">Largeur :</label>
+              <label class="block text-xl mt-5 ml-1" for="tapestry-width">{{ product.options.first }} :</label>
               <div class="relative flex mt-1">
                 <tapestry-select data-money-symbol="{{ cart.currency.symbol }}" data-orientation="width" data-tapestry-strips-width="{{ block.settings.tapestry_strips_width }}" data-texture-img-src="{{ texture_img }}">
-                  <select 
-                    class="min-w-32 rounded-l-lg p-3"
+                  <select
+                    class="min-w-32 rounded-l-lg p-3 outline-none"
                     type="number"
                     id="tapestry-width"
                     name="tapestry-width"
                   >
-                    {% for i in (block.settings.tapestry_min_width..block.settings.tapestry_max_width) %}
-                      {% liquid
-                        assign modulo_result = i | modulo: 10
-                        if modulo_result != 0
-                          continue
-                        endif
-                      %}
-                      <option value="{{ i }}" {% if i == tapestry_width %}selected{% endif %}>{{ i }}</option>
+                    {% for width in product.options_with_values.first.values %}
+                      <option value="{{ width }}" {% if forloop.first %}selected{% endif %}>{{ width |  split: ' ' |  first }}</option>
                     {% endfor %}
                   </select>
                 </tapestry-select>
                 <div class="pl-5 bg-white rounded-r-lg text-gray-600 text-lg flex justify-center items-center">
-                  <span class="px-5 border-l-1 border-gray-300 ">cm</span>
+                  <span class="px-5 border-l-1 border-gray-300 ">{{ unit }}</span>
                 </div>
               </div>
-              <label class="block text-xl mt-5 ml-1" for="tapestry-height">Hauteur :</label>
+              <label class="block text-xl mt-5 ml-1" for="tapestry-height">{{ product.options[1] }} :</label>
               <div class="relative flex mt-1 mb-6">
                 <tapestry-select data-money-symbol="{{ cart.currency.symbol }}" data-orientation="height" data-tapestry-strips-width="{{ block.settings.tapestry_strips_width }}">
                   <select 
-                    class="min-w-32 rounded-l-lg p-3"
+                    class="min-w-32 rounded-l-lg p-3 outline-none"
                     type="number"
                     id="tapestry-height"
                     name="tapestry-height"
                   >
-                    {% for i in (block.settings.tapestry_min_height..block.settings.tapestry_max_height) %}
-                      {% liquid
-                        assign modulo_result = i | modulo: 10
-                        if modulo_result != 0
-                          continue
-                        endif
-                      %}
-                      <option value="{{ i }}" {% if i == block.settings.tapestry_default_height %}selected{% endif %}>{{ i }}</option>
+                    {% for height in product.options_with_values[1].values %}
+                      <option value="{{ height }}" {% if forloop.first %}selected{% endif %}>{{ height |  split: ' ' |  first }}</option>
                     {% endfor %}
                   </select>  
                 </tapestry-select>
                 <div class="pl-5 bg-white rounded-r-lg text-gray-600 text-lg flex justify-center items-center">
-                  <span class="px-5 border-l-1 border-gray-300 ">cm</span>
+                  <span class="px-5 border-l-1 border-gray-300 ">{{ unit }}</span>
                 </div>
                 <input type="hidden" name="tapestry-ratio">
                 <input type="hidden" name="tapestry-x-position">
                 <input type="hidden" name="tapestry-y-position">
-                <input type="hidden" name="tapestry-cm2">
               </div>
             </div>
           {%- when 'trustpilot_review' -%}
@@ -849,34 +842,6 @@
         {
           "type": "header",
           "content": "t:sections.main-product.blocks.tapestry_options.headings.limitations.content"
-        },
-        {
-          "type": "number",
-          "id": "tapestry_min_width",
-          "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_min_width.label",
-          "info": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_min_width.info",
-          "default": 50
-        },
-        {
-          "type": "number",
-          "id": "tapestry_max_width",
-          "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_max_width.label",
-          "info": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_max_width.info",
-          "default": 300
-        },
-        {
-          "type": "number",
-          "id": "tapestry_min_height",
-          "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_min_height.label",
-          "info": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_min_height.info",
-          "default": 50
-        },
-        {
-          "type": "number",
-          "id": "tapestry_max_height",
-          "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_max_height.label",
-          "info": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_max_height.info",
-          "default": 300
         }
       ]
     },

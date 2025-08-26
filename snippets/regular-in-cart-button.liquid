@@ -8,7 +8,7 @@
     {% render 'regular-in-cart-button', product: product %}
 {% endcomment %}
 
-<span class="regular-in-cart-button inline-flex w-full items-center justify-between gap-2">
+<span class="regular-in-cart-button inline-flex w-full items-center justify-between gap-2 pointer-events-none">
     <span class="cart-button-text pointer-events-none py-4 md:py-5 whitespace-nowrap">
         {% if block.settings.is_dynamic_variant %}
             {{ product.selected_or_first_available_variant.title }}

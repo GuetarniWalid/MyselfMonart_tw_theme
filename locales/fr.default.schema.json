@@ -1461,22 +1461,6 @@
               "label": "Hauteur par défaut de la tapisserie",
               "info": "En cm"
             },
-            "tapestry_min_width": {
-              "label": "Largeur minimale de la tapisserie",
-              "info": "En cm"
-            },
-            "tapestry_max_width": {
-              "label": "Largeur maximale de la tapisserie",
-              "info": "En cm"
-            },
-            "tapestry_min_height": {
-              "label": "Hauteur minimale de la tapisserie",
-              "info": "En cm"
-            },
-            "tapestry_max_height": {
-              "label": "Hauteur maximale de la tapisserie",
-              "info": "En cm"
-            },
             "tapestry_strips_width": {
               "label": "Largeur des lés de tapisserie",
               "info": "En cm"
