@@ -13,6 +13,7 @@
       "blocks": {
         "collection_bCDL6Y": {
           "type": "collection",
+          "disabled": true,
           "settings": {
             "image": "shopify:\/\/shop_images\/galerie-tableaux-manga-street-art-naruto-luffy-goku.jpg",
             "collection": "tableau-manga-1",
