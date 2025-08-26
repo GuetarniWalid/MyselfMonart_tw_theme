@@ -2,7 +2,7 @@
 <script>
   window.variants = {{ product.variants | json }};
 </script>
- 
+
 {% liquid
   assign first_3d_model = product.media | where: "media_type", "model" | first | default: product.metafields.files["3d_file_name"].value
 
@@ -21,11 +21,14 @@
     else
       assign 3d_model_url = first_3d_model.sources[0].url
       assign 3d_model_poster = first_3d_model.preview_image
-    endif 
+    endif
   endif
 %}
 {% if first_3d_model != blank %}
-  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js" defer></script>
+  <script
+    type="module"
+    src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"
+    defer></script>
 {% endif %}
 
 <a class="px-4 py-2 opacity-0 focus-visible:opacity-100 absolute top-6 left-10 z-10 bg-secondary transition-colors duration-500" href="#ProductInfo-{{ section.id }}">
@@ -46,8 +49,7 @@
           width="550"
           height="auto"
           data-media-id="{{ product.media[1].id }}"
-            id="croppr"
-        >
+          id="croppr">
         {% render 'finger-touch' %}
       </div>
     </div>
@@ -80,11 +82,16 @@
         {% if product.media.size > 1 %}
           <div id="carousel-navigation-controls" class="absolute bg-secondary transition-colors duration-500 rounded-full left-1/2 -translate-x-1/2 bottom-3 border-main border-1 md:hidden flex justify-center items-center h-[47px] overflow-hidden hidden">
             <button class="previous pl-5 pr-3 h-full focus-visible:outline-none focus-visible:bg-main-10 hover:bg-main-10">
-              <div class="rotate-90">{% render 'tw-icon-caret', width: '18' %}</div>
+              <div class="rotate-90">{% render 'tw-icon-caret'
+ 
+, width: '18' %}</div>
             </button>
-            <span class="px-3"><span class="image-counter">1</span>/{{ number_of_media }}</span>
+            <span class="px-3">
+              <span class="image-counter">1</span>/{{ number_of_media }}</span>
             <button class="next pr-5 pl-3 h-full focus-visible:outline-none focus-visible:bg-main-10 hover:bg-main-10">
-              <div class="-rotate-90">{% render 'tw-icon-caret', width: '18' %}</div>
+              <div class="-rotate-90">{% render 'tw-icon-caret'
+ 
+, width: '18' %}</div>
             </button>
           </div>
         {% endif %}
@@ -115,21 +122,36 @@
         </div>
       </div>
 
-      <div class="popup fixed top-0 left-0 w-full h-dvh overflow-auto scrollbar bg-secondary transition-colors duration-500 z-50 hidden p-0 focus:outline-none" role="dialog" aria-modal="false" aria-label="{{ 'sections.main_product.carousel.popup.title' | t }}" tabindex="0">
-        <button class="absolute z-10 top-3 right-3 bg-secondary-50 transition-colors duration-500 rounded-full p-2 focus-visible:outline-main" type="button" aria-label="{{ 'sections.main_product.carousel.popup.close' | t }}" tabindex="-1">
-        {% render 'tw-icon-close', width: '22' %}
+      <div
+        class="popup fixed top-0 left-0 w-full h-dvh overflow-auto scrollbar bg-secondary transition-colors duration-500 z-50 hidden p-0 focus:outline-none"
+        role="dialog"
+        aria-modal="false"
+        aria-label="{{ 'sections.main_product.carousel.popup.title' | t }}"
+        tabindex="0">
+        <button
+          class="absolute z-10 top-3 right-3 bg-secondary-50 transition-colors duration-500 rounded-full p-2 focus-visible:outline-main"
+          type="button"
+          aria-label="{{ 'sections.main_product.carousel.popup.close' | t }}"
+          tabindex="-1">
+          {% render 'tw-icon-close'
+            , width: '22' %}
         </button>
         <template id="main-product-popup">
-        {%- for media in product.media -%}
-          <popup-image>
-            {%- render 'tw-main-product-popup-image', media: media, loop: forloop -%}
-          </popup-image>
-        {%- endfor -%}
+          {%- for media in product.media -%}
+            <popup-image>
+              {%- render 'tw-main-product-popup-image'
+                , media: media
+                , loop: forloop -%}
+            </popup-image>
+          {%- endfor -%}
         </template>
       </div>
     </main-product-carousel>
   {% endif %}
-  <main-product-blocks class="grow" id="ProductInfo-{{ section.id }}" data-layout="{{ template.suffix }}">
+  <main-product-blocks
+    class="grow"
+    id="ProductInfo-{{ section.id }}"
+    data-layout="{{ template.suffix }}">
     <div class="max-w-lg px-4 sm:px-0 mx-auto my-4">
       {%- for block in section.blocks -%}
         {%- case block.type -%}
@@ -140,191 +162,243 @@
           {%- when 'title' -%}
             <h1 class="text-2xl {{ block.settings.margin_bottom }}">{{ product.title | escape }}</h1>
           {%- when 'variant_picker' -%}
-            {% render 'product-variant-picker', product: product, block: block %}
+            {% render 'product-variant-picker'
+              , product: product
+              , block: block %}
           {%- when 'buy' -%}
-            {% style %}
-              :root {
-                --color-action-rgb: {{ block.settings.main_color.red }}, {{ block.settings.main_color.green }}, {{ block.settings.main_color.blue }};
-              }
-            {% endstyle %}
-            <div class="relative mt-10 mb-3 md:mb-8">
-              <button class="buy-button cart-button glass-anim" data-variant-id="{{ product.first_available_variant.id }}" data-template="{{ template.suffix }}" data-product-id="{{ product.id }}" data-is-dynamic-variant="{{ block.settings.is_dynamic_variant }}">
+            {% style %}:root
+            {
+              --color-action-rgb: {{ block.settings.main_color.red }}, 
+              {{ block.settings.main_color.green }}, 
+              {{ block.settings.main_color.blue }};
+            }
+          {% endstyle %}
+          <div class="relative mt-10 mb-3 md:mb-8">
+            <button
+              class="buy-button cart-button glass-anim"
+              data-variant-id="{{ product.first_available_variant.id }}"
+              data-template="{{ template.suffix }}"
+              data-product-id="{{ product.id }}"
+              data-is-dynamic-variant="{{ block.settings.is_dynamic_variant }}">
+              {% if block.settings.show_promotion and product.selected_or_first_available_variant.compare_at_price or block.settings.promotion_discount > 0 %}
+                {% render 'promotion-buy-button-content'
+                  , product: product
+                  , block: block %}
+              {% else %}
+                {% render 'regular-buy-button-content'
+                  , product: product
+                  , block: block %}
+              {% endif %}
+            </button>
+            {% render 'tw-icon-hand-click'
+              , class: "absolute top-1/2 -translate-y-1/2 left-0 -translate-x-1/2 scale-90 md:scale-100" %}
+            {% render 'tw-icon-hand-click'
+              , class: "absolute top-0 -translate-y-[65%] right-10 rotate-[100deg] scale-90 md:scale-100" %}
+            {% render 'tw-icon-hand-click'
+              , class: "absolute top-0 -translate-y-[65%] right-3/4 rotate-45 scale-90 md:scale-100" %}
+            {% render 'tw-icon-hand-click'
+              , class: "absolute bottom-0 translate-y-1/4 md:translate-y-1/2 right-1/4 -rotate-[135deg] scale-90 md:scale-100" %}
+            <template id="float-buy-button">
+              <button
+                class="float-buy-button cart-button fixed bottom-20 md:bottom-10 left-1/2 -translate-x-1/2 2xs:gap-5 md:gap-6 w-[100px] max-w-[90%] xs:max-w-[450px] md:xs:max-w-[90%] transition-colors duration-500 scale-0 glass-anim"
+                data-variant-id="{{ product.first_available_variant.id }}"
+                data-template="{{ template.suffix }}"
+                data-product-id="{{ product.id }}">
                 {% if block.settings.show_promotion and product.selected_or_first_available_variant.compare_at_price or block.settings.promotion_discount > 0 %}
-                  {% render 'promotion-buy-button-content', product: product, block: block %}
+                  {% render 'promotion-buy-button-content'
+                    , product: product
+                    , block: block %}
                 {% else %}
-                  {% render 'regular-buy-button-content', product: product, block: block %}
+                  {% render 'regular-buy-button-content'
+                    , product: product
+                    , block: block %}
                 {% endif %}
               </button>
-              {% render 'tw-icon-hand-click', class: "absolute top-1/2 -translate-y-1/2 left-0 -translate-x-1/2 scale-90 md:scale-100" %}
-              {% render 'tw-icon-hand-click', class: "absolute top-0 -translate-y-[65%] right-10 rotate-[100deg] scale-90 md:scale-100" %}
-              {% render 'tw-icon-hand-click', class: "absolute top-0 -translate-y-[65%] right-3/4 rotate-45 scale-90 md:scale-100" %}
-              {% render 'tw-icon-hand-click', class: "absolute bottom-0 translate-y-1/4 md:translate-y-1/2 right-1/4 -rotate-[135deg] scale-90 md:scale-100" %}
-              <template id="float-buy-button">
-                <button class="float-buy-button cart-button fixed bottom-20 md:bottom-10 left-1/2 -translate-x-1/2 2xs:gap-5 md:gap-6 w-[100px] max-w-[90%] xs:max-w-[450px] md:xs:max-w-[90%] transition-colors duration-500 scale-0 glass-anim" data-variant-id="{{ product.first_available_variant.id }}" data-template="{{ template.suffix }}" data-product-id="{{ product.id }}">
-                  {% if block.settings.show_promotion and product.selected_or_first_available_variant.compare_at_price or block.settings.promotion_discount > 0 %}
-                    {% render 'promotion-buy-button-content', product: product, block: block %}
-                  {% else %}
-                    {% render 'regular-buy-button-content', product: product, block: block %}
-                  {% endif %}
-                </button>
-              </template>
+            </template>
+          </div>
+          {% if block.settings.promotion_date != blank %}
+            {% if block.settings.show_promotion and product.selected_or_first_available_variant.compare_at_price or block.settings.promotion_discount > 0 %}
+              {% render 'promotion-date-banner'
+                , block: block
+                , text: block.settings.promotion_date %}
+            {% endif %}
+            <template id="promotion-date-banner">
+              {% render 'promotion-date-banner'
+                , block: block
+                , text: block.settings.promotion_date %}
+            </template>
+          {% endif %}
+          {% if template.suffix == 'painting' or template.suffix == 'personalized' %}
+            {% render 'painting-addons-drawer' %}
+          {% endif %}
+        {%- when 'description' -%}
+          {%- if product.description != blank -%}
+            <div class="product-description dropdown-button-target description flex flex-col gap-5 text-lg leading-relaxed h-56 overflow-hidden relative">
+              {{ product.description }}
             </div>
-            {% if block.settings.promotion_date != blank %}
-              {% if block.settings.show_promotion and product.selected_or_first_available_variant.compare_at_price or block.settings.promotion_discount > 0 %}
-                {% render 'promotion-date-banner', block: block, text: block.settings.promotion_date %}
-              {% endif %}
-              <template id="promotion-date-banner">
-               {% render 'promotion-date-banner', block: block, text: block.settings.promotion_date %}
-              </template>
-            {% endif %}
-            {% if template.suffix == 'painting' or template.suffix == 'personalized' %}
-              {% render 'painting-addons-drawer' %}     
-            {% endif %}
-          {%- when 'description' -%}
-            {%- if product.description != blank -%}
-              <div class="product-description dropdown-button-target description flex flex-col gap-5 text-lg leading-relaxed h-56 overflow-hidden relative">
-                {{ product.description }}
+            <dropdown-button>
+              <button class="group mt-6 mb-5">{{ 'sections.main_collection_banner.learn_more' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
+              <button class="group  mt-6 hidden mb-5">{{ 'sections.main_collection_banner.fewer_details' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
+            </dropdown-button>
+          {%- endif -%}
+        {%- when 'collapsible_tab' -%}
+          <details class="accordion group border-t border-main-10 first-of-type:mt-5 last-of-type:border-b last-of-type:border-b-main-10 last-of-type:mb-5">
+            <summary class="list-none flex justify-between py-3 select-none cursor-pointer">
+              <div class="flex gap-3">
+                {% render 'icon-accordion'
+                  , icon: block.settings.icon
+                  , color: block.settings.icon_color %}
+                <h4 class="h4 text-lg max-w-[90%]">
+                  {{ block.settings.heading | default: block.settings.page.title }}
+                </h4>
               </div>
-              <dropdown-button>
-                <button class="group mt-6 mb-5">{{ 'sections.main_collection_banner.learn_more' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
-                <button class="group  mt-6 hidden mb-5">{{ 'sections.main_collection_banner.fewer_details' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
-              </dropdown-button>
-            {%- endif -%}
-          {%- when 'collapsible_tab' -%}
-            <details class="accordion group border-t border-main-10 first-of-type:mt-5 last-of-type:border-b last-of-type:border-b-main-10 last-of-type:mb-5">
-              <summary class="list-none flex justify-between py-3 select-none cursor-pointer">
-                <div class="flex gap-3">
-                  {% render 'icon-accordion', icon: block.settings.icon, color: block.settings.icon_color %}
-                  <h4 class="h4 text-lg max-w-[90%]">
-                    {{ block.settings.heading | default: block.settings.page.title }}
-                  </h4>
-                </div>
-                <span class="group-open:rotate-180 transition-transform duration-200 mr-5 flex items-center">
-                  {% render 'tw-icon-caret', width: "10" %}
-                </span>
-              </summary>
-              <div class="py-3 text-lg flex flex-col gap-3">
-                {{ block.settings.content }}
-                {{ block.settings.page.content }}
-              </div>
-            </details>
-          {%- when 'likes' -%}
-            {% render 'my-like-button', product: product, likes_count: product.metafields.likes.number | default: 0 %}
-            <script src="{{ 'my-like-button.js' | asset_url }}" defer="defer"></script>
-          {%- when 'tapestry_options' -%}
-            {% if template.suffix == 'tapestry' %}
-              {% liquid
-                if product.images[1].aspect_ratio < 1
-                  assign tapestry_width = block.settings.tapestry_default_width_portrait
-                  assign texture_img = block.settings.tapestry_texture_portrait
-                elsif product.images[1].aspect_ratio > 1
-                  assign tapestry_width = block.settings.tapestry_default_width_landscape
-                  assign texture_img = block.settings.tapestry_texture_landscape
-                else
-                  assign tapestry_width = block.settings.tapestry_default_width_square
-                  assign texture_img = block.settings.tapestry_texture_square
-                endif
-              %}
-              {{ 'croppr.min.css' | asset_url | stylesheet_tag }}
-              <script src="{{ 'croppr.min.js' | asset_url }}" defer="defer"></script>
-            {% endif %}
-            {% if texture_img %}
-              <template id="tapestry-texture">
-                <img src="{{ texture_img | image_url: width: 600}}"
-                  srcset="{%- if texture_img.width >= 400 -%}{{ texture_img | image_url: width: 400 }} 400w,{%- endif -%}
+              <span class="group-open:rotate-180 transition-transform duration-200 mr-5 flex items-center">
+                {% render 'tw-icon-caret'
+                  , width: "10" %}
+              </span>
+            </summary>
+            <div class="py-3 text-lg flex flex-col gap-3">
+              {{ block.settings.content }}
+              {{ block.settings.page.content }}
+            </div>
+          </details>
+        {%- when 'likes' -%}
+          {% render 'my-like-button', product: product, likes_count: product.metafields.likes.number | default: 0 %}
+          <script src="{{ 'my-like-button.js' | asset_url }}" defer="defer"></script>
+        {%- when 'tapestry_options' -%}
+          {% if template.suffix == 'tapestry' %}
+            {% liquid
+              if product.images[1].aspect_ratio < 1
+                assign tapestry_width = block.settings.tapestry_default_width_portrait
+                assign texture_img = block.settings.tapestry_texture_portrait
+              elsif product.images[1].aspect_ratio > 1
+                assign tapestry_width = block.settings.tapestry_default_width_landscape
+                assign texture_img = block.settings.tapestry_texture_landscape
+              else
+                assign tapestry_width = block.settings.tapestry_default_width_square
+                assign texture_img = block.settings.tapestry_texture_square
+              endif
+            %}
+            {{ 'croppr.min.css' | asset_url | stylesheet_tag }}
+            <script src="{{ 'croppr.min.js' | asset_url }}" defer="defer"></script>
+          {% endif %}
+          {% if texture_img %}
+            <template id="tapestry-texture">
+              <img
+                src="{{ texture_img | image_url: width: 600}}"
+                srcset="{%- if texture_img.width >= 400 -%}{{ texture_img | image_url: width: 400 }} 400w,{%- endif -%}
                   {%- if texture_img.width >= 500 -%}{{ texture_img | image_url: width: 500 }} 500w,{%- endif -%}
                   {%- if texture_img.width >= 600 -%}{{ texture_img | image_url: width: 600 }} 600w,{%- endif -%}"
-                  width="620"
-                  height="1200"
-                  loading="lazy"
-                  alt="{{ tapestry_width.alt }}"
-                  class="absolute w-full h-full top-0 left-0 object-cover opacity-30 pointer-events-none"
-                  sizes="(max-width: 400px) 400px, (max-width: 500px) 500px, (max-width: 767px) 767px, (max-width: 850px) 400px, (max-width: 1040px) 500px, 600px"
-                >
-              </template>
-            {% endif %}
-            {% liquid
-              assign  unit = product.options_with_values.first.values.first |  split: ' ' |  last
-            %}
-            <div class="my-5 product-properties">
-              <label class="block text-xl mt-5 ml-1" for="tapestry-width">{{ product.options.first }} :</label>
-              <div class="relative flex mt-1">
-                <tapestry-select data-money-symbol="{{ cart.currency.symbol }}" data-orientation="width" data-tapestry-strips-width="{{ block.settings.tapestry_strips_width }}" data-texture-img-src="{{ texture_img }}">
-                  <select
-                    class="min-w-32 rounded-l-lg p-3 outline-none"
-                    type="number"
-                    id="tapestry-width"
-                    name="tapestry-width"
-                  >
-                    {% for width in product.options_with_values.first.values %}
-                      <option value="{{ width }}" {% if forloop.first %}selected{% endif %}>{{ width |  split: ' ' |  first }}</option>
-                    {% endfor %}
-                  </select>
-                </tapestry-select>
-                <div class="pl-5 bg-white rounded-r-lg text-gray-600 text-lg flex justify-center items-center">
-                  <span class="px-5 border-l-1 border-gray-300 ">{{ unit }}</span>
-                </div>
-              </div>
-              <label class="block text-xl mt-5 ml-1" for="tapestry-height">{{ product.options[1] }} :</label>
-              <div class="relative flex mt-1 mb-6">
-                <tapestry-select data-money-symbol="{{ cart.currency.symbol }}" data-orientation="height" data-tapestry-strips-width="{{ block.settings.tapestry_strips_width }}">
-                  <select 
-                    class="min-w-32 rounded-l-lg p-3 outline-none"
-                    type="number"
-                    id="tapestry-height"
-                    name="tapestry-height"
-                  >
-                    {% for height in product.options_with_values[1].values %}
-                      <option value="{{ height }}" {% if forloop.first %}selected{% endif %}>{{ height |  split: ' ' |  first }}</option>
-                    {% endfor %}
-                  </select>  
-                </tapestry-select>
-                <div class="pl-5 bg-white rounded-r-lg text-gray-600 text-lg flex justify-center items-center">
-                  <span class="px-5 border-l-1 border-gray-300 ">{{ unit }}</span>
-                </div>
-                <input type="hidden" name="tapestry-ratio">
-                <input type="hidden" name="tapestry-x-position">
-                <input type="hidden" name="tapestry-y-position">
+                width="620"
+                height="1200"
+                loading="lazy"
+                alt="{{ tapestry_width.alt }}"
+                class="absolute w-full h-full top-0 left-0 object-cover opacity-30 pointer-events-none"
+                sizes="(max-width: 400px) 400px, (max-width: 500px) 500px, (max-width: 767px) 767px, (max-width: 850px) 400px, (max-width: 1040px) 500px, 600px">
+            </template>
+          {% endif %}
+          {% liquid
+            assign unit = product.options_with_values.first.values.first | split: ' ' | last
+          %}
+          <div class="my-5 product-properties">
+            <label class="block text-xl mt-5 ml-1" for="tapestry-width">{{ product.options.first }} :</label>
+            <div class="relative flex mt-1">
+              <tapestry-select
+                data-money-symbol="{{ cart.currency.symbol }}"
+                data-orientation="width"
+                data-tapestry-strips-width="{{ block.settings.tapestry_strips_width }}"
+                data-texture-img-src="{{ texture_img }}">
+                <select
+                  class="min-w-32 rounded-l-lg p-3 outline-none bg-white"
+                  type="number"
+                  id="tapestry-width"
+                  name="tapestry-width">
+                  {% for width in product.options_with_values.first.values %}
+                    <option
+                      value="{{ width }}"
+                      {% if forloop.first %}
+                      selected{% endif %}>{{ width | split: ' ' | first }}</option>
+                  {% endfor %}
+                </select>
+              </tapestry-select>
+              <div class="pl-5 bg-white rounded-r-lg text-gray-600 text-lg flex justify-center items-center">
+                <span class="px-5 border-l-1 border-gray-300 ">{{ unit }}</span>
               </div>
             </div>
-          {%- when 'trustpilot_review' -%}
-            <div class="{{ block.settings.margin_bottom }}">
-              <p class="flex items-center mb-1">
-                <a href="{{ block.settings.link }}" target="_blank" class="underline">Trustpilot</a>
-                <span class="!inline-block w-[5px] h-[5px] rounded-full bg-main mx-2"></span>
-                {{ 'sections.trustpilot.excellent' | t }}
-              </p>
-              <div class="flex gap-1">
-                {% for i in (1..5) %}
-                  {% liquid
-                    assign current = i | times: 10
-                    if current <= block.settings.trustpilot_score
-                      assign green_width = 'w-full'
+            <label class="block text-xl mt-5 ml-1" for="tapestry-height">{{ product.options[1] }} :</label>
+            <div class="relative flex mt-1 mb-6">
+              <tapestry-select
+                data-money-symbol="{{ cart.currency.symbol }}"
+                data-orientation="height"
+                data-tapestry-strips-width="{{ block.settings.tapestry_strips_width }}">
+                <select
+                  class="min-w-32 rounded-l-lg p-3 outline-none bg-white"
+                  type="number"
+                  id="tapestry-height"
+                  name="tapestry-height">
+                  {% for height in product.options_with_values[1].values %}
+                    <option
+                      value="{{ height }}"
+                      {% if forloop.first %}
+                      selected{% endif %}>{{ height | split: ' ' | first }}</option>
+                  {% endfor %}
+                </select>
+              </tapestry-select>
+              <div class="pl-5 bg-white rounded-r-lg text-gray-600 text-lg flex justify-center items-center">
+                <span class="px-5 border-l-1 border-gray-300 ">{{ unit }}</span>
+              </div>
+              <input type="hidden" name="tapestry-ratio">
+              <input type="hidden" name="tapestry-x-position">
+              <input type="hidden" name="tapestry-y-position">
+            </div>
+          </div>
+        {%- when 'trustpilot_review' -%}
+          <div class="{{ block.settings.margin_bottom }}">
+            <p class="flex items-center mb-1">
+              <a
+                href="{{ block.settings.link }}"
+                target="_blank"
+                class="underline">Trustpilot</a>
+              <span class="!inline-block w-[5px] h-[5px] rounded-full bg-main mx-2"></span>
+              {{ 'sections.trustpilot.excellent' | t }}
+            </p>
+            <div class="flex gap-1">
+              {% for i in (1..5) %}
+                {% liquid
+                  assign current = i | times: 10
+                  if current <= block.settings.trustpilot_score
+                    assign green_width = 'w-full'
+                  else
+                    assign percent = block.settings.trustpilot_score | plus: 10 | minus: current | times: 10
+                    if percent == 0
+                      assign green_width = 'w-0'
+                    elsif percent > 0 and percent <= 25
+                      assign green_width = 'w-1/4'
+                    elsif percent > 25 and percent <= 50
+                      assign green_width = 'w-1/2'
+                    elsif percent > 50 and percent <= 75
+                      assign green_width = 'w-3/4'
                     else
-                      assign percent = block.settings.trustpilot_score | plus: 10 | minus: current | times: 10
-                      if percent == 0
-                        assign green_width = 'w-0'
-                      elsif percent > 0 and percent <= 25
-                        assign green_width = 'w-1/4'
-                      elsif percent > 25 and percent <= 50
-                        assign green_width = 'w-1/2'
-                      elsif percent > 50 and percent <= 75
-                        assign green_width = 'w-3/4'
-                      else
-                        assign green_width = 'w-full'
-                      endif
+                      assign green_width = 'w-full'
                     endif
-                  %}
-                  <div class="relative flex justify-center items-center bg-gray-300 h-10 w-10 before:absolute before:top-0 before:bottom-0 before:left-0 before:{{ green_width }} before:bg-[#00B67A]">
-                    <svg class="z-10" width="26" height="25" viewBox="0 0 26 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M18.6626 17.6149L21.0351 25L13.0043 19.0981L18.6626 17.6149ZM26 9.55286H16.0713L13.0054 0L9.92875 9.55505L0 9.54191L8.0405 15.4537L4.96383 24.9989L13.0043 19.0981L17.9693 15.4537L26 9.55286Z" fill="white"/>
-                    </svg>
-                  </div>
-                {% endfor %}
-                <p class="flex items-center ml-2">{{ 'sections.trustpilot.score' | t }}:  {{ block.settings.trustpilot_score |  divided_by: 10.0 }}</p>
-              </div>
+                  endif
+                %}
+                <div class="relative flex justify-center items-center bg-gray-300 h-10 w-10 before:absolute before:top-0 before:bottom-0 before:left-0 before:{{ green_width }} before:bg-[#00B67A]">
+                  <svg
+                    class="z-10"
+                    width="26"
+                    height="25"
+                    viewBox="0 0 26 25"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18.6626 17.6149L21.0351 25L13.0043 19.0981L18.6626 17.6149ZM26 9.55286H16.0713L13.0054 0L9.92875 9.55505L0 9.54191L8.0405 15.4537L4.96383 24.9989L13.0043 19.0981L17.9693 15.4537L26 9.55286Z" fill="white" />
+                  </svg>
+                </div>
+              {% endfor %}
+              <p class="flex items-center ml-2">{{ 'sections.trustpilot.score' | t }}: {{ block.settings.trustpilot_score | divided_by: 10.0 }}</p>
             </div>
-            {% capture reviews_structured_data %}
+          </div>
+          {% capture reviews_structured_data %}
               "aggregateRating": {
                 "@type": "AggregateRating",
                 "ratingValue": "{{ block.settings.trustpilot_score | divided_by: 10.0 }}",
@@ -334,72 +408,63 @@
               }
             {% endcapture %}
 
-        {%- endcase -%}
-      {%- endfor -%}
-    </div>
-  </main-product-blocks>
-</div>
-
-{% if template.suffix == 'painting' or template.suffix == 'personalized' %}
-  {% render 'painting-data-script', product: product %}
-{% else %}
-  <script type="application/ld+json">
-    {
-      "@context": "http://schema.org/",
-      "@type": "Product",
-      "@id": "{{ request.origin | append: product.url }}",
-      "name": {{ product.title | json }},
-      "logo": "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/logo-myselfmonart.svg?v=1727019678",
-      "url": {{ request.origin | append: product.url | json }},
-      {% if product.metafields.link.mother_collection.value.title != blank %}
-        "category": "{{ product.metafields.link.mother_collection.value.title }}",
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+</main-product-blocks></div>{% if template.suffix == 'painting' or template.suffix == 'personalized' %}
+{% render 'painting-data-script'
+  , product: product %}{% else %}
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org/",
+    "@type": "Product",
+    "@id": "{{ request.origin | append: product.url }}",
+    "name": {{ product.title | json }},
+    "logo": "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/logo-myselfmonart.svg?v=1727019678",
+    "url": {{ request.origin | append: product.url | json }},
+    {% if product.metafields.link.mother_collection.value.title != blank %}
+      "category" : "{{ product.metafields.link.mother_collection.value.title }}",
       {% endif %}
-        "image": [
-          {{ product.featured_media | image_url: width: product.featured_media.preview_image.width | prepend: "https:" | json }}
-        ],
+      "image": [{{ product.featured_media | image_url: width: product.featured_media.preview_image.width | prepend: "https:" | json }}],
       "description": {{ product.description | strip_html | json }},
       {% if product.selected_or_first_available_variant.sku != blank -%}
         "sku": {{ product.selected_or_first_available_variant.sku | json }},
-      {%- endif %}
-      "brand": {
-        "@type": "Brand",
-        "name": {{ product.vendor | json }}
-      },
-      "offers": [
-        {%- for variant in product.variants -%}
-          {
-            "@type" : "Offer",
-            {%- if variant.sku != blank -%}
-              "sku": {{ variant.sku | json }},
-            {%- endif -%}
-            {%- if variant.barcode.size == 12 -%}
-              "gtin12": {{ variant.barcode }},
-            {%- endif -%}
-            {%- if variant.barcode.size == 13 -%}
-              "gtin13": {{ variant.barcode }},
-            {%- endif -%}
-            {%- if variant.barcode.size == 14 -%}
-              "gtin14": {{ variant.barcode }},
-            {%- endif -%}
-            "availability" : "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
-            "price" : {{ variant.price | divided_by: 100.00 | json }},
-            "priceCurrency" : {{ cart.currency.iso_code | json }},
-            "url" : {{ request.origin | append: variant.url | json }},
-            "seller": {
-              "@type": "Organization",
-              "name": "{{ product.vendor }}"
-            }
-          }{% unless forloop.last %},{% endunless %}
-        {%- endfor -%}
-      ]
-      {%- if reviews_structured_data != blank -%}
-        ,{{ reviews_structured_data }}
-      {%- endif -%}
-    }
-  </script>
-{% endif %}
-
-{% schema %}
+        {%- endif %}
+        "brand": {
+          "@type": "Brand",
+          "name": {{ product.vendor | json }}
+        },
+        "offers": [
+                  {%- for variant in product.variants -%}
+            {
+                      "@type": "Offer",
+                      {%- if variant.sku != blank -%}
+                "sku": {{ variant.sku | json }},
+                      {%- endif -%}
+                {%- if variant.barcode.size == 12 -%}
+                  "gtin12": {{ variant.barcode }},
+                      {%- endif -%}
+                  {%- if variant.barcode.size == 13 -%}
+                    "gtin13": {{ variant.barcode }},
+                      {%- endif -%}
+                    {%- if variant.barcode.size == 14 -%}
+                      "gtin14": {{ variant.barcode }},
+                      {%- endif -%}
+                      "availability": "http://schema.org/{% if variant.available %} InStock{% else %}OutOfStock{% endif %}",
+                      "price": {{ variant.price | divided_by: 100.00 | json }},
+                      "priceCurrency": {{ cart.currency.iso_code | json }},
+                      "url": {{ request.origin | append: variant.url | json }},
+                      "seller": {
+                        "@type": "Organization",
+                        "name": "{{ product.vendor }}"
+                      }
+                    }{% unless forloop.last %},{% endunless %}
+                  {%- endfor -%}
+                ]{%- if reviews_structured_data != blank -%},
+                {{ reviews_structured_data }}
+                {%- endif -%}
+              }
+</script>{% endif %}{% schema %}
 {
   "name": "t:sections.main-product.name",
   "class": "page-width relative",
@@ -791,7 +856,7 @@
           "type": "image_picker",
           "id": "tapestry_texture_square",
           "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_texture_square.label"
-        },        
+        },
         {
           "type": "header",
           "content": "t:sections.main-product.blocks.tapestry_options.headings.default_width.content"
@@ -884,5 +949,4 @@
       ]
     }
   ]
-}
-{% endschema %}
+}{% endschema %}

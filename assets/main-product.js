@@ -343,22 +343,13 @@ class MainProductBlocks extends CollapsibleTab {
   };
 
   displayLoader(button) {
-    const buttonHeight = button.clientHeight;
-    button.style.height = buttonHeight + 'px';
-    button.classList.add('justify-center');
-    Array.from(button.children).forEach((child) => {
-      if (child.classList.contains('loader')) child.classList.remove('hidden');
-      else child.classList.add('hidden');
-    });
+    button.disabled = true;
+    button.classList.add('cursor-not-allowed');
   }
 
   hideLoader(button) {
-    button.style.height = '';
-    button.classList.remove('justify-center');
-    Array.from(button.children).forEach((child) => {
-      if (child.classList.contains('loader')) child.classList.add('hidden');
-      else child.classList.remove('hidden');
-    });
+    button.disabled = false;
+    button.classList.remove('cursor-not-allowed');
   }
 
   getproductProperties() {

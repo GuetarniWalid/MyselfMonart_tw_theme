@@ -46,7 +46,7 @@
             "tapestry_default_width_portrait": 150,
             "tapestry_default_width_square": 200,
             "tapestry_default_height": 250,
-            "tapestry_strips_width": 50,
+            "tapestry_strips_width": 50
           }
         },
         "buy_qrRzcg": {
@@ -77,103 +77,6 @@
         "description_Fw7xRB"
       ],
       "settings": {}
-    },
-    "customer_testimonial_myiwee": {
-      "type": "customer-testimonial",
-      "blocks": {
-        "image_text_Riirzd": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/Tableau-chambre-bebe_f6e62e6e-707b-41df-aa17-bdad25ef3385.jpg",
-            "message": "Juste une petite photo avec le cadre mis en place encore un grand merci à vous 🥰. \nElodie G"
-          }
-        },
-        "image_text_qM9rBh": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau_marylin.jpg",
-            "message": "Envoie très rapide et tableau encore plus beau que sur le site.\nParfait je recommande !!!\nJessica S"
-          }
-        },
-        "image_text_NnGTgN": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/ananas.jpg",
-            "message": "Trop contente de mon tableau, les couleurs sont aussi flashy que sur les photos du site.\nSarah F"
-          }
-        },
-        "image_text_hCDnam": {
-          "type": "image-text",
-          "settings": {
-            "message": "Le tableau est super, et encore plus beau en vrai ! Arrivé rapidement et bien protégé. Alain N"
-          }
-        },
-        "image_text_XaycRQ": {
-          "type": "image-text",
-          "settings": {
-            "message": "Très belle toile, les couleurs sont super et brillante. Marie K"
-          }
-        },
-        "image_text_QfHTN6": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/Tableau-deco-noir-et-blanc.jpg",
-            "message": "Top, rien à dire de plus. \nGuillaume H"
-          }
-        },
-        "image_text_ragCcn": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-salon-femme-africaine_03a72a0a-4a4d-4822-8824-a48b09af1eb3.jpg",
-            "message": "Magnifique tableau et très design, correspond parfaitement à la description.  Morel E"
-          }
-        },
-        "image_text_eAxGcM": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-comics-super-man.jpg",
-            "message": "Nickel, très satisfait c'est ma 3e commande. Hugo G"
-          }
-        },
-        "image_text_DbNc9D": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-superman-aquarelle.jpg",
-            "message": "TOP, tableau reçu rapidement avec suivie. Hugo G"
-          }
-        },
-        "image_text_DCdKLC": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-animaux-zebre_383f6477-a1c6-4c30-b8cc-637fe67fde0a.jpg",
-            "message": "L'animal, majestueux et solitaire trône dans mon salon au dessus de ma console... Peut on dire qu il est magnifique ? Assurément oui et je l adore!\nPatricia G."
-          }
-        },
-        "image_text_YKpN4r": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-deco-impression-alluminium-nike.jpg",
-            "message": "Très beau tableau que nous vous avons acheté en août dernier et qui a fait très plaisir à un jeune de 20 ans. \nNous sommes ravis et nous reviendrons vers vous.\nJacqueline R."
-          }
-        }
-      },
-      "block_order": [
-        "image_text_Riirzd",
-        "image_text_qM9rBh",
-        "image_text_NnGTgN",
-        "image_text_hCDnam",
-        "image_text_XaycRQ",
-        "image_text_QfHTN6",
-        "image_text_ragCcn",
-        "image_text_eAxGcM",
-        "image_text_DbNc9D",
-        "image_text_DCdKLC",
-        "image_text_YKpN4r"
-      ],
-      "settings": {
-        "title": "Nos tableaux à travers vos yeux ❤️",
-        "duration_image_appearance": 5
-      }
     },
     "product_recommendations_BCHJaq": {
       "type": "product-recommendations",
@@ -270,7 +173,6 @@
   "order": [
     "breadcrumb_RCxFAG",
     "main",
-    "customer_testimonial_myiwee",
     "product_recommendations_BCHJaq",
     "7ae13aad-330c-4fa7-94cf-fafc1c13cf60"
   ],
