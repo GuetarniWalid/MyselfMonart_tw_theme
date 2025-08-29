@@ -335,7 +335,6 @@ main-product-blocks .description h2 span {
 }
 /* Price Animation end */
 
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -483,10 +482,16 @@ main-product-blocks .description h2 span {
   }
 
   .is-liked {
-    @apply !bg-like-40 text-like transition-all duration-300;
+    @apply transition-all duration-300;
   }
-  .is-liked .inside-heart {
-    @apply fill-like;
+  .is-liked .outline-heart {
+    @apply hidden;
+  }
+  .is-liked .full-heart {
+    @apply inline-block text-like;
+  }
+  .like:not(.is-liked) .full-heart {
+    @apply hidden;
   }
 
   klarna-placement::part(osm-container) {
@@ -585,5 +590,15 @@ main-product-blocks .description h2 span {
 
   .skeleton {
     @apply relative before:absolute before:inset-0 before:-z-10 before:bg-gray-300 before:animate-pulse;
+  }
+
+  .text-ellipsis-start-mobile {
+    @media (max-width: 767px) {
+      direction: rtl;
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 }

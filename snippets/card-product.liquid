@@ -1,112 +1,71 @@
-{% comment %}
-    Renders a product card
-
-    Accepts:
-    - product: {Object} The product object
-    - show_secondary_image: {Boolean} Show the secondary image on hover. Default: false (optional)
-    - lazy_load: {Boolean} Image should be lazy loaded. Default: true (optional)
-    - section_id: {String} The ID of the section that contains this card.
-
-    Usage:
-    {% render 'card-product' %}
+{% comment %} 
+    Renders a product card 
+    Accepts: 
+    - product: {Object} The product object 
+    - show_secondary_image: {Boolean} Show the secondary image on hover. Default: false (optional) 
+    - lazy_load: {Boolean} Image should be lazy loaded. Default: true (optional) 
+    - section_id: {String} The ID of the section that contains this card. 
+    Usage: 
+    {% render 'card-product' %} 
 {% endcomment %}
 
 <div class="h-full flex flex-col">
   {%- if product.featured_media -%}
-    <div class="relative">
-      {% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
-      <img
-        srcset="{%- if product.featured_media.width >= 380 -%}{{ product.featured_media | image_url: width: 380 }} 380w,{%- endif -%}
-          {%- if product.featured_media.width >= 430 -%}{{ product.featured_media | image_url: width: 430 }} 430w,{%- endif -%}
-          {%- if product.featured_media.width >= 500 -%}{{ product.featured_media | image_url: width: 500 }} 500w,{%- endif -%}
-          {%- if product.featured_media.width >= 700 -%}{{ product.featured_media | image_url: width: 700 }} 700w,{%- endif -%}
-          {%- if product.featured_media.width >= 940 -%}{{ product.featured_media | image_url: width: 940 }} 940w,{%- endif -%}
-          {%- if product.featured_media.width >= 1066 -%}{{ product.featured_media | image_url: width: 1066 }} 1066w,{%- endif -%}
-          {{ product.featured_media | image_url }} {{ product.featured_media.width }}w"
-        src="{{ product.featured_media | image_url: width: 533 }}"
-        sizes="(min-width: 990px) 357px, (min-width: 900px) 425px, (min-width: 637px) 376px, (min-width: 500px) 295px, 100%"
-        alt="{% if product.metafields.meta_object.media.value.alts.value[0] %}{{ product.metafields.meta_object.media.value.alts.value[0] | escape }}{% else %}{{ product.featured_media.alt | escape }}{% endif %}"
-      {% unless lazy_load == false %}loading="lazy"{% endunless %}
-        width="{{ product.featured_media.width }}"
-        height="{{ product.featured_media.height }}"
-        class="skeleton w-full h-full object-cover"
-      >
-      {% comment %}theme-check-enable ImgLazyLoading{% endcomment %}
-
-      {%- if product.media[1] != nil and show_secondary_image -%}
-        {% if product.media[1].width <= product.media[1].height %}
+    <div class="relative mb-2 md:mb-5">
+      <div class="border-5 border-black h-fit w-fit shadow-[5px_5px_10px_rgba(0,0,0,0.5)] group-hover:shadow-none group-hover:border-transparent duration-100">
+        {%- if product.media[1] != nil and show_secondary_image -%}
           <img
-            srcset="{%- if product.media[1].width >= 380 -%}{{ product.media[1] | image_url: width: 380 }} 380w,{%- endif -%}
-              {%- if product.media[1].width >= 430 -%}{{ product.media[1] | image_url: width: 430 }} 430w,{%- endif -%}
+            srcset="{%- if product.media[1].width >= 200 -%}{{ product.media[1] | image_url: width: 200 }} 200w,{%- endif -%}
+              {%- if product.media[1].width >= 300 -%}{{ product.media[1] | image_url: width: 300 }} 300w,{%- endif -%}
+              {%- if product.media[1].width >= 400 -%}{{ product.media[1] | image_url: width: 400 }} 400w,{%- endif -%}
               {%- if product.media[1].width >= 500 -%}{{ product.media[1] | image_url: width: 500 }} 500w,{%- endif -%}
-              {%- if product.media[1].width >= 700 -%}{{ product.media[1] | image_url: width: 700 }} 700w,{%- endif -%}
-              {%- if product.media[1].width >= 940 -%}{{ product.media[1] | image_url: width: 940 }} 940w,{%- endif -%}
-              {%- if product.media[1].width >= 1066 -%}{{ product.media[1] | image_url: width: 1066 }} 1066w,{%- endif -%}
               {{ product.media[1] | image_url }} {{ product.media[1].width }}w"
-            src="{{ product.media[1] | image_url: width: 533 }}"
-            sizes="(min-width: 990px) 357px, (min-width: 900px) 425px, (min-width: 637px) 376px, (min-width: 500px) 295px, 100%"
+            src="{{ product.media[1] | image_url: width: 300 }}"
+            sizes="(min-width: 768px) 33%, (min-width: 1024px) 300px, 50%"
             alt="{% if product.metafields.meta_object.media.value.alts.value[1] %}{{ product.metafields.meta_object.media.value.alts.value[1] | escape }}{% else %}{{ product.media[1].alt | escape }}{% endif %}"
             loading="lazy"
-            width="{{ product.media[1].width }}"
-            height="{{ product.media[1].height }}"
-            class="skeleton absolute top-0 left-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 duration-300"
-          >
-        {% else %}
-          <img
-            srcset="{%- if product.media[1].width >= 380 -%}{{ product.media[1] | image_url: width: 380, height: 456, crop: 'center' }} 380w,{%- endif -%}
-              {%- if product.media[1].width >= 430 -%}{{ product.media[1] | image_url: width: 430, height: 456, crop: 'center' }} 430w,{%- endif -%}
-              {%- if product.media[1].width >= 500 -%}{{ product.media[1] | image_url: width: 500, height: 456, crop: 'center' }} 500w,{%- endif -%}
-              {%- if product.media[1].width >= 700 -%}{{ product.media[1] | image_url: width: 700, height: 456, crop: 'center' }} 700w,{%- endif -%}
-              {%- if product.media[1].width >= 940 -%}{{ product.media[1] | image_url: width: 940, height: 456, crop: 'center' }} 940w,{%- endif -%}
-              {%- if product.media[1].width >= 1066 -%}{{ product.media[1] | image_url: width: 1066, height: 456, crop: 'center' }} 1066w,{%- endif -%}
-              {{ product.media[1] | image_url }} {{ product.media[1].width }}w"
-            src="{{ product.media[1] | image_url: width: 533, height: 456, crop: 'center' }}"
-            sizes="(min-width: 990px) 357px, (min-width: 900px) 425px, (min-width: 637px) 376px, (min-width: 500px) 295px, 100%"
-            alt="{% if product.metafields.meta_object.media.value.alts.value[1] %}{{ product.metafields.meta_object.media.value.alts.value[1] | escape }}{% else %}{{ product.media[1].alt | escape }}{% endif %}"
-            loading="lazy"
-            width="{{ product.media[1].width }}"
-            height="{{ product.media[1].height }}"
-            class="skeleton absolute top-0 left-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 duration-300"
-          >
-        {% endif %}
-      {%- endif -%}
+            width="500"
+            height="auto"
+            class="skeleton w-full h-full object-contain">
+        {%- endif -%}
+      </div>
+
+      <img
+        srcset="{%- if product.featured_media.width >= 200 -%}{{ product.featured_media | image_url: width: 200 }} 200w,{%- endif -%}
+          {%- if product.featured_media.width >= 300 -%}{{ product.featured_media | image_url: width: 300 }} 300w,{%- endif -%}
+          {%- if product.featured_media.width >= 400 -%}{{ product.featured_media | image_url: width: 400 }} 400w,{%- endif -%}
+          {%- if product.featured_media.width >= 500 -%}{{ product.featured_media | image_url: width: 500 }} 500w,{%- endif -%}
+          {{ product.featured_media | image_url }} {{ product.featured_media.width }}w"
+        src="{{ product.featured_media | image_url: width: 300 }}"
+        sizes="(min-width: 768px) 33%, (min-width: 1024px) 300px, 50%"
+        alt="{% if product.metafields.meta_object.media.value.alts.value[0] %}{{ product.metafields.meta_object.media.value.alts.value[0] | escape }}{% else %}{{ product.featured_media.alt | escape }}{% endif %}"
+        {% unless lazy_load == false %}
+        loading="lazy"
+        {% endunless %}
+        width="500"
+        height="auto"
+        class="skeleton absolute top-0 left-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 duration-200 rounded-lg {% if product.media[1].width >= product.media[1].height %}object-top{% endif %}">
     </div>
   {%- endif -%}
-  <div class="p-3 flex-grow flex flex-col justify-between">
-    <div>
-      <h3 class="text-xl">
-        <a href="{{ product.url }}" class="after:absolute after:inset-0" tabindex="-1">
-          {{ product.title | escape | upcase }}
-          <span class="inline-flex items-center">
-            {% render 'tw-icon-arrow' %}
-          </span>
-        </a>
-      </h3>
-
-    </div>
-
-    <div class="mt-5">
-      <div class="my-4 flex justify-between items-end price-and-likes">
-        <p>
-          {{ "sections.main_collection_product_grid.card-product.starting_at" | t }}&nbsp;
-            <strong>
-              {{ product.price_min | money }}
-            </strong>
-        </p>
-        {% render 'my-like-button', product: product, likes_count: product.metafields.likes.number | default: 0 %}
-        <template class="likes-count-container-template">
-          {% render 'my-like-button', product: product, likes_count: 0 %}
-        </template>
-      </div>
-      <click-product class="w-full">
-        <button class="bg-main-5 border-1 border-main-5 py-3 rounded w-full group relative inline-block overflow-hidden focus:outline-none focus:ring active:bg-main active:text-secondary pointer-events-none" {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}>
-          <span class="ease absolute left-0 top-0 h-0 w-0 border-t-2 border-main transition-all duration-200 group-hover:w-full"> </span>
-          <span class="ease absolute right-0 top-0 h-0 w-0 border-r-2 border-main transition-all duration-200 group-hover:h-full"> </span>
-          <span class="ease absolute bottom-0 right-0 h-0 w-0 border-b-2 border-main transition-all duration-200 group-hover:w-full"> </span>
-          <span class="ease absolute bottom-0 left-0 h-0 w-0 border-l-2 border-main transition-all duration-200 group-hover:h-full"> </span>
-          {{ 'sections.product_grid.button' | t }}
-        </button>
-      </click-product>
+  <div class="p-3 flex flex-col justify-between bg-white rounded-lg shadow-lg">
+    <h3 class="text-sm">
+      <a
+        href="{{ product.url }}"
+        class="after:absolute after:inset-0 mobile:line-clamp-1 md:line-clamp-2 text-ellipsis-start-mobile"
+        tabindex="-1">
+        {{ product.title | escape | upcase }}
+      </a>
+    </h3>
+    <div class="mt-2 sm:mt-6 flex justify-between items-center sm:items-end price-and-likes">
+      {% render 'my-like-button', product: product, likes_count: product.metafields.likes.number | default: 0 %}
+      <template class="likes-count-container-template">
+        {% render 'my-like-button'
+          , product: product
+          , likes_count: 0 %}
+      </template>
+      <p class="text-sm md:mr-2">
+        <strong>{{ product.price_min | money }}</strong>
+      </p>
     </div>
   </div>
 </div>

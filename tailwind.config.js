@@ -27,6 +27,7 @@ module.exports = {
       borderWidth: {
         1: '1px',
         3: '3px',
+        5: '5px',
         'neu': '4px',
       },
       boxShadow: {

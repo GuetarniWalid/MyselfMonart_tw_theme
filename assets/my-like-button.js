@@ -56,7 +56,6 @@ class MyLikeButton extends HTMLElement {
       }
 
       this.updateLikeButtonCount();
-      this.updateInfiniteScrollStrorage();
     });
   }
 
@@ -157,33 +156,6 @@ class MyLikeButton extends HTMLElement {
   enableButton() {
     this.querySelector('button.like').classList.remove('disabled');
     this.querySelector('button.like').classList.remove('cursor-not-allowed');
-  }
-
-  updateInfiniteScrollStrorage() {
-    // Get all session storage entries that start with 'infinite-scroll-storage-'
-    const infiniteScrollEntries = Object.keys(sessionStorage)
-      .filter(key => key.startsWith('infinite-scroll-storage-'))
-      .map(key => ({
-        key,
-        html: sessionStorage.getItem(key)
-      }));
-
-    if (infiniteScrollEntries.length === 0) return;
-
-    // Process each HTML entry
-    infiniteScrollEntries.forEach(entry => {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(entry.html, 'text/html');
-      const myLikeButton = doc.querySelector(`my-like-button[data-product-id="${this.productId}"]`);
-      
-      if (myLikeButton) {
-        const likesCountElem = myLikeButton.querySelector('.total-users-likes-count');
-        likesCountElem.textContent = this.querySelector('.total-users-likes-count').textContent;
-        
-        // Save the modified HTML back to session storage
-        sessionStorage.setItem(entry.key, doc.documentElement.outerHTML);
-      }
-    });
   }
 }
 customElements.define('my-like-button', MyLikeButton);
