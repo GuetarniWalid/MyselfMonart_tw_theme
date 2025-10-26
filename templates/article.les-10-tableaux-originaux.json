@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "layout": "article",
   "sections": {
@@ -19,7 +28,7 @@
           "settings": {
             "heading": "Quelle est la plus originale des décorations murales pour ma cuisine ?",
             "icon": "none",
-            "row_content": "<p>Il existe de nombreuses idées originales pour décorer votre cuisine. Vous pouvez par exemple opter pour un tableau en bois, un tableau original représentant une ville ou des paysages, un tableau d'art contemporain, un tableau réalisé à partir de matériaux recyclés, etc.<\/p>"
+            "row_content": "<p>Il existe de nombreuses idées originales pour décorer votre cuisine. Vous pouvez par exemple opter pour un tableau en bois, un tableau original représentant une ville ou des paysages, un tableau d'art contemporain, un tableau réalisé à partir de matériaux recyclés, etc.</p>"
           }
         },
         "template--16652199854335__06022fe6-1e32-4b24-add6-72599d77b804-16732707135644ea88-1": {
@@ -27,7 +36,7 @@
           "settings": {
             "heading": "Quels matériaux choisir pour mes tableaux de décoration cuisine ?",
             "icon": "none",
-            "row_content": "<p>Vous pouvez choisir entre différents matériaux : bois, aluminium, verre, toile, le plexiglass et même le papier photo. Chaque matériau a ses propres caractéristiques ses avantages et ses inconvénients. Vous pouvez donc choisir le matériau qui convient le mieux à votre cuisine et à votre style décoration d'intérieur<\/p>"
+            "row_content": "<p>Vous pouvez choisir entre différents matériaux : bois, aluminium, verre, toile, le plexiglass et même le papier photo. Chaque matériau a ses propres caractéristiques ses avantages et ses inconvénients. Vous pouvez donc choisir le matériau qui convient le mieux à votre cuisine et à votre style décoration d'intérieur</p>"
           }
         },
         "template--16652199854335__06022fe6-1e32-4b24-add6-72599d77b804-16732707135644ea88-2": {
@@ -35,7 +44,7 @@
           "settings": {
             "heading": "Ou puis-je trouver des tableaux prêts à poser ?",
             "icon": "none",
-            "row_content": "<p>Vous trouverez une large collection de tableau pour cuisine sur le site en ligne <a href=\"https:\/\/www.myselfmonart.com\/collections\/tableau-cuisine\" title=\"https:\/\/www.myselfmonart.com\/collections\/tableau-cuisine\"><strong>MyselfMonart<\/strong><\/a>, des tableaux originaux et tendances qui s'harmoniseront parfaitement avec votre intérieur. Vous y trouverez également des kits de fixation muraux pour vous aider à installer vos tableaux rapidement et facilement.<\/p>"
+            "row_content": "<p>Vous trouverez une large collection de tableau pour cuisine sur le site en ligne <a href=\"https://www.myselfmonart.com/collections/tableau-cuisine\" title=\"https://www.myselfmonart.com/collections/tableau-cuisine\"><strong>MyselfMonart</strong></a>, des tableaux originaux et tendances qui s'harmoniseront parfaitement avec votre intérieur. Vous y trouverez également des kits de fixation muraux pour vous aider à installer vos tableaux rapidement et facilement.</p>"
           }
         },
         "template--16652199854335__06022fe6-1e32-4b24-add6-72599d77b804-16732707135644ea88-3": {
@@ -43,7 +52,7 @@
           "settings": {
             "heading": "Quels conseils puis-je suivre pour bien choisir mon tableau ?",
             "icon": "none",
-            "row_content": "<p>Lorsque vous choisissez un tableau pour votre cuisine, veillez à ce qu’il soit en harmonie avec le reste du décor, assurez-vous que le thème du tableau s’accorde avec le style de votre pièce. Vérifiez également la qualité du matériau ainsi que la taille du tableau afin qu'il ne soit ni trop petit ou trop grand.<\/p>"
+            "row_content": "<p>Lorsque vous choisissez un tableau pour votre cuisine, veillez à ce qu’il soit en harmonie avec le reste du décor, assurez-vous que le thème du tableau s’accorde avec le style de votre pièce. Vérifiez également la qualité du matériau ainsi que la taille du tableau afin qu'il ne soit ni trop petit ou trop grand.</p>"
           }
         }
       },

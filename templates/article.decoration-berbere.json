@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "layout": "article",
   "sections": {
@@ -15,9 +24,9 @@
       "type": "image-banner",
       "name": "t:sections.image-banner.name",
       "settings": {
-        "image_desktop": "shopify:\/\/shop_images\/deco-marocaine-atlas-tisseuse_68f0907f-ce8a-45a3-8786-573291e3a726.jpg",
+        "image_desktop": "shopify://shop_images/deco-marocaine-atlas-tisseuse_68f0907f-ce8a-45a3-8786-573291e3a726.jpg",
         "image_desktop_horizontal_position": "center",
-        "image_mobile": "shopify:\/\/shop_images\/art-berbere-decoration-interieure_1cfe7f68-b015-419d-9396-1537e9c14ba9.jpg",
+        "image_mobile": "shopify://shop_images/art-berbere-decoration-interieure_1cfe7f68-b015-419d-9396-1537e9c14ba9.jpg",
         "image_mobile_vertical_position": "center",
         "enable_lazy_loading": true
       }
@@ -28,7 +37,7 @@
         "text_nKfkGg": {
           "type": "text",
           "settings": {
-            "text": "<p>Évadez-vous au cœur de l’Atlas avec la décoration berbère, un style chaleureux, symbolique et artisanal qui fascine les amateurs d’intérieurs authentiques. <\/p><p>Ici, chaque fibre, chaque teinte raconte un bout du désert. Dans cet article, plongez dans l’histoire de l’art Amazigh, explorez ses matières phares comme la laine ou l’argile, découvrez les pièces incontournables – tapis, tableaux, lampes – et apprenez comment harmoniser cet univers avec votre intérieur moderne.<\/p>",
+            "text": "<p>Évadez-vous au cœur de l’Atlas avec la décoration berbère, un style chaleureux, symbolique et artisanal qui fascine les amateurs d’intérieurs authentiques. </p><p>Ici, chaque fibre, chaque teinte raconte un bout du désert. Dans cet article, plongez dans l’histoire de l’art Amazigh, explorez ses matières phares comme la laine ou l’argile, découvrez les pièces incontournables – tapis, tableaux, lampes – et apprenez comment harmoniser cet univers avec votre intérieur moderne.</p>",
             "text_size": "text-xl",
             "is_lighten": false
           }
@@ -80,7 +89,7 @@
         "text_FpqYzH": {
           "type": "text",
           "settings": {
-            "text": "<p>L’art berbère est né des civilisations Amazigh, peuples libres et nomades qui ont parcouru les montagnes et les plaines du Maghreb pendant des siècles. Leurs créations artistiques – tapis, poteries, bijoux – reflètent leur rapport à la nature, leur spiritualité et leur lien profond avec la terre. Leurs traditions, transmises oralement et par les mains, s’incarnent dans des objets du quotidien devenus iconiques.<\/p>",
+            "text": "<p>L’art berbère est né des civilisations Amazigh, peuples libres et nomades qui ont parcouru les montagnes et les plaines du Maghreb pendant des siècles. Leurs créations artistiques – tapis, poteries, bijoux – reflètent leur rapport à la nature, leur spiritualité et leur lien profond avec la terre. Leurs traditions, transmises oralement et par les mains, s’incarnent dans des objets du quotidien devenus iconiques.</p>",
             "text_size": "text-xl",
             "is_lighten": false
           }
@@ -101,9 +110,9 @@
       "type": "image-banner",
       "name": "t:sections.image-banner.name",
       "settings": {
-        "image_desktop": "shopify:\/\/shop_images\/tapis-laine-berbere-deco-epuree-artisanat-atlas.jpg",
+        "image_desktop": "shopify://shop_images/tapis-laine-berbere-deco-epuree-artisanat-atlas.jpg",
         "image_desktop_horizontal_position": "center",
-        "image_mobile": "shopify:\/\/shop_images\/tapis-berbere-fait-main-decoration-minimaliste-atlas.jpg",
+        "image_mobile": "shopify://shop_images/tapis-berbere-fait-main-decoration-minimaliste-atlas.jpg",
         "image_mobile_vertical_position": "center",
         "enable_lazy_loading": true
       }
@@ -122,7 +131,7 @@
         "text_7nJhhB": {
           "type": "text",
           "settings": {
-            "text": "<p>Les motifs berbères, bien plus que décoratifs, sont des langages codés.<\/p>",
+            "text": "<p>Les motifs berbères, bien plus que décoratifs, sont des langages codés.</p>",
             "text_size": "text-xl",
             "is_lighten": false
           }
@@ -145,9 +154,9 @@
         "column_dtecGA": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tapis-berbere-losange-graphique-contemporain.jpg",
+            "image": "shopify://shop_images/tapis-berbere-losange-graphique-contemporain.jpg",
             "title": "",
-            "text": "<p>Le losange incarne la femme et la fertilité<\/p>",
+            "text": "<p>Le losange incarne la femme et la fertilité</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -156,9 +165,9 @@
         "column_wXKniN": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tapis-motif-chevron-berbere-minimaliste.jpg",
+            "image": "shopify://shop_images/tapis-motif-chevron-berbere-minimaliste.jpg",
             "title": "",
-            "text": "<p>le chevron évoque les chemins de vie et de migration<\/p>",
+            "text": "<p>le chevron évoque les chemins de vie et de migration</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -167,9 +176,9 @@
         "column_7kVmYE": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/motif-amazigh-symbole-berbere-tapis-laine.jpg",
+            "image": "shopify://shop_images/motif-amazigh-symbole-berbere-tapis-laine.jpg",
             "title": "",
-            "text": "<p>la croix symbolise l’équilibre et la croissance spirituelle<\/p>",
+            "text": "<p>la croix symbolise l’équilibre et la croissance spirituelle</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -196,9 +205,9 @@
       "type": "image-with-text",
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
-        "image": "shopify:\/\/shop_images\/portrait-femme-amazighe-tenue-traditionnelle-tatouage.jpg",
+        "image": "shopify://shop_images/portrait-femme-amazighe-tenue-traditionnelle-tatouage.jpg",
         "title": "",
-        "description": "<p><strong>« Être Amazigh, ce n’est pas seulement parler une langue, c’est habiter un monde avec le cœur. »<\/strong><br\/><br\/>— <em>Tawada Bentayeb, poétesse rifaine<\/em><\/p>",
+        "description": "<p><strong>« Être Amazigh, ce n’est pas seulement parler une langue, c’est habiter un monde avec le cœur. »</strong><br/><br/>— <em>Tawada Bentayeb, poétesse rifaine</em></p>",
         "layout": "image_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -234,9 +243,9 @@
       "type": "image-with-text",
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
-        "image": "shopify:\/\/shop_images\/laine-naturelle-tapis-berbere-artisanat.jpg",
+        "image": "shopify://shop_images/laine-naturelle-tapis-berbere-artisanat.jpg",
         "title": "LA LAINE NATURELLE",
-        "description": "<p>Matière noble, la laine est au cœur des intérieurs berbères. Tissée à la main, elle compose les célèbres tapis Beni Ouarain et Azilal. Douce, isolante et durable, elle réchauffe l’espace tout en l’apaisant.<br\/><\/p>",
+        "description": "<p>Matière noble, la laine est au cœur des intérieurs berbères. Tissée à la main, elle compose les célèbres tapis Beni Ouarain et Azilal. Douce, isolante et durable, elle réchauffe l’espace tout en l’apaisant.<br/></p>",
         "layout": "text_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -250,9 +259,9 @@
       "type": "image-with-text",
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
-        "image": "shopify:\/\/shop_images\/salon-berbere-colore-tapis-mural-artisanat-marocain.jpg",
+        "image": "shopify://shop_images/salon-berbere-colore-tapis-mural-artisanat-marocain.jpg",
         "title": "LE BOIS BRUT & RACINES",
-        "description": "<p>Le bois utilisé dans l’artisanat berbère est brut, patiné par le temps ou brûlé pour en révéler la texture. Tabourets, miroirs, étagères... chaque pièce révèle l’âme de l’arbre dont elle est issue.ion ...<\/p>",
+        "description": "<p>Le bois utilisé dans l’artisanat berbère est brut, patiné par le temps ou brûlé pour en révéler la texture. Tabourets, miroirs, étagères... chaque pièce révèle l’âme de l’arbre dont elle est issue.ion ...</p>",
         "layout": "image_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -266,9 +275,9 @@
       "type": "image-with-text",
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
-        "image": "shopify:\/\/shop_images\/tajine-marocain-vaisselle-artisanale-ceramique.jpg",
+        "image": "shopify://shop_images/tajine-marocain-vaisselle-artisanale-ceramique.jpg",
         "title": "ARGILE & CÉRAMIQUE",
-        "description": "<p>L’argile est façonnée à la main pour créer des poteries utilitaires et décoratives. Les formes irrégulières, les émaux naturels et les motifs géométriques offrent un équilibre entre rusticité et poésie.<\/p>",
+        "description": "<p>L’argile est façonnée à la main pour créer des poteries utilitaires et décoratives. Les formes irrégulières, les émaux naturels et les motifs géométriques offrent un équilibre entre rusticité et poésie.</p>",
         "layout": "text_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -282,9 +291,9 @@
       "type": "image-with-text",
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
-        "image": "shopify:\/\/shop_images\/pigments-naturels-berberes-terre-cuite-couleurs.jpg",
+        "image": "shopify://shop_images/pigments-naturels-berberes-terre-cuite-couleurs.jpg",
         "title": "PALETTE DE COULEURS",
-        "description": "<p>Blanc écru, noir profond, terre cuite, ocre, bleu Majorelle : la palette berbère évoque la terre, le désert, les ciels marocains. Ces teintes naturelles s’accordent avec les intérieurs minimalistes ou bohèmes.<\/p>",
+        "description": "<p>Blanc écru, noir profond, terre cuite, ocre, bleu Majorelle : la palette berbère évoque la terre, le désert, les ciels marocains. Ces teintes naturelles s’accordent avec les intérieurs minimalistes ou bohèmes.</p>",
         "layout": "image_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -322,25 +331,25 @@
         "image_NRhKNG": {
           "type": "image",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tapis-beni-ouarain-losange-laine-naturelle.jpg"
+            "image": "shopify://shop_images/tapis-beni-ouarain-losange-laine-naturelle.jpg"
           }
         },
         "image_9eYQyq": {
           "type": "image",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tapis-azilal-berbere-multicolore-artisanat-marocain.jpg"
+            "image": "shopify://shop_images/tapis-azilal-berbere-multicolore-artisanat-marocain.jpg"
           }
         },
         "image_UBe9tq": {
           "type": "image",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tapis-boujaad-berbere-motifs-rouge-orange.jpg"
+            "image": "shopify://shop_images/tapis-boujaad-berbere-motifs-rouge-orange.jpg"
           }
         },
         "image_4Whfz6": {
           "type": "image",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tapis-beni-ouarain-losange-laine-naturelle_91899f66-ff00-4b86-a80e-94b5ec0a9420.jpg"
+            "image": "shopify://shop_images/tapis-beni-ouarain-losange-laine-naturelle_91899f66-ff00-4b86-a80e-94b5ec0a9420.jpg"
           }
         }
       },
@@ -363,9 +372,9 @@
       "type": "image-with-text",
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
-        "image": "shopify:\/\/shop_images\/poterie-berbere-tajine-terre-cuite-artisanat-maroc.jpg",
+        "image": "shopify://shop_images/poterie-berbere-tajine-terre-cuite-artisanat-maroc.jpg",
         "title": "POTERIES & CÉRAMIQUES",
-        "description": "<p>Du plat à tajine à la jarre décorative, les poteries berbères subliment la table et les étagères. Leur charme réside dans leur imperfection assumée.<\/p>",
+        "description": "<p>Du plat à tajine à la jarre décorative, les poteries berbères subliment la table et les étagères. Leur charme réside dans leur imperfection assumée.</p>",
         "layout": "text_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -379,9 +388,9 @@
       "type": "image-with-text",
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
-        "image": "shopify:\/\/shop_images\/decoration-boheme-tableau-femme-berbere-interieur-chaleureux.jpg",
+        "image": "shopify://shop_images/decoration-boheme-tableau-femme-berbere-interieur-chaleureux.jpg",
         "title": "TABLEAUX BERBÈRES : L’ART MURAL QUI RACONTE L’ATLAS",
-        "description": "<p>Plus qu’une décoration, nos tableaux berbères sont une immersion visuelle dans la culture Amazigh. Devant l’un de ces visages stylisés, on ressent un mélange de mystère et de force ancestrale. C’est une présence silencieuse qui veille, qui raconte sans un mot, et qui transforme un mur blanc en mémoire vivante. Motifs anciens, couleurs profondes, regards énigmatiques : chaque tableau devient un fragment d’histoire suspendu. Achetez ce tableau ce <a href=\"https:\/\/www.myselfmonart.com\/products\/decoration-berbere-authentique-eclat-culturel\" target=\"_blank\" title=\"https:\/\/www.myselfmonart.com\/products\/decoration-berbere-authentique-eclat-culturel\">tableau ici<\/a><\/p>",
+        "description": "<p>Plus qu’une décoration, nos tableaux berbères sont une immersion visuelle dans la culture Amazigh. Devant l’un de ces visages stylisés, on ressent un mélange de mystère et de force ancestrale. C’est une présence silencieuse qui veille, qui raconte sans un mot, et qui transforme un mur blanc en mémoire vivante. Motifs anciens, couleurs profondes, regards énigmatiques : chaque tableau devient un fragment d’histoire suspendu. Achetez ce tableau ce <a href=\"https://www.myselfmonart.com/products/decoration-berbere-authentique-eclat-culturel\" target=\"_blank\" title=\"https://www.myselfmonart.com/products/decoration-berbere-authentique-eclat-culturel\">tableau ici</a></p>",
         "layout": "image_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -397,9 +406,9 @@
         "column_DtUrnX": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/salon-minimaliste-marocain-coussins-berberes-tapis-traditionnels.jpg",
+            "image": "shopify://shop_images/salon-minimaliste-marocain-coussins-berberes-tapis-traditionnels.jpg",
             "title": "Salon minimaliste  (tapis & tableau)",
-            "text": "<p>Optez pour une base neutre et ajoutez un tapis Beni Ouarain et un tableau berbère XXL pour structurer l’espace. Le contraste entre sobriété et richesse visuelle crée un équilibre inspirant.<\/p>",
+            "text": "<p>Optez pour une base neutre et ajoutez un tapis Beni Ouarain et un tableau berbère XXL pour structurer l’espace. Le contraste entre sobriété et richesse visuelle crée un équilibre inspirant.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -408,9 +417,9 @@
         "column_F6jzww": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/chambre-marocaine-berbere-arcade-coussins-pompons.jpg",
+            "image": "shopify://shop_images/chambre-marocaine-berbere-arcade-coussins-pompons.jpg",
             "title": "Chambre cocooning",
-            "text": "<p>Mixez matières naturelles et lumières douces : tapis épais, plaid tissé main, lampe suspendue. Le style berbère devient ici un cocon réconfortant.<\/p>",
+            "text": "<p>Mixez matières naturelles et lumières douces : tapis épais, plaid tissé main, lampe suspendue. Le style berbère devient ici un cocon réconfortant.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -419,9 +428,9 @@
         "column_94yb9L": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/assiettes-artisanales-berberes-ceramique-motifs-floraux.jpg",
+            "image": "shopify://shop_images/assiettes-artisanales-berberes-ceramique-motifs-floraux.jpg",
             "title": "Salle à manger mix & match",
-            "text": "<p>Associez une table rustique avec des chaises design, une vaisselle berbère et un centre de table en poterie artisanale. L’effet : un contraste plein de caractère.<\/p>",
+            "text": "<p>Associez une table rustique avec des chaises design, une vaisselle berbère et un centre de table en poterie artisanale. L’effet : un contraste plein de caractère.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -430,9 +439,9 @@
         "column_YFNGpp": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/bureau-bois-decoration-tableau-femme-berbere.jpg",
+            "image": "shopify://shop_images/bureau-bois-decoration-tableau-femme-berbere.jpg",
             "title": "Coin bureau nomade",
-            "text": "<p>Minimaliste et chaleureux : tapis Azilal sous la chaise, étagère flottante, tabouret en bois brut. Idéal pour créer un espace propice à la concentration et à l’évasion.<\/p>",
+            "text": "<p>Minimaliste et chaleureux : tapis Azilal sous la chaise, étagère flottante, tabouret en bois brut. Idéal pour créer un espace propice à la concentration et à l’évasion.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -460,9 +469,9 @@
       "type": "image-with-text",
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
-        "image": "shopify:\/\/shop_images\/palettes-couleurs-inspiration-marocaine-decoration.jpg",
+        "image": "shopify://shop_images/palettes-couleurs-inspiration-marocaine-decoration.jpg",
         "title": "PALETTES PRÊTES À COPIER :",
-        "description": "<p>Les couleurs changent tout. Elles créent l’ambiance dès qu’on entre dans une pièce. Dans la déco berbère, elles viennent souvent de la nature : les tons de terre, le bleu du ciel, le blanc des murs en chaux. Elles permettent d’apaiser, de réchauffer ou de dynamiser un espace. Bien choisies, elles lient les objets entre eux et rendent la pièce plus harmonieuse, sans en faire trop.<\/p>",
+        "description": "<p>Les couleurs changent tout. Elles créent l’ambiance dès qu’on entre dans une pièce. Dans la déco berbère, elles viennent souvent de la nature : les tons de terre, le bleu du ciel, le blanc des murs en chaux. Elles permettent d’apaiser, de réchauffer ou de dynamiser un espace. Bien choisies, elles lient les objets entre eux et rendent la pièce plus harmonieuse, sans en faire trop.</p>",
         "layout": "text_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -480,7 +489,7 @@
           "settings": {
             "heading": "Qu’est-ce qui définit le style berbère en décoration ?",
             "icon": "none",
-            "row_content": "<p>Le style berbère se caractérise par des matières naturelles, des motifs géométriques symboliques, et un artisanat authentique. Il mêle simplicité, chaleur, et savoir-faire traditionnel.<\/p>"
+            "row_content": "<p>Le style berbère se caractérise par des matières naturelles, des motifs géométriques symboliques, et un artisanat authentique. Il mêle simplicité, chaleur, et savoir-faire traditionnel.</p>"
           }
         },
         "collapsible_row_wBkhdb": {
@@ -488,7 +497,7 @@
           "settings": {
             "heading": "Est-ce que la déco berbère s’adapte à tous les intérieurs ?",
             "icon": "none",
-            "row_content": "<p>Oui. Que votre intérieur soit moderne, rustique ou minimaliste, quelques éléments berbères (tapis, poteries, tableaux) peuvent s’intégrer facilement et apporter du caractère.<\/p>"
+            "row_content": "<p>Oui. Que votre intérieur soit moderne, rustique ou minimaliste, quelques éléments berbères (tapis, poteries, tableaux) peuvent s’intégrer facilement et apporter du caractère.</p>"
           }
         },
         "collapsible_row_7EgLJe": {
@@ -496,7 +505,7 @@
           "settings": {
             "heading": "Quels sont les essentiels pour créer une ambiance berbère ?",
             "icon": "none",
-            "row_content": "<p>Un tapis en laine, des céramiques artisanales, du bois brut, quelques coussins aux motifs graphiques et des tons naturels sont de très bonnes bases.<\/p>"
+            "row_content": "<p>Un tapis en laine, des céramiques artisanales, du bois brut, quelques coussins aux motifs graphiques et des tons naturels sont de très bonnes bases.</p>"
           }
         },
         "collapsible_row_diGVHR": {
@@ -504,7 +513,7 @@
           "settings": {
             "heading": "Comment éviter le total look ou le cliché ?",
             "icon": "none",
-            "row_content": "<p>En choisissant quelques pièces fortes plutôt que tout coordonner. Mieux vaut un beau tapis ou un tableau berbère bien placé que trop d’éléments qui surchargent la pièce.<\/p>"
+            "row_content": "<p>En choisissant quelques pièces fortes plutôt que tout coordonner. Mieux vaut un beau tapis ou un tableau berbère bien placé que trop d’éléments qui surchargent la pièce.</p>"
           }
         },
         "collapsible_row_FGb7Uf": {
@@ -512,7 +521,7 @@
           "settings": {
             "heading": "Pourquoi intégrer un tableau berbère à sa décoration ?",
             "icon": "none",
-            "row_content": "<p>Un tableau berbère apporte une touche graphique, culturelle et intemporelle. Les motifs racontent une histoire, les couleurs sont souvent terreuses ou contrastées. Chez MyselfMonart, nous sélectionnons des tableaux et objets décoratifs inspirés de la culture berbère, en collaboration avec des artistes et ateliers certifiés. Chaque pièce est choisie pour son originalité, sa qualité et son ancrage culturel.<\/p>"
+            "row_content": "<p>Un tableau berbère apporte une touche graphique, culturelle et intemporelle. Les motifs racontent une histoire, les couleurs sont souvent terreuses ou contrastées. Chez MyselfMonart, nous sélectionnons des tableaux et objets décoratifs inspirés de la culture berbère, en collaboration avec des artistes et ateliers certifiés. Chaque pièce est choisie pour son originalité, sa qualité et son ancrage culturel.</p>"
           }
         },
         "collapsible_row_36MQci": {
@@ -520,7 +529,7 @@
           "settings": {
             "heading": "Quelle différence entre tapis Beni Ouarain et Azilal ?",
             "icon": "none",
-            "row_content": "<p>Le Beni Ouarain est sobre, noir sur écru ; l’Azilal est plus coloré, avec des motifs plus libres.<\/p>"
+            "row_content": "<p>Le Beni Ouarain est sobre, noir sur écru ; l’Azilal est plus coloré, avec des motifs plus libres.</p>"
           }
         },
         "collapsible_row_jKLEGV": {
@@ -528,7 +537,7 @@
           "settings": {
             "heading": "Faut-il un grand budget pour adopter ce style ?",
             "icon": "none",
-            "row_content": "<p>Pas forcément. Il existe des pièces artisanales accessibles. L’important est de miser sur des objets faits main et durables, même en petite quantité.<\/p>"
+            "row_content": "<p>Pas forcément. Il existe des pièces artisanales accessibles. L’important est de miser sur des objets faits main et durables, même en petite quantité.</p>"
           }
         }
       },
@@ -560,7 +569,7 @@
         "text_TDfyQK": {
           "type": "text",
           "settings": {
-            "text": "<p>La décoration berbère est bien plus qu’un style : c’est un art de vivre entre modernité et mémoire. Chaque objet, chaque couleur, chaque motif y devient langage. En adoptant ses codes, vous invitez chez vous des récits, des gestes, une âme.<\/p>",
+            "text": "<p>La décoration berbère est bien plus qu’un style : c’est un art de vivre entre modernité et mémoire. Chaque objet, chaque couleur, chaque motif y devient langage. En adoptant ses codes, vous invitez chez vous des récits, des gestes, une âme.</p>",
             "text_size": "text-xl",
             "is_lighten": false
           }

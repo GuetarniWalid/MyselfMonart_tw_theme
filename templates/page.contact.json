@@ -1,18 +1,26 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "layout": "page",
   "sections": {
     "1659971223ecf8c3c8": {
       "type": "image-banner",
       "settings": {
-        "image_desktop": "shopify:\/\/shop_images\/serviceclient_ordi.jpg",
-        "image_mobile": "shopify:\/\/shop_images\/service_client.jpg"
+        "image_desktop": "shopify://shop_images/serviceclient_ordi.jpg",
+        "image_mobile": "shopify://shop_images/service_client.jpg"
       }
     },
     "main": {
       "type": "main-page",
       "disabled": true,
-      "settings": {
-      }
+      "settings": {}
     },
     "form": {
       "type": "contact-form",

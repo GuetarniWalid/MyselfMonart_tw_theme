@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "breadcrumb_RCxFAG": {
@@ -26,7 +35,7 @@
           "type": "trustpilot_review",
           "settings": {
             "trustpilot_score": 45,
-            "link": "https:\/\/fr.trustpilot.com\/review\/myselfmonart.com",
+            "link": "https://fr.trustpilot.com/review/myselfmonart.com",
             "margin_bottom": "mb-8"
           }
         },
@@ -48,7 +57,7 @@
           "settings": {
             "heading": "Délai d'expédition",
             "icon": "truck",
-            "content": "<p>🎨 Toile personnalisée : Fabrication en 3-4 jours <\/p><p>🚚  Expédition en 3-5 jours ouvrables en colis suivi à votre domicile.<\/p>",
+            "content": "<p>🎨 Toile personnalisée : Fabrication en 3-4 jours </p><p>🚚  Expédition en 3-5 jours ouvrables en colis suivi à votre domicile.</p>",
             "page": ""
           }
         },
@@ -83,98 +92,98 @@
         "image_text_E4gkJD": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-femme-abstrait-crayon-pastel.jpg",
+            "image": "shopify://shop_images/tableau-femme-abstrait-crayon-pastel.jpg",
             "message": "Très beau tableau ! Je suis ravie de mon achat, merci.. Léa M"
           }
         },
         "image_text_PWRHhc": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-alluminium-japonais-geisha-avis-clien.jpg",
+            "image": "shopify://shop_images/tableau-alluminium-japonais-geisha-avis-clien.jpg",
             "message": "Je suis juste en admiration devant cette œuvre et vous remercie de sortir de l’ordinaire pour habiller nos murs!!!\nUn grand merci. Sandra B"
           }
         },
         "image_text_fxBift": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/toile-moderne-frida-fleurs.jpg",
+            "image": "shopify://shop_images/toile-moderne-frida-fleurs.jpg",
             "message": "Dès l’ouverture du carton, j’ai trouvé la toile magnifique.\nEncore plus belle que sur la photo du site.\nJe l’ai installée. Et l’effet est «  waouh ! »\nTrès jolie toile ! Très beau site !\nJe suis ravi de mon achat. Cécile C"
           }
         },
         "image_text_Wckbj6": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-contemporain-abstrait-femme-ronde.jpg",
+            "image": "shopify://shop_images/tableau-contemporain-abstrait-femme-ronde.jpg",
             "message": "Reçu mon tableau et franchement, je ne regrette pas une seconde ! Les couleurs sont incroyables, l’originalité saute aux yeux… Impossible de ne pas s’arrêter devant. Sophie D"
           }
         },
         "image_text_DCdKLC": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableauphotographie-zebre-animaux-zebre-sauvage.jpg",
+            "image": "shopify://shop_images/tableauphotographie-zebre-animaux-zebre-sauvage.jpg",
             "message": "L'animal, majestueux et solitaire trône dans mon salon au dessus de ma console... Peut on dire qu il est magnifique ? Assurément oui et je l adore!\nPatricia G."
           }
         },
         "image_text_7ERwAp": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-gaming-marvel-iron-man.jpg",
+            "image": "shopify://shop_images/tableau-gaming-marvel-iron-man.jpg",
             "message": "Très content de mon achat ! Mon fils est ravi il va faire de beaux rêves de super-héros\n. Eugene D"
           }
         },
         "image_text_ragCcn": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/peinture-femme-noire-muse.jpg",
+            "image": "shopify://shop_images/peinture-femme-noire-muse.jpg",
             "message": "Magnifique tableau et très design, correspond parfaitement à la description.  Morel E"
           }
         },
         "image_text_Riirzd": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/Tableau-chambre-bebe_f6e62e6e-707b-41df-aa17-bdad25ef3385.jpg",
+            "image": "shopify://shop_images/Tableau-chambre-bebe_f6e62e6e-707b-41df-aa17-bdad25ef3385.jpg",
             "message": "Juste une petite photo avec le cadre mis en place encore un grand merci à vous 🥰. \nElodie G"
           }
         },
         "image_text_qM9rBh": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/deco-mural-toile-marilyn-monroe-pop-art.jpg",
+            "image": "shopify://shop_images/deco-mural-toile-marilyn-monroe-pop-art.jpg",
             "message": "Envoie très rapide et tableau encore plus beau que sur le site.\nParfait je recommande !!!\nJessica S"
           }
         },
         "image_text_xLzjRk": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/decoration-mural-cadre-bois-cactus-paysage-colore.jpg",
+            "image": "shopify://shop_images/decoration-mural-cadre-bois-cactus-paysage-colore.jpg",
             "message": "Super contente du rendu de ces cadres en bois ! 🌵 Ça apporte tellement de chaleur et de gaieté à mon salon, j’adore ! 😍 Lina O"
           }
         },
         "image_text_jLAVDk": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/avis-tableau-plexi_2.jpg",
+            "image": "shopify://shop_images/avis-tableau-plexi_2.jpg",
             "message": "Tableau magnifique, très contente du support choisi en plexiglas réalisé avec soin. Joëlle N"
           }
         },
         "image_text_yxnGkz": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-animaux-rhinoceros_b1022df5-0085-43a4-93b7-011dd579d316.jpg",
+            "image": "shopify://shop_images/tableau-animaux-rhinoceros_b1022df5-0085-43a4-93b7-011dd579d316.jpg",
             "message": "AMAZING ! Le poster est magnifique, il fait son effet dans mon salon. Vanessa K"
           }
         },
         "image_text_PTqtay": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/deco-mural-ying-yang.jpg",
+            "image": "shopify://shop_images/deco-mural-ying-yang.jpg",
             "message": "Le tableau est magnifique! Alexandre V"
           }
         },
         "image_text_NnGTgN": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-fruit-legume-cuisine-ananas-colore.jpg",
+            "image": "shopify://shop_images/tableau-fruit-legume-cuisine-ananas-colore.jpg",
             "message": "Trop contente de mon tableau, les couleurs sont aussi flashy que sur les photos du site.\nSarah F"
           }
         },
@@ -182,70 +191,70 @@
           "type": "image-text",
           "disabled": true,
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-street-art-femme-noire.jpg",
+            "image": "shopify://shop_images/tableau-street-art-femme-noire.jpg",
             "message": "Parfait\nSuper rendu. \tMariane B"
           }
         },
         "image_text_VRyJn9": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-panoramique-payasage-foret-lac.jpg",
+            "image": "shopify://shop_images/tableau-panoramique-payasage-foret-lac.jpg",
             "message": "Ce tableau est magnifique et tellement immersif ! Il donne une vraie sensation d’évasion et transforme l’ambiance de mon salon. Pierre S"
           }
         },
         "image_text_FpM3Nt": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-zen-japonais-geisha_59746ee5-1329-4a3a-94ad-bc201116687c.jpg",
+            "image": "shopify://shop_images/tableau-zen-japonais-geisha_59746ee5-1329-4a3a-94ad-bc201116687c.jpg",
             "message": "Nous sommes très satisfait de notre achat\nTrès bonne qualité\nNous ferons d´autres achats chez vous.\nBernard D"
           }
         },
         "image_text_UfccPh": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-pour-cuisine-epices-colore.jpg",
+            "image": "shopify://shop_images/tableau-pour-cuisine-epices-colore.jpg",
             "message": "Ravie de mon achat,\ntrès beau rendu des couleurs qui sont éclatantes. \nYannick R."
           }
         },
         "image_text_hCDnam": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/Tableau-chambre_a164de8b-ed28-4326-926b-92bbe380279b.jpg",
+            "image": "shopify://shop_images/Tableau-chambre_a164de8b-ed28-4326-926b-92bbe380279b.jpg",
             "message": "Le tableau est super, et encore plus beau en vrai ! Arrivé rapidement et bien protégé. Alain N"
           }
         },
         "image_text_XaycRQ": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/Tableau-decoration_44dcf7be-75b3-46aa-810b-3020d3b9dc06.jpg",
+            "image": "shopify://shop_images/Tableau-decoration_44dcf7be-75b3-46aa-810b-3020d3b9dc06.jpg",
             "message": "Très belle toile, les couleurs sont super et brillante. Marie K"
           }
         },
         "image_text_QfHTN6": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/Tableau-deco-noir-et-blanc.jpg",
+            "image": "shopify://shop_images/Tableau-deco-noir-et-blanc.jpg",
             "message": "Top, rien à dire de plus. \nGuillaume H"
           }
         },
         "image_text_eAxGcM": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-comics-super-man.jpg",
+            "image": "shopify://shop_images/tableau-comics-super-man.jpg",
             "message": "Nickel, très satisfait c'est ma 3e commande. Hugo G"
           }
         },
         "image_text_DbNc9D": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-superman-aquarelle.jpg",
+            "image": "shopify://shop_images/tableau-superman-aquarelle.jpg",
             "message": "TOP, tableau reçu rapidement avec suivie. Hugo G"
           }
         },
         "image_text_pFY7GA": {
           "type": "image-text",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-lion-impression-alluminuim.jpg",
+            "image": "shopify://shop_images/tableau-lion-impression-alluminuim.jpg",
             "message": "TOP QUALITÉ,  j'ai choisi l'impression sur aluminium et l'image est vraiment top. Ethan V"
           }
         }
@@ -285,9 +294,9 @@
       "type": "image-with-text",
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
-        "image": "shopify:\/\/shop_images\/comparaison_couleurs-tableau-haute-qualiter.jpg",
+        "image": "shopify://shop_images/comparaison_couleurs-tableau-haute-qualiter.jpg",
         "title": "Des couleurs qui prennent vie chez vous",
-        "description": "<p>Chaque tableau est imprimé en <strong>haute définition<\/strong>, révélant des <strong>teintes intenses, riches et profondes<\/strong>. Les détails sont nets, les nuances fidèles à l’œuvre originale, pour un rendu qui attire le regard et sublime votre décoration..<\/p>",
+        "description": "<p>Chaque tableau est imprimé en <strong>haute définition</strong>, révélant des <strong>teintes intenses, riches et profondes</strong>. Les détails sont nets, les nuances fidèles à l’œuvre originale, pour un rendu qui attire le regard et sublime votre décoration..</p>",
         "layout": "image_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -301,9 +310,9 @@
       "type": "image-with-text",
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
-        "image": "shopify:\/\/shop_images\/texture-tableau-toile-poster-alluminium-plexiglass.jpg",
+        "image": "shopify://shop_images/texture-tableau-toile-poster-alluminium-plexiglass.jpg",
         "title": "La finition qui reflète votre style",
-        "description": "<p>Toile au grain authentique, éclat du plexiglass, élégance de l’aluminium ou douceur du poster… Peu importe votre choix, chaque finition sublime votre œuvre et s’intègre parfaitement à votre décoration.<\/p>",
+        "description": "<p>Toile au grain authentique, éclat du plexiglass, élégance de l’aluminium ou douceur du poster… Peu importe votre choix, chaque finition sublime votre œuvre et s’intègre parfaitement à votre décoration.</p>",
         "layout": "text_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -319,7 +328,7 @@
         "svg_block_gqrreR": {
           "type": "svg_block",
           "settings": {
-            "badge_logo": "<svg width=\"98\" height=\"86\" viewbox=\"0 0 98 86\" fill=\"none\" xmlns=\"http:\/\/www.w3.org\/2000\/svg\" class=\"text-main\">\n<path d=\"M85.3701 1H96.3301V12.04\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M96.33 73.1602V84.5602H84.49\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M92.68 4.41992L82.21 13.5499\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M82.21 71.9199L92.68 81.0599\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M74.3701 17.5498H22.1801C19.7998 17.5498 17.8701 19.4795 17.8701 21.8598V62.9898C17.8701 65.3702 19.7998 67.2998 22.1801 67.2998H74.3701C76.7505 67.2998 78.6801 65.3702 78.6801 62.9898V21.8598C78.6801 19.4795 76.7505 17.5498 74.3701 17.5498Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\" stroke-linecap=\"round\"><\/path>\n<path d=\"M66.91 37.09C70.0525 37.09 72.6 34.5425 72.6 31.4C72.6 28.2575 70.0525 25.71 66.91 25.71C63.7675 25.71 61.22 28.2575 61.22 31.4C61.22 34.5425 63.7675 37.09 66.91 37.09Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M19.8301 48.4701C19.8301 48.4701 28.0701 41.4101 33.9501 40.6201C39.8301 39.8301 48.2701 42.4201 48.2701 42.4201C48.2701 42.4201 56.3101 46.5001 59.4501 48.4601C62.5901 50.4201 66.1201 51.9901 69.2601 52.3801C72.4001 52.7701 77.1101 52.3801 77.1101 52.3801\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M96.33 1H1V84.56H96.33V1Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M1 12.04V1H11.82\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M1 73.1602V84.5602H7.14H11.08\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M4.6499 4.29004L15.1199 13.42\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M15.1199 71.9199L4.6499 81.0599\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<\/svg>",
+            "badge_logo": "<svg width=\"98\" height=\"86\" viewbox=\"0 0 98 86\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"text-main\">\n<path d=\"M85.3701 1H96.3301V12.04\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M96.33 73.1602V84.5602H84.49\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M92.68 4.41992L82.21 13.5499\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M82.21 71.9199L92.68 81.0599\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M74.3701 17.5498H22.1801C19.7998 17.5498 17.8701 19.4795 17.8701 21.8598V62.9898C17.8701 65.3702 19.7998 67.2998 22.1801 67.2998H74.3701C76.7505 67.2998 78.6801 65.3702 78.6801 62.9898V21.8598C78.6801 19.4795 76.7505 17.5498 74.3701 17.5498Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\" stroke-linecap=\"round\"></path>\n<path d=\"M66.91 37.09C70.0525 37.09 72.6 34.5425 72.6 31.4C72.6 28.2575 70.0525 25.71 66.91 25.71C63.7675 25.71 61.22 28.2575 61.22 31.4C61.22 34.5425 63.7675 37.09 66.91 37.09Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M19.8301 48.4701C19.8301 48.4701 28.0701 41.4101 33.9501 40.6201C39.8301 39.8301 48.2701 42.4201 48.2701 42.4201C48.2701 42.4201 56.3101 46.5001 59.4501 48.4601C62.5901 50.4201 66.1201 51.9901 69.2601 52.3801C72.4001 52.7701 77.1101 52.3801 77.1101 52.3801\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M96.33 1H1V84.56H96.33V1Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M1 12.04V1H11.82\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M1 73.1602V84.5602H7.14H11.08\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M4.6499 4.29004L15.1199 13.42\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M15.1199 71.9199L4.6499 81.0599\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n</svg>",
             "logo_size": 75,
             "background_plus_border": false,
             "heading": "Format personnalisé",
@@ -329,7 +338,7 @@
         "svg_block_jhdjPx": {
           "type": "svg_block",
           "settings": {
-            "badge_logo": "<svg width=\"90\" height=\"86\" viewbox=\"0 0 90 86\" fill=\"none\" xmlns=\"http:\/\/www.w3.org\/2000\/svg\" class=\"text-main\">\n<path d=\"M88.97 1H9.5V76.98H88.97V1Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M20.03 76.98L74.2 1\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M29.8101 76.98L83.6401 1\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M50.6899 19.81L64.2299 1\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M38.6499 76.9798L51.8199 58.5498\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M21.5501 6.27002C21.5501 12.6 18.1301 18.26 13.3101 18.26C18.1301 18.26 21.5501 23.92 21.5501 30.25C21.5501 23.92 24.9701 18.26 29.7901 18.26C24.9701 18.26 21.5501 12.6 21.5501 6.27002Z\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"0.5\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M33.16 6.27002C33.16 9.43002 31.45 12.26 29.04 12.26C31.45 12.26 33.16 15.09 33.16 18.25C33.16 15.09 34.87 12.26 37.28 12.26C34.87 12.26 33.16 9.43002 33.16 6.27002Z\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"0.5\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M31.2902 18.2603C31.2902 21.4203 29.5802 24.2503 27.1702 24.2503C29.5802 24.2503 31.2902 27.0803 31.2902 30.2403C31.2902 27.0803 33.0002 24.2503 35.4102 24.2503C33.0002 24.2503 31.2902 21.4203 31.2902 18.2603Z\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"0.5\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M1.01001 10.3999V84.0099\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M77.81 84.5598L0 84.0098\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<\/svg>",
+            "badge_logo": "<svg width=\"90\" height=\"86\" viewbox=\"0 0 90 86\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"text-main\">\n<path d=\"M88.97 1H9.5V76.98H88.97V1Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M20.03 76.98L74.2 1\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M29.8101 76.98L83.6401 1\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M50.6899 19.81L64.2299 1\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M38.6499 76.9798L51.8199 58.5498\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M21.5501 6.27002C21.5501 12.6 18.1301 18.26 13.3101 18.26C18.1301 18.26 21.5501 23.92 21.5501 30.25C21.5501 23.92 24.9701 18.26 29.7901 18.26C24.9701 18.26 21.5501 12.6 21.5501 6.27002Z\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"0.5\" stroke-miterlimit=\"10\"></path>\n<path d=\"M33.16 6.27002C33.16 9.43002 31.45 12.26 29.04 12.26C31.45 12.26 33.16 15.09 33.16 18.25C33.16 15.09 34.87 12.26 37.28 12.26C34.87 12.26 33.16 9.43002 33.16 6.27002Z\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"0.5\" stroke-miterlimit=\"10\"></path>\n<path d=\"M31.2902 18.2603C31.2902 21.4203 29.5802 24.2503 27.1702 24.2503C29.5802 24.2503 31.2902 27.0803 31.2902 30.2403C31.2902 27.0803 33.0002 24.2503 35.4102 24.2503C33.0002 24.2503 31.2902 21.4203 31.2902 18.2603Z\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"0.5\" stroke-miterlimit=\"10\"></path>\n<path d=\"M1.01001 10.3999V84.0099\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M77.81 84.5598L0 84.0098\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n</svg>",
             "logo_size": 70,
             "background_plus_border": false,
             "heading": "Finition au choix",
@@ -339,7 +348,7 @@
         "svg_block_BrGJVg": {
           "type": "svg_block",
           "settings": {
-            "badge_logo": "<svg width=\"80\" height=\"83\" viewbox=\"0 0 80 83\" fill=\"none\" xmlns=\"http:\/\/www.w3.org\/2000\/svg\" class=\"text-main\">\n<path d=\"M78.74 1H1V81.65H78.74V1Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M39.87 13.04H68.49V72.42H11.25V13.04H20.53\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M39.87 34.7L30.2 24.07L20.53 34.7V1H39.87V34.7Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<\/svg>",
+            "badge_logo": "<svg width=\"80\" height=\"83\" viewbox=\"0 0 80 83\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"text-main\">\n<path d=\"M78.74 1H1V81.65H78.74V1Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M39.87 13.04H68.49V72.42H11.25V13.04H20.53\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M39.87 34.7L30.2 24.07L20.53 34.7V1H39.87V34.7Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n</svg>",
             "logo_size": 75,
             "background_plus_border": false,
             "heading": "Impression haute qualite",
@@ -349,7 +358,7 @@
         "svg_block_K7XcH8": {
           "type": "svg_block",
           "settings": {
-            "badge_logo": "<svg width=\"116\" height=\"90\" viewbox=\"0 0 116 90\" fill=\"none\" xmlns=\"http:\/\/www.w3.org\/2000\/svg\" class=\"text-main\">\n<path d=\"M25.87 54.9402H1V17.9502H48.24V39.8702\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M25.87 48.5801H8.51001V26.3301H41.67V39.8701\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M18.8301 17.9498L25.0901 11.5898L32.9101 17.9498\" stroke=\"currentColor\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M54.79 39.5099V7.35986H114.94V58.4899H89.38\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M62.3101 38.7499V14.8799H108.55V52.4799H89.3801\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M62.31 14.8799L54.79 7.35986\" stroke=\"currentColor\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M108.55 14.8799L114.94 7.35986\" stroke=\"currentColor\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M114.94 58.49L108.55 52.48\" stroke=\"currentColor\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M89.37 39.8701H26.73V88.9701H89.37V39.8701Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M79.22 48.6699H35.54V80.1599H79.22V48.6699Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M79.22 80.1602L89.38 88.9702\" stroke=\"currentColor\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M35.54 80.1602L26.73 88.9702\" stroke=\"currentColor\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M35.54 48.6701L26.73 39.8701\" stroke=\"currentColor\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M89.38 39.8701L79.22 48.6701\" stroke=\"currentColor\" stroke-miterlimit=\"10\"><\/path>\n<path d=\"M77.8201 7.36L84.0801 1L91.9001 7.36\" stroke=\"currentColor\" stroke-miterlimit=\"10\"><\/path>\n<\/svg>",
+            "badge_logo": "<svg width=\"116\" height=\"90\" viewbox=\"0 0 116 90\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"text-main\">\n<path d=\"M25.87 54.9402H1V17.9502H48.24V39.8702\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M25.87 48.5801H8.51001V26.3301H41.67V39.8701\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M18.8301 17.9498L25.0901 11.5898L32.9101 17.9498\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M54.79 39.5099V7.35986H114.94V58.4899H89.38\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M62.3101 38.7499V14.8799H108.55V52.4799H89.3801\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M62.31 14.8799L54.79 7.35986\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M108.55 14.8799L114.94 7.35986\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M114.94 58.49L108.55 52.48\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M89.37 39.8701H26.73V88.9701H89.37V39.8701Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M79.22 48.6699H35.54V80.1599H79.22V48.6699Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M79.22 80.1602L89.38 88.9702\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M35.54 80.1602L26.73 88.9702\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M35.54 48.6701L26.73 39.8701\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M89.38 39.8701L79.22 48.6701\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M77.8201 7.36L84.0801 1L91.9001 7.36\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n</svg>",
             "logo_size": 80,
             "background_plus_border": false,
             "heading": "Encadrement en option",
@@ -375,25 +384,25 @@
         "image_bDpkF3": {
           "type": "image",
           "settings": {
-            "image": "shopify:\/\/shop_images\/femme-accroche-tableau-mur.jpg"
+            "image": "shopify://shop_images/femme-accroche-tableau-mur.jpg"
           }
         },
         "image_TAPgwV": {
           "type": "image",
           "settings": {
-            "image": "shopify:\/\/shop_images\/emballage-tableau-decoration.jpg"
+            "image": "shopify://shop_images/emballage-tableau-decoration.jpg"
           }
         },
         "image_Vby3MD": {
           "type": "image",
           "settings": {
-            "image": "shopify:\/\/shop_images\/deco-neutre-salon-beige-tableau-japonais-oiseux.jpg"
+            "image": "shopify://shop_images/deco-neutre-salon-beige-tableau-japonais-oiseux.jpg"
           }
         },
         "image_CgQFPt": {
           "type": "image",
           "settings": {
-            "image": "shopify:\/\/shop_images\/chassis-bois-toile-coton-tableau-oiseaux-fleurs.jpg"
+            "image": "shopify://shop_images/chassis-bois-toile-coton-tableau-oiseaux-fleurs.jpg"
           }
         }
       },
@@ -428,7 +437,7 @@
           "settings": {
             "heading": "Quels supports choisir, le rendu est-il différent ?",
             "icon": "none",
-            "row_content": "<p>- Tableau toile 100% polyester (285g\/m²) : <strong>Mate et texturée<\/strong><\/p><p>Le tableau en toile offre une prise en main agréable. Le grain<strong> <\/strong>du papier est visible principalement dans les zones claires de l’image, tandis que les noirs auront tendance à les gommer. La surface de toile cuisine ajoute du relief et de la profondeur à vos tableaux. Il apporte une touche artistique et les dote d’une <strong>incroyable intensité.<\/strong><\/p><p>- tableau plexiglas ou tableau en verre acrylique :<strong> Brillant et transparent<\/strong><\/p><p>Le tableau mural en <strong>verre acrylique<\/strong>, également appelé <strong>tableau plexiglas,<\/strong> est un matériau synthétique rigide et transparent haut de gamme, son aspect est similaire à du verre.<\/p><p>Le plexiglas offre <strong>une profondeur <\/strong>et <strong>une luminosité extraordinaire <\/strong>à vos tableaux. Les couleurs de votre photo seront vives et éclatantes il est particulièrement recommandé pour la réalisation de tableaux lumineux.<\/p><p>- Tableau aluminium argent brossé ou tableau métal : <strong>Contraste et éclat.<\/strong><\/p><p>Le tableau deco en aluminium permet une <strong>présentation sobre, moderne et sans reflet<\/strong>. La densité des couleurs et les contrastes sont très forts.<\/p><p>L'aluminium est un support très résistant et de qualité il n'est pas sensible aux traces de doigts ou à l'humidité et l’entretien de vos toiles est facile. Vous pouvez les nettoyer avec un tissu légèrement humide.<\/p>"
+            "row_content": "<p>- Tableau toile 100% polyester (285g/m²) : <strong>Mate et texturée</strong></p><p>Le tableau en toile offre une prise en main agréable. Le grain<strong> </strong>du papier est visible principalement dans les zones claires de l’image, tandis que les noirs auront tendance à les gommer. La surface de toile cuisine ajoute du relief et de la profondeur à vos tableaux. Il apporte une touche artistique et les dote d’une <strong>incroyable intensité.</strong></p><p>- tableau plexiglas ou tableau en verre acrylique :<strong> Brillant et transparent</strong></p><p>Le tableau mural en <strong>verre acrylique</strong>, également appelé <strong>tableau plexiglas,</strong> est un matériau synthétique rigide et transparent haut de gamme, son aspect est similaire à du verre.</p><p>Le plexiglas offre <strong>une profondeur </strong>et <strong>une luminosité extraordinaire </strong>à vos tableaux. Les couleurs de votre photo seront vives et éclatantes il est particulièrement recommandé pour la réalisation de tableaux lumineux.</p><p>- Tableau aluminium argent brossé ou tableau métal : <strong>Contraste et éclat.</strong></p><p>Le tableau deco en aluminium permet une <strong>présentation sobre, moderne et sans reflet</strong>. La densité des couleurs et les contrastes sont très forts.</p><p>L'aluminium est un support très résistant et de qualité il n'est pas sensible aux traces de doigts ou à l'humidité et l’entretien de vos toiles est facile. Vous pouvez les nettoyer avec un tissu légèrement humide.</p>"
           }
         },
         "e20d3253-d757-4a99-9237-128916cc9ffb": {
@@ -436,7 +445,7 @@
           "settings": {
             "heading": "Avec quoi et comment accrochez mon tableau ?",
             "icon": "none",
-            "row_content": "<p>Pour une finition à la hauteur de votre décoration  il est important de prendre en compte le support d'impression. <\/p><p>- Les supports tels que le plexiglas coulé et l'aluminium nécessitent un espacement entre le tableau et le mur. <\/p><p>Nous vous recommandons d'utiliser notre système d'accrochage, nos équipes s'occupent d'installer le kit de fixation directement sur le tableau. Nos kit de fixation sont disponibles en supplément sur notre site. <\/p><p>- Pour accrocher les tableaux en toile montés sur châssis il est recommandé d'utiliser des crochets. Attention, il vous faudra prendre en compte le poids du tableau avant tout achat. <br\/><\/p><p>Enfin, pour ne pas abîmer votre mur il vous faudra également faire attention aux chevilles qui sont différentes selon les murs en placo, brique ou béton.<\/p><p>En raison de la particularité de chaque mur nos kits de fixation sont livrées sans visserie.<\/p>"
+            "row_content": "<p>Pour une finition à la hauteur de votre décoration  il est important de prendre en compte le support d'impression. </p><p>- Les supports tels que le plexiglas coulé et l'aluminium nécessitent un espacement entre le tableau et le mur. </p><p>Nous vous recommandons d'utiliser notre système d'accrochage, nos équipes s'occupent d'installer le kit de fixation directement sur le tableau. Nos kit de fixation sont disponibles en supplément sur notre site. </p><p>- Pour accrocher les tableaux en toile montés sur châssis il est recommandé d'utiliser des crochets. Attention, il vous faudra prendre en compte le poids du tableau avant tout achat. <br/></p><p>Enfin, pour ne pas abîmer votre mur il vous faudra également faire attention aux chevilles qui sont différentes selon les murs en placo, brique ou béton.</p><p>En raison de la particularité de chaque mur nos kits de fixation sont livrées sans visserie.</p>"
           }
         },
         "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-2": {
@@ -444,7 +453,7 @@
           "settings": {
             "heading": "Pourquoi acheter chez nous ?",
             "icon": "none",
-            "row_content": "<p>Nos graphistes travaillent chaque jour pour créer de nouvelles œuvres. Chaque semaine, nous mettons à jour notre site et ajoutons les nouveaux tableaux.<\/p><p>Vous avez la possibilité de choisir le support et la taille pour un accord parfait avec votre intérieur.<\/p><p>Si toutefois aucun tableau ne vous plaît, vous avez la possibilité de demander à nos graphistes de façonner l'œuvre de vos rêves.<\/p>"
+            "row_content": "<p>Nos graphistes travaillent chaque jour pour créer de nouvelles œuvres. Chaque semaine, nous mettons à jour notre site et ajoutons les nouveaux tableaux.</p><p>Vous avez la possibilité de choisir le support et la taille pour un accord parfait avec votre intérieur.</p><p>Si toutefois aucun tableau ne vous plaît, vous avez la possibilité de demander à nos graphistes de façonner l'œuvre de vos rêves.</p>"
           }
         },
         "a603c2c1-59a1-4067-9d4b-dc8591ddc1f8": {
@@ -452,7 +461,7 @@
           "settings": {
             "heading": "Quelle taille de toile choisir ?",
             "icon": "none",
-            "row_content": "<p>Pour ne pas vous tromper, mesurez la largeur de votre pan de mur. Multipliez le résultat par 0,57 pour obtenir le ratio idéal.<\/p><p>Sachez qu'il est également recommandé d'accrocher le centre du tableau à environ 1,65 mètre du sol (ce qui correspond à peu près à la hauteur des yeux). Il est aussi recommandé de laisser environ 30 centimètres d'espace entre un meuble et un tableau.<\/p>"
+            "row_content": "<p>Pour ne pas vous tromper, mesurez la largeur de votre pan de mur. Multipliez le résultat par 0,57 pour obtenir le ratio idéal.</p><p>Sachez qu'il est également recommandé d'accrocher le centre du tableau à environ 1,65 mètre du sol (ce qui correspond à peu près à la hauteur des yeux). Il est aussi recommandé de laisser environ 30 centimètres d'espace entre un meuble et un tableau.</p>"
           }
         },
         "collapsible_row_6q4PMJ": {
@@ -460,7 +469,7 @@
           "settings": {
             "heading": "Que faire si l'article ne me convient pas ?",
             "icon": "none",
-            "row_content": "<p>Pas de souci ! Si l'article ne répond pas à vos attentes, vous avez <strong>14 jours ouvrables<\/strong> après réception pour le retourner. Nous voulons que vous soyez totalement satisfait(e). Contactez-nous dans les 3 jours suivant la réception, et nous vous guiderons dans le processus de retour. <\/p>"
+            "row_content": "<p>Pas de souci ! Si l'article ne répond pas à vos attentes, vous avez <strong>14 jours ouvrables</strong> après réception pour le retourner. Nous voulons que vous soyez totalement satisfait(e). Contactez-nous dans les 3 jours suivant la réception, et nous vous guiderons dans le processus de retour. </p>"
           }
         }
       },

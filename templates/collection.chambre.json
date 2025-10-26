@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "layout": "collection",
   "sections": {
@@ -21,41 +30,41 @@
         "collection_e4aytH": {
           "type": "collection",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-chambre-adulte_8ed37f59-d8a6-401f-8818-433b0de07158.jpg",
+            "image": "shopify://shop_images/tableau-chambre-adulte_8ed37f59-d8a6-401f-8818-433b0de07158.jpg",
             "collection": "tableau-chambre-adulte",
             "nb_columns": "col-span-12",
             "lazy_load": false,
-            "paragraph": "<h3>EXPLOREZ NOTRE COLLECTION DE TABLEAUX POUR CHAMBRE À COUCHER<\/h3><p>Sublimez votre espace dédié au repos avec notre sélection de tableaux pour chambre. Que vous cherchiez à instaurer une ambiance apaisante pour encourager la sérénité, ou une touche sensuelle pour renforcer l'intimité, Myselfmonart a l'œuvre parfaite pour vous.<\/p><p>Chaque personnalité étant unique, nos tableaux sont choisis avec soin pour offrir une atmosphère idéale à cet espace si personnel. Transformez votre chambre avec élégance et harmonie grâce à notre collection, conçue pour s'adapter à chaque ambiance.<\/p>"
+            "paragraph": "<h3>EXPLOREZ NOTRE COLLECTION DE TABLEAUX POUR CHAMBRE À COUCHER</h3><p>Sublimez votre espace dédié au repos avec notre sélection de tableaux pour chambre. Que vous cherchiez à instaurer une ambiance apaisante pour encourager la sérénité, ou une touche sensuelle pour renforcer l'intimité, Myselfmonart a l'œuvre parfaite pour vous.</p><p>Chaque personnalité étant unique, nos tableaux sont choisis avec soin pour offrir une atmosphère idéale à cet espace si personnel. Transformez votre chambre avec élégance et harmonie grâce à notre collection, conçue pour s'adapter à chaque ambiance.</p>"
           }
         },
         "collection_JzfYie": {
           "type": "collection",
           "settings": {
-            "image": "shopify:\/\/shop_images\/Tableau-chambre-enfant_e3437408-1922-469a-abe1-e4198f27818d.jpg",
+            "image": "shopify://shop_images/Tableau-chambre-enfant_e3437408-1922-469a-abe1-e4198f27818d.jpg",
             "collection": "tableau-chambre-enfant",
             "nb_columns": "col-span-8",
             "lazy_load": false,
-            "paragraph": "<h3>DÉCOUVREZ LA MAGIE DES TABLEAUX POUR ENFANTS DE MYSELFMONARTT<\/h3><p>Plongez dans un univers où chaque tableau est une porte ouverte sur l'imagination. Notre collection de tableaux pour la chambre des enfants transforme de simples murs en scènes vibrantes de contes et d'aventures. Avec des motifs allant des animaux joyeux aux héros de contes de fées, chaque œuvre est conçue pour inspirer et éveiller la créativité des jeunes esprits. Invitez la magie et l'aventure dans la chambre de votre enfant avec Myselfmonart, où chaque tableau raconte une histoire unique, enrichissant leur monde de couleurs et de rêves.<\/p>"
+            "paragraph": "<h3>DÉCOUVREZ LA MAGIE DES TABLEAUX POUR ENFANTS DE MYSELFMONARTT</h3><p>Plongez dans un univers où chaque tableau est une porte ouverte sur l'imagination. Notre collection de tableaux pour la chambre des enfants transforme de simples murs en scènes vibrantes de contes et d'aventures. Avec des motifs allant des animaux joyeux aux héros de contes de fées, chaque œuvre est conçue pour inspirer et éveiller la créativité des jeunes esprits. Invitez la magie et l'aventure dans la chambre de votre enfant avec Myselfmonart, où chaque tableau raconte une histoire unique, enrichissant leur monde de couleurs et de rêves.</p>"
           }
         },
         "collection_dgikmt": {
           "type": "collection",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-chambre-bebe_de4822a8-1ce7-4764-93d7-9f6a04cf5548.jpg",
+            "image": "shopify://shop_images/tableau-chambre-bebe_de4822a8-1ce7-4764-93d7-9f6a04cf5548.jpg",
             "collection": "tableaux-chambre-bebe",
             "nb_columns": "col-span-4",
             "lazy_load": false,
-            "paragraph": "<h3>DÉCOUVREZ LES TABLEAUX CHAMBRE BÉBÉ DE MYSELMONART<\/h3><p>Créez un cocon de douceur et de sérénité pour votre bébé avec nos tableaux spécialement conçus pour les chambres d'enfants. Nos œuvres, pleines de tendresse et de couleurs apaisantes, créent un environnement idéal pour le repos et l'éveil de votre petit.<\/p><p>Chaque tableau est une fenêtre ouverte sur un monde doux et rassurant, parfait pour accompagner les premiers sourires et rêves de votre enfant. Laissez MyselMonart vous aider à transformer la chambre de votre bébé en un espace serein et inspirant.<\/p>"
+            "paragraph": "<h3>DÉCOUVREZ LES TABLEAUX CHAMBRE BÉBÉ DE MYSELMONART</h3><p>Créez un cocon de douceur et de sérénité pour votre bébé avec nos tableaux spécialement conçus pour les chambres d'enfants. Nos œuvres, pleines de tendresse et de couleurs apaisantes, créent un environnement idéal pour le repos et l'éveil de votre petit.</p><p>Chaque tableau est une fenêtre ouverte sur un monde doux et rassurant, parfait pour accompagner les premiers sourires et rêves de votre enfant. Laissez MyselMonart vous aider à transformer la chambre de votre bébé en un espace serein et inspirant.</p>"
           }
         },
         "collection_dBW9UB": {
           "type": "collection",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-chambre-ado_e90cd531-5782-425e-8186-824a9deb4e78.jpg",
+            "image": "shopify://shop_images/tableau-chambre-ado_e90cd531-5782-425e-8186-824a9deb4e78.jpg",
             "collection": "tableau-chambre-ado",
             "nb_columns": "col-span-12",
             "lazy_load": true,
-            "paragraph": "<h3>DÉCOUVREZ LES DÉCOUVREZ NOS TABLEAUX POUR LA CHAMBRE DE VOTRE ADO<\/h3><p>Créez un espace unique et stylé pour votre adolescent avec notre collection de tableaux. Chaque pièce est pensée pour capturer l'esprit jeune et dynamique de votre ado, qu'il soit fan de marques fashion, de paysages urbains, ou des personnages de Marvel et de BD. Nos tableaux offrent une variété de thèmes, du street art aux paysages urbains, pour satisfaire tous les goûts et apporter une touche personnelle à leur chambre.<\/p><p>Des couleurs vives pour dynamiser l’espace aux nuances plus apaisantes pour un coin détente, chaque tableau transforme leur chambre en un refuge où leur personnalité peut s'exprimer pleinement. Offrez à votre adolescent un environnement qui lui ressemble, où chaque mur devient une source d'inspiration et de confort. Découvrez comment nos tableaux peuvent donner vie à leur univers et créer une ambiance qui les inspire chaque jour.<\/p>"
+            "paragraph": "<h3>DÉCOUVREZ LES DÉCOUVREZ NOS TABLEAUX POUR LA CHAMBRE DE VOTRE ADO</h3><p>Créez un espace unique et stylé pour votre adolescent avec notre collection de tableaux. Chaque pièce est pensée pour capturer l'esprit jeune et dynamique de votre ado, qu'il soit fan de marques fashion, de paysages urbains, ou des personnages de Marvel et de BD. Nos tableaux offrent une variété de thèmes, du street art aux paysages urbains, pour satisfaire tous les goûts et apporter une touche personnelle à leur chambre.</p><p>Des couleurs vives pour dynamiser l’espace aux nuances plus apaisantes pour un coin détente, chaque tableau transforme leur chambre en un refuge où leur personnalité peut s'exprimer pleinement. Offrez à votre adolescent un environnement qui lui ressemble, où chaque mur devient une source d'inspiration et de confort. Découvrez comment nos tableaux peuvent donner vie à leur univers et créer une ambiance qui les inspire chaque jour.</p>"
           }
         }
       },

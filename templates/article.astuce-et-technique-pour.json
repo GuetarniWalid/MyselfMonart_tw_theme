@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "layout": "article",
   "sections": {
@@ -35,9 +44,9 @@
     "138dfacc-956d-4385-800b-427e62cc6cb0": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify:\/\/shop_images\/cuisine-tableau.jpg",
+        "image": "shopify://shop_images/cuisine-tableau.jpg",
         "title": "Idées futées pour une déco de cuisine",
-        "description": "<p>Si vous êtes en manque d'imagination ou à la recherche d'idées farfelues pour décorer votre cuisine, nous avons déniché pour vous des petites astuces qui permettront de redonner un coup de jeune à votre cuisine. Alors découvrez sans plus attendre les astuces de nos designers pour décorer votre cuisine. Et si vous souhaitez en savoir plus, découvrez l'article complet <\/p><p><a href=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/comment-faire-la-decoration-de-ma-cuisine?shpxid=764c9c2f-eacb-4366-b852-8b42d13bc3d9\" title=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/comment-faire-la-decoration-de-ma-cuisine?shpxid=764c9c2f-eacb-4366-b852-8b42d13bc3d9\">👉Comment faire la décoration de ma cuisine ?<\/a><\/p>",
+        "description": "<p>Si vous êtes en manque d'imagination ou à la recherche d'idées farfelues pour décorer votre cuisine, nous avons déniché pour vous des petites astuces qui permettront de redonner un coup de jeune à votre cuisine. Alors découvrez sans plus attendre les astuces de nos designers pour décorer votre cuisine. Et si vous souhaitez en savoir plus, découvrez l'article complet </p><p><a href=\"https://www.myselfmonart.com/blogs/tableau-cuisine/comment-faire-la-decoration-de-ma-cuisine?shpxid=764c9c2f-eacb-4366-b852-8b42d13bc3d9\" title=\"https://www.myselfmonart.com/blogs/tableau-cuisine/comment-faire-la-decoration-de-ma-cuisine?shpxid=764c9c2f-eacb-4366-b852-8b42d13bc3d9\">👉Comment faire la décoration de ma cuisine ?</a></p>",
         "layout": "image_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -71,9 +80,9 @@
     "df039cca-e85c-4e48-87c9-1ed5d5acc453": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify:\/\/shop_images\/Quelle-est-la-couleur-la-moins-salissante-pour-une-cuisine.jpg",
+        "image": "shopify://shop_images/Quelle-est-la-couleur-la-moins-salissante-pour-une-cuisine.jpg",
         "title": "La bonne couleur pour une cuisine propre plus longtemps",
-        "description": "<p>Pour concevoir ou rénover une cuisine, le choix de la couleur est crucial.<\/p><p>Vous savez probablement à quel point il peut être difficile de choisir la bonne couleur pour les murs, les armoires, et même du plancher. Si vous êtes en quête de conseils pour trouver une couleur qui résiste aux taches, à l'humidité et à la graisse, nous vous invitons à consulter notre blog : \"<\/p><p><a href=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/quelle-est-la-couleur-la-moins-salissante-pour-une-cuisine\" target=\"_blank\" title=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/quelle-est-la-couleur-la-moins-salissante-pour-une-cuisine\">👉 Quelle est la couleur la moins<br\/>salissante pour une cuisine ? <\/a><\/p><p>Alors n'hésitez pas à nous rendre visite pour découvrir nos précieux conseils !<\/p>",
+        "description": "<p>Pour concevoir ou rénover une cuisine, le choix de la couleur est crucial.</p><p>Vous savez probablement à quel point il peut être difficile de choisir la bonne couleur pour les murs, les armoires, et même du plancher. Si vous êtes en quête de conseils pour trouver une couleur qui résiste aux taches, à l'humidité et à la graisse, nous vous invitons à consulter notre blog : \"</p><p><a href=\"https://www.myselfmonart.com/blogs/tableau-cuisine/quelle-est-la-couleur-la-moins-salissante-pour-une-cuisine\" target=\"_blank\" title=\"https://www.myselfmonart.com/blogs/tableau-cuisine/quelle-est-la-couleur-la-moins-salissante-pour-une-cuisine\">👉 Quelle est la couleur la moins<br/>salissante pour une cuisine ? </a></p><p>Alors n'hésitez pas à nous rendre visite pour découvrir nos précieux conseils !</p>",
         "layout": "text_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -107,9 +116,9 @@
     "ec782ce3-8f63-4911-9804-8f480f2d5b52": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify:\/\/shop_images\/Comment-donner-un-coup-de-neuf_a-sa-cuisine.jpg",
+        "image": "shopify://shop_images/Comment-donner-un-coup-de-neuf_a-sa-cuisine.jpg",
         "title": "Relookez votre cuisine facilement",
-        "description": "<p>Besoin de donner un nouveau look à votre cuisine sans tout changer ? <\/p><p>Notre dernier article regorge de conseils pratiques pour transformer votre espace culinaire en un lieu fonctionnel et esthétique. Que vous souhaitiez moderniser vos armoires, changer le revêtement de sol ou ajouter des éléments de décoration, nous avons toutes les astuces pour vous aider à donner un coup de neuf à votre cuisine sans vous ruiner. <strong>Découvrez dès maintenant nos astuces sur notre blog \"  <\/strong><\/p><p><a href=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/comment-donner-un-coup-de-neuf-a-sa-cuisine\" target=\"_blank\" title=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/comment-donner-un-coup-de-neuf-a-sa-cuisine\">👉Comment donner un coup de neuf à sa cuisine ?<\/a><\/p>",
+        "description": "<p>Besoin de donner un nouveau look à votre cuisine sans tout changer ? </p><p>Notre dernier article regorge de conseils pratiques pour transformer votre espace culinaire en un lieu fonctionnel et esthétique. Que vous souhaitiez moderniser vos armoires, changer le revêtement de sol ou ajouter des éléments de décoration, nous avons toutes les astuces pour vous aider à donner un coup de neuf à votre cuisine sans vous ruiner. <strong>Découvrez dès maintenant nos astuces sur notre blog \"  </strong></p><p><a href=\"https://www.myselfmonart.com/blogs/tableau-cuisine/comment-donner-un-coup-de-neuf-a-sa-cuisine\" target=\"_blank\" title=\"https://www.myselfmonart.com/blogs/tableau-cuisine/comment-donner-un-coup-de-neuf-a-sa-cuisine\">👉Comment donner un coup de neuf à sa cuisine ?</a></p>",
         "layout": "image_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -143,9 +152,9 @@
     "bd8905d9-2e3f-417a-bd29-62ee386a63c9": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify:\/\/shop_images\/decoration-cuisine-cadres-fruits-style-mediterraneen.jpg",
+        "image": "shopify://shop_images/decoration-cuisine-cadres-fruits-style-mediterraneen.jpg",
         "title": "La cuisine est bien plus qu’un lieu de préparation :",
-        "description": "<p> C’est un espace de vie, de partage et de chaleur. Et parfois, il suffit d’un seul tableau pour lui donner une toute nouvelle ambiance. Dans cet article, découvrez des idées simples et inspirantes pour décorer votre cuisine avec goût : natures mortes gourmandes, citations pleines de bonne humeur, souvenirs de famille ou œuvres plus contemporaines. Des conseils concrets, pensés pour celles qui aiment les intérieurs harmonieux, épurés et empreints d’émotion.<\/p><p><a href=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/quels-tableaux-mettre-dans-une-cuisine-un-guide-pratique-et-esthetique\" target=\"_blank\" title=\"https:\/\/www.myselfmonart.com\/blogs\/tableau-cuisine\/quels-tableaux-mettre-dans-une-cuisine-un-guide-pratique-et-esthetique\">👉 <strong>Un guide à ne pas manquer pour faire entrer la douceur et la personnalité dans votre cuisine.<\/strong><\/a><\/p>",
+        "description": "<p> C’est un espace de vie, de partage et de chaleur. Et parfois, il suffit d’un seul tableau pour lui donner une toute nouvelle ambiance. Dans cet article, découvrez des idées simples et inspirantes pour décorer votre cuisine avec goût : natures mortes gourmandes, citations pleines de bonne humeur, souvenirs de famille ou œuvres plus contemporaines. Des conseils concrets, pensés pour celles qui aiment les intérieurs harmonieux, épurés et empreints d’émotion.</p><p><a href=\"https://www.myselfmonart.com/blogs/tableau-cuisine/quels-tableaux-mettre-dans-une-cuisine-un-guide-pratique-et-esthetique\" target=\"_blank\" title=\"https://www.myselfmonart.com/blogs/tableau-cuisine/quels-tableaux-mettre-dans-une-cuisine-un-guide-pratique-et-esthetique\">👉 <strong>Un guide à ne pas manquer pour faire entrer la douceur et la personnalité dans votre cuisine.</strong></a></p>",
         "layout": "image_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -171,7 +180,7 @@
           "settings": {
             "heading": "Comment bien concevoir l'aménagement de sa cuisine ?",
             "icon": "none",
-            "row_content": "<p>Pour bien concevoir l'aménagement de votre cuisine, vous devez prendre en compte les besoins de votre famille, le nombre de personnes qui vont l'utiliser et vos habitudes de cuisson. Pensez également à l'emplacement des prises électriques, des éviers et des placards.<\/p>"
+            "row_content": "<p>Pour bien concevoir l'aménagement de votre cuisine, vous devez prendre en compte les besoins de votre famille, le nombre de personnes qui vont l'utiliser et vos habitudes de cuisson. Pensez également à l'emplacement des prises électriques, des éviers et des placards.</p>"
           }
         },
         "template--16684094587135__8babb80d-11ea-47b3-9fd7-4547747a9d48-1677531235093f94a7-1": {
@@ -179,7 +188,7 @@
           "settings": {
             "heading": "Comment choisir les matériaux pour les plans de travail de cuisine ?",
             "icon": "none",
-            "row_content": "<p>Les matériaux les plus courants pour les plans de travail de cuisine sont le granit, le marbre, le bois, l'acier inoxydable et le quartz. Le choix dépend de votre style personnel, de la résistance aux taches, aux rayures et à la chaleur que vous recherchez.<\/p>"
+            "row_content": "<p>Les matériaux les plus courants pour les plans de travail de cuisine sont le granit, le marbre, le bois, l'acier inoxydable et le quartz. Le choix dépend de votre style personnel, de la résistance aux taches, aux rayures et à la chaleur que vous recherchez.</p>"
           }
         },
         "template--16684094587135__8babb80d-11ea-47b3-9fd7-4547747a9d48-1677531235093f94a7-2": {
@@ -187,7 +196,7 @@
           "settings": {
             "heading": "Comment choisir les couleurs pour sa cuisine ?",
             "icon": "none",
-            "row_content": "<p>Pour choisir les couleurs de votre cuisine, vous devez prendre en compte la lumière naturelle de votre pièce, votre style personnel et l'ambiance que vous souhaitez créer. Les couleurs claires sont recommandées pour les petites cuisines pour agrandir l'espace, tandis que les couleurs sombres sont plus adaptées aux grandes cuisines pour créer une ambiance chaleureuse.<\/p>"
+            "row_content": "<p>Pour choisir les couleurs de votre cuisine, vous devez prendre en compte la lumière naturelle de votre pièce, votre style personnel et l'ambiance que vous souhaitez créer. Les couleurs claires sont recommandées pour les petites cuisines pour agrandir l'espace, tandis que les couleurs sombres sont plus adaptées aux grandes cuisines pour créer une ambiance chaleureuse.</p>"
           }
         },
         "template--16684094587135__8babb80d-11ea-47b3-9fd7-4547747a9d48-1677531235093f94a7-3": {
@@ -195,7 +204,7 @@
           "settings": {
             "heading": "Comment éclairer sa cuisine ?",
             "icon": "none",
-            "row_content": "<p>Pour éclairer votre cuisine, vous pouvez utiliser plusieurs sources de lumière : un plafonnier central, des spots encastrés, des appliques murales ou encore des suspensions. L'éclairage doit être suffisant pour bien voir ce que vous faites, mais aussi créer une ambiance agréable.<\/p>"
+            "row_content": "<p>Pour éclairer votre cuisine, vous pouvez utiliser plusieurs sources de lumière : un plafonnier central, des spots encastrés, des appliques murales ou encore des suspensions. L'éclairage doit être suffisant pour bien voir ce que vous faites, mais aussi créer une ambiance agréable.</p>"
           }
         },
         "bf025448-6766-4a1f-9643-78d58831f07c": {
@@ -203,7 +212,7 @@
           "settings": {
             "heading": "Comment ajouter une touche personnelle à sa cuisine ?",
             "icon": "none",
-            "row_content": "<p>Pour ajouter une touche personnelle à votre cuisine, vous pouvez utiliser des accessoires tels que des coussins, des tapis ou des rideaux. Vous pouvez également ajouter des objets de décoration comme des <a href=\"https:\/\/www.myselfmonart.com\/collections\/tableau-cuisine\" target=\"_blank\" title=\"https:\/\/www.myselfmonart.com\/collections\/tableau-cuisine\">tableaux cuisine<\/a>, des plantes ou des étagères. N'oubliez pas que la touche personnelle doit être en accord avec le style général de votre cuisine.<\/p>"
+            "row_content": "<p>Pour ajouter une touche personnelle à votre cuisine, vous pouvez utiliser des accessoires tels que des coussins, des tapis ou des rideaux. Vous pouvez également ajouter des objets de décoration comme des <a href=\"https://www.myselfmonart.com/collections/tableau-cuisine\" target=\"_blank\" title=\"https://www.myselfmonart.com/collections/tableau-cuisine\">tableaux cuisine</a>, des plantes ou des étagères. N'oubliez pas que la touche personnelle doit être en accord avec le style général de votre cuisine.</p>"
           }
         }
       },

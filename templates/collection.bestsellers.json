@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "layout": "collection",
   "sections": {
@@ -37,7 +46,7 @@
         "svg_block_6ekJ4W": {
           "type": "svg_block",
           "settings": {
-            "badge_logo": "<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M14.121 5.879A3 3 0 0 0 9 8a1 1 0 0 1-2 0a5 5 0 1 1 8.535 3.535L9.88 17.193A3 3 0 0 0 9.016 19H16a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1v-.686a5 5 0 0 1 1.464-3.536l5.657-5.657a3 3 0 0 0 0-4.242\" clip-rule=\"evenodd\"><\/path><\/svg>",
+            "badge_logo": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M14.121 5.879A3 3 0 0 0 9 8a1 1 0 0 1-2 0a5 5 0 1 1 8.535 3.535L9.88 17.193A3 3 0 0 0 9.016 19H16a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1v-.686a5 5 0 0 1 1.464-3.536l5.657-5.657a3 3 0 0 0 0-4.242\" clip-rule=\"evenodd\"></path></svg>",
             "logo_size": 45,
             "background_plus_border": true,
             "heading": "PERSONNALISEZ",
@@ -47,7 +56,7 @@
         "svg_block_TkaFMd": {
           "type": "svg_block",
           "settings": {
-            "badge_logo": "<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2.5\" d=\"M8 19a5 5 0 1 0 3-9l5-6H8\"><\/path><\/svg>",
+            "badge_logo": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2.5\" d=\"M8 19a5 5 0 1 0 3-9l5-6H8\"></path></svg>",
             "logo_size": 45,
             "background_plus_border": true,
             "heading": "COMMANDEZ",
@@ -57,7 +66,7 @@
         "svg_block_CVpW8Q": {
           "type": "svg_block",
           "settings": {
-            "badge_logo": "<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2.5\" d=\"m10 4l-1.522 7.608A2 2 0 0 0 10.44 14H16m0 0V8m0 6v6\"><\/path><\/svg>",
+            "badge_logo": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2.5\" d=\"m10 4l-1.522 7.608A2 2 0 0 0 10.44 14H16m0 0V8m0 6v6\"></path></svg>",
             "logo_size": 45,
             "background_plus_border": true,
             "heading": "ADMIREZ",

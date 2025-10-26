@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "breadcrumb_RCxFAG": {
@@ -26,22 +35,22 @@
           "type": "trustpilot_review",
           "settings": {
             "trustpilot_score": 45,
-            "link": "https:\/\/fr.trustpilot.com\/review\/myselfmonart.com",
+            "link": "https://fr.trustpilot.com/review/myselfmonart.com",
             "margin_bottom": "mb-8"
           }
         },
         "8600f603-2d6f-4191-8020-3678432ba1e5": {
           "type": "text",
           "settings": {
-            "text": "<p>😃 Un changement immédiat et spectaculaire.<\/p><p>😍 Facile à poser, facile à aimer<\/p><p>😊 Un investissement durable et élégant<\/p>"
+            "text": "<p>😃 Un changement immédiat et spectaculaire.</p><p>😍 Facile à poser, facile à aimer</p><p>😊 Un investissement durable et élégant</p>"
           }
         },
         "tapestry_options_4AnMD4": {
           "type": "tapestry_options",
           "settings": {
-            "tapestry_texture_landscape": "shopify:\/\/shop_images\/tapisserie-texture.png",
-            "tapestry_texture_portrait": "shopify:\/\/shop_images\/tapisserie-texture-portrait.png",
-            "tapestry_texture_square": "shopify:\/\/shop_images\/tapisserie-texture-carre.png",
+            "tapestry_texture_landscape": "shopify://shop_images/tapisserie-texture.png",
+            "tapestry_texture_portrait": "shopify://shop_images/tapisserie-texture-portrait.png",
+            "tapestry_texture_square": "shopify://shop_images/tapisserie-texture-carre.png",
             "tapestry_default_width_landscape": 250,
             "tapestry_default_width_portrait": 150,
             "tapestry_default_width_square": 200,
@@ -95,7 +104,7 @@
           "settings": {
             "heading": "Quels sont les conseils d'utilisation pour le papier peint et peut-on le poser sur tout type de surface ?",
             "icon": "none",
-            "row_content": "<p>La surface de pose doit être <strong>sèche, propre, solide, légèrement absorbante et lisse<\/strong>. Cela garantit une adhérence optimale et une meilleure durabilité du papier peint.<\/p>"
+            "row_content": "<p>La surface de pose doit être <strong>sèche, propre, solide, légèrement absorbante et lisse</strong>. Cela garantit une adhérence optimale et une meilleure durabilité du papier peint.</p>"
           }
         },
         "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-1": {
@@ -103,7 +112,7 @@
           "settings": {
             "heading": "Quel type de colle utiliser pour la pose de ce papier peint ?",
             "icon": "none",
-            "row_content": "<p>Ce papier peint s'applique comme un papier peint classique avec de la colle murale.<\/p>"
+            "row_content": "<p>Ce papier peint s'applique comme un papier peint classique avec de la colle murale.</p>"
           }
         },
         "e20d3253-d757-4a99-9237-128916cc9ffb": {
@@ -111,7 +120,7 @@
           "settings": {
             "heading": "Combien de centimètres faut-il ajouter après mesure afin de garantir une impression et une pose optimale ?",
             "icon": "none",
-            "row_content": "<p>Nous conseillons d'ajouter <strong>5 cm en haut et en bas<\/strong> pour assurer un confort de pose optimal.<\/p>"
+            "row_content": "<p>Nous conseillons d'ajouter <strong>5 cm en haut et en bas</strong> pour assurer un confort de pose optimal.</p>"
           }
         },
         "a603c2c1-59a1-4067-9d4b-dc8591ddc1f8": {
@@ -119,7 +128,7 @@
           "settings": {
             "heading": "Que vais-je recevoir si j'ai par exemple un mur de 290 cm de hauteur et 400 cm de longueur ?",
             "icon": "none",
-            "row_content": "<p>Le papier peint sera livré en <strong>4 morceaux de 72,5 cm de hauteur sur 100 cm de longueur<\/strong>, pour une pose plus facile.<\/p>"
+            "row_content": "<p>Le papier peint sera livré en <strong>4 morceaux de 72,5 cm de hauteur sur 100 cm de longueur</strong>, pour une pose plus facile.</p>"
           }
         },
         "collapsible_row_9JJAHy": {
@@ -127,7 +136,7 @@
           "settings": {
             "heading": "Le papier peint est-il repositionnable et facile à enlever ?",
             "icon": "none",
-            "row_content": "<p>Oui, notre papier peint est conçu pour être retiré facilement sans abîmer votre mur. Cependant, il n'est pas repositionnable une fois collé.<\/p>"
+            "row_content": "<p>Oui, notre papier peint est conçu pour être retiré facilement sans abîmer votre mur. Cependant, il n'est pas repositionnable une fois collé.</p>"
           }
         },
         "collapsible_row_FiG4VX": {
@@ -135,7 +144,7 @@
           "settings": {
             "heading": "Sous combien de temps vais-je recevoir ma commande ?",
             "icon": "none",
-            "row_content": "<p>Nos papiers peints sont imprimés à la demande. <strong>Le délai de traitement, production et expédition est de 7 à 10 jours ouvrés.<\/strong> Vous recevrez un numéro de suivi dès l’envoi de votre commande.<\/p>"
+            "row_content": "<p>Nos papiers peints sont imprimés à la demande. <strong>Le délai de traitement, production et expédition est de 7 à 10 jours ouvrés.</strong> Vous recevrez un numéro de suivi dès l’envoi de votre commande.</p>"
           }
         },
         "collapsible_row_8KptAt": {
@@ -143,7 +152,7 @@
           "settings": {
             "heading": "Comment entretenir mon papier peint ?",
             "icon": "none",
-            "row_content": "<p>Un chiffon doux légèrement humide suffit pour nettoyer la surface. <strong>Évitez les produits abrasifs<\/strong> pour préserver la qualité d’impression.<\/p>"
+            "row_content": "<p>Un chiffon doux légèrement humide suffit pour nettoyer la surface. <strong>Évitez les produits abrasifs</strong> pour préserver la qualité d’impression.</p>"
           }
         },
         "collapsible_row_PJkTmW": {
@@ -151,7 +160,7 @@
           "settings": {
             "heading": "Quelle est votre politique de retour ?",
             "icon": "none",
-            "row_content": "<p>Les papiers peints étant imprimés sur-mesure selon vos dimensions, nous n'acceptons pas les retours sauf en cas de défaut de fabrication. Dans ce cas, contactez-nous sous <strong>48 heures après réception<\/strong> avec des photos du problème.<\/p>"
+            "row_content": "<p>Les papiers peints étant imprimés sur-mesure selon vos dimensions, nous n'acceptons pas les retours sauf en cas de défaut de fabrication. Dans ce cas, contactez-nous sous <strong>48 heures après réception</strong> avec des photos du problème.</p>"
           }
         }
       },

@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "layout": "collection",
   "sections": {
@@ -15,11 +24,11 @@
           "type": "collection",
           "disabled": true,
           "settings": {
-            "image": "shopify:\/\/shop_images\/galerie-tableaux-manga-street-art-naruto-luffy-goku.jpg",
+            "image": "shopify://shop_images/galerie-tableaux-manga-street-art-naruto-luffy-goku.jpg",
             "collection": "tableau-manga-1",
             "nb_columns": "col-span-12",
             "lazy_load": true,
-            "paragraph": "<h3><strong>DÉCOUVREZ NOTRE COLLECTION DE TABLEAUX MANGA<\/strong><\/h3><p>Plongez dans des univers forts en émotions avec notre collection de <strong>tableaux manga japonais<\/strong>. Pensée pour toutes les générations, elle met à l’honneur des séries cultes comme <strong>Naruto<\/strong>, <strong>One Piece<\/strong> ou <strong>Pokémon<\/strong>, qui ont marqué l’enfance et l’adolescence de nombreux passionnés.<\/p><p>Chaque tableau est disponible sur différents supports — <strong>toile, aluminium, plexiglass<\/strong>, ou <strong>poster<\/strong> — pour s’adapter à tous les styles d’intérieur, du plus classique au plus moderne. Les détails sont nets, les couleurs fidèles, pour un rendu à la hauteur des plus grands fans.<\/p><p>C’est une collection idéale si vous cherchez à <strong>décorer la chambre de votre enfant<\/strong>, ou à <strong>faire un cadeau qui a du sens<\/strong>. Ces tableaux trouvent aussi parfaitement leur place dans un <strong>bureau, un coin gaming ou un espace YouTube<\/strong>, pour créer une ambiance inspirante et personnalisée.<\/p><p>Le manga ne se résume pas à un style : c’est une culture visuelle forte, pleine d’histoires marquantes. Offrir ou s’offrir un tableau manga, c’est faire entrer un peu de cette passion dans le quotidien.<\/p>"
+            "paragraph": "<h3><strong>DÉCOUVREZ NOTRE COLLECTION DE TABLEAUX MANGA</strong></h3><p>Plongez dans des univers forts en émotions avec notre collection de <strong>tableaux manga japonais</strong>. Pensée pour toutes les générations, elle met à l’honneur des séries cultes comme <strong>Naruto</strong>, <strong>One Piece</strong> ou <strong>Pokémon</strong>, qui ont marqué l’enfance et l’adolescence de nombreux passionnés.</p><p>Chaque tableau est disponible sur différents supports — <strong>toile, aluminium, plexiglass</strong>, ou <strong>poster</strong> — pour s’adapter à tous les styles d’intérieur, du plus classique au plus moderne. Les détails sont nets, les couleurs fidèles, pour un rendu à la hauteur des plus grands fans.</p><p>C’est une collection idéale si vous cherchez à <strong>décorer la chambre de votre enfant</strong>, ou à <strong>faire un cadeau qui a du sens</strong>. Ces tableaux trouvent aussi parfaitement leur place dans un <strong>bureau, un coin gaming ou un espace YouTube</strong>, pour créer une ambiance inspirante et personnalisée.</p><p>Le manga ne se résume pas à un style : c’est une culture visuelle forte, pleine d’histoires marquantes. Offrir ou s’offrir un tableau manga, c’est faire entrer un peu de cette passion dans le quotidien.</p>"
           }
         }
       },
@@ -52,7 +61,7 @@
         "svg_block_fwBkmi": {
           "type": "svg_block",
           "settings": {
-            "badge_logo": "<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 256 256\"><path fill=\"currentColor\" d=\"M148 48v160a12 12 0 0 1-24 0V69.19l-21.83 13.1a12 12 0 0 1-12.34-20.58l40-24A12 12 0 0 1 148 48\"><\/path><\/svg>",
+            "badge_logo": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 256 256\"><path fill=\"currentColor\" d=\"M148 48v160a12 12 0 0 1-24 0V69.19l-21.83 13.1a12 12 0 0 1-12.34-20.58l40-24A12 12 0 0 1 148 48\"></path></svg>",
             "logo_size": 45,
             "background_plus_border": true,
             "heading": "CHOISISSEZ",
@@ -62,7 +71,7 @@
         "svg_block_jKTfqi": {
           "type": "svg_block",
           "settings": {
-            "badge_logo": "<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M14.121 5.879A3 3 0 0 0 9 8a1 1 0 0 1-2 0a5 5 0 1 1 8.535 3.535L9.88 17.193A3 3 0 0 0 9.016 19H16a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1v-.686a5 5 0 0 1 1.464-3.536l5.657-5.657a3 3 0 0 0 0-4.242\" clip-rule=\"evenodd\"><\/path><\/svg>",
+            "badge_logo": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M14.121 5.879A3 3 0 0 0 9 8a1 1 0 0 1-2 0a5 5 0 1 1 8.535 3.535L9.88 17.193A3 3 0 0 0 9.016 19H16a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1v-.686a5 5 0 0 1 1.464-3.536l5.657-5.657a3 3 0 0 0 0-4.242\" clip-rule=\"evenodd\"></path></svg>",
             "logo_size": 45,
             "background_plus_border": true,
             "heading": "PERSONNALISEZ",
@@ -72,7 +81,7 @@
         "svg_block_fYfEXf": {
           "type": "svg_block",
           "settings": {
-            "badge_logo": "<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2.5\" d=\"M8 19a5 5 0 1 0 3-9l5-6H8\"><\/path><\/svg>",
+            "badge_logo": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2.5\" d=\"M8 19a5 5 0 1 0 3-9l5-6H8\"></path></svg>",
             "logo_size": 45,
             "background_plus_border": true,
             "heading": "COMMANDEZ",
@@ -82,7 +91,7 @@
         "svg_block_iFndbn": {
           "type": "svg_block",
           "settings": {
-            "badge_logo": "<svg xmlns=\"http:\/\/www.w3.org\/2000\/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2.5\" d=\"m10 4l-1.522 7.608A2 2 0 0 0 10.44 14H16m0 0V8m0 6v6\"><\/path><\/svg>",
+            "badge_logo": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2.5\" d=\"m10 4l-1.522 7.608A2 2 0 0 0 10.44 14H16m0 0V8m0 6v6\"></path></svg>",
             "logo_size": 45,
             "background_plus_border": true,
             "heading": "ADMIREZ",

@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "layout": "collection",
   "sections": {
@@ -21,41 +30,41 @@
         "collection_49e7fq": {
           "type": "collection",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-paysage_8e1c68fe-763d-4c8b-94cb-85e6d50f362c.jpg",
+            "image": "shopify://shop_images/tableau-paysage_8e1c68fe-763d-4c8b-94cb-85e6d50f362c.jpg",
             "collection": "tableau-paysage",
             "nb_columns": "col-span-12",
             "lazy_load": false,
-            "paragraph": "<h3>Embarquez pour un Voyage Visuel avec Nos Tableaux de Paysages<\/h3><p><br\/>    Perdez-vous dans l’immensité des horizons avec notre gamme de tableaux de paysages du monde. Chaque œuvre est une invitation au voyage, offrant des escapades visuelles à travers des terrains montagneux, des déserts arides, et des cités pittoresques. Ces paysages méticuleusement capturés sont à la fois un hommage à la terre et une opportunité pour vous de vous immerger dans des panoramas lointains depuis le confort de votre foyer.<br\/><\/p><p><br\/>    Chacune de ces collections est soigneusement conçue pour apporter équilibre, beauté, et serenité à votre décoration d'interieur transformant ainsi vos pièces en sanctuaires de nature, d'évasion et d'exploration visuelle. Choisir nos tableaux de paysages, c’est adopter des fragments du monde naturel, des pépites de la splendeur de la Terre, et les intégrer dans votre quotidien pour une expérience quotidienne enrichissante et inspirante. Invitez la nature, l'aventure et l'émerveillement dans votre maison avec nos œuvres qui parlent à votre être et résonnent avec vos espaces.<br\/><\/p>"
+            "paragraph": "<h3>Embarquez pour un Voyage Visuel avec Nos Tableaux de Paysages</h3><p><br/>    Perdez-vous dans l’immensité des horizons avec notre gamme de tableaux de paysages du monde. Chaque œuvre est une invitation au voyage, offrant des escapades visuelles à travers des terrains montagneux, des déserts arides, et des cités pittoresques. Ces paysages méticuleusement capturés sont à la fois un hommage à la terre et une opportunité pour vous de vous immerger dans des panoramas lointains depuis le confort de votre foyer.<br/></p><p><br/>    Chacune de ces collections est soigneusement conçue pour apporter équilibre, beauté, et serenité à votre décoration d'interieur transformant ainsi vos pièces en sanctuaires de nature, d'évasion et d'exploration visuelle. Choisir nos tableaux de paysages, c’est adopter des fragments du monde naturel, des pépites de la splendeur de la Terre, et les intégrer dans votre quotidien pour une expérience quotidienne enrichissante et inspirante. Invitez la nature, l'aventure et l'émerveillement dans votre maison avec nos œuvres qui parlent à votre être et résonnent avec vos espaces.<br/></p>"
           }
         },
         "collection_cWitXL": {
           "type": "collection",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableaux-animaux.jpg",
+            "image": "shopify://shop_images/tableaux-animaux.jpg",
             "collection": "tableau-animaux",
             "nb_columns": "col-span-8",
             "lazy_load": false,
-            "paragraph": "<h3>DÉCOUVREZ NOTRE COLLECTION DE TABLEAUX ANIMAUX<\/h3><p><br\/>  Pour habiller les murs de votre maison ou offrir un cadeau original à vos proches,découvrez notre collection impressionnante de tableaux design et moderne et optez pour un tableau d'art sur le thème des animaux. Vous trouverez celui qui correspond le mieux à votre intérieur et vos envies, que vous<br\/>  préfériez un tableau de loup sauvage, un tableau de lion dominant, un tableau de cerf sauvage, ou encore un tableau de chaton mignon. Nous proposons une variété d'animaux pour répondre à toutes vos préférences et passions.<br\/><\/p><p><br\/>  Nos tableaux d'animaux sont imprimés sur toile, aluminium, ou plexiglas de haute qualité avec des couleurs éclatantes et une netteté exceptionnelle pour donner vie à chaque détail. De plus, nous offrons différentes tailles pour s'adapter à tous les espaces, grands ou petits. Que vous souhaitiez un<br\/>  tableau imposant pour habiller votre salon ou une petite toile pour votre bureau, nous avons tout ce qu'il vous faut pour embellir votre espace de vie.<br\/><\/p><p><br\/>  Offrez à vos proches un cadeau unique et personnalisé en choisissant l'animal qui correspond le mieux à leur personnalité et à leur goût. Ils seront ravis de recevoir un tel cadeau original et de pouvoir ajouter une touche d'exotisme et de créativité à leur décoration intérieure. Avec notre<br\/>  collection de tableaux animaux, offrez des cadeaux qui sortent de l'ordinaire, ajoutez une touche de nature et une atmosphère sauvage à votre maison.<br\/><\/p>"
+            "paragraph": "<h3>DÉCOUVREZ NOTRE COLLECTION DE TABLEAUX ANIMAUX</h3><p><br/>  Pour habiller les murs de votre maison ou offrir un cadeau original à vos proches,découvrez notre collection impressionnante de tableaux design et moderne et optez pour un tableau d'art sur le thème des animaux. Vous trouverez celui qui correspond le mieux à votre intérieur et vos envies, que vous<br/>  préfériez un tableau de loup sauvage, un tableau de lion dominant, un tableau de cerf sauvage, ou encore un tableau de chaton mignon. Nous proposons une variété d'animaux pour répondre à toutes vos préférences et passions.<br/></p><p><br/>  Nos tableaux d'animaux sont imprimés sur toile, aluminium, ou plexiglas de haute qualité avec des couleurs éclatantes et une netteté exceptionnelle pour donner vie à chaque détail. De plus, nous offrons différentes tailles pour s'adapter à tous les espaces, grands ou petits. Que vous souhaitiez un<br/>  tableau imposant pour habiller votre salon ou une petite toile pour votre bureau, nous avons tout ce qu'il vous faut pour embellir votre espace de vie.<br/></p><p><br/>  Offrez à vos proches un cadeau unique et personnalisé en choisissant l'animal qui correspond le mieux à leur personnalité et à leur goût. Ils seront ravis de recevoir un tel cadeau original et de pouvoir ajouter une touche d'exotisme et de créativité à leur décoration intérieure. Avec notre<br/>  collection de tableaux animaux, offrez des cadeaux qui sortent de l'ordinaire, ajoutez une touche de nature et une atmosphère sauvage à votre maison.<br/></p>"
           }
         },
         "collection_rFHRLY": {
           "type": "collection",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableaux-fleurs.jpg",
+            "image": "shopify://shop_images/tableaux-fleurs.jpg",
             "collection": "tableau-fleurs",
             "nb_columns": "col-span-4",
             "lazy_load": false,
-            "paragraph": "<h3>PARCOUREZ NOTRE SÉLECTION ÉLÉGANTE DE TABLEAUX FLORAUX<\/h3><p><br\/>Ornez vos murs avec la délicatesse de nos tableaux fleurs, et apportez un souffle de nature à votre intérieur. Découvrez la finesse d'une tulipe, la tendresse d'une rose ou la sérénité d'un champ de lavande à travers notre collection. Chaque toile est une célébration de la beauté florale, invitant à la détente et à la rêverie.<br\/><\/p><p><br\/>Réalisés avec soin, nos tableaux se déclinent sur toile, aluminium et plexiglas pour une qualité d'image exceptionnelle qui fait ressortir chaque nuance. Petits ou grands formats, ils s'intègrent harmonieusement dans tous les espaces, que ce soit pour une note de couleur dans un bureau ou un élément central dans votre salon.<br\/><\/p><p><br\/>Offrez ou offrez-vous un tableau de cette collection pour introduire élégance et poésie dans votre décor. Chaque pièce, chargée de sens et d'émotion, est une façon subtile d'enrichir son environnement quotidien.<br\/><\/p>"
+            "paragraph": "<h3>PARCOUREZ NOTRE SÉLECTION ÉLÉGANTE DE TABLEAUX FLORAUX</h3><p><br/>Ornez vos murs avec la délicatesse de nos tableaux fleurs, et apportez un souffle de nature à votre intérieur. Découvrez la finesse d'une tulipe, la tendresse d'une rose ou la sérénité d'un champ de lavande à travers notre collection. Chaque toile est une célébration de la beauté florale, invitant à la détente et à la rêverie.<br/></p><p><br/>Réalisés avec soin, nos tableaux se déclinent sur toile, aluminium et plexiglas pour une qualité d'image exceptionnelle qui fait ressortir chaque nuance. Petits ou grands formats, ils s'intègrent harmonieusement dans tous les espaces, que ce soit pour une note de couleur dans un bureau ou un élément central dans votre salon.<br/></p><p><br/>Offrez ou offrez-vous un tableau de cette collection pour introduire élégance et poésie dans votre décor. Chaque pièce, chargée de sens et d'émotion, est une façon subtile d'enrichir son environnement quotidien.<br/></p>"
           }
         },
         "collection_w4BEEU": {
           "type": "collection",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-mer_5d411c3e-8dbd-4fa7-8ea1-1a580d034068.jpg",
+            "image": "shopify://shop_images/tableau-mer_5d411c3e-8dbd-4fa7-8ea1-1a580d034068.jpg",
             "collection": "tableau-mer-1",
             "nb_columns": "col-span-12",
             "lazy_load": true,
-            "paragraph": "<h3>Naviguez Vers l'Horizon avec Nos Tableaux Marins<\/h3><p><br\/>Plongez dans l'immensité bleue et l'apaisante tranquillité de l'océan avec notre collection de tableaux marins. Chaque pièce est une fenêtre ouverte sur le vaste monde aquatique, proposant des évasions uniques à travers des plages sereines, des vagues tumultueuses, et des horizons lointains. Ces œuvres, capturant l'immensité de la mer, sont un hommage à sa puissance et à sa douceur, offrant à votre intérieur une touche de calme et d'évasion.<br\/><br\/>Notre sélection est minutieusement choisie pour infuser harmonie, beauté, et sérénité dans votre décoration intérieure, transformant vos pièces en havres de paix où nature, rêve et découverte visuelle s'entremêlent. Embrasser nos tableaux de la mer, c'est intégrer l'esprit de l'océan dans votre quotidien, une invitation à accueillir la tranquillité, l'aventure, et l'émerveillement au sein de votre foyer. Laissez ces paysages maritimes dialoguer avec votre âme et harmoniser votre décoration, pour une expérience quotidienne à la fois enrichissante et inspirante.<\/p>"
+            "paragraph": "<h3>Naviguez Vers l'Horizon avec Nos Tableaux Marins</h3><p><br/>Plongez dans l'immensité bleue et l'apaisante tranquillité de l'océan avec notre collection de tableaux marins. Chaque pièce est une fenêtre ouverte sur le vaste monde aquatique, proposant des évasions uniques à travers des plages sereines, des vagues tumultueuses, et des horizons lointains. Ces œuvres, capturant l'immensité de la mer, sont un hommage à sa puissance et à sa douceur, offrant à votre intérieur une touche de calme et d'évasion.<br/><br/>Notre sélection est minutieusement choisie pour infuser harmonie, beauté, et sérénité dans votre décoration intérieure, transformant vos pièces en havres de paix où nature, rêve et découverte visuelle s'entremêlent. Embrasser nos tableaux de la mer, c'est intégrer l'esprit de l'océan dans votre quotidien, une invitation à accueillir la tranquillité, l'aventure, et l'émerveillement au sein de votre foyer. Laissez ces paysages maritimes dialoguer avec votre âme et harmoniser votre décoration, pour une expérience quotidienne à la fois enrichissante et inspirante.</p>"
           }
         }
       },

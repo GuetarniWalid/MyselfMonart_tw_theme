@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "layout": "article",
   "sections": {
@@ -17,33 +26,33 @@
         "column_7ReQ6Y": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/relooker-salon-2_0b50463d-0b2d-4a15-b826-509ce10b7f13.jpg",
+            "image": "shopify://shop_images/relooker-salon-2_0b50463d-0b2d-4a15-b826-509ce10b7f13.jpg",
             "title": "7 astuces pour relooker votre maison",
-            "text": "<p>Donnez une touche de fraîcheur à votre maison avec astuces simples et abordables de relooking d'intérieur. Transformez votre espace en un lieu confortable, élégant et moderne sans dépenser une fortune. Découvrez nos 7 astuces pratiques pour une décoration créative et inspirante.<\/p>",
+            "text": "<p>Donnez une touche de fraîcheur à votre maison avec astuces simples et abordables de relooking d'intérieur. Transformez votre espace en un lieu confortable, élégant et moderne sans dépenser une fortune. Découvrez nos 7 astuces pratiques pour une décoration créative et inspirante.</p>",
             "link_label": "Lire la suite",
-            "link": "shopify:\/\/blogs\/tableau-salon\/7-astuces-pour-relooker-votre-maison",
+            "link": "shopify://blogs/tableau-salon/7-astuces-pour-relooker-votre-maison",
             "to_obfuscate": false
           }
         },
         "column_LfJP3J": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/relloker-salon-budget-pas-chere_c9523088-0a33-47ca-a55b-e12960200927.png",
+            "image": "shopify://shop_images/relloker-salon-budget-pas-chere_c9523088-0a33-47ca-a55b-e12960200927.png",
             "title": "6 astuces pour décorer un salon avec un petit budget",
-            "text": "<p>Découvrez des astuces déco inattendues pour métamorphoser votre salon sans vider votre portefeuille. De la magie des couleurs au charme des brocantes, embarquez dans une aventure créative et économique. Prêt à être ébloui<\/p>",
+            "text": "<p>Découvrez des astuces déco inattendues pour métamorphoser votre salon sans vider votre portefeuille. De la magie des couleurs au charme des brocantes, embarquez dans une aventure créative et économique. Prêt à être ébloui</p>",
             "link_label": "Lire la suite",
-            "link": "https:\/\/www.myselfmonart.com\/blogs\/tableau-salon\/6-astuces-pour-decorer-un-salon-avec-un-petit-budget-idee-deco-pas-chere",
+            "link": "https://www.myselfmonart.com/blogs/tableau-salon/6-astuces-pour-decorer-un-salon-avec-un-petit-budget-idee-deco-pas-chere",
             "to_obfuscate": false
           }
         },
         "column_TJMEYm": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/salon-pour-accueillir_b534c7fe-1406-4f8e-b688-7abfdb2f382b.jpg",
+            "image": "shopify://shop_images/salon-pour-accueillir_b534c7fe-1406-4f8e-b688-7abfdb2f382b.jpg",
             "title": "Comment aménager un salon pour recevoir",
-            "text": "<p>Découvrez nos astuces pour transformer votre salon en un espace accueillant et pratique pour recevoir vos invités. Éclairage, meubles, décoration et rangements pratiques : tout pour créer une atmosphère conviviale et chaleureuse chez vous. Avec notre guide d'aménagement, vous pourrez profiter pleinement de moments inoubliables en famille ou entre amis.<\/p>",
+            "text": "<p>Découvrez nos astuces pour transformer votre salon en un espace accueillant et pratique pour recevoir vos invités. Éclairage, meubles, décoration et rangements pratiques : tout pour créer une atmosphère conviviale et chaleureuse chez vous. Avec notre guide d'aménagement, vous pourrez profiter pleinement de moments inoubliables en famille ou entre amis.</p>",
             "link_label": "Lire la suite",
-            "link": "https:\/\/www.myselfmonart.com\/blogs\/tableau-salon\/comment-amenager-un-espace-accueillant-et-pratique-pour-recevoir",
+            "link": "https://www.myselfmonart.com/blogs/tableau-salon/comment-amenager-un-espace-accueillant-et-pratique-pour-recevoir",
             "to_obfuscate": false
           }
         }

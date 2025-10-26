@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "layout": "collection",
   "sections": {
@@ -21,31 +30,31 @@
         "collection_mQDfGC": {
           "type": "collection",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-chambre-garcon.jpg",
+            "image": "shopify://shop_images/tableau-chambre-garcon.jpg",
             "collection": "tableau-chambre-garcon",
             "nb_columns": "col-span-12",
             "lazy_load": false,
-            "paragraph": "<h3><strong> DÉCOUVREZ NOS TABLEAUX POUR DÉCORER L'UNIVERS DE VOTRE GARÇON<\/strong><\/h3><p>Créez un univers unique pour votre garçon avec nos tableaux conçus pour nourrir son imagination. Chaque tableau devient le cœur de son espace, transformant sa chambre en un lieu où il peut rêver, jouer et s'épanouir. Que votre enfant soit fasciné par l'espace, les aventures de pirates ou la nature, trouvez l'illustration qui reflète ses passions.<\/p><p>Des bleus profonds et des verts éclatants pour coloré son univers, ou des couleurs plus douces pour créer un cocon apaisant, chaque mur devient une invitation à l'aventure et à la créativité. Offrez-lui une chambre qui lui ressemble, un espace inspirant qui grandit avec lui.<\/p>"
+            "paragraph": "<h3><strong> DÉCOUVREZ NOS TABLEAUX POUR DÉCORER L'UNIVERS DE VOTRE GARÇON</strong></h3><p>Créez un univers unique pour votre garçon avec nos tableaux conçus pour nourrir son imagination. Chaque tableau devient le cœur de son espace, transformant sa chambre en un lieu où il peut rêver, jouer et s'épanouir. Que votre enfant soit fasciné par l'espace, les aventures de pirates ou la nature, trouvez l'illustration qui reflète ses passions.</p><p>Des bleus profonds et des verts éclatants pour coloré son univers, ou des couleurs plus douces pour créer un cocon apaisant, chaque mur devient une invitation à l'aventure et à la créativité. Offrez-lui une chambre qui lui ressemble, un espace inspirant qui grandit avec lui.</p>"
           }
         },
         "collection_eKHRLg": {
           "type": "collection",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-chambre-fille_8ca67c81-b66a-4a8c-a573-c7dd3f43ecb9.jpg",
+            "image": "shopify://shop_images/tableau-chambre-fille_8ca67c81-b66a-4a8c-a573-c7dd3f43ecb9.jpg",
             "collection": "tableau-chambre-fille",
             "nb_columns": "col-span-8",
             "lazy_load": false,
-            "paragraph": "<h3>DÉCOUVREZ NOS TABLEAUX POUR DÉCORER L'UNIVERS DE VOTRE FILLE<\/h3><p>Transformez la chambre de votre fille en un espace magique et féerique. Que votre enfant s’imagine en princesse Disney ou en aventurière de l’espace, vous êtes sûre de trouver le tableau qui embellira sa chambre. Nos tableaux de décorations  sont conçus pour nourrir son imagination et créer un univers qui lui ressemble.<\/p><p>Des couleurs pastel douces aux teintes éclatantes, chaque tableau est une invitation à rêver, jouer et s'évader. Ajoutez une touche de magie à sa chambre avec des illustrations qui font briller ses passions et transformez son espace en un lieu unique où elle peut grandir et s’épanouir.<\/p>"
+            "paragraph": "<h3>DÉCOUVREZ NOS TABLEAUX POUR DÉCORER L'UNIVERS DE VOTRE FILLE</h3><p>Transformez la chambre de votre fille en un espace magique et féerique. Que votre enfant s’imagine en princesse Disney ou en aventurière de l’espace, vous êtes sûre de trouver le tableau qui embellira sa chambre. Nos tableaux de décorations  sont conçus pour nourrir son imagination et créer un univers qui lui ressemble.</p><p>Des couleurs pastel douces aux teintes éclatantes, chaque tableau est une invitation à rêver, jouer et s'évader. Ajoutez une touche de magie à sa chambre avec des illustrations qui font briller ses passions et transformez son espace en un lieu unique où elle peut grandir et s’épanouir.</p>"
           }
         },
         "collection_pkn49k": {
           "type": "collection",
           "settings": {
-            "image": "shopify:\/\/shop_images\/tableau-chambre-filette_c4ebc9ac-6b26-4952-9340-8945174c0338.jpg",
+            "image": "shopify://shop_images/tableau-chambre-filette_c4ebc9ac-6b26-4952-9340-8945174c0338.jpg",
             "collection": "tableau-chambre-fillette",
             "nb_columns": "col-span-4",
             "lazy_load": true,
-            "paragraph": "<h3>DÉCOUVREZ NOS TABLEAUX POUR TRANSFORMER LA CHAMBRE DE VOTRE FILLETTE<\/h3><p>Apportez une touche de douceur et de magie à la chambre de votre fillette. Nos tableaux sont conçus pour créer un univers qui lui ressemble, où elle peut grandir et s’épanouir. Que vous choisissiez des illustrations délicates d’animaux sauvages, des abécédaires colorés pour l’aider à apprendre en s’amusant, ou des tableaux de danseuse ballerine, chaque tableau est une invitation à la découverte et à l’émerveillement.<\/p><p>Du rose pour ajouter une note de féerie, ou du beige pour créer une ambiance apaisante, chaque couleur est pensée pour envelopper son espace de tendresse. Ajoutez une touche unique à sa chambre et faites de cet endroit un lieu où elle se sent bien, entourée de ses rêves et de sa curiosité.<\/p>"
+            "paragraph": "<h3>DÉCOUVREZ NOS TABLEAUX POUR TRANSFORMER LA CHAMBRE DE VOTRE FILLETTE</h3><p>Apportez une touche de douceur et de magie à la chambre de votre fillette. Nos tableaux sont conçus pour créer un univers qui lui ressemble, où elle peut grandir et s’épanouir. Que vous choisissiez des illustrations délicates d’animaux sauvages, des abécédaires colorés pour l’aider à apprendre en s’amusant, ou des tableaux de danseuse ballerine, chaque tableau est une invitation à la découverte et à l’émerveillement.</p><p>Du rose pour ajouter une note de féerie, ou du beige pour créer une ambiance apaisante, chaque couleur est pensée pour envelopper son espace de tendresse. Ajoutez une touche unique à sa chambre et faites de cet endroit un lieu où elle se sent bien, entourée de ses rêves et de sa curiosité.</p>"
           }
         }
       },

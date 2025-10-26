@@ -599,6 +599,13 @@ main-product-blocks .description h2 span {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      /* Safari/iOS specific fixes */
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      /* Force Safari to recalculate layout */
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
     }
   }
 }

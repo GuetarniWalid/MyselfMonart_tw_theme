@@ -1,10 +1,18 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "layout": "article",
   "sections": {
     "ce4595e5-01e5-472d-ac56-563a87ef335c": {
       "type": "first-blog-link",
-      "settings": {
-      }
+      "settings": {}
     },
     "main": {
       "type": "main-article",
@@ -15,7 +23,7 @@
     "d1b293a4-2408-4f73-9deb-b89ac4a436b5": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify:\/\/shop_images\/ampoule.jpg",
+        "image": "shopify://shop_images/ampoule.jpg",
         "title": "Comprendre l'éclairage d'intérieur.",
         "description": "",
         "layout": "image_first",
@@ -30,7 +38,7 @@
         "template--16692575371519__383ee9d3-91a0-446f-b0c2-093c5372796e-167855766175a8acf4-1": {
           "type": "text",
           "settings": {
-            "text": "<p>Avant de choisir le type d'éclairage pour votre tableau, il est important de comprendre comment la lumière affecte l'apparence de votre art. La lumière peut affecter les couleurs et les textures de votre toile, révélant ou cachant les détails de l'œuvre. Par conséquent, il est important de choisir le bon type d'éclairage, afin de mettre en valeur les aspects les plus importants et ainsi éviter de détériorer votre œuvre.<\/p><h3><strong>Déterminer la luminosité de votre lampe<\/strong><\/h3><p>Une fois que vous avez défini l'emplacement de votre décoration murale, vous devez déterminer la puissance de l'ampoule, généralement on parle de lumens lorsqu'il s'agit de la luminosité et de watts pour la consommation d'électricité plus votre ampoule est forte plus elle consomme d'électricité.<\/p><p>La luminosité dépend de la taille du tableau, de la couleur des murs et de la pièce. Pour un tableau plus petit, une luminosité douce est suffisante, tandis qu'un tableau plus grand nécessite une luminosité plus vive. Vous pouvez également opter pour une luminosité réglable pour ajuster la luminosité en fonction de vos préférences.<\/p><h3><strong>Choisir la température de couleur<\/strong><\/h3><p>La température de couleur de la lumière peut également affecter la façon dont votre tableau est perçu. Les ampoules à lumière chaude, comme les incandescentes ou halogènes, peuvent aider à créer un style plus cosy et confortable, tandis que les ampoules à lumière froide, comme les fluorescentes, peuvent donner une impression de fraîcheur et de netteté. Vous pouvez également choisir une ampoule qui reflète la lumière du jour pour créer une ambiance plus naturelle.<\/p>",
+            "text": "<p>Avant de choisir le type d'éclairage pour votre tableau, il est important de comprendre comment la lumière affecte l'apparence de votre art. La lumière peut affecter les couleurs et les textures de votre toile, révélant ou cachant les détails de l'œuvre. Par conséquent, il est important de choisir le bon type d'éclairage, afin de mettre en valeur les aspects les plus importants et ainsi éviter de détériorer votre œuvre.</p><h3><strong>Déterminer la luminosité de votre lampe</strong></h3><p>Une fois que vous avez défini l'emplacement de votre décoration murale, vous devez déterminer la puissance de l'ampoule, généralement on parle de lumens lorsqu'il s'agit de la luminosité et de watts pour la consommation d'électricité plus votre ampoule est forte plus elle consomme d'électricité.</p><p>La luminosité dépend de la taille du tableau, de la couleur des murs et de la pièce. Pour un tableau plus petit, une luminosité douce est suffisante, tandis qu'un tableau plus grand nécessite une luminosité plus vive. Vous pouvez également opter pour une luminosité réglable pour ajuster la luminosité en fonction de vos préférences.</p><h3><strong>Choisir la température de couleur</strong></h3><p>La température de couleur de la lumière peut également affecter la façon dont votre tableau est perçu. Les ampoules à lumière chaude, comme les incandescentes ou halogènes, peuvent aider à créer un style plus cosy et confortable, tandis que les ampoules à lumière froide, comme les fluorescentes, peuvent donner une impression de fraîcheur et de netteté. Vous pouvez également choisir une ampoule qui reflète la lumière du jour pour créer une ambiance plus naturelle.</p>",
             "text_size": "text-xl",
             "is_lighten": false
           }
@@ -48,7 +56,7 @@
     "23a43a26-7952-47aa-ae44-f382b92ccc75": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify:\/\/shop_images\/applique-murale-pour-tableaujpg.jpg",
+        "image": "shopify://shop_images/applique-murale-pour-tableaujpg.jpg",
         "title": "Quel luminaire pour éclairer un tableau décoratif ?",
         "description": "",
         "layout": "text_first",
@@ -63,7 +71,7 @@
         "template--16692575371519__e3e5fd50-b846-4d69-a333-47d313f75e35-167855766175a8acf4-1": {
           "type": "text",
           "settings": {
-            "text": "<h3>Il existe différents types de luminaires pour éclairer les tableaux. Chacun d'entre eux peut offrir un effet d'éclairage différent pour votre tableau.<\/h3><ul><li><strong>Les spots<\/strong> sont une option populaire pour éclairer les tableaux, Ils sont souvent installés dans un plafond bas ou dans un mur pour projeter de la lumière directe sur le tableau. Les spots sont souvent réglables pour permettre une certaine flexibilité dans l'angle de la lumière.<br\/><\/li><li><strong>Les lampes murales<\/strong> sont une autre option populaire pour éclairer les toiles de peinture. Elles sont généralement installées au-dessus ou au-dessous du tableau et peuvent être réglées pour diriger la lumière. Elles peuvent être utilisées pour créer une lumière ambiante ou une lumière ciblée. Elles sont disponibles dans une variété de styles et peuvent être orientées pour diriger la lumière exactement où vous le souhaitez.<br\/><\/li><li><strong>Les appliques murales <\/strong>sont des luminaires fixes qui sont souvent installés à des endroits spécifiques pour créer un éclairage ambiant. Elles peuvent être utilisées pour mettre en valeur un cadre photo ainsi que pour créer une ambiance confortable dans la pièce.<br\/><\/li><li><strong>Les lampes sur pied<\/strong> sont une autre option pratique pour éclairer une toile. Elles peuvent être placées à côté du tableau et dirigées vers lui pour créer un effet d'éclairage doux et chaleureux.<br\/><\/li><li><strong>Les lampes suspendues<\/strong> sont une option moins courante pour éclairer un tableau de décoration, mais elles peuvent être très efficaces si elles sont utilisées correctement. Elles peuvent être placées directement au-dessus du tableau pour fournir un éclairage ciblé.<br\/><\/li><li><strong>Le projecteur de sol<\/strong> est souvent utilisé pour éclairer les tableaux de décoration de grande taille. Ils sont installés au sol et peuvent être réglables pour permettre une flexibilité dans l'angle de la lumière.<br\/><\/li><li><strong>La guirlande led<\/strong> est souvent utilisée pour éclairer un tableau par-derrière, ils sont discrets et ne prennent pas beaucoup de place. La guirlande led peut également être utilisée pour ajouter une touche de couleur à votre tableau, en choisissant une guirlande de couleur qui correspond à votre décoration.<br\/><\/li><li><strong>Le rail d'éclairage<\/strong> :  souvent utilisé pour éclairer la cuisine, il peut également être utilisé pour éclairer plusieurs tableaux en même temps et crée un mur art déco ou un mur de cadres. Les rails d'éclairage sont installés au plafond et peuvent être réglables pour permettre une flexibilité dans l'angle de la lumière.<\/li><\/ul>",
+            "text": "<h3>Il existe différents types de luminaires pour éclairer les tableaux. Chacun d'entre eux peut offrir un effet d'éclairage différent pour votre tableau.</h3><ul><li><strong>Les spots</strong> sont une option populaire pour éclairer les tableaux, Ils sont souvent installés dans un plafond bas ou dans un mur pour projeter de la lumière directe sur le tableau. Les spots sont souvent réglables pour permettre une certaine flexibilité dans l'angle de la lumière.<br/></li><li><strong>Les lampes murales</strong> sont une autre option populaire pour éclairer les toiles de peinture. Elles sont généralement installées au-dessus ou au-dessous du tableau et peuvent être réglées pour diriger la lumière. Elles peuvent être utilisées pour créer une lumière ambiante ou une lumière ciblée. Elles sont disponibles dans une variété de styles et peuvent être orientées pour diriger la lumière exactement où vous le souhaitez.<br/></li><li><strong>Les appliques murales </strong>sont des luminaires fixes qui sont souvent installés à des endroits spécifiques pour créer un éclairage ambiant. Elles peuvent être utilisées pour mettre en valeur un cadre photo ainsi que pour créer une ambiance confortable dans la pièce.<br/></li><li><strong>Les lampes sur pied</strong> sont une autre option pratique pour éclairer une toile. Elles peuvent être placées à côté du tableau et dirigées vers lui pour créer un effet d'éclairage doux et chaleureux.<br/></li><li><strong>Les lampes suspendues</strong> sont une option moins courante pour éclairer un tableau de décoration, mais elles peuvent être très efficaces si elles sont utilisées correctement. Elles peuvent être placées directement au-dessus du tableau pour fournir un éclairage ciblé.<br/></li><li><strong>Le projecteur de sol</strong> est souvent utilisé pour éclairer les tableaux de décoration de grande taille. Ils sont installés au sol et peuvent être réglables pour permettre une flexibilité dans l'angle de la lumière.<br/></li><li><strong>La guirlande led</strong> est souvent utilisée pour éclairer un tableau par-derrière, ils sont discrets et ne prennent pas beaucoup de place. La guirlande led peut également être utilisée pour ajouter une touche de couleur à votre tableau, en choisissant une guirlande de couleur qui correspond à votre décoration.<br/></li><li><strong>Le rail d'éclairage</strong> :  souvent utilisé pour éclairer la cuisine, il peut également être utilisé pour éclairer plusieurs tableaux en même temps et crée un mur art déco ou un mur de cadres. Les rails d'éclairage sont installés au plafond et peuvent être réglables pour permettre une flexibilité dans l'angle de la lumière.</li></ul>",
             "text_size": "text-xl",
             "is_lighten": false
           }
@@ -84,7 +92,7 @@
         "column_LhwQrA": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/applique-suspendu-pour-eclairer-tableau.jpg",
+            "image": "shopify://shop_images/applique-suspendu-pour-eclairer-tableau.jpg",
             "title": "Applique suspendue",
             "text": "",
             "link_label": "",
@@ -95,7 +103,7 @@
         "column_yUJHXc": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/lampadaire-industrielle-pour-tableau-moderne.webp",
+            "image": "shopify://shop_images/lampadaire-industrielle-pour-tableau-moderne.webp",
             "title": "Projecteur industriel",
             "text": "",
             "link_label": "",
@@ -106,7 +114,7 @@
         "column_n3VFWW": {
           "type": "column",
           "settings": {
-            "image": "shopify:\/\/shop_images\/lampe-pour-tableau-decoration.jpg",
+            "image": "shopify://shop_images/lampe-pour-tableau-decoration.jpg",
             "title": "Applique murale",
             "text": "",
             "link_label": "",
@@ -133,7 +141,7 @@
     "31a3345b-54d3-419f-9fcb-4e6e41948771": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify:\/\/shop_images\/projecteur-luminaire_pour-tableau.jpg",
+        "image": "shopify://shop_images/projecteur-luminaire_pour-tableau.jpg",
         "title": "Techniques pour éclairer un tableau décoratif",
         "description": "",
         "layout": "image_first",
@@ -148,7 +156,7 @@
         "template--16692575371519__91fe4963-90f8-428f-bdcf-e3268b519267-167855766175a8acf4-1": {
           "type": "text",
           "settings": {
-            "text": "<p><strong>Maintenant que vous avez choisi le type de luminaire, il est important de comprendre comment l'utiliser pour créer une ambiance chaleureuse et cosy dans votre maison. <\/strong><\/p><h3><strong>Sélectionner le bon angle d'éclairage<\/strong><\/h3><p>Le bon angle d'éclairage peut également jouer un rôle important dans la façon dont votre tableau est présenté. Pour les tableaux plus petits, un éclairage direct peut être suffisant. Cependant, pour les tableaux plus grands, vous pouvez envisager un éclairage indirect pour créer une lumière douce et uniforme. L'utilisation de projecteurs d'éclairage peut également aider à créer des ombres et des reflets sur votre tableau.<\/p><h3><strong>Positionner le luminaire correctement<\/strong><\/h3><p>Une fois que vous avez sélectionné le type de luminaire et l'angle d'éclairage, il est important de positionner le luminaire correctement. Le luminaire doit être placé à une distance suffisante du tableau pour éviter tout éblouissement, mais suffisamment proche pour que la lumière soit bien concentrée sur le tableau. Il est également important de placer le luminaire à une hauteur appropriée pour que le tableau soit bien éclairé et visible. il est recommandé de placer le luminaire à une hauteur d'environ 1,50 mètre du sol. Cette hauteur permet d'obtenir un éclairage homogène sur toute la surface du tableau, sans créer de zones d'ombre ni de reflets indésirables.<\/p>",
+            "text": "<p><strong>Maintenant que vous avez choisi le type de luminaire, il est important de comprendre comment l'utiliser pour créer une ambiance chaleureuse et cosy dans votre maison. </strong></p><h3><strong>Sélectionner le bon angle d'éclairage</strong></h3><p>Le bon angle d'éclairage peut également jouer un rôle important dans la façon dont votre tableau est présenté. Pour les tableaux plus petits, un éclairage direct peut être suffisant. Cependant, pour les tableaux plus grands, vous pouvez envisager un éclairage indirect pour créer une lumière douce et uniforme. L'utilisation de projecteurs d'éclairage peut également aider à créer des ombres et des reflets sur votre tableau.</p><h3><strong>Positionner le luminaire correctement</strong></h3><p>Une fois que vous avez sélectionné le type de luminaire et l'angle d'éclairage, il est important de positionner le luminaire correctement. Le luminaire doit être placé à une distance suffisante du tableau pour éviter tout éblouissement, mais suffisamment proche pour que la lumière soit bien concentrée sur le tableau. Il est également important de placer le luminaire à une hauteur appropriée pour que le tableau soit bien éclairé et visible. il est recommandé de placer le luminaire à une hauteur d'environ 1,50 mètre du sol. Cette hauteur permet d'obtenir un éclairage homogène sur toute la surface du tableau, sans créer de zones d'ombre ni de reflets indésirables.</p>",
             "text_size": "text-xl",
             "is_lighten": false
           }
@@ -166,7 +174,7 @@
     "a442fcad-68f4-4267-a8f1-da256e86408e": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify:\/\/shop_images\/sublimer-un-tableau-sur-cadre.jpg",
+        "image": "shopify://shop_images/sublimer-un-tableau-sur-cadre.jpg",
         "title": "Conseil déco pour sublimer un tableau",
         "description": "",
         "layout": "text_first",
@@ -181,7 +189,7 @@
         "template--16692575371519__82bae5a1-71d9-473d-9add-6d1b3b6ab3ed-167855766175a8acf4-1": {
           "type": "text",
           "settings": {
-            "text": "<p>Si vous cherchez à mettre en valeur votre chef-d'œuvre avec une lampe parfaite, la porcelaine est le matériau idéal pour ajouter une touche d'élégance et de raffinement à votre intérieur. <a href=\"https:\/\/reminiscencehome.com\/\" target=\"_blank\" title=\"https:\/\/reminiscencehome.com\/\">Les luminaires en porcelaine<\/a> existent dans une multitude de styles, tailles et couleurs pour satisfaire toutes vos envies, que vous cherchiez un design moderne, vintage ou rétro.<\/p><p>Les avantages des luminaires en porcelaine sont nombreux : leur beauté intemporelle, leur durabilité et leur capacité à offrir une lumière douce et chaleureuse qui crée une ambiance accueillante dans votre salon. De plus, la porcelaine est un matériau écologique et durable, parfait pour les amoureux de la nature, qui peut être facilement recyclé et réutilisé.<\/p><p>Si vous voulez transformer votre salon en un véritable lieu de détente et de convivialité, pourquoi ne pas jeter un coup d'œil à notre collection de<a href=\"https:\/\/www.myselfmonart.com\/collections\/tableau-salon\" target=\"_blank\" title=\"https:\/\/www.myselfmonart.com\/collections\/tableau-salon\"> tableaux pour salon<\/a> ? Et pour compléter l'ambiance, rien de mieux que d'ajouter une touche de porcelaine avec ces luminaires élégants et raffinés. N'hésitez pas à nous dire ce que vous en pensez, vous tomberez sous leur charme.<\/p>",
+            "text": "<p>Si vous cherchez à mettre en valeur votre chef-d'œuvre avec une lampe parfaite, la porcelaine est le matériau idéal pour ajouter une touche d'élégance et de raffinement à votre intérieur. <a href=\"https://reminiscencehome.com/\" target=\"_blank\" title=\"https://reminiscencehome.com/\">Les luminaires en porcelaine</a> existent dans une multitude de styles, tailles et couleurs pour satisfaire toutes vos envies, que vous cherchiez un design moderne, vintage ou rétro.</p><p>Les avantages des luminaires en porcelaine sont nombreux : leur beauté intemporelle, leur durabilité et leur capacité à offrir une lumière douce et chaleureuse qui crée une ambiance accueillante dans votre salon. De plus, la porcelaine est un matériau écologique et durable, parfait pour les amoureux de la nature, qui peut être facilement recyclé et réutilisé.</p><p>Si vous voulez transformer votre salon en un véritable lieu de détente et de convivialité, pourquoi ne pas jeter un coup d'œil à notre collection de<a href=\"https://www.myselfmonart.com/collections/tableau-salon\" target=\"_blank\" title=\"https://www.myselfmonart.com/collections/tableau-salon\"> tableaux pour salon</a> ? Et pour compléter l'ambiance, rien de mieux que d'ajouter une touche de porcelaine avec ces luminaires élégants et raffinés. N'hésitez pas à nous dire ce que vous en pensez, vous tomberez sous leur charme.</p>",
             "text_size": "text-xl",
             "is_lighten": false
           }
