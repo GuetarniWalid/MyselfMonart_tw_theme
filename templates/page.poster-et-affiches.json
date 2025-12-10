@@ -13,9 +13,9 @@
     "image_banner_xf7Frm": {
       "type": "image-banner",
       "settings": {
-        "image_desktop": "shopify://shop_images/banniere-deco-mural-tapisserie-poster-tableau-toile-15.jpg",
+        "image_desktop": "shopify://shop_images/cadeaux-noel-toile-decoration_1.jpg",
         "image_desktop_horizontal_position": "center",
-        "image_mobile": "shopify://shop_images/banniere-deco-murale-tableau-sur-toile-pop-art-dans-bureau-design_88563197-15e4-4c6d-a973-230c5a2a13ed.jpg",
+        "image_mobile": "shopify://shop_images/tableau-cadeaux-noel-portable.jpg",
         "image_mobile_vertical_position": "center",
         "enable_lazy_loading": true
       }

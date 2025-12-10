@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -18,8 +27,8 @@
         "trustpilot_review_WCpBfr": {
           "type": "trustpilot_review",
           "settings": {
-            "trustpilot_score": 44,
-            "link": "",
+            "trustpilot_score": 45,
+            "link": "https://fr.trustpilot.com/review/myselfmonart.com",
             "margin_bottom": "mb-2"
           }
         },
@@ -34,9 +43,14 @@
         "buy_bW8TLN": {
           "type": "buy",
           "settings": {
-            "is_dynamic_variant": true,
             "text": "J'emporte mon icône",
-            "main_color": "#149656"
+            "is_dynamic_variant": true,
+            "main_color": "#149656",
+            "show_promotion": false,
+            "promotion_discount": 15,
+            "promotion_discount_unit": "%",
+            "promotion_reason": "Summer sale ☀️",
+            "promotion_date": "Until the 31st of July"
           }
         }
       },
@@ -54,9 +68,9 @@
       "type": "image-with-text",
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
-        "image": "shopify:\/\/shop_images\/gourde-iconik-frida-caracteristiques.jpg",
+        "image": "shopify://shop_images/gourde-iconik-frida-caracteristiques.jpg",
         "title": "VOUS MÉRITEZ MIEUX QU’UNE SIMPLE GOURDE.",
-        "description": "<p>ICÖNIK, c’est un objet <strong>élégant, utile et inspirant.<br\/><\/strong>Pas un gadget, pas un accessoire, une <strong>pièce design<\/strong> à emporter partout.<\/p>",
+        "description": "<p>ICÖNIK, c’est un objet <strong>élégant, utile et inspirant.<br/></strong>Pas un gadget, pas un accessoire, une <strong>pièce design</strong> à emporter partout.</p>",
         "layout": "image_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -70,9 +84,9 @@
       "type": "image-with-text",
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
-        "image": "shopify:\/\/shop_images\/gourde-sac-en-cuir-iconik.jpg",
+        "image": "shopify://shop_images/gourde-sac-en-cuir-iconik.jpg",
         "title": "EXPRIME QUI TU ES !",
-        "description": "<p>On ne boit pas assez quand on n’aime pas l’objet qu’on utilise.<br\/> ICÖNIK, vous donne envie de vous hydrater, parce qu’on aime ce qu’on tient en main.<br\/> Frida, c’est la couleur, la force et la liberté.<br\/> <strong>Et vous, quelle icône vous inspire au quotidien ?<\/strong><\/p>",
+        "description": "<p>On ne boit pas assez quand on n’aime pas l’objet qu’on utilise.<br/> ICÖNIK, vous donne envie de vous hydrater, parce qu’on aime ce qu’on tient en main.<br/> Frida, c’est la couleur, la force et la liberté.<br/> <strong>Et vous, quelle icône vous inspire au quotidien ?</strong></p>",
         "layout": "text_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -86,9 +100,9 @@
       "type": "image-banner",
       "name": "t:sections.image-banner.name",
       "settings": {
-        "image_desktop": "shopify:\/\/shop_images\/gourde-iconik-femme-afro-utilistaion-plaisir_9d78dfb6-f179-4a5b-ae48-d30487e14df0.jpg",
+        "image_desktop": "shopify://shop_images/gourde-iconik-femme-afro-utilistaion-plaisir_9d78dfb6-f179-4a5b-ae48-d30487e14df0.jpg",
         "image_desktop_horizontal_position": "center",
-        "image_mobile": "shopify:\/\/shop_images\/gourde-utilisation-femme-afro-heureuse_da2d117b-5ec5-460c-8e9c-34ad84109d9a.jpg",
+        "image_mobile": "shopify://shop_images/gourde-utilisation-femme-afro-heureuse_da2d117b-5ec5-460c-8e9c-34ad84109d9a.jpg",
         "image_mobile_vertical_position": "center",
         "enable_lazy_loading": true
       }
@@ -97,9 +111,9 @@
       "type": "image-with-text",
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
-        "image": "shopify:\/\/shop_images\/gourde-iconik-frida-bureau.jpg",
+        "image": "shopify://shop_images/gourde-iconik-frida-bureau.jpg",
         "title": "UN OBJET D'ART UTILE",
-        "description": "<p>Emmenez-la partout : dans votre sac, au bureau, à un rendez-vous. Parce qu'une gourde peut être un accessoire de caractère.<\/p>",
+        "description": "<p>Emmenez-la partout : dans votre sac, au bureau, à un rendez-vous. Parce qu'une gourde peut être un accessoire de caractère.</p>",
         "layout": "image_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -113,9 +127,9 @@
       "type": "image-with-text",
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
-        "image": "shopify:\/\/shop_images\/marque-francaise-iconik.jpg",
+        "image": "shopify://shop_images/marque-francaise-iconik.jpg",
         "title": "À OFFRIR OU À S’OFFRIR.",
-        "description": "<p><strong>🎁 Le cadeau original, utile et stylé.<\/strong><\/p><ul><li>Pour dire “Je pense à toi” autrement.<\/li><li>Un objet qu’on garde, qu’on admire, et qu’on utilise vraiment.<\/li><\/ul><p><strong>À offrir à une personne inspirante ou à soi-même<\/strong><\/p>",
+        "description": "<p><strong>🎁 Le cadeau original, utile et stylé.</strong></p><ul><li>Pour dire “Je pense à toi” autrement.</li><li>Un objet qu’on garde, qu’on admire, et qu’on utilise vraiment.</li></ul><p><strong>À offrir à une personne inspirante ou à soi-même</strong></p>",
         "layout": "text_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -131,25 +145,25 @@
         "image_zd4F8K": {
           "type": "image",
           "settings": {
-            "image": "shopify:\/\/shop_images\/gourde-frida-kahlo-en-main-style-artistique_d1721e62-9422-4b81-9a0f-2cfb2739d6e9.jpg"
+            "image": "shopify://shop_images/gourde-frida-kahlo-en-main-style-artistique_d1721e62-9422-4b81-9a0f-2cfb2739d6e9.jpg"
           }
         },
         "image_xeQebd": {
           "type": "image",
           "settings": {
-            "image": "shopify:\/\/shop_images\/gourde-marilyn-monroe-icone-mode-cafe_b6e78991-6581-4361-81d6-97e0e415a533.jpg"
+            "image": "shopify://shop_images/gourde-marilyn-monroe-icone-mode-cafe_b6e78991-6581-4361-81d6-97e0e415a533.jpg"
           }
         },
         "image_Qx49Hx": {
           "type": "image",
           "settings": {
-            "image": "shopify:\/\/shop_images\/gourde-karl-lagerfeld-bouteille-design-miroir_e9f733ce-5e33-41a7-a5ef-2b49f958338e.jpg"
+            "image": "shopify://shop_images/gourde-karl-lagerfeld-bouteille-design-miroir_e9f733ce-5e33-41a7-a5ef-2b49f958338e.jpg"
           }
         },
         "image_rC8qjW": {
           "type": "image",
           "settings": {
-            "image": "shopify:\/\/shop_images\/gourde-coco-chanel-voiture-luxe_87aa6e5f-6da3-4beb-a46e-e7504a2bc8a3.jpg"
+            "image": "shopify://shop_images/gourde-coco-chanel-voiture-luxe_87aa6e5f-6da3-4beb-a46e-e7504a2bc8a3.jpg"
           }
         }
       },
@@ -176,7 +190,7 @@
           "settings": {
             "heading": "❓ Pourquoi ce prix -❓C’est juste une gourde ?",
             "icon": "none",
-            "row_content": "<p>Ce n’est pas “juste une gourde”. C’est un objet personnel, un accessoire de style qui vous suit chaque jour.<br\/><br\/>Fabriquée en inox brossé, peinte avec soin, étanche, durable et unique — elle dure des années.<br\/><br\/>À la fois utile, élégante, et originale… comme un parfum ou un bijou du quotidien.<\/p>"
+            "row_content": "<p>Ce n’est pas “juste une gourde”. C’est un objet personnel, un accessoire de style qui vous suit chaque jour.<br/><br/>Fabriquée en inox brossé, peinte avec soin, étanche, durable et unique — elle dure des années.<br/><br/>À la fois utile, élégante, et originale… comme un parfum ou un bijou du quotidien.</p>"
           }
         },
         "collapsible_row_ygEMwP": {
@@ -184,7 +198,7 @@
           "settings": {
             "heading": "❓Et si je ne l’aime pas ?",
             "icon": "none",
-            "row_content": "<p>Retour possible sous 14 jours, sans condition.<\/p>"
+            "row_content": "<p>Retour possible sous 14 jours, sans condition.</p>"
           }
         },
         "collapsible_row_gCeBYz": {
@@ -192,7 +206,7 @@
           "settings": {
             "heading": "❓Est-ce que ça garde vraiment le frais - ❓ Et pour les boissons chaudes ?",
             "icon": "none",
-            "row_content": "<p>Oui, 24h de fraîcheur ou 12h de chaleur grâce à sa double paroi en acier inoxydable.<\/p>"
+            "row_content": "<p>Oui, 24h de fraîcheur ou 12h de chaleur grâce à sa double paroi en acier inoxydable.</p>"
           }
         },
         "collapsible_row_HXBUfJ": {
@@ -200,7 +214,7 @@
           "settings": {
             "heading": "❓Est-ce lourd dans un sac ?",
             "icon": "none",
-            "row_content": "<p>Non, légère et bien équilibrée (moins de 450 g à vide).<\/p>"
+            "row_content": "<p>Non, légère et bien équilibrée (moins de 450 g à vide).</p>"
           }
         },
         "collapsible_row_3qckNE": {
@@ -208,7 +222,7 @@
           "settings": {
             "heading": "❓Et si le bouchon fuit ?",
             "icon": "none",
-            "row_content": "<p>Aucun risque : vissage précis, joint étanche, testé.<\/p>"
+            "row_content": "<p>Aucun risque : vissage précis, joint étanche, testé.</p>"
           }
         },
         "collapsible_row_ALwrDL": {
@@ -216,7 +230,7 @@
           "settings": {
             "heading": "❓Est-ce que ça passe au lave-vaisselle ?",
             "icon": "none",
-            "row_content": "<p>Le lavage à la main est recommandé pour préserver les couleurs.<\/p>"
+            "row_content": "<p>Le lavage à la main est recommandé pour préserver les couleurs.</p>"
           }
         },
         "collapsible_row_JFA3Er": {
@@ -224,7 +238,7 @@
           "settings": {
             "heading": "❓Peut-on la personnaliser ?",
             "icon": "none",
-            "row_content": "<p>Pas encore, mais chaque modèle est déjà une déclaration unique de style<\/p>"
+            "row_content": "<p>Pas encore, mais chaque modèle est déjà une déclaration unique de style</p>"
           }
         },
         "collapsible_row_64pqjf": {
@@ -232,7 +246,7 @@
           "settings": {
             "heading": "❓ C’est une vraie marque française ?",
             "icon": "none",
-            "row_content": "<p>Oui. ICÖNIK est une marque française, pensée avec amour, et expédiée depuis Toulouse.<\/p>"
+            "row_content": "<p>Oui. ICÖNIK est une marque française, pensée avec amour, et expédiée depuis Toulouse.</p>"
           }
         }
       },

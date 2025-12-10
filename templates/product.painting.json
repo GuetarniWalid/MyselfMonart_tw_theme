@@ -19,18 +19,6 @@
     "main": {
       "type": "main-product",
       "blocks": {
-        "likes_t9U7Ay": {
-          "type": "likes",
-          "settings": {
-            "margin_bottom": "mb-4"
-          }
-        },
-        "title": {
-          "type": "title",
-          "settings": {
-            "margin_bottom": "mb-2"
-          }
-        },
         "trustpilot_review_9q3NVM": {
           "type": "trustpilot_review",
           "settings": {
@@ -42,14 +30,26 @@
         "buy_qrRzcg": {
           "type": "buy",
           "settings": {
-            "text": "JE COMMANDE",
+            "text": "Choisir mon format",
             "is_dynamic_variant": false,
-            "main_color": "#fede65",
+            "main_color": "#73d298",
             "show_promotion": false,
             "promotion_discount": 15,
             "promotion_discount_unit": "%",
-            "promotion_reason": "Soldes d'été ☀️",
-            "promotion_date": "Se termine le 22 juillet"
+            "promotion_reason": "",
+            "promotion_date": "📅  Offre spéciale jusqu’au 8 décembre"
+          }
+        },
+        "likes_t9U7Ay": {
+          "type": "likes",
+          "settings": {
+            "margin_bottom": "mb-4"
+          }
+        },
+        "text_9JmhGc": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Livraison suivie • Impression haute qualité • Retours sans stress</p>"
           }
         },
         "collapsible_tab_HAUcNw": {
@@ -61,13 +61,10 @@
             "page": ""
           }
         },
-        "a70160ee-79ef-4eb9-8e65-ec87f898b506": {
-          "type": "collapsible_tab",
+        "title": {
+          "type": "title",
           "settings": {
-            "heading": "Guide des tailles",
-            "icon": "ruler",
-            "content": "",
-            "page": "guide-de-tailles"
+            "margin_bottom": "mb-2"
           }
         },
         "description_Fw7xRB": {
@@ -76,12 +73,12 @@
         }
       },
       "block_order": [
-        "likes_t9U7Ay",
-        "title",
         "trustpilot_review_9q3NVM",
         "buy_qrRzcg",
+        "likes_t9U7Ay",
+        "text_9JmhGc",
         "collapsible_tab_HAUcNw",
-        "a70160ee-79ef-4eb9-8e65-ec87f898b506",
+        "title",
         "description_Fw7xRB"
       ],
       "settings": {}
@@ -290,14 +287,37 @@
         "duration_image_appearance": 5
       }
     },
-    "image_with_text_WHC6jB": {
+    "rich_text_ekXjTi": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_BLMBrr": {
+          "type": "heading",
+          "settings": {
+            "heading": "Merci à nos clientes pour leurs magnifiques photos 💛",
+            "markup": "h3",
+            "heading_size": "text-xl"
+          }
+        }
+      },
+      "block_order": [
+        "heading_BLMBrr"
+      ],
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "content_alignment": "text-center",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "image_with_text_Bx3TYf": {
       "type": "image-with-text",
+      "disabled": true,
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
-        "image": "shopify://shop_images/comparaison_couleurs-tableau-haute-qualiter.jpg",
-        "title": "Des couleurs qui prennent vie chez vous",
-        "description": "<p>Chaque tableau est imprimé en <strong>haute définition</strong>, révélant des <strong>teintes intenses, riches et profondes</strong>. Les détails sont nets, les nuances fidèles à l’œuvre originale, pour un rendu qui attire le regard et sublime votre décoration..</p>",
-        "layout": "image_first",
+        "image": "shopify://shop_images/texture-tableau-toile-poster-alluminium-plexiglass.jpg",
+        "title": "La finition qui reflète votre style",
+        "description": "<h5>⭐ La finition qui reflète votre style</h5><p><br/>Chaque matière révèle une ambiance unique : la douceur d’une <strong>toile au toucher artisanal</strong>, l’éclat raffiné du <strong>plexiglass</strong>, ou la profondeur élégante de <strong>l’aluminium mat</strong>.<br/><br/><strong>À vous de choisir la finition qui sublime votre pièce et raconte votre style.<br/></strong></p>",
+        "layout": "text_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
         "dynamic_primary_color": "#111111",
@@ -306,20 +326,20 @@
         "padding_bottom": "pb-16"
       }
     },
-    "image_with_text_Bx3TYf": {
+    "image_with_text_WHC6jB": {
       "type": "image-with-text",
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
-        "image": "shopify://shop_images/texture-tableau-toile-poster-alluminium-plexiglass.jpg",
-        "title": "La finition qui reflète votre style",
-        "description": "<p>Toile au grain authentique, éclat du plexiglass, élégance de l’aluminium ou douceur du poster… Peu importe votre choix, chaque finition sublime votre œuvre et s’intègre parfaitement à votre décoration.</p>",
-        "layout": "text_first",
+        "image": "shopify://shop_images/comparaison_couleurs-tableau-haute-qualiter.jpg",
+        "title": "Des couleurs qui prennent vie chez vous",
+        "description": "<h5>⭐ Un rendu éclatant qui change l’ambiance d’une pièce</h5><p><br/>Nos impressions haute définition révèlent des teintes riches, profondes, et des détails d’une grande finesse.<br/><br/>Votre tableau capte la lumière, attire le regard et donne immédiatement du caractère à votre décoration.<br/><br/><em><strong>Une touche artistique qui transforme l’énergie de votre intérieur.</strong></em><br/></p>",
+        "layout": "image_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
         "dynamic_primary_color": "#111111",
         "dynamic_secondary_color": "#e3fae1",
-        "padding_top": "pt-16",
-        "padding_bottom": "pb-16"
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
       }
     },
     "badges_CQWfDx": {
@@ -414,7 +434,7 @@
       ],
       "settings": {
         "heading": "Un seul geste pour transformer votre intérieur",
-        "description": "De l’accrochage à l’émotion : nos tableaux transforment votre intérieur, sont protégés avec soin, imprimés sur des matières de qualité et s’intègrent dans votre quotidien pour créer une ambiance qui vous ressemble.",
+        "description": "Des tableaux qui s’intègrent naturellement à votre intérieur, subliment votre ambiance et accompagnent votre quotidien avec douceur et qualité.",
         "activate_dynamic_color": true,
         "dynamic_primary_color": "#f9eda2",
         "dynamic_secondary_color": "#112e3b"
@@ -489,8 +509,9 @@
     "breadcrumb_RCxFAG",
     "main",
     "customer_testimonial_myiwee",
-    "image_with_text_WHC6jB",
+    "rich_text_ekXjTi",
     "image_with_text_Bx3TYf",
+    "image_with_text_WHC6jB",
     "badges_CQWfDx",
     "shifted_image_carousel_mwTU9T",
     "product_recommendations_TX9rdQ",
