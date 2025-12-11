@@ -203,9 +203,7 @@
       },
       "tw-announcement-bar": {
         "type": "tw-announcement-bar",
-        "custom_css": [
-          "p {background: #000000;}"
-        ],
+        "custom_css": [],
         "settings": {
           "message": "20 novembre 2025 – avant-première : -15 % sur tous les produits"
         }
@@ -521,7 +519,7 @@
       "page-cart-subtotal": {
         "type": "page-cart-subtotal",
         "settings": {
-          "buy_button_color": "#FEDE65"
+          "buy_button_color": "#73d298"
         }
       }
     },

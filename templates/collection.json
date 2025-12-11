@@ -20,7 +20,7 @@
     "main-collection-product-grid": {
       "type": "main-collection-product-grid",
       "settings": {
-        "show_secondary_image": true
+        "show_secondary_image": false
       }
     },
     "main-collection-banner": {

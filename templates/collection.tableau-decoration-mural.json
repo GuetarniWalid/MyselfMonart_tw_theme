@@ -44,7 +44,7 @@
       "type": "main-collection-product-grid",
       "disabled": true,
       "settings": {
-        "show_secondary_image": true
+        "show_secondary_image": false
       }
     },
     "badges_L9nCbF": {
