@@ -591,21 +591,4 @@ main-product-blocks .description h2 span {
   .skeleton {
     @apply relative before:absolute before:inset-0 before:-z-10 before:bg-gray-300 before:animate-pulse;
   }
-
-  .text-ellipsis-start-mobile {
-    @media (max-width: 767px) {
-      direction: rtl;
-      text-align: left;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      /* Safari/iOS specific fixes */
-      display: block;
-      width: 100%;
-      max-width: 100%;
-      /* Force Safari to recalculate layout */
-      -webkit-transform: translateZ(0);
-      transform: translateZ(0);
-    }
-  }
 }

@@ -56,12 +56,14 @@
         {%- endif -%}
     </div>
   {%- endif -%}
-  <div class="p-3 flex flex-col justify-between bg-white rounded-lg shadow-lg">
+
+  <div class="p-3 flex flex-col justify-between bg-white rounded-lg shadow-lg mt-4">
     <h3 class="text-sm">
       <a
         href="{{ product.url }}"
-        class="after:absolute after:inset-0 mobile:line-clamp-1 md:line-clamp-2 text-ellipsis-start-mobile"
-        tabindex="-1">
+        class="product-card-title after:absolute after:inset-0 block overflow-hidden line-clamp-3"
+        tabindex="-1"
+        data-full-title="{{ product.title | escape | upcase }}">
         {{ product.title | escape | upcase }}
       </a>
     </h3>
@@ -78,3 +80,93 @@
     </div>
   </div>
 </div>
+
+<script>
+(function() {
+  function truncateTitleFromStart(element) {
+    const fullTitle = element.dataset.fullTitle;
+    if (!fullTitle) return;
+
+    // Get the computed line height
+    const style = window.getComputedStyle(element);
+    const lineHeight = parseFloat(style.lineHeight);
+    const maxHeight = lineHeight * 3; // 3 lines max
+
+    // Reset to full title first
+    element.textContent = fullTitle;
+
+    // If it fits, no need to truncate
+    if (element.scrollHeight <= maxHeight + 2) { // +2px tolerance
+      return;
+    }
+
+    // Binary search to find the optimal starting position
+    let left = 0;
+    let right = fullTitle.length;
+    let bestStart = 0;
+
+    while (left <= right) {
+      const mid = Math.floor((left + right) / 2);
+      const testText = '...' + fullTitle.substring(mid);
+      element.textContent = testText;
+
+      if (element.scrollHeight <= maxHeight + 2) {
+        bestStart = mid;
+        right = mid - 1; // Try to show more text
+      } else {
+        left = mid + 1; // Need to truncate more
+      }
+    }
+
+    // Apply the best fit with smart spacing
+    let finalText;
+    if (fullTitle[bestStart] === ' ') {
+      finalText = '... ' + fullTitle.substring(bestStart + 1);
+
+      // Verify it still fits with the extra space
+      element.textContent = finalText;
+      if (element.scrollHeight > maxHeight + 2) {
+        finalText = '...' + fullTitle.substring(bestStart);
+      }
+    } else {
+      // We're in the middle of a word
+      // Find the end of this broken word
+      const nextSpaceIndex = fullTitle.indexOf(' ', bestStart);
+      const brokenWordLength = (nextSpaceIndex === -1)
+        ? fullTitle.length - bestStart
+        : nextSpaceIndex - bestStart;
+
+      if (brokenWordLength < 3) {
+        const nextWordStart = nextSpaceIndex === -1 ? fullTitle.length : nextSpaceIndex + 1;
+        finalText = '... ' + fullTitle.substring(nextWordStart);
+
+        // Verify it still fits
+        element.textContent = finalText;
+        if (element.scrollHeight > maxHeight + 2) {
+          finalText = '...' + fullTitle.substring(bestStart);
+        }
+      } else {
+        finalText = '...' + fullTitle.substring(bestStart);
+      }
+    }
+
+    element.textContent = finalText;
+  }
+
+  function initTruncation() {
+    const titles = document.querySelectorAll('.product-card-title[data-full-title]');
+    titles.forEach(truncateTitleFromStart);
+  }
+
+  // Run on load and after fonts are loaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTruncation);
+  } else {
+    initTruncation();
+  }
+
+  if (document.fonts) {
+    document.fonts.ready.then(initTruncation);
+  }
+})();
+</script>
