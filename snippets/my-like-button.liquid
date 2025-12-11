@@ -3,6 +3,7 @@
   Accepts:
   - product: {Object}
   - likes_count: {Number}
+  - margin_bottom: {String}
 
   Usage:
   {% render 'my-like-button', product: product, likes_count: 0 %}
@@ -15,7 +16,7 @@
 %}
 
 <my-like-button data-product-id="{{ product.id }}" data-product-handle="{{ product.handle }}">
-  <button class="like relative py-1 sm:py-2 px-2 sm:px-3 bg-main-5 rounded inline-flex items-center gap-1 z-20">
+  <button class="like relative py-1 sm:py-2 px-2 sm:px-3 bg-main-5 rounded inline-flex items-center gap-1 z-20 {{ margin_bottom }}">
     {% render 'tw-icon-heart-outline' %}
     {% render 'tw-icon-heart-full' %}
     <span class="font-semibold font-heading total-users-likes-count text-sm text-main">

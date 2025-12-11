@@ -82,16 +82,12 @@
         {% if product.media.size > 1 %}
           <div id="carousel-navigation-controls" class="absolute bg-secondary transition-colors duration-500 rounded-full left-1/2 -translate-x-1/2 bottom-3 border-main border-1 md:hidden flex justify-center items-center h-[47px] overflow-hidden hidden">
             <button class="previous pl-5 pr-3 h-full focus-visible:outline-none focus-visible:bg-main-10 hover:bg-main-10">
-              <div class="rotate-90">{% render 'tw-icon-caret'
- 
-, width: '18' %}</div>
+              <div class="rotate-90">{% render 'tw-icon-caret', width: '18' %}</div>
             </button>
             <span class="px-3">
               <span class="image-counter">1</span>/{{ number_of_media }}</span>
             <button class="next pr-5 pl-3 h-full focus-visible:outline-none focus-visible:bg-main-10 hover:bg-main-10">
-              <div class="-rotate-90">{% render 'tw-icon-caret'
- 
-, width: '18' %}</div>
+              <div class="-rotate-90">{% render 'tw-icon-caret', width: '18' %}</div>
             </button>
           </div>
         {% endif %}
@@ -167,43 +163,19 @@
               , block: block %}
           {%- when 'buy' -%}
             {% style %}:root
-            {
-              --color-action-rgb: {{ block.settings.main_color.red }}, 
-              {{ block.settings.main_color.green }}, 
-              {{ block.settings.main_color.blue }};
-            }
-          {% endstyle %}
-          <div class="relative mt-10 mb-3 md:mb-8">
-            <button
-              class="buy-button cart-button glass-anim"
-              data-variant-id="{{ product.first_available_variant.id }}"
-              data-template="{{ template.suffix }}"
-              data-product-id="{{ product.id }}"
-              data-is-dynamic-variant="{{ block.settings.is_dynamic_variant }}">
-              {% if block.settings.show_promotion and product.selected_or_first_available_variant.compare_at_price or block.settings.promotion_discount > 0 %}
-                {% render 'promotion-buy-button-content'
-                  , product: product
-                  , block: block %}
-              {% else %}
-                {% render 'regular-buy-button-content'
-                  , product: product
-                  , block: block %}
-              {% endif %}
-            </button>
-            {% render 'tw-icon-hand-click'
-              , class: "absolute top-1/2 -translate-y-1/2 left-0 -translate-x-1/2 scale-90 md:scale-100" %}
-            {% render 'tw-icon-hand-click'
-              , class: "absolute top-0 -translate-y-[65%] right-10 rotate-[100deg] scale-90 md:scale-100" %}
-            {% render 'tw-icon-hand-click'
-              , class: "absolute top-0 -translate-y-[65%] right-3/4 rotate-45 scale-90 md:scale-100" %}
-            {% render 'tw-icon-hand-click'
-              , class: "absolute bottom-0 translate-y-1/4 md:translate-y-1/2 right-1/4 -rotate-[135deg] scale-90 md:scale-100" %}
-            <template id="float-buy-button">
+              {
+                --color-action-rgb: {{ block.settings.main_color.red }}, 
+                {{ block.settings.main_color.green }}, 
+                {{ block.settings.main_color.blue }};
+              }
+            {% endstyle %}
+            <div class="relative mt-10 mb-3 md:mb-8">
               <button
-                class="float-buy-button cart-button fixed bottom-20 md:bottom-10 left-1/2 -translate-x-1/2 2xs:gap-5 md:gap-6 w-[100px] max-w-[90%] xs:max-w-[450px] md:xs:max-w-[90%] transition-colors duration-500 scale-0 glass-anim"
+                class="buy-button cart-button glass-anim"
                 data-variant-id="{{ product.first_available_variant.id }}"
                 data-template="{{ template.suffix }}"
-                data-product-id="{{ product.id }}">
+                data-product-id="{{ product.id }}"
+                data-is-dynamic-variant="{{ block.settings.is_dynamic_variant }}">
                 {% if block.settings.show_promotion and product.selected_or_first_available_variant.compare_at_price or block.settings.promotion_discount > 0 %}
                   {% render 'promotion-buy-button-content'
                     , product: product
@@ -214,739 +186,769 @@
                     , block: block %}
                 {% endif %}
               </button>
-            </template>
-          </div>
-          {% if block.settings.promotion_date != blank %}
-            {% if block.settings.show_promotion and product.selected_or_first_available_variant.compare_at_price or block.settings.promotion_discount > 0 %}
-              {% render 'promotion-date-banner'
-                , block: block
-                , text: block.settings.promotion_date %}
+              {% render 'tw-icon-hand-click'
+                , class: "absolute top-1/2 -translate-y-1/2 left-0 -translate-x-1/2 scale-90 md:scale-100" %}
+              {% render 'tw-icon-hand-click'
+                , class: "absolute top-0 -translate-y-[65%] right-10 rotate-[100deg] scale-90 md:scale-100" %}
+              {% render 'tw-icon-hand-click'
+                , class: "absolute top-0 -translate-y-[65%] right-3/4 rotate-45 scale-90 md:scale-100" %}
+              {% render 'tw-icon-hand-click'
+                , class: "absolute bottom-0 translate-y-1/4 md:translate-y-1/2 right-1/4 -rotate-[135deg] scale-90 md:scale-100" %}
+              <template id="float-buy-button">
+                <button
+                  class="float-buy-button cart-button fixed bottom-20 md:bottom-10 left-1/2 -translate-x-1/2 2xs:gap-5 md:gap-6 w-[100px] max-w-[90%] xs:max-w-[450px] md:xs:max-w-[90%] transition-colors duration-500 scale-0 glass-anim"
+                  data-variant-id="{{ product.first_available_variant.id }}"
+                  data-template="{{ template.suffix }}"
+                  data-product-id="{{ product.id }}">
+                  {% if block.settings.show_promotion and product.selected_or_first_available_variant.compare_at_price or block.settings.promotion_discount > 0 %}
+                    {% render 'promotion-buy-button-content'
+                      , product: product
+                      , block: block %}
+                  {% else %}
+                    {% render 'regular-buy-button-content'
+                      , product: product
+                      , block: block %}
+                  {% endif %}
+                </button>
+              </template>
+            </div>
+            {% if block.settings.promotion_date != blank %}
+              {% if block.settings.show_promotion and product.selected_or_first_available_variant.compare_at_price or block.settings.promotion_discount > 0 %}
+                {% render 'promotion-date-banner'
+                  , block: block
+                  , text: block.settings.promotion_date %}
+              {% endif %}
+              <template id="promotion-date-banner">
+                {% render 'promotion-date-banner'
+                  , block: block
+                  , text: block.settings.promotion_date %}
+              </template>
             {% endif %}
-            <template id="promotion-date-banner">
-              {% render 'promotion-date-banner'
-                , block: block
-                , text: block.settings.promotion_date %}
-            </template>
-          {% endif %}
-          {% if template.suffix == 'painting' or template.suffix == 'personalized' %}
+              {% if template.suffix == 'painting' or template.suffix == 'personalized' %}
             {% render 'painting-addons-drawer' %}
-          {% endif %}
-        {%- when 'description' -%}
-          {%- if product.description != blank -%}
-            <div class="product-description dropdown-button-target description flex flex-col gap-5 text-lg leading-relaxed h-56 overflow-hidden relative">
-              {{ product.description }}
-            </div>
-            <dropdown-button>
-              <button class="group mt-6 mb-5">{{ 'sections.main_collection_banner.learn_more' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
-              <button class="group  mt-6 hidden mb-5">{{ 'sections.main_collection_banner.fewer_details' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
-            </dropdown-button>
-          {%- endif -%}
-        {%- when 'collapsible_tab' -%}
-          <details class="accordion group border-t border-main-10 first-of-type:mt-5 last-of-type:border-b last-of-type:border-b-main-10 last-of-type:mb-5">
-            <summary class="list-none flex justify-between py-3 select-none cursor-pointer">
-              <div class="flex gap-3">
-                {% render 'icon-accordion'
-                  , icon: block.settings.icon
-                  , color: block.settings.icon_color %}
-                <h4 class="h4 text-lg max-w-[90%]">
-                  {{ block.settings.heading | default: block.settings.page.title }}
-                </h4>
+            {% endif %}
+          {%- when 'description' -%}
+            {%- if product.description != blank -%}
+              <div class="product-description dropdown-button-target description flex flex-col gap-5 text-lg leading-relaxed h-56 overflow-hidden relative">
+                {{ product.description }}
               </div>
-              <span class="group-open:rotate-180 transition-transform duration-200 mr-5 flex items-center">
-                {% render 'tw-icon-caret'
-                  , width: "10" %}
-              </span>
-            </summary>
-            <div class="py-3 text-lg flex flex-col gap-3">
-              {{ block.settings.content }}
-              {{ block.settings.page.content }}
-            </div>
-          </details>
-        {%- when 'likes' -%}
-          {% render 'my-like-button', product: product, likes_count: product.metafields.likes.number | default: 0 %}
-          <script src="{{ 'my-like-button.js' | asset_url }}" defer="defer"></script>
-        {%- when 'tapestry_options' -%}
-          {% if template.suffix == 'tapestry' %}
-            {% liquid
-              if product.images[1].aspect_ratio < 1
-                assign tapestry_width = block.settings.tapestry_default_width_portrait
-                assign texture_img = block.settings.tapestry_texture_portrait
-              elsif product.images[1].aspect_ratio > 1
-                assign tapestry_width = block.settings.tapestry_default_width_landscape
-                assign texture_img = block.settings.tapestry_texture_landscape
-              else
-                assign tapestry_width = block.settings.tapestry_default_width_square
-                assign texture_img = block.settings.tapestry_texture_square
-              endif
-            %}
-            {{ 'croppr.min.css' | asset_url | stylesheet_tag }}
-            <script src="{{ 'croppr.min.js' | asset_url }}" defer="defer"></script>
-          {% endif %}
-          {% if texture_img %}
-            <template id="tapestry-texture">
-              <img
-                src="{{ texture_img | image_url: width: 600}}"
-                srcset="{%- if texture_img.width >= 400 -%}{{ texture_img | image_url: width: 400 }} 400w,{%- endif -%}
-                  {%- if texture_img.width >= 500 -%}{{ texture_img | image_url: width: 500 }} 500w,{%- endif -%}
-                  {%- if texture_img.width >= 600 -%}{{ texture_img | image_url: width: 600 }} 600w,{%- endif -%}"
-                width="620"
-                height="1200"
-                loading="lazy"
-                alt="{{ tapestry_width.alt }}"
-                class="absolute w-full h-full top-0 left-0 object-cover opacity-30 pointer-events-none"
-                sizes="(max-width: 400px) 400px, (max-width: 500px) 500px, (max-width: 767px) 767px, (max-width: 850px) 400px, (max-width: 1040px) 500px, 600px">
-            </template>
-          {% endif %}
-          {% liquid
-            assign unit = product.options_with_values.first.values.first | split: ' ' | last
-          %}
-          <div class="my-5 product-properties">
-            <label class="block text-xl mt-5 ml-1" for="tapestry-width">{{ product.options.first }} :</label>
-            <div class="relative flex mt-1">
-              <tapestry-select
-                data-money-symbol="{{ cart.currency.symbol }}"
-                data-orientation="width"
-                data-tapestry-strips-width="{{ block.settings.tapestry_strips_width }}"
-                data-texture-img-src="{{ texture_img }}">
-                <select
-                  class="min-w-32 rounded-l-lg p-3 outline-none bg-white"
-                  type="number"
-                  id="tapestry-width"
-                  name="tapestry-width">
-                  {% for width in product.options_with_values.first.values %}
-                    <option
-                      value="{{ width }}"
-                      {% if forloop.first %}
-                      selected{% endif %}>{{ width | split: ' ' | first }}</option>
-                  {% endfor %}
-                </select>
-              </tapestry-select>
-              <div class="pl-5 bg-white rounded-r-lg text-gray-600 text-lg flex justify-center items-center">
-                <span class="px-5 border-l-1 border-gray-300 ">{{ unit }}</span>
-              </div>
-            </div>
-            <label class="block text-xl mt-5 ml-1" for="tapestry-height">{{ product.options[1] }} :</label>
-            <div class="relative flex mt-1 mb-6">
-              <tapestry-select
-                data-money-symbol="{{ cart.currency.symbol }}"
-                data-orientation="height"
-                data-tapestry-strips-width="{{ block.settings.tapestry_strips_width }}">
-                <select
-                  class="min-w-32 rounded-l-lg p-3 outline-none bg-white"
-                  type="number"
-                  id="tapestry-height"
-                  name="tapestry-height">
-                  {% for height in product.options_with_values[1].values %}
-                    <option
-                      value="{{ height }}"
-                      {% if forloop.first %}
-                      selected{% endif %}>{{ height | split: ' ' | first }}</option>
-                  {% endfor %}
-                </select>
-              </tapestry-select>
-              <div class="pl-5 bg-white rounded-r-lg text-gray-600 text-lg flex justify-center items-center">
-                <span class="px-5 border-l-1 border-gray-300 ">{{ unit }}</span>
-              </div>
-              <input type="hidden" name="tapestry-ratio">
-              <input type="hidden" name="tapestry-x-position">
-              <input type="hidden" name="tapestry-y-position">
-            </div>
-          </div>
-        {%- when 'trustpilot_review' -%}
-          <div class="{{ block.settings.margin_bottom }}">
-            <p class="flex items-center mb-1">
-              <a
-                href="{{ block.settings.link }}"
-                target="_blank"
-                class="underline">Trustpilot</a>
-              <span class="!inline-block w-[5px] h-[5px] rounded-full bg-main mx-2"></span>
-              {{ 'sections.trustpilot.excellent' | t }}
-            </p>
-            <div class="flex gap-1">
-              {% for i in (1..5) %}
-                {% liquid
-                  assign current = i | times: 10
-                  if current <= block.settings.trustpilot_score
-                    assign green_width = 'w-full'
-                  else
-                    assign percent = block.settings.trustpilot_score | plus: 10 | minus: current | times: 10
-                    if percent == 0
-                      assign green_width = 'w-0'
-                    elsif percent > 0 and percent <= 25
-                      assign green_width = 'w-1/4'
-                    elsif percent > 25 and percent <= 50
-                      assign green_width = 'w-1/2'
-                    elsif percent > 50 and percent <= 75
-                      assign green_width = 'w-3/4'
-                    else
-                      assign green_width = 'w-full'
-                    endif
-                  endif
-                %}
-                <div class="relative flex justify-center items-center bg-gray-300 h-10 w-10 before:absolute before:top-0 before:bottom-0 before:left-0 before:{{ green_width }} before:bg-[#00B67A]">
-                  <svg
-                    class="z-10"
-                    width="26"
-                    height="25"
-                    viewBox="0 0 26 25"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path d="M18.6626 17.6149L21.0351 25L13.0043 19.0981L18.6626 17.6149ZM26 9.55286H16.0713L13.0054 0L9.92875 9.55505L0 9.54191L8.0405 15.4537L4.96383 24.9989L13.0043 19.0981L17.9693 15.4537L26 9.55286Z" fill="white" />
-                  </svg>
+              <dropdown-button>
+                <button class="group mt-6 mb-5">{{ 'sections.main_collection_banner.learn_more' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
+                <button class="group  mt-6 hidden mb-5">{{ 'sections.main_collection_banner.fewer_details' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
+              </dropdown-button>
+            {%- endif -%}
+          {%- when 'collapsible_tab' -%}
+            <details class="accordion group border-t border-main-10 first-of-type:mt-5 last-of-type:border-b last-of-type:border-b-main-10 last-of-type:mb-5">
+              <summary class="list-none flex justify-between py-3 select-none cursor-pointer">
+                <div class="flex gap-3">
+                  {% render 'icon-accordion'
+                    , icon: block.settings.icon
+                    , color: block.settings.icon_color %}
+                  <h4 class="h4 text-lg max-w-[90%]">
+                    {{ block.settings.heading | default: block.settings.page.title }}
+                  </h4>
                 </div>
-              {% endfor %}
-              <p class="flex items-center ml-2">{{ 'sections.trustpilot.score' | t }}: {{ block.settings.trustpilot_score | divided_by: 10.0 }}</p>
+                <span class="group-open:rotate-180 transition-transform duration-200 mr-5 flex items-center">
+                  {% render 'tw-icon-caret'
+                    , width: "10" %}
+                </span>
+              </summary>
+              <div class="py-3 text-lg flex flex-col gap-3">
+                {{ block.settings.content }}
+                {{ block.settings.page.content }}
+              </div>
+            </details>
+          {%- when 'likes' -%}
+            {% render 'my-like-button', product: product, likes_count: product.metafields.likes.number | default: 0, margin_bottom: block.settings.margin_bottom %}
+            <script src="{{ 'my-like-button.js' | asset_url }}" defer="defer"></script>
+          {%- when 'tapestry_options' -%}
+            {% if template.suffix == 'tapestry' %}
+              {% liquid
+                if product.images[1].aspect_ratio < 1
+                  assign tapestry_width = block.settings.tapestry_default_width_portrait
+                  assign texture_img = block.settings.tapestry_texture_portrait
+                elsif product.images[1].aspect_ratio > 1
+                  assign tapestry_width = block.settings.tapestry_default_width_landscape
+                  assign texture_img = block.settings.tapestry_texture_landscape
+                else
+                  assign tapestry_width = block.settings.tapestry_default_width_square
+                  assign texture_img = block.settings.tapestry_texture_square
+                endif
+              %}
+              {{ 'croppr.min.css' | asset_url | stylesheet_tag }}
+              <script src="{{ 'croppr.min.js' | asset_url }}" defer="defer"></script>
+            {% endif %}
+            {% if texture_img %}
+              <template id="tapestry-texture">
+                <img
+                  src="{{ texture_img | image_url: width: 600}}"
+                  srcset="{%- if texture_img.width >= 400 -%}{{ texture_img | image_url: width: 400 }} 400w,{%- endif -%}
+                    {%- if texture_img.width >= 500 -%}{{ texture_img | image_url: width: 500 }} 500w,{%- endif -%}
+                    {%- if texture_img.width >= 600 -%}{{ texture_img | image_url: width: 600 }} 600w,{%- endif -%}"
+                  width="620"
+                  height="1200"
+                  loading="lazy"
+                  alt="{{ tapestry_width.alt }}"
+                  class="absolute w-full h-full top-0 left-0 object-cover opacity-30 pointer-events-none"
+                  sizes="(max-width: 400px) 400px, (max-width: 500px) 500px, (max-width: 767px) 767px, (max-width: 850px) 400px, (max-width: 1040px) 500px, 600px">
+              </template>
+            {% endif %}
+            {% liquid
+              assign unit = product.options_with_values.first.values.first | split: ' ' | last
+            %}
+            <div class="my-5 product-properties">
+              <label class="block text-xl mt-5 ml-1" for="tapestry-width">{{ product.options.first }} :</label>
+              <div class="relative flex mt-1">
+                <tapestry-select
+                  data-money-symbol="{{ cart.currency.symbol }}"
+                  data-orientation="width"
+                  data-tapestry-strips-width="{{ block.settings.tapestry_strips_width }}"
+                  data-texture-img-src="{{ texture_img }}">
+                  <select
+                    class="min-w-32 rounded-l-lg p-3 outline-none bg-white"
+                    type="number"
+                    id="tapestry-width"
+                    name="tapestry-width">
+                    {% for width in product.options_with_values.first.values %}
+                      <option
+                        value="{{ width }}"
+                        {% if forloop.first %}
+                        selected{% endif %}>{{ width | split: ' ' | first }}</option>
+                    {% endfor %}
+                  </select>
+                </tapestry-select>
+                <div class="pl-5 bg-white rounded-r-lg text-gray-600 text-lg flex justify-center items-center">
+                  <span class="px-5 border-l-1 border-gray-300 ">{{ unit }}</span>
+                </div>
+              </div>
+              <label class="block text-xl mt-5 ml-1" for="tapestry-height">{{ product.options[1] }} :</label>
+              <div class="relative flex mt-1 mb-6">
+                <tapestry-select
+                  data-money-symbol="{{ cart.currency.symbol }}"
+                  data-orientation="height"
+                  data-tapestry-strips-width="{{ block.settings.tapestry_strips_width }}">
+                  <select
+                    class="min-w-32 rounded-l-lg p-3 outline-none bg-white"
+                    type="number"
+                    id="tapestry-height"
+                    name="tapestry-height">
+                    {% for height in product.options_with_values[1].values %}
+                      <option
+                        value="{{ height }}"
+                        {% if forloop.first %}
+                        selected{% endif %}>{{ height | split: ' ' | first }}</option>
+                    {% endfor %}
+                  </select>
+                </tapestry-select>
+                <div class="pl-5 bg-white rounded-r-lg text-gray-600 text-lg flex justify-center items-center">
+                  <span class="px-5 border-l-1 border-gray-300 ">{{ unit }}</span>
+                </div>
+                <input type="hidden" name="tapestry-ratio">
+                <input type="hidden" name="tapestry-x-position">
+                <input type="hidden" name="tapestry-y-position">
+              </div>
             </div>
-          </div>
-          {% capture reviews_structured_data %}
-              "aggregateRating": {
-                "@type": "AggregateRating",
-                "ratingValue": "{{ block.settings.trustpilot_score | divided_by: 10.0 }}",
-                "ratingCount": "30",
-                "worstRating": "1",
-                "bestRating": "5"
-              }
+          {%- when 'trustpilot_review' -%}
+            <div class="{{ block.settings.margin_bottom }}">
+              <p class="flex items-center mb-1">
+                <a
+                  href="{{ block.settings.link }}"
+                  target="_blank"
+                  class="underline">Trustpilot</a>
+                <span class="!inline-block w-[5px] h-[5px] rounded-full bg-main mx-2"></span>
+                {{ 'sections.trustpilot.excellent' | t }}
+              </p>
+              <div class="flex gap-1">
+                {% for i in (1..5) %}
+                  {% liquid
+                    assign current = i | times: 10
+                    if current <= block.settings.trustpilot_score
+                      assign green_width = 'w-full'
+                    else
+                      assign percent = block.settings.trustpilot_score | plus: 10 | minus: current | times: 10
+                      if percent == 0
+                        assign green_width = 'w-0'
+                      elsif percent > 0 and percent <= 25
+                        assign green_width = 'w-1/4'
+                      elsif percent > 25 and percent <= 50
+                        assign green_width = 'w-1/2'
+                      elsif percent > 50 and percent <= 75
+                        assign green_width = 'w-3/4'
+                      else
+                        assign green_width = 'w-full'
+                      endif
+                    endif
+                  %}
+                  <div class="relative flex justify-center items-center bg-gray-300 h-10 w-10 before:absolute before:top-0 before:bottom-0 before:left-0 before:{{ green_width }} before:bg-[#00B67A]">
+                    <svg
+                      class="z-10"
+                      width="26"
+                      height="25"
+                      viewBox="0 0 26 25"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path d="M18.6626 17.6149L21.0351 25L13.0043 19.0981L18.6626 17.6149ZM26 9.55286H16.0713L13.0054 0L9.92875 9.55505L0 9.54191L8.0405 15.4537L4.96383 24.9989L13.0043 19.0981L17.9693 15.4537L26 9.55286Z" fill="white" />
+                    </svg>
+                  </div>
+                {% endfor %}
+                <p class="flex items-center ml-2">{{ 'sections.trustpilot.score' | t }}: {{ block.settings.trustpilot_score | divided_by: 10.0 }}</p>
+              </div>
+            </div>
+            {% capture reviews_structured_data %}
+                "aggregateRating": {
+                  "@type": "AggregateRating",
+                  "ratingValue": "{{ block.settings.trustpilot_score | divided_by: 10.0 }}",
+                  "ratingCount": "30",
+                  "worstRating": "1",
+                  "bestRating": "5"
+                }
             {% endcapture %}
 
-      {%- endcase -%}
-    {%- endfor -%}
-  </div>
-</main-product-blocks></div>{% if template.suffix == 'painting' or template.suffix == 'personalized' %}
-{% render 'painting-data-script'
-  , product: product %}{% else %}
-<script type="application/ld+json">
-  {
-    "@context": "http://schema.org/",
-    "@type": "Product",
-    "@id": "{{ request.origin | append: product.url }}",
-    "name": {{ product.title | json }},
-    "logo": "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/logo-myselfmonart.svg?v=1727019678",
-    "url": {{ request.origin | append: product.url | json }},
-    {% if product.metafields.link.mother_collection.value.title != blank %}
-      "category" : "{{ product.metafields.link.mother_collection.value.title }}",
-      {% endif %}
-      "image": [{{ product.featured_media | image_url: width: product.featured_media.preview_image.width | prepend: "https:" | json }}],
-      "description": {{ product.description | strip_html | json }},
-      {% if product.selected_or_first_available_variant.sku != blank -%}
-        "sku": {{ product.selected_or_first_available_variant.sku | json }},
-        {%- endif %}
-        "brand": {
-          "@type": "Brand",
-          "name": {{ product.vendor | json }}
-        },
-        "offers": [
-                  {%- for variant in product.variants -%}
-            {
-                      "@type": "Offer",
-                      {%- if variant.sku != blank -%}
-                "sku": {{ variant.sku | json }},
-                      {%- endif -%}
-                {%- if variant.barcode.size == 12 -%}
-                  "gtin12": {{ variant.barcode }},
-                      {%- endif -%}
-                  {%- if variant.barcode.size == 13 -%}
-                    "gtin13": {{ variant.barcode }},
-                      {%- endif -%}
-                    {%- if variant.barcode.size == 14 -%}
-                      "gtin14": {{ variant.barcode }},
-                      {%- endif -%}
-                      "availability": "http://schema.org/{% if variant.available %} InStock{% else %}OutOfStock{% endif %}",
-                      "price": {{ variant.price | divided_by: 100.00 | json }},
-                      "priceCurrency": {{ cart.currency.iso_code | json }},
-                      "url": {{ request.origin | append: variant.url | json }},
-                      "seller": {
-                        "@type": "Organization",
-                        "name": "{{ product.vendor }}"
-                      }
-                    }{% unless forloop.last %},{% endunless %}
-                  {%- endfor -%}
-                ]{%- if reviews_structured_data != blank -%},
-                {{ reviews_structured_data }}
-                {%- endif -%}
-              }
-</script>{% endif %}{% schema %}
-{
-  "name": "t:sections.main-product.name",
-  "class": "page-width relative",
-  "tag": "section",
-  "blocks": [
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </main-product-blocks>
+</div>
+{% if template.suffix == 'painting' or template.suffix == 'personalized' %}
+  {% render 'painting-data-script', product: product %}
+{% else %}
+  <script type="application/ld+json">
     {
-      "type": "@app"
-    },
-    {
-      "type": "text",
-      "name": "t:sections.main-product.blocks.text.name",
-      "settings": [
-        {
-          "type": "richtext",
-          "id": "text",
-          "default": "<p>Text block</p>",
-          "label": "t:sections.main-product.blocks.text.settings.text.label"
-        }
-      ]
-    },
-    {
-      "type": "title",
-      "name": "t:sections.main-product.blocks.title.name",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "select",
-          "id": "margin_bottom",
-          "label": "t:sections.collections-pages-grid.settings.padding_bottom.label",
-          "options": [
-            {
-              "value": "mb-0",
-              "label": "t:sections.collections-pages-grid.settings.padding_top.options.none.label"
-            },
-            {
-              "value": "mb-2",
-              "label": "t:sections.collections-pages-grid.settings.padding_top.options.small.label"
-            },
-            {
-              "value": "mb-4",
-              "label": "t:sections.collections-pages-grid.settings.padding_top.options.medium.label"
-            },
-            {
-              "value": "mb-8",
-              "label": "t:sections.collections-pages-grid.settings.padding_top.options.large.label"
-            }
-          ],
-          "default": "mb-8"
-        }
-      ]
-    },
-    {
-      "type": "variant_picker",
-      "name": "t:sections.main-product.blocks.variant_picker.name",
-      "limit": 1
-    },
-    {
-      "type": "description",
-      "name": "t:sections.main-product.blocks.description.name",
-      "limit": 1
-    },
-    {
-      "type": "collapsible_tab",
-      "name": "t:sections.main-product.blocks.collapsible_tab.name",
-      "settings": [
-        {
-          "type": "text",
-          "id": "heading",
-          "default": "Collapsible row",
-          "info": "t:sections.main-product.blocks.collapsible_tab.settings.heading.info",
-          "label": "t:sections.main-product.blocks.collapsible_tab.settings.heading.label"
-        },
-        {
-          "type": "select",
-          "id": "icon",
-          "options": [
-            {
-              "value": "none",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__1.label"
-            },
-            {
-              "value": "apple",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__2.label"
-            },
-            {
-              "value": "banana",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__3.label"
-            },
-            {
-              "value": "bottle",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__4.label"
-            },
-            {
-              "value": "box",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__5.label"
-            },
-            {
-              "value": "carrot",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__6.label"
-            },
-            {
-              "value": "chat_bubble",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__7.label"
-            },
-            {
-              "value": "check_mark",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__8.label"
-            },
-            {
-              "value": "clipboard",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__9.label"
-            },
-            {
-              "value": "dairy",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__10.label"
-            },
-            {
-              "value": "dairy_free",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__11.label"
-            },
-            {
-              "value": "dryer",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__12.label"
-            },
-            {
-              "value": "eye",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__13.label"
-            },
-            {
-              "value": "fire",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__14.label"
-            },
-            {
-              "value": "gluten_free",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__15.label"
-            },
-            {
-              "value": "heart",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__16.label"
-            },
-            {
-              "value": "iron",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__17.label"
-            },
-            {
-              "value": "leaf",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__18.label"
-            },
-            {
-              "value": "leather",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__19.label"
-            },
-            {
-              "value": "lightning_bolt",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__20.label"
-            },
-            {
-              "value": "lipstick",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__21.label"
-            },
-            {
-              "value": "lock",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__22.label"
-            },
-            {
-              "value": "map_pin",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__23.label"
-            },
-            {
-              "value": "nut_free",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__24.label"
-            },
-            {
-              "value": "pants",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__25.label"
-            },
-            {
-              "value": "paw_print",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__26.label"
-            },
-            {
-              "value": "pepper",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__27.label"
-            },
-            {
-              "value": "perfume",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__28.label"
-            },
-            {
-              "value": "plane",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__29.label"
-            },
-            {
-              "value": "plant",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__30.label"
-            },
-            {
-              "value": "price_tag",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__31.label"
-            },
-            {
-              "value": "question_mark",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__32.label"
-            },
-            {
-              "value": "recycle",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__33.label"
-            },
-            {
-              "value": "return",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__34.label"
-            },
-            {
-              "value": "ruler",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__35.label"
-            },
-            {
-              "value": "serving_dish",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__36.label"
-            },
-            {
-              "value": "shirt",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__37.label"
-            },
-            {
-              "value": "shoe",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__38.label"
-            },
-            {
-              "value": "silhouette",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__39.label"
-            },
-            {
-              "value": "snowflake",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__40.label"
-            },
-            {
-              "value": "star",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__41.label"
-            },
-            {
-              "value": "stopwatch",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__42.label"
-            },
-            {
-              "value": "truck",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__43.label"
-            },
-            {
-              "value": "washing",
-              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__44.label"
-            }
-          ],
-          "default": "check_mark",
-          "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.label"
-        },
-        {
-          "type": "richtext",
-          "id": "content",
-          "label": "t:sections.main-product.blocks.collapsible_tab.settings.content.label"
-        },
-        {
-          "type": "page",
-          "id": "page",
-          "label": "t:sections.main-product.blocks.collapsible_tab.settings.page.label"
-        }
-      ]
-    },
-    {
-      "type": "buy",
-      "name": "t:sections.main-product.blocks.buy.name",
-      "settings": [
-        {
-          "type": "text",
-          "id": "text",
-          "default": "Commandez ici",
-          "label": "t:sections.main-product.blocks.buy.settings.text.label"
-        },
-        {
-          "type": "checkbox",
-          "id": "is_dynamic_variant",
-          "default": false,
-          "label": "t:sections.main-product.blocks.buy.settings.is_dynamic_variant.label",
-          "info": "t:sections.main-product.blocks.buy.settings.is_dynamic_variant.info"
-        },
-        {
-          "type": "color",
-          "id": "main_color",
-          "label": "t:sections.main-product.blocks.buy.settings.main_color.label",
-          "default": "#04A777"
-        },
-        {
-          "type": "header",
-          "content": "t:sections.main-product.blocks.buy.headings.promotion.content"
-        },
-        {
-          "type": "checkbox",
-          "id": "show_promotion",
-          "default": false,
-          "label": "t:sections.main-product.blocks.buy.settings.show_promotion.label",
-          "info": "t:sections.main-product.blocks.buy.settings.show_promotion.info"
-        },
-        {
-          "type": "number",
-          "id": "promotion_discount",
-          "label": "t:sections.main-product.blocks.buy.settings.promotion_discount.label",
-          "info": "t:sections.main-product.blocks.buy.settings.promotion_discount.info",
-          "default": 15
-        },
-        {
-          "type": "select",
-          "id": "promotion_discount_unit",
-          "label": "t:sections.main-product.blocks.buy.settings.promotion_discount_unit.label",
-          "options": [
-            {
-              "value": "%",
-              "label": "t:sections.main-product.blocks.buy.settings.promotion_discount_unit.options.percentage.label"
-            },
-            {
-              "value": "$",
-              "label": "t:sections.main-product.blocks.buy.settings.promotion_discount_unit.options.amount.label"
-            }
-          ],
-          "default": "%"
-        },
-        {
-          "type": "text",
-          "id": "promotion_reason",
-          "default": "Summer sale ☀️",
-          "label": "t:sections.main-product.blocks.buy.settings.promotion_reason.label",
-          "info": "t:sections.main-product.blocks.buy.settings.promotion_reason.info"
-        },
-        {
-          "type": "text",
-          "id": "promotion_date",
-          "default": "Until the 31st of July",
-          "label": "t:sections.main-product.blocks.buy.settings.promotion_date.label",
-          "info": "t:sections.main-product.blocks.buy.settings.promotion_date.info"
-        }
-      ]
-    },
-    {
-      "type": "likes",
-      "name": "t:sections.main-product.blocks.likes.name",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "select",
-          "id": "margin_bottom",
-          "label": "t:sections.collections-pages-grid.settings.padding_bottom.label",
-          "options": [
-            {
-              "value": "mb-2",
-              "label": "t:sections.collections-pages-grid.settings.padding_top.options.small.label"
-            },
-            {
-              "value": "mb-4",
-              "label": "t:sections.collections-pages-grid.settings.padding_top.options.medium.label"
-            },
-            {
-              "value": "mb-8",
-              "label": "t:sections.collections-pages-grid.settings.padding_top.options.large.label"
-            }
-          ],
-          "default": "mb-8"
-        }
-      ]
-    },
-    {
-      "type": "tapestry_options",
-      "name": "t:sections.main-product.blocks.tapestry_options.name",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "header",
-          "content": "t:sections.main-product.blocks.tapestry_options.headings.style.content"
-        },
-        {
-          "type": "image_picker",
-          "id": "tapestry_texture_landscape",
-          "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_texture_landscape.label"
-        },
-        {
-          "type": "image_picker",
-          "id": "tapestry_texture_portrait",
-          "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_texture_portrait.label"
-        },
-        {
-          "type": "image_picker",
-          "id": "tapestry_texture_square",
-          "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_texture_square.label"
-        },
-        {
-          "type": "header",
-          "content": "t:sections.main-product.blocks.tapestry_options.headings.default_width.content"
-        },
-        {
-          "type": "number",
-          "id": "tapestry_default_width_landscape",
-          "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_default_width_landscape.label",
-          "info": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_default_width_landscape.info",
-          "default": 250
-        },
-        {
-          "type": "number",
-          "id": "tapestry_default_width_portrait",
-          "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_default_width_portrait.label",
-          "info": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_default_width_portrait.info",
-          "default": 150
-        },
-        {
-          "type": "number",
-          "id": "tapestry_default_width_square",
-          "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_default_width_square.label",
-          "info": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_default_width_square.info",
-          "default": 200
-        },
-        {
-          "type": "header",
-          "content": "t:sections.main-product.blocks.tapestry_options.headings.default_height.content"
-        },
-        {
-          "type": "number",
-          "id": "tapestry_default_height",
-          "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_default_height.label",
-          "info": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_default_height.info",
-          "default": 250
-        },
-        {
-          "type": "header",
-          "content": "t:sections.main-product.blocks.tapestry_options.headings.tapestry_strips.content"
-        },
-        {
-          "type": "number",
-          "id": "tapestry_strips_width",
-          "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_strips_width.label",
-          "info": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_strips_width.info",
-          "default": 50
-        },
-        {
-          "type": "header",
-          "content": "t:sections.main-product.blocks.tapestry_options.headings.limitations.content"
-        }
-      ]
-    },
-    {
-      "type": "trustpilot_review",
-      "name": "t:sections.main-product.blocks.trustpilot_review.name",
-      "settings": [
-        {
-          "type": "number",
-          "id": "trustpilot_score",
-          "label": "t:sections.main-product.blocks.trustpilot_review.settings.trustpilot_score.label",
-          "info": "t:sections.main-product.blocks.trustpilot_review.settings.trustpilot_score.info",
-          "default": 43
-        },
-        {
-          "type": "url",
-          "id": "link",
-          "label": "t:sections.main-product.blocks.trustpilot_review.settings.link.label"
-        },
-        {
-          "type": "select",
-          "id": "margin_bottom",
-          "label": "t:sections.collections-pages-grid.settings.padding_bottom.label",
-          "options": [
-            {
-              "value": "mb-2",
-              "label": "t:sections.collections-pages-grid.settings.padding_top.options.small.label"
-            },
-            {
-              "value": "mb-4",
-              "label": "t:sections.collections-pages-grid.settings.padding_top.options.medium.label"
-            },
-            {
-              "value": "mb-8",
-              "label": "t:sections.collections-pages-grid.settings.padding_top.options.large.label"
-            }
-          ],
-          "default": "mb-2"
-        }
-      ]
+      "@context": "http://schema.org/",
+      "@type": "Product",
+      "@id": "{{ request.origin | append: product.url }}",
+      "name": {{ product.title | json }},
+      "logo": "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/logo-myselfmonart.svg?v=1727019678",
+      "url": {{ request.origin | append: product.url | json }},
+      {% if product.metafields.link.mother_collection.value.title != blank %}
+        "category" : "{{ product.metafields.link.mother_collection.value.title }}",
+        {% endif %}
+        "image": [{{ product.featured_media | image_url: width: product.featured_media.preview_image.width | prepend: "https:" | json }}],
+        "description": {{ product.description | strip_html | json }},
+        {% if product.selected_or_first_available_variant.sku != blank -%}
+          "sku": {{ product.selected_or_first_available_variant.sku | json }},
+          {%- endif %}
+          "brand": {
+            "@type": "Brand",
+            "name": {{ product.vendor | json }}
+          },
+          "offers": [
+                    {%- for variant in product.variants -%}
+              {
+                        "@type": "Offer",
+                        {%- if variant.sku != blank -%}
+                  "sku": {{ variant.sku | json }},
+                        {%- endif -%}
+                  {%- if variant.barcode.size == 12 -%}
+                    "gtin12": {{ variant.barcode }},
+                        {%- endif -%}
+                    {%- if variant.barcode.size == 13 -%}
+                      "gtin13": {{ variant.barcode }},
+                        {%- endif -%}
+                      {%- if variant.barcode.size == 14 -%}
+                        "gtin14": {{ variant.barcode }},
+                        {%- endif -%}
+                        "availability": "http://schema.org/{% if variant.available %} InStock{% else %}OutOfStock{% endif %}",
+                        "price": {{ variant.price | divided_by: 100.00 | json }},
+                        "priceCurrency": {{ cart.currency.iso_code | json }},
+                        "url": {{ request.origin | append: variant.url | json }},
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "{{ product.vendor }}"
+                        }
+                      }{% unless forloop.last %},{% endunless %}
+                    {%- endfor -%}
+                  ]{%- if reviews_structured_data != blank -%},
+                  {{ reviews_structured_data }}
+                  {%- endif -%}
     }
-  ]
-}{% endschema %}
+  </script>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "t:sections.main-product.name",
+    "class": "page-width relative",
+    "tag": "section",
+    "blocks": [
+      {
+        "type": "@app"
+      },
+      {
+        "type": "text",
+        "name": "t:sections.main-product.blocks.text.name",
+        "settings": [
+          {
+            "type": "richtext",
+            "id": "text",
+            "default": "<p>Text block</p>",
+            "label": "t:sections.main-product.blocks.text.settings.text.label"
+          }
+        ]
+      },
+      {
+        "type": "title",
+        "name": "t:sections.main-product.blocks.title.name",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "select",
+            "id": "margin_bottom",
+            "label": "t:sections.collections-pages-grid.settings.padding_bottom.label",
+            "options": [
+              {
+                "value": "mb-0",
+                "label": "t:sections.collections-pages-grid.settings.padding_top.options.none.label"
+              },
+              {
+                "value": "mb-2",
+                "label": "t:sections.collections-pages-grid.settings.padding_top.options.small.label"
+              },
+              {
+                "value": "mb-4",
+                "label": "t:sections.collections-pages-grid.settings.padding_top.options.medium.label"
+              },
+              {
+                "value": "mb-8",
+                "label": "t:sections.collections-pages-grid.settings.padding_top.options.large.label"
+              }
+            ],
+            "default": "mb-8"
+          }
+        ]
+      },
+      {
+        "type": "variant_picker",
+        "name": "t:sections.main-product.blocks.variant_picker.name",
+        "limit": 1
+      },
+      {
+        "type": "description",
+        "name": "t:sections.main-product.blocks.description.name",
+        "limit": 1
+      },
+      {
+        "type": "collapsible_tab",
+        "name": "t:sections.main-product.blocks.collapsible_tab.name",
+        "settings": [
+          {
+            "type": "text",
+            "id": "heading",
+            "default": "Collapsible row",
+            "info": "t:sections.main-product.blocks.collapsible_tab.settings.heading.info",
+            "label": "t:sections.main-product.blocks.collapsible_tab.settings.heading.label"
+          },
+          {
+            "type": "select",
+            "id": "icon",
+            "options": [
+              {
+                "value": "none",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__1.label"
+              },
+              {
+                "value": "apple",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__2.label"
+              },
+              {
+                "value": "banana",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__3.label"
+              },
+              {
+                "value": "bottle",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__4.label"
+              },
+              {
+                "value": "box",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__5.label"
+              },
+              {
+                "value": "carrot",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__6.label"
+              },
+              {
+                "value": "chat_bubble",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__7.label"
+              },
+              {
+                "value": "check_mark",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__8.label"
+              },
+              {
+                "value": "clipboard",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__9.label"
+              },
+              {
+                "value": "dairy",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__10.label"
+              },
+              {
+                "value": "dairy_free",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__11.label"
+              },
+              {
+                "value": "dryer",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__12.label"
+              },
+              {
+                "value": "eye",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__13.label"
+              },
+              {
+                "value": "fire",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__14.label"
+              },
+              {
+                "value": "gluten_free",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__15.label"
+              },
+              {
+                "value": "heart",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__16.label"
+              },
+              {
+                "value": "iron",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__17.label"
+              },
+              {
+                "value": "leaf",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__18.label"
+              },
+              {
+                "value": "leather",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__19.label"
+              },
+              {
+                "value": "lightning_bolt",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__20.label"
+              },
+              {
+                "value": "lipstick",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__21.label"
+              },
+              {
+                "value": "lock",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__22.label"
+              },
+              {
+                "value": "map_pin",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__23.label"
+              },
+              {
+                "value": "nut_free",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__24.label"
+              },
+              {
+                "value": "pants",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__25.label"
+              },
+              {
+                "value": "paw_print",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__26.label"
+              },
+              {
+                "value": "pepper",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__27.label"
+              },
+              {
+                "value": "perfume",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__28.label"
+              },
+              {
+                "value": "plane",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__29.label"
+              },
+              {
+                "value": "plant",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__30.label"
+              },
+              {
+                "value": "price_tag",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__31.label"
+              },
+              {
+                "value": "question_mark",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__32.label"
+              },
+              {
+                "value": "recycle",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__33.label"
+              },
+              {
+                "value": "return",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__34.label"
+              },
+              {
+                "value": "ruler",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__35.label"
+              },
+              {
+                "value": "serving_dish",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__36.label"
+              },
+              {
+                "value": "shirt",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__37.label"
+              },
+              {
+                "value": "shoe",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__38.label"
+              },
+              {
+                "value": "silhouette",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__39.label"
+              },
+              {
+                "value": "snowflake",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__40.label"
+              },
+              {
+                "value": "star",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__41.label"
+              },
+              {
+                "value": "stopwatch",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__42.label"
+              },
+              {
+                "value": "truck",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__43.label"
+              },
+              {
+                "value": "washing",
+                "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__44.label"
+              }
+            ],
+            "default": "check_mark",
+            "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.label"
+          },
+          {
+            "type": "richtext",
+            "id": "content",
+            "label": "t:sections.main-product.blocks.collapsible_tab.settings.content.label"
+          },
+          {
+            "type": "page",
+            "id": "page",
+            "label": "t:sections.main-product.blocks.collapsible_tab.settings.page.label"
+          }
+        ]
+      },
+      {
+        "type": "buy",
+        "name": "t:sections.main-product.blocks.buy.name",
+        "settings": [
+          {
+            "type": "text",
+            "id": "text",
+            "default": "Commandez ici",
+            "label": "t:sections.main-product.blocks.buy.settings.text.label"
+          },
+          {
+            "type": "checkbox",
+            "id": "is_dynamic_variant",
+            "default": false,
+            "label": "t:sections.main-product.blocks.buy.settings.is_dynamic_variant.label",
+            "info": "t:sections.main-product.blocks.buy.settings.is_dynamic_variant.info"
+          },
+          {
+            "type": "color",
+            "id": "main_color",
+            "label": "t:sections.main-product.blocks.buy.settings.main_color.label",
+            "default": "#04A777"
+          },
+          {
+            "type": "header",
+            "content": "t:sections.main-product.blocks.buy.headings.promotion.content"
+          },
+          {
+            "type": "checkbox",
+            "id": "show_promotion",
+            "default": false,
+            "label": "t:sections.main-product.blocks.buy.settings.show_promotion.label",
+            "info": "t:sections.main-product.blocks.buy.settings.show_promotion.info"
+          },
+          {
+            "type": "number",
+            "id": "promotion_discount",
+            "label": "t:sections.main-product.blocks.buy.settings.promotion_discount.label",
+            "info": "t:sections.main-product.blocks.buy.settings.promotion_discount.info",
+            "default": 15
+          },
+          {
+            "type": "select",
+            "id": "promotion_discount_unit",
+            "label": "t:sections.main-product.blocks.buy.settings.promotion_discount_unit.label",
+            "options": [
+              {
+                "value": "%",
+                "label": "t:sections.main-product.blocks.buy.settings.promotion_discount_unit.options.percentage.label"
+              },
+              {
+                "value": "$",
+                "label": "t:sections.main-product.blocks.buy.settings.promotion_discount_unit.options.amount.label"
+              }
+            ],
+            "default": "%"
+          },
+          {
+            "type": "text",
+            "id": "promotion_reason",
+            "default": "Summer sale ☀️",
+            "label": "t:sections.main-product.blocks.buy.settings.promotion_reason.label",
+            "info": "t:sections.main-product.blocks.buy.settings.promotion_reason.info"
+          },
+          {
+            "type": "text",
+            "id": "promotion_date",
+            "default": "Until the 31st of July",
+            "label": "t:sections.main-product.blocks.buy.settings.promotion_date.label",
+            "info": "t:sections.main-product.blocks.buy.settings.promotion_date.info"
+          }
+        ]
+      },
+      {
+        "type": "likes",
+        "name": "t:sections.main-product.blocks.likes.name",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "select",
+            "id": "margin_bottom",
+            "label": "t:sections.collections-pages-grid.settings.padding_bottom.label",
+            "options": [
+              {
+                "value": "mb-2",
+                "label": "t:sections.collections-pages-grid.settings.padding_top.options.small.label"
+              },
+              {
+                "value": "mb-4",
+                "label": "t:sections.collections-pages-grid.settings.padding_top.options.medium.label"
+              },
+              {
+                "value": "mb-8",
+                "label": "t:sections.collections-pages-grid.settings.padding_top.options.large.label"
+              }
+            ],
+            "default": "mb-8"
+          }
+        ]
+      },
+      {
+        "type": "tapestry_options",
+        "name": "t:sections.main-product.blocks.tapestry_options.name",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "header",
+            "content": "t:sections.main-product.blocks.tapestry_options.headings.style.content"
+          },
+          {
+            "type": "image_picker",
+            "id": "tapestry_texture_landscape",
+            "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_texture_landscape.label"
+          },
+          {
+            "type": "image_picker",
+            "id": "tapestry_texture_portrait",
+            "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_texture_portrait.label"
+          },
+          {
+            "type": "image_picker",
+            "id": "tapestry_texture_square",
+            "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_texture_square.label"
+          },
+          {
+            "type": "header",
+            "content": "t:sections.main-product.blocks.tapestry_options.headings.default_width.content"
+          },
+          {
+            "type": "number",
+            "id": "tapestry_default_width_landscape",
+            "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_default_width_landscape.label",
+            "info": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_default_width_landscape.info",
+            "default": 250
+          },
+          {
+            "type": "number",
+            "id": "tapestry_default_width_portrait",
+            "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_default_width_portrait.label",
+            "info": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_default_width_portrait.info",
+            "default": 150
+          },
+          {
+            "type": "number",
+            "id": "tapestry_default_width_square",
+            "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_default_width_square.label",
+            "info": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_default_width_square.info",
+            "default": 200
+          },
+          {
+            "type": "header",
+            "content": "t:sections.main-product.blocks.tapestry_options.headings.default_height.content"
+          },
+          {
+            "type": "number",
+            "id": "tapestry_default_height",
+            "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_default_height.label",
+            "info": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_default_height.info",
+            "default": 250
+          },
+          {
+            "type": "header",
+            "content": "t:sections.main-product.blocks.tapestry_options.headings.tapestry_strips.content"
+          },
+          {
+            "type": "number",
+            "id": "tapestry_strips_width",
+            "label": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_strips_width.label",
+            "info": "t:sections.main-product.blocks.tapestry_options.settings.tapestry_strips_width.info",
+            "default": 50
+          },
+          {
+            "type": "header",
+            "content": "t:sections.main-product.blocks.tapestry_options.headings.limitations.content"
+          }
+        ]
+      },
+      {
+        "type": "trustpilot_review",
+        "name": "t:sections.main-product.blocks.trustpilot_review.name",
+        "settings": [
+          {
+            "type": "number",
+            "id": "trustpilot_score",
+            "label": "t:sections.main-product.blocks.trustpilot_review.settings.trustpilot_score.label",
+            "info": "t:sections.main-product.blocks.trustpilot_review.settings.trustpilot_score.info",
+            "default": 43
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "t:sections.main-product.blocks.trustpilot_review.settings.link.label"
+          },
+          {
+            "type": "select",
+            "id": "margin_bottom",
+            "label": "t:sections.collections-pages-grid.settings.padding_bottom.label",
+            "options": [
+              {
+                "value": "mb-2",
+                "label": "t:sections.collections-pages-grid.settings.padding_top.options.small.label"
+              },
+              {
+                "value": "mb-4",
+                "label": "t:sections.collections-pages-grid.settings.padding_top.options.medium.label"
+              },
+              {
+                "value": "mb-8",
+                "label": "t:sections.collections-pages-grid.settings.padding_top.options.large.label"
+              }
+            ],
+            "default": "mb-2"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}
