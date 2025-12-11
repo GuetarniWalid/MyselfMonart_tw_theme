@@ -1151,6 +1151,23 @@
     "main-collection-product-grid": {
       "name": "Grille de produit",
       "settings": {
+        "margin_top": {
+          "label": "Marge supérieure",
+          "options": {
+            "none": {
+              "label": "Aucune"
+            },
+            "small": {
+              "label": "Petite"
+            },
+            "medium": {
+              "label": "Moyenne"
+            },
+            "large": {
+              "label": "Grande"
+            }
+          }
+        },
         "show_secondary_image": {
           "label": "Afficher la deuxième image en survol"
         }

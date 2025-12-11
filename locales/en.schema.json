@@ -1151,6 +1151,23 @@
     "main-collection-product-grid": {
       "name": "Product grid",
       "settings": {
+        "margin_top": {
+          "label": "Margin top",
+          "options": {
+            "none": {
+              "label": "None"
+            },
+            "small": {
+              "label": "Small"
+            },
+            "medium": {
+              "label": "Medium"
+            },
+            "large": {
+              "label": "Large"
+            }
+          }
+        },
         "show_secondary_image": {
           "label": "Show second image on hover"
         }
