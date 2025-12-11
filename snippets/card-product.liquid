@@ -20,7 +20,7 @@
 <div class="h-full flex flex-col">
   {%- if product.featured_media -%}
     <div class="relative mb-2 md:mb-5">
-      <div class="border-5 border-black h-fit w-fit shadow-[5px_5px_10px_rgba(0,0,0,0.5)] group-hover:shadow-none group-hover:border-transparent duration-100">
+      <div class="border-5 border-black h-fit w-fit shadow-[5px_5px_10px_rgba(0,0,0,0.5)] {% if show_secondary_image %}group-hover:shadow-none group-hover:border-transparent{% endif %} duration-100">
         {%- if main_image != nil -%}
           <img
             srcset="{%- if main_image.width >= 200 -%}{{ main_image | image_url: width: 200 }} 200w,{%- endif -%}
