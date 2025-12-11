@@ -36,6 +36,7 @@ export default function Option({
     setCurrentOption(option);
     setOptionSelected(option);
     focusedElementRef.current = e.target.id;
+    handleSelectClick();
   }
 
   function handleKeyDown(event) {

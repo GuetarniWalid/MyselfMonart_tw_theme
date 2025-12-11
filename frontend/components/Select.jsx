@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { v4 } from 'uuid';
 import Option from './Option';
 import InfoButton from './InfoButton';
@@ -19,6 +19,9 @@ export default function Select({
   const firstOptionRef = useRef(null);
   const ariaControlsIdRef = useRef(v4());
   const focusedElementRef = useFocusedElementRef();
+  const dropdownRef = useRef(null);
+  const containerRef = useRef(null);
+  const [maxHeight, setMaxHeight] = useState(null);
 
   const [openSelectId, setOpenSelectId] = useOpenSelectId();
   const [sizeSelected] = useVariantSelected.size();
@@ -43,6 +46,29 @@ export default function Select({
       selectRef.current.focus();
     }
   }, []);
+
+  useEffect(() => {
+    if (isOpen && containerRef.current && popupDirection === 'top') {
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const safetyPadding = 16; // 16px padding from top of viewport
+      const availableSpace = containerRect.bottom - safetyPadding;
+
+      // Use a small delay to ensure dropdown is rendered and has dimensions
+      setTimeout(() => {
+        if (dropdownRef.current) {
+          const dropdownHeight = dropdownRef.current.scrollHeight;
+
+          if (dropdownHeight > availableSpace) {
+            setMaxHeight(availableSpace);
+          } else {
+            setMaxHeight(null);
+          }
+        }
+      }, 0);
+    } else {
+      setMaxHeight(null);
+    }
+  }, [isOpen, popupDirection]);
 
   function handleSelectClick(e) {
     e?.stopPropagation();
@@ -90,9 +116,9 @@ export default function Select({
 
   return (
     <div className={`flex gap-3 h-12 mb-3 ${toBeHidden ? 'hidden' : ''}`}>
-      <div className="relative flex-1 h-full">
+      <div className="relative flex-1 h-full" ref={containerRef}>
         <div
-          className="react-select relative flex justify-between items-center rounded-lg px-3 h-full bg-white border-main border-neu shadow-neu-sm hover:shadow-neu-xs focus:outline-orange-500 focus:outline-2"
+          className={`react-select relative flex justify-between items-center rounded-lg px-3 h-full bg-white border-main border-neu shadow-neu-sm hover:shadow-neu-xs focus:outline-orange-500 focus:outline-2 ${isOpen ? 'opacity-0 pointer-events-none' : ''}`}
           role="button"
           aria-haspopup="listbox"
           aria-expanded={isOpen}
@@ -128,14 +154,16 @@ export default function Select({
         </div>
         {isOpen && (
           <ul
+            ref={dropdownRef}
             aria-label={options[0].type}
             role="listbox"
             id={ariaControlsIdRef.current}
             className={`absolute w-full rounded-lg p-3 bg-white border-main border-neu shadow-neu-sm ${
               popupDirection === 'top'
-                ? '-top-3 -translate-y-full'
+                ? 'bottom-0'
                 : '-bottom-3 translate-y-full'
-            }`}
+            } ${maxHeight ? 'overflow-y-auto' : ''}`}
+            style={maxHeight ? { maxHeight: `${maxHeight}px` } : undefined}
             aria-activedescendant={`${selectId}-option-0`}
           >
             {optionList}
