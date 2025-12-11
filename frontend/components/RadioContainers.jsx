@@ -8,11 +8,10 @@ export default function RadioContainers({
   drawerOpen,
 }) {
   const [sizeSelected] = useVariantSelected.size();
-  const [matterSelected] = useVariantSelected.matter();
 
   //without sizes
   const optionsList = getOptionsList().slice(1);
-  const availableOptionsList = optionsList.filter(options => options.filter(option => isOptionExisting(option, sizeSelected, matterSelected)).length > 1);
+  const availableOptionsList = optionsList.filter(options => options.filter(option => isOptionExisting(option, sizeSelected)).length > 1);
 
   const radios = availableOptionsList.map((options, index) => {
     return (

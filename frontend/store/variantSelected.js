@@ -4,25 +4,26 @@ const initialStore = {
   id: window.variants[0].id,
   price: Number(window.variants[0].price) / 100 || 0,
   size: window.paintingOptions.size[0],
-  matter: window.paintingOptions.matter[0],
-  thickness: window.paintingOptions.thickness[0],
   border: window.paintingOptions.border[0],
-  shine: window.paintingOptions.shine[0],
   fixation: window.paintingOptions.fixation[0],
   frameCanvas: getDefaultOption(window.paintingOptions.frameCanvas),
-  framePoster: getDefaultOption(window.paintingOptions.framePoster),
-  frameHandmade: getDefaultOption(window.paintingOptions.frameHandmade),
   defaultFixation: getDefaultOption(window.paintingOptions.fixation),
-  defaultOption3: getDefaultOption(window.variants).option3,
   upsells: [],
   items: [{ variantId: window.variants[0].id, properties: {} }],
 };
 
 function onAfterUpdate({ store }) {
-  const { size, matter } = getSizeAndMatterNames(store);
-  const option3 = getOption3(store);
+  const size = store.size.name;
+  const border = store.border.name;
 
-  const newVariant = getNewVariant(size, matter, option3);
+  const newVariant = getNewVariant(size, border);
+
+  // Guard against undefined variant
+  if (!newVariant) {
+    console.error('No variant found for:', { size, border, originalBorder: store.border.name });
+    console.log('Available variants:', window.variants);
+    return;
+  }
 
   if (store.id !== newVariant.id) {
     setVariantSelected.id(newVariant.id);
@@ -48,9 +49,9 @@ function onAfterUpdate({ store }) {
       });
     }
     setVariantSelected.items([
-      { 
-        variantId: newVariant.id, 
-        properties 
+      {
+        variantId: newVariant.id,
+        properties
       },
       ...upsells.map((u) => ({ variantId: u.variantId })),
     ]);
@@ -58,90 +59,53 @@ function onAfterUpdate({ store }) {
 }
 
 function getDefaultOption(options) {
+  if (!options || options.length === 0) return null;
   const lowestPriceOption = options.reduce((lowest, current) => {
     return current.price < lowest.price ? current : lowest;
   }, options[0]);
   return lowestPriceOption;
 }
 
-function getSizeAndMatterNames(store) {
-  return {
-    size: store.size.name,
-    matter: store.matter.name,
-  };
-}
-
-function getOption3(store) {
-  switch (store.matter.key) {
-    case 'matterCanvas':
-      return `${store.thickness.name}/${store.border.name}`;
-    case 'matterAluminium':
-      return `${store.shine.name}`;
-    default:
-      return 'Null';
-  }
-}
-
-function getNewVariant(size, matter, option3) {
+function getNewVariant(size, border) {
   return window.variants.find(
     (variant) =>
       variant.option1 === size &&
-      variant.option2 === matter &&
-      variant.option3 === option3,
+      variant.option2 === border,
   );
 }
 
 function isFixationAvailable(store) {
-  const test = store.fixation.availableOn?.includes(
-    `${store.size.key}/${store.matter.key}`,
-  );
+  // Check if fixation is available for the selected size
+  if (!store.fixation) return false;
+  const test = store.fixation.availableOn?.includes(store.size.key);
   return test;
 }
 
 function getUpsells(store) {
-  switch (store.matter.key) {
-    case 'matterPoster':
-      return [
-        {
-          variantId: store.framePoster.variantId,
-          price: store.framePoster.price,
-          name: store.framePoster.name,
-          type: store.framePoster.type,
-        },
-      ].filter((u) => Boolean(u.variantId));
-    case 'matterCanvas':
-      return [
-        { variantId: store.fixation.variantId, 
-          price: store.fixation.price,
-          name: store.fixation.name,
-          type: store.fixation.type,
-        },
-        {
-          variantId: store.frameCanvas.variantId,
-          price: store.frameCanvas.price,
-          name: store.frameCanvas.name,
-          type: store.frameCanvas.type,
-        },
-      ].filter((u) => Boolean(u.variantId));
-    case 'matterHandmade':
-      return [
-        {
-          variantId: store.frameHandmade.variantId,
-          price: store.frameHandmade.price,
-          name: store.frameHandmade.name,
-          type: store.frameHandmade.type,
-        },
-      ].filter((u) => Boolean(u.variantId));
-    default:
-      return [
-        { 
-          variantId: store.fixation.variantId, 
-          price: store.fixation.price,
-          name: store.fixation.name,
-          type: store.fixation.type,
-        },
-      ].filter((u) => Boolean(u.variantId));
+  // Size-based upsells: add fixation and frames based on size
+  const upsells = [];
+
+  // Add fixation if available for this size
+  if (store.fixation && store.fixation.variantId && isFixationAvailable(store)) {
+    upsells.push({
+      variantId: store.fixation.variantId,
+      price: store.fixation.price,
+      name: store.fixation.name,
+      type: store.fixation.type,
+    });
   }
+
+  // Add frames if available
+  if (store.frameCanvas && store.frameCanvas.variantId) {
+    upsells.push({
+      variantId: store.frameCanvas.variantId,
+      price: store.frameCanvas.price,
+      name: store.frameCanvas.name,
+      type: store.frameCanvas.type,
+    });
+  }
+
+  return upsells.filter((u) => Boolean(u.variantId));
 }
 
 function arraysShallowEqual(a, b) {

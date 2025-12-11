@@ -1,49 +1,17 @@
-import { useVariantSelected } from '../store/variantSelected';
-import { getVariantBySizeAndMatter } from '../utils/functions';
-
-export default function OptionPrice({ option, isDisabled, reason }) {
-  const [sizeSelected] = useVariantSelected.size();
-
-  let price;
-  switch (option.type) {
-    case 'matter':
-      price = getMatterPrice();
-      break;
-    default:
-      price = getOthersPrice();
-  }
-
-  function getMatterPrice() {
-    const sizePrice = window.variants.find(
-      (variant) => variant.option1 === sizeSelected.name,
-    ).price;
-    const variant = getVariantBySizeAndMatter(sizeSelected.name, option.name);
-    if (!variant) return null;
-    const totalPrice = variant.price;
-    const priceDifference = totalPrice - sizePrice;
-    return Product.formatPrice(priceDifference, false, true);
-  }
- 
-  function getOthersPrice() {
-    return Product.formatPrice(option.price, false, false);
-  }
-
-  function formatPrice(price) {
-    if (isDisabled || price === null) return window.react.errorMessage.notAvailableFor + reason;
-    return price;
-  }
+export default function OptionPrice({ option }) {
+  // All options use the price directly from the option object
+  const price = Product.formatPrice(option.price, false, false);
 
   function showPlus() {
     if (!option.price) return false;
     if (option.type === 'size') return false;
-    if (isDisabled || price === null) return false;
     return true;
   }
 
   return (
     <span className={showPlus() ? 'whitespace-nowrap' : ''}>
       {showPlus() && '+ '}
-      {formatPrice(price)}
+      {price}
     </span>
   );
 }

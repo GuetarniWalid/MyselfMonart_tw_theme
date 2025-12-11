@@ -8,13 +8,12 @@ export default function Selects({
   mobileSummaryRef,
 }) {
   const [sizeSelected] = useVariantSelected.size();
-  const [matterSelected] = useVariantSelected.matter();
 
   const optionsList = getOptionsList();
   const availableOptionsList = optionsList.filter(
     (options) =>
       options.filter((option) =>
-        isOptionExisting(option, sizeSelected, matterSelected),
+        isOptionExisting(option, sizeSelected),
       ).length > 1,
   );
 

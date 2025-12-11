@@ -4,19 +4,18 @@ export function getOptionsByType(type) {
   );
 }
 
-export function getVariantBySizeAndMatter(size, matter) {
-  return window.variants.find(variant => variant.option1 === size && variant.option2 === matter);
+export function getVariantBySizeAndBorder(size, border) {
+  return window.variants.find(variant => variant.option1 === size && variant.option2 === border);
 }
 
 export function getOptionsList() {
   return Object.entries(window.paintingOptions).map(([key, option]) => option);
 }
 
-export function isOptionExisting(option, sizeSelected, matterSelected) {
+export function isOptionExisting(option, sizeSelected) {
   if (option.availableOn === null) return true;
-  return option.availableOn.includes(
-    `${sizeSelected.key}/${matterSelected.key}`,
-  );
+  // Check if the selected size is in the availableOn array
+  return option.availableOn.includes(sizeSelected.key);
 }
 
 export function getProductSize(size) {

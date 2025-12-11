@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import InfoButton from './InfoButton';
 import OptionPrice from './OptionPrice';
 import { useVariantSelected } from '../store/variantSelected';
-import { getVariantBySizeAndMatter } from '../utils/functions';
 import { useFocusedElementRef } from '../store/FocusedElementContext';
 
 export default function Radio({
@@ -14,9 +13,14 @@ export default function Radio({
 }) {
   const ref = useRef(null);
   const focusedElementRef = useFocusedElementRef();
-  const [sizeSelected] = useVariantSelected.size();
   const [optionSelected, setOptionSelected] =
     useVariantSelected[option.type]();
+
+  // Guard against undefined optionSelected
+  if (!optionSelected) {
+    console.error('Option selected is undefined for type:', option.type);
+    return null;
+  }
 
   useEffect(() => {
     if (
@@ -40,28 +44,19 @@ export default function Radio({
     }
   }
 
-  function isMatterExisting() {
-    return getVariantBySizeAndMatter(sizeSelected.name, option.name);
-  }
-
   const isChecked = optionSelected.key === option.key;
-  const isMatterExist = option.type === 'matter' ? isMatterExisting() : true;
 
   return (
     <div className="lg:w-1/2 p-1 w-full">
       <div
         ref={ref}
-        onClick={isMatterExist ? handleRadioClick : undefined}
-        onKeyDown={isMatterExist ? handleKeyDown : undefined}
+        onClick={handleRadioClick}
+        onKeyDown={handleKeyDown}
         className={`${option.type} ${optionSelected.key} ${option.key} flex flex-col justify-between px-4 py-5 rounded h-full text-center ${
           isChecked
             ? 'bg-main-5 outline outline-main-20 outline-1 focus:outline-main-50 focus:outline-2'
             : ''
-        } ${
-          isMatterExist
-            ? 'cursor-pointer hover:bg-main-5'
-            : 'cursor-not-allowed opacity-50'
-        }`}
+        } cursor-pointer hover:bg-main-5`}
         tabIndex={drawerOpen ? 0 : -1}
         role="radio"
         aria-checked={isChecked ? 'true' : 'false'}
@@ -83,7 +78,7 @@ export default function Radio({
         </div>
         <div>
           <p className="inline-block bg-main-5 rounded-lg px-4 py-1 whitespace-nowrap my-4">
-            <OptionPrice option={option} reason={sizeSelected.name} />
+            <OptionPrice option={option} />
           </p>
           <InfoButton
             option={option}

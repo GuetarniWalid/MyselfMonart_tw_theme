@@ -10,8 +10,7 @@ export default function Radios({
   isLastContainer,
 }) {
   const [sizeSelected] = useVariantSelected.size();
-  const [matterSelected] = useVariantSelected.matter();
-  const availableOptions = options.filter(option => isOptionExisting(option, sizeSelected, matterSelected));
+  const availableOptions = options.filter(option => isOptionExisting(option, sizeSelected));
 
   return (
     <div className="flex flex-wrap md:justify-center" role="radiogroup">

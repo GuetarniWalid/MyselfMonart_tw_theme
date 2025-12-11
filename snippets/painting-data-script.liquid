@@ -42,33 +42,16 @@
   
   window.paintingOptions = {};
   window.paintingOptions.size = [];
-  window.paintingOptions.matter = [];
-  window.paintingOptions.thickness = [];
   window.paintingOptions.border = [];
-  window.paintingOptions.shine = [];
   window.paintingOptions.fixation = [];
   window.paintingOptions.frameCanvas = [];
-  window.paintingOptions.framePoster = [];
-  window.paintingOptions.frameHandmade = [];
 
   {% for option in product.metafields.painting_options.sizes.value %}
     {% render 'painting-data-script-window-filler', type: 'size', option: option %}
   {% endfor %}
 
-  {% for option in product.metafields.painting_options.matters.value %}
-    {% render 'painting-data-script-window-filler', type: 'matter', option: option %}
-  {% endfor %}
-
-  {% for option in product.metafields.painting_options.thicknesses.value %}
-    {% render 'painting-data-script-window-filler', type: 'thickness', option: option %}
-  {% endfor %}
-
   {% for option in product.metafields.painting_options.borders.value %}
     {% render 'painting-data-script-window-filler', type: 'border', option: option %}
-  {% endfor %}
-
-  {% for option in product.metafields.painting_options.shines.value %}
-    {% render 'painting-data-script-window-filler', type: 'shine', option: option %}
   {% endfor %}
 
   {% for option in product.metafields.painting_options.fixations.value %}
@@ -79,31 +62,12 @@
     {% render 'painting-data-script-window-filler', type: 'frameCanvas', option: option %}
   {% endfor %}
 
-  {% for option in product.metafields.painting_options.frames_poster.value %}
-    {% render 'painting-data-script-window-filler', type: 'framePoster', option: option %}
-  {% endfor %}
-
-  {% for option in product.metafields.painting_options.frames_handmade.value %}
-    {% render 'painting-data-script-window-filler', type: 'frameHandmade', option: option %}
-  {% endfor %}
-
   function getOptionPrice(option, variantLinked) {
   switch (option.type) {
     case 'size':
       return getSizeOptionPrice(option);
-      break;
-    case 'matter':
-      return getMatterOptionPrice(option);
-      break;
-    case 'thickness':
-      return getThicknessOptionPrice(option);
-      break;
     case 'border':
       return getBorderOptionPrice(option);
-      break;
-    case 'shine':
-      return getShineOptionPrice(option);
-      break;
     default:
       return getOthersOptionPrice(variantLinked);
   }
@@ -114,64 +78,21 @@ function getSizeOptionPrice(option) {
   return sizeOption ? Number(sizeOption.price) / 100 : null;
 }
 
-function getMatterOptionPrice(option) {
-  const matterOption = window.variants.find(variant => variant.option2 === option.name);
-  const matterPrice = Number(matterOption.price)
-  const lowerPrice = Number(window.variants[0].price)
-  return (matterPrice - lowerPrice) / 100;
-}
-
-function getThicknessOptionPrice(option) {
-  const variant1 = window.variants.find(variant => variant.option3.includes('/'));
-  const thickness1 = variant1.option3.split('/')[0];
-  const border1 = variant1.option3.split('/')[1];
-  const price1 = variant1.price
-
-  const variant2 = window.variants.find(variant => {
-    const [thickness, border] = variant.option3.split('/');
-    return thickness === option.name && border === border1
-  });
-  const price2 = variant2.price
-
-  const higherPrice = Math.max(price1, price2);
-  const lowerPrice = Math.min(price1, price2);
-  const priceDifference = (higherPrice - lowerPrice) / 100;
-
-  return priceDifference;
-}
-
 function getBorderOptionPrice(option) {
-  const variant1 = window.variants.find(variant => variant.option3.includes('/'));
-  const thickness1 = variant1.option3.split('/')[0];
-  const border1 = variant1.option3.split('/')[1];
-  const price1 = variant1.price
+  // Border is now option2, find price difference between borders for same size
+  const firstVariant = window.variants[0];
+  const size1 = firstVariant.option1;
+  const price1 = firstVariant.price;
 
-  const variant2 = window.variants.find(variant => {
-    const [thickness, border] = variant.option3.split('/');
-    return thickness === thickness1 && border === option.name
-  });
-  const price2 = variant2.price
+  const variant2 = window.variants.find(variant =>
+    variant.option1 === size1 && variant.option2 === option.name
+  );
 
-  const higherPrice = Math.max(price1, price2);
-  const lowerPrice = Math.min(price1, price2);
-  const priceDifference = (higherPrice - lowerPrice) / 100;
-  
-  return priceDifference;
-}
+  if (!variant2) return 0;
 
-function getShineOptionPrice(option) {
-  const variant1 = window.variants.find(variant => !variant.option3.includes('/') && variant.option3 !== 'Null');
-  const shine1 = variant1.option3
-  const price1 = variant1.price
+  const price2 = variant2.price;
+  const priceDifference = Math.abs(price2 - price1) / 100;
 
-  const variant2 = window.variants.find(variant => variant.option3 === option.name);
-  const shine2 = variant2.option3
-  const price2 = variant2.price
-
-  const higherPrice = Math.max(price1, price2);
-  const lowerPrice = Math.min(price1, price2);
-  const priceDifference = (higherPrice - lowerPrice) / 100;
-  
   return priceDifference;
 }
 
@@ -184,16 +105,20 @@ function getOthersOptionPrice(variantLinked) {
 
 function getAvailability(option, availability) {
   if (availability) return availability;
-  const variantsContainingOption = window.variants.filter(variant => variant.option3?.includes(option.name));
+
+  // For border options, check which sizes have this border available
+  const variantsContainingOption = window.variants.filter(
+    variant => variant.option2 === option.name
+  );
+
   if(!variantsContainingOption.length) return null;
 
-  const couplesSizeMatter = variantsContainingOption.map(variant => {
-    const option1 = window.paintingOptions.size.find(option => option.name === variant.option1);
-    const option2 = window.paintingOptions.matter.find(option => option.name === variant.option2);
-    return `${option1.key}/${option2.key}`
-    });
-  const couplesSizeMatterWithoutDuplicates = [...new Set(couplesSizeMatter)];
-  
-  return couplesSizeMatterWithoutDuplicates;
+  // Return array of size keys that have this border available
+  const sizes = variantsContainingOption.map(variant => {
+    const sizeOption = window.paintingOptions.size.find(opt => opt.name === variant.option1);
+    return sizeOption.key;
+  });
+
+  return [...new Set(sizes)];
 }
 </script>

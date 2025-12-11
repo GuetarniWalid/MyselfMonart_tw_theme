@@ -1,9 +1,7 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useVariantSelected } from '../store/variantSelected';
 import { setCurrentOption } from '../store/currentOption';
 import OptionPrice from './OptionPrice';
-import { getVariantBySizeAndMatter } from '../utils/functions';
-import useIsMobile from '../hooks/useIsMobile';
 import { useFocusedElementRef } from '../store/FocusedElementContext';
 
 export default function Option({
@@ -17,9 +15,6 @@ export default function Option({
 }) {
   const ref = useRef(null);
   const focusedElementRef = useFocusedElementRef();
-  const isMobile = useIsMobile();
-  const [variantSelected] = useVariantSelected();
-  const [sizeSelected] = useVariantSelected.size();
   const [optionSelected, setOptionSelected] =
     useVariantSelected[option.type]();
 
@@ -58,61 +53,24 @@ export default function Option({
     }
   }
 
-  function isMatterExisting() {
-    return getVariantBySizeAndMatter(sizeSelected.name, option.name);
-  }
-
-  function getReason() {
-    if (option.type === 'size') return window.react.errorMessage.poster;
-    return formatSizeName(sizeSelected.name);
-  }
-
-  function formatSizeName(sizeName) {
-    return sizeName.replace(/\s/g, '');
-  }
-
   const isSelected = option.key === optionSelected.key;
-  const isExisting = useMemo(() => {
-    if (option.type === 'matter') return true;
 
-    const variants = window.variants;
-    const size =
-      option.type === 'size' ? option.name : variantSelected.size.name;
-    const matter = variantSelected.matter.name;
-    const variant = variants.find(
-      (variant) => variant.option1 === size && variant.option2 === matter,
-    );
-    return !!variant;
-  }, [variantSelected]);
-
-  const isMatterExist = option.type === 'matter' ? isMatterExisting() : true;
-  const isDisabled = !isExisting || !isMatterExist;
-  
   return (
     <li
       id={id}
       className={`${
         isSelected ? 'bg-main-10 rounded-lg border-main border-1' : ''
-      }
-        ${
-          isDisabled
-            ? isMobile
-              ? 'rounded-lg cursor-not-allowed text-gray-600'
-              : 'bg-gray-200 rounded-lg cursor-not-allowed text-gray-600'
-            : 'cursor-pointer hover:bg-white/30 md:hover:bg-main-5 hover:backdrop-blur-xl md:hover:backdrop-blur-none'
-        }
-      flex justify-between items-center py-3 px-5 mb-2 rounded-lg`}
+      } cursor-pointer hover:bg-white/30 md:hover:bg-main-5 hover:backdrop-blur-xl md:hover:backdrop-blur-none flex justify-between items-center py-3 px-5 mb-2 rounded-lg`}
       role="option"
       aria-selected={isSelected}
-      onClick={isDisabled ? undefined : handleClick}
+      onClick={handleClick}
       tabIndex={isOpen ? '0' : '-1'}
       ref={ref}
       onKeyDown={handleKeyDown}
-      disabled={isDisabled}
     >
-      <span className={`${isDisabled ? 'line-through' : ''} pointer-events-none`}>{option.name}</span>
+      <span className="pointer-events-none">{option.name}</span>
       <span className="pointer-events-none max-w-20">
-        <OptionPrice option={option} isDisabled={isDisabled} reason={getReason()} />
+        <OptionPrice option={option} />
       </span>
     </li>
   );

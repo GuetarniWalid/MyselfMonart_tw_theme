@@ -14,9 +14,7 @@ const ImageProduct = forwardRef(({}, ref) => {
     if (isMobile) {
       if (
         currentOption &&
-        (currentOption.key.includes('Null') ||
-          currentOption.type === 'matter' ||
-          currentOption.type === 'shine')
+        currentOption.key.includes('Null')
       ) {
         setVisible(true);
         return;

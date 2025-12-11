@@ -10,7 +10,6 @@ export default function Painting() {
   const productRef = useRef(null);
 
   const sizes = useMemo(() => getOptionsByType('size'), []);
-  const thicknesses = useMemo(() => getOptionsByType('thickness'), []);
   const borders = useMemo(() => getOptionsByType('border'), []);
   const fixations = useMemo(
     () =>
@@ -26,31 +25,14 @@ export default function Painting() {
       ),
     [],
   );
-  const framesPoster = useMemo(
-    () =>
-      getOptionsByType('framePoster').filter((option) =>
-        !option.key.includes('Null'),
-      ),
-    [],
-  );
-  const framesHandmade = useMemo(
-    () =>
-      getOptionsByType('frameHandmade').filter((option) =>
-        !option.key.includes('Null'),
-      ),
-    [],
-  );
-  
+
   const otherOptions = useMemo(
     () => [
-      ...fixations,
-      ...thicknesses,
       ...borders,
+      ...fixations,
       ...framesCanvas,
-      ...framesPoster,
-      ...framesHandmade,
     ],
-    [fixations, thicknesses, borders, framesCanvas, framesPoster, framesHandmade],
+    [borders, fixations, framesCanvas],
   );
 
   const options = useMemo(

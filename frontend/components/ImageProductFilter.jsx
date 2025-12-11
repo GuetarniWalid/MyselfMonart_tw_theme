@@ -1,41 +1,15 @@
-import { useVariantSelected } from '../store/variantSelected';
-
 export default function ImageProductFilter({ width }) {
-  const [matter] = useVariantSelected.matter.key();
-  const [shine] = useVariantSelected.shine.key();
-
+  // Always show canvas painting texture filter for all products
   return (
-    <>
-      {matter === 'matterCanvas' && (
-        <img
-          src="https://cdn.shopify.com/s/files/1/0623/2388/4287/files/texture-toile.jpg?v=1706818351"
-          alt={window.canvasTexture}
-          width={width}
-          height="auto"
-          srcSet="https://cdn.shopify.com/s/files/1/0623/2388/4287/files/texture-toile.jpg?v=1706818351&width=250 250w,https://cdn.shopify.com/s/files/1/0623/2388/4287/files/texture-toile.jpg?v=1706818351&width=400 400w,https://cdn.shopify.com/s/files/1/0623/2388/4287/files/texture-toile.jpg?v=1706818351&width=600 600w,https://cdn.shopify.com/s/files/1/0623/2388/4287/files/texture-toile.jpg?v=1706818351&width=800 800w"
-          sizes="95vw"
-          className="absolute top-0 left-0 w-full h-full object-cover opacity-10"
-          loading="lazy"
-        />
-      )}
-      {(matter === 'matterAluminium' || matter === 'matterAluminiumPlexi') && (
-        <span
-          className={`block absolute -top-10 -bottom-3 -left-10 w-1/3 rotate-12 bg-gradient-to-r ${
-            shine === 'shineShine' || matter === 'matterAluminiumPlexi'
-              ? 'from-white/60 to-white/20'
-              : 'from-white/50 to-white/0'
-          }`}
-        >
-          {' '}
-        </span>
-      )}
-      {matter === 'matterPoster' && (
-        <span
-          className={`block absolute top-1/2 -left-10 -right-10 h-2/3 bg-gradient-to-b from-transparent via-white/40 to-white/20'`}
-        >
-          {' '}
-        </span>
-      )}
-    </>
+    <img
+      src="https://cdn.shopify.com/s/files/1/0623/2388/4287/files/texture-toile.jpg?v=1706818351"
+      alt={window.canvasTexture}
+      width={width}
+      height="auto"
+      srcSet="https://cdn.shopify.com/s/files/1/0623/2388/4287/files/texture-toile.jpg?v=1706818351&width=250 250w,https://cdn.shopify.com/s/files/1/0623/2388/4287/files/texture-toile.jpg?v=1706818351&width=400 400w,https://cdn.shopify.com/s/files/1/0623/2388/4287/files/texture-toile.jpg?v=1706818351&width=600 600w,https://cdn.shopify.com/s/files/1/0623/2388/4287/files/texture-toile.jpg?v=1706818351&width=800 800w"
+      sizes="95vw"
+      className="absolute top-0 left-0 w-full h-full object-cover opacity-10"
+      loading="lazy"
+    />
   );
 }

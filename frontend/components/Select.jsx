@@ -22,13 +22,18 @@ export default function Select({
 
   const [openSelectId, setOpenSelectId] = useOpenSelectId();
   const [sizeSelected] = useVariantSelected.size();
-  const [matterSelected] = useVariantSelected.matter();
   const availableOptions = options.filter((option) =>
-    isOptionExisting(option, sizeSelected, matterSelected),
+    isOptionExisting(option, sizeSelected),
   );
 
   const [variantSelected] = useVariantSelected();
   const optionSelected = variantSelected[options[0].type];
+
+  // Guard against undefined optionSelected
+  if (!optionSelected) {
+    console.error('Option selected is undefined for type:', options[0]?.type);
+    return null;
+  }
 
   const isOpen =
     focusedElementRef.current?.includes(selectId) && openSelectId === selectId;
