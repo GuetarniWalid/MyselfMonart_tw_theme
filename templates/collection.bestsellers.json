@@ -21,7 +21,8 @@
     "main-collection-product-grid": {
       "type": "main-collection-product-grid",
       "settings": {
-        "show_secondary_image": false
+        "show_secondary_image": false,
+        "margin_top": "mt-8"
       }
     },
     "main-collection-banner": {
