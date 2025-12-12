@@ -4,15 +4,16 @@
     Accepts:
     - product: {Object} The product object
     - block: {Object} The block object
+    - float: {Boolean} Is the button floating
 
     Usage:
-    {% render 'promotion-buy-button-content', product: product, block: block %}
+    {% render 'promotion-buy-button-content', product: product, block: block, float: true %}
 {% endcomment %}
 
-{% render 'promotion-in-cart-button', product: product, block: block %}
+{% render 'promotion-in-cart-button', product: product, block: block, float: float %}
 {% unless block.settings.promotion_discount > 0 %}
   <template class="template-regular-in-cart-button">
-    {% render 'regular-in-cart-button', product: product, block: block %}
+    {% render 'regular-in-cart-button', product: product, block: block, float: float %}
   </template>
   <template class="template-promotion-in-cart-button">
     {% render 'promotion-in-cart-button', product: product, block: block %}

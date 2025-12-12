@@ -13,6 +13,7 @@ module.exports = {
   ],
   theme: {
     screens: {
+      'mobile-mini': {'max': '415px'},
       'mobile': {'max': '767px'},
       '2xs': '410px',
       xs: '480px',

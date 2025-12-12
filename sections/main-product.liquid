@@ -172,27 +172,31 @@
                 {% if block.settings.show_promotion and product.selected_or_first_available_variant.compare_at_price or block.settings.promotion_discount > 0 %}
                   {% render 'promotion-buy-button-content'
                     , product: product
-                    , block: block %}
+                    , block: block
+                    , float: false %}
                 {% else %}
                   {% render 'regular-buy-button-content'
                     , product: product
-                    , block: block %}
+                    , block: block
+                    , float: false %}
                 {% endif %}
               </button>
               <template id="float-buy-button">
                 <button
-                  class="float-buy-button shadow-neu-lg hover:shadow-neu-md cart-button fixed bottom-3 justify-around left-4 2xs:gap-5 md:left-1/2 md:gap-6 w-[100px] md:bottom-6 max-w-[70%] transition-colors duration-500 scale-0 glass-anim"
+                  class="float-buy-button shadow-neu-lg hover:shadow-neu-md cart-button fixed bottom-3 justify-around left-4 2xs:gap-5 md:left-1/2 md:gap-6 w-[100px] md:bottom-6 mobile-mini:max-w-[62%] max-w-[70%] transition-colors duration-500 scale-0 glass-anim"
                   data-variant-id="{{ product.first_available_variant.id }}"
                   data-template="{{ template.suffix }}"
                   data-product-id="{{ product.id }}">
                   {% if block.settings.show_promotion and product.selected_or_first_available_variant.compare_at_price or block.settings.promotion_discount > 0 %}
                     {% render 'promotion-buy-button-content'
                       , product: product
-                      , block: block %}
+                      , block: block
+                      , float: true %}
                   {% else %}
                     {% render 'regular-buy-button-content'
                       , product: product
-                      , block: block %}
+                      , block: block
+                      , float: true %}
                   {% endif %}
                 </button>
               </template>
