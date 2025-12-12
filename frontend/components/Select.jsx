@@ -161,7 +161,7 @@ export default function Select({
             className={`absolute w-full rounded-lg p-3 bg-white border-main border-neu shadow-neu-sm ${
               popupDirection === 'top'
                 ? 'bottom-0'
-                : '-bottom-3 translate-y-full'
+                : 'top-0'
             } ${maxHeight ? 'overflow-y-auto' : ''}`}
             style={maxHeight ? { maxHeight: `${maxHeight}px` } : undefined}
             aria-activedescendant={`${selectId}-option-0`}
