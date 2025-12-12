@@ -43,7 +43,7 @@
           <p class="heading">
             <span class="font-bold">{{ 'sections.tw_cart_drawer.promotion' | t }}</span>&nbsp;&nbsp;
             {% for discount_application in cart.discount_applications %}
-              <span class="text-sm bg-action rounded py-1 px-2 mr-1">
+              <span class="text-sm bg-buy-button rounded py-1 px-2 mr-1">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="13"
@@ -75,8 +75,7 @@
         id="cart-drawer-klarna-placement"
         data-key="credit-promotion-badge"
         data-locale=""
-        data-purchase-amount={{ cart.total_price }}
-      ></klarna-placement>
+        data-purchase-amount={{ cart.total_price }}></klarna-placement>
     </div>
     <form
       action="{{ routes.cart_url }}"
@@ -106,7 +105,7 @@
               assign item_image = item.variant.image | default: item.product.featured_image
             endif
             assign bundle_string = ''
-            
+
             for bundle in item.product.metafields.bundle.products.value
               if item_product_ids contains bundle.id
                 continue
@@ -120,7 +119,7 @@
               assign bundle_image = bundle.images[1].src | image_url: width: 80 | default: bundle.featured_image.src | image_url: width: 80
               assign matching_variants_title = null
               assign matching_variants_id = null
-              
+
               for variant in bundle.variants
                 if item.product.template_suffix == 'painting' or item.product.template_suffix == 'personalized'
                   if bundle_ratio < 1
@@ -247,7 +246,7 @@
                 {% endif %}
                 <ul role="list" aria-label="{{ 'customer.order.discount' | t }}">
                   {%- for discount in item.discounts -%}
-                    <li class="text-xs inline-flex items-center gap-1 bg-action rounded py-1 px-2 mr-1 mt-2">
+                    <li class="text-xs inline-flex items-center gap-1 bg-buy-button rounded py-1 px-2 mr-1 mt-2">
                       {%- render 'tw-icon-discount' -%}
                       {{ discount.title }}
                     </li>
@@ -356,7 +355,7 @@
           id="CartDrawer-Checkout"
           name="checkout"
           form="CartDrawer-Form"
-          class="relative glass-anim flex w-full items-center justify-center gap-3 bg-action text-main border-main transition-colors duration-500 rounded-lg py-4 font-bold border-neu shadow-neu-lg hover:shadow-neu-md mb-4 outline-none focus-visible:outline focus-visible:outline-orange-500"
+          class="relative glass-anim flex w-full items-center justify-center gap-3 bg-buy-button text-main border-main transition-colors duration-500 rounded-lg py-4 font-bold border-neu shadow-neu-lg hover:shadow-neu-md mb-4 outline-none focus-visible:outline focus-visible:outline-orange-500"
           tabindex="-1">
           {% render 'icon-padlock' %}
           <span class="pt-1">{{ 'sections.tw_cart_drawer.checkout' | t | upcase }}</span>

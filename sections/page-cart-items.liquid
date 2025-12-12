@@ -14,26 +14,24 @@
       <ul>
         {%- for item in cart.items -%}
           {% liquid
-          if item.product.has_only_default_variant
-            assign image = item.product.featured_image.src
-          else
-            assign image = item.variant.featured_image.src | default: item.product.images[1].src | default: item.product.featured_image.src
-          endif
+            if item.product.has_only_default_variant
+              assign image = item.product.featured_image.src
+            else
+              assign image = item.variant.featured_image.src | default: item.product.images[1].src | default: item.product.featured_image.src
+            endif
           %}
           <cart-item data-index="{{ forloop.index }}" data-section-id="{{ section.id }}">
             <li class="grid grid-cols-[auto_1fr] md:grid-cols-[auto_1fr_auto_auto] grid-rows-[auto_auto] gap-x-4 gap-y-8 md:gap-y-0 py-8 first:border-t border-b border-main-10">
               {% if item.product.images[1] %}
                 <div class="relative md:row-span-2 w-[120px]">
-                  <a
-                    href="{{ item.url }}"
-                    class="absolute inset-0">
-                      <img
-                        src="{{ image | image_url: width: 150 }}"
-                        class="skeleton w-full h-full object-contain rounded-lg"
-                        alt="{% if item.product.metafields.meta_object.media.value.alts.value[1] %}{{ item.product.metafields.meta_object.media.value.alts.value[1] | escape }}{% else %}{{ item.product.images[1].alt | escape }}{% endif %}"
-                        loading="lazy"
-                        width="150"
-                        height="{{ 150 | divided_by: image.aspect_ratio | ceil }}">
+                  <a href="{{ item.url }}" class="absolute inset-0">
+                    <img
+                      src="{{ image | image_url: width: 150 }}"
+                      class="skeleton w-full h-full object-contain rounded-lg"
+                      alt="{% if item.product.metafields.meta_object.media.value.alts.value[1] %}{{ item.product.metafields.meta_object.media.value.alts.value[1] | escape }}{% else %}{{ item.product.images[1].alt | escape }}{% endif %}"
+                      loading="lazy"
+                      width="150"
+                      height="{{ 150 | divided_by: image.aspect_ratio | ceil }}">
                   </a>
                 </div>
               {% endif %}
@@ -63,7 +61,7 @@
                     aria-label="{{ 'customer.order.discount' | t }}"
                     class="text-main-80">
                     {%- for discount in item.discounts -%}
-                      <li class="inline-block text-sm mb-1 px-3 py-1 bg-action rounded mt-5">
+                      <li class="inline-block text-sm mb-1 px-3 py-1 bg-buy-button rounded mt-5">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="18"
@@ -87,7 +85,7 @@
                   {%- endif -%}
                   {{ item.final_price | money }}
                 </p>
-                
+
                 {% liquid
                   assign properties_to_display = ''
                   for property in item.properties

@@ -3,9 +3,6 @@
     "color": {
       "name": "Color",
       "settings": {
-        "action_color": {
-          "label": "Call to action color"
-        },
         "like_color": {
           "label": "Like color"
         },

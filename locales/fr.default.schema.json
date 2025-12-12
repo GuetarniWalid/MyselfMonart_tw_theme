@@ -3,9 +3,6 @@
     "color": {
       "name": "Couleur",
       "settings": {
-        "action_color": {
-          "label": "Couleur des appels à l'action"
-        },
         "like_color": {
           "label": "Couleur des j'aime"
         },
