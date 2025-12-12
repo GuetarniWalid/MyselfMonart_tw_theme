@@ -597,6 +597,18 @@ main-product-blocks .description h2 span {
   }
 
   .skeleton {
-    @apply relative before:absolute before:inset-0 before:-z-10 before:bg-gray-300 before:animate-pulse;
+    @apply relative before:absolute before:inset-0 before:-z-10 before:bg-main-10 before:animate-pulse;
+  }
+
+  /* Progressive blur-up image loading */
+  .skeleton img {
+    filter: blur(1.5rem);
+    transform: scale(1.1);
+    transition: filter 0.4s ease-out, transform 0.4s ease-out;
+  }
+
+  .skeleton.loaded img {
+    filter: blur(0);
+    transform: scale(1);
   }
 }

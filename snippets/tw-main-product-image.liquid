@@ -11,10 +11,10 @@
 
 <span class="img-wrapper {% if loop.first %}skeleton{% endif %} flex-none w-full h-full group cursor-pointer flex items-center snap-center relative md:border-secondary md:border-x-2 transition-colors duration-500 {% unless loop.last %}pr-10{% endunless %} after:absolute after:inset-0 after:-left-40">
   <img
-    srcset="{%- if media.preview_image.width >= 400 -%}{{ media.preview_image | image_url: width: 400 }} 400w,{%- endif -%}
+    {% if loop.first %}data-srcset{% else %}srcset{% endif %}="{%- if media.preview_image.width >= 400 -%}{{ media.preview_image | image_url: width: 400 }} 400w,{%- endif -%}
             {%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}
             {{ media.preview_image | image_url }} {{ media.preview_image.width }}w"
-    src="{{ media.preview_image | image_url: width: 550 }}"
+    src="{% if loop.first %}{{ media.preview_image | image_url: width: 40 }}{% else %}{{ media.preview_image | image_url: width: 550 }}{% endif %}"
     sizes="(min-width: 548px) 550px, 100vw"
     alt="{% if product.metafields.meta_object.media.value.alts.value[loop.index0] %}{{ product.metafields.meta_object.media.value.alts.value[loop.index0] | escape }}{% else %}{{ media.alt | escape }}{% endif %}"
     {% unless loop.first %}
@@ -23,7 +23,7 @@
     width="550"
     height="auto"
     data-media-id="{{ media.id }}"
-    class="w-full h-full {% if loop.index0 == 1 %}-translate-x-8{% else %}translate-x-0{% endif %} transition-all duration-100 {% if loop.index != 2 and template.suffix == 'painting' %}object-cover object-center{% else %}object-contain object-left{% endif %}"
+    class="{% if loop.first %}lqip {% endif %}w-full h-full {% if loop.index0 == 1 %}-translate-x-8{% else %}translate-x-0{% endif %} transition-all duration-100 {% if loop.index != 2 and template.suffix == 'painting' %}object-cover object-center{% else %}object-contain object-left{% endif %}"
   >
     <button class="zoom absolute top-10 right-16 bg-secondary transition-colors duration-500 p-[9px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-100 focus-visible:opacity-100 outline-none border-1 border-main" {% unless loop.first %}tabindex="-1"{% endunless %}>
     {% render 'tw-icon-zoom' %}

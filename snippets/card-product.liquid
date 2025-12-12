@@ -20,39 +20,39 @@
 <div class="h-full flex flex-col">
   {%- if product.featured_media -%}
     <div class="mb-2 md:mb-5">
-      <div class="relative border-5 border-black h-fit w-fit shadow-[5px_5px_10px_rgba(0,0,0,0.5)] {% if show_secondary_image %}group-hover:shadow-none group-hover:border-transparent{% endif %} duration-100">
+      <div class="skeleton rounded-lg overflow-hidden relative w-full shadow-[5px_5px_10px_rgba(0,0,0,0.5)] {% if show_secondary_image %}group-hover:shadow-none group-hover:border-transparent{% endif %} duration-100" style="aspect-ratio: {{ main_image.width }} / {{ main_image.height }}">
         {%- if main_image != nil -%}
           <img
-            srcset="{%- if main_image.width >= 200 -%}{{ main_image | image_url: width: 200 }} 200w,{%- endif -%}
+            data-srcset="{%- if main_image.width >= 200 -%}{{ main_image | image_url: width: 200 }} 200w,{%- endif -%}
               {%- if main_image.width >= 300 -%}{{ main_image | image_url: width: 300 }} 300w,{%- endif -%}
               {%- if main_image.width >= 400 -%}{{ main_image | image_url: width: 400 }} 400w,{%- endif -%}
               {%- if main_image.width >= 500 -%}{{ main_image | image_url: width: 500 }} 500w,{%- endif -%}
               {{ main_image | image_url }} {{ main_image.width }}w"
-            src="{{ product.media[1] | image_url: width: 300 }}"
+            src="{{ main_image | image_url: width: 10 }}"
             sizes="(min-width: 768px) 33%, (min-width: 1024px) 300px, 50%"
             alt="{% if product.metafields.meta_object.media.value.alts.value[1] %}{{ product.metafields.meta_object.media.value.alts.value[1] | escape }}{% else %}{{ product.media[1].alt | escape }}{% endif %}"
             loading="lazy"
-            width="500"
-            height="auto"
-            class="skeleton w-full h-full object-contain">
+            width="{{ main_image.width }}"
+            height="{{ main_image.height }}"
+            class="lqip w-full h-full object-contain">
         {%- endif -%}
 
         {%- if show_secondary_image -%}
           <img
-            srcset="{%- if product.featured_media.width >= 200 -%}{{ product.featured_media | image_url: width: 200 }} 200w,{%- endif -%}
+            data-srcset="{%- if product.featured_media.width >= 200 -%}{{ product.featured_media | image_url: width: 200 }} 200w,{%- endif -%}
               {%- if product.featured_media.width >= 300 -%}{{ product.featured_media | image_url: width: 300 }} 300w,{%- endif -%}
               {%- if product.featured_media.width >= 400 -%}{{ product.featured_media | image_url: width: 400 }} 400w,{%- endif -%}
               {%- if product.featured_media.width >= 500 -%}{{ product.featured_media | image_url: width: 500 }} 500w,{%- endif -%}
               {{ product.featured_media | image_url }} {{ product.featured_media.width }}w"
-          src="{{ product.featured_media | image_url: width: 300 }}"
+          src="{{ product.featured_media | image_url: width: 40 }}"
           sizes="(min-width: 768px) 33%, (min-width: 1024px) 300px, 50%"
           alt="{% if product.metafields.meta_object.media.value.alts.value[0] %}{{ product.metafields.meta_object.media.value.alts.value[0] | escape }}{% else %}{{ product.featured_media.alt | escape }}{% endif %}"
           {% unless lazy_load == false %}
           loading="lazy"
           {% endunless %}
-          width="500"
-          height="auto"
-          class="skeleton absolute top-0 left-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 duration-200 rounded-lg {% if product.media[1].width >= product.media[1].height %}object-top{% endif %}">
+          width="{{ product.featured_media.width }}"
+          height="{{ product.featured_media.height }}"
+          class="lqip absolute top-0 left-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 duration-200 rounded-lg {% if product.media[1].width >= product.media[1].height %}object-top{% endif %}">
         {%- endif -%}
     </div>
   {%- endif -%}

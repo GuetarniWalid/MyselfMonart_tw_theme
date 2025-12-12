@@ -10,7 +10,7 @@
     {% render 'product-media', media: media %}
 {% endcomment %}
 
-<button class="thumb-img-wrapper skeleton group cursor-pointer flex justify-center items-center relative outline-main hover:opacity-80" aria-label="{{ 'snippet.tw_main_product_thumbnail_image.see_image_number' | t: number: image_number }}">
+<button class="thumb-img-wrapper skeleton group cursor-pointer flex justify-center items-center relative outline-main hover:opacity-80 overflow-hidden" aria-label="{{ 'snippet.tw_main_product_thumbnail_image.see_image_number' | t: number: image_number }}">
   <img
     role="presentation"
     src="{{ image | image_url: width: 70 }}"

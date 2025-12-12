@@ -60,12 +60,54 @@ function removeSkeletonOnImagesLoad() {
   const images = document.querySelectorAll('img');
 
   images.forEach((image) => {
-    if (image.complete) {
-      image.parentElement.classList.remove('skeleton');
+    // Check if this is an LQIP image that needs to be swapped
+    const fullSrcset = image.getAttribute('data-srcset');
+
+    if (fullSrcset && image.classList.contains('lqip')) {
+      // This is an LQIP image - preload the full resolution version
+      const fullImage = new Image();
+
+      // Copy the srcset and sizes for proper responsive loading
+      fullImage.srcset = fullSrcset;
+      if (image.sizes) {
+        fullImage.sizes = image.sizes;
+      }
+
+      fullImage.onload = () => {
+        // Swap to full resolution image
+        image.srcset = fullSrcset;
+        image.removeAttribute('data-srcset');
+        image.classList.remove('lqip');
+
+        // Trigger blur removal
+        const parent = image.parentElement;
+        if (parent && parent.classList.contains('skeleton')) {
+          parent.classList.add('loaded');
+          setTimeout(() => {
+            parent.classList.remove('skeleton', 'loaded');
+          }, 450);
+        }
+      };
     } else {
-      image.addEventListener('load', () => {
-        image.parentElement?.classList.remove('skeleton');
-      });
+      // Regular image without LQIP - use the original logic
+      const handleImageLoad = () => {
+        const parent = image.parentElement;
+        if (parent && parent.classList.contains('skeleton')) {
+          // Add loaded class to trigger blur removal transition
+          parent.classList.add('loaded');
+
+          // Wait for transition to complete before removing skeleton
+          setTimeout(() => {
+            //parent.classList.remove('skeleton', 'loaded');
+          }, 450); // Slightly longer than CSS transition (400ms)
+        }
+      };
+
+      if (image.complete) {
+        handleImageLoad();
+      } else {
+        image.addEventListener('load', handleImageLoad);
+      }
     }
   });
 }
