@@ -21,7 +21,7 @@ export default function Select({
   const focusedElementRef = useFocusedElementRef();
   const dropdownRef = useRef(null);
   const containerRef = useRef(null);
-  const [maxHeight, setMaxHeight] = useState(null);
+  const [bottomOffset, setBottomOffset] = useState(0);
 
   const [openSelectId, setOpenSelectId] = useOpenSelectId();
   const [sizeSelected] = useVariantSelected.size();
@@ -51,22 +51,25 @@ export default function Select({
     if (isOpen && containerRef.current && popupDirection === 'top') {
       const containerRect = containerRef.current.getBoundingClientRect();
       const safetyPadding = 16; // 16px padding from top of viewport
-      const availableSpace = containerRect.bottom - safetyPadding;
 
       // Use a small delay to ensure dropdown is rendered and has dimensions
       setTimeout(() => {
         if (dropdownRef.current) {
           const dropdownHeight = dropdownRef.current.scrollHeight;
+          const topPosition = containerRect.bottom - dropdownHeight;
 
-          if (dropdownHeight > availableSpace) {
-            setMaxHeight(availableSpace);
+          // Check if dropdown would overflow the top
+          if (topPosition < safetyPadding) {
+            // Calculate how much we need to shift down
+            const shiftDown = safetyPadding - topPosition;
+            setBottomOffset(-shiftDown); // Negative to shift down from bottom:0
           } else {
-            setMaxHeight(null);
+            setBottomOffset(0); // No shift needed
           }
         }
       }, 0);
     } else {
-      setMaxHeight(null);
+      setBottomOffset(0);
     }
   }, [isOpen, popupDirection]);
 
@@ -158,12 +161,12 @@ export default function Select({
             aria-label={options[0].type}
             role="listbox"
             id={ariaControlsIdRef.current}
-            className={`absolute w-full rounded-lg p-3 bg-white border-main border-neu shadow-neu-sm ${
+            className={`absolute w-full rounded-lg p-3 bg-white border-main border-neu shadow-neu-sm z-50 ${
               popupDirection === 'top'
                 ? 'bottom-0'
                 : 'top-0'
-            } ${maxHeight ? 'overflow-y-auto' : ''}`}
-            style={maxHeight ? { maxHeight: `${maxHeight}px` } : undefined}
+            }`}
+            style={bottomOffset !== 0 && popupDirection === 'top' ? { bottom: `${bottomOffset}px` } : undefined}
             aria-activedescendant={`${selectId}-option-0`}
           >
             {optionList}
