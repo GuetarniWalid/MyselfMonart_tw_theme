@@ -61,7 +61,7 @@ const Button = forwardRef(
             unescapeMessage(message)
           )}
           <span className="py-4 block h-full">
-            {unescapeMessage(window.react.buyButton.total)}:&nbsp;&nbsp; {Product.formatPrice(totalPrice, true, false)}
+            {Product.formatPrice(totalPrice, true, false)}
           </span>
         </button>
         <Klarna purchaseAmount={totalPrice} />
