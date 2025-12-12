@@ -1,10 +1,10 @@
 <sticky-header class="transition-colors duration-500 border-b border-solid border-main relative">
   <div>
-    <div class="bg-secondary py-4 px-14 flex items-center justify-center md:justify-between border-b border-solid border-main">
+    <div class="bg-secondary py-4 pl-6 pr-3 flex items-center justify-between border-b border-solid border-main min-h-[90px] md:pl-14 md:pr-10">
       {% comment %} start on mobile {% endcomment %}
       <details class="inline-block h-full md:hidden">
         <summary class="group menu-opener list-none cursor-pointer">
-          <span class="group-focus-visible:border-2 group-focus-visible:border-main rounded mobile-menu absolute left-5 top-1/2 -translate-y-1/2">
+          <span class="group-focus-visible:border-2 group-focus-visible:border-main rounded mobile-menu">
             <span class="hamburger" aria-hidden="false">{% render 'tw-icon-hamburger' %}</span>
             <span class="close hidden" aria-hidden="true">{% render 'tw-icon-close' %}</span>
           </span>
@@ -446,7 +446,7 @@
         </nav>
       </details>
       {% comment %} end on mobile {% endcomment %}
-      <h2 class="cursor-pointer inline-flex items-center obfuscate text-2xl sm:text-3xl" data-url64="{{ routes.root_url | base64_encode }}">
+      <h2 class="cursor-pointer inline-flex items-center obfuscate text-2xl sm:text-3xl mobile:absolute mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-1/2 mobile:-translate-y-1/2" data-url64="{{ routes.root_url | base64_encode }}">
         {% if section.settings.logo_svg != blank %}
           {{ section.settings.logo_svg }}
         {% else %}
@@ -454,6 +454,8 @@
         {% endif %}
         <span class="ml-3 hidden xs:inline">MyselfMonArt</span>
       </h2>
+
+      {% render 'tw-loup-like-button' %}
     </div>
     {% comment %} start on desktop {% endcomment %}
     <nav
