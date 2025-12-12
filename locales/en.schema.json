@@ -1641,9 +1641,6 @@
         "empty_text": {
           "label": "Text",
           "info": "Displayed when no product is liked"
-        },
-        "show_secondary_image": {
-          "label": "Show second image on hover"
         }
       }
     },

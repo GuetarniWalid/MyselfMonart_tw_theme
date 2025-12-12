@@ -1641,9 +1641,6 @@
         "empty_text": {
           "label": "Texte",
           "info": "S'affiche au cas où il n'y a pas de produit liké"
-        },
-        "show_secondary_image": {
-          "label": "Afficher la deuxième image en survol"
         }
       }
     },
