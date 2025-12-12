@@ -18,7 +18,7 @@
             {% for block in section.blocks %}
               {% if block.type == "collection_only" %}
                 <li
-                  class="obfuscate flex items-center gap-3 hover:bg-main-5 p-3 rounded-lg cursor-pointer"
+                  class="obfuscate flex items-center gap-3 hover:bg-main-10 p-3 rounded-lg cursor-pointer"
                   data-url64="{{ block.settings.collection.url | base64_encode }}"
                   tabindex="0">
                   {% if block.settings.collection.featured_image != blank %}
@@ -32,7 +32,7 @@
                 </li>
               {% elsif block.type == "product_only" %}
                 <li
-                  class="obfuscate flex items-center gap-3 hover:bg-main-5 p-3 rounded-lg cursor-pointer"
+                  class="obfuscate flex items-center gap-3 hover:bg-main-10 p-3 rounded-lg cursor-pointer"
                   data-url64="{{ block.settings.product.url | base64_encode }}"
                   tabindex="0">
                   {% if block.settings.product.images[1] != blank %}
@@ -52,7 +52,7 @@
                 </li>
               {% elsif block.type == "page_only" %}
                 <li
-                  class="obfuscate flex items-center gap-3 hover:bg-main-5 p-3 rounded-lg cursor-pointer"
+                  class="obfuscate flex items-center gap-3 hover:bg-main-10 p-3 rounded-lg cursor-pointer"
                   data-url64="{{ block.settings.page.url | base64_encode }}"
                   tabindex="0">
                   {% if block.settings.image != blank %}
@@ -65,8 +65,8 @@
                   {{ block.settings.page.title | escape }}
                 </li>
               {% elsif block.type == "parent_collection_images" %}
-                <li class="details-wrapper group/one hover:bg-main-5 p-3 rounded-lg cursor-pointer">
-                  <details>
+                <li class="details-wrapper group/one hover:bg-main-10 p-3 rounded-lg cursor-pointer">
+                  <details class="js-nav-submenu">
                     <summary class="list-none flex items-center justify-between gap-3">
                       <div class="flex items-center gap-3">
                         {% if block.settings.product.images[1] != blank %}
@@ -83,7 +83,7 @@
                     </summary>
                     <div class="absolute inset-0 bg-secondary py-8 px-5 transition-all duration-150 translate-x-full overflow-y-scroll overflow-x-hidden">
                       <h3
-                        class="group bg-main-5 cursor-pointer py-2 px-4 rounded-md mb-2 text-xl"
+                        class="group bg-main-10 cursor-pointer py-2 px-4 rounded-md mb-2 text-xl"
                         tabindex="0"
                         role="button"
                         aria-label="{{ "sections.header.back" | t }}">
@@ -93,7 +93,7 @@
                       <ul class="gap-y-3 ">
                         {% for collection in block.settings.child_collection_list %}
                           <li
-                            class="obfuscate flex items-center gap-3 hover:bg-main-5 p-3 rounded-lg cursor-pointer"
+                            class="obfuscate flex items-center gap-3 hover:bg-main-10 p-3 rounded-lg cursor-pointer"
                             data-url64="{{ collection.url | base64_encode }}"
                             tabindex="0">
                             {% if collection.featured_image != blank %}
@@ -111,8 +111,8 @@
                   </details>
                 </li>
               {% else %}
-                <li class="details-wrapper group/one hover:bg-main-5 p-3 rounded-lg cursor-pointer">
-                  <details>
+                <li class="details-wrapper group/one hover:bg-main-10 p-3 rounded-lg cursor-pointer">
+                  <details class="js-nav-submenu">
                     <summary class="list-none flex items-center justify-between gap-3">
                       <div class="flex items-center gap-3">
                         {% if block.settings.product.images[1] != blank %}
@@ -129,7 +129,7 @@
                     </summary>
                     <div class="absolute inset-0 bg-secondary py-8 px-5 transition-all duration-150 translate-x-full overflow-y-scroll overflow-x-hidden">
                       <h3
-                        class="group bg-main-5 cursor-pointer py-2 px-4 rounded-md mb-2 text-xl"
+                        class="group bg-main-10 cursor-pointer py-2 px-4 rounded-md mb-2 text-xl"
                         tabindex="0"
                         role="button"
                         aria-label="{{ "sections.header.back" | t }}">
@@ -158,8 +158,8 @@
                             assign collection_list = block.settings[collection_id]
                             assign title_id = "title_" | append: id | append: '_section'
                           %}
-                          <li class="details-wrapper group/one hover:bg-main-5 p-3 rounded-lg cursor-pointer">
-                            <details>
+                          <li class="details-wrapper group/one hover:bg-main-10 p-3 rounded-lg cursor-pointer">
+                            <details class="js-nav-submenu">
                               <summary class="list-none flex items-center justify-between gap-3">
                                 <div class="flex items-center gap-3">
                                   {% if block.settings.product.images[1] != blank %}
@@ -176,7 +176,7 @@
                               </summary>
                               <div class="absolute inset-0 bg-secondary py-8 px-5 transition-all duration-150 translate-x-full overflow-y-scroll overflow-x-hidden">
                                 <h3
-                                  class="group bg-main-5 cursor-pointer py-2 px-4 rounded-md mb-2 text-xl"
+                                  class="group bg-main-10 cursor-pointer py-2 px-4 rounded-md mb-2 text-xl"
                                   tabindex="0"
                                   role="button"
                                   aria-label="{{ "sections.header.back" | t }}">
@@ -186,7 +186,7 @@
                                 <ul class="gap-y-3">
                                   {% for collection in block.settings[collection_id] %}
                                     <li
-                                      class="obfuscate flex items-center gap-3 hover:bg-main-5 p-3 rounded-lg cursor-pointer"
+                                      class="obfuscate flex items-center gap-3 hover:bg-main-10 p-3 rounded-lg cursor-pointer"
                                       data-url64="{{ collection.url | base64_encode }}"
                                       tabindex="0">
                                       {% if collection.featured_image != blank %}
@@ -211,8 +211,237 @@
               {% endif %}
             {% endfor %}
           </ul>
-          <div class="pb-16 pt-6 bg-main text-secondary">
+          <div class="flex justify-between pb-16 pt-6 bg-main text-secondary">
             {% render 'tw-list-social' %}
+            <details class="relative px-6">
+              <summary class="flex items-center justify-center text-secondary cursor-pointer">
+                {% if localization.country.currency.iso_code == 'CAD' and localization.language.iso_code == 'en' %}
+                  {% render 'icon-flag-ca' %}
+                {% elsif localization.country.currency.iso_code == 'CHF' and localization.language.iso_code == 'fr' %}
+                  {% render 'icon-flag-ch' %}
+                {% elsif localization.country.currency.iso_code == 'DKK' and localization.language.iso_code == 'en' %}
+                  {% render 'icon-flag-dk' %}
+                {% elsif localization.country.currency.iso_code == 'EUR' and localization.language.iso_code == 'fr' %}
+                  {% render 'icon-flag-fr' %}
+                {% elsif localization.country.currency.iso_code == 'GBP' and localization.language.iso_code == 'en' %}
+                  {% render 'icon-flag-uk' %}
+                {% elsif localization.country.currency.iso_code == 'USD' and localization.language.iso_code == 'en' %}
+                  {% render 'icon-flag-us' %}
+                {% else %}
+                  {% render 'icon-flag-world' %}
+                {% endif %}
+              </summary>
+              <ul class="absolute right-6 top-0 -translate-y-full z-50 bg-white rounded shadow-lg pt-1">
+                {% liquid
+                  if template.name == 'product'
+                    assign resource = product
+                  elsif template.name == 'collection'
+                    assign resource = collection
+                  elsif template.name == 'page'
+                    assign resource = page
+                  else
+                    assign resource = nil
+                  endif
+                %}
+                {%- for language in localization.available_languages -%}
+                  {%- for currency in shop.enabled_currencies -%}
+                    {% if currency.iso_code == 'CAD' and language.iso_code == 'en' %}
+                      <li tabindex="-1">
+                        <localization-flag>
+                          <a
+                            class="inline-flex items-center hover:bg-main-10 w-full py-2 mb-1 px-3 whitespace-nowrap text-main{% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'CAD' %} bg-main-10 cursor-not-allowed{% endif %}"
+                            {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'CAD' %}
+                              role="link"
+                              aria-disabled="true"
+                            {% else %}
+                              {% liquid
+                                if template.name == 'index'
+                                  assign url = routes.root_url | remove_last: 'en' | append: 'en'
+                                elsif template.name == 'search'
+                                  assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/search'
+                                elsif template.name == 'cart'
+                                  assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/cart'
+                                else
+                                  assign url = resource.metafields.translation.handle.value[language.iso_code]
+                                endif
+                              %}
+                              href="{{ url }}?currency={{ currency.iso_code }}"
+                            {% endif %}
+                            hreflang="{{ language.iso_code }}"
+                            lang="{{ language.iso_code }}"
+                            {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'CAD' %}
+                              aria-current="true"
+                            {% endif %}
+                            data-value="{{ language.iso_code }}">
+                            {% render 'icon-flag-ca' %}&nbsp;Canada
+                          </a>
+                        </localization-flag>
+                      </li>
+                    {% elsif currency.iso_code == 'CHF' and language.iso_code == 'fr' %}
+                      <li tabindex="-1">
+                        <localization-flag>
+                          <a
+                            class="inline-flex items-center hover:bg-main-10 w-full py-2 mb-1 px-3 whitespace-nowrap text-main{% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'CHF' %} bg-main-10 cursor-not-allowed{% endif %}"
+                            {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'CHF' %}
+                            role="link"
+                            aria-disabled="true"
+                            {% else %}
+                              {% liquid
+                                if template.name == 'index'
+                                  assign url = routes.root_url | remove_last: 'en'
+                                elsif template.name == 'search'
+                                  assign url = routes.root_url | remove_last: 'en' | append: 'search'
+                                elsif template.name == 'cart'
+                                  assign url = routes.root_url | remove_last: 'en' | append: 'cart'
+                                else
+                                  assign url = resource.metafields.translation.handle.value[language.iso_code]
+                                endif
+                              %}
+                              href="{{ url }}?currency={{ currency.iso_code }}"
+                            {% endif %}
+                            hreflang="{{ language.iso_code }}"
+                            lang="{{ language.iso_code }}"
+                            {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'CHF' %}
+                            aria-current="true"
+                            {% endif %}
+                            data-value="{{ language.iso_code }}">
+                            {% render 'icon-flag-ch' %}&nbsp;&nbsp;Suisse
+                          </a>
+                        </localization-flag>
+                      </li>
+                    {% elsif currency.iso_code == 'DKK' and language.iso_code == 'en' %}
+                      <li tabindex="-1">
+                        <localization-flag>
+                          <a
+                            class="inline-flex items-center hover:bg-main-10 w-full py-2 mb-1 px-3 whitespace-nowrap text-main{% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'DDK' %} bg-main-10 cursor-not-allowed{% endif %}"
+                            {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'DDK' %}
+                            role="link"
+                            aria-disabled="true"
+                            {% else %}
+                            {% liquid
+                                if template.name == 'index'
+                                  assign url = routes.root_url | remove_last: 'en' | append: 'en'
+                                elsif template.name == 'search'
+                                  assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/search'
+                                elsif template.name == 'cart'
+                                  assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/cart'
+                                else
+                                  assign url = resource.metafields.translation.handle.value[language.iso_code]
+                                endif
+                              %}
+                              href="{{ url }}?currency={{ currency.iso_code }}"
+                            {% endif %}
+                            hreflang="{{ language.iso_code }}"
+                            lang="{{ language.iso_code }}"
+                            {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'DDK' %}
+                            aria-current="true"
+                            {% endif %}
+                            data-value="{{ language.iso_code }}">
+                            {% render 'icon-flag-dk' %}&nbsp;&nbsp;Danmark
+                          </a>
+                        </localization-flag>
+                      </li>
+                    {% elsif currency.iso_code == 'EUR' and language.iso_code == 'fr' %}
+                      <li tabindex="-1">
+                        <localization-flag>
+                          <a
+                            class="inline-flex items-center hover:bg-main-10 w-full py-2 mb-1 px-3 whitespace-nowrap text-main{% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'EUR' %} bg-main-10 cursor-not-allowed{% endif %}"
+                            {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'EUR' %}
+                            role="link"
+                            aria-disabled="true"
+                            {% else %}
+                            {% liquid
+                                if template.name == 'index'
+                                  assign url = routes.root_url | remove_last: 'en'
+                                elsif template.name == 'search'
+                                  assign url = routes.root_url | remove_last: 'en' | append: 'search'
+                                elsif template.name == 'cart'
+                                  assign url = routes.root_url | remove_last: 'en' | append: 'cart'
+                                else
+                                  assign url = resource.metafields.translation.handle.value[language.iso_code]
+                                endif
+                              %}
+                              href="{{ url }}?currency={{ currency.iso_code }}"
+                            {% endif %}
+                            hreflang="{{ language.iso_code }}"
+                            lang="{{ language.iso_code }}"
+                            {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'EUR' %}
+                            aria-current="true"
+                            {% endif %}
+                            data-value="{{ language.iso_code }}">
+                            {% render 'icon-flag-fr' %}&nbsp;&nbsp;France
+                          </a>
+                        </localization-flag>
+                      </li>
+                    {% elsif currency.iso_code == 'GBP' and language.iso_code == 'en' %}
+                      <li tabindex="-1">
+                        <localization-flag>
+                          <a
+                            class="inline-flex items-center hover:bg-main-10 w-full py-2 mb-1 px-3 whitespace-nowrap text-main{% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'GBP' %} bg-main-10 cursor-not-allowed{% endif %}"
+                            {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'GBP' %}
+                            role="link"
+                            aria-disabled="true"
+                            {% else %}
+                            {% liquid
+                                if template.name == 'index'
+                                  assign url = routes.root_url | remove_last: 'en' | append: 'en'
+                                elsif template.name == 'search'
+                                  assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/search'
+                                elsif template.name == 'cart'
+                                  assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/cart'
+                                else
+                                  assign url = resource.metafields.translation.handle.value[language.iso_code]
+                                endif
+                              %}
+                              href="{{ url }}?currency={{ currency.iso_code }}"
+                            {% endif %}
+                            hreflang="{{ language.iso_code }}"
+                            lang="{{ language.iso_code }}"
+                            {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'GBP' %}
+                            aria-current="true"
+                            {% endif %}
+                            data-value="{{ language.iso_code }}">
+                            {% render 'icon-flag-uk' %}&nbsp;&nbsp;UK
+                          </a>
+                        </localization-flag>
+                      </li>
+                    {% elsif currency.iso_code == 'USD' and language.iso_code == 'en' %}
+                      <li tabindex="-1">
+                        <localization-flag>
+                          <a
+                            class="inline-flex items-center last-focusable hover:bg-main-10 w-full py-2 mb-1 px-3 whitespace-nowrap text-main{% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'USD' %} bg-main-10 cursor-not-allowed{% endif %}"
+                            {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'USD' %}
+                              role="link"
+                              aria-disabled="true"
+                            {% else %}
+                              {% liquid
+                                if template.name == 'index'
+                                  assign url = routes.root_url | remove_last: 'en' | append: 'en'
+                                elsif template.name == 'search'
+                                  assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/search'
+                                elsif template.name == 'cart'
+                                  assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/cart'
+                                else
+                                  assign url = resource.metafields.translation.handle.value[language.iso_code]
+                                endif
+                              %}
+                              href="{{ url }}?currency={{ currency.iso_code }}"
+                            {% endif %}
+                            hreflang="{{ language.iso_code }}"
+                            lang="{{ language.iso_code }}"
+                            {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'USD' %}
+                              aria-current="true"
+                            {% endif %}
+                            data-value="{{ language.iso_code }}">
+                            {% render 'icon-flag-us' %}&nbsp;&nbsp;USA
+                          </a>
+                        </localization-flag>
+                      </li>
+                    {% endif %}
+                  {%- endfor -%}
+                {%- endfor -%}
+              </ul>
+            </details>
           </div>
         </nav>
       </details>
@@ -225,242 +454,6 @@
         {% endif %}
         <span class="ml-3 hidden xs:inline">MyselfMonArt</span>
       </h2>
-
-      <div class="mobile:absolute right-4 top-1/2 mobile:-translate-y-1/2 md:flex items-center z-10" test="{{ request.path }}">
-        <details class="relative">
-          <summary class="flex items-center justify-center px-3 text-secondary cursor-pointer w-16 xs:w-20 h-16 xs:h-20">
-            {% if localization.country.currency.iso_code == 'CAD' and localization.language.iso_code == 'en' %}
-              {% render 'icon-flag-ca' %}
-            {% elsif localization.country.currency.iso_code == 'CHF' and localization.language.iso_code == 'fr' %}
-              {% render 'icon-flag-ch' %}
-            {% elsif localization.country.currency.iso_code == 'DKK' and localization.language.iso_code == 'en' %}
-              {% render 'icon-flag-dk' %}
-            {% elsif localization.country.currency.iso_code == 'EUR' and localization.language.iso_code == 'fr' %}
-              {% render 'icon-flag-fr' %}
-            {% elsif localization.country.currency.iso_code == 'GBP' and localization.language.iso_code == 'en' %}
-              {% render 'icon-flag-uk' %}
-            {% elsif localization.country.currency.iso_code == 'USD' and localization.language.iso_code == 'en' %}
-              {% render 'icon-flag-us' %}
-            {% else %}
-              {% render 'icon-flag-world' %}
-            {% endif %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="32" viewBox="0 0 24 24" class="inline-block text-main"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 10l4 4l4-4"/></svg>
-          </summary>
-          <ul class="absolute right-0 top-full z-50 bg-white rounded shadow-lg">
-            {% liquid
-              if template.name == 'product'
-                assign resource = product
-              elsif template.name == 'collection'
-                assign resource = collection
-              elsif template.name == 'page'
-                assign resource = page
-              else
-                assign resource = nil
-              endif
-            %}
-            {%- for language in localization.available_languages -%}
-              {%- for currency in shop.enabled_currencies -%}
-                {% if currency.iso_code == 'CAD' and language.iso_code == 'en' %}
-                  <li tabindex="-1">
-                    <localization-flag>
-                      <a
-                        class="inline-flex items-center hover:bg-main-5 w-full py-2 mb-1 px-3 whitespace-nowrap {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'CAD' %} bg-main-5 cursor-not-allowed{% endif %}"
-                        {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'CAD' %}
-                          role="link"
-                          aria-disabled="true"
-                        {% else %}
-                          {% liquid
-                            if template.name == 'index'
-                              assign url = routes.root_url | remove_last: 'en' | append: 'en'
-                            elsif template.name == 'search'
-                              assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/search'
-                            elsif template.name == 'cart'
-                              assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/cart'
-                            else
-                              assign url = resource.metafields.translation.handle.value[language.iso_code]
-                            endif
-                          %}
-                          href="{{ url }}?currency={{ currency.iso_code }}"
-                        {% endif %}
-                        hreflang="{{ language.iso_code }}"
-                        lang="{{ language.iso_code }}"
-                        {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'CAD' %}
-                          aria-current="true"
-                        {% endif %}
-                        data-value="{{ language.iso_code }}">
-                        {% render 'icon-flag-ca' %}&nbsp;Canada
-                      </a>
-                    </localization-flag>
-                  </li>
-                {% elsif currency.iso_code == 'CHF' and language.iso_code == 'fr' %}
-                  <li tabindex="-1">
-                    <localization-flag>
-                      <a
-                        class="inline-flex items-center hover:bg-main-5 w-full py-2 mb-1 px-3 whitespace-nowrap {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'CHF' %} bg-main-5 cursor-not-allowed{% endif %}"
-                        {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'CHF' %}
-                        role="link"
-                        aria-disabled="true"
-                        {% else %}
-                          {% liquid
-                            if template.name == 'index'
-                              assign url = routes.root_url | remove_last: 'en'
-                            elsif template.name == 'search'
-                              assign url = routes.root_url | remove_last: 'en' | append: 'search'
-                            elsif template.name == 'cart'
-                              assign url = routes.root_url | remove_last: 'en' | append: 'cart'
-                            else
-                              assign url = resource.metafields.translation.handle.value[language.iso_code]
-                            endif
-                          %}
-                          href="{{ url }}?currency={{ currency.iso_code }}"
-                        {% endif %}
-                        hreflang="{{ language.iso_code }}"
-                        lang="{{ language.iso_code }}"
-                        {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'CHF' %}
-                        aria-current="true"
-                        {% endif %}
-                        data-value="{{ language.iso_code }}">
-                        {% render 'icon-flag-ch' %}&nbsp;&nbsp;Suisse
-                      </a>
-                    </localization-flag>
-                  </li>
-                {% elsif currency.iso_code == 'DKK' and language.iso_code == 'en' %}
-                  <li tabindex="-1">
-                    <localization-flag>
-                      <a
-                        class="inline-flex items-center hover:bg-main-5 w-full py-2 mb-1 px-3 whitespace-nowrap {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'DDK' %} bg-main-5 cursor-not-allowed{% endif %}"
-                        {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'DDK' %}
-                        role="link"
-                        aria-disabled="true"
-                        {% else %}
-                        {% liquid
-                            if template.name == 'index'
-                              assign url = routes.root_url | remove_last: 'en' | append: 'en'
-                            elsif template.name == 'search'
-                              assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/search'
-                            elsif template.name == 'cart'
-                              assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/cart'
-                            else
-                              assign url = resource.metafields.translation.handle.value[language.iso_code]
-                            endif
-                          %}
-                          href="{{ url }}?currency={{ currency.iso_code }}"
-                        {% endif %}
-                        hreflang="{{ language.iso_code }}"
-                        lang="{{ language.iso_code }}"
-                        {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'DDK' %}
-                        aria-current="true"
-                        {% endif %}
-                        data-value="{{ language.iso_code }}">
-                        {% render 'icon-flag-dk' %}&nbsp;&nbsp;Danmark
-                      </a>
-                    </localization-flag>
-                  </li>
-                {% elsif currency.iso_code == 'EUR' and language.iso_code == 'fr' %}
-                  <li tabindex="-1">
-                    <localization-flag>
-                      <a
-                        class="inline-flex items-center hover:bg-main-5 w-full py-2 mb-1 px-3 whitespace-nowrap {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'EUR' %} bg-main-5 cursor-not-allowed{% endif %}"
-                        {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'EUR' %}
-                        role="link"
-                        aria-disabled="true"
-                        {% else %}
-                        {% liquid
-                            if template.name == 'index'
-                              assign url = routes.root_url | remove_last: 'en'
-                            elsif template.name == 'search'
-                              assign url = routes.root_url | remove_last: 'en' | append: 'search'
-                            elsif template.name == 'cart'
-                              assign url = routes.root_url | remove_last: 'en' | append: 'cart'
-                            else
-                              assign url = resource.metafields.translation.handle.value[language.iso_code]
-                            endif
-                          %}
-                          href="{{ url }}?currency={{ currency.iso_code }}"
-                        {% endif %}
-                        hreflang="{{ language.iso_code }}"
-                        lang="{{ language.iso_code }}"
-                        {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'EUR' %}
-                        aria-current="true"
-                        {% endif %}
-                        data-value="{{ language.iso_code }}">
-                        {% render 'icon-flag-fr' %}&nbsp;&nbsp;France
-                      </a>
-                    </localization-flag>
-                  </li>
-                {% elsif currency.iso_code == 'GBP' and language.iso_code == 'en' %}
-                  <li tabindex="-1">
-                    <localization-flag>
-                      <a
-                        class="inline-flex items-center hover:bg-main-5 w-full py-2 mb-1 px-3 whitespace-nowrap {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'GBP' %} bg-main-5 cursor-not-allowed{% endif %}"
-                        {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'GBP' %}
-                        role="link"
-                        aria-disabled="true"
-                        {% else %}
-                        {% liquid
-                            if template.name == 'index'
-                              assign url = routes.root_url | remove_last: 'en' | append: 'en'
-                            elsif template.name == 'search'
-                              assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/search'
-                            elsif template.name == 'cart'
-                              assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/cart'
-                            else
-                              assign url = resource.metafields.translation.handle.value[language.iso_code]
-                            endif
-                          %}
-                          href="{{ url }}?currency={{ currency.iso_code }}"
-                        {% endif %}
-                        hreflang="{{ language.iso_code }}"
-                        lang="{{ language.iso_code }}"
-                        {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'GBP' %}
-                        aria-current="true"
-                        {% endif %}
-                        data-value="{{ language.iso_code }}">
-                        {% render 'icon-flag-uk' %}&nbsp;&nbsp;UK
-                      </a>
-                    </localization-flag>
-                  </li>
-                {% elsif currency.iso_code == 'USD' and language.iso_code == 'en' %}
-                  <li tabindex="-1">
-                    <localization-flag>
-                      <a
-                        class="inline-flex items-center last-focusable hover:bg-main-5 w-full py-2 mb-1 px-3 whitespace-nowrap {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'USD' %} bg-main-5 cursor-not-allowed{% endif %}"
-                        {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'USD' %}
-                          role="link"
-                          aria-disabled="true"
-                        {% else %}
-                          {% liquid
-                            if template.name == 'index'
-                              assign url = routes.root_url | remove_last: 'en' | append: 'en'
-                            elsif template.name == 'search'
-                              assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/search'
-                            elsif template.name == 'cart'
-                              assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/cart'
-                            else
-                              assign url = resource.metafields.translation.handle.value[language.iso_code]
-                            endif
-                          %}
-                          href="{{ url }}?currency={{ currency.iso_code }}"
-                        {% endif %}
-                        hreflang="{{ language.iso_code }}"
-                        lang="{{ language.iso_code }}"
-                        {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'USD' %}
-                          aria-current="true"
-                        {% endif %}
-                        data-value="{{ language.iso_code }}">
-                        {% render 'icon-flag-us' %}&nbsp;&nbsp;USA
-                      </a>
-                    </localization-flag>
-                  </li>
-                {% endif %}
-              {%- endfor -%}
-            {%- endfor -%}
-          </ul>
-        </details>
-        <span class="obfuscate ml-6 cursor-pointer" data-url64="{{ pages["mes-j-aimes"].url | base64_encode }}">
-          <span class="hidden md:inline-block">{{ "snippet.tw_sticky_header.my_likes" | t }} &nbsp;{% render 'tw-icon-heart-outline' %}</span>
-        </span>
-      </div>
     </div>
     {% comment %} start on desktop {% endcomment %}
     <nav
@@ -475,21 +468,21 @@
         {% for block in section.blocks %}
           {% if block.type == "collection_only" %}
             <li
-              class="obfuscate cursor-pointer p-3 outline-none hover:bg-main-5 focus:bg-main-5"
+              class="obfuscate cursor-pointer p-3 outline-none hover:bg-main-10 focus:bg-main-10"
               data-url64="{{ block.settings.collection.url | base64_encode }}"
               tabindex="0">
               {{ block.settings.collection.title | escape }}
             </li>
           {% elsif block.type == "product_only" %}
             <li
-              class="obfuscate cursor-pointer p-3 outline-none hover:bg-main-5 focus:bg-main-5"
+              class="obfuscate cursor-pointer p-3 outline-none hover:bg-main-10 focus:bg-main-10"
               data-url64="{{ block.settings.product.url | base64_encode }}"
               tabindex="0">
               {{ block.settings.product.title | escape }}
             </li>
           {% elsif block.type == "page_only" %}
             <li
-              class="obfuscate cursor-pointer p-3 outline-none hover:bg-main-5 focus:bg-main-5"
+              class="obfuscate cursor-pointer p-3 outline-none hover:bg-main-10 focus:bg-main-10"
               data-url64="{{ block.settings.page.url | base64_encode }}"
               tabindex="0">
               {{ block.settings.page.title | escape }}
@@ -507,7 +500,7 @@
               endif
             %}
             <li
-              class="group relative cursor-pointer p-3 outline-none hover:bg-main-5 focus:bg-main-5"
+              class="group relative cursor-pointer p-3 outline-none hover:bg-main-10 focus:bg-main-10"
               tabindex="0"
               aria-haspopup="true"
               aria-expanded="false">
@@ -548,116 +541,117 @@
                     endif
                   %}
                   <style > :root
-                  {
-                    --desktop-nav-cols-{{ id }}: {{ desktop_nav_cols }};
-                    --desktop-nav-rows-{{ id }}: {{ desktop_nav_rows }};
-                  }
-                </style>
-                <li
-                  class="group/link relative obfuscate cursor-pointer before:absolute before:bottom-0 before:w-full before:h-1/2 before:z-10 before:bg-gradient-to-t before:from-black/80 before:to-transparent rounded overflow-hidden outline-none{% if forloop.first %} first-elem{% endif %}{% if forloop.last %} last-elem{% endif %}"
-                  data-url64="{{ collection.url | base64_encode }}"
-                  tabindex="-1">
-                  {% if collection.featured_image != blank %}
-                    {% assign image_alt = collection.featured_image.alt | escape %}
-                    {% if collection.metafields.meta_object.media.value.alts.value[0] %}
-                      {% assign image_alt = collection.metafields.meta_object.media.value.alts.value[0] | escape %}
+                    {
+                      --desktop-nav-cols-{{ id }}: {{ desktop_nav_cols }};
+                      --desktop-nav-rows-{{ id }}: {{ desktop_nav_rows }};
+                    }
+                  </style>
+                  <li
+                    class="group/link relative obfuscate cursor-pointer before:absolute before:bottom-0 before:w-full before:h-1/2 before:z-10 before:bg-gradient-to-t before:from-black/80 before:to-transparent rounded overflow-hidden outline-none{% if forloop.first %} first-elem{% endif %}{% if forloop.last %} last-elem{% endif %}"
+                    data-url64="{{ collection.url | base64_encode }}"
+                    tabindex="-1">
+                    {% if collection.featured_image != blank %}
+                      {% assign image_alt = collection.featured_image.alt | escape %}
+                      {% if collection.metafields.meta_object.media.value.alts.value[0] %}
+                        {% assign image_alt = collection.metafields.meta_object.media.value.alts.value[0] | escape %}
+                      {% endif %}
+                      {{ collection.featured_image | image_url: width: img_width, height: img_height | image_tag: width: img_width, height: img_height, alt: image_alt, loading: 'lazy', class: 'max-w-none transition-all duration-300 ease-out group-hover/link:scale-110 group-focus/link:scale-110' }}
                     {% endif %}
-                    {{ collection.featured_image | image_url: width: img_width, height: img_height | image_tag: width: img_width, height: img_height, alt: image_alt, loading: 'lazy', class: 'max-w-none transition-all duration-300 ease-out group-hover/link:scale-110 group-focus/link:scale-110' }}
-                  {% endif %}
-                  <p class="absolute z-20 bottom-4 text-xl text-secondary text-center w-full">
-                    {{ collection.title | escape }}
-                  </p>
-                </li>
-              {% endfor %}
-            </ul>
-          </li>
-        {% else %}
-          {% liquid
-            assign id = forloop.index
-            assign li_count = section.blocks | size
-            assign transform_shift = forloop.index | times: 100 | divided_by: li_count
-            if transform_shift > 50
-              assign left_shift = '100%'
-            else
-              assign left_shift = '0'
-              assign transform_shift = transform_shift | divided_by: 2
-            endif
-          %}
-          <li
-            class="group relative cursor-pointer p-3 outline-none hover:bg-main-5 focus:bg-main-5"
-            tabindex="0"
-            aria-haspopup="true"
-            aria-expanded="false">
-            <span
-              {% if block.settings.link != blank %}
-              class="obfuscate before:absolute before:inset-0"
-              data-url64="{{ block.settings.link | base64_encode }}"
+                    <p class="absolute z-20 bottom-4 text-xl text-secondary text-center w-full">
+                      {{ collection.title | escape }}
+                    </p>
+                  </li>
+                {% endfor %}
+              </ul>
+            </li>
+          {% else %}
+            {% liquid
+              assign id = forloop.index
+              assign li_count = section.blocks | size
+              assign transform_shift = forloop.index | times: 100 | divided_by: li_count
+              if transform_shift > 50
+                assign left_shift = '100%'
+              else
+                assign left_shift = '0'
+                assign transform_shift = transform_shift | divided_by: 2
+              endif
+            %}
+            <li
+              class="group relative cursor-pointer p-3 outline-none hover:bg-main-10 focus:bg-main-10"
               tabindex="0"
-              {% endif %}>
-              {{ block.settings.title | escape }}
-            </span>
-            <ul
-              class="hidden group-hover:grid grid-cols-[auto_auto_auto] grid-rows-[auto_auto_auto] absolute translate-y-full -bottom-[1px] bg-secondary p-3 gap-x-5 gap-y-3 min-w-max cursor-default rounded-b"
-              style="transform:translate(-{{ transform_shift }}%,100%);left:{{ left_shift }};"
-              role="menu">
-              {% liquid
-                assign sections_count = 0
-                if block.settings.child_collection_list_1_section != blank
-                  assign sections_count = sections_count | plus: 1
-                endif
-                if block.settings.child_collection_list_2_section != blank
-                  assign sections_count = sections_count | plus: 1
-                endif
-                if block.settings.child_collection_list_3_section != blank
-                  assign sections_count = sections_count | plus: 1
-                endif
-                if block.settings.child_collection_list_4_section != blank
-                  assign sections_count = sections_count | plus: 1
-                endif
-              %}
-              {% for id in (1..sections_count) %}
+              aria-haspopup="true"
+              aria-expanded="false">
+              <span
+                {% if block.settings.link != blank %}
+                class="obfuscate before:absolute before:inset-0"
+                data-url64="{{ block.settings.link | base64_encode }}"
+                tabindex="0"
+                {% endif %}>
+                {{ block.settings.title | escape }}
+              </span>
+              <ul
+                class="hidden group-hover:grid grid-cols-[auto_auto_auto] grid-rows-[auto_auto_auto] absolute translate-y-full -bottom-[1px] bg-secondary p-3 gap-x-5 gap-y-3 min-w-max cursor-default rounded-b"
+                style="transform:translate(-{{ transform_shift }}%,100%);left:{{ left_shift }};"
+                role="menu">
                 {% liquid
-                  assign collection_id = "child_collection_list_" | append: id | append: '_section'
-                  assign collection_list = block.settings[collection_id]
-                  assign title_id = "title_" | append: id | append: '_section'
+                  assign sections_count = 0
+                  if block.settings.child_collection_list_1_section != blank
+                    assign sections_count = sections_count | plus: 1
+                  endif
+                  if block.settings.child_collection_list_2_section != blank
+                    assign sections_count = sections_count | plus: 1
+                  endif
+                  if block.settings.child_collection_list_3_section != blank
+                    assign sections_count = sections_count | plus: 1
+                  endif
+                  if block.settings.child_collection_list_4_section != blank
+                    assign sections_count = sections_count | plus: 1
+                  endif
                 %}
-                <li class="no-focusable">
-                  <span class="block bg-main-10 py-2 px-4 font-heading rounded-lg mb-3">{{ block.settings[title_id] }}</span>
-                  <ul class="pl-2" tabindex="-1">
-                    {% for collection in collection_list %}
-                      <li
-                        class="obfuscate cursor-pointer py-1 px-2 rounded-md hover:bg-main-5 focus:bg-main-5 outline-none {% if forloop.first and forloop.parentloop.first %} first-elem{% endif %}{% if forloop.last and forloop.parentloop.last %} last-elem{% endif %}"
-                        data-url64="{{ collection.url | base64_encode }}"
-                        tabindex="-1">
-                        {{ collection.title | escape }}
-                      </li>
-                    {% endfor %}
-                  </ul>
-                </li>
-              {% endfor %}
-            </ul>
-          </li>
-        {% endif %}
-      {% endfor %}
-    </ul>
-  </nav>
-  {% comment %} end on desktop {% endcomment %}
+                {% for id in (1..sections_count) %}
+                  {% liquid
+                    assign collection_id = "child_collection_list_" | append: id | append: '_section'
+                    assign collection_list = block.settings[collection_id]
+                    assign title_id = "title_" | append: id | append: '_section'
+                  %}
+                  <li class="no-focusable">
+                    <span class="block bg-main-10 py-2 px-4 font-heading rounded-lg mb-3">{{ block.settings[title_id] }}</span>
+                    <ul class="pl-2" tabindex="-1">
+                      {% for collection in collection_list %}
+                        <li
+                          class="obfuscate cursor-pointer py-1 px-2 rounded-md hover:bg-main-10 focus:bg-main-10 outline-none {% if forloop.first and forloop.parentloop.first %} first-elem{% endif %}{% if forloop.last and forloop.parentloop.last %} last-elem{% endif %}"
+                          data-url64="{{ collection.url | base64_encode }}"
+                          tabindex="-1">
+                          {{ collection.title | escape }}
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </li>
+                {% endfor %}
+              </ul>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </nav>
+    {% comment %} end on desktop {% endcomment %}
 
-  {% if template.name != 'cart' %}
-    <button
-      id="cart-button"
-      class="absolute right-4 bottom-0 translate-y-1/2 bg-secondary border border-solid border-main w-16 h-[45px] xs:w-20 xs:h-[50px] rounded-[50px] flex justify-center items-center transition-all duration-75"
-      role="button"
-      aria-label="{{ "snippet.tw_sticky_header.open_cart" | t }}">
-      {% render 'tw-icon-bag' %}
-      <div class="absolute top-1/2 left-1/2 -translate-y-1 bg-secondary text-sm w-5 h-5 rounded-full overflow-hidden after:bg-main-10 after:absolute after:inset-0" id="bubble-nb-product">
-        {%- if cart != empty -%}
-          {%- if cart.item_count < 100 -%}
-            <span aria-hidden="true">{{ cart.item_count }}</span>
+    {% if template.name != 'cart' %}
+      <button
+        id="cart-button"
+        class="absolute right-4 bottom-0 translate-y-1/2 bg-secondary border border-solid border-main w-16 h-[45px] xs:w-20 xs:h-[50px] rounded-[50px] flex justify-center items-center transition-all duration-75"
+        role="button"
+        aria-label="{{ "snippet.tw_sticky_header.open_cart" | t }}">
+        {% render 'tw-icon-bag' %}
+        <div class="absolute top-1/2 left-1/2 -translate-y-1 bg-secondary text-sm w-5 h-5 rounded-full overflow-hidden after:bg-main-10 after:absolute after:inset-0" id="bubble-nb-product">
+          {%- if cart != empty -%}
+            {%- if cart.item_count < 100 -%}
+              <span aria-hidden="true">{{ cart.item_count }}</span>
+            {%- endif -%}
+            <span class="sr-only">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
           {%- endif -%}
-          <span class="sr-only">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
-        {%- endif -%}
-      </div>
-    </button>
-  {% endif %}
-</div></sticky-header>
+        </div>
+      </button>
+    {% endif %}
+  </div>
+</sticky-header>

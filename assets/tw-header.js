@@ -79,18 +79,24 @@ class StickyHeader extends HTMLElement {
     });
 
     this.subDetails.forEach((subDetail) => {
+      // Only add submenu behavior to navigation submenus, not other details elements (e.g. localization)
+      if (!subDetail.classList.contains('js-nav-submenu')) return;
+
       subDetail.firstElementChild.addEventListener('click', (e) => {
         e.preventDefault();
         this.openSubMenu(subDetail);
       });
 
-      subDetail.querySelector('h3').addEventListener('click', (e) => {
-        this.closeSubMenu(subDetail);
-      });
-      subDetail.querySelector('h3').addEventListener('keydown', (e) => {
-        if (e.key !== 'Enter') return;
-        this.closeSubMenu(subDetail);
-      });
+      const h3 = subDetail.querySelector('h3');
+      if (h3) {
+        h3.addEventListener('click', (e) => {
+          this.closeSubMenu(subDetail);
+        });
+        h3.addEventListener('keydown', (e) => {
+          if (e.key !== 'Enter') return;
+          this.closeSubMenu(subDetail);
+        });
+      }
     });
 
     document.addEventListener('PredictiveSearchClose', async () => {
@@ -177,7 +183,7 @@ class StickyHeader extends HTMLElement {
   changeParentLinkFocusable(focusable) {
     const tabIndexNum = focusable ? '0' : '-1';
     this.menuFirstLis.forEach((li) => {
-      if (li.firstElementChild.nodeName === 'DETAILS') {
+      if (li.firstElementChild && li.firstElementChild.nodeName === 'DETAILS') {
         if (focusable) li.firstElementChild.removeAttribute('tabindex');
         else li.firstElementChild.setAttribute('tabindex', '-1');
       } else {
