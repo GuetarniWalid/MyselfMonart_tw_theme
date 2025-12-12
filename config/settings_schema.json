@@ -79,6 +79,12 @@
         "id": "action_color",
         "label": "t:settings_schema.color.settings.action_color.label",
         "default": "#FEDE65"
+      },
+      {
+        "type": "color",
+        "id": "buy_button_color",
+        "label": "t:settings_schema.color.settings.buy_button_color.label",
+        "default": "#04A777"
       }
     ]
   },

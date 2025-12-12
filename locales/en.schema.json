@@ -14,6 +14,9 @@
         },
         "secondary_color": {
           "label": "Background color"
+        },
+        "buy_button_color": {
+          "label": "Buy button color"
         }
       }
     },
@@ -1250,9 +1253,6 @@
             "is_dynamic_variant": {
               "label": "Display variant name",
               "info": "If enabled, the variant name will take precedence over the text"
-            },
-            "main_color": {
-              "label": "Background Color"
             },
             "promotion_date": {
               "label": "Promotion end date",

@@ -47,6 +47,10 @@ module.exports = {
         },
         'breadcrumb-main': 'var(--color-breadcrumb-main)',
         'breadcrumb-secondary': 'var(--color-breadcrumb-secondary)',
+        'buy-button': {
+          DEFAULT: 'rgb(var(--color-buy-button-rgb))',
+          70: 'rgba(var(--color-buy-button-rgb), 0.7)',
+        },
         main: {
           DEFAULT: 'rgb(var(--color-main-rgb))',
           90: 'rgba(var(--color-main-rgb), 0.9)',

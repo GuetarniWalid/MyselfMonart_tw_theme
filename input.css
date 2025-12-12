@@ -170,19 +170,27 @@ main-product-blocks .description h2 span {
 
 /* Float Buy Button Animation start */
 .float-buy-button {
+  --btn-translate-x: 0%;
   animation: buyButton 1s var(--anim-motion) 1 0s forwards;
 }
+
+@media (min-width: 768px) {
+  .float-buy-button {
+    --btn-translate-x: -50%;
+  }
+}
+
 @keyframes buyButton {
   0% {
-    transform: translateX(-50%) scale(0);
+    transform: translateX(var(--btn-translate-x)) scale(0);
   }
 
   50% {
-    transform: translateX(-50%) scale(1);
+    transform: translateX(var(--btn-translate-x)) scale(1);
     width: 100px;
   }
   100% {
-    transform: translateX(-50%) scale(1);
+    transform: translateX(var(--btn-translate-x)) scale(1);
     width: 498px;
   }
 }
@@ -427,7 +435,7 @@ main-product-blocks .description h2 span {
   }
 
   .cart-button {
-    @apply relative w-full md:mx-auto bg-action border-main border-[4px] font-bold font-heading 2xs:text-lg xs:text-xl md:text-lg lg:text-xl text-main text-lg rounded-xl pl-8 pr-4 shadow-neu-xl hover:shadow-neu-lg transition-shadow duration-100 ease-in-out focus:outline focus:outline-orange-500 focus:outline-2 mb-4 md:mb-0 disabled:bg-action-70 disabled:outline-none disabled:cursor-wait overflow-hidden;
+    @apply relative w-full md:mx-auto bg-buy-button border-main border-[4px] font-bold font-heading 2xs:text-lg xs:text-xl md:text-lg lg:text-xl text-main text-lg rounded-xl pl-8 pr-4 shadow-neu-xl hover:shadow-neu-lg transition-shadow duration-100 ease-in-out focus:outline focus:outline-orange-500 focus:outline-2 mb-4 md:mb-0 disabled:bg-buy-button-70 disabled:outline-none disabled:cursor-wait overflow-hidden;
   }
 
   .cart-drawer {

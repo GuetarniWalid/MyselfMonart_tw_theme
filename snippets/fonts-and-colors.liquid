@@ -10,5 +10,6 @@
       --color-secondary-rgb: {{ settings.secondary_color | color_extract: 'red' }}, {{ settings.secondary_color | color_extract: 'green' }}, {{ settings.secondary_color | color_extract: 'blue' }};
       --color-like-rgb: {{ settings.like_color | color_extract: 'red' }}, {{ settings.like_color | color_extract: 'green' }}, {{ settings.like_color | color_extract: 'blue' }};
       --color-action-rgb: {{ settings.action_color.red }}, {{ settings.action_color.green }}, {{ settings.action_color.blue }};
+      --color-buy-button-rgb: {{ settings.buy_button_color | color_extract: 'red' }}, {{ settings.buy_button_color | color_extract: 'green' }}, {{ settings.buy_button_color | color_extract: 'blue' }};
     }
 {% endstyle %}

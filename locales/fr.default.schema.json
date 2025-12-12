@@ -14,6 +14,9 @@
         },
         "secondary_color": {
           "label": "Couleur de fond"
+        },
+        "buy_button_color": {
+          "label": "Couleur du bouton d'achat"
         }
       }
     },
@@ -1250,9 +1253,6 @@
             "is_dynamic_variant": {
               "label": "Afficher le nom de la variante",
               "info": "Si activé, le nom de la variante prendra le dessus sur le texte"
-            },
-            "main_color": {
-              "label": "Couleur de fond"
             },
             "promotion_date": {
               "label": "Date de fin de promotion",

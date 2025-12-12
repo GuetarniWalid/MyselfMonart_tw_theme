@@ -1,0 +1,15 @@
+<button
+  id="cart-button"
+  class="fixed z-20 right-6 bottom-6 bg-buy-button text-main w-[70px] h-[70px] rounded-full flex justify-center items-center transition-all duration-75 border-main border-[4px] shadow-neu-lg hover:shadow-neu-md"
+  role="button"
+  aria-label="{{ "snippet.tw_sticky_header.open_cart" | t }}">
+  {% render 'tw-icon-bag' %}
+  <div class="absolute top-1/2 left-1/2 -translate-y-1 bg-buy-button w-5 h-5 rounded-full overflow-hidden after:absolute after:inset-0" id="bubble-nb-product">
+    {%- if cart != empty -%}
+      {%- if cart.item_count < 100 -%}
+        <span aria-hidden="true">{{ cart.item_count }}</span>
+      {%- endif -%}
+      <span class="sr-only">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
+    {%- endif -%}
+  </div>
+</button>

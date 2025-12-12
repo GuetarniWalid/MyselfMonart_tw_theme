@@ -16,10 +16,7 @@
             {{ block.settings.text }}
         {% endif %}
     </span>
-    <span class="main-price pr-6 whitespace-nowrap">
-        <span class="hidden lg:inline">
-            {{ 'products.product.price.total' | t }}
-        </span>
+    <span class="main-price whitespace-nowrap">
         {% if template.suffix == 'painting' or template.suffix == 'personalized' %}
             {{ product.price_min | money }}
         {% else %}

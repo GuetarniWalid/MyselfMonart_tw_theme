@@ -162,13 +162,6 @@
               , product: product
               , block: block %}
           {%- when 'buy' -%}
-            {% style %}:root
-              {
-                --color-action-rgb: {{ block.settings.main_color.red }}, 
-                {{ block.settings.main_color.green }}, 
-                {{ block.settings.main_color.blue }};
-              }
-            {% endstyle %}
             <div class="relative mt-10 mb-3 md:mb-8">
               <button
                 class="buy-button cart-button glass-anim"
@@ -196,7 +189,7 @@
                 , class: "absolute bottom-0 translate-y-1/4 md:translate-y-1/2 right-1/4 -rotate-[135deg] scale-90 md:scale-100" %}
               <template id="float-buy-button">
                 <button
-                  class="float-buy-button cart-button fixed bottom-20 md:bottom-10 left-1/2 -translate-x-1/2 2xs:gap-5 md:gap-6 w-[100px] max-w-[90%] xs:max-w-[450px] md:xs:max-w-[90%] transition-colors duration-500 scale-0 glass-anim"
+                  class="float-buy-button shadow-neu-lg hover:shadow-neu-md cart-button fixed bottom-3 px-4 md:px-6 justify-around left-4 2xs:gap-5 md:left-1/2 md:gap-6 w-[100px] md:bottom-6 max-w-[70%] transition-colors duration-500 scale-0 glass-anim"
                   data-variant-id="{{ product.first_available_variant.id }}"
                   data-template="{{ template.suffix }}"
                   data-product-id="{{ product.id }}">
@@ -750,12 +743,6 @@
             "default": false,
             "label": "t:sections.main-product.blocks.buy.settings.is_dynamic_variant.label",
             "info": "t:sections.main-product.blocks.buy.settings.is_dynamic_variant.info"
-          },
-          {
-            "type": "color",
-            "id": "main_color",
-            "label": "t:sections.main-product.blocks.buy.settings.main_color.label",
-            "default": "#04A777"
           },
           {
             "type": "header",
