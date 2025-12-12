@@ -128,16 +128,6 @@
     "collections_grid_DXKnVN": {
       "type": "collections-pages-grid",
       "blocks": {
-        "page_DGiw97": {
-          "type": "page",
-          "settings": {
-            "image": "shopify://shop_images/panneau-mural_decoratif-interieur.jpg",
-            "page": "poster-et-affiche",
-            "nb_columns": "col-span-6",
-            "lazy_load": true,
-            "paragraph": "<h3>Sublimez Vos Murs avec Notre Collection de Posters et Affiches</h3><p>Découvrez notre collection variée de posters et affiches, idéale pour toutes les pièces de votre maison. Que ce soit pour le salon, la chambre, ou le bureau, nos designs uniques apportent une touche artistique à chaque espace. Choisissez parmi une gamme de styles et harmonisez votre intérieur avec nos cadres en bois<strong><br/></strong></p>"
-          }
-        },
         "page_RLddx7": {
           "type": "page",
           "settings": {
@@ -153,14 +143,13 @@
           "settings": {
             "image": "shopify://shop_images/panneaux-decoratifs-muraux.jpg",
             "page": "papier-peint",
-            "nb_columns": "col-span-12",
+            "nb_columns": "col-span-6",
             "lazy_load": true,
             "paragraph": "<h3>Sublimez Vos Murs avec Nos Tapisseries et Papiers Peints Panoramiques</h3><p>Découvrez notre collection de <strong>tapisseries et papiers peints</strong> conçus pour transformer votre intérieur. Que vous souhaitiez habiller un grand mur blanc avec un <strong>papier peint panoramique</strong> ou customiser une <strong>tête de lit</strong> avec un <strong>motif jungle</strong> audacieux, nous avons ce qu'il vous faut. Pour une <strong>chambre d'enfant</strong>, nos <strong>papiers peints tendance</strong> aux motifs doux et ludiques créent une atmosphère accueillante et joyeuse. Chaque design est pensé pour s'adapter à vos envies, offrant style et originalité à chaque pièce de votre maison.</p>"
           }
         }
       },
       "block_order": [
-        "page_DGiw97",
         "page_RLddx7",
         "page_xPBNeE"
       ],
@@ -203,23 +192,23 @@
     "multicolumn_dWGLnx": {
       "type": "multicolumn",
       "blocks": {
-        "column_jdnQLQ": {
+        "column_HVEjBP": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/poster-encadrer-cadre-bois-noir-mat_7a12c613-00d0-4408-9d83-de9ab5dc1f94.jpg",
-            "title": "Poster & Affiche",
-            "text": "<p>Ajoutez une touche chaleureuse et personnalisée à vos murs avec nos posters encadrés, parfaits pour créer une atmosphère accueillante et conviviale.</p>",
+            "image": "shopify://shop_images/zoom-impression-toile-texture-couleurs.jpg",
+            "title": "Tableau Décoration",
+            "text": "<p>Des créations originales aux teintes profondes et intenses, avec une texture chaleureuse qui sublime vos murs et enrichit l’ambiance de votre intérieur</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
           }
         },
-        "column_HVEjBP": {
+        "column_jdnQLQ": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/mpression-toile-angle-tableau-paysage-montagne.jpg",
-            "title": "Tableau Décoration",
-            "text": "<p>Apportez une touche moderne et élégante à votre intérieur grâce à nos tableaux de décoration, alliant style contemporain et finitions impeccables.</p>",
+            "image": "shopify://shop_images/cadre-toile-americain-noir-mat.jpg",
+            "title": "Cadre Pour Toile",
+            "text": "<p>Des cadres élégants qui soulignent la beauté de votre toile et créent une harmonie parfaite dans votre intérieur.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -230,7 +219,7 @@
           "settings": {
             "image": "shopify://shop_images/impression-poster-haute-qualite-resolution-300dpi.jpg",
             "title": "Papier Peint",
-            "text": "<p>Transformez vos espaces avec du papier peint aux couleurs éclatantes et au design brillant, pour un rendu haut de gamme qui illumine vos murs.</p>",
+            "text": "<p>Des motifs élégants et des teintes profondes pour habiller vos murs et créer une décoration intérieure plus riche, plus expressive.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -238,8 +227,8 @@
         }
       },
       "block_order": [
-        "column_jdnQLQ",
         "column_HVEjBP",
+        "column_jdnQLQ",
         "column_a4RPCk"
       ],
       "settings": {

@@ -264,37 +264,6 @@
               "child_collection_list_6_section": []
             }
           },
-          "parent_collection_text_hLdRVm": {
-            "type": "parent_collection_text",
-            "settings": {
-              "title": "Poster & Affiche",
-              "link": "shopify://pages/poster-et-affiche",
-              "title_1_section": "Pièce",
-              "child_collection_list_1_section": [
-                "posters-affiches-salon",
-                "affiches-poster-cuisine",
-                "posters-affiches-bureau",
-                "posters-affiches-chambre-adulte",
-                "posters-affiches-chambre-bebe",
-                "posters-affiches-chambre-enfant"
-              ],
-              "title_2_section": "Style",
-              "child_collection_list_2_section": [
-                "posters-affiches-abstrait",
-                "posters-affiches-zen",
-                "posters-affiches-nature",
-                "posters-affiches-marvel-dc-comics"
-              ],
-              "title_3_section": "",
-              "child_collection_list_3_section": [],
-              "title_4_section": "",
-              "child_collection_list_4_section": [],
-              "title_5_section": "",
-              "child_collection_list_5_section": [],
-              "title_6_section": "",
-              "child_collection_list_6_section": []
-            }
-          },
           "page_only_bwjpih": {
             "type": "page_only",
             "settings": {
@@ -304,7 +273,6 @@
         },
         "block_order": [
           "parent_collection_text_mK6xzF",
-          "parent_collection_text_hLdRVm",
           "page_only_bwjpih"
         ],
         "settings": {
