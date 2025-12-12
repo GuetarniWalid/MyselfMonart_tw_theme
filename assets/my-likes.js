@@ -3,7 +3,7 @@ class MyLikes extends HTMLElement {
     this.priceFormat = this.dataset.priceFormat;
     const template = this.querySelector('template');
     const instance = template.content.cloneNode(true);
-    const productCardModel = instance.querySelector('li');
+    const productCardModel = instance.querySelector('anime-product-card');
     const productsLiked = await this.getProductsLiked();
     const productsLikedElements = await this.getProductsLikedElements(productsLiked, productCardModel);
     this.populateInstance(instance, productsLikedElements);
@@ -24,33 +24,61 @@ class MyLikes extends HTMLElement {
 
   async getProductLikedElement(handle, productCardModel) {
     const product = await this.fetchProductByHandle(handle);
-    const model = productCardModel.cloneNode(true);
+    const wrapper = productCardModel.cloneNode(true);
+    const li = wrapper.querySelector('li');
 
-    model.querySelector('h3 a').href = `/products/${handle}`;
-    const svg = model.querySelector('h3 a span svg');
-    model.querySelector('h3 a').textContent = product.title + ' ';
-    model.querySelector('h3 a').appendChild(svg);
+    // Update product ID on the li element
+    if (li) {
+      li.id = product.id;
+    }
 
-    model.querySelector('img').src = `${product.image.src}&width=533`;
-    model.querySelector('img').srcset = this.buildShopifySrcset(product.image.src);
-    model.querySelector('img').alt = product.image.alt;
-    model.querySelector('img').width = product.image.width;
-    model.querySelector('img').height = product.image.height;
+    // Update product link
+    const titleLink = wrapper.querySelector('h3 a');
+    if (titleLink) {
+      titleLink.href = `/products/${handle}`;
+      titleLink.dataset.fullTitle = product.title.toUpperCase();
+      const svg = wrapper.querySelector('h3 a span svg');
+      titleLink.textContent = product.title.toUpperCase() + ' ';
+      if (svg) {
+        titleLink.appendChild(svg);
+      }
+    }
 
-    model.querySelector('img + img').src = `${product.images[1].src}&width=533`;
-    model.querySelector('img + img').srcset = this.buildShopifySrcset(product.images[1].src);
-    model.querySelector('img + img').alt = product.images[1].alt;
-    model.querySelector('img + img').width = product.images[1].width;
-    model.querySelector('img + img').height = product.images[1].height;
+    // Update first image
+    const firstImg = wrapper.querySelector('img');
+    const image = product.images[1] ?? product.image;
+    if (firstImg && image) {
+      firstImg.src = `${image.src}&width=533`;
+      firstImg.srcset = this.buildShopifySrcset(image.src);
+      firstImg.alt = image.alt;
+      firstImg.width = image.width;
+      firstImg.height = image.height;
+    }
 
-    model.querySelector('.price-and-likes p strong').textContent = this.formatPrice(product.variants[0].price, this.priceFormat);
+    // Update price
+    const priceElement = wrapper.querySelector('.price-and-likes p strong');
+    if (priceElement && product.variants && product.variants[0]) {
+      priceElement.textContent = this.formatPrice(product.variants[0].price, this.priceFormat);
+    }
 
-    model.querySelector('.total-users-likes-count').parentElement.remove();
-    model.querySelector('.like').classList.add('is-liked');
-    model.querySelector('my-like-button').dataset.productId = product.id;
-    model.querySelector('my-like-button').dataset.productHandle = product.handle;
+    // Remove likes count and mark as liked
+    const likesCount = wrapper.querySelector('.total-users-likes-count');
+    if (likesCount) {
+      likesCount.remove();
+    }
 
-    return model;
+    const likeButton = wrapper.querySelector('.like');
+    if (likeButton) {
+      likeButton.classList.add('is-liked');
+    }
+
+    const myLikeButton = wrapper.querySelector('my-like-button');
+    if (myLikeButton) {
+      myLikeButton.dataset.productId = product.id;
+      myLikeButton.dataset.productHandle = product.handle;
+    }
+
+    return wrapper;
   }
 
   async fetchProductByHandle(handle) {

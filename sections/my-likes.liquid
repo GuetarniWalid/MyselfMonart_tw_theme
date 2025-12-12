@@ -5,18 +5,18 @@
 
 <my-likes data-price-format="{{ first_product.price | money }}">
   <template>
-    <nav role="navigation">
-      <ul data-id="{{ section.id }}" class="grid sm:grid-cols-2 gap-3 lg:grid-cols-3 pb-3 mb-14">
-        <li id="{{ first_product.id }}" class="relative group border-main border-1 h-full">
+    <ul data-id="{{ section.id }}" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 md:gap-10 pb-3">
+      <anime-product-card>
+        <li id="{{ first_product.id }}" class="relative group h-full">
           {% render 'card-product'
             , product: first_product
-            , show_secondary_image: section.settings.show_secondary_image
+            , show_secondary_image: false
             , lazy_load: false
             , section_id: section.id
           %}
         </li>
-      </ul>
-    </nav>
+      </anime-product-card>
+    </ul>
   </template>
 </my-likes>
 <div class="flex justify-center my-40">

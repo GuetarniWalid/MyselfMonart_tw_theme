@@ -28,10 +28,14 @@ class MyLikeButton extends HTMLElement {
 
   connectedCallback() {
     const productLikedIds = this.getProductLikedIds();
-    productLikedIds.forEach((productLikedId) => {
-      const liToLiked = document.getElementById(productLikedId) || document.querySelector(`my-like-button[data-product-id="${productLikedId}"]`);
-      liToLiked?.querySelector('button.like').classList.add('is-liked');
-    });
+
+    // Only mark THIS button as liked if its product is in the liked list
+    if (productLikedIds.includes(this.productId)) {
+      const likeButton = this.querySelector('button.like');
+      if (likeButton) {
+        likeButton.classList.add('is-liked');
+      }
+    }
 
     this.addEventListener('click', async () => {
       if (this.querySelector('button.like').classList.contains('disabled')) return;
@@ -98,14 +102,25 @@ class MyLikeButton extends HTMLElement {
   deleteLiInLikedPage() {
     const myLikesComponent = document.querySelector('my-likes');
     if (!myLikesComponent) return;
-    this.closest('li').remove();
+
+    // Remove the entire anime-product-card wrapper, or fallback to li
+    const cardWrapper = this.closest('anime-product-card');
+    if (cardWrapper) {
+      cardWrapper.remove();
+    } else {
+      this.closest('li')?.remove();
+    }
+
     const productLikedIds = this.getProductLikedIds();
     const isLastLi = productLikedIds.length === 0;
     if (isLastLi) myLikesComponent.showEmptyMessage();
   }
 
   updateLikeButtonCount() {
-    document.querySelector('likes-count').updateCount();
+    const likesCountElement = document.querySelector('likes-count');
+    if (likesCountElement) {
+      likesCountElement.updateCount();
+    }
   }
 
   async updateLikesCountOnServer(id, action) {

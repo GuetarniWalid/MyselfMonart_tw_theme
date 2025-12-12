@@ -33,13 +33,17 @@
         }
 
         updateCount() {
-            const likedLis = localStorage.getItem('likedLis');
-            const likedLisArr = JSON.parse(likedLis) || [];
-            const count = likedLisArr.length;
-            this.likeCount = this.likeCount || this.querySelector('span')
+            const productLikedIds = localStorage.getItem('productLikedIds');
+            const productLikedIdsArr = JSON.parse(productLikedIds) || [];
+            const count = productLikedIdsArr.length;
+            this.likeCount = this.likeCount || this.querySelector('span');
             if(!this.likeCount) return;
-            if(count > 0) this.likeCount.textContent = count;
-            else this.likeCount.classList.add('hidden');
+            if(count > 0) {
+                this.likeCount.textContent = count;
+                this.likeCount.classList.remove('hidden');
+            } else {
+                this.likeCount.classList.add('hidden');
+            }
         }
     }
     customElements.define('likes-count', LikesCount);
