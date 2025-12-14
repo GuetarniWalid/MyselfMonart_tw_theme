@@ -13,12 +13,18 @@
               tabindex="0"
               class="flex gap-3">
               {%- if product.featured_media != blank -%}
-                <img
-                  class="rounded"
-                  src="{{ product.featured_media | image_url: width: 150 }}"
-                  alt="{% if product.metafields.meta_object.media.value.alts.value[0] %}{{ product.metafields.meta_object.media.value.alts.value[0] | escape }}{% else %}{{ product.featured_media.alt | escape }}{% endif %}"
-                  width="50"
-                  height="{{ 50 | divided_by: product.featured_media.preview_image.aspect_ratio }}">
+                <div class="skeleton rounded overflow-hidden flex-shrink-0" style="width: 50px; height: {{ 50 | divided_by: product.featured_media.preview_image.aspect_ratio }}px">
+                  <img
+                    class="lqip rounded w-full h-full object-cover"
+                    data-srcset="{%- if product.featured_media.width >= 100 -%}{{ product.featured_media | image_url: width: 100 }} 100w,{%- endif -%}
+                      {%- if product.featured_media.width >= 150 -%}{{ product.featured_media | image_url: width: 150 }} 150w,{%- endif -%}
+                      {{ product.featured_media | image_url }} {{ product.featured_media.width }}w"
+                    src="{{ product.featured_media | image_url: width: 10 }}"
+                    sizes="50px"
+                    alt="{% if product.metafields.meta_object.media.value.alts.value[0] %}{{ product.metafields.meta_object.media.value.alts.value[0] | escape }}{% else %}{{ product.featured_media.alt | escape }}{% endif %}"
+                    width="50"
+                    height="{{ 50 | divided_by: product.featured_media.preview_image.aspect_ratio }}">
+                </div>
               {%- endif -%}
               <div>
                 <h3 class="text-sm mb-1">{{ product.title }}</h3>

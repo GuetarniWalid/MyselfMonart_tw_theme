@@ -566,6 +566,11 @@ class PredictiveSearch extends HTMLElement {
 
     this.setLiveRegionResults();
     this.openList();
+
+    // Apply unblur effect to newly loaded images
+    if (window.removeSkeletonOnImagesLoad) {
+      window.removeSkeletonOnImagesLoad(this.predictiveSearchResults);
+    }
   }
 
   setLiveRegionResults() {

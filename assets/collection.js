@@ -77,6 +77,10 @@ class InfiniteScroll extends HTMLElement {
     direction === this.bottom
       ? this.after(node)
       : this.keepSameScrollPosition(node);
+
+    if (window.removeSkeletonOnImagesLoad) {
+      window.removeSkeletonOnImagesLoad(node);
+    }
   }
 
   keepSameScrollPosition(node) {

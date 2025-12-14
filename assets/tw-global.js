@@ -56,8 +56,8 @@ trapFocus = (e, firstFocusableElement, lastFocusableElement) => {
   }
 };
 
-function removeSkeletonOnImagesLoad() {
-  const images = document.querySelectorAll('img');
+function removeSkeletonOnImagesLoad(container = document) {
+  const images = container.querySelectorAll('img');
 
   images.forEach((image) => {
     // Check if this is an LQIP image that needs to be swapped
@@ -112,6 +112,9 @@ function removeSkeletonOnImagesLoad() {
   });
 }
 removeSkeletonOnImagesLoad();
+
+// Make the function globally available for infinite scroll
+window.removeSkeletonOnImagesLoad = removeSkeletonOnImagesLoad;
 
 function replacePlaceholderImages() {
   const medias = document.querySelectorAll(

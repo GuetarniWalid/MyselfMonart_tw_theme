@@ -44,12 +44,18 @@ class MyLikes extends HTMLElement {
       }
     }
 
-    // Update first image
+    // Update first image while preserving LQIP structure
     const firstImg = wrapper.querySelector('img');
     const image = product.images[1] ?? product.image;
     if (firstImg && image) {
-      firstImg.src = `${image.src}&width=533`;
-      firstImg.srcset = this.buildShopifySrcset(image.src);
+      // Keep the LQIP placeholder in src (10px)
+      firstImg.src = `${image.src}&width=10`;
+      // Set full resolution in data-srcset for LQIP system
+      firstImg.setAttribute('data-srcset', this.buildShopifySrcset(image.src));
+      // Ensure lqip class is present
+      if (!firstImg.classList.contains('lqip')) {
+        firstImg.classList.add('lqip');
+      }
       firstImg.alt = image.alt;
       firstImg.width = image.width;
       firstImg.height = image.height;
@@ -113,6 +119,11 @@ class MyLikes extends HTMLElement {
     productsLikedElements.forEach(element => {
       ul.appendChild(element);
     });
+
+    // Apply unblur effect to newly loaded images
+    if (window.removeSkeletonOnImagesLoad) {
+      window.removeSkeletonOnImagesLoad(ul);
+    }
   }
 
   hideLoader() {
