@@ -148,11 +148,15 @@ class CartItem extends HTMLElement {
       body: JSON.stringify({
         line: this.index,
         quantity,
-        sections: `${this.cartDrawerSectionId},tw-header-painting`,
+        sections: `${this.cartDrawerSectionId}`,
       }),
     });
     const json = await response.json();
-    this.renderNewSections(json);
+
+    // Fetch current cart state to update bubble
+    const cart = await this.getCartData();
+
+    this.renderNewSections(json, cart);
     this.setFocus();
   }
 
@@ -183,30 +187,45 @@ class CartItem extends HTMLElement {
       },
       body: JSON.stringify({
         updates,
-        sections: `${this.cartDrawerSectionId},tw-header-painting`,
+        sections: `${this.cartDrawerSectionId}`,
       }),
     });
     const json = await response.json();
-    this.renderNewSections(json);
+
+    // Fetch current cart state to update bubble
+    const cart = await this.getCartData();
+
+    this.renderNewSections(json, cart);
     this.setFocus();
   }
 
-  renderNewSections(json) {
+  renderNewSections(json, cart) {
+    // Update bubble manually with cart item count
     const bubble = document.getElementById('bubble-nb-product');
-    const newBubble = this.getSectionInnerJSON(
-      json.sections['tw-header-painting'],
-      '#bubble-nb-product',
-    );
-    bubble.innerHTML = newBubble;
+    if (bubble && cart) {
+      if (cart.item_count > 0) {
+        const itemCountHTML = cart.item_count < 100
+          ? `<span aria-hidden="true">${cart.item_count}</span>`
+          : '';
+        const srOnlyHTML = `<span class="sr-only">Cart count: ${cart.item_count}</span>`;
+        bubble.innerHTML = itemCountHTML + srOnlyHTML;
+      } else {
+        bubble.innerHTML = '';
+      }
+    }
 
     const sectionDrawer = document.getElementById(
       'shopify-section-tw-cart-drawer',
     );
-    const newSectionDrawer = this.getSectionInnerJSON(
-      json.sections['tw-cart-drawer'],
-      '#shopify-section-tw-cart-drawer',
-    );
-    sectionDrawer.innerHTML = newSectionDrawer;
+    if (sectionDrawer) {
+      const newSectionDrawer = this.getSectionInnerJSON(
+        json.sections['tw-cart-drawer'],
+        '#shopify-section-tw-cart-drawer',
+      );
+      if (newSectionDrawer) {
+        sectionDrawer.innerHTML = newSectionDrawer;
+      }
+    }
   }
 
   getSectionInnerJSON(json, selector) {
@@ -275,7 +294,7 @@ class QuickAddToCart extends HTMLElement {
 
   async makeOrder(itemIds) {
     const response = await fetch(
-      '/cart/add.js?sections=tw-cart-drawer,tw-header-painting',
+      '/cart/add.js?sections=tw-cart-drawer',
       {
         method: 'POST',
         headers: {
@@ -286,7 +305,12 @@ class QuickAddToCart extends HTMLElement {
     );
     if (!response.ok) throw new Error("Une erreur inattendu s'est produite.");
     const json = await response.json();
-    this.renderNewSections(json);
+
+    // Fetch current cart state to update bubble
+    const cartResponse = await fetch('/cart.js');
+    const cart = await cartResponse.json();
+
+    this.renderNewSections(json, cart);
     const closeButton = document.getElementById('addons-drawer-close-button');
     closeButton.click();
     setTimeout(() => {
@@ -316,22 +340,33 @@ class QuickAddToCart extends HTMLElement {
     });
   }
 
-  renderNewSections({ items, sections }) {
+  renderNewSections({ sections }, cart) {
+    // Update bubble manually with cart item count
     const bubble = document.getElementById('bubble-nb-product');
-    const newBubble = this.getSectionInnerJSON(
-      sections['tw-header-painting'],
-      '#bubble-nb-product',
-    );
-    bubble.innerHTML = newBubble;
+    if (bubble && cart) {
+      if (cart.item_count > 0) {
+        const itemCountHTML = cart.item_count < 100
+          ? `<span aria-hidden="true">${cart.item_count}</span>`
+          : '';
+        const srOnlyHTML = `<span class="sr-only">Cart count: ${cart.item_count}</span>`;
+        bubble.innerHTML = itemCountHTML + srOnlyHTML;
+      } else {
+        bubble.innerHTML = '';
+      }
+    }
 
     const sectionDrawer = document.getElementById(
       'shopify-section-tw-cart-drawer',
     );
-    const newSectionDrawer = this.getSectionInnerJSON(
-      sections['tw-cart-drawer'],
-      '#shopify-section-tw-cart-drawer',
-    );
-    sectionDrawer.innerHTML = newSectionDrawer;
+    if (sectionDrawer) {
+      const newSectionDrawer = this.getSectionInnerJSON(
+        sections['tw-cart-drawer'],
+        '#shopify-section-tw-cart-drawer',
+      );
+      if (newSectionDrawer) {
+        sectionDrawer.innerHTML = newSectionDrawer;
+      }
+    }
   }
 
   getSectionInnerJSON(json, selector) {
