@@ -4,13 +4,7 @@
   assign search_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
 -%}
 
-{%- if search.performed -%}
-  <h1 class="text-center mt-14 mb-4 text-3xl">{{ 'general.search.search_performed' | t }}</h1>
-{%- else -%}
-  <h1 class="text-center mt-14 mb-4 text-3xl">{{ 'general.search.search' | t }}</h1>
-{%- endif -%}
-
-<div class="relative h-24">
+<div class="relative h-24 mt-6 md:mt-14">
   {% render 'tw-predictive-search', in_header: false %}
 </div>
 
