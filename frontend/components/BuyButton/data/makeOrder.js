@@ -69,7 +69,6 @@ function renderNewSections({ sections }, cart) {
       sections['tw-cart-drawer'],
       '#shopify-section-tw-cart-drawer',
     );
-    console.log('newSectionDrawer content:', newSectionDrawer);
     if (newSectionDrawer !== null) {
       sectionDrawer.innerHTML = newSectionDrawer;
       console.log('✅ sectionDrawer updated successfully');
