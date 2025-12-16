@@ -19,12 +19,135 @@
         "enable_lazy_loading": true
       }
     },
-    "1198c25f-e6b6-405b-aa76-db2afd719caf": {
+    "rich_text_bwfdwX": {
       "type": "rich-text",
+      "blocks": {
+        "heading_bzccjE": {
+          "type": "heading",
+          "settings": {
+            "heading": "Tableaux modernes et papier peint artistique",
+            "markup": "h2",
+            "heading_size": "text-3xl"
+          }
+        },
+        "text_h7DkAc": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Découvrez nos créations murales en ligne, imaginées pour chaque pièce de votre intérieur. Explorez nos collections et choisissez le tableau qui fera écho à votre univers</p>",
+            "text_size": "text-xl",
+            "is_lighten": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_bzccjE",
+        "text_h7DkAc"
+      ],
+      "disabled": true,
+      "name": "t:sections.rich-text.presets.name",
       "settings": {
-        "content_alignment": "center",
+        "content_alignment": "text-left",
         "padding_top": "pt-0",
         "padding_bottom": "pb-0"
+      }
+    },
+    "product_list_hVQNEU": {
+      "type": "product-list",
+      "blocks": {
+        "featured_product_dmbfai": {
+          "type": "featured_product",
+          "settings": {
+            "product": "tableau-sur-toile-cheval-abstrait-en-mouvement"
+          }
+        },
+        "featured_product_M6ViPp": {
+          "type": "featured_product",
+          "settings": {
+            "product": "toile-decorative-visage-abstrait-emotion-profonde"
+          }
+        },
+        "featured_product_43ydD8": {
+          "type": "featured_product",
+          "settings": {
+            "product": "grand-tableau-yin-yang-bleu-et-or-harmonie-zen"
+          }
+        },
+        "featured_product_EaCQ6f": {
+          "type": "featured_product",
+          "settings": {
+            "product": "grand-tableau-oiseau-et-main-serenite-bleue"
+          }
+        },
+        "featured_product_gb3pM4": {
+          "type": "featured_product",
+          "settings": {
+            "product": "tableau-sur-toile-calligraphie-arabe-bleue-apaisante"
+          }
+        },
+        "featured_product_7BHWnW": {
+          "type": "featured_product",
+          "settings": {
+            "product": "tableau-design-frida-kahlo-nature-eclatante"
+          }
+        },
+        "featured_product_DBMph8": {
+          "type": "featured_product",
+          "settings": {
+            "product": "toile-contemporaine-le-petit-prince-poesie-etoilee"
+          }
+        },
+        "featured_product_4BG7QV": {
+          "type": "featured_product",
+          "settings": {
+            "product": "decor-mural-samourai-contraste-et-serenite"
+          }
+        },
+        "featured_product_nRFEhj": {
+          "type": "featured_product",
+          "settings": {
+            "product": "tableau-decoratif-maternite-africaine-chaleur-et-amour"
+          }
+        },
+        "featured_product_MkeHXi": {
+          "type": "featured_product",
+          "settings": {
+            "product": "tableau-design-frida-kahlo-vibrance-inspirante"
+          }
+        },
+        "featured_product_ULG9yE": {
+          "type": "featured_product",
+          "settings": {
+            "product": "creation-artistique-montagnes-du-japon-apaisantes"
+          }
+        },
+        "featured_product_DLxBnM": {
+          "type": "featured_product",
+          "settings": {
+            "product": "tableau-moderne-muse-africaine-eclat-sublime"
+          }
+        }
+      },
+      "block_order": [
+        "featured_product_dmbfai",
+        "featured_product_M6ViPp",
+        "featured_product_43ydD8",
+        "featured_product_EaCQ6f",
+        "featured_product_gb3pM4",
+        "featured_product_7BHWnW",
+        "featured_product_DBMph8",
+        "featured_product_4BG7QV",
+        "featured_product_nRFEhj",
+        "featured_product_MkeHXi",
+        "featured_product_ULG9yE",
+        "featured_product_DLxBnM"
+      ],
+      "disabled": true,
+      "name": "t:sections.product-list.presets.name",
+      "settings": {
+        "title": "",
+        "button_text": "Tout Afficher",
+        "button_link": "shopify://collections",
+        "to_obfuscate": true
       }
     },
     "badges_QiyDmQ": {
@@ -83,6 +206,70 @@
         "nb_columns_on_mobile": "2"
       }
     },
+    "collections_grid_DXKnVN": {
+      "type": "collections-pages-grid",
+      "blocks": {
+        "collection_WMUmaF": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify://shop_images/collection-tableau-best-seller.jpg",
+            "collection": "bestsellers-1",
+            "nb_columns": "col-span-6",
+            "lazy_load": true,
+            "paragraph": "<p>Découvrez notre collection de tableaux best-sellers, des œuvres qui séduisent dès le premier regard et trouvent facilement leur place dans tous les intérieurs. Ces tableaux font partie des choix préférés de nos clients, appréciés pour leur capacité à transformer une pièce et à créer une ambiance harmonieuse. Chaque création habille le mur avec élégance, apporte de la profondeur à l’espace et donne cette sensation agréable d’un intérieur soigné et chaleureux, que l’on aime regarder jour après jour.</p>"
+          }
+        },
+        "collection_6KBgf7": {
+          "type": "collection",
+          "settings": {
+            "image": "shopify://shop_images/collection-tableau-noir-et-blanc.jpg",
+            "collection": "tableau-abstrait",
+            "nb_columns": "col-span-3",
+            "lazy_load": true,
+            "paragraph": "<p>Découvrez notre collection de tableaux abstraits, des œuvres qui apportent du caractère tout en douceur à votre intérieur. Les formes et les couleurs se répondent naturellement, laissant place à l’émotion et à l’interprétation, sans jamais alourdir l’espace. Ces tableaux habillent le mur avec subtilité et créent une ambiance équilibrée, moderne et apaisante. Dans un salon, une chambre ou un espace de travail, l’abstrait devient une évidence, pour un intérieur harmonieux, élégant et agréable à vivre au quotidien.</p>"
+          }
+        },
+        "page_RLddx7": {
+          "type": "page",
+          "settings": {
+            "image": "shopify://shop_images/deco-murale-colore-tableau-toile-femme-africaine.jpg",
+            "page": "tableau-decoration",
+            "nb_columns": "col-span-3",
+            "lazy_load": true,
+            "paragraph": "<h3>Sublimez Votre Intérieur avec Nos Tableaux en Toile</h3><p>Découvrez notre collection de tableaux sur toile, imaginée pour apporter une vraie sensation de bien-être à votre intérieur. La toile révèle les couleurs avec délicatesse et offre une texture subtile qui donne de la vie à vos murs, sans en faire trop. Chaque œuvre trouve naturellement sa place dans un salon, une chambre ou un espace de travail, et participe à créer une atmosphère apaisante et harmonieuse. Accrochés au mur, ces tableaux transforment l’espace et donnent cette impression agréable d’un intérieur soigné, où l’on se sent bien, tout simplement.</p>"
+          }
+        },
+        "page_xPBNeE": {
+          "type": "page",
+          "settings": {
+            "image": "shopify://shop_images/panneaux-decoratifs-muraux.jpg",
+            "page": "papier-peint",
+            "nb_columns": "col-span-12",
+            "lazy_load": true,
+            "paragraph": "<h3>Sublimez Vos Murs avec Nos Tapisseries et Papiers Peints Panoramiques</h3><p>Découvrez notre collection de <strong>tapisseries et papiers peints</strong> conçus pour transformer votre intérieur. Que vous souhaitiez habiller un grand mur blanc avec un <strong>papier peint panoramique</strong> ou customiser une <strong>tête de lit</strong> avec un <strong>motif jungle</strong> audacieux, nous avons ce qu'il vous faut. Pour une <strong>chambre d'enfant</strong>, nos <strong>papiers peints tendance</strong> aux motifs doux et ludiques créent une atmosphère accueillante et joyeuse. Chaque design est pensé pour s'adapter à vos envies, offrant style et originalité à chaque pièce de votre maison.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "collection_WMUmaF",
+        "collection_6KBgf7",
+        "page_RLddx7",
+        "page_xPBNeE"
+      ],
+      "settings": {
+        "title": "Nos collection en vedette",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "1198c25f-e6b6-405b-aa76-db2afd719caf": {
+      "type": "rich-text",
+      "settings": {
+        "content_alignment": "center",
+        "padding_top": "pt-0",
+        "padding_bottom": "pb-0"
+      }
+    },
     "shifted_image_carousel_cJeF34": {
       "type": "shifted-image-text",
       "blocks": {
@@ -125,40 +312,6 @@
         "dynamic_secondary_color": "#112e3b"
       }
     },
-    "collections_grid_DXKnVN": {
-      "type": "collections-pages-grid",
-      "blocks": {
-        "page_RLddx7": {
-          "type": "page",
-          "settings": {
-            "image": "shopify://shop_images/deco-murale-colore-tableau-toile-femme-africaine.jpg",
-            "page": "tableau-decoration",
-            "nb_columns": "col-span-6",
-            "lazy_load": true,
-            "paragraph": "<h3>Sublimez Votre Intérieur avec Nos Tableaux en Plexiglas, Aluminium et Toile</h3><p>Découvrez notre collection de <strong>tableaux de décoration</strong> en plexiglas, aluminium et toile, conçus pour s'adapter à tous les styles d'intérieur. Le plexiglas apporte une brillance éclatante et moderne, l'aluminium offre une finition métallique subtile et durable, tandis que la toile traditionnelle ajoute une texture chaleureuse et artistique. Chaque matériau transforme vos murs en œuvres d'art uniques, que vous préfériez un style minimaliste, industriel, ou classique. Nos tableaux, légers et résistants, sont parfaits pour sublimer n'importe quel espace de votre maison.</p>"
-          }
-        },
-        "page_xPBNeE": {
-          "type": "page",
-          "settings": {
-            "image": "shopify://shop_images/panneaux-decoratifs-muraux.jpg",
-            "page": "papier-peint",
-            "nb_columns": "col-span-6",
-            "lazy_load": true,
-            "paragraph": "<h3>Sublimez Vos Murs avec Nos Tapisseries et Papiers Peints Panoramiques</h3><p>Découvrez notre collection de <strong>tapisseries et papiers peints</strong> conçus pour transformer votre intérieur. Que vous souhaitiez habiller un grand mur blanc avec un <strong>papier peint panoramique</strong> ou customiser une <strong>tête de lit</strong> avec un <strong>motif jungle</strong> audacieux, nous avons ce qu'il vous faut. Pour une <strong>chambre d'enfant</strong>, nos <strong>papiers peints tendance</strong> aux motifs doux et ludiques créent une atmosphère accueillante et joyeuse. Chaque design est pensé pour s'adapter à vos envies, offrant style et originalité à chaque pièce de votre maison.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "page_RLddx7",
-        "page_xPBNeE"
-      ],
-      "settings": {
-        "title": "Explorez nos Collections",
-        "padding_top": "pt-0",
-        "padding_bottom": "pb-0"
-      }
-    },
     "rich_text_DUh7mV": {
       "type": "rich-text",
       "blocks": {
@@ -189,13 +342,69 @@
         "padding_bottom": "pb-0"
       }
     },
+    "badges_cHPDPq": {
+      "type": "badges",
+      "blocks": {
+        "svg_block_kPN934": {
+          "type": "svg_block",
+          "settings": {
+            "badge_logo": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 256 256\"><path fill=\"currentColor\" d=\"M148 48v160a12 12 0 0 1-24 0V69.19l-21.83 13.1a12 12 0 0 1-12.34-20.58l40-24A12 12 0 0 1 148 48\"></path></svg>",
+            "logo_size": 45,
+            "background_plus_border": true,
+            "heading": "CHOISISSEZ",
+            "text": "Choisissez votre tableau deco parmi la large collection de tableaux"
+          }
+        },
+        "svg_block_UtVXBA": {
+          "type": "svg_block",
+          "settings": {
+            "badge_logo": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M14.121 5.879A3 3 0 0 0 9 8a1 1 0 0 1-2 0a5 5 0 1 1 8.535 3.535L9.88 17.193A3 3 0 0 0 9.016 19H16a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1v-.686a5 5 0 0 1 1.464-3.536l5.657-5.657a3 3 0 0 0 0-4.242\" clip-rule=\"evenodd\"></path></svg>",
+            "logo_size": 45,
+            "background_plus_border": true,
+            "heading": "PERSONNALISEZ",
+            "text": "Configurez la taille et le support de votre tableau"
+          }
+        },
+        "svg_block_pTNkWn": {
+          "type": "svg_block",
+          "settings": {
+            "badge_logo": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2.5\" d=\"M8 19a5 5 0 1 0 3-9l5-6H8\"></path></svg>",
+            "logo_size": 45,
+            "background_plus_border": true,
+            "heading": "COMMANDEZ",
+            "text": "Nous fabriquons votre tableau et nous chargeons de vous l'envoyer."
+          }
+        },
+        "svg_block_mLd4kz": {
+          "type": "svg_block",
+          "settings": {
+            "badge_logo": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2.5\" d=\"m10 4l-1.522 7.608A2 2 0 0 0 10.44 14H16m0 0V8m0 6v6\"></path></svg>",
+            "logo_size": 45,
+            "background_plus_border": true,
+            "heading": "ADMIREZ",
+            "text": "Accrochez votre tableau et profitez du résultat !"
+          }
+        }
+      },
+      "block_order": [
+        "svg_block_kPN934",
+        "svg_block_UtVXBA",
+        "svg_block_pTNkWn",
+        "svg_block_mLd4kz"
+      ],
+      "settings": {
+        "title": "",
+        "nb_columns_on_computer": "4",
+        "nb_columns_on_mobile": "1"
+      }
+    },
     "multicolumn_dWGLnx": {
       "type": "multicolumn",
       "blocks": {
         "column_HVEjBP": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/zoom-impression-toile-texture-couleurs.jpg",
+            "image": "shopify://shop_images/toile-cotton-abtrait_forme-geometrique.jpg",
             "title": "Tableau Décoration",
             "text": "<p>Des créations originales aux teintes profondes et intenses, avec une texture chaleureuse qui sublime vos murs et enrichit l’ambiance de votre intérieur</p>",
             "link_label": "",
@@ -206,7 +415,7 @@
         "column_jdnQLQ": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/cadre-toile-americain-noir-mat.jpg",
+            "image": "shopify://shop_images/cadre-americain-noir-mat-toile-femme-rouge-abstrait.jpg",
             "title": "Cadre Pour Toile",
             "text": "<p>Des cadres élégants qui soulignent la beauté de votre toile et créent une harmonie parfaite dans votre intérieur.</p>",
             "link_label": "",
@@ -217,7 +426,7 @@
         "column_a4RPCk": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/impression-poster-haute-qualite-resolution-300dpi.jpg",
+            "image": "shopify://shop_images/papier-peint-zen-asiatique-sakura.jpg",
             "title": "Papier Peint",
             "text": "<p>Des motifs élégants et des teintes profondes pour habiller vos murs et créer une décoration intérieure plus riche, plus expressive.</p>",
             "link_label": "",
@@ -302,62 +511,6 @@
         "padding_bottom": "pb-0"
       }
     },
-    "badges_cHPDPq": {
-      "type": "badges",
-      "blocks": {
-        "svg_block_kPN934": {
-          "type": "svg_block",
-          "settings": {
-            "badge_logo": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 256 256\"><path fill=\"currentColor\" d=\"M148 48v160a12 12 0 0 1-24 0V69.19l-21.83 13.1a12 12 0 0 1-12.34-20.58l40-24A12 12 0 0 1 148 48\"></path></svg>",
-            "logo_size": 45,
-            "background_plus_border": true,
-            "heading": "CHOISISSEZ",
-            "text": "Choisissez votre tableau deco parmi la large collection de tableaux"
-          }
-        },
-        "svg_block_UtVXBA": {
-          "type": "svg_block",
-          "settings": {
-            "badge_logo": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M14.121 5.879A3 3 0 0 0 9 8a1 1 0 0 1-2 0a5 5 0 1 1 8.535 3.535L9.88 17.193A3 3 0 0 0 9.016 19H16a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1v-.686a5 5 0 0 1 1.464-3.536l5.657-5.657a3 3 0 0 0 0-4.242\" clip-rule=\"evenodd\"></path></svg>",
-            "logo_size": 45,
-            "background_plus_border": true,
-            "heading": "PERSONNALISEZ",
-            "text": "Configurez la taille et le support de votre tableau"
-          }
-        },
-        "svg_block_pTNkWn": {
-          "type": "svg_block",
-          "settings": {
-            "badge_logo": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2.5\" d=\"M8 19a5 5 0 1 0 3-9l5-6H8\"></path></svg>",
-            "logo_size": 45,
-            "background_plus_border": true,
-            "heading": "COMMANDEZ",
-            "text": "Nous fabriquons votre tableau et nous chargeons de vous l'envoyer."
-          }
-        },
-        "svg_block_mLd4kz": {
-          "type": "svg_block",
-          "settings": {
-            "badge_logo": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2.5\" d=\"m10 4l-1.522 7.608A2 2 0 0 0 10.44 14H16m0 0V8m0 6v6\"></path></svg>",
-            "logo_size": 45,
-            "background_plus_border": true,
-            "heading": "ADMIREZ",
-            "text": "Accrochez votre tableau et profitez du résultat !"
-          }
-        }
-      },
-      "block_order": [
-        "svg_block_kPN934",
-        "svg_block_UtVXBA",
-        "svg_block_pTNkWn",
-        "svg_block_mLd4kz"
-      ],
-      "settings": {
-        "title": "",
-        "nb_columns_on_computer": "4",
-        "nb_columns_on_mobile": "1"
-      }
-    },
     "rich_text_VQq9NW": {
       "type": "rich-text",
       "blocks": {
@@ -391,14 +544,16 @@
   },
   "order": [
     "2b3b46e7-881c-4925-96cf-76c7ebf203c4",
-    "1198c25f-e6b6-405b-aa76-db2afd719caf",
+    "rich_text_bwfdwX",
+    "product_list_hVQNEU",
     "badges_QiyDmQ",
-    "shifted_image_carousel_cJeF34",
     "collections_grid_DXKnVN",
+    "1198c25f-e6b6-405b-aa76-db2afd719caf",
+    "shifted_image_carousel_cJeF34",
     "rich_text_DUh7mV",
+    "badges_cHPDPq",
     "multicolumn_dWGLnx",
     "rich_text_83wpVf",
-    "badges_cHPDPq",
     "rich_text_VQq9NW"
   ]
 }
