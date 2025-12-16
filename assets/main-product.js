@@ -182,6 +182,11 @@ class PopupImage extends HTMLElement {
     this.popup.addEventListener('keydown', (e) =>
       trapFocus(e, this.closePopupButton),
     );
+
+    // Apply unblur effect to popup images (cloned from template)
+    if (window.removeSkeletonOnImagesLoad) {
+      window.removeSkeletonOnImagesLoad(this);
+    }
   }
 }
 customElements.define('popup-image', PopupImage);
