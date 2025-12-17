@@ -18,7 +18,7 @@ const Input = forwardRef(({ type, name, label, errorMessage }, ref) => {
         type={type}
         name={name}
         required
-        className="block w-full h-14 rounded px-4"
+        className="block w-full h-14 rounded px-4 border border-main"
         ref={ref}
         onChange={(e) => {
           setCustomerDetails(prev => ({
