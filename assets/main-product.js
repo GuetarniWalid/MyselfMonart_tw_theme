@@ -274,8 +274,13 @@ class MainProductBlocks extends CollapsibleTab {
       this.displayLoader(button);
       const productProperties = this.getproductProperties();
       const json = await this.buyFetch(button, productProperties);
+
+      // Fetch current cart state to update bubble
+      const cartResponse = await fetch('/cart.js');
+      const cart = await cartResponse.json();
+
       const headerId = this.getHeaderId(button);
-      this.renderNewSections(json, headerId);
+      this.renderNewSections(json, cart, headerId);
       setTimeout(() => {
         const cartDrawerButton = document.getElementById('cart-button');
         cartDrawerButton.click();
@@ -315,13 +320,20 @@ class MainProductBlocks extends CollapsibleTab {
     return 'tw-header-painting';
   };
 
-  renderNewSections({ items, sections }, headerId) {
+  renderNewSections({ items, sections }, cart, headerId) {
+    // Update bubble manually with cart item count
     const bubble = document.getElementById('bubble-nb-product');
-    const newBubble = this.getSectionInnerJSON(
-      sections[headerId],
-      '#bubble-nb-product',
-    );
-    bubble.innerHTML = newBubble;
+    if (bubble && cart) {
+      if (cart.item_count > 0) {
+        const itemCountHTML = cart.item_count < 100
+          ? `<span aria-hidden="true">${cart.item_count}</span>`
+          : '';
+        const srOnlyHTML = `<span class="sr-only">Cart count: ${cart.item_count}</span>`;
+        bubble.innerHTML = itemCountHTML + srOnlyHTML;
+      } else {
+        bubble.innerHTML = '';
+      }
+    }
 
     const sectionDrawer = document.getElementById(
       'shopify-section-tw-cart-drawer',
@@ -371,7 +383,7 @@ customElements.define('main-product-blocks', MainProductBlocks);
 class VariantPicker extends HTMLElement {
   constructor() {
     super();
-    this.button = this.querySelector('button');
+    this.radioInput = this.querySelector('input[type="radio"]');
     this.buyButton = document.querySelector('.buy-button');
     this.variantsData = JSON.parse(
       document.getElementById('variants-data-json').textContent,
@@ -379,39 +391,31 @@ class VariantPicker extends HTMLElement {
   }
 
   connectedCallback() {
-    this.button.addEventListener('click', this.onButtonClick);
+    this.radioInput.addEventListener('change', this.onRadioChange);
   }
 
-  onButtonClick = () => {
-    this.unColorPreviousButtonSelected();
-    this.colorButtonSelected();
+  onRadioChange = () => {
+    // Update the selected border name in the guide link (option 2)
+    if (this.dataset.option === 'option2') {
+      const selectedBorderNameSpan = document.getElementById('selected-border-name');
+      if (selectedBorderNameSpan) {
+        selectedBorderNameSpan.textContent = this.radioInput.value;
+      }
+    }
+
+    // Update the selected frame name in the guide link (option 3)
+    if (this.dataset.option === 'option3') {
+      const selectedFrameNameSpan = document.getElementById('selected-frame-name');
+      if (selectedFrameNameSpan) {
+        selectedFrameNameSpan.textContent = this.radioInput.value;
+      }
+    }
+
     const variantData = this.getVariantData();
     if (!this.buyButton) return;
     this.buyButton.dataset.variantId = variantData.id;
     this.updateBuyButtonContent(variantData);
     this.updatePromotionDateBanner(variantData);
-  };
-
-  unColorPreviousButtonSelected() {
-    const container = this.closest('.container');
-    const previousVariantPickerSelected = container.querySelector(
-      'variant-picker[data-selected="true"]',
-    );
-    if (previousVariantPickerSelected) {
-      previousVariantPickerSelected.dataset.selected = 'false';
-      const previousButton =
-        previousVariantPickerSelected.querySelector('button');
-      previousButton.classList.replace('bg-main-90', 'bg-white');
-      previousButton.classList.remove('text-secondary');
-      previousButton.classList.add('border-main');
-    }
-  }
-
-  colorButtonSelected() {
-    this.button.classList.replace('bg-white', 'bg-main-90');
-    this.button.classList.add('text-secondary');
-    this.button.classList.remove('border-main');
-    this.dataset.selected = 'true';
   }
 
   getVariantData() {
@@ -431,13 +435,13 @@ class VariantPicker extends HTMLElement {
   }
 
   getOptions() {
-    const variantPickersSelected = document.querySelectorAll(
-      'variant-picker[data-selected="true"]',
+    const radioInputsChecked = document.querySelectorAll(
+      'variant-picker input[type="radio"]:checked',
     );
     const options = [
-      variantPickersSelected[0]?.dataset.optionValue || null,
-      variantPickersSelected[1]?.dataset.optionValue || null,
-      variantPickersSelected[2]?.dataset.optionValue || null,
+      radioInputsChecked[0]?.value || null,
+      radioInputsChecked[1]?.value || null,
+      radioInputsChecked[2]?.value || null,
     ];
     return options;
   }
@@ -692,3 +696,154 @@ class VariantToCart extends HTMLElement {
   };
 }
 customElements.define('variant-to-cart', VariantToCart);
+
+// Size Guide Popup Handler
+const sizeGuidePopup = document.getElementById('size-guide-popup');
+if (sizeGuidePopup) {
+  // Update size guide content when popup opens
+  sizeGuidePopup.addEventListener('click', (e) => {
+    // Close when clicking backdrop
+    if (e.target === sizeGuidePopup) {
+      sizeGuidePopup.close();
+    }
+  });
+
+  // Function to update the displayed size guide image
+  function updateSizeGuideImage() {
+    const selectedSizeRadio = document.querySelector('variant-picker input[name="option1"]:checked');
+    if (!selectedSizeRadio) return;
+
+    const selectedSize = selectedSizeRadio.value;
+    const sizeGuideItems = document.querySelectorAll('.size-guide-item');
+
+    sizeGuideItems.forEach(item => {
+      if (item.dataset.size === selectedSize) {
+        item.classList.remove('hidden');
+      } else {
+        item.classList.add('hidden');
+      }
+    });
+  }
+
+  // Update image when popup opens
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'attributes' && mutation.attributeName === 'open') {
+        if (sizeGuidePopup.hasAttribute('open')) {
+          updateSizeGuideImage();
+        }
+      }
+    });
+  });
+
+  observer.observe(sizeGuidePopup, { attributes: true });
+
+  // Update image when size selection changes
+  document.addEventListener('change', (e) => {
+    if (e.target.matches('variant-picker input[name="option1"]')) {
+      if (sizeGuidePopup.hasAttribute('open')) {
+        updateSizeGuideImage();
+      }
+    }
+  });
+}
+
+// Border Guide Popup Handler
+const borderGuidePopup = document.getElementById('border-guide-popup');
+if (borderGuidePopup) {
+  // Close when clicking backdrop
+  borderGuidePopup.addEventListener('click', (e) => {
+    if (e.target === borderGuidePopup) {
+      borderGuidePopup.close();
+    }
+  });
+
+  // Function to update the displayed border guide image
+  function updateBorderGuideImage() {
+    const selectedBorderRadio = document.querySelector('variant-picker input[name="option2"]:checked');
+    if (!selectedBorderRadio) return;
+
+    const selectedBorder = selectedBorderRadio.value;
+    const borderGuideItems = document.querySelectorAll('.border-guide-item');
+
+    borderGuideItems.forEach(item => {
+      if (item.dataset.border === selectedBorder) {
+        item.classList.remove('hidden');
+      } else {
+        item.classList.add('hidden');
+      }
+    });
+  }
+
+  // Update image when popup opens
+  const borderObserver = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'attributes' && mutation.attributeName === 'open') {
+        if (borderGuidePopup.hasAttribute('open')) {
+          updateBorderGuideImage();
+        }
+      }
+    });
+  });
+
+  borderObserver.observe(borderGuidePopup, { attributes: true });
+
+  // Update image when border selection changes
+  document.addEventListener('change', (e) => {
+    if (e.target.matches('variant-picker input[name="option2"]')) {
+      if (borderGuidePopup.hasAttribute('open')) {
+        updateBorderGuideImage();
+      }
+    }
+  });
+}
+
+// Frame Guide Popup Handler
+const frameGuidePopup = document.getElementById('frame-guide-popup');
+if (frameGuidePopup) {
+  // Close when clicking backdrop
+  frameGuidePopup.addEventListener('click', (e) => {
+    if (e.target === frameGuidePopup) {
+      frameGuidePopup.close();
+    }
+  });
+
+  // Function to update the displayed frame guide image
+  function updateFrameGuideImage() {
+    const selectedFrameRadio = document.querySelector('variant-picker input[name="option3"]:checked');
+    if (!selectedFrameRadio) return;
+
+    const selectedFrame = selectedFrameRadio.value;
+    const frameGuideItems = document.querySelectorAll('.frame-guide-item');
+
+    frameGuideItems.forEach(item => {
+      if (item.dataset.frame === selectedFrame) {
+        item.classList.remove('hidden');
+      } else {
+        item.classList.add('hidden');
+      }
+    });
+  }
+
+  // Update image when popup opens
+  const frameObserver = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'attributes' && mutation.attributeName === 'open') {
+        if (frameGuidePopup.hasAttribute('open')) {
+          updateFrameGuideImage();
+        }
+      }
+    });
+  });
+
+  frameObserver.observe(frameGuidePopup, { attributes: true });
+
+  // Update image when frame selection changes
+  document.addEventListener('change', (e) => {
+    if (e.target.matches('variant-picker input[name="option3"]')) {
+      if (frameGuidePopup.hasAttribute('open')) {
+        updateFrameGuideImage();
+      }
+    }
+  });
+}

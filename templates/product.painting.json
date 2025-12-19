@@ -27,12 +27,15 @@
             "margin_bottom": "mb-8"
           }
         },
+        "variant_picker_YiA9jN": {
+          "type": "variant_picker",
+          "settings": {}
+        },
         "buy_qrRzcg": {
           "type": "buy",
           "settings": {
             "text": "Choisir mon format",
             "is_dynamic_variant": false,
-            "main_color": "#73d298",
             "show_promotion": false,
             "promotion_discount": 15,
             "promotion_discount_unit": "%",
@@ -74,6 +77,7 @@
       },
       "block_order": [
         "trustpilot_review_9q3NVM",
+        "variant_picker_YiA9jN",
         "buy_qrRzcg",
         "likes_t9U7Ay",
         "text_9JmhGc",

@@ -10,15 +10,19 @@
             <div class="container flex gap-3 flex-wrap font-heading font-semibold py-4">
                 {%- for value in option.values -%}
                     {% if value.available %}
-                        {% if value.selected %}
-                            <variant-picker data-selected="true" data-option="option{{ option.position }}" data-option-value="{{ value }}" data-price-pattern="{{ product.price_min | money }}">
-                                <button class="px-4 py-2 rounded-lg bg-main-90 text-secondary transition-all duration-100 shadow-neu-lg hover:shadow-neu-md border-neu">{{ value }}</button>
-                            </variant-picker>   
-                        {% else %}
-                            <variant-picker data-option="option{{ option.position }}" data-option-value="{{ value }}" data-variant-price="{{ value.price | money }}" data-price-pattern="{{ product.price_min | money }}">
-                                <button class="px-4 py-2 rounded-lg bg-white shadow-neu-lg hover:shadow-neu-md border-neu border-main transition-all duration-100" data-id="{{ value.id }}">{{ value }}</button>
-                            </variant-picker>
-                        {% endif %}              
+                        <variant-picker data-option="option{{ option.position }}" data-option-value="{{ value }}" data-price-pattern="{{ product.price_min | money }}" data-variant-price="{{ value.price | money }}">
+                            <label class="cursor-pointer">
+                                <input
+                                    type="radio"
+                                    name="option{{ option.position }}"
+                                    value="{{ value }}"
+                                    class="peer hidden"
+                                    {% if value.selected %}checked{% endif %}>
+                                <span class="block px-4 py-2 rounded-lg bg-white peer-checked:bg-main-90 peer-checked:text-secondary transition-all duration-100 shadow-neu-lg hover:shadow-neu-md border-neu peer-checked:border-transparent">
+                                    {{ value }}
+                                </span>
+                            </label>
+                        </variant-picker>
                     {% endif %}
                 {% endfor %}
             </div>

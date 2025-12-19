@@ -8,6 +8,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  // Fixed cart button click handler
+  const fixedCartButton = document.getElementById('cart-button');
+  if (fixedCartButton) {
+    fixedCartButton.addEventListener('click', () => {
+      document.dispatchEvent(new CustomEvent('openCartDrawer'));
+    });
+  }
 });
 
 function makesLinksNavigable(link) {

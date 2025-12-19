@@ -311,6 +311,9 @@
           "title": "Vue détaillée de l'image du produit",
           "close": "Fermer"
         }
+      },
+      "variant_picker": {
+        "size_guide": "Guide des tailles"
       }
     },
     "my_likes": {

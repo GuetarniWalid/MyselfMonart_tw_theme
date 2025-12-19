@@ -111,9 +111,15 @@
           {%- when 'title' -%}
             <h1 class="text-2xl {{ block.settings.margin_bottom }}">{{ product.title | escape }}</h1>
           {%- when 'variant_picker' -%}
-            {% render 'product-variant-picker'
-              , product: product
-              , block: block %}
+            {% if template.suffix == 'painting' or template.suffix == 'personalized' %}
+              {% render 'painting-variant-picker'
+                , product: product
+                , block: block %}
+            {% else %}
+              {% render 'product-variant-picker'
+                , product: product
+                , block: block %}
+            {% endif %}
           {%- when 'buy' -%}
             <div class="relative mt-10 mb-3 md:mb-8">
               <button
@@ -165,9 +171,6 @@
                   , block: block
                   , text: block.settings.promotion_date %}
               </template>
-            {% endif %}
-              {% if template.suffix == 'painting' or template.suffix == 'personalized' %}
-            {% render 'painting-addons-drawer' %}
             {% endif %}
           {%- when 'description' -%}
             {%- if product.description != blank -%}
