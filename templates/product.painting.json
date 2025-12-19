@@ -34,7 +34,7 @@
         "buy_qrRzcg": {
           "type": "buy",
           "settings": {
-            "text": "Choisir mon format",
+            "text": "Commander",
             "is_dynamic_variant": false,
             "show_promotion": false,
             "promotion_discount": 15,
