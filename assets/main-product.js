@@ -391,28 +391,12 @@ class VariantPicker extends HTMLElement {
   }
 
   connectedCallback() {
-    this.radioInput.addEventListener('change', this.onRadioChange);
+    this.radioInput.addEventListener('change', this.onRadioChange.bind(this));
   }
 
-  onRadioChange = () => {
-    // Update the selected border name in the guide link (option 2)
-    if (this.dataset.option === 'option2') {
-      const selectedBorderNameSpan = document.getElementById('selected-border-name');
-      if (selectedBorderNameSpan) {
-        selectedBorderNameSpan.textContent = this.radioInput.value;
-      }
-    }
-
-    // Update the selected frame name in the guide link (option 3)
-    if (this.dataset.option === 'option3') {
-      const selectedFrameNameSpan = document.getElementById('selected-frame-name');
-      if (selectedFrameNameSpan) {
-        selectedFrameNameSpan.textContent = this.radioInput.value;
-      }
-    }
-
+  onRadioChange() {
     const variantData = this.getVariantData();
-    if (!this.buyButton) return;
+    if (!variantData || !this.buyButton) return;
     this.buyButton.dataset.variantId = variantData.id;
     this.updateBuyButtonContent(variantData);
     this.updatePromotionDateBanner(variantData);
@@ -426,6 +410,12 @@ class VariantPicker extends HTMLElement {
         variant.option2 === option2 &&
         variant.option3 === option3,
     );
+
+    if (!currentVariant) {
+      console.error('Variant not found for options:', { option1, option2, option3 });
+      return null;
+    }
+
     return {
       id: currentVariant.id,
       compareAtPrice: currentVariant.compare_at_price,
@@ -679,6 +669,119 @@ class VariantPicker extends HTMLElement {
 }
 customElements.define('variant-picker', VariantPicker);
 
+// PaintingVariantPicker extends VariantPicker with painting-specific availability logic
+class PaintingVariantPicker extends VariantPicker {
+  connectedCallback() {
+    super.connectedCallback();
+    // Update availability on initial load
+    if (this.dataset.option === 'option1' || this.dataset.option === 'option2') {
+      setTimeout(() => this.updateOptionAvailability(), 0);
+    }
+  }
+
+  getOptions() {
+    const radioInputsChecked = document.querySelectorAll(
+      'painting-variant-picker input[type="radio"]:checked',
+    );
+    const options = [
+      radioInputsChecked[0]?.value || null,
+      radioInputsChecked[1]?.value || null,
+      radioInputsChecked[2]?.value || null,
+    ];
+    return options;
+  }
+
+  onRadioChange() {
+    // Update the selected border name in the guide link (option 2)
+    if (this.dataset.option === 'option2') {
+      const selectedBorderNameSpan = document.getElementById('selected-border-name');
+      if (selectedBorderNameSpan) {
+        selectedBorderNameSpan.textContent = this.radioInput.value;
+      }
+    }
+
+    // Update the selected frame name in the guide link (option 3)
+    if (this.dataset.option === 'option3') {
+      const selectedFrameNameSpan = document.getElementById('selected-frame-name');
+      if (selectedFrameNameSpan) {
+        selectedFrameNameSpan.textContent = this.radioInput.value;
+      }
+    }
+
+    // Update option availability when size or border changes
+    if (this.dataset.option === 'option1' || this.dataset.option === 'option2') {
+      this.updateOptionAvailability();
+    }
+
+    // Call parent method to handle variant data updates
+    super.onRadioChange();
+  }
+
+  updateOptionAvailability() {
+    const [currentOption1, currentOption2] = this.getOptions();
+
+    // Get all frame option pickers (option3)
+    const frameOptions = document.querySelectorAll('painting-variant-picker[data-option="option3"]');
+    const frameOptionsArray = Array.from(frameOptions);
+    let availableCount = 0;
+    let firstFrameAvailable = false;
+
+    frameOptionsArray.forEach((framePicker, index) => {
+      const frameValue = framePicker.dataset.optionValue;
+      const radioInput = framePicker.querySelector('input[type="radio"]');
+      const label = framePicker.querySelector('label');
+
+      // Check if this frame is available for current size/border combination
+      const isAvailable = this.variantsData.some(variant =>
+        variant.option1 === currentOption1 &&
+        variant.option2 === currentOption2 &&
+        variant.option3 === frameValue &&
+        variant.available
+      );
+
+      if (isAvailable) {
+        availableCount++;
+        if (index === 0) firstFrameAvailable = true;
+        radioInput.disabled = false;
+        label.classList.remove('grayscale', 'cursor-not-allowed');
+        label.classList.add('cursor-pointer');
+      } else {
+        radioInput.disabled = true;
+        label.classList.add('grayscale', 'cursor-not-allowed');
+        label.classList.remove('cursor-pointer');
+
+        // If this option was selected, select the first available option
+        if (radioInput.checked) {
+          const firstAvailable = frameOptionsArray.find(picker => {
+            const value = picker.dataset.optionValue;
+            return this.variantsData.some(v =>
+              v.option1 === currentOption1 &&
+              v.option2 === currentOption2 &&
+              v.option3 === value &&
+              v.available
+            );
+          });
+
+          if (firstAvailable) {
+            firstAvailable.querySelector('input[type="radio"]').click();
+          }
+        }
+      }
+    });
+
+    // Show message if only the first frame (no frame) is available
+    const noFramesMessage = document.getElementById('no-frames-message');
+    if (noFramesMessage) {
+      if (availableCount === 1 && firstFrameAvailable) {
+        noFramesMessage.classList.remove('hidden');
+      } else {
+        noFramesMessage.classList.add('hidden');
+      }
+    }
+  }
+}
+customElements.define('painting-variant-picker', PaintingVariantPicker);
+
 class VariantToCart extends HTMLElement {
   constructor() {
     super();
@@ -710,7 +813,7 @@ if (sizeGuidePopup) {
 
   // Function to update the displayed size guide image
   function updateSizeGuideImage() {
-    const selectedSizeRadio = document.querySelector('variant-picker input[name="option1"]:checked');
+    const selectedSizeRadio = document.querySelector('painting-variant-picker input[name="option1"]:checked');
     if (!selectedSizeRadio) return;
 
     const selectedSize = selectedSizeRadio.value;
@@ -740,7 +843,7 @@ if (sizeGuidePopup) {
 
   // Update image when size selection changes
   document.addEventListener('change', (e) => {
-    if (e.target.matches('variant-picker input[name="option1"]')) {
+    if (e.target.matches('painting-variant-picker input[name="option1"]')) {
       if (sizeGuidePopup.hasAttribute('open')) {
         updateSizeGuideImage();
       }
@@ -760,7 +863,7 @@ if (borderGuidePopup) {
 
   // Function to update the displayed border guide image
   function updateBorderGuideImage() {
-    const selectedBorderRadio = document.querySelector('variant-picker input[name="option2"]:checked');
+    const selectedBorderRadio = document.querySelector('painting-variant-picker input[name="option2"]:checked');
     if (!selectedBorderRadio) return;
 
     const selectedBorder = selectedBorderRadio.value;
@@ -790,7 +893,7 @@ if (borderGuidePopup) {
 
   // Update image when border selection changes
   document.addEventListener('change', (e) => {
-    if (e.target.matches('variant-picker input[name="option2"]')) {
+    if (e.target.matches('painting-variant-picker input[name="option2"]')) {
       if (borderGuidePopup.hasAttribute('open')) {
         updateBorderGuideImage();
       }
@@ -810,7 +913,7 @@ if (frameGuidePopup) {
 
   // Function to update the displayed frame guide image
   function updateFrameGuideImage() {
-    const selectedFrameRadio = document.querySelector('variant-picker input[name="option3"]:checked');
+    const selectedFrameRadio = document.querySelector('painting-variant-picker input[name="option3"]:checked');
     if (!selectedFrameRadio) return;
 
     const selectedFrame = selectedFrameRadio.value;
@@ -840,7 +943,7 @@ if (frameGuidePopup) {
 
   // Update image when frame selection changes
   document.addEventListener('change', (e) => {
-    if (e.target.matches('variant-picker input[name="option3"]')) {
+    if (e.target.matches('painting-variant-picker input[name="option3"]')) {
       if (frameGuidePopup.hasAttribute('open')) {
         updateFrameGuideImage();
       }

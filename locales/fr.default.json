@@ -313,7 +313,8 @@
         }
       },
       "variant_picker": {
-        "size_guide": "Guide des tailles"
+        "size_guide": "Guide des tailles",
+        "no_frames_available": "Aucun cadre disponible pour cette taille"
       }
     },
     "my_likes": {
