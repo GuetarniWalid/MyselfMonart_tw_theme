@@ -8,4 +8,4 @@
     {% render 'promotion-date-banner', block: block, text: 'text' %}
 {% endcomment %}
 
-<div class="promotion-date-banner text-center border-main border-3 bg-white rounded-xl px-5 py-2 2xs:text-lg xs:text-xl md:text-lg lg:text-xl text-main text-lg" {% if block.settings.promotion_discount > 0 %}data-promotion-constant="true"{% endif %}>{{ text }}</div>
+<div class="promotion-date-banner text-center border-main border-3 bg-white rounded-xl px-5 py-2 2xs:text-lg xs:text-xl md:text-lg lg:text-xl text-main text-lg mx-4" {% if block.settings.promotion_discount > 0 %}data-promotion-constant="true"{% endif %}>{{ text }}</div>

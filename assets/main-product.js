@@ -950,3 +950,43 @@ if (frameGuidePopup) {
     }
   });
 }
+
+// Variant Options Scroll Arrow Handler
+const variantContainers = document.querySelectorAll('.variant-options-container');
+variantContainers.forEach(container => {
+  const parent = container.parentElement;
+  const rightArrow = parent.querySelector('.scroll-arrow-right');
+
+  if (!rightArrow) return;
+
+  // Update arrow visibility based on scroll position
+  function updateArrowVisibility() {
+    const isAtEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 5;
+
+    if (isAtEnd || container.scrollWidth <= container.clientWidth) {
+      rightArrow.classList.add('opacity-0', 'pointer-events-none');
+    } else {
+      rightArrow.classList.remove('opacity-0', 'pointer-events-none');
+    }
+  }
+
+  // Handle arrow click
+  function handleArrowClick() {
+    const scrollAmount = container.clientWidth * 0.8;
+    container.scrollTo({
+      left: container.scrollLeft + scrollAmount,
+      behavior: 'smooth'
+    });
+  }
+
+  // Add event listeners
+  const rightButton = rightArrow.querySelector('button');
+  if (rightButton) rightButton.addEventListener('click', handleArrowClick);
+  container.addEventListener('scroll', updateArrowVisibility);
+
+  // Initial check
+  updateArrowVisibility();
+
+  // Recheck on window resize
+  window.addEventListener('resize', updateArrowVisibility);
+});

@@ -101,15 +101,15 @@
     class="grow"
     id="ProductInfo-{{ section.id }}"
     data-layout="{{ template.suffix }}">
-    <div class="max-w-lg px-4 sm:px-0 mx-auto my-4">
+    <div class="max-w-lg sm:px-0 mx-auto my-4">
       {%- for block in section.blocks -%}
         {%- case block.type -%}
           {%- when '@app' -%}
             {% render block %}
           {%- when 'text' -%}
-            <div class="flex flex-col gap-4 mb-4 text-lg">{{- block.settings.text -}}</div>
+            <div class="flex flex-col gap-4 mb-4 text-lg mx-4">{{- block.settings.text -}}</div>
           {%- when 'title' -%}
-            <h1 class="text-2xl {{ block.settings.margin_bottom }}">{{ product.title | escape }}</h1>
+            <h1 class="text-2xl {{ block.settings.margin_bottom }} mx-4">{{ product.title | escape }}</h1>
           {%- when 'variant_picker' -%}
             {% if template.suffix == 'painting' or template.suffix == 'personalized' %}
               {% render 'painting-variant-picker'
@@ -121,7 +121,7 @@
                 , block: block %}
             {% endif %}
           {%- when 'buy' -%}
-            <div class="relative mt-10 mb-3 md:mb-8">
+            <div class="relative mt-10 mb-3 md:mb-8 mx-4">
               <button
                 class="buy-button cart-button glass-anim"
                 data-variant-id="{{ product.first_available_variant.id }}"
@@ -174,16 +174,16 @@
             {% endif %}
           {%- when 'description' -%}
             {%- if product.description != blank -%}
-              <div class="product-description dropdown-button-target description flex flex-col gap-5 text-lg leading-relaxed h-56 overflow-hidden relative">
+              <div class="product-description dropdown-button-target description flex flex-col gap-5 text-lg leading-relaxed h-56 overflow-hidden relative px-4">
                 {{ product.description }}
               </div>
               <dropdown-button>
-                <button class="group mt-6 mb-5">{{ 'sections.main_collection_banner.learn_more' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
-                <button class="group  mt-6 hidden mb-5">{{ 'sections.main_collection_banner.fewer_details' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
+                <button class="group mt-6 mb-5 mx-4">{{ 'sections.main_collection_banner.learn_more' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
+                <button class="group  mt-6 hidden mb-5 mx-4">{{ 'sections.main_collection_banner.fewer_details' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
               </dropdown-button>
             {%- endif -%}
           {%- when 'collapsible_tab' -%}
-            <details class="accordion group border-t border-main-10 first-of-type:mt-5 last-of-type:border-b last-of-type:border-b-main-10 last-of-type:mb-5">
+            <details class="accordion group border-t border-main-10 first-of-type:mt-5 last-of-type:border-b last-of-type:border-b-main-10 last-of-type:mb-5 mx-4">
               <summary class="list-none flex justify-between py-3 select-none cursor-pointer">
                 <div class="flex gap-3">
                   {% render 'icon-accordion'
@@ -241,7 +241,7 @@
             {% liquid
               assign unit = product.options_with_values.first.values.first | split: ' ' | last
             %}
-            <div class="my-5 product-properties">
+            <div class="my-5 product-properties mx-4">
               <label class="block text-xl mt-5 ml-1" for="tapestry-width">{{ product.options.first }} :</label>
               <div class="relative flex mt-1">
                 <tapestry-select
@@ -294,7 +294,7 @@
               </div>
             </div>
           {%- when 'trustpilot_review' -%}
-            <div class="{{ block.settings.margin_bottom }}">
+            <div class="{{ block.settings.margin_bottom }} mx-4">
               <p class="flex items-center mb-1">
                 <a
                   href="{{ block.settings.link }}"
@@ -348,7 +348,6 @@
                   "bestRating": "5"
                 }
             {% endcapture %}
-
         {%- endcase -%}
       {%- endfor -%}
     </div>
