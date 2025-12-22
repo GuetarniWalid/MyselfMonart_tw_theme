@@ -95,9 +95,11 @@
                 {% endfor %}
             </ul>
             <div class="text-sm flex items-end gap-2 font-bold whitespace-nowrap">
-                <span class="text-red-600">
-                <s>{{ bundle_crossed_price | money }}</s>
-                </span>
+                {%- if bundle_crossed_price != bundle_price -%}
+                    <span class="text-red-600">
+                    <s>{{ bundle_crossed_price | money }}</s>
+                    </span>
+                {%- endif -%}
                 <span class="heading">
                 {{ bundle_price | money }}
                 </span>
