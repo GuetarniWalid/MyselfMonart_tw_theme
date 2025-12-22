@@ -288,11 +288,12 @@ class QuickAddToCart extends HTMLElement {
     this.addEventListener('click', () => {
       this.querySelector('button').setAttribute('disabled', 'true');
       const itemIds = this.dataset.items.split(',');
-      this.makeOrder(itemIds);
+      const quantity = parseInt(this.dataset.quantity) || 1;
+      this.makeOrder(itemIds, quantity);
     });
   }
 
-  async makeOrder(itemIds) {
+  async makeOrder(itemIds, quantity) {
     const response = await fetch(
       '/cart/add.js?sections=tw-cart-drawer',
       {
@@ -300,7 +301,7 @@ class QuickAddToCart extends HTMLElement {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: this.getFetchBody(itemIds),
+        body: this.getFetchBody(itemIds, quantity),
       },
     );
     if (!response.ok) throw new Error("Une erreur inattendu s'est produite.");
@@ -319,7 +320,7 @@ class QuickAddToCart extends HTMLElement {
     }, 300);
   }
 
-  getFetchBody(itemIds) {
+  getFetchBody(itemIds, quantity) {
     const itemsData = itemIds.map((id, index) => {
       const properties = {}
       if (index === 0) {
@@ -330,7 +331,7 @@ class QuickAddToCart extends HTMLElement {
       }
       return {
         id,
-        quantity: 1,
+        quantity: quantity,
         properties,
       };
     });

@@ -368,7 +368,7 @@
       "name": "Cart drawer",
       "settings": {
         "bundle_title": {
-          "label": "Bundle title"
+          "label": "Painting bundle title"
         },
         "keep_shopping_url": {
           "label": "Continue shopping button link"

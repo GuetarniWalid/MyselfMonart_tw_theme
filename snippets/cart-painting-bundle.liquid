@@ -1,14 +1,14 @@
 {% comment %}
-    Renders a general-purpose cart bundle without variant matching.
-    This snippet is for simple bundle products (like fixations, accessories, etc.)
-    that don't require complex variant matching logic.
+    Renders a cart painting bundle with variant matching logic.
+    This snippet is specifically for painting bundles that require matching variants
+    based on size and other painting-specific options.
 
     Accepts:
-    - all_bundle_string: {Array} The array of all bundles
+    - all_bundle_string: {Array} The array of all painting bundles
     - all_bundle_complement_string: {Array} The array of all bundle complements
 
     Usage:
-    {% render 'cart-bundle', all_bundle_string: all_bundle_string, all_bundle_complement_string: all_bundle_complement_string %}
+    {% render 'cart-painting-bundle', all_bundle_string: all_bundle_string, all_bundle_complement_string: all_bundle_complement_string %}
 {% endcomment %}
 
 {% for bundle_string in all_bundle_string %}
@@ -56,7 +56,7 @@
                 {% assign bundle_price = bundle_price %}
                 {% assign bundle_crossed_price = bundle_crossed_price %}
                 {% for bundle_complement in bundle_complements %}
-                    {% liquid
+                    {% liquid 
                     assign bundle_complement_items = bundle_complement | split: ';;'
                     assign bundle_complement_title = bundle_complement_items[0]
                     assign bundle_complement_image = bundle_complement_items[1]
@@ -68,10 +68,10 @@
                     %}
                     <div class="flex gap-3 w-[45%] min-w-0">
                         <div class="w-10 h-10 rounded-md overflow-hidden flex-shrink-0">
-                            <img
-                            src="{{ bundle_complement_image }}"
-                            class="w-full h-full object-cover"
-                            width="80"
+                            <img 
+                            src="{{ bundle_complement_image }}" 
+                            class="w-full h-full object-cover" 
+                            width="80" 
                             height="auto"
                             loading="lazy"
                             >

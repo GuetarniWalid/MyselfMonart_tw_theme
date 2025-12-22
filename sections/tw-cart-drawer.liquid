@@ -85,12 +85,60 @@
         {% liquid
           assign all_bundle_string = ''
           assign all_bundle_complement_string = ''
+          assign all_general_bundle_string = ''
+          assign all_general_bundle_complement_string = ''
+          assign bundle_variant_tracker = ''
+          assign general_bundle_variant_tracker = ''
           assign item_product_ids = ''
           for item in cart.items
             assign item_product_ids = item_product_ids | append: item.product.id | append: ';;'
           endfor
           assign item_product_ids = item_product_ids | remove_last: ';;'
         %}
+
+        {% comment %} First pass: Build complete trackers {% endcomment %}
+        {% for item in cart.items %}
+          {% for bundle in item.product.metafields.bundle.paintings.value %}
+            {% unless item_product_ids contains bundle.id %}
+              {% if item.product.template_suffix == 'painting' or item.product.template_suffix == 'personalized' %}
+                {% assign bundle_ratio = bundle.images[1].aspect_ratio %}
+                {% if item.product.images[1].aspect_ratio < 1 %}
+                  {% assign item_largest_size = item.variant.option1 | split: 'x' | last | split: ' ' | first | plus: 0 %}
+                {% else %}
+                  {% assign item_largest_size = item.variant.option1 | split: 'x' | first | plus: 0 %}
+                {% endif %}
+                {% for variant in bundle.variants %}
+                  {% if bundle_ratio < 1 %}
+                    {% assign bundle_largest_size = variant.option1 | split: 'x' | last | split: ' ' | first | plus: 0 %}
+                  {% else %}
+                    {% assign bundle_largest_size = variant.option1 | split: 'x' | first | plus: 0 %}
+                  {% endif %}
+                  {% if bundle_largest_size == item_largest_size and variant.option2 == item.variant.option2 and variant.option3 == item.variant.option3 %}
+                    {% for qty_index in (1..item.quantity) %}
+                      {% assign bundle_variant_tracker = bundle_variant_tracker | append: variant.id | append: ';;' %}
+                    {% endfor %}
+                    {% break %}
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+            {% endunless %}
+          {% endfor %}
+
+          {% for bundle in item.product.metafields.bundle.products.value %}
+            {% unless item_product_ids contains bundle.id %}
+              {% if bundle.has_only_default_variant %}
+                {% assign bundle_variant_id = bundle.first_available_variant.id %}
+              {% else %}
+                {% assign bundle_variant_id = bundle.first_available_variant.id %}
+              {% endif %}
+              {% if bundle_variant_id != blank %}
+                {% for qty_index in (1..item.quantity) %}
+                  {% assign general_bundle_variant_tracker = general_bundle_variant_tracker | append: bundle_variant_id | append: ';;' %}
+                {% endfor %}
+              {% endif %}
+            {% endunless %}
+          {% endfor %}
+        {% endfor %}
 
         {% for item in cart.items %}
           {% liquid
@@ -106,7 +154,7 @@
             endif
             assign bundle_string = ''
 
-            for bundle in item.product.metafields.bundle.products.value
+            for bundle in item.product.metafields.bundle.paintings.value
               if item_product_ids contains bundle.id
                 continue
               endif
@@ -182,11 +230,97 @@
                 endif
               endfor
 
-              assign bundle_string = bundle.title | append: ';;' | append: bundle.url | append: ';;' | append: bundle_image | append: ';;' | append: matching_variants_title | append: ';;' | append: item.price | append: ';;' | append: item.original_price | append: ';;' | append: matching_variants_id | append: ';;' | append: bundle_discounts
+              unless all_bundle_string contains matching_variants_id
+                assign bundle_quantity = 0
+                assign matching_variants_id_str = matching_variants_id | append: ''
+                assign tracker_array = bundle_variant_tracker | split: ';;'
+                for tracked_id in tracker_array
+                  if tracked_id == matching_variants_id_str
+                    assign bundle_quantity = bundle_quantity | plus: 1
+                  endif
+                endfor
 
-              if bundle_string != blank
-                assign all_bundle_string = all_bundle_string | append: bundle_string | append: '%%%%'
+                assign bundle_string = bundle.title | append: ';;' | append: bundle.url | append: ';;' | append: bundle_image | append: ';;' | append: matching_variants_title | append: ';;' | append: item.price | append: ';;' | append: item.original_price | append: ';;' | append: matching_variants_id | append: ';;' | append: bundle_quantity | append: ';;' | append: bundle_discounts
+
+                if bundle_string != blank
+                  assign all_bundle_string = all_bundle_string | append: bundle_string | append: '%%%%'
+                endif
+              endunless
+            endfor
+
+            for bundle in item.product.metafields.bundle.products.value
+              if item_product_ids contains bundle.id
+                continue
               endif
+              assign bundle_discounts = ''
+              for discount in item.discounts
+                assign bundle_discounts = bundle_discounts | append: discount.title | append: '££'
+              endfor
+
+              assign bundle_image = bundle.featured_image.src | image_url: width: 80
+              assign bundle_variant_id = null
+              assign bundle_variant_title = ''
+
+              if bundle.has_only_default_variant
+                assign bundle_variant_id = bundle.first_available_variant.id
+              else
+                assign bundle_variant_id = bundle.first_available_variant.id
+                assign bundle_variant_title = bundle.first_available_variant.title
+              endif
+
+              if bundle_variant_id == null
+                continue
+              endif
+
+              for property in item.properties
+                assign first_character_in_key = property.first | slice: 0
+                if first_character_in_key == '_'
+                  for item in cart.items
+                    assign property_last = property.last | plus: 0
+                    if item.id == property_last
+                      assign all_general_bundle_complement_string = all_general_bundle_complement_string | append: item.product.title | append: ';;'
+                      if item.product.has_only_default_variant
+                        assign bundle_complement_image = item.product.featured_image.src | image_url: width: 80
+                        assign all_general_bundle_complement_string = all_general_bundle_complement_string | append: bundle_complement_image | append: ';;'
+                        assign all_general_bundle_complement_string = all_general_bundle_complement_string | append: '' | append: ';;'
+                        assign all_general_bundle_complement_string = all_general_bundle_complement_string | append: item.product.first_available_variant.id | append: ';;'
+                      else
+                        assign bundle_complement_image = item.variant.featured_image.src | image_url: width: 80
+                        assign all_general_bundle_complement_string = all_general_bundle_complement_string | append: bundle_complement_image | append: ';;'
+                        assign all_general_bundle_complement_string = all_general_bundle_complement_string | append: item.variant.title | append: ';;'
+                        assign all_general_bundle_complement_string = all_general_bundle_complement_string | append: item.variant.id | append: ';;'
+                      endif
+                      assign all_general_bundle_complement_string = all_general_bundle_complement_string | append: item.price | append: ';;'
+                      assign all_general_bundle_complement_string = all_general_bundle_complement_string | append: item.original_price | append: ';;'
+                      for discount in item.discounts
+                        assign all_general_bundle_complement_string = all_general_bundle_complement_string | append: discount.title | append: '££'
+                      endfor
+                      if forloop.parentloop.last
+                        assign all_general_bundle_complement_string = all_general_bundle_complement_string | append: '%%%%'
+                      else
+                        assign all_general_bundle_complement_string = all_general_bundle_complement_string | append: '$$$$'
+                      endif
+                    endif
+                  endfor
+                endif
+              endfor
+
+              unless all_general_bundle_string contains bundle_variant_id
+                assign general_bundle_quantity = 0
+                assign bundle_variant_id_str = bundle_variant_id | append: ''
+                assign general_tracker_array = general_bundle_variant_tracker | split: ';;'
+                for tracked_id in general_tracker_array
+                  if tracked_id == bundle_variant_id_str
+                    assign general_bundle_quantity = general_bundle_quantity | plus: 1
+                  endif
+                endfor
+
+                assign general_bundle_string = bundle.title | append: ';;' | append: bundle.url | append: ';;' | append: bundle_image | append: ';;' | append: bundle_variant_title | append: ';;' | append: bundle.price | append: ';;' | append: bundle.compare_at_price | append: ';;' | append: bundle_variant_id | append: ';;' | append: general_bundle_quantity | append: ';;' | append: bundle_discounts
+
+                if general_bundle_string != blank
+                  assign all_general_bundle_string = all_general_bundle_string | append: general_bundle_string | append: '%%%%'
+                endif
+              endunless
             endfor
           %}
 
@@ -320,6 +454,34 @@
       </ul>
     </form>
 
+    {% if all_general_bundle_string != blank %}
+      <div class="px-2 py-4">
+        <h2 class="text-sm font-bold heading">
+          {{ 'sections.tw_cart_drawer.general_bundle_title' | t }}
+        </h2>
+
+        {% assign all_general_bundle_string = all_general_bundle_string | split: '%%%%' %}
+        {% assign all_general_bundle_complement_string = all_general_bundle_complement_string | split: '%%%%' %}
+
+        {% if all_general_bundle_string.size > 1 %}
+          <snap-carrousel>
+            <ul class="flex gap-4 overflow-x-auto snap-mandatory snap-x scroll-smooth scrollbar pb-3">
+              {% render 'cart-bundle'
+                , all_bundle_string: all_general_bundle_string
+                , all_bundle_complement_string: all_general_bundle_complement_string %}
+            </ul>
+          </snap-carrousel>
+          <script src="{{ 'component-carrousel.js' | asset_url }}" defer="defer"></script>
+        {% else %}
+          <ul>
+            {% render 'cart-bundle'
+              , all_bundle_string: all_general_bundle_string
+              , all_bundle_complement_string: all_general_bundle_complement_string %}
+          </ul>
+        {% endif %}
+      </div>
+    {% endif %}
+
     {% if all_bundle_string != blank %}
       <div class="px-2 py-4">
         <h2 class="text-sm font-bold heading">
@@ -332,7 +494,7 @@
         {% if all_bundle_string.size > 1 %}
           <snap-carrousel>
             <ul class="flex gap-4 overflow-x-auto snap-mandatory snap-x scroll-smooth scrollbar pb-3">
-              {% render 'cart-bundle'
+              {% render 'cart-painting-bundle'
                 , all_bundle_string: all_bundle_string
                 , all_bundle_complement_string: all_bundle_complement_string %}
             </ul>
@@ -340,7 +502,7 @@
           <script src="{{ 'component-carrousel.js' | asset_url }}" defer="defer"></script>
         {% else %}
           <ul>
-            {% render 'cart-bundle'
+            {% render 'cart-painting-bundle'
               , all_bundle_string: all_bundle_string
               , all_bundle_complement_string: all_bundle_complement_string %}
           </ul>

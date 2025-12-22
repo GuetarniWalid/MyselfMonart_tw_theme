@@ -368,7 +368,7 @@
       "name": "Panier coulissant",
       "settings": {
         "bundle_title": {
-          "label": "Titre du bundle"
+          "label": "Titre du bundle de tableaux"
         },
         "keep_shopping_url": {
           "label": "Lien du bouton pour continuer les achats"
