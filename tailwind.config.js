@@ -41,8 +41,6 @@ module.exports = {
         'neu-xs': '1px 2px 0 rgb(var(--color-main-rgb))',
       },
       colors: {
-        'breadcrumb-main': 'var(--color-breadcrumb-main)',
-        'breadcrumb-secondary': 'var(--color-breadcrumb-secondary)',
         'buy-button': {
           DEFAULT: 'rgb(var(--color-buy-button-rgb))',
           70: 'rgba(var(--color-buy-button-rgb), 0.7)',

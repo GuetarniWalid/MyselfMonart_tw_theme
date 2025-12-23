@@ -395,44 +395,6 @@ main-product-blocks .description h2 span {
     border-radius: 36% 64% 65% 35% / 63% 61% 39% 37%;
   }
 
-  .breadcrumb-first {
-    clip-path: polygon(
-      0 0,
-      calc(100% - 10px) 0,
-      100% 50%,
-      calc(100% - 10px) 100%,
-      0 100%
-    );
-  }
-  .breadcrumb-box {
-    clip-path: polygon(
-      0 0,
-      calc(100% - 10px) 0,
-      100% 50%,
-      calc(100% - 10px) 100%,
-      0 100%,
-      10px 50%
-    );
-  }
-  .breadcrumb-first-before {
-    clip-path: polygon(
-      0 0,
-      calc(100% - 9px) 0,
-      100% 50%,
-      calc(100% - 9px) 100%,
-      0 100%
-    );
-  }
-  .breadcrumb-box-before {
-    clip-path: polygon(
-      1px 0,
-      calc(100% - 9px) 0,
-      100% 50%,
-      calc(100% - 9px) 100%,
-      1px 100%,
-      10px 50%
-    );
-  }
 
   .cart-button {
     @apply relative w-full px-4 md:px-6 md:mx-auto bg-buy-button border-main border-[4px] font-bold font-heading 2xs:text-lg xs:text-xl md:text-lg lg:text-xl text-main text-lg rounded-xl shadow-neu-xl hover:shadow-neu-lg transition-shadow duration-100 ease-in-out focus:outline focus:outline-orange-500 focus:outline-2 mb-4 md:mb-0 disabled:bg-buy-button-70 disabled:outline-none disabled:cursor-wait overflow-hidden;
