@@ -73,6 +73,10 @@ class MainProductCarousel extends HTMLElement {
     this.previousMediaButton?.addEventListener('click', () => {
       this.displayNextMedia(-1);
     });
+
+    // Initialize carousel positions on page load
+    this.shiftNextMediaToLeft();
+    this.centerContainedImage();
   }
 
   displayNextMedia = (diffFromCurrentMedia) => {

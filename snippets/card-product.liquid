@@ -9,56 +9,48 @@
     {% render 'card-product' %} 
 {% endcomment %}
 
-{% liquid
-  if product.media[1] != nil
-    assign main_image = product.media[1]
-  else 
-    assign main_image = product.featured_media
-  endif
-%}
-
-<div class="h-full flex flex-col">
+<div class="h-full flex flex-col justify-end">
   {%- if product.featured_media -%}
     <div class="mb-2 md:mb-5">
-      <div class="skeleton rounded-lg overflow-hidden relative w-full shadow-[5px_5px_10px_rgba(0,0,0,0.5)] {% if show_secondary_image %}group-hover:shadow-none group-hover:border-transparent{% endif %} duration-100" style="aspect-ratio: {{ main_image.width }} / {{ main_image.height }}">
-        {%- if main_image != nil -%}
-          <img
-            data-srcset="{%- if main_image.width >= 200 -%}{{ main_image | image_url: width: 200 }} 200w,{%- endif -%}
-              {%- if main_image.width >= 300 -%}{{ main_image | image_url: width: 300 }} 300w,{%- endif -%}
-              {%- if main_image.width >= 400 -%}{{ main_image | image_url: width: 400 }} 400w,{%- endif -%}
-              {%- if main_image.width >= 500 -%}{{ main_image | image_url: width: 500 }} 500w,{%- endif -%}
-              {{ main_image | image_url }} {{ main_image.width }}w"
-            src="{{ main_image | image_url: width: 10 }}"
-            sizes="(min-width: 768px) 33%, (min-width: 1024px) 300px, 50%"
-            alt="{% if product.metafields.meta_object.media.value.alts.value[1] %}{{ product.metafields.meta_object.media.value.alts.value[1] | escape }}{% else %}{{ product.media[1].alt | escape }}{% endif %}"
-            loading="lazy"
-            width="{{ main_image.width }}"
-            height="{{ main_image.height }}"
-            class="lqip w-full h-full object-contain">
-        {%- endif -%}
-
-        {%- if show_secondary_image -%}
-          <img
-            data-srcset="{%- if product.featured_media.width >= 200 -%}{{ product.featured_media | image_url: width: 200 }} 200w,{%- endif -%}
-              {%- if product.featured_media.width >= 300 -%}{{ product.featured_media | image_url: width: 300 }} 300w,{%- endif -%}
-              {%- if product.featured_media.width >= 400 -%}{{ product.featured_media | image_url: width: 400 }} 400w,{%- endif -%}
-              {%- if product.featured_media.width >= 500 -%}{{ product.featured_media | image_url: width: 500 }} 500w,{%- endif -%}
-              {{ product.featured_media | image_url }} {{ product.featured_media.width }}w"
-          src="{{ product.featured_media | image_url: width: 40 }}"
+      <div class="skeleton overflow-hidden relative w-full duration-100" style="aspect-ratio: {{ product.featured_media.width }} / {{ product.featured_media.height }}">
+        <img
+          data-srcset="{%- if product.featured_media.width >= 200 -%}{{ product.featured_media | image_url: width: 200 }} 200w,{%- endif -%}
+            {%- if product.featured_media.width >= 300 -%}{{ product.featured_media | image_url: width: 300 }} 300w,{%- endif -%}
+            {%- if product.featured_media.width >= 400 -%}{{ product.featured_media | image_url: width: 400 }} 400w,{%- endif -%}
+            {%- if product.featured_media.width >= 500 -%}{{ product.featured_media | image_url: width: 500 }} 500w,{%- endif -%}
+            {{ product.featured_media | image_url }} {{ product.featured_media.width }}w"
+          src="{{ product.featured_media | image_url: width: 10 }}"
           sizes="(min-width: 768px) 33%, (min-width: 1024px) 300px, 50%"
-          alt="{% if product.metafields.meta_object.media.value.alts.value[0] %}{{ product.metafields.meta_object.media.value.alts.value[0] | escape }}{% else %}{{ product.featured_media.alt | escape }}{% endif %}"
-          {% unless lazy_load == false %}
+          alt="{% if product.metafields.meta_object.media.value.alts.value[1] %}{{ product.metafields.meta_object.media.value.alts.value[1] | escape }}{% else %}{{ product.media[1].alt | escape }}{% endif %}"
           loading="lazy"
-          {% endunless %}
           width="{{ product.featured_media.width }}"
           height="{{ product.featured_media.height }}"
-          class="lqip absolute top-0 left-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 duration-200 rounded-lg {% if product.media[1].width >= product.media[1].height %}object-top{% endif %}">
+          class="lqip w-full h-full object-contain">
+
+        {%- if show_secondary_image and product.media[1] != nil -%}
+          <img
+            data-srcset="{%- if product.media[1].width >= 200 -%}{{ product.media[1] | image_url: width: 200 }} 200w,{%- endif -%}
+              {%- if product.media[1].width >= 300 -%}{{ product.media[1] | image_url: width: 300 }} 300w,{%- endif -%}
+              {%- if product.media[1].width >= 400 -%}{{ product.media[1] | image_url: width: 400 }} 400w,{%- endif -%}
+              {%- if product.media[1].width >= 500 -%}{{ product.media[1] | image_url: width: 500 }} 500w,{%- endif -%}
+              {{ product.media[1] | image_url }} {{ product.media[1].width }}w"
+            src="{{ product.media[1] | image_url: width: 40 }}"
+            sizes="(min-width: 768px) 33%, (min-width: 1024px) 300px, 50%"
+            alt="{% if product.metafields.meta_object.media.value.alts.value[0] %}{{ 
+              product.metafields.meta_object.media.value.alts.value[0] | escape }}{% else %}{{ product.media[1].alt | escape }}{% endif %}"
+            {% unless lazy_load == false %}
+            loading="lazy"
+            {% endunless %}
+            width="{{ product.media[1].width }}"
+            height="{{ product.media[1].height }}"
+            class="lqip absolute top-0 left-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 duration-200 rounded-lg {% if       
+              product.media[1].width >= product.media[1].height %}object-top{% endif %}">
         {%- endif -%}
     </div>
   {%- endif -%}
 
-  <div class="p-3 flex flex-col justify-between bg-white rounded-lg shadow-lg mt-4">
-    <h3 class="text-sm">
+  <div class="p-3 flex flex-col justify-between">
+    <h3 class="text-xs leading-normal">
       <a
         href="{{ product.url }}"
         class="product-card-title after:absolute after:inset-0 block overflow-hidden line-clamp-3"
@@ -67,7 +59,7 @@
         {{ product.title | escape | upcase }}
       </a>
     </h3>
-    <div class="mt-2 sm:mt-6 flex justify-between items-center sm:items-end price-and-likes">
+    <div class="mt-2 sm:mt-3 flex justify-between items-center price-and-likes">
       {% render 'my-like-button', product: product, likes_count: product.metafields.likes.number | default: 0 %}
       <template class="likes-count-container-template">
         {% render 'my-like-button'

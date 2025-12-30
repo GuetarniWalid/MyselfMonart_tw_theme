@@ -32,12 +32,11 @@
           {% liquid
             assign number_of_media = 0
             for media in product.media
-              if media.media_type == 'image' and forloop.index != 3
+              if media.media_type == 'image'
                 assign number_of_media = number_of_media | default: 0 | plus: 1
-                render 'tw-main-product-image', media: media, loop: forloop
-              else if media.media_type == 'image'
-                assign number_of_media = number_of_media | default: 0 | plus: 1
-                render 'tw-main-product-image', media: media, loop: forloop
+                if template.suffix == 'painting' and number_of_media != 2
+                  render 'tw-main-product-image', media: media, loop: forloop
+                endif
               endif
             endfor
           %}
@@ -59,12 +58,11 @@
             assign image_number = 0
             for media in product.media
               assign media_alt = product.metafields.meta_object.media.value.alts.value[forloop.index0] | default: media.alt
-              if media.media_type == 'image' and forloop.index != 3
+              if media.media_type == 'image'
                 assign image_number = image_number | default: 0 | plus: 1
-                render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media_alt, image_number: image_number
-              else if media.media_type == 'image'
-                assign image_number = image_number | default: 0 | plus: 1
-                render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media_alt, image_number: image_number
+                if template.suffix == 'painting' and image_number != 2
+                  render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media_alt, image_number: image_number
+                endif
               endif
             endfor
           %}
