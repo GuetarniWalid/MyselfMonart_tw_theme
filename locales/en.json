@@ -375,6 +375,21 @@
       "remove": "Remove {{article}} from cart",
       "subtotal": "Subtotal",
       "title": "Your cart"
+    },
+    "filter_drawer": {
+      "title": "Filter and Sort:",
+      "filter_label": "Filter:",
+      "topics_label": "Topics in this category:",
+      "colors_label": "Colours:",
+      "show_more": "+ Show more",
+      "show_less": "- Show less",
+      "other_collections_label": "Other collections",
+      "button_label": "Filter and Sort",
+      "open": "Open filters",
+      "close": "Close filters",
+      "placeholder": "Filter options will appear here",
+      "products": "products",
+      "clear_all": "Clear"
     }
   },
   "snippet": {

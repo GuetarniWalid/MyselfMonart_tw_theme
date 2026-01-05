@@ -28,27 +28,199 @@
         </li>
       {%- endif -%}
 
-      {%- for part in paginate.parts -%}
-        <li>
-          {%- if part.is_link -%}
+      {%- liquid
+        assign current = paginate.current_page
+        assign total = paginate.pages
+        assign base_url = paginate.parts[0].url | split: '=' | first | append: '='
+        assign total_minus_1 = total | minus: 1
+        assign total_minus_2 = total | minus: 2
+      -%}
+
+      {%- comment -%} Page 1 {%- endcomment -%}
+      <li>
+        {%- if current == 1 -%}
+          <a
+            role="link"
+            aria-disabled="true"
+            aria-current="page"
+            aria-label="{{ 'snippet.pagination.page' | t: number: 1 }}"
+            class="bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded">1</a>
+        {%- else -%}
+          <a
+            href="{{ base_url }}1{{ anchor }}"
+            aria-label="{{ 'snippet.pagination.page' | t: number: 1 }}"
+            class="hover:bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded transition-colors duration-200">1</a>
+        {%- endif -%}
+      </li>
+
+      {%- if current <= 2 -%}
+        {%- comment -%} Pages 1-2: show 1 2 3 ... last {%- endcomment -%}
+        {%- for i in (2..3) -%}
+          {%- if i <= total -%}
+            <li>
+              {%- if current == i -%}
+                <a
+                  role="link"
+                  aria-disabled="true"
+                  aria-current="page"
+                  aria-label="{{ 'snippet.pagination.page' | t: number: i }}"
+                  class="bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded">{{ i }}</a>
+              {%- else -%}
+                <a
+                  href="{{ base_url }}{{ i }}{{ anchor }}"
+                  aria-label="{{ 'snippet.pagination.page' | t: number: i }}"
+                  class="hover:bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded transition-colors duration-200">{{ i }}</a>
+              {%- endif -%}
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if total > 4 -%}
+          <li><span class="etc">…</span></li>
+        {%- endif -%}
+        {%- if total > 3 -%}
+          <li>
             <a
-              href="{{ part.url }}{{ anchor }}"
-              aria-label="{{ 'snippet.pagination.page' | t: number: part.title }}"
-              class="hover:bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded transition-colors duration-200">{{ part.title }}</a>
-          {%- else -%}
-            {%- if part.title == paginate.current_page -%}
+              href="{{ base_url }}{{ total }}{{ anchor }}"
+              aria-label="{{ 'snippet.pagination.page' | t: number: total }}"
+              class="hover:bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded transition-colors duration-200">{{ total }}</a>
+          </li>
+        {%- endif -%}
+
+      {%- elsif current == 3 -%}
+        {%- comment -%} Page 3: show 1 2 3 4 ... last {%- endcomment -%}
+        {%- for i in (2..4) -%}
+          {%- if i <= total -%}
+            <li>
+              {%- if current == i -%}
+                <a
+                  role="link"
+                  aria-disabled="true"
+                  aria-current="page"
+                  aria-label="{{ 'snippet.pagination.page' | t: number: i }}"
+                  class="bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded">{{ i }}</a>
+              {%- else -%}
+                <a
+                  href="{{ base_url }}{{ i }}{{ anchor }}"
+                  aria-label="{{ 'snippet.pagination.page' | t: number: i }}"
+                  class="hover:bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded transition-colors duration-200">{{ i }}</a>
+              {%- endif -%}
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if total > 5 -%}
+          <li><span class="etc">…</span></li>
+        {%- endif -%}
+        {%- if total > 4 -%}
+          <li>
+            <a
+              href="{{ base_url }}{{ total }}{{ anchor }}"
+              aria-label="{{ 'snippet.pagination.page' | t: number: total }}"
+              class="hover:bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded transition-colors duration-200">{{ total }}</a>
+          </li>
+        {%- endif -%}
+
+      {%- elsif current == total -%}
+        {%- comment -%} Last page: show 1 ... last-2 last-1 last {%- endcomment -%}
+        {%- if total > 4 -%}
+          <li><span class="etc">…</span></li>
+        {%- endif -%}
+        {%- assign start = total | minus: 2 -%}
+        {%- for i in (start..total) -%}
+          {%- if i > 1 -%}
+            <li>
+              {%- if current == i -%}
+                <a
+                  role="link"
+                  aria-disabled="true"
+                  aria-current="page"
+                  aria-label="{{ 'snippet.pagination.page' | t: number: i }}"
+                  class="bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded">{{ i }}</a>
+              {%- else -%}
+                <a
+                  href="{{ base_url }}{{ i }}{{ anchor }}"
+                  aria-label="{{ 'snippet.pagination.page' | t: number: i }}"
+                  class="hover:bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded transition-colors duration-200">{{ i }}</a>
+              {%- endif -%}
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+
+      {%- elsif current == total_minus_1 -%}
+        {%- comment -%} Second to last page: show 1 ... last-2 last-1 last {%- endcomment -%}
+        {%- if total > 4 -%}
+          <li><span class="etc">…</span></li>
+        {%- endif -%}
+        {%- assign start = total | minus: 2 -%}
+        {%- for i in (start..total) -%}
+          {%- if i > 1 -%}
+            <li>
+              {%- if current == i -%}
+                <a
+                  role="link"
+                  aria-disabled="true"
+                  aria-current="page"
+                  aria-label="{{ 'snippet.pagination.page' | t: number: i }}"
+                  class="bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded">{{ i }}</a>
+              {%- else -%}
+                <a
+                  href="{{ base_url }}{{ i }}{{ anchor }}"
+                  aria-label="{{ 'snippet.pagination.page' | t: number: i }}"
+                  class="hover:bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded transition-colors duration-200">{{ i }}</a>
+              {%- endif -%}
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+
+      {%- elsif current == total_minus_2 -%}
+        {%- comment -%} Third to last page: show 1 ... last-3 last-2 last-1 last {%- endcomment -%}
+        {%- if current > 4 -%}
+          <li><span class="etc">…</span></li>
+        {%- endif -%}
+        {%- assign start = total | minus: 3 -%}
+        {%- for i in (start..total) -%}
+          {%- if i > 1 -%}
+            <li>
+              {%- if current == i -%}
+                <a
+                  role="link"
+                  aria-disabled="true"
+                  aria-current="page"
+                  aria-label="{{ 'snippet.pagination.page' | t: number: i }}"
+                  class="bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded">{{ i }}</a>
+              {%- else -%}
+                <a
+                  href="{{ base_url }}{{ i }}{{ anchor }}"
+                  aria-label="{{ 'snippet.pagination.page' | t: number: i }}"
+                  class="hover:bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded transition-colors duration-200">{{ i }}</a>
+              {%- endif -%}
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+
+      {%- else -%}
+        {%- comment -%} Middle pages: show 1 ... current-1 current current+1 ... last {%- endcomment -%}
+        <li><span class="etc">…</span></li>
+        {%- assign start = current | minus: 1 -%}
+        {%- assign end = current | plus: 1 -%}
+        {%- for i in (start..end) -%}
+          <li>
+            {%- if current == i -%}
               <a
                 role="link"
                 aria-disabled="true"
                 aria-current="page"
-                aria-label="{{ 'snippet.pagination.page' | t: number: part.title }}"
-                class="bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded">{{ part.title }}</a>
+                aria-label="{{ 'snippet.pagination.page' | t: number: i }}"
+                class="bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded">{{ i }}</a>
             {%- else -%}
-              <span class="etc">{{ part.title }}</span>
+              <a
+                href="{{ base_url }}{{ i }}{{ anchor }}"
+                aria-label="{{ 'snippet.pagination.page' | t: number: i }}"
+                class="hover:bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded transition-colors duration-200">{{ i }}</a>
             {%- endif -%}
-          {%- endif -%}
-        </li>
-      {%- endfor -%}
+          </li>
+        {%- endfor -%}
+        <li><span class="etc">…</span></li>
+      {%- endif -%}
 
       {%- if paginate.next -%}
         <li>

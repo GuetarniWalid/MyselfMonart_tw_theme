@@ -5,7 +5,7 @@
 
 <my-likes data-price-format="{{ first_product.price | money }}">
   <template>
-    <ul data-id="{{ section.id }}" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 md:gap-10 pb-3">
+    <ul data-id="{{ section.id }}" class="product-grid">
       <anime-product-card>
         <li id="{{ first_product.id }}" class="relative group h-full">
           {% render 'card-product'

@@ -64,6 +64,13 @@ module.exports = {
           DEFAULT: 'rgb(var(--color-secondary-rgb))',
           50: 'rgba(var(--color-secondary-rgb), 0.5)',
         },
+        accent: {
+          DEFAULT: 'rgb(var(--color-accent-rgb))',
+          90: 'rgba(var(--color-accent-rgb), 0.9)',
+          70: 'rgba(var(--color-accent-rgb), 0.7)',
+          50: 'rgba(var(--color-accent-rgb), 0.5)',
+          20: 'rgba(var(--color-accent-rgb), 0.2)',
+        },
       },
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],

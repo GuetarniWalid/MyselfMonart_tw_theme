@@ -55,6 +55,8 @@
     <script src="{{ 'collection.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'dropdown-button.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'my-like-button.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'filter-drawer.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'collection-tag-filter.js' | asset_url }}" defer="defer"></script>
 
     <script>
       if (Shopify.designMode) {
@@ -86,6 +88,7 @@
       {% section 'tw-header-painting' %}
     {% endif %}
     {% section 'tw-cart-drawer' %}
+    {% render 'tw-filter-drawer' %}
     {% render 'open-cart-drawer-button' %}
 
 

@@ -16,6 +16,14 @@ document.addEventListener('DOMContentLoaded', () => {
       document.dispatchEvent(new CustomEvent('openCartDrawer'));
     });
   }
+
+  // Overlay click handler for drawers
+  const overlay = document.getElementById('overlay-content');
+  if (overlay) {
+    overlay.addEventListener('click', () => {
+      document.dispatchEvent(new CustomEvent('overlayClick'));
+    });
+  }
 });
 
 function makesLinksNavigable(link) {

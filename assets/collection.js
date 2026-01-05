@@ -10,7 +10,13 @@ class InfiniteScroll extends HTMLElement {
     this.page = Number(this.dataset.page);
     this.isFirstPage = this.page === 1;
     this.isLastPage = this.page === this.pages;
-    this.baseUrl = location.pathname + '?page=';
+
+    // Preserve all query parameters (like filter.p.tag) when building pagination URLs
+    const currentParams = new URLSearchParams(window.location.search);
+    currentParams.delete('page'); // Remove existing page param if any
+    const queryString = currentParams.toString();
+    this.baseUrl = location.pathname + (queryString ? `?${queryString}&page=` : '?page=');
+
     this.sectionId = this.dataset.sectionId;
     this.previousPageExists =
       Number(this.previousElementSibling?.dataset?.page) === this.page - 1;
@@ -210,44 +216,114 @@ class InfiniteScroll extends HTMLElement {
   }
 
   addCurrentPageToPagination() {
+    // Rebuild pagination following the custom pattern
     const template = document.getElementById('pagination-number');
-    const paginationNumber = template.content.cloneNode(true);
-    const liWithLink = paginationNumber.querySelector('li');
-    const a = paginationNumber.querySelector('a');
-    a.href = this.baseUrl + this.page;
-    a.textContent = this.page;
-    a.ariaLabel = a.ariaLabel.replace('#', this.page);
-    const etcElem = this.paginationNavbar
-      .querySelector('.etc')
-      ?.parentElement.cloneNode(true);
-    const lis = this.paginationNavbar.querySelectorAll('ul li');
+    const ul = this.paginationNavbar.querySelector('ul');
 
-    for (const li of lis) {
-      const liNumber = Number(li.textContent);
-      if (this.page === liNumber) return;
-      else if (!liNumber) continue;
-      else if (this.page + 1 <= liNumber) {
-        li.before(liWithLink);
-        break;
+    // Remove all existing page number items (keep arrows)
+    const existingItems = ul.querySelectorAll('li');
+    existingItems.forEach(li => {
+      if (!li.querySelector('.previous-arrow') && !li.querySelector('.next-arrow')) {
+        li.remove();
       }
-    }
-
-    this.paginationNavbar.querySelectorAll('.etc').forEach((span) => {
-      const prevLiNumber = Number(
-        span.parentElement.previousElementSibling.textContent,
-      );
-      const nextLiNumber = Number(
-        span.parentElement.nextElementSibling.textContent,
-      );
-      if (prevLiNumber + 1 === nextLiNumber) span.parentElement.remove();
     });
 
-    this.paginationNavbar.querySelectorAll('ul li').forEach((li) => {
-      const liNumber = Number(li.textContent);
-      const nextliNumber = Number(li.nextElementSibling?.textContent);
-      if (!liNumber || !nextliNumber || isNaN(liNumber) || isNaN(nextliNumber))
-        return;
-      if (liNumber + 1 !== nextliNumber) li.after(etcElem);
+    // Get reference points
+    const prevArrow = ul.querySelector('.previous-arrow')?.parentElement;
+    const nextArrow = ul.querySelector('.next-arrow')?.parentElement;
+    const insertPoint = nextArrow || ul;
+    const insertBefore = nextArrow ? true : false;
+
+    // Helper to create page number li
+    const createPageLi = (pageNum, isCurrent = false) => {
+      const clone = template.content.cloneNode(true);
+      const a = clone.querySelector('a');
+      a.href = this.baseUrl + pageNum;
+      a.textContent = pageNum;
+      a.ariaLabel = a.ariaLabel.replace('#', pageNum);
+
+      if (isCurrent) {
+        a.setAttribute('role', 'link');
+        a.setAttribute('aria-disabled', 'true');
+        a.setAttribute('aria-current', 'page');
+        a.classList.remove('hover:bg-main-10');
+        a.classList.add('bg-main-10');
+        a.removeAttribute('href');
+      }
+
+      return clone;
+    };
+
+    // Helper to create ellipsis li
+    const createEllipsis = () => {
+      const li = document.createElement('li');
+      const span = document.createElement('span');
+      span.className = 'etc';
+      span.textContent = '…';
+      li.appendChild(span);
+      return li;
+    };
+
+    // Helper to insert at correct position
+    const insertLi = (element) => {
+      if (insertBefore) {
+        insertPoint.before(element);
+      } else {
+        insertPoint.appendChild(element);
+      }
+    };
+
+    const current = this.page;
+    const total = this.pages;
+    const pages = [];
+
+    // Build page array following the pattern
+    if (current <= 2) {
+      // Pages 1-2: show 1 2 3 ... last
+      pages.push(1);
+      if (total >= 2) pages.push(2);
+      if (total >= 3) pages.push(3);
+      if (total > 4) pages.push('...');
+      if (total > 3) pages.push(total);
+    } else if (current === 3) {
+      // Page 3: show 1 2 3 4 ... last
+      pages.push(1, 2, 3);
+      if (total >= 4) pages.push(4);
+      if (total > 5) pages.push('...');
+      if (total > 4) pages.push(total);
+    } else if (current === total) {
+      // Last page: show 1 ... last-2 last-1 last
+      pages.push(1);
+      if (total > 4) pages.push('...');
+      for (let i = Math.max(2, total - 2); i <= total; i++) {
+        pages.push(i);
+      }
+    } else if (current === total - 1) {
+      // Second to last: show 1 ... last-2 last-1 last
+      pages.push(1);
+      if (total > 4) pages.push('...');
+      for (let i = Math.max(2, total - 2); i <= total; i++) {
+        pages.push(i);
+      }
+    } else if (current === total - 2) {
+      // Third to last: show 1 ... last-3 last-2 last-1 last
+      pages.push(1);
+      if (current > 4) pages.push('...');
+      for (let i = Math.max(2, total - 3); i <= total; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Middle pages: show 1 ... current-1 current current+1 ... last
+      pages.push(1, '...', current - 1, current, current + 1, '...', total);
+    }
+
+    // Insert pages
+    pages.forEach(page => {
+      if (page === '...') {
+        insertLi(createEllipsis());
+      } else {
+        insertLi(createPageLi(page, page === current));
+      }
     });
   }
 }

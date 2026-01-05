@@ -1,0 +1,81 @@
+{% comment %}
+  Reusable custom checkbox component
+
+  Parameters:
+  - checkbox_id: Unique ID for the checkbox (required)
+  - checkbox_name: Name attribute for the checkbox (optional)
+  - checkbox_value: Value attribute for the checkbox (optional)
+  - checkbox_label: Label text to display next to checkbox (optional)
+  - checkbox_checked: Whether checkbox is checked by default (optional, default: false)
+  - checkbox_swatch_color: Hex color value for visual swatch (optional, for color filters)
+  - checkbox_swatch_image: Image URL for visual swatch (optional, for color filters)
+  - checkbox_swatch_border: Add border to swatch (optional, for white/light colors)
+  - checkbox_swatch_checkmark_main: Use main color for checkmark instead of white (optional, for white/light colors)
+  - data_filter_param: Filter parameter name for JavaScript (optional)
+
+  Usage:
+  {% render 'custom-checkbox',
+    checkbox_id: 'my-checkbox',
+    checkbox_name: 'filter',
+    checkbox_value: 'value',
+    checkbox_label: 'Label text (123)',
+    checkbox_swatch_color: '#FF0000',
+    checkbox_swatch_border: true,
+    data_filter_param: 'filter.p.tag' %}
+{% endcomment %}
+
+<div class="flex items-center gap-2">
+  {%- comment -%} Custom checkbox with optional color swatch {%- endcomment -%}
+  {% if checkbox_swatch_color or checkbox_swatch_image %}
+    {%- comment -%} Color swatch checkbox {%- endcomment -%}
+    <div
+      class="inline-block relative w-5 h-5 rounded {% if checkbox_swatch_border %}border border-main-30{% else %}border-0{% endif %} cursor-pointer has-[:checked]:border-2 has-[:checked]:border-main"
+      role="checkbox"
+      style="{% if checkbox_swatch_image %}background-image: url('{{ checkbox_swatch_image }}'); background-size: cover; background-position: center;{% elsif checkbox_swatch_color %}background-color: {{ checkbox_swatch_color }};{% endif %}">
+      <input
+        id="{{ checkbox_id }}"
+        class="absolute inset-0 opacity-0 cursor-pointer peer"
+        type="checkbox"
+        {% if checkbox_name %}name="{{ checkbox_name }}"{% endif %}
+        {% if checkbox_value %}value="{{ checkbox_value }}"{% endif %}
+        {% if checkbox_checked %}checked{% endif %}
+        {% if data_filter_param %}data-filter-param="{{ data_filter_param }}"{% endif %} />
+      <svg
+        width="12"
+        height="10"
+        viewBox="0 0 12 10"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 {% if checkbox_swatch_checkmark_main %}text-main{% else %}text-white{% endif %} drop-shadow-md opacity-0 peer-checked:opacity-100 transition-opacity duration-200 pointer-events-none">
+        <path d="M4.5 9.20078L0.5 5.20078L1.9 3.80078L4.5 6.40078L10.1 0.800781L11.5 2.20078L4.5 9.20078Z" fill="currentColor" />
+      </svg>
+    </div>
+  {% else %}
+    {%- comment -%} Default checkbox (for tags, etc) {%- endcomment -%}
+    <div class="inline-block relative w-5 h-5 rounded border-2 border-main-80 bg-transparent cursor-pointer has-[:checked]:border-0 has-[:checked]:bg-main" role="checkbox">
+      <input
+        id="{{ checkbox_id }}"
+        class="absolute inset-0 opacity-0 cursor-pointer peer"
+        type="checkbox"
+        {% if checkbox_name %}name="{{ checkbox_name }}"{% endif %}
+        {% if checkbox_value %}value="{{ checkbox_value }}"{% endif %}
+        {% if checkbox_checked %}checked{% endif %}
+        {% if data_filter_param %}data-filter-param="{{ data_filter_param }}"{% endif %} />
+      <svg
+        width="12"
+        height="10"
+        viewBox="0 0 12 10"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-secondary opacity-0 peer-checked:opacity-100 transition-opacity duration-200 pointer-events-none">
+        <path d="M4.5 9.20078L0.5 5.20078L1.9 3.80078L4.5 6.40078L10.1 0.800781L11.5 2.20078L4.5 9.20078Z" fill="currentColor" />
+      </svg>
+    </div>
+  {% endif %}
+
+  {% if checkbox_label %}
+    <label for="{{ checkbox_id }}" class="cursor-pointer text-sm flex-1 text-main-80">
+      {{ checkbox_label }}
+    </label>
+  {% endif %}
+</div>

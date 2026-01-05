@@ -21,7 +21,7 @@
   {%- endif -%}
 
   {% paginate search.results by 24 %}
-    <ul data-id="{{ section.id }}" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 md:gap-10 pb-3">
+    <ul data-id="{{ section.id }}" class="product-grid">
       {%- for product in search.results -%}
         {% liquid
           assign lazy_load = false

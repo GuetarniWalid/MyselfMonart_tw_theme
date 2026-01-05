@@ -404,6 +404,10 @@ main-product-blocks .description h2 span {
     @apply fixed top-0 h-dvh right-0 z-50 w-full xs:w-96 bg-secondary transition-transform duration-100 overflow-y-auto scrollbar;
   }
 
+  .filter-drawer {
+    @apply fixed top-0 h-dvh right-0 z-50 w-full xs:w-96 bg-secondary transition-transform duration-100 overflow-y-auto scrollbar;
+  }
+
   .croppr-overlay {
     @apply pointer-events-none;
   }
@@ -422,6 +426,10 @@ main-product-blocks .description h2 span {
   .image-with-text a, 
   .product-description a {
     @apply relative after:bg-main-10 after:absolute after:top-0 after:bottom-0 after:-right-1 after:-left-1 after:-skew-x-12 inline-block;
+  }
+
+  .product-grid {
+    @apply grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-8 md:gap-10 pb-3;
   }
 
   .close-nav {
@@ -520,7 +528,6 @@ main-product-blocks .description h2 span {
   }
 
   .scrollbar {
-    scrollbar-color: rgba(1, 46, 93, 0.2) #efece8;
     scrollbar-width: 5px;
   }
 

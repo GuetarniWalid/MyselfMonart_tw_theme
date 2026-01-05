@@ -1,3 +1,18 @@
+{%- comment -%} Check if filters should be shown for this collection type {%- endcomment -%}
+{% assign show_filters = false %}
+{%- if template.name == 'collection' -%}
+  {% assign collection_type = collection.metafields.custom.type_of_collection | default: 'other' %}
+  {% if collection_type == 'painting' and settings.enable_painting_filtering %}
+    {% assign show_filters = true %}
+  {% elsif collection_type == 'poster' and settings.enable_poster_filtering %}
+    {% assign show_filters = true %}
+  {% elsif collection_type == 'tapestry' and settings.enable_tapestry_filtering %}
+    {% assign show_filters = true %}
+  {% elsif collection_type == 'other' and settings.enable_other_filtering %}
+    {% assign show_filters = true %}
+  {% endif %}
+{%- endif -%}
+
 <sticky-header class="transition-colors duration-500 border-b border-solid border-main relative">
   <div>
     <div class="bg-secondary py-4 pl-6 pr-3 flex items-center justify-between border-b border-solid border-main min-h-[90px] md:pl-14 md:pr-10 mobile:relative">
@@ -10,11 +25,11 @@
           </span>
         </summary>
         <nav
-          class="bg-secondary absolute bottom-0 left-0 w-screen border-t border-solid border-main close-nav transition-all duration-150 -z-10 h-[calc(100vh-80px)] overflow-y-auto scrollbar grid grid-rows-[1fr_auto]"
+          class="bg-secondary absolute bottom-0 left-0 w-screen border-t border-solid border-main close-nav transition-all duration-150 -z-10 h-[calc(100vh-90px)] overflow-y-auto scrollbar grid grid-rows-[1fr_auto]"
           role="dialog"
           aria-modal="true"
           aria-label="{{ "snippet.tw_sticky_header.navigation" | t }}">
-          <ul class="py-8 px-5 gap-y-3 relative overflow-hidden">
+          <ul class="px-5 gap-y-3 relative pb-8 {% if show_filters %}pt-[54px]{% else %}pt-8{% endif %}">
             {% for block in section.blocks %}
               {% if block.type == "collection_only" %}
                 <li
@@ -81,7 +96,7 @@
                       {% render 'tw-icon-arrow'
                         , group_one: true %}
                     </summary>
-                    <div class="absolute inset-0 bg-secondary py-8 px-5 transition-all duration-150 translate-x-full overflow-y-scroll overflow-x-hidden">
+                    <div class="absolute inset-0 bg-secondary pb-8 {% if show_filters %}pt-[54px]{% else %}pt-8{% endif %} px-5 transition-all duration-150 translate-x-full overflow-y-scroll overflow-x-hidden">
                       <h3
                         class="group bg-main-10 cursor-pointer py-2 px-4 rounded-md mb-2 text-xl"
                         tabindex="0"
@@ -127,7 +142,7 @@
                       {% render 'tw-icon-arrow'
                         , group_one: true %}
                     </summary>
-                    <div class="absolute inset-0 bg-secondary py-8 px-5 transition-all duration-150 translate-x-full overflow-y-scroll overflow-x-hidden">
+                    <div class="absolute inset-0 bg-secondary pb-8 {% if show_filters %}pt-[54px]{% else %}pt-8{% endif %} px-5 transition-all duration-150 translate-x-full overflow-y-scroll overflow-x-hidden">
                       <h3
                         class="group bg-main-10 cursor-pointer py-2 px-4 rounded-md mb-2 text-xl"
                         tabindex="0"
@@ -174,7 +189,7 @@
                                 {% render 'tw-icon-arrow'
                                   , group_one: true %}
                               </summary>
-                              <div class="absolute inset-0 bg-secondary py-8 px-5 transition-all duration-150 translate-x-full overflow-y-scroll overflow-x-hidden">
+                              <div class="absolute inset-0 bg-secondary pb-8 {% if show_filters %}pt-[54px]{% else %}pt-8{% endif %} px-5 transition-all duration-150 translate-x-full overflow-y-scroll overflow-x-hidden">
                                 <h3
                                   class="group bg-main-10 cursor-pointer py-2 px-4 rounded-md mb-2 text-xl"
                                   tabindex="0"
@@ -638,4 +653,34 @@
     </nav>
     {% comment %} end on desktop {% endcomment %}
   </div>
+
+  {%- comment -%} Mobile filter button - Collection pages only {%- endcomment -%}
+  {%- if show_filters -%}
+    <div
+      id="mobile-filter-button-wrapper"
+      class="md:hidden w-screen bg-secondary border-b border-main transition-transform duration-150"
+      style="margin-left: calc(-50vw + 50%);">
+
+      <button
+        type="button"
+        id="filter-button-mobile"
+        class="w-full flex items-center justify-center gap-3 py-3 px-4 hover:bg-main-10 transition-colors duration-100"
+        aria-label="{{ 'sections.filter_drawer.open' | t }}"
+        aria-expanded="false">
+
+        {% render 'icon-filter' %}
+
+        <span class="font-semibold text-sm heading">
+          {{ 'sections.filter_drawer.button_label' | t | upcase }}
+        </span>
+
+        {% if collection.products_count %}
+          <span class="text-xs text-main-70">
+            {{ collection.products_count }} {{ 'sections.filter_drawer.products' | t }}
+          </span>
+        {% endif %}
+      </button>
+    </div>
+  {%- endif -%}
+
 </sticky-header>

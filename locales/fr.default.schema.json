@@ -14,7 +14,26 @@
         },
         "buy_button_color": {
           "label": "Couleur du bouton d'achat"
+        },
+        "accent_color": {
+          "label": "Couleur d'accentuation"
         }
+      }
+    },
+    "collection_filters": {
+      "name": "Filtres de collections",
+      "paragraph": "Contrôlez quels types de collections affichent les filtres de produits (couleur, thèmes, tags, etc.)",
+      "enable_painting_filtering": {
+        "label": "Activer le filtrage sur les collections de tableaux"
+      },
+      "enable_poster_filtering": {
+        "label": "Activer le filtrage sur les collections de posters"
+      },
+      "enable_tapestry_filtering": {
+        "label": "Activer le filtrage sur les collections de tapisseries"
+      },
+      "enable_other_filtering": {
+        "label": "Activer le filtrage sur les autres collections"
       }
     },
     "cookie_banner": {

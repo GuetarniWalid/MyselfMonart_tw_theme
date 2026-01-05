@@ -4,8 +4,30 @@
       {{ 'sections.main_collection_product_grid.empty' | t }}
     </h2>
   {%- else -%}
-    <div>
-      {%- if paginate.pages > 1 -%}
+    {%- comment -%} Check if filters should be shown for this collection type {%- endcomment -%}
+    {% assign collection_type = collection.metafields.custom.type_of_collection | default: 'other' %}
+    {% assign show_filters = false %}
+    {% if collection_type == 'painting' and settings.enable_painting_filtering %}
+      {% assign show_filters = true %}
+    {% elsif collection_type == 'poster' and settings.enable_poster_filtering %}
+      {% assign show_filters = true %}
+    {% elsif collection_type == 'tapestry' and settings.enable_tapestry_filtering %}
+      {% assign show_filters = true %}
+    {% elsif collection_type == 'other' and settings.enable_other_filtering %}
+      {% assign show_filters = true %}
+    {% endif %}
+
+    {%- comment -%} Desktop: sidebar + grid layout {%- endcomment -%}
+    <div class="flex gap-8">
+
+      {%- comment -%} Desktop sidebar (hidden on mobile) {%- endcomment -%}
+      {% if show_filters %}
+        {% render 'filter-sidebar' %}
+      {% endif %}
+
+      {%- comment -%} Product grid (full width on mobile, flex-1 on desktop) {%- endcomment -%}
+      <div class="flex-1 min-w-0">
+        {%- if paginate.pages > 1 -%}
         <infinite-scroll
           id="infinite-scroll-{{ collection.id }}-{{ paginate.current_page }}"
           data-pages="{{ paginate.pages }}"
@@ -13,7 +35,7 @@
           data-section-id="{{ section.id }}"
           data-paginate-previous-url="{{ paginate.previous.url }}"
           data-paginate-next-url="{{ paginate.next.url }}">
-          <ul data-id="{{ section.id }}" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 md:gap-10 pb-3 {{ section.settings.margin_top }}">
+          <ul data-id="{{ section.id }}" class="product-grid {{ section.settings.margin_top }}">
             {%- for product in collection.products -%}
               {% liquid
                 assign lazy_load = false
@@ -38,7 +60,7 @@
           , paginate: paginate
           , anchor: '' %}
       {%- else -%}
-        <ul data-id="{{ section.id }}" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 md:gap-10 pb-3">
+        <ul data-id="{{ section.id }}" class="product-grid">
           {%- for product in collection.products -%}
             {% liquid
               assign lazy_load = false
@@ -59,9 +81,62 @@
           {%- endfor -%}
         </ul>
       {%- endif -%}
+      </div>
+      {%- comment -%} End of product grid wrapper {%- endcomment -%}
+
     </div>
+    {%- comment -%} End of flex container {%- endcomment -%}
   {%- endif -%}
 {%- endpaginate -%}
+
+{%- comment -%} Check if filters should be shown for this collection type {%- endcomment -%}
+{% assign collection_type = collection.metafields.custom.type_of_collection | default: 'other' %}
+{% assign show_filters = false %}
+{% if collection_type == 'painting' and settings.enable_painting_filtering %}
+  {% assign show_filters = true %}
+{% elsif collection_type == 'poster' and settings.enable_poster_filtering %}
+  {% assign show_filters = true %}
+{% elsif collection_type == 'tapestry' and settings.enable_tapestry_filtering %}
+  {% assign show_filters = true %}
+{% elsif collection_type == 'other' and settings.enable_other_filtering %}
+  {% assign show_filters = true %}
+{% endif %}
+
+{% if show_filters %}
+  {%- comment -%} Theme filtering custom element {%- endcomment -%}
+  {%- comment -%} Detect which color filter parameter is being used {%- endcomment -%}
+  {% assign color_param_name = 'filter.v.m.shopify.color-pattern' %}
+  {% for filter in collection.filters %}
+    {% if filter.type == 'list' %}
+      {% assign filter_label_lower = filter.label | downcase %}
+      {% if filter_label_lower contains 'color' or filter_label_lower contains 'couleur' %}
+        {% assign color_param_name = filter.param_name %}
+        {% break %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+  <collection-tag-filter>
+    {%- comment -%} Include filter count data for JavaScript to update UI {%- endcomment -%}
+    <script type="application/json" data-filter-counts>
+      {
+        {%- for filter in collection.filters -%}
+          {%- if filter.type == 'list' -%}
+            "{{ filter.param_name | handleize }}": [
+              {%- for filter_value in filter.values -%}
+                {
+                  "value": {{ filter_value.value | json }},
+                  "label": {{ filter_value.label | json }},
+                  "count": {{ filter_value.count | json }}
+                }{% unless forloop.last %},{% endunless %}
+              {%- endfor -%}
+            ]{% unless forloop.last %},{% endunless %}
+          {%- endif -%}
+        {%- endfor -%}
+      }
+    </script>
+  </collection-tag-filter>
+{% endif %}
 
 <script type="application/ld+json">
   {

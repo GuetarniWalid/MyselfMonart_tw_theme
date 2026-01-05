@@ -375,6 +375,21 @@
       "remove": "Enlever {{article}} du panier",
       "subtotal": "Sous-total",
       "title": "Votre panier"
+    },
+    "filter_drawer": {
+      "title": "Filtrer et Trier :",
+      "filter_label": "Filtrer :",
+      "topics_label": "Thèmes dans cette catégorie :",
+      "colors_label": "Couleurs :",
+      "show_more": "+ Voir plus",
+      "show_less": "- Voir moins",
+      "other_collections_label": "Autres collections",
+      "button_label": "Filtrer et Trier",
+      "open": "Ouvrir les filtres",
+      "close": "Fermer les filtres",
+      "placeholder": "Les options de filtrage apparaîtront ici",
+      "products": "produits",
+      "clear_all": "Supprimer"
     }
   },
   "snippet": {

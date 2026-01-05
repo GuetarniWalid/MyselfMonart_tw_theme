@@ -1,0 +1,74 @@
+{% comment %}
+  Reusable filter topics section
+  Renders theme filter checkboxes from Search & Discovery
+
+  Parameters:
+  - id_prefix: String - Prefix for checkbox IDs (e.g., 'filter-theme-' or 'filter-theme-mobile-')
+  - theme_filter: Object - The theme filter object from collection.filters
+
+  Usage:
+  {% render 'filter-topics-section', id_prefix: 'filter-theme-', theme_filter: theme_filter %}
+{% endcomment %}
+
+<div class="py-4">
+  {%- comment -%} Topics Section {%- endcomment -%}
+  <details class="group" open>
+    <summary class="sticky top-0 z-10 bg-secondary flex justify-between items-center cursor-pointer list-none select-none py-2 px-4">
+      <span class="font-semibold text-sm font-heading">{{ 'sections.filter_drawer.topics_label' | t }}</span>
+      <span class="group-open:rotate-180 transition-transform duration-200">
+        {% render 'tw-icon-caret', width: "12" %}
+      </span>
+    </summary>
+
+    <ul class="pt-3 pb-4 px-4 flex flex-col gap-4 max-h-[300px] overflow-y-auto scrollbar list-none">
+      {%- comment -%} Theme checkboxes from Search & Discovery {%- endcomment -%}
+      {% if theme_filter %}
+        {% for filter_value in theme_filter.values %}
+          {% assign theme_label = filter_value.label %}
+          {% assign theme_value = filter_value.value %}
+          {% assign theme_count = filter_value.count %}
+
+          {%- comment -%} Only show themes with at least 1 matching product {%- endcomment -%}
+          {% if theme_count > 0 %}
+
+          {%- comment -%} Show first 8 themes, hide rest {%- endcomment -%}
+          {% assign theme_index = forloop.index0 %}
+          {% assign theme_handleized = theme_label | handleize %}
+          {% assign checkbox_id_value = id_prefix | append: theme_handleized %}
+          {% assign checkbox_label_value = theme_label | append: ' (' | append: theme_count | append: ')' %}
+
+          <li class="{% if theme_index >= 8 %}hidden js-extra-themes{% endif %}">
+            {% render 'custom-checkbox',
+              checkbox_id: checkbox_id_value,
+              checkbox_name: 'theme',
+              checkbox_value: theme_value,
+              checkbox_label: checkbox_label_value %}
+          </li>
+
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </ul>
+
+    {%- comment -%} Show more button (only if more than 8 themes) {%- endcomment -%}
+    {% if theme_filter %}
+      {% assign total_themes = theme_filter.values | size %}
+      {% if total_themes > 8 %}
+        <button
+          type="button"
+          class="text-sm text-main-70 hover:text-main mt-4 cursor-pointer underline underline-offset-4 decoration-1 hover:decoration-2 px-4"
+          onclick="
+            const extraThemes = this.closest('details').querySelectorAll('.js-extra-themes');
+            const isShowing = extraThemes[0].classList.contains('hidden');
+            extraThemes.forEach(theme => theme.classList.toggle('hidden'));
+            this.textContent = isShowing ? '{{ 'sections.filter_drawer.show_less' | t }}' : '{{ 'sections.filter_drawer.show_more' | t }}';
+          ">
+          {{ 'sections.filter_drawer.show_more' | t }}
+        </button>
+      {% endif %}
+    {% endif %}
+  </details>
+
+  {%- comment -%} Future sections: Colours, Layout, Change category {%- endcomment -%}
+
+</div>

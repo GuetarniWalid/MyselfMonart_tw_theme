@@ -1,0 +1,65 @@
+{%- comment -%} Check if filters should be shown for this collection type {%- endcomment -%}
+{% assign collection_type = collection.metafields.custom.type_of_collection | default: 'other' %}
+{% assign show_filters = false %}
+{% if collection_type == 'painting' and settings.enable_painting_filtering %}
+  {% assign show_filters = true %}
+{% elsif collection_type == 'poster' and settings.enable_poster_filtering %}
+  {% assign show_filters = true %}
+{% elsif collection_type == 'tapestry' and settings.enable_tapestry_filtering %}
+  {% assign show_filters = true %}
+{% elsif collection_type == 'other' and settings.enable_other_filtering %}
+  {% assign show_filters = true %}
+{% endif %}
+
+{% if show_filters %}
+  <filter-drawer
+    class="filter-drawer translate-x-full"
+    role="dialog"
+    aria-modal="true"
+    aria-label="{{ 'sections.filter_drawer.title' | t }}"
+    tabindex="-1"
+    aria-expanded="false">
+
+    {%- comment -%} Header with close button {%- endcomment -%}
+    <div class="flex justify-between items-center px-4 py-3 border-b border-main sticky top-0 bg-secondary z-10">
+      <div class="flex items-center gap-3">
+        <h2 class="text-lg font-bold heading">{{ 'sections.filter_drawer.title' | t }}</h2>
+        <button
+          type="button"
+          class="clear-filters hidden text-main-80 hover:underline hover:text-main transition-colors"
+          aria-label="{{ 'sections.filter_drawer.clear_all' | t }}">
+          {{ 'sections.filter_drawer.clear_all' | t }}
+        </button>
+      </div>
+      <button
+        class="close"
+        type="button"
+        aria-label="{{ 'sections.filter_drawer.close' | t }}"
+        tabindex="-1">
+        {% render 'tw-icon-close', width: "24" %}
+      </button>
+    </div>
+
+    {%- comment -%} Filter content - Dynamically render all filters {%- endcomment -%}
+    {% for filter in collection.filters %}
+      {% if filter.type == 'list' %}
+        {%- comment -%} Check if this is a color filter to add visual swatches {%- endcomment -%}
+        {% assign is_color_filter = false %}
+        {% assign filter_label_lower = filter.label | downcase %}
+        {% if filter.param_name contains 'color' or filter_label_lower contains 'color' or filter_label_lower contains 'couleur' %}
+          {% assign is_color_filter = true %}
+        {% endif %}
+
+        {% if is_color_filter %}
+          {% render 'filter-colors-section', id_prefix: 'filter-mobile-' | append: forloop.index | append: '-', color_filter: filter, filter_index: forloop.index %}
+        {% else %}
+          {% render 'filter-generic-section', id_prefix: 'filter-mobile-' | append: forloop.index | append: '-', filter: filter, filter_index: forloop.index %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+
+    {%- comment -%} Collection navigation section (not a filter) {%- endcomment -%}
+    {% render 'collection-navigation-section', current_collection: collection %}
+
+  </filter-drawer>
+{% endif %}

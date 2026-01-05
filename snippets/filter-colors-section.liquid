@@ -1,0 +1,117 @@
+{% comment %}
+  Reusable filter colors section
+  Renders color filter checkboxes from Search & Discovery
+
+  Parameters:
+  - id_prefix: String - Prefix for checkbox IDs (e.g., 'filter-color-' or 'filter-color-mobile-')
+  - color_filter: Object - The color filter object from collection.filters
+  - filter_index: Number - Index of the filter for conditional open state (optional)
+
+  Usage:
+  {% render 'filter-colors-section', id_prefix: 'filter-color-', color_filter: color_filter, filter_index: 1 %}
+{% endcomment %}
+
+<div class="py-4 border-t border-main">
+  {%- comment -%} Colors Section {%- endcomment -%}
+  <details class="group" {% if filter_index <= 2 or filter_index == nil %}open{% endif %}>
+  <summary class="sticky top-0 z-20 bg-secondary flex justify-between items-center cursor-pointer list-none select-none py-2 px-4">
+    <span class="font-semibold text-sm font-heading">{{ 'sections.filter_drawer.colors_label' | t }}</span>
+    <span class="group-open:rotate-180 transition-transform duration-200">
+      {% render 'tw-icon-caret', width: "12" %}
+    </span>
+  </summary>
+
+  <ul class="pt-3 pb-4 px-4 flex flex-col gap-4 max-h-[300px] overflow-y-auto scrollbar list-none">
+    {%- comment -%} Color checkboxes from Search & Discovery {%- endcomment -%}
+    {% if color_filter %}
+      {% for filter_value in color_filter.values %}
+        {% assign color_label = filter_value.label %}
+        {% assign color_value = filter_value.value %}
+        {% assign color_count = filter_value.count %}
+
+        {%- comment -%} Only show colors with at least 1 matching product {%- endcomment -%}
+        {% if color_count > 0 %}
+
+        {%- comment -%} Get swatch data if available {%- endcomment -%}
+        {% assign swatch_color = null %}
+        {% assign swatch_image = null %}
+
+        {%- comment -%} First try to get swatch from filter API {%- endcomment -%}
+        {% if filter_value.swatch %}
+          {% if filter_value.swatch.color %}
+            {% assign swatch_color = filter_value.swatch.color %}
+          {% endif %}
+          {% if filter_value.swatch.image %}
+            {% assign swatch_image = filter_value.swatch.image %}
+          {% endif %}
+        {% endif %}
+
+        {%- comment -%} Fallback: Map color labels to images or hex values {%- endcomment -%}
+        {% unless swatch_color or swatch_image %}
+          {% assign color_lower = color_label | downcase %}
+          {% assign swatch_filename = null %}
+
+          {%- comment -%} First, check if there's an uploaded image file {%- endcomment -%}
+          {% case color_lower %}
+            {% when 'multicolor', 'multicolore', 'multi-color' %}
+              {% assign swatch_filename = 'multicolor.jpg' %}
+            {% when 'blanc-noir', 'blanc noir', 'noir-blanc', 'noir blanc', 'noir & blanc', 'blanc & noir', 'black-white', 'black white', 'white-black', 'white black', 'black & white', 'white & black' %}
+              {% assign swatch_filename = 'black-and-white.jpg' %}
+          {% endcase %}
+
+          {%- comment -%} If we have a filename, construct the CDN URL {%- endcomment -%}
+          {% if swatch_filename %}
+            {% assign swatch_image = 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/' | append: swatch_filename %}
+          {% endif %}
+        {% endunless %}
+
+        {%- comment -%} Check if this color needs a border (white or black & white) {%- endcomment -%}
+        {% assign needs_border = false %}
+        {% assign color_lower_check = color_label | downcase %}
+        {% if color_lower_check contains 'white' or color_lower_check contains 'blanc' or color_lower_check == 'white' or color_lower_check == 'blanc' %}
+          {% assign needs_border = true %}
+        {% endif %}
+
+        {%- comment -%} Show first 8 colors, hide rest {%- endcomment -%}
+        {% assign color_index = forloop.index0 %}
+        {% assign color_handleized = color_label | handleize %}
+        {% assign checkbox_id_value = id_prefix | append: color_handleized %}
+        {% assign checkbox_label_value = color_label | append: ' (' | append: color_count | append: ')' %}
+
+        <li class="{% if color_index >= 8 %}hidden js-extra-colors{% endif %}">
+          {% render 'custom-checkbox',
+            checkbox_id: checkbox_id_value,
+            checkbox_name: 'color',
+            checkbox_value: color_value,
+            checkbox_label: checkbox_label_value,
+            checkbox_swatch_color: swatch_color,
+            checkbox_swatch_image: swatch_image,
+            checkbox_swatch_border: needs_border,
+            checkbox_swatch_checkmark_main: needs_border,
+            data_filter_param: color_filter.param_name %}
+        </li>
+
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  </ul>
+
+  {%- comment -%} Show more button (only if more than 8 colors) {%- endcomment -%}
+  {% if color_filter %}
+    {% assign total_colors = color_filter.values | size %}
+    {% if total_colors > 8 %}
+      <button
+        type="button"
+        class="text-sm text-main-70 hover:text-main mt-4 cursor-pointer underline underline-offset-4 decoration-1 hover:decoration-2 px-4"
+        onclick="
+          const extraColors = this.closest('details').querySelectorAll('.js-extra-colors');
+          const isShowing = extraColors[0].classList.contains('hidden');
+          extraColors.forEach(color => color.classList.toggle('hidden'));
+          this.textContent = isShowing ? '{{ 'sections.filter_drawer.show_less' | t }}' : '{{ 'sections.filter_drawer.show_more' | t }}';
+        ">
+        {{ 'sections.filter_drawer.show_more' | t }}
+      </button>
+    {% endif %}
+  {% endif %}
+  </details>
+</div>

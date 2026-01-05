@@ -14,7 +14,26 @@
         },
         "buy_button_color": {
           "label": "Buy button color"
+        },
+        "accent_color": {
+          "label": "Accent color"
         }
+      }
+    },
+    "collection_filters": {
+      "name": "Collection Filters",
+      "paragraph": "Control which collection types display product filters (color, themes, tags, etc.)",
+      "enable_painting_filtering": {
+        "label": "Enable filtering on paintings collections"
+      },
+      "enable_poster_filtering": {
+        "label": "Enable filtering on posters collections"
+      },
+      "enable_tapestry_filtering": {
+        "label": "Enable filtering on tapestry collections"
+      },
+      "enable_other_filtering": {
+        "label": "Enable filtering on other collections"
       }
     },
     "cookie_banner": {

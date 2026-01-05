@@ -54,6 +54,39 @@
     ]
   },
   {
+    "name": "t:settings_schema.collection_filters.name",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "t:settings_schema.collection_filters.paragraph"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_painting_filtering",
+        "default": false,
+        "label": "t:settings_schema.collection_filters.enable_painting_filtering.label"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_poster_filtering",
+        "default": false,
+        "label": "t:settings_schema.collection_filters.enable_poster_filtering.label"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_tapestry_filtering",
+        "default": false,
+        "label": "t:settings_schema.collection_filters.enable_tapestry_filtering.label"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_other_filtering",
+        "default": false,
+        "label": "t:settings_schema.collection_filters.enable_other_filtering.label"
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.color.name",
     "settings": [
       {
@@ -79,6 +112,12 @@
         "id": "buy_button_color",
         "label": "t:settings_schema.color.settings.buy_button_color.label",
         "default": "#04A777"
+      },
+      {
+        "type": "color",
+        "id": "accent_color",
+        "label": "t:settings_schema.color.settings.accent_color.label",
+        "default": "#FCD34D"
       }
     ]
   },
