@@ -146,13 +146,31 @@ class MyLikeButton extends HTMLElement {
   }
 
   updateLikesCountOnLayout(action) {
-    const likesCountElem = this.querySelector(
+    let likesCountElem = this.querySelector(
       '.total-users-likes-count',
     );
+    const button = this.querySelector('.like');
+
+    // If count element doesn't exist and we're incrementing from 0, create it
+    if (!likesCountElem && action === 'increment') {
+      likesCountElem = document.createElement('span');
+      likesCountElem.className = 'font-semibold font-heading total-users-likes-count text-sm text-main';
+      likesCountElem.textContent = '1';
+      button.appendChild(likesCountElem);
+      return;
+    }
+
     if (!likesCountElem) return;
+
     const count = parseInt(likesCountElem.textContent);
     const newCount = action === 'increment' ? count + 1 : count - 1;
-    likesCountElem.textContent = newCount.toString();
+
+    // Hide when reaching 0, otherwise update text
+    if (newCount <= 0) {
+      likesCountElem.remove();
+    } else {
+      likesCountElem.textContent = newCount.toString();
+    }
   }
 
   updateLikesCountOnLocalStorage(id, action) {

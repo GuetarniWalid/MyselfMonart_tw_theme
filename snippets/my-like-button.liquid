@@ -19,8 +19,10 @@
   <button class="like relative py-1 sm:py-2 px-2 sm:px-3 bg-main-5 rounded inline-flex items-center gap-1 z-20 {{ margin_bottom }}">
     {% render 'tw-icon-heart-outline' %}
     {% render 'tw-icon-heart-full' %}
-    <span class="font-semibold font-heading total-users-likes-count text-sm text-main">
-      {{ likes_count }}
-    </span>
+    {% if likes_count > 0 %}
+      <span class="font-semibold font-heading total-users-likes-count text-sm text-main">
+        {{ likes_count }}
+      </span>
+    {% endif %}
   </button>
 </my-like-button>
