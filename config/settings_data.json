@@ -14,6 +14,7 @@
     "predictive_search_enabled": true,
     "predictive_search_show_vendor": false,
     "predictive_search_show_price": true,
+    "enable_painting_filtering": true,
     "main_color": "#232425",
     "secondary_color": "#ffffff",
     "favicon": "shopify://shop_images/logo-myselfmonart.png",
