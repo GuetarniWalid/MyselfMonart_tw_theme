@@ -61,10 +61,19 @@
       "tw-header-painting": {
         "type": "tw-header-painting",
         "blocks": {
+          "parent_collection_images_GqAFDP": {
+            "type": "parent_collection_images",
+            "settings": {
+              "title": "Tous Les Tableaux",
+              "link": "shopify://collections/tous-les-tableaux",
+              "product": "",
+              "child_collection_list": []
+            }
+          },
           "parent_collection_nGAFUn": {
             "type": "parent_collection_images",
             "settings": {
-              "title": "Tableau Par Pièce",
+              "title": "Par Pièce",
               "link": "",
               "product": "",
               "child_collection_list": [
@@ -78,7 +87,7 @@
           "parent_collection_fTjgF8": {
             "type": "parent_collection_images",
             "settings": {
-              "title": "Tableau Par Thème",
+              "title": "Par Thème",
               "link": "",
               "product": "",
               "child_collection_list": [
@@ -94,7 +103,7 @@
           "parent_collection_xnc6qR": {
             "type": "parent_collection_images",
             "settings": {
-              "title": "Tableau Par Couleur",
+              "title": "Par Couleur",
               "link": "",
               "product": "",
               "child_collection_list": [
@@ -111,7 +120,7 @@
           "parent_collection_MRr679": {
             "type": "parent_collection_images",
             "settings": {
-              "title": "Tableau Nature & Sauvage",
+              "title": "Nature & Sauvage",
               "link": "",
               "product": "",
               "child_collection_list": [
@@ -122,19 +131,10 @@
               ]
             }
           },
-          "parent_collection_images_GqAFDP": {
-            "type": "parent_collection_images",
-            "settings": {
-              "title": "Tous Les Tableaux",
-              "link": "shopify://collections/tableau-par-piece",
-              "product": "",
-              "child_collection_list": []
-            }
-          },
           "parent_collection_images_dt8w7c": {
             "type": "parent_collection_images",
             "settings": {
-              "title": "Tableau best-sellers",
+              "title": "Best-sellers",
               "link": "shopify://collections/bestsellers-1",
               "product": "",
               "child_collection_list": []
@@ -148,11 +148,11 @@
           }
         },
         "block_order": [
+          "parent_collection_images_GqAFDP",
           "parent_collection_nGAFUn",
           "parent_collection_fTjgF8",
           "parent_collection_xnc6qR",
           "parent_collection_MRr679",
-          "parent_collection_images_GqAFDP",
           "parent_collection_images_dt8w7c",
           "page_only_kTfwXk"
         ],
@@ -345,6 +345,15 @@
       "tw-header-page-painting": {
         "type": "tw-header-page-painting",
         "blocks": {
+          "parent_collection_images_GwidRm": {
+            "type": "parent_collection_images",
+            "settings": {
+              "title": "Tous les Tableaux",
+              "link": "shopify://collections/tableau-par-piece",
+              "product": "",
+              "child_collection_list": []
+            }
+          },
           "parent_collection_images_KAkXdU": {
             "type": "parent_collection_images",
             "settings": {
@@ -403,15 +412,6 @@
               "child_collection_list": []
             }
           },
-          "parent_collection_images_GwidRm": {
-            "type": "parent_collection_images",
-            "settings": {
-              "title": "Tous les Tableaux",
-              "link": "shopify://collections/tableau-par-piece",
-              "product": "",
-              "child_collection_list": []
-            }
-          },
           "page_only_pVtEnp": {
             "type": "page_only",
             "settings": {
@@ -420,11 +420,11 @@
           }
         },
         "block_order": [
+          "parent_collection_images_GwidRm",
           "parent_collection_images_KAkXdU",
           "parent_collection_images_fBR6L4",
           "parent_collection_images_jhp4Rc",
           "parent_collection_images_reMMae",
-          "parent_collection_images_GwidRm",
           "page_only_pVtEnp"
         ],
         "settings": {
