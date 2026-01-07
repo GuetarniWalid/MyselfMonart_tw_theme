@@ -11,7 +11,7 @@
   {% render 'filter-colors-section', id_prefix: 'filter-color-', color_filter: color_filter, filter_index: 1 %}
 {% endcomment %}
 
-<div class="py-4 border-t border-main">
+<div class="py-4 border-t border-main relative z-20 bg-secondary">
   {%- comment -%} Colors Section {%- endcomment -%}
   <details class="group" {% if filter_index <= 2 or filter_index == nil %}open{% endif %}>
   <summary class="sticky top-0 z-20 bg-secondary flex justify-between items-center cursor-pointer list-none select-none py-2 px-4">

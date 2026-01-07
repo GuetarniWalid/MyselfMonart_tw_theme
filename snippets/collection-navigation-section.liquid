@@ -26,9 +26,9 @@
 
     {%- comment -%} Only show section if there are other collections {%- endcomment -%}
     {% if related_count > 0 %}
-      <div class="py-4 border-t border-main">
+      <div class="py-4 border-t border-main relative z-20 bg-secondary">
         <details class="group/details">
-          <summary class="sticky top-0 z-5 bg-secondary flex justify-between items-center cursor-pointer list-none select-none py-2 px-4">
+          <summary class="sticky top-0 z-20 bg-secondary flex justify-between items-center cursor-pointer list-none select-none py-2 px-4">
             <span class="font-semibold text-sm font-heading">{{ 'sections.filter_drawer.other_collections_label' | t }}</span>
             <span class="group-open/details:rotate-180 transition-transform duration-200">
               {% render 'tw-icon-caret', width: "12" %}

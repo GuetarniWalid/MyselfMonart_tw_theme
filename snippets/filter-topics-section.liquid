@@ -10,10 +10,10 @@
   {% render 'filter-topics-section', id_prefix: 'filter-theme-', theme_filter: theme_filter %}
 {% endcomment %}
 
-<div class="py-4">
+<div class="py-4 relative z-20 bg-secondary">
   {%- comment -%} Topics Section {%- endcomment -%}
   <details class="group" open>
-    <summary class="sticky top-0 z-10 bg-secondary flex justify-between items-center cursor-pointer list-none select-none py-2 px-4">
+    <summary class="sticky top-0 z-20 bg-secondary flex justify-between items-center cursor-pointer list-none select-none py-2 px-4">
       <span class="font-semibold text-sm font-heading">{{ 'sections.filter_drawer.topics_label' | t }}</span>
       <span class="group-open:rotate-180 transition-transform duration-200">
         {% render 'tw-icon-caret', width: "12" %}
