@@ -33,7 +33,8 @@
         {%- comment -%} Show first 8 items, hide rest {%- endcomment -%}
         {% assign value_index = forloop.index0 %}
         {% assign value_handleized = value_label | handleize %}
-        {% assign checkbox_id_value = id_prefix | append: value_handleized %}
+        {% assign filter_param_handleized = filter.param_name | handleize %}
+        {% assign checkbox_id_value = id_prefix | append: filter_param_handleized | append: '-' | append: value_handleized %}
         {% assign checkbox_label_value = value_label | append: ' (' | append: value_count | append: ')' %}
         {% assign extra_class = 'js-extra-filter-' | append: filter_index %}
 

@@ -34,7 +34,8 @@
           {%- comment -%} Show first 8 themes, hide rest {%- endcomment -%}
           {% assign theme_index = forloop.index0 %}
           {% assign theme_handleized = theme_label | handleize %}
-          {% assign checkbox_id_value = id_prefix | append: theme_handleized %}
+          {% assign theme_param_handleized = theme_filter.param_name | handleize %}
+          {% assign checkbox_id_value = id_prefix | append: theme_param_handleized | append: '-' | append: theme_handleized %}
           {% assign checkbox_label_value = theme_label | append: ' (' | append: theme_count | append: ')' %}
 
           <li class="{% if theme_index >= 8 %}hidden js-extra-themes{% endif %}">

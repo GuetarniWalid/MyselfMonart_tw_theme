@@ -75,7 +75,8 @@
         {%- comment -%} Show first 8 colors, hide rest {%- endcomment -%}
         {% assign color_index = forloop.index0 %}
         {% assign color_handleized = color_label | handleize %}
-        {% assign checkbox_id_value = id_prefix | append: color_handleized %}
+        {% assign color_param_handleized = color_filter.param_name | handleize %}
+        {% assign checkbox_id_value = id_prefix | append: color_param_handleized | append: '-' | append: color_handleized %}
         {% assign checkbox_label_value = color_label | append: ' (' | append: color_count | append: ')' %}
 
         <li class="{% if color_index >= 8 %}hidden js-extra-colors{% endif %}">
