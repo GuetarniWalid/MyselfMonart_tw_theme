@@ -1,13 +1,17 @@
 class StickyHeader extends HTMLElement {
   constructor() {
     super();
+    // Mobile navigation elements
     this.menuOpener = this.querySelector('.menu-opener');
     this.detailsParent = this.menuOpener.parentNode;
     this.menu = this.menuOpener.nextElementSibling;
-    this.menuOpenTopElem = this.menu.querySelector('ul');
-    this.menuFirstLis = Array.from(this.menu.firstElementChild.children);
     this.subDetails = this.menu.querySelectorAll('details');
-    this.titleSubCollections = this.querySelectorAll('li ul h3');
+
+    // Desktop navigation elements
+    this.desktopNavButtons = this.querySelectorAll('.desktop-nav-button');
+    this.desktopDropdowns = this.querySelectorAll('.desktop-dropdown');
+
+    // Common elements
     this.overlay = document.getElementById('overlay-content');
     this.cartButton = document.getElementById('cart-button');
     this.body = document.body;
@@ -18,12 +22,10 @@ class StickyHeader extends HTMLElement {
     this.isHide = false;
     this.header = this.parentElement;
     this.predictiveSearch = document.querySelector('predictive-search');
-    this.firstFocusableElement = this.querySelector('.menu-opener');
-    this.lastFocusableElement = this.querySelector(
-      'nav ul:last-of-type li:last-of-type span:last-of-type',
-    );
-    this.menuOpenTopElemHeight = this.menuOpenTopElem.offsetHeight;
-    this.desktopUpperNavLis = this.querySelectorAll('#desktop-upper-nav > li');
+
+    // Desktop dropdown state tracking
+    this.currentOpenDropdown = null;
+    this.dropdownCloseTimeout = null;
   }
 
   connectedCallback() {
@@ -45,36 +47,261 @@ class StickyHeader extends HTMLElement {
       }
     });
 
-    this.desktopUpperNavLis.forEach((li) => {
-      li.addEventListener('mouseenter', (e) => {
-        const ul = e.target.querySelector('ul');
-        if (!ul) return
-        this.openDesktopMenu(ul);
-      });
-      li.addEventListener('keydown', (e) => {
-        if(e.key === 'Escape') {
-          this.closeDesktopMenu(e.target.closest('ul[role="menu"]'));
-        }
+    // Desktop navigation hover behavior
+    this.desktopNavButtons.forEach((button) => {
+      const sectionId = button.dataset.sectionId;
+      const dropdown = this.querySelector(`#dropdown-${sectionId}`);
 
-        const ul = e.target.querySelector('ul');
-        if (!ul) return;
+      if (!dropdown) return;
 
-        if (e.key === 'Enter') {
-          this.openDesktopMenu(ul);
-        }
-
-        ul.querySelector('li.last-elem')?.addEventListener(
-          'keydown',
-          this.closeDesktopMenuWithKeyboard,
-        );
-        ul.querySelector('li.first-elem')?.addEventListener(
-          'keydown',
-          this.closeDesktopMenuWithKeyboard,
-        );
+      // Button hover - open dropdown
+      button.addEventListener('mouseenter', () => {
+        this.openDesktopDropdown(dropdown, button);
       });
 
-      li.addEventListener('mouseleave', (e) => {
-        this.closeDesktopMenu(e.target.querySelector('ul'));
+      // Button keyboard support
+      button.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          this.toggleDesktopDropdown(dropdown, button);
+        } else if (e.key === 'Escape') {
+          this.closeDesktopDropdown();
+        }
+      });
+
+      // Dropdown hover - keep open
+      dropdown.addEventListener('mouseenter', () => {
+        clearTimeout(this.dropdownCloseTimeout);
+      });
+
+      dropdown.addEventListener('mouseleave', () => {
+        this.closeDesktopDropdown();
+      });
+    });
+
+    // Special case: if there's only one button, open dropdown on header hover
+    if (this.desktopNavButtons.length === 1) {
+      const singleButton = this.desktopNavButtons[0];
+      const sectionId = singleButton.dataset.sectionId;
+      const singleDropdown = this.querySelector(`#dropdown-${sectionId}`);
+
+      if (singleDropdown) {
+        // Get the header container (the div with flex layout)
+        const headerContainer = singleButton.closest(
+          '.flex.items-center.justify-between',
+        );
+
+        if (headerContainer) {
+          headerContainer.addEventListener('mouseenter', () => {
+            this.openDesktopDropdown(singleDropdown, singleButton);
+          });
+
+          headerContainer.addEventListener('mouseleave', () => {
+            // Only close if not hovering over the dropdown itself
+            this.dropdownCloseTimeout = setTimeout(() => {
+              this.closeDesktopDropdown();
+            }, 100);
+          });
+        }
+      }
+    }
+
+    // Desktop dropdown: Show images on hover of collections, parent items, products, and pages
+    this.desktopDropdowns.forEach((dropdown) => {
+      const collectionItems = dropdown.querySelectorAll(
+        '.desktop-nav-collection-item',
+      );
+      const parentItems = dropdown.querySelectorAll('.desktop-nav-parent-item');
+      const productItems = dropdown.querySelectorAll(
+        '.desktop-nav-product-item',
+      );
+      const pageItems = dropdown.querySelectorAll('.desktop-nav-page-item');
+      const defaultImage = dropdown.querySelector('.desktop-nav-default-image');
+
+      // Handle collection_only items
+      collectionItems.forEach((collectionItem) => {
+        const imageId = collectionItem.dataset.imageId;
+        const imagePanel = imageId
+          ? dropdown.querySelector(`#${imageId}`)
+          : null;
+
+        if (imagePanel) {
+          collectionItem.addEventListener('mouseenter', () => {
+            // Hide default image
+            if (defaultImage) {
+              defaultImage.classList.add('hidden');
+              defaultImage.classList.remove('grid');
+            }
+
+            // Hide all images first
+            dropdown.querySelectorAll('.desktop-nav-image').forEach((img) => {
+              img.classList.add('hidden');
+              img.classList.remove('grid');
+            });
+
+            // Show this collection's image grid
+            imagePanel.classList.remove('hidden');
+            imagePanel.classList.add('grid');
+          });
+
+          collectionItem.addEventListener('mouseleave', () => {
+            // Hide collection image grid
+            imagePanel.classList.add('hidden');
+            imagePanel.classList.remove('grid');
+
+            // Show default image again
+            if (defaultImage) {
+              defaultImage.classList.remove('hidden');
+              defaultImage.classList.add('grid');
+            }
+          });
+        }
+      });
+
+      // Handle set_of_collections items
+      parentItems.forEach((parentItem) => {
+        const imageId = parentItem.dataset.imageId;
+        const imagePanel = imageId
+          ? dropdown.querySelector(`#${imageId}`)
+          : null;
+
+        if (imagePanel) {
+          const dropdownGrid = parentItem.closest('.dropdown-grid');
+
+          parentItem.addEventListener('mouseenter', () => {
+            // Hide default image
+            if (defaultImage) {
+              defaultImage.classList.add('hidden');
+              defaultImage.classList.remove('grid');
+            }
+
+            // Hide all images first
+            dropdown.querySelectorAll('.desktop-nav-image').forEach((img) => {
+              img.classList.add('hidden');
+              img.classList.remove('grid', 'flex');
+            });
+
+            // Show this item's image
+            imagePanel.classList.remove('hidden');
+            imagePanel.classList.add('flex');
+
+            // Change grid layout to 2 columns
+            if (dropdownGrid) {
+              dropdownGrid.classList.remove(
+                'grid-cols-[200px_1fr]',
+                'lg:grid-cols-[280px_1fr]',
+              );
+              dropdownGrid.classList.add(
+                'grid-cols-[1fr_300px]',
+                '2md:grid-cols-2',
+              );
+            }
+          });
+
+          parentItem.addEventListener('mouseleave', () => {
+            // Hide collection image
+            imagePanel.classList.add('hidden');
+            imagePanel.classList.remove('flex');
+
+            // Show default image again
+            if (defaultImage) {
+              defaultImage.classList.remove('hidden');
+              defaultImage.classList.add('grid');
+            }
+
+            // Restore grid layout
+            if (dropdownGrid) {
+              dropdownGrid.classList.remove(
+                'grid-cols-[1fr_300px]',
+                '2md:grid-cols-2',
+              );
+              dropdownGrid.classList.add(
+                'grid-cols-[200px_1fr]',
+                'lg:grid-cols-[280px_1fr]',
+              );
+            }
+          });
+        }
+      });
+
+      // Handle product_only items
+      productItems.forEach((productItem) => {
+        const imageId = productItem.dataset.imageId;
+        const imagePanel = imageId
+          ? dropdown.querySelector(`#${imageId}`)
+          : null;
+
+        if (imagePanel) {
+          productItem.addEventListener('mouseenter', () => {
+            // Hide default image
+            if (defaultImage) {
+              defaultImage.classList.add('hidden');
+              defaultImage.classList.remove('grid');
+            }
+
+            // Hide all images first
+            dropdown.querySelectorAll('.desktop-nav-image').forEach((img) => {
+              img.classList.add('hidden');
+              img.classList.remove('grid', 'flex');
+            });
+
+            // Show this product's image
+            imagePanel.classList.remove('hidden');
+            imagePanel.classList.add('flex');
+          });
+
+          productItem.addEventListener('mouseleave', () => {
+            // Hide product image
+            imagePanel.classList.add('hidden');
+            imagePanel.classList.remove('flex');
+
+            // Show default image again
+            if (defaultImage) {
+              defaultImage.classList.remove('hidden');
+              defaultImage.classList.add('grid');
+            }
+          });
+        }
+      });
+
+      // Handle page_only items
+      pageItems.forEach((pageItem) => {
+        const imageId = pageItem.dataset.imageId;
+        const imagePanel = imageId
+          ? dropdown.querySelector(`#${imageId}`)
+          : null;
+
+        if (imagePanel) {
+          pageItem.addEventListener('mouseenter', () => {
+            // Hide default image
+            if (defaultImage) {
+              defaultImage.classList.add('hidden');
+              defaultImage.classList.remove('grid');
+            }
+
+            // Hide all images first
+            dropdown.querySelectorAll('.desktop-nav-image').forEach((img) => {
+              img.classList.add('hidden');
+              img.classList.remove('grid', 'flex');
+            });
+
+            // Show this page's image
+            imagePanel.classList.remove('hidden');
+            imagePanel.classList.add('flex');
+          });
+
+          pageItem.addEventListener('mouseleave', () => {
+            // Hide page image
+            imagePanel.classList.add('hidden');
+            imagePanel.classList.remove('flex');
+
+            // Show default image again
+            if (defaultImage) {
+              defaultImage.classList.remove('hidden');
+              defaultImage.classList.add('grid');
+            }
+          });
+        }
       });
     });
 
@@ -87,7 +314,7 @@ class StickyHeader extends HTMLElement {
         if (subDetail.open) {
           // Close sibling submenus at the same level
           const parent = subDetail.closest('ul');
-          parent.querySelectorAll('.js-nav-submenu').forEach(other => {
+          parent.querySelectorAll('.js-nav-submenu').forEach((other) => {
             if (other !== subDetail && other.open) {
               other.open = false;
             }
@@ -122,9 +349,18 @@ class StickyHeader extends HTMLElement {
       this.setOverlayAboveHeader(false);
     });
 
-    this.addEventListener('keydown', (e) =>
-      trapFocus(e, this.firstFocusableElement, this.lastFocusableElement),
-    );
+    this.addEventListener('keydown', (e) => {
+      // Get focusable elements dynamically when mobile menu is open
+      if (this.detailsParent.open) {
+        const firstFocusable = this.menuOpener;
+        const lastFocusable = this.menu.querySelector('.last-focusable') ||
+                              this.menu.querySelector('a:last-of-type') ||
+                              this.menu.querySelector('button:last-of-type');
+        if (firstFocusable && lastFocusable) {
+          trapFocus(e, firstFocusable, lastFocusable);
+        }
+      }
+    });
     this.hideHeaderOnScrollUp = () => (this.preventReveal = true);
     this.addEventListener('preventHeaderReveal', this.hideHeaderOnScrollUp);
     window.addEventListener('scroll', this.onScroll, false);
@@ -138,6 +374,9 @@ class StickyHeader extends HTMLElement {
   }
 
   closeMobileMenu = async () => {
+    // Close desktop dropdown if open
+    this.closeDesktopDropdown();
+
     if (!this.detailsParent.open) return;
     this.switchMobileMenuLogo(true);
     this.showOverlay(false);
@@ -149,7 +388,7 @@ class StickyHeader extends HTMLElement {
 
   resetMenuDisplay = () => {
     // Close all open submenus when mobile menu closes
-    this.subDetails.forEach(detail => {
+    this.subDetails.forEach((detail) => {
       if (detail.classList.contains('js-nav-submenu')) {
         detail.open = false;
       }
@@ -169,10 +408,6 @@ class StickyHeader extends HTMLElement {
     burger.setAttribute('aria-hidden', '' + !showBurger);
   }
 
-  hideSubCollection = (e) => {
-    e.target.closest('details').open = false;
-  };
-
   openMobileMenu = () => {
     if (this.detailsParent.open) return;
     this.detailsParent.open = true;
@@ -180,9 +415,12 @@ class StickyHeader extends HTMLElement {
     this.body.classList.add('overflow-hidden');
     this.switchMobileMenuLogo(false);
     this.showOverlay(true);
-    this.elemToFocus =
-      this.elemToFocus || this.menu.querySelector('[tabindex="0"]');
-    this.elemToFocus.focus();
+
+    // Focus first link or button in the mobile menu
+    const firstFocusable = this.menu.querySelector('a, button');
+    if (firstFocusable) {
+      firstFocusable.focus();
+    }
   };
 
   measureFixHeaderHeight() {
@@ -232,6 +470,7 @@ class StickyHeader extends HTMLElement {
 
   hide = () => {
     if (this.isHide) return;
+    this.closeDesktopDropdown();
     this.closeMobileMenu(true);
     this.header.classList.replace('translate-y-0', '-translate-y-full');
     this.cartButton?.classList.replace('translate-y-1/2', 'translate-y-0');
@@ -258,51 +497,70 @@ class StickyHeader extends HTMLElement {
     this.overlay.classList.toggle('z-40', bool);
   };
 
-  closeDesktopMenu = (ul) => {
-    this.showOverlay(false);
-
-    if(!ul) return;
-    ul.querySelectorAll('li').forEach((li) => {
-      li.tabIndex = '-1';
-    });
-    ul.classList.replace('grid', 'hidden');
-    ul.closest('li')?.setAttribute('aria-expanded', 'false');
-  };
-
-  closeDesktopMenuWithKeyboard = (e) => {
-    const ul = e.target.closest('ul[role="menu"]');
-    const firstLi = ul.querySelector('li.first-elem');
-    const lastLi = ul.querySelector('li.last-elem');
-
-    if (e.key === 'Tab') {
-      if (e.shiftKey && e.target === firstLi) {
-        this.closeDesktopMenu(ul);
-      } else if (!e.shiftKey && e.target === lastLi) {
-        this.closeDesktopMenu(ul);
-      }
-    }
-    if(e.key === 'Escape') {
-      this.closeDesktopMenu(ul);
-    }
-  };
-
-  openDesktopMenu = (ul) => {
-    this.showOverlay(true);
-
-    if(!ul) return;
-    ul.classList.replace('hidden', 'grid');
-    ul.querySelectorAll('li').forEach((li) => {
-      if(li.classList.contains('no-focusable')) return;
-      li.tabIndex = '0';
-    });
-    ul.querySelector('li.first-elem')?.focus();
-    ul.closest('li').setAttribute('aria-expanded', 'true');
-  };
-
   showOverlay = (bool) => {
     this.overlay.classList.toggle('hidden', !bool);
     this.overlay.classList.toggle('!block', bool);
     this.closest('header').classList.toggle('shadow-3xl', !bool);
+  };
+
+  openDesktopDropdown = (dropdown, button) => {
+    // Close any currently open dropdown
+    if (this.currentOpenDropdown && this.currentOpenDropdown !== dropdown) {
+      this.closeDesktopDropdown();
+    }
+
+    clearTimeout(this.dropdownCloseTimeout);
+
+    // Open new dropdown
+    dropdown.classList.remove('hidden');
+    dropdown.setAttribute('aria-hidden', 'false');
+    button.setAttribute('aria-expanded', 'true');
+
+    // Show overlay
+    this.showOverlay(true);
+
+    // Track current dropdown
+    this.currentOpenDropdown = dropdown;
+
+    // Make dropdown items focusable
+    dropdown.querySelectorAll('li[tabindex]').forEach((li) => {
+      li.setAttribute('tabindex', '0');
+    });
+  };
+
+  closeDesktopDropdown = () => {
+    if (!this.currentOpenDropdown) return;
+
+    const dropdown = this.currentOpenDropdown;
+    const button = this.querySelector(`[aria-controls="${dropdown.id}"]`);
+
+    // Hide dropdown
+    dropdown.classList.add('hidden');
+    dropdown.setAttribute('aria-hidden', 'true');
+    if (button) button.setAttribute('aria-expanded', 'false');
+
+    // Hide overlay
+    this.showOverlay(false);
+
+    // Hide all children panels
+    dropdown.querySelectorAll('.desktop-nav-children').forEach((panel) => {
+      panel.classList.add('hidden');
+    });
+
+    // Remove focusability
+    dropdown.querySelectorAll('li[tabindex]').forEach((li) => {
+      li.setAttribute('tabindex', '-1');
+    });
+
+    this.currentOpenDropdown = null;
+  };
+
+  toggleDesktopDropdown = (dropdown, button) => {
+    if (this.currentOpenDropdown === dropdown) {
+      this.closeDesktopDropdown();
+    } else {
+      this.openDesktopDropdown(dropdown, button);
+    }
   };
 }
 customElements.define('sticky-header', StickyHeader);
@@ -559,8 +817,6 @@ class PredictiveSearch extends HTMLElement {
   }
 
   open = () => {
-    if (this.isInHeader) {
-    }
     document.dispatchEvent(new CustomEvent('PredictiveSearchOpen'));
     this.overlay.classList.remove('hidden');
     this.input.removeAttribute('tabindex');

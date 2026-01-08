@@ -56,6 +56,27 @@
         "id": "logo_svg",
         "label": "t:sections.header.settings.logo_svg.label",
         "info": "t:sections.header.settings.logo_svg.info"
+      },
+      {
+        "type": "image_picker",
+        "id": "default_desktop_image_1",
+        "label": "t:sections.header.settings.default_desktop_image_1.label",
+        "info": "t:sections.header.settings.default_desktop_image_1.info"
+      },
+      {
+        "type": "image_picker",
+        "id": "default_desktop_image_2",
+        "label": "t:sections.header.settings.default_desktop_image_2.label"
+      },
+      {
+        "type": "image_picker",
+        "id": "default_desktop_image_3",
+        "label": "t:sections.header.settings.default_desktop_image_3.label"
+      },
+      {
+        "type": "image_picker",
+        "id": "default_desktop_image_4",
+        "label": "t:sections.header.settings.default_desktop_image_4.label"
       }
     ],
     "blocks": [ 
@@ -63,6 +84,27 @@
         "type": "collection_only",
         "name": "t:sections.header.blocks.collection_only.name",
         "settings": [
+          {
+            "type": "image_picker",
+            "id": "desktop_image_1",
+            "label": "t:sections.header.blocks.collection_only.settings.desktop_image_1.label",
+            "info": "t:sections.header.blocks.collection_only.settings.desktop_image_1.info"
+          },
+          {
+            "type": "image_picker",
+            "id": "desktop_image_2",
+            "label": "t:sections.header.blocks.collection_only.settings.desktop_image_2.label"
+          },
+          {
+            "type": "image_picker",
+            "id": "desktop_image_3",
+            "label": "t:sections.header.blocks.collection_only.settings.desktop_image_3.label"
+          },
+          {
+            "type": "image_picker",
+            "id": "desktop_image_4",
+            "label": "t:sections.header.blocks.collection_only.settings.desktop_image_4.label"
+          },
           {
             "type": "collection",
             "id": "collection",
@@ -74,6 +116,12 @@
         "type": "product_only",
         "name": "t:sections.header.blocks.product_only.name",
         "settings": [
+          {
+            "type": "image_picker",
+            "id": "desktop_image",
+            "label": "t:sections.header.blocks.product_only.settings.desktop_image.label",
+            "info": "t:sections.header.blocks.product_only.settings.desktop_image.info"
+          },
           {
             "type": "product",
             "id": "product",
@@ -87,9 +135,9 @@
         "settings": [
           {
             "type": "image_picker",
-            "id": "image",
-            "label": "Image",
-            "info": "t:sections.header.blocks.page_only.settings.image.info"
+            "id": "desktop_image",
+            "label": "t:sections.header.blocks.page_only.settings.desktop_image.label",
+            "info": "t:sections.header.blocks.page_only.settings.desktop_image.info"
           },
           {
             "type": "page",
@@ -124,6 +172,12 @@
             "type": "collection_list",
             "id": "child_collection_list",
             "label": "t:sections.header.blocks.parent_collection.settings.child_collection_list.label"
+          },
+          {
+            "type": "image_picker",
+            "id": "desktop_image",
+            "label": "t:sections.header.blocks.parent_collection.settings.desktop_image.label",
+            "info": "t:sections.header.blocks.parent_collection.settings.desktop_image.info"
           }
         ]
       }

@@ -456,7 +456,8 @@
     "tw_sticky_header": {
       "navigation": "Menu de navigation",
       "my_likes": "Mes j'aime",
-      "open_cart": "Ouvrir le panier"
+      "open_cart": "Ouvrir le panier",
+      "open_menu": "Ouvrir le menu de navigation"
     }
   },
   "templates": {

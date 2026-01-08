@@ -17,6 +17,7 @@ module.exports = {
       'mobile': {'max': '767px'},
       '2xs': '410px',
       xs: '480px',
+      '2md': '900px',
       ...defaultTheme.screens,
     },
     extend: {

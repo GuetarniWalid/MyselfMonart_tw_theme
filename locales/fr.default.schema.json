@@ -968,12 +968,38 @@
         "logo_svg": {
           "label": "Logo en svg",
           "info": "Ex: <svg ...></svg>"
+        },
+        "default_desktop_image_1": {
+          "label": "Image par défaut 1 (haut-gauche)",
+          "info": "Seulement visible sur ordinateur. Grille de 4 images affichée quand rien n'est survolé."
+        },
+        "default_desktop_image_2": {
+          "label": "Image par défaut 2 (haut-droite)"
+        },
+        "default_desktop_image_3": {
+          "label": "Image par défaut 3 (bas-gauche)"
+        },
+        "default_desktop_image_4": {
+          "label": "Image par défaut 4 (bas-droite)"
         }
       },
       "blocks": {
         "collection_only": {
           "name": "Collection seule",
           "settings": {
+            "desktop_image_1": {
+              "label": "Image desktop 1 (haut-gauche)",
+              "info": "Seulement visible sur ordinateur. Grille de 4 images."
+            },
+            "desktop_image_2": {
+              "label": "Image desktop 2 (haut-droite)"
+            },
+            "desktop_image_3": {
+              "label": "Image desktop 3 (bas-gauche)"
+            },
+            "desktop_image_4": {
+              "label": "Image desktop 4 (bas-droite)"
+            },
             "collection": {
               "label": "Collection"
             }
@@ -989,14 +1015,19 @@
             },
             "child_collection_list": {
               "label": "Collections enfants"
+            },
+            "desktop_image": {
+              "label": "Image qui illustre l'ensemble de collections",
+              "info": "Seulement visible sur ordinateur."
             }
           }
         },
         "page_only": {
           "name": "Page seule",
           "settings": {
-            "image": {
-              "info": "Pas obligatoire, seulement si vous souhaitez une image dans le menu mobile"
+            "desktop_image": {
+              "label": "Image qui illustre la page",
+              "info": "Seulement visible sur ordinateur."
             },
             "page": {
               "label": "Page"
@@ -1006,6 +1037,10 @@
         "product_only": {
           "name": "Produit seul",
           "settings": {
+            "desktop_image": {
+              "label": "Image qui illustre le produit",
+              "info": "Seulement visible sur ordinateur. Par défaut, utilise l'image principale du produit si non définie."
+            },
             "product": {
               "label": "Produit"
             }

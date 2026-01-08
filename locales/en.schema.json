@@ -968,12 +968,38 @@
         "logo_svg": {
           "label": "SVG logo",
           "info": "e.g. <svg ...><\/svg>"
+        },
+        "default_desktop_image_1": {
+          "label": "Default desktop image 1 (top-left)",
+          "info": "Only visible on desktop. Grid of 4 images shown when nothing is hovered."
+        },
+        "default_desktop_image_2": {
+          "label": "Default desktop image 2 (top-right)"
+        },
+        "default_desktop_image_3": {
+          "label": "Default desktop image 3 (bottom-left)"
+        },
+        "default_desktop_image_4": {
+          "label": "Default desktop image 4 (bottom-right)"
         }
       },
       "blocks": {
         "collection_only": {
           "name": "Collection only",
           "settings": {
+            "desktop_image_1": {
+              "label": "Desktop image 1 (top-left)",
+              "info": "Only visible on desktop. Grid of 4 images."
+            },
+            "desktop_image_2": {
+              "label": "Desktop image 2 (top-right)"
+            },
+            "desktop_image_3": {
+              "label": "Desktop image 3 (bottom-left)"
+            },
+            "desktop_image_4": {
+              "label": "Desktop image 4 (bottom-right)"
+            },
             "collection": {
               "label": "Collection"
             }
@@ -989,14 +1015,19 @@
             },
             "child_collection_list": {
               "label": "Child collections"
+            },
+            "desktop_image": {
+              "label": "Image illustrating the set of collections",
+              "info": "Only visible on desktop."
             }
           }
         },
         "page_only": {
           "name": "Page only",
           "settings": {
-            "image": {
-              "info": "Optional, for mobile menu image"
+            "desktop_image": {
+              "label": "Image illustrating the page",
+              "info": "Only visible on desktop."
             },
             "page": {
               "label": "Page"
@@ -1006,6 +1037,10 @@
         "product_only": {
           "name": "Product only",
           "settings": {
+            "desktop_image": {
+              "label": "Image illustrating the product",
+              "info": "Only visible on desktop. Falls back to product's featured image if not set."
+            },
             "product": {
               "label": "Product"
             }

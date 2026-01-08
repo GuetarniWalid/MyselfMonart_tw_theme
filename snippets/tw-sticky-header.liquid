@@ -15,48 +15,76 @@
 
 <sticky-header class="transition-colors duration-500 border-b border-solid border-main relative">
   <div>
-    <div class="bg-secondary py-4 pl-6 pr-3 flex items-center justify-between border-b border-solid border-main min-h-[90px] md:pl-14 md:pr-10 mobile:relative">
+    <div class="bg-secondary pl-6 pr-3 flex items-center justify-between border-b border-solid border-main min-h-[90px] md:px-10 lg:px-14 relative">
       {% comment %} start on mobile {% endcomment %}
       <details class="inline-block h-full md:hidden">
-        <summary class="group menu-opener list-none cursor-pointer">
+        <summary class="group menu-opener list-none cursor-pointer" aria-label="{{ 'snippet.tw_sticky_header.open_menu' | t }}">
           <span class="group-focus-visible:border-2 group-focus-visible:border-main rounded mobile-menu">
-            <span class="hamburger" aria-hidden="false">{% render 'tw-icon-hamburger' %}</span>
+            <span class="hamburger" aria-hidden="true">{% render 'tw-icon-hamburger' %}</span>
             <span class="close hidden" aria-hidden="true">{% render 'tw-icon-close' %}</span>
           </span>
         </summary>
-        <nav
+        <div
           class="bg-secondary absolute bottom-0 left-0 w-screen border-t border-solid border-main close-nav transition-all duration-150 -z-10 h-[calc(100vh-90px)] overflow-y-auto scrollbar grid grid-rows-[1fr_auto]"
           role="dialog"
           aria-modal="true"
           aria-label="{{ "snippet.tw_sticky_header.navigation" | t }}">
-          <ul class="px-5 gap-y-3 relative pb-8 {% if show_filters %}pt-[54px]{% else %}pt-8{% endif %}">
+          <nav class="px-5 relative pb-8 {% if show_filters %}pt-[54px]{% else %}pt-8{% endif %}"  aria-label="{{ "snippet.tw_sticky_header.navigation" | t }}">
+            {% assign section_open = false %}
+            {% assign has_title_blocks = false %}
+
+            {%- comment -%} Check if there are any title_only blocks {%- endcomment -%}
             {% for block in section.blocks %}
-              {% if block.type == "collection_only" %}
-                <li
-                  class="obfuscate hover:underline underline-offset-4 p-3 rounded-lg cursor-pointer"
-                  data-url64="{{ block.settings.collection.url | base64_encode }}"
-                  tabindex="0">
-                  {{ block.settings.collection.title | escape }}
+              {% if block.type == "title_only" %}
+                {% assign has_title_blocks = true %}
+                {% break %}
+              {% endif %}
+            {% endfor %}
+
+            {%- comment -%} If no title blocks, open a single ul for all items {%- endcomment -%}
+            {% if has_title_blocks == false %}
+              <ul class="flex flex-col gap-y-3">
+            {% endif %}
+
+            {% for block in section.blocks %}
+              {% if block.type == "title_only" %}
+                {%- comment -%} Close previous section if one was open {%- endcomment -%}
+                {% if section_open %}
+                  </ul>
+                  </section>
+                {% endif %}
+
+                {%- comment -%} Start new section {%- endcomment -%}
+                <section class="mb-6">
+                  <h3 class="font-limelight mb-4">
+                    {{ block.settings.title | escape }}
+                  </h3>
+                  <ul class="flex flex-col">
+                {% assign section_open = true %}
+
+              {% elsif block.type == "collection_only" %}
+                <li>
+                  <a
+                    href="{{ block.settings.collection.url }}"
+                    class="block hover:underline underline-offset-4 p-3">
+                    {{ block.settings.collection.title | escape }}
+                  </a>
                 </li>
               {% elsif block.type == "product_only" %}
-                <li
-                  class="obfuscate hover:underline underline-offset-4 p-3 rounded-lg cursor-pointer"
-                  data-url64="{{ block.settings.product.url | base64_encode }}"
-                  tabindex="0">
-                  {{ block.settings.product.title | escape }}
+                <li>
+                  <a
+                    href="{{ block.settings.product.url }}"
+                    class="block hover:underline underline-offset-4 p-3">
+                    {{ block.settings.product.title | escape }}
+                  </a>
                 </li>
               {% elsif block.type == "page_only" %}
-                <li
-                  class="obfuscate hover:underline underline-offset-4 p-3 rounded-lg cursor-pointer"
-                  data-url64="{{ block.settings.page.url | base64_encode }}"
-                  tabindex="0">
-                  {{ block.settings.page.title | escape }}
-                </li>
-              {% elsif block.type == "title_only" %}
-                <li class="mb-6">
-                  <h2 class="font-limelight">
-                    {{ block.settings.title | escape }}
-                  </h2>
+                <li>
+                  <a
+                    href="{{ block.settings.page.url }}"
+                    class="block hover:underline underline-offset-4 p-3">
+                    {{ block.settings.page.title | escape }}
+                  </a>
                 </li>
               {% else %}
                 <li class="details-wrapper">
@@ -67,23 +95,30 @@
                         {% render 'tw-icon-chevron', direction: "top" %}
                       </span>
                     </summary>
-                    <ul class="pl-8 group-open:mt-2">
-                      <div class="flex flex-col gap-y-2">
+                    <ul class="pl-8 group-open:mt-2 flex flex-col gap-y-2">
                       {% for collection in block.settings.child_collection_list %}
-                        <li
-                          class="obfuscate text-main-70 hover:underline underline-offset-4 p-3 rounded-lg cursor-pointer"
-                          data-url64="{{ collection.url | base64_encode }}"
-                          tabindex="0">
-                          {{ collection.title | escape }}
+                        <li>
+                          <a
+                            href="{{ collection.url }}"
+                            class="block text-main-70 hover:underline underline-offset-4 p-3">
+                            {{ collection.title | escape }}
+                          </a>
                         </li>
                       {% endfor %}
-                      </div>
                     </ul>
                   </details>
                 </li>
               {% endif %}
             {% endfor %}
-          </ul>
+
+            {%- comment -%} Close the last section or the single ul {%- endcomment -%}
+            {% if section_open %}
+              </ul>
+              </section>
+            {% elsif has_title_blocks == false %}
+              </ul>
+            {% endif %}
+          </nav>
           <div class="flex justify-between pb-16 pt-6 bg-main text-secondary">
             {% render 'tw-list-social' %}
             <details class="relative px-6">
@@ -115,333 +150,440 @@
                   else
                     assign resource = nil
                   endif
+
+                  # Define country/currency/language combinations
+                  # Format: currency|lang|flag_code|country_name|append_lang|spacing
+                  assign locales_data = 'CAD|en|ca|Canada|true|1,CHF|fr|ch|Suisse|false|2,DKK|en|dk|Danmark|true|2,EUR|fr|fr|France|false|2,GBP|en|uk|UK|true|2,USD|en|us|USA|true|2'
+                  assign locales = locales_data | split: ','
                 %}
-                {%- for language in localization.available_languages -%}
-                  {%- for currency in shop.enabled_currencies -%}
-                    {% if currency.iso_code == 'CAD' and language.iso_code == 'en' %}
-                      <li tabindex="-1">
-                        <localization-flag>
-                          <a
-                            class="inline-flex items-center hover:bg-main-10 w-full py-2 mb-1 px-3 whitespace-nowrap text-main{% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'CAD' %} bg-main-10 cursor-not-allowed{% endif %}"
-                            {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'CAD' %}
-                              role="link"
-                              aria-disabled="true"
-                            {% else %}
-                              {% liquid
-                                if template.name == 'index'
-                                  assign url = routes.root_url | remove_last: 'en' | append: 'en'
-                                elsif template.name == 'search'
-                                  assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/search'
-                                elsif template.name == 'cart'
-                                  assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/cart'
-                                else
-                                  assign url = resource.metafields.translation.handle.value[language.iso_code]
-                                endif
-                              %}
-                              href="{{ url }}?currency={{ currency.iso_code }}"
-                            {% endif %}
-                            hreflang="{{ language.iso_code }}"
-                            lang="{{ language.iso_code }}"
-                            {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'CAD' %}
-                              aria-current="true"
-                            {% endif %}
-                            data-value="{{ language.iso_code }}">
-                            {% render 'icon-flag-ca' %}&nbsp;Canada
-                          </a>
-                        </localization-flag>
-                      </li>
-                    {% elsif currency.iso_code == 'CHF' and language.iso_code == 'fr' %}
-                      <li tabindex="-1">
-                        <localization-flag>
-                          <a
-                            class="inline-flex items-center hover:bg-main-10 w-full py-2 mb-1 px-3 whitespace-nowrap text-main{% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'CHF' %} bg-main-10 cursor-not-allowed{% endif %}"
-                            {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'CHF' %}
-                            role="link"
-                            aria-disabled="true"
-                            {% else %}
-                              {% liquid
-                                if template.name == 'index'
-                                  assign url = routes.root_url | remove_last: 'en'
-                                elsif template.name == 'search'
-                                  assign url = routes.root_url | remove_last: 'en' | append: 'search'
-                                elsif template.name == 'cart'
-                                  assign url = routes.root_url | remove_last: 'en' | append: 'cart'
-                                else
-                                  assign url = resource.metafields.translation.handle.value[language.iso_code]
-                                endif
-                              %}
-                              href="{{ url }}?currency={{ currency.iso_code }}"
-                            {% endif %}
-                            hreflang="{{ language.iso_code }}"
-                            lang="{{ language.iso_code }}"
-                            {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'CHF' %}
-                            aria-current="true"
-                            {% endif %}
-                            data-value="{{ language.iso_code }}">
-                            {% render 'icon-flag-ch' %}&nbsp;&nbsp;Suisse
-                          </a>
-                        </localization-flag>
-                      </li>
-                    {% elsif currency.iso_code == 'DKK' and language.iso_code == 'en' %}
-                      <li tabindex="-1">
-                        <localization-flag>
-                          <a
-                            class="inline-flex items-center hover:bg-main-10 w-full py-2 mb-1 px-3 whitespace-nowrap text-main{% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'DDK' %} bg-main-10 cursor-not-allowed{% endif %}"
-                            {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'DDK' %}
-                            role="link"
-                            aria-disabled="true"
-                            {% else %}
-                            {% liquid
-                                if template.name == 'index'
-                                  assign url = routes.root_url | remove_last: 'en' | append: 'en'
-                                elsif template.name == 'search'
-                                  assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/search'
-                                elsif template.name == 'cart'
-                                  assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/cart'
-                                else
-                                  assign url = resource.metafields.translation.handle.value[language.iso_code]
-                                endif
-                              %}
-                              href="{{ url }}?currency={{ currency.iso_code }}"
-                            {% endif %}
-                            hreflang="{{ language.iso_code }}"
-                            lang="{{ language.iso_code }}"
-                            {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'DDK' %}
-                            aria-current="true"
-                            {% endif %}
-                            data-value="{{ language.iso_code }}">
-                            {% render 'icon-flag-dk' %}&nbsp;&nbsp;Danmark
-                          </a>
-                        </localization-flag>
-                      </li>
-                    {% elsif currency.iso_code == 'EUR' and language.iso_code == 'fr' %}
-                      <li tabindex="-1">
-                        <localization-flag>
-                          <a
-                            class="inline-flex items-center hover:bg-main-10 w-full py-2 mb-1 px-3 whitespace-nowrap text-main{% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'EUR' %} bg-main-10 cursor-not-allowed{% endif %}"
-                            {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'EUR' %}
-                            role="link"
-                            aria-disabled="true"
-                            {% else %}
-                            {% liquid
-                                if template.name == 'index'
-                                  assign url = routes.root_url | remove_last: 'en'
-                                elsif template.name == 'search'
-                                  assign url = routes.root_url | remove_last: 'en' | append: 'search'
-                                elsif template.name == 'cart'
-                                  assign url = routes.root_url | remove_last: 'en' | append: 'cart'
-                                else
-                                  assign url = resource.metafields.translation.handle.value[language.iso_code]
-                                endif
-                              %}
-                              href="{{ url }}?currency={{ currency.iso_code }}"
-                            {% endif %}
-                            hreflang="{{ language.iso_code }}"
-                            lang="{{ language.iso_code }}"
-                            {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'EUR' %}
-                            aria-current="true"
-                            {% endif %}
-                            data-value="{{ language.iso_code }}">
-                            {% render 'icon-flag-fr' %}&nbsp;&nbsp;France
-                          </a>
-                        </localization-flag>
-                      </li>
-                    {% elsif currency.iso_code == 'GBP' and language.iso_code == 'en' %}
-                      <li tabindex="-1">
-                        <localization-flag>
-                          <a
-                            class="inline-flex items-center hover:bg-main-10 w-full py-2 mb-1 px-3 whitespace-nowrap text-main{% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'GBP' %} bg-main-10 cursor-not-allowed{% endif %}"
-                            {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'GBP' %}
-                            role="link"
-                            aria-disabled="true"
-                            {% else %}
-                            {% liquid
-                                if template.name == 'index'
-                                  assign url = routes.root_url | remove_last: 'en' | append: 'en'
-                                elsif template.name == 'search'
-                                  assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/search'
-                                elsif template.name == 'cart'
-                                  assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/cart'
-                                else
-                                  assign url = resource.metafields.translation.handle.value[language.iso_code]
-                                endif
-                              %}
-                              href="{{ url }}?currency={{ currency.iso_code }}"
-                            {% endif %}
-                            hreflang="{{ language.iso_code }}"
-                            lang="{{ language.iso_code }}"
-                            {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'GBP' %}
-                            aria-current="true"
-                            {% endif %}
-                            data-value="{{ language.iso_code }}">
-                            {% render 'icon-flag-uk' %}&nbsp;&nbsp;UK
-                          </a>
-                        </localization-flag>
-                      </li>
-                    {% elsif currency.iso_code == 'USD' and language.iso_code == 'en' %}
-                      <li tabindex="-1">
-                        <localization-flag>
-                          <a
-                            class="inline-flex items-center last-focusable hover:bg-main-10 w-full py-2 mb-1 px-3 whitespace-nowrap text-main{% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'USD' %} bg-main-10 cursor-not-allowed{% endif %}"
-                            {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'USD' %}
-                              role="link"
-                              aria-disabled="true"
-                            {% else %}
-                              {% liquid
-                                if template.name == 'index'
-                                  assign url = routes.root_url | remove_last: 'en' | append: 'en'
-                                elsif template.name == 'search'
-                                  assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/search'
-                                elsif template.name == 'cart'
-                                  assign url = routes.root_url | remove_last: 'en' | append: 'en' | append: '/cart'
-                                else
-                                  assign url = resource.metafields.translation.handle.value[language.iso_code]
-                                endif
-                              %}
-                              href="{{ url }}?currency={{ currency.iso_code }}"
-                            {% endif %}
-                            hreflang="{{ language.iso_code }}"
-                            lang="{{ language.iso_code }}"
-                            {% if language.iso_code == localization.language.iso_code and localization.country.currency.iso_code == 'USD' %}
-                              aria-current="true"
-                            {% endif %}
-                            data-value="{{ language.iso_code }}">
-                            {% render 'icon-flag-us' %}&nbsp;&nbsp;USA
-                          </a>
-                        </localization-flag>
-                      </li>
-                    {% endif %}
+
+                {%- for locale in locales -%}
+                  {%- assign locale_parts = locale | split: '|' -%}
+                  {%- assign locale_currency = locale_parts[0] -%}
+                  {%- assign locale_lang = locale_parts[1] -%}
+                  {%- assign locale_flag = locale_parts[2] -%}
+                  {%- assign locale_name = locale_parts[3] -%}
+                  {%- assign append_lang = locale_parts[4] -%}
+                  {%- assign spacing = locale_parts[5] -%}
+
+                  {%- comment -%} Check if this locale is available in the store {%- endcomment -%}
+                  {%- assign is_available = false -%}
+                  {%- for language in localization.available_languages -%}
+                    {%- for currency in shop.enabled_currencies -%}
+                      {%- if currency.iso_code == locale_currency and language.iso_code == locale_lang -%}
+                        {%- assign is_available = true -%}
+                        {%- assign current_lang = language -%}
+                        {%- assign current_currency = currency -%}
+                        {%- break -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+                    {%- if is_available -%}{%- break -%}{%- endif -%}
                   {%- endfor -%}
+
+                  {%- if is_available -%}
+                    {%- assign is_current = false -%}
+                    {%- if current_lang.iso_code == localization.language.iso_code and localization.country.currency.iso_code == locale_currency -%}
+                      {%- assign is_current = true -%}
+                    {%- endif -%}
+
+                    {%- comment -%} Build URL based on template and language {%- endcomment -%}
+                    {%- unless is_current -%}
+                      {%- liquid
+                        if template.name == 'index'
+                          if append_lang == 'true'
+                            assign url = routes.root_url | remove_last: 'en' | append: locale_lang
+                          else
+                            assign url = routes.root_url | remove_last: 'en'
+                          endif
+                        elsif template.name == 'search'
+                          if append_lang == 'true'
+                            assign url = routes.root_url | remove_last: 'en' | append: locale_lang | append: '/search'
+                          else
+                            assign url = routes.root_url | remove_last: 'en' | append: 'search'
+                          endif
+                        elsif template.name == 'cart'
+                          if append_lang == 'true'
+                            assign url = routes.root_url | remove_last: 'en' | append: locale_lang | append: '/cart'
+                          else
+                            assign url = routes.root_url | remove_last: 'en' | append: 'cart'
+                          endif
+                        else
+                          assign url = resource.metafields.translation.handle.value[current_lang.iso_code]
+                        endif
+                      -%}
+                    {%- endunless -%}
+
+                    {%- assign is_last = false -%}
+                    {%- if forloop.last -%}{%- assign is_last = true -%}{%- endif -%}
+
+                    <li tabindex="-1">
+                      <localization-flag>
+                        <a
+                          class="inline-flex items-center hover:bg-main-10 w-full py-2 mb-1 px-3 whitespace-nowrap text-main{% if is_current %} bg-main-10 cursor-not-allowed{% endif %}{% if is_last %} last-focusable{% endif %}"
+                          {% if is_current %}
+                            role="link"
+                            aria-disabled="true"
+                            aria-current="true"
+                          {% else %}
+                            href="{{ url }}?currency={{ locale_currency }}"
+                          {% endif %}
+                          hreflang="{{ locale_lang }}"
+                          lang="{{ locale_lang }}"
+                          data-value="{{ locale_lang }}">
+                          {% case locale_flag %}
+                            {% when 'ca' %}{% render 'icon-flag-ca' %}
+                            {% when 'ch' %}{% render 'icon-flag-ch' %}
+                            {% when 'dk' %}{% render 'icon-flag-dk' %}
+                            {% when 'fr' %}{% render 'icon-flag-fr' %}
+                            {% when 'uk' %}{% render 'icon-flag-uk' %}
+                            {% when 'us' %}{% render 'icon-flag-us' %}
+                          {% endcase %}{% if spacing == '2' %}&nbsp;{% endif %}&nbsp;{{ locale_name }}
+                        </a>
+                      </localization-flag>
+                    </li>
+                  {%- endif -%}
                 {%- endfor -%}
               </ul>
             </details>
           </div>
-        </nav>
+        </div>
       </details>
       {% comment %} end on mobile {% endcomment %}
 
-      <h2 class="cursor-pointer inline-flex items-center obfuscate text-2xl sm:text-3xl mobile:absolute mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-1/2 mobile:-translate-y-1/2" data-url64="{{ routes.root_url | base64_encode }}">
+      {%- comment -%} Desktop navigation buttons {%- endcomment -%}
+      {%- liquid
+        comment
+          Count how many title_only blocks exist
+        endcomment
+        assign title_count = 0
+        for block in section.blocks
+          if block.type == "title_only"
+            assign title_count = title_count | plus: 1
+          endif
+        endfor
+      -%}
+      <nav class="hidden md:flex items-center gap-2 self-stretch" aria-label="Main navigation">
+        {% for block in section.blocks %}
+          {% if block.type == "title_only" %}
+            <button
+              type="button"
+              class="desktop-nav-button h-full px-3 text-sm text-main-80 hover:underline underline-offset-4 focus:underline outline-none cursor-pointer flex items-center"
+              aria-expanded="false"
+              aria-haspopup="true"
+              aria-controls="dropdown-{{ block.id }}"
+              data-section-id="{{ block.id }}"
+              aria-label="{% if title_count == 1 %}{{ 'snippet.tw_sticky_header.open_menu' | t }}{% else %}{{ block.settings.title | escape }}{% endif %}">
+              {% if title_count == 1 %}
+                {% render 'tw-icon-hamburger' %}
+              {% else %}
+                {{ block.settings.title | escape }}
+              {% endif %}
+            </button>
+          {% endif %}
+        {% endfor %}
+      </nav>
+
+      <a
+        href="{{ routes.root_url }}"
+        class="inline-flex items-center text-2xl sm:text-3xl mobile:absolute mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-1/2 mobile:-translate-y-1/2"
+        aria-label="MyselfMonArt - Go to homepage">
         {% if section.settings.logo_svg != blank %}
           {{ section.settings.logo_svg }}
         {% else %}
           {% render 'tw-default-logo' %}
         {% endif %}
-        <span class="ml-3 hidden xs:inline">MyselfMonArt</span>
-      </h2>
+        <span class="ml-3 hidden md:block font-heading text-4xl">MyselfMonArt</span>
+      </a>
 
       
       {% render 'tw-loup-like-button' %}
     </div>
-    {% comment %} start on desktop {% endcomment %}
-    <nav
-      class="hidden md:block bg-secondary border-b border-solid border-main px-10"
-      role="dialog"
-      aria-modal="true"
-      aria-label="{{ "snippet.tw_sticky_header.navigation" | t }}">
-      <ul
-        id="desktop-upper-nav"
-        class="flex justify-center items-center gap-4 2xl:gap-9"
-        role="menu">
-        {% for block in section.blocks %}
-          {% if block.type == "collection_only" %}
-            <li
-              class="obfuscate cursor-pointer p-3 outline-none hover:underline underline-offset-4 focus:underline"
-              data-url64="{{ block.settings.collection.url | base64_encode }}"
-              tabindex="0">
-              {{ block.settings.collection.title | escape }}
-            </li>
-          {% elsif block.type == "product_only" %}
-            <li
-              class="obfuscate cursor-pointer p-3 outline-none hover:underline underline-offset-4 focus:underline"
-              data-url64="{{ block.settings.product.url | base64_encode }}"
-              tabindex="0">
-              {{ block.settings.product.title | escape }}
-            </li>
-          {% elsif block.type == "page_only" %}
-            <li
-              class="obfuscate cursor-pointer p-3 outline-none hover:underline underline-offset-4 focus:underline"
-              data-url64="{{ block.settings.page.url | base64_encode }}"
-              tabindex="0">
-              {{ block.settings.page.title | escape }}
-            </li>
-          {% else %}
-            {% liquid
-              assign id = forloop.index
-              assign li_count = section.blocks | size
-              assign transform_shift = forloop.index | times: 100 | divided_by: li_count
-              if transform_shift > 50
-                assign left_shift = '100%'
-              else
-                assign left_shift = '0'
-                assign transform_shift = transform_shift | divided_by: 2
-              endif
-            %}
-            <li
-              class="group relative cursor-pointer p-3 outline-none hover:underline underline-offset-4 focus:underline"
-              tabindex="0"
-              aria-haspopup="true"
-              aria-expanded="false">
-              <span>
-                {{ block.settings.title | escape }}
-              </span>
-              <ul
-                class="hidden group-hover:grid absolute -bottom-[1px] bg-secondary p-3 gap-3 min-w-max cursor-default rounded-b"
-                style="transform:translate(-{{ transform_shift }}%,100%);left:{{ left_shift }};grid-template-columns:var(--desktop-nav-cols-{{ id }});grid-template-rows:var(--desktop-nav-rows-{{ id }});"
-                role="menu">
-                {% for collection in block.settings.child_collection_list %}
-                  {% liquid
-                    if forloop.length < 2
-                      assign img_width = 200
-                      assign img_height = 300
-                      assign desktop_nav_cols = "auto"
-                      assign desktop_nav_rows = "auto"
-                    elsif forloop.length < 5
-                      assign img_width = 200
-                      assign img_height = 300
-                      assign desktop_nav_cols = "auto auto"
-                      assign desktop_nav_rows = "auto auto"
-                    elsif forloop.length < 7
-                      assign img_width = 200
-                      assign img_height = 300
-                      assign desktop_nav_cols = "auto auto auto"
-                      assign desktop_nav_rows = "auto auto"
-                    else
-                      assign img_width = 150
-                      assign img_height = 225
-                      assign desktop_nav_cols = "auto auto auto"
-                      assign desktop_nav_rows = "auto auto auto"
-                    endif
-                  %}
-                  <style > :root
-                    {
-                      --desktop-nav-cols-{{ id }}: {{ desktop_nav_cols }};
-                      --desktop-nav-rows-{{ id }}: {{ desktop_nav_rows }};
-                    }
-                  </style>
-                  <li
-                    class="group/link relative obfuscate cursor-pointer before:absolute before:bottom-0 before:w-full before:h-1/2 before:z-10 before:bg-gradient-to-t before:from-black/80 before:to-transparent rounded overflow-hidden outline-none{% if forloop.first %} first-elem{% endif %}{% if forloop.last %} last-elem{% endif %}"
-                    data-url64="{{ collection.url | base64_encode }}"
-                    tabindex="-1">
-                    {% if collection.featured_image != blank %}
-                      {% assign image_alt = collection.featured_image.alt | escape %}
-                      {% if collection.metafields.meta_object.media.value.alts.value[0] %}
-                        {% assign image_alt = collection.metafields.meta_object.media.value.alts.value[0] | escape %}
-                      {% endif %}
-                      {{ collection.featured_image | image_url: width: img_width, height: img_height | image_tag: width: img_width, height: img_height, alt: image_alt, loading: 'lazy', class: 'max-w-none transition-all duration-300 ease-out group-hover/link:scale-110 group-focus/link:scale-110' }}
-                    {% endif %}
-                    <p class="absolute z-20 bottom-4 text-xl text-secondary text-center w-full">
-                      {{ collection.title | escape }}
-                    </p>
-                  </li>
-                {% endfor %}
-              </ul>
-            </li>
 
-          {% endif %}
-        {% endfor %}
-      </ul>
-    </nav>
-    {% comment %} end on desktop {% endcomment %}
+    {%- comment -%} Desktop dropdown panels - Full width {%- endcomment -%}
+    <div class="desktop-dropdown-container hidden md:block">
+      {% for block in section.blocks %}
+        {% if block.type == "title_only" %}
+          {% liquid
+            assign title_index = forloop.index0
+            assign next_title_index = section.blocks.size
+
+            for future_block in section.blocks
+              if future_block.type == 'title_only' and forloop.index0 > title_index
+                assign next_title_index = forloop.index0
+                break
+              endif
+            endfor
+          %}
+
+          <div
+            id="dropdown-{{ block.id }}"
+            class="desktop-dropdown hidden absolute left-0 right-0 bg-secondary border-b border-main shadow-lg z-20"
+            data-section-id="{{ block.id }}"
+            aria-hidden="true">
+
+            <div class="max-w-7xl mx-auto px-5 lg:px-10">
+              <div class="dropdown-grid grid grid-cols-[200px_1fr] lg:grid-cols-[280px_1fr]">
+                {%- comment -%} Left column: Title + All items - relative positioning context {%- endcomment -%}
+                <div class="relative py-8 gap-y-1 max-w-[200px] lg:max-w-[280px]">
+                  <h3 class="font-limelight text-3xl mb-6">
+                    {{ block.settings.title | escape }}
+                  </h3>
+                  <ul class="flex flex-col">
+                    {% for content_block in section.blocks %}
+                      {% assign content_index = forloop.index0 %}
+
+                      {% if content_index > title_index and content_index < next_title_index %}
+
+                        {% if content_block.type == "collection_only" %}
+                          <li class="desktop-nav-collection-item obfuscate hover:underline underline-offset-4 p-3 cursor-pointer"
+                            data-url64="{{ content_block.settings.collection.url | base64_encode }}"
+                            data-image-id="image-{{ content_block.id }}"
+                            tabindex="-1">
+                            {{ content_block.settings.collection.title | escape }}
+                          </li>
+
+                        {% elsif content_block.type == "product_only" %}
+                          <li class="desktop-nav-product-item obfuscate hover:underline underline-offset-4 p-3 cursor-pointer"
+                            data-url64="{{ content_block.settings.product.url | base64_encode }}"
+                            data-image-id="image-{{ content_block.id }}"
+                            tabindex="-1">
+                            {{ content_block.settings.product.title | escape }}
+                          </li>
+
+                        {% elsif content_block.type == "page_only" %}
+                          <li class="desktop-nav-page-item obfuscate hover:underline underline-offset-4 p-3 cursor-pointer"
+                            data-url64="{{ content_block.settings.page.url | base64_encode }}"
+                            data-image-id="image-{{ content_block.id }}"
+                            tabindex="-1">
+                            {{ content_block.settings.page.title | escape }}
+                          </li>
+
+                        {% elsif content_block.type == "set_of_collections" %}
+                          <li class="desktop-nav-parent-item group/parent" data-image-id="image-{{ content_block.id }}">
+                            <div class="relative p-3 cursor-pointer group-hover/parent:shadow-[0_-1px_0_0_currentColor,0_1px_0_0_currentColor]
+                            before:absolute before:top-0 before:bottom-0 before:w-full before:left-0 before:shadow-[0_-1px_0_0_currentColor,0_1px_0_0_currentColor] before:-translate-x-full before:hidden group-hover/parent:before:block after:absolute after:top-0 after:right-0 after:w-1 after:h-full after:bg-secondary after:translate-x-[1px] after:hidden group-hover/parent:after:block after:z-10">
+                              {{ content_block.settings.title | escape }}
+                            </div>
+                            {%- comment -%} Children positioned to the right via CSS - no JavaScript {%- endcomment -%}
+                            <div class="desktop-nav-children hidden group-hover/parent:block absolute top-0 bottom-0 right-0 translate-x-full pl-8 py-8 border-l-1 border-l-main">
+                              <h3 class="font-limelight text-3xl mb-6 w-11/12">{{ content_block.settings.title | escape }}</h3>
+                              <ul class="flex flex-col">
+                                {% for collection in content_block.settings.child_collection_list %}
+                                  <li class="obfuscate hover:underline underline-offset-4 p-3 cursor-pointer"
+                                    data-url64="{{ collection.url | base64_encode }}" tabindex="-1">
+                                    {{ collection.title | escape }}
+                                  </li>
+                                {% endfor %}
+                              </ul>
+                            </div>
+                          </li>
+                        {% endif %}
+
+                      {% endif %}
+                    {% endfor %}
+                  </ul>
+                </div>
+
+                {%- comment -%} Right column: All images positioned here, shown/hidden via JS {%- endcomment -%}
+                <div class="relative py-8">
+                  {%- comment -%} Default image grid - shown when nothing is hovered {%- endcomment -%}
+                  {% assign has_default_images = false %}
+                  {% if section.settings.default_desktop_image_1 != blank or section.settings.default_desktop_image_2 != blank or section.settings.default_desktop_image_3 != blank or section.settings.default_desktop_image_4 != blank %}
+                    {% assign has_default_images = true %}
+                  {% endif %}
+
+                  {% if has_default_images %}
+                    <div id="default-image-{{ block.id }}" class="desktop-nav-default-image w-full h-full max-h-[500px] grid grid-cols-2 lg:grid-cols-3 grid-rows-2 gap-6">
+                      {% if section.settings.default_desktop_image_1 != blank %}
+                        <div class="row-span-2 col-span-1">
+                          {{
+                            section.settings.default_desktop_image_1
+                            | image_url: width: 300
+                            | image_tag:
+                              widths: '300',
+                              sizes: '(min-width: 768px) 300px, 0px',
+                              class: 'w-full h-full object-cover'
+                          }}
+                        </div>
+                      {% endif %}
+                      {% if section.settings.default_desktop_image_2 != blank %}
+                        <div class="row-span-1 col-span-1 lg:row-span-1 lg:col-span-2">
+                          {{
+                            section.settings.default_desktop_image_2
+                            | image_url: width: 600
+                            | image_tag:
+                              widths: '400, 600',
+                              sizes: '(min-width: 1024px) 600px, (min-width: 768px) 400px, 0px',
+                              class: 'w-full h-full object-cover'
+                          }}
+                        </div>
+                      {% endif %}
+                      {% if section.settings.default_desktop_image_3 != blank %}
+                        <div class="row-span-1 col-span-1">
+                          {{
+                            section.settings.default_desktop_image_3
+                            | image_url: width: 400
+                            | image_tag:
+                              widths: '400',
+                              sizes: '(min-width: 768px) 400px, 0px',
+                              class: 'w-full h-full object-cover'
+                          }}
+                        </div>
+                      {% endif %}
+                      {% if section.settings.default_desktop_image_4 != blank %}
+                        <div class="hidden lg:block row-span-1 col-span-1">
+                          {{
+                            section.settings.default_desktop_image_4
+                            | image_url: width: 300
+                            | image_tag:
+                              widths: '300',
+                              sizes: '(min-width: 1024px) 300px, 0px',
+                              class: 'w-full h-full object-cover'
+                          }}
+                        </div>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+
+                  {%- comment -%} Collection, product, and page-specific images - shown on hover {%- endcomment -%}
+                  {% for content_block in section.blocks %}
+                    {% assign content_index = forloop.index0 %}
+
+                    {% if content_index > title_index and content_index < next_title_index %}
+                      {% if content_block.type == "collection_only" %}
+                        {% assign has_images = false %}
+                        {% if content_block.settings.desktop_image_1 != blank or content_block.settings.desktop_image_2 != blank or content_block.settings.desktop_image_3 != blank or content_block.settings.desktop_image_4 != blank %}
+                          {% assign has_images = true %}
+                        {% endif %}
+
+                        {% if has_images %}
+                          <div id="image-{{ content_block.id }}" class="desktop-nav-image hidden w-full h-full max-h-[500px] grid-cols-2 lg:grid-cols-3 grid-rows-2 gap-6">
+                            {% if content_block.settings.desktop_image_1 != blank %}
+                              <div class="row-span-2 col-span-1">
+                                {{
+                                  content_block.settings.desktop_image_1
+                                  | image_url: width: 300
+                                  | image_tag:
+                                    widths: '300',
+                                    sizes: '(min-width: 768px) 300px, 0px',
+                                    class: 'w-full h-full object-cover'
+                                }}
+                              </div>
+                            {% endif %}
+
+                            {% if content_block.settings.desktop_image_2 != blank %}
+                              <div class="row-span-1 col-span-1 lg:row-span-1 lg:col-span-2">
+                                {{
+                                  content_block.settings.desktop_image_2
+                                  | image_url: width: 600
+                                  | image_tag:
+                                    widths: '400, 600',
+                                    sizes: '(min-width: 1024px) 600px, (min-width: 768px) 400px, 0px',
+                                    class: 'w-full h-full object-cover'
+                                }}
+                              </div>
+                            {% endif %}
+
+                            {% if content_block.settings.desktop_image_3 != blank %}
+                              <div class="row-span-1 col-span-1">
+                                {{
+                                  content_block.settings.desktop_image_3
+                                  | image_url: width: 400
+                                  | image_tag:
+                                    widths: '400',
+                                    sizes: '(min-width: 768px) 400px, 0px',
+                                    class: 'w-full h-full object-cover'
+                                }}
+                              </div>
+                            {% endif %}
+
+                            {% if content_block.settings.desktop_image_4 != blank %}
+                              <div class="hidden lg:block row-span-1 col-span-1">
+                                {{
+                                  content_block.settings.desktop_image_4
+                                  | image_url: width: 300
+                                  | image_tag:
+                                    widths: '300',
+                                    sizes: '(min-width: 1024px) 300px, 0px',
+                                    class: 'w-full h-full object-cover'
+                                }}
+                              </div>
+                            {% endif %}
+                            </div>
+                        {% endif %}
+                      {% elsif content_block.type == "product_only" %}
+                        {% liquid
+                          assign product_image = blank
+
+                          # Check if custom desktop image is set
+                          if content_block.settings.desktop_image != blank
+                            assign product_image = content_block.settings.desktop_image
+                          elsif content_block.settings.product.featured_image != blank
+                            # Fallback to product's featured image
+                            assign product_image = content_block.settings.product.featured_image
+                          endif
+                        %}
+                        {% if product_image != blank %}
+                          <div id="image-{{ content_block.id }}" class="desktop-nav-image hidden mx-auto h-[500px] max-w-[500px]">
+                            {{
+                              product_image
+                              | image_url: width: 500
+                              | image_tag:
+                                widths: '500',
+                                sizes: '(min-width: 768px) 500px, 0px',
+                                class: 'h-full w-auto object-contain object-top'
+                            }}
+                          </div>
+                        {% endif %}
+                      {% elsif content_block.type == "page_only" and content_block.settings.desktop_image != blank %}
+                        <div id="image-{{ content_block.id }}" class="desktop-nav-image hidden mx-auto h-full max-h-[500px] max-w-[500px]">
+                            {{  
+                              content_block.settings.desktop_image
+                              | image_url: width: 500
+                              | image_tag:
+                                widths: '500',
+                                sizes: '(min-width: 768px) 500px, 0px',
+                                class: 'h-full w-auto object-contain object-top'
+                            }}
+                          </div>
+                      {% elsif content_block.type == "set_of_collections" %}
+                        {% liquid
+                          assign parent_image = blank
+
+                          # Check if custom desktop image is set
+                          if content_block.settings.desktop_image != blank
+                            assign parent_image = content_block.settings.desktop_image
+                          else
+                            # Fallback to first collection's featured image
+                            assign first_collection = content_block.settings.child_collection_list | first
+                            if first_collection != blank and first_collection.featured_image != blank
+                              assign parent_image = first_collection.featured_image
+                            endif
+                          endif
+                        %}
+                        {% if parent_image != blank %}
+                          <div id="image-{{ content_block.id }}" class="desktop-nav-image hidden mx-auto h-[500px] max-h-[400px] max-w-[400px]">
+                            {{
+                              parent_image
+                              | image_url: width: 400
+                              | image_tag:
+                                widths: '400',
+                                sizes: '(min-width: 768px) 400px, 0px',
+                                class: 'h-full w-full object-cover'
+                            }}
+                          </div>
+                        {% endif %}
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+        {% endif %}
+      {% endfor %}
+    </div>
   </div>
 
   {%- comment -%} Mobile filter button - Collection pages only {%- endcomment -%}
