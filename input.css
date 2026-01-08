@@ -580,4 +580,18 @@ main-product-blocks .description h2 span {
     filter: blur(0);
     transform: scale(1);
   }
+
+  /* Mobile menu accordion animations */
+  .js-nav-submenu > summary + ul > div {
+    display: grid;
+    grid-template-rows: 0fr;
+  }
+
+  .js-nav-submenu[open] > summary + ul > div {
+    grid-template-rows: 1fr;
+  }
+
+  .js-nav-submenu > summary + ul > div > * {
+    overflow: hidden;
+  }
 }

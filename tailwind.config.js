@@ -75,6 +75,7 @@ module.exports = {
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],
         heading: ['heading', 'sans-serif'],
+        limelight: ['Limelight', 'sans-serif'],
       },
       fontSize: {
         xs: '0.7rem',

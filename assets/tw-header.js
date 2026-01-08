@@ -82,21 +82,18 @@ class StickyHeader extends HTMLElement {
       // Only add submenu behavior to navigation submenus, not other details elements (e.g. localization)
       if (!subDetail.classList.contains('js-nav-submenu')) return;
 
-      subDetail.firstElementChild.addEventListener('click', (e) => {
-        e.preventDefault();
-        this.openSubMenu(subDetail);
+      // Single-open accordion: close other submenus when one opens
+      subDetail.addEventListener('toggle', () => {
+        if (subDetail.open) {
+          // Close sibling submenus at the same level
+          const parent = subDetail.closest('ul');
+          parent.querySelectorAll('.js-nav-submenu').forEach(other => {
+            if (other !== subDetail && other.open) {
+              other.open = false;
+            }
+          });
+        }
       });
-
-      const h3 = subDetail.querySelector('h3');
-      if (h3) {
-        h3.addEventListener('click', (e) => {
-          this.closeSubMenu(subDetail);
-        });
-        h3.addEventListener('keydown', (e) => {
-          if (e.key !== 'Enter') return;
-          this.closeSubMenu(subDetail);
-        });
-      }
     });
 
     document.addEventListener('PredictiveSearchClose', async () => {
@@ -150,21 +147,13 @@ class StickyHeader extends HTMLElement {
     this.resetMenuDisplay();
   };
 
-  closeSubMenu = async (subDetails) => {
-    const subMenu = subDetails?.firstElementChild.nextElementSibling;
-    subMenu?.classList.replace('translate-x-0', 'translate-x-full');
-    this.changeParentLinkFocusable(true);
-    await waitAnimEnd(subMenu);
-    if (subDetails) subDetails.open = false;
-    this.resizeHeaderHeightToFitTopElemMenu();
-  };
-
-  resizeHeaderHeightToFitTopElemMenu() {
-    this.menuOpenTopElem.style.height = '';
-  }
-
   resetMenuDisplay = () => {
-    this.closeSubMenu(this.subMenuOpen);
+    // Close all open submenus when mobile menu closes
+    this.subDetails.forEach(detail => {
+      if (detail.classList.contains('js-nav-submenu')) {
+        detail.open = false;
+      }
+    });
   };
 
   switchMobileMenuLogo(showBurger) {
@@ -178,18 +167,6 @@ class StickyHeader extends HTMLElement {
     close.setAttribute('aria-hidden', '' + showBurger);
     burger.classList.toggle('hidden', !showBurger);
     burger.setAttribute('aria-hidden', '' + !showBurger);
-  }
-
-  changeParentLinkFocusable(focusable) {
-    const tabIndexNum = focusable ? '0' : '-1';
-    this.menuFirstLis.forEach((li) => {
-      if (li.firstElementChild && li.firstElementChild.nodeName === 'DETAILS') {
-        if (focusable) li.firstElementChild.removeAttribute('tabindex');
-        else li.firstElementChild.setAttribute('tabindex', '-1');
-      } else {
-        li.setAttribute('tabindex', tabIndexNum);
-      }
-    });
   }
 
   hideSubCollection = (e) => {
@@ -207,29 +184,6 @@ class StickyHeader extends HTMLElement {
       this.elemToFocus || this.menu.querySelector('[tabindex="0"]');
     this.elemToFocus.focus();
   };
-
-  openSubMenu = (subDetails) => {
-    const subMenu = subDetails.firstElementChild.nextElementSibling;
-    subDetails.open = true;
-    subMenu.classList.replace('translate-x-full', 'translate-x-0');
-    this.changeParentLinkFocusable(false);
-    this.subMenuOpen = subDetails;
-    this.resizeHeaderHeightToFitSubmenu(subMenu);
-  };
-
-  resizeHeaderHeightToFitSubmenu(subMenu) {
-    const subMenuHeightWithoutPadding = Array.from(subMenu.children).reduce(
-      (acc, elem) => acc + elem.offsetHeight,
-      0,
-    );
-    var subMenuStyles = window.getComputedStyle(subMenu);
-    const subMenuHeight =
-      subMenuHeightWithoutPadding +
-      parseFloat(subMenuStyles.paddingTop) +
-      parseFloat(subMenuStyles.paddingBottom);
-
-    this.menuOpenTopElem.style.height = `${subMenuHeight}px`;
-  }
 
   measureFixHeaderHeight() {
     this.headerBounds.bottom = this.header.offsetHeight;

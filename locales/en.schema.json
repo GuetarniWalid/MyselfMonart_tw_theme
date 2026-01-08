@@ -963,14 +963,7 @@
       "name": "Gift image"
     },
     "header": {
-      "name": {
-        "painting": "Header for paintings",
-        "page": "Header for page",
-        "page_painting": "Header painting page",
-        "page_poster": "Header poster page",
-        "page_tapestry": "Header tapestry page",
-        "tapestry": "Header for tapestries"
-      },
+      "name": "Header",
       "settings": {
         "logo_svg": {
           "label": "SVG logo",
@@ -988,38 +981,11 @@
         },
         "parent_collection": {
           "name": {
-            "images": "Parent collection with images",
-            "text": "Parent collection with text"
-          },
-          "header": {
-            "first_section": {
-              "content": "First section"
-            },
-            "second_section": {
-              "content": "Second section"
-            },
-            "third_section": {
-              "content": "Third section"
-            },
-            "fourth_section": {
-              "content": "Fourth section"
-            },
-            "fifth_section": {
-              "content": "Fifth section"
-            },
-            "sixth_section": {
-              "content": "Sixth section"
-            }
+            "images": "Collection set"
           },
           "settings": {
-            "link": {
-              "label": "Main page link"
-            },
             "title": {
               "label": "Title"
-            },
-            "product": {
-              "label": "Representative image"
             },
             "child_collection_list": {
               "label": "Child collections"
@@ -1042,6 +1008,14 @@
           "settings": {
             "product": {
               "label": "Product"
+            }
+          }
+        },
+        "title_only": {
+          "name": "Title",
+          "settings": {
+            "title": {
+              "label": "Title text"
             }
           }
         }

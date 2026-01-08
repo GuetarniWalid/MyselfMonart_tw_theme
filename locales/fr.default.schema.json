@@ -141,39 +141,39 @@
       "settings": {
         "social_twitter_link": {
           "label": "Twitter",
-          "info": "https:\/\/twitter.com\/shopify"
+          "info": "https://twitter.com/shopify"
         },
         "social_facebook_link": {
           "label": "Facebook",
-          "info": "https:\/\/facebook.com\/shopify"
+          "info": "https://facebook.com/shopify"
         },
         "social_pinterest_link": {
           "label": "Pinterest",
-          "info": "https:\/\/pinterest.com\/shopify"
+          "info": "https://pinterest.com/shopify"
         },
         "social_instagram_link": {
           "label": "Instagram",
-          "info": "http:\/\/instagram.com\/shopify"
+          "info": "http://instagram.com/shopify"
         },
         "social_tiktok_link": {
           "label": "TikTok",
-          "info": "https:\/\/vimeo.com\/shopify"
+          "info": "https://vimeo.com/shopify"
         },
         "social_tumblr_link": {
           "label": "Tumblr",
-          "info": "http:\/\/shopify.tumblr.com"
+          "info": "http://shopify.tumblr.com"
         },
         "social_snapchat_link": {
           "label": "Snapchat",
-          "info": "https:\/\/www.snapchat.com\/add\/shopify"
+          "info": "https://www.snapchat.com/add/shopify"
         },
         "social_youtube_link": {
           "label": "YouTube",
-          "info": "https:\/\/www.youtube.com\/shopify"
+          "info": "https://www.youtube.com/shopify"
         },
         "social_vimeo_link": {
           "label": "Vimeo",
-          "info": "https:\/\/vimeo.com\/shopify"
+          "info": "https://vimeo.com/shopify"
         },
         "header": {
           "content": "Comptes sociaux"
@@ -189,7 +189,7 @@
         },
         "type_header_font": {
           "label": "Police",
-          "info": "La sélection d'une police différente peut influencer la vitesse de votre boutique. [En savoir plus sur les polices système.](https:\/\/help.shopify.com\/manual\/online-store\/os\/store-speed\/improving-speed#fonts)"
+          "info": "La sélection d'une police différente peut influencer la vitesse de votre boutique. [En savoir plus sur les polices système.](https://help.shopify.com/manual/online-store/os/store-speed/improving-speed#fonts)"
         },
         "header__1": {
           "content": "Titres"
@@ -199,7 +199,7 @@
         },
         "type_body_font": {
           "label": "Police",
-          "info": "La sélection d'une police différente peut influencer la vitesse de votre boutique. [En savoir plus sur les polices système.](https:\/\/help.shopify.com\/manual\/online-store\/os\/store-speed\/improving-speed#fonts)"
+          "info": "La sélection d'une police différente peut influencer la vitesse de votre boutique. [En savoir plus sur les polices système.](https://help.shopify.com/manual/online-store/os/store-speed/improving-speed#fonts)"
         },
         "heading_scale": {
           "label": "Échelle de taille de police"
@@ -690,7 +690,7 @@
       "name": "Bannière d'inscription à la liste de diffusion",
       "settings": {
         "paragraph": {
-          "content": "Chaque abonnement par e-mail entraîne la création d'un compte client. [En savoir plus](https:\/\/help.shopify.com\/manual\/customers)"
+          "content": "Chaque abonnement par e-mail entraîne la création d'un compte client. [En savoir plus](https://help.shopify.com/manual/customers)"
         },
         "image": {
           "label": "Image de fond"
@@ -709,7 +709,7 @@
         },
         "show_text_below": {
           "label": "Afficher le contenu sous l'image sur le mobile",
-          "info": "Pour optimiser vos résultats, utilisez une image ayant un rapport d'aspect de 16:9. [En savoir plus](https:\/\/help.shopify.com\/manual\/shopify-admin\/productivity-tools\/image-editor#understanding-image-aspect-ratio)"
+          "info": "Pour optimiser vos résultats, utilisez une image ayant un rapport d'aspect de 16:9. [En savoir plus](https://help.shopify.com/manual/shopify-admin/productivity-tools/image-editor#understanding-image-aspect-ratio)"
         },
         "image_height": {
           "label": "Hauteur de la bannière",
@@ -725,7 +725,7 @@
           "options__4": {
             "label": "Grand"
           },
-          "info": "Pour optimiser vos résultats, utilisez une image ayant un rapport d'aspect de 16:9. [En savoir plus](https:\/\/help.shopify.com\/manual\/shopify-admin\/productivity-tools\/image-editor#understanding-image-aspect-ratio)"
+          "info": "Pour optimiser vos résultats, utilisez une image ayant un rapport d'aspect de 16:9. [En savoir plus](https://help.shopify.com/manual/shopify-admin/productivity-tools/image-editor#understanding-image-aspect-ratio)"
         },
         "desktop_content_position": {
           "options__4": {
@@ -836,7 +836,7 @@
         },
         "show_image": {
           "label": "Afficher les images vedettes",
-          "info": "Pour optimiser vos résultats, utilisez une image ayant un rapport d'aspect de 3:2. [En savoir plus](https:\/\/help.shopify.com\/manual\/shopify-admin\/productivity-tools\/image-editor#understanding-image-aspect-ratio)"
+          "info": "Pour optimiser vos résultats, utilisez une image ayant un rapport d'aspect de 3:2. [En savoir plus](https://help.shopify.com/manual/shopify-admin/productivity-tools/image-editor#understanding-image-aspect-ratio)"
         },
         "show_date": {
           "label": "Afficher la date"
@@ -898,7 +898,7 @@
         },
         "logo": {
           "label": "Logo en svg",
-          "info": "Ex: <svg ...><\/svg>"
+          "info": "Ex: <svg ...></svg>"
         },
         "logo_with_original_color": {
           "label": "Utiliser les couleurs originales du logo"
@@ -914,7 +914,7 @@
         },
         "header__1": {
           "content": "Inscription à la liste de diffusion",
-          "info": "Abonnés automatiquement ajoutés à votre liste de clients « marketing accepté ». [En savoir plus](https:\/\/help.shopify.com\/manual\/customers\/manage-customers)"
+          "info": "Abonnés automatiquement ajoutés à votre liste de clients « marketing accepté ». [En savoir plus](https://help.shopify.com/manual/customers/manage-customers)"
         },
         "header__2": {
           "content": "Icônes de médias sociaux",
@@ -924,19 +924,19 @@
           "label": "Afficher les icônes des médias sociaux"
         },
         "header__3": {
-          "content": "Sélecteur de pays\/région"
+          "content": "Sélecteur de pays/région"
         },
         "header__4": {
-          "info": "Pour ajouter un pays\/une région, allez à vos [paramètres de paiement.](\/admin\/settings\/payments)"
+          "info": "Pour ajouter un pays/une région, allez à vos [paramètres de paiement.](/admin/settings/payments)"
         },
         "enable_country_selector": {
-          "label": "Activer le sélecteur de pays\/région"
+          "label": "Activer le sélecteur de pays/région"
         },
         "header__5": {
           "content": "Sélecteur de langue"
         },
         "header__6": {
-          "info": "Pour ajouter une langue, allez à vos [paramètres de langue.](\/admin\/settings\/languages)"
+          "info": "Pour ajouter une langue, allez à vos [paramètres de langue.](/admin/settings/languages)"
         },
         "enable_language_selector": {
           "label": "Activer le sélecteur de langue"
@@ -963,18 +963,11 @@
       "name": "Image du cadeau"
     },
     "header": {
-      "name": {
-        "painting": "En-tête pour tableaux",
-        "page": "En-tête pour page",
-        "page_painting": "En-tête page tableau",
-        "page_poster": "En-tête page poster",
-        "page_tapestry": "En-tête page tapisserie",
-        "tapestry": "En-tête pour tapisseries"
-      },
+      "name": "En-tête",
       "settings": {
         "logo_svg": {
           "label": "Logo en svg",
-          "info": "Ex: <svg ...><\/svg>"
+          "info": "Ex: <svg ...></svg>"
         }
       },
       "blocks": {
@@ -988,38 +981,11 @@
         },
         "parent_collection": {
           "name": {
-            "images": "Collection parente avec images",
-            "text": "Collection parente avec texte"
-          },
-          "header": {
-            "first_section": {
-              "content": "Première section"
-            },
-            "second_section": {
-              "content": "Deuxième section"
-            },
-            "third_section": {
-              "content": "Troisième section"
-            },
-            "fourth_section": {
-              "content": "Quatrième section"
-            },
-            "fifth_section": {
-              "content": "Cinquième section"
-            },
-            "sixth_section": {
-              "content": "Sixième section"
-            }
+            "images": "Ensemble de collection"
           },
           "settings": {
-            "link": {
-              "label": "Lien vers la page principale"
-            },
             "title": {
               "label": "Titre"
-            },
-            "product": {
-              "label": "Image de representation"
             },
             "child_collection_list": {
               "label": "Collections enfants"
@@ -1042,6 +1008,14 @@
           "settings": {
             "product": {
               "label": "Produit"
+            }
+          }
+        },
+        "title_only": {
+          "name": "Titre",
+          "settings": {
+            "title": {
+              "label": "Texte du titre"
             }
           }
         }
@@ -1562,7 +1536,7 @@
         },
         "show_rating": {
           "label": "Afficher la note du produit",
-          "info": "Pour afficher une note, ajoutez une application d'évaluation de produits. [En savoir plus](https:\/\/help.shopify.com\/manual\/online-store\/themes\/theme-structure\/page-types#search-results-section-settings)"
+          "info": "Pour afficher une note, ajoutez une application d'évaluation de produits. [En savoir plus](https://help.shopify.com/manual/online-store/themes/theme-structure/page-types#search-results-section-settings)"
         },
         "header_mobile": {
           "content": "Mise en page sur mobile"
@@ -1667,7 +1641,7 @@
           "label": "Rendre la section pleine largeur"
         },
         "paragraph": {
-          "content": "Chaque abonnement aux e-mails entraîne la création d'un compte client. [En savoir plus](https:\/\/help.shopify.com\/manual\/customers)"
+          "content": "Chaque abonnement aux e-mails entraîne la création d'un compte client. [En savoir plus](https://help.shopify.com/manual/customers)"
         }
       },
       "blocks": {
@@ -1851,7 +1825,7 @@
       "name": "Articles frères"
     },
     "shifted-image-text": {
-      "name": "Images décalées \/ Texte",
+      "name": "Images décalées / Texte",
       "settings": {
         "heading": {
           "label": "Titre"
@@ -1895,7 +1869,7 @@
         },
         "description": {
           "label": "Texte alternatif de la vidéo",
-          "info": "Décrivez la vidéo pour les clients utilisant des lecteurs d'écran. [En savoir plus](https:\/\/help.shopify.com\/manual\/online-store\/themes\/theme-structure\/theme-features#video)"
+          "info": "Décrivez la vidéo pour les clients utilisant des lecteurs d'écran. [En savoir plus](https://help.shopify.com/manual/online-store/themes/theme-structure/theme-features#video)"
         },
         "image_padding": {
           "label": "Ajouter une marge intérieure à l'image",

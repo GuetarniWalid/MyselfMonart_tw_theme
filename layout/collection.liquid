@@ -82,11 +82,7 @@
     </a>
 
     {% section 'tw-announcement-bar' %}
-    {% if collection.metafields.header.type.value == 'tapestry' %}
-      {% section 'tw-header-tapestry' %}
-    {% else %}
-      {% section 'tw-header-painting' %}
-    {% endif %}
+    {% section 'tw-header' %}
     {% section 'tw-cart-drawer' %}
     {% render 'tw-filter-drawer' %}
     {% render 'open-cart-drawer-button' %}
