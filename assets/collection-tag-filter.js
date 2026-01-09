@@ -241,11 +241,17 @@ class CollectionTagFilter extends HTMLElement {
       }
     });
 
+    // Capture the open/close state of all details elements BEFORE replacement
+    const desktopDetailsState = this.captureDetailsState(document.querySelector('aside[aria-label]'));
+    const mobileDetailsState = this.captureDetailsState(document.querySelector('filter-drawer'));
+
     // Replace desktop filter sidebar (from section HTML)
     const newSidebar = sectionDoc.querySelector('aside[aria-label]');
     const currentSidebar = document.querySelector('aside[aria-label]');
     if (newSidebar && currentSidebar) {
       currentSidebar.innerHTML = newSidebar.innerHTML;
+      // Restore the open/close state for desktop
+      this.restoreDetailsState(currentSidebar, desktopDetailsState);
     }
 
     // Replace mobile filter drawer content (from page HTML)
@@ -254,6 +260,8 @@ class CollectionTagFilter extends HTMLElement {
     if (newDrawer && currentDrawer) {
       // Get the new content (everything except the outer filter-drawer tag)
       currentDrawer.innerHTML = newDrawer.innerHTML;
+      // Restore the open/close state for mobile
+      this.restoreDetailsState(currentDrawer, mobileDetailsState);
 
       // Re-attach close button listener (since the button was replaced)
       const newCloseButton = currentDrawer.querySelector('.close');
@@ -300,6 +308,43 @@ class CollectionTagFilter extends HTMLElement {
 
     // Update clear button visibility
     this.updateClearButtonVisibility();
+  }
+
+  captureDetailsState(container) {
+    // Capture which details elements are open, identified by their summary text
+    if (!container) return new Map();
+
+    const detailsState = new Map();
+    const detailsElements = container.querySelectorAll('details');
+
+    detailsElements.forEach(details => {
+      const summary = details.querySelector('summary');
+      if (summary) {
+        // Use the summary text as a unique identifier for this section
+        const summaryText = summary.textContent.trim();
+        detailsState.set(summaryText, details.open);
+      }
+    });
+
+    return detailsState;
+  }
+
+  restoreDetailsState(container, detailsState) {
+    // Restore the open/close state of details elements based on their summary text
+    if (!container || !detailsState || detailsState.size === 0) return;
+
+    const detailsElements = container.querySelectorAll('details');
+
+    detailsElements.forEach(details => {
+      const summary = details.querySelector('summary');
+      if (summary) {
+        const summaryText = summary.textContent.trim();
+        // If we have saved state for this section, restore it
+        if (detailsState.has(summaryText)) {
+          details.open = detailsState.get(summaryText);
+        }
+      }
+    });
   }
 
   syncCheckboxes(changedCheckbox) {

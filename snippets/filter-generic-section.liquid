@@ -14,7 +14,7 @@
 {% if filter %}
 <div class="py-4 {% unless forloop.first %}border-t border-main{% endunless %} relative z-20 bg-secondary">
   <details class="group" {% if filter_index <= 2 %}open{% endif %}>
-    <summary class="sticky top-0 z-20 bg-secondary flex justify-between items-center cursor-pointer list-none select-none py-2 px-4">
+    <summary class="flex justify-between items-center cursor-pointer list-none select-none py-2 px-4">
       <span class="font-semibold text-sm font-heading">{{ filter.label }}</span>
       <span class="group-open:rotate-180 transition-transform duration-200">
         {% render 'tw-icon-caret', width: "12" %}
