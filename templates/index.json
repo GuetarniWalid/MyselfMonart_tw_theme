@@ -224,7 +224,7 @@
           "settings": {
             "image": "shopify://shop_images/collection-tableau-noir-et-blanc.jpg",
             "collection": "tableau-abstrait",
-            "nb_columns": "col-span-3",
+            "nb_columns": "col-span-6",
             "lazy_load": true,
             "paragraph": "<p>Découvrez notre collection de tableaux abstraits, des œuvres qui apportent du caractère tout en douceur à votre intérieur. Les formes et les couleurs se répondent naturellement, laissant place à l’émotion et à l’interprétation, sans jamais alourdir l’espace. Ces tableaux habillent le mur avec subtilité et créent une ambiance équilibrée, moderne et apaisante. Dans un salon, une chambre ou un espace de travail, l’abstrait devient une évidence, pour un intérieur harmonieux, élégant et agréable à vivre au quotidien.</p>"
           }
