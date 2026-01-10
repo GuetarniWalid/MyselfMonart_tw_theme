@@ -12,10 +12,7 @@
   "sections": {
     "cf6565ea-5338-4b92-985b-b5b0824700db": {
       "type": "breadcrumb",
-      "settings": {
-        "main_color": "#1a2e05",
-        "secondary_color": "#ebd0cd"
-      }
+      "settings": {}
     },
     "collections_pages_grid_mdxnY9": {
       "type": "collections-pages-grid",

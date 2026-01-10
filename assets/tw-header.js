@@ -26,6 +26,8 @@ class StickyHeader extends HTMLElement {
     // Desktop dropdown state tracking
     this.currentOpenDropdown = null;
     this.dropdownCloseTimeout = null;
+    this.preventDropdownOpen = false; // Prevents dropdown from reopening after hamburger click
+    this.lastTouchTime = 0; // Track last touch to ignore hover events on touch devices
   }
 
   connectedCallback() {
@@ -38,6 +40,16 @@ class StickyHeader extends HTMLElement {
 
     this.menuOpener.addEventListener('click', async (e) => {
       e.preventDefault();
+      // Close desktop dropdown if open (for iPad/landscape mode)
+      if (this.currentOpenDropdown) {
+        this.closeDesktopDropdown();
+        this.preventDropdownOpen = true;
+        // Reset the flag after a delay for touch devices
+        setTimeout(() => {
+          this.preventDropdownOpen = false;
+        }, 300);
+      }
+
       const isOpen = this.detailsParent.open;
       if (isOpen) {
         this.renderBodyScrollable(true);
@@ -54,9 +66,35 @@ class StickyHeader extends HTMLElement {
 
       if (!dropdown) return;
 
-      // Button hover - open dropdown
+      // Track touch events to distinguish from mouse events
+      button.addEventListener('touchstart', () => {
+        this.lastTouchTime = Date.now();
+      }, { passive: true });
+
+      // Button hover - open dropdown (ignore if recent touch)
       button.addEventListener('mouseenter', () => {
-        this.openDesktopDropdown(dropdown, button);
+        // Ignore mouseenter if it happened within 500ms of a touch (mobile Safari compatibility)
+        if (Date.now() - this.lastTouchTime > 500 && !this.preventDropdownOpen) {
+          this.openDesktopDropdown(dropdown, button);
+        }
+      });
+
+      // Button click - toggle dropdown (important for touch devices)
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (this.currentOpenDropdown === dropdown) {
+          // If this dropdown is open, close it and prevent reopening on hover
+          this.closeDesktopDropdown();
+          this.preventDropdownOpen = true;
+
+          // On touch devices, reset the flag after a short delay since mouseleave won't fire
+          setTimeout(() => {
+            this.preventDropdownOpen = false;
+          }, 300);
+        } else if (!this.preventDropdownOpen) {
+          // If closed and not prevented, open it (for touch devices)
+          this.openDesktopDropdown(dropdown, button);
+        }
       });
 
       // Button keyboard support
@@ -77,7 +115,17 @@ class StickyHeader extends HTMLElement {
       dropdown.addEventListener('mouseleave', () => {
         this.closeDesktopDropdown();
       });
+
     });
+
+    // Get the header container to reset the prevent flag
+    const headerContainer = this.querySelector('.flex.items-center.justify-between');
+    if (headerContainer) {
+      headerContainer.addEventListener('mouseleave', () => {
+        // Reset the prevent flag when mouse leaves the entire header
+        this.preventDropdownOpen = false;
+      });
+    }
 
     // Special case: if there's only one button, open dropdown on header hover
     if (this.desktopNavButtons.length === 1) {
@@ -86,14 +134,17 @@ class StickyHeader extends HTMLElement {
       const singleDropdown = this.querySelector(`#dropdown-${sectionId}`);
 
       if (singleDropdown) {
-        // Get the header container (the div with flex layout)
-        const headerContainer = singleButton.closest(
-          '.flex.items-center.justify-between',
-        );
-
         if (headerContainer) {
+          // Track touches on the header container
+          headerContainer.addEventListener('touchstart', () => {
+            this.lastTouchTime = Date.now();
+          }, { passive: true });
+
           headerContainer.addEventListener('mouseenter', () => {
-            this.openDesktopDropdown(singleDropdown, singleButton);
+            // Ignore mouseenter if it happened within 500ms of a touch
+            if (Date.now() - this.lastTouchTime > 500 && !this.preventDropdownOpen) {
+              this.openDesktopDropdown(singleDropdown, singleButton);
+            }
           });
 
           headerContainer.addEventListener('mouseleave', () => {
@@ -371,6 +422,47 @@ class StickyHeader extends HTMLElement {
       }
     });
     this.measureFixHeaderHeight();
+
+    // Handle orientation/resize changes to reset state when switching between mobile/desktop
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        // Reset dropdown state when switching layouts
+        this.preventDropdownOpen = false;
+        this.lastTouchTime = 0;
+
+        // Close desktop dropdown if switching to mobile
+        if (window.innerWidth < 768) { // md breakpoint
+          this.closeDesktopDropdown();
+          // Force close mobile menu and reset its state completely
+          if (this.detailsParent.open) {
+            this.detailsParent.open = false;
+            this.switchMobileMenuLogo(true);
+            this.menu.classList.remove('open-nav');
+            this.menu.classList.add('close-nav');
+            this.showOverlay(false);
+            this.resetMenuDisplay();
+          }
+          // Ensure body is scrollable
+          this.renderBodyScrollable(true);
+        }
+
+        // Close mobile menu if switching to desktop
+        if (window.innerWidth >= 768) {
+          // Force close mobile menu completely when switching to desktop
+          if (this.detailsParent.open) {
+            this.detailsParent.open = false;
+            this.switchMobileMenuLogo(true);
+            this.menu.classList.remove('open-nav');
+            this.menu.classList.add('close-nav');
+            this.showOverlay(false);
+            this.resetMenuDisplay();
+          }
+          this.renderBodyScrollable(true);
+        }
+      }, 100);
+    });
   }
 
   closeMobileMenu = async () => {
@@ -519,6 +611,9 @@ class StickyHeader extends HTMLElement {
     // Show overlay
     this.showOverlay(true);
 
+    // Prevent body scrolling when dropdown is open
+    this.renderBodyScrollable(false);
+
     // Track current dropdown
     this.currentOpenDropdown = dropdown;
 
@@ -541,6 +636,9 @@ class StickyHeader extends HTMLElement {
 
     // Hide overlay
     this.showOverlay(false);
+
+    // Re-enable body scrolling
+    this.renderBodyScrollable(true);
 
     // Hide all children panels
     dropdown.querySelectorAll('.desktop-nav-children').forEach((panel) => {
