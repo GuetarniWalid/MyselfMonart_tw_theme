@@ -1196,8 +1196,13 @@
             }
           }
         },
-        "show_secondary_image": {
-          "label": "Afficher la deuxième image en survol"
+        "primary_image_index": {
+          "label": "Numéro de l'image principale",
+          "info": "Entrez quelle image afficher (1 pour la première, 2 pour la deuxième, etc.)"
+        },
+        "next_image_index": {
+          "label": "Numéro de l'image au survol",
+          "info": "Entrez quelle image afficher au survol (0 pour désactiver l'effet de survol, 1 pour la première, 2 pour la deuxième, etc.)"
         }
       }
     },
@@ -1560,8 +1565,13 @@
     "main-search": {
       "name": "Résultats de la recherche",
       "settings": {
-        "show_secondary_image": {
-          "label": "Afficher la deuxième image en survol"
+        "primary_image_index": {
+          "label": "Numéro de l'image principale",
+          "info": "Entrez quelle image afficher (1 pour la première, 2 pour la deuxième, etc.)"
+        },
+        "next_image_index": {
+          "label": "Numéro de l'image au survol",
+          "info": "Entrez quelle image afficher au survol (0 pour désactiver l'effet de survol, 1 pour la première, 2 pour la deuxième, etc.)"
         },
         "show_vendor": {
           "label": "Afficher le distributeur"

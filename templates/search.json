@@ -13,7 +13,8 @@
     "main": {
       "type": "main-search",
       "settings": {
-        "show_secondary_image": false
+        "primary_image_index": 1,
+        "next_image_index": 0
       }
     }
   },

@@ -46,7 +46,7 @@ class MyLikes extends HTMLElement {
 
     // Update first image while preserving LQIP structure
     const firstImg = wrapper.querySelector('img');
-    const image = product.images[1] ?? product.image;
+    const image = product.image ?? product.images[0];
     if (firstImg && image) {
       // Keep the LQIP placeholder in src (10px)
       firstImg.src = `${image.src}&width=10`;

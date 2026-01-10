@@ -1,50 +1,71 @@
-{% comment %} 
-    Renders a product card 
-    Accepts: 
-    - product: {Object} The product object 
-    - show_secondary_image: {Boolean} Show the secondary image on hover. Default: false (optional) 
-    - lazy_load: {Boolean} Image should be lazy loaded. Default: true (optional) 
-    - section_id: {String} The ID of the section that contains this card. 
-    Usage: 
-    {% render 'card-product' %} 
+{% comment %}
+    Renders a product card
+    Accepts:
+    - product: {Object} The product object
+    - primary_image_index: {Number} Which image to show as primary (1-based index). Default: 1 (optional)
+    - next_image_index: {Number} Which image to show on hover (1-based index). Default: 0 (no hover image) (optional)
+    - lazy_load: {Boolean} Image should be lazy loaded. Default: true (optional)
+    - section_id: {String} The ID of the section that contains this card.
+    Usage:
+    {% render 'card-product' %}
 {% endcomment %}
 
 <div class="h-full flex flex-col justify-end">
-  {%- if product.featured_media -%}
+  {%- liquid
+    assign primary_index_input = primary_image_index | default: 1
+    assign primary_index = primary_index_input | minus: 1
+    assign primary_image = product.media[primary_index]
+    if primary_image == nil
+      assign primary_image = product.featured_media
+    endif
+
+    assign next_image_index_input = next_image_index | default: 0
+    assign should_show_next = false
+    assign next_image = nil
+    if next_image_index_input > 0
+      assign next_index = next_image_index_input | minus: 1
+      assign next_image = product.media[next_index]
+      if next_image != nil
+        assign should_show_next = true
+      endif
+    endif
+  -%}
+
+  {%- if primary_image -%}
     <div class="mb-2 md:mb-5">
-      <div class="skeleton overflow-hidden relative w-full duration-100" style="aspect-ratio: {{ product.featured_media.width }} / {{ product.featured_media.height }}">
+      <div class="skeleton overflow-hidden relative w-full duration-100" style="aspect-ratio: {{ primary_image.width }} / {{ primary_image.height }}">
         <img
-          data-srcset="{%- if product.featured_media.width >= 200 -%}{{ product.featured_media | image_url: width: 200 }} 200w,{%- endif -%}
-            {%- if product.featured_media.width >= 300 -%}{{ product.featured_media | image_url: width: 300 }} 300w,{%- endif -%}
-            {%- if product.featured_media.width >= 400 -%}{{ product.featured_media | image_url: width: 400 }} 400w,{%- endif -%}
-            {%- if product.featured_media.width >= 500 -%}{{ product.featured_media | image_url: width: 500 }} 500w,{%- endif -%}
-            {{ product.featured_media | image_url }} {{ product.featured_media.width }}w"
-          src="{{ product.featured_media | image_url: width: 10 }}"
+          data-srcset="{%- if primary_image.width >= 200 -%}{{ primary_image | image_url: width: 200 }} 200w,{%- endif -%}
+            {%- if primary_image.width >= 300 -%}{{ primary_image | image_url: width: 300 }} 300w,{%- endif -%}
+            {%- if primary_image.width >= 400 -%}{{ primary_image | image_url: width: 400 }} 400w,{%- endif -%}
+            {%- if primary_image.width >= 500 -%}{{ primary_image | image_url: width: 500 }} 500w,{%- endif -%}
+            {{ primary_image | image_url }} {{ primary_image.width }}w"
+          src="{{ primary_image | image_url: width: 10 }}"
           sizes="(min-width: 768px) 33%, (min-width: 1024px) 300px, 50%"
           alt="{% if product.metafields.meta_object.media.value.alts.value[1] %}{{ product.metafields.meta_object.media.value.alts.value[1] | escape }}{% else %}{{ product.media[1].alt | escape }}{% endif %}"
           loading="lazy"
-          width="{{ product.featured_media.width }}"
-          height="{{ product.featured_media.height }}"
+          width="{{ primary_image.width }}"
+          height="{{ primary_image.height }}"
           class="lqip w-full h-full object-contain">
 
-        {%- if show_secondary_image and product.media[1] != nil -%}
+        {%- if should_show_next -%}
           <img
-            data-srcset="{%- if product.media[1].width >= 200 -%}{{ product.media[1] | image_url: width: 200 }} 200w,{%- endif -%}
-              {%- if product.media[1].width >= 300 -%}{{ product.media[1] | image_url: width: 300 }} 300w,{%- endif -%}
-              {%- if product.media[1].width >= 400 -%}{{ product.media[1] | image_url: width: 400 }} 400w,{%- endif -%}
-              {%- if product.media[1].width >= 500 -%}{{ product.media[1] | image_url: width: 500 }} 500w,{%- endif -%}
-              {{ product.media[1] | image_url }} {{ product.media[1].width }}w"
-            src="{{ product.media[1] | image_url: width: 40 }}"
+            data-srcset="{%- if next_image.width >= 200 -%}{{ next_image | image_url: width: 200 }} 200w,{%- endif -%}
+              {%- if next_image.width >= 300 -%}{{ next_image | image_url: width: 300 }} 300w,{%- endif -%}
+              {%- if next_image.width >= 400 -%}{{ next_image | image_url: width: 400 }} 400w,{%- endif -%}
+              {%- if next_image.width >= 500 -%}{{ next_image | image_url: width: 500 }} 500w,{%- endif -%}
+              {{ next_image | image_url }} {{ next_image.width }}w"
+            src="{{ next_image | image_url: width: 40 }}"
             sizes="(min-width: 768px) 33%, (min-width: 1024px) 300px, 50%"
-            alt="{% if product.metafields.meta_object.media.value.alts.value[0] %}{{ 
-              product.metafields.meta_object.media.value.alts.value[0] | escape }}{% else %}{{ product.media[1].alt | escape }}{% endif %}"
+            alt="{% if product.metafields.meta_object.media.value.alts.value[0] %}{{
+              product.metafields.meta_object.media.value.alts.value[0] | escape }}{% else %}{{ next_image.alt | escape }}{% endif %}"
             {% unless lazy_load == false %}
             loading="lazy"
             {% endunless %}
-            width="{{ product.media[1].width }}"
-            height="{{ product.media[1].height }}"
-            class="lqip absolute top-0 left-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 duration-200 rounded-lg {% if       
-              product.media[1].width >= product.media[1].height %}object-top{% endif %}">
+            width="{{ next_image.width }}"
+            height="{{ next_image.height }}"
+            class="lqip absolute top-0 left-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 duration-200 rounded-lg {% if
+              next_image.width >= next_image.height %}object-top{% endif %}">
         {%- endif -%}
     </div>
   {%- endif -%}

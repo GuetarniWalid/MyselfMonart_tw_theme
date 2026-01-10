@@ -33,7 +33,8 @@
           <li id="{{ product.id }}" class="relative group h-full">
             {% render 'card-product'
               , product: product
-              , show_secondary_image: section.settings.show_secondary_image
+              , primary_image_index: section.settings.primary_image_index
+              , next_image_index: section.settings.next_image_index
               , lazy_load: lazy_load
               , section_id: section.id
             %}
@@ -58,10 +59,18 @@
       "content": "t:sections.main-search.settings.header__1.content"
     },
     {
-      "type": "checkbox",
-      "id": "show_secondary_image",
-      "default": true,
-      "label": "t:sections.main-search.settings.show_secondary_image.label"
+      "type": "number",
+      "id": "primary_image_index",
+      "label": "t:sections.main-search.settings.primary_image_index.label",
+      "info": "t:sections.main-search.settings.primary_image_index.info",
+      "default": 1
+    },
+    {
+      "type": "number",
+      "id": "next_image_index",
+      "label": "t:sections.main-search.settings.next_image_index.label",
+      "info": "t:sections.main-search.settings.next_image_index.info",
+      "default": 0
     }
   ]
 }

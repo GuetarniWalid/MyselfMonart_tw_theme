@@ -47,7 +47,8 @@
                 <li id="{{ product.id }}" class="relative group h-full">
                   {% render 'card-product'
                     , product: product
-                    , show_secondary_image: section.settings.show_secondary_image
+                    , primary_image_index: section.settings.primary_image_index
+                    , next_image_index: section.settings.next_image_index
                     , lazy_load: lazy_load
                     , section_id: section.id
                   %}
@@ -72,7 +73,8 @@
               <li id="{{ product.id }}" class="relative group h-full">
                 {% render 'card-product'
                   , product: product
-                  , show_secondary_image: section.settings.show_secondary_image
+                  , primary_image_index: section.settings.primary_image_index
+                  , next_image_index: section.settings.next_image_index
                   , lazy_load: lazy_load
                   , section_id: section.id
                 %}
@@ -190,10 +192,18 @@
     },
     "settings": [
       {
-        "type": "checkbox",
-        "id": "show_secondary_image",
-        "default": false,
-        "label": "t:sections.main-collection-product-grid.settings.show_secondary_image.label"
+        "type": "number",
+        "id": "primary_image_index",
+        "label": "t:sections.main-collection-product-grid.settings.primary_image_index.label",
+        "info": "t:sections.main-collection-product-grid.settings.primary_image_index.info",
+        "default": 1
+      },
+      {
+        "type": "number",
+        "id": "next_image_index",
+        "label": "t:sections.main-collection-product-grid.settings.next_image_index.label",
+        "info": "t:sections.main-collection-product-grid.settings.next_image_index.info",
+        "default": 0
       },
       {
         "type": "select",

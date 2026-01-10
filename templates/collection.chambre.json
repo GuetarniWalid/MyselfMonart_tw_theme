@@ -83,7 +83,8 @@
     "main-collection-product-grid": {
       "type": "main-collection-product-grid",
       "settings": {
-        "show_secondary_image": false
+        "primary_image_index": 1,
+        "next_image_index": 0
       }
     },
     "4fdd2cd7-6d03-494d-a7c0-3d6edc8b45cd": {

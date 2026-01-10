@@ -1196,8 +1196,13 @@
             }
           }
         },
-        "show_secondary_image": {
-          "label": "Show second image on hover"
+        "primary_image_index": {
+          "label": "Primary image number",
+          "info": "Enter which image to show (1 for first, 2 for second, etc.)"
+        },
+        "next_image_index": {
+          "label": "Hover image number",
+          "info": "Enter which image to show on hover (0 to disable hover effect, 1 for first, 2 for second, etc.)"
         }
       }
     },
@@ -1560,8 +1565,13 @@
     "main-search": {
       "name": "Search Results",
       "settings": {
-        "show_secondary_image": {
-          "label": "Show second image on hover"
+        "primary_image_index": {
+          "label": "Primary image number",
+          "info": "Enter which image to show (1 for first, 2 for second, etc.)"
+        },
+        "next_image_index": {
+          "label": "Hover image number",
+          "info": "Enter which image to show on hover (0 to disable hover effect, 1 for first, 2 for second, etc.)"
         },
         "show_vendor": {
           "label": "Show vendor"

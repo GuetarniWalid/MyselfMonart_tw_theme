@@ -10,7 +10,8 @@
         <li id="{{ first_product.id }}" class="relative group h-full">
           {% render 'card-product'
             , product: first_product
-            , show_secondary_image: false
+            , primary_image_index: 1
+            , next_image_index: 0
             , lazy_load: false
             , section_id: section.id
           %}
