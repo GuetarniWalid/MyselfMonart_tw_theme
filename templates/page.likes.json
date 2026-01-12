@@ -17,8 +17,6 @@
     "d56f225f-32c0-4053-91ad-acca3bbdf1b8": {
       "type": "my-likes",
       "settings": {
-        "primary_image_index": 1,
-        "next_image_index": 0,
         "empty_text": "<p>\n  Pour l'heure, aucun tableau n'a retenu votre cœur,<br>\n  Relâchez vos soucis, goûtez à ce bonheur,<br>\n  Laissez l'art embellir votre journée,<br>\n  Et vos murs une fois l'œuvre trouvé.\n</p>"
       }
     },
