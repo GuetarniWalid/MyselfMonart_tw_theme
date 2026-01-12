@@ -57,6 +57,8 @@ class InfiniteScroll extends HTMLElement {
           this.insertNode(nodeToInsert, direction);
         }
       });
+    }, {
+      rootMargin: '0px 0px 300px 0px' // Trigger 300px before bottom sentinel visible
     });
 
     observer.observe(this.querySelector(`.${direction}`));
@@ -80,9 +82,16 @@ class InfiniteScroll extends HTMLElement {
   }
 
   insertNode(node, direction) {
-    direction === this.bottom
-      ? this.after(node)
-      : this.keepSameScrollPosition(node);
+    if (direction === this.bottom) {
+      // Check if footer is visible or near - if so, preserve scroll position
+      if (this.isFooterVisibleOrNear()) {
+        this.keepSameScrollPositionBottom(node);
+      } else {
+        this.after(node);
+      }
+    } else {
+      this.keepSameScrollPosition(node);
+    }
 
     if (window.removeSkeletonOnImagesLoad) {
       window.removeSkeletonOnImagesLoad(node);
@@ -95,6 +104,84 @@ class InfiniteScroll extends HTMLElement {
       this.before(node);
       const heightNode = node.getBoundingClientRect().height;
       window.scrollTo(0, scrollPosition + heightNode);
+    });
+  }
+
+  isFooterVisibleOrNear() {
+    const footer = document.querySelector('footer.footer');
+    if (!footer) return false;
+
+    const footerRect = footer.getBoundingClientRect();
+
+    // Use visual viewport for better iOS compatibility
+    const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+
+    // Calculate how much of the footer is visible in the viewport
+    const footerHeight = footerRect.height;
+    const footerVisibleTop = Math.max(0, footerRect.top);
+    const footerVisibleBottom = Math.min(viewportHeight, footerRect.bottom);
+    const footerVisibleHeight = Math.max(0, footerVisibleBottom - footerVisibleTop);
+    const footerVisiblePercentage = (footerVisibleHeight / footerHeight) * 100;
+
+    // Only preserve scroll if MORE than 25% of footer is visible in viewport
+    if (footerVisiblePercentage > 25) {
+      return true;
+    }
+
+    return false;
+  }
+
+  keepSameScrollPositionBottom(node) {
+    const footer = document.querySelector('footer.footer');
+    if (!footer || !node) {
+      // Fallback to normal insertion if footer or node not found
+      if (node) this.after(node);
+      return;
+    }
+
+    // Get footer's current position relative to the viewport BEFORE insertion
+    const footerTopBefore = footer.getBoundingClientRect().top;
+    const scrollBefore = window.scrollY || document.documentElement.scrollTop;
+
+    // Store scroll behavior and disable smooth scrolling temporarily
+    const originalBehavior = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = 'auto';
+
+    // Insert the node
+    this.after(node);
+
+    // Force layout calculation to get accurate heights
+    const nodeHeight = node.getBoundingClientRect().height;
+
+    // Calculate where the footer should be kept
+    const targetFooterTop = footerTopBefore;
+
+    // Use requestAnimationFrame to adjust scroll after insertion
+    requestAnimationFrame(() => {
+      const footerTopAfter = footer.getBoundingClientRect().top;
+      const scrollAfter = window.scrollY || document.documentElement.scrollTop;
+
+      // Calculate how much to scroll to keep footer at same viewport position
+      const scrollAdjustment = footerTopAfter - targetFooterTop;
+
+      if (Math.abs(scrollAdjustment) > 1) {
+        const targetScroll = scrollAfter + scrollAdjustment;
+        window.scrollTo(0, targetScroll);
+        document.documentElement.scrollTop = targetScroll;
+        document.body.scrollTop = targetScroll;
+      }
+
+      if (Math.abs(scrollAdjustment) > 1) {
+        const targetScroll = scrollAfter + scrollAdjustment;
+        window.scrollTo(0, targetScroll);
+        document.documentElement.scrollTop = targetScroll;
+        document.body.scrollTop = targetScroll;
+      }
+
+      // Restore original scroll behavior
+      setTimeout(() => {
+        document.documentElement.style.scrollBehavior = originalBehavior;
+      }, 0);
     });
   }
 
