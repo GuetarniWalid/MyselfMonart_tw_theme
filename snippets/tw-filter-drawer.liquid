@@ -46,7 +46,7 @@
         {%- comment -%} Check if this is a color filter to add visual swatches {%- endcomment -%}
         {% assign is_color_filter = false %}
         {% assign filter_label_lower = filter.label | downcase %}
-        {% if filter.param_name contains 'color' or filter_label_lower contains 'color' or filter_label_lower contains 'couleur' %}
+        {% if filter.param_name contains 'color' or filter_label_lower contains 'color' or filter_label_lower contains 'colour' or filter_label_lower contains 'couleur' %}
           {% assign is_color_filter = true %}
         {% endif %}
 

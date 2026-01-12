@@ -111,7 +111,7 @@
   {% for filter in collection.filters %}
     {% if filter.type == 'list' %}
       {% assign filter_label_lower = filter.label | downcase %}
-      {% if filter_label_lower contains 'color' or filter_label_lower contains 'couleur' %}
+      {% if filter_label_lower contains 'color' or filter_label_lower contains 'colour' or filter_label_lower contains 'couleur' %}
         {% assign color_param_name = filter.param_name %}
         {% break %}
       {% endif %}

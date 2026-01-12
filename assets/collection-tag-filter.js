@@ -16,7 +16,20 @@ class CollectionTagFilter extends HTMLElement {
 
     // Get section ID from either data-section-id or data-id attribute
     this.sectionId = this.productGrid.dataset.sectionId || this.productGrid.dataset.id;
-    this.collectionUrl = window.location.pathname.split('/').slice(0, 3).join('/'); // /collections/handle
+
+    // Build collection URL - handles both /collections/handle and /en/collections/handle
+    const pathParts = window.location.pathname.split('/').filter(part => part !== '');
+    const collectionsIndex = pathParts.indexOf('collections');
+
+    if (collectionsIndex !== -1 && pathParts.length > collectionsIndex + 1) {
+      // Take all parts up to and including the collection handle
+      // e.g., ['en', 'collections', 'paintings'] -> '/en/collections/paintings'
+      // or ['collections', 'paintings'] -> '/collections/paintings'
+      this.collectionUrl = '/' + pathParts.slice(0, collectionsIndex + 2).join('/');
+    } else {
+      // Fallback: use the full pathname without query string
+      this.collectionUrl = window.location.pathname.split('?')[0];
+    }
 
     // Find ALL filter checkboxes that have data-filter-param attribute
     this.filterCheckboxes = Array.from(document.querySelectorAll('input[data-filter-param]'));
