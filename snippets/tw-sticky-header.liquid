@@ -66,7 +66,7 @@
                 <li>
                   <a
                     href="{{ block.settings.collection.url }}"
-                    class="block hover:underline underline-offset-4 p-3">
+                    class="block underline underline-offset-4 hover:translate-x-1 transition-transform duration-200 p-3">
                     {{ block.settings.collection.title | escape }}
                   </a>
                 </li>
@@ -74,7 +74,7 @@
                 <li>
                   <a
                     href="{{ block.settings.product.url }}"
-                    class="block hover:underline underline-offset-4 p-3">
+                    class="block underline underline-offset-4 hover:translate-x-1 transition-transform duration-200 p-3">
                     {{ block.settings.product.title | escape }}
                   </a>
                 </li>
@@ -82,7 +82,7 @@
                 <li>
                   <a
                     href="{{ block.settings.page.url }}"
-                    class="block hover:underline underline-offset-4 p-3">
+                    class="block underline underline-offset-4 hover:translate-x-1 transition-transform duration-200 p-3">
                     {{ block.settings.page.title | escape }}
                   </a>
                 </li>
@@ -100,7 +100,7 @@
                         <li>
                           <a
                             href="{{ collection.url }}"
-                            class="block text-main-70 hover:underline underline-offset-4 p-3">
+                            class="block text-main-70 underline underline-offset-4 hover:translate-x-1 transition-transform duration-200 p-3">
                             {{ collection.title | escape }}
                           </a>
                         </li>
@@ -335,7 +335,7 @@
                       {% if content_index > title_index and content_index < next_title_index %}
 
                         {% if content_block.type == "collection_only" %}
-                          <li class="desktop-nav-collection-item obfuscate hover:underline underline-offset-4 p-3 cursor-pointer"
+                          <li class="desktop-nav-collection-item obfuscate underline underline-offset-4 hover:translate-x-1 transition-transform duration-200 p-3 cursor-pointer"
                             data-url64="{{ content_block.settings.collection.url | base64_encode }}"
                             data-image-id="image-{{ content_block.id }}"
                             tabindex="-1">
@@ -343,7 +343,7 @@
                           </li>
 
                         {% elsif content_block.type == "product_only" %}
-                          <li class="desktop-nav-product-item obfuscate hover:underline underline-offset-4 p-3 cursor-pointer"
+                          <li class="desktop-nav-product-item obfuscate underline underline-offset-4 hover:translate-x-1 transition-transform duration-200 p-3 cursor-pointer"
                             data-url64="{{ content_block.settings.product.url | base64_encode }}"
                             data-image-id="image-{{ content_block.id }}"
                             tabindex="-1">
@@ -351,7 +351,7 @@
                           </li>
 
                         {% elsif content_block.type == "page_only" %}
-                          <li class="desktop-nav-page-item obfuscate hover:underline underline-offset-4 p-3 cursor-pointer"
+                          <li class="desktop-nav-page-item obfuscate underline underline-offset-4 hover:translate-x-1 transition-transform duration-200 p-3 cursor-pointer"
                             data-url64="{{ content_block.settings.page.url | base64_encode }}"
                             data-image-id="image-{{ content_block.id }}"
                             tabindex="-1">
@@ -369,7 +369,7 @@
                               <h3 class="font-limelight text-3xl mb-6 w-11/12">{{ content_block.settings.title | escape }}</h3>
                               <ul class="flex flex-col">
                                 {% for collection in content_block.settings.child_collection_list %}
-                                  <li class="obfuscate hover:underline underline-offset-4 p-3 cursor-pointer"
+                                  <li class="obfuscate underline underline-offset-4 hover:translate-x-1 transition-transform duration-200 p-3 cursor-pointer"
                                     data-url64="{{ collection.url | base64_encode }}" tabindex="-1">
                                     {{ collection.title | escape }}
                                   </li>
