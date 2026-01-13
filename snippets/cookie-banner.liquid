@@ -190,12 +190,12 @@
     }
     
     function initCookieBanner() {
-      // Don't show banner in theme editor
+      // Don't auto-consent in theme editor
       if (window.Shopify.designMode) {
         return;
       }
 
-      // Don't show banner in local development (shopify theme dev)
+      // Don't auto-consent in local development (shopify theme dev)
       const isLocalDev = window.location.hostname === 'localhost' ||
                          window.location.hostname === '127.0.0.1' ||
                          window.location.hostname.includes('.local');
@@ -204,16 +204,15 @@
         return;
       }
 
-      setTimeout(() => {
-        const currentVisitorConsent = window.Shopify.customerPrivacy.currentVisitorConsent();
+      // Automatically accept all cookies if consent hasn't been given yet
+      const shouldShowBanner = window.Shopify.customerPrivacy.shouldShowBanner();
 
-        const visitorConsentsEmpty = areVisitorConsentsEmpty(currentVisitorConsent);
-        const shouldShowBanner = window.Shopify.customerPrivacy.shouldShowBanner();
-
-        if(shouldShowBanner && visitorConsentsEmpty) {
-          showBanner();
-          }
-      }, 2000)
+      if (shouldShowBanner) {
+        // Auto-accept all tracking (analytics, marketing, preferences, sale_of_data)
+        window.Shopify.customerPrivacy.setTrackingConsent(true, function() {
+          console.log('Auto-consent: All cookies automatically accepted');
+        });
+      }
     }
     
     window.Shopify.loadFeatures([
