@@ -429,7 +429,7 @@ main-product-blocks .description h2 span {
   }
 
   .product-grid {
-    @apply grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-8 md:gap-10 pb-3;
+    @apply grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-4 sm:gap-y-8 md:gap-y-10 pb-3;
   }
 
   .close-nav {
