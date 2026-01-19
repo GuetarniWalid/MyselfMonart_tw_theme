@@ -70,25 +70,27 @@
     </div>
   {%- endif -%}
 
-  <div class="p-3 flex flex-col justify-between shadow-md rounded-md mx-2">
-    <h3 class="text-xs leading-normal">
-      <a
-        href="{{ product.url }}"
-        class="product-card-title after:absolute after:inset-0 block truncate font-normal"
-        tabindex="-1">
-        {{ product.metafields.title.short | escape | upcase }}
-      </a>
-    </h3>
-    <div class="mt-2 sm:mt-3 flex justify-between items-center price-and-likes">
+  <div class="p-3 flex flex-row justify-between items-center shadow-md rounded-md mx-2">
+    <div class="flex flex-col flex-1 min-w-0">
+      <h3 class="text-xs leading-normal">
+        <a
+          href="{{ product.url }}"
+          class="product-card-title after:absolute after:inset-0 block truncate font-normal"
+          tabindex="-1">
+          {{ product.metafields.title.short | escape | upcase }}
+        </a>
+      </h3>
+      <p class="text-sm mt-1">
+        {{ product.price_min | money }}
+      </p>
+    </div>
+    <div class="price-and-likes flex-shrink-0 ml-2">
       {% render 'my-like-button', product: product, likes_count: product.metafields.likes.number | default: 0 %}
       <template class="likes-count-container-template">
         {% render 'my-like-button'
           , product: product
           , likes_count: 0 %}
       </template>
-      <p class="text-sm md:mr-2">
-        {{ product.price_min | money }}
-      </p>
     </div>
   </div>
 </div>

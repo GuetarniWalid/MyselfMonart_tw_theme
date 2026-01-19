@@ -468,8 +468,9 @@ main-product-blocks .description h2 span {
 
   /* Heart icon - liked state */
   .like.is-liked .heart-fill {
-    @apply fill-like stroke-transparent;
-    stroke-width: 0;
+    @apply fill-like stroke-like;
+    stroke-width: 60;
+    paint-order: stroke fill;
   }
 
   /* Short title highlight - works on multiple lines */

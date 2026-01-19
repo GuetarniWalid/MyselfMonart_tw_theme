@@ -17,12 +17,18 @@ class MyLikes extends HTMLElement {
     return JSON.parse(productsLiked) || [];
   }
 
+  getProductShortTitles() {
+    const shortTitles = localStorage.getItem('productShortTitles');
+    return JSON.parse(shortTitles) || {};
+  }
+
   async getProductsLikedElements(productsLiked, productCardModel) {
-    const productsLikedElements = await Promise.all(productsLiked.map(handle => this.getProductLikedElement(handle, productCardModel)));
+    const shortTitles = this.getProductShortTitles();
+    const productsLikedElements = await Promise.all(productsLiked.map(handle => this.getProductLikedElement(handle, productCardModel, shortTitles)));
     return productsLikedElements;
   }
 
-  async getProductLikedElement(handle, productCardModel) {
+  async getProductLikedElement(handle, productCardModel, shortTitles) {
     const product = await this.fetchProductByHandle(handle);
     const wrapper = productCardModel.cloneNode(true);
     const li = wrapper.querySelector('li');
@@ -32,13 +38,16 @@ class MyLikes extends HTMLElement {
       li.id = product.id;
     }
 
+    // Use short title from localStorage if available, fallback to full title
+    const displayTitle = shortTitles[handle] || product.title;
+
     // Update product link
     const titleLink = wrapper.querySelector('h3 a');
     if (titleLink) {
       titleLink.href = `/products/${handle}`;
       titleLink.dataset.fullTitle = product.title.toUpperCase();
       const svg = wrapper.querySelector('h3 a span svg');
-      titleLink.textContent = product.title.toUpperCase() + ' ';
+      titleLink.textContent = displayTitle.toUpperCase() + ' ';
       if (svg) {
         titleLink.appendChild(svg);
       }

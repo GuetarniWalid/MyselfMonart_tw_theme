@@ -24,6 +24,7 @@ class MyLikeButton extends HTMLElement {
     super();
     this.productId = this.dataset.productId;
     this.productHandle = this.dataset.productHandle;
+    this.productShortTitle = this.dataset.productShortTitle;
   }
 
   connectedCallback() {
@@ -50,11 +51,13 @@ class MyLikeButton extends HTMLElement {
       if (isLiked) {
         this.deleteProductLikedIdInLocalStorage(productLikedIds);
         this.deleteProductLikedHandleInLocalStorage(productLikedHandles);
+        this.deleteProductShortTitleInLocalStorage();
         this.deleteLiInLikedPage();
         await this.updateLikesCountOnServer(this.productId, 'decrement');
       } else {
         this.saveProductLikedIdInLocalStorage(productLikedIds);
         this.saveProductLikedHandleInLocalStorage(productLikedHandles);
+        this.saveProductShortTitleInLocalStorage();
         this.deleteLiInLikedPage();
         await this.updateLikesCountOnServer(this.productId, 'increment');
       }
@@ -75,6 +78,11 @@ class MyLikeButton extends HTMLElement {
     return productLikedHandles;
   }
 
+  getProductShortTitles() {
+    const shortTitles = localStorage.getItem('productShortTitles');
+    return JSON.parse(shortTitles) || {};
+  }
+
   saveProductLikedIdInLocalStorage(productLikedIds) {
     productLikedIds.push(this.productId);
     localStorage.setItem('productLikedIds', JSON.stringify(productLikedIds));
@@ -83,6 +91,12 @@ class MyLikeButton extends HTMLElement {
   saveProductLikedHandleInLocalStorage(productLikedHandles) {
     productLikedHandles.push(this.productHandle);
     localStorage.setItem('productLikedHandles', JSON.stringify(productLikedHandles));
+  }
+
+  saveProductShortTitleInLocalStorage() {
+    const shortTitles = this.getProductShortTitles();
+    shortTitles[this.productHandle] = this.productShortTitle;
+    localStorage.setItem('productShortTitles', JSON.stringify(shortTitles));
   }
 
   deleteProductLikedIdInLocalStorage(productLikedIds) {
@@ -97,6 +111,12 @@ class MyLikeButton extends HTMLElement {
       (productLikedHandle) => productLikedHandle !== this.productHandle,
     );
     localStorage.setItem('productLikedHandles', JSON.stringify(productLikedHandlesFiltered));
+  }
+
+  deleteProductShortTitleInLocalStorage() {
+    const shortTitles = this.getProductShortTitles();
+    delete shortTitles[this.productHandle];
+    localStorage.setItem('productShortTitles', JSON.stringify(shortTitles));
   }
 
   deleteLiInLikedPage() {
