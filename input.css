@@ -581,6 +581,10 @@ main-product-blocks .description h2 span {
     transform: scale(1);
   }
 
+  .tw-main-product-image {
+    @apply relative 2md:mx-0 2md:flex 2md:justify-center;
+  }
+
   /* Mobile menu accordion animations */
   .js-nav-submenu > summary + ul > div {
     display: grid;

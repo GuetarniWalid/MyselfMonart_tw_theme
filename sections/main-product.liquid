@@ -7,10 +7,10 @@
   {{ "sections.main_product.accessibility.skip_to_product_info" | t }}
 </a>
 
-<div class="md:flex md:justify-center md:gap-12">
+<div class="2md:flex 2md:justify-center 2md:gap-12">
   {% if product.template_suffix == "tapestry" %}
     <div id="croppr-top-container" class="flex-grow">
-      <div class="md:sticky md:top-[120px] max-w-[550px] mx-auto relative">
+      <div class="2md:sticky 2md:top-[120px] max-w-[550px] mx-auto relative">
         <img
           srcset="{%- if product.media[1].preview_image.width >= 400 -%}{{ product.media[1].preview_image | image_url: width: 400 }} 400w,{%- endif -%}
                   {%- if product.media[1].preview_image.width >= 550 -%}{{ product.media[1].preview_image | image_url: width: 550 }} 550w,{%- endif -%}
@@ -27,22 +27,26 @@
     </div>
   {% else %}
     <main-product-carousel>
-      <div class="md:sticky md:top-[120px] relative max-w-[550px] mx-auto">
-        <div class="carousel flex justify-start items-center transition-transform duration-300 mx-auto my-1 snap-x snap-mandatory overflow-y-hidden overflow-x-auto scrollbar-hidden h-[55vh] xs:h-[65vh] md:h-[55vh] lg:h-[70vh]">
+      <div class="2md:sticky 2md:top-[120px] relative 2md:max-w-[700px]">
+        <div class="carousel flex justify-start items-start gap-2 transition-transform duration-300 my-1 snap-x snap-mandatory scrollbar-hidden 2md:grid 2md:grid-cols-1 2md:overflow-visible 2md:snap-none lg:grid-cols-2 overflow-x-auto">
           {% liquid
             assign number_of_media = 0
+            assign skip_second_image = false
+            if template.suffix == 'painting' or template.suffix == 'poster'
+              assign skip_second_image = true
+            endif
             for media in product.media
               if media.media_type == 'image'
                 assign number_of_media = number_of_media | default: 0 | plus: 1
-                if template.suffix == 'painting' and number_of_media != 2
+                unless skip_second_image and number_of_media == 2
                   render 'tw-main-product-image', media: media, loop: forloop
-                endif
+                endunless
               endif
             endfor
           %}
         </div>
         {% if product.media.size > 1 %}
-          <div id="carousel-navigation-controls" class="absolute bg-secondary transition-colors duration-500 rounded-full left-1/2 -translate-x-1/2 bottom-3 border-main border-1 md:hidden flex justify-center items-center h-[47px] overflow-hidden hidden">
+          <div id="carousel-navigation-controls" class="absolute bg-secondary transition-colors duration-500 rounded-full left-1/2 -translate-x-1/2 bottom-3 border-main border-1 2md:hidden flex justify-center items-center h-[47px] overflow-hidden hidden">
             <button class="previous pl-5 pr-3 h-full focus-visible:outline-none focus-visible:bg-main-10 hover:bg-main-10">
               <div class="rotate-90">{% render 'tw-icon-caret', width: '18' %}</div>
             </button>
@@ -53,20 +57,7 @@
             </button>
           </div>
         {% endif %}
-        <div class="hidden md:flex flex-wrap gap-2">
-          {% liquid
-            assign image_number = 0
-            for media in product.media
-              assign media_alt = product.metafields.meta_object.media.value.alts.value[forloop.index0] | default: media.alt
-              if media.media_type == 'image'
-                assign image_number = image_number | default: 0 | plus: 1
-                if template.suffix == 'painting' and image_number != 2
-                  render 'tw-main-product-thumbnail-image', image: media.preview_image, alt: media_alt, image_number: image_number
-                endif
-              endif
-            endfor
-          %}
-        </div>
+        {%- comment -%} Thumbnails hidden - images now display in grid on desktop {%- endcomment -%}
       </div>
 
       <div
@@ -84,12 +75,20 @@
             , width: '22' %}
         </button>
         <template id="main-product-popup">
+          {%- assign popup_image_number = 0 -%}
+          {%- assign popup_skip_second_image = false -%}
+          {%- if template.suffix == 'painting' or template.suffix == 'poster' -%}
+            {%- assign popup_skip_second_image = true -%}
+          {%- endif -%}
           {%- for media in product.media -%}
-            <popup-image>
-              {%- render 'tw-main-product-popup-image'
-                , media: media
-                , loop: forloop -%}
-            </popup-image>
+            {%- if media.media_type == 'image' -%}
+              {%- assign popup_image_number = popup_image_number | plus: 1 -%}
+              {%- unless popup_skip_second_image and popup_image_number == 2 -%}
+                <popup-image>
+                  {%- render 'tw-main-product-popup-image', media: media, loop: forloop -%}
+                </popup-image>
+              {%- endunless -%}
+            {%- endif -%}
           {%- endfor -%}
         </template>
       </div>
@@ -99,7 +98,7 @@
     class="grow"
     id="ProductInfo-{{ section.id }}"
     data-layout="{{ template.suffix }}">
-    <div class="max-w-lg sm:px-0 mx-auto my-4">
+    <div class="max-w-lg sm:px-0 mx-auto 2md:mx-0 my-4">
       {%- for block in section.blocks -%}
         {%- case block.type -%}
           {%- when '@app' -%}
@@ -410,7 +409,7 @@
 {% schema %}
   {
     "name": "t:sections.main-product.name",
-    "class": "page-width relative",
+    "class": "page-width tw-main-product-image",
     "tag": "section",
     "blocks": [
       {

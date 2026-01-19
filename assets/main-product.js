@@ -2,9 +2,6 @@ class MainProductCarousel extends HTMLElement {
   constructor() {
     super();
     this.medias = Array.from(this.querySelectorAll('.img-wrapper'));
-    this.thumbnailMedias = Array.from(
-      this.querySelectorAll('.thumb-img-wrapper'),
-    );
     this.currentMediaIndex = 0;
     this.popup = this.querySelector('.popup');
     this.closePopupButton = this.popup.querySelector('button');
@@ -16,25 +13,30 @@ class MainProductCarousel extends HTMLElement {
     );
     this.nextMediaButton = this.querySelector('.next');
     this.previousMediaButton = this.querySelector('.previous');
+    // Media query for mobile detection (matches Tailwind's 2md breakpoint at 900px)
+    this.mobileMediaQuery = window.matchMedia('(max-width: 899px)');
+  }
+
+  isMobile() {
+    return this.mobileMediaQuery.matches;
   }
 
   connectedCallback() {
-    this.medias.forEach((media) => {
+    this.medias.forEach((media, index) => {
       media.addEventListener('click', () => {
+        // On desktop, set currentMediaIndex based on clicked image
+        if (!this.isMobile()) {
+          this.currentMediaIndex = index;
+        }
         this.openPopup();
       });
       media.querySelector('.zoom')?.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !this.popupOpen) {
+          if (!this.isMobile()) {
+            this.currentMediaIndex = index;
+          }
           this.openPopup();
         }
-      });
-    });
-
-    this.thumbnailMedias.forEach((media) => {
-      media.addEventListener('click', () => {
-        const index = this.thumbnailMedias.indexOf(media);
-        const diffFromCurrentMedia = index - this.currentMediaIndex;
-        this.displayNextMedia(diffFromCurrentMedia);
       });
     });
 
@@ -52,6 +54,8 @@ class MainProductCarousel extends HTMLElement {
     });
 
     this.carousel.addEventListener('scroll', () => {
+      // Only handle scroll on mobile (carousel mode)
+      if (!this.isMobile()) return;
       if (this.scrollTimeout !== null) {
         clearTimeout(this.scrollTimeout);
       }
@@ -61,8 +65,6 @@ class MainProductCarousel extends HTMLElement {
         const diff = Math.round(this.carouselScrollFromLeft / this.imageWidth);
         this.currentMediaIndex = diff;
         this.changeImageCounter();
-        this.shiftNextMediaToLeft();
-        this.centerContainedImage();
       }, 100);
     });
 
@@ -74,9 +76,6 @@ class MainProductCarousel extends HTMLElement {
       this.displayNextMedia(-1);
     });
 
-    // Initialize carousel positions on page load
-    this.shiftNextMediaToLeft();
-    this.centerContainedImage();
   }
 
   displayNextMedia = (diffFromCurrentMedia) => {
@@ -146,31 +145,6 @@ class MainProductCarousel extends HTMLElement {
     }
     this.imageConter = this.imageConter || this.querySelector('.image-counter');
     this.imageConter.textContent = this.currentMediaIndex + 1;
-  };
-
-  shiftNextMediaToLeft = () => {
-    const currentMedia = this.medias[this.currentMediaIndex].firstElementChild;
-    const nextMedia =
-      this.medias[this.currentMediaIndex + 1]?.firstElementChild;
-    currentMedia.classList.replace('-translate-x-8', 'translate-x-0');
-    nextMedia?.classList.replace('translate-x-0', '-translate-x-8');
-  };
-
-  centerContainedImage = () => {
-    const currentMedia = this.medias[this.currentMediaIndex].firstElementChild;
-    currentMedia.classList.remove('object-left');
-
-    const nextMedia =
-      this.medias[this.currentMediaIndex + 1]?.firstElementChild;
-    if (nextMedia?.classList.contains('object-contain')) {
-      nextMedia?.classList.add('object-left');
-    }
-
-    const previousMedia =
-      this.medias[this.currentMediaIndex - 1]?.firstElementChild;
-    if (previousMedia?.classList.contains('object-contain')) {
-      previousMedia?.classList.add('object-left');
-    }
   };
 }
 customElements.define('main-product-carousel', MainProductCarousel);

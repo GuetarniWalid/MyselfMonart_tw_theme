@@ -17,8 +17,12 @@ module.exports = {
       'mobile': {'max': '767px'},
       '2xs': '410px',
       xs: '480px',
+      sm: '640px',
+      md: '768px',
       '2md': '900px',
-      ...defaultTheme.screens,
+      lg: '1024px',
+      xl: '1280px',
+      '2xl': '1536px',
     },
     extend: {
       animation: {
