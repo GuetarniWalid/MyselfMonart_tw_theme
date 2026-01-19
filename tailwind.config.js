@@ -48,6 +48,7 @@ module.exports = {
       colors: {
         'buy-button': {
           DEFAULT: 'rgb(var(--color-buy-button-rgb))',
+          20: 'rgba(var(--color-buy-button-rgb), 0.2)',
           70: 'rgba(var(--color-buy-button-rgb), 0.7)',
         },
         main: {

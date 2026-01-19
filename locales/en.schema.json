@@ -1545,6 +1545,14 @@
             }
           }
         },
+        "short_title": {
+          "name": "Short title",
+          "settings": {
+            "show_likes": {
+              "label": "Show likes"
+            }
+          }
+        },
         "trustpilot_review": {
           "name": "Trustpilot Reviews",
           "settings": {

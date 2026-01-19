@@ -459,17 +459,25 @@ main-product-blocks .description h2 span {
     @apply overflow-hidden h-[80vh];
   }
 
-  .is-liked {
-    @apply transition-all duration-300;
+  /* Heart icon - not liked state */
+  .like .heart-fill {
+    @apply fill-secondary stroke-main transition-all duration-300;
+    stroke-width: 60;
+    paint-order: stroke fill;
   }
-  .is-liked .outline-heart {
-    @apply hidden;
+
+  /* Heart icon - liked state */
+  .like.is-liked .heart-fill {
+    @apply fill-like stroke-transparent;
+    stroke-width: 0;
   }
-  .is-liked .full-heart {
-    @apply inline-block text-like;
-  }
-  .like:not(.is-liked) .full-heart {
-    @apply hidden;
+
+  /* Short title highlight - works on multiple lines */
+  .short-title-highlight {
+    background: linear-gradient(to top, rgb(var(--color-buy-button-rgb), 0.2) 50%, transparent 50%);
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    padding: 0 0.1em 0.3em 0.1em;
   }
 
   klarna-placement::part(osm-container) {

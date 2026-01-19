@@ -16,11 +16,10 @@
 %}
 
 <my-like-button data-product-id="{{ product.id }}" data-product-handle="{{ product.handle }}">
-  <button class="like relative py-1 sm:py-2 px-2 sm:px-3 border-main-5 border rounded inline-flex items-center gap-1 z-20 {{ margin_bottom }}">
-    {% render 'tw-icon-heart-outline' %}
-    {% render 'tw-icon-heart-full' %}
+  <button class="inline-flex flex-col like relative py-1 sm:py-2 px-2 sm:px-3 border-main-5 border rounded inline-flex items-center gap-1 z-20 {{ margin_bottom }}">
+    {% render 'tw-icon-heart-design' %}
     {% if likes_count > 0 %}
-      <span class=" font-heading total-users-likes-count text-sm text-main">
+      <span class="font-heading total-users-likes-count text-sm text-main">
         {{ likes_count }}
       </span>
     {% endif %}

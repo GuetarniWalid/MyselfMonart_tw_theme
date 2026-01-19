@@ -108,6 +108,18 @@
             <div class="flex flex-col gap-4 mb-4 text-lg mx-4">{{- block.settings.text -}}</div>
           {%- when 'title' -%}
             <h1 class="text-2xl {{ block.settings.margin_bottom }} mx-4">{{ product.title | escape }}</h1>
+          {%- when 'short_title' -%}
+            {%- if product.metafields.title.short != blank or block.settings.show_likes -%}
+              <div class="flex justify-between items-center {{ block.settings.margin_bottom }} mx-4">
+                {%- if product.metafields.title.short != blank -%}
+                  <p class="font-heading font-semibold text-xl"><span class="short-title-highlight">{{ product.metafields.title.short }}</span></p>
+                {%- endif -%}
+                {%- if block.settings.show_likes -%}
+                  {% render 'my-like-button', product: product, likes_count: product.metafields.likes.number | default: 0 %}
+                  <script src="{{ 'my-like-button.js' | asset_url }}" defer="defer"></script>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
           {%- when 'variant_picker' -%}
             {% if template.suffix == 'painting' or template.suffix == 'personalized' %}
               {% render 'painting-variant-picker'
@@ -201,9 +213,6 @@
                 {{ block.settings.page.content }}
               </div>
             </details>
-          {%- when 'likes' -%}
-            {% render 'my-like-button', product: product, likes_count: product.metafields.likes.number | default: 0, margin_bottom: block.settings.margin_bottom %}
-            <script src="{{ 'my-like-button.js' | asset_url }}" defer="defer"></script>
           {%- when 'tapestry_options' -%}
             {% if template.suffix == 'tapestry' %}
               {% liquid
@@ -456,6 +465,43 @@
               }
             ],
             "default": "mb-8"
+          }
+        ]
+      },
+      {
+        "type": "short_title",
+        "name": "t:sections.main-product.blocks.short_title.name",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "show_likes",
+            "label": "t:sections.main-product.blocks.short_title.settings.show_likes.label",
+            "default": true
+          },
+          {
+            "type": "select",
+            "id": "margin_bottom",
+            "label": "t:sections.collections-pages-grid.settings.padding_bottom.label",
+            "options": [
+              {
+                "value": "mb-0",
+                "label": "t:sections.collections-pages-grid.settings.padding_top.options.none.label"
+              },
+              {
+                "value": "mb-2",
+                "label": "t:sections.collections-pages-grid.settings.padding_top.options.small.label"
+              },
+              {
+                "value": "mb-4",
+                "label": "t:sections.collections-pages-grid.settings.padding_top.options.medium.label"
+              },
+              {
+                "value": "mb-8",
+                "label": "t:sections.collections-pages-grid.settings.padding_top.options.large.label"
+              }
+            ],
+            "default": "mb-4"
           }
         ]
       },
@@ -740,33 +786,6 @@
             "default": "Until the 31st of July",
             "label": "t:sections.main-product.blocks.buy.settings.promotion_date.label",
             "info": "t:sections.main-product.blocks.buy.settings.promotion_date.info"
-          }
-        ]
-      },
-      {
-        "type": "likes",
-        "name": "t:sections.main-product.blocks.likes.name",
-        "limit": 1,
-        "settings": [
-          {
-            "type": "select",
-            "id": "margin_bottom",
-            "label": "t:sections.collections-pages-grid.settings.padding_bottom.label",
-            "options": [
-              {
-                "value": "mb-2",
-                "label": "t:sections.collections-pages-grid.settings.padding_top.options.small.label"
-              },
-              {
-                "value": "mb-4",
-                "label": "t:sections.collections-pages-grid.settings.padding_top.options.medium.label"
-              },
-              {
-                "value": "mb-8",
-                "label": "t:sections.collections-pages-grid.settings.padding_top.options.large.label"
-              }
-            ],
-            "default": "mb-8"
           }
         ]
       },

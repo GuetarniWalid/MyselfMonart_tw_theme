@@ -1545,6 +1545,14 @@
             }
           }
         },
+        "short_title": {
+          "name": "Titre court",
+          "settings": {
+            "show_likes": {
+              "label": "Afficher les j'aime"
+            }
+          }
+        },
         "trustpilot_review": {
           "name": "Avis Trustpilot",
           "settings": {
