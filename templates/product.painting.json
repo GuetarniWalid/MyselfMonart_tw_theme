@@ -11,10 +11,7 @@
   "sections": {
     "breadcrumb_RCxFAG": {
       "type": "breadcrumb",
-      "settings": {
-        "main_color": "#1a2e05",
-        "secondary_color": "#ebd0cd"
-      }
+      "settings": {}
     },
     "main": {
       "type": "main-product",
@@ -24,7 +21,14 @@
           "settings": {
             "trustpilot_score": 45,
             "link": "https://fr.trustpilot.com/review/myselfmonart.com",
-            "margin_bottom": "mb-8"
+            "margin_bottom": "mb-4"
+          }
+        },
+        "short_title_9m74gE": {
+          "type": "short_title",
+          "settings": {
+            "show_likes": true,
+            "margin_bottom": "mb-2"
           }
         },
         "variant_picker_YiA9jN": {
@@ -35,18 +39,13 @@
           "type": "buy",
           "settings": {
             "text": "Commander",
+            "show_payment_icons": true,
             "is_dynamic_variant": false,
             "show_promotion": false,
             "promotion_discount": 15,
             "promotion_discount_unit": "%",
             "promotion_reason": "",
             "promotion_date": "📅  Offre spéciale jusqu’au 8 décembre"
-          }
-        },
-        "likes_t9U7Ay": {
-          "type": "likes",
-          "settings": {
-            "margin_bottom": "mb-4"
           }
         },
         "text_9JmhGc": {
@@ -77,9 +76,9 @@
       },
       "block_order": [
         "trustpilot_review_9q3NVM",
+        "short_title_9m74gE",
         "variant_picker_YiA9jN",
         "buy_qrRzcg",
-        "likes_t9U7Ay",
         "text_9JmhGc",
         "collapsible_tab_HAUcNw",
         "title",
