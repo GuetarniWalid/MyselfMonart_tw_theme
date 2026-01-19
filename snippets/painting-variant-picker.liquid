@@ -7,7 +7,7 @@
 {%- unless product.has_only_default_variant -%}
     <div class="mb-6">
         {%- for option in product.options_with_values -%}
-            <div class="pt-3 px-1 mx-4">
+            <div class="pt-3 px-1 mx-4 text-main-80">
                 {% if option.position == 1 %}
                     <button class="underline cursor-pointer hover:no-underline mb-3 flex items-center gap-2" onclick="document.getElementById('size-guide-popup').showModal()">
                         <span class="flex items-center justify-center w-5 h-5 rounded-full border border-main flex-shrink-0">
