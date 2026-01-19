@@ -46,7 +46,7 @@
           loading="lazy"
           width="{{ primary_image.width }}"
           height="{{ primary_image.height }}"
-          class="lqip w-full h-full object-contain">
+          class="lqip w-full h-full object-contain translate-x-1">
 
         {%- if should_show_next -%}
           <img
@@ -70,7 +70,7 @@
     </div>
   {%- endif -%}
 
-  <div class="p-3 flex flex-col justify-between shadow-md rounded-md -translate-x-2 mx-2">
+  <div class="p-3 flex flex-col justify-between shadow-md rounded-md mx-2">
     <h3 class="text-xs leading-normal">
       <a
         href="{{ product.url }}"
