@@ -1310,6 +1310,9 @@
             "show_promotion": {
               "label": "Afficher la promotion",
               "info": "Visible uniquement si le produit est en promotion"
+            },
+            "show_payment_icons": {
+              "label": "Afficher les icônes de paiement sous le bouton"
             }
           }
         },

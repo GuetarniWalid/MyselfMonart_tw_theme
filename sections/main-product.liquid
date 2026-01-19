@@ -133,7 +133,7 @@
           {%- when 'buy' -%}
             <div class="relative mt-10 mb-3 md:mb-8 mx-4">
               <button
-                class="buy-button cart-button glass-anim"
+                class="buy-button cart-button glass-anim mb-3"
                 data-variant-id="{{ product.first_available_variant.id }}"
                 data-template="{{ template.suffix }}"
                 data-product-id="{{ product.id }}"
@@ -150,6 +150,15 @@
                     , float: false %}
                 {% endif %}
               </button>
+              {% if block.settings.show_payment_icons %}
+                <div class="flex justify-center items-center gap-2 mt-3">
+                  {% render 'icon-pay-mastercard' %}
+                  {% render 'icon-pay-visa' %}
+                  {% render 'icon-pay-paypal' %}
+                  {% render 'icon-pay-amex' %}
+                  {% render 'icon-pay-klarna' %}
+                </div>
+              {% endif %}
               <template id="float-buy-button">
                 <button
                   class="float-buy-button shadow-neu-lg hover:shadow-neu-md cart-button fixed bottom-3 justify-around left-4 2xs:gap-5 md:left-1/2 md:gap-6 w-[100px] md:bottom-6 mobile-mini:max-w-[62%] max-w-[70%] transition-colors duration-500 scale-0 glass-anim"
@@ -731,6 +740,12 @@
             "id": "text",
             "default": "Commandez ici",
             "label": "t:sections.main-product.blocks.buy.settings.text.label"
+          },
+          {
+            "type": "checkbox",
+            "id": "show_payment_icons",
+            "default": false,
+            "label": "t:sections.main-product.blocks.buy.settings.show_payment_icons.label"
           },
           {
             "type": "checkbox",
