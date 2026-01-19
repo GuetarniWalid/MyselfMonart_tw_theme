@@ -131,7 +131,7 @@
                 , block: block %}
             {% endif %}
           {%- when 'buy' -%}
-            <div class="relative mt-10 mb-3 md:mb-8 mx-4">
+            <div class="relative mt-10 {{ block.settings.margin_bottom }} mx-4">
               <button
                 class="buy-button cart-button glass-anim mb-3"
                 data-variant-id="{{ product.first_available_variant.id }}"
@@ -745,6 +745,30 @@
             "id": "show_payment_icons",
             "default": false,
             "label": "t:sections.main-product.blocks.buy.settings.show_payment_icons.label"
+          },
+          {
+            "type": "select",
+            "id": "margin_bottom",
+            "label": "t:sections.collections-pages-grid.settings.padding_bottom.label",
+            "options": [
+              {
+                "value": "mb-0",
+                "label": "t:sections.collections-pages-grid.settings.padding_top.options.none.label"
+              },
+              {
+                "value": "mb-2",
+                "label": "t:sections.collections-pages-grid.settings.padding_top.options.small.label"
+              },
+              {
+                "value": "mb-4",
+                "label": "t:sections.collections-pages-grid.settings.padding_top.options.medium.label"
+              },
+              {
+                "value": "mb-8",
+                "label": "t:sections.collections-pages-grid.settings.padding_top.options.large.label"
+              }
+            ],
+            "default": "mb-8"
           },
           {
             "type": "checkbox",
