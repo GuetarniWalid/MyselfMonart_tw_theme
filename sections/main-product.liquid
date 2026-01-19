@@ -311,7 +311,7 @@
             </div>
           {%- when 'trustpilot_review' -%}
             <div class="{{ block.settings.margin_bottom }} mx-4">
-              <p class="flex items-center mb-1">
+              <p class="flex items-center mb-1 text-main-70">
                 <a
                   href="{{ block.settings.link }}"
                   target="_blank"
@@ -340,11 +340,10 @@
                       endif
                     endif
                   %}
-                  <div class="relative flex justify-center items-center bg-gray-300 h-10 w-10 before:absolute before:top-0 before:bottom-0 before:left-0 before:{{ green_width }} before:bg-[#00B67A]">
+                  <div class="relative flex justify-center items-center bg-gray-300 h-8 w-8 before:absolute before:top-0 before:bottom-0 before:left-0 before:{{ green_width }} before:bg-[#00B67A]">
                     <svg
                       class="z-10"
-                      width="26"
-                      height="25"
+                      width="20"
                       viewBox="0 0 26 25"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg">
@@ -352,7 +351,7 @@
                     </svg>
                   </div>
                 {% endfor %}
-                <p class="flex items-center ml-2">{{ 'sections.trustpilot.score' | t }}: {{ block.settings.trustpilot_score | divided_by: 10.0 }}</p>
+                <p class="flex items-center ml-2 text-main-70">{{ 'sections.trustpilot.score' | t }}: {{ block.settings.trustpilot_score | divided_by: 10.0 }}</p>
               </div>
             </div>
             {% capture reviews_structured_data %}
