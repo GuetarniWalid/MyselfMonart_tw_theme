@@ -30,14 +30,6 @@ class MainProductCarousel extends HTMLElement {
         }
         this.openPopup();
       });
-      media.querySelector('.zoom')?.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !this.popupOpen) {
-          if (!this.isMobile()) {
-            this.currentMediaIndex = index;
-          }
-          this.openPopup();
-        }
-      });
     });
 
     this.closePopupButton.addEventListener('keydown', (e) => {
@@ -84,10 +76,8 @@ class MainProductCarousel extends HTMLElement {
       this.currentMediaIndex + diffFromCurrentMedia > this.medias.length - 1
     )
       return;
-    this.renderOldZoomDefocusable();
     this.scrollToNextMedia(diffFromCurrentMedia);
     this.currentMediaIndex += diffFromCurrentMedia;
-    this.renderCurrentZoomFocusable();
   };
 
   scrollToNextMedia = (diffFromCurrentMedia) => {
@@ -99,18 +89,6 @@ class MainProductCarousel extends HTMLElement {
   mesureImageWidth = () => {
     const imageRect = this.medias[0].getBoundingClientRect();
     return imageRect.width;
-  };
-
-  renderOldZoomDefocusable = () => {
-    this.medias[this.currentMediaIndex]
-      .querySelector('.zoom')
-      ?.removeAttribute('tabindex');
-  };
-
-  renderCurrentZoomFocusable = () => {
-    if (this.medias[this.currentMediaIndex].classList.contains('model-3d'))
-      return;
-    this.medias[this.currentMediaIndex].querySelector('.zoom').tabIndex = 0;
   };
 
   openPopup = () => {
