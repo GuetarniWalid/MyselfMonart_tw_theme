@@ -76,18 +76,18 @@
           endif
         -%}
 
-        <a href="{{ home_url }}" class="text-sm text-main hover:text-[#0b179e] hover:underline hover:underline-offset-2 transition-colors duration-150 no-underline flex-shrink-0 {% if show_all_links %}inline{% else %}hidden md:inline{% endif %}" data-breadcrumb-home data-text="{{ home_text }}">
+        <a href="{{ home_url }}" class="text-sm text-main-80 hover:text-[#0b179e] hover:underline hover:underline-offset-2 transition-colors duration-150 no-underline flex-shrink-0 {% if show_all_links %}inline{% else %}hidden md:inline{% endif %}" data-breadcrumb-home data-text="{{ home_text }}">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="inline-block"><g fill="none" fill-rule="evenodd"><path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M10.671 2.843a2 2 0 0 1 2.658 0l3.934 3.497l.25-1.504a1 1 0 1 1 1.973.328L19.03 7.91l2.635 2.343a1 1 0 0 1-1.328 1.494l-.464-.412l-.787 7.864A2 2 0 0 1 17.095 21H6.905a2 2 0 0 1-1.99-1.801l-.786-7.864l-.465.412a1 1 0 0 1-1.328-1.494zM5.957 9.71q.028.092.038.191l.91 9.1h10.19l.91-9.1q.01-.1.038-.19L12 4.337z"/></g></svg>
         </a>
 
         {%- comment -%} Ellipsis buttons only (popups rendered outside section) {%- endcomment -%}
         {% if template contains 'product' %}
           {% unless show_all_links %}
-            <button type="button" class="breadcrumb-ellipsis inline md:hidden text-sm text-main-70 hover:text-main cursor-pointer" aria-label="Show breadcrumb navigation" data-template="product">...</button>
+            <button type="button" class="breadcrumb-ellipsis inline md:hidden text-sm text-main-70 hover:text-main-80 cursor-pointer" aria-label="Show breadcrumb navigation" data-template="product">...</button>
           {% endunless %}
         {% elsif template contains 'collection' %}
           {% unless show_all_links %}
-            <button type="button" class="breadcrumb-ellipsis inline md:hidden text-sm text-main-70 hover:text-main cursor-pointer" aria-label="Show breadcrumb navigation" data-template="collection">...</button>
+            <button type="button" class="breadcrumb-ellipsis inline md:hidden text-sm text-main-70 hover:text-main-80 cursor-pointer" aria-label="Show breadcrumb navigation" data-template="collection">...</button>
           {% endunless %}
         {% endif %}
 
@@ -147,7 +147,7 @@
                 assign item_list_element_names = item_list_element_names | append: '|,|' | append: default_painting_collection.title
                 assign item_list_element_urls = item_list_element_urls | append: '|,|' | append: default_painting_collection.url
               -%}
-              <a href="{{ default_painting_collection.url }}" class="text-sm text-main hover:text-[#0b179e] hover:underline hover:underline-offset-2 transition-colors duration-150 no-underline {% if has_parent and show_all_links == false %}hidden md:inline{% elsif has_parent == false or show_all_links %}inline{% endif %}">{{ default_painting_collection.title }}</a>
+              <a href="{{ default_painting_collection.url }}" class="text-sm text-main-80 hover:text-[#0b179e] hover:underline hover:underline-offset-2 transition-colors duration-150 no-underline {% if has_parent and show_all_links == false %}hidden md:inline{% elsif has_parent == false or show_all_links %}inline{% endif %}">{{ default_painting_collection.title }}</a>
             {% endif %}
 
             {%- comment -%} Show hierarchy {%- endcomment -%}
@@ -157,7 +157,7 @@
                 assign item_list_element_names = item_list_element_names | append: '|,|' | append: collection.title
                 assign item_list_element_urls = item_list_element_urls | append: '|,|' | append: collection.url
               -%}
-              <a href="{{ collection.url }}" class="text-sm text-main hover:text-[#0b179e] hover:underline hover:underline-offset-2 transition-colors duration-150 no-underline {% if show_all_links %}inline{% else %}hidden md:inline{% endif %}">{{ collection.title }}</a>
+              <a href="{{ collection.url }}" class="text-sm text-main-80 hover:text-[#0b179e] hover:underline hover:underline-offset-2 transition-colors duration-150 no-underline {% if show_all_links %}inline{% else %}hidden md:inline{% endif %}">{{ collection.title }}</a>
             {% elsif product.metafields.link.mother_collection != blank %}
               {%- liquid
                 assign mother_collection = product.metafields.link.mother_collection.value
@@ -175,7 +175,7 @@
                     assign item_list_element_urls = item_list_element_urls | append: '|,|' | append: parent_collection.url
                   -%}
                   <div class="min-w-0">
-                    <a href="{{ parent_collection.url }}" class="text-sm text-main hover:text-[#0b179e] hover:underline hover:underline-offset-2 transition-colors duration-150 no-underline truncate block">{{ parent_collection.title }}</a>
+                    <a href="{{ parent_collection.url }}" class="text-sm text-main-80 hover:text-[#0b179e] hover:underline hover:underline-offset-2 transition-colors duration-150 no-underline truncate block">{{ parent_collection.title }}</a>
                   </div>
                 {% endif %}
               {% endif %}
@@ -188,7 +188,7 @@
                   assign item_list_element_urls = item_list_element_urls | append: '|,|' | append: mother_collection.url
                 -%}
                 <div class="min-w-0">
-                  <a href="{{ mother_collection.url }}" class="text-sm text-main hover:text-[#0b179e] hover:underline hover:underline-offset-2 transition-colors duration-150 no-underline truncate block">{{ mother_collection.title }}</a>
+                  <a href="{{ mother_collection.url }}" class="text-sm text-main-80 hover:text-[#0b179e] hover:underline hover:underline-offset-2 transition-colors duration-150 no-underline truncate block">{{ mother_collection.title }}</a>
                 </div>
               {% endif %}
             {% endif %}
@@ -238,7 +238,7 @@
                 assign item_list_element_names = item_list_element_names | append: '|,|' | append: default_painting_collection.title
                 assign item_list_element_urls = item_list_element_urls | append: '|,|' | append: default_painting_collection.url
               -%}
-              <a href="{{ default_painting_collection.url }}" class="text-sm text-main hover:text-[#0b179e] hover:underline hover:underline-offset-2 transition-colors duration-150 no-underline {% if show_all_links %}inline{% else %}hidden md:inline{% endif %}">{{ default_painting_collection.title }}</a>
+              <a href="{{ default_painting_collection.url }}" class="text-sm text-main-80 hover:text-[#0b179e] hover:underline hover:underline-offset-2 transition-colors duration-150 no-underline {% if show_all_links %}inline{% else %}hidden md:inline{% endif %}">{{ default_painting_collection.title }}</a>
             {% endif %}
 
             {%- comment -%} Show grandparent {%- endcomment -%}
@@ -248,7 +248,7 @@
                 assign item_list_element_urls = item_list_element_urls | append: '|,|' | append: grand_parent.value.url
                 assign item_list_element_names = item_list_element_names | append: '|,|' | append: grand_parent.value.title
               -%}
-              <a href="{{ grand_parent.value.url }}" class="text-sm text-main hover:text-[#0b179e] hover:underline hover:underline-offset-2 transition-colors duration-150 no-underline {% if show_all_links %}inline{% else %}hidden md:inline{% endif %}">{{ grand_parent.value.title }}</a>
+              <a href="{{ grand_parent.value.url }}" class="text-sm text-main-80 hover:text-[#0b179e] hover:underline hover:underline-offset-2 transition-colors duration-150 no-underline {% if show_all_links %}inline{% else %}hidden md:inline{% endif %}">{{ grand_parent.value.title }}</a>
             {% endif %}
 
             {%- comment -%} Show parent (always visible on mobile) {%- endcomment -%}
@@ -259,7 +259,7 @@
                 assign item_list_element_urls = item_list_element_urls | append: '|,|' | append: parent.value.url
               -%}
               <div class="flex-1 min-w-0">
-                <a href="{{ parent.value.url }}" class="text-sm text-main hover:text-[#0b179e] hover:underline hover:underline-offset-2 transition-colors duration-150 no-underline truncate block">{{ parent.value.title }}</a>
+                <a href="{{ parent.value.url }}" class="text-sm text-main-80 hover:text-[#0b179e] hover:underline hover:underline-offset-2 transition-colors duration-150 no-underline truncate block">{{ parent.value.title }}</a>
               </div>
             {% endif %}
 
@@ -272,7 +272,7 @@
 
         {% unless template contains 'product' %}
           <span class="text-main-50 text-lg select-none pointer-events-none">/</span>
-          <span class="text-sm text-main font-semibold">
+          <span class="text-sm text-main-80 font-semibold">
             {%- liquid
               if template contains 'page'
                 echo page.title
