@@ -80,16 +80,13 @@ function removeSkeletonOnImagesLoad(container = document) {
     const fullSrcset = image.getAttribute('data-srcset');
 
     if (fullSrcset && image.classList.contains('lqip')) {
-      // This is an LQIP image - preload the full resolution version
-      const fullImage = new Image();
+      // Track if we've already handled this image
+      let handled = false;
 
-      // Copy the srcset and sizes for proper responsive loading
-      fullImage.srcset = fullSrcset;
-      if (image.sizes) {
-        fullImage.sizes = image.sizes;
-      }
+      const handleLqipLoad = () => {
+        if (handled) return;
+        handled = true;
 
-      fullImage.onload = () => {
         // Swap to full resolution image
         image.srcset = fullSrcset;
         image.removeAttribute('data-srcset');
@@ -104,6 +101,31 @@ function removeSkeletonOnImagesLoad(container = document) {
           }, 450);
         }
       };
+
+      // This is an LQIP image - preload the full resolution version
+      const fullImage = new Image();
+
+      // Copy the srcset and sizes for proper responsive loading
+      fullImage.srcset = fullSrcset;
+      if (image.sizes) {
+        fullImage.sizes = image.sizes;
+      }
+
+      fullImage.onload = handleLqipLoad;
+      fullImage.onerror = handleLqipLoad; // Remove skeleton even on error
+
+      // Handle cached images - check after setting handlers
+      if (fullImage.complete) {
+        handleLqipLoad();
+      }
+
+      // Fallback timeout - ensure skeleton is removed after 8 seconds max
+      setTimeout(() => {
+        if (!handled) {
+          console.warn('LQIP fallback timeout triggered for image:', image.src);
+          handleLqipLoad();
+        }
+      }, 8000);
     } else {
       // Regular image without LQIP - use the original logic
       const handleImageLoad = () => {
@@ -114,8 +136,8 @@ function removeSkeletonOnImagesLoad(container = document) {
 
           // Wait for transition to complete before removing skeleton
           setTimeout(() => {
-            //parent.classList.remove('skeleton', 'loaded');
-          }, 450); // Slightly longer than CSS transition (400ms)
+            parent.classList.remove('skeleton', 'loaded');
+          }, 450);
         }
       };
 
@@ -123,6 +145,7 @@ function removeSkeletonOnImagesLoad(container = document) {
         handleImageLoad();
       } else {
         image.addEventListener('load', handleImageLoad);
+        image.addEventListener('error', handleImageLoad); // Remove skeleton even on error
       }
     }
   });

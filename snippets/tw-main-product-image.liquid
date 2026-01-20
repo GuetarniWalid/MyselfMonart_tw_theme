@@ -9,20 +9,18 @@
     {% render 'tw-main-product-image', media: media %}
 {% endcomment %}
 
-<span class="img-wrapper w-5/6 sm:w-3/4 max-w-[550px] {% if loop.first %}skeleton{% endif %} flex-none group cursor-pointer flex items-center snap-start relative 2md:flex-auto 2md:w-full transition-colors duration-500 after:absolute after:inset-0 after:-left-40 2md:after:hidden">
+<span class="img-wrapper w-5/6 sm:w-3/4 max-w-[550px] overflow-hidden skeleton flex-none group cursor-pointer flex items-center snap-start relative 2md:flex-auto 2md:w-full transition-colors duration-500 after:absolute after:inset-0 after:-left-40 2md:after:hidden">
   <img
-    {% if loop.first %}data-srcset{% else %}srcset{% endif %}="{%- if media.preview_image.width >= 400 -%}{{ media.preview_image | image_url: width: 400 }} 400w,{%- endif -%}
+    data-srcset="{%- if media.preview_image.width >= 400 -%}{{ media.preview_image | image_url: width: 400 }} 400w,{%- endif -%}
             {%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}
             {{ media.preview_image | image_url }} {{ media.preview_image.width }}w"
-    src="{% if loop.first %}{{ media.preview_image | image_url: width: 40 }}{% else %}{{ media.preview_image | image_url: width: 550 }}{% endif %}"
+    src="{{ media.preview_image | image_url: width: 40 }}"
     sizes="(min-width: 1024px) 340px, (min-width: 900px) 480px, (min-width: 548px) 550px, 100vw"
     alt="{% if product.metafields.meta_object.media.value.alts.value[loop.index0] %}{{ product.metafields.meta_object.media.value.alts.value[loop.index0] | escape }}{% else %}{{ media.alt | escape }}{% endif %}"
-    {% unless loop.first %}
-      loading="lazy"
-    {% endunless %}
+    loading="eager"
     width="550"
     height="auto"
     data-media-id="{{ media.id }}"
-    class="{% if loop.first %}lqip {% endif %}w-full h-full transition-all duration-100 {% if loop.index != 2 and template.suffix == 'painting' %}object-cover object-center{% else %}object-contain 2md:object-contain 2md:object-center{% endif %}"
+    class="lqip w-full h-full transition-all duration-100 {% if loop.index != 2 and template.suffix == 'painting' %}object-cover object-center{% else %}object-contain 2md:object-contain 2md:object-center{% endif %}"
   >
 </span>
