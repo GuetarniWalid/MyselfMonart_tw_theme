@@ -107,7 +107,7 @@
           {%- when 'text' -%}
             <div class="flex flex-col gap-4 mb-4 text-lg mx-4">{{- block.settings.text -}}</div>
           {%- when 'title' -%}
-            <h1 class="text-2xl {{ block.settings.margin_bottom }} mx-4">{{ product.title | escape }}</h1>
+            <h1 class="{{ block.settings.font_size }} {{ block.settings.margin_bottom }} mx-4">{{ product.title | escape }}</h1>
           {%- when 'short_title' -%}
             {%- if product.metafields.title.short != blank or block.settings.show_likes -%}
               <div class="flex justify-between items-center {{ block.settings.margin_bottom }} mx-4">
@@ -193,7 +193,7 @@
             {% endif %}
           {%- when 'description' -%}
             {%- if product.description != blank -%}
-              <div class="product-description dropdown-button-target description flex flex-col gap-5 text-lg leading-relaxed h-56 overflow-hidden relative px-4">
+              <div class="product-description dropdown-button-target description flex flex-col gap-5 leading-relaxed h-56 overflow-hidden relative px-4 text-main-80 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-16 after:bg-gradient-to-t after:from-white after:to-transparent">
                 {{ product.description }}
               </div>
               <dropdown-button>
@@ -450,6 +450,30 @@
         "name": "t:sections.main-product.blocks.title.name",
         "limit": 1,
         "settings": [
+          {
+            "type": "select",
+            "id": "font_size",
+            "label": "t:sections.main-product.blocks.title.settings.font_size.label",
+            "options": [
+              {
+                "value": "text-lg",
+                "label": "t:sections.main-product.blocks.title.settings.font_size.options.small.label"
+              },
+              {
+                "value": "text-xl",
+                "label": "t:sections.main-product.blocks.title.settings.font_size.options.medium.label"
+              },
+              {
+                "value": "text-2xl",
+                "label": "t:sections.main-product.blocks.title.settings.font_size.options.large.label"
+              },
+              {
+                "value": "text-3xl",
+                "label": "t:sections.main-product.blocks.title.settings.font_size.options.extra_large.label"
+              }
+            ],
+            "default": "text-2xl"
+          },
           {
             "type": "select",
             "id": "margin_bottom",

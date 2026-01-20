@@ -161,10 +161,18 @@ summary::-webkit-details-marker {
   font-family: 'heading', sans-serif;
 }
 
-main-product-blocks .description h2 {
-  @apply text-lg font-normal font-roboto leading-relaxed;
+main-product-blocks .description h2,
+main-product-blocks .description h3 {
+  @apply text-base font-normal font-roboto leading-relaxed;
 }
-main-product-blocks .description h2 span {
+
+main-product-blocks .description h2 strong,
+main-product-blocks .description h3 strong {
+  @apply !font-normal;
+}
+
+main-product-blocks .description h2 span,
+main-product-blocks .description h3 span {
   font-size: inherit !important;
 }
 

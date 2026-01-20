@@ -1537,6 +1537,23 @@
         "title": {
           "name": "Titre",
           "settings": {
+            "font_size": {
+              "label": "Taille du texte",
+              "options": {
+                "small": {
+                  "label": "Petit"
+                },
+                "medium": {
+                  "label": "Moyen"
+                },
+                "large": {
+                  "label": "Grand"
+                },
+                "extra_large": {
+                  "label": "Très grand"
+                }
+              }
+            },
             "alignment": {
               "label": "Alignement",
               "options__1": {
