@@ -59,8 +59,8 @@
           "type": "collapsible_tab",
           "settings": {
             "heading": "Délai d'expédition",
-            "icon": "truck",
-            "content": "<p>🎨 Toile personnalisée : Fabrication en 3-4 jours </p><p>🚚  Expédition en 3-5 jours ouvrables en colis suivi à votre domicile.</p>",
+            "icon": "box",
+            "content": "<ul><li>Fabrication en 3/4 jours</li><li>Expédition en 3/5 jours ouvrables en colis suivi à votre domicile</li></ul>",
             "page": ""
           }
         },
