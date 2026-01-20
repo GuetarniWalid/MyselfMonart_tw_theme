@@ -1472,6 +1472,35 @@
             }
           }
         },
+        "shop_arguments": {
+          "name": "Arguments de vente",
+          "settings": {
+            "style": {
+              "header": "Style"
+            },
+            "background_color": {
+              "label": "Couleur de fond"
+            },
+            "argument_1": {
+              "header": "Argument 1"
+            },
+            "argument_2": {
+              "header": "Argument 2"
+            },
+            "argument_3": {
+              "header": "Argument 3"
+            },
+            "argument_4": {
+              "header": "Argument 4"
+            },
+            "icon": {
+              "label": "Icône"
+            },
+            "text": {
+              "label": "Texte"
+            }
+          }
+        },
         "likes": {
           "name": "J'aimes"
         },

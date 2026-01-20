@@ -1472,6 +1472,35 @@
             }
           }
         },
+        "shop_arguments": {
+          "name": "Shop Arguments",
+          "settings": {
+            "style": {
+              "header": "Style"
+            },
+            "background_color": {
+              "label": "Background color"
+            },
+            "argument_1": {
+              "header": "Argument 1"
+            },
+            "argument_2": {
+              "header": "Argument 2"
+            },
+            "argument_3": {
+              "header": "Argument 3"
+            },
+            "argument_4": {
+              "header": "Argument 4"
+            },
+            "icon": {
+              "label": "Icon"
+            },
+            "text": {
+              "label": "Text"
+            }
+          }
+        },
         "likes": {
           "name": "Likes"
         },
