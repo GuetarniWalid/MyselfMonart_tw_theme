@@ -40,6 +40,7 @@
           "settings": {
             "text": "Commander",
             "show_payment_icons": true,
+            "margin_bottom": "mb-8",
             "is_dynamic_variant": false,
             "show_promotion": false,
             "promotion_discount": 15,
@@ -63,10 +64,29 @@
             "page": ""
           }
         },
+        "collapsible_tab_9gdLK4": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Détails du produit",
+            "icon": "clipboard",
+            "content": "<h5>Qualité artisanale & savoir-faire</h5><p>Chaque toile est une pièce unique, fabriquée spécialement pour vous. Notre impression à la demande nous permet d'atteindre un niveau de qualité incomparable avec la production industrielle, tout en adoptant une démarche responsable qui limite les déchets.</p><p>Nous utilisons des encres haut de gamme, reconnues pour leur exceptionnelle résistance à la lumière. Vos couleurs restent éclatantes au fil des années, même exposées à la lumière naturelle de votre intérieur.</p><p></p><h5>Montage artisanal</h5><p>Chaque toile est tendue à la main sur un châssis en bois massif, pour un rendu élégant et une profondeur qui donne du relief à l'œuvre. La profondeur est de 3 cm pour les toiles.</p><h5><br/>Directement prêt à accrocher</h5><p>Nos toiles encadrées sont livrées montées et prêtes à accrocher. Le cadre en bois massif apporte une finition soignée qui s'intègre harmonieusement dans tout style de décoration.</p>",
+            "page": ""
+          }
+        },
+        "collapsible_tab_64pHhF": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Retour et échange",
+            "icon": "return",
+            "content": "<h5>Notre engagement qualité</h5><p>Chaque œuvre quitte notre atelier soigneusement emballée pour voyager en toute sécurité jusqu'à chez vous. Dans le rare cas où votre tableau arriverait endommagé ou ne correspondrait pas à nos exigences de qualité, nous nous engageons à vous envoyer une nouvelle pièce sans aucun frais.</p><p>Parce que vous méritez une œuvre parfaite sur vos murs, nous restons à vos côtés jusqu'à votre entière satisfaction.</p>",
+            "page": ""
+          }
+        },
         "title": {
           "type": "title",
           "settings": {
-            "margin_bottom": "mb-2"
+            "font_size": "text-lg",
+            "margin_bottom": "mb-4"
           }
         },
         "description_Fw7xRB": {
@@ -81,6 +101,8 @@
         "buy_qrRzcg",
         "text_9JmhGc",
         "collapsible_tab_HAUcNw",
+        "collapsible_tab_9gdLK4",
+        "collapsible_tab_64pHhF",
         "title",
         "description_Fw7xRB"
       ],
