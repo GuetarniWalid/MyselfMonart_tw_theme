@@ -4,7 +4,7 @@
 <customer-testimonial>
   <div class="h-full flex flex-col-reverse md:flex-row justify-center items-stretch gap-10 w-[400px] md:w-full mx-auto max-w-full" data-duration-appearance="{{ section.settings.duration_image_appearance }}">
     {%- if section.blocks.first.settings.message != blank -%}
-      <div class="message flex items-center justify-center w-72 mx-5"><p class="text-2xl">{{ section.blocks.first.settings.message }}</p></div>
+      <div class="message flex items-center justify-center w-72 mx-5"><p class="text-xl text-main-90 italic">{{ section.blocks.first.settings.message }}</p></div>
     {%- endif -%}
     {%- if section.blocks.first.settings.image == blank -%}
       <div class="max-w-full w-[400px] h-[400px] mx-auto md:mx-0 bg-gray-300 overflow-hidden">
