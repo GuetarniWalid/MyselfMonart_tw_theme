@@ -225,7 +225,7 @@
               </div>
             </details>
           {%- when 'shop_arguments' -%}
-            <div class="shop-arguments rounded-2xl mx-4 my-5 p-5 flex flex-col gap-4" style="background-color: {{ block.settings.background_color }}">
+            <div class="shop-arguments rounded-2xl mx-4 my-5 p-5 flex flex-col gap-4 bg-buy-button-30">
               {%- if block.settings.argument_1_text != blank -%}
                 <div class="flex gap-5 items-start">
                   {%- if block.settings.argument_1_icon != blank -%}
@@ -813,16 +813,6 @@
         "name": "t:sections.main-product.blocks.shop_arguments.name",
         "limit": 1,
         "settings": [
-          {
-            "type": "header",
-            "content": "t:sections.main-product.blocks.shop_arguments.settings.style.header"
-          },
-          {
-            "type": "color",
-            "id": "background_color",
-            "label": "t:sections.main-product.blocks.shop_arguments.settings.background_color.label",
-            "default": "#f5f0e6"
-          },
           {
             "type": "header",
             "content": "t:sections.main-product.blocks.shop_arguments.settings.argument_1.header"

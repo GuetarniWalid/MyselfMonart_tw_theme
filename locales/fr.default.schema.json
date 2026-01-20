@@ -1475,12 +1475,6 @@
         "shop_arguments": {
           "name": "Arguments de vente",
           "settings": {
-            "style": {
-              "header": "Style"
-            },
-            "background_color": {
-              "label": "Couleur de fond"
-            },
             "argument_1": {
               "header": "Argument 1"
             },
