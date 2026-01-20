@@ -17,6 +17,7 @@
     "enable_painting_filtering": true,
     "main_color": "#232425",
     "secondary_color": "#ffffff",
+    "buy_button_color": "#d79b86",
     "favicon": "shopify://shop_images/logo-myselfmonart.png",
     "currency_code_enabled": true,
     "social_twitter_link": "",
@@ -72,8 +73,6 @@
             "settings": {
               "desktop_image_1": "shopify://shop_images/tableau_floral_minimaliste_fleur_rouge_pot_dore-b47a787d-a409-4e0a-9603-ee569023e1a9.jpg",
               "desktop_image_2": "shopify://shop_images/Tableau-japonais-Nature-Cerisier-Sakura.jpg",
-              "desktop_image_3": "shopify://shop_images/mockup-10046790861147-1767866990416.jpg",
-              "desktop_image_4": "shopify://shop_images/mockup-7948979470591-1767865859175.jpg",
               "collection": "tous-les-tableaux"
             }
           },
@@ -129,8 +128,7 @@
                 "tableau-fleurs",
                 "tableau-mer-1",
                 "tableau-paysage"
-              ],
-              "desktop_image": "shopify://shop_images/mockup-9552303063387-1767836748981.jpg"
+              ]
             }
           },
           "collection_only_yccRzA": {
@@ -139,7 +137,6 @@
               "desktop_image_1": "shopify://shop_images/tableau-chambre-ados-donald.jpg",
               "desktop_image_2": "shopify://shop_images/tableau-abstrait-bleu-et-or-selon-gustav-klimt.jpg",
               "desktop_image_3": "shopify://shop_images/galets_abstraits_zen_minimaliste-d22ed61e-ef83-4d9e-8dc8-8bd742ec3458.jpg",
-              "desktop_image_4": "shopify://shop_images/mockup-9155346399579-1767828039067.jpg",
               "collection": "bestsellers-1"
             }
           }
