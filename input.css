@@ -444,6 +444,24 @@ main-product-blocks .description h3 span {
     @apply translate-y-full -translate-x-full md:translate-y-0 md:translate-x-0;
   }
 
+  .collapsible-tab h1,
+  .collapsible-tab h2,
+  .collapsible-tab h3,
+  .collapsible-tab h4,
+  .collapsible-tab h5,
+  .collapsible-tab h6 {
+    @apply text-base mb-3 mt-5;
+  }
+
+  .collapsible-tab h1:first-child,
+  .collapsible-tab h2:first-child,
+  .collapsible-tab h3:first-child,
+  .collapsible-tab h4:first-child,
+  .collapsible-tab h5:first-child,
+  .collapsible-tab h6:first-child {
+    @apply mt-0;
+  }
+
   .default {
     @apply grid-cols-2;
   }

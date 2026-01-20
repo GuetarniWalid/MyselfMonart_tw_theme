@@ -61,6 +61,7 @@ module.exports = {
           20: 'rgba(var(--color-main-rgb), 0.2)',
           10: 'rgba(var(--color-main-rgb), 0.1)',
           5: 'rgba(var(--color-main-rgb), 0.05)',
+          2: 'rgba(var(--color-main-rgb), 0.02)'
         },
         like: {
           DEFAULT: 'rgb(var(--color-like-rgb))',
