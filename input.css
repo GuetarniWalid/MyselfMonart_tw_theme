@@ -474,7 +474,7 @@ main-product-blocks .description h3 span {
   }
 
   .footer {
-    @apply bg-main text-secondary transition-colors duration-500 relative pb-24 pt-12 mt-28 xl:mt-48;
+    @apply bg-buy-button text-secondary transition-colors duration-500 relative pb-24 pt-12 mt-28 xl:mt-48;
   }
 
   .glass-anim {
@@ -501,7 +501,7 @@ main-product-blocks .description h3 span {
 
   /* Short title highlight - works on multiple lines */
   .short-title-highlight {
-    background: linear-gradient(to top, rgb(var(--color-buy-button-rgb), 0.2) 50%, transparent 50%);
+    background: linear-gradient(to top, rgb(var(--color-buy-button-rgb), 0.3) 50%, transparent 50%);
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
     padding: 0 0.1em 0.3em 0.1em;

@@ -2,14 +2,9 @@
 
 <footer-logic>
   <svg class="absolute top-2 right-0 left-0 -translate-y-full w-full" width="320" viewBox="0 0 1470 89" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true">
-    <path class="fill-main" fill-rule="evenodd" clip-rule="evenodd" d="M0 39.9244V89H1470V39.9244C1469.35 39.9532 1294.17 47.642 1150.17 39.9244C1072.84 35.7789 992.978 29.4304 912.212 23.0096C769.252 11.6444 623.445 0.0530014 483.721 0.0530014C116.221 0.0530014 0 39.9244 0 39.9244Z" fill="transparent"/>
+    <path class="fill-buy-button" fill-rule="evenodd" clip-rule="evenodd" d="M0 39.9244V89H1470V39.9244C1469.35 39.9532 1294.17 47.642 1150.17 39.9244C1072.84 35.7789 992.978 29.4304 912.212 23.0096C769.252 11.6444 623.445 0.0530014 483.721 0.0530014C116.221 0.0530014 0 39.9244 0 39.9244Z" fill="transparent"/>
   </svg>
-  <h2 class="text-center mb-14">
-    <span class="block mb-4">{% render 'tw-icon-logo-unfilled' %}</span>
-    <br>
-    {{ shop.name }}
-  </h2>
-  <div class="px-10 sm:px-20 max-w-7xl mx-auto">
+  <div class="px-10 sm:px-20 max-w-7xl mx-auto pt-16">
     {%- if section.blocks.size > 0 or section.settings.newsletter_enable -%}
       <div class="flex gap-x-16 gap-y-10 flex-col sm:flex-row sm:justify-between mb-14 px-8">
         {%- if section.blocks.size > 0 -%}
@@ -47,7 +42,7 @@
               id="NewsletterForm--{{ section.id }}"
               type="email"
               name="contact[email]"
-              class="bg-main pl-5 pr-9 border hover:border-2 focus:border-2 w-full h-full rounded-lg peer/search placeholder:text-transparent outline-none{% if form.errors %} border-like{% else %} border-secondary transition-colors duration-500{% endif %}"
+              class="bg-buy-button pl-5 pr-9 border hover:border-2 focus:border-2 w-full h-full rounded-lg peer/search placeholder:text-transparent outline-none{% if form.errors %} border-like{% else %} border-secondary transition-colors duration-500{% endif %}"
               value="{{ form.email }}"
               aria-required="true"
               autocorrect="off"
@@ -63,7 +58,7 @@
               placeholder="{{ 'sections.footer.newsletter.placeholder' | t }}"
               required
             >
-            <label for="NewsletterForm--{{ section.id }}" class="bg-main text-secondary/70 px-1 absolute -translate-y-1/2 left-4 top-0 text-xs tracking-normal peer-focus/search:top-0 peer-focus/search:text-xs peer-focus/search:tracking-normal peer-placeholder-shown/search:top-1/2 peer-placeholder-shown/search:text-sm peer-placeholder-shown/search:tracking-widest transition-all duration-75{% if form.errors %} text-like{% endif %}">
+            <label for="NewsletterForm--{{ section.id }}" class="text-secondary/70 px-1 absolute -translate-y-1/2 left-4 top-0 text-xs tracking-normal peer-focus/search:top-0 peer-focus/search:text-xs peer-focus/search:tracking-normal peer-placeholder-shown/search:top-1/2 peer-placeholder-shown/search:text-sm peer-placeholder-shown/search:tracking-widest transition-all duration-75{% if form.errors %} text-like{% endif %}">
               {{ 'sections.footer.newsletter.placeholder' | t }}
             </label>
             <button type="submit" name="commit" id="Subscribe" aria-label="{{ 'sections.footer.newsletter.subscribe' | t }}" class="absolute right-3 top-1/2 -translate-y-1/2{% if form.errors %} text-like{% endif %}">
