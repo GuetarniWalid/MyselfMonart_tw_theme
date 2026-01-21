@@ -592,7 +592,6 @@ class StickyHeader extends HTMLElement {
   showOverlay = (bool) => {
     this.overlay.classList.toggle('hidden', !bool);
     this.overlay.classList.toggle('!block', bool);
-    this.closest('header').classList.toggle('shadow-3xl', !bool);
   };
 
   openDesktopDropdown = (dropdown, button) => {

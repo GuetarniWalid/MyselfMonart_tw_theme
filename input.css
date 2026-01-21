@@ -485,18 +485,12 @@ main-product-blocks .description h3 span {
     @apply overflow-hidden h-[80vh];
   }
 
-  /* Heart icon - not liked state */
-  .like .heart-fill {
-    @apply fill-secondary stroke-main-70 transition-all duration-300;
-    stroke-width: 60;
-    paint-order: stroke fill;
-  }
-
   /* Heart icon - liked state */
-  .like.is-liked .heart-fill {
-    @apply fill-like stroke-like;
-    stroke-width: 60;
-    paint-order: stroke fill;
+  .like.is-liked .heart-fill-1 {
+    fill: #FEB6DF;
+  }
+  .like.is-liked .heart-fill-2 {
+    fill: #F388C5;
   }
 
   /* Short title highlight - works on multiple lines */

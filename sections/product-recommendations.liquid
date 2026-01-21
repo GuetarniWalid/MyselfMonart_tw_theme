@@ -9,7 +9,7 @@
           {%- for recommendation in recommendations.products -%}
             {%- unless recommendation.metafields.recommandation.hide == true -%}
               {%- assign first_image = recommendation.featured_image -%}
-              <li class="carrousel-item relative w-[250px] shrink-0 text-center snap-start pb-2 flex flex-col">
+              <li class="carrousel-item relative w-[250px] shrink-0 snap-start pb-2 flex flex-col">
                 <div class="relative cursor-pointer h-max grow">
                     <img
                         src="{{ first_image | image_url: width: 250 }}"
@@ -20,9 +20,7 @@
                         class="skeleton w-full h-full object-contain"
                     >
                 </div>
-                <h3 class="text-base font-normal block truncate w-full py-6 grow-0">
-                  <a href="{{ recommendation.url }}" class="before:absolute before:inset-0">{{ recommendation.metafields.title.short | default: recommendation.title }}</a>
-                </h3>
+                {% render 'card-product-info', product: recommendation %}
               </li>
             {%- endunless -%}
           {%- endfor -%}
@@ -34,6 +32,7 @@
 
 <script src="{{ 'product-recommendations.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'component-carrousel.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'my-like-button.js' | asset_url }}" defer="defer"></script>
 
 {% schema %}
 {
