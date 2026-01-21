@@ -7,42 +7,24 @@
       <snap-carrousel>
         <ul class="component-carroussel flex gap-4 overflow-x-auto snap-mandatory snap-x scroll-smooth scrollbar py-6">
           {%- for recommendation in recommendations.products -%}
-            {% if recommendation.metafields.info.about.value['hide-in-recommandation'] != true %}
+            {%- unless recommendation.metafields.recommandation.hide == true -%}
               {%- assign first_image = recommendation.featured_image -%}
-              {%- assign second_image = recommendation.images[1] -%}
-              <li class="carrousel-item group relative max-w-[350px] shrink-0 text-center snap-start pb-2 flex flex-col">
+              <li class="carrousel-item relative w-[250px] shrink-0 text-center snap-start pb-2 flex flex-col">
                 <div class="relative cursor-pointer h-max grow">
                     <img
-                        src="{{ first_image | image_url }}"
+                        src="{{ first_image | image_url: width: 250 }}"
                         alt="{% if recommendation.metafields.meta_object.media.value.alts.value[0] %}{{ recommendation.metafields.meta_object.media.value.alts.value[0] | escape }}{% else %}{{ first_image.alt | escape }}{% endif %}"
-                        width="350"
+                        width="250"
                         height="auto"
                         loading="lazy"
-                        srcset="
-                            {{ first_image | image_url: width: 300 }} 300w,
-                            {{ first_image | image_url: width: 350 }} 350w"
-                        sizes="(max-width: 356px) 300px, 350px"
-                        class="skeleton w-full h-full object-cover"
+                        class="skeleton w-full h-full object-contain"
                     >
-                    {%- if second_image != blank -%}
-                        <img
-                            src="{{ second_image | image_url }}"
-                            alt="{% if recommendation.metafields.meta_object.media.value.alts.value[1] %}{{ recommendation.metafields.meta_object.media.value.alts.value[1] | escape }}{% else %}{{ second_image.alt | escape }}{% endif %}"
-                            width="350"
-                            height="auto"
-                            loading="lazy"
-                            srcset="
-                                {{ second_image | image_url: width: 300 }} 300w,
-                                {{ second_image | image_url: width: 350 }} 350w"
-                            sizes="(max-width: 356px) 300px, 350px"
-                            class="skeleton w-full h-full object-cover absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                        >
-                    {%- endif -%}
                 </div>
-                <h3 class="relative text-xl inline-block mx-auto truncate text-ellipsis w-full py-6 grow-0 pointer-events-none">{{ recommendation.title }}</h3>
-                <a href="{{ recommendation.url }}" class="grow-0 w-9/12 mx-auto border border-main bg-main-10 rounded px-3 py-2 outline-main hover:outline hover:outline-1 transition-all duration-300 before:absolute before:inset-0">{{ section.settings.button_text }}</a>
+                <h3 class="text-base font-normal block truncate w-full py-6 grow-0">
+                  <a href="{{ recommendation.url }}" class="before:absolute before:inset-0">{{ recommendation.metafields.title.short | default: recommendation.title }}</a>
+                </h3>
               </li>
-            {% endif %}
+            {%- endunless -%}
           {%- endfor -%}
         </ul>
       </snap-carrousel>
@@ -68,12 +50,6 @@
       "id": "heading",
       "default": "You may also like",
       "label": "t:sections.product-recommendations.settings.heading.label"
-    },
-    {
-      "type": "text",
-      "id": "button_text",
-      "default": "See the product",
-      "label": "t:sections.product-recommendations.settings.button_text.label"
     },
     {
       "type": "number",
