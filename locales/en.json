@@ -229,17 +229,6 @@
       }
     }
   },
-  "react": {
-    "buyButton": {
-      "addProductToCart": "I want it!",
-      "addCustomerDetails": "I add my details",
-      "total": "Total"
-    },
-    "errorMessage": {
-      "notAvailableFor": "Not available for ",
-      "poster": "poster"
-    }
-  },
   "sections": {
     "collections_grid": {
       "find_out_more": "Find out more..."

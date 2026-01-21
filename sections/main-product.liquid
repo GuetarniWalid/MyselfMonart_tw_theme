@@ -422,10 +422,7 @@
     </div>
   </main-product-blocks>
 </div>
-{% if template.suffix == 'painting' or template.suffix == 'personalized' %}
-  {% render 'painting-data-script', product: product %}
-{% else %}
-  <script type="application/ld+json">
+<script type="application/ld+json">
     {
       "@context": "http://schema.org/",
       "@type": "Product",
@@ -476,7 +473,6 @@
                   {%- endif -%}
     }
   </script>
-{% endif %}
 
 {% schema %}
   {
