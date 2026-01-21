@@ -477,8 +477,7 @@
       "name": "t:sections.product-recommendations.name",
       "settings": {
         "heading": "VOUS POURRIEZ AUSSI AIMER",
-        "button_text": "Voir le tableau",
-        "number_products_to_display": 4
+        "number_products_to_display": 10
       }
     },
     "7ae13aad-330c-4fa7-94cf-fafc1c13cf60": {
