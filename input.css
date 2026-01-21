@@ -487,7 +487,7 @@ main-product-blocks .description h3 span {
 
   /* Heart icon - not liked state */
   .like .heart-fill {
-    @apply fill-secondary stroke-main transition-all duration-300;
+    @apply fill-secondary stroke-main-70 transition-all duration-300;
     stroke-width: 60;
     paint-order: stroke fill;
   }

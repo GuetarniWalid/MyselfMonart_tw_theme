@@ -115,7 +115,7 @@
                   <p class="font-heading font-semibold text-xl"><span class="short-title-highlight">{{ product.metafields.title.short }}</span></p>
                 {%- endif -%}
                 {%- if block.settings.show_likes -%}
-                  {% render 'my-like-button', product: product, likes_count: product.metafields.likes.number | default: 0 %}
+                  {% render 'my-like-button', product: product %}
                   <script src="{{ 'my-like-button.js' | asset_url }}" defer="defer"></script>
                 {%- endif -%}
               </div>

@@ -1,0 +1,26 @@
+{% comment %}
+  Renders the product info block (title, price, likes)
+  Accepts:
+  - product: {Object} The product object (required)
+  Usage:
+  {% render 'card-product-info', product: product %}
+{% endcomment %}
+
+<div class="p-3 flex flex-row justify-between items-center shadow-md rounded-md mx-2">
+  <div class="flex flex-col flex-1 min-w-0">
+    <h3 class="text-xs leading-normal">
+      <a
+        href="{{ product.url }}"
+        class="product-card-title after:absolute after:inset-0 block truncate font-normal"
+        tabindex="-1">
+        {{ product.metafields.title.short | default: product.title | escape | upcase }}
+      </a>
+    </h3>
+    <p class="text-sm mt-1">
+      {{ product.price_min | money }}
+    </p>
+  </div>
+  <div class="flex-shrink-0 ml-2">
+    {% render 'my-like-button', product: product %}
+  </div>
+</div>

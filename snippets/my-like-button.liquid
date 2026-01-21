@@ -2,26 +2,14 @@
   Renders a like button for a product.
   Accepts:
   - product: {Object}
-  - likes_count: {Number}
   - margin_bottom: {String}
 
   Usage:
-  {% render 'my-like-button', product: product, likes_count: 0 %}
+  {% render 'my-like-button', product: product %}
 {% endcomment %}
 
-{% liquid
-  if likes_count == blank
-    assign likes_count = 0
-  endif
-%}
-
 <my-like-button data-product-id="{{ product.id }}" data-product-handle="{{ product.handle }}" data-product-short-title="{{ product.metafields.title.short | escape }}">
-  <button class="inline-flex flex-col like relative py-1 sm:py-2 px-2 sm:px-3 border-main-5 border rounded inline-flex items-center gap-1 z-20 {{ margin_bottom }}">
+  <button class="inline-flex flex-col like relative p-2 items-center gap-1 z-20 {{ margin_bottom }}">
     {% render 'tw-icon-heart-design' %}
-    {% if likes_count > 0 %}
-      <span class="font-heading total-users-likes-count text-sm text-main">
-        {{ likes_count }}
-      </span>
-    {% endif %}
   </button>
 </my-like-button>

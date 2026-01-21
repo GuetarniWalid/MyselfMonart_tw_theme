@@ -146,7 +146,6 @@ class MyLikeButton extends HTMLElement {
   async updateLikesCountOnServer(id, action) {
     try {
       this.disableButton();
-      this.updateLikesCountOnLayout(action);
       const response = await fetch(
         `https://backend.myselfmonart.com/api/product/update/metafield/likes-count`,
         {
@@ -162,34 +161,6 @@ class MyLikeButton extends HTMLElement {
       console.error('Error:', error);
     } finally {
       this.enableButton();
-    }
-  }
-
-  updateLikesCountOnLayout(action) {
-    let likesCountElem = this.querySelector(
-      '.total-users-likes-count',
-    );
-    const button = this.querySelector('.like');
-
-    // If count element doesn't exist and we're incrementing from 0, create it
-    if (!likesCountElem && action === 'increment') {
-      likesCountElem = document.createElement('span');
-      likesCountElem.className = 'font-heading total-users-likes-count text-sm text-main';
-      likesCountElem.textContent = '1';
-      button.appendChild(likesCountElem);
-      return;
-    }
-
-    if (!likesCountElem) return;
-
-    const count = parseInt(likesCountElem.textContent);
-    const newCount = action === 'increment' ? count + 1 : count - 1;
-
-    // Hide when reaching 0, otherwise update text
-    if (newCount <= 0) {
-      likesCountElem.remove();
-    } else {
-      likesCountElem.textContent = newCount.toString();
     }
   }
 

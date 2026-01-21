@@ -3,31 +3,21 @@
 {%- endunless -%}
 
 <snap-carrousel>
-<ul role="list" class="component-carroussel flex gap-4 overflow-x-auto snap-mandatory snap-x scroll-smooth scrollbar pt-6 sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4" tabindex="-1">
+<ul role="list" class="component-carroussel flex gap-4 overflow-x-auto snap-mandatory snap-x scroll-smooth scrollbar py-6" tabindex="-1">
   {%- for block in section.blocks -%}
-    <li class="carrousel-item group relative max-w-[350px] shrink-0 text-center snap-start pb-2 flex flex-col md:max-w-none">
-      {%- if block.settings.product.images[1] != blank -%}
+    <li class="carrousel-item group relative w-[250px] shrink-0 snap-start pb-2 flex flex-col md:max-w-none">
+      {%- if block.settings.product.featured_image != blank -%}
         <div class="cursor-pointer max-h-[350px] grow">
           <img
-            srcset="{%- if block.settings.product.images[1].width >= 300 -%}{{ block.settings.product.images[1] | image_url: width: 300 }} 300w,{%- endif -%}
-            {%- if block.settings.product.images[1].width >= 350 -%}{{ block.settings.product.images[1] | image_url: width: 350 }} 350w,{%- endif -%}"
-            src="{{ block.settings.product.images[1] | image_url: width: 500 }}"
-            sizes="(max-width: 356px) 300px, 350px"
-            alt="{{ block.settings.product.images[1].alt }}"
-            width="350"
+            src="{{ block.settings.product.featured_image | image_url: width: 250 }}"
+            alt="{{ block.settings.product.featured_image.alt }}"
+            width="250"
             height="auto"
             loading="lazy"
-            class="skeleton w-full h-full object-cover"
+            class="skeleton w-full h-full object-contain"
           >
         </div>
-        <h3 class="text-xl inline-block mx-auto w-full py-6 grow-0">
-          <a href="{{ block.settings.product.url }}" class="after:absolute after:inset-0" tabindex="0">
-            {%- if block.settings.product.title != blank -%}
-              {{- block.settings.product.title | escape -}}
-            {%- endif -%}
-            <span>{% render 'tw-icon-arrow' %}</span>
-          </a>
-        </h3>
+        {% render 'card-product-info', product: block.settings.product %}
       {% else %}
         {% assign count = forloop.index0 | modulo: 6 |  plus: 1 %}
         {{  'product-' |  append: count | placeholder_svg_tag: 'w-full h-full bg-gray-200' }}
@@ -53,6 +43,7 @@
 {% endif %}
 
 <script src="{{ 'component-carrousel.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'my-like-button.js' | asset_url }}" defer="defer"></script>
 
 {% schema %}
 {
