@@ -42,10 +42,10 @@
             "show_payment_icons": true,
             "margin_bottom": "mb-8",
             "is_dynamic_variant": false,
-            "show_promotion": false,
-            "promotion_discount": 15,
+            "show_promotion": true,
+            "promotion_discount": 20,
             "promotion_discount_unit": "%",
-            "promotion_reason": "",
+            "promotion_reason": "Soldes d'hiver",
             "promotion_date": "📅  Offre spéciale jusqu’au 8 décembre"
           }
         },
