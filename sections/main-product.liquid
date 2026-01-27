@@ -8,7 +8,7 @@
   {{ "sections.main_product.accessibility.skip_to_product_info" | t }}
 </a>
 
-<div class="2md:flex 2md:justify-center 2md:gap-12">
+<div class="md:flex md:justify-center md:gap-6">
   {% if product.template_suffix == "tapestry" %}
     <div id="croppr-top-container" class="flex-grow">
       <div class="2md:sticky 2md:top-[120px] max-w-[550px] mx-auto relative">
@@ -28,20 +28,19 @@
     </div>
   {% else %}
     <main-product-carousel>
-      <div class="2md:sticky 2md:top-[120px] relative 2md:max-w-[700px]">
-        <div class="carousel flex justify-start items-start gap-2 transition-transform duration-300 my-1 snap-x snap-mandatory scrollbar-hidden 2md:grid 2md:grid-cols-1 2md:overflow-visible 2md:snap-none lg:grid-cols-2 overflow-x-auto">
+      <div class="md:sticky 2md:top-[120px] relative md:max-w-[700px]">
+        <div class="carousel flex justify-start items-start gap-2 transition-transform duration-300 my-1 snap-x snap-mandatory scrollbar-hidden md:grid md:grid-cols-1 2md:grid-cols-2 md:overflow-visible md:snap-none overflow-x-auto">
           {% liquid
+            assign start_from = section.settings.start_from_media | default: 1
             assign number_of_media = 0
-            assign skip_second_image = false
-            if template.suffix == 'painting' or template.suffix == 'poster'
-              assign skip_second_image = true
-            endif
+            assign image_index = 0
             for media in product.media
               if media.media_type == 'image'
-                assign number_of_media = number_of_media | default: 0 | plus: 1
-                unless skip_second_image and number_of_media == 2
+                assign image_index = image_index | plus: 1
+                if image_index >= start_from
+                  assign number_of_media = number_of_media | plus: 1
                   render 'tw-main-product-image', media: media, loop: forloop
-                endunless
+                endif
               endif
             endfor
           %}
@@ -76,19 +75,16 @@
             , width: '22' %}
         </button>
         <template id="main-product-popup">
-          {%- assign popup_image_number = 0 -%}
-          {%- assign popup_skip_second_image = false -%}
-          {%- if template.suffix == 'painting' or template.suffix == 'poster' -%}
-            {%- assign popup_skip_second_image = true -%}
-          {%- endif -%}
+          {%- assign popup_start_from = section.settings.start_from_media | default: 1 -%}
+          {%- assign popup_image_index = 0 -%}
           {%- for media in product.media -%}
             {%- if media.media_type == 'image' -%}
-              {%- assign popup_image_number = popup_image_number | plus: 1 -%}
-              {%- unless popup_skip_second_image and popup_image_number == 2 -%}
+              {%- assign popup_image_index = popup_image_index | plus: 1 -%}
+              {%- if popup_image_index >= popup_start_from -%}
                 <popup-image>
                   {%- render 'tw-main-product-popup-image', media: media, loop: forloop -%}
                 </popup-image>
-              {%- endunless -%}
+              {%- endif -%}
             {%- endif -%}
           {%- endfor -%}
         </template>
@@ -479,6 +475,15 @@
     "name": "t:sections.main-product.name",
     "class": "page-width tw-main-product-image",
     "tag": "section",
+    "settings": [
+      {
+        "type": "number",
+        "id": "start_from_media",
+        "label": "t:sections.main-product.settings.start_from_media.label",
+        "info": "t:sections.main-product.settings.start_from_media.info",
+        "default": 1
+      }
+    ],
     "blocks": [
       {
         "type": "@app"

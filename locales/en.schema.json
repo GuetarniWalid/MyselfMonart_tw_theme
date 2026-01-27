@@ -1268,6 +1268,12 @@
     },
     "main-product": {
       "name": "Product Information",
+      "settings": {
+        "start_from_media": {
+          "label": "Start from media index",
+          "info": "Skip images before this index. Set to 1 to show all images."
+        }
+      },
       "blocks": {
         "buy": {
           "name": "Purchase Buttons",

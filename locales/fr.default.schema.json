@@ -1268,6 +1268,12 @@
     },
     "main-product": {
       "name": "Informations produits",
+      "settings": {
+        "start_from_media": {
+          "label": "Commencer à partir du média",
+          "info": "Ignorer les images avant cet index. Mettre 1 pour afficher toutes les images."
+        }
+      },
       "blocks": {
         "buy": {
           "name": "Boutons d'achat",
