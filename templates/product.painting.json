@@ -46,7 +46,7 @@
             "promotion_discount": 20,
             "promotion_discount_unit": "%",
             "promotion_reason": "Soldes d'hiver",
-            "promotion_date": "📅  Offre spéciale jusqu’au 8 décembre"
+            "promotion_date": ""
           }
         },
         "collapsible_tab_HAUcNw": {
@@ -91,13 +91,13 @@
           "type": "shop_arguments",
           "settings": {
             "argument_1_icon": "<svg width=\"30\" viewbox=\"0 0 360 360\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M136.606 21.152C123.406 32.768 109.43 45.016 105.549 48.37C101.668 51.724 85.8058 65.605 70.2998 79.218L42.1068 103.968H22.3057C8.23875 103.968 2.15875 104.315 1.30575 105.168C-0.43525 106.909 -0.43525 305.027 1.30575 306.768C3.05075 308.513 305.161 308.513 306.906 306.768C308.647 305.027 308.647 106.909 306.906 105.168C306.059 104.321 300.25 103.968 287.152 103.968H268.599L216.606 51.968C181.977 17.334 163.944 -0.020981 162.61 1.90349e-05C161.454 0.019019 150.444 8.97502 136.606 21.152ZM209.606 56.968L256.598 103.968H156.352C101.217 103.968 56.1058 103.785 56.1058 103.562C56.1058 103.338 60.2678 99.469 65.3558 94.964C70.4438 90.459 76.1837 85.354 78.1117 83.62C80.0397 81.887 91.9297 71.468 104.534 60.468C117.139 49.468 135.136 33.629 144.529 25.269C153.921 16.91 161.833 10.048 162.11 10.019C162.387 9.99102 183.76 31.118 209.606 56.968ZM289.106 117.468L283.674 122.968H154.106H24.5378L19.1058 117.468L13.6738 111.968H154.106H294.538L289.106 117.468ZM18.1058 206.468V284.543L13.1058 289.468L8.10575 294.393V206.468V118.543L13.1058 123.468L18.1058 128.393V206.468ZM300.106 206.68V294.393L295.106 289.468L290.106 284.543V206.54V128.537L294.818 123.752C297.41 121.121 299.66 118.968 299.818 118.968C299.977 118.968 300.106 158.439 300.106 206.68ZM281.106 198.21V265.453L256.848 241.21C241.48 225.851 231.864 216.968 230.607 216.968C229.358 216.968 220.747 224.838 207.357 238.217L186.09 259.466L144.131 217.467C112.699 186.006 101.495 175.385 99.4757 175.136C97.1097 174.844 92.5268 179.056 61.9428 209.631L27.1058 244.457V187.713V130.968H154.106H281.106V198.21ZM187.824 155.344C176.25 159.661 169.054 170.811 170.641 181.968C173.48 201.922 196.691 210.887 211.581 197.781C224.578 186.34 222.741 166.706 207.79 157.268C202.803 154.12 193.506 153.224 187.824 155.344ZM203.237 164.553C212.427 169.246 214.83 181.657 208.044 189.386C197.66 201.212 179.106 194.564 179.106 179.017C179.106 166.665 192.11 158.87 203.237 164.553ZM141.833 227.468C165.065 250.843 184.845 269.968 185.788 269.968C186.73 269.968 197.209 260.298 209.072 248.479L230.643 226.99L255.874 252.236C269.752 266.122 281.106 278.267 281.106 279.225C281.106 280.873 274.191 280.968 154.106 280.968H27.1058V268.723V256.478L62.8507 220.723C82.5098 201.058 98.8197 184.968 99.0947 184.968C99.3687 184.968 118.602 204.093 141.833 227.468ZM289.606 294.968L294.531 299.968H154.106H13.6807L18.6058 294.968L23.5308 289.968H154.106H284.681L289.606 294.968Z\" fill=\"black\"></path>\n</svg>",
-            "argument_1_text": "Prêt à accrocher avec l'option cadre, votre œuvre arrive montée et prête à embellir vos murs",
+            "argument_1_text": "Avec le cadre, votre toile prend tout son éclat — livrée montée, prête à embellir votre intérieur.",
             "argument_2_icon": "<svg width=\"37\" height=\"30\" viewbox=\"0 0 32 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M16 19.3335C18.1217 19.3335 20.1566 18.4906 21.6569 16.9904C23.1571 15.4901 24 13.4552 24 11.3335C24 9.21176 23.1571 7.17693 21.6569 5.67664C20.1566 4.17635 18.1217 3.3335 16 3.3335C13.8783 3.3335 11.8434 4.17635 10.3431 5.67664C8.84286 7.17693 8 9.21176 8 11.3335C8 13.4552 8.84286 15.4901 10.3431 16.9904C11.8434 18.4906 13.8783 19.3335 16 19.3335Z\" fill=\"#00FF73\" fill-opacity=\"0.5\" stroke=\"black\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path>\n<path d=\"M21.334 28.667C22.3846 28.667 23.4248 28.4601 24.3955 28.058C25.3661 27.656 26.248 27.0667 26.9908 26.3238C27.7337 25.581 28.323 24.6991 28.725 23.7285C29.1271 22.7579 29.334 21.7176 29.334 20.667C29.334 19.6164 29.1271 18.5761 28.725 17.6055C28.323 16.6349 27.7337 15.753 26.9908 15.0101C26.248 14.2673 25.3661 13.678 24.3955 13.276C23.4248 12.8739 22.3846 12.667 21.334 12.667C19.2123 12.667 17.1774 13.5098 15.6771 15.0101C14.1768 16.5104 13.334 18.5453 13.334 20.667C13.334 22.7887 14.1768 24.8236 15.6771 26.3238C17.1774 27.8241 19.2123 28.667 21.334 28.667Z\" fill=\"#001EFF\" fill-opacity=\"0.5\" stroke=\"black\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path>\n<path d=\"M10.667 28.667C11.7176 28.667 12.7579 28.4601 13.7285 28.058C14.6991 27.656 15.581 27.0667 16.3238 26.3238C17.0667 25.581 17.656 24.6991 18.058 23.7285C18.4601 22.7579 18.667 21.7176 18.667 20.667C18.667 19.6164 18.4601 18.5761 18.058 17.6055C17.656 16.6349 17.0667 15.753 16.3238 15.0101C15.581 14.2673 14.6991 13.678 13.7285 13.276C12.7579 12.8739 11.7176 12.667 10.667 12.667C8.54526 12.667 6.51043 13.5098 5.01014 15.0101C3.50985 16.5104 2.66699 18.5453 2.66699 20.667C2.66699 22.7887 3.50985 24.8236 5.01014 26.3238C6.51043 27.8241 8.54526 28.667 10.667 28.667Z\" fill=\"#FF0000\" fill-opacity=\"0.5\" stroke=\"black\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path>\n</svg>",
-            "argument_2_text": "Couleurs éclatantes et durables. Encres haute pigmentation sans solvant, pour des teintes intenses qui traversent le temps",
+            "argument_2_text": "Une netteté remarquable, des couleurs riches et fidèles — la signature d'une impression premium.",
             "argument_3_icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"37\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"currentColor\" d=\"m12 11.675l-1.565 1.223q-.131.087-.252.003t-.071-.22l.592-1.985l-1.558-1.13q-.125-.087-.065-.23t.196-.144h1.939l.592-1.973q.05-.136.192-.136t.192.136l.593 1.973h1.932q.137 0 .2.143t-.063.23l-1.563 1.131l.592 1.985q.05.136-.071.22t-.252-.003zm0 8.287l-3.963 1.184q-.385.137-.711-.115T7 20.375v-5.504q-.95-.934-1.475-2.188T5 10q0-2.927 2.036-4.963T12 3t4.964 2.036T19 10q0 1.429-.525 2.683T17 14.87v5.504q0 .404-.326.656t-.71.115zM12 16q2.5 0 4.25-1.75T18 10t-1.75-4.25T12 4T7.75 5.75T6 10t1.75 4.25T12 16m-4 4.044l4-1.121l4 1.121v-4.33q-.836.615-1.859.95Q13.12 17 12 17t-2.141-.335T8 15.714zm4-2.165\"></path></svg>",
-            "argument_3_text": "Papier d'art premium 285g. Un support épais et raffiné, digne des plus belles galeries",
+            "argument_3_text": "Toile d'art au grain délicat, doux au toucher  — pour un rendu qui sublime votre intérieur.",
             "argument_4_icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"37\" height=\"25\" viewbox=\"0 0 48 48\"><g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"3\"><path d=\"M30.24 6.212q.387.213.76.444c4.937 3.058 8.238 8.46 8.313 14.63l3.747 5.223c.563.785.465 1.846-.363 2.344c-.83.5-2.063 1.084-3.734 1.488l-.566 6.718a3 3 0 0 1-3.358 2.725l-2.8-.346V43a2 2 0 0 1-1.998 2H13.014a2 2 0 0 1-1.999-2v-7.5c-4.295-3.192-7.075-8.275-7.075-14c0-6.26 3.321-11.75 8.315-14.844\"></path><path d=\"M17.023 14.057a8 8 0 1 0 7.954 0Q24.998 12.738 25 11c0-2.551-.044-4.405-.09-5.645c-.043-1.2-.854-2.187-2.05-2.285A24 24 0 0 0 21 3c-.732 0-1.35.029-1.86.07c-1.196.098-2.007 1.085-2.05 2.285C17.043 6.595 17 8.449 17 11q.001 1.739.023 3.057\"></path><path d=\"M21 29c3 3 7.6 5 12 5\"></path></g></svg>",
-            "argument_4_text": "À votre écoute 7 jours sur 7, notre équipe vous accompagne à chaque étape"
+            "argument_4_text": "Une question ? Une vraie personne vous répond, 7 jours sur 7."
           }
         }
       },
@@ -315,7 +315,7 @@
         "image_text_pFY7GA"
       ],
       "settings": {
-        "title": "Nos tableaux à travers vos yeux ❤️",
+        "title": "+1 000 intérieurs sublimés ✨",
         "duration_image_appearance": 5
       }
     },
@@ -325,7 +325,7 @@
         "heading_BLMBrr": {
           "type": "heading",
           "settings": {
-            "heading": "Merci à nos clientes pour leurs magnifiques photos 💛",
+            "heading": "Merci à nos clientes pour leurs magnifiques photos  ❤️❤️❤️",
             "markup": "h3",
             "heading_size": "text-xl"
           }
@@ -358,120 +358,6 @@
         "padding_bottom": "pb-16"
       }
     },
-    "image_with_text_WHC6jB": {
-      "type": "image-with-text",
-      "name": "t:sections.image-with-text.presets.name",
-      "settings": {
-        "image": "shopify://shop_images/comparaison_couleurs-tableau-haute-qualiter.jpg",
-        "title": "Des couleurs qui prennent vie chez vous",
-        "description": "<h5>⭐ Un rendu éclatant qui change l’ambiance d’une pièce</h5><p><br/>Nos impressions haute définition révèlent des teintes riches, profondes, et des détails d’une grande finesse.<br/><br/>Votre tableau capte la lumière, attire le regard et donne immédiatement du caractère à votre décoration.<br/><br/><em><strong>Une touche artistique qui transforme l’énergie de votre intérieur.</strong></em><br/></p>",
-        "layout": "image_first",
-        "enable_blob": true,
-        "activate_dynamic_color": false,
-        "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#e3fae1",
-        "padding_top": "pt-0",
-        "padding_bottom": "pb-0"
-      }
-    },
-    "badges_CQWfDx": {
-      "type": "badges",
-      "blocks": {
-        "svg_block_gqrreR": {
-          "type": "svg_block",
-          "settings": {
-            "badge_logo": "<svg width=\"98\" height=\"86\" viewbox=\"0 0 98 86\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"text-main\">\n<path d=\"M85.3701 1H96.3301V12.04\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M96.33 73.1602V84.5602H84.49\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M92.68 4.41992L82.21 13.5499\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M82.21 71.9199L92.68 81.0599\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M74.3701 17.5498H22.1801C19.7998 17.5498 17.8701 19.4795 17.8701 21.8598V62.9898C17.8701 65.3702 19.7998 67.2998 22.1801 67.2998H74.3701C76.7505 67.2998 78.6801 65.3702 78.6801 62.9898V21.8598C78.6801 19.4795 76.7505 17.5498 74.3701 17.5498Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\" stroke-linecap=\"round\"></path>\n<path d=\"M66.91 37.09C70.0525 37.09 72.6 34.5425 72.6 31.4C72.6 28.2575 70.0525 25.71 66.91 25.71C63.7675 25.71 61.22 28.2575 61.22 31.4C61.22 34.5425 63.7675 37.09 66.91 37.09Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M19.8301 48.4701C19.8301 48.4701 28.0701 41.4101 33.9501 40.6201C39.8301 39.8301 48.2701 42.4201 48.2701 42.4201C48.2701 42.4201 56.3101 46.5001 59.4501 48.4601C62.5901 50.4201 66.1201 51.9901 69.2601 52.3801C72.4001 52.7701 77.1101 52.3801 77.1101 52.3801\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M96.33 1H1V84.56H96.33V1Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M1 12.04V1H11.82\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M1 73.1602V84.5602H7.14H11.08\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M4.6499 4.29004L15.1199 13.42\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M15.1199 71.9199L4.6499 81.0599\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n</svg>",
-            "logo_size": 75,
-            "background_plus_border": false,
-            "heading": "Format personnalisé",
-            "text": "Le format qui s’intègre parfaitement à votre intérieur."
-          }
-        },
-        "svg_block_jhdjPx": {
-          "type": "svg_block",
-          "settings": {
-            "badge_logo": "<svg width=\"90\" height=\"86\" viewbox=\"0 0 90 86\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"text-main\">\n<path d=\"M88.97 1H9.5V76.98H88.97V1Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M20.03 76.98L74.2 1\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M29.8101 76.98L83.6401 1\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M50.6899 19.81L64.2299 1\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M38.6499 76.9798L51.8199 58.5498\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M21.5501 6.27002C21.5501 12.6 18.1301 18.26 13.3101 18.26C18.1301 18.26 21.5501 23.92 21.5501 30.25C21.5501 23.92 24.9701 18.26 29.7901 18.26C24.9701 18.26 21.5501 12.6 21.5501 6.27002Z\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"0.5\" stroke-miterlimit=\"10\"></path>\n<path d=\"M33.16 6.27002C33.16 9.43002 31.45 12.26 29.04 12.26C31.45 12.26 33.16 15.09 33.16 18.25C33.16 15.09 34.87 12.26 37.28 12.26C34.87 12.26 33.16 9.43002 33.16 6.27002Z\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"0.5\" stroke-miterlimit=\"10\"></path>\n<path d=\"M31.2902 18.2603C31.2902 21.4203 29.5802 24.2503 27.1702 24.2503C29.5802 24.2503 31.2902 27.0803 31.2902 30.2403C31.2902 27.0803 33.0002 24.2503 35.4102 24.2503C33.0002 24.2503 31.2902 21.4203 31.2902 18.2603Z\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"0.5\" stroke-miterlimit=\"10\"></path>\n<path d=\"M1.01001 10.3999V84.0099\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M77.81 84.5598L0 84.0098\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n</svg>",
-            "logo_size": 70,
-            "background_plus_border": false,
-            "heading": "Finition au choix",
-            "text": "Un rendu pensé pour s’harmoniser avec votre décoration."
-          }
-        },
-        "svg_block_BrGJVg": {
-          "type": "svg_block",
-          "settings": {
-            "badge_logo": "<svg width=\"80\" height=\"83\" viewbox=\"0 0 80 83\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"text-main\">\n<path d=\"M78.74 1H1V81.65H78.74V1Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M39.87 13.04H68.49V72.42H11.25V13.04H20.53\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M39.87 34.7L30.2 24.07L20.53 34.7V1H39.87V34.7Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n</svg>",
-            "logo_size": 75,
-            "background_plus_border": false,
-            "heading": "Impression haute qualite",
-            "text": "Couleurs intenses, riches et profondes en haute définition."
-          }
-        },
-        "svg_block_K7XcH8": {
-          "type": "svg_block",
-          "settings": {
-            "badge_logo": "<svg width=\"116\" height=\"90\" viewbox=\"0 0 116 90\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"text-main\">\n<path d=\"M25.87 54.9402H1V17.9502H48.24V39.8702\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M25.87 48.5801H8.51001V26.3301H41.67V39.8701\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M18.8301 17.9498L25.0901 11.5898L32.9101 17.9498\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M54.79 39.5099V7.35986H114.94V58.4899H89.38\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M62.3101 38.7499V14.8799H108.55V52.4799H89.3801\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M62.31 14.8799L54.79 7.35986\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M108.55 14.8799L114.94 7.35986\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M114.94 58.49L108.55 52.48\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M89.37 39.8701H26.73V88.9701H89.37V39.8701Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M79.22 48.6699H35.54V80.1599H79.22V48.6699Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M79.22 80.1602L89.38 88.9702\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M35.54 80.1602L26.73 88.9702\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M35.54 48.6701L26.73 39.8701\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M89.38 39.8701L79.22 48.6701\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M77.8201 7.36L84.0801 1L91.9001 7.36\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n</svg>",
-            "logo_size": 80,
-            "background_plus_border": false,
-            "heading": "Encadrement en option",
-            "text": "Cadre élégant pour sublimer et compléter votre tableau."
-          }
-        }
-      },
-      "block_order": [
-        "svg_block_gqrreR",
-        "svg_block_jhdjPx",
-        "svg_block_BrGJVg",
-        "svg_block_K7XcH8"
-      ],
-      "settings": {
-        "title": "CE QUI FAIT LA DIFFÉRENCE",
-        "nb_columns_on_computer": "4",
-        "nb_columns_on_mobile": "2"
-      }
-    },
-    "shifted_image_carousel_mwTU9T": {
-      "type": "shifted-image-text",
-      "blocks": {
-        "image_bDpkF3": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/femme-accroche-tableau-mur.jpg"
-          }
-        },
-        "image_TAPgwV": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/emballage-tableau-decoration.jpg"
-          }
-        },
-        "image_Vby3MD": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/deco-neutre-salon-beige-tableau-japonais-oiseux.jpg"
-          }
-        },
-        "image_CgQFPt": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/chassis-bois-toile-coton-tableau-oiseaux-fleurs.jpg"
-          }
-        }
-      },
-      "block_order": [
-        "image_bDpkF3",
-        "image_TAPgwV",
-        "image_Vby3MD",
-        "image_CgQFPt"
-      ],
-      "settings": {
-        "heading": "Un seul geste pour transformer votre intérieur",
-        "description": "Des tableaux qui s’intègrent naturellement à votre intérieur, subliment votre ambiance et accompagnent votre quotidien avec douceur et qualité.",
-        "activate_dynamic_color": true,
-        "dynamic_primary_color": "#f9eda2",
-        "dynamic_secondary_color": "#112e3b"
-      }
-    },
     "product_recommendations_TX9rdQ": {
       "type": "product-recommendations",
       "name": "t:sections.product-recommendations.name",
@@ -486,41 +372,105 @@
         "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-1": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "Quels supports choisir, le rendu est-il différent ?",
-            "icon": "none",
-            "row_content": "<p>- Tableau toile 100% polyester (285g/m²) : <strong>Mate et texturée</strong></p><p>Le tableau en toile offre une prise en main agréable. Le grain<strong> </strong>du papier est visible principalement dans les zones claires de l’image, tandis que les noirs auront tendance à les gommer. La surface de toile cuisine ajoute du relief et de la profondeur à vos tableaux. Il apporte une touche artistique et les dote d’une <strong>incroyable intensité.</strong></p><p>- tableau plexiglas ou tableau en verre acrylique :<strong> Brillant et transparent</strong></p><p>Le tableau mural en <strong>verre acrylique</strong>, également appelé <strong>tableau plexiglas,</strong> est un matériau synthétique rigide et transparent haut de gamme, son aspect est similaire à du verre.</p><p>Le plexiglas offre <strong>une profondeur </strong>et <strong>une luminosité extraordinaire </strong>à vos tableaux. Les couleurs de votre photo seront vives et éclatantes il est particulièrement recommandé pour la réalisation de tableaux lumineux.</p><p>- Tableau aluminium argent brossé ou tableau métal : <strong>Contraste et éclat.</strong></p><p>Le tableau deco en aluminium permet une <strong>présentation sobre, moderne et sans reflet</strong>. La densité des couleurs et les contrastes sont très forts.</p><p>L'aluminium est un support très résistant et de qualité il n'est pas sensible aux traces de doigts ou à l'humidité et l’entretien de vos toiles est facile. Vous pouvez les nettoyer avec un tissu légèrement humide.</p>"
+            "heading": "1 QUALITÉ & RENDU : Les couleurs seront-elles fidèles à ce que je vois sur mon écran ?",
+            "icon": "star",
+            "row_content": "<p>Oui. Nous utilisons des encres haute pigmentation sur une toile polyester 285g/m².</p><p>Les couleurs sont riches, profondes et garanties 75 ans sans altération. La texture légèrement grainée de la toile ajoute même du relief que vous ne percevez pas à l'écran. La plupart de nos clientes trouvent le rendu encore plus beau en vrai. 🤍</p><p></p>"
           }
         },
         "e20d3253-d757-4a99-9237-128916cc9ffb": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "Avec quoi et comment accrochez mon tableau ?",
+            "heading": "C'est une vraie toile ou une simple affiche ?",
             "icon": "none",
-            "row_content": "<p>Pour une finition à la hauteur de votre décoration  il est important de prendre en compte le support d'impression. </p><p>- Les supports tels que le plexiglas coulé et l'aluminium nécessitent un espacement entre le tableau et le mur. </p><p>Nous vous recommandons d'utiliser notre système d'accrochage, nos équipes s'occupent d'installer le kit de fixation directement sur le tableau. Nos kit de fixation sont disponibles en supplément sur notre site. </p><p>- Pour accrocher les tableaux en toile montés sur châssis il est recommandé d'utiliser des crochets. Attention, il vous faudra prendre en compte le poids du tableau avant tout achat. <br/></p><p>Enfin, pour ne pas abîmer votre mur il vous faudra également faire attention aux chevilles qui sont différentes selon les murs en placo, brique ou béton.</p><p>En raison de la particularité de chaque mur nos kits de fixation sont livrées sans visserie.</p>"
+            "row_content": "<p>Chaque tableau est fabriqué à la main dans notre atelier. Impression haute définition, toile épaisse 285g/m², châssis en bois massif, finitions soignées. Nous ne faisons aucun compromis sur la qualité — c'est notre signature.</p>"
           }
         },
         "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-2": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "Pourquoi acheter chez nous ?",
-            "icon": "none",
-            "row_content": "<p>Nos graphistes travaillent chaque jour pour créer de nouvelles œuvres. Chaque semaine, nous mettons à jour notre site et ajoutons les nouveaux tableaux.</p><p>Vous avez la possibilité de choisir le support et la taille pour un accord parfait avec votre intérieur.</p><p>Si toutefois aucun tableau ne vous plaît, vous avez la possibilité de demander à nos graphistes de façonner l'œuvre de vos rêves.</p>"
+            "heading": "2 TAILLE & VISUALISATION : Comment choisir la bonne taille pour mon mur ?",
+            "icon": "star",
+            "row_content": "<p>Une règle simple : mesurez la largeur de votre mur et divisez par 1,5. Vous obtenez la largeur idéale de votre tableau.</p><p>Espace Taille recommandée: </p><ul><li>Au-dessus d'une console / petit meuble 30x40 cm</li><li>Au-dessus d'un canapé 2 places 60x80 cm</li><li>Au-dessus d'un lit ou grand canapé75x100 cm</li><li>Grand mur ou pièce de caractère90x120 cm<br/></li></ul><p>Un doute ? Découpez un carton aux dimensions et scotchez-le au mur pour visualiser.</p>"
           }
         },
         "a603c2c1-59a1-4067-9d4b-dc8591ddc1f8": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "Quelle taille de toile choisir ?",
+            "heading": "Et si la taille ne convient pas une fois accroché ?",
             "icon": "none",
-            "row_content": "<p>Pour ne pas vous tromper, mesurez la largeur de votre pan de mur. Multipliez le résultat par 0,57 pour obtenir le ratio idéal.</p><p>Sachez qu'il est également recommandé d'accrocher le centre du tableau à environ 1,65 mètre du sol (ce qui correspond à peu près à la hauteur des yeux). Il est aussi recommandé de laisser environ 30 centimètres d'espace entre un meuble et un tableau.</p>"
+            "row_content": "<p>Vous avez 14 jours pour changer d'avis. Si la taille ne vous convient pas, contactez-nous et nous organisons le retour simplement. Votre satisfaction compte plus qu'une vente.</p>"
           }
         },
         "collapsible_row_6q4PMJ": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "Que faire si l'article ne me convient pas ?",
+            "heading": "3 LIVRAISON : Quels sont les délais de livraison ? Combien coûte la livraison ?",
+            "icon": "star",
+            "row_content": "<p>Chaque tableau est fabriqué à la commande dans notre atelier. Comptez 5 à 8 jours ouvrés pour la fabrication + 2 à 4 jours pour la livraison.Vous recevez un email avec le numéro de suivi dès l'expédition. </p><p>La livraison est offerte dès 99€ d'achat. En dessous, les frais sont de 4,99€ pour la France métropolitaine.</p>"
+          }
+        },
+        "collapsible_row_dNyRAY": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Mon tableau peut-il être endommagé pendant le transport ?",
             "icon": "none",
-            "row_content": "<p>Pas de souci ! Si l'article ne répond pas à vos attentes, vous avez <strong>14 jours ouvrables</strong> après réception pour le retourner. Nous voulons que vous soyez totalement satisfait(e). Contactez-nous dans les 3 jours suivant la réception, et nous vous guiderons dans le processus de retour. </p>"
+            "row_content": "<p>Nous emballons chaque tableau avec un soin extrême : protection des coins, carton renforcé, calage anti-choc. En cas de dommage malgré tout, envoyez-nous une photo et nous vous renvoyons un nouveau tableau sans frais. 📦</p>"
+          }
+        },
+        "collapsible_row_eY4ikH": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "4 RETOURS & GARANTIE : Que faire si le tableau ne me plaît pas ?",
+            "icon": "star",
+            "row_content": "<p>Vous disposez de 14 jours après réception pour nous retourner votre tableau. Il doit être dans son état d'origine, non accroché. Contactez-nous par email et nous vous guiderons pour le retour. Le remboursement est effectué sous 7 jours après réception.</p>"
+          }
+        },
+        "collapsible_row_HBrNTG": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Le tableau est-il garanti ?",
+            "icon": "none",
+            "row_content": "<p>Oui. Nos toiles sont garanties 75 ans contre la décoloration grâce à nos encres haute pigmentation. Si vous constatez un défaut de fabrication, contactez-nous — nous trouverons une solution.</p>"
+          }
+        },
+        "collapsible_row_JPTqhr": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "5 INSTALLATION : Comment accrocher mon tableau ?",
+            "icon": "star",
+            "row_content": "<p>Votre toile arrive déjà montée sur châssis en bois, prête à décorer votre intérieur. Pour l'accrocher, nous vous recommandons notre kit de fixation disponible en supplément dans la boutique — il s'adapte à tous les types de murs et garantit une installation sans mauvaise surprise.Aucun cadre à acheter, aucun montage à faire. Vous recevez, vous accrochez, vous admirez. 🤍</p>"
+          }
+        },
+        "collapsible_row_tzFVxD": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Faut-il acheter un cadre en plus ?",
+            "icon": "none",
+            "row_content": "<p>Nos toiles sont tendues sur châssis en bois et se suffisent à elles-mêmes. Mais si vous souhaitez un rendu plus sophistiqué, l'option \"avec cadre\" fait toute la différence — elle apporte une finition galerie d'art qui sublime vraiment le tableau. C'est d'ailleurs le choix préféré de nos clientes. 🤍</p>"
+          }
+        },
+        "collapsible_row_gey7Eg": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "6 PAIEMENT & SÉCURITÉ : Le paiement est-il sécurisé ?",
+            "icon": "star",
+            "row_content": "<p>Oui. Nous utilisons un système de paiement 100% sécurisé (SSL). Vos données bancaires ne transitent jamais par notre site — elles sont traitées directement par notre prestataire de paiement certifié (Visa, Mastercard, PayPal, Klarna, American Express).</p>"
+          }
+        },
+        "collapsible_row_fpW8TB": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Puis-je payer en plusieurs fois ?",
+            "icon": "none",
+            "row_content": "<p>Oui. Avec Klarna, vous pouvez régler en 3 fois sans frais à partir de 50€ d'achat.</p>"
+          }
+        },
+        "collapsible_row_jFqUX8": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "7 CONTACT : Comment vous contacter si j'ai une question ?",
+            "icon": "star",
+            "row_content": "<p>Une vraie personne vous répond 7 jours sur 7. Écrivez-nous à contact@myselfmonart.com — nous répondons généralement sous 24h. ❤️</p>"
           }
         }
       },
@@ -529,10 +479,74 @@
         "e20d3253-d757-4a99-9237-128916cc9ffb",
         "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-2",
         "a603c2c1-59a1-4067-9d4b-dc8591ddc1f8",
-        "collapsible_row_6q4PMJ"
+        "collapsible_row_6q4PMJ",
+        "collapsible_row_dNyRAY",
+        "collapsible_row_eY4ikH",
+        "collapsible_row_HBrNTG",
+        "collapsible_row_JPTqhr",
+        "collapsible_row_tzFVxD",
+        "collapsible_row_gey7Eg",
+        "collapsible_row_fpW8TB",
+        "collapsible_row_jFqUX8"
       ],
       "settings": {
         "heading": "QUESTIONS FRÉQUENTES"
+      }
+    },
+    "badges_CQWfDx": {
+      "type": "badges",
+      "blocks": {
+        "svg_block_jhdjPx": {
+          "type": "svg_block",
+          "settings": {
+            "badge_logo": "<svg width=\"90\" height=\"86\" viewbox=\"0 0 90 86\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"text-main\">\n<path d=\"M88.97 1H9.5V76.98H88.97V1Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M20.03 76.98L74.2 1\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M29.8101 76.98L83.6401 1\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M50.6899 19.81L64.2299 1\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M38.6499 76.9798L51.8199 58.5498\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M21.5501 6.27002C21.5501 12.6 18.1301 18.26 13.3101 18.26C18.1301 18.26 21.5501 23.92 21.5501 30.25C21.5501 23.92 24.9701 18.26 29.7901 18.26C24.9701 18.26 21.5501 12.6 21.5501 6.27002Z\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"0.5\" stroke-miterlimit=\"10\"></path>\n<path d=\"M33.16 6.27002C33.16 9.43002 31.45 12.26 29.04 12.26C31.45 12.26 33.16 15.09 33.16 18.25C33.16 15.09 34.87 12.26 37.28 12.26C34.87 12.26 33.16 9.43002 33.16 6.27002Z\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"0.5\" stroke-miterlimit=\"10\"></path>\n<path d=\"M31.2902 18.2603C31.2902 21.4203 29.5802 24.2503 27.1702 24.2503C29.5802 24.2503 31.2902 27.0803 31.2902 30.2403C31.2902 27.0803 33.0002 24.2503 35.4102 24.2503C33.0002 24.2503 31.2902 21.4203 31.2902 18.2603Z\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"0.5\" stroke-miterlimit=\"10\"></path>\n<path d=\"M1.01001 10.3999V84.0099\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M77.81 84.5598L0 84.0098\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n</svg>",
+            "logo_size": 70,
+            "background_plus_border": false,
+            "heading": "Le grain d'une vraie toile.",
+            "text": "Du relief, du grain, de la chaleur, un vrai rendu toile."
+          }
+        },
+        "svg_block_BrGJVg": {
+          "type": "svg_block",
+          "settings": {
+            "badge_logo": "<svg width=\"80\" height=\"83\" viewbox=\"0 0 80 83\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"text-main\">\n<path d=\"M78.74 1H1V81.65H78.74V1Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M39.87 13.04H68.49V72.42H11.25V13.04H20.53\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M39.87 34.7L30.2 24.07L20.53 34.7V1H39.87V34.7Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n</svg>",
+            "logo_size": 75,
+            "background_plus_border": false,
+            "heading": "Couleurs intenses",
+            "text": "Riches, profondes, fidèles — un rendu qui capte le regard"
+          }
+        },
+        "svg_block_gqrreR": {
+          "type": "svg_block",
+          "settings": {
+            "badge_logo": "<svg width=\"98\" height=\"86\" viewbox=\"0 0 98 86\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"text-main\">\n<path d=\"M85.3701 1H96.3301V12.04\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M96.33 73.1602V84.5602H84.49\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M92.68 4.41992L82.21 13.5499\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M82.21 71.9199L92.68 81.0599\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M74.3701 17.5498H22.1801C19.7998 17.5498 17.8701 19.4795 17.8701 21.8598V62.9898C17.8701 65.3702 19.7998 67.2998 22.1801 67.2998H74.3701C76.7505 67.2998 78.6801 65.3702 78.6801 62.9898V21.8598C78.6801 19.4795 76.7505 17.5498 74.3701 17.5498Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\" stroke-linecap=\"round\"></path>\n<path d=\"M66.91 37.09C70.0525 37.09 72.6 34.5425 72.6 31.4C72.6 28.2575 70.0525 25.71 66.91 25.71C63.7675 25.71 61.22 28.2575 61.22 31.4C61.22 34.5425 63.7675 37.09 66.91 37.09Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M19.8301 48.4701C19.8301 48.4701 28.0701 41.4101 33.9501 40.6201C39.8301 39.8301 48.2701 42.4201 48.2701 42.4201C48.2701 42.4201 56.3101 46.5001 59.4501 48.4601C62.5901 50.4201 66.1201 51.9901 69.2601 52.3801C72.4001 52.7701 77.1101 52.3801 77.1101 52.3801\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M96.33 1H1V84.56H96.33V1Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M1 12.04V1H11.82\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M1 73.1602V84.5602H7.14H11.08\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M4.6499 4.29004L15.1199 13.42\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M15.1199 71.9199L4.6499 81.0599\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n</svg>",
+            "logo_size": 75,
+            "background_plus_border": false,
+            "heading": "Un format pour chaque mur.",
+            "text": "Vertical, horizontal, carré — il y a forcément le vôtre."
+          }
+        },
+        "svg_block_K7XcH8": {
+          "type": "svg_block",
+          "settings": {
+            "badge_logo": "<svg width=\"116\" height=\"90\" viewbox=\"0 0 116 90\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"text-main\">\n<path d=\"M25.87 54.9402H1V17.9502H48.24V39.8702\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M25.87 48.5801H8.51001V26.3301H41.67V39.8701\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M18.8301 17.9498L25.0901 11.5898L32.9101 17.9498\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M54.79 39.5099V7.35986H114.94V58.4899H89.38\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M62.3101 38.7499V14.8799H108.55V52.4799H89.3801\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M62.31 14.8799L54.79 7.35986\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M108.55 14.8799L114.94 7.35986\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M114.94 58.49L108.55 52.48\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M89.37 39.8701H26.73V88.9701H89.37V39.8701Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M79.22 48.6699H35.54V80.1599H79.22V48.6699Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M79.22 80.1602L89.38 88.9702\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M35.54 80.1602L26.73 88.9702\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M35.54 48.6701L26.73 39.8701\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M89.38 39.8701L79.22 48.6701\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M77.8201 7.36L84.0801 1L91.9001 7.36\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n</svg>",
+            "logo_size": 80,
+            "background_plus_border": false,
+            "heading": "Cadre en option",
+            "text": "Le petit plus qui fait toute la différence."
+          }
+        }
+      },
+      "block_order": [
+        "svg_block_jhdjPx",
+        "svg_block_BrGJVg",
+        "svg_block_gqrreR",
+        "svg_block_K7XcH8"
+      ],
+      "settings": {
+        "title": "CE QUI FAIT LA DIFFÉRENCE",
+        "nb_columns_on_computer": "4",
+        "nb_columns_on_mobile": "2"
       }
     }
   },
@@ -542,11 +556,9 @@
     "customer_testimonial_myiwee",
     "rich_text_ekXjTi",
     "image_with_text_Bx3TYf",
-    "image_with_text_WHC6jB",
-    "badges_CQWfDx",
-    "shifted_image_carousel_mwTU9T",
     "product_recommendations_TX9rdQ",
-    "7ae13aad-330c-4fa7-94cf-fafc1c13cf60"
+    "7ae13aad-330c-4fa7-94cf-fafc1c13cf60",
+    "badges_CQWfDx"
   ],
   "layout": "product"
 }

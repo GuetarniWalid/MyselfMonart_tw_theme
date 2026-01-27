@@ -10,17 +10,12 @@
 {
   "layout": "page",
   "sections": {
-    "1659971223ecf8c3c8": {
-      "type": "image-banner",
-      "settings": {
-        "image_desktop": "shopify://shop_images/serviceclient_ordi.jpg",
-        "image_mobile": "shopify://shop_images/service_client.jpg"
-      }
-    },
     "main": {
       "type": "main-page",
       "disabled": true,
-      "settings": {}
+      "settings": {
+        "title_alignment": "text-left"
+      }
     },
     "form": {
       "type": "contact-form",
@@ -33,7 +28,6 @@
     }
   },
   "order": [
-    "1659971223ecf8c3c8",
     "main",
     "form"
   ]
