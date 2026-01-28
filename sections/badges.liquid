@@ -1,5 +1,5 @@
 {%- if section.settings.title != blank -%}
-  <h2 class="text-center mb-16">{{ section.settings.title }}</h2>
+  <h2 class="text-center mb-16"><span class="title-highlight">{{ section.settings.title }}</span></h2>
 {%- endif -%}
 <div class="grid grid-cols-{{ section.settings.nb_columns_on_mobile }} md:grid-cols-{{ section.settings.nb_columns_on_computer }} gap-16 mx-4">
   {%- for block in section.blocks -%}
@@ -25,10 +25,10 @@
           </div>
         {% endcase %}
           {%- if block.settings.heading != blank -%}
-            <h3 class="text-xl mb-4 text-center">{{ block.settings.heading }}</h3>
+            <h3 class="text-lg mb-4 px-4">{{ block.settings.heading }}</h3>
           {%- endif -%}
           {%- if block.settings.text != blank -%}
-            <p class="text-lg leading-relaxed px-2 mx-auto max-w-[450px]">{{ block.settings.text }}</p>
+            <p class="text-base leading-relaxed px-2 mx-auto max-w-[450px]">{{ block.settings.text }}</p>
           {%- endif -%}
     </div>
   {%- endfor -%}

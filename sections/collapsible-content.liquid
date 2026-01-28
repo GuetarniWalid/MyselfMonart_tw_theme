@@ -1,5 +1,5 @@
 {%- if section.settings.heading != blank -%}
-  <h2 class="text-center mb-10">{{ section.settings.heading | escape }}</h2>
+  <h2 class="text-center mb-10"><span class="title-highlight">{{ section.settings.heading | escape }}</span></h2>
 {% endif %}
 <collapsible-tab>
   {%- for block in section.blocks -%}
@@ -7,7 +7,7 @@
       <summary class="list-none flex justify-between py-3 select-none cursor-pointer">
         <div class="flex gap-3">
           {% render 'icon-accordion', icon: block.settings.icon, color: block.settings.icon_color %}
-          <h4 class="h4 text-lg">
+          <h4 class="h4 text-base font-normal">
             {{ block.settings.heading }}
           </h4>
         </div>
@@ -15,7 +15,7 @@
           {% render 'tw-icon-caret', width: "10" %}
         </span>
       </summary>
-      <div class="py-3 text-lg flex flex-col gap-3">
+      <div class="py-3 flex flex-col gap-3">
         {{ block.settings.row_content }}
       </div>
     </details>

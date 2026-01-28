@@ -2,7 +2,7 @@
   <div class="product-recommendations px-4" style="display:block">
     {%- if recommendations.performed? and recommendations.products_count > 0 -%}
       <h2 class="mb-2">
-        {{ section.settings.heading | escape }}
+        <span class="title-highlight">{{ section.settings.heading | escape }}</span>
       </h2>
       <snap-carrousel>
         <ul class="component-carroussel flex gap-4 overflow-x-auto snap-mandatory snap-x scroll-smooth scrollbar py-6">

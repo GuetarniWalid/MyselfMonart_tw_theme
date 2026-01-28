@@ -108,7 +108,7 @@
             {%- if product.metafields.title.short != blank or block.settings.show_likes -%}
               <div class="flex justify-between items-center {{ block.settings.margin_bottom }} mx-4">
                 {%- if product.metafields.title.short != blank -%}
-                  <p class="font-heading font-semibold text-xl"><span class="short-title-highlight">{{ product.metafields.title.short }}</span></p>
+                  <p class="font-heading font-semibold text-xl"><span class="title-highlight">{{ product.metafields.title.short }}</span></p>
                 {%- endif -%}
                 {%- if block.settings.show_likes -%}
                   {% render 'my-like-button', product: product %}
