@@ -113,7 +113,9 @@
         "description_Fw7xRB",
         "shop_arguments_kPT8Tg"
       ],
-      "settings": {}
+      "settings": {
+        "start_from_media": 3
+      }
     },
     "customer_testimonial_myiwee": {
       "type": "customer-testimonial",
