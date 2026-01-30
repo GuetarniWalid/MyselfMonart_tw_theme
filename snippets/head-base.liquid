@@ -9,11 +9,6 @@
   crossorigin />
 <meta name="p:domain_verify" content="df84d648bc3332c06767fb16e0fb142e" />
 
-<script>
-  /* >> Heatmap.com :: Snippet << */
-  (function (h,e,a,t,m,ap) { (h._heatmap_paq = []).push([ 'setTrackerUrl', (h.heatUrl = e) + a]); h.hErrorLogs=h.hErrorLogs || []; ap=t.createElement('script');  ap.src=h.heatUrl+'preprocessor.min.js?sid='+m;  ap.defer=true; t.head.appendChild(ap); ['error', 'unhandledrejection'].forEach(function (ty) {     h.addEventListener(ty, function (et) { h.hErrorLogs.push({ type: ty, event: et }); }); });})(window,'https://dashboard.heatmap.com/','heatmap.php',document,5144);
-</script>
-
 {%- if template.name == 'page' and page.metafields.robots.noindex.value -%}
   <meta name="robots" content="noindex,nofollow">
 {%- endif -%}
