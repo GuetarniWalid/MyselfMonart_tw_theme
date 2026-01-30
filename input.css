@@ -398,7 +398,7 @@ main-product-blocks .description h3 span {
     @apply heading font-bold text-lg;
   }
   h5 {
-    @apply heading font-bold text-md;
+    @apply heading font-bold text-base;
   }
   h6 {
     @apply heading font-bold text-sm;

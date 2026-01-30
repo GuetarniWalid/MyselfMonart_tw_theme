@@ -226,6 +226,10 @@
         "load_model": "Charger le modèle 3D {{ index }} dans la galerie",
         "load_video": "Lire la vidéo {{ index }} dans la galerie",
         "image_available": "L'image {{ index }} est maintenant disponible dans la galerie"
+      },
+      "tapestry": {
+        "range_from": "de",
+        "range_to": "à"
       }
     }
   },

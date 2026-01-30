@@ -226,6 +226,10 @@
         "open_media": "Open media {{ index }} in modal",
         "play_model": "Play 3D Viewer",
         "play_video": "Play video"
+      },
+      "tapestry": {
+        "range_from": "from",
+        "range_to": "to"
       }
     }
   },
