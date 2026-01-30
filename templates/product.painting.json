@@ -317,30 +317,8 @@
         "image_text_pFY7GA"
       ],
       "settings": {
-        "title": "+1 000 intérieurs sublimés ✨",
+        "title": "+1 000 intérieurs sublimés",
         "duration_image_appearance": 5
-      }
-    },
-    "rich_text_ekXjTi": {
-      "type": "rich-text",
-      "blocks": {
-        "heading_BLMBrr": {
-          "type": "heading",
-          "settings": {
-            "heading": "Merci à nos clientes pour leurs magnifiques photos  ❤️❤️❤️",
-            "markup": "h3",
-            "heading_size": "text-xl"
-          }
-        }
-      },
-      "block_order": [
-        "heading_BLMBrr"
-      ],
-      "name": "t:sections.rich-text.presets.name",
-      "settings": {
-        "content_alignment": "text-center",
-        "padding_top": "pt-0",
-        "padding_bottom": "pb-0"
       }
     },
     "image_with_text_Bx3TYf": {
@@ -374,8 +352,8 @@
         "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-1": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "1 QUALITÉ & RENDU : Les couleurs seront-elles fidèles à ce que je vois sur mon écran ?",
-            "icon": "star",
+            "heading": "Les couleurs seront-elles fidèles à ce que je vois sur mon écran ?",
+            "icon": "none",
             "row_content": "<p>Oui. Nous utilisons des encres haute pigmentation sur une toile polyester 285g/m².</p><p>Les couleurs sont riches, profondes et garanties 75 ans sans altération. La texture légèrement grainée de la toile ajoute même du relief que vous ne percevez pas à l'écran. La plupart de nos clientes trouvent le rendu encore plus beau en vrai. 🤍</p><p></p>"
           }
         },
@@ -390,8 +368,8 @@
         "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-2": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "2 TAILLE & VISUALISATION : Comment choisir la bonne taille pour mon mur ?",
-            "icon": "star",
+            "heading": "Comment choisir la bonne taille pour mon mur ?",
+            "icon": "none",
             "row_content": "<p>Une règle simple : mesurez la largeur de votre mur et divisez par 1,5. Vous obtenez la largeur idéale de votre tableau.</p><p>Espace Taille recommandée: </p><ul><li>Au-dessus d'une console / petit meuble 30x40 cm</li><li>Au-dessus d'un canapé 2 places 60x80 cm</li><li>Au-dessus d'un lit ou grand canapé75x100 cm</li><li>Grand mur ou pièce de caractère90x120 cm<br/></li></ul><p>Un doute ? Découpez un carton aux dimensions et scotchez-le au mur pour visualiser.</p>"
           }
         },
@@ -406,8 +384,8 @@
         "collapsible_row_6q4PMJ": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "3 LIVRAISON : Quels sont les délais de livraison ? Combien coûte la livraison ?",
-            "icon": "star",
+            "heading": "Quels sont les délais de livraison ? Combien coûte la livraison ?",
+            "icon": "none",
             "row_content": "<p>Chaque tableau est fabriqué à la commande dans notre atelier. Comptez 5 à 8 jours ouvrés pour la fabrication + 2 à 4 jours pour la livraison.Vous recevez un email avec le numéro de suivi dès l'expédition. </p><p>La livraison est offerte dès 99€ d'achat. En dessous, les frais sont de 4,99€ pour la France métropolitaine.</p>"
           }
         },
@@ -422,8 +400,8 @@
         "collapsible_row_eY4ikH": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "4 RETOURS & GARANTIE : Que faire si le tableau ne me plaît pas ?",
-            "icon": "star",
+            "heading": "Que faire si le tableau ne me plaît pas ?",
+            "icon": "none",
             "row_content": "<p>Vous disposez de 14 jours après réception pour nous retourner votre tableau. Il doit être dans son état d'origine, non accroché. Contactez-nous par email et nous vous guiderons pour le retour. Le remboursement est effectué sous 7 jours après réception.</p>"
           }
         },
@@ -438,8 +416,8 @@
         "collapsible_row_JPTqhr": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "5 INSTALLATION : Comment accrocher mon tableau ?",
-            "icon": "star",
+            "heading": "Comment accrocher mon tableau ?",
+            "icon": "none",
             "row_content": "<p>Votre toile arrive déjà montée sur châssis en bois, prête à décorer votre intérieur. Pour l'accrocher, nous vous recommandons notre kit de fixation disponible en supplément dans la boutique — il s'adapte à tous les types de murs et garantit une installation sans mauvaise surprise.Aucun cadre à acheter, aucun montage à faire. Vous recevez, vous accrochez, vous admirez. 🤍</p>"
           }
         },
@@ -454,8 +432,8 @@
         "collapsible_row_gey7Eg": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "6 PAIEMENT & SÉCURITÉ : Le paiement est-il sécurisé ?",
-            "icon": "star",
+            "heading": "Le paiement est-il sécurisé ?",
+            "icon": "none",
             "row_content": "<p>Oui. Nous utilisons un système de paiement 100% sécurisé (SSL). Vos données bancaires ne transitent jamais par notre site — elles sont traitées directement par notre prestataire de paiement certifié (Visa, Mastercard, PayPal, Klarna, American Express).</p>"
           }
         },
@@ -470,8 +448,8 @@
         "collapsible_row_jFqUX8": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "7 CONTACT : Comment vous contacter si j'ai une question ?",
-            "icon": "star",
+            "heading": "Comment vous contacter si j'ai une question ?",
+            "icon": "none",
             "row_content": "<p>Une vraie personne vous répond 7 jours sur 7. Écrivez-nous à contact@myselfmonart.com — nous répondons généralement sous 24h. ❤️</p>"
           }
         }
@@ -502,7 +480,7 @@
           "type": "svg_block",
           "settings": {
             "badge_logo": "<svg width=\"90\" height=\"86\" viewbox=\"0 0 90 86\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"text-main\">\n<path d=\"M88.97 1H9.5V76.98H88.97V1Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M20.03 76.98L74.2 1\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M29.8101 76.98L83.6401 1\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M50.6899 19.81L64.2299 1\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M38.6499 76.9798L51.8199 58.5498\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M21.5501 6.27002C21.5501 12.6 18.1301 18.26 13.3101 18.26C18.1301 18.26 21.5501 23.92 21.5501 30.25C21.5501 23.92 24.9701 18.26 29.7901 18.26C24.9701 18.26 21.5501 12.6 21.5501 6.27002Z\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"0.5\" stroke-miterlimit=\"10\"></path>\n<path d=\"M33.16 6.27002C33.16 9.43002 31.45 12.26 29.04 12.26C31.45 12.26 33.16 15.09 33.16 18.25C33.16 15.09 34.87 12.26 37.28 12.26C34.87 12.26 33.16 9.43002 33.16 6.27002Z\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"0.5\" stroke-miterlimit=\"10\"></path>\n<path d=\"M31.2902 18.2603C31.2902 21.4203 29.5802 24.2503 27.1702 24.2503C29.5802 24.2503 31.2902 27.0803 31.2902 30.2403C31.2902 27.0803 33.0002 24.2503 35.4102 24.2503C33.0002 24.2503 31.2902 21.4203 31.2902 18.2603Z\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"0.5\" stroke-miterlimit=\"10\"></path>\n<path d=\"M1.01001 10.3999V84.0099\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M77.81 84.5598L0 84.0098\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n</svg>",
-            "logo_size": 70,
+            "logo_size": 60,
             "background_plus_border": false,
             "heading": "Le grain d'une vraie toile.",
             "text": "Du relief, du grain, de la chaleur, un vrai rendu toile."
@@ -512,7 +490,7 @@
           "type": "svg_block",
           "settings": {
             "badge_logo": "<svg width=\"80\" height=\"83\" viewbox=\"0 0 80 83\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"text-main\">\n<path d=\"M78.74 1H1V81.65H78.74V1Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M39.87 13.04H68.49V72.42H11.25V13.04H20.53\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M39.87 34.7L30.2 24.07L20.53 34.7V1H39.87V34.7Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n</svg>",
-            "logo_size": 75,
+            "logo_size": 55,
             "background_plus_border": false,
             "heading": "Couleurs intenses",
             "text": "Riches, profondes, fidèles — un rendu qui capte le regard"
@@ -522,7 +500,7 @@
           "type": "svg_block",
           "settings": {
             "badge_logo": "<svg width=\"98\" height=\"86\" viewbox=\"0 0 98 86\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"text-main\">\n<path d=\"M85.3701 1H96.3301V12.04\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M96.33 73.1602V84.5602H84.49\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M92.68 4.41992L82.21 13.5499\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M82.21 71.9199L92.68 81.0599\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M74.3701 17.5498H22.1801C19.7998 17.5498 17.8701 19.4795 17.8701 21.8598V62.9898C17.8701 65.3702 19.7998 67.2998 22.1801 67.2998H74.3701C76.7505 67.2998 78.6801 65.3702 78.6801 62.9898V21.8598C78.6801 19.4795 76.7505 17.5498 74.3701 17.5498Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\" stroke-linecap=\"round\"></path>\n<path d=\"M66.91 37.09C70.0525 37.09 72.6 34.5425 72.6 31.4C72.6 28.2575 70.0525 25.71 66.91 25.71C63.7675 25.71 61.22 28.2575 61.22 31.4C61.22 34.5425 63.7675 37.09 66.91 37.09Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M19.8301 48.4701C19.8301 48.4701 28.0701 41.4101 33.9501 40.6201C39.8301 39.8301 48.2701 42.4201 48.2701 42.4201C48.2701 42.4201 56.3101 46.5001 59.4501 48.4601C62.5901 50.4201 66.1201 51.9901 69.2601 52.3801C72.4001 52.7701 77.1101 52.3801 77.1101 52.3801\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M96.33 1H1V84.56H96.33V1Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M1 12.04V1H11.82\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M1 73.1602V84.5602H7.14H11.08\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M4.6499 4.29004L15.1199 13.42\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M15.1199 71.9199L4.6499 81.0599\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n</svg>",
-            "logo_size": 75,
+            "logo_size": 60,
             "background_plus_border": false,
             "heading": "Un format pour chaque mur.",
             "text": "Vertical, horizontal, carré — il y a forcément le vôtre."
@@ -532,7 +510,7 @@
           "type": "svg_block",
           "settings": {
             "badge_logo": "<svg width=\"116\" height=\"90\" viewbox=\"0 0 116 90\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"text-main\">\n<path d=\"M25.87 54.9402H1V17.9502H48.24V39.8702\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M25.87 48.5801H8.51001V26.3301H41.67V39.8701\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M18.8301 17.9498L25.0901 11.5898L32.9101 17.9498\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M54.79 39.5099V7.35986H114.94V58.4899H89.38\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M62.3101 38.7499V14.8799H108.55V52.4799H89.3801\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M62.31 14.8799L54.79 7.35986\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M108.55 14.8799L114.94 7.35986\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M114.94 58.49L108.55 52.48\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M89.37 39.8701H26.73V88.9701H89.37V39.8701Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M79.22 48.6699H35.54V80.1599H79.22V48.6699Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M79.22 80.1602L89.38 88.9702\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M35.54 80.1602L26.73 88.9702\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M35.54 48.6701L26.73 39.8701\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M89.38 39.8701L79.22 48.6701\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M77.8201 7.36L84.0801 1L91.9001 7.36\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n</svg>",
-            "logo_size": 80,
+            "logo_size": 70,
             "background_plus_border": false,
             "heading": "Cadre en option",
             "text": "Le petit plus qui fait toute la différence."
@@ -556,7 +534,6 @@
     "breadcrumb_RCxFAG",
     "main",
     "customer_testimonial_myiwee",
-    "rich_text_ekXjTi",
     "image_with_text_Bx3TYf",
     "product_recommendations_TX9rdQ",
     "7ae13aad-330c-4fa7-94cf-fafc1c13cf60",
