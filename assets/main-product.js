@@ -488,8 +488,7 @@ class MainProductBlocks extends CollapsibleTab {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          items: [{ id: variantId, quantity: 1 }],
-          productProperties,
+          items: [{ id: variantId, quantity: 1, properties: productProperties }],
         }),
       },
     );
