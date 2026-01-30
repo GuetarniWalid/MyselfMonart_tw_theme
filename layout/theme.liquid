@@ -1,73 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ request.locale.iso_code }}">
   <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="theme-color" content="" />
-    <link rel="canonical" href="{{ canonical_url }}" />
-    <link
-      rel="preconnect"
-      href="https://cdn.shopify.com"
-      crossorigin />
-    <meta name="p:domain_verify" content="df84d648bc3332c06767fb16e0fb142e" />
-
-    {%- if template.name == 'page' and page.metafields.robots.noindex.value -%}
-      <meta name="robots" content="noindex,nofollow">
-    {%- endif -%}
-
-    {%- if settings.favicon != blank -%}
-      <link
-        rel="icon"
-        type="image/png"
-        href="{{ settings.favicon | image_url: width: 32, height: 32 }}" />
-    {%- endif -%}
-
-    <title>
-      {{ page_title }}
-      {%- if current_tags %}
-        &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
-      {%- if current_page != 1 %}
-        &ndash; Page {{ current_page }}{% endif -%}
-      {%- unless page_title contains shop.name %}
-        &ndash; {{ shop.name }}{% endunless -%}
-    </title>
-
-    {% if page_description %}
-      <meta name="description" content="{{ page_description | escape }}" />
-    {% endif %}
-    {% render 'meta-tags' %}
-
-    <script src="{{ 'tw-global.js' | asset_url }}" defer="defer"></script>
-    {{ content_for_header }}
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link
-      rel="preconnect"
-      href="https://fonts.gstatic.com"
-      crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap&family=Limelight&display=swap" rel="stylesheet">
-
-    {% render 'fonts-and-colors' %}
-
-    {{ 'output.css' | asset_url | stylesheet_tag }}
-
-    <script>
-      if (Shopify.designMode) {
-        document.documentElement.classList.add('shopify-design-mode');
-      }
-    </script>
-
-    {%- if request.design_mode -%}
-      <script src="{{ 'theme-editor.js' | asset_url }}" defer="defer"></script>
-    {%- endif -%}
-
-    <script
-      defer
-      data-environment="production"
-      src="https://js.klarna.com/web-sdk/v1/klarna.js"
-      data-client-id="klarna_live_client_JTMkM2xkZDhVYnpHRkEqTllvMT9FLXZMZiVnTTB3Q0YsN2VhMWYzNmQtNWQxMi00YjI4LWEwMGYtMzMyZDU2NzgyYTU4LDEsU05qMGlpd2VEWTNsa2ZPTFJoa1RTMWVJdEx1ai83VWZoWWI2ZFE5WFhxVT0"
-    ></script>
+    {% render 'head-base' %}
   </head>
 
   <body class="w-screen overflow-x-hidden text-main bg-secondary transition-colors duration-500 z-10 scrollbar relative min-h-screen">
