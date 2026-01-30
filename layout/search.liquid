@@ -2,6 +2,7 @@
 <html lang="{{ request.locale.iso_code }}">
   <head>
     {% render 'head-base' %}
+    {{ content_for_header }}
 
     <script src="{{ 'search.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'my-like-button.js' | asset_url }}" defer="defer"></script>

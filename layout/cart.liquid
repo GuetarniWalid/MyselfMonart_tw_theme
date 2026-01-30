@@ -2,6 +2,7 @@
 <html lang="{{ request.locale.iso_code }}">
   <head>
     {% render 'head-base' %}
+    {{ content_for_header }}
   </head>
 
   <body class="w-screen overflow-x-hidden text-main bg-secondary transition-colors duration-500 z-10 scrollbar relative min-h-screen">
