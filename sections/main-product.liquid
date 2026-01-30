@@ -358,6 +358,7 @@
                   assign tapestry_width = block.settings.tapestry_default_width_square
                   assign texture_img = block.settings.tapestry_texture_square
                 endif
+                assign tapestry_height = block.settings.tapestry_default_height
               %}
               {{ 'croppr.min.css' | asset_url | stylesheet_tag }}
               <script src="{{ 'croppr.min.js' | asset_url }}" defer="defer"></script>
@@ -394,9 +395,10 @@
                     id="tapestry-width"
                     name="tapestry-width">
                     {% for width in product.options_with_values.first.values %}
+                      {% assign width_value = width | split: ' ' | first | plus: 0 %}
                       <option
                         value="{{ width }}"
-                        {% if forloop.first %}
+                        {% if width_value == tapestry_width %}
                         selected{% endif %}>{{ width | split: ' ' | first }}</option>
                     {% endfor %}
                   </select>
@@ -417,9 +419,10 @@
                     id="tapestry-height"
                     name="tapestry-height">
                     {% for height in product.options_with_values[1].values %}
+                      {% assign height_value = height | split: ' ' | first | plus: 0 %}
                       <option
                         value="{{ height }}"
-                        {% if forloop.first %}
+                        {% if height_value == tapestry_height %}
                         selected{% endif %}>{{ height | split: ' ' | first }}</option>
                     {% endfor %}
                   </select>
