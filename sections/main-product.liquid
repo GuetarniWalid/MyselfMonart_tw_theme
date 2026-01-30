@@ -10,22 +10,95 @@
 
 <div class="md:flex md:justify-center md:gap-6">
   {% if product.template_suffix == "tapestry" %}
-    <div id="croppr-top-container" class="flex-grow">
-      <div class="2md:sticky 2md:top-[120px] max-w-[550px] mx-auto relative">
-        <img
-          srcset="{%- if product.media[1].preview_image.width >= 400 -%}{{ product.media[1].preview_image | image_url: width: 400 }} 400w,{%- endif -%}
-                  {%- if product.media[1].preview_image.width >= 550 -%}{{ product.media[1].preview_image | image_url: width: 550 }} 550w,{%- endif -%}
-                  {{ product.media[1].preview_image | image_url }} {{ product.media[1].preview_image.width }}w"
-          src="{{ product.media[1].preview_image | image_url: width: 550 }}"
-          sizes="(min-width: 548px) 550px, 100vw"
-          alt="{% if product.metafields.meta_object.media.value.alts.value[1] %}{{ product.metafields.meta_object.media.value.alts.value[1] | escape }}{% else %}{{ product.media[1].alt | escape }}{% endif %}"
-          width="550"
-          height="auto"
-          data-media-id="{{ product.media[1].id }}"
-          id="croppr">
-        {% render 'finger-touch' %}
+    <tapestry-product-carousel>
+      <div class="md:sticky 2md:top-[120px] relative md:max-w-[700px]">
+        <div class="carousel flex justify-start items-start gap-2 transition-transform duration-300 my-1 snap-x snap-mandatory scrollbar-hidden md:grid md:grid-cols-1 2md:grid-cols-2 md:overflow-visible md:snap-none overflow-x-auto">
+          {% liquid
+            assign number_of_media = 0
+            for media in product.media
+              if media.media_type == 'image'
+                assign number_of_media = number_of_media | plus: 1
+              endif
+            endfor
+          %}
+
+          <!-- FIRST ITEM: Cropper (special interactive element) -->
+          <div id="croppr-carousel-item"
+               class="cropper-item w-[83.33vw] sm:w-[75vw] md:w-full 2md:col-span-2 flex-none snap-start flex items-center justify-center"
+               data-is-cropper="true">
+            <div id="croppr-top-container" class="max-w-[550px] mx-auto relative">
+              <img
+                srcset="{%- if product.media[1].preview_image.width >= 400 -%}{{ product.media[1].preview_image | image_url: width: 400 }} 400w,{%- endif -%}
+                        {%- if product.media[1].preview_image.width >= 550 -%}{{ product.media[1].preview_image | image_url: width: 550 }} 550w,{%- endif -%}
+                        {{ product.media[1].preview_image | image_url }} {{ product.media[1].preview_image.width }}w"
+                src="{{ product.media[1].preview_image | image_url: width: 550 }}"
+                sizes="(min-width: 548px) 550px, 100vw"
+                alt="{% if product.metafields.meta_object.media.value.alts.value[1] %}{{ product.metafields.meta_object.media.value.alts.value[1] | escape }}{% else %}{{ product.media[1].alt | escape }}{% endif %}"
+                width="550"
+                height="auto"
+                data-media-id="{{ product.media[1].id }}"
+                id="croppr">
+              {% render 'finger-touch' %}
+            </div>
+          </div>
+
+          <!-- REMAINING ITEMS: Other product media (skip first image used for cropper) -->
+          {% assign image_index = 0 %}
+          {% for media in product.media %}
+            {% if media.media_type == 'image' %}
+              {% assign image_index = image_index | plus: 1 %}
+              {% if image_index > 1 %}
+                {% render 'tw-main-product-image', media: media, loop: forloop %}
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+
+        </div>
+
+        <!-- Navigation Controls -->
+        {% if number_of_media > 1 %}
+          <div id="carousel-navigation-controls" class="absolute bg-secondary transition-colors duration-500 rounded-full left-1/2 -translate-x-1/2 bottom-3 border-main border-1 2md:hidden flex justify-center items-center h-[47px] overflow-hidden hidden">
+            <button class="previous pl-5 pr-3 h-full focus-visible:outline-none focus-visible:bg-main-10 hover:bg-main-10">
+              <div class="rotate-90">{% render 'tw-icon-caret', width: '18' %}</div>
+            </button>
+            <span class="px-3">
+              <span class="image-counter">1</span>/{{ number_of_media }}</span>
+            <button class="next pr-5 pl-3 h-full focus-visible:outline-none focus-visible:bg-main-10 hover:bg-main-10">
+              <div class="-rotate-90">{% render 'tw-icon-caret', width: '18' %}</div>
+            </button>
+          </div>
+        {% endif %}
       </div>
-    </div>
+
+      <!-- Popup (excluding cropper - only shows other images) -->
+      <div
+        class="popup fixed top-0 left-0 w-full h-dvh overflow-auto scrollbar bg-secondary transition-colors duration-500 z-50 hidden p-0 focus:outline-none"
+        role="dialog"
+        aria-modal="false"
+        aria-label="{{ 'sections.main_product.carousel.popup.title' | t }}"
+        tabindex="0">
+        <button
+          class="absolute z-10 top-3 right-3 bg-secondary-50 transition-colors duration-500 rounded-full p-2 focus-visible:outline-main"
+          type="button"
+          aria-label="{{ 'sections.main_product.carousel.popup.close' | t }}"
+          tabindex="-1">
+          {% render 'tw-icon-close', width: '22' %}
+        </button>
+        <template id="main-product-popup">
+          {%- assign popup_image_index = 0 -%}
+          {%- for media in product.media -%}
+            {%- if media.media_type == 'image' -%}
+              {%- assign popup_image_index = popup_image_index | plus: 1 -%}
+              {%- if popup_image_index > 1 -%}
+                <popup-image>
+                  {%- render 'tw-main-product-popup-image', media: media, loop: forloop -%}
+                </popup-image>
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </template>
+      </div>
+    </tapestry-product-carousel>
   {% else %}
     <main-product-carousel>
       <div class="md:sticky 2md:top-[120px] relative md:max-w-[700px]">

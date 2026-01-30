@@ -127,6 +127,235 @@ class MainProductCarousel extends HTMLElement {
 }
 customElements.define('main-product-carousel', MainProductCarousel);
 
+// TapestryProductCarousel - extends carousel behavior for tapestry products with cropper integration
+class TapestryProductCarousel extends HTMLElement {
+  constructor() {
+    super();
+    // Include both cropper item and regular image wrappers
+    this.medias = Array.from(this.querySelectorAll('.img-wrapper, [data-is-cropper]'));
+    this.cropperItem = this.querySelector('[data-is-cropper="true"]');
+    this.currentMediaIndex = 0;
+    this.popup = this.querySelector('.popup');
+    this.closePopupButton = this.popup?.querySelector('button');
+    this.carousel = this.querySelector('.carousel');
+    this.popupOpen = false;
+    this.scrollTimeout = null;
+    this.carouselNavigationControls = this.querySelector(
+      '#carousel-navigation-controls',
+    );
+    this.nextMediaButton = this.querySelector('.next');
+    this.previousMediaButton = this.querySelector('.previous');
+    // Media query for mobile detection (matches Tailwind's 2md breakpoint at 900px)
+    this.mobileMediaQuery = window.matchMedia('(max-width: 899px)');
+  }
+
+  isMobile() {
+    return this.mobileMediaQuery.matches;
+  }
+
+  connectedCallback() {
+    // Attach click handlers ONLY to non-cropper items (cropper should not open popup)
+    this.medias.forEach((media, index) => {
+      if (media.dataset.isCropper) return; // Skip cropper
+      media.addEventListener('click', () => {
+        // On desktop, set currentMediaIndex based on clicked image
+        if (!this.isMobile()) {
+          this.currentMediaIndex = index;
+        }
+        this.openPopup();
+      });
+    });
+
+    if (this.closePopupButton) {
+      this.closePopupButton.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          this.closePopup();
+        }
+      });
+
+      this.closePopupButton.addEventListener('click', this.closePopup);
+    }
+
+    if (this.popup) {
+      this.popup.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          this.closePopup();
+        }
+      });
+    }
+
+    this.carousel.addEventListener('scroll', () => {
+      // Only handle scroll on mobile (carousel mode)
+      if (!this.isMobile()) return;
+      if (this.scrollTimeout !== null) {
+        clearTimeout(this.scrollTimeout);
+      }
+      this.scrollTimeout = setTimeout(() => {
+        this.imageWidth = this.imageWidth || this.mesureImageWidth();
+        this.carouselScrollFromLeft = this.carousel.scrollLeft;
+        const diff = Math.round(this.carouselScrollFromLeft / this.imageWidth);
+        this.currentMediaIndex = diff;
+        this.changeImageCounter();
+
+        // Dispatch event for cropper visibility tracking
+        const isCropperVisible = this.currentMediaIndex === 0;
+        document.dispatchEvent(new CustomEvent('tapestryCarouselScroll', {
+          detail: { isCropperVisible, currentIndex: this.currentMediaIndex }
+        }));
+      }, 100);
+    });
+
+    this.nextMediaButton?.addEventListener('click', () => {
+      this.displayNextMedia(1);
+    });
+
+    this.previousMediaButton?.addEventListener('click', () => {
+      this.displayNextMedia(-1);
+    });
+
+    // Setup touch handling to prevent carousel scroll during crop interaction
+    this.setupCropperTouchHandling();
+
+    // Auto-scroll to cropper when dimensions change (mobile only)
+    document.addEventListener('tapestrySizeChange', () => {
+      this.scrollToCropper();
+    });
+  }
+
+  setupCropperTouchHandling() {
+    if (!this.cropperItem) return;
+
+    // Wait for croppr to initialize
+    const observer = new MutationObserver((mutations) => {
+      const cropprContainer = this.cropperItem.querySelector('.croppr-container');
+      if (cropprContainer) {
+        observer.disconnect();
+        this.attachCropperTouchListeners(cropprContainer);
+      }
+    });
+
+    observer.observe(this.cropperItem, { childList: true, subtree: true });
+
+    // Also check if already initialized
+    const existingCropprContainer = this.cropperItem.querySelector('.croppr-container');
+    if (existingCropprContainer) {
+      observer.disconnect();
+      this.attachCropperTouchListeners(existingCropprContainer);
+    }
+  }
+
+  attachCropperTouchListeners(cropprContainer) {
+    // Prevent carousel scroll when interacting with cropper region or handles
+    const interactiveElements = cropprContainer.querySelectorAll('.croppr-region, .croppr-handle, .croppr-overlay');
+
+    interactiveElements.forEach(el => {
+      el.addEventListener('touchstart', (e) => {
+        // Temporarily disable snap scrolling
+        this.carousel.style.scrollSnapType = 'none';
+        this.carousel.style.overflowX = 'hidden';
+      }, { passive: true });
+    });
+
+    // Re-enable snap scrolling after crop interaction ends
+    document.addEventListener('touchend', () => {
+      // Small delay to ensure crop action completes
+      setTimeout(() => {
+        if (this.carousel) {
+          this.carousel.style.scrollSnapType = '';
+          this.carousel.style.overflowX = '';
+        }
+      }, 100);
+    });
+  }
+
+  scrollToCropper() {
+    // Only scroll on mobile
+    if (!this.isMobile()) return;
+
+    // Only scroll if not already at cropper
+    if (this.currentMediaIndex === 0) return;
+
+    // Scroll to beginning (cropper is at index 0)
+    this.carousel.scrollTo({ left: 0, behavior: 'smooth' });
+    this.currentMediaIndex = 0;
+    this.changeImageCounter();
+  }
+
+  displayNextMedia = (diffFromCurrentMedia) => {
+    if (
+      this.currentMediaIndex + diffFromCurrentMedia < 0 ||
+      this.currentMediaIndex + diffFromCurrentMedia > this.medias.length - 1
+    )
+      return;
+    this.scrollToNextMedia(diffFromCurrentMedia);
+    this.currentMediaIndex += diffFromCurrentMedia;
+  };
+
+  scrollToNextMedia = (diffFromCurrentMedia) => {
+    this.imageWidth = this.imageWidth || this.mesureImageWidth();
+    const nextPosition = this.imageWidth * diffFromCurrentMedia;
+    this.carousel.scrollBy({ left: nextPosition, behavior: 'smooth' });
+  };
+
+  mesureImageWidth = () => {
+    const firstMedia = this.medias[0];
+    if (!firstMedia) return 300; // fallback
+    const imageRect = firstMedia.getBoundingClientRect();
+    return imageRect.width;
+  };
+
+  openPopup = () => {
+    // Skip if current item is cropper (index 0)
+    if (this.currentMediaIndex === 0) return;
+
+    // Skip if no popup element
+    if (!this.popup) return;
+
+    this.popup.classList.remove('hidden');
+    this.popup.setAttribute('aria-modal', 'true');
+    this.popupOpen = true;
+    this.template =
+      this.template || document.getElementById('main-product-popup');
+    const clone = this.template.content.cloneNode(true);
+
+    // Adjust popup index (popup doesn't include cropper, so subtract 1)
+    const popupIndex = this.currentMediaIndex - 1;
+    this.popupMediaChild = clone.children[popupIndex];
+
+    if (this.popupMediaChild) {
+      this.popup.appendChild(this.popupMediaChild);
+      if (this.closePopupButton) {
+        this.closePopupButton.tabIndex = 0;
+      }
+      document.body.classList.add('overflow-hidden');
+    }
+  };
+
+  closePopup = () => {
+    if (!this.popup) return;
+
+    this.popup.classList.add('hidden');
+    this.popup.setAttribute('aria-modal', 'false');
+    this.popupOpen = false;
+    this.focus();
+    if (this.popupMediaChild && this.popup.contains(this.popupMediaChild)) {
+      this.popup.removeChild(this.popupMediaChild);
+    }
+    document.body.classList.remove('overflow-hidden');
+  };
+
+  changeImageCounter = () => {
+    if (this.carouselNavigationControls) {
+      this.carouselNavigationControls.classList.add('hidden');
+    }
+    this.imageCounter = this.imageCounter || this.querySelector('.image-counter');
+    if (this.imageCounter) {
+      this.imageCounter.textContent = this.currentMediaIndex + 1;
+    }
+  };
+}
+customElements.define('tapestry-product-carousel', TapestryProductCarousel);
+
 class PopupImage extends HTMLElement {
   constructor() {
     super();

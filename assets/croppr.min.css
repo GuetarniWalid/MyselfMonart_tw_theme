@@ -1,1 +1,13 @@
 .croppr-container *{user-select:none;-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;box-sizing:border-box;-webkit-box-sizing:border-box;-moz-box-sizing:border-box}.croppr-container img{vertical-align:middle;max-width:100%}.croppr{position:relative;display:inline-block;overflow:hidden}.croppr-handle,.croppr-imageClipped,.croppr-overlay,.croppr-region{position:absolute;top:0;outline:2px dashed rgb(255 255 255 / 0.3)}.croppr-overlay{right:0;bottom:0;left:0;z-index:1;cursor:crosshair}.croppr-region{z-index:3;cursor:move}.croppr-imageClipped{right:0;bottom:0;left:0;z-index:2;pointer-events:none}.croppr-handle{border:1px solid #000;background-color:#fff;width:10px;height:10px;z-index:4}.croppr img:first-child{opacity:0.2}
+
+/* Cropper in carousel context */
+.cropper-item{display:flex;align-items:center;justify-content:center}
+
+/* Prevent carousel scroll during crop interaction */
+.cropper-item .croppr-container,
+.cropper-item .croppr-region,
+.cropper-item .croppr-handle,
+.cropper-item .croppr-overlay{touch-action:none}
+
+/* Desktop: cropper spans full grid width (2md breakpoint = 900px) */
+@media (min-width:900px){.cropper-item{grid-column:span 2}}
