@@ -1,0 +1,79 @@
+{% comment %}
+    Renders one customer testimonial card (image + message) for the
+    customer-testimonial section. All cards are emitted server-side so the
+    UGC photos are indexable by Google Image Search.
+
+    Accepts:
+      - block: {Object} Section block of type "image-text"
+      - forloop: {Object} Forloop object (used for first-card priority hints)
+
+    Usage:
+      {% render 'customer-testimonial-card', block: block, forloop: forloop %}
+{% endcomment %}
+
+{%- liquid
+  assign img = block.settings.image
+  assign message = block.settings.message
+
+  comment
+    # Extract the customer name as the last two words of the message.
+    # Messages end with a first name + initial (e.g. "...merci. Léa M").
+    # Newlines are converted to spaces so a name behind a newline is kept intact.
+  endcomment
+  assign normalized = message | newline_to_br | replace: '<br />', ' ' | replace: '<br>', ' ' | replace: '  ', ' ' | replace: '  ', ' ' | strip
+  assign words = normalized | split: ' '
+  assign word_count = words.size
+  if word_count >= 2
+    assign last_idx = word_count | minus: 1
+    assign second_last_idx = word_count | minus: 2
+    assign customer_name = words[second_last_idx] | append: ' ' | append: words[last_idx]
+  else
+    assign customer_name = ''
+  endif
+
+  if img.alt != blank
+    assign img_alt = img.alt
+  elsif customer_name != blank
+    assign img_alt = 'Photo de tableau partagée par ' | append: customer_name
+  else
+    assign img_alt = 'Photo de tableau partagée par un client'
+  endif
+
+  if forloop.first
+    assign loading_strategy = 'eager'
+    assign fetch_priority = 'high'
+  else
+    assign loading_strategy = 'lazy'
+    assign fetch_priority = 'auto'
+  endif
+-%}
+
+<li class="carrousel-item shrink-0 snap-start snap-always w-[83vw] sm:w-[400px]">
+  <figure class="testimonial-card flex flex-col gap-4">
+    {%- if img != blank -%}
+      <div class="testimonial-card__media relative aspect-square w-full overflow-hidden rounded-lg bg-main-5">
+        <img
+          srcset="{%- if img.width >= 400 -%}{{ img | image_url: width: 400 }} 400w,{%- endif -%}
+                  {%- if img.width >= 600 -%}{{ img | image_url: width: 600 }} 600w,{%- endif -%}
+                  {%- if img.width >= 800 -%}{{ img | image_url: width: 800 }} 800w,{%- endif -%}
+                  {{ img | image_url }} {{ img.width }}w"
+          src="{{ img | image_url: width: 400 }}"
+          sizes="(min-width: 640px) 400px, 83vw"
+          alt="{{ img_alt | escape }}"
+          loading="{{ loading_strategy }}"
+          fetchpriority="{{ fetch_priority }}"
+          width="400"
+          height="400"
+          class="w-full h-full object-cover">
+      </div>
+    {%- endif -%}
+
+    {%- if message != blank -%}
+      <figcaption class="testimonial-card__message px-1">
+        <blockquote class="text-base md:text-lg text-main-90 italic leading-relaxed">
+          {{- message | newline_to_br -}}
+        </blockquote>
+      </figcaption>
+    {%- endif -%}
+  </figure>
+</li>

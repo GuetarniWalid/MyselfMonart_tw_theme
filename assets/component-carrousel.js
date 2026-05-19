@@ -14,6 +14,8 @@ if (!customElements.get('snap-carrousel')) {
     }
 
     connectedCallback() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
       this.liList.forEach((li) => {
         const observer = new IntersectionObserver(
           (entries) => {

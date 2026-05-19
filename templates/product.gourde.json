@@ -12,9 +12,10 @@
     "main": {
       "type": "main-product",
       "blocks": {
-        "likes_mnLGpD": {
-          "type": "likes",
+        "short_title_mnLGpD": {
+          "type": "short_title",
           "settings": {
+            "show_likes": true,
             "margin_bottom": "mb-8"
           }
         },
@@ -55,7 +56,7 @@
         }
       },
       "block_order": [
-        "likes_mnLGpD",
+        "short_title_mnLGpD",
         "title",
         "trustpilot_review_WCpBfr",
         "description_3Y7KG9",

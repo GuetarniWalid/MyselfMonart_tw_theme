@@ -1,0 +1,87 @@
+{% comment %}
+    Outputs a Schema.org JSON-LD ItemList of Review objects for the
+    customer-testimonial section.
+
+    On a product page, each Review's `itemReviewed` points at the current
+    product so Google can link the UGC photos to the product entity without
+    creating a duplicate Product. On other pages (article, homepage), the
+    Reviews are scoped to the shop's Organization.
+
+    Accepts:
+      - section_blocks: {Array} The section.blocks array
+      - product: {Object} Optional product object
+{% endcomment %}
+
+{%- liquid
+  assign review_count = 0
+  for block in section_blocks
+    if block.settings.message != blank
+      assign review_count = review_count | plus: 1
+    endif
+  endfor
+-%}
+
+{%- if review_count > 0 -%}
+  {%- capture reviewed_item -%}
+    {%- if product != blank -%}
+      "@type": "Product",
+      "@id": {{ request.origin | append: product.url | json }},
+      "name": {{ product.title | json }},
+      "url": {{ request.origin | append: product.url | json }}
+    {%- else -%}
+      "@type": "Organization",
+      "name": {{ shop.name | json }},
+      "url": {{ request.origin | json }}
+    {%- endif -%}
+  {%- endcapture -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "itemListElement": [
+        {%- assign emitted = 0 -%}
+        {%- for block in section_blocks -%}
+          {%- if block.settings.message == blank -%}{%- continue -%}{%- endif -%}
+          {%- if emitted > 0 -%},{%- endif -%}
+          {%- liquid
+            assign normalized = block.settings.message | newline_to_br | replace: '<br />', ' ' | replace: '<br>', ' ' | replace: '  ', ' ' | replace: '  ', ' ' | strip
+            assign words = normalized | split: ' '
+            assign word_count = words.size
+            if word_count >= 2
+              assign last_idx = word_count | minus: 1
+              assign second_last_idx = word_count | minus: 2
+              assign author_name = words[second_last_idx] | append: ' ' | append: words[last_idx]
+            else
+              assign author_name = 'Client vérifié'
+            endif
+          -%}
+          {
+            "@type": "ListItem",
+            "position": {{ emitted | plus: 1 }},
+            "item": {
+              "@type": "Review",
+              "reviewBody": {{ block.settings.message | strip_newlines | json }},
+              {%- if block.settings.image != blank %}
+              "image": {{ block.settings.image | image_url: width: 800 | prepend: 'https:' | json }},
+              {%- endif %}
+              "author": {
+                "@type": "Person",
+                "name": {{ author_name | json }}
+              },
+              "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": "5",
+                "bestRating": "5",
+                "worstRating": "1"
+              },
+              "itemReviewed": {
+                {{ reviewed_item }}
+              }
+            }
+          }
+          {%- assign emitted = emitted | plus: 1 -%}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{%- endif -%}

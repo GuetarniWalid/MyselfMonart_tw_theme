@@ -19,9 +19,10 @@
     "main": {
       "type": "main-product",
       "blocks": {
-        "likes_mgUwJx": {
-          "type": "likes",
+        "short_title_mgUwJx": {
+          "type": "short_title",
           "settings": {
+            "show_likes": true,
             "margin_bottom": "mb-4"
           }
         },
@@ -91,7 +92,7 @@
         }
       },
       "block_order": [
-        "likes_mgUwJx",
+        "short_title_mgUwJx",
         "title",
         "trustpilot_review_nXpwkL",
         "buy_qrRzcg",
