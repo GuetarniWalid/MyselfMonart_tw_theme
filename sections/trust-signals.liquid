@@ -65,12 +65,48 @@
   {%- endif -%}
 
   {%- if section.settings.show_trustpilot or visible_review_count > 0 -%}
+    {%- liquid
+      assign social_seed = ''
+      if settings.social_twitter_link != blank
+        assign social_seed = social_seed | append: '|' | append: settings.social_twitter_link
+      endif
+      if settings.social_facebook_link != blank
+        assign social_seed = social_seed | append: '|' | append: settings.social_facebook_link
+      endif
+      if settings.social_instagram_link != blank
+        assign social_seed = social_seed | append: '|' | append: settings.social_instagram_link
+      endif
+      if settings.social_tiktok_link != blank
+        assign social_seed = social_seed | append: '|' | append: settings.social_tiktok_link
+      endif
+      if settings.social_tumblr_link != blank
+        assign social_seed = social_seed | append: '|' | append: settings.social_tumblr_link
+      endif
+      if settings.social_snapchat_link != blank
+        assign social_seed = social_seed | append: '|' | append: settings.social_snapchat_link
+      endif
+      if settings.social_youtube_link != blank
+        assign social_seed = social_seed | append: '|' | append: settings.social_youtube_link
+      endif
+      if settings.social_vimeo_link != blank
+        assign social_seed = social_seed | append: '|' | append: settings.social_vimeo_link
+      endif
+      if settings.social_pinterest_link != blank
+        assign social_seed = social_seed | append: '|' | append: settings.social_pinterest_link
+      endif
+      assign social_links = social_seed | remove_first: '|' | split: '|'
+    -%}
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": {{ shop.name | json }},
-        "url": {{ request.origin | json }}
+        "url": {{ request.origin | json }},
+        "logo": "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/logo-myselfmonart-512x512.png?v=1694726914"
+        {%- if social_links.size > 0 -%}
+        ,
+        "sameAs": [{%- for url in social_links -%}{{ url | json }}{%- unless forloop.last -%},{%- endunless -%}{%- endfor -%}]
+        {%- endif -%}
         {%- if section.settings.show_trustpilot -%}
         ,
         "aggregateRating": {

@@ -10,38 +10,24 @@
 {% endif %}
 
 {%- if request.page_type == 'index' -%}
-  {% assign potential_action_target = request.origin | append: routes.search_url | append: "?q={search_term_string}" %}
+  {%- assign potential_action_target = request.origin | append: routes.search_url | append: "?q={search_term_string}" -%}
+  {% comment %}
+    Organization schema is emitted by the trust-signals section so it can
+    include aggregateRating + review[] alongside logo + sameAs in a single
+    consolidated entity. WebSite stays here.
+  {% endcomment %}
   <script type="application/ld+json">
-    [
-        {
-        "@context": "http://schema.org",
-        "@type": "WebSite",
-        "name": {{ shop.name | json }},
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": {{ potential_action_target | json }},
-          "query-input": "required name=search_term_string"
-        },
-        "url": {{ request.origin | append: page.url | json }}
+    {
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "name": {{ shop.name | json }},
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {{ potential_action_target | json }},
+        "query-input": "required name=search_term_string"
       },
-      {
-        "@context": "http://schema.org",
-        "@type": "Organization",
-        "name": {{ shop.name | json }},
-        "logo": "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/logo-myselfmonart-512x512.png?v=1694726914",
-        "sameAs": [{%- if settings.social_twitter_link != blank -%}
-            {{ settings.social_twitter_link | json }},{%- endif -%}{%- if settings.social_facebook_link != blank -%}
-            {{ settings.social_facebook_link | json }},{%- endif -%}{%- if settings.social_instagram_link != blank -%}
-            {{ settings.social_instagram_link | json }},{%- endif -%}{%- if settings.social_tiktok_link != blank -%}
-            {{ settings.social_tiktok_link | json }},{%- endif -%}{%- if settings.social_tumblr_link != blank -%}
-            {{ settings.social_tumblr_link | json }},{%- endif -%}{%- if settings.social_snapchat_link != blank -%}
-            {{ settings.social_snapchat_link | json }},{%- endif -%}{%- if settings.social_youtube_link != blank -%}
-            {{ settings.social_youtube_link | json }},{%- endif -%}{%- if settings.social_vimeo_link != blank -%}
-            {{ settings.social_vimeo_link | json }},{%- endif -%}{%- if settings.social_pinterest_link != blank -%}
-            {{ settings.social_pinterest_link | json }}{%- endif -%}],
-          "url": {{ request.origin | append: page.url | json }}
-        }
-      ]
+      "url": {{ request.origin | append: page.url | json }}
+    }
   </script>
 {%- endif -%}
 
