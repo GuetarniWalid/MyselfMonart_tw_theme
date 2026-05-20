@@ -719,7 +719,8 @@
           "info": "Rated out of 50. For a 4.5 out of 5 score, enter 45"
         },
         "trustpilot_review_count": {
-          "label": "Total Trustpilot review count"
+          "label": "Total Trustpilot review count",
+          "info": "Used for SEO (AggregateRating) and screen readers. Not displayed visually."
         },
         "trustpilot_link": {
           "label": "Trustpilot profile link"

@@ -1,18 +1,19 @@
 {% comment %}
     Renders the Trustpilot trust badge: 5 stars with a percentage fill that
-    reflects the score (out of 50), the "Excellent" label, the numeric score
-    and the total review count. Pure Liquid/CSS, no third-party JS, no layout
-    shift, accessible without JS.
+    reflects the score (out of 50), the "Excellent" label and the numeric
+    score. Pure Liquid/CSS, no third-party JS, no layout shift, accessible
+    without JS. The review count is only used for the aria-label so screen
+    reader users get the full context.
 
     Accepts:
       - score: {Number} Score out of 50 (e.g. 45 = 4.5/5)
-      - review_count: {Number} Total review count (display only)
+      - review_count: {Number} Total review count (used in aria-label only)
       - link: {String} Trustpilot profile URL
       - size: {String} "sm" | "md" | "lg" — visual scale
       - align: {String} Tailwind alignment class for the wrapper (e.g. "items-center md:items-start")
 
     Usage:
-      {% render 'trustpilot-badge', score: 45, review_count: 1240, link: 'https://...', size: 'md' %}
+      {% render 'trustpilot-badge', score: 45, review_count: 81, link: 'https://...', size: 'md' %}
 {% endcomment %}
 
 {%- liquid
@@ -98,10 +99,4 @@
       <span class="text-main-70">/5</span>
     </span>
   </div>
-
-  {%- if review_count > 0 -%}
-    <p class="{{ label_text }} text-main-70">
-      {{- 'sections.trustpilot.based_on' | t: count: review_count -}}
-    </p>
-  {%- endif -%}
 </div>
