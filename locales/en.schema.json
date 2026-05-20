@@ -695,6 +695,50 @@
         }
       }
     },
+    "trust-signals": {
+      "name": "Trust signals",
+      "headings": {
+        "content": "Content",
+        "trustpilot": "Trustpilot badge"
+      },
+      "settings": {
+        "eyebrow": {
+          "label": "Eyebrow"
+        },
+        "title": {
+          "label": "Title"
+        },
+        "subtitle": {
+          "label": "Subtitle"
+        },
+        "show_trustpilot": {
+          "label": "Show Trustpilot badge"
+        },
+        "trustpilot_score": {
+          "label": "Trustpilot score",
+          "info": "Rated out of 50. For a 4.5 out of 5 score, enter 45"
+        },
+        "trustpilot_review_count": {
+          "label": "Total Trustpilot review count"
+        },
+        "trustpilot_link": {
+          "label": "Trustpilot profile link"
+        }
+      },
+      "blocks": {
+        "image-text": {
+          "name": "Customer photo",
+          "settings": {
+            "image": {
+              "label": "Customer photo"
+            },
+            "message": {
+              "label": "Testimonial"
+            }
+          }
+        }
+      }
+    },
     "email-signup-banner": {
       "name": "Email signup banner",
       "settings": {

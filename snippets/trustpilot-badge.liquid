@@ -1,0 +1,107 @@
+{% comment %}
+    Renders the Trustpilot trust badge: 5 stars with a percentage fill that
+    reflects the score (out of 50), the "Excellent" label, the numeric score
+    and the total review count. Pure Liquid/CSS, no third-party JS, no layout
+    shift, accessible without JS.
+
+    Accepts:
+      - score: {Number} Score out of 50 (e.g. 45 = 4.5/5)
+      - review_count: {Number} Total review count (display only)
+      - link: {String} Trustpilot profile URL
+      - size: {String} "sm" | "md" | "lg" — visual scale
+      - align: {String} Tailwind alignment class for the wrapper (e.g. "items-center md:items-start")
+
+    Usage:
+      {% render 'trustpilot-badge', score: 45, review_count: 1240, link: 'https://...', size: 'md' %}
+{% endcomment %}
+
+{%- liquid
+  assign score = score | default: 45
+  assign review_count = review_count | default: 0
+  assign size = size | default: 'md'
+  assign align = align | default: 'items-center'
+
+  case size
+    when 'sm'
+      assign star_box = 'h-6 w-6'
+      assign star_w = 14
+      assign label_text = 'text-sm'
+      assign score_text = 'text-sm'
+    when 'lg'
+      assign star_box = 'h-10 w-10'
+      assign star_w = 24
+      assign label_text = 'text-base md:text-lg'
+      assign score_text = 'text-base md:text-lg'
+    else
+      assign star_box = 'h-8 w-8'
+      assign star_w = 20
+      assign label_text = 'text-base'
+      assign score_text = 'text-base'
+  endcase
+
+  assign score_display = score | divided_by: 10.0
+-%}
+
+<div class="trustpilot-badge flex flex-col gap-1 {{ align }}">
+  <p class="flex items-center {{ label_text }} text-main-70">
+    {%- if link != blank -%}
+      <a href="{{ link }}" target="_blank" rel="noopener" class="underline">Trustpilot</a>
+    {%- else -%}
+      <span>Trustpilot</span>
+    {%- endif -%}
+    <span class="!inline-block w-[5px] h-[5px] rounded-full bg-main mx-2" aria-hidden="true"></span>
+    <span class="font-medium">{{ 'sections.trustpilot.excellent' | t }}</span>
+  </p>
+
+  <div
+    class="flex items-center gap-1"
+    role="img"
+    aria-label="{{ 'sections.trustpilot.aria_score' | t: score: score_display, count: review_count }}">
+    {%- for i in (1..5) -%}
+      {%- liquid
+        assign current = i | times: 10
+        if current <= score
+          assign green_width = 'w-full'
+        else
+          assign percent = score | plus: 10 | minus: current | times: 10
+          if percent == 0
+            assign green_width = 'w-0'
+          elsif percent <= 25
+            assign green_width = 'w-1/4'
+          elsif percent <= 50
+            assign green_width = 'w-1/2'
+          elsif percent <= 75
+            assign green_width = 'w-3/4'
+          else
+            assign green_width = 'w-full'
+          endif
+        endif
+      -%}
+      <span
+        class="relative flex justify-center items-center bg-main-10 {{ star_box }} before:absolute before:top-0 before:bottom-0 before:left-0 before:{{ green_width }} before:bg-[#00B67A]"
+        aria-hidden="true">
+        <svg
+          class="relative z-10"
+          width="{{ star_w }}"
+          viewBox="0 0 26 25"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M18.6626 17.6149L21.0351 25L13.0043 19.0981L18.6626 17.6149ZM26 9.55286H16.0713L13.0054 0L9.92875 9.55505L0 9.54191L8.0405 15.4537L4.96383 24.9989L13.0043 19.0981L17.9693 15.4537L26 9.55286Z"
+            fill="white" />
+        </svg>
+      </span>
+    {%- endfor -%}
+
+    <span class="ml-2 {{ score_text }} text-main-90">
+      <span class="font-semibold">{{ score_display }}</span>
+      <span class="text-main-70">/5</span>
+    </span>
+  </div>
+
+  {%- if review_count > 0 -%}
+    <p class="{{ label_text }} text-main-70">
+      {{- 'sections.trustpilot.based_on' | t: count: review_count -}}
+    </p>
+  {%- endif -%}
+</div>

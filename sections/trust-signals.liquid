@@ -1,0 +1,176 @@
+{%- liquid
+  assign visible_review_count = 0
+  for block in section.blocks
+    if block.type == 'image-text' and block.settings.message != blank
+      assign visible_review_count = visible_review_count | plus: 1
+    endif
+  endfor
+
+  assign score = section.settings.trustpilot_score | default: 45
+  assign score_display = score | divided_by: 10.0
+  assign review_count = section.settings.trustpilot_review_count | default: 0
+-%}
+
+<div class="trust-signals">
+  <div class="trust-signals__intro flex flex-col items-center gap-6 md:gap-8 mx-4 md:mx-0 mb-10 md:mb-14">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="trust-signals__eyebrow text-sm md:text-base tracking-widest uppercase text-main-70">
+        {{ section.settings.eyebrow }}
+      </p>
+    {%- endif -%}
+
+    {%- if section.settings.title != blank -%}
+      <h2 class="text-2xl md:text-3xl text-center max-w-2xl">
+        <span class="title-highlight">{{ section.settings.title }}</span>
+      </h2>
+    {%- endif -%}
+
+    {%- if section.settings.subtitle != blank -%}
+      <p class="text-base md:text-lg text-main-70 text-center max-w-xl leading-relaxed">
+        {{ section.settings.subtitle }}
+      </p>
+    {%- endif -%}
+
+    {%- if section.settings.show_trustpilot -%}
+      <div class="trust-signals__trustpilot mt-2">
+        {% render 'trustpilot-badge',
+          score: score,
+          review_count: review_count,
+          link: section.settings.trustpilot_link,
+          size: 'lg',
+          align: 'items-center'
+        %}
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- if visible_review_count > 0 -%}
+    <div class="trust-signals__carrousel-wrapper px-4 md:px-0 relative">
+      <snap-carrousel role="region" aria-label="{{ 'sections.trust-signals.carrousel_label' | t }}">
+        <ul class="component-carroussel flex gap-4 md:gap-6 overflow-x-auto snap-mandatory snap-x scroll-smooth scrollbar-hidden py-2">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'image-text' and block.settings.message != blank -%}
+              {% render 'customer-testimonial-card', block: block, forloop: forloop %}
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </snap-carrousel>
+
+      <p class="sr-only">
+        {{ 'sections.trust-signals.carrousel_hint' | t: count: visible_review_count }}
+      </p>
+    </div>
+
+    {% render 'customer-testimonial-schema', section_blocks: section.blocks, product: blank %}
+
+    <script src="{{ 'component-carrousel.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+
+  {%- if section.settings.show_trustpilot -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": {{ shop.name | json }},
+        "url": {{ request.origin | json }},
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "{{ score_display }}",
+          "bestRating": "5",
+          "worstRating": "1",
+          "ratingCount": "{{ review_count | default: 30 }}"
+        }
+      }
+    </script>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.trust-signals.name",
+  "tag": "section",
+  "class": "page-width my-12 md:my-16",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.trust-signals.headings.content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:sections.trust-signals.settings.eyebrow.label",
+      "default": "Ils nous font confiance"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:sections.trust-signals.settings.title.label",
+      "default": "Nos clients adorent leurs tableaux"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "t:sections.trust-signals.settings.subtitle.label",
+      "default": "Découvrez les photos et avis vérifiés de nos clients."
+    },
+    {
+      "type": "header",
+      "content": "t:sections.trust-signals.headings.trustpilot"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trustpilot",
+      "label": "t:sections.trust-signals.settings.show_trustpilot.label",
+      "default": true
+    },
+    {
+      "type": "number",
+      "id": "trustpilot_score",
+      "label": "t:sections.trust-signals.settings.trustpilot_score.label",
+      "info": "t:sections.trust-signals.settings.trustpilot_score.info",
+      "default": 45
+    },
+    {
+      "type": "number",
+      "id": "trustpilot_review_count",
+      "label": "t:sections.trust-signals.settings.trustpilot_review_count.label",
+      "default": 1200
+    },
+    {
+      "type": "url",
+      "id": "trustpilot_link",
+      "label": "t:sections.trust-signals.settings.trustpilot_link.label"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image-text",
+      "name": "t:sections.trust-signals.blocks.image-text.name",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.trust-signals.blocks.image-text.settings.image.label"
+        },
+        {
+          "type": "textarea",
+          "id": "message",
+          "label": "t:sections.trust-signals.blocks.image-text.settings.message.label",
+          "default": "Photo magnifique, je suis ravi de mon achat ! Marie L"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.trust-signals.name",
+      "blocks": [
+        { "type": "image-text" },
+        { "type": "image-text" },
+        { "type": "image-text" },
+        { "type": "image-text" }
+      ]
+    }
+  ]
+}
+{% endschema %}

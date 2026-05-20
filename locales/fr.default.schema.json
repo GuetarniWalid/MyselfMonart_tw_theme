@@ -695,6 +695,50 @@
         }
       }
     },
+    "trust-signals": {
+      "name": "Signaux de confiance",
+      "headings": {
+        "content": "Contenu",
+        "trustpilot": "Badge Trustpilot"
+      },
+      "settings": {
+        "eyebrow": {
+          "label": "Sur-titre"
+        },
+        "title": {
+          "label": "Titre"
+        },
+        "subtitle": {
+          "label": "Sous-titre"
+        },
+        "show_trustpilot": {
+          "label": "Afficher le badge Trustpilot"
+        },
+        "trustpilot_score": {
+          "label": "Score Trustpilot",
+          "info": "Noté sur 50. Pour une note de 4,5 sur 5, entrez 45"
+        },
+        "trustpilot_review_count": {
+          "label": "Nombre total d'avis Trustpilot"
+        },
+        "trustpilot_link": {
+          "label": "Lien vers la page Trustpilot"
+        }
+      },
+      "blocks": {
+        "image-text": {
+          "name": "Photo client",
+          "settings": {
+            "image": {
+              "label": "Photo client"
+            },
+            "message": {
+              "label": "Témoignage"
+            }
+          }
+        }
+      }
+    },
     "email-signup-banner": {
       "name": "Bannière d'inscription à la liste de diffusion",
       "settings": {

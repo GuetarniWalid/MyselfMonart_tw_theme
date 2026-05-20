@@ -19,6 +19,86 @@
         "enable_lazy_loading": true
       }
     },
+    "trust_signals_home": {
+      "type": "trust-signals",
+      "blocks": {
+        "image_text_h1": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-femme-abstrait-crayon-pastel.jpg",
+            "message": "Très beau tableau ! Je suis ravie de mon achat, merci.. Léa M"
+          }
+        },
+        "image_text_h2": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/toile-moderne-frida-fleurs.jpg",
+            "message": "Dès l'ouverture du carton, j'ai trouvé la toile magnifique.\nEncore plus belle que sur la photo du site.\nJe l'ai installée. Et l'effet est «  waouh ! »\nTrès jolie toile ! Très beau site !\nJe suis ravi de mon achat. Cécile C"
+          }
+        },
+        "image_text_h3": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-contemporain-abstrait-femme-ronde.jpg",
+            "message": "Reçu mon tableau et franchement, je ne regrette pas une seconde ! Les couleurs sont incroyables, l'originalité saute aux yeux… Impossible de ne pas s'arrêter devant. Sophie D"
+          }
+        },
+        "image_text_h4": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableauphotographie-zebre-animaux-zebre-sauvage.jpg",
+            "message": "L'animal, majestueux et solitaire trône dans mon salon au dessus de ma console... Peut on dire qu il est magnifique ? Assurément oui et je l adore!\nPatricia G."
+          }
+        },
+        "image_text_h5": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/Tableau-chambre-bebe_f6e62e6e-707b-41df-aa17-bdad25ef3385.jpg",
+            "message": "Juste une petite photo avec le cadre mis en place encore un grand merci à vous 🥰. \nElodie G"
+          }
+        },
+        "image_text_h6": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/decoration-mural-cadre-bois-cactus-paysage-colore.jpg",
+            "message": "Super contente du rendu de ces cadres en bois ! 🌵 Ça apporte tellement de chaleur et de gaieté à mon salon, j'adore ! 😍 Lina O"
+          }
+        },
+        "image_text_h7": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-panoramique-payasage-foret-lac.jpg",
+            "message": "Ce tableau est magnifique et tellement immersif ! Il donne une vraie sensation d'évasion et transforme l'ambiance de mon salon. Pierre S"
+          }
+        },
+        "image_text_h8": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/deco-mural-toile-marilyn-monroe-pop-art.jpg",
+            "message": "Envoie très rapide et tableau encore plus beau que sur le site.\nParfait je recommande !!!\nJessica S"
+          }
+        }
+      },
+      "block_order": [
+        "image_text_h1",
+        "image_text_h2",
+        "image_text_h3",
+        "image_text_h4",
+        "image_text_h5",
+        "image_text_h6",
+        "image_text_h7",
+        "image_text_h8"
+      ],
+      "settings": {
+        "eyebrow": "Ils nous font confiance",
+        "title": "Nos clients adorent leurs tableaux",
+        "subtitle": "Découvrez les photos partagées par nos clients et notre note Trustpilot vérifiée.",
+        "show_trustpilot": true,
+        "trustpilot_score": 45,
+        "trustpilot_review_count": 1200,
+        "trustpilot_link": "https://fr.trustpilot.com/review/myselfmonart.com"
+      }
+    },
     "product_list_cDj6j9": {
       "type": "product-list",
       "blocks": {
@@ -652,6 +732,7 @@
   },
   "order": [
     "2b3b46e7-881c-4925-96cf-76c7ebf203c4",
+    "trust_signals_home",
     "product_list_cDj6j9",
     "rich_text_bwfdwX",
     "product_list_hVQNEU",

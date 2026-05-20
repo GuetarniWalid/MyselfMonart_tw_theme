@@ -360,7 +360,13 @@
     },
     "trustpilot": {
       "excellent": "Excellent",
-      "score": "Score"
+      "score": "Score",
+      "aria_score": "Rated {{ score }} out of 5 based on {{ count }} Trustpilot reviews",
+      "based_on": "Based on {{ count }} reviews"
+    },
+    "trust-signals": {
+      "carrousel_label": "Customer photos",
+      "carrousel_hint": "{{ count }} customer testimonials scroll through this carousel"
     },
     "tw_cart_drawer": {
       "checkout": "Secure payment",
