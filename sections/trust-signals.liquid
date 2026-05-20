@@ -61,18 +61,18 @@
       </p>
     </div>
 
-    {% render 'customer-testimonial-schema', section_blocks: section.blocks, product: blank %}
-
     <script src="{{ 'component-carrousel.js' | asset_url }}" defer="defer"></script>
   {%- endif -%}
 
-  {%- if section.settings.show_trustpilot -%}
+  {%- if section.settings.show_trustpilot or visible_review_count > 0 -%}
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": {{ shop.name | json }},
-        "url": {{ request.origin | json }},
+        "url": {{ request.origin | json }}
+        {%- if section.settings.show_trustpilot -%}
+        ,
         "aggregateRating": {
           "@type": "AggregateRating",
           "ratingValue": "{{ score_display }}",
@@ -80,6 +80,54 @@
           "worstRating": "1",
           "ratingCount": "{{ review_count | default: 30 }}"
         }
+        {%- endif -%}
+        {%- if visible_review_count > 0 -%}
+        ,
+        "review": [
+          {%- assign emitted = 0 -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type != 'image-text' or block.settings.message == blank -%}{%- continue -%}{%- endif -%}
+            {%- liquid
+              assign normalized = block.settings.message | newline_to_br | replace: '<br />', ' ' | replace: '<br>', ' ' | replace: '  ', ' ' | replace: '  ', ' ' | strip
+              assign words = normalized | split: ' '
+              assign word_count = words.size
+              assign author_name = ''
+              assign review_body = normalized
+              if word_count >= 2
+                assign last_idx = word_count | minus: 1
+                assign second_last_idx = word_count | minus: 2
+                assign author_name = words[second_last_idx] | append: ' ' | append: words[last_idx]
+                assign body_size = normalized | size
+                assign author_size = author_name | size
+                assign keep = body_size | minus: author_size
+                assign review_body = normalized | truncate: keep, '' | strip
+              endif
+            -%}
+            {%- if emitted > 0 -%},{%- endif -%}
+            {
+              "@type": "Review",
+              {%- if author_name != blank %}
+              "author": {
+                "@type": "Person",
+                "name": {{ author_name | json }}
+              },
+              {%- endif %}
+              "reviewBody": {{ review_body | json }},
+              "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": "5",
+                "bestRating": "5",
+                "worstRating": "1"
+              },
+              "itemReviewed": {
+                "@type": "Organization",
+                "name": {{ shop.name | json }}
+              }
+            }
+            {%- assign emitted = emitted | plus: 1 -%}
+          {%- endfor -%}
+        ]
+        {%- endif -%}
       }
     </script>
   {%- endif -%}
