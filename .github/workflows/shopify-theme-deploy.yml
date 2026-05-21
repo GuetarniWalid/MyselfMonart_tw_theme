@@ -1,0 +1,93 @@
+name: Shopify theme deploy
+
+on:
+  push:
+    branches:
+      - staging
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: shopify-theme-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy theme to Shopify
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      SHOPIFY_STORE: ${{ secrets.SHOPIFY_STORE }}
+      SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
+      STAGING_THEME_ID: "196928045403"
+      LIVE_THEME_ID: "167301710171"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Select target theme
+        id: target
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ "${GITHUB_REF_NAME}" = "staging" ]; then
+            echo "theme_id=${STAGING_THEME_ID}" >> "$GITHUB_OUTPUT"
+            echo "environment=staging" >> "$GITHUB_OUTPUT"
+          elif [ "${GITHUB_REF_NAME}" = "main" ]; then
+            echo "theme_id=${LIVE_THEME_ID}" >> "$GITHUB_OUTPUT"
+            echo "environment=live" >> "$GITHUB_OUTPUT"
+          else
+            echo "Unsupported branch: ${GITHUB_REF_NAME}" >&2
+            exit 1
+          fi
+
+      - name: Validate required secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ -z "${SHOPIFY_STORE}" ]; then
+            echo "Missing GitHub secret: SHOPIFY_STORE" >&2
+            exit 1
+          fi
+
+          if [ -z "${SHOPIFY_CLI_THEME_TOKEN}" ]; then
+            echo "Missing GitHub secret: SHOPIFY_CLI_THEME_TOKEN" >&2
+            exit 1
+          fi
+
+      - name: Install Shopify CLI
+        run: npm install -g @shopify/cli@latest
+
+      - name: Pull current Shopify theme before deploy
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          shopify theme pull \
+            --store "${SHOPIFY_STORE}" \
+            --password "${SHOPIFY_CLI_THEME_TOKEN}" \
+            --theme "${{ steps.target.outputs.theme_id }}" \
+            --path . \
+            --force
+
+      - name: Deploy theme
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          extra_flags=""
+          if [ "${GITHUB_REF_NAME}" = "main" ]; then
+            extra_flags="--allow-live"
+          fi
+
+          shopify theme push \
+            --store "${SHOPIFY_STORE}" \
+            --password "${SHOPIFY_CLI_THEME_TOKEN}" \
+            --theme "${{ steps.target.outputs.theme_id }}" \
+            --path . \
+            --force \
+            ${extra_flags}
