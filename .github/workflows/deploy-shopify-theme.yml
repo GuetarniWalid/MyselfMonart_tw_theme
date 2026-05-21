@@ -217,24 +217,22 @@ jobs:
           git push origin "HEAD:${{ github.ref_name }}"
 
           echo "::notice::Shopify admin changes were committed to ${{ github.ref_name }}."
-          echo "::notice::Stopping this deploy run. The new commit will trigger a fresh run that deploys the merged state."
+          echo "::notice::Continuing this same run to deploy the merged GitHub + Shopify state."
           echo "synced=true" >> "$GITHUB_OUTPUT"
 
-      - name: Stop after auto-sync commit
+      - name: Rebuild Tailwind CSS after auto-sync
         if: steps.autosync.outputs.synced == 'true'
-        run: |
-          echo "Auto-sync completed. A new workflow run will deploy the updated branch."
-          exit 0
+        run: npx tailwindcss -i ./input.css -o ./assets/output.css --minify
 
       - name: Write deployment marker
-        if: steps.autosync.outputs.synced != 'true'
         shell: bash
         run: |
           python3 - <<'PY'
-          import json, os
+          import json, os, subprocess
           from datetime import datetime, timezone
+          deployed_sha = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
           info = {
-            "sha": os.environ["GITHUB_SHA"],
+            "sha": deployed_sha,
             "branch": os.environ["GITHUB_REF_NAME"],
             "run_id": os.environ["GITHUB_RUN_ID"],
             "run_url": f"https://github.com/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{os.environ['GITHUB_RUN_ID']}",
@@ -247,7 +245,6 @@ jobs:
           PY
 
       - name: Deploy to Shopify ${{ steps.target.outputs.target }} theme
-        if: steps.autosync.outputs.synced != 'true'
         env:
           SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
           SHOPIFY_FLAG_STORE: ${{ secrets.SHOPIFY_STORE }}
