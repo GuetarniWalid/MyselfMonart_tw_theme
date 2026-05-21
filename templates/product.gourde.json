@@ -46,7 +46,6 @@
           "settings": {
             "text": "J'emporte mon icône",
             "is_dynamic_variant": true,
-            "main_color": "#149656",
             "show_promotion": false,
             "promotion_discount": 15,
             "promotion_discount_unit": "%",

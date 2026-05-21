@@ -11,10 +11,7 @@
   "sections": {
     "breadcrumb_RCxFAG": {
       "type": "breadcrumb",
-      "settings": {
-        "main_color": "#1a2e05",
-        "secondary_color": "#ebd0cd"
-      }
+      "settings": {}
     },
     "main": {
       "type": "main-product",
@@ -45,7 +42,6 @@
           "settings": {
             "text": "JE COMMANDE",
             "is_dynamic_variant": false,
-            "main_color": "#fede65",
             "show_promotion": false,
             "promotion_discount": 15,
             "promotion_discount_unit": "%",
@@ -191,8 +187,7 @@
         "image_text_DCdKLC"
       ],
       "settings": {
-        "title": "Nos tableaux à travers vos yeux ❤️",
-        "duration_image_appearance": 5
+        "title": "Nos tableaux à travers vos yeux ❤️"
       }
     },
     "product_recommendations_7Dekqa": {
@@ -200,7 +195,6 @@
       "name": "t:sections.product-recommendations.name",
       "settings": {
         "heading": "VOUS POURRIEZ AUSSI AIMER",
-        "button_text": "Voir le tableau",
         "number_products_to_display": 4
       }
     },
