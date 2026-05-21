@@ -539,8 +539,8 @@
             "image": "shopify://shop_images/toile-cotton-abtrait_forme-geometrique.jpg",
             "title": "Tableau Décoration",
             "text": "<p>Des créations originales aux teintes profondes et intenses, avec une texture chaleureuse qui sublime vos murs et enrichit l’ambiance de votre intérieur</p>",
-            "link_label": "Voir la collection",
-            "link": "shopify://collections/tableau-decoration",
+            "link_label": "",
+            "link": "",
             "to_obfuscate": false
           }
         },
@@ -550,8 +550,8 @@
             "image": "shopify://shop_images/cadre-americain-noir-mat-toile-femme-rouge-abstrait.jpg",
             "title": "Cadre Pour Toile",
             "text": "<p>Des cadres élégants qui soulignent la beauté de votre toile et créent une harmonie parfaite dans votre intérieur.</p>",
-            "link_label": "Voir les cadres",
-            "link": "/search?q=cadre",
+            "link_label": "",
+            "link": "",
             "to_obfuscate": false
           }
         },
@@ -561,8 +561,8 @@
             "image": "shopify://shop_images/papier-peint-zen-asiatique-sakura.jpg",
             "title": "Papier Peint",
             "text": "<p>Des motifs élégants et des teintes profondes pour habiller vos murs et créer une décoration intérieure plus riche, plus expressive.</p>",
-            "link_label": "Découvrir les papiers peints",
-            "link": "shopify://pages/papier-peint",
+            "link_label": "",
+            "link": "",
             "to_obfuscate": false
           }
         }
