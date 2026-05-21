@@ -16,7 +16,7 @@
         "image_desktop_horizontal_position": "center",
         "image_mobile": "shopify://shop_images/cadre-toile-canvas-abstrait-colore-picasso.jpg",
         "image_mobile_vertical_position": "top",
-        "enable_lazy_loading": true
+        "enable_lazy_loading": false
       }
     },
     "trust_signals_home": {
@@ -539,8 +539,8 @@
             "image": "shopify://shop_images/toile-cotton-abtrait_forme-geometrique.jpg",
             "title": "Tableau Décoration",
             "text": "<p>Des créations originales aux teintes profondes et intenses, avec une texture chaleureuse qui sublime vos murs et enrichit l’ambiance de votre intérieur</p>",
-            "link_label": "",
-            "link": "",
+            "link_label": "Voir la collection",
+            "link": "shopify://collections/tableau-decoration",
             "to_obfuscate": false
           }
         },
@@ -550,8 +550,8 @@
             "image": "shopify://shop_images/cadre-americain-noir-mat-toile-femme-rouge-abstrait.jpg",
             "title": "Cadre Pour Toile",
             "text": "<p>Des cadres élégants qui soulignent la beauté de votre toile et créent une harmonie parfaite dans votre intérieur.</p>",
-            "link_label": "",
-            "link": "",
+            "link_label": "Voir les cadres",
+            "link": "/search?q=cadre",
             "to_obfuscate": false
           }
         },
@@ -561,8 +561,8 @@
             "image": "shopify://shop_images/papier-peint-zen-asiatique-sakura.jpg",
             "title": "Papier Peint",
             "text": "<p>Des motifs élégants et des teintes profondes pour habiller vos murs et créer une décoration intérieure plus riche, plus expressive.</p>",
-            "link_label": "",
-            "link": "",
+            "link_label": "Découvrir les papiers peints",
+            "link": "shopify://pages/papier-peint",
             "to_obfuscate": false
           }
         }
@@ -596,7 +596,7 @@
         "text_4zdheU": {
           "type": "text",
           "settings": {
-            "text": "<p>Consultez notre guide des tailles ou prenez contacte avec nous. Nous serons heureux de pouvoir vous aider à harmoniser votre intérieur.</p>",
+            "text": "<p>Consultez notre guide des tailles ou prenez contact avec nous. Nous serons heureux de vous aider à harmoniser votre intérieur.</p>",
             "text_size": "text-xl",
             "is_lighten": false
           }
@@ -614,7 +614,7 @@
         "heading_NxJd7H": {
           "type": "heading",
           "settings": {
-            "heading": "Besoin d'Aide",
+            "heading": "Besoin d’aide ?",
             "markup": "h3",
             "heading_size": "text-3xl"
           }
@@ -657,7 +657,7 @@
         "text_xU7G8z": {
           "type": "text",
           "settings": {
-            "text": "<p>Votre intérieur, c'est plus qu'un décor. C'est l'endroit où vous posez vos valises, vos pensées, votre journée. Chez MyselfMonArt, on crée des tableaux pour ça — pas pour suivre une tendance, mais pour révéler ce que vous cherchez vraiment. Le calme après le bruit. La chaleur d'un chez-soi. L'audace d'un mur qui vous ressemble. Ou juste cette douceur qui fait qu'on se sent bien en rentrant.</p><p>Nos toiles sont imprimées sur commande, avec une texture mate et grainée qui donne du relief à chaque œuvre. Couleurs profondes, châssis bois massif, encres garanties 75 ans. De l'art pensé pour durer. <a href=\"/collections/tableau-salon\" title=\"Tableau Salon\">Un grand tableau de salon</a> au-dessus du canapé pour réchauffer vos soirées. Une touche de couleur avec <a href=\"/collections/tableau-cuisine\" title=\"Tableau Cuisine\">un tableau pour cuisine</a> qui donne envie de s'attabler. U<a href=\"/collections/tableau-chambre\" title=\"Tableau Chambre\">ne toile chaleureuse pour chambre</a> apaisant pour mieux fermer les yeux. Ou un [tableau chambre enfant] qui fait rêver les petits comme les grands. Abstrait, floral, pop art, japandi… il y a forcément une toile qui vous attend. Livraison offerte dès 99€, 14 jours pour changer d'avis. ❤️</p>",
+            "text": "<p>Votre intérieur, c'est plus qu'un décor. C'est l'endroit où vous posez vos valises, vos pensées, votre journée. Chez MyselfMonArt, on crée des tableaux pour ça — pas pour suivre une tendance, mais pour révéler ce que vous cherchez vraiment. Le calme après le bruit. La chaleur d'un chez-soi. L'audace d'un mur qui vous ressemble. Ou juste cette douceur qui fait qu'on se sent bien en rentrant.</p><p>Nos toiles sont imprimées sur commande, avec une texture mate et grainée qui donne du relief à chaque œuvre. Couleurs profondes, châssis bois massif, encres garanties 75 ans. De l'art pensé pour durer. <a href=\"/collections/tableau-salon\" title=\"Tableau Salon\">Un grand tableau de salon</a> au-dessus du canapé pour réchauffer vos soirées. Une touche de couleur avec <a href=\"/collections/tableau-cuisine\" title=\"Tableau Cuisine\">un tableau pour cuisine</a> qui donne envie de s'attabler. Une <a href=\"/collections/tableau-chambre\" title=\"Tableau Chambre\">toile chaleureuse pour chambre</a> apaisante pour mieux fermer les yeux. Ou un <a href=\"/collections/chambre-enfant\" title=\"Tableau chambre enfant\">tableau chambre enfant</a> qui fait rêver les petits comme les grands. Abstrait, floral, pop art, japandi… il y a forcément une toile qui vous attend. Livraison offerte dès 99€, 14 jours pour changer d'avis. ❤️</p>",
             "text_size": "text-lg",
             "is_lighten": true
           }

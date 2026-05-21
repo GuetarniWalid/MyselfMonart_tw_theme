@@ -1,6 +1,6 @@
 {%- if section.settings.image_desktop != blank -%}
   <img
-    {% if section.settings.enable_lazy_loading %}srcset{% else %}data-srcset{% endif %}="
+    srcset="
         {%- if section.settings.image_desktop.width >= 375 -%}{{ section.settings.image_desktop | image_url: width: 375 }} 375w,{%- endif -%}
         {%- if section.settings.image_desktop.width >= 550 -%}{{ section.settings.image_desktop | image_url: width: 550 }} 550w,{%- endif -%}
         {%- if section.settings.image_desktop.width >= 750 -%}{{ section.settings.image_desktop | image_url: width: 750 }} 750w,{%- endif -%}
@@ -14,15 +14,17 @@
       sizes="100vw"
       src="{{ section.settings.image_desktop | image_url: width: 40 }}"
       loading="{% if section.settings.enable_lazy_loading %}lazy{% else %}eager{% endif %}"
+      fetchpriority="{% if section.settings.enable_lazy_loading %}auto{% else %}high{% endif %}"
+      decoding="async"
       alt="{{ section.settings.image_desktop.alt | escape }}"
       width="2000"
       height="{{ section.settings.image_desktop.width | divided_by: section.settings.image_desktop.aspect_ratio }}"
-      class="hidden md:inline-block object-cover object-{{ section.settings.image_desktop_horizontal_position }} w-full h-full skeleton{% unless section.settings.enable_lazy_loading %} placeholder blur-lg{% endunless %}"
+      class="hidden md:inline-block object-cover object-{{ section.settings.image_desktop_horizontal_position }} w-full h-full skeleton"
   >
 {%- endif -%}
 {%- if section.settings.image_mobile != blank -%}
   <img
-    {% if section.settings.enable_lazy_loading %}srcset{% else %}data-srcset{% endif %}="
+    srcset="
       {%- if section.settings.image_mobile.width >= 375 -%}{{ section.settings.image_mobile | image_url: width: 375 }} 375w,{%- endif -%}
       {%- if section.settings.image_mobile.width >= 550 -%}{{ section.settings.image_mobile | image_url: width: 550 }} 550w,{%- endif -%}
       {%- if section.settings.image_mobile.width >= 750 -%}{{ section.settings.image_mobile | image_url: width: 750 }} 750w,{%- endif -%}
@@ -31,10 +33,12 @@
     sizes="100vh"
     src="{{ section.settings.image_mobile | image_url: width: 40 }}"
     loading="{% if section.settings.enable_lazy_loading %}lazy{% else %}eager{% endif %}"
+    fetchpriority="{% if section.settings.enable_lazy_loading %}auto{% else %}high{% endif %}"
+    decoding="async"
     alt="{{ section.settings.image_mobile.alt | escape }}"
     width="500"
     height="{{ section.settings.image_mobile.width | divided_by: section.settings.image_mobile.aspect_ratio }}"
-    class="md:hidden object-cover object-{{ section.settings.image_mobile_vertical_position }} w-full h-full skeleton{% unless section.settings.enable_lazy_loading %} placeholder blur-lg{% endunless %}"
+    class="md:hidden object-cover object-{{ section.settings.image_mobile_vertical_position }} w-full h-full skeleton"
   >
 {%- endif -%}
 {%- if section.settings.image_desktop == blank -%}
