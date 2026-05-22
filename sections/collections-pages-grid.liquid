@@ -53,17 +53,6 @@
                 {% endif %}
               </h2>
             {% endif %}
-            {% if block.settings.paragraph != blank %}
-              <button class="show-more pl-1 mt-2 z-20">{{ "sections.collections_grid.find_out_more" | t }}</button>
-            {% endif %}
-          </div>
-        {% endif %}
-        {% if block.settings.paragraph != blank %}
-          <div class="paragraph hidden absolute inset-0 bg-secondary transition-colors duration-500 border-2 border-main p-6 overflow-y-auto z-20">
-            <button class="close float-right ml-3 mb-3 bg-main-10 rounded p-2 border-main border-1">
-              {% render 'tw-icon-close' %}
-            </button>
-            {{ block.settings.paragraph }}
           </div>
         {% endif %}
       </li>

@@ -224,17 +224,17 @@
         "heading_bzccjE": {
           "type": "heading",
           "settings": {
-            "heading": "Tableaux modernes et toiles d'art",
+            "heading": "Achetez vos tableaux en ligne, simplement",
             "markup": "h2",
-            "heading_size": "text-3xl"
+            "heading_size": "text-5xl"
           }
         },
         "text_h7DkAc": {
           "type": "text",
           "settings": {
-            "text": "<p>Découvrez nos créations murales en ligne, imaginées pour chaque pièce de votre intérieur. Explorez nos collections et choisissez le tableau qui fera écho à votre univers</p>",
+            "text": "<p>Des œuvres murales modernes, imprimées sur toile avec des couleurs profondes et une finition mate. Choisissez le style qui transforme votre pièce, nous fabriquons votre tableau avec soin.</p>",
             "text_size": "text-xl",
-            "is_lighten": false
+            "is_lighten": true
           }
         }
       },
@@ -242,10 +242,9 @@
         "heading_bzccjE",
         "text_h7DkAc"
       ],
-      "disabled": true,
       "name": "t:sections.rich-text.presets.name",
       "settings": {
-        "content_alignment": "text-left",
+        "content_alignment": "text-center",
         "padding_top": "pt-0",
         "padding_bottom": "pb-0"
       }
@@ -378,7 +377,7 @@
         "collection_6KBgf7"
       ],
       "settings": {
-        "title": "Nos collection en vedette",
+        "title": "Nos collections en vedette",
         "padding_top": "pt-0",
         "padding_bottom": "pb-0"
       }

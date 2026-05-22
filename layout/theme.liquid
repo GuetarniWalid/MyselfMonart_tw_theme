@@ -5,7 +5,7 @@
     {{ content_for_header }}
   </head>
 
-  <body class="w-screen overflow-x-hidden text-main bg-secondary transition-colors duration-500 z-10 scrollbar relative min-h-screen">
+  <body class="template-{{ request.page_type }} w-screen overflow-x-hidden text-main bg-secondary transition-colors duration-500 z-10 scrollbar relative min-h-screen">
     <a class="sr-only focus:not-sr-only" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>
