@@ -224,7 +224,7 @@
         "heading_bzccjE": {
           "type": "heading",
           "settings": {
-            "heading": "Tableaux modernes et papier peint artistique",
+            "heading": "Tableaux modernes et toiles d'art",
             "markup": "h2",
             "heading_size": "text-3xl"
           }
@@ -371,22 +371,11 @@
             "lazy_load": true,
             "paragraph": "<p>Découvrez notre collection de tableaux abstraits, des œuvres qui apportent du caractère tout en douceur à votre intérieur. Les formes et les couleurs se répondent naturellement, laissant place à l’émotion et à l’interprétation, sans jamais alourdir l’espace. Ces tableaux habillent le mur avec subtilité et créent une ambiance équilibrée, moderne et apaisante. Dans un salon, une chambre ou un espace de travail, l’abstrait devient une évidence, pour un intérieur harmonieux, élégant et agréable à vivre au quotidien.</p>"
           }
-        },
-        "page_xPBNeE": {
-          "type": "page",
-          "settings": {
-            "image": "shopify://shop_images/panneaux-decoratifs-muraux.jpg",
-            "page": "papier-peint",
-            "nb_columns": "col-span-12",
-            "lazy_load": true,
-            "paragraph": "<h3>Sublimez Vos Murs avec Nos Tapisseries et Papiers Peints Panoramiques</h3><p>Découvrez notre collection de <strong>tapisseries et papiers peints</strong> conçus pour transformer votre intérieur. Que vous souhaitiez habiller un grand mur blanc avec un <strong>papier peint panoramique</strong> ou customiser une <strong>tête de lit</strong> avec un <strong>motif jungle</strong> audacieux, nous avons ce qu'il vous faut. Pour une <strong>chambre d'enfant</strong>, nos <strong>papiers peints tendance</strong> aux motifs doux et ludiques créent une atmosphère accueillante et joyeuse. Chaque design est pensé pour s'adapter à vos envies, offrant style et originalité à chaque pièce de votre maison.</p>"
-          }
         }
       },
       "block_order": [
         "collection_WMUmaF",
-        "collection_6KBgf7",
-        "page_xPBNeE"
+        "collection_6KBgf7"
       ],
       "settings": {
         "title": "Nos collection en vedette",
@@ -438,7 +427,7 @@
       ],
       "settings": {
         "heading": "Un Univers de Possibilités pour Créer Votre Atmosphère Idéale",
-        "description": "Que vous choisissiez des motifs audacieux ou des teintes délicates, une tapisserie sur mesure ou un tableau personnalisé, notre collection saura vous séduire, tout en captivant vos convives.",
+        "description": "Que vous choisissiez des motifs audacieux ou des teintes délicates, un tableau personnalisé ou une œuvre signature, notre collection saura vous séduire, tout en captivant vos convives.",
         "activate_dynamic_color": true,
         "dynamic_primary_color": "#f9eda2",
         "dynamic_secondary_color": "#112e3b"
@@ -554,28 +543,16 @@
             "link": "",
             "to_obfuscate": false
           }
-        },
-        "column_a4RPCk": {
-          "type": "column",
-          "settings": {
-            "image": "shopify://shop_images/papier-peint-zen-asiatique-sakura.jpg",
-            "title": "Papier Peint",
-            "text": "<p>Des motifs élégants et des teintes profondes pour habiller vos murs et créer une décoration intérieure plus riche, plus expressive.</p>",
-            "link_label": "",
-            "link": "",
-            "to_obfuscate": false
-          }
         }
       },
       "block_order": [
         "column_HVEjBP",
-        "column_jdnQLQ",
-        "column_a4RPCk"
+        "column_jdnQLQ"
       ],
       "settings": {
         "title": "",
         "image_shape": "rounded-none",
-        "columns_desktop": 3,
+        "columns_desktop": 2,
         "show_backgounds": true,
         "button_label": "",
         "button_link": "",
