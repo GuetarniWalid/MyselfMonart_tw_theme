@@ -47,6 +47,9 @@
 {% render 'fonts-and-colors' %}
 
 {{ 'output.css' | asset_url | stylesheet_tag }}
+{%- if request.page_type == 'index' -%}
+  {{ 'homepage-artesta-inspired.css' | asset_url | stylesheet_tag }}
+{%- endif -%}
 
 <script>
   if (Shopify.designMode) {
