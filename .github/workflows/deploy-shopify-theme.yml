@@ -179,10 +179,41 @@ jobs:
           sort -u "$CONFLICTS" -o "$CONFLICTS"
 
           if [[ -s "$CONFLICTS" ]]; then
-            echo "::error::Both GitHub and Shopify changed the same theme file(s) differently since the last deploy."
-            echo "::error::Auto-sync would risk overwriting work. Resolve these files manually, then push again."
-            sed -n '1,200p' "$CONFLICTS"
-            exit 1
+            # Homepage redesign files are intentionally GitHub-authoritative.
+            # The staging preview must reflect the committed homepage structure,
+            # even if Shopify Admin still has older copies of these files.
+            GIT_AUTHORITATIVE_CONFLICTS="/tmp/shopify-git-authoritative-conflicts.txt"
+            REMAINING_CONFLICTS="/tmp/shopify-remaining-conflicts.txt"
+            : > "$GIT_AUTHORITATIVE_CONFLICTS"
+            : > "$REMAINING_CONFLICTS"
+
+            while IFS= read -r file; do
+              case "$file" in
+                templates/index.json|\
+                snippets/head-base.liquid|\
+                layout/theme.liquid|\
+                sections/collections-pages-grid.liquid|\
+                assets/homepage-artesta-inspired.css|\
+                assets/output.css)
+                  echo "$file" >> "$GIT_AUTHORITATIVE_CONFLICTS"
+                  ;;
+                *)
+                  echo "$file" >> "$REMAINING_CONFLICTS"
+                  ;;
+              esac
+            done < "$CONFLICTS"
+
+            if [[ -s "$GIT_AUTHORITATIVE_CONFLICTS" ]]; then
+              echo "::warning::Using GitHub as source of truth for approved homepage redesign file(s):"
+              sed -n '1,200p' "$GIT_AUTHORITATIVE_CONFLICTS"
+            fi
+
+            if [[ -s "$REMAINING_CONFLICTS" ]]; then
+              echo "::error::Both GitHub and Shopify changed the same theme file(s) differently since the last deploy."
+              echo "::error::Auto-sync would risk overwriting work. Resolve these files manually, then push again."
+              sed -n '1,200p' "$REMAINING_CONFLICTS"
+              exit 1
+            fi
           fi
 
           if [[ ! -s "$TO_SYNC" ]]; then
