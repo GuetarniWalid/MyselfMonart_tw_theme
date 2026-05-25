@@ -53,8 +53,8 @@
     <div class="col-span-1 lg:col-span-5 flex flex-col justify-center px-6 py-16 md:px-12 md:py-20 lg:px-16 xl:px-24 {% if layout_reverse %}lg:order-2{% else %}lg:order-1{% endif %}">
 
       {%- if section.settings.eyebrow != blank -%}
-        <p class="font-roboto text-xs tracking-[0.2em] uppercase text-main-70 mb-6">
-          {{ section.settings.eyebrow | escape }}
+        <p class="font-roboto text-xs tracking-[0.2em] uppercase text-main mb-6">
+          <span class="title-highlight">{{ section.settings.eyebrow | escape }}</span>
         </p>
       {%- endif -%}
 
