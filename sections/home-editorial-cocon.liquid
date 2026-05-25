@@ -2,19 +2,30 @@
   Home — Editorial Cocon (section texte H2.1 Bienvenue).
 
   Conventions appliquées (cf .claude/skills/shopify-section-dev) :
-  - Tailwind only — pas de CSS custom, pas de <style>
-  - Variables globales theme : bg-main-5, text-main, text-main-70,
-    text-buy-button, font-heading, font-roboto
-  - Admin-configurable via {% schema %}
-  - SEO : heading_level configurable, id unique, aria-labelledby
-  - A11y : <blockquote> sémantique, ornement aria-hidden, motion-reduce
-  - Inspiration : Aesop (whitespace + serif), NYT Magazine (drop cap +
-    pull quote), Vignelli (asymétrie maîtrisée), Off-White (eyebrow numéroté)
-  - enabled_on.templates = ['index']
+  - Tailwind only
+  - Variables globales : bg-main-5, text-main, text-main-70, text-buy-button,
+    font-heading, font-roboto
+  - Admin-configurable
+  - SEO : heading_level, id, aria-labelledby
+  - A11y : <blockquote> sémantique, séparateurs aria-hidden, motion-reduce
 
-  Architecture layout : container max-w-3xl mx-auto pour un rythme de
-  lecture éditorial. Asymétrie obtenue par décalages margin négatifs
-  ponctuels (pas de grid 12 cols qui causait des rangées vides).
+  Architecture v2 (post-diagnostic Walid) :
+  - Une seule colonne centrée max-w-2xl pour stabilité visuelle
+    (Vignelli : "use a single grid as the spine")
+  - Pas de drop cap (cause des "2 traits verticaux d'épaisseur différente"
+    — le "I" lettrine entrait en collision visuelle avec la bordure latérale
+    du pull quote)
+  - Pas de décalages margin négatifs ni padding asymétriques
+    (le paragraphe 2 décalé droite était perçu comme une erreur)
+  - Asymétrie portée par les séparateurs horizontaux ornementés ─── ✦ ───
+    qui encadrent le pull quote, pattern typographie livre classique
+    (Penguin, NYT Magazine, Folio Society)
+  - Pull quote centré italique serif, sans bordure latérale (ornement pur
+    typographique)
+  - Inspiration : Aesop (whitespace + serif), NYT Magazine (séparateurs
+    end-mark), Tschichold (asymétrie dans la grille, pas en la brisant)
+
+  enabled_on.templates = ['index']
 {%- endcomment -%}
 
 {%- liquid
@@ -33,12 +44,12 @@
 
   assign text_class = 'text-main'
   assign muted_class = 'text-main-70'
-  assign quote_border = 'border-buy-button'
-  assign drop_cap_class = 'text-buy-button'
+  assign rule_class = 'bg-main-20'
+  assign ornament_color_class = 'text-buy-button'
   if section.settings.background_color == 'dark'
     assign text_class = 'text-secondary'
     assign muted_class = 'text-secondary-50'
-    assign quote_border = 'border-secondary'
+    assign rule_class = 'bg-secondary-50'
   endif
 
   assign heading_level = section.settings.heading_level | default: 'h2'
@@ -49,11 +60,11 @@
   class="home-editorial-cocon {{ bg_class }} {{ text_class }} w-full py-20 md:py-28 lg:py-36"
   aria-labelledby="{{ heading_id }}">
 
-  <div class="max-w-3xl mx-auto px-6 md:px-8">
+  <div class="max-w-2xl mx-auto px-6 md:px-8">
 
     {%- comment -%} Eyebrow numéroté façon Aesop / Off-White {%- endcomment -%}
     {%- if section.settings.eyebrow_number != blank or section.settings.eyebrow_label != blank -%}
-      <p class="font-roboto text-xs tracking-[0.22em] uppercase {{ muted_class }} flex items-center gap-3 mb-8 md:mb-10">
+      <p class="font-roboto text-xs tracking-[0.22em] uppercase {{ muted_class }} flex items-center gap-3 mb-6 md:mb-8">
         {%- if section.settings.eyebrow_number != blank -%}
           <span class="font-heading text-sm normal-case tracking-normal {{ text_class }}">— {{ section.settings.eyebrow_number | escape }}</span>
         {%- endif -%}
@@ -64,59 +75,73 @@
       </p>
     {%- endif -%}
 
-    {%- comment -%} H2 — légèrement décalé à gauche (-ml-1 sur md, statement subtil) {%- endcomment -%}
+    {%- comment -%} H2 aligned-left simple, pas de débordement {%- endcomment -%}
     {%- if section.settings.h2_title != blank -%}
       <{{ heading_level }}
         id="{{ heading_id }}"
-        class="font-heading {{ text_class }} !text-3xl md:!text-4xl lg:!text-5xl leading-[1.1] tracking-tight mb-10 md:mb-14 max-w-2xl">
+        class="font-heading {{ text_class }} !text-3xl md:!text-4xl lg:!text-5xl leading-[1.1] tracking-tight mb-10 md:mb-12">
         {{ section.settings.h2_title }}
       </{{ heading_level }}>
     {%- endif -%}
 
     {%- comment -%}
-      Paragraphe 1 — drop cap éditorial via .drop-cap (input.css @layer components).
-      Cible automatiquement la première lettre du premier <p> rendu par le richtext.
+      Paragraphe 1 — texte courant, aligned-left.
+      Plus de drop cap (cause de dissonance visuelle avec la pull quote).
+      Le rythme vient du whitespace et du leading généreux.
     {%- endcomment -%}
     {%- if section.settings.paragraph_1 != blank -%}
-      <div class="drop-cap font-roboto text-lg md:text-xl leading-relaxed {{ muted_class }} mb-12 md:mb-16 [&>p+p]:mt-4 [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-buy-button motion-reduce:[&_a]:transition-none [&_strong]:{{ text_class }} [&_strong]:font-semibold">
+      <div class="font-roboto text-lg md:text-xl leading-relaxed {{ muted_class }} [&>p+p]:mt-4 [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-buy-button motion-reduce:[&_a]:transition-none [&_strong]:{{ text_class }} [&_strong]:font-semibold">
         {{ section.settings.paragraph_1 }}
       </div>
     {%- endif -%}
 
     {%- comment -%}
-      Pull quote — bordure latérale terracotta, italic, décalée à gauche
-      sur desktop (margin-left négatif pour sortir du container, effet
-      "callout magazine"). Largeur contenue pour rester lisible.
+      Pull quote — centré, italique serif XL, encadré de séparateurs
+      horizontaux ornementés ─── ✦ ───. Pas de bordure latérale.
+      Pattern typographie de livre classique.
     {%- endcomment -%}
     {%- if section.settings.pull_quote != blank -%}
-      <blockquote class="my-12 md:my-16 lg:-ml-12 max-w-xl pl-6 md:pl-8 border-l-4 {{ quote_border }} font-heading italic !text-xl md:!text-2xl lg:!text-3xl leading-snug {{ text_class }}">
-        <p class="mb-3">« {{ section.settings.pull_quote }} »</p>
+
+      {%- comment -%} Séparateur supérieur {%- endcomment -%}
+      <div class="flex items-center justify-center gap-5 my-14 md:my-20" aria-hidden="true">
+        <hr class="h-px w-24 md:w-32 border-0 {{ rule_class }}">
+        <span class="font-heading text-base {{ ornament_color_class }}">{{ section.settings.divider_symbol | default: '✦' }}</span>
+        <hr class="h-px w-24 md:w-32 border-0 {{ rule_class }}">
+      </div>
+
+      <blockquote class="text-center font-heading italic !text-2xl md:!text-3xl leading-snug {{ text_class }} max-w-xl mx-auto">
+        <p>« {{ section.settings.pull_quote }} »</p>
         {%- if section.settings.pull_quote_attribution != blank -%}
-          <footer class="font-roboto not-italic text-xs tracking-[0.18em] uppercase {{ muted_class }} mt-3">— {{ section.settings.pull_quote_attribution | escape }}</footer>
+          <footer class="font-roboto not-italic text-xs tracking-[0.18em] uppercase {{ muted_class }} mt-5">— {{ section.settings.pull_quote_attribution | escape }}</footer>
         {%- endif -%}
       </blockquote>
+
+      {%- comment -%} Séparateur inférieur {%- endcomment -%}
+      <div class="flex items-center justify-center gap-5 my-14 md:my-20" aria-hidden="true">
+        <hr class="h-px w-24 md:w-32 border-0 {{ rule_class }}">
+        <span class="font-heading text-base {{ ornament_color_class }}">{{ section.settings.divider_symbol | default: '✦' }}</span>
+        <hr class="h-px w-24 md:w-32 border-0 {{ rule_class }}">
+      </div>
+
     {%- endif -%}
 
-    {%- comment -%} Paragraphe 2 — décalé à droite (margin-left positif) pour asymétrie {%- endcomment -%}
+    {%- comment -%} Paragraphe 2 — même alignement que paragraphe 1 (cohérence) {%- endcomment -%}
     {%- if section.settings.paragraph_2 != blank -%}
-      <div class="font-roboto text-lg md:text-xl leading-relaxed {{ muted_class }} mb-12 md:mb-16 md:pl-12 lg:pl-20
-                  [&>p+p]:mt-4
-                  [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-buy-button motion-reduce:[&_a]:transition-none
-                  [&_strong]:{{ text_class }} [&_strong]:font-semibold">
+      <div class="font-roboto text-lg md:text-xl leading-relaxed {{ muted_class }} [&>p+p]:mt-4 [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-buy-button motion-reduce:[&_a]:transition-none [&_strong]:{{ text_class }} [&_strong]:font-semibold">
         {{ section.settings.paragraph_2 }}
       </div>
     {%- endif -%}
 
-    {%- comment -%} Ornement décoratif central — séparateur éditorial classique {%- endcomment -%}
+    {%- comment -%} Ornement décoratif central avant la closing signature {%- endcomment -%}
     {%- if section.settings.show_ornament -%}
-      <div class="flex justify-center my-10 md:my-14" aria-hidden="true">
-        <span class="font-heading text-2xl md:text-3xl {{ drop_cap_class }}">{{ section.settings.ornament_symbol | default: '❋' }}</span>
+      <div class="flex justify-center my-12 md:my-16" aria-hidden="true">
+        <span class="font-heading text-2xl md:text-3xl {{ ornament_color_class }}">{{ section.settings.ornament_symbol | default: '❋' }}</span>
       </div>
     {%- endif -%}
 
     {%- comment -%} Closing signature italique centrée — signature poétique {%- endcomment -%}
     {%- if section.settings.closing_signature != blank -%}
-      <p class="text-center font-heading italic !text-lg md:!text-xl lg:!text-2xl leading-snug {{ text_class }} max-w-2xl mx-auto">
+      <p class="text-center font-heading italic !text-lg md:!text-xl lg:!text-2xl leading-snug {{ text_class }} max-w-xl mx-auto">
         {{ section.settings.closing_signature }}
       </p>
     {%- endif -%}
@@ -139,7 +164,6 @@
       "type": "text",
       "id": "eyebrow_number",
       "label": "Numéro (ex : 01)",
-      "info": "Style Aesop : « — 01    BIENVENUE »",
       "default": "01"
     },
     {
@@ -156,7 +180,7 @@
       "type": "select",
       "id": "heading_level",
       "label": "Niveau du titre (SEO)",
-      "info": "h2 par défaut. h1 réservé à la home (si on déplace le hero ailleurs).",
+      "info": "h2 par défaut. h1 réservé à la home.",
       "default": "h2",
       "options": [
         { "value": "h1", "label": "H1" },
@@ -172,11 +196,7 @@
     },
     {
       "type": "header",
-      "content": "Paragraphe 1 (avec drop cap automatique)"
-    },
-    {
-      "type": "paragraph",
-      "content": "La première lettre du premier paragraphe est automatiquement rendue en très grande taille (lettrine style magazine)."
+      "content": "Paragraphe 1"
     },
     {
       "type": "richtext",
@@ -186,20 +206,30 @@
     },
     {
       "type": "header",
-      "content": "Pull quote (citation extraite)"
+      "content": "Pull quote (citation extraite — pièce centrale)"
+    },
+    {
+      "type": "paragraph",
+      "content": "Encadrée par 2 séparateurs ornementés ─── ✦ ───. Affichée centrée, italique, sans bordure latérale (pour un visuel cohérent)."
     },
     {
       "type": "textarea",
       "id": "pull_quote",
       "label": "Citation",
-      "info": "Affichée avec bordure latérale terracotta, italique, décalée à gauche. Sans les guillemets — ils sont ajoutés automatiquement.",
-      "default": "Un mur n'est jamais juste un mur."
+      "info": "Sans les guillemets — ils sont ajoutés automatiquement.",
+      "default": "Un mur n'est jamais juste un mur — c'est l'arrière-plan de vos silences."
     },
     {
       "type": "text",
       "id": "pull_quote_attribution",
-      "label": "Attribution (optionnel)",
-      "info": "Ex : « Hayate », « Notre direction artistique »"
+      "label": "Attribution (optionnel)"
+    },
+    {
+      "type": "text",
+      "id": "divider_symbol",
+      "label": "Symbole du séparateur",
+      "info": "Ex : ✦ ❋ ◆ ✷ —",
+      "default": "✦"
     },
     {
       "type": "header",
@@ -213,12 +243,12 @@
     },
     {
       "type": "header",
-      "content": "Ornement décoratif"
+      "content": "Ornement final"
     },
     {
       "type": "checkbox",
       "id": "show_ornament",
-      "label": "Afficher l'ornement séparateur",
+      "label": "Afficher l'ornement avant la signature",
       "default": true
     },
     {
@@ -236,7 +266,6 @@
       "type": "textarea",
       "id": "closing_signature",
       "label": "Phrase de clôture italique",
-      "info": "Affichée en italique centré.",
       "default": "Prenez le temps. Le bon tableau, c'est rarement le premier — c'est celui qui revient vous chercher."
     },
     {
@@ -264,7 +293,8 @@
         "eyebrow_label": "Bienvenue",
         "h2_title": "Bienvenue dans le cocon MyselfMonArt",
         "show_ornament": true,
-        "ornament_symbol": "❋"
+        "ornament_symbol": "❋",
+        "divider_symbol": "✦"
       }
     }
   ]
