@@ -30,15 +30,20 @@
       }
     },
     "welcome": {
-      "type": "home-editorial-rich",
+      "type": "home-editorial-cocon",
       "settings": {
-        "background": "white",
-        "align": "center",
+        "eyebrow_number": "01",
+        "eyebrow_label": "Bienvenue",
         "heading_level": "h2",
-        "eyebrow": "Bienvenue",
-        "title": "Bienvenue dans le cocon MyselfMonArt",
-        "lead": "Il y a un instant que vous connaissez bien. Celui où vous rentrez chez vous, où la porte se referme, et où le monde se met enfin en sourdine. C'est cet instant-là que nous habillons.",
-        "body": "<p>Chez MyselfMonArt, nous croyons qu'un mur n'est jamais juste un mur. C'est l'arrière-plan de vos matinées lentes, de vos dîners qui s'étirent, des silences où vous vous retrouvez. Un tableau décoration murale bien choisi ne décore pas une pièce — il <strong>change l'air qu'on y respire</strong>.</p><p>Depuis 2022, nous sélectionnons à la main, retouchons œuvre par œuvre, et livrons des tableaux pensés pour les intérieurs qui veulent <strong>respirer plus large</strong>. Pas de catalogue de masse, pas de collections impersonnelles : seulement ce que notre direction artistique a jugé digne d'entrer chez vous.</p><p><em>Prenez le temps. Le bon tableau, c'est rarement le premier — c'est celui qui revient vous chercher.</em></p>"
+        "h2_title": "Bienvenue dans le cocon MyselfMonArt",
+        "paragraph_1": "<p>Il y a un instant que vous connaissez bien. Celui où vous rentrez chez vous, où la porte se referme, et où le monde se met enfin en sourdine.</p><p>C'est cet instant-là que nous habillons.</p>",
+        "pull_quote": "Un mur n'est jamais juste un mur. C'est l'arrière-plan de vos matinées lentes, de vos dîners qui s'étirent, des silences où vous vous retrouvez.",
+        "pull_quote_attribution": "",
+        "paragraph_2": "<p>Depuis 2022, nous sélectionnons à la main, retouchons œuvre par œuvre, et livrons des tableaux pensés pour les intérieurs qui veulent <strong>respirer plus large</strong>. Pas de catalogue de masse, pas de collections impersonnelles : seulement ce que notre direction artistique a jugé digne d'entrer chez vous.</p>",
+        "show_ornament": true,
+        "ornament_symbol": "❋",
+        "closing_signature": "Prenez le temps. Le bon tableau, c'est rarement le premier — c'est celui qui revient vous chercher.",
+        "background_color": "cream"
       }
     },
     "usps": {
