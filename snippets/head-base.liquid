@@ -35,6 +35,10 @@
 {% endif %}
 {% render 'meta-tags' %}
 
+{%- if request.page_type == 'index' -%}
+  {%- render 'json-ld-home' -%}
+{%- endif -%}
+
 <script src="{{ 'tw-global.js' | asset_url }}" defer="defer"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">

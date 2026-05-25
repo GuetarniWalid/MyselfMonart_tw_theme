@@ -1,0 +1,149 @@
+{%- comment -%}
+  Schemas JSON-LD spécifiques à la home MyselfMonArt.
+  Inclus conditionnellement depuis head-base.liquid via :
+    {% if request.page_type == 'index' %}{% render 'json-ld-home' %}{% endif %}
+
+  Note : l'Organization schema est déjà injecté par sections/trust-signals.liquid.
+  On ne le réinclut pas ici pour éviter le doublon validateur.
+{%- endcomment -%}
+
+{%- assign home_url = request.origin | append: '/' -%}
+{%- assign logo_url = 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/logo-myselfmonart-512x512.png?v=1694726914' -%}
+{%- if shop.brand.logo -%}
+  {%- assign logo_url = shop.brand.logo | image_url: width: 600 -%}
+{%- endif -%}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Store",
+  "@id": "{{ home_url }}#store",
+  "name": "MyselfMonArt",
+  "image": "{{ logo_url }}",
+  "url": "{{ home_url }}",
+  "telephone": "+33960446150",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Paris",
+    "addressCountry": "FR"
+  },
+  "priceRange": "€€",
+  "areaServed": ["FR", "BE", "CH", "LU", "DE", "ES", "IT", "AT", "PT", "NL", "GB", "US", "CA"],
+  "paymentAccepted": ["Credit Card", "PayPal", "Apple Pay", "Google Pay", "Shop Pay"],
+  "currenciesAccepted": "EUR",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.1",
+    "reviewCount": "80",
+    "bestRating": "5",
+    "worstRating": "1"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Accueil",
+    "item": "{{ home_url }}"
+  }]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "@id": "{{ home_url }}#collections-phares",
+  "name": "Collections phares MyselfMonArt",
+  "itemListOrder": "Unordered",
+  "numberOfItems": 16,
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Tableau salon", "url": "{{ home_url }}collections/tableau-salon"},
+    {"@type": "ListItem", "position": 2, "name": "Tableau chambre adulte", "url": "{{ home_url }}collections/tableau-chambre-adulte"},
+    {"@type": "ListItem", "position": 3, "name": "Tableau chambre enfant", "url": "{{ home_url }}collections/tableau-chambre-garcon"},
+    {"@type": "ListItem", "position": 4, "name": "Tableau bureau", "url": "{{ home_url }}collections/tableau-bureau"},
+    {"@type": "ListItem", "position": 5, "name": "Tableau cuisine", "url": "{{ home_url }}collections/tableau-cuisine"},
+    {"@type": "ListItem", "position": 6, "name": "Tableau abstrait", "url": "{{ home_url }}collections/tableau-abstrait"},
+    {"@type": "ListItem", "position": 7, "name": "Tableau zen", "url": "{{ home_url }}collections/tableau-zen"},
+    {"@type": "ListItem", "position": 8, "name": "Tableau pop art", "url": "{{ home_url }}collections/tableau-pop-art"},
+    {"@type": "ListItem", "position": 9, "name": "Tableau africain", "url": "{{ home_url }}collections/tableau-africain"},
+    {"@type": "ListItem", "position": 10, "name": "Tableau noir et blanc", "url": "{{ home_url }}collections/tableau-noir-et-blanc"},
+    {"@type": "ListItem", "position": 11, "name": "Tableau fleurs", "url": "{{ home_url }}collections/tableau-fleurs"},
+    {"@type": "ListItem", "position": 12, "name": "Tableau japonais", "url": "{{ home_url }}collections/tableau-japonais"},
+    {"@type": "ListItem", "position": 13, "name": "Tableaux Frida Kahlo", "url": "{{ home_url }}collections/tableaux-frida-kahlo"},
+    {"@type": "ListItem", "position": 14, "name": "Tableau paysage", "url": "{{ home_url }}collections/tableau-paysage"},
+    {"@type": "ListItem", "position": 15, "name": "Tableau couleur", "url": "{{ home_url }}collections/tableau-couleur"},
+    {"@type": "ListItem", "position": 16, "name": "Tableau ethnique", "url": "{{ home_url }}collections/tableau-ethnique"}
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Comment choisir un tableau décoration murale pour son salon ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Pour un salon, choisissez un tableau qui occupe 60 à 75 % de la largeur du meuble sous lequel il sera accroché (canapé, console). Privilégiez un sujet fédérateur (paysage, abstrait, portrait iconique) et reprenez 2 à 3 couleurs déjà présentes dans votre décoration. Le centre du tableau doit être à environ 1,50 m du sol, la hauteur moyenne du regard."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Quelle taille de tableau choisir pour mon mur ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "La règle empirique : votre tableau doit mesurer environ deux tiers de la largeur du meuble qu'il surplombe. Sur un mur seul sans meuble, pensez en proportion du mur entier — un grand format ou un triptyque structure mieux qu'une petite œuvre."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Comment harmoniser un tableau avec ma décoration ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Une seule couleur commune suffit à créer l'harmonie. Identifiez la couleur dominante d'un élément central de votre pièce (canapé, tapis, rideaux) et choisissez un tableau qui la reprend en accent. Tons chauds (rouge, orange, ocre) pour réchauffer une pièce, tons froids (bleu, vert) pour apaiser."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Comment accrocher un tableau correctement ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Le centre du tableau doit se situer à environ 1,50 m du sol. Pour un tableau tendu sur châssis, utilisez deux crochets espacés (et non un seul au centre) afin d'éviter qu'il bascule. Pré-marquez les points d'ancrage au crayon sur le mur avant de percer."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Quels sont vos délais de livraison ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nos tableaux sont imprimés à la demande, jamais en stock. Comptez quelques jours de production en plus du transport. Vos délais exacts sont indiqués sur la fiche produit de chaque œuvre et confirmés dans votre email de validation de commande. Pour toute question, joignez-nous au 09 60 44 61 50."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Vos tableaux sont-ils fabriqués en France ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Notre direction artistique est en France : c'est ici que les œuvres sont sélectionnées, retouchées et validées une à une par notre studio. L'impression est confiée à nos partenaires européens, principalement en Allemagne, dont les imprimeurs sur toile sont une référence internationale. Nous préférons assumer une chaîne européenne courte et contrôlée plutôt que revendiquer un drapeau qui ne correspondrait pas à la réalité."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Proposez-vous des tableaux peints à la main par un artiste ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui — sur devis. Si vous souhaitez transformer l'une de nos œuvres en peinture acrylique ou huile sur toile, réalisée à la main par un artiste, contactez-nous au 09 60 44 61 50 ou par mail. Nous établissons un devis personnalisé selon le format, la technique et le délai souhaité."
+      }
+    }
+  ]
+}
+</script>
