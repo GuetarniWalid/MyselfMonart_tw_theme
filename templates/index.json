@@ -9,7 +9,7 @@
  */
 {
   "sections": {
-    "2b3b46e7-881c-4925-96cf-76c7ebf203c4": {
+    "hero_image_banner": {
       "type": "image-banner",
       "settings": {
         "image_desktop": "shopify://shop_images/canvas-colore-tableaux-abstrait-moderne-cadre-toile.png",
@@ -17,6 +17,427 @@
         "image_mobile": "shopify://shop_images/cadre-toile-canvas-abstrait-colore-picasso.jpg",
         "image_mobile_vertical_position": "top",
         "enable_lazy_loading": false
+      }
+    },
+    "h1_heading": {
+      "type": "rich-text",
+      "blocks": {
+        "h1_main": {
+          "type": "heading",
+          "settings": {
+            "heading": "Tableau décoration murale — Œuvres curées par notre studio français",
+            "markup": "h1",
+            "heading_size": "text-3xl"
+          }
+        }
+      },
+      "block_order": ["h1_main"],
+      "settings": {
+        "content_alignment": "text-center",
+        "padding_top": "pt-8",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "h2_1_welcome": {
+      "type": "rich-text",
+      "blocks": {
+        "h2_welcome_heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Bienvenue dans le cocon MyselfMonArt",
+            "markup": "h2",
+            "heading_size": "text-3xl"
+          }
+        },
+        "welcome_text_1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Il y a un instant que vous connaissez bien. Celui où vous rentrez chez vous, où la porte se referme, et où le monde se met enfin en sourdine.</p><p>C'est cet instant-là que nous habillons.</p><p>Chez MyselfMonArt, nous croyons qu'un mur n'est jamais juste un mur. C'est l'arrière-plan de vos matinées lentes, de vos dîners qui s'étirent, des silences où vous vous retrouvez. Un tableau décoration murale bien choisi ne décore pas une pièce — il <strong>change l'air qu'on y respire</strong>.</p>"
+          }
+        },
+        "welcome_text_2": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Depuis 2022, nous sélectionnons à la main, retouchons œuvre par œuvre, et livrons des tableaux pensés pour les intérieurs qui veulent <strong>respirer plus large</strong>. Pas de catalogue de masse, pas de collections impersonnelles : seulement ce que notre direction artistique a jugé digne d'entrer chez vous.</p><p>Prenez le temps. Le bon tableau, c'est rarement le premier — c'est celui qui revient vous chercher.</p>"
+          }
+        }
+      },
+      "block_order": ["h2_welcome_heading", "welcome_text_1", "welcome_text_2"],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-8",
+        "padding_bottom": "pb-8"
+      }
+    },
+    "h2_2_usps_intro": {
+      "type": "rich-text",
+      "blocks": {
+        "h2_usps_heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Ce qui fait la différence d'un tableau MyselfMonArt",
+            "markup": "h2",
+            "heading_size": "text-3xl"
+          }
+        },
+        "usps_intro": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Un tableau décoration murale, ce n'est pas qu'une image imprimée. C'est une matière qu'on accroche au mur tous les jours pendant des années. Voici ce que nous mettons dedans — et que vous n'aurez pas ailleurs.</p>"
+          }
+        }
+      },
+      "block_order": ["h2_usps_heading", "usps_intro"],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-8",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "h2_2_usps_grid": {
+      "type": "multicolumn",
+      "blocks": {
+        "usp_curation": {
+          "type": "column",
+          "settings": {
+            "title": "Une sélection curée à la main par un graphiste-illustrateur",
+            "text": "<p>Chaque œuvre proposée chez MyselfMonArt est choisie, puis retouchée à la main par notre direction artistique. Walid, fondateur du studio, est graphiste-illustrateur de formation : il ajuste les contrastes, les lumières, la justesse des couleurs, jusqu'à ce que l'œuvre soit prête à vivre chez vous.</p><p>C'est une curation lente. Sur 700 œuvres référencées aujourd'hui dans nos collections, plus de mille n'ont pas passé le filtre.</p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
+          }
+        },
+        "usp_materials": {
+          "type": "column",
+          "settings": {
+            "title": "Toile 285 g/m², encres archival 75 ans, cadre bois massif",
+            "text": "<p>Toile 285 g/m² — assez dense pour tenir son grain sans s'affaisser. Encres archival garanties 75 ans — vos couleurs resteront fidèles à elles-mêmes bien après que le canapé en face aura été remplacé deux fois. Cadre en bois massif — pas un châssis creux, pas du contreplaqué.</p><p>Cette qualité-là, vous la sentez en accrochant le tableau. Et vous l'oubliez ensuite — c'est exactement ce qu'on attend d'un bon cadre.</p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
+          }
+        },
+        "usp_studio": {
+          "type": "column",
+          "settings": {
+            "title": "Direction artistique en France, impression européenne",
+            "text": "<p>Notre studio créatif est en France : c'est ici que les œuvres sont sélectionnées, retouchées, validées une à une. Nos partenaires d'impression sont en Europe, là où la qualité de tirage sur toile fait référence — l'Allemagne notamment, pour sa rigueur technique reconnue dans le monde de l'art imprimé.</p><p>Ce que nous garantissons, ce n'est pas un drapeau ; c'est une chaîne courte, européenne, contrôlée, où chaque étape a un visage.</p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
+          }
+        },
+        "usp_volume": {
+          "type": "column",
+          "settings": {
+            "title": "Plus de 1 015 tableaux déjà accrochés dans des intérieurs",
+            "text": "<p>Depuis 2022, plus de 1 015 tableaux sont sortis de nos cartons pour rejoindre des salons, des chambres, des bureaux, des couloirs un peu trop nus. Vous trouverez plus bas leurs photos chez nos clients — c'est probablement le meilleur portrait que nous puissions vous offrir de notre travail.</p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
+          }
+        }
+      },
+      "block_order": ["usp_curation", "usp_materials", "usp_studio", "usp_volume"],
+      "settings": {
+        "title": "",
+        "image_shape": "rounded-none",
+        "columns_desktop": 2,
+        "show_backgounds": true,
+        "button_label": "",
+        "button_link": "",
+        "to_obfuscate": false
+      }
+    },
+    "h2_3_by_room": {
+      "type": "multicolumn",
+      "blocks": {
+        "room_salon": {
+          "type": "column",
+          "settings": {
+            "title": "Tableau pour le salon",
+            "text": "<p>Le salon est la pièce où l'on reçoit, mais aussi celle où l'on se pose après une journée. Le bon tableau y crée le point focal sans crier — il invite à s'asseoir, à ralentir, à recommencer une conversation. Pensé pour les murs derrière le canapé, les pans aveugles, les enfilades à habiter.</p>",
+            "link_label": "Découvrir la collection",
+            "link": "shopify://collections/tableau-salon",
+            "to_obfuscate": false
+          }
+        },
+        "room_chambre_adulte": {
+          "type": "column",
+          "settings": {
+            "title": "Tableau pour la chambre adulte",
+            "text": "<p>La chambre, c'est l'endroit où vous quittez le monde. On y privilégie les tons doux, les sujets apaisants, les compositions qui se lisent allongé. Notre collection est curée pour accompagner les fins de journée, pas pour les agiter.</p>",
+            "link_label": "Découvrir la collection",
+            "link": "shopify://collections/tableau-chambre-adulte",
+            "to_obfuscate": false
+          }
+        },
+        "room_chambre_enfant": {
+          "type": "column",
+          "settings": {
+            "title": "Tableau pour la chambre enfant",
+            "text": "<p>Une chambre d'enfant grandit avec son occupant. Nous avons distingué chambre bébé, chambre garçon et chambre adolescent parce que les codes ne sont jamais les mêmes — et parce qu'un tableau bien choisi à 6 ans est un repère encore aimé à 12.</p>",
+            "link_label": "Découvrir la collection",
+            "link": "shopify://collections/tableau-chambre-garcon",
+            "to_obfuscate": false
+          }
+        },
+        "room_bureau": {
+          "type": "column",
+          "settings": {
+            "title": "Tableau pour le bureau",
+            "text": "<p>Le mur derrière vous en visio raconte qui vous êtes avant même que vous parliez. Le mur devant vous décide de votre concentration. Notre collection propose des œuvres qui élèvent sans distraire — pensées pour les bureaux à domicile comme pour les espaces professionnels.</p>",
+            "link_label": "Découvrir la collection",
+            "link": "shopify://collections/tableau-bureau",
+            "to_obfuscate": false
+          }
+        },
+        "room_cuisine": {
+          "type": "column",
+          "settings": {
+            "title": "Tableau pour la cuisine",
+            "text": "<p>La cuisine est devenue une pièce à vivre. Un tableau y trouve naturellement sa place — au-dessus du plan de travail, dans le coin repas, sur le pan de mur qui ramène l'œil. Notre collection joue les couleurs qui rassurent et les sujets qui ouvrent l'appétit.</p>",
+            "link_label": "Découvrir la collection",
+            "link": "shopify://collections/tableau-cuisine",
+            "to_obfuscate": false
+          }
+        },
+        "room_entree": {
+          "type": "column",
+          "settings": {
+            "title": "Tableau pour l'entrée et le couloir",
+            "text": "<p>L'entrée, c'est la première phrase de votre intérieur. Le couloir, c'est le souffle entre deux pièces. Ce sont des espaces souvent oubliés alors qu'ils décident de votre humeur dès le seuil. Nous avons des œuvres pensées pour ces formats étroits et ces traversées rapides — n'hésitez pas à nous demander conseil.</p>",
+            "link_label": "Voir nos collections",
+            "link": "shopify://collections",
+            "to_obfuscate": false
+          }
+        }
+      },
+      "block_order": ["room_salon", "room_chambre_adulte", "room_chambre_enfant", "room_bureau", "room_cuisine", "room_entree"],
+      "settings": {
+        "title": "Trouver votre tableau selon la pièce",
+        "image_shape": "aspect-[3/4] object-cover",
+        "columns_desktop": 3,
+        "show_backgounds": true,
+        "button_label": "",
+        "button_link": "",
+        "to_obfuscate": false
+      }
+    },
+    "h2_4_by_style_intro": {
+      "type": "rich-text",
+      "blocks": {
+        "h2_style_heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Explorer par style et univers",
+            "markup": "h2",
+            "heading_size": "text-3xl"
+          }
+        },
+        "style_intro": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Si vous savez déjà ce qui vous touche — un courant, une époque, une géographie — entrez par ici. Voici nos univers, curés un par un.</p>"
+          }
+        }
+      },
+      "block_order": ["h2_style_heading", "style_intro"],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-8",
+        "padding_bottom": "pb-0"
+      }
+    },
+    "h2_4_styles_part1": {
+      "type": "multicolumn",
+      "blocks": {
+        "style_abstrait": {
+          "type": "column",
+          "settings": {
+            "title": "Tableaux abstraits et modernes",
+            "text": "<p>L'abstraction laisse votre œil composer sa propre histoire. Couleurs, lignes, équilibres : rien ne vous dit quoi voir, tout vous invite à ressentir. Notre collection regroupe les œuvres les plus contemporaines de notre sélection.</p>",
+            "link_label": "Découvrir la collection",
+            "link": "shopify://collections/tableau-abstrait",
+            "to_obfuscate": false
+          }
+        },
+        "style_zen": {
+          "type": "column",
+          "settings": {
+            "title": "Tableaux zen et inspiration nature",
+            "text": "<p>Lotus, branches, paysages brumeux, lumière qui filtre. Pour les intérieurs qui cherchent l'apaisement comme une matière. Notre collection est pensée pour les chambres, les espaces méditation, les salons cocooning.</p>",
+            "link_label": "Découvrir la collection",
+            "link": "shopify://collections/tableau-zen",
+            "to_obfuscate": false
+          }
+        },
+        "style_popart": {
+          "type": "column",
+          "settings": {
+            "title": "Tableaux pop art et street art",
+            "text": "<p>L'énergie d'une scène urbaine, l'audace d'un grand aplat de couleur. Pour les intérieurs qui assument le caractère. Notre collection joue les contrastes francs et les références qui parlent à votre génération.</p>",
+            "link_label": "Découvrir la collection",
+            "link": "shopify://collections/tableau-pop-art",
+            "to_obfuscate": false
+          }
+        },
+        "style_africain": {
+          "type": "column",
+          "settings": {
+            "title": "Tableaux africains et ethniques",
+            "text": "<p>Portraits de femmes africaines, silhouettes berbères, motifs du Sahara : un univers que nous avons construit avec un soin particulier — c'est l'une de nos collections les plus aimées.</p>",
+            "link_label": "Découvrir la collection",
+            "link": "shopify://collections/tableau-africain",
+            "to_obfuscate": false
+          }
+        }
+      },
+      "block_order": ["style_abstrait", "style_zen", "style_popart", "style_africain"],
+      "settings": {
+        "title": "",
+        "image_shape": "aspect-[3/4] object-cover",
+        "columns_desktop": 2,
+        "show_backgounds": true,
+        "button_label": "",
+        "button_link": "",
+        "to_obfuscate": false
+      }
+    },
+    "h2_4_styles_part2": {
+      "type": "multicolumn",
+      "blocks": {
+        "style_nb": {
+          "type": "column",
+          "settings": {
+            "title": "Tableaux noir et blanc",
+            "text": "<p>Le noir et blanc ne vieillit jamais. Il s'accorde avec tout, structure un mur, fait reposer l'œil. Notre collection couvre la photographie, le dessin, l'abstraction monochrome.</p>",
+            "link_label": "Découvrir la collection",
+            "link": "shopify://collections/tableau-noir-et-blanc",
+            "to_obfuscate": false
+          }
+        },
+        "style_floral": {
+          "type": "column",
+          "settings": {
+            "title": "Tableaux floraux",
+            "text": "<p>Pas la nature morte académique — la fleur réinterprétée, agrandie, contemporaine. Notre collection propose des œuvres qui apportent le végétal sans tomber dans le décoratif convenu.</p>",
+            "link_label": "Découvrir la collection",
+            "link": "shopify://collections/tableau-fleurs",
+            "to_obfuscate": false
+          }
+        },
+        "style_japonais": {
+          "type": "column",
+          "settings": {
+            "title": "Tableaux japonais",
+            "text": "<p>Estampes revisitées, calligraphies épurées, vagues d'Hokusai et jardins de Kyoto. Notre collection est l'une des plus contemplatives de notre catalogue.</p>",
+            "link_label": "Découvrir la collection",
+            "link": "shopify://collections/tableau-japonais",
+            "to_obfuscate": false
+          }
+        },
+        "style_frida": {
+          "type": "column",
+          "settings": {
+            "title": "Tableaux Frida Kahlo",
+            "text": "<p>Une figure à elle seule mérite son univers. Notre collection rassemble portraits, autoportraits revisités, et hommages contemporains à l'iconique artiste mexicaine.</p>",
+            "link_label": "Découvrir la collection",
+            "link": "shopify://collections/tableaux-frida-kahlo",
+            "to_obfuscate": false
+          }
+        }
+      },
+      "block_order": ["style_nb", "style_floral", "style_japonais", "style_frida"],
+      "settings": {
+        "title": "",
+        "image_shape": "aspect-[3/4] object-cover",
+        "columns_desktop": 2,
+        "show_backgounds": true,
+        "button_label": "",
+        "button_link": "",
+        "to_obfuscate": false
+      }
+    },
+    "h2_5_size": {
+      "type": "rich-text",
+      "blocks": {
+        "h2_size_heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Choisir la bonne taille et le bon format",
+            "markup": "h2",
+            "heading_size": "text-3xl"
+          }
+        },
+        "size_text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>La taille d'un tableau ne se choisit pas au hasard ni au coup de cœur seul. Quelques repères suffisent à éviter les regrets :</p><ul><li><strong>Au-dessus d'un meuble</strong> (canapé, console, lit) : le tableau doit occuper <strong>60 à 75 % de la largeur du meuble</strong>. Au-dessous, il paraît timide ; au-dessus, il l'écrase.</li><li><strong>Hauteur d'accrochage</strong> : le <strong>centre du tableau à environ 1,50 m du sol</strong> — la hauteur moyenne du regard. La règle vaut pour les salons et chambres ; dans une entrée debout, on peut monter un peu.</li><li><strong>Mur seul, sans meuble dessous</strong> : pensez <strong>mur entier</strong> plutôt que zone. Un grand format ou un triptyque structurera mieux qu'une petite œuvre perdue.</li></ul><p>Pour aller plus loin, notre guide complet <a href=\"/blogs/tableau-cuisine/quelle-taille-de-tableau-choisir\">Quelle taille de tableau choisir ?</a> vous accompagne pièce par pièce.</p>"
+          }
+        }
+      },
+      "block_order": ["h2_size_heading", "size_text"],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-8",
+        "padding_bottom": "pb-8"
+      }
+    },
+    "h2_6_journey": {
+      "type": "rich-text",
+      "blocks": {
+        "h2_journey_heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Le voyage d'une œuvre, de notre studio à votre mur",
+            "markup": "h2",
+            "heading_size": "text-3xl"
+          }
+        },
+        "journey_text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Quand vous validez votre commande, l'œuvre n'attend pas dans un entrepôt. Elle n'existe pas encore. Voici ce qui se passe :</p><ol><li><strong>Le fichier source</strong>, déjà retouché par notre direction artistique, part vers notre atelier d'impression européen.</li><li>La toile est <strong>imprimée à la demande</strong>, jamais en lot. Vos couleurs sont calibrées sur votre format précis.</li><li>Elle est <strong>tendue à la main sur un châssis bois massif</strong>, vérifiée œuvre par œuvre.</li><li>Elle vous est livrée prête à accrocher, dans un emballage qui protège les angles — la partie la plus fragile d'un tableau tendu.</li></ol><p>Comptez quelques jours de production en plus du transport. C'est le prix d'une œuvre qui n'aura jamais vécu en stock.</p>"
+          }
+        }
+      },
+      "block_order": ["h2_journey_heading", "journey_text"],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-8",
+        "padding_bottom": "pb-8"
+      }
+    },
+    "h2_7_studio": {
+      "type": "rich-text",
+      "blocks": {
+        "h2_studio_heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Le studio MyselfMonArt — Paris, Toulouse, l'Europe",
+            "markup": "h2",
+            "heading_size": "text-3xl"
+          }
+        },
+        "studio_text_paris": {
+          "type": "text",
+          "settings": {
+            "text": "<h3>Notre siège est à Paris</h3><p>Paris, la ville de l'art — du Louvre aux galeries du Marais, des Beaux-Arts à Beaubourg. C'est notre point d'ancrage juridique, et c'est aussi un héritage culturel auquel nous tenons. Quand vous nous écrivez, votre courrier arrive à Paris.</p>"
+          }
+        },
+        "studio_text_toulouse_da": {
+          "type": "text",
+          "settings": {
+            "text": "<h3>Notre service client bat à Toulouse</h3><p>Notre équipe support, celle qui vous répond, vous conseille, gère vos commandes, est à Toulouse. Si vous nous appelez, vous entendrez ce léger accent qui réveille la journée. Toulouse a été élue parmi les villes les plus polies de France — nous n'y sommes pour rien, mais ça nous va bien.</p><h3>Notre direction artistique en France, notre impression en Europe</h3><p>Walid, fondateur, signe la direction artistique depuis la France. Sa formation de graphiste-illustrateur guide chaque retouche. L'impression, elle, est confiée à des partenaires européens — notamment en Allemagne, dont les imprimeurs sur toile sont une référence internationale dans le monde de l'art imprimé.</p><p>Nous préférons une chaîne courte, européenne, contrôlée, à un drapeau planté sur un emballage. C'est ce que nous garantissons : un travail dont chaque étape a un visage.</p>"
+          }
+        }
+      },
+      "block_order": ["h2_studio_heading", "studio_text_paris", "studio_text_toulouse_da"],
+      "settings": {
+        "content_alignment": "text-left",
+        "padding_top": "pt-8",
+        "padding_bottom": "pb-8"
       }
     },
     "trust_signals_home": {
@@ -91,636 +512,337 @@
       ],
       "settings": {
         "eyebrow": "Ils nous font confiance",
-        "title": "Nos clients adorent leurs tableaux",
-        "subtitle": "Découvrez les photos partagées par nos clients et notre note Trustpilot vérifiée.",
+        "title": "Ce que vivent nos clients au quotidien",
+        "subtitle": "Plus de 80 retours vérifiés sur Trustpilot et des dizaines de photos partagées par nos clients.",
         "show_trustpilot": true,
-        "trustpilot_score": 45,
-        "trustpilot_review_count": 81,
+        "trustpilot_score": 41,
+        "trustpilot_review_count": 80,
         "trustpilot_link": "https://fr.trustpilot.com/review/myselfmonart.com"
       }
     },
-    "product_list_cDj6j9": {
-      "type": "product-list",
-      "blocks": {
-        "featured_product_PKMzG7": {
-          "type": "featured_product",
-          "settings": {
-            "product": "cadre-moderne-abstrait-dore-luxe-et-modernite-zen"
-          }
-        },
-        "featured_product_pMByVG": {
-          "type": "featured_product",
-          "settings": {
-            "product": "decoration-murale-cerisier-ephemere-poetique"
-          }
-        },
-        "featured_product_8arTCa": {
-          "type": "featured_product",
-          "settings": {
-            "product": "art-mural-vases-abstraits-harmonie-pastel"
-          }
-        },
-        "featured_product_D46ipV": {
-          "type": "featured_product",
-          "settings": {
-            "product": "decor-mural-muse-abstraite-elegance-minimaliste"
-          }
-        },
-        "featured_product_8XkbKw": {
-          "type": "featured_product",
-          "settings": {
-            "product": "cadre-moderne-serenite-zen-du-japon"
-          }
-        },
-        "featured_product_YXMzpR": {
-          "type": "featured_product",
-          "settings": {
-            "product": "decor-mural-samourai-chemin-zen-et-poesie"
-          }
-        },
-        "featured_product_Eneg79": {
-          "type": "featured_product",
-          "settings": {
-            "product": "cadre-moderne-femme-africaine-portrait-lumineux"
-          }
-        },
-        "featured_product_rjiGfM": {
-          "type": "featured_product",
-          "settings": {
-            "product": "decor-mural-samourai-contraste-et-serenite"
-          }
-        },
-        "featured_product_dVdUMG": {
-          "type": "featured_product",
-          "settings": {
-            "product": "decoration-murale-baleine-reve-etoile-enfantin"
-          }
-        },
-        "featured_product_gaNTHd": {
-          "type": "featured_product",
-          "settings": {
-            "product": "grand-tableau-yin-yang-bleu-et-or-harmonie-zen"
-          }
-        },
-        "featured_product_KBemWL": {
-          "type": "featured_product",
-          "settings": {
-            "product": "cadre-moderne-cactus-serenite-boheme"
-          }
-        },
-        "featured_product_6wj74w": {
-          "type": "featured_product",
-          "settings": {
-            "product": "grand-tableau-oiseau-et-main-serenite-bleue"
-          }
-        },
-        "featured_product_WM7KJb": {
-          "type": "featured_product",
-          "settings": {
-            "product": "peinture-decorative-toaster-retro-pour-cuisine-enjouee"
-          }
-        },
-        "featured_product_DTwQxf": {
-          "type": "featured_product",
-          "settings": {
-            "product": "tableau-deco-femme-japonaise-en-kimono-the-zen"
-          }
-        },
-        "featured_product_LiJghG": {
-          "type": "featured_product",
-          "settings": {
-            "product": "tableau-moderne-fleurs-sauvages-eclat-naturel"
-          }
-        }
-      },
-      "block_order": [
-        "featured_product_PKMzG7",
-        "featured_product_pMByVG",
-        "featured_product_8arTCa",
-        "featured_product_D46ipV",
-        "featured_product_8XkbKw",
-        "featured_product_YXMzpR",
-        "featured_product_Eneg79",
-        "featured_product_rjiGfM",
-        "featured_product_dVdUMG",
-        "featured_product_gaNTHd",
-        "featured_product_KBemWL",
-        "featured_product_6wj74w",
-        "featured_product_WM7KJb",
-        "featured_product_DTwQxf",
-        "featured_product_LiJghG"
-      ],
-      "name": "t:sections.product-list.presets.name",
-      "settings": {
-        "title": "Tableaux déco — trouvez celui qui vous ressemble",
-        "button_text": "Voir tous les tableaux",
-        "button_link": "shopify://collections/tous-les-tableaux",
-        "to_obfuscate": true
-      }
-    },
-    "rich_text_bwfdwX": {
+    "h2_9_faq_intro": {
       "type": "rich-text",
       "blocks": {
-        "heading_bzccjE": {
+        "h2_faq_heading": {
           "type": "heading",
           "settings": {
-            "heading": "Tableaux modernes et toiles d'art",
+            "heading": "Comment bien choisir votre tableau décoration murale ?",
             "markup": "h2",
             "heading_size": "text-3xl"
           }
         },
-        "text_h7DkAc": {
+        "faq_intro_text": {
           "type": "text",
           "settings": {
-            "text": "<p>Découvrez nos créations murales en ligne, imaginées pour chaque pièce de votre intérieur. Explorez nos collections et choisissez le tableau qui fera écho à votre univers</p>",
-            "text_size": "text-xl",
-            "is_lighten": false
+            "text": "<p>Choisir un tableau décoration murale, ce n'est pas choisir un meuble : on ne le change pas tous les cinq ans. On le regarde tous les jours, parfois pendant une décennie. Trois questions valent la peine d'être posées avant d'acheter :</p><ol><li><strong>Quelle est la fonction de la pièce ?</strong> Une chambre demande l'apaisement ; un salon, le caractère ; un bureau, la concentration. Le sujet de l'œuvre doit servir l'usage du lieu.</li><li><strong>Quelle est l'ambiance déjà en place ?</strong> Identifiez 2 ou 3 couleurs dominantes de votre décoration actuelle. Le tableau idéal reprend l'une d'elles — pas toutes, sinon il se dilue.</li><li><strong>Quelle est l'intention émotionnelle ?</strong> Un tableau peut souligner, calmer, réveiller, structurer. Décidez de l'effet que vous voulez <strong>avant</strong> de choisir le sujet.</li></ol><p>Si ces questions vous laissent hésitant, notre équipe répond par téléphone et par mail. Vraiment.</p>"
           }
         }
       },
-      "block_order": [
-        "heading_bzccjE",
-        "text_h7DkAc"
-      ],
-      "disabled": true,
-      "name": "t:sections.rich-text.presets.name",
+      "block_order": ["h2_faq_heading", "faq_intro_text"],
       "settings": {
         "content_alignment": "text-left",
-        "padding_top": "pt-0",
-        "padding_bottom": "pb-0"
+        "padding_top": "pt-8",
+        "padding_bottom": "pb-8"
       }
     },
-    "product_list_hVQNEU": {
-      "type": "product-list",
+    "h2_10_faq": {
+      "type": "collapsible-content",
       "blocks": {
-        "featured_product_dmbfai": {
-          "type": "featured_product",
+        "faq_salon": {
+          "type": "collapsible_row",
           "settings": {
-            "product": "tableau-sur-toile-cheval-abstrait-en-mouvement"
+            "heading": "Comment choisir un tableau décoration murale pour son salon ?",
+            "icon": "none",
+            "row_content": "<p>Pour un salon, choisissez un tableau qui occupe <strong>60 à 75 % de la largeur du meuble</strong> sous lequel il sera accroché (canapé, console). Privilégiez un sujet fédérateur (paysage, abstrait, portrait iconique) et reprenez <strong>2 à 3 couleurs déjà présentes</strong> dans votre décoration. Le centre du tableau doit être <strong>à environ 1,50 m du sol</strong>, la hauteur moyenne du regard.</p>"
           }
         },
-        "featured_product_M6ViPp": {
-          "type": "featured_product",
+        "faq_size": {
+          "type": "collapsible_row",
           "settings": {
-            "product": "toile-decorative-visage-abstrait-emotion-profonde"
+            "heading": "Quelle taille de tableau choisir pour mon mur ?",
+            "icon": "none",
+            "row_content": "<p>La règle empirique : votre tableau doit mesurer <strong>environ deux tiers de la largeur du meuble</strong> qu'il surplombe. Sur un mur seul sans meuble, pensez en <strong>proportion du mur entier</strong> — un grand format ou un triptyque structure mieux qu'une petite œuvre. En cas de doute, notre <a href=\"/blogs/tableau-cuisine/quelle-taille-de-tableau-choisir\">guide complet sur la taille</a> détaille les cas pièce par pièce.</p>"
           }
         },
-        "featured_product_43ydD8": {
-          "type": "featured_product",
+        "faq_harmony": {
+          "type": "collapsible_row",
           "settings": {
-            "product": "grand-tableau-yin-yang-bleu-et-or-harmonie-zen"
+            "heading": "Comment harmoniser un tableau avec ma décoration ?",
+            "icon": "none",
+            "row_content": "<p>Une seule couleur commune suffit à créer l'harmonie. Identifiez la couleur dominante d'un élément central de votre pièce (canapé, tapis, rideaux) et choisissez un tableau qui la reprend en accent. <strong>Tons chauds</strong> (rouge, orange, ocre) pour réchauffer une pièce, <strong>tons froids</strong> (bleu, vert) pour apaiser. L'harmonie tient à un fil tendu, pas à dix accords.</p>"
           }
         },
-        "featured_product_EaCQ6f": {
-          "type": "featured_product",
+        "faq_hanging": {
+          "type": "collapsible_row",
           "settings": {
-            "product": "grand-tableau-oiseau-et-main-serenite-bleue"
+            "heading": "Comment accrocher un tableau correctement ?",
+            "icon": "none",
+            "row_content": "<p>Le centre du tableau doit se situer <strong>à environ 1,50 m du sol</strong>. Pour un tableau tendu sur châssis, utilisez deux crochets espacés (et non un seul au centre) afin d'éviter qu'il bascule. Pré-marquez les points d'ancrage au crayon sur le mur avant de percer. Pour plus de détails techniques, voir notre guide <a href=\"/blogs/tableau-cuisine/accrocher-un-tableau-en-toute-securite-nos-solutions-et-astuces-pratiques\">Accrocher un tableau en toute sécurité</a>.</p>"
           }
         },
-        "featured_product_gb3pM4": {
-          "type": "featured_product",
+        "faq_delivery": {
+          "type": "collapsible_row",
           "settings": {
-            "product": "tableau-sur-toile-calligraphie-arabe-bleue-apaisante"
+            "heading": "Quels sont vos délais de livraison ?",
+            "icon": "none",
+            "row_content": "<p>Nos tableaux sont <strong>imprimés à la demande</strong>, jamais en stock. Comptez quelques jours de production en plus du transport. Vos délais exacts sont indiqués sur la fiche produit de chaque œuvre et confirmés dans votre email de validation de commande. Pour toute question, joignez-nous au <strong>09 60 44 61 50</strong>.</p>"
           }
         },
-        "featured_product_7BHWnW": {
-          "type": "featured_product",
+        "faq_madeinfrance": {
+          "type": "collapsible_row",
           "settings": {
-            "product": "tableau-design-frida-kahlo-nature-eclatante"
+            "heading": "Vos tableaux sont-ils fabriqués en France ?",
+            "icon": "none",
+            "row_content": "<p>Notre direction artistique est en France : c'est ici que les œuvres sont sélectionnées, retouchées et validées une à une par notre studio. L'impression est confiée à nos partenaires européens, principalement en <strong>Allemagne</strong>, dont les imprimeurs sur toile sont une référence internationale. Nous préférons assumer une chaîne européenne courte et contrôlée plutôt que revendiquer un drapeau qui ne correspondrait pas à la réalité.</p>"
           }
         },
-        "featured_product_DBMph8": {
-          "type": "featured_product",
+        "faq_handpainted": {
+          "type": "collapsible_row",
           "settings": {
-            "product": "toile-contemporaine-le-petit-prince-poesie-etoilee"
-          }
-        },
-        "featured_product_4BG7QV": {
-          "type": "featured_product",
-          "settings": {
-            "product": "decor-mural-samourai-contraste-et-serenite"
-          }
-        },
-        "featured_product_nRFEhj": {
-          "type": "featured_product",
-          "settings": {
-            "product": "tableau-decoratif-maternite-africaine-chaleur-et-amour"
-          }
-        },
-        "featured_product_MkeHXi": {
-          "type": "featured_product",
-          "settings": {
-            "product": "tableau-design-frida-kahlo-vibrance-inspirante"
-          }
-        },
-        "featured_product_ULG9yE": {
-          "type": "featured_product",
-          "settings": {
-            "product": "creation-artistique-montagnes-du-japon-apaisantes"
-          }
-        },
-        "featured_product_DLxBnM": {
-          "type": "featured_product",
-          "settings": {
-            "product": "tableau-moderne-muse-africaine-eclat-sublime"
+            "heading": "Proposez-vous des tableaux peints à la main par un artiste ?",
+            "icon": "none",
+            "row_content": "<p>Oui — sur devis. Si vous souhaitez transformer l'une de nos œuvres en peinture acrylique ou huile sur toile, réalisée à la main par un artiste, contactez-nous au <strong>09 60 44 61 50</strong> ou par mail. Nous établissons un devis personnalisé selon le format, la technique et le délai souhaité.</p>"
           }
         }
       },
-      "block_order": [
-        "featured_product_dmbfai",
-        "featured_product_M6ViPp",
-        "featured_product_43ydD8",
-        "featured_product_EaCQ6f",
-        "featured_product_gb3pM4",
-        "featured_product_7BHWnW",
-        "featured_product_DBMph8",
-        "featured_product_4BG7QV",
-        "featured_product_nRFEhj",
-        "featured_product_MkeHXi",
-        "featured_product_ULG9yE",
-        "featured_product_DLxBnM"
-      ],
-      "disabled": true,
-      "name": "t:sections.product-list.presets.name",
+      "block_order": ["faq_salon", "faq_size", "faq_harmony", "faq_hanging", "faq_delivery", "faq_madeinfrance", "faq_handpainted"],
       "settings": {
-        "title": "",
-        "button_text": "Tout Afficher",
-        "button_link": "shopify://collections",
-        "to_obfuscate": true
+        "heading": "Questions fréquentes"
       }
     },
-    "collections_grid_DXKnVN": {
+    "h2_11_devis": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "",
+        "title": "Tableau peint à la main par un artiste, sur devis",
+        "description": "<p>Pour les projets où l'unicité prime — un cadeau d'exception, un anniversaire de mariage, un mur qui mérite une pièce vraiment unique — nous proposons la <strong>peinture à la main</strong>. Une œuvre, un artiste, votre format. Sur devis uniquement, sans engagement.</p><p>Demandez votre devis personnalisé au <strong>09 60 44 61 50</strong> ou via <a href=\"/pages/contact\">notre page contact</a>.</p>",
+        "layout": "image_first",
+        "enable_blob": true,
+        "activate_dynamic_color": false,
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "h2_12_collections_grid": {
       "type": "collections-pages-grid",
       "blocks": {
-        "collection_WMUmaF": {
+        "coll_salon": {
           "type": "collection",
           "settings": {
-            "image": "shopify://shop_images/collection-tableau-best-seller.jpg",
-            "collection": "bestsellers-1",
-            "nb_columns": "col-span-6",
+            "image": "",
+            "collection": "tableau-salon",
+            "nb_columns": "col-span-3",
             "lazy_load": true,
-            "paragraph": "<p>Découvrez notre collection de tableaux best-sellers, des œuvres qui séduisent dès le premier regard et trouvent facilement leur place dans tous les intérieurs. Ces tableaux font partie des choix préférés de nos clients, appréciés pour leur capacité à transformer une pièce et à créer une ambiance harmonieuse. Chaque création habille le mur avec élégance, apporte de la profondeur à l’espace et donne cette sensation agréable d’un intérieur soigné et chaleureux, que l’on aime regarder jour après jour.</p>"
+            "paragraph": "<p>Tableaux pour le salon — pour les murs derrière le canapé, les pans aveugles, les enfilades à habiter.</p>"
           }
         },
-        "collection_6KBgf7": {
+        "coll_chambre_adulte": {
+          "type": "collection",
+          "settings": {
+            "image": "",
+            "collection": "tableau-chambre-adulte",
+            "nb_columns": "col-span-3",
+            "lazy_load": true,
+            "paragraph": "<p>Tableaux pour la chambre adulte — tons doux, sujets apaisants, compositions qui se lisent allongé.</p>"
+          }
+        },
+        "coll_chambre_enfant": {
+          "type": "collection",
+          "settings": {
+            "image": "",
+            "collection": "tableau-chambre-garcon",
+            "nb_columns": "col-span-3",
+            "lazy_load": true,
+            "paragraph": "<p>Tableaux pour la chambre enfant — un repère choisi à 6 ans, encore aimé à 12.</p>"
+          }
+        },
+        "coll_bureau": {
+          "type": "collection",
+          "settings": {
+            "image": "",
+            "collection": "tableau-bureau",
+            "nb_columns": "col-span-3",
+            "lazy_load": true,
+            "paragraph": "<p>Tableaux pour le bureau — des œuvres qui élèvent sans distraire, pour les bureaux à domicile comme les espaces professionnels.</p>"
+          }
+        },
+        "coll_cuisine": {
+          "type": "collection",
+          "settings": {
+            "image": "",
+            "collection": "tableau-cuisine",
+            "nb_columns": "col-span-3",
+            "lazy_load": true,
+            "paragraph": "<p>Tableaux pour la cuisine — couleurs qui rassurent, sujets qui ouvrent l'appétit.</p>"
+          }
+        },
+        "coll_abstrait": {
+          "type": "collection",
+          "settings": {
+            "image": "",
+            "collection": "tableau-abstrait",
+            "nb_columns": "col-span-3",
+            "lazy_load": true,
+            "paragraph": "<p>Tableaux abstraits et modernes — l'abstraction laisse votre œil composer sa propre histoire.</p>"
+          }
+        },
+        "coll_zen": {
+          "type": "collection",
+          "settings": {
+            "image": "",
+            "collection": "tableau-zen",
+            "nb_columns": "col-span-3",
+            "lazy_load": true,
+            "paragraph": "<p>Tableaux zen et inspiration nature — pour les intérieurs qui cherchent l'apaisement comme une matière.</p>"
+          }
+        },
+        "coll_popart": {
+          "type": "collection",
+          "settings": {
+            "image": "",
+            "collection": "tableau-pop-art",
+            "nb_columns": "col-span-3",
+            "lazy_load": true,
+            "paragraph": "<p>Tableaux pop art et street art — l'énergie d'une scène urbaine, l'audace d'un grand aplat de couleur.</p>"
+          }
+        },
+        "coll_africain": {
+          "type": "collection",
+          "settings": {
+            "image": "",
+            "collection": "tableau-africain",
+            "nb_columns": "col-span-3",
+            "lazy_load": true,
+            "paragraph": "<p>Tableaux africains — portraits de femmes africaines, silhouettes berbères, motifs du Sahara.</p>"
+          }
+        },
+        "coll_noiretblanc": {
           "type": "collection",
           "settings": {
             "image": "shopify://shop_images/collection-tableau-noir-et-blanc.jpg",
-            "collection": "tableau-abstrait",
-            "nb_columns": "col-span-6",
+            "collection": "tableau-noir-et-blanc",
+            "nb_columns": "col-span-3",
             "lazy_load": true,
-            "paragraph": "<p>Découvrez notre collection de tableaux abstraits, des œuvres qui apportent du caractère tout en douceur à votre intérieur. Les formes et les couleurs se répondent naturellement, laissant place à l’émotion et à l’interprétation, sans jamais alourdir l’espace. Ces tableaux habillent le mur avec subtilité et créent une ambiance équilibrée, moderne et apaisante. Dans un salon, une chambre ou un espace de travail, l’abstrait devient une évidence, pour un intérieur harmonieux, élégant et agréable à vivre au quotidien.</p>"
+            "paragraph": "<p>Tableaux noir et blanc — il s'accorde avec tout, structure un mur, fait reposer l'œil.</p>"
+          }
+        },
+        "coll_fleurs": {
+          "type": "collection",
+          "settings": {
+            "image": "",
+            "collection": "tableau-fleurs",
+            "nb_columns": "col-span-3",
+            "lazy_load": true,
+            "paragraph": "<p>Tableaux floraux — la fleur réinterprétée, agrandie, contemporaine.</p>"
+          }
+        },
+        "coll_japonais": {
+          "type": "collection",
+          "settings": {
+            "image": "",
+            "collection": "tableau-japonais",
+            "nb_columns": "col-span-3",
+            "lazy_load": true,
+            "paragraph": "<p>Tableaux japonais — estampes revisitées, calligraphies épurées, vagues d'Hokusai.</p>"
+          }
+        },
+        "coll_frida": {
+          "type": "collection",
+          "settings": {
+            "image": "",
+            "collection": "tableaux-frida-kahlo",
+            "nb_columns": "col-span-3",
+            "lazy_load": true,
+            "paragraph": "<p>Tableaux Frida Kahlo — portraits, autoportraits revisités, hommages contemporains.</p>"
+          }
+        },
+        "coll_paysage": {
+          "type": "collection",
+          "settings": {
+            "image": "",
+            "collection": "tableau-paysage",
+            "nb_columns": "col-span-3",
+            "lazy_load": true,
+            "paragraph": "<p>Tableaux paysage — pour ouvrir une fenêtre sur l'horizon, là où il n'y en a pas.</p>"
           }
         }
       },
       "block_order": [
-        "collection_WMUmaF",
-        "collection_6KBgf7"
+        "coll_salon",
+        "coll_chambre_adulte",
+        "coll_chambre_enfant",
+        "coll_bureau",
+        "coll_cuisine",
+        "coll_abstrait",
+        "coll_zen",
+        "coll_popart",
+        "coll_africain",
+        "coll_noiretblanc",
+        "coll_fleurs",
+        "coll_japonais",
+        "coll_frida",
+        "coll_paysage"
       ],
       "settings": {
-        "title": "Nos collection en vedette",
-        "padding_top": "pt-0",
+        "title": "Découvrir toutes nos collections",
+        "padding_top": "pt-8",
         "padding_bottom": "pb-0"
       }
     },
-    "1198c25f-e6b6-405b-aa76-db2afd719caf": {
-      "type": "rich-text",
-      "settings": {
-        "content_alignment": "center",
-        "padding_top": "pt-0",
-        "padding_bottom": "pb-0"
-      }
-    },
-    "shifted_image_carousel_cJeF34": {
-      "type": "shifted-image-text",
-      "blocks": {
-        "image_AaTDCP": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/poster-salon-bleue.jpg"
-          }
-        },
-        "image_eVpDQA": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/decoration-murale-contemporaine.jpg"
-          }
-        },
-        "image_9eeV8Y": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/Decoration_Murale_-_Tableau_Street_Art_Mickey.jpg"
-          }
-        },
-        "image_94RVnq": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/idee-cadeau-personalise-bebe-garcon-poster-capricorne.jpg"
-          }
-        }
-      },
-      "block_order": [
-        "image_AaTDCP",
-        "image_eVpDQA",
-        "image_9eeV8Y",
-        "image_94RVnq"
-      ],
-      "settings": {
-        "heading": "Un Univers de Possibilités pour Créer Votre Atmosphère Idéale",
-        "description": "Que vous choisissiez des motifs audacieux ou des teintes délicates, un tableau personnalisé ou une œuvre signature, notre collection saura vous séduire, tout en captivant vos convives.",
-        "activate_dynamic_color": true,
-        "dynamic_primary_color": "#f9eda2",
-        "dynamic_secondary_color": "#112e3b"
-      }
-    },
-    "rich_text_DUh7mV": {
+    "h2_12_collections_more": {
       "type": "rich-text",
       "blocks": {
-        "heading_7W8ATM": {
-          "type": "heading",
-          "settings": {
-            "heading": "Créez une Ambiance Unique, Qui Vous Ressemble",
-            "markup": "h2",
-            "heading_size": "text-3xl"
-          }
-        },
-        "text_tPENCP": {
+        "more_text": {
           "type": "text",
           "settings": {
-            "text": "<p>Votre intérieur ne se limite pas à un simple espace de vie. Chez Myselfmonart, nous vous invitons à habiller vos murs avec émotion. Chacune de nos créations est pensée pour transformer votre intérieur en un véritable reflet de vous-même.</p>",
-            "text_size": "text-xl",
-            "is_lighten": false
-          }
-        }
-      },
-      "block_order": [
-        "heading_7W8ATM",
-        "text_tPENCP"
-      ],
-      "settings": {
-        "content_alignment": "text-left",
-        "padding_top": "pt-0",
-        "padding_bottom": "pb-0"
-      }
-    },
-    "badges_cHPDPq": {
-      "type": "badges",
-      "blocks": {
-        "svg_block_kPN934": {
-          "type": "svg_block",
-          "settings": {
-            "badge_logo": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 256 256\"><path fill=\"currentColor\" d=\"M148 48v160a12 12 0 0 1-24 0V69.19l-21.83 13.1a12 12 0 0 1-12.34-20.58l40-24A12 12 0 0 1 148 48\"></path></svg>",
-            "logo_size": 45,
-            "background_plus_border": true,
-            "heading": "CHOISISSEZ",
-            "text": "Choisissez votre tableau deco parmi la large collection de tableaux"
+            "text": "<p>Plus de 50 collections vous attendent — par pièce, par style, par couleur, par artiste, par moment de vie. Voir aussi <a href=\"/collections/tableau-couleur\">Tableau couleur</a> · <a href=\"/collections/tableau-ethnique\">Tableau ethnique</a>.</p>"
           }
         },
-        "svg_block_UtVXBA": {
-          "type": "svg_block",
-          "settings": {
-            "badge_logo": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M14.121 5.879A3 3 0 0 0 9 8a1 1 0 0 1-2 0a5 5 0 1 1 8.535 3.535L9.88 17.193A3 3 0 0 0 9.016 19H16a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1v-.686a5 5 0 0 1 1.464-3.536l5.657-5.657a3 3 0 0 0 0-4.242\" clip-rule=\"evenodd\"></path></svg>",
-            "logo_size": 45,
-            "background_plus_border": true,
-            "heading": "PERSONNALISEZ",
-            "text": "Configurez la taille et le support de votre tableau"
-          }
-        },
-        "svg_block_pTNkWn": {
-          "type": "svg_block",
-          "settings": {
-            "badge_logo": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2.5\" d=\"M8 19a5 5 0 1 0 3-9l5-6H8\"></path></svg>",
-            "logo_size": 45,
-            "background_plus_border": true,
-            "heading": "COMMANDEZ",
-            "text": "Nous fabriquons votre tableau et nous chargeons de vous l'envoyer."
-          }
-        },
-        "svg_block_mLd4kz": {
-          "type": "svg_block",
-          "settings": {
-            "badge_logo": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2.5\" d=\"m10 4l-1.522 7.608A2 2 0 0 0 10.44 14H16m0 0V8m0 6v6\"></path></svg>",
-            "logo_size": 45,
-            "background_plus_border": true,
-            "heading": "ADMIREZ",
-            "text": "Accrochez votre tableau et profitez du résultat !"
-          }
-        }
-      },
-      "block_order": [
-        "svg_block_kPN934",
-        "svg_block_UtVXBA",
-        "svg_block_pTNkWn",
-        "svg_block_mLd4kz"
-      ],
-      "settings": {
-        "title": "",
-        "nb_columns_on_computer": "4",
-        "nb_columns_on_mobile": "1"
-      }
-    },
-    "multicolumn_dWGLnx": {
-      "type": "multicolumn",
-      "blocks": {
-        "column_HVEjBP": {
-          "type": "column",
-          "settings": {
-            "image": "shopify://shop_images/toile-cotton-abtrait_forme-geometrique.jpg",
-            "title": "Tableau Décoration",
-            "text": "<p>Des créations originales aux teintes profondes et intenses, avec une texture chaleureuse qui sublime vos murs et enrichit l’ambiance de votre intérieur</p>",
-            "link_label": "",
-            "link": "",
-            "to_obfuscate": false
-          }
-        },
-        "column_jdnQLQ": {
-          "type": "column",
-          "settings": {
-            "image": "shopify://shop_images/cadre-americain-noir-mat-toile-femme-rouge-abstrait.jpg",
-            "title": "Cadre Pour Toile",
-            "text": "<p>Des cadres élégants qui soulignent la beauté de votre toile et créent une harmonie parfaite dans votre intérieur.</p>",
-            "link_label": "",
-            "link": "",
-            "to_obfuscate": false
-          }
-        }
-      },
-      "block_order": [
-        "column_HVEjBP",
-        "column_jdnQLQ"
-      ],
-      "settings": {
-        "title": "",
-        "image_shape": "rounded-none",
-        "columns_desktop": 2,
-        "show_backgounds": true,
-        "button_label": "",
-        "button_link": "",
-        "to_obfuscate": false
-      }
-    },
-    "rich_text_83wpVf": {
-      "type": "rich-text",
-      "blocks": {
-        "heading_r8rBrU": {
-          "type": "heading",
-          "settings": {
-            "heading": "CONSEILS POUR CHOISIR LA TAILLE IDÉALE DE VOTRE TABLEAU.",
-            "markup": "h3",
-            "heading_size": "text-3xl"
-          }
-        },
-        "text_4zdheU": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Consultez notre guide des tailles ou prenez contact avec nous. Nous serons heureux de vous aider à harmoniser votre intérieur.</p>",
-            "text_size": "text-xl",
-            "is_lighten": false
-          }
-        },
-        "button_tXJiiB": {
+        "more_button": {
           "type": "button",
           "settings": {
-            "button_label": "Guide des tailles",
-            "button_link": "shopify://pages/guide-de-tailles",
-            "button_label_2": "Inspirations",
-            "button_link_2": "shopify://blogs/tableau-salon/comment-trouver-des-idees-de-decoration",
+            "button_label": "Voir nos 50 collections",
+            "button_link": "shopify://collections",
+            "button_label_2": "",
+            "button_link_2": "",
             "to_obfuscate": false
           }
         },
-        "heading_NxJd7H": {
-          "type": "heading",
-          "settings": {
-            "heading": "Besoin d’aide ?",
-            "markup": "h3",
-            "heading_size": "text-3xl"
-          }
-        },
-        "button_YAaw3C": {
-          "type": "button",
-          "settings": {
-            "button_label": "Contactez-nous",
-            "button_link": "shopify://pages/contactez-nous",
-            "button_label_2": "F.A.Q",
-            "button_link_2": "shopify://pages/faq",
-            "to_obfuscate": false
-          }
-        }
-      },
-      "block_order": [
-        "heading_r8rBrU",
-        "text_4zdheU",
-        "button_tXJiiB",
-        "heading_NxJd7H",
-        "button_YAaw3C"
-      ],
-      "settings": {
-        "content_alignment": "text-left",
-        "padding_top": "pt-0",
-        "padding_bottom": "pb-0"
-      }
-    },
-    "rich_text_VQq9NW": {
-      "type": "rich-text",
-      "blocks": {
-        "heading_nakN6p": {
-          "type": "heading",
-          "settings": {
-            "heading": "Tableaux et toiles d'art — Trouvez celui qui vous ressemble",
-            "markup": "h1",
-            "heading_size": "text-2xl"
-          }
-        },
-        "text_xU7G8z": {
+        "signature_text": {
           "type": "text",
           "settings": {
-            "text": "<p>Votre intérieur, c'est plus qu'un décor. C'est l'endroit où vous posez vos valises, vos pensées, votre journée. Chez MyselfMonArt, on crée des tableaux pour ça — pas pour suivre une tendance, mais pour révéler ce que vous cherchez vraiment. Le calme après le bruit. La chaleur d'un chez-soi. L'audace d'un mur qui vous ressemble. Ou juste cette douceur qui fait qu'on se sent bien en rentrant.</p><p>Nos toiles sont imprimées sur commande, avec une texture mate et grainée qui donne du relief à chaque œuvre. Couleurs profondes, châssis bois massif, encres garanties 75 ans. De l'art pensé pour durer. <a href=\"/collections/tableau-salon\" title=\"Tableau Salon\">Un grand tableau de salon</a> au-dessus du canapé pour réchauffer vos soirées. Une touche de couleur avec <a href=\"/collections/tableau-cuisine\" title=\"Tableau Cuisine\">un tableau pour cuisine</a> qui donne envie de s'attabler. Une <a href=\"/collections/tableau-chambre\" title=\"Tableau Chambre\">toile chaleureuse pour chambre</a> apaisante pour mieux fermer les yeux. Ou un <a href=\"/collections/chambre-enfant\" title=\"Tableau chambre enfant\">tableau chambre enfant</a> qui fait rêver les petits comme les grands. Abstrait, floral, pop art, japandi… il y a forcément une toile qui vous attend. Livraison offerte dès 99€, 14 jours pour changer d'avis. ❤️</p>",
+            "text": "<p><em>Avec soin,</em><br><em>— Hayate / Team MyselfMonArt</em></p>",
             "text_size": "text-lg",
             "is_lighten": true
           }
         }
       },
-      "block_order": [
-        "heading_nakN6p",
-        "text_xU7G8z"
-      ],
+      "block_order": ["more_text", "more_button", "signature_text"],
       "settings": {
-        "content_alignment": "text-left",
-        "padding_top": "pt-0",
-        "padding_bottom": "pb-0"
-      }
-    },
-    "badges_QiyDmQ": {
-      "type": "badges",
-      "blocks": {
-        "svg_block_p4TBM6": {
-          "type": "svg_block",
-          "settings": {
-            "badge_logo": "<!--?xml version=\"1.0\" encoding=\"UTF-8\"?-->\n<svg id=\"uuid-695d01dc-b283-4fc9-a867-972d74565e33\" data-name=\"Calque 2\" xmlns=\"http://www.w3.org/2000/svg\" viewbox=\"0 0 827.66 854.36\">\n  <defs>\n    <style>\n      .uuid-9c7606a6-9736-4db3-bb55-f8e6badda296, .uuid-e297a342-1df7-4018-bbd8-a1c69c7dd7a3, .uuid-cadca79e-5698-4a0d-832c-c4e20103f6c4, .uuid-a771475b-25cc-4db4-8a13-2fd50d9f1fb0, .uuid-798b152e-bd81-4b17-90df-8db33ffe5b43, .uuid-0eb14ee6-cc45-47b5-9f79-629079fb14e8 {\n        stroke-width: 0px;\n      }\n\n      .uuid-e297a342-1df7-4018-bbd8-a1c69c7dd7a3 {\n        fill: #232323;\n      }\n\n      .uuid-cadca79e-5698-4a0d-832c-c4e20103f6c4 {\n        fill: #a93514;\n      }\n\n      .uuid-a771475b-25cc-4db4-8a13-2fd50d9f1fb0 {\n        fill: #fff;\n      }\n\n      .uuid-798b152e-bd81-4b17-90df-8db33ffe5b43 {\n        fill: #f0ac01;\n      }\n\n      .uuid-0eb14ee6-cc45-47b5-9f79-629079fb14e8 {\n        fill: #001f3f;\n      }\n    </style>\n  </defs>\n  <g id=\"uuid-2ff13fb8-33da-4751-a8bd-f8d51e3a38e7\" data-name=\"Calque 1\">\n    <g>\n      <path class=\"uuid-9c7606a6-9736-4db3-bb55-f8e6badda296\" d=\"m120.17,854.36c-16.71-4.3-32.92-9.58-46.18-21.43-25.51-22.81-36.09-51.36-29.84-84.72,29.82-159.06,116.84-279.57,250.09-368.59,3.23-2.16,6.59-4.16,10.06-5.88,9.46-4.67,18.12.25,19.2,10.8.2,1.93.09,3.89.09,5.83,0,127.05.06,254.11-.04,381.16-.03,33.69-13.83,59.67-44.66,74.88-7.81,3.85-16.77,5.35-25.21,7.94H120.17Zm178.25-446.63c-2.94,1.68-4.96,2.48-6.55,3.8-24.95,20.79-51.39,40.07-74.47,62.76-77.13,75.81-127.63,166.5-147.56,273.45-8.71,46.72,19.88,81.4,67.46,81.48,34.48.06,68.95.12,103.43-.08,6.34-.04,12.88-.52,18.97-2.16,24.43-6.56,38.7-27.22,38.71-55.52.04-118.44.02-236.89.02-355.33v-8.4Z\"></path>\n      <path class=\"uuid-9c7606a6-9736-4db3-bb55-f8e6badda296\" d=\"m300.62,74.31c27.7,12.61,52.12,29.37,74.74,48.89,24.73,21.34,46.9,45.03,66.48,71.18,4.6,6.15,5.09,12.09.34,18.28-39.47,51.33-84.97,95.51-145.31,121.91-55.41,24.23-109.85,20.54-163.08-6.83-52.79-27.15-94.02-67.57-129.84-114.11-4.85-6.3-5.49-12.42-.49-18.97,36.14-47.41,78.3-87.96,131.73-115.66,6.11-3.17,12.49-5.83,19.54-9.1-5.51-11.91-10.84-23.41-16.15-34.91-1.16-2.52-2.44-5-3.38-7.61-2.54-6.98-.8-12.68,5.79-16.32,6.1-3.36,13.19-1.03,16.85,6.03,4.98,9.61,9.31,19.55,13.89,29.36,7.25,15.54,7.21,15.42,23.76,12.47,6.49-1.16,13.12-1.58,20.55-2.44,0-11.6,0-22.65,0-33.7,0-2.5-.08-5.01.03-7.51.43-9.63,5.39-15.46,12.89-15.26,7.27.19,12.05,5.72,12.24,15,.25,11.95.28,23.92-.01,35.87-.13,5.17,1.44,7.18,6.82,7.93,9.32,1.29,18.47,3.74,28.8,5.93,2.5-5.13,5.31-10.72,7.98-16.38,4.63-9.79,9.03-19.69,13.79-29.41,4.15-8.47,10.58-11.29,17.43-8.11,6.74,3.13,8.97,10.22,5.29,18.46-5.43,12.17-11.2,24.19-16.8,36.28-1.26,2.73-2.44,5.49-3.87,8.74Zm-192.21,50.69c-31,22.87-56.76,49.39-80.44,78.93,35.31,42.67,73.88,80.6,124.2,104.68,47.13,22.55,94.2,22.34,141.38-.06,30.24-14.36,56.57-34.21,80.36-57.39,15.25-14.85,29.34-30.89,44.14-46.58-24.38-30.11-49.9-56.57-81.37-79.68,14.35,58.18.17,105.23-48.1,138.01-39.91,27.1-83.73,28.74-125.26,3.9-53.54-32.01-69.16-80.94-54.93-141.81Zm18.93,37.98c.78,49.53,37.31,89.44,87.37,94.56,37.2,3.81,74.92-17,92.14-50.82,17.7-34.77,12.35-77.93-13.26-105.73-1.98-2.15-4.63-4-7.32-5.16-30.38-13.05-61.6-16.88-94.45-10.9-30.37,5.53-51.79,20.13-59.53,51.12-2.21,8.83-3.33,17.94-4.95,26.92Z\"></path>\n      <path class=\"uuid-9c7606a6-9736-4db3-bb55-f8e6badda296\" d=\"m752.98,272.99c13.65-6.33,26.74-12.4,39.83-18.47,6.07-2.81,11.89-3.09,16.72,2.31,5.86,6.54,3.76,15.5-5.12,19.92-12.18,6.06-24.52,11.83-37.02,17.17-5.58,2.38-7.32,5.25-5.96,11.32,2.11,9.41,3.21,19.05,4.85,29.34,11.88,0,23.51-.03,35.14.02,3.33.01,6.68.05,9.98.43,6.87.81,10.58,5.33,10.79,11.75.21,6.45-3.32,11.61-10.11,12.24-9.1.84-18.3.67-27.45.82-6.36.1-12.72.02-19.23.02-2.55,11.03-5.26,21.44-7.13,32.01-.31,1.74,2.6,5.01,4.76,6.08,12.44,6.15,25.12,11.82,37.68,17.73,2.5,1.18,5.08,2.4,7.19,4.13,4.87,3.99,6.33,9.18,3.42,14.89-3,5.9-8.1,8.86-14.49,6.29-10.55-4.24-20.81-9.18-31.17-13.88-5.56-2.52-11.08-5.12-17.32-8.01-3.1,5.99-5.96,11.89-9.16,17.6-27.77,49.63-66.42,89.48-111.37,123.65-5.76,4.38-11.61,5.17-17.57.62-51.22-39.14-95.22-84.4-121.88-144.29-24.6-55.24-21.53-109.69,5.54-163.08,27.11-53.47,67.9-95.13,114.91-131.3,7.14-5.5,13.44-4.68,20.31.67,51.59,40.11,95.62,86.43,121.91,147.44.31.71.94,1.28,1.92,2.56Zm-134.51,262.95c29.58-23.75,55.84-49.44,77.54-80.09-25.26,6.9-50.18,7.19-74.82-1.01-24.47-8.14-44.29-22.83-59.41-43.76-15.31-21.19-22.94-44.97-22.55-71.02.49-33.55,12.68-62.51,37.27-85.44,34.16-31.86,74.42-39.79,121.25-27.1-23.51-31.83-49.97-57.56-79.25-81.01-39.34,32.01-74,67.38-98.53,111.65-29.04,52.42-31.19,105.54-3.55,159.3,24.4,47.46,60.7,84.6,102.04,118.48Zm40.29-100.29c22.16.04,43.23-7.22,59.9-21.38,3.63-3.09,6.83-7.37,8.69-11.75,17.24-40.62,17.48-81.46.19-122.13-1.97-4.62-5.23-9.24-9.09-12.42-31.77-26.23-77.76-28.38-111.83-5.62-34.73,23.2-50.36,66.48-38.31,106.08,12.19,40.04,48.65,67.14,90.46,67.22Z\"></path>\n      <path class=\"uuid-9c7606a6-9736-4db3-bb55-f8e6badda296\" d=\"m619.41,625.75c23.33-18.8,48.98-30.7,78.2-34.06,48.17-5.54,90.04,8.26,125.06,41.84,2.98,2.86,4.94,8.25,4.98,12.49.79,82.75-55.28,163.36-133.18,192.03-86.34,31.77-176.36,8.73-235.44-61.23-31.57-37.38-47.38-81.24-48.05-130.18-.07-5.01,3.16-11.39,6.93-14.93,54.58-51.17,135.89-55.24,195.64-10.23,1.76,1.32,3.55,2.6,5.86,4.28Zm-180.16,50.39c12.83,83.51,94.07,160.69,199.54,149.81,96.62-9.96,155.37-91.64,160.19-151.63-119.16,83.09-238.94,83.57-359.73,1.82Zm355.28-33.46c-44.34-38.94-125.15-34.9-164.11,7.71-6.26,6.84-14.71,7.96-20.4,1.97-19.8-20.84-44.35-32.15-72.44-35.69-35.2-4.44-66.85,4.69-95.04,26.58,93.81,88.18,251.5,92.91,351.99-.57Z\"></path>\n      <path class=\"uuid-9c7606a6-9736-4db3-bb55-f8e6badda296\" d=\"m620.3.36c60.13.85,116.46,23.52,163.24,69.13,15.89,15.49,16.48,38.67,1.89,54.82-13.97,15.45-37.76,17.32-54.01,2.82-19.95-17.79-41.1-33.21-67.02-40.83-57.45-16.9-109.31-6.2-155.09,32.53-9.37,7.93-18.03,16.68-31.19,17.8-17.02,1.45-32.21-7.16-39.39-22.39-6.98-14.81-4.6-33.46,8.46-44.33,17.87-14.86,36.18-29.72,56.18-41.34C537.63,8.7,575.67.66,620.3.36Zm150.4,95.33c-1.17-1.96-2.54-6.29-5.47-8.77-11.42-9.68-22.51-20.14-35.21-27.87-68.41-41.61-139.47-45.18-211.19-9.98-19.35,9.49-35.98,24.72-53.31,38.04-6.89,5.3-6.79,14.31-1.6,19.98,5.34,5.82,13.04,6.01,20.18.37,2.18-1.72,4.16-3.69,6.23-5.54,73.1-65.26,179.12-64.7,251.63,1.31,2.66,2.42,5.38,4.95,8.49,6.65,9.04,4.95,20.32-1.94,20.24-14.19Z\"></path>\n      <path class=\"uuid-9c7606a6-9736-4db3-bb55-f8e6badda296\" d=\"m411.34,535.94c-32.01-.71-55.2-31.99-43.06-61.61,8.74-21.32,22.07-40.85,34.19-60.67,4.34-7.1,13.84-7.68,18.67-1.36,16.04,20.98,31.81,42.61,37.59,68.86,6.37,28.94-17.45,55.44-47.39,54.78Zm.94-94.24c-7.37,13.94-13.99,25.38-19.56,37.31-5.15,11.02-2.38,20.98,6.31,27.52,7.88,5.92,19.29,5.81,27.07-.27,8.6-6.72,11.14-16.41,5.87-27.53-5.55-11.71-12.14-22.94-19.69-37.03Z\"></path>\n      <path class=\"uuid-798b152e-bd81-4b17-90df-8db33ffe5b43\" d=\"m298.42,407.73v8.4c0,118.44.02,236.89-.02,355.33-.01,28.31-14.28,48.96-38.71,55.52-6.08,1.63-12.63,2.12-18.97,2.16-34.48.2-68.95.14-103.43.08-47.58-.08-76.16-34.76-67.46-81.48,19.93-106.95,70.43-197.65,147.56-273.45,23.09-22.69,49.52-41.98,74.47-62.76,1.59-1.32,3.61-2.12,6.55-3.8Zm-17.85,87.85c-.36-12.49-10.6-17.94-19.44-12.42-7.28,4.54-14.17,9.8-20.8,15.27-41.79,34.45-70.76,78.61-94.8,126.35-6.6,13.11-12.11,26.8-17.62,40.42-2.88,7.11.4,14,6.81,16.58,6.21,2.49,12.4-.08,15.95-6.7.92-1.71,1.64-3.52,2.39-5.31,27.39-64.81,62.25-124.1,121.34-165.75,3.25-2.29,4.97-6.74,6.16-8.43Zm-92.81,251.41c-17.34.22-34.4,1.85-50,10.38-7.12,3.89-12.47,9.29-13.89,17.64-1.12,6.59,1.39,11.71,7.58,14.1,6.09,2.35,11.07.31,15.32-4.96,2.58-3.2,6.34-7.13,9.93-7.54,15.87-1.83,31.9-3.63,47.81-3.2,10,.27,20.88,1.73,27.21,12.8,1.49,2.6,8.96,3.9,12.49,2.6,3.48-1.29,7.21-6.41,7.73-10.27,1.34-10.09-5.25-16.48-13.42-21.02-15.79-8.79-33.16-10.36-50.78-10.53Z\"></path>\n      <path class=\"uuid-a771475b-25cc-4db4-8a13-2fd50d9f1fb0\" d=\"m108.42,125c-14.24,60.87,1.39,109.8,54.93,141.81,41.53,24.83,85.35,23.2,125.26-3.9,48.27-32.78,62.45-79.82,48.1-138.01,31.47,23.11,56.99,49.56,81.37,79.68-14.8,15.7-28.89,31.73-44.14,46.58-23.8,23.18-50.12,43.03-80.36,57.39-47.18,22.4-94.25,22.61-141.38.06-50.32-24.08-88.89-62.02-124.2-104.68,23.68-29.54,49.43-56.05,80.44-78.93Z\"></path>\n      <path class=\"uuid-0eb14ee6-cc45-47b5-9f79-629079fb14e8\" d=\"m127.35,162.98c1.62-8.98,2.74-18.08,4.95-26.92,7.74-30.99,29.16-45.59,59.53-51.12,32.85-5.98,64.08-2.15,94.45,10.9,2.69,1.16,5.34,3,7.32,5.16,25.6,27.8,30.95,70.96,13.26,105.73-17.21,33.82-54.94,54.63-92.14,50.82-50.06-5.12-86.58-45.03-87.37-94.56Zm37.77-4.88c-.18,31.69,25.81,57.94,57.48,58.07,31.47.13,57.83-26.25,57.77-57.84-.05-31.33-25.43-56.93-57.13-57.63-31.22-.69-57.95,25.71-58.13,57.4Z\"></path>\n      <path class=\"uuid-a771475b-25cc-4db4-8a13-2fd50d9f1fb0\" d=\"m618.47,535.93c-41.34-33.88-77.64-71.02-102.04-118.48-27.65-53.77-25.5-106.88,3.55-159.3,24.52-44.26,59.18-79.63,98.53-111.65,29.28,23.45,55.74,49.17,79.25,81.01-46.82-12.7-87.08-4.76-121.25,27.1-24.58,22.93-36.77,51.88-37.27,85.44-.38,26.05,7.24,49.83,22.55,71.02,15.12,20.93,34.94,35.62,59.41,43.76,24.64,8.2,49.55,7.91,74.82,1.01-21.71,30.66-47.97,56.34-77.54,80.09Z\"></path>\n      <path class=\"uuid-0eb14ee6-cc45-47b5-9f79-629079fb14e8\" d=\"m658.76,435.65c-41.81-.08-78.27-27.17-90.46-67.22-12.05-39.6,3.58-82.88,38.31-106.08,34.08-22.76,80.07-20.62,111.83,5.62,3.85,3.18,7.12,7.8,9.09,12.42,17.29,40.67,17.05,81.51-.19,122.13-1.86,4.38-5.05,8.66-8.69,11.75-16.67,14.16-37.74,21.42-59.9,21.38Zm62.72-94.34c.07-31.75-25.97-57.81-57.67-57.75-31.6.07-58.03,26.61-57.69,57.95.33,31.38,26.13,57.1,57.49,57.31,31.72.22,57.81-25.72,57.88-57.52Z\"></path>\n      <path class=\"uuid-cadca79e-5698-4a0d-832c-c4e20103f6c4\" d=\"m439.25,676.14c120.79,81.75,240.56,81.27,359.73-1.82-4.82,59.99-63.57,141.67-160.19,151.63-105.47,10.87-186.7-66.3-199.54-149.81Z\"></path>\n      <path class=\"uuid-cadca79e-5698-4a0d-832c-c4e20103f6c4\" d=\"m794.53,642.68c-100.5,93.48-258.19,88.74-351.99.57,28.19-21.9,59.83-31.02,95.04-26.58,28.09,3.54,52.64,14.85,72.44,35.69,5.7,6,14.15,4.88,20.4-1.97,38.96-42.61,119.78-46.65,164.11-7.71Z\"></path>\n      <path class=\"uuid-e297a342-1df7-4018-bbd8-a1c69c7dd7a3\" d=\"m770.7,95.7c.08,12.25-11.2,19.14-20.24,14.19-3.11-1.71-5.83-4.23-8.49-6.65-72.51-66-178.53-66.57-251.63-1.31-2.07,1.85-4.05,3.82-6.23,5.54-7.15,5.64-14.84,5.46-20.18-.37-5.2-5.66-5.29-14.68,1.6-19.98,17.33-13.32,33.96-28.55,53.31-38.04,71.72-35.19,142.79-31.62,211.19,9.98,12.7,7.72,23.79,18.18,35.21,27.87,2.93,2.48,4.3,6.81,5.47,8.77Z\"></path>\n      <path class=\"uuid-cadca79e-5698-4a0d-832c-c4e20103f6c4\" d=\"m412.28,441.7c7.56,14.09,14.14,25.32,19.69,37.03,5.27,11.11,2.73,20.81-5.87,27.53-7.78,6.08-19.19,6.19-27.07.27-8.69-6.53-11.46-16.49-6.31-27.52,5.57-11.93,12.19-23.36,19.56-37.31Z\"></path>\n      <path class=\"uuid-9c7606a6-9736-4db3-bb55-f8e6badda296\" d=\"m280.57,495.58c-1.2,1.69-2.92,6.14-6.16,8.43-59.08,41.66-93.95,100.95-121.34,165.75-.76,1.79-1.48,3.6-2.39,5.31-3.56,6.63-9.75,9.2-15.95,6.7-6.42-2.58-9.69-9.47-6.81-16.58,5.51-13.62,11.02-27.31,17.62-40.42,24.04-47.74,53.01-91.91,94.8-126.35,6.63-5.47,13.53-10.72,20.8-15.27,8.84-5.52,19.07-.07,19.44,12.42Z\"></path>\n      <path class=\"uuid-9c7606a6-9736-4db3-bb55-f8e6badda296\" d=\"m187.76,746.99c17.62.17,34.99,1.74,50.78,10.53,8.16,4.54,14.76,10.93,13.42,21.02-.51,3.86-4.25,8.98-7.73,10.27-3.53,1.31-11.01,0-12.49-2.6-6.33-11.07-17.21-12.53-27.21-12.8-15.91-.43-31.95,1.36-47.81,3.2-3.6.42-7.35,4.34-9.93,7.54-4.25,5.26-9.23,7.31-15.32,4.96-6.19-2.39-8.7-7.51-7.58-14.1,1.42-8.35,6.77-13.75,13.89-17.64,15.6-8.53,32.66-10.16,49.99-10.38Z\"></path>\n      <path class=\"uuid-9c7606a6-9736-4db3-bb55-f8e6badda296\" d=\"m165.13,158.1c.18-31.69,26.91-58.09,58.13-57.4,31.69.7,57.07,26.31,57.13,57.63.06,31.58-26.3,57.96-57.77,57.84-31.67-.13-57.66-26.38-57.48-58.07Zm57.45,32.77c17.77.1,32.51-14.36,32.72-32.08.21-17.72-14.15-32.42-32-32.78-18.16-.37-33.07,14.3-33.04,32.48.03,17.86,14.43,32.28,32.33,32.38Z\"></path>\n      <path class=\"uuid-9c7606a6-9736-4db3-bb55-f8e6badda296\" d=\"m721.48,341.31c-.07,31.8-26.16,57.73-57.88,57.52-31.36-.21-57.15-25.93-57.49-57.31-.33-31.35,26.09-57.89,57.69-57.95,31.7-.07,57.74,26,57.67,57.75Zm-25.2-.29c-.09-17.88-14.55-32.36-32.34-32.37-17.65-.01-32.48,14.65-32.69,32.31-.21,17.9,14.95,32.92,33.04,32.74,17.84-.18,32.07-14.73,31.99-32.68Z\"></path>\n      <path class=\"uuid-9c7606a6-9736-4db3-bb55-f8e6badda296\" d=\"m222.58,190.87c-17.9-.1-32.29-14.52-32.33-32.38-.03-18.19,14.88-32.85,33.04-32.48,17.85.36,32.21,15.07,32,32.78-.21,17.72-14.95,32.18-32.72,32.08Z\"></path>\n      <path class=\"uuid-9c7606a6-9736-4db3-bb55-f8e6badda296\" d=\"m696.28,341.02c.09,17.95-14.15,32.49-31.99,32.68-18.09.19-33.25-14.83-33.04-32.74.2-17.66,15.03-32.33,32.69-32.31,17.79.01,32.26,14.49,32.34,32.37Z\"></path>\n    </g>\n  </g>\n</svg>",
-            "logo_size": 40,
-            "background_plus_border": true,
-            "heading": "Qualité premium",
-            "text": "Toile texturée, Un grain mat qui donne du relief à chaque œuvre"
-          }
-        },
-        "svg_block_enwn6n": {
-          "type": "svg_block",
-          "settings": {
-            "badge_logo": "<svg height=\"512pt\" viewbox=\"0 -43 512 512\" width=\"512pt\" xmlns=\"http://www.w3.org/2000/svg\" id=\"fi_1850102\"><path d=\"m376.527344 212.894531h128.136718v102.695313h-128.136718zm0 0\" fill=\"#695d67\"></path><path d=\"m376.527344 212.894531h33.890625v102.695313h-33.890625zm0 0\" fill=\"#544e55\"></path><path d=\"m492.390625 418.285156h-115.863281v-102.695312h128.136718v90.792968c0 6.546876-5.523437 11.902344-12.273437 11.902344zm0 0\" fill=\"#544e55\"></path><path d=\"m376.527344 315.589844h33.890625v102.699218h-33.890625zm0 0\" fill=\"#453f46\"></path><path d=\"m376.527344 110.195312h128.136718v102.699219h-128.136718zm0 0\" fill=\"#4f67d2\"></path><path d=\"m376.527344 110.195312h33.890625v102.699219h-33.890625zm0 0\" fill=\"#324ccc\"></path><path d=\"m492.390625 7.5h-115.863281v102.699219h128.136718v-90.792969c0-6.550781-5.523437-11.90625-12.273437-11.90625zm0 0\" fill=\"#6c7ed6\"></path><path d=\"m376.527344 7.5h33.890625v102.695312h-33.890625zm0 0\" fill=\"#4f67d2\"></path><path d=\"m131.917969 212.894531h129.359375v102.695313h-129.359375zm0 0\" fill=\"#fee55a\"></path><path d=\"m128.027344 212.894531h33.890625v102.695313h-33.890625zm0 0\" fill=\"#ffd301\"></path><path d=\"m131.917969 315.589844h129.359375v102.699218h-129.359375zm0 0\" fill=\"#ffd301\"></path><path d=\"m128.027344 315.589844h33.890625v102.699218h-33.890625zm0 0\" fill=\"#ffc20c\"></path><path d=\"m7.667969 212.894531h124.25v102.695313h-124.25zm0 0\" fill=\"#ffa85d\"></path><path d=\"m7.667969 212.894531h30v102.695313h-30zm0 0\" fill=\"#ff9839\"></path><path d=\"m19.570312 418.285156h112.34375v-102.695312h-124.246093v90.792968c0 6.546876 5.355469 11.902344 11.902343 11.902344zm0 0\" fill=\"#ff9839\"></path><path d=\"m37.667969 315.589844h-30v90.792968c0 6.546876 5.355469 11.902344 11.902343 11.902344h18.097657zm0 0\" fill=\"#ff8607\"></path><path d=\"m256.164062 212.894531h124.25v102.695313h-124.25zm0 0\" fill=\"#23a8fe\"></path><path d=\"m256.164062 212.894531h30v102.695313h-30zm0 0\" fill=\"#0492fe\"></path><path d=\"m256.164062 315.589844h124.25v102.699218h-124.25zm0 0\" fill=\"#0492fe\"></path><path d=\"m256.164062 315.589844h30v102.699218h-30zm0 0\" fill=\"#0083fe\"></path><path d=\"m131.917969 110.195312h129.359375v102.699219h-129.359375zm0 0\" fill=\"#00ba66\"></path><path d=\"m128.027344 110.195312h33.890625v102.699219h-33.890625zm0 0\" fill=\"#01a755\"></path><path d=\"m131.917969 7.5h129.359375v102.699219h-129.359375zm0 0\" fill=\"#43cb8e\"></path><path d=\"m128.027344 7.5h33.890625v102.695312h-33.890625zm0 0\" fill=\"#00ba66\"></path><path d=\"m7.667969 110.195312h124.25v102.699219h-124.25zm0 0\" fill=\"#ff4756\"></path><path d=\"m7.667969 110.195312h30v102.699219h-30zm0 0\" fill=\"#fc2d39\"></path><path d=\"m19.570312 7.5h112.34375v102.699219h-124.246093v-90.792969c0-6.550781 5.355469-11.90625 11.902343-11.90625zm0 0\" fill=\"#ff656f\"></path><path d=\"m37.667969 7.5h-18.097657c-6.546874 0-11.90625 5.355469-11.90625 11.902344v90.792968h30v-102.695312zm0 0\" fill=\"#ff4756\"></path><path d=\"m256.164062 110.195312h124.25v102.699219h-124.25zm0 0\" fill=\"#60b8fe\"></path><path d=\"m256.164062 110.195312h30v102.699219h-30zm0 0\" fill=\"#23a8fe\"></path><path d=\"m256.164062 7.5h124.25v102.699219h-124.25zm0 0\" fill=\"#8cc9f9\"></path><path d=\"m256.164062 7.5h30v102.695312h-30zm0 0\" fill=\"#60b8fe\"></path><path d=\"m492.597656 0c-5.667968 0-147.175781 0-156.972656 0-4.144531 0-7.5 3.355469-7.5 7.5s3.355469 7.5 7.5 7.5h37.125v87.695312h-109.25v-87.695312h37.125c4.144531 0 7.5-3.355469 7.5-7.5s-3.355469-7.5-7.5-7.5h-44.625c-3.089844 0-233.34375 0-236.59375 0-10.703125 0-19.40625 8.707031-19.40625 19.40625v386.976562c0 10.699219 8.703125 19.40625 19.40625 19.40625h473.1875c10.699219 0 19.40625-8.707031 19.40625-19.40625 0-15.148437 0-111.53125 0-124.640624 0-4.140626-3.359375-7.5-7.5-7.5-4.144531 0-7.5 3.359374-7.5 7.5v26.347656h-109.25v-87.695313h109.25v26.347657c0 4.144531 3.355469 7.5 7.5 7.5s7.5-3.355469 7.5-7.5c0-10.179688 0-216.578126 0-227.335938 0-10.699219-8.703125-19.40625-19.402344-19.40625zm-368.347656 410.789062h-104.84375c-2.390625 0-4.40625-2.019531-4.40625-4.40625v-83.292968h109.25zm0-102.699218h-109.25v-87.695313h109.25zm0-102.695313h-109.25v-87.695312h109.25zm0-102.695312h-109.25v-83.292969c0-2.390625 2.019531-4.40625 4.40625-4.40625h104.84375zm124.25 308.089843h-109.25v-87.699218h109.25zm0-102.699218h-109.25v-87.695313h109.25zm0-102.695313h-109.25v-87.695312h109.25zm0-102.695312h-109.25v-87.699219h109.25zm124.25 308.089843h-109.25v-87.699218h109.25zm0-102.699218h-109.25v-87.695313h109.25zm0-102.695313h-109.25v-87.695312h109.25zm124.25 117.695313v83.292968c0 2.386719-2.015625 4.402344-4.402344 4.402344h-104.847656v-87.695312zm0-117.695313h-109.25v-87.695312h109.25zm0-102.695312h-109.25v-87.699219h104.847656c2.386719 0 4.402344 2.015625 4.402344 4.402344zm0 0\"></path></svg>",
-            "logo_size": 40,
-            "background_plus_border": true,
-            "heading": "Fait pour durer",
-            "text": "Encres haute pigmentation, couleurs intense et profonde."
-          }
-        },
-        "svg_block_BX7Jdk": {
-          "type": "svg_block",
-          "settings": {
-            "badge_logo": "<!--?xml version=\"1.0\" encoding=\"UTF-8\"?-->\n<svg id=\"uuid-3814800a-a0e7-42b4-9572-13e066d9589b\" data-name=\"Calque 2\" xmlns=\"http://www.w3.org/2000/svg\" viewbox=\"0 0 383.35 167.18\">\n  <defs>\n    <style>\n      .uuid-6acf3c7c-21b9-4bfa-aaa7-bf24f40a2889, .uuid-5d6a4fdf-15f5-4c47-b1a7-495aa4f989f4 {\n        stroke-width: 0px;\n      }\n\n      .uuid-5d6a4fdf-15f5-4c47-b1a7-495aa4f989f4 {\n        fill: #a93514;\n      }\n    </style>\n  </defs>\n  <g id=\"uuid-10a13294-3dbd-4853-8326-d4c49a7bdd79\" data-name=\"Calque 1\">\n    <g>\n      <path class=\"uuid-6acf3c7c-21b9-4bfa-aaa7-bf24f40a2889\" d=\"m0,108.19c1.25-3.37,2.19-6.89,3.8-10.08,5.18-10.24,14.81-14.36,25.07-17.26,2.82-.8,5.13,1,6.03,3.82.92,2.88-.18,5.26-2.84,6.58-2.56,1.26-5.31,2.14-7.96,3.21-8.8,3.55-13.95,11.91-12.74,20.63,1.29,9.26,8.55,15.94,18.31,16.76,1.61.14,3.24.1,4.86.1,85.07,0,170.15,0,255.22,0,1.5,0,3-.06,4.49.09,3.08.31,4.75,2.29,4.93,5.19.17,2.75-1.29,4.86-4.07,5.52-1.67.4-3.45.41-5.19.41-77.09.02-154.18.02-231.27.02h-4.78c-2.48,8.79.49,12.78,9.32,12.78,85.07,0,170.15-.07,255.22.09,10.24.02,12.82-2.24,11.3-13.82-3.56.3-7.12.72-10.7.86-4.17.17-6.67-1.84-6.89-5.21-.23-3.56,2.07-5.82,6.5-5.95,26.93-.84,46.57-19.58,51.84-41.55,8.17-34.05-16.8-66.51-51.99-67.26-35.59-.76-71.05.57-106.18,7.17-30.35,5.69-59.68,14.69-88.39,25.96-22.72,8.92-45.57,17.47-68.37,26.18-.47.18-.94.33-1.41.49-3.67,1.22-6.55.14-7.78-2.9-1.3-3.2.13-6.12,3.96-7.62,6.95-2.73,13.94-5.39,20.94-8,28.11-10.49,56.17-21.12,84.38-31.33,9.34-3.38,19.08-5.65,29.07-8.55-3.33-6.38-8.51-10.43-15.16-12.81-.82-.29-1.69-.45-2.53-.68-3.78-1.05-5.5-3.48-4.78-6.74.74-3.37,3.53-4.93,7.55-4.04,10.99,2.44,19.01,8.92,24.73,18.45.63,1.05,1.23,2.13,1.77,3.07,11.37-1.91,22.51-3.95,33.7-5.62,29.34-4.37,58.9-4.65,88.47-4.24,4.82.07,9.72.77,14.41,1.87,27.64,6.48,47.37,29.5,50.22,58.28,2.65,26.73-13.19,53.8-38.26,65.02-2.73,1.22-3.9,2.52-3.57,5.49.26,2.34.11,4.74.03,7.1-.3,8.8-6.24,15.65-14.89,17.12-1.59.27-3.22.37-4.84.37-86.57.02-173.14.02-259.71-.03-2.58,0-5.27-.28-7.73-1.03-6.96-2.11-11.71-8.55-12.09-15.95-.11-2.11-.02-4.23-.02-6.99-2.85,0-5.52,0-8.2,0-18.11-.02-28.64-8.05-33.36-25.43-.06-.22-.28-.39-.43-.59,0-2.99,0-5.99,0-8.98Z\"></path>\n      <path class=\"uuid-5d6a4fdf-15f5-4c47-b1a7-495aa4f989f4\" d=\"m318.54,23.11c-35.59-.76-71.05.57-106.18,7.17-30.35,5.69-59.68,14.69-88.39,25.96-22.72,8.92-45.57,17.47-68.37,26.18-.47.18-.94.33-1.41.49-1,.33-1.94.48-2.81.48-5.32,1.61-10.77,2.82-16.18,4.12-.29,1.59-1.35,2.89-3.07,3.74-2.56,1.26-5.31,2.14-7.96,3.21-8.8,3.55-13.95,11.91-12.74,20.63,1.29,9.26,8.55,15.94,18.31,16.76,1.61.14,3.24.1,4.86.1,85.07,0,170.15,0,255.22,0,1.5,0,3-.06,4.49.09,3.08.31,4.75,2.29,4.93,5.19.17,2.75-1.29,4.86-4.07,5.52-1.67.4-3.45.41-5.19.41-77.09.02-154.18.02-231.27.02h-4.78c-2.48,8.79.49,12.78,9.32,12.78,85.07,0,170.15-.07,255.22.09,10.24.02,12.82-2.24,11.3-13.82-3.56.3-7.12.72-10.7.86-4.17.17-6.67-1.84-6.89-5.21-.23-3.56,2.07-5.82,6.5-5.95,26.93-.84,46.57-19.58,51.84-41.55,8.17-34.05-16.8-66.51-51.99-67.26Z\"></path>\n    </g>\n  </g>\n</svg>",
-            "logo_size": 40,
-            "background_plus_border": true,
-            "heading": "Fabriqué pour vous",
-            "text": "Chaque toile imprimée à la commande."
-          }
-        },
-        "svg_block_QXMUR4": {
-          "type": "svg_block",
-          "settings": {
-            "badge_logo": "<svg height=\"512pt\" viewbox=\"0 -54 512 512\" width=\"512pt\" xmlns=\"http://www.w3.org/2000/svg\" id=\"fi_1438747\"><path d=\"m504.394531 93.925781c0-11.304687-5.808593-21.242187-14.601562-27.015625 8.792969-5.769531 14.601562-15.710937 14.601562-27.011718 0-17.835938-14.457031-32.292969-32.292969-32.292969-11.300781 0-21.242187 5.808593-27.011718 14.601562-5.769532-8.792969-15.710938-14.601562-27.011719-14.601562-11.304687 0-21.242187 5.808593-27.011719 14.601562-5.773437-8.792969-15.710937-14.601562-27.015625-14.601562-11.300781 0-21.242187 5.808593-27.011719 14.601562-5.769531-8.792969-15.710937-14.601562-27.011718-14.601562-11.300782 0-21.242188 5.808593-27.011719 14.601562-5.769531-8.792969-15.710937-14.601562-27.011719-14.601562-11.300781 0-21.242187 5.808593-27.011718 14.601562-5.769532-8.792969-15.710938-14.601562-27.015626-14.601562-11.300781 0-21.242187 5.808593-27.011718 14.601562-5.769532-8.792969-15.710938-14.601562-27.011719-14.601562s-21.242187 5.808593-27.011719 14.601562c-5.769531-8.792969-15.710937-14.601562-27.011718-14.601562-11.300782 0-21.242188 5.808593-27.011719 14.601562-5.769531-8.792969-15.710938-14.601562-27.011719-14.601562-17.84375 0-32.300781 14.457031-32.300781 32.292969 0 11.300781 5.808593 21.242187 14.601562 27.011718-8.792969 5.773438-14.601562 15.710938-14.601562 27.015625 0 11.300781 5.808593 21.242188 14.601562 27.011719-8.792969 5.769531-14.601562 15.710938-14.601562 27.011719s5.808593 21.242187 14.601562 27.011719c-8.792969 5.769531-14.601562 15.710937-14.601562 27.011718 0 11.304688 5.808593 21.242188 14.601562 27.015625-8.792969 5.769531-14.601562 15.710938-14.601562 27.011719s5.808593 21.242188 14.601562 27.011719c-8.792969 5.769531-14.601562 15.710937-14.601562 27.011719 0 11.304687 5.808593 21.242187 14.601562 27.011718-8.792969 5.773438-14.601562 15.710938-14.601562 27.015625 0 17.835938 14.457031 32.292969 32.292969 32.292969 11.300781 0 21.242187-5.808594 27.011718-14.601562 5.769532 8.792968 15.710938 14.601562 27.011719 14.601562 11.304687 0 21.242187-5.808594 27.011719-14.601562 5.773437 8.792968 15.710937 14.601562 27.015625 14.601562 11.300781 0 21.242187-5.808594 27.011719-14.601562 5.769531 8.792968 15.710937 14.601562 27.011718 14.601562 11.300782 0 21.242188-5.808594 27.011719-14.601562 5.769531 8.792968 15.710937 14.601562 27.011719 14.601562 11.300781 0 21.242187-5.808594 27.011718-14.601562 5.769532 8.792968 15.710938 14.601562 27.015626 14.601562 11.300781 0 21.242187-5.808594 27.011718-14.601562 5.769532 8.792968 15.710938 14.601562 27.011719 14.601562s21.242187-5.808594 27.011719-14.601562c5.769531 8.792968 15.710937 14.601562 27.011718 14.601562 11.300782 0 21.242188-5.808594 27.011719-14.601562 5.769531 8.792968 15.710938 14.601562 27.011719 14.601562 17.835938 0 32.296875-14.457031 32.296875-32.292969 0-11.304687-5.8125-21.242187-14.601563-27.011719 8.789063-5.769531 14.601563-15.710937 14.601563-27.011718 0-11.304688-5.8125-21.242188-14.601563-27.015625 8.789063-5.769531 14.601563-15.710938 14.601563-27.011719s-5.8125-21.242188-14.601563-27.011719c8.789063-5.769531 14.601563-15.710937 14.601563-27.011719 0-11.300781-5.8125-21.242187-14.601563-27.011718 8.789063-5.769532 14.601563-15.710938 14.601563-27.011719 0-11.304687-5.8125-21.242187-14.601563-27.011719 8.796876-5.773437 14.605469-15.714844 14.605469-27.015625zm0 0\" fill=\"#ddae45\"></path><path d=\"m476.007812 380.695312c-7.1875 1.636719-14.316406-1.371093-18.203124-7.296874-6.007813-9.152344-19.421876-9.152344-25.429688 0-3.179688 4.847656-8.523438 7.738281-14.296875 7.738281s-11.121094-2.890625-14.300781-7.738281c-6.003906-9.152344-19.421875-9.152344-25.425782 0-3.179687 4.847656-8.527343 7.738281-14.300781 7.738281-5.769531 0-11.117187-2.890625-14.296875-7.738281-6.007812-9.152344-19.421875-9.152344-25.429687 0-3.179688 4.847656-8.523438 7.738281-14.296875 7.738281-5.773438 0-11.117188-2.890625-14.296875-7.738281-6.007813-9.152344-19.421875-9.152344-25.429688 0-3.179687 4.847656-8.523437 7.738281-14.296875 7.738281-5.773437 0-11.117187-2.890625-14.300781-7.738281-6.003906-9.152344-19.421875-9.152344-25.425781 0-3.179688 4.847656-8.527344 7.738281-14.300782 7.738281-5.769531 0-11.117187-2.890625-14.296874-7.738281-6.007813-9.152344-19.421876-9.152344-25.429688 0-3.179688 4.847656-8.523438 7.738281-14.296875 7.738281s-11.117187-2.890625-14.296875-7.738281c-6.007812-9.152344-19.425781-9.152344-25.429688 0-3.179687 4.847656-8.527343 7.738281-14.300781 7.738281-5.773437 0-11.117187-2.890625-14.296875-7.738281-6.007812-9.152344-19.421875-9.152344-25.429687 0-3.886719 5.925781-11.011719 8.933593-18.199219 7.300781-6.289062-1.429688-11.3125-6.453125-12.742188-12.746094-1.632812-7.183594 1.371094-14.308594 7.296876-18.199219 9.152343-6.007812 9.152343-19.421875 0-25.429687-4.84375-3.179688-7.738282-8.523438-7.738282-14.296875 0-5.773438 2.894532-11.117188 7.738282-14.296875h.003906c9.148437-6.007813 9.148437-19.421875 0-25.429688-4.847656-3.179687-7.742188-8.523437-7.742188-14.296875 0-5.773437 2.894532-11.117187 7.742188-14.300781 9.148437-6.003906 9.148437-19.421875 0-25.425781-4.847656-3.179688-7.742188-8.527344-7.742188-14.300782 0-5.769531 2.894532-11.117187 7.742188-14.296874 9.148437-6.007813 9.148437-19.421876 0-25.425782h-.003906c-4.84375-3.183594-7.738282-8.527344-7.738282-14.300781s2.894532-11.117187 7.738282-14.296875c9.152343-6.007812 9.152343-19.421875 0-25.429688-4.84375-3.179687-7.738282-8.523437-7.738282-14.296874 0-5.773438 2.894532-11.117188 7.738282-14.300782 9.152343-6.003906 9.152343-19.417968 0-25.425781-5.925782-3.890625-8.929688-11.011719-7.296876-18.199219 1.429688-6.292968 6.453126-11.316406 12.742188-12.746094 7.1875-1.632812 14.3125 1.371094 18.203125 7.296876 6.003906 9.152343 19.421875 9.152343 25.425781 0 3.179688-4.84375 8.527344-7.738282 14.300782-7.738282 5.769531 0 11.117187 2.894532 14.296874 7.738282 6.007813 9.152343 19.421876 9.152343 25.429688 0 3.179688-4.84375 8.523438-7.738282 14.296875-7.738282s11.117187 2.894532 14.300781 7.738282v.003906c6.003906 9.148437 19.417969 9.148437 25.425782 0v-.003906c3.183593-4.84375 8.527343-7.738282 14.300781-7.738282 5.773437 0 11.117187 2.894532 14.296875 7.738282v.003906c6.007812 9.148437 19.421875 9.148437 25.429687 0v-.003906c3.179688-4.84375 8.523438-7.738282 14.296875-7.738282 5.773438 0 11.117188 2.894532 14.296875 7.738282v.003906c6.007813 9.148437 19.421875 9.148437 25.429688 0v-.003906c3.179687-4.84375 8.523437-7.738282 14.296875-7.738282 5.773437 0 11.121094 2.894532 14.300781 7.738282v.003906c6.003906 9.148437 19.421875 9.148437 25.425781 0v-.003906c3.179688-4.84375 8.527344-7.738282 14.300782-7.738282 5.773437 0 11.117187 2.894532 14.296874 7.738282v.003906c6.007813 9.148437 19.421876 9.148437 25.429688 0v-.003906c3.179688-4.84375 8.523438-7.738282 14.296875-7.738282s11.117187 2.894532 14.296875 7.738282v.003906c6.007812 9.148437 19.421875 9.148437 25.429688 0v-.003906c3.886718-5.925782 11.011718-8.929688 18.199218-7.296876 6.292969 1.429688 11.316406 6.453126 12.746094 12.742188 1.632812 7.1875-1.375 14.3125-7.300781 18.203125-9.148438 6.003906-9.148438 19.421875 0 25.425781h.003906c4.84375 3.179688 7.738281 8.527344 7.738281 14.300782 0 5.769531-2.894531 11.117187-7.738281 14.296874h-.003906c-9.148438 6.007813-9.148438 19.421876 0 25.429688h.003906c4.84375 3.179688 7.738281 8.523438 7.738281 14.296875s-2.894531 11.117187-7.738281 14.296875h-.003906c-9.148438 6.007812-9.148438 19.421875 0 25.429688 4.847656 3.179687 7.738281 8.523437 7.738281 14.296874 0 5.773438-2.890625 11.117188-7.738281 14.300782-9.152344 6.003906-9.152344 19.421875 0 25.425781 4.847656 3.179687 7.738281 8.527344 7.738281 14.300781 0 5.769532-2.890625 11.117188-7.738281 14.296875-9.152344 6.003907-9.152344 19.421875 0 25.425781 4.847656 3.183594 7.738281 8.527344 7.738281 14.300782 0 5.773437-2.890625 11.117187-7.738281 14.296875-9.152344 6.007812-9.152344 19.421875 0 25.429687 5.925781 3.886719 8.929687 11.011719 7.300781 18.195313-1.429688 6.292969-6.453125 11.316406-12.742188 12.746093zm0 0\" fill=\"#f4ca62\"></path><path d=\"m70.316406 70.3125h371.371094v263.320312h-371.371094zm0 0\" fill=\"#ccd2d6\"></path><path d=\"m85.523438 85.523438h340.953124v232.902343h-340.953124zm0 0\" fill=\"#fff\"></path><path d=\"m441.6875 341.238281h-371.371094c-4.199218 0-7.605468-3.40625-7.605468-7.605469v-263.320312c0-4.199219 3.40625-7.601562 7.605468-7.601562h371.371094c4.199219 0 7.601562 3.402343 7.601562 7.601562v203.671875c0 4.199219-3.402343 7.605469-7.601562 7.605469-4.203125 0-7.605469-3.40625-7.605469-7.605469v-196.066406h-356.164062v248.113281h356.164062v-21.628906c0-4.199219 3.402344-7.605469 7.605469-7.605469 4.199219 0 7.601562 3.40625 7.601562 7.605469v29.230468c0 4.199219-3.402343 7.605469-7.601562 7.605469zm0 0\"></path><path d=\"m472.101562 403.949219c-10.152343 0-19.734374-3.824219-27.011718-10.535157-7.277344 6.710938-16.859375 10.535157-27.015625 10.535157-10.152344 0-19.734375-3.824219-27.011719-10.535157-7.277344 6.710938-16.859375 10.535157-27.011719 10.535157-10.15625 0-19.734375-3.824219-27.015625-10.535157-7.277344 6.710938-16.859375 10.535157-27.011718 10.535157-10.152344 0-19.734376-3.824219-27.011719-10.535157-7.277344 6.710938-16.859375 10.535157-27.015625 10.535157-10.152344 0-19.734375-3.824219-27.011719-10.535157-7.277344 6.710938-16.859375 10.535157-27.011719 10.535157s-19.734375-3.824219-27.011718-10.535157c-7.28125 6.710938-16.859376 10.535157-27.015626 10.535157-10.152343 0-19.734374-3.824219-27.011718-10.535157-7.277344 6.710938-16.859375 10.535157-27.011719 10.535157s-19.734375-3.824219-27.011719-10.535157c-7.28125 6.710938-16.859375 10.535157-27.015625 10.535157-21.996093 0-39.894531-17.898438-39.894531-39.898438 0-10.152343 3.824219-19.734375 10.53125-27.011719-6.707031-7.28125-10.53125-16.859374-10.53125-27.015624 0-10.152344 3.824219-19.734376 10.53125-27.011719-6.707031-7.277344-10.53125-16.859375-10.53125-27.011719s3.824219-19.734375 10.53125-27.011719c-6.707031-7.277343-10.53125-16.859375-10.53125-27.015625 0-10.152344 3.824219-19.734375 10.53125-27.011718-6.707031-7.277344-10.53125-16.859376-10.53125-27.011719 0-10.152344 3.824219-19.734375 10.53125-27.011719-6.707031-7.277344-10.53125-16.859375-10.53125-27.011719 0-10.15625 3.824219-19.738281 10.53125-27.015625-6.707031-7.277344-10.53125-16.859375-10.53125-27.011718 0-16.746094 10.574219-31.824219 26.316406-37.523438 3.949219-1.429688 8.308594.609375 9.738282 4.558594 1.429687 3.949218-.613282 8.308594-4.5625 9.738281-9.738282 3.527344-16.285157 12.859375-16.285157 23.226563 0 8.34375 4.175781 16.066406 11.171875 20.65625 2.140625 1.40625 3.433594 3.792968 3.433594 6.355468s-1.292969 4.953125-3.433594 6.359375c-6.996094 4.589844-11.171875 12.3125-11.171875 20.65625 0 8.339844 4.175781 16.0625 11.171875 20.652344 2.140625 1.40625 3.433594 3.796875 3.433594 6.359375s-1.292969 4.949219-3.433594 6.355469c-6.996094 4.589843-11.171875 12.3125-11.171875 20.65625s4.175781 16.0625 11.171875 20.65625c2.140625 1.402343 3.433594 3.792969 3.433594 6.355469s-1.292969 4.953124-3.433594 6.355468c-6.996094 4.59375-11.171875 12.316406-11.171875 20.65625 0 8.34375 4.175781 16.066406 11.171875 20.65625 2.140625 1.40625 3.433594 3.796875 3.433594 6.359375 0 2.558594-1.292969 4.949219-3.433594 6.355469-6.996094 4.589844-11.171875 12.3125-11.171875 20.65625s4.175781 16.066406 11.171875 20.65625c2.140625 1.40625 3.433594 3.792969 3.433594 6.355469s-1.292969 4.953125-3.433594 6.359375c-6.996094 4.589844-11.171875 12.308594-11.171875 20.652344s4.175781 16.066406 11.171875 20.65625c2.140625 1.40625 3.433594 3.796874 3.433594 6.355468 0 2.5625-1.292969 4.953125-3.433594 6.359375-6.996094 4.589844-11.171875 12.3125-11.171875 20.65625 0 13.613281 11.078125 24.691407 24.691407 24.691407 8.34375 0 16.066406-4.175782 20.65625-11.171876 1.40625-2.140624 3.796874-3.429687 6.359374-3.429687s4.949219 1.289063 6.355469 3.429687c4.589844 6.996094 12.3125 11.171876 20.65625 11.171876s16.0625-4.175782 20.65625-11.171876c1.40625-2.140624 3.792969-3.429687 6.355469-3.429687s4.953125 1.289063 6.359375 3.429687c4.589844 6.996094 12.3125 11.171876 20.652344 11.171876 8.34375 0 16.066406-4.175782 20.65625-11.171876 1.40625-2.140624 3.796875-3.429687 6.359375-3.429687s4.949218 1.289063 6.355468 3.429687c4.589844 6.996094 12.3125 11.171876 20.65625 11.171876s16.066407-4.175782 20.65625-11.171876c1.40625-2.140624 3.792969-3.429687 6.355469-3.429687s4.953125 1.289063 6.359375 3.429687c4.589844 6.996094 12.3125 11.171876 20.65625 11.171876 8.339844 0 16.0625-4.175782 20.65625-11.171876 1.402344-2.140624 3.792969-3.429687 6.355469-3.429687s4.953125 1.289063 6.355469 3.429687c4.59375 6.996094 12.316406 11.171876 20.65625 11.171876 8.34375 0 16.066406-4.175782 20.65625-11.171876 1.40625-2.140624 3.796875-3.429687 6.355468-3.429687 2.5625 0 4.953126 1.289063 6.359376 3.429687 4.589843 6.996094 12.3125 11.171876 20.65625 11.171876s16.0625-4.175782 20.65625-11.171876c1.402343-2.140624 3.792968-3.429687 6.355468-3.429687s4.953125 1.289063 6.355469 3.429687c4.59375 6.996094 12.316406 11.171876 20.65625 11.171876 8.34375 0 16.066406-4.175782 20.65625-11.171876 1.40625-2.140624 3.796875-3.429687 6.359375-3.429687 2.558594 0 4.949219 1.289063 6.355469 3.429687 4.589843 6.996094 12.3125 11.171876 20.65625 11.171876 13.613281 0 24.691406-11.078126 24.691406-24.691407 0-8.34375-4.175781-16.066406-11.171875-20.65625-2.140625-1.40625-3.429688-3.792969-3.429688-6.355469s1.289063-4.953124 3.429688-6.359374c6.996094-4.589844 11.171875-12.3125 11.171875-20.652344 0-8.34375-4.175781-16.066406-11.171875-20.65625-2.140625-1.40625-3.429688-3.796875-3.429688-6.359375 0-2.558594 1.289063-4.949219 3.429688-6.355469 6.996094-4.589844 11.171875-12.3125 11.171875-20.65625s-4.175781-16.0625-11.171875-20.65625c-2.140625-1.402344-3.429688-3.792969-3.429688-6.355469s1.289063-4.953125 3.429688-6.355469c6.992188-4.59375 11.167969-12.316406 11.167969-20.660156 0-8.339844-4.175781-16.0625-11.171875-20.652344-2.140625-1.40625-3.433594-3.796874-3.433594-6.359374s1.292969-4.949219 3.433594-6.355469c6.996094-4.589844 11.171875-12.3125 11.171875-20.65625s-4.175781-16.0625-11.171875-20.65625c-2.140625-1.402344-3.433594-3.792969-3.433594-6.355469s1.292969-4.953125 3.433594-6.355469c6.996094-4.59375 11.171875-12.3125 11.171875-20.65625s-4.175781-16.066406-11.171875-20.65625c-2.140625-1.40625-3.433594-3.796875-3.433594-6.359375 0-2.558594 1.292969-4.949218 3.433594-6.355468 6.996094-4.589844 11.171875-12.3125 11.171875-20.65625 0-13.613282-11.078125-24.691407-24.691407-24.691407-8.34375 0-16.066406 4.175781-20.65625 11.171875-1.40625 2.140625-3.796874 3.433594-6.355468 3.433594-2.5625 0-4.953125-1.292969-6.359375-3.433594-4.589844-6.996094-12.3125-11.171875-20.65625-11.171875-8.339844 0-16.0625 4.175781-20.65625 11.171875-1.402344 2.140625-3.792969 3.433594-6.355469 3.433594s-4.953125-1.292969-6.355469-3.433594c-4.59375-6.996094-12.3125-11.171875-20.65625-11.171875s-16.066406 4.175781-20.65625 11.171875c-1.40625 2.140625-3.796875 3.433594-6.359375 3.433594-2.558594 0-4.949218-1.292969-6.355468-3.433594-4.589844-6.996094-12.3125-11.171875-20.65625-11.171875s-16.066407 4.175781-20.65625 11.171875c-1.402344 2.140625-3.792969 3.433594-6.355469 3.433594s-4.953125-1.292969-6.355469-3.433594c-4.59375-6.996094-12.3125-11.171875-20.660156-11.171875-8.339844 0-16.0625 4.175781-20.652344 11.171875-1.40625 2.140625-3.796875 3.433594-6.359375 3.433594s-4.949219-1.292969-6.355469-3.433594c-4.589844-6.996094-12.3125-11.171875-20.65625-11.171875s-16.066406 4.175781-20.65625 11.171875c-1.40625 2.140625-3.792968 3.433594-6.355468 3.433594s-4.953126-1.292969-6.359376-3.433594c-4.589843-6.996094-12.3125-11.171875-20.65625-11.171875-8.339843 0-16.0625 4.175781-20.652343 11.171875-1.40625 2.140625-3.796875 3.433594-6.359375 3.433594s-4.949219-1.292969-6.355469-3.433594c-4.589844-6.996094-12.3125-11.171875-20.65625-11.171875s-16.066406 4.175781-20.65625 11.171875c-1.40625 2.140625-3.792969 3.433594-6.355469 3.433594s-4.953125-1.292969-6.359375-3.433594c-1.863281-2.839844-4.347656-5.320312-7.191406-7.175781-3.515625-2.296875-4.503906-7.007813-2.207031-10.523437 2.296875-3.515626 7.007812-4.503907 10.523437-2.207032 1.867188 1.21875 3.613281 2.574219 5.230469 4.0625 7.277344-6.710937 16.859375-10.535156 27.015625-10.535156 10.152344 0 19.734375 3.824219 27.011719 10.53125 7.277344-6.710938 16.859375-10.53125 27.011718-10.53125 10.152344 0 19.734376 3.824219 27.015626 10.53125 7.277343-6.710938 16.859374-10.53125 27.011718-10.53125s19.734375 3.824219 27.011719 10.53125c7.277344-6.707031 16.859375-10.53125 27.011719-10.53125 10.15625 0 19.734375 3.824219 27.015625 10.53125 7.277343-6.710938 16.859375-10.53125 27.011719-10.53125 10.152343 0 19.734374 3.824219 27.011718 10.53125 7.277344-6.710938 16.859375-10.53125 27.015625-10.53125 10.152344 0 19.734375 3.824219 27.011719 10.53125 7.277344-6.707031 16.859375-10.53125 27.011719-10.53125 10.152343 0 19.734375 3.824219 27.011719 10.53125 7.277343-6.707031 16.859374-10.53125 27.015624-10.53125 22 0 39.898438 17.898438 39.898438 39.898438 0 10.152343-3.824219 19.734374-10.53125 27.011718 6.710938 7.277344 10.53125 16.859375 10.53125 27.015625 0 10.152344-3.824219 19.734375-10.53125 27.011719 6.710938 7.277344 10.53125 16.859375 10.53125 27.011719 0 10.152343-3.824219 19.734375-10.53125 27.011719 6.707031 7.277343 10.53125 16.859374 10.53125 27.011718 0 10.15625-3.824219 19.738282-10.53125 27.015625 6.710938 7.277344 10.53125 16.859375 10.53125 27.011719s-3.824219 19.734375-10.53125 27.011719c6.710938 7.277343 10.53125 16.859375 10.53125 27.011719 0 10.152343-3.824219 19.734374-10.53125 27.011718 6.707031 7.28125 10.53125 16.859375 10.53125 27.015625 0 22-17.898438 39.898438-39.898438 39.898438zm0 0\"></path></svg>",
-            "logo_size": 40,
-            "background_plus_border": true,
-            "heading": "Prêt à accrocher",
-            "text": "Livré monté sur châssis"
-          }
-        }
-      },
-      "block_order": [
-        "svg_block_p4TBM6",
-        "svg_block_enwn6n",
-        "svg_block_BX7Jdk",
-        "svg_block_QXMUR4"
-      ],
-      "settings": {
-        "title": "Nos engagements pour vous offrir une expérience exceptionnelle.",
-        "nb_columns_on_computer": "4",
-        "nb_columns_on_mobile": "2"
+        "content_alignment": "text-center",
+        "padding_top": "pt-8",
+        "padding_bottom": "pb-16"
       }
     }
   },
   "order": [
-    "2b3b46e7-881c-4925-96cf-76c7ebf203c4",
+    "hero_image_banner",
+    "h1_heading",
+    "h2_1_welcome",
+    "h2_2_usps_intro",
+    "h2_2_usps_grid",
+    "h2_3_by_room",
+    "h2_4_by_style_intro",
+    "h2_4_styles_part1",
+    "h2_4_styles_part2",
+    "h2_5_size",
+    "h2_6_journey",
+    "h2_7_studio",
     "trust_signals_home",
-    "product_list_cDj6j9",
-    "rich_text_bwfdwX",
-    "product_list_hVQNEU",
-    "collections_grid_DXKnVN",
-    "1198c25f-e6b6-405b-aa76-db2afd719caf",
-    "shifted_image_carousel_cJeF34",
-    "rich_text_DUh7mV",
-    "badges_cHPDPq",
-    "multicolumn_dWGLnx",
-    "rich_text_83wpVf",
-    "rich_text_VQq9NW",
-    "badges_QiyDmQ"
+    "h2_9_faq_intro",
+    "h2_10_faq",
+    "h2_11_devis",
+    "h2_12_collections_grid",
+    "h2_12_collections_more"
   ]
 }
