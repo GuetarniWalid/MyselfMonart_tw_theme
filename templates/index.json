@@ -94,14 +94,14 @@
       }
     },
     "rooms": {
-      "type": "home-cards-grid",
+      "type": "home-rooms-grid",
       "blocks": {
         "room_salon": {
-          "type": "card",
+          "type": "room",
           "settings": {
+            "number": "01",
             "image_asset": "vignette-salon-v1.png",
-            "alt": "Tableaux pour le salon — collection MyselfMonArt",
-            "label": "Salon",
+            "image_alt": "Tableaux pour le salon — collection MyselfMonArt",
             "title": "Tableau pour le salon",
             "text": "<p>Le bon tableau y crée le point focal sans crier. Pensé pour les murs derrière le canapé, les pans aveugles, les enfilades à habiter.</p>",
             "link_label": "Découvrir",
@@ -109,11 +109,11 @@
           }
         },
         "room_chambre_adulte": {
-          "type": "card",
+          "type": "room",
           "settings": {
+            "number": "02",
             "image_asset": "vignette-chambre-adulte-v1.png",
-            "alt": "Tableaux pour la chambre adulte — collection MyselfMonArt",
-            "label": "Chambre adulte",
+            "image_alt": "Tableaux pour la chambre adulte — collection MyselfMonArt",
             "title": "Tableau pour la chambre adulte",
             "text": "<p>Tons doux, sujets apaisants, compositions qui se lisent allongé. Curé pour accompagner les fins de journée, pas pour les agiter.</p>",
             "link_label": "Découvrir",
@@ -121,11 +121,11 @@
           }
         },
         "room_chambre_enfant": {
-          "type": "card",
+          "type": "room",
           "settings": {
+            "number": "03",
             "image_asset": "vignette-chambre-enfant-v1.png",
-            "alt": "Tableaux pour la chambre enfant — collection MyselfMonArt",
-            "label": "Chambre enfant",
+            "image_alt": "Tableaux pour la chambre enfant — collection MyselfMonArt",
             "title": "Tableau pour la chambre enfant",
             "text": "<p>Chambre bébé, garçon, ado : les codes ne sont jamais les mêmes. Un tableau bien choisi à 6 ans est un repère encore aimé à 12.</p>",
             "link_label": "Découvrir",
@@ -133,11 +133,11 @@
           }
         },
         "room_bureau": {
-          "type": "card",
+          "type": "room",
           "settings": {
+            "number": "04",
             "image_asset": "vignette-bureau-v1.png",
-            "alt": "Tableaux pour le bureau — collection MyselfMonArt",
-            "label": "Bureau",
+            "image_alt": "Tableaux pour le bureau — collection MyselfMonArt",
             "title": "Tableau pour le bureau",
             "text": "<p>Des œuvres qui élèvent sans distraire. Pensées pour les bureaux à domicile comme pour les espaces professionnels.</p>",
             "link_label": "Découvrir",
@@ -145,11 +145,11 @@
           }
         },
         "room_cuisine": {
-          "type": "card",
+          "type": "room",
           "settings": {
+            "number": "05",
             "image_asset": "vignette-cuisine-v1.png",
-            "alt": "Tableaux pour la cuisine — collection MyselfMonArt",
-            "label": "Cuisine",
+            "image_alt": "Tableaux pour la cuisine — collection MyselfMonArt",
             "title": "Tableau pour la cuisine",
             "text": "<p>Des couleurs qui rassurent et des sujets qui ouvrent l'appétit. Au-dessus du plan de travail, dans le coin repas, sur le pan de mur qui ramène l'œil.</p>",
             "link_label": "Découvrir",
@@ -157,11 +157,11 @@
           }
         },
         "room_entree": {
-          "type": "card",
+          "type": "room",
           "settings": {
+            "number": "06",
             "image_asset": "vignette-entree-v1.png",
-            "alt": "Tableaux pour l'entrée et le couloir — collection MyselfMonArt",
-            "label": "Entrée & couloir",
+            "image_alt": "Tableaux pour l'entrée et le couloir — collection MyselfMonArt",
             "title": "Tableau pour l'entrée et le couloir",
             "text": "<p>La première phrase de votre intérieur, le souffle entre deux pièces. Des œuvres pensées pour ces formats étroits et ces traversées rapides.</p>",
             "link_label": "Nous demander conseil",
@@ -171,10 +171,14 @@
       },
       "block_order": ["room_salon", "room_chambre_adulte", "room_chambre_enfant", "room_bureau", "room_cuisine", "room_entree"],
       "settings": {
-        "eyebrow": "Par pièce",
-        "title": "Trouver votre tableau selon la pièce",
+        "eyebrow_number": "03",
+        "eyebrow_label": "Par pièce",
+        "heading_level": "h2",
+        "h2_title": "Trouver votre tableau selon la pièce",
         "intro": "Chaque pièce appelle une intention différente. Commencez par la pièce, le reste suit.",
-        "columns": "3"
+        "columns": "3",
+        "show_numbers": true,
+        "background_color": "cream"
       }
     },
     "styles": {
