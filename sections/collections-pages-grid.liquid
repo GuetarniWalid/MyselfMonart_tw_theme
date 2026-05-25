@@ -7,7 +7,7 @@
       {% liquid
         assign object = block.settings.collection | default: block.settings.page
       %}
-      <li class="one-collection relative overflow-hidden h-[40vh] md:h-[60vh] md:{{ block.settings.nb_columns }} flex items-end col-span-12{% if block.settings.image != blank or block.settings.image_asset != blank %} after:absolute after:inset-0 after:bg-gradient-to-b after:from-transparent after:from-60% after:to-black/70{% endif %}">
+      <li class="one-collection relative overflow-hidden h-[40vh] md:h-[60vh] md:{{ block.settings.nb_columns }} flex items-end col-span-12{% if block.settings.image != blank %} after:absolute after:inset-0 after:bg-gradient-to-b after:from-transparent after:from-60% after:to-black/70{% endif %}"> 
         {% if block.settings.image != blank %}
           <img
             data-srcset="{{ block.settings.image | image_url: width: 375 }} 375w,
@@ -38,13 +38,6 @@
             height="auto"
             alt="{{ block.settings.image.alt | escape }}"
             class="skeleton placeholder blur-lg absolute top-0 left-0 w-full h-full object-cover"
-          >
-        {% elsif block.settings.image_asset != blank %}
-          <img
-            src="{{ block.settings.image_asset | asset_url }}"
-            loading="{% if block.settings.lazy_load %}lazy{% else %}eager{% endif %}"
-            alt="{{ block.settings.image_alt | escape }}"
-            class="absolute top-0 left-0 w-full h-full object-cover"
           >
         {% else %}
           {{ 'collection-1' | placeholder_svg_tag: 'absolute top-0 left-0 w-full h-full object-cover bg-gray-200' }}
@@ -151,17 +144,6 @@
             "type": "image_picker",
             "id": "image",
             "label": "Image"
-          },
-          {
-            "type": "text",
-            "id": "image_asset",
-            "label": "Asset filename (fallback)",
-            "info": "Nom de fichier dans /assets. Utilisé si l'image picker est vide."
-          },
-          {
-            "type": "text",
-            "id": "image_alt",
-            "label": "Alt text"
           },
           {
             "type": "collection",

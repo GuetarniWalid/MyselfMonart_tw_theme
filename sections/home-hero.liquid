@@ -1,0 +1,79 @@
+{%- liquid
+  assign desktop_url = ''
+  if section.settings.image_desktop != blank
+    assign desktop_url = section.settings.image_desktop | image_url: width: 1800
+  elsif section.settings.image_desktop_asset != blank
+    assign desktop_url = section.settings.image_desktop_asset | asset_url
+  endif
+
+  assign mobile_url = ''
+  if section.settings.image_mobile != blank
+    assign mobile_url = section.settings.image_mobile | image_url: width: 900
+  elsif section.settings.image_mobile_asset != blank
+    assign mobile_url = section.settings.image_mobile_asset | asset_url
+  endif
+-%}
+
+<section class="home-section home-hero">
+  <div class="home-hero__text">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="home-hero__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+    {%- if section.settings.h1_title != blank -%}
+      <h1 class="home-hero__title">{{ section.settings.h1_title }}</h1>
+    {%- endif -%}
+    {%- if section.settings.subtitle != blank -%}
+      <p class="home-hero__subtitle">{{ section.settings.subtitle | escape }}</p>
+    {%- endif -%}
+    {%- if section.settings.cta_label != blank and section.settings.cta_link != blank -%}
+      <a class="home-btn home-btn--ink home-hero__cta" href="{{ section.settings.cta_link }}">
+        {{ section.settings.cta_label | escape }}
+        <span class="home-btn__arrow" aria-hidden="true">→</span>
+      </a>
+    {%- endif -%}
+  </div>
+  <div class="home-hero__image-wrap">
+    {%- if desktop_url != '' -%}
+      <img
+        class="home-hero__image home-hero__image--desktop"
+        src="{{ desktop_url }}"
+        alt="{{ section.settings.alt_desktop | escape }}"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async">
+    {%- endif -%}
+    {%- if mobile_url != '' -%}
+      <img
+        class="home-hero__image home-hero__image--mobile"
+        src="{{ mobile_url }}"
+        alt="{{ section.settings.alt_mobile | escape }}"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async">
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Home — Hero",
+  "tag": "section",
+  "enabled_on": { "templates": ["index"] },
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow (étiquette au-dessus du H1)", "default": "Tableau décoration murale" },
+    { "type": "textarea", "id": "h1_title", "label": "H1 (titre principal)", "default": "Tableau décoration murale — Œuvres curées par notre studio français" },
+    { "type": "textarea", "id": "subtitle", "label": "Sous-titre", "default": "Depuis 2022, plus de 1 015 tableaux livrés. Toile 285g, encres archival 75 ans, cadre bois massif." },
+    { "type": "text", "id": "cta_label", "label": "CTA — label", "default": "Découvrir nos collections" },
+    { "type": "url", "id": "cta_link", "label": "CTA — lien" },
+    { "type": "header", "content": "Image desktop" },
+    { "type": "image_picker", "id": "image_desktop", "label": "Image desktop" },
+    { "type": "text", "id": "image_desktop_asset", "label": "OU asset filename desktop (ex: hero-...-desktop-v3.png)" },
+    { "type": "text", "id": "alt_desktop", "label": "Alt desktop", "default": "Tableau décoration murale moderne accroché dans un salon contemporain" },
+    { "type": "header", "content": "Image mobile" },
+    { "type": "image_picker", "id": "image_mobile", "label": "Image mobile" },
+    { "type": "text", "id": "image_mobile_asset", "label": "OU asset filename mobile" },
+    { "type": "text", "id": "alt_mobile", "label": "Alt mobile", "default": "Tableau décoration murale dans un intérieur cocon" }
+  ],
+  "presets": [{ "name": "Home — Hero" }]
+}
+{% endschema %}

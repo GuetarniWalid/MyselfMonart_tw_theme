@@ -1,0 +1,52 @@
+<section class="home-section home-faq">
+  <div class="home-faq__header">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="home-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+    {%- if section.settings.title != blank -%}
+      <h2 class="home-h2">{{ section.settings.title | escape }}</h2>
+    {%- endif -%}
+    {%- if section.settings.lead != blank -%}
+      <p class="home-lead">{{ section.settings.lead }}</p>
+    {%- endif -%}
+  </div>
+
+  <div class="home-faq__list">
+    {%- for block in section.blocks -%}
+      <details class="home-faq__item" {{ block.shopify_attributes }}>
+        <summary class="home-faq__summary">
+          <h3 class="home-faq__question">{{ block.settings.question | escape }}</h3>
+          <span class="home-faq__icon" aria-hidden="true">+</span>
+        </summary>
+        <div class="home-faq__answer">{{ block.settings.answer }}</div>
+      </details>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Home — FAQ",
+  "tag": "section",
+  "enabled_on": { "templates": ["index"] },
+  "max_blocks": 12,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "text", "id": "title", "label": "Titre H2", "default": "Questions fréquentes" },
+    { "type": "textarea", "id": "lead", "label": "Lead (optionnel)" }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "Q/A",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question (H3)" },
+        { "type": "richtext", "id": "answer", "label": "Réponse" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Home — FAQ", "blocks": [{ "type": "faq_item" }, { "type": "faq_item" }, { "type": "faq_item" }] }
+  ]
+}
+{% endschema %}
