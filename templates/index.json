@@ -103,7 +103,8 @@
             "image_alt": "Tableau accroché dans un salon contemporain — collection MyselfMonArt",
             "short_title": "Salon",
             "title": "Tableau pour le salon",
-            "description": "Le bon tableau y crée le point focal sans crier. Pensé pour les murs derrière le canapé, les pans aveugles, les enfilades à habiter.",
+            "description": "<p>Le salon est la pièce où l'on reçoit, mais aussi celle où l'on se pose après une journée. Le bon tableau y crée le point focal sans crier — il invite à s'asseoir, à ralentir, à recommencer une conversation. Pensé pour les murs derrière le canapé, les pans aveugles, les enfilades à habiter.</p>",
+            "link_label": "Découvrir la collection",
             "link": "shopify://collections/tableau-salon"
           }
         },
@@ -114,7 +115,8 @@
             "image_alt": "Tableau apaisant accroché dans une chambre adulte — collection MyselfMonArt",
             "short_title": "Chambre adulte",
             "title": "Tableau pour la chambre adulte",
-            "description": "Tons doux, sujets apaisants, compositions qui se lisent allongé. Curé pour accompagner les fins de journée, pas pour les agiter.",
+            "description": "<p>La chambre, c'est l'endroit où vous quittez le monde. On y privilégie les tons doux, les sujets apaisants, les compositions qui se lisent allongé. Notre collection est curée pour accompagner les fins de journée, pas pour les agiter.</p>",
+            "link_label": "Découvrir la collection",
             "link": "shopify://collections/tableau-chambre-adulte"
           }
         },
@@ -125,7 +127,8 @@
             "image_alt": "Tableau coloré dans une chambre d'enfant — collection MyselfMonArt",
             "short_title": "Chambre enfant",
             "title": "Tableau pour la chambre enfant",
-            "description": "Chambre bébé, garçon, ado : les codes ne sont jamais les mêmes. Un tableau bien choisi à 6 ans est un repère encore aimé à 12.",
+            "description": "<p>Une chambre d'enfant grandit avec son occupant. Nous avons distingué chambre bébé, garçon et adolescent parce que les codes ne sont jamais les mêmes — et parce qu'un tableau bien choisi à 6 ans est un repère encore aimé à 12.</p>",
+            "link_label": "Découvrir la collection",
             "link": "shopify://collections/tableau-chambre-garcon"
           }
         },
@@ -136,7 +139,8 @@
             "image_alt": "Tableau dans un bureau épuré — collection MyselfMonArt",
             "short_title": "Bureau",
             "title": "Tableau pour le bureau",
-            "description": "Des œuvres qui élèvent sans distraire. Pensées pour les bureaux à domicile comme pour les espaces professionnels.",
+            "description": "<p>Le mur derrière vous en visio raconte qui vous êtes avant même que vous parliez. Le mur devant vous décide de votre concentration. Notre collection propose des œuvres qui élèvent sans distraire — pensées pour les bureaux à domicile comme pour les espaces professionnels.</p>",
+            "link_label": "Découvrir la collection",
             "link": "shopify://collections/tableau-bureau"
           }
         },
@@ -147,7 +151,8 @@
             "image_alt": "Tableau vif dans une cuisine — collection MyselfMonArt",
             "short_title": "Cuisine",
             "title": "Tableau pour la cuisine",
-            "description": "Des couleurs qui rassurent et des sujets qui ouvrent l'appétit. Au-dessus du plan de travail, dans le coin repas, sur le pan de mur qui ramène l'œil.",
+            "description": "<p>La cuisine est devenue une pièce à vivre. Un tableau y trouve naturellement sa place — au-dessus du plan de travail, dans le coin repas, sur le pan de mur qui ramène l'œil. Notre collection joue les couleurs qui rassurent et les sujets qui ouvrent l'appétit.</p>",
+            "link_label": "Découvrir la collection",
             "link": "shopify://collections/tableau-cuisine"
           }
         },
@@ -158,7 +163,8 @@
             "image_alt": "Tableau accueillant dans une entrée chaleureuse — collection MyselfMonArt",
             "short_title": "Entrée & couloir",
             "title": "Tableau pour l'entrée et le couloir",
-            "description": "La première phrase de votre intérieur, le souffle entre deux pièces. Des œuvres pensées pour ces formats étroits et ces traversées rapides.",
+            "description": "<p>L'entrée, c'est la première phrase de votre intérieur. Le couloir, c'est le souffle entre deux pièces. Ce sont des espaces souvent oubliés alors qu'ils décident de votre humeur dès le seuil. Nous avons des œuvres pensées pour ces formats étroits et ces traversées rapides — n'hésitez pas à nous demander conseil.</p>",
+            "link_label": "Nous demander conseil",
             "link": "shopify://pages/contactez-nous"
           }
         }
@@ -169,8 +175,7 @@
         "eyebrow_label": "Par pièce",
         "heading_level": "h2",
         "h2_title": "Trouver votre tableau selon la pièce",
-        "intro": "Chaque pièce appelle une intention différente. Commencez par la pièce, le reste suit.",
-        "columns": "3",
+        "intro": "Chaque pièce de votre intérieur appelle une intention différente. Un tableau qui fonctionne dans un salon écrasera une chambre ; une œuvre qui apaise une chambre paraîtra timide dans un bureau. Nous avons construit nos collections autour de cette évidence : commencez par la pièce, le reste suit.",
         "background_color": "cream"
       }
     },
