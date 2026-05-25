@@ -13,14 +13,18 @@
       "type": "home-hero",
       "settings": {
         "eyebrow": "Tableau décoration murale",
-        "h1_title": "Œuvres curées par notre <em>studio français</em>",
-        "subtitle": "Depuis 2022, plus de 1 015 tableaux livrés. Toile 285g, encres archival 75 ans, cadre bois massif. Direction artistique en France, impression européenne.",
-        "cta_label": "Découvrir nos collections",
-        "cta_link": "shopify://collections",
+        "h1_title": "Art & décoration murale",
+        "subtitle": "Œuvres curées à la main par notre studio français. Toile 285g, encres archival 75 ans, cadre bois massif.",
+        "cta_primary_label": "Acheter",
+        "cta_primary_link": "shopify://collections",
+        "cta_secondary_label": "Inspiration",
+        "cta_secondary_link": "shopify://blogs/tableau-salon",
         "image_desktop_asset": "hero-tableau-decoration-murale-salon-desktop-v3.png",
-        "alt_desktop": "Tableau décoration murale moderne accroché dans un salon contemporain",
+        "image_alt_desktop": "Tableau décoration murale moderne accroché dans un salon contemporain",
         "image_mobile_asset": "hero-tableau-decoration-murale-mobile-v1.png",
-        "alt_mobile": "Tableau décoration murale dans un intérieur cocon"
+        "image_alt_mobile": "Tableau décoration murale dans un intérieur cocon",
+        "layout": "image-right",
+        "background_color": "secondary"
       }
     },
     "welcome": {

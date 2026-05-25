@@ -1,56 +1,134 @@
+{%- comment -%}
+  Home — Hero (split-screen éditorial style Artesta).
+
+  Convention : Tailwind only, variables globales du theme (font-heading,
+  bg-main, text-main-70, bg-secondary). Aucun CSS custom. Tous les textes,
+  liens, images sont configurables depuis l'admin Shopify theme editor.
+
+  Contraintes :
+  - `enabled_on.templates: ['index']` → uniquement disponible sur la home
+  - H1 unique (la home doit avoir un seul H1)
+  - Image hero : loading=eager + fetchpriority=high pour LCP
+  - A11y : alt obligatoire, focus visible, motion-reduce respecté
+{%- endcomment -%}
+
 {%- liquid
-  assign desktop_url = ''
+  assign image_desktop_url = ''
   if section.settings.image_desktop != blank
-    assign desktop_url = section.settings.image_desktop | image_url: width: 1800
+    assign image_desktop_url = section.settings.image_desktop | image_url: width: 1800
   elsif section.settings.image_desktop_asset != blank
-    assign desktop_url = section.settings.image_desktop_asset | asset_url
+    assign image_desktop_url = section.settings.image_desktop_asset | asset_url
   endif
 
-  assign mobile_url = ''
+  assign image_mobile_url = ''
   if section.settings.image_mobile != blank
-    assign mobile_url = section.settings.image_mobile | image_url: width: 900
+    assign image_mobile_url = section.settings.image_mobile | image_url: width: 900
   elsif section.settings.image_mobile_asset != blank
-    assign mobile_url = section.settings.image_mobile_asset | asset_url
+    assign image_mobile_url = section.settings.image_mobile_asset | asset_url
+  endif
+
+  case section.settings.background_color
+    when 'cream'
+      assign bg_class = 'bg-main-5'
+    when 'sable'
+      assign bg_class = 'bg-main-10'
+    when 'secondary'
+      assign bg_class = 'bg-secondary'
+    else
+      assign bg_class = 'bg-secondary'
+  endcase
+
+  assign layout_reverse = false
+  if section.settings.layout == 'image-left'
+    assign layout_reverse = true
   endif
 -%}
 
-<section class="home-section home-hero">
-  <div class="home-hero__text">
-    {%- if section.settings.eyebrow != blank -%}
-      <p class="home-hero__eyebrow">{{ section.settings.eyebrow | escape }}</p>
-    {%- endif -%}
-    {%- if section.settings.h1_title != blank -%}
-      <h1 class="home-hero__title">{{ section.settings.h1_title }}</h1>
-    {%- endif -%}
-    {%- if section.settings.subtitle != blank -%}
-      <p class="home-hero__subtitle">{{ section.settings.subtitle | escape }}</p>
-    {%- endif -%}
-    {%- if section.settings.cta_label != blank and section.settings.cta_link != blank -%}
-      <a class="home-btn home-btn--ink home-hero__cta" href="{{ section.settings.cta_link }}">
-        {{ section.settings.cta_label | escape }}
-        <span class="home-btn__arrow" aria-hidden="true">→</span>
-      </a>
-    {%- endif -%}
-  </div>
-  <div class="home-hero__image-wrap">
-    {%- if desktop_url != '' -%}
-      <img
-        class="home-hero__image home-hero__image--desktop"
-        src="{{ desktop_url }}"
-        alt="{{ section.settings.alt_desktop | escape }}"
-        loading="eager"
-        fetchpriority="high"
-        decoding="async">
-    {%- endif -%}
-    {%- if mobile_url != '' -%}
-      <img
-        class="home-hero__image home-hero__image--mobile"
-        src="{{ mobile_url }}"
-        alt="{{ section.settings.alt_mobile | escape }}"
-        loading="eager"
-        fetchpriority="high"
-        decoding="async">
-    {%- endif -%}
+<section
+  class="home-hero {{ bg_class }} w-full overflow-hidden"
+  aria-labelledby="home-hero-title">
+  <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[80vh] lg:min-h-[90vh]">
+
+    {%- comment -%} Bloc texte {%- endcomment -%}
+    <div class="col-span-1 lg:col-span-5 flex flex-col justify-center px-6 py-16 md:px-12 md:py-20 lg:px-16 xl:px-24 {% if layout_reverse %}lg:order-2{% else %}lg:order-1{% endif %}">
+
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="font-roboto text-xs tracking-[0.2em] uppercase text-main-70 mb-6">
+          {{ section.settings.eyebrow | escape }}
+        </p>
+      {%- endif -%}
+
+      {%- if section.settings.h1_title != blank -%}
+        <h1
+          id="home-hero-title"
+          class="font-heading text-main !text-5xl md:!text-6xl lg:!text-7xl xl:!text-8xl leading-[0.95] tracking-tight mb-6 md:mb-8">
+          {{ section.settings.h1_title }}
+        </h1>
+      {%- endif -%}
+
+      {%- if section.settings.subtitle != blank -%}
+        <p class="font-roboto text-base md:text-lg leading-relaxed text-main-70 max-w-xl mb-8 md:mb-10">
+          {{ section.settings.subtitle | escape }}
+        </p>
+      {%- endif -%}
+
+      {%- if section.settings.cta_primary_label != blank or section.settings.cta_secondary_label != blank -%}
+        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
+
+          {%- if section.settings.cta_primary_label != blank and section.settings.cta_primary_link != blank -%}
+            <a
+              href="{{ section.settings.cta_primary_link }}"
+              class="inline-flex items-center justify-center gap-3 px-10 py-4 rounded-full bg-main text-secondary font-roboto text-sm font-medium uppercase tracking-[0.08em] transition-colors duration-200 motion-reduce:transition-none hover:bg-main-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2 focus-visible:ring-offset-secondary">
+              <span>{{ section.settings.cta_primary_label | escape }}</span>
+            </a>
+          {%- endif -%}
+
+          {%- if section.settings.cta_secondary_label != blank and section.settings.cta_secondary_link != blank -%}
+            <a
+              href="{{ section.settings.cta_secondary_link }}"
+              class="inline-flex items-center justify-center gap-3 px-10 py-4 rounded-full bg-transparent border border-main text-main font-roboto text-sm font-medium uppercase tracking-[0.08em] transition-colors duration-200 motion-reduce:transition-none hover:bg-main hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2 focus-visible:ring-offset-secondary">
+              <span>{{ section.settings.cta_secondary_label | escape }}</span>
+            </a>
+          {%- endif -%}
+
+        </div>
+      {%- endif -%}
+
+    </div>
+
+    {%- comment -%} Bloc image {%- endcomment -%}
+    <div class="col-span-1 lg:col-span-7 relative min-h-[60vh] lg:min-h-full {% if layout_reverse %}lg:order-1{% else %}lg:order-2{% endif %}">
+
+      {%- if image_desktop_url != blank -%}
+        <img
+          src="{{ image_desktop_url }}"
+          alt="{{ section.settings.image_alt_desktop | escape }}"
+          class="hidden md:block absolute inset-0 w-full h-full object-cover"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+          width="1800"
+          height="1200">
+      {%- endif -%}
+
+      {%- if image_mobile_url != blank -%}
+        <img
+          src="{{ image_mobile_url }}"
+          alt="{{ section.settings.image_alt_mobile | escape }}"
+          class="md:hidden absolute inset-0 w-full h-full object-cover"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+          width="900"
+          height="1100">
+      {%- endif -%}
+
+      {%- if image_desktop_url == blank and image_mobile_url == blank -%}
+        <div class="absolute inset-0 bg-main-10" aria-hidden="true"></div>
+      {%- endif -%}
+
+    </div>
+
   </div>
 </section>
 
@@ -58,22 +136,140 @@
 {
   "name": "Home — Hero",
   "tag": "section",
+  "class": "home-hero-section",
   "enabled_on": { "templates": ["index"] },
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow (étiquette au-dessus du H1)", "default": "Tableau décoration murale" },
-    { "type": "textarea", "id": "h1_title", "label": "H1 (titre principal)", "default": "Tableau décoration murale — Œuvres curées par notre studio français" },
-    { "type": "textarea", "id": "subtitle", "label": "Sous-titre", "default": "Depuis 2022, plus de 1 015 tableaux livrés. Toile 285g, encres archival 75 ans, cadre bois massif." },
-    { "type": "text", "id": "cta_label", "label": "CTA — label", "default": "Découvrir nos collections" },
-    { "type": "url", "id": "cta_link", "label": "CTA — lien" },
-    { "type": "header", "content": "Image desktop" },
-    { "type": "image_picker", "id": "image_desktop", "label": "Image desktop" },
-    { "type": "text", "id": "image_desktop_asset", "label": "OU asset filename desktop (ex: hero-...-desktop-v3.png)" },
-    { "type": "text", "id": "alt_desktop", "label": "Alt desktop", "default": "Tableau décoration murale moderne accroché dans un salon contemporain" },
-    { "type": "header", "content": "Image mobile" },
-    { "type": "image_picker", "id": "image_mobile", "label": "Image mobile" },
-    { "type": "text", "id": "image_mobile_asset", "label": "OU asset filename mobile" },
-    { "type": "text", "id": "alt_mobile", "label": "Alt mobile", "default": "Tableau décoration murale dans un intérieur cocon" }
+    {
+      "type": "header",
+      "content": "Contenu textuel"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow (étiquette au-dessus du H1)",
+      "info": "Optionnel. Petite ligne en capitales avant le titre. Ex : « Tableau décoration murale »",
+      "default": "Tableau décoration murale"
+    },
+    {
+      "type": "textarea",
+      "id": "h1_title",
+      "label": "H1 — titre principal",
+      "info": "Doit être unique sur la page (la home n'a qu'un seul H1).",
+      "default": "Art & décoration murale"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Sous-titre",
+      "default": "Découvrez nos œuvres et laissez vos murs raconter des histoires."
+    },
+    {
+      "type": "header",
+      "content": "Appels à l'action"
+    },
+    {
+      "type": "text",
+      "id": "cta_primary_label",
+      "label": "CTA principal — libellé",
+      "default": "Acheter"
+    },
+    {
+      "type": "url",
+      "id": "cta_primary_link",
+      "label": "CTA principal — lien"
+    },
+    {
+      "type": "text",
+      "id": "cta_secondary_label",
+      "label": "CTA secondaire — libellé",
+      "default": "Inspiration"
+    },
+    {
+      "type": "url",
+      "id": "cta_secondary_link",
+      "label": "CTA secondaire — lien"
+    },
+    {
+      "type": "header",
+      "content": "Image desktop"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_desktop",
+      "label": "Image desktop",
+      "info": "Recommandé : 1800×1200 px, JPG ≤ 300 KB, sujet sur la moitié gauche/droite selon le layout."
+    },
+    {
+      "type": "text",
+      "id": "image_desktop_asset",
+      "label": "OU asset filename desktop",
+      "info": "Utilisé si l'image picker ci-dessus est vide. Ex : hero-...-desktop-v3.png (le fichier doit exister dans /assets)."
+    },
+    {
+      "type": "text",
+      "id": "image_alt_desktop",
+      "label": "Alt text desktop",
+      "info": "Obligatoire pour SEO et accessibilité.",
+      "default": "Tableau décoration murale moderne accroché dans un salon contemporain"
+    },
+    {
+      "type": "header",
+      "content": "Image mobile"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Image mobile",
+      "info": "Recommandé : 900×1100 px (format portrait)."
+    },
+    {
+      "type": "text",
+      "id": "image_mobile_asset",
+      "label": "OU asset filename mobile"
+    },
+    {
+      "type": "text",
+      "id": "image_alt_mobile",
+      "label": "Alt text mobile",
+      "default": "Tableau décoration murale dans un intérieur cocon"
+    },
+    {
+      "type": "header",
+      "content": "Mise en page"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Disposition desktop",
+      "default": "image-right",
+      "options": [
+        { "value": "image-right", "label": "Texte à gauche, image à droite" },
+        { "value": "image-left", "label": "Image à gauche, texte à droite" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "background_color",
+      "label": "Couleur de fond (bloc texte)",
+      "default": "secondary",
+      "options": [
+        { "value": "secondary", "label": "Secondary (par défaut theme)" },
+        { "value": "cream", "label": "Main 5% (crème)" },
+        { "value": "sable", "label": "Main 10% (sable)" }
+      ]
+    }
   ],
-  "presets": [{ "name": "Home — Hero" }]
+  "presets": [
+    {
+      "name": "Home — Hero",
+      "settings": {
+        "eyebrow": "Tableau décoration murale",
+        "h1_title": "Art & décoration murale",
+        "subtitle": "Découvrez nos œuvres et laissez vos murs raconter des histoires.",
+        "cta_primary_label": "Acheter",
+        "cta_secondary_label": "Inspiration"
+      }
+    }
+  ]
 }
 {% endschema %}
