@@ -19,10 +19,12 @@
         "cta_primary_link": "",
         "cta_secondary_label": "",
         "cta_secondary_link": "",
-        "image_desktop_asset": "hero-tableau-decoration-murale-salon-desktop-v9.png",
-        "image_alt_desktop": "Tableau décoration murale moderne accroché dans un salon contemporain",
-        "image_mobile_asset": "hero-tableau-decoration-murale-mobile-v1.png",
-        "image_alt_mobile": "Tableau décoration murale dans un intérieur cocon",
+        "hero_image_asset": "hero-tableau-decoration-murale-salon-v9.jpg",
+        "hero_image_alt": "Tableau décoration murale moderne accroché dans un salon contemporain — MyselfMonArt",
+        "image_asset_width": 1024,
+        "image_asset_height": 1024,
+        "image_position_desktop": "object-center",
+        "image_position_mobile": "object-center",
         "layout": "image-right",
         "background_color": "secondary"
       }

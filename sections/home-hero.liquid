@@ -1,30 +1,34 @@
 {%- comment -%}
   Home — Hero (split-screen éditorial style Artesta).
 
-  Convention : Tailwind only, variables globales du theme (font-heading,
-  bg-main, text-main-70, bg-secondary). Aucun CSS custom. Tous les textes,
-  liens, images sont configurables depuis l'admin Shopify theme editor.
+  Conventions theme (cf memory feedback) :
+  - Tailwind only — pas de CSS custom
+  - Variables globales : font-heading, bg-main, text-main-70, bg-secondary
+  - Admin-configurable — tout passe par le schema
+  - SEO + a11y impeccables — H1 unique, alt obligatoire, focus visible, motion-reduce
 
-  Contraintes :
-  - `enabled_on.templates: ['index']` → uniquement disponible sur la home
-  - H1 unique (la home doit avoir un seul H1)
-  - Image hero : loading=eager + fetchpriority=high pour LCP
-  - A11y : alt obligatoire, focus visible, motion-reduce respecté
+  Image responsive : un seul fichier source, srcset avec image_url filter
+  (si image_picker rempli), object-position configurable desktop/mobile
+  pour un crop responsive propre sans dupliquer l'image. Dimensions
+  explicites (width/height) pour éviter le CLS. loading=eager +
+  fetchpriority=high pour optimiser LCP.
+
+  Section contrainte au template index via enabled_on.
 {%- endcomment -%}
 
 {%- liquid
-  assign image_desktop_url = ''
-  if section.settings.image_desktop != blank
-    assign image_desktop_url = section.settings.image_desktop | image_url: width: 1800
-  elsif section.settings.image_desktop_asset != blank
-    assign image_desktop_url = section.settings.image_desktop_asset | asset_url
+  assign hero_image = section.settings.hero_image
+  assign hero_image_asset = section.settings.hero_image_asset
+  assign hero_image_alt = section.settings.hero_image_alt | default: ''
+
+  assign has_uploaded_image = false
+  if hero_image != blank
+    assign has_uploaded_image = true
   endif
 
-  assign image_mobile_url = ''
-  if section.settings.image_mobile != blank
-    assign image_mobile_url = section.settings.image_mobile | image_url: width: 900
-  elsif section.settings.image_mobile_asset != blank
-    assign image_mobile_url = section.settings.image_mobile_asset | asset_url
+  assign has_asset_image = false
+  if hero_image_asset != blank
+    assign has_asset_image = true
   endif
 
   case section.settings.background_color
@@ -42,6 +46,9 @@
   if section.settings.layout == 'image-left'
     assign layout_reverse = true
   endif
+
+  assign pos_desktop = section.settings.image_position_desktop | default: 'object-center'
+  assign pos_mobile = section.settings.image_position_mobile | default: 'object-center'
 -%}
 
 <section
@@ -96,35 +103,49 @@
 
     </div>
 
-    {%- comment -%} Bloc image {%- endcomment -%}
+    {%- comment -%}
+      Bloc image — une seule image, optimisée responsive.
+      - Si image_picker uploadée : srcset multi-tailles via image_url
+        filter (375 → 1800w), browser pick la meilleure.
+      - Si asset fallback : src unique avec sizes explicit + object-position
+        configurable mobile/desktop pour un crop propre.
+    {%- endcomment -%}
     <div class="col-span-1 lg:col-span-7 relative min-h-[60vh] lg:min-h-full {% if layout_reverse %}lg:order-1{% else %}lg:order-2{% endif %}">
 
-      {%- if image_desktop_url != blank -%}
+      {%- if has_uploaded_image -%}
         <img
-          src="{{ image_desktop_url }}"
-          alt="{{ section.settings.image_alt_desktop | escape }}"
-          class="hidden md:block absolute inset-0 w-full h-full object-cover"
+          srcset="{%- if hero_image.width >= 375 -%}{{ hero_image | image_url: width: 375 }} 375w,{%- endif -%}
+                  {%- if hero_image.width >= 550 -%}{{ hero_image | image_url: width: 550 }} 550w,{%- endif -%}
+                  {%- if hero_image.width >= 750 -%}{{ hero_image | image_url: width: 750 }} 750w,{%- endif -%}
+                  {%- if hero_image.width >= 1100 -%}{{ hero_image | image_url: width: 1100 }} 1100w,{%- endif -%}
+                  {%- if hero_image.width >= 1500 -%}{{ hero_image | image_url: width: 1500 }} 1500w,{%- endif -%}
+                  {%- if hero_image.width >= 1800 -%}{{ hero_image | image_url: width: 1800 }} 1800w,{%- endif -%}
+                  {{ hero_image | image_url }} {{ hero_image.width }}w"
+          sizes="(max-width: 1023px) 100vw, 58vw"
+          src="{{ hero_image | image_url: width: 1100 }}"
+          alt="{{ hero_image_alt | escape }}"
+          width="{{ hero_image.width }}"
+          height="{{ hero_image.height }}"
           loading="eager"
           fetchpriority="high"
           decoding="async"
-          width="1800"
-          height="1200">
-      {%- endif -%}
+          class="absolute inset-0 w-full h-full object-cover {{ pos_mobile }} md:{{ pos_desktop }}">
 
-      {%- if image_mobile_url != blank -%}
+      {%- elsif has_asset_image -%}
+        {%- assign asset_src = hero_image_asset | asset_url -%}
         <img
-          src="{{ image_mobile_url }}"
-          alt="{{ section.settings.image_alt_mobile | escape }}"
-          class="md:hidden absolute inset-0 w-full h-full object-cover"
+          src="{{ asset_src }}"
+          alt="{{ hero_image_alt | escape }}"
+          width="{{ section.settings.image_asset_width | default: 1024 }}"
+          height="{{ section.settings.image_asset_height | default: 1024 }}"
           loading="eager"
           fetchpriority="high"
           decoding="async"
-          width="900"
-          height="1100">
-      {%- endif -%}
+          sizes="(max-width: 1023px) 100vw, 58vw"
+          class="absolute inset-0 w-full h-full object-cover {{ pos_mobile }} md:{{ pos_desktop }}">
 
-      {%- if image_desktop_url == blank and image_mobile_url == blank -%}
-        <div class="absolute inset-0 bg-main-10" aria-hidden="true"></div>
+      {%- else -%}
+        <div class="absolute inset-0 bg-main-10" role="img" aria-label="{{ hero_image_alt | escape | default: 'Image hero à venir' }}"></div>
       {%- endif -%}
 
     </div>
@@ -146,8 +167,8 @@
     {
       "type": "text",
       "id": "eyebrow",
-      "label": "Eyebrow (étiquette au-dessus du H1)",
-      "info": "Optionnel. Petite ligne en capitales avant le titre. Ex : « Tableau décoration murale »",
+      "label": "Eyebrow (étiquette stylo au-dessus du H1)",
+      "info": "Optionnel. Petite ligne en capitales surlignée (.title-highlight). Ex : « Tableau décoration murale »",
       "default": "Tableau décoration murale"
     },
     {
@@ -161,17 +182,16 @@
       "type": "textarea",
       "id": "subtitle",
       "label": "Sous-titre",
-      "default": "Découvrez nos œuvres et laissez vos murs raconter des histoires."
+      "default": "Œuvres curées à la main par notre studio français. Toile 285g, encres archival 75 ans, cadre bois massif."
     },
     {
       "type": "header",
-      "content": "Appels à l'action"
+      "content": "Appels à l'action (optionnels)"
     },
     {
       "type": "text",
       "id": "cta_primary_label",
-      "label": "CTA principal — libellé",
-      "default": "Acheter"
+      "label": "CTA principal — libellé"
     },
     {
       "type": "url",
@@ -181,8 +201,7 @@
     {
       "type": "text",
       "id": "cta_secondary_label",
-      "label": "CTA secondaire — libellé",
-      "default": "Inspiration"
+      "label": "CTA secondaire — libellé"
     },
     {
       "type": "url",
@@ -191,47 +210,68 @@
     },
     {
       "type": "header",
-      "content": "Image desktop"
+      "content": "Image hero (desktop & mobile)"
+    },
+    {
+      "type": "paragraph",
+      "content": "Une seule image servie sur tous les écrans. Recommandation : JPG ou WebP ≤ 300 KB, 1800×1200 minimum, sujet centré pour un crop propre."
     },
     {
       "type": "image_picker",
-      "id": "image_desktop",
-      "label": "Image desktop",
-      "info": "Recommandé : 1800×1200 px, JPG ≤ 300 KB, sujet sur la moitié gauche/droite selon le layout."
+      "id": "hero_image",
+      "label": "Image hero (recommandé — srcset auto)"
     },
     {
       "type": "text",
-      "id": "image_desktop_asset",
-      "label": "OU asset filename desktop",
-      "info": "Utilisé si l'image picker ci-dessus est vide. Ex : hero-...-desktop-v3.png (le fichier doit exister dans /assets)."
+      "id": "hero_image_asset",
+      "label": "OU asset filename (fallback)",
+      "info": "Ex : hero-tableau-decoration-murale-salon-v9.jpg (le fichier doit exister dans /assets)."
     },
     {
       "type": "text",
-      "id": "image_alt_desktop",
-      "label": "Alt text desktop",
-      "info": "Obligatoire pour SEO et accessibilité.",
-      "default": "Tableau décoration murale moderne accroché dans un salon contemporain"
+      "id": "hero_image_alt",
+      "label": "Alt text (obligatoire pour SEO et accessibilité)",
+      "info": "Décrire le contenu de l'image en 80–125 caractères. Inclure le mot-clé cible sans le forcer.",
+      "default": "Tableau décoration murale moderne accroché dans un salon contemporain — MyselfMonArt"
     },
     {
-      "type": "header",
-      "content": "Image mobile"
+      "type": "number",
+      "id": "image_asset_width",
+      "label": "Largeur source (px) — pour l'asset fallback",
+      "info": "Sert à éviter le CLS. Laisser 1024 si tu ne sais pas.",
+      "default": 1024
     },
     {
-      "type": "image_picker",
-      "id": "image_mobile",
-      "label": "Image mobile",
-      "info": "Recommandé : 900×1100 px (format portrait)."
+      "type": "number",
+      "id": "image_asset_height",
+      "label": "Hauteur source (px) — pour l'asset fallback",
+      "default": 1024
     },
     {
-      "type": "text",
-      "id": "image_mobile_asset",
-      "label": "OU asset filename mobile"
+      "type": "select",
+      "id": "image_position_desktop",
+      "label": "Cadrage desktop",
+      "default": "object-center",
+      "options": [
+        { "value": "object-top",    "label": "Haut" },
+        { "value": "object-center", "label": "Centre" },
+        { "value": "object-bottom", "label": "Bas" },
+        { "value": "object-left",   "label": "Gauche" },
+        { "value": "object-right",  "label": "Droite" }
+      ]
     },
     {
-      "type": "text",
-      "id": "image_alt_mobile",
-      "label": "Alt text mobile",
-      "default": "Tableau décoration murale dans un intérieur cocon"
+      "type": "select",
+      "id": "image_position_mobile",
+      "label": "Cadrage mobile",
+      "default": "object-center",
+      "options": [
+        { "value": "object-top",    "label": "Haut" },
+        { "value": "object-center", "label": "Centre" },
+        { "value": "object-bottom", "label": "Bas" },
+        { "value": "object-left",   "label": "Gauche" },
+        { "value": "object-right",  "label": "Droite" }
+      ]
     },
     {
       "type": "header",
@@ -253,9 +293,9 @@
       "label": "Couleur de fond (bloc texte)",
       "default": "secondary",
       "options": [
-        { "value": "secondary", "label": "Secondary (par défaut theme)" },
-        { "value": "cream", "label": "Main 5% (crème)" },
-        { "value": "sable", "label": "Main 10% (sable)" }
+        { "value": "secondary", "label": "Secondary (par défaut)" },
+        { "value": "cream",     "label": "Main 5% (crème)" },
+        { "value": "sable",     "label": "Main 10% (sable)" }
       ]
     }
   ],
@@ -265,9 +305,7 @@
       "settings": {
         "eyebrow": "Tableau décoration murale",
         "h1_title": "Art & décoration murale",
-        "subtitle": "Découvrez nos œuvres et laissez vos murs raconter des histoires.",
-        "cta_primary_label": "Acheter",
-        "cta_secondary_label": "Inspiration"
+        "subtitle": "Œuvres curées à la main par notre studio français."
       }
     }
   ]
