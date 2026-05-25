@@ -48,7 +48,7 @@
       }
     },
     "usps": {
-      "type": "home-usps-grid",
+      "type": "home-usps-bento",
       "blocks": {
         "usp_1": {
           "type": "usp",
@@ -62,8 +62,8 @@
           "type": "usp",
           "settings": {
             "number": "02",
-            "title": "Toile 285 g/m², encres archival 75 ans, cadre bois massif",
-            "text": "<p><strong>Toile 285 g/m²</strong> — assez dense pour tenir son grain. <strong>Encres archival garanties 75 ans</strong> — vos couleurs resteront fidèles. <strong>Cadre en bois massif</strong> — pas un châssis creux, du vrai bois qui tient droit.</p>"
+            "title": "Toile 285 g/m², encres archival 75 ans",
+            "text": "<p><strong>Toile 285 g/m²</strong> assez dense pour tenir son grain. <strong>Encres archival 75 ans</strong> — vos couleurs resteront fidèles.</p>"
           }
         },
         "usp_3": {
@@ -71,7 +71,7 @@
           "settings": {
             "number": "03",
             "title": "Direction artistique en France, impression européenne",
-            "text": "<p>Notre studio créatif est en France. Nos partenaires d'impression sont en Europe — l'Allemagne notamment, pour sa rigueur technique reconnue dans le monde de l'art imprimé.</p><p>Une chaîne courte, européenne, contrôlée, où chaque étape a un visage.</p>"
+            "text": "<p>Studio créatif en France. Impression confiée à nos partenaires européens — notamment l'Allemagne, référence du tirage sur toile.</p>"
           }
         },
         "usp_4": {
@@ -85,9 +85,12 @@
       },
       "block_order": ["usp_1", "usp_2", "usp_3", "usp_4"],
       "settings": {
-        "eyebrow": "Qualité matière",
-        "title": "Ce qui fait la différence d'un tableau MyselfMonArt",
-        "intro": "Un tableau, ce n'est pas qu'une image imprimée. C'est une matière qu'on accroche au mur tous les jours pendant des années. Voici ce que nous y mettons."
+        "eyebrow_number": "02",
+        "eyebrow_label": "Qualité matière",
+        "heading_level": "h2",
+        "h2_title": "Ce qui fait la différence d'un tableau MyselfMonArt",
+        "intro": "Un tableau, ce n'est pas qu'une image imprimée. C'est une matière qu'on accroche au mur tous les jours pendant des années. Voici ce que nous y mettons.",
+        "background_color": "secondary"
       }
     },
     "rooms": {

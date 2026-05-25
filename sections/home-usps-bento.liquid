@@ -1,0 +1,251 @@
+{%- comment -%}
+  Home — USPs Bento (H2.2 Ce qui fait la différence).
+
+  Conventions appliquées (cf .claude/skills/shopify-section-dev) :
+  - Tailwind only — pas de CSS custom
+  - Variables globales : bg-secondary, bg-main-5, text-main, text-main-70,
+    text-buy-button, font-heading, font-roboto
+  - Admin-configurable
+  - SEO : H2 unique avec id + aria-labelledby ; H3 sur chaque USP
+  - A11y : hiérarchie Hn propre, focus-visible si liens, motion-reduce
+  - enabled_on.templates = ['index']
+
+  Architecture bento asymétrique (inspiration Linear / Apple Vision) :
+    Desktop (grid-cols-3, 3 rows) :
+      ┌──────────────┬─────────┐
+      │              │ USP 02  │
+      │   USP 01     ├─────────┤   ← USP 01 = 2 cols × 2 rows (la plus large)
+      │   (premium)  │ USP 03  │
+      ├──────────────┴─────────┤
+      │       USP 04 (wide)    │   ← USP 04 = 3 cols (social proof full-width)
+      └────────────────────────┘
+    Mobile : grid-cols-1 (stack vertical)
+
+  Hiérarchie : chiffres XL serif italic en accent terracotta (ornement
+  typographique éditorial), titre serif, body sans-serif.
+
+  Fond bg-secondary pour rupture rythmique avec la section précédente
+  (home-editorial-cocon en bg-main-5 / crème).
+{%- endcomment -%}
+
+{%- liquid
+  case section.settings.background_color
+    when 'cream'
+      assign bg_class = 'bg-main-5'
+    when 'sable'
+      assign bg_class = 'bg-main-10'
+    when 'secondary'
+      assign bg_class = 'bg-secondary'
+    when 'dark'
+      assign bg_class = 'bg-main'
+    else
+      assign bg_class = 'bg-secondary'
+  endcase
+
+  assign text_class = 'text-main'
+  assign muted_class = 'text-main-70'
+  assign card_bg_class = 'bg-main-5'
+  assign rule_class = 'bg-main-20'
+  assign number_color_class = 'text-buy-button'
+  if section.settings.background_color == 'dark'
+    assign text_class = 'text-secondary'
+    assign muted_class = 'text-secondary-50'
+    assign card_bg_class = 'bg-main-90'
+    assign rule_class = 'bg-secondary-50'
+  endif
+
+  assign heading_level = section.settings.heading_level | default: 'h2'
+  assign heading_id = 'home-usps-bento-' | append: section.id
+-%}
+
+<section
+  class="home-usps-bento {{ bg_class }} {{ text_class }} w-full py-20 md:py-28 lg:py-36"
+  aria-labelledby="{{ heading_id }}">
+
+  <div class="max-w-6xl mx-auto px-6 md:px-8">
+
+    {%- comment -%} Header — eyebrow + H2 + intro (cohérent avec cocon) {%- endcomment -%}
+    {%- if section.settings.eyebrow_number != blank or section.settings.eyebrow_label != blank -%}
+      <p class="font-roboto text-xs tracking-[0.22em] uppercase {{ muted_class }} flex items-center gap-3 mb-6 md:mb-8">
+        {%- if section.settings.eyebrow_number != blank -%}
+          <span class="font-heading text-sm normal-case tracking-normal {{ text_class }}">— {{ section.settings.eyebrow_number | escape }}</span>
+        {%- endif -%}
+        {%- if section.settings.eyebrow_label != blank -%}
+          <span aria-hidden="true" class="block h-px w-8 bg-current opacity-40"></span>
+          <span>{{ section.settings.eyebrow_label | escape }}</span>
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+
+    {%- if section.settings.h2_title != blank -%}
+      <{{ heading_level }}
+        id="{{ heading_id }}"
+        class="font-heading {{ text_class }} !text-3xl md:!text-4xl lg:!text-5xl leading-[1.1] tracking-tight mb-6 md:mb-8 max-w-3xl">
+        {{ section.settings.h2_title }}
+      </{{ heading_level }}>
+    {%- endif -%}
+
+    {%- if section.settings.intro != blank -%}
+      <p class="font-roboto text-lg md:text-xl leading-relaxed {{ muted_class }} max-w-2xl mb-14 md:mb-20">
+        {{ section.settings.intro }}
+      </p>
+    {%- endif -%}
+
+    {%- comment -%}
+      Bento grid asymétrique.
+      Block order index dans section.blocks : 0 = USP large, 1 = USP small top,
+      2 = USP small bottom, 3 = USP wide bas. Au-delà, items normaux (rares).
+    {%- endcomment -%}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-5">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign span_class = ''
+          case forloop.index0
+            when 0
+              assign span_class = 'lg:col-span-2 lg:row-span-2'
+            when 1
+              assign span_class = 'lg:col-start-3 lg:row-start-1'
+            when 2
+              assign span_class = 'lg:col-start-3 lg:row-start-2'
+            when 3
+              assign span_class = 'lg:col-span-3'
+            else
+              assign span_class = ''
+          endcase
+        -%}
+        <article
+          class="{{ span_class }} {{ card_bg_class }} p-8 md:p-10 lg:p-12 flex flex-col"
+          {{ block.shopify_attributes }}>
+
+          {%- if block.settings.number != blank -%}
+            <div class="font-heading italic !text-6xl md:!text-7xl lg:!text-8xl leading-[0.85] {{ number_color_class }} mb-6 md:mb-8" aria-hidden="true">
+              {{ block.settings.number | escape }}
+            </div>
+          {%- endif -%}
+
+          {%- if block.settings.title != blank -%}
+            <h3 class="font-heading {{ text_class }} !text-xl md:!text-2xl lg:!text-3xl leading-tight mb-4">
+              {{ block.settings.title | escape }}
+            </h3>
+          {%- endif -%}
+
+          {%- if block.settings.text != blank -%}
+            <div class="font-roboto text-base md:text-lg leading-relaxed {{ muted_class }} [&>p+p]:mt-3 [&_strong]:{{ text_class }} [&_strong]:font-semibold [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-buy-button motion-reduce:[&_a]:transition-none">
+              {{ block.settings.text }}
+            </div>
+          {%- endif -%}
+
+        </article>
+      {%- endfor -%}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Home — USPs Bento",
+  "tag": "section",
+  "class": "home-usps-bento-section",
+  "enabled_on": { "templates": ["index"] },
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Eyebrow (étiquette)"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_number",
+      "label": "Numéro (ex : 02)",
+      "default": "02"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_label",
+      "label": "Label (capitales)",
+      "default": "Qualité matière"
+    },
+    {
+      "type": "header",
+      "content": "Titre"
+    },
+    {
+      "type": "select",
+      "id": "heading_level",
+      "label": "Niveau du titre (SEO)",
+      "default": "h2",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ]
+    },
+    {
+      "type": "textarea",
+      "id": "h2_title",
+      "label": "Titre principal",
+      "default": "Ce qui fait la différence d'un tableau MyselfMonArt"
+    },
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "Intro"
+    },
+    {
+      "type": "header",
+      "content": "Apparence"
+    },
+    {
+      "type": "select",
+      "id": "background_color",
+      "label": "Couleur de fond",
+      "default": "secondary",
+      "options": [
+        { "value": "secondary", "label": "Secondary (blanc cassé)" },
+        { "value": "cream",     "label": "Main 5% (sable doux)" },
+        { "value": "sable",     "label": "Main 10% (sable plus marqué)" },
+        { "value": "dark",      "label": "Main (fond sombre, texte clair)" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "usp",
+      "name": "USP",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Ordre des blocks : 1 = card large (premium), 2 = card top right, 3 = card bottom right, 4 = card full-width bas. Au-delà = items grille normaux."
+        },
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Chiffre (ex : 01)",
+          "default": "01"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titre H3"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Texte"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Home — USPs Bento",
+      "blocks": [
+        { "type": "usp" },
+        { "type": "usp" },
+        { "type": "usp" },
+        { "type": "usp" }
+      ]
+    }
+  ]
+}
+{% endschema %}
