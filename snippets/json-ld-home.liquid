@@ -2,9 +2,6 @@
   Schemas JSON-LD spécifiques à la home MyselfMonArt.
   Inclus conditionnellement depuis head-base.liquid via :
     {% if request.page_type == 'index' %}{% render 'json-ld-home' %}{% endif %}
-
-  Note : l'Organization schema est déjà injecté par sections/trust-signals.liquid.
-  On ne le réinclut pas ici pour éviter le doublon validateur.
 {%- endcomment -%}
 
 {%- assign home_url = request.origin | append: '/' -%}
@@ -12,6 +9,45 @@
 {%- if shop.brand.logo -%}
   {%- assign logo_url = shop.brand.logo | image_url: width: 600 -%}
 {%- endif -%}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "{{ home_url }}#organization",
+  "name": "MyselfMonArt",
+  "legalName": "SAS KINDOPIA",
+  "url": "{{ home_url }}",
+  "logo": {
+    "@type": "ImageObject",
+    "url": "{{ logo_url }}",
+    "width": 600,
+    "height": 60
+  },
+  "foundingDate": "2022",
+  "founder": {
+    "@type": "Person",
+    "name": "Walid",
+    "jobTitle": "Directeur artistique, fondateur"
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Paris",
+    "addressCountry": "FR"
+  },
+  "contactPoint": [{
+    "@type": "ContactPoint",
+    "telephone": "+33960446150",
+    "contactType": "customer service",
+    "areaServed": "FR",
+    "availableLanguage": ["French", "English"]
+  }],
+  "sameAs": [
+    "https://fr.trustpilot.com/review/myselfmonart.com"
+  ],
+  "description": "Studio créatif français spécialisé dans la curation de tableaux décoration murale premium. Direction artistique à Paris, service client à Toulouse, impression européenne."
+}
+</script>
 
 <script type="application/ld+json">
 {

@@ -1,0 +1,110 @@
+{%- liquid
+  assign cols_class = 'home-cards__grid--3'
+  case section.settings.columns
+    when '2'
+      assign cols_class = ''
+    when '4'
+      assign cols_class = 'home-cards__grid--4'
+  endcase
+-%}
+
+<section class="home-section home-cards">
+  <div class="home-container">
+    {%- if section.settings.eyebrow != blank or section.settings.title != blank or section.settings.intro != blank -%}
+      <div class="home-cards__header">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="home-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+          <h2 class="home-h2">{{ section.settings.title | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.intro != blank -%}
+          <p class="home-lead">{{ section.settings.intro }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="home-cards__grid {{ cols_class }}">
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign img_url = ''
+        if block.settings.image != blank
+          assign img_url = block.settings.image | image_url: width: 800
+        elsif block.settings.image_asset != blank
+          assign img_url = block.settings.image_asset | asset_url
+        endif
+
+        assign card_tag = 'div'
+        if block.settings.link != blank
+          assign card_tag = 'a'
+        endif
+      -%}
+      <{{ card_tag }} class="home-card"
+        {% if block.settings.link != blank %}href="{{ block.settings.link }}"{% endif %}
+        {{ block.shopify_attributes }}>
+        <div class="home-card__image-wrap">
+          {%- if img_url != '' -%}
+            <img class="home-card__image"
+              src="{{ img_url }}"
+              alt="{{ block.settings.alt | escape }}"
+              loading="lazy"
+              decoding="async">
+          {%- endif -%}
+          {%- if block.settings.label != blank -%}
+            <span class="home-card__label">{{ block.settings.label | escape }}</span>
+          {%- endif -%}
+        </div>
+        {%- if block.settings.title != blank -%}
+          <h3 class="home-card__title">{{ block.settings.title | escape }}</h3>
+        {%- endif -%}
+        {%- if block.settings.text != blank -%}
+          <div class="home-card__text">{{ block.settings.text }}</div>
+        {%- endif -%}
+        {%- if block.settings.link_label != blank and block.settings.link != blank -%}
+          <span class="home-card__link">{{ block.settings.link_label | escape }}</span>
+        {%- endif -%}
+      </{{ card_tag }}>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Home — Cards grid",
+  "tag": "section",
+  "enabled_on": { "templates": ["index"] },
+  "max_blocks": 12,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "text", "id": "title", "label": "Titre H2" },
+    { "type": "textarea", "id": "intro", "label": "Intro" },
+    { "type": "select", "id": "columns", "label": "Colonnes desktop", "default": "3",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "image_asset", "label": "OU asset filename" },
+        { "type": "text", "id": "alt", "label": "Alt text" },
+        { "type": "text", "id": "label", "label": "Label (étiquette top-left, optionnel)" },
+        { "type": "text", "id": "title", "label": "Titre H3" },
+        { "type": "richtext", "id": "text", "label": "Texte" },
+        { "type": "text", "id": "link_label", "label": "Lien (label)", "default": "Découvrir" },
+        { "type": "url", "id": "link", "label": "Lien (URL)" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Home — Cards grid", "blocks": [{ "type": "card" }, { "type": "card" }, { "type": "card" }] }
+  ]
+}
+{% endschema %}

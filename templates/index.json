@@ -9,900 +9,505 @@
  */
 {
   "sections": {
-    "hero_image_banner": {
-      "type": "image-banner",
+    "hero": {
+      "type": "home-hero",
       "settings": {
-        "image_desktop": "",
+        "eyebrow": "Tableau décoration murale",
+        "h1_title": "Œuvres curées par notre <em>studio français</em>",
+        "subtitle": "Depuis 2022, plus de 1 015 tableaux livrés. Toile 285g, encres archival 75 ans, cadre bois massif. Direction artistique en France, impression européenne.",
+        "cta_label": "Découvrir nos collections",
+        "cta_link": "shopify://collections",
         "image_desktop_asset": "hero-tableau-decoration-murale-salon-desktop-v3.png",
-        "image_alt_desktop": "Tableau décoration murale moderne accroché dans un salon contemporain",
-        "image_desktop_horizontal_position": "center",
-        "image_mobile": "",
+        "alt_desktop": "Tableau décoration murale moderne accroché dans un salon contemporain",
         "image_mobile_asset": "hero-tableau-decoration-murale-mobile-v1.png",
-        "image_alt_mobile": "Tableau décoration murale dans un intérieur cocon",
-        "image_mobile_vertical_position": "top",
-        "enable_lazy_loading": false
+        "alt_mobile": "Tableau décoration murale dans un intérieur cocon"
       }
     },
-    "h1_heading": {
-      "type": "rich-text",
-      "blocks": {
-        "h1_main": {
-          "type": "heading",
-          "settings": {
-            "heading": "Tableau décoration murale — Œuvres curées par notre studio français",
-            "markup": "h1",
-            "heading_size": "text-3xl"
-          }
-        }
-      },
-      "block_order": ["h1_main"],
+    "welcome": {
+      "type": "home-editorial-rich",
       "settings": {
-        "content_alignment": "text-center",
-        "padding_top": "pt-8",
-        "padding_bottom": "pb-0"
+        "background": "white",
+        "align": "center",
+        "heading_level": "h2",
+        "eyebrow": "Bienvenue",
+        "title": "Bienvenue dans le cocon MyselfMonArt",
+        "lead": "Il y a un instant que vous connaissez bien. Celui où vous rentrez chez vous, où la porte se referme, et où le monde se met enfin en sourdine. C'est cet instant-là que nous habillons.",
+        "body": "<p>Chez MyselfMonArt, nous croyons qu'un mur n'est jamais juste un mur. C'est l'arrière-plan de vos matinées lentes, de vos dîners qui s'étirent, des silences où vous vous retrouvez. Un tableau décoration murale bien choisi ne décore pas une pièce — il <strong>change l'air qu'on y respire</strong>.</p><p>Depuis 2022, nous sélectionnons à la main, retouchons œuvre par œuvre, et livrons des tableaux pensés pour les intérieurs qui veulent <strong>respirer plus large</strong>. Pas de catalogue de masse, pas de collections impersonnelles : seulement ce que notre direction artistique a jugé digne d'entrer chez vous.</p><p><em>Prenez le temps. Le bon tableau, c'est rarement le premier — c'est celui qui revient vous chercher.</em></p>"
       }
     },
-    "h2_1_welcome": {
-      "type": "rich-text",
+    "usps": {
+      "type": "home-usps-grid",
       "blocks": {
-        "h2_welcome_heading": {
-          "type": "heading",
+        "usp_1": {
+          "type": "usp",
           "settings": {
-            "heading": "Bienvenue dans le cocon MyselfMonArt",
-            "markup": "h2",
-            "heading_size": "text-3xl"
+            "number": "01",
+            "title": "Curé à la main par un graphiste-illustrateur",
+            "text": "<p>Walid, fondateur du studio, est graphiste-illustrateur de formation. Il ajuste les contrastes, les lumières, la justesse des couleurs, jusqu'à ce que l'œuvre soit prête à vivre chez vous.</p><p>Sur 700 œuvres référencées aujourd'hui, plus de mille n'ont pas passé le filtre.</p>"
           }
         },
-        "welcome_text_1": {
-          "type": "text",
+        "usp_2": {
+          "type": "usp",
           "settings": {
-            "text": "<p>Il y a un instant que vous connaissez bien. Celui où vous rentrez chez vous, où la porte se referme, et où le monde se met enfin en sourdine.</p><p>C'est cet instant-là que nous habillons.</p><p>Chez MyselfMonArt, nous croyons qu'un mur n'est jamais juste un mur. C'est l'arrière-plan de vos matinées lentes, de vos dîners qui s'étirent, des silences où vous vous retrouvez. Un tableau décoration murale bien choisi ne décore pas une pièce — il <strong>change l'air qu'on y respire</strong>.</p>"
-          }
-        },
-        "welcome_text_2": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Depuis 2022, nous sélectionnons à la main, retouchons œuvre par œuvre, et livrons des tableaux pensés pour les intérieurs qui veulent <strong>respirer plus large</strong>. Pas de catalogue de masse, pas de collections impersonnelles : seulement ce que notre direction artistique a jugé digne d'entrer chez vous.</p><p>Prenez le temps. Le bon tableau, c'est rarement le premier — c'est celui qui revient vous chercher.</p>"
-          }
-        }
-      },
-      "block_order": ["h2_welcome_heading", "welcome_text_1", "welcome_text_2"],
-      "settings": {
-        "content_alignment": "text-left",
-        "padding_top": "pt-8",
-        "padding_bottom": "pb-8"
-      }
-    },
-    "h2_2_usps_intro": {
-      "type": "rich-text",
-      "blocks": {
-        "h2_usps_heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Ce qui fait la différence d'un tableau MyselfMonArt",
-            "markup": "h2",
-            "heading_size": "text-3xl"
-          }
-        },
-        "usps_intro": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Un tableau décoration murale, ce n'est pas qu'une image imprimée. C'est une matière qu'on accroche au mur tous les jours pendant des années. Voici ce que nous mettons dedans — et que vous n'aurez pas ailleurs.</p>"
-          }
-        }
-      },
-      "block_order": ["h2_usps_heading", "usps_intro"],
-      "settings": {
-        "content_alignment": "text-left",
-        "padding_top": "pt-8",
-        "padding_bottom": "pb-0"
-      }
-    },
-    "h2_2_usps_grid": {
-      "type": "multicolumn",
-      "blocks": {
-        "usp_curation": {
-          "type": "column",
-          "settings": {
-            "title": "Une sélection curée à la main par un graphiste-illustrateur",
-            "text": "<p>Chaque œuvre proposée chez MyselfMonArt est choisie, puis retouchée à la main par notre direction artistique. Walid, fondateur du studio, est graphiste-illustrateur de formation : il ajuste les contrastes, les lumières, la justesse des couleurs, jusqu'à ce que l'œuvre soit prête à vivre chez vous.</p><p>C'est une curation lente. Sur 700 œuvres référencées aujourd'hui dans nos collections, plus de mille n'ont pas passé le filtre.</p>",
-            "link_label": "",
-            "link": "",
-            "to_obfuscate": false
-          }
-        },
-        "usp_materials": {
-          "type": "column",
-          "settings": {
+            "number": "02",
             "title": "Toile 285 g/m², encres archival 75 ans, cadre bois massif",
-            "text": "<p>Toile 285 g/m² — assez dense pour tenir son grain sans s'affaisser. Encres archival garanties 75 ans — vos couleurs resteront fidèles à elles-mêmes bien après que le canapé en face aura été remplacé deux fois. Cadre en bois massif — pas un châssis creux, pas du contreplaqué.</p><p>Cette qualité-là, vous la sentez en accrochant le tableau. Et vous l'oubliez ensuite — c'est exactement ce qu'on attend d'un bon cadre.</p>",
-            "link_label": "",
-            "link": "",
-            "to_obfuscate": false
+            "text": "<p><strong>Toile 285 g/m²</strong> — assez dense pour tenir son grain. <strong>Encres archival garanties 75 ans</strong> — vos couleurs resteront fidèles. <strong>Cadre en bois massif</strong> — pas un châssis creux, du vrai bois qui tient droit.</p>"
           }
         },
-        "usp_studio": {
-          "type": "column",
+        "usp_3": {
+          "type": "usp",
           "settings": {
+            "number": "03",
             "title": "Direction artistique en France, impression européenne",
-            "text": "<p>Notre studio créatif est en France : c'est ici que les œuvres sont sélectionnées, retouchées, validées une à une. Nos partenaires d'impression sont en Europe, là où la qualité de tirage sur toile fait référence — l'Allemagne notamment, pour sa rigueur technique reconnue dans le monde de l'art imprimé.</p><p>Ce que nous garantissons, ce n'est pas un drapeau ; c'est une chaîne courte, européenne, contrôlée, où chaque étape a un visage.</p>",
-            "link_label": "",
-            "link": "",
-            "to_obfuscate": false
+            "text": "<p>Notre studio créatif est en France. Nos partenaires d'impression sont en Europe — l'Allemagne notamment, pour sa rigueur technique reconnue dans le monde de l'art imprimé.</p><p>Une chaîne courte, européenne, contrôlée, où chaque étape a un visage.</p>"
           }
         },
-        "usp_volume": {
-          "type": "column",
+        "usp_4": {
+          "type": "usp",
           "settings": {
-            "title": "Plus de 1 015 tableaux déjà accrochés dans des intérieurs",
-            "text": "<p>Depuis 2022, plus de 1 015 tableaux sont sortis de nos cartons pour rejoindre des salons, des chambres, des bureaux, des couloirs un peu trop nus. Vous trouverez plus bas leurs photos chez nos clients — c'est probablement le meilleur portrait que nous puissions vous offrir de notre travail.</p>",
-            "link_label": "",
-            "link": "",
-            "to_obfuscate": false
+            "number": "04",
+            "title": "1 015 tableaux accrochés dans des intérieurs",
+            "text": "<p>Depuis 2022, plus de 1 015 tableaux sont sortis de nos cartons pour rejoindre des salons, des chambres, des bureaux, des couloirs un peu trop nus. Plus bas, leurs photos chez nos clients.</p>"
           }
         }
       },
-      "block_order": ["usp_curation", "usp_materials", "usp_studio", "usp_volume"],
+      "block_order": ["usp_1", "usp_2", "usp_3", "usp_4"],
       "settings": {
-        "title": "",
-        "image_shape": "rounded-none",
-        "columns_desktop": 2,
-        "show_backgounds": true,
-        "button_label": "",
-        "button_link": "",
-        "to_obfuscate": false
+        "eyebrow": "Qualité matière",
+        "title": "Ce qui fait la différence d'un tableau MyselfMonArt",
+        "intro": "Un tableau, ce n'est pas qu'une image imprimée. C'est une matière qu'on accroche au mur tous les jours pendant des années. Voici ce que nous y mettons."
       }
     },
-    "h2_3_by_room": {
-      "type": "multicolumn",
+    "rooms": {
+      "type": "home-cards-grid",
       "blocks": {
         "room_salon": {
-          "type": "column",
+          "type": "card",
           "settings": {
             "image_asset": "vignette-salon-v1.png",
-            "image_alt": "Tableaux pour le salon — collection MyselfMonArt",
+            "alt": "Tableaux pour le salon — collection MyselfMonArt",
+            "label": "Salon",
             "title": "Tableau pour le salon",
-            "text": "<p>Le salon est la pièce où l'on reçoit, mais aussi celle où l'on se pose après une journée. Le bon tableau y crée le point focal sans crier — il invite à s'asseoir, à ralentir, à recommencer une conversation. Pensé pour les murs derrière le canapé, les pans aveugles, les enfilades à habiter.</p>",
-            "link_label": "Découvrir la collection",
-            "link": "shopify://collections/tableau-salon",
-            "to_obfuscate": false
+            "text": "<p>Le bon tableau y crée le point focal sans crier. Pensé pour les murs derrière le canapé, les pans aveugles, les enfilades à habiter.</p>",
+            "link_label": "Découvrir",
+            "link": "shopify://collections/tableau-salon"
           }
         },
         "room_chambre_adulte": {
-          "type": "column",
+          "type": "card",
           "settings": {
             "image_asset": "vignette-chambre-adulte-v1.png",
-            "image_alt": "Tableaux pour la chambre adulte — collection MyselfMonArt",
+            "alt": "Tableaux pour la chambre adulte — collection MyselfMonArt",
+            "label": "Chambre adulte",
             "title": "Tableau pour la chambre adulte",
-            "text": "<p>La chambre, c'est l'endroit où vous quittez le monde. On y privilégie les tons doux, les sujets apaisants, les compositions qui se lisent allongé. Notre collection est curée pour accompagner les fins de journée, pas pour les agiter.</p>",
-            "link_label": "Découvrir la collection",
-            "link": "shopify://collections/tableau-chambre-adulte",
-            "to_obfuscate": false
+            "text": "<p>Tons doux, sujets apaisants, compositions qui se lisent allongé. Curé pour accompagner les fins de journée, pas pour les agiter.</p>",
+            "link_label": "Découvrir",
+            "link": "shopify://collections/tableau-chambre-adulte"
           }
         },
         "room_chambre_enfant": {
-          "type": "column",
+          "type": "card",
           "settings": {
             "image_asset": "vignette-chambre-enfant-v1.png",
-            "image_alt": "Tableaux pour la chambre enfant — collection MyselfMonArt",
+            "alt": "Tableaux pour la chambre enfant — collection MyselfMonArt",
+            "label": "Chambre enfant",
             "title": "Tableau pour la chambre enfant",
-            "text": "<p>Une chambre d'enfant grandit avec son occupant. Nous avons distingué chambre bébé, chambre garçon et chambre adolescent parce que les codes ne sont jamais les mêmes — et parce qu'un tableau bien choisi à 6 ans est un repère encore aimé à 12.</p>",
-            "link_label": "Découvrir la collection",
-            "link": "shopify://collections/tableau-chambre-garcon",
-            "to_obfuscate": false
+            "text": "<p>Chambre bébé, garçon, ado : les codes ne sont jamais les mêmes. Un tableau bien choisi à 6 ans est un repère encore aimé à 12.</p>",
+            "link_label": "Découvrir",
+            "link": "shopify://collections/tableau-chambre-garcon"
           }
         },
         "room_bureau": {
-          "type": "column",
+          "type": "card",
           "settings": {
             "image_asset": "vignette-bureau-v1.png",
-            "image_alt": "Tableaux pour le bureau — collection MyselfMonArt",
+            "alt": "Tableaux pour le bureau — collection MyselfMonArt",
+            "label": "Bureau",
             "title": "Tableau pour le bureau",
-            "text": "<p>Le mur derrière vous en visio raconte qui vous êtes avant même que vous parliez. Le mur devant vous décide de votre concentration. Notre collection propose des œuvres qui élèvent sans distraire — pensées pour les bureaux à domicile comme pour les espaces professionnels.</p>",
-            "link_label": "Découvrir la collection",
-            "link": "shopify://collections/tableau-bureau",
-            "to_obfuscate": false
+            "text": "<p>Des œuvres qui élèvent sans distraire. Pensées pour les bureaux à domicile comme pour les espaces professionnels.</p>",
+            "link_label": "Découvrir",
+            "link": "shopify://collections/tableau-bureau"
           }
         },
         "room_cuisine": {
-          "type": "column",
+          "type": "card",
           "settings": {
             "image_asset": "vignette-cuisine-v1.png",
-            "image_alt": "Tableaux pour la cuisine — collection MyselfMonArt",
+            "alt": "Tableaux pour la cuisine — collection MyselfMonArt",
+            "label": "Cuisine",
             "title": "Tableau pour la cuisine",
-            "text": "<p>La cuisine est devenue une pièce à vivre. Un tableau y trouve naturellement sa place — au-dessus du plan de travail, dans le coin repas, sur le pan de mur qui ramène l'œil. Notre collection joue les couleurs qui rassurent et les sujets qui ouvrent l'appétit.</p>",
-            "link_label": "Découvrir la collection",
-            "link": "shopify://collections/tableau-cuisine",
-            "to_obfuscate": false
+            "text": "<p>Des couleurs qui rassurent et des sujets qui ouvrent l'appétit. Au-dessus du plan de travail, dans le coin repas, sur le pan de mur qui ramène l'œil.</p>",
+            "link_label": "Découvrir",
+            "link": "shopify://collections/tableau-cuisine"
           }
         },
         "room_entree": {
-          "type": "column",
+          "type": "card",
           "settings": {
             "image_asset": "vignette-entree-v1.png",
-            "image_alt": "Tableaux pour l'entrée et le couloir — collection MyselfMonArt",
+            "alt": "Tableaux pour l'entrée et le couloir — collection MyselfMonArt",
+            "label": "Entrée & couloir",
             "title": "Tableau pour l'entrée et le couloir",
-            "text": "<p>L'entrée, c'est la première phrase de votre intérieur. Le couloir, c'est le souffle entre deux pièces. Ce sont des espaces souvent oubliés alors qu'ils décident de votre humeur dès le seuil. Nous avons des œuvres pensées pour ces formats étroits et ces traversées rapides — n'hésitez pas à nous demander conseil.</p>",
-            "link_label": "Voir nos collections",
-            "link": "shopify://collections",
-            "to_obfuscate": false
+            "text": "<p>La première phrase de votre intérieur, le souffle entre deux pièces. Des œuvres pensées pour ces formats étroits et ces traversées rapides.</p>",
+            "link_label": "Nous demander conseil",
+            "link": "shopify://pages/contactez-nous"
           }
         }
       },
       "block_order": ["room_salon", "room_chambre_adulte", "room_chambre_enfant", "room_bureau", "room_cuisine", "room_entree"],
       "settings": {
+        "eyebrow": "Par pièce",
         "title": "Trouver votre tableau selon la pièce",
-        "image_shape": "aspect-[3/4] object-cover",
-        "columns_desktop": 3,
-        "show_backgounds": true,
-        "button_label": "",
-        "button_link": "",
-        "to_obfuscate": false
+        "intro": "Chaque pièce appelle une intention différente. Commencez par la pièce, le reste suit.",
+        "columns": "3"
       }
     },
-    "h2_4_by_style_intro": {
-      "type": "rich-text",
-      "blocks": {
-        "h2_style_heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Explorer par style et univers",
-            "markup": "h2",
-            "heading_size": "text-3xl"
-          }
-        },
-        "style_intro": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Si vous savez déjà ce qui vous touche — un courant, une époque, une géographie — entrez par ici. Voici nos univers, curés un par un.</p>"
-          }
-        }
-      },
-      "block_order": ["h2_style_heading", "style_intro"],
-      "settings": {
-        "content_alignment": "text-left",
-        "padding_top": "pt-8",
-        "padding_bottom": "pb-0"
-      }
-    },
-    "h2_4_styles_part1": {
-      "type": "multicolumn",
+    "styles": {
+      "type": "home-cards-grid",
       "blocks": {
         "style_abstrait": {
-          "type": "column",
+          "type": "card",
           "settings": {
             "image_asset": "style-abstrait-moderne-v1.png",
-            "image_alt": "Tableaux abstraits et modernes — collection MyselfMonArt",
+            "alt": "Tableaux abstraits et modernes — collection MyselfMonArt",
+            "label": "Abstrait & moderne",
             "title": "Tableaux abstraits et modernes",
-            "text": "<p>L'abstraction laisse votre œil composer sa propre histoire. Couleurs, lignes, équilibres : rien ne vous dit quoi voir, tout vous invite à ressentir. Notre collection regroupe les œuvres les plus contemporaines de notre sélection.</p>",
-            "link_label": "Découvrir la collection",
-            "link": "shopify://collections/tableau-abstrait",
-            "to_obfuscate": false
+            "text": "<p>L'abstraction laisse votre œil composer sa propre histoire. Couleurs, lignes, équilibres : tout vous invite à ressentir.</p>",
+            "link_label": "Découvrir",
+            "link": "shopify://collections/tableau-abstrait"
           }
         },
         "style_zen": {
-          "type": "column",
+          "type": "card",
           "settings": {
             "image_asset": "style-zen-nature-v1.png",
-            "image_alt": "Tableaux zen et inspiration nature — collection MyselfMonArt",
+            "alt": "Tableaux zen et inspiration nature — collection MyselfMonArt",
+            "label": "Zen & nature",
             "title": "Tableaux zen et inspiration nature",
-            "text": "<p>Lotus, branches, paysages brumeux, lumière qui filtre. Pour les intérieurs qui cherchent l'apaisement comme une matière. Notre collection est pensée pour les chambres, les espaces méditation, les salons cocooning.</p>",
-            "link_label": "Découvrir la collection",
-            "link": "shopify://collections/tableau-zen",
-            "to_obfuscate": false
+            "text": "<p>Lotus, branches, paysages brumeux, lumière qui filtre. Pour les intérieurs qui cherchent l'apaisement comme une matière.</p>",
+            "link_label": "Découvrir",
+            "link": "shopify://collections/tableau-zen"
           }
         },
         "style_popart": {
-          "type": "column",
+          "type": "card",
           "settings": {
             "image_asset": "style-pop-art-v1.png",
-            "image_alt": "Tableaux pop art et street art — collection MyselfMonArt",
+            "alt": "Tableaux pop art et street art — collection MyselfMonArt",
+            "label": "Pop art",
             "title": "Tableaux pop art et street art",
-            "text": "<p>L'énergie d'une scène urbaine, l'audace d'un grand aplat de couleur. Pour les intérieurs qui assument le caractère. Notre collection joue les contrastes francs et les références qui parlent à votre génération.</p>",
-            "link_label": "Découvrir la collection",
-            "link": "shopify://collections/tableau-pop-art",
-            "to_obfuscate": false
+            "text": "<p>L'énergie d'une scène urbaine, l'audace d'un grand aplat de couleur. Pour les intérieurs qui assument le caractère.</p>",
+            "link_label": "Découvrir",
+            "link": "shopify://collections/tableau-pop-art"
           }
         },
         "style_africain": {
-          "type": "column",
+          "type": "card",
           "settings": {
             "image_asset": "style-africain-ethnique-v1.png",
-            "image_alt": "Tableaux africains et ethniques — collection MyselfMonArt",
+            "alt": "Tableaux africains et ethniques — collection MyselfMonArt",
+            "label": "Africain & ethnique",
             "title": "Tableaux africains et ethniques",
-            "text": "<p>Portraits de femmes africaines, silhouettes berbères, motifs du Sahara : un univers que nous avons construit avec un soin particulier — c'est l'une de nos collections les plus aimées.</p>",
-            "link_label": "Découvrir la collection",
-            "link": "shopify://collections/tableau-africain",
-            "to_obfuscate": false
+            "text": "<p>Portraits de femmes africaines, silhouettes berbères, motifs du Sahara : un univers construit avec un soin particulier.</p>",
+            "link_label": "Découvrir",
+            "link": "shopify://collections/tableau-africain"
           }
-        }
-      },
-      "block_order": ["style_abstrait", "style_zen", "style_popart", "style_africain"],
-      "settings": {
-        "title": "",
-        "image_shape": "aspect-[3/4] object-cover",
-        "columns_desktop": 2,
-        "show_backgounds": true,
-        "button_label": "",
-        "button_link": "",
-        "to_obfuscate": false
-      }
-    },
-    "h2_4_styles_part2": {
-      "type": "multicolumn",
-      "blocks": {
+        },
         "style_nb": {
-          "type": "column",
+          "type": "card",
           "settings": {
             "image_asset": "style-noir-blanc-v1.png",
-            "image_alt": "Tableaux noir et blanc — collection MyselfMonArt",
+            "alt": "Tableaux noir et blanc — collection MyselfMonArt",
+            "label": "Noir & blanc",
             "title": "Tableaux noir et blanc",
-            "text": "<p>Le noir et blanc ne vieillit jamais. Il s'accorde avec tout, structure un mur, fait reposer l'œil. Notre collection couvre la photographie, le dessin, l'abstraction monochrome.</p>",
-            "link_label": "Découvrir la collection",
-            "link": "shopify://collections/tableau-noir-et-blanc",
-            "to_obfuscate": false
+            "text": "<p>Il s'accorde avec tout, structure un mur, fait reposer l'œil. Photographie, dessin, abstraction monochrome.</p>",
+            "link_label": "Découvrir",
+            "link": "shopify://collections/tableau-noir-et-blanc"
           }
         },
         "style_floral": {
-          "type": "column",
+          "type": "card",
           "settings": {
             "image_asset": "style-floral-v1.png",
-            "image_alt": "Tableaux floraux — collection MyselfMonArt",
+            "alt": "Tableaux floraux — collection MyselfMonArt",
+            "label": "Floral",
             "title": "Tableaux floraux",
-            "text": "<p>Pas la nature morte académique — la fleur réinterprétée, agrandie, contemporaine. Notre collection propose des œuvres qui apportent le végétal sans tomber dans le décoratif convenu.</p>",
-            "link_label": "Découvrir la collection",
-            "link": "shopify://collections/tableau-fleurs",
-            "to_obfuscate": false
+            "text": "<p>Pas la nature morte académique — la fleur réinterprétée, agrandie, contemporaine. Le végétal sans le décoratif convenu.</p>",
+            "link_label": "Découvrir",
+            "link": "shopify://collections/tableau-fleurs"
           }
         },
         "style_japonais": {
-          "type": "column",
+          "type": "card",
           "settings": {
             "image_asset": "style-japonais-v1.png",
-            "image_alt": "Tableaux japonais — collection MyselfMonArt",
+            "alt": "Tableaux japonais — collection MyselfMonArt",
+            "label": "Japonais",
             "title": "Tableaux japonais",
-            "text": "<p>Estampes revisitées, calligraphies épurées, vagues d'Hokusai et jardins de Kyoto. Notre collection est l'une des plus contemplatives de notre catalogue.</p>",
-            "link_label": "Découvrir la collection",
-            "link": "shopify://collections/tableau-japonais",
-            "to_obfuscate": false
+            "text": "<p>Estampes revisitées, calligraphies épurées, vagues d'Hokusai. L'une des collections les plus contemplatives.</p>",
+            "link_label": "Découvrir",
+            "link": "shopify://collections/tableau-japonais"
           }
         },
         "style_frida": {
-          "type": "column",
+          "type": "card",
           "settings": {
             "image_asset": "style-frida-kahlo-v1.png",
-            "image_alt": "Tableaux Frida Kahlo — collection MyselfMonArt",
+            "alt": "Tableaux Frida Kahlo — collection MyselfMonArt",
+            "label": "Frida Kahlo",
             "title": "Tableaux Frida Kahlo",
-            "text": "<p>Une figure à elle seule mérite son univers. Notre collection rassemble portraits, autoportraits revisités, et hommages contemporains à l'iconique artiste mexicaine.</p>",
-            "link_label": "Découvrir la collection",
-            "link": "shopify://collections/tableaux-frida-kahlo",
-            "to_obfuscate": false
+            "text": "<p>Portraits, autoportraits revisités, hommages contemporains à l'iconique artiste mexicaine.</p>",
+            "link_label": "Découvrir",
+            "link": "shopify://collections/tableaux-frida-kahlo"
           }
         }
       },
-      "block_order": ["style_nb", "style_floral", "style_japonais", "style_frida"],
+      "block_order": ["style_abstrait", "style_zen", "style_popart", "style_africain", "style_nb", "style_floral", "style_japonais", "style_frida"],
       "settings": {
-        "title": "",
-        "image_shape": "aspect-[3/4] object-cover",
-        "columns_desktop": 2,
-        "show_backgounds": true,
-        "button_label": "",
-        "button_link": "",
-        "to_obfuscate": false
+        "eyebrow": "Par style",
+        "title": "Explorer par style et univers",
+        "intro": "Si vous savez déjà ce qui vous touche — un courant, une époque, une géographie — entrez par ici.",
+        "columns": "4"
       }
     },
-    "h2_5_size": {
-      "type": "rich-text",
-      "blocks": {
-        "h2_size_heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Choisir la bonne taille et le bon format",
-            "markup": "h2",
-            "heading_size": "text-3xl"
-          }
-        },
-        "size_text": {
-          "type": "text",
-          "settings": {
-            "text": "<p>La taille d'un tableau ne se choisit pas au hasard ni au coup de cœur seul. Quelques repères suffisent à éviter les regrets :</p><ul><li><strong>Au-dessus d'un meuble</strong> (canapé, console, lit) : le tableau doit occuper <strong>60 à 75 % de la largeur du meuble</strong>. Au-dessous, il paraît timide ; au-dessus, il l'écrase.</li><li><strong>Hauteur d'accrochage</strong> : le <strong>centre du tableau à environ 1,50 m du sol</strong> — la hauteur moyenne du regard. La règle vaut pour les salons et chambres ; dans une entrée debout, on peut monter un peu.</li><li><strong>Mur seul, sans meuble dessous</strong> : pensez <strong>mur entier</strong> plutôt que zone. Un grand format ou un triptyque structurera mieux qu'une petite œuvre perdue.</li></ul><p>Pour aller plus loin, notre guide complet <a href=\"/blogs/tableau-cuisine/quelle-taille-de-tableau-choisir\">Quelle taille de tableau choisir ?</a> vous accompagne pièce par pièce.</p>"
-          }
-        }
-      },
-      "block_order": ["h2_size_heading", "size_text"],
+    "size_guide": {
+      "type": "home-editorial-rich",
       "settings": {
-        "content_alignment": "text-left",
-        "padding_top": "pt-8",
-        "padding_bottom": "pb-8"
+        "background": "cream",
+        "align": "left",
+        "heading_level": "h2",
+        "eyebrow": "Conseil",
+        "title": "Choisir la bonne taille et le bon format",
+        "body": "<p>La taille d'un tableau ne se choisit pas au hasard ni au coup de cœur seul. Quelques repères suffisent à éviter les regrets :</p><ul><li><strong>Au-dessus d'un meuble</strong> (canapé, console, lit) : le tableau doit occuper <strong>60 à 75 % de la largeur du meuble</strong>.</li><li><strong>Hauteur d'accrochage</strong> : le <strong>centre du tableau à environ 1,50 m du sol</strong> — la hauteur moyenne du regard.</li><li><strong>Mur seul, sans meuble dessous</strong> : pensez <strong>mur entier</strong>. Un grand format ou un triptyque structurera mieux qu'une petite œuvre perdue.</li></ul><p>Pour aller plus loin, notre guide complet <a href=\"/blogs/tableau-cuisine/quelle-taille-de-tableau-choisir\">Quelle taille de tableau choisir ?</a> vous accompagne pièce par pièce.</p>"
       }
     },
-    "h2_6_journey": {
-      "type": "rich-text",
-      "blocks": {
-        "h2_journey_heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Le voyage d'une œuvre, de notre studio à votre mur",
-            "markup": "h2",
-            "heading_size": "text-3xl"
-          }
-        },
-        "journey_text": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Quand vous validez votre commande, l'œuvre n'attend pas dans un entrepôt. Elle n'existe pas encore. Voici ce qui se passe :</p><ol><li><strong>Le fichier source</strong>, déjà retouché par notre direction artistique, part vers notre atelier d'impression européen.</li><li>La toile est <strong>imprimée à la demande</strong>, jamais en lot. Vos couleurs sont calibrées sur votre format précis.</li><li>Elle est <strong>tendue à la main sur un châssis bois massif</strong>, vérifiée œuvre par œuvre.</li><li>Elle vous est livrée prête à accrocher, dans un emballage qui protège les angles — la partie la plus fragile d'un tableau tendu.</li></ol><p>Comptez quelques jours de production en plus du transport. C'est le prix d'une œuvre qui n'aura jamais vécu en stock.</p>"
-          }
-        }
-      },
-      "block_order": ["h2_journey_heading", "journey_text"],
+    "journey": {
+      "type": "home-editorial-rich",
       "settings": {
-        "content_alignment": "text-left",
-        "padding_top": "pt-8",
-        "padding_bottom": "pb-8"
+        "background": "white",
+        "align": "left",
+        "heading_level": "h2",
+        "eyebrow": "Production",
+        "title": "Le voyage d'une œuvre, de notre studio à votre mur",
+        "lead": "Quand vous validez votre commande, l'œuvre n'attend pas dans un entrepôt. Elle n'existe pas encore. Voici ce qui se passe :",
+        "body": "<ol><li><strong>Le fichier source</strong>, déjà retouché par notre direction artistique, part vers notre atelier d'impression européen.</li><li>La toile est <strong>imprimée à la demande</strong>, jamais en lot. Vos couleurs sont calibrées sur votre format précis.</li><li>Elle est <strong>tendue à la main sur un châssis bois massif</strong>, vérifiée œuvre par œuvre.</li><li>Elle vous est livrée prête à accrocher, dans un emballage qui protège les angles.</li></ol><p>Comptez quelques jours de production en plus du transport. C'est le prix d'une œuvre qui n'aura jamais vécu en stock.</p>"
       }
     },
-    "h2_7_studio": {
-      "type": "rich-text",
+    "studio": {
+      "type": "home-studio-presence",
       "blocks": {
-        "h2_studio_heading": {
-          "type": "heading",
+        "place_paris": {
+          "type": "place",
           "settings": {
-            "heading": "Le studio MyselfMonArt — Paris, Toulouse, l'Europe",
-            "markup": "h2",
-            "heading_size": "text-3xl"
+            "title": "Notre siège est à Paris",
+            "text": "Paris, la ville de l'art — du Louvre aux galeries du Marais, des Beaux-Arts à Beaubourg. C'est notre point d'ancrage juridique, et un héritage culturel auquel nous tenons."
           }
         },
-        "studio_text_paris": {
-          "type": "text",
+        "place_toulouse": {
+          "type": "place",
           "settings": {
-            "text": "<h3>Notre siège est à Paris</h3><p>Paris, la ville de l'art — du Louvre aux galeries du Marais, des Beaux-Arts à Beaubourg. C'est notre point d'ancrage juridique, et c'est aussi un héritage culturel auquel nous tenons. Quand vous nous écrivez, votre courrier arrive à Paris.</p>"
+            "title": "Notre service client bat à Toulouse",
+            "text": "Notre équipe support — celle qui vous répond, vous conseille, gère vos commandes — est à Toulouse. Si vous nous appelez, vous entendrez ce léger accent qui réveille la journée."
           }
         },
-        "studio_text_toulouse_da": {
-          "type": "text",
+        "place_europe": {
+          "type": "place",
           "settings": {
-            "text": "<h3>Notre service client bat à Toulouse</h3><p>Notre équipe support, celle qui vous répond, vous conseille, gère vos commandes, est à Toulouse. Si vous nous appelez, vous entendrez ce léger accent qui réveille la journée. Toulouse a été élue parmi les villes les plus polies de France — nous n'y sommes pour rien, mais ça nous va bien.</p><h3>Notre direction artistique en France, notre impression en Europe</h3><p>Walid, fondateur, signe la direction artistique depuis la France. Sa formation de graphiste-illustrateur guide chaque retouche. L'impression, elle, est confiée à des partenaires européens — notamment en Allemagne, dont les imprimeurs sur toile sont une référence internationale dans le monde de l'art imprimé.</p><p>Nous préférons une chaîne courte, européenne, contrôlée, à un drapeau planté sur un emballage. C'est ce que nous garantissons : un travail dont chaque étape a un visage.</p>"
+            "title": "Direction artistique en France, impression en Europe",
+            "text": "Walid, fondateur, signe la direction artistique depuis la France. L'impression est confiée à des partenaires européens — notamment en Allemagne, dont les imprimeurs sur toile sont une référence internationale."
           }
         }
       },
-      "block_order": ["h2_studio_heading", "studio_text_paris", "studio_text_toulouse_da"],
+      "block_order": ["place_paris", "place_toulouse", "place_europe"],
       "settings": {
-        "content_alignment": "text-left",
-        "padding_top": "pt-8",
-        "padding_bottom": "pb-8"
+        "eyebrow": "Le studio",
+        "title": "Paris, Toulouse, l'Europe",
+        "intro": "Nous préférons une chaîne courte, européenne, contrôlée, à un drapeau planté sur un emballage. Un travail dont chaque étape a un visage.",
+        "image_asset": "equipe-studio-direction-artistique-v1.png",
+        "image_alt": "L'équipe MyselfMonArt — direction artistique à Paris et service client à Toulouse"
+      }
+    },
+    "customers": {
+      "type": "home-customers-carousel",
+      "blocks": {
+        "t1": { "type": "testimonial", "settings": { "image_asset": "vignette-salon-v1.png", "message": "Très beau tableau ! Je suis ravie de mon achat, merci. Léa M" } },
+        "t2": { "type": "testimonial", "settings": { "image_asset": "style-floral-v1.png", "message": "Dès l'ouverture du carton, j'ai trouvé la toile magnifique.\nEncore plus belle que sur la photo du site. L'effet est «  waouh ! ». Cécile C" } },
+        "t3": { "type": "testimonial", "settings": { "image_asset": "vignette-chambre-adulte-v1.png", "message": "Reçu mon tableau et franchement, je ne regrette pas une seconde ! Les couleurs sont incroyables, l'originalité saute aux yeux. Sophie D" } },
+        "t4": { "type": "testimonial", "settings": { "image_asset": "vignette-entree-v1.png", "message": "L'animal, majestueux et solitaire trône dans mon salon au dessus de ma console. Magnifique. Patricia G" } },
+        "t5": { "type": "testimonial", "settings": { "image_asset": "vignette-chambre-enfant-v1.png", "message": "Juste une petite photo avec le cadre mis en place, encore un grand merci. Elodie G" } },
+        "t6": { "type": "testimonial", "settings": { "image_asset": "vignette-cuisine-v1.png", "message": "Super contente du rendu de ces cadres en bois. Ça apporte tellement de chaleur et de gaieté à mon salon. Lina O" } },
+        "t7": { "type": "testimonial", "settings": { "image_asset": "style-zen-nature-v1.png", "message": "Ce tableau est magnifique et tellement immersif. Vraie sensation d'évasion, l'ambiance de mon salon est transformée. Pierre S" } },
+        "t8": { "type": "testimonial", "settings": { "image_asset": "style-pop-art-v1.png", "message": "Envoi très rapide et tableau encore plus beau que sur le site.\nParfait je recommande. Jessica S" } }
+      },
+      "block_order": ["t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8"],
+      "settings": {
+        "eyebrow": "Ils nous font confiance",
+        "title": "Ce que vivent nos clients au quotidien",
+        "lead": "Le meilleur portrait de notre travail, ce sont les photos que nos clients nous envoient une fois leur tableau accroché.",
+        "review_count": 80,
+        "trustpilot_link": "https://fr.trustpilot.com/review/myselfmonart.com"
+      }
+    },
+    "faq_intro": {
+      "type": "home-editorial-rich",
+      "settings": {
+        "background": "white",
+        "align": "center",
+        "heading_level": "h2",
+        "eyebrow": "Avant d'acheter",
+        "title": "Comment bien choisir votre tableau décoration murale ?",
+        "body": "<p>Choisir un tableau, ce n'est pas choisir un meuble : on ne le change pas tous les cinq ans. On le regarde tous les jours, parfois pendant une décennie. Trois questions valent la peine d'être posées avant d'acheter :</p><ol><li><strong>Quelle est la fonction de la pièce ?</strong> Une chambre demande l'apaisement ; un salon, le caractère ; un bureau, la concentration.</li><li><strong>Quelle est l'ambiance déjà en place ?</strong> Identifiez 2 ou 3 couleurs dominantes. Le tableau idéal en reprend une — pas toutes.</li><li><strong>Quelle est l'intention émotionnelle ?</strong> Souligner, calmer, réveiller, structurer. Décidez de l'effet <strong>avant</strong> de choisir le sujet.</li></ol><p>Si ces questions vous laissent hésitant, notre équipe répond par téléphone et par mail. Vraiment.</p>"
+      }
+    },
+    "faq": {
+      "type": "home-faq",
+      "blocks": {
+        "faq_salon": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Comment choisir un tableau décoration murale pour son salon ?",
+            "answer": "<p>Pour un salon, choisissez un tableau qui occupe <strong>60 à 75 % de la largeur du meuble</strong> sous lequel il sera accroché (canapé, console). Privilégiez un sujet fédérateur (paysage, abstrait, portrait iconique) et reprenez <strong>2 à 3 couleurs déjà présentes</strong> dans votre décoration. Le centre du tableau doit être <strong>à environ 1,50 m du sol</strong>, la hauteur moyenne du regard.</p>"
+          }
+        },
+        "faq_size": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Quelle taille de tableau choisir pour mon mur ?",
+            "answer": "<p>La règle empirique : votre tableau doit mesurer <strong>environ deux tiers de la largeur du meuble</strong> qu'il surplombe. Sur un mur seul sans meuble, pensez en <strong>proportion du mur entier</strong> — un grand format ou un triptyque structure mieux qu'une petite œuvre. En cas de doute, notre <a href=\"/blogs/tableau-cuisine/quelle-taille-de-tableau-choisir\">guide complet sur la taille</a> détaille les cas pièce par pièce.</p>"
+          }
+        },
+        "faq_harmony": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Comment harmoniser un tableau avec ma décoration ?",
+            "answer": "<p>Une seule couleur commune suffit à créer l'harmonie. Identifiez la couleur dominante d'un élément central de votre pièce (canapé, tapis, rideaux) et choisissez un tableau qui la reprend en accent. <strong>Tons chauds</strong> (rouge, orange, ocre) pour réchauffer une pièce, <strong>tons froids</strong> (bleu, vert) pour apaiser. L'harmonie tient à un fil tendu, pas à dix accords.</p>"
+          }
+        },
+        "faq_hanging": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Comment accrocher un tableau correctement ?",
+            "answer": "<p>Le centre du tableau doit se situer <strong>à environ 1,50 m du sol</strong>. Pour un tableau tendu sur châssis, utilisez deux crochets espacés (et non un seul au centre) afin d'éviter qu'il bascule. Pré-marquez les points d'ancrage au crayon sur le mur avant de percer. Pour plus de détails techniques, voir notre guide <a href=\"/blogs/tableau-cuisine/accrocher-un-tableau-en-toute-securite-nos-solutions-et-astuces-pratiques\">Accrocher un tableau en toute sécurité</a>.</p>"
+          }
+        },
+        "faq_delivery": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Quels sont vos délais de livraison ?",
+            "answer": "<p>Nos tableaux sont <strong>imprimés à la demande</strong>, jamais en stock. Comptez quelques jours de production en plus du transport. Vos délais exacts sont indiqués sur la fiche produit de chaque œuvre et confirmés dans votre email de validation de commande. Pour toute question, joignez-nous au <strong>09 60 44 61 50</strong>.</p>"
+          }
+        },
+        "faq_madeinfrance": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Vos tableaux sont-ils fabriqués en France ?",
+            "answer": "<p>Notre direction artistique est en France : c'est ici que les œuvres sont sélectionnées, retouchées et validées une à une par notre studio. L'impression est confiée à nos partenaires européens, principalement en <strong>Allemagne</strong>, dont les imprimeurs sur toile sont une référence internationale. Nous préférons assumer une chaîne européenne courte et contrôlée plutôt que revendiquer un drapeau qui ne correspondrait pas à la réalité.</p>"
+          }
+        },
+        "faq_handpainted": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Proposez-vous des tableaux peints à la main par un artiste ?",
+            "answer": "<p>Oui — sur devis. Si vous souhaitez transformer l'une de nos œuvres en peinture acrylique ou huile sur toile, réalisée à la main par un artiste, contactez-nous au <strong>09 60 44 61 50</strong> ou par mail. Nous établissons un devis personnalisé selon le format, la technique et le délai souhaité.</p>"
+          }
+        }
+      },
+      "block_order": ["faq_salon", "faq_size", "faq_harmony", "faq_hanging", "faq_delivery", "faq_madeinfrance", "faq_handpainted"],
+      "settings": {
+        "eyebrow": "FAQ",
+        "title": "Questions fréquentes"
+      }
+    },
+    "devis_cta": {
+      "type": "home-cta-banner",
+      "settings": {
+        "background_color": "terracotta",
+        "heading_level": "h2",
+        "eyebrow": "Sur devis",
+        "title": "Et si votre mur méritait une œuvre vraiment unique ?",
+        "subtitle": "Pour les projets où l'unicité prime — un cadeau d'exception, un anniversaire, un mur qui mérite mieux — nous proposons la peinture à la main. Une œuvre, un artiste, votre format.",
+        "cta_label": "Demander un devis",
+        "cta_link": "shopify://pages/contactez-nous"
+      }
+    },
+    "collections": {
+      "type": "home-cards-grid",
+      "blocks": {
+        "c_salon": { "type": "card", "settings": { "image_asset": "vignette-salon-v1.png", "alt": "Tableaux pour le salon — collection MyselfMonArt", "label": "Pièce", "title": "Tableau salon", "link_label": "Voir", "link": "shopify://collections/tableau-salon" } },
+        "c_chambre_a": { "type": "card", "settings": { "image_asset": "vignette-chambre-adulte-v1.png", "alt": "Tableaux pour la chambre adulte — collection MyselfMonArt", "label": "Pièce", "title": "Tableau chambre adulte", "link_label": "Voir", "link": "shopify://collections/tableau-chambre-adulte" } },
+        "c_chambre_e": { "type": "card", "settings": { "image_asset": "vignette-chambre-enfant-v1.png", "alt": "Tableaux pour la chambre enfant — collection MyselfMonArt", "label": "Pièce", "title": "Tableau chambre enfant", "link_label": "Voir", "link": "shopify://collections/tableau-chambre-garcon" } },
+        "c_bureau": { "type": "card", "settings": { "image_asset": "vignette-bureau-v1.png", "alt": "Tableaux pour le bureau — collection MyselfMonArt", "label": "Pièce", "title": "Tableau bureau", "link_label": "Voir", "link": "shopify://collections/tableau-bureau" } },
+        "c_cuisine": { "type": "card", "settings": { "image_asset": "vignette-cuisine-v1.png", "alt": "Tableaux pour la cuisine — collection MyselfMonArt", "label": "Pièce", "title": "Tableau cuisine", "link_label": "Voir", "link": "shopify://collections/tableau-cuisine" } },
+        "c_abstrait": { "type": "card", "settings": { "image_asset": "style-abstrait-moderne-v1.png", "alt": "Tableaux abstraits et modernes — collection MyselfMonArt", "label": "Style", "title": "Tableau abstrait", "link_label": "Voir", "link": "shopify://collections/tableau-abstrait" } },
+        "c_zen": { "type": "card", "settings": { "image_asset": "style-zen-nature-v1.png", "alt": "Tableaux zen et inspiration nature — collection MyselfMonArt", "label": "Style", "title": "Tableau zen", "link_label": "Voir", "link": "shopify://collections/tableau-zen" } },
+        "c_popart": { "type": "card", "settings": { "image_asset": "style-pop-art-v1.png", "alt": "Tableaux pop art et street art — collection MyselfMonArt", "label": "Style", "title": "Tableau pop art", "link_label": "Voir", "link": "shopify://collections/tableau-pop-art" } },
+        "c_africain": { "type": "card", "settings": { "image_asset": "style-africain-ethnique-v1.png", "alt": "Tableaux africains et ethniques — collection MyselfMonArt", "label": "Style", "title": "Tableau africain", "link_label": "Voir", "link": "shopify://collections/tableau-africain" } },
+        "c_nb": { "type": "card", "settings": { "image_asset": "style-noir-blanc-v1.png", "alt": "Tableaux noir et blanc — collection MyselfMonArt", "label": "Style", "title": "Tableau noir et blanc", "link_label": "Voir", "link": "shopify://collections/tableau-noir-et-blanc" } },
+        "c_fleurs": { "type": "card", "settings": { "image_asset": "style-floral-v1.png", "alt": "Tableaux floraux — collection MyselfMonArt", "label": "Style", "title": "Tableau fleurs", "link_label": "Voir", "link": "shopify://collections/tableau-fleurs" } },
+        "c_japonais": { "type": "card", "settings": { "image_asset": "style-japonais-v1.png", "alt": "Tableaux japonais — collection MyselfMonArt", "label": "Style", "title": "Tableau japonais", "link_label": "Voir", "link": "shopify://collections/tableau-japonais" } }
+      },
+      "block_order": ["c_salon", "c_chambre_a", "c_chambre_e", "c_bureau", "c_cuisine", "c_abstrait", "c_zen", "c_popart", "c_africain", "c_nb", "c_fleurs", "c_japonais"],
+      "settings": {
+        "eyebrow": "Toutes nos collections",
+        "title": "Découvrir nos 50 collections",
+        "intro": "Par pièce, par style, par couleur, par artiste, par moment de vie. Voici les plus visitées.",
+        "columns": "4"
+      }
+    },
+    "all_collections_cta": {
+      "type": "home-cta-banner",
+      "settings": {
+        "background_color": "cream",
+        "heading_level": "h3",
+        "eyebrow": "",
+        "title": "Plus de 50 collections vous attendent",
+        "subtitle": "Tableau couleur, tableau ethnique, tableau paysage et bien d'autres univers à explorer.",
+        "cta_label": "Voir nos 50 collections",
+        "cta_link": "shopify://collections"
       }
     },
     "trust_signals_home": {
       "type": "trust-signals",
       "blocks": {
-        "image_text_h1": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify://shop_images/tableau-femme-abstrait-crayon-pastel.jpg",
-            "message": "Très beau tableau ! Je suis ravie de mon achat, merci.. Léa M"
-          }
-        },
-        "image_text_h2": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify://shop_images/toile-moderne-frida-fleurs.jpg",
-            "message": "Dès l'ouverture du carton, j'ai trouvé la toile magnifique.\nEncore plus belle que sur la photo du site.\nJe l'ai installée. Et l'effet est «  waouh ! »\nTrès jolie toile ! Très beau site !\nJe suis ravi de mon achat. Cécile C"
-          }
-        },
-        "image_text_h3": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify://shop_images/tableau-contemporain-abstrait-femme-ronde.jpg",
-            "message": "Reçu mon tableau et franchement, je ne regrette pas une seconde ! Les couleurs sont incroyables, l'originalité saute aux yeux… Impossible de ne pas s'arrêter devant. Sophie D"
-          }
-        },
-        "image_text_h4": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify://shop_images/tableauphotographie-zebre-animaux-zebre-sauvage.jpg",
-            "message": "L'animal, majestueux et solitaire trône dans mon salon au dessus de ma console... Peut on dire qu il est magnifique ? Assurément oui et je l adore!\nPatricia G."
-          }
-        },
-        "image_text_h5": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify://shop_images/Tableau-chambre-bebe_f6e62e6e-707b-41df-aa17-bdad25ef3385.jpg",
-            "message": "Juste une petite photo avec le cadre mis en place encore un grand merci à vous 🥰. \nElodie G"
-          }
-        },
-        "image_text_h6": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify://shop_images/decoration-mural-cadre-bois-cactus-paysage-colore.jpg",
-            "message": "Super contente du rendu de ces cadres en bois ! 🌵 Ça apporte tellement de chaleur et de gaieté à mon salon, j'adore ! 😍 Lina O"
-          }
-        },
-        "image_text_h7": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify://shop_images/tableau-panoramique-payasage-foret-lac.jpg",
-            "message": "Ce tableau est magnifique et tellement immersif ! Il donne une vraie sensation d'évasion et transforme l'ambiance de mon salon. Pierre S"
-          }
-        },
-        "image_text_h8": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify://shop_images/deco-mural-toile-marilyn-monroe-pop-art.jpg",
-            "message": "Envoie très rapide et tableau encore plus beau que sur le site.\nParfait je recommande !!!\nJessica S"
-          }
-        }
+        "image_text_h1": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-femme-abstrait-crayon-pastel.jpg", "message": "Très beau tableau ! Je suis ravie de mon achat, merci.. Léa M" } },
+        "image_text_h2": { "type": "image-text", "settings": { "image": "shopify://shop_images/toile-moderne-frida-fleurs.jpg", "message": "Dès l'ouverture du carton, j'ai trouvé la toile magnifique. Cécile C" } }
       },
-      "block_order": [
-        "image_text_h1",
-        "image_text_h2",
-        "image_text_h3",
-        "image_text_h4",
-        "image_text_h5",
-        "image_text_h6",
-        "image_text_h7",
-        "image_text_h8"
-      ],
+      "block_order": ["image_text_h1", "image_text_h2"],
+      "disabled": true,
       "settings": {
         "eyebrow": "Ils nous font confiance",
         "title": "Ce que vivent nos clients au quotidien",
-        "subtitle": "Plus de 80 retours vérifiés sur Trustpilot et des dizaines de photos partagées par nos clients.",
+        "subtitle": "Plus de 80 retours vérifiés sur Trustpilot.",
         "show_trustpilot": true,
         "trustpilot_score": 41,
         "trustpilot_review_count": 80,
         "trustpilot_link": "https://fr.trustpilot.com/review/myselfmonart.com"
       }
     },
-    "h2_9_faq_intro": {
-      "type": "rich-text",
-      "blocks": {
-        "h2_faq_heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Comment bien choisir votre tableau décoration murale ?",
-            "markup": "h2",
-            "heading_size": "text-3xl"
-          }
-        },
-        "faq_intro_text": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Choisir un tableau décoration murale, ce n'est pas choisir un meuble : on ne le change pas tous les cinq ans. On le regarde tous les jours, parfois pendant une décennie. Trois questions valent la peine d'être posées avant d'acheter :</p><ol><li><strong>Quelle est la fonction de la pièce ?</strong> Une chambre demande l'apaisement ; un salon, le caractère ; un bureau, la concentration. Le sujet de l'œuvre doit servir l'usage du lieu.</li><li><strong>Quelle est l'ambiance déjà en place ?</strong> Identifiez 2 ou 3 couleurs dominantes de votre décoration actuelle. Le tableau idéal reprend l'une d'elles — pas toutes, sinon il se dilue.</li><li><strong>Quelle est l'intention émotionnelle ?</strong> Un tableau peut souligner, calmer, réveiller, structurer. Décidez de l'effet que vous voulez <strong>avant</strong> de choisir le sujet.</li></ol><p>Si ces questions vous laissent hésitant, notre équipe répond par téléphone et par mail. Vraiment.</p>"
-          }
-        }
-      },
-      "block_order": ["h2_faq_heading", "faq_intro_text"],
+    "signature": {
+      "type": "home-signature",
       "settings": {
-        "content_alignment": "text-left",
-        "padding_top": "pt-8",
-        "padding_bottom": "pb-8"
-      }
-    },
-    "h2_10_faq": {
-      "type": "collapsible-content",
-      "blocks": {
-        "faq_salon": {
-          "type": "collapsible_row",
-          "settings": {
-            "heading": "Comment choisir un tableau décoration murale pour son salon ?",
-            "icon": "none",
-            "row_content": "<p>Pour un salon, choisissez un tableau qui occupe <strong>60 à 75 % de la largeur du meuble</strong> sous lequel il sera accroché (canapé, console). Privilégiez un sujet fédérateur (paysage, abstrait, portrait iconique) et reprenez <strong>2 à 3 couleurs déjà présentes</strong> dans votre décoration. Le centre du tableau doit être <strong>à environ 1,50 m du sol</strong>, la hauteur moyenne du regard.</p>"
-          }
-        },
-        "faq_size": {
-          "type": "collapsible_row",
-          "settings": {
-            "heading": "Quelle taille de tableau choisir pour mon mur ?",
-            "icon": "none",
-            "row_content": "<p>La règle empirique : votre tableau doit mesurer <strong>environ deux tiers de la largeur du meuble</strong> qu'il surplombe. Sur un mur seul sans meuble, pensez en <strong>proportion du mur entier</strong> — un grand format ou un triptyque structure mieux qu'une petite œuvre. En cas de doute, notre <a href=\"/blogs/tableau-cuisine/quelle-taille-de-tableau-choisir\">guide complet sur la taille</a> détaille les cas pièce par pièce.</p>"
-          }
-        },
-        "faq_harmony": {
-          "type": "collapsible_row",
-          "settings": {
-            "heading": "Comment harmoniser un tableau avec ma décoration ?",
-            "icon": "none",
-            "row_content": "<p>Une seule couleur commune suffit à créer l'harmonie. Identifiez la couleur dominante d'un élément central de votre pièce (canapé, tapis, rideaux) et choisissez un tableau qui la reprend en accent. <strong>Tons chauds</strong> (rouge, orange, ocre) pour réchauffer une pièce, <strong>tons froids</strong> (bleu, vert) pour apaiser. L'harmonie tient à un fil tendu, pas à dix accords.</p>"
-          }
-        },
-        "faq_hanging": {
-          "type": "collapsible_row",
-          "settings": {
-            "heading": "Comment accrocher un tableau correctement ?",
-            "icon": "none",
-            "row_content": "<p>Le centre du tableau doit se situer <strong>à environ 1,50 m du sol</strong>. Pour un tableau tendu sur châssis, utilisez deux crochets espacés (et non un seul au centre) afin d'éviter qu'il bascule. Pré-marquez les points d'ancrage au crayon sur le mur avant de percer. Pour plus de détails techniques, voir notre guide <a href=\"/blogs/tableau-cuisine/accrocher-un-tableau-en-toute-securite-nos-solutions-et-astuces-pratiques\">Accrocher un tableau en toute sécurité</a>.</p>"
-          }
-        },
-        "faq_delivery": {
-          "type": "collapsible_row",
-          "settings": {
-            "heading": "Quels sont vos délais de livraison ?",
-            "icon": "none",
-            "row_content": "<p>Nos tableaux sont <strong>imprimés à la demande</strong>, jamais en stock. Comptez quelques jours de production en plus du transport. Vos délais exacts sont indiqués sur la fiche produit de chaque œuvre et confirmés dans votre email de validation de commande. Pour toute question, joignez-nous au <strong>09 60 44 61 50</strong>.</p>"
-          }
-        },
-        "faq_madeinfrance": {
-          "type": "collapsible_row",
-          "settings": {
-            "heading": "Vos tableaux sont-ils fabriqués en France ?",
-            "icon": "none",
-            "row_content": "<p>Notre direction artistique est en France : c'est ici que les œuvres sont sélectionnées, retouchées et validées une à une par notre studio. L'impression est confiée à nos partenaires européens, principalement en <strong>Allemagne</strong>, dont les imprimeurs sur toile sont une référence internationale. Nous préférons assumer une chaîne européenne courte et contrôlée plutôt que revendiquer un drapeau qui ne correspondrait pas à la réalité.</p>"
-          }
-        },
-        "faq_handpainted": {
-          "type": "collapsible_row",
-          "settings": {
-            "heading": "Proposez-vous des tableaux peints à la main par un artiste ?",
-            "icon": "none",
-            "row_content": "<p>Oui — sur devis. Si vous souhaitez transformer l'une de nos œuvres en peinture acrylique ou huile sur toile, réalisée à la main par un artiste, contactez-nous au <strong>09 60 44 61 50</strong> ou par mail. Nous établissons un devis personnalisé selon le format, la technique et le délai souhaité.</p>"
-          }
-        }
-      },
-      "block_order": ["faq_salon", "faq_size", "faq_harmony", "faq_hanging", "faq_delivery", "faq_madeinfrance", "faq_handpainted"],
-      "settings": {
-        "heading": "Questions fréquentes"
-      }
-    },
-    "h2_11_devis": {
-      "type": "image-with-text",
-      "settings": {
-        "image": "",
-        "title": "Tableau peint à la main par un artiste, sur devis",
-        "description": "<p>Pour les projets où l'unicité prime — un cadeau d'exception, un anniversaire de mariage, un mur qui mérite une pièce vraiment unique — nous proposons la <strong>peinture à la main</strong>. Une œuvre, un artiste, votre format. Sur devis uniquement, sans engagement.</p><p>Demandez votre devis personnalisé au <strong>09 60 44 61 50</strong> ou via <a href=\"/pages/contact\">notre page contact</a>.</p>",
-        "layout": "image_first",
-        "enable_blob": true,
-        "activate_dynamic_color": false,
-        "padding_top": "pt-16",
-        "padding_bottom": "pb-16"
-      }
-    },
-    "h2_12_collections_grid": {
-      "type": "collections-pages-grid",
-      "blocks": {
-        "coll_salon": {
-          "type": "collection",
-          "settings": {
-            "image": "",
-            "image_asset": "vignette-salon-v1.png",
-            "image_alt": "Tableaux pour le salon — collection MyselfMonArt",
-            "collection": "tableau-salon",
-            "nb_columns": "col-span-3",
-            "lazy_load": true,
-            "paragraph": "<p>Tableaux pour le salon — pour les murs derrière le canapé, les pans aveugles, les enfilades à habiter.</p>"
-          }
-        },
-        "coll_chambre_adulte": {
-          "type": "collection",
-          "settings": {
-            "image": "",
-            "image_asset": "vignette-chambre-adulte-v1.png",
-            "image_alt": "Tableaux pour la chambre adulte — collection MyselfMonArt",
-            "collection": "tableau-chambre-adulte",
-            "nb_columns": "col-span-3",
-            "lazy_load": true,
-            "paragraph": "<p>Tableaux pour la chambre adulte — tons doux, sujets apaisants, compositions qui se lisent allongé.</p>"
-          }
-        },
-        "coll_chambre_enfant": {
-          "type": "collection",
-          "settings": {
-            "image": "",
-            "image_asset": "vignette-chambre-enfant-v1.png",
-            "image_alt": "Tableaux pour la chambre enfant — collection MyselfMonArt",
-            "collection": "tableau-chambre-garcon",
-            "nb_columns": "col-span-3",
-            "lazy_load": true,
-            "paragraph": "<p>Tableaux pour la chambre enfant — un repère choisi à 6 ans, encore aimé à 12.</p>"
-          }
-        },
-        "coll_bureau": {
-          "type": "collection",
-          "settings": {
-            "image": "",
-            "image_asset": "vignette-bureau-v1.png",
-            "image_alt": "Tableaux pour le bureau — collection MyselfMonArt",
-            "collection": "tableau-bureau",
-            "nb_columns": "col-span-3",
-            "lazy_load": true,
-            "paragraph": "<p>Tableaux pour le bureau — des œuvres qui élèvent sans distraire, pour les bureaux à domicile comme les espaces professionnels.</p>"
-          }
-        },
-        "coll_cuisine": {
-          "type": "collection",
-          "settings": {
-            "image": "",
-            "image_asset": "vignette-cuisine-v1.png",
-            "image_alt": "Tableaux pour la cuisine — collection MyselfMonArt",
-            "collection": "tableau-cuisine",
-            "nb_columns": "col-span-3",
-            "lazy_load": true,
-            "paragraph": "<p>Tableaux pour la cuisine — couleurs qui rassurent, sujets qui ouvrent l'appétit.</p>"
-          }
-        },
-        "coll_abstrait": {
-          "type": "collection",
-          "settings": {
-            "image": "",
-            "image_asset": "style-abstrait-moderne-v1.png",
-            "image_alt": "Tableaux abstraits et modernes — collection MyselfMonArt",
-            "collection": "tableau-abstrait",
-            "nb_columns": "col-span-3",
-            "lazy_load": true,
-            "paragraph": "<p>Tableaux abstraits et modernes — l'abstraction laisse votre œil composer sa propre histoire.</p>"
-          }
-        },
-        "coll_zen": {
-          "type": "collection",
-          "settings": {
-            "image": "",
-            "image_asset": "style-zen-nature-v1.png",
-            "image_alt": "Tableaux zen et inspiration nature — collection MyselfMonArt",
-            "collection": "tableau-zen",
-            "nb_columns": "col-span-3",
-            "lazy_load": true,
-            "paragraph": "<p>Tableaux zen et inspiration nature — pour les intérieurs qui cherchent l'apaisement comme une matière.</p>"
-          }
-        },
-        "coll_popart": {
-          "type": "collection",
-          "settings": {
-            "image": "",
-            "image_asset": "style-pop-art-v1.png",
-            "image_alt": "Tableaux pop art et street art — collection MyselfMonArt",
-            "collection": "tableau-pop-art",
-            "nb_columns": "col-span-3",
-            "lazy_load": true,
-            "paragraph": "<p>Tableaux pop art et street art — l'énergie d'une scène urbaine, l'audace d'un grand aplat de couleur.</p>"
-          }
-        },
-        "coll_africain": {
-          "type": "collection",
-          "settings": {
-            "image": "",
-            "image_asset": "style-africain-ethnique-v1.png",
-            "image_alt": "Tableaux africains et ethniques — collection MyselfMonArt",
-            "collection": "tableau-africain",
-            "nb_columns": "col-span-3",
-            "lazy_load": true,
-            "paragraph": "<p>Tableaux africains — portraits de femmes africaines, silhouettes berbères, motifs du Sahara.</p>"
-          }
-        },
-        "coll_noiretblanc": {
-          "type": "collection",
-          "settings": {
-            "image": "",
-            "image_asset": "style-noir-blanc-v1.png",
-            "image_alt": "Tableaux noir et blanc — collection MyselfMonArt",
-            "collection": "tableau-noir-et-blanc",
-            "nb_columns": "col-span-3",
-            "lazy_load": true,
-            "paragraph": "<p>Tableaux noir et blanc — il s'accorde avec tout, structure un mur, fait reposer l'œil.</p>"
-          }
-        },
-        "coll_fleurs": {
-          "type": "collection",
-          "settings": {
-            "image": "",
-            "image_asset": "style-floral-v1.png",
-            "image_alt": "Tableaux floraux — collection MyselfMonArt",
-            "collection": "tableau-fleurs",
-            "nb_columns": "col-span-3",
-            "lazy_load": true,
-            "paragraph": "<p>Tableaux floraux — la fleur réinterprétée, agrandie, contemporaine.</p>"
-          }
-        },
-        "coll_japonais": {
-          "type": "collection",
-          "settings": {
-            "image": "",
-            "image_asset": "style-japonais-v1.png",
-            "image_alt": "Tableaux japonais — collection MyselfMonArt",
-            "collection": "tableau-japonais",
-            "nb_columns": "col-span-3",
-            "lazy_load": true,
-            "paragraph": "<p>Tableaux japonais — estampes revisitées, calligraphies épurées, vagues d'Hokusai.</p>"
-          }
-        },
-        "coll_frida": {
-          "type": "collection",
-          "settings": {
-            "image": "",
-            "image_asset": "style-frida-kahlo-v1.png",
-            "image_alt": "Tableaux Frida Kahlo — collection MyselfMonArt",
-            "collection": "tableaux-frida-kahlo",
-            "nb_columns": "col-span-3",
-            "lazy_load": true,
-            "paragraph": "<p>Tableaux Frida Kahlo — portraits, autoportraits revisités, hommages contemporains.</p>"
-          }
-        },
-        "coll_paysage": {
-          "type": "collection",
-          "settings": {
-            "image": "",
-            "image_asset": "style-zen-nature-v1.png",
-            "image_alt": "Tableaux paysage — collection MyselfMonArt",
-            "collection": "tableau-paysage",
-            "nb_columns": "col-span-3",
-            "lazy_load": true,
-            "paragraph": "<p>Tableaux paysage — pour ouvrir une fenêtre sur l'horizon, là où il n'y en a pas.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "coll_salon",
-        "coll_chambre_adulte",
-        "coll_chambre_enfant",
-        "coll_bureau",
-        "coll_cuisine",
-        "coll_abstrait",
-        "coll_zen",
-        "coll_popart",
-        "coll_africain",
-        "coll_noiretblanc",
-        "coll_fleurs",
-        "coll_japonais",
-        "coll_frida",
-        "coll_paysage"
-      ],
-      "settings": {
-        "title": "Découvrir toutes nos collections",
-        "padding_top": "pt-8",
-        "padding_bottom": "pb-0"
-      }
-    },
-    "h2_12_collections_more": {
-      "type": "rich-text",
-      "blocks": {
-        "more_text": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Plus de 50 collections vous attendent — par pièce, par style, par couleur, par artiste, par moment de vie. Voir aussi <a href=\"/collections/tableau-couleur\">Tableau couleur</a> · <a href=\"/collections/tableau-ethnique\">Tableau ethnique</a>.</p>"
-          }
-        },
-        "more_button": {
-          "type": "button",
-          "settings": {
-            "button_label": "Voir nos 50 collections",
-            "button_link": "shopify://collections",
-            "button_label_2": "",
-            "button_link_2": "",
-            "to_obfuscate": false
-          }
-        },
-        "signature_text": {
-          "type": "text",
-          "settings": {
-            "text": "<p><em>Avec soin,</em><br><em>— Hayate / Team MyselfMonArt</em></p>",
-            "text_size": "text-lg",
-            "is_lighten": true
-          }
-        }
-      },
-      "block_order": ["more_text", "more_button", "signature_text"],
-      "settings": {
-        "content_alignment": "text-center",
-        "padding_top": "pt-8",
-        "padding_bottom": "pb-16"
+        "line_1": "Avec soin,",
+        "line_2": "— Hayate / Team MyselfMonArt"
       }
     }
   },
   "order": [
-    "hero_image_banner",
-    "h1_heading",
-    "h2_1_welcome",
-    "h2_2_usps_intro",
-    "h2_2_usps_grid",
-    "h2_3_by_room",
-    "h2_4_by_style_intro",
-    "h2_4_styles_part1",
-    "h2_4_styles_part2",
-    "h2_5_size",
-    "h2_6_journey",
-    "h2_7_studio",
+    "hero",
+    "welcome",
+    "usps",
+    "rooms",
+    "styles",
+    "size_guide",
+    "journey",
+    "studio",
+    "customers",
+    "faq_intro",
+    "faq",
+    "devis_cta",
+    "collections",
+    "all_collections_cta",
     "trust_signals_home",
-    "h2_9_faq_intro",
-    "h2_10_faq",
-    "h2_11_devis",
-    "h2_12_collections_grid",
-    "h2_12_collections_more"
+    "signature"
   ]
 }

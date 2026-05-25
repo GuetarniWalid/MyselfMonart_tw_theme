@@ -37,6 +37,7 @@
 
 {%- if request.page_type == 'index' -%}
   {%- render 'json-ld-home' -%}
+  {{ 'home-styles.css' | asset_url | stylesheet_tag }}
 {%- endif -%}
 
 <script src="{{ 'tw-global.js' | asset_url }}" defer="defer"></script>

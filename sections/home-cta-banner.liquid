@@ -1,0 +1,58 @@
+{%- liquid
+  assign bg_style = section.settings.background_color | default: 'terracotta'
+  assign bg_class = 'home-section--terracotta'
+  if bg_style == 'dark'
+    assign bg_class = 'home-section--dark'
+  elsif bg_style == 'cream'
+    assign bg_class = 'home-section--cream'
+  endif
+-%}
+
+<section class="home-section home-cta-banner {{ bg_class }}">
+  <div class="home-cta-banner__inner">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="home-cta-banner__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+    {%- if section.settings.title != blank -%}
+      <{{ section.settings.heading_level | default: 'h2' }} class="home-cta-banner__title">{{ section.settings.title }}</{{ section.settings.heading_level | default: 'h2' }}>
+    {%- endif -%}
+    {%- if section.settings.subtitle != blank -%}
+      <p class="home-cta-banner__subtitle">{{ section.settings.subtitle }}</p>
+    {%- endif -%}
+    {%- if section.settings.cta_label != blank and section.settings.cta_link != blank -%}
+      <a class="home-btn home-btn--ghost-light" href="{{ section.settings.cta_link }}">
+        {{ section.settings.cta_label | escape }}
+        <span class="home-btn__arrow" aria-hidden="true">→</span>
+      </a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Home — CTA banner",
+  "tag": "section",
+  "enabled_on": { "templates": ["index"] },
+  "settings": [
+    { "type": "select", "id": "background_color", "label": "Fond", "default": "terracotta",
+      "options": [
+        { "value": "terracotta", "label": "Terracotta" },
+        { "value": "dark", "label": "Sombre" },
+        { "value": "cream", "label": "Crème" }
+      ]
+    },
+    { "type": "select", "id": "heading_level", "label": "Niveau du titre (SEO)", "default": "h2",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ]
+    },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "textarea", "id": "title", "label": "Titre éditorial" },
+    { "type": "textarea", "id": "subtitle", "label": "Sous-titre" },
+    { "type": "text", "id": "cta_label", "label": "CTA — label" },
+    { "type": "url", "id": "cta_link", "label": "CTA — lien" }
+  ],
+  "presets": [{ "name": "Home — CTA banner" }]
+}
+{% endschema %}

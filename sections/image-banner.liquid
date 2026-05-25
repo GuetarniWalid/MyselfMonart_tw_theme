@@ -21,15 +21,6 @@
       height="{{ section.settings.image_desktop.width | divided_by: section.settings.image_desktop.aspect_ratio }}"
       class="hidden md:inline-block object-cover object-{{ section.settings.image_desktop_horizontal_position }} w-full h-full skeleton"
   >
-{%- elsif section.settings.image_desktop_asset != blank -%}
-  <img
-    src="{{ section.settings.image_desktop_asset | asset_url }}"
-    loading="{% if section.settings.enable_lazy_loading %}lazy{% else %}eager{% endif %}"
-    fetchpriority="{% if section.settings.enable_lazy_loading %}auto{% else %}high{% endif %}"
-    decoding="async"
-    alt="{{ section.settings.image_alt_desktop | escape }}"
-    class="hidden md:inline-block object-cover object-{{ section.settings.image_desktop_horizontal_position }} w-full h-full skeleton"
-  >
 {%- endif -%}
 {%- if section.settings.image_mobile != blank -%}
   <img
@@ -49,17 +40,8 @@
     height="{{ section.settings.image_mobile.width | divided_by: section.settings.image_mobile.aspect_ratio }}"
     class="md:hidden object-cover object-{{ section.settings.image_mobile_vertical_position }} w-full h-full skeleton"
   >
-{%- elsif section.settings.image_mobile_asset != blank -%}
-  <img
-    src="{{ section.settings.image_mobile_asset | asset_url }}"
-    loading="{% if section.settings.enable_lazy_loading %}lazy{% else %}eager{% endif %}"
-    fetchpriority="{% if section.settings.enable_lazy_loading %}auto{% else %}high{% endif %}"
-    decoding="async"
-    alt="{{ section.settings.image_alt_mobile | escape }}"
-    class="md:hidden object-cover object-{{ section.settings.image_mobile_vertical_position }} w-full h-full skeleton"
-  >
 {%- endif -%}
-{%- if section.settings.image_desktop == blank and section.settings.image_desktop_asset == blank -%}
+{%- if section.settings.image_desktop == blank -%}
   {{ 'lifestyle-2' | placeholder_svg_tag }}
 {%- endif -%}
 
@@ -77,17 +59,6 @@
       "type": "image_picker",
       "id": "image_desktop",
       "label": "Image"
-    },
-    {
-      "type": "text",
-      "id": "image_desktop_asset",
-      "label": "Asset filename desktop (fallback)",
-      "info": "Nom de fichier dans /assets (ex: hero-desktop.png). Utilisé si l'image picker est vide."
-    },
-    {
-      "type": "text",
-      "id": "image_alt_desktop",
-      "label": "Alt text desktop"
     },
     {
       "type": "select",
@@ -117,17 +88,6 @@
       "type": "image_picker",
       "id": "image_mobile",
       "label": "Image"
-    },
-    {
-      "type": "text",
-      "id": "image_mobile_asset",
-      "label": "Asset filename mobile (fallback)",
-      "info": "Nom de fichier dans /assets. Utilisé si l'image picker est vide."
-    },
-    {
-      "type": "text",
-      "id": "image_alt_mobile",
-      "label": "Alt text mobile"
     },
     {
       "type": "select",

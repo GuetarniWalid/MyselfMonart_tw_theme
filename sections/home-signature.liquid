@@ -1,0 +1,17 @@
+<section class="home-section home-signature">
+  <p>{{ section.settings.line_1 | escape }}</p>
+  <p>{{ section.settings.line_2 | escape }}</p>
+</section>
+
+{% schema %}
+{
+  "name": "Home — Signature",
+  "tag": "section",
+  "enabled_on": { "templates": ["index"] },
+  "settings": [
+    { "type": "text", "id": "line_1", "label": "Ligne 1", "default": "Avec soin," },
+    { "type": "text", "id": "line_2", "label": "Ligne 2", "default": "— Hayate / Team MyselfMonArt" }
+  ],
+  "presets": [{ "name": "Home — Signature" }]
+}
+{% endschema %}

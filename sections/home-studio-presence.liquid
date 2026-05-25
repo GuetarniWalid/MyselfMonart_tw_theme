@@ -1,0 +1,81 @@
+{%- liquid
+  assign img_url = ''
+  if section.settings.image != blank
+    assign img_url = section.settings.image | image_url: width: 1000
+  elsif section.settings.image_asset != blank
+    assign img_url = section.settings.image_asset | asset_url
+  endif
+-%}
+
+<section class="home-section home-studio">
+  <div class="home-container">
+    <div class="home-studio__wrap">
+      <div class="home-studio__image-wrap">
+        {%- if img_url != '' -%}
+          <img class="home-studio__image"
+            src="{{ img_url }}"
+            alt="{{ section.settings.image_alt | escape }}"
+            loading="lazy"
+            decoding="async">
+        {%- endif -%}
+      </div>
+      <div>
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="home-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+          <h2 class="home-h2">{{ section.settings.title | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.intro != blank -%}
+          <p class="home-lead">{{ section.settings.intro }}</p>
+        {%- endif -%}
+
+        <div class="home-studio__places">
+          {%- for block in section.blocks -%}
+            <div class="home-studio__place" {{ block.shopify_attributes }}>
+              <div class="home-studio__place-marker" aria-hidden="true">{{ forloop.index }}</div>
+              <div>
+                {%- if block.settings.title != blank -%}
+                  <h3 class="home-studio__place-title">{{ block.settings.title | escape }}</h3>
+                {%- endif -%}
+                {%- if block.settings.text != blank -%}
+                  <p class="home-studio__place-text">{{ block.settings.text }}</p>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Home — Studio presence",
+  "tag": "section",
+  "enabled_on": { "templates": ["index"] },
+  "max_blocks": 5,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "text", "id": "title", "label": "Titre H2" },
+    { "type": "textarea", "id": "intro", "label": "Intro / lead" },
+    { "type": "image_picker", "id": "image", "label": "Image équipe / studio" },
+    { "type": "text", "id": "image_asset", "label": "OU asset filename" },
+    { "type": "text", "id": "image_alt", "label": "Alt text" }
+  ],
+  "blocks": [
+    {
+      "type": "place",
+      "name": "Lieu (H3)",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Titre H3" },
+        { "type": "textarea", "id": "text", "label": "Texte" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Home — Studio", "blocks": [{ "type": "place" }, { "type": "place" }, { "type": "place" }] }
+  ]
+}
+{% endschema %}
