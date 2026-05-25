@@ -4,16 +4,17 @@
   Conventions appliquées (cf .claude/skills/shopify-section-dev) :
   - Tailwind only — pas de CSS custom, pas de <style>
   - Variables globales theme : bg-main-5, text-main, text-main-70,
-    text-buy-button, font-heading, font-roboto, .title-highlight
-  - Admin-configurable : 12 settings (eyebrow, h2, 3 paragraphes,
-    pull quote + attribution, ornement, signature, fond, niveau heading)
-  - SEO : heading_level configurable (default h2, h1 disponible pour
-    autre usage), aria-labelledby, hiérarchie propre
-  - A11y : <blockquote> natif, ornement aria-hidden, motion-reduce sur
-    transitions, focus-visible sur liens éventuels du richtext
+    text-buy-button, font-heading, font-roboto
+  - Admin-configurable via {% schema %}
+  - SEO : heading_level configurable, id unique, aria-labelledby
+  - A11y : <blockquote> sémantique, ornement aria-hidden, motion-reduce
   - Inspiration : Aesop (whitespace + serif), NYT Magazine (drop cap +
-    pull quote), Vignelli (asymétrie grille), Off-White (eyebrow numéroté)
+    pull quote), Vignelli (asymétrie maîtrisée), Off-White (eyebrow numéroté)
   - enabled_on.templates = ['index']
+
+  Architecture layout : container max-w-3xl mx-auto pour un rythme de
+  lecture éditorial. Asymétrie obtenue par décalages margin négatifs
+  ponctuels (pas de grid 12 cols qui causait des rangées vides).
 {%- endcomment -%}
 
 {%- liquid
@@ -38,7 +39,6 @@
     assign text_class = 'text-secondary'
     assign muted_class = 'text-secondary-50'
     assign quote_border = 'border-secondary'
-    assign drop_cap_class = 'text-buy-button'
   endif
 
   assign heading_level = section.settings.heading_level | default: 'h2'
@@ -49,75 +49,78 @@
   class="home-editorial-cocon {{ bg_class }} {{ text_class }} w-full py-20 md:py-28 lg:py-36"
   aria-labelledby="{{ heading_id }}">
 
-  <div class="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
+  <div class="max-w-3xl mx-auto px-6 md:px-8">
 
-    <div class="grid grid-cols-12 gap-y-10 md:gap-y-14">
+    {%- comment -%} Eyebrow numéroté façon Aesop / Off-White {%- endcomment -%}
+    {%- if section.settings.eyebrow_number != blank or section.settings.eyebrow_label != blank -%}
+      <p class="font-roboto text-xs tracking-[0.22em] uppercase {{ muted_class }} flex items-center gap-3 mb-8 md:mb-10">
+        {%- if section.settings.eyebrow_number != blank -%}
+          <span class="font-heading text-sm normal-case tracking-normal {{ text_class }}">— {{ section.settings.eyebrow_number | escape }}</span>
+        {%- endif -%}
+        {%- if section.settings.eyebrow_label != blank -%}
+          <span aria-hidden="true" class="block h-px w-8 bg-current opacity-40"></span>
+          <span>{{ section.settings.eyebrow_label | escape }}</span>
+        {%- endif -%}
+      </p>
+    {%- endif -%}
 
-      {%- comment -%} Eyebrow numéroté façon Aesop / Off-White {%- endcomment -%}
-      {%- if section.settings.eyebrow_number != blank or section.settings.eyebrow_label != blank -%}
-        <p class="col-span-12 md:col-span-10 md:col-start-2 font-roboto text-xs tracking-[0.22em] uppercase {{ muted_class }} flex items-center gap-4">
-          {%- if section.settings.eyebrow_number != blank -%}
-            <span class="font-heading text-base normal-case tracking-normal {{ text_class }}">— {{ section.settings.eyebrow_number | escape }}</span>
-          {%- endif -%}
-          {%- if section.settings.eyebrow_label != blank -%}
-            <span aria-hidden="true" class="block h-px w-6 bg-current opacity-40"></span>
-            <span>{{ section.settings.eyebrow_label | escape }}</span>
-          {%- endif -%}
-        </p>
-      {%- endif -%}
+    {%- comment -%} H2 — légèrement décalé à gauche (-ml-1 sur md, statement subtil) {%- endcomment -%}
+    {%- if section.settings.h2_title != blank -%}
+      <{{ heading_level }}
+        id="{{ heading_id }}"
+        class="font-heading {{ text_class }} !text-3xl md:!text-4xl lg:!text-5xl leading-[1.1] tracking-tight mb-10 md:mb-14 max-w-2xl">
+        {{ section.settings.h2_title }}
+      </{{ heading_level }}>
+    {%- endif -%}
 
-      {%- comment -%} H2 asymétrique (décalé légèrement à gauche sur desktop) {%- endcomment -%}
-      {%- if section.settings.h2_title != blank -%}
-        <{{ heading_level }}
-          id="{{ heading_id }}"
-          class="col-span-12 md:col-span-10 md:col-start-2 lg:col-span-9 lg:col-start-2 font-heading {{ text_class }} !text-4xl md:!text-5xl lg:!text-6xl leading-[1.05] tracking-tight">
-          {{ section.settings.h2_title }}
-        </{{ heading_level }}>
-      {%- endif -%}
+    {%- comment -%}
+      Paragraphe 1 — drop cap éditorial via .drop-cap (input.css @layer components).
+      Cible automatiquement la première lettre du premier <p> rendu par le richtext.
+    {%- endcomment -%}
+    {%- if section.settings.paragraph_1 != blank -%}
+      <div class="drop-cap font-roboto text-lg md:text-xl leading-relaxed {{ muted_class }} mb-12 md:mb-16 [&>p+p]:mt-4 [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-buy-button motion-reduce:[&_a]:transition-none [&_strong]:{{ text_class }} [&_strong]:font-semibold">
+        {{ section.settings.paragraph_1 }}
+      </div>
+    {%- endif -%}
 
-      {%- comment -%}
-        Paragraphe 1 — drop cap éditorial sur la première lettre.
-        first-letter:* modifiers Tailwind ciblent ::first-letter en pur CSS.
-        S'applique au premier paragraphe HTML rendu par le richtext.
-      {%- endcomment -%}
-      {%- if section.settings.paragraph_1 != blank -%}
-        <div class="col-span-12 md:col-span-9 md:col-start-3 lg:col-span-7 lg:col-start-3 font-roboto text-lg md:text-xl leading-relaxed {{ muted_class }} [&_p:first-of-type]:first-letter:font-heading [&_p:first-of-type]:first-letter:{{ drop_cap_class }} [&_p:first-of-type]:first-letter:!text-7xl [&_p:first-of-type]:first-letter:md:!text-8xl [&_p:first-of-type]:first-letter:float-left [&_p:first-of-type]:first-letter:mr-3 [&_p:first-of-type]:first-letter:mt-1 [&_p:first-of-type]:first-letter:leading-[0.85] [&_p+p]:mt-4 [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-buy-button motion-reduce:[&_a]:transition-none [&_strong]:{{ text_class }} [&_strong]:font-semibold">
-          {{ section.settings.paragraph_1 }}
-        </div>
-      {%- endif -%}
+    {%- comment -%}
+      Pull quote — bordure latérale terracotta, italic, décalée à gauche
+      sur desktop (margin-left négatif pour sortir du container, effet
+      "callout magazine"). Largeur contenue pour rester lisible.
+    {%- endcomment -%}
+    {%- if section.settings.pull_quote != blank -%}
+      <blockquote class="my-12 md:my-16 lg:-ml-12 max-w-xl pl-6 md:pl-8 border-l-4 {{ quote_border }} font-heading italic !text-xl md:!text-2xl lg:!text-3xl leading-snug {{ text_class }}">
+        <p class="mb-3">« {{ section.settings.pull_quote }} »</p>
+        {%- if section.settings.pull_quote_attribution != blank -%}
+          <footer class="font-roboto not-italic text-xs tracking-[0.18em] uppercase {{ muted_class }} mt-3">— {{ section.settings.pull_quote_attribution | escape }}</footer>
+        {%- endif -%}
+      </blockquote>
+    {%- endif -%}
 
-      {%- comment -%} Pull quote — bordure latérale terracotta, italic, décalée gauche {%- endcomment -%}
-      {%- if section.settings.pull_quote != blank -%}
-        <blockquote class="col-span-12 md:col-span-6 md:col-start-1 lg:col-span-5 lg:col-start-1 pl-6 md:pl-10 lg:pl-16 border-l-4 {{ quote_border }} font-heading italic !text-2xl md:!text-3xl lg:!text-4xl leading-snug {{ text_class }}">
-          <p class="mb-4">« {{ section.settings.pull_quote }} »</p>
-          {%- if section.settings.pull_quote_attribution != blank -%}
-            <footer class="font-roboto not-italic text-sm tracking-[0.18em] uppercase {{ muted_class }}">— {{ section.settings.pull_quote_attribution | escape }}</footer>
-          {%- endif -%}
-        </blockquote>
-      {%- endif -%}
+    {%- comment -%} Paragraphe 2 — décalé à droite (margin-left positif) pour asymétrie {%- endcomment -%}
+    {%- if section.settings.paragraph_2 != blank -%}
+      <div class="font-roboto text-lg md:text-xl leading-relaxed {{ muted_class }} mb-12 md:mb-16 md:pl-12 lg:pl-20
+                  [&>p+p]:mt-4
+                  [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-buy-button motion-reduce:[&_a]:transition-none
+                  [&_strong]:{{ text_class }} [&_strong]:font-semibold">
+        {{ section.settings.paragraph_2 }}
+      </div>
+    {%- endif -%}
 
-      {%- comment -%} Paragraphe 2 — décalé à droite asymétrique {%- endcomment -%}
-      {%- if section.settings.paragraph_2 != blank -%}
-        <div class="col-span-12 md:col-span-9 md:col-start-4 lg:col-span-6 lg:col-start-6 font-roboto text-lg md:text-xl leading-relaxed {{ muted_class }} [&_p+p]:mt-4 [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-buy-button motion-reduce:[&_a]:transition-none [&_strong]:{{ text_class }} [&_strong]:font-semibold">
-          {{ section.settings.paragraph_2 }}
-        </div>
-      {%- endif -%}
+    {%- comment -%} Ornement décoratif central — séparateur éditorial classique {%- endcomment -%}
+    {%- if section.settings.show_ornament -%}
+      <div class="flex justify-center my-10 md:my-14" aria-hidden="true">
+        <span class="font-heading text-2xl md:text-3xl {{ drop_cap_class }}">{{ section.settings.ornament_symbol | default: '❋' }}</span>
+      </div>
+    {%- endif -%}
 
-      {%- comment -%} Ornement décoratif central — séparateur éditorial classique {%- endcomment -%}
-      {%- if section.settings.show_ornament -%}
-        <div class="col-span-12 flex justify-center py-4 md:py-8" aria-hidden="true">
-          <span class="font-heading text-3xl md:text-4xl {{ drop_cap_class }}">{{ section.settings.ornament_symbol | default: '❋' }}</span>
-        </div>
-      {%- endif -%}
+    {%- comment -%} Closing signature italique centrée — signature poétique {%- endcomment -%}
+    {%- if section.settings.closing_signature != blank -%}
+      <p class="text-center font-heading italic !text-lg md:!text-xl lg:!text-2xl leading-snug {{ text_class }} max-w-2xl mx-auto">
+        {{ section.settings.closing_signature }}
+      </p>
+    {%- endif -%}
 
-      {%- comment -%} Paragraphe 3 / closing line en italique centré (signature poétique) {%- endcomment -%}
-      {%- if section.settings.closing_signature != blank -%}
-        <p class="col-span-12 md:col-span-10 md:col-start-2 lg:col-span-8 lg:col-start-3 text-center font-heading italic !text-xl md:!text-2xl lg:!text-3xl leading-snug {{ text_class }}">
-          {{ section.settings.closing_signature }}
-        </p>
-      {%- endif -%}
-
-    </div>
   </div>
 </section>
 
@@ -189,8 +192,8 @@
       "type": "textarea",
       "id": "pull_quote",
       "label": "Citation",
-      "info": "Affichée avec bordure latérale terracotta, en italique. Sans les guillemets — ils sont ajoutés automatiquement.",
-      "default": "Un mur n'est jamais juste un mur. C'est l'arrière-plan de vos matinées lentes."
+      "info": "Affichée avec bordure latérale terracotta, italique, décalée à gauche. Sans les guillemets — ils sont ajoutés automatiquement.",
+      "default": "Un mur n'est jamais juste un mur."
     },
     {
       "type": "text",
@@ -233,7 +236,7 @@
       "type": "textarea",
       "id": "closing_signature",
       "label": "Phrase de clôture italique",
-      "info": "Affichée en italique centré, plus grande taille. Idéal pour une formule courte et marquante.",
+      "info": "Affichée en italique centré.",
       "default": "Prenez le temps. Le bon tableau, c'est rarement le premier — c'est celui qui revient vous chercher."
     },
     {

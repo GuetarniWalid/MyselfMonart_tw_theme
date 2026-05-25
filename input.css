@@ -530,6 +530,20 @@ main-product-blocks .description h3 span {
     padding: 0 0.1em 0.3em 0.1em;
   }
 
+  /* Drop cap editorial — first letter of the first paragraph rendered
+     as a large initial (magazine style). Apply to a wrapper that contains
+     <p> children (e.g. richtext output). Uses theme color tokens. */
+  .drop-cap > p:first-of-type::first-letter {
+    @apply font-heading float-left mr-3 mt-1 leading-[0.85];
+    color: rgb(var(--color-buy-button-rgb));
+    font-size: 3.75rem; /* text-6xl */
+  }
+  @media (min-width: 768px) {
+    .drop-cap > p:first-of-type::first-letter {
+      font-size: 4.5rem; /* text-7xl */
+    }
+  }
+
   klarna-placement::part(osm-container) {
     @apply py-3 rounded-sm border-none;
   }
