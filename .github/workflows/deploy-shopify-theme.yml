@@ -22,6 +22,9 @@ permissions:
 env:
   THEME_DIRS: "assets config layout locales sections snippets templates"
   DEPLOY_MARKER: "assets/github-deploy-info.json"
+  # Files CI rebuilds on every deploy. They must be excluded from auto-sync
+  # because git/Shopify diffs on them are build-output noise, not admin edits.
+  CI_BUILT_ARTIFACTS: "assets/output.css"
 
 concurrency:
   group: shopify-theme-${{ github.ref }}
@@ -141,6 +144,10 @@ jobs:
 
           git diff --name-only "$LAST_SHA" -- $THEME_DIRS | sort -u > "$LOCAL_CHANGED"
           sort -u "$REMOTE_CHANGED" -o "$REMOTE_CHANGED"
+
+          for artifact in $CI_BUILT_ARTIFACTS; do
+            sed -i "\|^${artifact}\$|d" "$REMOTE_CHANGED"
+          done
 
           if [[ ! -s "$REMOTE_CHANGED" ]]; then
             echo "No Shopify admin changes detected. Safe to deploy."
