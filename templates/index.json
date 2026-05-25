@@ -99,72 +99,66 @@
         "room_salon": {
           "type": "room",
           "settings": {
-            "number": "01",
             "image_asset": "vignette-salon-v1.png",
-            "image_alt": "Tableaux pour le salon — collection MyselfMonArt",
+            "image_alt": "Tableau accroché dans un salon contemporain — collection MyselfMonArt",
+            "short_title": "Salon",
             "title": "Tableau pour le salon",
-            "text": "<p>Le bon tableau y crée le point focal sans crier. Pensé pour les murs derrière le canapé, les pans aveugles, les enfilades à habiter.</p>",
-            "link_label": "Découvrir",
+            "description": "Le bon tableau y crée le point focal sans crier. Pensé pour les murs derrière le canapé, les pans aveugles, les enfilades à habiter.",
             "link": "shopify://collections/tableau-salon"
           }
         },
         "room_chambre_adulte": {
           "type": "room",
           "settings": {
-            "number": "02",
             "image_asset": "vignette-chambre-adulte-v1.png",
-            "image_alt": "Tableaux pour la chambre adulte — collection MyselfMonArt",
+            "image_alt": "Tableau apaisant accroché dans une chambre adulte — collection MyselfMonArt",
+            "short_title": "Chambre adulte",
             "title": "Tableau pour la chambre adulte",
-            "text": "<p>Tons doux, sujets apaisants, compositions qui se lisent allongé. Curé pour accompagner les fins de journée, pas pour les agiter.</p>",
-            "link_label": "Découvrir",
+            "description": "Tons doux, sujets apaisants, compositions qui se lisent allongé. Curé pour accompagner les fins de journée, pas pour les agiter.",
             "link": "shopify://collections/tableau-chambre-adulte"
           }
         },
         "room_chambre_enfant": {
           "type": "room",
           "settings": {
-            "number": "03",
             "image_asset": "vignette-chambre-enfant-v1.png",
-            "image_alt": "Tableaux pour la chambre enfant — collection MyselfMonArt",
+            "image_alt": "Tableau coloré dans une chambre d'enfant — collection MyselfMonArt",
+            "short_title": "Chambre enfant",
             "title": "Tableau pour la chambre enfant",
-            "text": "<p>Chambre bébé, garçon, ado : les codes ne sont jamais les mêmes. Un tableau bien choisi à 6 ans est un repère encore aimé à 12.</p>",
-            "link_label": "Découvrir",
+            "description": "Chambre bébé, garçon, ado : les codes ne sont jamais les mêmes. Un tableau bien choisi à 6 ans est un repère encore aimé à 12.",
             "link": "shopify://collections/tableau-chambre-garcon"
           }
         },
         "room_bureau": {
           "type": "room",
           "settings": {
-            "number": "04",
             "image_asset": "vignette-bureau-v1.png",
-            "image_alt": "Tableaux pour le bureau — collection MyselfMonArt",
+            "image_alt": "Tableau dans un bureau épuré — collection MyselfMonArt",
+            "short_title": "Bureau",
             "title": "Tableau pour le bureau",
-            "text": "<p>Des œuvres qui élèvent sans distraire. Pensées pour les bureaux à domicile comme pour les espaces professionnels.</p>",
-            "link_label": "Découvrir",
+            "description": "Des œuvres qui élèvent sans distraire. Pensées pour les bureaux à domicile comme pour les espaces professionnels.",
             "link": "shopify://collections/tableau-bureau"
           }
         },
         "room_cuisine": {
           "type": "room",
           "settings": {
-            "number": "05",
             "image_asset": "vignette-cuisine-v1.png",
-            "image_alt": "Tableaux pour la cuisine — collection MyselfMonArt",
+            "image_alt": "Tableau vif dans une cuisine — collection MyselfMonArt",
+            "short_title": "Cuisine",
             "title": "Tableau pour la cuisine",
-            "text": "<p>Des couleurs qui rassurent et des sujets qui ouvrent l'appétit. Au-dessus du plan de travail, dans le coin repas, sur le pan de mur qui ramène l'œil.</p>",
-            "link_label": "Découvrir",
+            "description": "Des couleurs qui rassurent et des sujets qui ouvrent l'appétit. Au-dessus du plan de travail, dans le coin repas, sur le pan de mur qui ramène l'œil.",
             "link": "shopify://collections/tableau-cuisine"
           }
         },
         "room_entree": {
           "type": "room",
           "settings": {
-            "number": "06",
             "image_asset": "vignette-entree-v1.png",
-            "image_alt": "Tableaux pour l'entrée et le couloir — collection MyselfMonArt",
+            "image_alt": "Tableau accueillant dans une entrée chaleureuse — collection MyselfMonArt",
+            "short_title": "Entrée & couloir",
             "title": "Tableau pour l'entrée et le couloir",
-            "text": "<p>La première phrase de votre intérieur, le souffle entre deux pièces. Des œuvres pensées pour ces formats étroits et ces traversées rapides.</p>",
-            "link_label": "Nous demander conseil",
+            "description": "La première phrase de votre intérieur, le souffle entre deux pièces. Des œuvres pensées pour ces formats étroits et ces traversées rapides.",
             "link": "shopify://pages/contactez-nous"
           }
         }
@@ -177,7 +171,6 @@
         "h2_title": "Trouver votre tableau selon la pièce",
         "intro": "Chaque pièce appelle une intention différente. Commencez par la pièce, le reste suit.",
         "columns": "3",
-        "show_numbers": true,
         "background_color": "cream"
       }
     },

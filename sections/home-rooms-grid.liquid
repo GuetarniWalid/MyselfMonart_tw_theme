@@ -2,27 +2,29 @@
   Home — Rooms Grid (H2.3 Trouver votre tableau selon la pièce).
 
   Conventions appliquées (cf .claude/skills/shopify-section-dev) :
-  - Tailwind only — pas de CSS custom (refonte de home-cards-grid V2 qui
-    utilisait home-styles.css)
+  - Tailwind only
   - Variables globales : bg-main-5, bg-secondary, text-main, text-main-70,
     text-buy-button, font-heading, font-roboto
-  - Admin-configurable : eyebrow numéroté + h2 + intro + 6 blocks de pièce
-    (chacun : numéro éditorial, image_picker OU asset, alt, label, titre,
-    texte court, lien)
-  - SEO : H2 unique avec id + aria-labelledby ; H3 sur chaque pièce ;
-    heading_level section configurable ; srcset Shopify quand image_picker
-  - A11y : card-as-link avec focus-visible:ring, motion-reduce sur transitions,
-    chiffre décoratif aria-hidden, alt obligatoire (mention info dans schema)
+  - Admin-configurable, SEO + a11y impeccables
   - enabled_on.templates = ['index']
 
-  Améliorations vs V1 home-cards-grid :
-  - Numéro éditorial "01" "02" en absolute top-left sur l'image (font-heading
-    italic + text-secondary + drop-shadow) — style NYT Magazine chapter pages
-    au lieu du label pill "SALON" qui faisait e-commerce générique
-  - Cohérence eyebrow numéroté avec home-editorial-cocon (01) et
-    home-usps-bento (02) → cette section est "03"
-  - Lien hover : translate-x sur la flèche (micro-interaction premium)
-  - Image scale au hover : 1.03 (subtle, pas 1.05+ qui fait gimmicky)
+  Direction artistique : minimaliste images-first (inspiration artesta.fr
+  "Achat par chambre" + "Collections en vedette"). Walid : "On préfère les
+  images au texte. Trop de texte ennuye."
+
+  Choix UX
+  - Images grandes format paysage 4/3 (vs 4/5 portrait V1) → plus de
+    présence visuelle, le lifestyle de chaque pièce raconte tout
+  - AUCUN texte sous l'image (V1 avait titre + body + lien — trop chargé)
+  - Sur chaque image : un seul label pill blanc en bas-gauche, contenant
+    le nom court de la pièce (Salon, Chambre adulte...) — c'est le H3
+    sémantique stylé, pas juste un badge décoratif
+  - Card entière clickable, hover scale 1.05 + label pill terracotta hover
+  - Description longue conservée en <span class="sr-only"> pour SEO + a11y
+    sans alourdir le visuel
+
+  Compromis texte ↔ image résolu : sémantique préservée (H3 dans le pill,
+  description en sr-only + aria-describedby), visuel ultra propre.
 {%- endcomment -%}
 
 {%- liquid
@@ -41,12 +43,11 @@
 
   assign text_class = 'text-main'
   assign muted_class = 'text-main-70'
-  assign link_class = 'text-buy-button'
-  assign number_overlay_class = 'text-secondary'
+  assign pill_bg_class = 'bg-secondary'
+  assign pill_text_class = 'text-main'
   if section.settings.background_color == 'dark'
     assign text_class = 'text-secondary'
     assign muted_class = 'text-secondary-50'
-    assign number_overlay_class = 'text-secondary'
   endif
 
   assign heading_level = section.settings.heading_level | default: 'h2'
@@ -65,10 +66,10 @@
   class="home-rooms-grid {{ bg_class }} {{ text_class }} w-full py-20 md:py-28 lg:py-36"
   aria-labelledby="{{ heading_id }}">
 
-  <div class="max-w-6xl mx-auto px-6 md:px-8">
+  <div class="max-w-7xl mx-auto px-6 md:px-8">
 
-    {%- comment -%} Header : eyebrow numéroté + H2 + intro (cohérent avec cocon & bento) {%- endcomment -%}
-    <div class="text-center mb-14 md:mb-20">
+    {%- comment -%} Header — eyebrow numéroté + H2 + intro {%- endcomment -%}
+    <div class="text-center mb-12 md:mb-16">
 
       {%- if section.settings.eyebrow_number != blank or section.settings.eyebrow_label != blank -%}
         <p class="font-roboto text-xs tracking-[0.22em] uppercase {{ muted_class }} flex items-center justify-center gap-3 mb-6 md:mb-8">
@@ -85,7 +86,7 @@
       {%- if section.settings.h2_title != blank -%}
         <{{ heading_level }}
           id="{{ heading_id }}"
-          class="font-heading {{ text_class }} !text-3xl md:!text-4xl lg:!text-5xl leading-[1.1] tracking-tight mb-6 max-w-2xl mx-auto">
+          class="font-heading {{ text_class }} !text-3xl md:!text-4xl lg:!text-5xl leading-[1.1] tracking-tight mb-5 max-w-2xl mx-auto">
           {{ section.settings.h2_title }}
         </{{ heading_level }}>
       {%- endif -%}
@@ -98,20 +99,22 @@
 
     </div>
 
-    {%- comment -%} Grille de cards {%- endcomment -%}
-    <div class="grid grid-cols-1 sm:grid-cols-2 {{ cols_class }} gap-x-5 gap-y-12 md:gap-x-6 md:gap-y-16">
+    {%- comment -%}
+      Grille de cards minimaliste : juste l'image + un label pill.
+      Aucun texte sous l'image. Toute la card est un lien.
+    {%- endcomment -%}
+    <div class="grid grid-cols-1 sm:grid-cols-2 {{ cols_class }} gap-3 md:gap-4">
 
       {%- for block in section.blocks -%}
         {%- liquid
-          assign block_number = block.settings.number | default: forloop.index | prepend: '0' | slice: -2, 2
-
+          assign short_title = block.settings.short_title | default: block.settings.title
           assign img_url = ''
-          assign img_alt = block.settings.image_alt | default: ''
-          assign img_width = 800
-          assign img_height = 1000
+          assign img_alt = block.settings.image_alt | default: short_title
+          assign img_width = 1000
+          assign img_height = 750
 
           if block.settings.image != blank
-            assign img_url = block.settings.image | image_url: width: 800
+            assign img_url = block.settings.image | image_url: width: 1000
             assign img_width = block.settings.image.width
             assign img_height = block.settings.image.height
           elsif block.settings.image_asset != blank
@@ -122,29 +125,28 @@
           if block.settings.link != blank
             assign has_link = true
           endif
+
+          assign desc_id = 'home-room-desc-' | append: block.id
         -%}
 
-        <article class="flex flex-col group" {{ block.shopify_attributes }}>
+        <article class="relative group" {{ block.shopify_attributes }}>
 
-          {%- comment -%} Image wrapper avec numéro éditorial en overlay {%- endcomment -%}
-          <div class="relative overflow-hidden aspect-[4/5] {{ bg_class }} mb-5">
-
-            {%- if has_link -%}
-              <a
-                href="{{ block.settings.link }}"
-                class="absolute inset-0 z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-buy-button focus-visible:ring-offset-2 focus-visible:ring-offset-secondary"
-                aria-label="{{ block.settings.title | default: img_alt | escape }} — découvrir">
-                <span class="sr-only">{{ block.settings.title | default: img_alt | escape }}</span>
-              </a>
-            {%- endif -%}
+          {%- if has_link -%}
+            <a
+              href="{{ block.settings.link }}"
+              {%- if block.settings.description != blank %} aria-describedby="{{ desc_id }}"{%- endif -%}
+              class="block relative overflow-hidden aspect-[4/3] {{ bg_class }} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-buy-button focus-visible:ring-offset-2 focus-visible:ring-offset-{{ bg_class | remove: 'bg-' }}">
+          {%- else -%}
+            <div class="relative overflow-hidden aspect-[4/3] {{ bg_class }}">
+          {%- endif -%}
 
             {%- if img_url != '' -%}
               {%- if block.settings.image != blank -%}
                 <img
-                  srcset="{%- if block.settings.image.width >= 400 -%}{{ block.settings.image | image_url: width: 400 }} 400w,{%- endif -%}
-                          {%- if block.settings.image.width >= 600 -%}{{ block.settings.image | image_url: width: 600 }} 600w,{%- endif -%}
+                  srcset="{%- if block.settings.image.width >= 500 -%}{{ block.settings.image | image_url: width: 500 }} 500w,{%- endif -%}
                           {%- if block.settings.image.width >= 800 -%}{{ block.settings.image | image_url: width: 800 }} 800w,{%- endif -%}
-                          {%- if block.settings.image.width >= 1000 -%}{{ block.settings.image | image_url: width: 1000 }} 1000w,{%- endif -%}
+                          {%- if block.settings.image.width >= 1100 -%}{{ block.settings.image | image_url: width: 1100 }} 1100w,{%- endif -%}
+                          {%- if block.settings.image.width >= 1500 -%}{{ block.settings.image | image_url: width: 1500 }} 1500w,{%- endif -%}
                           {{ block.settings.image | image_url }} {{ block.settings.image.width }}w"
                   sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
                   src="{{ img_url }}"
@@ -153,7 +155,7 @@
                   height="{{ img_height }}"
                   loading="lazy"
                   decoding="async"
-                  class="w-full h-full object-cover transition-transform duration-700 ease-out motion-reduce:transition-none group-hover:scale-[1.03]">
+                  class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out motion-reduce:transition-none group-hover:scale-105">
               {%- else -%}
                 <img
                   src="{{ img_url }}"
@@ -163,41 +165,28 @@
                   loading="lazy"
                   decoding="async"
                   sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
-                  class="w-full h-full object-cover transition-transform duration-700 ease-out motion-reduce:transition-none group-hover:scale-[1.03]">
+                  class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out motion-reduce:transition-none group-hover:scale-105">
               {%- endif -%}
             {%- endif -%}
 
-            {%- comment -%} Numéro éditorial en overlay (style NYT Magazine) {%- endcomment -%}
-            {%- if section.settings.show_numbers -%}
-              <div
-                class="absolute top-4 left-4 md:top-6 md:left-6 z-[5] pointer-events-none font-heading italic text-3xl md:text-4xl {{ number_overlay_class }} drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]"
-                aria-hidden="true">
-                {{ block_number }}
-              </div>
+            {%- comment -%} Label pill : c'est le H3 sémantique stylé en pill {%- endcomment -%}
+            {%- if short_title != blank -%}
+              <h3 class="absolute bottom-4 left-4 md:bottom-6 md:left-6 z-10 m-0">
+                <span class="inline-block {{ pill_bg_class }} {{ pill_text_class }} font-roboto text-[11px] md:text-xs font-medium tracking-[0.16em] uppercase px-4 py-2.5 md:px-5 md:py-3 rounded-full shadow-[0_2px_12px_rgba(0,0,0,0.08)] transition-colors duration-300 motion-reduce:transition-none group-hover:bg-buy-button group-hover:text-secondary">
+                  {{ short_title | escape }}
+                </span>
+              </h3>
             {%- endif -%}
 
-          </div>
+            {%- comment -%} Description longue en sr-only pour SEO + a11y {%- endcomment -%}
+            {%- if block.settings.description != blank -%}
+              <span id="{{ desc_id }}" class="sr-only">{{ block.settings.description | escape }}</span>
+            {%- endif -%}
 
-          {%- comment -%} Titre + texte + lien {%- endcomment -%}
-          {%- if block.settings.title != blank -%}
-            <h3 class="font-heading {{ text_class }} !text-xl md:!text-2xl leading-tight mb-2">
-              {{ block.settings.title | escape }}
-            </h3>
-          {%- endif -%}
-
-          {%- if block.settings.text != blank -%}
-            <div class="font-roboto text-sm md:text-base leading-relaxed {{ muted_class }} mb-3 [&_strong]:{{ text_class }} [&_strong]:font-semibold">
-              {{ block.settings.text }}
+          {%- if has_link -%}
+            </a>
+          {%- else -%}
             </div>
-          {%- endif -%}
-
-          {%- if has_link and block.settings.link_label != blank -%}
-            <p class="mt-auto pt-1">
-              <span class="font-roboto text-xs tracking-[0.18em] uppercase {{ link_class }} inline-flex items-center gap-2">
-                {{ block.settings.link_label | escape }}
-                <span aria-hidden="true" class="transition-transform duration-200 ease-out motion-reduce:transition-none group-hover:translate-x-1">→</span>
-              </span>
-            </p>
           {%- endif -%}
 
         </article>
@@ -274,12 +263,6 @@
       ]
     },
     {
-      "type": "checkbox",
-      "id": "show_numbers",
-      "label": "Afficher les numéros éditoriaux sur les images",
-      "default": true
-    },
-    {
       "type": "header",
       "content": "Apparence"
     },
@@ -302,21 +285,16 @@
       "name": "Pièce",
       "settings": [
         {
-          "type": "text",
-          "id": "number",
-          "label": "Numéro éditorial (ex : 01)",
-          "info": "Affiché en overlay sur l'image. Si vide, utilise l'index du block (01, 02, 03...)."
-        },
-        {
           "type": "image_picker",
           "id": "image",
-          "label": "Image (recommandé — srcset auto)"
+          "label": "Image (recommandé — srcset auto)",
+          "info": "Format paysage 4/3 recommandé. L'image porte tout le visuel."
         },
         {
           "type": "text",
           "id": "image_asset",
           "label": "OU asset filename (fallback)",
-          "info": "Ex : vignette-salon-v1.png (doit exister dans /assets)."
+          "info": "Ex : vignette-salon-v1.png"
         },
         {
           "type": "text",
@@ -326,24 +304,25 @@
         },
         {
           "type": "text",
-          "id": "title",
-          "label": "Titre H3 (ex : « Tableau pour le salon »)"
-        },
-        {
-          "type": "richtext",
-          "id": "text",
-          "label": "Texte court (50–80 mots)"
+          "id": "short_title",
+          "label": "Nom court (label pill — c'est le H3)",
+          "info": "Court et incisif. Ex : « Salon », « Chambre adulte ». S'affiche comme un pill sur l'image."
         },
         {
           "type": "text",
-          "id": "link_label",
-          "label": "Lien — libellé",
-          "default": "Découvrir"
+          "id": "title",
+          "label": "Titre long (optionnel — utilisé en fallback si short_title vide)"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description (SEO/a11y, non visible)",
+          "info": "1–2 phrases. Lue par les lecteurs d'écran, indexée par Google, mais pas affichée visuellement. Approche minimaliste : le visuel raconte, le texte reste sémantique."
         },
         {
           "type": "url",
           "id": "link",
-          "label": "Lien — URL"
+          "label": "Lien"
         }
       ]
     }
