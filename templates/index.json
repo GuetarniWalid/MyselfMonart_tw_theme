@@ -12,9 +12,13 @@
     "hero_image_banner": {
       "type": "image-banner",
       "settings": {
-        "image_desktop": "shopify://shop_images/canvas-colore-tableaux-abstrait-moderne-cadre-toile.png",
+        "image_desktop": "",
+        "image_desktop_asset": "hero-tableau-decoration-murale-salon-desktop-v3.png",
+        "image_alt_desktop": "Tableau décoration murale moderne accroché dans un salon contemporain",
         "image_desktop_horizontal_position": "center",
-        "image_mobile": "shopify://shop_images/cadre-toile-canvas-abstrait-colore-picasso.jpg",
+        "image_mobile": "",
+        "image_mobile_asset": "hero-tableau-decoration-murale-mobile-v1.png",
+        "image_alt_mobile": "Tableau décoration murale dans un intérieur cocon",
         "image_mobile_vertical_position": "top",
         "enable_lazy_loading": false
       }
@@ -155,6 +159,8 @@
         "room_salon": {
           "type": "column",
           "settings": {
+            "image_asset": "vignette-salon-v1.png",
+            "image_alt": "Tableaux pour le salon — collection MyselfMonArt",
             "title": "Tableau pour le salon",
             "text": "<p>Le salon est la pièce où l'on reçoit, mais aussi celle où l'on se pose après une journée. Le bon tableau y crée le point focal sans crier — il invite à s'asseoir, à ralentir, à recommencer une conversation. Pensé pour les murs derrière le canapé, les pans aveugles, les enfilades à habiter.</p>",
             "link_label": "Découvrir la collection",
@@ -165,6 +171,8 @@
         "room_chambre_adulte": {
           "type": "column",
           "settings": {
+            "image_asset": "vignette-chambre-adulte-v1.png",
+            "image_alt": "Tableaux pour la chambre adulte — collection MyselfMonArt",
             "title": "Tableau pour la chambre adulte",
             "text": "<p>La chambre, c'est l'endroit où vous quittez le monde. On y privilégie les tons doux, les sujets apaisants, les compositions qui se lisent allongé. Notre collection est curée pour accompagner les fins de journée, pas pour les agiter.</p>",
             "link_label": "Découvrir la collection",
@@ -175,6 +183,8 @@
         "room_chambre_enfant": {
           "type": "column",
           "settings": {
+            "image_asset": "vignette-chambre-enfant-v1.png",
+            "image_alt": "Tableaux pour la chambre enfant — collection MyselfMonArt",
             "title": "Tableau pour la chambre enfant",
             "text": "<p>Une chambre d'enfant grandit avec son occupant. Nous avons distingué chambre bébé, chambre garçon et chambre adolescent parce que les codes ne sont jamais les mêmes — et parce qu'un tableau bien choisi à 6 ans est un repère encore aimé à 12.</p>",
             "link_label": "Découvrir la collection",
@@ -185,6 +195,8 @@
         "room_bureau": {
           "type": "column",
           "settings": {
+            "image_asset": "vignette-bureau-v1.png",
+            "image_alt": "Tableaux pour le bureau — collection MyselfMonArt",
             "title": "Tableau pour le bureau",
             "text": "<p>Le mur derrière vous en visio raconte qui vous êtes avant même que vous parliez. Le mur devant vous décide de votre concentration. Notre collection propose des œuvres qui élèvent sans distraire — pensées pour les bureaux à domicile comme pour les espaces professionnels.</p>",
             "link_label": "Découvrir la collection",
@@ -195,6 +207,8 @@
         "room_cuisine": {
           "type": "column",
           "settings": {
+            "image_asset": "vignette-cuisine-v1.png",
+            "image_alt": "Tableaux pour la cuisine — collection MyselfMonArt",
             "title": "Tableau pour la cuisine",
             "text": "<p>La cuisine est devenue une pièce à vivre. Un tableau y trouve naturellement sa place — au-dessus du plan de travail, dans le coin repas, sur le pan de mur qui ramène l'œil. Notre collection joue les couleurs qui rassurent et les sujets qui ouvrent l'appétit.</p>",
             "link_label": "Découvrir la collection",
@@ -205,6 +219,8 @@
         "room_entree": {
           "type": "column",
           "settings": {
+            "image_asset": "vignette-entree-v1.png",
+            "image_alt": "Tableaux pour l'entrée et le couloir — collection MyselfMonArt",
             "title": "Tableau pour l'entrée et le couloir",
             "text": "<p>L'entrée, c'est la première phrase de votre intérieur. Le couloir, c'est le souffle entre deux pièces. Ce sont des espaces souvent oubliés alors qu'ils décident de votre humeur dès le seuil. Nous avons des œuvres pensées pour ces formats étroits et ces traversées rapides — n'hésitez pas à nous demander conseil.</p>",
             "link_label": "Voir nos collections",
@@ -255,6 +271,8 @@
         "style_abstrait": {
           "type": "column",
           "settings": {
+            "image_asset": "style-abstrait-moderne-v1.png",
+            "image_alt": "Tableaux abstraits et modernes — collection MyselfMonArt",
             "title": "Tableaux abstraits et modernes",
             "text": "<p>L'abstraction laisse votre œil composer sa propre histoire. Couleurs, lignes, équilibres : rien ne vous dit quoi voir, tout vous invite à ressentir. Notre collection regroupe les œuvres les plus contemporaines de notre sélection.</p>",
             "link_label": "Découvrir la collection",
@@ -265,6 +283,8 @@
         "style_zen": {
           "type": "column",
           "settings": {
+            "image_asset": "style-zen-nature-v1.png",
+            "image_alt": "Tableaux zen et inspiration nature — collection MyselfMonArt",
             "title": "Tableaux zen et inspiration nature",
             "text": "<p>Lotus, branches, paysages brumeux, lumière qui filtre. Pour les intérieurs qui cherchent l'apaisement comme une matière. Notre collection est pensée pour les chambres, les espaces méditation, les salons cocooning.</p>",
             "link_label": "Découvrir la collection",
@@ -275,6 +295,8 @@
         "style_popart": {
           "type": "column",
           "settings": {
+            "image_asset": "style-pop-art-v1.png",
+            "image_alt": "Tableaux pop art et street art — collection MyselfMonArt",
             "title": "Tableaux pop art et street art",
             "text": "<p>L'énergie d'une scène urbaine, l'audace d'un grand aplat de couleur. Pour les intérieurs qui assument le caractère. Notre collection joue les contrastes francs et les références qui parlent à votre génération.</p>",
             "link_label": "Découvrir la collection",
@@ -285,6 +307,8 @@
         "style_africain": {
           "type": "column",
           "settings": {
+            "image_asset": "style-africain-ethnique-v1.png",
+            "image_alt": "Tableaux africains et ethniques — collection MyselfMonArt",
             "title": "Tableaux africains et ethniques",
             "text": "<p>Portraits de femmes africaines, silhouettes berbères, motifs du Sahara : un univers que nous avons construit avec un soin particulier — c'est l'une de nos collections les plus aimées.</p>",
             "link_label": "Découvrir la collection",
@@ -310,6 +334,8 @@
         "style_nb": {
           "type": "column",
           "settings": {
+            "image_asset": "style-noir-blanc-v1.png",
+            "image_alt": "Tableaux noir et blanc — collection MyselfMonArt",
             "title": "Tableaux noir et blanc",
             "text": "<p>Le noir et blanc ne vieillit jamais. Il s'accorde avec tout, structure un mur, fait reposer l'œil. Notre collection couvre la photographie, le dessin, l'abstraction monochrome.</p>",
             "link_label": "Découvrir la collection",
@@ -320,6 +346,8 @@
         "style_floral": {
           "type": "column",
           "settings": {
+            "image_asset": "style-floral-v1.png",
+            "image_alt": "Tableaux floraux — collection MyselfMonArt",
             "title": "Tableaux floraux",
             "text": "<p>Pas la nature morte académique — la fleur réinterprétée, agrandie, contemporaine. Notre collection propose des œuvres qui apportent le végétal sans tomber dans le décoratif convenu.</p>",
             "link_label": "Découvrir la collection",
@@ -330,6 +358,8 @@
         "style_japonais": {
           "type": "column",
           "settings": {
+            "image_asset": "style-japonais-v1.png",
+            "image_alt": "Tableaux japonais — collection MyselfMonArt",
             "title": "Tableaux japonais",
             "text": "<p>Estampes revisitées, calligraphies épurées, vagues d'Hokusai et jardins de Kyoto. Notre collection est l'une des plus contemplatives de notre catalogue.</p>",
             "link_label": "Découvrir la collection",
@@ -340,6 +370,8 @@
         "style_frida": {
           "type": "column",
           "settings": {
+            "image_asset": "style-frida-kahlo-v1.png",
+            "image_alt": "Tableaux Frida Kahlo — collection MyselfMonArt",
             "title": "Tableaux Frida Kahlo",
             "text": "<p>Une figure à elle seule mérite son univers. Notre collection rassemble portraits, autoportraits revisités, et hommages contemporains à l'iconique artiste mexicaine.</p>",
             "link_label": "Découvrir la collection",
@@ -630,6 +662,8 @@
           "type": "collection",
           "settings": {
             "image": "",
+            "image_asset": "vignette-salon-v1.png",
+            "image_alt": "Tableaux pour le salon — collection MyselfMonArt",
             "collection": "tableau-salon",
             "nb_columns": "col-span-3",
             "lazy_load": true,
@@ -640,6 +674,8 @@
           "type": "collection",
           "settings": {
             "image": "",
+            "image_asset": "vignette-chambre-adulte-v1.png",
+            "image_alt": "Tableaux pour la chambre adulte — collection MyselfMonArt",
             "collection": "tableau-chambre-adulte",
             "nb_columns": "col-span-3",
             "lazy_load": true,
@@ -650,6 +686,8 @@
           "type": "collection",
           "settings": {
             "image": "",
+            "image_asset": "vignette-chambre-enfant-v1.png",
+            "image_alt": "Tableaux pour la chambre enfant — collection MyselfMonArt",
             "collection": "tableau-chambre-garcon",
             "nb_columns": "col-span-3",
             "lazy_load": true,
@@ -660,6 +698,8 @@
           "type": "collection",
           "settings": {
             "image": "",
+            "image_asset": "vignette-bureau-v1.png",
+            "image_alt": "Tableaux pour le bureau — collection MyselfMonArt",
             "collection": "tableau-bureau",
             "nb_columns": "col-span-3",
             "lazy_load": true,
@@ -670,6 +710,8 @@
           "type": "collection",
           "settings": {
             "image": "",
+            "image_asset": "vignette-cuisine-v1.png",
+            "image_alt": "Tableaux pour la cuisine — collection MyselfMonArt",
             "collection": "tableau-cuisine",
             "nb_columns": "col-span-3",
             "lazy_load": true,
@@ -680,6 +722,8 @@
           "type": "collection",
           "settings": {
             "image": "",
+            "image_asset": "style-abstrait-moderne-v1.png",
+            "image_alt": "Tableaux abstraits et modernes — collection MyselfMonArt",
             "collection": "tableau-abstrait",
             "nb_columns": "col-span-3",
             "lazy_load": true,
@@ -690,6 +734,8 @@
           "type": "collection",
           "settings": {
             "image": "",
+            "image_asset": "style-zen-nature-v1.png",
+            "image_alt": "Tableaux zen et inspiration nature — collection MyselfMonArt",
             "collection": "tableau-zen",
             "nb_columns": "col-span-3",
             "lazy_load": true,
@@ -700,6 +746,8 @@
           "type": "collection",
           "settings": {
             "image": "",
+            "image_asset": "style-pop-art-v1.png",
+            "image_alt": "Tableaux pop art et street art — collection MyselfMonArt",
             "collection": "tableau-pop-art",
             "nb_columns": "col-span-3",
             "lazy_load": true,
@@ -710,6 +758,8 @@
           "type": "collection",
           "settings": {
             "image": "",
+            "image_asset": "style-africain-ethnique-v1.png",
+            "image_alt": "Tableaux africains et ethniques — collection MyselfMonArt",
             "collection": "tableau-africain",
             "nb_columns": "col-span-3",
             "lazy_load": true,
@@ -719,7 +769,9 @@
         "coll_noiretblanc": {
           "type": "collection",
           "settings": {
-            "image": "shopify://shop_images/collection-tableau-noir-et-blanc.jpg",
+            "image": "",
+            "image_asset": "style-noir-blanc-v1.png",
+            "image_alt": "Tableaux noir et blanc — collection MyselfMonArt",
             "collection": "tableau-noir-et-blanc",
             "nb_columns": "col-span-3",
             "lazy_load": true,
@@ -730,6 +782,8 @@
           "type": "collection",
           "settings": {
             "image": "",
+            "image_asset": "style-floral-v1.png",
+            "image_alt": "Tableaux floraux — collection MyselfMonArt",
             "collection": "tableau-fleurs",
             "nb_columns": "col-span-3",
             "lazy_load": true,
@@ -740,6 +794,8 @@
           "type": "collection",
           "settings": {
             "image": "",
+            "image_asset": "style-japonais-v1.png",
+            "image_alt": "Tableaux japonais — collection MyselfMonArt",
             "collection": "tableau-japonais",
             "nb_columns": "col-span-3",
             "lazy_load": true,
@@ -750,6 +806,8 @@
           "type": "collection",
           "settings": {
             "image": "",
+            "image_asset": "style-frida-kahlo-v1.png",
+            "image_alt": "Tableaux Frida Kahlo — collection MyselfMonArt",
             "collection": "tableaux-frida-kahlo",
             "nb_columns": "col-span-3",
             "lazy_load": true,
@@ -760,6 +818,8 @@
           "type": "collection",
           "settings": {
             "image": "",
+            "image_asset": "style-zen-nature-v1.png",
+            "image_alt": "Tableaux paysage — collection MyselfMonArt",
             "collection": "tableau-paysage",
             "nb_columns": "col-span-3",
             "lazy_load": true,
