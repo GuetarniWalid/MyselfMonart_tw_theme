@@ -46,6 +46,13 @@
             width="336"
             loading="lazy"
         >
+      {%- elsif block.settings.image_asset != blank -%}
+        <img
+            class="skeleton mb-6 {{ section.settings.image_shape }}"
+            src="{{ block.settings.image_asset | asset_url }}"
+            alt="{{ block.settings.image_alt | escape }}"
+            loading="lazy"
+        >
       {%- else -%}
         {% assign svg_class = 'placeholder-svg bg-gray-300 mb-6 ' | append: section.settings.image_shape %}
         {{ 'image' | placeholder_svg_tag: svg_class }}
@@ -185,6 +192,17 @@
           "type": "image_picker",
           "id": "image",
           "label": "t:sections.multicolumn.blocks.column.settings.image.label"
+        },
+        {
+          "type": "text",
+          "id": "image_asset",
+          "label": "Asset filename (fallback)",
+          "info": "Nom de fichier dans /assets (ex: vignette-salon-v1.png). Utilisé si l'image picker est vide."
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Alt text"
         },
         {
           "type": "text",
