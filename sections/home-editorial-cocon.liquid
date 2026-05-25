@@ -1,0 +1,269 @@
+{%- comment -%}
+  Home — Editorial Cocon (section texte H2.1 Bienvenue).
+
+  Conventions appliquées (cf .claude/skills/shopify-section-dev) :
+  - Tailwind only — pas de CSS custom, pas de <style>
+  - Variables globales theme : bg-main-5, text-main, text-main-70,
+    text-buy-button, font-heading, font-roboto, .title-highlight
+  - Admin-configurable : 12 settings (eyebrow, h2, 3 paragraphes,
+    pull quote + attribution, ornement, signature, fond, niveau heading)
+  - SEO : heading_level configurable (default h2, h1 disponible pour
+    autre usage), aria-labelledby, hiérarchie propre
+  - A11y : <blockquote> natif, ornement aria-hidden, motion-reduce sur
+    transitions, focus-visible sur liens éventuels du richtext
+  - Inspiration : Aesop (whitespace + serif), NYT Magazine (drop cap +
+    pull quote), Vignelli (asymétrie grille), Off-White (eyebrow numéroté)
+  - enabled_on.templates = ['index']
+{%- endcomment -%}
+
+{%- liquid
+  case section.settings.background_color
+    when 'cream'
+      assign bg_class = 'bg-main-5'
+    when 'sable'
+      assign bg_class = 'bg-main-10'
+    when 'secondary'
+      assign bg_class = 'bg-secondary'
+    when 'dark'
+      assign bg_class = 'bg-main'
+    else
+      assign bg_class = 'bg-main-5'
+  endcase
+
+  assign text_class = 'text-main'
+  assign muted_class = 'text-main-70'
+  assign quote_border = 'border-buy-button'
+  assign drop_cap_class = 'text-buy-button'
+  if section.settings.background_color == 'dark'
+    assign text_class = 'text-secondary'
+    assign muted_class = 'text-secondary-50'
+    assign quote_border = 'border-secondary'
+    assign drop_cap_class = 'text-buy-button'
+  endif
+
+  assign heading_level = section.settings.heading_level | default: 'h2'
+  assign heading_id = 'home-editorial-cocon-' | append: section.id
+-%}
+
+<section
+  class="home-editorial-cocon {{ bg_class }} {{ text_class }} w-full py-20 md:py-28 lg:py-36"
+  aria-labelledby="{{ heading_id }}">
+
+  <div class="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
+
+    <div class="grid grid-cols-12 gap-y-10 md:gap-y-14">
+
+      {%- comment -%} Eyebrow numéroté façon Aesop / Off-White {%- endcomment -%}
+      {%- if section.settings.eyebrow_number != blank or section.settings.eyebrow_label != blank -%}
+        <p class="col-span-12 md:col-span-10 md:col-start-2 font-roboto text-xs tracking-[0.22em] uppercase {{ muted_class }} flex items-center gap-4">
+          {%- if section.settings.eyebrow_number != blank -%}
+            <span class="font-heading text-base normal-case tracking-normal {{ text_class }}">— {{ section.settings.eyebrow_number | escape }}</span>
+          {%- endif -%}
+          {%- if section.settings.eyebrow_label != blank -%}
+            <span aria-hidden="true" class="block h-px w-6 bg-current opacity-40"></span>
+            <span>{{ section.settings.eyebrow_label | escape }}</span>
+          {%- endif -%}
+        </p>
+      {%- endif -%}
+
+      {%- comment -%} H2 asymétrique (décalé légèrement à gauche sur desktop) {%- endcomment -%}
+      {%- if section.settings.h2_title != blank -%}
+        <{{ heading_level }}
+          id="{{ heading_id }}"
+          class="col-span-12 md:col-span-10 md:col-start-2 lg:col-span-9 lg:col-start-2 font-heading {{ text_class }} !text-4xl md:!text-5xl lg:!text-6xl leading-[1.05] tracking-tight">
+          {{ section.settings.h2_title }}
+        </{{ heading_level }}>
+      {%- endif -%}
+
+      {%- comment -%}
+        Paragraphe 1 — drop cap éditorial sur la première lettre.
+        first-letter:* modifiers Tailwind ciblent ::first-letter en pur CSS.
+        S'applique au premier paragraphe HTML rendu par le richtext.
+      {%- endcomment -%}
+      {%- if section.settings.paragraph_1 != blank -%}
+        <div class="col-span-12 md:col-span-9 md:col-start-3 lg:col-span-7 lg:col-start-3 font-roboto text-lg md:text-xl leading-relaxed {{ muted_class }} [&_p:first-of-type]:first-letter:font-heading [&_p:first-of-type]:first-letter:{{ drop_cap_class }} [&_p:first-of-type]:first-letter:!text-7xl [&_p:first-of-type]:first-letter:md:!text-8xl [&_p:first-of-type]:first-letter:float-left [&_p:first-of-type]:first-letter:mr-3 [&_p:first-of-type]:first-letter:mt-1 [&_p:first-of-type]:first-letter:leading-[0.85] [&_p+p]:mt-4 [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-buy-button motion-reduce:[&_a]:transition-none [&_strong]:{{ text_class }} [&_strong]:font-semibold">
+          {{ section.settings.paragraph_1 }}
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} Pull quote — bordure latérale terracotta, italic, décalée gauche {%- endcomment -%}
+      {%- if section.settings.pull_quote != blank -%}
+        <blockquote class="col-span-12 md:col-span-6 md:col-start-1 lg:col-span-5 lg:col-start-1 pl-6 md:pl-10 lg:pl-16 border-l-4 {{ quote_border }} font-heading italic !text-2xl md:!text-3xl lg:!text-4xl leading-snug {{ text_class }}">
+          <p class="mb-4">« {{ section.settings.pull_quote }} »</p>
+          {%- if section.settings.pull_quote_attribution != blank -%}
+            <footer class="font-roboto not-italic text-sm tracking-[0.18em] uppercase {{ muted_class }}">— {{ section.settings.pull_quote_attribution | escape }}</footer>
+          {%- endif -%}
+        </blockquote>
+      {%- endif -%}
+
+      {%- comment -%} Paragraphe 2 — décalé à droite asymétrique {%- endcomment -%}
+      {%- if section.settings.paragraph_2 != blank -%}
+        <div class="col-span-12 md:col-span-9 md:col-start-4 lg:col-span-6 lg:col-start-6 font-roboto text-lg md:text-xl leading-relaxed {{ muted_class }} [&_p+p]:mt-4 [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-buy-button motion-reduce:[&_a]:transition-none [&_strong]:{{ text_class }} [&_strong]:font-semibold">
+          {{ section.settings.paragraph_2 }}
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} Ornement décoratif central — séparateur éditorial classique {%- endcomment -%}
+      {%- if section.settings.show_ornament -%}
+        <div class="col-span-12 flex justify-center py-4 md:py-8" aria-hidden="true">
+          <span class="font-heading text-3xl md:text-4xl {{ drop_cap_class }}">{{ section.settings.ornament_symbol | default: '❋' }}</span>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} Paragraphe 3 / closing line en italique centré (signature poétique) {%- endcomment -%}
+      {%- if section.settings.closing_signature != blank -%}
+        <p class="col-span-12 md:col-span-10 md:col-start-2 lg:col-span-8 lg:col-start-3 text-center font-heading italic !text-xl md:!text-2xl lg:!text-3xl leading-snug {{ text_class }}">
+          {{ section.settings.closing_signature }}
+        </p>
+      {%- endif -%}
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Home — Editorial cocon",
+  "tag": "section",
+  "class": "home-editorial-cocon-section",
+  "enabled_on": { "templates": ["index"] },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Eyebrow (étiquette)"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_number",
+      "label": "Numéro (ex : 01)",
+      "info": "Style Aesop : « — 01    BIENVENUE »",
+      "default": "01"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_label",
+      "label": "Label (capitales)",
+      "default": "Bienvenue"
+    },
+    {
+      "type": "header",
+      "content": "Titre"
+    },
+    {
+      "type": "select",
+      "id": "heading_level",
+      "label": "Niveau du titre (SEO)",
+      "info": "h2 par défaut. h1 réservé à la home (si on déplace le hero ailleurs).",
+      "default": "h2",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ]
+    },
+    {
+      "type": "textarea",
+      "id": "h2_title",
+      "label": "Titre principal",
+      "default": "Bienvenue dans le cocon MyselfMonArt"
+    },
+    {
+      "type": "header",
+      "content": "Paragraphe 1 (avec drop cap automatique)"
+    },
+    {
+      "type": "paragraph",
+      "content": "La première lettre du premier paragraphe est automatiquement rendue en très grande taille (lettrine style magazine)."
+    },
+    {
+      "type": "richtext",
+      "id": "paragraph_1",
+      "label": "Texte",
+      "default": "<p>Il y a un instant que vous connaissez bien. Celui où vous rentrez chez vous, où la porte se referme, et où le monde se met enfin en sourdine.</p><p>C'est cet instant-là que nous habillons.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Pull quote (citation extraite)"
+    },
+    {
+      "type": "textarea",
+      "id": "pull_quote",
+      "label": "Citation",
+      "info": "Affichée avec bordure latérale terracotta, en italique. Sans les guillemets — ils sont ajoutés automatiquement.",
+      "default": "Un mur n'est jamais juste un mur. C'est l'arrière-plan de vos matinées lentes."
+    },
+    {
+      "type": "text",
+      "id": "pull_quote_attribution",
+      "label": "Attribution (optionnel)",
+      "info": "Ex : « Hayate », « Notre direction artistique »"
+    },
+    {
+      "type": "header",
+      "content": "Paragraphe 2"
+    },
+    {
+      "type": "richtext",
+      "id": "paragraph_2",
+      "label": "Texte",
+      "default": "<p>Depuis 2022, nous sélectionnons à la main, retouchons œuvre par œuvre, et livrons des tableaux pensés pour les intérieurs qui veulent <strong>respirer plus large</strong>. Pas de catalogue de masse, pas de collections impersonnelles : seulement ce que notre direction artistique a jugé digne d'entrer chez vous.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Ornement décoratif"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_ornament",
+      "label": "Afficher l'ornement séparateur",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "ornament_symbol",
+      "label": "Symbole",
+      "info": "Ex : ❋ ✦ — ◆ ✷",
+      "default": "❋"
+    },
+    {
+      "type": "header",
+      "content": "Signature de clôture (poétique)"
+    },
+    {
+      "type": "textarea",
+      "id": "closing_signature",
+      "label": "Phrase de clôture italique",
+      "info": "Affichée en italique centré, plus grande taille. Idéal pour une formule courte et marquante.",
+      "default": "Prenez le temps. Le bon tableau, c'est rarement le premier — c'est celui qui revient vous chercher."
+    },
+    {
+      "type": "header",
+      "content": "Apparence"
+    },
+    {
+      "type": "select",
+      "id": "background_color",
+      "label": "Couleur de fond",
+      "default": "cream",
+      "options": [
+        { "value": "secondary", "label": "Secondary (blanc cassé)" },
+        { "value": "cream",     "label": "Main 5% (sable doux)" },
+        { "value": "sable",     "label": "Main 10% (sable plus marqué)" },
+        { "value": "dark",      "label": "Main (fond sombre, texte clair)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Home — Editorial cocon",
+      "settings": {
+        "eyebrow_number": "01",
+        "eyebrow_label": "Bienvenue",
+        "h2_title": "Bienvenue dans le cocon MyselfMonArt",
+        "show_ornament": true,
+        "ornament_symbol": "❋"
+      }
+    }
+  ]
+}
+{% endschema %}
