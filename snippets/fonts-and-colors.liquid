@@ -5,12 +5,35 @@
         font-display: swap;
     }
     
+    {%- liquid
+      assign brand = settings.brand_color
+      assign brand_50  = brand | color_lighten: 42
+      assign brand_100 = brand | color_lighten: 32
+      assign brand_300 = brand | color_lighten: 18
+      assign brand_500 = brand
+      assign brand_700 = brand | color_darken: 15
+      assign brand_900 = brand | color_darken: 30
+    -%}
     :root {
+      /* Neutres (couleurs indépendantes de la marque) */
       --color-main-rgb: {{ settings.main_color | color_extract: 'red' }}, {{ settings.main_color | color_extract: 'green' }}, {{ settings.main_color | color_extract: 'blue' }};
       --color-secondary-rgb: {{ settings.secondary_color | color_extract: 'red' }}, {{ settings.secondary_color | color_extract: 'green' }}, {{ settings.secondary_color | color_extract: 'blue' }};
       --color-like-rgb: {{ settings.like_color | color_extract: 'red' }}, {{ settings.like_color | color_extract: 'green' }}, {{ settings.like_color | color_extract: 'blue' }};
-      --color-buy-button-rgb: {{ settings.buy_button_color | color_extract: 'red' }}, {{ settings.buy_button_color | color_extract: 'green' }}, {{ settings.buy_button_color | color_extract: 'blue' }};
-      --color-accent-rgb: {{ settings.accent_color | color_extract: 'red' }}, {{ settings.accent_color | color_extract: 'green' }}, {{ settings.accent_color | color_extract: 'blue' }};
-      --color-terra-rgb: {{ settings.terra_color | color_extract: 'red' }}, {{ settings.terra_color | color_extract: 'green' }}, {{ settings.terra_color | color_extract: 'blue' }};
+
+      /* Brand scale — toutes dérivées de settings.brand_color via Liquid color filters
+         (changer brand_color recolore harmoniquement toute la home) */
+      --color-brand-50-rgb:  {{ brand_50  | color_extract: 'red' }}, {{ brand_50  | color_extract: 'green' }}, {{ brand_50  | color_extract: 'blue' }};
+      --color-brand-100-rgb: {{ brand_100 | color_extract: 'red' }}, {{ brand_100 | color_extract: 'green' }}, {{ brand_100 | color_extract: 'blue' }};
+      --color-brand-300-rgb: {{ brand_300 | color_extract: 'red' }}, {{ brand_300 | color_extract: 'green' }}, {{ brand_300 | color_extract: 'blue' }};
+      --color-brand-500-rgb: {{ brand_500 | color_extract: 'red' }}, {{ brand_500 | color_extract: 'green' }}, {{ brand_500 | color_extract: 'blue' }};
+      --color-brand-700-rgb: {{ brand_700 | color_extract: 'red' }}, {{ brand_700 | color_extract: 'green' }}, {{ brand_700 | color_extract: 'blue' }};
+      --color-brand-900-rgb: {{ brand_900 | color_extract: 'red' }}, {{ brand_900 | color_extract: 'green' }}, {{ brand_900 | color_extract: 'blue' }};
+
+      /* Aliases rétrocompat — pointent vers le scale brand
+         (les 14 fichiers existants utilisant bg-buy-button / text-terra / bg-accent
+         continuent de fonctionner sans modification) */
+      --color-buy-button-rgb: {{ brand_500 | color_extract: 'red' }}, {{ brand_500 | color_extract: 'green' }}, {{ brand_500 | color_extract: 'blue' }};
+      --color-accent-rgb:     {{ brand_300 | color_extract: 'red' }}, {{ brand_300 | color_extract: 'green' }}, {{ brand_300 | color_extract: 'blue' }};
+      --color-terra-rgb:      {{ brand_700 | color_extract: 'red' }}, {{ brand_700 | color_extract: 'green' }}, {{ brand_700 | color_extract: 'blue' }};
     }
 {% endstyle %}
