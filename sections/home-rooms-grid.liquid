@@ -98,7 +98,7 @@
     existant du theme). Pattern identique à trust-signals.
   {%- endcomment -%}
   <snap-carrousel role="region" aria-label="{{ 'Carrousel : ' | append: carousel_label }}">
-    <ul class="flex overflow-x-auto snap-x snap-mandatory scrollbar-hidden gap-3 md:gap-4 pb-2 scroll-smooth scroll-pl-8 md:scroll-pl-16 lg:scroll-pl-24">
+    <ul class="flex overflow-x-auto snap-x snap-mandatory scrollbar-hidden gap-3 md:gap-4 pb-2 scroll-smooth scroll-pl-3 md:scroll-pl-4">
 
       {%- for block in section.blocks -%}
         {%- liquid
@@ -122,7 +122,7 @@
         -%}
 
         <li
-          class="carrousel-item snap-start flex-shrink-0 w-[82vw] sm:w-[58vw] md:w-[40vw] lg:w-[28vw] max-w-md first:ml-8 md:first:ml-16 lg:first:ml-24 last:mr-8 md:last:mr-16 lg:last:mr-24"
+          class="carrousel-item snap-start flex-shrink-0 w-[82vw] sm:w-[58vw] md:w-[40vw] lg:w-[28vw] max-w-md first:ml-3 md:first:ml-4 last:mr-3 md:last:mr-4"
           {{ block.shopify_attributes }}>
           <article class="group relative flex flex-col h-full">
 
