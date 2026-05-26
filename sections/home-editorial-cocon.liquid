@@ -44,11 +44,13 @@
 
   assign text_class = 'text-main'
   assign muted_class = 'text-main-70'
+  assign eyebrow_class = 'text-terra'
   assign rule_class = 'bg-main-20'
   assign ornament_color_class = 'text-buy-button'
   if section.settings.background_color == 'dark'
     assign text_class = 'text-secondary'
     assign muted_class = 'text-secondary-50'
+    assign eyebrow_class = 'text-secondary'
     assign rule_class = 'bg-secondary-50'
   endif
 
@@ -64,7 +66,7 @@
 
     {%- comment -%} Eyebrow numéroté façon Aesop / Off-White {%- endcomment -%}
     {%- if section.settings.eyebrow_number != blank or section.settings.eyebrow_label != blank -%}
-      <p class="font-roboto text-xs tracking-[0.22em] uppercase {{ muted_class }} flex items-center gap-3 mb-6 md:mb-8">
+      <p class="font-roboto text-xs tracking-[0.22em] uppercase font-medium {{ eyebrow_class }} flex items-center gap-3 mb-6 md:mb-8">
         {%- if section.settings.eyebrow_number != blank -%}
           <span class="font-heading text-sm normal-case tracking-normal {{ text_class }}">— {{ section.settings.eyebrow_number | escape }}</span>
         {%- endif -%}
