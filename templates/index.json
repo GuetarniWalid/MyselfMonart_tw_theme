@@ -290,14 +290,19 @@
       }
     },
     "size_guide": {
-      "type": "home-editorial-rich",
+      "type": "home-editorial-cocon",
       "settings": {
-        "background": "cream",
-        "align": "left",
+        "eyebrow_number": "",
+        "eyebrow_label": "Conseil pratique",
         "heading_level": "h2",
-        "eyebrow": "Conseil",
-        "title": "Choisir la bonne taille et le bon format",
-        "body": "<p>La taille d'un tableau ne se choisit pas au hasard ni au coup de cœur seul. Quelques repères suffisent à éviter les regrets :</p><ul><li><strong>Au-dessus d'un meuble</strong> (canapé, console, lit) : le tableau doit occuper <strong>60 à 75 % de la largeur du meuble</strong>.</li><li><strong>Hauteur d'accrochage</strong> : le <strong>centre du tableau à environ 1,50 m du sol</strong> — la hauteur moyenne du regard.</li><li><strong>Mur seul, sans meuble dessous</strong> : pensez <strong>mur entier</strong>. Un grand format ou un triptyque structurera mieux qu'une petite œuvre perdue.</li></ul><p>Pour aller plus loin, notre guide complet <a href=\"/blogs/tableau-cuisine/quelle-taille-de-tableau-choisir\">Quelle taille de tableau choisir ?</a> vous accompagne pièce par pièce.</p>"
+        "h2_title": "Choisir la bonne taille et le bon format",
+        "paragraph_1": "<p>La taille d'un tableau ne se choisit pas au hasard ni au coup de cœur seul. Quelques repères suffisent à éviter les regrets.</p>",
+        "pull_quote": "",
+        "pull_quote_attribution": "",
+        "paragraph_2": "<ul><li><strong>Au-dessus d'un meuble</strong> (canapé, console, lit) : le tableau doit occuper <strong>60 à 75 % de la largeur du meuble</strong>. Au-dessous, il paraît timide ; au-dessus, il l'écrase.</li><li><strong>Hauteur d'accrochage</strong> : le <strong>centre du tableau à environ 1,50 m du sol</strong> — la hauteur moyenne du regard. La règle vaut pour les salons et chambres ; dans une entrée debout, on peut monter un peu.</li><li><strong>Mur seul, sans meuble dessous</strong> : pensez <strong>mur entier</strong> plutôt que zone. Un grand format ou un triptyque structurera mieux qu'une petite œuvre perdue.</li></ul><p>Pour aller plus loin, notre guide complet <a href=\"/blogs/tableau-cuisine/quelle-taille-de-tableau-choisir\">Quelle taille de tableau choisir ?</a> vous accompagne pièce par pièce.</p>",
+        "show_ornament": false,
+        "closing_signature": "",
+        "background_color": "terracotta"
       }
     },
     "journey": {

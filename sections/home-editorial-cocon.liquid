@@ -38,6 +38,8 @@
       assign bg_class = 'bg-secondary'
     when 'dark'
       assign bg_class = 'bg-main'
+    when 'terracotta'
+      assign bg_class = 'bg-buy-button'
     else
       assign bg_class = 'bg-main-5'
   endcase
@@ -52,6 +54,13 @@
     assign muted_class = 'text-secondary-50'
     assign eyebrow_class = 'text-secondary'
     assign rule_class = 'bg-secondary-50'
+  endif
+  if section.settings.background_color == 'terracotta'
+    assign text_class = 'text-secondary'
+    assign muted_class = 'text-secondary'
+    assign eyebrow_class = 'text-secondary'
+    assign rule_class = 'bg-secondary-50'
+    assign ornament_color_class = 'text-secondary'
   endif
 
   assign heading_level = section.settings.heading_level | default: 'h2'
@@ -92,7 +101,7 @@
       Le rythme vient du whitespace et du leading généreux.
     {%- endcomment -%}
     {%- if section.settings.paragraph_1 != blank -%}
-      <div class="font-roboto text-lg md:text-xl leading-relaxed {{ muted_class }} [&>p+p]:mt-4 [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-buy-button motion-reduce:[&_a]:transition-none [&_strong]:{{ text_class }} [&_strong]:font-semibold">
+      <div class="font-roboto text-lg md:text-xl leading-relaxed {{ muted_class }} [&>p+p]:mt-4 [&_a]:underline [&_a]:underline-offset-2 [&_a]:transition-opacity [&_a:hover]:opacity-70 motion-reduce:[&_a]:transition-none [&_strong]:{{ text_class }} [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:my-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:my-5 [&_li]:mb-3 [&_li:last-child]:mb-0">
         {{ section.settings.paragraph_1 }}
       </div>
     {%- endif -%}
@@ -129,7 +138,7 @@
 
     {%- comment -%} Paragraphe 2 — même alignement que paragraphe 1 (cohérence) {%- endcomment -%}
     {%- if section.settings.paragraph_2 != blank -%}
-      <div class="font-roboto text-lg md:text-xl leading-relaxed {{ muted_class }} [&>p+p]:mt-4 [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-buy-button motion-reduce:[&_a]:transition-none [&_strong]:{{ text_class }} [&_strong]:font-semibold">
+      <div class="font-roboto text-lg md:text-xl leading-relaxed {{ muted_class }} [&>p+p]:mt-4 [&_a]:underline [&_a]:underline-offset-2 [&_a]:transition-opacity [&_a:hover]:opacity-70 motion-reduce:[&_a]:transition-none [&_strong]:{{ text_class }} [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:my-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:my-5 [&_li]:mb-3 [&_li:last-child]:mb-0">
         {{ section.settings.paragraph_2 }}
       </div>
     {%- endif -%}
@@ -280,10 +289,11 @@
       "label": "Couleur de fond",
       "default": "cream",
       "options": [
-        { "value": "secondary", "label": "Secondary (blanc cassé)" },
-        { "value": "cream",     "label": "Main 5% (sable doux)" },
-        { "value": "sable",     "label": "Main 10% (sable plus marqué)" },
-        { "value": "dark",      "label": "Main (fond sombre, texte clair)" }
+        { "value": "secondary",  "label": "Secondary (blanc cassé)" },
+        { "value": "cream",      "label": "Main 5% (sable doux)" },
+        { "value": "sable",      "label": "Main 10% (sable plus marqué)" },
+        { "value": "dark",       "label": "Main (fond sombre, texte clair)" },
+        { "value": "terracotta", "label": "Buy-button (terracotta, fond footer)" }
       ]
     }
   ],
