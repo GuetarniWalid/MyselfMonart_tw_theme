@@ -80,6 +80,15 @@ module.exports = {
           50: 'rgba(var(--color-accent-rgb), 0.5)',
           20: 'rgba(var(--color-accent-rgb), 0.2)',
         },
+        terra: {
+          DEFAULT: 'rgb(var(--color-terra-rgb))',
+          90: 'rgba(var(--color-terra-rgb), 0.9)',
+          80: 'rgba(var(--color-terra-rgb), 0.8)',
+          70: 'rgba(var(--color-terra-rgb), 0.7)',
+          50: 'rgba(var(--color-terra-rgb), 0.5)',
+          20: 'rgba(var(--color-terra-rgb), 0.2)',
+          10: 'rgba(var(--color-terra-rgb), 0.1)',
+        },
       },
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],

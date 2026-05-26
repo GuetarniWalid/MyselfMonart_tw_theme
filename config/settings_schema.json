@@ -118,6 +118,13 @@
         "id": "accent_color",
         "label": "t:settings_schema.color.settings.accent_color.label",
         "default": "#FCD34D"
+      },
+      {
+        "type": "color",
+        "id": "terra_color",
+        "label": "Terracotta texte (foncé, lisible)",
+        "info": "Complément foncé du buy_button (terracotta clair). Utilisée pour les eyebrows, liens d'action et accents textuels nécessitant un contraste fort sur fond clair.",
+        "default": "#9B4422"
       }
     ]
   },
