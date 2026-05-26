@@ -40,6 +40,8 @@
       assign bg_class = 'bg-main'
     when 'terracotta'
       assign bg_class = 'bg-brand-700'
+    when 'terracotta-light'
+      assign bg_class = 'bg-brand-100'
     else
       assign bg_class = 'bg-main-5'
   endcase
@@ -101,7 +103,7 @@
       Le rythme vient du whitespace et du leading généreux.
     {%- endcomment -%}
     {%- if section.settings.paragraph_1 != blank -%}
-      <div class="font-roboto text-lg md:text-xl leading-relaxed {{ muted_class }} [&>p+p]:mt-4 [&_a]:underline [&_a]:underline-offset-2 [&_a]:transition-opacity [&_a:hover]:opacity-70 motion-reduce:[&_a]:transition-none [&_strong]:{{ text_class }} [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:my-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:my-5 [&_li]:mb-3 [&_li:last-child]:mb-0">
+      <div class="font-roboto text-lg md:text-xl leading-relaxed {{ muted_class }} [&>p+p]:mt-5 [&_a]:underline [&_a]:underline-offset-4 [&_a]:transition-opacity [&_a:hover]:opacity-70 motion-reduce:[&_a]:transition-none [&_strong]:{{ text_class }} [&_strong]:font-medium [&_ul]:list-none [&_ul]:pl-0 [&_ul]:my-8 [&_ul]:space-y-6 [&_ol]:list-none [&_ol]:pl-0 [&_ol]:my-8 [&_ol]:space-y-6 [&_li]:relative [&_li]:pl-7 [&_li]:leading-relaxed [&_li]:before:content-['—'] [&_li]:before:absolute [&_li]:before:left-0 [&_li]:before:top-0 [&_li]:before:opacity-60">
         {{ section.settings.paragraph_1 }}
       </div>
     {%- endif -%}
@@ -138,7 +140,7 @@
 
     {%- comment -%} Paragraphe 2 — même alignement que paragraphe 1 (cohérence) {%- endcomment -%}
     {%- if section.settings.paragraph_2 != blank -%}
-      <div class="font-roboto text-lg md:text-xl leading-relaxed {{ muted_class }} [&>p+p]:mt-4 [&_a]:underline [&_a]:underline-offset-2 [&_a]:transition-opacity [&_a:hover]:opacity-70 motion-reduce:[&_a]:transition-none [&_strong]:{{ text_class }} [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:my-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:my-5 [&_li]:mb-3 [&_li:last-child]:mb-0">
+      <div class="font-roboto text-lg md:text-xl leading-relaxed {{ muted_class }} [&>p+p]:mt-5 [&_a]:underline [&_a]:underline-offset-4 [&_a]:transition-opacity [&_a:hover]:opacity-70 motion-reduce:[&_a]:transition-none [&_strong]:{{ text_class }} [&_strong]:font-medium [&_ul]:list-none [&_ul]:pl-0 [&_ul]:my-8 [&_ul]:space-y-6 [&_ol]:list-none [&_ol]:pl-0 [&_ol]:my-8 [&_ol]:space-y-6 [&_li]:relative [&_li]:pl-7 [&_li]:leading-relaxed [&_li]:before:content-['—'] [&_li]:before:absolute [&_li]:before:left-0 [&_li]:before:top-0 [&_li]:before:opacity-60">
         {{ section.settings.paragraph_2 }}
       </div>
     {%- endif -%}
@@ -289,11 +291,12 @@
       "label": "Couleur de fond",
       "default": "cream",
       "options": [
-        { "value": "secondary",  "label": "Secondary (blanc cassé)" },
-        { "value": "cream",      "label": "Main 5% (sable doux)" },
-        { "value": "sable",      "label": "Main 10% (sable plus marqué)" },
-        { "value": "dark",       "label": "Main (fond sombre, texte clair)" },
-        { "value": "terracotta", "label": "Buy-button (terracotta, fond footer)" }
+        { "value": "secondary",        "label": "Secondary (blanc cassé)" },
+        { "value": "cream",            "label": "Main 5% (sable doux)" },
+        { "value": "sable",            "label": "Main 10% (sable plus marqué)" },
+        { "value": "dark",             "label": "Main (fond sombre, texte clair)" },
+        { "value": "terracotta-light", "label": "Brand 100 (terracotta très clair, texte foncé)" },
+        { "value": "terracotta",       "label": "Brand 700 (terracotta foncé, texte clair)" }
       ]
     }
   ],
