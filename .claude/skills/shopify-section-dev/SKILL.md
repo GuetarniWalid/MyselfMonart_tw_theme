@@ -1,7 +1,7 @@
 ---
 name: shopify-section-dev
 description: |
-  Conventions de développement obligatoires pour créer ou modifier toute section Liquid dans ce theme Shopify MyselfMonArt. Invoque ce skill automatiquement dès que tu touches un fichier dans `sections/`, `snippets/`, `templates/`, ou que tu crées un nouveau composant front (hero, grille, FAQ, CTA, etc.). Couvre : architecture theme, Tailwind only, variables globales (couleurs main/secondary/accent/buy-button, fonts heading/roboto/limelight), admin-configurable via schema, SEO impeccable (H1 unique, hiérarchie Hn, alt, schema markup), accessibilité WCAG AA (focus visible, ARIA, contraste, motion-reduce), naming SEO des assets, build Tailwind, audit Lighthouse post-déploiement, contraintes `enabled_on.templates`, gestion conflits .tmp Shopify CLI.
+  Conventions de développement obligatoires pour créer ou modifier toute section Liquid dans ce theme Shopify MyselfMonArt. Invoque ce skill automatiquement dès que tu touches un fichier dans `sections/`, `snippets/`, `templates/`, ou que tu crées un nouveau composant front (hero, grille, FAQ, CTA, etc.). **Règle prioritaire (§ 1) : réutiliser ce qui existe déjà** dans le theme (custom elements, snippets, classes utility) AVANT d'écrire le moindre code — grep le repo systématiquement, n'inventer du neuf que si rien n'existe (carrousel = `<snap-carrousel>`, accordéon = `<collapsible-tab>`, modal = `<details-modal>`, highlight = `.title-highlight`, etc.). Couvre aussi : architecture theme, Tailwind only, variables globales (couleurs main/secondary/accent/buy-button, fonts heading/roboto/limelight), admin-configurable via schema, SEO impeccable (H1 unique, hiérarchie Hn, alt, schema markup), accessibilité WCAG AA (focus visible, ARIA, contraste, motion-reduce), naming SEO des assets, build Tailwind, audit Lighthouse post-déploiement, contraintes `enabled_on.templates`, gestion conflits .tmp Shopify CLI.
 ---
 
 # Skill — Développement de sections Shopify (MyselfMonArt theme)
@@ -31,7 +31,71 @@ Une section a 3 parties :
 
 ---
 
-## 1. Tailwind only (pas de CSS custom)
+## 1. RÉUTILISER avant de créer (règle absolue, prioritaire sur tout le reste)
+
+**Règle dure** : avant d'écrire 1 ligne de code (HTML, CSS, JS, schema, helper Liquid, snippet), **chercher dans le repo si ça existe déjà**. Si oui → **réutiliser**. Si non → seulement alors créer.
+
+**Pourquoi** : code scalable, propre, une seule logique par fonctionnalité. Si on veut update plus tard (fix bug, nouveau comportement), on touche **un seul endroit**, tout le site bénéficie. Sinon on duplique, on diverge, on a 3 carrousels qui se comportent différemment, on perd la maintenance.
+
+### Patterns réutilisables connus du theme MyselfMonArt
+
+| Besoin | Réutiliser | Où c'est défini | Exemple d'usage |
+|---|---|---|---|
+| **Carrousel scroll-snap** (auto-scroll, stop hover, IntersectionObserver, reduced-motion) | `<snap-carrousel>` custom element | [`assets/component-carrousel.js`](assets/component-carrousel.js) + classe `.carrousel-item` sur les `<li>` | [`sections/trust-signals.liquid`](sections/trust-signals.liquid), [`sections/home-rooms-grid.liquid`](sections/home-rooms-grid.liquid) |
+| **Titre surligné stabilo** | Classe `.title-highlight` | [`input.css:521`](input.css#L521) `@layer components` | `<span class="title-highlight">{{ titre }}</span>` |
+| **Scrollbar masquée** | Classe `.scrollbar-hidden` | [`input.css:606`](input.css#L606) | `<ul class="overflow-x-auto scrollbar-hidden">` |
+| **Bouton CTA neumorphic** | Classe `.cart-button` | [`input.css:432`](input.css#L432) | Pour les CTAs d'action principale style theme |
+| **Image responsive avec blob shape / dynamic color** | Custom element `<blob-shape-media>`, `<dynamic-color>` | [`assets/component-image-with-text.js`](assets/component-image-with-text.js) | Voir [`sections/image-with-text.liquid`](sections/image-with-text.liquid) |
+| **Accordéon FAQ** | `<collapsible-tab>` custom element + `<details>/<summary>` natifs | [`assets/collapsible-tab.js`](assets/collapsible-tab.js) | [`sections/collapsible-content.liquid`](sections/collapsible-content.liquid) |
+| **Modal/Dialog** | `<details-modal>`, `<modal-dialog>` | `assets/details-modal.js`, `assets/modal-dialog.js` | Cart drawer, quick-add modal |
+| **Infinite scroll** | `<infinite-scroll>` custom element | `assets/infinite-scroll.js` | Collection pagination |
+| **Dropdown / Disclosure** | `<details-disclosure>`, `<dropdown-button>` | `assets/details-disclosure.js` | Filtres, menu |
+| **Témoignage client** card | `{% render 'customer-testimonial-card' %}` | [`snippets/customer-testimonial-card.liquid`](snippets/customer-testimonial-card.liquid) | Voir trust-signals |
+| **Icônes SVG** | `{% render 'icon-X' %}` | `snippets/icon-*.liquid` (icon-accordion, icon-check, icon-account, icon-heart, etc.) | `{% render 'tw-icon-caret', width: '10' %}` |
+| **Schema JSON-LD home** | `{% render 'json-ld-home' %}` | [`snippets/json-ld-home.liquid`](snippets/json-ld-home.liquid) | Inclus auto dans head-base |
+| **Trustpilot badge** | `{% render 'trustpilot-badge' %}` | [`snippets/trustpilot-badge.liquid`](snippets/trustpilot-badge.liquid) | Score caché par défaut (cf [[feedback-trustpilot]]) |
+| **Container max-width standard** | Classes `page-width` + `max-w-7xl mx-auto` | Tailwind default | Headers de section |
+| **Couleurs / fonts dynamiques** | Vars CSS `--color-main-rgb`, `--color-buy-button-rgb`, font `heading` | [`snippets/fonts-and-colors.liquid`](snippets/fonts-and-colors.liquid) | Voir §3 ci-dessous |
+
+### Custom elements (`customElements.define`) disponibles
+
+Liste exhaustive — chercher ces noms en premier avant de coder un nouveau composant :
+
+```
+additionnal-product   anime-product-card    blob-shape-media     breadcrumb-popup
+cart-drawer           cart-item             cart-remove-button   click-product
+collapsible-tab       collection-tag-filter details-disclosure   details-modal
+dropdown-button       dynamic-color         filter-drawer        finger-touch
+footer-logic          header-menu           infinite-scroll      lazy-video
+localization-flag     media-gallery         modal-dialog         pickup-availability
+pickup-availability-drawer  product-modal   product-recommendations  quantity-input
+quick-add-modal       quick-add-to-cart     share-button         snap-carrousel
+```
+
+### Workflow d'audit "reuse first"
+
+Avant de coder une nouvelle section/snippet/JS, **toujours** :
+
+1. **Grep le repo** sur le concept fonctionnel (`carrousel`, `accordion`, `modal`, `slider`, `tabs`, `dropdown`, `tooltip`, `lightbox`...) :
+   ```
+   Grep pattern="carrousel|carousel|slider" path="assets/" output_mode="files_with_matches"
+   Grep pattern="customElements.define" path="assets/" output_mode="content"
+   ```
+2. **Lire le code existant** s'il existe — comprendre l'API/markup attendu.
+3. **Réutiliser** : intégrer dans la nouvelle section avec le même markup et les classes attendues.
+4. **Seulement si rien n'existe** : créer un nouveau composant, en suivant les conventions theme (custom element, fichier `assets/component-X.js` chargé en defer, classe scoping).
+
+### Exemple concret — refonte H2.3 V3 → V4
+
+V3 (mal) : j'avais codé un carrousel custom avec `overflow-x-auto snap-x snap-mandatory` Tailwind brut. Pas d'auto-scroll, pas de stop hover, pas d'IntersectionObserver.
+
+V4 (correct, Walid l'a corrigé manuellement) : réutilise `<snap-carrousel>` du theme avec classe `.carrousel-item` sur les `<li>`. Bénéfices auto : auto-scroll 2s, stop au hover/touch, respect `prefers-reduced-motion`, comportement identique à `trust-signals`. Pas de JS à écrire, pas de bug à reproduire ailleurs.
+
+**Si une logique JS du theme manque** : étendre le composant existant plutôt que créer un parallèle.
+
+---
+
+## 2. Tailwind only (pas de CSS custom)
 
 **Règle dure** : aucune `<style>` inline, aucun nouveau `.css` à part, aucun CSS scoped par section.
 
@@ -60,7 +124,7 @@ Sans rebuild, les nouvelles classes ne sont **pas** dans `output.css` → invisi
 
 ---
 
-## 2. Variables globales du theme — toujours les réutiliser
+## 3. Variables globales du theme — toujours les réutiliser
 
 ### Couleurs (déclarées dans [`snippets/fonts-and-colors.liquid`](snippets/fonts-and-colors.liquid), exposées via Tailwind config)
 
@@ -111,7 +175,7 @@ Utiliser **`md:` comme défaut** pour le desktop minimum, **`lg:`** pour les lay
 
 ---
 
-## 3. Admin-configurable via `{% schema %}` (doc Shopify)
+## 4. Admin-configurable via `{% schema %}` (doc Shopify)
 
 **Règle dure** : aucun texte, aucune image, aucun lien, aucune couleur ne doit être hardcodée dans le Liquid. Tout passe par les `settings` du schema → modifiable depuis le theme editor admin sans toucher au code.
 
@@ -186,7 +250,7 @@ Sinon Shopify la propose dans l'éditeur de tous les templates → confusion + r
 
 ---
 
-## 4. SEO impeccable (à appliquer systématiquement)
+## 5. SEO impeccable (à appliquer systématiquement)
 
 ### Hiérarchie
 
@@ -236,7 +300,7 @@ Pour les assets statiques (`asset_url`), pas de transformation automatique → f
 
 ---
 
-## 5. Accessibilité WCAG AA (à appliquer systématiquement)
+## 6. Accessibilité WCAG AA (à appliquer systématiquement)
 
 ### Checklist a11y minimum
 
@@ -257,22 +321,23 @@ Pour les assets statiques (`asset_url`), pas de transformation automatique → f
 
 ---
 
-## 6. Workflow complet pour créer une section
+## 7. Workflow complet pour créer une section
 
 ### Étapes
 
 1. **Briefing** : recap besoin + comment ça doit s'intégrer dans la page (template ciblé, copy, image, contraintes).
-2. **Vérifier les composants/sections existantes** : grep le repo (sections, snippets, input.css `@layer components`) pour réutiliser ce qui existe avant de coder du neuf.
-3. **Si section partagée avec d'autres pages** : ne **PAS** modifier la section existante. Soit créer une variante (`ma-section-home.liquid`) contrainte via `enabled_on.templates`, soit étendre avec settings optionnels qui ne changent rien quand vides.
-4. **Coder le Liquid** en suivant § 1-5.
-5. **Coder le schema** en mode admin-configurable strict (§ 3).
-6. **Rebuild Tailwind** : `npx tailwindcss -i ./input.css -o ./assets/output.css --minify`.
-7. **Référencer dans `templates/<page>.json`** avec settings remplis.
-8. **Tester en local** : `shopify theme dev` (port 9292).
-9. **Vérifier le rendu HTML** : curl + grep pour valider tags, alt, schema markup, classes.
-10. **Audit Lighthouse** (cf § 7) — viser ≥ 90 sur Performance, Accessibilité, SEO, Best Practices.
-11. **Commit Git** avec message explicite : `feat(section): ma-section X — Y`.
-12. **Share preview Shopify** : `shopify theme share` génère un theme draft + URL.
+2. **AUDIT REUSE FIRST (§ 1)** : avant TOUT code, grep le repo sur le concept fonctionnel pour identifier les patterns / custom elements / snippets / classes utility existants à réutiliser. Ne JAMAIS coder en doublon d'une logique déjà présente.
+3. **Vérifier les composants/sections existantes** : grep `sections/`, `snippets/`, `assets/component-*.js`, `input.css @layer components` pour réutiliser ce qui existe.
+4. **Si section partagée avec d'autres pages** : ne **PAS** modifier la section existante. Soit créer une variante (`ma-section-home.liquid`) contrainte via `enabled_on.templates`, soit étendre avec settings optionnels qui ne changent rien quand vides.
+5. **Coder le Liquid** en suivant § 2-6.
+6. **Coder le schema** en mode admin-configurable strict (§ 4).
+7. **Rebuild Tailwind** : `npx tailwindcss -i ./input.css -o ./assets/output.css --minify`.
+8. **Référencer dans `templates/<page>.json`** avec settings remplis.
+9. **Tester en local** : `shopify theme dev` (port 9292).
+10. **Vérifier le rendu HTML** : curl + grep pour valider tags, alt, schema markup, classes.
+11. **Audit Lighthouse** (cf § 8) — viser ≥ 90 sur Performance, Accessibilité, SEO, Best Practices.
+12. **Commit Git** avec message explicite : `feat(section): ma-section X — Y`.
+13. **Share preview Shopify** : `shopify theme share` génère un theme draft + URL.
 
 ### Gestion conflits .tmp Shopify CLI (Windows)
 
@@ -286,7 +351,7 @@ Get-CimInstance Win32_Process -Filter "Name='node.exe'" | Where-Object { $_.Comm
 
 ---
 
-## 7. Audit Lighthouse obligatoire après modif
+## 8. Audit Lighthouse obligatoire après modif
 
 À faire systématiquement après une création/modif de section.
 
@@ -318,7 +383,7 @@ Get-CimInstance Win32_Process -Filter "Name='node.exe'" | Where-Object { $_.Comm
 
 ---
 
-## 8. Voix de marque + faits structurels (contenu copy)
+## 9. Voix de marque + faits structurels (contenu copy)
 
 Quand on rédige du **copy** pour les settings (defaults, exemples, info) :
 
@@ -337,8 +402,11 @@ Quand on rédige du **copy** pour les settings (defaults, exemples, info) :
 
 ---
 
-## 9. Anti-patterns à éviter absolument
+## 10. Anti-patterns à éviter absolument
 
+- ❌ **Réinventer un composant qui existe déjà** (cf § 1) — recoder un carrousel, un accordéon, un modal sans grep préalable
+- ❌ Créer un JS custom pour un comportement déjà géré par un custom element du theme (`<snap-carrousel>`, `<collapsible-tab>`, `<details-modal>`, etc.)
+- ❌ Dupliquer une classe utility / un snippet helper qui existe (`.title-highlight`, `.scrollbar-hidden`, `.cart-button`, `customer-testimonial-card`, etc.)
 - ❌ `<style>` inline ou `style="..."` sur des balises (sauf via `{% style %}` exceptionnel et justifié)
 - ❌ CSS scoped par section dans `assets/x-styles.css`
 - ❌ Hardcoder un hex `#C04B2F` au lieu de `bg-accent` ou `bg-buy-button`
@@ -357,10 +425,12 @@ Quand on rédige du **copy** pour les settings (defaults, exemples, info) :
 
 ---
 
-## 10. Référence rapide — où trouver quoi
+## 11. Référence rapide — où trouver quoi
 
 | Quoi | Où |
 |---|---|
+| **Patterns réutilisables connus** (carrousel, accordéon, highlight, etc.) | **§ 1 de ce skill** (table « Patterns réutilisables connus du theme ») — consulter EN PREMIER |
+| **Custom elements définis** | `grep -h "customElements.define" assets/*.js` |
 | Couleurs tokens | [`tailwind.config.js`](tailwind.config.js) `theme.extend.colors`, [`snippets/fonts-and-colors.liquid`](snippets/fonts-and-colors.liquid) |
 | Variables `--color-*-rgb` | `snippets/fonts-and-colors.liquid` |
 | Settings admin (color, font, etc.) | `config/settings_schema.json` |
