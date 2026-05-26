@@ -1,5 +1,10 @@
 {%- comment -%}
-  Home — Editorial Cocon (section texte H2.1 Bienvenue).
+  Home — Prose (section texte éditoriale flexible).
+
+  Section générique pour blocs textuels longs : bienvenue cocon (H2.1),
+  conseils pratiques (H2.5), production (H2.6), chapeau FAQ (H2.9)...
+  Optionnels modulables via settings : pull quote, ornement séparateur,
+  signature de clôture.
 
   Conventions appliquées (cf .claude/skills/shopify-section-dev) :
   - Tailwind only
@@ -66,11 +71,11 @@
   endif
 
   assign heading_level = section.settings.heading_level | default: 'h2'
-  assign heading_id = 'home-editorial-cocon-' | append: section.id
+  assign heading_id = 'home-prose-' | append: section.id
 -%}
 
 <section
-  class="home-editorial-cocon {{ bg_class }} {{ text_class }} w-full py-20 md:py-28 lg:py-36"
+  class="home-prose {{ bg_class }} {{ text_class }} w-full py-20 md:py-28 lg:py-36"
   aria-labelledby="{{ heading_id }}">
 
   <div class="max-w-2xl mx-auto px-6 md:px-8">
@@ -164,9 +169,9 @@
 
 {% schema %}
 {
-  "name": "Home — Editorial cocon",
+  "name": "Home — Prose",
   "tag": "section",
-  "class": "home-editorial-cocon-section",
+  "class": "home-prose-section",
   "enabled_on": { "templates": ["index"] },
   "settings": [
     {
@@ -302,7 +307,7 @@
   ],
   "presets": [
     {
-      "name": "Home — Editorial cocon",
+      "name": "Home — Prose",
       "settings": {
         "eyebrow_number": "01",
         "eyebrow_label": "Bienvenue",
