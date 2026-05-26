@@ -89,6 +89,15 @@ module.exports = {
           20: 'rgba(var(--color-terra-rgb), 0.2)',
           10: 'rgba(var(--color-terra-rgb), 0.1)',
         },
+        // Brand scale dérivé de settings.brand_color (via Liquid color_lighten/_darken)
+        brand: {
+          50:  'rgb(var(--color-brand-50-rgb))',
+          100: 'rgb(var(--color-brand-100-rgb))',
+          300: 'rgb(var(--color-brand-300-rgb))',
+          500: 'rgb(var(--color-brand-500-rgb))',
+          700: 'rgb(var(--color-brand-700-rgb))',
+          900: 'rgb(var(--color-brand-900-rgb))',
+        },
       },
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],
