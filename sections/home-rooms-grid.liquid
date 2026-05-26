@@ -98,7 +98,7 @@
     existant du theme). Pattern identique à trust-signals.
   {%- endcomment -%}
   <snap-carrousel role="region" aria-label="{{ 'Carrousel : ' | append: carousel_label }}">
-    <ul class="flex overflow-x-auto snap-x snap-mandatory scrollbar-hidden gap-3 md:gap-4 pl-8 md:pl-16 lg:pl-24 pr-8 md:pr-16 lg:pr-24 pb-2 scroll-smooth">
+    <ul class="flex overflow-x-auto snap-x snap-mandatory scrollbar-hidden gap-3 md:gap-4 pb-2 scroll-smooth scroll-pl-8 md:scroll-pl-16 lg:scroll-pl-24">
 
       {%- for block in section.blocks -%}
         {%- liquid
@@ -122,7 +122,7 @@
         -%}
 
         <li
-          class="carrousel-item snap-start flex-shrink-0 w-[82vw] sm:w-[58vw] md:w-[40vw] lg:w-[28vw] max-w-md"
+          class="carrousel-item snap-start flex-shrink-0 w-[82vw] sm:w-[58vw] md:w-[40vw] lg:w-[28vw] max-w-md first:ml-8 md:first:ml-16 lg:first:ml-24 last:mr-8 md:last:mr-16 lg:last:mr-24"
           {{ block.shopify_attributes }}>
           <article class="group relative flex flex-col h-full">
 
@@ -211,25 +211,32 @@
   </snap-carrousel>
 
   {%- comment -%}
-    Mini script : IntersectionObserver sur les <li> du carrousel (plus
-    stable que l'image scaled qui déborde de son conteneur). Toggle
-    .is-centered sur l'img enfant quand le <li> est ≥ 50% visible
-    dans le viewport (= card "au centre" du carrousel).
-    Hover Tailwind group-hover:!scale-105 override avec !important.
+    Zoom dynamique scroll-driven vertical :
+    - Toutes les images démarrent à scale-110 (légèrement zoomées)
+    - Quand la SECTION entre dans le viewport vertical (≥ 20%) : ajoute
+      .is-centered sur TOUTES les images d'un coup → scale-100 (dézoom)
+    - io.disconnect() : déclenchement unique, pas de retour au zoom même
+      si l'utilisateur scrolle horizontalement le carrousel ensuite
+    - Hover sur une card : group-hover:!scale-105 (override grâce au
+      !important Tailwind)
   {%- endcomment -%}
   <script>
     (function () {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      const items = document.querySelectorAll('section.home-rooms-grid .carrousel-item');
-      if (!items.length || !('IntersectionObserver' in window)) return;
+      const sec = document.querySelector('section.home-rooms-grid');
+      if (!sec || !('IntersectionObserver' in window)) return;
+      const imgs = sec.querySelectorAll('[data-room-img]');
+      if (!imgs.length) return;
       const io = new IntersectionObserver(
         (entries) => entries.forEach((e) => {
-          const img = e.target.querySelector('[data-room-img]');
-          if (img) img.classList.toggle('is-centered', e.isIntersecting);
+          if (e.isIntersecting) {
+            imgs.forEach((img) => img.classList.add('is-centered'));
+            io.disconnect();
+          }
         }),
-        { threshold: 0.5 }
+        { threshold: 0.2 }
       );
-      items.forEach((li) => io.observe(li));
+      io.observe(sec);
     })();
   </script>
 
