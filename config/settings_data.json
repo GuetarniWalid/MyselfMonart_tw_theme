@@ -18,6 +18,7 @@
     "main_color": "#21150c",
     "secondary_color": "#ffffff",
     "buy_button_color": "#d79b86",
+    "brand_color": "#d79b86",
     "favicon": "shopify://shop_images/logo-myselfmonart.png",
     "currency_code_enabled": true,
     "social_twitter_link": "",

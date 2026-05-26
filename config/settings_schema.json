@@ -124,7 +124,7 @@
         "id": "brand_color",
         "label": "Couleur de marque (base)",
         "info": "Couleur principale de la marque. Des teintes sont dérivées automatiquement (brand-50/100/300/500/700/900) pour les fonds clairs/foncés, les textes, les CTA. Changer cette couleur recolore harmoniquement toute la home (cards, eyebrows, fond footer-like, etc.).",
-        "default": "#C04B2F"
+        "default": "#D79B86"
       }
     ]
   },
