@@ -227,7 +227,10 @@
   <script>
     (function () {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      const sec = document.querySelector('section.home-rooms-grid');
+      // Cible le wrapper Shopify de CETTE instance (sinon, document.querySelector
+      // global retournerait toujours la 1re section .home-rooms-grid → toutes
+      // les instances déclencheraient sur la même section).
+      const sec = document.getElementById('shopify-section-{{ section.id }}');
       if (!sec || !('IntersectionObserver' in window)) return;
       const imgs = sec.querySelectorAll('[data-room-img]');
       if (!imgs.length) return;
