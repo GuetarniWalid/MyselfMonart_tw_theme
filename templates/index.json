@@ -32,7 +32,7 @@
     "welcome": {
       "type": "home-editorial-cocon",
       "settings": {
-        "eyebrow_number": "01",
+        "eyebrow_number": "",
         "eyebrow_label": "Bienvenue",
         "heading_level": "h2",
         "h2_title": "Bienvenue dans le cocon MyselfMonArt",
@@ -85,7 +85,7 @@
       },
       "block_order": ["usp_1", "usp_2", "usp_3", "usp_4"],
       "settings": {
-        "eyebrow_number": "02",
+        "eyebrow_number": "",
         "eyebrow_label": "Qualité matière",
         "heading_level": "h2",
         "h2_title": "Ce qui fait la différence d'un tableau MyselfMonArt",
@@ -171,7 +171,7 @@
       },
       "block_order": ["room_salon", "room_chambre_adulte", "room_chambre_enfant", "room_bureau", "room_cuisine", "room_entree"],
       "settings": {
-        "eyebrow_number": "03",
+        "eyebrow_number": "",
         "eyebrow_label": "Par pièce",
         "heading_level": "h2",
         "h2_title": "Trouver votre tableau selon la pièce",
@@ -281,7 +281,7 @@
       },
       "block_order": ["style_abstrait", "style_zen", "style_popart", "style_africain", "style_nb", "style_floral", "style_japonais", "style_frida"],
       "settings": {
-        "eyebrow_number": "04",
+        "eyebrow_number": "",
         "eyebrow_label": "Par style",
         "heading_level": "h2",
         "h2_title": "Explorer par style et univers",
