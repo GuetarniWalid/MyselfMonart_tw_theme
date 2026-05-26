@@ -30,7 +30,7 @@
       }
     },
     "welcome": {
-      "type": "home-editorial-cocon",
+      "type": "home-prose",
       "settings": {
         "eyebrow_number": "",
         "eyebrow_label": "Bienvenue",
@@ -290,7 +290,7 @@
       }
     },
     "size_guide": {
-      "type": "home-editorial-cocon",
+      "type": "home-prose",
       "settings": {
         "eyebrow_number": "",
         "eyebrow_label": "Conseil pratique",
@@ -306,15 +306,19 @@
       }
     },
     "journey": {
-      "type": "home-editorial-rich",
+      "type": "home-prose",
       "settings": {
-        "background": "white",
-        "align": "left",
+        "eyebrow_number": "",
+        "eyebrow_label": "Production",
         "heading_level": "h2",
-        "eyebrow": "Production",
-        "title": "Le voyage d'une œuvre, de notre studio à votre mur",
-        "lead": "Quand vous validez votre commande, l'œuvre n'attend pas dans un entrepôt. Elle n'existe pas encore. Voici ce qui se passe :",
-        "body": "<ol><li><strong>Le fichier source</strong>, déjà retouché par notre direction artistique, part vers notre atelier d'impression européen.</li><li>La toile est <strong>imprimée à la demande</strong>, jamais en lot. Vos couleurs sont calibrées sur votre format précis.</li><li>Elle est <strong>tendue à la main sur un châssis bois massif</strong>, vérifiée œuvre par œuvre.</li><li>Elle vous est livrée prête à accrocher, dans un emballage qui protège les angles.</li></ol><p>Comptez quelques jours de production en plus du transport. C'est le prix d'une œuvre qui n'aura jamais vécu en stock.</p>"
+        "h2_title": "Le voyage d'une œuvre, de notre studio à votre mur",
+        "paragraph_1": "<p>Quand vous validez votre commande, l'œuvre n'attend pas dans un entrepôt. Elle n'existe pas encore. Voici ce qui se passe.</p>",
+        "pull_quote": "",
+        "pull_quote_attribution": "",
+        "paragraph_2": "<p>Le fichier source, déjà retouché par notre direction artistique, part vers notre atelier d'impression européen.</p><p>La toile est imprimée à la demande, jamais en lot. Vos couleurs sont calibrées sur votre format précis.</p><p>Elle est ensuite tendue à la main sur un châssis bois massif, vérifiée œuvre par œuvre.</p><p>Puis livrée prête à accrocher, dans un emballage qui protège les angles — la partie la plus fragile d'un tableau tendu.</p>",
+        "show_ornament": false,
+        "closing_signature": "Comptez quelques jours de production en plus du transport. C'est le prix d'une œuvre qui n'aura jamais vécu en stock.",
+        "background_color": "terracotta-light"
       }
     },
     "studio": {
