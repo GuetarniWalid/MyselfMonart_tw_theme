@@ -163,9 +163,9 @@
                 {%- endif -%}
               {%- endif -%}
 
-              {%- comment -%} Label pill décoratif (le H3 long est sémantiquement le titre, ce pill est visuel) {%- endcomment -%}
+              {%- comment -%} Label pill décoratif (haut-droite) {%- endcomment -%}
               {%- if block.settings.short_title != blank -%}
-                <span aria-hidden="true" class="absolute bottom-4 left-4 md:bottom-5 md:left-5 z-10 inline-block {{ pill_bg_class }} {{ pill_text_class }} font-roboto text-[11px] md:text-xs font-medium tracking-[0.16em] uppercase px-4 py-2.5 rounded-full shadow-[0_2px_12px_rgba(0,0,0,0.08)] transition-colors duration-300 motion-reduce:transition-none group-hover:bg-buy-button group-hover:text-secondary">
+                <span aria-hidden="true" class="absolute top-4 right-4 md:top-5 md:right-5 z-10 inline-block {{ pill_bg_class }} {{ pill_text_class }} font-roboto text-[11px] md:text-xs font-medium tracking-[0.16em] uppercase px-4 py-2.5 rounded-full shadow-[0_2px_12px_rgba(0,0,0,0.08)] transition-colors duration-300 motion-reduce:transition-none group-hover:bg-buy-button group-hover:text-secondary">
                   {{ block.settings.short_title | escape }}
                 </span>
               {%- endif -%}
@@ -216,12 +216,13 @@
   {%- comment -%}
     Zoom dynamique scroll-driven vertical :
     - Toutes les images démarrent à scale-110 (légèrement zoomées)
-    - Quand la SECTION entre dans le viewport vertical (≥ 20%) : ajoute
-      .is-centered sur TOUTES les images d'un coup → scale-100 (dézoom)
-    - io.disconnect() : déclenchement unique, pas de retour au zoom même
-      si l'utilisateur scrolle horizontalement le carrousel ensuite
-    - Hover sur une card : group-hover:!scale-105 (override grâce au
-      !important Tailwind)
+    - Quand la SECTION atteint la zone centrale du viewport
+      (rootMargin: '-25% 0px' réduit la zone de trigger aux 50% centraux),
+      ajoute .is-centered sur TOUTES les images d'un coup → scale-100
+    - L'utilisateur voit donc bien l'effet de dezoom au moment où la
+      section arrive au milieu de son écran, pas dès qu'elle pointe
+    - io.disconnect() : déclenchement unique
+    - Hover sur une card : group-hover:!scale-105 (override)
   {%- endcomment -%}
   <script>
     (function () {
@@ -237,7 +238,7 @@
             io.disconnect();
           }
         }),
-        { threshold: 0.2 }
+        { rootMargin: '-25% 0px -25% 0px', threshold: 0 }
       );
       io.observe(sec);
     })();
