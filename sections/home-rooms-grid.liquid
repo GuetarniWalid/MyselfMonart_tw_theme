@@ -45,12 +45,15 @@
 
   assign text_class = 'text-main'
   assign muted_class = 'text-main-70'
+  assign eyebrow_class = 'text-main'
+  assign link_class = 'text-main'
   assign pill_bg_class = 'bg-secondary'
   assign pill_text_class = 'text-main'
-  assign link_class = 'text-buy-button'
   if section.settings.background_color == 'dark'
     assign text_class = 'text-secondary'
     assign muted_class = 'text-secondary-50'
+    assign eyebrow_class = 'text-secondary'
+    assign link_class = 'text-secondary'
   endif
 
   assign heading_level = section.settings.heading_level | default: 'h2'
@@ -66,7 +69,7 @@
   <div class="max-w-3xl mx-auto px-6 md:px-8 text-center mb-12 md:mb-16">
 
     {%- if section.settings.eyebrow_number != blank or section.settings.eyebrow_label != blank -%}
-      <p class="font-roboto text-xs tracking-[0.22em] uppercase {{ muted_class }} flex items-center justify-center gap-3 mb-6 md:mb-8">
+      <p class="font-roboto text-xs tracking-[0.22em] uppercase font-medium {{ eyebrow_class }} flex items-center justify-center gap-3 mb-6 md:mb-8">
         {%- if section.settings.eyebrow_number != blank -%}
           <span class="font-heading text-sm normal-case tracking-normal {{ text_class }}">— {{ section.settings.eyebrow_number | escape }}</span>
         {%- endif -%}

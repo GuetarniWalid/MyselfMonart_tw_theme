@@ -180,111 +180,113 @@
       }
     },
     "styles": {
-      "type": "home-cards-grid",
+      "type": "home-rooms-grid",
       "blocks": {
         "style_abstrait": {
-          "type": "card",
+          "type": "room",
           "settings": {
             "image_asset": "style-abstrait-moderne-v1.png",
-            "alt": "Tableaux abstraits et modernes — collection MyselfMonArt",
-            "label": "Abstrait & moderne",
+            "image_alt": "Tableau abstrait moderne — collection MyselfMonArt",
+            "short_title": "Abstrait & moderne",
             "title": "Tableaux abstraits et modernes",
-            "text": "<p>L'abstraction laisse votre œil composer sa propre histoire. Couleurs, lignes, équilibres : tout vous invite à ressentir.</p>",
-            "link_label": "Découvrir",
+            "description": "<p>L'abstraction laisse votre œil composer sa propre histoire. Couleurs, lignes, équilibres : rien ne vous dit quoi voir, tout vous invite à ressentir. Notre collection regroupe les œuvres les plus contemporaines de notre sélection.</p>",
+            "link_label": "Découvrir la collection",
             "link": "shopify://collections/tableau-abstrait"
           }
         },
         "style_zen": {
-          "type": "card",
+          "type": "room",
           "settings": {
             "image_asset": "style-zen-nature-v1.png",
-            "alt": "Tableaux zen et inspiration nature — collection MyselfMonArt",
-            "label": "Zen & nature",
+            "image_alt": "Tableau zen et nature contemplatif — collection MyselfMonArt",
+            "short_title": "Zen & nature",
             "title": "Tableaux zen et inspiration nature",
-            "text": "<p>Lotus, branches, paysages brumeux, lumière qui filtre. Pour les intérieurs qui cherchent l'apaisement comme une matière.</p>",
-            "link_label": "Découvrir",
+            "description": "<p>Lotus, branches, paysages brumeux, lumière qui filtre. Pour les intérieurs qui cherchent l'apaisement comme une matière. Pensée pour les chambres, les espaces méditation, les salons cocooning.</p>",
+            "link_label": "Découvrir la collection",
             "link": "shopify://collections/tableau-zen"
           }
         },
         "style_popart": {
-          "type": "card",
+          "type": "room",
           "settings": {
             "image_asset": "style-pop-art-v1.png",
-            "alt": "Tableaux pop art et street art — collection MyselfMonArt",
-            "label": "Pop art",
+            "image_alt": "Tableau pop art urbain et coloré — collection MyselfMonArt",
+            "short_title": "Pop art",
             "title": "Tableaux pop art et street art",
-            "text": "<p>L'énergie d'une scène urbaine, l'audace d'un grand aplat de couleur. Pour les intérieurs qui assument le caractère.</p>",
-            "link_label": "Découvrir",
+            "description": "<p>L'énergie d'une scène urbaine, l'audace d'un grand aplat de couleur. Pour les intérieurs qui assument le caractère. Notre collection joue les contrastes francs et les références qui parlent à votre génération.</p>",
+            "link_label": "Découvrir la collection",
             "link": "shopify://collections/tableau-pop-art"
           }
         },
         "style_africain": {
-          "type": "card",
+          "type": "room",
           "settings": {
             "image_asset": "style-africain-ethnique-v1.png",
-            "alt": "Tableaux africains et ethniques — collection MyselfMonArt",
-            "label": "Africain & ethnique",
+            "image_alt": "Tableau africain ethnique avec portrait de femme berbère — collection MyselfMonArt",
+            "short_title": "Africain & ethnique",
             "title": "Tableaux africains et ethniques",
-            "text": "<p>Portraits de femmes africaines, silhouettes berbères, motifs du Sahara : un univers construit avec un soin particulier.</p>",
-            "link_label": "Découvrir",
+            "description": "<p>Portraits de femmes africaines, silhouettes berbères, motifs du Sahara : un univers que nous avons construit avec un soin particulier — c'est l'une de nos collections les plus aimées.</p>",
+            "link_label": "Découvrir la collection",
             "link": "shopify://collections/tableau-africain"
           }
         },
         "style_nb": {
-          "type": "card",
+          "type": "room",
           "settings": {
             "image_asset": "style-noir-blanc-v1.png",
-            "alt": "Tableaux noir et blanc — collection MyselfMonArt",
-            "label": "Noir & blanc",
+            "image_alt": "Tableau noir et blanc monochrome — collection MyselfMonArt",
+            "short_title": "Noir & blanc",
             "title": "Tableaux noir et blanc",
-            "text": "<p>Il s'accorde avec tout, structure un mur, fait reposer l'œil. Photographie, dessin, abstraction monochrome.</p>",
-            "link_label": "Découvrir",
+            "description": "<p>Le noir et blanc ne vieillit jamais. Il s'accorde avec tout, structure un mur, fait reposer l'œil. Notre collection couvre la photographie, le dessin, l'abstraction monochrome.</p>",
+            "link_label": "Découvrir la collection",
             "link": "shopify://collections/tableau-noir-et-blanc"
           }
         },
         "style_floral": {
-          "type": "card",
+          "type": "room",
           "settings": {
             "image_asset": "style-floral-v1.png",
-            "alt": "Tableaux floraux — collection MyselfMonArt",
-            "label": "Floral",
+            "image_alt": "Tableau floral contemporain avec fleur agrandie — collection MyselfMonArt",
+            "short_title": "Floral",
             "title": "Tableaux floraux",
-            "text": "<p>Pas la nature morte académique — la fleur réinterprétée, agrandie, contemporaine. Le végétal sans le décoratif convenu.</p>",
-            "link_label": "Découvrir",
+            "description": "<p>Pas la nature morte académique — la fleur réinterprétée, agrandie, contemporaine. Notre collection propose des œuvres qui apportent le végétal sans tomber dans le décoratif convenu.</p>",
+            "link_label": "Découvrir la collection",
             "link": "shopify://collections/tableau-fleurs"
           }
         },
         "style_japonais": {
-          "type": "card",
+          "type": "room",
           "settings": {
             "image_asset": "style-japonais-v1.png",
-            "alt": "Tableaux japonais — collection MyselfMonArt",
-            "label": "Japonais",
+            "image_alt": "Tableau japonais avec estampe revisitée — collection MyselfMonArt",
+            "short_title": "Japonais",
             "title": "Tableaux japonais",
-            "text": "<p>Estampes revisitées, calligraphies épurées, vagues d'Hokusai. L'une des collections les plus contemplatives.</p>",
-            "link_label": "Découvrir",
+            "description": "<p>Estampes revisitées, calligraphies épurées, vagues d'Hokusai et jardins de Kyoto. Notre collection est l'une des plus contemplatives de notre catalogue.</p>",
+            "link_label": "Découvrir la collection",
             "link": "shopify://collections/tableau-japonais"
           }
         },
         "style_frida": {
-          "type": "card",
+          "type": "room",
           "settings": {
             "image_asset": "style-frida-kahlo-v1.png",
-            "alt": "Tableaux Frida Kahlo — collection MyselfMonArt",
-            "label": "Frida Kahlo",
+            "image_alt": "Tableau Frida Kahlo en portrait épuré — collection MyselfMonArt",
+            "short_title": "Frida Kahlo",
             "title": "Tableaux Frida Kahlo",
-            "text": "<p>Portraits, autoportraits revisités, hommages contemporains à l'iconique artiste mexicaine.</p>",
-            "link_label": "Découvrir",
+            "description": "<p>Une figure à elle seule mérite son univers. Notre collection rassemble portraits, autoportraits revisités, et hommages contemporains à l'iconique artiste mexicaine.</p>",
+            "link_label": "Découvrir la collection",
             "link": "shopify://collections/tableaux-frida-kahlo"
           }
         }
       },
       "block_order": ["style_abstrait", "style_zen", "style_popart", "style_africain", "style_nb", "style_floral", "style_japonais", "style_frida"],
       "settings": {
-        "eyebrow": "Par style",
-        "title": "Explorer par style et univers",
-        "intro": "Si vous savez déjà ce qui vous touche — un courant, une époque, une géographie — entrez par ici.",
-        "columns": "4"
+        "eyebrow_number": "04",
+        "eyebrow_label": "Par style",
+        "heading_level": "h2",
+        "h2_title": "Explorer par style et univers",
+        "intro": "Si vous savez déjà ce qui vous touche — un courant, une époque, une géographie — entrez par ici. Voici nos univers, curés un par un.",
+        "background_color": "secondary"
       }
     },
     "size_guide": {
