@@ -7,12 +7,12 @@
     
     {%- liquid
       assign brand = settings.brand_color
-      assign brand_50  = brand | color_lighten: 42
-      assign brand_100 = brand | color_lighten: 32
-      assign brand_300 = brand | color_lighten: 18
+      assign brand_50  = brand | color_lighten: 22
+      assign brand_100 = brand | color_lighten: 14
+      assign brand_300 = brand | color_lighten: 6
       assign brand_500 = brand
-      assign brand_700 = brand | color_darken: 15
-      assign brand_900 = brand | color_darken: 30
+      assign brand_700 = brand | color_darken: 25
+      assign brand_900 = brand | color_darken: 40
     -%}
     :root {
       /* Neutres (couleurs indépendantes de la marque) */
