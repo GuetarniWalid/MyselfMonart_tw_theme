@@ -56,11 +56,18 @@
   assign eyebrow_class = 'text-terra'
   assign rule_class = 'bg-main-20'
   assign ornament_color_class = 'text-buy-button'
+  comment
+    Button CTA — adapte au background. Pill stable, le hover apporte
+    juste un mini-lift + ombre légère (pas d'inversion / pas de bg shift).
+    Effet doux, simple, sans opacity ni alpha.
+  endcomment
+  assign cta_btn_class = 'bg-terra text-secondary'
   if section.settings.background_color == 'dark'
     assign text_class = 'text-secondary'
     assign muted_class = 'text-secondary-50'
     assign eyebrow_class = 'text-secondary'
     assign rule_class = 'bg-secondary-50'
+    assign cta_btn_class = 'bg-secondary text-main'
   endif
   if section.settings.background_color == 'terracotta'
     assign text_class = 'text-secondary'
@@ -68,6 +75,7 @@
     assign eyebrow_class = 'text-secondary'
     assign rule_class = 'bg-secondary-50'
     assign ornament_color_class = 'text-secondary'
+    assign cta_btn_class = 'bg-secondary text-main'
   endif
 
   assign heading_level = section.settings.heading_level | default: 'h2'
@@ -157,11 +165,34 @@
       </div>
     {%- endif -%}
 
-    {%- comment -%} Closing signature italique centrée — signature poétique {%- endcomment -%}
+    {%- comment -%}
+      Closing signature italique centrée — signature poétique.
+      mt-20 md:mt-28 lg:mt-32 : respiration verticale très large avec le
+      paragraphe précédent pour que la phrase soit perçue comme une voix-off
+      détachée, pas comme la suite du flux courant. Si show_ornament=true
+      l'ornement apporte déjà l'espace donc on neutralise mt-.
+    {%- endcomment -%}
     {%- if section.settings.closing_signature != blank -%}
-      <p class="text-center font-heading italic !text-lg md:!text-xl lg:!text-2xl leading-snug {{ text_class }} max-w-xl mx-auto">
+      <p class="text-center font-heading italic !text-lg md:!text-xl lg:!text-2xl leading-snug {{ text_class }} max-w-xl mx-auto {% unless section.settings.show_ornament %}mt-20 md:mt-28 lg:mt-32{% endunless %}">
         {{ section.settings.closing_signature }}
       </p>
+    {%- endif -%}
+
+    {%- comment -%}
+      CTA optionnel — pill arrondi centré, contraste fort sur le background.
+      Pas d'ornement/signature requis pour l'afficher : si juste paragraph + CTA,
+      ça fait une banner-like avec un coeur prose minimaliste (cas devis_cta H2.11).
+      mt-12 md:mt-16 : respiration moyenne (le bouton n'est pas une voix-off,
+      donc moins d'espace que closing_signature).
+    {%- endcomment -%}
+    {%- if section.settings.cta_label != blank and section.settings.cta_link != blank -%}
+      <div class="flex justify-center mt-12 md:mt-16">
+        <a
+          href="{{ section.settings.cta_link }}"
+          class="inline-flex items-center justify-center px-7 md:px-9 py-3 md:py-4 rounded-full font-roboto text-sm md:text-base font-medium tracking-wide {{ cta_btn_class }} transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-px hover:shadow-md motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-offset-2">
+          {{ section.settings.cta_label | escape }}
+        </a>
+      </div>
     {%- endif -%}
 
   </div>
@@ -285,6 +316,21 @@
       "id": "closing_signature",
       "label": "Phrase de clôture italique",
       "default": "Prenez le temps. Le bon tableau, c'est rarement le premier — c'est celui qui revient vous chercher."
+    },
+    {
+      "type": "header",
+      "content": "Bouton CTA (optionnel)"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Texte du bouton",
+      "info": "Laisser vide pour ne pas afficher de bouton."
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Lien du bouton"
     },
     {
       "type": "header",
