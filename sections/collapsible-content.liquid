@@ -1,38 +1,342 @@
-{%- if section.settings.heading != blank -%}
-  <h2 class="text-center mb-10"><span class="title-highlight">{{ section.settings.heading | escape }}</span></h2>
-{% endif %}
-<collapsible-tab>
-  {%- for block in section.blocks -%}
-    <details class="accordion group border-t border-main-10 first-of-type:mt-5 last-of-type:border-b last-of-type:border-b-main-10 last-of-type:mb-5 max-w-[900px] mx-auto">
-      <summary class="list-none flex justify-between py-3 select-none cursor-pointer">
-        <div class="flex gap-3">
-          {% render 'icon-accordion', icon: block.settings.icon, color: block.settings.icon_color %}
-          <h4 class="h4 text-base font-normal">
-            {{ block.settings.heading }}
-          </h4>
-        </div>
-        <span class="group-open:rotate-180 transition-transform duration-200 mr-5 flex items-center">
-          {% render 'tw-icon-caret', width: "10" %}
-        </span>
-      </summary>
-      <div class="py-3 flex flex-col gap-3">
-        {{ block.settings.row_content }}
+{%- comment -%}
+  Collapsible content — accordéon Q/R universel (FAQ).
+
+  Section UNIQUE du theme pour tous les usages accordion :
+  - Home FAQ (templates/index.json)
+  - Pages produit (product.painting.json, product.json, etc.)
+  - Pages articles (article.*.json)
+
+  Conventions skill shopify-section-dev :
+  - Tailwind only (aucun CSS scoped)
+  - Variables globales : font-heading, font-roboto, text-main, text-main-90,
+    text-terra, bg-main-10, bg-terra, bg-secondary, border-main-10
+  - REUSE FIRST : <collapsible-tab> custom element ([assets/tw-global.js])
+    qui gère single-open + click body to close + link bail-out.
+  - Admin-configurable strict
+  - SEO : <h2>/<h3> configurable, aria-labelledby, JSON-LD FAQPage dynamique
+  - A11y : <details>/<summary> natifs, motion-reduce, focus-visible:ring,
+    aria-hidden sur icon
+
+  Visuel issu de l'ancien home-faq (validé Walid) — reprend 1:1 le design
+  original CSS scoped (assets/home-styles.css lignes 487-562) en Tailwind.
+
+  COMPATIBILITÉ ASCENDANTE :
+  - Block type `collapsible_row` conservé (préserve les 65 blocks existants
+    répartis sur 10 templates produits/articles).
+  - Settings block : `heading` (text), `row_content` (richtext), `icon` (select)
+    inchangés. Le `icon` est conservé en schema pour data-compat mais non rendu
+    visuellement (le nouveau design utilise le "+" rond plus minimaliste).
+{%- endcomment -%}
+
+{%- liquid
+  assign heading_level = section.settings.heading_level | default: 'h2'
+  assign heading_id = 'collapsible-' | append: section.id
+  assign show_header = false
+  if section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.lead != blank
+    assign show_header = true
+  endif
+
+  case section.settings.background_color
+    when 'cream'
+      assign bg_class = 'bg-main-5'
+    when 'sable'
+      assign bg_class = 'bg-main-10'
+    when 'transparent'
+      assign bg_class = ''
+    else
+      assign bg_class = 'bg-secondary'
+  endcase
+
+  case section.settings.heading_size
+    when 'small'
+      assign heading_size_class = 'text-xl md:text-2xl'
+    when 'large'
+      assign heading_size_class = 'text-[32px] md:text-[44px] lg:text-[56px]'
+    else
+      assign heading_size_class = 'text-2xl md:text-3xl lg:text-[36px]'
+  endcase
+
+  case section.settings.heading_weight
+    when 'light'
+      assign heading_weight_class = 'font-light'
+    when 'normal'
+      assign heading_weight_class = 'font-normal'
+    when 'medium'
+      assign heading_weight_class = 'font-medium'
+    when 'bold'
+      assign heading_weight_class = 'font-bold'
+    else
+      assign heading_weight_class = 'font-semibold'
+  endcase
+
+  case section.settings.question_size
+    when 'small'
+      assign question_size_class = 'text-[15px] md:text-base'
+    when 'large'
+      assign question_size_class = 'text-[18px] md:text-[22px]'
+    else
+      assign question_size_class = 'text-base md:text-lg'
+  endcase
+
+  comment
+    accent_tone — pilote la couleur de l'icon ouvert + des liens.
+    Trois tons disponibles, tous dérivés du brand_color global (admin) :
+    - terra (brand-700, par défaut)        : terracotta foncé saturé (home)
+    - buy-button (brand-500)               : même couleur que le bouton Panier/Buy
+    - brand-900                            : terracotta très sombre (chocolat)
+    On garde la couleur de brand globale, on règle juste la TONALITÉ ici.
+  endcomment
+  case section.settings.accent_tone
+    when 'buy-button'
+      assign accent_bg_class = 'group-open:bg-buy-button'
+      assign accent_icon_open_class = 'group-open:text-main'
+      assign accent_link_class = '[&_a]:text-buy-button'
+    when 'brand-900'
+      assign accent_bg_class = 'group-open:bg-brand-900'
+      assign accent_icon_open_class = 'group-open:text-secondary'
+      assign accent_link_class = '[&_a]:text-brand-900'
+    else
+      assign accent_bg_class = 'group-open:bg-terra'
+      assign accent_icon_open_class = 'group-open:text-secondary'
+      assign accent_link_class = '[&_a]:text-terra'
+  endcase
+-%}
+
+<section
+  class="collapsible-content {{ bg_class }} text-main w-full py-16 md:py-24 lg:py-[120px]"
+  {% if show_header %}aria-labelledby="{{ heading_id }}"{% endif %}>
+
+  {%- comment -%} Header centré, max 760px (cohérent avec home-faq) {%- endcomment -%}
+  {%- if show_header -%}
+    <div class="max-w-[760px] mx-auto px-6 text-center mb-10 md:mb-16">
+
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="font-roboto text-xs font-medium tracking-[0.18em] uppercase text-terra mb-4">
+          {{ section.settings.eyebrow | escape }}
+        </p>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <{{ heading_level }}
+          id="{{ heading_id }}"
+          class="font-heading {{ heading_weight_class }} leading-[1.1] tracking-[-0.01em] {{ heading_size_class }} mb-6">
+          {{ section.settings.heading | escape }}
+        </{{ heading_level }}>
+      {%- endif -%}
+
+      {%- if section.settings.lead != blank -%}
+        <p class="font-roboto text-base md:text-lg lg:text-[19px] leading-[1.65] text-main-70 mb-0">
+          {{ section.settings.lead }}
+        </p>
+      {%- endif -%}
+
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} Liste, max 880px, padding 24px (visuel original Walid) {%- endcomment -%}
+  {%- if section.blocks.size > 0 -%}
+    <collapsible-tab>
+      <div class="max-w-[880px] mx-auto px-6">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'collapsible_row' -%}
+            <details
+              class="accordion group border-t border-main-10 last:border-b last:border-main-10"
+              {{ block.shopify_attributes }}>
+
+              {%- comment -%}
+                Summary flex justify-between, py-6, gap-6, cursor-pointer.
+                focus-visible:ring-2 ring-terra pour a11y clavier (l'outline
+                default est retiré par list-none — on remet un focus ring).
+              {%- endcomment -%}
+              <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer flex items-center justify-between gap-6 py-6 outline-none focus-visible:ring-2 focus-visible:ring-terra focus-visible:ring-offset-2 focus-visible:rounded-sm">
+                <h3 class="font-heading font-medium leading-[1.3] {{ question_size_class }} text-main m-0">
+                  {{ block.settings.heading | escape }}
+                </h3>
+                {%- comment -%}
+                  Icon "+" — rond 32×32 fond sable au repos.
+                  Quand <details open> : fond terra (brand-700 plein),
+                  texte blanc, rotation 45° → "×". Transition douce.
+                {%- endcomment -%}
+                <span
+                  aria-hidden="true"
+                  class="flex-shrink-0 w-8 h-8 rounded-full bg-main-10 text-main flex items-center justify-center text-[20px] leading-none transition-[background-color,transform] duration-300 ease-out motion-reduce:transition-none {{ accent_bg_class }} {{ accent_icon_open_class }} group-open:rotate-45">
+                  +
+                </span>
+              </summary>
+
+              {%- comment -%}
+                Réponse — font-sans 15px, leading 1.7, text-main-90 (sombre lisible).
+                p:not(:last-child) mb-3 (=12px). Liens text-terra underline.
+                Strong text-main + font-semibold.
+                cursor-pointer rappelle au lecteur que le body est cliquable.
+              {%- endcomment -%}
+              <div class="pb-7 max-w-[760px] cursor-pointer">
+                <div class="font-roboto text-[15px] leading-[1.7] text-main-90 [&>p:not(:last-child)]:mb-3 {{ accent_link_class }} [&_a]:underline [&_a:hover]:opacity-80 motion-reduce:[&_a]:transition-none [&_strong]:text-main [&_strong]:font-semibold">
+                  {{ block.settings.row_content }}
+                </div>
+              </div>
+
+            </details>
+          {%- endif -%}
+        {%- endfor -%}
       </div>
-    </details>
-  {%- endfor -%}
-</collapsible-tab>
+    </collapsible-tab>
+
+    <script src="{{ 'tw-global.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+
+</section>
+
+{%- comment -%}
+  JSON-LD FAQPage dynamique — depuis les blocks (source de vérité unique).
+  Activable depuis le schema (emit_faq_jsonld) : à n'activer que sur les pages
+  où l'accordéon EST bien une FAQ (page home, page FAQ dédiée). Pas sur les
+  pages produit où les blocks parlent de matière/livraison du produit (et où
+  Shopify émet déjà du JSON-LD Product).
+{%- endcomment -%}
+{%- if section.settings.emit_faq_jsonld and section.blocks.size > 0 -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {%- assign emitted = 0 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type != 'collapsible_row' -%}{%- continue -%}{%- endif -%}
+          {%- if block.settings.heading == blank or block.settings.row_content == blank -%}{%- continue -%}{%- endif -%}
+          {%- if emitted > 0 -%},{%- endif -%}
+          {%- liquid
+            assign answer_text = block.settings.row_content | strip_html | strip | replace: '"', '\"'
+          -%}
+          {
+            "@type": "Question",
+            "name": {{ block.settings.heading | json }},
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": {{ answer_text | json }}
+            }
+          }
+          {%- assign emitted = emitted | plus: 1 -%}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{%- endif -%}
 
 {% schema %}
 {
   "name": "t:sections.collapsible_content.name",
   "tag": "section",
-  "class": "page-width my-20 px-4 mx-auto",
+  "class": "collapsible-content-section",
+  "max_blocks": 20,
   "settings": [
+    {
+      "type": "header",
+      "content": "Header (optionnel)"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow (capitales)"
+    },
+    {
+      "type": "select",
+      "id": "heading_level",
+      "label": "Niveau du titre (SEO)",
+      "info": "h2 par défaut. Si l'accordéon est dans une page produit où le titre principal est déjà un h1, garder h2.",
+      "default": "h2",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Taille du titre",
+      "info": "Medium (par défaut) s'aligne sur les autres H2 du theme. Large pour la home (titre éditorial). Small pour un sous-bloc.",
+      "default": "medium",
+      "options": [
+        { "value": "small",  "label": "Small (xl → 2xl)" },
+        { "value": "medium", "label": "Medium (2xl → 3xl → 36px)" },
+        { "value": "large",  "label": "Large (32px → 44px → 56px)" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Graisse du titre",
+      "info": "Semibold (par défaut) s'aligne sur les autres H2 du theme.",
+      "default": "semibold",
+      "options": [
+        { "value": "light",    "label": "Light (300)" },
+        { "value": "normal",   "label": "Normal (400)" },
+        { "value": "medium",   "label": "Medium (500)" },
+        { "value": "semibold", "label": "Semibold (600)" },
+        { "value": "bold",     "label": "Bold (700)" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "question_size",
+      "label": "Taille des questions (H3)",
+      "info": "Medium (par défaut) reste compact — pratique quand il y a beaucoup de questions. Large pour les pages éditoriales (home).",
+      "default": "medium",
+      "options": [
+        { "value": "small",  "label": "Small (15 → 16px)" },
+        { "value": "medium", "label": "Medium (16 → 18px)" },
+        { "value": "large",  "label": "Large (18 → 22px)" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "accent_tone",
+      "label": "Tonalité d'accent (icon ouvert + liens)",
+      "info": "Tonalité dérivée du brand_color global. Terra = terracotta foncé (home). Buy-button = même couleur que le bouton Panier/Buy (page produit). Brand-900 = terracotta chocolat très sombre.",
+      "default": "terra",
+      "options": [
+        { "value": "terra",      "label": "Terra (terracotta foncé — défaut)" },
+        { "value": "buy-button", "label": "Buy button (= bouton Panier)" },
+        { "value": "brand-900",  "label": "Brand 900 (terracotta chocolat)" }
+      ]
+    },
     {
       "type": "text",
       "id": "heading",
       "label": "t:sections.collapsible_content.settings.heading.label",
-      "default": "Collapsible content"
+      "default": "Questions fréquentes"
+    },
+    {
+      "type": "textarea",
+      "id": "lead",
+      "label": "Lead (optionnel)"
+    },
+    {
+      "type": "header",
+      "content": "Apparence"
+    },
+    {
+      "type": "select",
+      "id": "background_color",
+      "label": "Couleur de fond",
+      "default": "secondary",
+      "options": [
+        { "value": "secondary",   "label": "Secondary (blanc cassé)" },
+        { "value": "cream",       "label": "Main 5% (sable doux)" },
+        { "value": "sable",       "label": "Main 10% (sable marqué)" },
+        { "value": "transparent", "label": "Transparent (hérite du parent)" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "SEO"
+    },
+    {
+      "type": "checkbox",
+      "id": "emit_faq_jsonld",
+      "label": "Émettre JSON-LD FAQPage",
+      "info": "À cocher uniquement si cette section est une FAQ (page d'accueil, page FAQ dédiée). Ne pas activer sur les pages produit (Shopify émet déjà du JSON-LD Product).",
+      "default": false
     }
   ],
   "blocks": [
@@ -43,7 +347,7 @@
         {
           "type": "text",
           "id": "heading",
-          "default": "Collapsible row",
+          "default": "Question",
           "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.heading.label",
           "info": "t:sections.collapsible_content.blocks.collapsible_row.settings.heading.info"
         },
@@ -51,185 +355,54 @@
           "type": "select",
           "id": "icon",
           "options": [
-            {
-              "value": "none",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__1.label"
-            },
-            {
-              "value": "apple",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__2.label"
-            },
-            {
-              "value": "banana",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__3.label"
-            },
-            {
-              "value": "bottle",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__4.label"
-            },
-            {
-              "value": "box",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__5.label"
-            },
-            {
-              "value": "carrot",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__6.label"
-            },
-            {
-              "value": "chat_bubble",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__7.label"
-            },
-            {
-              "value": "check_mark",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__8.label"
-            },
-            {
-              "value": "clipboard",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__9.label"
-            },
-            {
-              "value": "dairy",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__10.label"
-            },
-            {
-              "value": "dairy_free",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__11.label"
-            },
-            {
-              "value": "dryer",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__12.label"
-            },
-            {
-              "value": "eye",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__13.label"
-            },
-            {
-              "value": "fire",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__14.label"
-            },
-            {
-              "value": "gluten_free",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__15.label"
-            },
-            {
-              "value": "heart",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__16.label"
-            },
-            {
-              "value": "iron",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__17.label"
-            },
-            {
-              "value": "leaf",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__18.label"
-            },
-            {
-              "value": "leather",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__19.label"
-            },
-            {
-              "value": "lightning_bolt",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__20.label"
-            },
-            {
-              "value": "lipstick",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__21.label"
-            },
-            {
-              "value": "lock",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__22.label"
-            },
-            {
-              "value": "map_pin",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__23.label"
-            },
-            {
-              "value": "nut_free",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__24.label"
-            },
-            {
-              "value": "pants",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__25.label"
-            },
-            {
-              "value": "paw_print",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__26.label"
-            },
-            {
-              "value": "pepper",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__27.label"
-            },
-            {
-              "value": "perfume",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__28.label"
-            },
-            {
-              "value": "plane",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__29.label"
-            },
-            {
-              "value": "plant",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__30.label"
-            },
-            {
-              "value": "price_tag",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__31.label"
-            },
-            {
-              "value": "question_mark",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__32.label"
-            },
-            {
-              "value": "recycle",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__33.label"
-            },
-            {
-              "value": "return",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__34.label"
-            },
-            {
-              "value": "ruler",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__35.label"
-            },
-            {
-              "value": "serving_dish",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__36.label"
-            },
-            {
-              "value": "shirt",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__37.label"
-            },
-            {
-              "value": "shoe",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__38.label"
-            },
-            {
-              "value": "silhouette",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__39.label"
-            },
-            {
-              "value": "snowflake",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__40.label"
-            },
-            {
-              "value": "star",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__41.label"
-            },
-            {
-              "value": "stopwatch",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__42.label"
-            },
-            {
-              "value": "truck",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__43.label"
-            },
-            {
-              "value": "washing",
-              "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__44.label"
-            }
+            { "value": "none",            "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__1.label" },
+            { "value": "apple",           "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__2.label" },
+            { "value": "banana",          "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__3.label" },
+            { "value": "bottle",          "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__4.label" },
+            { "value": "box",             "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__5.label" },
+            { "value": "carrot",          "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__6.label" },
+            { "value": "chat_bubble",     "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__7.label" },
+            { "value": "check_mark",      "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__8.label" },
+            { "value": "clipboard",       "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__9.label" },
+            { "value": "dairy",           "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__10.label" },
+            { "value": "dairy_free",      "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__11.label" },
+            { "value": "dryer",           "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__12.label" },
+            { "value": "eye",             "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__13.label" },
+            { "value": "fire",            "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__14.label" },
+            { "value": "gluten_free",     "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__15.label" },
+            { "value": "heart",           "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__16.label" },
+            { "value": "iron",            "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__17.label" },
+            { "value": "leaf",            "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__18.label" },
+            { "value": "leather",         "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__19.label" },
+            { "value": "lightning_bolt",  "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__20.label" },
+            { "value": "lipstick",        "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__21.label" },
+            { "value": "lock",            "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__22.label" },
+            { "value": "map_pin",         "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__23.label" },
+            { "value": "nut_free",        "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__24.label" },
+            { "value": "pants",           "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__25.label" },
+            { "value": "paw_print",       "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__26.label" },
+            { "value": "pepper",          "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__27.label" },
+            { "value": "perfume",         "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__28.label" },
+            { "value": "plane",           "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__29.label" },
+            { "value": "plant",           "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__30.label" },
+            { "value": "price_tag",       "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__31.label" },
+            { "value": "question_mark",   "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__32.label" },
+            { "value": "recycle",         "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__33.label" },
+            { "value": "return",          "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__34.label" },
+            { "value": "ruler",           "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__35.label" },
+            { "value": "serving_dish",    "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__36.label" },
+            { "value": "shirt",           "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__37.label" },
+            { "value": "shoe",            "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__38.label" },
+            { "value": "silhouette",      "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__39.label" },
+            { "value": "snowflake",       "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__40.label" },
+            { "value": "star",            "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__41.label" },
+            { "value": "stopwatch",       "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__42.label" },
+            { "value": "truck",           "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__43.label" },
+            { "value": "washing",         "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.options__44.label" }
           ],
-          "default": "check_mark",
-          "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.label"
+          "default": "none",
+          "label": "t:sections.collapsible_content.blocks.collapsible_row.settings.icon.label",
+          "info": "Champ conservé pour rétrocompatibilité (non rendu visuellement dans le nouveau design minimaliste)."
         },
         {
           "type": "richtext",
@@ -243,18 +416,10 @@
     {
       "name": "t:sections.collapsible_content.presets.name",
       "blocks": [
-        {
-          "type": "collapsible_row"
-        },
-        {
-          "type": "collapsible_row"
-        },
-        {
-          "type": "collapsible_row"
-        },
-        {
-          "type": "collapsible_row"
-        }
+        { "type": "collapsible_row" },
+        { "type": "collapsible_row" },
+        { "type": "collapsible_row" },
+        { "type": "collapsible_row" }
       ]
     }
   ]

@@ -262,7 +262,9 @@
       ],
       "name": "t:sections.collapsible_content.presets.name",
       "settings": {
-        "heading": "❓FAQ"
+        "eyebrow": "FAQ",
+        "heading": "Questions fréquentes",
+        "accent_tone": "buy-button"
       }
     },
     "variant_carrousel_dk3b4y": {
