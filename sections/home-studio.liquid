@@ -1,0 +1,280 @@
+{%- comment -%}
+  Home — Studio (présence Paris / Toulouse / Europe).
+
+  Successeur de home-studio-presence.liquid (qui dépendait de assets/home-styles.css
+  + Playfair Display hardcodée). Cette version respecte le skill
+  shopify-section-dev :
+  - Tailwind only (aucun CSS scoped)
+  - Variables globales : font-heading, font-roboto, text-main, text-main-70,
+    text-terra, bg-brand-700, bg-secondary, bg-main-5
+  - Admin-configurable strict (settings schema, image_picker, richtext)
+  - SEO : heading_level, id, aria-labelledby, alt obligatoire, srcset
+  - A11y : focus-visible:ring, sémantique <ol> pour les lieux numérotés,
+    motion-reduce friendly (pas d'animation auto)
+  - enabled_on.templates = ['index']
+
+  Layout :
+  - Desktop : 2 colonnes (image gauche / texte droite, ou inversion via setting)
+  - Mobile : image en haut, texte en dessous
+  - Image : aspect 4/5 (vertical), rounded-md, object-cover
+  - Numérotation : pastille ronde bg-brand-700 (terracotta foncé)
+{%- endcomment -%}
+
+{%- liquid
+  case section.settings.background_color
+    when 'cream'
+      assign bg_class = 'bg-main-5'
+    when 'sable'
+      assign bg_class = 'bg-main-10'
+    when 'secondary'
+      assign bg_class = 'bg-secondary'
+    else
+      assign bg_class = 'bg-secondary'
+  endcase
+
+  assign heading_level = section.settings.heading_level | default: 'h2'
+  assign heading_id = 'home-studio-' | append: section.id
+
+  assign image_layout = section.settings.image_layout | default: 'image-left'
+  assign order_image = 'order-1'
+  assign order_text  = 'order-2'
+  if image_layout == 'image-right'
+    assign order_image = 'order-1 md:order-2'
+    assign order_text  = 'order-2 md:order-1'
+  endif
+
+  assign img_url = ''
+  assign img_w = 0
+  assign img_h = 0
+  if section.settings.image != blank
+    assign img_url = section.settings.image | image_url: width: 1200
+    assign img_w = section.settings.image.width
+    assign img_h = section.settings.image.height
+  elsif section.settings.image_asset != blank
+    assign img_url = section.settings.image_asset | asset_url
+  endif
+-%}
+
+<section
+  class="home-studio {{ bg_class }} text-main w-full py-20 md:py-28 lg:py-36"
+  aria-labelledby="{{ heading_id }}">
+
+  <div class="max-w-7xl mx-auto px-6 md:px-8">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 lg:gap-20 items-center">
+
+      {%- comment -%} Image studio / équipe {%- endcomment -%}
+      <div class="{{ order_image }}">
+        {%- if img_url != '' -%}
+          <div class="relative overflow-hidden rounded-md aspect-[4/5] bg-main-5">
+            {%- if section.settings.image != blank -%}
+              <img
+                src="{{ section.settings.image | image_url: width: 1200 }}"
+                srcset="{%- if section.settings.image.width >= 500 -%}{{ section.settings.image | image_url: width: 500 }} 500w,{%- endif -%}
+                        {%- if section.settings.image.width >= 800 -%}{{ section.settings.image | image_url: width: 800 }} 800w,{%- endif -%}
+                        {%- if section.settings.image.width >= 1200 -%}{{ section.settings.image | image_url: width: 1200 }} 1200w,{%- endif -%}
+                        {{ section.settings.image | image_url }} {{ section.settings.image.width }}w"
+                sizes="(max-width: 767px) 100vw, 45vw"
+                alt="{{ section.settings.image_alt | escape }}"
+                width="{{ img_w }}"
+                height="{{ img_h }}"
+                loading="lazy"
+                decoding="async"
+                class="absolute inset-0 w-full h-full object-cover">
+            {%- else -%}
+              <img
+                src="{{ img_url }}"
+                alt="{{ section.settings.image_alt | escape }}"
+                loading="lazy"
+                decoding="async"
+                class="absolute inset-0 w-full h-full object-cover">
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Bloc texte : eyebrow + H2 + intro + liste de lieux numérotés {%- endcomment -%}
+      <div class="{{ order_text }}">
+
+        {%- if section.settings.eyebrow_label != blank -%}
+          <p class="font-roboto text-xs tracking-[0.22em] uppercase font-medium text-terra flex items-center gap-3 mb-6 md:mb-8">
+            <span aria-hidden="true" class="block h-px w-8 bg-current opacity-40"></span>
+            <span>{{ section.settings.eyebrow_label | escape }}</span>
+          </p>
+        {%- endif -%}
+
+        {%- if section.settings.h2_title != blank -%}
+          <{{ heading_level }}
+            id="{{ heading_id }}"
+            class="font-heading text-main !text-3xl md:!text-4xl lg:!text-5xl leading-[1.1] tracking-tight mb-6 md:mb-8">
+            {{ section.settings.h2_title }}
+          </{{ heading_level }}>
+        {%- endif -%}
+
+        {%- if section.settings.intro != blank -%}
+          <div class="font-roboto text-lg md:text-xl leading-relaxed text-main-70 [&>p+p]:mt-4 [&_a]:underline [&_a]:underline-offset-4 [&_strong]:text-main [&_strong]:font-medium mb-10 md:mb-12">
+            {{ section.settings.intro }}
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Liste ordonnée sémantique <ol> — chaque place numérotée {%- endcomment -%}
+        {%- if section.blocks.size > 0 -%}
+          <ol class="list-none space-y-7 md:space-y-8">
+            {%- for block in section.blocks -%}
+              <li class="flex gap-5 md:gap-6" {{ block.shopify_attributes }}>
+                <span
+                  aria-hidden="true"
+                  class="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 rounded-full bg-buy-button text-main font-heading text-lg md:text-xl flex items-center justify-center leading-none">
+                  {{- forloop.index -}}
+                </span>
+                <div class="flex-1 pt-2 md:pt-3">
+                  {%- if block.settings.title != blank -%}
+                    <h3 class="font-heading text-main !text-xl md:!text-2xl leading-snug mb-2">
+                      {{ block.settings.title | escape }}
+                    </h3>
+                  {%- endif -%}
+                  {%- if block.settings.text != blank -%}
+                    <div class="font-roboto text-base md:text-lg leading-relaxed text-main-70 [&_a]:underline [&_a]:underline-offset-4 [&_strong]:text-main [&_strong]:font-medium">
+                      {{ block.settings.text }}
+                    </div>
+                  {%- endif -%}
+                </div>
+              </li>
+            {%- endfor -%}
+          </ol>
+        {%- endif -%}
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Home — Studio",
+  "tag": "section",
+  "class": "home-studio-section",
+  "enabled_on": { "templates": ["index"] },
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_label",
+      "label": "Label (capitales)",
+      "default": "Le studio"
+    },
+    {
+      "type": "header",
+      "content": "Titre"
+    },
+    {
+      "type": "select",
+      "id": "heading_level",
+      "label": "Niveau du titre (SEO)",
+      "info": "h2 par défaut. h1 réservé à la home (hero).",
+      "default": "h2",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ]
+    },
+    {
+      "type": "textarea",
+      "id": "h2_title",
+      "label": "Titre principal",
+      "default": "Paris, Toulouse, l'Europe"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro",
+      "default": "<p>Nous préférons une chaîne courte, européenne, contrôlée, à un drapeau planté sur un emballage. Un travail dont chaque étape a un visage.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Image studio / équipe"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image (image_picker — priorité)"
+    },
+    {
+      "type": "text",
+      "id": "image_asset",
+      "label": "OU asset filename (fallback)",
+      "info": "Utilisé seulement si aucune image n'est uploadée ci-dessus."
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Alt text (obligatoire)",
+      "info": "Description 80-125 caractères, descriptive, SEO + a11y."
+    },
+    {
+      "type": "header",
+      "content": "Mise en page"
+    },
+    {
+      "type": "select",
+      "id": "image_layout",
+      "label": "Position de l'image (desktop)",
+      "default": "image-left",
+      "options": [
+        { "value": "image-left",  "label": "Image à gauche" },
+        { "value": "image-right", "label": "Image à droite" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "background_color",
+      "label": "Couleur de fond",
+      "default": "secondary",
+      "options": [
+        { "value": "secondary", "label": "Secondary (blanc cassé)" },
+        { "value": "cream",     "label": "Main 5% (sable doux)" },
+        { "value": "sable",     "label": "Main 10% (sable plus marqué)" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "place",
+      "name": "Lieu (H3 numéroté)",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titre H3"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Texte"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Home — Studio",
+      "settings": {
+        "eyebrow_label": "Le studio",
+        "h2_title": "Paris, Toulouse, l'Europe"
+      },
+      "blocks": [
+        { "type": "place" },
+        { "type": "place" },
+        { "type": "place" }
+      ]
+    }
+  ]
+}
+{% endschema %}
