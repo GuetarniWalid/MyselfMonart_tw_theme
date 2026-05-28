@@ -1,7 +1,7 @@
 # Mission — Collection Salon
 
 > Statut : 🔜 À démarrer. Brief pour l'agent qui prendra cette mission.
-> Lire d'abord [ROADMAP](../../ROADMAP.md) (état global) et [shared/playbook.md](../../shared/playbook.md) (méthodo + voix).
+> Lire d'abord [ROADMAP](../../ROADMAP.md) (état global) et [shared/METHODOLOGY.md](../../shared/METHODOLOGY.md) (méthodo + voix).
 
 ## Objectif
 
@@ -38,7 +38,7 @@ Top requêtes de la page :
 
 ## Méthodo
 
-Suivre le **[playbook 5 phases](../../shared/playbook.md)** (validé sur la home). Adapter : la Phase 1 (baseline GSC) est déjà partiellement faite ci-dessus.
+Suivre le **[playbook 5 phases](../../shared/METHODOLOGY.md)** (validé sur la home). Adapter : la Phase 1 (baseline GSC) est déjà partiellement faite ci-dessus.
 
 ## Où documenter (cette mission)
 
