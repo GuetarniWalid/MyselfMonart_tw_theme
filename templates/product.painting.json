@@ -469,7 +469,9 @@
         "collapsible_row_jFqUX8"
       ],
       "settings": {
-        "heading": "QUESTIONS FRÉQUENTES"
+        "eyebrow": "FAQ",
+        "heading": "QUESTIONS FRÉQUENTES",
+        "accent_tone": "buy-button"
       }
     },
     "badges_CQWfDx": {

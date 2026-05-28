@@ -248,20 +248,35 @@ if (!customElements.get('collapsible-tab')) {
 
     toggleAccordions = (e) => {
       const targetDetail = e.target.closest('.accordion');
-      if (
-        e.target.closest('summary').tagName.toLowerCase() === 'summary' &&
-        targetDetail.hasAttribute('open')
-      ) {
+      if (!targetDetail) return;
+
+      // Laisser passer les éléments interactifs imbriqués (lien, bouton,
+      // champ de formulaire) pour qu'ils gardent leur comportement natif
+      // sans déclencher l'open/close de l'accordéon.
+      if (e.target.closest('a, button, input, textarea, select, label')) {
         return;
       }
 
-      this.accordions.forEach((accordion) => {
-        if (accordion === e.target) {
-          accordion.toggleAttribute('open');
+      const clickedSummary = e.target.closest('summary') !== null;
+      const isOpen = targetDetail.hasAttribute('open');
+
+      // On prend le contrôle complet du toggle : on prévient la bascule
+      // native du <details> (sur summary) pour pouvoir aussi refermer les
+      // autres accordéons (single-open) sans concurrence avec le browser.
+      e.preventDefault();
+
+      if (clickedSummary) {
+        // Click sur l'entête : toggle l'élément et ferme les frères.
+        if (isOpen) {
+          targetDetail.removeAttribute('open');
         } else {
-          accordion.removeAttribute('open');
+          this.accordions.forEach((a) => a.removeAttribute('open'));
+          targetDetail.setAttribute('open', '');
         }
-      });
+      } else if (isOpen) {
+        // Click n'importe où dans le corps d'un accordéon ouvert : on referme.
+        targetDetail.removeAttribute('open');
+      }
     };
   }
   customElements.define('collapsible-tab', CollapsibleTab);

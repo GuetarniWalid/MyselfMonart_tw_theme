@@ -377,7 +377,9 @@
         "a603c2c1-59a1-4067-9d4b-dc8591ddc1f8"
       ],
       "settings": {
-        "heading": "QUESTIONS FRÉQUENTES"
+        "eyebrow": "FAQ",
+        "heading": "QUESTIONS FRÉQUENTES",
+        "accent_tone": "buy-button"
       }
     }
   },
