@@ -118,7 +118,7 @@
       }
     },
     "customer_testimonial_myiwee": {
-      "type": "customer-testimonial",
+      "type": "testimonials-carousel",
       "blocks": {
         "image_text_E4gkJD": {
           "type": "image-text",

@@ -1,5 +1,5 @@
 {%- comment -%}
-  Home — Customers (carrousel témoignages photo-client).
+  Testimonials carousel (carrousel témoignages photo-client).
 
   Successeur de home-customers-carousel.liquid (qui dépendait de assets/home-styles.css
   + Playfair Display + inline styles hardcodés).
@@ -17,12 +17,12 @@
   Fond bg-brand-700 = settings.brand_color | color_darken: 40 (~chocolat terracotta)
   → contraste élevé avec text-secondary (#FFFFFF), conforme WCAG AA.
 
-  enabled_on.templates = ['index']
+  Réutilisable sur tous les templates (home, produit, article).
 {%- endcomment -%}
 
 {%- liquid
   assign heading_level = section.settings.heading_level | default: 'h2'
-  assign heading_id = 'home-customers-' | append: section.id
+  assign heading_id = 'testimonials-carousel-' | append: section.id
 
   assign visible_review_count = 0
   for block in section.blocks
@@ -33,7 +33,7 @@
 -%}
 
 <section
-  class="home-customers bg-brand-700 text-secondary w-full py-20 md:py-28 lg:py-32 overflow-hidden"
+  class="testimonials-carousel bg-brand-700 text-secondary w-full py-20 md:py-28 lg:py-32 overflow-hidden"
   aria-labelledby="{{ heading_id }}">
 
   {%- comment -%} Header centré — eyebrow + H2 + lead + trustpilot meta {%- endcomment -%}
@@ -105,8 +105,14 @@
     <script src="{{ 'component-carrousel.js' | asset_url }}" defer="defer"></script>
   {%- endif -%}
 
-  {%- comment -%} JSON-LD AggregateRating + Review (SEO rich snippets) {%- endcomment -%}
-  {%- if visible_review_count > 0 -%}
+  {%- comment -%}
+    JSON-LD AggregateRating + Review (SEO rich snippets).
+    Gaté derrière emit_review_jsonld : à n'activer QUE sur une page où cette
+    section porte les avis de référence (home). Sur une fiche produit, le
+    JSON-LD Product gère déjà les avis → ne pas émettre un 2e schéma
+    Organization/Review qui entrerait en conflit.
+  {%- endcomment -%}
+  {%- if section.settings.emit_review_jsonld and visible_review_count > 0 -%}
     {%- assign rating_value = section.settings.trustpilot_score | default: 41 | divided_by: 10.0 -%}
     <script type="application/ld+json">
       {
@@ -160,10 +166,9 @@
 
 {% schema %}
 {
-  "name": "Home — Customers",
+  "name": "Testimonials carousel",
   "tag": "section",
-  "class": "home-customers-section",
-  "enabled_on": { "templates": ["index"] },
+  "class": "testimonials-carousel-section",
   "max_blocks": 25,
   "settings": [
     {
@@ -220,6 +225,13 @@
       "type": "url",
       "id": "trustpilot_link",
       "label": "Lien Trustpilot"
+    },
+    {
+      "type": "checkbox",
+      "id": "emit_review_jsonld",
+      "label": "Émettre JSON-LD avis (Organization + Review)",
+      "info": "À cocher uniquement sur la page de référence des avis (accueil). Décocher sur les fiches produit (le JSON-LD Product gère déjà les avis).",
+      "default": false
     }
   ],
   "blocks": [
@@ -248,7 +260,7 @@
   ],
   "presets": [
     {
-      "name": "Home — Customers",
+      "name": "Testimonials carousel",
       "blocks": [
         { "type": "image-text" },
         { "type": "image-text" },

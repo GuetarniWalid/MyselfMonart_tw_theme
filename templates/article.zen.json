@@ -50,7 +50,7 @@
       }
     },
     "customer_testimonial_Dxtnn3": {
-      "type": "customer-testimonial",
+      "type": "testimonials-carousel",
       "blocks": {
         "image_text_MkKxkA": {
           "type": "image-text",
