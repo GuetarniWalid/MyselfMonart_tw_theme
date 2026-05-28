@@ -104,7 +104,14 @@ Reconstruire la homepage FR de [myselfmonart.com](https://myselfmonart.com) pour
 | Phase 2 — Décodage SERP FR | ✅ Validée | [PHASE-2-serp-decoding.md](PHASE-2-serp-decoding.md) |
 | Phase 3 — Audit 3 concurrents | ✅ Validée | [PHASE-3-competitive-audit.md](PHASE-3-competitive-audit.md) |
 | Phase 4 — Génération homepage | ✅ Validée | [PHASE-4-homepage-deliverables.md](PHASE-4-homepage-deliverables.md) |
-| Phase 5 — Audit technique + déploiement | 🟡 5A statique fait, 5B dynamique en attente push staging | [PHASE-5-technical-audit.md](PHASE-5-technical-audit.md) |
+| Phase 5 — Audit technique + déploiement | ✅ **Déployée en LIVE le 2026-05-28** (SEO Lighthouse 100, LCP 561ms, CLS 0.00) | [PHASE-5-technical-audit.md](PHASE-5-technical-audit.md) |
+
+**🚀 MISSION DÉPLOYÉE EN PRODUCTION le 2026-05-28.** Nouvelle home live sur myselfmonart.com (thème live). Ancienne `/pages/tableau-decoration` en 404 (OK). Erreur console `Shopify is not defined` corrigée.
+
+**Actions post-déploiement restantes :**
+- **Walid** : Search Console → soumettre `https://www.myselfmonart.com/` pour ré-indexation prioritaire (Claude ne peut pas le faire via l'interface GSC)
+- **Suivi J+14 (2026-06-11)** et **J+30 (2026-06-27)** via skill `gsc-query` : impressions/clics/position sur "tableau décoration murale" + cluster vs baseline (home = 8 clics/90j en Phase 1), apparition rich snippets FAQ, absence de cannibalisation home vs /collections/tableau-salon
+- **Améliorations a11y optionnelles** (non bloquantes) : contraste 1 élément, liens icônes/SVG drapeaux sans nom accessible (cf. PHASE-5 §5B)
 
 **Implémentation** : faite sur la branche `seo-homepage-refonte` (42 commits). 16 sections dans index.json, nouvelles sections Liquid (hero-with-text, usps-bento, cards-carousel, cards-grid, prose, signature, testimonials-carousel, image-with-list), snippet json-ld-home.liquid, FAQPage dynamique. Double schema corrigé (commit 67af54e). H1 + signature corrigés en Phase 5A.
 
