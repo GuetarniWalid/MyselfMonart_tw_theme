@@ -1,17 +1,75 @@
-<section class="home-section home-signature">
-  <p>{{ section.settings.line_1 | escape }}</p>
-  <p>{{ section.settings.line_2 | escape }}</p>
+{%- comment -%}
+  Home — Signature (clôture éditoriale de la home).
+
+  Refonte 1:1 du style original `assets/home-styles.css` (lignes 618-628)
+  en Tailwind + vars theme — AUCUN changement visuel, juste :
+  - Playfair Display italic → font-heading italic (custom theme)
+  - couleurs hardcodées (--home-ink-70, --home-cream) → vars theme
+    (text-main-70, bg-main-5)
+  - CSS scoped → Tailwind utility classes
+
+  Conventions skill shopify-section-dev :
+  - Tailwind only (aucun CSS scoped)
+  - Vars globales : font-heading, text-main-70, bg-main-5
+  - Admin-configurable strict (line_1, line_2 textuelles)
+  - SEO : pas de heading (clôture textuelle décorative), rôle ARIA contentinfo
+  - A11y : <p> sémantiques, motion-reduce friendly (pas d'anim), text-center,
+    contraste text-main-70 sur bg-main-5 = ~6.5:1 → AAA
+
+  enabled_on.templates = ['index']
+
+  Visuel à préserver :
+  - text-center
+  - padding latéral 24px → px-6 ; padding vertical large pour respiration
+    (pt-20 md:pt-28 / pb-16 md:pb-20) — Walid : texte trop proche du haut
+  - font-heading italic 18px → text-lg (18px par défaut Tailwind)
+  - color text-main-70 (var theme dérivé du settings.main_color)
+  - bg-main-5 (cream doux)
+  - p margin 4px 0 → space-y-1 (4px)
+{%- endcomment -%}
+
+<section
+  class="home-signature bg-secondary pt-20 md:pt-28 pb-16 md:pb-20 px-6 text-center"
+  role="contentinfo"
+  aria-label="Signature MyselfMonArt">
+  <div class="font-heading italic text-lg text-main-70 leading-snug space-y-1">
+    {%- if section.settings.line_1 != blank -%}
+      <p class="m-0">{{ section.settings.line_1 | escape }}</p>
+    {%- endif -%}
+    {%- if section.settings.line_2 != blank -%}
+      <p class="m-0">{{ section.settings.line_2 | escape }}</p>
+    {%- endif -%}
+  </div>
 </section>
 
 {% schema %}
 {
   "name": "Home — Signature",
   "tag": "section",
+  "class": "home-signature-section",
   "enabled_on": { "templates": ["index"] },
   "settings": [
-    { "type": "text", "id": "line_1", "label": "Ligne 1", "default": "Avec soin," },
-    { "type": "text", "id": "line_2", "label": "Ligne 2", "default": "— Hayate / Team MyselfMonArt" }
+    {
+      "type": "text",
+      "id": "line_1",
+      "label": "Ligne 1",
+      "default": "Avec soin,"
+    },
+    {
+      "type": "text",
+      "id": "line_2",
+      "label": "Ligne 2",
+      "default": "— Team MyselfMonArt"
+    }
   ],
-  "presets": [{ "name": "Home — Signature" }]
+  "presets": [
+    {
+      "name": "Home — Signature",
+      "settings": {
+        "line_1": "Avec soin,",
+        "line_2": "— Team MyselfMonArt"
+      }
+    }
+  ]
 }
 {% endschema %}
