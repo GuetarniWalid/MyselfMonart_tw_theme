@@ -1,0 +1,261 @@
+{%- comment -%}
+  Home — Customers (carrousel témoignages photo-client).
+
+  Successeur de home-customers-carousel.liquid (qui dépendait de assets/home-styles.css
+  + Playfair Display + inline styles hardcodés).
+
+  Conventions skill shopify-section-dev :
+  - Tailwind only (aucun CSS scoped)
+  - Variables globales : font-heading, font-roboto, text-secondary, text-secondary-50,
+    bg-brand-700 (darken 40% du brand_color admin), text-terra
+  - REUSE FIRST : <snap-carrousel> custom element + snippet 'customer-testimonial-card'
+    (theme: 'dark') + script component-carrousel.js — mêmes patterns que trust-signals
+  - Admin-configurable strict (eyebrow, title, lead, trustpilot review count + link)
+  - SEO : heading_level select, aria-labelledby, JSON-LD aggregateRating + Review[]
+  - A11y : <snap-carrousel role="region" aria-label>, sr-only hint, scrollbar masquée
+
+  Fond bg-brand-700 = settings.brand_color | color_darken: 40 (~chocolat terracotta)
+  → contraste élevé avec text-secondary (#FFFFFF), conforme WCAG AA.
+
+  enabled_on.templates = ['index']
+{%- endcomment -%}
+
+{%- liquid
+  assign heading_level = section.settings.heading_level | default: 'h2'
+  assign heading_id = 'home-customers-' | append: section.id
+
+  assign visible_review_count = 0
+  for block in section.blocks
+    if block.type == 'image-text' and block.settings.message != blank
+      assign visible_review_count = visible_review_count | plus: 1
+    endif
+  endfor
+-%}
+
+<section
+  class="home-customers bg-brand-700 text-secondary w-full py-20 md:py-28 lg:py-32 overflow-hidden"
+  aria-labelledby="{{ heading_id }}">
+
+  {%- comment -%} Header centré — eyebrow + H2 + lead + trustpilot meta {%- endcomment -%}
+  <div class="max-w-3xl mx-auto px-6 md:px-8 text-center mb-12 md:mb-16">
+
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="font-roboto text-xs tracking-[0.22em] uppercase font-medium text-secondary-50 flex items-center justify-center gap-3 mb-6 md:mb-8">
+        <span aria-hidden="true" class="block h-px w-8 bg-current opacity-50"></span>
+        <span>{{ section.settings.eyebrow | escape }}</span>
+        <span aria-hidden="true" class="block h-px w-8 bg-current opacity-50"></span>
+      </p>
+    {%- endif -%}
+
+    {%- if section.settings.title != blank -%}
+      <{{ heading_level }}
+        id="{{ heading_id }}"
+        class="font-heading text-secondary !text-3xl md:!text-4xl lg:!text-5xl leading-[1.1] tracking-tight mb-6 md:mb-8">
+        {{ section.settings.title | escape }}
+      </{{ heading_level }}>
+    {%- endif -%}
+
+    {%- if section.settings.lead != blank -%}
+      <p class="font-roboto text-lg md:text-xl leading-relaxed text-secondary-50 max-w-2xl mx-auto">
+        {{ section.settings.lead | escape }}
+      </p>
+    {%- endif -%}
+
+    {%- if section.settings.review_count and section.settings.review_count > 0 -%}
+      <p class="mt-6 md:mt-8 font-roboto text-sm text-secondary-50">
+        {{ section.settings.review_count }} retours vérifiés sur Trustpilot
+        {%- if section.settings.trustpilot_link != blank -%}
+          <span aria-hidden="true" class="mx-2">·</span>
+          <a
+            href="{{ section.settings.trustpilot_link }}"
+            target="_blank"
+            rel="noopener nofollow"
+            class="underline underline-offset-4 text-secondary hover:opacity-80 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900 rounded-sm">
+            Voir tous nos avis
+          </a>
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+
+  </div>
+
+  {%- comment -%} Carrousel snap-x scroll-smooth avec auto-scroll <snap-carrousel> {%- endcomment -%}
+  {%- if visible_review_count > 0 -%}
+    <div class="relative">
+      <snap-carrousel role="region" aria-label="Avis et photos de nos clients">
+        {%- comment -%}
+          scroll-pl-4 md:scroll-pl-6 + [&>li:first-child]:ml-4 md:[&>li:first-child]:ml-6
+          → décale la 1re carte du bord gauche d'une valeur ÉGALE au gap entre cartes
+          (Walid). Le padding classique px-* est annulé par scroll-snap-mandatory,
+          d'où l'usage de scroll-padding + margin sur le premier <li>.
+          pr-6 md:pr-8 → respiration côté droit en fin de scroll.
+        {%- endcomment -%}
+        <ul class="component-carroussel flex gap-4 md:gap-6 overflow-x-auto snap-mandatory snap-x scroll-smooth scrollbar-hidden py-2 pr-6 md:pr-8 scroll-pl-4 md:scroll-pl-6 [&>li:first-child]:ml-4 md:[&>li:first-child]:ml-6">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'image-text' and block.settings.message != blank -%}
+              {% render 'customer-testimonial-card', block: block, forloop: forloop, theme: 'dark' %}
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </snap-carrousel>
+
+      <p class="sr-only">{{ visible_review_count }} avis clients défilent horizontalement. Utilisez les flèches du clavier pour naviguer.</p>
+    </div>
+
+    <script src="{{ 'component-carrousel.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+
+  {%- comment -%} JSON-LD AggregateRating + Review (SEO rich snippets) {%- endcomment -%}
+  {%- if visible_review_count > 0 -%}
+    {%- assign rating_value = section.settings.trustpilot_score | default: 41 | divided_by: 10.0 -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": {{ shop.name | json }},
+        "url": {{ request.origin | json }},
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "{{ rating_value }}",
+          "bestRating": "5",
+          "worstRating": "1",
+          "ratingCount": "{{ section.settings.review_count | default: 80 }}"
+        },
+        "review": [
+          {%- assign emitted = 0 -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type != 'image-text' or block.settings.message == blank -%}{%- continue -%}{%- endif -%}
+            {%- liquid
+              assign normalized = block.settings.message | newline_to_br | replace: '<br />', ' ' | replace: '<br>', ' ' | strip
+              assign words = normalized | split: ' '
+              assign word_count = words.size
+              assign author_name = ''
+              assign review_body = normalized
+              if word_count >= 2
+                assign last_idx = word_count | minus: 1
+                assign second_last_idx = word_count | minus: 2
+                assign author_name = words[second_last_idx] | append: ' ' | append: words[last_idx]
+                assign body_size = normalized | size
+                assign author_size = author_name | size
+                assign keep = body_size | minus: author_size
+                assign review_body = normalized | truncate: keep, '' | strip
+              endif
+            -%}
+            {%- if emitted > 0 -%},{%- endif -%}
+            {
+              "@type": "Review",
+              {%- if author_name != blank %}
+              "author": { "@type": "Person", "name": {{ author_name | json }} },
+              {%- endif %}
+              "reviewBody": {{ review_body | json }},
+              "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5", "worstRating": "1" }
+            }
+            {%- assign emitted = emitted | plus: 1 -%}
+          {%- endfor -%}
+        ]
+      }
+    </script>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Home — Customers",
+  "tag": "section",
+  "class": "home-customers-section",
+  "enabled_on": { "templates": ["index"] },
+  "max_blocks": 25,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Ils nous font confiance"
+    },
+    {
+      "type": "select",
+      "id": "heading_level",
+      "label": "Niveau du titre (SEO)",
+      "default": "h2",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ]
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Titre",
+      "default": "Ce que vivent nos clients au quotidien"
+    },
+    {
+      "type": "textarea",
+      "id": "lead",
+      "label": "Lead",
+      "default": "Le meilleur portrait de notre travail, ce sont les photos que nos clients nous envoient une fois leur tableau accroché."
+    },
+    {
+      "type": "header",
+      "content": "Trustpilot (info ligne + JSON-LD)"
+    },
+    {
+      "type": "number",
+      "id": "review_count",
+      "label": "Nombre d'avis Trustpilot",
+      "default": 80
+    },
+    {
+      "type": "number",
+      "id": "trustpilot_score",
+      "label": "Score Trustpilot ×10",
+      "info": "41 = 4.1/5",
+      "default": 41
+    },
+    {
+      "type": "url",
+      "id": "trustpilot_link",
+      "label": "Lien Trustpilot"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image-text",
+      "name": "Témoignage",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo client"
+        },
+        {
+          "type": "text",
+          "id": "image_asset",
+          "label": "OU asset filename (fallback)"
+        },
+        {
+          "type": "textarea",
+          "id": "message",
+          "label": "Message",
+          "info": "Les 2 derniers mots sont automatiquement extraits comme nom du client (ex : 'Léa M')."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Home — Customers",
+      "blocks": [
+        { "type": "image-text" },
+        { "type": "image-text" },
+        { "type": "image-text" },
+        { "type": "image-text" }
+      ]
+    }
+  ]
+}
+{% endschema %}
