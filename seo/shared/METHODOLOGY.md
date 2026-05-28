@@ -4,7 +4,7 @@
 > Document **vivant** : on le retouche dès qu'on apprend mieux. Voir le [changelog](#-changelog) en bas.
 > Pilotage des missions : [../ROADMAP.md](../ROADMAP.md). Faits marque : mémoire `project_myselfmonart_facts.md`.
 >
-> **Version 1.1** — base issue de la mission Homepage (déployée 2026-05-28, SEO Lighthouse 100, CWV au vert) + principe UX-first (§5bis).
+> **Version 1.2** — base mission Homepage + principe UX-first (§5bis) + principe REUSE FIRST des sections Shopify (§5).
 
 ---
 
@@ -109,7 +109,11 @@ Avant tout, identifier le **type de page** et son **intention dominante** : cela
 - **Images** : alt descriptif (jamais vide pour une image informative, jamais de keyword stuffing), dimensions explicites, WebP auto Shopify, `loading="lazy"` partout **sauf** le hero (`eager` + `fetchpriority="high"` pour le LCP).
 - **Schema JSON-LD** : 1 seul nœud par entité (attention aux doublons `@id` qui entrent en conflit), syntaxe validée.
 - **Core Web Vitals** : LCP < 2,5s, CLS < 0,1, INP < 200ms. **Mobile-first** (Google indexe le mobile).
-- **Conventions Shopify** : Tailwind only, variables globales fonts/couleurs, sections admin-configurables.
+- **Conventions Shopify** : Tailwind only, variables globales fonts/couleurs, sections admin-configurables et **génériques** (réutilisables, pas scopées à une seule page).
+- **Sections & snippets — RÉUTILISER avant de créer (REUSE FIRST)** : une mission peut amener à manipuler le code du thème (éditer ou créer des sections/snippets). Ordre de priorité :
+  1. **Réutiliser** une section existante (`sections/*.liquid`) en la configurant via ses blocks/settings dans le `.json` du template. Réflexe par défaut — inventorier l'existant d'abord.
+  2. **Adapter / étendre** une section proche (ajouter un setting ou un block) plutôt que dupliquer.
+  3. **En dernier recours seulement**, si aucune section existante ne peut faire le job : **créer une nouvelle section ou snippet via le skill `shopify-section-dev`** (il porte les conventions du thème). Respecter strictement : Tailwind, variables globales, admin-configurable, SEO + a11y impeccables, section générique réutilisable.
 
 ---
 
@@ -243,3 +247,4 @@ Après live : check **J+14** puis **J+30** via `gsc-query`. Comparer à la **bas
 |---|---|---|
 | 2026-05-28 | 1.0 | Version initiale, distillée de la mission Homepage (5 phases, voix Hayate, schema FAQPage différenciateur, garde-fous Made in France / Trustpilot / cannibalisation, CWV). |
 | 2026-05-28 | 1.1 | Ajout §5bis « UX d'abord » : ne jamais sacrifier l'expérience au SEO, texte éditorial en bas des pages transactionnelles, mini-étude UX pour les collections, règle d'or n°2, items UX dans la Definition of Done. (suite à un retour de Walid) |
+| 2026-05-28 | 1.2 | Ajout principe « REUSE FIRST » (§5) : réutiliser/adapter les sections existantes avant d'en créer ; création de section/snippet en dernier recours via le skill `shopify-section-dev`, dans le respect des conventions. (suite à un retour de Walid) |
