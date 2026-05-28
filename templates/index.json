@@ -19,7 +19,7 @@
         "cta_primary_link": "",
         "cta_secondary_label": "",
         "cta_secondary_link": "",
-        "hero_image_asset": "hero-tableau-decoration-murale-salon-v9.jpg",
+        "hero_image": "shopify://shop_images/hero-tableau-decoration-murale-salon-v9.jpg",
         "hero_image_alt": "Tableau décoration murale moderne accroché dans un salon contemporain — MyselfMonArt",
         "image_asset_width": 1024,
         "image_asset_height": 1024,
@@ -99,7 +99,7 @@
         "room_salon": {
           "type": "room",
           "settings": {
-            "image_asset": "vignette-salon-v1.png",
+            "image": "shopify://shop_images/vignette-salon-v1.jpg",
             "image_alt": "Tableau accroché dans un salon contemporain — collection MyselfMonArt",
             "short_title": "Salon",
             "title": "Tableau pour le salon",
@@ -111,7 +111,7 @@
         "room_chambre_adulte": {
           "type": "room",
           "settings": {
-            "image_asset": "vignette-chambre-adulte-v1.png",
+            "image": "shopify://shop_images/vignette-chambre-adulte-v1.jpg",
             "image_alt": "Tableau apaisant accroché dans une chambre adulte — collection MyselfMonArt",
             "short_title": "Chambre adulte",
             "title": "Tableau pour la chambre adulte",
@@ -123,7 +123,7 @@
         "room_chambre_enfant": {
           "type": "room",
           "settings": {
-            "image_asset": "vignette-chambre-enfant-v1.png",
+            "image": "shopify://shop_images/vignette-chambre-enfant-v1.jpg",
             "image_alt": "Tableau coloré dans une chambre d'enfant — collection MyselfMonArt",
             "short_title": "Chambre enfant",
             "title": "Tableau pour la chambre enfant",
@@ -135,7 +135,7 @@
         "room_bureau": {
           "type": "room",
           "settings": {
-            "image_asset": "vignette-bureau-v1.png",
+            "image": "shopify://shop_images/vignette-bureau-v1.jpg",
             "image_alt": "Tableau dans un bureau épuré — collection MyselfMonArt",
             "short_title": "Bureau",
             "title": "Tableau pour le bureau",
@@ -147,7 +147,7 @@
         "room_cuisine": {
           "type": "room",
           "settings": {
-            "image_asset": "vignette-cuisine-v1.png",
+            "image": "shopify://shop_images/vignette-cuisine-v1.jpg",
             "image_alt": "Tableau vif dans une cuisine — collection MyselfMonArt",
             "short_title": "Cuisine",
             "title": "Tableau pour la cuisine",
@@ -159,7 +159,7 @@
         "room_entree": {
           "type": "room",
           "settings": {
-            "image_asset": "vignette-entree-v1.png",
+            "image": "shopify://shop_images/vignette-entree-v1.jpg",
             "image_alt": "Tableau accueillant dans une entrée chaleureuse — collection MyselfMonArt",
             "short_title": "Entrée & couloir",
             "title": "Tableau pour l'entrée et le couloir",
@@ -185,7 +185,7 @@
         "style_abstrait": {
           "type": "room",
           "settings": {
-            "image_asset": "style-abstrait-moderne-v1.png",
+            "image": "shopify://shop_images/style-abstrait-moderne-v1.jpg",
             "image_alt": "Tableau abstrait moderne — collection MyselfMonArt",
             "short_title": "Abstrait & moderne",
             "title": "Tableaux abstraits et modernes",
@@ -197,7 +197,7 @@
         "style_zen": {
           "type": "room",
           "settings": {
-            "image_asset": "style-zen-nature-v1.png",
+            "image": "shopify://shop_images/style-zen-nature-v1.jpg",
             "image_alt": "Tableau zen et nature contemplatif — collection MyselfMonArt",
             "short_title": "Zen & nature",
             "title": "Tableaux zen et inspiration nature",
@@ -209,7 +209,7 @@
         "style_popart": {
           "type": "room",
           "settings": {
-            "image_asset": "style-pop-art-v1.png",
+            "image": "shopify://shop_images/style-pop-art-v1.jpg",
             "image_alt": "Tableau pop art urbain et coloré — collection MyselfMonArt",
             "short_title": "Pop art",
             "title": "Tableaux pop art et street art",
@@ -221,7 +221,7 @@
         "style_africain": {
           "type": "room",
           "settings": {
-            "image_asset": "style-africain-ethnique-v1.png",
+            "image": "shopify://shop_images/style-africain-ethnique-v1.jpg",
             "image_alt": "Tableau africain ethnique avec portrait de femme berbère — collection MyselfMonArt",
             "short_title": "Africain & ethnique",
             "title": "Tableaux africains et ethniques",
@@ -233,7 +233,7 @@
         "style_nb": {
           "type": "room",
           "settings": {
-            "image_asset": "style-noir-blanc-v1.png",
+            "image": "shopify://shop_images/style-noir-blanc-v1.jpg",
             "image_alt": "Tableau noir et blanc monochrome — collection MyselfMonArt",
             "short_title": "Noir & blanc",
             "title": "Tableaux noir et blanc",
@@ -245,7 +245,7 @@
         "style_floral": {
           "type": "room",
           "settings": {
-            "image_asset": "style-floral-v1.png",
+            "image": "shopify://shop_images/style-floral-v1.jpg",
             "image_alt": "Tableau floral contemporain avec fleur agrandie — collection MyselfMonArt",
             "short_title": "Floral",
             "title": "Tableaux floraux",
@@ -257,7 +257,7 @@
         "style_japonais": {
           "type": "room",
           "settings": {
-            "image_asset": "style-japonais-v1.png",
+            "image": "shopify://shop_images/style-japonais-v1.jpg",
             "image_alt": "Tableau japonais avec estampe revisitée — collection MyselfMonArt",
             "short_title": "Japonais",
             "title": "Tableaux japonais",
@@ -269,7 +269,7 @@
         "style_frida": {
           "type": "room",
           "settings": {
-            "image_asset": "style-frida-kahlo-v1.png",
+            "image": "shopify://shop_images/style-frida-kahlo-v1.jpg",
             "image_alt": "Tableau Frida Kahlo en portrait épuré — collection MyselfMonArt",
             "short_title": "Frida Kahlo",
             "title": "Tableaux Frida Kahlo",
@@ -318,161 +318,210 @@
         "paragraph_2": "<p>Le fichier source, déjà retouché par notre direction artistique, part vers notre atelier d'impression européen.</p><p>La toile est imprimée à la demande, jamais en lot. Vos couleurs sont calibrées sur votre format précis.</p><p>Elle est ensuite tendue à la main sur un châssis bois massif, vérifiée œuvre par œuvre.</p><p>Puis livrée prête à accrocher, dans un emballage qui protège les angles — la partie la plus fragile d'un tableau tendu.</p>",
         "show_ornament": false,
         "closing_signature": "Comptez quelques jours de production en plus du transport. C'est le prix d'une œuvre qui n'aura jamais vécu en stock.",
-        "background_color": "terracotta-light"
+        "background_color": "secondary"
       }
     },
     "studio": {
-      "type": "home-studio-presence",
+      "type": "home-studio",
       "blocks": {
         "place_paris": {
           "type": "place",
           "settings": {
             "title": "Notre siège est à Paris",
-            "text": "Paris, la ville de l'art — du Louvre aux galeries du Marais, des Beaux-Arts à Beaubourg. C'est notre point d'ancrage juridique, et un héritage culturel auquel nous tenons."
+            "text": "<p>Paris, la ville de l'art — du Louvre aux galeries du Marais, des Beaux-Arts à Beaubourg. C'est notre point d'ancrage juridique, et un héritage culturel auquel nous tenons.</p>"
           }
         },
         "place_toulouse": {
           "type": "place",
           "settings": {
             "title": "Notre service client bat à Toulouse",
-            "text": "Notre équipe support — celle qui vous répond, vous conseille, gère vos commandes — est à Toulouse. Si vous nous appelez, vous entendrez ce léger accent qui réveille la journée."
+            "text": "<p>Notre équipe support — celle qui vous répond, vous conseille, gère vos commandes — est à Toulouse. Si vous nous appelez, vous entendrez ce léger accent qui réveille la journée.</p>"
           }
         },
         "place_europe": {
           "type": "place",
           "settings": {
             "title": "Direction artistique en France, impression en Europe",
-            "text": "Walid, fondateur, signe la direction artistique depuis la France. L'impression est confiée à des partenaires européens — notamment en Allemagne, dont les imprimeurs sur toile sont une référence internationale."
+            "text": "<p>Walid, fondateur, signe la direction artistique depuis la France. L'impression est confiée à des partenaires européens — notamment en Allemagne, dont les imprimeurs sur toile sont une référence internationale.</p>"
           }
         }
       },
       "block_order": ["place_paris", "place_toulouse", "place_europe"],
       "settings": {
-        "eyebrow": "Le studio",
-        "title": "Paris, Toulouse, l'Europe",
-        "intro": "Nous préférons une chaîne courte, européenne, contrôlée, à un drapeau planté sur un emballage. Un travail dont chaque étape a un visage.",
-        "image_asset": "equipe-studio-direction-artistique-v1.png",
-        "image_alt": "L'équipe MyselfMonArt — direction artistique à Paris et service client à Toulouse"
+        "eyebrow_label": "Le studio",
+        "heading_level": "h2",
+        "h2_title": "Paris, Toulouse, l'Europe",
+        "intro": "<p>Nous préférons une chaîne courte, européenne, contrôlée, à un drapeau planté sur un emballage. Un travail dont chaque étape a un visage.</p>",
+        "image": "shopify://shop_images/equipe-studio-direction-artistique-v1.jpg",
+        "image_alt": "L'équipe MyselfMonArt — direction artistique à Paris et service client à Toulouse",
+        "image_layout": "image-left",
+        "background_color": "secondary"
       }
     },
     "customers": {
-      "type": "home-customers-carousel",
+      "type": "home-customers",
       "blocks": {
-        "t1": { "type": "testimonial", "settings": { "image_asset": "vignette-salon-v1.png", "message": "Très beau tableau ! Je suis ravie de mon achat, merci. Léa M" } },
-        "t2": { "type": "testimonial", "settings": { "image_asset": "style-floral-v1.png", "message": "Dès l'ouverture du carton, j'ai trouvé la toile magnifique.\nEncore plus belle que sur la photo du site. L'effet est «  waouh ! ». Cécile C" } },
-        "t3": { "type": "testimonial", "settings": { "image_asset": "vignette-chambre-adulte-v1.png", "message": "Reçu mon tableau et franchement, je ne regrette pas une seconde ! Les couleurs sont incroyables, l'originalité saute aux yeux. Sophie D" } },
-        "t4": { "type": "testimonial", "settings": { "image_asset": "vignette-entree-v1.png", "message": "L'animal, majestueux et solitaire trône dans mon salon au dessus de ma console. Magnifique. Patricia G" } },
-        "t5": { "type": "testimonial", "settings": { "image_asset": "vignette-chambre-enfant-v1.png", "message": "Juste une petite photo avec le cadre mis en place, encore un grand merci. Elodie G" } },
-        "t6": { "type": "testimonial", "settings": { "image_asset": "vignette-cuisine-v1.png", "message": "Super contente du rendu de ces cadres en bois. Ça apporte tellement de chaleur et de gaieté à mon salon. Lina O" } },
-        "t7": { "type": "testimonial", "settings": { "image_asset": "style-zen-nature-v1.png", "message": "Ce tableau est magnifique et tellement immersif. Vraie sensation d'évasion, l'ambiance de mon salon est transformée. Pierre S" } },
-        "t8": { "type": "testimonial", "settings": { "image_asset": "style-pop-art-v1.png", "message": "Envoi très rapide et tableau encore plus beau que sur le site.\nParfait je recommande. Jessica S" } }
+        "t_lea": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-femme-abstrait-crayon-pastel.jpg", "message": "Très beau tableau ! Je suis ravie de mon achat, merci.. Léa M" } },
+        "t_sandra": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-alluminium-japonais-geisha-avis-clien.jpg", "message": "Je suis juste en admiration devant cette œuvre et vous remercie de sortir de l'ordinaire pour habiller nos murs!!!\nUn grand merci. Sandra B" } },
+        "t_cecile": { "type": "image-text", "settings": { "image": "shopify://shop_images/toile-moderne-frida-fleurs.jpg", "message": "Dès l'ouverture du carton, j'ai trouvé la toile magnifique.\nEncore plus belle que sur la photo du site.\nJe l'ai installée. Et l'effet est «  waouh ! »\nTrès jolie toile ! Très beau site !\nJe suis ravi de mon achat. Cécile C" } },
+        "t_sophie": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-contemporain-abstrait-femme-ronde.jpg", "message": "Reçu mon tableau et franchement, je ne regrette pas une seconde ! Les couleurs sont incroyables, l'originalité saute aux yeux… Impossible de ne pas s'arrêter devant. Sophie D" } },
+        "t_patricia": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableauphotographie-zebre-animaux-zebre-sauvage.jpg", "message": "L'animal, majestueux et solitaire trône dans mon salon au dessus de ma console... Peut on dire qu il est magnifique ? Assurément oui et je l adore!\nPatricia G." } },
+        "t_eugene": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-gaming-marvel-iron-man.jpg", "message": "Très content de mon achat ! Mon fils est ravi il va faire de beaux rêves de super-héros\n. Eugene D" } },
+        "t_morel": { "type": "image-text", "settings": { "image": "shopify://shop_images/peinture-femme-noire-muse.jpg", "message": "Magnifique tableau et très design, correspond parfaitement à la description.  Morel E" } },
+        "t_elodie": { "type": "image-text", "settings": { "image": "shopify://shop_images/Tableau-chambre-bebe_f6e62e6e-707b-41df-aa17-bdad25ef3385.jpg", "message": "Juste une petite photo avec le cadre mis en place encore un grand merci à vous 🥰. \nElodie G" } },
+        "t_jessica": { "type": "image-text", "settings": { "image": "shopify://shop_images/deco-mural-toile-marilyn-monroe-pop-art.jpg", "message": "Envoie très rapide et tableau encore plus beau que sur le site.\nParfait je recommande !!!\nJessica S" } },
+        "t_lina": { "type": "image-text", "settings": { "image": "shopify://shop_images/decoration-mural-cadre-bois-cactus-paysage-colore.jpg", "message": "Super contente du rendu de ces cadres en bois ! 🌵 Ça apporte tellement de chaleur et de gaieté à mon salon, j'adore ! 😍 Lina O" } },
+        "t_joelle": { "type": "image-text", "settings": { "image": "shopify://shop_images/avis-tableau-plexi_2.jpg", "message": "Tableau magnifique, très contente du support choisi en plexiglas réalisé avec soin. Joëlle N" } },
+        "t_vanessa": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-animaux-rhinoceros_b1022df5-0085-43a4-93b7-011dd579d316.jpg", "message": "AMAZING ! Le poster est magnifique, il fait son effet dans mon salon. Vanessa K" } },
+        "t_alexandre": { "type": "image-text", "settings": { "image": "shopify://shop_images/deco-mural-ying-yang.jpg", "message": "Le tableau est magnifique! Alexandre V" } },
+        "t_sarah": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-fruit-legume-cuisine-ananas-colore.jpg", "message": "Trop contente de mon tableau, les couleurs sont aussi flashy que sur les photos du site.\nSarah F" } },
+        "t_pierre": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-panoramique-payasage-foret-lac.jpg", "message": "Ce tableau est magnifique et tellement immersif ! Il donne une vraie sensation d'évasion et transforme l'ambiance de mon salon. Pierre S" } },
+        "t_bernard": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-zen-japonais-geisha_59746ee5-1329-4a3a-94ad-bc201116687c.jpg", "message": "Nous sommes très satisfait de notre achat\nTrès bonne qualité\nNous ferons d´autres achats chez vous.\nBernard D" } },
+        "t_yannick": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-pour-cuisine-epices-colore.jpg", "message": "Ravie de mon achat,\ntrès beau rendu des couleurs qui sont éclatantes. \nYannick R." } },
+        "t_alain": { "type": "image-text", "settings": { "image": "shopify://shop_images/Tableau-chambre_a164de8b-ed28-4326-926b-92bbe380279b.jpg", "message": "Le tableau est super, et encore plus beau en vrai ! Arrivé rapidement et bien protégé. Alain N" } },
+        "t_marie": { "type": "image-text", "settings": { "image": "shopify://shop_images/Tableau-decoration_44dcf7be-75b3-46aa-810b-3020d3b9dc06.jpg", "message": "Très belle toile, les couleurs sont super et brillante. Marie K" } },
+        "t_guillaume": { "type": "image-text", "settings": { "image": "shopify://shop_images/Tableau-deco-noir-et-blanc.jpg", "message": "Top, rien à dire de plus. \nGuillaume H" } },
+        "t_hugo1": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-comics-super-man.jpg", "message": "Nickel, très satisfait c'est ma 3e commande. Hugo G" } },
+        "t_hugo2": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-superman-aquarelle.jpg", "message": "TOP, tableau reçu rapidement avec suivie. Hugo G" } },
+        "t_ethan": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-lion-impression-alluminuim.jpg", "message": "TOP QUALITÉ,  j'ai choisi l'impression sur aluminium et l'image est vraiment top. Ethan V" } }
       },
-      "block_order": ["t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8"],
+      "block_order": [
+        "t_lea", "t_sandra", "t_cecile", "t_sophie", "t_patricia",
+        "t_eugene", "t_morel", "t_elodie", "t_jessica", "t_lina",
+        "t_joelle", "t_vanessa", "t_alexandre", "t_sarah", "t_pierre",
+        "t_bernard", "t_yannick", "t_alain", "t_marie", "t_guillaume",
+        "t_hugo1", "t_hugo2", "t_ethan"
+      ],
       "settings": {
         "eyebrow": "Ils nous font confiance",
+        "heading_level": "h2",
         "title": "Ce que vivent nos clients au quotidien",
         "lead": "Le meilleur portrait de notre travail, ce sont les photos que nos clients nous envoient une fois leur tableau accroché.",
         "review_count": 80,
+        "trustpilot_score": 41,
         "trustpilot_link": "https://fr.trustpilot.com/review/myselfmonart.com"
       }
     },
     "faq_intro": {
-      "type": "home-editorial-rich",
+      "type": "home-prose",
       "settings": {
-        "background": "white",
-        "align": "center",
+        "eyebrow_number": "",
+        "eyebrow_label": "Avant d'acheter",
         "heading_level": "h2",
-        "eyebrow": "Avant d'acheter",
-        "title": "Comment bien choisir votre tableau décoration murale ?",
-        "body": "<p>Choisir un tableau, ce n'est pas choisir un meuble : on ne le change pas tous les cinq ans. On le regarde tous les jours, parfois pendant une décennie. Trois questions valent la peine d'être posées avant d'acheter :</p><ol><li><strong>Quelle est la fonction de la pièce ?</strong> Une chambre demande l'apaisement ; un salon, le caractère ; un bureau, la concentration.</li><li><strong>Quelle est l'ambiance déjà en place ?</strong> Identifiez 2 ou 3 couleurs dominantes. Le tableau idéal en reprend une — pas toutes.</li><li><strong>Quelle est l'intention émotionnelle ?</strong> Souligner, calmer, réveiller, structurer. Décidez de l'effet <strong>avant</strong> de choisir le sujet.</li></ol><p>Si ces questions vous laissent hésitant, notre équipe répond par téléphone et par mail. Vraiment.</p>"
+        "h2_title": "Comment bien choisir votre tableau décoration murale ?",
+        "paragraph_1": "<p>Choisir un tableau, ce n'est pas choisir un meuble : on ne le change pas tous les cinq ans. On le regarde tous les jours, parfois pendant une décennie. Trois questions valent la peine d'être posées avant d'acheter :</p><ol><li><strong>Quelle est la fonction de la pièce ?</strong> Une chambre demande l'apaisement ; un salon, le caractère ; un bureau, la concentration.</li><li><strong>Quelle est l'ambiance déjà en place ?</strong> Identifiez 2 ou 3 couleurs dominantes. Le tableau idéal en reprend une — pas toutes.</li><li><strong>Quelle est l'intention émotionnelle ?</strong> Souligner, calmer, réveiller, structurer. Décidez de l'effet <strong>avant</strong> de choisir le sujet.</li></ol>",
+        "pull_quote": "",
+        "pull_quote_attribution": "",
+        "paragraph_2": "",
+        "show_ornament": false,
+        "closing_signature": "Si ces questions vous laissent hésitant, notre équipe répond par téléphone et par mail. Vraiment.",
+        "background_color": "secondary"
       }
     },
     "faq": {
-      "type": "home-faq",
+      "type": "collapsible-content",
       "blocks": {
         "faq_salon": {
-          "type": "faq_item",
+          "type": "collapsible_row",
           "settings": {
-            "question": "Comment choisir un tableau décoration murale pour son salon ?",
-            "answer": "<p>Pour un salon, choisissez un tableau qui occupe <strong>60 à 75 % de la largeur du meuble</strong> sous lequel il sera accroché (canapé, console). Privilégiez un sujet fédérateur (paysage, abstrait, portrait iconique) et reprenez <strong>2 à 3 couleurs déjà présentes</strong> dans votre décoration. Le centre du tableau doit être <strong>à environ 1,50 m du sol</strong>, la hauteur moyenne du regard.</p>"
+            "heading": "Comment choisir un tableau décoration murale pour son salon ?",
+            "icon": "none",
+            "row_content": "<p>Pour un salon, choisissez un tableau qui occupe <strong>60 à 75 % de la largeur du meuble</strong> sous lequel il sera accroché (canapé, console). Privilégiez un sujet fédérateur (paysage, abstrait, portrait iconique) et reprenez <strong>2 à 3 couleurs déjà présentes</strong> dans votre décoration. Le centre du tableau doit être <strong>à environ 1,50 m du sol</strong>, la hauteur moyenne du regard.</p>"
           }
         },
         "faq_size": {
-          "type": "faq_item",
+          "type": "collapsible_row",
           "settings": {
-            "question": "Quelle taille de tableau choisir pour mon mur ?",
-            "answer": "<p>La règle empirique : votre tableau doit mesurer <strong>environ deux tiers de la largeur du meuble</strong> qu'il surplombe. Sur un mur seul sans meuble, pensez en <strong>proportion du mur entier</strong> — un grand format ou un triptyque structure mieux qu'une petite œuvre. En cas de doute, notre <a href=\"/blogs/tableau-cuisine/quelle-taille-de-tableau-choisir\">guide complet sur la taille</a> détaille les cas pièce par pièce.</p>"
+            "heading": "Quelle taille de tableau choisir pour mon mur ?",
+            "icon": "none",
+            "row_content": "<p>La règle empirique : votre tableau doit mesurer <strong>environ deux tiers de la largeur du meuble</strong> qu'il surplombe. Sur un mur seul sans meuble, pensez en <strong>proportion du mur entier</strong> — un grand format ou un triptyque structure mieux qu'une petite œuvre. En cas de doute, notre <a href=\"/blogs/tableau-cuisine/quelle-taille-de-tableau-choisir\">guide complet sur la taille</a> détaille les cas pièce par pièce.</p>"
           }
         },
         "faq_harmony": {
-          "type": "faq_item",
+          "type": "collapsible_row",
           "settings": {
-            "question": "Comment harmoniser un tableau avec ma décoration ?",
-            "answer": "<p>Une seule couleur commune suffit à créer l'harmonie. Identifiez la couleur dominante d'un élément central de votre pièce (canapé, tapis, rideaux) et choisissez un tableau qui la reprend en accent. <strong>Tons chauds</strong> (rouge, orange, ocre) pour réchauffer une pièce, <strong>tons froids</strong> (bleu, vert) pour apaiser. L'harmonie tient à un fil tendu, pas à dix accords.</p>"
+            "heading": "Comment harmoniser un tableau avec ma décoration ?",
+            "icon": "none",
+            "row_content": "<p>Une seule couleur commune suffit à créer l'harmonie. Identifiez la couleur dominante d'un élément central de votre pièce (canapé, tapis, rideaux) et choisissez un tableau qui la reprend en accent. <strong>Tons chauds</strong> (rouge, orange, ocre) pour réchauffer une pièce, <strong>tons froids</strong> (bleu, vert) pour apaiser. L'harmonie tient à un fil tendu, pas à dix accords.</p>"
           }
         },
         "faq_hanging": {
-          "type": "faq_item",
+          "type": "collapsible_row",
           "settings": {
-            "question": "Comment accrocher un tableau correctement ?",
-            "answer": "<p>Le centre du tableau doit se situer <strong>à environ 1,50 m du sol</strong>. Pour un tableau tendu sur châssis, utilisez deux crochets espacés (et non un seul au centre) afin d'éviter qu'il bascule. Pré-marquez les points d'ancrage au crayon sur le mur avant de percer. Pour plus de détails techniques, voir notre guide <a href=\"/blogs/tableau-cuisine/accrocher-un-tableau-en-toute-securite-nos-solutions-et-astuces-pratiques\">Accrocher un tableau en toute sécurité</a>.</p>"
+            "heading": "Comment accrocher un tableau correctement ?",
+            "icon": "none",
+            "row_content": "<p>Le centre du tableau doit se situer <strong>à environ 1,50 m du sol</strong>. Pour un tableau tendu sur châssis, utilisez deux crochets espacés (et non un seul au centre) afin d'éviter qu'il bascule. Pré-marquez les points d'ancrage au crayon sur le mur avant de percer. Pour plus de détails techniques, voir notre guide <a href=\"/blogs/tableau-cuisine/accrocher-un-tableau-en-toute-securite-nos-solutions-et-astuces-pratiques\">Accrocher un tableau en toute sécurité</a>.</p>"
           }
         },
         "faq_delivery": {
-          "type": "faq_item",
+          "type": "collapsible_row",
           "settings": {
-            "question": "Quels sont vos délais de livraison ?",
-            "answer": "<p>Nos tableaux sont <strong>imprimés à la demande</strong>, jamais en stock. Comptez quelques jours de production en plus du transport. Vos délais exacts sont indiqués sur la fiche produit de chaque œuvre et confirmés dans votre email de validation de commande. Pour toute question, joignez-nous au <strong>09 60 44 61 50</strong>.</p>"
+            "heading": "Quels sont vos délais de livraison ?",
+            "icon": "none",
+            "row_content": "<p>Nos tableaux sont <strong>imprimés à la demande</strong>, jamais en stock. Comptez quelques jours de production en plus du transport. Vos délais exacts sont indiqués sur la fiche produit de chaque œuvre et confirmés dans votre email de validation de commande. Pour toute question, joignez-nous au <strong>09 60 44 61 50</strong>.</p>"
           }
         },
         "faq_madeinfrance": {
-          "type": "faq_item",
+          "type": "collapsible_row",
           "settings": {
-            "question": "Vos tableaux sont-ils fabriqués en France ?",
-            "answer": "<p>Notre direction artistique est en France : c'est ici que les œuvres sont sélectionnées, retouchées et validées une à une par notre studio. L'impression est confiée à nos partenaires européens, principalement en <strong>Allemagne</strong>, dont les imprimeurs sur toile sont une référence internationale. Nous préférons assumer une chaîne européenne courte et contrôlée plutôt que revendiquer un drapeau qui ne correspondrait pas à la réalité.</p>"
+            "heading": "Vos tableaux sont-ils fabriqués en France ?",
+            "icon": "none",
+            "row_content": "<p>Notre direction artistique est en France : c'est ici que les œuvres sont sélectionnées, retouchées et validées une à une par notre studio. L'impression est confiée à nos partenaires européens, principalement en <strong>Allemagne</strong>, dont les imprimeurs sur toile sont une référence internationale. Nous préférons assumer une chaîne européenne courte et contrôlée plutôt que revendiquer un drapeau qui ne correspondrait pas à la réalité.</p>"
           }
         },
         "faq_handpainted": {
-          "type": "faq_item",
+          "type": "collapsible_row",
           "settings": {
-            "question": "Proposez-vous des tableaux peints à la main par un artiste ?",
-            "answer": "<p>Oui — sur devis. Si vous souhaitez transformer l'une de nos œuvres en peinture acrylique ou huile sur toile, réalisée à la main par un artiste, contactez-nous au <strong>09 60 44 61 50</strong> ou par mail. Nous établissons un devis personnalisé selon le format, la technique et le délai souhaité.</p>"
+            "heading": "Proposez-vous des tableaux peints à la main par un artiste ?",
+            "icon": "none",
+            "row_content": "<p>Oui — sur devis. Si vous souhaitez transformer l'une de nos œuvres en peinture acrylique ou huile sur toile, réalisée à la main par un artiste, contactez-nous au <strong>09 60 44 61 50</strong> ou par mail. Nous établissons un devis personnalisé selon le format, la technique et le délai souhaité.</p>"
           }
         }
       },
       "block_order": ["faq_salon", "faq_size", "faq_harmony", "faq_hanging", "faq_delivery", "faq_madeinfrance", "faq_handpainted"],
       "settings": {
         "eyebrow": "FAQ",
-        "title": "Questions fréquentes"
+        "heading_level": "h2",
+        "heading": "Questions fréquentes",
+        "heading_size": "large",
+        "question_size": "large",
+        "background_color": "secondary",
+        "emit_faq_jsonld": true
       }
     },
     "devis_cta": {
-      "type": "home-cta-banner",
+      "type": "home-prose",
       "settings": {
-        "background_color": "terracotta",
+        "eyebrow_number": "",
+        "eyebrow_label": "Sur devis",
         "heading_level": "h2",
-        "eyebrow": "Sur devis",
-        "title": "Et si votre mur méritait une œuvre vraiment unique ?",
-        "subtitle": "Pour les projets où l'unicité prime — un cadeau d'exception, un anniversaire, un mur qui mérite mieux — nous proposons la peinture à la main. Une œuvre, un artiste, votre format.",
+        "h2_title": "Et si votre mur méritait une œuvre vraiment unique ?",
+        "paragraph_1": "<p>Pour les projets où l'unicité prime — un cadeau d'exception, un anniversaire, un mur qui mérite mieux — nous proposons la peinture à la main. Une œuvre, un artiste, votre format.</p>",
+        "pull_quote": "",
+        "pull_quote_attribution": "",
+        "paragraph_2": "",
+        "show_ornament": false,
+        "closing_signature": "",
         "cta_label": "Demander un devis",
-        "cta_link": "shopify://pages/contactez-nous"
+        "cta_link": "shopify://pages/contactez-nous",
+        "background_color": "terracotta"
       }
     },
     "collections": {
       "type": "home-cards-grid",
       "blocks": {
-        "c_salon": { "type": "card", "settings": { "image_asset": "vignette-salon-v1.png", "alt": "Tableaux pour le salon — collection MyselfMonArt", "label": "Pièce", "title": "Tableau salon", "link_label": "Voir", "link": "shopify://collections/tableau-salon" } },
-        "c_chambre_a": { "type": "card", "settings": { "image_asset": "vignette-chambre-adulte-v1.png", "alt": "Tableaux pour la chambre adulte — collection MyselfMonArt", "label": "Pièce", "title": "Tableau chambre adulte", "link_label": "Voir", "link": "shopify://collections/tableau-chambre-adulte" } },
-        "c_chambre_e": { "type": "card", "settings": { "image_asset": "vignette-chambre-enfant-v1.png", "alt": "Tableaux pour la chambre enfant — collection MyselfMonArt", "label": "Pièce", "title": "Tableau chambre enfant", "link_label": "Voir", "link": "shopify://collections/tableau-chambre-garcon" } },
-        "c_bureau": { "type": "card", "settings": { "image_asset": "vignette-bureau-v1.png", "alt": "Tableaux pour le bureau — collection MyselfMonArt", "label": "Pièce", "title": "Tableau bureau", "link_label": "Voir", "link": "shopify://collections/tableau-bureau" } },
-        "c_cuisine": { "type": "card", "settings": { "image_asset": "vignette-cuisine-v1.png", "alt": "Tableaux pour la cuisine — collection MyselfMonArt", "label": "Pièce", "title": "Tableau cuisine", "link_label": "Voir", "link": "shopify://collections/tableau-cuisine" } },
-        "c_abstrait": { "type": "card", "settings": { "image_asset": "style-abstrait-moderne-v1.png", "alt": "Tableaux abstraits et modernes — collection MyselfMonArt", "label": "Style", "title": "Tableau abstrait", "link_label": "Voir", "link": "shopify://collections/tableau-abstrait" } },
-        "c_zen": { "type": "card", "settings": { "image_asset": "style-zen-nature-v1.png", "alt": "Tableaux zen et inspiration nature — collection MyselfMonArt", "label": "Style", "title": "Tableau zen", "link_label": "Voir", "link": "shopify://collections/tableau-zen" } },
-        "c_popart": { "type": "card", "settings": { "image_asset": "style-pop-art-v1.png", "alt": "Tableaux pop art et street art — collection MyselfMonArt", "label": "Style", "title": "Tableau pop art", "link_label": "Voir", "link": "shopify://collections/tableau-pop-art" } },
-        "c_africain": { "type": "card", "settings": { "image_asset": "style-africain-ethnique-v1.png", "alt": "Tableaux africains et ethniques — collection MyselfMonArt", "label": "Style", "title": "Tableau africain", "link_label": "Voir", "link": "shopify://collections/tableau-africain" } },
-        "c_nb": { "type": "card", "settings": { "image_asset": "style-noir-blanc-v1.png", "alt": "Tableaux noir et blanc — collection MyselfMonArt", "label": "Style", "title": "Tableau noir et blanc", "link_label": "Voir", "link": "shopify://collections/tableau-noir-et-blanc" } },
-        "c_fleurs": { "type": "card", "settings": { "image_asset": "style-floral-v1.png", "alt": "Tableaux floraux — collection MyselfMonArt", "label": "Style", "title": "Tableau fleurs", "link_label": "Voir", "link": "shopify://collections/tableau-fleurs" } },
-        "c_japonais": { "type": "card", "settings": { "image_asset": "style-japonais-v1.png", "alt": "Tableaux japonais — collection MyselfMonArt", "label": "Style", "title": "Tableau japonais", "link_label": "Voir", "link": "shopify://collections/tableau-japonais" } }
+        "c_salon": { "type": "card", "settings": { "image": "shopify://shop_images/vignette-salon-v1.jpg", "alt": "Tableaux pour le salon — collection MyselfMonArt", "label": "Pièce", "title": "Tableau salon", "link_label": "Voir", "link": "shopify://collections/tableau-salon" } },
+        "c_chambre_a": { "type": "card", "settings": { "image": "shopify://shop_images/vignette-chambre-adulte-v1.jpg", "alt": "Tableaux pour la chambre adulte — collection MyselfMonArt", "label": "Pièce", "title": "Tableau chambre adulte", "link_label": "Voir", "link": "shopify://collections/tableau-chambre-adulte" } },
+        "c_chambre_e": { "type": "card", "settings": { "image": "shopify://shop_images/vignette-chambre-enfant-v1.jpg", "alt": "Tableaux pour la chambre enfant — collection MyselfMonArt", "label": "Pièce", "title": "Tableau chambre enfant", "link_label": "Voir", "link": "shopify://collections/tableau-chambre-garcon" } },
+        "c_bureau": { "type": "card", "settings": { "image": "shopify://shop_images/vignette-bureau-v1.jpg", "alt": "Tableaux pour le bureau — collection MyselfMonArt", "label": "Pièce", "title": "Tableau bureau", "link_label": "Voir", "link": "shopify://collections/tableau-bureau" } },
+        "c_cuisine": { "type": "card", "settings": { "image": "shopify://shop_images/vignette-cuisine-v1.jpg", "alt": "Tableaux pour la cuisine — collection MyselfMonArt", "label": "Pièce", "title": "Tableau cuisine", "link_label": "Voir", "link": "shopify://collections/tableau-cuisine" } },
+        "c_abstrait": { "type": "card", "settings": { "image": "shopify://shop_images/style-abstrait-moderne-v1.jpg", "alt": "Tableaux abstraits et modernes — collection MyselfMonArt", "label": "Style", "title": "Tableau abstrait", "link_label": "Voir", "link": "shopify://collections/tableau-abstrait" } },
+        "c_zen": { "type": "card", "settings": { "image": "shopify://shop_images/style-zen-nature-v1.jpg", "alt": "Tableaux zen et inspiration nature — collection MyselfMonArt", "label": "Style", "title": "Tableau zen", "link_label": "Voir", "link": "shopify://collections/tableau-zen" } },
+        "c_popart": { "type": "card", "settings": { "image": "shopify://shop_images/style-pop-art-v1.jpg", "alt": "Tableaux pop art et street art — collection MyselfMonArt", "label": "Style", "title": "Tableau pop art", "link_label": "Voir", "link": "shopify://collections/tableau-pop-art" } },
+        "c_africain": { "type": "card", "settings": { "image": "shopify://shop_images/style-africain-ethnique-v1.jpg", "alt": "Tableaux africains et ethniques — collection MyselfMonArt", "label": "Style", "title": "Tableau africain", "link_label": "Voir", "link": "shopify://collections/tableau-africain" } },
+        "c_nb": { "type": "card", "settings": { "image": "shopify://shop_images/style-noir-blanc-v1.jpg", "alt": "Tableaux noir et blanc — collection MyselfMonArt", "label": "Style", "title": "Tableau noir et blanc", "link_label": "Voir", "link": "shopify://collections/tableau-noir-et-blanc" } },
+        "c_fleurs": { "type": "card", "settings": { "image": "shopify://shop_images/style-floral-v1.jpg", "alt": "Tableaux floraux — collection MyselfMonArt", "label": "Style", "title": "Tableau fleurs", "link_label": "Voir", "link": "shopify://collections/tableau-fleurs" } },
+        "c_japonais": { "type": "card", "settings": { "image": "shopify://shop_images/style-japonais-v1.jpg", "alt": "Tableaux japonais — collection MyselfMonArt", "label": "Style", "title": "Tableau japonais", "link_label": "Voir", "link": "shopify://collections/tableau-japonais" } }
       },
       "block_order": ["c_salon", "c_chambre_a", "c_chambre_e", "c_bureau", "c_cuisine", "c_abstrait", "c_zen", "c_popart", "c_africain", "c_nb", "c_fleurs", "c_japonais"],
       "settings": {
@@ -483,15 +532,21 @@
       }
     },
     "all_collections_cta": {
-      "type": "home-cta-banner",
+      "type": "home-prose",
       "settings": {
-        "background_color": "cream",
+        "eyebrow_number": "",
+        "eyebrow_label": "",
         "heading_level": "h3",
-        "eyebrow": "",
-        "title": "Plus de 50 collections vous attendent",
-        "subtitle": "Tableau couleur, tableau ethnique, tableau paysage et bien d'autres univers à explorer.",
+        "h2_title": "Plus de 50 collections vous attendent",
+        "paragraph_1": "<p>Tableau couleur, tableau ethnique, tableau paysage et bien d'autres univers à explorer.</p>",
+        "pull_quote": "",
+        "pull_quote_attribution": "",
+        "paragraph_2": "",
+        "show_ornament": false,
+        "closing_signature": "",
         "cta_label": "Voir nos 50 collections",
-        "cta_link": "shopify://collections"
+        "cta_link": "shopify://collections",
+        "background_color": "terracotta"
       }
     },
     "trust_signals_home": {
@@ -516,7 +571,7 @@
       "type": "home-signature",
       "settings": {
         "line_1": "Avec soin,",
-        "line_2": "— Hayate / Team MyselfMonArt"
+        "line_2": "— Team MyselfMonArt"
       }
     }
   },
