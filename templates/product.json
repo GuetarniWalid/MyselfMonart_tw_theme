@@ -35,7 +35,6 @@
           "settings": {
             "text": "AJOUTER AU PANIER",
             "is_dynamic_variant": false,
-            "main_color": "#FEDE65",
             "show_promotion": false,
             "promotion_discount": 15,
             "promotion_discount_unit": "%",
@@ -176,8 +175,8 @@
       ],
       "settings": {
         "eyebrow": "FAQ",
-        "heading": "QUESTIONS FRÉQUENTES",
-        "accent_tone": "buy-button"
+        "accent_tone": "buy-button",
+        "heading": "QUESTIONS FRÉQUENTES"
       }
     }
   },
