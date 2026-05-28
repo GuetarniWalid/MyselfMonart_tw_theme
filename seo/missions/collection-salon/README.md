@@ -49,6 +49,7 @@ Créer dans ce dossier au fur et à mesure : `STRATEGY.md` (décisions), `PHASE-
 - **⭐ UX d'abord (cf. [METHODOLOGY §5bis](../../shared/METHODOLOGY.md))** : sur cette collection, l'utilisateur veut **voir les tableaux immédiatement**. Montrer la grille produits above the fold ; **le long texte SEO va EN BAS**, pas avant les produits. Faire la mini-étude UX (que montrer en 1er ?) avant de construire. Ne pas dégrader l'expérience pour le SEO.
 - **Tenir [ROADMAP](../../ROADMAP.md) à jour** (statut mission, dates de check).
 - **Voix Hayate** (vouvoiement, premium-émotionnel-cocon) dans toute la copy.
+- **Sections : RÉUTILISER avant de créer** (cf. METHODOLOGY §5) : configurer les sections existantes du thème en priorité ; n'en créer une nouvelle (via le skill `shopify-section-dev`) qu'en dernier recours, dans le respect des conventions.
 - **Workflow déploiement** : staging → validation visuelle Walid → merge main = live.
 - **Pas de "Made in France"** (impression en Allemagne) — cf. faits structurels en mémoire.
 - Planifier le **suivi GSC J+14 / J+30** après déploiement.
