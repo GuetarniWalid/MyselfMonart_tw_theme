@@ -1,0 +1,232 @@
+/* Homepage editorial polish — inspired by Artesta's clean gallery mood, remixed with MyselfMonArt colors. */
+:root {
+  --mma-home-radius: 28px;
+  --mma-home-radius-lg: 36px;
+  --mma-home-shadow: 0 18px 60px rgba(var(--color-main-rgb), 0.10);
+  --mma-home-border: 1px solid rgba(var(--color-main-rgb), 0.10);
+}
+
+body.template-index,
+.template-index #MainContent {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(var(--color-accent-rgb), 0.12), transparent 28rem),
+    linear-gradient(180deg, rgba(var(--color-main-rgb), 0.025), rgba(var(--color-secondary-rgb), 0) 34rem);
+}
+
+.template-index #MainContent > .shopify-section:not(:first-child) {
+  margin-top: clamp(3.5rem, 7vw, 7rem);
+}
+
+.template-index .page-width {
+  max-width: min(1240px, calc(100vw - 28px));
+}
+
+.template-index h2 {
+  letter-spacing: -0.035em;
+  line-height: 0.95;
+}
+
+.template-index h2:not(.title-highlight),
+.template-index .rich-text h2,
+.template-index .product-list h2,
+.template-index .collections-pages-grid h2,
+.template-index .multicolumn h2 {
+  font-size: clamp(2rem, 5vw, 4.8rem);
+  max-width: 960px;
+}
+
+/* Hero: no new copy/structure — only soft premium framing/performance-safe visual polish. */
+.template-index .image-banner {
+  border-radius: 0 0 var(--mma-home-radius-lg) var(--mma-home-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--mma-home-shadow);
+}
+
+.template-index .image-banner img {
+  transform: scale(1.015);
+}
+
+/* Product carousel: calmer, gallery-like cards. */
+.template-index .product-list {
+  position: relative;
+}
+
+.template-index .product-list > h2 {
+  margin: 0 0 1.5rem;
+  padding: 0;
+}
+
+.template-index .product-list .component-carroussel {
+  gap: clamp(1rem, 2vw, 1.6rem);
+  padding: 1rem 0 1.5rem;
+  scroll-padding-inline: 1rem;
+}
+
+.template-index .product-list .carrousel-item {
+  width: clamp(230px, 25vw, 320px);
+  padding: 0.8rem;
+  border: var(--mma-home-border);
+  border-radius: var(--mma-home-radius);
+  background: rgba(var(--color-secondary-rgb), 0.78);
+  box-shadow: 0 12px 36px rgba(var(--color-main-rgb), 0.08);
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+
+.template-index .product-list .carrousel-item:hover {
+  transform: translateY(-6px);
+  border-color: rgba(var(--color-main-rgb), 0.22);
+  box-shadow: 0 22px 58px rgba(var(--color-main-rgb), 0.14);
+}
+
+.template-index .product-list .carrousel-item > div:first-child {
+  max-height: none;
+  aspect-ratio: 4 / 5;
+  border-radius: calc(var(--mma-home-radius) - 8px);
+  background: rgba(var(--color-main-rgb), 0.035);
+  overflow: hidden;
+}
+
+.template-index .product-list .carrousel-item img {
+  padding: 0.5rem;
+  transition: transform 260ms ease;
+}
+
+.template-index .product-list .carrousel-item:hover img {
+  transform: scale(1.035);
+}
+
+.template-index .product-list .carrousel-item .shadow-md {
+  margin: 0.85rem 0 0;
+  padding: 0.25rem 0.15rem 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+.template-index .product-card-title {
+  letter-spacing: 0.04em;
+}
+
+.template-index .product-list .text-center a,
+.template-index .product-list .text-center button,
+.template-index .rich-text a.inline-block,
+.template-index .rich-text button.obfuscate {
+  border-radius: 999px;
+  padding: 0.85rem 1.8rem;
+  background: rgb(var(--color-main-rgb));
+  color: rgb(var(--color-secondary-rgb));
+  border-color: rgb(var(--color-main-rgb));
+  box-shadow: 0 10px 28px rgba(var(--color-main-rgb), 0.16);
+}
+
+/* Collection cards: large editorial image tiles, no extra broken/detail buttons. */
+.template-index .collections-pages-grid ul {
+  gap: clamp(1rem, 2.4vw, 2rem);
+}
+
+.template-index .collections-pages-grid .one-collection {
+  min-height: clamp(420px, 58vw, 640px);
+  border-radius: var(--mma-home-radius-lg);
+  box-shadow: var(--mma-home-shadow);
+  isolation: isolate;
+}
+
+.template-index .collections-pages-grid .one-collection::after {
+  background: linear-gradient(180deg, transparent 35%, rgba(0,0,0,0.72));
+}
+
+.template-index .collections-pages-grid .one-collection img {
+  transition: transform 420ms ease, filter 420ms ease;
+}
+
+.template-index .collections-pages-grid .one-collection:hover img {
+  transform: scale(1.04);
+  filter: saturate(1.08) contrast(1.03);
+}
+
+.template-index .collections-pages-grid .one-collection > div:not(.paragraph) {
+  padding: clamp(1.4rem, 4vw, 2.6rem);
+}
+
+.template-index .collections-pages-grid .one-collection h2 {
+  max-width: 780px;
+  color: rgb(var(--color-secondary-rgb));
+  text-shadow: 0 3px 24px rgba(0,0,0,0.35);
+}
+
+.template-index .collections-pages-grid .one-collection .show-more,
+.template-index .collections-pages-grid .one-collection .paragraph {
+  display: none !important;
+}
+
+/* Reviews: premium horizontal social proof. */
+.template-index .trust-signals {
+  padding: clamp(2rem, 5vw, 4rem);
+  border: var(--mma-home-border);
+  border-radius: var(--mma-home-radius-lg);
+  background: rgba(var(--color-main-rgb), 0.035);
+}
+
+.template-index .trust-signals__eyebrow {
+  font-weight: 700;
+}
+
+.template-index .trust-signals .component-carroussel {
+  gap: 1.1rem;
+}
+
+.template-index .trust-signals li,
+.template-index .customer-testimonial-card {
+  border-radius: var(--mma-home-radius);
+}
+
+/* Text/value sections: airy, art-gallery rhythm. */
+.template-index .rich-text {
+  padding-inline: 1rem;
+}
+
+.template-index .rich-text .description {
+  max-width: 860px;
+  line-height: 1.75;
+}
+
+.template-index .rich-text .center .description,
+.template-index .rich-text .text-center.description {
+  margin-inline: auto;
+}
+
+.template-index .multicolumn ul {
+  gap: clamp(1rem, 2.5vw, 2rem);
+}
+
+.template-index .multicolumn li {
+  max-width: none;
+  border: var(--mma-home-border);
+  border-radius: var(--mma-home-radius-lg);
+  background: rgba(var(--color-secondary-rgb), 0.82) !important;
+  box-shadow: 0 14px 42px rgba(var(--color-main-rgb), 0.08);
+  overflow: hidden;
+}
+
+.template-index .multicolumn img {
+  width: 100%;
+  border-radius: calc(var(--mma-home-radius) - 8px);
+}
+
+@media (max-width: 767px) {
+  .template-index #MainContent > .shopify-section:not(:first-child) {
+    margin-top: 3.5rem;
+  }
+
+  .template-index .product-list .carrousel-item {
+    width: 74vw;
+  }
+
+  .template-index .collections-pages-grid .one-collection {
+    min-height: 68vh;
+  }
+
+  .template-index .trust-signals {
+    padding: 1.25rem;
+  }
+}
