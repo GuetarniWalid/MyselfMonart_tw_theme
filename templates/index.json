@@ -10,7 +10,7 @@
 {
   "sections": {
     "hero": {
-      "type": "home-hero",
+      "type": "hero-with-text",
       "settings": {
         "eyebrow": "Tableau décoration murale",
         "h1_title": "Art & décoration murale",
@@ -30,7 +30,7 @@
       }
     },
     "welcome": {
-      "type": "home-prose",
+      "type": "prose",
       "settings": {
         "eyebrow_number": "",
         "eyebrow_label": "Bienvenue",
@@ -48,7 +48,7 @@
       }
     },
     "usps": {
-      "type": "home-usps-bento",
+      "type": "usps-bento",
       "blocks": {
         "usp_1": {
           "type": "usp",
@@ -94,7 +94,7 @@
       }
     },
     "rooms": {
-      "type": "home-rooms-grid",
+      "type": "cards-carousel",
       "blocks": {
         "room_salon": {
           "type": "room",
@@ -180,7 +180,7 @@
       }
     },
     "styles": {
-      "type": "home-rooms-grid",
+      "type": "cards-carousel",
       "blocks": {
         "style_abstrait": {
           "type": "room",
@@ -290,7 +290,7 @@
       }
     },
     "size_guide": {
-      "type": "home-prose",
+      "type": "prose",
       "settings": {
         "eyebrow_number": "",
         "eyebrow_label": "Conseil pratique",
@@ -306,7 +306,7 @@
       }
     },
     "journey": {
-      "type": "home-prose",
+      "type": "prose",
       "settings": {
         "eyebrow_number": "",
         "eyebrow_label": "Production",
@@ -322,7 +322,7 @@
       }
     },
     "studio": {
-      "type": "home-studio",
+      "type": "image-with-list",
       "blocks": {
         "place_paris": {
           "type": "place",
@@ -359,7 +359,7 @@
       }
     },
     "customers": {
-      "type": "home-customers",
+      "type": "testimonials-carousel",
       "blocks": {
         "t_lea": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-femme-abstrait-crayon-pastel.jpg", "message": "Très beau tableau ! Je suis ravie de mon achat, merci.. Léa M" } },
         "t_sandra": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-alluminium-japonais-geisha-avis-clien.jpg", "message": "Je suis juste en admiration devant cette œuvre et vous remercie de sortir de l'ordinaire pour habiller nos murs!!!\nUn grand merci. Sandra B" } },
@@ -399,11 +399,12 @@
         "lead": "Le meilleur portrait de notre travail, ce sont les photos que nos clients nous envoient une fois leur tableau accroché.",
         "review_count": 80,
         "trustpilot_score": 41,
-        "trustpilot_link": "https://fr.trustpilot.com/review/myselfmonart.com"
+        "trustpilot_link": "https://fr.trustpilot.com/review/myselfmonart.com",
+        "emit_review_jsonld": true
       }
     },
     "faq_intro": {
-      "type": "home-prose",
+      "type": "prose",
       "settings": {
         "eyebrow_number": "",
         "eyebrow_label": "Avant d'acheter",
@@ -490,7 +491,7 @@
       }
     },
     "devis_cta": {
-      "type": "home-prose",
+      "type": "prose",
       "settings": {
         "eyebrow_number": "",
         "eyebrow_label": "Sur devis",
@@ -508,7 +509,7 @@
       }
     },
     "collections": {
-      "type": "home-cards-grid",
+      "type": "cards-grid",
       "blocks": {
         "c_salon": { "type": "card", "settings": { "image": "shopify://shop_images/vignette-salon-v1.jpg", "alt": "Tableaux pour le salon — collection MyselfMonArt", "label": "Pièce", "title": "Tableau salon", "link_label": "Voir", "link": "shopify://collections/tableau-salon" } },
         "c_chambre_a": { "type": "card", "settings": { "image": "shopify://shop_images/vignette-chambre-adulte-v1.jpg", "alt": "Tableaux pour la chambre adulte — collection MyselfMonArt", "label": "Pièce", "title": "Tableau chambre adulte", "link_label": "Voir", "link": "shopify://collections/tableau-chambre-adulte" } },
@@ -532,7 +533,7 @@
       }
     },
     "all_collections_cta": {
-      "type": "home-prose",
+      "type": "prose",
       "settings": {
         "eyebrow_number": "",
         "eyebrow_label": "",
@@ -568,7 +569,7 @@
       }
     },
     "signature": {
-      "type": "home-signature",
+      "type": "signature",
       "settings": {
         "line_1": "Avec soin,",
         "line_2": "— Team MyselfMonArt"
