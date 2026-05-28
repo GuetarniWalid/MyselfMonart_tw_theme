@@ -41,7 +41,7 @@ Légende statut : 🔜 à démarrer · 🟡 en cours · ✅ déployée · 📈 e
 seo/
 ├── ROADMAP.md                  ← CE doc : état global, missions, échéances
 ├── shared/
-│   └── playbook.md             ← méthodo réutilisable (5 phases) + voix + conventions
+│   └── METHODOLOGY.md             ← méthodo réutilisable (5 phases) + voix + conventions
 └── missions/
     ├── homepage/               ← Mission 1 (déployée)
     │   ├── STRATEGY.md         ← décisions verrouillées de la mission
@@ -53,7 +53,7 @@ seo/
 
 **Réflexe pour tout agent / toute session** :
 1. Lire **ROADMAP.md** (ici) → comprendre l'état global et les priorités
-2. Lire **shared/playbook.md** → méthodo + voix de marque
+2. Lire **shared/METHODOLOGY.md** → méthodo + voix de marque
 3. Aller dans **missions/<mission active>/** → contexte détaillé
 
 ---
@@ -62,7 +62,7 @@ seo/
 
 - **À chaque jalon** (déploiement, check GSC, démarrage/clôture de mission) → mettre à jour CE doc (tableau de bord + échéancier).
 - Chaque mission a son **`FOLLOWUP.md`** où sont consignés les résultats GSC dans le temps.
-- Chaque nouvelle mission = nouveau dossier `missions/<nom>/` + suit le `shared/playbook.md`.
+- Chaque nouvelle mission = nouveau dossier `missions/<nom>/` + suit le `shared/METHODOLOGY.md`.
 - Ne jamais laisser ce doc diverger de la réalité : c'est la source de vérité du pilotage.
 - Les **faits structurels** de l'entreprise (Paris/Toulouse/Allemagne, Trustpilot, etc.) sont en mémoire Claude (`project_myselfmonart_facts.md`), pas ici.
 
