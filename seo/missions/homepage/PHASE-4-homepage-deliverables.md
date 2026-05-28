@@ -1,7 +1,7 @@
 # Phase 4 — Livrables homepage MyselfMonArt
 
 > Status : ✅ Validée + **implémentée** sur la branche `seo-homepage-refonte`.
-> Ce doc = référence des specs. **La source de vérité de la copy est désormais [templates/index.json](../templates/index.json)** (ne pas dupliquer ici pour éviter la dérive).
+> Ce doc = référence des specs. **La source de vérité de la copy est désormais [templates/index.json](../../../templates/index.json)** (ne pas dupliquer ici pour éviter la dérive).
 > Recréé le 2026-05-26 après perte des docs non commités.
 
 ---
@@ -20,7 +20,7 @@
 
 ## B. Structure Hn implémentée (16 sections)
 
-Ordre dans [templates/index.json](../templates/index.json) `order[]` :
+Ordre dans [templates/index.json](../../../templates/index.json) `order[]` :
 
 | # | Section (id) | Type Liquid | Rôle |
 |---|---|---|---|
@@ -45,7 +45,7 @@ Ordre dans [templates/index.json](../templates/index.json) `order[]` :
 
 ## C. Copy
 
-> **Source de vérité = [templates/index.json](../templates/index.json)** (settings de chaque section). ~2 750 mots, voix Hayate (vouvoiement, premium-émotionnel-cocon). Validée par Walid 2026-05-25. Ne pas dupliquer ici.
+> **Source de vérité = [templates/index.json](../../../templates/index.json)** (settings de chaque section). ~2 750 mots, voix Hayate (vouvoiement, premium-émotionnel-cocon). Validée par Walid 2026-05-25. Ne pas dupliquer ici.
 
 ---
 

@@ -1,9 +1,9 @@
 # STRATEGY — Mission SEO/GEO homepage MyselfMonArt
 
-> **Doc maître**. Mis à jour à chaque décision verrouillée.
-> Dernière révision : 2026-05-26
+> Décisions verrouillées de **la mission homepage**. Pilotage global multi-missions → [../../ROADMAP.md](../../ROADMAP.md) · Méthodo → [../../shared/playbook.md](../../shared/playbook.md) · Suivi GSC → [FOLLOWUP.md](FOLLOWUP.md).
+> Mis à jour à chaque décision verrouillée. Dernière révision : 2026-05-28
 >
-> ⚠️ **IMPORTANT** : ce dossier `seo/` doit être COMMITÉ dans git. Une première version (non commitée) a été effacée par un `git clean` lors de l'implémentation. Ne pas laisser ces docs non trackés.
+> ⚠️ Ce dossier `seo/` doit rester COMMITÉ dans git (une 1re version non trackée avait été effacée par un `git clean`).
 
 ---
 
