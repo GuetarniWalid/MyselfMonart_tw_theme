@@ -4,7 +4,7 @@
 > Document **vivant** : on le retouche dès qu'on apprend mieux. Voir le [changelog](#-changelog) en bas.
 > Pilotage des missions : [../ROADMAP.md](../ROADMAP.md). Faits marque : mémoire `project_myselfmonart_facts.md`.
 >
-> **Version 1.0** — issue de la mission Homepage (déployée 2026-05-28, SEO Lighthouse 100, CWV au vert).
+> **Version 1.1** — base issue de la mission Homepage (déployée 2026-05-28, SEO Lighthouse 100, CWV au vert) + principe UX-first (§5bis).
 
 ---
 
@@ -12,7 +12,9 @@
 
 Objectif unique : **augmenter les ventes**. Chaque page optimisée est une brique d'autorité **SEO** (Google) **+ GEO** (citable par ChatGPT/Perplexity/AI Overviews). On avance **phase par phase, avec validation de Walid entre chaque**, et on **mesure l'impact réel via GSC** après déploiement (amélioration continue).
 
-Règle d'or : **jamais de data hallucinée.** Pas de volume/position sans source réelle (GSC, SERP). Si on ne sait pas, on le dit.
+Règle d'or n°1 : **jamais de data hallucinée.** Pas de volume/position sans source réelle (GSC, SERP). Si on ne sait pas, on le dit.
+
+Règle d'or n°2 : **l'UX prime.** On n'optimise jamais le SEO au détriment de l'expérience utilisateur — une bonne UX est elle-même un signal SEO (engagement, CWV). Voir [§5bis](#5bis--ux-dabord--ne-jamais-sacrifier-lexpérience-au-seo).
 
 ---
 
@@ -111,6 +113,33 @@ Avant tout, identifier le **type de page** et son **intention dominante** : cela
 
 ---
 
+## 5bis. ★ UX d'abord — ne jamais sacrifier l'expérience au SEO
+
+**Une bonne UX EST un bon SEO.** Google mesure l'engagement (temps passé, retours en SERP), les Core Web Vitals, et privilégie les pages agréables mobile-first. Dégrader l'UX pour caser du SEO est **contre-productif** : l'utilisateur repart → mauvais signal → le SEO baisse aussi.
+
+**Le faux dilemme « texte en haut (SEO) vs produits en haut (UX) »** : Google lit **toute** la page quel que soit l'ordre vertical. Le gros bloc de texte éditorial n'a **pas** besoin d'être au-dessus du contenu principal.
+
+**Règles** :
+- **H1 en haut : oui**, mais court et léger (il situe la page, ne bloque pas).
+- **Above-the-fold = ce que l'utilisateur est venu chercher**, pas ce que le SEO voudrait. Sur `/collections/tableau-salon`, l'internaute veut **voir des tableaux** immédiatement — pas lire 500 mots. Lui imposer un pavé = il repart.
+- **Le long texte éditorial SEO va en BAS** (sous la grille produits) sur les pages **transactionnelles** (collection, produit). Il sert Google + les visiteurs qui scrollent/hésitent. Une **intro courte (1-2 phrases)** en haut est acceptable ; pas un pavé.
+- À l'inverse, sur un **blog/éditorial**, le texte EST le contenu attendu → en haut (mais aéré, scannable).
+
+**Sur les pages importantes (collections surtout) : mini-étude UX AVANT de construire** :
+1. Quelle est l'intention dominante de l'utilisateur qui arrive sur cette page ?
+2. Que doit-il voir dans le 1er écran (above the fold) ?
+3. Qu'est-ce qui peut descendre plus bas (texte SEO, FAQ, guides d'achat) ?
+4. Construire la hiérarchie visuelle **pour l'utilisateur d'abord**, puis placer le SEO autour sans le gêner.
+
+**Pattern par type** :
+- **Collection / produit** : visuels/produits d'abord → **texte SEO + FAQ en bas**
+- **Blog / éditorial** : **texte d'abord** (aéré, listes, tableaux)
+- **Home** : hero émotionnel + preuves + navigation, sections éditoriales entrelacées
+
+> Principe : **en cas de doute entre servir l'utilisateur ou servir le crawler, sers l'utilisateur — le crawler suit.**
+
+---
+
 ## 6. Déclinaison par type de page
 
 > Ce qui **change** selon le type (le reste = invariants §4-5).
@@ -125,7 +154,8 @@ Avant tout, identifier le **type de page** et son **intention dominante** : cela
 - Keyword **catégorie** (pièce ou style) ; intention **commerciale**.
 - Schema : **CollectionPage + ItemList(produits) + BreadcrumbList + FAQPage**.
 - Title/Meta : champ SEO **de la collection** dans l'admin Shopify.
-- Contenu éditorial **en haut ou bas** de la grille produits ; **se différencier de la home** (anti-cannibalisation) et des collections sœurs.
+- **UX-first (cf. §5bis)** : produits visibles **immédiatement** (above the fold). Intro courte (1-2 phrases) max en haut ; le **long texte éditorial SEO va EN BAS** de la grille produits. Ne jamais pousser un pavé avant les tableaux.
+- **se différencier de la home** (anti-cannibalisation) et des collections sœurs.
 - Maillage : vers produits phares + collections connexes + blog pertinent.
 
 ### 🛍️ Produit
@@ -178,6 +208,11 @@ Contenu
 [ ] Réponses FAQ citation-worthy (50-90 mots)
 [ ] Garde-fous légaux respectés (§7)
 
+UX (cf. §5bis)
+[ ] Above-the-fold = ce que l'utilisateur veut (produits visibles direct sur une collection)
+[ ] Long texte SEO placé EN BAS sur les pages transactionnelles (pas un pavé avant les produits)
+[ ] Mini-étude UX faite pour les pages importantes (collections)
+
 Technique
 [ ] Lighthouse SEO = 100, Accessibilité ≥90
 [ ] LCP <2,5s, CLS <0,1
@@ -207,3 +242,4 @@ Après live : check **J+14** puis **J+30** via `gsc-query`. Comparer à la **bas
 | Date | Version | Évolution |
 |---|---|---|
 | 2026-05-28 | 1.0 | Version initiale, distillée de la mission Homepage (5 phases, voix Hayate, schema FAQPage différenciateur, garde-fous Made in France / Trustpilot / cannibalisation, CWV). |
+| 2026-05-28 | 1.1 | Ajout §5bis « UX d'abord » : ne jamais sacrifier l'expérience au SEO, texte éditorial en bas des pages transactionnelles, mini-étude UX pour les collections, règle d'or n°2, items UX dans la Definition of Done. (suite à un retour de Walid) |

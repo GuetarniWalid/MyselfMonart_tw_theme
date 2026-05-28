@@ -46,6 +46,7 @@ Créer dans ce dossier au fur et à mesure : `STRATEGY.md` (décisions), `PHASE-
 
 ## À ne pas oublier
 
+- **⭐ UX d'abord (cf. [METHODOLOGY §5bis](../../shared/METHODOLOGY.md))** : sur cette collection, l'utilisateur veut **voir les tableaux immédiatement**. Montrer la grille produits above the fold ; **le long texte SEO va EN BAS**, pas avant les produits. Faire la mini-étude UX (que montrer en 1er ?) avant de construire. Ne pas dégrader l'expérience pour le SEO.
 - **Tenir [ROADMAP](../../ROADMAP.md) à jour** (statut mission, dates de check).
 - **Voix Hayate** (vouvoiement, premium-émotionnel-cocon) dans toute la copy.
 - **Workflow déploiement** : staging → validation visuelle Walid → merge main = live.
