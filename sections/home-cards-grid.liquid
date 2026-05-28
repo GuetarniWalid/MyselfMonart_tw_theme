@@ -1,89 +1,283 @@
+{%- comment -%}
+  Home — Cards grid (grille de cartes collections).
+
+  Refonte 1:1 du style original `assets/home-styles.css` (lignes 234-340)
+  en Tailwind + vars theme — AUCUN changement visuel, juste :
+  - Playfair Display → font-heading (custom theme)
+  - couleurs hardcodées (--home-terracotta, --home-sable, --home-ink, etc.)
+    → vars theme (text-terra, bg-main-10, text-main, text-main-70)
+  - CSS scoped → Tailwind utility classes
+  - Reuse-first + admin-configurable + SEO + a11y respectés (cf skill)
+
+  Conventions skill shopify-section-dev :
+  - Tailwind only
+  - Vars globales : font-heading (serif), font-roboto (sans),
+    text-main, text-main-70, text-terra,
+    bg-secondary (badge label), bg-main-10 (image fallback)
+  - Admin-configurable strict (eyebrow, title, intro, columns, blocks)
+  - SEO : heading_level setting (h2 par défaut), aria-labelledby,
+    alt obligatoire, srcset pour image_picker
+  - A11y : stretched-link (carte cliquable entière), focus-visible:ring,
+    motion-reduce sur les transitions, aria-hidden sur l'arrow décoratif
+
+  enabled_on.templates = ['index']
+
+  Visuel à conserver à l'identique :
+  - Section padding clamp(64,10vw,120) 0 → py-16 md:py-24 lg:py-[120px]
+  - Header max-w 760px, text-center, mb clamp(48,6vw,80)
+  - Grid 1col / 2col(sm) / 3col(lg, default) / 2 ou 4 selon setting
+  - Card aspect 4/5, bg sable au repos, rounded[4px]
+  - Hover : card translate-y -4px + image scale 1.04 + arrow translate-x
+  - Label badge top-left : pill blanc, texte terra, uppercase tracking
+  - H3 22px, font-heading
+  - Lien arrow : "→" qui slide à droite au hover (motion-reduce safe)
+{%- endcomment -%}
+
 {%- liquid
-  assign cols_class = 'home-cards__grid--3'
+  assign heading_level = section.settings.heading_level | default: 'h2'
+  assign heading_id = 'home-cards-' | append: section.id
+  assign show_header = false
+  if section.settings.eyebrow != blank or section.settings.title != blank or section.settings.intro != blank
+    assign show_header = true
+  endif
+
   case section.settings.columns
     when '2'
-      assign cols_class = ''
+      assign grid_cols_lg_class = 'lg:grid-cols-2'
     when '4'
-      assign cols_class = 'home-cards__grid--4'
+      assign grid_cols_lg_class = 'lg:grid-cols-4'
+    else
+      assign grid_cols_lg_class = 'lg:grid-cols-3'
+  endcase
+
+  case section.settings.background_color
+    when 'cream'
+      assign bg_class = 'bg-main-5'
+    when 'sable'
+      assign bg_class = 'bg-main-10'
+    else
+      assign bg_class = 'bg-secondary'
   endcase
 -%}
 
-<section class="home-section home-cards">
-  <div class="home-container">
-    {%- if section.settings.eyebrow != blank or section.settings.title != blank or section.settings.intro != blank -%}
-      <div class="home-cards__header">
-        {%- if section.settings.eyebrow != blank -%}
-          <p class="home-eyebrow">{{ section.settings.eyebrow | escape }}</p>
-        {%- endif -%}
-        {%- if section.settings.title != blank -%}
-          <h2 class="home-h2">{{ section.settings.title | escape }}</h2>
-        {%- endif -%}
-        {%- if section.settings.intro != blank -%}
-          <p class="home-lead">{{ section.settings.intro }}</p>
-        {%- endif -%}
-      </div>
-    {%- endif -%}
-  </div>
+<section
+  class="home-cards {{ bg_class }} text-main w-full py-16 md:py-24 lg:py-[120px]"
+  {% if show_header %}aria-labelledby="{{ heading_id }}"{% endif %}>
 
-  <div class="home-cards__grid {{ cols_class }}">
-    {%- for block in section.blocks -%}
-      {%- liquid
-        assign img_url = ''
-        if block.settings.image != blank
-          assign img_url = block.settings.image | image_url: width: 800
-        elsif block.settings.image_asset != blank
-          assign img_url = block.settings.image_asset | asset_url
-        endif
+  {%- comment -%} Header centré max 760px (cohérent avec home-faq / home-prose) {%- endcomment -%}
+  {%- if show_header -%}
+    <div class="max-w-[760px] mx-auto mb-12 md:mb-20 px-6 text-center">
 
-        assign card_tag = 'div'
-        if block.settings.link != blank
-          assign card_tag = 'a'
-        endif
-      -%}
-      <{{ card_tag }} class="home-card"
-        {% if block.settings.link != blank %}href="{{ block.settings.link }}"{% endif %}
-        {{ block.shopify_attributes }}>
-        <div class="home-card__image-wrap">
-          {%- if img_url != '' -%}
-            <img class="home-card__image"
-              src="{{ img_url }}"
-              alt="{{ block.settings.alt | escape }}"
-              loading="lazy"
-              decoding="async">
-          {%- endif -%}
-          {%- if block.settings.label != blank -%}
-            <span class="home-card__label">{{ block.settings.label | escape }}</span>
-          {%- endif -%}
-        </div>
-        {%- if block.settings.title != blank -%}
-          <h3 class="home-card__title">{{ block.settings.title | escape }}</h3>
-        {%- endif -%}
-        {%- if block.settings.text != blank -%}
-          <div class="home-card__text">{{ block.settings.text }}</div>
-        {%- endif -%}
-        {%- if block.settings.link_label != blank and block.settings.link != blank -%}
-          <span class="home-card__link">{{ block.settings.link_label | escape }}</span>
-        {%- endif -%}
-      </{{ card_tag }}>
-    {%- endfor -%}
-  </div>
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="font-roboto text-xs font-medium tracking-[0.18em] uppercase text-terra mb-4 inline-block">
+          {{ section.settings.eyebrow | escape }}
+        </p>
+      {%- endif -%}
+
+      {%- if section.settings.title != blank -%}
+        <{{ heading_level }}
+          id="{{ heading_id }}"
+          class="font-heading font-medium leading-[1.1] tracking-[-0.01em] text-[32px] md:text-[44px] lg:text-[56px] mb-6">
+          {{ section.settings.title | escape }}
+        </{{ heading_level }}>
+      {%- endif -%}
+
+      {%- if section.settings.intro != blank -%}
+        <p class="font-roboto text-base md:text-lg lg:text-[19px] leading-[1.65] text-main-70 mb-0">
+          {{ section.settings.intro }}
+        </p>
+      {%- endif -%}
+
+    </div>
+  {%- endif -%}
+
+  {%- comment -%}
+    Grid responsive : 1/2/(2|3|4). gap 32px, padding lat 24px (px-6).
+    Liste sémantique <ul> pour les cartes (élément collection).
+  {%- endcomment -%}
+  {%- if section.blocks.size > 0 -%}
+    <ul class="grid grid-cols-1 sm:grid-cols-2 {{ grid_cols_lg_class }} gap-8 px-6 list-none m-0 p-0 pl-6 pr-6">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign img = block.settings.image
+          assign img_url = ''
+          if img != blank
+            assign img_url = img | image_url: width: 800
+          elsif block.settings.image_asset != blank
+            assign img_url = block.settings.image_asset | asset_url
+          endif
+
+          assign card_tag = 'div'
+          if block.settings.link != blank
+            assign card_tag = 'a'
+          endif
+        -%}
+        <li {{ block.shopify_attributes }}>
+          <{{ card_tag }}
+            class="home-card group flex flex-col text-inherit no-underline transition-transform duration-300 ease-out hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terra focus-visible:ring-offset-2 focus-visible:rounded-sm"
+            {% if block.settings.link != blank %}href="{{ block.settings.link }}"{% endif %}>
+
+            <div class="relative aspect-[4/5] overflow-hidden mb-5 bg-main-10 rounded">
+              {%- comment -%}
+                Image scale-110 par défaut → .is-centered (ajoutée par IO
+                quand la section atteint la zone centrale du viewport)
+                ramène à scale-100 = effet de dezoom à l'arrivée.
+                group-hover:!scale-105 override au survol pour garder une
+                interaction sensible. motion-reduce désactive tout zoom.
+              {%- endcomment -%}
+              {%- if img != blank -%}
+                <img
+                  data-card-img
+                  src="{{ img | image_url: width: 400 }}"
+                  srcset="{%- if img.width >= 400 -%}{{ img | image_url: width: 400 }} 400w,{%- endif -%}
+                          {%- if img.width >= 600 -%}{{ img | image_url: width: 600 }} 600w,{%- endif -%}
+                          {%- if img.width >= 800 -%}{{ img | image_url: width: 800 }} 800w,{%- endif -%}
+                          {{ img | image_url }} {{ img.width }}w"
+                  sizes="(min-width: 1024px) 22vw, (min-width: 640px) 45vw, 90vw"
+                  alt="{{ block.settings.alt | escape }}"
+                  width="{{ img.width }}"
+                  height="{{ img.height }}"
+                  loading="lazy"
+                  decoding="async"
+                  class="absolute inset-0 w-full h-full object-cover scale-110 transition-transform duration-700 ease-out motion-reduce:transition-none motion-reduce:!scale-100 [&.is-centered]:scale-100 group-hover:!scale-105">
+              {%- elsif img_url != '' -%}
+                <img
+                  data-card-img
+                  src="{{ img_url }}"
+                  alt="{{ block.settings.alt | escape }}"
+                  loading="lazy"
+                  decoding="async"
+                  class="absolute inset-0 w-full h-full object-cover scale-110 transition-transform duration-700 ease-out motion-reduce:transition-none motion-reduce:!scale-100 [&.is-centered]:scale-100 group-hover:!scale-105">
+              {%- endif -%}
+
+              {%- comment -%} Pill badge — top-RIGHT (Walid: cohérent avec home-rooms-grid) {%- endcomment -%}
+              {%- if block.settings.label != blank -%}
+                <span class="absolute top-4 right-4 px-3.5 py-1.5 bg-secondary text-terra font-roboto text-[11px] font-medium tracking-[0.12em] uppercase rounded-full">
+                  {{ block.settings.label | escape }}
+                </span>
+              {%- endif -%}
+            </div>
+
+            {%- if block.settings.title != blank -%}
+              <h3 class="font-heading font-medium text-[22px] text-main m-0 mb-2 leading-[1.25]">
+                {{ block.settings.title | escape }}
+              </h3>
+            {%- endif -%}
+
+            {%- if block.settings.text != blank -%}
+              <div class="font-roboto text-sm leading-[1.6] text-main-70 mb-3 [&_a]:text-terra [&_a]:underline [&_strong]:text-main [&_strong]:font-semibold">
+                {{ block.settings.text }}
+              </div>
+            {%- endif -%}
+
+            {%- if block.settings.link_label != blank and block.settings.link != blank -%}
+              <span class="font-roboto text-[13px] font-medium text-terra tracking-[0.04em] uppercase inline-flex items-center gap-2">
+                {{ block.settings.link_label | escape }}
+                <span aria-hidden="true" class="inline-block transition-transform duration-200 ease-out group-hover:translate-x-1 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0">→</span>
+              </span>
+            {%- endif -%}
+
+          </{{ card_tag }}>
+        </li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+
+  {%- comment -%}
+    Zoom dynamique scroll-driven (identique à home-rooms-grid V4) :
+    - Toutes les images démarrent en scale-110 (légèrement zoomées)
+    - Quand la SECTION atteint la zone centrale du viewport
+      (rootMargin -25% top/bottom = zone des 50% centraux),
+      .is-centered est ajoutée sur TOUTES les images → scale-100
+    - io.disconnect() : déclenchement unique (pas de re-trigger au scroll-up)
+    - getElementById scope à l'instance courante (pas global) — sinon le
+      même observer attraperait toutes les sections .home-cards
+    - reduced-motion bail out immédiat
+  {%- endcomment -%}
+  <script>
+    (function () {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const sec = document.getElementById('shopify-section-{{ section.id }}');
+      if (!sec || !('IntersectionObserver' in window)) return;
+      const imgs = sec.querySelectorAll('[data-card-img]');
+      if (!imgs.length) return;
+      const io = new IntersectionObserver(
+        (entries) => entries.forEach((e) => {
+          if (e.isIntersecting) {
+            imgs.forEach((img) => img.classList.add('is-centered'));
+            io.disconnect();
+          }
+        }),
+        { rootMargin: '-25% 0px -25% 0px', threshold: 0 }
+      );
+      io.observe(sec);
+    })();
+  </script>
+
 </section>
 
 {% schema %}
 {
   "name": "Home — Cards grid",
   "tag": "section",
+  "class": "home-cards-section",
   "enabled_on": { "templates": ["index"] },
-  "max_blocks": 12,
+  "max_blocks": 16,
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
-    { "type": "text", "id": "title", "label": "Titre H2" },
-    { "type": "textarea", "id": "intro", "label": "Intro" },
-    { "type": "select", "id": "columns", "label": "Colonnes desktop", "default": "3",
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow (capitales)"
+    },
+    {
+      "type": "select",
+      "id": "heading_level",
+      "label": "Niveau du titre (SEO)",
+      "info": "h2 par défaut.",
+      "default": "h2",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre principal"
+    },
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "Intro"
+    },
+    {
+      "type": "header",
+      "content": "Apparence"
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Colonnes desktop (≥ 1024px)",
+      "default": "3",
       "options": [
         { "value": "2", "label": "2" },
         { "value": "3", "label": "3" },
         { "value": "4", "label": "4" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "background_color",
+      "label": "Couleur de fond",
+      "default": "secondary",
+      "options": [
+        { "value": "secondary", "label": "Secondary (blanc cassé)" },
+        { "value": "cream",     "label": "Main 5% (sable doux)" },
+        { "value": "sable",     "label": "Main 10% (sable marqué)" }
       ]
     }
   ],
@@ -92,19 +286,59 @@
       "type": "card",
       "name": "Card",
       "settings": [
-        { "type": "image_picker", "id": "image", "label": "Image" },
-        { "type": "text", "id": "image_asset", "label": "OU asset filename" },
-        { "type": "text", "id": "alt", "label": "Alt text" },
-        { "type": "text", "id": "label", "label": "Label (étiquette top-left, optionnel)" },
-        { "type": "text", "id": "title", "label": "Titre H3" },
-        { "type": "richtext", "id": "text", "label": "Texte" },
-        { "type": "text", "id": "link_label", "label": "Lien (label)", "default": "Découvrir" },
-        { "type": "url", "id": "link", "label": "Lien (URL)" }
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "image_asset",
+          "label": "OU asset filename (fallback)"
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "Alt text (obligatoire SEO + a11y)"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label (pill top-left, optionnel)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titre (H3)"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Texte"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Label du lien",
+          "default": "Découvrir"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Lien (URL)"
+        }
       ]
     }
   ],
   "presets": [
-    { "name": "Home — Cards grid", "blocks": [{ "type": "card" }, { "type": "card" }, { "type": "card" }] }
+    {
+      "name": "Home — Cards grid",
+      "blocks": [
+        { "type": "card" },
+        { "type": "card" },
+        { "type": "card" }
+      ]
+    }
   ]
 }
 {% endschema %}
