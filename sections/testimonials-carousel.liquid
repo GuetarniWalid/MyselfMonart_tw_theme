@@ -118,6 +118,7 @@
       {
         "@context": "https://schema.org",
         "@type": "Organization",
+        "@id": "{{ request.origin }}/#organization",
         "name": {{ shop.name | json }},
         "url": {{ request.origin | json }},
         "aggregateRating": {
