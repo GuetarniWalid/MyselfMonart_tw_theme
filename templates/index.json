@@ -12,8 +12,8 @@
     "hero": {
       "type": "hero-with-text",
       "settings": {
-        "eyebrow": "Tableau décoration murale",
-        "h1_title": "Art & décoration murale",
+        "eyebrow": "Studio créatif français · Paris",
+        "h1_title": "Tableau décoration murale, l'art d'habiter vos murs",
         "subtitle": "Œuvres curées à la main par notre studio français. Toile 285g, encres archival 75 ans, cadre bois massif.",
         "cta_primary_label": "",
         "cta_primary_link": "",
@@ -572,7 +572,7 @@
       "type": "signature",
       "settings": {
         "line_1": "Avec soin,",
-        "line_2": "— Team MyselfMonArt"
+        "line_2": "— Hayate / Team MyselfMonArt"
       }
     }
   },
