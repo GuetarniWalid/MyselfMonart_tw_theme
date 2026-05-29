@@ -1,0 +1,206 @@
+{%- comment -%}
+  Collection — Éditorial (cocon sémantique) — v2.
+
+  Deux modes (setting `source`), pour décomposer le contenu d'une collection
+  sans le réécrire :
+  - intro : accroche courte, VISIBLE sous le H1 (lead typographique).
+  - guide : contenu éditorial profond, REPLIÉ dans un <details> natif
+    (« Lire le guide complet ») → plus de pavé, mais tout le SEO/cocon
+    reste dans le DOM.
+
+  Metafield-first avec fallback (modèle scalable, zéro-perte) :
+  - intro → collection.metafields.custom.intro, sinon setting `intro_text`.
+  - guide → collection.metafields.custom.guide, sinon collection.description
+    (la description native reste le foyer du texte optimisé + des liens cocon
+    — on ne la réécrit jamais : impossible de perdre un mot ou un lien).
+
+  REUSE FIRST : classe `.collection-description` (typo h2/h3/p/liens d'input.css),
+  pattern <details class="group"> + group-open (comme collapsible-content),
+  snippet tw-icon-chevron.
+
+  Conventions : Tailwind only, vars globales, admin-configurable, a11y
+  (<details>/<summary> natifs, focus-visible, motion-reduce), enabled_on collection.
+{%- endcomment -%}
+
+{%- liquid
+  assign source = section.settings.source | default: 'description'
+  case source
+    when 'intro'
+      assign content = collection.metafields.custom.intro
+      if content == blank
+        assign content = section.settings.intro_text
+      endif
+    when 'guide'
+      assign content = collection.metafields.custom.guide
+      if content == blank
+        assign content = collection.description
+      endif
+    else
+      assign content = collection.description
+  endcase
+
+  case section.settings.background_color
+    when 'cream'
+      assign bg_class = 'bg-main-5'
+    when 'secondary'
+      assign bg_class = 'bg-secondary'
+    else
+      assign bg_class = ''
+  endcase
+
+  case section.settings.max_width
+    when 'narrow'
+      assign mw_class = 'max-w-2xl'
+    when 'wide'
+      assign mw_class = 'max-w-4xl'
+    else
+      assign mw_class = 'max-w-3xl'
+  endcase
+
+  # Espacement : l'en-tête (intro) respire davantage au-dessus ; le guide replié reste compact.
+  if source == 'intro'
+    assign pad_class = 'pt-16 md:pt-24 pb-8 md:pb-10'
+  elsif section.settings.collapsible
+    assign pad_class = 'py-8 md:py-12'
+  else
+    assign pad_class = 'py-10 md:py-14'
+  endif
+-%}
+
+{%- if content != blank -%}
+  <section
+    class="collection-editorial {{ bg_class }} w-full {{ pad_class }}"
+    aria-label="{{ section.settings.aria_label | default: collection.title | escape }}">
+    <div class="{{ mw_class }} mx-auto px-4 md:px-6">
+
+      {%- if source == 'intro' -%}
+        {%- comment -%}
+          En-tête de collection : eyebrow + H1 (collection.title) + accroche.
+          Pattern aligné sur les en-têtes de la home (eyebrow terra uppercase +
+          titre font-heading + corps roboto léger), raffiné et cohérent thème.
+        {%- endcomment -%}
+        <div class="text-center">
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="font-roboto text-xs font-medium tracking-[0.2em] uppercase text-terra mb-4">
+              {{ section.settings.eyebrow | escape }}
+            </p>
+          {%- endif -%}
+          {%- if section.settings.show_title -%}
+            <h1 class="font-heading font-medium text-[30px] md:text-[42px] lg:text-[50px] leading-[1.1] tracking-[-0.01em] text-main mb-5">
+              {{ collection.title | escape }}
+            </h1>
+          {%- endif -%}
+          <div class="font-roboto text-base md:text-lg leading-[1.65] text-main-70 max-w-xl mx-auto [&_a]:text-terra [&_a]:underline">
+            <p>{{ content | newline_to_br }}</p>
+          </div>
+        </div>
+
+      {%- elsif section.settings.collapsible -%}
+        {%- comment -%} Guide profond REPLIÉ — <details> natif, chevron ▶→▼ au déploiement. {%- endcomment -%}
+        <details class="collection-guide group border-t border-b border-main-10">
+          <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer flex items-center gap-3 py-6 font-heading text-lg md:text-xl text-main outline-none focus-visible:ring-2 focus-visible:ring-terra focus-visible:ring-offset-2 focus-visible:rounded-sm">
+            <span aria-hidden="true" class="flex-shrink-0 text-terra transition-transform duration-300 ease-out motion-reduce:transition-none group-open:rotate-90">
+              {%- render 'tw-icon-chevron', width: 16 -%}
+            </span>
+            <span>{{ section.settings.summary_label | default: 'Lire le guide complet' | escape }}</span>
+          </summary>
+          <div class="collection-description pb-8 pt-2">
+            {{ content }}
+          </div>
+        </details>
+
+      {%- else -%}
+        {%- comment -%} Rendu simple non replié (compat ascendante). {%- endcomment -%}
+        <div class="collection-description">{{ content }}</div>
+      {%- endif -%}
+
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Collection — Éditorial",
+  "tag": "section",
+  "class": "collection-editorial-section",
+  "enabled_on": {
+    "templates": ["collection"]
+  },
+  "settings": [
+    {
+      "type": "select",
+      "id": "source",
+      "label": "Contenu à afficher",
+      "default": "description",
+      "info": "intro → metafield custom.intro (sinon texte de secours ci-dessous). guide → metafield custom.guide (sinon la description de la collection).",
+      "options": [
+        { "value": "intro",       "label": "Intro courte (accroche, visible)" },
+        { "value": "guide",       "label": "Guide complet (profond)" },
+        { "value": "description", "label": "Description brute (simple)" }
+      ]
+    },
+    {
+      "type": "textarea",
+      "id": "intro_text",
+      "label": "Texte de secours pour l'intro",
+      "info": "Utilisé si le metafield custom.intro est vide (utile pour le pilote)."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow (étiquette au-dessus du titre — mode intro)",
+      "info": "Petite étiquette en capitales, ex : « Collection »."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "label": "Afficher le titre de la collection en H1 (mode intro)",
+      "info": "Le H1 reprend le nom de la collection. À n'activer que sur UNE section par page.",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "collapsible",
+      "label": "Replier le contenu (mode guide)",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "summary_label",
+      "label": "Libellé du repli",
+      "default": "Lire le guide complet"
+    },
+    {
+      "type": "select",
+      "id": "max_width",
+      "label": "Largeur de lecture",
+      "default": "medium",
+      "options": [
+        { "value": "narrow", "label": "Étroite (max-w-2xl)" },
+        { "value": "medium", "label": "Moyenne (max-w-3xl)" },
+        { "value": "wide",   "label": "Large (max-w-4xl)" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "background_color",
+      "label": "Couleur de fond",
+      "default": "secondary",
+      "options": [
+        { "value": "secondary",   "label": "Secondary (blanc cassé)" },
+        { "value": "cream",       "label": "Main 5% (sable doux)" },
+        { "value": "transparent", "label": "Transparent (hérite du parent)" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Aria-label (a11y)",
+      "info": "Par défaut : le nom de la collection."
+    }
+  ],
+  "presets": [
+    { "name": "Collection — Éditorial" }
+  ]
+}
+{% endschema %}

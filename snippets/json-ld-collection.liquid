@@ -1,0 +1,34 @@
+{%- comment -%}
+  CollectionPage JSON-LD — schema générique pour pages collection.
+  Émis via un bloc `custom-liquid` dans le template (ex : templates/collection.tableau-salon.json)
+  avec pour valeur `{% render 'json-ld-collection' %}`.
+
+  Complète, sans les dupliquer :
+  - l'ItemList émis par `main-collection-product-grid` (liste des produits)
+  - le BreadcrumbList émis par `breadcrumb`
+  La FAQPage est émise séparément par `collapsible-content` (emit_faq_jsonld).
+
+  Réutilisable sur n'importe quelle collection : aucune donnée en dur.
+{%- endcomment -%}
+{%- liquid
+  assign coll_desc = collection.description | strip_html | strip | truncatewords: 50
+  if coll_desc == blank
+    assign coll_desc = collection.title
+  endif
+-%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": {{ collection.title | json }},
+  "description": {{ coll_desc | json }},
+  "url": {{ canonical_url | json }},
+  "inLanguage": "fr-FR",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": {{ shop.name | json }},
+    "url": {{ shop.url | json }}
+  }{% if collection.image %},
+  "primaryImageOfPage": {{ collection.image | image_url: width: 1200 | prepend: 'https:' | json }}{% endif %}
+}
+</script>

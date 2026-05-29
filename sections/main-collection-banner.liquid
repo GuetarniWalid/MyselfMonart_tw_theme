@@ -1,10 +1,12 @@
 <h1 class="py-8">{{ collection.title | escape }}</h1>
+{%- if section.settings.show_description -%}
 <div class="collection-description dropdown-button-target{% if section.settings.show_collapse_button %} h-56 overflow-hidden relative after:absolute after:bottom-0 after:w-full after:h-20 after:bg-gradient-to-t after:from-secondary{% endif %}">{{ collection.description }}</div>
 {%- if section.settings.show_collapse_button -%}
   <dropdown-button>
     <button class="group mt-6">{{ 'sections.main_collection_banner.learn_more' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
     <button class="group mt-2 hidden">{{ 'sections.main_collection_banner.fewer_details' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
   </dropdown-button>
+{%- endif -%}
 {%- endif -%}
 
 {% if section.settings.to_place_first %}
@@ -21,6 +23,13 @@
     "class": "main-collection-banner page-width mb-14 px-4",
     "tag": "section",
     "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_description",
+        "default": true,
+        "label": "Afficher la description de la collection",
+        "info": "Décocher pour n'afficher que le H1 (ex : quand la description est rendue dans une section éditoriale dédiée plus bas)."
+      },
       {
         "type": "checkbox",
         "id": "show_collapse_button",

@@ -27,10 +27,12 @@
   - Header max-w 760px, text-center, mb clamp(48,6vw,80)
   - Grid 1col / 2col(sm) / 3col(lg, default) / 2 ou 4 selon setting
   - Card aspect 4/5, bg sable au repos, rounded[4px]
-  - Hover : card translate-y -4px + image scale 1.04 + arrow translate-x
+  - Hover : SEULE l'image s'anime (scale 1.05). La carte ne se soulève plus
+    (translate-y retiré) → le texte sous l'image reste fixe.
   - Label badge top-left : pill blanc, texte terra, uppercase tracking
   - H3 22px, font-heading
-  - Lien arrow : "→" qui slide à droite au hover (motion-reduce safe)
+  - Lien arrow : snippet tw-icon-arrow (flèche qui s'allonge au hover via
+    elong-arrow), width réduit pour rester fin à côté du texte
 {%- endcomment -%}
 
 {%- liquid
@@ -114,7 +116,7 @@
         -%}
         <li {{ block.shopify_attributes }}>
           <{{ card_tag }}
-            class="home-card group flex flex-col text-inherit no-underline transition-transform duration-300 ease-out hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terra focus-visible:ring-offset-2 focus-visible:rounded-sm"
+            class="home-card group flex flex-col text-inherit no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terra focus-visible:ring-offset-2 focus-visible:rounded-sm"
             {% if block.settings.link != blank %}href="{{ block.settings.link }}"{% endif %}>
 
             <div class="relative aspect-[4/5] overflow-hidden mb-5 bg-main-10 rounded">
@@ -173,7 +175,7 @@
             {%- if block.settings.link_label != blank and block.settings.link != blank -%}
               <span class="font-roboto text-[13px] font-medium text-terra tracking-[0.04em] uppercase inline-flex items-center gap-2">
                 {{ block.settings.link_label | escape }}
-                <span aria-hidden="true" class="inline-block transition-transform duration-200 ease-out group-hover:translate-x-1 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0">→</span>
+                {% render 'tw-icon-arrow', width: 22 %}
               </span>
             {%- endif -%}
 

@@ -1,0 +1,190 @@
+{
+  "layout": "collection",
+  "sections": {
+    "breadcrumb": {
+      "type": "breadcrumb",
+      "settings": {}
+    },
+    "main-collection-product-grid": {
+      "type": "main-collection-product-grid",
+      "settings": {
+        "primary_image_index": 1,
+        "next_image_index": 0,
+        "margin_top": "mt-0"
+      }
+    },
+    "collection_editorial_intro": {
+      "type": "collection-editorial",
+      "settings": {
+        "source": "intro",
+        "eyebrow": "Collection",
+        "show_title": true,
+        "intro_text": "",
+        "collapsible": false,
+        "max_width": "narrow",
+        "background_color": "secondary",
+        "aria_label": "Introduction"
+      }
+    },
+    "collection_editorial_guide": {
+      "type": "collection-editorial",
+      "settings": {
+        "source": "guide",
+        "collapsible": true,
+        "summary_label": "Lire le guide complet du tableau de salon",
+        "max_width": "medium",
+        "background_color": "cream",
+        "aria_label": "Guide du tableau de salon"
+      }
+    },
+    "faq_salon": {
+      "type": "collapsible-content",
+      "blocks": {
+        "faq_choisir": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Quel tableau choisir pour un salon ?",
+            "icon": "none",
+            "row_content": "<p>Tout dépend de l'ambiance recherchée. Pour un salon chic et moderne, privilégiez une œuvre abstraite ou graphique aux teintes douces. Pour une atmosphère apaisante, un paysage ou un tableau zen. Et pour dynamiser la pièce, un tableau coloré au-dessus du canapé. L'essentiel : qu'il vous touche et dialogue avec vos meubles et vos couleurs.</p>"
+          }
+        },
+        "faq_taille": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Quelle taille de tableau au-dessus d'un canapé ?",
+            "icon": "none",
+            "row_content": "<p>Une bonne proportion occupe environ les deux tiers de la largeur du canapé, centrée à hauteur des yeux. Au-dessus d'un canapé de 220 cm, visez une œuvre ou une composition de 140 à 160 cm de large. Sur un grand mur, un format XXL ou un triptyque crée un bel effet galerie.</p>"
+          }
+        },
+        "faq_placer": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Où placer un tableau dans un salon ?",
+            "icon": "none",
+            "row_content": "<p>Les emplacements les plus naturels sont au-dessus du canapé, du buffet ou de la cheminée, et le long d'un mur de circulation. Centrez l'œuvre à environ 1,50 m du sol, à hauteur des yeux. Évitez de l'accrocher trop haut : un tableau doit accompagner le regard, pas obliger à lever la tête.</p>"
+          }
+        },
+        "faq_moderne": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Quel style de tableau pour un salon moderne ?",
+            "icon": "none",
+            "row_content": "<p>Les salons modernes s'accordent particulièrement avec l'art abstrait, les lignes graphiques, le noir et blanc et les compositions minimalistes. Une seule teinte travaillée en nuances crée un effet chic et intemporel. Un cadre fin et discret met l'œuvre en valeur sans l'alourdir.</p>"
+          }
+        },
+        "faq_qualite": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Vos tableaux sont-ils de bonne qualité ?",
+            "icon": "none",
+            "row_content": "<p>Oui. Chaque tableau est imprimé sur une toile premium de 285 g/m² avec des encres archival garanties 75 ans, puis monté sur un cadre en bois massif. Les œuvres sont sélectionnées et retouchées à la main par notre direction artistique, conçues en France et imprimées en Europe. Depuis 2022, plus de 1 000 tableaux ont rejoint de vrais intérieurs.</p>"
+          }
+        },
+        "faq_livraison": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Comment se passe la livraison ?",
+            "icon": "none",
+            "row_content": "<p>Vos tableaux sont fabriqués à la demande, puis expédiés avec soin et protégés pour le transport. Le délai précis et le suivi figurent sur chaque fiche produit et dans votre confirmation de commande. Une question avant de commander ? Notre service client à Toulouse vous répond au 09 60 44 61 50.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_choisir",
+        "faq_taille",
+        "faq_placer",
+        "faq_moderne",
+        "faq_qualite",
+        "faq_livraison"
+      ],
+      "settings": {
+        "eyebrow": "FAQ",
+        "heading_level": "h2",
+        "heading_size": "medium",
+        "heading_weight": "semibold",
+        "question_size": "medium",
+        "accent_tone": "terra",
+        "heading": "Vos questions sur les tableaux de salon",
+        "lead": "",
+        "background_color": "secondary",
+        "padding_size": "small",
+        "emit_faq_jsonld": true
+      }
+    },
+    "related_carousel": {
+      "type": "cards-carousel",
+      "blocks": {
+        "rel_abstrait": {
+          "type": "room",
+          "settings": { "collection": "tableau-abstrait" }
+        },
+        "rel_zen": {
+          "type": "room",
+          "settings": { "collection": "tableau-zen" }
+        },
+        "rel_paysage": {
+          "type": "room",
+          "settings": { "collection": "tableau-paysage" }
+        },
+        "rel_couleur": {
+          "type": "room",
+          "settings": { "collection": "tableau-couleur" }
+        },
+        "rel_chambre": {
+          "type": "room",
+          "settings": { "collection": "tableau-chambre" }
+        },
+        "rel_cuisine": {
+          "type": "room",
+          "settings": { "collection": "tableau-cuisine" }
+        },
+        "rel_bureau": {
+          "type": "room",
+          "settings": { "collection": "tableau-bureau" }
+        }
+      },
+      "block_order": [
+        "rel_abstrait",
+        "rel_zen",
+        "rel_paysage",
+        "rel_couleur",
+        "rel_chambre",
+        "rel_cuisine",
+        "rel_bureau"
+      ],
+      "settings": {
+        "eyebrow_number": "",
+        "eyebrow_label": "",
+        "heading_level": "h2",
+        "h2_title": "Explorez nos autres univers déco",
+        "intro": "",
+        "background_color": "secondary",
+        "padding_size": "small",
+        "show_descriptions": false
+      }
+    },
+    "custom_liquid_schema": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "{% render 'json-ld-collection' %}"
+      }
+    },
+    "signature_salon": {
+      "type": "signature",
+      "settings": {
+        "line_1": "Que votre salon devienne ce lieu où l'on se pose, enfin.",
+        "line_2": "— Hayate, Team MyselfMonArt"
+      }
+    }
+  },
+  "order": [
+    "breadcrumb",
+    "main-collection-product-grid",
+    "collection_editorial_intro",
+    "related_carousel",
+    "collection_editorial_guide",
+    "faq_salon",
+    "custom_liquid_schema",
+    "signature_salon"
+  ]
+}

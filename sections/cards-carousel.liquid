@@ -59,10 +59,19 @@
   assign heading_level = section.settings.heading_level | default: 'h2'
   assign heading_id = 'home-rooms-grid-' | append: section.id
   assign carousel_label = section.settings.h2_title | escape | default: 'Pièces'
+
+  case section.settings.padding_size
+    when 'small'
+      assign pad_class = 'py-10 md:py-14'
+    when 'medium'
+      assign pad_class = 'py-14 md:py-20'
+    else
+      assign pad_class = 'py-20 md:py-28 lg:py-36'
+  endcase
 -%}
 
 <section
-  class="home-rooms-grid {{ bg_class }} {{ text_class }} w-full py-20 md:py-28 lg:py-36"
+  class="home-rooms-grid {{ bg_class }} {{ text_class }} w-full min-w-0 overflow-x-hidden {{ pad_class }}"
   aria-labelledby="{{ heading_id }}">
 
   {%- comment -%} Header — eyebrow + H2 + intro (textes complets de la spec PHASE-4) {%- endcomment -%}
@@ -105,21 +114,42 @@
 
       {%- for block in section.blocks -%}
         {%- liquid
+          comment
+            Source du contenu : un bloc peut pointer une COLLECTION
+            (image/titre/lien auto, comme l'ancienne section collection-list)
+            OU rester en mode manuel (image_picker/asset + titre + lien).
+            Les valeurs manuelles, si présentes, priment sur la collection.
+          endcomment
+          assign card_image = block.settings.image
+          assign card_title = block.settings.title
+          assign card_link = block.settings.link
+          if block.settings.collection != blank
+            if card_image == blank
+              assign card_image = block.settings.collection.featured_image
+            endif
+            if card_title == blank
+              assign card_title = block.settings.collection.title
+            endif
+            if card_link == blank
+              assign card_link = block.settings.collection.url
+            endif
+          endif
+
           assign img_url = ''
-          assign img_alt = block.settings.image_alt | default: block.settings.short_title
           assign img_width = 800
           assign img_height = 1120
-
-          if block.settings.image != blank
-            assign img_url = block.settings.image | image_url: width: 800
-            assign img_width = block.settings.image.width
-            assign img_height = block.settings.image.height
+          if card_image != blank
+            assign img_url = card_image | image_url: width: 800
+            assign img_width = card_image.width
+            assign img_height = card_image.height
           elsif block.settings.image_asset != blank
             assign img_url = block.settings.image_asset | asset_url
           endif
 
+          assign img_alt = block.settings.image_alt | default: card_image.alt | default: card_title
+
           assign has_link = false
-          if block.settings.link != blank
+          if card_link != blank
             assign has_link = true
           endif
         -%}
@@ -133,14 +163,14 @@
             <div class="relative overflow-hidden aspect-[5/7] {{ bg_class }} mb-5">
 
               {%- if img_url != '' -%}
-                {%- if block.settings.image != blank -%}
+                {%- if card_image != blank -%}
                   <img
                     data-room-img
-                    srcset="{%- if block.settings.image.width >= 400 -%}{{ block.settings.image | image_url: width: 400 }} 400w,{%- endif -%}
-                            {%- if block.settings.image.width >= 600 -%}{{ block.settings.image | image_url: width: 600 }} 600w,{%- endif -%}
-                            {%- if block.settings.image.width >= 800 -%}{{ block.settings.image | image_url: width: 800 }} 800w,{%- endif -%}
-                            {%- if block.settings.image.width >= 1000 -%}{{ block.settings.image | image_url: width: 1000 }} 1000w,{%- endif -%}
-                            {{ block.settings.image | image_url }} {{ block.settings.image.width }}w"
+                    srcset="{%- if card_image.width >= 400 -%}{{ card_image | image_url: width: 400 }} 400w,{%- endif -%}
+                            {%- if card_image.width >= 600 -%}{{ card_image | image_url: width: 600 }} 600w,{%- endif -%}
+                            {%- if card_image.width >= 800 -%}{{ card_image | image_url: width: 800 }} 800w,{%- endif -%}
+                            {%- if card_image.width >= 1000 -%}{{ card_image | image_url: width: 1000 }} 1000w,{%- endif -%}
+                            {{ card_image | image_url }} {{ card_image.width }}w"
                     sizes="(max-width: 639px) 82vw, (max-width: 767px) 58vw, (max-width: 1023px) 40vw, 28vw"
                     src="{{ img_url }}"
                     alt="{{ img_alt | escape }}"
@@ -176,21 +206,21 @@
               Stretched-link : H3 > a avec ::after couvrant toute l'<article>.
               Toute la card devient cliquable, 1 seul lien sémantique.
             {%- endcomment -%}
-            {%- if block.settings.title != blank -%}
+            {%- if card_title != blank -%}
               <h3 class="font-heading {{ text_class }} !text-lg md:!text-xl leading-snug mb-3">
                 {%- if has_link -%}
                   <a
-                    href="{{ block.settings.link }}"
+                    href="{{ card_link }}"
                     class="after:absolute after:inset-0 after:z-20 focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-buy-button focus-visible:after:ring-offset-2">
-                    {{ block.settings.title | escape }}
+                    {{ card_title | escape }}
                   </a>
                 {%- else -%}
-                  {{ block.settings.title | escape }}
+                  {{ card_title | escape }}
                 {%- endif -%}
               </h3>
             {%- endif -%}
 
-            {%- if block.settings.description != blank -%}
+            {%- if section.settings.show_descriptions and block.settings.description != blank -%}
               <div class="font-roboto text-sm md:text-base leading-relaxed {{ muted_class }} mb-4 [&_strong]:{{ text_class }} [&_strong]:font-semibold">
                 {{ block.settings.description }}
               </div>
@@ -201,7 +231,7 @@
               <p class="mt-auto" aria-hidden="true">
                 <span class="inline-flex items-center gap-2 font-roboto text-xs tracking-[0.18em] uppercase {{ link_class }}">
                   <span>{{ block.settings.link_label | escape }}</span>
-                  <span class="transition-transform duration-200 ease-out motion-reduce:transition-none group-hover:translate-x-1">→</span>
+                  {% render 'tw-icon-arrow', width: 22 %}
                 </span>
               </p>
             {%- endif -%}
@@ -315,13 +345,37 @@
         { "value": "sable",     "label": "Main 10% (sable plus marqué)" },
         { "value": "dark",      "label": "Main (fond sombre, texte clair)" }
       ]
+    },
+    {
+      "type": "select",
+      "id": "padding_size",
+      "label": "Espacement vertical",
+      "default": "large",
+      "options": [
+        { "value": "small",  "label": "Petit" },
+        { "value": "medium", "label": "Moyen" },
+        { "value": "large",  "label": "Grand (défaut)" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_descriptions",
+      "label": "Afficher les descriptions sous les images",
+      "info": "Décocher pour n'afficher que l'image + le titre (ex : maillage de collections).",
+      "default": true
     }
   ],
   "blocks": [
     {
       "type": "room",
-      "name": "Pièce",
+      "name": "Carte",
       "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection (remplit image + titre + lien automatiquement)",
+          "info": "Si renseigné, l'image, le titre et le lien sont tirés de la collection. Les champs ci-dessous restent prioritaires s'ils sont remplis."
+        },
         {
           "type": "image_picker",
           "id": "image",
