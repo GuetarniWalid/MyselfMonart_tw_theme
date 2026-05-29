@@ -9,7 +9,7 @@
 {% endcomment %}
 
 <my-like-button data-product-id="{{ product.id }}" data-product-handle="{{ product.handle }}" data-product-short-title="{{ product.metafields.title.short | escape }}">
-  <button class="inline-flex flex-col like relative p-2 items-center gap-1 z-20 {{ margin_bottom }}">
+  <button type="button" aria-label="Ajouter ce tableau à mes favoris" class="inline-flex flex-col like relative p-2 items-center gap-1 z-20 {{ margin_bottom }}">
     {% render 'tw-icon-heart-design' %}
   </button>
 </my-like-button>
