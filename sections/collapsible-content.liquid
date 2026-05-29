@@ -47,6 +47,15 @@
       assign bg_class = 'bg-secondary'
   endcase
 
+  case section.settings.padding_size
+    when 'small'
+      assign pad_class = 'py-10 md:py-14'
+    when 'medium'
+      assign pad_class = 'py-14 md:py-20'
+    else
+      assign pad_class = 'py-16 md:py-24 lg:py-[120px]'
+  endcase
+
   case section.settings.heading_size
     when 'small'
       assign heading_size_class = 'text-xl md:text-2xl'
@@ -103,7 +112,7 @@
 -%}
 
 <section
-  class="collapsible-content {{ bg_class }} text-main w-full py-16 md:py-24 lg:py-[120px]"
+  class="collapsible-content {{ bg_class }} text-main w-full {{ pad_class }}"
   {% if show_header %}aria-labelledby="{{ heading_id }}"{% endif %}>
 
   {%- comment -%} Header centré, max 760px (cohérent avec home-faq) {%- endcomment -%}
@@ -325,6 +334,17 @@
         { "value": "cream",       "label": "Main 5% (sable doux)" },
         { "value": "sable",       "label": "Main 10% (sable marqué)" },
         { "value": "transparent", "label": "Transparent (hérite du parent)" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "padding_size",
+      "label": "Espacement vertical",
+      "default": "large",
+      "options": [
+        { "value": "small",  "label": "Petit" },
+        { "value": "medium", "label": "Moyen" },
+        { "value": "large",  "label": "Grand (défaut)" }
       ]
     },
     {
