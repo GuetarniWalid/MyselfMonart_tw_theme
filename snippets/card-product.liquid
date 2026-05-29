@@ -32,21 +32,34 @@
   -%}
 
   {%- if primary_image -%}
+    {%- capture primary_srcset -%}{%- if primary_image.width >= 200 -%}{{ primary_image | image_url: width: 200 }} 200w,{%- endif -%}{%- if primary_image.width >= 300 -%}{{ primary_image | image_url: width: 300 }} 300w,{%- endif -%}{%- if primary_image.width >= 400 -%}{{ primary_image | image_url: width: 400 }} 400w,{%- endif -%}{%- if primary_image.width >= 500 -%}{{ primary_image | image_url: width: 500 }} 500w,{%- endif -%}{{ primary_image | image_url }} {{ primary_image.width }}w{%- endcapture -%}
+    {%- capture primary_alt -%}{% if product.metafields.meta_object.media.value.alts.value[1] %}{{ product.metafields.meta_object.media.value.alts.value[1] | escape }}{% else %}{{ product.media[1].alt | escape }}{% endif %}{%- endcapture -%}
     <div class="mb-2 md:mb-5">
       <div class="skeleton overflow-hidden relative w-full duration-100" style="aspect-ratio: {{ primary_image.width }} / {{ primary_image.height }}">
+        {%- if lazy_load == false -%}
+        {%- comment -%} Image eager + prioritaire : candidate LCP (1ères cartes), pas de lazy JS {%- endcomment -%}
         <img
-          data-srcset="{%- if primary_image.width >= 200 -%}{{ primary_image | image_url: width: 200 }} 200w,{%- endif -%}
-            {%- if primary_image.width >= 300 -%}{{ primary_image | image_url: width: 300 }} 300w,{%- endif -%}
-            {%- if primary_image.width >= 400 -%}{{ primary_image | image_url: width: 400 }} 400w,{%- endif -%}
-            {%- if primary_image.width >= 500 -%}{{ primary_image | image_url: width: 500 }} 500w,{%- endif -%}
-            {{ primary_image | image_url }} {{ primary_image.width }}w"
+          srcset="{{ primary_srcset }}"
+          src="{{ primary_image | image_url: width: 400 }}"
+          sizes="(min-width: 768px) 33%, (min-width: 1024px) 300px, 50%"
+          alt="{{ primary_alt }}"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+          width="{{ primary_image.width }}"
+          height="{{ primary_image.height }}"
+          class="w-full h-full object-contain translate-x-1">
+        {%- else -%}
+        <img
+          data-srcset="{{ primary_srcset }}"
           src="{{ primary_image | image_url: width: 10 }}"
           sizes="(min-width: 768px) 33%, (min-width: 1024px) 300px, 50%"
-          alt="{% if product.metafields.meta_object.media.value.alts.value[1] %}{{ product.metafields.meta_object.media.value.alts.value[1] | escape }}{% else %}{{ product.media[1].alt | escape }}{% endif %}"
+          alt="{{ primary_alt }}"
           loading="lazy"
           width="{{ primary_image.width }}"
           height="{{ primary_image.height }}"
           class="lqip w-full h-full object-contain translate-x-1">
+        {%- endif -%}
 
         {%- if should_show_next -%}
           <img

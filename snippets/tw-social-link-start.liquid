@@ -6,7 +6,7 @@
 {% endcomment %}
 
 {% if balise == 'a' %}
-  <a href="{{ network }}" target="_blank" rel="noopener noreferrer">
+  <a href="{{ network }}" target="_blank" rel="noopener noreferrer"{% if label != blank %} aria-label="{{ label | escape }}"{% endif %}>
 {% else %}
-  <span class="obfuscate" data-url64="{{ network | base64_encode }}" data-blank="true" tabindex="0">
+  <span class="obfuscate" data-url64="{{ network | base64_encode }}" data-blank="true" tabindex="0"{% if label != blank %} role="link" aria-label="{{ label | escape }}"{% endif %}>
 {% endif %}

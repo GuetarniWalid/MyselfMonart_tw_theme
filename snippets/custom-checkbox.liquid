@@ -30,8 +30,7 @@
     {%- comment -%} Color swatch checkbox {%- endcomment -%}
     <div
       class="inline-block relative w-5 h-5 rounded {% if checkbox_swatch_border %}border border-main-30{% else %}border-0{% endif %} cursor-pointer has-[:checked]:border-2 has-[:checked]:border-main"
-      role="checkbox"
-      style="{% if checkbox_swatch_image %}background-image: url('{{ checkbox_swatch_image }}'); background-size: cover; background-position: center;{% elsif checkbox_swatch_color %}background-color: {{ checkbox_swatch_color }};{% endif %}">
+           style="{% if checkbox_swatch_image %}background-image: url('{{ checkbox_swatch_image }}'); background-size: cover; background-position: center;{% elsif checkbox_swatch_color %}background-color: {{ checkbox_swatch_color }};{% endif %}">
       <input
         id="{{ checkbox_id }}"
         class="absolute inset-0 opacity-0 cursor-pointer peer"
@@ -52,7 +51,7 @@
     </div>
   {% else %}
     {%- comment -%} Default checkbox (for tags, etc) {%- endcomment -%}
-    <div class="inline-block relative w-5 h-5 rounded border-2 border-main-80 bg-transparent cursor-pointer has-[:checked]:border-0 has-[:checked]:bg-main" role="checkbox">
+    <div class="inline-block relative w-5 h-5 rounded border-2 border-main-80 bg-transparent cursor-pointer has-[:checked]:border-0 has-[:checked]:bg-main">
       <input
         id="{{ checkbox_id }}"
         class="absolute inset-0 opacity-0 cursor-pointer peer"
