@@ -19,6 +19,7 @@ Logique d'**amélioration continue** : pour chaque page/cluster important → on
 |---|---|---|---|---|---|---|
 | 1 | **Homepage** | tableau décoration murale | ✅ **Déployée** | 2026-05-28 | J+14 : **2026-06-11** · J+30 : **2026-06-27** | [missions/homepage/](missions/homepage/) |
 | 2 | **Collection Salon** | tableau salon (+ chic/déco/moderne) | ✅ **Déployée** | 2026-05-29 | J+14 : **2026-06-12** · J+30 : **2026-06-28** | [missions/collection-salon/](missions/collection-salon/) |
+| 3 | **Accessibilité thème** (transverse) | — (qualité/UX, cible Lighthouse a11y 95+) | 🔜 À démarrer | — | — | [missions/a11y-theme/](missions/a11y-theme/) |
 
 Légende statut : 🔜 à démarrer · 🟡 en cours · ✅ déployée · 📈 en suivi · 🏁 clôturée (suivi terminé)
 
