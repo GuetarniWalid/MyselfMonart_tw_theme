@@ -145,13 +145,13 @@
     "@context": "https://schema.org",
     "@type": "ItemList",
     "name": "{{ collection.title }}",
-    "url": "{{ shop.url }} {{ collection.url }}",
+    "url": "{{ shop.url }}{{ collection.url }}",
     "itemListElement": [
       {%- for product in collection.products -%}
         {
           "@type": "ListItem",
           "position": {{ forloop.index }},
-          "url": "{{ shop.url }} {{ product.url }}",
+          "url": "{{ shop.url }}{{ product.url }}",
           "item": {
             "@type": "Product",
             "name": {{ product.title | strip_html | json }},
