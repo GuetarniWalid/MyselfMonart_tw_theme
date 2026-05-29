@@ -6,9 +6,11 @@
 | Jalon | Date prévue | Clics | Impr. | Pos moy. | Pos « tableau salon » | FAQPage/Breadcrumb en SERP ? | Notes |
 |---|---|---|---|---|---|---|---|
 | Baseline | 2026-05-28 | 383 | 29 863 | 10,98 | 11,56 | — | Avant refonte |
-| Déploiement | _à venir_ | — | — | — | — | — | _date de mise en live_ |
-| J+14 | _déploiement + 14 j_ | | | | | | |
-| J+30 | _déploiement + 30 j_ | | | | | | |
+| Déploiement | **2026-05-29** | — | — | — | — | — | Fichiers déployés sur thème live (run CI success). ⚠️ Page effective une fois le template assigné en admin + URL soumise à Search Console. |
+| J+14 | **2026-06-12** | | | | | | ☐ à faire |
+| J+30 | **2026-06-28** | | | | | | ☐ à faire |
+
+> ⚠️ Le « top du chrono » GSC = moment où le template `tableau-salon` est **assigné** à la collection en admin (la nouvelle page devient effective) + URL soumise à Search Console. Si l'assignation est faite après le 2026-05-29, décaler J+14/J+30 en conséquence.
 
 ## Commandes de check (skill gsc-query)
 
