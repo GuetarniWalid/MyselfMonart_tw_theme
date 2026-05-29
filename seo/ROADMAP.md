@@ -18,7 +18,7 @@ Logique d'**amélioration continue** : pour chaque page/cluster important → on
 | # | Mission | Keyword cible | Statut | Déployé le | Prochain check GSC | Dossier |
 |---|---|---|---|---|---|---|
 | 1 | **Homepage** | tableau décoration murale | ✅ **Déployée** | 2026-05-28 | J+14 : **2026-06-11** · J+30 : **2026-06-27** | [missions/homepage/](missions/homepage/) |
-| 2 | **Collection Salon** | tableau salon (+ chic/déco/moderne) | 🟡 **Prête (local) — en attente validation** | — | — | [missions/collection-salon/](missions/collection-salon/) |
+| 2 | **Collection Salon** | tableau salon (+ chic/déco/moderne) | ✅ **Déployée** | 2026-05-29 | J+14 : **2026-06-12** · J+30 : **2026-06-28** | [missions/collection-salon/](missions/collection-salon/) |
 
 Légende statut : 🔜 à démarrer · 🟡 en cours · ✅ déployée · 📈 en suivi · 🏁 clôturée (suivi terminé)
 
@@ -30,9 +30,9 @@ Légende statut : 🔜 à démarrer · 🟡 en cours · ✅ déployée · 📈 e
 |---|---|---|---|
 | **2026-06-11** | Check GSC **J+14** | Homepage | ☐ |
 | **2026-06-27** | Check GSC **J+30** | Homepage | ☐ |
-| _déploiement_ | Push staging → validation Walid → merge main | Collection Salon | ☐ |
-| _live + 14 j_ | Check GSC **J+14** | Collection Salon | ☐ |
-| _live + 30 j_ | Check GSC **J+30** | Collection Salon | ☐ |
+| ~~2026-05-29~~ | ~~Déploiement live~~ | Collection Salon | ☑ (fichiers déployés ; reste : assigner template + title/meta en admin) |
+| **2026-06-12** | Check GSC **J+14** | Collection Salon | ☐ |
+| **2026-06-28** | Check GSC **J+30** | Collection Salon | ☐ |
 
 > ⚠️ Les rappels email automatiques ont été désactivés (Walid relance manuellement). Quand il dit « lance le suivi SEO », exécuter le check de la mission concernée via le skill `gsc-query` et consigner le résultat dans le `FOLLOWUP.md` de la mission + cocher ci-dessus.
 
