@@ -111,8 +111,13 @@
               if media.media_type == 'image'
                 assign image_index = image_index | plus: 1
                 if image_index >= start_from
+                  if number_of_media == 0
+                    assign is_lcp_image = true
+                  else
+                    assign is_lcp_image = false
+                  endif
                   assign number_of_media = number_of_media | plus: 1
-                  render 'tw-main-product-image', media: media, loop: forloop
+                  render 'tw-main-product-image', media: media, loop: forloop, is_lcp: is_lcp_image
                 endif
               endif
             endfor
@@ -176,7 +181,11 @@
           {%- when 'text' -%}
             <div class="flex flex-col gap-4 mb-4 text-lg mx-4">{{- block.settings.text -}}</div>
           {%- when 'title' -%}
-            <h1 class="{{ block.settings.font_size }} {{ block.settings.margin_bottom }} mx-4">{{ product.title | escape }}</h1>
+            {%- if block.settings.tone == 'subtitle' -%}
+              <h1 class="text-xs font-normal text-brand-700 leading-relaxed tracking-wide {{ block.settings.margin_bottom }} mx-4">{{ product.title | escape }}</h1>
+            {%- else -%}
+              <h1 class="{{ block.settings.font_size }} {{ block.settings.margin_bottom }} mx-4">{{ product.title | escape }}</h1>
+            {%- endif -%}
           {%- when 'short_title' -%}
             {%- if product.metafields.title.short != blank or block.settings.show_likes -%}
               <div class="flex justify-between items-center {{ block.settings.margin_bottom }} mx-4">
@@ -277,9 +286,9 @@
                   {% render 'icon-accordion'
                     , icon: block.settings.icon
                     , color: block.settings.icon_color %}
-                  <h4 class="h4 text-base max-w-[90%] text-main-90 font-normal">
+                  <h2 class="h4 text-base max-w-[90%] text-main-90 font-normal">
                     {{ block.settings.heading | default: block.settings.page.title }}
-                  </h4>
+                  </h2>
                 </div>
                 <span class="group-open:rotate-180 transition-transform duration-200 mr-5 flex items-center">
                   {% render 'tw-icon-caret'
@@ -460,6 +469,13 @@
               <input type="hidden" name="_tapestry-y-position">
             </div>
           {%- when 'trustpilot_review' -%}
+            {%- liquid
+              # Source de verite unique : settings globaux du theme (cf. settings_schema.json
+              # groupe "Trustpilot"). Modifier la note ou le nb d'avis a UN seul endroit met
+              # a jour toutes les fiches produit automatiquement.
+              assign tp_score = settings.trustpilot_score_global | default: 41
+              assign tp_count = settings.trustpilot_review_count_global | default: 80
+            -%}
             <div class="{{ block.settings.margin_bottom }} mx-4">
               <p class="flex items-center mb-1 text-main-70">
                 <a
@@ -473,10 +489,10 @@
                 {% for i in (1..5) %}
                   {% liquid
                     assign current = i | times: 10
-                    if current <= block.settings.trustpilot_score
+                    if current <= tp_score
                       assign green_width = 'w-full'
                     else
-                      assign percent = block.settings.trustpilot_score | plus: 10 | minus: current | times: 10
+                      assign percent = tp_score | plus: 10 | minus: current | times: 10
                       if percent == 0
                         assign green_width = 'w-0'
                       elsif percent > 0 and percent <= 25
@@ -501,14 +517,14 @@
                     </svg>
                   </div>
                 {% endfor %}
-                <p class="flex items-center ml-2 text-main-70">{{ 'sections.trustpilot.score' | t }}: {{ block.settings.trustpilot_score | divided_by: 10.0 }}</p>
+                <p class="flex items-center ml-2 text-main-70">{{ 'sections.trustpilot.score' | t }}: {{ tp_score | divided_by: 10.0 }}</p>
               </div>
             </div>
             {% capture reviews_structured_data %}
                 "aggregateRating": {
                   "@type": "AggregateRating",
-                  "ratingValue": "{{ block.settings.trustpilot_score | divided_by: 10.0 }}",
-                  "ratingCount": "30",
+                  "ratingValue": "{{ tp_score | divided_by: 10.0 }}",
+                  "ratingCount": "{{ tp_count }}",
                   "worstRating": "1",
                   "bestRating": "5"
                 }
@@ -518,9 +534,35 @@
     </div>
   </main-product-blocks>
 </div>
+{%- liquid
+  assign sd_country = section.settings.ships_country | default: 'FR'
+  assign sd_return_days = section.settings.return_days | default: 14
+-%}
+{%- capture product_return_schema -%}
+  {%- if section.settings.enable_merchant_schema -%}
+  ,"hasMerchantReturnPolicy": {
+    "@type": "MerchantReturnPolicy",
+    "applicableCountry": "{{ sd_country }}",
+    "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+    "merchantReturnDays": {{ sd_return_days }},
+    "returnMethod": "https://schema.org/ReturnByMail"
+  }
+  {%- endif -%}
+{%- endcapture -%}
+{%- capture offer_shipping_schema -%}
+  {%- if section.settings.enable_merchant_schema -%}
+  ,"shippingDetails": {
+    "@type": "OfferShippingDetails",
+    {%- if section.settings.shipping_free %}
+    "shippingRate": { "@type": "MonetaryAmount", "value": "0", "currency": {{ cart.currency.iso_code | json }} },
+    {%- endif %}
+    "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "{{ sd_country }}" }
+  }
+  {%- endif -%}
+{%- endcapture -%}
 <script type="application/ld+json">
     {
-      "@context": "http://schema.org/",
+      "@context": "https://schema.org/",
       "@type": "Product",
       "@id": "{{ request.origin | append: product.url }}",
       "name": {{ product.title | json }},
@@ -537,7 +579,7 @@
           "brand": {
             "@type": "Brand",
             "name": {{ product.vendor | json }}
-          },
+          }{{ product_return_schema }},
           "offers": [
                     {%- for variant in product.variants -%}
               {
@@ -554,14 +596,15 @@
                       {%- if variant.barcode.size == 14 -%}
                         "gtin14": {{ variant.barcode }},
                         {%- endif -%}
-                        "availability": "http://schema.org/{% if variant.available %} InStock{% else %}OutOfStock{% endif %}",
+                        "availability": "https://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
                         "price": {{ variant.price | divided_by: 100.00 | json }},
+                        "priceValidUntil": "{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' }}",
                         "priceCurrency": {{ cart.currency.iso_code | json }},
                         "url": {{ request.origin | append: variant.url | json }},
                         "seller": {
                           "@type": "Organization",
                           "name": "{{ product.vendor }}"
-                        }
+                        }{% if forloop.first %}{{ offer_shipping_schema }}{% endif %}
                       }{% unless forloop.last %},{% endunless %}
                     {%- endfor -%}
                   ]{%- if reviews_structured_data != blank -%},
@@ -582,6 +625,36 @@
         "label": "t:sections.main-product.settings.start_from_media.label",
         "info": "t:sections.main-product.settings.start_from_media.info",
         "default": 1
+      },
+      {
+        "type": "header",
+        "content": "Données structurées marchand (SEO)"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_merchant_schema",
+        "label": "Émettre livraison + politique de retour (JSON-LD)",
+        "info": "Ajoute shippingDetails et hasMerchantReturnPolicy aux offres du schema Product (rich results livraison/retour Google).",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "shipping_free",
+        "label": "Livraison gratuite",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "ships_country",
+        "label": "Pays (code ISO)",
+        "info": "Code pays pour la livraison et les retours. Ex : FR.",
+        "default": "FR"
+      },
+      {
+        "type": "number",
+        "id": "return_days",
+        "label": "Délai de retour (jours)",
+        "default": 14
       }
     ],
     "blocks": [
@@ -607,8 +680,20 @@
         "settings": [
           {
             "type": "select",
+            "id": "tone",
+            "label": "Style visuel du H1",
+            "info": "Subtitle = petit, gris, discret (idéal sous un supertitle poétique). Headline = grand et prominent.",
+            "options": [
+              { "value": "headline", "label": "Titre principal (prominent)" },
+              { "value": "subtitle", "label": "Sous-titre discret (gris)" }
+            ],
+            "default": "headline"
+          },
+          {
+            "type": "select",
             "id": "font_size",
             "label": "t:sections.main-product.blocks.title.settings.font_size.label",
+            "info": "Utilisé uniquement quand Style = Titre principal.",
             "options": [
               {
                 "value": "text-lg",
@@ -1155,11 +1240,8 @@
         "name": "t:sections.main-product.blocks.trustpilot_review.name",
         "settings": [
           {
-            "type": "number",
-            "id": "trustpilot_score",
-            "label": "t:sections.main-product.blocks.trustpilot_review.settings.trustpilot_score.label",
-            "info": "t:sections.main-product.blocks.trustpilot_review.settings.trustpilot_score.info",
-            "default": 43
+            "type": "paragraph",
+            "content": "La note et le nombre d'avis sont gérés globalement dans Theme settings → Trustpilot (avis marque). Modifier les valeurs là met à jour toutes les fiches produit d'un coup."
           },
           {
             "type": "url",

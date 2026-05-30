@@ -9,20 +9,46 @@
     {% render 'tw-main-product-image', media: media %}
 {% endcomment %}
 
+{%- liquid
+  assign img_alt = media.alt
+  if product.metafields.meta_object.media.value.alts.value[loop.index0]
+    assign img_alt = product.metafields.meta_object.media.value.alts.value[loop.index0]
+  endif
+-%}
 <span class="img-wrapper w-[83.33vw] sm:w-[75vw] md:w-[550px] max-w-full overflow-hidden skeleton flex-none group cursor-pointer flex items-center snap-start">
-  <img
-    data-srcset="{%- if media.preview_image.width >= 400 -%}{{ media.preview_image | image_url: width: 400 }} 400w,{%- endif -%}
+  {%- if is_lcp -%}
+    <img
+      srcset="{%- if media.preview_image.width >= 400 -%}{{ media.preview_image | image_url: width: 400 }} 400w,{%- endif -%}
             {%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}
             {%- if media.preview_image.width >= 700 -%}{{ media.preview_image | image_url: width: 700 }} 700w,{%- endif -%}
             {%- if media.preview_image.width >= 1100 -%}{{ media.preview_image | image_url: width: 1100 }} 1100w,{%- endif -%}
             {{ media.preview_image | image_url }} {{ media.preview_image.width }}w"
-    src="{{ media.preview_image | image_url: width: 40 }}"
-    sizes="(min-width: 900px) 340px, (min-width: 768px) 550px, (min-width: 640px) 75vw, 83.33vw"
-    alt="{% if product.metafields.meta_object.media.value.alts.value[loop.index0] %}{{ product.metafields.meta_object.media.value.alts.value[loop.index0] | escape }}{% else %}{{ media.alt | escape }}{% endif %}"
-    loading="eager"
-    width="550"
-    height="auto"
-    data-media-id="{{ media.id }}"
-    class="lqip w-full h-full transition-all duration-100 object-contain 2md:object-center"
-  >
+      src="{{ media.preview_image | image_url: width: 700 }}"
+      sizes="(min-width: 900px) 340px, (min-width: 768px) 550px, (min-width: 640px) 75vw, 83.33vw"
+      alt="{{ img_alt | escape }}"
+      fetchpriority="high"
+      loading="eager"
+      decoding="async"
+      width="{{ media.preview_image.width }}"
+      height="{{ media.preview_image.height }}"
+      data-media-id="{{ media.id }}"
+      class="w-full h-full transition-all duration-100 object-contain 2md:object-center"
+    >
+  {%- else -%}
+    <img
+      data-srcset="{%- if media.preview_image.width >= 400 -%}{{ media.preview_image | image_url: width: 400 }} 400w,{%- endif -%}
+            {%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}
+            {%- if media.preview_image.width >= 700 -%}{{ media.preview_image | image_url: width: 700 }} 700w,{%- endif -%}
+            {%- if media.preview_image.width >= 1100 -%}{{ media.preview_image | image_url: width: 1100 }} 1100w,{%- endif -%}
+            {{ media.preview_image | image_url }} {{ media.preview_image.width }}w"
+      src="{{ media.preview_image | image_url: width: 40 }}"
+      sizes="(min-width: 900px) 340px, (min-width: 768px) 550px, (min-width: 640px) 75vw, 83.33vw"
+      alt="{{ img_alt | escape }}"
+      loading="lazy"
+      width="{{ media.preview_image.width }}"
+      height="{{ media.preview_image.height }}"
+      data-media-id="{{ media.id }}"
+      class="lqip w-full h-full transition-all duration-100 object-contain 2md:object-center"
+    >
+  {%- endif -%}
 </span>
