@@ -63,7 +63,7 @@
           "settings": {
             "heading": "Détails du produit",
             "icon": "clipboard",
-            "content": "<h5>Qualité artisanale & savoir-faire</h5><p>Chaque toile est une pièce unique, fabriquée spécialement pour vous. Notre impression à la demande nous permet d'atteindre un niveau de qualité incomparable avec la production industrielle, tout en adoptant une démarche responsable qui limite les déchets.</p><p>Nous utilisons des encres haut de gamme, reconnues pour leur exceptionnelle résistance à la lumière. Vos couleurs restent éclatantes au fil des années, même exposées à la lumière naturelle de votre intérieur.</p><p></p><h5>Montage artisanal</h5><p>Chaque toile est tendue à la main sur un châssis en bois massif, pour un rendu élégant et une profondeur qui donne du relief à l'œuvre. La profondeur est de 3 cm pour les toiles.</p><h5><br/>Directement prêt à accrocher</h5><p>Nos toiles encadrées sont livrées montées et prêtes à accrocher. Le cadre en bois massif apporte une finition soignée qui s'intègre harmonieusement dans tout style de décoration.</p>",
+            "content": "<h3>Qualité artisanale & savoir-faire</h3><p>Chaque toile est une pièce unique, fabriquée spécialement pour vous. Notre impression à la demande nous permet d'atteindre un niveau de qualité incomparable avec la production industrielle, tout en adoptant une démarche responsable qui limite les déchets.</p><p>Nous utilisons des encres haut de gamme, reconnues pour leur exceptionnelle résistance à la lumière. Vos couleurs restent éclatantes au fil des années, même exposées à la lumière naturelle de votre intérieur.</p><p></p><h3>Montage artisanal</h3><p>Chaque toile est tendue à la main sur un châssis en bois massif, pour un rendu élégant et une profondeur qui donne du relief à l'œuvre. La profondeur est de 3 cm pour les toiles.</p><h3><br/>Directement prêt à accrocher</h3><p>Nos toiles encadrées sont livrées montées et prêtes à accrocher. Le cadre en bois massif apporte une finition soignée qui s'intègre harmonieusement dans tout style de décoration.</p>",
             "page": ""
           }
         },
@@ -72,7 +72,7 @@
           "settings": {
             "heading": "Retour et échange",
             "icon": "return",
-            "content": "<h5>Notre engagement qualité</h5><p>Chaque œuvre quitte notre atelier soigneusement emballée pour voyager en toute sécurité jusqu'à chez vous. Dans le rare cas où votre tableau arriverait endommagé ou ne correspondrait pas à nos exigences de qualité, nous nous engageons à vous envoyer une nouvelle pièce sans aucun frais.</p><p>Parce que vous méritez une œuvre parfaite sur vos murs, nous restons à vos côtés jusqu'à votre entière satisfaction.</p>",
+            "content": "<h3>Notre engagement qualité</h3><p>Chaque œuvre quitte notre atelier soigneusement emballée pour voyager en toute sécurité jusqu'à chez vous. Dans le rare cas où votre tableau arriverait endommagé ou ne correspondrait pas à nos exigences de qualité, nous nous engageons à vous envoyer une nouvelle pièce sans aucun frais.</p><p>Parce que vous méritez une œuvre parfaite sur vos murs, nous restons à vos côtés jusqu'à votre entière satisfaction.</p>",
             "page": ""
           }
         },
@@ -124,6 +124,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-femme-abstrait-crayon-pastel.jpg",
+            "image_asset": "",
             "message": "Très beau tableau ! Je suis ravie de mon achat, merci.. Léa M"
           }
         },
@@ -131,6 +132,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-alluminium-japonais-geisha-avis-clien.jpg",
+            "image_asset": "",
             "message": "Je suis juste en admiration devant cette œuvre et vous remercie de sortir de l’ordinaire pour habiller nos murs!!!\nUn grand merci. Sandra B"
           }
         },
@@ -138,6 +140,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/toile-moderne-frida-fleurs.jpg",
+            "image_asset": "",
             "message": "Dès l’ouverture du carton, j’ai trouvé la toile magnifique.\nEncore plus belle que sur la photo du site.\nJe l’ai installée. Et l’effet est «  waouh ! »\nTrès jolie toile ! Très beau site !\nJe suis ravi de mon achat. Cécile C"
           }
         },
@@ -145,6 +148,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-contemporain-abstrait-femme-ronde.jpg",
+            "image_asset": "",
             "message": "Reçu mon tableau et franchement, je ne regrette pas une seconde ! Les couleurs sont incroyables, l’originalité saute aux yeux… Impossible de ne pas s’arrêter devant. Sophie D"
           }
         },
@@ -152,6 +156,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableauphotographie-zebre-animaux-zebre-sauvage.jpg",
+            "image_asset": "",
             "message": "L'animal, majestueux et solitaire trône dans mon salon au dessus de ma console... Peut on dire qu il est magnifique ? Assurément oui et je l adore!\nPatricia G."
           }
         },
@@ -159,6 +164,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-gaming-marvel-iron-man.jpg",
+            "image_asset": "",
             "message": "Très content de mon achat ! Mon fils est ravi il va faire de beaux rêves de super-héros\n. Eugene D"
           }
         },
@@ -166,6 +172,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/peinture-femme-noire-muse.jpg",
+            "image_asset": "",
             "message": "Magnifique tableau et très design, correspond parfaitement à la description.  Morel E"
           }
         },
@@ -173,6 +180,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/Tableau-chambre-bebe_f6e62e6e-707b-41df-aa17-bdad25ef3385.jpg",
+            "image_asset": "",
             "message": "Juste une petite photo avec le cadre mis en place encore un grand merci à vous 🥰. \nElodie G"
           }
         },
@@ -180,6 +188,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/deco-mural-toile-marilyn-monroe-pop-art.jpg",
+            "image_asset": "",
             "message": "Envoie très rapide et tableau encore plus beau que sur le site.\nParfait je recommande !!!\nJessica S"
           }
         },
@@ -187,6 +196,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/decoration-mural-cadre-bois-cactus-paysage-colore.jpg",
+            "image_asset": "",
             "message": "Super contente du rendu de ces cadres en bois ! 🌵 Ça apporte tellement de chaleur et de gaieté à mon salon, j’adore ! 😍 Lina O"
           }
         },
@@ -194,6 +204,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/avis-tableau-plexi_2.jpg",
+            "image_asset": "",
             "message": "Tableau magnifique, très contente du support choisi en plexiglas réalisé avec soin. Joëlle N"
           }
         },
@@ -201,6 +212,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-animaux-rhinoceros_b1022df5-0085-43a4-93b7-011dd579d316.jpg",
+            "image_asset": "",
             "message": "AMAZING ! Le poster est magnifique, il fait son effet dans mon salon. Vanessa K"
           }
         },
@@ -208,6 +220,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/deco-mural-ying-yang.jpg",
+            "image_asset": "",
             "message": "Le tableau est magnifique! Alexandre V"
           }
         },
@@ -215,6 +228,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-fruit-legume-cuisine-ananas-colore.jpg",
+            "image_asset": "",
             "message": "Trop contente de mon tableau, les couleurs sont aussi flashy que sur les photos du site.\nSarah F"
           }
         },
@@ -223,6 +237,7 @@
           "disabled": true,
           "settings": {
             "image": "shopify://shop_images/tableau-street-art-femme-noire.jpg",
+            "image_asset": "",
             "message": "Parfait\nSuper rendu. \tMariane B"
           }
         },
@@ -230,6 +245,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-panoramique-payasage-foret-lac.jpg",
+            "image_asset": "",
             "message": "Ce tableau est magnifique et tellement immersif ! Il donne une vraie sensation d’évasion et transforme l’ambiance de mon salon. Pierre S"
           }
         },
@@ -237,6 +253,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-zen-japonais-geisha_59746ee5-1329-4a3a-94ad-bc201116687c.jpg",
+            "image_asset": "",
             "message": "Nous sommes très satisfait de notre achat\nTrès bonne qualité\nNous ferons d´autres achats chez vous.\nBernard D"
           }
         },
@@ -244,6 +261,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-pour-cuisine-epices-colore.jpg",
+            "image_asset": "",
             "message": "Ravie de mon achat,\ntrès beau rendu des couleurs qui sont éclatantes. \nYannick R."
           }
         },
@@ -251,6 +269,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/Tableau-chambre_a164de8b-ed28-4326-926b-92bbe380279b.jpg",
+            "image_asset": "",
             "message": "Le tableau est super, et encore plus beau en vrai ! Arrivé rapidement et bien protégé. Alain N"
           }
         },
@@ -258,6 +277,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/Tableau-decoration_44dcf7be-75b3-46aa-810b-3020d3b9dc06.jpg",
+            "image_asset": "",
             "message": "Très belle toile, les couleurs sont super et brillante. Marie K"
           }
         },
@@ -265,6 +285,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/Tableau-deco-noir-et-blanc.jpg",
+            "image_asset": "",
             "message": "Top, rien à dire de plus. \nGuillaume H"
           }
         },
@@ -272,6 +293,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-comics-super-man.jpg",
+            "image_asset": "",
             "message": "Nickel, très satisfait c'est ma 3e commande. Hugo G"
           }
         },
@@ -279,6 +301,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-superman-aquarelle.jpg",
+            "image_asset": "",
             "message": "TOP, tableau reçu rapidement avec suivie. Hugo G"
           }
         },
@@ -286,6 +309,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-lion-impression-alluminuim.jpg",
+            "image_asset": "",
             "message": "TOP QUALITÉ,  j'ai choisi l'impression sur aluminium et l'image est vraiment top. Ethan V"
           }
         }
@@ -317,7 +341,14 @@
         "image_text_pFY7GA"
       ],
       "settings": {
-        "title": "+1 000 intérieurs sublimés"
+        "eyebrow": "Ils nous font confiance",
+        "heading_level": "h2",
+        "title": "+1 000 intérieurs sublimés",
+        "lead": "Le meilleur portrait de notre travail, ce sont les photos que nos clients nous envoient une fois leur tableau accroché.",
+        "review_count": 80,
+        "trustpilot_score": 41,
+        "trustpilot_link": "",
+        "emit_review_jsonld": false
       }
     },
     "image_with_text_Bx3TYf": {
@@ -470,8 +501,16 @@
       ],
       "settings": {
         "eyebrow": "FAQ",
+        "heading_level": "h2",
+        "heading_size": "medium",
+        "heading_weight": "semibold",
+        "question_size": "medium",
+        "accent_tone": "buy-button",
         "heading": "QUESTIONS FRÉQUENTES",
-        "accent_tone": "buy-button"
+        "lead": "",
+        "background_color": "secondary",
+        "padding_size": "large",
+        "emit_faq_jsonld": false
       }
     },
     "badges_CQWfDx": {
