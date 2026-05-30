@@ -284,5 +284,26 @@
         "default": 100
       }
     ]
+  },
+  {
+    "name": "Trustpilot (avis marque)",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Note et nombre d'avis utilisés pour l'affichage Trustpilot et l'aggregateRating JSON-LD sur toutes les fiches produit. Une seule source de vérité — modifier ici met à jour toutes les fiches automatiquement."
+      },
+      {
+        "type": "number",
+        "id": "trustpilot_score_global",
+        "label": "Score Trustpilot (sur 50, ex : 41 = 4.1/5)",
+        "default": 41
+      },
+      {
+        "type": "number",
+        "id": "trustpilot_review_count_global",
+        "label": "Nombre total d'avis",
+        "default": 80
+      }
+    ]
   }
 ]
