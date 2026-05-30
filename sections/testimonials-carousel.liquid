@@ -6,7 +6,7 @@
 
   Conventions skill shopify-section-dev :
   - Tailwind only (aucun CSS scoped)
-  - Variables globales : font-heading, font-roboto, text-secondary, text-secondary-50,
+  - Variables globales : font-heading, font-roboto, text-secondary, text-secondary,
     bg-brand-700 (darken 40% du brand_color admin), text-terra
   - REUSE FIRST : <snap-carrousel> custom element + snippet 'customer-testimonial-card'
     (theme: 'dark') + script component-carrousel.js — mêmes patterns que trust-signals
@@ -40,7 +40,7 @@
   <div class="max-w-3xl mx-auto px-6 md:px-8 text-center mb-12 md:mb-16">
 
     {%- if section.settings.eyebrow != blank -%}
-      <p class="font-roboto text-xs tracking-[0.22em] uppercase font-medium text-secondary-50 flex items-center justify-center gap-3 mb-6 md:mb-8">
+      <p class="font-roboto text-xs tracking-[0.22em] uppercase font-medium text-secondary flex items-center justify-center gap-3 mb-6 md:mb-8">
         <span aria-hidden="true" class="block h-px w-8 bg-current opacity-50"></span>
         <span>{{ section.settings.eyebrow | escape }}</span>
         <span aria-hidden="true" class="block h-px w-8 bg-current opacity-50"></span>
@@ -56,13 +56,13 @@
     {%- endif -%}
 
     {%- if section.settings.lead != blank -%}
-      <p class="font-roboto text-lg md:text-xl leading-relaxed text-secondary-50 max-w-2xl mx-auto">
+      <p class="font-roboto text-lg md:text-xl leading-relaxed text-secondary max-w-2xl mx-auto">
         {{ section.settings.lead | escape }}
       </p>
     {%- endif -%}
 
     {%- if section.settings.review_count and section.settings.review_count > 0 -%}
-      <p class="mt-6 md:mt-8 font-roboto text-sm text-secondary-50">
+      <p class="mt-6 md:mt-8 font-roboto text-sm text-secondary">
         {{ section.settings.review_count }} retours vérifiés sur Trustpilot
         {%- if section.settings.trustpilot_link != blank -%}
           <span aria-hidden="true" class="mx-2">·</span>
