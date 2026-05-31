@@ -4,3 +4,7 @@ node_modules/
 .DS_Store
 *.log
 shopify.theme.toml
+
+# Marker du dernier deploy, ecrit par le CI sur la live theme uniquement.
+# Ne jamais committer (cf .github/workflows/deploy-shopify-theme.yml).
+assets/github-deploy-info.json
