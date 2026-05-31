@@ -1,7 +1,7 @@
 # 🗼 ROADMAP — Pilotage SEO/Croissance MyselfMonArt
 
 > **CONTROL TOWER — point d'entrée unique.** Quand Walid demande « on en est où ? » ou « que doit-on faire ? », **la réponse est ici**.
-> Dernière révision : 2026-05-28
+> Dernière révision : 2026-05-31
 
 ---
 
@@ -20,6 +20,7 @@ Logique d'**amélioration continue** : pour chaque page/cluster important → on
 | 1 | **Homepage** | tableau décoration murale | ✅ **Déployée** | 2026-05-28 | J+14 : **2026-06-11** · J+30 : **2026-06-27** | [missions/homepage/](missions/homepage/) |
 | 2 | **Collection Salon** | tableau salon (+ chic/déco/moderne) | ✅ **Déployée** | 2026-05-29 | J+14 : **2026-06-12** · J+30 : **2026-06-28** | [missions/collection-salon/](missions/collection-salon/) |
 | 3 | **Accessibilité thème** (transverse) | — (qualité/UX, cible Lighthouse a11y 95+) | 🔜 À démarrer | — | — | [missions/a11y-theme/](missions/a11y-theme/) |
+| 4 | **Refonte fiche produit `painting`** (transverse) | — (template SOCLE de tous les tableaux : schema, Hn, a11y, LCP) | ✅ **Déployée** | 2026-05-31 | J+14 : **2026-06-14** · J+30 : **2026-06-30** | [missions/product-painting/](missions/product-painting/) |
 
 Légende statut : 🔜 à démarrer · 🟡 en cours · ✅ déployée · 📈 en suivi · 🏁 clôturée (suivi terminé)
 
@@ -34,6 +35,9 @@ Légende statut : 🔜 à démarrer · 🟡 en cours · ✅ déployée · 📈 e
 | ~~2026-05-29~~ | ~~Déploiement live~~ | Collection Salon | ☑ (fichiers déployés ; reste : assigner template + title/meta en admin) |
 | **2026-06-12** | Check GSC **J+14** | Collection Salon | ☐ |
 | **2026-06-28** | Check GSC **J+30** | Collection Salon | ☐ |
+| ~~2026-05-31~~ | ~~Déploiement live~~ | Refonte fiche painting | ☑ |
+| **2026-06-14** | Check GSC **J+14** | Refonte fiche painting | ☐ |
+| **2026-06-30** | Check GSC **J+30** | Refonte fiche painting | ☐ |
 
 > ⚠️ Les rappels email automatiques ont été désactivés (Walid relance manuellement). Quand il dit « lance le suivi SEO », exécuter le check de la mission concernée via le skill `gsc-query` et consigner le résultat dans le `FOLLOWUP.md` de la mission + cocher ci-dessus.
 
@@ -75,6 +79,6 @@ seo/
 ## 🔗 Références transverses
 
 - **Skill de suivi** : `gsc-query` (local) — siteUrl `sc-domain:myselfmonart.com`, country `fra`
-- **Déploiement** : push branche `staging` → thème staging ; push `main` → thème live (GitHub Actions). Workflow Walid : edit → staging → validation visuelle → merge main = live.
+- **Déploiement** : push `main` → thème live New MyselfMonArt (#167301710171) via GitHub Actions. La branche staging et le thème "GitHub Staging" ont été supprimés le 2026-05-31 (workflow simplifié main-only).
 - **Faits structurels marque** : mémoire `project_myselfmonart_facts.md`
 - **Différenciation sémantique inter-pages** (anti-cannibalisation) : la home vise le générique « tableau décoration murale » ; les collections visent pièce/style (ex : salon = « tableau salon » + chic/moderne/déco). À respecter dans chaque nouvelle mission.
