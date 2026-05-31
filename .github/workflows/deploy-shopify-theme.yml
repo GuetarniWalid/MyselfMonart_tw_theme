@@ -3,18 +3,8 @@ name: Deploy Shopify Theme
 on:
   push:
     branches:
-      - staging
       - main
   workflow_dispatch:
-    inputs:
-      target:
-        description: "Theme target to deploy"
-        required: true
-        default: "staging"
-        type: choice
-        options:
-          - staging
-          - live
 
 permissions:
   contents: write
@@ -57,27 +47,13 @@ jobs:
       - name: Install Shopify CLI
         run: npm install -g @shopify/cli@latest
 
-      - name: Resolve target theme
+      - name: Resolve target theme (live only)
         id: target
         shell: bash
         run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            TARGET="${{ github.event.inputs.target }}"
-          elif [[ "${{ github.ref_name }}" == "main" ]]; then
-            TARGET="live"
-          else
-            TARGET="staging"
-          fi
-
-          if [[ "$TARGET" == "live" ]]; then
-            echo "theme_id=${{ secrets.SHOPIFY_LIVE_THEME_ID }}" >> "$GITHUB_OUTPUT"
-            echo "allow_live=--allow-live" >> "$GITHUB_OUTPUT"
-          else
-            echo "theme_id=${{ secrets.SHOPIFY_STAGING_THEME_ID }}" >> "$GITHUB_OUTPUT"
-            echo "allow_live=" >> "$GITHUB_OUTPUT"
-          fi
-
-          echo "target=$TARGET" >> "$GITHUB_OUTPUT"
+          echo "theme_id=${{ secrets.SHOPIFY_LIVE_THEME_ID }}" >> "$GITHUB_OUTPUT"
+          echo "allow_live=--allow-live" >> "$GITHUB_OUTPUT"
+          echo "target=live" >> "$GITHUB_OUTPUT"
 
       - name: Pull current Shopify theme before deploying
         env:
