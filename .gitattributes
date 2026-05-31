@@ -1,0 +1,27 @@
+# Force LF line endings for all text files in this repo.
+#
+# Pourquoi : Shopify CLI sur Windows ecrit les fichiers theme avec CRLF
+# lors d'un `shopify theme pull`, ce qui contamine la live theme avec des
+# CRLF si on push depuis Windows. Le CI Linux relit ensuite la live (CRLF)
+# et compare a ses propres blobs git (LF) → mismatch → auto-sync conflict
+# bloquant sur fichiers en realite identiques (juste EOL different).
+#
+# `eol=lf` force git a stocker ET checkout en LF sur toutes plateformes,
+# `text=auto` detecte automatiquement les fichiers binaires pour les
+# exclure de la normalisation.
+* text=auto eol=lf
+
+# Binaires explicites — pas de conversion EOL
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.webp binary
+*.ico  binary
+*.svg  binary
+*.woff binary
+*.woff2 binary
+*.ttf  binary
+*.eot  binary
+*.pdf  binary
+*.zip  binary

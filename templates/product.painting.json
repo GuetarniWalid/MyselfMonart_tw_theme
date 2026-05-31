@@ -78,6 +78,7 @@
         "title": {
           "type": "title",
           "settings": {
+            "tone": "subtitle",
             "font_size": "text-lg",
             "margin_bottom": "mb-2"
           }
