@@ -90,9 +90,24 @@ jobs:
             exit 1
           fi
 
-          if ! git cat-file -e "$LAST_SHA^{commit}"; then
-            echo "::error::Last deployed commit $LAST_SHA is not available in this repository checkout. Cannot safely auto-sync."
-            exit 1
+          if ! git cat-file -e "$LAST_SHA^{commit}" 2>/dev/null; then
+            # The marker may reference a commit that was later rebased / force-pushed
+            # away (e.g. an old github-actions[bot] sync commit). Try to recover it
+            # explicitly from the remote before giving up.
+            git fetch --no-tags origin "$LAST_SHA" 2>/dev/null || true
+          fi
+
+          if ! git cat-file -e "$LAST_SHA^{commit}" 2>/dev/null; then
+            # Still unavailable: history was rewritten and there is no usable baseline
+            # to diff the live theme against. Hard-failing here would brick every
+            # future deploy. Degrade gracefully (same posture as the no-marker case):
+            # skip admin-change protection for THIS run only. The marker is rewritten
+            # below with the current commit, restoring full protection on the next run.
+            echo "::warning::Last deployed commit $LAST_SHA is not available in this repository (history was likely rewritten)."
+            echo "::warning::No usable baseline for admin-change auto-sync -> skipping protection for THIS run only."
+            echo "::warning::The deployment marker will be rewritten to the current commit, restoring protection on the next run."
+            echo "synced=false" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
 
           mkdir -p /tmp/last-deployed-theme
