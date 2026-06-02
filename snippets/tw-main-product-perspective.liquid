@@ -1,0 +1,94 @@
+{% comment %}
+  Slide « toile en perspective 3D » du carrousel produit (template painting).
+
+  L'IMAGE BRUTE d'impression (media[1]) est affichée comme <img> optimisée et INDEXABLE
+  (LCP rapide + référencement Google Images), PUIS remplacée par une transition fluide
+  vers le rendu WebGL : une toile sur châssis vue en perspective, dont la tranche (bordure)
+  et le cadre reflètent en direct la variante. Le WebGL RÉUTILISE cette <img> comme texture
+  (zéro requête réseau en double). Si le WebGL est indisponible / connexion très lente,
+  l'<img> reste affichée (repli gracieux).
+
+  Réutilise les conventions du carrousel existant :
+  - classe `.img-wrapper` -> capté par <main-product-carousel> (assets/main-product.js)
+  - cliquable comme les autres images -> ouvre le popup (grande toile en perspective)
+
+  Accepts:
+  - product: {Object}
+  - context: {String} 'carousel' (défaut) ou 'popup'
+{% endcomment %}
+
+{%- liquid
+  assign raw_media = product.media[1]
+  assign ctx = context | default: 'carousel'
+-%}
+{%- if raw_media and raw_media.media_type == 'image' -%}
+  {%- assign img = raw_media.preview_image -%}
+  {%- capture persp_config -%}
+    <script type="application/json" class="perspective-config">
+      {
+        "title": {{ product.title | json }},
+        "raw": {
+          "src": {{ img | image_url: width: 1500 | json }},
+          "width": {{ img.width | json }},
+          "height": {{ img.height | json }}
+        },
+        "borders": [
+          {%- for border in product.metafields.painting_options.borders.value -%}
+            {%- unless forloop.first %},{% endunless -%}
+            { "name": {{ border.name | json }}, "swatch": {% if border.radio.value.media.value.src %}{{ border.radio.value.media.value.src | image_url: width: 240 | json }}{% else %}null{% endif %} }
+          {%- endfor -%}
+        ],
+        "frames": [
+          {%- for frame in product.metafields.painting_options.frames_canvas.value -%}
+            {%- unless forloop.first %},{% endunless -%}
+            { "name": {{ frame.name | json }}, "swatch": {% if frame.radio.value.media.value.src %}{{ frame.radio.value.media.value.src | image_url: width: 240 | json }}{% else %}null{% endif %} }
+          {%- endfor -%}
+        ]
+      }
+    </script>
+  {%- endcapture -%}
+
+  {%- if ctx == 'popup' -%}
+    {%- comment -%} Gros plan : AUCUNE <img> brute. La texture vient du cache déjà décodé
+       par le carrousel -> on voit directement le WebGL, l'image brute ne réapparaît jamais. {%- endcomment -%}
+    <perspective-canvas class="block mx-auto mt-[6vh] w-[min(88vw,78vh)] max-w-full" data-context="popup" data-title="{{ product.title | escape }}">
+      <canvas
+        class="perspective-canvas-gl block w-full aspect-square opacity-0"
+        role="img"
+        aria-label="Aperçu en perspective de {{ product.title | escape }}">{{ product.title | escape }} — aperçu de la toile en perspective.</canvas>
+      {{ persp_config }}
+    </perspective-canvas>
+  {%- else -%}
+    <span
+      class="img-wrapper perspective-slide w-[83.33vw] sm:w-[75vw] md:w-[550px] max-w-full flex-none flex items-center justify-center snap-start"
+      data-media-id="{{ raw_media.id }}">
+      <figure class="relative block w-full m-0">
+        {%- comment -%} Image brute : indexable (Google Images) + source de texture WebGL, puis
+           fondu vers le WebGL. Slide en DERNIER (hors écran au départ sur mobile) -> lazy, pas
+           de fetchpriority : la LCP est la 1re image produit, pas celle-ci. {%- endcomment -%}
+        <img
+          class="persp-poster absolute inset-0 w-full h-full object-contain"
+          src="{{ img | image_url: width: 1100 }}"
+          srcset="{{ img | image_url: width: 550 }} 550w, {{ img | image_url: width: 750 }} 750w, {{ img | image_url: width: 1100 }} 1100w, {{ img | image_url: width: 1500 }} 1500w"
+          sizes="(max-width: 639px) 83vw, (max-width: 767px) 75vw, 550px"
+          alt="{{ product.title | escape }}"
+          width="{{ img.width }}"
+          height="{{ img.height }}"
+          loading="lazy"
+          decoding="async"
+          crossorigin="anonymous">
+        <perspective-canvas class="relative z-10 block w-full" data-context="carousel" data-title="{{ product.title | escape }}">
+          <canvas
+            class="perspective-canvas-gl block w-full aspect-square opacity-0 transition-opacity duration-500 ease-out"
+            role="img"
+            aria-label="Aperçu en perspective de {{ product.title | escape }}">{{ product.title | escape }} — aperçu de la toile en perspective.</canvas>
+          {{ persp_config }}
+        </perspective-canvas>
+        <figcaption class="sr-only">Aperçu 3D interactif de « {{ product.title | escape }} » : l'œuvre est imprimée sur une toile tendue sur châssis, que vous pouvez faire pivoter pour l'observer en perspective. Les bords de la toile (bordure blanche, noire, étirée, miroir ou pliée) et le cadre s'affichent en 3D selon la finition choisie. Rendu généré à partir de l'image réelle de l'œuvre.</figcaption>
+        <noscript>
+          <p class="sr-only">Visualisation 3D interactive du tableau « {{ product.title | escape }} » sur toile tendue sur châssis (activez JavaScript pour faire pivoter l'œuvre et voir les bords et le cadre en perspective).</p>
+        </noscript>
+      </figure>
+    </span>
+  {%- endif -%}
+{%- endif -%}

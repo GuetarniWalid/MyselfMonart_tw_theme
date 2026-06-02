@@ -122,6 +122,10 @@
               endif
             endfor
           %}
+          {%- comment -%} Toile en perspective 3D (WebGL) depuis l'image brute media[1] — placée en DERNIER dans le carrousel {%- endcomment -%}
+          {%- if template.suffix == 'painting' -%}
+            {% render 'tw-main-product-perspective', product: product %}
+          {%- endif -%}
         </div>
         {% if product.media.size > 1 %}
           <div id="carousel-navigation-controls" class="absolute bg-secondary transition-colors duration-500 rounded-full left-1/2 -translate-x-1/2 bottom-3 border-main border-1 2md:hidden flex justify-center items-center h-[47px] overflow-hidden hidden">
@@ -165,8 +169,15 @@
               {%- endif -%}
             {%- endif -%}
           {%- endfor -%}
+          {%- comment -%} Slide perspective en popup : grande toile 3D (clic -> zoom). Aligné en DERNIER avec le carrousel {%- endcomment -%}
+          {%- if template.suffix == 'painting' and product.media[1] and product.media[1].media_type == 'image' -%}
+            {% render 'tw-main-product-perspective', product: product, context: 'popup' %}
+          {%- endif -%}
         </template>
       </div>
+      {%- if template.suffix == 'painting' -%}
+        <script src="{{ 'component-perspective-canvas.js' | asset_url }}" defer></script>
+      {%- endif -%}
     </main-product-carousel>
   {% endif %}
   <main-product-blocks
@@ -560,6 +571,16 @@
   }
   {%- endif -%}
 {%- endcapture -%}
+{%- comment -%} Capacité de visualisation 3D (template painting) -> machine-readable pour Google & agents IA. {%- endcomment -%}
+{%- capture product_3d_props -%}
+  {%- if template.suffix == 'painting' and product.media[1] and product.media[1].media_type == 'image' -%}
+  ,"additionalProperty": [
+    { "@type": "PropertyValue", "name": "Visualisation 3D interactive", "value": "Oui" },
+    { "@type": "PropertyValue", "name": "Aperçu 3D", "value": "Toile tendue sur châssis vue en perspective, rotation interactive (WebGL)" },
+    { "@type": "PropertyValue", "name": "Bords visualisables en 3D", "value": "Bordure blanche, noire, étirée, miroir ou pliée" }
+  ]
+  {%- endif -%}
+{%- endcapture -%}
 <script type="application/ld+json">
     {
       "@context": "https://schema.org/",
@@ -579,7 +600,7 @@
           "brand": {
             "@type": "Brand",
             "name": {{ product.vendor | json }}
-          }{{ product_return_schema }},
+          }{{ product_3d_props }}{{ product_return_schema }},
           "offers": [
                     {%- for variant in product.variants -%}
               {
