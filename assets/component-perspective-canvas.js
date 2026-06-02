@@ -46,6 +46,10 @@
     highlightIn: 500, // ms : ease-in
     highlightHold: 1800, // ms : maintien sur le coin (~"quelques secondes")
     highlightOut: 650, // ms : retour à la position de base
+    // Cadre (caisse américaine) — proportions p/r à la demi-petite dimension de la toile.
+    frameGapRatio: 0.04, // écart toile <-> cadre (renfoncement = effet flottant)
+    frameWidthRatio: 0.1, // largeur de la face visible du cadre
+    frameProud: 0.018, // le cadre dépasse la toile vers l'avant (z) -> profil flottant
   };
 
   // Couleurs de tranche unie (bordure). Tons calés sur les swatches MyselfMonArt.
@@ -54,9 +58,129 @@
     black: [0.27, 0.27, 0.28], // noir-mat "sur matière" (pas un aplat #000) -> laisse voir le grain
   };
 
+  // Couleurs de cadre (caisse américaine), calées sur les swatches. Teintes plates (P3a) ;
+  // le grain de bois (chêne/noyer) + satiné argent viendront en P3b.
+  const FRAME_COLOR = {
+    blanc: [0.93, 0.92, 0.89],
+    noir: [0.23, 0.23, 0.25], // noir mat "sur matière", pas un aplat numérique trop dur
+    argent: [0.62, 0.63, 0.66],
+    chene: [0.74, 0.69, 0.59],
+    noyer: [0.4, 0.26, 0.17],
+  };
+  // state.frame est déjà normalisé (sans accents/casse) par syncStateFromDOM.
+  // Renvoie la couleur du cadre, ou null pour "Sans cadre".
+  const frameColorFromLabel = (norm) => {
+    if (!norm || norm.indexOf('sans') !== -1) return null;
+    if (norm.indexOf('noir') !== -1) return FRAME_COLOR.noir;
+    if (norm.indexOf('blanc') !== -1) return FRAME_COLOR.blanc;
+    if (norm.indexOf('argent') !== -1) return FRAME_COLOR.argent;
+    if (norm.indexOf('noyer') !== -1) return FRAME_COLOR.noyer;
+    if (norm.indexOf('chene') !== -1) return FRAME_COLOR.chene;
+    return null;
+  };
+
   // Source CPU de la texture de toile (lin), IDENTIQUE pour tous les produits/variantes :
   // générée UNE seule fois et partagée par toutes les instances (carrousel + popup).
   let SHARED_FABRIC_SOURCE = null;
+
+  // ----- BOIS RÉALISTE RGB (chêne/noyer/argent-grisé) : couleur + veines + flame grain -----
+  let SHARED_WOOD_OAK = null;
+  let SHARED_WOOD_WALNUT = null;
+  // Bruit de valeur TILEABLE (périodes px/py distinctes -> grain anisotrope, le long de V).
+  const wHash = (ix, iy, px, py) => {
+    ix = ((ix % px) + px) % px;
+    iy = ((iy % py) + py) % py;
+    let h = (ix * 374761393 + iy * 668265263) | 0;
+    h = (h ^ (h >> 13)) * 1274126177;
+    h = (h ^ (h >> 16)) >>> 0;
+    return h / 4294967295;
+  };
+  const wNoise = (x, y, px, py) => {
+    const ix = Math.floor(x), iy = Math.floor(y);
+    const fx = x - ix, fy = y - iy;
+    const sx = fx * fx * (3 - 2 * fx), sy = fy * fy * (3 - 2 * fy);
+    const v00 = wHash(ix, iy, px, py), v10 = wHash(ix + 1, iy, px, py);
+    const v01 = wHash(ix, iy + 1, px, py), v11 = wHash(ix + 1, iy + 1, px, py);
+    const a = v00 + (v10 - v00) * sx;
+    const b = v01 + (v11 - v01) * sx;
+    return a + (b - a) * sy;
+  };
+  const wFbm = (x, y, cu, cv, oct) => {
+    let s = 0, amp = 0.5, a = cu, b = cv;
+    for (let o = 0; o < oct; o++) {
+      s += amp * wNoise(x * a, y * b, a, b);
+      a *= 2; b *= 2; amp *= 0.5;
+    }
+    return s;
+  };
+  /* Canvas de bois RGB tileable : "cernes" (flame grain) ondulés par turbulence + veines
+     sombres NETTES (contraste), bandes larges vers un ton médian, variation chaud/froid,
+     fines fibres. light/mid/vein = palette de l'essence. */
+  const makeWoodCanvas = (light, mid, vein, rings, contrast, warm, fiberAmt, warpAmt, breakAmt) => {
+    const size = 512; // puissance de 2 (mipmaps + REPEAT)
+    const cnv = document.createElement('canvas');
+    cnv.width = size;
+    cnv.height = size;
+    const ctx = cnv.getContext('2d');
+    const im = ctx.createImageData(size, size);
+    const d = im.data;
+    const mix3 = (A, B, t) => [A[0] + (B[0] - A[0]) * t, A[1] + (B[1] - A[1]) * t, A[2] + (B[2] - A[2]) * t];
+    const cl = (c) => Math.max(0, Math.min(255, Math.round(c * 255)));
+    for (let y = 0; y < size; y++) {
+      for (let x = 0; x < size; x++) {
+        const u = x / size, v = y / size;
+        const w1 = wFbm(u, v, 3, 4, 4) - 0.5; // turbulence large (ondule aussi en longueur)
+        const w2 = wFbm(u, v, 6, 12, 3) - 0.5; // turbulence fine
+        const ring = u * rings + w1 * warpAmt + w2 * (warpAmt * 0.25); // cernes le long de V
+        const f = Math.abs((((ring % 1) + 1) % 1) - 0.5) * 2; // 0 au centre du cerne, 1 entre
+        let veinS = Math.pow(1 - f, contrast); // veines sombres nettes
+        // Rupture le long de V -> nervures plus COURTES et IRRÉGULIÈRES (pas continues).
+        // Basse fréquence en V -> segments nets ; smoothstep -> coupures franches.
+        let brk = wFbm(u, v, 4, 4, 3);
+        brk = brk * brk * (3 - 2 * brk); // accentue les zones pleines/vides
+        veinS *= 1 - breakAmt * (1 - brk);
+        const broad = wFbm(u, v, 2, 2, 3); // bandes larges
+        let col = mix3(light, vein, veinS * 0.85);
+        col = mix3(col, mid, broad * 0.35);
+        const tint = wFbm(u + 0.3, v, 2, 3, 2) - 0.5; // variation chaud/froid
+        col = [col[0] * (1 + tint * warm), col[1] * (1 + tint * warm * 0.3), col[2] * (1 - tint * warm * 0.5)];
+        const fiber = wFbm(u, v, rings * 9, rings * 2, 2) - 0.5; // fibres/pores fins
+        const fib = 1 - Math.abs(fiber) * fiberAmt;
+        const i = (y * size + x) * 4;
+        d[i] = cl(col[0] * fib);
+        d[i + 1] = cl(col[1] * fib);
+        d[i + 2] = cl(col[2] * fib);
+        d[i + 3] = 255;
+      }
+    }
+    ctx.putImageData(im, 0, 0);
+    return cnv;
+  };
+  let SHARED_SILVER = null;
+  // Chêne : NOMBREUSES fines nervures quasi droites (type parquet chêne), beige-gris clair.
+  const oakCanvas = () =>
+    (SHARED_WOOD_OAK =
+      SHARED_WOOD_OAK ||
+      makeWoodCanvas([0.58, 0.55, 0.51], [0.48, 0.46, 0.42], [0.36, 0.34, 0.31], 18, 3.2, 0.04, 0.08, 1.4, 0.85));
+  // Noyer : brun MUET (moins orangé), flame grain marqué.
+  const walnutCanvas = () =>
+    (SHARED_WOOD_WALNUT =
+      SHARED_WOOD_WALNUT ||
+      makeWoodCanvas([0.43, 0.33, 0.25], [0.32, 0.23, 0.16], [0.18, 0.12, 0.08], 9, 2.3, 0.08, 0.1, 1.9, 0.7));
+  // Argent ancien = BOIS GRISÉ (cérusé / driftwood), pas du métal : gris clair NEUTRE +
+  // grain de bois (mêmes rainures que le chêne), plus clair et moins brun que le chêne.
+  const silverCanvas = () =>
+    (SHARED_SILVER =
+      SHARED_SILVER ||
+      makeWoodCanvas([0.74, 0.73, 0.72], [0.63, 0.62, 0.61], [0.51, 0.50, 0.49], 18, 3.0, 0.02, 0.08, 1.3, 0.8));
+  // Texture RGB d'un cadre (null = couleur plate : blanc/noir).
+  const frameWoodTexKey = (norm) => {
+    if (!norm) return null;
+    if (norm.indexOf('noyer') !== -1) return 'walnut';
+    if (norm.indexOf('chene') !== -1) return 'oak';
+    if (norm.indexOf('argent') !== -1) return 'silver';
+    return null;
+  };
 
   // Cache module des textures d'oeuvre DÉCODÉES (puissance-de-deux), partagé entre
   // instances : le carrousel décode au chargement, le popup RÉUTILISE -> il affiche le
@@ -356,6 +480,10 @@
       if (this.hlRAF) cancelAnimationFrame(this.hlRAF);
       if (this._hlScrollIO) this._hlScrollIO.disconnect();
       if (this._hlScrollTO) clearTimeout(this._hlScrollTO);
+      if (this._onResize) {
+        window.removeEventListener('resize', this._onResize);
+        window.removeEventListener('orientationchange', this._onResize);
+      }
       this.releaseGL();
     }
 
@@ -375,9 +503,20 @@
           gl.deleteBuffer(this.geo.useBuf);
           gl.deleteBuffer(this.geo.idxBuf);
         }
+        if (this.frameGeo) {
+          gl.deleteBuffer(this.frameGeo.posBuf);
+          gl.deleteBuffer(this.frameGeo.uvBuf);
+          gl.deleteBuffer(this.frameGeo.fabBuf);
+          gl.deleteBuffer(this.frameGeo.norBuf);
+          gl.deleteBuffer(this.frameGeo.useBuf);
+          gl.deleteBuffer(this.frameGeo.idxBuf);
+        }
         if (this.shadowBuf) gl.deleteBuffer(this.shadowBuf);
         if (this.texture) gl.deleteTexture(this.texture);
         if (this.fabricTex) gl.deleteTexture(this.fabricTex); // texture GL par-contexte (la SOURCE CPU partagée reste)
+        if (this.woodOakTex) gl.deleteTexture(this.woodOakTex);
+        if (this.woodWalnutTex) gl.deleteTexture(this.woodWalnutTex);
+        if (this.silverTex) gl.deleteTexture(this.silverTex);
         if (this.program) gl.deleteProgram(this.program);
         if (this.shadowProgram) gl.deleteProgram(this.shadowProgram);
         const lose = gl.getExtension('WEBGL_lose_context');
@@ -385,6 +524,7 @@
       } catch (e) {}
       this.gl = null;
       this.geo = null;
+      this.frameGeo = null;
       this.texture = null;
       this.shadowBuf = null;
       this.program = null;
@@ -432,10 +572,14 @@
         return;
       }
       const prevBorder = this.state.border;
+      const prevFrame = this.state.frame;
       this.syncStateFromDOM();
       this.scheduleRender();
-      // Bordure changée -> mise en lumière de la tranche (avec scroll préalable sur mobile).
-      if (this.state.border !== prevBorder) this.highlightOnBorderChange();
+      // Bordure OU cadre changé -> sur mobile, le carrousel scrolle vers la slide WebGL puis
+      // joue la mise en lumière, pour que l'utilisateur voie DIRECTEMENT le changement.
+      if (this.state.border !== prevBorder || this.state.frame !== prevFrame) {
+        this.highlightOnBorderChange();
+      }
     }
 
     /* Sur MOBILE le carrousel ne montre qu'une image à la fois ; si la slide WebGL (placée
@@ -746,6 +890,9 @@
         : null;
 
       this.fabricTex = this.makeFabricTexture();
+      // Textures de cadre (bois chêne/noyer, argent grisé) construites À LA DEMANDE, par
+      // essence réellement sélectionnée (ensureFrameTex au rendu) -> aucune génération ni
+      // upload GPU pour les produits sans cadre bois, et 1 seule essence à la fois.
 
       // Suit les changements de taille du slide. On CACHE la taille CSS ici (callback RO)
       // pour ne JAMAIS lire le layout pendant render() -> supprime le forced reflow.
@@ -808,6 +955,44 @@
       gl.generateMipmap(gl.TEXTURE_2D);
       this.applyAniso();
       return tex;
+    }
+
+    /* Upload d'un canvas (bois RGB) en texture GL (REPEAT + mipmaps + aniso). */
+    makeFrameTexFromCanvas(cnv) {
+      const gl = this.gl;
+      const tex = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, cnv);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.generateMipmap(gl.TEXTURE_2D);
+      this.applyAniso();
+      return tex;
+    }
+
+    /* Texture de cadre (bois/argent) À LA DEMANDE : la 1re sélection d'une essence crée sa
+       texture GL (le canvas source reste mémorisé au niveau module -> généré au plus une fois
+       par page). Évite tout coût pour les cadres non utilisés. */
+    ensureFrameTex(woodKey) {
+      if (woodKey === 'oak') return this.woodOakTex || (this.woodOakTex = this.makeFrameTexFromCanvas(oakCanvas()));
+      if (woodKey === 'walnut') return this.woodWalnutTex || (this.woodWalnutTex = this.makeFrameTexFromCanvas(walnutCanvas()));
+      if (woodKey === 'silver') return this.silverTex || (this.silverTex = this.makeFrameTexFromCanvas(silverCanvas()));
+      return null;
+    }
+
+    /* Gros plan : dimensionne le canvas au ratio de l'oeuvre, borné à l'écran (82vh ou 90vw)
+       -> toile la plus grande possible, centrée, sans vide latéral. Rappelé sur resize/rotation. */
+    sizePopup() {
+      if (this.getAttribute('data-context') !== 'popup' || !this.aspect) return;
+      const ar = this.aspect;
+      const h = Math.min(0.82 * window.innerHeight, (0.9 * window.innerWidth) / ar);
+      this.canvas.style.width = Math.round(h * ar) + 'px';
+      this.canvas.style.height = Math.round(h) + 'px';
+      this.canvas.style.margin = '0 auto';
+      this.style.width = '100%'; // le conteneur prend la largeur, le canvas est centré dedans
     }
 
     buildProgram(vsrc, fsrc) {
@@ -952,6 +1137,19 @@
       this.texture = tex;
       this.buildGeometry();
       this.ready = true;
+      // Gros plan : taille du canvas adaptée à l'oeuvre (ratio portrait), bornée à l'écran
+      // -> toile plus grande, sans vide latéral. Recalcul à la rotation/resize de l'écran.
+      if (this.getAttribute('data-context') === 'popup' && this.aspect) {
+        this.sizePopup();
+        if (!this._onResize) {
+          this._onResize = () => {
+            this.sizePopup();
+            this.scheduleRender();
+          };
+          window.addEventListener('resize', this._onResize);
+          window.addEventListener('orientationchange', this._onResize);
+        }
+      }
       this.scheduleRender();
       // Init lazy : une mise en lumière demandée avant que le rendu soit prêt -> on la joue.
       if (this._pendingHighlight) {
@@ -1139,19 +1337,112 @@
         fabBuf: this.makeBuffer(gl.ARRAY_BUFFER, new Float32Array(fab)),
         norBuf: this.makeBuffer(gl.ARRAY_BUFFER, new Float32Array(nor)),
         useBuf: this.makeBuffer(gl.ARRAY_BUFFER, new Float32Array(use)),
-        idxBuf: this.makeBuffer(
-          gl.ELEMENT_ARRAY_BUFFER,
-          new Uint16Array(idx),
-        ),
+        idxBuf: this.makeBuffer(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(idx)),
       };
 
-      // Quad d'ombre, sur le "mur" derrière la toile (un peu plus grand). z appliqué
-      // via la matrice d'ombre (plan fronto-parallèle, en retrait derrière la toile).
+      // ===== CADRE (caisse américaine) : 4 barres en ONGLET autour de la toile, séparées
+      //       par un ÉCART (renfoncement = effet flottant), avec profondeur enveloppant la
+      //       toile. Rendu dans une passe séparée (couleur de cadre, sans grain de toile). =====
+      let frameOuterW = halfW;
+      let frameOuterH = halfH;
+      if (this.frameGeo) {
+        gl.deleteBuffer(this.frameGeo.posBuf);
+        gl.deleteBuffer(this.frameGeo.uvBuf);
+        gl.deleteBuffer(this.frameGeo.fabBuf);
+        gl.deleteBuffer(this.frameGeo.norBuf);
+        gl.deleteBuffer(this.frameGeo.useBuf);
+        gl.deleteBuffer(this.frameGeo.idxBuf);
+        this.frameGeo = null;
+      }
+      if (frameColorFromLabel(this.state.frame)) {
+        const minHalf = Math.min(halfW, halfH);
+        const G = minHalf * SCENE.frameGapRatio; // écart toile <-> cadre
+        const FW = minHalf * SCENE.frameWidthRatio; // largeur de la face du cadre
+        const iW = halfW + G, iH = halfH + G; // bord intérieur (le trou)
+        const oW = iW + FW, oH = iH + FW; // bord extérieur
+        const Zf = SCENE.frameProud; // face avant du cadre (dépasse la toile)
+        const zb = -(D + 0.005); // arrière du cadre (enveloppe la toile)
+        frameOuterW = oW;
+        frameOuterH = oH;
+        const fpos = [], fuv = [], ffab = [], fnor = [], fuse = [], fidx = [];
+        const isWoodFrame = !!frameWoodTexKey(this.state.frame); // chêne/noyer -> texture bois RGB
+        const pushF = (v, n, fb) => {
+          const base = fpos.length / 3;
+          for (let i = 0; i < 4; i++) {
+            fpos.push(v[i][0], v[i][1], v[i][2]);
+            const f = fb ? fb[i] : [0, 0];
+            fuv.push(f[0], f[1]); // UV le long des barres -> bois RGB (uTex) si bois
+            ffab.push(f[0], f[1]); // idem -> satiné gris (uFabric) si argent
+            fnor.push(n[0], n[1], n[2]);
+            fuse.push(isWoodFrame ? 1 : 0); // 1 = échantillonne le bois RGB ; 0 = couleur plate
+          }
+          fidx.push(base, base + 1, base + 2, base, base + 2, base + 3);
+        };
+        const cham = FW * 0.16; // petit chamfer -> bords avant adoucis (comme le biseau toile)
+        const Zc = Zf - cham; // pied du chamfer
+        const S = Math.SQRT1_2;
+        const rectC = (hw, hh) => [[-hw, -hh], [hw, -hh], [hw, hh], [-hw, hh]]; // BL,BR,TR,TL
+        const O = rectC(oW, oH); // contour extérieur
+        const Oc = rectC(oW - cham, oH - cham); // bord avant extérieur (rentré du chamfer)
+        const Ir = rectC(iW, iH); // contour intérieur (le trou)
+        const Ic = rectC(iW + cham, iH + cham); // bord avant intérieur
+        const TL = rectC(halfW, halfH); // contour de la toile -> pour le plancher du renfoncement
+        // Normales par barre (0=bas, 1=droite, 2=haut, 3=gauche).
+        const NRM = {
+          front: [[0, 0, 1], [0, 0, 1], [0, 0, 1], [0, 0, 1]],
+          outWall: [[0, -1, 0], [1, 0, 0], [0, 1, 0], [-1, 0, 0]],
+          inWall: [[0, 1, 0], [-1, 0, 0], [0, -1, 0], [1, 0, 0]],
+          outCham: [[0, -S, S], [S, 0, S], [0, S, S], [-S, 0, S]],
+          inCham: [[0, S, S], [-S, 0, S], [0, -S, S], [S, 0, S]],
+        };
+        // Anneau de 4 trapèzes mitrés : contour intérieur (zIn) -> extérieur (zOut).
+        const WS = 1.6; // échelle du grain de bois
+        const ring = (inC, zIn, outC, zOut, nrm) => {
+          for (let k = 0; k < 4; k++) {
+            const a = k, b = (k + 1) % 4;
+            const verts = [
+              [inC[a][0], inC[a][1], zIn],
+              [inC[b][0], inC[b][1], zIn],
+              [outC[b][0], outC[b][1], zOut],
+              [outC[a][0], outC[a][1], zOut],
+            ];
+            // Grain le long de la barre : haut/bas (k=0,2) -> grain selon x ; gauche/droite
+            // (k=1,3) -> grain selon y. V (2e coord) = axe du grain de la texture bois.
+            const horiz = k === 0 || k === 2;
+            const isWall = Math.abs(nrm[k][2]) < 0.5; // mur (normale ~horizontale)
+            // V = le long de la barre (grain) ; U = largeur EN PLAN (faces) ou PROFONDEUR z
+            // (murs) -> supprime l'étirement de la texture sur les côtés.
+            const fb = verts.map((p) => {
+              const along = horiz ? p[0] : p[1];
+              const cross = isWall ? p[2] : horiz ? p[1] : p[0];
+              return [cross * WS, along * WS];
+            });
+            pushF(verts, nrm[k], fb);
+          }
+        };
+        ring(Ic, Zf, Oc, Zf, NRM.front); // face avant (entre les deux chamfers)
+        ring(Oc, Zf, O, Zc, NRM.outCham); // chamfer extérieur (bord adouci)
+        ring(O, Zc, O, zb, NRM.outWall); // mur extérieur (profondeur)
+        ring(Ic, Zf, Ir, Zc, NRM.inCham); // chamfer intérieur (bord adouci)
+        ring(Ir, Zc, Ir, zb, NRM.inWall); // mur intérieur (renfoncement)
+        ring(TL, zb, Ir, zb, NRM.front); // PLANCHER du renfoncement -> couleur cadre (fini le blanc)
+        this.frameGeo = {
+          count: fidx.length,
+          posBuf: this.makeBuffer(gl.ARRAY_BUFFER, new Float32Array(fpos)),
+          uvBuf: this.makeBuffer(gl.ARRAY_BUFFER, new Float32Array(fuv)),
+          fabBuf: this.makeBuffer(gl.ARRAY_BUFFER, new Float32Array(ffab)),
+          norBuf: this.makeBuffer(gl.ARRAY_BUFFER, new Float32Array(fnor)),
+          useBuf: this.makeBuffer(gl.ARRAY_BUFFER, new Float32Array(fuse)),
+          idxBuf: this.makeBuffer(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(fidx)),
+        };
+      }
+
+      // Quad d'ombre : épouse le contour EXTÉRIEUR (toile seule, ou cadre s'il est présent).
       const sM = SCENE.shadowMargin;
       const zS = 0;
       this.shadowZ = -(D + 0.02); // tout proche derrière -> ombre de contact serrée
-      const sw = halfW + sM;
-      const sh = halfH + sM;
+      const sw = frameOuterW + sM;
+      const sh = frameOuterH + sM;
       if (this.shadowBuf) gl.deleteBuffer(this.shadowBuf);
       this.shadowBuf = this.makeBuffer(
         gl.ARRAY_BUFFER,
@@ -1162,10 +1453,11 @@
       );
       this.halfW = halfW; // demi-dimensions de la toile (face avant) -> cadrage sur le coin
       this.halfH = halfH;
-      this.shadowHalf = [halfW, halfH];
+      this.shadowHalf = [frameOuterW, frameOuterH];
       this.shadowRadius = r;
 
-      this.geoKey = mode + '|' + (this.sizeW || 0) + 'x' + (this.sizeH || 0); // bordure + taille
+      this.geoKey =
+        mode + '|' + (this.state.frame || 'none') + '|' + (this.sizeW || 0) + 'x' + (this.sizeH || 0);
     }
 
     makeBuffer(target, data) {
@@ -1208,8 +1500,9 @@
     render() {
       const gl = this.gl;
       if (!gl || !this.geo) return;
-      // Bordure ET taille changent la géométrie des tranches -> reconstruire au besoin.
-      const key = this.state.border + '|' + (this.sizeW || 0) + 'x' + (this.sizeH || 0);
+      // Bordure, CADRE et taille changent la géométrie -> reconstruire au besoin.
+      const key =
+        this.state.border + '|' + (this.state.frame || 'none') + '|' + (this.sizeW || 0) + 'x' + (this.sizeH || 0);
       if (this.geoKey !== key) this.buildGeometry();
       this.resize();
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -1294,6 +1587,30 @@
 
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.geo.idxBuf);
       gl.drawElements(gl.TRIANGLES, this.geo.count, gl.UNSIGNED_SHORT, 0);
+
+      // CADRE (caisse américaine) : même programme, couleur de cadre, SANS grain de toile.
+      if (this.frameGeo) {
+        const woodKey = frameWoodTexKey(this.state.frame);
+        if (woodKey) {
+          // Cadre TEXTURÉ (bois ou argent brossé) : on échantillonne sa texture RGB (use=1).
+          const ftex = this.ensureFrameTex(woodKey);
+          gl.activeTexture(gl.TEXTURE0);
+          gl.bindTexture(gl.TEXTURE_2D, ftex);
+          gl.uniform1i(this.locs.uTex, 0);
+          gl.uniform1f(this.locs.uWeaveAmt, 0.0); // la texture RGB porte couleur + grain
+        } else {
+          // blanc / noir : couleur plate mate (use=0).
+          gl.uniform3fv(this.locs.uSideColor, frameColorFromLabel(this.state.frame) || [0.5, 0.5, 0.5]);
+          gl.uniform1f(this.locs.uWeaveAmt, 0.0);
+        }
+        this.bindAttrib(this.locs.aPos, this.frameGeo.posBuf, 3);
+        this.bindAttrib(this.locs.aUV, this.frameGeo.uvBuf, 2);
+        this.bindAttrib(this.locs.aFabUV, this.frameGeo.fabBuf, 2);
+        this.bindAttrib(this.locs.aNormal, this.frameGeo.norBuf, 3);
+        this.bindAttrib(this.locs.aUseTex, this.frameGeo.useBuf, 1);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.frameGeo.idxBuf);
+        gl.drawElements(gl.TRIANGLES, this.frameGeo.count, gl.UNSIGNED_SHORT, 0);
+      }
 
       // 1er rendu réussi -> transition fluide de l'<img> brute vers le WebGL.
       if (!this._revealed) {
