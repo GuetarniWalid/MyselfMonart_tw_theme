@@ -68,8 +68,8 @@ Avant tout, identifier le **type de page** et son **intention dominante** : cela
 
 ### Phase 5 — Audit technique + déploiement + suivi
 - **5A statique (code)** : schema présent + valide, title/meta/H1, alt text, maillage, conformité aux specs.
-- **5B dynamique (staging)** : Lighthouse (SEO=100 visé, Accessibilité ≥90), Core Web Vitals (LCP <2,5s, CLS <0,1), rendu, responsive mobile, liens (pas de 404), erreurs console.
-- **Déploiement** : push `staging` → preview → **validation visuelle Walid** → merge `main` = live.
+- **5B dynamique (preview locale)** : Lighthouse (SEO=100 visé, Accessibilité ≥90), Core Web Vitals (LCP <2,5s, CLS <0,1), rendu, responsive mobile, liens (pas de 404), erreurs console.
+- **Déploiement** : valider en local (`shopify theme dev`) → **validation visuelle Walid** → push direct sur `main` = live.
 - **Post-live** : soumettre l'URL à **Search Console** (action Walid) + créer le `FOLLOWUP.md` de la mission.
 - **Suivi** : check GSC **J+14 et J+30** → consigner dans `FOLLOWUP.md` → mettre à jour `ROADMAP.md`.
 
@@ -224,7 +224,7 @@ Technique
 [ ] 0 erreur console bloquante
 
 Déploiement & suivi
-[ ] Validé visuellement par Walid sur staging
+[ ] Validé visuellement par Walid en local
 [ ] Mergé main = live
 [ ] URL soumise à Search Console
 [ ] FOLLOWUP.md créé + ROADMAP.md à jour

@@ -64,10 +64,10 @@
 
 ## Étapes de mise en ligne (workflow Walid — NON exécutées)
 
-1. **Local → preview** : `shopify theme dev` (port 9292) *ou* push `staging` (déploie sur thème staging non public).
+1. **Local → preview** : `shopify theme dev` (port 9292).
 2. **Admin** : assigner le template `tableau-salon` à la collection + saisir title/meta/description (cf [PHASE-4](PHASE-4-contenu.md) §C). Sur le store de preview pour valider.
-3. **Validation visuelle Walid** sur staging.
-4. **GO** → merge `main` = live.
+3. **Validation visuelle Walid** en local.
+4. **GO** → push direct sur `main` = live.
 5. **Post-live** : soumettre l'URL à Search Console + créer le suivi.
 
 ## Suivi GSC

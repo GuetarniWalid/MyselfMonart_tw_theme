@@ -28,7 +28,7 @@ Le plus rentable + faible risque : **color-contrast (footer)** + **target-size**
 ## Méthode
 1. Brancher le **MCP chrome-devtools** (Lighthouse) et auditer en local (`?view` si besoin) — itérer fichier par fichier, re-auditer à chaque lot.
 2. Respecter les conventions (`shopify-section-dev`) : Tailwind only, vars globales, ne pas casser le visuel.
-3. Déployer via staging → validation Walid → main (workflow habituel).
+3. Valider en local (`shopify theme dev`) → validation Walid → push direct sur `main` = live.
 4. Re-auditer le live (attendre la purge du cache CDN Shopify, ~30 min, ou PageSpeed Insights).
 
 ## Garde-fous

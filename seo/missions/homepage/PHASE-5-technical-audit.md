@@ -1,7 +1,7 @@
 # Phase 5 — Audit technique + plan de déploiement
 
-> Status : ✅ Audit complet (5A statique + 5B dynamique) — 2026-05-28. Thème staging validé, prêt pour passage live après validation Walid.
-> Branche auditée : `seo-homepage-refonte` → mergée dans `staging` (déployée sur thème "MyselfMonArt - GitHub Staging")
+> Status : ✅ Audit complet (5A statique + 5B dynamique) — 2026-05-28. Validé en preview locale, prêt pour passage live après validation Walid.
+> Branche auditée : `seo-homepage-refonte` (validée en preview locale `shopify theme dev`)
 > URL preview testée : `https://www.myselfmonart.com/?preview_theme_id=196928045403`
 
 ---
@@ -11,7 +11,7 @@
 | Sous-phase | Périmètre | Prérequis |
 |---|---|---|
 | **5A — statique** | Code : schemas, copy, structure Hn, maillage, alt text, conformité spec | Accès fichiers (✅ fait) |
-| **5B — dynamique** | Rendu : Rich Results Test, Lighthouse/CWV, H1 au rendu, images chargées, responsive | URL preview publique (push staging) |
+| **5B — dynamique** | Rendu : Rich Results Test, Lighthouse/CWV, H1 au rendu, images chargées, responsive | Preview locale (`shopify theme dev`) |
 
 ---
 
@@ -53,7 +53,7 @@
 
 ## 5B — Audit dynamique (résultats, 2026-05-28)
 
-Réalisé sur le thème staging via chrome-devtools (Lighthouse + performance trace + DOM) et curl (HTML brut).
+Réalisé sur la preview locale via chrome-devtools (Lighthouse + performance trace + DOM) et curl (HTML brut).
 
 ### ✅ Conforme
 
@@ -102,7 +102,7 @@ Réalisé sur le thème staging via chrome-devtools (Lighthouse + performance tr
 1. Corriger #2 (double schema) sur la branche
 2. Commit des corrections (H1, signature, double schema)
 3. Walid configure Title/Meta dans l'admin Shopify
-4. Validation visuelle finale Walid sur preview (workflow : staging → validation → merge)
+4. Validation visuelle finale Walid en local (workflow : local → validation → push `main`)
 5. Merge `seo-homepage-refonte` → `main` (= mise en live, selon workflow Walid)
 6. **Post-déploiement** :
    - Soumettre l'URL home à Google Search Console → "Demander une indexation"

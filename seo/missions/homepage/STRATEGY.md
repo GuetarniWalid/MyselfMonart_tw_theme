@@ -138,7 +138,7 @@ Reconstruire la homepage FR de [myselfmonart.com](https://myselfmonart.com) pour
 2. Avancer phase par phase, validation entre chaque.
 3. Toujours expliquer le pourquoi.
 4. Voix de marque : vouvoiement, premium-émotionnel, "Hayate / Team MyselfMonArt".
-5. Workflow déploiement : **jamais push direct sur main** → edit → staging → validation visuelle Walid → merge main = live.
+5. Workflow déploiement : tout en **local** (`shopify theme dev`) → validation visuelle Walid en local → push direct sur `main` = live.
 6. Conventions sections Shopify : Tailwind only, vars globales fonts/couleurs, admin-configurable, SEO + a11y impeccables.
 7. Format : markdown clair, tableaux quand pertinent.
 

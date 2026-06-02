@@ -50,6 +50,6 @@ Créer dans ce dossier au fur et à mesure : `STRATEGY.md` (décisions), `PHASE-
 - **Tenir [ROADMAP](../../ROADMAP.md) à jour** (statut mission, dates de check).
 - **Voix Hayate** (vouvoiement, premium-émotionnel-cocon) dans toute la copy.
 - **Sections : RÉUTILISER avant de créer** (cf. METHODOLOGY §5) : configurer les sections existantes du thème en priorité ; n'en créer une nouvelle (via le skill `shopify-section-dev`) qu'en dernier recours, dans le respect des conventions.
-- **Workflow déploiement** : staging → validation visuelle Walid → merge main = live.
+- **Workflow déploiement** : local (`shopify theme dev`) → validation visuelle Walid → push direct sur `main` = live.
 - **Pas de "Made in France"** (impression en Allemagne) — cf. faits structurels en mémoire.
 - Planifier le **suivi GSC J+14 / J+30** après déploiement.
