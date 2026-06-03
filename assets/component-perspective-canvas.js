@@ -22,7 +22,8 @@
     pitch: 0.13, // bascule (rad) : révèle la tranche basse
     fovY: 0.3, // champ de vision vertical (rad) — modéré pour limiter la distorsion
     camDist: 4.6, // distance caméra
-    scale: 0.66, // taille de la toile dans le cadrage (carrousel)
+    scale: 0.66, // taille de la toile dans le cadrage (carrousel, desktop)
+    scaleCarouselMobile: 0.52, // carrousel sur mobile : toile plus posée (marge), le "zoom" est réservé au gros plan (popup)
     scalePopup: 0.56, // gros plan : un peu plus de marge pour que l'ombre (et la rotation) ne soit jamais coupée
     chassisCm: 2.0, // profondeur RÉELLE du châssis (cm). La proportion du bord = chassisCm / taille choisie (cm) -> physiquement exacte et plus fine sur les grandes toiles. Ajustable.
     ambient: 0.74,
@@ -383,11 +384,9 @@
       this.aspect = 1;
       this.rafId = null;
       this.state = { border: 'white', frame: 'none' };
-      // Gros plan (popup) : échelle réduite -> marge pour ne pas couper l'ombre.
-      this.scale =
-        this.getAttribute('data-context') === 'popup'
-          ? SCENE.scalePopup
-          : SCENE.scale;
+      // Échelle de cadrage : popup (gros plan) / carrousel mobile (posé) / carrousel desktop.
+      // Recalculée sur resize (callback ResizeObserver) car dépend du viewport.
+      this.scale = this.computeScale();
       this.yawOffset = 0; // inclinaison interactive (clic-glisser souris)
       this.pitchOffset = 0;
       this.dragging = false;
@@ -686,26 +685,23 @@
     }
 
     /* Glisser -> inclinaison de la toile, retour ressort au relâchement.
-       Souris partout ; le TACTILE n'est activé que dans le gros plan (popup) : dans le
-       carrousel, le toucher reste dédié au swipe (navigation) et au tap (ouvre le popup). */
+       Actif à la SOURIS ET au TACTILE, dans le carrousel comme dans le popup : le doigt fait
+       tourner la toile (touch-action:none) -> l'utilisateur comprend tout de suite qu'elle est
+       dynamique. Dans le carrousel, la navigation se fait alors via le quart d'image adjacent
+       resté visible sur les côtés ; un simple tap (sans glisser) ouvre toujours le popup. */
     setupInteraction() {
       const c = this.canvas;
       if (!c || this._interaction) return;
       this._interaction = true;
-      const allowTouch = this.getAttribute('data-context') === 'popup';
       c.style.cursor = 'grab';
-      if (allowTouch) c.style.touchAction = 'none'; // le doigt fait tourner, sans scroller/zoomer le popup
+      c.style.touchAction = 'none'; // le doigt fait tourner la toile (pas de scroll/zoom natif du canvas)
       let sx = 0, sy = 0, sYaw = 0, sPitch = 0;
       const K = 0.006; // rad / pixel
       const AXIS = 1.4; // garde-fou par axe (< π/2 : garde le clamp combiné monotone)
       const TILT_COS = Math.cos(1.26); // bascule max du FRONT (~72°), tous axes confondus -> jamais l'arrière
       const onDown = (e) => {
         const isMouse = !e.pointerType || e.pointerType === 'mouse';
-        if (isMouse) {
-          if (e.button !== 0) return; // souris : bouton gauche uniquement
-        } else if (!allowTouch) {
-          return; // tactile / stylet : seulement dans le gros plan (popup)
-        }
+        if (isMouse && e.button !== 0) return; // souris : bouton gauche uniquement (tactile/stylet : OK partout)
         this.stopHighlight(); // l'utilisateur reprend la main -> on coupe l'animation auto
         this.dragging = true;
         this.moved = false;
@@ -900,6 +896,7 @@
         this.ro = new ResizeObserver((entries) => {
           const cr = entries[0] && entries[0].contentRect;
           if (cr) { this._cssW = cr.width; this._cssH = cr.height; }
+          this.scale = this.computeScale(); // viewport a pu franchir le breakpoint mobile/desktop
           this.scheduleRender();
         });
         this.ro.observe(this.canvas);
@@ -981,6 +978,17 @@
       if (woodKey === 'walnut') return this.woodWalnutTex || (this.woodWalnutTex = this.makeFrameTexFromCanvas(walnutCanvas()));
       if (woodKey === 'silver') return this.silverTex || (this.silverTex = this.makeFrameTexFromCanvas(silverCanvas()));
       return null;
+    }
+
+    /* Échelle de cadrage de la toile selon le contexte/viewport :
+       - popup (gros plan) : scalePopup (le canvas remplit l'écran -> vue immersive "zoomée") ;
+       - carrousel sur mobile : scaleCarouselMobile (toile posée, avec marge -> PAS zoomée) ;
+       - carrousel sur desktop : scale.
+       Le "zoom" n'apparaît donc qu'au clic, dans le popup. Recalculée au resize. */
+    computeScale() {
+      if (this.getAttribute('data-context') === 'popup') return SCENE.scalePopup;
+      const mobile = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
+      return mobile ? SCENE.scaleCarouselMobile : SCENE.scale;
     }
 
     /* Gros plan : dimensionne le canvas au ratio de l'oeuvre, borné à l'écran (82vh ou 90vw)
