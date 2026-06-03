@@ -52,6 +52,13 @@
     {%- comment -%} Gros plan : AUCUNE <img> brute. La texture vient du cache déjà décodé
        par le carrousel -> on voit directement le WebGL, l'image brute ne réapparaît jamais. {%- endcomment -%}
     <perspective-canvas class="block mx-auto mt-[6vh] w-[min(88vw,78vh)] max-w-full" data-context="popup" data-title="{{ product.title | escape }}">
+      {%- comment -%} Gros plan : même motif mur répété en PLEIN ÉCRAN derrière la toile -> casse le
+         grand aplat blanc du popup, sans étirement. z-[-1] : au-dessus du fond du popup, sous la
+         toile et le bouton fermer. Décoratif -> aria-hidden. {%- endcomment -%}
+      <div
+        class="decor-bg fixed inset-0 bg-repeat bg-center bg-[length:256px_256px] z-[-1]"
+        style="background-image:url('{{ 'fond-mur-beige-clair-texture.webp' | asset_url }}')"
+        aria-hidden="true"></div>
       <canvas
         class="perspective-canvas-gl block w-full aspect-square opacity-0"
         role="img"
@@ -63,6 +70,15 @@
       class="img-wrapper perspective-slide w-[83.33vw] sm:w-[75vw] md:w-[550px] max-w-full flex-none flex items-center justify-center snap-start"
       data-media-id="{{ raw_media.id }}">
       <figure class="relative block w-full m-0">
+        {%- comment -%} Fond mur texturé (décoratif) DERRIÈRE la toile -> l'œuvre paraît accrochée
+           au mur et son ombre 3D s'y projette (le poster brut passe à opacity:0 au reveal WebGL).
+           Motif TILEABLE (512² seamless, ~2 Ko) répété en CSS : jamais étiré quelle que soit la
+           taille, chargement minimal. Le seul style inline est l'URL d'asset (dynamique, pas
+           d'équivalent Tailwind possible) ; répétition/taille via Tailwind. Décoratif -> aria-hidden. {%- endcomment -%}
+        <div
+          class="decor-bg absolute inset-0 bg-repeat bg-center bg-[length:256px_256px]"
+          style="background-image:url('{{ 'fond-mur-beige-clair-texture.webp' | asset_url }}')"
+          aria-hidden="true"></div>
         {%- comment -%} Image brute : indexable (Google Images) + source de texture WebGL, puis
            fondu vers le WebGL. Slide en DERNIER (hors écran au départ sur mobile) -> lazy, pas
            de fetchpriority : la LCP est la 1re image produit, pas celle-ci. {%- endcomment -%}

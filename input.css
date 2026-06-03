@@ -12,7 +12,8 @@
     #overlay-content,
     .croppr-region,
     .croppr-overlay,
-    .croppr-handleContainer
+    .croppr-handleContainer,
+    .decor-bg
   ) {
   display: none;
 }

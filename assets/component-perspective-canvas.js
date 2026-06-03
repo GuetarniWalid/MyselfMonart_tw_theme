@@ -22,8 +22,8 @@
     pitch: 0.13, // bascule (rad) : révèle la tranche basse
     fovY: 0.3, // champ de vision vertical (rad) — modéré pour limiter la distorsion
     camDist: 4.6, // distance caméra
-    scale: 0.66, // taille de la toile dans le cadrage (carrousel, desktop)
-    scaleCarouselMobile: 0.52, // carrousel sur mobile : toile plus posée (marge), le "zoom" est réservé au gros plan (popup)
+    scale: 0.52, // taille de la toile dans le carrousel desktop/iPad : posée, toile + ombre ENTIÈRES (non rognées), comme le mobile
+    scaleCarouselMobile: 0.52, // carrousel sur mobile : idem (toile entière, posée). Le "zoom" est réservé au gros plan (popup)
     scalePopup: 0.56, // gros plan : un peu plus de marge pour que l'ombre (et la rotation) ne soit jamais coupée
     chassisCm: 2.0, // profondeur RÉELLE du châssis (cm). La proportion du bord = chassisCm / taille choisie (cm) -> physiquement exacte et plus fine sur les grandes toiles. Ajustable.
     ambient: 0.74,
