@@ -180,7 +180,8 @@
             "type": "menu_list",
             "settings": {
               "heading": "Un problème ?",
-              "menu": "footer"
+              "menu": "footer",
+              "append_order_tracking": true
             }
           }
         },

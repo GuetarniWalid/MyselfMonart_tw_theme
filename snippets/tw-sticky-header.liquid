@@ -1,3 +1,11 @@
+{%- comment -%} Destination du lien « Suivre ma commande » (repli sur l'espace compte client natif) {%- endcomment -%}
+{%- liquid
+  assign order_tracking_url = settings.order_tracking_url
+  if order_tracking_url == blank
+    assign order_tracking_url = routes.account_url
+  endif
+-%}
+
 {%- comment -%} Check if filters should be shown for this collection type {%- endcomment -%}
 {% assign show_filters = false %}
 {%- if template.name == 'collection' -%}
@@ -119,10 +127,18 @@
               </ul>
             {% endif %}
           </nav>
-          <div class="flex justify-between pb-10 pt-6 bg-main text-secondary">
+          <div>
+            <div class="p-4">
+              {% render 'tw-order-tracking-link',
+                class: 'w-full justify-center py-3 bg-buy-button text-main rounded-lg',
+                show_icon: true,
+                icon_width: 22
+              %}
+            </div>
+            <div class="bg-buy-button text-main flex justify-between pb-10 pt-6">
             {% render 'tw-list-social' %}
             <details class="relative px-6">
-              <summary class="flex items-center justify-center text-secondary cursor-pointer">
+              <summary class="flex items-center justify-center text-main cursor-pointer">
                 {% if localization.country.currency.iso_code == 'CAD' and localization.language.iso_code == 'en' %}
                   {% render 'icon-flag-ca' %}
                 {% elsif localization.country.currency.iso_code == 'CHF' and localization.language.iso_code == 'fr' %}
@@ -245,6 +261,7 @@
                 {%- endfor -%}
               </ul>
             </details>
+            </div>
           </div>
         </div>
       </details>
@@ -381,6 +398,12 @@
 
                       {% endif %}
                     {% endfor %}
+                    {%- comment -%} Dernier lien du menu : Suivre ma commande {%- endcomment -%}
+                    <li class="obfuscate underline underline-offset-4 hover:translate-x-1 transition-transform duration-200 p-3 cursor-pointer"
+                      data-url64="{{ order_tracking_url | base64_encode }}"
+                      tabindex="-1">
+                      {{ 'general.order_tracking' | t }}
+                    </li>
                   </ul>
                 </div>
 

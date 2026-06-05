@@ -184,7 +184,8 @@
     },
     "share": {
       "success_message": "Lien copié dans le presse-papiers"
-    }
+    },
+    "order_tracking": "Suivre ma commande"
   },
   "localization": {
     "country_label": "Devise",

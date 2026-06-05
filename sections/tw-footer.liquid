@@ -1,5 +1,13 @@
 <script src="{{ 'tw-footer.js' | asset_url }}" defer="defer"></script>
 
+{%- comment -%} Destination du lien « Suivre ma commande » (repli sur l'espace compte client natif) {%- endcomment -%}
+{%- liquid
+  assign footer_order_tracking_url = settings.order_tracking_url
+  if footer_order_tracking_url == blank
+    assign footer_order_tracking_url = routes.account_url
+  endif
+-%}
+
 <footer-logic>
   <svg class="absolute top-2 right-0 left-0 -translate-y-full w-full" width="320" viewBox="0 0 1470 89" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true">
     <path class="fill-buy-button" fill-rule="evenodd" clip-rule="evenodd" d="M0 39.9244V89H1470V39.9244C1469.35 39.9532 1294.17 47.642 1150.17 39.9244C1072.84 35.7789 992.978 29.4304 912.212 23.0096C769.252 11.6444 623.445 0.0530014 483.721 0.0530014C116.221 0.0530014 0 39.9244 0 39.9244Z" fill="transparent"/>
@@ -15,15 +23,22 @@
                   {%- if block.settings.heading != blank -%}
                     <h3 class="mb-4">{{- block.settings.heading | escape -}}</h3>
                   {%- endif -%}
-                  {%- if block.settings.menu != blank -%}
+                  {%- if block.settings.menu != blank or block.settings.append_order_tracking -%}
                     <ul class="text-sm">
-                      {%- for link in block.settings.menu.links -%}
+                      {%- if block.settings.menu != blank -%}
+                        {%- for link in block.settings.menu.links -%}
+                          <li class="mb-2">
+                              <a href="{{ link.url }}">
+                                {{ link.title }}
+                              </a>
+                          </li>
+                        {%- endfor -%}
+                      {%- endif -%}
+                      {%- if block.settings.append_order_tracking -%}
                         <li class="mb-2">
-                            <a href="{{ link.url }}">
-                              {{ link.title }}
-                            </a>
+                          <a href="{{ footer_order_tracking_url }}">{{ 'general.order_tracking' | t }}</a>
                         </li>
-                      {%- endfor -%}
+                      {%- endif -%}
                     </ul>
                   {%- endif -%}
               {%- endcase -%}
@@ -183,6 +198,13 @@
           "id": "menu",
           "label": "t:sections.footer.blocks.link_list.settings.menu.label",
           "info": "t:sections.footer.blocks.link_list.settings.menu.info"
+        },
+        {
+          "type": "checkbox",
+          "id": "append_order_tracking",
+          "default": false,
+          "label": "t:sections.footer.blocks.link_list.settings.append_order_tracking.label",
+          "info": "t:sections.footer.blocks.link_list.settings.append_order_tracking.info"
         }
       ]
     }

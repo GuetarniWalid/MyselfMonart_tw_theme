@@ -53,6 +53,15 @@
         }
       }
     },
+    "order_tracking": {
+      "name": "Suivi de commande",
+      "settings": {
+        "order_tracking_url": {
+          "label": "Page de suivi de commande",
+          "info": "Lien du bouton « Suivre ma commande » (footer, menu, panier). Laissez vide pour utiliser l'espace compte client Shopify, où le client retrouve ses commandes et le suivi de son colis."
+        }
+      }
+    },
     "currency_format": {
       "name": "Format de devise",
       "settings": {
@@ -921,6 +930,10 @@
             "menu": {
               "label": "Menu",
               "info": "Affiche uniquement les éléments de menu de niveau supérieur."
+            },
+            "append_order_tracking": {
+              "label": "Ajouter « Suivre ma commande » en dernier",
+              "info": "Ajoute le lien de suivi de commande comme dernier lien de cette colonne (ex. colonne « Un problème ? »)."
             }
           }
         },

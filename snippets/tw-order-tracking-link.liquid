@@ -1,0 +1,38 @@
+{% comment %}
+  Lien « Suivre ma commande » — source de vérité unique.
+  Réutilisé dans : footer, header (menu mobile + desktop), tiroir panier & page panier.
+
+  Destination : settings.order_tracking_url (configurable dans l'éditeur de thème),
+  avec repli automatique sur routes.account_url (espace compte client natif Shopify,
+  où le client retrouve ses commandes et le suivi de son colis).
+
+  Paramètres :
+    class        classes Tailwind additionnelles sur le <a>
+    label_class  classes sur le <span> du libellé (ex : masquage responsive)
+    icon_width   taille en px de l'icône colis (défaut 20)
+    show_icon    passer à true pour afficher l'icône colis (masquée par défaut)
+    ring_class   couleur du focus ring (défaut 'ring-main' ; utiliser 'ring-secondary' sur fond sombre)
+    tabindex     valeur tabindex optionnelle (ex : '-1' dans le tiroir panier)
+
+  Usage :
+    {% render 'tw-order-tracking-link', class: 'text-sm underline underline-offset-4' %}
+{% endcomment %}
+
+{%- liquid
+  assign tracking_url = settings.order_tracking_url
+  if tracking_url == blank
+    assign tracking_url = routes.account_url
+  endif
+  assign tracking_icon_width = icon_width | default: 20
+  assign tracking_ring_class = ring_class | default: 'ring-main'
+-%}
+<a
+  href="{{ tracking_url }}"
+  class="inline-flex items-center gap-2 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:{{ tracking_ring_class }} focus-visible:ring-offset-2 rounded {{ class }}"
+  aria-label="{{ 'general.order_tracking' | t }}"
+  {%- if tabindex %} tabindex="{{ tabindex }}"{% endif %}>
+  {%- if show_icon -%}
+    <span aria-hidden="true" class="shrink-0 inline-flex">{% render 'icon-package', width: tracking_icon_width %}</span>
+  {%- endif -%}
+  <span class="{{ label_class }}">{{ 'general.order_tracking' | t }}</span>
+</a>

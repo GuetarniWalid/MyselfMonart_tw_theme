@@ -20,6 +20,12 @@
         tabindex="-1">
         {{ 'sections.tw_cart_drawer.continue_shopping' | t }}
       </button>
+      <div class="mt-8">
+        {% render 'tw-order-tracking-link',
+          class: 'justify-center text-sm underline underline-offset-4 hover:translate-x-1 transition-transform duration-200',
+          tabindex: '-1'
+        %}
+      </div>
     </div>
     <div class="loading-wrapper h-full flex justify-center items-center hidden">
       <p>{{ "sections.tw_cart_drawer.loading" | t }}&nbsp;&nbsp;</p>

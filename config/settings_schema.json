@@ -19,6 +19,17 @@
     ]
   },
   {
+    "name": "t:settings_schema.order_tracking.name",
+    "settings": [
+      {
+        "type": "url",
+        "id": "order_tracking_url",
+        "label": "t:settings_schema.order_tracking.settings.order_tracking_url.label",
+        "info": "t:settings_schema.order_tracking.settings.order_tracking_url.info"
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.search_input.name",
     "settings": [
       {

@@ -53,6 +53,15 @@
         }
       }
     },
+    "order_tracking": {
+      "name": "Order tracking",
+      "settings": {
+        "order_tracking_url": {
+          "label": "Order tracking page",
+          "info": "Link for the « Track my order » button (footer, menu, cart). Leave empty to use the native Shopify customer account, where customers find their orders and parcel tracking."
+        }
+      }
+    },
     "currency_format": {
       "name": "Currency format",
       "settings": {
@@ -921,6 +930,10 @@
             "menu": {
               "label": "Menu",
               "info": "Only top-level menu items are shown."
+            },
+            "append_order_tracking": {
+              "label": "Append « Track my order » as last item",
+              "info": "Adds the order tracking link as the last link of this column (e.g. a « Need help? » column)."
             }
           }
         },
