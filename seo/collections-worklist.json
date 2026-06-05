@@ -1,0 +1,574 @@
+﻿{
+    "meta":  {
+                 "generated_from":  "Shopify listCollections (live) 2026-06-05",
+                 "total_collections":  56,
+                 "pending":  0,
+                 "done":  47,
+                 "skip":  9,
+                 "priorite_source":  "PLAN §6 (clics web FR nov-dec 2025) puis productsCount desc",
+                 "note_affichage":  "RESOLU 2026-06-05: affichage metafield-first via snippet collection-editorial-auto (garde = custom.guide) injecte dans main-collection-product-grid -\u003e 0 admin, 0 assignation template, 0 double-H1. 46 collections traitees (45 bulk + pilote africain). H1 des templates a banner desactive force via flag custom.editorial_h1.",
+                 "note_template_suffix":  "custom.intro=multi_line_text_field ; custom.guide=multi_line_text_field (HTML brut) ; custom.faq=json ([{q,a}]) ; custom.editorial_h1=boolean. Rollback = vider ces metafields."
+             },
+    "collections":  [
+                        {
+                            "handle":  "tableau-salon",
+                            "title":  "Tableau Salon",
+                            "gid":  "gid://shopify/Collection/404485669119",
+                            "products_count":  448,
+                            "clics_avant":  null,
+                            "priorite":  0,
+                            "status":  "done",
+                            "reason":  "pilote modele (29/05)"
+                        },
+                        {
+                            "handle":  "tableau-africain",
+                            "title":  "Tableau Africain",
+                            "gid":  "gid://shopify/Collection/407673012479",
+                            "products_count":  87,
+                            "clics_avant":  215,
+                            "priorite":  1,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (pilote valide)"
+                        },
+                        {
+                            "handle":  "tableau-couleur",
+                            "title":  "Tableau Coloré",
+                            "gid":  "gid://shopify/Collection/600341086555",
+                            "products_count":  277,
+                            "clics_avant":  112,
+                            "priorite":  2,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-japonais",
+                            "title":  "Tableau Japonais",
+                            "gid":  "gid://shopify/Collection/599544299867",
+                            "products_count":  61,
+                            "clics_avant":  106,
+                            "priorite":  3,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-chambre-ado",
+                            "title":  "Tableau Chambre Ado",
+                            "gid":  "gid://shopify/Collection/406513090815",
+                            "products_count":  55,
+                            "clics_avant":  106,
+                            "priorite":  4,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableaux-frida-kahlo",
+                            "title":  "Tableau Frida kahlo",
+                            "gid":  "gid://shopify/Collection/644724818267",
+                            "products_count":  14,
+                            "clics_avant":  99,
+                            "priorite":  5,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-bureau",
+                            "title":  "Tableau Bureau",
+                            "gid":  "gid://shopify/Collection/407649157375",
+                            "products_count":  411,
+                            "clics_avant":  43,
+                            "priorite":  6,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-chambre-garcon",
+                            "title":  "Tableau Chambre Garçon",
+                            "gid":  "gid://shopify/Collection/406514893055",
+                            "products_count":  49,
+                            "clics_avant":  36,
+                            "priorite":  7,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-bleue",
+                            "title":  "Tableau Bleu",
+                            "gid":  "gid://shopify/Collection/599920804187",
+                            "products_count":  61,
+                            "clics_avant":  29,
+                            "priorite":  8,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-zen",
+                            "title":  "Tableau Zen",
+                            "gid":  "gid://shopify/Collection/604416967003",
+                            "products_count":  81,
+                            "clics_avant":  28,
+                            "priorite":  9,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-cuisine",
+                            "title":  "Tableau Cuisine",
+                            "gid":  "gid://shopify/Collection/403801309439",
+                            "products_count":  102,
+                            "clics_avant":  25,
+                            "priorite":  10,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-animaux",
+                            "title":  "Tableau Animaux",
+                            "gid":  "gid://shopify/Collection/407429972223",
+                            "products_count":  143,
+                            "clics_avant":  16,
+                            "priorite":  12,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableaux-chambre-bebe",
+                            "title":  "Tableaux Chambre Bebe",
+                            "gid":  "gid://shopify/Collection/406505226495",
+                            "products_count":  58,
+                            "clics_avant":  14,
+                            "priorite":  13,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-paysage",
+                            "title":  "Tableau Paysage",
+                            "gid":  "gid://shopify/Collection/607562432859",
+                            "products_count":  78,
+                            "clics_avant":  14,
+                            "priorite":  14,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tous-les-tableaux",
+                            "title":  "Tous les Tableaux",
+                            "gid":  "gid://shopify/Collection/607051088219",
+                            "products_count":  748,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-chambre-adulte",
+                            "title":  "Tableau Chambre Adulte",
+                            "gid":  "gid://shopify/Collection/406514532607",
+                            "products_count":  341,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-chambre",
+                            "title":  "Tableau Chambre",
+                            "gid":  "gid://shopify/Collection/404666908927",
+                            "products_count":  333,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableaux-nature-sauvage",
+                            "title":  "Tableaux Nature",
+                            "gid":  "gid://shopify/Collection/607047844187",
+                            "products_count":  289,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-ethnique",
+                            "title":  "Tableau Ethnique",
+                            "gid":  "gid://shopify/Collection/599645290843",
+                            "products_count":  133,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-fleurs",
+                            "title":  "Tableau Fleurs",
+                            "gid":  "gid://shopify/Collection/607034311003",
+                            "products_count":  93,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-noir-et-blanc",
+                            "title":  "Tableau Noir et Blanc",
+                            "gid":  "gid://shopify/Collection/600281612635",
+                            "products_count":  79,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-chambre-enfant",
+                            "title":  "Tableau Chambre Enfant",
+                            "gid":  "gid://shopify/Collection/406510534911",
+                            "products_count":  76,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-chambre-fille",
+                            "title":  "Tableau Chambre Fille",
+                            "gid":  "gid://shopify/Collection/406516138239",
+                            "products_count":  64,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-abstrait",
+                            "title":  "Tableau Abstrait",
+                            "gid":  "gid://shopify/Collection/620119982427",
+                            "products_count":  63,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-rose",
+                            "title":  "Tableau Rose",
+                            "gid":  "gid://shopify/Collection/600150933851",
+                            "products_count":  63,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-rouge",
+                            "title":  "Tableau Rouge",
+                            "gid":  "gid://shopify/Collection/599890166107",
+                            "products_count":  62,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-chambre-fillette",
+                            "title":  "Tableau Chambre Fillette",
+                            "gid":  "gid://shopify/Collection/406508994815",
+                            "products_count":  58,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-jaune",
+                            "title":  "Tableau Jaune",
+                            "gid":  "gid://shopify/Collection/599721574747",
+                            "products_count":  57,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-pop-art",
+                            "title":  "Tableau Pop Art",
+                            "gid":  "gid://shopify/Collection/602732953947",
+                            "products_count":  53,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-orange",
+                            "title":  "Tableau Orange",
+                            "gid":  "gid://shopify/Collection/600335221083",
+                            "products_count":  49,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-portrait-1",
+                            "title":  "Tableau Portrait",
+                            "gid":  "gid://shopify/Collection/644760338779",
+                            "products_count":  42,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-mer-1",
+                            "title":  "Tableau Mer",
+                            "gid":  "gid://shopify/Collection/619498307931",
+                            "products_count":  33,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-fruits-et-legumes",
+                            "title":  "Tableau Fruits et Légumes",
+                            "gid":  "gid://shopify/Collection/623299887451",
+                            "products_count":  32,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "bestsellers-1",
+                            "title":  "Tableau best-seller",
+                            "gid":  "gid://shopify/Collection/629742960987",
+                            "products_count":  30,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-vert",
+                            "title":  "Tableau Vert",
+                            "gid":  "gid://shopify/Collection/599959470427",
+                            "products_count":  30,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-cheval",
+                            "title":  "Tableau chevaux",
+                            "gid":  "gid://shopify/Collection/656988471643",
+                            "products_count":  24,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-gris",
+                            "title":  "Tableau Gris",
+                            "gid":  "gid://shopify/Collection/600154669403",
+                            "products_count":  23,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-street-art",
+                            "title":  "Tableau Street Art",
+                            "gid":  "gid://shopify/Collection/624281387355",
+                            "products_count":  21,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-violet",
+                            "title":  "Tableau Violet",
+                            "gid":  "gid://shopify/Collection/600338071899",
+                            "products_count":  17,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-lion",
+                            "title":  "Tableau Lion",
+                            "gid":  "gid://shopify/Collection/640741704027",
+                            "products_count":  16,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-personnalise-famille",
+                            "title":  "Poster Personnalisé Famille",
+                            "gid":  "gid://shopify/Collection/624856400219",
+                            "products_count":  14,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "horoscope-bebe",
+                            "title":  "Poster bébé : Signe Astrologique aquarelle",
+                            "gid":  "gid://shopify/Collection/643265495387",
+                            "products_count":  12,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableaux-bouddha",
+                            "title":  "Tableaux Bouddha",
+                            "gid":  "gid://shopify/Collection/650738270555",
+                            "products_count":  12,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "papier-peint-fleur",
+                            "title":  "Papier Peint fleur",
+                            "gid":  "gid://shopify/Collection/632713216347",
+                            "products_count":  11,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-islamique",
+                            "title":  "Tableau Islamique",
+                            "gid":  "gid://shopify/Collection/646969459035",
+                            "products_count":  9,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "papier-peint-colore",
+                            "title":  "Papier Peint Coloré",
+                            "gid":  "gid://shopify/Collection/632158028123",
+                            "products_count":  7,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "tableau-amerindiens",
+                            "title":  "Tableau amérindiens",
+                            "gid":  "gid://shopify/Collection/600113480027",
+                            "products_count":  4,
+                            "clics_avant":  null,
+                            "priorite":  100,
+                            "status":  "done",
+                            "reason":  "applique live 2026-06-05 (bulk metafield-first)"
+                        },
+                        {
+                            "handle":  "kit-tableau",
+                            "title":  "Kit tableau",
+                            "gid":  "gid://shopify/Collection/651498094939",
+                            "products_count":  4,
+                            "clics_avant":  null,
+                            "priorite":  9999,
+                            "status":  "skip",
+                            "reason":  "hors-sujet (kit)"
+                        },
+                        {
+                            "handle":  "tableau-marvel",
+                            "title":  "Tableau Marvel",
+                            "gid":  "gid://shopify/Collection/609639006555",
+                            "products_count":  3,
+                            "clics_avant":  null,
+                            "priorite":  9999,
+                            "status":  "skip",
+                            "reason":  "licence/3 prod"
+                        },
+                        {
+                            "handle":  "test",
+                            "title":  "test",
+                            "gid":  "gid://shopify/Collection/663907795291",
+                            "products_count":  3,
+                            "clics_avant":  null,
+                            "priorite":  9999,
+                            "status":  "skip",
+                            "reason":  "test"
+                        },
+                        {
+                            "handle":  "papier-peint-paysage",
+                            "title":  "Papier Peint Paysage",
+                            "gid":  "gid://shopify/Collection/632805327195",
+                            "products_count":  1,
+                            "clics_avant":  null,
+                            "priorite":  9999,
+                            "status":  "skip",
+                            "reason":  "1 produit"
+                        },
+                        {
+                            "handle":  "tableau-manga-1",
+                            "title":  "Tableau Manga",
+                            "gid":  "gid://shopify/Collection/633296159067",
+                            "products_count":  1,
+                            "clics_avant":  null,
+                            "priorite":  9999,
+                            "status":  "skip",
+                            "reason":  "1 produit"
+                        },
+                        {
+                            "handle":  "tableau-naruto",
+                            "title":  "Tableau Naruto",
+                            "gid":  "gid://shopify/Collection/633307005275",
+                            "products_count":  0,
+                            "clics_avant":  null,
+                            "priorite":  9999,
+                            "status":  "skip",
+                            "reason":  "0 produit"
+                        },
+                        {
+                            "handle":  "tableau-star-wars",
+                            "title":  "Tableau Star Wars",
+                            "gid":  "gid://shopify/Collection/636133179739",
+                            "products_count":  0,
+                            "clics_avant":  null,
+                            "priorite":  9999,
+                            "status":  "skip",
+                            "reason":  "0 produit"
+                        },
+                        {
+                            "handle":  "tableau-one-piece",
+                            "title":  "Tableau One Piece",
+                            "gid":  "gid://shopify/Collection/633297142107",
+                            "products_count":  0,
+                            "clics_avant":  null,
+                            "priorite":  9999,
+                            "status":  "skip",
+                            "reason":  "0 produit"
+                        },
+                        {
+                            "handle":  "posters-affiches-marvel-dc-comics",
+                            "title":  "Posters \u0026 Affiches Marvel - DC Comics",
+                            "gid":  "gid://shopify/Collection/631565058395",
+                            "products_count":  0,
+                            "clics_avant":  null,
+                            "priorite":  9999,
+                            "status":  "skip",
+                            "reason":  "0 produit"
+                        }
+                    ]
+}

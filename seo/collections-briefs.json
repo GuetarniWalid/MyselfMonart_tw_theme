@@ -1,0 +1,1699 @@
+﻿{
+    "generated":  "2026-06-05",
+    "allowed_collections":  [
+                                {
+                                    "title":  "Tableau Salon",
+                                    "url":  "/collections/tableau-salon"
+                                },
+                                {
+                                    "title":  "Tableau Africain",
+                                    "url":  "/collections/tableau-africain"
+                                },
+                                {
+                                    "title":  "Tableau Coloré",
+                                    "url":  "/collections/tableau-couleur"
+                                },
+                                {
+                                    "title":  "Tableau Japonais",
+                                    "url":  "/collections/tableau-japonais"
+                                },
+                                {
+                                    "title":  "Tableau Chambre Ado",
+                                    "url":  "/collections/tableau-chambre-ado"
+                                },
+                                {
+                                    "title":  "Tableau Frida kahlo",
+                                    "url":  "/collections/tableaux-frida-kahlo"
+                                },
+                                {
+                                    "title":  "Tableau Bureau",
+                                    "url":  "/collections/tableau-bureau"
+                                },
+                                {
+                                    "title":  "Tableau Chambre Garçon",
+                                    "url":  "/collections/tableau-chambre-garcon"
+                                },
+                                {
+                                    "title":  "Tableau Bleu",
+                                    "url":  "/collections/tableau-bleue"
+                                },
+                                {
+                                    "title":  "Tableau Zen",
+                                    "url":  "/collections/tableau-zen"
+                                },
+                                {
+                                    "title":  "Tableau Cuisine",
+                                    "url":  "/collections/tableau-cuisine"
+                                },
+                                {
+                                    "title":  "Tableau Animaux",
+                                    "url":  "/collections/tableau-animaux"
+                                },
+                                {
+                                    "title":  "Tableaux Chambre Bebe",
+                                    "url":  "/collections/tableaux-chambre-bebe"
+                                },
+                                {
+                                    "title":  "Tableau Paysage",
+                                    "url":  "/collections/tableau-paysage"
+                                },
+                                {
+                                    "title":  "Tous les Tableaux",
+                                    "url":  "/collections/tous-les-tableaux"
+                                },
+                                {
+                                    "title":  "Tableau Chambre Adulte",
+                                    "url":  "/collections/tableau-chambre-adulte"
+                                },
+                                {
+                                    "title":  "Tableau Chambre",
+                                    "url":  "/collections/tableau-chambre"
+                                },
+                                {
+                                    "title":  "Tableaux Nature",
+                                    "url":  "/collections/tableaux-nature-sauvage"
+                                },
+                                {
+                                    "title":  "Tableau Ethnique",
+                                    "url":  "/collections/tableau-ethnique"
+                                },
+                                {
+                                    "title":  "Tableau Fleurs",
+                                    "url":  "/collections/tableau-fleurs"
+                                },
+                                {
+                                    "title":  "Tableau Noir et Blanc",
+                                    "url":  "/collections/tableau-noir-et-blanc"
+                                },
+                                {
+                                    "title":  "Tableau Chambre Enfant",
+                                    "url":  "/collections/tableau-chambre-enfant"
+                                },
+                                {
+                                    "title":  "Tableau Chambre Fille",
+                                    "url":  "/collections/tableau-chambre-fille"
+                                },
+                                {
+                                    "title":  "Tableau Abstrait",
+                                    "url":  "/collections/tableau-abstrait"
+                                },
+                                {
+                                    "title":  "Tableau Rose",
+                                    "url":  "/collections/tableau-rose"
+                                },
+                                {
+                                    "title":  "Tableau Rouge",
+                                    "url":  "/collections/tableau-rouge"
+                                },
+                                {
+                                    "title":  "Tableau Chambre Fillette",
+                                    "url":  "/collections/tableau-chambre-fillette"
+                                },
+                                {
+                                    "title":  "Tableau Jaune",
+                                    "url":  "/collections/tableau-jaune"
+                                },
+                                {
+                                    "title":  "Tableau Pop Art",
+                                    "url":  "/collections/tableau-pop-art"
+                                },
+                                {
+                                    "title":  "Tableau Orange",
+                                    "url":  "/collections/tableau-orange"
+                                },
+                                {
+                                    "title":  "Tableau Portrait",
+                                    "url":  "/collections/tableau-portrait-1"
+                                },
+                                {
+                                    "title":  "Tableau Mer",
+                                    "url":  "/collections/tableau-mer-1"
+                                },
+                                {
+                                    "title":  "Tableau Fruits et Légumes",
+                                    "url":  "/collections/tableau-fruits-et-legumes"
+                                },
+                                {
+                                    "title":  "Tableau best-seller",
+                                    "url":  "/collections/bestsellers-1"
+                                },
+                                {
+                                    "title":  "Tableau Vert",
+                                    "url":  "/collections/tableau-vert"
+                                },
+                                {
+                                    "title":  "Tableau chevaux",
+                                    "url":  "/collections/tableau-cheval"
+                                },
+                                {
+                                    "title":  "Tableau Gris",
+                                    "url":  "/collections/tableau-gris"
+                                },
+                                {
+                                    "title":  "Tableau Street Art",
+                                    "url":  "/collections/tableau-street-art"
+                                },
+                                {
+                                    "title":  "Tableau Violet",
+                                    "url":  "/collections/tableau-violet"
+                                },
+                                {
+                                    "title":  "Tableau Lion",
+                                    "url":  "/collections/tableau-lion"
+                                },
+                                {
+                                    "title":  "Poster Personnalisé Famille",
+                                    "url":  "/collections/tableau-personnalise-famille"
+                                },
+                                {
+                                    "title":  "Poster bébé : Signe Astrologique aquarelle",
+                                    "url":  "/collections/horoscope-bebe"
+                                },
+                                {
+                                    "title":  "Tableaux Bouddha",
+                                    "url":  "/collections/tableaux-bouddha"
+                                },
+                                {
+                                    "title":  "Papier Peint fleur",
+                                    "url":  "/collections/papier-peint-fleur"
+                                },
+                                {
+                                    "title":  "Tableau Islamique",
+                                    "url":  "/collections/tableau-islamique"
+                                },
+                                {
+                                    "title":  "Papier Peint Coloré",
+                                    "url":  "/collections/papier-peint-colore"
+                                },
+                                {
+                                    "title":  "Tableau amérindiens",
+                                    "url":  "/collections/tableau-amerindiens"
+                                }
+                            ],
+    "briefs":  [
+                   {
+                       "handle":  "tableau-couleur",
+                       "title":  "Tableau Coloré",
+                       "gid":  "gid://shopify/Collection/600341086555",
+                       "primary_kw":  "tableau coloré",
+                       "secondary_kw":  [
+                                            "tableau couleur",
+                                            "tableau colore",
+                                            "tableau coloré pour salon",
+                                            "tableaux colorés",
+                                            "tableau moderne coloré",
+                                            "tableau coloré salon",
+                                            "tableau coloré original",
+                                            "tableau de couleur",
+                                            "tableau couleur vive",
+                                            "tableaux colores"
+                                        ],
+                       "product_handles":  [
+                                               "toile-contemporaine-le-petit-prince-poesie-etoilee",
+                                               "tableau-decoratif-maternite-africaine-chaleur-et-amour",
+                                               "tableau-mural-femmes-africaines-pluie-multicolore",
+                                               "tableau-design-frida-kahlo-nature-eclatante",
+                                               "cadre-design-femmes-africaines-grace-en-mouvement",
+                                               "decoration-murale-cerisier-ephemere-poetique",
+                                               "tableau-decoratif-geisha-urbain-tradition-moderne",
+                                               "tableau-sur-toile-douceur-du-bebe-lion-en-aquarelle",
+                                               "toile-deco-danse-africaine-mouvements-envoutants",
+                                               "tableaux-deco-portrait-femme-africaine-boheme-chic"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/toile-contemporaine-le-petit-prince-poesie-etoilee",
+                                             "/products/tableau-decoratif-maternite-africaine-chaleur-et-amour",
+                                             "/products/tableau-mural-femmes-africaines-pluie-multicolore"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-japonais",
+                       "title":  "Tableau Japonais",
+                       "gid":  "gid://shopify/Collection/599544299867",
+                       "primary_kw":  "tableau japonais",
+                       "secondary_kw":  [
+                                            "tableau japon",
+                                            "tableaux japonais",
+                                            "cadre japonais",
+                                            "tableau style japonais",
+                                            "tableau japonais contemporain",
+                                            "tableau inspiration japonaise",
+                                            "tableau art japonais",
+                                            "tableau japonais zen",
+                                            "toile japonaise",
+                                            "toile japonaise murale"
+                                        ],
+                       "product_handles":  [
+                                               "grand-tableau-yin-yang-bleu-et-or-harmonie-zen",
+                                               "creation-artistique-montagnes-du-japon-apaisantes",
+                                               "decoration-murale-cerisier-ephemere-poetique",
+                                               "tableau-decoratif-geisha-urbain-tradition-moderne",
+                                               "decor-mural-samourai-contraste-et-serenite",
+                                               "cadre-moderne-samourai-lombre-subtile",
+                                               "cadre-moderne-innocence-street-art-japonais",
+                                               "tableau-dart-pagode-harmonie-calligraphique",
+                                               "tableau-mural-lanterne-japonaise-eclat-serein",
+                                               "tableau-sur-toile-geisha-au-charme-japonais"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/grand-tableau-yin-yang-bleu-et-or-harmonie-zen",
+                                             "/products/creation-artistique-montagnes-du-japon-apaisantes",
+                                             "/products/decoration-murale-cerisier-ephemere-poetique"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-chambre-ado",
+                       "title":  "Tableau Chambre Ado",
+                       "gid":  "gid://shopify/Collection/406513090815",
+                       "primary_kw":  "tableau chambre ado garçon",
+                       "secondary_kw":  [
+                                            "tableau chambre ado",
+                                            "tableau chambre",
+                                            "cadre chambre ado",
+                                            "tableau ado",
+                                            "tableau pour chambre ado fille",
+                                            "tableau pour chambre adolescent",
+                                            "tableau chambre fille 12 ans",
+                                            "deco ado",
+                                            "tableau ado garcon",
+                                            "tableau adolescent"
+                                        ],
+                       "product_handles":  [
+                                               "grand-tableau-yin-yang-bleu-et-or-harmonie-zen",
+                                               "tableaux-deco-portrait-femme-africaine-boheme-chic",
+                                               "cadre-moderne-samourai-lombre-subtile",
+                                               "tableau-dart-femme-fleur-mystere-et-eclat-floral",
+                                               "toile-moderne-ronaldo-genie-du-football-urbain",
+                                               "tableau-decoratif-bart-simpson-espieglerie-pop",
+                                               "tableau-moderne-frida-kahlo-eclat-floral-poetique",
+                                               "grand-tableau-oiseau-et-main-serenite-bleue",
+                                               "decoration-murale-marilyn-monroe-street-art-audacieuse",
+                                               "uvre-murale-new-york-leffervescence-urbaine"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/grand-tableau-yin-yang-bleu-et-or-harmonie-zen",
+                                             "/products/tableaux-deco-portrait-femme-africaine-boheme-chic",
+                                             "/products/cadre-moderne-samourai-lombre-subtile"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableaux-frida-kahlo",
+                       "title":  "Tableau Frida kahlo",
+                       "gid":  "gid://shopify/Collection/644724818267",
+                       "primary_kw":  "tableau frida kahlo",
+                       "secondary_kw":  [
+                                            "frida kahlo peinture",
+                                            "toile frida kahlo",
+                                            "œuvres d\u0027art de frida kahlo",
+                                            "frida kahlo tableau",
+                                            "peinture frida kahlo",
+                                            "tableaux frida kahlo",
+                                            "objet frida kahlo",
+                                            "tableau de frida kahlo",
+                                            "tableau frida",
+                                            "frida kahlo objet"
+                                        ],
+                       "product_handles":  [
+                                               "tableau-design-frida-kahlo-vibrance-inspirante",
+                                               "tableau-design-frida-kahlo-nature-eclatante",
+                                               "uvre-murale-frida-kahlo-passion-et-couleurs",
+                                               "toile-dartiste-frida-kahlo-portrait-epure",
+                                               "tableau-moderne-frida-kahlo-eclat-floral-poetique",
+                                               "tableau-sur-toile-frida-kahlo-citation-ailes-et-fleurs-eclatantes",
+                                               "frida-kahlo-tableau-sur-toile-street-art-noir-blanc-et-or",
+                                               "decor-mural-portrait-frida-kahlo-regard-noir-et-blanc",
+                                               "decoration-murale-portrait-frida-kahlo-nb-authentique",
+                                               "tableau-toile-frida-kahlo-bouquet-rose-et-caractere"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/tableau-design-frida-kahlo-vibrance-inspirante",
+                                             "/products/tableau-design-frida-kahlo-nature-eclatante",
+                                             "/products/uvre-murale-frida-kahlo-passion-et-couleurs"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-bureau",
+                       "title":  "Tableau Bureau",
+                       "gid":  "gid://shopify/Collection/407649157375",
+                       "primary_kw":  "tableau bureau",
+                       "secondary_kw":  [
+                                            "tableau pour bureau",
+                                            "décoration murale bureau",
+                                            "tableau pour bureau professionnel",
+                                            "décoration murale bureau professionnel",
+                                            "cadre deco bureau",
+                                            "tableau deco bureau",
+                                            "tableau décoration bureau",
+                                            "cadre pour bureau professionnel",
+                                            "decoration murale bureau",
+                                            "deco murale bureau"
+                                        ],
+                       "product_handles":  [
+                                               "toile-contemporaine-le-petit-prince-poesie-etoilee",
+                                               "tableau-decoratif-maternite-africaine-chaleur-et-amour",
+                                               "tableau-mural-femmes-africaines-pluie-multicolore",
+                                               "tableau-design-frida-kahlo-vibrance-inspirante",
+                                               "grand-tableau-yin-yang-bleu-et-or-harmonie-zen",
+                                               "creation-artistique-montagnes-du-japon-apaisantes",
+                                               "tableau-design-frida-kahlo-nature-eclatante",
+                                               "cadre-design-femmes-africaines-grace-en-mouvement",
+                                               "decoration-murale-cerisier-ephemere-poetique",
+                                               "tableau-decoratif-geisha-urbain-tradition-moderne"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/toile-contemporaine-le-petit-prince-poesie-etoilee",
+                                             "/products/tableau-decoratif-maternite-africaine-chaleur-et-amour",
+                                             "/products/tableau-mural-femmes-africaines-pluie-multicolore"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-chambre-garcon",
+                       "title":  "Tableau Chambre Garçon",
+                       "gid":  "gid://shopify/Collection/406514893055",
+                       "primary_kw":  "tableau chambre garçon",
+                       "secondary_kw":  [
+                                            "tableau chambre enfant garcon",
+                                            "tableau chambre bébé garcon",
+                                            "tableau chambre enfant",
+                                            "cadre chambre enfant garçon",
+                                            "tableau peinture pour petit garçon",
+                                            "tableau chambre bébé garçon",
+                                            "tableau chambre garçon 6 ans",
+                                            "cadre enfant garçon",
+                                            "cadre chambre garcon",
+                                            "tableau bebe"
+                                        ],
+                       "product_handles":  [
+                                               "toile-contemporaine-le-petit-prince-poesie-etoilee",
+                                               "tableau-sur-toile-douceur-du-bebe-lion-en-aquarelle",
+                                               "tableau-design-panda-douceur-et-joie-pastel",
+                                               "tableau-design-renard-doux-reve-denfant",
+                                               "tableau-decoratif-bart-simpson-espieglerie-pop",
+                                               "tableau-mural-animaux-magie-pastel-pour-bebe",
+                                               "toile-contemporaine-sonic-aventurier-bleu-vitamine",
+                                               "cadre-design-petit-prince-reverie-etoilee",
+                                               "toile-originale-ourson-calin-douceur-enfantine",
+                                               "toile-foret-enchantee-et-animaux-mignons-apaisants"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/toile-contemporaine-le-petit-prince-poesie-etoilee",
+                                             "/products/tableau-sur-toile-douceur-du-bebe-lion-en-aquarelle",
+                                             "/products/tableau-design-panda-douceur-et-joie-pastel"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-bleue",
+                       "title":  "Tableau Bleu",
+                       "gid":  "gid://shopify/Collection/599920804187",
+                       "primary_kw":  "tableau bleu",
+                       "secondary_kw":  [
+                                            "tableau bleu moderne",
+                                            "tableau avec du bleu",
+                                            "tableau bleu nuit",
+                                            "tableau bleu maison du monde",
+                                            "tableau moderne bleu",
+                                            "tableau bleu ciel",
+                                            "tableau bleu et blanc",
+                                            "tableau bleu et or",
+                                            "tableau salon bleu",
+                                            "tableau abstrait bleu et blanc"
+                                        ],
+                       "product_handles":  [
+                                               "toile-contemporaine-le-petit-prince-poesie-etoilee",
+                                               "grand-tableau-yin-yang-bleu-et-or-harmonie-zen",
+                                               "tableau-design-frida-kahlo-nature-eclatante",
+                                               "toile-decorative-visage-abstrait-emotion-profonde",
+                                               "creation-artistique-abstrait-klimt-harmonie-bleu-et-or",
+                                               "tableau-sur-toile-voile-de-mains-bleues-en-harmonie",
+                                               "toile-deco-couple-bleu-et-or-romance-intemporelle",
+                                               "toile-contemporaine-pecheur-thailandais-zen-sur-le-lac",
+                                               "tableau-design-aquarelle-florale-eclat-printanier",
+                                               "toile-moderne-etreinte-aquatique-harmonies-bleues"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/toile-contemporaine-le-petit-prince-poesie-etoilee",
+                                             "/products/grand-tableau-yin-yang-bleu-et-or-harmonie-zen",
+                                             "/products/tableau-design-frida-kahlo-nature-eclatante"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-zen",
+                       "title":  "Tableau Zen",
+                       "gid":  "gid://shopify/Collection/604416967003",
+                       "primary_kw":  "tableau zen",
+                       "secondary_kw":  [
+                                            "peinture zen",
+                                            "tableau zen nature",
+                                            "tableau apaisant",
+                                            "tableau apaisant chambre",
+                                            "tableaux zen",
+                                            "cadre zen",
+                                            "couleur zen",
+                                            "tableau nature zen",
+                                            "tableau zen pour salon",
+                                            "toile zen"
+                                        ],
+                       "product_handles":  [
+                                               "grand-tableau-yin-yang-bleu-et-or-harmonie-zen",
+                                               "tableau-sur-toile-voile-de-mains-bleues-en-harmonie",
+                                               "toile-contemporaine-pecheur-thailandais-zen-sur-le-lac",
+                                               "tableau-mural-lanterne-japonaise-eclat-serein",
+                                               "cadre-moderne-fleurs-de-cerisier-soleil-rouge-du-japon",
+                                               "cadre-moderne-abstrait-dore-luxe-et-modernite-zen",
+                                               "decor-mural-samourai-chemin-zen-et-poesie",
+                                               "decoration-murale-cerisier-douceur-printaniere",
+                                               "tableau-decoratif-galets-serenite-au-crepuscule",
+                                               "toile-moderne-etreinte-aquatique-harmonies-bleues"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/grand-tableau-yin-yang-bleu-et-or-harmonie-zen",
+                                             "/products/tableau-sur-toile-voile-de-mains-bleues-en-harmonie",
+                                             "/products/toile-contemporaine-pecheur-thailandais-zen-sur-le-lac"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-cuisine",
+                       "title":  "Tableau Cuisine",
+                       "gid":  "gid://shopify/Collection/403801309439",
+                       "primary_kw":  "deco cuisine mur",
+                       "secondary_kw":  [
+                                            "deco murale cuisine",
+                                            "tableau cuisine",
+                                            "tableau pour cuisine blanche",
+                                            "decoration cuisine mur",
+                                            "idée pour habiller un mur de cuisine",
+                                            "cuisine lapeyre",
+                                            "tableau cuisine original",
+                                            "cadre pour cuisine",
+                                            "tableau cuisine tendance",
+                                            "quelle taille de tableau sur un mur"
+                                        ],
+                       "product_handles":  [
+                                               "tableau-sur-toile-tasse-de-cafe-minimaliste-beige-rituel-du-matin-pour-cuisine",
+                                               "cadre-moderne-cuisine-martini-verres-cocktail-colores",
+                                               "toile-design-cuisine-kitchen-joyeuse-et-conviviale",
+                                               "uvre-murale-vase-dolivier-charme-pour-la-cuisine",
+                                               "toile-decorative-sardines-colorees-mediterraneennes",
+                                               "decoration-murale-cuisine-ici-cest-chocolatine",
+                                               "toile-contemporaine-cafe-multilingue-moment-convivial",
+                                               "tableau-deco-femme-japonaise-en-kimono-the-zen",
+                                               "grand-tableau-cafetiere-italienne-retro-humour-cafe",
+                                               "peinture-decorative-toaster-retro-pour-cuisine-enjouee"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/tableau-sur-toile-tasse-de-cafe-minimaliste-beige-rituel-du-matin-pour-cuisine",
+                                             "/products/cadre-moderne-cuisine-martini-verres-cocktail-colores",
+                                             "/products/toile-design-cuisine-kitchen-joyeuse-et-conviviale"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-animaux",
+                       "title":  "Tableau Animaux",
+                       "gid":  "gid://shopify/Collection/407429972223",
+                       "primary_kw":  "tableau animaux original",
+                       "secondary_kw":  [
+                                            "tableau humoristique animaux",
+                                            "tableau animalier",
+                                            "tableau animaux design",
+                                            "tableau animaux moderne",
+                                            "tableau animaux peinture",
+                                            "cadre animal",
+                                            "cadre animaux colorés",
+                                            "cadre deco animaux",
+                                            "grand tableau animaux",
+                                            "myselfmonart"
+                                        ],
+                       "product_handles":  [
+                                               "tableau-sur-toile-douceur-du-bebe-lion-en-aquarelle",
+                                               "tableau-sur-toile-cheval-abstrait-en-mouvement",
+                                               "toile-murale-girafe-pop-art-exotisme-vibrant",
+                                               "tableau-design-panda-douceur-et-joie-pastel",
+                                               "tableau-decoratif-singe-aux-toilettes-humour-decale",
+                                               "toile-dartiste-renard-eclat-animal-drape-de-mystere",
+                                               "cadre-moderne-boxer-pop-art-energie-vibrante",
+                                               "toile-murale-moutons-cool-elegance-ludique",
+                                               "tableau-decoratif-lion-pop-art-force-intense",
+                                               "tableau-sur-toile-cheval-pop-art-multicolore-explosion-de-couleurs-et-liberte"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/tableau-sur-toile-douceur-du-bebe-lion-en-aquarelle",
+                                             "/products/tableau-sur-toile-cheval-abstrait-en-mouvement",
+                                             "/products/toile-murale-girafe-pop-art-exotisme-vibrant"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableaux-chambre-bebe",
+                       "title":  "Tableaux Chambre Bebe",
+                       "gid":  "gid://shopify/Collection/406505226495",
+                       "primary_kw":  "tableau chambre bébé fille",
+                       "secondary_kw":  [
+                                            "tableau chambre bébé",
+                                            "aquarelle chambre bébé",
+                                            "tableau chambre bébé personnalisé",
+                                            "cadre déco chambre bébé",
+                                            "tableau chambre bebe fille",
+                                            "tableau pour bebe fille",
+                                            "cadre bebe fille",
+                                            "cadre deco bebe",
+                                            "cadre pour chambre bebe",
+                                            "cadre pour chambre bébé"
+                                        ],
+                       "product_handles":  [
+                                               "toile-contemporaine-le-petit-prince-poesie-etoilee",
+                                               "tableau-sur-toile-douceur-du-bebe-lion-en-aquarelle",
+                                               "tableau-design-panda-douceur-et-joie-pastel",
+                                               "tableau-design-renard-doux-reve-denfant",
+                                               "tableau-mural-animaux-magie-pastel-pour-bebe",
+                                               "peinture-murale-maternite-tendresse-russe",
+                                               "toile-design-baleine-doux-reves-pour-bebe",
+                                               "grand-tableau-cite-crepusculaire-etheree",
+                                               "art-mural-surs-en-harmonie-amour-fraternel",
+                                               "decor-mural-heroisme-enfantin-touche-dhumour"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/toile-contemporaine-le-petit-prince-poesie-etoilee",
+                                             "/products/tableau-sur-toile-douceur-du-bebe-lion-en-aquarelle",
+                                             "/products/tableau-design-panda-douceur-et-joie-pastel"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-paysage",
+                       "title":  "Tableau Paysage",
+                       "gid":  "gid://shopify/Collection/607562432859",
+                       "primary_kw":  "cadre paysage",
+                       "secondary_kw":  [
+                                            "tableau paysage",
+                                            "tableau salon paysage",
+                                            "cadre nature paysage",
+                                            "tableau paysage salon",
+                                            "tableau peinture paysage",
+                                            "cadre paysage nature",
+                                            "décoration murale paysage",
+                                            "paysage tableau",
+                                            "tableau de paysage",
+                                            "tableau mural"
+                                        ],
+                       "product_handles":  [
+                                               "creation-artistique-montagnes-du-japon-apaisantes",
+                                               "tableau-mural-barque-maritime-serenite-des-couleurs",
+                                               "toile-contemporaine-pecheur-thailandais-zen-sur-le-lac",
+                                               "decor-mural-touareg-mystere-du-sahara",
+                                               "toile-design-femme-nguni-aux-perles-animees",
+                                               "cadre-moderne-fleurs-de-cerisier-soleil-rouge-du-japon",
+                                               "tableau-moderne-village-africain-vie-authentique",
+                                               "decor-mural-samourai-chemin-zen-et-poesie",
+                                               "peinture-decorative-girafes-crepuscule-africain",
+                                               "tableau-decoratif-galets-serenite-au-crepuscule"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/creation-artistique-montagnes-du-japon-apaisantes",
+                                             "/products/tableau-mural-barque-maritime-serenite-des-couleurs",
+                                             "/products/toile-contemporaine-pecheur-thailandais-zen-sur-le-lac"
+                                         ]
+                   },
+                   {
+                       "handle":  "tous-les-tableaux",
+                       "title":  "Tous les Tableaux",
+                       "gid":  "gid://shopify/Collection/607051088219",
+                       "primary_kw":  "lionceau dessin réaliste",
+                       "secondary_kw":  [
+                                            "myselfmonart",
+                                            "site:www.myselfmonart.com",
+                                            "tableaux stylisés",
+                                            "tous les tableaux"
+                                        ],
+                       "product_handles":  [
+                                               "toile-contemporaine-le-petit-prince-poesie-etoilee",
+                                               "tableau-decoratif-maternite-africaine-chaleur-et-amour",
+                                               "tableau-mural-femmes-africaines-pluie-multicolore",
+                                               "tableau-design-frida-kahlo-vibrance-inspirante",
+                                               "grand-tableau-yin-yang-bleu-et-or-harmonie-zen",
+                                               "creation-artistique-montagnes-du-japon-apaisantes",
+                                               "tableau-design-frida-kahlo-nature-eclatante",
+                                               "cadre-design-femmes-africaines-grace-en-mouvement",
+                                               "decoration-murale-cerisier-ephemere-poetique",
+                                               "tableau-decoratif-geisha-urbain-tradition-moderne"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/toile-contemporaine-le-petit-prince-poesie-etoilee",
+                                             "/products/tableau-decoratif-maternite-africaine-chaleur-et-amour",
+                                             "/products/tableau-mural-femmes-africaines-pluie-multicolore"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-chambre-adulte",
+                       "title":  "Tableau Chambre Adulte",
+                       "gid":  "gid://shopify/Collection/406514532607",
+                       "primary_kw":  "tableau pour chambre adulte romantique",
+                       "secondary_kw":  [
+                                            "grand tableau chambre parentale",
+                                            "cadre deco chambre",
+                                            "cadre pour chambre à coucher",
+                                            "grand tableau chambre",
+                                            "tableau chambre",
+                                            "tableau chambre adulte",
+                                            "tableau chambre parentale",
+                                            "tableau deco chambre",
+                                            "tableau décoration chambre",
+                                            "tableau pour chambre à coucher adulte"
+                                        ],
+                       "product_handles":  [
+                                               "tableau-decoratif-maternite-africaine-chaleur-et-amour",
+                                               "tableau-mural-femmes-africaines-pluie-multicolore",
+                                               "grand-tableau-yin-yang-bleu-et-or-harmonie-zen",
+                                               "creation-artistique-montagnes-du-japon-apaisantes",
+                                               "cadre-design-femmes-africaines-grace-en-mouvement",
+                                               "decoration-murale-cerisier-ephemere-poetique",
+                                               "tableau-decoratif-geisha-urbain-tradition-moderne",
+                                               "toile-deco-danse-africaine-mouvements-envoutants",
+                                               "tableau-mural-femme-berbere-eclat-authentique",
+                                               "tableau-sur-toile-cheval-abstrait-en-mouvement"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/tableau-decoratif-maternite-africaine-chaleur-et-amour",
+                                             "/products/tableau-mural-femmes-africaines-pluie-multicolore",
+                                             "/products/grand-tableau-yin-yang-bleu-et-or-harmonie-zen"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-chambre",
+                       "title":  "Tableau Chambre",
+                       "gid":  "gid://shopify/Collection/404666908927",
+                       "primary_kw":  "tableau chambre ado garçon",
+                       "secondary_kw":  [
+                                            "tableau chambre garçon",
+                                            "tableau chambre ado",
+                                            "tableau chambre",
+                                            "tableau chambre enfant garcon",
+                                            "cadre chambre ado",
+                                            "tableau chambre bébé garcon",
+                                            "myselfmonart",
+                                            "tableau ado",
+                                            "tableau chambre enfant",
+                                            "tableau pour chambre ado fille"
+                                        ],
+                       "product_handles":  [
+                                               "tableau-decoratif-maternite-africaine-chaleur-et-amour",
+                                               "tableau-mural-femmes-africaines-pluie-multicolore",
+                                               "creation-artistique-montagnes-du-japon-apaisantes",
+                                               "tableau-design-frida-kahlo-nature-eclatante",
+                                               "cadre-design-femmes-africaines-grace-en-mouvement",
+                                               "decoration-murale-cerisier-ephemere-poetique",
+                                               "tableau-decoratif-geisha-urbain-tradition-moderne",
+                                               "tableau-sur-toile-douceur-du-bebe-lion-en-aquarelle",
+                                               "toile-deco-danse-africaine-mouvements-envoutants",
+                                               "tableau-mural-femme-berbere-eclat-authentique"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/tableau-decoratif-maternite-africaine-chaleur-et-amour",
+                                             "/products/tableau-mural-femmes-africaines-pluie-multicolore",
+                                             "/products/creation-artistique-montagnes-du-japon-apaisantes"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableaux-nature-sauvage",
+                       "title":  "Tableaux Nature",
+                       "gid":  "gid://shopify/Collection/607047844187",
+                       "primary_kw":  "achat tableau nature",
+                       "secondary_kw":  [
+                                            "décoration murale paysages épurés",
+                                            "décoration épurée paysages",
+                                            "grand tableau nature",
+                                            "myselfmonart",
+                                            "nature tableau",
+                                            "partie gauche toile sauvage",
+                                            "peinture animaux colorés",
+                                            "peinture hyperréaliste",
+                                            "site:myshopify.com décoration maison",
+                                            "site:www.myselfmonart.com"
+                                        ],
+                       "product_handles":  [
+                                               "creation-artistique-montagnes-du-japon-apaisantes",
+                                               "tableau-design-frida-kahlo-nature-eclatante",
+                                               "decoration-murale-cerisier-ephemere-poetique",
+                                               "tableau-sur-toile-douceur-du-bebe-lion-en-aquarelle",
+                                               "tableau-sur-toile-cheval-abstrait-en-mouvement",
+                                               "toile-murale-girafe-pop-art-exotisme-vibrant",
+                                               "tableau-design-panda-douceur-et-joie-pastel",
+                                               "tableau-decoratif-singe-aux-toilettes-humour-decale",
+                                               "toile-dartiste-renard-eclat-animal-drape-de-mystere",
+                                               "cadre-moderne-boxer-pop-art-energie-vibrante"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/creation-artistique-montagnes-du-japon-apaisantes",
+                                             "/products/tableau-design-frida-kahlo-nature-eclatante",
+                                             "/products/decoration-murale-cerisier-ephemere-poetique"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-ethnique",
+                       "title":  "Tableau Ethnique",
+                       "gid":  "gid://shopify/Collection/599645290843",
+                       "primary_kw":  "tableau ethnique",
+                       "secondary_kw":  [
+                                            "tableau ethnique chic",
+                                            "tableau afro chic",
+                                            "tableau africain",
+                                            "tableau africain design",
+                                            "tableau africain et ethnique",
+                                            "tableau ethnique maison du monde",
+                                            "tableau femme africaine",
+                                            "cadre ethnique",
+                                            "peinture ethnique",
+                                            "peintures ethniques"
+                                        ],
+                       "product_handles":  [
+                                               "tableau-decoratif-maternite-africaine-chaleur-et-amour",
+                                               "tableau-mural-femmes-africaines-pluie-multicolore",
+                                               "grand-tableau-yin-yang-bleu-et-or-harmonie-zen",
+                                               "creation-artistique-montagnes-du-japon-apaisantes",
+                                               "cadre-design-femmes-africaines-grace-en-mouvement",
+                                               "decoration-murale-cerisier-ephemere-poetique",
+                                               "tableau-decoratif-geisha-urbain-tradition-moderne",
+                                               "toile-deco-danse-africaine-mouvements-envoutants",
+                                               "tableau-mural-femme-berbere-eclat-authentique",
+                                               "tableaux-deco-portrait-femme-africaine-boheme-chic"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/tableau-decoratif-maternite-africaine-chaleur-et-amour",
+                                             "/products/tableau-mural-femmes-africaines-pluie-multicolore",
+                                             "/products/grand-tableau-yin-yang-bleu-et-or-harmonie-zen"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-fleurs",
+                       "title":  "Tableau Fleurs",
+                       "gid":  "gid://shopify/Collection/607034311003",
+                       "primary_kw":  "tableau fleurs moderne",
+                       "secondary_kw":  [
+                                            "tableau fleurs",
+                                            "tableau avec fleurs naturelles",
+                                            "tableau fleur",
+                                            "peinture fleurs moderne",
+                                            "tableau abstrait fleurs contemporain",
+                                            "tableau bouquet de fleurs moderne",
+                                            "tableau de fleur",
+                                            "tableau femme fleur",
+                                            "tableau moderne fleurs",
+                                            "tableaux de fleurs en peinture"
+                                        ],
+                       "product_handles":  [
+                                               "decoration-murale-cerisier-ephemere-poetique",
+                                               "tableau-moderne-fleurs-sauvages-eclat-naturel",
+                                               "uvre-murale-frida-kahlo-passion-et-couleurs",
+                                               "tableau-sur-toile-douceur-dune-fleur-en-main",
+                                               "tableau-design-aquarelle-florale-eclat-printanier",
+                                               "toile-decorative-cerisier-et-hirondelles-aquarelle",
+                                               "toile-moderne-bouquet-abstrait-harmonie-florale",
+                                               "cadre-moderne-fleurs-de-cerisier-soleil-rouge-du-japon",
+                                               "tableau-mural-formes-organiques-orange-et-bleu",
+                                               "tableau-decoratif-cercles-colores-energie-joyeuse"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/decoration-murale-cerisier-ephemere-poetique",
+                                             "/products/tableau-moderne-fleurs-sauvages-eclat-naturel",
+                                             "/products/uvre-murale-frida-kahlo-passion-et-couleurs"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-noir-et-blanc",
+                       "title":  "Tableau Noir et Blanc",
+                       "gid":  "gid://shopify/Collection/600281612635",
+                       "primary_kw":  "tableau sensuel noir et blanc",
+                       "secondary_kw":  [
+                                            "tableau femme sensuelle noir et blanc",
+                                            "tableau noir et blanc salon",
+                                            "tableau photo noir et blanc",
+                                            "tableau deco salon noir et blanc",
+                                            "tableau femme noir et blanc",
+                                            "tableau noir et blanc",
+                                            "tableau noir et blanc moderne",
+                                            "tableau visage femme noir et blanc",
+                                            "tableaux noir et blanc",
+                                            "toile noir et blanc abstrait"
+                                        ],
+                       "product_handles":  [
+                                               "decor-mural-samourai-contraste-et-serenite",
+                                               "tableau-decoratif-singe-aux-toilettes-humour-decale",
+                                               "toile-dartiste-frida-kahlo-portrait-epure",
+                                               "tableau-mural-lanterne-japonaise-eclat-serein",
+                                               "uvre-murale-lion-etreinte-sauvage-noir-et-blanc",
+                                               "peinture-decorative-femme-africaine-chic-noir-et-blanc",
+                                               "tableau-design-vin-nectar-de-convivialite",
+                                               "cadre-moderne-duel-de-chevaux-energie-sauvage",
+                                               "cadre-moderne-renard-noir-et-blanc-regard-intense",
+                                               "tableau-decoratif-paysage-zen-asiatique-envoutant"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/decor-mural-samourai-contraste-et-serenite",
+                                             "/products/tableau-decoratif-singe-aux-toilettes-humour-decale",
+                                             "/products/toile-dartiste-frida-kahlo-portrait-epure"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-chambre-enfant",
+                       "title":  "Tableau Chambre Enfant",
+                       "gid":  "gid://shopify/Collection/406510534911",
+                       "primary_kw":  "myselfmonart",
+                       "secondary_kw":  [
+                                            "tableau chambre garçon",
+                                            "cadres chambre enfant",
+                                            "tableau chambre enfant fille",
+                                            "tableau chambre garçon 6 ans",
+                                            "tableau peinture chambre enfant",
+                                            "tableau pour chambre enfant",
+                                            "tableaux chambre bébé",
+                                            "ambiance chambre fille",
+                                            "aquarelle chambre enfant",
+                                            "aquarelle pour chambre bébé"
+                                        ],
+                       "product_handles":  [
+                                               "toile-contemporaine-le-petit-prince-poesie-etoilee",
+                                               "tableau-sur-toile-douceur-du-bebe-lion-en-aquarelle",
+                                               "tableau-design-panda-douceur-et-joie-pastel",
+                                               "tableau-design-renard-doux-reve-denfant",
+                                               "tableau-mural-animaux-magie-pastel-pour-bebe",
+                                               "peinture-murale-maternite-tendresse-russe",
+                                               "toile-design-baleine-doux-reves-pour-bebe",
+                                               "tableau-original-foret-fantastique-eblouissante",
+                                               "grand-tableau-cite-crepusculaire-etheree",
+                                               "toile-contemporaine-sonic-aventurier-bleu-vitamine"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/toile-contemporaine-le-petit-prince-poesie-etoilee",
+                                             "/products/tableau-sur-toile-douceur-du-bebe-lion-en-aquarelle",
+                                             "/products/tableau-design-panda-douceur-et-joie-pastel"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-chambre-fille",
+                       "title":  "Tableau Chambre Fille",
+                       "gid":  "gid://shopify/Collection/406516138239",
+                       "primary_kw":  "tableau fille",
+                       "secondary_kw":  [
+                                            "tableau pour fille",
+                                            "toile chambre fille",
+                                            "cadre deco chambre fille",
+                                            "cadre fille",
+                                            "cadre fille chambre",
+                                            "tableau bebe",
+                                            "tableau chambre fille",
+                                            "tableau chambre fille 10 ans",
+                                            "tableau enfant deco",
+                                            "tableau enfant fille"
+                                        ],
+                       "product_handles":  [
+                                               "toile-contemporaine-le-petit-prince-poesie-etoilee",
+                                               "tableau-sur-toile-douceur-du-bebe-lion-en-aquarelle",
+                                               "tableau-design-panda-douceur-et-joie-pastel",
+                                               "tableau-design-renard-doux-reve-denfant",
+                                               "tableau-moderne-frida-kahlo-eclat-floral-poetique",
+                                               "tableau-mural-animaux-magie-pastel-pour-bebe",
+                                               "peinture-murale-maternite-tendresse-russe",
+                                               "tableau-original-foret-fantastique-eblouissante",
+                                               "grand-tableau-cite-crepusculaire-etheree",
+                                               "toile-danseuse-florale-etheree"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/toile-contemporaine-le-petit-prince-poesie-etoilee",
+                                             "/products/tableau-sur-toile-douceur-du-bebe-lion-en-aquarelle",
+                                             "/products/tableau-design-panda-douceur-et-joie-pastel"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-abstrait",
+                       "title":  "Tableau Abstrait",
+                       "gid":  "gid://shopify/Collection/620119982427",
+                       "primary_kw":  "tableau contemporain abstrait",
+                       "secondary_kw":  [
+                                            "abstait",
+                                            "abstrait",
+                                            "abstrait coloré",
+                                            "abstrait moderne",
+                                            "abstrait peinture sur toile",
+                                            "abstrait tableau",
+                                            "abstrait tableau moderne coloré",
+                                            "abstrait tableau moderne salon",
+                                            "abstrait tableau mosaique moderne",
+                                            "abstrait tableau visage contemporain"
+                                        ],
+                       "product_handles":  [
+                                               "creation-artistique-abstrait-klimt-harmonie-bleu-et-or",
+                                               "tableau-sur-toile-cheval-abstrait-en-mouvement",
+                                               "tableau-moderne-beaute-africaine-dansante",
+                                               "uvre-murale-calligraphie-arabe-harmonie-spirituelle",
+                                               "tableau-sur-toile-cheval-pop-art-multicolore-explosion-de-couleurs-et-liberte",
+                                               "toile-deco-couple-bleu-et-or-romance-intemporelle",
+                                               "uvre-murale-energie-geometrique-couleurs-vives",
+                                               "tableaux-deco-portrait-feminin-douceur-pastel",
+                                               "tableau-decoratif-bouteilles-vintage-colorees",
+                                               "tableau-design-aquarelle-florale-eclat-printanier"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/creation-artistique-abstrait-klimt-harmonie-bleu-et-or",
+                                             "/products/tableau-sur-toile-cheval-abstrait-en-mouvement",
+                                             "/products/tableau-moderne-beaute-africaine-dansante"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-rose",
+                       "title":  "Tableau Rose",
+                       "gid":  "gid://shopify/Collection/600150933851",
+                       "primary_kw":  "abstrait rose",
+                       "secondary_kw":  [
+                                            "art deco rose",
+                                            "cadre aesthetic rose",
+                                            "cadre avec rose",
+                                            "cadre chambre rose",
+                                            "cadre deco rose",
+                                            "cadre fleurs roses",
+                                            "cadre mural fleur",
+                                            "cadre rose et gris",
+                                            "cadre rose pale",
+                                            "cadre rose poudré"
+                                        ],
+                       "product_handles":  [
+                                               "decoration-murale-cerisier-ephemere-poetique",
+                                               "toile-moderne-bouquet-abstrait-harmonie-florale",
+                                               "peinture-murale-panda-en-costume-charme-decale",
+                                               "toile-foret-enchantee-et-animaux-mignons-apaisants",
+                                               "uvre-murale-macarons-colores-explosion-gourmande",
+                                               "cadre-moderne-macarons-evasion-gourmande-florale",
+                                               "tableau-sur-toile-frida-kahlo-citation-ailes-et-fleurs-eclatantes",
+                                               "tableau-sur-toile-cheval-et-cavalier-elegance-coloree-et-liberte-stylisee",
+                                               "tableau-zen-grues-blanches-soleil-couchant-et-serenite-japonaise",
+                                               "tableau-islamique-calligraphie-arabe-orange-et-rose-moderne"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/decoration-murale-cerisier-ephemere-poetique",
+                                             "/products/toile-moderne-bouquet-abstrait-harmonie-florale",
+                                             "/products/peinture-murale-panda-en-costume-charme-decale"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-rouge",
+                       "title":  "Tableau Rouge",
+                       "gid":  "gid://shopify/Collection/599890166107",
+                       "primary_kw":  "tableau rouge salon",
+                       "secondary_kw":  [
+                                            "tableau avec du rouge",
+                                            "tableau rouge",
+                                            "tableau rouge et noir",
+                                            "peinture tableau rouge",
+                                            "tableau décoratif avec du rouge",
+                                            "tableau fond rouge",
+                                            "tableau moderne avec du rouge",
+                                            "tableau moderne rouge",
+                                            "tableau peinture rouge",
+                                            "tableau rouge noir"
+                                        ],
+                       "product_handles":  [
+                                               "creation-artistique-montagnes-du-japon-apaisantes",
+                                               "cadre-moderne-samourai-lombre-subtile",
+                                               "uvre-murale-portrait-femme-masai-envoutante",
+                                               "tableau-design-femmes-africaines-teintes-chaudes",
+                                               "decoration-murale-cerisier-douceur-printaniere",
+                                               "peinture-murale-maternite-tendresse-russe",
+                                               "grand-tableau-dragon-energie-et-equilibre",
+                                               "decor-mural-cerisier-enneige-renouveau-japonais",
+                                               "decoration-murale-cercle-rouge-harmonie-zen",
+                                               "decoration-murale-portrait-femme-noire-eclat-tribal"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/creation-artistique-montagnes-du-japon-apaisantes",
+                                             "/products/cadre-moderne-samourai-lombre-subtile",
+                                             "/products/uvre-murale-portrait-femme-masai-envoutante"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-chambre-fillette",
+                       "title":  "Tableau Chambre Fillette",
+                       "gid":  "gid://shopify/Collection/406508994815",
+                       "primary_kw":  "tableau enfant fille",
+                       "secondary_kw":  [
+                                            "tableau fille",
+                                            "tableau peinture pour petite fille",
+                                            "tableau pour bebe fille",
+                                            "tableau pour chambre de petite fille",
+                                            "tableau pour fille",
+                                            "aquarelle chambre fille",
+                                            "aquarelle petite fille",
+                                            "aquarelle pour chambre de petite fille",
+                                            "bureau pour fillette",
+                                            "cadeau decorations murales enfant atmo"
+                                        ],
+                       "product_handles":  [
+                                               "toile-contemporaine-le-petit-prince-poesie-etoilee",
+                                               "tableau-sur-toile-douceur-du-bebe-lion-en-aquarelle",
+                                               "tableau-design-panda-douceur-et-joie-pastel",
+                                               "tableau-design-renard-doux-reve-denfant",
+                                               "tableau-moderne-frida-kahlo-eclat-floral-poetique",
+                                               "tableau-mural-animaux-magie-pastel-pour-bebe",
+                                               "peinture-murale-maternite-tendresse-russe",
+                                               "tableau-original-foret-fantastique-eblouissante",
+                                               "grand-tableau-cite-crepusculaire-etheree",
+                                               "toile-danseuse-florale-etheree"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/toile-contemporaine-le-petit-prince-poesie-etoilee",
+                                             "/products/tableau-sur-toile-douceur-du-bebe-lion-en-aquarelle",
+                                             "/products/tableau-design-panda-douceur-et-joie-pastel"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-jaune",
+                       "title":  "Tableau Jaune",
+                       "gid":  "gid://shopify/Collection/599721574747",
+                       "primary_kw":  "tableau jaune",
+                       "secondary_kw":  [
+                                            "tableau avec du jaune",
+                                            "tableau jaune moutarde",
+                                            "tableau jaune et bleu",
+                                            "tableau noir et jaune",
+                                            "affiche jaune",
+                                            "affiche jaune moutarde",
+                                            "art jaune",
+                                            "bureau mur jaune",
+                                            "cadre avec du jaune",
+                                            "cadre jaune"
+                                        ],
+                       "product_handles":  [
+                                               "toile-deco-danse-africaine-mouvements-envoutants",
+                                               "uvre-murale-calligraphie-arabe-harmonie-spirituelle",
+                                               "tableau-dart-femme-fleur-mystere-et-eclat-floral",
+                                               "tableau-sur-toile-geisha-au-charme-japonais",
+                                               "tableau-design-femmes-africaines-teintes-chaudes",
+                                               "grand-tableau-citron-eclat-de-fraicheur-juteuse",
+                                               "peinture-decorative-velo-vintage-charme-vibrant",
+                                               "cadre-moderne-musicien-yoruba-aux-rythmes-envoutants",
+                                               "tableau-sur-toile-louvre-vivant-signe-van-gogh",
+                                               "tableau-sur-toile-oiseaux-au-crepuscule-lumiere-doree-et-serenite-naturelle"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/toile-deco-danse-africaine-mouvements-envoutants",
+                                             "/products/uvre-murale-calligraphie-arabe-harmonie-spirituelle",
+                                             "/products/tableau-dart-femme-fleur-mystere-et-eclat-floral"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-pop-art",
+                       "title":  "Tableau Pop Art",
+                       "gid":  "gid://shopify/Collection/602732953947",
+                       "primary_kw":  "tableau pop art",
+                       "secondary_kw":  [
+                                            "tableau pop art femme",
+                                            "tableau coloré pop art",
+                                            "tableau pop art grand format",
+                                            "tableau pop art noir et blanc",
+                                            "tableau street art pop culture",
+                                            "couleur pop art",
+                                            "myselfmonart",
+                                            "tableau femme pop art",
+                                            "tableau pop art abstrait",
+                                            "tableau pop art artiste"
+                                        ],
+                       "product_handles":  [
+                                               "toile-murale-girafe-pop-art-exotisme-vibrant",
+                                               "cadre-moderne-boxer-pop-art-energie-vibrante",
+                                               "toile-contemporaine-beaute-feminine-pop-art-afro",
+                                               "tableau-dart-femme-africaine-eclat-exotique",
+                                               "tableau-decoratif-lion-pop-art-force-intense",
+                                               "tableau-sur-toile-cheval-pop-art-multicolore-explosion-de-couleurs-et-liberte",
+                                               "art-mural-marilyn-monroe-pop-art-vibrant",
+                                               "tableau-sur-toile-macarons-pop-art-colores",
+                                               "peinture-decorative-statue-liberte-pop-art-vibrant",
+                                               "toile-design-queen-elisabeth-pop-art-rebelle"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/toile-murale-girafe-pop-art-exotisme-vibrant",
+                                             "/products/cadre-moderne-boxer-pop-art-energie-vibrante",
+                                             "/products/toile-contemporaine-beaute-feminine-pop-art-afro"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-orange",
+                       "title":  "Tableau Orange",
+                       "gid":  "gid://shopify/Collection/600335221083",
+                       "primary_kw":  "tableau orange",
+                       "secondary_kw":  [
+                                            "tableau avec couleur orange",
+                                            "tableau orange et bleu",
+                                            "tableau orange et jaune",
+                                            "affiche agrumes",
+                                            "affiche couleur orange",
+                                            "art orange",
+                                            "cadre orange",
+                                            "chambre peinture orange",
+                                            "contemporain tableau moderne salon",
+                                            "couleur orange"
+                                        ],
+                       "product_handles":  [
+                                               "tableau-decoratif-maternite-africaine-chaleur-et-amour",
+                                               "cadre-design-femmes-africaines-grace-en-mouvement",
+                                               "toile-deco-danse-africaine-mouvements-envoutants",
+                                               "tableaux-deco-portrait-femme-africaine-boheme-chic",
+                                               "tableau-moderne-beaute-africaine-dansante",
+                                               "decor-mural-touareg-mystere-du-sahara",
+                                               "toile-design-femme-nguni-aux-perles-animees",
+                                               "tableau-mural-formes-organiques-orange-et-bleu",
+                                               "tableau-toile-femme-aux-fleurs-charme-provocant",
+                                               "tableau-sur-toile-coquelicots-lumiere-dete-et-douceur-champetre"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/tableau-decoratif-maternite-africaine-chaleur-et-amour",
+                                             "/products/cadre-design-femmes-africaines-grace-en-mouvement",
+                                             "/products/toile-deco-danse-africaine-mouvements-envoutants"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-portrait-1",
+                       "title":  "Tableau Portrait",
+                       "gid":  "gid://shopify/Collection/644760338779",
+                       "primary_kw":  "portrait decoration",
+                       "secondary_kw":  [
+                                            "art deco portrait",
+                                            "art tableaux",
+                                            "cadre maryline monroe",
+                                            "cadre visage",
+                                            "collection tableau",
+                                            "deco portrait",
+                                            "decoration portrait",
+                                            "des tableau",
+                                            "dessin visage femme couleur",
+                                            "décoration haut de gamme avec tableaux de peintres de talent"
+                                        ],
+                       "product_handles":  [
+                                               "tableau-design-frida-kahlo-vibrance-inspirante",
+                                               "tableau-design-frida-kahlo-nature-eclatante",
+                                               "tableau-mural-femme-berbere-eclat-authentique",
+                                               "tableau-dart-femme-africaine-eclat-exotique",
+                                               "toile-dartiste-femme-africaine-splendeur-vibrante",
+                                               "uvre-murale-portrait-femme-masai-envoutante",
+                                               "art-mural-marilyn-monroe-pop-art-vibrant",
+                                               "toile-moderne-ronaldo-genie-du-football-urbain",
+                                               "cadre-moderne-innocence-street-art-japonais",
+                                               "creation-artistique-enfant-du-monde-innocence-pure"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/tableau-design-frida-kahlo-vibrance-inspirante",
+                                             "/products/tableau-design-frida-kahlo-nature-eclatante",
+                                             "/products/tableau-mural-femme-berbere-eclat-authentique"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-mer-1",
+                       "title":  "Tableau Mer",
+                       "gid":  "gid://shopify/Collection/619498307931",
+                       "primary_kw":  "art marin",
+                       "secondary_kw":  [
+                                            "grand tableau mer",
+                                            "tableau bord de mer",
+                                            "tableau theme marin",
+                                            "toile mer plage",
+                                            "art deco marine",
+                                            "art sur toile tableau",
+                                            "art visuel mer",
+                                            "brise vue bois flotté maison du monde",
+                                            "cadre bord de mer",
+                                            "cadre deco mer"
+                                        ],
+                       "product_handles":  [
+                                               "creation-artistique-montagnes-du-japon-apaisantes",
+                                               "tableau-mural-barque-maritime-serenite-des-couleurs",
+                                               "toile-contemporaine-pecheur-thailandais-zen-sur-le-lac",
+                                               "toile-design-baleine-doux-reves-pour-bebe",
+                                               "toile-originale-harmonie-des-barques-colorees",
+                                               "tableau-moderne-vagues-bleues-symphonie-marine",
+                                               "decoration-murale-jetee-lacustre-calme-infini",
+                                               "cadre-moderne-phare-sur-toile-tempete-envoutante",
+                                               "tableau-sur-toile-barque-au-lever-du-soleil-lunaire",
+                                               "peinture-decorative-pecheur-vietnamien-au-crepuscule"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/creation-artistique-montagnes-du-japon-apaisantes",
+                                             "/products/tableau-mural-barque-maritime-serenite-des-couleurs",
+                                             "/products/toile-contemporaine-pecheur-thailandais-zen-sur-le-lac"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-fruits-et-legumes",
+                       "title":  "Tableau Fruits et Légumes",
+                       "gid":  "gid://shopify/Collection/623299887451",
+                       "primary_kw":  "cadre fruits et légumes",
+                       "secondary_kw":  [
+                                            "cadre fruits",
+                                            "tableau cuisine fruits et légumes",
+                                            "tableau de fruits et légumes",
+                                            "tableau fruit",
+                                            "cadre fruit",
+                                            "cadre legumes",
+                                            "decoration cuisine",
+                                            "tableau avec fruits",
+                                            "tableau de fruit",
+                                            "tableau de fruits"
+                                        ],
+                       "product_handles":  [
+                                               "cadre-moderne-poire-eclat-frais-et-gourmand",
+                                               "decoration-murale-poire-vibrance-gourmande",
+                                               "grand-tableau-citron-eclat-de-fraicheur-juteuse",
+                                               "toile-contemporaine-citron-retro-eclat-pop-art",
+                                               "toile-moderne-ananas-dore-style-retro-chic",
+                                               "tableaux-deco-cerisiers-fruites-cuisine-vintage",
+                                               "toile-decorative-agrumes-peps-pour-la-cuisine",
+                                               "tableau-original-oranges-pop-art-chaleur-en-cuisine",
+                                               "tableau-toile-citrons-eclatants-cuisine-vitaminee",
+                                               "decor-mural-plantes-en-pot-pop-art-eclatant"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/cadre-moderne-poire-eclat-frais-et-gourmand",
+                                             "/products/decoration-murale-poire-vibrance-gourmande",
+                                             "/products/grand-tableau-citron-eclat-de-fraicheur-juteuse"
+                                         ]
+                   },
+                   {
+                       "handle":  "bestsellers-1",
+                       "title":  "Tableau best-seller",
+                       "gid":  "gid://shopify/Collection/629742960987",
+                       "primary_kw":  "myselfmonart",
+                       "secondary_kw":  [
+                                            "best tableau",
+                                            "design best seller",
+                                            "myself art",
+                                            "peinture portrait femme moderne",
+                                            "peinture visage femme avec fleurs",
+                                            "self mon",
+                                            "tableau contemporain noir et blanc",
+                                            "tableau femme de dos avec chapeau",
+                                            "tableau noir et blanc abstrait",
+                                            "tableau noir et or femme"
+                                        ],
+                       "product_handles":  [
+                                               "tableau-decoratif-maternite-africaine-chaleur-et-amour",
+                                               "grand-tableau-yin-yang-bleu-et-or-harmonie-zen",
+                                               "tableau-design-frida-kahlo-nature-eclatante",
+                                               "decoration-murale-cerisier-ephemere-poetique",
+                                               "tableau-decoratif-geisha-urbain-tradition-moderne",
+                                               "creation-artistique-abstrait-klimt-harmonie-bleu-et-or",
+                                               "cadre-moderne-femme-africaine-eclat-culturel",
+                                               "tableau-design-panda-douceur-et-joie-pastel",
+                                               "toile-dartiste-renard-eclat-animal-drape-de-mystere",
+                                               "toile-deco-couple-bleu-et-or-romance-intemporelle"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/tableau-decoratif-maternite-africaine-chaleur-et-amour",
+                                             "/products/grand-tableau-yin-yang-bleu-et-or-harmonie-zen",
+                                             "/products/tableau-design-frida-kahlo-nature-eclatante"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-vert",
+                       "title":  "Tableau Vert",
+                       "gid":  "gid://shopify/Collection/599959470427",
+                       "primary_kw":  "tableau vert",
+                       "secondary_kw":  [
+                                            "tableau vert maison du monde",
+                                            "tableau vert sauge",
+                                            "cadre vert sauge",
+                                            "grand tableau vert",
+                                            "tableau nature verte",
+                                            "tableau sur mur vert",
+                                            "cadre vert maison du monde",
+                                            "tableau abstrait vert d\u0027eau",
+                                            "tableau couleur vert",
+                                            "tableau moderne vert"
+                                        ],
+                       "product_handles":  [
+                                               "tableau-design-frida-kahlo-vibrance-inspirante",
+                                               "tableaux-deco-portrait-femme-africaine-boheme-chic",
+                                               "toile-moderne-bouquet-abstrait-harmonie-florale",
+                                               "tableau-deco-vin-rouge-facon-klimt-eclat-dore",
+                                               "toile-originale-fleurs-de-lotus-serenite-aquatique",
+                                               "decoration-murale-nenuphars-harmonie-aquatique",
+                                               "tableau-chambre-bebe-trois-tortues-empilees-douceur-et-tendresse-pour-decoration-apaisante",
+                                               "tableau-sur-toile-herons-blancs-vol-gracieux-sur-eau-emeraude",
+                                               "tableau-sur-toile-calligraphie-arabe-spiritualite-moderne-et-texturee",
+                                               "tableau-abstrait-couple-enlace-silhouettes-colorees-et-jardin-intime"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/tableau-design-frida-kahlo-vibrance-inspirante",
+                                             "/products/tableaux-deco-portrait-femme-africaine-boheme-chic",
+                                             "/products/toile-moderne-bouquet-abstrait-harmonie-florale"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-cheval",
+                       "title":  "Tableau chevaux",
+                       "gid":  "gid://shopify/Collection/656988471643",
+                       "primary_kw":  "tableau chevaux",
+                       "secondary_kw":  [
+                                            "tableau cheval",
+                                            "tableau cheval abstrait",
+                                            "cheval peinture moderne",
+                                            "chevaux tableau",
+                                            "tableau avec cheval",
+                                            "tableau cheval moderne",
+                                            "tableau peinture chevaux",
+                                            "tableaux chevaux",
+                                            "tableaux chevaux stylisés",
+                                            "tableaux de chevaux"
+                                        ],
+                       "product_handles":  [
+                                               "tableau-sur-toile-cheval-abstrait-en-mouvement",
+                                               "tableau-sur-toile-cheval-pop-art-multicolore-explosion-de-couleurs-et-liberte",
+                                               "tableau-sur-toile-deux-chevaux-a-motifs-fleuris-et-pois-pour-chambre-denfant",
+                                               "cadre-moderne-duel-de-chevaux-energie-sauvage",
+                                               "tableau-sur-toile-cheval-blanc-aquarelle-onirique-et-serenite",
+                                               "tableau-sur-toile-cheval-et-cavalier-elegance-coloree-et-liberte-stylisee",
+                                               "tableau-cheval-minimaliste-brun-et-noir-elegance-calme-et-naturelle",
+                                               "tableau-cheval-au-regard-bleu-intense-style-graphique-traits-graves-sur-fond-electrique",
+                                               "tableau-cheval-noir-en-mouvement-energie-brute-et-couleurs-abstraites-sur-toile",
+                                               "tableau-cheval-en-mouvement-oeuvre-abstraite-puissante-noir-et-beige"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/tableau-sur-toile-cheval-abstrait-en-mouvement",
+                                             "/products/tableau-sur-toile-cheval-pop-art-multicolore-explosion-de-couleurs-et-liberte",
+                                             "/products/tableau-sur-toile-deux-chevaux-a-motifs-fleuris-et-pois-pour-chambre-denfant"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-gris",
+                       "title":  "Tableau Gris",
+                       "gid":  "gid://shopify/Collection/600154669403",
+                       "primary_kw":  "Tableau Gris",
+                       "secondary_kw":  [
+
+                                        ],
+                       "product_handles":  [
+
+                                           ],
+                       "featured_urls":  [
+
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-street-art",
+                       "title":  "Tableau Street Art",
+                       "gid":  "gid://shopify/Collection/624281387355",
+                       "primary_kw":  "image street art",
+                       "secondary_kw":  [
+                                            "tableau graffiti",
+                                            "marilyn monroe street art",
+                                            "peinture street art sur toile",
+                                            "street art marilyn monroe",
+                                            "tableau graffiti pop art",
+                                            "tableau street art",
+                                            "tableau street art luxe",
+                                            "tableau street art personnalisé",
+                                            "achat tableau street art",
+                                            "acheter tableau street art"
+                                        ],
+                       "product_handles":  [
+                                               "tableau-decoratif-geisha-urbain-tradition-moderne",
+                                               "cadre-moderne-femme-africaine-eclat-culturel",
+                                               "cadre-moderne-innocence-street-art-japonais",
+                                               "tableau-decoratif-bart-simpson-espieglerie-pop",
+                                               "decoration-murale-marilyn-monroe-street-art-audacieuse",
+                                               "toile-decorative-pop-art-jeune-fille-eclatante",
+                                               "uvre-murale-new-york-leffervescence-urbaine",
+                                               "tableau-street-art-elephant-couronne-hybride-zebre-graffiti-urbain",
+                                               "tableau-sur-toile-levres-street-art-rouge-et-or-graffiti-urbain-moderne",
+                                               "toile-manga-street-art-portrait-urbain-colore"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/tableau-decoratif-geisha-urbain-tradition-moderne",
+                                             "/products/cadre-moderne-femme-africaine-eclat-culturel",
+                                             "/products/cadre-moderne-innocence-street-art-japonais"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-violet",
+                       "title":  "Tableau Violet",
+                       "gid":  "gid://shopify/Collection/600338071899",
+                       "primary_kw":  "Tableau Violet",
+                       "secondary_kw":  [
+
+                                        ],
+                       "product_handles":  [
+
+                                           ],
+                       "featured_urls":  [
+
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-lion",
+                       "title":  "Tableau Lion",
+                       "gid":  "gid://shopify/Collection/640741704027",
+                       "primary_kw":  "tableau lion",
+                       "secondary_kw":  [
+                                            "toile lion",
+                                            "tableau lionne",
+                                            "cadre lion",
+                                            "cadre lion et lionne",
+                                            "image lion et lionne",
+                                            "lion tableau",
+                                            "photo lion et lionne noir et blanc",
+                                            "tableau lion couleur",
+                                            "tableau lion multicolore",
+                                            "tableau lionne et lionceau"
+                                        ],
+                       "product_handles":  [
+                                               "tableau-sur-toile-douceur-du-bebe-lion-en-aquarelle",
+                                               "tableau-decoratif-lion-pop-art-force-intense",
+                                               "uvre-murale-lion-etreinte-sauvage-noir-et-blanc",
+                                               "tableau-deco-lion-et-lionceau-noir-et-blanc-captivant",
+                                               "tableau-sur-toile-lion-couronne-street-art-noir-blanc-et-or",
+                                               "tableau-chambre-bebe-lion-tendre-aux-yeux-doux-et-couleurs-apaisantes",
+                                               "tableau-lion-noir-et-blanc-force-paisible-et-majeste-contemplative",
+                                               "tableau-dart-lion-audace-du-street-art",
+                                               "toile-moderne-lion-ethnique-esprit-sauvage",
+                                               "toile-deco-lion-chinois-chance-et-prosperite"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/tableau-sur-toile-douceur-du-bebe-lion-en-aquarelle",
+                                             "/products/tableau-decoratif-lion-pop-art-force-intense",
+                                             "/products/uvre-murale-lion-etreinte-sauvage-noir-et-blanc"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-personnalise-famille",
+                       "title":  "Poster Personnalisé Famille",
+                       "gid":  "gid://shopify/Collection/624856400219",
+                       "primary_kw":  "tableau famille personnalisé",
+                       "secondary_kw":  [
+                                            "affiche a personnaliser famille",
+                                            "affiche ciel naissance",
+                                            "affiche de famille",
+                                            "affiche dessin famille",
+                                            "affiche dessin famille personnalisé",
+                                            "affiche famille de dos",
+                                            "affiche famille personnalisable",
+                                            "affiche famille personnalise",
+                                            "affiche famille personnalisee",
+                                            "affiche famille personnalisé"
+                                        ],
+                       "product_handles":  [
+                                               "cadeau-personnalise-foot-colore",
+                                               "cadeau-personnalise-bebe-horoscope-capricorne",
+                                               "verseau-horoscope-cadeau-personnalise-bebe",
+                                               "tableau-moderne-bebe-taureau-naissance-personnalisee",
+                                               "sagitaire-horoscope-cadeau-personnalise-bebe",
+                                               "gemeaux-horoscope-cadeau-personnalise-bebe",
+                                               "cancer-horoscope-cadeau-personnalise-bebe",
+                                               "vierge-horoscope-cadeau-personnalise-bebe",
+                                               "belier-horoscope-cadeau-personnalise-bebe",
+                                               "balance-horoscope-cadeau-personnalise-bebe"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/cadeau-personnalise-foot-colore",
+                                             "/products/cadeau-personnalise-bebe-horoscope-capricorne",
+                                             "/products/verseau-horoscope-cadeau-personnalise-bebe"
+                                         ]
+                   },
+                   {
+                       "handle":  "horoscope-bebe",
+                       "title":  "Poster bébé : Signe Astrologique aquarelle",
+                       "gid":  "gid://shopify/Collection/643265495387",
+                       "primary_kw":  "affiche astrologie",
+                       "secondary_kw":  [
+                                            "affiche ciel jour de naissance",
+                                            "affiche ciel naissance",
+                                            "affiche constellation jour de naissance",
+                                            "affiche du ciel de naissance",
+                                            "affiche signe astrologique",
+                                            "affiche signe astrologique personnalisé",
+                                            "affiche étoile de naissance",
+                                            "affiche étoile naissance",
+                                            "astre dessin",
+                                            "astrologie poster"
+                                        ],
+                       "product_handles":  [
+                                               "cadeau-personnalise-bebe-horoscope-capricorne",
+                                               "gemeaux-horoscope-cadeau-personnalise-bebe",
+                                               "vierge-horoscope-cadeau-personnalise-bebe",
+                                               "verseau-horoscope-cadeau-personnalise-bebe",
+                                               "tableau-moderne-bebe-taureau-naissance-personnalisee",
+                                               "sagitaire-horoscope-cadeau-personnalise-bebe",
+                                               "belier-horoscope-cadeau-personnalise-bebe",
+                                               "balance-horoscope-cadeau-personnalise-bebe",
+                                               "cancer-horoscope-cadeau-personnalise-bebe",
+                                               "cadeau-personnalis-bebe-horoscope-lion"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/cadeau-personnalise-bebe-horoscope-capricorne",
+                                             "/products/gemeaux-horoscope-cadeau-personnalise-bebe",
+                                             "/products/vierge-horoscope-cadeau-personnalise-bebe"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableaux-bouddha",
+                       "title":  "Tableaux Bouddha",
+                       "gid":  "gid://shopify/Collection/650738270555",
+                       "primary_kw":  "tableau bouddha",
+                       "secondary_kw":  [
+                                            "décoration murale bouddha",
+                                            "bouddha tableau",
+                                            "tableau de bouddha",
+                                            "toile bouddha",
+                                            "affiche bouddha",
+                                            "applique murale bouddha",
+                                            "bouddha art",
+                                            "bouddha cadre",
+                                            "bouddha coloré",
+                                            "bouddha couleur"
+                                        ],
+                       "product_handles":  [
+                                               "grand-tableau-bouddha-dore-lotus-et-serenite-zen",
+                                               "tableau-moderne-bouddha-en-meditation-lune-mystique",
+                                               "cadre-decoratif-bouddha-multicolore-eclat-zen",
+                                               "toile-contemporaine-bouddha-noir-et-jaune-serenite",
+                                               "toile-bouddha-zen-havre-de-serenite",
+                                               "tableau-decoratif-bouddha-serenite-intemporelle",
+                                               "cadre-design-bouddha-dore-eveil-et-paix",
+                                               "uvre-murale-bouddha-lumiere-et-spiritualite",
+                                               "toile-deco-bouddha-fleuri-aura-doree-zen",
+                                               "toile-design-bouddha-tranquillite-divine"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/grand-tableau-bouddha-dore-lotus-et-serenite-zen",
+                                             "/products/tableau-moderne-bouddha-en-meditation-lune-mystique",
+                                             "/products/cadre-decoratif-bouddha-multicolore-eclat-zen"
+                                         ]
+                   },
+                   {
+                       "handle":  "papier-peint-fleur",
+                       "title":  "Papier Peint fleur",
+                       "gid":  "gid://shopify/Collection/632713216347",
+                       "primary_kw":  "fleur papier peint",
+                       "secondary_kw":  [
+                                            "fleurs papier peint",
+                                            "motif floral papier peint",
+                                            "papier a fleur",
+                                            "papier fleurie",
+                                            "papier floral",
+                                            "papier peint a fleur",
+                                            "papier peint a fleurs",
+                                            "papier peint art deco floral",
+                                            "papier peint art déco floral",
+                                            "papier peint avec des fleurs"
+                                        ],
+                       "product_handles":  [
+                                               "peinture-murale-chrysanthemes-fraicheur-et-couleur",
+                                               "papier-peint-fleurs-printanieres-une-explosion-de-couleurs",
+                                               "papier-peint-floral-colore-une-touche-de-nature-eclatante",
+                                               "papier-peint-floral-fleurs-sauvages-aquarelle",
+                                               "papier-papier-peint-japonais-fleurs-de-cerisier-rouge-et-or",
+                                               "papapier-peint-panoramique-moderne-esprit-libre",
+                                               "papier-peint-paysage-zen-galets-sur-leau",
+                                               "tableau-deco-bouquet-de-roses-abstrait-sur-fond-bleu",
+                                               "cadre-moderne-rose-a-lhuile-beaute-ephemere",
+                                               "tableau-moderne-tulipes-multicolores-ambiance-vive"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/peinture-murale-chrysanthemes-fraicheur-et-couleur",
+                                             "/products/papier-peint-fleurs-printanieres-une-explosion-de-couleurs",
+                                             "/products/papier-peint-floral-colore-une-touche-de-nature-eclatante"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-islamique",
+                       "title":  "Tableau Islamique",
+                       "gid":  "gid://shopify/Collection/646969459035",
+                       "primary_kw":  "tableau allah",
+                       "secondary_kw":  [
+                                            "tableau allah moderne",
+                                            "tableau arabe",
+                                            "tableau art islamique",
+                                            "tableau islam",
+                                            "tableau islamique",
+                                            "tableau musulman design",
+                                            "affiche islam",
+                                            "affiche islam pour cadre",
+                                            "affiche islamique",
+                                            "allah tableau"
+                                        ],
+                       "product_handles":  [
+                                               "uvre-murale-calligraphie-arabe-harmonie-spirituelle",
+                                               "tableau-sur-toile-kaaba-lumiere-impressionniste-et-devotion-sacree",
+                                               "tableau-sur-toile-calligraphie-arabe-spiritualite-moderne-et-texturee",
+                                               "cadre-design-calligraphie-arabe-harmonie-spirituelle",
+                                               "tableau-islamique-calligraphie-arabe-orange-et-rose-moderne",
+                                               "tableau-islamique-calligraphie-kufique-bleu-et-or-toile-spirituelle-contemporaine",
+                                               "tableau-sur-toile-calligraphie-arabe-bleue-apaisante",
+                                               "tableau-toile-allah-calligraphie-sacree-doree",
+                                               "tableau-toile-subhanallah-louange-au-createur"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/uvre-murale-calligraphie-arabe-harmonie-spirituelle",
+                                             "/products/tableau-sur-toile-kaaba-lumiere-impressionniste-et-devotion-sacree",
+                                             "/products/tableau-sur-toile-calligraphie-arabe-spiritualite-moderne-et-texturee"
+                                         ]
+                   },
+                   {
+                       "handle":  "papier-peint-colore",
+                       "title":  "Papier Peint Coloré",
+                       "gid":  "gid://shopify/Collection/632158028123",
+                       "primary_kw":  "couleur papier peint",
+                       "secondary_kw":  [
+                                            "mon papier peint",
+                                            "papier peint artistique",
+                                            "papier peint chaleureux",
+                                            "papier peint colora",
+                                            "papier peint colore",
+                                            "papier peint coloré",
+                                            "papier peint coloré design",
+                                            "papier peint coloré moderne",
+                                            "papier peint couleur",
+                                            "papier peint interieur"
+                                        ],
+                       "product_handles":  [
+                                               "papier-peint-fleurs-printanieres-une-explosion-de-couleurs",
+                                               "papier-peint-floral-colore-une-touche-de-nature-eclatante",
+                                               "papier-peint-floral-fleurs-sauvages-aquarelle",
+                                               "papier-papier-peint-japonais-fleurs-de-cerisier-rouge-et-or",
+                                               "papapier-peint-panoramique-moderne-esprit-libre",
+                                               "papier-peint-paysage-zen-galets-sur-leau"
+                                           ],
+                       "featured_urls":  [
+                                             "/products/papier-peint-fleurs-printanieres-une-explosion-de-couleurs",
+                                             "/products/papier-peint-floral-colore-une-touche-de-nature-eclatante",
+                                             "/products/papier-peint-floral-fleurs-sauvages-aquarelle"
+                                         ]
+                   },
+                   {
+                       "handle":  "tableau-amerindiens",
+                       "title":  "Tableau amérindiens",
+                       "gid":  "gid://shopify/Collection/600113480027",
+                       "primary_kw":  "Tableau amérindiens",
+                       "secondary_kw":  [
+
+                                        ],
+                       "product_handles":  [
+
+                                           ],
+                       "featured_urls":  [
+
+                                         ]
+                   }
+               ]
+}
