@@ -91,6 +91,15 @@
   {%- endif -%}
 {%- endpaginate -%}
 
+{%- comment -%}
+  Éditorial E-E-A-T piloté par metafields (récup. SEO post Core Update déc. 2025).
+  GARDE : rendu uniquement si custom.guide est renseigné → no-op total sinon
+  (collections non traitées + pilote tableau-salon qui a son propre template).
+{%- endcomment -%}
+{%- if collection.metafields.custom.guide != blank -%}
+  {% render 'collection-editorial-auto' %}
+{%- endif -%}
+
 {%- comment -%} Check if filters should be shown for this collection type {%- endcomment -%}
 {% assign collection_type = collection.metafields.custom.type_of_collection | default: 'other' %}
 {% assign show_filters = false %}

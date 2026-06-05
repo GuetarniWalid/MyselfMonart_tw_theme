@@ -1,0 +1,119 @@
+{%- comment -%}
+  collection-editorial-auto — Éditorial E-E-A-T piloté par METAFIELDS (rollout récup. post Core Update déc. 2025).
+
+  Rendu UNIQUEMENT si collection.metafields.custom.guide est présent (gate dans
+  main-collection-product-grid) → no-op TOTAL sur toute collection non traitée,
+  y compris le pilote tableau-salon (qui possède son propre template dédié).
+  Aucune duplication possible, aucun impact tant qu'aucun metafield n'est écrit.
+
+  Source de vérité = metafields (live, 100% automatisable, rollback = vider le metafield) :
+   - custom.intro (multi_line)   → accroche, SANS H1 (le H1 reste celui de main-collection-banner → 1 seul H1).
+   - custom.guide (multi_line/HTML) → guide profond, replié dans un <details> natif.
+   - custom.faq  (json: [{"q","a"}]) → FAQ accordéon + JSON-LD FAQPage.
+
+  REUSE FIRST (skill shopify-section-dev) : classes .collection-description, pattern
+  <details>/group-open, snippet tw-icon-chevron, custom element <collapsible-tab> (tw-global.js),
+  markup repris à l'identique de collection-editorial.liquid + collapsible-content.liquid.
+  Tailwind only · vars globales · a11y (<details> natifs, focus-visible, motion-reduce) · 1 seul H1 (aucun ici).
+{%- endcomment -%}
+
+{%- liquid
+  assign ed_intro = collection.metafields.custom.intro.value
+  assign ed_guide = collection.metafields.custom.guide.value
+  assign ed_faq = collection.metafields.custom.faq.value
+-%}
+
+<section class="collection-editorial-auto w-full" aria-label="{{ collection.title | escape }} — guide & questions">
+
+  {%- comment -%} 1) Accroche (intro) — SANS H1 : le H1 reste le titre porté par main-collection-banner. {%- endcomment -%}
+  {%- if ed_intro != blank -%}
+    <div class="bg-secondary w-full py-10 md:py-14">
+      <div class="max-w-3xl mx-auto px-4 md:px-6 text-center">
+        <div class="font-roboto text-base md:text-lg leading-[1.65] text-main-70 max-w-xl mx-auto [&_a]:text-terra [&_a]:underline">
+          <p>{{ ed_intro | newline_to_br }}</p>
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} 2) Guide profond — replié dans <details> (réutilise .collection-description + tw-icon-chevron). {%- endcomment -%}
+  {%- if ed_guide != blank -%}
+    <div class="bg-main-5 w-full py-8 md:py-12">
+      <div class="max-w-3xl mx-auto px-4 md:px-6">
+        <details class="collection-guide group border-t border-b border-main-10">
+          <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer flex items-center gap-3 py-6 font-heading text-lg md:text-xl text-main outline-none focus-visible:ring-2 focus-visible:ring-terra focus-visible:ring-offset-2 focus-visible:rounded-sm">
+            <span aria-hidden="true" class="flex-shrink-0 text-terra transition-transform duration-300 ease-out motion-reduce:transition-none group-open:rotate-90">
+              {%- render 'tw-icon-chevron', width: 16 -%}
+            </span>
+            <span>Lire le guide complet</span>
+          </summary>
+          <div class="collection-description pb-8 pt-2">
+            {{ ed_guide }}
+          </div>
+        </details>
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} 3) FAQ — accordéon repris de collapsible-content.liquid, piloté par le metafield json custom.faq. {%- endcomment -%}
+  {%- if ed_faq != blank and ed_faq.size > 0 -%}
+    <div class="collapsible-content bg-secondary text-main w-full py-10 md:py-14" aria-labelledby="faq-auto-{{ collection.id }}">
+      <div class="max-w-[760px] mx-auto px-6 text-center mb-10 md:mb-16">
+        <p class="font-roboto text-xs font-medium tracking-[0.18em] uppercase text-terra mb-4">FAQ</p>
+        <h2 id="faq-auto-{{ collection.id }}" class="font-heading font-semibold leading-[1.1] tracking-[-0.01em] text-2xl md:text-3xl lg:text-[36px] mb-0">
+          Vos questions sur {{ collection.title | escape | downcase }}
+        </h2>
+      </div>
+      <collapsible-tab>
+        <div class="max-w-[880px] mx-auto px-6">
+          {%- for item in ed_faq -%}
+            {%- if item.q == blank or item.a == blank -%}{%- continue -%}{%- endif -%}
+            <details class="accordion group border-t border-main-10 last:border-b last:border-main-10">
+              <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer flex items-center justify-between gap-6 py-6 outline-none focus-visible:ring-2 focus-visible:ring-terra focus-visible:ring-offset-2 focus-visible:rounded-sm">
+                <h3 class="font-heading font-medium leading-[1.3] text-base md:text-lg text-main m-0">
+                  {{ item.q | escape }}
+                </h3>
+                <span
+                  aria-hidden="true"
+                  class="flex-shrink-0 w-8 h-8 rounded-full bg-main-10 text-main flex items-center justify-center text-[20px] leading-none transition-[background-color,transform] duration-300 ease-out motion-reduce:transition-none group-open:bg-terra group-open:text-secondary group-open:rotate-45">
+                  +
+                </span>
+              </summary>
+              <div class="pb-7 max-w-[760px] cursor-pointer">
+                <div class="font-roboto text-[15px] leading-[1.7] text-main-90 [&>p:not(:last-child)]:mb-3 [&_a]:text-terra [&_a]:underline [&_a:hover]:opacity-80 motion-reduce:[&_a]:transition-none [&_strong]:text-main [&_strong]:font-semibold">
+                  {{ item.a }}
+                </div>
+              </div>
+            </details>
+          {%- endfor -%}
+        </div>
+      </collapsible-tab>
+      <script src="{{ 'tw-global.js' | asset_url }}" defer="defer"></script>
+    </div>
+
+    {%- comment -%} JSON-LD FAQPage — source unique = le metafield faq (n'émettre que sur de vraies FAQ). {%- endcomment -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {%- assign emitted = 0 -%}
+          {%- for item in ed_faq -%}
+            {%- if item.q == blank or item.a == blank -%}{%- continue -%}{%- endif -%}
+            {%- if emitted > 0 -%},{%- endif -%}
+            {
+              "@type": "Question",
+              "name": {{ item.q | json }},
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": {{ item.a | strip_html | strip | json }}
+              }
+            }
+            {%- assign emitted = emitted | plus: 1 -%}
+          {%- endfor -%}
+        ]
+      }
+    </script>
+  {%- endif -%}
+
+</section>
