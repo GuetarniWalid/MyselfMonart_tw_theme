@@ -42,10 +42,9 @@ Toutes les régressions redoutées sont **réfutées** par les données + le liv
 - **`tableau-mer-1`** : question FAQ reformulée « Où sont fabriqués vos tableaux ? ».
 - **`collection-editorial.liquid` durci** (commit `3271640`) : le H1 (mode intro `show_title`) est émis même si l'accroche est vide → plus de perte de H1 possible (salon vérifié intact).
 
-**Impossible via MCP → admin manuel (rapide, ~5 s chacun) :** le MCP n'expose pas `updateCollection`, donc `collection.title` (= le H1) n'est modifiable qu'en admin :
-- `tableaux-frida-kahlo` : « Tableau Frida **kahlo** » → « Frida **Kahlo** » (casse).
-- `tableau-personnalise-famille` : « **Poster** Personnalisé Famille » → inclure « Tableau » **si** ce sont bien des tableaux (sinon laisser « Poster »).
-→ Admin Shopify → Online Store → Collections → [collection] → Titre.
+**Titres de collection — RÉSOLU le 2026-06-06** (le MCP expose désormais `updateCollection`) :
+- `tableaux-frida-kahlo` : titre/H1 → « **Tableau Frida Kahlo** » (casse corrigée). ✅ vérifié live.
+- `tableau-personnalise-famille` : **seoTitle** → « Poster & Tableau Personnalisé Famille » (couvre le mot-clé « tableau personnalisé famille »). H1 conservé « Poster Personnalisé Famille ». ⚠️ **À trancher (Walid)** : le handle (`tableau-personnalise-famille`), la description (« tableaux personnalisés famille ») et le mot-clé pointent tous vers « **tableau** » ; le H1 « Poster » est l'anomalie. Si tu confirmes que c'est une collection de tableaux, je passe le H1 à « Tableau Personnalisé Famille » en 1 appel (produits = mix poster/toile, dispo dans les deux).
 
 ## Note cache
 Après écriture d'un metafield, le `page_cache` Shopify de l'URL par défaut peut servir l'ancien rendu quelques minutes (TTL) ; les correctifs sont prouvés via rendus frais (cache-bust `?country=`). Convergence automatique.
