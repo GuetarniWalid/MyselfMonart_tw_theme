@@ -67,7 +67,8 @@
   endif
 -%}
 
-{%- if content != blank -%}
+{%- comment -%} Robustesse : en mode intro show_title, le H1 (titre principal de la page) doit etre emis MEME si l'accroche (content) est vide, sinon la page perd son H1. {%- endcomment -%}
+{%- if content != blank or section.settings.show_title -%}
   <section
     class="collection-editorial {{ bg_class }} w-full {{ pad_class }}"
     aria-label="{{ section.settings.aria_label | default: collection.title | escape }}">
@@ -90,9 +91,11 @@
               {{ collection.title | escape }}
             </h1>
           {%- endif -%}
-          <div class="font-roboto text-base md:text-lg leading-[1.65] text-main-70 max-w-xl mx-auto [&_a]:text-terra [&_a]:underline">
-            <p>{{ content | newline_to_br }}</p>
-          </div>
+          {%- if content != blank -%}
+            <div class="font-roboto text-base md:text-lg leading-[1.65] text-main-70 max-w-xl mx-auto [&_a]:text-terra [&_a]:underline">
+              <p>{{ content | newline_to_br }}</p>
+            </div>
+          {%- endif -%}
         </div>
 
       {%- elsif section.settings.collapsible -%}
