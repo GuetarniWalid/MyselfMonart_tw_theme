@@ -33,5 +33,19 @@ Toutes les régressions redoutées sont **réfutées** par les données + le liv
 - **Polish mineur** : guide de `tableau-noir-et-blanc` — l'ancre « tableaux gris » pointe désormais vers /tableau-couleur (lien **valide**, libellé à aligner si on veut « tableaux colorés »).
 - **Robustesse (fragilité latente)** : dans `sections/collection-editorial.liquid` (utilisé par le template salon), le `<h1>` (mode intro `show_title`) est conditionné à `content != blank`. Si le `custom.intro` était vidé, salon perdrait son H1 silencieusement. Reco : émettre le H1 dès `show_title`, indépendamment du contenu d'accroche. (Non urgent — salon a son intro aujourd'hui.)
 
+## Suivi des recommandations — traitées le 2026-06-05
+
+**Faites par MCP / code (vérifiées en live) :**
+- **Meta-descriptions** ajoutées via `global.description_tag` : `tous-les-tableaux`, `bestsellers-1`, `tableau-street-art`, `tableau-islamique` (rendu `<meta description>` confirmé).
+- **Title `tableau-rouge`** corrigé via `global.title_tag` → « Tableau Rouge : Intensité et Passion pour une Décoration Audacieuse » (T rétabli, marque en double supprimée).
+- **`tableau-noir-et-blanc`** : lien 404 `/collections/tableau-gris` corrigé dans le **guide** ET la **FAQ** → `/collections/tableau-couleur`, ancre alignée « tableaux colorés ». **0 lien cassé** restant.
+- **`tableau-mer-1`** : question FAQ reformulée « Où sont fabriqués vos tableaux ? ».
+- **`collection-editorial.liquid` durci** (commit `3271640`) : le H1 (mode intro `show_title`) est émis même si l'accroche est vide → plus de perte de H1 possible (salon vérifié intact).
+
+**Impossible via MCP → admin manuel (rapide, ~5 s chacun) :** le MCP n'expose pas `updateCollection`, donc `collection.title` (= le H1) n'est modifiable qu'en admin :
+- `tableaux-frida-kahlo` : « Tableau Frida **kahlo** » → « Frida **Kahlo** » (casse).
+- `tableau-personnalise-famille` : « **Poster** Personnalisé Famille » → inclure « Tableau » **si** ce sont bien des tableaux (sinon laisser « Poster »).
+→ Admin Shopify → Online Store → Collections → [collection] → Titre.
+
 ## Note cache
 Après écriture d'un metafield, le `page_cache` Shopify de l'URL par défaut peut servir l'ancien rendu quelques minutes (TTL) ; les correctifs sont prouvés via rendus frais (cache-bust `?country=`). Convergence automatique.
