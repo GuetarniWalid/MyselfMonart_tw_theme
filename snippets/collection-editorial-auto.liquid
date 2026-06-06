@@ -22,6 +22,7 @@
   assign ed_guide = collection.metafields.custom.guide.value
   assign ed_faq = collection.metafields.custom.faq.value
   assign ed_h1 = collection.metafields.custom.editorial_h1.value
+  assign ed_cocon = collection.metafields.custom.cocon_links.value
 -%}
 
 <section class="collection-editorial-auto w-full" aria-label="{{ collection.title | escape }} — guide & questions">
@@ -57,6 +58,13 @@
             {{ ed_guide }}
           </div>
         </details>
+        {%- comment -%} Cocon : liens internes (blog / collections sœurs) préservés de l'ancienne description masquée par le banner. {%- endcomment -%}
+        {%- if ed_cocon != blank and ed_cocon.size > 0 -%}
+          <p class="font-roboto text-[15px] leading-[1.7] text-main-70 pt-6 [&_a]:text-terra [&_a]:underline">
+            <strong class="text-main">Pour aller plus loin :</strong>
+            {% for l in ed_cocon %}<a href="{{ l.url }}">{{ l.label | escape }}</a>{% unless forloop.last %} &middot; {% endunless %}{% endfor %}
+          </p>
+        {%- endif -%}
       </div>
     </div>
   {%- endif -%}

@@ -35,3 +35,18 @@ couleur, japonais, chambre-ado, frida-kahlo, bureau, chambre-garcon, bleue, zen,
 - ⚠️ **tableau-chambre** : **2 `<h1>`** (préexistant : `main-collection-banner` + section `collections-pages-grid` du template `collection.chambre.json`). NON causé par l'éditorial. À corriger côté template si souhaité (hors périmètre éditorial).
 
 **Rollback facile** : par collection, vider les metafields `custom.guide` (referme la garde → masque tout l'éditorial), `custom.intro`, `custom.faq`, et `custom.editorial_h1` le cas échéant. Aucune `collection.description` n'a été modifiée. Le code thème (snippet + garde dans `main-collection-product-grid`) est inerte sans ces metafields.
+
+---
+
+## Correctifs post-application — 2026-06-05
+
+1. **Double zone de texte → 1 zone** (commit `42a6579`). Sur les templates à `main-collection-banner` actif, la page affichait l'ancienne `collection.description` (banner) **+** le nouveau guide = 2 pavés. `sections/main-collection-banner.liquid` ne rend plus la description quand `custom.guide` existe (le H1 reste). Revue adversariale 3 angles OK. `collection.description` préservée dans Shopify (réaffichée si `custom.guide` vidé). Vérifié live : bureau/cuisine = 1 zone, salon inchangé.
+
+2. **Préservation du cocon** (snippet `collection-editorial-auto` + metafield `custom.cocon_links` json `[{url,label}]`, rendu en bloc « Pour aller plus loin » sous le guide). Les liens internes des anciennes descriptions masquées sont réintroduits :
+   - `tableau-cuisine` : 3 liens blog (aménager / décorer / déco A-Z).
+   - `tableau-zen` : 1 lien blog (déco zen).
+   - `tableau-fleurs` : 1 lien blog (fleurir ses murs).
+   - `tableau-ethnique` : 2 liens collections (africain, japonais).
+   - `tableaux-nature-sauvage` : 4 liens collections (fleurs, paysage, animaux, mer). *(Le lien `admin.shopify.com` cassé de l'ancienne description n'a PAS été repris.)*
+   - `tableau-salon` : non concerné (pas de banner → ses liens blog restent affichés via son guide).
+   Rollback : vider `custom.cocon_links`.
