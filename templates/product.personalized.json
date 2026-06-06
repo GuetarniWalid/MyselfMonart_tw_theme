@@ -60,7 +60,7 @@
           "settings": {
             "heading": "Livraison",
             "icon": "truck",
-            "content": "<p>🎨 Toile personnalisée : Fabrication en 3-4 jours </p><p>🚚  Expédition en 3-5 jours ouvrables en colis suivi à votre domicile.</p><p>🎁 Livraison gratuite </p>",
+            "content": "<p>🎨 Poster personnalisé : Fabrication à la demande en 3-4 jours </p><p>🚚  Expédition en 3-5 jours ouvrables en colis suivi à votre domicile.</p><p>🎁 Livraison gratuite </p>",
             "page": ""
           }
         },
@@ -69,7 +69,7 @@
           "settings": {
             "heading": "Materiaux",
             "icon": "leather",
-            "content": "<p><strong>- La Toile</strong> est composée de fibres 100% polyester d'une épaisseur de 285g/m².</p><p>L'épaisseur du châssis au choix 2 ou 4 cm </p><p><strong>- Le Plexiglass</strong> est composé de  <strong>verre acrylique</strong> + <strong>plaques aluminium . </strong>Épaisseur: 6 mm</p><p>Bord: noir entre les plaques métalliques + verre acrylique transparent sur le dessus, coins arrondis</p><p>- <strong>L'aluminium argent brossé, </strong>dit Alupanel, est une plaque composite en aluminium d'une épaisseur de 3mm. Il est <strong>résistant aux UV et à l'humidité. </strong></p><p>Bord: noir entre les plaques métalliques, coins arrondis</p>",
+            "content": "<p><strong>- Le papier</strong> : un papier de qualité au rendu mat et précis, pour des couleurs justes et des détails nets.</p><p><strong>- Les formats</strong> : 30 × 40 cm ou 60 × 80 cm, à poser tel quel ou à encadrer.</p><p><strong>- Le cadre (en option)</strong> : plusieurs finitions au choix — blanc, noir mat, chêne clair, noyer ou argent ancien.</p><p>Chaque poster est imprimé à la demande, conçu en France et imprimé en Europe.</p>",
             "page": ""
           }
         },
@@ -242,7 +242,7 @@
       "settings": {
         "image": "shopify://shop_images/texture_x3_70ae7c8b-712c-4c74-bb93-e76a2eddc37b.jpg",
         "title": "EN HARMONIE",
-        "description": "<p>Vous avez le souci du détail ? Allez plus loin en personnalisant aussi le support. Sur toile, plexiglas ou aluminium, choisissez l’aspect qui s’accorde le mieux à votre intérieur.</p>",
+        "description": "<p>Vous avez le souci du détail ? Allez plus loin en choisissant la finition de votre poster : à poser tel quel, ou sublimé par un cadre (blanc, noir mat, chêne clair, noyer ou argent ancien) qui s'accorde au mieux à votre intérieur.</p>",
         "layout": "image_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -257,7 +257,7 @@
       "settings": {
         "image": "shopify://shop_images/metre.jpg",
         "title": "DU SUR-MESURE",
-        "description": "<p>Choisissez la taille de votre tableau. En paysage, portrait, carré, petit ou grand, à vous de voir selon votre espace.</p>",
+        "description": "<p>Choisissez la taille de votre poster. En paysage, portrait, carré, petit ou grand, à vous de voir selon votre espace.</p>",
         "layout": "text_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -311,8 +311,8 @@
           "type": "column",
           "settings": {
             "image": "shopify://shop_images/tableau-deco-femme-satisfaction-garantie.jpg",
-            "title": "GARANTIE",
-            "text": "<p>Chaque tableau que nous créons est le reflet de notre engagement envers l'excellence et la durabilité. Pour vous le prouver, nous offrons une garantie de 10 ans sur toutes nos œuvres.</p>",
+            "title": "QUALITÉ",
+            "text": "<p>Chaque œuvre que nous créons reflète notre engagement envers l'excellence et le soin du détail. Une question, un doute ? Notre studio à Toulouse reste à votre écoute, avant comme après votre commande.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -340,17 +340,17 @@
         "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-1": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "Quels supports choisir, le rendu est-il différent ?",
+            "heading": "Quel rendu et quelles finitions pour votre poster ?",
             "icon": "none",
-            "row_content": "<p>- Tableau toile 100% polyester (285g/m²) : <strong>Mate et texturée</strong></p><p>Le tableau en toile offre une prise en main agréable. Le grain<strong> </strong>du papier est visible principalement dans les zones claires de l’image, tandis que les noirs auront tendance à les gommer. La surface de toile cuisine ajoute du relief et de la profondeur à vos tableaux. Il apporte une touche artistique et les dote d’une <strong>incroyable intensité.</strong></p><p>- tableau plexiglas ou tableau en verre acrylique :<strong> Brillant et transparent</strong></p><p>Le tableau mural en <strong>verre acrylique</strong>, également appelé <strong>tableau plexiglas,</strong> est un matériau synthétique rigide et transparent haut de gamme, son aspect est similaire à du verre.</p><p>Le plexiglas offre <strong>une profondeur </strong>et <strong>une luminosité extraordinaire </strong>à vos tableaux. Les couleurs de votre photo seront vives et éclatantes il est particulièrement recommandé pour la réalisation de tableaux lumineux.</p><p>- Tableau aluminium argent brossé ou tableau métal : <strong>Contraste et éclat.</strong></p><p>Le tableau deco en aluminium permet une <strong>présentation sobre, moderne et sans reflet</strong>. La densité des couleurs et les contrastes sont très forts.</p><p>L'aluminium est un support très résistant et de qualité il n'est pas sensible aux traces de doigts ou à l'humidité et l’entretien de vos toiles est facile. Vous pouvez les nettoyer avec un tissu légèrement humide.</p>"
+            "row_content": "<p><p>Votre poster est imprimé à la demande sur un papier de qualité, au rendu <strong>mat et précis</strong> : des couleurs justes, des détails nets et une belle profondeur.</p><p>Il vous est proposé en deux formats — <strong>30 × 40 cm</strong> ou <strong>60 × 80 cm</strong> — à poser tel quel ou à encadrer. Côté cadre, plusieurs finitions s'offrent à vous : <strong>blanc, noir mat, chêne clair, noyer ou argent ancien</strong>, pour s'accorder à votre intérieur.</p>"
           }
         },
         "e20d3253-d757-4a99-9237-128916cc9ffb": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "Avec quoi et comment accrochez mon tableau ?",
+            "heading": "Comment accrocher ou poser votre poster ?",
             "icon": "none",
-            "row_content": "<p>Pour une finition à la hauteur de votre décoration  il est important de prendre en compte le support d'impression. </p><p>- Les supports tels que le plexiglas coulé et l'aluminium nécessitent un espacement entre le tableau et le mur. </p><p>Nous vous recommandons d'utiliser notre système d'accrochage, nos équipes s'occupent d'installer le kit de fixation directement sur le tableau. Nos kit de fixation sont disponibles en supplément sur notre site. </p><p>- Pour accrocher les tableaux en toile montés sur châssis il est recommandé d'utiliser des crochets. Attention, il vous faudra prendre en compte le poids du tableau avant tout achat. <br/></p><p>Enfin, pour ne pas abîmer votre mur il vous faudra également faire attention aux chevilles qui sont différentes selon les murs en placo, brique ou béton.</p><p>En raison de la particularité de chaque mur nos kits de fixation sont livrées sans visserie.</p>"
+            "row_content": "<p><p>Tout dépend de la finition que vous choisissez.</p><p>- <strong>Sans cadre</strong> : votre poster s'affiche en toute simplicité, avec le système d'accrochage de votre choix.</p><p>- <strong>Avec cadre</strong> : il est prêt à être accroché. Pensez simplement à adapter les fixations à votre type de mur — placo, brique ou béton. Nos cadres sont livrés sans visserie, car chaque mur est différent.</p>"
           }
         },
         "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-2": {
@@ -358,15 +358,15 @@
           "settings": {
             "heading": "Pourquoi acheter chez nous ?",
             "icon": "none",
-            "row_content": "<p>Nos graphistes travaillent chaque jour pour créer de nouvelles œuvres. Chaque semaine, nous mettons à jour notre site et ajoutons les nouveaux tableaux.</p><p>Vous avez la possibilité de choisir le support et la taille pour un accord parfait avec votre intérieur.</p><p>Si toutefois aucun tableau ne vous plaît, vous avez la possibilité de demander à nos graphistes de façonner l'œuvre de vos rêves.</p>"
+            "row_content": "<p>Nos graphistes travaillent chaque jour pour créer de nouvelles œuvres. Chaque semaine, nous mettons à jour notre site et ajoutons les nouveaux posters.</p><p>Vous pouvez choisir le format et la personnalisation pour un accord parfait avec votre intérieur.</p><p>Si toutefois aucun poster ne vous plaît, vous avez la possibilité de demander à nos graphistes de façonner l'œuvre de vos rêves.</p>"
           }
         },
         "a603c2c1-59a1-4067-9d4b-dc8591ddc1f8": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "Quelle taille de toile choisir ?",
+            "heading": "Quelle taille de poster choisir ?",
             "icon": "none",
-            "row_content": "<p>Pour ne pas vous tromper, mesurez la largeur de votre pan de mur. Multipliez le résultat par 0,57 pour obtenir le ratio idéal.</p><p>Sachez qu'il est également recommandé d'accrocher le centre du tableau à environ 1,65 mètre du sol (ce qui correspond à peu près à la hauteur des yeux). Il est aussi recommandé de laisser environ 30 centimètres d'espace entre un meuble et un tableau.</p>"
+            "row_content": "<p>Pour ne pas vous tromper, mesurez la largeur de votre pan de mur. Multipliez le résultat par 0,57 pour obtenir le ratio idéal.</p><p>Sachez qu'il est également recommandé d'accrocher le centre du poster à environ 1,65 mètre du sol (ce qui correspond à peu près à la hauteur des yeux). Il est aussi recommandé de laisser environ 30 centimètres d'espace entre un meuble et votre poster.</p>"
           }
         }
       },
