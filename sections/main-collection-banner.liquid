@@ -1,10 +1,12 @@
-<h1 class="py-8">{{ collection.title | escape }}</h1>
 {%- comment -%}
-  Rollout éditorial metafield-first : si custom.guide existe, le guide éditorial (rendu sous la grille
-  par collection-editorial-auto) remplace la description — on ne l'affiche pas ici en doublon
-  (évite 2 zones de gros texte ; cf tableau-salon = 1 seule zone). Le H1 ci-dessus reste toujours rendu.
-  Description PRÉSERVÉE dans Shopify, ré-affichée automatiquement si custom.guide est vidé.
+  Rollout éditorial metafield-first : quand un éditorial custom.guide existe, c'est collection-editorial-auto
+  (sous la grille) qui porte le H1 EN TÊTE + tout le contenu. Le banner ne rend alors NI H1 NI description
+  → évite le H1 orphelin tout en bas (to_place_first / order:1) ET le doublon de texte. H1 + description
+  ré-affichés automatiquement si custom.guide est vidé. (cf tableau-salon, sans banner = 1 seul H1 en tête.)
 {%- endcomment -%}
+{%- if collection.metafields.custom.guide == blank -%}
+  <h1 class="py-8">{{ collection.title | escape }}</h1>
+{%- endif -%}
 {%- if section.settings.show_description and collection.metafields.custom.guide == blank -%}
 <div class="collection-description dropdown-button-target{% if section.settings.show_collapse_button %} h-56 overflow-hidden relative after:absolute after:bottom-0 after:w-full after:h-20 after:bg-gradient-to-t after:from-secondary{% endif %}">{{ collection.description }}</div>
 {%- if section.settings.show_collapse_button -%}

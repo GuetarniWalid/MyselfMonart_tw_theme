@@ -21,27 +21,22 @@
   assign ed_intro = collection.metafields.custom.intro.value
   assign ed_guide = collection.metafields.custom.guide.value
   assign ed_faq = collection.metafields.custom.faq.value
-  assign ed_h1 = collection.metafields.custom.editorial_h1.value
   assign ed_cocon = collection.metafields.custom.cocon_links.value
 -%}
 
 <section class="collection-editorial-auto w-full" aria-label="{{ collection.title | escape }} — guide & questions">
 
-  {%- comment -%} 1) H1 OPTIONNEL (flag custom.editorial_h1) : uniquement pour les collections dont le template n'a PAS de banner H1 (banner desactive) — evite le page-sans-H1 SANS jamais creer de double-H1. Sinon le H1 reste celui de main-collection-banner. + accroche (intro). {%- endcomment -%}
-  {%- if ed_intro != blank or ed_h1 -%}
-    <div class="bg-secondary w-full py-10 md:py-14">
-      <div class="max-w-3xl mx-auto px-4 md:px-6 text-center">
-        {%- if ed_h1 -%}
-          <h1 class="font-heading font-medium text-[30px] md:text-[42px] lg:text-[50px] leading-[1.1] tracking-[-0.01em] text-main mb-5">{{ collection.title | escape }}</h1>
-        {%- endif -%}
-        {%- if ed_intro != blank -%}
-          <div class="font-roboto text-base md:text-lg leading-[1.65] text-main-70 max-w-xl mx-auto [&_a]:text-terra [&_a]:underline">
-            <p>{{ ed_intro | newline_to_br }}</p>
-          </div>
-        {%- endif -%}
-      </div>
+  {%- comment -%} 1) H1 + accroche — l'éditorial PORTE le H1, EN TÊTE du bloc (sous la grille), exactement comme tableau-salon. main-collection-banner masque son propre H1 quand custom.guide existe → 1 seul H1, jamais orphelin en bas via to_place_first. Le snippet ne s'exécute que si custom.guide existe (garde dans main-collection-product-grid), donc le H1 est toujours légitime ici. {%- endcomment -%}
+  <div class="bg-secondary w-full py-10 md:py-14">
+    <div class="max-w-3xl mx-auto px-4 md:px-6 text-center">
+      <h1 class="font-heading font-medium text-[30px] md:text-[42px] lg:text-[50px] leading-[1.1] tracking-[-0.01em] text-main mb-5">{{ collection.title | escape }}</h1>
+      {%- if ed_intro != blank -%}
+        <div class="font-roboto text-base md:text-lg leading-[1.65] text-main-70 max-w-xl mx-auto [&_a]:text-terra [&_a]:underline">
+          <p>{{ ed_intro | newline_to_br }}</p>
+        </div>
+      {%- endif -%}
     </div>
-  {%- endif -%}
+  </div>
 
   {%- comment -%} 2) Guide profond — replié dans <details> (réutilise .collection-description + tw-icon-chevron). {%- endcomment -%}
   {%- if ed_guide != blank -%}
