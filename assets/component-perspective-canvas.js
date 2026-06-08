@@ -545,8 +545,14 @@
       const f = document.querySelector(
         'painting-variant-picker input[name="option3"]:checked',
       );
-      if (b) this.state.border = borderTypeFromLabel(b.value);
-      if (f) this.state.frame = normalize(f.value); // TODO-P3 : mapper vers texture cadre
+      // La finition (bordure/cadre) est dérivée du HANDLE du métaobjet (data-render-key),
+      // STABLE quelle que soit la langue de la boutique (ex. « bordure-noire », « cadre-noyer »,
+      // « sans-cadre »). Le LIBELLÉ de variante, lui, est traduit (ES/DE/NL/EN) et ne contient
+      // plus les mots-clés FR du mapping -> hors français, tout retombait sur 'white'/'sans cadre'
+      // et l'animation ne reconnaissait plus la sélection. Repli sur le libellé si l'attribut est
+      // absent (produit sans métaobjet bordure/cadre configuré).
+      if (b) this.state.border = borderTypeFromLabel(b.dataset.renderKey || b.value);
+      if (f) this.state.frame = normalize(f.dataset.renderKey || f.value);
       // Taille (option1, ex. "30x40 cm") -> dimensions réelles pour la proportion du châssis.
       const s = document.querySelector(
         'painting-variant-picker input[name="option1"]:checked',
@@ -805,7 +811,9 @@
       let label = 'Aperçu en perspective';
       if (title) label += ' de ' + title;
       if (borderLabel) label += ' — ' + borderLabel.toLowerCase();
-      if (frameLabel && normalize(frameLabel).indexOf('sans') === -1) {
+      // « Pas de cadre » détecté sur l'état dérivé du handle (indépendant de la langue),
+      // tout en affichant le libellé traduit pour le lecteur d'écran.
+      if (frameLabel && this.state.frame && this.state.frame.indexOf('sans') === -1) {
         label += ', ' + frameLabel.toLowerCase();
       }
       this.canvas.setAttribute('aria-label', label);
