@@ -206,7 +206,7 @@
     if (n.includes('noir')) return 'black';
     if (n.includes('blanc')) return 'white';
     if (n.includes('etir')) return 'stretch'; // étirée (P2)
-    if (n.includes('miroir')) return 'mirror'; // miroir (P2)
+    if (n.includes('miroir') || n.includes('moroir')) return 'mirror'; // miroir (P2) — 'moroir' = faute de frappe du handle métaobjet live (bordure-moroir) ; on tolère les deux
     if (n.includes('pli')) return 'fold'; // pliée (P2)
     return 'white';
   }
