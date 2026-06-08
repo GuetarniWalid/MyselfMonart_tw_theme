@@ -63,9 +63,9 @@
       "address1": "Address 1",
       "address2": "Address 2",
       "city": "City",
-      "country": "Country\/region",
+      "country": "Country/region",
       "province": "Province",
-      "zip": "Postal\/ZIP code",
+      "zip": "Postal/ZIP code",
       "phone": "Phone",
       "set_default": "Set as default address",
       "add": "Add address",
@@ -163,7 +163,7 @@
       "login_form_password_placeholder": "Your password",
       "login_form_error": "Wrong password!",
       "login_form_submit": "Enter",
-      "admin_link_html": "Are you the store owner? <a href=\"\/admin\" class=\"link underlined-link\">Log in here<\/a>"
+      "admin_link_html": "Are you the store owner? <a href=\"/admin\" class=\"link underlined-link\">Log in here</a>"
     },
     "search": {
       "search": "Search",
@@ -216,8 +216,8 @@
         "view_store_info": "View store information",
         "check_other_stores": "Check availability at other stores",
         "pick_up_available": "Pickup available",
-        "pick_up_available_at_html": "Pickup available at <span class=\"color-foreground\">{{ location_name }}<\/span>",
-        "pick_up_unavailable_at_html": "Pickup currently unavailable at <span class=\"color-foreground\">{{ location_name }}<\/span>"
+        "pick_up_available_at_html": "Pickup available at <span class=\"color-foreground\">{{ location_name }}</span>",
+        "pick_up_unavailable_at_html": "Pickup currently unavailable at <span class=\"color-foreground\">{{ location_name }}</span>"
       },
       "media": {
         "load_image": "Load image {{ index }} in gallery view",
@@ -398,6 +398,37 @@
       "placeholder": "Filter options will appear here",
       "products": "products",
       "clear_all": "Clear"
+    },
+    "collection_editorial": {
+      "read_full_guide": "Read the full guide",
+      "faq_heading": "Your questions about {{ title }}",
+      "learn_more": "Further reading:"
+    },
+    "mma": {
+      "add_to_favorites": "Add to favorites",
+      "remove_from_favorites": "Remove from favorites",
+      "add_artwork_to_favorites": "Add this artwork to my favorites",
+      "error_generic": "Something went wrong",
+      "breadcrumb_home": "Home",
+      "photo_shared_by": "Artwork photo shared by ",
+      "photo_shared_by_customer": "Artwork photo shared by a customer",
+      "testimonials_region": "Customer testimonials",
+      "rooms": "Rooms",
+      "carousel_prefix": "Carousel: ",
+      "hero_image_pending": "Hero image coming soon",
+      "reviews_verified_suffix": "verified reviews on Trustpilot",
+      "see_all_reviews": "See all our reviews",
+      "reviews_and_photos": "Our customers' reviews and photos",
+      "reviews_scroll_hint": "customer reviews scroll horizontally. Use the arrow keys to navigate.",
+      "scroll_options_right": "Scroll options to the right",
+      "scroll_options_left": "Scroll options to the left",
+      "close_size_guide": "Close the size guide",
+      "close_border_guide": "Close the border guide",
+      "close_frame_guide": "Close the frame guide",
+      "perspective_preview_of": "Perspective preview of {{ title }}",
+      "perspective_canvas_caption": "{{ title }} — canvas perspective preview.",
+      "perspective_figcaption": "Interactive 3D preview of “{{ title }}”: the artwork is printed on a canvas stretched over a wooden frame, which you can rotate to view it in perspective. The canvas edges (white, black, stretched, mirrored or folded border) and the chosen frame (American box frame in white, matte black, antique silver, light oak, walnut — or no frame) are shown in 3D based on the selected finish. Render generated from the actual image of the artwork.",
+      "perspective_noscript": "Interactive 3D view of the artwork “{{ title }}” on a canvas stretched over a wooden frame (enable JavaScript to rotate the artwork and see the edges and frame in perspective)."
     }
   },
   "snippet": {

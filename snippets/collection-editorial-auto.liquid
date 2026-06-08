@@ -22,6 +22,7 @@
   assign ed_guide = collection.metafields.custom.guide.value
   assign ed_faq = collection.metafields.custom.faq.value
   assign ed_cocon = collection.metafields.custom.cocon_links.value
+  assign ed_faq_title = collection.title | downcase
 -%}
 
 <section class="collection-editorial-auto w-full" aria-label="{{ collection.title | escape }} — guide & questions">
@@ -47,7 +48,7 @@
             <span aria-hidden="true" class="flex-shrink-0 text-terra transition-transform duration-300 ease-out motion-reduce:transition-none group-open:rotate-90">
               {%- render 'tw-icon-chevron', width: 16 -%}
             </span>
-            <span>Lire le guide complet</span>
+            <span>{{ 'sections.collection_editorial.read_full_guide' | t }}</span>
           </summary>
           <div class="collection-description pb-8 pt-2">
             {{ ed_guide }}
@@ -56,7 +57,7 @@
         {%- comment -%} Cocon : liens internes (blog / collections sœurs) préservés de l'ancienne description masquée par le banner. {%- endcomment -%}
         {%- if ed_cocon != blank and ed_cocon.size > 0 -%}
           <p class="font-roboto text-[15px] leading-[1.7] text-main-70 pt-6 [&_a]:text-terra [&_a]:underline">
-            <strong class="text-main">Pour aller plus loin :</strong>
+            <strong class="text-main">{{ 'sections.collection_editorial.learn_more' | t }}</strong>
             {% for l in ed_cocon %}<a href="{{ l.url }}">{{ l.label | escape }}</a>{% unless forloop.last %} &middot; {% endunless %}{% endfor %}
           </p>
         {%- endif -%}
@@ -70,7 +71,7 @@
       <div class="max-w-[760px] mx-auto px-6 text-center mb-10 md:mb-16">
         <p class="font-roboto text-xs font-medium tracking-[0.18em] uppercase text-terra mb-4">FAQ</p>
         <h2 id="faq-auto-{{ collection.id }}" class="font-heading font-semibold leading-[1.1] tracking-[-0.01em] text-2xl md:text-3xl lg:text-[36px] mb-0">
-          Vos questions sur {{ collection.title | escape | downcase }}
+          {{ 'sections.collection_editorial.faq_heading' | t: title: ed_faq_title }}
         </h2>
       </div>
       <collapsible-tab>

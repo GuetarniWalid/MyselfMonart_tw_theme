@@ -15,7 +15,7 @@
 
 {%- if visible_review_count > 0 -%}
   <div class="px-4">
-    <snap-carrousel role="region" aria-label="Témoignages clients">
+    <snap-carrousel role="region" aria-label="{{ 'sections.mma.testimonials_region' | t }}">
       <ul class="component-carroussel flex gap-4 md:gap-6 overflow-x-auto snap-mandatory snap-x scroll-smooth scrollbar-hidden py-2">
         {%- for block in section.blocks -%}
           {%- if block.settings.message != blank -%}

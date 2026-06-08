@@ -105,7 +105,7 @@
             <span aria-hidden="true" class="flex-shrink-0 text-terra transition-transform duration-300 ease-out motion-reduce:transition-none group-open:rotate-90">
               {%- render 'tw-icon-chevron', width: 16 -%}
             </span>
-            <span>{{ section.settings.summary_label | default: 'Lire le guide complet' | escape }}</span>
+            <span>{% if section.settings.summary_label != blank %}{{ section.settings.summary_label | escape }}{% else %}{{ 'sections.collection_editorial.read_full_guide' | t }}{% endif %}</span>
           </summary>
           <div class="collection-description pb-8 pt-2">
             {{ content }}

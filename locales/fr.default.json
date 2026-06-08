@@ -50,7 +50,7 @@
       "address1": "Adresse 1",
       "address2": "Adresse 2",
       "city": "Ville",
-      "country": "Pays\/région",
+      "country": "Pays/région",
       "province": "Province",
       "zip": "Code postal",
       "phone": "Téléphone",
@@ -152,7 +152,7 @@
       "login_form_password_placeholder": "Votre mot de passe",
       "login_form_error": "Mot de passe incorrect !",
       "login_form_submit": "Saisir",
-      "admin_link_html": "La boutique vous appartient-elle ? <a href=\"\/admin\" class=\"link underlined-link\">Se connecter ici<\/a>"
+      "admin_link_html": "La boutique vous appartient-elle ? <a href=\"/admin\" class=\"link underlined-link\">Se connecter ici</a>"
     },
     "social": {
       "links": {
@@ -216,8 +216,8 @@
         "view_store_info": "Afficher les informations de la boutique",
         "check_other_stores": "Vérifier la disponibilité dans d'autres boutiques",
         "pick_up_available": "Service de retrait disponible",
-        "pick_up_available_at_html": "Service de retrait disponible à <span class=\"color-foreground\">{{ location_name }}<\/span>",
-        "pick_up_unavailable_at_html": "Service de retrait non disponible actuellement à <span class=\"color-foreground\">{{ location_name }}<\/span>"
+        "pick_up_available_at_html": "Service de retrait disponible à <span class=\"color-foreground\">{{ location_name }}</span>",
+        "pick_up_unavailable_at_html": "Service de retrait non disponible actuellement à <span class=\"color-foreground\">{{ location_name }}</span>"
       },
       "media": {
         "open_media": "Ouvrir le média {{ index }} dans une fenêtre modale",
@@ -398,6 +398,37 @@
       "placeholder": "Les options de filtrage apparaîtront ici",
       "products": "produits",
       "clear_all": "Supprimer"
+    },
+    "collection_editorial": {
+      "read_full_guide": "Lire le guide complet",
+      "faq_heading": "Vos questions sur {{ title }}",
+      "learn_more": "Pour aller plus loin :"
+    },
+    "mma": {
+      "add_to_favorites": "Ajouter aux favoris",
+      "remove_from_favorites": "Retirer des favoris",
+      "add_artwork_to_favorites": "Ajouter ce tableau à mes favoris",
+      "error_generic": "il y a une erreur",
+      "breadcrumb_home": "Accueil",
+      "photo_shared_by": "Photo de tableau partagée par ",
+      "photo_shared_by_customer": "Photo de tableau partagée par un client",
+      "testimonials_region": "Témoignages clients",
+      "rooms": "Pièces",
+      "carousel_prefix": "Carrousel : ",
+      "hero_image_pending": "Image hero à venir",
+      "reviews_verified_suffix": "retours vérifiés sur Trustpilot",
+      "see_all_reviews": "Voir tous nos avis",
+      "reviews_and_photos": "Avis et photos de nos clients",
+      "reviews_scroll_hint": "avis clients défilent horizontalement. Utilisez les flèches du clavier pour naviguer.",
+      "scroll_options_right": "Faire défiler les options vers la droite",
+      "scroll_options_left": "Faire défiler les options vers la gauche",
+      "close_size_guide": "Fermer le guide des tailles",
+      "close_border_guide": "Fermer le guide des bords",
+      "close_frame_guide": "Fermer le guide des cadres",
+      "perspective_preview_of": "Aperçu en perspective de {{ title }}",
+      "perspective_canvas_caption": "{{ title }} — aperçu de la toile en perspective.",
+      "perspective_figcaption": "Aperçu 3D interactif de « {{ title }} » : l’œuvre est imprimée sur une toile tendue sur châssis, que vous pouvez faire pivoter pour l’observer en perspective. Les bords de la toile (bordure blanche, noire, étirée, miroir ou pliée) et le cadre choisi (caisse américaine blanc, noir mat, argent ancien, chêne clair, noyer — ou sans cadre) s’affichent en 3D selon la finition choisie. Rendu généré à partir de l’image réelle de l’œuvre.",
+      "perspective_noscript": "Visualisation 3D interactive du tableau « {{ title }} » sur toile tendue sur châssis (activez JavaScript pour faire pivoter l’œuvre et voir les bords et le cadre en perspective)."
     }
   },
   "snippet": {

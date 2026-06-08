@@ -47,7 +47,7 @@
             </div>
             <div class="relative">
                 <div class="scroll-arrow scroll-arrow-right absolute right-0 top-0 bottom-3 w-12 bg-gradient-to-l from-secondary via-secondary via-60% to-transparent flex items-center justify-center z-10 transition-opacity duration-200">
-                    <button type="button" class="w-8 h-8 flex items-center justify-end" aria-label="Faire défiler les options vers la droite">
+                    <button type="button" class="w-8 h-8 flex items-center justify-end" aria-label="{{ 'sections.mma.scroll_options_right' | t }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
@@ -148,7 +148,7 @@
     {%- comment -%} Size Guide Popup {%- endcomment -%}
     <dialog id="size-guide-popup" class="backdrop:bg-black/30 bg-transparent p-0 w-full max-w-sm rounded-xl">
         <div class="bg-secondary rounded-xl w-full max-h-[90vh] overflow-y-auto scrollbar-hidden relative">
-            <button onclick="document.getElementById('size-guide-popup').close()" class="absolute z-10 top-3 right-3 bg-secondary-50 rounded-full p-2 hover:bg-main-10 transition-colors" aria-label="Fermer le guide des tailles">
+            <button onclick="document.getElementById('size-guide-popup').close()" class="absolute z-10 top-3 right-3 bg-secondary-50 rounded-full p-2 hover:bg-main-10 transition-colors" aria-label="{{ 'sections.mma.close_size_guide' | t }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
                     <path fill="currentColor" d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41z"/>
                 </svg>
@@ -182,7 +182,7 @@
     {%- comment -%} Border Guide Popup {%- endcomment -%}
     <dialog id="border-guide-popup" class="backdrop:bg-black/30 bg-transparent p-0 w-full max-w-sm rounded-xl">
         <div class="bg-secondary rounded-xl w-full max-h-[90vh] overflow-y-auto scrollbar-hidden relative">
-            <button onclick="document.getElementById('border-guide-popup').close()" class="absolute z-10 top-3 right-3 bg-secondary-50 rounded-full p-2 hover:bg-main-10 transition-colors" aria-label="Fermer le guide des bords">
+            <button onclick="document.getElementById('border-guide-popup').close()" class="absolute z-10 top-3 right-3 bg-secondary-50 rounded-full p-2 hover:bg-main-10 transition-colors" aria-label="{{ 'sections.mma.close_border_guide' | t }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
                     <path fill="currentColor" d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41z"/>
                 </svg>
@@ -216,7 +216,7 @@
     {%- comment -%} Frame Guide Popup {%- endcomment -%}
     <dialog id="frame-guide-popup" class="backdrop:bg-black/30 bg-transparent p-0 w-full max-w-sm rounded-xl">
         <div class="bg-secondary rounded-xl w-full max-h-[90vh] overflow-y-auto scrollbar-hidden relative">
-            <button onclick="document.getElementById('frame-guide-popup').close()" class="absolute z-10 top-3 right-3 bg-secondary-50 rounded-full p-2 hover:bg-main-10 transition-colors" aria-label="Fermer le guide des cadres">
+            <button onclick="document.getElementById('frame-guide-popup').close()" class="absolute z-10 top-3 right-3 bg-secondary-50 rounded-full p-2 hover:bg-main-10 transition-colors" aria-label="{{ 'sections.mma.close_frame_guide' | t }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
                     <path fill="currentColor" d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41z"/>
                 </svg>

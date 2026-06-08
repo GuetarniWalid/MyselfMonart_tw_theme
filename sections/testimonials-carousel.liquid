@@ -63,7 +63,7 @@
 
     {%- if section.settings.review_count and section.settings.review_count > 0 -%}
       <p class="mt-6 md:mt-8 font-roboto text-sm text-secondary">
-        {{ section.settings.review_count }} retours vérifiés sur Trustpilot
+        {{ section.settings.review_count }} {{ 'sections.mma.reviews_verified_suffix' | t }}
         {%- if section.settings.trustpilot_link != blank -%}
           <span aria-hidden="true" class="mx-2">·</span>
           <a
@@ -71,7 +71,7 @@
             target="_blank"
             rel="noopener nofollow"
             class="underline underline-offset-4 text-secondary hover:opacity-80 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900 rounded-sm">
-            Voir tous nos avis
+            {{ 'sections.mma.see_all_reviews' | t }}
           </a>
         {%- endif -%}
       </p>
@@ -82,7 +82,7 @@
   {%- comment -%} Carrousel snap-x scroll-smooth avec auto-scroll <snap-carrousel> {%- endcomment -%}
   {%- if visible_review_count > 0 -%}
     <div class="relative">
-      <snap-carrousel role="region" aria-label="Avis et photos de nos clients">
+      <snap-carrousel role="region" aria-label="{{ 'sections.mma.reviews_and_photos' | t }}">
         {%- comment -%}
           scroll-pl-4 md:scroll-pl-6 + [&>li:first-child]:ml-4 md:[&>li:first-child]:ml-6
           → décale la 1re carte du bord gauche d'une valeur ÉGALE au gap entre cartes
@@ -99,7 +99,7 @@
         </ul>
       </snap-carrousel>
 
-      <p class="sr-only">{{ visible_review_count }} avis clients défilent horizontalement. Utilisez les flèches du clavier pour naviguer.</p>
+      <p class="sr-only">{{ visible_review_count }} {{ 'sections.mma.reviews_scroll_hint' | t }}</p>
     </div>
 
     <script src="{{ 'component-carrousel.js' | asset_url }}" defer="defer"></script>

@@ -32,7 +32,6 @@
         "trustpilot_review_nXpwkL": {
           "type": "trustpilot_review",
           "settings": {
-            "trustpilot_score": 43,
             "link": "https://fr.trustpilot.com/review/myselfmonart.com",
             "margin_bottom": "mb-8"
           }
@@ -378,8 +377,8 @@
       ],
       "settings": {
         "eyebrow": "FAQ",
-        "heading": "QUESTIONS FRÉQUENTES",
-        "accent_tone": "buy-button"
+        "accent_tone": "buy-button",
+        "heading": "QUESTIONS FRÉQUENTES"
       }
     }
   },

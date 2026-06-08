@@ -145,7 +145,7 @@
           class="absolute inset-0 w-full h-full object-cover {{ pos_mobile }} md:{{ pos_desktop }}">
 
       {%- else -%}
-        <div class="absolute inset-0 bg-main-10" role="img" aria-label="{{ hero_image_alt | escape | default: 'Image hero à venir' }}"></div>
+        <div class="absolute inset-0 bg-main-10" role="img" aria-label="{% if hero_image_alt != blank %}{{ hero_image_alt | escape }}{% else %}{{ 'sections.mma.hero_image_pending' | t }}{% endif %}"></div>
       {%- endif -%}
 
     </div>

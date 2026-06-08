@@ -62,7 +62,7 @@
       <canvas
         class="perspective-canvas-gl block w-full aspect-square opacity-0"
         role="img"
-        aria-label="Aperçu en perspective de {{ product.title | escape }}">{{ product.title | escape }} — aperçu de la toile en perspective.</canvas>
+        aria-label="{{ 'sections.mma.perspective_preview_of' | t: title: product.title }}">{{ 'sections.mma.perspective_canvas_caption' | t: title: product.title }}</canvas>
       {{ persp_config }}
     </perspective-canvas>
   {%- else -%}
@@ -97,12 +97,12 @@
           <canvas
             class="perspective-canvas-gl block w-full aspect-square opacity-0 transition-opacity duration-500 ease-out"
             role="img"
-            aria-label="Aperçu en perspective de {{ product.title | escape }}">{{ product.title | escape }} — aperçu de la toile en perspective.</canvas>
+            aria-label="{{ 'sections.mma.perspective_preview_of' | t: title: product.title }}">{{ 'sections.mma.perspective_canvas_caption' | t: title: product.title }}</canvas>
           {{ persp_config }}
         </perspective-canvas>
-        <figcaption class="sr-only">Aperçu 3D interactif de « {{ product.title | escape }} » : l'œuvre est imprimée sur une toile tendue sur châssis, que vous pouvez faire pivoter pour l'observer en perspective. Les bords de la toile (bordure blanche, noire, étirée, miroir ou pliée) et le cadre choisi (caisse américaine blanc, noir mat, argent ancien, chêne clair, noyer — ou sans cadre) s'affichent en 3D selon la finition choisie. Rendu généré à partir de l'image réelle de l'œuvre.</figcaption>
+        <figcaption class="sr-only">{{ 'sections.mma.perspective_figcaption' | t: title: product.title }}</figcaption>
         <noscript>
-          <p class="sr-only">Visualisation 3D interactive du tableau « {{ product.title | escape }} » sur toile tendue sur châssis (activez JavaScript pour faire pivoter l'œuvre et voir les bords et le cadre en perspective).</p>
+          <p class="sr-only">{{ 'sections.mma.perspective_noscript' | t: title: product.title }}</p>
         </noscript>
       </figure>
     </span>

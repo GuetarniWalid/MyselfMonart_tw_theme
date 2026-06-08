@@ -39,9 +39,9 @@
   if img.alt != blank
     assign img_alt = img.alt
   elsif customer_name != blank
-    assign img_alt = 'Photo de tableau partagée par ' | append: customer_name
+    assign img_alt = 'sections.mma.photo_shared_by' | t | append: customer_name
   else
-    assign img_alt = 'Photo de tableau partagée par un client'
+    assign img_alt = 'sections.mma.photo_shared_by_customer' | t
   endif
 
   if forloop.first

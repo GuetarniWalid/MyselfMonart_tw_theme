@@ -58,7 +58,8 @@
 
   assign heading_level = section.settings.heading_level | default: 'h2'
   assign heading_id = 'home-rooms-grid-' | append: section.id
-  assign carousel_label = section.settings.h2_title | escape | default: 'Pièces'
+  assign rooms_fallback = 'sections.mma.rooms' | t
+  assign carousel_label = section.settings.h2_title | escape | default: rooms_fallback
 
   case section.settings.padding_size
     when 'small'
@@ -109,7 +110,7 @@
     Carrousel auto-scroll via <snap-carrousel> (component-carrousel.js
     existant du theme). Pattern identique à trust-signals.
   {%- endcomment -%}
-  <snap-carrousel role="region" aria-label="{{ 'Carrousel : ' | append: carousel_label }}">
+  <snap-carrousel role="region" aria-label="{{ 'sections.mma.carousel_prefix' | t | append: carousel_label }}">
     <ul class="flex overflow-x-auto snap-x snap-mandatory scrollbar-hidden gap-3 md:gap-4 pb-2 scroll-smooth scroll-pl-3 md:scroll-pl-4">
 
       {%- for block in section.blocks -%}
