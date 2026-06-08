@@ -575,10 +575,10 @@
 {%- capture product_3d_props -%}
   {%- if template.suffix == 'painting' and product.media[1] and product.media[1].media_type == 'image' -%}
   ,"additionalProperty": [
-    { "@type": "PropertyValue", "name": "Visualisation 3D interactive", "value": "Oui" },
-    { "@type": "PropertyValue", "name": "Aperçu 3D", "value": "Toile tendue sur châssis vue en perspective, rotation interactive (WebGL)" },
-    { "@type": "PropertyValue", "name": "Bords visualisables en 3D", "value": "Bordure blanche, noire, étirée, miroir ou pliée" },
-    { "@type": "PropertyValue", "name": "Cadres visualisables en 3D", "value": "Caisse américaine blanc, noir mat, argent ancien, chêne clair ou noyer (ou sans cadre)" }
+    { "@type": "PropertyValue", "name": {{ 'sections.mma.product_3d_interactive_name' | t | json }}, "value": {{ 'sections.mma.product_3d_interactive_value' | t | json }} },
+    { "@type": "PropertyValue", "name": {{ 'sections.mma.product_3d_preview_name' | t | json }}, "value": {{ 'sections.mma.product_3d_preview_value' | t | json }} },
+    { "@type": "PropertyValue", "name": {{ 'sections.mma.product_3d_borders_name' | t | json }}, "value": {{ 'sections.mma.product_3d_borders_value' | t | json }} },
+    { "@type": "PropertyValue", "name": {{ 'sections.mma.product_3d_frames_name' | t | json }}, "value": {{ 'sections.mma.product_3d_frames_value' | t | json }} }
   ]
   {%- endif -%}
 {%- endcapture -%}

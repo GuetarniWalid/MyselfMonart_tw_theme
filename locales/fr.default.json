@@ -270,7 +270,15 @@
       "home": "Accueil",
       "localization": {
         "country_label": "Devise",
-        "language_label": "Langue"
+        "language_label": "Langue",
+        "currency": {
+          "CAD": "Dollar canadien",
+          "CHF": "Franc suisse",
+          "DKK": "Couronne danoise",
+          "EUR": "Euro",
+          "GBP": "Livre sterling",
+          "USD": "Dollar américain"
+        }
       },
       "newsletter": {
         "error": "Une erreur s'est produite lors de l'inscription",
@@ -289,6 +297,14 @@
       },
       "country_selector": {
         "world": "Monde"
+      },
+      "countries": {
+        "ca": "Canada",
+        "ch": "Suisse",
+        "dk": "Danemark",
+        "fr": "France",
+        "uk": "Royaume-Uni",
+        "us": "États-Unis"
       },
       "logo": {
         "title": "Logo géométrique inspiré de Picasso",
@@ -428,7 +444,19 @@
       "perspective_preview_of": "Aperçu en perspective de {{ title }}",
       "perspective_canvas_caption": "{{ title }} — aperçu de la toile en perspective.",
       "perspective_figcaption": "Aperçu 3D interactif de « {{ title }} » : l’œuvre est imprimée sur une toile tendue sur châssis, que vous pouvez faire pivoter pour l’observer en perspective. Les bords de la toile (bordure blanche, noire, étirée, miroir ou pliée) et le cadre choisi (caisse américaine blanc, noir mat, argent ancien, chêne clair, noyer — ou sans cadre) s’affichent en 3D selon la finition choisie. Rendu généré à partir de l’image réelle de l’œuvre.",
-      "perspective_noscript": "Visualisation 3D interactive du tableau « {{ title }} » sur toile tendue sur châssis (activez JavaScript pour faire pivoter l’œuvre et voir les bords et le cadre en perspective)."
+      "perspective_noscript": "Visualisation 3D interactive du tableau « {{ title }} » sur toile tendue sur châssis (activez JavaScript pour faire pivoter l’œuvre et voir les bords et le cadre en perspective).",
+      "product_3d_interactive_name": "Visualisation 3D interactive",
+      "product_3d_interactive_value": "Oui",
+      "product_3d_preview_name": "Aperçu 3D",
+      "product_3d_preview_value": "Toile tendue sur châssis vue en perspective, rotation interactive (WebGL)",
+      "product_3d_borders_name": "Bords visualisables en 3D",
+      "product_3d_borders_value": "Bordure blanche, noire, étirée, miroir ou pliée",
+      "product_3d_frames_name": "Cadres visualisables en 3D",
+      "product_3d_frames_value": "Caisse américaine blanc, noir mat, argent ancien, chêne clair ou noyer (ou sans cadre)",
+      "breadcrumb_nav": "Fil d’Ariane",
+      "breadcrumb_show_nav": "Afficher le fil d’Ariane",
+      "social_visit_on": "MyselfMonArt sur {{ network }}",
+      "signature_label": "Signature MyselfMonArt"
     }
   },
   "snippet": {
@@ -496,7 +524,9 @@
       "navigation": "Menu de navigation",
       "my_likes": "Mes j'aime",
       "open_cart": "Ouvrir le panier",
-      "open_menu": "Ouvrir le menu de navigation"
+      "open_menu": "Ouvrir le menu de navigation",
+      "main_nav": "Navigation principale",
+      "go_to_homepage": "MyselfMonArt — Aller à l’accueil"
     }
   },
   "templates": {

@@ -43,7 +43,15 @@
       "home": "Home",
       "localization": {
         "country_label": "Valuta",
-        "language_label": "Taal"
+        "language_label": "Taal",
+        "currency": {
+          "CAD": "Canadese dollar",
+          "CHF": "Zwitserse frank",
+          "DKK": "Deense kroon",
+          "EUR": "Euro",
+          "GBP": "Britse pond",
+          "USD": "Amerikaanse dollar"
+        }
       },
       "newsletter": {
         "error": "Er is een fout opgetreden bij het inschrijven",
@@ -65,6 +73,14 @@
       },
       "country_selector": {
         "world": "Wereld"
+      },
+      "countries": {
+        "ca": "Canada",
+        "ch": "Zwitserland",
+        "dk": "Denemarken",
+        "fr": "Frankrijk",
+        "uk": "Verenigd Koninkrijk",
+        "us": "Verenigde Staten"
       }
     },
     "main_collection_banner": {
@@ -187,6 +203,18 @@
       "remove_from_favorites": "Verwijderen uit favorieten",
       "close_border_guide": "Randengids sluiten",
       "perspective_noscript": "Interactieve 3D-weergave van het schilderij « {{ title }} » op canvas gespannen over een spieraam (schakel JavaScript in om het kunstwerk te draaien en de randen en de lijst in perspectief te zien).",
+      "product_3d_interactive_name": "Interactieve 3D-weergave",
+      "product_3d_interactive_value": "Ja",
+      "product_3d_preview_name": "3D-voorbeeld",
+      "product_3d_preview_value": "Op spieraam gespannen canvas in perspectief, met interactieve rotatie (WebGL)",
+      "product_3d_borders_name": "In 3D weer te geven randen",
+      "product_3d_borders_value": "Witte, zwarte, uitgerekte, spiegel- of gevouwen rand",
+      "product_3d_frames_name": "In 3D weer te geven lijsten",
+      "product_3d_frames_value": "Floater-lijst in wit, mat zwart, antiekzilver, licht eiken of notenhout (of zonder lijst)",
+      "breadcrumb_nav": "Kruimelpad",
+      "breadcrumb_show_nav": "Kruimelpad tonen",
+      "social_visit_on": "MyselfMonArt op {{ network }}",
+      "signature_label": "Handtekening van MyselfMonArt",
       "photo_shared_by": "Foto van schilderij gedeeld door ",
       "carousel_prefix": "Carrousel: ",
       "scroll_options_right": "Opties naar rechts schuiven",
@@ -463,6 +491,8 @@
     "tw_sticky_header": {
       "my_likes": "Mijn favorieten",
       "open_menu": "Navigatiemenu openen",
+      "main_nav": "Hoofdnavigatie",
+      "go_to_homepage": "MyselfMonArt — Naar de startpagina",
       "navigation": "Navigatiemenu",
       "open_cart": "Winkelmandje openen"
     },

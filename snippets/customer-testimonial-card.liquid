@@ -36,9 +36,12 @@
     assign customer_name = ''
   endif
 
-  if img.alt != blank
-    assign img_alt = img.alt
-  elsif customer_name != blank
+  comment
+    # Alt localisé : on construit toujours l'alt depuis les clés de locale (traduites
+    # dans toutes les langues), jamais depuis img.alt (qui porte le texte FR du fichier
+    # image, non localisable) — voir audit i18n 2026-06-08.
+  endcomment
+  if customer_name != blank
     assign img_alt = 'sections.mma.photo_shared_by' | t | append: customer_name
   else
     assign img_alt = 'sections.mma.photo_shared_by_customer' | t

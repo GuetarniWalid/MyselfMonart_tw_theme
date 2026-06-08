@@ -37,7 +37,15 @@
     "footer": {
       "localization": {
         "country_label": "Währung",
-        "language_label": "Sprache"
+        "language_label": "Sprache",
+        "currency": {
+          "CAD": "Kanadischer Dollar",
+          "CHF": "Schweizer Franken",
+          "DKK": "Dänische Krone",
+          "EUR": "Euro",
+          "GBP": "Britisches Pfund",
+          "USD": "US-Dollar"
+        }
       },
       "newsletter": {
         "error": "Bei der Anmeldung ist ein Fehler aufgetreten",
@@ -64,6 +72,14 @@
       "back": "Zurück zum Hauptmenü",
       "country_selector": {
         "world": "Welt"
+      },
+      "countries": {
+        "ca": "Kanada",
+        "ch": "Schweiz",
+        "dk": "Dänemark",
+        "fr": "Frankreich",
+        "uk": "Vereinigtes Königreich",
+        "us": "Vereinigte Staaten"
       }
     },
     "main_collection_banner": {
@@ -182,6 +198,18 @@
       "close_frame_guide": "Rahmen-Ratgeber schließen",
       "perspective_canvas_caption": "{{ title }} — perspektivische Vorschau der Leinwand.",
       "perspective_noscript": "Interaktive 3D-Ansicht des Bildes „{{ title }}“ auf einer über einen Keilrahmen gespannten Leinwand (aktivieren Sie JavaScript, um das Werk zu drehen und die Kanten und den Rahmen in der Perspektive zu sehen).",
+      "product_3d_interactive_name": "Interaktive 3D-Vorschau",
+      "product_3d_interactive_value": "Ja",
+      "product_3d_preview_name": "3D-Vorschau",
+      "product_3d_preview_value": "Auf Keilrahmen gespannte Leinwand in perspektivischer Ansicht mit interaktiver Drehung (WebGL)",
+      "product_3d_borders_name": "In 3D darstellbare Ränder",
+      "product_3d_borders_value": "Weißer, schwarzer, gedehnter, gespiegelter oder gefalteter Rand",
+      "product_3d_frames_name": "In 3D darstellbare Rahmen",
+      "product_3d_frames_value": "Schattenfugenrahmen in Weiß, Mattschwarz, Antiksilber, heller Eiche oder Nussbaum (oder ohne Rahmen)",
+      "breadcrumb_nav": "Brotkrümelnavigation",
+      "breadcrumb_show_nav": "Brotkrümelnavigation anzeigen",
+      "social_visit_on": "MyselfMonArt auf {{ network }}",
+      "signature_label": "Signatur von MyselfMonArt",
       "error_generic": "Es ist ein Fehler aufgetreten",
       "testimonials_region": "Kundenstimmen",
       "carousel_prefix": "Karussell: ",
@@ -459,6 +487,8 @@
     "tw_sticky_header": {
       "my_likes": "Meine Favoriten",
       "open_menu": "Navigationsmenü öffnen",
+      "main_nav": "Hauptnavigation",
+      "go_to_homepage": "MyselfMonArt — Zur Startseite",
       "navigation": "Navigationsmenü",
       "open_cart": "Warenkorb öffnen"
     },

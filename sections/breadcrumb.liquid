@@ -4,7 +4,7 @@
 %}
 {% unless template == 'index' or template == 'cart' or template == 'list-collections' %}
   <breadcrumb-popup>
-    <nav role="navigation" aria-label="breadcrumbs">
+    <nav role="navigation" aria-label="{{ 'sections.mma.breadcrumb_nav' | t }}">
       <div class="my-4 px-4 breadcrumb-wrapper flex items-center gap-2 whitespace-nowrap w-full">
         {%- liquid
           assign home_url = "/"
@@ -83,11 +83,11 @@
         {%- comment -%} Ellipsis buttons only (popups rendered outside section) {%- endcomment -%}
         {% if template contains 'product' %}
           {% unless show_all_links %}
-            <button type="button" class="breadcrumb-ellipsis inline md:hidden text-sm text-main-70 hover:text-main-80 cursor-pointer" aria-label="Show breadcrumb navigation" data-template="product">...</button>
+            <button type="button" class="breadcrumb-ellipsis inline md:hidden text-sm text-main-70 hover:text-main-80 cursor-pointer" aria-label="{{ 'sections.mma.breadcrumb_show_nav' | t }}" data-template="product">...</button>
           {% endunless %}
         {% elsif template contains 'collection' %}
           {% unless show_all_links %}
-            <button type="button" class="breadcrumb-ellipsis inline md:hidden text-sm text-main-70 hover:text-main-80 cursor-pointer" aria-label="Show breadcrumb navigation" data-template="collection">...</button>
+            <button type="button" class="breadcrumb-ellipsis inline md:hidden text-sm text-main-70 hover:text-main-80 cursor-pointer" aria-label="{{ 'sections.mma.breadcrumb_show_nav' | t }}" data-template="collection">...</button>
           {% endunless %}
         {% endif %}
 

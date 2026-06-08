@@ -270,7 +270,15 @@
       "home": "Home",
       "localization": {
         "country_label": "Currency",
-        "language_label": "Language"
+        "language_label": "Language",
+        "currency": {
+          "CAD": "Canadian Dollar",
+          "CHF": "Swiss Franc",
+          "DKK": "Danish Krone",
+          "EUR": "Euro",
+          "GBP": "British Pound",
+          "USD": "US Dollar"
+        }
       },
       "newsletter": {
         "error": "An error occurred while subscribing",
@@ -289,6 +297,14 @@
       },
       "country_selector": {
         "world": "World"
+      },
+      "countries": {
+        "ca": "Canada",
+        "ch": "Switzerland",
+        "dk": "Denmark",
+        "fr": "France",
+        "uk": "United Kingdom",
+        "us": "United States"
       },
       "logo": {
         "title": "Geometric logo inspired by Picasso",
@@ -428,7 +444,19 @@
       "perspective_preview_of": "Perspective preview of {{ title }}",
       "perspective_canvas_caption": "{{ title }} — canvas perspective preview.",
       "perspective_figcaption": "Interactive 3D preview of “{{ title }}”: the artwork is printed on a canvas stretched over a wooden frame, which you can rotate to view it in perspective. The canvas edges (white, black, stretched, mirrored or folded border) and the chosen frame (American box frame in white, matte black, antique silver, light oak, walnut — or no frame) are shown in 3D based on the selected finish. Render generated from the actual image of the artwork.",
-      "perspective_noscript": "Interactive 3D view of the artwork “{{ title }}” on a canvas stretched over a wooden frame (enable JavaScript to rotate the artwork and see the edges and frame in perspective)."
+      "perspective_noscript": "Interactive 3D view of the artwork “{{ title }}” on a canvas stretched over a wooden frame (enable JavaScript to rotate the artwork and see the edges and frame in perspective).",
+      "product_3d_interactive_name": "Interactive 3D preview",
+      "product_3d_interactive_value": "Yes",
+      "product_3d_preview_name": "3D preview",
+      "product_3d_preview_value": "Canvas stretched on a frame, shown in perspective with interactive rotation (WebGL)",
+      "product_3d_borders_name": "Borders viewable in 3D",
+      "product_3d_borders_value": "White, black, stretched, mirror or folded border",
+      "product_3d_frames_name": "Frames viewable in 3D",
+      "product_3d_frames_value": "Floater frame in white, matte black, antique silver, light oak or walnut (or no frame)",
+      "breadcrumb_nav": "Breadcrumb",
+      "breadcrumb_show_nav": "Show breadcrumb navigation",
+      "social_visit_on": "MyselfMonArt on {{ network }}",
+      "signature_label": "MyselfMonArt signature"
     }
   },
   "snippet": {
@@ -496,7 +524,9 @@
       "navigation": "Navigation",
       "my_likes": "My likes",
       "open_cart": "Open cart",
-      "open_menu": "Open navigation menu"
+      "open_menu": "Open navigation menu",
+      "main_nav": "Main navigation",
+      "go_to_homepage": "MyselfMonArt — Go to homepage"
     }
   },
   "templates": {

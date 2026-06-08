@@ -179,6 +179,9 @@
                   {%- assign locale_lang = locale_parts[1] -%}
                   {%- assign locale_flag = locale_parts[2] -%}
                   {%- assign locale_name = locale_parts[3] -%}
+                  {%- comment -%} Nom de pays localisé (audit i18n) : on remplace la valeur FR codée en dur de locales_data par la clé de locale traduite, en gardant le fallback si la clé manque. {%- endcomment -%}
+                  {%- assign country_label_t = 'sections.header.countries.' | append: locale_flag | t -%}
+                  {%- unless country_label_t contains 'ranslation missing' -%}{%- assign locale_name = country_label_t -%}{%- endunless -%}
                   {%- assign append_lang = locale_parts[4] -%}
                   {%- assign spacing = locale_parts[5] -%}
 
@@ -279,7 +282,7 @@
           endif
         endfor
       -%}
-      <nav class="hidden md:flex items-center gap-2 self-stretch" aria-label="Main navigation">
+      <nav class="hidden md:flex items-center gap-2 self-stretch" aria-label="{{ 'snippet.tw_sticky_header.main_nav' | t }}">
         {% for block in section.blocks %}
           {% if block.type == "title_only" %}
             <button
@@ -303,7 +306,7 @@
       <a
         href="{{ routes.root_url }}"
         class="inline-flex items-center text-2xl sm:text-3xl mobile:absolute mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-1/2 mobile:-translate-y-1/2"
-        aria-label="MyselfMonArt - Go to homepage">
+        aria-label="{{ 'snippet.tw_sticky_header.go_to_homepage' | t }}">
         {% if section.settings.logo_svg != blank %}
           {{ section.settings.logo_svg }}
         {% else %}

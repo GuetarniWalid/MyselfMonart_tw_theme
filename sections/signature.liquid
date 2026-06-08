@@ -31,7 +31,7 @@
 <section
   class="home-signature bg-secondary pt-14 md:pt-20 pb-12 md:pb-16 px-6 text-center"
   role="contentinfo"
-  aria-label="Signature MyselfMonArt">
+  aria-label="{{ 'sections.mma.signature_label' | t }}">
   <div class="font-heading italic text-lg text-main-70 leading-snug space-y-1">
     {%- if section.settings.line_1 != blank -%}
       <p class="m-0">{{ section.settings.line_1 | escape }}</p>

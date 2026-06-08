@@ -16,35 +16,40 @@
 <ul class="flex px-6 gap-5" role="list">
   {%- if settings.social_facebook_link != blank -%}
     <li>
-      {% render 'tw-social-link-start', network: settings.social_facebook_link, balise: balise, label: 'MyselfMonArt sur Facebook' %}
+      {%- assign social_label = 'sections.mma.social_visit_on' | t: network: 'Facebook' -%}
+      {% render 'tw-social-link-start', network: settings.social_facebook_link, balise: balise, label: social_label %}
         {% render 'icon-facebook' %}
       {% render 'tw-link-end', balise: balise %}
     </li>
   {%- endif -%}
   {%- if settings.social_pinterest_link != blank -%}
     <li>
-      {% render 'tw-social-link-start', network: settings.social_pinterest_link, balise: balise, label: 'MyselfMonArt sur Pinterest' %}
+      {%- assign social_label = 'sections.mma.social_visit_on' | t: network: 'Pinterest' -%}
+      {% render 'tw-social-link-start', network: settings.social_pinterest_link, balise: balise, label: social_label %}
         {% render 'icon-pinterest' %}
       {% render 'tw-link-end', balise: balise %}
     </li>
   {%- endif -%}
   {%- if settings.social_instagram_link != blank -%}
     <li>
-      {% render 'tw-social-link-start', network: settings.social_instagram_link, balise: balise, label: 'MyselfMonArt sur Instagram' %}
+      {%- assign social_label = 'sections.mma.social_visit_on' | t: network: 'Instagram' -%}
+      {% render 'tw-social-link-start', network: settings.social_instagram_link, balise: balise, label: social_label %}
         {% render 'icon-instagram' %}
       {% render 'tw-link-end', balise: balise %}
     </li>
   {%- endif -%}
   {%- if settings.social_tiktok_link != blank -%}
     <li>
-      {% render 'tw-social-link-start', network: settings.social_tiktok_link, balise: balise, label: 'MyselfMonArt sur TikTok' %}
+      {%- assign social_label = 'sections.mma.social_visit_on' | t: network: 'TikTok' -%}
+      {% render 'tw-social-link-start', network: settings.social_tiktok_link, balise: balise, label: social_label %}
         {% render 'icon-tiktok' %}
       {% render 'tw-link-end', balise: balise %}
     </li>
   {%- endif -%}
   {%- if settings.social_youtube_link != blank -%}
     <li>
-      {% render 'tw-social-link-start', network: settings.social_youtube_link, balise: balise, label: 'MyselfMonArt sur YouTube' %}
+      {%- assign social_label = 'sections.mma.social_visit_on' | t: network: 'YouTube' -%}
+      {% render 'tw-social-link-start', network: settings.social_youtube_link, balise: balise, label: social_label %}
         {% render 'icon-youtube' %}
       {% render 'tw-link-end', balise: balise %}
     </li>

@@ -40,7 +40,15 @@
     "footer": {
       "localization": {
         "country_label": "Moneda",
-        "language_label": "Idioma"
+        "language_label": "Idioma",
+        "currency": {
+          "CAD": "Dólar canadiense",
+          "CHF": "Franco suizo",
+          "DKK": "Corona danesa",
+          "EUR": "Euro",
+          "GBP": "Libra esterlina",
+          "USD": "Dólar estadounidense"
+        }
       },
       "newsletter": {
         "error": "Se ha producido un error al suscribirse",
@@ -67,6 +75,14 @@
       "back": "Volver al menú principal",
       "country_selector": {
         "world": "Mundo"
+      },
+      "countries": {
+        "ca": "Canadá",
+        "ch": "Suiza",
+        "dk": "Dinamarca",
+        "fr": "Francia",
+        "uk": "Reino Unido",
+        "us": "Estados Unidos"
       }
     },
     "main_collection_banner": {
@@ -188,6 +204,18 @@
       "reviews_and_photos": "Opiniones y fotos de nuestros clientes",
       "perspective_canvas_caption": "{{ title }} — vista del lienzo en perspectiva.",
       "perspective_noscript": "Visualización 3D interactiva del cuadro «{{ title }}» sobre lienzo tensado en bastidor (activa JavaScript para girar la obra y ver los bordes y el marco en perspectiva).",
+      "product_3d_interactive_name": "Visualización 3D interactiva",
+      "product_3d_interactive_value": "Sí",
+      "product_3d_preview_name": "Vista previa 3D",
+      "product_3d_preview_value": "Lienzo tensado en bastidor visto en perspectiva, con rotación interactiva (WebGL)",
+      "product_3d_borders_name": "Bordes visualizables en 3D",
+      "product_3d_borders_value": "Borde blanco, negro, estirado, espejo o plegado",
+      "product_3d_frames_name": "Marcos visualizables en 3D",
+      "product_3d_frames_value": "Caja americana en blanco, negro mate, plata envejecida, roble claro o nogal (o sin marco)",
+      "breadcrumb_nav": "Ruta de navegación",
+      "breadcrumb_show_nav": "Mostrar la ruta de navegación",
+      "social_visit_on": "MyselfMonArt en {{ network }}",
+      "signature_label": "Firma de MyselfMonArt",
       "photo_shared_by": "Foto del cuadro compartida por ",
       "close_size_guide": "Cerrar la guía de tallas",
       "close_frame_guide": "Cerrar la guía de marcos",
@@ -454,6 +482,8 @@
     "tw_sticky_header": {
       "my_likes": "Mis favoritos",
       "open_menu": "Abrir el menú de navegación",
+      "main_nav": "Navegación principal",
+      "go_to_homepage": "MyselfMonArt — Ir a la página de inicio",
       "navigation": "Menú de navegación",
       "open_cart": "Abrir el carrito"
     },

@@ -115,7 +115,9 @@
 
                 <div class="bg-secondary transition-colors duration-500 text-main inline-block min-w-[130px] h-10 rounded-md relative">
                   <button type="button" aria-describedby="FooterCountryLabel" class="first-focusable flex justify-between items-center w-full h-full px-3">
-                    {{ cart.currency.name }}
+                    {%- assign cart_cur_label = 'sections.footer.localization.currency.' | append: cart.currency.iso_code | t -%}
+                    {%- if cart_cur_label contains 'ranslation missing' -%}{%- assign cart_cur_label = cart.currency.name -%}{%- endif -%}
+                    {{ cart_cur_label }}
                     {% render 'tw-icon-caret' %}
                   </button>
                   <div class="disclosure__list-wrapper" hidden>
@@ -123,7 +125,9 @@
                       {%- for currency in shop.enabled_currencies -%}
                         <li tabindex="-1">
                           <a class="{% if forloop.last %}last-focusable {% endif %}hover:bg-main-5 inline-block w-full py-2 mb-1 px-3{% if currency.iso_code == cart.currency.iso_code %} bg-main-5 cursor-not-allowed{% endif %}" {% if currency.iso_code == cart.currency.iso_code %}role="link" aria-disabled="true"{% else %}href="#"{% endif %}{% if currency.iso_code == cart.currency.iso_code %} aria-current="true"{% endif %} data-value="{{ currency.iso_code }}">
-                            {{ currency.name }}
+                            {%- assign cur_label = 'sections.footer.localization.currency.' | append: currency.iso_code | t -%}
+                            {%- if cur_label contains 'ranslation missing' -%}{%- assign cur_label = currency.name -%}{%- endif -%}
+                            {{ cur_label }}
                           </a>
                         </li>
                       {%- endfor -%}
