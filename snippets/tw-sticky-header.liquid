@@ -420,12 +420,14 @@
 
                   {% if has_default_images %}
                     <div id="default-image-{{ block.id }}" class="desktop-nav-default-image w-full h-full max-h-[500px] grid grid-cols-2 lg:grid-cols-3 grid-rows-2 gap-6">
+                      {%- assign nav_alt = shop.name -%}
                       {% if section.settings.default_desktop_image_1 != blank %}
                         <div class="row-span-2 col-span-1">
                           {{
                             section.settings.default_desktop_image_1
                             | image_url: width: 300
                             | image_tag:
+                              alt: nav_alt,
                               widths: '300',
                               sizes: '(min-width: 768px) 300px, 0px',
                               class: 'w-full h-full object-cover'
@@ -438,6 +440,7 @@
                             section.settings.default_desktop_image_2
                             | image_url: width: 600
                             | image_tag:
+                              alt: nav_alt,
                               widths: '400, 600',
                               sizes: '(min-width: 1024px) 600px, (min-width: 768px) 400px, 0px',
                               class: 'w-full h-full object-cover'
@@ -450,6 +453,7 @@
                             section.settings.default_desktop_image_3
                             | image_url: width: 400
                             | image_tag:
+                              alt: nav_alt,
                               widths: '400',
                               sizes: '(min-width: 768px) 400px, 0px',
                               class: 'w-full h-full object-cover'
@@ -462,6 +466,7 @@
                             section.settings.default_desktop_image_4
                             | image_url: width: 300
                             | image_tag:
+                              alt: nav_alt,
                               widths: '300',
                               sizes: '(min-width: 1024px) 300px, 0px',
                               class: 'w-full h-full object-cover'
@@ -484,12 +489,14 @@
 
                         {% if has_images %}
                           <div id="image-{{ content_block.id }}" class="desktop-nav-image hidden w-full h-full max-h-[500px] grid-cols-2 lg:grid-cols-3 grid-rows-2 gap-6">
+                            {%- assign nav_alt = content_block.settings.collection.title | default: shop.name -%}
                             {% if content_block.settings.desktop_image_1 != blank %}
                               <div class="row-span-2 col-span-1">
                                 {{
                                   content_block.settings.desktop_image_1
                                   | image_url: width: 300
                                   | image_tag:
+                                    alt: nav_alt,
                                     widths: '300',
                                     sizes: '(min-width: 768px) 300px, 0px',
                                     class: 'w-full h-full object-cover'
@@ -503,6 +510,7 @@
                                   content_block.settings.desktop_image_2
                                   | image_url: width: 600
                                   | image_tag:
+                                    alt: nav_alt,
                                     widths: '400, 600',
                                     sizes: '(min-width: 1024px) 600px, (min-width: 768px) 400px, 0px',
                                     class: 'w-full h-full object-cover'
@@ -516,6 +524,7 @@
                                   content_block.settings.desktop_image_3
                                   | image_url: width: 400
                                   | image_tag:
+                                    alt: nav_alt,
                                     widths: '400',
                                     sizes: '(min-width: 768px) 400px, 0px',
                                     class: 'w-full h-full object-cover'
@@ -529,6 +538,7 @@
                                   content_block.settings.desktop_image_4
                                   | image_url: width: 300
                                   | image_tag:
+                                    alt: nav_alt,
                                     widths: '300',
                                     sizes: '(min-width: 1024px) 300px, 0px',
                                     class: 'w-full h-full object-cover'
@@ -548,6 +558,8 @@
                             # Fallback to product's featured image
                             assign product_image = content_block.settings.product.featured_image
                           endif
+
+                          assign nav_alt = content_block.settings.product.title | default: shop.name
                         %}
                         {% if product_image != blank %}
                           <div id="image-{{ content_block.id }}" class="desktop-nav-image hidden mx-auto h-[500px] max-w-[500px]">
@@ -555,6 +567,7 @@
                               product_image
                               | image_url: width: 500
                               | image_tag:
+                                alt: nav_alt,
                                 widths: '500',
                                 sizes: '(min-width: 768px) 500px, 0px',
                                 class: 'h-full w-auto object-contain object-top'
@@ -562,11 +575,13 @@
                           </div>
                         {% endif %}
                       {% elsif content_block.type == "page_only" and content_block.settings.desktop_image != blank %}
+                        {%- assign nav_alt = content_block.settings.page.title | default: shop.name -%}
                         <div id="image-{{ content_block.id }}" class="desktop-nav-image hidden mx-auto h-full max-h-[500px] max-w-[500px]">
                             {{  
                               content_block.settings.desktop_image
                               | image_url: width: 500
                               | image_tag:
+                                alt: nav_alt,
                                 widths: '500',
                                 sizes: '(min-width: 768px) 500px, 0px',
                                 class: 'h-full w-auto object-contain object-top'
@@ -575,17 +590,15 @@
                       {% elsif content_block.type == "set_of_collections" %}
                         {% liquid
                           assign parent_image = blank
+                          assign first_collection = content_block.settings.child_collection_list | first
 
-                          # Check if custom desktop image is set
                           if content_block.settings.desktop_image != blank
                             assign parent_image = content_block.settings.desktop_image
-                          else
-                            # Fallback to first collection's featured image
-                            assign first_collection = content_block.settings.child_collection_list | first
-                            if first_collection != blank and first_collection.featured_image != blank
-                              assign parent_image = first_collection.featured_image
-                            endif
+                          elsif first_collection != blank and first_collection.featured_image != blank
+                            assign parent_image = first_collection.featured_image
                           endif
+
+                          assign nav_alt = first_collection.title | default: shop.name
                         %}
                         {% if parent_image != blank %}
                           <div id="image-{{ content_block.id }}" class="desktop-nav-image hidden mx-auto h-[500px] max-h-[400px] max-w-[400px]">
@@ -593,6 +606,7 @@
                               parent_image
                               | image_url: width: 400
                               | image_tag:
+                                alt: nav_alt,
                                 widths: '400',
                                 sizes: '(min-width: 768px) 400px, 0px',
                                 class: 'h-full w-full object-cover'

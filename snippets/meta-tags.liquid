@@ -11,12 +11,19 @@
   elsif request.page_type == 'password'
     assign og_url = request.origin
   endif
+
+  assign og_lang = request.locale.iso_code | split: '-' | first
+  assign og_locale = request.locale.iso_code | replace: '-', '_'
+  if localization.country.iso_code != blank
+    assign og_locale = og_lang | append: '_' | append: localization.country.iso_code
+  endif
 %}
 
 <meta property="og:site_name" content="{{ shop.name }}">
 <meta property="og:url" content="{{ og_url }}">
 <meta property="og:title" content="{{ og_title | escape }}">
 <meta property="og:type" content="{{ og_type }}">
+<meta property="og:locale" content="{{ og_locale }}">
 <meta property="og:description" content="{{ og_description | escape }}">
 
 {%- if page_image -%}
@@ -24,6 +31,7 @@
   <meta property="og:image:secure_url" content="https:{{ page_image | image_url }}">
   <meta property="og:image:width" content="{{ page_image.width }}">
   <meta property="og:image:height" content="{{ page_image.height }}">
+  <meta property="og:image:alt" content="{{ page_image.alt | default: og_title | escape }}">
 {%- endif -%}
 
 {%- if request.page_type == 'product' -%}
