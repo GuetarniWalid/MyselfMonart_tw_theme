@@ -4,7 +4,9 @@
   "description": "Shopify theme for myselmonart.com",
   "main": "index.js",
   "scripts": {
-    "tw": "npx tailwindcss -i ./input.css -o ./assets/output.css --watch --minify --poll"
+    "tw": "npx tailwindcss -i ./input.css -o ./assets/output.css --watch --minify --poll",
+    "i18n-lint": "node scripts/i18n-lint.cjs",
+    "prepare": "git config core.hooksPath .husky"
   },
   "author": "",
   "license": "ISC",

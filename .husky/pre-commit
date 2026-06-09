@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+# i18n pre-commit gate — REFUSES the commit if scripts/i18n-lint.cjs finds a hard error
+# (a hardcoded aria-label/alt literal, or an unparseable locale file). Locale key-parity
+# drift is only a warning and never blocks. Bypass in an emergency with `git commit -n`.
+# Added 2026-06-08 (i18n chantier). Activated via `git config core.hooksPath .husky`,
+# re-applied on any clone by the package.json "prepare" script.
+node scripts/i18n-lint.cjs
