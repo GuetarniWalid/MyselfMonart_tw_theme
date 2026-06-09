@@ -21,7 +21,8 @@
         "marketing": "Gerichte advertenties",
         "sale_of_data": "Verzameling van gegevens om producten en diensten te verbeteren"
       },
-      "parameter": "Instellen"
+      "parameter": "Instellen",
+      "message-1": "Onze cookies zijn niet om op te eten, maar ze maken je bezoek extra leuk!"
     },
     "collections_grid": {
       "find_out_more": "Meer ontdekken..."
@@ -81,7 +82,8 @@
         "fr": "Frankrijk",
         "uk": "Verenigd Koninkrijk",
         "us": "Verenigde Staten"
-      }
+      },
+      "back": "Terug naar het hoofdmenu"
     },
     "main_collection_banner": {
       "learn_more": "Meer weten",
@@ -292,7 +294,8 @@
       "submit": "Versturen",
       "forgot_password": "Wachtwoord vergeten?",
       "sign_in": "Inloggen",
-      "password": "Wachtwoord"
+      "password": "Wachtwoord",
+      "email": "E-mailadres"
     },
     "orders": {
       "title": "Bestelgeschiedenis",
@@ -326,7 +329,8 @@
       "tax": "Btw",
       "fulfilled_at_html": "Verwerkt op {{ date }}",
       "tracking_url": "Trackinglink",
-      "quantity": "Aantal"
+      "quantity": "Aantal",
+      "sku": "Artikelnr."
     },
     "recover_password": {
       "subtext": "We sturen je een e-mail om je wachtwoord opnieuw in te stellen",
@@ -338,7 +342,8 @@
       "password": "Wachtwoord",
       "submit": "Aanmaken",
       "title": "Account aanmaken",
-      "last_name": "Achternaam"
+      "last_name": "Achternaam",
+      "email": "E-mailadres"
     },
     "reset_password": {
       "subtext": "Voer een nieuw wachtwoord in voor {{ email }}",
