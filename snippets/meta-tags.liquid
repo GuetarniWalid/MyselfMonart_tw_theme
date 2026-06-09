@@ -1,8 +1,11 @@
 {%- liquid
-  assign og_title = page_title | default: shop.name
+  # title_override / description_override are passed by head-base.liquid so the
+  # homepage (and any future locale-driven page) keeps og/twitter in sync with
+  # the localised <title> / <meta description>. Falls back to Shopify defaults.
+  assign og_title = title_override | default: page_title | default: shop.name
   assign og_url = canonical_url | default: request.origin
   assign og_type = 'website'
-  assign og_description = page_description | default: shop.description | default: shop.name
+  assign og_description = description_override | default: page_description | default: shop.description | default: shop.name
 
   if request.page_type == 'product'
     assign og_type = 'product'
@@ -12,11 +15,25 @@
     assign og_url = request.origin
   endif
 
-  assign og_lang = request.locale.iso_code | split: '-' | first
+  # og:locale must be a valid lang_REGION. request.locale.iso_code is usually a
+  # bare language ('es','nl','de') — pairing it with the market country gave
+  # invalid values like es_FR. Keep an explicit region per language; locales
+  # that already carry a region (e.g. fr-CA) pass straight through.
   assign og_locale = request.locale.iso_code | replace: '-', '_'
-  if localization.country.iso_code != blank
-    assign og_locale = og_lang | append: '_' | append: localization.country.iso_code
-  endif
+  unless og_locale contains '_'
+    case og_locale
+      when 'fr'
+        assign og_locale = 'fr_FR'
+      when 'es'
+        assign og_locale = 'es_ES'
+      when 'nl'
+        assign og_locale = 'nl_NL'
+      when 'de'
+        assign og_locale = 'de_DE'
+      when 'en'
+        assign og_locale = 'en_US'
+    endcase
+  endunless
 %}
 
 <meta property="og:site_name" content="{{ shop.name }}">

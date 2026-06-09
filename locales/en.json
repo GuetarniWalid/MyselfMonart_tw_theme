@@ -456,7 +456,12 @@
       "breadcrumb_nav": "Breadcrumb",
       "breadcrumb_show_nav": "Show breadcrumb navigation",
       "social_visit_on": "MyselfMonArt on {{ network }}",
-      "signature_label": "MyselfMonArt signature"
+      "signature_label": "MyselfMonArt signature",
+      "home_seo_title": "Wall art decoration — Paris Studio | MyselfMonArt",
+      "home_seo_description": "Wall art hand-curated by our French studio in Paris. 285 g canvas, 75-year archival inks, solid wood frame. ⭐ Trustpilot.",
+      "home_org_description": "French creative studio specializing in curating premium wall art. Artistic direction in Paris, customer service in Toulouse, European printing.",
+      "home_founder_jobtitle": "Artistic director, founder",
+      "home_collections_list_name": "Featured collections MyselfMonArt"
     }
   },
   "snippet": {

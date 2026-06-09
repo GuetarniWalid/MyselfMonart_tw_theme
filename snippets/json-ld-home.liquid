@@ -5,6 +5,9 @@
 {%- endcomment -%}
 
 {%- assign home_url = request.origin | append: '/' -%}
+{%- comment -%} Featured collections for the ItemList schema. Names pull from each collection's
+  own localised title (collections[handle].title) — single source of truth, auto-translated. {%- endcomment -%}
+{%- assign featured_handles = 'tableau-salon,tableau-chambre-adulte,tableau-chambre-garcon,tableau-bureau,tableau-cuisine,tableau-abstrait,tableau-zen,tableau-pop-art,tableau-africain,tableau-noir-et-blanc,tableau-fleurs,tableau-japonais,tableaux-frida-kahlo,tableau-paysage,tableau-couleur,tableau-ethnique' | split: ',' -%}
 {%- assign logo_url = 'https://cdn.shopify.com/s/files/1/0623/2388/4287/files/logo-myselfmonart-512x512.png?v=1694726914' -%}
 {%- if shop.brand.logo -%}
   {%- assign logo_url = shop.brand.logo | image_url: width: 600 -%}
@@ -28,7 +31,7 @@
   "founder": {
     "@type": "Person",
     "name": "Walid",
-    "jobTitle": "Directeur artistique, fondateur"
+    "jobTitle": {{ 'sections.mma.home_founder_jobtitle' | t | json }}
   },
   "address": {
     "@type": "PostalAddress",
@@ -45,7 +48,7 @@
   "sameAs": [
     "https://fr.trustpilot.com/review/myselfmonart.com"
   ],
-  "description": "Studio créatif français spécialisé dans la curation de tableaux décoration murale premium. Direction artistique à Paris, service client à Toulouse, impression européenne."
+  "description": {{ 'sections.mma.home_org_description' | t | json }}
 }
 </script>
 
@@ -77,7 +80,7 @@
   "itemListElement": [{
     "@type": "ListItem",
     "position": 1,
-    "name": "Accueil",
+    "name": {{ 'sections.mma.breadcrumb_home' | t | json }},
     "item": "{{ home_url }}"
   }]
 }
@@ -88,26 +91,15 @@
   "@context": "https://schema.org",
   "@type": "ItemList",
   "@id": "{{ home_url }}#collections-phares",
-  "name": "Collections phares MyselfMonArt",
+  "name": {{ 'sections.mma.home_collections_list_name' | t | json }},
   "itemListOrder": "Unordered",
-  "numberOfItems": 16,
+  "numberOfItems": {{ featured_handles.size }},
   "itemListElement": [
-    {"@type": "ListItem", "position": 1, "name": "Tableau salon", "url": "{{ home_url }}collections/tableau-salon"},
-    {"@type": "ListItem", "position": 2, "name": "Tableau chambre adulte", "url": "{{ home_url }}collections/tableau-chambre-adulte"},
-    {"@type": "ListItem", "position": 3, "name": "Tableau chambre enfant", "url": "{{ home_url }}collections/tableau-chambre-garcon"},
-    {"@type": "ListItem", "position": 4, "name": "Tableau bureau", "url": "{{ home_url }}collections/tableau-bureau"},
-    {"@type": "ListItem", "position": 5, "name": "Tableau cuisine", "url": "{{ home_url }}collections/tableau-cuisine"},
-    {"@type": "ListItem", "position": 6, "name": "Tableau abstrait", "url": "{{ home_url }}collections/tableau-abstrait"},
-    {"@type": "ListItem", "position": 7, "name": "Tableau zen", "url": "{{ home_url }}collections/tableau-zen"},
-    {"@type": "ListItem", "position": 8, "name": "Tableau pop art", "url": "{{ home_url }}collections/tableau-pop-art"},
-    {"@type": "ListItem", "position": 9, "name": "Tableau africain", "url": "{{ home_url }}collections/tableau-africain"},
-    {"@type": "ListItem", "position": 10, "name": "Tableau noir et blanc", "url": "{{ home_url }}collections/tableau-noir-et-blanc"},
-    {"@type": "ListItem", "position": 11, "name": "Tableau fleurs", "url": "{{ home_url }}collections/tableau-fleurs"},
-    {"@type": "ListItem", "position": 12, "name": "Tableau japonais", "url": "{{ home_url }}collections/tableau-japonais"},
-    {"@type": "ListItem", "position": 13, "name": "Tableaux Frida Kahlo", "url": "{{ home_url }}collections/tableaux-frida-kahlo"},
-    {"@type": "ListItem", "position": 14, "name": "Tableau paysage", "url": "{{ home_url }}collections/tableau-paysage"},
-    {"@type": "ListItem", "position": 15, "name": "Tableau couleur", "url": "{{ home_url }}collections/tableau-couleur"},
-    {"@type": "ListItem", "position": 16, "name": "Tableau ethnique", "url": "{{ home_url }}collections/tableau-ethnique"}
+    {%- for handle in featured_handles -%}
+      {%- assign col = collections[handle] -%}
+      {%- unless forloop.first %},{% endunless %}
+      {"@type": "ListItem", "position": {{ forloop.index }}, "name": {{ col.title | default: handle | json }}, "url": "{{ home_url }}collections/{{ handle }}"}
+    {%- endfor -%}
   ]
 }
 </script>

@@ -220,7 +220,12 @@
       "close_border_guide": "Randführer schließen",
       "add_to_favorites": "Zu Favoriten hinzufügen",
       "perspective_figcaption": "Interaktive 3D-Vorschau von „{{ title }}“: Das Werk wird auf eine über einen Keilrahmen gespannte Leinwand gedruckt, die Sie drehen können, um es in der Perspektive zu betrachten. Die Leinwandkanten (weißer, schwarzer, gedehnter, gespiegelter oder gefalteter Rand) sowie der gewählte Rahmen (amerikanischer Schattenfugenrahmen weiß, mattschwarz, altsilber, helle Eiche, Nussbaum – oder ohne Rahmen) werden je nach gewählter Ausführung in 3D dargestellt. Darstellung erzeugt aus dem realen Bild des Werks.",
-      "see_all_reviews": "Alle Bewertungen ansehen"
+      "see_all_reviews": "Alle Bewertungen ansehen",
+      "home_seo_title": "Wandbild-Dekoration — Studio Paris | MyselfMonArt",
+      "home_seo_description": "Handverlesene Wandbilder aus unserem französischen Studio in Paris. Leinwand 285 g, Archival-Tinten 75 Jahre, Massivholzrahmen. ⭐ Trustpilot.",
+      "home_org_description": "Französisches Kreativstudio, spezialisiert auf die Kuratierung hochwertiger Wandbilder. Künstlerische Leitung in Paris, Kundenservice in Toulouse, europäischer Druck.",
+      "home_founder_jobtitle": "Künstlerischer Leiter, Gründer",
+      "home_collections_list_name": "Top-Kollektionen MyselfMonArt"
     },
     "collections_grid": {
       "find_out_more": "Mehr erfahren..."

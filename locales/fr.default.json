@@ -456,7 +456,12 @@
       "breadcrumb_nav": "Fil d’Ariane",
       "breadcrumb_show_nav": "Afficher le fil d’Ariane",
       "social_visit_on": "MyselfMonArt sur {{ network }}",
-      "signature_label": "Signature MyselfMonArt"
+      "signature_label": "Signature MyselfMonArt",
+      "home_seo_title": "Tableau décoration murale — Studio Paris | MyselfMonArt",
+      "home_seo_description": "Tableaux décoration murale curés à la main par notre studio français à Paris. Toile 285g, encres archival 75 ans, cadre bois massif. ⭐ Trustpilot.",
+      "home_org_description": "Studio créatif français spécialisé dans la curation de tableaux décoration murale premium. Direction artistique à Paris, service client à Toulouse, impression européenne.",
+      "home_founder_jobtitle": "Directeur artistique, fondateur",
+      "home_collections_list_name": "Collections phares MyselfMonArt"
     }
   },
   "snippet": {

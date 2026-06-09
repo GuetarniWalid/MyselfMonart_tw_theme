@@ -2,12 +2,17 @@
 /*
  * i18n completeness lint for the MyselfMonArt theme.
  *
- * Catches the two theme-side regression classes from the 2026-06-08 i18n audit BEFORE they
+ * Catches the theme-side regression classes from the 2026-06-08/06-09 i18n audits BEFORE they
  * ship (run it in CI / pre-deploy):
  *   1. Hardcoded user-facing literals in `aria-label="..."` and `alt="..."` — i.e. text that
  *      is NOT a Liquid expression ({{ ... }}). Those never get translated (they stayed FR/EN
  *      on /es). Use `aria-label="{{ 'some.key' | t }}"` instead.
- *   2. Locale key drift: every key in the source locale (fr.default.json) must exist in
+ *   2. Hardcoded user-facing literals in JSON-LD (`<script type="application/ld+json">`) free-text
+ *      / label fields (name, description, jobTitle, …). They never get translated either (the
+ *      home BreadcrumbList stayed "Accueil" and Organization.description stayed FR on /es/nl/de —
+ *      2026-06-09 audit). Use `{{ 'some.key' | t | json }}` or pull from a localised object
+ *      (e.g. `collections[handle].title`). Brand/proper nouns are allow-listed.
+ *   3. Locale key drift: every key in the source locale (fr.default.json) must exist in
  *      en/es/de/nl.json, or that string falls back to French on the missing language.
  *
  * Usage:  node scripts/i18n-lint.cjs
@@ -57,6 +62,44 @@ for (const dir of SCAN_DIRS) {
         console.log(`  ✖ ${rel}:${i + 1}  hardcoded ${attr}="${value}"`)
         issues++
       }
+    })
+  }
+}
+
+// ---- 1b. Hardcoded user-facing literals inside JSON-LD blocks --------------------------
+// schema.org free-text / label fields hardcoded in FR/EN never get translated. Only a small
+// set of label-bearing keys is checked; structural/enum keys (telephone, priceRange,
+// addressCountry, contactType, itemListOrder, …) are ignored by omission. Brand / proper
+// nouns are allow-listed; a trailing `i18n-lint-ignore` comment also silences a line.
+const LD_KEYS = new Set([
+  'name', 'alternateName', 'description', 'jobTitle', 'slogan', 'headline',
+  'caption', 'abstract', 'disambiguatingDescription', 'reviewBody', 'articleBody', 'text',
+])
+const LD_BRAND_ALLOW = new Set(['MyselfMonArt', 'Walid', 'SAS KINDOPIA'])
+const LD_KV_RE = /"([A-Za-z]+)"\s*:\s*"([^"]*)"/g
+
+for (const dir of SCAN_DIRS) {
+  for (const file of listLiquidFiles(dir)) {
+    const rel = path.relative(ROOT, file)
+    const lines = fs.readFileSync(file, 'utf8').split('\n')
+    let inLd = false
+    lines.forEach((line, i) => {
+      if (line.includes('application/ld+json')) inLd = true
+      if (inLd && !line.includes('i18n-lint-ignore')) {
+        LD_KV_RE.lastIndex = 0
+        let m
+        while ((m = LD_KV_RE.exec(line)) !== null) {
+          const [, key, value] = m
+          if (!LD_KEYS.has(key)) continue
+          if (value.trim() === '') continue
+          if (value.includes('{{') || value.includes('{%')) continue // Liquid expression — ok
+          if (!HAS_LETTER.test(value)) continue
+          if (LD_BRAND_ALLOW.has(value.trim())) continue // brand / proper noun
+          console.log(`  ✖ ${rel}:${i + 1}  hardcoded JSON-LD ${key}="${value}" (use {{ 'key' | t | json }} or a localised object)`)
+          issues++
+        }
+      }
+      if (inLd && line.includes('</script>')) inLd = false
     })
   }
 }

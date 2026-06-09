@@ -20,20 +20,33 @@
     href="{{ settings.favicon | image_url: width: 32, height: 32 }}" />
 {%- endif -%}
 
+{%- liquid
+  # Homepage SEO title/description live in the theme locale files
+  # (sections.mma.home_seo_*) so they are localised per language and covered by
+  # the TranslateThemeLocale backend cron + the i18n linter. Every other page
+  # type keeps Shopify's native page_title / page_description.
+  assign meta_title = page_title
+  assign meta_description = page_description
+  if request.page_type == 'index'
+    assign meta_title = 'sections.mma.home_seo_title' | t
+    assign meta_description = 'sections.mma.home_seo_description' | t
+  endif
+-%}
+
 <title>
-  {{ page_title }}
+  {{ meta_title }}
   {%- if current_tags %}
     &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
   {%- if current_page != 1 %}
     &ndash; Page {{ current_page }}{% endif -%}
-  {%- unless page_title contains shop.name %}
+  {%- unless meta_title contains shop.name %}
     &ndash; {{ shop.name }}{% endunless -%}
 </title>
 
-{% if page_description %}
-  <meta name="description" content="{{ page_description | escape }}" />
+{% if meta_description %}
+  <meta name="description" content="{{ meta_description | escape }}" />
 {% endif %}
-{% render 'meta-tags' %}
+{% render 'meta-tags', title_override: meta_title, description_override: meta_description %}
 
 {%- if request.page_type == 'index' -%}
   {%- render 'json-ld-home' -%}
