@@ -25,7 +25,7 @@
   assign ed_faq_title = collection.title | downcase
 -%}
 
-<section class="collection-editorial-auto w-full" aria-label="{{ collection.title | escape }} — guide & questions">
+<section class="collection-editorial-auto w-full" aria-label="{{ collection.title | escape }}">
 
   {%- comment -%} 1) H1 + accroche — l'éditorial PORTE le H1, EN TÊTE du bloc (sous la grille), exactement comme tableau-salon. main-collection-banner masque son propre H1 quand custom.guide existe → 1 seul H1, jamais orphelin en bas via to_place_first. Le snippet ne s'exécute que si custom.guide existe (garde dans main-collection-product-grid), donc le H1 est toujours légitime ici. {%- endcomment -%}
   <div class="bg-secondary w-full py-10 md:py-14">
