@@ -37,26 +37,26 @@
         {% assign swatch_color = null %}
         {% assign swatch_image = null %}
 
-        {%- comment -%} First try to get swatch from filter API {%- endcomment -%}
+        {%- comment -%} First try to get swatch from filter API (blank-safe: S&D peut envoyer une couleur vide) {%- endcomment -%}
         {% if filter_value.swatch %}
-          {% if filter_value.swatch.color %}
+          {% if filter_value.swatch.color != blank %}
             {% assign swatch_color = filter_value.swatch.color %}
           {% endif %}
-          {% if filter_value.swatch.image %}
-            {% assign swatch_image = filter_value.swatch.image %}
+          {% if filter_value.swatch.image != blank %}
+            {% assign swatch_image = filter_value.swatch.image | image_url: width: 48 %}
           {% endif %}
         {% endif %}
 
-        {%- comment -%} Fallback: Map color labels to images or hex values {%- endcomment -%}
+        {%- comment -%} Fallback: Map color labels to images or hex values (libellés localisés par langue) {%- endcomment -%}
         {% unless swatch_color or swatch_image %}
           {% assign color_lower = color_label | downcase %}
           {% assign swatch_filename = null %}
 
           {%- comment -%} First, check if there's an uploaded image file {%- endcomment -%}
           {% case color_lower %}
-            {% when 'multicolor', 'multicolore', 'multi-color' %}
+            {% when 'multicolor', 'multicolore', 'multi-color', 'mehrfarbig', 'veelkleurig' %}
               {% assign swatch_filename = 'multicolor.jpg' %}
-            {% when 'blanc-noir', 'blanc noir', 'noir-blanc', 'noir blanc', 'noir & blanc', 'blanc & noir', 'black-white', 'black white', 'white-black', 'white black', 'black & white', 'white & black' %}
+            {% when 'blanc-noir', 'blanc noir', 'noir-blanc', 'noir blanc', 'noir & blanc', 'noir et blanc', 'blanc & noir', 'black-white', 'black white', 'white-black', 'white black', 'black & white', 'white & black', 'blanco y negro', 'schwarz-weiß', 'schwarz-weiss', 'zwart-wit' %}
               {% assign swatch_filename = 'black-and-white.jpg' %}
           {% endcase %}
 
@@ -69,7 +69,7 @@
         {%- comment -%} Check if this color needs a border (white or black & white) {%- endcomment -%}
         {% assign needs_border = false %}
         {% assign color_lower_check = color_label | downcase %}
-        {% if color_lower_check contains 'white' or color_lower_check contains 'blanc' or color_lower_check == 'white' or color_lower_check == 'blanc' %}
+        {% if color_lower_check contains 'white' or color_lower_check contains 'blanc' or color_lower_check == 'wit' or color_lower_check == 'weiß' or color_lower_check == 'weiss' %}
           {% assign needs_border = true %}
         {% endif %}
 
