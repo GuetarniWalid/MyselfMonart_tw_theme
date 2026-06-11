@@ -25,7 +25,8 @@
     {%- comment -%} Color checkboxes from Search & Discovery {%- endcomment -%}
     {% if color_filter %}
       {% for filter_value in color_filter.values %}
-        {% assign color_label = filter_value.label %}
+        {%- capture color_label_mapped -%}{% render 'filter-color-label', label: filter_value.label %}{%- endcapture -%}
+        {% assign color_label = color_label_mapped | strip %}
         {% assign color_value = filter_value.value %}
         {% assign color_count = filter_value.count %}
 

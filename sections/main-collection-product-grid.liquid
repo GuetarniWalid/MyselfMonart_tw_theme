@@ -135,9 +135,14 @@
           {%- if filter.type == 'list' -%}
             "{{ filter.param_name | handleize }}": [
               {%- for filter_value in filter.values -%}
+                {%- if filter.param_name contains 'color' -%}
+                  {%- capture mapped_label -%}{% render 'filter-color-label', label: filter_value.label %}{%- endcapture -%}
+                {%- else -%}
+                  {%- capture mapped_label -%}{{ filter_value.label }}{%- endcapture -%}
+                {%- endif -%}
                 {
                   "value": {{ filter_value.value | json }},
-                  "label": {{ filter_value.label | json }},
+                  "label": {{ mapped_label | strip | json }},
                   "count": {{ filter_value.count | json }}
                 }{% unless forloop.last %},{% endunless %}
               {%- endfor -%}

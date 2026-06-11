@@ -1,0 +1,26 @@
+{%- comment -%}
+  Libellé d'une valeur du filtre couleur (groupes Search & Discovery nommés d'après la
+  taxonomie). Hors FR, Shopify localise déjà ces noms de base (Dorado, Gold, Geel…). En FR,
+  la boutique garde ses intitulés composés historiques : on remappe les noms de base vers
+  les libellés métier (clés sections.filter_drawer.color_*), uniquement pour la locale fr.
+  Utilisé par filter-colors-section ET le JSON data-filter-counts (collection-tag-filter.js
+  réécrit les labels après interaction) — les deux doivent rester identiques.
+
+  Usage : {% render 'filter-color-label', label: filter_value.label %}
+{%- endcomment -%}
+{%- liquid
+  assign out = label
+  if request.locale.iso_code == 'fr'
+    case label
+      when 'Or'
+        assign out = 'sections.filter_drawer.color_gold' | t
+      when 'Jaune'
+        assign out = 'sections.filter_drawer.color_yellow' | t
+      when 'Beige'
+        assign out = 'sections.filter_drawer.color_beige' | t
+      when 'Marron'
+        assign out = 'sections.filter_drawer.color_brown' | t
+    endcase
+  endif
+  echo out
+-%}
