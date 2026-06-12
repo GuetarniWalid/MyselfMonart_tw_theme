@@ -277,6 +277,17 @@ main-product-blocks .description h3 span {
 }
 /* Float Buy Button Animation end */
 
+/* Fiche personnalisée (sections/tw-custom-art-studio.liquid) : quand le CTA studio
+   flotte en bas d'écran sur mobile (classe posée sur body par
+   assets/component-custom-art-studio.js), il a priorité sur le float-buy-button
+   classique qui occupe le même emplacement — on ne superpose jamais deux CTA d'achat.
+   Mobile uniquement : sur desktop le CTA studio ne flotte pas. */
+@media (max-width: 767px) {
+  body.studio-cta-floating .float-buy-button {
+    display: none;
+  }
+}
+
 /* Finger Touch Animation start */
 .finger-x-touch {
   animation: XfingerTouch 9s normal infinite 3s forwards;

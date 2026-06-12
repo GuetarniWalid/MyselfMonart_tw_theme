@@ -36,22 +36,10 @@
             "margin_bottom": "mb-8"
           }
         },
-        "buy_qrRzcg": {
-          "type": "buy",
-          "settings": {
-            "text": "JE COMMANDE",
-            "is_dynamic_variant": false,
-            "show_promotion": false,
-            "promotion_discount": 15,
-            "promotion_discount_unit": "%",
-            "promotion_reason": "Soldes d'été ☀️",
-            "promotion_date": "Se termine le 22 juillet"
-          }
-        },
         "8600f603-2d6f-4191-8020-3678432ba1e5": {
           "type": "text",
           "settings": {
-            "text": "<p>- Le cadeau parfait qui marque les esprits</p><p>- Une touche personnelle qui fait toute la différence</p><p>-Un cadeau intemporel qui ne se démode jamais<br/></p>"
+            "text": "<p>- Sa photo, son équipe, son prénom : une œuvre unique, créée à la demande</p><p>- Vous découvrez l'aperçu en quelques instants et validez avant impression</p><p>- Le cadeau qui fait briller les yeux des passionnés de ballon rond<br/></p>"
           }
         },
         "collapsible_tab_HAUcNw": {
@@ -59,16 +47,16 @@
           "settings": {
             "heading": "Livraison",
             "icon": "truck",
-            "content": "<p>🎨 Poster personnalisé : Fabrication à la demande en 3-4 jours </p><p>🚚  Expédition en 3-5 jours ouvrables en colis suivi à votre domicile.</p><p>🎁 Livraison gratuite </p>",
+            "content": "<p>🎨 Dès votre validation, fabrication à la demande en 3-4 jours.</p><p>🚚 Expédition en 3-5 jours ouvrés, en colis suivi à votre domicile.</p><p>🎁 Livraison gratuite.</p>",
             "page": ""
           }
         },
         "collapsible_tab_4UhrbY": {
           "type": "collapsible_tab",
           "settings": {
-            "heading": "Materiaux",
+            "heading": "Matériaux",
             "icon": "leather",
-            "content": "<p><strong>- Le papier</strong> : un papier de qualité au rendu mat et précis, pour des couleurs justes et des détails nets.</p><p><strong>- Les formats</strong> : 30 × 40 cm ou 60 × 80 cm, à poser tel quel ou à encadrer.</p><p><strong>- Le cadre (en option)</strong> : plusieurs finitions au choix — blanc, noir mat, chêne clair, noyer ou argent ancien.</p><p>Chaque poster est imprimé à la demande, conçu en France et imprimé en Europe.</p>",
+            "content": "<p><strong>- Le papier</strong> : un papier épais (200 g/m² et plus) au rendu mat et précis, pour des couleurs justes et des détails nets.</p><p><strong>- Les formats</strong> : 30 × 40 cm ou 60 × 80 cm, à poser tel quel ou à encadrer.</p><p><strong>- Le cadre (en option)</strong> : cinq finitions au choix — blanc, noir mat, chêne clair, noyer ou argent ancien.</p><p>Chaque poster est imprimé à la demande, conçu en France et imprimé en Europe.</p>",
             "page": ""
           }
         },
@@ -90,7 +78,6 @@
         "short_title_mgUwJx",
         "title",
         "trustpilot_review_nXpwkL",
-        "buy_qrRzcg",
         "8600f603-2d6f-4191-8020-3678432ba1e5",
         "collapsible_tab_HAUcNw",
         "collapsible_tab_4UhrbY",
@@ -98,6 +85,13 @@
         "description_Fw7xRB"
       ],
       "settings": {}
+    },
+    "custom_art_studio_M3kxQz": {
+      "type": "tw-custom-art-studio",
+      "settings": {
+        "backend_url": "https://backend.myselfmonart.com",
+        "mock_mode": false
+      }
     },
     "customer_testimonial_myiwee": {
       "type": "testimonials-carousel",
@@ -204,24 +198,24 @@
           "type": "number_block",
           "settings": {
             "number": 1,
-            "heading": "Ne perdez plus votre temps à chercher",
-            "text": "Chaque mois, nous enrichissons notre assortiment de nouvelles créations."
+            "heading": "Vous validez avant impression",
+            "text": "Découvrez l'aperçu de votre tableau en quelques instants : rien ne part à l'impression sans votre accord."
           }
         },
         "434fa092-b676-4395-a95a-9922006fa7db": {
           "type": "number_block",
           "settings": {
             "number": 2,
-            "heading": "L’art de sortir de l’ordinaire",
-            "text": "En manque d'imagination ? Nos graphistes créent pour vous des œuvres originales"
+            "heading": "Un artiste veille sur chaque œuvre",
+            "text": "Chaque création est contrôlée avant impression. Et si votre photo ne donne rien, un artiste reprend la main sous 24 h."
           }
         },
         "dc1cd24a-b307-4124-abb9-b1ac55ba1e6b": {
           "type": "number_block",
           "settings": {
             "number": 3,
-            "heading": "Trouvez l'accord parfait",
-            "text": "Petit ou grand espace, vintage ou moderne, personnalisez taille et matière pour un accord parfait."
+            "heading": "Un cadeau qui marque les esprits",
+            "text": "Anniversaire, fête des pères, fin de saison : offrez-lui son portrait de joueur de légende, prénom et numéro floqués."
           }
         }
       },
@@ -256,7 +250,7 @@
       "settings": {
         "image": "shopify://shop_images/metre.jpg",
         "title": "DU SUR-MESURE",
-        "description": "<p>Choisissez la taille de votre poster. En paysage, portrait, carré, petit ou grand, à vous de voir selon votre espace.</p>",
+        "description": "<p>Choisissez le format de votre poster : 30 × 40 cm pour un clin d'œil discret, 60 × 80 cm pour en faire la pièce maîtresse du mur.</p>",
         "layout": "text_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -270,8 +264,8 @@
       "type": "image-with-text",
       "settings": {
         "image": "shopify://shop_images/tour_eiffel.jpg",
-        "title": "MADE IN FRANCE",
-        "description": "<p>Une touche d'art à la française. Enracinés dans notre cher pays, nous mettons l'accent sur votre satisfaction en offrant un service client de qualité supérieure.</p>",
+        "title": "CONÇU EN FRANCE",
+        "description": "<p>Chaque tableau est créé et contrôlé en France par notre studio, puis imprimé en Europe sur des papiers sélectionnés. Et de Toulouse, notre service client veille sur votre commande du premier aperçu à la livraison.</p>",
         "layout": "image_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -289,7 +283,7 @@
           "settings": {
             "image": "shopify://shop_images/femme-service-client-call.jpg",
             "title": "SERVICE CLIENT",
-            "text": "<p>Par mail ou téléphone, c’est toujours avec joie que nous échangeons avec vous, pour vous offrir une expérience exceptionnelle</p>",
+            "text": "<p>Par mail ou téléphone, c’est toujours avec joie que nous échangeons avec vous, pour vous offrir une expérience exceptionnelle.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -300,7 +294,7 @@
           "settings": {
             "image": "shopify://shop_images/cliente-satisfaite-souriante.jpg",
             "title": "SATISFACTION",
-            "text": "<p>Nous faisons tout pour que notre travail vous donne entière satisfaction. Nos produits sont fabriqués, vérifiés et emballés avec le plus grand soin, avant d'être livré directement à votre domicile.</p>",
+            "text": "<p>Nous faisons tout pour que notre travail vous donne entière satisfaction. Nos produits sont fabriqués, vérifiés et emballés avec le plus grand soin, avant d'être livrés directement à votre domicile.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -336,44 +330,62 @@
     "7ae13aad-330c-4fa7-94cf-fafc1c13cf60": {
       "type": "collapsible-content",
       "blocks": {
-        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-1": {
+        "faq_comment_ca_marche": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Comment ça marche ?",
+            "icon": "none",
+            "row_content": "<p>1. Vous choisissez une photo bien nette de votre joueur ou joueuse.</p><p>2. Vous sélectionnez l'équipe, le prénom et le numéro à floquer.</p><p>3. En 30 secondes environ, notre studio compose votre tableau et vous en présente l'aperçu.</p><p>4. Le résultat vous plaît ? Vous validez, et nous lançons l'impression.</p>"
+          }
+        },
+        "faq_photo_difficile": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Et si ma photo ne donne rien ?",
+            "icon": "none",
+            "row_content": "<p>Cela peut arriver : photo trop sombre, visage trop petit ou de profil. Le studio vous le signale aussitôt et vous invite à en essayer une autre.</p><p>Et si décidément rien n'y fait, un artiste de notre studio prend le relais : vous recevez par e-mail un aperçu réalisé à la main, sous 24 h.</p>"
+          }
+        },
+        "faq_delais_fete_des_peres": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Sera-t-il là à temps pour la fête des pères ?",
+            "icon": "none",
+            "row_content": "<p>Entre votre validation et la réception, comptez <strong>3 à 4 jours de fabrication</strong> puis <strong>3 à 5 jours ouvrés d'expédition</strong> en colis suivi.</p><p>Pour une réception avant le 21 juin, ne tardez donc pas : créez et validez votre tableau dès aujourd'hui — c'est l'affaire de quelques minutes.</p>"
+          }
+        },
+        "faq_retractation": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Puis-je changer d'avis après ma commande ?",
+            "icon": "none",
+            "row_content": "<p>Votre tableau est créé à votre image et imprimé à la demande : il ne pourrait être ni revendu, ni réutilisé. La loi exclut pour cette raison les créations personnalisées du droit de rétractation (article L221-28 3° du Code de la consommation).</p><p>C'est précisément pourquoi vous validez l'aperçu avant impression : rien ne part en fabrication sans votre accord. Et si quoi que ce soit vous chagrine à la réception, notre service client de Toulouse cherchera toujours une solution avec vous.</p>"
+          }
+        },
+        "faq_rendu_finitions": {
           "type": "collapsible_row",
           "settings": {
             "heading": "Quel rendu et quelles finitions pour votre poster ?",
             "icon": "none",
-            "row_content": "<p><p>Votre poster est imprimé à la demande sur un papier de qualité, au rendu <strong>mat et précis</strong> : des couleurs justes, des détails nets et une belle profondeur.</p><p>Il vous est proposé en deux formats — <strong>30 × 40 cm</strong> ou <strong>60 × 80 cm</strong> — à poser tel quel ou à encadrer. Côté cadre, plusieurs finitions s'offrent à vous : <strong>blanc, noir mat, chêne clair, noyer ou argent ancien</strong>, pour s'accorder à votre intérieur.</p>"
+            "row_content": "<p>Votre poster est imprimé à la demande sur un papier épais, au rendu <strong>mat et précis</strong> : des couleurs justes, des détails nets et une belle profondeur.</p><p>Il vous est proposé en deux formats — <strong>30 × 40 cm</strong> ou <strong>60 × 80 cm</strong> — à poser tel quel ou à encadrer. Côté cadre, cinq finitions s'offrent à vous : <strong>blanc, noir mat, chêne clair, noyer ou argent ancien</strong>, pour s'accorder à votre intérieur.</p>"
           }
         },
-        "e20d3253-d757-4a99-9237-128916cc9ffb": {
+        "faq_affiliation_clubs": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "Comment accrocher ou poser votre poster ?",
+            "heading": "Êtes-vous affiliés aux clubs ou aux fédérations ?",
             "icon": "none",
-            "row_content": "<p><p>Tout dépend de la finition que vous choisissez.</p><p>- <strong>Sans cadre</strong> : votre poster s'affiche en toute simplicité, avec le système d'accrochage de votre choix.</p><p>- <strong>Avec cadre</strong> : il est prêt à être accroché. Pensez simplement à adapter les fixations à votre type de mur — placo, brique ou béton. Nos cadres sont livrés sans visserie, car chaque mur est différent.</p>"
-          }
-        },
-        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-2": {
-          "type": "collapsible_row",
-          "settings": {
-            "heading": "Pourquoi acheter chez nous ?",
-            "icon": "none",
-            "row_content": "<p>Nos graphistes travaillent chaque jour pour créer de nouvelles œuvres. Chaque semaine, nous mettons à jour notre site et ajoutons les nouveaux posters.</p><p>Vous pouvez choisir le format et la personnalisation pour un accord parfait avec votre intérieur.</p><p>Si toutefois aucun poster ne vous plaît, vous avez la possibilité de demander à nos graphistes de façonner l'œuvre de vos rêves.</p>"
-          }
-        },
-        "a603c2c1-59a1-4067-9d4b-dc8591ddc1f8": {
-          "type": "collapsible_row",
-          "settings": {
-            "heading": "Quelle taille de poster choisir ?",
-            "icon": "none",
-            "row_content": "<p>Pour ne pas vous tromper, mesurez la largeur de votre pan de mur. Multipliez le résultat par 0,57 pour obtenir le ratio idéal.</p><p>Sachez qu'il est également recommandé d'accrocher le centre du poster à environ 1,65 mètre du sol (ce qui correspond à peu près à la hauteur des yeux). Il est aussi recommandé de laisser environ 30 centimètres d'espace entre un meuble et votre poster.</p>"
+            "row_content": "<p>Non. MyselfMonArt est un studio indépendant : nos créations sont des œuvres originales, inspirées des couleurs de l'équipe que vous choisissez. Elles ne sont ni éditées, ni approuvées par les clubs, ligues ou fédérations de football.</p>"
           }
         }
       },
       "block_order": [
-        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-1",
-        "e20d3253-d757-4a99-9237-128916cc9ffb",
-        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-2",
-        "a603c2c1-59a1-4067-9d4b-dc8591ddc1f8"
+        "faq_comment_ca_marche",
+        "faq_photo_difficile",
+        "faq_delais_fete_des_peres",
+        "faq_retractation",
+        "faq_rendu_finitions",
+        "faq_affiliation_clubs"
       ],
       "settings": {
         "eyebrow": "FAQ",
@@ -385,6 +397,7 @@
   "order": [
     "breadcrumb_RCxFAG",
     "main",
+    "custom_art_studio_M3kxQz",
     "customer_testimonial_myiwee",
     "product_recommendations_7Dekqa",
     "bf44dcab-c1df-4c80-b75a-9ee39a6bfe2e",

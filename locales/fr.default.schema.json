@@ -667,6 +667,93 @@
         "name": "Formulaire de contact"
       }
     },
+    "custom-art-studio": {
+      "name": "Studio de personnalisation",
+      "headings": {
+        "content": {
+          "content": "Contenu"
+        },
+        "steps": {
+          "content": "Titres des étapes"
+        },
+        "photo_examples": {
+          "content": "Exemples de photo (étape 1)"
+        },
+        "wait": {
+          "content": "Textes de l'attente (storytelling)"
+        },
+        "reveal": {
+          "content": "Révélation"
+        },
+        "technical": {
+          "content": "Technique"
+        }
+      },
+      "settings": {
+        "heading": {
+          "label": "Titre de la section"
+        },
+        "description": {
+          "label": "Texte d'introduction"
+        },
+        "cta_label": {
+          "label": "Libellé du bouton d'ouverture"
+        },
+        "step_photo_title": {
+          "label": "Étape 1 — Photo"
+        },
+        "step_team_title": {
+          "label": "Étape 2 — Équipe"
+        },
+        "step_name_title": {
+          "label": "Étape 3 — Prénom et numéro"
+        },
+        "step_format_title": {
+          "label": "Étape 4 — Format et finition"
+        },
+        "good_photo_image": {
+          "label": "Image — bonne photo"
+        },
+        "good_photo_alt": {
+          "label": "Texte alternatif — bonne photo"
+        },
+        "bad_photo_image": {
+          "label": "Image — photo à éviter"
+        },
+        "bad_photo_alt": {
+          "label": "Texte alternatif — photo à éviter"
+        },
+        "wait_phase_1": {
+          "label": "Phase 1"
+        },
+        "wait_phase_2": {
+          "label": "Phase 2"
+        },
+        "wait_phase_3": {
+          "label": "Phase 3"
+        },
+        "wait_phase_4": {
+          "label": "Phase 4"
+        },
+        "reveal_title": {
+          "label": "Titre de la révélation"
+        },
+        "mock_reveal_image": {
+          "label": "Image d'exemple (mode démonstration)",
+          "info": "Affichée à la révélation quand le mode démonstration est actif. Sans image, une œuvre de démonstration est composée automatiquement."
+        },
+        "backend_url": {
+          "label": "URL du back-end"
+        },
+        "mock_mode": {
+          "label": "Mode démonstration (sans back-end)",
+          "info": "Simule équipes, génération et révélation avec des données locales. À décocher quand l'API /api/custom-art est en production."
+        }
+      },
+      "presets": {
+        "name": "Studio de personnalisation"
+      }
+    },
     "custom-liquid": {
       "name": "Liquid personnalisé",
       "settings": {

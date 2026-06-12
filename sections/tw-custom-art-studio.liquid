@@ -1,0 +1,795 @@
+{% comment %}
+  Studio de personnalisation « poster perso foot » (plan growth/POSTER-PERSO-FOOT-PLAN.md, mission M3).
+
+  La section rend :
+  1. Le CTA principal « Créer mon tableau » — en flux dans la section ; sur mobile il se
+     fixe en bas d'écran quand la section sort du viewport (IntersectionObserver côté JS)
+     et masque alors le float-buy-button du bloc buy (body.studio-cta-floating, input.css).
+  2. Le squelette du studio : <custom-art-studio> (assets/component-custom-art-studio.js)
+     — overlay plein écran mobile / modal centré desktop, 4 étapes guidées
+     (photo → équipe → prénom+numéro → format+finition), attente storytelling,
+     révélation, ajout panier via /cart/add.js (mêmes contrats DOM que main-product.js :
+     #bubble-nb-product, #shopify-section-tw-cart-drawer, #cart-button).
+
+  Mode réel (M6) : auth de session (token de POST /jobs -> en-tête x-custom-art-session +
+  credentials sur tous les appels suivants), statuts pending/generating/judging/ready/
+  failed/manual_review, reveal WebGL (perspective-canvas recréé avec l'aperçu en texture +
+  cadre/format choisis, repli image + cadre CSS), galerie de mises en situation en
+  streaming, écran « Faire réaliser par un artiste » (manual_review / échec définitif),
+  caps anti-abus (429/403) avec messages FR. Détail des contrats : en-tête de
+  assets/component-custom-art-studio.js.
+
+  Mode mock (setting) : tout le parcours est navigable sans back-end (fixtures locales,
+  génération simulée ~8 s, mockups simulés, prénom « ARTISTE » -> écran artiste).
+
+  Réutilise : trapFocus global (assets/tw-global.js), classes .cart-button / .title-highlight /
+  shadow-neu-* / .scrollbar-hidden, vars couleurs bg-main / bg-secondary / bg-buy-button.
+  Le pattern modal s'inspire de details-modal (overlay + focus trap + overflow-hidden body),
+  ré-implémenté ici car details-modal est couplé au header (.header__icons).
+{% endcomment %}
+
+<script src="{{ 'component-custom-art-studio.js' | asset_url }}" defer="defer"></script>
+{%- comment -%} Visualiseur 3D réutilisé au reveal (déjà chargé seulement sur les fiches
+   « painting » par main-product ; ici la fiche personnalisée en a besoin aussi). {%- endcomment -%}
+<script src="{{ 'component-perspective-canvas.js' | asset_url }}" defer="defer"></script>
+
+<custom-art-studio
+  class="block"
+  data-section-id="{{ section.id }}">
+
+  {%- comment -%} ---- CTA d'ouverture (sticky bas d'écran sur mobile) ---- {%- endcomment -%}
+  <div class="page-width px-4">
+    <div class="max-w-lg mx-auto text-center py-10">
+      {%- if section.settings.heading != blank -%}
+        <h2 id="studio-heading-{{ section.id }}" class="mb-4">
+          <span class="title-highlight">{{ section.settings.heading | escape }}</span>
+        </h2>
+      {%- endif -%}
+      {%- if section.settings.description != blank -%}
+        <div class="text-main-80 leading-relaxed mb-6">{{ section.settings.description }}</div>
+      {%- endif -%}
+      {%- comment -%} En flux par défaut ; sur mobile, le JS le fixe en bas d'écran
+         UNIQUEMENT quand la section est hors viewport (IntersectionObserver, pattern
+         float-buy-button) et masque alors le float-buy-button classique (cf. input.css :
+         body.studio-cta-floating) pour ne pas superposer deux CTA d'achat. {%- endcomment -%}
+      <button
+        type="button"
+        data-studio-open
+        data-studio-cta
+        aria-haspopup="dialog"
+        class="cart-button glass-anim py-4 mobile:w-auto">
+        {{ section.settings.cta_label | escape }}
+      </button>
+    </div>
+  </div>
+
+  {%- comment -%} ---- Dialog studio (caché tant que le CTA n'est pas cliqué) ---- {%- endcomment -%}
+  <div
+    data-studio-dialog
+    class="fixed inset-0 z-[60] hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="studio-dialog-title-{{ section.id }}">
+
+    {%- comment -%} Fond assombri (desktop) — clic = tentative de fermeture {%- endcomment -%}
+    <div data-studio-backdrop class="absolute inset-0 bg-main-50 hidden md:block" aria-hidden="true"></div>
+
+    <div class="relative flex h-full w-full flex-col bg-secondary md:mx-auto md:mt-[5vh] md:h-auto md:max-h-[90vh] md:w-full md:max-w-xl md:rounded-2xl md:border-main md:border-1 md:shadow-neu-lg overflow-hidden">
+
+      {%- comment -%} ---- Entête : indicateur d'étape + titre + fermer ---- {%- endcomment -%}
+      <header class="flex items-start justify-between gap-4 border-b border-main-10 p-4">
+        <div>
+          <p data-step-indicator class="text-xs uppercase tracking-wide text-main-70 mb-1"></p>
+          <h2 id="studio-dialog-title-{{ section.id }}" data-step-title class="text-xl font-heading font-bold">
+            {{ section.settings.step_photo_title | escape }}
+          </h2>
+          <div data-step-dots class="mt-2 flex gap-1.5" aria-hidden="true">
+            <span class="h-1.5 w-6 rounded-full bg-main transition-colors duration-300 motion-reduce:transition-none"></span>
+            <span class="h-1.5 w-6 rounded-full bg-main-20 transition-colors duration-300 motion-reduce:transition-none"></span>
+            <span class="h-1.5 w-6 rounded-full bg-main-20 transition-colors duration-300 motion-reduce:transition-none"></span>
+            <span class="h-1.5 w-6 rounded-full bg-main-20 transition-colors duration-300 motion-reduce:transition-none"></span>
+          </div>
+          {%- if section.settings.mock_mode -%}
+            <p class="mt-2 inline-block rounded-full bg-accent-20 px-2 py-0.5 text-2xs uppercase tracking-wide text-main-80">
+              {{ 'sections.custom_art_studio.mock_badge' | t }}
+            </p>
+          {%- endif -%}
+        </div>
+        <button
+          type="button"
+          data-studio-close
+          class="shrink-0 rounded-full bg-secondary-50 p-2 hover:bg-main-10 transition-colors duration-200 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main"
+          aria-label="{{ 'sections.custom_art_studio.close' | t }}">
+          {% render 'tw-icon-close', width: '20' %}
+        </button>
+      </header>
+
+      {%- comment -%} ---- Corps scrollable ---- {%- endcomment -%}
+      <div class="grow overflow-y-auto scrollbar-hidden p-4">
+
+        <p data-resume-note class="mb-4 rounded-xl bg-buy-button-10 px-3 py-2 text-sm text-main-80" hidden>
+          {{ 'sections.custom_art_studio.resume_note' | t }}
+        </p>
+
+        {%- comment -%} ===== Étape 1 — Photo ===== {%- endcomment -%}
+        {%- comment -%} Exemples bonne/mauvaise photo : image_picker admin prioritaire,
+           sinon repli sur 2 assets embarqués (photos libres Pexels, optimisées < 80 Ko)
+           -> la fiche est complète sans aucune action admin. {%- endcomment -%}
+        <div data-studio-panel="photo">
+          <ul class="grid grid-cols-2 gap-3 mb-5">
+            <li class="rounded-xl border border-main-10 bg-main-2 p-3 text-center">
+              {%- if section.settings.good_photo_image -%}
+                <img
+                  src="{{ section.settings.good_photo_image | image_url: width: 300 }}"
+                  alt="{{ section.settings.good_photo_alt | escape }}"
+                  width="{{ section.settings.good_photo_image.width }}"
+                  height="{{ section.settings.good_photo_image.height }}"
+                  loading="lazy"
+                  decoding="async"
+                  class="mb-2 aspect-square w-full rounded-lg object-cover">
+              {%- else -%}
+                <img
+                  src="{{ 'studio-photo-exemple-portrait-net.jpg' | asset_url }}"
+                  alt="{{ section.settings.good_photo_alt | escape }}"
+                  width="600"
+                  height="600"
+                  loading="lazy"
+                  decoding="async"
+                  class="mb-2 aspect-square w-full rounded-lg object-cover">
+              {%- endif -%}
+              <p class="text-xs text-main-80">✓ {{ 'sections.custom_art_studio.photo_good_caption' | t }}</p>
+            </li>
+            <li class="rounded-xl border border-main-10 bg-main-2 p-3 text-center">
+              {%- if section.settings.bad_photo_image -%}
+                <img
+                  src="{{ section.settings.bad_photo_image | image_url: width: 300 }}"
+                  alt="{{ section.settings.bad_photo_alt | escape }}"
+                  width="{{ section.settings.bad_photo_image.width }}"
+                  height="{{ section.settings.bad_photo_image.height }}"
+                  loading="lazy"
+                  decoding="async"
+                  class="mb-2 aspect-square w-full rounded-lg object-cover grayscale">
+              {%- else -%}
+                <img
+                  src="{{ 'studio-photo-exemple-ombres-dures.jpg' | asset_url }}"
+                  alt="{{ section.settings.bad_photo_alt | escape }}"
+                  width="600"
+                  height="600"
+                  loading="lazy"
+                  decoding="async"
+                  class="mb-2 aspect-square w-full rounded-lg object-cover grayscale">
+              {%- endif -%}
+              <p class="text-xs text-main-80">✗ {{ 'sections.custom_art_studio.photo_bad_caption' | t }}</p>
+            </li>
+          </ul>
+
+          <div class="flex flex-col gap-3 2xs:flex-row">
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/heic,image/heif"
+              capture="user"
+              class="sr-only"
+              id="studio-photo-capture-{{ section.id }}"
+              data-photo-input>
+            <label
+              for="studio-photo-capture-{{ section.id }}"
+              class="md:hidden inline-flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl border-main border-1 bg-secondary px-4 py-3 font-heading font-semibold text-main shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none focus-within:ring-2 focus-within:ring-main">
+              {{ 'sections.custom_art_studio.photo_capture' | t }}
+            </label>
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/heic,image/heif"
+              class="sr-only"
+              id="studio-photo-gallery-{{ section.id }}"
+              data-photo-input>
+            <label
+              for="studio-photo-gallery-{{ section.id }}"
+              class="inline-flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl border-main border-1 bg-secondary px-4 py-3 font-heading font-semibold text-main shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none focus-within:ring-2 focus-within:ring-main">
+              {{ 'sections.custom_art_studio.photo_choose' | t }}
+            </label>
+          </div>
+
+          <div data-photo-preview-wrapper class="mt-4 text-center" hidden>
+            <img
+              data-photo-preview
+              src=""
+              alt="{{ 'sections.custom_art_studio.photo_preview_alt' | t }}"
+              width="320"
+              height="320"
+              class="mx-auto max-h-64 w-auto rounded-xl border border-main-10 object-contain shadow-neu-sm">
+            <button
+              type="button"
+              data-photo-replace
+              class="mt-3 text-sm text-main-80 underline hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main rounded">
+              {{ 'sections.custom_art_studio.photo_replace' | t }}
+            </button>
+          </div>
+
+          <p data-photo-error class="mt-3 text-sm text-accent" role="alert" aria-live="polite" hidden></p>
+
+          <div class="mt-5 flex items-start gap-3">
+            <input
+              type="checkbox"
+              id="studio-consent-{{ section.id }}"
+              data-consent
+              class="mt-1 h-5 w-5 shrink-0 cursor-pointer accent-current focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+            <label for="studio-consent-{{ section.id }}" class="cursor-pointer text-sm text-main-80">
+              {{ 'sections.custom_art_studio.consent_label' | t }}
+            </label>
+          </div>
+        </div>
+
+        {%- comment -%} ===== Étape 2 — Équipe ===== {%- endcomment -%}
+        <div data-studio-panel="team" hidden>
+          <label for="studio-team-search-{{ section.id }}" class="mb-1 block text-xs uppercase tracking-wide text-main-70">
+            {{ 'sections.custom_art_studio.team_search_label' | t }}
+          </label>
+          <input
+            type="search"
+            id="studio-team-search-{{ section.id }}"
+            data-team-search
+            autocomplete="off"
+            placeholder="{{ 'sections.custom_art_studio.team_search_placeholder' | t }}"
+            class="mb-4 w-full rounded-xl border border-main-10 bg-secondary px-4 py-3 text-main placeholder:text-main-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+
+          <fieldset>
+            <legend class="sr-only">{{ 'sections.custom_art_studio.team_grid_label' | t }}</legend>
+            <p data-team-loading class="py-6 text-center text-sm text-main-70" aria-live="polite">
+              {{ 'sections.custom_art_studio.team_loading' | t }}
+            </p>
+            <div data-team-error class="py-6 text-center" hidden>
+              <p class="mb-3 text-sm text-accent">{{ 'sections.custom_art_studio.team_error' | t }}</p>
+              <button
+                type="button"
+                data-team-retry
+                class="rounded-xl border-main border-1 bg-secondary px-4 py-2 font-heading font-semibold shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+                {{ 'sections.custom_art_studio.team_retry' | t }}
+              </button>
+            </div>
+            <ul data-team-grid class="grid grid-cols-3 gap-3 2xs:grid-cols-4 sm:grid-cols-5"></ul>
+            <p data-team-empty class="py-6 text-center text-sm text-main-70" hidden>
+              {{ 'sections.custom_art_studio.team_empty' | t }}
+            </p>
+          </fieldset>
+          <p data-team-required-error class="mt-3 text-sm text-accent" role="alert" aria-live="polite" hidden>
+            {{ 'sections.custom_art_studio.team_required' | t }}
+          </p>
+        </div>
+
+        {%- comment -%} ===== Étape 3 — Prénom + numéro (aperçu live sur dos de maillot) ===== {%- endcomment -%}
+        <div data-studio-panel="name" hidden>
+          {%- comment -%} Aperçu SVG : couleurs remplies par le JS depuis l'équipe choisie
+             (données dynamiques -> style inline, pas d'équivalent Tailwind possible). {%- endcomment -%}
+          <p class="sr-only">{{ 'sections.custom_art_studio.jersey_preview_label' | t }}</p>
+          <svg
+            data-jersey
+            viewBox="0 0 200 220"
+            class="mx-auto mb-5 block w-40"
+            aria-hidden="true"
+            focusable="false">
+            <path
+              data-jersey-body
+              d="M62 26 L84 12 Q100 24 116 12 L138 26 L172 52 L152 78 L144 64 L144 204 Q100 212 56 204 L56 64 L48 78 L28 52 Z"
+              class="fill-main"
+              stroke="rgba(0,0,0,0.25)"
+              stroke-width="2"></path>
+            <path
+              d="M84 12 Q100 30 116 12 L112 9 Q100 19 88 9 Z"
+              class="fill-secondary"
+              opacity="0.9"></path>
+            <text
+              data-jersey-name
+              x="100"
+              y="92"
+              text-anchor="middle"
+              class="fill-secondary font-heading"
+              font-size="17"
+              font-weight="700"
+              letter-spacing="1.5">{{ 'sections.custom_art_studio.jersey_placeholder_name' | t }}</text>
+            <text
+              data-jersey-number
+              x="100"
+              y="166"
+              text-anchor="middle"
+              class="fill-secondary font-heading"
+              font-size="62"
+              font-weight="700">{{ 'sections.custom_art_studio.jersey_placeholder_number' | t }}</text>
+          </svg>
+
+          <label for="studio-player-name-{{ section.id }}" class="mb-1 block text-xs uppercase tracking-wide text-main-70">
+            {{ 'sections.custom_art_studio.name_label' | t }}
+          </label>
+          <input
+            type="text"
+            id="studio-player-name-{{ section.id }}"
+            data-player-name
+            maxlength="12"
+            autocomplete="off"
+            autocapitalize="characters"
+            spellcheck="false"
+            aria-describedby="studio-name-help-{{ section.id }}"
+            class="mb-1 w-full rounded-xl border border-main-10 bg-secondary px-4 py-3 uppercase tracking-widest text-main focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+          <p id="studio-name-help-{{ section.id }}" class="mb-4 text-xs text-main-70">
+            {{ 'sections.custom_art_studio.name_help' | t }}
+          </p>
+
+          <label for="studio-player-number-{{ section.id }}" class="mb-1 block text-xs uppercase tracking-wide text-main-70">
+            {{ 'sections.custom_art_studio.number_label' | t }}
+          </label>
+          <input
+            type="number"
+            id="studio-player-number-{{ section.id }}"
+            data-player-number
+            min="1"
+            max="99"
+            step="1"
+            inputmode="numeric"
+            autocomplete="off"
+            class="no-spin w-28 rounded-xl border border-main-10 bg-secondary px-4 py-3 text-center text-main focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+
+          <p data-name-error class="mt-3 text-sm text-accent" role="alert" aria-live="polite" hidden></p>
+        </div>
+
+        {%- comment -%} ===== Étape 4 — Format + finition (vraies variantes Shopify, prix live) ===== {%- endcomment -%}
+        <div data-studio-panel="format" hidden>
+          {%- unless product.has_only_default_variant -%}
+            {%- for option in product.options_with_values -%}
+              <fieldset class="mb-5">
+                <legend class="mb-2 text-xs uppercase tracking-wide text-main-70">{{ option.name }}</legend>
+                <div class="flex flex-wrap gap-2">
+                  {%- for value in option.values -%}
+                    <label class="cursor-pointer">
+                      <input
+                        type="radio"
+                        name="studio-option{{ option.position }}"
+                        value="{{ value | escape }}"
+                        data-studio-option
+                        data-option-position="{{ option.position }}"
+                        data-option-name="{{ option.name | escape }}"
+                        class="peer sr-only"
+                        {% if forloop.first %}checked{% endif %}>
+                      <span class="block rounded-full border border-main-20 bg-secondary px-4 py-2 text-sm text-main transition-all duration-100 motion-reduce:transition-none peer-checked:bg-main peer-checked:text-secondary peer-focus-visible:ring-2 peer-focus-visible:ring-main peer-focus-visible:ring-offset-2">
+                        {{ value }}
+                      </span>
+                    </label>
+                  {%- endfor -%}
+                </div>
+              </fieldset>
+            {%- endfor -%}
+          {%- endunless -%}
+
+          <p class="flex items-baseline gap-2 border-t border-main-10 pt-4">
+            <span class="text-xs uppercase tracking-wide text-main-70">{{ 'sections.custom_art_studio.price_label' | t }}</span>
+            <span data-studio-price class="text-2xl font-heading font-bold" aria-live="polite">{{ product.first_available_variant.price | money }}</span>
+          </p>
+          <p data-variant-unavailable class="mt-2 text-sm text-accent" role="alert" aria-live="polite" hidden>
+            {{ 'sections.custom_art_studio.variant_unavailable' | t }}
+          </p>
+        </div>
+
+        {%- comment -%} ===== Écran d'attente storytelling ===== {%- endcomment -%}
+        <div data-studio-screen="wait" hidden>
+          <div class="py-10 text-center">
+            <h3 class="mb-6 text-lg font-heading font-bold">{{ 'sections.custom_art_studio.wait_title' | t }}</h3>
+            <div class="mx-auto mb-4 h-2 w-full max-w-sm overflow-hidden rounded-full bg-main-10">
+              <div
+                data-wait-bar
+                class="h-full w-0 rounded-full bg-buy-button transition-[width] duration-700 ease-out motion-reduce:transition-none"></div>
+            </div>
+            <p data-wait-text class="min-h-6 text-main-80" aria-live="polite"></p>
+            <p class="mt-6 text-xs text-main-70">{{ 'sections.custom_art_studio.wait_note' | t }}</p>
+          </div>
+        </div>
+
+        {%- comment -%} ===== Écran de révélation ===== {%- endcomment -%}
+        <div data-studio-screen="reveal" hidden>
+          <h3 class="mb-5 text-center text-lg font-heading font-bold">{{ section.settings.reveal_title | escape }}</h3>
+
+          {%- comment -%} Figure = repli image + cadre CSS (WebGL indisponible : motion-reduce,
+             vieux mobiles, Save-Data). La bordure prend la teinte de la finition choisie
+             (style inline posé par le JS — donnée produit dynamique). Masquée dès que le
+             visualiseur 3D a présenté son 1er rendu (évènement perspective:ready). {%- endcomment -%}
+          <figure data-reveal-figure class="mx-auto w-full max-w-xs md:max-w-sm">
+            <div data-reveal-frame class="border-8 border-main bg-secondary p-2 shadow-neu-lg">
+              <img
+                data-reveal-image
+                src=""
+                alt="{{ 'sections.custom_art_studio.reveal_image_alt' | t }}"
+                width="1024"
+                height="1365"
+                class="block h-auto w-full"
+                hidden>
+            </div>
+            <figcaption class="mt-2 text-center text-xs text-main-70">
+              {{ 'sections.custom_art_studio.reveal_watermark_note' | t }}
+            </figcaption>
+          </figure>
+
+          {%- comment -%} Visualiseur 3D : le JS recrée ici un <perspective-canvas
+             data-context="studio"> + <script class="perspective-config"> avec l'URL de
+             l'œuvre générée en texture et le cadre/format choisis (pattern « popup » de
+             snippets/tw-main-product-perspective.liquid). L'image DOIT être servie avec
+             crossorigin/ACAO (DO Spaces) sinon la texture WebGL est rejetée
+             (cf. assets/component-perspective-canvas.js). {%- endcomment -%}
+          <div data-studio-webgl-slot class="mx-auto w-full max-w-xs md:max-w-sm" hidden></div>
+
+          <div class="mx-auto mt-6 flex max-w-sm flex-col gap-3">
+            <button
+              type="button"
+              data-studio-add-to-cart
+              class="rounded-xl border-main border-[4px] bg-buy-button px-6 py-3 font-heading font-bold text-main shadow-neu-md hover:shadow-neu-sm transition-shadow duration-100 motion-reduce:transition-none disabled:cursor-wait disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2">
+              {{ 'sections.custom_art_studio.add_to_cart' | t }} — <span data-reveal-price>{{ product.first_available_variant.price | money }}</span>
+            </button>
+            <button
+              type="button"
+              data-studio-reveal-next
+              class="rounded-xl border-main border-1 bg-secondary px-6 py-3 font-heading font-semibold text-main shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none disabled:cursor-wait disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+              {{ 'sections.custom_art_studio.another_version' | t }}
+            </button>
+            <button
+              type="button"
+              data-studio-save-toggle
+              aria-expanded="false"
+              class="text-sm text-main-80 underline hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main rounded">
+              {{ 'sections.custom_art_studio.save_creation' | t }}
+            </button>
+
+            <form data-studio-save-form class="rounded-xl bg-main-2 p-4" hidden novalidate>
+              <label for="studio-save-email-{{ section.id }}" class="mb-1 block text-xs uppercase tracking-wide text-main-70">
+                {{ 'sections.custom_art_studio.save_email_label' | t }}
+              </label>
+              <div class="flex gap-2">
+                <input
+                  type="email"
+                  id="studio-save-email-{{ section.id }}"
+                  data-save-email
+                  required
+                  autocomplete="email"
+                  placeholder="{{ 'sections.custom_art_studio.save_email_placeholder' | t }}"
+                  class="w-full rounded-xl border border-main-10 bg-secondary px-3 py-2 text-main placeholder:text-main-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+                <button
+                  type="submit"
+                  class="shrink-0 rounded-xl border-main border-1 bg-secondary px-4 py-2 font-heading font-semibold shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none disabled:cursor-wait disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+                  {{ 'sections.custom_art_studio.save_submit' | t }}
+                </button>
+              </div>
+              <p data-save-feedback class="mt-2 text-sm text-main-80" aria-live="polite" hidden></p>
+            </form>
+
+            <p data-reveal-feedback class="text-center text-sm text-accent" role="alert" aria-live="polite" hidden></p>
+            <p data-cart-feedback class="text-center text-sm text-main-80" aria-live="polite" hidden></p>
+          </div>
+
+          {%- comment -%} Galerie « mises en situation » : cellules squelette remplies en
+             streaming au fil des rendus du moteur externe (job.mockups), lien zoom sur
+             chaque image. Cachée tant qu'aucune mise en situation n'est annoncée. {%- endcomment -%}
+          <section
+            data-mockup-zone
+            class="mx-auto mt-8 w-full max-w-sm"
+            aria-labelledby="studio-mockups-title-{{ section.id }}"
+            hidden>
+            <h4 id="studio-mockups-title-{{ section.id }}" class="mb-3 text-center text-sm font-heading font-semibold uppercase tracking-wide text-main-80">
+              {{ 'sections.custom_art_studio.mockups_title' | t }}
+            </h4>
+            <ul data-mockup-grid class="grid grid-cols-2 gap-3"></ul>
+          </section>
+        </div>
+
+        {%- comment -%} ===== Écran d'erreur de génération ===== {%- endcomment -%}
+        <div data-studio-screen="error" hidden>
+          <div class="py-10 text-center">
+            <p data-error-message class="mb-5 text-main-80" role="alert" aria-live="assertive">
+              {{ 'sections.custom_art_studio.generation_error' | t }}
+            </p>
+
+            {%- comment -%} Cap « 3e essai+ = e-mail requis » (403) : l'e-mail saisi ici
+               débloque et relance directement la génération. {%- endcomment -%}
+            <form data-error-email-form class="mx-auto mb-5 max-w-xs text-left" hidden novalidate>
+              <label for="studio-error-email-{{ section.id }}" class="mb-1 block text-xs uppercase tracking-wide text-main-70">
+                {{ 'sections.custom_art_studio.save_email_label' | t }}
+              </label>
+              <div class="flex gap-2">
+                <input
+                  type="email"
+                  id="studio-error-email-{{ section.id }}"
+                  data-error-email
+                  required
+                  autocomplete="email"
+                  placeholder="{{ 'sections.custom_art_studio.save_email_placeholder' | t }}"
+                  class="w-full rounded-xl border border-main-10 bg-secondary px-3 py-2 text-main placeholder:text-main-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+                <button
+                  type="submit"
+                  class="shrink-0 rounded-xl border-main border-1 bg-secondary px-4 py-2 font-heading font-semibold shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none disabled:cursor-wait disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+                  {{ 'sections.custom_art_studio.error_email_submit' | t }}
+                </button>
+              </div>
+            </form>
+
+            <button
+              type="button"
+              data-studio-retry
+              class="rounded-xl border-main border-[4px] bg-buy-button px-6 py-3 font-heading font-bold text-main shadow-neu-md hover:shadow-neu-sm transition-shadow duration-100 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2">
+              {{ 'sections.custom_art_studio.retry' | t }}
+            </button>
+          </div>
+        </div>
+
+        {%- comment -%} ===== Écran « Faire réaliser par un artiste » (décision plan §0.15) :
+           photo refusée ou aucune création retenue -> un artiste prend le relais,
+           aperçu promis sous 24 h par e-mail. L'essai n'est pas décompté. {%- endcomment -%}
+        <div data-studio-screen="artist" hidden>
+          <div class="mx-auto max-w-sm py-6 text-center">
+            {%- comment -%} Illustration palette + pinceau (décorative, couleurs du thème). {%- endcomment -%}
+            <svg viewBox="0 0 120 120" class="mx-auto mb-5 h-24 w-24" aria-hidden="true" focusable="false">
+              <circle cx="60" cy="60" r="56" class="fill-buy-button-10"></circle>
+              <path d="M60 26c-21 0-38 14-38 32 0 17 15 30 33 30 5 0 8-3 8-7 0-2-1-3-2-5-1-1-2-3-2-5 0-4 3-7 8-7h9c12 0 22-9 22-20 0-10-17-18-38-18z" class="fill-secondary" stroke="currentColor" stroke-opacity="0.25" stroke-width="2"></path>
+              <circle cx="46" cy="42" r="5" class="fill-accent"></circle>
+              <circle cx="64" cy="38" r="5" class="fill-buy-button"></circle>
+              <circle cx="38" cy="56" r="5" class="fill-main-20"></circle>
+              <circle cx="80" cy="46" r="5" class="fill-like"></circle>
+              <path d="M88 18l10 10-34 36-12 4 3-13z" class="fill-main"></path>
+            </svg>
+            <h3 class="mb-3 text-lg font-heading font-bold">{{ 'sections.custom_art_studio.artist_title' | t }}</h3>
+            <p class="mb-5 text-main-80">{{ 'sections.custom_art_studio.artist_body' | t }}</p>
+
+            <form data-artist-form novalidate>
+              <label for="studio-artist-email-{{ section.id }}" class="mb-1 block text-left text-xs uppercase tracking-wide text-main-70">
+                {{ 'sections.custom_art_studio.artist_email_label' | t }}
+              </label>
+              <input
+                type="email"
+                id="studio-artist-email-{{ section.id }}"
+                data-artist-email
+                required
+                autocomplete="email"
+                placeholder="{{ 'sections.custom_art_studio.save_email_placeholder' | t }}"
+                class="mb-3 w-full rounded-xl border border-main-10 bg-secondary px-4 py-3 text-main placeholder:text-main-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+              <button
+                type="submit"
+                class="w-full rounded-xl border-main border-[4px] bg-buy-button px-6 py-3 font-heading font-bold text-main shadow-neu-md hover:shadow-neu-sm transition-shadow duration-100 motion-reduce:transition-none disabled:cursor-wait disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2">
+                {{ 'sections.custom_art_studio.artist_submit' | t }}
+              </button>
+            </form>
+
+            <p data-artist-feedback class="mt-4 text-sm text-main-80" aria-live="polite" hidden></p>
+            <p class="mt-4 text-xs text-main-70">{{ 'sections.custom_art_studio.artist_note' | t }}</p>
+          </div>
+        </div>
+      </div>
+
+      {%- comment -%} ---- Pied : navigation Retour / Continuer / Créer ---- {%- endcomment -%}
+      <footer data-studio-footer class="flex items-center justify-between gap-3 border-t border-main-10 p-4">
+        <button
+          type="button"
+          data-studio-back
+          class="rounded-xl px-4 py-3 font-heading font-semibold text-main-80 hover:bg-main-5 transition-colors duration-200 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+          {{ 'sections.custom_art_studio.back' | t }}
+        </button>
+        <button
+          type="button"
+          data-studio-next
+          class="grow rounded-xl border-main border-[4px] bg-buy-button px-6 py-3 font-heading font-bold text-main shadow-neu-md hover:shadow-neu-sm transition-shadow duration-100 motion-reduce:transition-none disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2">
+          {{ 'sections.custom_art_studio.next' | t }}
+        </button>
+      </footer>
+    </div>
+  </div>
+
+  {%- comment -%} ---- Config consommée par le custom element (textes localisés inclus :
+     aucun littéral utilisateur dans le JS) ---- {%- endcomment -%}
+  <script type="application/json" data-studio-config>
+    {
+      "backendUrl": {{ section.settings.backend_url | strip | json }},
+      "mock": {{ section.settings.mock_mode | json }},
+      "productId": {{ product.id | json }},
+      "currencySymbol": {{ cart.currency.symbol | json }},
+      "hasOnlyDefaultVariant": {{ product.has_only_default_variant | json }},
+      "defaultVariantId": {{ product.first_available_variant.id | json }},
+      "variants": {{ product.variants | json }},
+      "stepTitles": {
+        "photo": {{ section.settings.step_photo_title | json }},
+        "team": {{ section.settings.step_team_title | json }},
+        "name": {{ section.settings.step_name_title | json }},
+        "format": {{ section.settings.step_format_title | json }}
+      },
+      "waitPhases": [
+        {{ section.settings.wait_phase_1 | json }},
+        {{ section.settings.wait_phase_2 | json }},
+        {{ section.settings.wait_phase_3 | json }},
+        {{ section.settings.wait_phase_4 | json }}
+      ],
+      "mockRevealImage": {% if section.settings.mock_reveal_image %}{{ section.settings.mock_reveal_image | image_url: width: 1024 | json }}{% else %}null{% endif %},
+      "i18n": {
+        "step_indicator": {{ 'sections.custom_art_studio.step_indicator' | t: step: '[step]', total: '[total]' | json }},
+        "confirm_close": {{ 'sections.custom_art_studio.confirm_close' | t | json }},
+        "photo_error_type": {{ 'sections.custom_art_studio.photo_error_type' | t | json }},
+        "photo_error_size": {{ 'sections.custom_art_studio.photo_error_size' | t | json }},
+        "photo_error_small": {{ 'sections.custom_art_studio.photo_error_small' | t | json }},
+        "photo_error_unreadable": {{ 'sections.custom_art_studio.photo_error_unreadable' | t | json }},
+        "photo_required": {{ 'sections.custom_art_studio.photo_required' | t | json }},
+        "consent_required": {{ 'sections.custom_art_studio.consent_required' | t | json }},
+        "name_required": {{ 'sections.custom_art_studio.name_required' | t | json }},
+        "number_required": {{ 'sections.custom_art_studio.number_required' | t | json }},
+        "generate": {{ 'sections.custom_art_studio.generate' | t | json }},
+        "next": {{ 'sections.custom_art_studio.next' | t | json }},
+        "generation_error": {{ 'sections.custom_art_studio.generation_error' | t | json }},
+        "cart_error": {{ 'sections.custom_art_studio.cart_error' | t | json }},
+        "cart_added_mock": {{ 'sections.custom_art_studio.cart_added_mock' | t | json }},
+        "cart_count_sr": {{ 'sections.custom_art_studio.cart_count_sr' | t: count: '[count]' | json }},
+        "save_success": {{ 'sections.custom_art_studio.save_success' | t | json }},
+        "save_error": {{ 'sections.custom_art_studio.save_error' | t | json }},
+        "email_required_for_retry": {{ 'sections.custom_art_studio.email_required_for_retry' | t | json }},
+        "error_rate_limited": {{ 'sections.custom_art_studio.error_rate_limited' | t | json }},
+        "error_email_required": {{ 'sections.custom_art_studio.error_email_required' | t | json }},
+        "webgl_preview_label": {{ 'sections.custom_art_studio.webgl_preview_label' | t | json }},
+        "webgl_canvas_caption": {{ 'sections.custom_art_studio.webgl_canvas_caption' | t | json }},
+        "mockups_loading": {{ 'sections.custom_art_studio.mockups_loading' | t | json }},
+        "mockup_alt": {{ 'sections.custom_art_studio.mockup_alt' | t | json }},
+        "mockup_zoom": {{ 'sections.custom_art_studio.mockup_zoom' | t | json }},
+        "artist_success": {{ 'sections.custom_art_studio.artist_success' | t | json }},
+        "artist_error": {{ 'sections.custom_art_studio.artist_error' | t | json }},
+        "mock_watermark": {{ 'sections.custom_art_studio.mock_watermark' | t | json }},
+        "prop_name": {{ 'sections.custom_art_studio.prop_name' | t | json }},
+        "prop_number": {{ 'sections.custom_art_studio.prop_number' | t | json }},
+        "prop_team": {{ 'sections.custom_art_studio.prop_team' | t | json }},
+        "prop_preview": {{ 'sections.custom_art_studio.prop_preview' | t | json }}
+      }
+    }
+  </script>
+</custom-art-studio>
+
+{% schema %}
+{
+  "name": "t:sections.custom-art-studio.name",
+  "tag": "section",
+  "class": "tw-custom-art-studio-section",
+  "limit": 1,
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.custom-art-studio.headings.content.content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.custom-art-studio.settings.heading.label",
+      "default": "Créez votre tableau de légende"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:sections.custom-art-studio.settings.description.label",
+      "default": "<p>Votre photo, votre équipe, votre numéro : notre studio compose une œuvre unique, imprimée avec soin.</p>"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "t:sections.custom-art-studio.settings.cta_label.label",
+      "default": "Créer mon tableau"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.custom-art-studio.headings.steps.content"
+    },
+    {
+      "type": "text",
+      "id": "step_photo_title",
+      "label": "t:sections.custom-art-studio.settings.step_photo_title.label",
+      "default": "Votre photo"
+    },
+    {
+      "type": "text",
+      "id": "step_team_title",
+      "label": "t:sections.custom-art-studio.settings.step_team_title.label",
+      "default": "Votre équipe"
+    },
+    {
+      "type": "text",
+      "id": "step_name_title",
+      "label": "t:sections.custom-art-studio.settings.step_name_title.label",
+      "default": "Prénom et numéro"
+    },
+    {
+      "type": "text",
+      "id": "step_format_title",
+      "label": "t:sections.custom-art-studio.settings.step_format_title.label",
+      "default": "Format et finition"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.custom-art-studio.headings.photo_examples.content"
+    },
+    {
+      "type": "image_picker",
+      "id": "good_photo_image",
+      "label": "t:sections.custom-art-studio.settings.good_photo_image.label"
+    },
+    {
+      "type": "text",
+      "id": "good_photo_alt",
+      "label": "t:sections.custom-art-studio.settings.good_photo_alt.label",
+      "default": "Exemple de bonne photo : portrait net et bien éclairé, visage de face bien visible"
+    },
+    {
+      "type": "image_picker",
+      "id": "bad_photo_image",
+      "label": "t:sections.custom-art-studio.settings.bad_photo_image.label"
+    },
+    {
+      "type": "text",
+      "id": "bad_photo_alt",
+      "label": "t:sections.custom-art-studio.settings.bad_photo_alt.label",
+      "default": "Exemple de photo à éviter : visage dans l'ombre, mal éclairé et difficile à distinguer"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.custom-art-studio.headings.wait.content"
+    },
+    {
+      "type": "text",
+      "id": "wait_phase_1",
+      "label": "t:sections.custom-art-studio.settings.wait_phase_1.label",
+      "default": "Analyse de votre photo…"
+    },
+    {
+      "type": "text",
+      "id": "wait_phase_2",
+      "label": "t:sections.custom-art-studio.settings.wait_phase_2.label",
+      "default": "Le peintre esquisse le portrait…"
+    },
+    {
+      "type": "text",
+      "id": "wait_phase_3",
+      "label": "t:sections.custom-art-studio.settings.wait_phase_3.label",
+      "default": "Mise en couleurs aux teintes de votre équipe…"
+    },
+    {
+      "type": "text",
+      "id": "wait_phase_4",
+      "label": "t:sections.custom-art-studio.settings.wait_phase_4.label",
+      "default": "Vernissage et derniers détails…"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.custom-art-studio.headings.reveal.content"
+    },
+    {
+      "type": "text",
+      "id": "reveal_title",
+      "label": "t:sections.custom-art-studio.settings.reveal_title.label",
+      "default": "Votre tableau est prêt !"
+    },
+    {
+      "type": "image_picker",
+      "id": "mock_reveal_image",
+      "label": "t:sections.custom-art-studio.settings.mock_reveal_image.label",
+      "info": "t:sections.custom-art-studio.settings.mock_reveal_image.info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.custom-art-studio.headings.technical.content"
+    },
+    {
+      "type": "text",
+      "id": "backend_url",
+      "label": "t:sections.custom-art-studio.settings.backend_url.label",
+      "default": "https://backend.myselfmonart.com"
+    },
+    {
+      "type": "checkbox",
+      "id": "mock_mode",
+      "label": "t:sections.custom-art-studio.settings.mock_mode.label",
+      "info": "t:sections.custom-art-studio.settings.mock_mode.info",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.custom-art-studio.name"
+    }
+  ]
+}
+{% endschema %}

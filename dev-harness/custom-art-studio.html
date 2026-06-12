@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Harness local — custom-art-studio (mode mock)</title>
+  <!--
+    ============================================================================
+    PAGE DE TEST LOCALE (hors Shopify) du custom element <custom-art-studio>.
+
+    Comment l'ouvrir :
+      1. S'assurer que assets/output.css est à jour :
+         npx tailwindcss -i ./input.css -o ./assets/output.css --minify
+      2. Ouvrir ce fichier directement dans un navigateur (double-clic), ou —
+         si le navigateur bloque sessionStorage/fetch en file:// — servir le
+         repo : `npx serve .` (ou `python -m http.server`) puis visiter
+         http://localhost:3000/dev-harness/custom-art-studio.html
+      3. Le mode mock est actif : équipes en fixture, génération simulée ~8 s,
+         œuvre de démonstration SVG, reveal WebGL (perspective-canvas) + mises en
+         situation simulées en streaming. L'« Ajouter au panier » échoue volontairement
+         hors Shopify et affiche le message de démonstration.
+      4. Scénario « Faire réaliser par un artiste » (manual_review) : saisir le
+         prénom ARTISTE à l'étape 3.
+
+    Le markup ci-dessous reproduit le rendu de sections/tw-custom-art-studio.liquid
+    (textes FR = locales/fr.default.json, sections.custom_art_studio). Si la section
+    Liquid évolue, répercuter ici les changements de structure.
+    ============================================================================
+  -->
+  <link rel="stylesheet" href="../assets/output.css">
+  <style>
+    /* Variables normalement émises par snippets/fonts-and-colors.liquid
+       (valeurs reprises de config/settings_data.json) — harness uniquement. */
+    :root {
+      --color-main-rgb: 33, 21, 12;
+      --color-secondary-rgb: 255, 255, 255;
+      --color-like-rgb: 243, 136, 197;
+      --color-buy-button-rgb: 215, 155, 134;
+      --color-accent-rgb: 221, 171, 153;
+      --color-terra-rgb: 158, 104, 86;
+      --color-brand-50-rgb: 244, 226, 219;
+      --color-brand-100-rgb: 236, 207, 196;
+      --color-brand-300-rgb: 221, 171, 153;
+      --color-brand-500-rgb: 215, 155, 134;
+      --color-brand-700-rgb: 158, 104, 86;
+      --color-brand-900-rgb: 110, 71, 58;
+    }
+    body { font-family: Roboto, system-ui, sans-serif; }
+  </style>
+  <script src="../assets/component-custom-art-studio.js" defer></script>
+  <!-- Visualiseur 3D réutilisé au reveal (même script que les fiches « painting »). -->
+  <script src="../assets/component-perspective-canvas.js" defer></script>
+</head>
+<body class="bg-secondary text-main">
+
+  <main class="page-width px-4 py-10">
+    <div class="mx-auto max-w-lg rounded-xl border border-main-10 bg-main-2 p-4 text-sm text-main-80">
+      <p><strong>Harness local</strong> — studio de personnalisation en mode mock. Parcours complet : photo → équipe → prénom/numéro → format/finition → attente (~8 s) → révélation (WebGL + mises en situation simulées).</p>
+      <p class="mt-2">Scénario « Faire réaliser par un artiste » (manual_review) : saisir le prénom <strong>ARTISTE</strong> à l'étape 3.</p>
+    </div>
+
+    <custom-art-studio class="block" data-section-id="harness">
+
+      <!-- ---- CTA d'ouverture ---- -->
+      <div class="page-width px-4">
+        <div class="max-w-lg mx-auto text-center py-10">
+          <h2 id="studio-heading-harness" class="mb-4">
+            <span class="title-highlight">Créez votre tableau de légende</span>
+          </h2>
+          <div class="text-main-80 leading-relaxed mb-6">
+            <p>Votre photo, votre équipe, votre numéro : notre studio compose une œuvre unique, imprimée avec soin.</p>
+          </div>
+          <!-- En flux par défaut ; flotte en bas d'écran (mobile) quand la section
+               sort du viewport — logique IntersectionObserver du custom element. -->
+          <button
+            type="button"
+            data-studio-open
+            data-studio-cta
+            aria-haspopup="dialog"
+            class="cart-button glass-anim py-4 mobile:w-auto">
+            Créer mon tableau
+          </button>
+        </div>
+      </div>
+
+      <!-- ---- Dialog studio ---- -->
+      <div
+        data-studio-dialog
+        class="fixed inset-0 z-[60] hidden"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="studio-dialog-title-harness">
+
+        <div data-studio-backdrop class="absolute inset-0 bg-main-50 hidden md:block" aria-hidden="true"></div>
+
+        <div class="relative flex h-full w-full flex-col bg-secondary md:mx-auto md:mt-[5vh] md:h-auto md:max-h-[90vh] md:w-full md:max-w-xl md:rounded-2xl md:border-main md:border-1 md:shadow-neu-lg overflow-hidden">
+
+          <header class="flex items-start justify-between gap-4 border-b border-main-10 p-4">
+            <div>
+              <p data-step-indicator class="text-xs uppercase tracking-wide text-main-70 mb-1"></p>
+              <h2 id="studio-dialog-title-harness" data-step-title class="text-xl font-heading font-bold">Votre photo</h2>
+              <div data-step-dots class="mt-2 flex gap-1.5" aria-hidden="true">
+                <span class="h-1.5 w-6 rounded-full bg-main transition-colors duration-300 motion-reduce:transition-none"></span>
+                <span class="h-1.5 w-6 rounded-full bg-main-20 transition-colors duration-300 motion-reduce:transition-none"></span>
+                <span class="h-1.5 w-6 rounded-full bg-main-20 transition-colors duration-300 motion-reduce:transition-none"></span>
+                <span class="h-1.5 w-6 rounded-full bg-main-20 transition-colors duration-300 motion-reduce:transition-none"></span>
+              </div>
+              <p class="mt-2 inline-block rounded-full bg-accent-20 px-2 py-0.5 text-2xs uppercase tracking-wide text-main-80">
+                Mode démonstration — aucune génération réelle
+              </p>
+            </div>
+            <button
+              type="button"
+              data-studio-close
+              class="shrink-0 rounded-full bg-secondary-50 p-2 hover:bg-main-10 transition-colors duration-200 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main"
+              aria-label="Fermer le studio">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="currentColor" d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41z"/>
+              </svg>
+            </button>
+          </header>
+
+          <div class="grow overflow-y-auto scrollbar-hidden p-4">
+
+            <p data-resume-note class="mb-4 rounded-xl bg-buy-button-10 px-3 py-2 text-sm text-main-80" hidden>
+              Bon retour ! Vos choix ont été retrouvés — il ne manque que votre photo.
+            </p>
+
+            <!-- ===== Étape 1 — Photo ===== -->
+            <div data-studio-panel="photo">
+              <!-- M11 : exemples par défaut (assets embarqués, repli des image_picker admin) -->
+              <ul class="grid grid-cols-2 gap-3 mb-5">
+                <li class="rounded-xl border border-main-10 bg-main-2 p-3 text-center">
+                  <img
+                    src="../assets/studio-photo-exemple-portrait-net.jpg"
+                    alt="Exemple de bonne photo : portrait net et bien éclairé, visage de face bien visible"
+                    width="600"
+                    height="600"
+                    loading="lazy"
+                    decoding="async"
+                    class="mb-2 aspect-square w-full rounded-lg object-cover">
+                  <p class="text-xs text-main-80">✓ Photo idéale : visage net, bien éclairé, de face</p>
+                </li>
+                <li class="rounded-xl border border-main-10 bg-main-2 p-3 text-center">
+                  <img
+                    src="../assets/studio-photo-exemple-ombres-dures.jpg"
+                    alt="Exemple de photo à éviter : visage dans l'ombre, mal éclairé et difficile à distinguer"
+                    width="600"
+                    height="600"
+                    loading="lazy"
+                    decoding="async"
+                    class="mb-2 aspect-square w-full rounded-lg object-cover grayscale">
+                  <p class="text-xs text-main-80">✗ À éviter : flou, visage dans l'ombre ou trop loin</p>
+                </li>
+              </ul>
+
+              <div class="flex flex-col gap-3 2xs:flex-row">
+                <input type="file" accept="image/jpeg,image/png,image/heic,image/heif" capture="user" class="sr-only" id="studio-photo-capture-harness" data-photo-input>
+                <label for="studio-photo-capture-harness" class="md:hidden inline-flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl border-main border-1 bg-secondary px-4 py-3 font-heading font-semibold text-main shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none focus-within:ring-2 focus-within:ring-main">
+                  Prendre une photo
+                </label>
+                <input type="file" accept="image/jpeg,image/png,image/heic,image/heif" class="sr-only" id="studio-photo-gallery-harness" data-photo-input>
+                <label for="studio-photo-gallery-harness" class="inline-flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl border-main border-1 bg-secondary px-4 py-3 font-heading font-semibold text-main shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none focus-within:ring-2 focus-within:ring-main">
+                  Choisir dans la galerie
+                </label>
+              </div>
+
+              <div data-photo-preview-wrapper class="mt-4 text-center" hidden>
+                <img data-photo-preview src="" alt="Aperçu de la photo choisie pour votre tableau personnalisé" width="320" height="320" class="mx-auto max-h-64 w-auto rounded-xl border border-main-10 object-contain shadow-neu-sm">
+                <button type="button" data-photo-replace class="mt-3 text-sm text-main-80 underline hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main rounded">
+                  Changer de photo
+                </button>
+              </div>
+
+              <p data-photo-error class="mt-3 text-sm text-accent" role="alert" aria-live="polite" hidden></p>
+
+              <div class="mt-5 flex items-start gap-3">
+                <input type="checkbox" id="studio-consent-harness" data-consent class="mt-1 h-5 w-5 shrink-0 cursor-pointer accent-current focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+                <label for="studio-consent-harness" class="cursor-pointer text-sm text-main-80">
+                  Je confirme disposer des droits sur cette photo et j'accepte son utilisation pour la création de mon tableau.
+                </label>
+              </div>
+            </div>
+
+            <!-- ===== Étape 2 — Équipe ===== -->
+            <div data-studio-panel="team" hidden>
+              <label for="studio-team-search-harness" class="mb-1 block text-xs uppercase tracking-wide text-main-70">Rechercher une équipe</label>
+              <input type="search" id="studio-team-search-harness" data-team-search autocomplete="off" placeholder="Ex. : Paris, Marseille…" class="mb-4 w-full rounded-xl border border-main-10 bg-secondary px-4 py-3 text-main placeholder:text-main-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+
+              <fieldset>
+                <legend class="sr-only">Choisissez votre équipe</legend>
+                <p data-team-loading class="py-6 text-center text-sm text-main-70" aria-live="polite">Chargement des équipes…</p>
+                <div data-team-error class="py-6 text-center" hidden>
+                  <p class="mb-3 text-sm text-accent">Les équipes n'ont pas pu être chargées.</p>
+                  <button type="button" data-team-retry class="rounded-xl border-main border-1 bg-secondary px-4 py-2 font-heading font-semibold shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">Réessayer</button>
+                </div>
+                <ul data-team-grid class="grid grid-cols-3 gap-3 2xs:grid-cols-4 sm:grid-cols-5"></ul>
+                <p data-team-empty class="py-6 text-center text-sm text-main-70" hidden>Aucune équipe ne correspond à votre recherche.</p>
+              </fieldset>
+              <p data-team-required-error class="mt-3 text-sm text-accent" role="alert" aria-live="polite" hidden>Choisissez une équipe pour continuer.</p>
+            </div>
+
+            <!-- ===== Étape 3 — Prénom + numéro ===== -->
+            <div data-studio-panel="name" hidden>
+              <p class="sr-only">Aperçu du lettrage sur le dos du maillot</p>
+              <svg data-jersey viewBox="0 0 200 220" class="mx-auto mb-5 block w-40" aria-hidden="true" focusable="false">
+                <path data-jersey-body d="M62 26 L84 12 Q100 24 116 12 L138 26 L172 52 L152 78 L144 64 L144 204 Q100 212 56 204 L56 64 L48 78 L28 52 Z" class="fill-main" stroke="rgba(0,0,0,0.25)" stroke-width="2"></path>
+                <path d="M84 12 Q100 30 116 12 L112 9 Q100 19 88 9 Z" class="fill-secondary" opacity="0.9"></path>
+                <text data-jersey-name x="100" y="92" text-anchor="middle" class="fill-secondary font-heading" font-size="17" font-weight="700" letter-spacing="1.5">PRÉNOM</text>
+                <text data-jersey-number x="100" y="166" text-anchor="middle" class="fill-secondary font-heading" font-size="62" font-weight="700">10</text>
+              </svg>
+
+              <label for="studio-player-name-harness" class="mb-1 block text-xs uppercase tracking-wide text-main-70">Prénom sur le maillot</label>
+              <input type="text" id="studio-player-name-harness" data-player-name maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="studio-name-help-harness" class="mb-1 w-full rounded-xl border border-main-10 bg-secondary px-4 py-3 uppercase tracking-widest text-main focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+              <p id="studio-name-help-harness" class="mb-4 text-xs text-main-70">12 caractères maximum — lettres, espaces et tirets.</p>
+
+              <label for="studio-player-number-harness" class="mb-1 block text-xs uppercase tracking-wide text-main-70">Numéro (1 à 99)</label>
+              <input type="number" id="studio-player-number-harness" data-player-number min="1" max="99" step="1" inputmode="numeric" autocomplete="off" class="no-spin w-28 rounded-xl border border-main-10 bg-secondary px-4 py-3 text-center text-main focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+
+              <p data-name-error class="mt-3 text-sm text-accent" role="alert" aria-live="polite" hidden></p>
+            </div>
+
+            <!-- ===== Étape 4 — Format + finition ===== -->
+            <div data-studio-panel="format" hidden>
+              <fieldset class="mb-5">
+                <legend class="mb-2 text-xs uppercase tracking-wide text-main-70">Format</legend>
+                <div class="flex flex-wrap gap-2">
+                  <label class="cursor-pointer">
+                    <input type="radio" name="studio-option1" value="30x40 cm" data-studio-option data-option-position="1" data-option-name="Format" class="peer sr-only" checked>
+                    <span class="block rounded-full border border-main-20 bg-secondary px-4 py-2 text-sm text-main transition-all duration-100 motion-reduce:transition-none peer-checked:bg-main peer-checked:text-secondary peer-focus-visible:ring-2 peer-focus-visible:ring-main peer-focus-visible:ring-offset-2">30x40 cm</span>
+                  </label>
+                  <label class="cursor-pointer">
+                    <input type="radio" name="studio-option1" value="60x80 cm" data-studio-option data-option-position="1" data-option-name="Format" class="peer sr-only">
+                    <span class="block rounded-full border border-main-20 bg-secondary px-4 py-2 text-sm text-main transition-all duration-100 motion-reduce:transition-none peer-checked:bg-main peer-checked:text-secondary peer-focus-visible:ring-2 peer-focus-visible:ring-main peer-focus-visible:ring-offset-2">60x80 cm</span>
+                  </label>
+                </div>
+              </fieldset>
+              <fieldset class="mb-5">
+                <legend class="mb-2 text-xs uppercase tracking-wide text-main-70">Finition</legend>
+                <div class="flex flex-wrap gap-2">
+                  <label class="cursor-pointer">
+                    <input type="radio" name="studio-option2" value="Sans cadre" data-studio-option data-option-position="2" data-option-name="Finition" class="peer sr-only" checked>
+                    <span class="block rounded-full border border-main-20 bg-secondary px-4 py-2 text-sm text-main transition-all duration-100 motion-reduce:transition-none peer-checked:bg-main peer-checked:text-secondary peer-focus-visible:ring-2 peer-focus-visible:ring-main peer-focus-visible:ring-offset-2">Sans cadre</span>
+                  </label>
+                  <label class="cursor-pointer">
+                    <input type="radio" name="studio-option2" value="Cadre blanc" data-studio-option data-option-position="2" data-option-name="Finition" class="peer sr-only">
+                    <span class="block rounded-full border border-main-20 bg-secondary px-4 py-2 text-sm text-main transition-all duration-100 motion-reduce:transition-none peer-checked:bg-main peer-checked:text-secondary peer-focus-visible:ring-2 peer-focus-visible:ring-main peer-focus-visible:ring-offset-2">Cadre blanc</span>
+                  </label>
+                  <label class="cursor-pointer">
+                    <input type="radio" name="studio-option2" value="Cadre noir mat" data-studio-option data-option-position="2" data-option-name="Finition" class="peer sr-only">
+                    <span class="block rounded-full border border-main-20 bg-secondary px-4 py-2 text-sm text-main transition-all duration-100 motion-reduce:transition-none peer-checked:bg-main peer-checked:text-secondary peer-focus-visible:ring-2 peer-focus-visible:ring-main peer-focus-visible:ring-offset-2">Cadre noir mat</span>
+                  </label>
+                  <label class="cursor-pointer">
+                    <input type="radio" name="studio-option2" value="Cadre chêne clair" data-studio-option data-option-position="2" data-option-name="Finition" class="peer sr-only">
+                    <span class="block rounded-full border border-main-20 bg-secondary px-4 py-2 text-sm text-main transition-all duration-100 motion-reduce:transition-none peer-checked:bg-main peer-checked:text-secondary peer-focus-visible:ring-2 peer-focus-visible:ring-main peer-focus-visible:ring-offset-2">Cadre chêne clair</span>
+                  </label>
+                  <label class="cursor-pointer">
+                    <input type="radio" name="studio-option2" value="Cadre noyer" data-studio-option data-option-position="2" data-option-name="Finition" class="peer sr-only">
+                    <span class="block rounded-full border border-main-20 bg-secondary px-4 py-2 text-sm text-main transition-all duration-100 motion-reduce:transition-none peer-checked:bg-main peer-checked:text-secondary peer-focus-visible:ring-2 peer-focus-visible:ring-main peer-focus-visible:ring-offset-2">Cadre noyer</span>
+                  </label>
+                  <label class="cursor-pointer">
+                    <input type="radio" name="studio-option2" value="Cadre argent ancien" data-studio-option data-option-position="2" data-option-name="Finition" class="peer sr-only">
+                    <span class="block rounded-full border border-main-20 bg-secondary px-4 py-2 text-sm text-main transition-all duration-100 motion-reduce:transition-none peer-checked:bg-main peer-checked:text-secondary peer-focus-visible:ring-2 peer-focus-visible:ring-main peer-focus-visible:ring-offset-2">Cadre argent ancien</span>
+                  </label>
+                </div>
+              </fieldset>
+
+              <p class="flex items-baseline gap-2 border-t border-main-10 pt-4">
+                <span class="text-xs uppercase tracking-wide text-main-70">Prix</span>
+                <span data-studio-price class="text-2xl font-heading font-bold" aria-live="polite">34,90 €</span>
+              </p>
+              <p data-variant-unavailable class="mt-2 text-sm text-accent" role="alert" aria-live="polite" hidden>Cette combinaison n'est pas disponible pour le moment.</p>
+            </div>
+
+            <!-- ===== Écran d'attente ===== -->
+            <div data-studio-screen="wait" hidden>
+              <div class="py-10 text-center">
+                <h3 class="mb-6 text-lg font-heading font-bold">Création de votre tableau…</h3>
+                <div class="mx-auto mb-4 h-2 w-full max-w-sm overflow-hidden rounded-full bg-main-10">
+                  <div data-wait-bar class="h-full w-0 rounded-full bg-buy-button transition-[width] duration-700 ease-out motion-reduce:transition-none"></div>
+                </div>
+                <p data-wait-text class="min-h-6 text-main-80" aria-live="polite"></p>
+                <p class="mt-6 text-xs text-main-70">Comptez 20 à 30 secondes. Vous pouvez fermer cette fenêtre : votre création vous attendra.</p>
+              </div>
+            </div>
+
+            <!-- ===== Écran de révélation ===== -->
+            <div data-studio-screen="reveal" hidden>
+              <h3 class="mb-5 text-center text-lg font-heading font-bold">Votre tableau est prêt !</h3>
+
+              <!-- Figure = repli image + cadre CSS ; masquée dès que le WebGL a rendu (perspective:ready). -->
+              <figure data-reveal-figure class="mx-auto w-full max-w-xs md:max-w-sm">
+                <div data-reveal-frame class="border-8 border-main bg-secondary p-2 shadow-neu-lg">
+                  <img data-reveal-image src="" alt="Aperçu de votre tableau personnalisé, protégé par un filigrane" width="1024" height="1365" class="block h-auto w-full" hidden>
+                </div>
+                <figcaption class="mt-2 text-center text-xs text-main-70">Aperçu protégé par filigrane — votre tableau final est imprimé sans.</figcaption>
+              </figure>
+
+              <!-- Visualiseur 3D recréé ici à chaque reveal (perspective-canvas, data-context="studio"). -->
+              <div data-studio-webgl-slot class="mx-auto w-full max-w-xs md:max-w-sm" hidden></div>
+
+              <div class="mx-auto mt-6 flex max-w-sm flex-col gap-3">
+                <button type="button" data-studio-add-to-cart class="rounded-xl border-main border-[4px] bg-buy-button px-6 py-3 font-heading font-bold text-main shadow-neu-md hover:shadow-neu-sm transition-shadow duration-100 motion-reduce:transition-none disabled:cursor-wait disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2">
+                  Ajouter au panier — <span data-reveal-price>34,90 €</span>
+                </button>
+                <button type="button" data-studio-reveal-next class="rounded-xl border-main border-1 bg-secondary px-6 py-3 font-heading font-semibold text-main shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none disabled:cursor-wait disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+                  Une autre version
+                </button>
+                <button type="button" data-studio-save-toggle aria-expanded="false" class="text-sm text-main-80 underline hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main rounded">
+                  Sauvegarder ma création
+                </button>
+
+                <form data-studio-save-form class="rounded-xl bg-main-2 p-4" hidden novalidate>
+                  <label for="studio-save-email-harness" class="mb-1 block text-xs uppercase tracking-wide text-main-70">Votre e-mail</label>
+                  <div class="flex gap-2">
+                    <input type="email" id="studio-save-email-harness" data-save-email required autocomplete="email" placeholder="prenom@exemple.fr" class="w-full rounded-xl border border-main-10 bg-secondary px-3 py-2 text-main placeholder:text-main-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+                    <button type="submit" class="shrink-0 rounded-xl border-main border-1 bg-secondary px-4 py-2 font-heading font-semibold shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none disabled:cursor-wait disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+                      Recevoir ma création
+                    </button>
+                  </div>
+                  <p data-save-feedback class="mt-2 text-sm text-main-80" aria-live="polite" hidden></p>
+                </form>
+
+                <p data-reveal-feedback class="text-center text-sm text-accent" role="alert" aria-live="polite" hidden></p>
+                <p data-cart-feedback class="text-center text-sm text-main-80" aria-live="polite" hidden></p>
+              </div>
+
+              <!-- Galerie « mises en situation » : squelettes remplis en streaming, lien zoom. -->
+              <section data-mockup-zone class="mx-auto mt-8 w-full max-w-sm" aria-labelledby="studio-mockups-title-harness" hidden>
+                <h4 id="studio-mockups-title-harness" class="mb-3 text-center text-sm font-heading font-semibold uppercase tracking-wide text-main-80">Votre tableau, chez vous</h4>
+                <ul data-mockup-grid class="grid grid-cols-2 gap-3"></ul>
+              </section>
+            </div>
+
+            <!-- ===== Écran d'erreur ===== -->
+            <div data-studio-screen="error" hidden>
+              <div class="py-10 text-center">
+                <p data-error-message class="mb-5 text-main-80" role="alert" aria-live="assertive">
+                  La création n'a pas abouti — cet essai n'est pas décompté. Réessayez, idéalement avec une photo bien nette.
+                </p>
+
+                <!-- Cap « 3e essai+ = e-mail requis » (403) : visible uniquement dans ce cas. -->
+                <form data-error-email-form class="mx-auto mb-5 max-w-xs text-left" hidden novalidate>
+                  <label for="studio-error-email-harness" class="mb-1 block text-xs uppercase tracking-wide text-main-70">Votre e-mail</label>
+                  <div class="flex gap-2">
+                    <input type="email" id="studio-error-email-harness" data-error-email required autocomplete="email" placeholder="prenom@exemple.fr" class="w-full rounded-xl border border-main-10 bg-secondary px-3 py-2 text-main placeholder:text-main-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+                    <button type="submit" class="shrink-0 rounded-xl border-main border-1 bg-secondary px-4 py-2 font-heading font-semibold shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none disabled:cursor-wait disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+                      Débloquer mon essai
+                    </button>
+                  </div>
+                </form>
+
+                <button type="button" data-studio-retry class="rounded-xl border-main border-[4px] bg-buy-button px-6 py-3 font-heading font-bold text-main shadow-neu-md hover:shadow-neu-sm transition-shadow duration-100 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2">
+                  Réessayer
+                </button>
+              </div>
+            </div>
+
+            <!-- ===== Écran « Faire réaliser par un artiste » (manual_review / échec définitif) ===== -->
+            <div data-studio-screen="artist" hidden>
+              <div class="mx-auto max-w-sm py-6 text-center">
+                <svg viewBox="0 0 120 120" class="mx-auto mb-5 h-24 w-24" aria-hidden="true" focusable="false">
+                  <circle cx="60" cy="60" r="56" class="fill-buy-button-10"></circle>
+                  <path d="M60 26c-21 0-38 14-38 32 0 17 15 30 33 30 5 0 8-3 8-7 0-2-1-3-2-5-1-1-2-3-2-5 0-4 3-7 8-7h9c12 0 22-9 22-20 0-10-17-18-38-18z" class="fill-secondary" stroke="currentColor" stroke-opacity="0.25" stroke-width="2"></path>
+                  <circle cx="46" cy="42" r="5" class="fill-accent"></circle>
+                  <circle cx="64" cy="38" r="5" class="fill-buy-button"></circle>
+                  <circle cx="38" cy="56" r="5" class="fill-main-20"></circle>
+                  <circle cx="80" cy="46" r="5" class="fill-like"></circle>
+                  <path d="M88 18l10 10-34 36-12 4 3-13z" class="fill-main"></path>
+                </svg>
+                <h3 class="mb-3 text-lg font-heading font-bold">Faites réaliser votre tableau par un artiste</h3>
+                <p class="mb-5 text-main-80">Votre photo mérite un soin particulier : un artiste de notre studio va s'occuper personnellement de votre tableau. Laissez votre e-mail, vous recevrez votre aperçu sous 24 h — sans engagement.</p>
+
+                <form data-artist-form novalidate>
+                  <label for="studio-artist-email-harness" class="mb-1 block text-left text-xs uppercase tracking-wide text-main-70">Votre e-mail</label>
+                  <input type="email" id="studio-artist-email-harness" data-artist-email required autocomplete="email" placeholder="prenom@exemple.fr" class="mb-3 w-full rounded-xl border border-main-10 bg-secondary px-4 py-3 text-main placeholder:text-main-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+                  <button type="submit" class="w-full rounded-xl border-main border-[4px] bg-buy-button px-6 py-3 font-heading font-bold text-main shadow-neu-md hover:shadow-neu-sm transition-shadow duration-100 motion-reduce:transition-none disabled:cursor-wait disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2">
+                    Recevoir mon aperçu sous 24 h
+                  </button>
+                </form>
+
+                <p data-artist-feedback class="mt-4 text-sm text-main-80" aria-live="polite" hidden></p>
+                <p class="mt-4 text-xs text-main-70">Cette demande n'est pas décomptée de vos essais.</p>
+              </div>
+            </div>
+          </div>
+
+          <footer data-studio-footer class="flex items-center justify-between gap-3 border-t border-main-10 p-4">
+            <button type="button" data-studio-back class="rounded-xl px-4 py-3 font-heading font-semibold text-main-80 hover:bg-main-5 transition-colors duration-200 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+              Retour
+            </button>
+            <button type="button" data-studio-next class="grow rounded-xl border-main border-[4px] bg-buy-button px-6 py-3 font-heading font-bold text-main shadow-neu-md hover:shadow-neu-sm transition-shadow duration-100 motion-reduce:transition-none disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2">
+              Continuer
+            </button>
+          </footer>
+        </div>
+      </div>
+
+      <!-- ---- Config mock (équivalent du JSON rendu par la section Liquid) ---- -->
+      <script type="application/json" data-studio-config>
+        {
+          "backendUrl": "https://backend.myselfmonart.com",
+          "mock": true,
+          "productId": "harness",
+          "currencySymbol": "€",
+          "hasOnlyDefaultVariant": false,
+          "defaultVariantId": 1001,
+          "variants": [
+            { "id": 1001, "option1": "30x40 cm", "option2": "Sans cadre", "option3": null, "price": 3490, "available": true },
+            { "id": 1002, "option1": "30x40 cm", "option2": "Cadre blanc", "option3": null, "price": 5490, "available": true },
+            { "id": 1003, "option1": "30x40 cm", "option2": "Cadre noir mat", "option3": null, "price": 5490, "available": true },
+            { "id": 1004, "option1": "30x40 cm", "option2": "Cadre chêne clair", "option3": null, "price": 5490, "available": true },
+            { "id": 1005, "option1": "30x40 cm", "option2": "Cadre noyer", "option3": null, "price": 5490, "available": true },
+            { "id": 1006, "option1": "30x40 cm", "option2": "Cadre argent ancien", "option3": null, "price": 5490, "available": true },
+            { "id": 1007, "option1": "60x80 cm", "option2": "Sans cadre", "option3": null, "price": 4990, "available": true },
+            { "id": 1008, "option1": "60x80 cm", "option2": "Cadre blanc", "option3": null, "price": 6990, "available": true },
+            { "id": 1009, "option1": "60x80 cm", "option2": "Cadre noir mat", "option3": null, "price": 6990, "available": true },
+            { "id": 1010, "option1": "60x80 cm", "option2": "Cadre chêne clair", "option3": null, "price": 6990, "available": true },
+            { "id": 1011, "option1": "60x80 cm", "option2": "Cadre noyer", "option3": null, "price": 6990, "available": true },
+            { "id": 1012, "option1": "60x80 cm", "option2": "Cadre argent ancien", "option3": null, "price": 6990, "available": true }
+          ],
+          "stepTitles": {
+            "photo": "Votre photo",
+            "team": "Votre équipe",
+            "name": "Prénom et numéro",
+            "format": "Format et finition"
+          },
+          "waitPhases": [
+            "Analyse de votre photo…",
+            "Le peintre esquisse le portrait…",
+            "Mise en couleurs aux teintes de votre équipe…",
+            "Vernissage et derniers détails…"
+          ],
+          "mockRevealImage": null,
+          "i18n": {
+            "step_indicator": "Étape [step] sur [total]",
+            "confirm_close": "Fermer le studio ? Votre progression est enregistrée, vous pourrez reprendre là où vous en étiez.",
+            "photo_error_type": "Format non pris en charge. Utilisez une photo JPG, PNG ou HEIC.",
+            "photo_error_size": "Photo trop lourde (15 Mo maximum).",
+            "photo_error_small": "Photo trop petite : 512 pixels minimum de côté pour un beau rendu.",
+            "photo_error_unreadable": "Impossible de lire cette photo. Essayez-en une autre.",
+            "photo_required": "Ajoutez une photo pour continuer.",
+            "consent_required": "Merci de confirmer que vous disposez des droits sur cette photo.",
+            "name_required": "Indiquez le prénom à afficher sur le maillot.",
+            "number_required": "Choisissez un numéro entre 1 et 99.",
+            "generate": "Créer mon tableau",
+            "next": "Continuer",
+            "generation_error": "La création n'a pas abouti — cet essai n'est pas décompté. Réessayez, idéalement avec une photo bien nette.",
+            "cart_error": "L'ajout au panier n'a pas fonctionné. Réessayez dans un instant.",
+            "cart_added_mock": "Démonstration : le tableau aurait été ajouté au panier.",
+            "cart_count_sr": "[count] article(s) dans le panier",
+            "save_success": "C'est noté ! Vous recevrez un lien pour retrouver votre création.",
+            "save_error": "L'enregistrement n'a pas abouti. Vérifiez l'e-mail et réessayez.",
+            "email_required_for_retry": "Laissez votre e-mail pour débloquer un nouvel essai.",
+            "error_rate_limited": "Le studio connaît une forte affluence en ce moment. Réessayez dans quelques minutes — vos choix sont conservés.",
+            "error_email_required": "Vos essais découverte du jour sont utilisés. Laissez votre e-mail pour débloquer un nouvel essai.",
+            "webgl_preview_label": "Aperçu en perspective de votre tableau personnalisé",
+            "webgl_canvas_caption": "Votre tableau personnalisé présenté en perspective, avec le format et la finition choisis.",
+            "mockups_loading": "Mise en situation en préparation…",
+            "mockup_alt": "Mise en situation de votre tableau personnalisé dans un intérieur décoré",
+            "mockup_zoom": "Agrandir cette mise en situation (s'ouvre dans un nouvel onglet)",
+            "artist_success": "C'est entre les mains de notre artiste ! Votre aperçu vous attendra dans votre boîte mail d'ici 24 h.",
+            "artist_error": "L'envoi n'a pas abouti. Vérifiez votre e-mail et réessayez.",
+            "mock_watermark": "APERÇU — DÉMONSTRATION",
+            "prop_name": "Prénom",
+            "prop_number": "Numéro",
+            "prop_team": "Équipe",
+            "prop_preview": "Aperçu"
+          }
+        }
+      </script>
+    </custom-art-studio>
+  </main>
+</body>
+</html>

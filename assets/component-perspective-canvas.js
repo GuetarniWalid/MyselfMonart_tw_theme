@@ -422,6 +422,14 @@
       // Réagit aux changements de variante (event natif qui bubble jusqu'au document).
       document.addEventListener('change', this.onVariantChange);
 
+      // Studio de personnalisation : le nœud est monté CACHÉ ([hidden] sur le slot) puis
+      // révélé par l'intégrateur au 1er rendu (évènement perspective:ready). Un
+      // IntersectionObserver ne tirerait jamais sur un nœud display:none -> init directe.
+      if (this.getAttribute('data-context') === 'studio') {
+        this.deferInit();
+        return;
+      }
+
       // Init paresseuse : on n'allume le WebGL que lorsque le slide approche le viewport.
       if ('IntersectionObserver' in window) {
         this.io = new IntersectionObserver(
@@ -445,10 +453,11 @@
        jamais le thread au paint LCP. L'<img> poster (LCP/indexable) est visible pendant ce
        temps. Garde-fou anti-attente infinie. */
     deferInit() {
-      // Gros plan (popup) : 1 frame pour laisser le modal s'ouvrir/peindre AVANT l'init
-      // WebGL (ouverture fluide), puis init (texture déjà en cache -> rendu rapide).
+      // Gros plan (popup) et studio (reveal) : 1 frame pour laisser le modal s'ouvrir/peindre
+      // AVANT l'init WebGL (ouverture fluide), puis init (texture déjà en cache -> rendu rapide).
       // Aucune image brute n'est jamais affichée ici.
-      if (this.getAttribute('data-context') === 'popup') {
+      const ctx = this.getAttribute('data-context');
+      if (ctx === 'popup' || ctx === 'studio') {
         requestAnimationFrame(() => this.init());
         return;
       }
@@ -539,6 +548,21 @@
     }
 
     syncStateFromDOM() {
+      // État FIGÉ fourni par la config (studio de personnalisation : la finition et le
+      // format sont choisis DANS le studio, il n'y a pas de painting-variant-picker sur la
+      // page). Prioritaire et indépendant du DOM ; le nœud est recréé à chaque reveal.
+      const fixed = this.config && this.config.state;
+      if (fixed) {
+        this.state.border = borderTypeFromLabel(fixed.border || 'white');
+        this.state.frame = normalize(fixed.frame || '');
+        const m = String(fixed.size || '').match(/(\d+(?:[.,]\d+)?)\s*[x×]\s*(\d+(?:[.,]\d+)?)/i);
+        if (m) {
+          this.sizeW = parseFloat(m[1].replace(',', '.'));
+          this.sizeH = parseFloat(m[2].replace(',', '.'));
+        }
+        this.updateAria('', fixed.frame || '');
+        return;
+      }
       const b = document.querySelector(
         'painting-variant-picker input[name="option2"]:checked',
       );
@@ -568,6 +592,9 @@
     }
 
     onVariantChange(event) {
+      // État figé par la config (studio) : la sélection se fait dans le studio, on ignore
+      // les éventuels pickers d'autres sections de la page.
+      if (this.config && this.config.state) return;
       const target = event.target;
       if (
         !target ||
@@ -808,7 +835,8 @@
     updateAria(borderLabel, frameLabel) {
       if (!this.canvas) return;
       const title = (this.config && this.config.title) || '';
-      let label = 'Aperçu en perspective';
+      // ariaLabel localisé fourni par l'intégrateur (studio) ; libellé FR historique sinon.
+      let label = (this.config && this.config.ariaLabel) || 'Aperçu en perspective';
       if (title) label += ' de ' + title;
       if (borderLabel) label += ' — ' + borderLabel.toLowerCase();
       // « Pas de cadre » détecté sur l'état dérivé du handle (indépendant de la langue),
@@ -1639,6 +1667,9 @@
        Elle "se soulève" en perspective (yaw + échelle de la toile) pendant que le canvas
        apparaît, puis reste dans le DOM à opacity:0 (toujours indexable par Google). */
     reveal() {
+      // Signale le 1er rendu présenté aux intégrations (studio : bascule du repli
+      // image+cadre CSS vers le WebGL UNIQUEMENT quand une frame est réellement affichable).
+      this.dispatchEvent(new CustomEvent('perspective:ready', { bubbles: true }));
       const isPopup = this.getAttribute('data-context') === 'popup';
       const poster =
         (this.parentElement && this.parentElement.querySelector('.persp-poster')) || null;
