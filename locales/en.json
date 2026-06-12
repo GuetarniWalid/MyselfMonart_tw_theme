@@ -413,7 +413,11 @@
       "close": "Close filters",
       "placeholder": "Filter options will appear here",
       "products": "products",
-      "clear_all": "Clear"
+      "clear_all": "Clear",
+      "color_gold": "Gold / Gilded",
+      "color_yellow": "Yellow / Ochre",
+      "color_beige": "Beige / Cream",
+      "color_brown": "Brown / Earth"
     },
     "collection_editorial": {
       "read_full_guide": "Read the full guide",

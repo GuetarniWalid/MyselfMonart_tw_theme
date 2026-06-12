@@ -176,7 +176,11 @@
       "other_collections_label": "Otras colecciones",
       "open": "Abrir filtros",
       "placeholder": "Las opciones de filtrado aparecerán aquí",
-      "clear_all": "Eliminar"
+      "clear_all": "Eliminar",
+      "color_gold": "Dorado / Oro",
+      "color_yellow": "Amarillo / Ocre",
+      "color_beige": "Beige / Crema",
+      "color_brown": "Marrón / Tierra"
     },
     "collection_editorial": {
       "read_full_guide": "Leer la guía completa",

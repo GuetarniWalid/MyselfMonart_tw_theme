@@ -179,7 +179,10 @@
       "filter_label": "Filteren:",
       "show_more": "+ Meer tonen",
       "products": "producten",
-      "button_label": "Filteren en sorteren"
+      "button_label": "Filteren en sorteren",
+      "color_gold": "Goud / Goudkleurig",
+      "color_yellow": "Geel / Oker",
+      "color_brown": "Bruin / Aardetinten"
     },
     "collection_editorial": {
       "faq_heading": "Jouw vragen over {{ title }}",

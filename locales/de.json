@@ -177,7 +177,11 @@
       "clear_all": "Löschen",
       "filter_label": "Filtern:",
       "placeholder": "Die Filteroptionen werden hier angezeigt",
-      "show_less": "- Weniger anzeigen"
+      "show_less": "- Weniger anzeigen",
+      "color_gold": "Gold / Goldfarben",
+      "color_yellow": "Gelb / Ocker",
+      "color_beige": "Beige / Creme",
+      "color_brown": "Braun / Erdtöne"
     },
     "collection_editorial": {
       "read_full_guide": "Vollständigen Ratgeber lesen",
