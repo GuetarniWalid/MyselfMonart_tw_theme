@@ -106,6 +106,14 @@
       '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
     }[c]));
 
+  // Crest bicolore NET. Le linear-gradient(135deg, c0 50%, c1 50%) bavait sur la diagonale
+  // (anti-aliasing -> on voyait un peu de chaque couleur de l'autre côté, bord « découpé »).
+  // Ici : carré plein c0 + triangle c1 (moitié bas-droite) -> UNE seule arête nette. Le cercle
+  // vient du parent (overflow-hidden rounded-full). Forward-compatible : remplacer rect+path par
+  // un <image href> (logo astro, photo…) garde le même conteneur circulaire.
+  const crestSvg = (c0, c1) =>
+    `<svg viewBox="0 0 100 100" class="block h-full w-full" preserveAspectRatio="none" aria-hidden="true" focusable="false"><rect width="100" height="100" fill="${escapeHtml(c0 || '#888888')}"></rect><path d="M100 0V100H0Z" fill="${escapeHtml(c1 || c0 || '#888888')}"></path></svg>`;
+
   const normalize = (value) =>
     String(value ?? '')
       .normalize('NFD')
@@ -771,7 +779,7 @@
           <label class="group relative flex cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-main-10 bg-secondary p-2.5 text-center shadow-neu-xs transition-[transform,box-shadow,background-color,border-color] duration-150 hover:bg-main-5 hover:shadow-neu-md active:scale-[0.98] has-[:checked]:border-terra has-[:checked]:bg-buy-button-10 has-[:checked]:shadow-neu-md motion-reduce:transition-none motion-reduce:active:scale-100">
             <input type="radio" name="studio-team" value="${escapeHtml(team.id)}" class="peer sr-only" data-team-input${checked}>
             <span class="pointer-events-none absolute right-1.5 top-1.5 z-10 hidden h-5 w-5 place-items-center rounded-full bg-terra text-secondary shadow-neu-xs peer-checked:grid" aria-hidden="true">${CHECK_SVG_INLINE}</span>
-            <span data-allow-empty class="h-14 w-14 rounded-full border border-main-20 shadow-neu-xs peer-focus-visible:ring-2 peer-focus-visible:ring-main peer-focus-visible:ring-offset-2 sm:h-16 sm:w-16" style="background:linear-gradient(135deg, ${escapeHtml(colors[0])} 50%, ${escapeHtml(colors[1] || colors[0])} 50%)" aria-hidden="true"></span>
+            <span class="block h-14 w-14 overflow-hidden rounded-full border border-main-20 shadow-neu-xs peer-focus-visible:ring-2 peer-focus-visible:ring-main peer-focus-visible:ring-offset-2 sm:h-16 sm:w-16" aria-hidden="true">${crestSvg(colors[0], colors[1] || colors[0])}</span>
             <span class="line-clamp-2 min-h-[2rem] text-xs font-medium leading-tight text-main-80 peer-checked:font-bold peer-checked:text-main">${escapeHtml(team.name)}</span>
           </label>
         </li>`;
@@ -795,7 +803,7 @@
       if (nameEl) nameEl.textContent = this.state.teamName || '';
       if (swatch) {
         const c = this.state.teamColors || ['#444444', '#dddddd'];
-        swatch.style.background = `linear-gradient(135deg, ${c[0]} 50%, ${c[1] || c[0]} 50%)`;
+        swatch.innerHTML = crestSvg(c[0], c[1] || c[0]);
       }
       box.classList.remove('hidden');
       box.classList.add('flex');
