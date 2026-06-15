@@ -47,17 +47,17 @@
   // n'est pas posé sur le produit : le studio live tourne dessus -> zéro régression pendant le
   // chantier. Dès que studio.config existe, c'est lui qui pilote l'ordre/les types des étapes.
   const FOOT_FALLBACK_STEPS = [
-    { name: 'photo', type: 'photo', required: true, consent: { required: true }, payloadKey: 'photo' },
-    { name: 'team', type: 'choice', required: true, payloadKey: 'teamId' },
+    { name: 'photo', type: 'photo', required: true, consent: { required: true }, payloadKey: 'photo', checkpointLabel: { fr: 'Photo', en: 'Photo' } },
+    { name: 'team', type: 'choice', required: true, payloadKey: 'teamId', checkpointLabel: { fr: 'Équipe', en: 'Team' } },
     {
-      name: 'name', type: 'group', required: true,
+      name: 'name', type: 'group', required: true, checkpointLabel: { fr: 'Prénom', en: 'Name' },
       children: [
         { name: 'playerName', type: 'text', required: true, minLength: 1, maxLength: 12, payloadKey: 'playerName' },
         { name: 'playerNumber', type: 'number', required: true, min: 1, max: 99, integer: true, payloadKey: 'playerNumber' },
       ],
     },
     {
-      name: 'format', type: 'format', required: true,
+      name: 'format', type: 'format', required: true, checkpointLabel: { fr: 'Format', en: 'Format' },
       roles: [
         { role: 'size', payloadKey: 'format', resolve: 'dimensions' },
         { role: 'frame', payloadKey: 'frame', resolve: 'slug' },
@@ -123,6 +123,8 @@
   // Coche inline (copie de snippets/icon-checkmark.liquid) pour le badge « équipe sélectionnée »
   // du sélecteur d'équipe : renderTeams construit du HTML en chaîne, donc pas de {% render %}.
   const CHECK_SVG_INLINE = '<svg class="block w-3" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 9" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M11.35.643a.5.5 0 01.006.707l-6.77 6.886a.5.5 0 01-.719-.006L.638 4.845a.5.5 0 11.724-.69l2.872 3.011 6.41-6.517a.5.5 0 01.707-.006h-.001z" fill="currentColor"/></svg>';
+  // Coche du stepper (14px via w-3.5, sizée sur le svg car renderStepper construit du HTML en chaîne).
+  const STEP_CHECK_SVG = '<svg class="block h-auto w-3.5" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 9" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M11.35.643a.5.5 0 01.006.707l-6.77 6.886a.5.5 0 01-.719-.006L.638 4.845a.5.5 0 11.724-.69l2.872 3.011 6.41-6.517a.5.5 0 01.707-.006h-.001z" fill="currentColor"/></svg>';
 
   const escapeHtml = (value) =>
     String(value ?? '').replace(/[&<>"']/g, (c) => ({
@@ -253,6 +255,7 @@
       this.bindErrorScreen();
       this.bindArtistScreen();
       this.applyRestoredFields();
+      this.renderStepper();
     }
 
     disconnectedCallback() {
@@ -553,6 +556,26 @@
 
       if (stepName === 'team' && !this.teams) this.loadTeams();
       this.persist();
+    }
+
+    // Construit le stepper (pastilles + connecteurs) DEPUIS la config -> nombre d'étapes VARIABLE,
+    // labels depuis checkpointLabel (i18n). Re-requête les noeuds après (re)génération du markup.
+    renderStepper() {
+      const ol = this.stepCheckpoints;
+      if (!ol) return;
+      ol.innerHTML = this.studioSteps.map((step, i) => {
+        const connector = i === 0 ? ''
+          : '<span class="absolute left-[-50%] right-1/2 top-[13px] h-0.5 overflow-hidden rounded-full bg-main-10"><span data-cp-line-fill class="block h-full w-0 rounded-full bg-buy-button transition-[width] duration-500 ease-out motion-reduce:transition-none"></span></span>';
+        const label = escapeHtml(this.t(step.checkpointLabel) || this.t(step.title) || '');
+        return `<li class="relative flex flex-1 flex-col items-center text-center">${connector}`
+          + '<span data-cp-node class="relative z-10 flex h-7 w-7 items-center justify-center rounded-full border-2 border-main-20 bg-secondary text-2xs font-bold text-main-50 transition-all duration-300 motion-reduce:transition-none">'
+          + `<span data-cp-num class="absolute transition-all duration-300 motion-reduce:transition-none">${i + 1}</span>`
+          + `<span data-cp-check class="absolute flex items-center justify-center text-main opacity-0 scale-50 transition-all duration-300 motion-reduce:transition-none">${STEP_CHECK_SVG}</span>`
+          + '</span>'
+          + `<span class="mt-2 text-2xs leading-tight text-main-70">${label}</span></li>`;
+      }).join('');
+      this.stepNodes = this.querySelectorAll('[data-cp-node]');
+      this.stepLineFills = this.querySelectorAll('[data-cp-line-fill]');
     }
 
     /* Pastilles numérotées + connecteurs : passé = rempli (couleur marque), courant = mis en

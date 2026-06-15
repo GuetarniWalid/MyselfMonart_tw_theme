@@ -87,24 +87,10 @@
         {%- comment -%} Progression : pastilles numérotées (coche quand validé), connecteurs
            qui se remplissent de gauche à droite. Pleine largeur. Pastilles OPAQUES (bg-secondary)
            -> le connecteur passe DERRIÈRE sans se voir. Piloté par updateCheckpoints (JS). {%- endcomment -%}
-        <ol data-step-checkpoints class="mt-4 flex items-start" aria-hidden="true">
-          {%- assign cp_keys = 'cp_photo,cp_team,cp_name,cp_format' | split: ',' -%}
-          {%- for key in cp_keys -%}
-            {%- assign cp_tkey = 'sections.custom_art_studio.' | append: key -%}
-            <li class="relative flex flex-1 flex-col items-center text-center">
-              {%- unless forloop.first -%}
-                <span class="absolute left-[-50%] right-1/2 top-[13px] h-0.5 overflow-hidden rounded-full bg-main-10">
-                  <span data-cp-line-fill class="block h-full w-0 rounded-full bg-buy-button transition-[width] duration-500 ease-out motion-reduce:transition-none"></span>
-                </span>
-              {%- endunless -%}
-              <span data-cp-node class="relative z-10 flex h-7 w-7 items-center justify-center rounded-full border-2 border-main-20 bg-secondary text-2xs font-bold text-main-50 transition-all duration-300 motion-reduce:transition-none">
-                <span data-cp-num class="absolute transition-all duration-300 motion-reduce:transition-none">{{ forloop.index }}</span>
-                <span data-cp-check class="absolute flex items-center justify-center text-main opacity-0 scale-50 transition-all duration-300 motion-reduce:transition-none [&>svg]:w-3.5 [&>svg]:h-auto">{% render 'icon-checkmark' %}</span>
-              </span>
-              <span class="mt-2 text-2xs leading-tight text-main-70">{{ cp_tkey | t }}</span>
-            </li>
-          {%- endfor -%}
-        </ol>
+        {%- comment -%} Stepper rendu par le JS (renderStepper) depuis studio.config -> nombre
+           d'étapes VARIABLE. Conteneur vide ici (data-allow-empty : évite le masquage *:empty
+           avant le remplissage JS). {%- endcomment -%}
+        <ol data-step-checkpoints data-allow-empty class="mt-4 flex items-start" aria-hidden="true"></ol>
       </header>
 
       {%- comment -%} ---- Corps scrollable ---- {%- endcomment -%}
