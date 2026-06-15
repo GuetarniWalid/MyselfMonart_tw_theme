@@ -508,19 +508,30 @@
           const done = i < index;
           const current = i === index;
           const upcoming = i > index;
-          // validée = remplie couleur marque + COCHE ; courante = contour marque + numéro ;
-          // à venir = atténuée. Fond OPAQUE dans tous les cas (cache le connecteur derrière).
+          // Fond TOUJOURS opaque (masque le connecteur qui passe derrière) : aplat couleur de
+          // marque quand validé, blanc sinon. La couleur de marque (salmon clair) sert d'aplat,
+          // jamais de texte -> numéro et coche en brun foncé (text-main) pour rester lisibles.
           node.classList.toggle('bg-buy-button', done);
-          node.classList.toggle('text-secondary', done);
           node.classList.toggle('bg-secondary', !done);
           node.classList.toggle('border-buy-button', done || current);
-          node.classList.toggle('text-buy-button', current);
           node.classList.toggle('border-main-20', upcoming);
+          // Halo doux autour de l'étape en cours.
+          node.classList.toggle('ring-4', current);
+          node.classList.toggle('ring-buy-button-20', current);
+          // Numéro : lisible (brun foncé) en cours, atténué pour les étapes à venir.
+          node.classList.toggle('text-main', current);
           node.classList.toggle('text-main-50', upcoming);
+          // Chiffre -> coche : cross-fade + léger pop (les deux sont superposés au même centre).
           const num = node.querySelector('[data-cp-num]');
           const check = node.querySelector('[data-cp-check]');
-          if (num) num.classList.toggle('hidden', done);
-          if (check) check.classList.toggle('hidden', !done);
+          if (num) {
+            num.classList.toggle('opacity-0', done);
+            num.classList.toggle('scale-50', done);
+          }
+          if (check) {
+            check.classList.toggle('opacity-0', !done);
+            check.classList.toggle('scale-50', !done);
+          }
         });
       }
       if (this.stepLineFills) {

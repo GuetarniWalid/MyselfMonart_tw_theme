@@ -97,11 +97,11 @@
                   <span data-cp-line-fill class="block h-full w-0 rounded-full bg-buy-button transition-[width] duration-500 ease-out motion-reduce:transition-none"></span>
                 </span>
               {%- endunless -%}
-              <span data-cp-node class="relative z-10 flex h-7 w-7 items-center justify-center rounded-full border-2 border-main-20 bg-secondary text-2xs font-bold text-main-50 transition-colors duration-300 motion-reduce:transition-none">
-                <span data-cp-num>{{ forloop.index }}</span>
-                <span data-cp-check class="hidden">{% render 'icon-check' %}</span>
+              <span data-cp-node class="relative z-10 flex h-7 w-7 items-center justify-center rounded-full border-2 border-main-20 bg-secondary text-2xs font-bold text-main-50 transition-all duration-300 motion-reduce:transition-none">
+                <span data-cp-num class="absolute transition-all duration-300 motion-reduce:transition-none">{{ forloop.index }}</span>
+                <span data-cp-check class="absolute flex items-center justify-center text-main opacity-0 scale-50 transition-all duration-300 motion-reduce:transition-none [&>svg]:w-3.5 [&>svg]:h-auto">{% render 'icon-checkmark' %}</span>
               </span>
-              <span class="mt-2 text-2xs leading-tight text-main-60">{{ cp_tkey | t }}</span>
+              <span class="mt-2 text-2xs leading-tight text-main-70">{{ cp_tkey | t }}</span>
             </li>
           {%- endfor -%}
         </ol>

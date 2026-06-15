@@ -13,7 +13,9 @@
     .croppr-region,
     .croppr-overlay,
     .croppr-handleContainer,
-    .decor-bg
+    .decor-bg,
+    [data-cp-line-fill],
+    [data-studio-backdrop]
   ) {
   display: none;
 }
