@@ -455,14 +455,15 @@ class MainProductBlocks extends CollapsibleTab {
 
   onBuyButtonClick = async (e) => {
     const button = e.currentTarget || e.target;
-    // Produit personnalisé (poster perso foot) : le bouton d'achat OUVRE le studio de
-    // création au lieu d'ajouter au panier. L'ajout au panier se fait à la fin du studio,
-    // une fois l'aperçu validé. Ciblé sur le template `personalized` -> les autres produits
-    // gardent l'ajout au panier classique. Vaut pour le bouton fixe ET le bouton flottant.
-    if (button?.dataset?.template === 'personalized') {
+    // Produit personnalisé : le bouton d'achat OUVRE le studio de création au lieu d'ajouter au
+    // panier. Détection par PRÉSENCE du studio sur la page (monté par les templates personnalisés :
+    // foot IA, poster à design fixe…) plutôt que par un nom de template en dur -> tout nouveau
+    // produit perso marche sans retoucher ce code. L'ajout au panier se fait à la fin du studio
+    // (aperçu validé pour l'IA, ou directement pour un design fixe). Bouton fixe ET flottant.
+    const studio = document.querySelector('custom-art-studio');
+    if (studio && typeof studio.open === 'function') {
       e.preventDefault();
-      const studio = document.querySelector('custom-art-studio');
-      if (studio && typeof studio.open === 'function') studio.open();
+      studio.open();
       return;
     }
     try {

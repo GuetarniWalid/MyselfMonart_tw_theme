@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "productType": "poster-foot-nb",
+  "generation": { "enabled": false },
+  "steps": [
+    {
+      "name": "firstName",
+      "type": "text",
+      "required": true,
+      "maxLength": 14,
+      "charset": "letters",
+      "transform": "uppercase",
+      "cartProperty": { "label": { "fr": "Prénom", "en": "First name", "de": "Vorname", "nl": "Voornaam", "es": "Nombre" } },
+      "title": { "fr": "Le prénom à floquer", "en": "Name to print", "de": "Aufzudruckender Name", "nl": "Naam om te bedrukken", "es": "Nombre a estampar" },
+      "checkpointLabel": { "fr": "Prénom", "en": "Name", "de": "Name", "nl": "Naam", "es": "Nombre" },
+      "label": { "fr": "Prénom sur le maillot", "en": "Name on the jersey", "de": "Name auf dem Trikot", "nl": "Naam op het shirt", "es": "Nombre en la camiseta" },
+      "placeholder": { "fr": "Ex : LUCAS", "en": "E.g. LUCAS", "de": "z. B. LUCAS", "nl": "Bijv. LUCAS", "es": "Ej.: LUCAS" }
+    },
+    {
+      "name": "number",
+      "type": "number",
+      "required": true,
+      "min": 1,
+      "max": 99,
+      "integer": true,
+      "cartProperty": { "label": { "fr": "Numéro", "en": "Number", "de": "Nummer", "nl": "Nummer", "es": "Número" } },
+      "title": { "fr": "Le numéro", "en": "The number", "de": "Die Nummer", "nl": "Het nummer", "es": "El número" },
+      "checkpointLabel": { "fr": "Numéro", "en": "Number", "de": "Nummer", "nl": "Nummer", "es": "Número" },
+      "label": { "fr": "Numéro sur le maillot (1-99)", "en": "Number on the jersey (1-99)", "de": "Nummer auf dem Trikot (1-99)", "nl": "Nummer op het shirt (1-99)", "es": "Número en la camiseta (1-99)" }
+    },
+    {
+      "name": "format",
+      "type": "format",
+      "required": true,
+      "title": { "fr": "Format et finition", "en": "Format and finish", "de": "Format und Ausführung", "nl": "Formaat en afwerking", "es": "Formato y acabado" },
+      "checkpointLabel": { "fr": "Format", "en": "Format", "de": "Format", "nl": "Formaat", "es": "Formato" },
+      "roles": [
+        { "role": "size", "payloadKey": "format", "resolve": "dimensions" },
+        { "role": "frame", "payloadKey": "frame", "resolve": "slug" }
+      ]
+    }
+  ]
+}

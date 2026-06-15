@@ -215,6 +215,20 @@ function validateConfig(cfg) {
     }
   }
 
+  // Mode SANS génération (produit design fixe : generation.enabled === false). Le moteur saute
+  // photo/attente/reveal et ajoute au panier directement, avec les champs cartProperty en propriétés
+  // de commande. (Même condition que le moteur : hasGeneration = !(generation && enabled === false).)
+  const noGen = !!(cfg.generation && cfg.generation.enabled === false);
+  if (noGen && Array.isArray(cfg.steps)) {
+    if (cfg.steps.some((s) => s && s.type === 'photo')) {
+      warnings.push('generation.enabled:false (sans génération) mais une étape "photo" existe : sans back-end, la photo n\'est ni envoyée ni traitée. Retire l\'étape photo.');
+    }
+    const hasCartProp = (steps) => (steps || []).some((s) => s && (s.cartProperty || (s.type === 'group' && hasCartProp(s.children))));
+    if (!hasCartProp(cfg.steps)) {
+      warnings.push('mode sans génération mais aucune étape n\'a "cartProperty" : la commande ne portera ni prénom ni numéro. Ajoute "cartProperty" (ex : { "label": { "fr": "Prénom" } }) aux champs à imprimer.');
+    }
+  }
+
   return { errors, warnings };
 }
 

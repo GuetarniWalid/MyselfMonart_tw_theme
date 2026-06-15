@@ -199,6 +199,13 @@
         ? this.studioConfig.steps
         : FOOT_FALLBACK_STEPS;
       this.stepNames = this.studioSteps.map((step) => step.name);
+      // Mode « sans génération » (config-driven). Un produit perso à DESIGN FIXE (ex : poster foot
+      // N&B, prénom+numéro imprimés sur un visuel existant) n'a pas de génération IA : il désactive
+      // le bloc generation -> pas de photo/attente/reveal ; à la dernière étape on AJOUTE AU PANIER
+      // directement (prénom/numéro en propriétés de commande). Marqueur EXPLICITE `generation.enabled
+      // === false` : par défaut (bloc absent OU enabled!==false) = AVEC génération -> le foot, dont la
+      // config n'a pas de bloc generation, reste inchangé.
+      this.hasGeneration = !(this.studioConfig && this.studioConfig.generation && this.studioConfig.generation.enabled === false);
       this.storageKey = `mma-studio:${this.config.productId || 'product'}`;
 
       this.dialog = this.querySelector('[data-studio-dialog]');
@@ -222,7 +229,9 @@
       this.lastFocused = null;
 
       this.state = {
-        step: 'photo',
+        // 1re étape de CETTE config (foot : 'photo' ; produit sans photo : sa 1re étape).
+        // Jamais 'photo' en dur -> sinon un produit no-gen ouvrirait sur un step inexistant.
+        step: this.stepNames[0],
         screen: 'steps', // steps | wait | reveal | error | artist
         fields: {}, // valeurs génériques par step.name (config-driven), en parallèle des clés foot
         consent: false,
@@ -244,6 +253,9 @@
       };
 
       this.restoreState();
+      // Garde-fou config-driven : un step persisté absent de CETTE config (ex : 'photo' hérité,
+      // ou config modifiée) -> on repart de la 1re étape plutôt que d'afficher un écran vide.
+      if (!this.stepNames.includes(this.state.step)) this.state.step = this.stepNames[0];
       // Snapshot avant les bind : le syncVariant initial de bindFormatStep réécrit
       // state.selectedOptions depuis les radios par défaut.
       this.restoredOptions = { ...(this.state.selectedOptions || {}) };
@@ -307,10 +319,12 @@
         if (this.state.teamId && this.state.fields.team == null) this.state.fields.team = this.state.teamId;
         if (this.state.playerName && this.state.fields.playerName == null) this.state.fields.playerName = this.state.playerName;
         if (this.state.playerNumber && this.state.fields.playerNumber == null) this.state.fields.playerNumber = this.state.playerNumber;
-        // La photo (File) n'est pas persistable : sans photo ni job en cours,
-        // on repart de l'étape photo en gardant les autres réponses.
-        if (!this.state.jobId && !this.state.previewUrl && this.state.step !== 'photo') {
-          this.state.step = 'photo';
+        // La photo (File) n'est pas persistable : sans photo ni job en cours, on repart de la
+        // 1re étape en gardant les autres réponses. Produit SANS étape photo (design fixe) :
+        // rien à perdre -> on reprend là où on en était (pas de reset).
+        const hasPhotoStep = this.studioSteps.some((s) => s.type === 'photo');
+        if (hasPhotoStep && !this.state.jobId && !this.state.previewUrl && this.state.step !== this.stepNames[0]) {
+          this.state.step = this.stepNames[0];
           this.state.screen = 'steps';
           this.shouldShowResumeNote = true;
         }
@@ -555,7 +569,9 @@
       this.footer.hidden = false;
       this.footer.classList.remove('hidden');
       this.backButton.hidden = index === 0;
-      this.nextButton.textContent = index === this.stepNames.length - 1 ? this.i18n.generate : this.i18n.next;
+      this.nextButton.textContent = index === this.stepNames.length - 1
+        ? (this.hasGeneration ? this.i18n.generate : (this.i18n.add_to_cart || this.i18n.generate))
+        : this.i18n.next;
       this.updateNextDisabled();
 
       if (stepName === 'team' && !this.teams) this.loadTeams();
@@ -703,10 +719,13 @@
       this.nextButton.addEventListener('click', () => {
         if (!this.stepIsValid(this.state.step)) return;
         const index = this.stepNames.indexOf(this.state.step);
-        if (index === this.stepNames.length - 1) this.startGeneration();
-        else this.showStep(this.stepNames[index + 1]);
+        if (index === this.stepNames.length - 1) {
+          // Dernière étape : génération IA (foot) OU ajout panier direct (produit design fixe).
+          if (this.hasGeneration) this.startGeneration();
+          else this.directAddToCart();
+        } else this.showStep(this.stepNames[index + 1]);
       });
-      this.q('[data-studio-retry]')?.addEventListener('click', () => this.showStep('photo'));
+      this.q('[data-studio-retry]')?.addEventListener('click', () => this.showStep(this.stepNames[0]));
       // Cap « 3e essai+ = e-mail requis » : l'e-mail saisi débloque et relance la génération.
       this.q('[data-error-email-form]')?.addEventListener('submit', (event) => {
         event.preventDefault();
@@ -1726,6 +1745,75 @@
       } finally {
         button.disabled = false;
       }
+    }
+
+    // Ajout panier DIRECT (produit personnalisé SANS génération : design fixe, prénom/numéro
+    // imprimés). Pas de back-end, pas de garde-fou mock (rien à mocker). Les champs marqués
+    // cartProperty deviennent des propriétés de la ligne de commande (lisibles pour l'impression) ;
+    // la variante choisie (format/finition) porte le format. Mêmes contrats DOM que addToCart.
+    async directAddToCart() {
+      const firstInvalid = this.stepNames.find((step) => !this.stepIsValid(step));
+      if (firstInvalid) { this.showStep(firstInvalid); return; }
+
+      const button = this.nextButton;
+      button.disabled = true;
+      const feedback = this.q('[data-studio-cart-feedback]');
+      if (feedback) feedback.hidden = true;
+
+      try {
+        const response = await fetch('/cart/add.js?sections=tw-cart-drawer,tw-header-painting', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            items: [{
+              id: this.state.variantId || this.config.defaultVariantId,
+              quantity: 1,
+              properties: this.buildCartProperties(),
+            }],
+          }),
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const json = await response.json();
+
+        const cart = await (await fetch('/cart.js')).json();
+        this.updateCartBubble(cart.item_count);
+
+        const drawer = document.getElementById('shopify-section-tw-cart-drawer');
+        if (drawer && json.sections && json.sections['tw-cart-drawer']) {
+          drawer.innerHTML = new DOMParser()
+            .parseFromString(json.sections['tw-cart-drawer'], 'text/html')
+            .querySelector('#shopify-section-tw-cart-drawer').innerHTML;
+        }
+
+        this.clearPersisted();
+        this.close();
+        setTimeout(() => document.getElementById('cart-button')?.click(), 300);
+      } catch (e) {
+        if (feedback) { feedback.textContent = this.i18n.cart_error; feedback.hidden = false; }
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    // Propriétés de ligne de commande depuis les étapes marquées cartProperty (mode sans génération).
+    // Clé = libellé lisible (cartProperty.label i18n, sinon checkpointLabel/label/title), valeur = saisie.
+    buildCartProperties() {
+      const props = {};
+      const fields = this.state.fields || {};
+      const collect = (step) => {
+        if (step.type === 'group') { (step.children || []).forEach(collect); return; }
+        if (!step.cartProperty) return;
+        const value = fields[step.name];
+        if (value == null || value === '') return;
+        let label = (step.cartProperty && typeof step.cartProperty === 'object' && step.cartProperty.label)
+          ? this.t(step.cartProperty.label)
+          : (this.t(step.checkpointLabel) || this.t(step.label) || this.t(step.title) || step.name);
+        // Anti-écrasement : si deux libellés résolvent à l'identique, on retombe sur le name (unique).
+        if (label in props) label = step.name;
+        props[label] = value;
+      };
+      this.studioSteps.forEach(collect);
+      return props;
     }
 
     updateCartBubble(count) {
