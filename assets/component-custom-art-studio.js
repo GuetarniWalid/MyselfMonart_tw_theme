@@ -43,6 +43,15 @@
   if (customElements.get('custom-art-studio')) return;
 
   const STEPS = ['photo', 'team', 'name', 'format'];
+  // Livrable A (studio config-driven) — repli foot utilisé tant que le metafield studio.config
+  // n'est pas posé sur le produit : le studio live tourne dessus -> zéro régression pendant le
+  // chantier. Dès que studio.config existe, c'est lui qui pilote l'ordre/les types des étapes.
+  const FOOT_FALLBACK_STEPS = [
+    { name: 'photo', type: 'photo' },
+    { name: 'team', type: 'choice' },
+    { name: 'name', type: 'group' },
+    { name: 'format', type: 'format' },
+  ];
   const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/heic', 'image/heif'];
   const HEIC_EXT = /\.(heic|heif)$/i;
   const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15 Mo
@@ -162,6 +171,13 @@
       const configNode = this.querySelector('[data-studio-config]');
       this.config = configNode ? JSON.parse(configNode.textContent) : {};
       this.i18n = this.config.i18n || {};
+      // Config-driven : la liste ORDONNÉE des étapes vient du metafield studio.config (injecté
+      // par la section dans config.studio). Repli foot si absent (migration progressive).
+      this.studioConfig = this.config.studio && typeof this.config.studio === 'object' ? this.config.studio : null;
+      this.studioSteps = (this.studioConfig && Array.isArray(this.studioConfig.steps) && this.studioConfig.steps.length)
+        ? this.studioConfig.steps
+        : FOOT_FALLBACK_STEPS;
+      this.stepNames = this.studioSteps.map((step) => step.name);
       this.storageKey = `mma-studio:${this.config.productId || 'product'}`;
 
       this.dialog = this.querySelector('[data-studio-dialog]');
@@ -486,13 +502,13 @@
         panel.hidden = panel.dataset.studioPanel !== stepName;
       });
 
-      const index = STEPS.indexOf(stepName);
+      const index = this.stepNames.indexOf(stepName);
       this.stepTitle.textContent = (this.config.stepTitles || {})[stepName] || '';
       if (this.stepIndicator) {
         this.stepIndicator.hidden = false;
         this.stepIndicator.textContent = (this.i18n.step_indicator || '')
           .replace('[step]', index + 1)
-          .replace('[total]', STEPS.length);
+          .replace('[total]', this.stepNames.length);
       }
       this.updateCheckpoints(index);
 
@@ -500,7 +516,7 @@
       this.footer.hidden = false;
       this.footer.classList.remove('hidden');
       this.backButton.hidden = index === 0;
-      this.nextButton.textContent = index === STEPS.length - 1 ? this.i18n.generate : this.i18n.next;
+      this.nextButton.textContent = index === this.stepNames.length - 1 ? this.i18n.generate : this.i18n.next;
       this.updateNextDisabled();
 
       if (stepName === 'team' && !this.teams) this.loadTeams();
@@ -596,14 +612,14 @@
 
     bindErrorScreen() {
       this.backButton.addEventListener('click', () => {
-        const index = STEPS.indexOf(this.state.step);
-        if (index > 0) this.showStep(STEPS[index - 1]);
+        const index = this.stepNames.indexOf(this.state.step);
+        if (index > 0) this.showStep(this.stepNames[index - 1]);
       });
       this.nextButton.addEventListener('click', () => {
         if (!this.stepIsValid(this.state.step)) return;
-        const index = STEPS.indexOf(this.state.step);
-        if (index === STEPS.length - 1) this.startGeneration();
-        else this.showStep(STEPS[index + 1]);
+        const index = this.stepNames.indexOf(this.state.step);
+        if (index === this.stepNames.length - 1) this.startGeneration();
+        else this.showStep(this.stepNames[index + 1]);
       });
       this.q('[data-studio-retry]')?.addEventListener('click', () => this.showStep('photo'));
       // Cap « 3e essai+ = e-mail requis » : l'e-mail saisi débloque et relance la génération.
@@ -923,7 +939,7 @@
 
     async startGeneration() {
       // Étape incomplète (ex. photo perdue après restauration) : on y ramène l'utilisateur.
-      const firstInvalid = STEPS.find((step) => !this.stepIsValid(step));
+      const firstInvalid = this.stepNames.find((step) => !this.stepIsValid(step));
       if (firstInvalid) {
         this.showStep(firstInvalid);
         return;
