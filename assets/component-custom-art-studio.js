@@ -43,9 +43,6 @@
   if (customElements.get('custom-art-studio')) return;
 
   const STEPS = ['photo', 'team', 'name', 'format'];
-  // Remplissage de la barre par étape : démarre déjà avancé et fait de grands bonds
-  // -> l'utilisateur a l'impression que ça file vite (perception de rapidité).
-  const STEP_PROGRESS = [22, 48, 72, 92];
   const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/heic', 'image/heif'];
   const HEIC_EXT = /\.(heic|heif)$/i;
   const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15 Mo
@@ -160,9 +157,10 @@
       this.backButton = this.querySelector('[data-studio-back]');
       this.nextButton = this.querySelector('[data-studio-next]');
       this.stepTitle = this.querySelector('[data-step-title]');
-      this.stepIndicator = this.querySelector('[data-step-indicator]');
-      this.stepProgress = this.querySelector('[data-step-progress]');
-      this.stepProgressFill = this.querySelector('[data-step-progress-fill]');
+      this.stepIndicator = this.querySelector('[data-step-indicator]'); // optionnel
+      this.stepCheckpoints = this.querySelector('[data-step-checkpoints]');
+      this.stepNodes = this.querySelectorAll('[data-cp-node]');
+      this.stepLineFills = this.querySelectorAll('[data-cp-line-fill]');
       this.resumeNote = this.querySelector('[data-resume-note]');
 
       this.photoFile = null;
@@ -359,6 +357,16 @@
     open() {
       this.lastFocused = document.activeElement;
       this.dialog.classList.remove('hidden');
+      // Flou d'arrière-plan : on RÉUTILISE l'overlay global du thème (#overlay-content,
+      // posé au niveau du layout -> son backdrop-filter fonctionne, contrairement à un fond
+      // interne à la section que des parents transformés cassent). Même mécanisme que le
+      // cart-drawer / les menus. Blur renforcé pour le studio, réinitialisé à la fermeture.
+      const overlay = document.getElementById('overlay-content');
+      if (overlay) {
+        overlay.classList.remove('hidden');
+        overlay.style.backdropFilter = 'blur(6px)';
+        overlay.style.webkitBackdropFilter = 'blur(6px)';
+      }
       document.body.classList.add('overflow-hidden');
       this.dialog.addEventListener('keydown', this.onKeydown);
 
@@ -407,6 +415,12 @@
       if (this.state.screen === 'wait' && this.config.mock) this.state.screen = 'steps';
       this.persist();
       this.dialog.classList.add('hidden');
+      const overlay = document.getElementById('overlay-content');
+      if (overlay) {
+        overlay.classList.add('hidden');
+        overlay.style.backdropFilter = '';
+        overlay.style.webkitBackdropFilter = '';
+      }
       this.dialog.removeEventListener('keydown', this.onKeydown);
       document.body.classList.remove('overflow-hidden');
       this.lastFocused?.focus?.();
@@ -457,17 +471,13 @@
 
       const index = STEPS.indexOf(stepName);
       this.stepTitle.textContent = (this.config.stepTitles || {})[stepName] || '';
-      this.stepIndicator.hidden = false;
-      this.stepIndicator.textContent = (this.i18n.step_indicator || '')
-        .replace('[step]', index + 1)
-        .replace('[total]', STEPS.length);
-      if (this.stepProgress) {
-        this.stepProgress.hidden = false;
-        this.stepProgress.classList.remove('hidden');
-        if (this.stepProgressFill) {
-          this.stepProgressFill.style.width = (STEP_PROGRESS[index] ?? 100) + '%';
-        }
+      if (this.stepIndicator) {
+        this.stepIndicator.hidden = false;
+        this.stepIndicator.textContent = (this.i18n.step_indicator || '')
+          .replace('[step]', index + 1)
+          .replace('[total]', STEPS.length);
       }
+      this.updateCheckpoints(index);
 
       // classe + attribut : la classe Tailwind `flex` du footer/dots écrase l'attribut hidden seul.
       this.footer.hidden = false;
@@ -480,6 +490,36 @@
       this.persist();
     }
 
+    /* Pastilles numérotées + connecteurs : passé = rempli (couleur marque), courant = mis en
+       avant, à venir = atténué ; les connecteurs se remplissent à mesure -> progression nette. */
+    updateCheckpoints(index) {
+      if (this.stepCheckpoints) {
+        this.stepCheckpoints.hidden = false;
+        this.stepCheckpoints.classList.remove('hidden');
+      }
+      if (this.stepNodes) {
+        this.stepNodes.forEach((node, i) => {
+          const done = i < index;
+          const current = i === index;
+          const upcoming = i > index;
+          node.classList.toggle('bg-buy-button', done);
+          node.classList.toggle('text-secondary', done);
+          node.classList.toggle('border-buy-button', done || current);
+          node.classList.toggle('bg-secondary', current);
+          node.classList.toggle('text-buy-button', current);
+          node.classList.toggle('bg-main-5', upcoming);
+          node.classList.toggle('text-main-40', upcoming);
+          node.classList.toggle('border-main-10', upcoming);
+        });
+      }
+      if (this.stepLineFills) {
+        // Le connecteur n°j précède l'étape (j+1) : rempli dès qu'on a atteint cette étape.
+        this.stepLineFills.forEach((fill, j) => {
+          fill.style.width = index >= j + 1 ? '100%' : '0%';
+        });
+      }
+    }
+
     showScreen(screenName) {
       this.state.screen = screenName;
       this.querySelectorAll('[data-studio-panel]').forEach((panel) => { panel.hidden = true; });
@@ -488,10 +528,10 @@
       });
       this.footer.hidden = true;
       this.footer.classList.add('hidden');
-      this.stepIndicator.hidden = true;
-      if (this.stepProgress) {
-        this.stepProgress.hidden = true;
-        this.stepProgress.classList.add('hidden');
+      if (this.stepIndicator) this.stepIndicator.hidden = true;
+      if (this.stepCheckpoints) {
+        this.stepCheckpoints.hidden = true;
+        this.stepCheckpoints.classList.add('hidden');
       }
       const heading = this.q(`[data-studio-screen="${screenName}"] h3`);
       if (heading) this.stepTitle.textContent = heading.textContent;
