@@ -420,6 +420,26 @@
       <!-- ---- Config mock (équivalent du JSON rendu par la section Liquid) ---- -->
       <script type="application/json" data-studio-config>
         {
+          "locale": "fr",
+          "studio": {
+            "version": 1,
+            "productType": "foot",
+            "steps": [
+              { "name": "photo", "type": "photo", "required": true, "consent": { "required": true }, "payloadKey": "photo", "title": { "fr": "Votre photo", "en": "Your photo" }, "checkpointLabel": { "fr": "Photo", "en": "Photo" } },
+              { "name": "team", "type": "choice", "required": true, "payloadKey": "teamId", "source": "endpoint", "endpoint": "/api/custom-art/teams", "title": { "fr": "Votre équipe", "en": "Your team" }, "checkpointLabel": { "fr": "Équipe", "en": "Team" } },
+              { "name": "name", "type": "group", "required": true, "title": { "fr": "Prénom et numéro", "en": "Name and number" }, "checkpointLabel": { "fr": "Prénom", "en": "Name" },
+                "children": [
+                  { "name": "playerName", "type": "text", "required": true, "minLength": 1, "maxLength": 12, "payloadKey": "playerName" },
+                  { "name": "playerNumber", "type": "number", "required": true, "min": 1, "max": 99, "integer": true, "payloadKey": "playerNumber" }
+                ] },
+              { "name": "format", "type": "format", "required": true, "title": { "fr": "Format et finition", "en": "Format and finish" }, "checkpointLabel": { "fr": "Format", "en": "Format" },
+                "roles": [
+                  { "role": "size", "payloadKey": "format", "resolve": "dimensions" },
+                  { "role": "frame", "payloadKey": "frame", "resolve": "slug" }
+                ] }
+            ],
+            "payload": { "extra": { "consent": "1" } }
+          },
           "backendUrl": "https://backend.myselfmonart.com",
           "mock": true,
           "productId": "harness",
