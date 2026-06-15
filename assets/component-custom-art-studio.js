@@ -256,6 +256,8 @@
       this.bindArtistScreen();
       this.applyRestoredFields();
       this.renderStepper();
+      this.renderGenericPanels();
+      this.bindGenericInputs();
     }
 
     disconnectedCallback() {
@@ -1017,6 +1019,82 @@
       }
       this.persist();
       this.updateNextDisabled();
+    }
+
+    /* ------------------------------------------ panneaux génériques (text/number/date) */
+
+    // Pour les étapes dont AUCUN panneau de section dédié n'existe (un nouveau produit) : on génère
+    // un panneau d'input. Le foot réutilise ses panneaux existants (photo/team/name/format) ;
+    // choice/format/photo gardent les leurs ; le groupe maillot reste spécifique au foot.
+    findStepDeep(name) {
+      for (const step of this.studioSteps) {
+        if (step.name === name) return step;
+        if (step.type === 'group') {
+          const child = (step.children || []).find((c) => c.name === name);
+          if (child) return child;
+        }
+      }
+      return null;
+    }
+
+    genericPanelHtml(step) {
+      const name = escapeHtml(step.name);
+      const label = escapeHtml(this.t(step.label) || this.t(step.title) || '');
+      const help = escapeHtml(this.t(step.help) || '');
+      const placeholder = escapeHtml(this.t(step.placeholder) || '');
+      const id = `studio-field-${name}`;
+      let inputType = 'text';
+      let attrs = '';
+      if (step.type === 'number') {
+        inputType = 'number';
+        attrs = `inputmode="numeric"${step.min != null ? ` min="${step.min}"` : ''}${step.max != null ? ` max="${step.max}"` : ''}`;
+      } else if (step.type === 'date') {
+        inputType = step.mode === 'time' ? 'time' : 'date';
+      }
+      return `<div data-studio-panel="${name}" hidden>`
+        + `<label for="${id}" class="mb-1 block text-xs uppercase tracking-wide text-main-70">${label}</label>`
+        + `<input type="${inputType}" id="${id}" data-generic-input data-field="${name}" data-ftype="${escapeHtml(step.type)}" autocomplete="off" placeholder="${placeholder}" ${attrs}`
+        + ' class="mb-1 w-full rounded-xl border border-main-10 bg-secondary px-4 py-3 text-main placeholder:text-main-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">'
+        + (help ? `<p class="mb-4 text-xs text-main-70">${help}</p>` : '')
+        + '</div>';
+    }
+
+    renderGenericPanels() {
+      const host = this.q('[data-studio-generic-panels]');
+      if (!host) return;
+      const GENERIC = { text: true, number: true, date: true };
+      const toRender = this.studioSteps.filter((step) => GENERIC[step.type] && !this.q(`[data-studio-panel="${step.name}"]`));
+      host.innerHTML = toRender.map((step) => this.genericPanelHtml(step)).join('');
+      host.querySelectorAll('[data-generic-input]').forEach((input) => {
+        const v = (this.state.fields || {})[input.dataset.field];
+        if (v != null) input.value = v;
+      });
+    }
+
+    bindGenericInputs() {
+      const host = this.q('[data-studio-generic-panels]');
+      if (!host) return;
+      host.addEventListener('input', (event) => {
+        const input = event.target.closest('[data-generic-input]');
+        if (!input) return;
+        const name = input.dataset.field;
+        const ftype = input.dataset.ftype;
+        const step = this.findStepDeep(name) || {};
+        let v = input.value;
+        if (ftype === 'number') {
+          const maxLen = step.max != null ? String(step.max).length : undefined;
+          v = v.replace(/\D/g, '');
+          if (maxLen) v = v.slice(0, maxLen);
+        } else if (ftype === 'text') {
+          if (step.transform === 'uppercase') v = v.toLocaleUpperCase('fr');
+          if (step.charset === 'letters') v = v.replace(/[^A-ZÀ-ÖØ-ÞŒÆ' -]/gi, '');
+          if (step.maxLength) v = v.slice(0, step.maxLength);
+        }
+        if (input.value !== v) input.value = v;
+        this.state.fields[name] = v;
+        this.persist();
+        this.updateNextDisabled();
+      });
     }
 
     /* ------------------------------------------------------------ génération */

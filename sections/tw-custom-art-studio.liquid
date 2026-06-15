@@ -370,6 +370,11 @@
           </p>
         </div>
 
+        {%- comment -%} Conteneur des panneaux génériques (text/number/date) rendus par le JS
+           (renderGenericPanels) pour les étapes d'un produit sans panneau dédié ci-dessus.
+           Vide pour le foot (qui a ses propres panneaux). {%- endcomment -%}
+        <div data-studio-generic-panels></div>
+
         {%- comment -%} ===== Écran d'attente storytelling ===== {%- endcomment -%}
         <div data-studio-screen="wait" hidden>
           <div class="py-10 text-center">
