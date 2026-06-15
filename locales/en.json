@@ -497,6 +497,7 @@
       "team_retry": "Try again",
       "team_empty": "No teams match your search.",
       "team_required": "Select a team to continue.",
+      "team_selected_prefix": "Selected team:",
       "name_label": "First name on the jersey",
       "name_help": "Up to 12 characters — letters, spaces, and hyphens.",
       "name_required": "Please enter the first name to display on the jersey.",

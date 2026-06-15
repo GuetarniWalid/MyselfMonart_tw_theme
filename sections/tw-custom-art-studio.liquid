@@ -235,6 +235,20 @@
             placeholder="{{ 'sections.custom_art_studio.team_search_placeholder' | t }}"
             class="mb-4 w-full rounded-xl border border-main-10 bg-secondary px-4 py-3 text-main placeholder:text-main-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
 
+          {%- comment -%} Confirmation du choix : « Équipe sélectionnée : <nom> » + mini-crest des
+             vraies couleurs de l'équipe. Masquée tant qu'aucune équipe n'est choisie (pilotée par
+             updateTeamConfirm, JS). Le swatch est volontairement vide (fond seul) -> data-allow-empty
+             pour échapper à la règle globale *:empty{display:none}. {%- endcomment -%}
+          <p
+            data-team-confirm
+            class="mb-4 hidden items-center gap-2.5 rounded-xl border-2 border-terra bg-buy-button-10 px-3 py-2.5 text-sm text-main shadow-neu-xs"
+            role="status"
+            aria-live="polite">
+            <span class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-terra text-secondary shadow-neu-xs [&>svg]:w-3.5 [&>svg]:h-auto" aria-hidden="true">{% render 'icon-checkmark' %}</span>
+            <span data-team-confirm-swatch data-allow-empty class="h-6 w-6 shrink-0 rounded-full border border-main-20" aria-hidden="true"></span>
+            <span class="min-w-0">{{ 'sections.custom_art_studio.team_selected_prefix' | t }} <span data-team-confirm-name class="font-bold text-main"></span></span>
+          </p>
+
           <fieldset>
             <legend class="sr-only">{{ 'sections.custom_art_studio.team_grid_label' | t }}</legend>
             <p data-team-loading class="py-6 text-center text-sm text-main-70" aria-live="polite">
@@ -249,7 +263,7 @@
                 {{ 'sections.custom_art_studio.team_retry' | t }}
               </button>
             </div>
-            <ul data-team-grid class="grid grid-cols-3 gap-3 2xs:grid-cols-4 sm:grid-cols-5"></ul>
+            <ul data-team-grid class="grid grid-cols-2 gap-3 2xs:grid-cols-3 sm:grid-cols-4"></ul>
             <p data-team-empty class="py-6 text-center text-sm text-main-70" hidden>
               {{ 'sections.custom_art_studio.team_empty' | t }}
             </p>

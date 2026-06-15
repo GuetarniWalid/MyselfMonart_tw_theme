@@ -97,6 +97,10 @@
     { id: 'montpellier', name: 'Montpellier', colors: ['#1a3668', '#f08418'] },
   ];
 
+  // Coche inline (copie de snippets/icon-checkmark.liquid) pour le badge « équipe sélectionnée »
+  // du sélecteur d'équipe : renderTeams construit du HTML en chaîne, donc pas de {% render %}.
+  const CHECK_SVG_INLINE = '<svg class="block w-3" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 9" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M11.35.643a.5.5 0 01.006.707l-6.77 6.886a.5.5 0 01-.719-.006L.638 4.845a.5.5 0 11.724-.69l2.872 3.011 6.41-6.517a.5.5 0 01.707-.006h-.001z" fill="currentColor"/></svg>';
+
   const escapeHtml = (value) =>
     String(value ?? '').replace(/[&<>"']/g, (c) => ({
       '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
@@ -709,6 +713,7 @@
         this.state.teamId = team.id;
         this.state.teamName = team.name;
         this.state.teamColors = team.colors;
+        this.updateTeamConfirm();
         const requiredError = this.q('[data-team-required-error]');
         if (requiredError) requiredError.hidden = true;
         this.updateJersey();
@@ -756,16 +761,44 @@
       grid.innerHTML = matches.map((team) => {
         const colors = team.colors || ['#444444', '#dddddd'];
         const checked = String(team.id) === String(this.state.teamId) ? ' checked' : '';
-        // style inline : couleurs d'équipe = données dynamiques (pas des couleurs du thème).
+        // Carte CLIQUABLE (relief neu + bordure + hover + active) avec crest bicolore + nom.
+        // Sélection à indices REDONDANTS (jamais la couleur seule) : bordure terra (brun foncé,
+        // contraste AA) + teinte marque via has-[:checked] sur la carte ; BADGE COCHE + nom en
+        // gras via peer-checked (dégradation gracieuse si :has() indisponible). Couleurs d'équipe
+        // = style inline (dynamiques). data-allow-empty : le crest n'a pas d'enfant (fond seul) ->
+        // exempté de la règle globale *:empty{display:none}.
         return `<li>
-          <label class="block cursor-pointer text-center">
+          <label class="group relative flex cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-main-10 bg-secondary p-2.5 text-center shadow-neu-xs transition-[transform,box-shadow,background-color,border-color] duration-150 hover:bg-main-5 hover:shadow-neu-md active:scale-[0.98] has-[:checked]:border-terra has-[:checked]:bg-buy-button-10 has-[:checked]:shadow-neu-md motion-reduce:transition-none motion-reduce:active:scale-100">
             <input type="radio" name="studio-team" value="${escapeHtml(team.id)}" class="peer sr-only" data-team-input${checked}>
-            <span class="mx-auto block h-12 w-12 rounded-full border border-main-20 shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none peer-checked:ring-2 peer-checked:ring-main peer-checked:ring-offset-2 peer-focus-visible:ring-2 peer-focus-visible:ring-main peer-focus-visible:ring-offset-2" style="background:linear-gradient(135deg, ${escapeHtml(colors[0])} 50%, ${escapeHtml(colors[1] || colors[0])} 50%)" aria-hidden="true"></span>
-            <span class="mt-1 block truncate text-xs text-main-80">${escapeHtml(team.name)}</span>
+            <span class="pointer-events-none absolute right-1.5 top-1.5 z-10 hidden h-5 w-5 place-items-center rounded-full bg-terra text-secondary shadow-neu-xs peer-checked:grid" aria-hidden="true">${CHECK_SVG_INLINE}</span>
+            <span data-allow-empty class="h-14 w-14 rounded-full border border-main-20 shadow-neu-xs peer-focus-visible:ring-2 peer-focus-visible:ring-main peer-focus-visible:ring-offset-2 sm:h-16 sm:w-16" style="background:linear-gradient(135deg, ${escapeHtml(colors[0])} 50%, ${escapeHtml(colors[1] || colors[0])} 50%)" aria-hidden="true"></span>
+            <span class="line-clamp-2 min-h-[2rem] text-xs font-medium leading-tight text-main-80 peer-checked:font-bold peer-checked:text-main">${escapeHtml(team.name)}</span>
           </label>
         </li>`;
       }).join('');
       empty.hidden = matches.length > 0;
+      this.updateTeamConfirm();
+    }
+
+    // Confirmation persistante du choix : « Équipe sélectionnée : <nom> » + mini-crest des vraies
+    // couleurs. Appelée au changement de sélection ET en fin de renderTeams (filtre/restauration).
+    updateTeamConfirm() {
+      const box = this.q('[data-team-confirm]');
+      if (!box) return;
+      if (!this.state.teamId) {
+        box.classList.add('hidden');
+        box.classList.remove('flex');
+        return;
+      }
+      const nameEl = this.q('[data-team-confirm-name]');
+      const swatch = this.q('[data-team-confirm-swatch]');
+      if (nameEl) nameEl.textContent = this.state.teamName || '';
+      if (swatch) {
+        const c = this.state.teamColors || ['#444444', '#dddddd'];
+        swatch.style.background = `linear-gradient(135deg, ${c[0]} 50%, ${c[1] || c[0]} 50%)`;
+      }
+      box.classList.remove('hidden');
+      box.classList.add('flex');
     }
 
     /* ------------------------------------------------ étape prénom + numéro */

@@ -270,6 +270,7 @@
       "team_retry": "Erneut versuchen",
       "team_empty": "Kein Team entspricht Ihrer Suche.",
       "team_required": "Wählen Sie ein Team aus, um fortzufahren.",
+      "team_selected_prefix": "Ausgewähltes Team:",
       "name_label": "Vorname auf dem Trikot",
       "name_help": "Maximal 12 Zeichen — Buchstaben, Leerzeichen und Bindestriche.",
       "name_required": "Geben Sie den Vornamen an, der auf dem Trikot stehen soll.",

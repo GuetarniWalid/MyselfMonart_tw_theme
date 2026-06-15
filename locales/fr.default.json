@@ -297,6 +297,7 @@
       "team_retry": "Réessayer",
       "team_empty": "Aucune équipe ne correspond à votre recherche.",
       "team_required": "Choisissez une équipe pour continuer.",
+      "team_selected_prefix": "Équipe sélectionnée :",
       "name_label": "Prénom sur le maillot",
       "name_help": "12 caractères maximum — lettres, espaces et tirets.",
       "name_required": "Indiquez le prénom à afficher sur le maillot.",

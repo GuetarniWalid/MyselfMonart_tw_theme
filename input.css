@@ -15,7 +15,8 @@
     .croppr-handleContainer,
     .decor-bg,
     [data-cp-line-fill],
-    [data-studio-backdrop]
+    [data-studio-backdrop],
+    [data-allow-empty]
   ) {
   display: none;
 }

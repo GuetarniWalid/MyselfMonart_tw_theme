@@ -269,6 +269,7 @@
       "team_retry": "Reintentar",
       "team_empty": "Ningún equipo coincide con tu búsqueda.",
       "team_required": "Selecciona un equipo para continuar.",
+      "team_selected_prefix": "Equipo seleccionado:",
       "name_label": "Nombre en la camiseta",
       "name_help": "12 caracteres máximo — letras, espacios y guiones.",
       "name_required": "Indica el nombre que se mostrará en la camiseta.",
