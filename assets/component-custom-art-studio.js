@@ -362,7 +362,11 @@
 
     open() {
       this.lastFocused = document.activeElement;
+      // Visibilité par TOGGLE de `flex` (ajouté ici, retiré à la fermeture) : elle ne peut PAS
+      // reposer sur le seul `hidden`, car une classe `md:flex` en dur l'emporterait sur `hidden`
+      // en desktop -> dialogue ouvert par défaut. Fermé = `hidden`, ouvert = `flex`.
       this.dialog.classList.remove('hidden');
+      this.dialog.classList.add('flex');
       // Flou d'arrière-plan : on RÉUTILISE l'overlay global du thème (#overlay-content,
       // posé au niveau du layout -> son backdrop-filter fonctionne, contrairement à un fond
       // interne à la section que des parents transformés cassent). Même mécanisme que le
@@ -403,15 +407,9 @@
     }
 
     attemptClose() {
-      const pristine = this.state.screen === 'steps'
-        && this.state.step === 'photo'
-        && !this.photoFile
-        && !this.state.consent;
-      // Reveal et demande artiste déjà envoyée : rien à perdre -> fermeture sans confirmation.
-      const artistDone = this.state.screen === 'artist'
-        && this.state.artistRequested === this.state.jobId;
-      const safe = pristine || this.state.screen === 'reveal' || artistDone;
-      if (!safe && !window.confirm(this.i18n.confirm_close)) return;
+      // Fermeture immédiate, sans confirmation : l'état est persisté (sessionStorage) et les
+      // saisies restent en mémoire -> l'utilisateur rouvre exactement là où il s'était arrêté.
+      // (Le window.confirm précédent était une friction inutile : rien n'est jamais perdu.)
       this.close();
     }
 
@@ -421,6 +419,7 @@
       if (this.state.screen === 'wait' && this.config.mock) this.state.screen = 'steps';
       this.persist();
       this.dialog.classList.add('hidden');
+      this.dialog.classList.remove('flex');
       const overlay = document.getElementById('overlay-content');
       if (overlay) {
         overlay.classList.add('hidden');
