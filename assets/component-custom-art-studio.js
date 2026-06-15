@@ -47,10 +47,16 @@
   // n'est pas posé sur le produit : le studio live tourne dessus -> zéro régression pendant le
   // chantier. Dès que studio.config existe, c'est lui qui pilote l'ordre/les types des étapes.
   const FOOT_FALLBACK_STEPS = [
-    { name: 'photo', type: 'photo' },
-    { name: 'team', type: 'choice' },
-    { name: 'name', type: 'group' },
-    { name: 'format', type: 'format' },
+    { name: 'photo', type: 'photo', required: true, consent: { required: true } },
+    { name: 'team', type: 'choice', required: true },
+    {
+      name: 'name', type: 'group', required: true,
+      children: [
+        { name: 'playerName', type: 'text', required: true, minLength: 1, maxLength: 12 },
+        { name: 'playerNumber', type: 'number', required: true, min: 1, max: 99, integer: true },
+      ],
+    },
+    { name: 'format', type: 'format', required: true },
   ];
   const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/heic', 'image/heif'];
   const HEIC_EXT = /\.(heic|heif)$/i;
@@ -174,6 +180,9 @@
       // Config-driven : la liste ORDONNÉE des étapes vient du metafield studio.config (injecté
       // par la section dans config.studio). Repli foot si absent (migration progressive).
       this.studioConfig = this.config.studio && typeof this.config.studio === 'object' ? this.config.studio : null;
+      // Locale courante (injectée par la section depuis request.locale) pour résoudre les
+      // maps i18n {fr,en,…} de studio.config. Repli 'fr'.
+      this.locale = (typeof this.config.locale === 'string' && this.config.locale) ? this.config.locale : 'fr';
       this.studioSteps = (this.studioConfig && Array.isArray(this.studioConfig.steps) && this.studioConfig.steps.length)
         ? this.studioConfig.steps
         : FOOT_FALLBACK_STEPS;
@@ -203,6 +212,7 @@
       this.state = {
         step: 'photo',
         screen: 'steps', // steps | wait | reveal | error | artist
+        fields: {}, // valeurs génériques par step.name (config-driven), en parallèle des clés foot
         consent: false,
         teamId: null,
         teamName: null,
@@ -250,13 +260,21 @@
       return this.querySelector(selector);
     }
 
+    // Résout une valeur i18n de studio.config : chaîne brute, ou map {fr,en,…} via la locale
+    // courante (repli fr puis ''). Sert aux titres/labels/erreurs pilotés par la config.
+    t(value) {
+      if (typeof value === 'string') return value;
+      if (value && typeof value === 'object') return value[this.locale] || value.fr || '';
+      return '';
+    }
+
     persist() {
       try {
-        const { step, screen, consent, teamId, teamName, teamColors, playerName,
+        const { step, screen, consent, fields, teamId, teamName, teamColors, playerName,
           playerNumber, selectedOptions, variantId, jobId, sessionToken, email, status,
           previewUrl, revealCount, mockups, artistRequested } = this.state;
         sessionStorage.setItem(this.storageKey, JSON.stringify({
-          step, screen, consent, teamId, teamName, teamColors, playerName,
+          step, screen, consent, fields, teamId, teamName, teamColors, playerName,
           playerNumber, selectedOptions, variantId, jobId, sessionToken, email, status,
           previewUrl, revealCount, mockups, artistRequested,
         }));
@@ -268,6 +286,12 @@
         const raw = sessionStorage.getItem(this.storageKey);
         if (!raw) return;
         Object.assign(this.state, JSON.parse(raw));
+        // Backfill de l'état générique depuis les clés foot historiques (sessionStorage antérieur
+        // au champ `fields`) -> la validation par type reste cohérente après un reload.
+        if (!this.state.fields || typeof this.state.fields !== 'object') this.state.fields = {};
+        if (this.state.teamId && this.state.fields.team == null) this.state.fields.team = this.state.teamId;
+        if (this.state.playerName && this.state.fields.playerName == null) this.state.fields.playerName = this.state.playerName;
+        if (this.state.playerNumber && this.state.fields.playerNumber == null) this.state.fields.playerNumber = this.state.playerNumber;
         // La photo (File) n'est pas persistable : sans photo ni job en cours,
         // on repart de l'étape photo en gardant les autres réponses.
         if (!this.state.jobId && !this.state.previewUrl && this.state.step !== 'photo') {
@@ -503,7 +527,7 @@
       });
 
       const index = this.stepNames.indexOf(stepName);
-      this.stepTitle.textContent = (this.config.stepTitles || {})[stepName] || '';
+      this.stepTitle.textContent = this.t((this.studioSteps[index] || {}).title) || (this.config.stepTitles || {})[stepName] || '';
       if (this.stepIndicator) {
         this.stepIndicator.hidden = false;
         this.stepIndicator.textContent = (this.i18n.step_indicator || '')
@@ -588,18 +612,44 @@
     }
 
     stepIsValid(stepName) {
-      switch (stepName) {
-        case 'photo':
-          return Boolean(this.photoFile && this.state.consent);
-        case 'team':
-          return Boolean(this.state.teamId);
-        case 'name': {
-          const number = parseInt(this.state.playerNumber, 10);
-          return this.state.playerName.trim().length > 0
-            && Number.isInteger(number) && number >= 1 && number <= 99;
+      const step = (this.studioSteps || []).find((s) => s.name === stepName);
+      return step ? this.stepTypeValid(step) : false;
+    }
+
+    // Validation GÉNÉRIQUE pilotée par le TYPE d'étape (config-driven) : contraintes lues dans
+    // l'objet step (consent, minLength, min/max…), valeur dans state.fields[name] (sauf photo =
+    // File à part, format = variantId). Un groupe valide ses enfants (ET logique).
+    stepTypeValid(step) {
+      const fields = this.state.fields || {};
+      switch (step.type) {
+        case 'photo': {
+          const consentOk = !step.consent || step.consent.required === false || this.state.consent;
+          return Boolean(this.photoFile && consentOk);
         }
+        case 'choice':
+          return step.required === false ? true : Boolean(fields[step.name]);
+        case 'text': {
+          const v = String(fields[step.name] || '').trim();
+          if (!v) return step.required === false;
+          if (step.minLength && v.length < step.minLength) return false;
+          if (step.maxLength && v.length > step.maxLength) return false;
+          return true;
+        }
+        case 'number': {
+          const raw = fields[step.name];
+          if (raw === '' || raw == null) return step.required === false;
+          const n = parseInt(raw, 10);
+          if (!Number.isInteger(n)) return false;
+          if (step.min != null && n < step.min) return false;
+          if (step.max != null && n > step.max) return false;
+          return true;
+        }
+        case 'date':
+          return fields[step.name] ? true : step.required === false;
         case 'format':
           return Boolean(this.state.variantId);
+        case 'group':
+          return (step.children || []).every((child) => this.stepTypeValid(child));
         default:
           return false;
       }
@@ -737,6 +787,7 @@
         this.state.teamId = team.id;
         this.state.teamName = team.name;
         this.state.teamColors = team.colors;
+        this.state.fields.team = team.id;
         this.updateTeamConfirm();
         const requiredError = this.q('[data-team-required-error]');
         if (requiredError) requiredError.hidden = true;
@@ -839,6 +890,7 @@
           .slice(0, 12);
         if (nameInput.value !== cleaned) nameInput.value = cleaned;
         this.state.playerName = cleaned;
+        this.state.fields.playerName = cleaned;
         this.setNameError(null);
         this.updateJersey();
         this.persist();
@@ -849,6 +901,7 @@
         const digits = numberInput.value.replace(/\D/g, '').slice(0, 2);
         if (numberInput.value !== digits) numberInput.value = digits;
         this.state.playerNumber = digits;
+        this.state.fields.playerNumber = digits;
         this.setNameError(null);
         this.updateJersey();
         this.persist();
