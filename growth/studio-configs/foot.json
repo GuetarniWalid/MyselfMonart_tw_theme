@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "productType": "foot",
+  "steps": [
+    {
+      "name": "photo",
+      "type": "photo",
+      "required": true,
+      "consent": { "required": true },
+      "payloadKey": "photo",
+      "title": { "fr": "Votre photo", "en": "Your photo", "de": "Dein Foto", "nl": "Je foto", "es": "Tu foto" },
+      "checkpointLabel": { "fr": "Photo", "en": "Photo", "de": "Foto", "nl": "Foto", "es": "Foto" }
+    },
+    {
+      "name": "team",
+      "type": "choice",
+      "required": true,
+      "payloadKey": "teamId",
+      "source": "endpoint",
+      "endpoint": "/api/custom-art/teams",
+      "title": { "fr": "Votre équipe", "en": "Your team", "de": "Dein Team", "nl": "Je team", "es": "Tu equipo" },
+      "checkpointLabel": { "fr": "Équipe", "en": "Team", "de": "Team", "nl": "Team", "es": "Equipo" }
+    },
+    {
+      "name": "name",
+      "type": "group",
+      "required": true,
+      "title": { "fr": "Prénom et numéro", "en": "Name and number", "de": "Name und Nummer", "nl": "Naam en nummer", "es": "Nombre y número" },
+      "checkpointLabel": { "fr": "Prénom", "en": "Name", "de": "Name", "nl": "Naam", "es": "Nombre" },
+      "children": [
+        { "name": "playerName", "type": "text", "required": true, "minLength": 1, "maxLength": 12, "payloadKey": "playerName" },
+        { "name": "playerNumber", "type": "number", "required": true, "min": 1, "max": 99, "integer": true, "payloadKey": "playerNumber" }
+      ]
+    },
+    {
+      "name": "format",
+      "type": "format",
+      "required": true,
+      "title": { "fr": "Format et finition", "en": "Format and finish", "de": "Format und Ausführung", "nl": "Formaat en afwerking", "es": "Formato y acabado" },
+      "checkpointLabel": { "fr": "Format", "en": "Format", "de": "Format", "nl": "Formaat", "es": "Formato" },
+      "roles": [
+        { "role": "size", "payloadKey": "format", "resolve": "dimensions" },
+        { "role": "frame", "payloadKey": "frame", "resolve": "slug" }
+      ]
+    }
+  ],
+  "payload": { "extra": { "consent": "1" } }
+}

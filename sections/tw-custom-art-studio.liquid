@@ -588,6 +588,12 @@
      aucun littéral utilisateur dans le JS) ---- {%- endcomment -%}
   <script type="application/json" data-studio-config>
     {
+      {%- comment -%} Config-driven (Voie 2) : le studio lit ses étapes depuis le metafield
+         produit `studio.config` (type json). Absent -> `null` -> le moteur retombe sur son
+         repli foot hard-codé (FOOT_FALLBACK_STEPS) : zéro régression tant qu'aucun produit
+         n'a de metafield. `locale` (code court fr/en/de/nl/es) résout les maps i18n du JSON. {%- endcomment -%}
+      "locale": {{ request.locale.iso_code | json }},
+      "studio": {{ product.metafields.studio.config.value | json }},
       "backendUrl": {{ section.settings.backend_url | strip | json }},
       "mock": {{ section.settings.mock_mode | json }},
       "productId": {{ product.id | json }},

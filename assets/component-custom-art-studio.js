@@ -192,7 +192,9 @@
       this.studioConfig = this.config.studio && typeof this.config.studio === 'object' ? this.config.studio : null;
       // Locale courante (injectée par la section depuis request.locale) pour résoudre les
       // maps i18n {fr,en,…} de studio.config. Repli 'fr'.
-      this.locale = (typeof this.config.locale === 'string' && this.config.locale) ? this.config.locale : 'fr';
+      // Normalisée sur 2 lettres : request.locale.iso_code peut valoir « fr-CA », « en-GB »… et
+      // les maps i18n de la config sont indexées par code court (fr/en/de/nl/es).
+      this.locale = ((typeof this.config.locale === 'string' && this.config.locale) ? this.config.locale : 'fr').toLowerCase().slice(0, 2);
       this.studioSteps = (this.studioConfig && Array.isArray(this.studioConfig.steps) && this.studioConfig.steps.length)
         ? this.studioConfig.steps
         : FOOT_FALLBACK_STEPS;

@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "productType": "horoscope",
+  "steps": [
+    {
+      "name": "firstName",
+      "type": "text",
+      "required": true,
+      "maxLength": 30,
+      "charset": "letters",
+      "payloadKey": "name",
+      "title": { "fr": "Votre prénom", "en": "Your first name", "de": "Dein Vorname", "nl": "Je voornaam", "es": "Tu nombre" },
+      "checkpointLabel": { "fr": "Prénom", "en": "Name", "de": "Name", "nl": "Naam", "es": "Nombre" },
+      "label": { "fr": "Prénom", "en": "First name", "de": "Vorname", "nl": "Voornaam", "es": "Nombre" },
+      "placeholder": { "fr": "Ex : Camille", "en": "E.g. Camille", "de": "z. B. Camille", "nl": "Bijv. Camille", "es": "Ej.: Camille" }
+    },
+    {
+      "name": "birthday",
+      "type": "date",
+      "required": true,
+      "mode": "date",
+      "payloadKey": "birthday",
+      "title": { "fr": "Date de naissance", "en": "Date of birth", "de": "Geburtsdatum", "nl": "Geboortedatum", "es": "Fecha de nacimiento" },
+      "checkpointLabel": { "fr": "Naissance", "en": "Birth", "de": "Geburt", "nl": "Geboorte", "es": "Nacimiento" },
+      "label": { "fr": "Date de naissance", "en": "Date of birth", "de": "Geburtsdatum", "nl": "Geboortedatum", "es": "Fecha de nacimiento" }
+    },
+    {
+      "name": "time_of_birth",
+      "type": "date",
+      "required": false,
+      "mode": "time",
+      "payloadKey": "time_of_birth",
+      "title": { "fr": "Heure de naissance", "en": "Time of birth", "de": "Geburtszeit", "nl": "Geboortetijd", "es": "Hora de nacimiento" },
+      "checkpointLabel": { "fr": "Heure", "en": "Time", "de": "Zeit", "nl": "Tijd", "es": "Hora" },
+      "label": { "fr": "Heure de naissance", "en": "Time of birth", "de": "Geburtszeit", "nl": "Geboortetijd", "es": "Hora de nacimiento" },
+      "help": { "fr": "Optionnel, pour un thème astral précis.", "en": "Optional, for a precise birth chart.", "de": "Optional, für ein genaues Geburtshoroskop.", "nl": "Optioneel, voor een nauwkeurige horoscoop.", "es": "Opcional, para una carta astral precisa." }
+    },
+    {
+      "name": "size",
+      "type": "number",
+      "required": false,
+      "min": 40,
+      "max": 250,
+      "integer": true,
+      "payloadKey": "size",
+      "title": { "fr": "Taille", "en": "Height", "de": "Größe", "nl": "Lengte", "es": "Altura" },
+      "checkpointLabel": { "fr": "Taille", "en": "Height", "de": "Größe", "nl": "Lengte", "es": "Altura" },
+      "label": { "fr": "Taille en cm", "en": "Height in cm", "de": "Größe in cm", "nl": "Lengte in cm", "es": "Altura en cm" }
+    },
+    {
+      "name": "weight",
+      "type": "number",
+      "required": false,
+      "min": 2,
+      "max": 400,
+      "integer": true,
+      "payloadKey": "weight",
+      "title": { "fr": "Poids", "en": "Weight", "de": "Gewicht", "nl": "Gewicht", "es": "Peso" },
+      "checkpointLabel": { "fr": "Poids", "en": "Weight", "de": "Gewicht", "nl": "Gewicht", "es": "Peso" },
+      "label": { "fr": "Poids en kg", "en": "Weight in kg", "de": "Gewicht in kg", "nl": "Gewicht in kg", "es": "Peso en kg" }
+    },
+    {
+      "name": "format",
+      "type": "format",
+      "required": true,
+      "title": { "fr": "Format et finition", "en": "Format and finish", "de": "Format und Ausführung", "nl": "Formaat en afwerking", "es": "Formato y acabado" },
+      "checkpointLabel": { "fr": "Format", "en": "Format", "de": "Format", "nl": "Formaat", "es": "Formato" },
+      "roles": [
+        { "role": "size", "payloadKey": "format", "resolve": "dimensions" },
+        { "role": "frame", "payloadKey": "frame", "resolve": "slug" }
+      ]
+    }
+  ],
+  "payload": { "extra": {} }
+}
