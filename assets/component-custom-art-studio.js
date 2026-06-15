@@ -351,6 +351,12 @@
       });
       this.q('[data-studio-close]')?.addEventListener('click', () => this.attemptClose());
       this.q('[data-studio-backdrop]')?.addEventListener('click', () => this.attemptClose());
+      // Fermeture au clic sur le flou : même mécanique que le cart-drawer — l'overlay global
+      // du thème dispatche l'event 'overlayClick' (cf. tw-global.js). On ne réagit que si le
+      // studio est ouvert (l'overlay est partagé avec le panier / les menus).
+      document.addEventListener('overlayClick', () => {
+        if (this.dialog && !this.dialog.classList.contains('hidden')) this.attemptClose();
+      });
       this.onKeydown = this.onKeydown.bind(this);
     }
 
@@ -502,14 +508,19 @@
           const done = i < index;
           const current = i === index;
           const upcoming = i > index;
+          // validée = remplie couleur marque + COCHE ; courante = contour marque + numéro ;
+          // à venir = atténuée. Fond OPAQUE dans tous les cas (cache le connecteur derrière).
           node.classList.toggle('bg-buy-button', done);
           node.classList.toggle('text-secondary', done);
+          node.classList.toggle('bg-secondary', !done);
           node.classList.toggle('border-buy-button', done || current);
-          node.classList.toggle('bg-secondary', current);
           node.classList.toggle('text-buy-button', current);
-          node.classList.toggle('bg-main-5', upcoming);
-          node.classList.toggle('text-main-40', upcoming);
-          node.classList.toggle('border-main-10', upcoming);
+          node.classList.toggle('border-main-20', upcoming);
+          node.classList.toggle('text-main-50', upcoming);
+          const num = node.querySelector('[data-cp-num]');
+          const check = node.querySelector('[data-cp-check]');
+          if (num) num.classList.toggle('hidden', done);
+          if (check) check.classList.toggle('hidden', !done);
         });
       }
       if (this.stepLineFills) {

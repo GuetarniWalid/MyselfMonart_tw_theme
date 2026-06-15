@@ -98,43 +98,37 @@
 
         <div class="relative flex h-full w-full flex-col bg-secondary md:h-auto md:max-h-[90vh] md:w-full md:max-w-xl md:rounded-2xl md:border-main md:border-1 md:shadow-neu-lg overflow-hidden">
 
-          <header class="flex items-start justify-between gap-4 border-b border-main-10 p-4">
-            <div class="min-w-0 flex-1">
-              <h2 id="studio-dialog-title-harness" data-step-title class="text-xl font-heading font-bold">Votre photo</h2>
-              <ol data-step-checkpoints class="mt-3 flex items-start" aria-hidden="true">
-                <li class="relative flex flex-1 flex-col items-center text-center">
-                  <span data-cp-node class="relative z-10 flex h-6 w-6 items-center justify-center rounded-full border border-main-10 bg-main-5 text-2xs font-bold text-main-40 transition-colors duration-300 motion-reduce:transition-none">1</span>
-                  <span class="mt-1.5 text-2xs leading-tight text-main-60">Photo</span>
-                </li>
-                <li class="relative flex flex-1 flex-col items-center text-center">
-                  <span class="absolute left-[-50%] right-1/2 top-3 h-0.5 overflow-hidden rounded-full bg-main-10"><span data-cp-line-fill class="block h-full w-0 rounded-full bg-buy-button transition-[width] duration-500 ease-out motion-reduce:transition-none"></span></span>
-                  <span data-cp-node class="relative z-10 flex h-6 w-6 items-center justify-center rounded-full border border-main-10 bg-main-5 text-2xs font-bold text-main-40 transition-colors duration-300 motion-reduce:transition-none">2</span>
-                  <span class="mt-1.5 text-2xs leading-tight text-main-60">Équipe</span>
-                </li>
-                <li class="relative flex flex-1 flex-col items-center text-center">
-                  <span class="absolute left-[-50%] right-1/2 top-3 h-0.5 overflow-hidden rounded-full bg-main-10"><span data-cp-line-fill class="block h-full w-0 rounded-full bg-buy-button transition-[width] duration-500 ease-out motion-reduce:transition-none"></span></span>
-                  <span data-cp-node class="relative z-10 flex h-6 w-6 items-center justify-center rounded-full border border-main-10 bg-main-5 text-2xs font-bold text-main-40 transition-colors duration-300 motion-reduce:transition-none">3</span>
-                  <span class="mt-1.5 text-2xs leading-tight text-main-60">Prénom</span>
-                </li>
-                <li class="relative flex flex-1 flex-col items-center text-center">
-                  <span class="absolute left-[-50%] right-1/2 top-3 h-0.5 overflow-hidden rounded-full bg-main-10"><span data-cp-line-fill class="block h-full w-0 rounded-full bg-buy-button transition-[width] duration-500 ease-out motion-reduce:transition-none"></span></span>
-                  <span data-cp-node class="relative z-10 flex h-6 w-6 items-center justify-center rounded-full border border-main-10 bg-main-5 text-2xs font-bold text-main-40 transition-colors duration-300 motion-reduce:transition-none">4</span>
-                  <span class="mt-1.5 text-2xs leading-tight text-main-60">Format</span>
-                </li>
-              </ol>
-              <p class="mt-2 inline-block rounded-full bg-accent-20 px-2 py-0.5 text-2xs uppercase tracking-wide text-main-80">
-                Mode démonstration — aucune génération réelle
-              </p>
+          <header class="border-b border-main-10 p-4">
+            <div class="flex items-start justify-between gap-4">
+              <div class="min-w-0 flex-1">
+                <h2 id="studio-dialog-title-harness" data-step-title class="text-xl font-heading font-bold">Votre photo</h2>
+                <p class="mt-1 inline-block rounded-full bg-accent-20 px-2 py-0.5 text-2xs uppercase tracking-wide text-main-80">Mode démonstration — aucune génération réelle</p>
+              </div>
+              <button type="button" data-studio-close class="shrink-0 rounded-full bg-secondary-50 p-2 hover:bg-main-10 transition-colors duration-200 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main" aria-label="Fermer le studio">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41z"/></svg>
+              </button>
             </div>
-            <button
-              type="button"
-              data-studio-close
-              class="shrink-0 rounded-full bg-secondary-50 p-2 hover:bg-main-10 transition-colors duration-200 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main"
-              aria-label="Fermer le studio">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-                <path fill="currentColor" d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41z"/>
-              </svg>
-            </button>
+            <ol data-step-checkpoints class="mt-4 flex items-start" aria-hidden="true">
+              <li class="relative flex flex-1 flex-col items-center text-center">
+                <span data-cp-node class="relative z-10 flex h-7 w-7 items-center justify-center rounded-full border-2 border-main-20 bg-secondary text-2xs font-bold text-main-50 transition-colors duration-300 motion-reduce:transition-none"><span data-cp-num>1</span><span data-cp-check class="hidden"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" class="shrink-0"><path fill="currentColor" d="m10.6 13.8l-2.15-2.15q-.275-.275-.7-.275t-.7.275t-.275.7t.275.7L9.9 15.9q.3.3.7.3t.7-.3l5.65-5.65q.275-.275.275-.7t-.275-.7t-.7-.275t-.7.275zM12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22"/></svg></span></span>
+                <span class="mt-2 text-2xs leading-tight text-main-60">Photo</span>
+              </li>
+              <li class="relative flex flex-1 flex-col items-center text-center">
+                <span class="absolute left-[-50%] right-1/2 top-[13px] h-0.5 overflow-hidden rounded-full bg-main-10"><span data-cp-line-fill class="block h-full w-0 rounded-full bg-buy-button transition-[width] duration-500 ease-out motion-reduce:transition-none"></span></span>
+                <span data-cp-node class="relative z-10 flex h-7 w-7 items-center justify-center rounded-full border-2 border-main-20 bg-secondary text-2xs font-bold text-main-50 transition-colors duration-300 motion-reduce:transition-none"><span data-cp-num>2</span><span data-cp-check class="hidden"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" class="shrink-0"><path fill="currentColor" d="m10.6 13.8l-2.15-2.15q-.275-.275-.7-.275t-.7.275t-.275.7t.275.7L9.9 15.9q.3.3.7.3t.7-.3l5.65-5.65q.275-.275.275-.7t-.275-.7t-.7-.275t-.7.275zM12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22"/></svg></span></span>
+                <span class="mt-2 text-2xs leading-tight text-main-60">Équipe</span>
+              </li>
+              <li class="relative flex flex-1 flex-col items-center text-center">
+                <span class="absolute left-[-50%] right-1/2 top-[13px] h-0.5 overflow-hidden rounded-full bg-main-10"><span data-cp-line-fill class="block h-full w-0 rounded-full bg-buy-button transition-[width] duration-500 ease-out motion-reduce:transition-none"></span></span>
+                <span data-cp-node class="relative z-10 flex h-7 w-7 items-center justify-center rounded-full border-2 border-main-20 bg-secondary text-2xs font-bold text-main-50 transition-colors duration-300 motion-reduce:transition-none"><span data-cp-num>3</span><span data-cp-check class="hidden"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" class="shrink-0"><path fill="currentColor" d="m10.6 13.8l-2.15-2.15q-.275-.275-.7-.275t-.7.275t-.275.7t.275.7L9.9 15.9q.3.3.7.3t.7-.3l5.65-5.65q.275-.275.275-.7t-.275-.7t-.7-.275t-.7.275zM12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22"/></svg></span></span>
+                <span class="mt-2 text-2xs leading-tight text-main-60">Prénom</span>
+              </li>
+              <li class="relative flex flex-1 flex-col items-center text-center">
+                <span class="absolute left-[-50%] right-1/2 top-[13px] h-0.5 overflow-hidden rounded-full bg-main-10"><span data-cp-line-fill class="block h-full w-0 rounded-full bg-buy-button transition-[width] duration-500 ease-out motion-reduce:transition-none"></span></span>
+                <span data-cp-node class="relative z-10 flex h-7 w-7 items-center justify-center rounded-full border-2 border-main-20 bg-secondary text-2xs font-bold text-main-50 transition-colors duration-300 motion-reduce:transition-none"><span data-cp-num>4</span><span data-cp-check class="hidden"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" class="shrink-0"><path fill="currentColor" d="m10.6 13.8l-2.15-2.15q-.275-.275-.7-.275t-.7.275t-.275.7t.275.7L9.9 15.9q.3.3.7.3t.7-.3l5.65-5.65q.275-.275.275-.7t-.275-.7t-.7-.275t-.7.275zM12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22"/></svg></span></span>
+                <span class="mt-2 text-2xs leading-tight text-main-60">Format</span>
+              </li>
+            </ol>
           </header>
 
           <div class="grow overflow-y-auto scrollbar-hidden p-4">

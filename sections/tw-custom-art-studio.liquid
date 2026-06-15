@@ -62,43 +62,49 @@
        (le parent md:flex md:items-center s'en charge ; max-h-90vh + corps scrollable). {%- endcomment -%}
     <div class="relative flex h-full w-full flex-col bg-secondary md:h-auto md:max-h-[90vh] md:w-full md:max-w-xl md:rounded-2xl md:border-main md:border-1 md:shadow-neu-lg overflow-hidden">
 
-      {%- comment -%} ---- Entête : indicateur d'étape + titre + fermer ---- {%- endcomment -%}
-      <header class="flex items-start justify-between gap-4 border-b border-main-10 p-4">
-        <div class="min-w-0 flex-1">
-          <h2 id="studio-dialog-title-{{ section.id }}" data-step-title class="text-xl font-heading font-bold">
-            {{ section.settings.step_photo_title | escape }}
-          </h2>
-          {%- comment -%} Progression : pastilles numérotées + labels, connecteurs qui se
-             remplissent (épuré, minimaliste). Pilotée par showStep
-             (assets/component-custom-art-studio.js). {%- endcomment -%}
-          <ol data-step-checkpoints class="mt-3 flex items-start" aria-hidden="true">
-            {%- assign cp_keys = 'cp_photo,cp_team,cp_name,cp_format' | split: ',' -%}
-            {%- for key in cp_keys -%}
-              {%- assign cp_tkey = 'sections.custom_art_studio.' | append: key -%}
-              <li class="relative flex flex-1 flex-col items-center text-center">
-                {%- unless forloop.first -%}
-                  <span class="absolute left-[-50%] right-1/2 top-3 h-0.5 overflow-hidden rounded-full bg-main-10">
-                    <span data-cp-line-fill class="block h-full w-0 rounded-full bg-buy-button transition-[width] duration-500 ease-out motion-reduce:transition-none"></span>
-                  </span>
-                {%- endunless -%}
-                <span data-cp-node class="relative z-10 flex h-6 w-6 items-center justify-center rounded-full border border-main-10 bg-main-5 text-2xs font-bold text-main-40 transition-colors duration-300 motion-reduce:transition-none">{{ forloop.index }}</span>
-                <span class="mt-1.5 text-2xs leading-tight text-main-60">{{ cp_tkey | t }}</span>
-              </li>
-            {%- endfor -%}
-          </ol>
-          {%- if section.settings.mock_mode -%}
-            <p class="mt-2 inline-block rounded-full bg-accent-20 px-2 py-0.5 text-2xs uppercase tracking-wide text-main-80">
-              {{ 'sections.custom_art_studio.mock_badge' | t }}
-            </p>
-          {%- endif -%}
+      {%- comment -%} ---- Entête : titre + fermer, puis stepper pleine largeur ---- {%- endcomment -%}
+      <header class="border-b border-main-10 p-4">
+        <div class="flex items-start justify-between gap-4">
+          <div class="min-w-0 flex-1">
+            <h2 id="studio-dialog-title-{{ section.id }}" data-step-title class="text-xl font-heading font-bold">
+              {{ section.settings.step_photo_title | escape }}
+            </h2>
+            {%- if section.settings.mock_mode -%}
+              <p class="mt-1 inline-block rounded-full bg-accent-20 px-2 py-0.5 text-2xs uppercase tracking-wide text-main-80">
+                {{ 'sections.custom_art_studio.mock_badge' | t }}
+              </p>
+            {%- endif -%}
+          </div>
+          <button
+            type="button"
+            data-studio-close
+            class="shrink-0 rounded-full bg-secondary-50 p-2 hover:bg-main-10 transition-colors duration-200 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main"
+            aria-label="{{ 'sections.custom_art_studio.close' | t }}">
+            {% render 'tw-icon-close', width: '20' %}
+          </button>
         </div>
-        <button
-          type="button"
-          data-studio-close
-          class="shrink-0 rounded-full bg-secondary-50 p-2 hover:bg-main-10 transition-colors duration-200 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main"
-          aria-label="{{ 'sections.custom_art_studio.close' | t }}">
-          {% render 'tw-icon-close', width: '20' %}
-        </button>
+
+        {%- comment -%} Progression : pastilles numérotées (coche quand validé), connecteurs
+           qui se remplissent de gauche à droite. Pleine largeur. Pastilles OPAQUES (bg-secondary)
+           -> le connecteur passe DERRIÈRE sans se voir. Piloté par updateCheckpoints (JS). {%- endcomment -%}
+        <ol data-step-checkpoints class="mt-4 flex items-start" aria-hidden="true">
+          {%- assign cp_keys = 'cp_photo,cp_team,cp_name,cp_format' | split: ',' -%}
+          {%- for key in cp_keys -%}
+            {%- assign cp_tkey = 'sections.custom_art_studio.' | append: key -%}
+            <li class="relative flex flex-1 flex-col items-center text-center">
+              {%- unless forloop.first -%}
+                <span class="absolute left-[-50%] right-1/2 top-[13px] h-0.5 overflow-hidden rounded-full bg-main-10">
+                  <span data-cp-line-fill class="block h-full w-0 rounded-full bg-buy-button transition-[width] duration-500 ease-out motion-reduce:transition-none"></span>
+                </span>
+              {%- endunless -%}
+              <span data-cp-node class="relative z-10 flex h-7 w-7 items-center justify-center rounded-full border-2 border-main-20 bg-secondary text-2xs font-bold text-main-50 transition-colors duration-300 motion-reduce:transition-none">
+                <span data-cp-num>{{ forloop.index }}</span>
+                <span data-cp-check class="hidden">{% render 'icon-check' %}</span>
+              </span>
+              <span class="mt-2 text-2xs leading-tight text-main-60">{{ cp_tkey | t }}</span>
+            </li>
+          {%- endfor -%}
+        </ol>
       </header>
 
       {%- comment -%} ---- Corps scrollable ---- {%- endcomment -%}
