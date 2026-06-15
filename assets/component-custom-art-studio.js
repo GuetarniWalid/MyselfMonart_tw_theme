@@ -47,17 +47,25 @@
   // n'est pas posé sur le produit : le studio live tourne dessus -> zéro régression pendant le
   // chantier. Dès que studio.config existe, c'est lui qui pilote l'ordre/les types des étapes.
   const FOOT_FALLBACK_STEPS = [
-    { name: 'photo', type: 'photo', required: true, consent: { required: true } },
-    { name: 'team', type: 'choice', required: true },
+    { name: 'photo', type: 'photo', required: true, consent: { required: true }, payloadKey: 'photo' },
+    { name: 'team', type: 'choice', required: true, payloadKey: 'teamId' },
     {
       name: 'name', type: 'group', required: true,
       children: [
-        { name: 'playerName', type: 'text', required: true, minLength: 1, maxLength: 12 },
-        { name: 'playerNumber', type: 'number', required: true, min: 1, max: 99, integer: true },
+        { name: 'playerName', type: 'text', required: true, minLength: 1, maxLength: 12, payloadKey: 'playerName' },
+        { name: 'playerNumber', type: 'number', required: true, min: 1, max: 99, integer: true, payloadKey: 'playerNumber' },
       ],
     },
-    { name: 'format', type: 'format', required: true },
+    {
+      name: 'format', type: 'format', required: true,
+      roles: [
+        { role: 'size', payloadKey: 'format', resolve: 'dimensions' },
+        { role: 'frame', payloadKey: 'frame', resolve: 'slug' },
+      ],
+    },
   ];
+  // Constantes additionnelles du payload foot (jointes à chaque génération).
+  const FOOT_FALLBACK_PAYLOAD_EXTRA = { consent: '1' };
   const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/heic', 'image/heif'];
   const HEIC_EXT = /\.(heic|heif)$/i;
   const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15 Mo
@@ -990,6 +998,51 @@
 
     /* ------------------------------------------------------------ génération */
 
+    // Assemble le FormData de génération depuis la config (steps + state.fields + résolution
+    // format/frame). Reproduit EXACTEMENT le payload foot (mêmes champs/valeurs/ORDRE) -> zéro
+    // régression back-end ; se généralise aux autres produits via leurs steps/payloadKey.
+    buildPayload() {
+      const fd = new FormData();
+      const fields = this.state.fields || {};
+      const appendStep = (step) => {
+        const key = step.payloadKey || step.name;
+        switch (step.type) {
+          case 'photo':
+            if (this.photoFile) fd.append(key, this.photoFile);
+            break;
+          case 'choice':
+          case 'text':
+          case 'number':
+          case 'date': {
+            const v = fields[step.name];
+            if (v != null && v !== '') fd.append(key, v);
+            break;
+          }
+          case 'group':
+            (step.children || []).forEach(appendStep);
+            break;
+          case 'format':
+            // Format/finition en SECOURS (slug API), résolus par nom d'option ; la variante reste
+            // la source de vérité (variantId), envoyée APRÈS (ordre identique au foot actuel).
+            (step.roles || []).forEach((role) => {
+              const label = this.selectedOptionByName(role.role === 'frame' ? OPTION_FRAME_RE : OPTION_FORMAT_RE);
+              const value = role.resolve === 'slug' ? frameApiValue(label) : formatApiValue(label);
+              if (value) fd.append(role.payloadKey || role.role, value);
+            });
+            if (this.state.variantId) fd.append('variantId', this.state.variantId);
+            break;
+          default:
+            break;
+        }
+      };
+      this.studioSteps.forEach(appendStep);
+      const extra = (this.studioConfig && this.studioConfig.payload && this.studioConfig.payload.extra)
+        || FOOT_FALLBACK_PAYLOAD_EXTRA;
+      Object.entries(extra).forEach(([k, v]) => fd.append(k, v));
+      if (this.state.email) fd.append('email', this.state.email);
+      return fd;
+    }
+
     async startGeneration() {
       // Étape incomplète (ex. photo perdue après restauration) : on y ramène l'utilisateur.
       const firstInvalid = this.stepNames.find((step) => !this.stepIsValid(step));
@@ -1019,23 +1072,9 @@
 
       this.startWaitProgress(REAL_DURATION_ESTIMATE);
       try {
-        const formData = new FormData();
-        formData.append('photo', this.photoFile);
-        formData.append('teamId', this.state.teamId);
-        formData.append('playerName', this.state.playerName);
-        formData.append('playerNumber', this.state.playerNumber);
-        // Résolution par nom d'option (pas par position) ; la variante reste la
-        // source de vérité côté back-end (variantId), format/frame en SECOURS — envoyés
-        // au format API ('30x40'|'60x80' + slug de finition), jamais en libellés bruts,
-        // et seulement quand ils sont résolus (le validateur back-end refuse le vide).
-        const format = formatApiValue(this.selectedOptionByName(OPTION_FORMAT_RE));
-        const frame = frameApiValue(this.selectedOptionByName(OPTION_FRAME_RE));
-        if (format) formData.append('format', format);
-        if (frame) formData.append('frame', frame);
-        if (this.state.variantId) formData.append('variantId', this.state.variantId);
-        formData.append('consent', '1');
-        // Cap « 3e essai+ = e-mail requis » : on joint l'e-mail dès qu'on le connaît.
-        if (this.state.email) formData.append('email', this.state.email);
+        // Payload assemblé depuis la config (cf. buildPayload) : identique au foot (mêmes
+        // champs/valeurs/ordre), généralisé aux autres produits via leurs steps.
+        const formData = this.buildPayload();
         const { response, data } = await this.api('/api/custom-art/jobs', {
           method: 'POST',
           body: formData,
