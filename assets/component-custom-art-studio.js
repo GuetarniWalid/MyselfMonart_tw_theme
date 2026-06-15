@@ -43,6 +43,9 @@
   if (customElements.get('custom-art-studio')) return;
 
   const STEPS = ['photo', 'team', 'name', 'format'];
+  // Remplissage de la barre par étape : démarre déjà avancé et fait de grands bonds
+  // -> l'utilisateur a l'impression que ça file vite (perception de rapidité).
+  const STEP_PROGRESS = [22, 48, 72, 92];
   const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/heic', 'image/heif'];
   const HEIC_EXT = /\.(heic|heif)$/i;
   const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15 Mo
@@ -158,7 +161,8 @@
       this.nextButton = this.querySelector('[data-studio-next]');
       this.stepTitle = this.querySelector('[data-step-title]');
       this.stepIndicator = this.querySelector('[data-step-indicator]');
-      this.stepDots = this.querySelector('[data-step-dots]');
+      this.stepProgress = this.querySelector('[data-step-progress]');
+      this.stepProgressFill = this.querySelector('[data-step-progress-fill]');
       this.resumeNote = this.querySelector('[data-resume-note]');
 
       this.photoFile = null;
@@ -457,14 +461,12 @@
       this.stepIndicator.textContent = (this.i18n.step_indicator || '')
         .replace('[step]', index + 1)
         .replace('[total]', STEPS.length);
-      if (this.stepDots) {
-        this.stepDots.hidden = false;
-        this.stepDots.classList.remove('hidden');
-        Array.from(this.stepDots.children).forEach((dot, dotIndex) => {
-          dot.classList.toggle('bg-buy-button', dotIndex < index);
-          dot.classList.toggle('bg-main', dotIndex === index);
-          dot.classList.toggle('bg-main-20', dotIndex > index);
-        });
+      if (this.stepProgress) {
+        this.stepProgress.hidden = false;
+        this.stepProgress.classList.remove('hidden');
+        if (this.stepProgressFill) {
+          this.stepProgressFill.style.width = (STEP_PROGRESS[index] ?? 100) + '%';
+        }
       }
 
       // classe + attribut : la classe Tailwind `flex` du footer/dots écrase l'attribut hidden seul.
@@ -487,9 +489,9 @@
       this.footer.hidden = true;
       this.footer.classList.add('hidden');
       this.stepIndicator.hidden = true;
-      if (this.stepDots) {
-        this.stepDots.hidden = true;
-        this.stepDots.classList.add('hidden');
+      if (this.stepProgress) {
+        this.stepProgress.hidden = true;
+        this.stepProgress.classList.add('hidden');
       }
       const heading = this.q(`[data-studio-screen="${screenName}"] h3`);
       if (heading) this.stepTitle.textContent = heading.textContent;

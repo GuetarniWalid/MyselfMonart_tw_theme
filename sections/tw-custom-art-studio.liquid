@@ -49,15 +49,17 @@
   {%- comment -%} ---- Dialog studio (caché tant que le bouton n'est pas cliqué) ---- {%- endcomment -%}
   <div
     data-studio-dialog
-    class="fixed inset-0 z-[60] hidden"
+    class="fixed inset-0 z-[60] hidden md:flex md:items-center md:justify-center md:p-4"
     role="dialog"
     aria-modal="true"
     aria-labelledby="studio-dialog-title-{{ section.id }}">
 
-    {%- comment -%} Fond assombri (desktop) — clic = tentative de fermeture {%- endcomment -%}
-    <div data-studio-backdrop class="absolute inset-0 bg-main-50 hidden md:block" aria-hidden="true"></div>
+    {%- comment -%} Fond assombri + FLOUTÉ (desktop) — clic = tentative de fermeture {%- endcomment -%}
+    <div data-studio-backdrop class="absolute inset-0 bg-main-40 backdrop-blur-md hidden md:block" aria-hidden="true"></div>
 
-    <div class="relative flex h-full w-full flex-col bg-secondary md:mx-auto md:mt-[5vh] md:h-auto md:max-h-[90vh] md:w-full md:max-w-xl md:rounded-2xl md:border-main md:border-1 md:shadow-neu-lg overflow-hidden">
+    {%- comment -%} Panneau : plein écran sur mobile ; carte CENTRÉE verticalement sur desktop
+       (le parent md:flex md:items-center s'en charge ; max-h-90vh + corps scrollable). {%- endcomment -%}
+    <div class="relative flex h-full w-full flex-col bg-secondary md:h-auto md:max-h-[90vh] md:w-full md:max-w-xl md:rounded-2xl md:border-main md:border-1 md:shadow-neu-lg overflow-hidden">
 
       {%- comment -%} ---- Entête : indicateur d'étape + titre + fermer ---- {%- endcomment -%}
       <header class="flex items-start justify-between gap-4 border-b border-main-10 p-4">
@@ -66,11 +68,16 @@
           <h2 id="studio-dialog-title-{{ section.id }}" data-step-title class="text-xl font-heading font-bold">
             {{ section.settings.step_photo_title | escape }}
           </h2>
-          <div data-step-dots class="mt-2 flex gap-1.5" aria-hidden="true">
-            <span class="h-1.5 w-6 rounded-full bg-main transition-colors duration-300 motion-reduce:transition-none"></span>
-            <span class="h-1.5 w-6 rounded-full bg-main-20 transition-colors duration-300 motion-reduce:transition-none"></span>
-            <span class="h-1.5 w-6 rounded-full bg-main-20 transition-colors duration-300 motion-reduce:transition-none"></span>
-            <span class="h-1.5 w-6 rounded-full bg-main-20 transition-colors duration-300 motion-reduce:transition-none"></span>
+          {%- comment -%} Barre de progression continue : le fil avance d'un grand bond
+             animé à chaque étape (démarre déjà rempli) -> sensation que ça file vite.
+             Pilotée par showStep (assets/component-custom-art-studio.js). {%- endcomment -%}
+          <div data-step-progress class="mt-2.5 w-40 max-w-full" aria-hidden="true">
+            <div class="relative h-2 w-full overflow-hidden rounded-full bg-main-10">
+              <div
+                data-step-progress-fill
+                class="h-full rounded-full bg-buy-button transition-[width] duration-500 ease-out motion-reduce:transition-none"
+                style="width: 0%"></div>
+            </div>
           </div>
           {%- if section.settings.mock_mode -%}
             <p class="mt-2 inline-block rounded-full bg-accent-20 px-2 py-0.5 text-2xs uppercase tracking-wide text-main-80">
