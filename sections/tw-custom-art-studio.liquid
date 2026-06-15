@@ -37,33 +37,16 @@
   class="block"
   data-section-id="{{ section.id }}">
 
-  {%- comment -%} ---- CTA d'ouverture (sticky bas d'écran sur mobile) ---- {%- endcomment -%}
-  <div class="page-width px-4">
-    <div class="max-w-lg mx-auto text-center py-10">
-      {%- if section.settings.heading != blank -%}
-        <h2 id="studio-heading-{{ section.id }}" class="mb-4">
-          <span class="title-highlight">{{ section.settings.heading | escape }}</span>
-        </h2>
-      {%- endif -%}
-      {%- if section.settings.description != blank -%}
-        <div class="text-main-80 leading-relaxed mb-6">{{ section.settings.description }}</div>
-      {%- endif -%}
-      {%- comment -%} En flux par défaut ; sur mobile, le JS le fixe en bas d'écran
-         UNIQUEMENT quand la section est hors viewport (IntersectionObserver, pattern
-         float-buy-button) et masque alors le float-buy-button classique (cf. input.css :
-         body.studio-cta-floating) pour ne pas superposer deux CTA d'achat. {%- endcomment -%}
-      <button
-        type="button"
-        data-studio-open
-        data-studio-cta
-        aria-haspopup="dialog"
-        class="cart-button glass-anim py-4 mobile:w-auto">
-        {{ section.settings.cta_label | escape }}
-      </button>
-    </div>
-  </div>
+  {%- comment -%}
+    Pas de CTA propre ici : le déclencheur est le bouton d'achat « JE CRÉE MON TABLEAU »
+    réutilisé en haut de la fiche (bloc `buy` du main-product, comportement flottant inclus).
+    Sur le template `personalized`, assets/main-product.js détourne son clic pour appeler
+    custom-art-studio.open() au lieu d'ajouter au panier. Cette section ne porte donc plus
+    que le dialogue (caché jusqu'à l'ouverture). L'éditorial « comment ça marche » sera
+    ajouté lors de la passe copywriting de la fiche.
+  {%- endcomment -%}
 
-  {%- comment -%} ---- Dialog studio (caché tant que le CTA n'est pas cliqué) ---- {%- endcomment -%}
+  {%- comment -%} ---- Dialog studio (caché tant que le bouton n'est pas cliqué) ---- {%- endcomment -%}
   <div
     data-studio-dialog
     class="fixed inset-0 z-[60] hidden"

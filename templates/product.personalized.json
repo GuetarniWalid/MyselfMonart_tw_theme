@@ -36,6 +36,15 @@
             "margin_bottom": "mb-8"
           }
         },
+        "buy_qrRzcg": {
+          "type": "buy",
+          "settings": {
+            "text": "JE CRÉE MON TABLEAU",
+            "is_dynamic_variant": false,
+            "show_promotion": false,
+            "show_payment_icons": false
+          }
+        },
         "8600f603-2d6f-4191-8020-3678432ba1e5": {
           "type": "text",
           "settings": {
@@ -78,6 +87,7 @@
         "short_title_mgUwJx",
         "title",
         "trustpilot_review_nXpwkL",
+        "buy_qrRzcg",
         "8600f603-2d6f-4191-8020-3678432ba1e5",
         "collapsible_tab_HAUcNw",
         "collapsible_tab_4UhrbY",

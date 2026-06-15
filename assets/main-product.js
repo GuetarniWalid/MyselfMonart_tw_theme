@@ -454,7 +454,17 @@ class MainProductBlocks extends CollapsibleTab {
   };
 
   onBuyButtonClick = async (e) => {
-    const button = e.target;
+    const button = e.currentTarget || e.target;
+    // Produit personnalisé (poster perso foot) : le bouton d'achat OUVRE le studio de
+    // création au lieu d'ajouter au panier. L'ajout au panier se fait à la fin du studio,
+    // une fois l'aperçu validé. Ciblé sur le template `personalized` -> les autres produits
+    // gardent l'ajout au panier classique. Vaut pour le bouton fixe ET le bouton flottant.
+    if (button?.dataset?.template === 'personalized') {
+      e.preventDefault();
+      const studio = document.querySelector('custom-art-studio');
+      if (studio && typeof studio.open === 'function') studio.open();
+      return;
+    }
     try {
       this.displayLoader(button);
       const productProperties = this.getproductProperties();
