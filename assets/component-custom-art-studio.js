@@ -286,6 +286,7 @@
       this.ctaObserver?.disconnect();
       document.body.classList.remove(CTA_FLOATING_BODY_CLASS);
       if (this.photoObjectUrl) URL.revokeObjectURL(this.photoObjectUrl);
+      clearTimeout(this._fmtPreviewTimer);
     }
 
     /* ------------------------------------------------------------------ utils */
@@ -596,6 +597,15 @@
       const promoDate = this.q('[data-studio-promo-date]');
       if (promoDate) promoDate.classList.toggle('hidden', !isBuyStep);
       this.updateNextDisabled();
+
+      // Aperçu WebGL « format » (poster) : monté à l'ENTRÉE de l'étape format, LIBÉRÉ partout
+      // ailleurs -> garantit un seul contexte WebGL. (syncVariant le re-monte sur changement.)
+      if (stepName === 'format') {
+        this.mountFormatPreview();
+      } else {
+        const fmtSlot = this.q('[data-studio-format-webgl-slot]');
+        if (fmtSlot) { fmtSlot.innerHTML = ''; fmtSlot.hidden = true; }
+      }
 
       if (stepName === 'team' && !this.teams) this.loadTeams();
       this.persist();
@@ -1100,6 +1110,15 @@
       return radio ? radio.value : '';
     }
 
+    // Comme selectedOptionByName mais renvoie le HANDLE du métaobjet (data-render-key) plutôt
+    // que le libellé traduit -> finition (cadre) STABLE hors français (cf. visualiseur 3D toile).
+    // Repli sur le libellé si le produit n'a pas de métaobjet de finition configuré.
+    selectedRenderKeyByName(pattern) {
+      const radio = Array.from(this.querySelectorAll('[data-studio-option]:checked'))
+        .find((candidate) => pattern.test(normalize(candidate.dataset.optionName || '')));
+      return radio ? (radio.dataset.renderKey || radio.value) : '';
+    }
+
     syncVariant() {
       const priceZone = this.q('[data-studio-price]');
       const unavailable = this.q('[data-variant-unavailable]');
@@ -1128,6 +1147,13 @@
       }
       this.persist();
       this.updateNextDisabled();
+
+      // Aperçu « format » : reflète la nouvelle TAILLE/CADRE (re-mount débounce, uniquement sur
+      // l'étape format -> n'allume jamais un contexte WebGL ailleurs).
+      if (this.state.step === 'format') {
+        clearTimeout(this._fmtPreviewTimer);
+        this._fmtPreviewTimer = setTimeout(() => this.mountFormatPreview(), 120);
+      }
     }
 
     /* ------------------------------ bulles d'info format/finition (design fiches toile) */
@@ -1531,6 +1557,9 @@
       const figure = this.q('[data-reveal-figure]');
       this.applyFallbackFrame();
       if (figure) figure.hidden = false;
+      // Un seul contexte WebGL : on libère l'aperçu « format » avant de monter le reveal.
+      const fmtSlot = this.q('[data-studio-format-webgl-slot]');
+      if (fmtSlot) { fmtSlot.innerHTML = ''; fmtSlot.hidden = true; }
       if (!slot) return;
       slot.hidden = true;
       slot.innerHTML = '';
@@ -1543,13 +1572,17 @@
         ariaLabel: this.i18n.webgl_preview_label,
         raw: { src: url },
         // État FIGÉ (pas de painting-variant-picker dans le studio) : finition + format
-        // résolus par NOM d'option, interprétés par syncStateFromDOM (config.state).
+        // résolus par NOM d'option, interprétés par syncStateFromDOM (config.state). Le CADRE
+        // est résolu par HANDLE (render-key) -> stable hors français.
         state: {
           border: 'white',
-          frame: this.selectedOptionByName(OPTION_FRAME_RE),
+          frame: this.selectedRenderKeyByName(OPTION_FRAME_RE),
           size: this.selectedOptionByName(OPTION_FORMAT_RE),
         },
       };
+      // Poster -> rendu PAPIER + VERRE (même moteur que l'aperçu « format »). Les posters sont
+      // identifiés par la présence d'une image d'aperçu poster dans la config.
+      if (this.config.posterPreview && this.config.posterPreview.src) cfg.material = 'paper';
       // Chevrons échappés : un « </script> » dans le JSON inline casserait le parsing HTML.
       const json = JSON.stringify(cfg).replace(/</g, '\\u003c');
       slot.innerHTML = '<perspective-canvas class="block w-full" data-context="studio">'
@@ -1560,6 +1593,43 @@
         slot.hidden = false;
         if (figure) figure.hidden = true;
       }, { once: true });
+    }
+
+    /* Aperçu WebGL « format » (poster) : monte un <perspective-canvas> en mode PAPIER dans le
+       panneau Format, reflétant la TAILLE + le CADRE choisis. Le moteur en mode studio ignore le
+       DOM (config.state figé) -> on RE-MONTE le nœud à chaque changement (pattern « popup », le
+       cache de texture rend le re-décodage gratuit). Un seul contexte WebGL : on libère le slot
+       du reveal d'abord. Replis identiques au reveal (script absent / reduced-motion / pas de WebGL). */
+    mountFormatPreview() {
+      const slot = this.q('[data-studio-format-webgl-slot]');
+      if (!slot) return;
+      const revealSlot = this.q('[data-studio-webgl-slot]');
+      if (revealSlot) { revealSlot.innerHTML = ''; revealSlot.hidden = true; }
+      slot.innerHTML = '';
+      const src = this.config.posterPreview && this.config.posterPreview.src;
+      if (!src
+        || !customElements.get('perspective-canvas')
+        || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+        || !this.webglAvailable()) {
+        slot.hidden = true;
+        return;
+      }
+      const cfg = {
+        ariaLabel: this.i18n.webgl_preview_label,
+        material: 'paper',
+        raw: { src: src },
+        state: {
+          border: 'white',
+          frame: this.selectedRenderKeyByName(OPTION_FRAME_RE),
+          size: this.selectedOptionByName(OPTION_FORMAT_RE),
+        },
+      };
+      const json = JSON.stringify(cfg).replace(/</g, '\\u003c');
+      slot.innerHTML = '<perspective-canvas class="block w-full" data-context="studio">'
+        + `<canvas class="perspective-canvas-gl block w-full" style="aspect-ratio:4/5" role="img" aria-label="${escapeHtml(this.i18n.webgl_preview_label)}">${escapeHtml(this.i18n.webgl_canvas_caption)}</canvas>`
+        + `<script type="application/json" class="perspective-config">${json}</scr` + 'ipt>'
+        + '</perspective-canvas>';
+      slot.hidden = false;
     }
 
     /* ------------------------------------------- mises en situation (mockups) */

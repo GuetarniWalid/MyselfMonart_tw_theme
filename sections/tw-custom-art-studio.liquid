@@ -359,6 +359,12 @@
              (foot inchangé). Radios data-studio-option -> syncVariant inchangé. {%- endcomment -%}
           {% render 'studio-variant-picker', product: product %}
 
+          {%- comment -%} Aperçu WebGL « poster » (papier + cadre + verre) : le JS monte ici un
+             <perspective-canvas data-context="studio"> en mode papier reflétant la TAILLE + le
+             CADRE choisis, re-monté à chaque changement (un seul contexte WebGL à la fois). Vide
+             tant que non monté -> data-allow-empty (cf. règle *:empty{display:none}). {%- endcomment -%}
+          <div data-studio-format-webgl-slot data-allow-empty class="mx-auto mt-4 w-full max-w-xs md:max-w-sm" hidden></div>
+
           {%- comment -%} Ligne prix « PRIX 30 € » : utile au foot (le bouton du format dit « Générer »,
              sans prix). Masquée par le JS pour un poster SANS génération, où le prix est DANS le bouton
              « Ajouter au panier » du pied (pas de doublon). {%- endcomment -%}
@@ -641,6 +647,9 @@
         {{ section.settings.wait_phase_4 | json }}
       ],
       "mockRevealImage": {% if section.settings.mock_reveal_image %}{{ section.settings.mock_reveal_image | image_url: width: 1024 | json }}{% else %}null{% endif %},
+      {%- comment -%} Image de base de l'aperçu WebGL « format » (poster) = le design imprimé
+         (media[1]), texturé sur la feuille papier. Présent uniquement pour les posters. {%- endcomment -%}
+      "posterPreview": {%- if product.metafields.artwork.type == 'poster' and product.media[1] and product.media[1].media_type == 'image' -%}{ "src": {{ product.media[1].preview_image | image_url: width: 1200 | json }} }{%- else -%}null{%- endif -%},
       "i18n": {
         "step_indicator": {{ 'sections.custom_art_studio.step_indicator' | t: step: '[step]', total: '[total]' | json }},
         "confirm_close": {{ 'sections.custom_art_studio.confirm_close' | t | json }},

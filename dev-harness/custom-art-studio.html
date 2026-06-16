@@ -292,6 +292,11 @@
                 </div>
               </fieldset>
 
+              <!-- Aperçu WebGL « poster » (papier + cadre + verre) monté par le JS (mountFormatPreview).
+                   En LIVE, les radios de finition portent data-render-key (handle métaobjet) ; ici les
+                   libellés FR suffisent (selectedRenderKeyByName retombe sur la valeur). -->
+              <div data-studio-format-webgl-slot data-allow-empty class="mx-auto mt-4 w-full max-w-xs md:max-w-sm" hidden></div>
+
               <p data-studio-price-line class="flex items-baseline gap-2 border-t border-main-10 pt-4">
                 <span class="text-xs uppercase tracking-wide text-main-70">Prix</span>
                 <span data-studio-price class="text-2xl font-heading font-bold" aria-live="polite">34,90 €</span>
@@ -491,6 +496,7 @@
             "Vernissage et derniers détails…"
           ],
           "mockRevealImage": null,
+          "posterPreview": { "src": "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-enfant-garcon-personalise-prenom-foot.jpg?v=1767441242&width=1200" },
           "i18n": {
             "step_indicator": "Étape [step] sur [total]",
             "confirm_close": "Fermer le studio ? Votre progression est enregistrée, vous pourrez reprendre là où vous en étiez.",

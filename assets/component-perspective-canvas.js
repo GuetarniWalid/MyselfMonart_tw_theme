@@ -51,6 +51,20 @@
     frameGapRatio: 0.04, // écart toile <-> cadre (renfoncement = effet flottant)
     frameWidthRatio: 0.1, // largeur de la face visible du cadre
     frameProud: 0.018, // le cadre dépasse la toile vers l'avant (z) -> profil flottant
+    // ---- POSTER ENCADRÉ (mode papier + verre) — activé par config.material === 'paper' ----
+    // Un poster n'est PAS une toile : feuille fine, baguette COLLÉE au tirage (pas de caisse
+    // américaine flottante), et une GLACE (verre) en façade aux reflets nets.
+    paperCm: 0.1, // épaisseur de la feuille (1 mm) -> bord papier quasi un trait (poster nu)
+    paperWeaveAmt: 0.12, // grain papier mat (quasi lisse) vs lin (0.85)
+    posterFrameGapRatio: -0.015, // NÉGATIF : la baguette RECOUVRE le bord du tirage (feuillure) -> collée, pas d'écart
+    posterFrameWidthRatio: 0.075, // largeur de la baguette (profil carré)
+    posterFrameProud: 0.022, // la baguette dépasse le verre vers l'avant
+    posterFrameDepth: 0.05, // profondeur du cadre (faible : poster encadré, pas un châssis)
+    glassProud: 0.012, // la glace dépasse le papier (épaisseur du verre visible au-dessus du tirage)
+    glassTint: [0.99, 0.98, 0.96], // teinte du reflet : blanc NEUTRE (lumière de fenêtre), pas bleu
+    glassReflAmt: 0.38, // intensité des carreaux (subtile : ne dénature pas les couleurs)
+    glassFresnelAmt: 0.1, // brillance des bords (Fresnel léger)
+    glassSweepMs: 850, // durée du balayage de reflet au changement de cadre
   };
 
   // Couleurs de tranche unie (bordure). Tons calés sur les swatches MyselfMonArt.
@@ -370,6 +384,75 @@
     }
   `;
 
+  // GLACE (verre) du poster encadré : un quad transparent posé DEVANT le tirage, dans
+  // l'ouverture du cadre. Reflet spéculaire calculé PAR FRAGMENT (le shader principal est en
+  // Lambert par-sommet -> incapable d'un reflet net) : Fresnel + traînées lumineuses NETTES
+  // qui glissent quand on incline (le vecteur réfléchi suit la normale + la vue). Additif.
+  const VS_GLASS = `
+    attribute vec3 aPos;
+    attribute vec3 aNormal;
+    uniform mat4 uMVP;
+    uniform mat4 uModel;
+    uniform vec3 uCamPos;
+    varying vec3 vN;
+    varying vec3 vV;
+    varying vec3 vWorldPos;
+    varying vec2 vLocal;
+    void main() {
+      gl_Position = uMVP * vec4(aPos, 1.0);
+      vN = normalize(mat3(uModel) * aNormal);
+      vec3 wp = (uModel * vec4(aPos, 1.0)).xyz;
+      vWorldPos = wp;
+      vV = normalize(uCamPos - wp);
+      vLocal = aPos.xy;
+    }
+  `;
+  const FS_GLASS = `
+    precision mediump float;
+    varying vec3 vN;
+    varying vec3 vV;
+    varying vec3 vWorldPos;
+    varying vec2 vLocal;
+    uniform vec3 uGlassTint;
+    uniform float uReflAmt;
+    uniform float uFresnelAmt;
+    uniform float uStreakPhase;
+    uniform vec2 uHalfImg;
+    void main() {
+      vec3 N = normalize(vN);
+      vec3 V = normalize(vV);
+      float ndv = clamp(dot(N, V), 0.0, 1.0);
+      float fres = pow(1.0 - ndv, 3.0);
+      // RÉFLEXION PLANAIRE : on réfléchit le rayon caméra->surface puis on l'intersecte avec un
+      // plan-fenêtre FIXE devant le tableau. La fenêtre est donc fixe dans la pièce ; la vitre la
+      // "balaye" naturellement quand on incline (vrai reflet, pas une texture peinte qui glisse).
+      vec3 Rdir = reflect(-V, N);
+      float denom = Rdir.z;
+      float valid = step(0.06, denom);
+      float t = (1.7 - vWorldPos.z) / max(denom, 0.06);
+      vec2 E = vWorldPos.xy + t * Rdir.xy; // point visé sur le plan-fenêtre
+      // Fenêtre fixe : pleine hauteur, ~moitié en largeur, calée sur le BORD GAUCHE au repos
+      // (bord droit ~au milieu de la toile). Léger balayage horizontal.
+      vec2 winC = vec2(1.35 + uStreakPhase, -0.55);
+      vec2 winHalf = vec2(0.45, 1.05);
+      vec2 q = (E - winC) / winHalf; // -1..1 dans la fenêtre
+      vec2 aq = abs(q);
+      float inWin = step(aq.x, 1.0) * step(aq.y, 1.0) * valid;
+      // Carreaux de LUMIÈRE uniquement (2 colonnes x 4 rangées) : joints TRANSPARENTS, AUCUNE
+      // barre sombre -> on n'éclaire que les carreaux, jamais d'ombre entre eux.
+      vec2 tc = (q * 0.5 + 0.5) * vec2(2.0, 4.0);
+      vec2 cell = fract(tc);
+      float j = 0.10; // largeur du joint transparent entre carreaux
+      vec2 pe = smoothstep(0.0, j, cell) * (1.0 - smoothstep(1.0 - j, 1.0, cell));
+      float pane = pe.x * pe.y;
+      // Bords de la fenêtre adoucis (pas de coupe franche disgracieuse).
+      float soft = (1.0 - smoothstep(0.86, 1.0, aq.x)) * (1.0 - smoothstep(0.86, 1.0, aq.y));
+      // Lumière LÉGÈRE et subtile (additif) : pas de blanc agressif, jamais d'assombrissement.
+      float a = clamp(pane * soft * inWin * uReflAmt + fres * uFresnelAmt, 0.0, 1.0);
+      gl_FragColor = vec4(uGlassTint * a, a); // additif (blend ONE, ONE)
+    }
+  `;
+
   /* ----------------------------------------------------------------------- *
    * Custom element
    * ----------------------------------------------------------------------- */
@@ -378,6 +461,8 @@
       super();
       this.canvas = this.querySelector('canvas');
       this.config = this.readConfig();
+      // Mode POSTER (papier + verre) : isolé derrière un flag, le chemin TOILE reste inchangé.
+      this.posterMode = !!(this.config && this.config.material === 'paper');
       this.gl = null;
       this.ready = false;
       this.texture = null;
@@ -399,6 +484,9 @@
       this.hlFocus = 0;
       this.hlRAF = null;
       this.hlStart = 0;
+      // Balayage de reflet de la glace (au changement de cadre, mode poster).
+      this.glassPhase = 0;
+      this.glassRAF = null;
       this.onVariantChange = this.onVariantChange.bind(this);
     }
 
@@ -486,6 +574,7 @@
       if (this.rafId) cancelAnimationFrame(this.rafId);
       if (this.springId) cancelAnimationFrame(this.springId);
       if (this.hlRAF) cancelAnimationFrame(this.hlRAF);
+      if (this.glassRAF) cancelAnimationFrame(this.glassRAF);
       if (this._hlScrollIO) this._hlScrollIO.disconnect();
       if (this._hlScrollTO) clearTimeout(this._hlScrollTO);
       if (this._onResize) {
@@ -519,6 +608,10 @@
           gl.deleteBuffer(this.frameGeo.useBuf);
           gl.deleteBuffer(this.frameGeo.idxBuf);
         }
+        if (this.glassGeo) {
+          gl.deleteBuffer(this.glassGeo.posBuf);
+          gl.deleteBuffer(this.glassGeo.norBuf);
+        }
         if (this.shadowBuf) gl.deleteBuffer(this.shadowBuf);
         if (this.texture) gl.deleteTexture(this.texture);
         if (this.fabricTex) gl.deleteTexture(this.fabricTex); // texture GL par-contexte (la SOURCE CPU partagée reste)
@@ -527,16 +620,19 @@
         if (this.silverTex) gl.deleteTexture(this.silverTex);
         if (this.program) gl.deleteProgram(this.program);
         if (this.shadowProgram) gl.deleteProgram(this.shadowProgram);
+        if (this.glassProgram) gl.deleteProgram(this.glassProgram);
         const lose = gl.getExtension('WEBGL_lose_context');
         if (lose) lose.loseContext();
       } catch (e) {}
       this.gl = null;
       this.geo = null;
       this.frameGeo = null;
+      this.glassGeo = null;
       this.texture = null;
       this.shadowBuf = null;
       this.program = null;
       this.shadowProgram = null;
+      this.glassProgram = null;
       this.ready = false;
     }
 
@@ -715,6 +811,36 @@
       this.hlZoom = 1;
       this.hlFocus = 0;
       this.scheduleRender(); // repeindre la position de repos (sinon frame zoomée figée si clic sans drag)
+    }
+
+    /* Poster encadré : au lieu de la "mise en lumière de la tranche" (inexistante sur une
+       feuille), on fait GLISSER un reflet sur la glace -> l'utilisateur voit que c'est sous
+       verre. Respecte prefers-reduced-motion (reflet statique, pas d'animation). */
+    glassSweep() {
+      if (!this.posterMode || !this.glassGeo) return;
+      const reduce =
+        window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) {
+        this.glassPhase = 0;
+        this.scheduleRender();
+        return;
+      }
+      if (this.glassRAF) cancelAnimationFrame(this.glassRAF);
+      const start = performance.now();
+      const tick = () => {
+        const t = (performance.now() - start) / SCENE.glassSweepMs;
+        if (t >= 1 || !this.gl) {
+          this.glassPhase = 0;
+          this.glassRAF = null;
+          this.render();
+          return;
+        }
+        const e = t * t * (3 - 2 * t); // smoothstep
+        this.glassPhase = -0.7 + 1.4 * e; // balaie le reflet d'un bord à l'autre
+        this.render();
+        this.glassRAF = requestAnimationFrame(tick);
+      };
+      this.glassRAF = requestAnimationFrame(tick);
     }
 
     /* Glisser -> inclinaison de la toile, retour ressort au relâchement.
@@ -920,6 +1046,25 @@
             uShadowColor: gl.getUniformLocation(this.shadowProgram, 'uShadowColor'),
           }
         : null;
+
+      // Programme GLACE (verre) — uniquement en mode poster. Aucun coût pour la toile.
+      if (this.posterMode) {
+        this.glassProgram = this.buildProgram(VS_GLASS, FS_GLASS);
+        this.gLocs = this.glassProgram
+          ? {
+              aPos: gl.getAttribLocation(this.glassProgram, 'aPos'),
+              aNormal: gl.getAttribLocation(this.glassProgram, 'aNormal'),
+              uMVP: gl.getUniformLocation(this.glassProgram, 'uMVP'),
+              uModel: gl.getUniformLocation(this.glassProgram, 'uModel'),
+              uCamPos: gl.getUniformLocation(this.glassProgram, 'uCamPos'),
+              uGlassTint: gl.getUniformLocation(this.glassProgram, 'uGlassTint'),
+              uReflAmt: gl.getUniformLocation(this.glassProgram, 'uReflAmt'),
+              uFresnelAmt: gl.getUniformLocation(this.glassProgram, 'uFresnelAmt'),
+              uStreakPhase: gl.getUniformLocation(this.glassProgram, 'uStreakPhase'),
+              uHalfImg: gl.getUniformLocation(this.glassProgram, 'uHalfImg'),
+            }
+          : null;
+      }
 
       this.fabricTex = this.makeFabricTexture();
       // Textures de cadre (bois chêne/noyer, argent grisé) construites À LA DEMANDE, par
@@ -1234,7 +1379,8 @@
       // choisie (cm). La longue face = 2.0 unités-monde, d'où le facteur 2.0.
       const Wc = this.sizeW || 40;
       const Hc = this.sizeH || 40;
-      const D = (SCENE.chassisCm * 2.0) / Math.max(Wc, Hc);
+      // Poster : feuille fine (paperCm) ; toile : châssis épais (chassisCm).
+      const D = ((this.posterMode ? SCENE.paperCm : SCENE.chassisCm) * 2.0) / Math.max(Wc, Hc);
 
       const pos = [];
       const uv = [];
@@ -1398,14 +1544,22 @@
         gl.deleteBuffer(this.frameGeo.idxBuf);
         this.frameGeo = null;
       }
+      // Glace : reconstruite avec le cadre (poster) ; libérée si pas de cadre.
+      if (this.glassGeo) {
+        gl.deleteBuffer(this.glassGeo.posBuf);
+        gl.deleteBuffer(this.glassGeo.norBuf);
+        this.glassGeo = null;
+      }
       if (frameColorFromLabel(this.state.frame)) {
         const minHalf = Math.min(halfW, halfH);
-        const G = minHalf * SCENE.frameGapRatio; // écart toile <-> cadre
-        const FW = minHalf * SCENE.frameWidthRatio; // largeur de la face du cadre
-        const iW = halfW + G, iH = halfH + G; // bord intérieur (le trou)
+        // Poster : feuillure NÉGATIVE (la baguette recouvre le bord du tirage -> collée, pas de
+        // caisse américaine flottante) ; toile : écart positif (effet flottant).
+        const G = minHalf * (this.posterMode ? SCENE.posterFrameGapRatio : SCENE.frameGapRatio);
+        const FW = minHalf * (this.posterMode ? SCENE.posterFrameWidthRatio : SCENE.frameWidthRatio);
+        const iW = halfW + G, iH = halfH + G; // bord intérieur (l'ouverture)
         const oW = iW + FW, oH = iH + FW; // bord extérieur
-        const Zf = SCENE.frameProud; // face avant du cadre (dépasse la toile)
-        const zb = -(D + 0.005); // arrière du cadre (enveloppe la toile)
+        const Zf = this.posterMode ? SCENE.posterFrameProud : SCENE.frameProud; // face avant du cadre
+        const zb = this.posterMode ? -SCENE.posterFrameDepth : -(D + 0.005); // arrière du cadre
         frameOuterW = oW;
         frameOuterH = oH;
         const fpos = [], fuv = [], ffab = [], fnor = [], fuse = [], fidx = [];
@@ -1469,7 +1623,9 @@
         ring(O, Zc, O, zb, NRM.outWall); // mur extérieur (profondeur)
         ring(Ic, Zf, Ir, Zc, NRM.inCham); // chamfer intérieur (bord adouci)
         ring(Ir, Zc, Ir, zb, NRM.inWall); // mur intérieur (renfoncement)
-        ring(TL, zb, Ir, zb, NRM.front); // PLANCHER du renfoncement -> couleur cadre (fini le blanc)
+        // PLANCHER du renfoncement : seulement pour la TOILE (caisse américaine flottante).
+        // Le poster n'a pas de renfoncement (baguette collée/feuillure) -> on l'omet.
+        if (!this.posterMode) ring(TL, zb, Ir, zb, NRM.front);
         this.frameGeo = {
           count: fidx.length,
           posBuf: this.makeBuffer(gl.ARRAY_BUFFER, new Float32Array(fpos)),
@@ -1479,6 +1635,27 @@
           useBuf: this.makeBuffer(gl.ARRAY_BUFFER, new Float32Array(fuse)),
           idxBuf: this.makeBuffer(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(fidx)),
         };
+
+        // GLACE (verre) du poster : un quad dans l'OUVERTURE (iW/iH), posé en avant du tirage
+        // (glassProud) -> épaisseur visible + reflets nets. Uniquement en mode poster encadré.
+        if (this.posterMode) {
+          const gz = SCENE.glassProud;
+          const gv = [
+            [-iW, -iH, gz], [iW, -iH, gz], [iW, iH, gz],
+            [-iW, -iH, gz], [iW, iH, gz], [-iW, iH, gz],
+          ];
+          const gpos = [], gnor = [];
+          for (let i = 0; i < gv.length; i++) {
+            gpos.push(gv[i][0], gv[i][1], gv[i][2]);
+            gnor.push(0, 0, 1);
+          }
+          this.glassGeo = {
+            count: 6,
+            posBuf: this.makeBuffer(gl.ARRAY_BUFFER, new Float32Array(gpos)),
+            norBuf: this.makeBuffer(gl.ARRAY_BUFFER, new Float32Array(gnor)),
+          };
+          this.glassHalf = [iW, iH];
+        }
       }
 
       // Quad d'ombre : épouse le contour EXTÉRIEUR (toile seule, ou cadre s'il est présent).
@@ -1501,7 +1678,8 @@
       this.shadowRadius = r;
 
       this.geoKey =
-        mode + '|' + (this.state.frame || 'none') + '|' + (this.sizeW || 0) + 'x' + (this.sizeH || 0);
+        mode + '|' + (this.state.frame || 'none') + '|' + (this.sizeW || 0) + 'x' + (this.sizeH || 0) +
+        (this.posterMode ? '|p' : '|c');
     }
 
     makeBuffer(target, data) {
@@ -1546,7 +1724,8 @@
       if (!gl || !this.geo) return;
       // Bordure, CADRE et taille changent la géométrie -> reconstruire au besoin.
       const key =
-        this.state.border + '|' + (this.state.frame || 'none') + '|' + (this.sizeW || 0) + 'x' + (this.sizeH || 0);
+        this.state.border + '|' + (this.state.frame || 'none') + '|' + (this.sizeW || 0) + 'x' + (this.sizeH || 0) +
+        (this.posterMode ? '|p' : '|c');
       if (this.geoKey !== key) this.buildGeometry();
       this.resize();
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -1613,7 +1792,8 @@
 
       const col = BORDER_COLOR[this.state.border] || BORDER_COLOR.white;
       gl.uniform3fv(this.locs.uSideColor, col);
-      gl.uniform1f(this.locs.uWeaveAmt, SCENE.weaveAmt);
+      // Poster : grain PAPIER mat (faible) ; toile : grain de LIN (fort).
+      gl.uniform1f(this.locs.uWeaveAmt, this.posterMode ? SCENE.paperWeaveAmt : SCENE.weaveAmt);
 
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, this.texture);
@@ -1656,6 +1836,31 @@
         gl.drawElements(gl.TRIANGLES, this.frameGeo.count, gl.UNSIGNED_SHORT, 0);
       }
 
+      // GLACE (verre) : passe additive PAR-DESSUS le tirage, dans l'ouverture du cadre.
+      // Reflet spéculaire net + Fresnel, calculés par fragment -> suit l'inclinaison.
+      if (this.posterMode && this.glassGeo && this.glassProgram) {
+        gl.useProgram(this.glassProgram);
+        // Désactive les attributs du programme principal non utilisés par la glace.
+        [this.locs.aUV, this.locs.aFabUV, this.locs.aUseTex].forEach((l) => {
+          if (l >= 0) gl.disableVertexAttribArray(l);
+        });
+        gl.depthMask(false); // la glace est DEVANT le tirage ; pas d'écriture de profondeur
+        gl.blendFunc(gl.ONE, gl.ONE); // ADDITIF : la fenêtre n'AJOUTE que de la lumière (aucune ombre)
+        gl.uniformMatrix4fv(this.gLocs.uMVP, false, mvp);
+        gl.uniformMatrix4fv(this.gLocs.uModel, false, model);
+        gl.uniform3f(this.gLocs.uCamPos, 0, 0, SCENE.camDist);
+        gl.uniform3fv(this.gLocs.uGlassTint, SCENE.glassTint);
+        gl.uniform1f(this.gLocs.uReflAmt, SCENE.glassReflAmt);
+        gl.uniform1f(this.gLocs.uFresnelAmt, SCENE.glassFresnelAmt);
+        gl.uniform1f(this.gLocs.uStreakPhase, this.glassPhase);
+        gl.uniform2f(this.gLocs.uHalfImg, this.glassHalf[0], this.glassHalf[1]);
+        this.bindAttrib(this.gLocs.aPos, this.glassGeo.posBuf, 3);
+        this.bindAttrib(this.gLocs.aNormal, this.glassGeo.norBuf, 3);
+        gl.drawArrays(gl.TRIANGLES, 0, this.glassGeo.count);
+        gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); // restaure le blend global (prémultiplié)
+        gl.depthMask(true);
+      }
+
       // 1er rendu réussi -> transition fluide de l'<img> brute vers le WebGL.
       if (!this._revealed) {
         this._revealed = true;
@@ -1670,6 +1875,8 @@
       // Signale le 1er rendu présenté aux intégrations (studio : bascule du repli
       // image+cadre CSS vers le WebGL UNIQUEMENT quand une frame est réellement affichable).
       this.dispatchEvent(new CustomEvent('perspective:ready', { bubbles: true }));
+      // Poster encadré : joue un balayage de reflet une fois le 1er rendu présenté.
+      if (this.posterMode) requestAnimationFrame(() => this.glassSweep());
       const isPopup = this.getAttribute('data-context') === 'popup';
       const poster =
         (this.parentElement && this.parentElement.querySelector('.persp-poster')) || null;
