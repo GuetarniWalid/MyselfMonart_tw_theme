@@ -318,7 +318,10 @@
       "prop_name": "Vorname",
       "prop_number": "Nummer",
       "prop_team": "Team",
-      "prop_preview": "Vorschau"
+      "prop_preview": "Vorschau",
+      "cp_photo": "Foto",
+      "cp_team": "Team",
+      "cp_name": "Vorname"
     }
   },
   "accessibility": {

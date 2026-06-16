@@ -545,7 +545,9 @@
       "prop_name": "First name",
       "prop_number": "Number",
       "prop_team": "Team",
-      "prop_preview": "Preview"
+      "prop_preview": "Preview",
+      "cp_team": "Team",
+      "cp_name": "First name"
     }
   },
   "snippet": {

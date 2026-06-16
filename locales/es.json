@@ -317,7 +317,11 @@
       "prop_name": "Nombre",
       "prop_number": "Número",
       "prop_team": "Equipo",
-      "prop_preview": "Vista previa"
+      "prop_preview": "Vista previa",
+      "cp_photo": "Foto",
+      "cp_team": "Equipo",
+      "cp_name": "Nombre",
+      "cp_format": "Formato"
     }
   },
   "accessibility": {

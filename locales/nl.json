@@ -316,7 +316,11 @@
       "prop_name": "Voornaam",
       "prop_number": "Nummer",
       "prop_team": "Team",
-      "prop_preview": "Voorbeeld"
+      "prop_preview": "Voorbeeld",
+      "cp_photo": "Foto",
+      "cp_team": "Team",
+      "cp_name": "Voornaam",
+      "cp_format": "Formaat"
     }
   },
   "accessibility": {
