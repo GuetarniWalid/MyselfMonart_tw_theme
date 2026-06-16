@@ -295,7 +295,7 @@
               <!-- Aperçu WebGL « poster » (papier + cadre + verre) monté par le JS (mountFormatPreview).
                    En LIVE, les radios de finition portent data-render-key (handle métaobjet) ; ici les
                    libellés FR suffisent (selectedRenderKeyByName retombe sur la valeur). -->
-              <div data-studio-format-webgl-slot data-allow-empty class="mx-auto mt-4 w-full max-w-xs md:max-w-sm" hidden></div>
+              <div data-studio-format-webgl-slot data-allow-empty class="relative -mx-4 mt-4 overflow-hidden py-5" hidden></div>
 
               <p data-studio-price-line class="flex items-baseline gap-2 border-t border-main-10 pt-4">
                 <span class="text-xs uppercase tracking-wide text-main-70">Prix</span>
@@ -332,7 +332,7 @@
               </figure>
 
               <!-- Visualiseur 3D recréé ici à chaque reveal (perspective-canvas, data-context="studio"). -->
-              <div data-studio-webgl-slot class="mx-auto w-full max-w-xs md:max-w-sm" hidden></div>
+              <div data-studio-webgl-slot class="relative -mx-4 overflow-hidden py-5" hidden></div>
 
               <div class="mx-auto mt-6 flex max-w-sm flex-col gap-3">
                 <button type="button" data-studio-add-to-cart data-studio-buy class="cart-button glass-anim mb-0 disabled:cursor-wait focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2">
@@ -425,7 +425,7 @@
 
           <p data-studio-cart-feedback class="mx-4 -mb-1 text-sm text-accent" role="alert" aria-live="polite" hidden></p>
 
-          <footer data-studio-footer class="flex flex-col gap-2 border-t border-main-10 p-4">
+          <footer data-studio-footer class="flex flex-col gap-2 border-t border-main-10 px-4 pt-4 pb-7">
             <button type="button" data-studio-back class="self-start inline-flex items-center gap-1.5 rounded text-sm font-heading font-semibold text-main-80 underline hover:no-underline transition-colors duration-200 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="shrink-0">
                 <polyline points="15 18 9 12 15 6"></polyline>

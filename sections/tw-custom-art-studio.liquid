@@ -363,7 +363,10 @@
              <perspective-canvas data-context="studio"> en mode papier reflétant la TAILLE + le
              CADRE choisis, re-monté à chaque changement (un seul contexte WebGL à la fois). Vide
              tant que non monté -> data-allow-empty (cf. règle *:empty{display:none}). {%- endcomment -%}
-          <div data-studio-format-webgl-slot data-allow-empty class="mx-auto mt-4 w-full max-w-xs md:max-w-sm" hidden></div>
+          {%- comment -%} Bande PLEINE LARGEUR : `-mx-4` annule le padding du corps de la modale ->
+             le fond mur touche les bords gauche/droit (section image d'une autre couleur). Le poster
+             (perspective-canvas) est centré dessus par le JS. `relative` = ancre du fond absolu. {%- endcomment -%}
+          <div data-studio-format-webgl-slot data-allow-empty class="relative -mx-4 mt-4 overflow-hidden py-5" hidden></div>
 
           {%- comment -%} Ligne prix « PRIX 30 € » : utile au foot (le bouton du format dit « Générer »,
              sans prix). Masquée par le JS pour un poster SANS génération, où le prix est DANS le bouton
@@ -427,7 +430,7 @@
              snippets/tw-main-product-perspective.liquid). L'image DOIT être servie avec
              crossorigin/ACAO (DO Spaces) sinon la texture WebGL est rejetée
              (cf. assets/component-perspective-canvas.js). {%- endcomment -%}
-          <div data-studio-webgl-slot class="mx-auto w-full max-w-xs md:max-w-sm" hidden></div>
+          <div data-studio-webgl-slot class="relative -mx-4 overflow-hidden py-5" hidden></div>
 
           <div class="mx-auto mt-6 flex max-w-sm flex-col gap-3">
             <button
@@ -588,7 +591,7 @@
          PLEINE LARGEUR (look fiche toile via .cart-button) EN DESSOUS. À la dernière étape d'un produit
          SANS génération, le JS injecte dans ce bouton le contenu prix+promo (clone de
          [data-studio-buy-content]) ; sinon il porte un libellé simple (Continuer / Générer). {%- endcomment -%}
-      <footer data-studio-footer class="flex flex-col gap-2 border-t border-main-10 p-4">
+      <footer data-studio-footer class="flex flex-col gap-2 border-t border-main-10 px-4 pt-4 pb-7">
         <button
           type="button"
           data-studio-back

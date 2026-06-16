@@ -1610,9 +1610,10 @@
       if (this.config.posterPreview && this.config.posterPreview.src) cfg.material = 'paper';
       // Chevrons échappés : un « </script> » dans le JSON inline casserait le parsing HTML.
       const json = JSON.stringify(cfg).replace(/</g, '\\u003c');
-      slot.innerHTML = '<perspective-canvas class="relative block w-full" data-context="studio">'
-        + this.decorBgHtml()
-        + `<canvas class="perspective-canvas-gl relative z-10 block w-full aspect-square opacity-0 transition-opacity duration-500 ease-out" role="img" aria-label="${escapeHtml(this.i18n.webgl_preview_label)}">${escapeHtml(this.i18n.webgl_canvas_caption)}</canvas>`
+      // Fond mur en SIBLING (remplit la bande pleine largeur du slot) + poster centré au-dessus.
+      slot.innerHTML = this.decorBgHtml()
+        + '<perspective-canvas class="relative z-10 mx-auto block w-full max-w-xs md:max-w-sm" data-context="studio">'
+        + `<canvas class="perspective-canvas-gl block w-full aspect-square opacity-0 transition-opacity duration-500 ease-out" role="img" aria-label="${escapeHtml(this.i18n.webgl_preview_label)}">${escapeHtml(this.i18n.webgl_canvas_caption)}</canvas>`
         + `<script type="application/json" class="perspective-config">${json}</scr` + 'ipt>'
         + '</perspective-canvas>';
       slot.addEventListener('perspective:ready', () => {
@@ -1651,9 +1652,10 @@
         },
       };
       const json = JSON.stringify(cfg).replace(/</g, '\\u003c');
-      slot.innerHTML = '<perspective-canvas class="relative block w-full" data-context="studio">'
-        + this.decorBgHtml()
-        + `<canvas class="perspective-canvas-gl relative z-10 block w-full" style="aspect-ratio:4/5" role="img" aria-label="${escapeHtml(this.i18n.webgl_preview_label)}">${escapeHtml(this.i18n.webgl_canvas_caption)}</canvas>`
+      // Fond mur en SIBLING (remplit la bande pleine largeur du slot) + poster centré au-dessus.
+      slot.innerHTML = this.decorBgHtml()
+        + '<perspective-canvas class="relative z-10 mx-auto block w-full max-w-xs md:max-w-sm" data-context="studio">'
+        + `<canvas class="perspective-canvas-gl block w-full" style="aspect-ratio:4/5" role="img" aria-label="${escapeHtml(this.i18n.webgl_preview_label)}">${escapeHtml(this.i18n.webgl_canvas_caption)}</canvas>`
         + `<script type="application/json" class="perspective-config">${json}</scr` + 'ipt>'
         + '</perspective-canvas>';
       slot.hidden = false;
