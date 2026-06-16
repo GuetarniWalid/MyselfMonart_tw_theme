@@ -37,6 +37,25 @@
   class="block"
   data-section-id="{{ section.id }}">
 
+  {%- comment -%} Contenu « acheter » façon fiche toile (prix + promo DANS le bouton) : on RÉUTILISE
+     les snippets du bloc buy (regular/promotion-in-cart-button) en leur passant la SECTION comme
+     `block` — ses réglages text / is_dynamic_variant / show_promotion / promotion_* miment ceux du
+     bloc buy. Capturé une fois ici, puis : réinjecté dans le bouton du reveal (foot) ET cloné par le
+     JS dans le bouton du pied à la dernière étape d'un produit SANS génération (poster). Le JS
+     n'actualise ensuite que les prix (.main-price / .crossed-price) selon la variante choisie. {%- endcomment -%}
+  {%- assign studio_promo_active = false -%}
+  {%- if section.settings.show_promotion and product.selected_or_first_available_variant.compare_at_price or section.settings.promotion_discount > 0 -%}
+    {%- assign studio_promo_active = true -%}
+  {%- endif -%}
+  {%- capture studio_buy_content -%}
+    {%- if studio_promo_active -%}
+      {%- render 'promotion-in-cart-button', product: product, block: section, float: false -%}
+    {%- else -%}
+      {%- render 'regular-in-cart-button', product: product, block: section, float: false -%}
+    {%- endif -%}
+  {%- endcapture -%}
+  <template data-studio-buy-content>{{ studio_buy_content }}</template>
+
   {%- comment -%}
     Pas de CTA propre ici : le déclencheur est le bouton d'achat « JE CRÉE MON TABLEAU »
     réutilisé en haut de la fiche (bloc `buy` du main-product, comportement flottant inclus).
@@ -340,7 +359,10 @@
              (foot inchangé). Radios data-studio-option -> syncVariant inchangé. {%- endcomment -%}
           {% render 'studio-variant-picker', product: product %}
 
-          <p class="mt-4 flex items-baseline gap-2 border-t border-main-10 pt-4">
+          {%- comment -%} Ligne prix « PRIX 30 € » : utile au foot (le bouton du format dit « Générer »,
+             sans prix). Masquée par le JS pour un poster SANS génération, où le prix est DANS le bouton
+             « Ajouter au panier » du pied (pas de doublon). {%- endcomment -%}
+          <p data-studio-price-line class="mt-4 flex items-baseline gap-2 border-t border-main-10 pt-4">
             <span class="text-xs uppercase tracking-wide text-main-70">{{ 'sections.custom_art_studio.price_label' | t }}</span>
             <span data-studio-price class="text-2xl font-heading font-bold" aria-live="polite">{{ product.first_available_variant.price | money }}</span>
           </p>
@@ -405,9 +427,15 @@
             <button
               type="button"
               data-studio-add-to-cart
-              class="rounded-xl border-main border-[4px] bg-buy-button px-6 py-3 font-heading font-bold text-main shadow-neu-md hover:shadow-neu-sm transition-shadow duration-100 motion-reduce:transition-none disabled:cursor-wait disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2">
-              {{ 'sections.custom_art_studio.add_to_cart' | t }} — <span data-reveal-price>{{ product.first_available_variant.price | money }}</span>
+              data-studio-buy
+              class="cart-button glass-anim mb-0 disabled:cursor-wait focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2">
+              {{ studio_buy_content }}
             </button>
+            {%- comment -%} Bandeau date promo SOUS le bouton (exactement comme la fiche toile : snippet
+               promotion-date-banner). Rendu seulement si promo active ET date renseignée. {%- endcomment -%}
+            {%- if studio_promo_active and section.settings.promotion_date != blank -%}
+              {% render 'promotion-date-banner', block: section, text: section.settings.promotion_date %}
+            {%- endif -%}
             <button
               type="button"
               data-studio-reveal-next
@@ -550,19 +578,32 @@
       <p data-studio-cart-feedback class="mx-4 -mb-1 text-sm text-accent" role="alert" aria-live="polite" hidden></p>
 
       {%- comment -%} ---- Pied : navigation Retour / Continuer / Créer ---- {%- endcomment -%}
-      <footer data-studio-footer class="flex items-center justify-between gap-3 border-t border-main-10 p-4">
+      {%- comment -%} Pied 2 rangées : « Retour » en lien-flèche discret AU-DESSUS, bouton d'achat
+         PLEINE LARGEUR (look fiche toile via .cart-button) EN DESSOUS. À la dernière étape d'un produit
+         SANS génération, le JS injecte dans ce bouton le contenu prix+promo (clone de
+         [data-studio-buy-content]) ; sinon il porte un libellé simple (Continuer / Générer). {%- endcomment -%}
+      <footer data-studio-footer class="flex flex-col gap-2 border-t border-main-10 p-4">
         <button
           type="button"
           data-studio-back
-          class="rounded-xl px-4 py-3 font-heading font-semibold text-main-80 hover:bg-main-5 transition-colors duration-200 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+          class="self-start inline-flex items-center gap-1.5 rounded text-sm font-heading font-semibold text-main-80 underline hover:no-underline transition-colors duration-200 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="shrink-0">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
           {{ 'sections.custom_art_studio.back' | t }}
         </button>
         <button
           type="button"
           data-studio-next
-          class="grow rounded-xl border-main border-[4px] bg-buy-button px-6 py-3 font-heading font-bold text-main shadow-neu-md hover:shadow-neu-sm transition-shadow duration-100 motion-reduce:transition-none disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2">
-          {{ 'sections.custom_art_studio.next' | t }}
+          class="cart-button glass-anim mb-0 disabled:cursor-wait focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2">
+          <span class="cart-button-text inline-block py-4 md:py-5">{{ 'sections.custom_art_studio.next' | t }}</span>
         </button>
+        {%- comment -%} Bandeau date promo SOUS le bouton d'achat du pied (poster sans génération) :
+           même snippet que la fiche toile. Masqué par défaut ; le JS l'affiche uniquement à la dernière
+           étape (quand le bouton est « Ajouter au panier »). {%- endcomment -%}
+        {%- if studio_promo_active and section.settings.promotion_date != blank -%}
+          <div data-studio-promo-date class="hidden">{% render 'promotion-date-banner', block: section, text: section.settings.promotion_date %}</div>
+        {%- endif -%}
       </footer>
     </div>
   </div>
@@ -581,6 +622,9 @@
       "mock": {{ section.settings.mock_mode | json }},
       "productId": {{ product.id | json }},
       "currencySymbol": {{ cart.currency.symbol | json }},
+      {%- comment -%} Promo « façon bloc buy » : le JS calcule le prix remisé par variante (mêmes maths
+         que Product.getPriceDiscounted) et l'écrit dans .main-price/.crossed-price du bouton. {%- endcomment -%}
+      "promo": { "show": {{ section.settings.show_promotion | json }}, "discount": {{ section.settings.promotion_discount | default: 0 | json }}, "unit": {{ section.settings.promotion_discount_unit | default: '%' | json }} },
       "hasOnlyDefaultVariant": {{ product.has_only_default_variant | json }},
       "defaultVariantId": {{ product.first_available_variant.id | json }},
       "variants": {{ product.variants | json }},
@@ -783,6 +827,59 @@
       "label": "t:sections.custom-art-studio.settings.mock_mode.label",
       "info": "t:sections.custom-art-studio.settings.mock_mode.info",
       "default": true
+    },
+    {
+      "type": "header",
+      "content": "Bouton d'achat (prix + promotion)"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Texte du bouton d'ajout au panier",
+      "default": "Ajouter au panier"
+    },
+    {
+      "type": "checkbox",
+      "id": "is_dynamic_variant",
+      "label": "Afficher le titre de la variante dans le bouton",
+      "info": "Si activé, le bouton affiche le nom de la variante choisie au lieu du texte ci-dessus.",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_promotion",
+      "label": "Activer la promotion (prix barré dans le bouton)",
+      "info": "Affiche le prix barré + le prix remisé + le badge réduction, comme sur les fiches toile. Laisser décoché pour un prix simple.",
+      "default": false
+    },
+    {
+      "type": "number",
+      "id": "promotion_discount",
+      "label": "Remise",
+      "info": "0 = pas de remise artificielle (une promo Shopify via prix barré sur la variante reste prise en compte).",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "promotion_discount_unit",
+      "label": "Unité de la remise",
+      "options": [
+        { "value": "%", "label": "Pourcentage (%)" },
+        { "value": "$", "label": "Montant fixe" }
+      ],
+      "default": "%"
+    },
+    {
+      "type": "text",
+      "id": "promotion_reason",
+      "label": "Raison de la promotion (animation dans le bouton)",
+      "default": ""
+    },
+    {
+      "type": "text",
+      "id": "promotion_date",
+      "label": "Date de fin de promotion",
+      "default": ""
     }
   ],
   "presets": [

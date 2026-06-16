@@ -46,7 +46,11 @@
         {%- endfor -%}
       {%- endif -%}
 
-      <fieldset class="mb-5">
+      {%- comment -%} min-w-0 : neutralise le min-width:min-content par défaut du <fieldset> (quirk UA)
+         qui sinon refuse de rétrécir, déborde le panneau et fait scroller TOUT le corps du studio en X
+         (les deux rangées bougeaient ensemble). Avec min-w-0, chaque rangée [data-studio-vscroll]
+         scrolle indépendamment dans sa propre largeur. {%- endcomment -%}
+      <fieldset class="mb-5 min-w-0">
         <div class="mb-2 flex items-center justify-between gap-3">
           <legend class="text-xs uppercase tracking-wide text-main-70">{{ option.name }}</legend>
           {%- comment -%} Bouton info "i" -> ouvre la bulle de cette option (si des popups existent). {%- endcomment -%}
@@ -79,9 +83,12 @@
           {%- endif -%}
         </div>
 
-        {%- comment -%} Rangée de choix : scroll horizontal (mêmes classes que la toile). {%- endcomment -%}
+        {%- comment -%} Rangée de choix : scroll horizontal isolé. px-3/py-3 : marge pour que
+           l'outline de sélection (offset-2) du 1er/dernier item ne soit jamais rogné par le bord du
+           conteneur (bug « Sans cadre » tronqué). overscroll-x-contain : empêche le chaînage du scroll
+           tactile vers un parent (chaque rangée reste isolée même en fin de course). {%- endcomment -%}
         <div class="relative">
-          <div data-studio-vscroll class="flex gap-3 overflow-x-auto font-heading text-sm font-semibold py-2 scrollbar-hidden scroll-smooth">
+          <div data-studio-vscroll class="flex gap-3 overflow-x-auto overscroll-x-contain font-heading text-sm font-semibold py-3 px-3 scrollbar-hidden scroll-smooth">
             {%- for value in option.values -%}
               {%- comment -%} Métaobjet correspondant à cette valeur (match par nom). {%- endcomment -%}
               {%- assign mo_match = null -%}

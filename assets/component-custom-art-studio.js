@@ -219,6 +219,11 @@
       this.stepNodes = this.querySelectorAll('[data-cp-node]');
       this.stepLineFills = this.querySelectorAll('[data-cp-line-fill]');
       this.resumeNote = this.querySelector('[data-resume-note]');
+      // Promo « façon bloc buy » (réglages de la section) + contenu d'achat capturé côté Liquid
+      // (snippets regular/promotion-in-cart-button) : le JS clone ce template dans le bouton du pied
+      // et n'actualise que les prix (.main-price / .crossed-price) selon la variante choisie.
+      this.promo = (this.config.promo && typeof this.config.promo === 'object') ? this.config.promo : null;
+      this.buyContentTemplate = this.querySelector('[data-studio-buy-content]');
 
       this.photoFile = null;
       this.photoObjectUrl = null;
@@ -574,13 +579,91 @@
       this.footer.hidden = false;
       this.footer.classList.remove('hidden');
       this.backButton.hidden = index === 0;
-      this.nextButton.textContent = index === this.stepNames.length - 1
+      // Dernière étape d'un produit SANS génération (poster) -> le bouton du pied DEVIENT le bouton
+      // d'achat « façon fiche toile » (prix + promo dedans, cloné du template). Sinon libellé simple.
+      const isLast = index === this.stepNames.length - 1;
+      const isBuyStep = isLast && !this.hasGeneration;
+      const nextLabel = isLast
         ? (this.hasGeneration ? this.i18n.generate : (this.i18n.add_to_cart || this.i18n.generate))
         : this.i18n.next;
+      this.setNextButtonContent(nextLabel, isBuyStep);
+      // Prix dans le bouton -> on masque la ligne « PRIX … » du panneau format (doublon) pour le poster.
+      // Toggle de la CLASSE `hidden` (et pas seulement l'attribut) : la classe `flex` du <p> écraserait
+      // l'attribut hidden seul (même gotcha que le footer/dots).
+      const priceLine = this.q('[data-studio-price-line]');
+      if (priceLine) priceLine.classList.toggle('hidden', isBuyStep);
+      // Bandeau date promo du pied : visible seulement quand le bouton est « Ajouter au panier ».
+      const promoDate = this.q('[data-studio-promo-date]');
+      if (promoDate) promoDate.classList.toggle('hidden', !isBuyStep);
       this.updateNextDisabled();
 
       if (stepName === 'team' && !this.teams) this.loadTeams();
       this.persist();
+    }
+
+    /* ---------------------------------------- bouton d'achat (prix + promo « façon fiche toile ») */
+
+    // Bouton principal du pied : contenu « acheter » (texte + prix + promo, structure des snippets
+    // regular/promotion-in-cart-button clonée du template) sur la dernière étape d'un produit SANS
+    // génération ; libellé simple (Continuer / Générer) sinon. Le clic reste géré par data-studio-next.
+    setNextButtonContent(label, isBuy) {
+      const btn = this.nextButton;
+      if (!btn) return;
+      if (isBuy && this.buyContentTemplate && this.buyContentTemplate.content) {
+        btn.setAttribute('data-studio-buy', '');
+        btn.innerHTML = '';
+        btn.appendChild(this.buyContentTemplate.content.cloneNode(true));
+        this.updateBuyButtons();
+      } else {
+        btn.removeAttribute('data-studio-buy');
+        btn.innerHTML = `<span class="cart-button-text inline-block py-4 md:py-5">${escapeHtml(label)}</span>`;
+      }
+    }
+
+    // Variante Shopify actuellement choisie (objet complet, pour le prix + compare_at_price).
+    currentVariant() {
+      const id = this.state.variantId || this.config.defaultVariantId;
+      return (this.config.variants || []).find((v) => v.id === id) || null;
+    }
+
+    // Réplique Product.getPriceDiscounted (assets/layout-product.js) : « % » -> prix*(100-d)/100 ;
+    // montant fixe -> prix - d*100 (la remise est en unités monétaires, les prix en centimes).
+    priceDiscounted(price, discount, unit) {
+      const d = Number(discount) || 0;
+      if (unit === '%') return Math.round((price * (100 - d)) / 100);
+      return price - d * 100;
+    }
+
+    // Actualise les prix dans TOUS les boutons d'achat affichés ([data-studio-buy] : pied + reveal)
+    // selon la variante choisie. On ne touche qu'aux montants (.main-price / .crossed-price /
+    // .reduction-price) — la structure vient des snippets réutilisés (regular/promotion-in-cart-button).
+    updateBuyButtons() {
+      const variant = this.currentVariant();
+      if (!variant) return;
+      const price = variant.price;
+      const promoOn = this.promo && Number(this.promo.discount) > 0;
+      this.querySelectorAll('[data-studio-buy]').forEach((btn) => {
+        const main = btn.querySelector('.main-price');
+        const crossed = btn.querySelector('.crossed-price');
+        const reduction = btn.querySelector('.reduction-price');
+        if (crossed) {
+          if (promoOn) {
+            // Remise artificielle (réglage section) : prix barré = plein, prix affiché = remisé.
+            const newPrice = this.priceDiscounted(price, this.promo.discount, this.promo.unit);
+            if (main) main.textContent = this.formatPrice(newPrice);
+            crossed.textContent = this.formatPrice(price);
+          } else if (variant.compare_at_price && variant.compare_at_price > price) {
+            // Promo Shopify native (prix barré posé sur la variante).
+            if (main) main.textContent = this.formatPrice(price);
+            crossed.textContent = this.formatPrice(variant.compare_at_price);
+            if (reduction) reduction.textContent = `- ${this.formatPrice(variant.compare_at_price - price)}`;
+          } else if (main) {
+            main.textContent = this.formatPrice(price);
+          }
+        } else if (main) {
+          main.textContent = this.formatPrice(price);
+        }
+      });
     }
 
     // Construit le stepper (pastilles + connecteurs) DEPUIS la config -> nombre d'étapes VARIABLE,
@@ -1036,8 +1119,8 @@
       if (variant && variant.available !== false) {
         this.state.variantId = variant.id;
         if (priceZone) priceZone.textContent = this.formatPrice(variant.price);
-        const revealPrice = this.q('[data-reveal-price]');
-        if (revealPrice) revealPrice.textContent = this.formatPrice(variant.price);
+        // Prix DANS le bouton d'achat (pied poster + reveal foot), promo incluse.
+        this.updateBuyButtons();
         if (unavailable) unavailable.hidden = true;
       } else {
         this.state.variantId = null;
@@ -1405,6 +1488,8 @@
       this.mountPerspective(url);
       this.renderMockups();
       this.showScreen('reveal');
+      // Prix + promo dans le bouton d'achat du reveal selon la variante choisie au format.
+      this.updateBuyButtons();
       if (persistState) this.persist();
     }
 
