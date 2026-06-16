@@ -650,6 +650,9 @@
       {%- comment -%} Image de base de l'aperçu WebGL « format » (poster) = le design imprimé
          (media[1]), texturé sur la feuille papier. Présent uniquement pour les posters. {%- endcomment -%}
       "posterPreview": {%- if product.metafields.artwork.type == 'poster' and product.media[1] and product.media[1].media_type == 'image' -%}{ "src": {{ product.media[1].preview_image | image_url: width: 1200 | json }} }{%- else -%}null{%- endif -%},
+      {%- comment -%} Fond mur texturé derrière l'aperçu WebGL (même asset que la toile) : distingue
+         le blanc de l'œuvre du blanc du fond quand le tirage est clair. {%- endcomment -%}
+      "wallTexture": {{ 'fond-mur-beige-clair-texture.webp' | asset_url | json }},
       "i18n": {
         "step_indicator": {{ 'sections.custom_art_studio.step_indicator' | t: step: '[step]', total: '[total]' | json }},
         "confirm_close": {{ 'sections.custom_art_studio.confirm_close' | t | json }},

@@ -295,6 +295,16 @@
       return this.querySelector(selector);
     }
 
+    // Fond mur texturé (même asset que la toile) placé DERRIÈRE le canvas WebGL : distingue le
+    // blanc d'un tirage clair du blanc du fond de la modale. `.decor-bg` est whitelisté contre la
+    // règle *:empty{display:none}. Vide si l'asset n'est pas fourni par la config.
+    decorBgHtml() {
+      const wall = this.config && this.config.wallTexture;
+      if (!wall) return '';
+      return '<div class="decor-bg absolute inset-0 bg-repeat bg-center bg-[length:256px_256px]"'
+        + ` style="background-image:url('${wall}')" aria-hidden="true"></div>`;
+    }
+
     // Résout une valeur i18n de studio.config : chaîne brute, ou map {fr,en,…} via la locale
     // courante (repli fr puis ''). Sert aux titres/labels/erreurs pilotés par la config.
     t(value) {
@@ -822,6 +832,21 @@
           if (this.hasGeneration) this.startGeneration();
           else this.directAddToCart();
         } else this.showStep(this.stepNames[index + 1]);
+      });
+      // Touche ENTRÉE dans un champ de saisie d'une étape = clic « Continuer ». Le bouton est
+      // désactivé tant que l'étape n'est pas valide -> Entrée n'avance que si tout est rempli.
+      // On laisse les <form> (e-mails sauvegarde/artiste/erreur) gérer leur propre submit, et la
+      // recherche d'équipe (type=search) ne valide pas l'étape (exclue par le filtre de type).
+      this.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' || event.isComposing) return;
+        if (this.state.screen !== 'steps') return;
+        const t = event.target;
+        if (!t || t.tagName !== 'INPUT') return;
+        const type = (t.getAttribute('type') || 'text').toLowerCase();
+        if (['text', 'number', 'tel', 'date', 'email'].indexOf(type) === -1) return;
+        if (t.closest('form')) return;
+        event.preventDefault();
+        if (!this.nextButton.disabled) this.nextButton.click();
       });
       this.q('[data-studio-retry]')?.addEventListener('click', () => this.showStep(this.stepNames[0]));
       // Cap « 3e essai+ = e-mail requis » : l'e-mail saisi débloque et relance la génération.
@@ -1585,8 +1610,9 @@
       if (this.config.posterPreview && this.config.posterPreview.src) cfg.material = 'paper';
       // Chevrons échappés : un « </script> » dans le JSON inline casserait le parsing HTML.
       const json = JSON.stringify(cfg).replace(/</g, '\\u003c');
-      slot.innerHTML = '<perspective-canvas class="block w-full" data-context="studio">'
-        + `<canvas class="perspective-canvas-gl block w-full aspect-square opacity-0 transition-opacity duration-500 ease-out" role="img" aria-label="${escapeHtml(this.i18n.webgl_preview_label)}">${escapeHtml(this.i18n.webgl_canvas_caption)}</canvas>`
+      slot.innerHTML = '<perspective-canvas class="relative block w-full" data-context="studio">'
+        + this.decorBgHtml()
+        + `<canvas class="perspective-canvas-gl relative z-10 block w-full aspect-square opacity-0 transition-opacity duration-500 ease-out" role="img" aria-label="${escapeHtml(this.i18n.webgl_preview_label)}">${escapeHtml(this.i18n.webgl_canvas_caption)}</canvas>`
         + `<script type="application/json" class="perspective-config">${json}</scr` + 'ipt>'
         + '</perspective-canvas>';
       slot.addEventListener('perspective:ready', () => {
@@ -1625,8 +1651,9 @@
         },
       };
       const json = JSON.stringify(cfg).replace(/</g, '\\u003c');
-      slot.innerHTML = '<perspective-canvas class="block w-full" data-context="studio">'
-        + `<canvas class="perspective-canvas-gl block w-full" style="aspect-ratio:4/5" role="img" aria-label="${escapeHtml(this.i18n.webgl_preview_label)}">${escapeHtml(this.i18n.webgl_canvas_caption)}</canvas>`
+      slot.innerHTML = '<perspective-canvas class="relative block w-full" data-context="studio">'
+        + this.decorBgHtml()
+        + `<canvas class="perspective-canvas-gl relative z-10 block w-full" style="aspect-ratio:4/5" role="img" aria-label="${escapeHtml(this.i18n.webgl_preview_label)}">${escapeHtml(this.i18n.webgl_canvas_caption)}</canvas>`
         + `<script type="application/json" class="perspective-config">${json}</scr` + 'ipt>'
         + '</perspective-canvas>';
       slot.hidden = false;
