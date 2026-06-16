@@ -354,30 +354,33 @@
 
         {%- comment -%} ===== Étape 4 — Format + finition (vraies variantes Shopify, prix live) ===== {%- endcomment -%}
         <div data-studio-panel="format" hidden>
-          {%- comment -%} Picker format/finition : design des fiches toile (swatch-images + bouton
-             info + bulle), piloté par les métaobjets painting_option, repli texte si pas d'image
-             (foot inchangé). Radios data-studio-option -> syncVariant inchangé. {%- endcomment -%}
-          {% render 'studio-variant-picker', product: product %}
+          {%- comment -%} Desktop/iPad (md+) : 2 colonnes — IMAGE à GAUCHE (section fond mur unie,
+             poster centré, sans blanc) / OPTIONS à DROITE -> popup MOINS HAUTE (plus de troncature
+             iPad). Mobile : empilé, options puis bande image (ordre préservé via order-*). {%- endcomment -%}
+          <div class="flex flex-col md:flex-row md:items-stretch">
+            {%- comment -%} SECTION IMAGE : le JS y monte le fond mur (absolute inset-0) + le poster
+               centré. Mobile = bande pleine largeur (-ml/-mr-4) SOUS les options ; desktop = colonne
+               GAUCHE pleine couleur qui touche le bord (-ml-4). Vide tant que non monté ->
+               data-allow-empty (règle *:empty). {%- endcomment -%}
+            <div data-studio-format-webgl-slot data-allow-empty
+                 class="relative order-2 -ml-4 -mr-4 mt-4 overflow-hidden py-5 md:order-1 md:mr-0 md:-ml-4 md:-my-4 md:w-1/2 md:py-6"
+                 hidden></div>
 
-          {%- comment -%} Aperçu WebGL « poster » (papier + cadre + verre) : le JS monte ici un
-             <perspective-canvas data-context="studio"> en mode papier reflétant la TAILLE + le
-             CADRE choisis, re-monté à chaque changement (un seul contexte WebGL à la fois). Vide
-             tant que non monté -> data-allow-empty (cf. règle *:empty{display:none}). {%- endcomment -%}
-          {%- comment -%} Bande PLEINE LARGEUR : `-mx-4` annule le padding du corps de la modale ->
-             le fond mur touche les bords gauche/droit (section image d'une autre couleur). Le poster
-             (perspective-canvas) est centré dessus par le JS. `relative` = ancre du fond absolu. {%- endcomment -%}
-          <div data-studio-format-webgl-slot data-allow-empty class="relative -mx-4 mt-4 overflow-hidden py-5" hidden></div>
+            {%- comment -%} OPTIONS : format + finition + ligne prix. {%- endcomment -%}
+            <div class="order-1 md:order-2 md:w-1/2 md:self-center md:pl-6">
+              {% render 'studio-variant-picker', product: product %}
 
-          {%- comment -%} Ligne prix « PRIX 30 € » : utile au foot (le bouton du format dit « Générer »,
-             sans prix). Masquée par le JS pour un poster SANS génération, où le prix est DANS le bouton
-             « Ajouter au panier » du pied (pas de doublon). {%- endcomment -%}
-          <p data-studio-price-line class="mt-4 flex items-baseline gap-2 border-t border-main-10 pt-4">
-            <span class="text-xs uppercase tracking-wide text-main-70">{{ 'sections.custom_art_studio.price_label' | t }}</span>
-            <span data-studio-price class="text-2xl font-heading font-bold" aria-live="polite">{{ product.first_available_variant.price | money }}</span>
-          </p>
-          <p data-variant-unavailable class="mt-2 text-sm text-accent" role="alert" aria-live="polite" hidden>
-            {{ 'sections.custom_art_studio.variant_unavailable' | t }}
-          </p>
+              {%- comment -%} Ligne prix « PRIX 30 € » : utile au foot (bouton « Générer »). Masquée
+                 par le JS pour un poster SANS génération (prix DANS le bouton d'achat). {%- endcomment -%}
+              <p data-studio-price-line class="mt-4 flex items-baseline gap-2 border-t border-main-10 pt-4">
+                <span class="text-xs uppercase tracking-wide text-main-70">{{ 'sections.custom_art_studio.price_label' | t }}</span>
+                <span data-studio-price class="text-2xl font-heading font-bold" aria-live="polite">{{ product.first_available_variant.price | money }}</span>
+              </p>
+              <p data-variant-unavailable class="mt-2 text-sm text-accent" role="alert" aria-live="polite" hidden>
+                {{ 'sections.custom_art_studio.variant_unavailable' | t }}
+              </p>
+            </div>
+          </div>
         </div>
 
         {%- comment -%} Conteneur des panneaux génériques (text/number/date) rendus par le JS

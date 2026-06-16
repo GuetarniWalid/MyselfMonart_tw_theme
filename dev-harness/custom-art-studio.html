@@ -249,6 +249,13 @@
 
             <!-- ===== Étape 4 — Format + finition ===== -->
             <div data-studio-panel="format" hidden>
+             <div class="flex flex-col md:flex-row md:items-stretch">
+              <!-- SECTION IMAGE : montée par le JS (fond mur + poster). Mobile = bande sous les options ; desktop = colonne gauche pleine couleur. -->
+              <div data-studio-format-webgl-slot data-allow-empty
+                   class="relative order-2 -ml-4 -mr-4 mt-4 overflow-hidden py-5 md:order-1 md:mr-0 md:-ml-4 md:-my-4 md:w-1/2 md:py-6"
+                   hidden></div>
+              <!-- OPTIONS : format + finition + prix -->
+              <div class="order-1 md:order-2 md:w-1/2 md:self-center md:pl-6">
               <fieldset class="mb-5">
                 <legend class="mb-2 text-xs uppercase tracking-wide text-main-70">Format</legend>
                 <div class="flex flex-wrap gap-2">
@@ -292,16 +299,13 @@
                 </div>
               </fieldset>
 
-              <!-- Aperçu WebGL « poster » (papier + cadre + verre) monté par le JS (mountFormatPreview).
-                   En LIVE, les radios de finition portent data-render-key (handle métaobjet) ; ici les
-                   libellés FR suffisent (selectedRenderKeyByName retombe sur la valeur). -->
-              <div data-studio-format-webgl-slot data-allow-empty class="relative -mx-4 mt-4 overflow-hidden py-5" hidden></div>
-
               <p data-studio-price-line class="flex items-baseline gap-2 border-t border-main-10 pt-4">
                 <span class="text-xs uppercase tracking-wide text-main-70">Prix</span>
                 <span data-studio-price class="text-2xl font-heading font-bold" aria-live="polite">34,90 €</span>
               </p>
               <p data-variant-unavailable class="mt-2 text-sm text-accent" role="alert" aria-live="polite" hidden>Cette combinaison n'est pas disponible pour le moment.</p>
+              </div>
+             </div>
             </div>
 
             <!-- Conteneur des panneaux génériques (text/number/date) rendus par le JS pour les étapes sans panneau dédié. Vide pour le foot. -->
