@@ -1,0 +1,194 @@
+{%- comment -%}
+  Picker format/finition DU STUDIO — reproduit le design des fiches toile
+  (snippets/painting-variant-picker.liquid) : pastilles-images (swatch) + bouton info "i" qui
+  ouvre une BULLE (dialog) avec image + titre + description, pour les TAILLES et les CADRES.
+
+  Différences avec le picker toile (volontaires) :
+  - Radios au contrat du STUDIO : data-studio-option + data-option-position + data-option-name
+    (+ data-render-key) -> syncVariant (assets/component-custom-art-studio.js) inchangé.
+  - Détection taille/cadre par NOM d'option (et non par position figée 1/2/3) : un poster a
+    Format(1)/Finition(2), une toile Format(1)/Bordure(2)/Cadre(3). Robuste aux deux.
+  - Bulles SCOPÉES au studio (data-studio-guide / data-studio-guide-item), pilotées par le JS du
+    studio (pas main-product.js) -> aucune collision d'ID, aucun couplage.
+  - REPLI texte si la valeur n'a pas de métaobjet (foot/produit sans images) -> zéro régression.
+
+  Données : product.metafields.painting_options.{sizes,frames_canvas}.value (métaobjets
+  painting_option). Chaque option : name, radio.value.media.value.{src,alt} (vignette),
+  popup.value.{media.value.src/alt, title, description} (bulle), system.handle (render-key).
+
+  Accepte : product.
+{%- endcomment -%}
+
+{%- unless product.has_only_default_variant -%}
+  <div data-studio-vpicker>
+    {%- for option in product.options_with_values -%}
+      {%- comment -%} Type d'option par NOM (mêmes familles que selectedOptionByName du JS). {%- endcomment -%}
+      {%- assign onl = option.name | downcase -%}
+      {%- assign opt_kind = 'other' -%}
+      {%- if onl contains 'cadre' or onl contains 'finition' or onl contains 'frame' or onl contains 'encadrement' -%}
+        {%- assign opt_kind = 'frame' -%}
+        {%- assign opt_metaobjects = product.metafields.painting_options.frames_canvas.value -%}
+      {%- elsif onl contains 'format' or onl contains 'taille' or onl contains 'dimension' or onl contains 'size' -%}
+        {%- assign opt_kind = 'size' -%}
+        {%- assign opt_metaobjects = product.metafields.painting_options.sizes.value -%}
+      {%- elsif onl contains 'bordure' or onl contains 'border' -%}
+        {%- assign opt_kind = 'border' -%}
+        {%- assign opt_metaobjects = product.metafields.painting_options.borders.value -%}
+      {%- else -%}
+        {%- assign opt_metaobjects = empty -%}
+      {%- endif -%}
+
+      {%- comment -%} Y a-t-il au moins une vignette image pour cette option ? Sinon, repli texte. {%- endcomment -%}
+      {%- assign has_swatch = false -%}
+      {%- if opt_metaobjects != empty -%}
+        {%- for mo in opt_metaobjects -%}
+          {%- if mo.radio.value.media.value.src -%}{%- assign has_swatch = true -%}{%- break -%}{%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+
+      <fieldset class="mb-5">
+        <div class="mb-2 flex items-center justify-between gap-3">
+          <legend class="text-xs uppercase tracking-wide text-main-70">{{ option.name }}</legend>
+          {%- comment -%} Bouton info "i" -> ouvre la bulle de cette option (si des popups existent). {%- endcomment -%}
+          {%- assign has_popup = false -%}
+          {%- if opt_metaobjects != empty -%}
+            {%- for mo in opt_metaobjects -%}
+              {%- if mo.popup.value.title or mo.popup.value.description or mo.popup.value.media.value.src -%}{%- assign has_popup = true -%}{%- break -%}{%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+          {%- if has_popup -%}
+            {%- comment -%} Libellé par défaut : taille -> « Guide des tailles » ; cadre/bordure -> nom
+               de la valeur choisie (comme la toile). Jamais vide (piège *:empty). Le JS le réactualise. {%- endcomment -%}
+            {%- if opt_kind == 'size' -%}
+              {%- assign guide_label = 'sections.main_product.variant_picker.size_guide' | t -%}
+            {%- else -%}
+              {%- assign guide_label = option.values.first -%}
+              {%- for v in option.values -%}{%- if v.selected -%}{%- assign guide_label = v -%}{%- break -%}{%- endif -%}{%- endfor -%}
+            {%- endif -%}
+            <button
+              type="button"
+              data-studio-guide-open="{{ opt_kind }}"
+              class="flex items-center gap-1.5 text-sm text-main-80 underline hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main rounded">
+              <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-main">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 15 15" aria-hidden="true">
+                  <path fill="currentColor" d="M7.5 1C6.7 1 6 1.7 6 2.5S6.7 4 7.5 4S9 3.3 9 2.5S8.3 1 7.5 1M4 5v1s2 0 2 2v2c0 2-2 2-2 2v1h7v-1s-2 0-2-2V6c0-.5-.5-1-1-1z"></path>
+                </svg>
+              </span>
+              <span data-studio-guide-name="{{ opt_kind }}">{{ guide_label }}</span>
+            </button>
+          {%- endif -%}
+        </div>
+
+        {%- comment -%} Rangée de choix : scroll horizontal (mêmes classes que la toile). {%- endcomment -%}
+        <div class="relative">
+          <div data-studio-vscroll class="flex gap-3 overflow-x-auto font-heading text-sm font-semibold py-2 scrollbar-hidden scroll-smooth">
+            {%- for value in option.values -%}
+              {%- comment -%} Métaobjet correspondant à cette valeur (match par nom). {%- endcomment -%}
+              {%- assign mo_match = null -%}
+              {%- assign mo_is_first = false -%}
+              {%- if opt_metaobjects != empty -%}
+                {%- for mo in opt_metaobjects -%}
+                  {%- if mo.name == value -%}
+                    {%- assign mo_match = mo -%}
+                    {%- if forloop.first -%}{%- assign mo_is_first = true -%}{%- endif -%}
+                    {%- break -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
+              {%- assign render_key = '' -%}
+              {%- if mo_match -%}{%- assign render_key = mo_match.system.handle -%}{%- endif -%}
+
+              <label class="shrink-0 cursor-pointer">
+                <input
+                  type="radio"
+                  name="studio-option{{ option.position }}"
+                  value="{{ value | escape }}"
+                  data-studio-option
+                  data-option-position="{{ option.position }}"
+                  data-option-name="{{ option.name | escape }}"
+                  {%- if render_key != blank %} data-render-key="{{ render_key | escape }}"{% endif -%}
+                  class="peer sr-only"
+                  {% if forloop.first %}checked{% endif %}>
+                {%- if opt_kind == 'frame' and mo_is_first -%}
+                  {%- comment -%} 1re entrée cadre = "sans cadre" -> icône barrée (comme la toile). {%- endcomment -%}
+                  <span class="flex h-[60px] w-[60px] items-center justify-center rounded-full transition-all duration-100 peer-checked:outline peer-checked:outline-1 peer-checked:outline-main peer-checked:outline-offset-2" title="{{ value | escape }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 42 42" class="text-main" aria-hidden="true">
+                      <circle class="fill-main-10" cx="21" cy="21" r="20"></circle>
+                      <line x1="34" y1="8" x2="8" y2="34" stroke="currentColor" stroke-width="1" stroke-linecap="round"></line>
+                    </svg>
+                  </span>
+                {%- elsif mo_match and mo_match.radio.value.media.value.src and opt_kind != 'size' -%}
+                  {%- comment -%} Vignette image (cadre/bordure). La taille reste en pastille texte (comme la toile). {%- endcomment -%}
+                  <span class="block h-[60px] w-[60px] overflow-hidden rounded-full transition-all duration-100 peer-checked:outline peer-checked:outline-1 peer-checked:outline-main peer-checked:outline-offset-2">
+                    <img
+                      src="{{ mo_match.radio.value.media.value.src | image_url: width: 60 }}"
+                      alt="{{ mo_match.radio.value.media.value.alt | escape }}"
+                      width="60"
+                      height="60"
+                      loading="lazy"
+                      class="h-full w-full object-cover">
+                  </span>
+                {%- else -%}
+                  {%- comment -%} Repli : pastille texte (taille, ou cadre sans image -> foot/avant ajout des visuels). {%- endcomment -%}
+                  <span class="block rounded-full border border-main-20 bg-secondary px-4 py-2 text-sm font-normal text-main transition-all duration-100 motion-reduce:transition-none peer-checked:bg-main peer-checked:text-secondary peer-focus-visible:ring-2 peer-focus-visible:ring-main peer-focus-visible:ring-offset-2">
+                    {{ value }}
+                  </span>
+                {%- endif -%}
+              </label>
+            {%- endfor -%}
+          </div>
+        </div>
+      </fieldset>
+    {%- endfor -%}
+
+    {%- comment -%} ===== Bulles (dialogs) scopées au studio, une par famille d'option ===== {%- endcomment -%}
+    {%- assign guide_families = 'size,frame,border' | split: ',' -%}
+    {%- for fam in guide_families -%}
+      {%- case fam -%}
+        {%- when 'size' -%}{%- assign fam_metaobjects = product.metafields.painting_options.sizes.value -%}
+        {%- when 'frame' -%}{%- assign fam_metaobjects = product.metafields.painting_options.frames_canvas.value -%}
+        {%- when 'border' -%}{%- assign fam_metaobjects = product.metafields.painting_options.borders.value -%}
+      {%- endcase -%}
+      {%- if fam_metaobjects != empty -%}
+        {%- assign fam_has_popup = false -%}
+        {%- for mo in fam_metaobjects -%}
+          {%- if mo.popup.value.title or mo.popup.value.description or mo.popup.value.media.value.src -%}{%- assign fam_has_popup = true -%}{%- break -%}{%- endif -%}
+        {%- endfor -%}
+        {%- if fam_has_popup -%}
+          <dialog data-studio-guide="{{ fam }}" class="backdrop:bg-black/30 bg-transparent p-0 w-full max-w-sm rounded-xl">
+            <div class="relative max-h-[90vh] w-full overflow-y-auto scrollbar-hidden rounded-xl bg-secondary">
+              <button
+                type="button"
+                data-studio-guide-close
+                class="absolute right-3 top-3 z-10 rounded-full bg-secondary-50 p-2 hover:bg-main-10 transition-colors"
+                aria-label="{{ 'sections.custom_art_studio.close' | t }}">
+                {% render 'tw-icon-close', width: '20' %}
+              </button>
+              <div class="pb-8">
+                {%- for mo in fam_metaobjects -%}
+                  <div data-studio-guide-item="{{ fam }}" data-value="{{ mo.name | escape }}" class="hidden">
+                    {%- if mo.popup.value.media.value.src -%}
+                      <img
+                        src="{{ mo.popup.value.media.value.src | image_url: width: 500 }}"
+                        alt="{{ mo.popup.value.media.value.alt | escape }}"
+                        width="500"
+                        height="500"
+                        loading="lazy"
+                        class="w-full">
+                    {%- endif -%}
+                    {%- if mo.popup.value.title -%}
+                      <h3 class="my-8 px-8 text-xl">{{ mo.popup.value.title }}</h3>
+                    {%- endif -%}
+                    {%- if mo.popup.value.description -%}
+                      <div class="px-8 leading-loose text-main-90">{{ mo.popup.value.description }}</div>
+                    {%- endif -%}
+                  </div>
+                {%- endfor -%}
+              </div>
+            </div>
+          </dialog>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+{%- endunless -%}

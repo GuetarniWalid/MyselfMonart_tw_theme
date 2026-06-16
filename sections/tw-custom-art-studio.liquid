@@ -335,33 +335,12 @@
 
         {%- comment -%} ===== Étape 4 — Format + finition (vraies variantes Shopify, prix live) ===== {%- endcomment -%}
         <div data-studio-panel="format" hidden>
-          {%- unless product.has_only_default_variant -%}
-            {%- for option in product.options_with_values -%}
-              <fieldset class="mb-5">
-                <legend class="mb-2 text-xs uppercase tracking-wide text-main-70">{{ option.name }}</legend>
-                <div class="flex flex-wrap gap-2">
-                  {%- for value in option.values -%}
-                    <label class="cursor-pointer">
-                      <input
-                        type="radio"
-                        name="studio-option{{ option.position }}"
-                        value="{{ value | escape }}"
-                        data-studio-option
-                        data-option-position="{{ option.position }}"
-                        data-option-name="{{ option.name | escape }}"
-                        class="peer sr-only"
-                        {% if forloop.first %}checked{% endif %}>
-                      <span class="block rounded-full border border-main-20 bg-secondary px-4 py-2 text-sm text-main transition-all duration-100 motion-reduce:transition-none peer-checked:bg-main peer-checked:text-secondary peer-focus-visible:ring-2 peer-focus-visible:ring-main peer-focus-visible:ring-offset-2">
-                        {{ value }}
-                      </span>
-                    </label>
-                  {%- endfor -%}
-                </div>
-              </fieldset>
-            {%- endfor -%}
-          {%- endunless -%}
+          {%- comment -%} Picker format/finition : design des fiches toile (swatch-images + bouton
+             info + bulle), piloté par les métaobjets painting_option, repli texte si pas d'image
+             (foot inchangé). Radios data-studio-option -> syncVariant inchangé. {%- endcomment -%}
+          {% render 'studio-variant-picker', product: product %}
 
-          <p class="flex items-baseline gap-2 border-t border-main-10 pt-4">
+          <p class="mt-4 flex items-baseline gap-2 border-t border-main-10 pt-4">
             <span class="text-xs uppercase tracking-wide text-main-70">{{ 'sections.custom_art_studio.price_label' | t }}</span>
             <span data-studio-price class="text-2xl font-heading font-bold" aria-live="polite">{{ product.first_available_variant.price | money }}</span>
           </p>

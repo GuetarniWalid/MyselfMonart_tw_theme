@@ -82,6 +82,7 @@
   // Résolution des options par NOM (l'ordre des options Shopify n'est pas garanti).
   const OPTION_FORMAT_RE = /format|taille|dimension/;
   const OPTION_FRAME_RE = /cadre|finition|frame|encadrement/;
+  const OPTION_BORDER_RE = /bordure|border/;
 
   // Teintes des finitions pour le repli image + cadre CSS (WebGL indisponible). Tons calés
   // sur FRAME_COLOR de component-perspective-canvas.js — données produit, pas couleurs thème.
@@ -265,6 +266,7 @@
       this.bindTeamStep();
       this.bindNameStep();
       this.bindFormatStep();
+      this.bindVariantGuides();
       this.bindRevealScreen();
       this.bindErrorScreen();
       this.bindArtistScreen();
@@ -513,6 +515,9 @@
     }
 
     onKeydown(event) {
+      // Une bulle d'info (native <dialog data-studio-guide> en top-layer) est ouverte : elle gère
+      // son propre Échap/Tab. On NE piège PAS, sinon Échap fermerait tout le studio au lieu de la bulle.
+      if (this.dialog.querySelector('[data-studio-guide][open]')) return;
       if (event.key === 'Escape') {
         event.preventDefault();
         this.attemptClose();
@@ -1040,6 +1045,77 @@
       }
       this.persist();
       this.updateNextDisabled();
+    }
+
+    /* ------------------------------ bulles d'info format/finition (design fiches toile) */
+
+    // Famille d'une option par son NOM (mêmes regex que selectedOptionByName) -> détermine
+    // quels métaobjets/quelle bulle (taille/cadre/bordure). null = option non guidée.
+    optionFamily(name) {
+      const n = normalize(name || '');
+      if (OPTION_FRAME_RE.test(n)) return 'frame';
+      if (OPTION_FORMAT_RE.test(n)) return 'size';
+      if (OPTION_BORDER_RE.test(n)) return 'border';
+      return null;
+    }
+
+    // Valeur cochée pour une famille donnée (ex. cadre sélectionné -> « Cadre noyer »).
+    selectedValueForFamily(family) {
+      const radio = Array.from(this.querySelectorAll('[data-studio-option]:checked'))
+        .find((r) => this.optionFamily(r.dataset.optionName) === family);
+      return radio ? radio.value : null;
+    }
+
+    // Affiche, dans la bulle d'une famille, l'item correspondant à la valeur sélectionnée.
+    // Repli : si aucun item ne matche (libellé qui a dérivé du nom de métaobjet), on montre le 1er
+    // plutôt qu'une bulle vide.
+    updateGuideItem(family) {
+      const value = this.selectedValueForFamily(family);
+      const items = Array.from(this.querySelectorAll(`[data-studio-guide-item="${family}"]`));
+      if (!items.length) return;
+      const matched = items.some((item) => item.dataset.value === value);
+      items.forEach((item, i) => {
+        const show = matched ? item.dataset.value === value : i === 0;
+        item.classList.toggle('hidden', !show);
+      });
+    }
+
+    // Met à jour le libellé du bouton info (cadre/bordure -> nom choisi ; taille -> garde « Guide »).
+    updateGuideName(family) {
+      if (family === 'size') return;
+      const span = this.q(`[data-studio-guide-name="${family}"]`);
+      const value = this.selectedValueForFamily(family);
+      if (span && value) span.textContent = value;
+    }
+
+    bindVariantGuides() {
+      // Bouton info -> ouvre la bulle (dialog) de la famille, en montrant l'item sélectionné.
+      this.querySelectorAll('[data-studio-guide-open]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const family = btn.dataset.studioGuideOpen;
+          const dialog = this.q(`[data-studio-guide="${family}"]`);
+          if (!dialog || typeof dialog.showModal !== 'function') return;
+          this.updateGuideItem(family);
+          dialog.showModal();
+        });
+      });
+      // Fermeture : bouton X + clic sur le fond.
+      this.querySelectorAll('[data-studio-guide]').forEach((dialog) => {
+        dialog.querySelector('[data-studio-guide-close]')?.addEventListener('click', () => dialog.close());
+        dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
+      });
+      // À chaque changement de variante : maj du nom affiché + de la bulle si elle est ouverte.
+      this.querySelectorAll('[data-studio-option]').forEach((radio) => {
+        radio.addEventListener('change', () => {
+          const family = this.optionFamily(radio.dataset.optionName);
+          if (!family) return;
+          this.updateGuideName(family);
+          const dialog = this.q(`[data-studio-guide="${family}"]`);
+          if (dialog && dialog.open) this.updateGuideItem(family);
+        });
+      });
+      // Init des libellés (cadre/bordure -> nom du choix par défaut).
+      ['frame', 'border'].forEach((family) => this.updateGuideName(family));
     }
 
     /* ------------------------------------------ panneaux génériques (text/number/date) */
