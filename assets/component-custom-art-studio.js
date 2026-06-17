@@ -461,6 +461,15 @@
 
     open() {
       this.lastFocused = document.activeElement;
+      // A11y (WCAG 4.1.2) : le déclencheur réel (bouton d'achat détourné ou [data-studio-open])
+      // annonce qu'il ouvre une fenêtre de personnalisation et son état déployé.
+      const trigger = this.lastFocused;
+      if (trigger && trigger.setAttribute) {
+        trigger.setAttribute('aria-haspopup', 'dialog');
+        if (this.dialog && this.dialog.id) trigger.setAttribute('aria-controls', this.dialog.id);
+        trigger.setAttribute('aria-expanded', 'true');
+        this._trigger = trigger;
+      }
       // Visibilité par TOGGLE de `flex` (ajouté ici, retiré à la fermeture) : elle ne peut PAS
       // reposer sur le seul `hidden`, car une classe `md:flex` en dur l'emporterait sur `hidden`
       // en desktop -> dialogue ouvert par défaut. Fermé = `hidden`, ouvert = `flex`.
@@ -527,6 +536,7 @@
       }
       this.dialog.removeEventListener('keydown', this.onKeydown);
       document.body.classList.remove('overflow-hidden');
+      this._trigger?.setAttribute?.('aria-expanded', 'false');
       this.lastFocused?.focus?.();
     }
 
@@ -610,6 +620,14 @@
 
       // Largeur de modale : large (2 colonnes) à l'étape format, normale ailleurs.
       this.setModalWidth(stepName === 'format');
+
+      // A11y : au changement d'étape (modale ouverte), déplacer le focus sur le titre de l'étape
+      // -> annonce le nouveau contexte au lecteur d'écran + replace l'ordre de tabulation. À
+      // l'OUVERTURE, open() refocalise le bouton « fermer » juste après (priorité), pas de conflit.
+      if (this.dialog && this.dialog.classList.contains('flex') && this.stepTitle) {
+        this.stepTitle.setAttribute('tabindex', '-1');
+        this.stepTitle.focus({ preventScroll: true });
+      }
 
       // Aperçu WebGL « format » (poster) : monté à l'ENTRÉE de l'étape format, LIBÉRÉ partout
       // ailleurs -> garantit un seul contexte WebGL. (syncVariant le re-monte sur changement.)

@@ -582,6 +582,18 @@
   ]
   {%- endif -%}
 {%- endcapture -%}
+{%- comment -%} Studio de personnalisation EN LIGNE (fiches poster perso) -> machine-readable pour
+   Google & agents IA : signale un produit personnalisable en direct, avec aperçu. Gaté sur le
+   metafield artwork.type (présence réelle du studio), exclusif du bloc 3D (painting). {%- endcomment -%}
+{%- capture product_studio_props -%}
+  {%- if product.metafields.artwork.type == 'poster' -%}
+  ,"additionalProperty": [
+    { "@type": "PropertyValue", "name": {{ 'sections.mma.product_studio_interactive_name' | t | json }}, "value": {{ 'sections.mma.product_studio_interactive_value' | t | json }} },
+    { "@type": "PropertyValue", "name": {{ 'sections.mma.product_studio_elements_name' | t | json }}, "value": {{ 'sections.mma.product_studio_elements_value' | t | json }} },
+    { "@type": "PropertyValue", "name": {{ 'sections.mma.product_studio_preview_name' | t | json }}, "value": {{ 'sections.mma.product_studio_preview_value' | t | json }} }
+  ]
+  {%- endif -%}
+{%- endcapture -%}
 <script type="application/ld+json">
     {
       "@context": "https://schema.org/",
@@ -601,7 +613,7 @@
           "brand": {
             "@type": "Brand",
             "name": {{ product.vendor | json }}
-          }{{ product_3d_props }}{{ product_return_schema }},
+          }{{ product_3d_props }}{{ product_studio_props }}{{ product_return_schema }},
           "offers": [
                     {%- for variant in product.variants -%}
               {

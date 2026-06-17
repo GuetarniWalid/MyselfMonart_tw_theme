@@ -57,21 +57,36 @@
   <template data-studio-buy-content>{{ studio_buy_content }}</template>
 
   {%- comment -%}
-    Pas de CTA propre ici : le déclencheur est le bouton d'achat « JE CRÉE MON TABLEAU »
-    réutilisé en haut de la fiche (bloc `buy` du main-product, comportement flottant inclus).
-    Sur le template `personalized`, assets/main-product.js détourne son clic pour appeler
-    custom-art-studio.open() au lieu d'ajouter au panier. Cette section ne porte donc plus
-    que le dialogue (caché jusqu'à l'ouverture). L'éditorial « comment ça marche » sera
-    ajouté lors de la passe copywriting de la fiche.
-  {%- endcomment -%}
+    Le déclencheur d'OUVERTURE est le bouton d'achat « JE CRÉE MON TABLEAU » réutilisé en haut
+    de la fiche (bloc `buy` du main-product) : assets/main-product.js détourne son clic vers
+    custom-art-studio.open(). Cette section porte le dialogue (caché) + un ÉDITORIAL serveur
+    décrivant le studio -> signal SEO « studio de personnalisation en ligne » lisible des robots
+    (le parcours interactif est injecté en JS, donc invisible des moteurs : c'est ce texte
+    serveur qui porte les mots-clés). Réglages heading/description admin-configurables. {%- endcomment -%}
+  {%- comment -%} Style DISCRET (minimaliste) : petit titre + courte phrase atténués -> n'encombre
+     pas l'utilisateur (le studio parle de lui-même), mais reste un H2 sémantique riche en mots-clés
+     côté serveur. Copie GÉNÉRIQUE (réglages) -> s'adapte à tout futur tableau perso sans retouche ;
+     le mot-clé produit (« foot »…) vient du H1 de la fiche. {%- endcomment -%}
+  {%- if section.settings.heading != blank or section.settings.description != blank -%}
+    <section aria-labelledby="studio-intro-{{ section.id }}" class="page-width mx-auto max-w-lg px-4 py-5 text-center">
+      {%- if section.settings.heading != blank -%}
+        <h2 id="studio-intro-{{ section.id }}" class="font-heading text-base font-semibold text-main-80">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+      {%- if section.settings.description != blank -%}
+        <div class="mx-auto mt-1.5 max-w-md text-sm text-main-70 leading-relaxed">{{ section.settings.description }}</div>
+      {%- endif -%}
+    </section>
+  {%- endif -%}
 
   {%- comment -%} ---- Dialog studio (caché tant que le bouton n'est pas cliqué) ---- {%- endcomment -%}
   <div
     data-studio-dialog
+    id="studio-dialog-{{ section.id }}"
     class="fixed inset-0 z-[60] hidden md:items-center md:justify-center md:p-6"
     role="dialog"
     aria-modal="true"
-    aria-labelledby="studio-dialog-title-{{ section.id }}">
+    aria-labelledby="studio-dialog-title-{{ section.id }}"
+    aria-describedby="studio-dialog-desc-{{ section.id }}">
 
     {%- comment -%} Zone transparente de fermeture au clic (desktop). Le FLOU d'arrière-plan
        est fourni par l'overlay global du thème #overlay-content (cf. open() du JS). {%- endcomment -%}
@@ -84,8 +99,15 @@
        `md:transition` = redimensionnement doux entre étapes. {%- endcomment -%}
     <div data-studio-modal class="relative flex h-full w-full flex-col bg-secondary md:h-auto md:max-h-[90vh] md:w-full md:max-w-xl md:rounded-2xl md:border-main md:border-1 md:shadow-neu-lg overflow-hidden md:transition-[max-width] md:duration-300 md:ease-out motion-reduce:md:transition-none">
 
+      {%- comment -%} Description de la modale (référencée par aria-describedby) : nomme l'outil
+         pour les lecteurs d'écran. sr-only -> aucun impact visuel. {%- endcomment -%}
+      <p id="studio-dialog-desc-{{ section.id }}" class="sr-only">{{ 'sections.custom_art_studio.dialog_intro' | t }}</p>
+
       {%- comment -%} ---- Entête : titre + fermer, puis stepper pleine largeur ---- {%- endcomment -%}
       <header class="border-b border-main-10 p-4">
+        {%- comment -%} Indicateur « Étape X sur Y » annoncé aux lecteurs d'écran (le JS le remplit
+           via showStep). sr-only -> invisible ; data-allow-empty -> survit à *:empty avant remplissage. {%- endcomment -%}
+        <p data-step-indicator data-allow-empty class="sr-only" role="status" aria-live="polite" hidden></p>
         <div class="flex items-start justify-between gap-4">
           <div class="min-w-0 flex-1">
             <h2 id="studio-dialog-title-{{ section.id }}" data-step-title class="text-xl font-heading font-bold">
@@ -720,13 +742,13 @@
       "type": "text",
       "id": "heading",
       "label": "t:sections.custom-art-studio.settings.heading.label",
-      "default": "Créez votre tableau de légende"
+      "default": "Personnalisez votre poster en direct dans notre studio en ligne"
     },
     {
       "type": "richtext",
       "id": "description",
       "label": "t:sections.custom-art-studio.settings.description.label",
-      "default": "<p>Votre photo, votre équipe, votre numéro : notre studio compose une œuvre unique, imprimée avec soin.</p>"
+      "default": "<p>Prénom, numéro, format, cadre : composez en direct votre poster personnalisé — un tableau, une fois encadré — avec un aperçu 3D en temps réel. Conçu en France, imprimé en Europe.</p>"
     },
     {
       "type": "text",
