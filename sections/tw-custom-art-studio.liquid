@@ -59,24 +59,11 @@
   {%- comment -%}
     Le déclencheur d'OUVERTURE est le bouton d'achat « JE CRÉE MON TABLEAU » réutilisé en haut
     de la fiche (bloc `buy` du main-product) : assets/main-product.js détourne son clic vers
-    custom-art-studio.open(). Cette section porte le dialogue (caché) + un ÉDITORIAL serveur
-    décrivant le studio -> signal SEO « studio de personnalisation en ligne » lisible des robots
-    (le parcours interactif est injecté en JS, donc invisible des moteurs : c'est ce texte
-    serveur qui porte les mots-clés). Réglages heading/description admin-configurables. {%- endcomment -%}
-  {%- comment -%} Style DISCRET (minimaliste) : petit titre + courte phrase atténués -> n'encombre
-     pas l'utilisateur (le studio parle de lui-même), mais reste un H2 sémantique riche en mots-clés
-     côté serveur. Copie GÉNÉRIQUE (réglages) -> s'adapte à tout futur tableau perso sans retouche ;
-     le mot-clé produit (« foot »…) vient du H1 de la fiche. {%- endcomment -%}
-  {%- if section.settings.heading != blank or section.settings.description != blank -%}
-    <section aria-labelledby="studio-intro-{{ section.id }}" class="page-width mx-auto max-w-lg px-4 py-5 text-center">
-      {%- if section.settings.heading != blank -%}
-        <h2 id="studio-intro-{{ section.id }}" class="font-heading text-base font-semibold text-main-80">{{ section.settings.heading | escape }}</h2>
-      {%- endif -%}
-      {%- if section.settings.description != blank -%}
-        <div class="mx-auto mt-1.5 max-w-md text-sm text-main-70 leading-relaxed">{{ section.settings.description }}</div>
-      {%- endif -%}
-    </section>
-  {%- endif -%}
+    custom-art-studio.open(). Cette section ne porte que le dialogue (caché).
+    L'ÉDITORIAL SEO « Personnalisation en ligne » a été DÉPLACÉ dans un accordéon collapsible_tab
+    de la fiche produit (1er, au-dessus de Livraison/Matériaux — cf templates/product.personalized-poster.json)
+    -> contenu serveur crawlable (h2 + texte), plus discret. Le JSON-LD studio reste, lui, dans
+    main-product.liquid (inchangé). {%- endcomment -%}
 
   {%- comment -%} ---- Dialog studio (caché tant que le bouton n'est pas cliqué) ---- {%- endcomment -%}
   <div

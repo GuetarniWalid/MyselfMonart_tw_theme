@@ -54,6 +54,15 @@
             "text": "<p>- Le cadeau parfait qui marque les esprits</p><p>- Une touche personnelle qui fait toute la différence</p><p>-Un cadeau intemporel qui ne se démode jamais<br/></p>"
           }
         },
+        "collapsible_tab_studio": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Personnalisation en ligne",
+            "icon": "star",
+            "content": "<p>Personnalisez votre poster en direct dans notre studio en ligne : prénom, numéro, format et cadre. Composez votre poster personnalisé — un tableau, une fois encadré — avec un aperçu 3D en temps réel. Conçu en France, imprimé en Europe.</p>",
+            "page": ""
+          }
+        },
         "collapsible_tab_HAUcNw": {
           "type": "collapsible_tab",
           "settings": {
@@ -92,6 +101,7 @@
         "trustpilot_review_nXpwkL",
         "buy_qrRzcg",
         "8600f603-2d6f-4191-8020-3678432ba1e5",
+        "collapsible_tab_studio",
         "collapsible_tab_HAUcNw",
         "collapsible_tab_4UhrbY",
         "a70160ee-79ef-4eb9-8e65-ec87f898b506",
