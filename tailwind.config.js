@@ -138,6 +138,8 @@ module.exports = {
     },
   },
   safelist: [
+    'md:max-w-3xl',
+    'md:max-w-xl',
     'grid-cols-1',
     'grid-cols-2',
     'md:grid-cols-1',

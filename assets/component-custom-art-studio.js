@@ -608,6 +608,9 @@
       if (promoDate) promoDate.classList.toggle('hidden', !isBuyStep);
       this.updateNextDisabled();
 
+      // Largeur de modale : large (2 colonnes) à l'étape format, normale ailleurs.
+      this.setModalWidth(stepName === 'format');
+
       // Aperçu WebGL « format » (poster) : monté à l'ENTRÉE de l'étape format, LIBÉRÉ partout
       // ailleurs -> garantit un seul contexte WebGL. (syncVariant le re-monte sur changement.)
       if (stepName === 'format') {
@@ -767,7 +770,17 @@
       }
       const heading = this.q(`[data-studio-screen="${screenName}"] h3`);
       if (heading) this.stepTitle.textContent = heading.textContent;
+      this.setModalWidth(false); // écrans hors-étapes (attente/reveal/erreur) -> largeur normale
       this.persist();
+    }
+
+    // Élargit la modale (desktop/iPad) à l'étape FORMAT (2 colonnes -> on profite de l'espace,
+    // toutes les options visibles) et la remet à sa largeur normale ailleurs (single-column).
+    setModalWidth(wide) {
+      const modal = this.q('[data-studio-modal]');
+      if (!modal) return;
+      modal.classList.toggle('md:max-w-3xl', wide);
+      modal.classList.toggle('md:max-w-xl', !wide);
     }
 
     stepIsValid(stepName) {
@@ -1654,7 +1667,7 @@
       const json = JSON.stringify(cfg).replace(/</g, '\\u003c');
       // Fond mur en SIBLING (remplit la bande pleine largeur du slot) + poster centré au-dessus.
       slot.innerHTML = this.decorBgHtml()
-        + '<perspective-canvas class="relative z-10 mx-auto block w-full max-w-xs md:max-w-sm" data-context="studio">'
+        + '<perspective-canvas class="relative z-10 mx-auto block w-full max-w-xs" data-context="studio">'
         + `<canvas class="perspective-canvas-gl block w-full" style="aspect-ratio:4/5" role="img" aria-label="${escapeHtml(this.i18n.webgl_preview_label)}">${escapeHtml(this.i18n.webgl_canvas_caption)}</canvas>`
         + `<script type="application/json" class="perspective-config">${json}</scr` + 'ipt>'
         + '</perspective-canvas>';

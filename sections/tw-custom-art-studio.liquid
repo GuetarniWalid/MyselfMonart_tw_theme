@@ -68,7 +68,7 @@
   {%- comment -%} ---- Dialog studio (caché tant que le bouton n'est pas cliqué) ---- {%- endcomment -%}
   <div
     data-studio-dialog
-    class="fixed inset-0 z-[60] hidden md:items-center md:justify-center md:p-4"
+    class="fixed inset-0 z-[60] hidden md:items-center md:justify-center md:p-6"
     role="dialog"
     aria-modal="true"
     aria-labelledby="studio-dialog-title-{{ section.id }}">
@@ -79,7 +79,10 @@
 
     {%- comment -%} Panneau : plein écran sur mobile ; carte CENTRÉE verticalement sur desktop
        (le parent md:flex md:items-center s'en charge ; max-h-90vh + corps scrollable). {%- endcomment -%}
-    <div class="relative flex h-full w-full flex-col bg-secondary md:h-auto md:max-h-[90vh] md:w-full md:max-w-xl md:rounded-2xl md:border-main md:border-1 md:shadow-neu-lg overflow-hidden">
+    {%- comment -%} `data-studio-modal` : le JS élargit la modale (md:max-w-3xl) UNIQUEMENT à
+       l'étape Format (2 colonnes) et la remet à md:max-w-xl ailleurs (single-column, pas étalé).
+       `md:transition` = redimensionnement doux entre étapes. {%- endcomment -%}
+    <div data-studio-modal class="relative flex h-full w-full flex-col bg-secondary md:h-auto md:max-h-[90vh] md:w-full md:max-w-xl md:rounded-2xl md:border-main md:border-1 md:shadow-neu-lg overflow-hidden md:transition-[max-width] md:duration-300 md:ease-out motion-reduce:md:transition-none">
 
       {%- comment -%} ---- Entête : titre + fermer, puis stepper pleine largeur ---- {%- endcomment -%}
       <header class="border-b border-main-10 p-4">
