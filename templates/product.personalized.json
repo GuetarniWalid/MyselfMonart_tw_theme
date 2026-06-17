@@ -39,7 +39,7 @@
         "buy_qrRzcg": {
           "type": "buy",
           "settings": {
-            "text": "JE CRÉE MON TABLEAU",
+            "text": "JE CRÉE MON POSTER",
             "is_dynamic_variant": false,
             "show_promotion": false,
             "show_payment_icons": false
@@ -48,7 +48,7 @@
         "8600f603-2d6f-4191-8020-3678432ba1e5": {
           "type": "text",
           "settings": {
-            "text": "<p>- Sa photo, son équipe, son prénom : une œuvre unique, créée à la demande</p><p>- Vous découvrez l'aperçu en quelques instants et validez avant impression</p><p>- Le cadeau qui fait briller les yeux des passionnés de ballon rond<br/></p>"
+            "text": "<p>- Sa photo, son équipe, son prénom : une œuvre unique, créée à la demande</p><p>- Aperçu gratuit en quelques instants : vous ne réglez qu'une fois le résultat validé</p><p>- Le cadeau qui fait briller les yeux des passionnés de ballon rond</p><p>- Plus de 1 000 créations livrées depuis 2022 — 4,1/5 sur Trustpilot<br/></p>"
           }
         },
         "collapsible_tab_HAUcNw": {
@@ -100,7 +100,7 @@
       "type": "tw-custom-art-studio",
       "settings": {
         "backend_url": "https://backend.myselfmonart.com",
-        "mock_mode": true
+        "mock_mode": false
       }
     },
     "customer_testimonial_myiwee": {
@@ -209,7 +209,7 @@
           "settings": {
             "number": 1,
             "heading": "Vous validez avant impression",
-            "text": "Découvrez l'aperçu de votre tableau en quelques instants : rien ne part à l'impression sans votre accord."
+            "text": "Découvrez l'aperçu de votre poster en quelques instants, gratuitement : rien ne part à l'impression sans votre accord."
           }
         },
         "434fa092-b676-4395-a95a-9922006fa7db": {
@@ -275,7 +275,7 @@
       "settings": {
         "image": "shopify://shop_images/tour_eiffel.jpg",
         "title": "CONÇU EN FRANCE",
-        "description": "<p>Chaque tableau est créé et contrôlé en France par notre studio, puis imprimé en Europe sur des papiers sélectionnés. Et de Toulouse, notre service client veille sur votre commande du premier aperçu à la livraison.</p>",
+        "description": "<p>Chaque poster est créé et contrôlé en France par notre studio, puis imprimé en Europe sur des papiers sélectionnés. Et de Toulouse, notre service client veille sur votre commande du premier aperçu à la livraison.</p>",
         "layout": "image_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -345,7 +345,7 @@
           "settings": {
             "heading": "Comment ça marche ?",
             "icon": "none",
-            "row_content": "<p>1. Vous choisissez une photo bien nette de votre joueur ou joueuse.</p><p>2. Vous sélectionnez l'équipe, le prénom et le numéro à floquer.</p><p>3. En 30 secondes environ, notre studio compose votre tableau et vous en présente l'aperçu.</p><p>4. Le résultat vous plaît ? Vous validez, et nous lançons l'impression.</p>"
+            "row_content": "<p>1. Vous choisissez une photo bien nette de votre joueur ou joueuse.</p><p>2. Vous sélectionnez l'équipe, le prénom et le numéro à floquer.</p><p>3. En 30 secondes environ, notre studio compose votre poster et vous en présente l'aperçu, gratuitement.</p><p>4. Le résultat vous plaît ? Vous validez, et nous lançons l'impression.</p>"
           }
         },
         "faq_photo_difficile": {
@@ -356,12 +356,20 @@
             "row_content": "<p>Cela peut arriver : photo trop sombre, visage trop petit ou de profil. Le studio vous le signale aussitôt et vous invite à en essayer une autre.</p><p>Et si décidément rien n'y fait, un artiste de notre studio prend le relais : vous recevez par e-mail un aperçu réalisé à la main, sous 24 h.</p>"
           }
         },
+        "faq_rgpd_photo": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Que devient la photo que vous téléversez ?",
+            "icon": "none",
+            "row_content": "<p>Elle nous sert uniquement à composer puis à imprimer votre poster. Elle n'alimente aucun entraînement d'intelligence artificielle et n'est partagée avec personne.</p><p>Nous la supprimons une fois votre commande honorée — et au plus tard sous 30 jours si vous ne passez pas commande. Pour la photo d'un enfant, nous vous demandons d'être son parent ou son représentant légal.</p>"
+          }
+        },
         "faq_delais_fete_des_peres": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "Sera-t-il là à temps pour la fête des pères ?",
+            "heading": "Sera-t-il livré à temps pour l'offrir ?",
             "icon": "none",
-            "row_content": "<p>Entre votre validation et la réception, comptez <strong>3 à 4 jours de fabrication</strong> puis <strong>3 à 5 jours ouvrés d'expédition</strong> en colis suivi.</p><p>Pour une réception avant le 21 juin, ne tardez donc pas : créez et validez votre tableau dès aujourd'hui — c'est l'affaire de quelques minutes.</p>"
+            "row_content": "<p>Entre votre validation et la réception, comptez <strong>3 à 4 jours de fabrication</strong> puis <strong>3 à 5 jours ouvrés d'expédition</strong> en colis suivi.</p><p>Pour être sûr de l'offrir à temps, lancez-vous dès aujourd'hui : créer et valider votre poster, c'est l'affaire de quelques minutes.</p>"
           }
         },
         "faq_retractation": {
@@ -392,6 +400,7 @@
       "block_order": [
         "faq_comment_ca_marche",
         "faq_photo_difficile",
+        "faq_rgpd_photo",
         "faq_delais_fete_des_peres",
         "faq_retractation",
         "faq_rendu_finitions",
