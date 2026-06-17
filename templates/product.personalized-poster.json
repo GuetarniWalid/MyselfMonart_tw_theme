@@ -277,8 +277,8 @@
       "type": "image-with-text",
       "settings": {
         "image": "shopify://shop_images/tour_eiffel.jpg",
-        "title": "MADE IN FRANCE",
-        "description": "<p>Une touche d'art à la française. Enracinés dans notre cher pays, nous mettons l'accent sur votre satisfaction en offrant un service client de qualité supérieure.</p>",
+        "title": "CONÇU EN FRANCE",
+        "description": "<p>Chaque tableau est créé et contrôlé en France par notre studio, puis imprimé en Europe sur des papiers sélectionnés. Et de Toulouse, notre service client veille sur votre commande du premier aperçu à la livraison.</p>",
         "layout": "image_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
