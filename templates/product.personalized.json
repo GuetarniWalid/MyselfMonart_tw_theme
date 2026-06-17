@@ -201,14 +201,53 @@
         "number_products_to_display": 4
       }
     },
+    "bf44dcab-c1df-4c80-b75a-9ee39a6bfe2e": {
+      "type": "badges",
+      "blocks": {
+        "ef364299-4b9c-463a-a50d-210af473e95e": {
+          "type": "number_block",
+          "settings": {
+            "number": 1,
+            "heading": "Vous validez avant impression",
+            "text": "Découvrez l'aperçu de votre poster en quelques instants, gratuitement : rien ne part à l'impression sans votre accord."
+          }
+        },
+        "434fa092-b676-4395-a95a-9922006fa7db": {
+          "type": "number_block",
+          "settings": {
+            "number": 2,
+            "heading": "Un artiste veille sur chaque œuvre",
+            "text": "Chaque création est contrôlée avant impression. Et si votre photo ne donne rien, un artiste reprend la main sous 24 h."
+          }
+        },
+        "dc1cd24a-b307-4124-abb9-b1ac55ba1e6b": {
+          "type": "number_block",
+          "settings": {
+            "number": 3,
+            "heading": "Un cadeau qui marque les esprits",
+            "text": "Anniversaire, fête des pères, fin de saison : offrez-lui son portrait de joueur de légende, prénom et numéro floqués."
+          }
+        }
+      },
+      "block_order": [
+        "ef364299-4b9c-463a-a50d-210af473e95e",
+        "434fa092-b676-4395-a95a-9922006fa7db",
+        "dc1cd24a-b307-4124-abb9-b1ac55ba1e6b"
+      ],
+      "settings": {
+        "title": "",
+        "nb_columns_on_computer": "3",
+        "nb_columns_on_mobile": "1"
+      }
+    },
     "b5027902-4240-44cf-8660-b6e754562c52": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify://shop_images/poster-personnalise-foot-enfant-decouvre-chambre.jpg",
-        "title": "Le jour où il se voit en légende",
-        "description": "<p>Ce n'est pas qu'un poster. C'est son visage, ses couleurs, son numéro — figés sous les lumières d'un grand soir. Le cadeau qu'on n'oublie pas, et qui reste accroché bien après la fin de saison.</p>",
+        "image": "shopify://shop_images/texture_x3_70ae7c8b-712c-4c74-bb93-e76a2eddc37b.jpg",
+        "title": "EN HARMONIE",
+        "description": "<p>Vous avez le souci du détail ? Allez plus loin en choisissant la finition de votre poster : à poser tel quel, ou sublimé par un cadre (blanc, noir mat, chêne clair, noyer ou argent ancien) qui s'accorde au mieux à votre intérieur.</p>",
         "layout": "image_first",
-        "enable_blob": false,
+        "enable_blob": true,
         "activate_dynamic_color": false,
         "dynamic_primary_color": "#111111",
         "dynamic_secondary_color": "#e3fae1",
@@ -219,11 +258,11 @@
     "afe2a87a-371e-4c67-93b7-8c6b2244f43b": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify://shop_images/poster-foot-papier-mat-detail.jpg",
-        "title": "Une matière qui se respecte",
-        "description": "<p>Imprimé à la demande sur un papier épais au rendu <strong>mat et profond</strong> : des couleurs justes, des noirs riches, un grain délicat. Pas de plastique brillant, pas de reflets — la sobriété d'une vraie pièce d'art.</p>",
+        "image": "shopify://shop_images/metre.jpg",
+        "title": "DU SUR-MESURE",
+        "description": "<p>Choisissez le format de votre poster : 30 × 40 cm pour un clin d'œil discret, 60 × 80 cm pour en faire la pièce maîtresse du mur.</p>",
         "layout": "text_first",
-        "enable_blob": false,
+        "enable_blob": true,
         "activate_dynamic_color": false,
         "dynamic_primary_color": "#111111",
         "dynamic_secondary_color": "#e3fae1",
@@ -234,11 +273,11 @@
     "556b5926-5cdb-4c50-a817-c79f15894cdd": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify://shop_images/poster-foot-finitions-cadres.jpg",
-        "title": "Le format et le cadre qui lui ressemblent",
-        "description": "<p>Deux formats : <strong>30 × 40 cm</strong> pour un clin d'œil, <strong>60 × 80 cm</strong> pour la pièce maîtresse du mur. À poser tel quel, ou sublimé par l'un de nos cinq cadres — blanc, noir mat, chêne clair, noyer ou argent ancien — qui transforme le poster en véritable tableau.</p><p><em>Conçu en France, imprimé en Europe.</em></p>",
+        "image": "shopify://shop_images/tour_eiffel.jpg",
+        "title": "CONÇU EN FRANCE",
+        "description": "<p>Chaque poster est créé et contrôlé en France par notre studio, puis imprimé en Europe sur des papiers sélectionnés. Et de Toulouse, notre service client veille sur votre commande du premier aperçu à la livraison.</p>",
         "layout": "image_first",
-        "enable_blob": false,
+        "enable_blob": true,
         "activate_dynamic_color": false,
         "dynamic_primary_color": "#111111",
         "dynamic_secondary_color": "#e3fae1",
@@ -252,9 +291,9 @@
         "column_fN6DfA": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/poster-foot-etape-1-photo.jpg",
-            "title": "1 · Sa photo",
-            "text": "<p>Une belle photo de votre enfant, un visage net et bien éclairé : c'est tout ce dont nous avons besoin pour commencer.</p>",
+            "image": "shopify://shop_images/femme-service-client-call.jpg",
+            "title": "SERVICE CLIENT",
+            "text": "<p>Par mail ou téléphone, c’est toujours avec joie que nous échangeons avec vous, pour vous offrir une expérience exceptionnelle.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -263,9 +302,9 @@
         "column_zAm3tT": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/poster-foot-etape-2-apercu.jpg",
-            "title": "2 · L'aperçu en quelques instants",
-            "text": "<p>Son équipe, son prénom, son numéro : notre studio compose son poster et vous en révèle l'aperçu en direct. Gratuit, sans engagement.</p>",
+            "image": "shopify://shop_images/cliente-satisfaite-souriante.jpg",
+            "title": "SATISFACTION",
+            "text": "<p>Nous faisons tout pour que notre travail vous donne entière satisfaction. Nos produits sont fabriqués, vérifiés et emballés avec le plus grand soin, avant d'être livrés directement à votre domicile.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -274,9 +313,9 @@
         "column_U3DQjE": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/poster-foot-etape-3-encadre.jpg",
-            "title": "3 · Livré, prêt à accrocher",
-            "text": "<p>Vous validez, nous imprimons sur un beau papier mat. Reçu chez vous, encadré en option, prêt à faire briller ses yeux.</p>",
+            "image": "shopify://shop_images/tableau-deco-femme-satisfaction-garantie.jpg",
+            "title": "QUALITÉ",
+            "text": "<p>Chaque œuvre que nous créons reflète notre engagement envers l'excellence et le soin du détail. Une question, un doute ? Notre studio à Toulouse reste à votre écoute, avant comme après votre commande.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -289,8 +328,8 @@
         "column_U3DQjE"
       ],
       "settings": {
-        "title": "DE SA PHOTO À SON POSTER, EN 3 ÉTAPES",
-        "image_shape": "aspect-[3/4] object-cover",
+        "title": "NOS GARANTIES",
+        "image_shape": "rounded-full aspect-square object-cover",
         "columns_desktop": 3,
         "show_backgounds": false,
         "button_label": "",
@@ -333,30 +372,6 @@
             "row_content": "<p>Entre votre validation et la réception, comptez <strong>3 à 4 jours de fabrication</strong> puis <strong>3 à 5 jours ouvrés d'expédition</strong> en colis suivi.</p><p>Pour être sûr de l'offrir à temps, lancez-vous dès aujourd'hui : créer et valider votre poster, c'est l'affaire de quelques minutes.</p>"
           }
         },
-        "faq_equipes": {
-          "type": "collapsible_row",
-          "settings": {
-            "heading": "Quelles équipes puis-je choisir ?",
-            "icon": "none",
-            "row_content": "<p>Une quinzaine d'équipes parmi les plus aimées sont disponibles dans le studio, et la sélection s'agrandit régulièrement. Vous choisissez les couleurs, notre studio s'occupe du reste — nos créations sont des œuvres originales, non affiliées aux clubs.</p>"
-          }
-        },
-        "faq_adulte": {
-          "type": "collapsible_row",
-          "settings": {
-            "heading": "C'est aussi un beau cadeau pour un adulte ?",
-            "icon": "none",
-            "row_content": "<p>Bien sûr. Papa fan des Bleus, partenaire supporter, grand-parent passionné… chacun peut devenir le joueur de légende de son propre poster. Il suffit d'une belle photo.</p>"
-          }
-        },
-        "faq_accrocher": {
-          "type": "collapsible_row",
-          "settings": {
-            "heading": "Comment l'accrocher ou le poser ?",
-            "icon": "none",
-            "row_content": "<p>Sans cadre, votre poster se fixe facilement (pâte adhésive, pinces, ou un cadre du commerce aux formats 30 × 40 ou 60 × 80 cm). Avec l'option cadre, il arrive monté et prêt à accrocher.</p>"
-          }
-        },
         "faq_retractation": {
           "type": "collapsible_row",
           "settings": {
@@ -384,14 +399,11 @@
       },
       "block_order": [
         "faq_comment_ca_marche",
-        "faq_equipes",
-        "faq_adulte",
         "faq_photo_difficile",
         "faq_rgpd_photo",
         "faq_delais_fete_des_peres",
-        "faq_rendu_finitions",
-        "faq_accrocher",
         "faq_retractation",
+        "faq_rendu_finitions",
         "faq_affiliation_clubs"
       ],
       "settings": {
@@ -405,13 +417,14 @@
     "breadcrumb_RCxFAG",
     "main",
     "custom_art_studio_M3kxQz",
-    "multicolumn_aLxMGX",
+    "customer_testimonial_myiwee",
+    "product_recommendations_7Dekqa",
+    "bf44dcab-c1df-4c80-b75a-9ee39a6bfe2e",
     "b5027902-4240-44cf-8660-b6e754562c52",
     "afe2a87a-371e-4c67-93b7-8c6b2244f43b",
     "556b5926-5cdb-4c50-a817-c79f15894cdd",
-    "customer_testimonial_myiwee",
-    "7ae13aad-330c-4fa7-94cf-fafc1c13cf60",
-    "product_recommendations_7Dekqa"
+    "multicolumn_aLxMGX",
+    "7ae13aad-330c-4fa7-94cf-fafc1c13cf60"
   ],
   "layout": "product"
 }
