@@ -100,7 +100,7 @@
       "type": "tw-custom-art-studio",
       "settings": {
         "backend_url": "https://backend.myselfmonart.com",
-        "mock_mode": true
+        "mock_mode": false
       }
     },
     "customer_testimonial_myiwee": {
