@@ -1302,24 +1302,51 @@
       return null;
     }
 
+    // Sélecteur d'HEURE 24 h localisé (FR « 14 h 05 », DE/NL/ES « 14:05 ») pour les locales non-EN :
+    // l'input natif <type=time> affiche 12 h/24 h selon le NAVIGATEUR, pas la langue du site → on
+    // force le 24 h via 2 <select>. EN garde l'input natif (12 h AM/PM, validé par Walid).
+    timeSelectsHtml(step, name, id) {
+      const sep = this.locale === 'fr' ? 'h' : ':';
+      const hoursLabel = escapeHtml(this.i18n.hours || 'Heures');
+      const minutesLabel = escapeHtml(this.i18n.minutes || 'Minutes');
+      const pad = (n) => String(n).padStart(2, '0');
+      let hOpts = '<option value=""></option>';
+      for (let h = 0; h < 24; h++) hOpts += `<option value="${pad(h)}">${pad(h)}</option>`;
+      let mOpts = '<option value=""></option>';
+      for (let m = 0; m < 60; m++) mOpts += `<option value="${pad(m)}">${pad(m)}</option>`;
+      const selCls = 'rounded-xl border border-main-10 bg-secondary px-3 py-3 text-main focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main';
+      return `<div data-time-field="${name}" role="group" aria-labelledby="${id}-label" class="mb-1 flex items-center gap-2">`
+        + `<select data-time-part="h" id="${id}" aria-label="${hoursLabel}" class="${selCls}">${hOpts}</select>`
+        + `<span aria-hidden="true" class="font-medium text-main-70">${sep}</span>`
+        + `<select data-time-part="m" aria-label="${minutesLabel}" class="${selCls}">${mOpts}</select>`
+        + '</div>';
+    }
+
     genericPanelHtml(step) {
       const name = escapeHtml(step.name);
       const label = escapeHtml(this.t(step.label) || this.t(step.title) || '');
       const help = escapeHtml(this.t(step.help) || '');
       const placeholder = escapeHtml(this.t(step.placeholder) || '');
       const id = `studio-field-${name}`;
-      let inputType = 'text';
-      let attrs = '';
-      if (step.type === 'number') {
-        inputType = 'number';
-        attrs = `inputmode="numeric"${step.min != null ? ` min="${step.min}"` : ''}${step.max != null ? ` max="${step.max}"` : ''}`;
-      } else if (step.type === 'date') {
-        inputType = step.mode === 'time' ? 'time' : 'date';
+      const isCustomTime = step.type === 'date' && step.mode === 'time' && this.locale !== 'en';
+      let field;
+      if (isCustomTime) {
+        field = this.timeSelectsHtml(step, name, id);
+      } else {
+        let inputType = 'text';
+        let attrs = '';
+        if (step.type === 'number') {
+          inputType = 'number';
+          attrs = `inputmode="numeric"${step.min != null ? ` min="${step.min}"` : ''}${step.max != null ? ` max="${step.max}"` : ''}`;
+        } else if (step.type === 'date') {
+          inputType = step.mode === 'time' ? 'time' : 'date';
+        }
+        field = `<input type="${inputType}" id="${id}" data-generic-input data-field="${name}" data-ftype="${escapeHtml(step.type)}" autocomplete="off" placeholder="${placeholder}" ${attrs}`
+          + ' class="mb-1 w-full rounded-xl border border-main-10 bg-secondary px-4 py-3 text-main placeholder:text-main-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">';
       }
       return `<div data-studio-panel="${name}" hidden>`
-        + `<label for="${id}" class="mb-1 block text-xs uppercase tracking-wide text-main-70">${label}</label>`
-        + `<input type="${inputType}" id="${id}" data-generic-input data-field="${name}" data-ftype="${escapeHtml(step.type)}" autocomplete="off" placeholder="${placeholder}" ${attrs}`
-        + ' class="mb-1 w-full rounded-xl border border-main-10 bg-secondary px-4 py-3 text-main placeholder:text-main-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">'
+        + `<label ${isCustomTime ? `id="${id}-label"` : `for="${id}"`} class="mb-1 block text-xs uppercase tracking-wide text-main-70">${label}</label>`
+        + field
         + (help ? `<p class="mb-4 text-xs text-main-70">${help}</p>` : '')
         + '</div>';
     }
@@ -1333,6 +1360,16 @@
       host.querySelectorAll('[data-generic-input]').forEach((input) => {
         const v = (this.state.fields || {})[input.dataset.field];
         if (v != null) input.value = v;
+      });
+      // Repeuple les sélecteurs d'heure custom (valeur stockée "HH:MM").
+      host.querySelectorAll('[data-time-field]').forEach((grp) => {
+        const v = (this.state.fields || {})[grp.dataset.field];
+        if (!v) return;
+        const [h, m] = String(v).split(':');
+        const hs = grp.querySelector('[data-time-part="h"]');
+        const ms = grp.querySelector('[data-time-part="m"]');
+        if (hs && h != null) hs.value = h;
+        if (ms && m != null) ms.value = m;
       });
     }
 
@@ -1357,6 +1394,19 @@
         }
         if (input.value !== v) input.value = v;
         this.state.fields[name] = v;
+        this.persist();
+        this.updateNextDisabled();
+      });
+      // Sélecteurs d'heure custom (heures + minutes) → valeur combinée "HH:MM" (vide si incomplet).
+      host.addEventListener('change', (event) => {
+        const sel = event.target.closest('[data-time-part]');
+        if (!sel) return;
+        const grp = sel.closest('[data-time-field]');
+        if (!grp) return;
+        const name = grp.dataset.field;
+        const h = (grp.querySelector('[data-time-part="h"]') || {}).value || '';
+        const m = (grp.querySelector('[data-time-part="m"]') || {}).value || '';
+        this.state.fields[name] = (h !== '' && m !== '') ? `${h}:${m}` : '';
         this.persist();
         this.updateNextDisabled();
       });
