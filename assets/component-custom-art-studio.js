@@ -823,6 +823,9 @@
           if (!v) return step.required === false;
           if (step.minLength && v.length < step.minLength) return false;
           if (step.maxLength && v.length > step.maxLength) return false;
+          // Garde-fou de format optionnel (ex. poids numérique) — bloque « Continuer » tant
+          // que la saisie ne matche pas le motif fourni par la config.
+          if (step.pattern) { try { if (!new RegExp(step.pattern).test(v)) return false; } catch (e) { /* motif invalide → ignoré */ } }
           return true;
         }
         case 'number': {
@@ -2086,6 +2089,38 @@
       }
     }
 
+    // Met en forme une valeur de champ pour l'AFFICHAGE (panier/commande, checkpoint) selon la
+    // locale du site. Les inputs natifs date/time renvoient une valeur canonique (date = ISO
+    // YYYY-MM-DD, time = "HH:MM" 24 h) ; on la rend lisible et localisée pour la personne qui
+    // imprime le poster (FR 22/01/2024 · 18h45, EN 01/22/2024 · 6:45 PM, DE 22.01.2024, NL 22-01-2024).
+    displayFieldValue(step, raw) {
+      const v = String(raw == null ? '' : raw).trim();
+      if (!v) return v;
+      if (step && step.type === 'date') {
+        if (step.mode === 'time') {
+          const tm = v.match(/^(\d{1,2}):(\d{2})/);
+          if (!tm) return v;
+          let h = parseInt(tm[1], 10);
+          const m = tm[2];
+          if (this.locale === 'en') {
+            const ampm = h < 12 ? 'AM' : 'PM';
+            let h12 = h % 12; if (h12 === 0) h12 = 12;
+            return `${h12}:${m} ${ampm}`;
+          }
+          const hh = String(h).padStart(2, '0');
+          return this.locale === 'fr' ? `${hh}h${m}` : `${hh}:${m}`;
+        }
+        const dm = v.match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (!dm) return v;
+        const [, y, mo, d] = dm;
+        if (this.locale === 'en') return `${mo}/${d}/${y}`;
+        if (this.locale === 'de') return `${d}.${mo}.${y}`;
+        if (this.locale === 'nl') return `${d}-${mo}-${y}`;
+        return `${d}/${mo}/${y}`; // fr, es, défaut
+      }
+      return v;
+    }
+
     // Propriétés de ligne de commande depuis les étapes marquées cartProperty (mode sans génération).
     // Clé = libellé lisible (cartProperty.label i18n, sinon checkpointLabel/label/title), valeur = saisie.
     buildCartProperties() {
@@ -2094,7 +2129,7 @@
       const collect = (step) => {
         if (step.type === 'group') { (step.children || []).forEach(collect); return; }
         if (!step.cartProperty) return;
-        const value = fields[step.name];
+        const value = this.displayFieldValue(step, fields[step.name]);
         if (value == null || value === '') return;
         let label = (step.cartProperty && typeof step.cartProperty === 'object' && step.cartProperty.label)
           ? this.t(step.cartProperty.label)
