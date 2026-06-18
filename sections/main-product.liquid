@@ -110,7 +110,12 @@
             for media in product.media
               if media.media_type == 'image'
                 assign image_index = image_index | plus: 1
-                if image_index >= start_from
+                comment
+                  # Règle globale : l'image d'index 1 (la 2e image) est l'image SOURCE
+                  # (utilisée pour le rendu WebGL / autres) et ne doit jamais s'afficher
+                  # dans la galerie produit — tous produits, toile ou poster, perso ou non.
+                endcomment
+                if image_index >= start_from and image_index != 2
                   if number_of_media == 0
                     assign is_lcp_image = true
                   else
@@ -162,7 +167,8 @@
           {%- for media in product.media -%}
             {%- if media.media_type == 'image' -%}
               {%- assign popup_image_index = popup_image_index | plus: 1 -%}
-              {%- if popup_image_index >= popup_start_from -%}
+              {%- comment -%} Idem galerie : on ne montre jamais l'image source d'index 1 (2e image). {%- endcomment -%}
+              {%- if popup_image_index >= popup_start_from and popup_image_index != 2 -%}
                 <popup-image>
                   {%- render 'tw-main-product-popup-image', media: media, loop: forloop -%}
                 </popup-image>
