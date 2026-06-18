@@ -72,15 +72,6 @@
             "page": ""
           }
         },
-        "a70160ee-79ef-4eb9-8e65-ec87f898b506": {
-          "type": "collapsible_tab",
-          "settings": {
-            "heading": "Guide des tailles",
-            "icon": "ruler",
-            "content": "",
-            "page": "guide-de-tailles"
-          }
-        },
         "description_Fw7xRB": {
           "type": "description",
           "settings": {}
@@ -94,7 +85,6 @@
         "8600f603-2d6f-4191-8020-3678432ba1e5",
         "collapsible_tab_HAUcNw",
         "collapsible_tab_4UhrbY",
-        "a70160ee-79ef-4eb9-8e65-ec87f898b506",
         "description_Fw7xRB"
       ],
       "settings": {}

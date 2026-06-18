@@ -59,7 +59,7 @@
           "settings": {
             "heading": "Personnalisation en ligne",
             "icon": "star",
-            "content": "<p>Personnalisez votre poster en direct dans notre studio en ligne : prénom, numéro, format et cadre. Composez votre poster personnalisé — un tableau, une fois encadré — avec un aperçu 3D en temps réel. Conçu en France, imprimé en Europe.</p>",
+            "content": "<p>Personnalisez votre poster en direct dans notre studio en ligne : ses détails, le format et le cadre. Composez votre poster personnalisé — un tableau, une fois encadré — avec un aperçu 3D en temps réel. Conçu en France, imprimé en Europe.</p>",
             "page": ""
           }
         },
@@ -81,15 +81,6 @@
             "page": ""
           }
         },
-        "a70160ee-79ef-4eb9-8e65-ec87f898b506": {
-          "type": "collapsible_tab",
-          "settings": {
-            "heading": "Guide des tailles",
-            "icon": "ruler",
-            "content": "",
-            "page": "guide-de-tailles"
-          }
-        },
         "description_Fw7xRB": {
           "type": "description",
           "settings": {}
@@ -104,7 +95,6 @@
         "collapsible_tab_studio",
         "collapsible_tab_HAUcNw",
         "collapsible_tab_4UhrbY",
-        "a70160ee-79ef-4eb9-8e65-ec87f898b506",
         "description_Fw7xRB"
       ],
       "settings": {}
@@ -219,7 +209,7 @@
       "settings": {
         "image": "shopify://shop_images/poster-personnalise-foot-enfant-decouvre-chambre.jpg",
         "title": "Le jour où il se voit en légende",
-        "description": "<p>Ce n'est pas qu'un poster. Ce sont ses couleurs, son prénom et son numéro floqué — figés sous les lumières d'un grand soir. Le cadeau qu'on n'oublie pas, et qui reste accroché bien après la fin de saison.</p>",
+        "description": "<p>Ce n'est pas qu'un poster. Ce sont ses couleurs, son nom, son histoire — figés sous les lumières d'un grand soir. Le cadeau qu'on n'oublie pas, et qui reste accroché bien après la fin de saison.</p>",
         "layout": "image_first",
         "enable_blob": false,
         "activate_dynamic_color": false,
@@ -234,7 +224,7 @@
       "settings": {
         "image": "shopify://shop_images/poster-foot-papier-mat-detail.jpg",
         "title": "Une matière qui se respecte",
-        "description": "<p>Imprimé à la demande sur un papier épais au rendu <strong>mat et profond</strong> : des couleurs justes, des noirs riches, un grain délicat. Pas de plastique brillant, pas de reflets — la sobriété d'une vraie pièce d'art.</p>",
+        "description": "<p>Imprimé à la demande sur un papier épais au rendu <strong>mat et profond</strong> : des couleurs justes, des détails nets, un grain délicat. Pas de plastique brillant, pas de reflets — la sobriété d'une vraie pièce d'art.</p>",
         "layout": "text_first",
         "enable_blob": false,
         "activate_dynamic_color": false,
@@ -266,8 +256,8 @@
           "type": "column",
           "settings": {
             "image": "shopify://shop_images/poster-foot-personnalisation-prenom-numero.jpg",
-            "title": "1 · Prénom & numéro",
-            "text": "<p>Dans le studio, choisissez le prénom et le numéro à floquer. C'est son poster, à son nom.</p>",
+            "title": "1 · La personnalisation",
+            "text": "<p>Dans le studio, composez son poster en quelques clics. C’est son poster, à son image.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -319,7 +309,7 @@
           "settings": {
             "heading": "Comment ça marche ?",
             "icon": "none",
-            "row_content": "<p>1. Dans le studio en ligne, choisissez le prénom et le numéro à floquer.</p><p>2. L'aperçu se compose en direct : vous voyez exactement votre poster avant de commander.</p><p>3. Le résultat vous plaît ? Vous validez, et nous lançons l'impression.</p>"
+            "row_content": "<p>1. Dans le studio en ligne, composez son poster en quelques clics.</p><p>2. L'aperçu se compose en direct : vous voyez exactement votre poster avant de commander.</p><p>3. Le résultat vous plaît ? Vous validez, et nous lançons l'impression.</p>"
           }
         },
         "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-1": {
