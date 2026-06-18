@@ -1363,7 +1363,7 @@
       });
       // Repeuple les sélecteurs d'heure custom (valeur stockée "HH:MM").
       host.querySelectorAll('[data-time-field]').forEach((grp) => {
-        const v = (this.state.fields || {})[grp.dataset.field];
+        const v = (this.state.fields || {})[grp.dataset.timeField];
         if (!v) return;
         const [h, m] = String(v).split(':');
         const hs = grp.querySelector('[data-time-part="h"]');
@@ -1403,7 +1403,7 @@
         if (!sel) return;
         const grp = sel.closest('[data-time-field]');
         if (!grp) return;
-        const name = grp.dataset.field;
+        const name = grp.dataset.timeField;
         const h = (grp.querySelector('[data-time-part="h"]') || {}).value || '';
         const m = (grp.querySelector('[data-time-part="m"]') || {}).value || '';
         this.state.fields[name] = (h !== '' && m !== '') ? `${h}:${m}` : '';
