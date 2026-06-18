@@ -323,6 +323,7 @@
       "empty": "No products found"
     },
     "main_product": {
+      "open_linked_page": "View {{ title }}",
       "accessibility": {
         "skip_to_product_info": "Skip to product information"
       },

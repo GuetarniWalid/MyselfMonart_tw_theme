@@ -416,6 +416,7 @@
       "empty": "Aucun produit trouvé"
     },
     "main_product": {
+      "open_linked_page": "Voir {{ title }}",
       "accessibility": {
         "skip_to_product_info": "Passer aux informations produits"
       },

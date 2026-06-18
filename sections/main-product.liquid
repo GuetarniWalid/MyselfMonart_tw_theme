@@ -316,6 +316,15 @@
                 <div class="m-5">
                   {{ block.settings.content }}
                   {{ block.settings.page.content }}
+                  {%- comment -%} Repli : si la page liée n'a pas de corps (contenu rendu via un
+                     template de page, ex. guide-de-tailles), on affiche un lien vers la page
+                     plutôt qu'un accordéon vide. {%- endcomment -%}
+                  {%- if block.settings.content == blank and block.settings.page != blank and block.settings.page.content == blank -%}
+                    <a href="{{ block.settings.page.url }}" target="_blank" rel="noopener"
+                      class="inline-flex w-fit items-center gap-1 underline underline-offset-4 text-main hover:opacity-80 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2 focus-visible:ring-offset-secondary rounded-sm">
+                      {{ 'sections.main_product.open_linked_page' | t: title: block.settings.page.title }}
+                    </a>
+                  {%- endif -%}
                 </div>
               </div>
             </details>

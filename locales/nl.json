@@ -96,6 +96,7 @@
       "empty": "Geen producten gevonden"
     },
     "main_product": {
+      "open_linked_page": "{{ title }} bekijken",
       "carousel": {
         "popup": {
           "title": "Gedetailleerde weergave van de productafbeelding",

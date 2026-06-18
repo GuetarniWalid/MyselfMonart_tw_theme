@@ -96,6 +96,7 @@
       "empty": "No se han encontrado productos"
     },
     "main_product": {
+      "open_linked_page": "Ver {{ title }}",
       "accessibility": {
         "skip_to_product_info": "Saltar a la información del producto"
       },
