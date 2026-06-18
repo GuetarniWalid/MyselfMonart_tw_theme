@@ -228,7 +228,13 @@
       "home_seo_description": "Cuadros de decoración mural seleccionados a mano por nuestro estudio francés en París. Lienzo 285 g, tintas archival 75 años, marco de madera maciza. ⭐ Trustpilot.",
       "home_org_description": "Estudio creativo francés especializado en la curación de cuadros de decoración mural premium. Dirección artística en París, atención al cliente en Toulouse, impresión europea.",
       "home_founder_jobtitle": "Director artístico, fundador",
-      "home_collections_list_name": "Colecciones destacadas MyselfMonArt"
+      "home_collections_list_name": "Colecciones destacadas MyselfMonArt",
+      "product_studio_interactive_name": "Personalización en línea",
+      "product_studio_interactive_value": "Sí — estudio de personalización en tiempo real",
+      "product_studio_elements_name": "Elementos personalizables",
+      "product_studio_elements_value": "Nombre, número, formato y marco",
+      "product_studio_preview_name": "Vista previa antes de realizar el pedido",
+      "product_studio_preview_value": "Vista previa 3D del póster personalizado en tiempo real"
     },
     "my_likes": {
       "empty_text": "Todavía no tienes favoritos"
@@ -321,7 +327,8 @@
       "cp_photo": "Foto",
       "cp_team": "Equipo",
       "cp_name": "Nombre",
-      "cp_format": "Formato"
+      "cp_format": "Formato",
+      "dialog_intro": "Estudio de personalización en línea: crea tu póster personalizado paso a paso, con vista previa en tiempo real."
     }
   },
   "accessibility": {

@@ -230,7 +230,13 @@
       "home_seo_description": "Handgeselecteerde schilderijen voor wanddecoratie van onze Franse studio in Parijs. Canvas 285 g, archival-inkten 75 jaar, massief houten lijst. ⭐ Trustpilot.",
       "home_org_description": "Franse creatieve studio gespecialiseerd in het cureren van premium schilderijen voor wanddecoratie. Artistieke leiding in Parijs, klantenservice in Toulouse, Europese druk.",
       "home_founder_jobtitle": "Artistiek directeur, oprichter",
-      "home_collections_list_name": "Uitgelichte collecties MyselfMonArt"
+      "home_collections_list_name": "Uitgelichte collecties MyselfMonArt",
+      "product_studio_interactive_name": "Online personalisatie",
+      "product_studio_interactive_value": "Ja — live personalisatiestudio",
+      "product_studio_elements_name": "Aanpasbare elementen",
+      "product_studio_elements_value": "Voornaam, nummer, formaat en lijst",
+      "product_studio_preview_name": "Voorvertoning voor bestellen",
+      "product_studio_preview_value": "Realtime 3D-voorbeeld van je gepersonaliseerde poster"
     },
     "my_likes": {
       "empty_text": "Je hebt nog geen favorieten"
@@ -320,7 +326,8 @@
       "cp_photo": "Foto",
       "cp_team": "Team",
       "cp_name": "Voornaam",
-      "cp_format": "Formaat"
+      "cp_format": "Formaat",
+      "dialog_intro": "Online personalisatiestudio: maak stap voor stap een gepersonaliseerde poster, met een live voorbeeld."
     }
   },
   "accessibility": {

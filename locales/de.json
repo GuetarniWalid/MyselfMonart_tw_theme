@@ -229,7 +229,13 @@
       "home_seo_description": "Handverlesene Wandbilder aus unserem französischen Studio in Paris. Leinwand 285 g, Archival-Tinten 75 Jahre, Massivholzrahmen. ⭐ Trustpilot.",
       "home_org_description": "Französisches Kreativstudio, spezialisiert auf die Kuratierung hochwertiger Wandbilder. Künstlerische Leitung in Paris, Kundenservice in Toulouse, europäischer Druck.",
       "home_founder_jobtitle": "Künstlerischer Leiter, Gründer",
-      "home_collections_list_name": "Top-Kollektionen MyselfMonArt"
+      "home_collections_list_name": "Top-Kollektionen MyselfMonArt",
+      "product_studio_interactive_name": "Online-Personalisierung",
+      "product_studio_interactive_value": "Ja — Live‑Personalisierungsstudio",
+      "product_studio_elements_name": "Anpassbare Elemente",
+      "product_studio_elements_value": "Vorname, Nummer, Format und Rahmen",
+      "product_studio_preview_name": "Vorschau vor der Bestellung",
+      "product_studio_preview_value": "Echtzeit-3D-Vorschau des personalisierten Posters"
     },
     "collections_grid": {
       "find_out_more": "Mehr erfahren..."
@@ -321,7 +327,8 @@
       "prop_preview": "Vorschau",
       "cp_photo": "Foto",
       "cp_team": "Team",
-      "cp_name": "Vorname"
+      "cp_name": "Vorname",
+      "dialog_intro": "Online-Personalisierungsstudio: Gestalten Sie Ihr persönliches Poster Schritt für Schritt – mit Live-Vorschau."
     }
   },
   "accessibility": {

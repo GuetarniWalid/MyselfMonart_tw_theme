@@ -465,7 +465,13 @@
       "home_seo_description": "Wall art hand-curated by our French studio in Paris. 285 g canvas, 75-year archival inks, solid wood frame. ⭐ Trustpilot.",
       "home_org_description": "French creative studio specializing in curating premium wall art. Artistic direction in Paris, customer service in Toulouse, European printing.",
       "home_founder_jobtitle": "Artistic director, founder",
-      "home_collections_list_name": "Featured collections MyselfMonArt"
+      "home_collections_list_name": "Featured collections MyselfMonArt",
+      "product_studio_interactive_name": "Online customization",
+      "product_studio_interactive_value": "Yes — live personalization studio",
+      "product_studio_elements_name": "Customizable elements",
+      "product_studio_elements_value": "First name, number, size and frame",
+      "product_studio_preview_name": "Preview before ordering",
+      "product_studio_preview_value": "Live 3D preview of your custom poster"
     },
     "custom_art_studio": {
       "close": "Close the studio",
@@ -547,7 +553,8 @@
       "prop_team": "Team",
       "prop_preview": "Preview",
       "cp_team": "Team",
-      "cp_name": "First name"
+      "cp_name": "First name",
+      "dialog_intro": "Online Custom Art Studio: design your custom poster step by step with a live preview."
     }
   },
   "snippet": {
