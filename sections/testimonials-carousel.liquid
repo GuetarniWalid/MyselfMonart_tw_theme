@@ -39,8 +39,10 @@
   {%- comment -%} Header centré — eyebrow + H2 + lead + trustpilot meta {%- endcomment -%}
   <div class="max-w-3xl mx-auto px-6 md:px-8 text-center mb-12 md:mb-16">
 
-    {%- comment -%} Repli i18n : un défaut de schema fuiterait en FR hors-FR (non traduisible). {%- endcomment -%}
-    {%- assign tc_eyebrow = section.settings.eyebrow | default: ('sections.testimonials_carousel.eyebrow_default' | t) -%}
+    {%- comment -%} Repli i18n : un défaut de schema fuiterait en FR hors-FR (non traduisible).
+       NB : pas de `| t` dans les parenthèses d'un `default:` (Liquid invalide) → pré-assigner. {%- endcomment -%}
+    {%- assign tc_eyebrow_default = 'sections.testimonials_carousel.eyebrow_default' | t -%}
+    {%- assign tc_eyebrow = section.settings.eyebrow | default: tc_eyebrow_default -%}
     {%- if tc_eyebrow != blank -%}
       <p class="font-roboto text-xs tracking-[0.22em] uppercase font-medium text-secondary flex items-center justify-center gap-3 mb-6 md:mb-8">
         <span aria-hidden="true" class="block h-px w-8 bg-current opacity-50"></span>
@@ -57,7 +59,8 @@
       </{{ heading_level }}>
     {%- endif -%}
 
-    {%- assign tc_lead = section.settings.lead | default: ('sections.testimonials_carousel.lead_default' | t) -%}
+    {%- assign tc_lead_default = 'sections.testimonials_carousel.lead_default' | t -%}
+    {%- assign tc_lead = section.settings.lead | default: tc_lead_default -%}
     {%- if tc_lead != blank -%}
       <p class="font-roboto text-lg md:text-xl leading-relaxed text-secondary max-w-2xl mx-auto">
         {{ tc_lead | escape }}
