@@ -245,6 +245,10 @@
     "page": {
       "title": "Título de la página"
     },
+    "testimonials_carousel": {
+      "eyebrow_default": "Confían en nosotros",
+      "lead_default": "El mejor retrato de nuestro trabajo son las fotos que nos envían nuestros clientes una vez colgado su cuadro."
+    },
     "custom_art_studio": {
       "close": "Cerrar el estudio",
       "confirm_close": "¿Cerrar el estudio? Tu progreso se ha guardado; podrás retomar donde lo dejaste.",
@@ -289,6 +293,7 @@
       "wait_note": "Tomará entre 20 y 30 segundos. Puede cerrar esta ventana: su creación le estará esperando.",
       "reveal_image_alt": "Vista previa de tu cuadro personalizado con marca de agua",
       "reveal_watermark_note": "Vista previa protegida con marca de agua — tu cuadro final se imprime sin ella.",
+      "reveal_title": "¡Tu póster está listo!",
       "add_to_cart": "Añadir al carrito",
       "another_version": "Otra versión",
       "save_creation": "Guardar mi creación",
@@ -424,6 +429,7 @@
       "shipping_address": "Dirección de envío",
       "discount": "Descuento",
       "track_shipment": "Seguir el envío",
+      "print_invoice": "Imprimir factura",
       "subtotal": "Subtotal",
       "cancelled_html": "Pedido cancelado el {{ date }}",
       "tracking_company": "Transportista",

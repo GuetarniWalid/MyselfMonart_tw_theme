@@ -47,11 +47,14 @@
   {%- if section.settings.show_promotion and product.selected_or_first_available_variant.compare_at_price or section.settings.promotion_discount > 0 -%}
     {%- assign studio_promo_active = true -%}
   {%- endif -%}
+  {%- comment -%} Libellé du bouton d'achat = clé i18n traduite (jamais le défaut FR du réglage,
+     qui n'est pas un translatableContent et fuiterait « Ajouter au panier » hors-FR). {%- endcomment -%}
+  {%- assign studio_cart_label = 'sections.custom_art_studio.add_to_cart' | t -%}
   {%- capture studio_buy_content -%}
     {%- if studio_promo_active -%}
-      {%- render 'promotion-in-cart-button', product: product, block: section, float: false -%}
+      {%- render 'promotion-in-cart-button', product: product, block: section, float: false, text: studio_cart_label -%}
     {%- else -%}
-      {%- render 'regular-in-cart-button', product: product, block: section, float: false -%}
+      {%- render 'regular-in-cart-button', product: product, block: section, float: false, text: studio_cart_label -%}
     {%- endif -%}
   {%- endcapture -%}
   <template data-studio-buy-content>{{ studio_buy_content }}</template>
@@ -417,7 +420,10 @@
 
         {%- comment -%} ===== Écran de révélation ===== {%- endcomment -%}
         <div data-studio-screen="reveal" hidden>
-          <h3 class="mb-5 text-center text-lg font-heading font-bold">{{ section.settings.reveal_title | escape }}</h3>
+          {%- comment -%} Repli sur la clé i18n traduite si le réglage est au défaut FR (un défaut de
+             schema n'est jamais exposé comme translatableContent → fuiterait hors-FR). {%- endcomment -%}
+          {%- assign studio_reveal_title = 'sections.custom_art_studio.reveal_title' | t -%}
+          <h3 class="mb-5 text-center text-lg font-heading font-bold">{{ section.settings.reveal_title | default: studio_reveal_title | escape }}</h3>
 
           {%- comment -%} Figure = repli image + cadre CSS (WebGL indisponible : motion-reduce,
              vieux mobiles, Save-Data). La bordure prend la teinte de la finition choisie
@@ -833,7 +839,7 @@
       "type": "text",
       "id": "reveal_title",
       "label": "t:sections.custom-art-studio.settings.reveal_title.label",
-      "default": "Votre poster est prêt !"
+      "info": "Laisser vide pour le texte traduit par défaut (sections.custom_art_studio.reveal_title)."
     },
     {
       "type": "image_picker",

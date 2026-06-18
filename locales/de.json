@@ -246,6 +246,10 @@
     "sibling_blog_links": {
       "complementary_blog_posts": "Ergänzende Artikel"
     },
+    "testimonials_carousel": {
+      "eyebrow_default": "Sie vertrauen uns",
+      "lead_default": "Das beste Porträt unserer Arbeit sind die Fotos, die uns unsere Kundinnen und Kunden schicken, sobald ihr Bild an der Wand hängt."
+    },
     "custom_art_studio": {
       "close": "Studio schließen",
       "confirm_close": "Studio schließen? Ihr Fortschritt wurde gespeichert. Sie können später dort weitermachen, wo Sie aufgehört haben.",
@@ -290,6 +294,7 @@
       "wait_note": "Das dauert 20–30 Sekunden. Sie können dieses Fenster schließen – Ihre Kreation wartet auf Sie.",
       "reveal_image_alt": "Vorschau Ihres personalisierten Wandbilds, mit Wasserzeichen versehen",
       "reveal_watermark_note": "Vorschau mit Wasserzeichen geschützt — Ihr finales Wandbild wird ohne Wasserzeichen gedruckt.",
+      "reveal_title": "Ihr Poster ist fertig!",
       "add_to_cart": "In den Warenkorb",
       "another_version": "Eine weitere Version",
       "save_creation": "Mein Design speichern",
@@ -417,6 +422,7 @@
       "price": "Preis",
       "total": "Gesamt",
       "track_shipment": "Sendung verfolgen",
+      "print_invoice": "Rechnung drucken",
       "tracking_company": "Versanddienstleister",
       "tracking_number": "Sendungsnummer",
       "total_duties": "Zollgebühren",

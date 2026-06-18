@@ -104,6 +104,7 @@
       "total": "Total",
       "fulfilled_at_html": "Traitée le {{ date }}",
       "track_shipment": "Suivre l'envoi",
+      "print_invoice": "Imprimer une facture",
       "tracking_url": "Lien de suivi",
       "tracking_company": "Transporteur",
       "tracking_number": "Numéro de suivi",
@@ -263,6 +264,10 @@
       "error": "Une erreur s'est produite lors de l'envoi du message",
       "textarea": "Votre message"
     },
+    "testimonials_carousel": {
+      "eyebrow_default": "Ils nous font confiance",
+      "lead_default": "Le meilleur portrait de notre travail, ce sont les photos que nos clients nous envoient une fois leur tableau accroché."
+    },
     "custom_art_studio": {
       "close": "Fermer le studio",
       "confirm_close": "Fermer le studio ? Votre progression est enregistrée, vous pourrez reprendre là où vous en étiez.",
@@ -312,6 +317,7 @@
       "wait_note": "Comptez 20 à 30 secondes. Vous pouvez fermer cette fenêtre : votre création vous attendra.",
       "reveal_image_alt": "Aperçu de votre poster personnalisé, protégé par un filigrane",
       "reveal_watermark_note": "Aperçu protégé par filigrane — votre poster final est imprimé sans.",
+      "reveal_title": "Votre poster est prêt !",
       "add_to_cart": "Ajouter au panier",
       "another_version": "Une autre version",
       "save_creation": "Sauvegarder ma création",

@@ -117,6 +117,7 @@
       "total": "Total",
       "fulfilled_at_html": "Fulfilled {{ date }}",
       "track_shipment": "Track shipment",
+      "print_invoice": "Print invoice",
       "tracking_url": "Tracking link",
       "tracking_company": "Carrier",
       "tracking_number": "Tracking number",
@@ -473,6 +474,10 @@
       "product_studio_preview_name": "Preview before ordering",
       "product_studio_preview_value": "Live 3D preview of your custom poster"
     },
+    "testimonials_carousel": {
+      "eyebrow_default": "They trust us",
+      "lead_default": "The best portrait of our work is the photos our customers send us once their artwork is on the wall."
+    },
     "custom_art_studio": {
       "close": "Close the studio",
       "confirm_close": "Close the studio? Your progress is saved, and you can pick up where you left off.",
@@ -517,6 +522,7 @@
       "wait_note": "Please allow 20–30 seconds. You can close this window—your artwork will be waiting.",
       "reveal_image_alt": "Preview of your custom wall art, protected by a watermark",
       "reveal_watermark_note": "Watermarked preview — your final print will be watermark-free.",
+      "reveal_title": "Your poster is ready!",
       "add_to_cart": "Add to cart",
       "another_version": "Another version",
       "save_creation": "Save my design",

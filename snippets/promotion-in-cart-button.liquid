@@ -13,7 +13,7 @@
       {% if block.settings.is_dynamic_variant %}
         {{ product.selected_or_first_available_variant.title }}
       {% else %}
-        {{ block.settings.text }}
+        {{ text | default: block.settings.text }}
       {% endif %}
     </span>
     {% if block.settings.promotion_reason != blank %}

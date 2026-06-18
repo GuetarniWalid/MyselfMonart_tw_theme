@@ -244,6 +244,10 @@
     "product_grid": {
       "button": "Bekijk het schilderij"
     },
+    "testimonials_carousel": {
+      "eyebrow_default": "Zij vertrouwen ons",
+      "lead_default": "Het mooiste portret van ons werk zijn de foto's die onze klanten ons sturen zodra hun kunstwerk aan de muur hangt."
+    },
     "custom_art_studio": {
       "close": "Studio sluiten",
       "confirm_close": "De studio sluiten? Je voortgang is opgeslagen. Je kunt verdergaan waar je was gebleven.",
@@ -288,6 +292,7 @@
       "wait_note": "Reken op 20 tot 30 seconden. Je kunt dit venster sluiten: je creatie wacht op je.",
       "reveal_image_alt": "Voorbeeld van je gepersonaliseerde kunstwerk, beschermd met een watermerk",
       "reveal_watermark_note": "Voorbeeld met watermerk — je definitieve print wordt zonder watermerk gedrukt.",
+      "reveal_title": "Je poster is klaar!",
       "add_to_cart": "In winkelwagen",
       "another_version": "Andere versie",
       "save_creation": "Mijn ontwerp opslaan",
@@ -416,6 +421,7 @@
       "price": "Prijs",
       "total": "Totaal",
       "track_shipment": "Zending volgen",
+      "print_invoice": "Factuur afdrukken",
       "tracking_company": "Vervoerder",
       "tracking_number": "Trackingnummer",
       "subtotal": "Subtotaal",

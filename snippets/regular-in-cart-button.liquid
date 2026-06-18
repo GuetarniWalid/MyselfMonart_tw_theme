@@ -14,7 +14,7 @@
         {% if block.settings.is_dynamic_variant %}
             {{ product.selected_or_first_available_variant.title }}
         {% else %}
-            {{ block.settings.text }}
+            {{ text | default: block.settings.text }}
         {% endif %}
     </span>
     <span class="main-price whitespace-nowrap {% if float %}mobile-mini:hidden{% endif %} inline">
