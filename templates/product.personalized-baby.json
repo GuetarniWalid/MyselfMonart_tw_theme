@@ -1,0 +1,385 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "breadcrumb_RCxFAG": {
+      "type": "breadcrumb",
+      "settings": {}
+    },
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "short_title_mgUwJx": {
+          "type": "short_title",
+          "settings": {
+            "show_likes": true,
+            "margin_bottom": "mb-4"
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {
+            "margin_bottom": "mb-2"
+          }
+        },
+        "trustpilot_review_nXpwkL": {
+          "type": "trustpilot_review",
+          "settings": {
+            "link": "https://fr.trustpilot.com/review/myselfmonart.com",
+            "margin_bottom": "mb-8"
+          }
+        },
+        "buy_qrRzcg": {
+          "type": "buy",
+          "settings": {
+            "text": "JE PERSONNALISE",
+            "is_dynamic_variant": false,
+            "show_promotion": false,
+            "promotion_discount": 15,
+            "promotion_discount_unit": "%",
+            "promotion_reason": "Soldes d'été ☀️",
+            "promotion_date": "Se termine le 22 juillet"
+          }
+        },
+        "8600f603-2d6f-4191-8020-3678432ba1e5": {
+          "type": "text",
+          "settings": {
+            "text": "<p>- Son prénom, sa date et heure de naissance, sa taille et son poids : un souvenir unique</p><p>- Aperçu en direct : vous validez avant l'impression</p><p>- Le cadeau de naissance qui traverse le temps</p>"
+          }
+        },
+        "collapsible_tab_studio": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Personnalisation en ligne",
+            "icon": "star",
+            "content": "<p>Personnalisez votre poster de naissance en direct dans notre studio en ligne : prénom, date et heure de naissance, taille, poids, format et cadre. Composez votre poster — un tableau, une fois encadré — avec un aperçu en temps réel. Conçu en France, imprimé en Europe.</p>",
+            "page": ""
+          }
+        },
+        "collapsible_tab_HAUcNw": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Livraison",
+            "icon": "truck",
+            "content": "<p>🎨 Poster personnalisé : Fabrication à la demande en 3-4 jours </p><p>🚚  Expédition en 3-5 jours ouvrables en colis suivi à votre domicile.</p><p>🎁 Livraison gratuite </p>",
+            "page": ""
+          }
+        },
+        "collapsible_tab_4UhrbY": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Materiaux",
+            "icon": "leather",
+            "content": "<p><strong>- Le papier</strong> : un papier de qualité au rendu mat et précis, pour des couleurs justes et des détails nets.</p><p><strong>- Les formats</strong> : plusieurs tailles, de 30 × 40 cm à 90 × 120 cm, à poser tel quel ou à encadrer.</p><p><strong>- Le cadre (en option)</strong> : plusieurs finitions au choix — blanc, noir mat, chêne clair, noyer ou argent ancien.</p><p>Chaque poster est imprimé à la demande, conçu en France et imprimé en Europe.</p>",
+            "page": ""
+          }
+        },
+        "a70160ee-79ef-4eb9-8e65-ec87f898b506": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Guide des tailles",
+            "icon": "ruler",
+            "content": "",
+            "page": "guide-de-tailles"
+          }
+        },
+        "description_Fw7xRB": {
+          "type": "description",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "short_title_mgUwJx",
+        "title",
+        "trustpilot_review_nXpwkL",
+        "buy_qrRzcg",
+        "8600f603-2d6f-4191-8020-3678432ba1e5",
+        "collapsible_tab_studio",
+        "collapsible_tab_HAUcNw",
+        "collapsible_tab_4UhrbY",
+        "a70160ee-79ef-4eb9-8e65-ec87f898b506",
+        "description_Fw7xRB"
+      ],
+      "settings": {}
+    },
+    "custom_art_studio_nb": {
+      "type": "tw-custom-art-studio",
+      "settings": {
+        "backend_url": "https://backend.myselfmonart.com",
+        "mock_mode": false
+      }
+    },
+    "customer_testimonial_myiwee": {
+      "type": "testimonials-carousel",
+      "blocks": {
+        "image_text_Riirzd": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/Tableau-chambre-bebe_f6e62e6e-707b-41df-aa17-bdad25ef3385.jpg",
+            "message": "Juste une petite photo avec le cadre mis en place encore un grand merci à vous 🥰. \nElodie G"
+          }
+        },
+        "image_text_qM9rBh": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/deco-mural-toile-marilyn-monroe-pop-art.jpg",
+            "message": "Envoie très rapide et tableau encore plus beau que sur le site.\nParfait je recommande !!!\nJessica S"
+          }
+        },
+        "image_text_4dzVer": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-animaux-rhinoceros_b1022df5-0085-43a4-93b7-011dd579d316.jpg",
+            "message": "AMAZING ! Le poster est magnifique, il fait son effet dans mon salon. Vanessa K"
+          }
+        },
+        "image_text_NnGTgN": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-fruit-legume-cuisine-ananas-colore.jpg",
+            "message": "Trop contente de mon tableau, les couleurs sont aussi flashy que sur les photos du site.\nSarah F"
+          }
+        },
+        "image_text_QfHTN6": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/Tableau-deco-noir-et-blanc.jpg",
+            "message": "Top, rien à dire de plus. \nGuillaume H"
+          }
+        },
+        "image_text_ragCcn": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-salon-femme-africaine.jpg",
+            "message": "Magnifique tableau et très design, correspond parfaitement à la description.  Morel E"
+          }
+        },
+        "image_text_eAxGcM": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-comics-super-man.jpg",
+            "message": "Nickel, très satisfait c'est ma 3e commande. Hugo G"
+          }
+        },
+        "image_text_e69XT9": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-gaming-marvel-iron-man.jpg",
+            "message": "Très content de mon achat ! Mon fils est ravi il va faire de beaux rêves de super-héros\n. EUGENE D"
+          }
+        },
+        "image_text_DbNc9D": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-superman-aquarelle.jpg",
+            "message": "TOP, tableau reçu rapidement avec suivie. Hugo G"
+          }
+        },
+        "image_text_DCdKLC": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableauphotographie-zebre-animaux-zebre-sauvage.jpg",
+            "message": "L'animal, majestueux et solitaire trône dans mon salon au dessus de ma console... Peut on dire qu il est magnifique ? Assurément oui et je l adore!\nPatricia G."
+          }
+        }
+      },
+      "block_order": [
+        "image_text_Riirzd",
+        "image_text_qM9rBh",
+        "image_text_4dzVer",
+        "image_text_NnGTgN",
+        "image_text_QfHTN6",
+        "image_text_ragCcn",
+        "image_text_eAxGcM",
+        "image_text_e69XT9",
+        "image_text_DbNc9D",
+        "image_text_DCdKLC"
+      ],
+      "settings": {
+        "title": "Nos tableaux à travers vos yeux ❤️"
+      }
+    },
+    "product_recommendations_7Dekqa": {
+      "type": "product-recommendations",
+      "name": "t:sections.product-recommendations.name",
+      "settings": {
+        "heading": "VOUS POURRIEZ AUSSI AIMER",
+        "number_products_to_display": 4
+      }
+    },
+    "b5027902-4240-44cf-8660-b6e754562c52": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify://shop_images/poster-bebe-naissance-emotion.jpg",
+        "title": "Le tout premier chapitre de son histoire",
+        "description": "<p>Un prénom, une date, une heure, ses premières mesures — les détails précieux des tout premiers instants, réunis dans une œuvre douce qui veille sur son sommeil. Un cadeau de naissance qu'on garde toute une vie.</p>",
+        "layout": "image_first",
+        "enable_blob": false,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#e3fae1",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "afe2a87a-371e-4c67-93b7-8c6b2244f43b": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify://shop_images/poster-bebe-papier-mat-detail.jpg",
+        "title": "Une matière qui se respecte",
+        "description": "<p>Imprimé à la demande sur un papier épais au rendu <strong>mat et doux</strong> : des teintes délicates, des détails fins, un grain élégant. La sobriété d'une vraie pièce d'art, pensée pour sa chambre.</p>",
+        "layout": "text_first",
+        "enable_blob": false,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#e3fae1",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "556b5926-5cdb-4c50-a817-c79f15894cdd": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify://shop_images/poster-foot-finitions-cadres.jpg",
+        "title": "Le format et le cadre qui lui ressemblent",
+        "description": "<p>Plusieurs formats, de <strong>30 × 40 cm</strong> à <strong>90 × 120 cm</strong>, à poser tel quel ou à encadrer. Sublimé par l'un de nos cinq cadres — blanc, noir mat, chêne clair, noyer ou argent ancien — qui transforme le poster en véritable tableau.</p><p><em>Conçu en France, imprimé en Europe.</em></p>",
+        "layout": "image_first",
+        "enable_blob": false,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#e3fae1",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "multicolumn_aLxMGX": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_fN6DfA": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/poster-bebe-etape-1-personnalisation.jpg",
+            "title": "1 · Les infos de bébé",
+            "text": "<p>Renseignez son prénom, sa date et heure de naissance, sa taille et son poids. Son histoire, dans les moindres détails.</p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
+          }
+        },
+        "column_zAm3tT": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/poster-bebe-etape-2-apercu.jpg",
+            "title": "2 · L'aperçu en direct",
+            "text": "<p>Son poster se compose sous vos yeux, en temps réel : vous voyez exactement le rendu avant de commander. Gratuit, sans engagement.</p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
+          }
+        },
+        "column_U3DQjE": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/poster-bebe-etape-3-encadre.jpg",
+            "title": "3 · Livré, prêt à offrir",
+            "text": "<p>Vous validez, nous imprimons sur un beau papier mat. Reçu chez vous, encadré en option, prêt à offrir pour une naissance ou un baptême.</p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
+          }
+        }
+      },
+      "block_order": [
+        "column_fN6DfA",
+        "column_zAm3tT",
+        "column_U3DQjE"
+      ],
+      "settings": {
+        "title": "DE LA NAISSANCE À SON POSTER, EN 3 ÉTAPES",
+        "image_shape": "aspect-[3/4] object-cover",
+        "columns_desktop": 3,
+        "show_backgounds": false,
+        "button_label": "",
+        "button_link": "",
+        "to_obfuscate": false
+      }
+    },
+    "7ae13aad-330c-4fa7-94cf-fafc1c13cf60": {
+      "type": "collapsible-content",
+      "blocks": {
+        "faq_nb_comment": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Comment ça marche ?",
+            "icon": "none",
+            "row_content": "<p>1. Dans le studio en ligne, renseignez les infos de bébé : prénom, date et heure de naissance, taille, poids.</p><p>2. L'aperçu se compose en direct : vous voyez exactement le poster avant de commander.</p><p>3. Le résultat vous plaît ? Vous validez, et nous lançons l'impression.</p>"
+          }
+        },
+        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-1": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Quel rendu et quelles finitions pour votre poster ?",
+            "icon": "none",
+            "row_content": "<p><p>Votre poster est imprimé à la demande sur un papier de qualité, au rendu <strong>mat et précis</strong> : des couleurs justes, des détails nets et une belle profondeur.</p><p>Il vous est proposé en plusieurs formats, de <strong>30 × 40 cm</strong> à <strong>90 × 120 cm</strong>, à poser tel quel ou à encadrer. Côté cadre, plusieurs finitions s'offrent à vous : <strong>blanc, noir mat, chêne clair, noyer ou argent ancien</strong>, pour s'accorder à votre intérieur.</p>"
+          }
+        },
+        "e20d3253-d757-4a99-9237-128916cc9ffb": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Comment accrocher ou poser votre poster ?",
+            "icon": "none",
+            "row_content": "<p><p>Tout dépend de la finition que vous choisissez.</p><p>- <strong>Sans cadre</strong> : votre poster s'affiche en toute simplicité, avec le système d'accrochage de votre choix.</p><p>- <strong>Avec cadre</strong> : il est prêt à être accroché. Pensez simplement à adapter les fixations à votre type de mur — placo, brique ou béton. Nos cadres sont livrés sans visserie, car chaque mur est différent.</p>"
+          }
+        },
+        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-2": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Pourquoi acheter chez nous ?",
+            "icon": "none",
+            "row_content": "<p>Nos graphistes travaillent chaque jour pour créer de nouvelles œuvres. Chaque semaine, nous mettons à jour notre site et ajoutons les nouveaux posters.</p><p>Vous pouvez choisir le format et la personnalisation pour un accord parfait avec votre intérieur.</p><p>Si toutefois aucun poster ne vous plaît, vous avez la possibilité de demander à nos graphistes de façonner l'œuvre de vos rêves.</p>"
+          }
+        },
+        "a603c2c1-59a1-4067-9d4b-dc8591ddc1f8": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Quelle taille de poster choisir ?",
+            "icon": "none",
+            "row_content": "<p>Pour ne pas vous tromper, mesurez la largeur de votre pan de mur. Multipliez le résultat par 0,57 pour obtenir le ratio idéal.</p><p>Sachez qu'il est également recommandé d'accrocher le centre du poster à environ 1,65 mètre du sol (ce qui correspond à peu près à la hauteur des yeux). Il est aussi recommandé de laisser environ 30 centimètres d'espace entre un meuble et votre poster.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_nb_comment",
+        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-1",
+        "e20d3253-d757-4a99-9237-128916cc9ffb",
+        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-2",
+        "a603c2c1-59a1-4067-9d4b-dc8591ddc1f8"
+      ],
+      "settings": {
+        "eyebrow": "FAQ",
+        "accent_tone": "buy-button",
+        "heading": "QUESTIONS FRÉQUENTES"
+      }
+    }
+  },
+  "order": [
+    "breadcrumb_RCxFAG",
+    "main",
+    "custom_art_studio_nb",
+    "multicolumn_aLxMGX",
+    "b5027902-4240-44cf-8660-b6e754562c52",
+    "afe2a87a-371e-4c67-93b7-8c6b2244f43b",
+    "556b5926-5cdb-4c50-a817-c79f15894cdd",
+    "customer_testimonial_myiwee",
+    "7ae13aad-330c-4fa7-94cf-fafc1c13cf60",
+    "product_recommendations_7Dekqa"
+  ],
+  "layout": "product"
+}
