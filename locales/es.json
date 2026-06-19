@@ -269,6 +269,7 @@
       "photo_error_size": "Imagen demasiado grande (máx. 15 MB).",
       "photo_error_small": "Foto demasiado pequeña: al menos 512 píxeles por lado pour un buen resultado.",
       "photo_error_unreadable": "No se puede leer esta foto. Prueba con otra.",
+      "photo_reupload_hint": "Para crear otra versión, vuelve a subir tu foto.",
       "photo_required": "Añade una foto para continuar.",
       "consent_label": "Confirmo que poseo los derechos sobre esta foto y acepto su uso para la creación de mi cuadro.",
       "consent_required": "Confirma que tienes los derechos sobre esta foto.",

@@ -270,6 +270,7 @@
       "photo_error_size": "Foto zu groß (max. 15 MB).",
       "photo_error_small": "Foto zu klein: Mindestens 512 Pixel je Seite für ein schönes Ergebnis.",
       "photo_error_unreadable": "Dieses Foto kann nicht gelesen werden. Bitte wählen Sie ein anderes.",
+      "photo_reupload_hint": "Um eine weitere Version zu erstellen, laden Sie bitte Ihr Foto erneut hoch.",
       "photo_required": "Fügen Sie ein Foto hinzu, um fortzufahren.",
       "consent_label": "Ich bestätige, dass ich die Rechte an diesem Foto besitze, und stimme seiner Verwendung zur Erstellung meines Wandbilds zu.",
       "consent_required": "Bitte bestätigen Sie, dass Sie die Rechte an diesem Foto besitzen.",

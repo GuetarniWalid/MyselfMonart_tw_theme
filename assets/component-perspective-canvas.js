@@ -575,6 +575,7 @@
       if (this.springId) cancelAnimationFrame(this.springId);
       if (this.hlRAF) cancelAnimationFrame(this.hlRAF);
       if (this.glassRAF) cancelAnimationFrame(this.glassRAF);
+      this._stopGen(); // stoppe la boucle d'essuyage du mode génération si active
       if (this._hlScrollIO) this._hlScrollIO.disconnect();
       if (this._hlScrollTO) clearTimeout(this._hlScrollTO);
       if (this._onResize) {
@@ -1248,6 +1249,328 @@
       img.src = cfgSrc;
     }
 
+    /* Hot-swap d'oeuvre SANS recréer le contexte GL : recharge/redécode la nouvelle src et
+       remplace la texture (géométrie reconstruite si le ratio change, via finishTexture).
+       Sert au studio « Poster perso » : cycle de génération (poster <-> toile vierge) et morph
+       final (placeholder -> vraie image), sans le coût d'un démontage/remontage du custom
+       element. No-op tant que le GL n'est pas prêt (l'init pose la 1re texture via loadTexture).
+       En cas d'échec de chargement, on GARDE l'ancienne texture (aucune casse visuelle). */
+    setTexture(src) {
+      if (!this.gl || !src) return;
+      if (this.config && this.config.raw) this.config.raw.src = src; // cohérence si re-lecture
+      const key = this.texKey(src);
+      const cached = key && DECODED_TEX.get(key);
+      if (cached) {
+        this.aspect = cached.aspect;
+        this.finishTexture(cached.source, cached.flipY, key);
+        return;
+      }
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.decoding = 'async';
+      img.onload = () => this.decodeAndUpload(img, key);
+      img.onerror = () => {}; // échec : on conserve l'ancienne texture
+      img.src = src;
+    }
+
+    /* ============================ MODE GÉNÉRATION (studio « Poster perso ») ============================
+       Pendant la génération IA, l'oeuvre DANS le cadre alterne « poster générique <-> toile vierge
+       gris clair », la bascule étant ESSUYÉE par une vague de lumière (le front lumineux porte le
+       changement : derrière lui, l'image a changé). Au reveal, une dernière vague essuie vers la
+       VRAIE image. Tout passe par une texture pilotée par un CANVAS 2D ré-uploadé par frame
+       (texImage2D) : le SHADER 3D / la géométrie / le cadre / le verre restent INCHANGÉS (zéro
+       risque sur le rendu de production), seul le contenu de l'oeuvre est composité en 2D.
+       Le compositing 2D (_composeGenFrame / _makeGreyCanvas) est volontairement isolé et testable
+       hors WebGL. Coupé en motion-reduce/sans-WebGL par l'intégrateur (qui n'appelle pas startGenerating). */
+    _makeGreyCanvas(w, h) {
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      const x = c.getContext('2d');
+      // « Toile vierge » = LIN CRÈME (validé Walid, clarté 230) : crème clair chaud, PROPRE, SANS
+      // bord ni vignette ni ombre. La trame tissée du lin donne la MATIÈRE ; la vague glisse dessus.
+      const g = x.createLinearGradient(0, 0, w, h);
+      g.addColorStop(0, '#e6e3d9');
+      g.addColorStop(0.55, '#e3e0d6');
+      g.addColorStop(1, '#dedad0');
+      x.fillStyle = g;
+      x.fillRect(0, 0, w, h);
+      // Trame de lin over-under (fil clair / fil sombre), légère irrégularité déterministe par cellule.
+      const s = Math.max(2, Math.round(w / 150));
+      for (let yy = 0; yy < h; yy += s) {
+        for (let xx = 0; xx < w; xx += s) {
+          const over = ((Math.floor(xx / s) + Math.floor(yy / s)) % 2) === 0;
+          const n = ((((Math.floor(xx / s) * 73856093) ^ (Math.floor(yy / s) * 19349663)) & 255) / 255) - 0.5;
+          x.fillStyle = over
+            ? 'rgba(255,254,250,' + (0.14 + 0.05 * n).toFixed(3) + ')'
+            : 'rgba(150,134,104,' + (0.15 + 0.06 * n).toFixed(3) + ')';
+          x.fillRect(xx, yy, s, s);
+        }
+      }
+      // Neps / fibres : fines fibres claires et sombres clairsemées (richesse de surface du lin).
+      const neps = Math.round((w * h) / 1070);
+      for (let i = 0; i < neps; i++) {
+        x.fillStyle = (Math.random() < 0.5) ? 'rgba(255,254,250,0.50)' : 'rgba(150,134,104,0.42)';
+        x.fillRect(Math.random() * w, Math.random() * h, s * 0.5, s * 0.5);
+      }
+      return c;
+    }
+
+    // Dessine `img` en COVER (remplit w×h sans déformer) sur le contexte 2D.
+    _drawCover(ctx, img, w, h) {
+      const iw = img.naturalWidth || img.width;
+      const ih = img.naturalHeight || img.height;
+      if (!iw || !ih) return;
+      const s = Math.max(w / iw, h / ih);
+      const dw = iw * s, dh = ih * s;
+      ctx.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh);
+    }
+
+    // Région DÉJÀ essuyée (qui révèle l'image entrante) : bord en ARC, balayage OBLIQUE à 45°.
+    // Construit le chemin dans un repère tourné de -45° ; le caller clippe puis dessine à l'endroit.
+    _waveRegion(ctx, w, h, wave) {
+      const diag = w + h;
+      const front = -diag / 2 + wave * diag; // position du front le long de l'oblique
+      const span = diag * 0.36;              // extent vertical VISIBLE du cadre (repère tourné)
+      const arc = diag * 0.14;               // amplitude de la crête (réglable) -> arc bien visible
+      ctx.translate(w / 2, h / 2);
+      ctx.rotate(-Math.PI / 4);
+      ctx.beginPath();
+      ctx.moveTo(-diag, -diag);
+      ctx.lineTo(front - arc, -diag);
+      ctx.lineTo(front - arc, -span);                          // droit hors-champ -> début de crête
+      ctx.quadraticCurveTo(front + arc, 0, front - arc, span); // CRÊTE de la vague (dans le cadre)
+      ctx.lineTo(front - arc, diag);                           // droit -> hors-champ bas
+      ctx.lineTo(-diag, diag);
+      ctx.closePath();
+    }
+
+    // Bande lumineuse SUBTILE le long du front courbé (additive, faible opacité).
+    _waveBand(ctx, w, h, wave) {
+      const diag = w + h;
+      const front = -diag / 2 + wave * diag;
+      const span = diag * 0.36;  // MÊME crête que _waveRegion -> la lumière épouse le bord
+      const arc = diag * 0.14;   // MÊME arc que _waveRegion
+      ctx.save();
+      ctx.translate(w / 2, h / 2);
+      ctx.rotate(-Math.PI / 4);
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(front - arc, -span);
+      ctx.quadraticCurveTo(front + arc, 0, front - arc, span);
+      // UNE SEULE bande de lumière, semi-transparente et FLOUE -> uniforme et CONTINUE (pas un
+      // coeur net + un halo séparés). « blanc avec un peu de transparence », tout doux.
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.filter = 'blur(' + Math.max(1, Math.round(diag * 0.015)) + 'px)';
+      ctx.strokeStyle = 'rgba(255,255,255,0.42)';
+      ctx.lineWidth = diag * 0.026;
+      ctx.stroke();
+      ctx.filter = 'none';
+      ctx.restore();
+    }
+
+    /* Compose UNE frame : `aImg` (sortante) plein cadre, `bImg` (entrante) révélée dans la région
+       déjà essuyée (bord en ARC, oblique 45°), + une bande lumineuse SUBTILE au front. Pur
+       Canvas2D -> testable hors WebGL. */
+    _composeGenFrame(ctx, w, h, aImg, bImg, wave) {
+      ctx.clearRect(0, 0, w, h);
+      if (aImg) this._drawCover(ctx, aImg, w, h);
+      if (bImg && wave > 0) {
+        ctx.save();
+        this._waveRegion(ctx, w, h, wave);  // chemin dans le repère tourné
+        ctx.clip();
+        ctx.setTransform(1, 0, 0, 1, 0, 0); // images À L'ENDROIT (le clip oblique persiste)
+        this._drawCover(ctx, bImg, w, h);
+        ctx.restore();
+      }
+      if (wave > 0 && wave < 1) this._waveBand(ctx, w, h, wave);
+    }
+
+    _genImg(name) {
+      const g = this._gen;
+      if (!g) return null;
+      return name === 'poster' ? g.poster : name === 'grey' ? g.grey : g.real;
+    }
+
+    // Démarre le cycle : remplace la texture par une texture pilotée par un canvas 2D, charge le
+    // poster générique (drawable) depuis le cache décodé (ou rechargement), génère la toile grise,
+    // et lance la boucle d'essuyage. No-op si GL absent ou déjà en cours.
+    startGenerating() {
+      if (!this.gl || this._gen) return;
+      const src = (this.config && this.config.raw && this.config.raw.src) || '';
+      if (!src) return;
+      // Poster chargé en image FRAÎCHE : orientation top-left fiable. (La source décodée du cache
+      // DECODED_TEX peut être un ImageBitmap PRÉ-RETOURNÉ -> placeholder à l'envers si on la
+      // dessine.) Quasi instantané (déjà en cache navigateur via l'étape Format).
+      const pim = new Image();
+      pim.crossOrigin = 'anonymous';
+      pim.onload = () => this._beginGen(pim);
+      pim.onerror = () => {}; // pas de poster -> on ne démarre pas (texture actuelle conservée)
+      pim.src = src;
+    }
+
+    _beginGen(posterImg) {
+      if (!this.gl || this._gen) return;
+      const aspect = (posterImg.naturalWidth / posterImg.naturalHeight) || this.aspect || 0.75;
+      this.aspect = aspect;
+      const W = 640;
+      const H = Math.max(1, Math.round(W / aspect));
+      const live = document.createElement('canvas');
+      live.width = W; live.height = H;
+      const ctx = live.getContext('2d');
+      this._gen = {
+        live, ctx, W, H,
+        grey: this._makeGreyCanvas(W, H),
+        poster: posterImg, real: null, realSrc: null,
+        a: 'poster', b: 'grey', phase: 'hold', wave: 0, t: 0,
+        finishing: false, last: 0, raf: 0, tex: null,
+      };
+      this._composeGenFrame(ctx, W, H, posterImg, null, 0); // 1re frame = poster (anti-flash)
+      const gl = this.gl;
+      const tex = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true); // canvas top-left + image fraîche -> orientation OK
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, live);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); // pas de mipmap (re-upload/frame)
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      if (this.texture) gl.deleteTexture(this.texture);
+      this.texture = tex;
+      this._gen.tex = tex;
+      this.ready = true;
+      this._genLoop = this._genLoop.bind(this);
+      this._gen.raf = requestAnimationFrame(this._genLoop);
+    }
+
+    _genLoop(now) {
+      const g = this._gen;
+      if (!g) return;
+      if (!g.last) g.last = now;
+      const dt = Math.min(64, now - g.last); // borne anti-saut (onglet en arrière-plan)
+      g.last = now;
+      const HOLD = 1100, WIPE = 1500; // ms : tenue puis essuyage
+      if (g.phase === 'hold') {
+        g.t += dt;
+        if (g.t >= HOLD) { g.phase = 'wipe'; g.t = 0; g.wave = 0; }
+      } else {
+        g.t += dt;
+        g.wave = Math.min(1, g.t / WIPE);
+        if (g.wave >= 1) {
+          g.a = g.b; // l'entrant devient l'affiché
+          if (g.finishing && g.real && g.a === 'real') { this._finishGenDone(); return; }
+          if (g.finishing && g.real) {
+            g.b = 'real'; g.phase = 'wipe'; g.t = 0; g.wave = 0; // reveal final : on enchaîne sans tenue
+          } else {
+            g.b = (g.a === 'poster') ? 'grey' : 'poster';
+            g.phase = 'hold'; g.t = 0; g.wave = 0;
+          }
+        }
+      }
+      const aImg = this._genImg(g.a);
+      const bImg = g.phase === 'wipe' ? this._genImg(g.b) : null;
+      if (aImg) {
+        this._composeGenFrame(g.ctx, g.W, g.H, aImg, bImg, g.phase === 'wipe' ? g.wave : 0);
+        const gl = this.gl;
+        gl.bindTexture(gl.TEXTURE_2D, g.tex);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, g.live);
+        this.render();
+      }
+      g.raf = requestAnimationFrame(this._genLoop);
+    }
+
+    // Reveal final : la prochaine vague essuie vers la VRAIE image, puis on repasse à une texture
+    // nette (mipmaps) via setTexture. Si pas de cycle en cours, swap direct.
+    finishGenerating(realSrc) {
+      const g = this._gen;
+      if (!g) { if (realSrc) this.setTexture(realSrc); return; }
+      g.finishing = true;
+      g.realSrc = realSrc || null;
+      if (realSrc) {
+        const im = new Image();
+        im.crossOrigin = 'anonymous';
+        im.onload = () => { if (this._gen) this._gen.real = im; };
+        im.onerror = () => { if (this._gen) { this._gen.realSrc = realSrc; this._gen.real = this._genImg('poster'); } };
+        im.src = realSrc;
+      }
+    }
+
+    _finishGenDone() {
+      const g = this._gen;
+      const realSrc = g && g.realSrc;
+      this._stopGen();
+      if (realSrc) this.setTexture(realSrc); // texture finale nette
+      // La VAGUE de reveal est terminée (vraie image présentée). Le studio attend ce signal pour
+      // rendre le bouton d'achat cliquable -> jamais « avant de voir le résultat ».
+      this.dispatchEvent(new CustomEvent('perspective:revealed'));
+    }
+
+    _stopGen() {
+      const g = this._gen;
+      if (!g) return;
+      if (g.raf) cancelAnimationFrame(g.raf);
+      this._gen = null;
+    }
+
+    // Arrêt DUR du cycle (échec / fermeture / démontage) sans reveal.
+    stopGenerating() { this._stopGen(); }
+
+    // Transition « une autre version » : MÊME vague de lumière que le reveal, mais essuyage UNIQUE de
+    // l'image AFFICHÉE (config.raw.src) vers newSrc — sans cycle placeholder/toile ni fausse attente.
+    // Émet perspective:revealed à la fin (comme la génération). Replis : déjà en vague -> on enchaîne ;
+    // GL absent / « avant » indisponible -> swap direct (setTexture, aucune casse visuelle).
+    revealSwap(newSrc) {
+      if (!this.gl || !newSrc) { if (newSrc) this.setTexture(newSrc); return; }
+      if (this._gen) { this.finishGenerating(newSrc); return; } // déjà une vague en cours -> enchaîne
+      const fromSrc = (this.config && this.config.raw && this.config.raw.src) || '';
+      if (!fromSrc || fromSrc === newSrc) { this.setTexture(newSrc); return; }
+      const fromImg = new Image(); fromImg.crossOrigin = 'anonymous';
+      const toImg = new Image(); toImg.crossOrigin = 'anonymous';
+      let loaded = 0;
+      const onBoth = () => { if (++loaded >= 2) this._beginSwap(fromImg, toImg, newSrc); };
+      fromImg.onload = onBoth; toImg.onload = onBoth;
+      fromImg.onerror = () => this.setTexture(newSrc); // « avant » KO -> swap direct
+      toImg.onerror = () => this.setTexture(newSrc);   // « après » KO -> setTexture garde l'actuelle
+      fromImg.src = fromSrc; toImg.src = newSrc;
+    }
+
+    // Amorce l'essuyage unique fromImg -> toImg : on RÉUTILISE la boucle _genLoop avec un état seedé
+    // en phase 'wipe' (a = image actuelle, b = 'real' = nouvelle), finishing=true -> une seule vague
+    // puis texture nette (setTexture) via _finishGenDone. Aucun changement au shader/à la géométrie.
+    _beginSwap(fromImg, toImg, newSrc) {
+      if (!this.gl || this._gen) return;
+      const aspect = (toImg.naturalWidth / toImg.naturalHeight) || this.aspect || 0.75;
+      this.aspect = aspect;
+      const W = 640;
+      const H = Math.max(1, Math.round(W / aspect));
+      const live = document.createElement('canvas');
+      live.width = W; live.height = H;
+      const ctx = live.getContext('2d');
+      this._gen = {
+        live, ctx, W, H, grey: null,
+        poster: fromImg, real: toImg, realSrc: newSrc,
+        a: 'poster', b: 'real', phase: 'wipe', wave: 0, t: 0,
+        finishing: true, last: 0, raf: 0, tex: null,
+      };
+      this._composeGenFrame(ctx, W, H, fromImg, null, 0); // anti-flash : 1re frame = image actuelle
+      const gl = this.gl;
+      const tex = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, live);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      if (this.texture) gl.deleteTexture(this.texture);
+      this.texture = tex;
+      this._gen.tex = tex;
+      this.ready = true;
+      this._genLoop = this._genLoop.bind(this);
+      this._gen.raf = requestAnimationFrame(this._genLoop);
+    }
+
     /* Décode l'oeuvre en PUISSANCE-DE-DEUX (mipmaps -> anti-aliasing quand la toile est
        inclinée), MET EN CACHE module la source décodée (réutilisée par les autres
        instances, ex. popup), puis upload. createImageBitmap hors-thread si dispo, sinon
@@ -1323,6 +1646,10 @@
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
       gl.generateMipmap(gl.TEXTURE_2D);
       this.applyAniso(); // filtrage anisotrope : netteté + anti-aliasing aux angles rasants
+      // Hot-swap : libère l'ANCIENNE texture GL de CETTE instance avant de la remplacer (le cache
+      // DECODED_TEX ne stocke que la SOURCE décodée -> non concerné). Évite la fuite de textures
+      // pendant le cycle de génération (poster <-> toile, swaps répétés).
+      if (this.texture) gl.deleteTexture(this.texture);
       this.texture = tex;
       this.buildGeometry();
       this.ready = true;

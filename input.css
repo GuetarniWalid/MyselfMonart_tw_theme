@@ -291,6 +291,85 @@ main-product-blocks .description h3 span {
   }
 }
 
+/* Studio « Poster perso » — overlay « atelier en cours » posé SUR le visualiseur pendant la
+   génération (placeholder = poster générique 3D). Balayage lumineux en BOUCLE qui traverse le
+   poster (le halo respirant, lui, utilise animate-pulse de Tailwind). L'élément balayé fait ~1/3
+   de large : translateX -160%->420% (en % de SA largeur) le fait passer d'un bord à l'autre.
+   Coupé en prefers-reduced-motion. cf. sections/tw-custom-art-studio.liquid (data-stage-overlay). */
+@keyframes studioGenSweep {
+  0% {
+    transform: translateX(-160%);
+  }
+  100% {
+    transform: translateX(420%);
+  }
+}
+.studio-gen-sweep {
+  animation: studioGenSweep 2.6s ease-in-out infinite;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .studio-gen-sweep {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* Lueur de marque PULSÉE autour du cadre du poster pendant la génération (classe posée/retirée
+   par setStage() du JS sur [data-reveal-frame] et sur la perspective-canvas du placeholder).
+   Conserve l'ombre neumorphique du cadre (6px 7px 0 main) ET ajoute un halo « buy-button » qui
+   respire -> le poster a l'air « en cours d'atelier ». Coupée en prefers-reduced-motion (halo fixe). */
+@keyframes studioGenGlow {
+  0%,
+  100% {
+    box-shadow: 6px 7px 0 rgb(var(--color-main-rgb)), 0 0 0 2px rgba(var(--color-buy-button-rgb), 0.45), 0 0 20px 3px rgba(var(--color-buy-button-rgb), 0.28);
+  }
+  50% {
+    box-shadow: 6px 7px 0 rgb(var(--color-main-rgb)), 0 0 0 3px rgba(var(--color-buy-button-rgb), 0.7), 0 0 36px 9px rgba(var(--color-buy-button-rgb), 0.45);
+  }
+}
+.studio-gen-glow {
+  animation: studioGenGlow 2s ease-in-out infinite;
+}
+
+/* Studio « Poster perso » — le bouton « Générer » DEVIENT la barre de progression pendant la
+   génération in-place : piste claire (buy-button à 16 %) + remplissage buy-button plein (élément
+   [data-gen-fill] dont la largeur monte) + label « Création en cours… » par-dessus. cf. setNextGenerating(). */
+.studio-gen-bar {
+  position: relative;
+  overflow: hidden;
+  cursor: wait;
+  background: rgba(var(--color-buy-button-rgb), 0.16) !important;
+}
+
+/* Studio « Poster perso » — au lancement de la génération, le visualiseur GRANDIT (petit -> grand)
+   pour prendre toute la place une fois les options effacées. cf. animateIntoGeneration(). */
+@keyframes studioFmtGrow {
+  0% {
+    transform: scale(0.55);
+    opacity: 0.35;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.studio-fmt-grow {
+  animation: studioFmtGrow 0.65s cubic-bezier(0.2, 0.75, 0.3, 1) both;
+  transform-origin: center center;
+}
+@media (prefers-reduced-motion: reduce) {
+  .studio-fmt-grow {
+    animation: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .studio-gen-glow {
+    animation: none;
+    box-shadow: 6px 7px 0 rgb(var(--color-main-rgb)), 0 0 0 2px rgba(var(--color-buy-button-rgb), 0.5);
+  }
+}
+
 /* Finger Touch Animation start */
 .finger-x-touch {
   animation: XfingerTouch 9s normal infinite 3s forwards;

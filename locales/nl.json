@@ -268,6 +268,7 @@
       "photo_error_size": "Foto te groot (max. 15 MB).",
       "photo_error_small": "Foto te klein: minimaal 512 pixels per zijde voor een mooi resultaat.",
       "photo_error_unreadable": "Deze foto kan niet worden ingelezen. Probeer een andere.",
+      "photo_reupload_hint": "Upload je foto opnieuw om een andere versie te maken.",
       "photo_required": "Voeg een foto toe om verder te gaan.",
       "consent_label": "Ik bevestig dat ik over de rechten op deze foto beschik en ga akkoord met het gebruik ervan voor het maken van mijn wanddecoratie.",
       "consent_required": "Bevestig dat je de rechten op deze foto hebt.",

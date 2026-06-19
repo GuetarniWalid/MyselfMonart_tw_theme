@@ -77,7 +77,23 @@
   const MOCKUP_TIMEOUT = 120000; // moteur de rendu down -> on retire les squelettes restants
   const MOCK_DURATION = 8000;
   const REAL_DURATION_ESTIMATE = 28000; // ~20-30 s annoncés, barre plafonnée à 90 %
+  // Mémoire DURABLE (localStorage) : au-delà de ce délai, on NE reprend PAS un reveal/une génération
+  // (le job back-end a pu expirer -> éviter reveal-next/ajout panier sur un job mort). Conservateur,
+  // bien en deçà de l'expiration serveur. Les SAISIES restent ; seul l'état de job est réinitialisé.
+  const RESUME_TTL_MS = 3 * 24 * 60 * 60 * 1000; // 3 jours
   const MOCK_MANUAL_REVIEW_NAME = 'ARTISTE'; // prénom déclencheur du scénario artiste en mock
+  // Autres prénoms déclencheurs de TEST en mock (mock_mode UNIQUEMENT, aucun effet en prod) :
+  // valider chaque écran sans génération payante. cf. startGeneration().
+  const MOCK_FAIL_NAME = 'ECHEC';     // -> écran artiste (statut « failed »)
+  const MOCK_ERROR_NAME = 'ERREUR';   // -> écran d'erreur générique (404 / timeout / réseau)
+  const MOCK_EXPIRE_NAME = 'EXPIRE';  // -> écran d'erreur (création expirée J+30 ; texte réel = back-end)
+  const MOCK_SLOW_NAME = 'LENT';      // -> attente longue (~24 s) pour observer le placeholder/overlay
+  const MOCK_SLOW_DURATION = 24000;
+  // Normalise un prénom pour le comparer aux déclencheurs (insensible à la casse et aux accents).
+  // Plage des diacritiques combinants U+0300–U+036F construite via new RegExp (échappements ASCII,
+  // insensibles à toute normalisation Unicode du source).
+  const DIACRITICS_RE = new RegExp('[\\u0300-\\u036f]', 'g');
+  const normTriggerName = (s) => (s || '').trim().toUpperCase().normalize('NFD').replace(DIACRITICS_RE, '');
 
   // Résolution des options par NOM (l'ordre des options Shopify n'est pas garanti).
   const OPTION_FORMAT_RE = /format|taille|dimension/;
@@ -211,7 +227,10 @@
 
       this.dialog = this.querySelector('[data-studio-dialog]');
       this.footer = this.querySelector('[data-studio-footer]');
+      this.navRow = this.querySelector('[data-studio-nav-row]'); // rangée « Retour » / « Une autre version »
       this.backButton = this.querySelector('[data-studio-back]');
+      this.revealNextLink = this.querySelector('[data-studio-reveal-next]'); // lien « Une autre version » (reveal)
+      this.saveButton = this.querySelector('[data-studio-save-toggle]');     // bouton « Sauvegarder » (haut droite, reveal)
       this.nextButton = this.querySelector('[data-studio-next]');
       this.stepTitle = this.querySelector('[data-step-title]');
       this.stepIndicator = this.querySelector('[data-step-indicator]'); // optionnel
@@ -238,7 +257,10 @@
         // 1re étape de CETTE config (foot : 'photo' ; produit sans photo : sa 1re étape).
         // Jamais 'photo' en dur -> sinon un produit no-gen ouvrirait sur un step inexistant.
         step: this.stepNames[0],
-        screen: 'steps', // steps | wait | reveal | error | artist
+        screen: 'steps', // steps | reveal | error | artist (l'attente a fusionné dans reveal)
+        // Sous-état de l'étage Format in-place : 'form' (options visibles) | 'generating' (vague +
+        // bouton-barre) | 'ready' (vraie image + bouton « Ajouter au panier »). cf. enterGeneratingStage/showReveal.
+        stage: 'form',
         fields: {}, // valeurs génériques par step.name (config-driven), en parallèle des clés foot
         consent: false,
         teamId: null,
@@ -254,6 +276,7 @@
         status: null,
         previewUrl: null,
         revealCount: 0,
+        imageStale: false, // true = une donnée de l'image a changé -> régé requise au prochain « Continuer »
         mockups: null, // [{ psd, status, url }] — streaming post-reveal
         artistRequested: null, // jobId dont la demande artiste a déjà été envoyée
       };
@@ -315,22 +338,45 @@
 
     persist() {
       try {
-        const { step, screen, consent, fields, teamId, teamName, teamColors, playerName,
+        const { step, screen, stage, consent, fields, teamId, teamName, teamColors, playerName,
           playerNumber, selectedOptions, variantId, jobId, sessionToken, email, status,
-          previewUrl, revealCount, mockups, artistRequested } = this.state;
-        sessionStorage.setItem(this.storageKey, JSON.stringify({
-          step, screen, consent, fields, teamId, teamName, teamColors, playerName,
+          previewUrl, revealCount, imageStale, mockups, artistRequested } = this.state;
+        // Mémoire DURABLE (localStorage) : survit à la fermeture du navigateur -> on ré-affiche
+        // direct la création à la réouverture (cf. open()), sans pousser à régénérer.
+        localStorage.setItem(this.storageKey, JSON.stringify({
+          step, screen, stage, consent, fields, teamId, teamName, teamColors, playerName,
           playerNumber, selectedOptions, variantId, jobId, sessionToken, email, status,
-          previewUrl, revealCount, mockups, artistRequested,
+          previewUrl, revealCount, imageStale, mockups, artistRequested,
+          savedAt: Date.now(), // horodatage de fraîcheur (garde TTL à la reprise, cf. restoreState)
         }));
       } catch (e) { /* stockage indisponible (navigation privée) : non bloquant */ }
     }
 
     restoreState() {
       try {
-        const raw = sessionStorage.getItem(this.storageKey);
+        let raw = null;
+        try { raw = localStorage.getItem(this.storageKey); } catch (e) { /* idem */ }
+        // Migration douce : une session ouverte avant le passage en durable est encore en sessionStorage.
+        if (!raw) { try { raw = sessionStorage.getItem(this.storageKey); } catch (e) { /* no-op */ } }
         if (!raw) return;
-        Object.assign(this.state, JSON.parse(raw));
+        const saved = JSON.parse(raw);
+        Object.assign(this.state, saved);
+        // Garde de FRAÎCHEUR (mémoire durable) : un reveal/une génération mémorisé trop ancien -> le job
+        // back-end a pu expirer. On NE reprend PAS l'état de job (sinon reveal-next/ajout panier sur un
+        // job mort = coût + commande non productible) : on garde les SAISIES et on repart proprement.
+        // savedAt absent = migration sessionStorage de la session EN COURS (fraîche) -> pas de reset.
+        if (saved.savedAt && (Date.now() - saved.savedAt) > RESUME_TTL_MS
+            && (this.state.stage === 'ready' || this.state.stage === 'generating')) {
+          this.state.stage = 'form';
+          this.state.screen = 'steps';
+          this.state.previewUrl = null;
+          this.state.jobId = null;
+          this.state.sessionToken = null;
+          this.state.status = null;
+          this.state.revealCount = 0;
+          this.state.mockups = null;
+          this.state.imageStale = true; // données potentiellement modifiées entre-temps -> régé propre
+        }
         // Backfill de l'état générique depuis les clés foot historiques (sessionStorage antérieur
         // au champ `fields`) -> la validation par type reste cohérente après un reload.
         if (!this.state.fields || typeof this.state.fields !== 'object') this.state.fields = {};
@@ -350,6 +396,7 @@
     }
 
     clearPersisted() {
+      try { localStorage.removeItem(this.storageKey); } catch (e) { /* no-op */ }
       try { sessionStorage.removeItem(this.storageKey); } catch (e) { /* no-op */ }
     }
 
@@ -358,6 +405,7 @@
       clearTimeout(this.mockTimer);
       clearInterval(this.progressTimer);
       clearInterval(this.mockupTimer);
+      clearTimeout(this._revealChromeTimer); // repli du chrome d'achat différé (cf. showReveal)
       (this.mockMockupTimers || []).forEach(clearTimeout);
       this.mockMockupTimers = [];
       this.pollTimer = this.mockTimer = this.progressTimer = this.mockupTimer = null;
@@ -493,18 +541,25 @@
         this.shouldShowResumeNote = false;
       }
 
+      // Reprise IN-PLACE (mémoire durable) : le reveal/la génération vivent sur l'étape Format
+      // (screen reste 'steps'), donc on route sur le STAGE, pas sur un écran séparé.
+      const fmtStep = this.stepNames.includes('format') ? 'format' : this.stepNames[this.stepNames.length - 1];
       if (this.state.screen === 'artist' && this.state.jobId) {
         this.showArtist();
-      } else if (this.state.screen === 'reveal' && this.state.previewUrl) {
+      } else if (this.state.stage === 'ready' && this.state.previewUrl) {
+        // Création terminée : on remonte l'étape Format puis on ré-affiche DIRECT l'image finale
+        // dans le visualiseur (pas de régénération, pas de coût) — « on lui raffiche de suite ».
+        this.state.screen = 'steps';
+        this.showStep(fmtStep);
         this.showReveal(this.state.previewUrl, false);
-        // Reprise du streaming des mises en situation interrompu par la fermeture.
-        if (this.config.mock) {
-          if (!this.mockupsSettled(this.state.mockups)) this.resetMockMockups();
-        } else {
-          this.startMockupWatch();
-        }
-      } else if (this.state.screen === 'wait' && this.state.jobId && !this.config.mock) {
-        this.showScreen('wait');
+      } else if (this.state.stage === 'generating' && this.state.jobId && !this.config.mock
+                 && this.state.screen !== 'error' && this.state.screen !== 'artist') {
+        // Génération RÉELLE en cours, interrompue par la fermeture : on reprend l'étape Format,
+        // le placeholder + la barre, ET le polling là où il en était. (Exclut les écrans erreur/artiste :
+        // défense en profondeur, en plus du reset de stage par showError.)
+        this.state.screen = 'steps';
+        this.showStep(fmtStep);
+        this.enterGeneratingStage();
         this.startWaitProgress(REAL_DURATION_ESTIMATE);
         this.startPolling();
       } else {
@@ -523,8 +578,8 @@
 
     close() {
       this.stopTimers();
-      // En mock, le « job » n'existe pas côté serveur : on revient aux étapes.
-      if (this.state.screen === 'wait' && this.config.mock) this.state.screen = 'steps';
+      // En mock, le « job » n'existe pas côté serveur : pendant la génération on revient aux étapes.
+      if (this.state.stage === 'generating' && this.config.mock) this.state.screen = 'steps';
       this.persist();
       this.dialog.classList.add('hidden');
       this.dialog.classList.remove('flex');
@@ -546,6 +601,12 @@
       if (this.dialog.querySelector('[data-studio-guide][open]')) return;
       if (event.key === 'Escape') {
         event.preventDefault();
+        // Popover « Sauvegarder » ouvert : Échap ferme le POPOVER seul, pas tout le studio.
+        if (this.saveButton && this.saveButton.getAttribute('aria-expanded') === 'true') {
+          this.closeSavePopover();
+          this.saveButton.focus();
+          return;
+        }
         this.attemptClose();
         return;
       }
@@ -580,6 +641,39 @@
       this.stopTimers();
       this.state.screen = 'steps';
       this.state.step = stepName;
+      // Sortie de la mise en scène in-place (génération/reveal) -> on RESTAURE l'UI Format normale :
+      // options visibles, visualiseur à sa demi-largeur, bouton redevenu un bouton (pas une barre).
+      this.state.stage = 'form';
+      clearTimeout(this._fmtAnim);
+      // Chrome du reveal masqué hors reveal : « Une autre version », « Sauvegarder » + son popover.
+      if (this.revealNextLink) this.revealNextLink.hidden = true;
+      if (this.saveButton) { this.saveButton.hidden = true; this.saveButton.setAttribute('aria-expanded', 'false'); }
+      this.q('[data-studio-save-form]')?.setAttribute('hidden', '');
+      const optsReset = this.q('[data-fmt-options]');
+      if (optsReset) {
+        optsReset.classList.remove('hidden');
+        // Nettoie les styles inline posés par l'animation de sortie (sinon options invisibles au retour).
+        [].concat(Array.from(optsReset.querySelectorAll('fieldset')), [this.q('[data-studio-price-line]')]).filter(Boolean)
+          .forEach((el) => { el.style.opacity = ''; el.style.transform = ''; el.style.transition = ''; el.style.transitionDelay = ''; });
+      }
+      const fmtSlotReset = this.q('[data-studio-format-webgl-slot]');
+      if (fmtSlotReset) {
+        const rowReset = fmtSlotReset.parentElement;
+        if (rowReset) rowReset.style.display = ''; // rétablit le flex 2 colonnes
+        fmtSlotReset.style.width = '';
+        fmtSlotReset.style.flexShrink = '';
+        fmtSlotReset.style.marginLeft = '';
+        fmtSlotReset.style.marginRight = '';
+        fmtSlotReset.classList.remove('md:w-full', 'md:-mr-4', 'studio-fmt-grow', 'max-w-sm');
+        fmtSlotReset.classList.add('md:w-1/2');
+        const pc0 = fmtSlotReset.querySelector('perspective-canvas');
+        if (pc0) { pc0.classList.remove('studio-fmt-grow', 'max-w-sm'); pc0.classList.add('max-w-xs'); }
+      }
+      if (this.nextButton) {
+        this.nextButton.classList.remove('studio-gen-bar');
+        this.nextButton.removeAttribute('aria-busy');
+        this.nextButton.disabled = false;
+      }
 
       this.querySelectorAll('[data-studio-screen]').forEach((screen) => { screen.hidden = true; });
       this.querySelectorAll('[data-studio-panel]').forEach((panel) => {
@@ -600,12 +694,18 @@
       this.footer.hidden = false;
       this.footer.classList.remove('hidden');
       this.backButton.hidden = index === 0;
+      // La rangée nav (Retour / Une autre version) suit « Retour » : cachée si pas de retour ET pas de
+      // reveal (le lien « Une autre version » est masqué hors reveal -> rangée = visibilité de Retour).
+      if (this.navRow) this.navRow.hidden = this.backButton.hidden;
       // Dernière étape d'un produit SANS génération (poster) -> le bouton du pied DEVIENT le bouton
       // d'achat « façon fiche toile » (prix + promo dedans, cloné du template). Sinon libellé simple.
       const isLast = index === this.stepNames.length - 1;
       const isBuyStep = isLast && !this.hasGeneration;
+      // Image déjà générée et inchangée -> « Continuer » (le clic ré-affiche le reveal, AUCUNE régé) ;
+      // sinon « Générer » (lance/relance la génération facturée).
+      const imageReady = this.hasGeneration && this.state.previewUrl && !this.state.imageStale;
       const nextLabel = isLast
-        ? (this.hasGeneration ? this.i18n.generate : (this.i18n.add_to_cart || this.i18n.generate))
+        ? (this.hasGeneration ? (imageReady ? this.i18n.next : this.i18n.generate) : (this.i18n.add_to_cart || this.i18n.generate))
         : this.i18n.next;
       this.setNextButtonContent(nextLabel, isBuyStep);
       // Prix dans le bouton -> on masque la ligne « PRIX … » du panneau format (doublon) pour le poster.
@@ -855,16 +955,28 @@
 
     bindErrorScreen() {
       this.backButton.addEventListener('click', () => {
+        // Au reveal, le 1er « Retour » = revenir à l'ÉDITION Format (on RE-rend l'étape courante) :
+        // les options réapparaissent, l'image générée reste affichée (mountFormatPreview la réutilise
+        // -> changer cadre/taille la recadre SANS régé), le bouton redevient « Continuer ». Un 2e
+        // « Retour » remonte alors le parcours normalement (vers prénom/numéro/photo).
+        if (this.state.stage === 'ready') { this.showStep(this.state.step); return; }
         const index = this.stepNames.indexOf(this.state.step);
         if (index > 0) this.showStep(this.stepNames[index - 1]);
       });
       this.nextButton.addEventListener('click', () => {
+        // Reveal IN-PLACE : le bouton-barre plein est devenu « Ajouter au panier » -> achat.
+        if (this.state.stage === 'ready') { this.addToCart(); return; }
         if (!this.stepIsValid(this.state.step)) return;
         const index = this.stepNames.indexOf(this.state.step);
         if (index === this.stepNames.length - 1) {
           // Dernière étape : génération IA (foot) OU ajout panier direct (produit design fixe).
-          if (this.hasGeneration) this.startGeneration();
-          else this.directAddToCart();
+          if (this.hasGeneration) {
+            // Image déjà générée et champs (prénom/numéro/photo/équipe) inchangés -> on RÉ-AFFICHE le
+            // reveal sans AUCUN appel back-end (donc sans régénération facturée). Sinon on (re)génère :
+            // c'est le cas après un changement d'info présente dans l'image (compté côté back-end).
+            if (this.state.previewUrl && !this.state.imageStale) this.showReveal(this.state.previewUrl);
+            else this.startGeneration();
+          } else this.directAddToCart();
         } else this.showStep(this.stepNames[index + 1]);
       });
       // Touche ENTRÉE dans un champ de saisie d'une étape = clic « Continuer ». Le bouton est
@@ -942,6 +1054,7 @@
       }
 
       this.photoFile = file;
+      this.markImageStale(); // photo = donnée présente dans l'image -> régé requise au prochain « Continuer »
       this.setPhotoError(null);
 
       const wrapper = this.q('[data-photo-preview-wrapper]');
@@ -999,6 +1112,7 @@
         this.state.teamName = team.name;
         this.state.teamColors = team.colors;
         this.state.fields.team = team.id;
+        this.markImageStale(); // l'équipe pilote le maillot dans l'image -> régé requise
         this.updateTeamConfirm();
         const requiredError = this.q('[data-team-required-error]');
         if (requiredError) requiredError.hidden = true;
@@ -1102,6 +1216,7 @@
         if (nameInput.value !== cleaned) nameInput.value = cleaned;
         this.state.playerName = cleaned;
         this.state.fields.playerName = cleaned;
+        this.markImageStale(); // le prénom est imprimé dans l'image -> régé requise
         this.setNameError(null);
         this.updateJersey();
         this.persist();
@@ -1113,6 +1228,7 @@
         if (numberInput.value !== digits) numberInput.value = digits;
         this.state.playerNumber = digits;
         this.state.fields.playerNumber = digits;
+        this.markImageStale(); // le numéro est imprimé dans l'image -> régé requise
         this.setNameError(null);
         this.updateJersey();
         this.persist();
@@ -1464,25 +1580,43 @@
       const firstInvalid = this.stepNames.find((step) => !this.stepIsValid(step));
       if (firstInvalid) {
         this.showStep(firstInvalid);
+        // Cas « photo oubliée à la reprise » (File non persistable) alors qu'une image existe déjà :
+        // on EXPLIQUE le renvoi à l'upload au lieu d'un saut muet (UX du chemin « régénérer »).
+        const invalidStep = (this.studioSteps || []).find((s) => s.name === firstInvalid);
+        if (invalidStep && invalidStep.type === 'photo' && this.state.previewUrl && this.i18n.photo_reupload_hint) {
+          this.setPhotoError(this.i18n.photo_reupload_hint);
+        }
         return;
       }
-      this.showScreen('wait');
+      this.enterGeneratingStage();
 
       if (this.config.mock) {
-        this.startWaitProgress(MOCK_DURATION);
+        // Prénom déclencheur (mock_mode UNIQUEMENT) -> permet de valider CHAQUE écran sans coût.
+        const trigger = normTriggerName(this.state.playerName);
+        const duration = trigger === MOCK_SLOW_NAME ? MOCK_SLOW_DURATION : MOCK_DURATION;
+        this.startWaitProgress(duration);
         this.mockTimer = setTimeout(() => {
           this.state.jobId = `mock-${Date.now()}`;
           this.state.revealCount = 0;
-          // Scénario de test de l'écran artiste (manual_review) : prénom « ARTISTE ».
-          if (this.state.playerName.trim() === MOCK_MANUAL_REVIEW_NAME) {
-            this.state.status = 'manual_review';
+          // ARTISTE = photo confiée à un artiste (manual_review) ; ECHEC = échec définitif.
+          // Les deux mènent au MÊME écran « artiste » (cf. pollJob : manual_review|failed -> showArtist).
+          if (trigger === MOCK_MANUAL_REVIEW_NAME || trigger === MOCK_FAIL_NAME) {
+            this.state.status = trigger === MOCK_FAIL_NAME ? 'failed' : 'manual_review';
             this.persist();
             this.showArtist();
             return;
           }
+          // ERREUR = erreur générique (404/timeout/réseau) ; EXPIRE = création expirée (J+30).
+          // Même écran d'erreur ; en prod le texte « expiré » vient du back-end (data.message).
+          if (trigger === MOCK_ERROR_NAME || trigger === MOCK_EXPIRE_NAME) {
+            this.state.status = trigger === MOCK_EXPIRE_NAME ? 'expired' : 'failed';
+            this.persist();
+            this.showError(this.i18n.generation_error);
+            return;
+          }
           this.showReveal(this.mockArtworkUrl(0));
           this.resetMockMockups();
-        }, MOCK_DURATION);
+        }, duration);
         return;
       }
 
@@ -1577,6 +1711,9 @@
         const elapsed = Date.now() - startedAt;
         const percent = Math.min(90, (elapsed / duration) * 90);
         if (bar) bar.style.width = `${percent}%`;
+        // Le BOUTON-BARRE in-place se remplit avec la même progression (0 -> 90 %, 100 % au reveal).
+        const fill = this.q('[data-gen-fill]');
+        if (fill) fill.style.width = `${percent}%`;
         const nextPhase = Math.min(phases.length - 1, Math.floor((percent / 90) * phases.length));
         if (nextPhase !== phaseIndex) {
           phaseIndex = nextPhase;
@@ -1590,6 +1727,10 @@
 
     showError(message, options = {}) {
       this.stopTimers();
+      // L'écran d'erreur n'est PAS un état de génération en cours : on remet le stage à 'form' pour
+      // qu'à la réouverture (mémoire durable) open() ne relance PAS le polling d'un job mort (sinon
+      // l'utilisateur retombe sur la barre « Création en cours… » au lieu de l'écran d'erreur).
+      this.state.stage = 'form';
       const zone = this.q('[data-error-message]');
       if (zone && message) zone.textContent = message;
       // Cap « e-mail requis » : formulaire e-mail directement sur l'écran d'erreur,
@@ -1607,25 +1748,226 @@
 
     /* ------------------------------------------------------------ révélation */
 
-    showReveal(url, persistState = true) {
+    // Marque l'aperçu généré comme PÉRIMÉ : une donnée présente DANS l'image (prénom, numéro, photo,
+    // équipe) a changé -> le prochain « Continuer » à la dernière étape relancera une génération
+    // (décomptée côté back-end). Changer le cadre/la taille ne l'appelle PAS (simple recadrage WebGL
+    // de la même image utilisateur). Sans effet tant qu'aucune image n'a encore été générée.
+    markImageStale() {
+      this.state.imageStale = true;
+    }
+
+    // REVEAL IN-PLACE (sur l'étape Format, sans changer d'écran) : la dernière vague essuie le
+    // placeholder vers la VRAIE image dans le MÊME visualiseur (hot-swap, pas de remontage), le
+    // bouton-barre plein devient « Ajouter au panier ». Le repli image + les écrans séparés ne
+    // sont plus utilisés pour le chemin heureux.
+    showReveal(url, persistState = true, opts = {}) {
       this.stopTimers();
-      const bar = this.q('[data-wait-bar]');
-      if (bar) bar.style.width = '100%';
       this.state.previewUrl = url;
       this.state.status = 'ready';
-      const image = this.q('[data-reveal-image]');
-      if (image && url) {
-        image.src = url;
-        image.hidden = false;
-      }
+      this.state.stage = 'ready';
+      this.state.imageStale = false; // l'image affichée correspond aux champs actuels (pas de régé requise)
+      // Mise en page « visualiseur plein » garantie : si on arrive ici via « Continuer » (image déjà
+      // prête) sans passer par la génération, les options sont encore visibles -> on les masque et on
+      // étend le slot. Idempotent quand on vient de la génération (déjà fait par animateIntoGeneration).
+      this.q('[data-fmt-options]')?.classList.add('hidden');
+      this._fillFormatSlot(false);
+      const fill = this.q('[data-gen-fill]');
+      if (fill) fill.style.width = '100%'; // barre (= bouton) pleine
       const feedback = this.q('[data-reveal-feedback]');
       if (feedback) feedback.hidden = true;
-      this.mountPerspective(url);
-      this.renderMockups();
-      this.showScreen('reveal');
-      // Prix + promo dans le bouton d'achat du reveal selon la variante choisie au format.
-      this.updateBuyButtons();
+
+      // Chrome d'ACHAT du reveal in-place : bouton « Ajouter au panier » + « Retour »/« Une autre
+      // version » (rangée du pied) + « Sauvegarder » (haut droite) + titre. On ne le présente qu'une
+      // fois la VRAIE image affichée (pas « cliquable avant de voir le résultat »).
+      clearTimeout(this._revealChromeTimer);
+      let chromeShown = false;
+      const showRevealChrome = () => {
+        if (chromeShown) return;
+        // L'utilisateur a pu naviguer (Retour/fermeture) pendant la vague -> on n'impose pas le chrome
+        // d'achat hors contexte reveal (l'event différé/le repli deviennent inoffensifs).
+        if (this.state.stage !== 'ready') return;
+        chromeShown = true;
+        clearTimeout(this._revealChromeTimer);
+        this.setNextReady();   // bouton plein -> « Ajouter au panier » (prix + promo)
+        if (this.navRow) this.navRow.hidden = false;
+        if (this.backButton) this.backButton.hidden = false;
+        if (this.revealNextLink) { this.revealNextLink.hidden = false; this.revealNextLink.disabled = false; }
+        if (this.saveButton) this.saveButton.hidden = false;
+        if (this.stepTitle && this.i18n.reveal_title) this.stepTitle.textContent = this.i18n.reveal_title;
+      };
+
+      const pc = this.q('[data-studio-format-webgl-slot] perspective-canvas');
+      if (pc && pc._gen && typeof pc.finishGenerating === 'function') {
+        // GÉNÉRATION en cours : la dernière vague essuie le placeholder vers la vraie image. Le bouton
+        // reste la barre « Création en cours… » pendant la vague, puis devient « Ajouter au panier »
+        // à la fin (event perspective:revealed). Repli temporisé si l'event ne vient pas.
+        pc.addEventListener('perspective:revealed', showRevealChrome, { once: true });
+        this._revealChromeTimer = setTimeout(showRevealChrome, 4000);
+        pc.finishGenerating(url);
+      } else if (opts.wave && pc && typeof pc.revealSwap === 'function') {
+        // « UNE AUTRE VERSION » : on est DÉJÀ au reveal -> le chrome d'achat reste en place, et l'image
+        // fait la MÊME vague (essuyage de la version actuelle vers la nouvelle). Pas de fausse attente.
+        showRevealChrome();
+        pc.revealSwap(url);
+      } else {
+        // Pas de vague (continue / reprise / sans WebGL) : image posée direct -> chrome immédiat.
+        if (pc && typeof pc.finishGenerating === 'function') pc.finishGenerating(url);
+        else if (pc && typeof pc.setTexture === 'function') pc.setTexture(url);
+        showRevealChrome();
+      }
       if (persistState) this.persist();
+    }
+
+    // Sous-état de l'écran reveal (visualiseur HÉROS CONTINU). 'generating' = poster générique +
+    // overlay « atelier en cours » ; 'ready' = vraie image + chrome d'achat. Bascule la visibilité
+    // des éléments marqués [data-stage-generating] / [data-stage-ready] dans l'écran reveal.
+    setStage(stage) {
+      this.state.stage = stage;
+      const screen = this.q('[data-studio-screen="reveal"]');
+      if (!screen) return;
+      screen.dataset.studioStage = stage;
+      screen.querySelectorAll('[data-stage-generating]').forEach((el) => { el.hidden = stage !== 'generating'; });
+      screen.querySelectorAll('[data-stage-ready]').forEach((el) => { el.hidden = stage !== 'ready'; });
+      // Lueur de marque pulsée sur le cadre du repli (poster plat) pendant la génération
+      // (cf. input.css .studio-gen-glow) ; retirée au reveal pour retrouver l'ombre neumorphique.
+      const frame = this.q('[data-reveal-frame]');
+      if (frame) frame.classList.toggle('studio-gen-glow', stage === 'generating');
+    }
+
+    // Monte le poster GÉNÉRIQUE (config.posterPreview) dans le visualiseur du reveal -> placeholder
+    // pendant la génération : même cadre/format que le choix utilisateur, même moteur papier+verre
+    // que l'étape Format. Au reveal, seule l'image change (morph sur place). Réutilise
+    // mountPerspective (repli figure, un seul contexte GL, bascule sur perspective:ready).
+    mountStagePlaceholder() {
+      const src = this.config.posterPreview && this.config.posterPreview.src;
+      if (!src) return;
+      const image = this.q('[data-reveal-image]');
+      if (image) {
+        // Repli image (WebGL KO) = poster générique. Si l'image échoue (404/réseau), on la MASQUE
+        // pour ne jamais afficher l'icône « image cassée » : l'overlay + la barre signalent déjà
+        // « en cours » (cadre neutre). Le visualiseur 3D fait le même repli de son côté.
+        image.onerror = () => { image.hidden = true; };
+        image.src = src;
+        image.hidden = false;
+      }
+      this.mountPerspective(src);
+      // Même lueur de marque pulsée sur le visualiseur 3D du placeholder (le reveal, lui, monte un
+      // <perspective-canvas> SANS cette classe -> le glow ne survit pas au morph).
+      const pc = this.q('[data-studio-webgl-slot] perspective-canvas');
+      if (pc) pc.classList.add('studio-gen-glow');
+    }
+
+    // Entre dans l'étage de GÉNÉRATION : visualiseur (placeholder générique) + overlay « atelier en
+    // cours » dans l'écran reveal, chrome d'achat masqué, galerie d'un cycle précédent masquée.
+    // Remplace l'ancien écran d'attente séparé (le visualiseur devient le héros continu).
+    // GÉNÉRATION IN-PLACE : on RESTE sur l'étape Format (pas de changement d'écran). On masque les
+    // options / prix / retour / stepper, on élargit le visualiseur, le bouton « Générer » devient la
+    // BARRE qui se remplit, et on lance la VAGUE (poster <-> toile) sur le visualiseur Format déjà monté.
+    enterGeneratingStage() {
+      this.state.stage = 'generating';
+      if (this.navRow) this.navRow.hidden = true;       // masque « Retour » + « Une autre version »
+      if (this.saveButton) this.saveButton.hidden = true;
+      const genSaveForm = this.q('[data-studio-save-form]');
+      if (genSaveForm) genSaveForm.hidden = true;
+      if (this.stepIndicator) this.stepIndicator.hidden = true;
+      if (this.stepCheckpoints) { this.stepCheckpoints.hidden = true; this.stepCheckpoints.classList.add('hidden'); }
+      const mockZone = this.q('[data-mockup-zone]');
+      if (mockZone) mockZone.hidden = true; // pas de mockups d'un cycle précédent pendant la génération
+      this.setNextGenerating();   // le bouton devient la barre « Création en cours… »
+      this.startFormatWave();     // la vague démarre sur le visualiseur Format
+      if (this.stepTitle && this.i18n.wait_title) this.stepTitle.textContent = this.i18n.wait_title;
+      this.animateIntoGeneration(); // options qui s'effacent (quinconce) -> visualiseur qui grandit
+      this.persist();
+    }
+
+    // Transition FLUIDE vers la génération : les options s'effacent (opacité + glissement latéral, en
+    // quinconce), puis le visualiseur s'agrandit (petit -> grand) et passe en PLEIN BORD des deux côtés
+    // (fond commun, plus de bande blanche à droite). Coupé proprement en motion-reduce.
+    // PLEIN CADRE du visualiseur Format (options masquées en amont) : sort le slot du flex, marges
+    // négatives -> il couvre TOUT le modal (fond commun, pas de bande blanche), poster un peu plus
+    // grand. `animate` = effet « petit -> grand » (entrée en génération) ; sinon application sèche
+    // (ex. reveal atteint via « Continuer » sans repasser par la génération). Idempotent.
+    _fillFormatSlot(animate) {
+      const slot = this.q('[data-studio-format-webgl-slot]');
+      if (!slot) return;
+      const row = slot.parentElement;
+      if (row) row.style.display = 'block';
+      slot.classList.remove('md:w-1/2');
+      slot.style.width = '';
+      slot.style.flexShrink = '';
+      slot.style.marginLeft = '-1rem';
+      slot.style.marginRight = '-1rem';
+      const pc = slot.querySelector('perspective-canvas');
+      if (pc) { pc.classList.remove('max-w-xs'); pc.classList.add('max-w-sm'); }
+      if (animate) {
+        const growEl = pc || slot; // sans WebGL : on anime le slot — JAMAIS de max-w dessus (sinon il se bride)
+        growEl.classList.add('studio-fmt-grow');
+        setTimeout(() => growEl.classList.remove('studio-fmt-grow'), 750);
+      }
+    }
+
+    animateIntoGeneration() {
+      const opts = this.q('[data-fmt-options]');
+      const fillSlot = () => this._fillFormatSlot(true);
+      const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce || !opts) {
+        if (opts) opts.classList.add('hidden');
+        fillSlot();
+        return;
+      }
+      // 1) Options : fondu + glissement latéral, EN QUINCONCE (Format, Finition, prix…).
+      const leavers = [].concat(
+        Array.from(opts.querySelectorAll('fieldset')),
+        [this.q('[data-studio-price-line]')],
+      ).filter(Boolean);
+      leavers.forEach((el, i) => {
+        el.style.transition = 'opacity 0.45s ease, transform 0.5s ease';
+        el.style.transitionDelay = (i * 0.12) + 's';
+      });
+      void opts.offsetWidth; // force un reflow -> la transition part bien de l'état initial (opacité 1)
+      leavers.forEach((el) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateX(30px)';
+      });
+      // 2) Une fois les options parties : on les retire du flux et le visualiseur grandit pour remplir.
+      clearTimeout(this._fmtAnim);
+      this._fmtAnim = setTimeout(() => { opts.classList.add('hidden'); fillSlot(); }, 760);
+    }
+
+    // Lance la vague (mode génération du moteur) sur le <perspective-canvas> du visualiseur Format.
+    // Sans WebGL (repli sobre) : pas de canvas -> seule la barre signale la progression.
+    startFormatWave() {
+      const pc = this.q('[data-studio-format-webgl-slot] perspective-canvas');
+      if (!pc) return;
+      const go = () => { if (typeof pc.startGenerating === 'function') pc.startGenerating(); };
+      if (pc.gl && pc.ready) go();
+      else pc.addEventListener('perspective:ready', go, { once: true });
+    }
+
+    // Le bouton du pied DEVIENT la barre de progression : piste claire (.studio-gen-bar) + remplissage
+    // [data-gen-fill] (largeur pilotée par startWaitProgress) + label « Création en cours… ». Non cliquable.
+    setNextGenerating() {
+      const btn = this.nextButton;
+      if (!btn) return;
+      btn.disabled = true;
+      btn.setAttribute('aria-busy', 'true');
+      btn.removeAttribute('data-studio-buy');
+      btn.classList.add('studio-gen-bar');
+      const label = this.i18n.wait_title || 'Création en cours…';
+      btn.innerHTML =
+        '<span data-gen-fill class="absolute inset-y-0 left-0 w-0 bg-buy-button transition-[width] duration-500 ease-out motion-reduce:transition-none" aria-hidden="true"></span>'
+        + '<span class="relative z-10 cart-button-text inline-block py-4 md:py-5">' + escapeHtml(label) + '</span>';
+    }
+
+    // Fin de génération : le bouton plein redevient un vrai bouton « Ajouter au panier » (prix + promo).
+    setNextReady() {
+      const btn = this.nextButton;
+      if (!btn) return;
+      btn.disabled = false;
+      btn.removeAttribute('aria-busy');
+      btn.classList.remove('studio-gen-bar');
+      this.setNextButtonContent(this.i18n.add_to_cart || '', true);
+      this.updateBuyButtons();
     }
 
     /* --------------------------------------------------- reveal WebGL (3D) */
@@ -1717,7 +2059,10 @@
       const revealSlot = this.q('[data-studio-webgl-slot]');
       if (revealSlot) { revealSlot.innerHTML = ''; revealSlot.hidden = true; }
       slot.innerHTML = '';
-      const src = this.config.posterPreview && this.config.posterPreview.src;
+      // Après une génération, l'IMAGE GÉNÉRÉE reste dans le visualiseur Format (on ne la « bouge »
+      // jamais) : changer cadre/taille la recadre en direct (re-mount), sans régénérer. Avant toute
+      // génération, on retombe sur le poster générique (placeholder).
+      const src = this.state.previewUrl || (this.config.posterPreview && this.config.posterPreview.src);
       if (!src
         || !customElements.get('perspective-canvas')
         || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
@@ -1757,6 +2102,7 @@
     // squelettes restants sont retirés (le reveal et le panier n'en dépendent jamais).
     startMockupWatch() {
       if (this.config.mock) return;
+      if (!this.q('[data-mockup-zone]')) return; // mises en situation retirées du reveal -> pas de polling
       clearInterval(this.mockupTimer);
       if (!this.state.jobId) return;
       if (Array.isArray(this.state.mockups) && this.state.mockups.length
@@ -1830,6 +2176,7 @@
 
     // Mock : 3 mises en situation simulées qui « tombent » en streaming (~1,4 s d'écart).
     resetMockMockups() {
+      if (!this.q('[data-mockup-zone]')) return; // mises en situation retirées du reveal
       (this.mockMockupTimers || []).forEach(clearTimeout);
       this.mockMockupTimers = [];
       this.state.mockups = [{ status: 'rendering' }, { status: 'rendering' }, { status: 'rendering' }];
@@ -1927,6 +2274,19 @@
         event.preventDefault();
         this.saveCreation();
       });
+      // Clic EN DEHORS du popover « Sauvegarder » (et hors de son déclencheur) -> on le referme.
+      this.dialog.addEventListener('pointerdown', (event) => {
+        if (!this.saveButton || this.saveButton.getAttribute('aria-expanded') !== 'true') return;
+        if (event.target.closest('[data-studio-save-toggle]')) return;
+        if (saveForm && saveForm.contains(event.target)) return;
+        this.closeSavePopover();
+      });
+    }
+
+    // Referme le popover « Sauvegarder » sans toucher au reste du studio (Échap / clic extérieur).
+    closeSavePopover() {
+      if (this.saveButton) this.saveButton.setAttribute('aria-expanded', 'false');
+      this.q('[data-studio-save-form]')?.setAttribute('hidden', '');
     }
 
     async revealNext() {
@@ -1935,7 +2295,7 @@
       try {
         this.state.revealCount += 1;
         if (this.config.mock) {
-          this.showReveal(this.mockArtworkUrl(this.state.revealCount));
+          this.showReveal(this.mockArtworkUrl(this.state.revealCount), true, { wave: true });
           this.resetMockMockups();
           return;
         }
@@ -1945,9 +2305,10 @@
         );
         const previewUrl = this.previewFrom(data);
         if (response.ok && previewUrl) {
-          // Runner-up n°2 / n°3 : révélation instantanée.
+          // Runner-up n°2 / n°3 : image déjà prête côté serveur -> on l'amène avec la MÊME vague
+          // (essuyage vers la nouvelle version), pas un swap sec. (wave: true)
           this.state.mockups = Array.isArray(data.mockups) ? data.mockups : this.state.mockups;
-          this.showReveal(previewUrl);
+          this.showReveal(previewUrl, true, { wave: true });
           this.startMockupWatch();
         } else if (this.isEmailRequired(response, data)) {
           // Cap d'essais anonymes atteint : on guide vers la sauvegarde par e-mail.
@@ -1978,7 +2339,7 @@
           this.state.mockups = null;
           this.state.status = data.status;
           this.persist();
-          this.showScreen('wait');
+          this.enterGeneratingStage();
           this.startWaitProgress(REAL_DURATION_ESTIMATE);
           this.startPolling();
         } else if (data.status === 'manual_review' || data.status === 'failed') {
@@ -2030,7 +2391,9 @@
     /* ----------------------------------------------------------- ajout panier */
 
     async addToCart() {
-      const button = this.q('[data-studio-add-to-cart]');
+      // Reveal in-place : le bouton d'achat EST le bouton-barre du pied (data-studio-next), il n'y a
+      // plus de [data-studio-add-to-cart] dédié -> repli sur nextButton (évite un null-deref réel).
+      const button = this.q('[data-studio-add-to-cart]') || this.nextButton;
       const feedback = this.q('[data-cart-feedback]');
 
       // Garde-fou mock : le job n'existe pas côté back-end, donc AUCUN ajout au panier

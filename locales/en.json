@@ -498,6 +498,7 @@
       "photo_error_size": "Photo too large (max 15 MB).",
       "photo_error_small": "Photo too small: at least 512 pixels per side for best results.",
       "photo_error_unreadable": "We couldn't read this photo. Try a different one.",
+      "photo_reupload_hint": "To create another version, please re-upload your photo.",
       "photo_required": "Add a photo to continue.",
       "consent_label": "I confirm I own the rights to this photo and agree to its use to create my wall art.",
       "consent_required": "Please confirm that you have the rights to this photo.",

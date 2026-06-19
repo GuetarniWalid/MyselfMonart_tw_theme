@@ -291,6 +291,7 @@
       "photo_error_size": "Photo trop lourde (15 Mo maximum).",
       "photo_error_small": "Photo trop petite : 512 pixels minimum de côté pour un beau rendu.",
       "photo_error_unreadable": "Impossible de lire cette photo. Essayez-en une autre.",
+      "photo_reupload_hint": "Pour créer une autre version, réimportez votre photo.",
       "photo_required": "Ajoutez une photo pour continuer.",
       "consent_label": "Je confirme disposer des droits sur cette photo et j'accepte son utilisation pour la création de mon poster.",
       "consent_required": "Merci de confirmer que vous disposez des droits sur cette photo.",

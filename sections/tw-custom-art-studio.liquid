@@ -372,7 +372,54 @@
           {%- comment -%} Desktop/iPad (md+) : 2 colonnes — IMAGE à GAUCHE (section fond mur unie,
              poster centré, sans blanc) / OPTIONS à DROITE -> popup MOINS HAUTE (plus de troncature
              iPad). Mobile : empilé, options puis bande image (ordre préservé via order-*). {%- endcomment -%}
-          <div class="flex flex-col md:flex-row md:items-stretch">
+          <div class="relative flex flex-col md:flex-row md:items-stretch">
+            {%- comment -%} « Sauvegarder » : bouton icône+texte (ombre neu) en HAUT À DROITE du
+               visualiseur, par-dessus le fond commun. Masqué hors reveal. Clic -> popover e-mail
+               (parcours de reprise). Réutilise data-studio-save-toggle / data-studio-save-form. {%- endcomment -%}
+            <button
+              type="button"
+              data-studio-save-toggle
+              aria-expanded="false"
+              aria-controls="studio-save-form-{{ section.id }}"
+              hidden
+              class="absolute right-3 top-3 z-20 inline-flex items-center gap-1.5 rounded-xl border-main border-2 bg-secondary px-3 py-2 text-sm font-heading font-semibold text-main shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="shrink-0">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                <polyline points="7 3 7 8 15 8"></polyline>
+              </svg>
+              {{ 'sections.custom_art_studio.save_creation' | t }}
+            </button>
+            <form
+              data-studio-save-form
+              id="studio-save-form-{{ section.id }}"
+              role="group"
+              aria-label="{{ 'sections.custom_art_studio.save_creation' | t }}"
+              hidden
+              novalidate
+              class="absolute right-3 top-16 z-20 w-72 max-w-[calc(100vw-2rem)] rounded-xl border-main border-2 bg-secondary p-3 shadow-neu-sm">
+              <label for="studio-save-email-{{ section.id }}" class="mb-1 block text-xs uppercase tracking-wide text-main-70">
+                {{ 'sections.custom_art_studio.save_email_label' | t }}
+              </label>
+              {%- comment -%} Champ + bouton EMPILÉS (pleine largeur) : l'input garde toute la largeur
+                 du popover (pas écrasé par le bouton à côté). {%- endcomment -%}
+              <div class="flex flex-col gap-2">
+                <input
+                  type="email"
+                  id="studio-save-email-{{ section.id }}"
+                  data-save-email
+                  required
+                  autocomplete="email"
+                  placeholder="{{ 'sections.custom_art_studio.save_email_placeholder' | t }}"
+                  class="w-full rounded-xl border border-main-10 bg-secondary px-3 py-2 text-main placeholder:text-main-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+                <button
+                  type="submit"
+                  class="w-full rounded-xl border-main border-2 bg-secondary px-3 py-2 font-heading font-semibold shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+                  {{ 'sections.custom_art_studio.save_submit' | t }}
+                </button>
+              </div>
+              <p data-save-feedback class="mt-2 text-sm text-main-80" aria-live="polite" hidden></p>
+            </form>
             {%- comment -%} SECTION IMAGE : le JS y monte le fond mur (absolute inset-0) + le poster
                centré. Mobile = bande pleine largeur (-ml/-mr-4) SOUS les options ; desktop = colonne
                GAUCHE pleine couleur qui touche le bord (-ml-4). Vide tant que non monté ->
@@ -381,8 +428,9 @@
                  class="relative order-2 -ml-4 -mr-4 mt-4 overflow-hidden py-5 md:order-1 md:mr-0 md:-ml-4 md:-my-4 md:w-1/2 md:py-6"
                  hidden></div>
 
-            {%- comment -%} OPTIONS : format + finition + ligne prix. {%- endcomment -%}
-            <div class="order-1 md:order-2 md:w-1/2 md:self-center md:pl-6">
+            {%- comment -%} OPTIONS : format + finition + ligne prix. Masquées par le JS pendant la
+               génération / le reveal (in-place) -> le visualiseur prend toute la place. {%- endcomment -%}
+            <div data-fmt-options class="order-1 md:order-2 md:w-1/2 md:self-center md:pl-6">
               {% render 'studio-variant-picker', product: product %}
 
               {%- comment -%} Ligne prix « PRIX 30 € » : utile au foot (bouton « Générer »). Masquée
@@ -396,6 +444,7 @@
               </p>
             </div>
           </div>
+
         </div>
 
         {%- comment -%} Conteneur des panneaux génériques (text/number/date) rendus par le JS
@@ -403,123 +452,6 @@
            Vide pour le foot (qui a ses propres panneaux). {%- endcomment -%}
         <div data-studio-generic-panels></div>
 
-        {%- comment -%} ===== Écran d'attente storytelling ===== {%- endcomment -%}
-        <div data-studio-screen="wait" hidden>
-          <div class="py-10 text-center">
-            <h3 class="mb-6 text-lg font-heading font-bold">{{ 'sections.custom_art_studio.wait_title' | t }}</h3>
-            <div class="mx-auto mb-4 h-2 w-full max-w-sm overflow-hidden rounded-full bg-main-10">
-              <div
-                data-wait-bar
-                data-allow-empty
-                class="h-full w-0 rounded-full bg-buy-button transition-[width] duration-700 ease-out motion-reduce:transition-none"></div>
-            </div>
-            <p data-wait-text class="min-h-6 text-main-80" aria-live="polite"></p>
-            <p class="mt-6 text-xs text-main-70">{{ 'sections.custom_art_studio.wait_note' | t }}</p>
-          </div>
-        </div>
-
-        {%- comment -%} ===== Écran de révélation ===== {%- endcomment -%}
-        <div data-studio-screen="reveal" hidden>
-          {%- comment -%} Repli sur la clé i18n traduite si le réglage est au défaut FR (un défaut de
-             schema n'est jamais exposé comme translatableContent → fuiterait hors-FR). {%- endcomment -%}
-          {%- assign studio_reveal_title = 'sections.custom_art_studio.reveal_title' | t -%}
-          <h3 class="mb-5 text-center text-lg font-heading font-bold">{{ section.settings.reveal_title | default: studio_reveal_title | escape }}</h3>
-
-          {%- comment -%} Figure = repli image + cadre CSS (WebGL indisponible : motion-reduce,
-             vieux mobiles, Save-Data). La bordure prend la teinte de la finition choisie
-             (style inline posé par le JS — donnée produit dynamique). Masquée dès que le
-             visualiseur 3D a présenté son 1er rendu (évènement perspective:ready). {%- endcomment -%}
-          <figure data-reveal-figure class="mx-auto w-full max-w-xs md:max-w-sm">
-            <div data-reveal-frame class="border-8 border-main bg-secondary p-2 shadow-neu-lg">
-              <img
-                data-reveal-image
-                src=""
-                alt="{{ 'sections.custom_art_studio.reveal_image_alt' | t }}"
-                width="1024"
-                height="1365"
-                class="block h-auto w-full"
-                hidden>
-            </div>
-            <figcaption class="mt-2 text-center text-xs text-main-70">
-              {{ 'sections.custom_art_studio.reveal_watermark_note' | t }}
-            </figcaption>
-          </figure>
-
-          {%- comment -%} Visualiseur 3D : le JS recrée ici un <perspective-canvas
-             data-context="studio"> + <script class="perspective-config"> avec l'URL de
-             l'œuvre générée en texture et le cadre/format choisis (pattern « popup » de
-             snippets/tw-main-product-perspective.liquid). L'image DOIT être servie avec
-             crossorigin/ACAO (DO Spaces) sinon la texture WebGL est rejetée
-             (cf. assets/component-perspective-canvas.js). {%- endcomment -%}
-          <div data-studio-webgl-slot class="relative -mx-4 overflow-hidden py-5" hidden></div>
-
-          <div class="mx-auto mt-6 flex max-w-sm flex-col gap-3">
-            <button
-              type="button"
-              data-studio-add-to-cart
-              data-studio-buy
-              class="cart-button glass-anim mb-0 disabled:cursor-wait focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2">
-              {{ studio_buy_content }}
-            </button>
-            {%- comment -%} Bandeau date promo SOUS le bouton (exactement comme la fiche toile : snippet
-               promotion-date-banner). Rendu seulement si promo active ET date renseignée. {%- endcomment -%}
-            {%- if studio_promo_active and section.settings.promotion_date != blank -%}
-              {% render 'promotion-date-banner', block: section, text: section.settings.promotion_date %}
-            {%- endif -%}
-            <button
-              type="button"
-              data-studio-reveal-next
-              class="rounded-xl border-main border-1 bg-secondary px-6 py-3 font-heading font-semibold text-main shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none disabled:cursor-wait disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
-              {{ 'sections.custom_art_studio.another_version' | t }}
-            </button>
-            <button
-              type="button"
-              data-studio-save-toggle
-              aria-expanded="false"
-              class="text-sm text-main-80 underline hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main rounded">
-              {{ 'sections.custom_art_studio.save_creation' | t }}
-            </button>
-
-            <form data-studio-save-form class="rounded-xl bg-main-2 p-4" hidden novalidate>
-              <label for="studio-save-email-{{ section.id }}" class="mb-1 block text-xs uppercase tracking-wide text-main-70">
-                {{ 'sections.custom_art_studio.save_email_label' | t }}
-              </label>
-              <div class="flex gap-2">
-                <input
-                  type="email"
-                  id="studio-save-email-{{ section.id }}"
-                  data-save-email
-                  required
-                  autocomplete="email"
-                  placeholder="{{ 'sections.custom_art_studio.save_email_placeholder' | t }}"
-                  class="w-full rounded-xl border border-main-10 bg-secondary px-3 py-2 text-main placeholder:text-main-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
-                <button
-                  type="submit"
-                  class="shrink-0 rounded-xl border-main border-1 bg-secondary px-4 py-2 font-heading font-semibold shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none disabled:cursor-wait disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
-                  {{ 'sections.custom_art_studio.save_submit' | t }}
-                </button>
-              </div>
-              <p data-save-feedback class="mt-2 text-sm text-main-80" aria-live="polite" hidden></p>
-            </form>
-
-            <p data-reveal-feedback class="text-center text-sm text-accent" role="alert" aria-live="polite" hidden></p>
-            <p data-cart-feedback class="text-center text-sm text-main-80" aria-live="polite" hidden></p>
-          </div>
-
-          {%- comment -%} Galerie « mises en situation » : cellules squelette remplies en
-             streaming au fil des rendus du moteur externe (job.mockups), lien zoom sur
-             chaque image. Cachée tant qu'aucune mise en situation n'est annoncée. {%- endcomment -%}
-          <section
-            data-mockup-zone
-            class="mx-auto mt-8 w-full max-w-sm"
-            aria-labelledby="studio-mockups-title-{{ section.id }}"
-            hidden>
-            <h4 id="studio-mockups-title-{{ section.id }}" class="mb-3 text-center text-sm font-heading font-semibold uppercase tracking-wide text-main-80">
-              {{ 'sections.custom_art_studio.mockups_title' | t }}
-            </h4>
-            <ul data-mockup-grid class="grid grid-cols-2 gap-3"></ul>
-          </section>
-        </div>
 
         {%- comment -%} ===== Écran d'erreur de génération ===== {%- endcomment -%}
         <div data-studio-screen="error" hidden>
@@ -613,21 +545,40 @@
          SANS génération, le JS injecte dans ce bouton le contenu prix+promo (clone de
          [data-studio-buy-content]) ; sinon il porte un libellé simple (Continuer / Générer). {%- endcomment -%}
       <footer data-studio-footer class="flex flex-col gap-2 border-t border-main-10 px-4 pt-4 pb-7">
-        <button
-          type="button"
-          data-studio-back
-          class="self-start inline-flex items-center gap-1.5 rounded text-sm font-heading font-semibold text-main-80 underline hover:no-underline transition-colors duration-200 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="shrink-0">
-            <polyline points="15 18 9 12 15 6"></polyline>
-          </svg>
-          {{ 'sections.custom_art_studio.back' | t }}
-        </button>
+        {%- comment -%} Rangée navigation : « Retour » (lien-flèche, à gauche) ET, au reveal seulement,
+           « Une autre version » (lien jumeau souligné, à droite, masqué hors reveal). Deux liens
+           DISCRETS, pas des boutons : on n'incite pas à régénérer. {%- endcomment -%}
+        <div data-studio-nav-row class="flex items-center justify-between gap-3">
+          <button
+            type="button"
+            data-studio-back
+            class="inline-flex items-center gap-1.5 rounded text-sm font-heading font-semibold text-main-80 underline hover:no-underline transition-colors duration-200 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="shrink-0">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            {{ 'sections.custom_art_studio.back' | t }}
+          </button>
+          <button
+            type="button"
+            data-studio-reveal-next
+            hidden
+            class="inline-flex items-center gap-1.5 rounded text-sm font-heading font-semibold text-main-80 underline hover:no-underline transition-colors duration-200 motion-reduce:transition-none disabled:cursor-wait disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+            {{ 'sections.custom_art_studio.another_version' | t }}
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="shrink-0">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+            </svg>
+          </button>
+        </div>
         <button
           type="button"
           data-studio-next
           class="cart-button glass-anim mb-0 disabled:cursor-wait focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2">
           <span class="cart-button-text inline-block py-4 md:py-5">{{ 'sections.custom_art_studio.next' | t }}</span>
         </button>
+        {%- comment -%} Retours d'état du reveal in-place (achat / régénération), sous le bouton. {%- endcomment -%}
+        <p data-cart-feedback class="text-center text-sm text-main-80" aria-live="polite" hidden></p>
+        <p data-reveal-feedback class="text-center text-sm text-accent" role="alert" aria-live="polite" hidden></p>
         {%- comment -%} Bandeau date promo SOUS le bouton d'achat du pied (poster sans génération) :
            même snippet que la fiche toile. Masqué par défaut ; le JS l'affiche uniquement à la dernière
            étape (quand le bouton est « Ajouter au panier »). {%- endcomment -%}
@@ -684,6 +635,7 @@
         "photo_error_size": {{ 'sections.custom_art_studio.photo_error_size' | t | json }},
         "photo_error_small": {{ 'sections.custom_art_studio.photo_error_small' | t | json }},
         "photo_error_unreadable": {{ 'sections.custom_art_studio.photo_error_unreadable' | t | json }},
+        "photo_reupload_hint": {{ 'sections.custom_art_studio.photo_reupload_hint' | t | json }},
         "photo_required": {{ 'sections.custom_art_studio.photo_required' | t | json }},
         "consent_required": {{ 'sections.custom_art_studio.consent_required' | t | json }},
         "name_required": {{ 'sections.custom_art_studio.name_required' | t | json }},
@@ -694,6 +646,8 @@
         "hours": {{ 'sections.custom_art_studio.hours' | t | json }},
         "minutes": {{ 'sections.custom_art_studio.minutes' | t | json }},
         "generation_error": {{ 'sections.custom_art_studio.generation_error' | t | json }},
+        "wait_title": {{ 'sections.custom_art_studio.wait_title' | t | json }},
+        "reveal_title": {{ 'sections.custom_art_studio.reveal_title' | t | json }},
         "cart_error": {{ 'sections.custom_art_studio.cart_error' | t | json }},
         "cart_added_mock": {{ 'sections.custom_art_studio.cart_added_mock' | t | json }},
         "cart_count_sr": {{ 'sections.custom_art_studio.cart_count_sr' | t: count: '[count]' | json }},
