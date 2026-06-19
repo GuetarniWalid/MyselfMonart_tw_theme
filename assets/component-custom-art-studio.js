@@ -646,8 +646,9 @@
       this.state.stage = 'form';
       clearTimeout(this._fmtAnim);
       // Chrome du reveal masqué hors reveal : « Une autre version », « Sauvegarder » + son popover.
-      if (this.revealNextLink) this.revealNextLink.hidden = true;
-      if (this.saveButton) { this.saveButton.hidden = true; this.saveButton.setAttribute('aria-expanded', 'false'); }
+      this._setHidden(this.revealNextLink, true);
+      this._setHidden(this.saveButton, true);
+      this.saveButton?.setAttribute('aria-expanded', 'false');
       this.q('[data-studio-save-form]')?.setAttribute('hidden', '');
       const optsReset = this.q('[data-fmt-options]');
       if (optsReset) {
@@ -693,10 +694,10 @@
       // classe + attribut : la classe Tailwind `flex` du footer/dots écrase l'attribut hidden seul.
       this.footer.hidden = false;
       this.footer.classList.remove('hidden');
-      this.backButton.hidden = index === 0;
+      this._setHidden(this.backButton, index === 0);
       // La rangée nav (Retour / Une autre version) suit « Retour » : cachée si pas de retour ET pas de
       // reveal (le lien « Une autre version » est masqué hors reveal -> rangée = visibilité de Retour).
-      if (this.navRow) this.navRow.hidden = this.backButton.hidden;
+      this._setHidden(this.navRow, index === 0);
       // Dernière étape d'un produit SANS génération (poster) -> le bouton du pied DEVIENT le bouton
       // d'achat « façon fiche toile » (prix + promo dedans, cloné du template). Sinon libellé simple.
       const isLast = index === this.stepNames.length - 1;
@@ -1789,10 +1790,11 @@
         chromeShown = true;
         clearTimeout(this._revealChromeTimer);
         this.setNextReady();   // bouton plein -> « Ajouter au panier » (prix + promo)
-        if (this.navRow) this.navRow.hidden = false;
-        if (this.backButton) this.backButton.hidden = false;
-        if (this.revealNextLink) { this.revealNextLink.hidden = false; this.revealNextLink.disabled = false; }
-        if (this.saveButton) this.saveButton.hidden = false;
+        this._setHidden(this.navRow, false);
+        this._setHidden(this.backButton, false);
+        this._setHidden(this.revealNextLink, false);
+        if (this.revealNextLink) this.revealNextLink.disabled = false;
+        this._setHidden(this.saveButton, false);
         if (this.stepTitle && this.i18n.reveal_title) this.stepTitle.textContent = this.i18n.reveal_title;
       };
 
@@ -1865,8 +1867,9 @@
     // BARRE qui se remplit, et on lance la VAGUE (poster <-> toile) sur le visualiseur Format déjà monté.
     enterGeneratingStage() {
       this.state.stage = 'generating';
-      if (this.navRow) this.navRow.hidden = true;       // masque « Retour » + « Une autre version »
-      if (this.saveButton) this.saveButton.hidden = true;
+      this._setHidden(this.navRow, true);       // masque « Retour » + « Une autre version »
+      this._setHidden(this.saveButton, true);
+      this.saveButton?.setAttribute('aria-expanded', 'false');
       const genSaveForm = this.q('[data-studio-save-form]');
       if (genSaveForm) genSaveForm.hidden = true;
       if (this.stepIndicator) this.stepIndicator.hidden = true;
@@ -2287,6 +2290,15 @@
     closeSavePopover() {
       if (this.saveButton) this.saveButton.setAttribute('aria-expanded', 'false');
       this.q('[data-studio-save-form]')?.setAttribute('hidden', '');
+    }
+
+    // Bascule de visibilité ROBUSTE : l'attribut `hidden` SEUL est écrasé par une classe d'affichage
+    // (inline-flex/flex) -> on bascule AUSSI la classe Tailwind `hidden` (qui, elle, l'emporte).
+    // L'attribut reste posé pour l'arbre d'accessibilité. (Gotcha thème : cf. footer/dots.)
+    _setHidden(el, hidden) {
+      if (!el) return;
+      el.hidden = hidden;
+      el.classList.toggle('hidden', hidden);
     }
 
     async revealNext() {
