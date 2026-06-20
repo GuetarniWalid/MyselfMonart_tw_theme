@@ -462,11 +462,13 @@
 
             {%- comment -%} Cap « 3e essai+ = e-mail requis » (403) : l'e-mail saisi ici
                débloque et relance directement la génération. {%- endcomment -%}
-            <form data-error-email-form class="mx-auto mb-5 max-w-xs text-left" hidden novalidate>
+            <form data-error-email-form class="mx-auto mb-5 w-72 max-w-[calc(100vw-3rem)] text-left" hidden novalidate>
               <label for="studio-error-email-{{ section.id }}" class="mb-1 block text-xs uppercase tracking-wide text-main-70">
                 {{ 'sections.custom_art_studio.save_email_label' | t }}
               </label>
-              <div class="flex gap-2">
+              {%- comment -%} Champ + bouton EMPILÉS (pleine largeur) : l'input garde toute la largeur,
+                 pas écrasé par le bouton à côté. {%- endcomment -%}
+              <div class="flex flex-col gap-2">
                 <input
                   type="email"
                   id="studio-error-email-{{ section.id }}"
@@ -477,7 +479,7 @@
                   class="w-full rounded-xl border border-main-10 bg-secondary px-3 py-2 text-main placeholder:text-main-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
                 <button
                   type="submit"
-                  class="shrink-0 rounded-xl border-main border-1 bg-secondary px-4 py-2 font-heading font-semibold shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none disabled:cursor-wait disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+                  class="w-full rounded-xl border-main border-1 bg-secondary px-4 py-2 font-heading font-semibold shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none disabled:cursor-wait disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
                   {{ 'sections.custom_art_studio.error_email_submit' | t }}
                 </button>
               </div>

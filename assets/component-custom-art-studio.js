@@ -1736,14 +1736,19 @@
       if (zone && message) zone.textContent = message;
       // Cap « e-mail requis » : formulaire e-mail directement sur l'écran d'erreur,
       // pré-rempli si l'adresse est déjà connue ; sa soumission relance la génération.
+      const emailRequired = !!options.emailRequired;
       const emailForm = this.q('[data-error-email-form]');
       if (emailForm) {
-        emailForm.hidden = !options.emailRequired;
-        if (options.emailRequired) {
+        emailForm.hidden = !emailRequired;
+        if (emailRequired) {
           const input = this.q('[data-error-email]');
           if (input && this.state.email && !input.value) input.value = this.state.email;
         }
       }
+      // « Réessayer » (= relancer le parcours) n'a de sens que pour un ÉCHEC réel. Sur le cap
+      // « e-mail requis », réessayer retombe sur le même cap (il FAUT l'e-mail pour débloquer) ->
+      // on masque le bouton, seul le formulaire e-mail est actionnable.
+      this._setHidden(this.q('[data-studio-retry]'), emailRequired);
       this.showScreen('error');
     }
 
