@@ -323,6 +323,8 @@
       "artist_error": "Het verzenden is mislukt. Controleer je e-mailadres en probeer het opnieuw.",
       "artist_note": "Deze aanvraag telt niet mee voor je proefrondes.",
       "generation_error": "De creatie is niet gelukt — deze poging wordt niet meegerekend. Probeer het opnieuw, bij voorkeur met een scherpe foto.",
+      "error_title": "De creatie is niet gelukt",
+      "error_title_email": "Ontgrendel een nieuwe poging",
       "retry": "Opnieuw proberen",
       "cart_error": "Het toevoegen aan je winkelwagen is niet gelukt. Probeer het zo meteen opnieuw.",
       "cart_added_mock": "Demo: het kunstwerk zou aan je winkelwagen zijn toegevoegd.",

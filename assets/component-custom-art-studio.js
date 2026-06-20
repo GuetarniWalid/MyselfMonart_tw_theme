@@ -1749,6 +1749,14 @@
       // « e-mail requis », réessayer retombe sur le même cap (il FAUT l'e-mail pour débloquer) ->
       // on masque le bouton, seul le formulaire e-mail est actionnable.
       this._setHidden(this.q('[data-studio-retry]'), emailRequired);
+      // Titre de l'en-tête adapté au cas. L'écran d'erreur n'a pas de <h3> -> showScreen ne le réécrit
+      // pas, sinon il garderait « Création… » de l'étape d'attente (en contradiction avec le message).
+      if (this.stepTitle) {
+        const errTitle = emailRequired
+          ? (this.i18n.error_title_email || this.i18n.error_title)
+          : this.i18n.error_title;
+        if (errTitle) this.stepTitle.textContent = errTitle;
+      }
       this.showScreen('error');
     }
 

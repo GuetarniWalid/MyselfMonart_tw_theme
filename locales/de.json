@@ -325,6 +325,8 @@
       "artist_error": "Senden fehlgeschlagen. Bitte überprüfen Sie Ihre E-Mail-Adresse und versuchen Sie es erneut.",
       "artist_note": "Diese Anfrage wird nicht auf Ihre Versuche angerechnet.",
       "generation_error": "Die Erstellung war nicht erfolgreich — dieser Versuch wird nicht angerechnet. Versuchen Sie es erneut, idealerweise mit einem möglichst scharfen Foto.",
+      "error_title": "Die Erstellung ist nicht gelungen",
+      "error_title_email": "Schalten Sie einen neuen Versuch frei",
       "retry": "Erneut versuchen",
       "cart_error": "Das Hinzufügen zum Warenkorb hat nicht funktioniert. Bitte versuchen Sie es gleich erneut.",
       "cart_added_mock": "Demo: Das Kunstwerk wäre in den Warenkorb gelegt worden.",

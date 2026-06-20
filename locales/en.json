@@ -553,6 +553,8 @@
       "artist_error": "Your submission didn't go through. Check your email and try again.",
       "artist_note": "This request won’t count toward your attempts.",
       "generation_error": "Generation failed — this attempt won’t be counted. Try again with a clear, sharp photo.",
+      "error_title": "Your artwork didn’t come through",
+      "error_title_email": "Unlock another try",
       "retry": "Try again",
       "cart_error": "Couldn't add to cart. Please try again in a moment.",
       "cart_added_mock": "Demo: the artwork would have been added to your cart.",
