@@ -26,11 +26,11 @@
  * - mockups (moteur de rendu externe) : streaming post-reveal via le polling du job
  *   (cellules squelette -> images + lien zoom), dégradation gracieuse si le moteur est down.
  *
- * Reveal WebGL : au reveal, un nœud <perspective-canvas> est RECRÉÉ dans
- * [data-studio-webgl-slot] (pattern « popup » de snippets/tw-main-product-perspective.liquid)
- * avec l'aperçu généré en texture (URL CORS-ok requise) + le cadre/format choisis (état figé
- * via perspective-config.state). Repli image + cadre CSS si WebGL indisponible
- * (prefers-reduced-motion, vieux mobiles, Save-Data, texture refusée).
+ * Reveal IN-PLACE (sur l'étape Format) : l'aperçu généré remplace le placeholder dans le MÊME
+ * <perspective-canvas> du slot [data-studio-format-webgl-slot] (texture CORS-ok requise) + le
+ * cadre/format choisis (état figé via perspective-config.state). Repli <img> statique (poster
+ * générique puis image finale au reveal) si WebGL indisponible (prefers-reduced-motion, vieux
+ * mobiles, Save-Data, texture refusée) — cf. mountFormatPreview/canUse3D/swapFallbackImg.
  *
  * Mode mock (setting de section) : équipes en fixture locale, génération simulée ~8 s,
  * œuvre de démonstration construite en SVG (couleurs de l'équipe + prénom + numéro),
@@ -100,16 +100,6 @@
   const OPTION_FRAME_RE = /cadre|finition|frame|encadrement/;
   const OPTION_BORDER_RE = /bordure|border/;
 
-  // Teintes des finitions pour le repli image + cadre CSS (WebGL indisponible). Tons calés
-  // sur FRAME_COLOR de component-perspective-canvas.js — données produit, pas couleurs thème.
-  const FRAME_FALLBACK_COLOR = {
-    blanc: '#EDEAE3',
-    noir: '#3B3B40',
-    argent: '#9EA1A8',
-    chene: '#BDB096',
-    noyer: '#66422B',
-  };
-
   // Classes du CTA quand il flotte en bas d'écran (préfixe `mobile:` = sans effet desktop).
   // Littéraux conservés ici pour rester détectables par le scan Tailwind (assets/**/*.js).
   const CTA_FLOAT_CLASSES = ['mobile:fixed', 'mobile:bottom-3', 'mobile:inset-x-4', 'mobile:z-30'];
@@ -161,14 +151,6 @@
       .normalize('NFD')
       .replace(/\p{Diacritic}/gu, '')
       .toLowerCase();
-
-  // Teinte CSS de la finition choisie (null = sans cadre / inconnue).
-  const frameFallbackColor = (label) => {
-    const n = normalize(label);
-    if (!n || n.indexOf('sans') !== -1) return null;
-    const key = Object.keys(FRAME_FALLBACK_COLOR).find((k) => n.indexOf(k) !== -1);
-    return key ? FRAME_FALLBACK_COLOR[key] : null;
-  };
 
   // Valeur API du format depuis le libellé d'option (« 30x40 cm » -> '30x40') :
   // le back-end attend l'enum '30x40' | '60x80', jamais le libellé brut (422 sinon).
@@ -238,6 +220,9 @@
       this.stepNodes = this.querySelectorAll('[data-cp-node]');
       this.stepLineFills = this.querySelectorAll('[data-cp-line-fill]');
       this.resumeNote = this.querySelector('[data-resume-note]');
+      // Texte par défaut de la note (« Bon retour… ») capturé une fois : setResumeNote() le restaure
+      // après avoir affiché une note temporaire (chargement / lien périmé). cf. A1.
+      this._resumeNoteDefault = this.resumeNote ? this.resumeNote.textContent.trim() : '';
       // Promo « façon bloc buy » (réglages de la section) + contenu d'achat capturé côté Liquid
       // (snippets regular/promotion-in-cart-button) : le JS clone ce template dans le bouton du pied
       // et n'actualise que les prix (.main-price / .crossed-price) selon la variante choisie.
@@ -252,6 +237,7 @@
       this.mockupTimer = null;
       this.mockMockupTimers = [];
       this.lastFocused = null;
+      this.guestLink = false; // mode « invité par lien » (?ca_job) : mémoire éphémère, actions verrouillées
 
       this.state = {
         // 1re étape de CETTE config (foot : 'photo' ; produit sans photo : sa 1re étape).
@@ -288,6 +274,13 @@
       // Snapshot avant les bind : le syncVariant initial de bindFormatStep réécrit
       // state.selectedOptions depuis les radios par défaut.
       this.restoredOptions = { ...(this.state.selectedOptions || {}) };
+      // Reprise par LIEN e-mail (?ca_job=<uuid>) : le back-end mint ces liens dans l'e-mail de
+      // sauvegarde, mais le thème ne les lisait jamais (0 occurrence avant A1). On capture l'uuid
+      // ici ; open() le consomme (resumeFromJob), en PRIORITÉ sur la reprise locale.
+      try {
+        const caJob = new URLSearchParams(window.location.search).get('ca_job');
+        if (caJob && caJob.trim()) this._pendingCaJob = caJob.trim();
+      } catch (e) { /* URLSearchParams indispo : reprise locale seule */ }
       this.bindStickyCta();
       this.bindOpenClose();
       this.bindPhotoStep();
@@ -302,6 +295,13 @@
       this.renderStepper();
       this.renderGenericPanels();
       this.bindGenericInputs();
+      // Lien e-mail (?ca_job) : OUVERTURE AUTO du studio au chargement, direct sur le reveal du job
+      // partagé (décision Walid). setTimeout(0) (et non rAF, mis en pause dans un onglet non visible) :
+      // s'exécute APRÈS les scripts `defer` -> perspective-canvas est défini (reveal WebGL, pas repli).
+      // _pendingCaJob est consommé par open() -> une seule ouverture auto.
+      if (this._pendingCaJob) {
+        setTimeout(() => { if (this._pendingCaJob) this.open(); }, 0);
+      }
     }
 
     disconnectedCallback() {
@@ -337,6 +337,10 @@
     }
 
     persist() {
+      // Mode « invité par lien » (?ca_job) : mémoire ÉPHÉMÈRE — on n'écrit jamais le localStorage
+      // (le job vu n'est pas forcément rattaché à la session de CE navigateur ; éviter qu'une visite
+      // ultérieure sans lien réactive des actions verrouillées 403). cf. A1 / enterGuestLink.
+      if (this.guestLink) return;
       try {
         const { step, screen, stage, consent, fields, teamId, teamName, teamColors, playerName,
           playerNumber, selectedOptions, variantId, jobId, sessionToken, email, status,
@@ -537,12 +541,31 @@
       this.dialog.addEventListener('keydown', this.onKeydown);
 
       if (this.shouldShowResumeNote && this.resumeNote) {
-        this.resumeNote.hidden = false;
+        this.setResumeNote(this._resumeNoteDefault); // texte par défaut garanti (immunisé d'un message A1 antérieur)
         this.shouldShowResumeNote = false;
       }
 
-      // Reprise IN-PLACE (mémoire durable) : le reveal/la génération vivent sur l'étape Format
-      // (screen reste 'steps'), donc on route sur le STAGE, pas sur un écran séparé.
+      // Reprise par LIEN e-mail (?ca_job) : PRIORITÉ absolue sur la reprise locale, consommée une
+      // seule fois (cf. A1). Le focus va d'abord au bouton « fermer », puis resumeFromJob (async)
+      // route selon le statut du job (GET public, aucun cap possible).
+      if (this._pendingCaJob) {
+        const uuid = this._pendingCaJob;
+        this._pendingCaJob = null;
+        this.q('[data-studio-close]')?.focus();
+        this.resumeFromJob(uuid);
+        return;
+      }
+
+      // Reprise IN-PLACE (mémoire durable localStorage) : le reveal/la génération vivent sur l'étape
+      // Format (screen reste 'steps'), donc on route sur le STAGE, pas sur un écran séparé.
+      this.routeResume();
+      this.q('[data-studio-close]')?.focus();
+    }
+
+    // Routage de reprise LOCAL (mémoire durable localStorage) : artiste / reveal prêt / génération en
+    // cours / parcours normal. Extrait d'open() pour être réutilisé après une reprise par lien périmée
+    // (enterGuestExpired). Ne lit QUE l'état local — aucun appel réseau, donc AUCUN cap (cf. A3).
+    routeResume() {
       const fmtStep = this.stepNames.includes('format') ? 'format' : this.stepNames[this.stepNames.length - 1];
       if (this.state.screen === 'artist' && this.state.jobId) {
         this.showArtist();
@@ -566,7 +589,98 @@
         this.state.screen = 'steps';
         this.showStep(this.state.step);
       }
-      this.q('[data-studio-close]')?.focus();
+    }
+
+    /* -------------------------------------------- reprise par lien e-mail (?ca_job) — A1 */
+
+    // Reprise « invité par lien » : le GET /jobs/:uuid est PUBLIC (preview visible sans session),
+    // mais reveal-next/save y sont 403 -> on ré-affiche le reveal en mode invité (« Une autre
+    // version » + « Sauvegarder » masqués) ; l'ACHAT reste possible (panier Shopify, pas le
+    // back-end custom-art). Mémoire éphémère : guestLink coupe persist() (cf. A1).
+    async resumeFromJob(uuid) {
+      this.guestLink = true; // dès l'entrée : la note de chargement ne doit pas persister l'état
+      const fmtStep = this.stepNames.includes('format') ? 'format' : this.stepNames[this.stepNames.length - 1];
+      // Mock (harness/démo) : pas de back-end -> on simule selon l'uuid (test sans coût).
+      if (this.config.mock) { this.resumeFromJobMock(uuid, fmtStep); return; }
+      // Pendant le GET : on pose l'étape Format (le reveal y vit) + une note de chargement discrète.
+      this.state.screen = 'steps';
+      this.showStep(fmtStep);
+      this.setResumeNote(this.i18n.resume_loading);
+      try {
+        const { response, data } = await this.api(`/api/custom-art/jobs/${encodeURIComponent(uuid)}`);
+        if (response.status === 404 || response.status === 410 || !response.ok) { this.enterGuestExpired(); return; }
+        const status = data.status;
+        if (status === 'expired') { this.enterGuestExpired(); return; }
+        if (status === 'manual_review' || status === 'failed') {
+          // Le job est déjà pris en charge (l'e-mail de reprise a été émis à la sauvegarde) : on
+          // montre l'écran artiste en mode « déjà envoyé » (pas de formulaire 403 sans session).
+          this.state.jobId = uuid;
+          this.state.artistRequested = uuid;
+          this.showArtist();
+          return;
+        }
+        const preview = this.previewFrom(data);
+        if (status === 'ready' && preview) { this.enterGuestLink(uuid, data, preview, fmtStep); return; }
+        // Job non concluant via lien (pending/judging…) : cas improbable -> message doux + local.
+        this.enterGuestExpired();
+      } catch (e) {
+        this.enterGuestExpired();
+      }
+    }
+
+    // Simulation mock de resumeFromJob (harness) : uuid contenant « expire »/« 404 » -> lien périmé ;
+    // « artist »/« echec »/« fail » -> écran artiste ; sinon -> reveal invité prêt. Aucun coût.
+    resumeFromJobMock(uuid, fmtStep) {
+      const u = normalize(uuid);
+      this.state.screen = 'steps';
+      this.showStep(fmtStep);
+      if (u.indexOf('expire') !== -1 || u.indexOf('404') !== -1) { this.enterGuestExpired(); return; }
+      if (u.indexOf('artist') !== -1 || u.indexOf('echec') !== -1 || u.indexOf('fail') !== -1) {
+        this.state.jobId = uuid;
+        this.state.artistRequested = uuid;
+        this.showArtist();
+        return;
+      }
+      this.enterGuestLink(uuid, {}, this.mockArtworkUrl(0), fmtStep);
+    }
+
+    // Entre en mode « invité par lien » et ré-affiche le reveal du job partagé. previewUrl ramené
+    // SANS persister (persist() est déjà coupé par guestLink). Le chrome du reveal masquera « Une
+    // autre version » + « Sauvegarder » (403 sans session) via this.guestLink (cf. showReveal).
+    enterGuestLink(uuid, data, preview, fmtStep) {
+      this.guestLink = true;
+      this.state.jobId = uuid;
+      this.state.previewUrl = preview;
+      this.state.status = 'ready';
+      this.state.stage = 'ready';
+      this.state.imageStale = false;
+      // Best-effort : si le GET expose les métadonnées du job, on pré-remplit l'affichage panier
+      // (sinon _job_id suffit côté production). Noms de champs back-end tolérés au plus large.
+      if (data) {
+        if (data.playerName != null) this.state.playerName = data.playerName;
+        if (data.playerNumber != null) this.state.playerNumber = String(data.playerNumber);
+        if (data.teamName != null) this.state.teamName = data.teamName;
+        if (data.email != null && !this.state.email) this.state.email = data.email;
+      }
+      this.setResumeNote(null);
+      this.showStep(fmtStep);
+      this.showReveal(preview, false);
+    }
+
+    // Lien e-mail périmé / introuvable : message DOUX (pas une erreur dure) + bascule sur le parcours
+    // LOCAL normal (l'utilisateur garde ses propres saisies / son dernier reveal local s'il en a un).
+    enterGuestExpired() {
+      this.guestLink = false; // on quitte le mode invité -> la mémoire durable locale reprend la main
+      this.setResumeNote(this.i18n.resume_link_expired);
+      this.routeResume();
+    }
+
+    // Affiche/masque la note de reprise (haut du corps). msg falsy -> on RESTAURE le texte par défaut
+    // du DOM (« Bon retour… ») et on masque, pour ne pas polluer la note « photo perdue » (open()).
+    setResumeNote(msg) {
+      if (!this.resumeNote) return;
+      this.resumeNote.textContent = msg || this._resumeNoteDefault || '';
+      this.resumeNote.hidden = !msg;
     }
 
     attemptClose() {
@@ -669,6 +783,8 @@
         fmtSlotReset.classList.add('md:w-1/2');
         const pc0 = fmtSlotReset.querySelector('perspective-canvas');
         if (pc0) { pc0.classList.remove('studio-fmt-grow', 'max-w-sm'); pc0.classList.add('max-w-xs'); }
+        const fb0 = fmtSlotReset.querySelector('[data-fmt-fallback-img]');
+        if (fb0) { fb0.classList.remove('studio-fmt-grow', 'max-w-sm'); fb0.classList.add('max-w-xs'); fb0.style.display = ''; }
       }
       if (this.nextButton) {
         this.nextButton.classList.remove('studio-gen-bar');
@@ -1589,6 +1705,9 @@
         }
         return;
       }
+      // Une génération ACTIVE sort du mode « invité par lien » : ce job devient celui de la session
+      // courante -> on réautorise la mémoire durable locale. cf. A1.
+      this.guestLink = false;
       this.enterGeneratingStage();
 
       if (this.config.mock) {
@@ -1805,9 +1924,11 @@
         this.setNextReady();   // bouton plein -> « Ajouter au panier » (prix + promo)
         this._setHidden(this.navRow, false);
         this._setHidden(this.backButton, false);
-        this._setHidden(this.revealNextLink, false);
-        if (this.revealNextLink) this.revealNextLink.disabled = false;
-        this._setHidden(this.saveButton, false);
+        // Mode « invité par lien » (?ca_job, sans session) : « Une autre version » et « Sauvegarder »
+        // renverraient 403 -> on les laisse masqués ; l'achat (panier Shopify) reste disponible. cf. A1.
+        this._setHidden(this.revealNextLink, !!this.guestLink);
+        if (this.revealNextLink) this.revealNextLink.disabled = !!this.guestLink;
+        this._setHidden(this.saveButton, !!this.guestLink);
         if (this.stepTitle && this.i18n.reveal_title) this.stepTitle.textContent = this.i18n.reveal_title;
       };
 
@@ -1828,48 +1949,10 @@
         // Pas de vague (continue / reprise / sans WebGL) : image posée direct -> chrome immédiat.
         if (pc && typeof pc.finishGenerating === 'function') pc.finishGenerating(url);
         else if (pc && typeof pc.setTexture === 'function') pc.setTexture(url);
+        else this.swapFallbackImg(url); // repli sans WebGL : la vraie image entre dans le <img>
         showRevealChrome();
       }
       if (persistState) this.persist();
-    }
-
-    // Sous-état de l'écran reveal (visualiseur HÉROS CONTINU). 'generating' = poster générique +
-    // overlay « atelier en cours » ; 'ready' = vraie image + chrome d'achat. Bascule la visibilité
-    // des éléments marqués [data-stage-generating] / [data-stage-ready] dans l'écran reveal.
-    setStage(stage) {
-      this.state.stage = stage;
-      const screen = this.q('[data-studio-screen="reveal"]');
-      if (!screen) return;
-      screen.dataset.studioStage = stage;
-      screen.querySelectorAll('[data-stage-generating]').forEach((el) => { el.hidden = stage !== 'generating'; });
-      screen.querySelectorAll('[data-stage-ready]').forEach((el) => { el.hidden = stage !== 'ready'; });
-      // Lueur de marque pulsée sur le cadre du repli (poster plat) pendant la génération
-      // (cf. input.css .studio-gen-glow) ; retirée au reveal pour retrouver l'ombre neumorphique.
-      const frame = this.q('[data-reveal-frame]');
-      if (frame) frame.classList.toggle('studio-gen-glow', stage === 'generating');
-    }
-
-    // Monte le poster GÉNÉRIQUE (config.posterPreview) dans le visualiseur du reveal -> placeholder
-    // pendant la génération : même cadre/format que le choix utilisateur, même moteur papier+verre
-    // que l'étape Format. Au reveal, seule l'image change (morph sur place). Réutilise
-    // mountPerspective (repli figure, un seul contexte GL, bascule sur perspective:ready).
-    mountStagePlaceholder() {
-      const src = this.config.posterPreview && this.config.posterPreview.src;
-      if (!src) return;
-      const image = this.q('[data-reveal-image]');
-      if (image) {
-        // Repli image (WebGL KO) = poster générique. Si l'image échoue (404/réseau), on la MASQUE
-        // pour ne jamais afficher l'icône « image cassée » : l'overlay + la barre signalent déjà
-        // « en cours » (cadre neutre). Le visualiseur 3D fait le même repli de son côté.
-        image.onerror = () => { image.hidden = true; };
-        image.src = src;
-        image.hidden = false;
-      }
-      this.mountPerspective(src);
-      // Même lueur de marque pulsée sur le visualiseur 3D du placeholder (le reveal, lui, monte un
-      // <perspective-canvas> SANS cette classe -> le glow ne survit pas au morph).
-      const pc = this.q('[data-studio-webgl-slot] perspective-canvas');
-      if (pc) pc.classList.add('studio-gen-glow');
     }
 
     // Entre dans l'étage de GÉNÉRATION : visualiseur (placeholder générique) + overlay « atelier en
@@ -1914,9 +1997,11 @@
       slot.style.marginLeft = '-1rem';
       slot.style.marginRight = '-1rem';
       const pc = slot.querySelector('perspective-canvas');
+      const fb = slot.querySelector('[data-fmt-fallback-img]');
       if (pc) { pc.classList.remove('max-w-xs'); pc.classList.add('max-w-sm'); }
+      if (fb) { fb.classList.remove('max-w-xs'); fb.classList.add('max-w-sm'); } // repli <img> grandit comme le canvas
       if (animate) {
-        const growEl = pc || slot; // sans WebGL : on anime le slot — JAMAIS de max-w dessus (sinon il se bride)
+        const growEl = pc || fb || slot; // sans WebGL : on anime le <img> de repli, sinon le slot
         growEl.classList.add('studio-fmt-grow');
         setTimeout(() => growEl.classList.remove('studio-fmt-grow'), 750);
       }
@@ -2002,68 +2087,6 @@
       return this._webglAvailable;
     }
 
-    // Repli image + cadre CSS : la bordure de la figure prend la teinte de la finition
-    // choisie (donnée produit dynamique -> style inline, pas d'équivalent Tailwind).
-    applyFallbackFrame() {
-      const frame = this.q('[data-reveal-frame]');
-      if (!frame) return;
-      const color = frameFallbackColor(this.selectedOptionByName(OPTION_FRAME_RE));
-      frame.style.borderColor = color || 'transparent';
-    }
-
-    // Monte le visualiseur 3D (toile + cadre/format choisis) avec l'aperçu généré en
-    // texture — pattern « popup » de tw-main-product-perspective : le nœud
-    // <perspective-canvas> est RECRÉÉ à chaque reveal (l'ancien libère son contexte GL
-    // via disconnectedCallback). Le slot reste caché tant que le 1er rendu n'est pas
-    // présenté (évènement perspective:ready) : si le WebGL est indisponible
-    // (motion-reduce, vieux mobile, Save-Data, texture refusée), la figure image + cadre
-    // CSS reste le rendu final. L'URL d'aperçu DOIT être servie CORS-ok (crossorigin
-    // anonymous géré par component-perspective-canvas).
-    mountPerspective(url) {
-      const slot = this.q('[data-studio-webgl-slot]');
-      const figure = this.q('[data-reveal-figure]');
-      this.applyFallbackFrame();
-      if (figure) figure.hidden = false;
-      // Un seul contexte WebGL : on libère l'aperçu « format » avant de monter le reveal.
-      const fmtSlot = this.q('[data-studio-format-webgl-slot]');
-      if (fmtSlot) { fmtSlot.innerHTML = ''; fmtSlot.hidden = true; }
-      if (!slot) return;
-      slot.hidden = true;
-      slot.innerHTML = '';
-      if (!url) return;
-      if (!customElements.get('perspective-canvas')) return; // script non chargé (repli)
-      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      if (!this.webglAvailable()) return;
-
-      const cfg = {
-        ariaLabel: this.i18n.webgl_preview_label,
-        raw: { src: url },
-        // État FIGÉ (pas de painting-variant-picker dans le studio) : finition + format
-        // résolus par NOM d'option, interprétés par syncStateFromDOM (config.state). Le CADRE
-        // est résolu par HANDLE (render-key) -> stable hors français.
-        state: {
-          border: 'white',
-          frame: this.selectedRenderKeyByName(OPTION_FRAME_RE),
-          size: this.selectedOptionByName(OPTION_FORMAT_RE),
-        },
-      };
-      // Poster -> rendu PAPIER + VERRE (même moteur que l'aperçu « format »). Les posters sont
-      // identifiés par la présence d'une image d'aperçu poster dans la config.
-      if (this.config.posterPreview && this.config.posterPreview.src) cfg.material = 'paper';
-      // Chevrons échappés : un « </script> » dans le JSON inline casserait le parsing HTML.
-      const json = JSON.stringify(cfg).replace(/</g, '\\u003c');
-      // Fond mur en SIBLING (remplit la bande pleine largeur du slot) + poster centré au-dessus.
-      slot.innerHTML = this.decorBgHtml()
-        + '<perspective-canvas class="relative z-10 mx-auto block w-full max-w-xs md:max-w-sm" data-context="studio">'
-        + `<canvas class="perspective-canvas-gl block w-full aspect-square opacity-0 transition-opacity duration-500 ease-out" role="img" aria-label="${escapeHtml(this.i18n.webgl_preview_label)}">${escapeHtml(this.i18n.webgl_canvas_caption)}</canvas>`
-        + `<script type="application/json" class="perspective-config">${json}</scr` + 'ipt>'
-        + '</perspective-canvas>';
-      slot.addEventListener('perspective:ready', () => {
-        slot.hidden = false;
-        if (figure) figure.hidden = true;
-      }, { once: true });
-    }
-
     /* Aperçu WebGL « format » (poster) : monte un <perspective-canvas> en mode PAPIER dans le
        panneau Format, reflétant la TAILLE + le CADRE choisis. Le moteur en mode studio ignore le
        DOM (config.state figé) -> on RE-MONTE le nœud à chaque changement (pattern « popup », le
@@ -2072,18 +2095,20 @@
     mountFormatPreview() {
       const slot = this.q('[data-studio-format-webgl-slot]');
       if (!slot) return;
-      const revealSlot = this.q('[data-studio-webgl-slot]');
-      if (revealSlot) { revealSlot.innerHTML = ''; revealSlot.hidden = true; }
       slot.innerHTML = '';
       // Après une génération, l'IMAGE GÉNÉRÉE reste dans le visualiseur Format (on ne la « bouge »
       // jamais) : changer cadre/taille la recadre en direct (re-mount), sans régénérer. Avant toute
       // génération, on retombe sur le poster générique (placeholder).
       const src = this.state.previewUrl || (this.config.posterPreview && this.config.posterPreview.src);
-      if (!src
-        || !customElements.get('perspective-canvas')
-        || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
-        || !this.webglAvailable()) {
-        slot.hidden = true;
+      if (!src) { slot.hidden = true; return; }
+      // Repli SANS 3D (WebGL indispo / reduced-motion / Save-Data / script absent) : POSTER STATIQUE
+      // (<img>) au lieu de masquer le slot -> le reveal a TOUJOURS un visuel + la barre signale la
+      // progression. La vraie image y est posée au reveal (swapFallbackImg). cf. chantier B.
+      if (!this.canUse3D()) {
+        slot.innerHTML = this.decorBgHtml() + this.fallbackImgHtml(src);
+        const fb = slot.querySelector('[data-fmt-fallback-img]');
+        if (fb) fb.onerror = () => { fb.style.display = 'none'; }; // 404/réseau -> pas d'icône cassée
+        slot.hidden = false;
         return;
       }
       const cfg = {
@@ -2104,6 +2129,35 @@
         + `<script type="application/json" class="perspective-config">${json}</scr` + 'ipt>'
         + '</perspective-canvas>';
       slot.hidden = false;
+    }
+
+    // True si le visualiseur 3D (WebGL) est utilisable. Sinon -> repli <img> statique (chantier B).
+    // Conditions de repli : script perspective-canvas absent, prefers-reduced-motion, mode Save-Data
+    // (économie de données), ou WebGL indisponible (vieux mobile / contexte refusé).
+    canUse3D() {
+      if (!customElements.get('perspective-canvas')) return false;
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+      const conn = navigator.connection || navigator.webkitConnection || navigator.mozConnection;
+      if (conn && conn.saveData) return false;
+      return this.webglAvailable();
+    }
+
+    // Markup du poster STATIQUE de repli (sans 3D) : même placement que le <canvas> (centré, max-w-xs
+    // -> il grandit comme lui via _fillFormatSlot). object-contain -> image entière, jamais rognée.
+    fallbackImgHtml(src) {
+      return '<img data-fmt-fallback-img'
+        + ` src="${escapeHtml(src)}" alt="${escapeHtml(this.i18n.webgl_preview_label)}"`
+        + ' decoding="async" class="relative z-10 mx-auto block w-full max-w-xs max-h-[58vh] rounded-xl object-contain shadow-neu-sm">';
+    }
+
+    // Repli sans WebGL : pose la vraie image générée dans le <img> de repli au reveal (et à « Une
+    // autre version »). 404/réseau -> on masque (pas d'icône cassée).
+    swapFallbackImg(url) {
+      const fb = this.q('[data-studio-format-webgl-slot] [data-fmt-fallback-img]');
+      if (!fb || !url) return;
+      fb.onerror = () => { fb.style.display = 'none'; };
+      fb.style.display = '';
+      fb.src = url;
     }
 
     /* ------------------------------------------- mises en situation (mockups) */
@@ -2215,6 +2269,10 @@
     // e-mail (décision plan §0.15). L'essai n'est pas décompté côté back-end.
     showArtist() {
       this.stopTimers();
+      // Cohérence de stage (comme showError) : l'écran artiste n'est PAS une génération en cours -> on
+      // remet stage='form' pour qu'une réouverture (mémoire durable) ne relance pas le polling d'un job
+      // mort. Défense en profondeur : open()/routeResume excluent déjà screen==='artist'. cf. chantier C.
+      this.state.stage = 'form';
       const form = this.q('[data-artist-form]');
       const feedback = this.q('[data-artist-feedback]');
       const alreadySent = this.state.artistRequested

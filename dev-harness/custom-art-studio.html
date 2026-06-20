@@ -56,7 +56,11 @@
   <main class="page-width px-4 py-10">
     <div class="mx-auto max-w-lg rounded-xl border border-main-10 bg-main-2 p-4 text-sm text-main-80">
       <p><strong>Harness local</strong> — studio de personnalisation en mode mock. Parcours complet : photo → équipe → prénom/numéro → format/finition → attente (~8 s) → révélation (WebGL + mises en situation simulées).</p>
-      <p class="mt-2">Scénario « Faire réaliser par un artiste » (manual_review) : saisir le prénom <strong>ARTISTE</strong> à l'étape 3.</p>
+      <p class="mt-2"><strong>Prénoms déclencheurs</strong> (étape 3, mode mock seulement) :
+        <strong>ARTISTE</strong> / <strong>ECHEC</strong> → écran artiste · <strong>ERREUR</strong> / <strong>EXPIRE</strong> → écran d'erreur · <strong>LENT</strong> → attente longue (~24 s).</p>
+      <p class="mt-2"><strong>Reprise par lien e-mail</strong> (chantier A1) — ajouter à l'URL :
+        <code>?ca_job=ready-xxx</code> → reveal « invité par lien » (Une autre version + Sauvegarder masqués) ·
+        <code>?ca_job=artist-xxx</code> → écran artiste · <code>?ca_job=expired</code> → lien périmé (note douce + parcours normal).</p>
     </div>
 
     <!-- Faux overlay global du thème (présent dans les layouts) pour tester le flou en local -->
@@ -494,6 +498,8 @@
             "error_title_email": "Débloquez un nouvel essai",
             "wait_title": "Création de votre tableau…",
             "reveal_title": "Votre tableau est prêt !",
+            "resume_loading": "Nous retrouvons votre création…",
+            "resume_link_expired": "Ce lien n'est plus actif. Vous pouvez composer une nouvelle création.",
             "cart_error": "L'ajout au panier n'a pas fonctionné. Réessayez dans un instant.",
             "cart_added_mock": "Démonstration : le tableau aurait été ajouté au panier.",
             "cart_count_sr": "[count] article(s) dans le panier",
