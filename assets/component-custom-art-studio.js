@@ -588,6 +588,10 @@
       } else {
         this.state.screen = 'steps';
         this.showStep(this.state.step);
+        // A2 : aucune reprise locale -> on demande au back-end le DERNIER job de la session
+        // (GET /jobs/last, cookie de session). S'il existe -> bascule sur le reveal ; sinon (204)
+        // parcours normal. Lecture seule, JAMAIS de cap (cf. A3). Produits à génération uniquement.
+        if (this.hasGeneration) this.resumeLastJob();
       }
     }
 
@@ -681,6 +685,79 @@
       if (!this.resumeNote) return;
       this.resumeNote.textContent = msg || this._resumeNoteDefault || '';
       this.resumeNote.hidden = !msg;
+    }
+
+    /* --------------------------------------- reprise « dernier job de la session » (/jobs/last) — A2 */
+
+    // À l'ouverture, sans reprise locale ni ?ca_job : on demande au back-end le DERNIER job de la
+    // session (GET /jobs/last, authentifié par cookie + x-custom-art-session). LECTURE SEULE, JAMAIS
+    // de cap (204 si rien à reprendre / session inconnue). Couvre le retour « même appareil,
+    // localStorage vidé ». Une seule tentative par chargement. Job de SA session -> actions complètes.
+    async resumeLastJob() {
+      if (this._lastJobChecked) return;
+      this._lastJobChecked = true;
+      if (this.config.mock) { this.resumeLastJobMock(); return; }
+      try {
+        const { response, data } = await this.api('/api/custom-art/jobs/last');
+        if (response.status === 204 || !response.ok) return; // rien à reprendre -> parcours normal
+        if (!this._canApplyLastJob()) return; // l'utilisateur a déjà avancé/interagi -> on ne le yanke pas
+        const status = data.status;
+        if (status === 'manual_review' || status === 'failed') {
+          this.state.jobId = data.uuid || data.jobId || data.id;
+          this.persist();
+          this.showArtist();
+          return;
+        }
+        const preview = this.previewFrom(data);
+        if (status === 'ready' && preview) this.applyLastJob(data, preview);
+      } catch (e) { /* silencieux : parcours normal */ }
+    }
+
+    // Simulation mock (harness) : ?ca_last=ready -> reveal (session, actions complètes) ;
+    // ?ca_last=artist -> écran artiste ; absent/none -> 204 (parcours normal). Aucun coût.
+    resumeLastJobMock() {
+      let v = '';
+      try { v = normalize(new URLSearchParams(window.location.search).get('ca_last') || ''); } catch (e) { /* no-op */ }
+      if (!v || v === 'none') return;
+      if (!this._canApplyLastJob()) return;
+      if (v.indexOf('artist') !== -1 || v.indexOf('fail') !== -1 || v.indexOf('echec') !== -1) {
+        this.state.jobId = 'mock-last';
+        this.persist();
+        this.showArtist();
+        return;
+      }
+      this.applyLastJob({ uuid: 'mock-last', teamName: 'Paris' }, this.mockArtworkUrl(0));
+    }
+
+    // Garde anti-yank : on n'applique le « dernier job » que si l'utilisateur est TOUJOURS à l'écran
+    // de départ (1re étape, rien saisi, studio ouvert) — sinon l'appel async résoudrait pendant qu'il
+    // édite et le téléporterait vers un vieux reveal.
+    _canApplyLastJob() {
+      return this.state.screen === 'steps'
+        && this.state.stage === 'form'
+        && !this.photoFile
+        && this.state.step === this.stepNames[0]
+        && Boolean(this.dialog && this.dialog.classList.contains('flex'));
+    }
+
+    // Bascule sur le reveal du dernier job de la session. guestLink=false (job de SA session ->
+    // « Une autre version »/« Sauvegarder » actives + mémoire DURABLE : on persiste pour réhydrater
+    // le localStorage de cet appareil -> la prochaine ouverture est instantanée).
+    applyLastJob(data, preview) {
+      const fmtStep = this.stepNames.includes('format') ? 'format' : this.stepNames[this.stepNames.length - 1];
+      this.guestLink = false;
+      this.state.jobId = data.uuid || data.jobId || data.id;
+      this.state.previewUrl = preview;
+      this.state.status = 'ready';
+      this.state.stage = 'ready';
+      this.state.imageStale = false;
+      if (data.teamName != null) this.state.teamName = data.teamName;
+      if (data.playerName != null) this.state.playerName = data.playerName;
+      if (data.playerNumber != null) this.state.playerNumber = String(data.playerNumber);
+      if (data.email != null && !this.state.email) this.state.email = data.email;
+      this.state.screen = 'steps';
+      this.showStep(fmtStep);
+      this.showReveal(preview, true); // persist=true -> réhydrate le localStorage (reprise instantanée ensuite)
     }
 
     attemptClose() {
