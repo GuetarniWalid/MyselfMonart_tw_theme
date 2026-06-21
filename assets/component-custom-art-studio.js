@@ -279,7 +279,17 @@
       // ici ; open() le consomme (resumeFromJob), en PRIORITÉ sur la reprise locale.
       try {
         const caJob = new URLSearchParams(window.location.search).get('ca_job');
-        if (caJob && caJob.trim()) this._pendingCaJob = caJob.trim();
+        if (caJob && caJob.trim()) {
+          this._pendingCaJob = caJob.trim();
+          // On RETIRE ?ca_job de l'URL (sans recharger) une fois l'uuid copié en mémoire : sinon un
+          // reload/partage/favori ré-entrerait perpétuellement en mode invité (et l'uuid d'un job tiers
+          // traînerait dans la barre d'adresse). L'ouverture auto de CE chargement reste OK (déjà capturé).
+          try {
+            const u = new URL(window.location.href);
+            u.searchParams.delete('ca_job');
+            window.history.replaceState(window.history.state, '', u);
+          } catch (e2) { /* history indispo : non bloquant */ }
+        }
       } catch (e) { /* URLSearchParams indispo : reprise locale seule */ }
       this.bindStickyCta();
       this.bindOpenClose();
@@ -369,8 +379,12 @@
         // back-end a pu expirer. On NE reprend PAS l'état de job (sinon reveal-next/ajout panier sur un
         // job mort = coût + commande non productible) : on garde les SAISIES et on repart proprement.
         // savedAt absent = migration sessionStorage de la session EN COURS (fraîche) -> pas de reset.
-        if (saved.savedAt && (Date.now() - saved.savedAt) > RESUME_TTL_MS
-            && (this.state.stage === 'ready' || this.state.stage === 'generating')) {
+        // L'écran ARTISTE (stage='form' mais screen='artist' + jobId) échappait à la garde -> on l'inclut :
+        // sinon une réouverture des semaines plus tard ré-affiche l'artiste sur un job mort (renvoi e-mail
+        // -> boucle d'erreur). Tout état de JOB trop ancien repart proprement.
+        const tooOld = saved.savedAt && (Date.now() - saved.savedAt) > RESUME_TTL_MS;
+        if (tooOld && (this.state.stage === 'ready' || this.state.stage === 'generating'
+            || (this.state.screen === 'artist' && this.state.jobId))) {
           this.state.stage = 'form';
           this.state.screen = 'steps';
           this.state.previewUrl = null;
@@ -379,6 +393,7 @@
           this.state.status = null;
           this.state.revealCount = 0;
           this.state.mockups = null;
+          this.state.artistRequested = null;
           this.state.imageStale = true; // données potentiellement modifiées entre-temps -> régé propre
         }
         // Backfill de l'état générique depuis les clés foot historiques (sessionStorage antérieur
@@ -410,6 +425,7 @@
       clearInterval(this.progressTimer);
       clearInterval(this.mockupTimer);
       clearTimeout(this._revealChromeTimer); // repli du chrome d'achat différé (cf. showReveal)
+      clearTimeout(this._webglFallbackTimer); // backstop repli <img> si l'init WebGL n'aboutit jamais
       (this.mockMockupTimers || []).forEach(clearTimeout);
       this.mockMockupTimers = [];
       this.pollTimer = this.mockTimer = this.progressTimer = this.mockupTimer = null;
@@ -709,7 +725,15 @@
           return;
         }
         const preview = this.previewFrom(data);
-        if (status === 'ready' && preview) this.applyLastJob(data, preview);
+        if (status === 'ready' && preview) {
+          // On VALIDE que l'image charge AVANT de basculer/persister : un job 'ready' à l'image CDN
+          // morte figerait sinon un reveal cassé en localStorage (persisté) et court-circuiterait un
+          // /jobs/last frais pendant 3 j. Image KO -> on ignore en silence (parcours normal).
+          const probe = new Image();
+          probe.onload = () => { if (this._canApplyLastJob()) this.applyLastJob(data, preview); };
+          probe.onerror = () => { /* aperçu mort -> on ne reprend pas ce job */ };
+          probe.src = preview;
+        }
       } catch (e) { /* silencieux : parcours normal */ }
     }
 
@@ -2010,23 +2034,26 @@
       };
 
       const pc = this.q('[data-studio-format-webgl-slot] perspective-canvas');
-      if (pc && pc._gen && typeof pc.finishGenerating === 'function') {
+      const pcUsable = Boolean(pc && pc.gl); // canvas RÉELLEMENT initialisé (sinon init KO -> repli <img>)
+      if (pcUsable && pc._gen && typeof pc.finishGenerating === 'function') {
         // GÉNÉRATION en cours : la dernière vague essuie le placeholder vers la vraie image. Le bouton
         // reste la barre « Création en cours… » pendant la vague, puis devient « Ajouter au panier »
         // à la fin (event perspective:revealed). Repli temporisé si l'event ne vient pas.
         pc.addEventListener('perspective:revealed', showRevealChrome, { once: true });
         this._revealChromeTimer = setTimeout(showRevealChrome, 4000);
         pc.finishGenerating(url);
-      } else if (opts.wave && pc && typeof pc.revealSwap === 'function') {
+      } else if (opts.wave && pcUsable && typeof pc.revealSwap === 'function') {
         // « UNE AUTRE VERSION » : on est DÉJÀ au reveal -> le chrome d'achat reste en place, et l'image
         // fait la MÊME vague (essuyage de la version actuelle vers la nouvelle). Pas de fausse attente.
         showRevealChrome();
         pc.revealSwap(url);
       } else {
-        // Pas de vague (continue / reprise / sans WebGL) : image posée direct -> chrome immédiat.
-        if (pc && typeof pc.finishGenerating === 'function') pc.finishGenerating(url);
-        else if (pc && typeof pc.setTexture === 'function') pc.setTexture(url);
-        else this.swapFallbackImg(url); // repli sans WebGL : la vraie image entre dans le <img>
+        // Pas de vague (continue / reprise / sans WebGL OU canvas KO) : image posée direct -> chrome
+        // immédiat. Un canvas monté mais non initialisé (pcUsable faux) bascule sur le repli <img>.
+        if (pcUsable && typeof pc.finishGenerating === 'function') pc.finishGenerating(url);
+        else if (pcUsable && typeof pc.setTexture === 'function') pc.setTexture(url);
+        else if (this.q('[data-studio-format-webgl-slot] [data-fmt-fallback-img]')) this.swapFallbackImg(url);
+        else this._fallbackToImg(url); // canvas KO sans repli encore monté -> on remplace par le <img>
         showRevealChrome();
       }
       if (persistState) this.persist();
@@ -2184,7 +2211,7 @@
       if (!this.canUse3D()) {
         slot.innerHTML = this.decorBgHtml() + this.fallbackImgHtml(src);
         const fb = slot.querySelector('[data-fmt-fallback-img]');
-        if (fb) fb.onerror = () => { fb.style.display = 'none'; }; // 404/réseau -> pas d'icône cassée
+        if (fb) fb.onerror = () => this._fallbackImgError(fb); // 404 -> poster générique, jamais mur vide
         slot.hidden = false;
         return;
       }
@@ -2206,6 +2233,44 @@
         + `<script type="application/json" class="perspective-config">${json}</scr` + 'ipt>'
         + '</perspective-canvas>';
       slot.hidden = false;
+      // BACKSTOP : le pré-check canUse3D() peut passer alors que l'init du VRAI canvas échoue ensuite
+      // (éviction « too many WebGL contexts », getContext/shader KO) -> aucune frame, aucun
+      // perspective:ready. Si le canvas n'est toujours pas prêt après le délai, on bascule sur le repli
+      // <img> pour ne JAMAIS laisser un visualiseur vide avec un bouton d'achat actif au-dessus.
+      clearTimeout(this._webglFallbackTimer);
+      this._webglFallbackTimer = setTimeout(() => {
+        const pc = slot.querySelector('perspective-canvas');
+        if (pc && (!pc.gl || !pc.ready)) this._fallbackToImg(src);
+      }, 4000);
+    }
+
+    // Bascule le visualiseur Format vers le repli <img> statique en cours de route (init WebGL échouée
+    // tardivement). Au reveal, pose la vraie image finale ; sinon le placeholder/poster passé. Idempotent.
+    _fallbackToImg(src) {
+      const slot = this.q('[data-studio-format-webgl-slot]');
+      if (!slot) return;
+      const imgSrc = (this.state.stage === 'ready' && this.state.previewUrl)
+        || src || (this.config.posterPreview && this.config.posterPreview.src);
+      if (!imgSrc) return;
+      slot.innerHTML = this.decorBgHtml() + this.fallbackImgHtml(imgSrc);
+      const fb = slot.querySelector('[data-fmt-fallback-img]');
+      if (fb) fb.onerror = () => this._fallbackImgError(fb);
+      slot.hidden = false;
+    }
+
+    // Erreur de chargement du repli <img> : dernier recours = le poster générique (jamais un mur vide).
+    // Si même le poster échoue, on masque (pas d'icône cassée). L'ACHAT reste valide (le job porte
+    // l'image côté serveur) -> on ne bloque pas le bouton sur un simple aléa CDN de l'aperçu.
+    _fallbackImgError(fb) {
+      if (!fb) return;
+      const poster = this.config.posterPreview && this.config.posterPreview.src;
+      if (poster && fb.src !== poster && !fb.dataset.triedPoster) {
+        fb.dataset.triedPoster = '1';
+        fb.style.display = '';
+        fb.src = poster;
+        return;
+      }
+      fb.style.display = 'none';
     }
 
     // True si le visualiseur 3D (WebGL) est utilisable. Sinon -> repli <img> statique (chantier B).
@@ -2215,7 +2280,10 @@
       if (!customElements.get('perspective-canvas')) return false;
       if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
       const conn = navigator.connection || navigator.webkitConnection || navigator.mozConnection;
-      if (conn && conn.saveData) return false;
+      // Aligné sur le gate INTERNE du moteur (component-perspective-canvas init) : il refuse aussi
+      // l'init en 2g/slow-2g (pas seulement Save-Data) -> sans ce miroir, on monterait un canvas qui
+      // n'init jamais = visualiseur vide. (Le repli a posteriori dans mountFormatPreview couvre le reste.)
+      if (conn && (conn.saveData || conn.effectiveType === 'slow-2g' || conn.effectiveType === '2g')) return false;
       return this.webglAvailable();
     }
 
@@ -2232,7 +2300,8 @@
     swapFallbackImg(url) {
       const fb = this.q('[data-studio-format-webgl-slot] [data-fmt-fallback-img]');
       if (!fb || !url) return;
-      fb.onerror = () => { fb.style.display = 'none'; };
+      delete fb.dataset.triedPoster; // nouvelle image -> on autorise à nouveau le recours poster
+      fb.onerror = () => this._fallbackImgError(fb);
       fb.style.display = '';
       fb.src = url;
     }
@@ -2346,6 +2415,7 @@
     // e-mail (décision plan §0.15). L'essai n'est pas décompté côté back-end.
     showArtist() {
       this.stopTimers();
+      this.setResumeNote(null); // la note « Nous retrouvons… » n'a de sens que sur le reveal, pas l'artiste
       // Cohérence de stage (comme showError) : l'écran artiste n'est PAS une génération en cours -> on
       // remet stage='form' pour qu'une réouverture (mémoire durable) ne relance pas le polling d'un job
       // mort. Défense en profondeur : open()/routeResume excluent déjà screen==='artist'. cf. chantier C.

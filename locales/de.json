@@ -290,6 +290,7 @@
       "number_required": "Bitte eine Zahl zwischen 1 und 99 eingeben.",
       "jersey_preview_label": "Vorschau des Schriftzugs auf der Rückseite des Trikots",
       "jersey_placeholder_name": "VORNAME",
+      "jersey_placeholder_number": "10",
       "price_label": "Preis",
       "variant_unavailable": "Diese Kombination ist derzeit nicht verfügbar.",
       "wait_title": "Ihr Bild wird erstellt…",

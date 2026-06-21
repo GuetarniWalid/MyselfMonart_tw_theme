@@ -289,6 +289,7 @@
       "number_required": "Elige un número del 1 al 99.",
       "jersey_preview_label": "Vista previa del texto en la espalda de la camiseta",
       "jersey_placeholder_name": "NOMBRE",
+      "jersey_placeholder_number": "10",
       "price_label": "Precio",
       "variant_unavailable": "Esta combinación no está disponible por el momento.",
       "wait_title": "Creando tu cuadro…",

@@ -518,6 +518,7 @@
       "number_required": "Please enter a number between 1 and 99.",
       "jersey_preview_label": "Back-of-jersey lettering preview",
       "jersey_placeholder_name": "FIRST NAME",
+      "jersey_placeholder_number": "10",
       "price_label": "Price",
       "variant_unavailable": "This combination isn’t available right now.",
       "wait_title": "Creating your artwork…",
