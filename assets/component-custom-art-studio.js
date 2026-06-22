@@ -2081,6 +2081,17 @@
         // fait la MÊME vague (essuyage de la version actuelle vers la nouvelle). Pas de fausse attente.
         showRevealChrome();
         pc.revealSwap(url);
+      } else if (pc && !pc.gl && typeof pc.setTexture === 'function') {
+        // REPRISE (fermeture puis réouverture sur le reveal) : showStep('format') vient de RE-MONTER le
+        // <perspective-canvas> via mountFormatPreview, mais son init WebGL est ASYNC -> pc.gl pas encore
+        // prêt ICI (showReveal s'exécute synchrone juste après). On ATTEND 'perspective:ready' puis on pose
+        // la texture, au lieu de basculer tout de suite sur _fallbackToImg — qui DÉTRUIRAIT le canvas et
+        // afficherait l'image BRUTE en grand (bug). Si l'init échoue vraiment, le backstop 4 s de
+        // mountFormatPreview retombe proprement sur le repli <img>.
+        pc.addEventListener('perspective:ready', () => {
+          if (typeof pc.setTexture === 'function') pc.setTexture(url);
+        }, { once: true });
+        showRevealChrome();
       } else {
         // Pas de vague (continue / reprise / sans WebGL OU canvas KO) : image posée direct -> chrome
         // immédiat. Un canvas monté mais non initialisé (pcUsable faux) bascule sur le repli <img>.

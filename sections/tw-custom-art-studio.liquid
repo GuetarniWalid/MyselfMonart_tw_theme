@@ -377,17 +377,19 @@
           {%- comment -%} Desktop/iPad (md+) : 2 colonnes — IMAGE à GAUCHE (section fond mur unie,
              poster centré, sans blanc) / OPTIONS à DROITE -> popup MOINS HAUTE (plus de troncature
              iPad). Mobile : empilé, options puis bande image (ordre préservé via order-*). {%- endcomment -%}
-          <div class="relative flex flex-col md:flex-row md:items-stretch">
-            {%- comment -%} « Sauvegarder » : bouton icône+texte (ombre neu) en HAUT À DROITE du
-               visualiseur, par-dessus le fond commun. Masqué hors reveal. Clic -> popover e-mail
-               (parcours de reprise). Réutilise data-studio-save-toggle / data-studio-save-form. {%- endcomment -%}
+          {%- comment -%} « Sauvegarder ma création » : conteneur EN FLUX au-dessus du visualiseur ->
+             le bouton ne chevauche JAMAIS l'œuvre (il la pousse dessous) et reste haut. Affiché seulement
+             au reveal (le JS bascule le bouton ; sinon conteneur replié, hauteur nulle). `relative z-20`
+             = ancre du popover e-mail (absolu -> n'altère pas la mise en page) + garde le bouton au-dessus
+             du visuel qui peut déborder (md:-my-4). {%- endcomment -%}
+          <div data-studio-save-row class="relative z-20 flex justify-end">
             <button
               type="button"
               data-studio-save-toggle
               aria-expanded="false"
               aria-controls="studio-save-form-{{ section.id }}"
               hidden
-              class="hidden absolute right-3 top-3 z-20 inline-flex items-center gap-1.5 rounded-xl border-main border-2 bg-secondary px-3 py-2 text-sm font-heading font-semibold text-main shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+              class="hidden inline-flex items-center gap-1.5 rounded-xl border-main border-2 bg-secondary px-3 py-2 text-sm font-heading font-semibold text-main shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
               <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="shrink-0">
                 <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
                 <polyline points="17 21 17 13 7 13 7 21"></polyline>
@@ -402,7 +404,7 @@
               aria-label="{{ 'sections.custom_art_studio.save_creation' | t }}"
               hidden
               novalidate
-              class="absolute right-3 top-16 z-20 w-72 max-w-[calc(100vw-2rem)] rounded-xl border-main border-2 bg-secondary p-3 shadow-neu-sm">
+              class="absolute right-0 top-full z-30 mt-2 w-72 max-w-[calc(100vw-2rem)] rounded-xl border-main border-2 bg-secondary p-3 shadow-neu-sm">
               <label for="studio-save-email-{{ section.id }}" class="mb-1 block text-xs uppercase tracking-wide text-main-70">
                 {{ 'sections.custom_art_studio.save_email_label' | t }}
               </label>
@@ -425,6 +427,9 @@
               </div>
               <p data-save-feedback class="mt-2 text-sm text-main-80" aria-live="polite" hidden></p>
             </form>
+          </div>
+          {%- comment -%} Rangée visualiseur + options (le bouton « Sauvegarder » est désormais au-dessus). {%- endcomment -%}
+          <div class="relative flex flex-col md:flex-row md:items-stretch">
             {%- comment -%} SECTION IMAGE : le JS y monte le fond mur (absolute inset-0) + le poster
                centré. Mobile = bande pleine largeur (-ml/-mr-4) SOUS les options ; desktop = colonne
                GAUCHE pleine couleur qui touche le bord (-ml-4). Vide tant que non monté ->

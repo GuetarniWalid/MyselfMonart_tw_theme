@@ -261,9 +261,9 @@
 
             <!-- ===== Étape 4 — Format + finition ===== -->
             <div data-studio-panel="format" hidden>
-             <div class="relative flex flex-col md:flex-row md:items-stretch">
-              <!-- « Sauvegarder » : bouton icône+texte (ombre neu) en HAUT À DROITE du visualiseur, masqué hors reveal. Clic -> popover e-mail. -->
-              <button type="button" data-studio-save-toggle aria-expanded="false" aria-controls="studio-save-form-harness" hidden class="hidden absolute right-3 top-3 z-20 inline-flex items-center gap-1.5 rounded-xl border-main border-2 bg-secondary px-3 py-2 text-sm font-heading font-semibold text-main shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+             <!-- « Sauvegarder ma création » : conteneur EN FLUX au-dessus du visualiseur (ne chevauche jamais l'œuvre, la pousse dessous). relative z-20 = ancre du popover + bouton au-dessus du visuel. -->
+             <div data-studio-save-row class="relative z-20 flex justify-end">
+              <button type="button" data-studio-save-toggle aria-expanded="false" aria-controls="studio-save-form-harness" hidden class="hidden inline-flex items-center gap-1.5 rounded-xl border-main border-2 bg-secondary px-3 py-2 text-sm font-heading font-semibold text-main shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
                 <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="shrink-0">
                   <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
                   <polyline points="17 21 17 13 7 13 7 21"></polyline>
@@ -271,7 +271,7 @@
                 </svg>
                 Sauvegarder
               </button>
-              <form data-studio-save-form id="studio-save-form-harness" role="group" aria-label="Sauvegarder ma création" hidden novalidate class="absolute right-3 top-16 z-20 w-72 max-w-[calc(100vw-2rem)] rounded-xl border-main border-2 bg-secondary p-3 shadow-neu-sm">
+              <form data-studio-save-form id="studio-save-form-harness" role="group" aria-label="Sauvegarder ma création" hidden novalidate class="absolute right-0 top-full z-30 mt-2 w-72 max-w-[calc(100vw-2rem)] rounded-xl border-main border-2 bg-secondary p-3 shadow-neu-sm">
                 <label for="studio-save-email-harness" class="mb-1 block text-xs uppercase tracking-wide text-main-70">Votre e-mail</label>
                 <div class="flex flex-col gap-2">
                   <input type="email" id="studio-save-email-harness" data-save-email required autocomplete="email" placeholder="prenom@exemple.fr" class="w-full rounded-xl border border-main-10 bg-secondary px-3 py-2 text-main placeholder:text-main-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
@@ -279,6 +279,9 @@
                 </div>
                 <p data-save-feedback class="mt-2 text-sm text-main-80" aria-live="polite" hidden></p>
               </form>
+             </div>
+             <!-- Rangée visualiseur + options (bouton « Sauvegarder » désormais au-dessus). -->
+             <div class="relative flex flex-col md:flex-row md:items-stretch">
               <!-- SECTION IMAGE : montée par le JS (fond mur + poster). Mobile = bande sous les options ; desktop = colonne gauche pleine couleur. -->
               <div data-studio-format-webgl-slot data-allow-empty
                    class="relative order-2 -ml-4 -mr-4 mt-4 overflow-hidden py-5 md:order-1 md:mr-0 md:-ml-4 md:-my-4 md:w-1/2 md:py-6"
