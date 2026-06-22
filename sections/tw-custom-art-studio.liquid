@@ -435,12 +435,15 @@
                GAUCHE pleine couleur qui touche le bord (-ml-4). Vide tant que non monté ->
                data-allow-empty (règle *:empty). {%- endcomment -%}
             <div data-studio-format-webgl-slot data-allow-empty
-                 class="relative order-2 -ml-4 -mr-4 mt-4 overflow-hidden py-5 md:order-1 md:mr-0 md:-ml-4 md:-my-4 md:w-1/2 md:py-6"
+                 class="relative order-2 -ml-4 -mr-4 mt-4 overflow-hidden py-5 md:order-1 md:ml-0 md:mr-0 md:shrink-0 md:-my-4 md:w-1/2 md:py-6"
                  hidden></div>
 
             {%- comment -%} OPTIONS : format + finition + ligne prix. Masquées par le JS pendant la
                génération / le reveal (in-place) -> le visualiseur prend toute la place. {%- endcomment -%}
-            <div data-fmt-options class="order-1 md:order-2 md:w-1/2 md:self-center md:pl-6">
+            {%- comment -%} Mobile : le bloc options reste un PANNEAU BLANC (bg-secondary) qui déborde
+               pour couvrir le padding du corps (le corps est beige sur l'étape format) -> options sur
+               blanc « comme avant », seule la zone du tableau (sous les options) reste beige. {%- endcomment -%}
+            <div data-fmt-options class="order-1 mobile:-mx-4 mobile:-mt-4 mobile:bg-secondary mobile:px-4 mobile:pt-4 mobile:pb-4 md:order-2 md:w-[calc(50%_+_1rem)] md:shrink-0 md:self-stretch md:bg-secondary md:-my-4 md:py-6 md:pl-6 md:pr-4">
               {% render 'studio-variant-picker', product: product %}
 
               {%- comment -%} Ligne prix « PRIX 30 € » : utile au foot (bouton « Générer »). Masquée

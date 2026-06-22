@@ -284,10 +284,10 @@
              <div class="relative flex flex-col md:flex-row md:items-stretch">
               <!-- SECTION IMAGE : montée par le JS (fond mur + poster). Mobile = bande sous les options ; desktop = colonne gauche pleine couleur. -->
               <div data-studio-format-webgl-slot data-allow-empty
-                   class="relative order-2 -ml-4 -mr-4 mt-4 overflow-hidden py-5 md:order-1 md:mr-0 md:-ml-4 md:-my-4 md:w-1/2 md:py-6"
+                   class="relative order-2 -ml-4 -mr-4 mt-4 overflow-hidden py-5 md:order-1 md:ml-0 md:mr-0 md:shrink-0 md:-my-4 md:w-1/2 md:py-6"
                    hidden></div>
               <!-- OPTIONS : format + finition + prix (masquées par le JS pendant la génération in-place) -->
-              <div data-fmt-options class="order-1 md:order-2 md:w-1/2 md:self-center md:pl-6">
+              <div data-fmt-options class="order-1 mobile:-mx-4 mobile:-mt-4 mobile:bg-secondary mobile:px-4 mobile:pt-4 mobile:pb-4 md:order-2 md:w-[calc(50%_+_1rem)] md:shrink-0 md:self-stretch md:bg-secondary md:-my-4 md:py-6 md:pl-6 md:pr-4">
               <fieldset class="mb-5">
                 <legend class="mb-2 text-xs uppercase tracking-wide text-main-70">Format</legend>
                 <div class="flex flex-wrap gap-2">
