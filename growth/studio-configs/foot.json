@@ -10,6 +10,10 @@
       "faceAngle": "three-quarter",
       "photoCheck": true,
       "payloadKey": "photo",
+      "examples": {
+        "good": { "image": "studio-photo-exemple-bon-3-4.jpg", "alt": { "fr": "Exemple de bonne photo : garçon vu de trois-quarts, visage net et bien éclairé" } },
+        "bad": { "image": "studio-photo-exemple-mauvais-dos.jpg", "alt": { "fr": "Exemple de photo à éviter : enfant de dos, visage non visible" }, "caption": { "fr": "À éviter : visage non visible (de dos ou de trop loin)" } }
+      },
       "title": { "fr": "Votre photo", "en": "Your photo", "de": "Dein Foto", "nl": "Je foto", "es": "Tu foto" },
       "checkpointLabel": { "fr": "Photo", "en": "Photo", "de": "Foto", "nl": "Foto", "es": "Foto" }
     },

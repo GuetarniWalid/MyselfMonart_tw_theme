@@ -1363,7 +1363,7 @@
           if (this.config.productType) fd.append('productType', this.config.productType);
           const { response, data } = await this.api('/api/custom-art/photo-check', { method: 'POST', body: fd });
           if (!response.ok) throw new Error(`HTTP ${response.status}`);
-          verdict = { ok: !!data.ok, issues: Array.isArray(data.issues) ? data.issues : [] };
+          verdict = { ok: !!data.ok, issues: Array.isArray(data.issues) ? data.issues : [], faceAngleDetected: typeof data.faceAngleDetected === 'string' ? data.faceAngleDetected : '' };
         }
       } catch (e) {
         // Vérif indisponible -> on N'EMPÊCHE PAS la vente (fail-open). Pré-check back-end à la génération.
@@ -1377,7 +1377,15 @@
     }
 
     _applyPhotoVerdict(verdict, opts) {
-      this._renderPhotoVerdict(verdict.ok ? 'ok' : 'bad', verdict, opts || {});
+      // 3 états : refusée (ok=false) / acceptée mais pas idéale (angle détecté ≠ angle de l'œuvre)
+      // / parfaite. Le « warn » N'EMPÊCHE PAS de continuer (permissif), il informe seulement.
+      let kind = 'ok';
+      if (!verdict.ok) {
+        kind = 'bad';
+      } else if (verdict.faceAngleDetected && verdict.faceAngleDetected !== 'none' && verdict.faceAngleDetected !== this.photoFaceAngle) {
+        kind = 'warn';
+      }
+      this._renderPhotoVerdict(kind, verdict, opts || {});
       this.state.photoOk = !!verdict.ok;
       this.persist();
       this.updateNextDisabled();
@@ -1413,8 +1421,10 @@
     // Mock (mode démo) : un nom de fichier contenant « bad/mauvais/ko » simule un refus, sinon OK.
     _mockPhotoVerdict(file) {
       const name = ((file && file.name) || '').toLowerCase();
-      if (/bad|mauvais|ko/.test(name)) return { ok: false, issues: ['too_dark', 'angle_mismatch'] };
-      return { ok: true, issues: [] };
+      if (/bad|mauvais|ko/.test(name)) return { ok: false, issues: ['too_dark', 'angle_mismatch'], faceAngleDetected: 'back' };
+      // « warn/face » -> photo acceptée mais angle ≠ œuvre (état ambre) ; sinon angle = œuvre (vert).
+      if (/warn|face/.test(name)) return { ok: true, issues: [], faceAngleDetected: this.photoFaceAngle === 'front' ? 'profile' : 'front' };
+      return { ok: true, issues: [], faceAngleDetected: this.photoFaceAngle };
     }
 
     // Rendu du panneau de verdict (loading / ok / error / bad). Messages d'issues localisés (i18n).
@@ -1436,6 +1446,13 @@
       if (kind === 'ok') {
         el.className = 'mt-3 flex items-center gap-2 rounded-xl border-2 border-[#5a8a6a] bg-[#eef5ec] px-3 py-2.5 text-sm font-medium text-main';
         el.textContent = '✓ ' + (this.i18n.photo_check_ok || 'Photo parfaite');
+        return;
+      }
+      if (kind === 'warn') {
+        // Acceptée mais pas idéale (angle détecté ≠ angle de l'œuvre) : ambre, on laisse continuer.
+        el.className = 'mt-3 rounded-xl border-2 border-[#e0a64e] bg-[#fdf4e3] px-3 py-2.5 text-sm text-main';
+        el.innerHTML = '<p class="font-semibold">⚠ ' + escapeHtml(this.i18n.photo_check_warn_title || '') + '</p>'
+          + '<p class="mt-1">' + escapeHtml(this._photoWarnMessage()) + '</p>';
         return;
       }
       el.className = 'mt-3 rounded-xl border-2 border-accent bg-secondary px-3 py-2.5 text-sm text-main';
@@ -1471,6 +1488,15 @@
       });
       if (!out.length) out.push(this.i18n.photo_issue_generic || '');
       return out;
+    }
+
+    // Message « accepté mais pas idéal » selon l'angle attendu par l'œuvre (état ambre).
+    _photoWarnMessage() {
+      const key = this.photoFaceAngle === 'profile' ? 'photo_warn_angle_profile'
+        : this.photoFaceAngle === 'back' ? 'photo_warn_angle_back'
+        : this.photoFaceAngle === 'three-quarter' ? 'photo_warn_angle_three_quarter'
+        : 'photo_warn_angle_front';
+      return this.i18n[key] || '';
     }
 
     // Consigne photo adaptée à faceAngle (config A) : « …de face / de profil / de dos / de trois-quarts ».

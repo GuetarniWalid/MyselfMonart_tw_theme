@@ -140,54 +140,95 @@
         </p>
 
         {%- comment -%} ===== Étape 1 — Photo ===== {%- endcomment -%}
-        {%- comment -%} Exemples bonne/mauvaise photo : image_picker admin prioritaire,
-           sinon repli sur 2 assets embarqués (photos libres Pexels, optimisées < 80 Ko)
-           -> la fiche est complète sans aucune action admin. {%- endcomment -%}
+        {%- comment -%} Exemples bonne/mauvaise photo : priorité au JSON config produit
+           (studio.config -> étape photo -> examples : per-produit), sinon image_picker admin,
+           sinon 2 assets embarqués génériques -> zéro action admin requise. L'image peut être
+           un nom d'asset thème (résolu par asset_url) OU une URL complète (Shopify Files). {%- endcomment -%}
         <div data-studio-panel="photo">
+          {%- liquid
+            assign studio_cfg = product.metafields.studio.config.value
+            assign ex_good_url = blank
+            assign ex_bad_url = blank
+            assign ex_good_alt = blank
+            assign ex_bad_alt = blank
+            assign ex_bad_caption = blank
+            if studio_cfg.steps
+              for st in studio_cfg.steps
+                if st.type == 'photo'
+                  assign ex = st.examples
+                  if ex.good.image
+                    if ex.good.image contains '//'
+                      assign ex_good_url = ex.good.image
+                    else
+                      assign ex_good_url = ex.good.image | asset_url
+                    endif
+                  endif
+                  if ex.good.alt
+                    assign ex_good_alt = ex.good.alt[request.locale.iso_code] | default: ex.good.alt.fr
+                  endif
+                  if ex.bad.image
+                    if ex.bad.image contains '//'
+                      assign ex_bad_url = ex.bad.image
+                    else
+                      assign ex_bad_url = ex.bad.image | asset_url
+                    endif
+                  endif
+                  if ex.bad.alt
+                    assign ex_bad_alt = ex.bad.alt[request.locale.iso_code] | default: ex.bad.alt.fr
+                  endif
+                  if ex.bad.caption
+                    assign ex_bad_caption = ex.bad.caption[request.locale.iso_code] | default: ex.bad.caption.fr
+                  endif
+                  break
+                endif
+              endfor
+            endif
+            if ex_good_url == blank
+              if section.settings.good_photo_image
+                assign ex_good_url = section.settings.good_photo_image | image_url: width: 600
+              else
+                assign ex_good_url = 'studio-photo-exemple-portrait-net.jpg' | asset_url
+              endif
+            endif
+            if ex_bad_url == blank
+              if section.settings.bad_photo_image
+                assign ex_bad_url = section.settings.bad_photo_image | image_url: width: 600
+              else
+                assign ex_bad_url = 'studio-photo-exemple-ombres-dures.jpg' | asset_url
+              endif
+            endif
+            if ex_good_alt == blank
+              assign ex_good_alt = section.settings.good_photo_alt
+            endif
+            if ex_bad_alt == blank
+              assign ex_bad_alt = section.settings.bad_photo_alt
+            endif
+            if ex_bad_caption == blank
+              assign ex_bad_caption = 'sections.custom_art_studio.photo_bad_caption' | t
+            endif
+          -%}
           <ul class="grid grid-cols-2 gap-3 mb-5">
             <li class="rounded-xl border border-main-10 bg-main-2 p-3 text-center">
-              {%- if section.settings.good_photo_image -%}
-                <img
-                  src="{{ section.settings.good_photo_image | image_url: width: 300 }}"
-                  alt="{{ section.settings.good_photo_alt | escape }}"
-                  width="{{ section.settings.good_photo_image.width }}"
-                  height="{{ section.settings.good_photo_image.height }}"
-                  loading="lazy"
-                  decoding="async"
-                  class="mb-2 aspect-square w-full rounded-lg object-cover">
-              {%- else -%}
-                <img
-                  src="{{ 'studio-photo-exemple-portrait-net.jpg' | asset_url }}"
-                  alt="{{ section.settings.good_photo_alt | escape }}"
-                  width="600"
-                  height="600"
-                  loading="lazy"
-                  decoding="async"
-                  class="mb-2 aspect-square w-full rounded-lg object-cover">
-              {%- endif -%}
+              <img
+                src="{{ ex_good_url }}"
+                alt="{{ ex_good_alt | escape }}"
+                width="600"
+                height="600"
+                loading="lazy"
+                decoding="async"
+                class="mb-2 aspect-square w-full rounded-lg object-cover">
               <p class="text-xs text-main-80">✓ <span data-photo-caption>{{ 'sections.custom_art_studio.photo_caption_front' | t }}</span></p>
             </li>
             <li class="rounded-xl border border-main-10 bg-main-2 p-3 text-center">
-              {%- if section.settings.bad_photo_image -%}
-                <img
-                  src="{{ section.settings.bad_photo_image | image_url: width: 300 }}"
-                  alt="{{ section.settings.bad_photo_alt | escape }}"
-                  width="{{ section.settings.bad_photo_image.width }}"
-                  height="{{ section.settings.bad_photo_image.height }}"
-                  loading="lazy"
-                  decoding="async"
-                  class="mb-2 aspect-square w-full rounded-lg object-cover grayscale">
-              {%- else -%}
-                <img
-                  src="{{ 'studio-photo-exemple-ombres-dures.jpg' | asset_url }}"
-                  alt="{{ section.settings.bad_photo_alt | escape }}"
-                  width="600"
-                  height="600"
-                  loading="lazy"
-                  decoding="async"
-                  class="mb-2 aspect-square w-full rounded-lg object-cover grayscale">
-              {%- endif -%}
-              <p class="text-xs text-main-80">✗ {{ 'sections.custom_art_studio.photo_bad_caption' | t }}</p>
+              <img
+                src="{{ ex_bad_url }}"
+                alt="{{ ex_bad_alt | escape }}"
+                width="600"
+                height="600"
+                loading="lazy"
+                decoding="async"
+                class="mb-2 aspect-square w-full rounded-lg object-cover grayscale">
+              <p class="text-xs text-main-80">✗ {{ ex_bad_caption }}</p>
             </li>
           </ul>
 
@@ -681,6 +722,11 @@
         "photo_issue_angle_three_quarter": {{ 'sections.custom_art_studio.photo_issue_angle_three_quarter' | t | json }},
         "photo_issue_angle_profile": {{ 'sections.custom_art_studio.photo_issue_angle_profile' | t | json }},
         "photo_issue_angle_back": {{ 'sections.custom_art_studio.photo_issue_angle_back' | t | json }},
+        "photo_check_warn_title": {{ 'sections.custom_art_studio.photo_check_warn_title' | t | json }},
+        "photo_warn_angle_front": {{ 'sections.custom_art_studio.photo_warn_angle_front' | t | json }},
+        "photo_warn_angle_three_quarter": {{ 'sections.custom_art_studio.photo_warn_angle_three_quarter' | t | json }},
+        "photo_warn_angle_profile": {{ 'sections.custom_art_studio.photo_warn_angle_profile' | t | json }},
+        "photo_warn_angle_back": {{ 'sections.custom_art_studio.photo_warn_angle_back' | t | json }},
         "consent_required": {{ 'sections.custom_art_studio.consent_required' | t | json }},
         "name_required": {{ 'sections.custom_art_studio.name_required' | t | json }},
         "number_required": {{ 'sections.custom_art_studio.number_required' | t | json }},
