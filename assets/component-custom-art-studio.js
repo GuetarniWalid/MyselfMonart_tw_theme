@@ -1417,11 +1417,11 @@
         // = style inline (dynamiques). data-allow-empty : le crest n'a pas d'enfant (fond seul) ->
         // exempté de la règle globale *:empty{display:none}.
         return `<li>
-          <label class="group relative flex h-full cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-main-10 bg-secondary p-2.5 text-center shadow-neu-xs transition-[transform,box-shadow,background-color,border-color] duration-150 hover:bg-main-5 hover:shadow-neu-md active:scale-[0.98] has-[:checked]:border-[#5a8a6a] has-[:checked]:bg-[#eef5ec] has-[:checked]:shadow-neu-md motion-reduce:transition-none motion-reduce:active:scale-100">
+          <label class="group relative flex h-full min-h-[118px] cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-main-10 bg-secondary p-2.5 text-center shadow-neu-xs transition-[transform,box-shadow,background-color,border-color] duration-150 hover:bg-main-5 hover:shadow-neu-md active:scale-[0.98] has-[:checked]:border-[#5a8a6a] has-[:checked]:bg-[#eef5ec] has-[:checked]:shadow-neu-md motion-reduce:transition-none motion-reduce:active:scale-100 sm:min-h-[126px]">
             <input type="radio" name="studio-team" value="${escapeHtml(team.id)}" class="peer sr-only" data-team-input${checked}>
             <span class="pointer-events-none absolute right-1.5 top-1.5 z-10 hidden h-5 w-5 place-items-center rounded-full bg-[#4f8061] text-secondary shadow-neu-xs peer-checked:grid" aria-hidden="true">${CHECK_SVG_INLINE}</span>
             <span class="block h-14 w-14 overflow-hidden rounded-full border border-main-20 shadow-neu-xs peer-focus-visible:ring-2 peer-focus-visible:ring-main peer-focus-visible:ring-offset-2 sm:h-16 sm:w-16" aria-hidden="true">${crestSvg(colors[0], colors[1] || colors[0])}</span>
-            <span class="line-clamp-2 min-h-[2rem] text-xs font-medium leading-tight text-main-80 peer-checked:font-bold peer-checked:text-main">${escapeHtml(team.name)}</span>
+            <span class="line-clamp-2 text-xs font-medium leading-tight text-main-80 peer-checked:font-bold peer-checked:text-main">${escapeHtml(team.name)}</span>
           </label>
         </li>`;
       }).join('');
