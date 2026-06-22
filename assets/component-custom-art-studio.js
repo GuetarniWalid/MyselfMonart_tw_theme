@@ -940,18 +940,28 @@
       // d'achat « façon fiche toile » (prix + promo dedans, cloné du template). Sinon libellé simple.
       const isLast = index === this.stepNames.length - 1;
       const isBuyStep = isLast && !this.hasGeneration;
+      // Prix + promo DANS le bouton du pied (façon « Ajouter au panier ») dès la dernière étape : achat
+      // direct (poster) OU étape Format d'un produit à génération (foot, bouton « Continuer »/« Générer »).
+      const priceInButton = isLast;
       // Image déjà générée et inchangée -> « Continuer » (le clic ré-affiche le reveal, AUCUNE régé) ;
       // sinon « Générer » (lance/relance la génération facturée).
       const imageReady = this.hasGeneration && this.state.previewUrl && !this.state.imageStale;
       const nextLabel = isLast
         ? (this.hasGeneration ? (imageReady ? this.i18n.next : this.i18n.generate) : (this.i18n.add_to_cart || this.i18n.generate))
         : this.i18n.next;
-      this.setNextButtonContent(nextLabel, isBuyStep);
-      // Prix dans le bouton -> on masque la ligne « PRIX … » du panneau format (doublon) pour le poster.
+      this.setNextButtonContent(nextLabel, priceInButton);
+      // Étape Format d'un produit à génération : bouton façon achat (prix+promo) MAIS libellé d'ACTION
+      // (Continuer/Générer), pas « Ajouter au panier » -> on remplace le texte du clone (is_dynamic_variant
+      // = false : .cart-button-text porte bien le libellé). updateBuyButtons tient le prix à jour par variante.
+      if (priceInButton && this.hasGeneration) {
+        const nextText = this.nextButton && this.nextButton.querySelector('.cart-button-text');
+        if (nextText) nextText.textContent = nextLabel;
+      }
+      // Prix dans le bouton -> on masque la ligne « PRIX … » du panneau format (doublon).
       // Toggle de la CLASSE `hidden` (et pas seulement l'attribut) : la classe `flex` du <p> écraserait
       // l'attribut hidden seul (même gotcha que le footer/dots).
       const priceLine = this.q('[data-studio-price-line]');
-      if (priceLine) priceLine.classList.toggle('hidden', isBuyStep);
+      if (priceLine) priceLine.classList.toggle('hidden', priceInButton);
       // Bandeau date promo du pied : visible seulement quand le bouton est « Ajouter au panier ».
       const promoDate = this.q('[data-studio-promo-date]');
       if (promoDate) promoDate.classList.toggle('hidden', !isBuyStep);
@@ -2011,22 +2021,21 @@
       this.state.imageStale = true;
     }
 
+    _applyRevealBg() {
+      const body = this.q('[data-studio-body]');
+      if (!body) return;
+      // Beige (= mur du visualiseur) sur TOUT le corps dès qu'on est sur l'étape du tableau (format) :
+      // sélection de format, génération ET reveal -> le « milieu » est uniforme, plus de blanc autour du
+      // visualiseur (haut/bas), corps `grow` -> pleine hauteur (mobile OK). Étapes amont (photo/équipe/
+      // nom) inchangées ; header (steps) et footer (bouton) jamais touchés.
+      const onArtworkStep = this.state.step === 'format';
+      body.classList.toggle('bg-[#fcf8ef]', onArtworkStep);
+    }
+
     // REVEAL IN-PLACE (sur l'étape Format, sans changer d'écran) : la dernière vague essuie le
     // placeholder vers la VRAIE image dans le MÊME visualiseur (hot-swap, pas de remontage), le
     // bouton-barre plein devient « Ajouter au panier ». Le repli image + les écrans séparés ne
     // sont plus utilisés pour le chemin heureux.
-    // Fond beige (= couleur du mur du visualiseur, fond-mur-beige-clair-texture.webp ≈ #fcf8ef) sur TOUT
-    // le corps scrollable, UNIQUEMENT en génération/reveal (le « milieu » où vit le tableau). Le corps est
-    // `grow` -> il remplit la hauteur entre header et footer (corrige le blanc haut/bas sur mobile). Les
-    // étapes amont + la sélection de format restent inchangées ; header (steps) et footer (bouton) jamais
-    // touchés. Piloté par le stage -> robuste à l'ordre des appels showStep/showReveal/enterGeneratingStage.
-    _applyRevealBg() {
-      const body = this.q('[data-studio-body]');
-      if (!body) return;
-      const reveal = this.state.stage === 'ready' || this.state.stage === 'generating';
-      body.classList.toggle('bg-[#fcf8ef]', reveal);
-    }
-
     showReveal(url, persistState = true, opts = {}) {
       this.stopTimers();
       this.state.previewUrl = url;
