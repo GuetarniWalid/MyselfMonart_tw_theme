@@ -138,6 +138,18 @@
       '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
     }[c]));
 
+  // Décode les entités HTML (inverse d'escapeHtml). textarea = décodeur SÛR : son contenu est du
+  // RCDATA (les balises éventuelles restent du texte, rien n'est exécuté). Sert à « dé-échapper »
+  // les libellés i18n produits par le filtre Liquid `t` (qui HTML-échappe : ' -> &#39;, & -> &amp;…)
+  // avant un rendu en textContent. Le garde sur '&' évite de toucher le DOM pour le cas courant.
+  const decodeEntities = (value) => {
+    const s = String(value ?? '');
+    if (s.indexOf('&') === -1) return s;
+    const ta = document.createElement('textarea');
+    ta.innerHTML = s;
+    return ta.value;
+  };
+
   // Crest bicolore NET. Le linear-gradient(135deg, c0 50%, c1 50%) bavait sur la diagonale
   // (anti-aliasing -> on voyait un peu de chaque couleur de l'autre côté, bord « découpé »).
   // Ici : carré plein c0 + triangle c1 (moitié bas-droite) -> UNE seule arête nette. Le cercle
@@ -186,6 +198,14 @@
       const configNode = this.querySelector('[data-studio-config]');
       this.config = configNode ? JSON.parse(configNode.textContent) : {};
       this.i18n = this.config.i18n || {};
+      // Le filtre Liquid `t` HTML-échappe ses sorties (' -> &#39;, & -> &amp;…). Comme on réinjecte
+      // ensuite ces libellés via textContent (ex. save_success « C'est noté »), on décode UNE fois
+      // les entités à l'ingestion pour retrouver le texte humain — sinon « C&#39;est noté » s'affiche
+      // littéralement. Couvre toutes les langues sans toucher les fichiers de locale ; les usages
+      // innerHTML repassent tous par escapeHtml() donc restent sûrs (et corrigés au passage).
+      for (const key in this.i18n) {
+        if (typeof this.i18n[key] === 'string') this.i18n[key] = decodeEntities(this.i18n[key]);
+      }
       // Config-driven : la liste ORDONNÉE des étapes vient du metafield studio.config (injecté
       // par la section dans config.studio). Repli foot si absent (migration progressive).
       this.studioConfig = this.config.studio && typeof this.config.studio === 'object' ? this.config.studio : null;
