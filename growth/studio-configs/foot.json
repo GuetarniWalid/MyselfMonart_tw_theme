@@ -7,7 +7,7 @@
       "type": "photo",
       "required": true,
       "consent": { "required": true },
-      "faceAngle": "profile",
+      "faceAngle": "three-quarter",
       "photoCheck": true,
       "payloadKey": "photo",
       "title": { "fr": "Votre photo", "en": "Your photo", "de": "Dein Foto", "nl": "Je foto", "es": "Tu foto" },
