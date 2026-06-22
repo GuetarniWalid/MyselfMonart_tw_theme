@@ -171,7 +171,7 @@
                     loading="lazy"
                     decoding="async"
                     class="mb-2 aspect-square w-full rounded-lg object-cover">
-                  <p class="text-xs text-main-80">✓ Photo idéale : visage net, bien éclairé, de face</p>
+                  <p class="text-xs text-main-80">✓ <span data-photo-caption>Photo idéale : visage net, bien éclairé, de face</span></p>
                 </li>
                 <li class="rounded-xl border border-main-10 bg-main-2 p-3 text-center">
                   <img
@@ -205,6 +205,7 @@
               </div>
 
               <p data-photo-error class="mt-3 text-sm text-accent" role="alert" aria-live="polite" hidden></p>
+              <div data-photo-verdict role="status" aria-live="polite" hidden></div>
 
               <div class="mt-5 flex items-start gap-3">
                 <input type="checkbox" id="studio-consent-harness" data-consent class="mt-1 h-5 w-5 shrink-0 cursor-pointer accent-current focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
@@ -432,7 +433,7 @@
             "version": 1,
             "productType": "foot",
             "steps": [
-              { "name": "photo", "type": "photo", "required": true, "consent": { "required": true }, "payloadKey": "photo", "title": { "fr": "Votre photo", "en": "Your photo" }, "checkpointLabel": { "fr": "Photo", "en": "Photo" } },
+              { "name": "photo", "type": "photo", "required": true, "consent": { "required": true }, "faceAngle": "front", "photoCheck": true, "payloadKey": "photo", "title": { "fr": "Votre photo", "en": "Your photo" }, "checkpointLabel": { "fr": "Photo", "en": "Photo" } },
               { "name": "team", "type": "choice", "required": true, "payloadKey": "teamId", "source": "endpoint", "endpoint": "/api/custom-art/teams", "title": { "fr": "Votre équipe", "en": "Your team" }, "checkpointLabel": { "fr": "Équipe", "en": "Team" } },
               { "name": "name", "type": "group", "required": true, "title": { "fr": "Prénom et numéro", "en": "Name and number" }, "checkpointLabel": { "fr": "Prénom", "en": "Name" },
                 "children": [
@@ -492,6 +493,28 @@
             "photo_error_unreadable": "Impossible de lire cette photo. Essayez-en une autre.",
             "photo_reupload_hint": "Pour créer une autre version, réimportez votre photo.",
             "photo_required": "Ajoutez une photo pour continuer.",
+            "photo_caption_front": "Photo idéale : visage net, bien éclairé, de face",
+            "photo_caption_three_quarter": "Photo idéale : visage net, bien éclairé, légèrement de trois-quarts",
+            "photo_caption_profile": "Photo idéale : visage net, bien éclairé, de profil",
+            "photo_caption_back": "Photo idéale : arrière de la tête bien net et bien éclairé",
+            "photo_check_loading": "Analyse de votre photo…",
+            "photo_check_ok": "Photo parfaite — vous pouvez continuer",
+            "photo_check_title_bad": "Cette photo ne convient pas :",
+            "photo_check_same": "C'est la même photo : elle ne convient pas, pour la raison ci-dessous.",
+            "photo_check_error": "Vérification indisponible — vous pouvez continuer, nous re-vérifierons.",
+            "photo_issue_no_face": "Aucun visage détecté — cadrez bien le visage.",
+            "photo_issue_multiple_faces": "Plusieurs visages — une seule personne sur la photo.",
+            "photo_issue_too_dark": "Visage trop sombre — placez-vous près d'une fenêtre ou d'une lumière.",
+            "photo_issue_blurry": "Photo floue — reprenez une photo bien nette.",
+            "photo_issue_face_too_small": "Visage trop loin — rapprochez-vous.",
+            "photo_issue_obstructed": "Visage masqué (lunettes, masque, main, cheveux) — dégagez le visage.",
+            "photo_issue_low_quality": "Qualité insuffisante — reprenez une photo nette et bien éclairée.",
+            "photo_issue_nsfw": "Cette image n'est pas acceptée.",
+            "photo_issue_generic": "Photo non conforme — réessayez avec une autre.",
+            "photo_issue_angle_front": "Il faut une photo de face pour ce poster.",
+            "photo_issue_angle_three_quarter": "Il faut une photo légèrement de trois-quarts pour ce poster.",
+            "photo_issue_angle_profile": "Il faut une photo de profil pour ce poster.",
+            "photo_issue_angle_back": "Il faut une photo de l'arrière de la tête pour ce poster.",
             "consent_required": "Merci de confirmer que vous disposez des droits sur cette photo.",
             "name_required": "Indiquez le prénom à afficher sur le maillot.",
             "number_required": "Choisissez un numéro entre 1 et 99.",

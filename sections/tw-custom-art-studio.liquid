@@ -165,7 +165,7 @@
                   decoding="async"
                   class="mb-2 aspect-square w-full rounded-lg object-cover">
               {%- endif -%}
-              <p class="text-xs text-main-80">✓ {{ 'sections.custom_art_studio.photo_good_caption' | t }}</p>
+              <p class="text-xs text-main-80">✓ <span data-photo-caption>{{ 'sections.custom_art_studio.photo_caption_front' | t }}</span></p>
             </li>
             <li class="rounded-xl border border-main-10 bg-main-2 p-3 text-center">
               {%- if section.settings.bad_photo_image -%}
@@ -234,6 +234,10 @@
           </div>
 
           <p data-photo-error class="mt-3 text-sm text-accent" role="alert" aria-live="polite" hidden></p>
+
+          {%- comment -%} Verdict du juge photo (qualité + angle) : rempli/affiché par le JS
+             (loading / ok / erreurs détaillées). Bloque « Continuer » tant que ce n'est pas OK. {%- endcomment -%}
+          <div data-photo-verdict role="status" aria-live="polite" hidden></div>
 
           <div class="mt-5 flex items-start gap-3">
             <input
@@ -655,6 +659,28 @@
         "photo_error_unreadable": {{ 'sections.custom_art_studio.photo_error_unreadable' | t | json }},
         "photo_reupload_hint": {{ 'sections.custom_art_studio.photo_reupload_hint' | t | json }},
         "photo_required": {{ 'sections.custom_art_studio.photo_required' | t | json }},
+        "photo_caption_front": {{ 'sections.custom_art_studio.photo_caption_front' | t | json }},
+        "photo_caption_three_quarter": {{ 'sections.custom_art_studio.photo_caption_three_quarter' | t | json }},
+        "photo_caption_profile": {{ 'sections.custom_art_studio.photo_caption_profile' | t | json }},
+        "photo_caption_back": {{ 'sections.custom_art_studio.photo_caption_back' | t | json }},
+        "photo_check_loading": {{ 'sections.custom_art_studio.photo_check_loading' | t | json }},
+        "photo_check_ok": {{ 'sections.custom_art_studio.photo_check_ok' | t | json }},
+        "photo_check_title_bad": {{ 'sections.custom_art_studio.photo_check_title_bad' | t | json }},
+        "photo_check_same": {{ 'sections.custom_art_studio.photo_check_same' | t | json }},
+        "photo_check_error": {{ 'sections.custom_art_studio.photo_check_error' | t | json }},
+        "photo_issue_no_face": {{ 'sections.custom_art_studio.photo_issue_no_face' | t | json }},
+        "photo_issue_multiple_faces": {{ 'sections.custom_art_studio.photo_issue_multiple_faces' | t | json }},
+        "photo_issue_too_dark": {{ 'sections.custom_art_studio.photo_issue_too_dark' | t | json }},
+        "photo_issue_blurry": {{ 'sections.custom_art_studio.photo_issue_blurry' | t | json }},
+        "photo_issue_face_too_small": {{ 'sections.custom_art_studio.photo_issue_face_too_small' | t | json }},
+        "photo_issue_obstructed": {{ 'sections.custom_art_studio.photo_issue_obstructed' | t | json }},
+        "photo_issue_low_quality": {{ 'sections.custom_art_studio.photo_issue_low_quality' | t | json }},
+        "photo_issue_nsfw": {{ 'sections.custom_art_studio.photo_issue_nsfw' | t | json }},
+        "photo_issue_generic": {{ 'sections.custom_art_studio.photo_issue_generic' | t | json }},
+        "photo_issue_angle_front": {{ 'sections.custom_art_studio.photo_issue_angle_front' | t | json }},
+        "photo_issue_angle_three_quarter": {{ 'sections.custom_art_studio.photo_issue_angle_three_quarter' | t | json }},
+        "photo_issue_angle_profile": {{ 'sections.custom_art_studio.photo_issue_angle_profile' | t | json }},
+        "photo_issue_angle_back": {{ 'sections.custom_art_studio.photo_issue_angle_back' | t | json }},
         "consent_required": {{ 'sections.custom_art_studio.consent_required' | t | json }},
         "name_required": {{ 'sections.custom_art_studio.name_required' | t | json }},
         "number_required": {{ 'sections.custom_art_studio.number_required' | t | json }},

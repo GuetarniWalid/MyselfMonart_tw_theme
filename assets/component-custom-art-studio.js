@@ -47,7 +47,7 @@
   // n'est pas posé sur le produit : le studio live tourne dessus -> zéro régression pendant le
   // chantier. Dès que studio.config existe, c'est lui qui pilote l'ordre/les types des étapes.
   const FOOT_FALLBACK_STEPS = [
-    { name: 'photo', type: 'photo', required: true, consent: { required: true }, payloadKey: 'photo', checkpointLabel: { fr: 'Photo', en: 'Photo' } },
+    { name: 'photo', type: 'photo', required: true, consent: { required: true }, faceAngle: 'front', payloadKey: 'photo', checkpointLabel: { fr: 'Photo', en: 'Photo' } },
     { name: 'team', type: 'choice', required: true, payloadKey: 'teamId', checkpointLabel: { fr: 'Équipe', en: 'Team' } },
     {
       name: 'name', type: 'group', required: true, checkpointLabel: { fr: 'Prénom', en: 'Name' },
@@ -218,6 +218,16 @@
         ? this.studioConfig.steps
         : FOOT_FALLBACK_STEPS;
       this.stepNames = this.studioSteps.map((step) => step.name);
+      // faceAngle (config A) : angle de visage attendu par l'œuvre -> pilote la consigne photo ET le
+      // juge photo (vérifie que la photo correspond). Repli 'front'. `_photoVerdicts` = cache
+      // hash -> verdict : on ne re-juge JAMAIS deux fois la même photo (économie de tokens).
+      this.photoFaceAngle = ((this.studioSteps.find((s) => s.type === 'photo') || {}).faceAngle) || 'front';
+      // Flag d'activation du juge photo (config). OFF par défaut -> dormant tant que l'endpoint
+      // back-end /photo-check n'est pas livré (on n'affiche pas « indisponible » en prod). On l'active
+      // via la config (metafield studio.config) une fois le back-end prêt.
+      this.photoCheckEnabled = ((this.studioSteps.find((s) => s.type === 'photo') || {}).photoCheck) === true;
+      this._photoVerdicts = {};
+      this._applyPhotoCaption(); // consigne photo adaptée à l'angle de l'œuvre
       // Mode « sans génération » (config-driven). Un produit perso à DESIGN FIXE (ex : poster foot
       // N&B, prénom+numéro imprimés sur un visuel existant) n'a pas de génération IA : il désactive
       // le bloc generation -> pas de photo/attente/reveal ; à la dernière étape on AJOUTE AU PANIER
@@ -1163,7 +1173,7 @@
       switch (step.type) {
         case 'photo': {
           const consentOk = !step.consent || step.consent.required === false || this.state.consent;
-          return Boolean(this.photoFile && consentOk);
+          return Boolean(this.photoFile && consentOk && this.state.photoOk);
         }
         case 'choice':
           return step.required === false ? true : Boolean(fields[step.name]);
@@ -1305,6 +1315,8 @@
       this.photoFile = file;
       this.markImageStale(); // photo = donnée présente dans l'image -> régé requise au prochain « Continuer »
       this.setPhotoError(null);
+      // Avec juge -> bloquée tant que non validée ; sans juge (flag OFF) -> validée d'office (= avant).
+      this.state.photoOk = !this.photoCheckEnabled;
 
       const wrapper = this.q('[data-photo-preview-wrapper]');
       const preview = this.q('[data-photo-preview]');
@@ -1317,8 +1329,160 @@
         // HEIC non décodable par le navigateur : pas d'aperçu, mais fichier accepté.
         wrapper.hidden = true;
       }
+      if (this.photoCheckEnabled) this._checkPhoto(file); // juge photo (qualité + angle), dédup par hash
       this.persist();
       this.updateNextDisabled();
+    }
+
+    // Juge photo : valide la photo (qualité + correspondance d'angle faceAngle) AVANT de laisser
+    // continuer. Économie de tokens : (1) dédup par hash -> on ne re-juge jamais la même photo ;
+    // (2) photo réduite à 768px pour l'appel ; (3) modèle cheap côté back-end. Fail-open si la
+    // vérif est indisponible (le back-end re-checke de toute façon à la génération).
+    async _checkPhoto(file) {
+      this.state.photoOk = false;
+      this.updateNextDisabled();
+      let hash = '';
+      try { hash = await this._hashFile(file); } catch (e) { hash = ''; }
+      if (hash && this._photoVerdicts[hash]) {
+        // Même photo déjà jugée -> verdict mémorisé, AUCUN appel back-end.
+        this._applyPhotoVerdict(this._photoVerdicts[hash], { same: !this._photoVerdicts[hash].ok });
+        return;
+      }
+      this._renderPhotoVerdict('loading');
+      let verdict;
+      try {
+        if (this.config.mock) {
+          await new Promise((r) => setTimeout(r, 500));
+          verdict = this._mockPhotoVerdict(file);
+        } else {
+          const blob = await this._downscalePhoto(file, 768, 0.85);
+          const fd = new FormData();
+          fd.append('photo', blob, 'photo.jpg');
+          fd.append('faceAngle', this.photoFaceAngle);
+          if (hash) fd.append('hash', hash);
+          if (this.config.productType) fd.append('productType', this.config.productType);
+          const { response, data } = await this.api('/api/custom-art/photo-check', { method: 'POST', body: fd });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          verdict = { ok: !!data.ok, issues: Array.isArray(data.issues) ? data.issues : [] };
+        }
+      } catch (e) {
+        // Vérif indisponible -> on N'EMPÊCHE PAS la vente (fail-open). Pré-check back-end à la génération.
+        this._renderPhotoVerdict('error');
+        this.state.photoOk = true;
+        this.updateNextDisabled();
+        return;
+      }
+      if (hash) this._photoVerdicts[hash] = verdict;
+      this._applyPhotoVerdict(verdict, {});
+    }
+
+    _applyPhotoVerdict(verdict, opts) {
+      this._renderPhotoVerdict(verdict.ok ? 'ok' : 'bad', verdict, opts || {});
+      this.state.photoOk = !!verdict.ok;
+      this.persist();
+      this.updateNextDisabled();
+    }
+
+    // Hash SHA-256 (hex) des octets ORIGINAUX -> clé de dédup déterministe (même fichier = même hash).
+    async _hashFile(file) {
+      const buf = await file.arrayBuffer();
+      const digest = await crypto.subtle.digest('SHA-256', buf);
+      return Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // Réduit la photo (max maxPx, JPEG) pour l'appel au juge : moins de tokens image, plus rapide.
+    _downscalePhoto(file, maxPx, quality) {
+      return new Promise((resolve, reject) => {
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => {
+          URL.revokeObjectURL(url);
+          const scale = Math.min(1, maxPx / Math.max(img.naturalWidth, img.naturalHeight));
+          const w = Math.max(1, Math.round(img.naturalWidth * scale));
+          const h = Math.max(1, Math.round(img.naturalHeight * scale));
+          const c = document.createElement('canvas');
+          c.width = w; c.height = h;
+          c.getContext('2d').drawImage(img, 0, 0, w, h);
+          c.toBlob((b) => (b ? resolve(b) : reject(new Error('toBlob null'))), 'image/jpeg', quality);
+        };
+        img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('decode')); };
+        img.src = url;
+      });
+    }
+
+    // Mock (mode démo) : un nom de fichier contenant « bad/mauvais/ko » simule un refus, sinon OK.
+    _mockPhotoVerdict(file) {
+      const name = ((file && file.name) || '').toLowerCase();
+      if (/bad|mauvais|ko/.test(name)) return { ok: false, issues: ['too_dark', 'angle_mismatch'] };
+      return { ok: true, issues: [] };
+    }
+
+    // Rendu du panneau de verdict (loading / ok / error / bad). Messages d'issues localisés (i18n).
+    _renderPhotoVerdict(kind, verdict, opts) {
+      const el = this.q('[data-photo-verdict]');
+      if (!el) return;
+      opts = opts || {};
+      el.hidden = false;
+      if (kind === 'loading') {
+        el.className = 'mt-3 flex items-center gap-2 rounded-xl border border-main-10 bg-main-2 px-3 py-2.5 text-sm text-main-70';
+        el.textContent = this.i18n.photo_check_loading || 'Analyse de votre photo…';
+        return;
+      }
+      if (kind === 'error') {
+        el.className = 'mt-3 rounded-xl border border-main-10 bg-main-2 px-3 py-2.5 text-sm text-main-70';
+        el.textContent = this.i18n.photo_check_error || '';
+        return;
+      }
+      if (kind === 'ok') {
+        el.className = 'mt-3 flex items-center gap-2 rounded-xl border-2 border-[#5a8a6a] bg-[#eef5ec] px-3 py-2.5 text-sm font-medium text-main';
+        el.textContent = '✓ ' + (this.i18n.photo_check_ok || 'Photo parfaite');
+        return;
+      }
+      el.className = 'mt-3 rounded-xl border-2 border-accent bg-secondary px-3 py-2.5 text-sm text-main';
+      const intro = opts.same ? (this.i18n.photo_check_same || '') : (this.i18n.photo_check_title_bad || '');
+      const msgs = this._photoIssueMessages((verdict && verdict.issues) || []);
+      el.innerHTML = '<p class="font-semibold text-accent">' + escapeHtml(intro) + '</p>'
+        + '<ul class="mt-1 list-disc space-y-0.5 pl-5">'
+        + msgs.map((m) => '<li>' + escapeHtml(m) + '</li>').join('')
+        + '</ul>';
+    }
+
+    // Codes d'issues -> messages i18n (dé-dupliqués). « angle_mismatch » -> message selon faceAngle.
+    _photoIssueMessages(issues) {
+      const angleKey = this.photoFaceAngle === 'profile' ? 'photo_issue_angle_profile'
+        : this.photoFaceAngle === 'back' ? 'photo_issue_angle_back'
+        : this.photoFaceAngle === 'three-quarter' ? 'photo_issue_angle_three_quarter'
+        : 'photo_issue_angle_front';
+      const map = {
+        no_face: 'photo_issue_no_face',
+        multiple_faces: 'photo_issue_multiple_faces',
+        too_dark: 'photo_issue_too_dark',
+        blurry: 'photo_issue_blurry',
+        face_too_small: 'photo_issue_face_too_small',
+        obstructed: 'photo_issue_obstructed',
+        low_quality: 'photo_issue_low_quality',
+        nsfw: 'photo_issue_nsfw',
+        angle_mismatch: angleKey,
+      };
+      const out = [];
+      (issues || []).forEach((code) => {
+        const msg = this.i18n[map[code]] || this.i18n.photo_issue_generic || '';
+        if (msg && out.indexOf(msg) === -1) out.push(msg);
+      });
+      if (!out.length) out.push(this.i18n.photo_issue_generic || '');
+      return out;
+    }
+
+    // Consigne photo adaptée à faceAngle (config A) : « …de face / de profil / de dos / de trois-quarts ».
+    _applyPhotoCaption() {
+      const el = this.q('[data-photo-caption]');
+      if (!el) return;
+      const key = this.photoFaceAngle === 'profile' ? 'photo_caption_profile'
+        : this.photoFaceAngle === 'back' ? 'photo_caption_back'
+        : this.photoFaceAngle === 'three-quarter' ? 'photo_caption_three_quarter'
+        : 'photo_caption_front';
+      const txt = this.i18n[key];
+      if (txt) el.textContent = txt;
     }
 
     readImageSize(file) {
