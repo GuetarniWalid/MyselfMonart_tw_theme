@@ -917,6 +917,7 @@
       this.querySelectorAll('[data-studio-panel]').forEach((panel) => {
         panel.hidden = panel.dataset.studioPanel !== stepName;
       });
+      this._applyRevealBg(); // stage remis à 'form' ci-dessus -> retire le beige (sélection/étapes amont)
 
       const index = this.stepNames.indexOf(stepName);
       this.stepTitle.textContent = this.t((this.studioSteps[index] || {}).title) || (this.config.stepTitles || {})[stepName] || '';
@@ -2014,12 +2015,25 @@
     // placeholder vers la VRAIE image dans le MÊME visualiseur (hot-swap, pas de remontage), le
     // bouton-barre plein devient « Ajouter au panier ». Le repli image + les écrans séparés ne
     // sont plus utilisés pour le chemin heureux.
+    // Fond beige (= couleur du mur du visualiseur, fond-mur-beige-clair-texture.webp ≈ #fcf8ef) sur TOUT
+    // le corps scrollable, UNIQUEMENT en génération/reveal (le « milieu » où vit le tableau). Le corps est
+    // `grow` -> il remplit la hauteur entre header et footer (corrige le blanc haut/bas sur mobile). Les
+    // étapes amont + la sélection de format restent inchangées ; header (steps) et footer (bouton) jamais
+    // touchés. Piloté par le stage -> robuste à l'ordre des appels showStep/showReveal/enterGeneratingStage.
+    _applyRevealBg() {
+      const body = this.q('[data-studio-body]');
+      if (!body) return;
+      const reveal = this.state.stage === 'ready' || this.state.stage === 'generating';
+      body.classList.toggle('bg-[#fcf8ef]', reveal);
+    }
+
     showReveal(url, persistState = true, opts = {}) {
       this.stopTimers();
       this.state.previewUrl = url;
       this.state.status = 'ready';
       this.state.stage = 'ready';
       this.state.imageStale = false; // l'image affichée correspond aux champs actuels (pas de régé requise)
+      this._applyRevealBg(); // stage 'ready' -> corps beige plein (milieu du tableau)
       // Mise en page « visualiseur plein » garantie : si on arrive ici via « Continuer » (image déjà
       // prête) sans passer par la génération, les options sont encore visibles -> on les masque et on
       // étend le slot. Idempotent quand on vient de la génération (déjà fait par animateIntoGeneration).
@@ -2087,6 +2101,7 @@
     // BARRE qui se remplit, et on lance la VAGUE (poster <-> toile) sur le visualiseur Format déjà monté.
     enterGeneratingStage() {
       this.state.stage = 'generating';
+      this._applyRevealBg(); // stage 'generating' -> corps beige plein dès le placeholder
       this._setHidden(this.navRow, true);       // masque « Retour » + « Une autre version »
       this._setHidden(this.saveButton, true);
       this.saveButton?.setAttribute('aria-expanded', 'false');

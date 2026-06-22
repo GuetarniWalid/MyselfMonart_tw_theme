@@ -138,6 +138,7 @@ module.exports = {
     },
   },
   safelist: [
+    'bg-[#fcf8ef]',
     'md:max-w-3xl',
     'md:max-w-xl',
     'grid-cols-1',
