@@ -303,6 +303,10 @@
           {%- comment -%} Aperçu SVG : couleurs remplies par le JS depuis l'équipe choisie
              (données dynamiques -> style inline, pas d'équivalent Tailwind possible). {%- endcomment -%}
           <p class="sr-only">{{ 'sections.custom_art_studio.jersey_preview_label' | t }}</p>
+          {%- comment -%} Aperçu maillot SIMPLE (dos) : corps ÉLARGI (coutures du torse x≈48/152 au lieu
+             de 56/144) pour accueillir des prénoms plus longs. fill-main/fill-secondary = replis Tailwind,
+             remplacés en inline par les couleurs d'équipe (JS, updateJersey). Le prénom long est réduit
+             par updateJersey pour tenir dans le corps. {%- endcomment -%}
           <svg
             data-jersey
             viewBox="0 0 200 220"
@@ -311,12 +315,12 @@
             focusable="false">
             <path
               data-jersey-body
-              d="M62 26 L84 12 Q100 24 116 12 L138 26 L172 52 L152 78 L144 64 L144 204 Q100 212 56 204 L56 64 L48 78 L28 52 Z"
+              d="M55 26 L81 12 Q100 24 119 12 L145 26 L185 52 L161 78 L152 64 L152 204 Q100 212 48 204 L48 64 L39 78 L15 52 Z"
               class="fill-main"
               stroke="rgba(0,0,0,0.25)"
               stroke-width="2"></path>
             <path
-              d="M84 12 Q100 30 116 12 L112 9 Q100 19 88 9 Z"
+              d="M81 12 Q100 30 119 12 L114 9 Q100 19 86 9 Z"
               class="fill-secondary"
               opacity="0.9"></path>
             <text
@@ -327,7 +331,7 @@
               class="fill-secondary font-heading"
               font-size="17"
               font-weight="700"
-              letter-spacing="1.5">{{ 'sections.custom_art_studio.jersey_placeholder_name' | t }}</text>
+              letter-spacing="1">{{ 'sections.custom_art_studio.jersey_placeholder_name' | t }}</text>
             <text
               data-jersey-number
               x="100"

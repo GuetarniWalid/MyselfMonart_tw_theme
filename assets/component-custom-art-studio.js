@@ -1506,6 +1506,9 @@
       }
       if (this.state.playerName) nameText.textContent = this.state.playerName;
       if (this.state.playerNumber) numberText.textContent = this.state.playerNumber;
+      // Corps élargi : on réduit simplement la taille du prénom quand il est long, pour qu'il tienne dans le dos.
+      const len = (nameText.textContent || '').length;
+      nameText.setAttribute('font-size', len <= 7 ? '17' : len <= 9 ? '14' : '11');
     }
 
     /* ------------------------------------------- étape format + finition */
