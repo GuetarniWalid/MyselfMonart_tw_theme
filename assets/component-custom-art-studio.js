@@ -82,6 +82,8 @@
   const GEN_DURATIONS_KEEP = 5;        // moyenne glissante sur les 5 dernières
   const GEN_DURATION_MIN = 10000;      // bornes anti-aberration (barre)
   const GEN_DURATION_MAX = 90000;
+  const GEN_PROGRESS_CAP = 98;         // plafond de la barre (jamais 100 % avant la vraie fin)
+  const GEN_ESTIMATE_KEY = 'mma-studio:genEstimate'; // cache de l'estimation GLOBALE (back-end)
   // Mémoire DURABLE (localStorage) : au-delà de ce délai, on NE reprend PAS un reveal/une génération
   // (le job back-end a pu expirer -> éviter reveal-next/ajout panier sur un job mort). Conservateur,
   // bien en deçà de l'expiration serveur. Les SAISIES restent ; seul l'état de job est réinitialisé.
@@ -2122,6 +2124,9 @@
         this.state.mockups = null;
         this.state.status = data.status || 'pending';
         this.persist();
+        // Estimation GLOBALE (back-end) si fournie : on recale la barre + on la met en cache pour les
+        // prochains lancements (instantané, et partagée par tous les utilisateurs via le back-end).
+        if (data && data.estimatedMs > 0) { this._cacheGenEstimate(data.estimatedMs); this._retuneWait(data.estimatedMs); }
         this.startPolling();
       } catch (e) {
         this.showError(this.i18n.generation_error);
@@ -2183,16 +2188,19 @@
       const bar = this.q('[data-wait-bar]');
       const text = this.q('[data-wait-text]');
       const phases = this.config.waitPhases || [];
-      const startedAt = Date.now();
+      this._waitStartedAt = Date.now();
+      this._waitTau = Math.max(GEN_DURATION_MIN, duration) / 2.3; // ~88 % atteint vers la durée estimée
       let phaseIndex = -1;
       const tick = () => {
-        const elapsed = Date.now() - startedAt;
-        const percent = Math.min(90, (elapsed / duration) * 90);
+        const elapsed = Date.now() - this._waitStartedAt;
+        // Courbe ASYMPTOTIQUE : monte vite, puis ralentit, mais PROGRESSE TOUJOURS (jamais figée),
+        // sans jamais atteindre 100 % avant la vraie fin (100 % = transformation du bouton au reveal).
+        // -> fini le blocage sec à 90 % quand la génération dépasse l'estimation.
+        const percent = GEN_PROGRESS_CAP * (1 - Math.exp(-elapsed / this._waitTau));
         if (bar) bar.style.width = `${percent}%`;
-        // Le BOUTON-BARRE in-place se remplit avec la même progression (0 -> 90 %, 100 % au reveal).
         const fill = this.q('[data-gen-fill]');
         if (fill) fill.style.width = `${percent}%`;
-        const nextPhase = Math.min(phases.length - 1, Math.floor((percent / 90) * phases.length));
+        const nextPhase = Math.min(phases.length - 1, Math.floor((percent / GEN_PROGRESS_CAP) * phases.length));
         if (nextPhase !== phaseIndex) {
           phaseIndex = nextPhase;
           if (text) text.textContent = phases[phaseIndex] || '';
@@ -2203,10 +2211,19 @@
       this.progressTimer = setInterval(tick, 500);
     }
 
-    // Durée annoncée par la barre : moyenne glissante des vraies générations (localStorage), repli sur
-    // l'estimation par défaut, bornée pour ignorer les valeurs aberrantes. cf. _recordGenDuration().
+    // Recale la durée estimée EN COURS DE ROUTE (ex. estimation globale renvoyée par le back-end au
+    // lancement) : la courbe asymptotique reste continue (à faible avancement l'ajustement est invisible).
+    _retuneWait(durationMs) {
+      if (durationMs > 0) this._waitTau = Math.max(GEN_DURATION_MIN, Math.min(GEN_DURATION_MAX, durationMs)) / 2.3;
+    }
+
+    // Durée annoncée par la barre, par ordre de préférence : (1) estimation GLOBALE mise en cache
+    // (renvoyée par le back-end, partagée par tous), (2) repli : moyenne glissante des vraies
+    // générations de CE navigateur, (3) défaut. Bornée pour ignorer les valeurs aberrantes.
     _estimateGenDuration() {
       try {
+        const cached = parseInt(localStorage.getItem(GEN_ESTIMATE_KEY) || '', 10);
+        if (cached > 0) return Math.max(GEN_DURATION_MIN, Math.min(GEN_DURATION_MAX, cached));
         const arr = JSON.parse(localStorage.getItem(GEN_DURATIONS_KEY) || '[]');
         if (Array.isArray(arr) && arr.length) {
           const avg = arr.reduce((a, b) => a + b, 0) / arr.length;
@@ -2214,6 +2231,12 @@
         }
       } catch (e) { /* localStorage indispo -> repli */ }
       return REAL_DURATION_ESTIMATE;
+    }
+
+    // Met en cache l'estimation GLOBALE renvoyée par le back-end -> dispo instantanément au prochain
+    // lancement (et partagée par tous via le back-end). cf. startGeneration / _estimateGenDuration.
+    _cacheGenEstimate(ms) {
+      try { if (ms > 0) localStorage.setItem(GEN_ESTIMATE_KEY, String(Math.round(ms))); } catch (e) { /* indispo */ }
     }
 
     // Enregistre la durée d'une vraie génération réussie (moyenne glissante des 5 dernières).
