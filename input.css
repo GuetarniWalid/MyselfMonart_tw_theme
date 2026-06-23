@@ -381,6 +381,34 @@ main-product-blocks .description h3 span {
   background: rgba(var(--color-buy-button-rgb), 0.16) !important;
 }
 
+/* Studio « Poster perso » — pendant la génération, le remplissage [data-gen-fill] (largeur pilotée
+   par le JS) porte des VAGUES VERTICALES douces qui défilent (rayures ondulées, jamais droites/dures).
+   On n'anime QUE background-position (GPU-friendly) ; bord avant adouci, pas de ligne nette. */
+.studio-gen-bar [data-gen-fill] {
+  background-color: rgb(var(--color-buy-button-rgb)); /* #d79b86 — repli plein */
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='40'%20height='60'%3E%3Cpath%20d='M20%200%20Q6%2015%2020%2030%20Q34%2045%2020%2060'%20fill='none'%20stroke='%23ffffff'%20stroke-opacity='0.18'%20stroke-width='14'%20stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size: 40px 60px;
+  background-repeat: repeat;
+  animation: studioGenWaves 4.5s linear infinite;
+  will-change: background-position;
+}
+.studio-gen-bar [data-gen-fill]::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 30px;
+  background: linear-gradient(90deg, rgba(var(--color-buy-button-rgb), 0), rgba(var(--color-buy-button-rgb), 0.16));
+  pointer-events: none;
+}
+@keyframes studioGenWaves {
+  to { background-position: 0 -60px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .studio-gen-bar [data-gen-fill] { animation: none; }
+}
+
 /* Studio « Poster perso » — au lancement de la génération, le visualiseur GRANDIT (petit -> grand)
    pour prendre toute la place une fois les options effacées. cf. animateIntoGeneration(). */
 @keyframes studioFmtGrow {

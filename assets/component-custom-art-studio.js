@@ -77,6 +77,11 @@
   const MOCKUP_TIMEOUT = 120000; // moteur de rendu down -> on retire les squelettes restants
   const MOCK_DURATION = 8000;
   const REAL_DURATION_ESTIMATE = 28000; // ~20-30 s annoncés, barre plafonnée à 90 %
+  // Calibrage auto : on mémorise la durée des dernières vraies générations pour ajuster la barre.
+  const GEN_DURATIONS_KEY = 'mma-studio:genDurations';
+  const GEN_DURATIONS_KEEP = 5;        // moyenne glissante sur les 5 dernières
+  const GEN_DURATION_MIN = 10000;      // bornes anti-aberration (barre)
+  const GEN_DURATION_MAX = 90000;
   // Mémoire DURABLE (localStorage) : au-delà de ce délai, on NE reprend PAS un reveal/une génération
   // (le job back-end a pu expirer -> éviter reveal-next/ajout panier sur un job mort). Conservateur,
   // bien en deçà de l'expiration serveur. Les SAISIES restent ; seul l'état de job est réinitialisé.
@@ -630,7 +635,7 @@
         this.state.screen = 'steps';
         this.showStep(fmtStep);
         this.enterGeneratingStage();
-        this.startWaitProgress(REAL_DURATION_ESTIMATE);
+        this.startWaitProgress(this._estimateGenDuration());
         this.startPolling();
       } else {
         this.state.screen = 'steps';
@@ -2090,7 +2095,8 @@
         return;
       }
 
-      this.startWaitProgress(REAL_DURATION_ESTIMATE);
+      this.genStartedAt = Date.now();
+      this.startWaitProgress(this._estimateGenDuration());
       try {
         // Payload assemblé depuis la config (cf. buildPayload) : identique au foot (mêmes
         // champs/valeurs/ordre), généralisé aux autres produits via leurs steps.
@@ -2148,6 +2154,8 @@
         this.state.status = data.status;
         if (data.status === 'ready') {
           clearInterval(this.pollTimer);
+          // Calibrage auto : mémorise la durée réelle (uniquement une vraie génération de cette session).
+          if (!this.config.mock && this.genStartedAt) { this._recordGenDuration(Date.now() - this.genStartedAt); this.genStartedAt = null; }
           this.state.mockups = Array.isArray(data.mockups) ? data.mockups : this.state.mockups;
           this.showReveal(this.previewFrom(data));
           this.startMockupWatch();
@@ -2193,6 +2201,31 @@
       tick();
       clearInterval(this.progressTimer);
       this.progressTimer = setInterval(tick, 500);
+    }
+
+    // Durée annoncée par la barre : moyenne glissante des vraies générations (localStorage), repli sur
+    // l'estimation par défaut, bornée pour ignorer les valeurs aberrantes. cf. _recordGenDuration().
+    _estimateGenDuration() {
+      try {
+        const arr = JSON.parse(localStorage.getItem(GEN_DURATIONS_KEY) || '[]');
+        if (Array.isArray(arr) && arr.length) {
+          const avg = arr.reduce((a, b) => a + b, 0) / arr.length;
+          return Math.max(GEN_DURATION_MIN, Math.min(GEN_DURATION_MAX, Math.round(avg)));
+        }
+      } catch (e) { /* localStorage indispo -> repli */ }
+      return REAL_DURATION_ESTIMATE;
+    }
+
+    // Enregistre la durée d'une vraie génération réussie (moyenne glissante des 5 dernières).
+    _recordGenDuration(ms) {
+      if (!(ms > 0) || ms > GEN_DURATION_MAX * 2) return; // ignore aberrant (job très long / horloge)
+      try {
+        let arr = JSON.parse(localStorage.getItem(GEN_DURATIONS_KEY) || '[]');
+        if (!Array.isArray(arr)) arr = [];
+        arr.push(Math.round(ms));
+        if (arr.length > GEN_DURATIONS_KEEP) arr = arr.slice(-GEN_DURATIONS_KEEP);
+        localStorage.setItem(GEN_DURATIONS_KEY, JSON.stringify(arr));
+      } catch (e) { /* localStorage indispo -> on n'enregistre pas */ }
     }
 
     showError(message, options = {}) {
@@ -2433,7 +2466,7 @@
       btn.classList.add('studio-gen-bar');
       const label = this.i18n.wait_title || 'Création en cours…';
       btn.innerHTML =
-        '<span data-gen-fill class="absolute inset-y-0 left-0 w-0 bg-buy-button transition-[width] duration-500 ease-out motion-reduce:transition-none" aria-hidden="true"></span>'
+        '<span data-gen-fill data-allow-empty class="absolute inset-y-0 left-0 w-0 bg-buy-button transition-[width] duration-500 ease-out motion-reduce:transition-none" aria-hidden="true"></span>'
         + '<span class="relative z-10 cart-button-text inline-block py-4 md:py-5">' + escapeHtml(label) + '</span>';
     }
 
@@ -2843,7 +2876,7 @@
           this.state.status = data.status;
           this.persist();
           this.enterGeneratingStage();
-          this.startWaitProgress(REAL_DURATION_ESTIMATE);
+          this.startWaitProgress(this._estimateGenDuration());
           this.startPolling();
         } else if (data.status === 'manual_review' || data.status === 'failed') {
           this.showArtist();
