@@ -382,15 +382,24 @@ main-product-blocks .description h3 span {
 }
 
 /* Studio « Poster perso » — pendant la génération, le remplissage [data-gen-fill] (largeur pilotée
-   par le JS) porte des VAGUES VERTICALES douces qui défilent (rayures ondulées, jamais droites/dures).
-   On n'anime QUE background-position (GPU-friendly) ; bord avant adouci, pas de ligne nette. */
+   par le JS) porte des VAGUES À 45° douces qui défilent (rayures ondulées, jamais droites/dures).
+   Les vagues vivent dans un ::before surdimensionné tourné à 45°, clippé au remplissage par
+   overflow:hidden. On n'anime QUE background-position (GPU-friendly) ; bord avant adouci par ::after. */
 .studio-gen-bar [data-gen-fill] {
-  background-color: rgb(var(--color-buy-button-rgb)); /* #d79b86 — repli plein */
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='40'%20height='60'%3E%3Cpath%20d='M20%200%20Q6%2015%2020%2030%20Q34%2045%2020%2060'%20fill='none'%20stroke='%23ffffff'%20stroke-opacity='0.18'%20stroke-width='14'%20stroke-linecap='round'/%3E%3C/svg%3E");
-  background-size: 40px 60px;
+  background-color: rgb(var(--color-buy-button-rgb)); /* #d79b86 — repli plein + base */
+  overflow: hidden; /* clippe les vagues diagonales au remplissage */
+}
+.studio-gen-bar [data-gen-fill]::before {
+  content: "";
+  position: absolute;
+  inset: -200px; /* surdimensionné : couvre le remplissage une fois tourné à 45° */
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='40'%20height='40'%3E%3Cpath%20d='M0%2020%20Q10%2012%2020%2020%20T40%2020'%20fill='none'%20stroke='%23ffffff'%20stroke-opacity='0.18'%20stroke-width='12'%20stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat: repeat;
-  animation: studioGenWaves 4.5s linear infinite;
+  background-size: 40px 40px;
+  transform: rotate(45deg);
+  animation: studioGenWaves 5s linear infinite;
   will-change: background-position;
+  pointer-events: none;
 }
 .studio-gen-bar [data-gen-fill]::after {
   content: "";
@@ -401,12 +410,13 @@ main-product-blocks .description h3 span {
   width: 30px;
   background: linear-gradient(90deg, rgba(var(--color-buy-button-rgb), 0), rgba(var(--color-buy-button-rgb), 0.16));
   pointer-events: none;
+  z-index: 1; /* le fondu de bord passe au-dessus des vagues */
 }
 @keyframes studioGenWaves {
-  to { background-position: 0 -60px; }
+  to { background-position: 0 -40px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .studio-gen-bar [data-gen-fill] { animation: none; }
+  .studio-gen-bar [data-gen-fill]::before { animation: none; }
 }
 
 /* Studio « Poster perso » — au lancement de la génération, le visualiseur GRANDIT (petit -> grand)
