@@ -76,7 +76,7 @@
   const MOCKUP_POLL_INTERVAL = 3000; // streaming des mises en situation après le reveal
   const MOCKUP_TIMEOUT = 120000; // moteur de rendu down -> on retire les squelettes restants
   const MOCK_DURATION = 8000;
-  const REAL_DURATION_ESTIMATE = 28000; // ~20-30 s annoncés, barre plafonnée à 90 %
+  const REAL_DURATION_ESTIMATE = 40000; // défaut prudent (1re génération only) ; calibré ensuite (local puis back-end)
   // Calibrage auto : on mémorise la durée des dernières vraies générations pour ajuster la barre.
   const GEN_DURATIONS_KEY = 'mma-studio:genDurations';
   const GEN_DURATIONS_KEEP = 5;        // moyenne glissante sur les 5 dernières
@@ -2189,7 +2189,7 @@
       const text = this.q('[data-wait-text]');
       const phases = this.config.waitPhases || [];
       this._waitStartedAt = Date.now();
-      this._waitTau = Math.max(GEN_DURATION_MIN, duration) / 2.3; // ~88 % atteint vers la durée estimée
+      this._waitTau = Math.max(GEN_DURATION_MIN, duration) / 1.8; // départ DOUX, ~82 % vers la durée estimée
       let phaseIndex = -1;
       const tick = () => {
         const elapsed = Date.now() - this._waitStartedAt;
@@ -2214,7 +2214,7 @@
     // Recale la durée estimée EN COURS DE ROUTE (ex. estimation globale renvoyée par le back-end au
     // lancement) : la courbe asymptotique reste continue (à faible avancement l'ajustement est invisible).
     _retuneWait(durationMs) {
-      if (durationMs > 0) this._waitTau = Math.max(GEN_DURATION_MIN, Math.min(GEN_DURATION_MAX, durationMs)) / 2.3;
+      if (durationMs > 0) this._waitTau = Math.max(GEN_DURATION_MIN, Math.min(GEN_DURATION_MAX, durationMs)) / 1.8;
     }
 
     // Durée annoncée par la barre, par ordre de préférence : (1) estimation GLOBALE mise en cache
