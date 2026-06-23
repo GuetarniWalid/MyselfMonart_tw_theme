@@ -244,6 +244,7 @@
       this.revealNextLink = this.querySelector('[data-studio-reveal-next]'); // lien « Une autre version » (reveal)
       this.saveButton = this.querySelector('[data-studio-save-toggle]');     // bouton « Sauvegarder » (haut droite, reveal)
       this.nextButton = this.querySelector('[data-studio-next]');
+      this.nextWrap = this.querySelector('[data-studio-next-wrap]'); // wrapper du bouton coulissant
       this.stepTitle = this.querySelector('[data-step-title]');
       this.stepIndicator = this.querySelector('[data-step-indicator]'); // optionnel
       this.stepCheckpoints = this.querySelector('[data-step-checkpoints]');
@@ -1208,8 +1209,27 @@
     }
 
     updateNextDisabled() {
-      if (this.state.screen !== 'steps') return;
-      this.nextButton.disabled = !this.stepIsValid(this.state.step);
+      // Hors écran d'étapes (reveal/achat, attente, erreur) -> le bouton-barre doit rester VISIBLE.
+      if (this.state.screen !== 'steps') {
+        if (this.nextWrap) this.nextWrap.classList.remove('is-collapsed');
+        this._armMotion();
+        return;
+      }
+      const ok = this.stepIsValid(this.state.step);
+      this.nextButton.disabled = !ok;
+      // Le bouton « Continuer » coulisse : présent uniquement quand l'étape est valide (guide l'utilisateur).
+      if (this.nextWrap) this.nextWrap.classList.toggle('is-collapsed', !ok);
+      this._armMotion();
+    }
+
+    // Active les transitions du bouton coulissant APRÈS le 1er rendu : l'état initial (souvent replié,
+    // ex. étape photo vide) est posé sans animation -> aucun flash à l'ouverture du studio.
+    _armMotion() {
+      if (this._motionArmed) return;
+      this._motionArmed = true;
+      // setTimeout (et non rAF) : se déclenche même onglet en arrière-plan ; l'état initial est déjà
+      // posé (sans transition) avant ce tick -> pas de flash, et l'anim s'active de façon fiable ensuite.
+      setTimeout(() => this.classList.add('studio-motion'), 60);
     }
 
     bindErrorScreen() {

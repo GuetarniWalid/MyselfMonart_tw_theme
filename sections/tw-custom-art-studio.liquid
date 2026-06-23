@@ -626,12 +626,19 @@
             </svg>
           </button>
         </div>
-        <button
-          type="button"
-          data-studio-next
-          class="cart-button glass-anim mb-0 disabled:cursor-wait focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2">
-          <span class="cart-button-text inline-block py-4 md:py-5">{{ 'sections.custom_art_studio.next' | t }}</span>
-        </button>
+        {%- comment -%} Bouton « Continuer » COULISSANT : révélé (glisse vers le haut) seulement quand
+           l'étape est valide, rétracté sinon (cf. updateNextDisabled + CSS [data-studio-next-wrap]).
+           Le wrapper porte l'anim ; le bouton lui-même est inchangé (état affiché identique). {%- endcomment -%}
+        <div data-studio-next-wrap>
+          <div data-studio-next-slot>
+            <button
+              type="button"
+              data-studio-next
+              class="cart-button glass-anim mb-0 disabled:cursor-wait focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2">
+              <span class="cart-button-text inline-block py-4 md:py-5">{{ 'sections.custom_art_studio.next' | t }}</span>
+            </button>
+          </div>
+        </div>
         {%- comment -%} Retours d'état du reveal in-place (achat / régénération), sous le bouton. {%- endcomment -%}
         <p data-cart-feedback class="text-center text-sm text-main-80" aria-live="polite" hidden></p>
         <p data-reveal-feedback class="text-center text-sm text-accent" role="alert" aria-live="polite" hidden></p>

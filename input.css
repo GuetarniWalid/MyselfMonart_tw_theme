@@ -24,6 +24,45 @@ summary::-webkit-details-marker {
   display: none;
 }
 
+/* Bouton « Continuer » du studio : se révèle (glisse vers le haut + fondu) seulement quand l'étape
+   devient valide, et se rétracte sinon — guide l'utilisateur étape par étape. L'état AFFICHÉ est
+   inchangé (aucune classe ajoutée sur le bouton). Transitions actives après le 1er rendu
+   (.studio-motion) -> pas de flash. L'overflow du slot ne redevient « visible » qu'APRÈS l'ouverture
+   pour ne jamais rogner l'ombre neu-xl (11/12px) en état affiché. */
+[data-studio-next-wrap] {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+[data-studio-next-wrap] > [data-studio-next-slot] {
+  min-height: 0;
+  overflow: visible;
+}
+[data-studio-next-wrap].is-collapsed {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  margin-top: -0.5rem;
+  pointer-events: none;
+}
+[data-studio-next-wrap].is-collapsed > [data-studio-next-slot] {
+  overflow: hidden;
+  transform: translateY(14px);
+}
+.studio-motion [data-studio-next-wrap] {
+  transition: grid-template-rows 0.4s var(--anim-motion), opacity 0.3s ease, margin-top 0.4s var(--anim-motion);
+}
+.studio-motion [data-studio-next-wrap] > [data-studio-next-slot] {
+  transition: transform 0.4s var(--anim-motion), overflow 0s 0.4s;
+}
+.studio-motion [data-studio-next-wrap].is-collapsed > [data-studio-next-slot] {
+  transition: transform 0.4s var(--anim-motion), overflow 0s 0s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .studio-motion [data-studio-next-wrap],
+  .studio-motion [data-studio-next-wrap] > [data-studio-next-slot] {
+    transition: none;
+  }
+}
+
 /* Finger Tap Animation start */
 .finger-tap {
   animation: fingerTap 1.5s linear infinite;
