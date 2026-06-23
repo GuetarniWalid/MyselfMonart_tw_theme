@@ -305,6 +305,8 @@
         revealCount: 0,
         imageStale: false, // true = une donnée de l'image a changé -> régé requise au prochain « Continuer »
         mockups: null, // [{ psd, status, url }] — streaming post-reveal
+        versions: [], // historique client des versions révélées {previewUrl, mockups, jobId, rank}
+        activeVersion: -1, // index de la version affichée (navigateur de versions)
         artistRequested: null, // jobId dont la demande artiste a déjà été envoyée
       };
 
@@ -395,13 +397,13 @@
       try {
         const { step, screen, stage, consent, fields, teamId, teamName, teamColors, playerName,
           playerNumber, selectedOptions, variantId, jobId, sessionToken, email, status,
-          previewUrl, revealCount, imageStale, mockups, artistRequested } = this.state;
+          previewUrl, revealCount, imageStale, mockups, versions, activeVersion, artistRequested } = this.state;
         // Mémoire DURABLE (localStorage) : survit à la fermeture du navigateur -> on ré-affiche
         // direct la création à la réouverture (cf. open()), sans pousser à régénérer.
         localStorage.setItem(this.storageKey, JSON.stringify({
           step, screen, stage, consent, fields, teamId, teamName, teamColors, playerName,
           playerNumber, selectedOptions, variantId, jobId, sessionToken, email, status,
-          previewUrl, revealCount, imageStale, mockups, artistRequested,
+          previewUrl, revealCount, imageStale, mockups, versions, activeVersion, artistRequested,
           savedAt: Date.now(), // horodatage de fraîcheur (garde TTL à la reprise, cf. restoreState)
         }));
       } catch (e) { /* stockage indisponible (navigation privée) : non bloquant */ }
@@ -434,6 +436,8 @@
           this.state.status = null;
           this.state.revealCount = 0;
           this.state.mockups = null;
+          this.state.versions = [];
+          this.state.activeVersion = -1;
           this.state.artistRequested = null;
           this.state.imageStale = true; // données potentiellement modifiées entre-temps -> régé propre
         }
@@ -2095,7 +2099,9 @@
             this.showError(this.i18n.generation_error);
             return;
           }
-          this.showReveal(this.mockArtworkUrl(0));
+          const mockPreview = this.mockArtworkUrl(0);
+          this._pushVersion(mockPreview, null, this.state.jobId);
+          this.showReveal(mockPreview);
           this.resetMockMockups();
         }, duration);
         return;
@@ -2169,7 +2175,9 @@
           // Calibrage auto : mémorise la durée réelle (uniquement une vraie génération de cette session).
           if (!this.config.mock && this.genStartedAt) { this._recordGenDuration(Date.now() - this.genStartedAt); this.genStartedAt = null; }
           this.state.mockups = Array.isArray(data.mockups) ? data.mockups : this.state.mockups;
-          this.showReveal(this.previewFrom(data));
+          const readyPreview = this.previewFrom(data);
+          this._pushVersion(readyPreview, this.state.mockups, this.state.jobId);
+          this.showReveal(readyPreview);
           this.startMockupWatch();
         } else if (data.status === 'manual_review' || data.status === 'failed') {
           // Échec définitif OU photo à confier à un artiste (décision plan §0.15).
@@ -2351,8 +2359,7 @@
         this._setHidden(this.backButton, false);
         // Mode « invité par lien » (?ca_job, sans session) : « Une autre version » et « Sauvegarder »
         // renverraient 403 -> on les laisse masqués ; l'achat (panier Shopify) reste disponible. cf. A1.
-        this._setHidden(this.revealNextLink, !!this.guestLink);
-        if (this.revealNextLink) this.revealNextLink.disabled = !!this.guestLink;
+        this._renderVersionNav(); // segment ‹ compteur › + bouton « Nouvelle version » (selon la position)
         this._setHidden(this.saveButton, !!this.guestLink);
         if (this.stepTitle && this.i18n.reveal_title) this.stepTitle.textContent = this.i18n.reveal_title;
       };
@@ -2390,6 +2397,11 @@
         else if (this.q('[data-studio-format-webgl-slot] [data-fmt-fallback-img]')) this.swapFallbackImg(url);
         else this._fallbackToImg(url); // canvas KO sans repli encore monté -> on remplace par le <img>
         showRevealChrome();
+      }
+      // Filet : toute version affichée existe au moins une fois dans l'historique (reprise / continue / invité).
+      if (!Array.isArray(this.state.versions) || !this.state.versions.length) {
+        this.state.versions = [{ previewUrl: url, mockups: this.state.mockups || null, jobId: this.state.jobId, rank: this._versionRankFromUrl(url) || ((this.state.revealCount || 0) + 1) }];
+        this.state.activeVersion = 0;
       }
       if (persistState) this.persist();
     }
@@ -2814,6 +2826,29 @@
     bindRevealScreen() {
       this.q('[data-studio-add-to-cart]')?.addEventListener('click', () => this.addToCart());
       this.q('[data-studio-reveal-next]')?.addEventListener('click', () => this.revealNext());
+      // Navigation entre versions déjà vues (gratuit/instantané).
+      this.q('[data-studio-version-prev]')?.addEventListener('click', () => this._gotoVersion(this.state.activeVersion - 1));
+      this.q('[data-studio-version-next]')?.addEventListener('click', () => this._gotoVersion(this.state.activeVersion + 1));
+      const revealZone = this.q('[data-studio-format-webgl-slot]');
+      if (revealZone) {
+        // Flèches clavier ←/→ (zone reveal) = préc/suiv, jamais de génération.
+        revealZone.addEventListener('keydown', (e) => {
+          if (this.state.stage !== 'ready') return;
+          if (e.key === 'ArrowLeft') { e.preventDefault(); this._gotoVersion(this.state.activeVersion - 1); }
+          else if (e.key === 'ArrowRight') { e.preventDefault(); this._gotoVersion(this.state.activeVersion + 1); }
+        });
+        // Swipe horizontal sur l'œuvre = préc/suiv (jamais de génération -> pas de coût accidentel).
+        let sx = 0, sy = 0;
+        revealZone.addEventListener('touchstart', (e) => { const t = e.changedTouches[0]; sx = t.clientX; sy = t.clientY; }, { passive: true });
+        revealZone.addEventListener('touchend', (e) => {
+          if (this.state.stage !== 'ready') return;
+          const t = e.changedTouches[0];
+          const dx = t.clientX - sx, dy = t.clientY - sy;
+          if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+            this._gotoVersion(this.state.activeVersion + (dx < 0 ? 1 : -1)); // swipe gauche = version suivante
+          }
+        }, { passive: true });
+      }
 
       const saveToggle = this.q('[data-studio-save-toggle]');
       const saveForm = this.q('[data-studio-save-form]');
@@ -2855,13 +2890,85 @@
       el.classList.toggle('hidden', hidden);
     }
 
+    /* ---- Navigateur de versions : revoir GRATUITEMENT les versions déjà générées (historique client).
+       « ✨ Nouvelle version » (revealNext) reste le SEUL chemin payant/runner-up. La version affichée
+       est celle achetée (panier porte _job_id + _version_rank de la version active). ---- */
+
+    // Rang (1-based) d'une version depuis l'URL d'aperçu `/preview/N` (N = rank-1, contrat back-end).
+    _versionRankFromUrl(url) {
+      const m = typeof url === 'string' ? url.match(/\/preview\/(\d+)/) : null;
+      return m ? parseInt(m[1], 10) + 1 : null;
+    }
+
+    // Mémorise une version révélée (push en fin d'historique, devient active). Dédup sur l'URL.
+    _pushVersion(previewUrl, mockups, jobId) {
+      if (!previewUrl) return;
+      if (!Array.isArray(this.state.versions)) this.state.versions = [];
+      const versions = this.state.versions;
+      const last = versions[versions.length - 1];
+      if (last && last.previewUrl === previewUrl) {
+        last.mockups = mockups || last.mockups; // même image re-rendue -> pas de doublon
+        this.state.activeVersion = versions.length - 1;
+        return;
+      }
+      const rank = this._versionRankFromUrl(previewUrl)
+        || (typeof this.state.revealCount === 'number' ? this.state.revealCount + 1 : null);
+      versions.push({ previewUrl, mockups: mockups || null, jobId: jobId || this.state.jobId, rank });
+      this.state.activeVersion = versions.length - 1;
+    }
+
+    _activeVersion() {
+      const v = this.state.versions;
+      return (Array.isArray(v) && v[this.state.activeVersion]) || null;
+    }
+
+    // Navigation GRATUITE/instantanée entre versions déjà vues (aucun appel back-end).
+    _gotoVersion(index) {
+      const versions = this.state.versions || [];
+      if (index < 0 || index >= versions.length || index === this.state.activeVersion) return;
+      this.state.activeVersion = index;
+      const v = versions[index];
+      this.state.jobId = v.jobId || this.state.jobId; // la commande suit la version affichée
+      this.state.mockups = v.mockups || null;
+      this.showReveal(v.previewUrl, true, { wave: true });
+      this.renderMockups();
+      this._renderVersionNav();
+    }
+
+    // Segment ‹ compteur › + visibilité du bouton « Nouvelle version » selon la position.
+    _renderVersionNav() {
+      const nav = this.q('[data-studio-version-nav]');
+      const newBtn = this.revealNextLink; // = « Générer une nouvelle version » (data-studio-reveal-next)
+      const versions = Array.isArray(this.state.versions) ? this.state.versions : [];
+      const n = versions.length;
+      const i = this.state.activeVersion;
+      const isLast = i >= n - 1;
+      const onReveal = this.state.stage === 'ready' && !this.guestLink;
+      if (nav) {
+        this._setHidden(nav, !(onReveal && n > 1)); // segment seulement s'il y a plusieurs versions
+        const counter = this.q('[data-studio-version-counter]');
+        if (counter) counter.textContent = `${i + 1} / ${n}`;
+        const prev = this.q('[data-studio-version-prev]');
+        const next = this.q('[data-studio-version-next]');
+        if (prev) prev.disabled = i <= 0;
+        if (next) next.disabled = isLast;
+      }
+      // « Nouvelle version » : uniquement sur la DERNIÈRE version -> impossible de régénérer par erreur.
+      if (newBtn) {
+        this._setHidden(newBtn, !(onReveal && isLast));
+        newBtn.disabled = !!this.guestLink;
+      }
+    }
+
     async revealNext() {
       const button = this.q('[data-studio-reveal-next]');
       button.disabled = true;
       try {
         this.state.revealCount += 1;
         if (this.config.mock) {
-          this.showReveal(this.mockArtworkUrl(this.state.revealCount), true, { wave: true });
+          const mockPreview = this.mockArtworkUrl(this.state.revealCount);
+          this._pushVersion(mockPreview, null, this.state.jobId);
+          this.showReveal(mockPreview, true, { wave: true });
           this.resetMockMockups();
           return;
         }
@@ -2874,6 +2981,7 @@
           // Runner-up n°2 / n°3 : image déjà prête côté serveur -> on l'amène avec la MÊME vague
           // (essuyage vers la nouvelle version), pas un swap sec. (wave: true)
           this.state.mockups = Array.isArray(data.mockups) ? data.mockups : this.state.mockups;
+          this._pushVersion(previewUrl, this.state.mockups, this.state.jobId);
           this.showReveal(previewUrl, true, { wave: true });
           this.startMockupWatch();
         } else if (this.isEmailRequired(response, data)) {
@@ -2981,6 +3089,9 @@
         [this.i18n.prop_team]: this.state.teamName,
         [this.i18n.prop_preview]: this.state.previewUrl,
       };
+      // Fige la version COMMANDÉE par son rang (back-end : impression par rank, pas « dernière révélée »).
+      const activeV = this._activeVersion();
+      if (activeV && activeV.rank != null) properties._version_rank = activeV.rank;
 
       try {
         // Même contrat que MainProductBlocks.buyFetch (assets/main-product.js).
