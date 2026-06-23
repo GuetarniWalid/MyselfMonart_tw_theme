@@ -1278,9 +1278,7 @@
           input.value = '';
         });
       });
-      this.q('[data-photo-replace]')?.addEventListener('click', () => {
-        this.querySelectorAll('[data-photo-input]')[this.querySelectorAll('[data-photo-input]').length - 1]?.click();
-      });
+      // « Changer de photo » : pas de bouton dédié — les boutons d'upload restent visibles au-dessus.
       const consent = this.q('[data-consent]');
       consent?.addEventListener('change', () => {
         this.state.consent = consent.checked;
@@ -1318,17 +1316,11 @@
       // Avec juge -> bloquée tant que non validée ; sans juge (flag OFF) -> validée d'office (= avant).
       this.state.photoOk = !this.photoCheckEnabled;
 
-      const wrapper = this.q('[data-photo-preview-wrapper]');
-      const preview = this.q('[data-photo-preview]');
       if (this.photoObjectUrl) URL.revokeObjectURL(this.photoObjectUrl);
-      if (dimensions) {
-        this.photoObjectUrl = URL.createObjectURL(file);
-        preview.src = this.photoObjectUrl;
-        wrapper.hidden = false;
-      } else {
-        // HEIC non décodable par le navigateur : pas d'aperçu, mais fichier accepté.
-        wrapper.hidden = true;
-      }
+      // HEIC non décodable par le navigateur -> pas de vignette (null), mais fichier accepté.
+      this.photoObjectUrl = dimensions ? URL.createObjectURL(file) : null;
+      // Juge OFF -> on montre quand même la photo (bandeau neutre). Juge ON -> _checkPhoto rend loading puis verdict.
+      if (!this.photoCheckEnabled) this._renderPhotoVerdict('neutral');
       if (this.photoCheckEnabled) this._checkPhoto(file); // juge photo (qualité + angle), dédup par hash
       this.persist();
       this.updateNextDisabled();
@@ -1427,41 +1419,54 @@
       return { ok: true, issues: [], faceAngleDetected: this.photoFaceAngle };
     }
 
-    // Rendu du panneau de verdict (loading / ok / error / bad). Messages d'issues localisés (i18n).
+    // Bandeau HORIZONTAL : la photo uploadée à GAUCHE, le verdict à DROITE (à hauteur de l'image),
+    // même langage couleur que les cartes exemple du dessus (vert OK / ambre pas-idéal / rouge refus)
+    // -> on compare sa photo aux exemples d'un coup d'œil, sans pop-up séparée.
+    // États : loading / neutral (juge OFF) / ok / warn / error / bad.
     _renderPhotoVerdict(kind, verdict, opts) {
       const el = this.q('[data-photo-verdict]');
       if (!el) return;
       opts = opts || {};
       el.hidden = false;
+      const base = 'mt-3 flex items-center gap-3 rounded-xl border-2 p-3 text-left';
+      const thumb = this.photoObjectUrl
+        ? '<img src="' + this.photoObjectUrl + '" alt="' + escapeHtml(this.i18n.photo_preview_alt || '') + '" class="h-20 w-20 shrink-0 rounded-lg object-cover">'
+        : '';
+      const col = (inner) => '<div class="min-w-0 flex-1">' + inner + '</div>';
+
       if (kind === 'loading') {
-        el.className = 'mt-3 flex items-center gap-2 rounded-xl border border-main-10 bg-main-2 px-3 py-2.5 text-sm text-main-70';
-        el.textContent = this.i18n.photo_check_loading || 'Analyse de votre photo…';
+        el.className = base + ' border-main-10 bg-main-2';
+        el.innerHTML = thumb + col('<p class="text-sm text-main-70">' + escapeHtml(this.i18n.photo_check_loading || 'Analyse de votre photo…') + '</p>');
         return;
       }
       if (kind === 'error') {
-        el.className = 'mt-3 rounded-xl border border-main-10 bg-main-2 px-3 py-2.5 text-sm text-main-70';
-        el.textContent = this.i18n.photo_check_error || '';
+        el.className = base + ' border-main-10 bg-main-2';
+        el.innerHTML = thumb + col('<p class="text-sm text-main-70">' + escapeHtml(this.i18n.photo_check_error || '') + '</p>');
+        return;
+      }
+      if (kind === 'neutral') {
+        el.className = base + ' border-main-10 bg-main-2';
+        el.innerHTML = thumb + col('<p class="text-sm font-medium text-main">' + escapeHtml(this.i18n.photo_added || '') + '</p>');
         return;
       }
       if (kind === 'ok') {
-        el.className = 'mt-3 flex items-center gap-2 rounded-xl border-2 border-[#5a8a6a] bg-[#eef5ec] px-3 py-2.5 text-sm font-medium text-main';
-        el.textContent = '✓ ' + (this.i18n.photo_check_ok || 'Photo parfaite');
+        el.className = base + ' border-[#5a8a6a] bg-[#eef5ec]';
+        el.innerHTML = thumb + col('<p class="text-sm font-semibold text-[#3f6a53]">✓ ' + escapeHtml(this.i18n.photo_check_ok || 'Photo parfaite') + '</p>');
         return;
       }
       if (kind === 'warn') {
-        // Acceptée mais pas idéale (angle détecté ≠ angle de l'œuvre) : ambre, on laisse continuer.
-        el.className = 'mt-3 rounded-xl border-2 border-[#e0a64e] bg-[#fdf4e3] px-3 py-2.5 text-sm text-main';
-        el.innerHTML = '<p class="font-semibold">⚠ ' + escapeHtml(this.i18n.photo_check_warn_title || '') + '</p>'
-          + '<p class="mt-1">' + escapeHtml(this._photoWarnMessage()) + '</p>';
+        el.className = base + ' border-[#e0a64e] bg-[#fdf4e3]';
+        el.innerHTML = thumb + col('<p class="text-sm font-semibold text-[#854f0b]">⚠ ' + escapeHtml(this.i18n.photo_check_warn_title || '') + '</p>'
+          + '<p class="mt-0.5 text-xs leading-snug text-[#854f0b]">' + escapeHtml(this._photoWarnMessage()) + '</p>');
         return;
       }
-      el.className = 'mt-3 rounded-xl border-2 border-accent bg-secondary px-3 py-2.5 text-sm text-main';
+      el.className = base + ' border-[#a93514] bg-[#faf0ec]';
       const intro = opts.same ? (this.i18n.photo_check_same || '') : (this.i18n.photo_check_title_bad || '');
       const msgs = this._photoIssueMessages((verdict && verdict.issues) || []);
-      el.innerHTML = '<p class="font-semibold text-accent">' + escapeHtml(intro) + '</p>'
-        + '<ul class="mt-1 list-disc space-y-0.5 pl-5">'
+      el.innerHTML = thumb + col('<p class="text-sm font-semibold text-[#a93514]">' + escapeHtml(intro) + '</p>'
+        + '<ul class="mt-0.5 list-disc space-y-0.5 pl-4 text-xs leading-snug text-[#a93514]">'
         + msgs.map((m) => '<li>' + escapeHtml(m) + '</li>').join('')
-        + '</ul>';
+        + '</ul>');
     }
 
     // Codes d'issues -> messages i18n (dé-dupliqués). « angle_mismatch » -> message selon faceAngle.

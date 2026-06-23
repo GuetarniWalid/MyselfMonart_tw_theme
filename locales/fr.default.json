@@ -294,6 +294,7 @@
       "photo_check_title_bad": "Cette photo ne convient pas :",
       "photo_check_same": "C'est la même photo : elle ne convient pas, pour la raison ci-dessous.",
       "photo_check_error": "Vérification indisponible — vous pouvez continuer, nous re-vérifierons.",
+      "photo_added": "Photo ajoutée",
       "photo_issue_no_face": "Aucun visage détecté — cadrez bien le visage.",
       "photo_issue_multiple_faces": "Plusieurs visages — une seule personne sur la photo.",
       "photo_issue_too_dark": "Visage trop sombre — placez-vous près d'une fenêtre ou d'une lumière.",
