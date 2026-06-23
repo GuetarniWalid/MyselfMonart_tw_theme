@@ -162,27 +162,33 @@
             <div data-studio-panel="photo">
               <!-- M11 : exemples par défaut (assets embarqués, repli des image_picker admin) -->
               <ul class="grid grid-cols-2 gap-3 mb-5">
-                <li class="rounded-xl border border-main-10 bg-main-2 p-3 text-center">
-                  <img
-                    src="../assets/studio-photo-exemple-bon-3-4.jpg"
-                    alt="Exemple de bonne photo : garçon vu de trois-quarts, visage net et bien éclairé"
-                    width="600"
-                    height="600"
-                    loading="lazy"
-                    decoding="async"
-                    class="mb-2 aspect-square w-full rounded-lg object-cover">
-                  <p class="text-xs text-main-80">✓ <span data-photo-caption>Photo idéale : visage net, bien éclairé, légèrement de trois-quarts</span></p>
+                <li class="relative overflow-hidden rounded-xl border-2 border-[#5a8a6a] bg-[#eef5ec] p-3 text-center">
+                  <div class="relative mb-2">
+                    <img
+                      src="../assets/studio-photo-exemple-bon-3-4.jpg"
+                      alt="Exemple de bonne photo : garçon vu de trois-quarts, visage net et bien éclairé"
+                      width="600"
+                      height="600"
+                      loading="lazy"
+                      decoding="async"
+                      class="aspect-square w-full rounded-lg object-cover">
+                    <span aria-hidden="true" class="absolute right-1.5 top-1.5 grid h-6 w-6 place-items-center rounded-full bg-[#5a8a6a] text-[13px] leading-none text-secondary shadow-neu-xs">&#10003;</span>
+                  </div>
+                  <p class="text-xs font-semibold leading-snug text-[#3f6a53]"><span class="mb-0.5 block text-[10px] font-bold uppercase tracking-wide">Idéale</span><span data-photo-caption>Photo idéale : visage net, bien éclairé, légèrement de trois-quarts</span></p>
                 </li>
-                <li class="rounded-xl border border-main-10 bg-main-2 p-3 text-center">
-                  <img
-                    src="../assets/studio-photo-exemple-mauvais-dos.jpg"
-                    alt="Exemple de photo à éviter : enfant de dos, visage non visible"
-                    width="600"
-                    height="600"
-                    loading="lazy"
-                    decoding="async"
-                    class="mb-2 aspect-square w-full rounded-lg object-cover grayscale">
-                  <p class="text-xs text-main-80">✗ À éviter : visage non visible (de dos ou de trop loin)</p>
+                <li class="relative overflow-hidden rounded-xl border-2 border-[#a93514] bg-[#faf0ec] p-3 text-center">
+                  <div class="relative mb-2">
+                    <img
+                      src="../assets/studio-photo-exemple-mauvais-dos.jpg"
+                      alt="Exemple de photo à éviter : enfant de dos, visage non visible"
+                      width="600"
+                      height="600"
+                      loading="lazy"
+                      decoding="async"
+                      class="aspect-square w-full rounded-lg object-cover grayscale">
+                    <span aria-hidden="true" class="absolute right-1.5 top-1.5 grid h-6 w-6 place-items-center rounded-full bg-[#a93514] text-[13px] leading-none text-secondary shadow-neu-xs">&#10007;</span>
+                  </div>
+                  <p class="text-xs font-semibold leading-snug text-[#a93514]"><span class="mb-0.5 block text-[10px] font-bold uppercase tracking-wide">À éviter</span>À éviter : visage non visible (de dos ou de trop loin)</p>
                 </li>
               </ul>
 

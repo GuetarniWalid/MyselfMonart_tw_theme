@@ -207,28 +207,37 @@
               assign ex_bad_caption = 'sections.custom_art_studio.photo_bad_caption' | t
             endif
           -%}
+          {%- comment -%} Règles photo en évidence : bonne = bandeau vert (réutilise le vert verdict/équipe),
+             mauvaise = bandeau rouge (rouge maison #a93514). Pastille ✓/✗ + libellé court (sens porté par
+             le mot + la couleur + l'icône → daltonien-safe). {%- endcomment -%}
           <ul class="grid grid-cols-2 gap-3 mb-5">
-            <li class="rounded-xl border border-main-10 bg-main-2 p-3 text-center">
-              <img
-                src="{{ ex_good_url }}"
-                alt="{{ ex_good_alt | escape }}"
-                width="600"
-                height="600"
-                loading="lazy"
-                decoding="async"
-                class="mb-2 aspect-square w-full rounded-lg object-cover">
-              <p class="text-xs text-main-80">✓ <span data-photo-caption>{{ 'sections.custom_art_studio.photo_caption_front' | t }}</span></p>
+            <li class="relative overflow-hidden rounded-xl border-2 border-[#5a8a6a] bg-[#eef5ec] p-3 text-center">
+              <div class="relative mb-2">
+                <img
+                  src="{{ ex_good_url }}"
+                  alt="{{ ex_good_alt | escape }}"
+                  width="600"
+                  height="600"
+                  loading="lazy"
+                  decoding="async"
+                  class="aspect-square w-full rounded-lg object-cover">
+                <span aria-hidden="true" class="absolute right-1.5 top-1.5 grid h-6 w-6 place-items-center rounded-full bg-[#5a8a6a] text-[13px] leading-none text-secondary shadow-neu-xs">&#10003;</span>
+              </div>
+              <p class="text-xs font-semibold leading-snug text-[#3f6a53]"><span class="mb-0.5 block text-[10px] font-bold uppercase tracking-wide">{{ 'sections.custom_art_studio.photo_label_good' | t }}</span><span data-photo-caption>{{ 'sections.custom_art_studio.photo_caption_front' | t }}</span></p>
             </li>
-            <li class="rounded-xl border border-main-10 bg-main-2 p-3 text-center">
-              <img
-                src="{{ ex_bad_url }}"
-                alt="{{ ex_bad_alt | escape }}"
-                width="600"
-                height="600"
-                loading="lazy"
-                decoding="async"
-                class="mb-2 aspect-square w-full rounded-lg object-cover grayscale">
-              <p class="text-xs text-main-80">✗ {{ ex_bad_caption }}</p>
+            <li class="relative overflow-hidden rounded-xl border-2 border-[#a93514] bg-[#faf0ec] p-3 text-center">
+              <div class="relative mb-2">
+                <img
+                  src="{{ ex_bad_url }}"
+                  alt="{{ ex_bad_alt | escape }}"
+                  width="600"
+                  height="600"
+                  loading="lazy"
+                  decoding="async"
+                  class="aspect-square w-full rounded-lg object-cover grayscale">
+                <span aria-hidden="true" class="absolute right-1.5 top-1.5 grid h-6 w-6 place-items-center rounded-full bg-[#a93514] text-[13px] leading-none text-secondary shadow-neu-xs">&#10007;</span>
+              </div>
+              <p class="text-xs font-semibold leading-snug text-[#a93514]"><span class="mb-0.5 block text-[10px] font-bold uppercase tracking-wide">{{ 'sections.custom_art_studio.photo_label_bad' | t }}</span>{{ ex_bad_caption }}</p>
             </li>
           </ul>
 

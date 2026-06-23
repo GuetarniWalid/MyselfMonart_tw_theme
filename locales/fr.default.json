@@ -283,6 +283,8 @@
       "mock_badge": "Mode démonstration — aucune génération réelle",
       "photo_good_caption": "Photo idéale : visage net, bien éclairé, de face",
       "photo_bad_caption": "À éviter : flou, visage dans l'ombre ou trop loin",
+      "photo_label_good": "Idéale",
+      "photo_label_bad": "À éviter",
       "photo_caption_front": "Photo idéale : visage net, bien éclairé, de face",
       "photo_caption_three_quarter": "Photo idéale : visage net, bien éclairé, légèrement de trois-quarts",
       "photo_caption_profile": "Photo idéale : visage net, bien éclairé, de profil",
