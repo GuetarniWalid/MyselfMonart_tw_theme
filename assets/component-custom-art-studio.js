@@ -216,6 +216,9 @@
       // Config-driven : la liste ORDONNÉE des étapes vient du metafield studio.config (injecté
       // par la section dans config.studio). Repli foot si absent (migration progressive).
       this.studioConfig = this.config.studio && typeof this.config.studio === 'object' ? this.config.studio : null;
+      // Type de produit (foot/horoscope/…) envoyé au back-end (jobs + photo-check) pour la
+      // segmentation des stats (durée moyenne par type) et les contrôles. Repli 'foot'.
+      this.productType = (this.studioConfig && this.studioConfig.productType) || 'foot';
       // Locale courante (injectée par la section depuis request.locale) pour résoudre les
       // maps i18n {fr,en,…} de studio.config. Repli 'fr'.
       // Normalisée sur 2 lettres : request.locale.iso_code peut valoir « fr-CA », « en-GB »… et
@@ -1379,7 +1382,7 @@
           fd.append('photo', blob, 'photo.jpg');
           fd.append('faceAngle', this.photoFaceAngle);
           if (hash) fd.append('hash', hash);
-          if (this.config.productType) fd.append('productType', this.config.productType);
+          if (this.productType) fd.append('productType', this.productType);
           const { response, data } = await this.api('/api/custom-art/photo-check', { method: 'POST', body: fd });
           if (!response.ok) throw new Error(`HTTP ${response.status}`);
           verdict = { ok: !!data.ok, issues: Array.isArray(data.issues) ? data.issues : [], faceAngleDetected: typeof data.faceAngleDetected === 'string' ? data.faceAngleDetected : '' };
@@ -2045,6 +2048,7 @@
       const extra = (this.studioConfig && this.studioConfig.payload && this.studioConfig.payload.extra)
         || FOOT_FALLBACK_PAYLOAD_EXTRA;
       Object.entries(extra).forEach(([k, v]) => fd.append(k, v));
+      if (this.productType) fd.append('productType', this.productType);
       if (this.state.email) fd.append('email', this.state.email);
       return fd;
     }
