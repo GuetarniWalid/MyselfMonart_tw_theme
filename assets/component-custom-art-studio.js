@@ -2161,6 +2161,9 @@
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         this.pollErrorCount = 0;
         this.state.status = data.status;
+        // Estimation GLOBALE aussi renvoyée pendant 'processing' (back-end) : recale la barre si le
+        // visiteur a rechargé en pleine génération, et met l'estimation en cache pour la prochaine fois.
+        if (data.estimatedMs > 0) { this._cacheGenEstimate(data.estimatedMs); this._retuneWait(data.estimatedMs); }
         if (data.status === 'ready') {
           clearInterval(this.pollTimer);
           // Calibrage auto : mémorise la durée réelle (uniquement une vraie génération de cette session).
