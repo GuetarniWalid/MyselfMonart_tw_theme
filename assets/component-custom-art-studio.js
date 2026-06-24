@@ -76,6 +76,7 @@
   const MOCKUP_POLL_INTERVAL = 3000; // streaming des mises en situation après le reveal
   const MOCKUP_TIMEOUT = 120000; // moteur de rendu down -> on retire les squelettes restants
   const MOCK_DURATION = 8000;
+  const MOCK_CANDIDATES = 3; // mock UNIQUEMENT : nb de candidats simulés par lot (parcours « 1/3 → 2/3 → 3/3 »)
   const REAL_DURATION_ESTIMATE = 40000; // défaut prudent (1re génération only) ; calibré ensuite (local puis back-end)
   // Calibrage auto : on mémorise la durée des dernières vraies générations pour ajuster la barre.
   const GEN_DURATIONS_KEY = 'mma-studio:genDurations';
@@ -305,8 +306,9 @@
         revealCount: 0,
         imageStale: false, // true = une donnée de l'image a changé -> régé requise au prochain « Continuer »
         mockups: null, // [{ psd, status, url }] — streaming post-reveal
-        versions: [], // historique client des versions révélées {previewUrl, mockups, jobId, rank}
-        activeVersion: -1, // index de la version affichée (navigateur de versions)
+        versions: [], // candidats DÉJÀ révélés du LOT courant {previewUrl, mockups, jobId, rank}
+        activeVersion: -1, // index du candidat affiché (navigateur de versions)
+        candidateTotal: null, // nb TOTAL de candidats du lot courant (back-end candidate.total) -> compteur « x / N »
         artistRequested: null, // jobId dont la demande artiste a déjà été envoyée
       };
 
@@ -397,13 +399,13 @@
       try {
         const { step, screen, stage, consent, fields, teamId, teamName, teamColors, playerName,
           playerNumber, selectedOptions, variantId, jobId, sessionToken, email, status,
-          previewUrl, revealCount, imageStale, mockups, versions, activeVersion, artistRequested } = this.state;
+          previewUrl, revealCount, imageStale, mockups, versions, activeVersion, candidateTotal, artistRequested } = this.state;
         // Mémoire DURABLE (localStorage) : survit à la fermeture du navigateur -> on ré-affiche
         // direct la création à la réouverture (cf. open()), sans pousser à régénérer.
         localStorage.setItem(this.storageKey, JSON.stringify({
           step, screen, stage, consent, fields, teamId, teamName, teamColors, playerName,
           playerNumber, selectedOptions, variantId, jobId, sessionToken, email, status,
-          previewUrl, revealCount, imageStale, mockups, versions, activeVersion, artistRequested,
+          previewUrl, revealCount, imageStale, mockups, versions, activeVersion, candidateTotal, artistRequested,
           savedAt: Date.now(), // horodatage de fraîcheur (garde TTL à la reprise, cf. restoreState)
         }));
       } catch (e) { /* stockage indisponible (navigation privée) : non bloquant */ }
@@ -438,6 +440,7 @@
           this.state.mockups = null;
           this.state.versions = [];
           this.state.activeVersion = -1;
+          this.state.candidateTotal = null;
           this.state.artistRequested = null;
           this.state.imageStale = true; // données potentiellement modifiées entre-temps -> régé propre
         }
@@ -824,6 +827,12 @@
       if (data.playerName != null) this.state.playerName = data.playerName;
       if (data.playerNumber != null) this.state.playerNumber = String(data.playerNumber);
       if (data.email != null && !this.state.email) this.state.email = data.email;
+      // Reprise = on ne récupère qu'UNE image (pas tout le lot) : navigateur à une seule version connue.
+      // Pas de `candidate.total` ici (sinon le compteur promettrait des candidats que reveal-next, dont le
+      // pointeur serveur est inconnu après reprise, pourrait désynchroniser). « 1 / 1 » + « Générer ».
+      this.state.versions = [];
+      this.state.activeVersion = -1;
+      this.state.candidateTotal = null;
       this.state.screen = 'steps';
       this.showStep(fmtStep);
       this.showReveal(preview, true); // persist=true -> réhydrate le localStorage (reprise instantanée ensuite)
@@ -2073,6 +2082,10 @@
       // Une génération ACTIVE sort du mode « invité par lien » : ce job devient celui de la session
       // courante -> on réautorise la mémoire durable locale. cf. A1.
       this.guestLink = false;
+      // Génération (initiale ou régé après édition) -> nouveau lot : navigateur de versions vierge.
+      this.state.versions = [];
+      this.state.activeVersion = -1;
+      this.state.candidateTotal = null;
       this.enterGeneratingStage();
 
       if (this.config.mock) {
@@ -2099,6 +2112,8 @@
             this.showError(this.i18n.generation_error);
             return;
           }
+          this._mockLot = 0;
+          this.state.candidateTotal = MOCK_CANDIDATES; // mock : lot simulé de N candidats (parcours « 1/N »)
           const mockPreview = this.mockArtworkUrl(0);
           this._pushVersion(mockPreview, null, this.state.jobId);
           this.showReveal(mockPreview);
@@ -2175,6 +2190,7 @@
           // Calibrage auto : mémorise la durée réelle (uniquement une vraie génération de cette session).
           if (!this.config.mock && this.genStartedAt) { this._recordGenDuration(Date.now() - this.genStartedAt); this.genStartedAt = null; }
           this.state.mockups = Array.isArray(data.mockups) ? data.mockups : this.state.mockups;
+          this._applyCandidateMeta(data); // total du lot -> compteur « 1 / N » dès la 1re image
           const readyPreview = this.previewFrom(data);
           this._pushVersion(readyPreview, this.state.mockups, this.state.jobId);
           this.showReveal(readyPreview);
@@ -2835,16 +2851,17 @@
       this.q('[data-studio-reveal-next]')?.addEventListener('click', () => this.revealNext());
       // Navigation entre versions déjà vues (gratuit/instantané).
       this.q('[data-studio-version-prev]')?.addEventListener('click', () => this._gotoVersion(this.state.activeVersion - 1));
-      this.q('[data-studio-version-next]')?.addEventListener('click', () => this._gotoVersion(this.state.activeVersion + 1));
+      this.q('[data-studio-version-next]')?.addEventListener('click', () => this._nextVersion());
       const revealZone = this.q('[data-studio-format-webgl-slot]');
       if (revealZone) {
-        // Flèches clavier ←/→ (zone reveal) = préc/suiv, jamais de génération.
+        // Flèches clavier ←/→ (zone reveal) = préc/suiv. « Suivant » sert le candidat suivant du lot
+        // (gratuit, déjà prêt) mais ne déclenche jamais une génération (la flèche n'agit pas au dernier).
         revealZone.addEventListener('keydown', (e) => {
           if (this.state.stage !== 'ready') return;
           if (e.key === 'ArrowLeft') { e.preventDefault(); this._gotoVersion(this.state.activeVersion - 1); }
-          else if (e.key === 'ArrowRight') { e.preventDefault(); this._gotoVersion(this.state.activeVersion + 1); }
+          else if (e.key === 'ArrowRight') { e.preventDefault(); this._nextVersion(); }
         });
-        // Swipe horizontal sur l'œuvre = préc/suiv (jamais de génération -> pas de coût accidentel).
+        // Swipe horizontal sur l'œuvre = préc/suiv (jamais de génération payante -> pas de coût accidentel).
         let sx = 0, sy = 0;
         revealZone.addEventListener('touchstart', (e) => { const t = e.changedTouches[0]; sx = t.clientX; sy = t.clientY; }, { passive: true });
         revealZone.addEventListener('touchend', (e) => {
@@ -2852,7 +2869,7 @@
           const t = e.changedTouches[0];
           const dx = t.clientX - sx, dy = t.clientY - sy;
           if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-            this._gotoVersion(this.state.activeVersion + (dx < 0 ? 1 : -1)); // swipe gauche = version suivante
+            if (dx < 0) this._nextVersion(); else this._gotoVersion(this.state.activeVersion - 1); // swipe gauche = suivant
           }
         }, { passive: true });
       }
@@ -2907,6 +2924,22 @@
       return m ? parseInt(m[1], 10) + 1 : null;
     }
 
+    // Lit le bloc `candidate { rank, total, hasMore }` du contrat back-end (ready / reveal-next) et
+    // mémorise le TOTAL du lot -> alimente le compteur « x / N » dès la 1re image, AVANT d'avoir
+    // récupéré les candidats suivants. `total` est stable par jobId (lot figé après ready). Absent
+    // (vieux back-end) = repli silencieux sur le nb de versions déjà révélées (cf. _renderVersionNav).
+    _applyCandidateMeta(data) {
+      const c = data && data.candidate;
+      if (c && typeof c.total === 'number' && c.total > 0) this.state.candidateTotal = c.total;
+    }
+
+    // Total de candidats du lot courant : back-end si connu, sinon nb déjà révélé (repli rétro-compatible).
+    _candidateTotal() {
+      const versions = Array.isArray(this.state.versions) ? this.state.versions : [];
+      const t = this.state.candidateTotal;
+      return (typeof t === 'number' && t > 0) ? Math.max(t, versions.length) : versions.length;
+    }
+
     // Mémorise une version révélée (push en fin d'historique, devient active). Dédup sur l'URL.
     _pushVersion(previewUrl, mockups, jobId) {
       if (!previewUrl) return;
@@ -2944,40 +2977,80 @@
       this._renderVersionNav();
     }
 
-    // Segment ‹ compteur › + visibilité du bouton « Nouvelle version » selon la position.
+    // Flèche « suivant » : candidat DÉJÀ révélé -> navigation instantanée (gratuit) ; sinon, il reste un
+    // candidat du lot non encore récupéré -> reveal-next le sert (déjà prêt côté serveur = gratuit/instantané).
+    // On n'atteint JAMAIS ici le dernier candidat (la flèche est masquée à N/N au profit de « Générer une
+    // nouvelle version »), donc reveal-next ne déclenche pas de génération payante par ce chemin.
+    _nextVersion() {
+      const versions = this.state.versions || [];
+      const i = this.state.activeVersion;
+      if (i + 1 < versions.length) { this._gotoVersion(i + 1); return; } // déjà vu -> instantané
+      if (i + 1 < this._candidateTotal()) this.revealNext(); // candidat suivant du lot, pas encore récupéré
+    }
+
+    // Mock UNIQUEMENT : démarre un NOUVEAU lot simulé (équivalent d'une nouvelle génération payante en réel).
+    _startMockLot() {
+      this._mockLot = (this._mockLot || 0) + 1;
+      this.state.versions = [];
+      this.state.activeVersion = -1;
+      this.state.candidateTotal = null;
+      this.state.revealCount = 0;
+      this.state.mockups = null;
+      this.state.jobId = `mock-${this._mockLot}-${Date.now()}`;
+      this.enterGeneratingStage();
+      this.startWaitProgress(MOCK_DURATION);
+      this.mockTimer = setTimeout(() => {
+        this.state.candidateTotal = MOCK_CANDIDATES;
+        const url = this.mockArtworkUrl(this._mockLot * 10); // base distincte par lot -> URLs uniques
+        this._pushVersion(url, null, this.state.jobId);
+        this.showReveal(url);
+        this.resetMockMockups();
+      }, MOCK_DURATION);
+    }
+
+    // Segment ‹ compteur › + visibilité du bouton « Nouvelle version » selon la position dans le LOT.
+    // Modèle : on parcourt les N candidats du lot courant (back-end candidate.total). « x / N » est
+    // affiché dès la 1re image (N connu d'emblée) ; « Générer une nouvelle version » (payant) n'apparaît
+    // QU'au dernier candidat (N/N), une fois tous les candidats déjà générés visionnés.
     _renderVersionNav() {
       const nav = this.q('[data-studio-version-nav]');
       const newBtn = this.revealNextLink; // = « Générer une nouvelle version » (data-studio-reveal-next)
-      const versions = Array.isArray(this.state.versions) ? this.state.versions : [];
-      const n = versions.length;
+      const total = this._candidateTotal();
       const i = this.state.activeVersion;
-      const isLast = i >= n - 1;
+      const rank = i + 1; // rang 1-based du candidat affiché
+      const isLast = rank >= total; // dernier candidat du lot -> seule action restante = générer (payant)
       const onReveal = this.state.stage === 'ready' && !this.guestLink;
-      this._setHidden(nav, !onReveal); // le segment (nav + « générer ») est présent dès le reveal (hors invité)
+      this._setHidden(nav, !onReveal); // le segment (compteur + flèches + « générer ») est présent dès le reveal (hors invité)
       if (newBtn) newBtn.disabled = !!this.guestLink;
       if (!onReveal) return;
       const counter = this.q('[data-studio-version-counter]');
       const prev = this.q('[data-studio-version-prev]');
       const next = this.q('[data-studio-version-next]');
-      if (counter) counter.textContent = `${i + 1} / ${n}`;
-      if (prev) prev.disabled = i <= 0; // la flèche « précédent » reste TOUJOURS (désactivée sur la 1re)
-      // Sur la DERNIÈRE version : compteur + « suivant » s'effacent au profit de « Générer une nouvelle version »
-      // (au même endroit, à droite de la flèche « précédent »). Sinon : ‹ compteur ›, et « générer » caché.
-      if (counter) this._setHidden(counter, isLast);
-      if (next) this._setHidden(next, isLast);
-      if (newBtn) this._setHidden(newBtn, !isLast);
+      if (counter) { counter.textContent = `${rank} / ${total}`; this._setHidden(counter, false); } // compteur TOUJOURS visible
+      if (prev) prev.disabled = i <= 0; // « précédent » présent en permanence (désactivé sur le 1er candidat)
+      if (next) this._setHidden(next, isLast); // « suivant » caché sur le dernier candidat
+      if (newBtn) this._setHidden(newBtn, !isLast); // « Générer une nouvelle version » seulement au bout du lot
     }
 
     async revealNext() {
+      if (this._revealing) return; // garde anti double-clic (flèche « suivant » + lien « Générer une nouvelle version »)
+      this._revealing = true;
       const button = this.q('[data-studio-reveal-next]');
-      button.disabled = true;
+      if (button) button.disabled = true;
       try {
         this.state.revealCount += 1;
         if (this.config.mock) {
-          const mockPreview = this.mockArtworkUrl(this.state.revealCount);
-          this._pushVersion(mockPreview, null, this.state.jobId);
-          this.showReveal(mockPreview, true, { wave: true });
-          this.resetMockMockups();
+          const total = this.state.candidateTotal || MOCK_CANDIDATES;
+          if (this.state.revealCount < total) {
+            // Candidat suivant du lot, « déjà prêt » côté serveur -> gratuit/instantané (vague d'essuyage).
+            const mockPreview = this.mockArtworkUrl((this._mockLot || 0) * 10 + this.state.revealCount);
+            this._pushVersion(mockPreview, null, this.state.jobId);
+            this.showReveal(mockPreview, true, { wave: true });
+            this.resetMockMockups();
+          } else {
+            // Lot épuisé : « Générer une nouvelle version » -> nouvelle génération (nouveau lot). SEUL chemin payant.
+            this._startMockLot();
+          }
           return;
         }
         const { response, data } = await this.api(
@@ -2989,6 +3062,7 @@
           // Runner-up n°2 / n°3 : image déjà prête côté serveur -> on l'amène avec la MÊME vague
           // (essuyage vers la nouvelle version), pas un swap sec. (wave: true)
           this.state.mockups = Array.isArray(data.mockups) ? data.mockups : this.state.mockups;
+          this._applyCandidateMeta(data); // tient le total à jour (devrait être stable sur le lot)
           this._pushVersion(previewUrl, this.state.mockups, this.state.jobId);
           this.showReveal(previewUrl, true, { wave: true });
           this.startMockupWatch();
@@ -3020,6 +3094,10 @@
           this.state.revealCount = 0;
           this.state.mockups = null;
           this.state.status = data.status;
+          // Nouveau lot -> on repart d'un navigateur vierge (le nouveau jobId a son propre `total`).
+          this.state.versions = [];
+          this.state.activeVersion = -1;
+          this.state.candidateTotal = null;
           this.persist();
           this.enterGeneratingStage();
           this.startWaitProgress(this._estimateGenDuration());
@@ -3032,7 +3110,8 @@
       } catch (e) {
         this.showError(this.i18n.generation_error);
       } finally {
-        button.disabled = false;
+        this._revealing = false;
+        if (button) button.disabled = false;
       }
     }
 
