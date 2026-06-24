@@ -383,7 +383,7 @@
       "artist_success": "C'est entre les mains de notre artiste ! Votre aperçu vous attendra dans votre boîte mail d'ici 24 h.",
       "artist_error": "L'envoi n'a pas abouti. Vérifiez votre e-mail et réessayez.",
       "artist_note": "Cette demande n'est pas décomptée de vos essais.",
-      "generation_error": "La création n'a pas abouti — cet essai n'est pas décompté. Réessayez, idéalement avec une photo bien nette.",
+      "generation_error": "Cet essai n'est pas décompté. Réessayez, idéalement avec une photo bien nette.",
       "error_title": "La création n'a pas abouti",
       "error_title_email": "Débloquez un nouvel essai",
       "retry": "Réessayer",
