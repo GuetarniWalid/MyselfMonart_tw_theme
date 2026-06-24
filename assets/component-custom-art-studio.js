@@ -833,6 +833,7 @@
       this.state.versions = [];
       this.state.activeVersion = -1;
       this.state.candidateTotal = null;
+      this._genSlot = false;
       this.state.screen = 'steps';
       this.showStep(fmtStep);
       this.showReveal(preview, true); // persist=true -> réhydrate le localStorage (reprise instantanée ensuite)
@@ -2850,7 +2851,7 @@
       this.q('[data-studio-add-to-cart]')?.addEventListener('click', () => this.addToCart());
       this.q('[data-studio-reveal-next]')?.addEventListener('click', () => this.revealNext());
       // Navigation entre versions déjà vues (gratuit/instantané).
-      this.q('[data-studio-version-prev]')?.addEventListener('click', () => this._gotoVersion(this.state.activeVersion - 1));
+      this.q('[data-studio-version-prev]')?.addEventListener('click', () => this._prevVersion());
       this.q('[data-studio-version-next]')?.addEventListener('click', () => this._nextVersion());
       const revealZone = this.q('[data-studio-format-webgl-slot]');
       if (revealZone) {
@@ -2858,7 +2859,7 @@
         // (gratuit, déjà prêt) mais ne déclenche jamais une génération (la flèche n'agit pas au dernier).
         revealZone.addEventListener('keydown', (e) => {
           if (this.state.stage !== 'ready') return;
-          if (e.key === 'ArrowLeft') { e.preventDefault(); this._gotoVersion(this.state.activeVersion - 1); }
+          if (e.key === 'ArrowLeft') { e.preventDefault(); this._prevVersion(); }
           else if (e.key === 'ArrowRight') { e.preventDefault(); this._nextVersion(); }
         });
         // Swipe horizontal sur l'œuvre = préc/suiv (jamais de génération payante -> pas de coût accidentel).
@@ -2869,7 +2870,7 @@
           const t = e.changedTouches[0];
           const dx = t.clientX - sx, dy = t.clientY - sy;
           if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-            if (dx < 0) this._nextVersion(); else this._gotoVersion(this.state.activeVersion - 1); // swipe gauche = suivant
+            if (dx < 0) this._nextVersion(); else this._prevVersion(); // swipe gauche = suivant, droite = précédent
           }
         }, { passive: true });
       }
@@ -2955,6 +2956,7 @@
         || (typeof this.state.revealCount === 'number' ? this.state.revealCount + 1 : null);
       versions.push({ previewUrl, mockups: mockups || null, jobId: jobId || this.state.jobId, rank });
       this.state.activeVersion = versions.length - 1;
+      this._genSlot = false; // nouveau candidat révélé/affiché -> jamais sur le slot « Générer »
       try { if (localStorage.getItem('mma-studio:debug') === '1') console.log('[MMA push] total=' + versions.length + ' rank=' + rank + ' job=' + (jobId || this.state.jobId) + ' url=' + (previewUrl || '').slice(-70)); } catch (e) {}
     }
 
@@ -2967,6 +2969,7 @@
     _gotoVersion(index) {
       const versions = this.state.versions || [];
       if (index < 0 || index >= versions.length || index === this.state.activeVersion) return;
+      this._genSlot = false; // on affiche un candidat -> on quitte le slot « Générer »
       this.state.activeVersion = index;
       const v = versions[index];
       try { if (localStorage.getItem('mma-studio:debug') === '1') console.log('[MMA nav] -> ' + (index + 1) + '/' + versions.length + ' rank=' + v.rank + ' url=' + (v.previewUrl || '').slice(-70)); } catch (e) {}
@@ -2977,15 +2980,24 @@
       this._renderVersionNav();
     }
 
-    // Flèche « suivant » : candidat DÉJÀ révélé -> navigation instantanée (gratuit) ; sinon, il reste un
-    // candidat du lot non encore récupéré -> reveal-next le sert (déjà prêt côté serveur = gratuit/instantané).
-    // On n'atteint JAMAIS ici le dernier candidat (la flèche est masquée à N/N au profit de « Générer une
-    // nouvelle version »), donc reveal-next ne déclenche pas de génération payante par ce chemin.
+    // Flèche « suivant » (RÈGLE Walid) : sur un candidat -> candidat suivant (instantané si déjà révélé,
+    // sinon reveal-next gratuit) ; au DERNIER candidat -> ouvre le SLOT « Générer » (pas de génération, image
+    // inchangée). Au slot -> no-op (flèche droite cachée). Les flèches ne déclenchent JAMAIS de génération payante.
     _nextVersion() {
+      if (this._genSlot) return;
       const versions = this.state.versions || [];
       const i = this.state.activeVersion;
-      if (i + 1 < versions.length) { this._gotoVersion(i + 1); return; } // déjà vu -> instantané
-      if (i + 1 < this._candidateTotal()) this.revealNext(); // candidat suivant du lot, pas encore récupéré
+      if (i + 1 < versions.length) { this._gotoVersion(i + 1); return; } // candidat déjà révélé -> instantané
+      if (i + 1 < this._candidateTotal()) { this.revealNext(); return; } // candidat suivant pas encore récupéré -> gratuit
+      this._genSlot = true; // dernier candidat -> on dévoile le slot « Générer » (compteur effacé, flèche gauche seule)
+      this._renderVersionNav();
+    }
+
+    // Flèche « précédent » (RÈGLE Walid) : depuis le slot « Générer » -> retour au dernier candidat (N/N) ;
+    // sinon -> candidat précédent (instantané).
+    _prevVersion() {
+      if (this._genSlot) { this._genSlot = false; this._renderVersionNav(); return; }
+      this._gotoVersion(this.state.activeVersion - 1);
     }
 
     // Mock UNIQUEMENT : démarre un NOUVEAU lot simulé (équivalent d'une nouvelle génération payante en réel).
@@ -3008,28 +3020,39 @@
       }, MOCK_DURATION);
     }
 
-    // Segment ‹ compteur › + visibilité du bouton « Nouvelle version » selon la position dans le LOT.
-    // Modèle : on parcourt les N candidats du lot courant (back-end candidate.total). « x / N » est
-    // affiché dès la 1re image (N connu d'emblée) ; « Générer une nouvelle version » (payant) n'apparaît
-    // QU'au dernier candidat (N/N), une fois tous les candidats déjà générés visionnés.
+    // Segment navigateur de versions — RÈGLE FIGÉE Walid (cf. memory feedback-studio-version-nav-rule) :
+    //  • candidats 1..N : « ‹ k / N › » — compteur TOUJOURS visible, flèche gauche présente (désactivée à 1/N),
+    //    flèche droite TOUJOURS présente (Y COMPRIS à N/N). « Générer une nouvelle version » MASQUÉ.
+    //  • la flèche droite à N/N ne génère pas et n'efface pas le compteur : elle avance vers un SLOT « Générer »
+    //    SÉPARÉ (position N+1).
+    //  • slot « Générer » (this._genSlot) : compteur EFFACÉ, flèche droite disparue, il reste la flèche gauche
+    //    (retour vers N/N) + « Générer une nouvelle version ». L'image reste celle du dernier candidat.
     _renderVersionNav() {
       const nav = this.q('[data-studio-version-nav]');
       const newBtn = this.revealNextLink; // = « Générer une nouvelle version » (data-studio-reveal-next)
       const total = this._candidateTotal();
       const i = this.state.activeVersion;
       const rank = i + 1; // rang 1-based du candidat affiché
-      const isLast = rank >= total; // dernier candidat du lot -> seule action restante = générer (payant)
       const onReveal = this.state.stage === 'ready' && !this.guestLink;
-      this._setHidden(nav, !onReveal); // le segment (compteur + flèches + « générer ») est présent dès le reveal (hors invité)
+      this._setHidden(nav, !onReveal); // le segment est présent dès le reveal (hors invité)
       if (newBtn) newBtn.disabled = !!this.guestLink;
       if (!onReveal) return;
       const counter = this.q('[data-studio-version-counter]');
       const prev = this.q('[data-studio-version-prev]');
       const next = this.q('[data-studio-version-next]');
-      if (counter) { counter.textContent = `${rank} / ${total}`; this._setHidden(counter, false); } // compteur TOUJOURS visible
-      if (prev) prev.disabled = i <= 0; // « précédent » présent en permanence (désactivé sur le 1er candidat)
-      if (next) this._setHidden(next, isLast); // « suivant » caché sur le dernier candidat
-      if (newBtn) this._setHidden(newBtn, !isLast); // « Générer une nouvelle version » seulement au bout du lot
+      if (this._genSlot) {
+        // Slot « Générer » (position N+1) : compteur effacé, flèche droite cachée, flèche gauche = retour N/N.
+        if (counter) this._setHidden(counter, true);
+        if (next) this._setHidden(next, true);
+        if (prev) { this._setHidden(prev, false); prev.disabled = false; }
+        if (newBtn) this._setHidden(newBtn, false);
+      } else {
+        // Candidat k / N : compteur + flèche gauche (désactivée à 1/N) + flèche droite TOUJOURS visible.
+        if (counter) { counter.textContent = `${rank} / ${total}`; this._setHidden(counter, false); }
+        if (prev) { this._setHidden(prev, false); prev.disabled = i <= 0; }
+        if (next) this._setHidden(next, false); // flèche droite présente même au dernier candidat (-> slot générer)
+        if (newBtn) this._setHidden(newBtn, true); // « Générer » jamais sur un candidat
+      }
     }
 
     async revealNext() {
