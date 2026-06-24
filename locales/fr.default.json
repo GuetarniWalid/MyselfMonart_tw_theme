@@ -364,6 +364,7 @@
       "save_submit": "Recevoir ma création",
       "save_success": "C'est noté ! Vous recevrez un lien pour retrouver votre création.",
       "save_error": "L'enregistrement n'a pas abouti. Vérifiez l'e-mail et réessayez.",
+      "save_retry_title": "Encore une version ?",
       "email_required_for_retry": "Laissez votre e-mail pour débloquer un nouvel essai.",
       "error_rate_limited": "Le studio connaît une forte affluence en ce moment. Réessayez dans quelques minutes — vos choix sont conservés.",
       "error_email_required": "Vos essais découverte du jour sont utilisés. Laissez votre e-mail pour débloquer un nouvel essai.",

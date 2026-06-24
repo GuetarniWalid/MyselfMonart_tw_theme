@@ -446,6 +446,10 @@
               hidden
               novalidate
               class="absolute right-0 top-full z-30 mt-2 w-72 max-w-[calc(100vw-2rem)] rounded-xl border-main border-2 bg-secondary p-3 shadow-neu-sm">
+              {%- comment -%} Titre de la boîte : « Sauvegarder ma création » par défaut ; remplacé par le cadrage
+                 « générer » quand le popover est ouvert par le gate e-mail (clic « Générer une nouvelle version »
+                 d'un visiteur anonyme), pour ne pas faire croire qu'on demande de sauvegarder. {%- endcomment -%}
+              <p data-save-title class="mb-2 text-sm font-heading font-semibold text-main">{{ 'sections.custom_art_studio.save_creation' | t }}</p>
               <label for="studio-save-email-{{ section.id }}" class="mb-1 block text-xs uppercase tracking-wide text-main-70">
                 {{ 'sections.custom_art_studio.save_email_label' | t }}
               </label>
@@ -767,6 +771,8 @@
         "cart_count_sr": {{ 'sections.custom_art_studio.cart_count_sr' | t: count: '[count]' | json }},
         "save_success": {{ 'sections.custom_art_studio.save_success' | t | json }},
         "save_error": {{ 'sections.custom_art_studio.save_error' | t | json }},
+        "save_creation": {{ 'sections.custom_art_studio.save_creation' | t | json }},
+        "save_retry_title": {{ 'sections.custom_art_studio.save_retry_title' | t | json }},
         "email_required_for_retry": {{ 'sections.custom_art_studio.email_required_for_retry' | t | json }},
         "error_rate_limited": {{ 'sections.custom_art_studio.error_rate_limited' | t | json }},
         "error_email_required": {{ 'sections.custom_art_studio.error_email_required' | t | json }},

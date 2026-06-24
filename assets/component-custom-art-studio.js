@@ -2882,6 +2882,12 @@
         saveToggle.setAttribute('aria-expanded', String(!expanded));
         saveForm.hidden = expanded;
         if (!expanded) {
+          // Ouverture NORMALE (clic « Sauvegarder ») : on rétablit le titre « Sauvegarder » et on efface un
+          // éventuel message résiduel du gate « générer ».
+          const title = this.q('[data-save-title]');
+          if (title && this.i18n.save_creation) title.textContent = this.i18n.save_creation;
+          const fb = this.q('[data-save-feedback]');
+          if (fb) { fb.hidden = true; fb.textContent = ''; }
           const emailInput = this.q('[data-save-email]');
           if (emailInput && this.state.email && !emailInput.value) emailInput.value = this.state.email;
           emailInput?.focus();
@@ -3090,11 +3096,14 @@
           this.showReveal(previewUrl, true, { wave: true });
           this.startMockupWatch();
         } else if (this.isEmailRequired(response, data)) {
-          // Cap d'essais anonymes atteint : on guide vers la sauvegarde par e-mail.
+          // Cap d'essais anonymes atteint : on ouvre la boîte e-mail, RE-TITRÉE « générer » (pas « Sauvegarder »)
+          // pour ne pas dérouter — le visiteur vient de cliquer « Générer une nouvelle version », pas « Sauvegarder ».
           const saveToggle = this.q('[data-studio-save-toggle]');
           const feedback = this.q('[data-save-feedback]');
           saveToggle?.setAttribute('aria-expanded', 'true');
           this.q('[data-studio-save-form]').hidden = false;
+          const gateTitle = this.q('[data-save-title]');
+          if (gateTitle && this.i18n.save_retry_title) gateTitle.textContent = this.i18n.save_retry_title;
           if (feedback) {
             feedback.textContent = this.i18n.email_required_for_retry;
             feedback.hidden = false;
