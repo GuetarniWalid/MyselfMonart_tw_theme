@@ -2366,20 +2366,20 @@
 
       const pc = this.q('[data-studio-format-webgl-slot] perspective-canvas');
       const pcUsable = Boolean(pc && pc.gl); // canvas RÉELLEMENT initialisé (sinon init KO -> repli <img>)
-      if (pcUsable && pc._gen && typeof pc.finishGenerating === 'function') {
+      if (opts.instant && pcUsable && typeof pc.setTexture === 'function') {
+        // NAVIGATION entre versions DÉJÀ vues : swap INSTANTANÉ et fiable, PRIORITAIRE sur toute vague
+        // (même résiduelle). On coupe la vague en cours puis on pose la texture directement (cache ->
+        // instantané) -> plus jamais de version intermédiaire sautée.
+        if (typeof pc.stopGenerating === 'function') pc.stopGenerating();
+        pc.setTexture(url);
+        showRevealChrome();
+      } else if (pcUsable && pc._gen && typeof pc.finishGenerating === 'function') {
         // GÉNÉRATION en cours : la dernière vague essuie le placeholder vers la vraie image. Le bouton
         // reste la barre « Création en cours… » pendant la vague, puis devient « Ajouter au panier »
         // à la fin (event perspective:revealed). Repli temporisé si l'event ne vient pas.
         pc.addEventListener('perspective:revealed', showRevealChrome, { once: true });
         this._revealChromeTimer = setTimeout(showRevealChrome, 4000);
         pc.finishGenerating(url);
-      } else if (opts.instant && pcUsable && typeof pc.setTexture === 'function') {
-        // NAVIGATION entre versions DÉJÀ vues : swap INSTANTANÉ et fiable. On NE relance PAS la vague
-        // (async + enchaînable) qui pouvait sauter la version intermédiaire si on cliquait vite -> on
-        // coupe toute vague résiduelle et on pose la texture directement (cache -> instantané).
-        if (typeof pc.stopGenerating === 'function') pc.stopGenerating();
-        pc.setTexture(url);
-        showRevealChrome();
       } else if (opts.wave && pcUsable && typeof pc.revealSwap === 'function') {
         // « UNE AUTRE VERSION »/runner-up : on est DÉJÀ au reveal -> le chrome d'achat reste en place, et
         // l'image fait la MÊME vague (essuyage de la version actuelle vers la nouvelle). Pas de fausse attente.
@@ -2922,6 +2922,7 @@
         || (typeof this.state.revealCount === 'number' ? this.state.revealCount + 1 : null);
       versions.push({ previewUrl, mockups: mockups || null, jobId: jobId || this.state.jobId, rank });
       this.state.activeVersion = versions.length - 1;
+      try { if (localStorage.getItem('mma-studio:debug') === '1') console.log('[MMA push] total=' + versions.length + ' rank=' + rank + ' job=' + (jobId || this.state.jobId) + ' url=' + (previewUrl || '').slice(-70)); } catch (e) {}
     }
 
     _activeVersion() {
@@ -2935,6 +2936,7 @@
       if (index < 0 || index >= versions.length || index === this.state.activeVersion) return;
       this.state.activeVersion = index;
       const v = versions[index];
+      try { if (localStorage.getItem('mma-studio:debug') === '1') console.log('[MMA nav] -> ' + (index + 1) + '/' + versions.length + ' rank=' + v.rank + ' url=' + (v.previewUrl || '').slice(-70)); } catch (e) {}
       this.state.jobId = v.jobId || this.state.jobId; // la commande suit la version affichée
       this.state.mockups = v.mockups || null;
       this.showReveal(v.previewUrl, true, { instant: true }); // swap INSTANTANÉ (pas de vague async qui saute des versions)
@@ -3253,8 +3255,7 @@
       // (couleurs de l'équipe + prénom + numéro) pour un parcours mock crédible.
       if (this.config.mockRevealImage && variation === 0) return this.config.mockRevealImage;
       const colors = this.state.teamColors || ['#444444', '#dddddd'];
-      const angles = [30, 120, 210, 300];
-      const angle = angles[variation % angles.length];
+      const angle = (variation * 53) % 360; // distinct par variation -> chaque version mock a une URL unique
       const name = escapeHtml(this.state.playerName || '');
       const number = escapeHtml(this.state.playerNumber || '');
       const watermark = escapeHtml(this.i18n.mock_watermark || '');
