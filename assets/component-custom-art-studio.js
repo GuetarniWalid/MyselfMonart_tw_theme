@@ -272,6 +272,8 @@
       this.buyContentTemplate = this.querySelector('[data-studio-buy-content]');
 
       this.photoFile = null;
+      this.photoIsHeic = false; // HEIC/HEIF iPhone -> à ré-encoder en JPEG pour /jobs (sharp serveur ne décode pas le HEIC)
+      this._jobPhotoBlob = null; // JPEG décodable envoyé à /jobs à la place du HEIC original (préparé à la génération)
       this.photoObjectUrl = null;
       this.teams = null;
       this.pollTimer = null;
@@ -1355,6 +1357,8 @@
       }
 
       this.photoFile = file;
+      this.photoIsHeic = isHeic; // mémorisé -> /jobs recevra un JPEG ré-encodé (sharp serveur ne décode pas le HEIC)
+      this._jobPhotoBlob = null; // invalide tout JPEG préparé pour une photo précédente
       this.markImageStale(); // photo = donnée présente dans l'image -> régé requise au prochain « Continuer »
       this.setPhotoError(null);
       // Avec juge -> bloquée tant que non validée ; sans juge (flag OFF) -> validée d'office (= avant).
@@ -2031,7 +2035,10 @@
         const key = step.payloadKey || step.name;
         switch (step.type) {
           case 'photo':
-            if (this.photoFile) fd.append(key, this.photoFile);
+            // HEIC iPhone : on envoie le JPEG ré-encodé (décodable par sharp) préparé à la génération ;
+            // sinon l'original (JPEG/PNG/AVIF décodables côté serveur).
+            if (this._jobPhotoBlob) fd.append(key, this._jobPhotoBlob, 'photo.jpg');
+            else if (this.photoFile) fd.append(key, this.photoFile);
             break;
           case 'choice':
           case 'text':
@@ -2126,6 +2133,12 @@
       this.genStartedAt = Date.now();
       this.startWaitProgress(this._estimateGenDuration());
       try {
+        // HEIC/HEIF iPhone : le sharp serveur ne décode QUE JPEG/PNG/AVIF -> on ré-encode la photo en
+        // JPEG (canvas, max 2048 px) AVANT /jobs, sinon 422 « non décodable ». Repli sur l'original si le
+        // navigateur ne sait pas décoder le HEIC (ex. Chrome desktop) : rien de mieux possible côté client.
+        if (this.photoIsHeic && this.photoFile && !this._jobPhotoBlob) {
+          this._jobPhotoBlob = await this._downscalePhoto(this.photoFile, 2048, 0.92).catch(() => null);
+        }
         // Payload assemblé depuis la config (cf. buildPayload) : identique au foot (mêmes
         // champs/valeurs/ordre), généralisé aux autres produits via leurs steps.
         const formData = this.buildPayload();
