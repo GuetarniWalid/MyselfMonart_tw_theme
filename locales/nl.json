@@ -368,7 +368,13 @@
       "photo_warn_angle_front": "Deze foto is niet recht van voren zoals het kunstwerk; de weergave kan daardoor iets minder natuurgetrouw zijn. Je kunt toch doorgaan.",
       "photo_warn_angle_three_quarter": "Deze foto is niet in driekwartaanzicht zoals het kunstwerk; de weergave kan iets minder getrouw zijn. Je kunt toch doorgaan.",
       "photo_warn_angle_profile": "Deze foto is geen profielaanzicht zoals het kunstwerk: het resultaat kan daardoor iets minder getrouw zijn. Je kunt wel doorgaan.",
-      "photo_warn_angle_back": "Deze foto toont de achterkant van het hoofd niet zoals het kunstwerk dat doet: het resultaat kan iets minder natuurgetrouw zijn. Je kunt alsnog doorgaan."
+      "photo_warn_angle_back": "Deze foto toont de achterkant van het hoofd niet zoals het kunstwerk dat doet: het resultaat kan iets minder natuurgetrouw zijn. Je kunt alsnog doorgaan.",
+      "photo_label_good": "Ideaal",
+      "photo_label_bad": "Te vermijden",
+      "photo_added": "Foto toegevoegd",
+      "version_prev": "Vorige versie",
+      "version_next": "Volgende versie",
+      "version_new": "Nieuwe versie genereren"
     }
   },
   "accessibility": {

@@ -369,7 +369,13 @@
       "photo_warn_angle_front": "Dieses Foto ist nicht frontal aufgenommen wie das Kunstwerk: Die Darstellung könnte etwas weniger originalgetreu sein. Sie können trotzdem fortfahren.",
       "photo_warn_angle_three_quarter": "Dieses Foto ist nicht in Dreiviertelansicht wie das Kunstwerk; das Ergebnis kann etwas weniger originalgetreu ausfallen. Sie können trotzdem fortfahren.",
       "photo_warn_angle_profile": "Dieses Foto ist nicht in Profilansicht wie das Kunstwerk – die Darstellung könnte etwas weniger originalgetreu sein. Sie können trotzdem fortfahren.",
-      "photo_warn_angle_back": "Dieses Foto zeigt den Hinterkopf nicht wie im Motiv; das Ergebnis könnte etwas weniger naturgetreu ausfallen. Sie können trotzdem fortfahren."
+      "photo_warn_angle_back": "Dieses Foto zeigt den Hinterkopf nicht wie im Motiv; das Ergebnis könnte etwas weniger naturgetreu ausfallen. Sie können trotzdem fortfahren.",
+      "photo_label_good": "Ideal",
+      "photo_label_bad": "Zu vermeiden",
+      "photo_added": "Foto hinzugefügt",
+      "version_prev": "Vorherige Version",
+      "version_next": "Nächste Version",
+      "version_new": "Neue Version erstellen"
     }
   },
   "accessibility": {

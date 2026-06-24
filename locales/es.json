@@ -369,7 +369,13 @@
       "photo_warn_angle_front": "Esta foto no está tomada de frente, como la obra; el resultado podría ser un poco menos fiel. Aun así, puedes continuar.",
       "photo_warn_angle_three_quarter": "Esta foto no está en un ángulo de tres cuartos como la obra; el resultado podría ser un poco menos fiel. Aun así, puedes continuar.",
       "photo_warn_angle_profile": "Esta foto no es de perfil como la obra: el resultado puede ser un poco menos fiel. Aun así, puedes continuar.",
-      "photo_warn_angle_back": "Esta foto no muestra la parte posterior de la cabeza como en la obra: el resultado podría ser un poco menos fiel. Aun así, puedes continuar."
+      "photo_warn_angle_back": "Esta foto no muestra la parte posterior de la cabeza como en la obra: el resultado podría ser un poco menos fiel. Aun así, puedes continuar.",
+      "photo_label_good": "Ideal",
+      "photo_label_bad": "A evitar",
+      "photo_added": "Foto añadida",
+      "version_prev": "Versión anterior",
+      "version_next": "Versión siguiente",
+      "version_new": "Generar una nueva versión"
     }
   },
   "accessibility": {

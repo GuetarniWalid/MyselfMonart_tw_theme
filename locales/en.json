@@ -596,7 +596,13 @@
       "photo_warn_angle_front": "This photo isn't straight-on like the artwork, so the result may be slightly less accurate. You can still proceed.",
       "photo_warn_angle_three_quarter": "This photo isn’t at a three-quarter angle like the artwork, so the result may be slightly less accurate. You can still proceed.",
       "photo_warn_angle_profile": "This photo isn’t a side profile like the artwork, so the result may be a bit less accurate. You can still continue.",
-      "photo_warn_angle_back": "This photo doesn’t show the back of the head like the artwork does, so the result may be a little less accurate. You can still proceed."
+      "photo_warn_angle_back": "This photo doesn’t show the back of the head like the artwork does, so the result may be a little less accurate. You can still proceed.",
+      "photo_label_good": "Ideal",
+      "photo_label_bad": "Avoid",
+      "photo_added": "Photo added",
+      "version_prev": "Previous version",
+      "version_next": "Next version",
+      "version_new": "Generate a new version"
     }
   },
   "snippet": {
