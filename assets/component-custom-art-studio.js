@@ -2373,9 +2373,16 @@
         pc.addEventListener('perspective:revealed', showRevealChrome, { once: true });
         this._revealChromeTimer = setTimeout(showRevealChrome, 4000);
         pc.finishGenerating(url);
+      } else if (opts.instant && pcUsable && typeof pc.setTexture === 'function') {
+        // NAVIGATION entre versions DÉJÀ vues : swap INSTANTANÉ et fiable. On NE relance PAS la vague
+        // (async + enchaînable) qui pouvait sauter la version intermédiaire si on cliquait vite -> on
+        // coupe toute vague résiduelle et on pose la texture directement (cache -> instantané).
+        if (typeof pc.stopGenerating === 'function') pc.stopGenerating();
+        pc.setTexture(url);
+        showRevealChrome();
       } else if (opts.wave && pcUsable && typeof pc.revealSwap === 'function') {
-        // « UNE AUTRE VERSION » : on est DÉJÀ au reveal -> le chrome d'achat reste en place, et l'image
-        // fait la MÊME vague (essuyage de la version actuelle vers la nouvelle). Pas de fausse attente.
+        // « UNE AUTRE VERSION »/runner-up : on est DÉJÀ au reveal -> le chrome d'achat reste en place, et
+        // l'image fait la MÊME vague (essuyage de la version actuelle vers la nouvelle). Pas de fausse attente.
         showRevealChrome();
         pc.revealSwap(url);
       } else if (pc && !pc.gl && typeof pc.setTexture === 'function') {
@@ -2930,7 +2937,7 @@
       const v = versions[index];
       this.state.jobId = v.jobId || this.state.jobId; // la commande suit la version affichée
       this.state.mockups = v.mockups || null;
-      this.showReveal(v.previewUrl, true, { wave: true });
+      this.showReveal(v.previewUrl, true, { instant: true }); // swap INSTANTANÉ (pas de vague async qui saute des versions)
       this.renderMockups();
       this._renderVersionNav();
     }
@@ -2944,20 +2951,19 @@
       const i = this.state.activeVersion;
       const isLast = i >= n - 1;
       const onReveal = this.state.stage === 'ready' && !this.guestLink;
-      if (nav) {
-        this._setHidden(nav, !(onReveal && n > 1)); // segment seulement s'il y a plusieurs versions
-        const counter = this.q('[data-studio-version-counter]');
-        if (counter) counter.textContent = `${i + 1} / ${n}`;
-        const prev = this.q('[data-studio-version-prev]');
-        const next = this.q('[data-studio-version-next]');
-        if (prev) prev.disabled = i <= 0;
-        if (next) next.disabled = isLast;
-      }
-      // « Nouvelle version » : uniquement sur la DERNIÈRE version -> impossible de régénérer par erreur.
-      if (newBtn) {
-        this._setHidden(newBtn, !(onReveal && isLast));
-        newBtn.disabled = !!this.guestLink;
-      }
+      this._setHidden(nav, !onReveal); // le segment (nav + « générer ») est présent dès le reveal (hors invité)
+      if (newBtn) newBtn.disabled = !!this.guestLink;
+      if (!onReveal) return;
+      const counter = this.q('[data-studio-version-counter]');
+      const prev = this.q('[data-studio-version-prev]');
+      const next = this.q('[data-studio-version-next]');
+      if (counter) counter.textContent = `${i + 1} / ${n}`;
+      if (prev) prev.disabled = i <= 0; // la flèche « précédent » reste TOUJOURS (désactivée sur la 1re)
+      // Sur la DERNIÈRE version : compteur + « suivant » s'effacent au profit de « Générer une nouvelle version »
+      // (au même endroit, à droite de la flèche « précédent »). Sinon : ‹ compteur ›, et « générer » caché.
+      if (counter) this._setHidden(counter, isLast);
+      if (next) this._setHidden(next, isLast);
+      if (newBtn) this._setHidden(newBtn, !isLast);
     }
 
     async revealNext() {
