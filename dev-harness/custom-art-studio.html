@@ -275,7 +275,7 @@
                 <label for="studio-save-email-harness" class="mb-1 block text-xs uppercase tracking-wide text-main-70">Votre e-mail</label>
                 <div class="flex flex-col gap-2">
                   <input type="email" id="studio-save-email-harness" data-save-email required autocomplete="email" placeholder="prenom@exemple.fr" class="w-full rounded-xl border border-main-10 bg-secondary px-3 py-2 text-main placeholder:text-main-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
-                  <button type="submit" class="w-full rounded-xl border-main border-2 bg-secondary px-3 py-2 font-heading font-semibold shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">Recevoir</button>
+                  <button type="submit" data-save-submit class="w-full rounded-xl border-main border-2 bg-secondary px-3 py-2 font-heading font-semibold shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">Recevoir</button>
                 </div>
                 <p data-save-feedback class="mt-2 text-sm text-main-80" aria-live="polite" hidden></p>
               </form>
@@ -550,7 +550,9 @@
             "save_success": "C'est noté ! Vous recevrez un lien pour retrouver votre création.",
             "save_error": "L'enregistrement n'a pas abouti. Vérifiez l'e-mail et réessayez.",
             "save_creation": "Sauvegarder ma création",
+            "save_submit": "Recevoir ma création",
             "save_retry_title": "Encore une version ?",
+            "save_retry_submit": "Générer ma nouvelle version",
             "email_required_for_retry": "Laissez votre e-mail pour débloquer un nouvel essai.",
             "error_rate_limited": "Le studio connaît une forte affluence en ce moment. Réessayez dans quelques minutes — vos choix sont conservés.",
             "error_email_required": "Vos essais découverte du jour sont utilisés. Laissez votre e-mail pour débloquer un nouvel essai.",

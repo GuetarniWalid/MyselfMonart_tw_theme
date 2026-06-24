@@ -466,6 +466,7 @@
                   class="w-full rounded-xl border border-main-10 bg-secondary px-3 py-2 text-main placeholder:text-main-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
                 <button
                   type="submit"
+                  data-save-submit
                   class="w-full rounded-xl border-main border-2 bg-secondary px-3 py-2 font-heading font-semibold shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
                   {{ 'sections.custom_art_studio.save_submit' | t }}
                 </button>
@@ -772,7 +773,9 @@
         "save_success": {{ 'sections.custom_art_studio.save_success' | t | json }},
         "save_error": {{ 'sections.custom_art_studio.save_error' | t | json }},
         "save_creation": {{ 'sections.custom_art_studio.save_creation' | t | json }},
+        "save_submit": {{ 'sections.custom_art_studio.save_submit' | t | json }},
         "save_retry_title": {{ 'sections.custom_art_studio.save_retry_title' | t | json }},
+        "save_retry_submit": {{ 'sections.custom_art_studio.save_retry_submit' | t | json }},
         "email_required_for_retry": {{ 'sections.custom_art_studio.email_required_for_retry' | t | json }},
         "error_rate_limited": {{ 'sections.custom_art_studio.error_rate_limited' | t | json }},
         "error_email_required": {{ 'sections.custom_art_studio.error_email_required' | t | json }},

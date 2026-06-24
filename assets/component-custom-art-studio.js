@@ -2094,6 +2094,7 @@
       this.state.versions = [];
       this.state.activeVersion = -1;
       this.state.candidateTotal = null;
+      this._genSlot = false;
       this.enterGeneratingStage();
 
       if (this.config.mock) {
@@ -2895,10 +2896,13 @@
         saveToggle.setAttribute('aria-expanded', String(!expanded));
         saveForm.hidden = expanded;
         if (!expanded) {
-          // Ouverture NORMALE (clic « Sauvegarder ») : on rétablit le titre « Sauvegarder » et on efface un
-          // éventuel message résiduel du gate « générer ».
+          // Ouverture NORMALE (clic « Sauvegarder ») : on rétablit le titre + le libellé du bouton
+          // « Sauvegarder » et on efface un éventuel message/contexte résiduel du gate « générer ».
+          this._emailGateForGenerate = false;
           const title = this.q('[data-save-title]');
           if (title && this.i18n.save_creation) title.textContent = this.i18n.save_creation;
+          const submitBtn = this.q('[data-save-submit]');
+          if (submitBtn && this.i18n.save_submit) submitBtn.textContent = this.i18n.save_submit;
           const fb = this.q('[data-save-feedback]');
           if (fb) { fb.hidden = true; fb.textContent = ''; }
           const emailInput = this.q('[data-save-email]');
@@ -2908,6 +2912,21 @@
       });
       saveForm?.addEventListener('submit', (event) => {
         event.preventDefault();
+        if (this._emailGateForGenerate) {
+          // Boîte ouverte par le gate « Générer une nouvelle version » (cap e-mail) : on enregistre l'e-mail
+          // puis on RELANCE la génération (même chemin prouvé que l'écran d'erreur : POST /jobs avec e-mail),
+          // au lieu de sauvegarder -> il se passe quelque chose à l'écran (chargement → nouvelle image).
+          const input = this.q('[data-save-email]');
+          if (!input || !input.checkValidity()) { input?.reportValidity(); return; }
+          this.state.email = input.value;
+          this.persist();
+          this._emailGateForGenerate = false;
+          const gateSubmit = this.q('[data-save-submit]');
+          if (gateSubmit && this.i18n.save_submit) gateSubmit.textContent = this.i18n.save_submit; // restaure le libellé
+          this.closeSavePopover();
+          this.startGeneration();
+          return;
+        }
         this.saveCreation();
       });
       // Clic EN DEHORS du popover « Sauvegarder » (et hors de son déclencheur) -> on le referme.
@@ -3115,8 +3134,13 @@
           const feedback = this.q('[data-save-feedback]');
           saveToggle?.setAttribute('aria-expanded', 'true');
           this.q('[data-studio-save-form]').hidden = false;
+          // Ce gate sert à GÉNÉRER (pas à sauvegarder) : on re-titre, on re-libelle le bouton, et on marque
+          // le contexte pour que sa soumission RELANCE la génération (cf. handler du formulaire).
+          this._emailGateForGenerate = true;
           const gateTitle = this.q('[data-save-title]');
           if (gateTitle && this.i18n.save_retry_title) gateTitle.textContent = this.i18n.save_retry_title;
+          const gateSubmit = this.q('[data-save-submit]');
+          if (gateSubmit && this.i18n.save_retry_submit) gateSubmit.textContent = this.i18n.save_retry_submit;
           if (feedback) {
             feedback.textContent = this.i18n.email_required_for_retry;
             feedback.hidden = false;
