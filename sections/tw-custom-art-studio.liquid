@@ -238,32 +238,21 @@
           </ul>
 
           <div class="flex flex-col gap-3 2xs:flex-row">
-            {%- comment -%} « Prendre une photo » (mobile/iPad) : caméra ARRIÈRE (capture="environment", on
-               photographie l'enfant, pas un selfie) + accept="image/*" — iOS Safari ouvre une caméra NOIRE si
-               on combine `capture` à une liste de types stricte. La validation de format réelle (HEIC inclus)
-               est faite par handlePhoto côté JS, donc image/* est sans risque ici. {%- endcomment -%}
+            {%- comment -%} UN SEUL <input type="file" accept="image/*"> SANS `capture` : sur mobile (iOS/Android)
+               l'OS présente lui-même « Prendre une photo / Photothèque / Fichiers » ; sur desktop, l'explorateur
+               de fichiers. On NE force PAS `capture` car la caméra inline du WebView iOS s'ouvre NOIRE sur iPad
+               (bug WebKit, indépendant de capture=user/environment et de la liste accept). La validation de format
+               réelle (HEIC inclus) reste assurée par handlePhoto côté JS, donc image/* est sans risque ici. {%- endcomment -%}
             <input
               type="file"
               accept="image/*"
-              capture="environment"
               class="sr-only"
-              id="studio-photo-capture-{{ section.id }}"
+              id="studio-photo-input-{{ section.id }}"
               data-photo-input>
             <label
-              for="studio-photo-capture-{{ section.id }}"
-              class="md:hidden inline-flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl border-main border-1 bg-secondary px-4 py-3 font-heading font-semibold text-main shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none focus-within:ring-2 focus-within:ring-main">
-              {{ 'sections.custom_art_studio.photo_capture' | t }}
-            </label>
-            <input
-              type="file"
-              accept="image/jpeg,image/png,image/heic,image/heif"
-              class="sr-only"
-              id="studio-photo-gallery-{{ section.id }}"
-              data-photo-input>
-            <label
-              for="studio-photo-gallery-{{ section.id }}"
+              for="studio-photo-input-{{ section.id }}"
               class="inline-flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl border-main border-1 bg-secondary px-4 py-3 font-heading font-semibold text-main shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none focus-within:ring-2 focus-within:ring-main">
-              {{ 'sections.custom_art_studio.photo_choose' | t }}
+              {{ 'sections.custom_art_studio.photo_add' | t }}
             </label>
           </div>
 
