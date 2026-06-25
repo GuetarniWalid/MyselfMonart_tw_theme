@@ -836,8 +836,8 @@
           this.render();
           return;
         }
-        const e = t * t * (3 - 2 * t); // smoothstep
-        this.glassPhase = -0.7 + 1.4 * e; // balaie le reflet d'un bord à l'autre
+        const e = t * t * (3 - 2 * t); // smoothstep (vitesse nulle aux deux bouts -> départ et pose en douceur)
+        this.glassPhase = -1.4 * (1.0 - e); // glisse depuis la gauche et SE POSE au repos (0) : fin continue, plus de saut
         this.render();
         this.glassRAF = requestAnimationFrame(tick);
       };
