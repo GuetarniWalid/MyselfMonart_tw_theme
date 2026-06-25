@@ -374,7 +374,9 @@
       "photo_added": "Foto toegevoegd",
       "version_prev": "Vorige versie",
       "version_next": "Volgende versie",
-      "version_new": "Nieuwe versie genereren"
+      "version_new": "Nieuwe versie genereren",
+      "save_retry_submit": "Genereer mijn nieuwe versie",
+      "save_retry_title": "Nog een versie?"
     }
   },
   "accessibility": {

@@ -375,7 +375,9 @@
       "photo_added": "Foto hinzugefügt",
       "version_prev": "Vorherige Version",
       "version_next": "Nächste Version",
-      "version_new": "Neue Version erstellen"
+      "version_new": "Neue Version erstellen",
+      "save_retry_submit": "Meine neue Version erstellen",
+      "save_retry_title": "Noch eine Version?"
     }
   },
   "accessibility": {

@@ -375,7 +375,9 @@
       "photo_added": "Foto añadida",
       "version_prev": "Versión anterior",
       "version_next": "Versión siguiente",
-      "version_new": "Generar una nueva versión"
+      "version_new": "Generar una nueva versión",
+      "save_retry_submit": "Generar mi nueva versión",
+      "save_retry_title": "¿Otra versión?"
     }
   },
   "accessibility": {

@@ -602,7 +602,9 @@
       "photo_added": "Photo added",
       "version_prev": "Previous version",
       "version_next": "Next version",
-      "version_new": "Generate a new version"
+      "version_new": "Generate a new version",
+      "save_retry_submit": "Generate a new version",
+      "save_retry_title": "Another version?"
     }
   },
   "snippet": {
