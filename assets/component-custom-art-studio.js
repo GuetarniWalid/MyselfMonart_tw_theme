@@ -2109,6 +2109,14 @@
       this.state.lotStart = (this.state.versions || []).length; // départ du nouveau lot dans l'historique cumulé
       this.state.candidateTotal = null;
       this._genSlot = false;
+      // ⚠️ La relance peut venir de l'écran d'ERREUR (déblocage du cap e-mail « Vos essais du jour… ») ou
+      // ARTISTE : enterGeneratingStage met en scène la génération SUR l'étape Format, mais ne CHANGE PAS
+      // l'écran affiché. Sans ce retour explicite, on monte la génération sur un écran caché pendant que
+      // l'écran d'erreur RESTE affiché -> le user clique « Débloquer », « rien ne se passe », la popup reste.
+      if (this.state.screen !== 'steps') {
+        const fmtStep = this.stepNames.includes('format') ? 'format' : this.stepNames[this.stepNames.length - 1];
+        this.showStep(fmtStep);
+      }
       this.enterGeneratingStage();
 
       if (this.config.mock) {
