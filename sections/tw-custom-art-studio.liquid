@@ -238,10 +238,14 @@
           </ul>
 
           <div class="flex flex-col gap-3 2xs:flex-row">
+            {%- comment -%} « Prendre une photo » (mobile/iPad) : caméra ARRIÈRE (capture="environment", on
+               photographie l'enfant, pas un selfie) + accept="image/*" — iOS Safari ouvre une caméra NOIRE si
+               on combine `capture` à une liste de types stricte. La validation de format réelle (HEIC inclus)
+               est faite par handlePhoto côté JS, donc image/* est sans risque ici. {%- endcomment -%}
             <input
               type="file"
-              accept="image/jpeg,image/png,image/heic,image/heif"
-              capture="user"
+              accept="image/*"
+              capture="environment"
               class="sr-only"
               id="studio-photo-capture-{{ section.id }}"
               data-photo-input>
