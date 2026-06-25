@@ -308,9 +308,10 @@
         revealCount: 0,
         imageStale: false, // true = une donnée de l'image a changé -> régé requise au prochain « Continuer »
         mockups: null, // [{ psd, status, url }] — streaming post-reveal
-        versions: [], // candidats DÉJÀ révélés du LOT courant {previewUrl, mockups, jobId, rank}
+        versions: [], // candidats révélés, CUMULÉS sur tous les lots de la création {previewUrl, mockups, jobId, rank}
         activeVersion: -1, // index du candidat affiché (navigateur de versions)
-        candidateTotal: null, // nb TOTAL de candidats du lot courant (back-end candidate.total) -> compteur « x / N »
+        candidateTotal: null, // nb total de candidats du LOT COURANT (back-end candidate.total)
+        lotStart: 0, // index dans versions[] où commence le lot courant -> total cumulé = lotStart + candidateTotal
         artistRequested: null, // jobId dont la demande artiste a déjà été envoyée
       };
 
@@ -401,13 +402,13 @@
       try {
         const { step, screen, stage, consent, fields, teamId, teamName, teamColors, playerName,
           playerNumber, selectedOptions, variantId, jobId, sessionToken, email, status,
-          previewUrl, revealCount, imageStale, mockups, versions, activeVersion, candidateTotal, artistRequested } = this.state;
+          previewUrl, revealCount, imageStale, mockups, versions, activeVersion, candidateTotal, lotStart, artistRequested } = this.state;
         // Mémoire DURABLE (localStorage) : survit à la fermeture du navigateur -> on ré-affiche
         // direct la création à la réouverture (cf. open()), sans pousser à régénérer.
         localStorage.setItem(this.storageKey, JSON.stringify({
           step, screen, stage, consent, fields, teamId, teamName, teamColors, playerName,
           playerNumber, selectedOptions, variantId, jobId, sessionToken, email, status,
-          previewUrl, revealCount, imageStale, mockups, versions, activeVersion, candidateTotal, artistRequested,
+          previewUrl, revealCount, imageStale, mockups, versions, activeVersion, candidateTotal, lotStart, artistRequested,
           savedAt: Date.now(), // horodatage de fraîcheur (garde TTL à la reprise, cf. restoreState)
         }));
       } catch (e) { /* stockage indisponible (navigation privée) : non bloquant */ }
@@ -443,6 +444,7 @@
           this.state.versions = [];
           this.state.activeVersion = -1;
           this.state.candidateTotal = null;
+          this.state.lotStart = 0;
           this.state.artistRequested = null;
           this.state.imageStale = true; // données potentiellement modifiées entre-temps -> régé propre
         }
@@ -844,6 +846,7 @@
       this.state.versions = [];
       this.state.activeVersion = -1;
       this.state.candidateTotal = null;
+      this.state.lotStart = 0;
       this._genSlot = false;
       this.state.screen = 'steps';
       this.showStep(fmtStep);
@@ -2099,9 +2102,10 @@
       // Une génération ACTIVE sort du mode « invité par lien » : ce job devient celui de la session
       // courante -> on réautorise la mémoire durable locale. cf. A1.
       this.guestLink = false;
-      // Génération (initiale ou régé après édition) -> nouveau lot : navigateur de versions vierge.
-      this.state.versions = [];
-      this.state.activeVersion = -1;
+      // Cumulatif : une régé après CHANGEMENT d'info (imageStale) = NOUVELLE création -> navigateur vidé.
+      // Une « nouvelle version » (mêmes infos, ex. relance après gate e-mail) -> on EMPILE le nouveau lot.
+      if (this.state.imageStale) { this.state.versions = []; this.state.activeVersion = -1; }
+      this.state.lotStart = (this.state.versions || []).length; // départ du nouveau lot dans l'historique cumulé
       this.state.candidateTotal = null;
       this._genSlot = false;
       this.enterGeneratingStage();
@@ -2983,11 +2987,15 @@
       if (c && typeof c.total === 'number' && c.total > 0) this.state.candidateTotal = c.total;
     }
 
-    // Total de candidats du lot courant : back-end si connu, sinon nb déjà révélé (repli rétro-compatible).
+    // Total CUMULÉ de versions navigables = lots précédents (déjà dans versions[]) + total du lot courant.
+    // `lotStart` = index de départ du lot courant ; `candidateTotal` = total back-end de ce lot. Repli sur le
+    // nb déjà révélé si le total back-end est inconnu. -> compteur « x / N » sur l'ensemble cumulé.
     _candidateTotal() {
       const versions = Array.isArray(this.state.versions) ? this.state.versions : [];
+      const lotStart = this.state.lotStart || 0;
       const t = this.state.candidateTotal;
-      return (typeof t === 'number' && t > 0) ? Math.max(t, versions.length) : versions.length;
+      const cumulative = (typeof t === 'number' && t > 0) ? (lotStart + t) : versions.length;
+      return Math.max(cumulative, versions.length);
     }
 
     // Mémorise une version révélée (push en fin d'historique, devient active). Dédup sur l'URL.
@@ -3052,11 +3060,11 @@
     // Mock UNIQUEMENT : démarre un NOUVEAU lot simulé (équivalent d'une nouvelle génération payante en réel).
     _startMockLot() {
       this._mockLot = (this._mockLot || 0) + 1;
-      this.state.versions = [];
-      this.state.activeVersion = -1;
+      this.state.lotStart = (this.state.versions || []).length; // cumulatif : le nouveau lot s'empile
       this.state.candidateTotal = null;
       this.state.revealCount = 0;
       this.state.mockups = null;
+      this._genSlot = false;
       this.state.jobId = `mock-${this._mockLot}-${Date.now()}`;
       this.enterGeneratingStage();
       this.startWaitProgress(MOCK_DURATION);
@@ -3175,10 +3183,10 @@
           this.state.revealCount = 0;
           this.state.mockups = null;
           this.state.status = data.status;
-          // Nouveau lot -> on repart d'un navigateur vierge (le nouveau jobId a son propre `total`).
-          this.state.versions = [];
-          this.state.activeVersion = -1;
+          // Cumulatif : nouveau lot AJOUTÉ à la suite (on n'efface pas l'historique). lotStart = position de départ.
+          this.state.lotStart = (this.state.versions || []).length;
           this.state.candidateTotal = null;
+          this._genSlot = false;
           this.persist();
           this.enterGeneratingStage();
           this.startWaitProgress(this._estimateGenDuration());
