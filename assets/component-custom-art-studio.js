@@ -506,18 +506,27 @@
       return { response, data };
     }
 
-    // Cap « e-mail requis » : le back-end répond 429 avec code 'email_required'
-    // (contrat CustomArtController) ; les formes 403 / emailRequired restent tolérées.
+    // Cap « e-mail requis » : on se base sur le CODE (contrat back-end), PAS sur le statut HTTP nu.
+    // ⚠️ un 403 nu n'est PAS un cap e-mail (reveal-next peut renvoyer 403 « création d'une autre session ») :
+    // ne traiter comme e-mail-requis que data.code === 'email_required'.
     isEmailRequired(response, data) {
-      return Boolean((data && (data.code === 'email_required' || data.emailRequired))
-        || response.status === 403);
+      return Boolean(data && data.code === 'email_required');
     }
 
-    // Message FR propre pour les caps anti-abus (e-mail requis testé AVANT le 429
-    // générique : le cap « e-mail requis » arrive lui aussi en HTTP 429).
+    // Quota perso du jour épuisé (même avec e-mail) : code 'daily_cap' (HTTP 429).
+    isDailyCap(response, data) {
+      return Boolean(data && data.code === 'daily_cap');
+    }
+
+    // Message FR propre selon le CODE du back-end. 4 sources de 429 distinctes :
+    //  email_required (boîte e-mail) / daily_cap (limite du jour) / high_traffic (forte affluence) /
+    //  429 SANS code = throttle anti-rafale (Retry-After). On lit data.code d'abord, le statut en dernier.
     capsMessage(response, data) {
-      if (this.isEmailRequired(response, data)) return this.i18n.error_email_required;
-      if (response.status === 429) return this.i18n.error_rate_limited;
+      const code = data && data.code;
+      if (code === 'email_required') return this.i18n.error_email_required;
+      if (code === 'daily_cap') return this.i18n.error_daily_cap;
+      if (code === 'high_traffic') return this.i18n.error_rate_limited;
+      if (response.status === 429) return this.i18n.error_too_many; // 429 sans code -> anti-rafale
       return null;
     }
 
@@ -2150,8 +2159,9 @@
         if (!response.ok) {
           const caps = this.capsMessage(response, data);
           if (caps) {
-            // E-mail requis : l'e-mail débloque l'essai -> formulaire sur l'écran d'erreur.
-            this.showError(caps, { emailRequired: this.isEmailRequired(response, data) });
+            // Cap : e-mail requis (formulaire de déblocage) / limite du jour (pas de réessai) / affluence /
+            // anti-rafale -> message adapté selon data.code (cf. capsMessage / showError).
+            this.showError(caps, { emailRequired: this.isEmailRequired(response, data), dailyCap: this.isDailyCap(response, data) });
             return;
           }
           // Pré-checks back-end (visage non détecté, photo refusée…) : message du serveur.
@@ -2308,6 +2318,7 @@
       // Cap « e-mail requis » : formulaire e-mail directement sur l'écran d'erreur,
       // pré-rempli si l'adresse est déjà connue ; sa soumission relance la génération.
       const emailRequired = !!options.emailRequired;
+      const dailyCap = !!options.dailyCap;
       const emailForm = this.q('[data-error-email-form]');
       if (emailForm) {
         emailForm.hidden = !emailRequired;
@@ -2317,15 +2328,15 @@
         }
       }
       // « Réessayer » (= relancer le parcours) n'a de sens que pour un ÉCHEC réel. Sur le cap
-      // « e-mail requis », réessayer retombe sur le même cap (il FAUT l'e-mail pour débloquer) ->
-      // on masque le bouton, seul le formulaire e-mail est actionnable.
-      this._setHidden(this.q('[data-studio-retry]'), emailRequired);
+      // « e-mail requis » (il FAUT l'e-mail) comme sur la « limite du jour » (rien ne se débloque
+      // aujourd'hui), réessayer retombe sur le même mur -> on masque le bouton.
+      this._setHidden(this.q('[data-studio-retry]'), emailRequired || dailyCap);
       // Titre de l'en-tête adapté au cas. L'écran d'erreur n'a pas de <h3> -> showScreen ne le réécrit
       // pas, sinon il garderait « Création… » de l'étape d'attente (en contradiction avec le message).
       if (this.stepTitle) {
-        const errTitle = emailRequired
-          ? (this.i18n.error_title_email || this.i18n.error_title)
-          : this.i18n.error_title;
+        let errTitle = this.i18n.error_title;
+        if (emailRequired) errTitle = this.i18n.error_title_email || errTitle;
+        else if (dailyCap) errTitle = this.i18n.error_title_daily || errTitle;
         if (errTitle) this.stepTitle.textContent = errTitle;
       }
       this.showScreen('error');
@@ -3149,10 +3160,11 @@
           if (emailInput && this.state.email && !emailInput.value) emailInput.value = this.state.email;
           emailInput?.focus();
         } else if (response.status === 429) {
-          // Cap de volume (forte affluence) : message en place, on reste sur le reveal.
+          // Caps NON-e-mail selon data.code (daily_cap = limite du jour / high_traffic = affluence) ou
+          // anti-rafale (429 sans code) : message adapté EN PLACE (on reste au reveal).
           const feedback = this.q('[data-reveal-feedback]');
           if (feedback) {
-            feedback.textContent = this.i18n.error_rate_limited;
+            feedback.textContent = this.capsMessage(response, data) || this.i18n.error_rate_limited;
             feedback.hidden = false;
           }
         } else if (data.status === 'generating' || data.status === 'pending' || data.status === 'judging') {
