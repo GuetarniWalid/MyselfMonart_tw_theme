@@ -431,9 +431,9 @@
       float valid = step(0.06, denom);
       float t = (1.7 - vWorldPos.z) / max(denom, 0.06);
       vec2 E = vWorldPos.xy + t * Rdir.xy; // point visé sur le plan-fenêtre
-      // Fenêtre fixe : pleine hauteur, ~moitié en largeur, calée sur le BORD GAUCHE au repos
-      // (bord droit ~au milieu de la toile). Léger balayage horizontal.
-      vec2 winC = vec2(1.35 + uStreakPhase, -0.55);
+      // Fenêtre fixe : pleine hauteur, ~moitié en largeur, calée sur le QUART DROIT au repos
+      // (centre du reflet ~aux 3/4 de la toile). Léger balayage horizontal.
+      vec2 winC = vec2(2.5 + uStreakPhase, -0.55);
       vec2 winHalf = vec2(0.45, 1.05);
       vec2 q = (E - winC) / winHalf; // -1..1 dans la fenêtre
       vec2 aq = abs(q);
