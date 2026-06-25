@@ -815,7 +815,10 @@
   <div data-studio-lead-wrap hidden aria-hidden="true">
     {%- form 'customer' -%}
       <input type="email" name="contact[email]" data-studio-lead-email value="" tabindex="-1">
-      <input type="hidden" name="contact[tags]" value="studio{% if product %},{{ product.handle }}{% endif %}">
+      {%- comment -%} Tags client : « studio » (filtre tous les leads studio) + « oeuvre-<ID produit> » =
+         IDENTIFIANT UNIQUE & IMMUABLE de l'œuvre (l'ID Shopify ne change jamais, jamais partagé entre 2 produits ;
+         le handle, lui, peut changer/être réutilisé) + le handle en clair pour la lisibilité dans l'admin. {%- endcomment -%}
+      <input type="hidden" name="contact[tags]" value="studio{% if product %},oeuvre-{{ product.id }},{{ product.handle }}{% endif %}">
     {%- endform -%}
   </div>
 </custom-art-studio>
