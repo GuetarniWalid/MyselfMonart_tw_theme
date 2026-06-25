@@ -745,6 +745,7 @@
       }
       this.setResumeNote(null);
       this.showStep(fmtStep);
+      this.restoreOptionsFromJob(data);
       this.showReveal(preview, false);
     }
 
@@ -850,6 +851,7 @@
       this._genSlot = false;
       this.state.screen = 'steps';
       this.showStep(fmtStep);
+      this.restoreOptionsFromJob(data);
       this.showReveal(preview, true); // persist=true -> réhydrate le localStorage (reprise instantanée ensuite)
     }
 
@@ -3496,6 +3498,34 @@
     }
 
     /* ------------------------------------------------- restauration des champs */
+
+    // Reprise (lien e-mail ?ca_job ou GET /jobs/last) : restaure le FORMAT + la FINITION
+    // choisis (le back-end renvoie data.format = '30x40'|'60x80' et data.frame = slug, ex
+    // 'none' | 'cadre-noyer') en cochant les bons radios d'option, puis resynchronise la
+    // variante (prix + bouton d'achat). Sans ça, la reprise repartait sur la variante par
+    // défaut et perdait les options sélectionnées au moment de la création.
+    restoreOptionsFromJob(data) {
+      if (!data || this.config.hasOnlyDefaultVariant) return;
+      const radios = Array.from(this.querySelectorAll('[data-studio-option]'));
+      if (!radios.length) return;
+      let changed = false;
+      const pick = (pattern, wanted, toApi) => {
+        if (!wanted) return;
+        const group = radios.filter((r) => pattern.test(normalize(r.dataset.optionName || '')));
+        const target = group.find((r) => toApi(r.value) === wanted);
+        if (!target || target.checked) return;
+        const pos = target.dataset.optionPosition;
+        radios
+          .filter((r) => r.dataset.optionPosition === pos)
+          .forEach((r) => { r.checked = (r === target); });
+        // Évènement 'change' = même chemin qu'un clic réel (syncVariant + libellés guides).
+        target.dispatchEvent(new Event('change', { bubbles: true }));
+        changed = true;
+      };
+      pick(OPTION_FORMAT_RE, data.format, formatApiValue);
+      pick(OPTION_FRAME_RE, data.frame, frameApiValue);
+      if (changed) this.syncVariant();
+    }
 
     applyRestoredFields() {
       const consent = this.q('[data-consent]');
