@@ -527,13 +527,13 @@
 
             {%- comment -%} Cap « 3e essai+ = e-mail requis » (403) : l'e-mail saisi ici
                débloque et relance directement la génération. {%- endcomment -%}
-            <form data-error-email-form class="mx-auto mb-5 w-72 max-w-[calc(100vw-3rem)] text-left" hidden novalidate>
-              <label for="studio-error-email-{{ section.id }}" class="mb-1 block text-xs uppercase tracking-wide text-main-70">
+            {%- comment -%} Largeur : pleine largeur sur mobile (moins le padding parent), plafonnée à max-w-md
+               (≈448px) sur desktop. Champ + case + bouton aérés (gap-4). {%- endcomment -%}
+            <form data-error-email-form class="mx-auto mb-5 w-full max-w-md text-left" hidden novalidate>
+              <label for="studio-error-email-{{ section.id }}" class="mb-1.5 block text-xs uppercase tracking-wide text-main-70">
                 {{ 'sections.custom_art_studio.save_email_label' | t }}
               </label>
-              {%- comment -%} Champ + bouton EMPILÉS (pleine largeur) : l'input garde toute la largeur,
-                 pas écrasé par le bouton à côté. {%- endcomment -%}
-              <div class="flex flex-col gap-2">
+              <div class="flex flex-col gap-4">
                 <input
                   type="email"
                   id="studio-error-email-{{ section.id }}"
@@ -541,15 +541,18 @@
                   required
                   autocomplete="email"
                   placeholder="{{ 'sections.custom_art_studio.save_email_placeholder' | t }}"
-                  class="w-full rounded-xl border border-main-10 bg-secondary px-3 py-2 text-main placeholder:text-main-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
-                {%- comment -%} Opt-in marketing (pré-coché) : pousse l'e-mail en client Shopify (tags studio + œuvre) si coché. {%- endcomment -%}
-                <label class="flex items-start gap-2 text-left text-xs leading-snug text-main-70">
-                  <input type="checkbox" data-studio-marketing-optin checked class="mt-0.5 shrink-0 accent-main">
+                  class="w-full rounded-xl border border-main-10 bg-secondary px-4 py-3.5 text-base text-main placeholder:text-main-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+                {%- comment -%} Opt-in marketing (pré-coché) : case dimensionnée à hauteur du texte (h-4 w-4 / text-sm),
+                   bien alignée. Pousse l'e-mail en client Shopify (tags studio + œuvre) si coché. {%- endcomment -%}
+                <label class="flex items-start gap-2.5 text-left text-sm leading-snug text-main-80">
+                  <input type="checkbox" data-studio-marketing-optin checked class="mt-0.5 h-4 w-4 shrink-0 accent-main">
                   <span>{{ 'sections.custom_art_studio.marketing_optin' | t }}</span>
                 </label>
+                {%- comment -%} Bouton d'action principal : couleur d'achat (buy-button, comme « Ajouter au panier »),
+                   plus haut (py-4), nettement détaché du texte au-dessus (mt-2). {%- endcomment -%}
                 <button
                   type="submit"
-                  class="w-full rounded-xl border-main border-1 bg-secondary px-4 py-2 font-heading font-semibold shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none disabled:cursor-wait disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+                  class="mt-2 w-full rounded-xl border-main border-[4px] bg-buy-button px-6 py-4 font-heading font-bold text-main shadow-neu-md hover:shadow-neu-sm transition-shadow duration-100 motion-reduce:transition-none disabled:cursor-wait disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2">
                   {{ 'sections.custom_art_studio.error_email_submit' | t }}
                 </button>
               </div>
