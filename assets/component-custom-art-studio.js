@@ -1322,6 +1322,7 @@
         }
         this.state.email = input.value;
         this.persist();
+        if (this.q('[data-error-email-form] [data-studio-marketing-optin]')?.checked) this._pushLeadToShopify(input.value);
         this.startGeneration();
       });
     }
@@ -2935,6 +2936,7 @@
           if (!input || !input.checkValidity()) { input?.reportValidity(); return; }
           this.state.email = input.value;
           this.persist();
+          if (this.q('[data-studio-save-form] [data-studio-marketing-optin]')?.checked) this._pushLeadToShopify(input.value);
           this._emailGateForGenerate = false;
           const gateSubmit = this.q('[data-save-submit]');
           if (gateSubmit && this.i18n.save_submit) gateSubmit.textContent = this.i18n.save_submit; // restaure le libellé
@@ -3232,10 +3234,24 @@
         this.state.email = emailInput.value;
         this.persist();
         feedback.textContent = this.i18n.save_success;
+        // Opt-in marketing coché -> on pousse aussi l'e-mail en client dans l'admin Shopify (tags studio + œuvre).
+        if (this.q('[data-studio-save-form] [data-studio-marketing-optin]')?.checked) this._pushLeadToShopify(this.state.email);
       } catch (e) {
         feedback.textContent = this.i18n.save_error;
       }
       feedback.hidden = false;
+    }
+
+    // Pousse l'e-mail capturé en client Shopify (ADMIN), côté front, via le form 'customer' natif caché
+    // (même mécanisme que la newsletter du footer). Tags studio + œuvre injectés côté Liquid. Fire-and-forget :
+    // n'interrompt jamais le parcours (génération/sauvegarde passent, elles, par le back-end custom-art).
+    _pushLeadToShopify(email) {
+      if (this.config.mock || !email) return; // démo/harness : pas de vraie boutique Shopify derrière
+      const form = this.querySelector('[data-studio-lead-wrap] form');
+      if (!form) return;
+      const input = form.querySelector('[data-studio-lead-email]');
+      if (input) input.value = email;
+      try { fetch(form.action, { method: 'POST', body: new FormData(form) }).catch(() => {}); } catch (e) { /* non bloquant */ }
     }
 
     /* ----------------------------------------------------------- ajout panier */

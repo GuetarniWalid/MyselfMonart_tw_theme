@@ -275,6 +275,7 @@
                 <label for="studio-save-email-harness" class="mb-1 block text-xs uppercase tracking-wide text-main-70">Votre e-mail</label>
                 <div class="flex flex-col gap-2">
                   <input type="email" id="studio-save-email-harness" data-save-email required autocomplete="email" placeholder="prenom@exemple.fr" class="w-full rounded-xl border border-main-10 bg-secondary px-3 py-2 text-main placeholder:text-main-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+                  <label class="flex items-start gap-2 text-left text-xs leading-snug text-main-70"><input type="checkbox" data-studio-marketing-optin checked class="mt-0.5 shrink-0 accent-main"><span>Je souhaite recevoir les offres et nouveautés MyselfMonArt par e-mail.</span></label>
                   <button type="submit" data-save-submit class="w-full rounded-xl border-main border-2 bg-secondary px-3 py-2 font-heading font-semibold shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">Recevoir</button>
                 </div>
                 <p data-save-feedback class="mt-2 text-sm text-main-80" aria-live="polite" hidden></p>
@@ -356,6 +357,7 @@
                   <label for="studio-error-email-harness" class="mb-1 block text-xs uppercase tracking-wide text-main-70">Votre e-mail</label>
                   <div class="flex flex-col gap-2">
                     <input type="email" id="studio-error-email-harness" data-error-email required autocomplete="email" placeholder="prenom@exemple.fr" class="w-full rounded-xl border border-main-10 bg-secondary px-3 py-2 text-main placeholder:text-main-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+                    <label class="flex items-start gap-2 text-left text-xs leading-snug text-main-70"><input type="checkbox" data-studio-marketing-optin checked class="mt-0.5 shrink-0 accent-main"><span>Je souhaite recevoir les offres et nouveautés MyselfMonArt par e-mail.</span></label>
                     <button type="submit" class="w-full rounded-xl border-main border-1 bg-secondary px-4 py-2 font-heading font-semibold shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none disabled:cursor-wait disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
                       Débloquer mon essai
                     </button>
@@ -574,6 +576,14 @@
           }
         }
       </script>
+    <!-- Harness : miroir du form 'customer' caché (en prod, généré par Liquid). Mock -> jamais soumis. -->
+    <div data-studio-lead-wrap hidden aria-hidden="true">
+      <form action="/contact" method="post">
+        <input type="hidden" name="form_type" value="customer">
+        <input type="email" name="contact[email]" data-studio-lead-email value="" tabindex="-1">
+        <input type="hidden" name="contact[tags]" value="studio,poster-perso-foot">
+      </form>
+    </div>
     </custom-art-studio>
   </main>
 </body>

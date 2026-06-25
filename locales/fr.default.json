@@ -363,6 +363,7 @@
       "save_email_placeholder": "prenom@exemple.fr",
       "save_submit": "Recevoir ma création",
       "save_retry_submit": "Générer ma nouvelle version",
+      "marketing_optin": "Je souhaite recevoir les offres et nouveautés MyselfMonArt par e-mail.",
       "save_success": "C'est noté ! Vous recevrez un lien pour retrouver votre création.",
       "save_error": "L'enregistrement n'a pas abouti. Vérifiez l'e-mail et réessayez.",
       "save_retry_title": "Encore une version ?",

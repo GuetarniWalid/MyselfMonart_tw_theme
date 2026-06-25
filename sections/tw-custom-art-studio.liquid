@@ -464,6 +464,12 @@
                   autocomplete="email"
                   placeholder="{{ 'sections.custom_art_studio.save_email_placeholder' | t }}"
                   class="w-full rounded-xl border border-main-10 bg-secondary px-3 py-2 text-main placeholder:text-main-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+                {%- comment -%} Opt-in marketing (pré-coché, demande Walid) : si coché à la capture, l'e-mail est
+                   poussé en client Shopify (tags studio + œuvre) côté front. {%- endcomment -%}
+                <label class="flex items-start gap-2 text-left text-xs leading-snug text-main-70">
+                  <input type="checkbox" data-studio-marketing-optin checked class="mt-0.5 shrink-0 accent-main">
+                  <span>{{ 'sections.custom_art_studio.marketing_optin' | t }}</span>
+                </label>
                 <button
                   type="submit"
                   data-save-submit
@@ -536,6 +542,11 @@
                   autocomplete="email"
                   placeholder="{{ 'sections.custom_art_studio.save_email_placeholder' | t }}"
                   class="w-full rounded-xl border border-main-10 bg-secondary px-3 py-2 text-main placeholder:text-main-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
+                {%- comment -%} Opt-in marketing (pré-coché) : pousse l'e-mail en client Shopify (tags studio + œuvre) si coché. {%- endcomment -%}
+                <label class="flex items-start gap-2 text-left text-xs leading-snug text-main-70">
+                  <input type="checkbox" data-studio-marketing-optin checked class="mt-0.5 shrink-0 accent-main">
+                  <span>{{ 'sections.custom_art_studio.marketing_optin' | t }}</span>
+                </label>
                 <button
                   type="submit"
                   class="w-full rounded-xl border-main border-1 bg-secondary px-4 py-2 font-heading font-semibold shadow-neu-sm hover:shadow-neu-xs transition-shadow duration-100 motion-reduce:transition-none disabled:cursor-wait disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main">
@@ -797,6 +808,16 @@
       }
     }
   </script>
+  {%- comment -%} Capture LEAD -> client dans l'ADMIN Shopify, côté front (même mécanisme natif que la
+     newsletter du footer : form 'customer'). Soumis en AJAX par le JS quand l'opt-in marketing est coché.
+     Tags : « studio » + le handle du produit (= trace de l'œuvre, pour relancer sur cette création précise).
+     Caché et hors de tout autre <form> (pas d'imbrication). {%- endcomment -%}
+  <div data-studio-lead-wrap hidden aria-hidden="true">
+    {%- form 'customer' -%}
+      <input type="email" name="contact[email]" data-studio-lead-email value="" tabindex="-1">
+      <input type="hidden" name="contact[tags]" value="studio{% if product %},{{ product.handle }}{% endif %}">
+    {%- endform -%}
+  </div>
 </custom-art-studio>
 
 {% schema %}
