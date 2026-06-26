@@ -65,6 +65,7 @@
     glassReflAmt: 0.38, // intensité des carreaux (subtile : ne dénature pas les couleurs)
     glassFresnelAmt: 0.1, // brillance des bords (Fresnel léger)
     glassSweepMs: 850, // durée du balayage de reflet au changement de cadre
+    passeRatio: 0.08, // passe-partout (contour blanc) = 8% du PETIT côté, ÉGAL en cm sur les 4 côtés (= extension MJ buildMattedOeuvre, PP_RATIO 0.08)
   };
 
   // Couleurs de tranche unie (bordure). Tons calés sur les swatches MyselfMonArt.
@@ -337,6 +338,8 @@
     uniform sampler2D uFabric;
     uniform vec3 uSideColor;
     uniform float uWeaveAmt;
+    uniform float uPasse;   // 1 = passe-partout (contour blanc) sur la face avant (poster)
+    uniform vec2 uMargin;   // marge blanche en fraction (U,V) ; ÉGALE en cm sur les 4 côtés
     varying vec2 vUV;
     varying vec2 vFabUV;
     varying float vUseTex;
@@ -347,7 +350,28 @@
       // un aplat numérique. UV en coordonnées-monde -> grain continu autour de l'arête.
       float fab = texture2D(uFabric, vFabUV).r;
       float weave = mix(1.0, fab, uWeaveAmt);
-      vec3 base = (vUseTex > 0.5) ? texture2D(uTex, vUV).rgb : uSideColor;
+      vec3 base;
+      if (vUseTex > 0.5) {
+        // Passe-partout (poster) : reproduit buildMattedOeuvre de l'extension MJ (PP_RATIO 0.08) ->
+        // marge blanche ÉGALE en cm sur les 4 côtés + œuvre en COVER dans le cadre intérieur
+        // (remplit en gardant le ratio, léger rognage). uMargin code la marge égale-en-cm en fractions.
+        if (uPasse > 0.5) {
+          if (vUV.x < uMargin.x || vUV.x > 1.0 - uMargin.x || vUV.y < uMargin.y || vUV.y > 1.0 - uMargin.y) {
+            base = vec3(1.0); // marge blanche (même papier -> grain + éclairage s'appliquent plus bas)
+          } else {
+            vec2 inner = (vUV - uMargin) / (1.0 - 2.0 * uMargin); // 0..1 dans le cadre intérieur
+            float R = (1.0 - 2.0 * uMargin.x) / (1.0 - 2.0 * uMargin.y); // cadre/œuvre (même ratio œuvre)
+            vec2 cuv = inner;
+            if (R > 1.0) cuv.y = (inner.y - 0.5) / R + 0.5; // cadre plus large -> rogne en hauteur
+            else cuv.x = (inner.x - 0.5) * R + 0.5;          // cadre plus haut -> rogne en largeur
+            base = texture2D(uTex, cuv).rgb;
+          }
+        } else {
+          base = texture2D(uTex, vUV).rgb;
+        }
+      } else {
+        base = uSideColor;
+      }
       base *= weave;
       gl_FragColor = vec4(min(base * vLight, vec3(1.0)), 1.0);
     }
@@ -468,7 +492,7 @@
       this.texture = null;
       this.aspect = 1;
       this.rafId = null;
-      this.state = { border: 'white', frame: 'none' };
+      this.state = { border: 'white', frame: 'none', passe: false };
       // Échelle de cadrage : popup (gros plan) / carrousel mobile (posé) / carrousel desktop.
       // Recalculée sur resize (callback ResizeObserver) car dépend du viewport.
       this.scale = this.computeScale();
@@ -673,6 +697,8 @@
           p && p.dataset.frameMode === 'framed'
             ? normalize(p.dataset.colorHandle || p.dataset.colorName || p.value)
             : '';
+        // Contour blanc (passe-partout) : radio « Avec contour blanc » coché (cf. picker).
+        this.state.passe = !!document.querySelector('[data-white-border="on"]:checked');
         const sp = document.querySelector(
           'painting-variant-picker input[name="option1"]:checked',
         );
@@ -719,20 +745,19 @@
       // les éventuels pickers d'autres sections de la page.
       if (this.config && this.config.state) return;
       const target = event.target;
-      if (
-        !target ||
-        !target.matches ||
-        !target.matches('painting-variant-picker input[type="radio"]')
-      ) {
-        return;
-      }
+      if (!target || !target.matches) return;
+      // Réagit aux variantes painting-variant-picker, ET (poster) au radio « Contour blanc ».
+      const isVariant = target.matches('painting-variant-picker input[type="radio"]');
+      const isWhiteBorder = this.posterMode && target.matches('[data-white-border]');
+      if (!isVariant && !isWhiteBorder) return;
       const prevBorder = this.state.border;
       const prevFrame = this.state.frame;
+      const prevPasse = this.state.passe;
       this.syncStateFromDOM();
       this.scheduleRender();
-      // Bordure OU cadre changé -> sur mobile, le carrousel scrolle vers la slide WebGL puis
-      // joue la mise en lumière, pour que l'utilisateur voie DIRECTEMENT le changement.
-      if (this.state.border !== prevBorder || this.state.frame !== prevFrame) {
+      // Bordure / cadre / contour blanc changé -> sur mobile, le carrousel scrolle vers la slide WebGL
+      // puis joue l'animation, pour que l'utilisateur voie DIRECTEMENT le changement.
+      if (this.state.border !== prevBorder || this.state.frame !== prevFrame || this.state.passe !== prevPasse) {
         if (this.posterMode) {
           // Poster : pas de "mise en lumière de tranche" (inexistante sur une feuille) -> on fait
           // GLISSER le reflet sur la glace. Joué APRÈS le render qui (re)construit le cadre + la
@@ -1056,6 +1081,8 @@
         uFabric: gl.getUniformLocation(this.program, 'uFabric'),
         uSideColor: gl.getUniformLocation(this.program, 'uSideColor'),
         uWeaveAmt: gl.getUniformLocation(this.program, 'uWeaveAmt'),
+        uPasse: gl.getUniformLocation(this.program, 'uPasse'),
+        uMargin: gl.getUniformLocation(this.program, 'uMargin'),
       };
 
       gl.enable(gl.DEPTH_TEST);
@@ -2155,6 +2182,15 @@
       // Poster : grain PAPIER mat (faible) ; toile : grain de LIN (fort).
       gl.uniform1f(this.locs.uWeaveAmt, this.posterMode ? SCENE.paperWeaveAmt : SCENE.weaveAmt);
 
+      // Passe-partout (poster « Avec contour blanc ») : marge blanche du tirage (face avant). uPasse=0
+      // ailleurs (toile + cadre, plus bas) -> aucun effet. Marge ÉGALE en cm -> fractions U/V selon le ratio.
+      const ppOn = this.posterMode && this.state.passe ? 1.0 : 0.0;
+      const ppAspect = this.aspect || 0.75;
+      const ppMU = ppAspect <= 1.0 ? SCENE.passeRatio : SCENE.passeRatio / ppAspect;
+      const ppMV = ppAspect <= 1.0 ? SCENE.passeRatio * ppAspect : SCENE.passeRatio;
+      gl.uniform1f(this.locs.uPasse, ppOn);
+      gl.uniform2f(this.locs.uMargin, ppMU, ppMV);
+
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, this.texture);
       gl.uniform1i(this.locs.uTex, 0);
@@ -2174,6 +2210,7 @@
 
       // CADRE (caisse américaine) : même programme, couleur de cadre, SANS grain de toile.
       if (this.frameGeo) {
+        gl.uniform1f(this.locs.uPasse, 0.0); // le CADRE ne reçoit jamais le passe-partout (seul le tirage)
         const woodKey = frameWoodTexKey(this.state.frame);
         if (woodKey) {
           // Cadre TEXTURÉ (bois ou argent brossé) : on échantillonne sa texture RGB (use=1).

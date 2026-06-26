@@ -4,28 +4,35 @@
     Accepts:
       - media: {Object} Product Media object
       - loop: {Object} Forloop object
+      - pp_media: {Object} (optionnel) visuel « passe-partout » paire (cf. tw-main-product-image).
+        Permet au zoom (popup) de refléter aussi le choix « Avec/Sans contour blanc ».
 
     Usage:
     {% render 'tw-main-product-popup-image', media: media, loop: forloop %}
 {% endcomment %}
 
+{%- liquid
+  assign pop_alt = media.alt
+  if product.metafields.meta_object.media.value.alts.value[loop.index0]
+    assign pop_alt = product.metafields.meta_object.media.value.alts.value[loop.index0]
+  endif
+  assign pp_alt = ''
+  if pp_media
+    assign pp_alt = pp_media.alt
+  endif
+-%}
+{%- capture reg_srcset -%}{%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}{%- if media.preview_image.width >= 1100 -%}{{ media.preview_image | image_url: width: 1100 }} 1100w,{%- endif -%}{%- if media.preview_image.width >= 1445 -%}{{ media.preview_image | image_url: width: 1445 }} 1445w,{%- endif -%}{%- if media.preview_image.width >= 1680 -%}{{ media.preview_image | image_url: width: 1680 }} 1680w,{%- endif -%}{%- if media.preview_image.width >= 2048 -%}{{ media.preview_image | image_url: width: 2048 }} 2048w,{%- endif -%}{%- if media.preview_image.width >= 2200 -%}{{ media.preview_image | image_url: width: 2200 }} 2200w,{%- endif -%}{%- if media.preview_image.width >= 2890 -%}{{ media.preview_image | image_url: width: 2890 }} 2890w,{%- endif -%}{%- if media.preview_image.width >= 4096 -%}{{ media.preview_image | image_url: width: 4096 }} 4096w,{%- endif -%}{{ media.preview_image | image_url }} {{ media.preview_image.width }}w{%- endcapture -%}
+{%- capture pp_attrs -%}{%- if pp_media -%}{%- capture pp_srcset -%}{%- if pp_media.preview_image.width >= 550 -%}{{ pp_media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}{%- if pp_media.preview_image.width >= 1100 -%}{{ pp_media.preview_image | image_url: width: 1100 }} 1100w,{%- endif -%}{%- if pp_media.preview_image.width >= 1445 -%}{{ pp_media.preview_image | image_url: width: 1445 }} 1445w,{%- endif -%}{%- if pp_media.preview_image.width >= 1680 -%}{{ pp_media.preview_image | image_url: width: 1680 }} 1680w,{%- endif -%}{%- if pp_media.preview_image.width >= 2048 -%}{{ pp_media.preview_image | image_url: width: 2048 }} 2048w,{%- endif -%}{%- if pp_media.preview_image.width >= 2890 -%}{{ pp_media.preview_image | image_url: width: 2890 }} 2890w,{%- endif -%}{%- if pp_media.preview_image.width >= 4096 -%}{{ pp_media.preview_image | image_url: width: 4096 }} 4096w,{%- endif -%}{{ pp_media.preview_image | image_url }} {{ pp_media.preview_image.width }}w{%- endcapture -%} data-pp-swap data-reg-srcset="{{ reg_srcset }}" data-reg-src="{{ media.preview_image | image_url: width: 550 }}" data-reg-alt="{{ pop_alt | escape }}" data-pp-srcset="{{ pp_srcset }}" data-pp-src="{{ pp_media.preview_image | image_url: width: 550 }}" data-pp-alt="{{ pp_alt | escape }}"{%- endif -%}{%- endcapture -%}
 <div class="skeleton block mx-auto">
     <img
-      srcset="{%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}
-              {%- if media.preview_image.width >= 1100 -%}{{ media.preview_image | image_url: width: 1100 }} 1100w,{%- endif -%}
-              {%- if media.preview_image.width >= 1445 -%}{{ media.preview_image | image_url: width: 1445 }} 1445w,{%- endif -%}
-              {%- if media.preview_image.width >= 1680 -%}{{ media.preview_image | image_url: width: 1680 }} 1680w,{%- endif -%}
-              {%- if media.preview_image.width >= 2048 -%}{{ media.preview_image | image_url: width: 2048 }} 2048w,{%- endif -%}
-              {%- if media.preview_image.width >= 2200 -%}{{ media.preview_image | image_url: width: 2200 }} 2200w,{%- endif -%}
-              {%- if media.preview_image.width >= 2890 -%}{{ media.preview_image | image_url: width: 2890 }} 2890w,{%- endif -%}
-              {%- if media.preview_image.width >= 4096 -%}{{ media.preview_image | image_url: width: 4096 }} 4096w,{%- endif -%}
-              {{ media.preview_image | image_url }} {{ media.preview_image.width }}w"
+      srcset="{{ reg_srcset }}"
       class="object-cover object-center w-full h-auto"
       sizes="100vw"
       src="{{ media.preview_image | image_url: width: 550 }}"
-      alt="{% if product.metafields.meta_object.media.value.alts.value[loop.index0] %}{{ product.metafields.meta_object.media.value.alts.value[loop.index0] | escape }}{% else %}{{ media.alt | escape }}{% endif %}"
+      alt="{{ pop_alt | escape }}"
       loading="lazy"
       width="1100"
       height="auto"
+      {{ pp_attrs }}
     >
 </div>

@@ -471,6 +471,9 @@
       },
       "variant_picker": {
         "frame_color": "Couleur du cadre",
+        "white_border": "Contour blanc",
+        "white_border_with": "Avec contour blanc",
+        "white_border_without": "Sans contour blanc",
         "size_guide": "Guide des tailles",
         "no_frames_available": "Aucun cadre disponible pour cette taille"
       }

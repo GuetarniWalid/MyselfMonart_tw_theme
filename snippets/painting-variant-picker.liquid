@@ -12,6 +12,14 @@
        donc gardé derrière `is_poster`, sans rien changer aux toiles (chemin position 1/2/3 intact). {%- endcomment -%}
     {%- assign is_poster = false -%}
     {%- if product.metafields.painting_options.frames_poster != blank -%}{%- assign is_poster = true -%}{%- endif -%}
+    {%- comment -%} Passe-partout : le produit a-t-il des visuels « contour blanc » ? (nom de fichier
+       contenant `passe-partout`). Si oui, on propose un sélecteur Sans/Avec contour blanc, FEINTÉ
+       (pas une variante, pas de prix), qui échange les visuels de galerie (cachés/non chargés par
+       défaut) + l'image source du WebGL (Phase 2). Piloté par initPosterWhiteBorder (main-product.js). {%- endcomment -%}
+    {%- assign has_passe_partout = false -%}
+    {%- for m in product.media -%}
+      {%- if m.media_type == 'image' and m.preview_image.src contains 'passe-partout' -%}{%- assign has_passe_partout = true -%}{%- break -%}{%- endif -%}
+    {%- endfor -%}
     <div class="mb-6">
         {%- for option in product.options_with_values -%}
             <div class="pt-3 px-1 mx-4 text-main-80">
@@ -238,6 +246,32 @@
                 <hr>
             {% endunless %}
         {%- endfor -%}
+        {%- comment -%} ===== Contour blanc (passe-partout) — sélecteur Sans/Avec, FEINTÉ (pas une variante) =====
+           2 radios clairs. « Sans contour blanc » = défaut (visuels sans bord blanc affichés/chargés).
+           « Avec contour blanc » -> initPosterWhiteBorder (main-product.js) échange les <img> de galerie vers
+           les versions passe-partout (chargées seulement à ce moment) et active la property. Indépendant du
+           cadre. Property visible « Contour blanc » localisée + `_passe_partout` neutre, dans .product-properties
+           (POST JSON, noms bruts) ; `disabled` par défaut -> « Sans » ne soumet rien. {%- endcomment -%}
+        {% if is_poster and has_passe_partout %}
+            <hr>
+            <div class="pt-3 px-1 mx-4 mb-1 text-main-80">
+                <span class="font-heading font-semibold">{{ 'sections.main_product.variant_picker.white_border' | t }}</span>
+            </div>
+            <div class="variant-options-container flex gap-3 overflow-x-auto font-heading text-sm font-semibold py-4 px-5 scrollbar-thin scrollbar-thumb-main-30 scrollbar-track-transparent scroll-smooth" data-white-border-row role="radiogroup" aria-label="{{ 'sections.main_product.variant_picker.white_border' | t }}">
+                <label class="cursor-pointer transition-opacity duration-200 flex-shrink-0">
+                    <input type="radio" name="contour-blanc-ui" value="off" class="peer hidden" data-white-border="off" checked>
+                    <span class="block px-3 py-2 font-normal rounded-full bg-secondary peer-checked:bg-main peer-checked:text-secondary text-main transition-all duration-100">{{ 'sections.main_product.variant_picker.white_border_without' | t }}</span>
+                </label>
+                <label class="cursor-pointer transition-opacity duration-200 flex-shrink-0">
+                    <input type="radio" name="contour-blanc-ui" value="on" class="peer hidden" data-white-border="on">
+                    <span class="block px-3 py-2 font-normal rounded-full bg-secondary peer-checked:bg-main peer-checked:text-secondary text-main transition-all duration-100">{{ 'sections.main_product.variant_picker.white_border_with' | t }}</span>
+                </label>
+            </div>
+            <div class="product-properties">
+                <input type="hidden" name="{{ 'sections.main_product.variant_picker.white_border' | t }}" data-wb-name value="{{ 'sections.main_product.variant_picker.white_border_with' | t }}" disabled>
+                <input type="hidden" name="_passe_partout" data-wb-flag value="oui" disabled>
+            </div>
+        {% endif %}
     </div>
     <script type="application/json" id="variants-data-json">
       {{ product.variants | json }}

@@ -102,6 +102,8 @@ class MainProductCarousel extends HTMLElement {
     const clone = this.template.content.cloneNode(true);
     this.popupMediaChild = clone.children[this.currentMediaIndex];
     this.popup.appendChild(this.popupMediaChild);
+    // Poster « contour blanc » : si le client est en mode passe-partout, refléter son choix sur le zoom.
+    if (window.__applyWhiteBorderSwap) window.__applyWhiteBorderSwap(this.popupMediaChild);
     this.closePopupButton.tabIndex = 0;
     document.body.classList.add('overflow-hidden');
   };
@@ -1280,4 +1282,48 @@ variantContainers.forEach(container => {
   // État initial (le HTML rend déjà la pastille « Sans cadre » cochée + propriétés désactivées).
   syncFrameAvailability();
   syncColorProperty();
+})();
+
+// ===== Poster — « Contour blanc » (passe-partout) : échange les visuels galerie/popup « sans bord » <->
+// « avec bord blanc » et pose la property _passe_partout. UN SEUL <img> par tuile (data-reg-* / data-pp-*)
+// -> indices carrousel/popup INCHANGÉS ; les versions passe-partout ne se TÉLÉCHARGENT qu'au 1er « Avec ».
+// N'existe que si le picker a rendu la rangée (data-white-border-row) -> zéro effet ailleurs.
+(function initPosterWhiteBorder() {
+  const row = document.querySelector('[data-white-border-row]');
+  if (!row) return;
+  const wbName = document.querySelector('.product-properties [data-wb-name]');
+  const wbFlag = document.querySelector('.product-properties [data-wb-flag]');
+
+  // Applique le swap reg<->pp aux <img data-pp-swap> d'un scope (galerie entière ou clone du popup).
+  function applySwap(scope, on) {
+    scope.querySelectorAll('[data-pp-swap]').forEach((img) => {
+      const ss = on ? img.dataset.ppSrcset : img.dataset.regSrcset;
+      const s = on ? img.dataset.ppSrc : img.dataset.regSrc;
+      const a = on ? img.dataset.ppAlt : img.dataset.regAlt;
+      if (ss != null) img.srcset = ss; // déclenche le (télé)chargement de la version voulue
+      if (s) img.src = s;
+      if (a) img.alt = a;
+    });
+  }
+
+  function setWhiteBorder(on) {
+    applySwap(document, on);
+    if (wbName) wbName.disabled = !on;
+    if (wbFlag) wbFlag.disabled = !on;
+    // Drapeau global -> les clones du popup (créés à l'ouverture) reflètent le choix courant.
+    document.body.classList.toggle('poster-pp-on', on);
+  }
+
+  document.addEventListener('change', (e) => {
+    if (e.target.matches('[data-white-border]')) {
+      setWhiteBorder(e.target.dataset.whiteBorder === 'on');
+    }
+  });
+
+  // Le carrousel applique ce swap au clone du popup à l'ouverture (cf. openPopup) pour refléter le choix.
+  window.__applyWhiteBorderSwap = (scope) => {
+    if (scope && document.body.classList.contains('poster-pp-on')) applySwap(scope, true);
+  };
+
+  // État initial = « Sans contour blanc » (défaut) : les <img> sont déjà la version sans bord, rien à faire.
 })();

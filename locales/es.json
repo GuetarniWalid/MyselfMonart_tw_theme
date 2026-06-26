@@ -108,6 +108,9 @@
       },
       "variant_picker": {
         "frame_color": "Color del marco",
+        "white_border": "Borde blanco",
+        "white_border_with": "Con borde blanco",
+        "white_border_without": "Sin borde blanco",
         "no_frames_available": "No hay marcos disponibles para este tamaño",
         "size_guide": "Guía de tallas"
       }

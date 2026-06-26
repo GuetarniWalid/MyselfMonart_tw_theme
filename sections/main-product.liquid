@@ -117,6 +117,13 @@
             assign start_from = section.settings.start_from_media | default: 1
             assign number_of_media = 0
             assign image_index = 0
+            comment
+              # Passe-partout : chaque tuile « sans bord » est PAIRÉE à son visuel « contour blanc » par
+              # correspondance de NOM DE FICHIER (le passe-partout = même base + `-passe-partout`), robuste
+              # à l'ordre ET à start_from. Attaché en data-pp-* (cf. tw-main-product-image) -> 1 <img>/tuile,
+              # indices carrousel/popup INCHANGÉS ; les passe-partout NE sont PAS des tuiles et ne chargent
+              # qu'au 1er « Avec contour blanc ».
+            endcomment
             for media in product.media
               if media.media_type == 'image'
                 assign image_index = image_index | plus: 1
@@ -125,14 +132,28 @@
                   # (utilisée pour le rendu WebGL / autres) et ne doit jamais s'afficher
                   # dans la galerie produit — tous produits, toile ou poster, perso ou non.
                 endcomment
-                if image_index >= start_from and image_index != 2
+                assign is_pp_media = false
+                if media.preview_image.src contains 'passe-partout'
+                  assign is_pp_media = true
+                endif
+                if image_index >= start_from and image_index != 2 and is_pp_media == false
                   if number_of_media == 0
                     assign is_lcp_image = true
                   else
                     assign is_lcp_image = false
                   endif
                   assign number_of_media = number_of_media | plus: 1
-                  render 'tw-main-product-image', media: media, loop: forloop, is_lcp: is_lcp_image
+                  assign pp_media_for_tile = null
+                  for ppm in product.media
+                    if ppm.media_type == 'image' and ppm.preview_image.src contains 'passe-partout'
+                      assign pp_stem = ppm.preview_image.src | split: '-passe-partout' | first
+                      if media.preview_image.src contains pp_stem
+                        assign pp_media_for_tile = ppm
+                        break
+                      endif
+                    endif
+                  endfor
+                  render 'tw-main-product-image', media: media, loop: forloop, is_lcp: is_lcp_image, pp_media: pp_media_for_tile
                 endif
               endif
             endfor
@@ -177,10 +198,21 @@
           {%- for media in product.media -%}
             {%- if media.media_type == 'image' -%}
               {%- assign popup_image_index = popup_image_index | plus: 1 -%}
-              {%- comment -%} Idem galerie : on ne montre jamais l'image source d'index 1 (2e image). {%- endcomment -%}
-              {%- if popup_image_index >= popup_start_from and popup_image_index != 2 -%}
+              {%- comment -%} Idem galerie : jamais l'image source d'index 1 (2e image) ; le passe-partout est
+                 apparié par NOM DE FICHIER (data-pp-* sur la tuile sans bord) -> mêmes tuiles/indices que la
+                 galerie, donc clic galerie = bon zoom. {%- endcomment -%}
+              {%- assign is_pp_media = false -%}
+              {%- if media.preview_image.src contains 'passe-partout' -%}{%- assign is_pp_media = true -%}{%- endif -%}
+              {%- if popup_image_index >= popup_start_from and popup_image_index != 2 and is_pp_media == false -%}
+                {%- assign pp_media_for_tile = null -%}
+                {%- for ppm in product.media -%}
+                  {%- if ppm.media_type == 'image' and ppm.preview_image.src contains 'passe-partout' -%}
+                    {%- assign pp_stem = ppm.preview_image.src | split: '-passe-partout' | first -%}
+                    {%- if media.preview_image.src contains pp_stem -%}{%- assign pp_media_for_tile = ppm -%}{%- break -%}{%- endif -%}
+                  {%- endif -%}
+                {%- endfor -%}
                 <popup-image>
-                  {%- render 'tw-main-product-popup-image', media: media, loop: forloop -%}
+                  {%- render 'tw-main-product-popup-image', media: media, loop: forloop, pp_media: pp_media_for_tile -%}
                 </popup-image>
               {%- endif -%}
             {%- endif -%}

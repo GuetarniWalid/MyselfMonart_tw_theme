@@ -335,6 +335,9 @@
       },
       "variant_picker": {
         "frame_color": "Frame colour",
+        "white_border": "White border",
+        "white_border_with": "With white border",
+        "white_border_without": "Without white border",
         "size_guide": "Size Guide",
         "no_frames_available": "No frames available for this size"
       }

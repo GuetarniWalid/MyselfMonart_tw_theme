@@ -4,6 +4,11 @@
     Accepts:
       - media: {Object} Product Media object
       - loop: {Object} Forloop object
+      - pp_media: {Object} (optionnel) visuel « passe-partout » (contour blanc) PAIRÉ à `media`.
+        Si fourni, on l'attache en data-pp-* (NON chargé tant que « Avec contour blanc » n'est pas
+        choisi) + on garde la version sans bord en data-reg-* pour le retour. Le swap est piloté par
+        initPosterWhiteBorder (assets/main-product.js) : un seul <img> par tuile -> indices
+        carrousel/popup INCHANGÉS.
 
     Usage:
     {% render 'tw-main-product-image', media: media %}
@@ -14,15 +19,17 @@
   if product.metafields.meta_object.media.value.alts.value[loop.index0]
     assign img_alt = product.metafields.meta_object.media.value.alts.value[loop.index0]
   endif
+  assign pp_alt = ''
+  if pp_media
+    assign pp_alt = pp_media.alt
+  endif
 -%}
+{%- capture reg_srcset -%}{%- if media.preview_image.width >= 400 -%}{{ media.preview_image | image_url: width: 400 }} 400w,{%- endif -%}{%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}{%- if media.preview_image.width >= 700 -%}{{ media.preview_image | image_url: width: 700 }} 700w,{%- endif -%}{%- if media.preview_image.width >= 1100 -%}{{ media.preview_image | image_url: width: 1100 }} 1100w,{%- endif -%}{{ media.preview_image | image_url }} {{ media.preview_image.width }}w{%- endcapture -%}
+{%- capture pp_attrs -%}{%- if pp_media -%}{%- capture pp_srcset -%}{%- if pp_media.preview_image.width >= 400 -%}{{ pp_media.preview_image | image_url: width: 400 }} 400w,{%- endif -%}{%- if pp_media.preview_image.width >= 550 -%}{{ pp_media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}{%- if pp_media.preview_image.width >= 700 -%}{{ pp_media.preview_image | image_url: width: 700 }} 700w,{%- endif -%}{%- if pp_media.preview_image.width >= 1100 -%}{{ pp_media.preview_image | image_url: width: 1100 }} 1100w,{%- endif -%}{{ pp_media.preview_image | image_url }} {{ pp_media.preview_image.width }}w{%- endcapture -%} data-pp-swap data-reg-srcset="{{ reg_srcset }}" data-reg-src="{{ media.preview_image | image_url: width: 700 }}" data-reg-alt="{{ img_alt | escape }}" data-pp-srcset="{{ pp_srcset }}" data-pp-src="{{ pp_media.preview_image | image_url: width: 700 }}" data-pp-alt="{{ pp_alt | escape }}"{%- endif -%}{%- endcapture -%}
 <span class="img-wrapper w-[83.33vw] sm:w-[75vw] md:w-[550px] max-w-full overflow-hidden skeleton flex-none group cursor-pointer flex items-center snap-start">
   {%- if is_lcp -%}
     <img
-      srcset="{%- if media.preview_image.width >= 400 -%}{{ media.preview_image | image_url: width: 400 }} 400w,{%- endif -%}
-            {%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}
-            {%- if media.preview_image.width >= 700 -%}{{ media.preview_image | image_url: width: 700 }} 700w,{%- endif -%}
-            {%- if media.preview_image.width >= 1100 -%}{{ media.preview_image | image_url: width: 1100 }} 1100w,{%- endif -%}
-            {{ media.preview_image | image_url }} {{ media.preview_image.width }}w"
+      srcset="{{ reg_srcset }}"
       src="{{ media.preview_image | image_url: width: 700 }}"
       sizes="(min-width: 900px) 340px, (min-width: 768px) 550px, (min-width: 640px) 75vw, 83.33vw"
       alt="{{ img_alt | escape }}"
@@ -32,15 +39,12 @@
       width="{{ media.preview_image.width }}"
       height="{{ media.preview_image.height }}"
       data-media-id="{{ media.id }}"
+      {{ pp_attrs }}
       class="w-full h-full transition-all duration-100 object-contain 2md:object-center"
     >
   {%- else -%}
     <img
-      data-srcset="{%- if media.preview_image.width >= 400 -%}{{ media.preview_image | image_url: width: 400 }} 400w,{%- endif -%}
-            {%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}
-            {%- if media.preview_image.width >= 700 -%}{{ media.preview_image | image_url: width: 700 }} 700w,{%- endif -%}
-            {%- if media.preview_image.width >= 1100 -%}{{ media.preview_image | image_url: width: 1100 }} 1100w,{%- endif -%}
-            {{ media.preview_image | image_url }} {{ media.preview_image.width }}w"
+      data-srcset="{{ reg_srcset }}"
       src="{{ media.preview_image | image_url: width: 40 }}"
       sizes="(min-width: 900px) 340px, (min-width: 768px) 550px, (min-width: 640px) 75vw, 83.33vw"
       alt="{{ img_alt | escape }}"
@@ -48,6 +52,7 @@
       width="{{ media.preview_image.width }}"
       height="{{ media.preview_image.height }}"
       data-media-id="{{ media.id }}"
+      {{ pp_attrs }}
       class="lqip w-full h-full transition-all duration-100 object-contain 2md:object-center"
     >
   {%- endif -%}

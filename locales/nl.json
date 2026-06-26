@@ -105,6 +105,9 @@
       },
       "variant_picker": {
         "frame_color": "Lijstkleur",
+        "white_border": "Witte rand",
+        "white_border_with": "Met witte rand",
+        "white_border_without": "Zonder witte rand",
         "size_guide": "Maattabel",
         "no_frames_available": "Geen lijst beschikbaar voor dit formaat"
       },

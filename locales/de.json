@@ -105,6 +105,9 @@
       },
       "variant_picker": {
         "frame_color": "Rahmenfarbe",
+        "white_border": "Weißer Rand",
+        "white_border_with": "Mit weißem Rand",
+        "white_border_without": "Ohne weißen Rand",
         "no_frames_available": "Kein Rahmen für diese Größe verfügbar",
         "size_guide": "Größentabelle"
       }
