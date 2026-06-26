@@ -2055,10 +2055,10 @@
         const key = step.payloadKey || step.name;
         switch (step.type) {
           case 'photo':
-            // HEIC iPhone : on envoie le JPEG ré-encodé (décodable par sharp) préparé à la génération ;
-            // sinon l'original (JPEG/PNG/AVIF décodables côté serveur).
+            // On n'envoie QUE le Blob canvas ré-encodé (toujours lisible), JAMAIS le File brut : ce dernier
+            // provoque NotReadableError à l'upload -> POST muet. startGeneration garantit _jobPhotoBlob non
+            // nul ici (cascade 2048/1024/768 + abandon clair si aucun Blob), donc le repli File brut est retiré.
             if (this._jobPhotoBlob) fd.append(key, this._jobPhotoBlob, 'photo.jpg');
-            else if (this.photoFile) fd.append(key, this.photoFile);
             break;
           case 'choice':
           case 'text':
@@ -2163,16 +2163,22 @@
       this.genStartedAt = Date.now();
       this.startWaitProgress(this._estimateGenDuration());
       try {
-        // Photo envoyée à /jobs = TOUJOURS un Blob JPEG ré-encodé en mémoire (canvas), jamais le File brut.
-        // Deux raisons : (1) HEIC/HEIF iPhone -> le sharp serveur ne décode QUE JPEG/PNG/AVIF (422 sinon) ;
-        // (2) SURTOUT, sur iOS Safari le File brut issu de l'<input> (photothèque/appareil) devient souvent
-        // NON LISIBLE au moment de l'upload (NotReadableError) -> le corps du POST /jobs ne part jamais
-        // (préflight OK puis échec, fetch rejeté -> message d'échec générique). C'est le symptôme observé en
-        // prod : /photo-check (qui envoie déjà un Blob canvas réduit) passe, /jobs (qui envoyait le File brut)
-        // échoue. Un Blob canvas est toujours lisible -> upload fiable. Repli sur le File original si le
-        // ré-encodage échoue (navigateur ne décodant pas le HEIC, ex. Chrome desktop) : jamais pire qu'avant.
+        // Photo envoyée à /jobs = TOUJOURS un Blob JPEG ré-encodé en mémoire (canvas), JAMAIS le File brut.
+        // Le File brut issu de l'<input> (photothèque/appareil) devient souvent NON LISIBLE au moment de
+        // l'upload (NotReadableError — iOS Safari surtout, mais aussi Android) -> le corps du POST /jobs ne
+        // part jamais (préflight OK puis échec, fetch rejeté -> message générique). Un Blob canvas, lui, est
+        // toujours lisible -> upload fiable (c'est exactement ce que fait /photo-check, qui marche). Aussi
+        // requis pour HEIC/HEIF iPhone (le sharp serveur ne décode QUE JPEG/PNG/AVIF, 422 sinon).
+        // Cascade de tailles décroissantes : un canvas 2048 px peut rendre toBlob null sur un mobile bas de
+        // gamme là où 768 px passe (la taille que /photo-check ré-encode déjà avec succès). On NE retombe
+        // JAMAIS sur le File brut (cf. buildPayload) : si AUCUNE taille ne produit de Blob (photo non
+        // décodable), message clair plutôt qu'un POST muet voué à NotReadableError.
         if (this.photoFile && !this._jobPhotoBlob) {
-          this._jobPhotoBlob = await this._downscalePhoto(this.photoFile, 2048, 0.92).catch(() => null);
+          for (const px of [2048, 1024, 768]) {
+            this._jobPhotoBlob = await this._downscalePhoto(this.photoFile, px, 0.92).catch(() => null);
+            if (this._jobPhotoBlob) break;
+          }
+          if (!this._jobPhotoBlob) { this.showError(this.i18n.generation_error); return; }
         }
         // Payload assemblé depuis la config (cf. buildPayload) : identique au foot (mêmes
         // champs/valeurs/ordre), généralisé aux autres produits via leurs steps.
