@@ -20,12 +20,21 @@
 {%- liquid
   assign raw_media = product.media[1]
   assign ctx = context | default: 'carousel'
+  # Poster : rendu PAPIER + cadre collé + glace à reflets (mode `material:'paper'` du moteur),
+  # exactement comme le studio. Détecté par le métafield frames_poster (cf. main-product.liquid).
+  # La finition (cadre) est lue depuis la pastille de cadre du picker (data-frame-mode/handle),
+  # pas depuis une option3 inexistante. Toile = pas de `material` -> mode toile/châssis inchangé.
+  assign is_poster = false
+  if product.metafields.painting_options.frames_poster != blank
+    assign is_poster = true
+  endif
 -%}
 {%- if raw_media and raw_media.media_type == 'image' -%}
   {%- assign img = raw_media.preview_image -%}
   {%- capture persp_config -%}
     <script type="application/json" class="perspective-config">
       {
+        {%- if is_poster %}"material": "paper",{% endif %}
         "title": {{ product.title | json }},
         "raw": {
           "src": {{ img | image_url: width: 1500 | json }},

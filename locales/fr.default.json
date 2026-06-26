@@ -470,6 +470,7 @@
         }
       },
       "variant_picker": {
+        "frame_color": "Couleur du cadre",
         "size_guide": "Guide des tailles",
         "no_frames_available": "Aucun cadre disponible pour cette taille"
       }

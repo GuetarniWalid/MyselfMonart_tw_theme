@@ -660,6 +660,32 @@
         this.updateAria('', fixed.frame || '');
         return;
       }
+      // Poster (mode papier) : la finition est la PASTILLE de cadre du picker (data-frame-mode +
+      // data-color-handle), pas l'option2 "bordure" d'une toile, ni une option3 (le poster n'en a
+      // pas). « Sans cadre » (frame-mode none) -> pas de cadre (frame vide -> frameColorFromLabel
+      // renvoie null = papier nu) ; une couleur -> handle du cadre (cadre-blanc-1 -> blanc, etc.).
+      if (this.posterMode) {
+        const p = document.querySelector(
+          'painting-variant-picker input[data-frame-mode]:checked',
+        );
+        this.state.border = 'white'; // un poster n'a pas de tranche de châssis
+        this.state.frame =
+          p && p.dataset.frameMode === 'framed'
+            ? normalize(p.dataset.colorHandle || p.dataset.colorName || p.value)
+            : '';
+        const sp = document.querySelector(
+          'painting-variant-picker input[name="option1"]:checked',
+        );
+        if (sp) {
+          const mp = sp.value.match(/(\d+(?:[.,]\d+)?)\s*[x×]\s*(\d+(?:[.,]\d+)?)/i);
+          if (mp) {
+            this.sizeW = parseFloat(mp[1].replace(',', '.'));
+            this.sizeH = parseFloat(mp[2].replace(',', '.'));
+          }
+        }
+        this.updateAria('', p ? p.dataset.colorName || p.value : '');
+        return;
+      }
       const b = document.querySelector(
         'painting-variant-picker input[name="option2"]:checked',
       );
@@ -707,7 +733,14 @@
       // Bordure OU cadre changé -> sur mobile, le carrousel scrolle vers la slide WebGL puis
       // joue la mise en lumière, pour que l'utilisateur voie DIRECTEMENT le changement.
       if (this.state.border !== prevBorder || this.state.frame !== prevFrame) {
-        this.highlightOnBorderChange();
+        if (this.posterMode) {
+          // Poster : pas de "mise en lumière de tranche" (inexistante sur une feuille) -> on fait
+          // GLISSER le reflet sur la glace. Joué APRÈS le render qui (re)construit le cadre + la
+          // glace (glassGeo) -> double rAF. glassSweep no-op si « Sans cadre » (pas de glassGeo).
+          requestAnimationFrame(() => requestAnimationFrame(() => this.glassSweep()));
+        } else {
+          this.highlightOnBorderChange();
+        }
       }
     }
 

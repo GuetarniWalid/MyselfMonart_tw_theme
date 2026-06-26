@@ -568,6 +568,11 @@ class MainProductBlocks extends CollapsibleTab {
     const inputs = this.querySelectorAll('.product-properties input');
     const productProperties = {};
     inputs.forEach((input) => {
+      // Radios / cases à cocher : ne retenir QUE l'option réellement cochée (sinon la dernière
+      // du groupe écrasait les précédentes -> ex. couleur de cadre poster).
+      if ((input.type === 'radio' || input.type === 'checkbox') && !input.checked) return;
+      // Champs désactivés (ex. couleur de cadre quand « Sans cadre ») ou sans name : non soumis.
+      if (input.disabled || !input.name) return;
       productProperties[input.name] = input.value;
     });
     return productProperties;
@@ -1108,19 +1113,33 @@ if (frameGuidePopup) {
 
   // Function to update the displayed frame guide image
   function updateFrameGuideImage() {
-    const selectedFrameRadio = document.querySelector('painting-variant-picker input[name="option3"]:checked');
-    if (!selectedFrameRadio) return;
+    // Toile : option3 = cadre. Poster : pas d'option3 -> reflète la COULEUR choisie (« Avec cadre »),
+    // sinon la valeur du toggle « Cadres » (« Sans cadre »). Le guide (frames_canvas) inclut « Sans cadre »
+    // + les couleurs ; si la valeur courante n'a pas d'item correspondant (contenu produit variable), le
+    // filet de sécurité plus bas affiche le 1er item plutôt qu'une bulle vide.
+    let selectedFrame;
+    const option3Radio = document.querySelector('painting-variant-picker input[name="option3"]:checked');
+    if (option3Radio) {
+      selectedFrame = option3Radio.value;
+    } else {
+      // Poster : la pastille cochée porte la couleur (data-color-name = « Avec cadre ») ou « Sans cadre » (value).
+      const posterChecked = document.querySelector('painting-variant-picker input[data-frame-mode]:checked');
+      if (posterChecked) selectedFrame = posterChecked.dataset.colorName || posterChecked.value;
+    }
+    if (!selectedFrame) return;
 
-    const selectedFrame = selectedFrameRadio.value;
     const frameGuideItems = document.querySelectorAll('.frame-guide-item');
 
+    let matched = false;
     frameGuideItems.forEach(item => {
-      if (item.dataset.frame === selectedFrame) {
-        item.classList.remove('hidden');
-      } else {
-        item.classList.add('hidden');
-      }
+      const isMatch = item.dataset.frame === selectedFrame;
+      item.classList.toggle('hidden', !isMatch);
+      if (isMatch) matched = true;
     });
+    // Filet de sécurité : ne jamais laisser la bulle vide (valeur sans item de guide) -> 1er item.
+    if (!matched && frameGuideItems.length) {
+      frameGuideItems.forEach((item, i) => item.classList.toggle('hidden', i !== 0));
+    }
   }
 
   // Update image when popup opens
@@ -1136,9 +1155,12 @@ if (frameGuidePopup) {
 
   frameObserver.observe(frameGuidePopup, { attributes: true });
 
-  // Update image when frame selection changes
+  // Update image when frame selection changes (toile : option3 ; poster : toggle Cadres + couleur).
   document.addEventListener('change', (e) => {
-    if (e.target.matches('painting-variant-picker input[name="option3"]')) {
+    if (
+      e.target.matches('painting-variant-picker input[name="option3"]') ||
+      e.target.matches('painting-variant-picker input[data-frame-mode]')
+    ) {
       if (frameGuidePopup.hasAttribute('open')) {
         updateFrameGuideImage();
       }
@@ -1185,3 +1207,77 @@ variantContainers.forEach(container => {
   // Recheck on window resize
   window.addEventListener('resize', updateArrowVisibility);
 });
+
+// ===== Poster — « Cadres » sur UNE rangée (Sans cadre + couleurs), couleur = line-item property =====
+// Les pastilles SONT les radios de variante option2 : « Sans cadre » (data-frame-mode="none") et une
+// pastille par couleur (data-frame-mode="framed" + data-color-name/handle, toutes value="Avec cadre").
+// La couleur cochée est recopiée dans les propriétés de ligne « Couleur du cadre »/« _cadre ». N'existe
+// que sur les posters (data-frame-mode présent) -> ce handler sort immédiatement sur les toiles.
+(function initPosterFrameColor() {
+  const pastilles = Array.from(document.querySelectorAll('painting-variant-picker input[data-frame-mode]'));
+  if (!pastilles.length) return;
+
+  const cadreNom = document.querySelector('.product-properties [data-cadre-name]');
+  const cadreHandle = document.querySelector('.product-properties [data-cadre-handle]');
+  const variantsDataEl = document.getElementById('variants-data-json');
+  const variantsData = variantsDataEl ? JSON.parse(variantsDataEl.textContent) : [];
+
+  const selectedSize = () =>
+    document.querySelector('painting-variant-picker input[name="option1"]:checked')?.value || null;
+
+  // Recopie la couleur de la pastille cochée dans les propriétés de ligne (vidées + désactivées si « Sans cadre »).
+  function syncColorProperty() {
+    const checked = pastilles.find((p) => p.checked);
+    const framed = checked && checked.dataset.frameMode === 'framed';
+    if (cadreNom) {
+      cadreNom.disabled = !framed;
+      cadreNom.value = framed ? (checked.dataset.colorName || '') : '';
+    }
+    if (cadreHandle) {
+      cadreHandle.disabled = !framed;
+      cadreHandle.value = framed ? (checked.dataset.colorHandle || '') : '';
+    }
+    // Libellé du guide cadre : nom de la couleur (Avec cadre) ou « Sans cadre ».
+    const span = document.getElementById('selected-frame-name');
+    if (span && checked) span.textContent = framed ? (checked.dataset.colorName || checked.value) : checked.value;
+  }
+
+  // Désactive les pastilles couleur (= Avec cadre) pour les tailles sans variante encadrée (ex. 90×120).
+  function syncFrameAvailability() {
+    const size = selectedSize();
+    pastilles.forEach((input) => {
+      const available = variantsData.some(
+        (v) => v.option1 === size && v.option2 === input.value && v.available,
+      );
+      const label = input.closest('label');
+      if (available) {
+        input.disabled = false;
+        if (label) { label.classList.remove('grayscale', 'cursor-not-allowed'); label.classList.add('cursor-pointer'); }
+      } else {
+        input.disabled = true;
+        if (label) { label.classList.add('grayscale', 'cursor-not-allowed'); label.classList.remove('cursor-pointer'); }
+        // Si la pastille indisponible était cochée, basculer sur la 1re disponible (-> change : variante + prix).
+        if (input.checked) {
+          const fallback = pastilles.find((p) =>
+            variantsData.some((v) => v.option1 === size && v.option2 === p.value && v.available),
+          );
+          if (fallback) fallback.click();
+        }
+      }
+    });
+  }
+
+  document.addEventListener('change', (e) => {
+    const t = e.target;
+    if (t.matches('painting-variant-picker input[name="option1"]')) {
+      syncFrameAvailability();
+    }
+    if (t.matches('painting-variant-picker input[data-frame-mode]')) {
+      syncColorProperty();
+    }
+  });
+
+  // État initial (le HTML rend déjà la pastille « Sans cadre » cochée + propriétés désactivées).
+  syncFrameAvailability();
+  syncColorProperty();
+})();

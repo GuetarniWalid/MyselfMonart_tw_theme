@@ -104,6 +104,7 @@
         }
       },
       "variant_picker": {
+        "frame_color": "Lijstkleur",
         "size_guide": "Maattabel",
         "no_frames_available": "Geen lijst beschikbaar voor dit formaat"
       },

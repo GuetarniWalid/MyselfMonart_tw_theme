@@ -4,6 +4,16 @@
   window.variants = {{ product.variants | json }};
 </script>
 
+{%- comment -%} Poster (option cadre Sans/Avec + couleur de cadre en line-item property) : on le rend
+   comme une « toile » (picker painting-variant-picker + visualiseur 3D), détecté par le métafield
+   `frames_poster` et NON par le suffixe de template -> tout poster portant ce métafield fonctionne
+   quel que soit son template, sans configuration produit par produit (le suffixe est facile à oublier
+   à la création d'un brouillon). {%- endcomment -%}
+{%- assign is_poster = false -%}
+{%- if product.metafields.painting_options.frames_poster != blank -%}{%- assign is_poster = true -%}{%- endif -%}
+{%- assign show_perspective = false -%}
+{%- if template.suffix == 'painting' or is_poster -%}{%- assign show_perspective = true -%}{%- endif -%}
+
 <a class="px-4 py-2 opacity-0 focus-visible:opacity-100 absolute top-6 left-10 z-10 bg-secondary transition-colors duration-500" href="#ProductInfo-{{ section.id }}">
   {{ "sections.main_product.accessibility.skip_to_product_info" | t }}
 </a>
@@ -128,7 +138,7 @@
             endfor
           %}
           {%- comment -%} Toile en perspective 3D (WebGL) depuis l'image brute media[1] — placée en DERNIER dans le carrousel {%- endcomment -%}
-          {%- if template.suffix == 'painting' -%}
+          {%- if show_perspective -%}
             {% render 'tw-main-product-perspective', product: product %}
           {%- endif -%}
         </div>
@@ -176,12 +186,12 @@
             {%- endif -%}
           {%- endfor -%}
           {%- comment -%} Slide perspective en popup : grande toile 3D (clic -> zoom). Aligné en DERNIER avec le carrousel {%- endcomment -%}
-          {%- if template.suffix == 'painting' and product.media[1] and product.media[1].media_type == 'image' -%}
+          {%- if show_perspective and product.media[1] and product.media[1].media_type == 'image' -%}
             {% render 'tw-main-product-perspective', product: product, context: 'popup' %}
           {%- endif -%}
         </template>
       </div>
-      {%- if template.suffix == 'painting' -%}
+      {%- if show_perspective -%}
         <script src="{{ 'component-perspective-canvas.js' | asset_url }}" defer></script>
       {%- endif -%}
     </main-product-carousel>
@@ -216,7 +226,7 @@
               </div>
             {%- endif -%}
           {%- when 'variant_picker' -%}
-            {% if template.suffix == 'painting' or template.suffix == 'personalized' %}
+            {% if template.suffix == 'painting' or template.suffix == 'personalized' or is_poster %}
               {% render 'painting-variant-picker'
                 , product: product
                 , block: block %}

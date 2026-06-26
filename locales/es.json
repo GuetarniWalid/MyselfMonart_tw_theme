@@ -107,6 +107,7 @@
         }
       },
       "variant_picker": {
+        "frame_color": "Color del marco",
         "no_frames_available": "No hay marcos disponibles para este tamaño",
         "size_guide": "Guía de tallas"
       }

@@ -5,6 +5,13 @@
 {% endcomment %}
 
 {%- unless product.has_only_default_variant -%}
+    {%- comment -%} Détection « poster » : un poster a 2 options (Tailles + Cadres{Sans/Avec cadre})
+       et expose le métafield painting_options.frames_poster (liste des couleurs de cadre poster).
+       Sur un poster, l'option « Cadres » est en POSITION 2 (pas 3) — le code historique la routerait
+       dans la branche BORDURE et ne matcherait aucune pastille. Tout le comportement « poster » est
+       donc gardé derrière `is_poster`, sans rien changer aux toiles (chemin position 1/2/3 intact). {%- endcomment -%}
+    {%- assign is_poster = false -%}
+    {%- if product.metafields.painting_options.frames_poster != blank -%}{%- assign is_poster = true -%}{%- endif -%}
     <div class="mb-6">
         {%- for option in product.options_with_values -%}
             <div class="pt-3 px-1 mx-4 text-main-80">
@@ -16,6 +23,22 @@
                             </svg>
                         </span>
                         <span>{{ 'sections.main_product.variant_picker.size_guide' | t }}</span>
+                    </button>
+                {% elsif is_poster and option.position == 2 %}
+                    {%- comment -%} Poster : l'option « Cadres » (Sans/Avec cadre) est en position 2. On ouvre
+                       le guide CADRE (frame-guide-popup), jamais le guide bordure. Le libellé reflète la
+                       valeur choisie (le JS le réactualise sur changement, cf. assets/main-product.js). {%- endcomment -%}
+                    <button class="underline cursor-pointer hover:no-underline mb-3 flex items-center gap-2" onclick="document.getElementById('frame-guide-popup').showModal()">
+                        <span class="flex items-center justify-center w-5 h-5 rounded-full border border-main flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 15 15">
+                                <path fill="currentColor" d="M7.5 1C6.7 1 6 1.7 6 2.5S6.7 4 7.5 4S9 3.3 9 2.5S8.3 1 7.5 1M4 5v1s2 0 2 2v2c0 2-2 2-2 2v1h7v-1s-2 0-2-2V6c0-.5-.5-1-1-1z"></path>
+                            </svg>
+                        </span>
+                        <span id="selected-frame-name">
+                            {%- for value in option.values -%}
+                                {%- if value.selected -%}{{ value }}{%- endif -%}
+                            {%- endfor -%}
+                        </span>
                     </button>
                 {% elsif option.position == 2 %}
                     <button class="underline cursor-pointer hover:no-underline mb-3 flex items-center gap-2" onclick="document.getElementById('border-guide-popup').showModal()">
@@ -54,6 +77,49 @@
                     </button>
                 </div>
                 <div class="variant-options-container flex gap-3 overflow-x-auto font-heading text-sm font-semibold py-4 px-5 scrollbar-thin scrollbar-thumb-main-30 scrollbar-track-transparent scroll-smooth">
+            {%- if is_poster and option.position == 2 -%}
+                {%- comment -%} POSTER — « Cadres » sur UNE seule rangée (UX identique à la toile) : pastille
+                   « Sans cadre » + une pastille par couleur, en UN seul clic. Le découpage variante
+                   {Sans cadre / Avec cadre} (prix) est INTERNE : « Sans cadre » -> option2 = Sans cadre ;
+                   chaque couleur -> option2 = Avec cadre (même prix) + la couleur portée en line-item property.
+                   Toutes les pastilles sont name="option2" (UN SEUL groupe radio -> sélection unique, pas de
+                   2e étape). La couleur cochée est recopiée dans les property `Couleur du cadre`/`_cadre`
+                   par initPosterFrameColor (assets/main-product.js). {%- endcomment -%}
+                {%- assign sans_value = null -%}
+                {%- assign avec_value = null -%}
+                {%- for v in option.values -%}
+                    {%- if forloop.first -%}{%- assign sans_value = v -%}{%- else -%}{%- assign avec_value = v -%}{%- endif -%}
+                {%- endfor -%}
+                {%- comment -%} Pastille « Sans cadre » (cercle barré, identique à la toile) -> variante Sans cadre. {%- endcomment -%}
+                <painting-variant-picker data-option="option2" data-option-value="{{ sans_value }}" data-price-pattern="{{ product.price_min | money }}" data-variant-price="{{ sans_value.price | money }}" data-initially-available="{{ sans_value.available }}" class="flex-shrink-0">
+                    <label class="cursor-pointer transition-opacity duration-200">
+                        <input type="radio" name="option2" value="{{ sans_value }}" class="peer hidden" data-frame-mode="none"{% if sans_value.selected %} checked{% endif %} data-variant-option>
+                        <span class="sr-only">{{ sans_value }}</span>
+                        <span class="flex items-center justify-center w-[60px] h-[60px] rounded-full transition-all duration-100 peer-checked:outline peer-checked:outline-1 peer-checked:outline-main peer-checked:outline-offset-2" title="{{ sans_value | escape }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 42 42" class="text-main" aria-hidden="true">
+                                <circle class="fill-main-10" cx="21" cy="21" r="20"/>
+                                <line x1="34" y1="8" x2="8" y2="34" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+                            </svg>
+                        </span>
+                    </label>
+                </painting-variant-picker>
+                {%- comment -%} Une pastille par couleur de cadre poster -> variante Avec cadre (même prix) + property couleur. {%- endcomment -%}
+                {%- for frame in product.metafields.painting_options.frames_poster.value -%}
+                    <painting-variant-picker data-option="option2" data-option-value="{{ avec_value }}" data-price-pattern="{{ product.price_min | money }}" data-variant-price="{{ avec_value.price | money }}" data-initially-available="{{ avec_value.available }}" class="flex-shrink-0">
+                        <label class="cursor-pointer transition-opacity duration-200">
+                            <input type="radio" name="option2" value="{{ avec_value }}" class="peer hidden" data-frame-mode="framed" data-color-name="{{ frame.name | escape }}" data-color-handle="{{ frame.system.handle | escape }}"{% if avec_value.selected and forloop.first %} checked{% endif %} data-variant-option>
+                            <span class="sr-only">{{ frame.name }}</span>
+                            {%- if frame.radio.value.media.value.src -%}
+                                <span class="block rounded-full overflow-hidden w-[60px] h-[60px] transition-all duration-100 peer-checked:outline peer-checked:outline-1 peer-checked:outline-main peer-checked:outline-offset-2" title="{{ frame.name | escape }}">
+                                    <img src="{{ frame.radio.value.media.value.src | image_url: width: 60 }}" alt="{{ frame.radio.value.media.value.alt | escape }}" width="60" height="60" loading="lazy" class="object-cover">
+                                </span>
+                            {%- else -%}
+                                <span class="block rounded-full border border-main-20 bg-secondary px-4 py-2 font-normal text-main transition-all duration-100 peer-checked:bg-main peer-checked:text-secondary" title="{{ frame.name | escape }}">{{ frame.name }}</span>
+                            {%- endif -%}
+                        </label>
+                    </painting-variant-picker>
+                {%- endfor -%}
+            {%- else -%}
             {%- for value in option.values -%}
                 {% if value.available %}
                     {%- comment -%} Clé de rendu STABLE et indépendante de la langue pour le visualiseur 3D
@@ -145,8 +211,24 @@
                     </painting-variant-picker>
                 {% endif %}
             {% endfor %}
+            {%- endif -%}
                 </div>
             </div>
+            {% if is_poster and option.position == 2 %}
+                {%- comment -%} Couleur du cadre en LINE-ITEM PROPERTY (pas une variante -> pas d'explosion de
+                   variantes ; la couleur n'affecte pas le prix). Inputs CACHÉS dans .product-properties,
+                   recopiés depuis la pastille couleur cochée par initPosterFrameColor (assets/main-product.js) :
+                   CLÉ de property = libellé LOCALISÉ (clé locale `frame_color` -> Couleur du cadre / Frame
+                   colour / Rahmenfarbe / Color del marco / Lijstkleur). Shopify NE traduit PAS les clés de
+                   property -> on rend la clé DÉJÀ localisée (selon request.locale) : au checkout/admin le
+                   client voit la clé dans SA langue. Valeur = nom localisé du cadre ; « _cadre » (masqué) =
+                   handle neutre pour le back/fulfillment. NOMS BRUTS (pas properties[...]) car l'ajout panier
+                   est un POST JSON (cf. champs _tapestry-*). disabled -> « Sans cadre » ne soumet rien. {%- endcomment -%}
+                <div class="product-properties">
+                    <input type="hidden" name="{{ 'sections.main_product.variant_picker.frame_color' | t }}" data-cadre-name value="" disabled>
+                    <input type="hidden" name="_cadre" data-cadre-handle value="" disabled>
+                </div>
+            {% endif %}
             {% if option.position == 3 %}
                 <div id="no-frames-message" class="hidden px-3 pt-2 text-sm text-main-70 italic ml-4">
                     {{ 'sections.main_product.variant_picker.no_frames_available' | t }}

@@ -104,6 +104,7 @@
         }
       },
       "variant_picker": {
+        "frame_color": "Rahmenfarbe",
         "no_frames_available": "Kein Rahmen für diese Größe verfügbar",
         "size_guide": "Größentabelle"
       }
