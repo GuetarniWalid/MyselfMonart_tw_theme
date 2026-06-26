@@ -330,6 +330,17 @@
             endfor
           %}
 
+          {%- liquid
+            # Vignette PERSONNALISÉE : si la ligne porte l'aperçu masqué (_preview, URL externe proxifiée),
+            # on l'affiche à la place de l'image produit générique. Vide pour les produits non personnalisés
+            # -> comportement inchangé. Repli (onerror) sur l'image produit si l'aperçu ne charge pas.
+            assign custom_preview_url = ''
+            for property in item.properties
+              if property.first == '_preview' and property.last != blank
+                assign custom_preview_url = property.last
+              endif
+            endfor
+          -%}
           <cart-item
             data-index="{{ item.index | plus: 1 }}"
             data-section-id="{{ section.id }}"
@@ -343,8 +354,14 @@
                   class="absolute inset-0 rounded-lg overflow-hidden">
                   <img
                     class="w-full h-full object-cover"
+                    {%- if custom_preview_url != blank %}
+                    src="{{ custom_preview_url | escape }}"
+                    alt="{{ item.product.title | escape }}"
+                    onerror="this.onerror=null;this.src='{{ item_image | image_url: width: 160 }}'"
+                    {%- else %}
                     src="{{ item_image | image_url: width: 160 }}"
                     alt="{{ item_image.alt | escape }}"
+                    {%- endif %}
                     loading="lazy"
                     width="160"
                     height="auto">
@@ -378,10 +395,10 @@
                   endfor
                 %}
                 {% if properties_string != blank %}
-                  <p class="text-xs">
+                  <p class="text-xs break-words">
                     <span class="font-bold">{{ 'sections.tw_cart_drawer.info' | t }} :
                     </span>
-                    {{ properties_string | replace_last: '/', '' }}
+                    {{ properties_string | replace_last: '/', '' | escape }}
                   </p>
                 {% endif %}
                 <ul role="list" aria-label="{{ 'customer.order.discount' | t }}">

@@ -3312,8 +3312,12 @@
         [this.i18n.prop_name]: this.state.playerName,
         [this.i18n.prop_number]: this.state.playerNumber,
         [this.i18n.prop_team]: this.state.teamName,
-        [this.i18n.prop_preview]: this.state.previewUrl,
       };
+      // Aperçu personnalisé en propriété MASQUÉE (préfixe « _ ») : n'apparaît PLUS en texte dans le panier
+      // (l'URL complète était moche et poussait le layout du drawer faute de coupure), mais reste lisible
+      // par le thème pour afficher la VIGNETTE personnalisée (tw-cart-drawer / page-cart-items) et par
+      // l'admin sur la commande. Anciennement propriété visible « Aperçu ».
+      if (this.state.previewUrl) properties._preview = this.state.previewUrl;
       // Fige la version COMMANDÉE par son rang (back-end : impression par rank, pas « dernière révélée »).
       const activeV = this._activeVersion();
       if (activeV && activeV.rank != null) properties._version_rank = activeV.rank;
