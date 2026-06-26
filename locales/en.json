@@ -603,7 +603,11 @@
       "version_next": "Next version",
       "version_new": "Generate a new version",
       "save_retry_submit": "Generate a new version",
-      "save_retry_title": "Another version?"
+      "save_retry_title": "Another version?",
+      "marketing_optin": "I'd like to receive MyselfMonArt offers and updates by email.",
+      "error_daily_cap": "You’ve used all your generations for today. Come back tomorrow—your selections are saved.",
+      "error_too_many": "Too many requests at once. Please wait a few seconds, then try again.",
+      "error_title_daily": "Daily limit reached"
     }
   },
   "snippet": {

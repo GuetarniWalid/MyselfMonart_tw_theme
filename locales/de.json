@@ -376,7 +376,11 @@
       "version_next": "Nächste Version",
       "version_new": "Neue Version erstellen",
       "save_retry_submit": "Meine neue Version erstellen",
-      "save_retry_title": "Noch eine Version?"
+      "save_retry_title": "Noch eine Version?",
+      "marketing_optin": "Ich möchte Angebote und Neuheiten von MyselfMonArt per E-Mail erhalten.",
+      "error_daily_cap": "Sie haben Ihr Tageskontingent ausgeschöpft. Kommen Sie morgen wieder — Ihre Auswahl bleibt gespeichert.",
+      "error_too_many": "Zu viele Anfragen auf einmal. Bitte warten Sie ein paar Sekunden und versuchen Sie es erneut.",
+      "error_title_daily": "Tageslimit erreicht"
     }
   },
   "accessibility": {

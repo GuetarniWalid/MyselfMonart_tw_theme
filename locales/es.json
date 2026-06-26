@@ -376,7 +376,11 @@
       "version_next": "Versión siguiente",
       "version_new": "Generar una nueva versión",
       "save_retry_submit": "Generar mi nueva versión",
-      "save_retry_title": "¿Otra versión?"
+      "save_retry_title": "¿Otra versión?",
+      "marketing_optin": "Quiero recibir ofertas y novedades de MyselfMonArt por correo electrónico.",
+      "error_daily_cap": "Has alcanzado el límite diario de creaciones. Vuelve mañana — tus selecciones quedan guardadas.",
+      "error_too_many": "Demasiadas solicitudes seguidas. Espera unos segundos y vuelve a intentarlo.",
+      "error_title_daily": "Límite diario alcanzado"
     }
   },
   "accessibility": {

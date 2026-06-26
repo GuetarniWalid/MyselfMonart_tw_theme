@@ -375,7 +375,11 @@
       "version_next": "Volgende versie",
       "version_new": "Nieuwe versie genereren",
       "save_retry_submit": "Genereer mijn nieuwe versie",
-      "save_retry_title": "Nog een versie?"
+      "save_retry_title": "Nog een versie?",
+      "marketing_optin": "Ik wil aanbiedingen en nieuws van MyselfMonArt per e-mail ontvangen.",
+      "error_daily_cap": "Je hebt je dagelijkse limiet bereikt. Kom morgen terug — je keuzes blijven bewaard.",
+      "error_too_many": "Te veel verzoeken tegelijk. Wacht een paar seconden en probeer het opnieuw.",
+      "error_title_daily": "Daglimiet bereikt"
     }
   },
   "accessibility": {
