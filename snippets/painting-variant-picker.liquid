@@ -354,7 +354,9 @@
                 </svg>
             </button>
             <div id="frame-guide-content" class="pb-8">
-                {%- for frame_option in product.metafields.painting_options.frames_canvas.value -%}
+                {%- comment -%} Poster : frames_canvas n'est pas exposé au storefront pour ces produits → on peuple le guide depuis frames_poster (mêmes métaobjets couleur, déjà rendus par les pastilles). Toile = frames_canvas inchangé. {%- endcomment -%}
+                {%- if is_poster -%}{%- assign frame_guide_list = product.metafields.painting_options.frames_poster.value -%}{%- else -%}{%- assign frame_guide_list = product.metafields.painting_options.frames_canvas.value -%}{%- endif -%}
+                {%- for frame_option in frame_guide_list -%}
                     <div class="frame-guide-item hidden" data-frame="{{ frame_option.name }}">
                         {%- if frame_option.popup.value.media.value.src -%}
                             <img
