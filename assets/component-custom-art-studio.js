@@ -3225,12 +3225,19 @@
       }
       try {
         if (!this.config.mock) {
+          // Fige la version SAUVEGARDÉE par son rang (1-based), MÊME contrat que le panier (_version_rank).
+          // Sans lui, le back-end retombe sur le meilleur candidat (/preview/0) -> l'e-mail de reprise et le
+          // lien ?ca_job ramèneraient la version 1, pas celle affichée. state.jobId suit déjà la version active
+          // (cf. _gotoVersion), donc on POST sur le bon job ET on transmet son rang.
+          const av = this._activeVersion();
+          const body = { email: emailInput.value };
+          if (av && av.rank != null) body.version_rank = av.rank;
           const { response } = await this.api(
             `/api/custom-art/jobs/${this.state.jobId}/save`,
             {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email: emailInput.value }),
+              body: JSON.stringify(body),
             },
           );
           if (response.status === 429) {
