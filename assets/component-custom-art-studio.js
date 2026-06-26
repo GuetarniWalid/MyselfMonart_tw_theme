@@ -2163,10 +2163,15 @@
       this.genStartedAt = Date.now();
       this.startWaitProgress(this._estimateGenDuration());
       try {
-        // HEIC/HEIF iPhone : le sharp serveur ne décode QUE JPEG/PNG/AVIF -> on ré-encode la photo en
-        // JPEG (canvas, max 2048 px) AVANT /jobs, sinon 422 « non décodable ». Repli sur l'original si le
-        // navigateur ne sait pas décoder le HEIC (ex. Chrome desktop) : rien de mieux possible côté client.
-        if (this.photoIsHeic && this.photoFile && !this._jobPhotoBlob) {
+        // Photo envoyée à /jobs = TOUJOURS un Blob JPEG ré-encodé en mémoire (canvas), jamais le File brut.
+        // Deux raisons : (1) HEIC/HEIF iPhone -> le sharp serveur ne décode QUE JPEG/PNG/AVIF (422 sinon) ;
+        // (2) SURTOUT, sur iOS Safari le File brut issu de l'<input> (photothèque/appareil) devient souvent
+        // NON LISIBLE au moment de l'upload (NotReadableError) -> le corps du POST /jobs ne part jamais
+        // (préflight OK puis échec, fetch rejeté -> message d'échec générique). C'est le symptôme observé en
+        // prod : /photo-check (qui envoie déjà un Blob canvas réduit) passe, /jobs (qui envoyait le File brut)
+        // échoue. Un Blob canvas est toujours lisible -> upload fiable. Repli sur le File original si le
+        // ré-encodage échoue (navigateur ne décodant pas le HEIC, ex. Chrome desktop) : jamais pire qu'avant.
+        if (this.photoFile && !this._jobPhotoBlob) {
           this._jobPhotoBlob = await this._downscalePhoto(this.photoFile, 2048, 0.92).catch(() => null);
         }
         // Payload assemblé depuis la config (cf. buildPayload) : identique au foot (mêmes
