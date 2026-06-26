@@ -931,7 +931,12 @@
       // options visibles, visualiseur à sa demi-largeur, bouton redevenu un bouton (pas une barre).
       this.state.stage = 'form';
       clearTimeout(this._fmtAnim);
-      // Chrome du reveal masqué hors reveal : « Une autre version », « Sauvegarder » + son popover.
+      // Chrome du reveal masqué hors reveal : navigateur de versions (compteur ‹ k/N › + flèches), « Une
+      // autre version », « Sauvegarder » + son popover. Le navigateur de versions n'a de sens QU'au reveal
+      // (on regarde une image) : sans ce masquage, un « Retour » vers une étape amont (prénom, numéro, photo…)
+      // le laissait visible -> incohérence (on pouvait changer de « version » sans image). _renderVersionNav
+      // le ré-affichera au prochain reveal (cf. onReveal = stage === 'ready').
+      this._setHidden(this.q('[data-studio-version-nav]'), true);
       this._setHidden(this.revealNextLink, true);
       this._setHidden(this.saveButton, true);
       this.saveButton?.setAttribute('aria-expanded', 'false');
