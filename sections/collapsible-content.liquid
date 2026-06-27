@@ -190,8 +190,9 @@
         {%- endfor -%}
       </div>
     </collapsible-tab>
-
-    <script src="{{ 'tw-global.js' | asset_url }}" defer="defer"></script>
+    {%- comment -%} Pas d'include local de tw-global.js : il est déjà chargé globalement via head-base
+    (defer → <collapsible-tab> est défini à temps). Un 2e include le ferait tourner 2x sur la page
+    et casserait les images placeholder (replacePlaceholderImages → srcset="null"). {%- endcomment -%}
   {%- endif -%}
 
 </section>

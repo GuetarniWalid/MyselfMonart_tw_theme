@@ -160,11 +160,18 @@ function replacePlaceholderImages() {
     'img.placeholder, picture.placeholder source',
   );
   medias.forEach((media) => {
-    media.setAttribute('srcset', media.getAttribute('data-srcset'));
+    // Idempotent : si data-srcset a déjà été consommé (ex. tw-global.js inclus 2x
+    // sur la même page : head-base + éditorial/collapsible), ne PAS réécrire srcset.
+    // Sinon setAttribute('srcset', null) pose srcset="null" -> l'image charge
+    // /collections/null (404), reste cassée et figée en flou (blur-lg jamais retiré).
+    const fullSrcset = media.getAttribute('data-srcset');
+    if (!fullSrcset) return;
+    // Handlers AVANT srcset : une image en cache peut charger de façon synchrone et
+    // ne jamais déclencher onload s'il est posé après -> blur-lg jamais retiré.
+    media.onload = () => media.classList.remove('blur-lg');
+    media.onerror = () => media.classList.remove('blur-lg');
+    media.setAttribute('srcset', fullSrcset);
     media.removeAttribute('data-srcset');
-    media.onload = () => {
-      media.classList.remove('blur-lg');
-    };
   });
 }
 replacePlaceholderImages();
