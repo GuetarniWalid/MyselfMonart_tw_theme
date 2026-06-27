@@ -1,7 +1,8 @@
-# 🗼 ROADMAP — Pilotage SEO/Croissance MyselfMonArt
+# 🗼 ROADMAP — Pilotage SEO MyselfMonArt (sous-chantier)
 
-> **CONTROL TOWER — point d'entrée unique.** Quand Walid demande « on en est où ? » ou « que doit-on faire ? », **la réponse est ici**.
-> Dernière révision : 2026-05-31
+> ⚠️ **DEPUIS LE 2026-06-10, le point d'entrée unique du pilotage business est [growth/PLAN.md](../growth/PLAN.md)** (plan de croissance 12 semaines, prime sur toutes les décisions antérieures). Cette roadmap reste la référence du **sous-chantier SEO uniquement** (missions, suivis GSC).
+> **Cadrage issu du plan global :** SEO en mode **maintenance, cappé 4-6h/semaine** (réindexation images, suivi GSC 30 min/sem, quick wins title/meta positions 4-12). **Chantier i18n Phase 2 (back-end) GELÉ 12 semaines** (91 % des ventes FR, risque hreflang en pleine récupération). Pas de nouvelle mission lourde avant lecture des suivis J+30.
+> Dernière révision : 2026-06-27 (suivi GSC J+30 Homepage consigné)
 
 ---
 
@@ -17,7 +18,7 @@ Logique d'**amélioration continue** : pour chaque page/cluster important → on
 
 | # | Mission | Keyword cible | Statut | Déployé le | Prochain check GSC | Dossier |
 |---|---|---|---|---|---|---|
-| 1 | **Homepage** | tableau décoration murale | ✅ **Déployée** | 2026-05-28 | J+14 : **2026-06-11** · J+30 : **2026-06-27** | [missions/homepage/](missions/homepage/) |
+| 1 | **Homepage** | tableau décoration murale | 📈 **En suivi** | 2026-05-28 | J+30 ☑ (27/06) · prochain : **fenêtre Q4** | [missions/homepage/](missions/homepage/) |
 | 2 | **Collection Salon** | tableau salon (+ chic/déco/moderne) | ✅ **Déployée** | 2026-05-29 | J+14 : **2026-06-12** · J+30 : **2026-06-28** | [missions/collection-salon/](missions/collection-salon/) |
 | 3 | **Accessibilité thème** (transverse) | — (qualité/UX, cible Lighthouse a11y 95+) | 🔜 À démarrer | — | — | [missions/a11y-theme/](missions/a11y-theme/) |
 | 4 | **Refonte fiche produit `painting`** (transverse) | — (template SOCLE de tous les tableaux : schema, Hn, a11y, LCP) | ✅ **Déployée** | 2026-05-31 | J+14 : **2026-06-14** · J+30 : **2026-06-30** | [missions/product-painting/](missions/product-painting/) |
@@ -30,8 +31,8 @@ Légende statut : 🔜 à démarrer · 🟡 en cours · ✅ déployée · 📈 e
 
 | Date | Action | Mission | Fait ? |
 |---|---|---|---|
-| **2026-06-11** | Check GSC **J+14** | Homepage | ☐ |
-| **2026-06-27** | Check GSC **J+30** | Homepage | ☐ |
+| ~~2026-06-11~~ | ~~Check GSC **J+14**~~ | Homepage | ⊘ **sauté** (pivot growth-plan du 10/06) |
+| **2026-06-27** | Check GSC **J+30** | Homepage | ☑ **Fait** — head term « tableau décoration murale » toujours **0 imp** sur la home ; gain home = **brand uniquement** ; baisse site-wide = **core update** (pas la home). Verdict : garder en suivi, pas de relaunch, re-check Q4. Cf [FOLLOWUP](missions/homepage/FOLLOWUP.md) |
 | ~~2026-05-29~~ | ~~Déploiement live~~ | Collection Salon | ☑ (fichiers déployés ; reste : assigner template + title/meta en admin) |
 | **2026-06-12** | Check GSC **J+14** | Collection Salon | ☐ |
 | **2026-06-28** | Check GSC **J+30** | Collection Salon | ☐ |
