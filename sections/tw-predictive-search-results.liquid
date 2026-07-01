@@ -7,7 +7,24 @@
       <hr>
       <ul class="predictive-search-results pt-2 pb-2" role="listbox">
         {%- for product in predictive_search.resources.products -%}
-          <li role="option" class="p-2 hover:bg-main-5 rounded-md">
+          {%- liquid
+            assign is_poster_flag = 0
+            if product.type == 'poster' or product.metafields.artwork.type == 'poster'
+              assign is_poster_flag = 1
+            endif
+            assign twin_id = ''
+            if product.metafields.link.painting.value.id
+              assign twin_id = product.metafields.link.painting.value.id
+            elsif product.metafields.link.poster.value.id
+              assign twin_id = product.metafields.link.poster.value.id
+            endif
+          -%}
+          <li
+            role="option"
+            class="p-2 hover:bg-main-5 rounded-md"
+            data-pid="{{ product.id }}"
+            data-poster="{{ is_poster_flag }}"
+            data-twin="{{ twin_id }}">
             <a
               href="{{ product.url }}"
               tabindex="0"

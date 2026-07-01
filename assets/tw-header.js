@@ -824,7 +824,7 @@ class PredictiveSearch extends HTMLElement {
         searchTerm,
       )}&${encodeURIComponent('resources[type]')}=product&${encodeURIComponent(
         'resources[limit]',
-      )}=4&section_id=tw-predictive-search-results`,
+      )}=10&section_id=tw-predictive-search-results`,
     )
       .then((response) => {
         if (!response.ok) {
@@ -871,6 +871,18 @@ class PredictiveSearch extends HTMLElement {
 
   renderSearchResults(resultsMarkup) {
     this.predictiveSearchResults.innerHTML = resultsMarkup;
+
+    // Dédup jumeaux toile/poster selon le contexte de page, puis coupe à 4.
+    const list = this.predictiveSearchResults.querySelector(
+      '.predictive-search-results',
+    );
+    if (list && window.filterCategoryDuplicates) {
+      window.filterCategoryDuplicates(list, this.dataset.searchScope || 'toile');
+      list.querySelectorAll('li[data-pid]').forEach((el, i) => {
+        if (i >= 4) el.remove();
+      });
+    }
+
     this.setAttribute('results', true);
 
     this.setLiveRegionResults();
@@ -947,6 +959,61 @@ class PredictiveSearch extends HTMLElement {
   };
 }
 customElements.define('predictive-search', PredictiveSearch);
+
+/**
+ * Déduplique les jumeaux toile/poster (même image, deux fiches liées par le
+ * métafield link.painting/link.poster) dans un conteneur de résultats.
+ *
+ * On ne masque QUE les vrais doublons : une paire dont les deux membres sont
+ * présents dans les résultats. Le membre conservé dépend du contexte (scope) :
+ *  - scope 'poster' → on garde le poster, on retire la toile jumelle
+ *  - scope 'toile'  → on garde la toile, on retire le poster jumeau
+ * Les produits sans jumeau visible (orphelins) sont toujours conservés.
+ *
+ * Chaque élément doit porter : data-pid, data-poster ("1"|"0"), data-twin (id
+ * du jumeau ou vide). La détection est pilotée par le lien (peu importe lequel
+ * des deux membres le porte).
+ *
+ * @param {Element} container - conteneur dont on filtre les enfants [data-pid]
+ * @param {string} scope - 'poster' | 'toile' (défaut 'toile')
+ */
+window.filterCategoryDuplicates = function (container, scope) {
+  if (!container) return;
+  const normScope = scope === 'poster' ? 'poster' : 'toile';
+  const items = Array.from(container.querySelectorAll('[data-pid]'));
+  if (!items.length) return;
+
+  const byId = new Map();
+  items.forEach((el) => byId.set(String(el.dataset.pid), el));
+
+  const toHide = new Set();
+  items.forEach((el) => {
+    const twin = el.dataset.twin;
+    if (!twin || !byId.has(twin)) return; // pas de jumeau visible → on garde
+    const isPoster = el.dataset.poster === '1';
+    let hideId;
+    if (normScope === 'poster') {
+      hideId = isPoster ? twin : el.dataset.pid; // retire la toile de la paire
+    } else {
+      hideId = isPoster ? el.dataset.pid : twin; // retire le poster de la paire
+    }
+    toHide.add(String(hideId));
+  });
+
+  toHide.forEach((pid) => {
+    const el = byId.get(pid);
+    if (el) el.remove();
+  });
+};
+
+// Page /search : applique le même filtre anti-doublon à la grille de résultats,
+// selon le scope transporté dans l'URL (?ps=poster|toile ; défaut toile).
+(function initSearchResultsScope() {
+  const grid = document.querySelector('[data-search-results-grid]');
+  if (!grid) return;
+  const ps = new URLSearchParams(window.location.search).get('ps');
+  window.filterCategoryDuplicates(grid, ps === 'poster' ? 'poster' : 'toile');
+})();
 
 class LocalizationFlag extends HTMLElement {
   connectedCallback() {

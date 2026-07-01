@@ -1,7 +1,25 @@
 {% comment %}
   Accepts:
   - in_header: {Boolean}
+
+  search_scope : catégorie de produits à privilégier dans la recherche selon le
+  contexte de la page courante (poster | toile). Sert à dédupliquer les jumeaux
+  toile/poster (même image) côté client — cf assets/tw-header.js
+  (window.filterCategoryDuplicates). Défaut = toile (accueil, blog, panier…).
 {% endcomment %}
+
+{%- liquid
+  assign search_scope = 'toile'
+  if template.name == 'product'
+    if product.type == 'poster' or product.metafields.artwork.type == 'poster'
+      assign search_scope = 'poster'
+    endif
+  elsif template.name == 'collection'
+    if collection.metafields.custom.type_of_collection == 'poster'
+      assign search_scope = 'poster'
+    endif
+  endif
+-%}
 
 <predictive-search
   class="bg-secondary flex justify-center items-center transition-all duration-100 px-5 absolute inset-0 {% if in_header %}-translate-y-full{% endif %} z-10"
@@ -9,6 +27,7 @@
   {% if in_header %}
   aria-hidden="true"
   {% endif %}
+  data-search-scope="{{ search_scope }}"
   data-is-in-header="{{ in_header }}">
   <form
     action="{{ routes.search_url }}"
@@ -19,6 +38,10 @@
       type="hidden"
       name="type"
       value="product" />
+    <input
+      type="hidden"
+      name="ps"
+      value="{{ search_scope }}" />
     <input
       id="search"
       class="bg-secondary pl-5 pr-9 border border-main hover:border-2 focus:border-2 w-full h-full rounded-lg peer/search placeholder:text-transparent outline-none"

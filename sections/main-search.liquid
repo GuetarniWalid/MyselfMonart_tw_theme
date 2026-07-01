@@ -21,15 +21,28 @@
   {%- endif -%}
 
   {% paginate search.results by 24 %}
-    <ul data-id="{{ section.id }}" class="product-grid">
+    <ul data-id="{{ section.id }}" class="product-grid" data-search-results-grid>
       {%- for product in search.results -%}
         {% liquid
           assign lazy_load = false
           if forloop.index > 2
             assign lazy_load = true
           endif
+          assign is_poster_flag = 0
+          if product.type == 'poster' or product.metafields.artwork.type == 'poster'
+            assign is_poster_flag = 1
+          endif
+          assign twin_id = ''
+          if product.metafields.link.painting.value.id
+            assign twin_id = product.metafields.link.painting.value.id
+          elsif product.metafields.link.poster.value.id
+            assign twin_id = product.metafields.link.poster.value.id
+          endif
         %}
-        <anime-product-card>
+        <anime-product-card
+          data-pid="{{ product.id }}"
+          data-poster="{{ is_poster_flag }}"
+          data-twin="{{ twin_id }}">
           <li id="{{ product.id }}" class="relative group h-full">
             {% render 'card-product'
               , product: product
