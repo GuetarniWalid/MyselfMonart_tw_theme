@@ -14,6 +14,15 @@
 {%- assign show_perspective = false -%}
 {%- if template.suffix == 'painting' or is_poster -%}{%- assign show_perspective = true -%}{%- endif -%}
 
+{%- comment -%} Jumeau Poster/Toile (métafields link.painting / link.poster) -> bascule sans rechargement.
+   Le moteur de soft-navigation n'est chargé que sur les fiches ayant un jumeau réellement PUBLIÉ
+   (published_at) — même condition que le rendu du bouton (cf. snippet product-format-toggle). {%- endcomment -%}
+{%- assign has_twin = false -%}
+{%- if product.metafields.link.painting.value.published_at != blank or product.metafields.link.poster.value.published_at != blank -%}{%- assign has_twin = true -%}{%- endif -%}
+{%- if has_twin and section.settings.enable_format_toggle -%}
+  <script src="{{ 'product-twin-toggle.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
 <a class="px-4 py-2 opacity-0 focus-visible:opacity-100 absolute top-6 left-10 z-10 bg-secondary transition-colors duration-500" href="#ProductInfo-{{ section.id }}">
   {{ "sections.main_product.accessibility.skip_to_product_info" | t }}
 </a>
@@ -258,6 +267,10 @@
               </div>
             {%- endif -%}
           {%- when 'variant_picker' -%}
+            {%- comment -%} Bascule Poster/Toile au-dessus de TOUTES les variantes (si jumeau lié). {%- endcomment -%}
+            {%- if section.settings.enable_format_toggle -%}
+              {% render 'product-format-toggle', product: product %}
+            {%- endif -%}
             {% if template.suffix == 'painting' or template.suffix == 'personalized' or is_poster %}
               {% render 'painting-variant-picker'
                 , product: product
@@ -746,6 +759,17 @@
         "id": "return_days",
         "label": "Délai de retour (jours)",
         "default": 14
+      },
+      {
+        "type": "header",
+        "content": "Bascule Poster / Toile"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_format_toggle",
+        "label": "Afficher la bascule Poster / Toile",
+        "info": "Bouton au-dessus des variantes pour passer à la fiche jumelle sans rechargement. N'apparaît que si le produit a un jumeau lié (métafield link.poster / link.painting).",
+        "default": true
       }
     ],
     "blocks": [

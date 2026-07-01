@@ -476,6 +476,12 @@
         "white_border_without": "Sans contour blanc",
         "size_guide": "Guide des tailles",
         "no_frames_available": "Aucun cadre disponible pour cette taille"
+      },
+      "format_toggle": {
+        "poster": "Poster",
+        "canvas": "Toile",
+        "aria_label": "Choix du format",
+        "switch_to": "Afficher en {{ format }}"
       }
     },
     "my_likes": {

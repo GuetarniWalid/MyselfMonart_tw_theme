@@ -113,6 +113,12 @@
         "white_border_without": "Sin borde blanco",
         "no_frames_available": "No hay marcos disponibles para este tamaño",
         "size_guide": "Guía de tallas"
+      },
+      "format_toggle": {
+        "poster": "Póster",
+        "canvas": "Lienzo",
+        "aria_label": "Elegir formato",
+        "switch_to": "Ver en {{ format }}"
       }
     },
     "main_404": {

@@ -1,0 +1,86 @@
+{% comment %}
+  Bascule Poster <-> Toile (segmented control), placée AU-DESSUS des variantes.
+  Accepts:
+  - product: {Object} le produit courant.
+
+  Jumeau via les métafields product_reference existants :
+    - je suis un POSTER  -> link.painting = ma toile jumelle
+    - je suis une TOILE  -> link.poster   = mon poster jumeau
+  Si aucun jumeau -> ne rend RIEN.
+
+  Progressive enhancement : ce sont de vrais liens <a> (fonctionnent sans JS, crawlables,
+  partageables). Le custom element <product-twin-toggle> (assets/product-twin-toggle.js)
+  intercepte le clic pour basculer SANS rechargement (fetch + swap de #MainContent) et pose
+  aria-busy + une atténuation pendant le fetch. Poster à GAUCHE, Toile à DROITE.
+
+  DESIGN (panel UX) : segmented control façon iOS. ACTIF = pilule BLANCHE (bg-secondary) détachée de
+  la piste grise par un accent PUR = anneau marine 1px + ombre douce (shadow-pill), hors-flux (donc
+  aucun décalage 1px entre l'actif <span> et l'inactif <a>). INACTIF = transparent, se fond dans la
+  piste grise (bg-main-5), texte marine plein. Aucune ombre neu dure ni saumon ici -> le bouton
+  d'achat saumon reste le seul point chaud/surélevé de la page.
+
+  Icônes : Tabler « photo » (Poster) et « frame » (Toile), inline en SVG (le thème n'a pas la police
+  Tabler). currentColor -> suivent la couleur du texte (marine). w-4 h-4, aria-hidden.
+{% endcomment %}
+
+{%- comment -%} Le jumeau doit être PUBLIÉ (published_at présent) : un jumeau supprimé, brouillon ou
+   dépublié mènerait à une 404 -> on n'affiche pas le bouton dans ce cas. Accès nil-safe : si la
+   référence est vide OU non publiée, `.value.published_at` est blank. {%- endcomment -%}
+{%- assign twin = blank -%}
+{%- assign current_is_poster = false -%}
+{%- if product.metafields.link.painting.value != blank and product.metafields.link.painting.value.published_at != blank -%}
+  {%- assign twin = product.metafields.link.painting.value -%}
+  {%- assign current_is_poster = true -%}
+{%- elsif product.metafields.link.poster.value != blank and product.metafields.link.poster.value.published_at != blank -%}
+  {%- assign twin = product.metafields.link.poster.value -%}
+{%- endif -%}
+
+{%- if twin != blank -%}
+  {%- assign poster_label = 'sections.main_product.format_toggle.poster' | t -%}
+  {%- assign canvas_label = 'sections.main_product.format_toggle.canvas' | t -%}
+  {%- comment -%} Base commune aux 2 cellules : hauteur >=48px (py-3.5), transition unifiée + motion-reduce. {%- endcomment -%}
+  {%- assign cell_base = 'flex-1 min-w-0 flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl font-heading font-semibold text-sm transition-all duration-200 motion-reduce:transition-none' -%}
+  {%- comment -%} ACTIF : pilule BLANCHE (bg-secondary) + shadow-pill (anneau marine 1px qui DESSINE le bord
+     sur la piste grise + ombre douce diffuse). Hors-flux -> pilule pixel-identique à l'inactif. Texte marine plein. {%- endcomment -%}
+  {%- assign cell_active = 'bg-secondary text-main shadow-pill' -%}
+  {%- comment -%} INACTIF : fond TRANSPARENT -> la piste grise (bg-main-5) transparaît, la cellule s'y fond. Texte
+     marine plein (AA), hover très léger (bg-main-10), focus détaché sur la couleur réelle derrière = la piste (ring-offset-main-5). {%- endcomment -%}
+  {%- assign cell_link = 'bg-transparent text-main hover:bg-main-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2 focus-visible:ring-offset-main-5' -%}
+
+  {%- comment -%} Icône Tabler « photo » (Poster) {%- endcomment -%}
+  {%- capture icon_poster -%}
+    <svg class="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M15 8h.01"></path>
+      <path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z"></path>
+      <path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"></path>
+      <path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"></path>
+    </svg>
+  {%- endcapture -%}
+  {%- comment -%} Icône Tabler « frame » (Toile) {%- endcomment -%}
+  {%- capture icon_canvas -%}
+    <svg class="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M4 7l16 0"></path>
+      <path d="M4 17l16 0"></path>
+      <path d="M7 4l0 16"></path>
+      <path d="M17 4l0 16"></path>
+    </svg>
+  {%- endcapture -%}
+
+  <product-twin-toggle class="block mb-6 mx-4">
+    <div class="flex items-stretch gap-1.5 p-2 rounded-2xl bg-main-5" role="group" aria-label="{{ 'sections.main_product.format_toggle.aria_label' | t }}">
+      {%- comment -%} Cellule POSTER (gauche) {%- endcomment -%}
+      {%- if current_is_poster -%}
+        <span class="{{ cell_base }} {{ cell_active }}" aria-current="true">{{ icon_poster }}<span>{{ poster_label }}</span></span>
+      {%- else -%}
+        <a href="{{ twin.url }}" data-twin-url class="{{ cell_base }} {{ cell_link }}" aria-label="{{ 'sections.main_product.format_toggle.switch_to' | t: format: poster_label }}">{{ icon_poster }}<span>{{ poster_label }}</span></a>
+      {%- endif -%}
+
+      {%- comment -%} Cellule TOILE (droite) {%- endcomment -%}
+      {%- if current_is_poster -%}
+        <a href="{{ twin.url }}" data-twin-url class="{{ cell_base }} {{ cell_link }}" aria-label="{{ 'sections.main_product.format_toggle.switch_to' | t: format: canvas_label }}">{{ icon_canvas }}<span>{{ canvas_label }}</span></a>
+      {%- else -%}
+        <span class="{{ cell_base }} {{ cell_active }}" aria-current="true">{{ icon_canvas }}<span>{{ canvas_label }}</span></span>
+      {%- endif -%}
+    </div>
+  </product-twin-toggle>
+{%- endif -%}

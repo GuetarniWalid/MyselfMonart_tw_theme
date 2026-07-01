@@ -1210,120 +1210,119 @@ variantContainers.forEach(container => {
   window.addEventListener('resize', updateArrowVisibility);
 });
 
-// ===== Poster — « Cadres » sur UNE rangée (Sans cadre + couleurs), couleur = line-item property =====
-// Les pastilles SONT les radios de variante option2 : « Sans cadre » (data-frame-mode="none") et une
-// pastille par couleur (data-frame-mode="framed" + data-color-name/handle, toutes value="Avec cadre").
-// La couleur cochée est recopiée dans les propriétés de ligne « Couleur du cadre »/« _cadre ». N'existe
-// que sur les posters (data-frame-mode présent) -> ce handler sort immédiatement sur les toiles.
-(function initPosterFrameColor() {
-  const pastilles = Array.from(document.querySelectorAll('painting-variant-picker input[data-frame-mode]'));
-  if (!pastilles.length) return;
+// ===== Poster — options (cadre couleur + contour blanc) : idempotent & SWAP-SAFE =====
+// Les handlers re-dérivent TOUJOURS leur état du DOM COURANT (aucune closure figée sur des nœuds ou
+// des données de variantes) -> ils survivent au remplacement de #MainContent lors de la bascule
+// Poster/Toile sans rechargement. Les écouteurs délégués sur `document` sont attachés UNE SEULE fois ;
+// window.mmaInitPosterOptions() (ré)applique l'état initial au 1er chargement ET après chaque bascule.
 
+// --- Cadre poster : la pastille couleur cochée (= « Avec cadre ») est recopiée dans les propriétés de
+//     ligne « Couleur du cadre » / « _cadre » ; « Sans cadre » les vide + désactive. N'existe que sur
+//     les posters (pastilles data-frame-mode présentes) -> no-op immédiat sur les toiles. ---
+function mmaPosterPastilles() {
+  return Array.from(document.querySelectorAll('painting-variant-picker input[data-frame-mode]'));
+}
+function mmaSelectedPosterSize() {
+  return (
+    document.querySelector('painting-variant-picker input[name="option1"]:checked')?.value || null
+  );
+}
+// Recopie la couleur de la pastille cochée dans les propriétés de ligne (vidées + désactivées si « Sans cadre »).
+function mmaSyncPosterColorProperty() {
+  const pastilles = mmaPosterPastilles();
+  if (!pastilles.length) return;
   const cadreNom = document.querySelector('.product-properties [data-cadre-name]');
   const cadreHandle = document.querySelector('.product-properties [data-cadre-handle]');
+  const checked = pastilles.find((p) => p.checked);
+  const framed = checked && checked.dataset.frameMode === 'framed';
+  if (cadreNom) {
+    cadreNom.disabled = !framed;
+    cadreNom.value = framed ? (checked.dataset.colorName || '') : '';
+  }
+  if (cadreHandle) {
+    cadreHandle.disabled = !framed;
+    cadreHandle.value = framed ? (checked.dataset.colorHandle || '') : '';
+  }
+  // Libellé du guide cadre : nom de la couleur (Avec cadre) ou « Sans cadre ».
+  const span = document.getElementById('selected-frame-name');
+  if (span && checked) span.textContent = framed ? (checked.dataset.colorName || checked.value) : checked.value;
+}
+// Désactive les pastilles couleur (= Avec cadre) pour les tailles sans variante encadrée (ex. 90×120).
+function mmaSyncPosterFrameAvailability() {
+  const pastilles = mmaPosterPastilles();
+  if (!pastilles.length) return;
   const variantsDataEl = document.getElementById('variants-data-json');
   const variantsData = variantsDataEl ? JSON.parse(variantsDataEl.textContent) : [];
-
-  const selectedSize = () =>
-    document.querySelector('painting-variant-picker input[name="option1"]:checked')?.value || null;
-
-  // Recopie la couleur de la pastille cochée dans les propriétés de ligne (vidées + désactivées si « Sans cadre »).
-  function syncColorProperty() {
-    const checked = pastilles.find((p) => p.checked);
-    const framed = checked && checked.dataset.frameMode === 'framed';
-    if (cadreNom) {
-      cadreNom.disabled = !framed;
-      cadreNom.value = framed ? (checked.dataset.colorName || '') : '';
-    }
-    if (cadreHandle) {
-      cadreHandle.disabled = !framed;
-      cadreHandle.value = framed ? (checked.dataset.colorHandle || '') : '';
-    }
-    // Libellé du guide cadre : nom de la couleur (Avec cadre) ou « Sans cadre ».
-    const span = document.getElementById('selected-frame-name');
-    if (span && checked) span.textContent = framed ? (checked.dataset.colorName || checked.value) : checked.value;
-  }
-
-  // Désactive les pastilles couleur (= Avec cadre) pour les tailles sans variante encadrée (ex. 90×120).
-  function syncFrameAvailability() {
-    const size = selectedSize();
-    pastilles.forEach((input) => {
-      const available = variantsData.some(
-        (v) => v.option1 === size && v.option2 === input.value && v.available,
-      );
-      const label = input.closest('label');
-      if (available) {
-        input.disabled = false;
-        if (label) { label.classList.remove('grayscale', 'cursor-not-allowed'); label.classList.add('cursor-pointer'); }
-      } else {
-        input.disabled = true;
-        if (label) { label.classList.add('grayscale', 'cursor-not-allowed'); label.classList.remove('cursor-pointer'); }
-        // Si la pastille indisponible était cochée, basculer sur la 1re disponible (-> change : variante + prix).
-        if (input.checked) {
-          const fallback = pastilles.find((p) =>
-            variantsData.some((v) => v.option1 === size && v.option2 === p.value && v.available),
-          );
-          if (fallback) fallback.click();
-        }
+  const size = mmaSelectedPosterSize();
+  pastilles.forEach((input) => {
+    const available = variantsData.some(
+      (v) => v.option1 === size && v.option2 === input.value && v.available,
+    );
+    const label = input.closest('label');
+    if (available) {
+      input.disabled = false;
+      if (label) { label.classList.remove('grayscale', 'cursor-not-allowed'); label.classList.add('cursor-pointer'); }
+    } else {
+      input.disabled = true;
+      if (label) { label.classList.add('grayscale', 'cursor-not-allowed'); label.classList.remove('cursor-pointer'); }
+      // Si la pastille indisponible était cochée, basculer sur la 1re disponible (-> change : variante + prix).
+      if (input.checked) {
+        const fallback = pastilles.find((p) =>
+          variantsData.some((v) => v.option1 === size && v.option2 === p.value && v.available),
+        );
+        if (fallback) fallback.click();
       }
-    });
-  }
-
-  document.addEventListener('change', (e) => {
-    const t = e.target;
-    if (t.matches('painting-variant-picker input[name="option1"]')) {
-      syncFrameAvailability();
-    }
-    if (t.matches('painting-variant-picker input[data-frame-mode]')) {
-      syncColorProperty();
     }
   });
+}
 
-  // État initial (le HTML rend déjà la pastille « Sans cadre » cochée + propriétés désactivées).
-  syncFrameAvailability();
-  syncColorProperty();
-})();
-
-// ===== Poster — « Contour blanc » (passe-partout) : échange les visuels galerie/popup « sans bord » <->
-// « avec bord blanc » et pose la property _passe_partout. UN SEUL <img> par tuile (data-reg-* / data-pp-*)
-// -> indices carrousel/popup INCHANGÉS ; les versions passe-partout ne se TÉLÉCHARGENT qu'au 1er « Avec ».
-// N'existe que si le picker a rendu la rangée (data-white-border-row) -> zéro effet ailleurs.
-(function initPosterWhiteBorder() {
-  const row = document.querySelector('[data-white-border-row]');
-  if (!row) return;
+// --- Contour blanc (passe-partout) : échange les visuels galerie/popup « sans bord » <-> « avec bord
+//     blanc » et pose la property _passe_partout. UN SEUL <img> par tuile (data-reg-* / data-pp-*) ->
+//     indices carrousel/popup INCHANGÉS ; les versions passe-partout ne se TÉLÉCHARGENT qu'au 1er « Avec ». ---
+function mmaApplyWhiteBorderSwap(scope, on) {
+  scope.querySelectorAll('[data-pp-swap]').forEach((img) => {
+    const ss = on ? img.dataset.ppSrcset : img.dataset.regSrcset;
+    const s = on ? img.dataset.ppSrc : img.dataset.regSrc;
+    const a = on ? img.dataset.ppAlt : img.dataset.regAlt;
+    if (ss != null) img.srcset = ss; // déclenche le (télé)chargement de la version voulue
+    if (s) img.src = s;
+    if (a) img.alt = a;
+  });
+}
+function mmaSetWhiteBorder(on) {
+  mmaApplyWhiteBorderSwap(document, on);
   const wbName = document.querySelector('.product-properties [data-wb-name]');
   const wbFlag = document.querySelector('.product-properties [data-wb-flag]');
+  if (wbName) wbName.disabled = !on;
+  if (wbFlag) wbFlag.disabled = !on;
+  // Drapeau global -> les clones du popup (créés à l'ouverture) reflètent le choix courant.
+  document.body.classList.toggle('poster-pp-on', on);
+}
+// Le carrousel applique ce swap au clone du popup à l'ouverture (cf. openPopup) pour refléter le choix.
+// Toujours défini (garde interne sur poster-pp-on) -> no-op tant qu'aucun contour blanc n'est actif.
+window.__applyWhiteBorderSwap = (scope) => {
+  if (scope && document.body.classList.contains('poster-pp-on')) mmaApplyWhiteBorderSwap(scope, true);
+};
 
-  // Applique le swap reg<->pp aux <img data-pp-swap> d'un scope (galerie entière ou clone du popup).
-  function applySwap(scope, on) {
-    scope.querySelectorAll('[data-pp-swap]').forEach((img) => {
-      const ss = on ? img.dataset.ppSrcset : img.dataset.regSrcset;
-      const s = on ? img.dataset.ppSrc : img.dataset.regSrc;
-      const a = on ? img.dataset.ppAlt : img.dataset.regAlt;
-      if (ss != null) img.srcset = ss; // déclenche le (télé)chargement de la version voulue
-      if (s) img.src = s;
-      if (a) img.alt = a;
-    });
-  }
-
-  function setWhiteBorder(on) {
-    applySwap(document, on);
-    if (wbName) wbName.disabled = !on;
-    if (wbFlag) wbFlag.disabled = !on;
-    // Drapeau global -> les clones du popup (créés à l'ouverture) reflètent le choix courant.
-    document.body.classList.toggle('poster-pp-on', on);
-  }
-
+// Écouteurs délégués attachés UNE SEULE fois : ils re-dérivent l'état du DOM courant à chaque
+// événement -> insensibles au remplacement de #MainContent (bascule Poster/Toile sans rechargement).
+if (!window.__mmaMainProductDelegated) {
+  window.__mmaMainProductDelegated = true;
   document.addEventListener('change', (e) => {
-    if (e.target.matches('[data-white-border]')) {
-      setWhiteBorder(e.target.dataset.whiteBorder === 'on');
-    }
+    const t = e.target;
+    if (!t || typeof t.matches !== 'function') return;
+    if (t.matches('painting-variant-picker input[name="option1"]')) mmaSyncPosterFrameAvailability();
+    if (t.matches('painting-variant-picker input[data-frame-mode]')) mmaSyncPosterColorProperty();
+    if (t.matches('[data-white-border]')) mmaSetWhiteBorder(t.dataset.whiteBorder === 'on');
   });
+}
 
-  // Le carrousel applique ce swap au clone du popup à l'ouverture (cf. openPopup) pour refléter le choix.
-  window.__applyWhiteBorderSwap = (scope) => {
-    if (scope && document.body.classList.contains('poster-pp-on')) applySwap(scope, true);
-  };
-
-  // État initial = « Sans contour blanc » (défaut) : les <img> sont déjà la version sans bord, rien à faire.
-})();
+// (Ré)initialise l'état des options poster : au 1er chargement ET après une bascule Poster/Toile.
+// Cadre : le HTML rend déjà « Sans cadre » coché + propriétés désactivées ; on calcule la disponibilité
+// des couleurs pour la taille par défaut. Contour blanc : défaut « Sans » = état déjà rendu par le
+// serveur -> rien à forcer ici (le drapeau poster-pp-on est remis à zéro par le moteur de bascule).
+window.mmaInitPosterOptions = function mmaInitPosterOptions() {
+  mmaSyncPosterFrameAvailability();
+  mmaSyncPosterColorProperty();
+};
+window.mmaInitPosterOptions();
