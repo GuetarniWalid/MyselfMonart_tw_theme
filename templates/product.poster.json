@@ -1,0 +1,593 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "breadcrumb_RCxFAG": {
+      "type": "breadcrumb",
+      "settings": {}
+    },
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "trustpilot_review_9q3NVM": {
+          "type": "trustpilot_review",
+          "settings": {
+            "link": "https://fr.trustpilot.com/review/myselfmonart.com",
+            "margin_bottom": "mb-4"
+          }
+        },
+        "short_title_9m74gE": {
+          "type": "short_title",
+          "settings": {
+            "show_likes": true,
+            "margin_bottom": "mb-2"
+          }
+        },
+        "variant_picker_YiA9jN": {
+          "type": "variant_picker",
+          "settings": {}
+        },
+        "buy_qrRzcg": {
+          "type": "buy",
+          "settings": {
+            "text": "Commander",
+            "show_payment_icons": true,
+            "margin_bottom": "mb-8",
+            "is_dynamic_variant": false,
+            "show_promotion": false,
+            "promotion_discount": 20,
+            "promotion_discount_unit": "%",
+            "promotion_reason": "Soldes d'hiver",
+            "promotion_date": ""
+          }
+        },
+        "text_benefits_poster": {
+          "type": "text",
+          "settings": {
+            "text": "<ul><li><strong>Un tirage photo HD, éclatant</strong> — vrai papier photo, couleurs vives et détails nets, impression sans bordure.</li><li><strong>À encadrer selon vos envies</strong> — un cadre standard du commerce suffit, votre mur-galerie prend vie.</li><li><strong>L’art qui se renouvelle</strong> — un format léger que l’on change au gré des saisons et des humeurs.</li></ul>"
+          }
+        },
+        "collapsible_tab_poster_ou_toile": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Poster ou toile : lequel choisir ?",
+            "icon": "star",
+            "content": "<p>Une même œuvre, deux façons de l’habiter — à vous de choisir celle qui vous ressemble aujourd’hui.</p><p><strong>Le poster, c’est la liberté.</strong> Un format papier léger et accessible, à encadrer vous-même avec un cadre standard du commerce, ou à poser tel quel. On le déplace, on le compose en mur-galerie, on le renouvelle au gré des envies. Idéal pour une première déco, un petit budget, une location ou un cadeau qui a du goût. Le rendu ? Un vrai papier photo, un tirage HD aux couleurs éclatantes.</p><p><strong>La version sur toile, c’est la pièce forte.</strong> Celle qu’on installe pour durer, qui donne le ton d’un mur et qu’on ne change pas. Plus enveloppante, plus présente — pensée pour rester.</p><p>Envie de la découvrir sur toile ? Utilisez la bascule <em>Poster / Toile</em> en haut de page pour voir la même œuvre en version durable.</p>",
+            "page": ""
+          }
+        },
+        "collapsible_tab_finitions": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Le poster & ses finitions",
+            "icon": "clipboard",
+            "content": "<h3>Un vrai tirage photo</h3><p>Votre affiche est une reproduction en haute définition, imprimée sur un vrai papier photo. Les couleurs sont éclatantes et fidèles, les détails d’une grande netteté. L’image s’imprime bord à bord, sans bordure — un rendu plein cadre, épuré et minimaliste.</p><p>Quatre formats pour trouver le vôtre : <strong>30×40</strong> (petit mur ou composition), <strong>60×80</strong> (au-dessus d’un meuble), <strong>75×100</strong> et <strong>90×120 cm</strong> (la pièce forte, au-dessus d’un canapé ou d’un lit). En un clic, ajoutez le <strong>contour blanc</strong> : une marge blanche autour du visuel, pour un effet galerie plus chic qui laisse respirer l’image.</p><h3>Le cadre, en option</h3><p><strong>Sans cadre</strong> : l’affiche seule, à encadrer selon vos envies avec un cadre standard du commerce. <em>Le cadre n’est pas inclus</em> — mais toute liberté de composer vous appartient. <strong>Avec cadre</strong> : livrée prête à accrocher, en cinq finitions au choix — blanc, noir mat, chêne clair, noyer, argent ancien.</p>",
+            "page": ""
+          }
+        },
+        "collapsible_tab_livraison": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Livraison, paiement & délais",
+            "icon": "truck",
+            "content": "<ul><li><strong>Livraison offerte partout.</strong> Aucun minimum, en colis suivi jusqu'à votre porte.</li><li><strong>Fabrication à la demande :</strong> comptez 3 à 4 jours de fabrication, puis 3 à 5 jours ouvrés de livraison. Votre numéro de suivi vous est envoyé dès l'expédition.</li><li><strong>Paiement en 3 fois sans frais</strong> avec Klarna dès 50 €.</li><li><em>Conçu en France, imprimé en Europe.</em></li></ul>",
+            "page": ""
+          }
+        },
+        "collapsible_tab_retour": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Retour & satisfaction",
+            "icon": "return",
+            "content": "<h3>14 jours pour changer d'avis</h3><p>Votre affiche ne trouve pas sa place ? Vous avez 14 jours après réception pour nous la retourner. On vous guide, simplement — votre satisfaction compte plus qu'une vente.</p><h3>Arrivée impeccable, garantie</h3><p>Chaque affiche part soigneusement protégée. Dans le cas rare où elle arriverait abîmée par le transport, envoyez-nous une photo : on vous réimprime et réexpédie une nouvelle affiche, sans frais. 🤍</p>",
+            "page": ""
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {
+            "tone": "subtitle",
+            "font_size": "text-lg",
+            "margin_bottom": "mb-2"
+          }
+        },
+        "description_Fw7xRB": {
+          "type": "description",
+          "settings": {}
+        },
+        "shop_arguments_poster": {
+          "type": "shop_arguments",
+          "settings": {
+            "argument_1_icon": "<svg width=\"30\" viewbox=\"0 0 360 360\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M136.606 21.152C123.406 32.768 109.43 45.016 105.549 48.37C101.668 51.724 85.8058 65.605 70.2998 79.218L42.1068 103.968H22.3057C8.23875 103.968 2.15875 104.315 1.30575 105.168C-0.43525 106.909 -0.43525 305.027 1.30575 306.768C3.05075 308.513 305.161 308.513 306.906 306.768C308.647 305.027 308.647 106.909 306.906 105.168C306.059 104.321 300.25 103.968 287.152 103.968H268.599L216.606 51.968C181.977 17.334 163.944 -0.020981 162.61 1.90349e-05C161.454 0.019019 150.444 8.97502 136.606 21.152ZM209.606 56.968L256.598 103.968H156.352C101.217 103.968 56.1058 103.785 56.1058 103.562C56.1058 103.338 60.2678 99.469 65.3558 94.964C70.4438 90.459 76.1837 85.354 78.1117 83.62C80.0397 81.887 91.9297 71.468 104.534 60.468C117.139 49.468 135.136 33.629 144.529 25.269C153.921 16.91 161.833 10.048 162.11 10.019C162.387 9.99102 183.76 31.118 209.606 56.968ZM289.106 117.468L283.674 122.968H154.106H24.5378L19.1058 117.468L13.6738 111.968H154.106H294.538L289.106 117.468ZM18.1058 206.468V284.543L13.1058 289.468L8.10575 294.393V206.468V118.543L13.1058 123.468L18.1058 128.393V206.468ZM300.106 206.68V294.393L295.106 289.468L290.106 284.543V206.54V128.537L294.818 123.752C297.41 121.121 299.66 118.968 299.818 118.968C299.977 118.968 300.106 158.439 300.106 206.68ZM281.106 198.21V265.453L256.848 241.21C241.48 225.851 231.864 216.968 230.607 216.968C229.358 216.968 220.747 224.838 207.357 238.217L186.09 259.466L144.131 217.467C112.699 186.006 101.495 175.385 99.4757 175.136C97.1097 174.844 92.5268 179.056 61.9428 209.631L27.1058 244.457V187.713V130.968H154.106H281.106V198.21ZM187.824 155.344C176.25 159.661 169.054 170.811 170.641 181.968C173.48 201.922 196.691 210.887 211.581 197.781C224.578 186.34 222.741 166.706 207.79 157.268C202.803 154.12 193.506 153.224 187.824 155.344ZM203.237 164.553C212.427 169.246 214.83 181.657 208.044 189.386C197.66 201.212 179.106 194.564 179.106 179.017C179.106 166.665 192.11 158.87 203.237 164.553ZM141.833 227.468C165.065 250.843 184.845 269.968 185.788 269.968C186.73 269.968 197.209 260.298 209.072 248.479L230.643 226.99L255.874 252.236C269.752 266.122 281.106 278.267 281.106 279.225C281.106 280.873 274.191 280.968 154.106 280.968H27.1058V268.723V256.478L62.8507 220.723C82.5098 201.058 98.8197 184.968 99.0947 184.968C99.3687 184.968 118.602 204.093 141.833 227.468ZM289.606 294.968L294.531 299.968H154.106H13.6807L18.6058 294.968L23.5308 289.968H154.106H284.681L289.606 294.968Z\" fill=\"black\"></path>\n</svg>",
+            "argument_1_text": "Tirage photo HD sur vrai papier photo — couleurs éclatantes, détails nets, impression sans bordure.",
+            "argument_2_icon": "<svg width=\"37\" height=\"30\" viewbox=\"0 0 32 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M16 19.3335C18.1217 19.3335 20.1566 18.4906 21.6569 16.9904C23.1571 15.4901 24 13.4552 24 11.3335C24 9.21176 23.1571 7.17693 21.6569 5.67664C20.1566 4.17635 18.1217 3.3335 16 3.3335C13.8783 3.3335 11.8434 4.17635 10.3431 5.67664C8.84286 7.17693 8 9.21176 8 11.3335C8 13.4552 8.84286 15.4901 10.3431 16.9904C11.8434 18.4906 13.8783 19.3335 16 19.3335Z\" fill=\"#00FF73\" fill-opacity=\"0.5\" stroke=\"black\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path>\n<path d=\"M21.334 28.667C22.3846 28.667 23.4248 28.4601 24.3955 28.058C25.3661 27.656 26.248 27.0667 26.9908 26.3238C27.7337 25.581 28.323 24.6991 28.725 23.7285C29.1271 22.7579 29.334 21.7176 29.334 20.667C29.334 19.6164 29.1271 18.5761 28.725 17.6055C28.323 16.6349 27.7337 15.753 26.9908 15.0101C26.248 14.2673 25.3661 13.678 24.3955 13.276C23.4248 12.8739 22.3846 12.667 21.334 12.667C19.2123 12.667 17.1774 13.5098 15.6771 15.0101C14.1768 16.5104 13.334 18.5453 13.334 20.667C13.334 22.7887 14.1768 24.8236 15.6771 26.3238C17.1774 27.8241 19.2123 28.667 21.334 28.667Z\" fill=\"#001EFF\" fill-opacity=\"0.5\" stroke=\"black\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path>\n<path d=\"M10.667 28.667C11.7176 28.667 12.7579 28.4601 13.7285 28.058C14.6991 27.656 15.581 27.0667 16.3238 26.3238C17.0667 25.581 17.656 24.6991 18.058 23.7285C18.4601 22.7579 18.667 21.7176 18.667 20.667C18.667 19.6164 18.4601 18.5761 18.058 17.6055C17.656 16.6349 17.0667 15.753 16.3238 15.0101C15.581 14.2673 14.6991 13.678 13.7285 13.276C12.7579 12.8739 11.7176 12.667 10.667 12.667C8.54526 12.667 6.51043 13.5098 5.01014 15.0101C3.50985 16.5104 2.66699 18.5453 2.66699 20.667C2.66699 22.7887 3.50985 24.8236 5.01014 26.3238C6.51043 27.8241 8.54526 28.667 10.667 28.667Z\" fill=\"#FF0000\" fill-opacity=\"0.5\" stroke=\"black\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path>\n</svg>",
+            "argument_2_text": "Des couleurs justes, des détails nets — l'image se lit franchement, fidèle à l'écran.",
+            "argument_3_icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"37\" height=\"32\" viewbox=\"0 0 24 24\"><path fill=\"currentColor\" d=\"m12 11.675l-1.565 1.223q-.131.087-.252.003t-.071-.22l.592-1.985l-1.558-1.13q-.125-.087-.065-.23t.196-.144h1.939l.592-1.973q.05-.136.192-.136t.192.136l.593 1.973h1.932q.137 0 .2.143t-.063.23l-1.563 1.131l.592 1.985q.05.136-.071.22t-.252-.003zm0 8.287l-3.963 1.184q-.385.137-.711-.115T7 20.375v-5.504q-.95-.934-1.475-2.188T5 10q0-2.927 2.036-4.963T12 3t4.964 2.036T19 10q0 1.429-.525 2.683T17 14.87v5.504q0 .404-.326.656t-.71.115zM12 16q2.5 0 4.25-1.75T18 10t-1.75-4.25T12 4T7.75 5.75T6 10t1.75 4.25T12 16m-4 4.044l4-1.121l4 1.121v-4.33q-.836.615-1.859.95Q13.12 17 12 17t-2.141-.335T8 15.714zm4-2.165\"></path></svg>",
+            "argument_3_text": "À encadrer selon vos envies : un cadre standard, et votre mur-galerie prend vie.",
+            "argument_4_icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"37\" height=\"25\" viewbox=\"0 0 48 48\"><g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"3\"><path d=\"M30.24 6.212q.387.213.76.444c4.937 3.058 8.238 8.46 8.313 14.63l3.747 5.223c.563.785.465 1.846-.363 2.344c-.83.5-2.063 1.084-3.734 1.488l-.566 6.718a3 3 0 0 1-3.358 2.725l-2.8-.346V43a2 2 0 0 1-1.998 2H13.014a2 2 0 0 1-1.999-2v-7.5c-4.295-3.192-7.075-8.275-7.075-14c0-6.26 3.321-11.75 8.315-14.844\"></path><path d=\"M17.023 14.057a8 8 0 1 0 7.954 0Q24.998 12.738 25 11c0-2.551-.044-4.405-.09-5.645c-.043-1.2-.854-2.187-2.05-2.285A24 24 0 0 0 21 3c-.732 0-1.35.029-1.86.07c-1.196.098-2.007 1.085-2.05 2.285C17.043 6.595 17 8.449 17 11q.001 1.739.023 3.057\"></path><path d=\"M21 29c3 3 7.6 5 12 5\"></path></g></svg>",
+            "argument_4_text": "Une question ? Une vraie personne vous répond, 7 jours sur 7."
+          }
+        }
+      },
+      "block_order": [
+        "trustpilot_review_9q3NVM",
+        "short_title_9m74gE",
+        "variant_picker_YiA9jN",
+        "buy_qrRzcg",
+        "text_benefits_poster",
+        "collapsible_tab_poster_ou_toile",
+        "collapsible_tab_finitions",
+        "collapsible_tab_livraison",
+        "collapsible_tab_retour",
+        "title",
+        "description_Fw7xRB",
+        "shop_arguments_poster"
+      ],
+      "settings": {
+        "start_from_media": 3
+      }
+    },
+    "customer_testimonial_myiwee": {
+      "type": "testimonials-carousel",
+      "blocks": {
+        "image_text_E4gkJD": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-femme-abstrait-crayon-pastel.jpg",
+            "image_asset": "",
+            "message": "Très beau tableau ! Je suis ravie de mon achat, merci.. Léa M"
+          }
+        },
+        "image_text_PWRHhc": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-alluminium-japonais-geisha-avis-clien.jpg",
+            "image_asset": "",
+            "message": "Je suis juste en admiration devant cette œuvre et vous remercie de sortir de l’ordinaire pour habiller nos murs!!!\nUn grand merci. Sandra B"
+          }
+        },
+        "image_text_fxBift": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/toile-moderne-frida-fleurs.jpg",
+            "image_asset": "",
+            "message": "Dès l’ouverture du carton, j’ai trouvé la toile magnifique.\nEncore plus belle que sur la photo du site.\nJe l’ai installée. Et l’effet est «  waouh ! »\nTrès jolie toile ! Très beau site !\nJe suis ravi de mon achat. Cécile C"
+          }
+        },
+        "image_text_Wckbj6": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-contemporain-abstrait-femme-ronde.jpg",
+            "image_asset": "",
+            "message": "Reçu mon tableau et franchement, je ne regrette pas une seconde ! Les couleurs sont incroyables, l’originalité saute aux yeux… Impossible de ne pas s’arrêter devant. Sophie D"
+          }
+        },
+        "image_text_DCdKLC": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableauphotographie-zebre-animaux-zebre-sauvage.jpg",
+            "image_asset": "",
+            "message": "L'animal, majestueux et solitaire trône dans mon salon au dessus de ma console... Peut on dire qu il est magnifique ? Assurément oui et je l adore!\nPatricia G."
+          }
+        },
+        "image_text_7ERwAp": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-gaming-marvel-iron-man.jpg",
+            "image_asset": "",
+            "message": "Très content de mon achat ! Mon fils est ravi il va faire de beaux rêves de super-héros\n. Eugene D"
+          }
+        },
+        "image_text_ragCcn": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/peinture-femme-noire-muse.jpg",
+            "image_asset": "",
+            "message": "Magnifique tableau et très design, correspond parfaitement à la description.  Morel E"
+          }
+        },
+        "image_text_Riirzd": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/Tableau-chambre-bebe_f6e62e6e-707b-41df-aa17-bdad25ef3385.jpg",
+            "image_asset": "",
+            "message": "Juste une petite photo avec le cadre mis en place encore un grand merci à vous 🥰. \nElodie G"
+          }
+        },
+        "image_text_qM9rBh": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/deco-mural-toile-marilyn-monroe-pop-art.jpg",
+            "image_asset": "",
+            "message": "Envoie très rapide et tableau encore plus beau que sur le site.\nParfait je recommande !!!\nJessica S"
+          }
+        },
+        "image_text_xLzjRk": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/decoration-mural-cadre-bois-cactus-paysage-colore.jpg",
+            "image_asset": "",
+            "message": "Super contente du rendu de ces cadres en bois ! 🌵 Ça apporte tellement de chaleur et de gaieté à mon salon, j’adore ! 😍 Lina O"
+          }
+        },
+        "image_text_jLAVDk": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/avis-tableau-plexi_2.jpg",
+            "image_asset": "",
+            "message": "Tableau magnifique, très contente du support choisi en plexiglas réalisé avec soin. Joëlle N"
+          }
+        },
+        "image_text_yxnGkz": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-animaux-rhinoceros_b1022df5-0085-43a4-93b7-011dd579d316.jpg",
+            "image_asset": "",
+            "message": "AMAZING ! Le poster est magnifique, il fait son effet dans mon salon. Vanessa K"
+          }
+        },
+        "image_text_PTqtay": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/deco-mural-ying-yang.jpg",
+            "image_asset": "",
+            "message": "Le tableau est magnifique! Alexandre V"
+          }
+        },
+        "image_text_NnGTgN": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-fruit-legume-cuisine-ananas-colore.jpg",
+            "image_asset": "",
+            "message": "Trop contente de mon tableau, les couleurs sont aussi flashy que sur les photos du site.\nSarah F"
+          }
+        },
+        "image_text_YVdFr3": {
+          "type": "image-text",
+          "disabled": true,
+          "settings": {
+            "image": "shopify://shop_images/tableau-street-art-femme-noire.jpg",
+            "image_asset": "",
+            "message": "Parfait\nSuper rendu. \tMariane B"
+          }
+        },
+        "image_text_VRyJn9": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-panoramique-payasage-foret-lac.jpg",
+            "image_asset": "",
+            "message": "Ce tableau est magnifique et tellement immersif ! Il donne une vraie sensation d’évasion et transforme l’ambiance de mon salon. Pierre S"
+          }
+        },
+        "image_text_FpM3Nt": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-zen-japonais-geisha_59746ee5-1329-4a3a-94ad-bc201116687c.jpg",
+            "image_asset": "",
+            "message": "Nous sommes très satisfait de notre achat\nTrès bonne qualité\nNous ferons d´autres achats chez vous.\nBernard D"
+          }
+        },
+        "image_text_UfccPh": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-pour-cuisine-epices-colore.jpg",
+            "image_asset": "",
+            "message": "Ravie de mon achat,\ntrès beau rendu des couleurs qui sont éclatantes. \nYannick R."
+          }
+        },
+        "image_text_hCDnam": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/Tableau-chambre_a164de8b-ed28-4326-926b-92bbe380279b.jpg",
+            "image_asset": "",
+            "message": "Le tableau est super, et encore plus beau en vrai ! Arrivé rapidement et bien protégé. Alain N"
+          }
+        },
+        "image_text_XaycRQ": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/Tableau-decoration_44dcf7be-75b3-46aa-810b-3020d3b9dc06.jpg",
+            "image_asset": "",
+            "message": "Très belle toile, les couleurs sont super et brillante. Marie K"
+          }
+        },
+        "image_text_QfHTN6": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/Tableau-deco-noir-et-blanc.jpg",
+            "image_asset": "",
+            "message": "Top, rien à dire de plus. \nGuillaume H"
+          }
+        },
+        "image_text_eAxGcM": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-comics-super-man.jpg",
+            "image_asset": "",
+            "message": "Nickel, très satisfait c'est ma 3e commande. Hugo G"
+          }
+        },
+        "image_text_DbNc9D": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-superman-aquarelle.jpg",
+            "image_asset": "",
+            "message": "TOP, tableau reçu rapidement avec suivie. Hugo G"
+          }
+        },
+        "image_text_pFY7GA": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-lion-impression-alluminuim.jpg",
+            "image_asset": "",
+            "message": "TOP QUALITÉ,  j'ai choisi l'impression sur aluminium et l'image est vraiment top. Ethan V"
+          }
+        }
+      },
+      "block_order": [
+        "image_text_E4gkJD",
+        "image_text_PWRHhc",
+        "image_text_fxBift",
+        "image_text_Wckbj6",
+        "image_text_DCdKLC",
+        "image_text_7ERwAp",
+        "image_text_ragCcn",
+        "image_text_Riirzd",
+        "image_text_qM9rBh",
+        "image_text_xLzjRk",
+        "image_text_jLAVDk",
+        "image_text_yxnGkz",
+        "image_text_PTqtay",
+        "image_text_NnGTgN",
+        "image_text_YVdFr3",
+        "image_text_VRyJn9",
+        "image_text_FpM3Nt",
+        "image_text_UfccPh",
+        "image_text_hCDnam",
+        "image_text_XaycRQ",
+        "image_text_QfHTN6",
+        "image_text_eAxGcM",
+        "image_text_DbNc9D",
+        "image_text_pFY7GA"
+      ],
+      "settings": {
+        "eyebrow": "Ils habillent leurs murs",
+        "heading_level": "h2",
+        "title": "+1 000 intérieurs qui ont trouvé leur affiche",
+        "lead": "La plus belle preuve de notre travail, ce sont les photos que vous nous envoyez : vos affiches accrochées, vos murs qui prennent vie.",
+        "review_count": 81,
+        "trustpilot_score": 45,
+        "trustpilot_link": "",
+        "emit_review_jsonld": false
+      }
+    },
+    "posterB_matiere": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify://shop_images/poster-papier-photo-hd-detail.jpg",
+        "title": "Un tirage photo, une vraie qualité",
+        "description": "<p>Ce n’est pas l’affiche bon marché qu’on scotche et qu’on oublie. Imprimé pour vous, à la commande, en haute définition sur un <strong>vrai papier photo</strong>, votre poster révèle des <strong>couleurs éclatantes</strong> et fidèles, des détails d’une grande netteté.</p><p>L’image s’imprime <strong>bord à bord, sans bordure</strong> : un rendu plein cadre, épuré et minimaliste, qui capte le regard sans jamais le charger. <em>Conçu en France, imprimé en Europe.</em></p>",
+        "layout": "text_first",
+        "enable_blob": false,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#e3fae1",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "posterC_format": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify://shop_images/poster-formats-cadres-finitions.jpg",
+        "title": "Le format et le cadre qui vous ressemblent",
+        "description": "<p>Quatre formats pour trouver le vôtre : <strong>30 × 40 cm</strong> pour un clin d'œil ou une composition, <strong>60 × 80 cm</strong> au-dessus d'un meuble, <strong>75 × 100</strong> et <strong>90 × 120 cm</strong> pour la présence forte d'un mur signature. Un choix sans regret : le format se change aussi facilement qu'une envie.</p><p>Sans cadre, vous recevez l'affiche seule, à encadrer vous-même avec un <strong>cadre standard du commerce</strong>, en toute liberté. Avec cadre, choisissez l'une de nos <strong>cinq finitions</strong> — blanc, noir mat, chêne clair, noyer, argent ancien — et recevez votre poster <strong>prêt à accrocher</strong>. Une envie plus galerie ? L'option <strong>contour blanc</strong> ajoute une marge élégante autour du visuel, pour le laisser respirer.</p>",
+        "layout": "image_first",
+        "enable_blob": false,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#e3fae1",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "posterA_mur": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify://shop_images/poster-mur-galerie-salon-ambiance.jpg",
+        "title": "Un mur-galerie qui vous ressemble",
+        "description": "<p>Il y a ce mur nu qui attend depuis des mois, et cette envie tenace de le voir enfin vivre. Le poster, c'est la façon la plus légère de franchir le pas : un geste simple, un imaginaire qui s'accroche, et la pièce change d'âme.</p><p>Format papier <strong>accessible</strong>, il vous laisse oser sans crainte de vous tromper — on compose, on déplace, on <strong>renouvelle</strong> au gré des saisons. Seul pour une touche juste, ou multiplié en <strong>mur-galerie</strong> pour un ensemble qui raconte votre histoire. Le bel intérieur ne se décrète pas : il se compose, une affiche à la fois.</p>",
+        "layout": "text_first",
+        "enable_blob": false,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#e3fae1",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "product_recommendations_TX9rdQ": {
+      "type": "product-recommendations",
+      "settings": {
+        "heading": "COMPLÉTEZ VOTRE MUR-GALERIE",
+        "number_products_to_display": 10
+      }
+    },
+    "faq_poster_collapsible": {
+      "type": "collapsible-content",
+      "blocks": {
+        "faq_poster_matiere": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Est-ce un vrai poster de qualité, ou une simple affiche fragile ?",
+            "icon": "none",
+            "row_content": "<p>C’est un tirage photo imprimé en <strong>haute définition</strong> sur un <strong>vrai papier photo</strong> : des couleurs éclatantes, des détails nets et fidèles à l’image. L’impression est <strong>sans bordure</strong>, bord à bord, pour un rendu plein cadre, épuré et minimaliste — rien à voir avec une affiche fine bon marché. Chaque tirage est imprimé à la demande, en tirage frais. Conçu en France, imprimé en Europe. Plus de <strong>1000 intérieurs</strong> nous font déjà confiance, avec une note <strong>Trustpilot de 4,5/5</strong>.</p>"
+          }
+        },
+        "faq_poster_cadre_inclus": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Le cadre est-il inclus ? Et le « contour blanc », qu'est-ce que c'est ?",
+            "icon": "none",
+            "row_content": "<p>Cela dépend de l'option que vous choisissez, et tout est clair au moment de commander :</p><ul><li><strong>Sans cadre</strong> : vous recevez l'affiche seule, à encadrer vous-même. Le cadre n'est pas inclus — mais vous gagnez en liberté et en budget.</li><li><strong>Avec cadre</strong> : votre affiche arrive <strong>prête à accrocher</strong>, dans la finition de votre choix (blanc, noir mat, chêne clair, noyer ou argent ancien).</li></ul><p>L'option <strong>« Contour blanc »</strong> ajoute une marge blanche autour du visuel, façon passe-partout de galerie : le motif respire davantage et gagne en élégance une fois encadré. C'est optionnel, en un clic.</p>"
+          }
+        },
+        "faq_poster_encadrer": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Comment encadrer mon affiche ?",
+            "icon": "none",
+            "row_content": "<p>C'est l'un des grands avantages du format : votre affiche s'encadre avec un <strong>cadre standard du commerce</strong>, aux dimensions du poster, sans bricolage ni menuiserie. Privilégiez un cadre sobre — bois clair, noir ou blanc — pour laisser le motif s'exprimer. Vous préférez ne pas chercher ? Choisissez simplement l'option <strong>« Avec cadre »</strong> : l'affiche arrive prête à accrocher.</p>"
+          }
+        },
+        "faq_poster_taille": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Quelle taille choisir pour mon mur ?",
+            "icon": "none",
+            "row_content": "<p>Une règle simple : mesurez la largeur de votre pan de mur et visez une affiche qui en occupe environ les deux tiers. Voici des repères concrets selon nos formats :</p><ul><li><strong>30 × 40 cm</strong> — un petit mur, un coin bureau, ou une composition à plusieurs.</li><li><strong>60 × 80 cm</strong> — au-dessus d'un meuble, d'une console ou d'un lit une place.</li><li><strong>75 × 100 cm</strong> — une pièce forte, au-dessus d'un canapé ou d'un lit.</li><li><strong>90 × 120 cm</strong> — le grand format, pour un mur qui a du caractère.</li></ul><p>Un doute ? Découpez un carton aux dimensions et posez-le au mur quelques instants : vous visualiserez tout de suite. Et comme le format est léger et accessible, vous pouvez en changer sans regret.</p>"
+          }
+        },
+        "faq_poster_mur_galerie": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Comment composer un mur-galerie avec plusieurs affiches ?",
+            "icon": "none",
+            "row_content": "<p>Le mur-galerie (<em>gallery wall</em>) est fait pour le format affiche. Partez d'un fil conducteur — une palette commune ou un thème — puis mêlez quelques formats et cadres assortis. Disposez d'abord vos affiches au sol pour trouver l'équilibre avant de fixer quoi que ce soit, gardez des espaces réguliers, et laissez respirer l'ensemble : un mur réussi respire autant qu'il montre. C'est tout le plaisir du poster — on ajoute, on réorganise, on renouvelle au fil des envies.</p>"
+          }
+        },
+        "faq_poster_livraison": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Quels sont les délais et le coût de livraison ?",
+            "icon": "none",
+            "row_content": "<p><strong>La livraison est offerte partout.</strong> Chaque affiche étant imprimée à la demande, comptez environ <strong>3 à 4 jours</strong> de fabrication, puis <strong>3 à 5 jours ouvrés</strong> de livraison en colis suivi. Vous recevez votre numéro de suivi dès l'expédition. Conçu en France, imprimé en Europe.</p>"
+          }
+        },
+        "faq_poster_retour": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Et si l'affiche ne me convient pas une fois reçue ?",
+            "icon": "none",
+            "row_content": "<p>Vous disposez de <strong>14 jours</strong> après réception pour changer d'avis. Si la taille ou le rendu ne vous convient pas, contactez-nous : nous organisons le retour simplement. Votre satisfaction passe avant tout.</p>"
+          }
+        },
+        "faq_poster_paiement": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Puis-je payer en plusieurs fois ?",
+            "icon": "none",
+            "row_content": "<p>Oui. Dès <strong>50 €</strong> d'achat, réglez en <strong>3 fois sans frais avec Klarna</strong>, directement au moment du paiement. Idéal pour un grand format avec cadre, ou pour composer un mur-galerie de plusieurs affiches sans alourdir le budget. Le paiement est entièrement sécurisé.</p>"
+          }
+        },
+        "faq_poster_ou_toile": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Poster ou toile : lequel choisir ?",
+            "icon": "none",
+            "row_content": "<p>Tout est une question d'usage. Le <strong>poster</strong> est le compagnon de la souplesse : format papier léger, accessible, que l'on encadre soi-même — idéal pour un petit budget, une location, une première déco, un cadeau, ou simplement l'envie de renouveler ses murs régulièrement. La version <strong>sur toile</strong>, elle, s'impose comme la pièce maîtresse durable, destinée à rester en place sur le long terme. Même imaginaire, deux présences différentes. Retrouvez le comparatif détaillé juste au-dessus, ou basculez à tout moment vers la version sur toile pour la découvrir.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_poster_matiere",
+        "faq_poster_cadre_inclus",
+        "faq_poster_encadrer",
+        "faq_poster_taille",
+        "faq_poster_mur_galerie",
+        "faq_poster_livraison",
+        "faq_poster_retour",
+        "faq_poster_paiement",
+        "faq_poster_ou_toile"
+      ],
+      "settings": {
+        "eyebrow": "FAQ",
+        "heading_level": "h2",
+        "heading_size": "medium",
+        "heading_weight": "semibold",
+        "question_size": "medium",
+        "accent_tone": "buy-button",
+        "heading": "QUESTIONS FRÉQUENTES",
+        "lead": "",
+        "background_color": "secondary",
+        "padding_size": "large",
+        "emit_faq_jsonld": true
+      }
+    },
+    "badges_CQWfDx": {
+      "type": "badges",
+      "blocks": {
+        "svg_block_jhdjPx": {
+          "type": "svg_block",
+          "settings": {
+            "badge_logo": "<svg width=\"90\" height=\"86\" viewbox=\"0 0 90 86\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"text-main\">\n<path d=\"M88.97 1H9.5V76.98H88.97V1Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M20.03 76.98L74.2 1\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M29.8101 76.98L83.6401 1\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M50.6899 19.81L64.2299 1\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M38.6499 76.9798L51.8199 58.5498\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M21.5501 6.27002C21.5501 12.6 18.1301 18.26 13.3101 18.26C18.1301 18.26 21.5501 23.92 21.5501 30.25C21.5501 23.92 24.9701 18.26 29.7901 18.26C24.9701 18.26 21.5501 12.6 21.5501 6.27002Z\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"0.5\" stroke-miterlimit=\"10\"></path>\n<path d=\"M33.16 6.27002C33.16 9.43002 31.45 12.26 29.04 12.26C31.45 12.26 33.16 15.09 33.16 18.25C33.16 15.09 34.87 12.26 37.28 12.26C34.87 12.26 33.16 9.43002 33.16 6.27002Z\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"0.5\" stroke-miterlimit=\"10\"></path>\n<path d=\"M31.2902 18.2603C31.2902 21.4203 29.5802 24.2503 27.1702 24.2503C29.5802 24.2503 31.2902 27.0803 31.2902 30.2403C31.2902 27.0803 33.0002 24.2503 35.4102 24.2503C33.0002 24.2503 31.2902 21.4203 31.2902 18.2603Z\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"0.5\" stroke-miterlimit=\"10\"></path>\n<path d=\"M1.01001 10.3999V84.0099\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M77.81 84.5598L0 84.0098\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n</svg>",
+            "logo_size": 60,
+            "background_plus_border": false,
+            "heading": "Un tirage photo HD",
+            "text": "Vrai papier photo, reproduction haute définition : couleurs éclatantes, détails nets, impression sans bordure."
+          }
+        },
+        "svg_block_BrGJVg": {
+          "type": "svg_block",
+          "settings": {
+            "badge_logo": "<svg width=\"80\" height=\"83\" viewbox=\"0 0 80 83\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"text-main\">\n<path d=\"M78.74 1H1V81.65H78.74V1Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M39.87 13.04H68.49V72.42H11.25V13.04H20.53\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M39.87 34.7L30.2 24.07L20.53 34.7V1H39.87V34.7Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n</svg>",
+            "logo_size": 55,
+            "background_plus_border": false,
+            "heading": "Des couleurs éclatantes",
+            "text": "Couleurs éclatantes et fidèles, détails nets. Chaque tirage est imprimé à la demande, pour un rendu impeccable."
+          }
+        },
+        "svg_block_gqrreR": {
+          "type": "svg_block",
+          "settings": {
+            "badge_logo": "<svg width=\"98\" height=\"86\" viewbox=\"0 0 98 86\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"text-main\">\n<path d=\"M85.3701 1H96.3301V12.04\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M96.33 73.1602V84.5602H84.49\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M92.68 4.41992L82.21 13.5499\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M82.21 71.9199L92.68 81.0599\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M74.3701 17.5498H22.1801C19.7998 17.5498 17.8701 19.4795 17.8701 21.8598V62.9898C17.8701 65.3702 19.7998 67.2998 22.1801 67.2998H74.3701C76.7505 67.2998 78.6801 65.3702 78.6801 62.9898V21.8598C78.6801 19.4795 76.7505 17.5498 74.3701 17.5498Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\" stroke-linecap=\"round\"></path>\n<path d=\"M66.91 37.09C70.0525 37.09 72.6 34.5425 72.6 31.4C72.6 28.2575 70.0525 25.71 66.91 25.71C63.7675 25.71 61.22 28.2575 61.22 31.4C61.22 34.5425 63.7675 37.09 66.91 37.09Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M19.8301 48.4701C19.8301 48.4701 28.0701 41.4101 33.9501 40.6201C39.8301 39.8301 48.2701 42.4201 48.2701 42.4201C48.2701 42.4201 56.3101 46.5001 59.4501 48.4601C62.5901 50.4201 66.1201 51.9901 69.2601 52.3801C72.4001 52.7701 77.1101 52.3801 77.1101 52.3801\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M96.33 1H1V84.56H96.33V1Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M1 12.04V1H11.82\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M1 73.1602V84.5602H7.14H11.08\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M4.6499 4.29004L15.1199 13.42\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M15.1199 71.9199L4.6499 81.0599\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n</svg>",
+            "logo_size": 60,
+            "background_plus_border": false,
+            "heading": "À composer sur votre mur",
+            "text": "Du 30×40 au 90×120, seule ou en mur-galerie. Un format léger à renouveler au gré de vos envies."
+          }
+        },
+        "svg_block_K7XcH8": {
+          "type": "svg_block",
+          "settings": {
+            "badge_logo": "<svg width=\"116\" height=\"90\" viewbox=\"0 0 116 90\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"text-main\">\n<path d=\"M25.87 54.9402H1V17.9502H48.24V39.8702\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M25.87 48.5801H8.51001V26.3301H41.67V39.8701\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M18.8301 17.9498L25.0901 11.5898L32.9101 17.9498\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M54.79 39.5099V7.35986H114.94V58.4899H89.38\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M62.3101 38.7499V14.8799H108.55V52.4799H89.3801\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M62.31 14.8799L54.79 7.35986\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M108.55 14.8799L114.94 7.35986\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M114.94 58.49L108.55 52.48\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M89.37 39.8701H26.73V88.9701H89.37V39.8701Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M79.22 48.6699H35.54V80.1599H79.22V48.6699Z\" stroke=\"currentColor\" stroke-width=\"2\" stroke-miterlimit=\"10\"></path>\n<path d=\"M79.22 80.1602L89.38 88.9702\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M35.54 80.1602L26.73 88.9702\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M35.54 48.6701L26.73 39.8701\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M89.38 39.8701L79.22 48.6701\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n<path d=\"M77.8201 7.36L84.0801 1L91.9001 7.36\" stroke=\"currentColor\" stroke-miterlimit=\"10\"></path>\n</svg>",
+            "logo_size": 70,
+            "background_plus_border": false,
+            "heading": "Cadre & contour, en option",
+            "text": "Sans cadre, à encadrer vous-même ; avec cadre, prête à accrocher. Le contour blanc en option, pour l'effet galerie."
+          }
+        }
+      },
+      "block_order": [
+        "svg_block_jhdjPx",
+        "svg_block_BrGJVg",
+        "svg_block_gqrreR",
+        "svg_block_K7XcH8"
+      ],
+      "settings": {
+        "title": "CE QUI FAIT LA DIFFÉRENCE",
+        "nb_columns_on_computer": "4",
+        "nb_columns_on_mobile": "2"
+      }
+    }
+  },
+  "order": [
+    "breadcrumb_RCxFAG",
+    "main",
+    "customer_testimonial_myiwee",
+    "posterB_matiere",
+    "posterC_format",
+    "posterA_mur",
+    "product_recommendations_TX9rdQ",
+    "faq_poster_collapsible",
+    "badges_CQWfDx"
+  ],
+  "layout": "product"
+}
