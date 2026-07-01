@@ -340,6 +340,12 @@
         "white_border_without": "Without white border",
         "size_guide": "Size Guide",
         "no_frames_available": "No frames available for this size"
+      },
+      "format_toggle": {
+        "poster": "Poster",
+        "canvas": "Canvas",
+        "aria_label": "Choose format",
+        "switch_to": "Show as {{ format }}"
       }
     },
     "my_likes": {

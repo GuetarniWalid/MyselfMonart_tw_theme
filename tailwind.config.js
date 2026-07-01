@@ -39,6 +39,10 @@ module.exports = {
       boxShadow: {
         '3xl': '1px 12px 50px -1px rgba(0,0,0,0.1)',
         button: '0px 0px 0px 1px rgb(var(--color-main-rgb))',
+        // Pilule sélectionnée du segmented control (bascule Poster/Toile) : anneau marine 1px (dessine le
+        // bord de la pilule blanche sur la piste grise) + ombre douce diffuse (léger soulèvement premium).
+        // Hors-flux (box-shadow) -> aucun décalage 1px entre l'actif <span> et l'inactif <a>.
+        'pill': '0px 0px 0px 1px rgb(var(--color-main-rgb)), 1px 12px 50px -1px rgba(0,0,0,0.1)',
         'neu-xl': '11px 12px 0 rgb(var(--color-main-rgb))',
         'neu-lg': '6px 7px 0 rgb(var(--color-main-rgb))',
         'neu-md': '4px 5px 0 rgb(var(--color-main-rgb))',

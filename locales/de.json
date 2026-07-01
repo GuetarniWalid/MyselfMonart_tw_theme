@@ -110,6 +110,12 @@
         "white_border_without": "Ohne weißen Rand",
         "no_frames_available": "Kein Rahmen für diese Größe verfügbar",
         "size_guide": "Größentabelle"
+      },
+      "format_toggle": {
+        "poster": "Poster",
+        "canvas": "Leinwand",
+        "aria_label": "Format wählen",
+        "switch_to": "Als {{ format }} anzeigen"
       }
     },
     "main_404": {

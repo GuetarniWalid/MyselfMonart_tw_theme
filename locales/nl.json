@@ -111,6 +111,12 @@
         "size_guide": "Maattabel",
         "no_frames_available": "Geen lijst beschikbaar voor dit formaat"
       },
+      "format_toggle": {
+        "poster": "Poster",
+        "canvas": "Canvas",
+        "aria_label": "Formaat kiezen",
+        "switch_to": "Toon als {{ format }}"
+      },
       "accessibility": {
         "skip_to_product_info": "Ga naar de productinformatie"
       }
