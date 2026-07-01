@@ -23,16 +23,38 @@
   if pp_media
     assign pp_alt = pp_media.alt
   endif
+  # Contour blanc activé par défaut (pp_default) : si la tuile a un visuel passe-partout apparié, on rend
+  # DIRECTEMENT la version « avec bord blanc » en primaire (srcset/src/alt) -> pas de flash ni de double
+  # téléchargement au chargement. La version sans bord passe en data-reg-* (chargée seulement si le client
+  # choisit « Sans contour blanc »). Sans pp_default : comportement d'origine (sans bord primaire, pp en data-pp-*).
+  assign use_pp = false
+  if pp_media and pp_default
+    assign use_pp = true
+  endif
 -%}
 {%- capture reg_srcset -%}{%- if media.preview_image.width >= 400 -%}{{ media.preview_image | image_url: width: 400 }} 400w,{%- endif -%}{%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}{%- if media.preview_image.width >= 700 -%}{{ media.preview_image | image_url: width: 700 }} 700w,{%- endif -%}{%- if media.preview_image.width >= 1100 -%}{{ media.preview_image | image_url: width: 1100 }} 1100w,{%- endif -%}{{ media.preview_image | image_url }} {{ media.preview_image.width }}w{%- endcapture -%}
-{%- capture pp_attrs -%}{%- if pp_media -%}{%- capture pp_srcset -%}{%- if pp_media.preview_image.width >= 400 -%}{{ pp_media.preview_image | image_url: width: 400 }} 400w,{%- endif -%}{%- if pp_media.preview_image.width >= 550 -%}{{ pp_media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}{%- if pp_media.preview_image.width >= 700 -%}{{ pp_media.preview_image | image_url: width: 700 }} 700w,{%- endif -%}{%- if pp_media.preview_image.width >= 1100 -%}{{ pp_media.preview_image | image_url: width: 1100 }} 1100w,{%- endif -%}{{ pp_media.preview_image | image_url }} {{ pp_media.preview_image.width }}w{%- endcapture -%} data-pp-swap data-reg-srcset="{{ reg_srcset }}" data-reg-src="{{ media.preview_image | image_url: width: 700 }}" data-reg-alt="{{ img_alt | escape }}" data-pp-srcset="{{ pp_srcset }}" data-pp-src="{{ pp_media.preview_image | image_url: width: 700 }}" data-pp-alt="{{ pp_alt | escape }}"{%- endif -%}{%- endcapture -%}
+{%- assign pp_srcset = '' -%}
+{%- if pp_media -%}{%- capture pp_srcset -%}{%- if pp_media.preview_image.width >= 400 -%}{{ pp_media.preview_image | image_url: width: 400 }} 400w,{%- endif -%}{%- if pp_media.preview_image.width >= 550 -%}{{ pp_media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}{%- if pp_media.preview_image.width >= 700 -%}{{ pp_media.preview_image | image_url: width: 700 }} 700w,{%- endif -%}{%- if pp_media.preview_image.width >= 1100 -%}{{ pp_media.preview_image | image_url: width: 1100 }} 1100w,{%- endif -%}{{ pp_media.preview_image | image_url }} {{ pp_media.preview_image.width }}w{%- endcapture -%}{%- endif -%}
+{%- capture pp_attrs -%}{%- if pp_media -%} data-pp-swap data-reg-srcset="{{ reg_srcset }}" data-reg-src="{{ media.preview_image | image_url: width: 700 }}" data-reg-alt="{{ img_alt | escape }}" data-pp-srcset="{{ pp_srcset }}" data-pp-src="{{ pp_media.preview_image | image_url: width: 700 }}" data-pp-alt="{{ pp_alt | escape }}"{%- endif -%}{%- endcapture -%}
+{%- liquid
+  assign init_srcset = reg_srcset
+  assign init_src = media.preview_image | image_url: width: 700
+  assign init_src_lqip = media.preview_image | image_url: width: 40
+  assign init_alt = img_alt
+  if use_pp
+    assign init_srcset = pp_srcset
+    assign init_src = pp_media.preview_image | image_url: width: 700
+    assign init_src_lqip = pp_media.preview_image | image_url: width: 40
+    assign init_alt = pp_alt | default: img_alt
+  endif
+-%}
 <span class="img-wrapper w-[83.33vw] sm:w-[75vw] md:w-[550px] max-w-full overflow-hidden skeleton flex-none group cursor-pointer flex items-center snap-start">
   {%- if is_lcp -%}
     <img
-      srcset="{{ reg_srcset }}"
-      src="{{ media.preview_image | image_url: width: 700 }}"
+      srcset="{{ init_srcset }}"
+      src="{{ init_src }}"
       sizes="(min-width: 900px) 340px, (min-width: 768px) 550px, (min-width: 640px) 75vw, 83.33vw"
-      alt="{{ img_alt | escape }}"
+      alt="{{ init_alt | escape }}"
       fetchpriority="high"
       loading="eager"
       decoding="async"
@@ -44,10 +66,10 @@
     >
   {%- else -%}
     <img
-      data-srcset="{{ reg_srcset }}"
-      src="{{ media.preview_image | image_url: width: 40 }}"
+      data-srcset="{{ init_srcset }}"
+      src="{{ init_src_lqip }}"
       sizes="(min-width: 900px) 340px, (min-width: 768px) 550px, (min-width: 640px) 75vw, 83.33vw"
-      alt="{{ img_alt | escape }}"
+      alt="{{ init_alt | escape }}"
       loading="lazy"
       width="{{ media.preview_image.width }}"
       height="{{ media.preview_image.height }}"

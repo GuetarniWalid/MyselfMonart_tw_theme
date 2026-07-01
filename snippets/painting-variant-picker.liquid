@@ -247,11 +247,13 @@
             {% endunless %}
         {%- endfor -%}
         {%- comment -%} ===== Contour blanc (passe-partout) — sélecteur Sans/Avec, FEINTÉ (pas une variante) =====
-           2 radios clairs. « Sans contour blanc » = défaut (visuels sans bord blanc affichés/chargés).
-           « Avec contour blanc » -> initPosterWhiteBorder (main-product.js) échange les <img> de galerie vers
-           les versions passe-partout (chargées seulement à ce moment) et active la property. Indépendant du
-           cadre. Property visible « Contour blanc » localisée + `_passe_partout` neutre, dans .product-properties
-           (POST JSON, noms bruts) ; `disabled` par défaut -> « Sans » ne soumet rien. {%- endcomment -%}
+           2 radios clairs. « Avec contour blanc » = DÉFAUT : le serveur rend directement les visuels
+           passe-partout (cf. tw-main-product-image `pp_default`) + le WebGL dessine le liseré (radio « on »
+           coché lu par syncStateFromDOM) + la property est active dès l'ouverture (inputs sans `disabled`).
+           « Sans contour blanc » -> initPosterWhiteBorder (main-product.js) rebascule les <img> de galerie vers
+           les versions sans bord (chargées à ce moment) et désactive la property. Indépendant du cadre.
+           Property visible « Contour blanc » localisée + `_passe_partout` neutre, dans .product-properties
+           (POST JSON, noms bruts) ; actifs par défaut -> « Sans » les désactive (JS). {%- endcomment -%}
         {% if is_poster and has_passe_partout %}
             <hr>
             <div class="pt-3 px-1 mx-4 mb-1 text-main-80">
@@ -259,17 +261,17 @@
             </div>
             <div class="variant-options-container flex gap-3 overflow-x-auto font-heading text-sm font-semibold py-4 px-5 scrollbar-thin scrollbar-thumb-main-30 scrollbar-track-transparent scroll-smooth" data-white-border-row role="radiogroup" aria-label="{{ 'sections.main_product.variant_picker.white_border' | t }}">
                 <label class="cursor-pointer transition-opacity duration-200 flex-shrink-0">
-                    <input type="radio" name="contour-blanc-ui" value="off" class="peer hidden" data-white-border="off" checked>
+                    <input type="radio" name="contour-blanc-ui" value="off" class="peer hidden" data-white-border="off">
                     <span class="block px-3 py-2 font-normal rounded-full bg-secondary peer-checked:bg-main peer-checked:text-secondary text-main transition-all duration-100">{{ 'sections.main_product.variant_picker.white_border_without' | t }}</span>
                 </label>
                 <label class="cursor-pointer transition-opacity duration-200 flex-shrink-0">
-                    <input type="radio" name="contour-blanc-ui" value="on" class="peer hidden" data-white-border="on">
+                    <input type="radio" name="contour-blanc-ui" value="on" class="peer hidden" data-white-border="on" checked>
                     <span class="block px-3 py-2 font-normal rounded-full bg-secondary peer-checked:bg-main peer-checked:text-secondary text-main transition-all duration-100">{{ 'sections.main_product.variant_picker.white_border_with' | t }}</span>
                 </label>
             </div>
             <div class="product-properties">
-                <input type="hidden" name="{{ 'sections.main_product.variant_picker.white_border' | t }}" data-wb-name value="{{ 'sections.main_product.variant_picker.white_border_with' | t }}" disabled>
-                <input type="hidden" name="_passe_partout" data-wb-flag value="oui" disabled>
+                <input type="hidden" name="{{ 'sections.main_product.variant_picker.white_border' | t }}" data-wb-name value="{{ 'sections.main_product.variant_picker.white_border_with' | t }}">
+                <input type="hidden" name="_passe_partout" data-wb-flag value="oui">
             </div>
         {% endif %}
     </div>

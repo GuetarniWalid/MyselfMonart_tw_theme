@@ -11,6 +11,12 @@
    à la création d'un brouillon). {%- endcomment -%}
 {%- assign is_poster = false -%}
 {%- if product.metafields.painting_options.frames_poster != blank -%}{%- assign is_poster = true -%}{%- endif -%}
+{%- comment -%} Contour blanc (passe-partout) activé PAR DÉFAUT sur les posters : quand une tuile a un
+   visuel passe-partout apparié, le serveur rend directement la version « avec bord blanc » en primaire
+   (pas de flash ni de double-téléchargement au chargement). Le radio « Avec contour blanc » est coché
+   par défaut (cf. painting-variant-picker) et main-product.js pose le drapeau poster-pp-on à l'init.
+   Mettre à false pour revenir à un défaut « Sans contour blanc ». {%- endcomment -%}
+{%- assign pp_default_on = true -%}
 {%- assign show_perspective = false -%}
 {%- if template.suffix == 'painting' or is_poster -%}{%- assign show_perspective = true -%}{%- endif -%}
 
@@ -162,7 +168,7 @@
                       endif
                     endif
                   endfor
-                  render 'tw-main-product-image', media: media, loop: forloop, is_lcp: is_lcp_image, pp_media: pp_media_for_tile
+                  render 'tw-main-product-image', media: media, loop: forloop, is_lcp: is_lcp_image, pp_media: pp_media_for_tile, pp_default: pp_default_on
                 endif
               endif
             endfor

@@ -1319,10 +1319,15 @@ if (!window.__mmaMainProductDelegated) {
 
 // (Ré)initialise l'état des options poster : au 1er chargement ET après une bascule Poster/Toile.
 // Cadre : le HTML rend déjà « Sans cadre » coché + propriétés désactivées ; on calcule la disponibilité
-// des couleurs pour la taille par défaut. Contour blanc : défaut « Sans » = état déjà rendu par le
-// serveur -> rien à forcer ici (le drapeau poster-pp-on est remis à zéro par le moteur de bascule).
+// des couleurs pour la taille par défaut. Contour blanc : défaut « Avec » (radio « on » coché côté serveur
+// + visuels passe-partout déjà rendus en primaire) -> on applique mmaSetWhiteBorder selon le radio coché,
+// pour poser le drapeau poster-pp-on (reflété par les clones du popup) et synchroniser la property. Idempotent :
+// le swap vise la version DÉJÀ affichée -> aucun re-téléchargement. Robuste à la bascule (le HTML re-rendu
+// porte le même défaut) et sans effet sur les toiles (aucun radio [data-white-border]).
 window.mmaInitPosterOptions = function mmaInitPosterOptions() {
   mmaSyncPosterFrameAvailability();
   mmaSyncPosterColorProperty();
+  const wb = document.querySelector('[data-white-border]:checked');
+  if (wb) mmaSetWhiteBorder(wb.dataset.whiteBorder === 'on');
 };
 window.mmaInitPosterOptions();
