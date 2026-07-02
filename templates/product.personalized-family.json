@@ -1,0 +1,59 @@
+{
+  "sections": {
+    "breadcrumb": {
+      "type": "breadcrumb",
+      "settings": {}
+    },
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {
+            "margin_bottom": "mb-2"
+          }
+        },
+        "buy": {
+          "type": "buy",
+          "settings": {
+            "text": "JE CRÉE MON POSTER",
+            "is_dynamic_variant": false,
+            "show_promotion": false,
+            "show_payment_icons": false
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "title",
+        "buy",
+        "description"
+      ],
+      "settings": {}
+    },
+    "custom_art_studio": {
+      "type": "tw-custom-art-studio",
+      "settings": {
+        "backend_url": "https://backend.myselfmonart.com",
+        "mock_mode": true
+      }
+    },
+    "product_recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "heading": "VOUS POURRIEZ AUSSI AIMER",
+        "number_products_to_display": 4
+      }
+    }
+  },
+  "order": [
+    "breadcrumb",
+    "main",
+    "custom_art_studio",
+    "product_recommendations"
+  ],
+  "layout": "product"
+}

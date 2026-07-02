@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "productType": "family-lineart",
+  "steps": [
+    {
+      "name": "photo",
+      "type": "photo",
+      "required": true,
+      "consent": { "required": true },
+      "payloadKey": "photo",
+      "title": { "fr": "Votre photo de famille", "en": "Your family photo" },
+      "checkpointLabel": { "fr": "Photo", "en": "Photo" }
+    },
+    {
+      "name": "familyName",
+      "type": "text",
+      "required": true,
+      "maxLength": 24,
+      "charset": "free",
+      "payloadKey": "familyName",
+      "cartProperty": { "label": { "fr": "Nom de famille", "en": "Family name" } },
+      "title": { "fr": "Votre nom de famille", "en": "Your family name" },
+      "label": { "fr": "Nom affiché sous le dessin", "en": "Name shown under the artwork" },
+      "placeholder": { "fr": "Ex : Guetarni", "en": "E.g. Guetarni" },
+      "checkpointLabel": { "fr": "Nom", "en": "Name" }
+    },
+    {
+      "name": "memberNames",
+      "type": "text",
+      "required": true,
+      "maxLength": 140,
+      "charset": "free",
+      "payloadKey": "names",
+      "cartProperty": { "label": { "fr": "Prénoms", "en": "First names" } },
+      "title": { "fr": "Les prénoms, dans l'ordre", "en": "The names, in order" },
+      "label": { "fr": "Prénoms de gauche à droite, séparés par des virgules", "en": "Names left to right, separated by commas" },
+      "placeholder": { "fr": "Ex : Papa, Franco, Maman, Veronica", "en": "E.g. Daddy, Franco, Mommy, Veronica" },
+      "help": { "fr": "Dans le même ordre que sur votre photo (de gauche à droite).", "en": "Same order as on your photo (left to right)." },
+      "checkpointLabel": { "fr": "Prénoms", "en": "Names" }
+    },
+    {
+      "name": "format",
+      "type": "format",
+      "required": true,
+      "title": { "fr": "Format et finition", "en": "Format and finish" },
+      "checkpointLabel": { "fr": "Format", "en": "Format" },
+      "roles": [
+        { "role": "size", "payloadKey": "format", "resolve": "dimensions" },
+        { "role": "frame", "payloadKey": "frame", "resolve": "slug" }
+      ]
+    }
+  ],
+  "payload": { "extra": {} }
+}
