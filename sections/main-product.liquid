@@ -647,15 +647,28 @@
   }
   {%- endif -%}
 {%- endcapture -%}
-{%- comment -%} Capacité de visualisation 3D (template painting) -> machine-readable pour Google & agents IA. {%- endcomment -%}
+{%- comment -%} Capacité de visualisation 3D -> machine-readable pour Google & agents IA.
+   Gaté par SUFFIXE de template (mutuellement exclusifs) : 'painting' = toile sur châssis
+   (bords + cadres caisse américaine) ; 'poster' = tirage encadré sous verre (cadres +
+   contour blanc, pas de bords). Jamais émis en même temps que product_studio_props
+   (suffixes personalized*) -> pas de clé additionalProperty dupliquée dans le JSON-LD. {%- endcomment -%}
 {%- capture product_3d_props -%}
-  {%- if template.suffix == 'painting' and product.media[1] and product.media[1].media_type == 'image' -%}
+  {%- if product.media[1] and product.media[1].media_type == 'image' -%}
+    {%- if template.suffix == 'painting' -%}
   ,"additionalProperty": [
     { "@type": "PropertyValue", "name": {{ 'sections.mma.product_3d_interactive_name' | t | json }}, "value": {{ 'sections.mma.product_3d_interactive_value' | t | json }} },
     { "@type": "PropertyValue", "name": {{ 'sections.mma.product_3d_preview_name' | t | json }}, "value": {{ 'sections.mma.product_3d_preview_value' | t | json }} },
     { "@type": "PropertyValue", "name": {{ 'sections.mma.product_3d_borders_name' | t | json }}, "value": {{ 'sections.mma.product_3d_borders_value' | t | json }} },
     { "@type": "PropertyValue", "name": {{ 'sections.mma.product_3d_frames_name' | t | json }}, "value": {{ 'sections.mma.product_3d_frames_value' | t | json }} }
   ]
+    {%- elsif template.suffix == 'poster' -%}
+  ,"additionalProperty": [
+    { "@type": "PropertyValue", "name": {{ 'sections.mma.product_3d_interactive_name' | t | json }}, "value": {{ 'sections.mma.product_3d_interactive_value' | t | json }} },
+    { "@type": "PropertyValue", "name": {{ 'sections.mma.product_3d_preview_name' | t | json }}, "value": {{ 'sections.mma.product_3d_preview_value_poster' | t | json }} },
+    { "@type": "PropertyValue", "name": {{ 'sections.mma.product_3d_frames_name' | t | json }}, "value": {{ 'sections.mma.product_3d_frames_value_poster' | t | json }} },
+    { "@type": "PropertyValue", "name": {{ 'sections.mma.product_3d_pp_name_poster' | t | json }}, "value": {{ 'sections.mma.product_3d_pp_value_poster' | t | json }} }
+  ]
+    {%- endif -%}
   {%- endif -%}
 {%- endcapture -%}
 {%- comment -%} Studio de personnalisation EN LIGNE (fiches perso) -> machine-readable pour
