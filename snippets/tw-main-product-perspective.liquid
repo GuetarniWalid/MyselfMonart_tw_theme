@@ -28,6 +28,17 @@
   if product.metafields.painting_options.frames_poster != blank
     assign is_poster = true
   endif
+  # Texte d'accessibilité (aria/caption/figcaption/noscript) : le rendu 3D poster montre un
+  # TIRAGE encadré sous verre, pas une toile sur châssis -> clés dédiées quand is_poster,
+  # sinon le lecteur d'écran / Google lisent « toile tendue sur châssis » sur une page poster.
+  assign persp_caption_key = 'sections.mma.perspective_canvas_caption'
+  assign persp_figcaption_key = 'sections.mma.perspective_figcaption'
+  assign persp_noscript_key = 'sections.mma.perspective_noscript'
+  if is_poster
+    assign persp_caption_key = 'sections.mma.perspective_canvas_caption_poster'
+    assign persp_figcaption_key = 'sections.mma.perspective_figcaption_poster'
+    assign persp_noscript_key = 'sections.mma.perspective_noscript_poster'
+  endif
 -%}
 {%- if raw_media and raw_media.media_type == 'image' -%}
   {%- assign img = raw_media.preview_image -%}
@@ -71,7 +82,7 @@
       <canvas
         class="perspective-canvas-gl block w-full aspect-square opacity-0"
         role="img"
-        aria-label="{{ 'sections.mma.perspective_preview_of' | t: title: product.title }}">{{ 'sections.mma.perspective_canvas_caption' | t: title: product.title }}</canvas>
+        aria-label="{{ 'sections.mma.perspective_preview_of' | t: title: product.title }}">{{ persp_caption_key | t: title: product.title }}</canvas>
       {{ persp_config }}
     </perspective-canvas>
   {%- else -%}
@@ -106,12 +117,12 @@
           <canvas
             class="perspective-canvas-gl block w-full aspect-square opacity-0 transition-opacity duration-500 ease-out"
             role="img"
-            aria-label="{{ 'sections.mma.perspective_preview_of' | t: title: product.title }}">{{ 'sections.mma.perspective_canvas_caption' | t: title: product.title }}</canvas>
+            aria-label="{{ 'sections.mma.perspective_preview_of' | t: title: product.title }}">{{ persp_caption_key | t: title: product.title }}</canvas>
           {{ persp_config }}
         </perspective-canvas>
-        <figcaption class="sr-only">{{ 'sections.mma.perspective_figcaption' | t: title: product.title }}</figcaption>
+        <figcaption class="sr-only">{{ persp_figcaption_key | t: title: product.title }}</figcaption>
         <noscript>
-          <p class="sr-only">{{ 'sections.mma.perspective_noscript' | t: title: product.title }}</p>
+          <p class="sr-only">{{ persp_noscript_key | t: title: product.title }}</p>
         </noscript>
       </figure>
     </span>
