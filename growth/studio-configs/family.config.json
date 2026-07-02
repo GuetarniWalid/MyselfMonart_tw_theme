@@ -17,6 +17,27 @@
       "checkpointLabel": {
         "fr": "Photo",
         "en": "Photo"
+      },
+      "faceAngle": "back",
+      "examples": {
+        "good": {
+          "image": "studio-photo-exemple-famille-bon-dos.jpg",
+          "alt": {
+            "fr": "Exemple de bonne photo : famille de dos, en pied, se tenant la main, silhouettes nettes",
+            "en": "Good photo example: family from behind, full-length, holding hands, sharp silhouettes"
+          }
+        },
+        "bad": {
+          "image": "studio-photo-exemple-famille-mauvais-selfie.jpg",
+          "alt": {
+            "fr": "Exemple de photo à éviter : selfie serré, visages coupés, silhouettes invisibles",
+            "en": "Photo to avoid: tight selfie, cropped faces, no silhouettes visible"
+          },
+          "caption": {
+            "fr": "À éviter : selfie serré, on ne voit pas les silhouettes",
+            "en": "Avoid: tight selfie, silhouettes not visible"
+          }
+        }
       }
     },
     {
