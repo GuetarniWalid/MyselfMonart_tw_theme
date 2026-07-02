@@ -47,7 +47,7 @@
       "type": "tw-custom-art-studio",
       "settings": {
         "backend_url": "https://backend.myselfmonart.com",
-        "mock_mode": true,
+        "mock_mode": false,
         "mock_reveal_image": "shopify://shop_images/studio-reference-poster-famille-line-art.png"
       }
     },
