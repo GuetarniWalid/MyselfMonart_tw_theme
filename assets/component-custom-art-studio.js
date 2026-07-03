@@ -776,8 +776,16 @@
       this._lastJobChecked = true;
       if (this.config.mock) { this.resumeLastJobMock(); return; }
       try {
-        const { response, data } = await this.api('/api/custom-art/jobs/last');
+        // Scoping PRODUIT : la session est partagée par toutes les fiches perso -> sans filtre, le
+        // dernier job foot « reprenait » sur la fiche famille (bug Walid 2026-07-02). On passe le
+        // productType au back (filtre serveur quand il sera déployé) ET on garde le job seulement
+        // s'il appartient à CE produit. Les jobs sans productType (antérieurs au champ) sont des
+        // foot — seul produit qui existait alors.
+        const qs = this.productType ? `?productType=${encodeURIComponent(this.productType)}` : '';
+        const { response, data } = await this.api(`/api/custom-art/jobs/last${qs}`);
         if (response.status === 204 || !response.ok) return; // rien à reprendre -> parcours normal
+        const jobType = (data && data.productType) || 'foot';
+        if (jobType !== (this.productType || 'foot')) return; // job d'un AUTRE produit -> parcours normal
         if (!this._canApplyLastJob()) return; // l'utilisateur a déjà avancé/interagi -> on ne le yanke pas
         const status = data.status;
         if (status === 'manual_review' || status === 'failed') {
