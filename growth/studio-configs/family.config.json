@@ -56,7 +56,7 @@
         "messages": {
           "warn_angle": {
             "fr": "Photo acceptée — pour un dessin fidèle des silhouettes et des tailles, préférez une photo de dos, en pied.",
-            "en": "Photo accepted â for a faithful drawing of silhouettes and heights, prefer a photo from behind, full-length."
+            "en": "Photo accepted — for a faithful drawing of silhouettes and heights, prefer a photo from behind, full-length."
           },
           "reject_framing": {
             "fr": "On ne voit pas tout le monde en entier : reprenez une photo des pieds à la tête.",
