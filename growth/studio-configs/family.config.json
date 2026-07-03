@@ -38,6 +38,31 @@
             "en": "Avoid: tight selfie, silhouettes not visible"
           }
         }
+      },
+      "photoCheck": true,
+      "photoPolicy": {
+        "subject": "group",
+        "framing": "full-body",
+        "people": {
+          "min": 1,
+          "max": 6
+        },
+        "angles": {
+          "back": "perfect",
+          "front": "warn",
+          "three-quarter": "warn",
+          "profile": "warn"
+        },
+        "messages": {
+          "warn_angle": {
+            "fr": "Photo acceptÃ©e â pour un dessin fidÃ¨le des silhouettes et des tailles, prÃ©fÃ©rez une photo de dos, en pied.",
+            "en": "Photo accepted â for a faithful drawing of silhouettes and heights, prefer a photo from behind, full-length."
+          },
+          "reject_framing": {
+            "fr": "On ne voit pas tout le monde en entier : reprenez une photo des pieds Ã  la tÃªte.",
+            "en": "Not everyone is fully visible: retake a photo from head to toe."
+          }
+        }
       }
     },
     {

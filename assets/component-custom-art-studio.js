@@ -236,6 +236,9 @@
       // back-end /photo-check n'est pas livré (on n'affiche pas « indisponible » en prod). On l'active
       // via la config (metafield studio.config) une fois le back-end prêt.
       this.photoCheckEnabled = ((this.studioSteps.find((s) => s.type === 'photo') || {}).photoCheck) === true;
+      // Politique photo PAR PRODUIT (contrat photo-check §9) : envoyée verbatim au juge (multipart
+      // `policy`), qui DÉRIVE le verdict + le grade côté back. Absente -> shim faceAngle (foot au pixel).
+      this.photoPolicy = ((this.studioSteps.find((s) => s.type === 'photo') || {}).photoPolicy) || null;
       this._photoVerdicts = {};
       this._applyPhotoCaption(); // consigne photo adaptée à l'angle de l'œuvre
       // Mode « sans génération » (config-driven). Un produit perso à DESIGN FIXE (ex : poster foot
@@ -1433,11 +1436,19 @@
           const fd = new FormData();
           fd.append('photo', blob, 'photo.jpg');
           fd.append('faceAngle', this.photoFaceAngle);
+          // Politique par produit (§9) : le back l'applique et renvoie le grade. faceAngle reste
+          // envoyé (compat anciens back : sans support, `policy` est simplement ignorée).
+          if (this.photoPolicy) fd.append('policy', JSON.stringify(this.photoPolicy));
           if (hash) fd.append('hash', hash);
           if (this.productType) fd.append('productType', this.productType);
           const { response, data } = await this.api('/api/custom-art/photo-check', { method: 'POST', body: fd });
           if (!response.ok) throw new Error(`HTTP ${response.status}`);
-          verdict = { ok: !!data.ok, issues: Array.isArray(data.issues) ? data.issues : [], faceAngleDetected: typeof data.faceAngleDetected === 'string' ? data.faceAngleDetected : '' };
+          verdict = {
+            ok: !!data.ok,
+            issues: Array.isArray(data.issues) ? data.issues : [],
+            faceAngleDetected: typeof data.faceAngleDetected === 'string' ? data.faceAngleDetected : '',
+            grade: data.grade === 'perfect' || data.grade === 'warn' ? data.grade : '',
+          };
         }
       } catch (e) {
         // Vérif indisponible -> on N'EMPÊCHE PAS la vente (fail-open). Pré-check back-end à la génération.
@@ -1451,11 +1462,15 @@
     }
 
     _applyPhotoVerdict(verdict, opts) {
-      // 3 états : refusée (ok=false) / acceptée mais pas idéale (angle détecté ≠ angle de l'œuvre)
-      // / parfaite. Le « warn » N'EMPÊCHE PAS de continuer (permissif), il informe seulement.
+      // 3 états : refusée (ok=false) / acceptée mais pas idéale / parfaite. Le « warn » N'EMPÊCHE
+      // PAS de continuer (permissif), il informe seulement. Source du tri-état : le GRADE calculé
+      // côté back (policy §9, une seule source de vérité) quand il est présent ; sinon repli legacy
+      // (back pas encore déployé) = comparaison locale angle détecté vs angle de l'œuvre.
       let kind = 'ok';
       if (!verdict.ok) {
         kind = 'bad';
+      } else if (verdict.grade) {
+        kind = verdict.grade === 'warn' ? 'warn' : 'ok';
       } else if (verdict.faceAngleDetected && verdict.faceAngleDetected !== 'none' && verdict.faceAngleDetected !== this.photoFaceAngle) {
         kind = 'warn';
       }
@@ -1566,19 +1581,34 @@
         obstructed: 'photo_issue_obstructed',
         low_quality: 'photo_issue_low_quality',
         nsfw: 'photo_issue_nsfw',
+        not_full_body: 'photo_issue_not_full_body',
+        too_many_people: 'photo_issue_too_many_people',
+        no_person: 'photo_issue_no_person',
         angle_mismatch: angleKey,
       };
       const out = [];
       (issues || []).forEach((code) => {
-        const msg = this.i18n[map[code]] || this.i18n.photo_issue_generic || '';
+        // Surcharge PAR PRODUIT (photoPolicy.messages, maps i18n) prioritaire sur les clés globales.
+        // `reject_framing` (nom du contrat §9.2) couvre le code not_full_body.
+        const msg = this._policyMessage(code === 'not_full_body' ? 'reject_framing' : code)
+          || this.i18n[map[code]] || this.i18n.photo_issue_generic || '';
         if (msg && out.indexOf(msg) === -1) out.push(msg);
       });
       if (!out.length) out.push(this.i18n.photo_issue_generic || '');
       return out;
     }
 
-    // Message « accepté mais pas idéal » selon l'angle attendu par l'œuvre (état ambre).
+    // Surcharge de message par produit (photoPolicy.messages.<clé> = map i18n) -> résolue par t().
+    _policyMessage(key) {
+      const m = this.photoPolicy && this.photoPolicy.messages && this.photoPolicy.messages[key];
+      return m ? this.t(m) : '';
+    }
+
+    // Message « accepté mais pas idéal » (état ambre) : surcharge produit (warn_angle) sinon clé
+    // globale selon l'angle attendu par l'œuvre.
     _photoWarnMessage() {
+      const override = this._policyMessage('warn_angle');
+      if (override) return override;
       const key = this.photoFaceAngle === 'profile' ? 'photo_warn_angle_profile'
         : this.photoFaceAngle === 'back' ? 'photo_warn_angle_back'
         : this.photoFaceAngle === 'three-quarter' ? 'photo_warn_angle_three_quarter'
