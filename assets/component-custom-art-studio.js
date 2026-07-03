@@ -409,6 +409,7 @@
           step, screen, stage, consent, fields, teamId, teamName, teamColors, playerName,
           playerNumber, selectedOptions, variantId, jobId, sessionToken, email, status,
           previewUrl, revealCount, imageStale, mockups, versions, activeVersion, candidateTotal, lotStart, artistRequested,
+          productType: this.productType, // provenance : cet état appartient à CE produit (garde à la reprise)
           savedAt: Date.now(), // horodatage de fraîcheur (garde TTL à la reprise, cf. restoreState)
         }));
       } catch (e) { /* stockage indisponible (navigation privée) : non bloquant */ }
@@ -422,6 +423,12 @@
         if (!raw) { try { raw = sessionStorage.getItem(this.storageKey); } catch (e) { /* no-op */ } }
         if (!raw) return;
         const saved = JSON.parse(raw);
+        // Garde de PROVENANCE : ne réhydrater que l'état de CE produit. C'est la 2e moitié du bug
+        // « le foot reprend sur la fiche famille » : /jobs/last (avant son scoping produit) avait
+        // PERSISTÉ le reveal foot sous la clé de la fiche famille -> il revenait à chaque ouverture,
+        // même hard-refresh. Un état sans productType date d'avant ce champ = ère foot. Mismatch ->
+        // purge DÉFINITIVE (sinon le poison revient au prochain reload).
+        if ((saved.productType || 'foot') !== (this.productType || 'foot')) { this.clearPersisted(); return; }
         Object.assign(this.state, saved);
         // Garde de FRAÎCHEUR (mémoire durable) : un reveal/une génération mémorisé trop ancien -> le job
         // back-end a pu expirer. On NE reprend PAS l'état de job (sinon reveal-next/ajout panier sur un
