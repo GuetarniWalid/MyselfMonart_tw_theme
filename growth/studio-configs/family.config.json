@@ -55,11 +55,11 @@
         },
         "messages": {
           "warn_angle": {
-            "fr": "Photo acceptÃ©e â pour un dessin fidÃ¨le des silhouettes et des tailles, prÃ©fÃ©rez une photo de dos, en pied.",
+            "fr": "Photo acceptée — pour un dessin fidèle des silhouettes et des tailles, préférez une photo de dos, en pied.",
             "en": "Photo accepted â for a faithful drawing of silhouettes and heights, prefer a photo from behind, full-length."
           },
           "reject_framing": {
-            "fr": "On ne voit pas tout le monde en entier : reprenez une photo des pieds Ã  la tÃªte.",
+            "fr": "On ne voit pas tout le monde en entier : reprenez une photo des pieds à la tête.",
             "en": "Not everyone is fully visible: retake a photo from head to toe."
           }
         }
