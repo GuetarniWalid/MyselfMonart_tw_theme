@@ -247,7 +247,14 @@
       "product_studio_elements_name": "Aanpasbare elementen",
       "product_studio_elements_value": "Voornaam, nummer, formaat en lijst",
       "product_studio_preview_name": "Voorvertoning voor bestellen",
-      "product_studio_preview_value": "Realtime 3D-voorbeeld van je gepersonaliseerde poster"
+      "product_studio_preview_value": "Realtime 3D-voorbeeld van je gepersonaliseerde poster",
+      "perspective_canvas_caption_poster": "{{ title }} — perspectiefweergave van de poster.",
+      "perspective_figcaption_poster": "Interactieve 3D-weergave van ‘{{ title }}’: de fotoafdruk, ingelijst en achter glas, die je kunt draaien om het in perspectief te bekijken. De gekozen lijst (wit, matzwart, licht eikenhout, notenhout, antiekzilver — of zonder lijst) en de optie witte rand worden in 3D getoond volgens de gekozen afwerking. Weergave gegenereerd op basis van de echte afbeelding van het kunstwerk.",
+      "perspective_noscript_poster": "Interactieve 3D-weergave van de poster « {{ title }} », ingelijst achter glas (schakel JavaScript in om het kunstwerk te draaien en de lijst in perspectief te bekijken).",
+      "product_3d_preview_value_poster": "Ingelijste fotoafdruk achter glas in perspectief, interactieve rotatie (WebGL)",
+      "product_3d_frames_value_poster": "Wit, matzwart, licht eiken, walnoot of antiek zilver (of zonder lijst)",
+      "product_3d_pp_name_poster": "Witte rand in 3D te bekijken",
+      "product_3d_pp_value_poster": "Witte passe-partout-rand rondom de afbeelding, optioneel"
     },
     "my_likes": {
       "empty_text": "Je hebt nog geen favorieten"

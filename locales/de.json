@@ -246,7 +246,14 @@
       "product_studio_elements_name": "Anpassbare Elemente",
       "product_studio_elements_value": "Vorname, Nummer, Format und Rahmen",
       "product_studio_preview_name": "Vorschau vor der Bestellung",
-      "product_studio_preview_value": "Echtzeit-3D-Vorschau des personalisierten Posters"
+      "product_studio_preview_value": "Echtzeit-3D-Vorschau des personalisierten Posters",
+      "perspective_canvas_caption_poster": "{{ title }} — Poster in Perspektivansicht.",
+      "perspective_figcaption_poster": "Interaktive 3D-Vorschau von „{{ title }}“: der gerahmte, verglaste Kunstdruck, den Sie drehen können, um ihn aus verschiedenen Blickwinkeln zu betrachten. Der gewählte Rahmen (Weiß, Mattschwarz, helle Eiche, Nussbaum, Antiksilber — oder ohne Rahmen) und die Option mit weißem Rand werden in 3D entsprechend der ausgewählten Ausführung dargestellt. Rendering auf Basis des Originalbilds des Kunstwerks.",
+      "perspective_noscript_poster": "Interaktive 3D-Ansicht des Posters „{{ title }}“, gerahmt und hinter Glas (Aktivieren Sie JavaScript, um das Kunstwerk zu drehen und den Rahmen perspektivisch zu sehen).",
+      "product_3d_preview_value_poster": "Hinter Glas gerahmter Fotoabzug in Perspektivansicht, interaktive Drehung (WebGL)",
+      "product_3d_frames_value_poster": "Weiß, Mattschwarz, Eiche hell, Nussbaum oder Silber antik (oder ohne Rahmen)",
+      "product_3d_pp_name_poster": "Weißer Rand (3D-Ansicht)",
+      "product_3d_pp_value_poster": "Weißer Rand im Passepartout-Stil um das Motiv, optional"
     },
     "collections_grid": {
       "find_out_more": "Mehr erfahren..."

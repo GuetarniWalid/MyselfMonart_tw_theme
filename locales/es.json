@@ -245,7 +245,14 @@
       "product_studio_elements_name": "Elementos personalizables",
       "product_studio_elements_value": "Nombre, número, formato y marco",
       "product_studio_preview_name": "Vista previa antes de realizar el pedido",
-      "product_studio_preview_value": "Vista previa 3D del póster personalizado en tiempo real"
+      "product_studio_preview_value": "Vista previa 3D del póster personalizado en tiempo real",
+      "perspective_canvas_caption_poster": "{{ title }} — vista previa en perspectiva del póster.",
+      "perspective_figcaption_poster": "Vista 3D interactiva de « {{ title }} »: la impresión fotográfica, enmarcada y con vidrio, que puedes girar para verla en perspectiva. El marco seleccionado (blanco, negro mate, roble claro, nogal, plata envejecida — o sin marco) y la opción de borde blanco se muestran en 3D según el acabado elegido. Modelo 3D generado a partir de la imagen real de la obra.",
+      "perspective_noscript_poster": "Visualización 3D interactiva del póster « {{ title }} », enmarcado y con cristal (activa JavaScript para girar la obra y ver el marco en perspectiva).",
+      "product_3d_preview_value_poster": "Impresión fotográfica enmarcada con cristal, vista en perspectiva, rotación interactiva (WebGL)",
+      "product_3d_frames_value_poster": "Blanco, negro mate, roble claro, nogal o plata envejecida (o sin marco)",
+      "product_3d_pp_name_poster": "Borde blanco con vista 3D",
+      "product_3d_pp_value_poster": "Margen blanco tipo paspartú alrededor de la imagen, opcional"
     },
     "my_likes": {
       "empty_text": "Todavía no tienes favoritos"

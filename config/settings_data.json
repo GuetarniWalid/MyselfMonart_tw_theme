@@ -173,7 +173,8 @@
             "type": "menu_list",
             "settings": {
               "heading": "Mentions Légales",
-              "menu": "mentions-l-gales"
+              "menu": "mentions-l-gales",
+              "append_order_tracking": false
             }
           },
           "menu_list_JRx6dW": {
@@ -199,7 +200,7 @@
         "type": "tw-announcement-bar",
         "custom_css": [],
         "settings": {
-          "message": "Livraison OFFERTE sur toutes vos commandes"
+          "message": "-10% sur tout les tableaux et Livraison OFFERTE"
         }
       },
       "page-cart-items": {

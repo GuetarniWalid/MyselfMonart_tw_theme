@@ -483,7 +483,14 @@
       "product_studio_elements_name": "Customizable elements",
       "product_studio_elements_value": "First name, number, size and frame",
       "product_studio_preview_name": "Preview before ordering",
-      "product_studio_preview_value": "Live 3D preview of your custom poster"
+      "product_studio_preview_value": "Live 3D preview of your custom poster",
+      "perspective_canvas_caption_poster": "{{ title }} — angled view of the poster.",
+      "perspective_figcaption_poster": "Interactive 3D preview of \"{{ title }}\": a photographic print, framed behind glass, that you can rotate to view from every angle. The chosen frame (white, matte black, light oak, walnut, antique silver, or no frame) and the white border option are displayed in 3D to reflect your selection. Rendering generated from the artwork’s actual image.",
+      "perspective_noscript_poster": "Interactive 3D view of the “{{ title }}” poster, framed behind glass (enable JavaScript to rotate the artwork and view the frame in perspective).",
+      "product_3d_preview_value_poster": "Framed photographic print behind glass, perspective view, interactive rotation (WebGL)",
+      "product_3d_frames_value_poster": "White, matte black, light oak, walnut or antique silver (or unframed)",
+      "product_3d_pp_name_poster": "White border (3D view)",
+      "product_3d_pp_value_poster": "Optional white mat-style border around the artwork"
     },
     "testimonials_carousel": {
       "eyebrow_default": "They trust us",
