@@ -42,7 +42,6 @@
 (() => {
   if (customElements.get('custom-art-studio')) return;
 
-  const STEPS = ['photo', 'team', 'name', 'format'];
   // Livrable A (studio config-driven) — repli foot utilisé tant que le metafield studio.config
   // n'est pas posé sur le produit : le studio live tourne dessus -> zéro régression pendant le
   // chantier. Dès que studio.config existe, c'est lui qui pilote l'ordre/les types des étapes.
@@ -2319,14 +2318,20 @@
       if (durationMs > 0) this._waitTau = Math.max(GEN_DURATION_MIN, Math.min(GEN_DURATION_MAX, durationMs)) / 1.8;
     }
 
+    // Clés de calibrage SEGMENTÉES PAR PRODUIT : le back segmente déjà ses stats par productType ;
+    // sans le suffixe, la barre famille démarrait sur les durées mises en cache par une génération
+    // FOOT du même navigateur (et inversement).
+    _genEstimateKey() { return `${GEN_ESTIMATE_KEY}:${this.productType || 'foot'}`; }
+    _genDurationsKey() { return `${GEN_DURATIONS_KEY}:${this.productType || 'foot'}`; }
+
     // Durée annoncée par la barre, par ordre de préférence : (1) estimation GLOBALE mise en cache
     // (renvoyée par le back-end, partagée par tous), (2) repli : moyenne glissante des vraies
     // générations de CE navigateur, (3) défaut. Bornée pour ignorer les valeurs aberrantes.
     _estimateGenDuration() {
       try {
-        const cached = parseInt(localStorage.getItem(GEN_ESTIMATE_KEY) || '', 10);
+        const cached = parseInt(localStorage.getItem(this._genEstimateKey()) || '', 10);
         if (cached > 0) return Math.max(GEN_DURATION_MIN, Math.min(GEN_DURATION_MAX, cached));
-        const arr = JSON.parse(localStorage.getItem(GEN_DURATIONS_KEY) || '[]');
+        const arr = JSON.parse(localStorage.getItem(this._genDurationsKey()) || '[]');
         if (Array.isArray(arr) && arr.length) {
           const avg = arr.reduce((a, b) => a + b, 0) / arr.length;
           return Math.max(GEN_DURATION_MIN, Math.min(GEN_DURATION_MAX, Math.round(avg)));
@@ -2338,18 +2343,18 @@
     // Met en cache l'estimation GLOBALE renvoyée par le back-end -> dispo instantanément au prochain
     // lancement (et partagée par tous via le back-end). cf. startGeneration / _estimateGenDuration.
     _cacheGenEstimate(ms) {
-      try { if (ms > 0) localStorage.setItem(GEN_ESTIMATE_KEY, String(Math.round(ms))); } catch (e) { /* indispo */ }
+      try { if (ms > 0) localStorage.setItem(this._genEstimateKey(), String(Math.round(ms))); } catch (e) { /* indispo */ }
     }
 
     // Enregistre la durée d'une vraie génération réussie (moyenne glissante des 5 dernières).
     _recordGenDuration(ms) {
       if (!(ms > 0) || ms > GEN_DURATION_MAX * 2) return; // ignore aberrant (job très long / horloge)
       try {
-        let arr = JSON.parse(localStorage.getItem(GEN_DURATIONS_KEY) || '[]');
+        let arr = JSON.parse(localStorage.getItem(this._genDurationsKey()) || '[]');
         if (!Array.isArray(arr)) arr = [];
         arr.push(Math.round(ms));
         if (arr.length > GEN_DURATIONS_KEEP) arr = arr.slice(-GEN_DURATIONS_KEEP);
-        localStorage.setItem(GEN_DURATIONS_KEY, JSON.stringify(arr));
+        localStorage.setItem(this._genDurationsKey(), JSON.stringify(arr));
       } catch (e) { /* localStorage indispo -> on n'enregistre pas */ }
     }
 
@@ -3322,12 +3327,16 @@
       button.disabled = true;
       feedback.hidden = true;
 
-      const properties = {
-        _job_id: this.state.jobId,
-        [this.i18n.prop_name]: this.state.playerName,
-        [this.i18n.prop_number]: this.state.playerNumber,
-        [this.i18n.prop_team]: this.state.teamName,
-      };
+      // Propriétés lisibles de la commande : celles de la CONFIG produit d'abord (steps marqués
+      // cartProperty — ex. famille : « Nom de famille »/« Prénoms » ; avant ce fix elles n'étaient
+      // émises QUE par le chemin sans génération -> la ligne panier famille partait VIDE), puis le
+      // trio legacy foot SEULEMENT si renseigné (émettre « Prénom : (vide) » polluait le drawer,
+      // qui concatène les valeurs sans filtrer les blancs).
+      const properties = this.buildCartProperties();
+      if (this.state.playerName) properties[this.i18n.prop_name] = this.state.playerName;
+      if (this.state.playerNumber) properties[this.i18n.prop_number] = this.state.playerNumber;
+      if (this.state.teamName) properties[this.i18n.prop_team] = this.state.teamName;
+      properties._job_id = this.state.jobId;
       // Aperçu personnalisé en propriété MASQUÉE (préfixe « _ ») : n'apparaît PLUS en texte dans le panier
       // (l'URL complète était moche et poussait le layout du drawer faute de coupure), mais reste lisible
       // par le thème pour afficher la VIGNETTE personnalisée (tw-cart-drawer / page-cart-items) et par
