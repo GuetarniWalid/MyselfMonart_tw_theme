@@ -13,7 +13,7 @@
       "cartProperty": { "label": { "fr": "Nom de famille", "en": "Family name", "de": "Familienname", "nl": "Familienaam", "es": "Apellido" } },
       "title": { "fr": "Votre nom de famille", "en": "Your family name", "de": "Dein Familienname", "nl": "Je familienaam", "es": "Tu apellido" },
       "label": { "fr": "Nom affiché sous le dessin", "en": "Name shown under the artwork", "de": "Name unter der Zeichnung", "nl": "Naam onder de tekening", "es": "Nombre mostrado bajo el dibujo" },
-      "placeholder": { "fr": "Ex : Guetarni", "en": "E.g. Guetarni", "de": "z. B. Guetarni", "nl": "Bijv. Guetarni", "es": "Ej.: Guetarni" },
+      "placeholder": { "fr": "Ex : Martin", "en": "E.g. Martin", "de": "z. B. Martin", "nl": "Bijv. Martin", "es": "Ej.: Martin" },
       "checkpointLabel": { "fr": "Nom", "en": "Name", "de": "Name", "nl": "Naam", "es": "Apellido" }
     },
     {
