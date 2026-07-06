@@ -65,7 +65,7 @@
           "settings": {
             "heading": "Matériaux",
             "icon": "leather",
-            "content": "<p><strong>- Le papier</strong> : un papier épais (200 g/m² et plus) au rendu mat et précis, pour des couleurs justes et des noirs profonds.</p><p><strong>- Les formats</strong> : 30 × 40 cm ou 60 × 80 cm, à poser tel quel ou à encadrer.</p><p><strong>- Le cadre (en option)</strong> : cinq finitions au choix — blanc, noir mat, chêne clair, noyer ou argent ancien.</p><p>Chaque poster est imprimé à la demande, conçu en France et imprimé en Europe.</p>",
+            "content": "<p><strong>- Le papier</strong> : un papier épais (200 g/m² et plus) au fini brillant, pour des couleurs éclatantes et des noirs profonds.</p><p><strong>- Les formats</strong> : 30 × 40 cm ou 60 × 80 cm, à poser tel quel ou à encadrer.</p><p><strong>- Le cadre (en option)</strong> : cinq finitions au choix — blanc, noir mat, chêne clair, noyer ou argent ancien.</p><p>Chaque poster est imprimé à la demande, conçu en France et imprimé en Europe.</p>",
             "page": ""
           }
         },
@@ -91,7 +91,7 @@
       "settings": {
         "backend_url": "https://backend.myselfmonart.com",
         "mock_mode": false,
-        "mock_reveal_image": "shopify://shop_images/poster-famille-personnalise-dessin-au-trait-prenoms.jpg"
+        "mock_reveal_image": "shopify://shop_images/poster-famille-personnalise-dessin-au-trait-prenoms_2d4159bc-f495-4af4-9738-8670993946d8.jpg"
       }
     },
     "etapes": {
@@ -100,7 +100,7 @@
         "etape_photo": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/poster-famille-personnalise-dessin-au-trait-prenoms.jpg",
+            "image": "shopify://shop_images/poster-famille-personnalise-dessin-au-trait-prenoms_2d4159bc-f495-4af4-9738-8670993946d8.jpg",
             "title": "1 · Votre famille",
             "text": "<p>Votre nom de famille, les prénoms de votre tribu, le format qui vous plaît : vous personnalisez tout, directement sur cette page.</p>",
             "link_label": "",
@@ -111,9 +111,9 @@
         "etape_apercu": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/poster-famille-papier-mat-detail-trait.jpg",
+            "image": "shopify://shop_images/affiche-famille-personnalisee-dessin-trait-prenoms-coeurs-8a4a3131-5468-4d78-8c35-39e2eb5ad00c.jpg",
             "title": "2 · Notre studio compose",
-            "text": "<p>Votre création est composée avec soin, puis imprimée à la demande sur un beau papier épais au rendu mat.</p>",
+            "text": "<p>Votre création est composée avec soin, puis imprimée à la demande sur un beau papier épais au fini brillant.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -122,7 +122,7 @@
         "etape_livre": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/poster-famille-personnalise-dessin-trait-salon.jpg",
+            "image": "shopify://shop_images/affiche-famille-personnalisee-dessin-trait-salon-moderne-747262a4-034f-47f3-ae2a-b6d8884d9322.jpg",
             "title": "3 · Livré, prêt à accrocher",
             "text": "<p>Reçu chez vous en colis suivi, encadré en option — prêt à offrir, ou à réchauffer vos murs.</p>",
             "link_label": "",
@@ -149,7 +149,7 @@
     "bandeau_emotion": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify://shop_images/poster-famille-personnalise-dessin-trait-salon.jpg",
+        "image": "shopify://shop_images/poster-famille-personnalise-dessin-trait-decoration-sur-mesure-d98dac88-10b2-4110-8eda-b23941a8cf1b.jpg",
         "title": "Ce qui compte vraiment, sur votre mur",
         "description": "<p>Vos prénoms réunis, votre nom de famille mis à l'honneur : un portrait de famille qui raconte votre histoire — pas celle d'un catalogue. Ce n'est pas qu'un poster, c'est votre tribu, accrochée au mur.</p>",
         "layout": "image_first",
@@ -164,9 +164,9 @@
     "bandeau_matiere": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify://shop_images/poster-famille-papier-mat-detail-trait.jpg",
+        "image": "shopify://shop_images/poster-famille-personnalise-dessin-trait-minimaliste-prenoms-fe1a50aa-8c13-4059-8e9c-79032b7aed5f.jpg",
         "title": "Une matière qui se respecte",
-        "description": "<p>Imprimé à la demande sur un papier épais au rendu <strong>mat et profond</strong> : des couleurs justes, des noirs riches, un grain délicat. Pas de plastique brillant, pas de reflets — la sobriété d'une vraie pièce d'art.</p>",
+        "description": "<p>Imprimé à la demande sur un papier épais au <strong>fini brillant</strong> : des couleurs éclatantes, des noirs profonds, un rendu net et lumineux. Une vraie qualité photo, pensée pour durer.</p>",
         "layout": "text_first",
         "enable_blob": false,
         "activate_dynamic_color": false,
@@ -179,7 +179,7 @@
     "bandeau_finitions": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify://shop_images/poster-famille-formats-cadres-finitions.jpg",
+        "image": "shopify://shop_images/poster-famille-personnalise-dessin-trait-minimaliste-prenoms-coeurs-2c8eeb2f-8de6-46bb-ab83-364d3d2f4bba.jpg",
         "title": "Le format et le cadre qui vous ressemblent",
         "description": "<p>Deux formats : <strong>30 × 40 cm</strong> pour un clin d'œil, <strong>60 × 80 cm</strong> pour la pièce maîtresse du mur. À poser tel quel, ou sublimé par l'un de nos cinq cadres — blanc, noir mat, chêne clair, noyer ou argent ancien — qui transforme votre poster en véritable tableau.</p><p><em>Conçu en France, imprimé en Europe.</em></p>",
         "layout": "image_first",
@@ -265,7 +265,7 @@
           "settings": {
             "heading": "Comment ça marche ?",
             "icon": "none",
-            "row_content": "<p>1. Vous personnalisez votre poster directement sur cette page : nom de famille, prénoms… tout ce qui fait votre histoire.</p><p>2. Vous choisissez le format, avec ou sans cadre, et vous commandez.</p><p>3. Notre studio compose votre création avec soin, puis l'imprime à la demande sur un beau papier mat.</p><p>4. Livrée chez vous en colis suivi, prête à offrir ou à accrocher.</p>"
+            "row_content": "<p>1. Vous personnalisez votre poster directement sur cette page : nom de famille, prénoms… tout ce qui fait votre histoire.</p><p>2. Vous choisissez le format, avec ou sans cadre, et vous commandez.</p><p>3. Notre studio compose votre création avec soin, puis l'imprime à la demande sur un beau papier brillant.</p><p>4. Livrée chez vous en colis suivi, prête à offrir ou à accrocher.</p>"
           }
         },
         "faq_combien_personnes": {
@@ -313,7 +313,7 @@
           "settings": {
             "heading": "Quel rendu et quelles finitions ?",
             "icon": "none",
-            "row_content": "<p>Votre poster est imprimé à la demande sur un papier épais, au rendu <strong>mat et précis</strong> : des couleurs justes, des noirs profonds, aucun reflet.</p><p>Il vous est proposé en deux formats — <strong>30 × 40 cm</strong> ou <strong>60 × 80 cm</strong> — à poser tel quel ou à encadrer. Côté cadre, cinq finitions s'offrent à vous : <strong>blanc, noir mat, chêne clair, noyer ou argent ancien</strong>, pour s'accorder à votre intérieur.</p>"
+            "row_content": "<p>Votre poster est imprimé à la demande sur un papier épais, au <strong>fini brillant</strong> : des couleurs éclatantes, des noirs profonds, un rendu net et lumineux.</p><p>Il vous est proposé en deux formats — <strong>30 × 40 cm</strong> ou <strong>60 × 80 cm</strong> — à poser tel quel ou à encadrer. Côté cadre, cinq finitions s'offrent à vous : <strong>blanc, noir mat, chêne clair, noyer ou argent ancien</strong>, pour s'accorder à votre intérieur.</p>"
           }
         },
         "faq_accrocher": {
