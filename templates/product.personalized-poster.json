@@ -77,7 +77,7 @@
           "settings": {
             "heading": "Materiaux",
             "icon": "leather",
-            "content": "<p><strong>- Le papier</strong> : un papier de qualité au fini brillant, pour des couleurs justes et des détails nets.</p><p><strong>- Les formats</strong> : 30 × 40 cm ou 60 × 80 cm, à poser tel quel ou à encadrer.</p><p><strong>- Le cadre (en option)</strong> : plusieurs finitions au choix — blanc, noir mat, chêne clair, noyer ou argent ancien.</p><p>Chaque poster est imprimé à la demande, conçu en France et imprimé en Europe.</p>",
+            "content": "<p><strong>- Le papier</strong> : un papier de qualité , pour des couleurs justes et des détails nets.</p><p><strong>- Les formats</strong> : 30 × 40 cm ou 60 × 80 cm, à poser tel quel ou à encadrer.</p><p><strong>- Le cadre (en option)</strong> : plusieurs finitions au choix — blanc, noir mat, chêne clair, noyer ou argent ancien.</p><p>Chaque poster est imprimé à la demande, conçu en France et imprimé en Europe.</p>",
             "page": ""
           }
         },
@@ -222,9 +222,9 @@
     "afe2a87a-371e-4c67-93b7-8c6b2244f43b": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify://shop_images/poster-foot-papier-mat-detail.jpg",
+        "image": "shopify://shop_images/poster-foot-papier-detail.jpg",
         "title": "Une matière qui se respecte",
-        "description": "<p>Imprimé à la demande sur un papier épais au <strong>fini brillant</strong> : des couleurs justes, des détails nets, un grain délicat. Un rendu net et lumineux — une vraie qualité photo, pensée pour durer.</p>",
+        "description": "<p>Imprimé à la demande sur un papier épais <strong>de qualité</strong> : des couleurs justes, des détails nets. Un rendu net et lumineux — une vraie qualité photo, pensée pour durer.</p>",
         "layout": "text_first",
         "enable_blob": false,
         "activate_dynamic_color": false,
@@ -279,7 +279,7 @@
           "settings": {
             "image": "shopify://shop_images/poster-foot-etape-3-encadre.jpg",
             "title": "3 · Livré, prêt à accrocher",
-            "text": "<p>Vous validez, nous imprimons sur un beau papier brillant. Reçu chez vous, encadré en option, prêt à offrir.</p>",
+            "text": "<p>Vous validez, nous imprimons sur un beau papier épais. Reçu chez vous, encadré en option, prêt à offrir.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -317,7 +317,7 @@
           "settings": {
             "heading": "Quel rendu et quelles finitions pour votre poster ?",
             "icon": "none",
-            "row_content": "<p><p>Votre poster est imprimé à la demande sur un papier de qualité, au <strong>fini brillant</strong> : des couleurs justes, des détails nets et une belle profondeur.</p><p>Il vous est proposé en deux formats — <strong>30 × 40 cm</strong> ou <strong>60 × 80 cm</strong> — à poser tel quel ou à encadrer. Côté cadre, plusieurs finitions s'offrent à vous : <strong>blanc, noir mat, chêne clair, noyer ou argent ancien</strong>, pour s'accorder à votre intérieur.</p>"
+            "row_content": "<p><p>Votre poster est imprimé à la demande sur un papier de qualité, <strong>de qualité</strong> : des couleurs justes, des détails nets et une belle profondeur.</p><p>Il vous est proposé en deux formats — <strong>30 × 40 cm</strong> ou <strong>60 × 80 cm</strong> — à poser tel quel ou à encadrer. Côté cadre, plusieurs finitions s'offrent à vous : <strong>blanc, noir mat, chêne clair, noyer ou argent ancien</strong>, pour s'accorder à votre intérieur.</p>"
           }
         },
         "e20d3253-d757-4a99-9237-128916cc9ffb": {

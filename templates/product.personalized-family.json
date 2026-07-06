@@ -65,7 +65,7 @@
           "settings": {
             "heading": "Matériaux",
             "icon": "leather",
-            "content": "<p><strong>- Le papier</strong> : un papier épais (200 g/m² et plus) au fini brillant, pour des couleurs éclatantes et des noirs profonds.</p><p><strong>- Les formats</strong> : 30 × 40 cm ou 60 × 80 cm, à poser tel quel ou à encadrer.</p><p><strong>- Le cadre (en option)</strong> : cinq finitions au choix — blanc, noir mat, chêne clair, noyer ou argent ancien.</p><p>Chaque poster est imprimé à la demande, conçu en France et imprimé en Europe.</p>",
+            "content": "<p><strong>- Le papier</strong> : un papier épais (200 g/m² et plus), pour des couleurs éclatantes et des noirs profonds.</p><p><strong>- Les formats</strong> : 30 × 40 cm ou 60 × 80 cm, à poser tel quel ou à encadrer.</p><p><strong>- Le cadre (en option)</strong> : cinq finitions au choix — blanc, noir mat, chêne clair, noyer ou argent ancien.</p><p>Chaque poster est imprimé à la demande, conçu en France et imprimé en Europe.</p>",
             "page": ""
           }
         },
@@ -113,7 +113,7 @@
           "settings": {
             "image": "shopify://shop_images/affiche-famille-personnalisee-dessin-trait-prenoms-coeurs-8a4a3131-5468-4d78-8c35-39e2eb5ad00c.jpg",
             "title": "2 · Notre studio compose",
-            "text": "<p>Votre création est composée avec soin, puis imprimée à la demande sur un beau papier épais au fini brillant.</p>",
+            "text": "<p>Votre création est composée avec soin, puis imprimée à la demande sur un beau papier épais de qualité.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -166,7 +166,7 @@
       "settings": {
         "image": "shopify://shop_images/poster-famille-personnalise-dessin-trait-minimaliste-prenoms-fe1a50aa-8c13-4059-8e9c-79032b7aed5f.jpg",
         "title": "Une matière qui se respecte",
-        "description": "<p>Imprimé à la demande sur un papier épais au <strong>fini brillant</strong> : des couleurs éclatantes, des noirs profonds, un rendu net et lumineux. Une vraie qualité photo, pensée pour durer.</p>",
+        "description": "<p>Imprimé à la demande sur un papier épais <strong>de qualité</strong> : des couleurs éclatantes, des noirs profonds, un rendu net et lumineux. Une vraie qualité photo, pensée pour durer.</p>",
         "layout": "text_first",
         "enable_blob": false,
         "activate_dynamic_color": false,
@@ -265,7 +265,7 @@
           "settings": {
             "heading": "Comment ça marche ?",
             "icon": "none",
-            "row_content": "<p>1. Vous personnalisez votre poster directement sur cette page : nom de famille, prénoms… tout ce qui fait votre histoire.</p><p>2. Vous choisissez le format, avec ou sans cadre, et vous commandez.</p><p>3. Notre studio compose votre création avec soin, puis l'imprime à la demande sur un beau papier brillant.</p><p>4. Livrée chez vous en colis suivi, prête à offrir ou à accrocher.</p>"
+            "row_content": "<p>1. Vous personnalisez votre poster directement sur cette page : nom de famille, prénoms… tout ce qui fait votre histoire.</p><p>2. Vous choisissez le format, avec ou sans cadre, et vous commandez.</p><p>3. Notre studio compose votre création avec soin, puis l'imprime à la demande sur un beau papier épais.</p><p>4. Livrée chez vous en colis suivi, prête à offrir ou à accrocher.</p>"
           }
         },
         "faq_combien_personnes": {
@@ -313,7 +313,7 @@
           "settings": {
             "heading": "Quel rendu et quelles finitions ?",
             "icon": "none",
-            "row_content": "<p>Votre poster est imprimé à la demande sur un papier épais, au <strong>fini brillant</strong> : des couleurs éclatantes, des noirs profonds, un rendu net et lumineux.</p><p>Il vous est proposé en deux formats — <strong>30 × 40 cm</strong> ou <strong>60 × 80 cm</strong> — à poser tel quel ou à encadrer. Côté cadre, cinq finitions s'offrent à vous : <strong>blanc, noir mat, chêne clair, noyer ou argent ancien</strong>, pour s'accorder à votre intérieur.</p>"
+            "row_content": "<p>Votre poster est imprimé à la demande sur un papier épais, <strong>de qualité</strong> : des couleurs éclatantes, des noirs profonds, un rendu net et lumineux.</p><p>Il vous est proposé en deux formats — <strong>30 × 40 cm</strong> ou <strong>60 × 80 cm</strong> — à poser tel quel ou à encadrer. Côté cadre, cinq finitions s'offrent à vous : <strong>blanc, noir mat, chêne clair, noyer ou argent ancien</strong>, pour s'accorder à votre intérieur.</p>"
           }
         },
         "faq_accrocher": {
