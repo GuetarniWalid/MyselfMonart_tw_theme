@@ -48,7 +48,7 @@
         "arguments": {
           "type": "text",
           "settings": {
-            "text": "<p>- Votre photo, vos prénoms : un portrait de famille unique, créé à la demande</p><p>- Aperçu gratuit en quelques instants : vous ne réglez qu'une fois le résultat validé</p><p>- Le cadeau qui touche en plein cœur, à toutes les générations</p><p>- Plus de 1 000 créations livrées depuis 2022 — 4,1/5 sur Trustpilot<br/></p>"
+            "text": "<p>- Vos prénoms, votre histoire : un portrait de famille unique, créé à la demande</p><p>- Composé avec soin par notre studio, pour que chaque détail vous ressemble</p><p>- Le cadeau qui touche en plein cœur, à toutes les générations</p><p>- Plus de 1 000 créations livrées depuis 2022 — 4,1/5 sur Trustpilot<br/></p>"
           }
         },
         "collapsible_livraison": {
@@ -65,7 +65,7 @@
           "settings": {
             "heading": "Matériaux",
             "icon": "leather",
-            "content": "<p><strong>- Le papier</strong> : un papier épais (200 g/m² et plus) au rendu mat et précis, pour un trait net et des noirs profonds.</p><p><strong>- Les formats</strong> : 30 × 40 cm ou 60 × 80 cm, à poser tel quel ou à encadrer.</p><p><strong>- Le cadre (en option)</strong> : cinq finitions au choix — blanc, noir mat, chêne clair, noyer ou argent ancien.</p><p>Chaque poster est imprimé à la demande, conçu en France et imprimé en Europe.</p>",
+            "content": "<p><strong>- Le papier</strong> : un papier épais (200 g/m² et plus) au rendu mat et précis, pour des couleurs justes et des noirs profonds.</p><p><strong>- Les formats</strong> : 30 × 40 cm ou 60 × 80 cm, à poser tel quel ou à encadrer.</p><p><strong>- Le cadre (en option)</strong> : cinq finitions au choix — blanc, noir mat, chêne clair, noyer ou argent ancien.</p><p>Chaque poster est imprimé à la demande, conçu en France et imprimé en Europe.</p>",
             "page": ""
           }
         },
@@ -100,9 +100,9 @@
         "etape_photo": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/studio-photo-exemple-famille-bon-dos.jpg",
-            "title": "1 · Votre photo de famille",
-            "text": "<p>Une photo prise de dos, en pied — tout le monde bien visible, de la tête aux pieds. C'est elle qui guide le dessin.</p>",
+            "image": "shopify://shop_images/poster-famille-personnalise-dessin-au-trait-prenoms.jpg",
+            "title": "1 · Votre famille",
+            "text": "<p>Votre nom de famille, les prénoms de votre tribu, le format qui vous plaît : vous personnalisez tout, directement sur cette page.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -111,9 +111,9 @@
         "etape_apercu": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/poster-famille-personnalise-dessin-au-trait-prenoms.jpg",
-            "title": "2 · L'aperçu en quelques instants",
-            "text": "<p>Vos prénoms, votre nom de famille : notre studio compose votre poster et vous en révèle l'aperçu en direct. Gratuit, sans engagement.</p>",
+            "image": "shopify://shop_images/poster-famille-papier-mat-detail-trait.jpg",
+            "title": "2 · Notre studio compose",
+            "text": "<p>Votre création est composée avec soin, puis imprimée à la demande sur un beau papier épais au rendu mat.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -124,7 +124,7 @@
           "settings": {
             "image": "shopify://shop_images/poster-famille-personnalise-dessin-trait-salon.jpg",
             "title": "3 · Livré, prêt à accrocher",
-            "text": "<p>Vous validez, nous imprimons sur un beau papier mat. Reçu chez vous, encadré en option, prêt à réchauffer vos murs.</p>",
+            "text": "<p>Reçu chez vous en colis suivi, encadré en option — prêt à offrir, ou à réchauffer vos murs.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -137,7 +137,7 @@
         "etape_livre"
       ],
       "settings": {
-        "title": "DE VOTRE PHOTO À VOTRE POSTER, EN 3 ÉTAPES",
+        "title": "VOTRE POSTER PERSONNALISÉ, EN 3 ÉTAPES",
         "image_shape": "aspect-[3/4] object-cover",
         "columns_desktop": 3,
         "show_backgounds": false,
@@ -149,9 +149,9 @@
     "bandeau_emotion": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify://shop_images/poster-famille-personnalise-avant-apres-photo-dessin.jpg",
-        "title": "Ce qui compte vraiment, en un trait",
-        "description": "<p>Une photo d'un instant ordinaire devient un portrait épuré : vos silhouettes main dans la main, votre nom de famille calligraphié, vos prénoms réunis. Ce n'est pas qu'un poster — c'est votre famille, dessinée d'un seul geste.</p>",
+        "image": "shopify://shop_images/poster-famille-personnalise-dessin-trait-salon.jpg",
+        "title": "Ce qui compte vraiment, sur votre mur",
+        "description": "<p>Vos prénoms réunis, votre nom de famille mis à l'honneur : un portrait de famille qui raconte votre histoire — pas celle d'un catalogue. Ce n'est pas qu'un poster, c'est votre tribu, accrochée au mur.</p>",
         "layout": "image_first",
         "enable_blob": false,
         "activate_dynamic_color": false,
@@ -166,7 +166,7 @@
       "settings": {
         "image": "shopify://shop_images/poster-famille-papier-mat-detail-trait.jpg",
         "title": "Une matière qui se respecte",
-        "description": "<p>Imprimé à la demande sur un papier épais au rendu <strong>mat et profond</strong> : un trait net, des noirs riches, un grain délicat. Pas de plastique brillant, pas de reflets — la sobriété d'une vraie pièce d'art.</p>",
+        "description": "<p>Imprimé à la demande sur un papier épais au rendu <strong>mat et profond</strong> : des couleurs justes, des noirs riches, un grain délicat. Pas de plastique brillant, pas de reflets — la sobriété d'une vraie pièce d'art.</p>",
         "layout": "text_first",
         "enable_blob": false,
         "activate_dynamic_color": false,
@@ -265,39 +265,31 @@
           "settings": {
             "heading": "Comment ça marche ?",
             "icon": "none",
-            "row_content": "<p>1. Vous choisissez une photo de votre famille, prise de dos et en pied.</p><p>2. Vous indiquez votre nom de famille, puis les prénoms dans l'ordre de la photo, de gauche à droite.</p><p>3. En une trentaine de secondes, notre studio compose votre poster et vous en présente l'aperçu, gratuitement.</p><p>4. Le résultat vous plaît ? Vous validez, et nous lançons l'impression.</p>"
-          }
-        },
-        "faq_quelle_photo": {
-          "type": "collapsible_row",
-          "settings": {
-            "heading": "Quelle photo choisir ?",
-            "icon": "none",
-            "row_content": "<p>L'idéale : votre famille <strong>de dos</strong>, <strong>en pied</strong> (de la tête aux pieds), bien éclairée — et personne d'autre dans le cadre. C'est elle qui guide les silhouettes, les tailles et les coiffures du dessin.</p><p>Une photo de face fonctionne aussi : le portrait étant dessiné de dos, ce sont les silhouettes qui comptent, pas les visages.</p>"
+            "row_content": "<p>1. Vous personnalisez votre poster directement sur cette page : nom de famille, prénoms… tout ce qui fait votre histoire.</p><p>2. Vous choisissez le format, avec ou sans cadre, et vous commandez.</p><p>3. Notre studio compose votre création avec soin, puis l'imprime à la demande sur un beau papier mat.</p><p>4. Livrée chez vous en colis suivi, prête à offrir ou à accrocher.</p>"
           }
         },
         "faq_combien_personnes": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "Combien de personnes sur le poster ?",
+            "heading": "Combien de prénoms sur le poster ?",
             "icon": "none",
-            "row_content": "<p>De 1 à 6 personnes. Indiquez simplement les prénoms dans l'ordre de la photo, de gauche à droite — chacun apparaîtra sous sa silhouette, séparé par de petits cœurs.</p>"
+            "row_content": "<p>La plupart de nos créations accueillent de 1 à 6 prénoms — parents, enfants, grands-parents… Indiquez-les dans l'ordre souhaité : chacun trouve sa place sur le poster.</p>"
           }
         },
-        "faq_apercu_deplait": {
+        "faq_erreur_prenom": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "Et si l'aperçu ne me plaît pas ?",
+            "heading": "Et si je me trompe dans un prénom ?",
             "icon": "none",
-            "row_content": "<p>Plusieurs versions vous sont proposées : parcourez-les librement avec les flèches, elles restent gratuites. Vous pouvez aussi relancer une nouvelle création, ou modifier votre photo et vos prénoms.</p><p>Et si décidément rien n'y fait, un artiste de notre studio prend le relais : vous recevez par e-mail un aperçu réalisé à la main, sous 24 h.</p>"
+            "row_content": "<p>Votre création reprend vos textes à la lettre : vérifiez bien l'orthographe au moment de personnaliser.</p><p>Une coquille repérée juste après la commande ? Écrivez vite à notre service client de Toulouse : tant que la fabrication n'a pas commencé, nous corrigeons avec plaisir.</p>"
           }
         },
         "faq_rgpd_photo": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "Que devient la photo que vous téléversez ?",
+            "heading": "Que deviennent les informations que je confie ?",
             "icon": "none",
-            "row_content": "<p>Elle nous sert uniquement à composer puis à imprimer votre poster. Elle n'alimente aucun entraînement d'intelligence artificielle et n'est partagée avec personne.</p><p>Nous la supprimons une fois votre commande honorée — et au plus tard sous 30 jours si vous ne passez pas commande. Pour la photo d'un enfant, nous vous demandons d'être son parent ou son représentant légal.</p>"
+            "row_content": "<p>Vos prénoms et vos textes servent uniquement à composer puis à imprimer votre création — ils ne sont partagés avec personne.</p><p>Si votre personnalisation comporte une photo, elle n'alimente aucun entraînement d'intelligence artificielle et est supprimée une fois votre commande honorée.</p>"
           }
         },
         "faq_occasions": {
@@ -313,7 +305,7 @@
           "settings": {
             "heading": "Sera-t-il livré à temps pour l'offrir ?",
             "icon": "none",
-            "row_content": "<p>Entre votre validation et la réception, comptez <strong>3 à 4 jours de fabrication</strong> puis <strong>3 à 5 jours ouvrés d'expédition</strong> en colis suivi.</p><p>Pour être sûr de l'offrir à temps, lancez-vous dès aujourd'hui : créer et valider votre poster, c'est l'affaire de quelques minutes.</p>"
+            "row_content": "<p>Entre votre commande et la réception, comptez <strong>3 à 4 jours de fabrication</strong> puis <strong>3 à 5 jours ouvrés d'expédition</strong> en colis suivi.</p><p>Pour être sûr de l'offrir à temps, lancez-vous dès aujourd'hui : personnaliser votre poster, c'est l'affaire d'une minute.</p>"
           }
         },
         "faq_rendu_finitions": {
@@ -321,7 +313,7 @@
           "settings": {
             "heading": "Quel rendu et quelles finitions ?",
             "icon": "none",
-            "row_content": "<p>Votre poster est imprimé à la demande sur un papier épais, au rendu <strong>mat et précis</strong> : un trait net, des noirs profonds, aucun reflet.</p><p>Il vous est proposé en deux formats — <strong>30 × 40 cm</strong> ou <strong>60 × 80 cm</strong> — à poser tel quel ou à encadrer. Côté cadre, cinq finitions s'offrent à vous : <strong>blanc, noir mat, chêne clair, noyer ou argent ancien</strong>, pour s'accorder à votre intérieur.</p>"
+            "row_content": "<p>Votre poster est imprimé à la demande sur un papier épais, au rendu <strong>mat et précis</strong> : des couleurs justes, des noirs profonds, aucun reflet.</p><p>Il vous est proposé en deux formats — <strong>30 × 40 cm</strong> ou <strong>60 × 80 cm</strong> — à poser tel quel ou à encadrer. Côté cadre, cinq finitions s'offrent à vous : <strong>blanc, noir mat, chêne clair, noyer ou argent ancien</strong>, pour s'accorder à votre intérieur.</p>"
           }
         },
         "faq_accrocher": {
@@ -337,15 +329,14 @@
           "settings": {
             "heading": "Puis-je changer d'avis après ma commande ?",
             "icon": "none",
-            "row_content": "<p>Votre création est réalisée à votre image et imprimée à la demande : elle ne pourrait être ni revendue, ni réutilisée. La loi exclut pour cette raison les créations personnalisées du droit de rétractation (article L221-28 3° du Code de la consommation).</p><p>C'est précisément pourquoi vous validez l'aperçu avant impression : rien ne part en fabrication sans votre accord. Et si quoi que ce soit vous chagrine à la réception, notre service client de Toulouse cherchera toujours une solution avec vous.</p>"
+            "row_content": "<p>Votre création est réalisée à votre image et imprimée à la demande : elle ne pourrait être ni revendue, ni réutilisée. La loi exclut pour cette raison les créations personnalisées du droit de rétractation (article L221-28 3° du Code de la consommation).</p><p>C'est pourquoi nous vous invitons à bien vérifier votre personnalisation avant de commander. Et si quoi que ce soit vous chagrine à la réception, notre service client de Toulouse cherchera toujours une solution avec vous.</p>"
           }
         }
       },
       "block_order": [
         "faq_comment_ca_marche",
-        "faq_quelle_photo",
         "faq_combien_personnes",
-        "faq_apercu_deplait",
+        "faq_erreur_prenom",
         "faq_occasions",
         "faq_rgpd_photo",
         "faq_delais",
