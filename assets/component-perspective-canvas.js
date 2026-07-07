@@ -761,18 +761,25 @@
         if (this.posterMode) {
           // Poster : pas de "mise en lumière de tranche" (inexistante sur une feuille) -> on fait
           // GLISSER le reflet sur la glace. Joué APRÈS le render qui (re)construit le cadre + la
-          // glace (glassGeo) -> double rAF. glassSweep no-op si « Sans cadre » (pas de glassGeo).
-          requestAnimationFrame(() => requestAnimationFrame(() => this.glassSweep()));
+          // glace (glassGeo) -> double rAF. glassSweep no-op si « Sans cadre » (pas de glassGeo),
+          // mais le carrousel scrolle quand même : l'utilisateur voit le cadre disparaître.
+          requestAnimationFrame(() =>
+            requestAnimationFrame(() =>
+              this.revealOnChange(() => this.glassSweep(), () => !!this.glassRAF),
+            ),
+          );
         } else {
-          this.highlightOnBorderChange();
+          this.revealOnChange(() => this.triggerHighlight(), () => !!this.hlRAF);
         }
       }
     }
 
     /* Sur MOBILE le carrousel ne montre qu'une image à la fois ; si la slide WebGL (placée
        en dernier) n'est pas visible, on l'amène d'abord au centre, PUIS on joue l'animation
-       quand elle est en vue. Sur desktop (grille = tout visible) ou en popup : direct. */
-    highlightOnBorderChange() {
+       (`play` : mise en lumière de tranche pour la toile, reflet sur la glace pour le poster)
+       quand elle est en vue. Sur desktop (grille = tout visible) ou en popup : direct.
+       `isPlaying` : rAF dédié de l'animation -> le garde-fou ne la relance pas si déjà en cours. */
+    revealOnChange(play, isPlaying) {
       const isPopup = this.getAttribute('data-context') === 'popup';
       const mobile = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
       if (this._hlScrollIO) { this._hlScrollIO.disconnect(); this._hlScrollIO = null; }
@@ -780,7 +787,7 @@
       const slide = this.closest('.perspective-slide');
       const carousel = slide && slide.closest('.carousel');
       if (isPopup || !mobile || !slide || !carousel) {
-        this.triggerHighlight();
+        play();
         return;
       }
       // Scroll horizontal du carrousel pour centrer la slide WebGL (sans scroll vertical).
@@ -794,7 +801,10 @@
           if (entries.some((e) => e.intersectionRatio >= 0.6)) {
             io.disconnect();
             this._hlScrollIO = null;
-            this.triggerHighlight();
+            // L'IO a joué -> on annule le garde-fou (poster : le sweep ne dure que 850 ms,
+            // un timeout en retard le trouverait fini et rejouerait le reflet une 2e fois).
+            if (this._hlScrollTO) { clearTimeout(this._hlScrollTO); this._hlScrollTO = null; }
+            play();
           }
         },
         { root: carousel, threshold: [0.6] },
@@ -804,7 +814,7 @@
       // Garde-fou : si l'IO ne tire pas (déjà centrée / scroll instantané), joue après un délai.
       this._hlScrollTO = setTimeout(() => {
         if (this._hlScrollIO) { this._hlScrollIO.disconnect(); this._hlScrollIO = null; }
-        if (!this.hlRAF) this.triggerHighlight();
+        if (!isPlaying()) play();
       }, 800);
     }
 
