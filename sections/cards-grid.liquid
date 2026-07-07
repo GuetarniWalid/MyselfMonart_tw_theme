@@ -1,6 +1,12 @@
 {%- comment -%}
   Home — Cards grid (grille de cartes collections).
 
+  V2 — Image de card = TOUJOURS l'image de la collection (Admin Shopify)
+  quand une collection est renseignée ; ratio carré (les images de
+  collection sont en 1200×1200). L'image manuelle (picker ou asset) ne
+  sert plus que de repli pour les cards SANS collection. Même traitement
+  que cards-carousel V5.
+
   Refonte 1:1 du style original `assets/home-styles.css` (lignes 234-340)
   en Tailwind + vars theme — AUCUN changement visuel, juste :
   - Playfair Display → font-heading (custom theme)
@@ -26,7 +32,8 @@
   - Section padding clamp(64,10vw,120) 0 → py-16 md:py-24 lg:py-[120px]
   - Header max-w 760px, text-center, mb clamp(48,6vw,80)
   - Grid 1col / 2col(sm) / 3col(lg, default) / 2 ou 4 selon setting
-  - Card aspect 4/5, bg sable au repos, rounded[4px]
+  - Card carrée (aspect-square depuis V2 — images collection 1200×1200),
+    bg sable au repos, rounded[4px]
   - Hover : SEULE l'image s'anime (scale 1.05). La carte ne se soulève plus
     (translate-y retiré) → le texte sous l'image reste fixe.
   - Label badge top-left : pill blanc, texte terra, uppercase tracking
@@ -101,25 +108,46 @@
     <ul class="grid grid-cols-1 sm:grid-cols-2 {{ grid_cols_lg_class }} gap-8 px-6 list-none m-0 p-0 pl-6 pr-6">
       {%- for block in section.blocks -%}
         {%- liquid
-          assign img = block.settings.image
-          assign img_url = ''
-          if img != blank
-            assign img_url = img | image_url: width: 800
-          elsif block.settings.image_asset != blank
-            assign img_url = block.settings.image_asset | asset_url
+          comment
+            Source du contenu : un bloc qui pointe une COLLECTION affiche
+            TOUJOURS l'image de la collection (Admin Shopify → Collection →
+            Image) — jamais une image manuelle. Titre et lien manuels
+            restent prioritaires s'ils sont remplis. Sans collection,
+            l'image manuelle (picker ou asset) sert de repli.
+          endcomment
+          assign card_title = block.settings.title
+          assign card_link = block.settings.link
+          if block.settings.collection != blank
+            assign img = block.settings.collection.featured_image
+            assign img_url = ''
+            if card_title == blank
+              assign card_title = block.settings.collection.title
+            endif
+            if card_link == blank
+              assign card_link = block.settings.collection.url
+            endif
+          else
+            assign img = block.settings.image
+            assign img_url = ''
+            if img == blank and block.settings.image_asset != blank
+              assign img_url = block.settings.image_asset | asset_url
+            endif
           endif
 
+          assign img_alt = block.settings.alt | default: img.alt | default: card_title
+
           assign card_tag = 'div'
-          if block.settings.link != blank
+          if card_link != blank
             assign card_tag = 'a'
           endif
         -%}
         <li {{ block.shopify_attributes }}>
           <{{ card_tag }}
             class="home-card group flex flex-col text-inherit no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terra focus-visible:ring-offset-2 focus-visible:rounded-sm"
-            {% if block.settings.link != blank %}href="{{ block.settings.link }}"{% endif %}>
+            {% if card_link != blank %}href="{{ card_link }}"{% endif %}>
 
-            <div class="relative aspect-[4/5] overflow-hidden mb-5 bg-main-10 rounded">
+            {%- comment -%} data-allow-empty : sans image résolvable ni label, le div serait vide → masqué par la règle globale *:empty d'input.css {%- endcomment -%}
+            <div data-allow-empty class="relative aspect-square overflow-hidden mb-5 bg-main-10 rounded">
               {%- comment -%}
                 Image scale-110 par défaut → .is-centered (ajoutée par IO
                 quand la section atteint la zone centrale du viewport)
@@ -136,7 +164,7 @@
                           {%- if img.width >= 800 -%}{{ img | image_url: width: 800 }} 800w,{%- endif -%}
                           {{ img | image_url }} {{ img.width }}w"
                   sizes="(min-width: 1024px) 22vw, (min-width: 640px) 45vw, 90vw"
-                  alt="{{ block.settings.alt | escape }}"
+                  alt="{{ img_alt | escape }}"
                   width="{{ img.width }}"
                   height="{{ img.height }}"
                   loading="lazy"
@@ -146,7 +174,9 @@
                 <img
                   data-card-img
                   src="{{ img_url }}"
-                  alt="{{ block.settings.alt | escape }}"
+                  alt="{{ img_alt | escape }}"
+                  width="800"
+                  height="800"
                   loading="lazy"
                   decoding="async"
                   class="absolute inset-0 w-full h-full object-cover scale-110 transition-transform duration-700 ease-out motion-reduce:transition-none motion-reduce:!scale-100 [&.is-centered]:scale-100 group-hover:!scale-105">
@@ -160,9 +190,9 @@
               {%- endif -%}
             </div>
 
-            {%- if block.settings.title != blank -%}
+            {%- if card_title != blank -%}
               <h3 class="font-heading font-medium text-[22px] text-main m-0 mb-2 leading-[1.25]">
-                {{ block.settings.title | escape }}
+                {{ card_title | escape }}
               </h3>
             {%- endif -%}
 
@@ -172,7 +202,7 @@
               </div>
             {%- endif -%}
 
-            {%- if block.settings.link_label != blank and block.settings.link != blank -%}
+            {%- if block.settings.link_label != blank and card_link != blank -%}
               <span class="font-roboto text-[13px] font-medium text-terra tracking-[0.04em] uppercase inline-flex items-center gap-2">
                 {{ block.settings.link_label | escape }}
                 {% render 'tw-icon-arrow', width: 22 %}
@@ -288,19 +318,28 @@
       "name": "Card",
       "settings": [
         {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection (source de l'image + titre + lien)",
+          "info": "Si renseigné, l'image affichée est TOUJOURS celle de la collection (Admin Shopify → Collection → Image). Titre et lien ci-dessous restent prioritaires s'ils sont remplis."
+        },
+        {
           "type": "image_picker",
           "id": "image",
-          "label": "Image"
+          "label": "Image (uniquement si aucune collection)",
+          "info": "Ignorée dès qu'une collection est sélectionnée. Format carré recommandé."
         },
         {
           "type": "text",
           "id": "image_asset",
-          "label": "OU asset filename (fallback)"
+          "label": "OU asset filename (fallback)",
+          "info": "Ignoré dès qu'une collection est sélectionnée."
         },
         {
           "type": "text",
           "id": "alt",
-          "label": "Alt text (obligatoire SEO + a11y)"
+          "label": "Alt text (optionnel — remplace l'alt automatique)",
+          "info": "Laisser vide sur une carte collection : l'alt SEO de l'image de la collection est utilisé automatiquement. À remplir uniquement pour une image manuelle sans collection."
         },
         {
           "type": "text",
