@@ -48,12 +48,21 @@
             "promotion_date": ""
           }
         },
+        "collapsible_tab_79mrAT": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Poster ou toile : lequel choisir ?",
+            "icon": "star",
+            "content": "<p>Une même œuvre, deux façons de l’habiter — à vous de choisir celle qui vous ressemble aujourd’hui.</p><p><strong>Le poster, c’est la liberté.</strong> Un format papier léger et accessible, à encadrer vous-même avec un cadre standard du commerce, ou à poser tel quel. On le déplace, on le compose en mur-galerie, on le renouvelle au gré des envies. Idéal pour une première déco, un petit budget, une location ou un cadeau qui a du goût. Le rendu ? Un vrai papier photo, un tirage HD aux couleurs éclatantes.</p><p><strong>La version sur toile, c’est la pièce forte.</strong> Celle qu’on installe pour durer, qui donne le ton d’un mur et qu’on ne change pas. Plus enveloppante, plus présente — pensée pour rester.</p><p>Envie de la découvrir sur toile ? Utilisez la bascule <em>Poster / Toile</em> en haut de page pour voir la même œuvre en version durable.</p>",
+            "page": ""
+          }
+        },
         "collapsible_tab_HAUcNw": {
           "type": "collapsible_tab",
           "settings": {
-            "heading": "Délai d'expédition",
+            "heading": "Livraison, paiement & délais",
             "icon": "box",
-            "content": "<ul><li>Fabrication en 3/4 jours</li><li>Expédition en 3/5 jours ouvrables en colis suivi à votre domicile</li></ul>",
+            "content": "<p><strong>Livraison offerte partout.</strong> Aucun minimum, en colis suivi jusqu'à votre porte.</p><p><strong>Fabrication à la demande :</strong><br/> comptez 3 à 4 jours de fabrication, puis 3 à 5 jours ouvrés de <br/>livraison. Votre numéro de suivi vous est envoyé dès l'expédition.</p><p><strong>Paiement en 3 fois sans frais</strong> avec Klarna dès 50 €.</p><p><em>Conçu en France, imprimé en Europe.</em></p>",
             "page": ""
           }
         },
@@ -106,6 +115,7 @@
         "short_title_9m74gE",
         "variant_picker_YiA9jN",
         "buy_qrRzcg",
+        "collapsible_tab_79mrAT",
         "collapsible_tab_HAUcNw",
         "collapsible_tab_9gdLK4",
         "collapsible_tab_64pHhF",
@@ -114,7 +124,12 @@
         "shop_arguments_kPT8Tg"
       ],
       "settings": {
-        "start_from_media": 3
+        "start_from_media": 3,
+        "enable_merchant_schema": true,
+        "shipping_free": true,
+        "ships_country": "FR",
+        "return_days": 14,
+        "enable_format_toggle": true
       }
     },
     "customer_testimonial_myiwee": {

@@ -48,27 +48,12 @@
             "promotion_date": ""
           }
         },
-        "text_benefits_poster": {
-          "type": "text",
-          "settings": {
-            "text": "<ul><li><strong>Un tirage photo HD, éclatant</strong> — vrai papier photo, couleurs vives et détails nets, impression sans bordure.</li><li><strong>À encadrer selon vos envies</strong> — un cadre standard du commerce suffit, votre mur-galerie prend vie.</li><li><strong>L’art qui se renouvelle</strong> — un format léger que l’on change au gré des saisons et des humeurs.</li></ul>"
-          }
-        },
         "collapsible_tab_poster_ou_toile": {
           "type": "collapsible_tab",
           "settings": {
             "heading": "Poster ou toile : lequel choisir ?",
             "icon": "star",
             "content": "<p>Une même œuvre, deux façons de l’habiter — à vous de choisir celle qui vous ressemble aujourd’hui.</p><p><strong>Le poster, c’est la liberté.</strong> Un format papier léger et accessible, à encadrer vous-même avec un cadre standard du commerce, ou à poser tel quel. On le déplace, on le compose en mur-galerie, on le renouvelle au gré des envies. Idéal pour une première déco, un petit budget, une location ou un cadeau qui a du goût. Le rendu ? Un vrai papier photo, un tirage HD aux couleurs éclatantes.</p><p><strong>La version sur toile, c’est la pièce forte.</strong> Celle qu’on installe pour durer, qui donne le ton d’un mur et qu’on ne change pas. Plus enveloppante, plus présente — pensée pour rester.</p><p>Envie de la découvrir sur toile ? Utilisez la bascule <em>Poster / Toile</em> en haut de page pour voir la même œuvre en version durable.</p>",
-            "page": ""
-          }
-        },
-        "collapsible_tab_finitions": {
-          "type": "collapsible_tab",
-          "settings": {
-            "heading": "Le poster & ses finitions",
-            "icon": "clipboard",
-            "content": "<h3>Un vrai tirage photo</h3><p>Votre affiche est une reproduction en haute définition, imprimée sur un vrai papier photo. Les couleurs sont éclatantes et fidèles, les détails d’une grande netteté. L’image s’imprime bord à bord, sans bordure — un rendu plein cadre, épuré et minimaliste.</p><p>Quatre formats pour trouver le vôtre : <strong>30×40</strong> (petit mur ou composition), <strong>60×80</strong> (au-dessus d’un meuble), <strong>75×100</strong> et <strong>90×120 cm</strong> (la pièce forte, au-dessus d’un canapé ou d’un lit). En un clic, ajoutez le <strong>contour blanc</strong> : une marge blanche autour du visuel, pour un effet galerie plus chic qui laisse respirer l’image.</p><h3>Le cadre, en option</h3><p><strong>Sans cadre</strong> : l’affiche seule, à encadrer selon vos envies avec un cadre standard du commerce. <em>Le cadre n’est pas inclus</em> — mais toute liberté de composer vous appartient. <strong>Avec cadre</strong> : livrée prête à accrocher, en cinq finitions au choix — blanc, noir mat, chêne clair, noyer, argent ancien.</p>",
             "page": ""
           }
         },
@@ -81,12 +66,21 @@
             "page": ""
           }
         },
+        "collapsible_tab_finitions": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Le poster & ses finitions",
+            "icon": "clipboard",
+            "content": "<h3>Un vrai tirage photo</h3><p>Votre affiche est une reproduction en haute définition, imprimée sur un vrai papier photo. Les couleurs sont éclatantes et fidèles, les détails d’une grande netteté. L’image s’imprime bord à bord, sans bordure — un rendu plein cadre, épuré et minimaliste.</p><p>Quatre formats pour trouver le vôtre : <strong>30×40</strong> (petit mur ou composition), <strong>60×80</strong> (au-dessus d’un meuble), <strong>75×100</strong> et <strong>90×120 cm</strong> (la pièce forte, au-dessus d’un canapé ou d’un lit). En un clic, ajoutez le <strong>contour blanc</strong> : une marge blanche autour du visuel, pour un effet galerie plus chic qui laisse respirer l’image.</p><h3>Le cadre, en option</h3><p><strong>Sans cadre</strong> : l’affiche seule, à encadrer selon vos envies avec un cadre standard du commerce. <em>Le cadre n’est pas inclus</em> — mais toute liberté de composer vous appartient. <strong>Avec cadre</strong> : livrée prête à accrocher, en cinq finitions au choix — blanc, noir mat, chêne clair, noyer, argent ancien.</p>",
+            "page": ""
+          }
+        },
         "collapsible_tab_retour": {
           "type": "collapsible_tab",
           "settings": {
-            "heading": "Retour & satisfaction",
+            "heading": "Retour & échange",
             "icon": "return",
-            "content": "<h3>14 jours pour changer d'avis</h3><p>Votre affiche ne trouve pas sa place ? Vous avez 14 jours après réception pour nous la retourner. On vous guide, simplement — votre satisfaction compte plus qu'une vente.</p><h3>Arrivée impeccable, garantie</h3><p>Chaque affiche part soigneusement protégée. Dans le cas rare où elle arriverait abîmée par le transport, envoyez-nous une photo : on vous réimprime et réexpédie une nouvelle affiche, sans frais. 🤍</p>",
+            "content": "<h3>Notre engagement qualité</h3><p>Chaque œuvre quitte notre atelier <br/>soigneusement emballée pour voyager en toute sécurité jusqu'à chez vous.<br/> Dans le rare cas où votre tableau arriverait endommagé ou ne <br/>correspondrait pas à nos exigences de qualité, nous nous engageons à <br/>vous envoyer une nouvelle pièce sans aucun frais.</p><p>Parce que vous méritez une œuvre parfaite sur vos murs, nous restons à vos côtés jusqu'à votre entière satisfaction.</p>",
             "page": ""
           }
         },
@@ -121,17 +115,21 @@
         "short_title_9m74gE",
         "variant_picker_YiA9jN",
         "buy_qrRzcg",
-        "text_benefits_poster",
         "collapsible_tab_poster_ou_toile",
-        "collapsible_tab_finitions",
         "collapsible_tab_livraison",
+        "collapsible_tab_finitions",
         "collapsible_tab_retour",
         "title",
         "description_Fw7xRB",
         "shop_arguments_poster"
       ],
       "settings": {
-        "start_from_media": 3
+        "start_from_media": 3,
+        "enable_merchant_schema": true,
+        "shipping_free": true,
+        "ships_country": "FR",
+        "return_days": 14,
+        "enable_format_toggle": true
       }
     },
     "customer_testimonial_myiwee": {
