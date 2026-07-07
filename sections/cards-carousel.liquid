@@ -1,6 +1,11 @@
 {%- comment -%}
   Home — Rooms Grid (H2.3 Trouver votre tableau selon la pièce).
 
+  V5 — Image de card = TOUJOURS l'image de la collection (Admin Shopify)
+  quand une collection est renseignée ; ratio carré (les images de
+  collection sont en 1200×1200). L'image manuelle ne sert plus que de
+  repli pour les cards SANS collection (ex : carte vers une page).
+
   V4 — Carrousel auto-scroll + card entièrement cliquable + zoom dynamique.
 
   Améliorations vs V3
@@ -116,35 +121,24 @@
       {%- for block in section.blocks -%}
         {%- liquid
           comment
-            Source du contenu : un bloc peut pointer une COLLECTION
-            (image/titre/lien auto, comme l'ancienne section collection-list)
-            OU rester en mode manuel (image_picker/asset + titre + lien).
-            Les valeurs manuelles, si présentes, priment sur la collection.
+            Source du contenu : un bloc qui pointe une COLLECTION affiche
+            TOUJOURS l'image de la collection (Admin Shopify → Collection →
+            Image) — jamais une image manuelle. Titre et lien manuels
+            restent prioritaires s'ils sont remplis. Sans collection
+            (ex : carte vers une page), l'image manuelle sert de repli.
           endcomment
-          assign card_image = block.settings.image
           assign card_title = block.settings.title
           assign card_link = block.settings.link
           if block.settings.collection != blank
-            if card_image == blank
-              assign card_image = block.settings.collection.featured_image
-            endif
+            assign card_image = block.settings.collection.featured_image
             if card_title == blank
               assign card_title = block.settings.collection.title
             endif
             if card_link == blank
               assign card_link = block.settings.collection.url
             endif
-          endif
-
-          assign img_url = ''
-          assign img_width = 800
-          assign img_height = 1120
-          if card_image != blank
-            assign img_url = card_image | image_url: width: 800
-            assign img_width = card_image.width
-            assign img_height = card_image.height
-          elsif block.settings.image_asset != blank
-            assign img_url = block.settings.image_asset | asset_url
+          else
+            assign card_image = block.settings.image
           endif
 
           assign img_alt = block.settings.image_alt | default: card_image.alt | default: card_title
@@ -161,37 +155,25 @@
           <article class="group relative flex flex-col h-full">
 
             {%- comment -%} Image avec zoom dynamique (scale-110 par défaut, .is-centered retire le zoom, group-hover:scale-105 override) {%- endcomment -%}
-            <div class="relative overflow-hidden aspect-[5/7] {{ bg_class }} mb-5">
+            {%- comment -%} data-allow-empty : sans image résolvable ni pill, le div serait vide → masqué par la règle globale *:empty d'input.css {%- endcomment -%}
+            <div data-allow-empty class="relative overflow-hidden aspect-square {{ bg_class }} mb-5">
 
-              {%- if img_url != '' -%}
-                {%- if card_image != blank -%}
-                  <img
-                    data-room-img
-                    srcset="{%- if card_image.width >= 400 -%}{{ card_image | image_url: width: 400 }} 400w,{%- endif -%}
-                            {%- if card_image.width >= 600 -%}{{ card_image | image_url: width: 600 }} 600w,{%- endif -%}
-                            {%- if card_image.width >= 800 -%}{{ card_image | image_url: width: 800 }} 800w,{%- endif -%}
-                            {%- if card_image.width >= 1000 -%}{{ card_image | image_url: width: 1000 }} 1000w,{%- endif -%}
-                            {{ card_image | image_url }} {{ card_image.width }}w"
-                    sizes="(max-width: 639px) 82vw, (max-width: 767px) 58vw, (max-width: 1023px) 40vw, 28vw"
-                    src="{{ img_url }}"
-                    alt="{{ img_alt | escape }}"
-                    width="{{ img_width }}"
-                    height="{{ img_height }}"
-                    loading="lazy"
-                    decoding="async"
-                    class="absolute inset-0 w-full h-full object-cover scale-110 transition-transform duration-700 ease-out motion-reduce:transition-none motion-reduce:!scale-100 [&.is-centered]:scale-100 group-hover:!scale-105">
-                {%- else -%}
-                  <img
-                    data-room-img
-                    src="{{ img_url }}"
-                    alt="{{ img_alt | escape }}"
-                    width="{{ img_width }}"
-                    height="{{ img_height }}"
-                    loading="lazy"
-                    decoding="async"
-                    sizes="(max-width: 639px) 82vw, (max-width: 767px) 58vw, (max-width: 1023px) 40vw, 28vw"
-                    class="absolute inset-0 w-full h-full object-cover scale-110 transition-transform duration-700 ease-out motion-reduce:transition-none motion-reduce:!scale-100 [&.is-centered]:scale-100 group-hover:!scale-105">
-                {%- endif -%}
+              {%- if card_image != blank -%}
+                <img
+                  data-room-img
+                  srcset="{%- if card_image.width >= 400 -%}{{ card_image | image_url: width: 400 }} 400w,{%- endif -%}
+                          {%- if card_image.width >= 600 -%}{{ card_image | image_url: width: 600 }} 600w,{%- endif -%}
+                          {%- if card_image.width >= 800 -%}{{ card_image | image_url: width: 800 }} 800w,{%- endif -%}
+                          {%- if card_image.width >= 1000 -%}{{ card_image | image_url: width: 1000 }} 1000w,{%- endif -%}
+                          {{ card_image | image_url }} {{ card_image.width }}w"
+                  sizes="(max-width: 639px) 82vw, (max-width: 767px) 58vw, (max-width: 1023px) 40vw, 28vw"
+                  src="{{ card_image | image_url: width: 800 }}"
+                  alt="{{ img_alt | escape }}"
+                  width="{{ card_image.width }}"
+                  height="{{ card_image.height }}"
+                  loading="lazy"
+                  decoding="async"
+                  class="absolute inset-0 w-full h-full object-cover scale-110 transition-transform duration-700 ease-out motion-reduce:transition-none motion-reduce:!scale-100 [&.is-centered]:scale-100 group-hover:!scale-105">
               {%- endif -%}
 
               {%- comment -%} Label pill décoratif (haut-droite) {%- endcomment -%}
@@ -374,26 +356,20 @@
         {
           "type": "collection",
           "id": "collection",
-          "label": "Collection (remplit image + titre + lien automatiquement)",
-          "info": "Si renseigné, l'image, le titre et le lien sont tirés de la collection. Les champs ci-dessous restent prioritaires s'ils sont remplis."
+          "label": "Collection (source de l'image + titre + lien)",
+          "info": "Si renseigné, l'image affichée est TOUJOURS celle de la collection (Admin Shopify → Collection → Image). Titre et lien ci-dessous restent prioritaires s'ils sont remplis."
         },
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Image (recommandé — srcset auto)",
-          "info": "Format portrait 5/7 recommandé."
-        },
-        {
-          "type": "text",
-          "id": "image_asset",
-          "label": "OU asset filename (fallback)",
-          "info": "Ex : vignette-salon-v1.png"
+          "label": "Image (uniquement si aucune collection)",
+          "info": "Ignorée dès qu'une collection est sélectionnée. Format carré recommandé."
         },
         {
           "type": "text",
           "id": "image_alt",
-          "label": "Alt text (obligatoire SEO + a11y)",
-          "info": "80–125 caractères."
+          "label": "Alt text (optionnel — remplace l'alt automatique)",
+          "info": "Laisser vide sur une carte collection : l'alt SEO de l'image de la collection est utilisé automatiquement. À remplir uniquement pour une image manuelle sans collection."
         },
         {
           "type": "text",

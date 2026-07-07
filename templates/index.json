@@ -99,8 +99,7 @@
         "room_salon": {
           "type": "room",
           "settings": {
-            "image": "shopify://shop_images/vignette-salon-v1.jpg",
-            "image_alt": "Tableau accroché dans un salon contemporain — collection MyselfMonArt",
+            "collection": "tableau-salon",
             "short_title": "Salon",
             "title": "Tableau pour le salon",
             "description": "<p>Le salon est la pièce où l'on reçoit, mais aussi celle où l'on se pose après une journée. Le bon tableau y crée le point focal sans crier — il invite à s'asseoir, à ralentir, à recommencer une conversation. Pensé pour les murs derrière le canapé, les pans aveugles, les enfilades à habiter.</p>",
@@ -111,8 +110,7 @@
         "room_chambre_adulte": {
           "type": "room",
           "settings": {
-            "image": "shopify://shop_images/vignette-chambre-adulte-v1.jpg",
-            "image_alt": "Tableau apaisant accroché dans une chambre adulte — collection MyselfMonArt",
+            "collection": "tableau-chambre-adulte",
             "short_title": "Chambre adulte",
             "title": "Tableau pour la chambre adulte",
             "description": "<p>La chambre, c'est l'endroit où vous quittez le monde. On y privilégie les tons doux, les sujets apaisants, les compositions qui se lisent allongé. Notre collection est curée pour accompagner les fins de journée, pas pour les agiter.</p>",
@@ -123,8 +121,7 @@
         "room_chambre_enfant": {
           "type": "room",
           "settings": {
-            "image": "shopify://shop_images/vignette-chambre-enfant-v1.jpg",
-            "image_alt": "Tableau coloré dans une chambre d'enfant — collection MyselfMonArt",
+            "collection": "tableau-chambre-garcon",
             "short_title": "Chambre enfant",
             "title": "Tableau pour la chambre enfant",
             "description": "<p>Une chambre d'enfant grandit avec son occupant. Nous avons distingué chambre bébé, garçon et adolescent parce que les codes ne sont jamais les mêmes — et parce qu'un tableau bien choisi à 6 ans est un repère encore aimé à 12.</p>",
@@ -135,8 +132,7 @@
         "room_bureau": {
           "type": "room",
           "settings": {
-            "image": "shopify://shop_images/vignette-bureau-v1.jpg",
-            "image_alt": "Tableau dans un bureau épuré — collection MyselfMonArt",
+            "collection": "tableau-bureau",
             "short_title": "Bureau",
             "title": "Tableau pour le bureau",
             "description": "<p>Le mur derrière vous en visio raconte qui vous êtes avant même que vous parliez. Le mur devant vous décide de votre concentration. Notre collection propose des œuvres qui élèvent sans distraire — pensées pour les bureaux à domicile comme pour les espaces professionnels.</p>",
@@ -147,8 +143,7 @@
         "room_cuisine": {
           "type": "room",
           "settings": {
-            "image": "shopify://shop_images/vignette-cuisine-v1.jpg",
-            "image_alt": "Tableau vif dans une cuisine — collection MyselfMonArt",
+            "collection": "tableau-cuisine",
             "short_title": "Cuisine",
             "title": "Tableau pour la cuisine",
             "description": "<p>La cuisine est devenue une pièce à vivre. Un tableau y trouve naturellement sa place — au-dessus du plan de travail, dans le coin repas, sur le pan de mur qui ramène l'œil. Notre collection joue les couleurs qui rassurent et les sujets qui ouvrent l'appétit.</p>",
@@ -159,13 +154,12 @@
         "room_entree": {
           "type": "room",
           "settings": {
-            "image": "shopify://shop_images/vignette-entree-v1.jpg",
-            "image_alt": "Tableau accueillant dans une entrée chaleureuse — collection MyselfMonArt",
+            "collection": "tableau-entree-couloir",
             "short_title": "Entrée & couloir",
             "title": "Tableau pour l'entrée et le couloir",
-            "description": "<p>L'entrée, c'est la première phrase de votre intérieur. Le couloir, c'est le souffle entre deux pièces. Ce sont des espaces souvent oubliés alors qu'ils décident de votre humeur dès le seuil. Nous avons des œuvres pensées pour ces formats étroits et ces traversées rapides — n'hésitez pas à nous demander conseil.</p>",
-            "link_label": "Nous demander conseil",
-            "link": "shopify://pages/contactez-nous"
+            "description": "<p>L'entrée, c'est la première phrase de votre intérieur. Le couloir, c'est le souffle entre deux pièces. Ce sont des espaces souvent oubliés alors qu'ils décident de votre humeur dès le seuil. Nous avons réuni les œuvres pensées pour ces formats étroits et ces traversées rapides dans une collection dédiée.</p>",
+            "link_label": "Découvrir la collection",
+            "link": "shopify://collections/tableau-entree-couloir"
           }
         }
       },
@@ -185,8 +179,7 @@
         "style_abstrait": {
           "type": "room",
           "settings": {
-            "image": "shopify://shop_images/style-abstrait-moderne-v1.jpg",
-            "image_alt": "Tableau abstrait moderne — collection MyselfMonArt",
+            "collection": "tableau-abstrait",
             "short_title": "Abstrait & moderne",
             "title": "Tableaux abstraits et modernes",
             "description": "<p>L'abstraction laisse votre œil composer sa propre histoire. Couleurs, lignes, équilibres : rien ne vous dit quoi voir, tout vous invite à ressentir. Notre collection regroupe les œuvres les plus contemporaines de notre sélection.</p>",
@@ -197,8 +190,7 @@
         "style_zen": {
           "type": "room",
           "settings": {
-            "image": "shopify://shop_images/style-zen-nature-v1.jpg",
-            "image_alt": "Tableau zen et nature contemplatif — collection MyselfMonArt",
+            "collection": "tableau-zen",
             "short_title": "Zen & nature",
             "title": "Tableaux zen et inspiration nature",
             "description": "<p>Lotus, branches, paysages brumeux, lumière qui filtre. Pour les intérieurs qui cherchent l'apaisement comme une matière. Pensée pour les chambres, les espaces méditation, les salons cocooning.</p>",
@@ -209,8 +201,7 @@
         "style_popart": {
           "type": "room",
           "settings": {
-            "image": "shopify://shop_images/style-pop-art-v1.jpg",
-            "image_alt": "Tableau pop art urbain et coloré — collection MyselfMonArt",
+            "collection": "tableau-pop-art",
             "short_title": "Pop art",
             "title": "Tableaux pop art et street art",
             "description": "<p>L'énergie d'une scène urbaine, l'audace d'un grand aplat de couleur. Pour les intérieurs qui assument le caractère. Notre collection joue les contrastes francs et les références qui parlent à votre génération.</p>",
@@ -221,8 +212,7 @@
         "style_africain": {
           "type": "room",
           "settings": {
-            "image": "shopify://shop_images/style-africain-ethnique-v1.jpg",
-            "image_alt": "Tableau africain ethnique avec portrait de femme berbère — collection MyselfMonArt",
+            "collection": "tableau-africain",
             "short_title": "Africain & ethnique",
             "title": "Tableaux africains et ethniques",
             "description": "<p>Portraits de femmes africaines, silhouettes berbères, motifs du Sahara : un univers que nous avons construit avec un soin particulier — c'est l'une de nos collections les plus aimées.</p>",
@@ -233,8 +223,7 @@
         "style_nb": {
           "type": "room",
           "settings": {
-            "image": "shopify://shop_images/style-noir-blanc-v1.jpg",
-            "image_alt": "Tableau noir et blanc monochrome — collection MyselfMonArt",
+            "collection": "tableau-noir-et-blanc",
             "short_title": "Noir & blanc",
             "title": "Tableaux noir et blanc",
             "description": "<p>Le noir et blanc ne vieillit jamais. Il s'accorde avec tout, structure un mur, fait reposer l'œil. Notre collection couvre la photographie, le dessin, l'abstraction monochrome.</p>",
@@ -245,8 +234,7 @@
         "style_floral": {
           "type": "room",
           "settings": {
-            "image": "shopify://shop_images/style-floral-v1.jpg",
-            "image_alt": "Tableau floral contemporain avec fleur agrandie — collection MyselfMonArt",
+            "collection": "tableau-fleurs",
             "short_title": "Floral",
             "title": "Tableaux floraux",
             "description": "<p>Pas la nature morte académique — la fleur réinterprétée, agrandie, contemporaine. Notre collection propose des œuvres qui apportent le végétal sans tomber dans le décoratif convenu.</p>",
@@ -257,8 +245,7 @@
         "style_japonais": {
           "type": "room",
           "settings": {
-            "image": "shopify://shop_images/style-japonais-v1.jpg",
-            "image_alt": "Tableau japonais avec estampe revisitée — collection MyselfMonArt",
+            "collection": "tableau-japonais",
             "short_title": "Japonais",
             "title": "Tableaux japonais",
             "description": "<p>Estampes revisitées, calligraphies épurées, vagues d'Hokusai et jardins de Kyoto. Notre collection est l'une des plus contemplatives de notre catalogue.</p>",
@@ -269,8 +256,7 @@
         "style_frida": {
           "type": "room",
           "settings": {
-            "image": "shopify://shop_images/style-frida-kahlo-v1.jpg",
-            "image_alt": "Tableau Frida Kahlo en portrait épuré — collection MyselfMonArt",
+            "collection": "tableaux-frida-kahlo",
             "short_title": "Frida Kahlo",
             "title": "Tableaux Frida Kahlo",
             "description": "<p>Une figure à elle seule mérite son univers. Notre collection rassemble portraits, autoportraits revisités, et hommages contemporains à l'iconique artiste mexicaine.</p>",
