@@ -167,6 +167,8 @@
         "heading_level": "h2",
         "h2_title": "Explorez nos autres univers déco",
         "intro": "",
+        "hub_label": "Voir le salon en poster & affiche",
+        "hub_collection": "posters-affiches-salon",
         "background_color": "secondary",
         "padding_size": "small",
         "show_descriptions": false
