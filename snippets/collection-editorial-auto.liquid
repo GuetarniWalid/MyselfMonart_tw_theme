@@ -58,7 +58,21 @@
         {%- if ed_cocon != blank and ed_cocon.size > 0 -%}
           <p class="font-roboto text-[15px] leading-[1.7] text-main-70 pt-6 [&_a]:text-terra [&_a]:underline">
             <strong class="text-main">{{ 'sections.collection_editorial.learn_more' | t }}</strong>
-            {% for l in ed_cocon %}<a href="{{ l.url }}">{{ l.label | escape }}</a>{% unless forloop.last %} &middot; {% endunless %}{% endfor %}
+            {%- comment -%} i18n : un lien /collections/<handle> stocké en dur reste FR. On résout l'objet collection
+               par son handle et on rend collection.url (localisé : préfixe locale + handle traduit). Les liens
+               non-collection (blog, page) gardent leur url. {%- endcomment -%}
+            {%- for l in ed_cocon -%}
+              {%- liquid
+                assign l_url = l.url
+                if l.url contains '/collections/'
+                  assign l_handle = l.url | split: '/collections/' | last | split: '?' | first | split: '#' | first | split: '/' | first
+                  if collections[l_handle].url != blank
+                    assign l_url = collections[l_handle].url
+                  endif
+                endif
+              -%}
+              <a href="{{ l_url }}">{{ l.label | escape }}</a>{% unless forloop.last %} &middot; {% endunless %}
+            {%- endfor -%}
           </p>
         {%- endif -%}
       </div>
