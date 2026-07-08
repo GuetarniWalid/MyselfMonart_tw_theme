@@ -109,6 +109,18 @@
       </p>
     {%- endif -%}
 
+    {%- comment -%} Lien hub optionnel (pilier) sous l'intro — no-op si non renseigné (carrousels pièce/style non affectés). {%- endcomment -%}
+    {%- if section.settings.hub_link != blank and section.settings.hub_label != blank -%}
+      <p class="mt-7">
+        <a
+          href="{{ section.settings.hub_link }}"
+          class="inline-flex items-center gap-2 font-roboto text-xs md:text-sm tracking-[0.16em] uppercase font-medium {{ link_class }} underline underline-offset-4 decoration-1 hover:opacity-80 transition-opacity motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-buy-button focus-visible:ring-offset-2 rounded-sm">
+          <span>{{ section.settings.hub_label | escape }}</span>
+          {% render 'tw-icon-arrow', width: 22 %}
+        </a>
+      </p>
+    {%- endif -%}
+
   </div>
 
   {%- comment -%}
@@ -312,6 +324,21 @@
       "id": "intro",
       "label": "Intro (paragraphe complet, cf spec PHASE-4 Section C)",
       "default": "Chaque pièce de votre intérieur appelle une intention différente. Un tableau qui fonctionne dans un salon écrasera une chambre ; une œuvre qui apaise une chambre paraîtra timide dans un bureau. Nous avons construit nos collections autour de cette évidence : commencez par la pièce, le reste suit."
+    },
+    {
+      "type": "header",
+      "content": "Lien hub optionnel (sous l'intro)"
+    },
+    {
+      "type": "text",
+      "id": "hub_label",
+      "label": "Libellé du lien hub",
+      "info": "Ex : « Voir tous nos posters & affiches ». Laisser vide pour ne rien afficher (carrousels par pièce/style)."
+    },
+    {
+      "type": "url",
+      "id": "hub_link",
+      "label": "URL du lien hub (page pilier)"
     },
     {
       "type": "header",

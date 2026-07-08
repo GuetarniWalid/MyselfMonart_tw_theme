@@ -291,6 +291,84 @@
         "background_color": "terracotta-light"
       }
     },
+    "posters_home": {
+      "type": "cards-carousel",
+      "blocks": {
+        "p_zen": {
+          "type": "room",
+          "settings": {
+            "collection": "posters-affiches-zen",
+            "short_title": "Nature & zen",
+            "title": "Poster nature & zen",
+            "link_label": "Voir les affiches",
+            "link": "shopify://collections/posters-affiches-zen"
+          }
+        },
+        "p_africain": {
+          "type": "room",
+          "settings": {
+            "collection": "posters-affiches-africain",
+            "short_title": "Africain",
+            "title": "Poster & affiche africaine",
+            "link_label": "Voir les affiches",
+            "link": "shopify://collections/posters-affiches-africain"
+          }
+        },
+        "p_bureau": {
+          "type": "room",
+          "settings": {
+            "collection": "posters-affiches-bureau",
+            "short_title": "Bureau",
+            "title": "Poster pour le bureau",
+            "link_label": "Voir les affiches",
+            "link": "shopify://collections/posters-affiches-bureau"
+          }
+        },
+        "p_cuisine": {
+          "type": "room",
+          "settings": {
+            "collection": "affiches-poster-cuisine",
+            "short_title": "Cuisine",
+            "title": "Poster & affiche cuisine",
+            "link_label": "Voir les affiches",
+            "link": "shopify://collections/affiches-poster-cuisine"
+          }
+        },
+        "p_ado": {
+          "type": "room",
+          "settings": {
+            "collection": "posters-affiches-chambre-ado",
+            "short_title": "Chambre ado",
+            "title": "Poster pour la chambre ado",
+            "link_label": "Voir les affiches",
+            "link": "shopify://collections/posters-affiches-chambre-ado"
+          }
+        },
+        "p_entree": {
+          "type": "room",
+          "settings": {
+            "collection": "posters-affiches-entree-couloir",
+            "short_title": "Entrée & couloir",
+            "title": "Poster pour l'entrée et le couloir",
+            "link_label": "Voir les affiches",
+            "link": "shopify://collections/posters-affiches-entree-couloir"
+          }
+        }
+      },
+      "block_order": ["p_zen", "p_africain", "p_bureau", "p_cuisine", "p_ado", "p_entree"],
+      "settings": {
+        "eyebrow_number": "",
+        "eyebrow_label": "Poster & Affiche",
+        "heading_level": "h2",
+        "h2_title": "Le même art, en version poster",
+        "intro": "La toile est une pièce maîtresse, pour longtemps. Le poster, lui, s'encadre soi-même, se change quand l'envie vient et habille un mur sans se ruiner — parfait pour une entrée, une chambre d'ado ou un bureau. Le même soin de curation, dans un format plus léger et plus libre.",
+        "hub_label": "Voir tous nos posters & affiches",
+        "hub_link": "shopify://collections/posters-affiches",
+        "show_descriptions": false,
+        "padding_size": "large",
+        "background_color": "cream"
+      }
+    },
     "journey": {
       "type": "prose",
       "settings": {
@@ -569,6 +647,7 @@
     "rooms",
     "styles",
     "size_guide",
+    "posters_home",
     "journey",
     "studio",
     "customers",
