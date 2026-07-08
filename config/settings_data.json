@@ -292,7 +292,8 @@
         "disabled": false,
         "settings": {}
       }
-    }
+    },
+    "enable_poster_filtering": true
   },
   "presets": {
     "Default": {
