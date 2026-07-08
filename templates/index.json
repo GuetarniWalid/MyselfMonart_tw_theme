@@ -83,7 +83,12 @@
           }
         }
       },
-      "block_order": ["usp_1", "usp_2", "usp_3", "usp_4"],
+      "block_order": [
+        "usp_1",
+        "usp_2",
+        "usp_3",
+        "usp_4"
+      ],
       "settings": {
         "eyebrow_number": "",
         "eyebrow_label": "Qualité matière",
@@ -163,7 +168,14 @@
           }
         }
       },
-      "block_order": ["room_salon", "room_chambre_adulte", "room_chambre_enfant", "room_bureau", "room_cuisine", "room_entree"],
+      "block_order": [
+        "room_salon",
+        "room_chambre_adulte",
+        "room_chambre_enfant",
+        "room_bureau",
+        "room_cuisine",
+        "room_entree"
+      ],
       "settings": {
         "eyebrow_number": "",
         "eyebrow_label": "Par pièce",
@@ -265,7 +277,16 @@
           }
         }
       },
-      "block_order": ["style_abstrait", "style_zen", "style_popart", "style_africain", "style_nb", "style_floral", "style_japonais", "style_frida"],
+      "block_order": [
+        "style_abstrait",
+        "style_zen",
+        "style_popart",
+        "style_africain",
+        "style_nb",
+        "style_floral",
+        "style_japonais",
+        "style_frida"
+      ],
       "settings": {
         "eyebrow_number": "",
         "eyebrow_label": "Par style",
@@ -355,18 +376,23 @@
           }
         }
       },
-      "block_order": ["p_zen", "p_africain", "p_bureau", "p_cuisine", "p_ado", "p_entree"],
+      "block_order": [
+        "p_zen",
+        "p_africain",
+        "p_bureau",
+        "p_cuisine",
+        "p_ado",
+        "p_entree"
+      ],
       "settings": {
         "eyebrow_number": "",
         "eyebrow_label": "Poster & Affiche",
         "heading_level": "h2",
         "h2_title": "Le même art, en version poster",
         "intro": "La toile est une pièce maîtresse, pour longtemps. Le poster, lui, s'encadre soi-même, se change quand l'envie vient et habille un mur sans se ruiner — parfait pour une entrée, une chambre d'ado ou un bureau. Le même soin de curation, dans un format plus léger et plus libre.",
-        "hub_label": "Voir tous nos posters & affiches",
-        "hub_link": "shopify://collections/posters-affiches",
-        "show_descriptions": false,
+        "background_color": "cream",
         "padding_size": "large",
-        "background_color": "cream"
+        "show_descriptions": false
       }
     },
     "journey": {
@@ -410,7 +436,11 @@
           }
         }
       },
-      "block_order": ["place_paris", "place_toulouse", "place_europe"],
+      "block_order": [
+        "place_paris",
+        "place_toulouse",
+        "place_europe"
+      ],
       "settings": {
         "eyebrow_label": "Le studio",
         "heading_level": "h2",
@@ -425,36 +455,192 @@
     "customers": {
       "type": "testimonials-carousel",
       "blocks": {
-        "t_lea": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-femme-abstrait-crayon-pastel.jpg", "message": "Très beau tableau ! Je suis ravie de mon achat, merci.. Léa M" } },
-        "t_sandra": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-alluminium-japonais-geisha-avis-clien.jpg", "message": "Je suis juste en admiration devant cette œuvre et vous remercie de sortir de l'ordinaire pour habiller nos murs!!!\nUn grand merci. Sandra B" } },
-        "t_cecile": { "type": "image-text", "settings": { "image": "shopify://shop_images/toile-moderne-frida-fleurs.jpg", "message": "Dès l'ouverture du carton, j'ai trouvé la toile magnifique.\nEncore plus belle que sur la photo du site.\nJe l'ai installée. Et l'effet est «  waouh ! »\nTrès jolie toile ! Très beau site !\nJe suis ravi de mon achat. Cécile C" } },
-        "t_sophie": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-contemporain-abstrait-femme-ronde.jpg", "message": "Reçu mon tableau et franchement, je ne regrette pas une seconde ! Les couleurs sont incroyables, l'originalité saute aux yeux… Impossible de ne pas s'arrêter devant. Sophie D" } },
-        "t_patricia": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableauphotographie-zebre-animaux-zebre-sauvage.jpg", "message": "L'animal, majestueux et solitaire trône dans mon salon au dessus de ma console... Peut on dire qu il est magnifique ? Assurément oui et je l adore!\nPatricia G." } },
-        "t_eugene": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-gaming-marvel-iron-man.jpg", "message": "Très content de mon achat ! Mon fils est ravi il va faire de beaux rêves de super-héros\n. Eugene D" } },
-        "t_morel": { "type": "image-text", "settings": { "image": "shopify://shop_images/peinture-femme-noire-muse.jpg", "message": "Magnifique tableau et très design, correspond parfaitement à la description.  Morel E" } },
-        "t_elodie": { "type": "image-text", "settings": { "image": "shopify://shop_images/Tableau-chambre-bebe_f6e62e6e-707b-41df-aa17-bdad25ef3385.jpg", "message": "Juste une petite photo avec le cadre mis en place encore un grand merci à vous 🥰. \nElodie G" } },
-        "t_jessica": { "type": "image-text", "settings": { "image": "shopify://shop_images/deco-mural-toile-marilyn-monroe-pop-art.jpg", "message": "Envoie très rapide et tableau encore plus beau que sur le site.\nParfait je recommande !!!\nJessica S" } },
-        "t_lina": { "type": "image-text", "settings": { "image": "shopify://shop_images/decoration-mural-cadre-bois-cactus-paysage-colore.jpg", "message": "Super contente du rendu de ces cadres en bois ! 🌵 Ça apporte tellement de chaleur et de gaieté à mon salon, j'adore ! 😍 Lina O" } },
-        "t_joelle": { "type": "image-text", "settings": { "image": "shopify://shop_images/avis-tableau-plexi_2.jpg", "message": "Tableau magnifique, très contente du support choisi en plexiglas réalisé avec soin. Joëlle N" } },
-        "t_vanessa": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-animaux-rhinoceros_b1022df5-0085-43a4-93b7-011dd579d316.jpg", "message": "AMAZING ! Le poster est magnifique, il fait son effet dans mon salon. Vanessa K" } },
-        "t_alexandre": { "type": "image-text", "settings": { "image": "shopify://shop_images/deco-mural-ying-yang.jpg", "message": "Le tableau est magnifique! Alexandre V" } },
-        "t_sarah": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-fruit-legume-cuisine-ananas-colore.jpg", "message": "Trop contente de mon tableau, les couleurs sont aussi flashy que sur les photos du site.\nSarah F" } },
-        "t_pierre": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-panoramique-payasage-foret-lac.jpg", "message": "Ce tableau est magnifique et tellement immersif ! Il donne une vraie sensation d'évasion et transforme l'ambiance de mon salon. Pierre S" } },
-        "t_bernard": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-zen-japonais-geisha_59746ee5-1329-4a3a-94ad-bc201116687c.jpg", "message": "Nous sommes très satisfait de notre achat\nTrès bonne qualité\nNous ferons d´autres achats chez vous.\nBernard D" } },
-        "t_yannick": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-pour-cuisine-epices-colore.jpg", "message": "Ravie de mon achat,\ntrès beau rendu des couleurs qui sont éclatantes. \nYannick R." } },
-        "t_alain": { "type": "image-text", "settings": { "image": "shopify://shop_images/Tableau-chambre_a164de8b-ed28-4326-926b-92bbe380279b.jpg", "message": "Le tableau est super, et encore plus beau en vrai ! Arrivé rapidement et bien protégé. Alain N" } },
-        "t_marie": { "type": "image-text", "settings": { "image": "shopify://shop_images/Tableau-decoration_44dcf7be-75b3-46aa-810b-3020d3b9dc06.jpg", "message": "Très belle toile, les couleurs sont super et brillante. Marie K" } },
-        "t_guillaume": { "type": "image-text", "settings": { "image": "shopify://shop_images/Tableau-deco-noir-et-blanc.jpg", "message": "Top, rien à dire de plus. \nGuillaume H" } },
-        "t_hugo1": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-comics-super-man.jpg", "message": "Nickel, très satisfait c'est ma 3e commande. Hugo G" } },
-        "t_hugo2": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-superman-aquarelle.jpg", "message": "TOP, tableau reçu rapidement avec suivie. Hugo G" } },
-        "t_ethan": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-lion-impression-alluminuim.jpg", "message": "TOP QUALITÉ,  j'ai choisi l'impression sur aluminium et l'image est vraiment top. Ethan V" } }
+        "t_lea": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-femme-abstrait-crayon-pastel.jpg",
+            "message": "Très beau tableau ! Je suis ravie de mon achat, merci.. Léa M"
+          }
+        },
+        "t_sandra": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-alluminium-japonais-geisha-avis-clien.jpg",
+            "message": "Je suis juste en admiration devant cette œuvre et vous remercie de sortir de l'ordinaire pour habiller nos murs!!!\nUn grand merci. Sandra B"
+          }
+        },
+        "t_cecile": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/toile-moderne-frida-fleurs.jpg",
+            "message": "Dès l'ouverture du carton, j'ai trouvé la toile magnifique.\nEncore plus belle que sur la photo du site.\nJe l'ai installée. Et l'effet est «  waouh ! »\nTrès jolie toile ! Très beau site !\nJe suis ravi de mon achat. Cécile C"
+          }
+        },
+        "t_sophie": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-contemporain-abstrait-femme-ronde.jpg",
+            "message": "Reçu mon tableau et franchement, je ne regrette pas une seconde ! Les couleurs sont incroyables, l'originalité saute aux yeux… Impossible de ne pas s'arrêter devant. Sophie D"
+          }
+        },
+        "t_patricia": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableauphotographie-zebre-animaux-zebre-sauvage.jpg",
+            "message": "L'animal, majestueux et solitaire trône dans mon salon au dessus de ma console... Peut on dire qu il est magnifique ? Assurément oui et je l adore!\nPatricia G."
+          }
+        },
+        "t_eugene": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-gaming-marvel-iron-man.jpg",
+            "message": "Très content de mon achat ! Mon fils est ravi il va faire de beaux rêves de super-héros\n. Eugene D"
+          }
+        },
+        "t_morel": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/peinture-femme-noire-muse.jpg",
+            "message": "Magnifique tableau et très design, correspond parfaitement à la description.  Morel E"
+          }
+        },
+        "t_elodie": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/Tableau-chambre-bebe_f6e62e6e-707b-41df-aa17-bdad25ef3385.jpg",
+            "message": "Juste une petite photo avec le cadre mis en place encore un grand merci à vous 🥰. \nElodie G"
+          }
+        },
+        "t_jessica": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/deco-mural-toile-marilyn-monroe-pop-art.jpg",
+            "message": "Envoie très rapide et tableau encore plus beau que sur le site.\nParfait je recommande !!!\nJessica S"
+          }
+        },
+        "t_lina": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/decoration-mural-cadre-bois-cactus-paysage-colore.jpg",
+            "message": "Super contente du rendu de ces cadres en bois ! 🌵 Ça apporte tellement de chaleur et de gaieté à mon salon, j'adore ! 😍 Lina O"
+          }
+        },
+        "t_joelle": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/avis-tableau-plexi_2.jpg",
+            "message": "Tableau magnifique, très contente du support choisi en plexiglas réalisé avec soin. Joëlle N"
+          }
+        },
+        "t_vanessa": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-animaux-rhinoceros_b1022df5-0085-43a4-93b7-011dd579d316.jpg",
+            "message": "AMAZING ! Le poster est magnifique, il fait son effet dans mon salon. Vanessa K"
+          }
+        },
+        "t_alexandre": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/deco-mural-ying-yang.jpg",
+            "message": "Le tableau est magnifique! Alexandre V"
+          }
+        },
+        "t_sarah": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-fruit-legume-cuisine-ananas-colore.jpg",
+            "message": "Trop contente de mon tableau, les couleurs sont aussi flashy que sur les photos du site.\nSarah F"
+          }
+        },
+        "t_pierre": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-panoramique-payasage-foret-lac.jpg",
+            "message": "Ce tableau est magnifique et tellement immersif ! Il donne une vraie sensation d'évasion et transforme l'ambiance de mon salon. Pierre S"
+          }
+        },
+        "t_bernard": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-zen-japonais-geisha_59746ee5-1329-4a3a-94ad-bc201116687c.jpg",
+            "message": "Nous sommes très satisfait de notre achat\nTrès bonne qualité\nNous ferons d´autres achats chez vous.\nBernard D"
+          }
+        },
+        "t_yannick": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-pour-cuisine-epices-colore.jpg",
+            "message": "Ravie de mon achat,\ntrès beau rendu des couleurs qui sont éclatantes. \nYannick R."
+          }
+        },
+        "t_alain": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/Tableau-chambre_a164de8b-ed28-4326-926b-92bbe380279b.jpg",
+            "message": "Le tableau est super, et encore plus beau en vrai ! Arrivé rapidement et bien protégé. Alain N"
+          }
+        },
+        "t_marie": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/Tableau-decoration_44dcf7be-75b3-46aa-810b-3020d3b9dc06.jpg",
+            "message": "Très belle toile, les couleurs sont super et brillante. Marie K"
+          }
+        },
+        "t_guillaume": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/Tableau-deco-noir-et-blanc.jpg",
+            "message": "Top, rien à dire de plus. \nGuillaume H"
+          }
+        },
+        "t_hugo1": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-comics-super-man.jpg",
+            "message": "Nickel, très satisfait c'est ma 3e commande. Hugo G"
+          }
+        },
+        "t_hugo2": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-superman-aquarelle.jpg",
+            "message": "TOP, tableau reçu rapidement avec suivie. Hugo G"
+          }
+        },
+        "t_ethan": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-lion-impression-alluminuim.jpg",
+            "message": "TOP QUALITÉ,  j'ai choisi l'impression sur aluminium et l'image est vraiment top. Ethan V"
+          }
+        }
       },
       "block_order": [
-        "t_lea", "t_sandra", "t_cecile", "t_sophie", "t_patricia",
-        "t_eugene", "t_morel", "t_elodie", "t_jessica", "t_lina",
-        "t_joelle", "t_vanessa", "t_alexandre", "t_sarah", "t_pierre",
-        "t_bernard", "t_yannick", "t_alain", "t_marie", "t_guillaume",
-        "t_hugo1", "t_hugo2", "t_ethan"
+        "t_lea",
+        "t_sandra",
+        "t_cecile",
+        "t_sophie",
+        "t_patricia",
+        "t_eugene",
+        "t_morel",
+        "t_elodie",
+        "t_jessica",
+        "t_lina",
+        "t_joelle",
+        "t_vanessa",
+        "t_alexandre",
+        "t_sarah",
+        "t_pierre",
+        "t_bernard",
+        "t_yannick",
+        "t_alain",
+        "t_marie",
+        "t_guillaume",
+        "t_hugo1",
+        "t_hugo2",
+        "t_ethan"
       ],
       "settings": {
         "eyebrow": "Ils nous font confiance",
@@ -543,13 +729,21 @@
           }
         }
       },
-      "block_order": ["faq_salon", "faq_size", "faq_harmony", "faq_hanging", "faq_delivery", "faq_madeinfrance", "faq_handpainted"],
+      "block_order": [
+        "faq_salon",
+        "faq_size",
+        "faq_harmony",
+        "faq_hanging",
+        "faq_delivery",
+        "faq_madeinfrance",
+        "faq_handpainted"
+      ],
       "settings": {
         "eyebrow": "FAQ",
         "heading_level": "h2",
-        "heading": "Questions fréquentes",
         "heading_size": "large",
         "question_size": "large",
+        "heading": "Questions fréquentes",
         "background_color": "secondary",
         "emit_faq_jsonld": true
       }
@@ -575,20 +769,141 @@
     "collections": {
       "type": "cards-grid",
       "blocks": {
-        "c_salon": { "type": "card", "settings": { "collection": "tableau-salon", "label": "Pièce", "title": "Tableau salon", "link_label": "Voir", "link": "shopify://collections/tableau-salon" } },
-        "c_chambre_a": { "type": "card", "settings": { "collection": "tableau-chambre-adulte", "label": "Pièce", "title": "Tableau chambre adulte", "link_label": "Voir", "link": "shopify://collections/tableau-chambre-adulte" } },
-        "c_chambre_e": { "type": "card", "settings": { "collection": "tableau-chambre-garcon", "label": "Pièce", "title": "Tableau chambre enfant", "link_label": "Voir", "link": "shopify://collections/tableau-chambre-garcon" } },
-        "c_bureau": { "type": "card", "settings": { "collection": "tableau-bureau", "label": "Pièce", "title": "Tableau bureau", "link_label": "Voir", "link": "shopify://collections/tableau-bureau" } },
-        "c_cuisine": { "type": "card", "settings": { "collection": "tableau-cuisine", "label": "Pièce", "title": "Tableau cuisine", "link_label": "Voir", "link": "shopify://collections/tableau-cuisine" } },
-        "c_abstrait": { "type": "card", "settings": { "collection": "tableau-abstrait", "label": "Style", "title": "Tableau abstrait", "link_label": "Voir", "link": "shopify://collections/tableau-abstrait" } },
-        "c_zen": { "type": "card", "settings": { "collection": "tableau-zen", "label": "Style", "title": "Tableau zen", "link_label": "Voir", "link": "shopify://collections/tableau-zen" } },
-        "c_popart": { "type": "card", "settings": { "collection": "tableau-pop-art", "label": "Style", "title": "Tableau pop art", "link_label": "Voir", "link": "shopify://collections/tableau-pop-art" } },
-        "c_africain": { "type": "card", "settings": { "collection": "tableau-africain", "label": "Style", "title": "Tableau africain", "link_label": "Voir", "link": "shopify://collections/tableau-africain" } },
-        "c_nb": { "type": "card", "settings": { "collection": "tableau-noir-et-blanc", "label": "Style", "title": "Tableau noir et blanc", "link_label": "Voir", "link": "shopify://collections/tableau-noir-et-blanc" } },
-        "c_fleurs": { "type": "card", "settings": { "collection": "tableau-fleurs", "label": "Style", "title": "Tableau fleurs", "link_label": "Voir", "link": "shopify://collections/tableau-fleurs" } },
-        "c_japonais": { "type": "card", "settings": { "collection": "tableau-japonais", "label": "Style", "title": "Tableau japonais", "link_label": "Voir", "link": "shopify://collections/tableau-japonais" } }
+        "c_salon": {
+          "type": "card",
+          "settings": {
+            "collection": "tableau-salon",
+            "label": "Pièce",
+            "title": "Tableau salon",
+            "link_label": "Voir",
+            "link": "shopify://collections/tableau-salon"
+          }
+        },
+        "c_chambre_a": {
+          "type": "card",
+          "settings": {
+            "collection": "tableau-chambre-adulte",
+            "label": "Pièce",
+            "title": "Tableau chambre adulte",
+            "link_label": "Voir",
+            "link": "shopify://collections/tableau-chambre-adulte"
+          }
+        },
+        "c_chambre_e": {
+          "type": "card",
+          "settings": {
+            "collection": "tableau-chambre-garcon",
+            "label": "Pièce",
+            "title": "Tableau chambre enfant",
+            "link_label": "Voir",
+            "link": "shopify://collections/tableau-chambre-garcon"
+          }
+        },
+        "c_bureau": {
+          "type": "card",
+          "settings": {
+            "collection": "tableau-bureau",
+            "label": "Pièce",
+            "title": "Tableau bureau",
+            "link_label": "Voir",
+            "link": "shopify://collections/tableau-bureau"
+          }
+        },
+        "c_cuisine": {
+          "type": "card",
+          "settings": {
+            "collection": "tableau-cuisine",
+            "label": "Pièce",
+            "title": "Tableau cuisine",
+            "link_label": "Voir",
+            "link": "shopify://collections/tableau-cuisine"
+          }
+        },
+        "c_abstrait": {
+          "type": "card",
+          "settings": {
+            "collection": "tableau-abstrait",
+            "label": "Style",
+            "title": "Tableau abstrait",
+            "link_label": "Voir",
+            "link": "shopify://collections/tableau-abstrait"
+          }
+        },
+        "c_zen": {
+          "type": "card",
+          "settings": {
+            "collection": "tableau-zen",
+            "label": "Style",
+            "title": "Tableau zen",
+            "link_label": "Voir",
+            "link": "shopify://collections/tableau-zen"
+          }
+        },
+        "c_popart": {
+          "type": "card",
+          "settings": {
+            "collection": "tableau-pop-art",
+            "label": "Style",
+            "title": "Tableau pop art",
+            "link_label": "Voir",
+            "link": "shopify://collections/tableau-pop-art"
+          }
+        },
+        "c_africain": {
+          "type": "card",
+          "settings": {
+            "collection": "tableau-africain",
+            "label": "Style",
+            "title": "Tableau africain",
+            "link_label": "Voir",
+            "link": "shopify://collections/tableau-africain"
+          }
+        },
+        "c_nb": {
+          "type": "card",
+          "settings": {
+            "collection": "tableau-noir-et-blanc",
+            "label": "Style",
+            "title": "Tableau noir et blanc",
+            "link_label": "Voir",
+            "link": "shopify://collections/tableau-noir-et-blanc"
+          }
+        },
+        "c_fleurs": {
+          "type": "card",
+          "settings": {
+            "collection": "tableau-fleurs",
+            "label": "Style",
+            "title": "Tableau fleurs",
+            "link_label": "Voir",
+            "link": "shopify://collections/tableau-fleurs"
+          }
+        },
+        "c_japonais": {
+          "type": "card",
+          "settings": {
+            "collection": "tableau-japonais",
+            "label": "Style",
+            "title": "Tableau japonais",
+            "link_label": "Voir",
+            "link": "shopify://collections/tableau-japonais"
+          }
+        }
       },
-      "block_order": ["c_salon", "c_chambre_a", "c_chambre_e", "c_bureau", "c_cuisine", "c_abstrait", "c_zen", "c_popart", "c_africain", "c_nb", "c_fleurs", "c_japonais"],
+      "block_order": [
+        "c_salon",
+        "c_chambre_a",
+        "c_chambre_e",
+        "c_bureau",
+        "c_cuisine",
+        "c_abstrait",
+        "c_zen",
+        "c_popart",
+        "c_africain",
+        "c_nb",
+        "c_fleurs",
+        "c_japonais"
+      ],
       "settings": {
         "eyebrow": "Toutes nos collections",
         "title": "Découvrir nos 50 collections",
@@ -617,10 +932,25 @@
     "trust_signals_home": {
       "type": "trust-signals",
       "blocks": {
-        "image_text_h1": { "type": "image-text", "settings": { "image": "shopify://shop_images/tableau-femme-abstrait-crayon-pastel.jpg", "message": "Très beau tableau ! Je suis ravie de mon achat, merci.. Léa M" } },
-        "image_text_h2": { "type": "image-text", "settings": { "image": "shopify://shop_images/toile-moderne-frida-fleurs.jpg", "message": "Dès l'ouverture du carton, j'ai trouvé la toile magnifique. Cécile C" } }
+        "image_text_h1": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-femme-abstrait-crayon-pastel.jpg",
+            "message": "Très beau tableau ! Je suis ravie de mon achat, merci.. Léa M"
+          }
+        },
+        "image_text_h2": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/toile-moderne-frida-fleurs.jpg",
+            "message": "Dès l'ouverture du carton, j'ai trouvé la toile magnifique. Cécile C"
+          }
+        }
       },
-      "block_order": ["image_text_h1", "image_text_h2"],
+      "block_order": [
+        "image_text_h1",
+        "image_text_h2"
+      ],
       "disabled": true,
       "settings": {
         "eyebrow": "Ils nous font confiance",
