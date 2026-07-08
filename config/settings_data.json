@@ -140,6 +140,66 @@
               "desktop_image_3": "shopify://shop_images/galets_abstraits_zen_minimaliste-d22ed61e-ef83-4d9e-8dc8-8bd742ec3458.jpg",
               "collection": "bestsellers-1"
             }
+          },
+          "title_only_rNccpq": {
+            "type": "title_only",
+            "settings": {
+              "title": "Posters & Affiches"
+            }
+          },
+          "collection_only_K9q98M": {
+            "type": "collection_only",
+            "settings": {
+              "collection": "posters-affiches"
+            }
+          },
+          "parent_collection_PHcqgr": {
+            "type": "set_of_collections",
+            "settings": {
+              "title": "Par Pièce",
+              "child_collection_list": [
+                "posters-affiches-chambre",
+                "posters-affiches-salon",
+                "posters-affiches-bureau",
+                "affiches-poster-cuisine",
+                "posters-affiches-chambre-ado",
+                "posters-affiches-entree-couloir"
+              ]
+            }
+          },
+          "parent_collection_qTy5fZ": {
+            "type": "set_of_collections",
+            "settings": {
+              "title": "Par Thème",
+              "child_collection_list": [
+                "posters-affiches-zen",
+                "posters-affiches-africain",
+                "posters-affiches-abstrait",
+                "posters-affiches-nature",
+                "posters-affiches-noir-et-blanc",
+                "posters-affiches-japonais"
+              ]
+            }
+          },
+          "parent_collection_6r52Kb": {
+            "type": "set_of_collections",
+            "settings": {
+              "title": "Par Couleur",
+              "child_collection_list": [
+                "posters-affiches-bleu",
+                "posters-affiches-rouge",
+                "posters-affiches-vert",
+                "posters-affiches-jaune",
+                "posters-affiches-rose",
+                "posters-affiches-gris"
+              ]
+            }
+          },
+          "collection_only_HL3HhC": {
+            "type": "collection_only",
+            "settings": {
+              "collection": "posters-affiches-best-sellers"
+            }
           }
         },
         "block_order": [
@@ -149,7 +209,13 @@
           "parent_collection_fTjgF8",
           "parent_collection_xnc6qR",
           "parent_collection_MRr679",
-          "collection_only_yccRzA"
+          "collection_only_yccRzA",
+          "title_only_rNccpq",
+          "collection_only_K9q98M",
+          "parent_collection_PHcqgr",
+          "parent_collection_qTy5fZ",
+          "parent_collection_6r52Kb",
+          "collection_only_HL3HhC"
         ],
         "settings": {
           "logo_svg": "",
