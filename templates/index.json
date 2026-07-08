@@ -390,6 +390,8 @@
         "heading_level": "h2",
         "h2_title": "Le même art, en version poster",
         "intro": "La toile est une pièce maîtresse, pour longtemps. Le poster, lui, s'encadre soi-même, se change quand l'envie vient et habille un mur sans se ruiner — parfait pour une entrée, une chambre d'ado ou un bureau. Le même soin de curation, dans un format plus léger et plus libre.",
+        "hub_label": "Voir tous nos posters & affiches",
+        "hub_link": "/collections/posters-affiches",
         "background_color": "cream",
         "padding_size": "large",
         "show_descriptions": false
