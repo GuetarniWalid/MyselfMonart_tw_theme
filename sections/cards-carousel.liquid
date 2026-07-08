@@ -155,7 +155,16 @@
             assign card_link = block.settings.link
           endif
 
-          assign img_alt = block.settings.image_alt | default: card_image.alt | default: card_title
+          comment
+            i18n alt : quand la carte pointe une collection, dériver l'alt de collection.title
+            (LOCALISÉ, comme le méga-menu) plutôt que de card_image.alt (posé en FR par le playbook
+            héros → alt français sur les pages EN/ES/DE/NL). Repli image manuelle inchangé.
+          endcomment
+          if block.settings.collection != blank
+            assign img_alt = block.settings.image_alt | default: block.settings.collection.title | default: card_title
+          else
+            assign img_alt = block.settings.image_alt | default: card_image.alt | default: card_title
+          endif
 
           assign has_link = false
           if card_link != blank

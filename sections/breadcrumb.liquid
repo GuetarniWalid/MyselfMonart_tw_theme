@@ -7,7 +7,9 @@
     <nav role="navigation" aria-label="{{ 'sections.mma.breadcrumb_nav' | t }}">
       <div class="my-4 px-4 breadcrumb-wrapper flex items-center gap-2 whitespace-nowrap w-full">
         {%- liquid
-          assign home_url = "/"
+          # i18n : routes.root_url = "/" en FR défaut, "/en", "/de", "/es", "/nl" selon la locale
+          # (corrige le lien « Accueil » ET l'item[0] du JSON-LD BreadcrumbList qui en dérivent).
+          assign home_url = routes.root_url
           assign home_text = 'sections.footer.home' | t
           assign item_list_element_names = home_text
           assign item_list_element_urls = home_url
