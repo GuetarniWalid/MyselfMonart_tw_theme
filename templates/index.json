@@ -690,6 +690,22 @@
             "row_content": "<p>La règle empirique : votre tableau doit mesurer <strong>environ deux tiers de la largeur du meuble</strong> qu'il surplombe. Sur un mur seul sans meuble, pensez en <strong>proportion du mur entier</strong> — un grand format ou un triptyque structure mieux qu'une petite œuvre. En cas de doute, notre <a href=\"/blogs/tableau-cuisine/quelle-taille-de-tableau-choisir\">guide complet sur la taille</a> détaille les cas pièce par pièce.</p>"
           }
         },
+        "faq_format": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Toile ou poster : lequel choisir ?",
+            "icon": "none",
+            "row_content": "<p>Les deux formats portent le même art, sélectionné et retouché à la main par notre studio. C'est la matière et l'intention qui changent :</p><ul><li><strong>La toile</strong> est une pièce maîtresse : imprimée sur une toile de 285 g/m², tendue sur un cadre en bois massif, <strong>prête à accrocher</strong> et pensée pour durer. Idéale pour un salon, une chambre ou un bureau que l'on installe pour longtemps.</li><li><strong>Le poster (ou l'affiche)</strong> est un <strong>format papier léger</strong>, à encadrer soi-même et à renouveler au gré des envies. Parfait pour un petit budget, une entrée, une chambre d'ado ou un bureau, et pour composer un mur-galerie que l'on fait évoluer.</li></ul><p>Beaucoup commencent par l'affiche pour tester un univers, puis adoptent la toile pour la pièce qu'ils veulent vraiment ancrer.</p>"
+          }
+        },
+        "faq_bascule": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Le même visuel existe-t-il en toile et en poster ?",
+            "icon": "none",
+            "row_content": "<p>Oui, la plupart de nos œuvres existent dans les deux formats. Sur chaque fiche produit, un simple bouton vous permet de <strong>basculer entre la version toile et la version poster</strong>, sans quitter la page. Vous comparez, puis vous choisissez la matière qui vous convient — au même endroit.</p>"
+          }
+        },
         "faq_harmony": {
           "type": "collapsible_row",
           "settings": {
@@ -734,6 +750,8 @@
       "block_order": [
         "faq_salon",
         "faq_size",
+        "faq_format",
+        "faq_bascule",
         "faq_harmony",
         "faq_hanging",
         "faq_delivery",
