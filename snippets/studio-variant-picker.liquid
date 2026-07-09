@@ -20,14 +20,31 @@
 {%- endcomment -%}
 
 {%- unless product.has_only_default_variant -%}
-  <div data-studio-vpicker>
+  {%- comment -%} Poster (nouveau modèle) : le produit expose painting_options.frames_poster (couleurs de
+     cadre) -> l'option « Cadre » vaut {Sans cadre / Avec cadre} et la COULEUR passe en line-item property
+     (comme painting-variant-picker.liquid). Sinon (toile / produit legacy) : comportement historique
+     inchangé (frames_canvas). Clés de property localisées exposées en data-* pour le JS studio. {%- endcomment -%}
+  {%- assign is_poster = false -%}
+  {%- if product.metafields.painting_options.frames_poster != blank -%}{%- assign is_poster = true -%}{%- endif -%}
+  {%- assign has_passe_partout = false -%}
+  {%- for m in product.media -%}
+    {%- if m.media_type == 'image' and m.preview_image.src contains 'passe-partout' -%}{%- assign has_passe_partout = true -%}{%- break -%}{%- endif -%}
+  {%- endfor -%}
+  <div data-studio-vpicker
+    data-cadre-key="{{ 'sections.main_product.variant_picker.frame_color' | t | escape }}"
+    data-contour-key="{{ 'sections.main_product.variant_picker.white_border' | t | escape }}"
+    data-contour-value="{{ 'sections.main_product.variant_picker.white_border_with' | t | escape }}">
     {%- for option in product.options_with_values -%}
       {%- comment -%} Type d'option par NOM (mêmes familles que selectedOptionByName du JS). {%- endcomment -%}
       {%- assign onl = option.name | downcase -%}
       {%- assign opt_kind = 'other' -%}
       {%- if onl contains 'cadre' or onl contains 'finition' or onl contains 'frame' or onl contains 'encadrement' -%}
         {%- assign opt_kind = 'frame' -%}
-        {%- assign opt_metaobjects = product.metafields.painting_options.frames_canvas.value -%}
+        {%- if is_poster -%}
+          {%- assign opt_metaobjects = product.metafields.painting_options.frames_poster.value -%}
+        {%- else -%}
+          {%- assign opt_metaobjects = product.metafields.painting_options.frames_canvas.value -%}
+        {%- endif -%}
       {%- elsif onl contains 'format' or onl contains 'taille' or onl contains 'dimension' or onl contains 'size' -%}
         {%- assign opt_kind = 'size' -%}
         {%- assign opt_metaobjects = product.metafields.painting_options.sizes.value -%}
@@ -89,6 +106,37 @@
            tactile vers un parent (chaque rangée reste isolée même en fin de course). {%- endcomment -%}
         <div class="relative">
           <div data-studio-vscroll class="flex gap-3 overflow-x-auto overscroll-x-contain font-heading text-sm font-semibold py-3 px-3 scrollbar-hidden scroll-smooth">
+            {%- if opt_kind == 'frame' and is_poster -%}
+              {%- comment -%} POSTER — « Sans cadre » (cercle barré) + 1 pastille par COULEUR (frames_poster),
+                 en UN clic (cf. painting-variant-picker.liquid). « Sans cadre » -> option = Sans cadre ;
+                 chaque couleur -> option = Avec cadre (même prix) + couleur portée en line-item property par
+                 le JS studio. Toutes name="studio-option{position}" (un seul groupe radio -> choix unique). {%- endcomment -%}
+              {%- assign sans_value = option.values.first -%}
+              {%- assign avec_value = null -%}
+              {%- for v in option.values -%}{%- unless forloop.first -%}{%- assign avec_value = v -%}{%- break -%}{%- endunless -%}{%- endfor -%}
+              <label class="shrink-0 cursor-pointer">
+                <input type="radio" name="studio-option{{ option.position }}" value="{{ sans_value | escape }}" data-studio-option data-option-position="{{ option.position }}" data-option-name="{{ option.name | escape }}" data-frame-mode="none" class="peer sr-only"{% if sans_value.selected %} checked{% endif %}>
+                <span class="flex h-[60px] w-[60px] items-center justify-center rounded-full transition-all duration-100 peer-checked:outline peer-checked:outline-1 peer-checked:outline-main peer-checked:outline-offset-2" title="{{ sans_value | escape }}">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 42 42" class="text-main" aria-hidden="true">
+                    <circle class="fill-main-10" cx="21" cy="21" r="20"></circle>
+                    <line x1="34" y1="8" x2="8" y2="34" stroke="currentColor" stroke-width="1" stroke-linecap="round"></line>
+                  </svg>
+                </span>
+              </label>
+              {%- for frame in opt_metaobjects -%}
+                <label class="shrink-0 cursor-pointer">
+                  <input type="radio" name="studio-option{{ option.position }}" value="{{ avec_value | escape }}" data-studio-option data-option-position="{{ option.position }}" data-option-name="{{ option.name | escape }}" data-frame-mode="framed" data-color-name="{{ frame.name | escape }}" data-color-handle="{{ frame.system.handle | escape }}" data-render-key="{{ frame.system.handle | escape }}" class="peer sr-only"{% if avec_value.selected and forloop.first %} checked{% endif %}>
+                  <span class="sr-only">{{ frame.name }}</span>
+                  {%- if frame.radio.value.media.value.src -%}
+                    <span class="block h-[60px] w-[60px] overflow-hidden rounded-full transition-all duration-100 peer-checked:outline peer-checked:outline-1 peer-checked:outline-main peer-checked:outline-offset-2" title="{{ frame.name | escape }}">
+                      <img src="{{ frame.radio.value.media.value.src | image_url: width: 60 }}" alt="{{ frame.radio.value.media.value.alt | escape }}" width="60" height="60" loading="lazy" class="h-full w-full object-cover">
+                    </span>
+                  {%- else -%}
+                    <span class="block rounded-full border border-main-20 bg-secondary px-4 py-2 text-sm font-normal text-main transition-all duration-100 peer-checked:bg-main peer-checked:text-secondary" title="{{ frame.name | escape }}">{{ frame.name }}</span>
+                  {%- endif -%}
+                </label>
+              {%- endfor -%}
+            {%- else -%}
             {%- for value in option.values -%}
               {%- comment -%} Métaobjet correspondant à cette valeur (match par nom). {%- endcomment -%}
               {%- assign mo_match = null -%}
@@ -143,17 +191,38 @@
                 {%- endif -%}
               </label>
             {%- endfor -%}
+            {%- endif -%}
           </div>
         </div>
       </fieldset>
     {%- endfor -%}
+
+    {%- comment -%} ===== Contour blanc (passe-partout) — toggle Sans/Avec, FEINTÉ (property, PAS une variante).
+       « Avec » = défaut (coché). Non-variante (pas de data-studio-option -> n'entre pas dans syncVariant) :
+       le JS studio le lit pour la property `Contour blanc`/`_passe_partout` + l'aperçu WebGL (`passe`).
+       Mêmes clés/valeurs localisées que le poster standard. N'apparaît que si visuels passe-partout. {%- endcomment -%}
+    {%- if is_poster and has_passe_partout -%}
+      <fieldset class="mb-5 min-w-0">
+        <div class="mb-2"><legend class="text-xs uppercase tracking-wide text-main-70">{{ 'sections.main_product.variant_picker.white_border' | t }}</legend></div>
+        <div class="flex gap-3 py-3 px-3 font-heading text-sm font-semibold" role="radiogroup" aria-label="{{ 'sections.main_product.variant_picker.white_border' | t | escape }}">
+          <label class="shrink-0 cursor-pointer">
+            <input type="radio" name="studio-contour" value="off" data-studio-white-border class="peer sr-only">
+            <span class="block rounded-full border border-main-20 bg-secondary px-4 py-2 text-sm font-normal text-main transition-all duration-100 peer-checked:bg-main peer-checked:text-secondary">{{ 'sections.main_product.variant_picker.white_border_without' | t }}</span>
+          </label>
+          <label class="shrink-0 cursor-pointer">
+            <input type="radio" name="studio-contour" value="on" data-studio-white-border class="peer sr-only" checked>
+            <span class="block rounded-full border border-main-20 bg-secondary px-4 py-2 text-sm font-normal text-main transition-all duration-100 peer-checked:bg-main peer-checked:text-secondary">{{ 'sections.main_product.variant_picker.white_border_with' | t }}</span>
+          </label>
+        </div>
+      </fieldset>
+    {%- endif -%}
 
     {%- comment -%} ===== Bulles (dialogs) scopées au studio, une par famille d'option ===== {%- endcomment -%}
     {%- assign guide_families = 'size,frame,border' | split: ',' -%}
     {%- for fam in guide_families -%}
       {%- case fam -%}
         {%- when 'size' -%}{%- assign fam_metaobjects = product.metafields.painting_options.sizes.value -%}
-        {%- when 'frame' -%}{%- assign fam_metaobjects = product.metafields.painting_options.frames_canvas.value -%}
+        {%- when 'frame' -%}{%- if is_poster -%}{%- assign fam_metaobjects = product.metafields.painting_options.frames_poster.value -%}{%- else -%}{%- assign fam_metaobjects = product.metafields.painting_options.frames_canvas.value -%}{%- endif -%}
         {%- when 'border' -%}{%- assign fam_metaobjects = product.metafields.painting_options.borders.value -%}
       {%- endcase -%}
       {%- if fam_metaobjects != empty -%}

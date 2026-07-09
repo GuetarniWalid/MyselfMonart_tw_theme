@@ -1824,7 +1824,25 @@
       this.querySelectorAll('[data-studio-option]').forEach((radio) => {
         radio.addEventListener('change', () => this.syncVariant());
       });
+      // Contour blanc (passe-partout) : NE change PAS la variante (c'est une property, pas une option)
+      // -> pas de syncVariant ; on re-monte juste l'aperçu WebGL (qui lit `passe`) + on persiste.
+      this.querySelectorAll('[data-studio-white-border]').forEach((radio) => {
+        radio.addEventListener('change', () => {
+          this.persist();
+          if (this.state.step === 'format') {
+            clearTimeout(this._fmtPreviewTimer);
+            this._fmtPreviewTimer = setTimeout(() => this.mountFormatPreview(), 120);
+          }
+        });
+      });
       this.syncVariant();
+    }
+
+    // Contour blanc actif ? (radio « Avec contour blanc » coché). Le toggle n'existe que sur les
+    // posters avec visuels passe-partout -> absent = false (aucune property, aucun liseré).
+    whiteBorderOn() {
+      const on = this.q('[data-studio-white-border]:checked');
+      return !!on && on.value === 'on';
     }
 
     selectedOptionValues() {
@@ -2701,6 +2719,7 @@
           border: 'white',
           frame: this.selectedRenderKeyByName(OPTION_FRAME_RE),
           size: this.selectedOptionByName(OPTION_FORMAT_RE),
+          passe: this.whiteBorderOn(),
         },
       };
       const json = JSON.stringify(cfg).replace(/</g, '\\u003c');
@@ -3512,6 +3531,24 @@
         props[label] = value;
       };
       this.studioSteps.forEach(collect);
+      // Cadre poster + contour blanc en LINE-ITEM PROPERTIES — mêmes NOMS/VALEURS que le picker poster
+      // standard (painting-variant-picker.liquid) pour un fulfillment identique. Clés localisées lues
+      // en data-* sur le conteneur du picker (rendues selon request.locale côté Liquid).
+      const vpicker = this.q('[data-studio-vpicker]');
+      if (vpicker) {
+        // Couleur : uniquement si une pastille « Avec cadre » (data-frame-mode="framed") est cochée.
+        // « Sans cadre » (frame-mode="none") n'émet rien.
+        const frameRadio = this.q('[data-studio-option][data-frame-mode="framed"]:checked');
+        if (frameRadio && frameRadio.dataset.colorName) {
+          props[vpicker.dataset.cadreKey || 'Couleur du cadre'] = frameRadio.dataset.colorName;
+          props._cadre = frameRadio.dataset.colorHandle || '';
+        }
+        // Contour blanc : property active si « Avec contour blanc » coché (défaut).
+        if (this.whiteBorderOn()) {
+          props[vpicker.dataset.contourKey || 'Contour blanc'] = vpicker.dataset.contourValue || 'Avec contour blanc';
+          props._passe_partout = 'oui';
+        }
+      }
       return props;
     }
 

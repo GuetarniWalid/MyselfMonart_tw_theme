@@ -676,6 +676,10 @@
       if (fixed) {
         this.state.border = borderTypeFromLabel(fixed.border || 'white');
         this.state.frame = normalize(fixed.frame || '');
+        // Contour blanc (passe-partout) fourni par la config FIGÉE du studio (le studio a son propre
+        // toggle contour, il n'y a pas de painting-variant-picker DOM sur la page perso). Sans cette
+        // ligne, l'état figé n'exposait jamais `passe` -> le studio ne dessinait jamais le liseré.
+        this.state.passe = !!fixed.passe;
         const m = String(fixed.size || '').match(/(\d+(?:[.,]\d+)?)\s*[x×]\s*(\d+(?:[.,]\d+)?)/i);
         if (m) {
           this.sizeW = parseFloat(m[1].replace(',', '.'));
