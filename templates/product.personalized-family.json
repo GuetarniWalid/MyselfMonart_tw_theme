@@ -26,6 +26,8 @@
         "title": {
           "type": "title",
           "settings": {
+            "tone": "headline",
+            "font_size": "text-2xl",
             "margin_bottom": "mb-2"
           }
         },
@@ -40,9 +42,14 @@
           "type": "buy",
           "settings": {
             "text": "JE CRÉE MON POSTER",
+            "show_payment_icons": false,
+            "margin_bottom": "mb-8",
             "is_dynamic_variant": false,
             "show_promotion": false,
-            "show_payment_icons": false
+            "promotion_discount": 15,
+            "promotion_discount_unit": "%",
+            "promotion_reason": "Soldes d'été ☀️",
+            "promotion_date": ""
           }
         },
         "arguments": {
@@ -84,14 +91,42 @@
         "collapsible_materiaux",
         "description"
       ],
-      "settings": {}
+      "settings": {
+        "start_from_media": 1,
+        "enable_merchant_schema": true,
+        "shipping_free": true,
+        "ships_country": "FR",
+        "return_days": 14,
+        "enable_format_toggle": true
+      }
     },
     "custom_art_studio": {
       "type": "tw-custom-art-studio",
       "settings": {
+        "heading": "Personnalisez votre poster en direct dans notre studio en ligne",
+        "description": "<p>Prénom, numéro, format, cadre : composez en direct votre poster personnalisé — un tableau, une fois encadré — avec un aperçu 3D en temps réel. Conçu en France, imprimé en Europe.</p>",
+        "cta_label": "Créer mon poster",
+        "step_photo_title": "Votre photo",
+        "step_team_title": "Votre équipe",
+        "step_name_title": "Prénom et numéro",
+        "step_format_title": "Format et finition",
+        "good_photo_alt": "Exemple de bonne photo : portrait net et bien éclairé, visage de face bien visible",
+        "bad_photo_alt": "Exemple de photo à éviter : visage dans l'ombre, mal éclairé et difficile à distinguer",
+        "wait_phase_1": "Analyse de votre photo…",
+        "wait_phase_2": "Le peintre esquisse le portrait…",
+        "wait_phase_3": "Mise en couleurs aux teintes de votre équipe…",
+        "wait_phase_4": "Vernissage et derniers détails…",
+        "reveal_title": "",
+        "mock_reveal_image": "shopify://shop_images/poster-famille-personnalise-dessin-au-trait-prenoms_2d4159bc-f495-4af4-9738-8670993946d8.jpg",
         "backend_url": "https://backend.myselfmonart.com",
         "mock_mode": false,
-        "mock_reveal_image": "shopify://shop_images/poster-famille-personnalise-dessin-au-trait-prenoms_2d4159bc-f495-4af4-9738-8670993946d8.jpg"
+        "text": "Ajouter au panier",
+        "is_dynamic_variant": false,
+        "show_promotion": false,
+        "promotion_discount": 0,
+        "promotion_discount_unit": "%",
+        "promotion_reason": "",
+        "promotion_date": ""
       }
     },
     "etapes": {
@@ -100,7 +135,7 @@
         "etape_photo": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/poster-famille-personnalise-dessin-au-trait-prenoms_2d4159bc-f495-4af4-9738-8670993946d8.jpg",
+            "image": "shopify://shop_images/photo-de-famille_64d19b2d-aca4-483c-bd3d-d7b6ac1f43a8.png",
             "title": "1 · Votre famille",
             "text": "<p>Votre nom de famille, les prénoms de votre tribu, le format qui vous plaît : vous personnalisez tout, directement sur cette page.</p>",
             "link_label": "",
@@ -111,9 +146,9 @@
         "etape_apercu": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/affiche-famille-personnalisee-dessin-trait-prenoms-coeurs-8a4a3131-5468-4d78-8c35-39e2eb5ad00c.jpg",
+            "image": "shopify://shop_images/studio-transformation-photo.png",
             "title": "2 · Notre studio compose",
-            "text": "<p>Votre création est composée avec soin, puis imprimée à la demande sur un beau papier épais de qualité.</p>",
+            "text": "<p>Votre création est composée avec soin par notre studio, puis imprimée à la demande sur un beau papier épais de qualité.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -122,7 +157,7 @@
         "etape_livre": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/affiche-famille-personnalisee-dessin-trait-salon-moderne-747262a4-034f-47f3-ae2a-b6d8884d9322.jpg",
+            "image": "shopify://shop_images/deballage-cadre-poster-famille.png",
             "title": "3 · Livré, prêt à accrocher",
             "text": "<p>Reçu chez vous en colis suivi, encadré en option — prêt à offrir, ou à réchauffer vos murs.</p>",
             "link_label": "",
@@ -138,7 +173,7 @@
       ],
       "settings": {
         "title": "VOTRE POSTER PERSONNALISÉ, EN 3 ÉTAPES",
-        "image_shape": "aspect-[3/4] object-cover",
+        "image_shape": "aspect-square object-cover",
         "columns_desktop": 3,
         "show_backgounds": false,
         "button_label": "",
@@ -149,7 +184,7 @@
     "bandeau_emotion": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify://shop_images/poster-famille-personnalise-dessin-trait-decoration-sur-mesure-d98dac88-10b2-4110-8eda-b23941a8cf1b.jpg",
+        "image": "shopify://shop_images/poster-personnalise-dans-piec-de-vie.png",
         "title": "Ce qui compte vraiment, sur votre mur",
         "description": "<p>Vos prénoms réunis, votre nom de famille mis à l'honneur : un portrait de famille qui raconte votre histoire — pas celle d'un catalogue. Ce n'est pas qu'un poster, c'est votre tribu, accrochée au mur.</p>",
         "layout": "image_first",
@@ -164,7 +199,7 @@
     "bandeau_matiere": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify://shop_images/poster-famille-personnalise-dessin-trait-minimaliste-prenoms-fe1a50aa-8c13-4059-8e9c-79032b7aed5f.jpg",
+        "image": "shopify://shop_images/poster-famille-personnalise-dessin-trait-prenoms-coeurs-58751306-ca46-43ff-a9e9-4f1074e7c22d.jpg",
         "title": "Une matière qui se respecte",
         "description": "<p>Imprimé à la demande sur un papier épais <strong>de qualité</strong> : des couleurs éclatantes, des noirs profonds, un rendu net et lumineux. Une vraie qualité photo, pensée pour durer.</p>",
         "layout": "text_first",
@@ -179,7 +214,7 @@
     "bandeau_finitions": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify://shop_images/poster-famille-personnalise-dessin-trait-minimaliste-prenoms-coeurs-2c8eeb2f-8de6-46bb-ab83-364d3d2f4bba.jpg",
+        "image": "shopify://shop_images/poster-famille-personnalise-formats-et-cadres-deco-murale.jpg",
         "title": "Le format et le cadre qui vous ressemblent",
         "description": "<p>Deux formats : <strong>30 × 40 cm</strong> pour un clin d'œil, <strong>60 × 80 cm</strong> pour la pièce maîtresse du mur. À poser tel quel, ou sublimé par l'un de nos cinq cadres — blanc, noir mat, chêne clair, noyer ou argent ancien — qui transforme votre poster en véritable tableau.</p><p><em>Conçu en France, imprimé en Europe.</em></p>",
         "layout": "image_first",
@@ -198,6 +233,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/Tableau-chambre-bebe_f6e62e6e-707b-41df-aa17-bdad25ef3385.jpg",
+            "image_asset": "",
             "message": "Juste une petite photo avec le cadre mis en place encore un grand merci à vous 🥰. \nElodie G"
           }
         },
@@ -205,6 +241,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/deco-mural-toile-marilyn-monroe-pop-art.jpg",
+            "image_asset": "",
             "message": "Envoie très rapide et tableau encore plus beau que sur le site.\nParfait je recommande !!!\nJessica S"
           }
         },
@@ -212,6 +249,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-animaux-rhinoceros_b1022df5-0085-43a4-93b7-011dd579d316.jpg",
+            "image_asset": "",
             "message": "AMAZING ! Le poster est magnifique, il fait son effet dans mon salon. Vanessa K"
           }
         },
@@ -219,6 +257,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-fruit-legume-cuisine-ananas-colore.jpg",
+            "image_asset": "",
             "message": "Trop contente de mon tableau, les couleurs sont aussi flashy que sur les photos du site.\nSarah F"
           }
         },
@@ -226,6 +265,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/Tableau-deco-noir-et-blanc.jpg",
+            "image_asset": "",
             "message": "Top, rien à dire de plus. \nGuillaume H"
           }
         },
@@ -233,6 +273,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-salon-femme-africaine.jpg",
+            "image_asset": "",
             "message": "Magnifique tableau et très design, correspond parfaitement à la description.  Morel E"
           }
         },
@@ -240,6 +281,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableauphotographie-zebre-animaux-zebre-sauvage.jpg",
+            "image_asset": "",
             "message": "L'animal, majestueux et solitaire trône dans mon salon au dessus de ma console... Peut on dire qu il est magnifique ? Assurément oui et je l adore!\nPatricia G."
           }
         }
@@ -254,7 +296,14 @@
         "image_text_7"
       ],
       "settings": {
-        "title": "Nos créations à travers vos yeux ❤️"
+        "eyebrow": "",
+        "heading_level": "h2",
+        "title": "Nos créations à travers vos yeux ❤️",
+        "lead": "",
+        "review_count": 80,
+        "trustpilot_score": 41,
+        "trustpilot_link": "",
+        "emit_review_jsonld": false
       }
     },
     "faq": {
@@ -284,20 +333,20 @@
             "row_content": "<p>Votre création reprend vos textes à la lettre : vérifiez bien l'orthographe au moment de personnaliser.</p><p>Une coquille repérée juste après la commande ? Écrivez vite à notre service client de Toulouse : tant que la fabrication n'a pas commencé, nous corrigeons avec plaisir.</p>"
           }
         },
-        "faq_rgpd_photo": {
-          "type": "collapsible_row",
-          "settings": {
-            "heading": "Que deviennent les informations que je confie ?",
-            "icon": "none",
-            "row_content": "<p>Vos prénoms et vos textes servent uniquement à composer puis à imprimer votre création — ils ne sont partagés avec personne.</p><p>Si votre personnalisation comporte une photo, elle n'alimente aucun entraînement d'intelligence artificielle et est supprimée une fois votre commande honorée.</p>"
-          }
-        },
         "faq_occasions": {
           "type": "collapsible_row",
           "settings": {
             "heading": "Pour quelles occasions l'offrir ?",
             "icon": "none",
             "row_content": "<p>Fête des mères, fête des pères, Noël, naissance, anniversaire de mariage, cadeau pour les grands-parents… Un portrait de famille personnalisé touche à tous les coups : c'est votre histoire qu'on accroche au mur.</p>"
+          }
+        },
+        "faq_rgpd_photo": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Que deviennent les informations que je confie ?",
+            "icon": "none",
+            "row_content": "<p>Vos prénoms et vos textes servent uniquement à composer puis à imprimer votre création — ils ne sont partagés avec personne.</p><p>Si votre personnalisation comporte une photo, elle n'alimente aucun entraînement d'intelligence artificielle et est supprimée une fois votre commande honorée.</p>"
           }
         },
         "faq_delais": {
@@ -346,8 +395,16 @@
       ],
       "settings": {
         "eyebrow": "FAQ",
+        "heading_level": "h2",
+        "heading_size": "medium",
+        "heading_weight": "semibold",
+        "question_size": "medium",
         "accent_tone": "buy-button",
-        "heading": "QUESTIONS FRÉQUENTES"
+        "heading": "QUESTIONS FRÉQUENTES",
+        "lead": "",
+        "background_color": "secondary",
+        "padding_size": "large",
+        "emit_faq_jsonld": false
       }
     },
     "product_recommendations": {
