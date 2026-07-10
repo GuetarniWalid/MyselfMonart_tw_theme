@@ -64,8 +64,10 @@
     posterFrameDepth: 0.05, // profondeur du cadre (faible : poster encadré, pas un châssis)
     glassProud: 0.012, // la glace dépasse le papier (épaisseur du verre visible au-dessus du tirage)
     glassTint: [0.99, 0.98, 0.96], // teinte du reflet : blanc NEUTRE (lumière de fenêtre), pas bleu
-    glassReflAmt: 0.17, // intensité des carreaux : réduite p/r à l'origine (0.38 blanchissait les œuvres claires) mais remontée depuis 0.12 (reflet devenu quasi invisible). Compromis : verre perceptible sans masquer un dessin au trait sur blanc.
-    glassFresnelAmt: 0.08, // brillance des bords (Fresnel) : léger éclat de verre sur les bords, n'atteint pas le centre du tirage
+    glassReflAmt: 0.17, // intensité des carreaux (poster PDP) : réduite p/r à l'origine (0.38 blanchissait les œuvres claires) mais remontée depuis 0.12 (reflet devenu quasi invisible). Compromis : verre perceptible sans masquer un dessin au trait sur blanc.
+    glassFresnelAmt: 0.08, // brillance des bords (Fresnel, poster PDP) : léger éclat de verre sur les bords, n'atteint pas le centre du tirage
+    glassReflStudio: 0.12, // studio perso : reflet ENCORE atténué. La scène y est adoucie (ambientStudio) -> le reflet additif y ressortait relativement plus. Ne touche pas le poster PDP (0.17). Réglable.
+    glassFresnelStudio: 0.055, // idem studio : éclat des bords réduit
     glassSweepMs: 850, // durée du balayage de reflet au changement de cadre
     passeRatio: 0.08, // passe-partout (contour blanc) = 8% du PETIT côté, ÉGAL en cm sur les 4 côtés (= extension MJ buildMattedOeuvre, PP_RATIO 0.08)
   };
@@ -2268,8 +2270,10 @@
         gl.uniformMatrix4fv(this.gLocs.uModel, false, model);
         gl.uniform3f(this.gLocs.uCamPos, 0, 0, SCENE.camDist);
         gl.uniform3fv(this.gLocs.uGlassTint, SCENE.glassTint);
-        gl.uniform1f(this.gLocs.uReflAmt, SCENE.glassReflAmt);
-        gl.uniform1f(this.gLocs.uFresnelAmt, SCENE.glassFresnelAmt);
+        // Studio (perso) : reflet encore atténué ; la PDP garde glassReflAmt/glassFresnelAmt.
+        const studioGlass = this.getAttribute('data-context') === 'studio';
+        gl.uniform1f(this.gLocs.uReflAmt, studioGlass ? SCENE.glassReflStudio : SCENE.glassReflAmt);
+        gl.uniform1f(this.gLocs.uFresnelAmt, studioGlass ? SCENE.glassFresnelStudio : SCENE.glassFresnelAmt);
         gl.uniform1f(this.gLocs.uStreakPhase, this.glassPhase);
         gl.uniform2f(this.gLocs.uHalfImg, this.glassHalf[0], this.glassHalf[1]);
         this.bindAttrib(this.gLocs.aPos, this.glassGeo.posBuf, 3);
