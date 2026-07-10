@@ -51,7 +51,7 @@
         "8600f603-2d6f-4191-8020-3678432ba1e5": {
           "type": "text",
           "settings": {
-            "text": "<p><strong>Son prénom et les petits détails qui racontent son histoire</strong> — une pièce unique, rien qu'à lui.</p><p><strong>Composé à la main par notre studio</strong> — d'après les informations que vous nous confiez.</p><p><strong>Le cadeau qui traverse le temps</strong>, aussi doux à offrir qu'à garder.</p>"
+            "text": "<p><strong>Son prénom et les petits détails qui racontent son histoire</strong> — une pièce unique, rien qu'à lui.</p><p><strong>Composé pour lui, un par un, par notre studio</strong> — d'après les informations que vous nous confiez.</p><p><strong>Le cadeau qui traverse le temps</strong>, aussi doux à offrir qu'à garder.</p>"
           }
         },
         "collapsible_tab_studio": {
@@ -59,7 +59,7 @@
           "settings": {
             "heading": "Personnalisation en ligne",
             "icon": "star",
-            "content": "<p>Renseignez en ligne son prénom, les informations de votre choix, puis le format et le cadre. Notre studio compose ensuite son œuvre à la main, avec le plus grand soin, avant de l'imprimer.</p><p><em>Conçu et contrôlé en France, imprimé en Europe.</em></p>",
+            "content": "<p>Renseignez en ligne son prénom, les informations de votre choix, puis le format et le cadre. Notre studio compose ensuite son œuvre, une par une, à partir de vos informations, avant impression.</p><p><em>Conçu et contrôlé en France, imprimé en Europe.</em></p>",
             "page": ""
           }
         },
@@ -268,7 +268,7 @@
           "settings": {
             "image": "shopify://shop_images/poster-bebe-etape-2-apercu.jpg",
             "title": "2 · Notre studio compose son œuvre",
-            "text": "<p>Nos artistes façonnent son poster à la main, avec soin, d'après les informations que vous nous avez confiées.</p>",
+            "text": "<p>Notre studio compose son visuel, un par un, à partir des informations que vous nous avez confiées.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -349,7 +349,7 @@
           "settings": {
             "heading": "Une création personnalisée : puis-je changer d'avis ?",
             "icon": "none",
-            "row_content": "<p>Chaque poster étant fabriqué sur mesure d'après vos informations, il n'est pas repris ni échangé une fois lancé en impression (article L221-28 du Code de la consommation). Nos artistes composent chaque œuvre avec le plus grand soin, et notre service client, à Toulouse, reste à vos côtés à la moindre question.</p>"
+            "row_content": "<p>Chaque poster étant fabriqué sur mesure d'après vos informations, il n'est pas repris ni échangé une fois lancé en impression (article L221-28 du Code de la consommation). Notre studio compose chaque œuvre avec le plus grand soin, et notre service client, à Toulouse, reste à vos côtés à la moindre question.</p>"
           }
         },
         "faq_pourquoi": {
@@ -357,7 +357,7 @@
           "settings": {
             "heading": "Pourquoi l'acheter chez nous ?",
             "icon": "none",
-            "row_content": "<p>MyselfMonArt est un studio créatif indépendant depuis 2022, entre Paris, Toulouse et l'Allemagne. Plus de 1 000 créations déjà livrées, une note Trustpilot de 4,1/5, et un service client français qui prend soin de chaque commande — comme d'un petit trésor de famille.</p>"
+            "row_content": "<p>MyselfMonArt est un studio créatif indépendant depuis 2022, entre Paris, Toulouse et l'Allemagne. Plus de 1 000 créations déjà livrées depuis 2022, d'excellents avis sur Trustpilot, et un service client français, à Toulouse, qui prend soin de chaque commande — comme d'un petit trésor de famille.</p>"
           }
         }
       },
