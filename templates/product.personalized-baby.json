@@ -39,7 +39,7 @@
         "buy_qrRzcg": {
           "type": "buy",
           "settings": {
-            "text": "JE PERSONNALISE",
+            "text": "JE CRÉE SON POSTER",
             "is_dynamic_variant": false,
             "show_promotion": false,
             "promotion_discount": 15,
@@ -51,7 +51,7 @@
         "8600f603-2d6f-4191-8020-3678432ba1e5": {
           "type": "text",
           "settings": {
-            "text": "<p>- Son prénom, sa date et heure de naissance, sa taille et son poids : un souvenir unique</p><p>- Aperçu en direct : vous validez avant l'impression</p><p>- Le cadeau de naissance qui traverse le temps</p>"
+            "text": "<p><strong>Son prénom et les petits détails qui racontent son histoire</strong> — une pièce unique, rien qu'à lui.</p><p><strong>Aperçu en direct</strong> — vous validez le rendu avant l'impression.</p><p><strong>Le cadeau qui traverse le temps</strong>, aussi doux à offrir qu'à garder.</p>"
           }
         },
         "collapsible_tab_studio": {
@@ -59,7 +59,7 @@
           "settings": {
             "heading": "Personnalisation en ligne",
             "icon": "star",
-            "content": "<p>Personnalisez votre poster de naissance en direct dans notre studio en ligne : prénom, date et heure de naissance, taille, poids, format et cadre. Composez votre poster — un tableau, une fois encadré — avec un aperçu en temps réel. Conçu en France, imprimé en Europe.</p>",
+            "content": "<p>Composez son poster en direct dans notre studio en ligne : son prénom, les informations que vous choisissez, puis le format et le cadre. L'aperçu se met à jour en temps réel — vous validez ce que vous voyez avant que l'on imprime.</p><p><em>Gratuit et sans engagement. Conçu et contrôlé en France, imprimé en Europe.</em></p>",
             "page": ""
           }
         },
@@ -68,16 +68,16 @@
           "settings": {
             "heading": "Livraison",
             "icon": "truck",
-            "content": "<p>🎨 Poster personnalisé : Fabrication à la demande en 3-4 jours </p><p>🚚  Expédition en 3-5 jours ouvrables en colis suivi à votre domicile.</p><p>🎁 Livraison gratuite </p>",
+            "content": "<p>🎨 <strong>Fabrication à la demande</strong> — 3 à 4 jours, rien que pour lui.</p><p>🚚 <strong>Expédition</strong> — 3 à 5 jours ouvrés en colis suivi.</p><p>🎁 <strong>Livraison gratuite.</strong></p>",
             "page": ""
           }
         },
         "collapsible_tab_4UhrbY": {
           "type": "collapsible_tab",
           "settings": {
-            "heading": "Materiaux",
+            "heading": "Matériaux",
             "icon": "leather",
-            "content": "<p><strong>- Le papier</strong> : un papier de qualité , pour des couleurs justes et des détails nets.</p><p><strong>- Les formats</strong> : plusieurs tailles, de 30 × 40 cm à 90 × 120 cm, à poser tel quel ou à encadrer.</p><p><strong>- Le cadre (en option)</strong> : quatre finitions au choix — blanc, noir mat, chêne clair ou noyer.</p><p>Chaque poster est imprimé à la demande, conçu en France et imprimé en Europe.</p>",
+            "content": "<p>Imprimé à la demande sur un papier épais de qualité : des teintes justes, des détails nets, la sobriété d'une vraie pièce d'art.</p><p>Quatre formats, de 30 × 40 cm à 90 × 120 cm — à poser tel quel ou à encadrer. En option, l'un de nos quatre cadres — blanc, noir mat, chêne clair ou noyer — transforme le poster en véritable tableau.</p><p><em>Conçu et contrôlé en France, imprimé en Europe.</em></p>",
             "page": ""
           }
         },
@@ -208,8 +208,8 @@
       "type": "image-with-text",
       "settings": {
         "image": "shopify://shop_images/poster-bebe-naissance-emotion.jpg",
-        "title": "Le tout premier chapitre de son histoire",
-        "description": "<p>Un prénom, une date, une heure, ses premières mesures — les détails précieux des tout premiers instants, réunis dans une œuvre douce qui veille sur son sommeil. Un cadeau de naissance qu'on garde toute une vie.</p>",
+        "title": "Une œuvre qui veille sur lui",
+        "description": "<p>Son prénom, et les petits détails qui n'appartiennent qu'à lui — réunis dans une œuvre douce, pensée pour sa chambre. Le genre de cadeau que l'on choisit avec le cœur, et que l'on garde bien après les premières années.</p>",
         "layout": "image_first",
         "enable_blob": false,
         "activate_dynamic_color": false,
@@ -224,7 +224,7 @@
       "settings": {
         "image": "shopify://shop_images/poster-bebe-papier-detail.jpg",
         "title": "Une matière qui se respecte",
-        "description": "<p>Imprimé à la demande sur un papier épais <strong>de qualité</strong> : des teintes délicates, des détails fins, un grain élégant. La sobriété d'une vraie pièce d'art, pensée pour sa chambre.</p>",
+        "description": "<p>Imprimé à la demande sur un papier épais de qualité : des teintes délicates, un grain élégant, des détails nets. La douceur d'une vraie pièce d'art — assez sobre pour grandir avec lui, année après année.</p>",
         "layout": "text_first",
         "enable_blob": false,
         "activate_dynamic_color": false,
@@ -239,7 +239,7 @@
       "settings": {
         "image": "shopify://shop_images/poster-foot-finitions-cadres.jpg",
         "title": "Le format et le cadre qui lui ressemblent",
-        "description": "<p>Plusieurs formats, de <strong>30 × 40 cm</strong> à <strong>90 × 120 cm</strong>, à poser tel quel ou à encadrer. Sublimé par l'un de nos quatre cadres — blanc, noir mat, chêne clair ou noyer — qui transforme le poster en véritable tableau.</p><p><em>Conçu en France, imprimé en Europe.</em></p>",
+        "description": "<p>Quatre formats, de 30 × 40 cm à 90 × 120 cm, à poser tel quel ou à encadrer. Sublimé par l'un de nos quatre cadres — blanc, noir mat, chêne clair ou noyer — qui transforme le poster en véritable tableau. <em>Conçu et contrôlé en France, imprimé en Europe.</em></p>",
         "layout": "image_first",
         "enable_blob": false,
         "activate_dynamic_color": false,
@@ -256,8 +256,8 @@
           "type": "column",
           "settings": {
             "image": "shopify://shop_images/poster-bebe-etape-1-personnalisation.jpg",
-            "title": "1 · Les infos de bébé",
-            "text": "<p>Renseignez son prénom, sa date et heure de naissance, sa taille et son poids. Son histoire, dans les moindres détails.</p>",
+            "title": "1 · Vous le personnalisez",
+            "text": "<p>Son prénom et les petits détails que vous choisissez — ceux qui racontent son histoire.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -268,7 +268,7 @@
           "settings": {
             "image": "shopify://shop_images/poster-bebe-etape-2-apercu.jpg",
             "title": "2 · L'aperçu en direct",
-            "text": "<p>Son poster se compose sous vos yeux, en temps réel : vous voyez exactement le rendu avant de commander. Gratuit, sans engagement.</p>",
+            "text": "<p>Vous voyez le rendu se composer en temps réel, et vous le validez avant impression.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -279,7 +279,7 @@
           "settings": {
             "image": "shopify://shop_images/poster-bebe-etape-3-encadre.jpg",
             "title": "3 · Livré, prêt à offrir",
-            "text": "<p>Vous validez, nous imprimons sur un beau papier épais. Reçu chez vous, encadré en option, prêt à offrir pour une naissance ou un baptême.</p>",
+            "text": "<p>Fabriqué avec soin, expédié chez vous — prêt à prendre sa place dans sa chambre ou sous le sapin.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -292,7 +292,7 @@
         "column_U3DQjE"
       ],
       "settings": {
-        "title": "DE LA NAISSANCE À SON POSTER, EN 3 ÉTAPES",
+        "title": "SON POSTER PERSONNALISÉ, EN 3 ÉTAPES",
         "image_shape": "aspect-[3/4] object-cover",
         "columns_desktop": 3,
         "show_backgounds": false,
@@ -304,58 +304,76 @@
     "7ae13aad-330c-4fa7-94cf-fafc1c13cf60": {
       "type": "collapsible-content",
       "blocks": {
-        "faq_nb_comment": {
+        "faq_comment": {
           "type": "collapsible_row",
           "settings": {
             "heading": "Comment ça marche ?",
             "icon": "none",
-            "row_content": "<p>1. Dans le studio en ligne, renseignez les infos de bébé : prénom, date et heure de naissance, taille, poids.</p><p>2. L'aperçu se compose en direct : vous voyez exactement le poster avant de commander.</p><p>3. Le résultat vous plaît ? Vous validez, et nous lançons l'impression.</p>"
+            "row_content": "<p>Vous ouvrez le studio en ligne, vous renseignez son prénom et les informations proposées pour ce poster, puis vous choisissez le format et le cadre. L'aperçu se compose en direct : vous validez le rendu, et nous l'imprimons.</p>"
           }
         },
-        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-1": {
+        "faq_finitions": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "Quel rendu et quelles finitions pour votre poster ?",
+            "heading": "Quel rendu et quelles finitions ?",
             "icon": "none",
-            "row_content": "<p><p>Votre poster est imprimé à la demande sur un papier de qualité, <strong>de qualité</strong> : des couleurs justes, des détails nets et une belle profondeur.</p><p>Il vous est proposé en plusieurs formats, de <strong>30 × 40 cm</strong> à <strong>90 × 120 cm</strong>, à poser tel quel ou à encadrer. Côté cadre, quatre finitions s'offrent à vous : <strong>blanc, noir mat, chêne clair ou noyer</strong>, pour s'accorder à votre intérieur.</p>"
+            "row_content": "<p>Une impression à la demande sur papier épais de qualité, aux teintes justes et aux détails nets. À poser tel quel, ou à encadrer parmi quatre finitions — blanc, noir mat, chêne clair, noyer — qui lui donnent l'allure d'un vrai tableau.</p>"
           }
         },
-        "e20d3253-d757-4a99-9237-128916cc9ffb": {
+        "faq_accrocher": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "Comment accrocher ou poser votre poster ?",
+            "heading": "Comment l'accrocher ou le poser ?",
             "icon": "none",
-            "row_content": "<p><p>Tout dépend de la finition que vous choisissez.</p><p>- <strong>Sans cadre</strong> : votre poster s'affiche en toute simplicité, avec le système d'accrochage de votre choix.</p><p>- <strong>Avec cadre</strong> : il est prêt à être accroché. Pensez simplement à adapter les fixations à votre type de mur — placo, brique ou béton. Nos cadres sont livrés sans visserie, car chaque mur est différent.</p>"
+            "row_content": "<p>Sans cadre, le poster s'affiche avec une pince, une pâte adhésive ou un joli ruban. Avec cadre, il se suspend au mur ou se pose sur une étagère, une commode, un rebord — au plus près de son petit monde.</p>"
           }
         },
-        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-2": {
-          "type": "collapsible_row",
-          "settings": {
-            "heading": "Pourquoi acheter chez nous ?",
-            "icon": "none",
-            "row_content": "<p>Nos graphistes travaillent chaque jour pour créer de nouvelles œuvres. Chaque semaine, nous mettons à jour notre site et ajoutons les nouveaux posters.</p><p>Vous pouvez choisir le format et la personnalisation pour un accord parfait avec votre intérieur.</p><p>Si toutefois aucun poster ne vous plaît, vous avez la possibilité de demander à nos graphistes de façonner l'œuvre de vos rêves.</p>"
-          }
-        },
-        "a603c2c1-59a1-4067-9d4b-dc8591ddc1f8": {
+        "faq_taille": {
           "type": "collapsible_row",
           "settings": {
             "heading": "Quelle taille de poster choisir ?",
             "icon": "none",
-            "row_content": "<p>Pour ne pas vous tromper, mesurez la largeur de votre pan de mur. Multipliez le résultat par 0,57 pour obtenir le ratio idéal.</p><p>Sachez qu'il est également recommandé d'accrocher le centre du poster à environ 1,65 mètre du sol (ce qui correspond à peu près à la hauteur des yeux). Il est aussi recommandé de laisser environ 30 centimètres d'espace entre un meuble et votre poster.</p>"
+            "row_content": "<p>Pour ne pas vous tromper, mesurez la largeur de votre pan de mur. Multipliez le résultat par 0,57 pour obtenir le ratio idéal.</p><p>Sachez qu'il est également recommandé d'accrocher le centre du poster à environ 1,65 mètre du sol (ce qui correspond à peu près à la hauteur des yeux). Il est aussi recommandé de laisser environ 30 centimètres d'espace entre un meuble et votre poster.</p>"
+          }
+        },
+        "faq_delai": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Combien de temps pour l'offrir à temps ?",
+            "icon": "none",
+            "row_content": "<p>Comptez 3 à 4 jours de fabrication à la demande, puis 3 à 5 jours ouvrés d'expédition en colis suivi. Pour une date importante, prévoyez cette petite marge et commandez avec un peu d'avance.</p>"
+          }
+        },
+        "faq_retractation": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Une création personnalisée : puis-je changer d'avis ?",
+            "icon": "none",
+            "row_content": "<p>Chaque poster étant fabriqué sur mesure d'après vos informations, il n'est pas repris ni échangé une fois lancé en impression (article L221-28 du Code de la consommation). C'est justement pourquoi vous validez l'aperçu avant impression — et notre service client, à Toulouse, reste à vos côtés à la moindre question.</p>"
+          }
+        },
+        "faq_pourquoi": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Pourquoi l'acheter chez nous ?",
+            "icon": "none",
+            "row_content": "<p>MyselfMonArt est un studio créatif indépendant depuis 2022, entre Paris, Toulouse et l'Allemagne. Plus de 1 000 créations déjà livrées, une note Trustpilot de 4,1/5, et un service client français qui prend soin de chaque commande — comme d'un petit trésor de famille.</p>"
           }
         }
       },
       "block_order": [
-        "faq_nb_comment",
-        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-1",
-        "e20d3253-d757-4a99-9237-128916cc9ffb",
-        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-2",
-        "a603c2c1-59a1-4067-9d4b-dc8591ddc1f8"
+        "faq_comment",
+        "faq_finitions",
+        "faq_accrocher",
+        "faq_taille",
+        "faq_delai",
+        "faq_retractation",
+        "faq_pourquoi"
       ],
       "settings": {
         "eyebrow": "FAQ",
         "accent_tone": "buy-button",
-        "heading": "QUESTIONS FRÉQUENTES"
+        "heading": "Vos questions, nos réponses"
       }
     }
   },
