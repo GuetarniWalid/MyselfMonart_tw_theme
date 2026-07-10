@@ -66,8 +66,8 @@
     glassTint: [0.99, 0.98, 0.96], // teinte du reflet : blanc NEUTRE (lumière de fenêtre), pas bleu
     glassReflAmt: 0.17, // intensité des carreaux (poster PDP) : réduite p/r à l'origine (0.38 blanchissait les œuvres claires) mais remontée depuis 0.12 (reflet devenu quasi invisible). Compromis : verre perceptible sans masquer un dessin au trait sur blanc.
     glassFresnelAmt: 0.08, // brillance des bords (Fresnel, poster PDP) : léger éclat de verre sur les bords, n'atteint pas le centre du tirage
-    glassReflStudio: 0.08, // studio perso : reflet TRÈS discret (3e baisse). La scène y est adoucie (ambientStudio) -> le reflet additif y ressort ; on le veut à peine perceptible pour ne pas gêner l'œuvre. Ne touche pas le poster PDP (0.17). Réglable.
-    glassFresnelStudio: 0.04, // idem studio : éclat des bords réduit
+    glassReflStudio: 0.05, // studio perso : reflet à PEINE perceptible (4e baisse). La scène y est adoucie (ambientStudio) -> le reflet additif y ressort ; on le veut minimal pour ne pas gêner l'œuvre. Ne touche pas le poster PDP (0.17). Réglable (0.0 = coupé).
+    glassFresnelStudio: 0.025, // idem studio : éclat des bords quasi nul
     glassSweepMs: 850, // durée du balayage de reflet au changement de cadre
     passeRatio: 0.08, // passe-partout (contour blanc) = 8% du PETIT côté, ÉGAL en cm sur les 4 côtés (= extension MJ buildMattedOeuvre, PP_RATIO 0.08)
   };
