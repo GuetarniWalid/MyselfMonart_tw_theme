@@ -25,10 +25,10 @@
     scale: 0.52, // taille de la toile dans le carrousel desktop/iPad : posée, toile + ombre ENTIÈRES (non rognées), comme le mobile
     scaleCarouselMobile: 0.52, // carrousel sur mobile : idem (toile entière, posée). Le "zoom" est réservé au gros plan (popup)
     scalePopup: 0.56, // gros plan : un peu plus de marge pour que l'ombre (et la rotation) ne soit jamais coupée
-    scaleStudio: 0.62, // studio de personnalisation : l'œuvre doit REMPLIR son cadre (argument de vente : la montrer grande). Bien plus que le carrousel PDP (0.52). Réglable — baisser si le cadre/tranche/ombre est rogné.
+    scalePoster: 0.62, // POSTER (studio perso + PDP poster) : l'œuvre remplit son cadre (argument de vente : la montrer grande). Scopé par posterMode -> la TOILE garde le cadrage carrousel (scale 0.52). Réglable — baisser si le cadre/tranche/ombre est rogné.
     chassisCm: 2.0, // profondeur RÉELLE du châssis (cm). La proportion du bord = chassisCm / taille choisie (cm) -> physiquement exacte et plus fine sur les grandes toiles. Ajustable.
     ambient: 0.74,
-    ambientStudio: 0.64, // studio perso : ambiant abaissé -> l'éclairage de la face avant (vLight) repasse SOUS 1.0, donc les beiges / papiers chauds cessent de saturer vers le blanc. N'affecte PAS la PDP (toile/poster carrousel). Réglable.
+    ambientPoster: 0.64, // POSTER (studio perso + PDP poster) : ambiant abaissé -> l'éclairage face avant (vLight) repasse SOUS 1.0, les beiges / papiers chauds cessent de saturer vers le blanc. Scopé par posterMode -> la TOILE garde 0.74. Réglable.
     diffuse: 0.4,
     lightDir: [0.45, 0.55, 0.9], // lumière depuis le haut-droite (côté visible)
     weaveAmt: 0.85, // mélange vers la texture de toile (subtil mais visible)
@@ -64,10 +64,8 @@
     posterFrameDepth: 0.05, // profondeur du cadre (faible : poster encadré, pas un châssis)
     glassProud: 0.012, // la glace dépasse le papier (épaisseur du verre visible au-dessus du tirage)
     glassTint: [0.99, 0.98, 0.96], // teinte du reflet : blanc NEUTRE (lumière de fenêtre), pas bleu
-    glassReflAmt: 0.17, // intensité des carreaux (poster PDP) : réduite p/r à l'origine (0.38 blanchissait les œuvres claires) mais remontée depuis 0.12 (reflet devenu quasi invisible). Compromis : verre perceptible sans masquer un dessin au trait sur blanc.
-    glassFresnelAmt: 0.08, // brillance des bords (Fresnel, poster PDP) : léger éclat de verre sur les bords, n'atteint pas le centre du tirage
-    glassReflStudio: 0.05, // studio perso : reflet à PEINE perceptible (4e baisse). La scène y est adoucie (ambientStudio) -> le reflet additif y ressort ; on le veut minimal pour ne pas gêner l'œuvre. Ne touche pas le poster PDP (0.17). Réglable (0.0 = coupé).
-    glassFresnelStudio: 0.025, // idem studio : éclat des bords quasi nul
+    glassReflAmt: 0.05, // intensité des carreaux, TOUS les posters (studio + PDP) : reflet à peine perceptible. Passe additive ONE,ONE (n'ajoute que de la lumière) -> trop fort, il blanchit les œuvres claires. La glace n'existe qu'en posterMode (jamais sur la toile). Réglable (0.0 = coupé).
+    glassFresnelAmt: 0.025, // brillance des bords (Fresnel) : quasi nulle
     glassSweepMs: 850, // durée du balayage de reflet au changement de cadre
     passeRatio: 0.08, // passe-partout (contour blanc) = 8% du PETIT côté, ÉGAL en cm sur les 4 côtés (= extension MJ buildMattedOeuvre, PP_RATIO 0.08)
   };
@@ -1247,9 +1245,9 @@
        Le "zoom" n'apparaît donc qu'au clic, dans le popup. Recalculée au resize. */
     computeScale() {
       if (this.getAttribute('data-context') === 'popup') return SCENE.scalePopup;
-      // Studio (perso) : l'œuvre remplit le cadre pour impressionner — cadrage propre, indépendant
-      // du viewport (le canvas y est déjà en 4/5, centré). Ne touche PAS le carrousel PDP.
-      if (this.getAttribute('data-context') === 'studio') return SCENE.scaleStudio;
+      // Poster (studio perso + PDP) : l'œuvre remplit le cadre pour impressionner. Scopé par
+      // posterMode -> la TOILE garde le cadrage carrousel ci-dessous. (popup traité au-dessus.)
+      if (this.posterMode) return SCENE.scalePoster;
       const mobile = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
       return mobile ? SCENE.scaleCarouselMobile : SCENE.scale;
     }
@@ -2195,8 +2193,8 @@
       gl.uniformMatrix4fv(this.locs.uMVP, false, mvp);
       gl.uniformMatrix4fv(this.locs.uModel, false, model);
       gl.uniform3fv(this.locs.uLightDir, SCENE.lightDir);
-      // Studio (perso) : ambiant réduit pour ne pas blanchir les beiges/papiers clairs. PDP inchangée.
-      const ambient = this.getAttribute('data-context') === 'studio' ? SCENE.ambientStudio : SCENE.ambient;
+      // Poster (studio + PDP) : ambiant réduit pour ne pas blanchir les beiges/papiers clairs. Toile inchangée.
+      const ambient = this.posterMode ? SCENE.ambientPoster : SCENE.ambient;
       gl.uniform1f(this.locs.uAmbient, ambient);
       gl.uniform1f(this.locs.uDiffuse, SCENE.diffuse);
 
@@ -2270,10 +2268,8 @@
         gl.uniformMatrix4fv(this.gLocs.uModel, false, model);
         gl.uniform3f(this.gLocs.uCamPos, 0, 0, SCENE.camDist);
         gl.uniform3fv(this.gLocs.uGlassTint, SCENE.glassTint);
-        // Studio (perso) : reflet encore atténué ; la PDP garde glassReflAmt/glassFresnelAmt.
-        const studioGlass = this.getAttribute('data-context') === 'studio';
-        gl.uniform1f(this.gLocs.uReflAmt, studioGlass ? SCENE.glassReflStudio : SCENE.glassReflAmt);
-        gl.uniform1f(this.gLocs.uFresnelAmt, studioGlass ? SCENE.glassFresnelStudio : SCENE.glassFresnelAmt);
+        gl.uniform1f(this.gLocs.uReflAmt, SCENE.glassReflAmt);
+        gl.uniform1f(this.gLocs.uFresnelAmt, SCENE.glassFresnelAmt);
         gl.uniform1f(this.gLocs.uStreakPhase, this.glassPhase);
         gl.uniform2f(this.gLocs.uHalfImg, this.glassHalf[0], this.glassHalf[1]);
         this.bindAttrib(this.gLocs.aPos, this.glassGeo.posBuf, 3);
