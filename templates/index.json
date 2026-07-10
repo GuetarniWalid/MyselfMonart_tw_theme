@@ -649,8 +649,6 @@
         "heading_level": "h2",
         "title": "Ce que vivent nos clients au quotidien",
         "lead": "Le meilleur portrait de notre travail, ce sont les photos que nos clients nous envoient une fois leur tableau accroché.",
-        "review_count": 80,
-        "trustpilot_score": 41,
         "trustpilot_link": "https://fr.trustpilot.com/review/myselfmonart.com",
         "emit_review_jsonld": true
       }
@@ -977,8 +975,6 @@
         "title": "Ce que vivent nos clients au quotidien",
         "subtitle": "Plus de 80 retours vérifiés sur Trustpilot.",
         "show_trustpilot": true,
-        "trustpilot_score": 41,
-        "trustpilot_review_count": 80,
         "trustpilot_link": "https://fr.trustpilot.com/review/myselfmonart.com"
       }
     },

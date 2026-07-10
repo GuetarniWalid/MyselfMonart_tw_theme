@@ -24,6 +24,12 @@
   assign heading_level = section.settings.heading_level | default: 'h2'
   assign heading_id = 'testimonials-carousel-' | append: section.id
 
+  # Source de verite unique : reglages globaux du theme (cf. settings_schema.json
+  # groupe "Trustpilot (avis marque)"). Note et nombre d'avis modifies a UN seul
+  # endroit -> mis a jour partout (fiches produit, home, ligne info + JSON-LD ici).
+  assign tp_score = settings.trustpilot_score_global | default: 42
+  assign tp_count = settings.trustpilot_review_count_global | default: 81
+
   assign visible_review_count = 0
   for block in section.blocks
     if block.type == 'image-text' and block.settings.message != blank
@@ -67,9 +73,9 @@
       </p>
     {%- endif -%}
 
-    {%- if section.settings.review_count and section.settings.review_count > 0 -%}
+    {%- if tp_count and tp_count > 0 -%}
       <p class="mt-6 md:mt-8 font-roboto text-sm text-secondary">
-        {{ section.settings.review_count }} {{ 'sections.mma.reviews_verified_suffix' | t }}
+        {{ tp_count }} {{ 'sections.mma.reviews_verified_suffix' | t }}
         {%- if section.settings.trustpilot_link != blank -%}
           <span aria-hidden="true" class="mx-2">·</span>
           <a
@@ -119,7 +125,7 @@
     Organization/Review qui entrerait en conflit.
   {%- endcomment -%}
   {%- if section.settings.emit_review_jsonld and visible_review_count > 0 -%}
-    {%- assign rating_value = section.settings.trustpilot_score | default: 41 | divided_by: 10.0 -%}
+    {%- assign rating_value = tp_score | divided_by: 10.0 -%}
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -132,7 +138,7 @@
           "ratingValue": "{{ rating_value }}",
           "bestRating": "5",
           "worstRating": "1",
-          "ratingCount": "{{ section.settings.review_count | default: 80 }}"
+          "ratingCount": "{{ tp_count }}"
         },
         "review": [
           {%- assign emitted = 0 -%}
@@ -216,17 +222,8 @@
       "content": "Trustpilot (info ligne + JSON-LD)"
     },
     {
-      "type": "number",
-      "id": "review_count",
-      "label": "Nombre d'avis Trustpilot",
-      "default": 80
-    },
-    {
-      "type": "number",
-      "id": "trustpilot_score",
-      "label": "Score Trustpilot ×10",
-      "info": "41 = 4.1/5",
-      "default": 41
+      "type": "paragraph",
+      "content": "La note et le nombre d'avis proviennent du réglage global Thème → Trustpilot (avis marque). Les modifier là met à jour cette section, les fiches produit, la home et les schémas d'un coup."
     },
     {
       "type": "url",

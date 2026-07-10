@@ -6,9 +6,12 @@
     endif
   endfor
 
-  assign score = section.settings.trustpilot_score | default: 45
+  # Source de verite unique : reglages globaux du theme (cf. settings_schema.json
+  # groupe "Trustpilot (avis marque)"). Note et nombre d'avis modifies a UN seul
+  # endroit -> mis a jour partout (badge + aggregateRating JSON-LD ici).
+  assign score = settings.trustpilot_score_global | default: 42
   assign score_display = score | divided_by: 10.0
-  assign review_count = section.settings.trustpilot_review_count | default: 0
+  assign review_count = settings.trustpilot_review_count_global | default: 81
 -%}
 
 <div class="trust-signals">
@@ -114,7 +117,7 @@
           "ratingValue": "{{ score_display }}",
           "bestRating": "5",
           "worstRating": "1",
-          "ratingCount": "{{ review_count | default: 30 }}"
+          "ratingCount": "{{ review_count }}"
         }
         {%- endif -%}
         {%- if visible_review_count > 0 -%}
@@ -198,23 +201,14 @@
       "content": "t:sections.trust-signals.headings.trustpilot"
     },
     {
+      "type": "paragraph",
+      "content": "La note et le nombre d'avis proviennent du réglage global Thème → Trustpilot (avis marque). Les modifier là met à jour cette section, les fiches produit, la home et les schémas d'un coup."
+    },
+    {
       "type": "checkbox",
       "id": "show_trustpilot",
       "label": "t:sections.trust-signals.settings.show_trustpilot.label",
       "default": true
-    },
-    {
-      "type": "number",
-      "id": "trustpilot_score",
-      "label": "t:sections.trust-signals.settings.trustpilot_score.label",
-      "info": "t:sections.trust-signals.settings.trustpilot_score.info",
-      "default": 45
-    },
-    {
-      "type": "number",
-      "id": "trustpilot_review_count",
-      "label": "t:sections.trust-signals.settings.trustpilot_review_count.label",
-      "default": 1200
     },
     {
       "type": "url",
