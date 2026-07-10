@@ -21,7 +21,6 @@
         "trustpilot_review_6YjUkL": {
           "type": "trustpilot_review",
           "settings": {
-            "trustpilot_score": 45,
             "link": "",
             "margin_bottom": "mb-2"
           }

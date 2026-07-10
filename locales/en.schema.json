@@ -723,14 +723,6 @@
         "show_trustpilot": {
           "label": "Show Trustpilot badge"
         },
-        "trustpilot_score": {
-          "label": "Trustpilot score",
-          "info": "Rated out of 50. For a 4.5 out of 5 score, enter 45"
-        },
-        "trustpilot_review_count": {
-          "label": "Total Trustpilot review count",
-          "info": "Used for SEO (AggregateRating) and screen readers. Not displayed visually."
-        },
         "trustpilot_link": {
           "label": "Trustpilot profile link"
         }
@@ -1674,10 +1666,6 @@
           "settings": {
             "link": {
               "label": "Trustpilot Link"
-            },
-            "trustpilot_score": {
-              "label": "Trustpilot Score",
-              "info": "Rated out of 50. For a 4.3 out of 5 score, enter 43"
             }
           }
         },

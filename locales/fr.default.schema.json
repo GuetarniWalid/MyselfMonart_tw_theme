@@ -810,14 +810,6 @@
         "show_trustpilot": {
           "label": "Afficher le badge Trustpilot"
         },
-        "trustpilot_score": {
-          "label": "Score Trustpilot",
-          "info": "Noté sur 50. Pour une note de 4,5 sur 5, entrez 45"
-        },
-        "trustpilot_review_count": {
-          "label": "Nombre total d'avis Trustpilot",
-          "info": "Utilisé pour le SEO (AggregateRating) et pour les lecteurs d'écran. Non affiché visuellement."
-        },
         "trustpilot_link": {
           "label": "Lien vers la page Trustpilot"
         }
@@ -1761,10 +1753,6 @@
           "settings": {
             "link": {
               "label": "Lien Trustpilot"
-            },
-            "trustpilot_score": {
-              "label": "Score Trustpilot",
-              "info": "Noté sur 50. Pour une note de 4,3 sur 5, entrez 43"
             }
           }
         },
