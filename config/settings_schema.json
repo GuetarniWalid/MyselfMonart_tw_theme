@@ -306,14 +306,14 @@
       {
         "type": "number",
         "id": "trustpilot_score_global",
-        "label": "Score Trustpilot (sur 50, ex : 41 = 4.1/5)",
-        "default": 41
+        "label": "Score Trustpilot (sur 50, ex : 42 = 4.2/5)",
+        "default": 42
       },
       {
         "type": "number",
         "id": "trustpilot_review_count_global",
         "label": "Nombre total d'avis",
-        "default": 80
+        "default": 81
       }
     ]
   }

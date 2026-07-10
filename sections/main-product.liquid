@@ -560,8 +560,8 @@
               # Source de verite unique : settings globaux du theme (cf. settings_schema.json
               # groupe "Trustpilot"). Modifier la note ou le nb d'avis a UN seul endroit met
               # a jour toutes les fiches produit automatiquement.
-              assign tp_score = settings.trustpilot_score_global | default: 41
-              assign tp_count = settings.trustpilot_review_count_global | default: 80
+              assign tp_score = settings.trustpilot_score_global | default: 42
+              assign tp_count = settings.trustpilot_review_count_global | default: 81
             -%}
             <div class="{{ block.settings.margin_bottom }} mx-4">
               <p class="flex items-center mb-1 text-main-70">
