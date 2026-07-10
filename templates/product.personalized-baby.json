@@ -51,7 +51,7 @@
         "8600f603-2d6f-4191-8020-3678432ba1e5": {
           "type": "text",
           "settings": {
-            "text": "<p><strong>Son prénom et les petits détails qui racontent son histoire</strong> — une pièce unique, rien qu'à lui.</p><p><strong>Aperçu en direct</strong> — vous validez le rendu avant l'impression.</p><p><strong>Le cadeau qui traverse le temps</strong>, aussi doux à offrir qu'à garder.</p>"
+            "text": "<p><strong>Son prénom et les petits détails qui racontent son histoire</strong> — une pièce unique, rien qu'à lui.</p><p><strong>Composé à la main par notre studio</strong> — d'après les informations que vous nous confiez.</p><p><strong>Le cadeau qui traverse le temps</strong>, aussi doux à offrir qu'à garder.</p>"
           }
         },
         "collapsible_tab_studio": {
@@ -59,7 +59,7 @@
           "settings": {
             "heading": "Personnalisation en ligne",
             "icon": "star",
-            "content": "<p>Composez son poster en direct dans notre studio en ligne : son prénom, les informations que vous choisissez, puis le format et le cadre. L'aperçu se met à jour en temps réel — vous validez ce que vous voyez avant que l'on imprime.</p><p><em>Gratuit et sans engagement. Conçu et contrôlé en France, imprimé en Europe.</em></p>",
+            "content": "<p>Renseignez en ligne son prénom, les informations de votre choix, puis le format et le cadre. Notre studio compose ensuite son œuvre à la main, avec le plus grand soin, avant de l'imprimer.</p><p><em>Conçu et contrôlé en France, imprimé en Europe.</em></p>",
             "page": ""
           }
         },
@@ -267,8 +267,8 @@
           "type": "column",
           "settings": {
             "image": "shopify://shop_images/poster-bebe-etape-2-apercu.jpg",
-            "title": "2 · L'aperçu en direct",
-            "text": "<p>Vous voyez le rendu se composer en temps réel, et vous le validez avant impression.</p>",
+            "title": "2 · Notre studio compose son œuvre",
+            "text": "<p>Nos artistes façonnent son poster à la main, avec soin, d'après les informations que vous nous avez confiées.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -309,7 +309,7 @@
           "settings": {
             "heading": "Comment ça marche ?",
             "icon": "none",
-            "row_content": "<p>Vous ouvrez le studio en ligne, vous renseignez son prénom et les informations proposées pour ce poster, puis vous choisissez le format et le cadre. L'aperçu se compose en direct : vous validez le rendu, et nous l'imprimons.</p>"
+            "row_content": "<p>Vous renseignez en ligne son prénom et les informations proposées pour ce poster, puis vous choisissez le format et le cadre. Notre studio compose ensuite son œuvre avec soin, l'imprime et vous la livre.</p>"
           }
         },
         "faq_finitions": {
@@ -349,7 +349,7 @@
           "settings": {
             "heading": "Une création personnalisée : puis-je changer d'avis ?",
             "icon": "none",
-            "row_content": "<p>Chaque poster étant fabriqué sur mesure d'après vos informations, il n'est pas repris ni échangé une fois lancé en impression (article L221-28 du Code de la consommation). C'est justement pourquoi vous validez l'aperçu avant impression — et notre service client, à Toulouse, reste à vos côtés à la moindre question.</p>"
+            "row_content": "<p>Chaque poster étant fabriqué sur mesure d'après vos informations, il n'est pas repris ni échangé une fois lancé en impression (article L221-28 du Code de la consommation). Nos artistes composent chaque œuvre avec le plus grand soin, et notre service client, à Toulouse, reste à vos côtés à la moindre question.</p>"
           }
         },
         "faq_pourquoi": {
