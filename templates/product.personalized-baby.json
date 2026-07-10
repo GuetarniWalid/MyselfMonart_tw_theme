@@ -51,7 +51,7 @@
         "8600f603-2d6f-4191-8020-3678432ba1e5": {
           "type": "text",
           "settings": {
-            "text": "<p><strong>Son prénom et les petits détails qui racontent son histoire</strong> — une pièce unique, rien qu'à lui.</p><p><strong>Composé pour lui, un par un, par notre studio</strong> — d'après les informations que vous nous confiez.</p><p><strong>Le cadeau qui traverse le temps</strong>, aussi doux à offrir qu'à garder.</p>"
+            "text": "<p><strong>Son prénom et les petits détails qui racontent son histoire</strong> — une pièce unique, rien qu'à lui.</p><p><strong>Composé pour lui, un par un, par notre studio</strong> — prénom et informations vérifiés avant impression.</p><p><strong>Le cadeau de naissance qui reste au mur</strong>, longtemps après le faire-part.</p>"
           }
         },
         "collapsible_tab_studio": {
@@ -59,7 +59,7 @@
           "settings": {
             "heading": "Personnalisation en ligne",
             "icon": "star",
-            "content": "<p>Renseignez en ligne son prénom, les informations de votre choix, puis le format et le cadre. Notre studio compose ensuite son œuvre, une par une, à partir de vos informations, avant impression.</p><p><em>Conçu et contrôlé en France, imprimé en Europe.</em></p>",
+            "content": "<p>Renseignez en ligne son prénom et les informations de votre choix, puis le format et le cadre. Notre studio compose ensuite son œuvre, une par une, et vérifie chaque prénom et chaque information avant l'impression.</p><p><em>Conçu et contrôlé en France, imprimé en Europe.</em></p>",
             "page": ""
           }
         },
@@ -77,7 +77,7 @@
           "settings": {
             "heading": "Matériaux",
             "icon": "leather",
-            "content": "<p>Imprimé à la demande sur un papier épais de qualité : des teintes justes, des détails nets, la sobriété d'une vraie pièce d'art.</p><p>Quatre formats, de 30 × 40 cm à 90 × 120 cm — à poser tel quel ou à encadrer. En option, l'un de nos quatre cadres — blanc, noir mat, chêne clair ou noyer — transforme le poster en véritable tableau.</p><p><em>Conçu et contrôlé en France, imprimé en Europe.</em></p>",
+            "content": "<p>Une impression soignée, aux <strong>couleurs profondes et justes</strong> et aux détails nets.</p><p>Quatre formats, de 30 × 40 cm à 90 × 120 cm — à poser tel quel ou à encadrer. En option, l'un de nos quatre <strong>cadres fins</strong> — blanc, noir mat, chêne clair ou noyer — livré prêt à accrocher.</p><p><em>Conçu et contrôlé en France, imprimé en Europe.</em></p>",
             "page": ""
           }
         },
@@ -207,9 +207,9 @@
     "b5027902-4240-44cf-8660-b6e754562c52": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify://shop_images/poster-bebe-naissance-emotion.jpg",
+        "image": "shopify://shop_images/affiche-personnalisee-naissance-scorpion-bleu-gris-chambre-bebe-a9d6e140-56d0-4ee5-989f-5ea0875dde0f.jpg",
         "title": "Une œuvre qui veille sur lui",
-        "description": "<p>Son prénom, et les petits détails qui n'appartiennent qu'à lui — réunis dans une œuvre douce, pensée pour sa chambre. Le genre de cadeau que l'on choisit avec le cœur, et que l'on garde bien après les premières années.</p>",
+        "description": "<p>Le premier repère tendre de sa chambre : son prénom, son histoire, réunis dans une œuvre qui lui est entièrement dédiée. Le cadeau de naissance qu'on n'oublie pas — celui qui reste au mur, bien après les premiers jours.</p>",
         "layout": "image_first",
         "enable_blob": false,
         "activate_dynamic_color": false,
@@ -222,9 +222,9 @@
     "afe2a87a-371e-4c67-93b7-8c6b2244f43b": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify://shop_images/poster-bebe-papier-detail.jpg",
-        "title": "Une matière qui se respecte",
-        "description": "<p>Imprimé à la demande sur un papier épais de qualité : des teintes délicates, un grain élégant, des détails nets. La douceur d'une vraie pièce d'art — assez sobre pour grandir avec lui, année après année.</p>",
+        "image": "shopify://shop_images/affiche-scorpion-personnalise-prenom-naissance-chambre-bebe-0504e264-a160-491e-b5ad-3e89504aea28.jpg",
+        "title": "Un rendu net, des couleurs justes",
+        "description": "<p>Des couleurs profondes et fidèles, des détails nets : une œuvre qui a de l'allure au mur. Livrée à plat, prête à poser telle quelle ou à encadrer.</p>",
         "layout": "text_first",
         "enable_blob": false,
         "activate_dynamic_color": false,
@@ -239,8 +239,23 @@
       "settings": {
         "image": "shopify://shop_images/poster-bebe-finitions-cadres.jpg",
         "title": "Le format et le cadre qui lui ressemblent",
-        "description": "<p>Quatre formats, de 30 × 40 cm à 90 × 120 cm, à poser tel quel ou à encadrer. Sublimé par l'un de nos quatre cadres — blanc, noir mat, chêne clair ou noyer — qui transforme le poster en véritable tableau. <em>Conçu et contrôlé en France, imprimé en Europe.</em></p>",
+        "description": "<p>Quatre formats, de 30 × 40 cm à 90 × 120 cm, à poser tel quel ou à encadrer. Et pour le sublimer, l'un de nos quatre cadres fins — blanc, noir mat, chêne clair ou noyer — livré prêt à accrocher. <em>Conçu et contrôlé en France, imprimé en Europe.</em></p>",
         "layout": "image_first",
+        "enable_blob": false,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#e3fae1",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "a_offrir_bebe": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify://shop_images/affiche-naissance-personnalisee-scorpion-lucas-chambre-bebe-bd711f9e-6fcd-4a0f-b198-e13de7214016.jpg",
+        "title": "Le cadeau de naissance qu'on garde des années",
+        "description": "<p>Pour une naissance, un baptême, une arrivée qu'on veut célébrer : offrez bien plus qu'une affiche — la toute première œuvre à son nom. Celle qui dit, à hauteur d'enfant, qu'il était attendu et déjà aimé.</p>",
+        "layout": "text_first",
         "enable_blob": false,
         "activate_dynamic_color": false,
         "dynamic_primary_color": "#111111",
@@ -255,9 +270,9 @@
         "column_fN6DfA": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/poster-bebe-etape-1-personnalisation.jpg",
-            "title": "1 · Vous le personnalisez",
-            "text": "<p>Son prénom et les petits détails que vous choisissez — ceux qui racontent son histoire.</p>",
+            "image": "shopify://shop_images/poster-bebe-etape-infos-carte.jpg",
+            "title": "1 · Vous nous confiez ses infos",
+            "text": "<p>Son prénom et les détails que vous choisissez, renseignés en ligne en quelques instants.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -266,9 +281,9 @@
         "column_zAm3tT": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/poster-bebe-etape-2-apercu.jpg",
+            "image": "shopify://shop_images/tableaupersonnalise-bebe-horoscope.jpg",
             "title": "2 · Notre studio compose son œuvre",
-            "text": "<p>Notre studio compose son visuel, un par un, à partir des informations que vous nous avez confiées.</p>",
+            "text": "<p>Nos graphistes composent son visuel, un par un, et vérifient chaque information avant l'impression.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -277,9 +292,9 @@
         "column_U3DQjE": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/poster-bebe-etape-3-encadre.jpg",
-            "title": "3 · Livré, prêt à offrir",
-            "text": "<p>Fabriqué avec soin, expédié chez vous — prêt à prendre sa place dans sa chambre ou sous le sapin.</p>",
+            "image": "shopify://shop_images/poster-naissance-scorpion-bleu-gris-chambre-bebe-personnalise-f785f854-90be-4c8b-9a76-87ee67c77fc1.jpg",
+            "title": "3 · Livré chez vous, prêt à accrocher",
+            "text": "<p>Imprimé en Europe et expédié en colis suivi, il arrive prêt à poser ou à accrocher dans sa chambre.</p>",
             "link_label": "",
             "link": "",
             "to_obfuscate": false
@@ -309,7 +324,15 @@
           "settings": {
             "heading": "Comment ça marche ?",
             "icon": "none",
-            "row_content": "<p>Vous renseignez en ligne son prénom et les informations proposées pour ce poster, puis vous choisissez le format et le cadre. Notre studio compose ensuite son œuvre avec soin, l'imprime et vous la livre.</p>"
+            "row_content": "<p>Vous renseignez en ligne son prénom et les informations proposées pour ce poster, puis vous choisissez le format et le cadre. Notre studio compose ensuite son œuvre et vérifie chaque information avant de l'imprimer et de vous la livrer.</p>"
+          }
+        },
+        "faq_apercu": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Puis-je voir mon poster avant l'impression ?",
+            "icon": "none",
+            "row_content": "<p>Il n'y a pas d'aperçu à valider. Dès votre commande, notre studio compose votre poster et <strong>vérifie chaque information — l'orthographe du prénom, la date</strong> — avant de lancer l'impression. C'est notre façon de vous garantir un rendu juste, sans mauvaise surprise.</p>"
           }
         },
         "faq_finitions": {
@@ -317,7 +340,7 @@
           "settings": {
             "heading": "Quel rendu et quelles finitions ?",
             "icon": "none",
-            "row_content": "<p>Une impression à la demande sur papier épais de qualité, aux teintes justes et aux détails nets. À poser tel quel, ou à encadrer parmi quatre finitions — blanc, noir mat, chêne clair, noyer — qui lui donnent l'allure d'un vrai tableau.</p>"
+            "row_content": "<p>Des couleurs profondes et justes, des détails nets. À poser tel quel, ou à encadrer parmi quatre finitions fines — blanc, noir mat, chêne clair, noyer — qui lui donnent l'allure d'un vrai tableau.</p>"
           }
         },
         "faq_accrocher": {
@@ -349,7 +372,7 @@
           "settings": {
             "heading": "Une création personnalisée : puis-je changer d'avis ?",
             "icon": "none",
-            "row_content": "<p>Chaque poster étant fabriqué sur mesure d'après vos informations, il n'est pas repris ni échangé une fois lancé en impression (article L221-28 du Code de la consommation). Notre studio compose chaque œuvre avec le plus grand soin, et notre service client, à Toulouse, reste à vos côtés à la moindre question.</p>"
+            "row_content": "<p>Chaque poster étant fabriqué sur mesure d'après vos informations, il n'est pas repris ni échangé une fois lancé en impression (article L221-28 du Code de la consommation). Notre studio compose chaque œuvre avec le plus grand soin et vérifie vos informations avant l'impression ; et notre service client, à Toulouse, reste à vos côtés à la moindre question.</p>"
           }
         },
         "faq_pourquoi": {
@@ -363,6 +386,7 @@
       },
       "block_order": [
         "faq_comment",
+        "faq_apercu",
         "faq_finitions",
         "faq_accrocher",
         "faq_taille",
@@ -385,6 +409,7 @@
     "b5027902-4240-44cf-8660-b6e754562c52",
     "afe2a87a-371e-4c67-93b7-8c6b2244f43b",
     "556b5926-5cdb-4c50-a817-c79f15894cdd",
+    "a_offrir_bebe",
     "customer_testimonial_myiwee",
     "7ae13aad-330c-4fa7-94cf-fafc1c13cf60",
     "product_recommendations_7Dekqa"
