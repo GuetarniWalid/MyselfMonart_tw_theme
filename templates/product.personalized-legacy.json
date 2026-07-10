@@ -68,7 +68,7 @@
           "settings": {
             "heading": "Materiaux",
             "icon": "leather",
-            "content": "<p><strong>- Le papier</strong> : un papier de qualité , pour des couleurs justes et des détails nets.</p><p><strong>- Les formats</strong> : 30 × 40 cm ou 60 × 80 cm, à poser tel quel ou à encadrer.</p><p><strong>- Le cadre (en option)</strong> : plusieurs finitions au choix — blanc, noir mat, chêne clair, noyer ou argent ancien.</p><p>Chaque poster est imprimé à la demande, conçu en France et imprimé en Europe.</p>",
+            "content": "<p><strong>- Le papier</strong> : un papier de qualité , pour des couleurs justes et des détails nets.</p><p><strong>- Les formats</strong> : 30 × 40 cm ou 60 × 80 cm, à poser tel quel ou à encadrer.</p><p><strong>- Le cadre (en option)</strong> : quatre finitions au choix — blanc, noir mat, chêne clair ou noyer.</p><p>Chaque poster est imprimé à la demande, conçu en France et imprimé en Europe.</p>",
             "page": ""
           }
         },
@@ -231,7 +231,7 @@
       "settings": {
         "image": "shopify://shop_images/texture_x3_70ae7c8b-712c-4c74-bb93-e76a2eddc37b.jpg",
         "title": "EN HARMONIE",
-        "description": "<p>Vous avez le souci du détail ? Allez plus loin en choisissant la finition de votre poster : à poser tel quel, ou sublimé par un cadre (blanc, noir mat, chêne clair, noyer ou argent ancien) qui s'accorde au mieux à votre intérieur.</p>",
+        "description": "<p>Vous avez le souci du détail ? Allez plus loin en choisissant la finition de votre poster : à poser tel quel, ou sublimé par un cadre (blanc, noir mat, chêne clair ou noyer) qui s'accorde au mieux à votre intérieur.</p>",
         "layout": "image_first",
         "enable_blob": true,
         "activate_dynamic_color": false,
@@ -331,7 +331,7 @@
           "settings": {
             "heading": "Quel rendu et quelles finitions pour votre poster ?",
             "icon": "none",
-            "row_content": "<p><p>Votre poster est imprimé à la demande sur un papier de qualité, <strong>de qualité</strong> : des couleurs justes, des détails nets et une belle profondeur.</p><p>Il vous est proposé en deux formats — <strong>30 × 40 cm</strong> ou <strong>60 × 80 cm</strong> — à poser tel quel ou à encadrer. Côté cadre, plusieurs finitions s'offrent à vous : <strong>blanc, noir mat, chêne clair, noyer ou argent ancien</strong>, pour s'accorder à votre intérieur.</p>"
+            "row_content": "<p><p>Votre poster est imprimé à la demande sur un papier de qualité, <strong>de qualité</strong> : des couleurs justes, des détails nets et une belle profondeur.</p><p>Il vous est proposé en deux formats — <strong>30 × 40 cm</strong> ou <strong>60 × 80 cm</strong> — à poser tel quel ou à encadrer. Côté cadre, quatre finitions s'offrent à vous : <strong>blanc, noir mat, chêne clair ou noyer</strong>, pour s'accorder à votre intérieur.</p>"
           }
         },
         "e20d3253-d757-4a99-9237-128916cc9ffb": {

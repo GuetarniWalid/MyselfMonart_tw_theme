@@ -39,6 +39,12 @@
     assign persp_figcaption_key = 'sections.mma.perspective_figcaption_poster'
     assign persp_noscript_key = 'sections.mma.perspective_noscript_poster'
   endif
+  # Visualiseur 3D : sur un poster, la liste des cadres vient de frames_poster (4 couleurs, sans
+  # argent ancien) — comme les pastilles du picker — et non de frames_canvas (cadres toile à 5+).
+  assign frame_source = product.metafields.painting_options.frames_canvas.value
+  if is_poster
+    assign frame_source = product.metafields.painting_options.frames_poster.value
+  endif
 -%}
 {%- if raw_media and raw_media.media_type == 'image' -%}
   {%- assign img = raw_media.preview_image -%}
@@ -59,7 +65,7 @@
           {%- endfor -%}
         ],
         "frames": [
-          {%- for frame in product.metafields.painting_options.frames_canvas.value -%}
+          {%- for frame in frame_source -%}
             {%- unless forloop.first %},{% endunless -%}
             { "name": {{ frame.name | json }}, "swatch": {% if frame.radio.value.media.value.src %}{{ frame.radio.value.media.value.src | image_url: width: 240 | json }}{% else %}null{% endif %} }
           {%- endfor -%}
