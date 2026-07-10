@@ -62,8 +62,8 @@
     posterFrameDepth: 0.05, // profondeur du cadre (faible : poster encadré, pas un châssis)
     glassProud: 0.012, // la glace dépasse le papier (épaisseur du verre visible au-dessus du tirage)
     glassTint: [0.99, 0.98, 0.96], // teinte du reflet : blanc NEUTRE (lumière de fenêtre), pas bleu
-    glassReflAmt: 0.38, // intensité des carreaux (subtile : ne dénature pas les couleurs)
-    glassFresnelAmt: 0.1, // brillance des bords (Fresnel léger)
+    glassReflAmt: 0.17, // intensité des carreaux : réduite p/r à l'origine (0.38 blanchissait les œuvres claires) mais remontée depuis 0.12 (reflet devenu quasi invisible). Compromis : verre perceptible sans masquer un dessin au trait sur blanc.
+    glassFresnelAmt: 0.08, // brillance des bords (Fresnel) : léger éclat de verre sur les bords, n'atteint pas le centre du tirage
     glassSweepMs: 850, // durée du balayage de reflet au changement de cadre
     passeRatio: 0.08, // passe-partout (contour blanc) = 8% du PETIT côté, ÉGAL en cm sur les 4 côtés (= extension MJ buildMattedOeuvre, PP_RATIO 0.08)
   };

@@ -25,22 +25,52 @@
   <header>
     <h1>Spike — Poster papier + verre <code>material:'paper'</code> — design générique, format 30×40</h1>
     <p>👉 Glissez (souris ou doigt) sur un poster pour l'incliner : le reflet du verre bouge en direct. Format 30×40, design générique.</p>
+    <p style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+      <button type="button" data-preset="line">Dessin au trait (blanc) — cas perso</button>
+      <button type="button" data-preset="foot">Photo foot (non-régression)</button>
+      <input id="imgUrl" type="text" placeholder="…ou collez une URL d'image" style="flex:1; min-width:220px; padding:4px 6px; font-size:12px;" />
+      <button type="button" id="applyUrl">Appliquer</button>
+    </p>
   </header>
   <div class="grid" id="grid"></div>
   <script src="../assets/component-perspective-canvas.js"></script>
   <script>
-    var SRC = "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-enfant-garcon-personalise-prenom-foot.jpg?v=1767441242&width=1100";
+    var FOOT = "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-enfant-garcon-personalise-prenom-foot.jpg?v=1767441242&width=1100";
+    // Dessin au trait sur fond blanc (data-URI, aucune dépendance réseau) : reproduit le cas
+    // "œuvre claire" où le reflet additif masquait le tirage. C'est LE cas à valider.
+    var LINE_SVG = "<svg xmlns='http://www.w3.org/2000/svg' width='600' height='800' viewBox='0 0 600 800'>"
+      + "<rect width='600' height='800' fill='#ffffff'/>"
+      + "<g fill='none' stroke='#1e1e1e' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'>"
+      + "<path d='M200 250 q-70 10 -70 90 q0 90 70 100 q70 -10 70 -100 q0 -80 -70 -90 z'/>"
+      + "<path d='M185 372 q20 18 40 0'/>"
+      + "<path d='M400 300 q-60 10 -60 80 q0 80 60 90 q60 -10 60 -90 q0 -70 -60 -80 z'/>"
+      + "<path d='M388 406 q17 15 34 0'/>"
+      + "<path d='M120 560 q180 -40 360 0'/>"
+      + "</g>"
+      + "<circle cx='180' cy='330' r='5' fill='#1e1e1e'/><circle cx='230' cy='330' r='5' fill='#1e1e1e'/>"
+      + "<circle cx='385' cy='372' r='4' fill='#1e1e1e'/><circle cx='425' cy='372' r='4' fill='#1e1e1e'/>"
+      + "<text x='300' y='660' text-anchor='middle' font-family='Georgia, serif' font-size='34' fill='#1e1e1e'>Famille</text>"
+      + "</svg>";
+    var LINE = "data:image/svg+xml," + encodeURIComponent(LINE_SVG);
     var FRAMES = ["Sans cadre", "Cadre blanc", "Cadre noir Mat", "Cadre argent ancien", "Cadre chêne clair", "Cadre noyer"];
-    var html = FRAMES.map(function (frame) {
-      var cfg = { title: "Joueur en Herbe", ariaLabel: "Aperçu poster", material: "paper", raw: { src: SRC }, state: { border: "white", frame: frame, size: "30x40" } };
-      var json = JSON.stringify(cfg).replace(/</g, "\\u003c");
-      return '<div class="tile"><h2>' + frame + '</h2><div class="stage">' +
-        '<perspective-canvas data-context="studio" class="block">' +
-        '<canvas class="perspective-canvas-gl"></canvas>' +
-        '<script type="application/json" class="perspective-config">' + json + '<\/script>' +
-        '</perspective-canvas></div></div>';
-    }).join("");
-    document.getElementById("grid").innerHTML = html;
+    function render(SRC) {
+      var html = FRAMES.map(function (frame) {
+        var cfg = { title: "Joueur en Herbe", ariaLabel: "Aperçu poster", material: "paper", raw: { src: SRC }, state: { border: "white", frame: frame, size: "30x40" } };
+        var json = JSON.stringify(cfg).replace(/</g, "\\u003c");
+        return '<div class="tile"><h2>' + frame + '</h2><div class="stage">' +
+          '<perspective-canvas data-context="studio" class="block">' +
+          '<canvas class="perspective-canvas-gl"></canvas>' +
+          '<script type="application/json" class="perspective-config">' + json + '<\/script>' +
+          '</perspective-canvas></div></div>';
+      }).join("");
+      document.getElementById("grid").innerHTML = html;
+    }
+    document.querySelector('[data-preset="line"]').addEventListener("click", function () { render(LINE); });
+    document.querySelector('[data-preset="foot"]').addEventListener("click", function () { render(FOOT); });
+    document.getElementById("applyUrl").addEventListener("click", function () {
+      var u = document.getElementById("imgUrl").value.trim(); if (u) render(u);
+    });
+    render(LINE); // ouvre directement sur le cas "œuvre claire"
     // Pilotage pour les captures : incline tous les posters (montre le reflet de verre qui glisse).
     window.__tilt = function (deg) {
       var r = (deg || 0) * Math.PI / 180;
