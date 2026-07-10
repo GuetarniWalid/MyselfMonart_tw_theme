@@ -17,8 +17,9 @@
     .tile h2 { font-size: 13px; font-weight: 700; margin: 4px 0 8px; color: #555; text-transform: uppercase; letter-spacing: .05em; }
     .stage { display: flex; align-items: center; justify-content: center; min-height: 620px; }
     perspective-canvas { display: block; }
-    .perspective-canvas-gl { display: block; width: 480px; height: 560px; max-width: 100%; cursor: grab; }
-    @media (max-width: 820px) { .perspective-canvas-gl { width: 340px; height: 410px; } .stage { min-height: 450px; } }
+    /* Ratio 4/5 = celui du canvas réel du studio (aspect-ratio:4/5) -> cadrage fidèle. */
+    .perspective-canvas-gl { display: block; width: 448px; height: 560px; max-width: 100%; cursor: grab; }
+    @media (max-width: 820px) { .perspective-canvas-gl { width: 328px; height: 410px; } .stage { min-height: 450px; } }
   </style>
 </head>
 <body>
@@ -26,7 +27,7 @@
     <h1>Spike — Poster papier + verre <code>material:'paper'</code> — design générique, format 30×40</h1>
     <p>👉 Glissez (souris ou doigt) sur un poster pour l'incliner : le reflet du verre bouge en direct. Format 30×40, design générique.</p>
     <p style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-      <button type="button" data-preset="line">Dessin au trait (blanc) — cas perso</button>
+      <button type="button" data-preset="line">Dessin au trait (papier beige) — cas perso</button>
       <button type="button" data-preset="foot">Photo foot (non-régression)</button>
       <input id="imgUrl" type="text" placeholder="…ou collez une URL d'image" style="flex:1; min-width:220px; padding:4px 6px; font-size:12px;" />
       <button type="button" id="applyUrl">Appliquer</button>
@@ -36,10 +37,11 @@
   <script src="../assets/component-perspective-canvas.js"></script>
   <script>
     var FOOT = "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/tableau-enfant-garcon-personalise-prenom-foot.jpg?v=1767441242&width=1100";
-    // Dessin au trait sur fond blanc (data-URI, aucune dépendance réseau) : reproduit le cas
-    // "œuvre claire" où le reflet additif masquait le tirage. C'est LE cas à valider.
+    // Dessin au trait sur PAPIER BEIGE (data-URI, aucune dépendance réseau) : reproduit le cas
+    // "œuvre claire/chaude" où le reflet additif masquait le tirage ET où l'éclairage trop fort
+    // saturait le beige vers le blanc. C'est LE cas à valider.
     var LINE_SVG = "<svg xmlns='http://www.w3.org/2000/svg' width='600' height='800' viewBox='0 0 600 800'>"
-      + "<rect width='600' height='800' fill='#ffffff'/>"
+      + "<rect width='600' height='800' fill='#ece1cb'/>"
       + "<g fill='none' stroke='#1e1e1e' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'>"
       + "<path d='M200 250 q-70 10 -70 90 q0 90 70 100 q70 -10 70 -100 q0 -80 -70 -90 z'/>"
       + "<path d='M185 372 q20 18 40 0'/>"

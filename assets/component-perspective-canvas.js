@@ -25,8 +25,10 @@
     scale: 0.52, // taille de la toile dans le carrousel desktop/iPad : posée, toile + ombre ENTIÈRES (non rognées), comme le mobile
     scaleCarouselMobile: 0.52, // carrousel sur mobile : idem (toile entière, posée). Le "zoom" est réservé au gros plan (popup)
     scalePopup: 0.56, // gros plan : un peu plus de marge pour que l'ombre (et la rotation) ne soit jamais coupée
+    scaleStudio: 0.62, // studio de personnalisation : l'œuvre doit REMPLIR son cadre (argument de vente : la montrer grande). Bien plus que le carrousel PDP (0.52). Réglable — baisser si le cadre/tranche/ombre est rogné.
     chassisCm: 2.0, // profondeur RÉELLE du châssis (cm). La proportion du bord = chassisCm / taille choisie (cm) -> physiquement exacte et plus fine sur les grandes toiles. Ajustable.
     ambient: 0.74,
+    ambientStudio: 0.64, // studio perso : ambiant abaissé -> l'éclairage de la face avant (vLight) repasse SOUS 1.0, donc les beiges / papiers chauds cessent de saturer vers le blanc. N'affecte PAS la PDP (toile/poster carrousel). Réglable.
     diffuse: 0.4,
     lightDir: [0.45, 0.55, 0.9], // lumière depuis le haut-droite (côté visible)
     weaveAmt: 0.85, // mélange vers la texture de toile (subtil mais visible)
@@ -1243,6 +1245,9 @@
        Le "zoom" n'apparaît donc qu'au clic, dans le popup. Recalculée au resize. */
     computeScale() {
       if (this.getAttribute('data-context') === 'popup') return SCENE.scalePopup;
+      // Studio (perso) : l'œuvre remplit le cadre pour impressionner — cadrage propre, indépendant
+      // du viewport (le canvas y est déjà en 4/5, centré). Ne touche PAS le carrousel PDP.
+      if (this.getAttribute('data-context') === 'studio') return SCENE.scaleStudio;
       const mobile = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
       return mobile ? SCENE.scaleCarouselMobile : SCENE.scale;
     }
@@ -2188,7 +2193,9 @@
       gl.uniformMatrix4fv(this.locs.uMVP, false, mvp);
       gl.uniformMatrix4fv(this.locs.uModel, false, model);
       gl.uniform3fv(this.locs.uLightDir, SCENE.lightDir);
-      gl.uniform1f(this.locs.uAmbient, SCENE.ambient);
+      // Studio (perso) : ambiant réduit pour ne pas blanchir les beiges/papiers clairs. PDP inchangée.
+      const ambient = this.getAttribute('data-context') === 'studio' ? SCENE.ambientStudio : SCENE.ambient;
+      gl.uniform1f(this.locs.uAmbient, ambient);
       gl.uniform1f(this.locs.uDiffuse, SCENE.diffuse);
 
       const col = BORDER_COLOR[this.state.border] || BORDER_COLOR.white;
