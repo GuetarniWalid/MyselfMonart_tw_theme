@@ -26,6 +26,8 @@
         "title": {
           "type": "title",
           "settings": {
+            "tone": "headline",
+            "font_size": "text-2xl",
             "margin_bottom": "mb-2"
           }
         },
@@ -40,6 +42,8 @@
           "type": "buy",
           "settings": {
             "text": "JE CRÉE SON POSTER",
+            "show_payment_icons": false,
+            "margin_bottom": "mb-8",
             "is_dynamic_variant": false,
             "show_promotion": false,
             "promotion_discount": 15,
@@ -97,111 +101,93 @@
         "collapsible_tab_4UhrbY",
         "description_Fw7xRB"
       ],
-      "settings": {}
+      "settings": {
+        "start_from_media": 1,
+        "enable_merchant_schema": true,
+        "shipping_free": true,
+        "ships_country": "FR",
+        "return_days": 14,
+        "enable_format_toggle": true
+      }
     },
     "custom_art_studio_nb": {
       "type": "tw-custom-art-studio",
       "settings": {
+        "heading": "Personnalisez votre poster en direct dans notre studio en ligne",
+        "description": "<p>Prénom, numéro, format, cadre : composez en direct votre poster personnalisé — un tableau, une fois encadré — avec un aperçu 3D en temps réel. Conçu en France, imprimé en Europe.</p>",
+        "cta_label": "Créer mon poster",
+        "step_photo_title": "Votre photo",
+        "step_team_title": "Votre équipe",
+        "step_name_title": "Prénom et numéro",
+        "step_format_title": "Format et finition",
+        "good_photo_alt": "Exemple de bonne photo : portrait net et bien éclairé, visage de face bien visible",
+        "bad_photo_alt": "Exemple de photo à éviter : visage dans l'ombre, mal éclairé et difficile à distinguer",
+        "wait_phase_1": "Analyse de votre photo…",
+        "wait_phase_2": "Le peintre esquisse le portrait…",
+        "wait_phase_3": "Mise en couleurs aux teintes de votre équipe…",
+        "wait_phase_4": "Vernissage et derniers détails…",
+        "reveal_title": "",
         "backend_url": "https://backend.myselfmonart.com",
-        "mock_mode": false
+        "mock_mode": false,
+        "text": "Ajouter au panier",
+        "is_dynamic_variant": false,
+        "show_promotion": false,
+        "promotion_discount": 0,
+        "promotion_discount_unit": "%",
+        "promotion_reason": "",
+        "promotion_date": ""
       }
     },
-    "customer_testimonial_myiwee": {
-      "type": "testimonials-carousel",
+    "multicolumn_aLxMGX": {
+      "type": "multicolumn",
       "blocks": {
-        "image_text_Riirzd": {
-          "type": "image-text",
+        "column_fN6DfA": {
+          "type": "column",
           "settings": {
-            "image": "shopify://shop_images/Tableau-chambre-bebe_f6e62e6e-707b-41df-aa17-bdad25ef3385.jpg",
-            "message": "Juste une petite photo avec le cadre mis en place encore un grand merci à vous 🥰. \nElodie G"
+            "image": "shopify://shop_images/poster-bebe-etape-infos-carte.jpg",
+            "title": "1 · Vous nous confiez ses infos",
+            "text": "<p>Son prénom et les détails que vous choisissez, renseignés en ligne en quelques instants.</p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
           }
         },
-        "image_text_qM9rBh": {
-          "type": "image-text",
+        "column_zAm3tT": {
+          "type": "column",
           "settings": {
-            "image": "shopify://shop_images/deco-mural-toile-marilyn-monroe-pop-art.jpg",
-            "message": "Envoie très rapide et tableau encore plus beau que sur le site.\nParfait je recommande !!!\nJessica S"
+            "image": "shopify://shop_images/tableaupersonnalise-bebe-horoscope.jpg",
+            "title": "2 · Notre studio compose son œuvre",
+            "text": "<p>Nos graphistes composent son visuel, un par un, et vérifient chaque information avant l'impression.</p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
           }
         },
-        "image_text_4dzVer": {
-          "type": "image-text",
+        "column_U3DQjE": {
+          "type": "column",
           "settings": {
-            "image": "shopify://shop_images/tableau-animaux-rhinoceros_b1022df5-0085-43a4-93b7-011dd579d316.jpg",
-            "message": "AMAZING ! Le poster est magnifique, il fait son effet dans mon salon. Vanessa K"
-          }
-        },
-        "image_text_NnGTgN": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify://shop_images/tableau-fruit-legume-cuisine-ananas-colore.jpg",
-            "message": "Trop contente de mon tableau, les couleurs sont aussi flashy que sur les photos du site.\nSarah F"
-          }
-        },
-        "image_text_QfHTN6": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify://shop_images/Tableau-deco-noir-et-blanc.jpg",
-            "message": "Top, rien à dire de plus. \nGuillaume H"
-          }
-        },
-        "image_text_ragCcn": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify://shop_images/tableau-salon-femme-africaine.jpg",
-            "message": "Magnifique tableau et très design, correspond parfaitement à la description.  Morel E"
-          }
-        },
-        "image_text_eAxGcM": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify://shop_images/tableau-comics-super-man.jpg",
-            "message": "Nickel, très satisfait c'est ma 3e commande. Hugo G"
-          }
-        },
-        "image_text_e69XT9": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify://shop_images/tableau-gaming-marvel-iron-man.jpg",
-            "message": "Très content de mon achat ! Mon fils est ravi il va faire de beaux rêves de super-héros\n. EUGENE D"
-          }
-        },
-        "image_text_DbNc9D": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify://shop_images/tableau-superman-aquarelle.jpg",
-            "message": "TOP, tableau reçu rapidement avec suivie. Hugo G"
-          }
-        },
-        "image_text_DCdKLC": {
-          "type": "image-text",
-          "settings": {
-            "image": "shopify://shop_images/tableauphotographie-zebre-animaux-zebre-sauvage.jpg",
-            "message": "L'animal, majestueux et solitaire trône dans mon salon au dessus de ma console... Peut on dire qu il est magnifique ? Assurément oui et je l adore!\nPatricia G."
+            "image": "shopify://shop_images/deballage-poster-bebe.png",
+            "title": "3 · Livré chez vous, prêt à accrocher",
+            "text": "<p>Imprimé en Europe et expédié en colis suivi, il arrive prêt à poser ou à accrocher dans sa chambre.</p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
           }
         }
       },
       "block_order": [
-        "image_text_Riirzd",
-        "image_text_qM9rBh",
-        "image_text_4dzVer",
-        "image_text_NnGTgN",
-        "image_text_QfHTN6",
-        "image_text_ragCcn",
-        "image_text_eAxGcM",
-        "image_text_e69XT9",
-        "image_text_DbNc9D",
-        "image_text_DCdKLC"
+        "column_fN6DfA",
+        "column_zAm3tT",
+        "column_U3DQjE"
       ],
       "settings": {
-        "title": "Nos tableaux à travers vos yeux ❤️"
-      }
-    },
-    "product_recommendations_7Dekqa": {
-      "type": "product-recommendations",
-      "name": "t:sections.product-recommendations.name",
-      "settings": {
-        "heading": "VOUS POURRIEZ AUSSI AIMER",
-        "number_products_to_display": 4
+        "title": "SON POSTER PERSONNALISÉ, EN 3 ÉTAPES",
+        "image_shape": "aspect-square object-cover",
+        "columns_desktop": 3,
+        "show_backgounds": false,
+        "button_label": "",
+        "button_link": "",
+        "to_obfuscate": false
       }
     },
     "b5027902-4240-44cf-8660-b6e754562c52": {
@@ -264,56 +250,109 @@
         "padding_bottom": "pb-16"
       }
     },
-    "multicolumn_aLxMGX": {
-      "type": "multicolumn",
+    "customer_testimonial_myiwee": {
+      "type": "testimonials-carousel",
       "blocks": {
-        "column_fN6DfA": {
-          "type": "column",
+        "image_text_Riirzd": {
+          "type": "image-text",
           "settings": {
-            "image": "shopify://shop_images/poster-bebe-etape-infos-carte.jpg",
-            "title": "1 · Vous nous confiez ses infos",
-            "text": "<p>Son prénom et les détails que vous choisissez, renseignés en ligne en quelques instants.</p>",
-            "link_label": "",
-            "link": "",
-            "to_obfuscate": false
+            "image": "shopify://shop_images/Tableau-chambre-bebe_f6e62e6e-707b-41df-aa17-bdad25ef3385.jpg",
+            "image_asset": "",
+            "message": "Juste une petite photo avec le cadre mis en place encore un grand merci à vous 🥰. \nElodie G"
           }
         },
-        "column_zAm3tT": {
-          "type": "column",
+        "image_text_qM9rBh": {
+          "type": "image-text",
           "settings": {
-            "image": "shopify://shop_images/tableaupersonnalise-bebe-horoscope.jpg",
-            "title": "2 · Notre studio compose son œuvre",
-            "text": "<p>Nos graphistes composent son visuel, un par un, et vérifient chaque information avant l'impression.</p>",
-            "link_label": "",
-            "link": "",
-            "to_obfuscate": false
+            "image": "shopify://shop_images/deco-mural-toile-marilyn-monroe-pop-art.jpg",
+            "image_asset": "",
+            "message": "Envoie très rapide et tableau encore plus beau que sur le site.\nParfait je recommande !!!\nJessica S"
           }
         },
-        "column_U3DQjE": {
-          "type": "column",
+        "image_text_4dzVer": {
+          "type": "image-text",
           "settings": {
-            "image": "shopify://shop_images/poster-naissance-scorpion-bleu-gris-chambre-bebe-personnalise-f785f854-90be-4c8b-9a76-87ee67c77fc1.jpg",
-            "title": "3 · Livré chez vous, prêt à accrocher",
-            "text": "<p>Imprimé en Europe et expédié en colis suivi, il arrive prêt à poser ou à accrocher dans sa chambre.</p>",
-            "link_label": "",
-            "link": "",
-            "to_obfuscate": false
+            "image": "shopify://shop_images/tableau-animaux-rhinoceros_b1022df5-0085-43a4-93b7-011dd579d316.jpg",
+            "image_asset": "",
+            "message": "AMAZING ! Le poster est magnifique, il fait son effet dans mon salon. Vanessa K"
+          }
+        },
+        "image_text_NnGTgN": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-fruit-legume-cuisine-ananas-colore.jpg",
+            "image_asset": "",
+            "message": "Trop contente de mon tableau, les couleurs sont aussi flashy que sur les photos du site.\nSarah F"
+          }
+        },
+        "image_text_QfHTN6": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/Tableau-deco-noir-et-blanc.jpg",
+            "image_asset": "",
+            "message": "Top, rien à dire de plus. \nGuillaume H"
+          }
+        },
+        "image_text_ragCcn": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-salon-femme-africaine.jpg",
+            "image_asset": "",
+            "message": "Magnifique tableau et très design, correspond parfaitement à la description.  Morel E"
+          }
+        },
+        "image_text_eAxGcM": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-comics-super-man.jpg",
+            "image_asset": "",
+            "message": "Nickel, très satisfait c'est ma 3e commande. Hugo G"
+          }
+        },
+        "image_text_e69XT9": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-gaming-marvel-iron-man.jpg",
+            "image_asset": "",
+            "message": "Très content de mon achat ! Mon fils est ravi il va faire de beaux rêves de super-héros\n. EUGENE D"
+          }
+        },
+        "image_text_DbNc9D": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-superman-aquarelle.jpg",
+            "image_asset": "",
+            "message": "TOP, tableau reçu rapidement avec suivie. Hugo G"
+          }
+        },
+        "image_text_DCdKLC": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableauphotographie-zebre-animaux-zebre-sauvage.jpg",
+            "image_asset": "",
+            "message": "L'animal, majestueux et solitaire trône dans mon salon au dessus de ma console... Peut on dire qu il est magnifique ? Assurément oui et je l adore!\nPatricia G."
           }
         }
       },
       "block_order": [
-        "column_fN6DfA",
-        "column_zAm3tT",
-        "column_U3DQjE"
+        "image_text_Riirzd",
+        "image_text_qM9rBh",
+        "image_text_4dzVer",
+        "image_text_NnGTgN",
+        "image_text_QfHTN6",
+        "image_text_ragCcn",
+        "image_text_eAxGcM",
+        "image_text_e69XT9",
+        "image_text_DbNc9D",
+        "image_text_DCdKLC"
       ],
       "settings": {
-        "title": "SON POSTER PERSONNALISÉ, EN 3 ÉTAPES",
-        "image_shape": "aspect-[3/4] object-cover",
-        "columns_desktop": 3,
-        "show_backgounds": false,
-        "button_label": "",
-        "button_link": "",
-        "to_obfuscate": false
+        "eyebrow": "",
+        "heading_level": "h2",
+        "title": "Nos tableaux à travers vos yeux ❤️",
+        "lead": "",
+        "trustpilot_link": "",
+        "emit_review_jsonld": false
       }
     },
     "7ae13aad-330c-4fa7-94cf-fafc1c13cf60": {
@@ -396,8 +435,24 @@
       ],
       "settings": {
         "eyebrow": "FAQ",
+        "heading_level": "h2",
+        "heading_size": "medium",
+        "heading_weight": "semibold",
+        "question_size": "medium",
         "accent_tone": "buy-button",
-        "heading": "Vos questions, nos réponses"
+        "heading": "Vos questions, nos réponses",
+        "lead": "",
+        "background_color": "secondary",
+        "padding_size": "large",
+        "emit_faq_jsonld": false
+      }
+    },
+    "product_recommendations_7Dekqa": {
+      "type": "product-recommendations",
+      "name": "t:sections.product-recommendations.name",
+      "settings": {
+        "heading": "VOUS POURRIEZ AUSSI AIMER",
+        "number_products_to_display": 4
       }
     }
   },
