@@ -417,7 +417,11 @@
   },
   "cart_drawer": {
     "quick_add_to_cart": "Añadir rápido",
-    "keep_shopping": "Seguir comprando"
+    "keep_shopping": "Seguir comprando",
+    "add_missing_fixation": {
+      "one": "Añadir el kit que falta",
+      "other": "Añadir los {{ count }} kits que faltan"
+    }
   },
   "customer": {
     "account": {

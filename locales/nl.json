@@ -416,7 +416,11 @@
   },
   "cart_drawer": {
     "quick_add_to_cart": "Snel toevoegen",
-    "keep_shopping": "Verder winkelen"
+    "keep_shopping": "Verder winkelen",
+    "add_missing_fixation": {
+      "one": "Ontbrekende set toevoegen",
+      "other": "De {{ count }} ontbrekende sets toevoegen"
+    }
   },
   "customer": {
     "account": {

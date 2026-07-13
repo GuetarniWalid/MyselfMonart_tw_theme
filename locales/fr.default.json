@@ -22,7 +22,11 @@
   },
   "cart_drawer": {
     "keep_shopping": "Continuer les achats",
-    "quick_add_to_cart": "Ajout rapide"
+    "quick_add_to_cart": "Ajout rapide",
+    "add_missing_fixation": {
+      "one": "Ajouter le kit manquant",
+      "other": "Ajouter les {{ count }} kits manquants"
+    }
   },
   "customer": {
     "account": {

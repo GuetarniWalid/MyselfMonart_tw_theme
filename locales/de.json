@@ -417,7 +417,11 @@
   },
   "cart_drawer": {
     "quick_add_to_cart": "Schnell hinzufügen",
-    "keep_shopping": "Weiter einkaufen"
+    "keep_shopping": "Weiter einkaufen",
+    "add_missing_fixation": {
+      "one": "Fehlendes Set hinzufügen",
+      "other": "Die {{ count }} fehlenden Sets hinzufügen"
+    }
   },
   "customer": {
     "account": {

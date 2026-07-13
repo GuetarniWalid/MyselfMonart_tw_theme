@@ -115,7 +115,7 @@
             </div>
             <quick-add-to-cart data-items="{{ item_to_add_ids }}" data-quantity="{{ bundle_quantity }}">
                 <button class="w-full border-main border-1 rounded-md py-2 outline-none focus-visible:outline focus-visible:outline-orange-500 bg-main-5 hover:shadow-button transition-shadow duration-100">
-                    {{ 'cart_drawer.quick_add_to_cart' | t }}
+                    {{ 'cart_drawer.add_missing_fixation' | t: count: bundle_quantity }}
                 </button>
             </quick-add-to-cart>
         </li>

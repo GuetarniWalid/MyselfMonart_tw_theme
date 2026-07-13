@@ -130,19 +130,19 @@
             {% endunless %}
           {% endfor %}
 
+          {% comment %}
+            Bundle général (kit d'accrochage) : on compte TOUJOURS le nombre de tableaux,
+            même si le kit est déjà au panier, pour pouvoir reproposer le complément manquant
+            (suggestion persistante). Le retrait de l'ancien filtre « unless item_product_ids
+            contains bundle.id » est volontaire.
+          {% endcomment %}
           {% for bundle in item.product.metafields.bundle.products.value %}
-            {% unless item_product_ids contains bundle.id %}
-              {% if bundle.has_only_default_variant %}
-                {% assign bundle_variant_id = bundle.first_available_variant.id %}
-              {% else %}
-                {% assign bundle_variant_id = bundle.first_available_variant.id %}
-              {% endif %}
-              {% if bundle_variant_id != blank %}
-                {% for qty_index in (1..item.quantity) %}
-                  {% assign general_bundle_variant_tracker = general_bundle_variant_tracker | append: bundle_variant_id | append: ';;' %}
-                {% endfor %}
-              {% endif %}
-            {% endunless %}
+            {% assign bundle_variant_id = bundle.first_available_variant.id %}
+            {% if bundle_variant_id != blank %}
+              {% for qty_index in (1..item.quantity) %}
+                {% assign general_bundle_variant_tracker = general_bundle_variant_tracker | append: bundle_variant_id | append: ';;' %}
+              {% endfor %}
+            {% endif %}
           {% endfor %}
         {% endfor %}
 
@@ -255,9 +255,6 @@
             endfor
 
             for bundle in item.product.metafields.bundle.products.value
-              if item_product_ids contains bundle.id
-                continue
-              endif
               assign bundle_discounts = ''
               for discount in item.discounts
                 assign bundle_discounts = bundle_discounts | append: discount.title | append: '££'
@@ -321,9 +318,19 @@
                   endif
                 endfor
 
-                assign general_bundle_string = bundle.title | append: ';;' | append: bundle.url | append: ';;' | append: bundle_image | append: ';;' | append: bundle_variant_title | append: ';;' | append: bundle.price | append: ';;' | append: bundle.compare_at_price | append: ';;' | append: bundle_variant_id | append: ';;' | append: general_bundle_quantity | append: ';;' | append: bundle_discounts
+                # Suggestion opt-in : on ne propose QUE les kits manquants
+                # (nombre de tableaux - kits déjà présents dans le panier).
+                assign kit_qty_in_cart = 0
+                for cart_item in cart.items
+                  if cart_item.product.id == bundle.id
+                    assign kit_qty_in_cart = kit_qty_in_cart | plus: cart_item.quantity
+                  endif
+                endfor
+                assign general_bundle_quantity = general_bundle_quantity | minus: kit_qty_in_cart
 
-                if general_bundle_string != blank
+                if general_bundle_quantity > 0
+                  assign general_bundle_string = bundle.title | append: ';;' | append: bundle.url | append: ';;' | append: bundle_image | append: ';;' | append: bundle_variant_title | append: ';;' | append: bundle.price | append: ';;' | append: bundle.compare_at_price | append: ';;' | append: bundle_variant_id | append: ';;' | append: general_bundle_quantity | append: ';;' | append: bundle_discounts
+
                   assign all_general_bundle_string = all_general_bundle_string | append: general_bundle_string | append: '%%%%'
                 endif
               endunless
@@ -344,6 +351,7 @@
           <cart-item
             data-index="{{ item.index | plus: 1 }}"
             data-section-id="{{ section.id }}"
+            data-quantity="{{ item.quantity }}"
             data-id="{{ item.id }}">
             <li class="bg-white py-3 px-2 grid grid-cols-[auto_1fr_auto] gap-x-4{% unless forloop.last %} border-b-[1.5px] border-dotted border-main{% endunless %}">
               <div class="relative row-span-2 w-20 max-h-28">
@@ -409,6 +417,31 @@
                     </li>
                   {%- endfor -%}
                 </ul>
+                {%- comment -%}
+                  Ligne « kit d'accrochage » (accessoire) : stepper +/- pour ajuster la quantité
+                  directement dans le tiroir (le reste des lignes n'a qu'un bouton « retirer »).
+                {%- endcomment -%}
+                {%- if item.product.productType == 'Fixation' -%}
+                  <div class="mt-2 inline-flex items-center h-8 border border-main rounded-md">
+                    <button
+                      name="minus"
+                      type="button"
+                      class="flex w-8 h-full justify-center items-center outline-none focus-visible:outline focus-visible:outline-orange-500"
+                      aria-label="{{ 'sections.tw_cart_drawer.minus' | t: article: item.product.title }}"
+                      tabindex="-1">
+                      <span class="pointer-events-none">{% render 'tw-icon-minus' %}</span>
+                    </button>
+                    <span class="w-8 text-center text-sm font-bold" aria-hidden="true">{{ item.quantity }}</span>
+                    <button
+                      name="plus"
+                      type="button"
+                      class="flex w-8 h-full justify-center items-center outline-none focus-visible:outline focus-visible:outline-orange-500"
+                      aria-label="{{ 'sections.tw_cart_drawer.plus' | t: article: item.product.title }}"
+                      tabindex="-1">
+                      <span class="pointer-events-none">{% render 'tw-icon-plus' %}</span>
+                    </button>
+                  </div>
+                {%- endif -%}
               </div>
               <div class="flex flex-col justify-between gap-4">
                 <div>

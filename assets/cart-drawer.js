@@ -107,6 +107,9 @@ class CartItem extends HTMLElement {
   }
 
   connectedCallback() {
+    this.quantity = Number(this.dataset.quantity);
+    this.wireStepper();
+
     this.getCartData()
       .then((json) => {
         this.cartItems = json.items;
@@ -120,6 +123,32 @@ class CartItem extends HTMLElement {
       .catch((error) => {
         console.log('🚀 ~ error:', error);
       });
+  }
+
+  // Stepper +/- des lignes accessoire (kit d'accrochage). Réutilise updateQuantity ;
+  // après re-render du tiroir, l'élément est remplacé et se recâble via connectedCallback.
+  wireStepper() {
+    const minus = this.querySelector('button[name="minus"]');
+    const plus = this.querySelector('button[name="plus"]');
+    if (!minus && !plus) return;
+
+    minus?.addEventListener('click', () => this.step(this.quantity - 1));
+    plus?.addEventListener('click', () => this.step(this.quantity + 1));
+  }
+
+  async step(newQuantity) {
+    if (newQuantity < 0) return;
+    this.setStepperDisabled(true);
+    await this.updateQuantity(newQuantity);
+    // Succès -> le tiroir est re-rendu et cet élément est détaché (boutons neufs, actifs).
+    // Échec (pas de re-render) -> on ré-active pour ne pas laisser le stepper bloqué.
+    if (this.isConnected) this.setStepperDisabled(false);
+  }
+
+  setStepperDisabled(state) {
+    this.querySelectorAll('button[name="minus"], button[name="plus"]').forEach(
+      (button) => button.toggleAttribute('disabled', state),
+    );
   }
 
   async updateQuantity(quantity) {
