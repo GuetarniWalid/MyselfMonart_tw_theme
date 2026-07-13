@@ -480,8 +480,7 @@ class MainProductBlocks extends CollapsibleTab {
       const headerId = this.getHeaderId(button);
       this.renderNewSections(json, cart, headerId);
       setTimeout(() => {
-        const cartDrawerButton = document.getElementById('cart-button');
-        cartDrawerButton.click();
+        document.getElementById('cart-button')?.click();
       }, 300);
     } catch (e) {
       throw new Error("Une erreur inattendu s'est produite.");

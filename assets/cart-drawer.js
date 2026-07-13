@@ -341,11 +341,13 @@ class QuickAddToCart extends HTMLElement {
     const cart = await cartResponse.json();
 
     this.renderNewSections(json, cart);
-    const closeButton = document.getElementById('addons-drawer-close-button');
-    closeButton.click();
+    // Ferme un éventuel tiroir d'addons (absent des templates actuels -> no-op sûr).
+    // Avant : appel non gardé sur un id inexistant -> TypeError qui avortait makeOrder
+    // AVANT le setTimeout de ré-ouverture, laissant le tiroir non ré-initialisé.
+    document.getElementById('addons-drawer-close-button')?.click();
+    // Ré-ouvre/ré-initialise le tiroir panier après le re-render (focus + aria).
     setTimeout(() => {
-      const cartDrawerButton = document.getElementById('cart-button');
-      cartDrawerButton.click();
+      document.getElementById('cart-button')?.click();
     }, 300);
   }
 
