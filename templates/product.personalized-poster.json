@@ -237,9 +237,9 @@
     "556b5926-5cdb-4c50-a817-c79f15894cdd": {
       "type": "image-with-text",
       "settings": {
-        "image": "shopify://shop_images/cadres-poster-quatre-finitions-blanc-noir-chene-noyer.jpg",
+        "image": "shopify://shop_images/poster-foot-finitions-cadres.jpg",
         "title": "Le format et le cadre qui lui ressemblent",
-        "description": "<p>Quatre formats, de <strong>30 × 40 cm</strong> pour un clin d'œil à <strong>90 × 120 cm</strong> pour la pièce maîtresse du mur. À poser tel quel, ou sublimé par l'un de nos quatre cadres — blanc, noir mat, chêne clair ou noyer — qui transforme le poster en véritable tableau.</p><p><em>Conçu en France, imprimé en Europe.</em></p>",
+        "description": "<p>Deux formats : <strong>30 × 40 cm</strong> pour un clin d'œil, <strong>60 × 80 cm</strong> pour la pièce maîtresse du mur. À poser tel quel, ou sublimé par l'un de nos quatre cadres — blanc, noir mat, chêne clair ou noyer — qui transforme le poster en véritable tableau.</p><p><em>Conçu en France, imprimé en Europe.</em></p>",
         "layout": "image_first",
         "enable_blob": false,
         "activate_dynamic_color": false,
