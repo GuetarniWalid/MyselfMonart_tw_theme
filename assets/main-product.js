@@ -462,10 +462,33 @@ class MainProductBlocks extends CollapsibleTab {
     // foot IA, poster à design fixe…) plutôt que par un nom de template en dur -> tout nouveau
     // produit perso marche sans retoucher ce code. L'ajout au panier se fait à la fin du studio
     // (aperçu validé pour l'IA, ou directement pour un design fixe). Bouton fixe ET flottant.
+    // FAIL-CLOSED : on se branche sur la PRÉSENCE de l'élément, jamais sur le fait qu'il soit déjà
+    // « upgradé ». Le bundle du studio est chargé en `defer` : entre l'instant où le bouton devient
+    // cliquable et l'upgrade du custom element, `studio.open` n'existe pas encore. Avant ce garde-fou
+    // le clic RETOMBAIT sur un /cart/add.js nu — getproductProperties() renvoie {} sur ces templates
+    // (aucun bloc .product-properties) -> commande d'un produit personnalisé SANS AUCUNE
+    // personnalisation, indiscernable d'un poster catalogue. On n'ajoute donc JAMAIS au panier depuis
+    // ce chemin quand un studio est présent : on attend son upgrade (borné), puis on l'ouvre.
     const studio = document.querySelector('custom-art-studio');
-    if (studio && typeof studio.open === 'function') {
+    if (studio) {
       e.preventDefault();
-      studio.open();
+      if (typeof studio.open === 'function') {
+        studio.open();
+        return;
+      }
+      this.displayLoader(button);
+      try {
+        await Promise.race([
+          customElements.whenDefined('custom-art-studio'),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('studio-timeout')), 5000)),
+        ]);
+        const ready = document.querySelector('custom-art-studio');
+        if (ready && typeof ready.open === 'function') ready.open();
+      } catch (err) {
+        // Studio indisponible (bundle en échec ou trop lent) : on ne commande PAS un produit
+        // personnalisé nu. Le bouton est rendu au client, qui peut re-cliquer.
+      }
+      this.hideLoader(button);
       return;
     }
     try {

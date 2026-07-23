@@ -637,6 +637,17 @@
       if (this._pendingCaJob) {
         const uuid = this._pendingCaJob;
         this._pendingCaJob = null;
+        // Produit SANS génération (design fixe) : aucun job ne lui correspond -> on IGNORE le lien.
+        // Sinon un ?ca_job pointant le job d'un AUTRE produit poserait ici state.stage='ready', et
+        // l'achat passerait par addToCart() — qui écrit `_job_id` — au lieu de directAddToCart().
+        // Le back-end créerait alors une vraie commande de production IA (fichier d'impression +
+        // e-mail « votre création part en production ») sur un produit qui ne génère rien.
+        // Symétrique de resumeLastJob(), déjà gardé par `if (this.hasGeneration)` plus bas.
+        if (!this.hasGeneration) {
+          this.routeResume();
+          this.q('[data-studio-close]')?.focus();
+          return;
+        }
         this.q('[data-studio-close]')?.focus();
         this.resumeFromJob(uuid);
         return;
@@ -3529,6 +3540,14 @@
         // Anti-écrasement : si deux libellés résolvent à l'identique, on retombe sur le name (unique).
         if (label in props) label = step.name;
         props[label] = value;
+        // MIROIR MACHINE (additif, caché) : la MÊME donnée en valeur BRUTE sous une clé STABLE.
+        // La clé visible est le libellé TRADUIT (« Prénom » / « Vorname » / « Nombre ») et la valeur
+        // est formatée pour l'affichage (« 22/01/2024 » en fr mais « 01/22/2024 » en en) -> une date
+        // est ambiguë pour l'atelier sans connaître la locale de la commande. Le préfixe « _ » masque
+        // la propriété au client (panier, checkout, e-mail de confirmation) tout en la laissant
+        // lisible dans l'admin Shopify. Purement ADDITIF : n'altère aucune clé ni valeur existante.
+        const raw = fields[step.name];
+        if (raw != null && raw !== '' && typeof raw !== 'object') props[`_mm_${step.name}`] = String(raw);
       };
       this.studioSteps.forEach(collect);
       // Cadre poster + contour blanc en LINE-ITEM PROPERTIES — mêmes NOMS/VALEURS que le picker poster
