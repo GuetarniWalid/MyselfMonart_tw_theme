@@ -66,7 +66,7 @@
           "settings": {
             "heading": "Le poster & ses finitions",
             "icon": "clipboard",
-            "content": "<h3>Un tirage sur beau papier</h3><p>Votre poster est imprimé à la demande sur un <strong>papier épais</strong> (200 g/m² et plus) : un trait net, des noirs profonds, un rendu lumineux qui dure. Deux formats au choix — <strong>30 × 40 cm</strong> ou <strong>60 × 80 cm</strong> — à poser tel quel ou à encadrer. En un clic, ajoutez le <strong>contour blanc</strong> : une marge blanche autour du dessin, pour un effet galerie plus chic.</p><h3>Le cadre, en option</h3><p><strong>Sans cadre</strong> : le poster seul, à encadrer selon vos envies avec un cadre standard. <strong>Avec cadre</strong> : livré prêt à accrocher, en quatre finitions au choix — blanc, noir mat, chêne clair, noyer.</p>",
+            "content": "<h3>Un tirage sur beau papier</h3><p>Votre poster est imprimé à la demande sur un <strong>papier épais</strong> (200 g/m² et plus) : un trait net, des noirs profonds, un rendu lumineux qui dure. Quatre formats au choix — du <strong>30 × 40 cm</strong> au <strong>90 × 120 cm</strong> — à poser tel quel ou à encadrer. En un clic, ajoutez le <strong>contour blanc</strong> : une marge blanche autour du dessin, pour un effet galerie plus chic.</p><h3>Le cadre, en option</h3><p><strong>Sans cadre</strong> : le poster seul, à encadrer selon vos envies avec un cadre standard. <strong>Avec cadre</strong> : livré prêt à accrocher, en quatre finitions au choix — blanc, noir mat, chêne clair, noyer.</p>",
             "page": ""
           }
         },
@@ -233,7 +233,7 @@
       "settings": {
         "image": "shopify://shop_images/poster-famille-personnalise-formats-et-cadres-deco-murale.jpg",
         "title": "Le format et le cadre qui vous ressemblent",
-        "description": "<p>Deux formats : <strong>30 × 40 cm</strong> pour un clin d'œil, <strong>60 × 80 cm</strong> pour la pièce maîtresse du mur. À poser tel quel, ou sublimé par l'un de nos quatre cadres — blanc, noir mat, chêne clair ou noyer — qui transforme votre poster en véritable tableau.</p><p><em>Conçu en France, imprimé en Europe.</em></p>",
+        "description": "<p>Quatre formats, du <strong>30 × 40 cm</strong> pour un clin d'œil au <strong>90 × 120 cm</strong> pour la pièce maîtresse du mur. À poser tel quel, ou sublimé par l'un de nos quatre cadres — blanc, noir mat, chêne clair ou noyer — qui transforme votre poster en véritable tableau.</p><p><em>Conçu en France, imprimé en Europe.</em></p>",
         "layout": "image_first",
         "enable_blob": false,
         "activate_dynamic_color": false,
@@ -377,7 +377,7 @@
           "settings": {
             "heading": "Quel rendu et quelles finitions ?",
             "icon": "none",
-            "row_content": "<p>Votre poster est imprimé à la demande sur un papier épais, <strong>de qualité</strong> : des couleurs éclatantes, des noirs profonds, un rendu net et lumineux.</p><p>Il vous est proposé en deux formats — <strong>30 × 40 cm</strong> ou <strong>60 × 80 cm</strong> — à poser tel quel ou à encadrer. Côté cadre, quatre finitions s'offrent à vous : <strong>blanc, noir mat, chêne clair ou noyer</strong>, pour s'accorder à votre intérieur.</p>"
+            "row_content": "<p>Votre poster est imprimé à la demande sur un papier épais, <strong>de qualité</strong> : des couleurs éclatantes, des noirs profonds, un rendu net et lumineux.</p><p>Il vous est proposé en quatre formats — du <strong>30 × 40 cm</strong> au <strong>90 × 120 cm</strong> — à poser tel quel ou à encadrer. Côté cadre, quatre finitions s'offrent à vous : <strong>blanc, noir mat, chêne clair ou noyer</strong>, pour s'accorder à votre intérieur.</p>"
           }
         },
         "faq_accrocher": {
@@ -385,7 +385,7 @@
           "settings": {
             "heading": "Comment l'accrocher ou le poser ?",
             "icon": "none",
-            "row_content": "<p>Sans cadre, votre poster se fixe facilement (pâte adhésive, pinces, ou un cadre du commerce aux formats 30 × 40 ou 60 × 80 cm). Avec l'option cadre, il arrive monté et prêt à accrocher.</p>"
+            "row_content": "<p>Sans cadre, votre poster se fixe facilement (pâte adhésive, pinces, ou un cadre du commerce au format correspondant). Avec l'option cadre, il arrive monté et prêt à accrocher.</p>"
           }
         },
         "faq_retractation": {
