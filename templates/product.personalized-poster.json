@@ -26,6 +26,8 @@
         "title": {
           "type": "title",
           "settings": {
+            "tone": "headline",
+            "font_size": "text-2xl",
             "margin_bottom": "mb-2"
           }
         },
@@ -40,6 +42,8 @@
           "type": "buy",
           "settings": {
             "text": "JE PERSONNALISE",
+            "show_payment_icons": false,
+            "margin_bottom": "mb-8",
             "is_dynamic_variant": false,
             "show_promotion": false,
             "promotion_discount": 15,
@@ -97,13 +101,138 @@
         "collapsible_tab_4UhrbY",
         "description_Fw7xRB"
       ],
-      "settings": {}
+      "settings": {
+        "start_from_media": 1,
+        "enable_merchant_schema": true,
+        "shipping_free": true,
+        "ships_country": "FR",
+        "return_days": 14,
+        "enable_format_toggle": true
+      }
     },
     "custom_art_studio_nb": {
       "type": "tw-custom-art-studio",
       "settings": {
+        "heading": "Personnalisez votre poster en direct dans notre studio en ligne",
+        "description": "<p>Prénom, numéro, format, cadre : composez en direct votre poster personnalisé — un tableau, une fois encadré — avec un aperçu 3D en temps réel. Conçu en France, imprimé en Europe.</p>",
+        "cta_label": "Créer mon poster",
+        "step_photo_title": "Votre photo",
+        "step_team_title": "Votre équipe",
+        "step_name_title": "Prénom et numéro",
+        "step_format_title": "Format et finition",
+        "good_photo_alt": "Exemple de bonne photo : portrait net et bien éclairé, visage de face bien visible",
+        "bad_photo_alt": "Exemple de photo à éviter : visage dans l'ombre, mal éclairé et difficile à distinguer",
+        "wait_phase_1": "Analyse de votre photo…",
+        "wait_phase_2": "Le peintre esquisse le portrait…",
+        "wait_phase_3": "Mise en couleurs aux teintes de votre équipe…",
+        "wait_phase_4": "Vernissage et derniers détails…",
+        "reveal_title": "",
         "backend_url": "https://backend.myselfmonart.com",
-        "mock_mode": false
+        "mock_mode": false,
+        "text": "Ajouter au panier",
+        "is_dynamic_variant": false,
+        "show_promotion": false,
+        "promotion_discount": 0,
+        "promotion_discount_unit": "%",
+        "promotion_reason": "",
+        "promotion_date": ""
+      }
+    },
+    "multicolumn_aLxMGX": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_fN6DfA": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/poster-foot-personnalisation-prenom-numero.jpg",
+            "title": "1 · À son image",
+            "text": "<p>Dans le studio, composez son poster en quelques clics : prénom, numéro, couleurs. Un cadeau pensé pour lui, qui lui ressemble vraiment.ge.</p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
+          }
+        },
+        "column_zAm3tT": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/poster-foot-etape-2-apercu.jpg",
+            "title": "2 · L'aperçu en direct",
+            "text": "<p>Le rendu se compose sous vos yeux, en temps réel. Vous voyez exactement ce que vous recevrez, sans surprise. Gratuit et sans engagement.</p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
+          }
+        },
+        "column_U3DQjE": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/poster-foot-etape-3-encadre.jpg",
+            "title": "3 · Livré, prêt à accrocher",
+            "text": "<p>Vous validez, on imprime sur un beau papier épais. Livré chez vous, avec cadre en option, prêt à offrir.</p>",
+            "link_label": "",
+            "link": "",
+            "to_obfuscate": false
+          }
+        }
+      },
+      "block_order": [
+        "column_fN6DfA",
+        "column_zAm3tT",
+        "column_U3DQjE"
+      ],
+      "settings": {
+        "title": "SON POSTER, CRÉÉ EN 3 ÉTAPES",
+        "image_shape": "aspect-[3/4] object-cover",
+        "columns_desktop": 3,
+        "show_backgounds": false,
+        "button_label": "",
+        "button_link": "",
+        "to_obfuscate": false
+      }
+    },
+    "b5027902-4240-44cf-8660-b6e754562c52": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify://shop_images/poster-personnalise-foot-enfant-decouvre-chambre.jpg",
+        "title": "Le jour où il se voit en légende",
+        "description": "<p><strong>Ses couleurs, son nom, son rêve réunis dans un poster unique.</strong> Le cadeau qui lui dira, chaque jour, que tout est possible — et qu'un jour, ce héros, ce sera lui.</p>",
+        "layout": "image_first",
+        "enable_blob": false,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#e3fae1",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "afe2a87a-371e-4c67-93b7-8c6b2244f43b": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify://shop_images/poster-foot-papier-detail.jpg",
+        "title": "Un rendu digne de son héros",
+        "description": "<p><strong>Imprimé à la demande sur un papier épais de qualité : des couleurs éclatantes, des détails précis.</strong> Un rendu net et lumineux — une vraie qualité photo, pensée pour durer.</p>",
+        "layout": "text_first",
+        "enable_blob": false,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#e3fae1",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
+      }
+    },
+    "556b5926-5cdb-4c50-a817-c79f15894cdd": {
+      "type": "image-with-text",
+      "settings": {
+        "image": "shopify://shop_images/poster-foot-finitions-cadres.jpg",
+        "title": "Le bon format, le beau cadre",
+        "description": "<p>Au dessus du lit ou près du bureau— Plusieurs formats au choix, pour trouver celui qui prendra sa juste place.</p><p>Et pour qu'il s'accorde parfaitement à la pièce, posez-le tel quel ou habillez-le de l'un de nos quatre cadres — blanc, noir mat, chêne clair ou noyer </p><p><em>Conçu en France, imprimé en Europe.</em></p>",
+        "layout": "image_first",
+        "enable_blob": false,
+        "activate_dynamic_color": false,
+        "dynamic_primary_color": "#111111",
+        "dynamic_secondary_color": "#e3fae1",
+        "padding_top": "pt-16",
+        "padding_bottom": "pb-16"
       }
     },
     "customer_testimonial_myiwee": {
@@ -113,6 +242,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/Tableau-chambre-bebe_f6e62e6e-707b-41df-aa17-bdad25ef3385.jpg",
+            "image_asset": "",
             "message": "Juste une petite photo avec le cadre mis en place encore un grand merci à vous 🥰. \nElodie G"
           }
         },
@@ -120,6 +250,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/deco-mural-toile-marilyn-monroe-pop-art.jpg",
+            "image_asset": "",
             "message": "Envoie très rapide et tableau encore plus beau que sur le site.\nParfait je recommande !!!\nJessica S"
           }
         },
@@ -127,6 +258,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-animaux-rhinoceros_b1022df5-0085-43a4-93b7-011dd579d316.jpg",
+            "image_asset": "",
             "message": "AMAZING ! Le poster est magnifique, il fait son effet dans mon salon. Vanessa K"
           }
         },
@@ -134,6 +266,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-fruit-legume-cuisine-ananas-colore.jpg",
+            "image_asset": "",
             "message": "Trop contente de mon tableau, les couleurs sont aussi flashy que sur les photos du site.\nSarah F"
           }
         },
@@ -141,6 +274,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/Tableau-deco-noir-et-blanc.jpg",
+            "image_asset": "",
             "message": "Top, rien à dire de plus. \nGuillaume H"
           }
         },
@@ -148,6 +282,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-salon-femme-africaine.jpg",
+            "image_asset": "",
             "message": "Magnifique tableau et très design, correspond parfaitement à la description.  Morel E"
           }
         },
@@ -155,6 +290,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-comics-super-man.jpg",
+            "image_asset": "",
             "message": "Nickel, très satisfait c'est ma 3e commande. Hugo G"
           }
         },
@@ -162,6 +298,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-gaming-marvel-iron-man.jpg",
+            "image_asset": "",
             "message": "Très content de mon achat ! Mon fils est ravi il va faire de beaux rêves de super-héros\n. EUGENE D"
           }
         },
@@ -169,6 +306,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-superman-aquarelle.jpg",
+            "image_asset": "",
             "message": "TOP, tableau reçu rapidement avec suivie. Hugo G"
           }
         },
@@ -176,6 +314,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableauphotographie-zebre-animaux-zebre-sauvage.jpg",
+            "image_asset": "",
             "message": "L'animal, majestueux et solitaire trône dans mon salon au dessus de ma console... Peut on dire qu il est magnifique ? Assurément oui et je l adore!\nPatricia G."
           }
         }
@@ -193,112 +332,12 @@
         "image_text_DCdKLC"
       ],
       "settings": {
-        "title": "Nos tableaux à travers vos yeux ❤️"
-      }
-    },
-    "product_recommendations_7Dekqa": {
-      "type": "product-recommendations",
-      "name": "t:sections.product-recommendations.name",
-      "settings": {
-        "heading": "VOUS POURRIEZ AUSSI AIMER",
-        "number_products_to_display": 4
-      }
-    },
-    "b5027902-4240-44cf-8660-b6e754562c52": {
-      "type": "image-with-text",
-      "settings": {
-        "image": "shopify://shop_images/poster-personnalise-foot-enfant-decouvre-chambre.jpg",
-        "title": "Le jour où il se voit en légende",
-        "description": "<p>Ce n'est pas qu'un poster. Ce sont ses couleurs, son nom, son histoire — figés sous les lumières d'un grand soir. Le cadeau qu'on n'oublie pas, et qui reste accroché bien après la fin de saison.</p>",
-        "layout": "image_first",
-        "enable_blob": false,
-        "activate_dynamic_color": false,
-        "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#e3fae1",
-        "padding_top": "pt-16",
-        "padding_bottom": "pb-16"
-      }
-    },
-    "afe2a87a-371e-4c67-93b7-8c6b2244f43b": {
-      "type": "image-with-text",
-      "settings": {
-        "image": "shopify://shop_images/poster-foot-papier-detail.jpg",
-        "title": "Une matière qui se respecte",
-        "description": "<p>Imprimé à la demande sur un papier épais <strong>de qualité</strong> : des couleurs justes, des détails nets. Un rendu net et lumineux — une vraie qualité photo, pensée pour durer.</p>",
-        "layout": "text_first",
-        "enable_blob": false,
-        "activate_dynamic_color": false,
-        "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#e3fae1",
-        "padding_top": "pt-16",
-        "padding_bottom": "pb-16"
-      }
-    },
-    "556b5926-5cdb-4c50-a817-c79f15894cdd": {
-      "type": "image-with-text",
-      "settings": {
-        "image": "shopify://shop_images/poster-foot-finitions-cadres.jpg",
-        "title": "Le format et le cadre qui lui ressemblent",
-        "description": "<p>Deux formats : <strong>30 × 40 cm</strong> pour un clin d'œil, <strong>60 × 80 cm</strong> pour la pièce maîtresse du mur. À poser tel quel, ou sublimé par l'un de nos quatre cadres — blanc, noir mat, chêne clair ou noyer — qui transforme le poster en véritable tableau.</p><p><em>Conçu en France, imprimé en Europe.</em></p>",
-        "layout": "image_first",
-        "enable_blob": false,
-        "activate_dynamic_color": false,
-        "dynamic_primary_color": "#111111",
-        "dynamic_secondary_color": "#e3fae1",
-        "padding_top": "pt-16",
-        "padding_bottom": "pb-16"
-      }
-    },
-    "multicolumn_aLxMGX": {
-      "type": "multicolumn",
-      "blocks": {
-        "column_fN6DfA": {
-          "type": "column",
-          "settings": {
-            "image": "shopify://shop_images/poster-foot-personnalisation-prenom-numero.jpg",
-            "title": "1 · La personnalisation",
-            "text": "<p>Dans le studio, composez son poster en quelques clics. C’est son poster, à son image.</p>",
-            "link_label": "",
-            "link": "",
-            "to_obfuscate": false
-          }
-        },
-        "column_zAm3tT": {
-          "type": "column",
-          "settings": {
-            "image": "shopify://shop_images/poster-foot-etape-2-apercu.jpg",
-            "title": "2 · L'aperçu en direct",
-            "text": "<p>Le rendu se compose sous vos yeux, en temps réel : vous voyez exactement ce que vous commandez. Gratuit, sans engagement.</p>",
-            "link_label": "",
-            "link": "",
-            "to_obfuscate": false
-          }
-        },
-        "column_U3DQjE": {
-          "type": "column",
-          "settings": {
-            "image": "shopify://shop_images/poster-foot-etape-3-encadre.jpg",
-            "title": "3 · Livré, prêt à accrocher",
-            "text": "<p>Vous validez, nous imprimons sur un beau papier épais. Reçu chez vous, encadré en option, prêt à offrir.</p>",
-            "link_label": "",
-            "link": "",
-            "to_obfuscate": false
-          }
-        }
-      },
-      "block_order": [
-        "column_fN6DfA",
-        "column_zAm3tT",
-        "column_U3DQjE"
-      ],
-      "settings": {
-        "title": "DE LA PERSO À SON POSTER, EN 3 ÉTAPES",
-        "image_shape": "aspect-[3/4] object-cover",
-        "columns_desktop": 3,
-        "show_backgounds": false,
-        "button_label": "",
-        "button_link": "",
-        "to_obfuscate": false
+        "eyebrow": "",
+        "heading_level": "h2",
+        "title": "Nos tableaux à travers vos yeux ❤️",
+        "lead": "",
+        "trustpilot_link": "",
+        "emit_review_jsonld": false
       }
     },
     "7ae13aad-330c-4fa7-94cf-fafc1c13cf60": {
@@ -354,8 +393,24 @@
       ],
       "settings": {
         "eyebrow": "FAQ",
+        "heading_level": "h2",
+        "heading_size": "medium",
+        "heading_weight": "semibold",
+        "question_size": "medium",
         "accent_tone": "buy-button",
-        "heading": "QUESTIONS FRÉQUENTES"
+        "heading": "QUESTIONS FRÉQUENTES",
+        "lead": "",
+        "background_color": "secondary",
+        "padding_size": "large",
+        "emit_faq_jsonld": false
+      }
+    },
+    "product_recommendations_7Dekqa": {
+      "type": "product-recommendations",
+      "name": "t:sections.product-recommendations.name",
+      "settings": {
+        "heading": "VOUS POURRIEZ AUSSI AIMER",
+        "number_products_to_display": 4
       }
     }
   },
