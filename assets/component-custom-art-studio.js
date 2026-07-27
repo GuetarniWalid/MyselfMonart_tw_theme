@@ -402,13 +402,13 @@
       // ultérieure sans lien réactive des actions verrouillées 403). cf. A1 / enterGuestLink.
       if (this.guestLink) return;
       try {
-        const { step, screen, stage, consent, fields, teamId, teamName, teamColors, playerName,
+        const { step, screen, stage, consent, fields, teamId, teamSlug, teamName, teamColors, playerName,
           playerNumber, selectedOptions, variantId, jobId, sessionToken, email, status,
           previewUrl, revealCount, imageStale, mockups, versions, activeVersion, candidateTotal, lotStart, artistRequested } = this.state;
         // Mémoire DURABLE (localStorage) : survit à la fermeture du navigateur -> on ré-affiche
         // direct la création à la réouverture (cf. open()), sans pousser à régénérer.
         localStorage.setItem(this.storageKey, JSON.stringify({
-          step, screen, stage, consent, fields, teamId, teamName, teamColors, playerName,
+          step, screen, stage, consent, fields, teamId, teamSlug, teamName, teamColors, playerName,
           playerNumber, selectedOptions, variantId, jobId, sessionToken, email, status,
           previewUrl, revealCount, imageStale, mockups, versions, activeVersion, candidateTotal, lotStart, artistRequested,
           productType: this.productType, // provenance : cet état appartient à CE produit (garde à la reprise)
@@ -1679,6 +1679,12 @@
         this.state.teamName = team.name;
         this.state.teamColors = team.colors;
         this.state.fields.team = team.id;
+        // Le SLUG de l'équipe, en plus de son identifiant numérique. Le chemin historique continue
+        // de lire `teamId` (une ligne de la table équipes) ; un produit piloté par recette, lui,
+        // désigne ses options par slug — c'est ce qui permet à la recette de porter ses propres
+        // maillots au lieu de dépendre de la base. Envoyer les deux garde les deux chemins
+        // fonctionnels pendant la transition, sans rien casser.
+        this.state.teamSlug = team.slug || null;
         this.markImageStale(); // l'équipe pilote le maillot dans l'image -> régé requise
         this.updateTeamConfirm();
         const requiredError = this.q('[data-team-required-error]');
@@ -2159,6 +2165,11 @@
         }
       };
       this.studioSteps.forEach(appendStep);
+      // Slug de l'équipe, EN PLUS de son identifiant numérique. Le chemin historique lit `teamId`
+      // (une ligne de la table équipes) et ignore cette clé ; un produit piloté par recette lit
+      // `teamSlug`, car sa recette désigne ses options par slug et porte ses propres maillots.
+      // Envoyer les deux garde les deux chemins fonctionnels pendant la transition.
+      if (this.state.teamSlug) fd.append('teamSlug', this.state.teamSlug);
       const extra = (this.studioConfig && this.studioConfig.payload && this.studioConfig.payload.extra)
         || FOOT_FALLBACK_PAYLOAD_EXTRA;
       Object.entries(extra).forEach(([k, v]) => fd.append(k, v));
