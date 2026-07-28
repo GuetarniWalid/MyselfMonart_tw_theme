@@ -1,260 +1,260 @@
 ﻿{
     "snapshots":  [
                       {
-                          "label":  "J0",
-                          "date":  "2026-06-05",
-                          "window":  "2026-05-08..2026-06-05",
+                          "label":  "REF-avant-CU",
+                          "date":  "2026-07-28",
+                          "window":  "2026-04-20..2026-05-17",
                           "country":  "fra",
                           "rows":  [
                                        {
                                            "handle":  "tableau-salon",
-                                           "gsc_clicks":  0,
-                                           "gsc_impr":  5,
-                                           "gsc_pos":  12.2,
-                                           "ga4_organic":  196
+                                           "gsc_clicks":  182,
+                                           "gsc_impr":  12155,
+                                           "gsc_pos":  10.2,
+                                           "ga4_organic":  249
                                        },
                                        {
                                            "handle":  "tableau-africain",
-                                           "gsc_clicks":  1,
-                                           "gsc_impr":  8,
-                                           "gsc_pos":  12.1,
-                                           "ga4_organic":  134
+                                           "gsc_clicks":  71,
+                                           "gsc_impr":  4113,
+                                           "gsc_pos":  5.9,
+                                           "ga4_organic":  159
                                        },
                                        {
                                            "handle":  "tableau-couleur",
-                                           "gsc_clicks":  0,
-                                           "gsc_impr":  21,
-                                           "gsc_pos":  9.4,
-                                           "ga4_organic":  45
+                                           "gsc_clicks":  21,
+                                           "gsc_impr":  5415,
+                                           "gsc_pos":  8.1,
+                                           "ga4_organic":  51
                                        },
                                        {
                                            "handle":  "tableau-japonais",
-                                           "gsc_clicks":  0,
-                                           "gsc_impr":  4,
-                                           "gsc_pos":  24.2,
-                                           "ga4_organic":  14
+                                           "gsc_clicks":  9,
+                                           "gsc_impr":  2458,
+                                           "gsc_pos":  10.3,
+                                           "ga4_organic":  21
                                        },
                                        {
                                            "handle":  "tableau-chambre-ado",
-                                           "gsc_clicks":  0,
-                                           "gsc_impr":  3,
-                                           "gsc_pos":  11.3,
-                                           "ga4_organic":  31
+                                           "gsc_clicks":  5,
+                                           "gsc_impr":  1619,
+                                           "gsc_pos":  17.2,
+                                           "ga4_organic":  34
                                        },
                                        {
                                            "handle":  "tableaux-frida-kahlo",
-                                           "gsc_clicks":  36,
-                                           "gsc_impr":  7525,
-                                           "gsc_pos":  8.7,
-                                           "ga4_organic":  58
+                                           "gsc_clicks":  37,
+                                           "gsc_impr":  8724,
+                                           "gsc_pos":  9.1,
+                                           "ga4_organic":  64
                                        },
                                        {
                                            "handle":  "tableau-bureau",
-                                           "gsc_clicks":  0,
-                                           "gsc_impr":  3,
-                                           "gsc_pos":  6,
-                                           "ga4_organic":  37
+                                           "gsc_clicks":  12,
+                                           "gsc_impr":  2090,
+                                           "gsc_pos":  6.9,
+                                           "ga4_organic":  43
                                        },
                                        {
                                            "handle":  "tableau-chambre-garcon",
-                                           "gsc_clicks":  0,
-                                           "gsc_impr":  2,
-                                           "gsc_pos":  26,
-                                           "ga4_organic":  0
+                                           "gsc_clicks":  6,
+                                           "gsc_impr":  1051,
+                                           "gsc_pos":  11.3,
+                                           "ga4_organic":  15
                                        },
                                        {
                                            "handle":  "tableau-bleue",
-                                           "gsc_clicks":  0,
-                                           "gsc_impr":  13,
-                                           "gsc_pos":  11.4,
-                                           "ga4_organic":  13
+                                           "gsc_clicks":  6,
+                                           "gsc_impr":  1502,
+                                           "gsc_pos":  9,
+                                           "ga4_organic":  24
                                        },
                                        {
                                            "handle":  "tableau-zen",
-                                           "gsc_clicks":  4,
-                                           "gsc_impr":  1179,
-                                           "gsc_pos":  7.5,
-                                           "ga4_organic":  20
+                                           "gsc_clicks":  9,
+                                           "gsc_impr":  1502,
+                                           "gsc_pos":  8.4,
+                                           "ga4_organic":  29
                                        },
                                        {
                                            "handle":  "tableau-cuisine",
-                                           "gsc_clicks":  0,
-                                           "gsc_impr":  1,
-                                           "gsc_pos":  37,
-                                           "ga4_organic":  15
+                                           "gsc_clicks":  3,
+                                           "gsc_impr":  818,
+                                           "gsc_pos":  23.3,
+                                           "ga4_organic":  24
                                        },
                                        {
                                            "handle":  "tableau-animaux",
                                            "gsc_clicks":  0,
-                                           "gsc_impr":  20,
-                                           "gsc_pos":  1,
-                                           "ga4_organic":  0
+                                           "gsc_impr":  722,
+                                           "gsc_pos":  17.5,
+                                           "ga4_organic":  17
                                        },
                                        {
                                            "handle":  "tableaux-chambre-bebe",
-                                           "gsc_clicks":  2,
-                                           "gsc_impr":  919,
-                                           "gsc_pos":  11.3,
+                                           "gsc_clicks":  3,
+                                           "gsc_impr":  1311,
+                                           "gsc_pos":  13.3,
                                            "ga4_organic":  12
                                        },
                                        {
                                            "handle":  "tableau-paysage",
-                                           "gsc_clicks":  0,
-                                           "gsc_impr":  1,
-                                           "gsc_pos":  5,
-                                           "ga4_organic":  26
+                                           "gsc_clicks":  4,
+                                           "gsc_impr":  1928,
+                                           "gsc_pos":  13.4,
+                                           "ga4_organic":  30
                                        },
                                        {
                                            "handle":  "tous-les-tableaux",
                                            "gsc_clicks":  0,
-                                           "gsc_impr":  2,
+                                           "gsc_impr":  4,
                                            "gsc_pos":  1,
-                                           "ga4_organic":  28
+                                           "ga4_organic":  40
                                        },
                                        {
                                            "handle":  "tableau-chambre-adulte",
-                                           "gsc_clicks":  0,
-                                           "gsc_impr":  1,
-                                           "gsc_pos":  51,
-                                           "ga4_organic":  11
+                                           "gsc_clicks":  6,
+                                           "gsc_impr":  648,
+                                           "gsc_pos":  17.7,
+                                           "ga4_organic":  13
                                        },
                                        {
                                            "handle":  "tableau-chambre",
                                            "gsc_clicks":  0,
-                                           "gsc_impr":  4,
-                                           "gsc_pos":  82.2,
-                                           "ga4_organic":  0
+                                           "gsc_impr":  323,
+                                           "gsc_pos":  31.6,
+                                           "ga4_organic":  9
                                        },
                                        {
                                            "handle":  "tableaux-nature-sauvage",
                                            "gsc_clicks":  0,
-                                           "gsc_impr":  5,
-                                           "gsc_pos":  84.6,
-                                           "ga4_organic":  0
+                                           "gsc_impr":  6,
+                                           "gsc_pos":  74.7,
+                                           "ga4_organic":  6
                                        },
                                        {
                                            "handle":  "tableau-ethnique",
-                                           "gsc_clicks":  0,
-                                           "gsc_impr":  23,
-                                           "gsc_pos":  17.1,
-                                           "ga4_organic":  25
+                                           "gsc_clicks":  2,
+                                           "gsc_impr":  715,
+                                           "gsc_pos":  15.3,
+                                           "ga4_organic":  33
                                        },
                                        {
                                            "handle":  "tableau-fleurs",
-                                           "gsc_clicks":  0,
-                                           "gsc_impr":  1,
-                                           "gsc_pos":  12,
-                                           "ga4_organic":  17
+                                           "gsc_clicks":  10,
+                                           "gsc_impr":  2759,
+                                           "gsc_pos":  11.6,
+                                           "ga4_organic":  36
                                        },
                                        {
                                            "handle":  "tableau-noir-et-blanc",
-                                           "gsc_clicks":  0,
-                                           "gsc_impr":  1,
-                                           "gsc_pos":  36,
-                                           "ga4_organic":  11
+                                           "gsc_clicks":  4,
+                                           "gsc_impr":  1889,
+                                           "gsc_pos":  14.5,
+                                           "ga4_organic":  14
                                        },
                                        {
                                            "handle":  "tableau-chambre-enfant",
                                            "gsc_clicks":  0,
-                                           "gsc_impr":  21,
-                                           "gsc_pos":  2.5,
-                                           "ga4_organic":  0
+                                           "gsc_impr":  154,
+                                           "gsc_pos":  32.7,
+                                           "ga4_organic":  5
                                        },
                                        {
                                            "handle":  "tableau-chambre-fille",
                                            "gsc_clicks":  0,
-                                           "gsc_impr":  3,
-                                           "gsc_pos":  18.7,
-                                           "ga4_organic":  0
+                                           "gsc_impr":  78,
+                                           "gsc_pos":  12.4,
+                                           "ga4_organic":  2
                                        },
                                        {
                                            "handle":  "tableau-abstrait",
                                            "gsc_clicks":  0,
-                                           "gsc_impr":  1,
-                                           "gsc_pos":  27,
-                                           "ga4_organic":  18
+                                           "gsc_impr":  202,
+                                           "gsc_pos":  47.7,
+                                           "ga4_organic":  26
                                        },
                                        {
                                            "handle":  "tableau-rose",
                                            "gsc_clicks":  0,
-                                           "gsc_impr":  163,
-                                           "gsc_pos":  20.1,
-                                           "ga4_organic":  0
+                                           "gsc_impr":  169,
+                                           "gsc_pos":  23.2,
+                                           "ga4_organic":  1
                                        },
                                        {
                                            "handle":  "tableau-rouge",
                                            "gsc_clicks":  0,
-                                           "gsc_impr":  1,
-                                           "gsc_pos":  9,
-                                           "ga4_organic":  14
+                                           "gsc_impr":  559,
+                                           "gsc_pos":  10.8,
+                                           "ga4_organic":  8
                                        },
                                        {
                                            "handle":  "tableau-chambre-fillette",
                                            "gsc_clicks":  1,
-                                           "gsc_impr":  99,
-                                           "gsc_pos":  16.1,
-                                           "ga4_organic":  0
+                                           "gsc_impr":  165,
+                                           "gsc_pos":  19.2,
+                                           "ga4_organic":  6
                                        },
                                        {
                                            "handle":  "tableau-jaune",
                                            "gsc_clicks":  0,
-                                           "gsc_impr":  273,
-                                           "gsc_pos":  11.1,
-                                           "ga4_organic":  0
+                                           "gsc_impr":  341,
+                                           "gsc_pos":  11.5,
+                                           "ga4_organic":  4
                                        },
                                        {
                                            "handle":  "tableau-pop-art",
-                                           "gsc_clicks":  0,
-                                           "gsc_impr":  2,
-                                           "gsc_pos":  30,
-                                           "ga4_organic":  16
+                                           "gsc_clicks":  6,
+                                           "gsc_impr":  1120,
+                                           "gsc_pos":  18.9,
+                                           "ga4_organic":  15
                                        },
                                        {
                                            "handle":  "tableau-orange",
-                                           "gsc_clicks":  0,
-                                           "gsc_impr":  209,
-                                           "gsc_pos":  12.8,
-                                           "ga4_organic":  0
+                                           "gsc_clicks":  1,
+                                           "gsc_impr":  361,
+                                           "gsc_pos":  13.4,
+                                           "ga4_organic":  8
                                        },
                                        {
                                            "handle":  "tableau-portrait-1",
                                            "gsc_clicks":  0,
-                                           "gsc_impr":  28,
-                                           "gsc_pos":  17,
-                                           "ga4_organic":  0
+                                           "gsc_impr":  63,
+                                           "gsc_pos":  21.8,
+                                           "ga4_organic":  3
                                        },
                                        {
                                            "handle":  "tableau-mer-1",
                                            "gsc_clicks":  0,
-                                           "gsc_impr":  8,
-                                           "gsc_pos":  45.8,
-                                           "ga4_organic":  0
+                                           "gsc_impr":  99,
+                                           "gsc_pos":  45.4,
+                                           "ga4_organic":  13
                                        },
                                        {
                                            "handle":  "tableau-fruits-et-legumes",
-                                           "gsc_clicks":  0,
-                                           "gsc_impr":  9,
-                                           "gsc_pos":  11.2,
-                                           "ga4_organic":  17
+                                           "gsc_clicks":  1,
+                                           "gsc_impr":  384,
+                                           "gsc_pos":  11.1,
+                                           "ga4_organic":  14
                                        },
                                        {
                                            "handle":  "bestsellers-1",
                                            "gsc_clicks":  0,
-                                           "gsc_impr":  10,
-                                           "gsc_pos":  1,
-                                           "ga4_organic":  12
+                                           "gsc_impr":  8,
+                                           "gsc_pos":  2.5,
+                                           "ga4_organic":  16
                                        },
                                        {
                                            "handle":  "tableau-vert",
                                            "gsc_clicks":  0,
-                                           "gsc_impr":  124,
-                                           "gsc_pos":  11.8,
-                                           "ga4_organic":  14
+                                           "gsc_impr":  562,
+                                           "gsc_pos":  14,
+                                           "ga4_organic":  11
                                        },
                                        {
                                            "handle":  "tableau-cheval",
                                            "gsc_clicks":  7,
-                                           "gsc_impr":  1041,
+                                           "gsc_impr":  1183,
                                            "gsc_pos":  10.6,
                                            "ga4_organic":  18
                                        },
@@ -267,10 +267,10 @@
                                        },
                                        {
                                            "handle":  "tableau-street-art",
-                                           "gsc_clicks":  0,
-                                           "gsc_impr":  455,
-                                           "gsc_pos":  20.8,
-                                           "ga4_organic":  16
+                                           "gsc_clicks":  1,
+                                           "gsc_impr":  681,
+                                           "gsc_pos":  22.7,
+                                           "ga4_organic":  11
                                        },
                                        {
                                            "handle":  "tableau-violet",
@@ -282,9 +282,346 @@
                                        {
                                            "handle":  "tableau-lion",
                                            "gsc_clicks":  0,
-                                           "gsc_impr":  533,
-                                           "gsc_pos":  13.9,
+                                           "gsc_impr":  793,
+                                           "gsc_pos":  13,
+                                           "ga4_organic":  4
+                                       },
+                                       {
+                                           "handle":  "tableau-personnalise-famille",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  5,
+                                           "gsc_pos":  55.6,
                                            "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "horoscope-bebe",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  21,
+                                           "gsc_pos":  46,
+                                           "ga4_organic":  2
+                                       },
+                                       {
+                                           "handle":  "tableaux-bouddha",
+                                           "gsc_clicks":  2,
+                                           "gsc_impr":  448,
+                                           "gsc_pos":  21.5,
+                                           "ga4_organic":  7
+                                       },
+                                       {
+                                           "handle":  "papier-peint-fleur",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  9,
+                                           "gsc_pos":  51.2,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "tableau-islamique",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  506,
+                                           "gsc_pos":  27.1,
+                                           "ga4_organic":  5
+                                       },
+                                       {
+                                           "handle":  "papier-peint-colore",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  189,
+                                           "gsc_pos":  19.5,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "tableau-amerindiens",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  0,
+                                           "gsc_pos":  null,
+                                           "ga4_organic":  0
+                                       }
+                                   ]
+                      },
+                      {
+                          "label":  "J0",
+                          "date":  "2026-07-28",
+                          "window":  "2026-05-08..2026-06-05",
+                          "country":  "fra",
+                          "rows":  [
+                                       {
+                                           "handle":  "tableau-salon",
+                                           "gsc_clicks":  140,
+                                           "gsc_impr":  10010,
+                                           "gsc_pos":  9,
+                                           "ga4_organic":  200
+                                       },
+                                       {
+                                           "handle":  "tableau-africain",
+                                           "gsc_clicks":  61,
+                                           "gsc_impr":  3436,
+                                           "gsc_pos":  6.5,
+                                           "ga4_organic":  133
+                                       },
+                                       {
+                                           "handle":  "tableau-couleur",
+                                           "gsc_clicks":  23,
+                                           "gsc_impr":  4916,
+                                           "gsc_pos":  8.2,
+                                           "ga4_organic":  45
+                                       },
+                                       {
+                                           "handle":  "tableau-japonais",
+                                           "gsc_clicks":  10,
+                                           "gsc_impr":  2001,
+                                           "gsc_pos":  10.7,
+                                           "ga4_organic":  14
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre-ado",
+                                           "gsc_clicks":  9,
+                                           "gsc_impr":  1172,
+                                           "gsc_pos":  12,
+                                           "ga4_organic":  31
+                                       },
+                                       {
+                                           "handle":  "tableaux-frida-kahlo",
+                                           "gsc_clicks":  37,
+                                           "gsc_impr":  8422,
+                                           "gsc_pos":  8.7,
+                                           "ga4_organic":  58
+                                       },
+                                       {
+                                           "handle":  "tableau-bureau",
+                                           "gsc_clicks":  10,
+                                           "gsc_impr":  1697,
+                                           "gsc_pos":  7.7,
+                                           "ga4_organic":  37
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre-garcon",
+                                           "gsc_clicks":  6,
+                                           "gsc_impr":  914,
+                                           "gsc_pos":  8.9,
+                                           "ga4_organic":  8
+                                       },
+                                       {
+                                           "handle":  "tableau-bleue",
+                                           "gsc_clicks":  2,
+                                           "gsc_impr":  1223,
+                                           "gsc_pos":  9,
+                                           "ga4_organic":  13
+                                       },
+                                       {
+                                           "handle":  "tableau-zen",
+                                           "gsc_clicks":  6,
+                                           "gsc_impr":  1338,
+                                           "gsc_pos":  7.5,
+                                           "ga4_organic":  20
+                                       },
+                                       {
+                                           "handle":  "tableau-cuisine",
+                                           "gsc_clicks":  2,
+                                           "gsc_impr":  771,
+                                           "gsc_pos":  19,
+                                           "ga4_organic":  15
+                                       },
+                                       {
+                                           "handle":  "tableau-animaux",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  667,
+                                           "gsc_pos":  14.8,
+                                           "ga4_organic":  10
+                                       },
+                                       {
+                                           "handle":  "tableaux-chambre-bebe",
+                                           "gsc_clicks":  3,
+                                           "gsc_impr":  1079,
+                                           "gsc_pos":  11.4,
+                                           "ga4_organic":  12
+                                       },
+                                       {
+                                           "handle":  "tableau-paysage",
+                                           "gsc_clicks":  3,
+                                           "gsc_impr":  1903,
+                                           "gsc_pos":  12.4,
+                                           "ga4_organic":  26
+                                       },
+                                       {
+                                           "handle":  "tous-les-tableaux",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  3,
+                                           "gsc_pos":  1.7,
+                                           "ga4_organic":  28
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre-adulte",
+                                           "gsc_clicks":  5,
+                                           "gsc_impr":  494,
+                                           "gsc_pos":  14.4,
+                                           "ga4_organic":  11
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  183,
+                                           "gsc_pos":  23.1,
+                                           "ga4_organic":  9
+                                       },
+                                       {
+                                           "handle":  "tableaux-nature-sauvage",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  5,
+                                           "gsc_pos":  84.6,
+                                           "ga4_organic":  1
+                                       },
+                                       {
+                                           "handle":  "tableau-ethnique",
+                                           "gsc_clicks":  2,
+                                           "gsc_impr":  576,
+                                           "gsc_pos":  16.9,
+                                           "ga4_organic":  26
+                                       },
+                                       {
+                                           "handle":  "tableau-fleurs",
+                                           "gsc_clicks":  6,
+                                           "gsc_impr":  2386,
+                                           "gsc_pos":  10.1,
+                                           "ga4_organic":  17
+                                       },
+                                       {
+                                           "handle":  "tableau-noir-et-blanc",
+                                           "gsc_clicks":  3,
+                                           "gsc_impr":  1437,
+                                           "gsc_pos":  14.9,
+                                           "ga4_organic":  11
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre-enfant",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  147,
+                                           "gsc_pos":  25.4,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre-fille",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  49,
+                                           "gsc_pos":  13.7,
+                                           "ga4_organic":  3
+                                       },
+                                       {
+                                           "handle":  "tableau-abstrait",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  72,
+                                           "gsc_pos":  39.1,
+                                           "ga4_organic":  19
+                                       },
+                                       {
+                                           "handle":  "tableau-rose",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  179,
+                                           "gsc_pos":  20,
+                                           "ga4_organic":  1
+                                       },
+                                       {
+                                           "handle":  "tableau-rouge",
+                                           "gsc_clicks":  2,
+                                           "gsc_impr":  678,
+                                           "gsc_pos":  8.9,
+                                           "ga4_organic":  13
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre-fillette",
+                                           "gsc_clicks":  1,
+                                           "gsc_impr":  119,
+                                           "gsc_pos":  15,
+                                           "ga4_organic":  4
+                                       },
+                                       {
+                                           "handle":  "tableau-jaune",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  301,
+                                           "gsc_pos":  11.3,
+                                           "ga4_organic":  2
+                                       },
+                                       {
+                                           "handle":  "tableau-pop-art",
+                                           "gsc_clicks":  6,
+                                           "gsc_impr":  1242,
+                                           "gsc_pos":  14.3,
+                                           "ga4_organic":  16
+                                       },
+                                       {
+                                           "handle":  "tableau-orange",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  228,
+                                           "gsc_pos":  13,
+                                           "ga4_organic":  6
+                                       },
+                                       {
+                                           "handle":  "tableau-portrait-1",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  30,
+                                           "gsc_pos":  16.5,
+                                           "ga4_organic":  2
+                                       },
+                                       {
+                                           "handle":  "tableau-mer-1",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  51,
+                                           "gsc_pos":  45.2,
+                                           "ga4_organic":  9
+                                       },
+                                       {
+                                           "handle":  "tableau-fruits-et-legumes",
+                                           "gsc_clicks":  2,
+                                           "gsc_impr":  406,
+                                           "gsc_pos":  10.4,
+                                           "ga4_organic":  17
+                                       },
+                                       {
+                                           "handle":  "bestsellers-1",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  10,
+                                           "gsc_pos":  1,
+                                           "ga4_organic":  12
+                                       },
+                                       {
+                                           "handle":  "tableau-vert",
+                                           "gsc_clicks":  1,
+                                           "gsc_impr":  516,
+                                           "gsc_pos":  13.9,
+                                           "ga4_organic":  14
+                                       },
+                                       {
+                                           "handle":  "tableau-cheval",
+                                           "gsc_clicks":  7,
+                                           "gsc_impr":  1186,
+                                           "gsc_pos":  10.8,
+                                           "ga4_organic":  18
+                                       },
+                                       {
+                                           "handle":  "tableau-gris",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  0,
+                                           "gsc_pos":  null,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "tableau-street-art",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  514,
+                                           "gsc_pos":  20.9,
+                                           "ga4_organic":  17
+                                       },
+                                       {
+                                           "handle":  "tableau-violet",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  0,
+                                           "gsc_pos":  null,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "tableau-lion",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  593,
+                                           "gsc_pos":  14,
+                                           "ga4_organic":  4
                                        },
                                        {
                                            "handle":  "tableau-personnalise-famille",
@@ -298,14 +635,14 @@
                                            "gsc_clicks":  0,
                                            "gsc_impr":  9,
                                            "gsc_pos":  34.8,
-                                           "ga4_organic":  0
+                                           "ga4_organic":  1
                                        },
                                        {
                                            "handle":  "tableaux-bouddha",
                                            "gsc_clicks":  0,
-                                           "gsc_impr":  328,
-                                           "gsc_pos":  21.6,
-                                           "ga4_organic":  0
+                                           "gsc_impr":  390,
+                                           "gsc_pos":  21.2,
+                                           "ga4_organic":  2
                                        },
                                        {
                                            "handle":  "papier-peint-fleur",
@@ -317,15 +654,1026 @@
                                        {
                                            "handle":  "tableau-islamique",
                                            "gsc_clicks":  0,
-                                           "gsc_impr":  1,
-                                           "gsc_pos":  11,
+                                           "gsc_impr":  465,
+                                           "gsc_pos":  25.5,
                                            "ga4_organic":  0
                                        },
                                        {
                                            "handle":  "papier-peint-colore",
                                            "gsc_clicks":  0,
-                                           "gsc_impr":  192,
+                                           "gsc_impr":  198,
                                            "gsc_pos":  16.4,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "tableau-amerindiens",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  0,
+                                           "gsc_pos":  null,
+                                           "ga4_organic":  0
+                                       }
+                                   ]
+                      },
+                      {
+                          "label":  "J14",
+                          "date":  "2026-07-28",
+                          "window":  "2026-05-22..2026-06-19",
+                          "country":  "fra",
+                          "rows":  [
+                                       {
+                                           "handle":  "tableau-salon",
+                                           "gsc_clicks":  106,
+                                           "gsc_impr":  8576,
+                                           "gsc_pos":  8.5,
+                                           "ga4_organic":  151
+                                       },
+                                       {
+                                           "handle":  "tableau-africain",
+                                           "gsc_clicks":  44,
+                                           "gsc_impr":  3009,
+                                           "gsc_pos":  6.3,
+                                           "ga4_organic":  87
+                                       },
+                                       {
+                                           "handle":  "tableau-couleur",
+                                           "gsc_clicks":  18,
+                                           "gsc_impr":  4084,
+                                           "gsc_pos":  7.8,
+                                           "ga4_organic":  42
+                                       },
+                                       {
+                                           "handle":  "tableau-japonais",
+                                           "gsc_clicks":  11,
+                                           "gsc_impr":  1634,
+                                           "gsc_pos":  10.6,
+                                           "ga4_organic":  23
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre-ado",
+                                           "gsc_clicks":  5,
+                                           "gsc_impr":  974,
+                                           "gsc_pos":  10.2,
+                                           "ga4_organic":  23
+                                       },
+                                       {
+                                           "handle":  "tableaux-frida-kahlo",
+                                           "gsc_clicks":  24,
+                                           "gsc_impr":  5438,
+                                           "gsc_pos":  8.4,
+                                           "ga4_organic":  43
+                                       },
+                                       {
+                                           "handle":  "tableau-bureau",
+                                           "gsc_clicks":  10,
+                                           "gsc_impr":  1415,
+                                           "gsc_pos":  8.2,
+                                           "ga4_organic":  39
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre-garcon",
+                                           "gsc_clicks":  1,
+                                           "gsc_impr":  564,
+                                           "gsc_pos":  8.4,
+                                           "ga4_organic":  7
+                                       },
+                                       {
+                                           "handle":  "tableau-bleue",
+                                           "gsc_clicks":  4,
+                                           "gsc_impr":  1163,
+                                           "gsc_pos":  7.5,
+                                           "ga4_organic":  15
+                                       },
+                                       {
+                                           "handle":  "tableau-zen",
+                                           "gsc_clicks":  9,
+                                           "gsc_impr":  1203,
+                                           "gsc_pos":  7.5,
+                                           "ga4_organic":  16
+                                       },
+                                       {
+                                           "handle":  "tableau-cuisine",
+                                           "gsc_clicks":  2,
+                                           "gsc_impr":  693,
+                                           "gsc_pos":  17.2,
+                                           "ga4_organic":  16
+                                       },
+                                       {
+                                           "handle":  "tableau-animaux",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  697,
+                                           "gsc_pos":  12.5,
+                                           "ga4_organic":  6
+                                       },
+                                       {
+                                           "handle":  "tableaux-chambre-bebe",
+                                           "gsc_clicks":  2,
+                                           "gsc_impr":  1102,
+                                           "gsc_pos":  10.7,
+                                           "ga4_organic":  12
+                                       },
+                                       {
+                                           "handle":  "tableau-paysage",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  1564,
+                                           "gsc_pos":  13.3,
+                                           "ga4_organic":  17
+                                       },
+                                       {
+                                           "handle":  "tous-les-tableaux",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  1,
+                                           "gsc_pos":  3,
+                                           "ga4_organic":  19
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre-adulte",
+                                           "gsc_clicks":  1,
+                                           "gsc_impr":  348,
+                                           "gsc_pos":  15.4,
+                                           "ga4_organic":  10
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  80,
+                                           "gsc_pos":  16.5,
+                                           "ga4_organic":  8
+                                       },
+                                       {
+                                           "handle":  "tableaux-nature-sauvage",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  25,
+                                           "gsc_pos":  28.1,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "tableau-ethnique",
+                                           "gsc_clicks":  3,
+                                           "gsc_impr":  503,
+                                           "gsc_pos":  18.8,
+                                           "ga4_organic":  30
+                                       },
+                                       {
+                                           "handle":  "tableau-fleurs",
+                                           "gsc_clicks":  6,
+                                           "gsc_impr":  1850,
+                                           "gsc_pos":  9.6,
+                                           "ga4_organic":  23
+                                       },
+                                       {
+                                           "handle":  "tableau-noir-et-blanc",
+                                           "gsc_clicks":  4,
+                                           "gsc_impr":  1318,
+                                           "gsc_pos":  14.2,
+                                           "ga4_organic":  5
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre-enfant",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  140,
+                                           "gsc_pos":  22.9,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre-fille",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  34,
+                                           "gsc_pos":  15,
+                                           "ga4_organic":  3
+                                       },
+                                       {
+                                           "handle":  "tableau-abstrait",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  27,
+                                           "gsc_pos":  27.9,
+                                           "ga4_organic":  14
+                                       },
+                                       {
+                                           "handle":  "tableau-rose",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  157,
+                                           "gsc_pos":  19.4,
+                                           "ga4_organic":  2
+                                       },
+                                       {
+                                           "handle":  "tableau-rouge",
+                                           "gsc_clicks":  2,
+                                           "gsc_impr":  603,
+                                           "gsc_pos":  7.9,
+                                           "ga4_organic":  9
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre-fillette",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  111,
+                                           "gsc_pos":  9.1,
+                                           "ga4_organic":  5
+                                       },
+                                       {
+                                           "handle":  "tableau-jaune",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  255,
+                                           "gsc_pos":  13.1,
+                                           "ga4_organic":  3
+                                       },
+                                       {
+                                           "handle":  "tableau-pop-art",
+                                           "gsc_clicks":  1,
+                                           "gsc_impr":  1093,
+                                           "gsc_pos":  12.9,
+                                           "ga4_organic":  12
+                                       },
+                                       {
+                                           "handle":  "tableau-orange",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  184,
+                                           "gsc_pos":  12.7,
+                                           "ga4_organic":  3
+                                       },
+                                       {
+                                           "handle":  "tableau-portrait-1",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  15,
+                                           "gsc_pos":  13.6,
+                                           "ga4_organic":  3
+                                       },
+                                       {
+                                           "handle":  "tableau-mer-1",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  40,
+                                           "gsc_pos":  11.4,
+                                           "ga4_organic":  8
+                                       },
+                                       {
+                                           "handle":  "tableau-fruits-et-legumes",
+                                           "gsc_clicks":  3,
+                                           "gsc_impr":  416,
+                                           "gsc_pos":  8.8,
+                                           "ga4_organic":  12
+                                       },
+                                       {
+                                           "handle":  "bestsellers-1",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  8,
+                                           "gsc_pos":  1,
+                                           "ga4_organic":  8
+                                       },
+                                       {
+                                           "handle":  "tableau-vert",
+                                           "gsc_clicks":  1,
+                                           "gsc_impr":  396,
+                                           "gsc_pos":  14.1,
+                                           "ga4_organic":  11
+                                       },
+                                       {
+                                           "handle":  "tableau-cheval",
+                                           "gsc_clicks":  3,
+                                           "gsc_impr":  1075,
+                                           "gsc_pos":  11.2,
+                                           "ga4_organic":  13
+                                       },
+                                       {
+                                           "handle":  "tableau-gris",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  0,
+                                           "gsc_pos":  null,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "tableau-street-art",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  480,
+                                           "gsc_pos":  20,
+                                           "ga4_organic":  13
+                                       },
+                                       {
+                                           "handle":  "tableau-violet",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  0,
+                                           "gsc_pos":  null,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "tableau-lion",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  426,
+                                           "gsc_pos":  14,
+                                           "ga4_organic":  4
+                                       },
+                                       {
+                                           "handle":  "tableau-personnalise-famille",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  0,
+                                           "gsc_pos":  null,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "horoscope-bebe",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  6,
+                                           "gsc_pos":  14.2,
+                                           "ga4_organic":  1
+                                       },
+                                       {
+                                           "handle":  "tableaux-bouddha",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  332,
+                                           "gsc_pos":  19.1,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "papier-peint-fleur",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  9,
+                                           "gsc_pos":  27.8,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "tableau-islamique",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  394,
+                                           "gsc_pos":  25.6,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "papier-peint-colore",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  151,
+                                           "gsc_pos":  15.8,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "tableau-amerindiens",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  0,
+                                           "gsc_pos":  null,
+                                           "ga4_organic":  0
+                                       }
+                                   ]
+                      },
+                      {
+                          "label":  "J30",
+                          "date":  "2026-07-28",
+                          "window":  "2026-06-07..2026-07-05",
+                          "country":  "fra",
+                          "rows":  [
+                                       {
+                                           "handle":  "tableau-salon",
+                                           "gsc_clicks":  88,
+                                           "gsc_impr":  7932,
+                                           "gsc_pos":  8.4,
+                                           "ga4_organic":  118
+                                       },
+                                       {
+                                           "handle":  "tableau-africain",
+                                           "gsc_clicks":  50,
+                                           "gsc_impr":  2796,
+                                           "gsc_pos":  5.5,
+                                           "ga4_organic":  103
+                                       },
+                                       {
+                                           "handle":  "tableau-couleur",
+                                           "gsc_clicks":  22,
+                                           "gsc_impr":  3631,
+                                           "gsc_pos":  7.8,
+                                           "ga4_organic":  43
+                                       },
+                                       {
+                                           "handle":  "tableau-japonais",
+                                           "gsc_clicks":  9,
+                                           "gsc_impr":  1436,
+                                           "gsc_pos":  10.9,
+                                           "ga4_organic":  29
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre-ado",
+                                           "gsc_clicks":  3,
+                                           "gsc_impr":  1004,
+                                           "gsc_pos":  10.8,
+                                           "ga4_organic":  18
+                                       },
+                                       {
+                                           "handle":  "tableaux-frida-kahlo",
+                                           "gsc_clicks":  14,
+                                           "gsc_impr":  2217,
+                                           "gsc_pos":  8.7,
+                                           "ga4_organic":  31
+                                       },
+                                       {
+                                           "handle":  "tableau-bureau",
+                                           "gsc_clicks":  9,
+                                           "gsc_impr":  1321,
+                                           "gsc_pos":  8.8,
+                                           "ga4_organic":  34
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre-garcon",
+                                           "gsc_clicks":  5,
+                                           "gsc_impr":  479,
+                                           "gsc_pos":  9.2,
+                                           "ga4_organic":  11
+                                       },
+                                       {
+                                           "handle":  "tableau-bleue",
+                                           "gsc_clicks":  4,
+                                           "gsc_impr":  1194,
+                                           "gsc_pos":  6.2,
+                                           "ga4_organic":  16
+                                       },
+                                       {
+                                           "handle":  "tableau-zen",
+                                           "gsc_clicks":  10,
+                                           "gsc_impr":  1124,
+                                           "gsc_pos":  7.8,
+                                           "ga4_organic":  15
+                                       },
+                                       {
+                                           "handle":  "tableau-cuisine",
+                                           "gsc_clicks":  2,
+                                           "gsc_impr":  627,
+                                           "gsc_pos":  17.3,
+                                           "ga4_organic":  22
+                                       },
+                                       {
+                                           "handle":  "tableau-animaux",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  699,
+                                           "gsc_pos":  12.5,
+                                           "ga4_organic":  4
+                                       },
+                                       {
+                                           "handle":  "tableaux-chambre-bebe",
+                                           "gsc_clicks":  1,
+                                           "gsc_impr":  923,
+                                           "gsc_pos":  11.9,
+                                           "ga4_organic":  8
+                                       },
+                                       {
+                                           "handle":  "tableau-paysage",
+                                           "gsc_clicks":  1,
+                                           "gsc_impr":  1501,
+                                           "gsc_pos":  12.9,
+                                           "ga4_organic":  14
+                                       },
+                                       {
+                                           "handle":  "tous-les-tableaux",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  8,
+                                           "gsc_pos":  27,
+                                           "ga4_organic":  9
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre-adulte",
+                                           "gsc_clicks":  1,
+                                           "gsc_impr":  267,
+                                           "gsc_pos":  16.2,
+                                           "ga4_organic":  10
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  113,
+                                           "gsc_pos":  20.5,
+                                           "ga4_organic":  5
+                                       },
+                                       {
+                                           "handle":  "tableaux-nature-sauvage",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  127,
+                                           "gsc_pos":  28.4,
+                                           "ga4_organic":  1
+                                       },
+                                       {
+                                           "handle":  "tableau-ethnique",
+                                           "gsc_clicks":  1,
+                                           "gsc_impr":  460,
+                                           "gsc_pos":  19,
+                                           "ga4_organic":  27
+                                       },
+                                       {
+                                           "handle":  "tableau-fleurs",
+                                           "gsc_clicks":  4,
+                                           "gsc_impr":  1264,
+                                           "gsc_pos":  11.2,
+                                           "ga4_organic":  30
+                                       },
+                                       {
+                                           "handle":  "tableau-noir-et-blanc",
+                                           "gsc_clicks":  3,
+                                           "gsc_impr":  1293,
+                                           "gsc_pos":  13.7,
+                                           "ga4_organic":  6
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre-enfant",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  126,
+                                           "gsc_pos":  23.3,
+                                           "ga4_organic":  3
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre-fille",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  31,
+                                           "gsc_pos":  12.7,
+                                           "ga4_organic":  2
+                                       },
+                                       {
+                                           "handle":  "tableau-abstrait",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  30,
+                                           "gsc_pos":  29.6,
+                                           "ga4_organic":  10
+                                       },
+                                       {
+                                           "handle":  "tableau-rose",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  167,
+                                           "gsc_pos":  21.4,
+                                           "ga4_organic":  2
+                                       },
+                                       {
+                                           "handle":  "tableau-rouge",
+                                           "gsc_clicks":  2,
+                                           "gsc_impr":  469,
+                                           "gsc_pos":  5.7,
+                                           "ga4_organic":  5
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre-fillette",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  92,
+                                           "gsc_pos":  9.2,
+                                           "ga4_organic":  4
+                                       },
+                                       {
+                                           "handle":  "tableau-jaune",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  219,
+                                           "gsc_pos":  12.5,
+                                           "ga4_organic":  2
+                                       },
+                                       {
+                                           "handle":  "tableau-pop-art",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  899,
+                                           "gsc_pos":  13.2,
+                                           "ga4_organic":  13
+                                       },
+                                       {
+                                           "handle":  "tableau-orange",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  148,
+                                           "gsc_pos":  13.4,
+                                           "ga4_organic":  5
+                                       },
+                                       {
+                                           "handle":  "tableau-portrait-1",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  21,
+                                           "gsc_pos":  10.5,
+                                           "ga4_organic":  2
+                                       },
+                                       {
+                                           "handle":  "tableau-mer-1",
+                                           "gsc_clicks":  1,
+                                           "gsc_impr":  107,
+                                           "gsc_pos":  10.3,
+                                           "ga4_organic":  8
+                                       },
+                                       {
+                                           "handle":  "tableau-fruits-et-legumes",
+                                           "gsc_clicks":  3,
+                                           "gsc_impr":  372,
+                                           "gsc_pos":  7.7,
+                                           "ga4_organic":  14
+                                       },
+                                       {
+                                           "handle":  "bestsellers-1",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  11,
+                                           "gsc_pos":  1,
+                                           "ga4_organic":  11
+                                       },
+                                       {
+                                           "handle":  "tableau-vert",
+                                           "gsc_clicks":  1,
+                                           "gsc_impr":  319,
+                                           "gsc_pos":  14.3,
+                                           "ga4_organic":  4
+                                       },
+                                       {
+                                           "handle":  "tableau-cheval",
+                                           "gsc_clicks":  5,
+                                           "gsc_impr":  924,
+                                           "gsc_pos":  11.7,
+                                           "ga4_organic":  15
+                                       },
+                                       {
+                                           "handle":  "tableau-gris",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  0,
+                                           "gsc_pos":  null,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "tableau-street-art",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  624,
+                                           "gsc_pos":  22.2,
+                                           "ga4_organic":  6
+                                       },
+                                       {
+                                           "handle":  "tableau-violet",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  0,
+                                           "gsc_pos":  null,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "tableau-lion",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  393,
+                                           "gsc_pos":  14.5,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "tableau-personnalise-famille",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  0,
+                                           "gsc_pos":  null,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "horoscope-bebe",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  6,
+                                           "gsc_pos":  13,
+                                           "ga4_organic":  1
+                                       },
+                                       {
+                                           "handle":  "tableaux-bouddha",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  334,
+                                           "gsc_pos":  20.6,
+                                           "ga4_organic":  1
+                                       },
+                                       {
+                                           "handle":  "papier-peint-fleur",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  7,
+                                           "gsc_pos":  26.1,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "tableau-islamique",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  319,
+                                           "gsc_pos":  28.5,
+                                           "ga4_organic":  3
+                                       },
+                                       {
+                                           "handle":  "papier-peint-colore",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  154,
+                                           "gsc_pos":  19.1,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "tableau-amerindiens",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  0,
+                                           "gsc_pos":  null,
+                                           "ga4_organic":  0
+                                       }
+                                   ]
+                      },
+                      {
+                          "label":  "J53",
+                          "date":  "2026-07-28",
+                          "window":  "2026-06-29..2026-07-26",
+                          "country":  "fra",
+                          "rows":  [
+                                       {
+                                           "handle":  "tableau-salon",
+                                           "gsc_clicks":  75,
+                                           "gsc_impr":  7806,
+                                           "gsc_pos":  9,
+                                           "ga4_organic":  85
+                                       },
+                                       {
+                                           "handle":  "tableau-africain",
+                                           "gsc_clicks":  52,
+                                           "gsc_impr":  3932,
+                                           "gsc_pos":  5.3,
+                                           "ga4_organic":  119
+                                       },
+                                       {
+                                           "handle":  "tableau-couleur",
+                                           "gsc_clicks":  31,
+                                           "gsc_impr":  3886,
+                                           "gsc_pos":  7,
+                                           "ga4_organic":  42
+                                       },
+                                       {
+                                           "handle":  "tableau-japonais",
+                                           "gsc_clicks":  9,
+                                           "gsc_impr":  1129,
+                                           "gsc_pos":  10.3,
+                                           "ga4_organic":  26
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre-ado",
+                                           "gsc_clicks":  2,
+                                           "gsc_impr":  1166,
+                                           "gsc_pos":  12.4,
+                                           "ga4_organic":  13
+                                       },
+                                       {
+                                           "handle":  "tableaux-frida-kahlo",
+                                           "gsc_clicks":  13,
+                                           "gsc_impr":  1000,
+                                           "gsc_pos":  9.3,
+                                           "ga4_organic":  26
+                                       },
+                                       {
+                                           "handle":  "tableau-bureau",
+                                           "gsc_clicks":  11,
+                                           "gsc_impr":  1308,
+                                           "gsc_pos":  9.2,
+                                           "ga4_organic":  26
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre-garcon",
+                                           "gsc_clicks":  3,
+                                           "gsc_impr":  651,
+                                           "gsc_pos":  12,
+                                           "ga4_organic":  14
+                                       },
+                                       {
+                                           "handle":  "tableau-bleue",
+                                           "gsc_clicks":  11,
+                                           "gsc_impr":  1050,
+                                           "gsc_pos":  6,
+                                           "ga4_organic":  17
+                                       },
+                                       {
+                                           "handle":  "tableau-zen",
+                                           "gsc_clicks":  8,
+                                           "gsc_impr":  1073,
+                                           "gsc_pos":  7,
+                                           "ga4_organic":  18
+                                       },
+                                       {
+                                           "handle":  "tableau-cuisine",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  575,
+                                           "gsc_pos":  21.5,
+                                           "ga4_organic":  8
+                                       },
+                                       {
+                                           "handle":  "tableau-animaux",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  605,
+                                           "gsc_pos":  12.6,
+                                           "ga4_organic":  6
+                                       },
+                                       {
+                                           "handle":  "tableaux-chambre-bebe",
+                                           "gsc_clicks":  1,
+                                           "gsc_impr":  759,
+                                           "gsc_pos":  14,
+                                           "ga4_organic":  7
+                                       },
+                                       {
+                                           "handle":  "tableau-paysage",
+                                           "gsc_clicks":  1,
+                                           "gsc_impr":  1175,
+                                           "gsc_pos":  13.1,
+                                           "ga4_organic":  14
+                                       },
+                                       {
+                                           "handle":  "tous-les-tableaux",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  48,
+                                           "gsc_pos":  33.2,
+                                           "ga4_organic":  9
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre-adulte",
+                                           "gsc_clicks":  1,
+                                           "gsc_impr":  315,
+                                           "gsc_pos":  16.5,
+                                           "ga4_organic":  8
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  131,
+                                           "gsc_pos":  35,
+                                           "ga4_organic":  8
+                                       },
+                                       {
+                                           "handle":  "tableaux-nature-sauvage",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  171,
+                                           "gsc_pos":  32.8,
+                                           "ga4_organic":  4
+                                       },
+                                       {
+                                           "handle":  "tableau-ethnique",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  416,
+                                           "gsc_pos":  18.1,
+                                           "ga4_organic":  16
+                                       },
+                                       {
+                                           "handle":  "tableau-fleurs",
+                                           "gsc_clicks":  1,
+                                           "gsc_impr":  1158,
+                                           "gsc_pos":  15.1,
+                                           "ga4_organic":  5
+                                       },
+                                       {
+                                           "handle":  "tableau-noir-et-blanc",
+                                           "gsc_clicks":  1,
+                                           "gsc_impr":  1227,
+                                           "gsc_pos":  15.6,
+                                           "ga4_organic":  3
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre-enfant",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  175,
+                                           "gsc_pos":  28.2,
+                                           "ga4_organic":  3
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre-fille",
+                                           "gsc_clicks":  1,
+                                           "gsc_impr":  20,
+                                           "gsc_pos":  11,
+                                           "ga4_organic":  3
+                                       },
+                                       {
+                                           "handle":  "tableau-abstrait",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  132,
+                                           "gsc_pos":  43.2,
+                                           "ga4_organic":  5
+                                       },
+                                       {
+                                           "handle":  "tableau-rose",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  145,
+                                           "gsc_pos":  22.1,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "tableau-rouge",
+                                           "gsc_clicks":  2,
+                                           "gsc_impr":  402,
+                                           "gsc_pos":  5.5,
+                                           "ga4_organic":  6
+                                       },
+                                       {
+                                           "handle":  "tableau-chambre-fillette",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  88,
+                                           "gsc_pos":  7,
+                                           "ga4_organic":  1
+                                       },
+                                       {
+                                           "handle":  "tableau-jaune",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  224,
+                                           "gsc_pos":  9.3,
+                                           "ga4_organic":  1
+                                       },
+                                       {
+                                           "handle":  "tableau-pop-art",
+                                           "gsc_clicks":  1,
+                                           "gsc_impr":  645,
+                                           "gsc_pos":  15.9,
+                                           "ga4_organic":  8
+                                       },
+                                       {
+                                           "handle":  "tableau-orange",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  75,
+                                           "gsc_pos":  19.8,
+                                           "ga4_organic":  3
+                                       },
+                                       {
+                                           "handle":  "tableau-portrait-1",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  21,
+                                           "gsc_pos":  22.4,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "tableau-mer-1",
+                                           "gsc_clicks":  2,
+                                           "gsc_impr":  173,
+                                           "gsc_pos":  15.4,
+                                           "ga4_organic":  7
+                                       },
+                                       {
+                                           "handle":  "tableau-fruits-et-legumes",
+                                           "gsc_clicks":  2,
+                                           "gsc_impr":  324,
+                                           "gsc_pos":  8.4,
+                                           "ga4_organic":  10
+                                       },
+                                       {
+                                           "handle":  "bestsellers-1",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  4,
+                                           "gsc_pos":  1,
+                                           "ga4_organic":  11
+                                       },
+                                       {
+                                           "handle":  "tableau-vert",
+                                           "gsc_clicks":  3,
+                                           "gsc_impr":  315,
+                                           "gsc_pos":  14.2,
+                                           "ga4_organic":  8
+                                       },
+                                       {
+                                           "handle":  "tableau-cheval",
+                                           "gsc_clicks":  7,
+                                           "gsc_impr":  744,
+                                           "gsc_pos":  10.2,
+                                           "ga4_organic":  18
+                                       },
+                                       {
+                                           "handle":  "tableau-gris",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  0,
+                                           "gsc_pos":  null,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "tableau-street-art",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  495,
+                                           "gsc_pos":  22.8,
+                                           "ga4_organic":  5
+                                       },
+                                       {
+                                           "handle":  "tableau-violet",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  2,
+                                           "gsc_pos":  9,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "tableau-lion",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  378,
+                                           "gsc_pos":  15.4,
+                                           "ga4_organic":  1
+                                       },
+                                       {
+                                           "handle":  "tableau-personnalise-famille",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  9,
+                                           "gsc_pos":  45.6,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "horoscope-bebe",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  11,
+                                           "gsc_pos":  25.3,
+                                           "ga4_organic":  4
+                                       },
+                                       {
+                                           "handle":  "tableaux-bouddha",
+                                           "gsc_clicks":  1,
+                                           "gsc_impr":  411,
+                                           "gsc_pos":  19.8,
+                                           "ga4_organic":  3
+                                       },
+                                       {
+                                           "handle":  "papier-peint-fleur",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  5,
+                                           "gsc_pos":  21,
+                                           "ga4_organic":  0
+                                       },
+                                       {
+                                           "handle":  "tableau-islamique",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  272,
+                                           "gsc_pos":  30.5,
+                                           "ga4_organic":  4
+                                       },
+                                       {
+                                           "handle":  "papier-peint-colore",
+                                           "gsc_clicks":  0,
+                                           "gsc_impr":  98,
+                                           "gsc_pos":  23.8,
                                            "ga4_organic":  0
                                        },
                                        {
