@@ -6,14 +6,30 @@
   {% render 'card-product-info', product: product %}
 {% endcomment %}
 
+{%- capture card_short %}{{ product.metafields.title.short }}{% endcapture -%}
+{%- assign card_short = card_short | strip -%}
+{%- assign card_label = card_short | default: product.title -%}
+
 <div class="p-3 flex flex-row justify-between items-center shadow-md rounded-md mx-2">
   <div class="flex flex-col flex-1 min-w-0">
     <h3 class="text-xs leading-normal">
+      {%- comment -%}
+        Pas de tabindex="-1" ici : c'est le SEUL lien vers la fiche produit (stretched link via
+        after:inset-0). Le neutraliser rendait toutes les cartes inatteignables au clavier (WCAG 2.1.1).
+      {%- endcomment -%}
       <a
         href="{{ product.url }}"
-        class="product-card-title after:absolute after:inset-0 block truncate font-normal"
-        tabindex="-1">
-        {{ product.metafields.title.short | default: product.title | escape | upcase }}
+        class="product-card-title after:absolute after:inset-0 block truncate font-normal focus-visible:shadow-button focus-visible:rounded-sm">
+        {{ card_label | escape | upcase }}
+        {%- comment -%}
+          Le libelle visible est poetique (« SERENITE ») : seul, il n'indique pas la destination du
+          lien (WCAG 2.4.4 Link Purpose). On complete le nom accessible avec le titre descriptif,
+          qui sert du meme coup d'ancre de lien interne vers la fiche produit.
+          Emis uniquement s'il existe un titre court distinct, sinon le libelle serait duplique.
+        {%- endcomment -%}
+        {%- if card_short != blank and card_short != product.title -%}
+          <span class="sr-only">{{ product.title | escape }}</span>
+        {%- endif -%}
       </a>
     </h3>
     <p class="text-sm mt-1">
