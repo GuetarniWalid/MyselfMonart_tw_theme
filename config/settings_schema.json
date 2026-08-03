@@ -4,8 +4,53 @@
     "theme_name": "Sense",
     "theme_version": "4.0.0",
     "theme_author": "Shopify",
-    "theme_documentation_url": "https:\/\/help.shopify.com\/manual\/online-store\/themes",
-    "theme_support_url": "https:\/\/support.shopify.com\/"
+    "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
+    "theme_support_url": "https://support.shopify.com/"
+  },
+  {
+    "name": "t:settings_schema.promo_popup.name",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_promo_popup",
+        "label": "t:settings_schema.promo_popup.settings.enable_promo_popup.label",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "promo_popup_code",
+        "label": "t:settings_schema.promo_popup.settings.promo_popup_code.label",
+        "info": "t:settings_schema.promo_popup.settings.promo_popup_code.info",
+        "default": "MERCI-K7QX"
+      },
+      {
+        "type": "text",
+        "id": "promo_popup_end",
+        "label": "t:settings_schema.promo_popup.settings.promo_popup_end.label",
+        "info": "t:settings_schema.promo_popup.settings.promo_popup_end.info",
+        "default": "2026-09-30"
+      },
+      {
+        "type": "range",
+        "id": "promo_popup_delay",
+        "label": "t:settings_schema.promo_popup.settings.promo_popup_delay.label",
+        "min": 5,
+        "max": 60,
+        "step": 5,
+        "unit": "s",
+        "default": 15
+      },
+      {
+        "type": "range",
+        "id": "promo_popup_pages",
+        "label": "t:settings_schema.promo_popup.settings.promo_popup_pages.label",
+        "info": "t:settings_schema.promo_popup.settings.promo_popup_pages.info",
+        "min": 2,
+        "max": 5,
+        "step": 1,
+        "default": 2
+      }
+    ]
   },
   {
     "name": "t:settings_schema.cookie_banner.name",

@@ -400,6 +400,33 @@
       "error_daily_cap": "Je hebt je dagelijkse limiet bereikt. Kom morgen terug — je keuzes blijven bewaard.",
       "error_too_many": "Te veel verzoeken tegelijk. Wacht een paar seconden en probeer het opnieuw.",
       "error_title_daily": "Daglimiet bereikt"
+    },
+    "promo_popup": {
+      "already_subscribed": "U bent al ingeschreven: hier is uw bon.",
+      "apply": "Mijn korting toepassen",
+      "badge": "Uw bon van 15 €",
+      "close": "Sluiten",
+      "consent": "Ik wil de aanbiedingen en nieuwtjes van MyselfMonArt per e-mail ontvangen. Zonder dit vinkje kunnen wij u uw code niet sturen.",
+      "copied": "Gekopieerd",
+      "copy": "Kopiëren",
+      "device_limit": "Deze code staat alleen in deze browser. We sturen hem ook per e-mail: wisselt u van apparaat, dan vindt u hem daar.",
+      "email_label": "Uw e-mailadres",
+      "email_placeholder": "naam@voorbeeld.nl",
+      "error_consent": "Vink dit vakje aan zodat wij u uw code kunnen sturen.",
+      "error_email": "Dit e-mailadres lijkt niet geldig.",
+      "later": "Later",
+      "network_error": "We konden uw e-mail niet opslaan. Uw bon blijft geldig.",
+      "note_150": "Bij een mandje boven 150 € is de lopende actie al voordeliger dan deze bon: die actie wordt toegepast, en dat is normaal.",
+      "offer_html": "<strong>15 € korting vanaf 80 € aankoop</strong>, berekend over het productbedrag, <strong>exclusief verzendkosten</strong>. Geldig op de hele site, <strong>eenmalig, per klant</strong>, tot <strong>{{ date }} om 23.59 uur (Parijse tijd)</strong>. Aanbod is <strong>niet combineerbaar</strong> met de lopende actie of een andere code: de voor u meest voordelige korting wordt automatisch toegepast.",
+      "privacy_link": "Privacybeleid",
+      "privacy_notice": "Verwerkingsverantwoordelijke: SAS KINDOPIA. Doel: commerciële prospectie per e-mail. Rechtsgrond: uw toestemming. Ontvangers: onze technische dienstverleners, waaronder Shopify; sommige verwerken gegevens buiten de Europese Unie, gedekt door de standaardcontractbepalingen van de Europese Commissie. Bewaartermijn: 3 jaar na uw laatste contact. U heeft recht op inzage, rectificatie, verwijdering, bezwaar en overdraagbaarheid; u kunt uw toestemming op elk moment intrekken via de afmeldlink in elke e-mail en een klacht indienen bij de CNIL.",
+      "retry": "Opnieuw proberen",
+      "submit": "Mijn bon ontvangen",
+      "submitting": "Verzenden…",
+      "subtitle": "Vanaf 80 € aankoop. Uw code verschijnt hier, direct.",
+      "success_title": "Hier is uw bon",
+      "title": "15 € cadeau op uw eerste kunstwerk",
+      "valid_until": "Geldig tot {{ date }} om 23.59 uur"
     }
   },
   "accessibility": {

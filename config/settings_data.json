@@ -293,7 +293,12 @@
         "settings": {}
       }
     },
-    "enable_poster_filtering": true
+    "enable_poster_filtering": true,
+    "enable_promo_popup": false,
+    "promo_popup_code": "MERCI-K7QX",
+    "promo_popup_end": "2026-09-30",
+    "promo_popup_delay": 15,
+    "promo_popup_pages": 2
   },
   "presets": {
     "Default": {

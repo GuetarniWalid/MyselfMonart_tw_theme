@@ -401,6 +401,33 @@
       "error_daily_cap": "Sie haben Ihr Tageskontingent ausgeschöpft. Kommen Sie morgen wieder — Ihre Auswahl bleibt gespeichert.",
       "error_too_many": "Zu viele Anfragen auf einmal. Bitte warten Sie ein paar Sekunden und versuchen Sie es erneut.",
       "error_title_daily": "Tageslimit erreicht"
+    },
+    "promo_popup": {
+      "already_subscribed": "Sie sind bereits angemeldet: hier ist Ihr Gutschein.",
+      "apply": "Rabatt anwenden",
+      "badge": "Ihr 15-€-Gutschein",
+      "close": "Schließen",
+      "consent": "Ich möchte Angebote und Neuheiten von MyselfMonArt per E-Mail erhalten. Ohne dieses Häkchen können wir Ihnen Ihren Code nicht senden.",
+      "copied": "Kopiert",
+      "copy": "Kopieren",
+      "device_limit": "Dieser Code ist nur in diesem Browser gespeichert. Wir senden ihn Ihnen auch per E-Mail: bei einem Gerätewechsel finden Sie ihn dort.",
+      "email_label": "Ihre E-Mail-Adresse",
+      "email_placeholder": "name@beispiel.de",
+      "error_consent": "Bitte setzen Sie dieses Häkchen, damit wir Ihnen Ihren Code senden können.",
+      "error_email": "Diese E-Mail-Adresse scheint nicht gültig zu sein.",
+      "later": "Später",
+      "network_error": "Wir konnten Ihre E-Mail nicht speichern. Ihr Gutschein bleibt gültig.",
+      "note_150": "Ab einem Warenkorb über 150 € ist die laufende Aktion bereits günstiger als dieser Gutschein: dann gilt die Aktion, und das ist richtig so.",
+      "offer_html": "<strong>15 € Rabatt ab 80 € Einkaufswert</strong>, berechnet auf den Warenwert, <strong>ohne Versandkosten</strong>. Gültig auf der ganzen Website, <strong>nur einmal, pro Kunde</strong>, bis zum <strong>{{ date }} um 23:59 Uhr (Pariser Zeit)</strong>. Das Angebot ist <strong>nicht kombinierbar</strong> mit der laufenden Aktion oder einem anderen Code: der für Sie günstigste Rabatt wird automatisch angewendet.",
+      "privacy_link": "Datenschutzerklärung",
+      "privacy_notice": "Verantwortlich: SAS KINDOPIA. Zweck: Werbung per E-Mail. Rechtsgrundlage: Ihre Einwilligung. Empfänger: unsere technischen Dienstleister, darunter Shopify; einige verarbeiten Daten außerhalb der Europäischen Union auf Grundlage der Standardvertragsklauseln der Europäischen Kommission. Speicherdauer: 3 Jahre nach Ihrem letzten Kontakt. Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Widerspruch und Datenübertragbarkeit; Sie können Ihre Einwilligung jederzeit über den Abmeldelink in jeder E-Mail widerrufen und Beschwerde bei der CNIL einlegen.",
+      "retry": "Erneut versuchen",
+      "submit": "Gutschein erhalten",
+      "submitting": "Senden…",
+      "subtitle": "Ab 80 € Einkaufswert. Ihr Code erscheint sofort, hier.",
+      "success_title": "Hier ist Ihr Gutschein",
+      "title": "15 € Rabatt auf Ihr erstes Kunstwerk",
+      "valid_until": "Gültig bis zum {{ date }} um 23:59 Uhr"
     }
   },
   "accessibility": {

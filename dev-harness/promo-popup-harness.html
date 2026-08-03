@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Banc d'essai — encart promo « bon de 15 € »</title>
+
+<!-- CSS reellement servi par le theme -->
+<link rel="stylesheet" href="../assets/output.css">
+
+<style>
+  /* Reproduit snippets/fonts-and-colors.liquid, qui n'existe pas hors Shopify.
+     Valeurs reelles de config/settings_data.json : main #21150c, secondary #ffffff,
+     brand #d79b86 (brand_50 = lighten 22, brand_900 = darken 40, terra = darken 25). */
+  @font-face { font-family: "heading"; src: url("../assets/heading.woff2") format("woff2"); font-display: swap; }
+  :root {
+    --color-main-rgb: 33, 21, 12;
+    --color-secondary-rgb: 255, 255, 255;
+    --color-brand-50-rgb: 243, 225, 218;
+    --color-brand-900-rgb: 109, 55, 36;
+    --color-buy-button-rgb: 215, 155, 134;
+    --color-terra-rgb: 166, 84, 55;
+    --anim-motion: cubic-bezier(0.17, 0.67, 0.61, 1.06);
+  }
+  body { font-family: Roboto, sans-serif; background: #efece8; margin: 0; }
+  .harness-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 99; background: #21150c; color: #fff; padding: 8px 12px; font: 12px/1.4 ui-monospace, monospace; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .harness-bar button { font: inherit; padding: 4px 10px; border-radius: 999px; border: 1px solid #fff; background: transparent; color: #fff; cursor: pointer; }
+  .fake-page { padding: 60px 16px 200px; max-width: 720px; }
+</style>
+</head>
+<body>
+
+<div class="harness-bar">
+  <strong>BANC D'ESSAI</strong>
+  <button onclick="reset()">Reinitialiser le stockage</button>
+  <button onclick="document.querySelector('promo-popup').open()">Ouvrir</button>
+  <button onclick="toggleBuy()">Bouton d'achat on/off</button>
+  <button onclick="toggleCookie()">Bandeau cookies on/off</button>
+  <span id="log"></span>
+</div>
+
+<div class="fake-page">
+  <h1 class="font-heading font-bold text-3xl">Fiche produit factice</h1>
+  <p class="mt-4">Le contenu doit rester visible et utilisable : l'encart n'est pas modal.</p>
+  <main-product-blocks class="block mt-8 p-4 border-1 border-main rounded-xl">
+    <p class="text-sm text-main-80">&lt;main-product-blocks&gt; — point de montage de la pastille de retour.</p>
+    <p class="mt-2 font-heading font-bold text-2xl">102,50 €</p>
+  </main-product-blocks>
+</div>
+
+<!-- Bouton d'achat flottant du theme (sections/main-product.liquid:320) -->
+<button class="float-buy-button cart-button fixed bottom-3 left-4 md:bottom-6 md:left-1/2 max-w-[70%] z-20 px-6 py-3 rounded-xl">
+  Ajouter au panier
+</button>
+
+<!-- Bandeau cookies (snippets/cookie-banner.liquid:2) -->
+<div id="cookies-banner" class="fixed bottom-6 left-5 md:left-16 right-5 bg-secondary border-1 border-main rounded-xl max-w-[550px] px-6 py-4 z-50 hidden">
+  Bandeau cookies factice
+</div>
+
+<!-- ====== MARKUP DE snippets/promo-popup.liquid, Liquid resolu en FR ====== -->
+<promo-popup class="hidden" data-promo-popup
+  data-code="MERCI-K7QX"
+  data-until="2026-09-30T23:59:59"
+  data-delay="2"
+  data-min-pages="1"
+  data-product-url="/products/exemple"
+  data-cart-count="0">
+  <div role="dialog" aria-labelledby="PromoPopupTitle" data-promo-card
+    class="fixed z-40 bottom-3 left-3 right-3 md:left-auto md:right-6 md:bottom-[var(--promo-bottom)] md:w-[400px] flex flex-col max-h-[62vh] md:max-h-[70vh] overflow-hidden bg-secondary border-1 border-main rounded-2xl shadow-3xl text-main">
+
+    <button type="button" data-promo-close aria-label="Fermer"
+      class="absolute top-3 right-2 z-10 w-11 h-11 flex items-center justify-center bg-transparent border-0 rounded-[10px] text-main hover:bg-main-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main disabled:opacity-35 transition-colors duration-500">
+      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M1 1 L15 15 M15 1 L1 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+
+    <div data-promo-screen="1" class="flex flex-col min-h-0">
+      <form action="/contact" method="post" class="flex flex-col min-h-0">
+        <input type="hidden" name="contact[tags]" value="promo-popup">
+        <div class="flex-none pt-4 pb-2.5 pl-[18px] pr-14">
+          <h2 id="PromoPopupTitle" tabindex="-1" data-promo-title class="m-0 font-heading font-bold text-[21px] leading-[1.15] outline-offset-[3px]">15 € offerts sur votre première œuvre</h2>
+          <p class="mt-1.5 mb-0 text-sm leading-[1.35] text-main-80">Dès 80 € d’achat. Votre code s’affiche tout de suite, ici.</p>
+        </div>
+        <div class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain px-[18px] flex flex-col gap-3.5">
+          <div>
+            <label for="PromoPopupEmail" class="block text-sm font-medium mb-1.5">Votre adresse e-mail</label>
+            <input id="PromoPopupEmail" type="email" name="contact[email]" required autocomplete="email" placeholder="prenom@exemple.fr" aria-describedby="PromoPopupEmailError" data-promo-email
+              class="w-full box-border h-12 px-3.5 text-base text-main bg-secondary border-1 border-main rounded-[10px] outline-none focus:border-2 focus:px-[13px]">
+            <p id="PromoPopupEmailError" data-promo-email-error aria-live="polite" class="hidden items-start gap-1.5 mt-1.5 mb-0 text-sm leading-[1.35] font-medium text-terra">
+              <svg aria-hidden="true" focusable="false" class="inline-block" viewBox="0 0 13 13" width="17" height="17"><circle cx="6.5" cy="6.5" r="5.5" fill="#f87171"/><path d="M5.87 3.53l.1 4.04h1.05l.1-4.04H5.87zm.63 6.13a.66.66 0 100-1.31.66.66 0 000 1.31z" fill="currentColor"/></svg>
+              <span data-promo-error-text>Cette adresse e-mail ne semble pas valide.</span>
+            </p>
+          </div>
+          <div>
+            <div class="flex gap-3 items-start">
+              <input id="PromoPopupConsent" type="checkbox" name="contact[accepts_marketing]" value="true" aria-describedby="PromoPopupConsentError" data-promo-consent class="flex-none w-[22px] h-[22px] mt-px accent-main cursor-pointer">
+              <label for="PromoPopupConsent" class="text-sm leading-[1.4] cursor-pointer">J’accepte de recevoir par e-mail les offres et nouveautés de MyselfMonArt. Sans cette case, nous ne pouvons pas vous envoyer votre code.</label>
+            </div>
+            <p id="PromoPopupConsentError" data-promo-consent-error aria-live="polite" class="hidden items-start gap-1.5 mt-1.5 mb-0 text-sm leading-[1.35] font-medium text-terra">
+              <svg aria-hidden="true" focusable="false" class="inline-block" viewBox="0 0 13 13" width="17" height="17"><circle cx="6.5" cy="6.5" r="5.5" fill="#f87171"/><path d="M5.87 3.53l.1 4.04h1.05l.1-4.04H5.87zm.63 6.13a.66.66 0 100-1.31.66.66 0 000 1.31z" fill="currentColor"/></svg>
+              <span data-promo-error-text>Cochez cette case pour que nous puissions vous envoyer votre code.</span>
+            </p>
+          </div>
+          <p class="m-0 text-[15px] leading-relaxed"><strong>15 € de remise à partir de 80 € d’achat</strong>, calculés sur le montant des produits, <strong>hors frais de livraison</strong>. Valable sur tout le site, <strong>une seule fois, par client</strong>, jusqu’au <strong>30 septembre 2026 à 23 h 59 (heure de Paris)</strong>. Offre <strong>non cumulable</strong> avec la promotion en cours ni avec un autre code : la réduction la plus avantageuse pour vous est appliquée automatiquement.</p>
+          <p class="m-0 text-[13px] leading-relaxed text-main-80">Responsable : SAS KINDOPIA. Finalité : prospection commerciale par e-mail. Base légale : votre consentement. Conservation : 3 ans après votre dernier contact. <a href="#" class="text-main underline">Politique de confidentialité</a></p>
+        </div>
+        <div class="flex-none flex flex-col gap-2 px-[18px] pt-3.5 pb-4 border-t border-main-10">
+          <button type="submit" data-promo-submit data-sending="Envoi…"
+            class="w-full min-h-[50px] px-4 bg-main text-secondary border-0 rounded-[10px] font-heading font-bold text-[17px] hover:bg-brand-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2 disabled:opacity-60 transition-colors duration-500">Recevoir mon bon</button>
+          <div class="flex items-center justify-center min-h-[44px]">
+            <button type="button" data-promo-close class="bg-transparent border-0 px-3 py-2.5 text-[15px] text-main-80 underline hover:text-main focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main disabled:opacity-60 transition-colors duration-500">Plus tard</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div data-promo-screen="2" class="hidden flex-col min-h-0">
+      <div class="flex-none pt-4 pb-2.5 pl-[18px] pr-14">
+        <h2 id="PromoPopupTitle2" tabindex="-1" data-promo-title class="m-0 font-heading font-bold text-[21px] leading-[1.15] outline-offset-[3px]">Voici votre bon</h2>
+        <p data-promo-status data-allow-empty data-network="Nous n’avons pas pu enregistrer votre e-mail. Votre bon reste valable." data-already="Vous êtes déjà inscrit : voici votre bon." class="hidden mt-1.5 mb-0 text-sm leading-[1.35] font-medium"></p>
+      </div>
+      <div class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain px-[18px] flex flex-col gap-3.5">
+        <div class="flex items-stretch gap-2.5">
+          <div class="flex-1 flex items-center justify-center border-2 border-dashed border-main bg-brand-50 rounded-xl px-3 py-2.5 min-h-[56px]">
+            <span class="font-heading font-bold text-[25px] tracking-[0.05em] select-all">MERCI-K7QX</span>
+          </div>
+          <button type="button" data-promo-copy data-copied="Copié" class="flex-none min-w-[88px] min-h-[56px] px-3.5 bg-secondary border-1 border-main rounded-xl text-[15px] font-medium text-main hover:bg-main-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2 transition-colors duration-500">Copier</button>
+        </div>
+        <p class="m-0 text-[15px] font-bold leading-[1.4]">Valable jusqu’au 30 septembre 2026 à 23 h 59</p>
+        <p class="m-0 text-[15px] leading-[1.45]">Sur un panier supérieur à 150 €, la promotion en cours est déjà plus avantageuse que ce bon : c’est elle qui s’appliquera, et c’est normal.</p>
+        <p class="m-0 text-[13px] leading-relaxed text-main-80">Ce code est enregistré dans ce navigateur. Nous vous l’envoyons aussi par e-mail : si vous changez d’appareil, vous le retrouverez là.</p>
+      </div>
+      <div class="flex-none flex flex-col gap-2 px-[18px] pt-3.5 pb-4 border-t border-main-10">
+        <a href="/discount/MERCI-K7QX?redirect=/products/exemple" data-promo-apply
+          class="w-full min-h-[50px] px-4 flex items-center justify-center bg-main text-secondary border-0 rounded-[10px] font-heading font-bold text-[17px] no-underline hover:bg-brand-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2 transition-colors duration-500">Appliquer ma remise</a>
+        <div class="flex items-center justify-center min-h-[44px]">
+          <button type="button" data-promo-retry class="bg-transparent border-0 px-3 py-2.5 text-[15px] text-main-80 underline hover:text-main focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main transition-colors duration-500 hidden">Réessayer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <template data-promo-badge-template>
+    <button type="button" data-promo-badge class="inline-flex items-center gap-2 mb-4 px-3.5 min-h-[38px] bg-transparent border-1 border-dashed border-terra rounded-full text-[13px] font-medium text-terra hover:bg-terra-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terra transition-colors duration-500">Votre bon de 15 €</button>
+  </template>
+</promo-popup>
+
+<script>
+  // Stub minimal de tw-global.js (le vrai fichier n'est pas charge dans le banc d'essai)
+  window.removeTrapFocus = (el) => { if (el && el.focus) el.focus(); };
+  // stub du compteur de tw-global.js
+  if (!window.__mmaPvCounted) { window.__mmaPvCounted = true;
+    const bump = () => { try { sessionStorage.setItem('mma_pv_count', String((parseInt(sessionStorage.getItem('mma_pv_count'),10)||0)+1)); } catch(e){} };
+    bump(); document.addEventListener('mma:soft-navigation', bump); }
+  function reset() { sessionStorage.clear(); localStorage.clear(); location.reload(); }
+  function toggleBuy() { document.querySelector('.float-buy-button').classList.toggle('hidden'); }
+  function toggleCookie() { document.getElementById('cookies-banner').classList.toggle('hidden'); }
+  // Le banc d'essai n'a pas de back-end : on neutralise le POST pour tester le chemin nominal
+  const realFetch = window.fetch;
+  window.fetch = (url, opts) => (String(url).includes('/contact')
+    ? Promise.resolve(new Response('', { status: 200 }))
+    : realFetch(url, opts));
+  setInterval(() => {
+    document.getElementById('log').textContent =
+      'pv=' + (sessionStorage.getItem('mma_pv_count') || 0) +
+      ' seen=' + (localStorage.getItem('mma_promo_seen_at') ? 'oui' : 'non') +
+      ' code=' + (localStorage.getItem('mma_promo_until') ? 'oui' : 'non');
+  }, 500);
+</script>
+<script src="../assets/promo-popup.js"></script>
+</body>
+</html>

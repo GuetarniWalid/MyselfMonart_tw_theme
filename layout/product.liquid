@@ -57,6 +57,14 @@
       window.productPriceModel = '{{ product.price | money }}';
     </script>
 
+    {%- comment -%}
+      Encart promo « bon de 15 € » — fiche produit UNIQUEMENT.
+      ⛔ Ce layout, pas layout/theme.liquid : les fiches produit rendent product.liquid.
+    {%- endcomment -%}
+    {%- if settings.enable_promo_popup -%}
+      {% render 'promo-popup' %}
+    {%- endif -%}
+
     {%- if settings.enable_cookie -%}
       {% render 'cookie-banner' %}
     {%- endif -%}

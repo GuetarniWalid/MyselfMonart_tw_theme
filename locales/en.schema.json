@@ -159,39 +159,39 @@
       "settings": {
         "social_twitter_link": {
           "label": "Twitter",
-          "info": "https:\/\/twitter.com\/shopify"
+          "info": "https://twitter.com/shopify"
         },
         "social_facebook_link": {
           "label": "Facebook",
-          "info": "https:\/\/facebook.com\/shopify"
+          "info": "https://facebook.com/shopify"
         },
         "social_pinterest_link": {
           "label": "Pinterest",
-          "info": "https:\/\/pinterest.com\/shopify"
+          "info": "https://pinterest.com/shopify"
         },
         "social_instagram_link": {
           "label": "Instagram",
-          "info": "http:\/\/instagram.com\/shopify"
+          "info": "http://instagram.com/shopify"
         },
         "social_tiktok_link": {
           "label": "TikTok",
-          "info": "https:\/\/vimeo.com\/shopify"
+          "info": "https://vimeo.com/shopify"
         },
         "social_tumblr_link": {
           "label": "Tumblr",
-          "info": "http:\/\/shopify.tumblr.com"
+          "info": "http://shopify.tumblr.com"
         },
         "social_snapchat_link": {
           "label": "Snapchat",
-          "info": "https:\/\/www.snapchat.com\/add\/shopify"
+          "info": "https://www.snapchat.com/add/shopify"
         },
         "social_youtube_link": {
           "label": "YouTube",
-          "info": "https:\/\/www.youtube.com\/shopify"
+          "info": "https://www.youtube.com/shopify"
         },
         "social_vimeo_link": {
           "label": "Vimeo",
-          "info": "https:\/\/vimeo.com\/shopify"
+          "info": "https://vimeo.com/shopify"
         },
         "header": {
           "content": "Social accounts"
@@ -207,7 +207,7 @@
         },
         "type_header_font": {
           "label": "Font",
-          "info": "Selecting a different font may affect your store’s speed. [Learn more about system fonts.](https:\/\/help.shopify.com\/manual\/online-store\/os\/store-speed\/improving-speed#fonts)"
+          "info": "Selecting a different font may affect your store’s speed. [Learn more about system fonts.](https://help.shopify.com/manual/online-store/os/store-speed/improving-speed#fonts)"
         },
         "header__1": {
           "content": "Headings"
@@ -217,13 +217,36 @@
         },
         "type_body_font": {
           "label": "Font",
-          "info": "Selecting a different font may affect your store’s speed. [Learn more about system fonts.](https:\/\/help.shopify.com\/manual\/online-store\/os\/store-speed\/improving-speed#fonts)"
+          "info": "Selecting a different font may affect your store’s speed. [Learn more about system fonts.](https://help.shopify.com/manual/online-store/os/store-speed/improving-speed#fonts)"
         },
         "heading_scale": {
           "label": "Font size scale"
         },
         "body_scale": {
           "label": "Font size scale"
+        }
+      }
+    },
+    "promo_popup": {
+      "name": "Promo popup (product page)",
+      "settings": {
+        "enable_promo_popup": {
+          "label": "Enable promo card"
+        },
+        "promo_popup_code": {
+          "label": "Discount code",
+          "info": "Hard to guess. Must exist in Discounts, with a minimum purchase and all “Combinations” UNCHECKED."
+        },
+        "promo_popup_end": {
+          "label": "Valid until (YYYY-MM-DD)",
+          "info": "Must match the code’s real end date in Shopify."
+        },
+        "promo_popup_delay": {
+          "label": "Engagement delay (seconds)"
+        },
+        "promo_popup_pages": {
+          "label": "Minimum page views",
+          "info": "At least 2: never show on the landing page from Google."
         }
       }
     }
@@ -745,7 +768,7 @@
       "name": "Email signup banner",
       "settings": {
         "paragraph": {
-          "content": "Each email signup creates a customer account. [Learn more](https:\/\/help.shopify.com\/manual\/customers)"
+          "content": "Each email signup creates a customer account. [Learn more](https://help.shopify.com/manual/customers)"
         },
         "image": {
           "label": "Background image"
@@ -764,7 +787,7 @@
         },
         "show_text_below": {
           "label": "Show content below image on mobile",
-          "info": "For best results, use a 16:9 aspect ratio image. [Learn more](https:\/\/help.shopify.com\/manual\/shopify-admin\/productivity-tools\/image-editor#understanding-image-aspect-ratio)"
+          "info": "For best results, use a 16:9 aspect ratio image. [Learn more](https://help.shopify.com/manual/shopify-admin/productivity-tools/image-editor#understanding-image-aspect-ratio)"
         },
         "image_height": {
           "label": "Banner height",
@@ -780,7 +803,7 @@
           "options__4": {
             "label": "Large"
           },
-          "info": "For best results, use a 16:9 aspect ratio image. [Learn more](https:\/\/help.shopify.com\/manual\/shopify-admin\/productivity-tools\/image-editor#understanding-image-aspect-ratio)"
+          "info": "For best results, use a 16:9 aspect ratio image. [Learn more](https://help.shopify.com/manual/shopify-admin/productivity-tools/image-editor#understanding-image-aspect-ratio)"
         },
         "desktop_content_position": {
           "label": "Content position on desktop",
@@ -891,7 +914,7 @@
         },
         "show_image": {
           "label": "Show featured images",
-          "info": "For best results, use a 3:2 aspect ratio image. [Learn more](https:\/\/help.shopify.com\/manual\/shopify-admin\/productivity-tools\/image-editor#understanding-image-aspect-ratio)"
+          "info": "For best results, use a 3:2 aspect ratio image. [Learn more](https://help.shopify.com/manual/shopify-admin/productivity-tools/image-editor#understanding-image-aspect-ratio)"
         },
         "show_date": {
           "label": "Show date"
@@ -957,7 +980,7 @@
         },
         "logo": {
           "label": "SVG logo",
-          "info": "e.g. <svg ...><\/svg>"
+          "info": "e.g. <svg ...></svg>"
         },
         "logo_with_original_color": {
           "label": "Use original logo colors"
@@ -973,7 +996,7 @@
         },
         "header__1": {
           "content": "Newsletter signup",
-          "info": "Subscribers are automatically added to your 'accepts marketing' customer list. [Learn more](https:\/\/help.shopify.com\/manual\/customers\/manage-customers)"
+          "info": "Subscribers are automatically added to your 'accepts marketing' customer list. [Learn more](https://help.shopify.com/manual/customers/manage-customers)"
         },
         "header__2": {
           "content": "Social media icons",
@@ -983,19 +1006,19 @@
           "label": "Show social media icons"
         },
         "header__3": {
-          "content": "Country\/region selector"
+          "content": "Country/region selector"
         },
         "header__4": {
-          "info": "To add a country\/region, go to your [payment settings](\/admin\/settings\/payments)"
+          "info": "To add a country/region, go to your [payment settings](/admin/settings/payments)"
         },
         "enable_country_selector": {
-          "label": "Enable country\/region selector"
+          "label": "Enable country/region selector"
         },
         "header__5": {
           "content": "Language selector"
         },
         "header__6": {
-          "info": "To add a language, go to your [language settings](\/admin\/settings\/languages)"
+          "info": "To add a language, go to your [language settings](/admin/settings/languages)"
         },
         "enable_language_selector": {
           "label": "Enable language selector"
@@ -1026,7 +1049,7 @@
       "settings": {
         "logo_svg": {
           "label": "SVG logo",
-          "info": "e.g. <svg ...><\/svg>"
+          "info": "e.g. <svg ...></svg>"
         },
         "default_desktop_image_1": {
           "label": "Default desktop image 1 (top-left)",
@@ -1693,7 +1716,7 @@
         },
         "show_rating": {
           "label": "Show product rating",
-          "info": "To show a rating, add a product review app. [Learn more](https:\/\/help.shopify.com\/manual\/online-store\/themes\/theme-structure\/page-types#search-results-section-settings)"
+          "info": "To show a rating, add a product review app. [Learn more](https://help.shopify.com/manual/online-store/themes/theme-structure/page-types#search-results-section-settings)"
         },
         "header_mobile": {
           "content": "Mobile layout"
@@ -1798,7 +1821,7 @@
           "label": "Make section full width"
         },
         "paragraph": {
-          "content": "Each email subscription creates a customer account. [Learn more](https:\/\/help.shopify.com\/manual\/customers)"
+          "content": "Each email subscription creates a customer account. [Learn more](https://help.shopify.com/manual/customers)"
         }
       },
       "blocks": {
@@ -1982,7 +2005,7 @@
       "name": "Sibling Articles"
     },
     "shifted-image-text": {
-      "name": "Shifted Image \/ Text",
+      "name": "Shifted Image / Text",
       "settings": {
         "heading": {
           "label": "Title"
@@ -2018,7 +2041,7 @@
         },
         "description": {
           "label": "Video alt text",
-          "info": "Describe the video for customers using screen readers. [Learn more](https:\/\/help.shopify.com\/manual\/online-store\/themes\/theme-structure\/theme-features#video)"
+          "info": "Describe the video for customers using screen readers. [Learn more](https://help.shopify.com/manual/online-store/themes/theme-structure/theme-features#video)"
         },
         "image_padding": {
           "label": "Add padding to image",

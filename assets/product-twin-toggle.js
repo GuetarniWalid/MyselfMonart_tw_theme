@@ -107,6 +107,11 @@
         // 5) URL + <title> + métadonnées <head>.
         updateHead(doc);
         if (push) history.pushState({ mmaSoftNav: true }, '', url);
+        // 5 bis) Une soft-nav réussie = une page vue de plus pour les modules qui comptent les
+        //        pages de la session (compteur mma_pv_count de tw-global.js, lu par promo-popup.js).
+        //        Émis ici et pas plus haut : une bascule qui échoue part dans le catch, qui
+        //        recharge la page — elle sera donc comptée naturellement.
+        document.dispatchEvent(new CustomEvent('mma:soft-navigation', { detail: { url } }));
         // 6) a11y : ancrer le focus près de la nouvelle bascule (l'ancien élément cliqué a disparu).
         const toggle = main.querySelector('product-twin-toggle');
         if (toggle) {

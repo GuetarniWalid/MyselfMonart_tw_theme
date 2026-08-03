@@ -632,6 +632,33 @@
       "error_daily_cap": "You’ve used all your generations for today. Come back tomorrow—your selections are saved.",
       "error_too_many": "Too many requests at once. Please wait a few seconds, then try again.",
       "error_title_daily": "Daily limit reached"
+    },
+    "promo_popup": {
+      "already_subscribed": "You are already subscribed: here is your voucher.",
+      "apply": "Apply my discount",
+      "badge": "Your €15 voucher",
+      "close": "Close",
+      "consent": "I agree to receive MyselfMonArt offers and news by email. Without this box we cannot send you your code.",
+      "copied": "Copied",
+      "copy": "Copy",
+      "device_limit": "This code is stored in this browser. We also send it to you by email: if you change device, you will find it there.",
+      "email_label": "Your email address",
+      "email_placeholder": "name@example.com",
+      "error_consent": "Please tick this box so we can send you your code.",
+      "error_email": "This email address does not look valid.",
+      "later": "Later",
+      "network_error": "We could not save your email. Your voucher is still valid.",
+      "note_150": "On a basket above €150 the current promotion is already better than this voucher: that is the one that will apply, and that is normal.",
+      "offer_html": "<strong>€15 off on orders from €80</strong>, calculated on the product total, <strong>excluding shipping costs</strong>. Valid site-wide, <strong>once only, per customer</strong>, until <strong>{{ date }} at 11:59 pm (Paris time)</strong>. This offer <strong>cannot be combined</strong> with the current promotion or any other code: the discount that is most advantageous for you is applied automatically.",
+      "privacy_link": "Privacy policy",
+      "privacy_notice": "Controller: SAS KINDOPIA. Purpose: commercial prospecting by email. Legal basis: your consent. Recipients: our technical providers, including Shopify; some process data outside the European Union, covered by the European Commission’s standard contractual clauses. Retention: 3 years after your last contact. You have the right to access, rectify, erase, object and to data portability; you can withdraw your consent at any time via the unsubscribe link in every email, and lodge a complaint with the CNIL.",
+      "retry": "Try again",
+      "submit": "Get my voucher",
+      "submitting": "Sending…",
+      "subtitle": "On orders from €80. Your code appears right here, right away.",
+      "success_title": "Here is your voucher",
+      "title": "€15 off your first artwork",
+      "valid_until": "Valid until {{ date }} at 11:59 pm"
     }
   },
   "snippet": {

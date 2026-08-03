@@ -303,3 +303,24 @@ if (!customElements.get('collapsible-tab')) {
   }
   customElements.define('collapsible-tab', CollapsibleTab);
 }
+
+/* Compteur de pages vues de la session — alimente le déclenchement de l'encart promo
+   (assets/promo-popup.js), qui se contente de LIRE la clé.
+   Il vit ici parce que tw-global.js est chargé sur TOUS les layouts : compter dans
+   promo-popup.js ne compterait que les fiches produit, et un visiteur arrivé de Google sur
+   une collection puis passé sur une fiche resterait à 1 page vue.
+   ⛔ Art. 82 : un entier de session, aucune donnée personnelle, jamais transmis.
+   ⚠️ tw-global.js est inclus deux fois sur certaines pages -> la garde est indispensable. */
+if (!window.__mmaPvCounted) {
+  window.__mmaPvCounted = true;
+  const mmaBumpPageView = () => {
+    try {
+      const n = parseInt(sessionStorage.getItem('mma_pv_count'), 10) || 0;
+      sessionStorage.setItem('mma_pv_count', String(n + 1));
+    } catch (e) {
+      /* mode privé / quota : on dégrade sans casser la page */
+    }
+  };
+  mmaBumpPageView();
+  document.addEventListener('mma:soft-navigation', mmaBumpPageView);
+}

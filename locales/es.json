@@ -401,6 +401,33 @@
       "error_daily_cap": "Has alcanzado el límite diario de creaciones. Vuelve mañana — tus selecciones quedan guardadas.",
       "error_too_many": "Demasiadas solicitudes seguidas. Espera unos segundos y vuelve a intentarlo.",
       "error_title_daily": "Límite diario alcanzado"
+    },
+    "promo_popup": {
+      "already_subscribed": "Ya está suscrito: aquí tiene su vale.",
+      "apply": "Aplicar mi descuento",
+      "badge": "Su vale de 15 €",
+      "close": "Cerrar",
+      "consent": "Acepto recibir por correo electrónico las ofertas y novedades de MyselfMonArt. Sin esta casilla no podemos enviarle su código.",
+      "copied": "Copiado",
+      "copy": "Copiar",
+      "device_limit": "Este código se guarda solo en este navegador. También se lo enviamos por correo: si cambia de dispositivo, lo encontrará allí.",
+      "email_label": "Su dirección de correo electrónico",
+      "email_placeholder": "nombre@ejemplo.es",
+      "error_consent": "Marque esta casilla para que podamos enviarle su código.",
+      "error_email": "Esta dirección de correo no parece válida.",
+      "later": "Más tarde",
+      "network_error": "No hemos podido guardar su correo. Su vale sigue siendo válido.",
+      "note_150": "En una cesta superior a 150 €, la promoción en curso ya es más ventajosa que este vale: se aplicará la promoción, y es lo normal.",
+      "offer_html": "<strong>15 € de descuento a partir de 80 € de compra</strong>, calculados sobre el importe de los productos, <strong>sin incluir los gastos de envío</strong>. Válido en toda la web, <strong>una sola vez, por cliente</strong>, hasta el <strong>{{ date }} a las 23:59 (hora de París)</strong>. Oferta <strong>no acumulable</strong> con la promoción en curso ni con otro código: se aplica automáticamente el descuento más ventajoso para usted.",
+      "privacy_link": "Política de privacidad",
+      "privacy_notice": "Responsable: SAS KINDOPIA. Finalidad: prospección comercial por correo electrónico. Base jurídica: su consentimiento. Destinatarios: nuestros proveedores técnicos, incluido Shopify; algunos tratan datos fuera de la Unión Europea, amparados por las cláusulas contractuales tipo de la Comisión Europea. Conservación: 3 años después de su último contacto. Dispone de los derechos de acceso, rectificación, supresión, oposición y portabilidad; puede retirar su consentimiento en cualquier momento mediante el enlace de baja incluido en cada correo, y presentar una reclamación ante la CNIL.",
+      "retry": "Volver a intentarlo",
+      "submit": "Recibir mi vale",
+      "submitting": "Enviando…",
+      "subtitle": "A partir de 80 € de compra. Su código aparece aquí, al instante.",
+      "success_title": "Aquí tiene su vale",
+      "title": "15 € de regalo en su primera obra",
+      "valid_until": "Válido hasta el {{ date }} a las 23:59"
     }
   },
   "accessibility": {

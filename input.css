@@ -330,6 +330,25 @@ main-product-blocks .description h3 span {
   }
 }
 
+/* Même principe pour l'encart promo (snippets/promo-popup.liquid) : sur mobile il occupe
+   EXACTEMENT la place du bouton d'achat flottant, il ne le recouvre jamais — on ne
+   superpose pas deux CTA en bas d'écran, et on ne rend jamais « Ajouter au panier »
+   inatteignable pour capturer un e-mail. Le bouton revient à la fermeture.
+   Sur desktop la place existe : l'encart est ancré au-dessus (--promo-bottom, calculé en JS). */
+@media (max-width: 767px) {
+  body.promo-popup-open .float-buy-button {
+    display: none;
+  }
+}
+
+/* Valeur de repli de l'ancrage desktop : 7rem couvre le bouton d'achat (≈50 px) + son
+   bottom-6 (24 px) + 16 px de marge. Le JS l'affine avec la hauteur réelle mesurée.
+   Déclarée ici et non en classe Tailwind : une valeur arbitraire contenant var(…, fallback)
+   n'est pas compilée par Tailwind. */
+[data-promo-card] {
+  --promo-bottom: 7rem;
+}
+
 /* Studio « Poster perso » — overlay « atelier en cours » posé SUR le visualiseur pendant la
    génération (placeholder = poster générique 3D). Balayage lumineux en BOUCLE qui traverse le
    poster (le halo respirant, lui, utilise animate-pulse de Tailwind). L'élément balayé fait ~1/3
