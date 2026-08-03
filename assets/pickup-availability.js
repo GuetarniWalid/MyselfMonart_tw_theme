@@ -76,9 +76,23 @@ if (!customElements.get('pickup-availability-drawer')) {
         this.hide();
       });
 
-      this.addEventListener('keyup', () => {
+      this.addEventListener('keyup', (event) => {
         if(event.code.toUpperCase() === 'ESCAPE') this.hide();
       });
+
+      // Piège de focus : même mécanique que cart-drawer.js:19 — un handler `keydown` qui
+      // délègue au trapFocus global (assets/tw-global.js), lequel attend un ÉVÉNEMENT.
+      this.addEventListener('keydown', (e) => {
+        if (!this.hasAttribute('open')) return;
+        const focusables = this.focusableElements();
+        if (!focusables.length) return;
+        trapFocus(e, focusables[0], focusables[focusables.length - 1]);
+      });
+    }
+
+    focusableElements() {
+      const selector = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+      return Array.from(this.querySelectorAll(selector)).filter((el) => el.offsetParent !== null);
     }
 
     handleBodyClick(evt) {
@@ -100,7 +114,9 @@ if (!customElements.get('pickup-availability-drawer')) {
       this.setAttribute('open', '');
       document.body.addEventListener('click', this.onBodyClick);
       document.body.classList.add('overflow-hidden');
-      trapFocus(this);
+      // Le drawer porte tabindex="-1" et role="dialog" (sections/pickup-availability.liquid:34) :
+      // on lui donne le focus, le piège Tab est posé en keydown dans le constructeur.
+      this.focus();
     }
   });
 }

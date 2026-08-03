@@ -72,6 +72,21 @@ trapFocus = (e, firstFocusableElement, lastFocusableElement) => {
   }
 };
 
+/**
+ * Pendant de trapFocus, appelé à la FERMETURE d'une modale / d'un tiroir.
+ *
+ * Le piège de focus du thème est un simple handler `keydown` posé sur le composant
+ * (cf. cart-drawer.js:19, tw-header.js:403) : il n'y a donc aucun listener global à
+ * retirer ici. Le seul travail restant est de RESTITUER le focus au déclencheur, comme
+ * le fait cart-drawer.js:60 (`this.cartButton.focus()`) ou le studio
+ * (component-custom-art-studio.js:909 `this.lastFocused?.focus?.()`).
+ *
+ * Passer `null` (ou rien) = ne pas déplacer le focus.
+ */
+removeTrapFocus = (elementToFocus = null) => {
+  elementToFocus?.focus?.();
+};
+
 function removeSkeletonOnImagesLoad(container = document) {
   const images = container.querySelectorAll('img');
 
