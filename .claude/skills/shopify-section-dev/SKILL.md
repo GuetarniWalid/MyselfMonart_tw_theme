@@ -1,7 +1,7 @@
 ---
 name: shopify-section-dev
 description: |
-  Conventions de développement obligatoires pour créer ou modifier toute section Liquid dans ce theme Shopify MyselfMonArt. Invoque ce skill automatiquement dès que tu touches un fichier dans `sections/`, `snippets/`, `templates/`, ou que tu crées un nouveau composant front (hero, grille, FAQ, CTA, etc.). **Règle prioritaire (§ 1) : réutiliser ce qui existe déjà** dans le theme (custom elements, snippets, classes utility) AVANT d'écrire le moindre code — grep le repo systématiquement, n'inventer du neuf que si rien n'existe (carrousel = `<snap-carrousel>`, accordéon = `<collapsible-tab>`, modal = `<details-modal>`, highlight = `.title-highlight`, etc.). Couvre aussi : architecture theme, Tailwind only, variables globales (couleurs main/secondary/accent/buy-button, fonts heading/roboto/limelight), admin-configurable via schema, SEO impeccable (H1 unique, hiérarchie Hn, alt, schema markup), accessibilité WCAG AA (focus visible, ARIA, contraste, motion-reduce), naming SEO des assets, build Tailwind, audit Lighthouse post-déploiement, contraintes `enabled_on.templates`, gestion conflits .tmp Shopify CLI.
+  Conventions de développement obligatoires pour créer ou modifier toute section Liquid dans ce theme Shopify MyselfMonArt. Invoque ce skill automatiquement dès que tu touches un fichier dans `sections/`, `snippets/`, `templates/`, ou que tu crées un nouveau composant front (hero, grille, FAQ, CTA, etc.). **Règle prioritaire (§ 1) : réutiliser ce qui existe déjà** dans le theme (custom elements, snippets, classes utility) AVANT d'écrire le moindre code — grep le repo systématiquement, n'inventer du neuf que si rien n'existe (carrousel = `<snap-carrousel>`, accordéon = `<collapsible-tab>`, tiroir = `<cart-drawer>`, modale = `<dialog>` natif comme dans le studio, highlight = `.title-highlight`, etc.) — en vérifiant dans le § « custom elements » que le composant visé est bien **chargé**, le thème contenant des vestiges de Dawn jamais supprimés. Couvre aussi : architecture theme, Tailwind only, variables globales (couleurs main/secondary/accent/buy-button, fonts heading/roboto/limelight), admin-configurable via schema, SEO impeccable (H1 unique, hiérarchie Hn, alt, schema markup), accessibilité WCAG AA (focus visible, ARIA, contraste, motion-reduce), naming SEO des assets, build Tailwind, audit Lighthouse post-déploiement, contraintes `enabled_on.templates`, gestion conflits .tmp Shopify CLI.
 ---
 
 # Skill — Développement de sections Shopify (MyselfMonArt theme)
@@ -46,10 +46,13 @@ Une section a 3 parties :
 | **Scrollbar masquée** | Classe `.scrollbar-hidden` | [`input.css:606`](input.css#L606) | `<ul class="overflow-x-auto scrollbar-hidden">` |
 | **Bouton CTA neumorphic** | Classe `.cart-button` | [`input.css:432`](input.css#L432) | Pour les CTAs d'action principale style theme |
 | **Image responsive avec blob shape / dynamic color** | Custom element `<blob-shape-media>`, `<dynamic-color>` | [`assets/component-image-with-text.js`](assets/component-image-with-text.js) | Voir [`sections/image-with-text.liquid`](sections/image-with-text.liquid) |
-| **Accordéon FAQ** | `<collapsible-tab>` custom element + `<details>/<summary>` natifs | [`assets/collapsible-tab.js`](assets/collapsible-tab.js) | [`sections/collapsible-content.liquid`](sections/collapsible-content.liquid) |
-| **Modal/Dialog** | `<details-modal>`, `<modal-dialog>` | `assets/details-modal.js`, `assets/modal-dialog.js` | Cart drawer, quick-add modal |
-| **Infinite scroll** | `<infinite-scroll>` custom element | `assets/infinite-scroll.js` | Collection pagination |
-| **Dropdown / Disclosure** | `<details-disclosure>`, `<dropdown-button>` | `assets/details-disclosure.js` | Filtres, menu |
+| **Accordéon FAQ** | `<collapsible-tab>` custom element + `<details>/<summary>` natifs | [`assets/tw-global.js`](assets/tw-global.js) (⚠️ pas de fichier `collapsible-tab.js`) | [`sections/collapsible-content.liquid`](sections/collapsible-content.liquid) |
+| **Tiroir latéral (panier)** | `<cart-drawer>` custom element | [`assets/cart-drawer.js`](assets/cart-drawer.js) | Tiroir panier — overlay + `overflow-hidden` sur le body + piège de focus |
+| **Modale plein écran** | `<dialog>` natif piloté en JS | [`assets/component-custom-art-studio.js`](assets/component-custom-art-studio.js) | Studio de personnalisation — ⛔ il n'existe **aucun** `<details-modal>` ni `<modal-dialog>` opérationnel (cf. § « code mort » ci-dessous) |
+| **Lightbox image produit** | `<popup-image>` custom element | [`assets/main-product.js`](assets/main-product.js) | Agrandissement d'un visuel de la galerie produit |
+| **Piège de focus** | `trapFocus(e, premier, dernier)` en handler `keydown` + `removeTrapFocus(declencheur)` à la fermeture | [`assets/tw-global.js`](assets/tw-global.js) | `cart-drawer.js:19`, `tw-header.js:403` — ⚠️ `trapFocus` attend un **événement** en 1er argument, pas un élément |
+| **Infinite scroll** | `<infinite-scroll>` custom element | [`assets/collection.js`](assets/collection.js) (⚠️ pas de fichier `infinite-scroll.js`) | Pagination collection |
+| **Dropdown / Disclosure** | `<dropdown-button>` | [`assets/dropdown-button.js`](assets/dropdown-button.js) | Filtres, menu |
 | **Témoignage client** card | `{% render 'customer-testimonial-card' %}` | [`snippets/customer-testimonial-card.liquid`](snippets/customer-testimonial-card.liquid) | Voir trust-signals |
 | **Icônes SVG** | `{% render 'icon-X' %}` | `snippets/icon-*.liquid` (icon-accordion, icon-check, icon-account, icon-heart, etc.) | `{% render 'tw-icon-caret', width: '10' %}` |
 | **Schema JSON-LD home** | `{% render 'json-ld-home' %}` | [`snippets/json-ld-home.liquid`](snippets/json-ld-home.liquid) | Inclus auto dans head-base |
@@ -59,18 +62,35 @@ Une section a 3 parties :
 
 ### Custom elements (`customElements.define`) disponibles
 
-Liste exhaustive — chercher ces noms en premier avant de coder un nouveau composant :
+Liste vérifiée le 2026-08-03 (audit `customElements.define` croisé avec les `<script src>` réellement émis par les templates, puis confirmé sur 12 types de page en production).
+
+**✅ Réellement chargés — c'est ici qu'il faut chercher avant de coder :**
 
 ```
-additionnal-product   anime-product-card    blob-shape-media     breadcrumb-popup
-cart-drawer           cart-item             cart-remove-button   click-product
-collapsible-tab       collection-tag-filter details-disclosure   details-modal
-dropdown-button       dynamic-color         filter-drawer        finger-touch
-footer-logic          header-menu           infinite-scroll      lazy-video
-localization-flag     media-gallery         modal-dialog         pickup-availability
-pickup-availability-drawer  product-modal   product-recommendations  quantity-input
-quick-add-modal       quick-add-to-cart     share-button         snap-carrousel
+anime-product-card    blob-shape-media      breadcrumb-popup     cart-drawer
+cart-item             cart-remove-button    click-product        collapsible-tab
+collection-tag-filter custom-art-studio     dropdown-button      dynamic-color
+filter-drawer         finger-touch          footer-logic         infinite-scroll
+localization-flag     localization-form     main-product-blocks  main-product-carousel
+my-like-button        my-likes              my-likes-button      painting-variant-picker
+perspective-canvas    popup-image           predictive-search    product-recommendations
+product-twin-toggle   quantity-input        quick-add-to-cart    snap-carrousel
+sticky-header         tapestry-product-carousel  tapestry-select  variant-picker
+variant-to-cart
 ```
+
+**⛔ Définis dans le repo mais JAMAIS chargés — ne pas réutiliser, ne pas s'en inspirer :**
+
+```
+additionnal-product   details-disclosure    details-modal        header-menu
+lazy-video            media-gallery         password-modal       pickup-availability
+pickup-availability-drawer  product-modal   quick-add-modal      radio-bundle
+share-button          show-more-button
+```
+
+Ce sont des vestiges de Dawn, antérieurs au commit `af6060d "Transition to React and TailwindCSS"` (17/03/2024) et jamais supprimés. Aucun template ne charge leur JS et leur contrat DOM (`.header__icons`, `.modal-overlay`…) n'existe plus. Le nom `modal-dialog`, lui, ne correspond à **aucun fichier** du thème.
+
+Conséquence pratique : si un besoin ressemble à l'un de ces composants morts, il faut **coder du neuf** en suivant les conventions du thème (ou réutiliser `<cart-drawer>` / le `<dialog>` du studio comme modèle), pas ressusciter le fichier Dawn.
 
 ### Workflow d'audit "reuse first"
 
@@ -405,7 +425,8 @@ Quand on rédige du **copy** pour les settings (defaults, exemples, info) :
 ## 10. Anti-patterns à éviter absolument
 
 - ❌ **Réinventer un composant qui existe déjà** (cf § 1) — recoder un carrousel, un accordéon, un modal sans grep préalable
-- ❌ Créer un JS custom pour un comportement déjà géré par un custom element du theme (`<snap-carrousel>`, `<collapsible-tab>`, `<details-modal>`, etc.)
+- ❌ Créer un JS custom pour un comportement déjà géré par un custom element **chargé** du theme (`<snap-carrousel>`, `<collapsible-tab>`, `<cart-drawer>`, `<popup-image>`, etc.)
+- ❌ À l'inverse, réutiliser un custom element **jamais chargé** (`<details-modal>`, `<media-gallery>`, `<quick-add-modal>`… cf. la liste ⛔ du § 1) : le markup serait inerte, sans la moindre erreur visible
 - ❌ Dupliquer une classe utility / un snippet helper qui existe (`.title-highlight`, `.scrollbar-hidden`, `.cart-button`, `customer-testimonial-card`, etc.)
 - ❌ `<style>` inline ou `style="..."` sur des balises (sauf via `{% style %}` exceptionnel et justifié)
 - ❌ CSS scoped par section dans `assets/x-styles.css`
