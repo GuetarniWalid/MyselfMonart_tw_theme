@@ -9,12 +9,16 @@
  */
 {
   "current": {
+    "enable_promo_popup": true,
+    "promo_popup_delay": 15,
+    "promo_popup_pages": 2,
     "enable_cookie": true,
     "enable_predictive_search": true,
     "predictive_search_enabled": true,
     "predictive_search_show_vendor": false,
     "predictive_search_show_price": true,
     "enable_painting_filtering": true,
+    "enable_poster_filtering": true,
     "main_color": "#21150c",
     "secondary_color": "#ffffff",
     "buy_button_color": "#d79b86",
@@ -292,11 +296,7 @@
         "disabled": false,
         "settings": {}
       }
-    },
-    "enable_poster_filtering": true,
-    "enable_promo_popup": false,
-    "promo_popup_delay": 15,
-    "promo_popup_pages": 2
+    }
   },
   "presets": {
     "Default": {
