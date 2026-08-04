@@ -381,10 +381,41 @@
         b.addEventListener('click', () => this.close())
       );
 
-      this.form.addEventListener('submit', (e) => {
-        e.preventDefault(); // ⛔ un POST natif rechargerait la page et détruirait l'écran 2
-        this.submit();
-      });
+      /* ⛔ ON N'ÉCOUTE PLUS `submit` — le bouton est en type="button" et on écoute son CLIC.
+         Constaté en production le 2026-08-04 : `e.preventDefault()` ne suffisait pas. Shopify
+         attache son propre écouteur `submit` (protection hCaptcha des formulaires client,
+         ce_storefront_forms_captcha_hcaptcha.v1.5.2) qui intercepte l'événement, fait son
+         preventDefault, puis RE-SOUMET le formulaire nativement une fois le captcha résolu.
+         Résultat mesuré : la page naviguait vers
+           ?contact[tags]=promo-popup&form_type=customer#PromoPopupForm
+         l'encart était détruit, et le client — pourtant bien inscrit par notre fetch — ne
+         voyait JAMAIS l'écran 2 ni son code.
+         En ne déclenchant aucun événement `submit`, l'écouteur de Shopify ne se réveille pas :
+         plus de navigation, et le badge « Protégé par hCaptcha » disparaît par la même
+         occasion. Contrepartie assumée : ce formulaire n'est plus couvert par la protection
+         anti-spam de Shopify — il ne demande qu'un e-mail, et le minimum de 80 € protège la
+         remise elle-même. */
+      if (this.submitBtn) {
+        this.submitBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.submit();
+        });
+      }
+      /* La touche Entrée dans un champ déclenche une soumission implicite : on l'intercepte
+         AVANT qu'elle ne génère l'événement, sinon on rejoue exactement le bug ci-dessus. */
+      if (this.emailInput) {
+        this.emailInput.addEventListener('keydown', (e) => {
+          if (e.key !== 'Enter') return;
+          e.preventDefault();
+          this.submit();
+        });
+      }
+
+      /* Dernier rempart, volontairement PASSIF : on annule sans rappeler submit(). Un second
+         appel ici doublerait l'envoi quand le clic a déjà fait le travail. Et si Shopify
+         re-soumet malgré tout, ce preventDefault n'y changera rien — d'où les deux gardes
+         ci-dessus, qui empêchent l'événement d'exister plutôt que de tenter de l'annuler. */
+      this.form.addEventListener('submit', (e) => e.preventDefault());
 
       if (this.emailInput) {
         this.emailInput.addEventListener('input', () => this.setError(this.emailError, false));
