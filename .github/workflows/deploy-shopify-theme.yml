@@ -5,6 +5,18 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      force_github:
+        description: >-
+          Faire gagner GitHub sur les fichiers en conflit. À n'utiliser QUE
+          lorsque le « changement Shopify » détecté n'en est pas un — typiquement
+          après un push refusé par Shopify (erreur de syntaxe Liquid) : le fichier
+          est alors sauté, le thème garde l'ancienne version, et la protection le
+          lit à tort comme une modification faite dans l'admin. NE PAS utiliser si
+          quelqu'un a réellement édité le thème dans l'éditeur Shopify : ses
+          modifications seraient écrasées.
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -188,10 +200,25 @@ jobs:
           sort -u "$CONFLICTS" -o "$CONFLICTS"
 
           if [[ -s "$CONFLICTS" ]]; then
-            echo "::error::Both GitHub and Shopify changed the same theme file(s) differently since the last deploy."
-            echo "::error::Auto-sync would risk overwriting work. Resolve these files manually, then push again."
-            sed -n '1,200p' "$CONFLICTS"
-            exit 1
+            if [[ "${{ inputs.force_github }}" == "true" ]]; then
+              # Échappatoire explicite, réservée au faux conflit : quand un push précédent a
+              # été REFUSÉ par Shopify (syntaxe Liquid), le fichier est sauté et le thème garde
+              # l'ancienne version. La comparaison le voit alors « modifié côté Shopify » alors
+              # que personne n'a touché l'admin, et le déploiement se bloque définitivement.
+              # On laisse GitHub gagner : les fichiers en conflit ne sont pas réimportés, ils
+              # partiront tels quels au push. Volontairement manuel (workflow_dispatch) et jamais
+              # automatique — sur un vrai conflit, cela écraserait le travail fait dans l'éditeur.
+              echo "::warning::force_github=true — GitHub gagne sur les fichiers en conflit ci-dessous."
+              echo "::warning::Ils NE seront PAS réimportés depuis le thème ; la version du dépôt sera déployée."
+              sed -n '1,200p' "$CONFLICTS"
+            else
+              echo "::error::Both GitHub and Shopify changed the same theme file(s) differently since the last deploy."
+              echo "::error::Auto-sync would risk overwriting work. Resolve these files manually, then push again."
+              echo "::error::Si le thème est resté en arrière parce qu'un push a été REFUSÉ par Shopify,"
+              echo "::error::relancez ce workflow manuellement avec l'option force_github."
+              sed -n '1,200p' "$CONFLICTS"
+              exit 1
+            fi
           fi
 
           if [[ ! -s "$TO_SYNC" ]]; then
@@ -257,10 +284,36 @@ jobs:
         env:
           SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
           SHOPIFY_FLAG_STORE: ${{ secrets.SHOPIFY_STORE }}
-        run: >-
-          shopify theme push
-          --theme "${{ steps.target.outputs.theme_id }}"
-          --path .
-          --json
-          --nodelete
-          ${{ steps.target.outputs.allow_live }}
+        shell: bash
+        run: |
+          set -o pipefail
+          shopify theme push \
+            --theme "${{ steps.target.outputs.theme_id }}" \
+            --path . \
+            --json \
+            --nodelete \
+            ${{ steps.target.outputs.allow_live }} | tee /tmp/push.out
+
+          # ⛔ Shopify SAUTE les fichiers qu'il refuse (syntaxe Liquid) et rend malgré tout un
+          # code de sortie 0 : « The theme was pushed with errors ». Sans ce contrôle, le job
+          # reste VERT alors que la production garde l'ancienne version du fichier — on croit
+          # avoir déployé pendant des heures. Incident réel du 2026-08-04 sur promo-popup.liquid.
+          python3 - <<'PY'
+          import json, re, sys
+          from pathlib import Path
+          brut = Path('/tmp/push.out').read_text(errors='replace')
+          bloc = re.search(r'\{.*\}\s*$', brut, re.S)   # la CLI écrit du texte avant le JSON
+          if not bloc:
+              print('::warning::Réponse JSON du push introuvable — contrôle des erreurs impossible.')
+              sys.exit(0)
+          erreurs = (json.loads(bloc.group(0)).get('theme') or {}).get('errors') or {}
+          if not erreurs:
+              print('Aucun fichier refusé par Shopify.')
+              sys.exit(0)
+          for fichier, messages in erreurs.items():
+              for m in messages:
+                  print(f'::error file={fichier}::{m}')
+          print('::error::Shopify a REFUSÉ les fichiers ci-dessus : ils ont été sautés et la '
+                'production garde leur ancienne version. Le déploiement est marqué en échec.')
+          sys.exit(1)
+          PY
