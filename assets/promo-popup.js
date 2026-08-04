@@ -92,6 +92,9 @@
 
       this.bind();
 
+      /* Avant toute décision : effacer ce qui a dépassé sa durée annoncée. */
+      this.purgeStaleKeys();
+
       /* Un code déjà obtenu et encore valide : on ne redemande jamais l'e-mail,
          on se contente de la pastille en ligne dans la fiche. */
       if (this.hasLiveCode()) {
@@ -100,6 +103,34 @@
       }
 
       if (this.eligible()) this.startTimer();
+    }
+
+    /* ---------- hygiène du stockage local ---------- */
+
+    /* ⛔ Purge des clés devenues inutiles. Ce n'est pas cosmétique : la politique de
+       confidentialité annonce une conservation de 30 jours maximum au titre de l'exemption
+       de l'art. 82 (traceur strictement nécessaire). Une clé qui survivrait indéfiniment
+       rendrait cette mention FAUSSE. Le code doit tenir la promesse du texte. */
+    purgeStaleKeys() {
+      const now = Date.now();
+      const until = readInt(localStorage, CODE_KEY);
+      if (until > 0 && now >= until) {
+        try {
+          localStorage.removeItem(CODE_KEY);
+        } catch (e) {
+          /* mode privé : rien à faire */
+        }
+      }
+      [SEEN_KEY, SUB_KEY].forEach((k) => {
+        const ts = readInt(localStorage, k);
+        if (ts > 0 && now - ts >= SEEN_TTL) {
+          try {
+            localStorage.removeItem(k);
+          } catch (e) {
+            /* idem */
+          }
+        }
+      });
     }
 
     /* ---------- éligibilité ---------- */
