@@ -10,7 +10,7 @@
 {
   "current": {
     "enable_promo_popup": true,
-    "promo_popup_delay": 15,
+    "promo_popup_delay": 10,
     "promo_popup_pages": 2,
     "enable_cookie": true,
     "enable_predictive_search": true,

@@ -9,9 +9,13 @@
      piège de focus — la page reste utilisable. Focus déplacé sur le titre à l'ouverture,
      restitué à la fermeture via removeTrapFocus (assets/tw-global.js:86).
 
-  ⛔ Garde-fou SEO : le déclenchement (2e page vue + engagement + bandeau cookies résolu)
-     vit dans assets/promo-popup.js. Ne JAMAIS afficher sur la page d'atterrissage :
-     70,8 % du trafic est mobile et 100 % du CA vient du référencement organique.
+  ⛔ Garde-fou SEO : ce n'est PAS le moment de l'affichage qui compte, c'est l'OBSTRUCTION.
+     La doc Google distingue « interstitials » (voile sur toute la page, à éviter) et
+     « dialogs » (recouvrement partiel, toléré) et recommande les bannières occupant une
+     petite fraction de l'écran. L'encart est de ce second type : il peut donc s'afficher dès
+     la page d'atterrissage. Ce qui est interdit, c'est de le faire grossir ou de le voiler.
+     ⛔ JAMAIS de voile / backdrop-filter : cf. OVERLAY_ENABLED dans assets/promo-popup.js.
+     Le déclenchement vit dans ce même fichier (délai + signal d'engagement sur la 1re page).
 
   ⛔ v1 = marché France / EUR uniquement (montant fixe en € + double opt-in allemand).
 {%- endcomment -%}
@@ -82,7 +86,7 @@
       à minuit UTC, ce qui décalait la validité de la pastille d'une à deux heures.
     {%- endcomment -%}
     data-until-ts="{{ end_ts }}"
-    data-delay="{{ settings.promo_popup_delay | default: 15 }}"
+    data-delay="{{ settings.promo_popup_delay | default: 10 }}"
     data-min-pages="{{ settings.promo_popup_pages | default: 2 }}"
     data-product-url="{{ product.url | default: routes.root_url }}"
     data-cart-count="{{ cart.item_count }}">

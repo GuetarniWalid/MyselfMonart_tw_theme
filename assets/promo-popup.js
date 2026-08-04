@@ -31,6 +31,20 @@
   const CODE_KEY = 'mma_promo_until'; // localStorage — horodatage ms de fin de validité
   const SEEN_TTL = 30 * 24 * 60 * 60 * 1000; // 30 jours
   const TIMEOUT = 8000;
+
+  /* ⛔ VOILE / FLOU D'ARRIÈRE-PLAN : INTERDIT, et ce drapeau existe pour que ça le reste.
+     La doc Google distingue explicitement « interstitials » (recouvrement de TOUTE la page,
+     à éviter) et « dialogs » (recouvrement partiel, toléré) — et son erreur n°1 est
+     « Don't obscure the entire page with interstitials ». Un voile fait donc franchir la
+     ligne. Aucune source ne mesure le moindre gain de conversion à format et timing
+     constants, et `backdrop-filter` sur un élément `position: fixed` provoque un jank de
+     scroll documenté sur iOS Safari — 70,8 % du trafic est mobile.
+     Le voile n'est d'ailleurs pas un effet visuel : c'est l'affordance de la MODALITÉ. Il
+     imposerait aria-modal, piège de focus, `inert` sur l'extérieur et verrou de scroll. Un
+     contrat à moitié tenu serait pire que pas de voile du tout.
+     Si quelqu'un l'active un jour, la garde de open() rend mécaniquement impossible le
+     cumul « voile + page d'atterrissage » — la configuration exacte que Google sanctionne. */
+  const OVERLAY_ENABLED = false;
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
   const readInt = (store, key) => {
@@ -102,7 +116,11 @@
         return;
       }
 
-      if (this.eligible()) this.startTimer();
+      if (this.eligible()) {
+        this.signal = false;
+        this.watchEngagement();
+        this.startTimer();
+      }
     }
 
     /* ---------- hygiène du stockage local ---------- */
@@ -140,12 +158,24 @@
       return until > 0 && Date.now() < until;
     }
 
+    /* Le nombre de pages vues ne BLOQUE plus : il module l'exigence d'engagement.
+       Google ne condamne pas le MOMENT de l'affichage, il condamne l'OBSTRUCTION — sa doc
+       distingue explicitement « interstitials » (voile sur toute la page, à éviter) et
+       « dialogs » (recouvrement partiel, toléré), et recommande justement les bannières
+       occupant une petite fraction de l'écran. Notre encart est de ce second type.
+       À l'inverse, exiger une 2e page vue éteignait l'encart pour la majorité des sessions :
+       70,8 % du trafic est mobile et arrive en direct depuis la recherche, sur la fiche. */
     eligible() {
       if (this.cartCount > 0) return false; // on ne dérange pas quelqu'un qui achète déjà
-      if (readInt(sessionStorage, PV_KEY) < this.minPages) return false; // ⛔ jamais à l'atterrissage
       const seen = readInt(localStorage, SEEN_KEY);
       if (seen && Date.now() - seen < SEEN_TTL) return false;
       return true;
+    }
+
+    /* Sur la page d'ATTERRISSAGE, le délai seul ne suffit pas : il faut un signe d'intérêt
+       réel. Ailleurs dans la session, la navigation est déjà ce signe. */
+    needsEngagementSignal() {
+      return readInt(sessionStorage, PV_KEY) < this.minPages;
     }
 
     cookieBannerVisible() {
@@ -172,18 +202,42 @@
         }
 
         this.engaged += 1000;
-        if (this.engaged >= this.delay) {
-          clearInterval(this.timer);
-          this.open();
-        }
+        if (this.engaged < this.delay) return;
+        if (this.needsEngagementSignal() && !this.signal) return; // page d'atterrissage : on attend un geste
+        clearInterval(this.timer);
+        this.open();
       };
       this.timer = setInterval(tick, 1000);
+    }
+
+    /* Signaux d'intérêt réel sur la fiche. Le premier suffit, puis on se débranche.
+       `passive` et `once` : aucun coût sur le scroll, aucune fuite d'écouteur. */
+    watchEngagement() {
+      if (!this.needsEngagementSignal()) {
+        this.signal = true;
+        return;
+      }
+      const fire = () => {
+        this.signal = true;
+        window.removeEventListener('scroll', onScroll);
+      };
+      const onScroll = () => {
+        // avoir dépassé la hauteur d'un écran = être passé sous le bloc prix
+        if (window.scrollY >= window.innerHeight * 0.6) fire();
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      // choix d'un format, d'un cadre, d'un contour, ouverture de la galerie…
+      document.addEventListener('change', fire, { once: true, passive: true });
     }
 
     /* ---------- ouverture / fermeture ---------- */
 
     open() {
       if (this.isOpen) return;
+      /* Garde structurelle : un voile sur la page d'atterrissage reconstitue mot pour mot
+         le cas sanctionné (pop-up couvrant le contenu à l'arrivée depuis la recherche,
+         sur mobile). Interdit par le code, pas par une convention. */
+      if (OVERLAY_ENABLED && this.needsEngagementSignal()) return;
       this.isOpen = true;
       this.opener = document.activeElement;
       this.classList.remove('hidden');
