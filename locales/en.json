@@ -654,6 +654,8 @@
       "submit": "Get my voucher",
       "submitting": "Sending…",
       "success_title": "Here is your voucher",
+      "months": "January,February,March,April,May,June,July,August,September,October,November,December",
+      "date_pattern": "{{ day }} {{ month }} {{ year }}",
       "failed_title": "Your sign-up didn’t go through",
       "subscribe_failed": "We couldn’t save your address. Your voucher below is still valid — try again, or write to us and we’ll add you manually.",
       "mail_fallback": "Email us to be added",

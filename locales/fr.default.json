@@ -656,6 +656,8 @@
       "submit": "Recevoir mon bon",
       "submitting": "Envoi…",
       "success_title": "Voici votre bon",
+      "months": "janvier,février,mars,avril,mai,juin,juillet,août,septembre,octobre,novembre,décembre",
+      "date_pattern": "{{ day }} {{ month }} {{ year }}",
       "failed_title": "Votre inscription n’a pas abouti",
       "subscribe_failed": "Nous n’avons pas pu enregistrer votre adresse. Votre bon reste valable ci-dessous — réessayez, ou écrivez-nous et nous vous inscrivons à la main.",
       "mail_fallback": "Nous écrire pour être inscrit",

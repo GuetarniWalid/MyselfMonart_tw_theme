@@ -423,6 +423,8 @@
       "submit": "Recibir mi vale",
       "submitting": "Enviando…",
       "success_title": "Aquí tiene su vale",
+      "months": "enero,febrero,marzo,abril,mayo,junio,julio,agosto,septiembre,octubre,noviembre,diciembre",
+      "date_pattern": "{{ day }} de {{ month }} de {{ year }}",
       "failed_title": "Tu suscripción no se ha completado",
       "subscribe_failed": "No hemos podido guardar tu dirección. Tu vale sigue siendo válido abajo: inténtalo de nuevo o escríbenos y te damos de alta manualmente.",
       "mail_fallback": "Escríbenos para darte de alta",

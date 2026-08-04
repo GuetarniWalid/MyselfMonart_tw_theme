@@ -20,7 +20,11 @@
      mobile reste une bannière occupant une fraction de l'écran — le format que Google
      recommande explicitement comme alternative.
 
-  ⛔ v1 = marché France / EUR uniquement (montant fixe en € + double opt-in allemand).
+  ⛔ ZONE EURO uniquement — le bon est un montant FIXE en euros. Les 5 langues publiées sont
+     servies (fr, en, de, es, nl) ; c'est la monnaie qui décide, pas la langue.
+  ⚠️ ALLEMAGNE : le consentement est ici un opt-in SIMPLE. Le droit allemand attend un double
+     opt-in. Le réglage Shopify « confirmation d'inscription » (à activer côté admin, pas ici)
+     est ce qui met la boutique en conformité — il vaut alors pour toutes les langues.
 {%- endcomment -%}
 
 {%- liquid
@@ -38,10 +42,19 @@
   assign end_ts = shop.metafields.promo.ends_ts.value | default: 0 | plus: 0
 
   comment
-    %d et non %-d : le modificateur « sans zéro initial » est une extension strftime que ce
-    thème n'utilise nulle part et que je n'ai pas pu vérifier sur Shopify.
+    ⛔ NE JAMAIS utiliser %B ici. Le filtre date de Shopify rend les noms de mois en ANGLAIS
+    tant que le fichier de locale ne définit pas date_formats — ce thème n'en a aucun. La fiche
+    française affichait donc « 16 August 2026 ». On compose la date à partir de nos propres
+    traductions : c'est la seule façon d'être juste dans les 5 langues.
+    %d et non %-d (extension strftime non vérifiée sur Shopify) ; le « plus: 0 » qui suit
+    convertit en entier et supprime du même coup le zéro initial.
   endcomment
-  assign promo_deadline = promo_iso | date: '%d %B %Y'
+  assign month_names = 'sections.promo_popup.months' | t | split: ','
+  assign month_index = promo_iso | date: '%m' | plus: 0 | minus: 1
+  assign month_name = month_names[month_index] | strip
+  assign day_number = promo_iso | date: '%d' | plus: 0
+  assign year_number = promo_iso | date: '%Y'
+  assign promo_deadline = 'sections.promo_popup.date_pattern' | t: day: day_number, month: month_name, year: year_number
   assign is_eur = false
   if localization.country.currency.iso_code == 'EUR'
     assign is_eur = true
@@ -58,7 +71,13 @@
   endif
 -%}
 
-{%- if promo_code != blank and end_ts > 0 and promo_live and is_eur and request.locale.iso_code == 'fr' -%}
+{%- comment -%}
+  Le verrou porte sur la MONNAIE, pas sur la langue : le bon est un montant fixe en euros,
+  il n'a aucun sens pour un visiteur facturé en dollars canadiens ou américains. En revanche
+  un visiteur néerlandais, allemand, espagnol ou anglophone payant en euros doit le voir —
+  dans SA langue. Les 5 locales publiées sont traduites (33 clés chacune).
+{%- endcomment -%}
+{%- if promo_code != blank and end_ts > 0 and promo_live and is_eur -%}
   <promo-popup
     class="hidden"
     data-promo-popup

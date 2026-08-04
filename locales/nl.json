@@ -422,6 +422,8 @@
       "submit": "Mijn bon ontvangen",
       "submitting": "Verzenden…",
       "success_title": "Hier is uw bon",
+      "months": "januari,februari,maart,april,mei,juni,juli,augustus,september,oktober,november,december",
+      "date_pattern": "{{ day }} {{ month }} {{ year }}",
       "failed_title": "Je aanmelding is niet gelukt",
       "subscribe_failed": "We konden je adres niet opslaan. Je tegoedbon hieronder blijft geldig — probeer het opnieuw, of stuur ons een bericht en we voegen je handmatig toe.",
       "mail_fallback": "Mail ons om je aan te melden",

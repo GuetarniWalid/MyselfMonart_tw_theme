@@ -423,6 +423,8 @@
       "submit": "Gutschein erhalten",
       "submitting": "Senden…",
       "success_title": "Hier ist Ihr Gutschein",
+      "months": "Januar,Februar,März,April,Mai,Juni,Juli,August,September,Oktober,November,Dezember",
+      "date_pattern": "{{ day }}. {{ month }} {{ year }}",
       "failed_title": "Ihre Anmeldung war nicht erfolgreich",
       "subscribe_failed": "Wir konnten Ihre Adresse nicht speichern. Ihr Gutschein unten bleibt gültig – versuchen Sie es erneut oder schreiben Sie uns, wir tragen Sie manuell ein.",
       "mail_fallback": "Schreiben Sie uns für die Anmeldung",
