@@ -327,7 +327,10 @@
        La vente est primaire, l'abonnement est secondaire — un échec réseau ne doit
        jamais priver le client de son bon. */
     grantCode(state) {
-      const until = Date.parse(this.dataset.until || '') || Date.now() + SEEN_TTL;
+      /* Epoch en secondes fourni par le Liquid (data-until-ts), pas une chaîne à parser :
+         Date.parse() sur une date nue l'interprète à minuit UTC et décalait la validité. */
+      const untilSec = parseInt(this.dataset.untilTs, 10) || 0;
+      const until = untilSec > 0 ? untilSec * 1000 : Date.now() + SEEN_TTL;
       write(localStorage, CODE_KEY, until);
       write(localStorage, SEEN_KEY, Date.now());
 

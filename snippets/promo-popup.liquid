@@ -22,14 +22,45 @@
     Le libellé affiché en est dérivé (mois localisé par la locale de la boutique),
     et le JS reçoit la même date pour dater la validité de la pastille.
   endcomment
-  assign promo_code = settings.promo_popup_code | strip
-  assign promo_end = settings.promo_popup_end | strip
+  comment
+    SOURCE DE VÉRITÉ = les métachamps de boutique, pilotés par le cron du back-end
+    (growth/BACKEND-PROMPT-rotation-code-promo.md). Le back-end n'écrit JAMAIS dans le thème :
+    metafieldsSet est atomique et n'entre pas en course avec le déploiement GitHub Actions.
+
+    Trois champs, chacun pour UN seul usage — c'est ce qui supprime toute ambiguïté de fuseau :
+      promo.code      texte    le code, ex. « MERCI-K7QX »
+      promo.ends_at   texte    ISO 8601 AVEC décalage, ex. « 2026-09-30T23:59:59+02:00 » (affichage)
+      promo.ends_ts   entier   le MÊME instant en secondes epoch (comparaison)
+
+    Repli sur les réglages du thème si les métachamps sont vides : la boutique reste pilotable
+    à la main si le back-end n'est pas encore branché ou s'il est arrêté.
+  endcomment
+  assign promo_code = shop.metafields.promo.code.value | default: '' | strip
+  assign promo_iso = shop.metafields.promo.ends_at.value | default: '' | strip
+  assign end_ts = shop.metafields.promo.ends_ts.value | default: 0 | plus: 0
+
+  if promo_code == blank
+    assign promo_code = settings.promo_popup_code | strip
+  endif
+  if end_ts == 0
+    comment
+      Repli : le réglage ne porte qu'une date nue (« 2026-09-30 »), que Liquid interprète à
+      minuit UTC. On ajoute 86399 s pour couvrir la journée entière. Approximation d'une à deux
+      heures selon l'heure d'été — acceptable en repli, exacte via les métachamps.
+    endcomment
+    assign fallback_end = settings.promo_popup_end | strip
+    if fallback_end != blank
+      assign promo_iso = fallback_end
+      assign end_ts = fallback_end | date: '%s' | plus: 86399
+    endif
+  endif
+
   comment
     %d et non %-d : le modificateur « sans zéro initial » est une extension strftime que ce
     thème n'utilise nulle part et que je n'ai pas pu vérifier sur Shopify. %d est standard.
     Seule conséquence : « 05 octobre » au lieu de « 5 octobre » pour les jours 1 à 9.
   endcomment
-  assign promo_deadline = promo_end | date: '%d %B %Y'
+  assign promo_deadline = promo_iso | date: '%d %B %Y'
   assign is_eur = false
   if localization.country.currency.iso_code == 'EUR'
     assign is_eur = true
@@ -38,29 +69,28 @@
   comment
     ⛔ AUTO-EXTINCTION. Sans ce garde-fou, l'encart continuerait d'annoncer « Valable jusqu'au
     30 septembre » le 5 octobre, avec un code que Shopify refuse déjà au panier : promesse
-    intenable (art. L.121-2) et parcours cassé. La date de fin étant portée par la remise
-    Shopify, l'encart doit s'éteindre EXACTEMENT en même temps qu'elle.
-    Comparaison en secondes epoch ; +86399 pour couvrir la journée entière jusqu'à 23:59:59,
-    cohérent avec le data-until transmis au JS.
-  endcomment
-  comment
-    `| plus: N` et non `| times:` : c'est le motif déjà éprouvé dans ce thème
-    (sections/main-product.liquid:726) pour forcer la coercition numérique du '%s'.
+    intenable (art. L.121-2) et parcours cassé. L'encart s'éteint EXACTEMENT en même temps que
+    la remise, et c'est aussi le filet de sécurité si le cron du back-end tombe en panne :
+    l'offre disparaît, elle ne ment jamais.
+    `| plus: 0` force la coercition numérique — motif déjà éprouvé ici (main-product.liquid:726).
   endcomment
   assign now_ts = 'now' | date: '%s' | plus: 0
-  assign end_ts = promo_end | date: '%s' | plus: 86399
   assign promo_live = false
   if end_ts > now_ts
     assign promo_live = true
   endif
 -%}
 
-{%- if promo_code != blank and promo_end != blank and promo_live and is_eur and request.locale.iso_code == 'fr' -%}
+{%- if promo_code != blank and end_ts > 0 and promo_live and is_eur and request.locale.iso_code == 'fr' -%}
   <promo-popup
     class="hidden"
     data-promo-popup
     data-code="{{ promo_code | escape }}"
-    data-until="{{ promo_end | date: '%Y-%m-%dT23:59:59' }}"
+    {%- comment -%}
+      Epoch en SECONDES et non une chaîne à parser : Date.parse() sur une date nue l'interprète
+      à minuit UTC, ce qui décalait la validité de la pastille d'une à deux heures.
+    {%- endcomment -%}
+    data-until-ts="{{ end_ts }}"
     data-delay="{{ settings.promo_popup_delay | default: 15 }}"
     data-min-pages="{{ settings.promo_popup_pages | default: 2 }}"
     data-product-url="{{ product.url | default: routes.root_url }}"
