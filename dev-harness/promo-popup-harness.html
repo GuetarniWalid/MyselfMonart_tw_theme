@@ -76,6 +76,8 @@
       <div data-promo-screen="1" class="flex flex-col min-h-0">
         
         <form action="/contact" method="post" class="flex flex-col min-h-0">
+          
+          
           <input type="hidden" name="contact[tags]" value="promo-popup">
 
           
@@ -219,14 +221,20 @@
       </div>
 
       
-      <div data-promo-screen="2" class="hidden flex-col min-h-0">
+      <div
+        data-promo-screen="2"
+        
+        class="hidden flex-col min-h-0">
         <div
           class="flex-none bg-brand-500 bg-cover bg-center bg-blend-multiply px-5 pt-[18px] pb-5 pr-14"
           style="background-image:url('../assets/fond-mur-beige-clair-texture.webp')">
+          
           <h2
             id="PromoPopupTitle2"
             tabindex="-1"
             data-promo-title
+            data-success-title="Voici votre bon"
+            data-failed-title="Votre inscription n’a pas abouti"
             class="m-0 font-heading font-bold text-[17px] md:text-[21px] leading-[1.15] outline-none focus:outline-none">
             Voici votre bon
           </h2>
@@ -246,6 +254,7 @@
             data-promo-status
             data-allow-empty
             data-network="Nous n’avons pas pu enregistrer votre e-mail. Votre bon reste valable."
+            data-failed="Nous n’avons pas pu enregistrer votre adresse. Votre bon reste valable ci-dessous — réessayez, ou écrivez-nous et nous vous inscrivons à la main."
             data-already="Vous êtes déjà inscrit : voici votre bon."
             class="hidden mt-2.5 mb-0 text-sm leading-[1.35] font-medium"></p>
         </div>
@@ -269,13 +278,20 @@
             class="w-full min-h-[52px] px-4 flex items-center justify-center bg-main text-secondary border-0 rounded-xl font-heading font-bold text-lg no-underline hover:bg-brand-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2 transition-colors duration-500">
             Appliquer ma remise
           </a>
-          <div class="flex items-center justify-center min-h-[44px]">
+          <div class="flex items-center justify-center gap-4 min-h-[44px]">
             <button
               type="button"
               data-promo-retry
               class="hidden bg-transparent border-0 px-3 py-2.5 text-[15px] text-main-80 underline hover:text-main focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main transition-colors duration-500">
               Réessayer
             </button>
+            
+            <a
+              data-promo-mailto
+              href="mailto:team@myselfmonart.com?subject=Inscription au bon de 15 €"
+              class="hidden bg-transparent px-3 py-2.5 text-[15px] text-main-80 underline hover:text-main focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main transition-colors duration-500">
+              Nous écrire pour être inscrit
+            </a>
           </div>
         </div>
       </div>

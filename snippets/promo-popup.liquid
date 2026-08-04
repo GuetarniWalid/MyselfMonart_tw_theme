@@ -106,6 +106,15 @@
           non stylée, ni aria-live ni aria-invalid).
         {%- endcomment -%}
         {%- form 'customer', id: 'PromoPopupForm', class: 'flex flex-col min-h-0' -%}
+          {%- comment -%}
+            ⛔ VERDICT SERVEUR — la SEULE clé qui ouvre l'écran du code.
+            form.posted_successfully? n'est vrai que lorsque Shopify vient d'accepter l'envoi et
+            nous a renvoyés sur cette page. Aucun signal côté client — délai écoulé, absence
+            d'erreur, chargement d'une iframe — n'a le droit d'y donner accès : c'est exactement
+            ce qui a permis, le 2026-08-04, d'annoncer un bon à des visiteurs jamais inscrits.
+            En l'absence de ce verdict, on considère que c'est un ÉCHEC. Jamais l'inverse.
+          {%- endcomment -%}
+          {%- if form.posted_successfully? -%}{%- assign promo_posted = true -%}{%- endif -%}
           <input type="hidden" name="contact[tags]" value="promo-popup">
 
           {%- comment -%}
@@ -228,9 +237,12 @@
 
           <div class="flex-none flex flex-col gap-1.5 px-5 pt-3.5 pb-4 border-t border-main-10">
             {%- comment -%}
-              type="button" et NON "submit" : un événement submit réveille l'écouteur hCaptcha
-              de Shopify, qui re-soumet le formulaire nativement et détruit l'encart avant
-              l'écran 2. Vérifié en production le 2026-08-04. Le JS écoute le CLIC.
+              type="button" et NON "submit" — mais plus du tout pour la raison d'origine.
+              L'événement submit doit au contraire RESTER authentique : c'est lui, et lui seul,
+              qui fait poser par Shopify le jeton hCaptcha sans lequel POST /contact répond 400
+              « Missing CAPTCHA token » (changement cassant du 28/10/2024). Le type button ne
+              sert qu'à faire passer NOTRE validation — e-mail, consentement — avant lui ; le JS
+              déclenche ensuite un vrai submit par requestSubmit().
 
               Ce commentaire est AU-DESSUS de la balise, jamais entre l'ouverture du bouton et
               son premier attribut : une balise Liquid ouverte avec le tiret de contrôle
@@ -261,14 +273,23 @@
       </div>
 
       {%- comment -%} ═══════════ ÉCRAN 2 — le code ═══════════ {%- endcomment -%}
-      <div data-promo-screen="2" class="hidden flex-col min-h-0">
+      <div
+        data-promo-screen="2"
+        {% if promo_posted %}data-promo-posted="true"{% endif %}
+        class="hidden flex-col min-h-0">
         <div
           class="flex-none bg-brand-500 bg-cover bg-center bg-blend-multiply px-5 pt-[18px] pb-5 pr-14"
           style="background-image:url('{{ 'fond-mur-beige-clair-texture.webp' | asset_url }}')">
+          {%- comment -%}
+            Deux titres pour un même écran : « Voici votre bon » ne doit JAMAIS coiffer un échec
+            d'inscription. Le JS bascule sur data-failed-title quand le verdict serveur manque.
+          {%- endcomment -%}
           <h2
             id="PromoPopupTitle2"
             tabindex="-1"
             data-promo-title
+            data-success-title="{{ 'sections.promo_popup.success_title' | t | escape }}"
+            data-failed-title="{{ 'sections.promo_popup.failed_title' | t | escape }}"
             class="m-0 font-heading font-bold text-[17px] md:text-[21px] leading-[1.15] outline-none focus:outline-none">
             {{ 'sections.promo_popup.success_title' | t }}
           </h2>
@@ -288,6 +309,7 @@
             data-promo-status
             data-allow-empty
             data-network="{{ 'sections.promo_popup.network_error' | t | escape }}"
+            data-failed="{{ 'sections.promo_popup.subscribe_failed' | t | escape }}"
             data-already="{{ 'sections.promo_popup.already_subscribed' | t | escape }}"
             class="hidden mt-2.5 mb-0 text-sm leading-[1.35] font-medium"></p>
         </div>
@@ -312,13 +334,25 @@
             class="w-full min-h-[52px] px-4 flex items-center justify-center bg-main text-secondary border-0 rounded-xl font-heading font-bold text-lg no-underline hover:bg-brand-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2 transition-colors duration-500">
             {{ 'sections.promo_popup.apply' | t }}
           </a>
-          <div class="flex items-center justify-center min-h-[44px]">
+          <div class="flex items-center justify-center gap-4 min-h-[44px]">
             <button
               type="button"
               data-promo-retry
               class="hidden bg-transparent border-0 px-3 py-2.5 text-[15px] text-main-80 underline hover:text-main focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main transition-colors duration-500">
               {{ 'sections.promo_popup.retry' | t }}
             </button>
+            {%- comment -%}
+              Repli humain, visible uniquement sur échec. Ce n'est pas une politesse : c'est le
+              système d'alerte. Chaque panne réelle atterrit dans la boîte team@, gratuitement et
+              sans qu'on ait à surveiller quoi que ce soit. Un seul « Réessayer » avant lui — au
+              delà on ne fait que se rapprocher du blocage 429 par IP de Shopify.
+            {%- endcomment -%}
+            <a
+              data-promo-mailto
+              href="mailto:team@myselfmonart.com?subject={{ 'sections.promo_popup.mail_subject' | t | url_encode }}"
+              class="hidden bg-transparent px-3 py-2.5 text-[15px] text-main-80 underline hover:text-main focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main transition-colors duration-500">
+              {{ 'sections.promo_popup.mail_fallback' | t }}
+            </a>
           </div>
         </div>
       </div>

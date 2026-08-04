@@ -43,7 +43,7 @@ def trad(m):
     concat = re.match(r"'sections\.promo_popup\.([a-z_]+)'\s*\|\s*append:\s*(\d+)\s*\|\s*append:\s*'([a-z_]+)'\s*\|\s*t", expr)
     if concat:
         return T.get(concat.group(1) + concat.group(2) + concat.group(3), "??")
-    simple = re.match(r"'sections\.promo_popup\.([a-z0-9_]+)'\s*\|\s*t(?:\s*:\s*date:\s*\w+)?(?:\s*\|\s*escape)?", expr)
+    simple = re.match(r"'sections\.promo_popup\.([a-z0-9_]+)'\s*\|\s*t(?:\s*:\s*date:\s*\w+)?(?:\s*\|\s*(?:escape|url_encode))?", expr)
     if simple:
         return T.get(simple.group(1), "??").replace("{{ date }}", DEADLINE)
     return ""
@@ -72,6 +72,12 @@ s = s.replace("{% render 'tw-icon-error' %}", ICONE_ERREUR).replace("{% render '
 s = re.sub(r"\{%-\s*form 'customer'[^%]*-%\}",
            '<form action="/contact" method="post" class="flex flex-col min-h-0">', s)
 s = re.sub(r"\{%-\s*endform\s*-%\}", "</form>", s)
+
+# 7bis) le VERDICT SERVEUR (form.posted_successfully?) n'existe pas hors Shopify : le banc
+# simule toujours le cas « pas encore soumis ». Le succès se teste en posant à la main
+# data-promo-posted="true" sur l'écran 2 depuis la console.
+s = re.sub(r"\{%-\s*if form\.posted_successfully\?\s*-%\}.*?\{%-\s*endif\s*-%\}", "", s, flags=re.S)
+s = re.sub(r"\{%\s*if promo_posted\s*%\}.*?\{%\s*endif\s*%\}", "", s, flags=re.S)
 
 # 8) le <script> du thème -> le fichier local
 s = re.sub(r"<script src=\"\{\{[^}]*\}\}\"[^>]*></script>", "", s)

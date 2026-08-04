@@ -33,12 +33,18 @@
 (() => {
   if (window.customElements.get('promo-popup')) return;
 
+  const PENDING_KEY = 'mma_promo_pending'; // sessionStorage — horodatage ms d'un envoi parti
   const PV_KEY = 'mma_pv_count'; // sessionStorage — entier (alimenté par tw-global.js)
   const SEEN_KEY = 'mma_promo_seen_at'; // localStorage — horodatage ms de la dernière fermeture
   const SUB_KEY = 'mma_promo_sub_at'; // localStorage — horodatage ms du dernier envoi réussi
   const CODE_KEY = 'mma_promo_until'; // localStorage — horodatage ms de fin de validité
   const SEEN_TTL = 30 * 24 * 60 * 60 * 1000; // 30 jours
-  const TIMEOUT = 8000;
+  /* Chien de garde : après un requestSubmit(), la page doit partir. Passé ce délai sans être
+     partie, c'est que la soumission a été avalée en silence.
+     ⚠️ Une énigme hCaptcha visible met la page en attente du visiteur, parfois une minute :
+     conclure à l'échec pendant qu'il clique sur des images serait un faux négatif. Le chien de
+     garde se REPROGRAMME donc tant que l'énigme est à l'écran (voir challengeVisible). */
+  const WATCHDOG = 8000;
 
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -76,6 +82,7 @@
       this.consentError = this.querySelector('[data-promo-consent-error]');
       this.submitBtn = this.querySelector('[data-promo-submit]');
       this.retryBtn = this.querySelector('[data-promo-retry]');
+      this.mailtoLink = this.querySelector('[data-promo-mailto]');
       this.copyBtn = this.querySelector('[data-promo-copy]');
       this.statusEl = this.querySelector('[data-promo-status]');
       this.screens = {
@@ -90,6 +97,7 @@
          submit avant notre handler (bulle système, ni aria-live ni aria-invalid). */
       this.form.setAttribute('novalidate', 'novalidate');
 
+
       this.code = this.dataset.code || '';
       this.delay = (parseInt(this.dataset.delay, 10) || 10) * 1000;
       this.minPages = parseInt(this.dataset.minPages, 10) || 2;
@@ -103,6 +111,27 @@
 
       /* Avant toute décision : effacer ce qui a dépassé sa durée annoncée. */
       this.purgeStaleKeys();
+
+      /* ⛔ AU RETOUR DE SHOPIFY — on tranche ici, une seule fois, et le serveur a le dernier mot.
+         `posted` vient du Liquid (form.posted_successfully?) : c'est Shopify qui affirme avoir
+         accepté l'inscription. `pending` est la trace déposée juste avant l'envoi.
+         Revenir avec la trace mais SANS le verdict = ÉCHEC. On ne conclut jamais au succès par
+         défaut — c'est ce défaut-là qui a distribué des codes à des visiteurs jamais inscrits. */
+      const posted = this.screens[2].dataset.promoPosted === 'true';
+      const pending = readInt(sessionStorage, PENDING_KEY) > 0;
+      if (posted || pending) {
+        try {
+          sessionStorage.removeItem(PENDING_KEY);
+        } catch (e) {
+          /* mode privé */
+        }
+        const knownHere = readInt(localStorage, SUB_KEY) > 0;
+        if (posted) write(localStorage, SUB_KEY, Date.now());
+        this.grantCode(posted ? (knownHere ? 'already' : '') : 'failed');
+        this.open();
+        this.cleanUrl();
+        return;
+      }
 
       /* Un code déjà obtenu et encore valide : on ne redemande jamais l'e-mail,
          on se contente de la pastille en ligne dans la fiche. */
@@ -238,6 +267,10 @@
       document.body.classList.add('promo-popup-open');
 
       this.applyModality();
+
+      /* Câbler le captcha dès l'ouverture, jamais au moment de l'envoi : le script Shopify a
+         besoin de charger hCaptcha avant qu'un submit ne survienne, sans quoi il l'avale. */
+      this.armCaptcha();
 
       /* Focaliser le titre de l'écran RÉELLEMENT affiché : rouvert depuis la pastille,
          l'encart est sur l'écran 2 et forcer l'écran 1 ici volerait le focus. */
@@ -376,33 +409,31 @@
       this.onEsc = (e) => {
         if (e.key === 'Escape' && this.isOpen && this.state !== 'sending') this.close();
       };
+      /* La page s'en va : la soumission est bien partie, le chien de garde n'a plus lieu d'être. */
+      this.onPageHide = () => clearTimeout(this.watchdog);
 
       this.querySelectorAll('[data-promo-close]').forEach((b) =>
         b.addEventListener('click', () => this.close())
       );
 
-      /* ⛔ ON N'ÉCOUTE PLUS `submit` — le bouton est en type="button" et on écoute son CLIC.
-         Constaté en production le 2026-08-04 : `e.preventDefault()` ne suffisait pas. Shopify
-         attache son propre écouteur `submit` (protection hCaptcha des formulaires client,
-         ce_storefront_forms_captcha_hcaptcha.v1.5.2) qui intercepte l'événement, fait son
-         preventDefault, puis RE-SOUMET le formulaire nativement une fois le captcha résolu.
-         Résultat mesuré : la page naviguait vers
-           ?contact[tags]=promo-popup&form_type=customer#PromoPopupForm
-         l'encart était détruit, et le client — pourtant bien inscrit par notre fetch — ne
-         voyait JAMAIS l'écran 2 ni son code.
-         En ne déclenchant aucun événement `submit`, l'écouteur de Shopify ne se réveille pas :
-         plus de navigation, et le badge « Protégé par hCaptcha » disparaît par la même
-         occasion. Contrepartie assumée : ce formulaire n'est plus couvert par la protection
-         anti-spam de Shopify — il ne demande qu'un e-mail, et le minimum de 80 € protège la
-         remise elle-même. */
+      /* ⛔ L'ÉVÉNEMENT `submit` DOIT RESTER AUTHENTIQUE — ne jamais revenir en arrière.
+         Mesuré en production le 2026-08-04 : POST /contact refuse toute requête ne portant pas
+         le jeton `h-captcha-response`, et ce jeton n'est injecté que par le script Shopify
+         (ce_storefront_forms_captcha_hcaptcha.v1.5.2) accroché à l'événement `submit` du
+         formulaire RÉEL. Un fetch(), ou un formulaire fabriqué en JS, arrive sans jeton et
+         reçoit « invalid parameters » en HTTP 400 — silencieusement, puisque l'écran 2
+         s'affiche de toute façon : le visiteur repartait avec un code et sans inscription.
+         Ce qu'on neutralise, ce n'est donc pas l'événement mais sa DESTINATION : form.target
+         pointe sur une iframe cachée, la réponse y atterrit, la page ne bouge pas.
+         Le bouton reste en type="button" pour que NOTRE validation passe d'abord ; c'est
+         submit() qui appelle ensuite requestSubmit(), lequel produit un vrai événement. */
       if (this.submitBtn) {
         this.submitBtn.addEventListener('click', (e) => {
           e.preventDefault();
           this.submit();
         });
       }
-      /* La touche Entrée dans un champ déclenche une soumission implicite : on l'intercepte
-         AVANT qu'elle ne génère l'événement, sinon on rejoue exactement le bug ci-dessus. */
+      /* Entrée dans le champ = soumission implicite, qui sauterait notre validation. */
       if (this.emailInput) {
         this.emailInput.addEventListener('keydown', (e) => {
           if (e.key !== 'Enter') return;
@@ -410,12 +441,6 @@
           this.submit();
         });
       }
-
-      /* Dernier rempart, volontairement PASSIF : on annule sans rappeler submit(). Un second
-         appel ici doublerait l'envoi quand le clic a déjà fait le travail. Et si Shopify
-         re-soumet malgré tout, ce preventDefault n'y changera rien — d'où les deux gardes
-         ci-dessus, qui empêchent l'événement d'exister plutôt que de tenter de l'annuler. */
-      this.form.addEventListener('submit', (e) => e.preventDefault());
 
       if (this.emailInput) {
         this.emailInput.addEventListener('input', () => this.setError(this.emailError, false));
@@ -427,7 +452,18 @@
         this.copyBtn.addEventListener('click', () => this.copy());
       }
       if (this.retryBtn) {
-        this.retryBtn.addEventListener('click', () => this.submit(true));
+        this.retryBtn.addEventListener('click', () => {
+          this.retried = true;
+          /* ⛔ Après un retour de page, le champ e-mail est VIDE : renvoyer le formulaire tel
+             quel échouerait à coup sûr et ferait passer le visiteur pour fautif. On le ramène
+             sur la saisie. Ne rejouer l'envoi que si l'adresse est encore là. */
+          if (!this.emailInput || !EMAIL_RE.test((this.emailInput.value || '').trim())) {
+            this.show(1);
+            if (this.emailInput) this.emailInput.focus();
+            return;
+          }
+          this.submit(true);
+        });
       }
     }
 
@@ -437,8 +473,17 @@
         this.submitBtn.disabled = on;
         this.submitBtn.textContent = on ? this.submitBtn.dataset.sending || '…' : this.submitLabel;
       }
-      if (this.emailInput) this.emailInput.disabled = on;
-      if (this.consentInput) this.consentInput.disabled = on;
+      /* ⛔ JAMAIS `disabled` sur les champs : la spec HTML exclut les contrôles désactivés du
+         form data set, et l'envoi est désormais NATIF — verrouiller avant la soumission ferait
+         partir un POST sans `contact[email]`. C'est exactement le bug du 2026-08-04, qui était
+         invisible parce que l'écran 2 s'affiche quoi qu'il arrive.
+         `readOnly` verrouille la saisie SANS retirer le champ de l'envoi ; la case à cocher,
+         elle, ne connaît pas readOnly, on la neutralise donc au pointeur uniquement. */
+      if (this.emailInput) this.emailInput.readOnly = on;
+      if (this.consentInput) {
+        this.consentInput.classList.toggle('pointer-events-none', on);
+        this.consentInput.setAttribute('aria-disabled', on ? 'true' : 'false');
+      }
       this.querySelectorAll('[data-promo-close]').forEach((b) => {
         b.disabled = on;
       });
@@ -464,41 +509,76 @@
         this.setError(this.consentError, false);
       }
 
-      /* ⛔ Construire le FormData AVANT setSending : la spec HTML exclut les contrôles
-         `disabled` du form data set. Verrouiller les champs d'abord ferait partir un POST
-         sans `contact[email]` — personne ne serait inscrit, et l'échec serait invisible
-         puisque l'écran 2 s'affiche de toute façon. Bug constaté au banc d'essai. */
-      const payload = new FormData(this.form);
       this.setSending(true);
+      this.armCaptcha();
 
-      /* « Déjà inscrit » : Shopify répond de façon identique pour une adresse connue et une
-         nouvelle, il n'existe AUCUN signal serveur exploitable. On s'appuie sur le seul fait
-         vérifiable localement — un envoi déjà réussi dans ce navigateur. ⛔ Surtout pas
-         SEEN_KEY, qui est écrite à chaque fermeture (y compris sur « Plus tard ») : le
-         message « Vous êtes déjà inscrit » serait alors mensonger. */
-      const knownHere = readInt(localStorage, SUB_KEY) > 0;
+      /* Trace déposée AVANT le départ. Si on revient sur le site sans le verdict du serveur,
+         c'est un échec, et on le dira. sessionStorage : meurt avec l'onglet, ne contient qu'un
+         horodatage, aucune donnée personnelle — cohérent avec la mention de l'art. 82. */
+      write(sessionStorage, PENDING_KEY, Date.now());
 
-      let ok = true;
-      try {
-        const ctrl = new AbortController();
-        const to = setTimeout(() => ctrl.abort(), TIMEOUT);
-        try {
-          const res = await fetch(this.form.action, {
-            method: 'POST',
-            body: payload,
-            signal: ctrl.signal,
-          });
-          ok = res.ok;
-        } finally {
-          clearTimeout(to); // sinon le timer survit au rejet du fetch
+      /* requestSubmit() et NON submit() : seul le premier émet un vrai événement `submit`,
+         donc seul lui réveille le script Shopify qui pose le jeton hCaptcha. */
+      this.form.requestSubmit();
+
+      /* ⛔ CHIEN DE GARDE — le filet contre la panne muette.
+         Après un requestSubmit() la page DOIT partir. Si elle est encore là 8 s plus tard, c'est
+         que la soumission a été avalée : quand le formulaire n'est pas câblé, le bootstrap
+         Shopify fait preventDefault() et RIEN d'autre — aucune requête, aucun code HTTP, aucune
+         trace. On n'en conclut jamais un succès : on affiche l'échec. */
+      const veiller = () => {
+        if (this.challengeVisible()) {
+          this.watchdog = setTimeout(veiller, WATCHDOG); // l'énigme est à l'écran : on patiente
+          return;
         }
-      } catch (e) {
-        ok = false;
-      }
+        try {
+          sessionStorage.removeItem(PENDING_KEY);
+        } catch (e) {
+          /* mode privé */
+        }
+        this.setSending(false);
+        this.grantCode('failed');
+      };
+      clearTimeout(this.watchdog);
+      this.watchdog = setTimeout(veiller, WATCHDOG);
+      window.addEventListener('pagehide', this.onPageHide, { once: true });
+    }
 
-      this.setSending(false);
-      if (ok) write(localStorage, SUB_KEY, Date.now());
-      this.grantCode(ok ? (knownHere ? 'already' : '') : 'network');
+    /* Une énigme hCaptcha réellement affichée : iframe du fournisseur, de taille non nulle.
+       On ne se fie pas à la présence de l'iframe (l'implémentation invisible en pose une de
+       1 px en permanence) mais à sa hauteur rendue. */
+    challengeVisible() {
+      const frames = document.querySelectorAll('iframe[src*="hcaptcha.com"]');
+      for (let i = 0; i < frames.length; i += 1) {
+        if (frames[i].getBoundingClientRect().height > 100) return true;
+      }
+      return false;
+    }
+
+    /* ⛔ Câblage EXPLICITE du captcha, sans quoi rien ne part.
+       Le script Shopify ne s'accroche au formulaire qu'au premier focusin ou change ; si un
+       submit survient avant ce câblage, il fait preventDefault() et s'arrête là. L'envoi
+       disparaît en silence. On arme donc à l'ouverture de l'encart — et pas au chargement de la
+       page, pour ne pas tirer hCaptcha là où l'encart ne s'affiche jamais. */
+    armCaptcha() {
+      if (this.captchaArmed) return;
+      this.captchaArmed = true;
+      try {
+        window.Shopify.captcha.protect(this.form);
+      } catch (e) {
+        /* API absente ou renommée : le focus réel sur le champ e-mail produit le même câblage,
+           c'est la seconde ceinture. */
+      }
+    }
+
+    /* L'URL de retour porte ?customer_posted=true. On l'efface : un rafraîchissement ne doit pas
+       rejouer un succès, et l'URL partagée ou indexée doit rester propre. */
+    cleanUrl() {
+      if (location.search.indexOf('customer_posted') === -1) return;
+      const params = new URLSearchParams(location.search);
+      params.delete('customer_posted');
+      const query = params.toString();
+      history.replaceState(null, '', location.pathname + (query ? '?' + query : ''));
     }
 
     /* Le code vient d'un réglage admin : il est connu côté client et s'affiche TOUJOURS.
@@ -507,22 +587,43 @@
     grantCode(state) {
       /* Epoch en secondes fourni par le Liquid (data-until-ts), pas une chaîne à parser :
          Date.parse() sur une date nue l'interprète à minuit UTC et décalait la validité. */
+      const failed = state === 'failed' || state === 'network';
       const untilSec = parseInt(this.dataset.untilTs, 10) || 0;
       const until = untilSec > 0 ? untilSec * 1000 : Date.now() + SEEN_TTL;
-      write(localStorage, CODE_KEY, until);
+
+      /* ⛔ Sur échec, on n'écrit PAS CODE_KEY. Cette clé fait apparaître la pastille et empêche
+         l'encart de redemander l'e-mail : la poser ici condamnerait un visiteur dont
+         l'inscription a échoué à ne plus jamais pouvoir s'inscrire. Le code, lui, reste affiché
+         — il est valide indépendamment, et le retirer punirait le client d'une panne qui n'est
+         pas la sienne. Ce qu'on cesse d'affirmer, c'est « vous êtes inscrit ». */
+      if (!failed) write(localStorage, CODE_KEY, until);
       write(localStorage, SEEN_KEY, Date.now());
 
+      /* Le titre suit le verdict : « Voici votre bon » ne doit jamais coiffer un échec. */
+      const title = this.screens[2].querySelector('[data-promo-title]');
+      if (title && title.dataset.successTitle) {
+        title.textContent = failed
+          ? title.dataset.failedTitle || title.dataset.successTitle
+          : title.dataset.successTitle;
+      }
+
       if (this.statusEl) {
+        const data = this.statusEl.dataset;
         const msg =
-          state === 'network'
-            ? this.statusEl.dataset.network
-            : state === 'already'
-              ? this.statusEl.dataset.already
-              : '';
+          state === 'failed'
+            ? data.failed || data.network
+            : state === 'network'
+              ? data.network
+              : state === 'already'
+                ? data.already
+                : '';
         this.statusEl.textContent = msg || '';
         this.statusEl.classList.toggle('hidden', !msg);
       }
-      if (this.retryBtn) this.retryBtn.classList.toggle('hidden', state !== 'network');
+      /* Un seul « Réessayer » : au-delà on ne fait que se rapprocher du blocage 429 par IP de
+         Shopify, qui aggraverait la panne au lieu de la réparer. Ensuite, le repli humain. */
+      if (this.retryBtn) this.retryBtn.classList.toggle('hidden', !failed || this.retried);
+      if (this.mailtoLink) this.mailtoLink.classList.toggle('hidden', !failed || !this.retried);
 
       this.show(2);
     }
