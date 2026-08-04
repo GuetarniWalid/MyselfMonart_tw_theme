@@ -32,28 +32,19 @@
       promo.ends_at   texte    ISO 8601 AVEC décalage, ex. « 2026-09-30T23:59:59+02:00 » (affichage)
       promo.ends_ts   entier   le MÊME instant en secondes epoch (comparaison)
 
-    Repli sur les réglages du thème si les métachamps sont vides : la boutique reste pilotable
-    à la main si le back-end n'est pas encore branché ou s'il est arrêté.
+    ⛔ AUCUN REPLI sur des réglages de thème, volontairement. Un repli ne pourrait se
+    déclencher que si les métachamps sont vides — c'est-à-dire précisément le cas où l'on
+    VEUT que l'encart s'éteigne. Il n'apporterait donc rien, mais il ferait afficher un code
+    figé que le checkout refuserait : le seul scénario que le cahier des charges interdit.
+    (Un réglage `promo_popup_code` valait « MERCI-K7QX », le code d'exemple du brief, qui
+    n'a jamais existé dans Réductions — vérifié le 2026-08-04. Piège désamorcé.)
+
+    Pilotage manuel : par les métachamps eux-mêmes (leurs définitions existent, ils sont
+    éditables dans l'admin). Coupure d'urgence : le réglage `enable_promo_popup`.
   endcomment
   assign promo_code = shop.metafields.promo.code.value | default: '' | strip
   assign promo_iso = shop.metafields.promo.ends_at.value | default: '' | strip
   assign end_ts = shop.metafields.promo.ends_ts.value | default: 0 | plus: 0
-
-  if promo_code == blank
-    assign promo_code = settings.promo_popup_code | strip
-  endif
-  if end_ts == 0
-    comment
-      Repli : le réglage ne porte qu'une date nue (« 2026-09-30 »), que Liquid interprète à
-      minuit UTC. On ajoute 86399 s pour couvrir la journée entière. Approximation d'une à deux
-      heures selon l'heure d'été — acceptable en repli, exacte via les métachamps.
-    endcomment
-    assign fallback_end = settings.promo_popup_end | strip
-    if fallback_end != blank
-      assign promo_iso = fallback_end
-      assign end_ts = fallback_end | date: '%s' | plus: 86399
-    endif
-  endif
 
   comment
     %d et non %-d : le modificateur « sans zéro initial » est une extension strftime que ce

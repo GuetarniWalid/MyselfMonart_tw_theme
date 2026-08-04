@@ -233,14 +233,6 @@
         "enable_promo_popup": {
           "label": "Enable promo card"
         },
-        "promo_popup_code": {
-          "label": "Discount code",
-          "info": "Hard to guess. Must exist in Discounts, with a minimum purchase and all “Combinations” UNCHECKED."
-        },
-        "promo_popup_end": {
-          "label": "Valid until (YYYY-MM-DD)",
-          "info": "Must match the code’s real end date in Shopify."
-        },
         "promo_popup_delay": {
           "label": "Engagement delay (seconds)"
         },

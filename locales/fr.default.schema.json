@@ -233,14 +233,6 @@
         "enable_promo_popup": {
           "label": "Activer l’encart promo"
         },
-        "promo_popup_code": {
-          "label": "Code de réduction",
-          "info": "Non devinable. Doit exister dans Réductions, avec minimum d’achat et « Combinaisons » TOUT DÉCOCHÉ."
-        },
-        "promo_popup_end": {
-          "label": "Fin de validité (AAAA-MM-JJ)",
-          "info": "Doit correspondre à la date de fin réelle du code dans Shopify."
-        },
         "promo_popup_delay": {
           "label": "Délai d’engagement (secondes)"
         },

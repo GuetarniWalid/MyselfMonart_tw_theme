@@ -17,20 +17,6 @@
         "default": false
       },
       {
-        "type": "text",
-        "id": "promo_popup_code",
-        "label": "t:settings_schema.promo_popup.settings.promo_popup_code.label",
-        "info": "t:settings_schema.promo_popup.settings.promo_popup_code.info",
-        "default": "MERCI-K7QX"
-      },
-      {
-        "type": "text",
-        "id": "promo_popup_end",
-        "label": "t:settings_schema.promo_popup.settings.promo_popup_end.label",
-        "info": "t:settings_schema.promo_popup.settings.promo_popup_end.info",
-        "default": "2026-09-30"
-      },
-      {
         "type": "range",
         "id": "promo_popup_delay",
         "label": "t:settings_schema.promo_popup.settings.promo_popup_delay.label",
