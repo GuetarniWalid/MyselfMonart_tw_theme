@@ -60,6 +60,11 @@ module.exports = {
         main: {
           DEFAULT: 'rgb(var(--color-main-rgb))',
           90: 'rgba(var(--color-main-rgb), 0.9)',
+          // 40 : voile desktop de l'encart promo. ⛔ Ne PAS écrire bg-main/40 : la syntaxe à
+          // barre oblique de Tailwind produit rgb(var(--x)/.4), or la variable du thème est en
+          // VIRGULES (« 33, 21, 12 ») — le mélange est invalide et le navigateur jette la
+          // déclaration (vérifié : couleur calculée rgba(0,0,0,0)). Il faut une nuance déclarée.
+          40: 'rgba(var(--color-main-rgb), 0.4)',
           80: 'rgba(var(--color-main-rgb), 0.8)',
           75: 'rgba(var(--color-main-rgb), 0.75)',
           70: 'rgba(var(--color-main-rgb), 0.7)',

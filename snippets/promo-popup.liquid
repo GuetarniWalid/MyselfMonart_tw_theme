@@ -1,50 +1,37 @@
 {%- comment -%}
   Popup promo « bon de 15 € » — fiche produit uniquement.
 
-  Brief : growth/POPUP-BRIEF-CLAUDE-DESIGN.md · Design : Claude Design (projet 09aa6a11).
+  Brief : growth/POPUP-BRIEF-CLAUDE-DESIGN.md · Design : Claude Design (projet 09aa6a11, v2).
 
   Rendu depuis layout/product.liquid, juste avant le bloc enable_cookie.
 
-  ⛔ Encart NON MODAL : role="dialog" + aria-labelledby, mais PAS aria-modal et PAS de
-     piège de focus — la page reste utilisable. Focus déplacé sur le titre à l'ouverture,
-     restitué à la fermeture via removeTrapFocus (assets/tw-global.js:86).
+  DEUX FORMES, DEUX CONTRATS D'ACCESSIBILITÉ :
+  · MOBILE — carte basse, AUCUN voile, NON MODALE : role="dialog" + aria-labelledby, mais ni
+    aria-modal ni piège de focus, la page reste utilisable. Elle occupe la place du bouton
+    d'achat flottant et le masque le temps de l'ouverture (input.css) — on ne superpose pas
+    deux CTA sur un écran étroit.
+  · DESKTOP — carte centrée sur un voile : c'est une MODALE de fait. Le JS pose donc
+    aria-modal, le piège de focus et le verrou de scroll (voir promo-popup.js). Un contrat à
+    moitié tenu serait pire que pas de voile du tout.
 
-  ⛔ Garde-fou SEO : ce n'est PAS le moment de l'affichage qui compte, c'est l'OBSTRUCTION.
-     La doc Google distingue « interstitials » (voile sur toute la page, à éviter) et
-     « dialogs » (recouvrement partiel, toléré) et recommande les bannières occupant une
-     petite fraction de l'écran. L'encart est de ce second type : il peut donc s'afficher dès
-     la page d'atterrissage. Ce qui est interdit, c'est de le faire grossir ou de le voiler.
-     ⛔ JAMAIS de voile / backdrop-filter : cf. OVERLAY_ENABLED dans assets/promo-popup.js.
-     Le déclenchement vit dans ce même fichier (délai + signal d'engagement sur la 1re page).
+  ⛔ Garde-fou SEO : ce n'est pas le MOMENT de l'affichage qui compte, c'est l'OBSTRUCTION.
+     La doctrine Google des interstitiels vise l'arrivée depuis la recherche MOBILE ; c'est
+     pourquoi le voile est strictement réservé au desktop (hidden md:block) et que la carte
+     mobile reste une bannière occupant une fraction de l'écran — le format que Google
+     recommande explicitement comme alternative.
 
   ⛔ v1 = marché France / EUR uniquement (montant fixe en € + double opt-in allemand).
 {%- endcomment -%}
 
 {%- liquid
   comment
-    Une seule source de vérité pour l'échéance : la date ISO du réglage admin.
-    Le libellé affiché en est dérivé (mois localisé par la locale de la boutique),
-    et le JS reçoit la même date pour dater la validité de la pastille.
-  endcomment
-  comment
     SOURCE DE VÉRITÉ = les métachamps de boutique, pilotés par le cron du back-end
-    (growth/BACKEND-PROMPT-rotation-code-promo.md). Le back-end n'écrit JAMAIS dans le thème :
-    metafieldsSet est atomique et n'entre pas en course avec le déploiement GitHub Actions.
-
-    Trois champs, chacun pour UN seul usage — c'est ce qui supprime toute ambiguïté de fuseau :
-      promo.code      texte    le code, ex. « MERCI-K7QX »
-      promo.ends_at   texte    ISO 8601 AVEC décalage, ex. « 2026-09-30T23:59:59+02:00 » (affichage)
+    (growth/BACKEND-PROMPT-rotation-code-promo.md). Le back-end n'écrit JAMAIS dans le thème.
+      promo.code      texte    le code, ex. « MERCI-SZGJJ »
+      promo.ends_at   texte    ISO 8601 AVEC décalage (affichage)
       promo.ends_ts   entier   le MÊME instant en secondes epoch (comparaison)
-
-    ⛔ AUCUN REPLI sur des réglages de thème, volontairement. Un repli ne pourrait se
-    déclencher que si les métachamps sont vides — c'est-à-dire précisément le cas où l'on
-    VEUT que l'encart s'éteigne. Il n'apporterait donc rien, mais il ferait afficher un code
-    figé que le checkout refuserait : le seul scénario que le cahier des charges interdit.
-    (Un réglage `promo_popup_code` valait « MERCI-K7QX », le code d'exemple du brief, qui
-    n'a jamais existé dans Réductions — vérifié le 2026-08-04. Piège désamorcé.)
-
-    Pilotage manuel : par les métachamps eux-mêmes (leurs définitions existent, ils sont
-    éditables dans l'admin). Coupure d'urgence : le réglage `enable_promo_popup`.
+    ⛔ Aucun repli sur des réglages de thème : il ne se déclencherait que si les métachamps
+    sont vides, c'est-à-dire précisément quand on VEUT que l'encart s'éteigne.
   endcomment
   assign promo_code = shop.metafields.promo.code.value | default: '' | strip
   assign promo_iso = shop.metafields.promo.ends_at.value | default: '' | strip
@@ -52,8 +39,7 @@
 
   comment
     %d et non %-d : le modificateur « sans zéro initial » est une extension strftime que ce
-    thème n'utilise nulle part et que je n'ai pas pu vérifier sur Shopify. %d est standard.
-    Seule conséquence : « 05 octobre » au lieu de « 5 octobre » pour les jours 1 à 9.
+    thème n'utilise nulle part et que je n'ai pas pu vérifier sur Shopify.
   endcomment
   assign promo_deadline = promo_iso | date: '%d %B %Y'
   assign is_eur = false
@@ -62,12 +48,8 @@
   endif
 
   comment
-    ⛔ AUTO-EXTINCTION. Sans ce garde-fou, l'encart continuerait d'annoncer « Valable jusqu'au
-    30 septembre » le 5 octobre, avec un code que Shopify refuse déjà au panier : promesse
-    intenable (art. L.121-2) et parcours cassé. L'encart s'éteint EXACTEMENT en même temps que
-    la remise, et c'est aussi le filet de sécurité si le cron du back-end tombe en panne :
-    l'offre disparaît, elle ne ment jamais.
-    `| plus: 0` force la coercition numérique — motif déjà éprouvé ici (main-product.liquid:726).
+    ⛔ AUTO-EXTINCTION : l'encart s'éteint exactement en même temps que la remise Shopify.
+    C'est aussi le filet si le cron du back-end tombe : l'offre disparaît, elle ne ment jamais.
   endcomment
   assign now_ts = 'now' | date: '%s' | plus: 0
   assign promo_live = false
@@ -82,143 +64,174 @@
     data-promo-popup
     data-code="{{ promo_code | escape }}"
     {%- comment -%}
-      Epoch en SECONDES et non une chaîne à parser : Date.parse() sur une date nue l'interprète
-      à minuit UTC, ce qui décalait la validité de la pastille d'une à deux heures.
+      Epoch en SECONDES : Date.parse() sur une date nue l'interprète à minuit UTC, ce qui
+      décalait la validité de la pastille d'une à deux heures selon l'heure d'été.
     {%- endcomment -%}
     data-until-ts="{{ end_ts }}"
     data-delay="{{ settings.promo_popup_delay | default: 10 }}"
     data-min-pages="{{ settings.promo_popup_pages | default: 2 }}"
     data-product-url="{{ product.url | default: routes.root_url }}"
     data-cart-count="{{ cart.item_count }}">
+
+    {%- comment -%}
+      Voile DESKTOP uniquement. ⛔ bg-main-40 et NON bg-main/40 : la syntaxe à barre oblique
+      de Tailwind produit rgb(var(--x)/.4), or --color-main-rgb est en VIRGULES — le mélange
+      est invalide et le navigateur jette la déclaration (vérifié : rgba(0,0,0,0)).
+      data-allow-empty : élément vide, sinon masqué par la règle *:empty d'input.css.
+    {%- endcomment -%}
+    <div data-promo-veil data-allow-empty class="hidden md:block fixed inset-0 z-[39] bg-main-40"></div>
+
     <div
       role="dialog"
       aria-labelledby="PromoPopupTitle"
       data-promo-card
-      {%- comment -%}
-        bottom-[var(--promo-bottom)] sur TOUS les breakpoints : l'encart s'empile au-dessus du
-        bouton d'achat flottant au lieu de le masquer (cf. input.css). Le JS calcule la valeur
-        depuis la position réelle du bouton.
-        La hauteur max prend le min entre 62 vh et « ce qui reste réellement au-dessus du
-        bouton » : sans ça, l'encart poussé vers le haut déborderait du viewport sur petit écran.
-        100svh et non 100vh : sur mobile, vh ignore la barre d'adresse rétractable.
-      {%- endcomment -%}
-      class="fixed z-40 bottom-[var(--promo-bottom)] left-3 right-3 md:left-auto md:right-6 md:w-[400px] flex flex-col max-h-[min(62vh,calc(100svh-var(--promo-bottom)-1rem))] md:max-h-[70vh] overflow-hidden bg-secondary border-1 border-main rounded-2xl shadow-3xl text-main">
+      class="fixed z-40 bottom-3 left-3 right-3 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[616px] flex flex-col max-h-[85vh] md:max-h-[92vh] overflow-hidden bg-secondary border-1 border-main rounded-[18px] shadow-3xl text-main">
 
       {%- comment -%} Croix : pleine opacité dès la 1re frame, cible 44x44, jamais retardée {%- endcomment -%}
       <button
         type="button"
         data-promo-close
         aria-label="{{ 'sections.promo_popup.close' | t }}"
-        class="absolute top-3 right-2 z-10 w-11 h-11 flex items-center justify-center bg-transparent border-0 rounded-[10px] text-main hover:bg-main-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main disabled:opacity-35 transition-colors duration-500">
+        class="absolute top-2 right-2 z-10 w-11 h-11 flex items-center justify-center bg-transparent border-0 rounded-full text-main hover:bg-white/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main disabled:opacity-35 transition-colors duration-500">
         <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
           <path d="M1 1 L15 15 M15 1 L1 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none" />
         </svg>
       </button>
 
-      {%- comment -%} ---------- ÉCRAN 1 — l'offre ---------- {%- endcomment -%}
+      {%- comment -%} ═══════════ ÉCRAN 1 — l'offre ═══════════ {%- endcomment -%}
       <div data-promo-screen="1" class="flex flex-col min-h-0">
         {%- comment -%}
-          novalidate est posé par le JS (connectedCallback), PAS ici : le thème ne passe jamais
-          d'attribut libre à {% form %} et je n'ai pas pu le vérifier sur Shopify. Sans novalidate,
-          la validation native intercepte le submit AVANT notre handler — la bulle système
-          s'affiche (langue du navigateur, non stylée) et ni aria-live ni aria-invalid ne sont
-          posés. Bug constaté au banc d'essai.
+          novalidate est posé par le JS : le thème ne passe jamais d'attribut libre à {% form %}.
+          Sans lui, la validation native intercepte le submit avant notre handler (bulle système
+          non stylée, ni aria-live ni aria-invalid).
         {%- endcomment -%}
         {%- form 'customer', id: 'PromoPopupForm', class: 'flex flex-col min-h-0' -%}
           <input type="hidden" name="contact[tags]" value="promo-popup">
 
-          <div class="flex-none pt-4 pb-2.5 pl-[18px] pr-14">
+          {%- comment -%}
+            BANDEAU — le montant traité comme une affiche. L'URL de la texture vient de Liquid,
+            elle ne peut donc pas vivre dans une classe Tailwind : motif déjà employé tel quel
+            dans le thème (snippets/tw-main-product-perspective.liquid:86).
+          {%- endcomment -%}
+          <div
+            class="flex-none bg-brand-500 bg-cover bg-center bg-blend-multiply px-5 pt-[18px] pb-5 pr-14"
+            style="background-image:url('{{ 'fond-mur-beige-clair-texture.webp' | asset_url }}')">
             <h2
               id="PromoPopupTitle"
               tabindex="-1"
               data-promo-title
-              class="m-0 font-heading font-bold text-[21px] leading-[1.15] outline-offset-[3px]">
-              {{ 'sections.promo_popup.title' | t }}
+              class="m-0 flex flex-wrap items-baseline gap-x-2.5 gap-y-0 outline-offset-[3px]">
+              <span class="font-heading font-bold text-[40px] md:text-[78px] leading-[0.95] tracking-[-0.02em] [text-shadow:2px_3px_0_rgba(255,255,255,0.85)]">
+                {{ 'sections.promo_popup.title_amount' | t }}
+              </span>
+              <span class="font-heading font-bold text-[17px] md:text-[21px] leading-[1.15]">
+                {{ 'sections.promo_popup.title_rest' | t }}
+              </span>
             </h2>
-            <p class="mt-1.5 mb-0 text-sm leading-[1.35] text-main-80">
-              {{ 'sections.promo_popup.subtitle' | t }}
-            </p>
           </div>
 
-          <div class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain px-[18px] flex flex-col gap-3.5">
-            <div>
-              <label for="PromoPopupEmail" class="block text-sm font-medium mb-1.5">
-                {{ 'sections.promo_popup.email_label' | t }}
-              </label>
-              <input
-                id="PromoPopupEmail"
-                type="email"
-                name="contact[email]"
-                required
-                autocomplete="email"
-                autocapitalize="off"
-                autocorrect="off"
-                spellcheck="false"
-                placeholder="{{ 'sections.promo_popup.email_placeholder' | t }}"
-                aria-describedby="PromoPopupEmailError"
-                data-promo-email
-                class="w-full box-border h-12 px-3.5 text-base text-main bg-secondary border-1 border-main rounded-[10px] outline-none focus:border-2 focus:px-[13px]">
-              {%- comment -%}
-                Markup pré-rendu : le JS ne fait que basculer la CLASSE `hidden`.
-                ⛔ Ne PAS utiliser l'attribut `hidden` ici : `[hidden]{display:none}` est en couche
-                base (offset 10829 d'output.css) et `.flex{display:flex}` en couche utilities
-                (26742) — à spécificité égale, la plus tardive gagne, donc l'attribut est
-                NEUTRALISÉ sur tout élément portant `flex`. `.hidden` (26865) vient après `.flex`,
-                elle est donc le seul mécanisme fiable. Bug constaté au banc d'essai.
-              {%- endcomment -%}
-              <p
-                id="PromoPopupEmailError"
-                data-promo-email-error
-                aria-live="polite"
-                class="hidden items-start gap-1.5 mt-1.5 mb-0 text-sm leading-[1.35] font-medium text-terra">
-                {% render 'tw-icon-error' %}
-                <span data-promo-error-text>{{ 'sections.promo_popup.error_email' | t }}</span>
-              </p>
-            </div>
+          {%- comment -%}
+            CORPS — deux colonnes sur desktop : conditions à gauche, action à droite. À la
+            longueur de copie livrée la carte ne défile pas ; la zone défilante et son dégradé
+            ne servent que de filet si la copie s'allonge ou si l'utilisateur grossit le texte.
+          {%- endcomment -%}
+          <div class="relative flex-1 min-h-0">
+            <div class="h-full overflow-y-auto overflow-x-hidden overscroll-contain grid md:grid-cols-2 gap-x-[26px] gap-y-4 pl-5 pr-[26px] pt-4 pb-[22px]">
 
-            <div>
-              <div class="flex gap-3 items-start">
-                <input
-                  id="PromoPopupConsent"
-                  type="checkbox"
-                  name="contact[accepts_marketing]"
-                  value="true"
-                  aria-describedby="PromoPopupConsentError"
-                  data-promo-consent
-                  class="flex-none w-[22px] h-[22px] mt-px accent-main cursor-pointer">
-                <label for="PromoPopupConsent" class="text-sm leading-[1.4] cursor-pointer">
-                  {{ 'sections.promo_popup.consent' | t }}
-                </label>
+              <div class="md:[grid-area:1/1/3/2] flex flex-col gap-2">
+                {%- comment -%} ⛔ Conditions substantielles (art. L.121-3) : le seuil, son
+                   assiette (hors livraison), l'unicité, la non-cumulabilité et l'échéance
+                   datée. Réécrites en puces d'une ligne, jamais supprimées. {%- endcomment -%}
+                <ul class="list-none m-0 p-0 flex flex-col gap-2 text-sm leading-[1.4]">
+                  {%- for i in (1..3) -%}
+                    <li class="flex gap-[9px] items-baseline">
+                      <span data-allow-empty class="flex-none w-[5px] h-[5px] mt-[7px] rounded-full bg-terra"></span>
+                      <span>
+                        <strong>{{ 'sections.promo_popup.cond_' | append: i | append: '_lead' | t }}</strong>
+                        {{ 'sections.promo_popup.cond_' | append: i | append: '_rest' | t }}
+                      </span>
+                    </li>
+                  {%- endfor -%}
+                  <li class="flex gap-[9px] items-baseline">
+                    <span data-allow-empty class="flex-none w-[5px] h-[5px] mt-[7px] rounded-full bg-terra"></span>
+                    <span>{{ 'sections.promo_popup.valid_until' | t: date: promo_deadline }}</span>
+                  </li>
+                </ul>
+                {%- comment -%} Information en niveaux : le consentement au 1er plan, le détail
+                   à un clic dans la politique de confidentialité. {%- endcomment -%}
+                <a
+                  href="{{ routes.root_url }}policies/privacy-policy"
+                  class="pl-[14px] text-xs text-main-70 underline hover:text-main transition-colors duration-500">
+                  {{ 'sections.promo_popup.privacy_link' | t }}
+                </a>
               </div>
-              <p
-                id="PromoPopupConsentError"
-                data-promo-consent-error
-                aria-live="polite"
-                class="hidden items-start gap-1.5 mt-1.5 mb-0 text-sm leading-[1.35] font-medium text-terra">
-                {% render 'tw-icon-error' %}
-                <span data-promo-error-text>{{ 'sections.promo_popup.error_consent' | t }}</span>
-              </p>
+
+              <div class="md:[grid-area:1/2/2/3]">
+                <label for="PromoPopupEmail" class="block text-sm font-medium mb-1.5">
+                  {{ 'sections.promo_popup.email_label' | t }}
+                </label>
+                <input
+                  id="PromoPopupEmail"
+                  type="email"
+                  name="contact[email]"
+                  required
+                  autocomplete="email"
+                  autocapitalize="off"
+                  autocorrect="off"
+                  spellcheck="false"
+                  placeholder="{{ 'sections.promo_popup.email_placeholder' | t }}"
+                  aria-describedby="PromoPopupEmailError"
+                  data-promo-email
+                  class="w-full box-border h-12 px-3.5 text-base text-main bg-secondary border-1 border-main rounded-[10px] outline-none focus:border-2 focus:px-[13px]">
+                {%- comment -%}
+                  ⛔ Bascule par la CLASSE `hidden`, jamais par l'attribut : `[hidden]` est en
+                  couche base et perd contre `.flex` (couche utilities) — l'élément resterait
+                  VISIBLE. Bug constaté au banc d'essai.
+                {%- endcomment -%}
+                <p
+                  id="PromoPopupEmailError"
+                  data-promo-email-error
+                  aria-live="polite"
+                  class="hidden items-start gap-1.5 mt-1.5 mb-0 text-sm leading-[1.35] font-medium text-terra">
+                  {% render 'tw-icon-error' %}
+                  <span data-promo-error-text>{{ 'sections.promo_popup.error_email' | t }}</span>
+                </p>
+              </div>
+
+              <div class="md:[grid-area:2/2/3/3]">
+                <div class="flex gap-3 items-start">
+                  <input
+                    id="PromoPopupConsent"
+                    type="checkbox"
+                    name="contact[accepts_marketing]"
+                    value="true"
+                    aria-describedby="PromoPopupConsentError"
+                    data-promo-consent
+                    class="flex-none w-[22px] h-[22px] mt-px accent-main cursor-pointer">
+                  <label for="PromoPopupConsent" class="text-xs leading-[1.4] cursor-pointer">
+                    {{ 'sections.promo_popup.consent' | t }}
+                  </label>
+                </div>
+                <p
+                  id="PromoPopupConsentError"
+                  data-promo-consent-error
+                  aria-live="polite"
+                  class="hidden items-start gap-1.5 mt-1.5 mb-0 text-sm leading-[1.35] font-medium text-terra">
+                  {% render 'tw-icon-error' %}
+                  <span data-promo-error-text>{{ 'sections.promo_popup.error_consent' | t }}</span>
+                </p>
+              </div>
             </div>
-
-            {%- comment -%} ⛔ Conditions substantielles (art. L.121-3) — ne jamais tronquer {%- endcomment -%}
-            <p class="m-0 text-[15px] leading-relaxed">
-              {{ 'sections.promo_popup.offer_html' | t: date: promo_deadline }}
-            </p>
-
-            <p class="m-0 text-[13px] leading-relaxed text-main-80">
-              {{ 'sections.promo_popup.privacy_notice' | t }}
-              <a href="{{ routes.root_url }}policies/privacy-policy" class="text-main underline">
-                {{ 'sections.promo_popup.privacy_link' | t }}
-              </a>
-            </p>
+            {%- comment -%} Dégradé de pied : signale qu'il reste du contenu si la zone défile {%- endcomment -%}
+            <div data-allow-empty aria-hidden="true" class="pointer-events-none absolute inset-x-px bottom-0 h-4 bg-gradient-to-t from-secondary"></div>
           </div>
 
-          <div class="flex-none flex flex-col gap-2 px-[18px] pt-3.5 pb-4 border-t border-main-10">
+          <div class="flex-none flex flex-col gap-1.5 px-5 pt-3.5 pb-4 border-t border-main-10">
             <button
               type="submit"
               data-promo-submit
               data-sending="{{ 'sections.promo_popup.submitting' | t | escape }}"
-              class="w-full min-h-[50px] px-4 bg-main text-secondary border-0 rounded-[10px] font-heading font-bold text-[17px] hover:bg-brand-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2 disabled:opacity-60 transition-colors duration-500">
+              class="w-full min-h-[52px] px-4 bg-main text-secondary border-0 rounded-xl font-heading font-bold text-lg hover:bg-brand-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2 disabled:opacity-60 transition-colors duration-500">
               {{ 'sections.promo_popup.submit' | t }}
             </button>
             <div class="flex items-center justify-center min-h-[44px]">
@@ -233,28 +246,21 @@
         {%- endform -%}
       </div>
 
-      {%- comment -%} ---------- ÉCRAN 2 — le code ---------- {%- endcomment -%}
+      {%- comment -%} ═══════════ ÉCRAN 2 — le code ═══════════ {%- endcomment -%}
       <div data-promo-screen="2" class="hidden flex-col min-h-0">
-        <div class="flex-none pt-4 pb-2.5 pl-[18px] pr-14">
+        <div
+          class="flex-none bg-brand-500 bg-cover bg-center bg-blend-multiply px-5 pt-[18px] pb-5 pr-14"
+          style="background-image:url('{{ 'fond-mur-beige-clair-texture.webp' | asset_url }}')">
           <h2
             id="PromoPopupTitle2"
             tabindex="-1"
             data-promo-title
-            class="m-0 font-heading font-bold text-[21px] leading-[1.15] outline-offset-[3px]">
+            class="m-0 font-heading font-bold text-[17px] md:text-[21px] leading-[1.15] outline-offset-[3px]">
             {{ 'sections.promo_popup.success_title' | t }}
           </h2>
-          <p
-            data-promo-status
-            data-allow-empty
-            data-network="{{ 'sections.promo_popup.network_error' | t | escape }}"
-            data-already="{{ 'sections.promo_popup.already_subscribed' | t | escape }}"
-            class="hidden mt-1.5 mb-0 text-sm leading-[1.35] font-medium"></p>
-        </div>
-
-        <div class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain px-[18px] flex flex-col gap-3.5">
-          <div class="flex items-stretch gap-2.5">
-            <div class="flex-1 flex items-center justify-center border-2 border-dashed border-main bg-brand-50 rounded-xl px-3 py-2.5 min-h-[56px]">
-              <span class="font-heading font-bold text-[25px] tracking-[0.05em] select-all">{{ promo_code }}</span>
+          <div class="mt-2.5 flex items-stretch gap-2.5">
+            <div class="flex-1 flex items-center justify-center bg-secondary border-2 border-dashed border-main rounded-xl px-3 py-2 min-h-[56px]">
+              <span class="font-heading font-bold text-[27px] tracking-wide select-all">{{ promo_code }}</span>
             </div>
             <button
               type="button"
@@ -264,27 +270,32 @@
               {{ 'sections.promo_popup.copy' | t }}
             </button>
           </div>
-
-          <p class="m-0 text-[15px] font-bold leading-[1.4]">
-            {{ 'sections.promo_popup.valid_until' | t: date: promo_deadline }}
-          </p>
-
-          {%- comment -%} Au-delà de 150 € le -10 % automatique reste plus avantageux : on le dit ici,
-             le client ne doit pas le découvrir seul dans le tiroir panier. {%- endcomment -%}
-          <p class="m-0 text-[15px] leading-[1.45]">{{ 'sections.promo_popup.note_150' | t }}</p>
-
-          <p class="m-0 text-[13px] leading-relaxed text-main-80">
-            {{ 'sections.promo_popup.offer_html' | t: date: promo_deadline }}
-          </p>
-
-          <p class="m-0 text-[13px] leading-relaxed text-main-80">{{ 'sections.promo_popup.device_limit' | t }}</p>
+          <p
+            data-promo-status
+            data-allow-empty
+            data-network="{{ 'sections.promo_popup.network_error' | t | escape }}"
+            data-already="{{ 'sections.promo_popup.already_subscribed' | t | escape }}"
+            class="hidden mt-2.5 mb-0 text-sm leading-[1.35] font-medium"></p>
         </div>
 
-        <div class="flex-none flex flex-col gap-2 px-[18px] pt-3.5 pb-4 border-t border-main-10">
+        <div class="relative flex-1 min-h-0">
+          <div class="h-full overflow-y-auto overflow-x-hidden overscroll-contain flex flex-col gap-2.5 pl-5 pr-[26px] pt-4 pb-[22px]">
+            <p class="m-0 text-[15px] font-bold leading-[1.4]">
+              {{ 'sections.promo_popup.valid_until' | t: date: promo_deadline }}
+            </p>
+            {%- comment -%} Au-delà de 150 € le -10 % automatique reste plus avantageux : on le dit
+               ici, le client ne doit pas le découvrir seul dans le tiroir panier. {%- endcomment -%}
+            <p class="m-0 text-sm leading-[1.45]">{{ 'sections.promo_popup.note_150' | t }}</p>
+            <p class="m-0 text-xs leading-relaxed text-main-70">{{ 'sections.promo_popup.device_limit' | t }}</p>
+          </div>
+          <div data-allow-empty aria-hidden="true" class="pointer-events-none absolute inset-x-px bottom-0 h-4 bg-gradient-to-t from-secondary"></div>
+        </div>
+
+        <div class="flex-none flex flex-col gap-1.5 px-5 pt-3.5 pb-4 border-t border-main-10">
           <a
             href="{{ routes.root_url }}discount/{{ promo_code | url_encode }}?redirect={{ product.url | default: routes.root_url }}"
             data-promo-apply
-            class="w-full min-h-[50px] px-4 flex items-center justify-center bg-main text-secondary border-0 rounded-[10px] font-heading font-bold text-[17px] no-underline hover:bg-brand-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2 transition-colors duration-500">
+            class="w-full min-h-[52px] px-4 flex items-center justify-center bg-main text-secondary border-0 rounded-xl font-heading font-bold text-lg no-underline hover:bg-brand-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2 transition-colors duration-500">
             {{ 'sections.promo_popup.apply' | t }}
           </a>
           <div class="flex items-center justify-center min-h-[44px]">

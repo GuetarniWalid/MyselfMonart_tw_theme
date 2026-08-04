@@ -5,12 +5,20 @@
  *
  * ⛔ GARDE-FOU SEO — la règle la plus importante du fichier.
  *    100 % du chiffre d'affaires vient du référencement organique et 70,8 % du trafic est
- *    mobile. Google déclasse les pages dont le contenu est masqué à l'arrivée depuis les
- *    résultats de recherche. L'encart ne s'ouvre donc JAMAIS sur la première page vue
- *    d'une session : il faut au minimum une 2e page ET un engagement réel.
+ *    mobile. Ce que Google sanctionne n'est pas le MOMENT de l'affichage mais l'OBSTRUCTION :
+ *    sa documentation distingue « interstitials » (voile sur toute la page, à éviter) de
+ *    « dialogs » (recouvrement partiel, toléré) et recommande les bannières occupant une
+ *    petite fraction de l'écran. D'où la règle : sur MOBILE, jamais de voile, jamais de
+ *    plein écran — et sur la page d'atterrissage, un signe d'engagement réel est exigé en
+ *    plus du délai (scroll d'un écran, ou choix d'un format/cadre/contour).
+ *    ⚠️ Le délai n'a JAMAIS été une protection SEO : le moteur de rendu de Google accélère
+ *    son horloge quand la page est inactive, un setTimeout est traversé.
  *
- * ⛔ NON MODAL — pas d'aria-modal, pas de piège de focus : la page reste utilisable.
- *    Le focus va sur le titre à l'ouverture et revient à son origine à la fermeture.
+ * ⛔ DEUX CONTRATS D'ACCESSIBILITÉ selon la largeur (voir isModal / applyModality).
+ *    MOBILE : bannière basse sans voile — NON MODALE, ni aria-modal ni piège de focus.
+ *    DESKTOP : carte centrée sur voile — MODALE, donc aria-modal + piège de focus + verrou
+ *    de scroll. Un voile sans ces obligations serait pire que pas de voile du tout.
+ *    Dans les deux cas le focus va sur le titre à l'ouverture et revient à son origine.
  *
  * ⛔ IDEMPOTENCE — assets/tw-global.js est inclus deux fois sur certaines pages et ce
  *    script peut être réévalué après un swap de #MainContent (bascule Poster/Toile).
@@ -32,19 +40,6 @@
   const SEEN_TTL = 30 * 24 * 60 * 60 * 1000; // 30 jours
   const TIMEOUT = 8000;
 
-  /* ⛔ VOILE / FLOU D'ARRIÈRE-PLAN : INTERDIT, et ce drapeau existe pour que ça le reste.
-     La doc Google distingue explicitement « interstitials » (recouvrement de TOUTE la page,
-     à éviter) et « dialogs » (recouvrement partiel, toléré) — et son erreur n°1 est
-     « Don't obscure the entire page with interstitials ». Un voile fait donc franchir la
-     ligne. Aucune source ne mesure le moindre gain de conversion à format et timing
-     constants, et `backdrop-filter` sur un élément `position: fixed` provoque un jank de
-     scroll documenté sur iOS Safari — 70,8 % du trafic est mobile.
-     Le voile n'est d'ailleurs pas un effet visuel : c'est l'affordance de la MODALITÉ. Il
-     imposerait aria-modal, piège de focus, `inert` sur l'extérieur et verrou de scroll. Un
-     contrat à moitié tenu serait pire que pas de voile du tout.
-     Si quelqu'un l'active un jour, la garde de open() rend mécaniquement impossible le
-     cumul « voile + page d'atterrissage » — la configuration exacte que Google sanctionne. */
-  const OVERLAY_ENABLED = false;
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
   const readInt = (store, key) => {
@@ -96,7 +91,7 @@
       this.form.setAttribute('novalidate', 'novalidate');
 
       this.code = this.dataset.code || '';
-      this.delay = (parseInt(this.dataset.delay, 10) || 15) * 1000;
+      this.delay = (parseInt(this.dataset.delay, 10) || 10) * 1000;
       this.minPages = parseInt(this.dataset.minPages, 10) || 2;
       this.cartCount = parseInt(this.dataset.cartCount, 10) || 0;
       this.submitLabel = this.submitBtn ? this.submitBtn.textContent.trim() : '';
@@ -234,18 +229,15 @@
 
     open() {
       if (this.isOpen) return;
-      /* Garde structurelle : un voile sur la page d'atterrissage reconstitue mot pour mot
-         le cas sanctionné (pop-up couvrant le contenu à l'arrivée depuis la recherche,
-         sur mobile). Interdit par le code, pas par une convention. */
-      if (OVERLAY_ENABLED && this.needsEngagementSignal()) return;
       this.isOpen = true;
       this.opener = document.activeElement;
       this.classList.remove('hidden');
-      this.positionCard();
 
       /* Mobile : l'encart PREND LA PLACE du bouton d'achat flottant, il ne le recouvre
          jamais. Même mécanique que le studio (body.studio-cta-floating dans input.css). */
       document.body.classList.add('promo-popup-open');
+
+      this.applyModality();
 
       /* Focaliser le titre de l'écran RÉELLEMENT affiché : rouvert depuis la pastille,
          l'encart est sur l'écran 2 et forcer l'écran 1 ici volerait le focus. */
@@ -260,11 +252,68 @@
          Le setTimeout laisse le clic d'ouverture finir de se propager avant d'écouter. */
       setTimeout(() => document.addEventListener('click', this.onDocClick), 0);
       document.addEventListener('keydown', this.onEsc);
+      /* Un redimensionnement peut faire franchir le point de bascule desktop/mobile :
+         la modalité doit suivre, sinon on garde un piège de focus sans voile, ou l'inverse. */
       window.addEventListener('resize', this.onResize);
-      /* Le bouton d'achat n'apparaît qu'au défilement : sans ce recalcul, l'encart ouvert
-         avant lui resterait au repli de 7rem et le recouvrirait dès qu'il surgit. */
-      window.addEventListener('scroll', this.onReposition, { passive: true });
     }
+
+    /* ⛔ DEUX CONTRATS SELON LA LARGEUR.
+       Desktop : la carte est centrée sur un voile plein écran — c'est une modale de fait,
+       donc aria-modal + piège de focus + verrou de scroll. Un contrat à moitié tenu (un
+       voile sans les obligations) serait pire que pas de voile du tout.
+       Mobile : bannière basse, aucun voile, la page reste utilisable — donc NI aria-modal,
+       NI piège de focus. Le voile est `hidden md:block` : la combinaison « voile + arrivée
+       depuis la recherche mobile », seule réellement sanctionnée par Google, est donc
+       impossible par construction, sans avoir besoin d'un garde-fou en JS. */
+    isModal() {
+      return window.matchMedia('(min-width: 768px)').matches;
+    }
+
+    applyModality() {
+      const modal = this.isModal();
+      if (modal) {
+        this.card.setAttribute('aria-modal', 'true');
+        document.body.classList.add('overflow-hidden');
+        this.scopeFocusables();
+        this.card.addEventListener('keydown', this.onTrap);
+      } else {
+        this.card.removeAttribute('aria-modal');
+        document.body.classList.remove('overflow-hidden');
+        this.card.removeEventListener('keydown', this.onTrap);
+      }
+    }
+
+    releaseModality() {
+      this.card.removeAttribute('aria-modal');
+      document.body.classList.remove('overflow-hidden');
+      this.card.removeEventListener('keydown', this.onTrap);
+    }
+
+    /* Bornes du piège de focus. On filtre sur offsetParent : l'écran masqué contient des
+       champs focalisables qui ne doivent pas entrer dans le cycle. */
+    scopeFocusables() {
+      const sel = 'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])';
+      const list = Array.from(this.card.querySelectorAll(sel)).filter((el) => el.offsetParent !== null);
+      this.firstFocusable = list[0] || null;
+      this.lastFocusable = list[list.length - 1] || null;
+    }
+
+    /* trapFocus (assets/tw-global.js) est un HANDLER keydown, pas un piège clé en main :
+       signature (event, premier, dernier). Repli local s'il venait à disparaître. */
+    onTrap = (e) => {
+      if (e.key !== 'Tab' || !this.firstFocusable) return;
+      if (typeof window.trapFocus === 'function') {
+        window.trapFocus(e, this.firstFocusable, this.lastFocusable);
+        return;
+      }
+      if (e.shiftKey && document.activeElement === this.firstFocusable) {
+        this.lastFocusable.focus();
+        e.preventDefault();
+      } else if (!e.shiftKey && document.activeElement === this.lastFocusable) {
+        this.firstFocusable.focus();
+        e.preventDefault();
+      }
+    };
 
     close() {
       if (!this.isOpen) return;
@@ -274,7 +323,7 @@
       document.removeEventListener('click', this.onDocClick);
       document.removeEventListener('keydown', this.onEsc);
       window.removeEventListener('resize', this.onResize);
-      window.removeEventListener('scroll', this.onReposition);
+      this.releaseModality();
       write(localStorage, SEEN_KEY, Date.now());
 
       /* Restitution du focus — removeTrapFocus est défini dans assets/tw-global.js */
@@ -287,39 +336,12 @@
       if (this.hasLiveCode()) this.mountBadge();
     }
 
-    onResize = () => this.positionCard();
-
-    /* Étranglé par rAF : le scroll tire des dizaines d'événements par seconde et
-       getBoundingClientRect force un recalcul de mise en page. Une mesure par frame suffit. */
-    onReposition = () => {
-      if (this.repositionPending) return;
-      this.repositionPending = true;
-      requestAnimationFrame(() => {
-        this.repositionPending = false;
-        if (this.isOpen) this.positionCard();
-      });
+    onResize = () => {
+      if (this.isOpen) this.applyModality();
     };
 
     /* Desktop : ancré AU-DESSUS du bouton d'achat (offset = sa hauteur réelle + 16 px).
        Sans cet offset, à 1280 px le bouton et la carte se recouvrent sur 33 px. */
-    /* L'encart s'empile AU-DESSUS du bouton d'achat flottant, il ne le masque jamais :
-       le rendre inatteignable pour capturer un e-mail coûterait plus cher qu'il ne rapporte.
-       On mesure la position RÉELLE plutôt que de rejouer les valeurs Tailwind (bottom-3 en
-       mobile, bottom-6 en desktop) : une seule formule, juste sur tous les breakpoints.
-       ⚠️ Le bouton vit dans un <template> et n'est injecté qu'au défilement — d'où le repli
-       et le recalcul au scroll. */
-    positionCard() {
-      const buy = document.querySelector('.float-buy-button');
-      let bottom = '7rem';
-      if (buy) {
-        const r = buy.getBoundingClientRect();
-        // hauteur nulle = bouton présent mais encore replié (scale-0) : on garde le repli
-        if (r.height > 0 && getComputedStyle(buy).display !== 'none') {
-          bottom = `${Math.round(window.innerHeight - r.top + 12)}px`;
-        }
-      }
-      this.card.style.setProperty('--promo-bottom', bottom);
-    }
 
     /* ---------- écrans ---------- */
 

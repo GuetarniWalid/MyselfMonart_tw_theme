@@ -417,16 +417,20 @@
       "later": "Later",
       "network_error": "We konden uw e-mail niet opslaan. Uw bon blijft geldig.",
       "note_150": "Bij een mandje boven 150 € is de lopende actie al voordeliger dan deze bon: die actie wordt toegepast, en dat is normaal.",
-      "offer_html": "<strong>15 € korting vanaf 80 € aankoop</strong>, berekend over het productbedrag, <strong>exclusief verzendkosten</strong>. Geldig op de hele site, <strong>eenmalig, per klant</strong>, tot <strong>{{ date }} om 23.59 uur (Parijse tijd)</strong>. Aanbod is <strong>niet combineerbaar</strong> met de lopende actie of een andere code: de voor u meest voordelige korting wordt automatisch toegepast.",
       "privacy_link": "Privacybeleid",
-      "privacy_notice": "Verwerkingsverantwoordelijke: SAS KINDOPIA. Doel: commerciële prospectie per e-mail. Rechtsgrond: uw toestemming. Ontvangers: onze technische dienstverleners, waaronder Shopify; sommige verwerken gegevens buiten de Europese Unie, gedekt door de standaardcontractbepalingen van de Europese Commissie. Bewaartermijn: 3 jaar na uw laatste contact. U heeft recht op inzage, rectificatie, verwijdering, bezwaar en overdraagbaarheid; u kunt uw toestemming op elk moment intrekken via de afmeldlink in elke e-mail en een klacht indienen bij de CNIL.",
       "retry": "Opnieuw proberen",
       "submit": "Mijn bon ontvangen",
       "submitting": "Verzenden…",
-      "subtitle": "Vanaf 80 € aankoop. Uw code verschijnt hier, direct.",
       "success_title": "Hier is uw bon",
-      "title": "15 € cadeau op uw eerste kunstwerk",
-      "valid_until": "Geldig tot {{ date }} om 23.59 uur"
+      "valid_until": "Geldig tot {{ date }} om 23.59 uur",
+      "title_amount": "15 €",
+      "title_rest": "korting op uw eerste kunstwerk",
+      "cond_1_lead": "Vanaf 80 €",
+      "cond_1_rest": "exclusief verzendkosten",
+      "cond_2_lead": "Eenmalig",
+      "cond_2_rest": "per klant",
+      "cond_3_lead": "Niet combineerbaar",
+      "cond_3_rest": "met de lopende actie"
     }
   },
   "accessibility": {

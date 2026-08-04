@@ -418,16 +418,20 @@
       "later": "Später",
       "network_error": "Wir konnten Ihre E-Mail nicht speichern. Ihr Gutschein bleibt gültig.",
       "note_150": "Ab einem Warenkorb über 150 € ist die laufende Aktion bereits günstiger als dieser Gutschein: dann gilt die Aktion, und das ist richtig so.",
-      "offer_html": "<strong>15 € Rabatt ab 80 € Einkaufswert</strong>, berechnet auf den Warenwert, <strong>ohne Versandkosten</strong>. Gültig auf der ganzen Website, <strong>nur einmal, pro Kunde</strong>, bis zum <strong>{{ date }} um 23:59 Uhr (Pariser Zeit)</strong>. Das Angebot ist <strong>nicht kombinierbar</strong> mit der laufenden Aktion oder einem anderen Code: der für Sie günstigste Rabatt wird automatisch angewendet.",
       "privacy_link": "Datenschutzerklärung",
-      "privacy_notice": "Verantwortlich: SAS KINDOPIA. Zweck: Werbung per E-Mail. Rechtsgrundlage: Ihre Einwilligung. Empfänger: unsere technischen Dienstleister, darunter Shopify; einige verarbeiten Daten außerhalb der Europäischen Union auf Grundlage der Standardvertragsklauseln der Europäischen Kommission. Speicherdauer: 3 Jahre nach Ihrem letzten Kontakt. Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Widerspruch und Datenübertragbarkeit; Sie können Ihre Einwilligung jederzeit über den Abmeldelink in jeder E-Mail widerrufen und Beschwerde bei der CNIL einlegen.",
       "retry": "Erneut versuchen",
       "submit": "Gutschein erhalten",
       "submitting": "Senden…",
-      "subtitle": "Ab 80 € Einkaufswert. Ihr Code erscheint sofort, hier.",
       "success_title": "Hier ist Ihr Gutschein",
-      "title": "15 € Rabatt auf Ihr erstes Kunstwerk",
-      "valid_until": "Gültig bis zum {{ date }} um 23:59 Uhr"
+      "valid_until": "Gültig bis zum {{ date }} um 23:59 Uhr",
+      "title_amount": "15 €",
+      "title_rest": "geschenkt auf Ihr erstes Kunstwerk",
+      "cond_1_lead": "Ab 80 €",
+      "cond_1_rest": "ohne Versandkosten",
+      "cond_2_lead": "Einmalig",
+      "cond_2_rest": "pro Kunde",
+      "cond_3_lead": "Nicht kombinierbar",
+      "cond_3_rest": "mit der laufenden Aktion"
     }
   },
   "accessibility": {

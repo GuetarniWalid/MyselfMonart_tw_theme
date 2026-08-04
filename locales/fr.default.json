@@ -651,16 +651,20 @@
       "later": "Plus tard",
       "network_error": "Nous n’avons pas pu enregistrer votre e-mail. Votre bon reste valable.",
       "note_150": "Sur un panier supérieur à 150 €, la promotion en cours est déjà plus avantageuse que ce bon : c’est elle qui s’appliquera, et c’est normal.",
-      "offer_html": "<strong>15 € de remise à partir de 80 € d’achat</strong>, calculés sur le montant des produits, <strong>hors frais de livraison</strong>. Valable sur tout le site, <strong>une seule fois, par client</strong>, jusqu’au <strong>{{ date }} à 23 h 59 (heure de Paris)</strong>. Offre <strong>non cumulable</strong> avec la promotion en cours ni avec un autre code : la réduction la plus avantageuse pour vous est appliquée automatiquement.",
       "privacy_link": "Politique de confidentialité",
-      "privacy_notice": "Responsable : SAS KINDOPIA. Finalité : prospection commerciale par e-mail. Base légale : votre consentement. Destinataires : nos prestataires techniques, dont Shopify ; certains traitent des données hors de l’Union européenne, encadrés par les clauses contractuelles types de la Commission européenne. Conservation : 3 ans après votre dernier contact. Vous disposez d’un droit d’accès, de rectification, d’effacement, d’opposition et de portabilité ; vous pouvez retirer votre consentement à tout moment via le lien de désabonnement présent dans chaque e-mail, et introduire une réclamation auprès de la CNIL.",
       "retry": "Réessayer",
       "submit": "Recevoir mon bon",
       "submitting": "Envoi…",
-      "subtitle": "Dès 80 € d’achat. Votre code s’affiche tout de suite, ici.",
       "success_title": "Voici votre bon",
-      "title": "15 € offerts sur votre première œuvre",
-      "valid_until": "Valable jusqu’au {{ date }} à 23 h 59"
+      "valid_until": "Valable jusqu’au {{ date }} à 23 h 59",
+      "title_amount": "15 €",
+      "title_rest": "offerts sur votre première œuvre",
+      "cond_1_lead": "Dès 80 € d’achat",
+      "cond_1_rest": "hors frais de livraison",
+      "cond_2_lead": "Une seule fois",
+      "cond_2_rest": "par client",
+      "cond_3_lead": "Non cumulable",
+      "cond_3_rest": "avec la promotion en cours"
     }
   },
   "snippet": {

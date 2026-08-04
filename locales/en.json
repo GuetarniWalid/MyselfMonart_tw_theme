@@ -649,16 +649,20 @@
       "later": "Later",
       "network_error": "We could not save your email. Your voucher is still valid.",
       "note_150": "On a basket above €150 the current promotion is already better than this voucher: that is the one that will apply, and that is normal.",
-      "offer_html": "<strong>€15 off on orders from €80</strong>, calculated on the product total, <strong>excluding shipping costs</strong>. Valid site-wide, <strong>once only, per customer</strong>, until <strong>{{ date }} at 11:59 pm (Paris time)</strong>. This offer <strong>cannot be combined</strong> with the current promotion or any other code: the discount that is most advantageous for you is applied automatically.",
       "privacy_link": "Privacy policy",
-      "privacy_notice": "Controller: SAS KINDOPIA. Purpose: commercial prospecting by email. Legal basis: your consent. Recipients: our technical providers, including Shopify; some process data outside the European Union, covered by the European Commission’s standard contractual clauses. Retention: 3 years after your last contact. You have the right to access, rectify, erase, object and to data portability; you can withdraw your consent at any time via the unsubscribe link in every email, and lodge a complaint with the CNIL.",
       "retry": "Try again",
       "submit": "Get my voucher",
       "submitting": "Sending…",
-      "subtitle": "On orders from €80. Your code appears right here, right away.",
       "success_title": "Here is your voucher",
-      "title": "€15 off your first artwork",
-      "valid_until": "Valid until {{ date }} at 11:59 pm"
+      "valid_until": "Valid until {{ date }} at 11:59 pm",
+      "title_amount": "€15",
+      "title_rest": "off your first artwork",
+      "cond_1_lead": "From €80",
+      "cond_1_rest": "excluding shipping",
+      "cond_2_lead": "One use",
+      "cond_2_rest": "per customer",
+      "cond_3_lead": "Not combinable",
+      "cond_3_rest": "with the current promotion"
     }
   },
   "snippet": {
