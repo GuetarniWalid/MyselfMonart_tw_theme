@@ -34,9 +34,28 @@
   if localization.country.currency.iso_code == 'EUR'
     assign is_eur = true
   endif
+
+  comment
+    ⛔ AUTO-EXTINCTION. Sans ce garde-fou, l'encart continuerait d'annoncer « Valable jusqu'au
+    30 septembre » le 5 octobre, avec un code que Shopify refuse déjà au panier : promesse
+    intenable (art. L.121-2) et parcours cassé. La date de fin étant portée par la remise
+    Shopify, l'encart doit s'éteindre EXACTEMENT en même temps qu'elle.
+    Comparaison en secondes epoch ; +86399 pour couvrir la journée entière jusqu'à 23:59:59,
+    cohérent avec le data-until transmis au JS.
+  endcomment
+  comment
+    `| plus: N` et non `| times:` : c'est le motif déjà éprouvé dans ce thème
+    (sections/main-product.liquid:726) pour forcer la coercition numérique du '%s'.
+  endcomment
+  assign now_ts = 'now' | date: '%s' | plus: 0
+  assign end_ts = promo_end | date: '%s' | plus: 86399
+  assign promo_live = false
+  if end_ts > now_ts
+    assign promo_live = true
+  endif
 -%}
 
-{%- if promo_code != blank and promo_end != blank and is_eur and request.locale.iso_code == 'fr' -%}
+{%- if promo_code != blank and promo_end != blank and promo_live and is_eur and request.locale.iso_code == 'fr' -%}
   <promo-popup
     class="hidden"
     data-promo-popup
