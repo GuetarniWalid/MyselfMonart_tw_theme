@@ -67,7 +67,7 @@
   data-product-url="/products/exemple"
   data-cart-count="0">
   <div role="dialog" aria-labelledby="PromoPopupTitle" data-promo-card
-    class="fixed z-40 bottom-3 left-3 right-3 md:left-auto md:right-6 md:bottom-[var(--promo-bottom)] md:w-[400px] flex flex-col max-h-[62vh] md:max-h-[70vh] overflow-hidden bg-secondary border-1 border-main rounded-2xl shadow-3xl text-main">
+    class="fixed z-40 bottom-[var(--promo-bottom)] left-3 right-3 md:left-auto md:right-6 md:w-[400px] flex flex-col max-h-[min(62vh,calc(100svh-var(--promo-bottom)-1rem))] md:max-h-[70vh] overflow-hidden bg-secondary border-1 border-main rounded-2xl shadow-3xl text-main">
 
     <button type="button" data-promo-close aria-label="Fermer"
       class="absolute top-3 right-2 z-10 w-11 h-11 flex items-center justify-center bg-transparent border-0 rounded-[10px] text-main hover:bg-main-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main disabled:opacity-35 transition-colors duration-500">

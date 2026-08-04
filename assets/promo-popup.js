@@ -261,6 +261,9 @@
       setTimeout(() => document.addEventListener('click', this.onDocClick), 0);
       document.addEventListener('keydown', this.onEsc);
       window.addEventListener('resize', this.onResize);
+      /* Le bouton d'achat n'apparaît qu'au défilement : sans ce recalcul, l'encart ouvert
+         avant lui resterait au repli de 7rem et le recouvrirait dès qu'il surgit. */
+      window.addEventListener('scroll', this.onReposition, { passive: true });
     }
 
     close() {
@@ -271,6 +274,7 @@
       document.removeEventListener('click', this.onDocClick);
       document.removeEventListener('keydown', this.onEsc);
       window.removeEventListener('resize', this.onResize);
+      window.removeEventListener('scroll', this.onReposition);
       write(localStorage, SEEN_KEY, Date.now());
 
       /* Restitution du focus — removeTrapFocus est défini dans assets/tw-global.js */
@@ -285,12 +289,36 @@
 
     onResize = () => this.positionCard();
 
+    /* Étranglé par rAF : le scroll tire des dizaines d'événements par seconde et
+       getBoundingClientRect force un recalcul de mise en page. Une mesure par frame suffit. */
+    onReposition = () => {
+      if (this.repositionPending) return;
+      this.repositionPending = true;
+      requestAnimationFrame(() => {
+        this.repositionPending = false;
+        if (this.isOpen) this.positionCard();
+      });
+    };
+
     /* Desktop : ancré AU-DESSUS du bouton d'achat (offset = sa hauteur réelle + 16 px).
        Sans cet offset, à 1280 px le bouton et la carte se recouvrent sur 33 px. */
+    /* L'encart s'empile AU-DESSUS du bouton d'achat flottant, il ne le masque jamais :
+       le rendre inatteignable pour capturer un e-mail coûterait plus cher qu'il ne rapporte.
+       On mesure la position RÉELLE plutôt que de rejouer les valeurs Tailwind (bottom-3 en
+       mobile, bottom-6 en desktop) : une seule formule, juste sur tous les breakpoints.
+       ⚠️ Le bouton vit dans un <template> et n'est injecté qu'au défilement — d'où le repli
+       et le recalcul au scroll. */
     positionCard() {
       const buy = document.querySelector('.float-buy-button');
-      const h = buy ? buy.offsetHeight : 0;
-      this.card.style.setProperty('--promo-bottom', h ? `${h + 40}px` : '7rem');
+      let bottom = '7rem';
+      if (buy) {
+        const r = buy.getBoundingClientRect();
+        // hauteur nulle = bouton présent mais encore replié (scale-0) : on garde le repli
+        if (r.height > 0 && getComputedStyle(buy).display !== 'none') {
+          bottom = `${Math.round(window.innerHeight - r.top + 12)}px`;
+        }
+      }
+      this.card.style.setProperty('--promo-bottom', bottom);
     }
 
     /* ---------- écrans ---------- */

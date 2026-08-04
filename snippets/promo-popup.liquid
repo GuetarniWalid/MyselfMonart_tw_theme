@@ -94,7 +94,15 @@
       role="dialog"
       aria-labelledby="PromoPopupTitle"
       data-promo-card
-      class="fixed z-40 bottom-3 left-3 right-3 md:left-auto md:right-6 md:bottom-[var(--promo-bottom)] md:w-[400px] flex flex-col max-h-[62vh] md:max-h-[70vh] overflow-hidden bg-secondary border-1 border-main rounded-2xl shadow-3xl text-main">
+      {%- comment -%}
+        bottom-[var(--promo-bottom)] sur TOUS les breakpoints : l'encart s'empile au-dessus du
+        bouton d'achat flottant au lieu de le masquer (cf. input.css). Le JS calcule la valeur
+        depuis la position réelle du bouton.
+        La hauteur max prend le min entre 62 vh et « ce qui reste réellement au-dessus du
+        bouton » : sans ça, l'encart poussé vers le haut déborderait du viewport sur petit écran.
+        100svh et non 100vh : sur mobile, vh ignore la barre d'adresse rétractable.
+      {%- endcomment -%}
+      class="fixed z-40 bottom-[var(--promo-bottom)] left-3 right-3 md:left-auto md:right-6 md:w-[400px] flex flex-col max-h-[min(62vh,calc(100svh-var(--promo-bottom)-1rem))] md:max-h-[70vh] overflow-hidden bg-secondary border-1 border-main rounded-2xl shadow-3xl text-main">
 
       {%- comment -%} Croix : pleine opacité dès la 1re frame, cible 44x44, jamais retardée {%- endcomment -%}
       <button
