@@ -80,6 +80,19 @@ restes = re.findall(r"\{\{.*?\}\}|\{%.*?%\}", s)
 if restes:
     raise SystemExit("STOP — Liquid non résolu : %s" % restes[:5])
 
+# ⛔ Attribut COLLÉ au nom de balise. Le tiret de `{%-` supprime l'espace qui le précède :
+# un commentaire glissé entre `<button` et son premier attribut produit `<buttontype="button"`,
+# soit un élément qui n'est plus un bouton. Survenu en production le 2026-08-04, invisible à
+# la relecture. On refuse de générer plutôt que de tester un markup cassé.
+CONNUES = {"button", "input", "form", "div", "span", "label", "a", "p", "ul", "li", "h2",
+           "svg", "path", "circle", "template", "promo-popup", "main-product-blocks", "strong"}
+for tag in set(re.findall(r"<([a-zA-Z][a-zA-Z0-9-]*)(?=[\s>/])", s)):
+    if tag.lower() not in CONNUES:
+        raise SystemExit("STOP — balise inconnue « <%s » : attribut probablement collé au nom "
+                         "(tiret Liquid `{%%-` ayant mangé l'espace ?)" % tag)
+if re.search(r"<[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z]=[\"']", s):
+    raise SystemExit("STOP — attribut collé au nom de balise détecté")
+
 GABARIT = u"""<!doctype html>
 <html lang="fr">
 <head>

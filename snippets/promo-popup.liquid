@@ -227,11 +227,17 @@
           </div>
 
           <div class="flex-none flex flex-col gap-1.5 px-5 pt-3.5 pb-4 border-t border-main-10">
+            {%- comment -%}
+              ⛔ type="button" et NON "submit" : un événement submit réveille l'écouteur
+              hCaptcha de Shopify, qui re-soumet le formulaire nativement et détruit l'encart
+              avant l'écran 2. Vérifié en production le 2026-08-04. Le JS écoute le CLIC.
+
+              ⛔ Ce commentaire est AU-DESSUS de la balise, jamais entre `<button` et son
+              premier attribut : le tiret de `{%-` supprime l'espace qui précède, ce qui avait
+              produit `<buttontype="button"` — nom de balise et attribut collés, élément qui
+              n'était plus un bouton. Constaté en production.
+            {%- endcomment -%}
             <button
-              {%- comment -%} type="button" et NON "submit" : un evenement submit reveille
-                 l'ecouteur hCaptcha de Shopify, qui re-soumet le formulaire nativement et
-                 detruit l'encart avant l'ecran 2. Verifie en production le 2026-08-04.
-                 Le JS ecoute le CLIC. {%- endcomment -%}
               type="button"
               data-promo-submit
               data-sending="{{ 'sections.promo_popup.submitting' | t | escape }}"
