@@ -101,7 +101,7 @@
       {%- comment -%} ═══════════ ÉCRAN 1 — l'offre ═══════════ {%- endcomment -%}
       <div data-promo-screen="1" class="flex flex-col min-h-0">
         {%- comment -%}
-          novalidate est posé par le JS : le thème ne passe jamais d'attribut libre à {% form %}.
+          novalidate est posé par le JS : le thème ne passe jamais d'attribut libre à la balise form.
           Sans lui, la validation native intercepte le submit avant notre handler (bulle système
           non stylée, ni aria-live ni aria-invalid).
         {%- endcomment -%}
@@ -228,14 +228,18 @@
 
           <div class="flex-none flex flex-col gap-1.5 px-5 pt-3.5 pb-4 border-t border-main-10">
             {%- comment -%}
-              ⛔ type="button" et NON "submit" : un événement submit réveille l'écouteur
-              hCaptcha de Shopify, qui re-soumet le formulaire nativement et détruit l'encart
-              avant l'écran 2. Vérifié en production le 2026-08-04. Le JS écoute le CLIC.
+              type="button" et NON "submit" : un événement submit réveille l'écouteur hCaptcha
+              de Shopify, qui re-soumet le formulaire nativement et détruit l'encart avant
+              l'écran 2. Vérifié en production le 2026-08-04. Le JS écoute le CLIC.
 
-              ⛔ Ce commentaire est AU-DESSUS de la balise, jamais entre `<button` et son
-              premier attribut : le tiret de `{%-` supprime l'espace qui précède, ce qui avait
-              produit `<buttontype="button"` — nom de balise et attribut collés, élément qui
-              n'était plus un bouton. Constaté en production.
+              Ce commentaire est AU-DESSUS de la balise, jamais entre l'ouverture du bouton et
+              son premier attribut : une balise Liquid ouverte avec le tiret de contrôle
+              d'espaces supprime le blanc qui la précède, ce qui avait produit un nom de balise
+              collé à son attribut — l'élément n'était alors plus un bouton.
+
+              Et NE JAMAIS écrire de délimiteur Liquid littéral dans ce commentaire : Liquid
+              les tokenise même à l'intérieur d'un bloc comment, le fichier est alors rejeté
+              au déploiement (« comment tag was never closed ») alors que le job CI reste vert.
             {%- endcomment -%}
             <button
               type="button"
