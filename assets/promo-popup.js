@@ -159,8 +159,20 @@
     startTimer() {
       const tick = () => {
         if (document.visibilityState !== 'visible') return; // timer suspendu onglet inactif
+
+        /* ⛔ Le compteur ne tourne PAS tant que le bandeau cookies est à l'écran.
+           Sinon l'engagement s'accumule pendant que le visiteur lit le bandeau : s'il met 20 s
+           à l'accepter, le délai est déjà dépassé et l'encart s'ouvre dans la seconde qui suit.
+           Deux fenêtres coup sur coup, c'est agressif et ça se fait fermer par réflexe.
+           En mettant le compteur en pause, le délai repart à zéro APRÈS la fermeture du
+           bandeau : le visiteur retrouve la page seule pendant tout le délai. */
+        if (this.cookieBannerVisible()) {
+          this.engaged = 0;
+          return;
+        }
+
         this.engaged += 1000;
-        if (this.engaged >= this.delay && !this.cookieBannerVisible()) {
+        if (this.engaged >= this.delay) {
           clearInterval(this.timer);
           this.open();
         }
