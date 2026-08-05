@@ -341,6 +341,17 @@ main-product-blocks .description h3 span {
   }
 }
 
+/* ⛔ Badge flottant hCaptcha injecté par Shopify (div#shop-hcaptcha-badge-container, position
+   fixed, z-index 9999, 211x55). Il apparaît dès qu'un formulaire protégé est armé et recouvre
+   le bas de l'écran sur mobile — inacceptable sur une fiche produit.
+   On le masque, et la mention exigée en contrepartie par hCaptcha est rendue en texte dans
+   l'encart lui-même (snippets/promo-popup.liquid, sous le lien de confidentialité).
+   ⚠️ Masquer sans afficher cette mention quelque part violerait les conditions de hCaptcha :
+   si un autre formulaire du thème devient protégé, il lui faut la sienne. */
+#shop-hcaptcha-badge-container {
+  display: none !important;
+}
+
 /* Studio « Poster perso » — overlay « atelier en cours » posé SUR le visualiseur pendant la
    génération (placeholder = poster générique 3D). Balayage lumineux en BOUCLE qui traverse le
    poster (le halo respirant, lui, utilise animate-pulse de Tailwind). L'élément balayé fait ~1/3

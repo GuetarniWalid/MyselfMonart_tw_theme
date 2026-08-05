@@ -192,6 +192,18 @@
                   class="pl-[14px] text-xs text-main-70 underline hover:text-main transition-colors duration-500">
                   {{ 'sections.promo_popup.privacy_link' | t }}
                 </a>
+                {%- comment -%}
+                  Mention hCaptcha OBLIGATOIRE : ses conditions n'autorisent le masquage du badge
+                  flottant qu'en échange de cette attribution visible. Le badge est masqué dans
+                  input.css (#shop-hcaptcha-badge-container) parce qu'il recouvrait le bas de
+                  l'écran sur mobile. Retirer cette ligne remettrait la boutique en infraction.
+                {%- endcomment -%}
+                <p class="pl-[14px] m-0 text-[11px] leading-[1.35] text-main-60">
+                  {{ 'sections.promo_popup.captcha_notice' | t }}
+                  <a href="https://www.hcaptcha.com/privacy" target="_blank" rel="noopener nofollow" class="underline hover:text-main transition-colors duration-500">{{ 'sections.promo_popup.captcha_privacy' | t }}</a>
+                  ·
+                  <a href="https://www.hcaptcha.com/terms" target="_blank" rel="noopener nofollow" class="underline hover:text-main transition-colors duration-500">{{ 'sections.promo_popup.captcha_terms' | t }}</a>
+                </p>
               </div>
 
               <div class="md:[grid-area:1/2/2/3]">
