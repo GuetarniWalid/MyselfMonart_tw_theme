@@ -281,7 +281,28 @@ Je m'en charge, mais tu dois connaître le contrat :
 
 ---
 
-## 9. Prérequis DNS — bloquant, à faire avant le premier envoi
+## 9. Prérequis DNS — ✅ FAIT ET VÉRIFIÉ LE 2026-08-05/06
+
+**Tout ce qui suit est en place et contrôlé sur deux résolveurs indépendants. Rien à refaire.**
+
+| | État |
+|---|---|
+| SPF racine | `v=spf1 include:_spf.google.com ~all` ✅ |
+| DKIM Google Workspace | `google._domainkey`, RSA 2048 ✅ |
+| DMARC | `p=none`, rapports vers Cloudflare DMARC Management ✅ |
+| Authentification Shopify | 6 CNAME, 4 sélecteurs DKIM servant de vraies clés ✅ |
+| SES : DKIM | 3 CNAME, identité **Verified** ✅ |
+| SES : MAIL FROM | MX + SPF sur `bounce.mail.myselfmonart.com` ✅ |
+
+**Deux points à connaître :**
+- Le DMARC du sous-domaine `mail.myselfmonart.com` n'a **volontairement pas** été créé : en son absence, DMARC remonte au domaine parent, qui porte déjà `p=none` **et** l'adresse de collecte Cloudflare. Créer celui que suggérait AWS aurait supprimé les rapports sur le canal marketing.
+- `aspf=s` est **absent** du DMARC, et doit le rester : il casserait l'alignement SPF de SES, qui envoie depuis un sous-domaine.
+
+**On restera en `p=none` plusieurs semaines.** Ne pas durcir vers `quarantine` ou `reject` sans avoir lu les rapports et confirmé que Google Workspace, Shopify et SES passent tous les trois.
+
+<details>
+<summary>Historique — le diagnostic d'origine (conservé pour mémoire)</summary>
+
 
 **Le SPF du domaine est cassé aujourd'hui**, et pas seulement pour ce projet :
 
@@ -307,6 +328,8 @@ v=spf1 include:dc-aa8e722993._spfm.myselfmonart.com ~all
 
 **`Reply-To: team@myselfmonart.com` sur chaque envoi** — impératif : `mail.myselfmonart.com` n'aura aucune boîte de réception, sans Reply-To toute réponse client tombe dans le vide.
 
+</details>
+
 ---
 
 ## 10. Webhooks
@@ -330,15 +353,46 @@ Shopify **supprime définitivement** un abonnement après **8 échecs consécuti
 
 ---
 
-## 11. Transport d'envoi — deux implémentations dès le départ
+## 11. Transport d'envoi — Amazon SES, déjà en place
 
-Le compte peut être fermé (§0). Écrire l'envoi derrière une interface `MailTransport` à **deux implémentations** : **Resend** (principal) et **Brevo** ou **Mailjet** (secours, tous deux UE et autorisant le marketing).
+**⚠️ Cette section a été réécrite le 2026-08-06 : le prestataire retenu n'est PAS Resend.**
 
-**Poser les enregistrements DNS des deux dès maintenant** : sélecteurs DKIM différents, sous-domaines d'envoi distincts, donc aucun conflit et aucun coût. La bascule devient une variable d'environnement.
+Resend a été écarté pour une raison structurelle : **ses seuils de plainte s'appliquent au COMPTE, pas au domaine** (« Your complaint rate must be lower than 0.08% […] your account may be shutdown without warning »). Or le compte Resend existant sert déjà les e-mails **transactionnels du studio** de personnalisation, sur `send.myselfmonart.com`. Une plainte sur la séquence promo aurait pu suspendre l'envoi des liens de reprise de création. Et ouvrir un second compte gratuit tombe sous leur clause anti-contournement de quota.
 
-C'est le seul endroit où « je règle une fois » impose de régler deux fois.
+### Ce qui est déjà configuré et vérifié
+
+| | |
+|---|---|
+| Prestataire | **Amazon SES** |
+| Région | **eu-west-1 (Irlande)** — définitif, les enregistrements y sont liés |
+| Domaine d'envoi | **`mail.myselfmonart.com`** — statut **Verified** |
+| Identité ARN | `arn:aws:ses:eu-west-1:691667571330:identity/mail.myselfmonart.com` |
+| MAIL FROM personnalisé | `bounce.mail.myselfmonart.com` (MX + SPF posés) |
+| DKIM | Easy DKIM RSA_2048, 3 CNAME posés, identité validée |
+| Hôte SMTP | `email-smtp.eu-west-1.amazonaws.com` |
+| Port | `587` (STARTTLS) |
+| Identifiants | utilisateur IAM `backend-ses-sender-smtp`, transmis hors de ce document |
+| Coût | 0,10 $ les 1 000 e-mails, sans abonnement (~0,05 $/mois au volume prévu) |
+
+### ⛔ Envoi en RAW obligatoire
+
+La politique IAM de cet utilisateur n'autorise qu'une seule action : **`ses:SendRawEmail`**.
+
+Ce n'est pas une limitation subie, c'est le besoin : les en-têtes `List-Unsubscribe` et `List-Unsubscribe-Post` du §6 ne peuvent être posés que dans un message construit en brut. Construis le MIME toi-même (nodemailer convient très bien en mode SMTP).
+
+Si un jour un appel échoue en « Access Denied » parce que le code est passé en contenu simple, la correction est d'ajouter `ses:SendEmail` à la politique — pas de contourner le format brut.
+
+### Sortie du bac à sable
+
+Demandée le 2026-08-05. **Tant qu'elle n'est pas accordée, SES n'accepte d'envoyer qu'à des adresses vérifiées une par une.** Vérifier l'état dans Account dashboard avant le premier test réel.
+
+### Second transport, toujours recommandé
+
+Garder l'envoi derrière une interface `MailTransport`. Le SMTP rend la bascule triviale : trois variables d'environnement. Second candidat : **SMTP2GO** (gratuit, 1 000/mois, aucun logo) ou **Brevo**.
 
 **⛔ Écarté formellement : Scaleway Transactional Email**, dont les conditions interdisent le marketing mot pour mot (« You cannot use Transactional Email to send marketing emails »).
+
+**⛔ Ne pas toucher au compte Resend ni à `send.myselfmonart.com`** : c'est le canal du studio, il fonctionne, il reste isolé de celui-ci.
 
 ---
 
