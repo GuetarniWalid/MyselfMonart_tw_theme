@@ -67,7 +67,7 @@ Les trois fichiers portent en commentaire :
 
 > `MERCI-K7QX / 30 septembre 2026 → réglages admin promo_popup_code`
 
-**Ce n'est plus l'architecture retenue.** Chaque inscrit reçoit désormais **son propre code**, créé au moment de son inscription, valable **14 jours à compter de ce moment-là**.
+**Ce n'est plus l'architecture retenue.** Chaque inscrit reçoit désormais **son propre code**, créé au moment de son inscription, valable **8 jours à compter de ce moment-là**.
 
 Conséquences à répercuter dans les trois fichiers :
 
@@ -91,33 +91,22 @@ Conséquences à répercuter dans les trois fichiers :
 
 ---
 
-## 4. Le mail 3 promet une urgence qui n'existe pas
+## 4. Le mail 3 — l'urgence est désormais vraie, garde le texte
 
 **Fichier :** `mail-3-derniere-chance.html`.
 
-Il est écrit pour partir « la veille de l'échéance » et affirme **« Vos 15 € s'arrêtent demain, 23 h 59 »**. Or il part à **J+7**, alors que le code vit **14 jours**. Il resterait donc encore une semaine : l'affirmation serait fausse.
+Le titre **« Vos 15 € s'arrêtent demain, 23 h 59 »** est **exact et doit être conservé tel quel.**
 
-**Deux issues. Je recommande la première.**
+La validité du code a été calée sur la cadence : **8 jours**, alors que le 3ᵉ e-mail part à **J+7**. Le code expire donc bien le lendemain de sa réception. Ce n'est pas une coïncidence, c'est le réglage qui rend la promesse vérifiable.
 
-### Option A (recommandée) — décaler l'envoi à J+12
+Deux ajustements seulement dans ce fichier :
 
-L'urgence devient vraie, et l'e-mail garde toute sa force. Le titre devient :
+- **La date reste une variable.** « 30 septembre 2026 » n'est qu'un exemple : c'est `{{ expires_at }}`, propre à chaque destinataire.
+- **Retirer du commentaire d'en-tête** la mention « Envoi : veille de l'échéance ». Écrire : *« Envoi : J+7 après l'inscription, 18 h 00 (heure de Paris) — le code expire à J+8, l'échéance annoncée est donc réelle. »*
 
-> **Vos 15 € s'arrêtent après-demain, 23 h 59.**
+⚠️ **Ne pas rallonger la validité du code sans décaler l'envoi de ce mail.** Les deux valeurs sont liées : c'est ce qui distingue une urgence honnête d'une urgence fabriquée. Une échéance fausse est précisément ce qui fait cliquer sur « signaler comme spam ».
 
-Cette option demande un changement d'une ligne côté back-end (J+7 → J+12). Elle est préférable : une urgence réelle convertit mieux qu'une urgence fabriquée, et une échéance fausse est exactement ce qui fait cliquer sur « signaler comme spam ».
-
-### Option B — garder J+7 et dire la vérité
-
-Titre :
-
-> **Dernier rappel : vos 15 € vous attendent jusqu'au {{ expires_at }}.**
-
-Et remplacer « Passé cette heure-là, le code cesse de fonctionner » par :
-
-> C'est le dernier e-mail que nous vous envoyons à ce sujet. Après le {{ expires_at }}, le code cesse simplement de fonctionner — il n'est pas reconduit.
-
-**Dans les deux cas**, supprimer du `mail-2` la mention « Sauté si l'échéance est à moins de 48 h » : avec 14 jours fixes à partir de l'inscription, ce cas ne peut plus se produire.
+Enfin, **supprimer du `mail-2` la mention « Sauté si l'échéance est à moins de 48 h »** : avec une durée fixe partant de l'inscription de chacun, ce cas ne peut plus se produire.
 
 ---
 

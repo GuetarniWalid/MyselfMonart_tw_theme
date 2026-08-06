@@ -116,7 +116,7 @@ Le code de `shop.metafields.promo.code` est affiché sur le site, donc lisible p
 | `usageLimit` | **1** (usage total, pas « un par client ») |
 | `appliesOncePerCustomer` | `true` |
 | `startsAt` | maintenant |
-| `endsAt` | **maintenant + 14 jours** |
+| `endsAt` | **maintenant + 8 jours**, à 23 h 59 heure de Paris |
 | `combinesWith` | **tout à `false`** — Shopify ne combine rien par défaut, mais le poser explicitement |
 | Marché | France / EUR |
 | Titre interne | `BON15-<id inscrit>` pour le retrouver |
@@ -262,9 +262,15 @@ Le code public rotatif **n'est plus envoyé par e-mail**. Son rôle se réduit :
 
 - `promo.ends_at` / `promo.ends_ts` continuent de piloter **l'extinction automatique de l'encart** sur le site. **Ne pas y toucher.**
 - `promo.code` n'est plus lu par l'encart pour affichage (§8). Le conserver : il reste le code du bandeau et un repli.
-- **Le passage à 21 jours évoqué précédemment est ABANDONNÉ.** Il n'avait de sens qu'avec un e-mail portant le code public. Avec des codes nominatifs, **14 jours suffisent** — la validité court à partir de l'inscription de chaque personne.
+- **Le passage à 21 jours évoqué précédemment est ABANDONNÉ**, et les 14 jours aussi. Les deux venaient d'une marge de sécurité de l'ancienne architecture : le code était public et tournait chaque semaine, il devait donc survivre à une rotation tombant au milieu de la séquence. Avec un code nominatif créé à l'inscription, cette contrainte n'existe plus.
 
-**Garde-fou à conserver :** refuser un envoi si le code de l'inscrit expire dans moins de **72 h**, journaliser et alerter.
+### ⛔ La validité est de 8 jours, et ce chiffre n'est pas arbitraire
+
+**8 jours = la cadence des e-mails (J+7) + 1.** C'est ce qui rend l'urgence du 3ᵉ e-mail **vraie** : il part à J+7, le code expire à J+8, et « vos 15 € s'arrêtent demain » est exact.
+
+Ne pas rallonger cette durée sans décaler l'envoi du 3ᵉ e-mail en conséquence. Un e-mail qui annonce une échéance fausse est précisément ce qui fait cliquer sur « signaler comme spam » — et au seuil de 0,08 % de plaintes du §0, c'est le seul évènement qui peut fermer le compte d'envoi.
+
+**Garde-fou :** refuser un envoi si le code de l'inscrit est **déjà expiré** ; journaliser et alerter. *(Le seuil de 72 h évoqué précédemment n'a plus lieu d'être : avec 8 jours de validité, le 3ᵉ e-mail tombe volontairement à moins de 24 h de l'échéance. Un garde-fou à 72 h le bloquerait systématiquement.)*
 
 ---
 
