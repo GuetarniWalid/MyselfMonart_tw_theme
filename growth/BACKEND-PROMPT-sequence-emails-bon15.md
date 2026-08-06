@@ -127,6 +127,59 @@ Le code de `shop.metafields.promo.code` est affiché sur le site, donc lisible p
 
 ---
 
+## 4 bis. Le bon à l'international — un montant rond par devise
+
+**Décision du marchand, 2026-08-06 : le dispositif s'ouvre à TOUS les marchés**, pas seulement la zone euro. Et il veut **un chiffre rond dans chaque devise**, quitte à donner un peu moins de valeur qu'en France.
+
+### Le problème, en une ligne
+
+Un code à montant fixe est **toujours** libellé dans la devise de la boutique — `DiscountAmountInput` n'a aucun champ de devise. Un code de 15 € vu par un Américain donne « −17,43 $ » au paiement, et le montant **change d'un jour à l'autre**.
+
+### La solution : calibrer le montant en euros à l'émission
+
+On ne pose pas 15 € pour tout le monde. **Au moment de créer le code, on calcule le montant en euros qui tombera sur la cible ronde de la devise du visiteur**, taux du jour à l'appui, avec une **marge de sécurité de 2 %**.
+
+| Devise | L'e-mail et l'encart promettent | Seuil annoncé | Marchés Shopify visés |
+|---|---|---|---|
+| **EUR** | **15 €** | 80 € | France · europ · Allemagne · Espagne |
+| **USD** | **15 $** | 90 $ | USA |
+| **CAD** | **20 $ CA** | 130 $ CA | Canada |
+| **CHF** | **14 CHF** | 75 CHF | Suisse |
+| **GBP** | **13 £** | 70 £ | angleterre |
+
+**La marge de 2 % arrondit toujours VERS LE HAUT.** Un client qui reçoit 15,31 $ au lieu de 15 $ ne se plaint jamais ; un client qui reçoit 14,96 $ écrit au service client. Entre l'émission et l'utilisation il s'écoule jusqu'à 7 jours, et le taux bouge — c'est cette marge qui garantit qu'on ne descend jamais sous le chiffre promis.
+
+Même logique sur le **seuil** : on l'annonce arrondi vers le haut, et on pose en euros une valeur juste en dessous, pour que le client ne soit jamais refusé sur la promesse.
+
+**Source des taux :** l'API de la Banque centrale européenne, gratuite et sans clé. Rafraîchie une fois par jour, mise en cache. En cas d'indisponibilité, garder le dernier taux connu — jamais bloquer une inscription pour ça.
+
+### ⛔ Le ciblage par marché — obligatoire, et il a une condition de version
+
+Chaque code doit être restreint aux marchés de sa devise, via **`context.markets`** sur `discountCodeBasicCreate`. Sans ça, un Américain pourrait utiliser le code calibré pour l'euro, et inversement.
+
+- **Version d'API Admin `2026-07` minimum, impérativement.** En dessous, les codes portant une éligibilité marché deviennent **invisibles en lecture** : impossible de les vérifier ou de les supprimer ensuite.
+- Viser **tous les marchés de la devise**, en construisant la liste **dynamiquement** depuis l'API. Une liste codée en dur ferait sortir du dispositif, en silence, tout marché créé plus tard.
+- **⛔ Ne jamais utiliser `context.customers`.** Les types d'éligibilité s'excluent mutuellement : rattacher le code à une fiche client rendrait le ciblage par marché impossible. Le caractère « nominatif » vient de la chaîne aléatoire + `usageLimit: 1`, pas d'un rattachement client.
+
+### ⛔ Le trou à combler d'abord
+
+Le formulaire d'inscription n'envoie aujourd'hui que **la langue**. C'est insuffisant : un inscrit **allemand ou espagnol paie en euros** mais n'est pas sur le marché France. Un code verrouillé sur la France lui serait **inutilisable**.
+
+Le thème transmettra donc aussi le **pays** et la **devise** de localisation. C'est la devise qui décide de la ligne du tableau ; le pays sert de repli.
+
+### Ce qu'on écarte, et pourquoi
+
+**Le taux de change manuel** est la seule voie qui donnerait « −15,00 $ » pile. Elle est rejetée :
+
+- elle ne toucherait **pas que la remise**. La price list est un **ajustement en pourcentage**, pas des prix fixes : le taux s'applique **avant** l'ajustement (`prix = base × taux × 1,266`), donc figer le taux déplace **tout le catalogue** du marché ;
+- la Suisse et l'Angleterre n'ont **aucune** grille dédiée : 100 % de leurs prix viennent de cette conversion ;
+- elle transfère les **frais de conversion du client vers la marge** du marchand ;
+- les remboursements resteraient au taux réel alors que les ventes seraient au taux gelé — l'écart est toujours défavorable.
+
+Coût estimé : 150 à 185 €/an, plus une gestion de change permanente, pour gagner trente centimes d'affichage. Non.
+
+---
+
 ## 5. Le parcours, étape par étape
 
 ### 5.1 — L'encart poste ici
@@ -137,13 +190,17 @@ Le code de `shop.metafields.promo.code` est affiché sur le site, donc lisible p
 // Requête
 {
   "email": "prenom@exemple.fr",
-  "locale": "fr",              // fr | en | de | es | nl
+  "locale": "fr",              // fr | en | de | es | nl — pilote la LANGUE des e-mails
+  "currency": "EUR",           // EUR | USD | CAD | CHF | GBP — pilote le MONTANT du bon (§4 bis)
+  "country": "FR",             // repli si la devise manque
   "source_url": "https://www.myselfmonart.com/products/...",
   "consent": true,
   "consent_label": "J'accepte de recevoir…",  // le libellé RÉELLEMENT affiché
   "hp": ""                     // pot de miel : non vide = on répond 200 et on jette
 }
 ```
+
+⚠️ **`locale` et `currency` sont deux choses différentes et ne se déduisent pas l'une de l'autre.** Un Allemand lit en allemand et paie en euros ; un Suisse peut lire en français et payer en francs ; un Américain lit en anglais et paie en dollars. La langue choisit le gabarit d'e-mail, la devise choisit le montant du bon et les marchés visés.
 
 ```jsonc
 // 200 — succès
