@@ -165,7 +165,22 @@ Le lien `/discount/` dépose un cookie. Sur mobile, entre le navigateur intégr�
 **Fichiers :** les trois.
 
 - L'expéditeur annoncé en commentaire (`bonjour@myselfmonart.com`) devient : envoi depuis **`mail.myselfmonart.com`**, avec **`Reply-To: team@myselfmonart.com`**. Ce dernier est impératif — le domaine d'envoi n'a aucune boîte de réception.
-- `[ADRESSE POSTALE COMPLÈTE]` → **SAS KINDOPIA**, adresse du siège. À demander au marchand.
+
+### ⛔ Pas d'adresse postale — décision ferme du marchand
+
+**Supprimer le bloc `[ADRESSE POSTALE COMPLÈTE]` des trois fichiers.** Ne jamais le réintroduire, sous aucune forme, dans aucune version future.
+
+Ce qui le remplace, et qui suffit à l'obligation d'identification :
+
+```
+MyselfMonArt — direction artistique à Paris, service client à Toulouse.
+Mentions légales · Politique de confidentialité · Se désabonner
+```
+
+Les trois libellés sont des liens. « Mentions légales » pointe vers la page de la boutique, qui porte déjà l'identité complète de l'éditeur.
+
+*Note juridique, pour que la décision soit tenue en connaissance de cause : le droit français (LCEN art. 20) exige que l'annonceur soit **clairement identifiable**, pas qu'une adresse postale figure dans le corps du message — contrairement à la loi américaine CAN-SPAM, qui l'impose et qui ne s'applique pas ici (l'encart est verrouillé sur la zone euro). Le nom de la marque plus un lien vers les mentions légales satisfont l'obligation.*
+
 - Le **lien de désabonnement visible** dans le pied de page est **obligatoire et non négociable**, en plus des en-têtes techniques que pose le back-end. Il doit rester lisible : pas de gris trop clair sur fond crème. C'est ce qui transforme un « je me désabonne » en clic inoffensif plutôt qu'en signalement pour spam — le seul évènement réellement dangereux du dispositif.
 - La ligne de contexte de collecte devient datée : « Vous recevez cet e-mail parce que vous avez demandé un bon de 15 € sur myselfmonart.com le {{ signup_date }}. »
 
@@ -194,7 +209,7 @@ L'attribut `lang` devra devenir variable.
 - Le **« point d'honnêteté »** du mail 3 sur le seuil de 150 € : excellent, il désamorce l'objection au lieu de la subir.
 - Le **code en texte vivant**, jamais en image, sélectionnable. C'est capital.
 - Les **conditions du bon dans le corps** de l'e-mail, pas renvoyées à un lien.
-- Les **affirmations matière** (« toile 285 g, encres archival 75 ans, cadre bois massif ») : elles figurent déjà mot pour mot dans la description SEO de la page d'accueil. Elles ne sont pas inventées. *(Le marchand doit confirmer qu'elles sont exactes — mais ce n'est pas au design de trancher.)*
+- Les **affirmations matière** (« toile 285 g, encres archival 75 ans, cadre bois massif ») : **validées par le marchand le 2026-08-06**. Elles figurent déjà mot pour mot dans la description SEO de la page d'accueil, et sont donc cohérentes avec le reste de la boutique. À conserver telles quelles.
 - L'**aperçu 3D**, le **contour blanc**, le **poster encadré sous verre** : tous vérifiés exacts dans les fichiers de traduction du thème.
 - **Aucun pixel de suivi d'ouverture.** À maintenir : depuis la recommandation CNIL de mars 2026, il exigerait un consentement distinct que le formulaire ne recueille pas. On pilote au clic.
 - Le **code technique** : tables, 600 px, repli Outlook, préheader masqué, `mso-line-height-rule`. Rien à redire.
