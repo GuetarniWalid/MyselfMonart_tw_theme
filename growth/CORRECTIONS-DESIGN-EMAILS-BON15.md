@@ -110,6 +110,35 @@ Enfin, **supprimer du `mail-2` la mention « Sauté si l'échéance est à moins
 
 ---
 
+## 4 bis. ⛔ Retirer l'heure des échéances — elle n'est vraie qu'à Paris
+
+**Fichiers :** les quatre.
+
+Les e-mails affichent partout « 23 h 59 — heure de Paris ». L'encart est ouvert à **toute la zone euro**, qui s'étale de **UTC+0** (Irlande, Portugal) à **UTC+3** (Finlande).
+
+Conséquences réelles :
+
+- Un **Irlandais** qui essaie à 23 h 15 chez lui se fait refuser son bon, alors que l'e-mail lui promettait 23 h 59.
+- Un **Finlandais** voit le même instant tomber après minuit : sa date locale est le lendemain de celle annoncée.
+
+**À appliquer :** supprimer l'heure de tous les textes clients et borner à la journée.
+
+| | Avant | Après |
+|---|---|---|
+| FR | Valable jusqu'au 13 août à 23 h 59 | Valable jusqu'au 13 août **inclus** |
+| EN | Valid until 13 August at 11:59 pm | Valid **through** 13 August |
+| DE | Gültig bis zum 13. August um 23:59 Uhr | Gültig bis **einschließlich** 13. August |
+| ES | Válido hasta el 13 de agosto a las 23:59 | Válido hasta el 13 de agosto **incluido** |
+| NL | Geldig tot 13 augustus om 23.59 uur | Geldig **tot en met** 13 augustus |
+
+Cas particulier du **mail 3** : « Vos 15 € s'arrêtent demain, 23 h 59 » devient **« Vos 15 € s'arrêtent demain soir »**. L'urgence est intacte, la promesse redevient tenable partout.
+
+Le thème a déjà été corrigé dans ce sens, et épingle en plus l'affichage de la date sur le fuseau de Paris — sans quoi un Finlandais lisait une date dans l'encart et une autre dans son e-mail, pour le même code.
+
+*(L'instant réel d'expiration ne change pas : il reste 23:59:59 heure de Paris, un moment unique et absolu. Seul son affichage est corrigé.)*
+
+---
+
 ## 5. Corrections factuelles
 
 ### Les cadres de la toile sont incomplets
