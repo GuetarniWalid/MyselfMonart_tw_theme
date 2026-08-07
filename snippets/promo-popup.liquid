@@ -20,8 +20,10 @@
      mobile reste une bannière occupant une fraction de l'écran — le format que Google
      recommande explicitement comme alternative.
 
-  ⛔ ZONE EURO uniquement — le bon est un montant FIXE en euros. Les 5 langues publiées sont
-     servies (fr, en, de, es, nl) ; c'est la monnaie qui décide, pas la langue.
+  ⛔ CINQ DEVISES SERVIES (EUR, USD, CAD, CHF, GBP) — hors de cette liste, l'encart s'éteint.
+     Langue et monnaie sont deux axes INDÉPENDANTS : un Belge lit en néerlandais et paie en
+     euros, un Canadien lit en français et paie en dollars canadiens. Le montant suit la
+     MONNAIE, la traduction suit la LANGUE ; ne jamais déduire l'un de l'autre.
   ⚠️ ALLEMAGNE : le consentement est ici un opt-in SIMPLE. Le droit allemand attend un double
      opt-in. Le réglage Shopify « confirmation d'inscription » (à activer côté admin, pas ici)
      est ce qui met la boutique en conformité — il vaut alors pour toutes les langues.
@@ -55,10 +57,31 @@
   assign day_number = promo_iso | date: '%d' | plus: 0
   assign year_number = promo_iso | date: '%Y'
   assign promo_deadline = 'sections.promo_popup.date_pattern' | t: day: day_number, month: month_name, year: year_number
-  assign is_eur = false
-  if localization.country.currency.iso_code == 'EUR'
-    assign is_eur = true
+  comment
+    ⛔ CINQ DEVISES, DES CIBLES RONDES — JAMAIS UNE CONVERSION.
+    Le bon vaut 15 € en zone euro, mais 15 $ aux États-Unis, 20 $ CA au Canada, 14 CHF en Suisse
+    et 13 £ au Royaume-Uni. Ce sont des montants DÉCIDÉS, pas des conversions : le thème les
+    affiche tels quels, et le back-end pose ensuite le montant en euros qui tombera dessus.
+    ⚠️ Cette table doit rester identique à celle du back-end (§4 bis de son brief). Si l'une des
+    deux bouge seule, le client lit un montant et en reçoit un autre.
+    ⚠️ Une devise hors de cette liste éteint l'encart. C'est voulu : mieux vaut ne rien proposer
+    qu'annoncer un montant qui ne correspond à rien.
+  endcomment
+  assign promo_currency = localization.country.currency.iso_code | default: 'EUR'
+  assign devises_servies = 'EUR,USD,CAD,CHF,GBP' | split: ','
+  assign devise_servie = false
+  if devises_servies contains promo_currency
+    assign devise_servie = true
   endif
+  assign cle_devise = promo_currency | downcase
+  assign promo_amount = 'sections.promo_popup.amount_' | append: cle_devise | t
+  assign promo_threshold = 'sections.promo_popup.threshold_' | append: cle_devise | t
+  comment
+    Le seuil où la promo en cours devient plus avantageuse que le bon = bon ÷ taux de promo,
+    CALCULÉ DANS LA DEVISE DU CLIENT : 15 $ ÷ 10 % = 150 $. ⛔ Surtout pas la conversion de
+    150 € — l'erreur est tentante et donne un chiffre faux dans 4 devises sur 5.
+  endcomment
+  assign promo_crossover = 'sections.promo_popup.crossover_' | append: cle_devise | t
 
   comment
     ⛔ AUTO-EXTINCTION : l'encart s'éteint exactement en même temps que la remise Shopify.
@@ -72,16 +95,20 @@
 -%}
 
 {%- comment -%}
-  Le verrou porte sur la MONNAIE, pas sur la langue : le bon est un montant fixe en euros,
-  il n'a aucun sens pour un visiteur facturé en dollars canadiens ou américains. En revanche
-  un visiteur néerlandais, allemand, espagnol ou anglophone payant en euros doit le voir —
-  dans SA langue. Les 5 locales publiées sont traduites (33 clés chacune).
+  ⛔ LE CODE NE VIENT PLUS D'ICI. Chaque inscrit reçoit un code NOMINATIF créé par le back-end
+  au moment de son inscription, et renvoyé dans la réponse HTTP. `promo.code` ne sert donc plus
+  qu'au bandeau du site ; il n'est volontairement PAS rendu dans cette page, pour qu'aucun code
+  utilisable ne soit lisible dans le HTML public.
+  Ce qui reste ici : la fenêtre de campagne (`ends_ts`), qui décide si l'encart s'affiche.
 {%- endcomment -%}
-{%- if promo_code != blank and end_ts > 0 and promo_live and is_eur -%}
+{%- if end_ts > 0 and promo_live and devise_servie -%}
   <promo-popup
     class="hidden"
     data-promo-popup
-    data-code="{{ promo_code | escape }}"
+    data-endpoint="https://backend.myselfmonart.com/api/newsletter/subscribe"
+    data-locale="{{ request.locale.iso_code }}"
+    data-currency="{{ promo_currency }}"
+    data-country="{{ localization.country.iso_code }}"
     {%- comment -%}
       Epoch en SECONDES : Date.parse() sur une date nue l'interprète à minuit UTC, ce qui
       décalait la validité de la pastille d'une à deux heures selon l'heure d'été.
@@ -124,17 +151,34 @@
           Sans lui, la validation native intercepte le submit avant notre handler (bulle système
           non stylée, ni aria-live ni aria-invalid).
         {%- endcomment -%}
-        {%- form 'customer', id: 'PromoPopupForm', class: 'flex flex-col min-h-0' -%}
+        {%- comment -%}
+          ⛔ FORMULAIRE SIMPLE — la balise form de Shopify a été retirée, et ce n'est pas cosmétique.
+          (Ne pas écrire ici le nom de cette balise entre délimiteurs Liquid : ils sont tokenisés
+          même à l'intérieur d'un bloc comment, et le fichier serait rejeté au déploiement.)
+          Le script anti-spam de Shopify s'accroche au sélecteur
+            form[action*='/contact'] input[name='form_type'][value='customer']
+          Tant que ce formulaire portait ces marqueurs, Shopify chargeait hCaptcha, affichait son
+          badge flottant, et exigeait un jeton que seul un envoi natif pouvait produire — d'où le
+          rechargement de page qu'on a subi pendant deux jours. En n'étant plus un formulaire
+          client Shopify, il sort du sélecteur : plus de captcha, plus de badge, plus de jeton.
+          L'inscription part désormais en arrière-plan vers le back-end, qui répond en JSON.
+          ⚠️ Ne jamais remettre `action="/contact"` ni un champ `form_type` ici.
+        {%- endcomment -%}
+        <form id="PromoPopupForm" class="flex flex-col min-h-0" novalidate>
           {%- comment -%}
-            ⛔ VERDICT SERVEUR — la SEULE clé qui ouvre l'écran du code.
-            form.posted_successfully? n'est vrai que lorsque Shopify vient d'accepter l'envoi et
-            nous a renvoyés sur cette page. Aucun signal côté client — délai écoulé, absence
-            d'erreur, chargement d'une iframe — n'a le droit d'y donner accès : c'est exactement
-            ce qui a permis, le 2026-08-04, d'annoncer un bon à des visiteurs jamais inscrits.
-            En l'absence de ce verdict, on considère que c'est un ÉCHEC. Jamais l'inverse.
+            Pot de miel : invisible pour un humain, rempli par la plupart des robots. Le back-end
+            répond 200 sans rien créer quand il est non vide. `data-allow-empty` parce que la règle
+            globale *:empty d'input.css masquerait sinon le conteneur.
           {%- endcomment -%}
-          {%- if form.posted_successfully? -%}{%- assign promo_posted = true -%}{%- endif -%}
-          <input type="hidden" name="contact[tags]" value="promo-popup">
+          {%- comment -%}
+            Style en ligne et NON classes Tailwind, exceptionnellement : ce champ doit être hors
+            écran quoi qu'il arrive, y compris si la feuille compilée est en retard sur le thème.
+            Un pot de miel visible transformerait chaque visiteur en faux positif.
+          {%- endcomment -%}
+          <div data-allow-empty aria-hidden="true" style="position:absolute;left:-9999px;top:0;width:1px;height:1px;overflow:hidden">
+            <label for="PromoPopupHp">{{ 'sections.promo_popup.email_label' | t }}</label>
+            <input id="PromoPopupHp" type="text" name="hp" tabindex="-1" autocomplete="off" data-promo-hp>
+          </div>
 
           {%- comment -%}
             BANDEAU — le montant traité comme une affiche. L'URL de la texture vient de Liquid,
@@ -150,7 +194,7 @@
               data-promo-title
               class="m-0 flex flex-wrap items-baseline gap-x-2.5 gap-y-0 outline-none focus:outline-none">
               <span class="font-heading font-bold text-[40px] md:text-[78px] leading-[0.95] tracking-[-0.02em] [text-shadow:2px_3px_0_rgba(255,255,255,0.85)]">
-                {{ 'sections.promo_popup.title_amount' | t }}
+                {{ promo_amount }}
               </span>
               <span class="font-heading font-bold text-[17px] md:text-[21px] leading-[1.15]">
                 {{ 'sections.promo_popup.title_rest' | t }}
@@ -175,14 +219,24 @@
                     <li class="flex gap-[9px] items-baseline">
                       <span data-allow-empty class="flex-none w-[5px] h-[5px] mt-[7px] rounded-full bg-terra"></span>
                       <span>
-                        <strong>{{ 'sections.promo_popup.cond_' | append: i | append: '_lead' | t }}</strong>
+                        {%- comment -%}
+                          Le seuil suit la devise : « dès 80 € » en zone euro, « dès 90 $ » aux
+                          États-Unis. Seule la 1re condition le porte, d'où le t: min: ciblé.
+                        {%- endcomment -%}
+                        <strong>{{ 'sections.promo_popup.cond_' | append: i | append: '_lead' | t: min: promo_threshold }}</strong>
                         {{ 'sections.promo_popup.cond_' | append: i | append: '_rest' | t }}
                       </span>
                     </li>
                   {%- endfor -%}
                   <li class="flex gap-[9px] items-baseline">
                     <span data-allow-empty class="flex-none w-[5px] h-[5px] mt-[7px] rounded-full bg-terra"></span>
-                    <span>{{ 'sections.promo_popup.valid_until' | t: date: promo_deadline }}</span>
+                    {%- comment -%}
+                      AVANT l'inscription, le visiteur n'a pas encore de code : il n'y a donc pas
+                      encore d'échéance à lui annoncer. On annonce une DURÉE. Afficher ici la fin
+                      de campagne serait faux — son code, lui, vivra 8 jours à partir de SON
+                      inscription, et ce sont deux dates différentes.
+                    {%- endcomment -%}
+                    <span>{{ 'sections.promo_popup.valid_duration' | t }}</span>
                   </li>
                 </ul>
                 {%- comment -%} Information en niveaux : le consentement au 1er plan, le détail
@@ -250,6 +304,21 @@
                     class="flex-none w-[22px] h-[22px] mt-px accent-main cursor-pointer">
                   <label for="PromoPopupConsent" class="text-xs leading-[1.4] cursor-pointer">
                     {{ 'sections.promo_popup.consent' | t }}
+                    {%- comment -%}
+                      ⚠️ CANADA UNIQUEMENT. La loi canadienne anti-pourriel (règlement DORS/2012-36,
+                      art. 4) veut que l'adresse postale et le droit de retrait figurent DANS la
+                      demande de consentement — un renvoi par lien ne suffit pas. Ailleurs, la
+                      marque et le lien mentions légales suffisent : on n'affiche donc pas l'adresse
+                      aux visiteurs qui n'y ont pas droit, c'est une décision de Walid.
+                      Dans le <label> à dessein : le clic sur ce texte coche la case, ce qui est le
+                      comportement attendu d'une mention rattachée au consentement.
+                    {%- endcomment -%}
+                    {%- if localization.country.iso_code == 'CA' -%}
+                      <span class="block mt-1 opacity-70">
+                        {{ 'sections.promo_popup.consent_address' | t }}
+                        {{ 'sections.promo_popup.consent_withdraw' | t }}
+                      </span>
+                    {%- endif -%}
                   </label>
                 </div>
                 <p
@@ -268,12 +337,10 @@
 
           <div class="flex-none flex flex-col gap-1.5 px-5 pt-3.5 pb-4 border-t border-main-10">
             {%- comment -%}
-              type="button" et NON "submit" — mais plus du tout pour la raison d'origine.
-              L'événement submit doit au contraire RESTER authentique : c'est lui, et lui seul,
-              qui fait poser par Shopify le jeton hCaptcha sans lequel POST /contact répond 400
-              « Missing CAPTCHA token » (changement cassant du 28/10/2024). Le type button ne
-              sert qu'à faire passer NOTRE validation — e-mail, consentement — avant lui ; le JS
-              déclenche ensuite un vrai submit par requestSubmit().
+              type="button" et NON "submit" : notre validation (e-mail, consentement) doit passer
+              avant tout envoi, et l'inscription part ensuite en arrière-plan vers le back-end.
+              Le formulaire n'étant plus un formulaire client Shopify, plus aucun captcha ne s'y
+              accroche — c'est ce qui a supprimé le rechargement de page et le badge flottant.
 
               Ce commentaire est AU-DESSUS de la balise, jamais entre l'ouverture du bouton et
               son premier attribut : une balise Liquid ouverte avec le tiret de contrôle
@@ -300,7 +367,7 @@
               </button>
             </div>
           </div>
-        {%- endform -%}
+        </form>
       </div>
 
       {%- comment -%} ═══════════ ÉCRAN 2 — le code ═══════════ {%- endcomment -%}
@@ -326,7 +393,11 @@
           </h2>
           <div class="mt-2.5 flex items-stretch gap-2.5">
             <div class="flex-1 flex items-center justify-center bg-secondary border-2 border-dashed border-main rounded-xl px-3 py-2 min-h-[56px]">
-              <span class="font-heading font-bold text-[27px] tracking-wide select-all">{{ promo_code }}</span>
+              {%- comment -%}
+                Vide au rendu : le code nominatif est écrit par le JS depuis la réponse du
+                back-end. data-allow-empty, sinon la règle globale *:empty le masquerait.
+              {%- endcomment -%}
+              <span data-promo-code-value data-allow-empty class="font-heading font-bold text-[27px] tracking-wide select-all"></span>
             </div>
             <button
               type="button"
@@ -348,11 +419,19 @@
         <div class="relative flex-1 min-h-0">
           <div class="h-full overflow-y-auto overflow-x-hidden overscroll-contain flex flex-col gap-2.5 pl-5 pr-[26px] pt-4 pb-[22px]">
             <p class="m-0 text-[15px] font-bold leading-[1.4]">
-              {{ 'sections.promo_popup.valid_until' | t: date: promo_deadline }}
+              {%- comment -%}
+                APRÈS l'inscription : la date personnelle du code, écrite par le JS depuis la
+                réponse du back-end. Le gabarit de phrase reste traduit côté thème, seule la
+                date est injectée : on rend la phrase avec un marqueur @@ que le JS remplace.
+                (Ne jamais écrire ici de délimiteur Liquid littéral — tokenisé même en commentaire,
+                le fichier serait rejeté au déploiement.)
+              {%- endcomment -%}
+              <span data-promo-until-text data-allow-empty
+                    data-template="{{ 'sections.promo_popup.valid_until' | t: date: '@@' | escape }}"></span>
             </p>
             {%- comment -%} Au-delà de 150 € le -10 % automatique reste plus avantageux : on le dit
                ici, le client ne doit pas le découvrir seul dans le tiroir panier. {%- endcomment -%}
-            <p class="m-0 text-sm leading-[1.45]">{{ 'sections.promo_popup.note_150' | t }}</p>
+            <p class="m-0 text-sm leading-[1.45]">{{ 'sections.promo_popup.note_150' | t: seuil: promo_crossover }}</p>
             <p class="m-0 text-xs leading-relaxed text-main-70">{{ 'sections.promo_popup.device_limit' | t }}</p>
           </div>
           <div data-allow-empty aria-hidden="true" class="pointer-events-none absolute inset-x-px bottom-0 h-4 bg-gradient-to-t from-secondary"></div>
@@ -360,7 +439,13 @@
 
         <div class="flex-none flex flex-col gap-1.5 px-5 pt-3.5 pb-4 border-t border-main-10">
           <a
-            href="{{ routes.root_url }}discount/{{ promo_code | url_encode }}?redirect={{ product.url | default: routes.root_url }}"
+            {%- comment -%}
+              href posé par le JS une fois le code connu. On garde ici la BASE et la cible de
+              redirection, qui elles sont bien connues côté serveur et localisées.
+            {%- endcomment -%}
+            href="{{ product.url | default: routes.root_url }}"
+            data-discount-base="{{ routes.root_url }}discount/"
+            data-redirect="{{ product.url | default: routes.root_url }}"
             data-promo-apply
             class="w-full min-h-[52px] px-4 flex items-center justify-center bg-main text-secondary border-0 rounded-xl font-heading font-bold text-lg no-underline hover:bg-brand-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2 transition-colors duration-500">
             {{ 'sections.promo_popup.apply' | t }}
@@ -380,7 +465,7 @@
             {%- endcomment -%}
             <a
               data-promo-mailto
-              href="mailto:team@myselfmonart.com?subject={{ 'sections.promo_popup.mail_subject' | t | url_encode }}"
+              href="mailto:team@myselfmonart.com?subject={{ 'sections.promo_popup.mail_subject' | t: amount: promo_amount | url_encode }}"
               class="hidden bg-transparent px-3 py-2.5 text-[15px] text-main-80 underline hover:text-main focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main transition-colors duration-500">
               {{ 'sections.promo_popup.mail_fallback' | t }}
             </a>
@@ -397,7 +482,7 @@
         data-promo-badge
         class="inline-flex items-center gap-2 mb-4 px-3.5 min-h-[38px] bg-transparent border-1 border-dashed border-terra rounded-full text-[13px] font-medium text-terra hover:bg-terra-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terra transition-colors duration-500">
         {% render 'tw-icon-discount' %}
-        {{ 'sections.promo_popup.badge' | t }}
+        {{ 'sections.promo_popup.badge' | t: amount: promo_amount }}
       </button>
     </template>
   </promo-popup>

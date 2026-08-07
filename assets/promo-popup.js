@@ -24,30 +24,37 @@
  *    script peut être réévalué après un swap de #MainContent (bascule Poster/Toile).
  *    Toute initialisation doit pouvoir être rejouée sans effet de bord.
  *
- * ⛔ ART. 82 (loi Informatique et Libertés) — le stockage local ne contient QUE des
- *    entiers et des horodatages, jamais d'e-mail ni d'identifiant, n'est jamais transmis,
- *    et expire au bout de 30 jours. C'est ce qui le fait tenir dans l'exemption
- *    « strictement nécessaire » sans recueil de consentement.
+ * ⛔ ART. 82 (loi Informatique et Libertés) — le stockage local contient des horodatages et,
+ *    depuis le passage au code NOMINATIF, le code de remise de ce visiteur. Jamais son e-mail,
+ *    jamais un identifiant permettant de le reconnaître. Rien n'est transmis à un tiers, et le
+ *    code est effacé dès son échéance passée (purgeStaleKeys).
+ *    Le code y est parce qu'il est LE service explicitement demandé par la personne : sans lui,
+ *    elle ne peut plus retrouver son bon depuis la boutique. C'est ce qui le fait tenir dans
+ *    l'exemption « strictement nécessaire » — mais la politique de confidentialité doit le dire.
  */
 
 (() => {
   if (window.customElements.get('promo-popup')) return;
 
-  const PENDING_KEY = 'mma_promo_pending'; // sessionStorage — horodatage ms d'un envoi parti
   const PV_KEY = 'mma_pv_count'; // sessionStorage — entier (alimenté par tw-global.js)
+  const CODE_VALUE_KEY = 'mma_promo_code'; // localStorage — le code nominatif de CE visiteur
   const SEEN_KEY = 'mma_promo_seen_at'; // localStorage — horodatage ms de la dernière fermeture
   const SUB_KEY = 'mma_promo_sub_at'; // localStorage — horodatage ms du dernier envoi réussi
   const CODE_KEY = 'mma_promo_until'; // localStorage — horodatage ms de fin de validité
   const SEEN_TTL = 30 * 24 * 60 * 60 * 1000; // 30 jours
-  /* Chien de garde : après un requestSubmit(), la page doit partir. Passé ce délai sans être
-     partie, c'est que la soumission a été avalée en silence.
-     ⚠️ Une énigme hCaptcha visible met la page en attente du visiteur, parfois une minute :
-     conclure à l'échec pendant qu'il clique sur des images serait un faux négatif. Le chien de
-     garde se REPROGRAMME donc tant que l'énigme est à l'écran (voir challengeVisible). */
-  const WATCHDOG = 8000;
+  /* Délai maximal de la requête d'inscription. Le back-end répond en moins de 2 s par contrat ;
+     au-delà on rend la main au visiteur plutôt que de le laisser devant un bouton figé. */
+  const TIMEOUT = 10000;
 
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+  const readStr = (store, key) => {
+    try {
+      return store.getItem(key) || '';
+    } catch (e) {
+      return '';
+    }
+  };
   const readInt = (store, key) => {
     try {
       return parseInt(store.getItem(key), 10) || 0;
@@ -98,7 +105,23 @@
       this.form.setAttribute('novalidate', 'novalidate');
 
 
-      this.code = this.dataset.code || '';
+      /* ⛔ Le code n'est plus rendu par le serveur : il est NOMINATIF, créé par le back-end à
+         l'inscription et renvoyé dans la réponse. On ne connaît donc au chargement que celui
+         d'un visiteur déjà inscrit sur cet appareil. */
+      this.endpoint = this.dataset.endpoint || '';
+      this.locale = this.dataset.locale || 'fr';
+
+      /* Devise et pays réellement servis. On les lit sur les globales Shopify plutôt que sur des
+         attributs Liquid : `Shopify.currency.active` reflète la devise de PRÉSENTATION, celle que
+         le client verra au paiement, y compris quand il a changé de pays au sélecteur sans
+         recharger. Repli sur les attributs rendus par le serveur, puis sur l'euro. */
+      const sh = window.Shopify || {};
+      this.currency = (sh.currency && sh.currency.active) || this.dataset.currency || 'EUR';
+      this.country = sh.country || this.dataset.country || 'FR';
+      this.code = readStr(localStorage, CODE_VALUE_KEY);
+      this.hpInput = this.querySelector('[data-promo-hp]');
+      this.codeEl = this.querySelector('[data-promo-code-value]');
+      this.applyLink = this.querySelector('[data-promo-apply]');
       this.delay = (parseInt(this.dataset.delay, 10) || 10) * 1000;
       this.minPages = parseInt(this.dataset.minPages, 10) || 2;
       this.cartCount = parseInt(this.dataset.cartCount, 10) || 0;
@@ -112,30 +135,11 @@
       /* Avant toute décision : effacer ce qui a dépassé sa durée annoncée. */
       this.purgeStaleKeys();
 
-      /* ⛔ AU RETOUR DE SHOPIFY — on tranche ici, une seule fois, et le serveur a le dernier mot.
-         `posted` vient du Liquid (form.posted_successfully?) : c'est Shopify qui affirme avoir
-         accepté l'inscription. `pending` est la trace déposée juste avant l'envoi.
-         Revenir avec la trace mais SANS le verdict = ÉCHEC. On ne conclut jamais au succès par
-         défaut — c'est ce défaut-là qui a distribué des codes à des visiteurs jamais inscrits. */
-      const posted = this.screens[2].dataset.promoPosted === 'true';
-      const pending = readInt(sessionStorage, PENDING_KEY) > 0;
-      if (posted || pending) {
-        try {
-          sessionStorage.removeItem(PENDING_KEY);
-        } catch (e) {
-          /* mode privé */
-        }
-        const knownHere = readInt(localStorage, SUB_KEY) > 0;
-        if (posted) write(localStorage, SUB_KEY, Date.now());
-        this.grantCode(posted ? (knownHere ? 'already' : '') : 'failed');
-        this.open();
-        this.cleanUrl();
-        return;
-      }
-
       /* Un code déjà obtenu et encore valide : on ne redemande jamais l'e-mail,
          on se contente de la pastille en ligne dans la fiche. */
       if (this.hasLiveCode()) {
+        this.renderCode(false); // sinon la pastille ouvrirait un cadre vide
+        this.show(2);
         this.mountBadge();
         return;
       }
@@ -159,6 +163,8 @@
       if (until > 0 && now >= until) {
         try {
           localStorage.removeItem(CODE_KEY);
+          /* Le code périmé part avec son échéance : le garder ferait afficher un bon mort. */
+          localStorage.removeItem(CODE_VALUE_KEY);
         } catch (e) {
           /* mode privé : rien à faire */
         }
@@ -267,10 +273,6 @@
       document.body.classList.add('promo-popup-open');
 
       this.applyModality();
-
-      /* Câbler le captcha dès l'ouverture, jamais au moment de l'envoi : le script Shopify a
-         besoin de charger hCaptcha avant qu'un submit ne survienne, sans quoi il l'avale. */
-      this.armCaptcha();
 
       /* Focaliser le titre de l'écran RÉELLEMENT affiché : rouvert depuis la pastille,
          l'encart est sur l'écran 2 et forcer l'écran 1 ici volerait le focus. */
@@ -409,24 +411,22 @@
       this.onEsc = (e) => {
         if (e.key === 'Escape' && this.isOpen && this.state !== 'sending') this.close();
       };
-      /* La page s'en va : la soumission est bien partie, le chien de garde n'a plus lieu d'être. */
-      this.onPageHide = () => clearTimeout(this.watchdog);
 
       this.querySelectorAll('[data-promo-close]').forEach((b) =>
         b.addEventListener('click', () => this.close())
       );
 
-      /* ⛔ L'ÉVÉNEMENT `submit` DOIT RESTER AUTHENTIQUE — ne jamais revenir en arrière.
-         Mesuré en production le 2026-08-04 : POST /contact refuse toute requête ne portant pas
-         le jeton `h-captcha-response`, et ce jeton n'est injecté que par le script Shopify
-         (ce_storefront_forms_captcha_hcaptcha.v1.5.2) accroché à l'événement `submit` du
-         formulaire RÉEL. Un fetch(), ou un formulaire fabriqué en JS, arrive sans jeton et
-         reçoit « invalid parameters » en HTTP 400 — silencieusement, puisque l'écran 2
-         s'affiche de toute façon : le visiteur repartait avec un code et sans inscription.
-         Ce qu'on neutralise, ce n'est donc pas l'événement mais sa DESTINATION : form.target
-         pointe sur une iframe cachée, la réponse y atterrit, la page ne bouge pas.
-         Le bouton reste en type="button" pour que NOTRE validation passe d'abord ; c'est
-         submit() qui appelle ensuite requestSubmit(), lequel produit un vrai événement. */
+      /* ⛔ AUCUNE SOUMISSION NATIVE — le formulaire n'est plus qu'un conteneur de champs.
+         Historique, pour qu'on ne refasse jamais le chemin inverse : tant que ce bloc était un
+         formulaire client Shopify pointant sur /contact, le script anti-spam s'y accrochait,
+         imposait un jeton hCaptcha, affichait son badge flottant, et n'acceptait qu'un envoi
+         natif — donc un rechargement de page qui détruisait l'encart avant l'écran du code.
+         L'inscription part maintenant en `fetch` vers le back-end, qui répond en JSON avec un
+         code de remise NOMINATIF. On a enfin un vrai code HTTP à interpréter. */
+      this.form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.submit();
+      });
       if (this.submitBtn) {
         this.submitBtn.addEventListener('click', (e) => {
           e.preventDefault();
@@ -510,94 +510,136 @@
       }
 
       this.setSending(true);
-      this.armCaptcha();
 
-      /* Trace déposée AVANT le départ. Si on revient sur le site sans le verdict du serveur,
-         c'est un échec, et on le dira. sessionStorage : meurt avec l'onglet, ne contient qu'un
-         horodatage, aucune donnée personnelle — cohérent avec la mention de l'art. 82. */
-      write(sessionStorage, PENDING_KEY, Date.now());
+      const issue = await this.envoyer();
+      this.setSending(false);
 
-      /* requestSubmit() et NON submit() : seul le premier émet un vrai événement `submit`,
-         donc seul lui réveille le script Shopify qui pose le jeton hCaptcha. */
-      this.form.requestSubmit();
-
-      /* ⛔ CHIEN DE GARDE — le filet contre la panne muette.
-         Après un requestSubmit() la page DOIT partir. Si elle est encore là 8 s plus tard, c'est
-         que la soumission a été avalée : quand le formulaire n'est pas câblé, le bootstrap
-         Shopify fait preventDefault() et RIEN d'autre — aucune requête, aucun code HTTP, aucune
-         trace. On n'en conclut jamais un succès : on affiche l'échec. */
-      const veiller = () => {
-        if (this.challengeVisible()) {
-          this.watchdog = setTimeout(veiller, WATCHDOG); // l'énigme est à l'écran : on patiente
-          return;
-        }
-        try {
-          sessionStorage.removeItem(PENDING_KEY);
-        } catch (e) {
-          /* mode privé */
-        }
-        this.setSending(false);
-        this.grantCode('failed');
-      };
-      clearTimeout(this.watchdog);
-      this.watchdog = setTimeout(veiller, WATCHDOG);
-      window.addEventListener('pagehide', this.onPageHide, { once: true });
-    }
-
-    /* Une énigme hCaptcha réellement affichée : iframe du fournisseur, de taille non nulle.
-       On ne se fie pas à la présence de l'iframe (l'implémentation invisible en pose une de
-       1 px en permanence) mais à sa hauteur rendue. */
-    challengeVisible() {
-      const frames = document.querySelectorAll('iframe[src*="hcaptcha.com"]');
-      for (let i = 0; i < frames.length; i += 1) {
-        if (frames[i].getBoundingClientRect().height > 100) return true;
+      if (issue.ok) {
+        this.code = issue.code;
+        write(localStorage, CODE_VALUE_KEY, issue.code);
+        write(localStorage, SUB_KEY, Date.now());
       }
-      return false;
+      this.grantCode(issue.ok ? issue.state : 'failed', issue.until);
     }
 
-    /* ⛔ Câblage EXPLICITE du captcha, sans quoi rien ne part.
-       Le script Shopify ne s'accroche au formulaire qu'au premier focusin ou change ; si un
-       submit survient avant ce câblage, il fait preventDefault() et s'arrête là. L'envoi
-       disparaît en silence. On arme donc à l'ouverture de l'encart — et pas au chargement de la
-       page, pour ne pas tirer hCaptcha là où l'encart ne s'affiche jamais. */
-    armCaptcha() {
-      if (this.captchaArmed) return;
-      this.captchaArmed = true;
+    /* L'inscription : une requête, une réponse, un verdict. C'est tout ce qu'on voulait depuis
+       le début. Le back-end crée le client Shopify ET le code de remise nominatif, puis renvoie
+       ce code — qui n'existe donc nulle part dans le HTML public. */
+    async envoyer() {
+      const echec = { ok: false };
+      if (!this.endpoint) return echec;
+
+      const ctrl = new AbortController();
+      const to = setTimeout(() => ctrl.abort(), TIMEOUT);
       try {
-        window.Shopify.captcha.protect(this.form);
+        const res = await fetch(this.endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          signal: ctrl.signal,
+          body: JSON.stringify({
+            email: (this.emailInput.value || '').trim(),
+            locale: this.locale,
+            /* ⛔ La LANGUE et la DEVISE sont deux axes indépendants, et le back-end en a besoin
+               des deux : la langue choisit le gabarit d'e-mail, la devise choisit le montant du
+               bon et les marchés sur lesquels le code sera valable. Un Allemand lit en allemand
+               et paie en euros ; un Suisse peut lire en français et payer en francs. Déduire
+               l'une de l'autre donnerait un code inutilisable.
+               Source : les globales que Shopify injecte lui-même dans la page — elles reflètent
+               le marché réellement servi, ce que le Liquid du thème ne sait pas toujours dire. */
+            currency: this.currency,
+            country: this.country,
+            consent: !!(this.consentInput && this.consentInput.checked),
+            /* Le libellé RÉELLEMENT affiché, pas une constante : c'est lui qui fait la preuve
+               du consentement au sens de l'art. 7(1) RGPD. S'il change un jour, la preuve
+               enregistrée change avec lui, sans intervention. */
+            consent_label: this.consentLabel(),
+            source_url: location.href,
+            hp: this.hpInput ? this.hpInput.value : '',
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data || !data.ok || !data.code) return echec;
+        const until = Date.parse(data.expires_at);
+        return {
+          ok: true,
+          code: data.code,
+          state: data.state === 'already' ? 'already' : '',
+          until: isNaN(until) ? 0 : until,
+        };
       } catch (e) {
-        /* API absente ou renommée : le focus réel sur le champ e-mail produit le même câblage,
-           c'est la seconde ceinture. */
+        return echec; // réseau coupé, délai dépassé, réponse illisible
+      } finally {
+        clearTimeout(to);
       }
     }
 
-    /* L'URL de retour porte ?customer_posted=true. On l'efface : un rafraîchissement ne doit pas
-       rejouer un succès, et l'URL partagée ou indexée doit rester propre. */
-    cleanUrl() {
-      if (location.search.indexOf('customer_posted') === -1) return;
-      const params = new URLSearchParams(location.search);
-      params.delete('customer_posted');
-      const query = params.toString();
-      history.replaceState(null, '', location.pathname + (query ? '?' + query : ''));
+    consentLabel() {
+      const el = this.querySelector('label[for="PromoPopupConsent"]');
+      return el ? el.textContent.replace(/\s+/g, ' ').trim() : '';
     }
 
-    /* Le code vient d'un réglage admin : il est connu côté client et s'affiche TOUJOURS.
-       La vente est primaire, l'abonnement est secondaire — un échec réseau ne doit
-       jamais priver le client de son bon. */
-    grantCode(state) {
-      /* Epoch en secondes fourni par le Liquid (data-until-ts), pas une chaîne à parser :
-         Date.parse() sur une date nue l'interprète à minuit UTC et décalait la validité. */
+    /* Écrit le code et son lien d'application dans l'écran 2.
+       Appelée à deux moments : après une inscription réussie, et au chargement d'une page pour
+       un visiteur qui a DÉJÀ son code (rouverture depuis la pastille). Sans ce second appel,
+       la pastille ouvrirait un écran au cadre vide. */
+    renderCode(failed) {
+      if (this.codeEl) this.codeEl.textContent = failed || !this.code ? '' : this.code;
+
+      /* La date d'échéance PERSONNELLE. Formatée ici, dans la langue de la page : le back-end
+         renvoie un ISO 8601, et le mois doit s'écrire en lettres. ⛔ Ne jamais afficher la fin
+         de campagne à la place — le code de ce visiteur meurt 8 jours après SON inscription. */
+      const el = this.querySelector('[data-promo-until-text]');
+      if (el) {
+        const until = readInt(localStorage, CODE_KEY);
+        let texte = '';
+        if (!failed && until > 0) {
+          try {
+            /* ⛔ timeZone: 'Europe/Paris' — SANS lui, la date serait rendue dans le fuseau du
+               visiteur. L'encart est ouvert à toute la zone euro, qui va de UTC+0 (Irlande,
+               Portugal) à UTC+3 (Finlande) : un même instant tombe alors un jour plus tard chez
+               les uns. Un Finlandais lirait « 14 août » dans l'encart et « 13 août » dans son
+               e-mail, pour le même code. On épingle donc l'affichage sur Paris, comme les
+               e-mails et comme l'échéance réelle du code. */
+            texte = (el.dataset.template || '@@').replace(
+              '@@',
+              new Date(until).toLocaleDateString(this.locale, {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                timeZone: 'Europe/Paris',
+              })
+            );
+          } catch (e) {
+            texte = ''; // locale inconnue : mieux vaut rien qu'une date mal écrite
+          }
+        }
+        el.textContent = texte;
+      }
+
+      if (!this.applyLink) return;
+      const base = this.applyLink.dataset.discountBase || '/discount/';
+      const redir = this.applyLink.dataset.redirect || '/';
+      const utilisable = !failed && !!this.code;
+      this.applyLink.href = utilisable
+        ? base + encodeURIComponent(this.code) + '?redirect=' + redir
+        : redir;
+      this.applyLink.classList.toggle('hidden', !utilisable);
+    }
+
+    /* ⛔ L'écran du code ne s'ouvre QUE sur un succès serveur. En cas d'échec on l'ouvre aussi,
+       mais avec le titre et le message d'échec, et SANS code — on n'a rien à donner. C'est le
+       défaut qui avait distribué des bons à des visiteurs jamais inscrits : ne jamais le rejouer. */
+    grantCode(state, untilMs) {
       const failed = state === 'failed' || state === 'network';
-      const untilSec = parseInt(this.dataset.untilTs, 10) || 0;
-      const until = untilSec > 0 ? untilSec * 1000 : Date.now() + SEEN_TTL;
+      const until = untilMs > 0 ? untilMs : Date.now() + SEEN_TTL;
 
       /* ⛔ Sur échec, on n'écrit PAS CODE_KEY. Cette clé fait apparaître la pastille et empêche
          l'encart de redemander l'e-mail : la poser ici condamnerait un visiteur dont
-         l'inscription a échoué à ne plus jamais pouvoir s'inscrire. Le code, lui, reste affiché
-         — il est valide indépendamment, et le retirer punirait le client d'une panne qui n'est
-         pas la sienne. Ce qu'on cesse d'affirmer, c'est « vous êtes inscrit ». */
+         l'inscription a échoué à ne plus jamais pouvoir s'inscrire. */
       if (!failed) write(localStorage, CODE_KEY, until);
       write(localStorage, SEEN_KEY, Date.now());
+
+      this.renderCode(failed);
 
       /* Le titre suit le verdict : « Voici votre bon » ne doit jamais coiffer un échec. */
       const title = this.screens[2].querySelector('[data-promo-title]');

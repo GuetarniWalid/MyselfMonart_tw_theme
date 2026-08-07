@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Banc d'essai — encart promo « bon de 15 € »</title>
+<title>Banc d'essai — encart promo (fr/FR/EUR)</title>
 <!-- ⚠️ FICHIER GÉNÉRÉ : ne pas éditer à la main. Source = snippets/promo-popup.liquid.
      Régénérer avec :  python dev-harness/build-harness.py  -->
 <link rel="stylesheet" href="../assets/output.css">
@@ -23,11 +23,14 @@
 </head>
 <body>
 <div class="harness-bar">
-  <strong>BANC D'ESSAI</strong>
+  <strong>BANC D'ESSAI — fr · FR · EUR</strong>
   <button onclick="reset()">Réinitialiser</button>
   <button onclick="document.querySelector('promo-popup').open()">Ouvrir</button>
   <button onclick="toggleBuy()">Bouton d'achat</button>
   <button onclick="toggleCookie()">Bandeau cookies</button>
+  <button onclick="window.__stubMode='ok'">Serveur OK</button>
+  <button onclick="window.__stubMode='already'">Déjà inscrit</button>
+  <button onclick="window.__stubMode='fail'">Serveur en échec</button>
   <span id="log"></span>
 </div>
 <div class="fake-page">
@@ -44,7 +47,10 @@
 <promo-popup
     class="hidden"
     data-promo-popup
-    data-code="MERCI-K7QX"
+    data-endpoint="/__stub/subscribe"
+    data-locale="fr"
+    data-currency="EUR"
+    data-country="FR"
     
     data-until-ts="1790812799"
     data-delay="2"
@@ -75,10 +81,14 @@
       
       <div data-promo-screen="1" class="flex flex-col min-h-0">
         
-        <form action="/contact" method="post" class="flex flex-col min-h-0">
+        
+        <form id="PromoPopupForm" class="flex flex-col min-h-0" novalidate>
           
           
-          <input type="hidden" name="contact[tags]" value="promo-popup">
+          <div data-allow-empty aria-hidden="true" style="position:absolute;left:-9999px;top:0;width:1px;height:1px;overflow:hidden">
+            <label for="PromoPopupHp">Votre adresse e-mail</label>
+            <input id="PromoPopupHp" type="text" name="hp" tabindex="-1" autocomplete="off" data-promo-hp>
+          </div>
 
           
           <div
@@ -90,7 +100,7 @@
               data-promo-title
               class="m-0 flex flex-wrap items-baseline gap-x-2.5 gap-y-0 outline-none focus:outline-none">
               <span class="font-heading font-bold text-[40px] md:text-[78px] leading-[0.95] tracking-[-0.02em] [text-shadow:2px_3px_0_rgba(255,255,255,0.85)]">
-                15 €
+                15 €
               </span>
               <span class="font-heading font-bold text-[17px] md:text-[21px] leading-[1.15]">
                 offerts sur votre première œuvre
@@ -109,7 +119,8 @@
                     <li class="flex gap-[9px] items-baseline">
                       <span data-allow-empty class="flex-none w-[5px] h-[5px] mt-[7px] rounded-full bg-terra"></span>
                       <span>
-                        <strong>Dès 80 € d’achat</strong>
+                        
+                        <strong>Dès 80 € d’achat</strong>
                         hors frais de livraison
                       </span>
                     </li>
@@ -117,6 +128,7 @@
                     <li class="flex gap-[9px] items-baseline">
                       <span data-allow-empty class="flex-none w-[5px] h-[5px] mt-[7px] rounded-full bg-terra"></span>
                       <span>
+                        
                         <strong>Une seule fois</strong>
                         par client
                       </span>
@@ -125,6 +137,7 @@
                     <li class="flex gap-[9px] items-baseline">
                       <span data-allow-empty class="flex-none w-[5px] h-[5px] mt-[7px] rounded-full bg-terra"></span>
                       <span>
+                        
                         <strong>Non cumulable</strong>
                         avec la promotion en cours
                       </span>
@@ -132,7 +145,8 @@
                   
                   <li class="flex gap-[9px] items-baseline">
                     <span data-allow-empty class="flex-none w-[5px] h-[5px] mt-[7px] rounded-full bg-terra"></span>
-                    <span>Valable jusqu’au 30 septembre 2026 à 23 h 59</span>
+                    
+                    <span>Valable 8 jours à compter de sa réception</span>
                   </li>
                 </ul>
                 
@@ -190,6 +204,8 @@
                     class="flex-none w-[22px] h-[22px] mt-px accent-main cursor-pointer">
                   <label for="PromoPopupConsent" class="text-xs leading-[1.4] cursor-pointer">
                     J’accepte de recevoir par e-mail les offres et nouveautés de MyselfMonArt. Sans cette case, nous ne pouvons pas vous envoyer votre code.
+                    
+                    
                   </label>
                 </div>
                 <p
@@ -247,7 +263,8 @@
           </h2>
           <div class="mt-2.5 flex items-stretch gap-2.5">
             <div class="flex-1 flex items-center justify-center bg-secondary border-2 border-dashed border-main rounded-xl px-3 py-2 min-h-[56px]">
-              <span class="font-heading font-bold text-[27px] tracking-wide select-all">MERCI-K7QX</span>
+              
+              <span data-promo-code-value data-allow-empty class="font-heading font-bold text-[27px] tracking-wide select-all"></span>
             </div>
             <button
               type="button"
@@ -260,8 +277,8 @@
           <p
             data-promo-status
             data-allow-empty
-            data-network="Nous n’avons pas pu enregistrer votre e-mail. Votre bon reste valable."
-            data-failed="Nous n’avons pas pu enregistrer votre adresse. Votre bon reste valable ci-dessous — réessayez, ou écrivez-nous et nous vous inscrivons à la main."
+            data-network="Nous n’avons pas pu enregistrer votre adresse, et votre bon n’a donc pas pu être créé. Réessayez dans un instant, ou écrivez-nous et nous nous en occupons."
+            data-failed="Nous n’avons pas pu enregistrer votre adresse, et votre bon n’a donc pas pu être créé. Réessayez dans un instant, ou écrivez-nous et nous nous en occupons."
             data-already="Vous êtes déjà inscrit : voici votre bon."
             class="hidden mt-2.5 mb-0 text-sm leading-[1.35] font-medium"></p>
         </div>
@@ -269,10 +286,12 @@
         <div class="relative flex-1 min-h-0">
           <div class="h-full overflow-y-auto overflow-x-hidden overscroll-contain flex flex-col gap-2.5 pl-5 pr-[26px] pt-4 pb-[22px]">
             <p class="m-0 text-[15px] font-bold leading-[1.4]">
-              Valable jusqu’au 30 septembre 2026 à 23 h 59
+              
+              <span data-promo-until-text data-allow-empty
+                    data-template="Valable jusqu’au @@ inclus"></span>
             </p>
             
-            <p class="m-0 text-sm leading-[1.45]">Sur un panier supérieur à 150 €, la promotion en cours est déjà plus avantageuse que ce bon : c’est elle qui s’appliquera, et c’est normal.</p>
+            <p class="m-0 text-sm leading-[1.45]">Sur un panier supérieur à 150 €, la promotion en cours est déjà plus avantageuse que ce bon : c’est elle qui s’appliquera, et c’est normal.</p>
             <p class="m-0 text-xs leading-relaxed text-main-70">Ce code est enregistré dans ce navigateur. Nous vous l’envoyons aussi par e-mail : si vous changez d’appareil, vous le retrouverez là.</p>
           </div>
           <div data-allow-empty aria-hidden="true" class="pointer-events-none absolute inset-x-px bottom-0 h-4 bg-gradient-to-t from-secondary"></div>
@@ -280,7 +299,10 @@
 
         <div class="flex-none flex flex-col gap-1.5 px-5 pt-3.5 pb-4 border-t border-main-10">
           <a
-            href="/discount/MERCI-K7QX?redirect=/products/exemple"
+            
+            href="/products/exemple"
+            data-discount-base="/discount/"
+            data-redirect="/products/exemple"
             data-promo-apply
             class="w-full min-h-[52px] px-4 flex items-center justify-center bg-main text-secondary border-0 rounded-xl font-heading font-bold text-lg no-underline hover:bg-brand-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2 transition-colors duration-500">
             Appliquer ma remise
@@ -295,7 +317,7 @@
             
             <a
               data-promo-mailto
-              href="mailto:team@myselfmonart.com?subject=Inscription au bon de 15 €"
+              href="mailto:team@myselfmonart.com?subject=Inscription au bon de 15 €"
               class="hidden bg-transparent px-3 py-2.5 text-[15px] text-main-80 underline hover:text-main focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main transition-colors duration-500">
               Nous écrire pour être inscrit
             </a>
@@ -311,12 +333,39 @@
         data-promo-badge
         class="inline-flex items-center gap-2 mb-4 px-3.5 min-h-[38px] bg-transparent border-1 border-dashed border-terra rounded-full text-[13px] font-medium text-terra hover:bg-terra-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terra transition-colors duration-500">
         <svg aria-hidden="true" focusable="false" width="15" height="15" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor"/></svg>
-        Votre bon de 15 €
+        Votre bon de 15 €
       </button>
     </template>
   </promo-popup>
 
 <script>
+  /* ⛔ STUB DU BACK-END. Le banc ne doit jamais atteindre backend.myselfmonart.com : chaque
+     essai y créerait un vrai client Shopify et un vrai code de remise. On intercepte donc
+     l'adresse bidon /__stub/subscribe et on rend une réponse conforme au contrat.
+     Les trois boutons de la barre pilotent le scénario. */
+  window.__stubMode = 'ok';
+  const __vraiFetch = window.fetch;
+  window.fetch = function (url, opts) {
+    if (String(url).indexOf('/__stub/subscribe') === -1) return __vraiFetch.apply(this, arguments);
+    const corps = JSON.parse((opts && opts.body) || '{}');
+    document.getElementById('log').textContent =
+      'POST reçu — ' + corps.email + ' · locale=' + corps.locale
+      + ' · currency=' + corps.currency + ' · country=' + corps.country
+      + ' · consent=' + corps.consent + (corps.hp ? ' · POT DE MIEL REMPLI' : '');
+    window.__dernierPost = corps;
+    if (window.__stubMode === 'fail') {
+      return Promise.resolve(new Response(JSON.stringify({ ok: false, error: 'rate_limited' }),
+        { status: 429, headers: { 'Content-Type': 'application/json' } }));
+    }
+    const fin = new Date(Date.now() + 8 * 24 * 3600 * 1000);
+    return Promise.resolve(new Response(JSON.stringify({
+      ok: true,
+      state: window.__stubMode === 'already' ? 'already' : 'subscribed',
+      code: 'MERCI-TEST42',
+      expires_at: fin.toISOString(),
+    }), { status: 200, headers: { 'Content-Type': 'application/json' } }));
+  };
+
   window.trapFocus = (e, first, last) => {
     if (e.key !== 'Tab') return;
     if (e.shiftKey && document.activeElement === first) { last.focus(); e.preventDefault(); }

@@ -8,12 +8,25 @@ Liquid mécaniquement plutôt que de recopier à la main.
 
 Usage :  python dev-harness/build-harness.py
 """
-import io, json, os, re
+import io, json, os, re, sys
 
 RACINE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SNIPPET = os.path.join(RACINE, "snippets", "promo-popup.liquid")
-LOCALE = os.path.join(RACINE, "locales", "fr.default.json")
 SORTIE = os.path.join(RACINE, "dev-harness", "promo-popup-harness.html")
+
+# Langue et MARCHÉ sont deux axes indépendants — c'est précisément ce qu'il faut pouvoir tester :
+#   python dev-harness/build-harness.py            → fr / France / EUR
+#   python dev-harness/build-harness.py fr CA      → fr / Canada / CAD (+ mentions canadiennes)
+#   python dev-harness/build-harness.py en US      → en / États-Unis / USD
+PAYS = {"FR": "EUR", "US": "USD", "CA": "CAD", "CH": "CHF", "GB": "GBP", "JP": "JPY"}
+LANG = sys.argv[1] if len(sys.argv) > 1 else "fr"
+CODE_PAYS = (sys.argv[2] if len(sys.argv) > 2 else "FR").upper()
+if CODE_PAYS not in PAYS:
+    raise SystemExit("pays inconnu : %s (attendu %s)" % (CODE_PAYS, "/".join(PAYS)))
+DEVISE = PAYS[CODE_PAYS]
+LOCALE = os.path.join(RACINE, "locales", ("fr.default" if LANG == "fr" else LANG) + ".json")
+if not os.path.exists(LOCALE):
+    raise SystemExit("locale inconnue : %s" % LANG)
 
 CODE = "MERCI-K7QX"
 DEADLINE = "30 septembre 2026"
@@ -21,6 +34,17 @@ UNTIL_TS = "1790812799"  # 2026-09-30T23:59:59+02:00
 
 raw = io.open(LOCALE, encoding="utf-8").read().lstrip("﻿")
 T = json.loads(raw[raw.find("{"):])["sections"]["promo_popup"]
+
+# Le snippet ne s'affiche pas hors des 5 devises servies. Le banc doit reproduire ce verdict,
+# sinon on testerait un encart que la production n'aurait jamais rendu.
+if DEVISE not in ("EUR", "USD", "CAD", "CHF", "GBP"):
+    raise SystemExit("devise %s non servie — en production l'encart ne s'affiche PAS. "
+                     "C'est le comportement attendu, pas une erreur du banc." % DEVISE)
+CLE = DEVISE.lower()
+MONTANT = T["amount_" + CLE]
+SEUIL = T["threshold_" + CLE]
+BASCULE = T["crossover_" + CLE]
+PARAMS = {"min": SEUIL, "amount": MONTANT, "seuil": BASCULE}
 
 s = io.open(SNIPPET, encoding="utf-8").read()
 
@@ -40,9 +64,24 @@ s = re.sub(r"\{%-?\s*comment\s*-?%\}.*?\{%-?\s*endcomment\s*-?%\}", "", s, flags
 # 4) traductions, y compris les clés construites par concaténation
 def trad(m):
     expr = m.group(1)
-    concat = re.match(r"'sections\.promo_popup\.([a-z_]+)'\s*\|\s*append:\s*(\d+)\s*\|\s*append:\s*'([a-z_]+)'\s*\|\s*t", expr)
+    concat = re.match(r"'sections\.promo_popup\.([a-z_]+)'\s*\|\s*append:\s*(\d+)\s*\|\s*append:\s*'([a-z_]+)'\s*\|\s*t(?:\s*:\s*(min|amount|seuil):\s*promo_\w+)?", expr)
     if concat:
-        return T.get(concat.group(1) + concat.group(2) + concat.group(3), "??")
+        val = T.get(concat.group(1) + concat.group(2) + concat.group(3), "??")
+        # `cond_1_lead` porte le seuil d'achat : la clé est construite ET paramétrée.
+        if concat.group(4):
+            val = val.replace("{{ %s }}" % concat.group(4), PARAMS[concat.group(4)])
+        return val
+    # ⚠️ `date: '@@'` — le thème rend volontairement un MARQUEUR que le JS remplace ensuite par
+    # l'échéance personnelle du visiteur. Le banc doit le laisser tel quel : y injecter une date
+    # ferait passer pour correct un affichage qui, en production, montrerait la fin de campagne.
+    marqueur = re.match(r"'sections\.promo_popup\.([a-z0-9_]+)'\s*\|\s*t\s*:\s*date:\s*'@@'", expr)
+    if marqueur:
+        return T.get(marqueur.group(1), "??").replace("{{ date }}", "@@")
+    # Les chaînes paramétrées par la devise : `| t: min: promo_threshold` & co.
+    param = re.match(r"'sections\.promo_popup\.([a-z0-9_]+)'\s*\|\s*t\s*:\s*(min|amount|seuil):\s*promo_\w+", expr)
+    if param:
+        val = PARAMS[param.group(2)]
+        return T.get(param.group(1), "??").replace("{{ %s }}" % param.group(2), val)
     simple = re.match(r"'sections\.promo_popup\.([a-z0-9_]+)'\s*\|\s*t(?:\s*:\s*date:\s*\w+)?(?:\s*\|\s*(?:escape|url_encode))?", expr)
     if simple:
         return T.get(simple.group(1), "??").replace("{{ date }}", DEADLINE)
@@ -60,6 +99,21 @@ s = re.sub(r"\{\{\s*product\.url[^}]*\}\}", "/products/exemple", s)
 s = re.sub(r"\{\{\s*settings\.promo_popup_delay[^}]*\}\}", "2", s)
 s = re.sub(r"\{\{\s*settings\.promo_popup_pages[^}]*\}\}", "1", s)
 s = re.sub(r"\{\{\s*cart\.item_count\s*\}\}", "0", s)
+s = re.sub(r"\{\{\s*request\.locale\.iso_code\s*\}\}", LANG, s)
+s = re.sub(r"\{\{\s*promo_currency\s*\}\}", DEVISE, s)
+s = re.sub(r"\{\{\s*promo_amount\s*\}\}", MONTANT, s)
+s = re.sub(r"\{\{\s*promo_threshold\s*\}\}", SEUIL, s)
+s = re.sub(r"\{\{\s*localization\.country\.iso_code\s*\}\}", CODE_PAYS, s)
+
+# Les mentions canadiennes ne sont rendues qu'au Canada : le banc tranche comme le Liquid.
+def _canada(m):
+    return m.group(1) if CODE_PAYS == "CA" else ""
+s = re.sub(r"\{%-\s*if localization\.country\.iso_code == 'CA'\s*-%\}(.*?)\{%-\s*endif\s*-%\}",
+           _canada, s, flags=re.S)
+
+# ⛔ Le banc ne doit JAMAIS appeler le vrai back-end : chaque essai créerait un client Shopify
+# et un code de remise réels. On pointe sur une adresse bidon, interceptée par le stub du gabarit.
+s = s.replace("https://backend.myselfmonart.com/api/newsletter/subscribe", "/__stub/subscribe")
 
 # 6) snippets rendus
 ICONE_ERREUR = ('<svg aria-hidden="true" focusable="false" class="inline-block" viewBox="0 0 13 13" width="17" height="17">'
@@ -104,7 +158,7 @@ GABARIT = u"""<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Banc d'essai — encart promo « bon de 15 € »</title>
+<title>Banc d'essai — encart promo ({lang}/{pays}/{devise})</title>
 <!-- ⚠️ FICHIER GÉNÉRÉ : ne pas éditer à la main. Source = snippets/promo-popup.liquid.
      Régénérer avec :  python dev-harness/build-harness.py  -->
 <link rel="stylesheet" href="../assets/output.css">
@@ -124,11 +178,14 @@ GABARIT = u"""<!doctype html>
 </head>
 <body>
 <div class="harness-bar">
-  <strong>BANC D'ESSAI</strong>
+  <strong>BANC D'ESSAI — {lang} · {pays} · {devise}</strong>
   <button onclick="reset()">Réinitialiser</button>
   <button onclick="document.querySelector('promo-popup').open()">Ouvrir</button>
   <button onclick="toggleBuy()">Bouton d'achat</button>
   <button onclick="toggleCookie()">Bandeau cookies</button>
+  <button onclick="window.__stubMode='ok'">Serveur OK</button>
+  <button onclick="window.__stubMode='already'">Déjà inscrit</button>
+  <button onclick="window.__stubMode='fail'">Serveur en échec</button>
   <span id="log"></span>
 </div>
 <div class="fake-page">
@@ -145,6 +202,33 @@ GABARIT = u"""<!doctype html>
 {corps}
 
 <script>
+  /* ⛔ STUB DU BACK-END. Le banc ne doit jamais atteindre backend.myselfmonart.com : chaque
+     essai y créerait un vrai client Shopify et un vrai code de remise. On intercepte donc
+     l'adresse bidon /__stub/subscribe et on rend une réponse conforme au contrat.
+     Les trois boutons de la barre pilotent le scénario. */
+  window.__stubMode = 'ok';
+  const __vraiFetch = window.fetch;
+  window.fetch = function (url, opts) {{
+    if (String(url).indexOf('/__stub/subscribe') === -1) return __vraiFetch.apply(this, arguments);
+    const corps = JSON.parse((opts && opts.body) || '{{}}');
+    document.getElementById('log').textContent =
+      'POST reçu — ' + corps.email + ' · locale=' + corps.locale
+      + ' · currency=' + corps.currency + ' · country=' + corps.country
+      + ' · consent=' + corps.consent + (corps.hp ? ' · POT DE MIEL REMPLI' : '');
+    window.__dernierPost = corps;
+    if (window.__stubMode === 'fail') {{
+      return Promise.resolve(new Response(JSON.stringify({{ ok: false, error: 'rate_limited' }}),
+        {{ status: 429, headers: {{ 'Content-Type': 'application/json' }} }}));
+    }}
+    const fin = new Date(Date.now() + 8 * 24 * 3600 * 1000);
+    return Promise.resolve(new Response(JSON.stringify({{
+      ok: true,
+      state: window.__stubMode === 'already' ? 'already' : 'subscribed',
+      code: 'MERCI-TEST42',
+      expires_at: fin.toISOString(),
+    }}), {{ status: 200, headers: {{ 'Content-Type': 'application/json' }} }}));
+  }};
+
   window.trapFocus = (e, first, last) => {{
     if (e.key !== 'Tab') return;
     if (e.shiftKey && document.activeElement === first) {{ last.focus(); e.preventDefault(); }}
@@ -165,5 +249,6 @@ GABARIT = u"""<!doctype html>
 </html>
 """
 
-io.open(SORTIE, "w", encoding="utf-8", newline="\n").write(GABARIT.format(corps=s.strip()))
-print("banc genere : %s (%d octets)" % (os.path.basename(SORTIE), len(s)))
+io.open(SORTIE, "w", encoding="utf-8", newline="\n").write(GABARIT.format(corps=s.strip(), lang=LANG, pays=CODE_PAYS, devise=DEVISE))
+print("banc genere : %s — %s / %s / %s (%d octets)"
+      % (os.path.basename(SORTIE), LANG, CODE_PAYS, DEVISE, len(s)))
