@@ -438,11 +438,16 @@
         </div>
 
         <div class="flex-none flex flex-col gap-1.5 px-5 pt-3.5 pb-4 border-t border-main-10">
+          {%- comment -%}
+            href posé par le JS une fois le code connu. On garde ici la BASE et la cible de
+            redirection, qui elles sont bien connues côté serveur et localisées.
+            ⛔ CE COMMENTAIRE RESTE AU-DESSUS DE LA BALISE. Glissé entre `<a` et son premier
+            attribut, les tirets de `{%-`/`-%}` mangent les espaces des deux côtés et rendent
+            `<ahref="...` : une balise inconnue, stylée comme un bouton mais qui n'est PAS un
+            lien — le clic ne fait alors rien du tout. Survenu en production, invisible à la
+            relecture, et le bon n'était jamais appliqué.
+          {%- endcomment -%}
           <a
-            {%- comment -%}
-              href posé par le JS une fois le code connu. On garde ici la BASE et la cible de
-              redirection, qui elles sont bien connues côté serveur et localisées.
-            {%- endcomment -%}
             href="{{ product.url | default: routes.root_url }}"
             data-discount-base="{{ routes.root_url }}discount/"
             data-redirect="{{ product.url | default: routes.root_url }}"

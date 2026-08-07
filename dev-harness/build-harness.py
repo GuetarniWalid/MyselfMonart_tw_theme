@@ -58,8 +58,21 @@ if bloc:
     déplié = "".join(motif.replace("append: i", "append: %d" % i) for i in (1, 2, 3))
     s = s[:bloc.start()] + déplié + s[bloc.end():]
 
-# 3) commentaires Liquid
-s = re.sub(r"\{%-?\s*comment\s*-?%\}.*?\{%-?\s*endcomment\s*-?%\}", "", s, flags=re.S)
+# 3) commentaires Liquid — en REPRODUISANT le contrôle d'espaces.
+# ⛔ Ne jamais revenir à un simple re.sub(..., "") : il laisse les espaces autour du commentaire,
+# alors que Liquid les MANGE quand la balise porte un tiret (`{%-` à gauche, `-%}` à droite).
+# Sans cette fidélité, le garde-fou « attribut collé » plus bas est AVEUGLE au cas qu'il vise :
+# un commentaire glissé entre `<a` et son premier attribut rend `<ahref="...` — une balise
+# inconnue, stylée comme un bouton mais qui n'est pas un lien, dont le clic ne fait RIEN.
+# Survenu en production le 2026-08-07 : le bouton « Appliquer ma remise » n'appliquait rien.
+_COMMENT = re.compile(
+    r"([ \t]*\n?[ \t]*)?\{%(-?)\s*comment\s*-?%\}.*?\{%-?\s*endcomment\s*(-?)%\}([ \t]*\n?[ \t]*)?",
+    re.S)
+def _sans_commentaire(m):
+    avant, tiret_gauche, tiret_droit, apres = m.groups()
+    return ("" if tiret_gauche == "-" else (avant or "")) + \
+           ("" if tiret_droit == "-" else (apres or ""))
+s = _COMMENT.sub(_sans_commentaire, s)
 
 # 4) traductions, y compris les clés construites par concaténation
 def trad(m):
