@@ -3573,10 +3573,16 @@
           props[vpicker.dataset.cadreKey || 'Couleur du cadre'] = frameRadio.dataset.colorName;
           props._cadre = frameRadio.dataset.colorHandle || '';
         }
-        // Contour blanc : property active si « Avec contour blanc » coché (défaut).
-        if (this.whiteBorderOn()) {
-          props[vpicker.dataset.contourKey || 'Contour blanc'] = vpicker.dataset.contourValue || 'Avec contour blanc';
-          props._passe_partout = 'oui';
+        // Contour blanc : les DEUX choix sont écrits dans la commande (même règle que le poster standard,
+        // cf. mmaSetWhiteBorder) — une ligne absente dans l'admin serait indiscernable d'un produit sans
+        // option ou d'un bug. On teste la PRÉSENCE du toggle, pas sa valeur : sans toggle (produit sans
+        // visuel passe-partout), toujours aucune property.
+        if (this.q('[data-studio-white-border]')) {
+          const wbOn = this.whiteBorderOn();
+          props[vpicker.dataset.contourKey || 'Contour blanc'] = wbOn
+            ? vpicker.dataset.contourValue || 'Avec contour blanc'
+            : vpicker.dataset.contourValueOff || 'Sans contour blanc';
+          props._passe_partout = wbOn ? 'oui' : 'non';
         }
       }
       return props;

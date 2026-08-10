@@ -1315,8 +1315,21 @@ function mmaSetWhiteBorder(on) {
   mmaApplyWhiteBorderSwap(document, on);
   const wbName = document.querySelector('.product-properties [data-wb-name]');
   const wbFlag = document.querySelector('.product-properties [data-wb-flag]');
-  if (wbName) wbName.disabled = !on;
-  if (wbFlag) wbFlag.disabled = !on;
+  // Les DEUX choix sont écrits dans la commande (valeur réécrite, plus de `disabled`) : « Sans » n'émettait
+  // rien, et une ligne absente dans l'admin est indiscernable d'un produit sans option ou d'un bug JS ->
+  // impossible de trancher à la fabrication. Libellés localisés rendus côté serveur (data-on / data-off).
+  // Repli défensif : HTML d'une version antérieure servi par un cache (pas de data-on/off) -> on retombe
+  // EXACTEMENT sur l'ancien comportement (« Avec » émet la valeur déjà rendue, « Sans » n'émet rien),
+  // jamais sur une property « undefined » qui partirait jusqu'à la commande.
+  const label = wbName && (on ? wbName.dataset.on || wbName.value : wbName.dataset.off);
+  if (wbName) {
+    wbName.disabled = !label;
+    if (label) wbName.value = label;
+  }
+  if (wbFlag) {
+    wbFlag.disabled = !label;
+    wbFlag.value = on ? 'oui' : 'non';
+  }
   // Drapeau global -> les clones du popup (créés à l'ouverture) reflètent le choix courant.
   document.body.classList.toggle('poster-pp-on', on);
 }

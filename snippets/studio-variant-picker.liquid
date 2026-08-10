@@ -33,7 +33,8 @@
   <div data-studio-vpicker
     data-cadre-key="{{ 'sections.main_product.variant_picker.frame_color' | t | escape }}"
     data-contour-key="{{ 'sections.main_product.variant_picker.white_border' | t | escape }}"
-    data-contour-value="{{ 'sections.main_product.variant_picker.white_border_with' | t | escape }}">
+    data-contour-value="{{ 'sections.main_product.variant_picker.white_border_with' | t | escape }}"
+    data-contour-value-off="{{ 'sections.main_product.variant_picker.white_border_without' | t | escape }}">
     {%- for option in product.options_with_values -%}
       {%- comment -%} Type d'option par NOM (mêmes familles que selectedOptionByName du JS). {%- endcomment -%}
       {%- assign onl = option.name | downcase -%}

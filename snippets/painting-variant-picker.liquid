@@ -249,11 +249,13 @@
         {%- comment -%} ===== Contour blanc (passe-partout) — sélecteur Sans/Avec, FEINTÉ (pas une variante) =====
            2 radios clairs. « Avec contour blanc » = DÉFAUT : le serveur rend directement les visuels
            passe-partout (cf. tw-main-product-image `pp_default`) + le WebGL dessine le liseré (radio « on »
-           coché lu par syncStateFromDOM) + la property est active dès l'ouverture (inputs sans `disabled`).
-           « Sans contour blanc » -> initPosterWhiteBorder (main-product.js) rebascule les <img> de galerie vers
-           les versions sans bord (chargées à ce moment) et désactive la property. Indépendant du cadre.
+           coché lu par syncStateFromDOM). « Sans contour blanc » -> mmaSetWhiteBorder (main-product.js)
+           rebascule les <img> de galerie vers les versions sans bord (chargées à ce moment). Indépendant du cadre.
            Property visible « Contour blanc » localisée + `_passe_partout` neutre, dans .product-properties
-           (POST JSON, noms bruts) ; actifs par défaut -> « Sans » les désactive (JS). {%- endcomment -%}
+           (POST JSON, noms bruts). Les DEUX choix sont écrits dans la commande : « Sans » n'émettait rien,
+           et dans l'admin une ligne absente était indiscernable d'un produit sans option ou d'un bug JS ->
+           impossible de trancher au moment de la fabrication. Le JS réécrit donc la VALEUR (data-on /
+           data-off, déjà localisées côté serveur) au lieu de désactiver les champs. {%- endcomment -%}
         {% if is_poster and has_passe_partout %}
             <hr>
             <div class="pt-3 px-1 mx-4 mb-1 text-main-80">
@@ -270,7 +272,7 @@
                 </label>
             </div>
             <div class="product-properties">
-                <input type="hidden" name="{{ 'sections.main_product.variant_picker.white_border' | t }}" data-wb-name value="{{ 'sections.main_product.variant_picker.white_border_with' | t }}">
+                <input type="hidden" name="{{ 'sections.main_product.variant_picker.white_border' | t }}" data-wb-name data-on="{{ 'sections.main_product.variant_picker.white_border_with' | t | escape }}" data-off="{{ 'sections.main_product.variant_picker.white_border_without' | t | escape }}" value="{{ 'sections.main_product.variant_picker.white_border_with' | t }}">
                 <input type="hidden" name="_passe_partout" data-wb-flag value="oui">
             </div>
         {% endif %}
