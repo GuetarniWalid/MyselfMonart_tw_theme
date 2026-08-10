@@ -35,10 +35,17 @@
       </span>
       <span data-money-symbol="{{ cart.currency.symbol }}" class="main-price inline-block py-4 md:py-5 transition-transform duration-300 ease-in-out buy-button-bottom-anim absolute bottom-0 right-0 text-right whitespace-nowrap">
         {% liquid
-          if template.suffix == 'painting' or template.suffix == 'personalized'
-            assign price = product.price_min
-          else
-            assign price = product.selected_or_first_available_variant.price
+          comment
+            Prix d'appel (le moins cher) tant qu'aucune variante n'est demandee ;
+            des que l'URL cible une variante (?variant=, liens profonds Pinterest /
+            Shopping / e-mails), on affiche le prix reel de CETTE variante, sinon il
+            contredit le selecteur et le prix barre qui, eux, la suivent.
+          endcomment
+          assign price = product.selected_or_first_available_variant.price
+          if product.selected_variant == nil
+            if template.suffix == 'painting' or template.suffix == 'personalized'
+              assign price = product.price_min
+            endif
           endif
           if block.settings.promotion_discount > 0
             if block.settings.promotion_discount_unit == '%'

@@ -18,10 +18,20 @@
         {% endif %}
     </span>
     <span class="main-price whitespace-nowrap {% if float %}mobile-mini:hidden{% endif %} inline">
-        {% if template.suffix == 'painting' or template.suffix == 'personalized' %}
-            {{ product.price_min | money }}
-        {% else %}
-            {{ product.selected_or_first_available_variant.price | money }}
-        {% endif %}
+        {%- liquid
+            comment
+                Prix d'appel (le moins cher) tant qu'aucune variante n'est demandee ;
+                des que l'URL cible une variante (?variant=, liens profonds Pinterest /
+                Shopping / e-mails), on affiche le prix reel de CETTE variante, sinon il
+                contredit le selecteur qui, lui, la suit.
+            endcomment
+            assign price = product.selected_or_first_available_variant.price
+            if product.selected_variant == nil
+                if template.suffix == 'painting' or template.suffix == 'personalized'
+                    assign price = product.price_min
+                endif
+            endif
+        -%}
+        {{ price | money }}
     </span>
 </span>
