@@ -449,7 +449,7 @@
       "mail_fallback": "Mail ons om je aan te melden",
       "mail_subject": "Aanmelding voor de tegoedbon van {{ amount }}",
       "valid_until": "Geldig tot en met {{ date }}",
-      "valid_duration": "8 dagen geldig vanaf ontvangst",
+      "valid_duration": "7 dagen geldig vanaf ontvangst",
       "title_rest": "korting op uw eerste kunstwerk",
       "cond_1_lead": "Vanaf {{ min }} aankoop",
       "cond_1_rest": "exclusief verzendkosten",

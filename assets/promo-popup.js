@@ -587,7 +587,7 @@
 
       /* La date d'échéance PERSONNELLE. Formatée ici, dans la langue de la page : le back-end
          renvoie un ISO 8601, et le mois doit s'écrire en lettres. ⛔ Ne jamais afficher la fin
-         de campagne à la place — le code de ce visiteur meurt 8 jours après SON inscription. */
+         de campagne à la place — le code de ce visiteur meurt 7 jours après SON inscription. */
       const el = this.querySelector('[data-promo-until-text]');
       if (el) {
         const until = readInt(localStorage, CODE_KEY);

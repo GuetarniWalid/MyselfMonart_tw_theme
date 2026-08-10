@@ -681,7 +681,7 @@
       "mail_fallback": "Email us to be added",
       "mail_subject": "Sign-up for the {{ amount }} voucher",
       "valid_until": "Valid through {{ date }}",
-      "valid_duration": "Valid for 8 days from the moment you receive it",
+      "valid_duration": "Valid for 7 days from the moment you receive it",
       "title_rest": "off your first artwork",
       "cond_1_lead": "On orders from {{ min }}",
       "cond_1_rest": "excluding shipping",

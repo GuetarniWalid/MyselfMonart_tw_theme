@@ -233,7 +233,7 @@ GABARIT = u"""<!doctype html>
       return Promise.resolve(new Response(JSON.stringify({{ ok: false, error: 'rate_limited' }}),
         {{ status: 429, headers: {{ 'Content-Type': 'application/json' }} }}));
     }}
-    const fin = new Date(Date.now() + 8 * 24 * 3600 * 1000);
+    const fin = new Date(Date.now() + 7 * 24 * 3600 * 1000);
     return Promise.resolve(new Response(JSON.stringify({{
       ok: true,
       state: window.__stubMode === 'already' ? 'already' : 'subscribed',

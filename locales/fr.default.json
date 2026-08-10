@@ -683,7 +683,7 @@
       "mail_fallback": "Nous écrire pour être inscrit",
       "mail_subject": "Inscription au bon de {{ amount }}",
       "valid_until": "Valable jusqu’au {{ date }} inclus",
-      "valid_duration": "Valable 8 jours à compter de sa réception",
+      "valid_duration": "Valable 7 jours à compter de sa réception",
       "title_rest": "offerts sur votre première œuvre",
       "cond_1_lead": "Dès {{ min }} d’achat",
       "cond_1_rest": "hors frais de livraison",

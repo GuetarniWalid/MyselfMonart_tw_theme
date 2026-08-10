@@ -450,7 +450,7 @@
       "mail_fallback": "Escríbenos para darte de alta",
       "mail_subject": "Suscripción al vale de {{ amount }}",
       "valid_until": "Válido hasta el {{ date }} incluido",
-      "valid_duration": "Válido durante 8 días desde su recepción",
+      "valid_duration": "Válido durante 7 días desde su recepción",
       "title_rest": "de regalo en su primera obra",
       "cond_1_lead": "A partir de {{ min }} de compra",
       "cond_1_rest": "sin gastos de envío",

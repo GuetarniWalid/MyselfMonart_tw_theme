@@ -450,7 +450,7 @@
       "mail_fallback": "Schreiben Sie uns für die Anmeldung",
       "mail_subject": "Anmeldung für den Gutschein über {{ amount }}",
       "valid_until": "Gültig bis einschließlich {{ date }}",
-      "valid_duration": "8 Tage ab Erhalt gültig",
+      "valid_duration": "7 Tage ab Erhalt gültig",
       "title_rest": "geschenkt auf Ihr erstes Kunstwerk",
       "cond_1_lead": "Ab {{ min }} Einkaufswert",
       "cond_1_rest": "ohne Versandkosten",

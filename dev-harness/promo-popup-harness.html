@@ -118,7 +118,7 @@
                     </li>
                   
                   <li class="flex gap-[9px] items-baseline">
-                    <span data-allow-empty class="flex-none w-[5px] h-[5px] mt-[7px] rounded-full bg-terra"></span><span>Valable 8 jours à compter de sa réception</span>
+                    <span data-allow-empty class="flex-none w-[5px] h-[5px] mt-[7px] rounded-full bg-terra"></span><span>Valable 7 jours à compter de sa réception</span>
                   </li>
                 </ul><a
                   href="/policies/privacy-policy"
@@ -300,7 +300,7 @@
       return Promise.resolve(new Response(JSON.stringify({ ok: false, error: 'rate_limited' }),
         { status: 429, headers: { 'Content-Type': 'application/json' } }));
     }
-    const fin = new Date(Date.now() + 8 * 24 * 3600 * 1000);
+    const fin = new Date(Date.now() + 7 * 24 * 3600 * 1000);
     return Promise.resolve(new Response(JSON.stringify({
       ok: true,
       state: window.__stubMode === 'already' ? 'already' : 'subscribed',

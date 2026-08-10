@@ -6,11 +6,23 @@
     </li>
     <li class="group relative">
         {% liquid
-            if request.locale.primary
-                assign likes_page = "/pages/" | append: settings.likes_page | base64_encode
-            else
-                assign likes_page = "/" | append: request.locale.iso_code | append: "/pages/" | append: settings.likes_page | base64_encode
+            comment
+                ⛔ LE LIEN SUIT LE MARCHÉ, PAS LA LANGUE.
+                request.locale.iso_code rend « en » aussi bien sur /en — qui est une vitrine du
+                marché FRANCE, en euros — que sur /en-us. Construire « /<langue>/pages/… » jetait
+                donc l'Américain et le Suisse sur la boutique française ; et le Canadien
+                francophone tombait dans la branche « marché primaire » (sa langue EST la langue
+                primaire), donc sur /pages/… sans préfixe, en euros lui aussi.
+                routes.root_url porte le préfixe RÉEL du marché : « / » sur le marché primaire,
+                « /en-us », « /fr-ca », « /de-ch » ailleurs. Vérifié sur les 4 marchés.
+                ⚠️ Hors marché primaire il n'y a PAS de barre oblique finale, d'où le test
+                explicite plutôt qu'un append direct qui donnerait « /en-uspages/ ».
+            endcomment
+            assign racine = routes.root_url
+            if racine == "/"
+                assign racine = ""
             endif
+            assign likes_page = racine | append: "/pages/" | append: settings.likes_page | base64_encode
         %}
         <span tabindex="0" class="group obfuscate p-4 transition-colors duration-500 relative" data-url64="{{ likes_page }}">
             {% render 'tw-icon-heart-outline' %}
