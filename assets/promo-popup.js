@@ -519,7 +519,7 @@
         write(localStorage, CODE_VALUE_KEY, issue.code);
         write(localStorage, SUB_KEY, Date.now());
       }
-      this.grantCode(issue.ok ? issue.state : 'failed', issue.until);
+      this.grantCode(issue.ok ? issue.state : issue.state || 'failed', issue.until);
     }
 
     /* L'inscription : une requête, une réponse, un verdict. C'est tout ce qu'on voulait depuis
@@ -557,8 +557,20 @@
             hp: this.hpInput ? this.hpInput.value : '',
           }),
         });
-        const data = await res.json();
-        if (!res.ok || !data || !data.ok || !data.code) return echec;
+        /* Tolérant au corps illisible : un 429 servi par une couche en amont peut ne pas être
+           du JSON. On veut quand même savoir que c'est un 429, d'où le catch plutôt qu'une
+           exception qui nous ferait retomber sur l'échec générique. */
+        const data = await res.json().catch(() => null);
+        if (!res.ok || !data || !data.ok || !data.code) {
+          /* Le quota mérite son propre message : dire « réessayez dans un instant » à quelqu'un
+             bloqué jusqu'au lendemain, c'est l'envoyer se cogner à la même porte. Le back-end
+             donne `scope` = 'hour' | 'day' ; on retombe sur l'heure quand il se tait, parce que
+             c'est la plus douce des deux affirmations. */
+          if (res.status === 429 || (data && data.error === 'rate_limited')) {
+            return { ok: false, state: data && data.scope === 'day' ? 'rate_day' : 'rate_hour' };
+          }
+          return echec;
+        }
         const until = Date.parse(data.expires_at);
         return {
           ok: true,
@@ -639,7 +651,10 @@
        mais avec le titre et le message d'échec, et SANS code — on n'a rien à donner. C'est le
        défaut qui avait distribué des bons à des visiteurs jamais inscrits : ne jamais le rejouer. */
     grantCode(state, untilMs) {
-      const failed = state === 'failed' || state === 'network';
+      /* Un quota atteint est un échec comme un autre du point de vue de l'écran : aucun code à
+         montrer. Il ne s'en distingue que par le message et par le sort du bouton « Réessayer ». */
+      const limite = state === 'rate_hour' || state === 'rate_day';
+      const failed = state === 'failed' || state === 'network' || limite;
       const until = untilMs > 0 ? untilMs : Date.now() + SEEN_TTL;
 
       /* ⛔ Sur échec, on n'écrit PAS CODE_KEY. Cette clé fait apparaître la pastille et empêche
@@ -659,22 +674,26 @@
       }
 
       if (this.statusEl) {
-        const data = this.statusEl.dataset;
-        const msg =
-          state === 'failed'
-            ? data.failed || data.network
-            : state === 'network'
-              ? data.network
-              : state === 'already'
-                ? data.already
-                : '';
-        this.statusEl.textContent = msg || '';
+        const d = this.statusEl.dataset;
+        const messages = {
+          failed: d.failed || d.network,
+          network: d.network,
+          already: d.already,
+          rate_hour: d.rateHour || d.failed,
+          rate_day: d.rateDay || d.failed,
+        };
+        const msg = messages[state] || '';
+        this.statusEl.textContent = msg;
         this.statusEl.classList.toggle('hidden', !msg);
       }
       /* Un seul « Réessayer » : au-delà on ne fait que se rapprocher du blocage 429 par IP de
          Shopify, qui aggraverait la panne au lieu de la réparer. Ensuite, le repli humain. */
-      if (this.retryBtn) this.retryBtn.classList.toggle('hidden', !failed || this.retried);
-      if (this.mailtoLink) this.mailtoLink.classList.toggle('hidden', !failed || !this.retried);
+      /* ⛔ Sur un quota atteint, « Réessayer » est un bouton qui NE PEUT PAS marcher : la porte
+         est fermée pour une heure ou pour la journée. On le retire et on offre directement le
+         repli humain. Proposer une action vouée à échouer, c'est le même mensonge que l'écran
+         d'échec qui promettait un e-mail jamais envoyé. */
+      if (this.retryBtn) this.retryBtn.classList.toggle('hidden', !failed || this.retried || limite);
+      if (this.mailtoLink) this.mailtoLink.classList.toggle('hidden', !failed || (!this.retried && !limite));
 
       this.show(2);
     }

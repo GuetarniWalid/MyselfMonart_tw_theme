@@ -31,6 +31,8 @@
   <button onclick="window.__stubMode='ok'">Serveur OK</button>
   <button onclick="window.__stubMode='already'">Déjà inscrit</button>
   <button onclick="window.__stubMode='fail'">Serveur en échec</button>
+  <button onclick="window.__stubMode='rate_hour'">Quota horaire</button>
+  <button onclick="window.__stubMode='rate_day'">Quota journalier</button>
   <span id="log"></span>
 </div>
 <div class="fake-page">
@@ -50,7 +52,8 @@
     data-endpoint="/__stub/subscribe"
     data-locale="fr"
     data-currency="EUR"
-    data-country="FR"data-until-ts="1790812799"
+    data-country="FR"
+    data-until-ts="1790812799"
     data-delay="2"
     data-min-pages="1"
     data-product-url="/products/exemple"
@@ -226,13 +229,14 @@
               class="flex-none min-w-[88px] min-h-[56px] px-3.5 bg-secondary border-1 border-main rounded-xl text-[15px] font-medium text-main hover:bg-main-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2 transition-colors duration-500">
               Copier
             </button>
-          </div>
-          <p
+          </div><p
             data-promo-status
             data-allow-empty
             data-network="Nous n’avons pas pu enregistrer votre adresse, et votre bon n’a donc pas pu être créé. Réessayez dans un instant, ou écrivez-nous et nous nous en occupons."
             data-failed="Nous n’avons pas pu enregistrer votre adresse, et votre bon n’a donc pas pu être créé. Réessayez dans un instant, ou écrivez-nous et nous nous en occupons."
             data-already="Vous êtes déjà inscrit : voici votre bon."
+            data-rate-hour="Trop de tentatives depuis votre connexion. Réessayez dans une heure."
+            data-rate-day="Vous avez déjà demandé un bon plusieurs fois aujourd’hui. Réessayez demain."
             class="hidden mt-2.5 mb-0 text-sm leading-[1.35] font-medium"></p>
         </div>
 
@@ -296,9 +300,17 @@
       + ' · currency=' + corps.currency + ' · country=' + corps.country
       + ' · consent=' + corps.consent + (corps.hp ? ' · POT DE MIEL REMPLI' : '');
     window.__dernierPost = corps;
+    /* Le back-end distingue le quota horaire du quota journalier via `scope`. Le banc doit
+       pouvoir rejouer les deux, sinon le message dedie n'est jamais eprouve. */
+    if (window.__stubMode === 'rate_hour' || window.__stubMode === 'rate_day') {
+      const scope = window.__stubMode === 'rate_day' ? 'day' : 'hour';
+      return Promise.resolve(new Response(
+        JSON.stringify({ ok: false, error: 'rate_limited', scope: scope, retry_after: 3598 }),
+        { status: 429, headers: { 'Content-Type': 'application/json', 'Retry-After': '3598' } }));
+    }
     if (window.__stubMode === 'fail') {
-      return Promise.resolve(new Response(JSON.stringify({ ok: false, error: 'rate_limited' }),
-        { status: 429, headers: { 'Content-Type': 'application/json' } }));
+      return Promise.resolve(new Response(JSON.stringify({ ok: false, error: 'server_error' }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }));
     }
     const fin = new Date(Date.now() + 7 * 24 * 3600 * 1000);
     return Promise.resolve(new Response(JSON.stringify({

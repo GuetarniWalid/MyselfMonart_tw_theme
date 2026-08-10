@@ -446,6 +446,8 @@
       "date_pattern": "{{ day }} {{ month }} {{ year }}",
       "failed_title": "Je aanmelding is niet gelukt",
       "subscribe_failed": "We konden je adres niet opslaan, dus je tegoedbon kon niet worden aangemaakt. Probeer het zo meteen opnieuw, of stuur ons een bericht — wij regelen het.",
+      "rate_limited_hour": "Te veel pogingen vanaf uw verbinding. Probeer het over een uur opnieuw.",
+      "rate_limited_day": "U hebt vandaag al meerdere keren een bon aangevraagd. Probeer het morgen opnieuw.",
       "mail_fallback": "Mail ons om je aan te melden",
       "mail_subject": "Aanmelding voor de tegoedbon van {{ amount }}",
       "valid_until": "Geldig tot en met {{ date }}",

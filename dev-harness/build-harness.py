@@ -166,6 +166,15 @@ for tag in set(re.findall(r"<([a-zA-Z][a-zA-Z0-9-]*)(?=[\s>/])", s)):
 if re.search(r"<[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z]=[\"']", s):
     raise SystemExit("STOP — attribut collé au nom de balise détecté")
 
+# ⛔ Deuxième forme du MÊME piège, ratée par le contrôle ci-dessus : un commentaire glissé ENTRE
+# DEUX ATTRIBUTS les soude — `data-already="…"data-rate-hour="…"`. Le navigateur récupère, donc
+# ça passe inaperçu ; mais c'est une erreur d'analyse et on ne bâtit rien sur la récupération.
+# Après une valeur entre guillemets, la spec HTML n'admet qu'un espace, `/` ou `>`.
+colles = re.findall(r"[\"'][a-zA-Z][a-zA-Z0-9-]*=[\"']", s)
+if colles:
+    raise SystemExit("STOP — attributs soudés entre eux : %s "
+                     "(commentaire Liquid placé entre deux attributs ?)" % colles[:3])
+
 GABARIT = u"""<!doctype html>
 <html lang="fr">
 <head>
@@ -199,6 +208,8 @@ GABARIT = u"""<!doctype html>
   <button onclick="window.__stubMode='ok'">Serveur OK</button>
   <button onclick="window.__stubMode='already'">Déjà inscrit</button>
   <button onclick="window.__stubMode='fail'">Serveur en échec</button>
+  <button onclick="window.__stubMode='rate_hour'">Quota horaire</button>
+  <button onclick="window.__stubMode='rate_day'">Quota journalier</button>
   <span id="log"></span>
 </div>
 <div class="fake-page">
@@ -229,9 +240,17 @@ GABARIT = u"""<!doctype html>
       + ' · currency=' + corps.currency + ' · country=' + corps.country
       + ' · consent=' + corps.consent + (corps.hp ? ' · POT DE MIEL REMPLI' : '');
     window.__dernierPost = corps;
+    /* Le back-end distingue le quota horaire du quota journalier via `scope`. Le banc doit
+       pouvoir rejouer les deux, sinon le message dedie n'est jamais eprouve. */
+    if (window.__stubMode === 'rate_hour' || window.__stubMode === 'rate_day') {{
+      const scope = window.__stubMode === 'rate_day' ? 'day' : 'hour';
+      return Promise.resolve(new Response(
+        JSON.stringify({{ ok: false, error: 'rate_limited', scope: scope, retry_after: 3598 }}),
+        {{ status: 429, headers: {{ 'Content-Type': 'application/json', 'Retry-After': '3598' }} }}));
+    }}
     if (window.__stubMode === 'fail') {{
-      return Promise.resolve(new Response(JSON.stringify({{ ok: false, error: 'rate_limited' }}),
-        {{ status: 429, headers: {{ 'Content-Type': 'application/json' }} }}));
+      return Promise.resolve(new Response(JSON.stringify({{ ok: false, error: 'server_error' }}),
+        {{ status: 500, headers: {{ 'Content-Type': 'application/json' }} }}));
     }}
     const fin = new Date(Date.now() + 7 * 24 * 3600 * 1000);
     return Promise.resolve(new Response(JSON.stringify({{

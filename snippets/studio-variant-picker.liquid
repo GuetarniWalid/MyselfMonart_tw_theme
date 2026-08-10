@@ -161,7 +161,12 @@
                   data-studio-option
                   data-option-position="{{ option.position }}"
                   data-option-name="{{ option.name | escape }}"
-                  {%- if render_key != blank %} data-render-key="{{ render_key | escape }}"{% endif -%}
+                  {%- comment -%}
+                    ⛔ Le `-%}` du endif mangeait le retour à la ligne et soudait l'attribut
+                    suivant : `data-render-key="…"class="peer sr-only"`. Le navigateur récupère,
+                    donc ça ne se voyait pas — on ne s'appuie pas dessus. Sans tiret à droite.
+                  {%- endcomment -%}
+                  {%- if render_key != blank %} data-render-key="{{ render_key | escape }}"{% endif %}
                   class="peer sr-only"
                   {% if forloop.first %}checked{% endif %}>
                 {%- if opt_kind == 'frame' and mo_is_first -%}

@@ -680,6 +680,8 @@
       "date_pattern": "{{ day }} {{ month }} {{ year }}",
       "failed_title": "Votre inscription n’a pas abouti",
       "subscribe_failed": "Nous n’avons pas pu enregistrer votre adresse, et votre bon n’a donc pas pu être créé. Réessayez dans un instant, ou écrivez-nous et nous nous en occupons.",
+      "rate_limited_hour": "Trop de tentatives depuis votre connexion. Réessayez dans une heure.",
+      "rate_limited_day": "Vous avez déjà demandé un bon plusieurs fois aujourd’hui. Réessayez demain.",
       "mail_fallback": "Nous écrire pour être inscrit",
       "mail_subject": "Inscription au bon de {{ amount }}",
       "valid_until": "Valable jusqu’au {{ date }} inclus",

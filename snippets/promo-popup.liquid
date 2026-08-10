@@ -101,6 +101,13 @@
   utilisable ne soit lisible dans le HTML public.
   Ce qui reste ici : la fenêtre de campagne (`ends_ts`), qui décide si l'encart s'affiche.
 {%- endcomment -%}
+{%- comment -%}
+  data-until-ts : epoch en SECONDES. Date.parse() sur une date nue l'interprète à minuit UTC,
+  ce qui décalait la validité de la pastille d'une à deux heures selon l'heure d'été.
+  ⛔ Ce commentaire reste ICI, au-dessus. Placé entre deux attributs, les tirets de `{%-`/`-%}`
+  les soudent — `data-country="…"data-until-ts="…"`. Le navigateur récupère, ce qui rend la
+  faute invisible ; elle a vécu en production sans être vue.
+{%- endcomment -%}
 {%- if end_ts > 0 and promo_live and devise_servie -%}
   <promo-popup
     class="hidden"
@@ -109,10 +116,6 @@
     data-locale="{{ request.locale.iso_code }}"
     data-currency="{{ promo_currency }}"
     data-country="{{ localization.country.iso_code }}"
-    {%- comment -%}
-      Epoch en SECONDES : Date.parse() sur une date nue l'interprète à minuit UTC, ce qui
-      décalait la validité de la pastille d'une à deux heures selon l'heure d'été.
-    {%- endcomment -%}
     data-until-ts="{{ end_ts }}"
     data-delay="{{ settings.promo_popup_delay | default: 10 }}"
     data-min-pages="{{ settings.promo_popup_pages | default: 2 }}"
@@ -414,12 +417,24 @@
               {{ 'sections.promo_popup.copy' | t }}
             </button>
           </div>
+          {%- comment -%}
+            Les messages d'échec, portés en attributs pour rester traduits côté thème.
+            data-rate-hour / data-rate-day : le back-end distingue le quota HORAIRE du quota
+            JOURNALIER (champ `scope` du 429). Sans cette nuance on afficherait « réessayez dans
+            un instant » à quelqu'un bloqué jusqu'au lendemain — un message faux vaut moins que
+            pas de message.
+            ⛔ CE COMMENTAIRE RESTE AU-DESSUS DE LA BALISE. Placé ENTRE deux attributs, les
+            tirets de `{%-`/`-%}` les soudent : `data-already="…"data-rate-hour="…"`. Le
+            navigateur récupère, mais c'est une erreur d'analyse et on ne s'appuie pas dessus.
+          {%- endcomment -%}
           <p
             data-promo-status
             data-allow-empty
             data-network="{{ 'sections.promo_popup.network_error' | t | escape }}"
             data-failed="{{ 'sections.promo_popup.subscribe_failed' | t | escape }}"
             data-already="{{ 'sections.promo_popup.already_subscribed' | t | escape }}"
+            data-rate-hour="{{ 'sections.promo_popup.rate_limited_hour' | t | escape }}"
+            data-rate-day="{{ 'sections.promo_popup.rate_limited_day' | t | escape }}"
             class="hidden mt-2.5 mb-0 text-sm leading-[1.35] font-medium"></p>
         </div>
 

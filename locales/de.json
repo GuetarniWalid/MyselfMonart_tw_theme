@@ -447,6 +447,8 @@
       "date_pattern": "{{ day }}. {{ month }} {{ year }}",
       "failed_title": "Ihre Anmeldung war nicht erfolgreich",
       "subscribe_failed": "Wir konnten Ihre Adresse nicht speichern, daher konnte Ihr Gutschein nicht erstellt werden. Versuchen Sie es gleich noch einmal oder schreiben Sie uns – wir kümmern uns darum.",
+      "rate_limited_hour": "Zu viele Versuche von Ihrer Verbindung. Bitte versuchen Sie es in einer Stunde erneut.",
+      "rate_limited_day": "Sie haben heute bereits mehrfach einen Gutschein angefordert. Bitte versuchen Sie es morgen erneut.",
       "mail_fallback": "Schreiben Sie uns für die Anmeldung",
       "mail_subject": "Anmeldung für den Gutschein über {{ amount }}",
       "valid_until": "Gültig bis einschließlich {{ date }}",

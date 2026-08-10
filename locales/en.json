@@ -678,6 +678,8 @@
       "date_pattern": "{{ day }} {{ month }} {{ year }}",
       "failed_title": "Your sign-up didn’t go through",
       "subscribe_failed": "We couldn’t save your address, so your voucher couldn’t be created. Try again in a moment, or write to us and we’ll sort it out.",
+      "rate_limited_hour": "Too many attempts from your connection. Please try again in an hour.",
+      "rate_limited_day": "You have already requested a voucher several times today. Please try again tomorrow.",
       "mail_fallback": "Email us to be added",
       "mail_subject": "Sign-up for the {{ amount }} voucher",
       "valid_until": "Valid through {{ date }}",
