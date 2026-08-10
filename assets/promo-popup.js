@@ -616,6 +616,15 @@
         el.textContent = texte;
       }
 
+      /* ⛔ Sur échec, tout ce qui SUPPOSE un code doit disparaître : le cadre vide, le bouton
+         « Copier » qui ne copierait rien, l'échéance, et surtout « nous vous l'envoyons aussi
+         par e-mail » — promettre un e-mail qui n'est jamais parti est pire que ne rien dire.
+         ⚠️ On bascule la CLASSE `hidden` et non l'attribut : ces éléments sont en `flex`, qui
+         neutralise `[hidden]` (couche base battue par les utilities). */
+      this.querySelectorAll('[data-promo-on-success]').forEach((el) => {
+        el.classList.toggle('hidden', !!failed);
+      });
+
       if (!this.applyLink) return;
       const base = this.applyLink.dataset.discountBase || '/discount/';
       const redir = this.applyLink.dataset.redirect || '/';

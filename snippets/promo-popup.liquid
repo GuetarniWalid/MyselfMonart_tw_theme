@@ -391,7 +391,14 @@
             class="m-0 font-heading font-bold text-[17px] md:text-[21px] leading-[1.15] outline-none focus:outline-none">
             {{ 'sections.promo_popup.success_title' | t }}
           </h2>
-          <div class="mt-2.5 flex items-stretch gap-2.5">
+          {%- comment -%}
+            data-promo-on-success : tout ce qui n'a de sens QUE si un code a été délivré.
+            Le JS le masque en cas d'échec. Sans ça, l'écran d'échec montrait un cadre de
+            code vide, un bouton « Copier » qui ne copiait rien, et surtout la phrase
+            « nous vous l'envoyons par e-mail » alors qu'aucun e-mail n'était parti.
+            ⚠️ Masquage par la CLASSE `hidden`, jamais par l'attribut : `flex` le neutralise.
+          {%- endcomment -%}
+          <div data-promo-on-success class="mt-2.5 flex items-stretch gap-2.5">
             <div class="flex-1 flex items-center justify-center bg-secondary border-2 border-dashed border-main rounded-xl px-3 py-2 min-h-[56px]">
               {%- comment -%}
                 Vide au rendu : le code nominatif est écrit par le JS depuis la réponse du
@@ -418,7 +425,7 @@
 
         <div class="relative flex-1 min-h-0">
           <div class="h-full overflow-y-auto overflow-x-hidden overscroll-contain flex flex-col gap-2.5 pl-5 pr-[26px] pt-4 pb-[22px]">
-            <p class="m-0 text-[15px] font-bold leading-[1.4]">
+            <p data-promo-on-success class="m-0 text-[15px] font-bold leading-[1.4]">
               {%- comment -%}
                 APRÈS l'inscription : la date personnelle du code, écrite par le JS depuis la
                 réponse du back-end. Le gabarit de phrase reste traduit côté thème, seule la
@@ -431,8 +438,8 @@
             </p>
             {%- comment -%} Au-delà de 150 € le -10 % automatique reste plus avantageux : on le dit
                ici, le client ne doit pas le découvrir seul dans le tiroir panier. {%- endcomment -%}
-            <p class="m-0 text-sm leading-[1.45]">{{ 'sections.promo_popup.note_150' | t: seuil: promo_crossover }}</p>
-            <p class="m-0 text-xs leading-relaxed text-main-70">{{ 'sections.promo_popup.device_limit' | t }}</p>
+            <p data-promo-on-success class="m-0 text-sm leading-[1.45]">{{ 'sections.promo_popup.note_150' | t: seuil: promo_crossover }}</p>
+            <p data-promo-on-success class="m-0 text-xs leading-relaxed text-main-70">{{ 'sections.promo_popup.device_limit' | t }}</p>
           </div>
           <div data-allow-empty aria-hidden="true" class="pointer-events-none absolute inset-x-px bottom-0 h-4 bg-gradient-to-t from-secondary"></div>
         </div>

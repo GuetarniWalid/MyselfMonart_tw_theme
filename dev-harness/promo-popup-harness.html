@@ -216,8 +216,7 @@
             data-failed-title="Votre inscription n’a pas abouti"
             class="m-0 font-heading font-bold text-[17px] md:text-[21px] leading-[1.15] outline-none focus:outline-none">
             Voici votre bon
-          </h2>
-          <div class="mt-2.5 flex items-stretch gap-2.5">
+          </h2><div data-promo-on-success class="mt-2.5 flex items-stretch gap-2.5">
             <div class="flex-1 flex items-center justify-center bg-secondary border-2 border-dashed border-main rounded-xl px-3 py-2 min-h-[56px]"><span data-promo-code-value data-allow-empty class="font-heading font-bold text-[27px] tracking-wide select-all"></span>
             </div>
             <button
@@ -239,10 +238,10 @@
 
         <div class="relative flex-1 min-h-0">
           <div class="h-full overflow-y-auto overflow-x-hidden overscroll-contain flex flex-col gap-2.5 pl-5 pr-[26px] pt-4 pb-[22px]">
-            <p class="m-0 text-[15px] font-bold leading-[1.4]"><span data-promo-until-text data-allow-empty
+            <p data-promo-on-success class="m-0 text-[15px] font-bold leading-[1.4]"><span data-promo-until-text data-allow-empty
                     data-template="Valable jusqu’au @@ inclus"></span>
-            </p><p class="m-0 text-sm leading-[1.45]">Sur un panier supérieur à 150 €, la promotion en cours est déjà plus avantageuse que ce bon : c’est elle qui s’appliquera, et c’est normal.</p>
-            <p class="m-0 text-xs leading-relaxed text-main-70">Ce code est enregistré dans ce navigateur. Nous vous l’envoyons aussi par e-mail : si vous changez d’appareil, vous le retrouverez là.</p>
+            </p><p data-promo-on-success class="m-0 text-sm leading-[1.45]">Sur un panier supérieur à 150 €, la promotion en cours est déjà plus avantageuse que ce bon : c’est elle qui s’appliquera, et c’est normal.</p>
+            <p data-promo-on-success class="m-0 text-xs leading-relaxed text-main-70">Ce code est enregistré dans ce navigateur. Nous vous l’envoyons aussi par e-mail : si vous changez d’appareil, vous le retrouverez là.</p>
           </div>
           <div data-allow-empty aria-hidden="true" class="pointer-events-none absolute inset-x-px bottom-0 h-4 bg-gradient-to-t from-secondary"></div>
         </div>
