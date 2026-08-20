@@ -70,7 +70,10 @@
   const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15 Mo
   const MIN_DIMENSION = 512; // pré-check côté client (le back-end revalide)
   const POLL_INTERVAL = 2000;
-  const POLL_TIMEOUT = 180000; // garde-fou : job jamais conclu côté back-end -> erreur franche
+  const POLL_TIMEOUT = 180000; // au-delà : on ANNONCE que c'est plus long (on continue de poller)
+  // Plafond DUR : au-delà, le job est vraiment perdu côté back-end -> erreur franche.
+  // Généreux, car la cliente peut rester sur la page ; l'e-mail prend le relais si elle part.
+  const POLL_HARD_TIMEOUT = 1200000; // 20 min
   const POLL_MAX_NETWORK_ERRORS = 8; // ~16 s de réseau KO d'affilée -> erreur franche
   const MOCKUP_POLL_INTERVAL = 3000; // streaming des mises en situation après le reveal
   const MOCKUP_TIMEOUT = 120000; // moteur de rendu down -> on retire les squelettes restants
@@ -1358,6 +1361,10 @@
         this.state.email = input.value;
         this.persist();
         if (this.q('[data-error-email-form] [data-studio-marketing-optin]')?.checked) this._pushLeadToShopify(input.value);
+        // Deux usages du même formulaire : débloquer le cap « e-mail requis » (relance la
+        // génération) ou armer la notification « c'est plus long que prévu » (surtout PAS de
+        // relance : la création est déjà en cours).
+        if (this.emailFormMode === 'notify') { this._armNotify(input.value); return; }
         this.startGeneration();
       });
     }
@@ -2301,13 +2308,21 @@
     startPolling() {
       clearInterval(this.pollTimer);
       this.pollStartedAt = Date.now();
+      // Nouvelle génération = nouvelle patience : l'annonce « plus long que prévu » doit
+      // pouvoir réapparaître (sinon elle ne servirait qu'une fois par session).
+      this.longNoticeShown = false;
       this.pollErrorCount = 0;
       this.pollTimer = setInterval(() => this.pollJob(), POLL_INTERVAL);
     }
 
     async pollJob() {
       // Garde-fou : job jamais conclu (worker bloqué…) -> on ne polle pas indéfiniment.
-      if (Date.now() - this.pollStartedAt > POLL_TIMEOUT) {
+      const waited = Date.now() - this.pollStartedAt;
+      // Plus long que prévu : on le DIT, on propose l'e-mail, et on CONTINUE de poller — si elle
+      // reste, elle verra son tableau ici même. Avant, on affichait un échec à 3 min alors que la
+      // création allait au bout : elle était perdue pour la cliente sans adresse (incident 20/08).
+      if (waited > POLL_TIMEOUT && !this.longNoticeShown) this.showTakingLonger();
+      if (waited > POLL_HARD_TIMEOUT) {
         clearInterval(this.pollTimer);
         this.showError(this.i18n.generation_error);
         return;
@@ -2426,6 +2441,70 @@
         if (arr.length > GEN_DURATIONS_KEEP) arr = arr.slice(-GEN_DURATIONS_KEEP);
         localStorage.setItem(this._genDurationsKey(), JSON.stringify(arr));
       } catch (e) { /* localStorage indispo -> on n'enregistre pas */ }
+    }
+
+    /* --------------------------------------------- « c'est plus long que prévu » */
+
+    /**
+     * Affiché quand la génération dépasse la patience du studio (POLL_TIMEOUT) — SANS arrêter le
+     * polling : la création continue côté serveur et, si la cliente reste, son tableau s'affichera
+     * ici même. Avant, on montrait un échec sec à 3 minutes ; une création un peu longue était
+     * alors perdue pour elle, définitivement si aucune adresse n'était connue (incident 20/08).
+     *
+     * Deux cas :
+     *  - adresse déjà connue -> on arme la notification TOUT DE SUITE, sans rien redemander
+     *    (un formulaire de plus à cet instant, c'est une occasion d'abandonner) ;
+     *  - adresse inconnue -> on la demande, et sa soumission arme la notification.
+     */
+    showTakingLonger() {
+      this.longNoticeShown = true;
+      const zone = this.q('[data-error-message]');
+      const known = this.state.email;
+
+      if (this.stepTitle && this.i18n.longer_title) this.stepTitle.textContent = this.i18n.longer_title;
+      if (zone) {
+        zone.textContent = known
+          ? (this.i18n.longer_body_known || '').replace('{email}', known)
+          : this.i18n.longer_body_ask || '';
+      }
+      // « Réessayer » n'a aucun sens ici : la création est EN COURS. Relancer la ferait
+      // recommencer (et re-décompter un essai) alors qu'elle va aboutir.
+      this._setHidden(this.q('[data-studio-retry]'), true);
+
+      const emailForm = this.q('[data-error-email-form]');
+      if (emailForm) {
+        this.emailFormMode = known ? null : 'notify';
+        emailForm.hidden = !!known;
+        // Le bouton du formulaire est libellé pour le cap « e-mail requis » (il RELANCE la
+        // génération). Ici il ne relance rien : il demande à être prévenue.
+        const submit = emailForm.querySelector('button[type="submit"]');
+        if (submit && !known && this.i18n.longer_submit) submit.textContent = this.i18n.longer_submit;
+      }
+      this.showScreen('error');
+      if (known) this._armNotify(known);
+    }
+
+    /**
+     * Demande au back-end de prévenir par e-mail dès que la création est prête.
+     * Best-effort : un échec ne bloque rien — la cliente peut toujours rester sur la page, et le
+     * polling n'a pas été interrompu.
+     */
+    async _armNotify(email) {
+      const zone = this.q('[data-error-message]');
+      try {
+        const { response, data } = await this.api(`/api/custom-art/jobs/${this.state.jobId}/notify`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, locale: (document.documentElement.lang || 'fr').slice(0, 2) }),
+        });
+        if (!response.ok || !data || data.success === false) throw new Error('notify KO');
+        this.emailFormMode = null;
+        const form = this.q('[data-error-email-form]');
+        if (form) form.hidden = true;
+        if (zone) zone.textContent = (this.i18n.longer_armed || '').replace('{email}', email);
+      } catch (_) {
+        if (zone && this.i18n.longer_armed_failed) zone.textContent = this.i18n.longer_armed_failed;
+      }
     }
 
     showError(message, options = {}) {

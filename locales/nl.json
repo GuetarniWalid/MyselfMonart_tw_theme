@@ -399,7 +399,13 @@
       "marketing_optin": "Ik wil aanbiedingen en nieuws van MyselfMonArt per e-mail ontvangen.",
       "error_daily_cap": "Je hebt je dagelijkse limiet bereikt. Kom morgen terug — je keuzes blijven bewaard.",
       "error_too_many": "Te veel verzoeken tegelijk. Wacht een paar seconden en probeer het opnieuw.",
-      "error_title_daily": "Daglimiet bereikt"
+      "error_title_daily": "Daglimiet bereikt",
+      "longer_submit": "Mail mij zodra het klaar is",
+      "longer_title": "Dit duurt langer dan gewoonlijk",
+      "longer_body_known": "Je creatie is nog in de maak — ze heeft iets meer tijd nodig dan gewoonlijk. Je kunt op deze pagina blijven, ze verschijnt hier zodra ze klaar is. En als je liever afsluit: we mailen je op {email} zodra het zover is.",
+      "longer_body_ask": "Je creatie is nog in de maak — ze heeft iets meer tijd nodig dan gewoonlijk. Je kunt op deze pagina blijven, ze verschijnt hier zodra ze klaar is. Laat je e-mail achter als je liever afsluit: we laten het je weten zodra het zover is.",
+      "longer_armed": "Genoteerd: we mailen je op {email} zodra je creatie klaar is. Je kunt deze pagina gerust sluiten.",
+      "longer_armed_failed": "Je creatie is nog in de maak. We konden je e-mail niet opslaan — blijf op deze pagina, ze verschijnt hier zodra ze klaar is."
     },
     "promo_popup": {
       "already_subscribed": "U bent al ingeschreven: hier is uw bon.",

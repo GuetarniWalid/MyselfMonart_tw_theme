@@ -400,7 +400,13 @@
       "marketing_optin": "Quiero recibir ofertas y novedades de MyselfMonArt por correo electrónico.",
       "error_daily_cap": "Has alcanzado el límite diario de creaciones. Vuelve mañana — tus selecciones quedan guardadas.",
       "error_too_many": "Demasiadas solicitudes seguidas. Espera unos segundos y vuelve a intentarlo.",
-      "error_title_daily": "Límite diario alcanzado"
+      "error_title_daily": "Límite diario alcanzado",
+      "longer_submit": "Avísame por correo",
+      "longer_title": "Está tardando más de lo habitual",
+      "longer_body_known": "Tu creación sigue en marcha — necesita un poco más de tiempo de lo normal. Puedes quedarte en esta página y aparecerá aquí en cuanto esté lista. Y si prefieres cerrarla, te escribimos a {email} en cuanto esté hecha.",
+      "longer_body_ask": "Tu creación sigue en marcha — necesita un poco más de tiempo de lo normal. Puedes quedarte en esta página y aparecerá aquí en cuanto esté lista. Déjanos tu correo si prefieres cerrarla: te avisamos en cuanto esté hecha.",
+      "longer_armed": "Anotado: te escribimos a {email} en cuanto tu creación esté lista. Puedes cerrar esta página con tranquilidad.",
+      "longer_armed_failed": "Tu creación sigue en marcha. No hemos podido guardar tu correo — quédate en esta página y aparecerá aquí en cuanto esté lista."
     },
     "promo_popup": {
       "already_subscribed": "Ya está suscrito: aquí tiene su vale.",

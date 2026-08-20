@@ -400,7 +400,13 @@
       "marketing_optin": "Ich möchte Angebote und Neuheiten von MyselfMonArt per E-Mail erhalten.",
       "error_daily_cap": "Sie haben Ihr Tageskontingent ausgeschöpft. Kommen Sie morgen wieder — Ihre Auswahl bleibt gespeichert.",
       "error_too_many": "Zu viele Anfragen auf einmal. Bitte warten Sie ein paar Sekunden und versuchen Sie es erneut.",
-      "error_title_daily": "Tageslimit erreicht"
+      "error_title_daily": "Tageslimit erreicht",
+      "longer_submit": "Benachrichtigt mich per E-Mail",
+      "longer_title": "Das dauert länger als sonst",
+      "longer_body_known": "Ihre Kreation entsteht noch — sie braucht etwas mehr Zeit als gewöhnlich. Sie können auf dieser Seite bleiben, sie erscheint hier, sobald sie fertig ist. Und wenn Sie lieber schließen möchten: Wir schreiben Ihnen an {email}, sobald es so weit ist.",
+      "longer_body_ask": "Ihre Kreation entsteht noch — sie braucht etwas mehr Zeit als gewöhnlich. Sie können auf dieser Seite bleiben, sie erscheint hier, sobald sie fertig ist. Hinterlassen Sie uns Ihre E-Mail, wenn Sie lieber schließen möchten: Wir sagen Ihnen Bescheid, sobald es so weit ist.",
+      "longer_armed": "Notiert: Wir schreiben Ihnen an {email}, sobald Ihre Kreation fertig ist. Sie können diese Seite beruhigt schließen.",
+      "longer_armed_failed": "Ihre Kreation entsteht noch. Wir konnten Ihre E-Mail nicht speichern — bleiben Sie auf dieser Seite, sie erscheint hier, sobald sie fertig ist."
     },
     "promo_popup": {
       "already_subscribed": "Sie sind bereits angemeldet: hier ist Ihr Gutschein.",

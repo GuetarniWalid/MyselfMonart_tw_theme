@@ -631,7 +631,13 @@
       "marketing_optin": "I'd like to receive MyselfMonArt offers and updates by email.",
       "error_daily_cap": "You’ve used all your generations for today. Come back tomorrow—your selections are saved.",
       "error_too_many": "Too many requests at once. Please wait a few seconds, then try again.",
-      "error_title_daily": "Daily limit reached"
+      "error_title_daily": "Daily limit reached",
+      "longer_submit": "Email me when it is ready",
+      "longer_title": "This is taking longer than usual",
+      "longer_body_known": "Your creation is still being made — it needs a little more time than usual. You can stay on this page and it will appear here as soon as it is ready. And if you would rather close it, we will write to you at {email} as soon as it is done.",
+      "longer_body_ask": "Your creation is still being made — it needs a little more time than usual. You can stay on this page and it will appear here as soon as it is ready. Leave us your email if you would rather close it: we will let you know as soon as it is done.",
+      "longer_armed": "All set: we will write to you at {email} as soon as your creation is ready. You can safely close this page.",
+      "longer_armed_failed": "Your creation is still being made. We could not save your email — stay on this page and it will appear here as soon as it is ready."
     },
     "promo_popup": {
       "already_subscribed": "You are already subscribed: here is your voucher.",
