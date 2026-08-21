@@ -158,16 +158,29 @@
                     assign is_lcp_image = false
                   endif
                   assign number_of_media = number_of_media | plus: 1
+                  comment
+                    # Preuve « avant / après » (poster personnalisé) : la photo de la cliente et le
+                    # rendu côte à côte. C'est une démonstration, pas une mise en situation
+                    # encadrable — elle n'a pas de jumeau passe-partout et ne doit pas en hériter
+                    # d'un par COLLISION : l'appariage ci-dessous teste `contains`, pas l'égalité.
+                    # Sans data-pp-swap, la tuile reste identique en « Avec » comme en « Sans ».
+                  endcomment
+                  assign is_proof = false
+                  if media.preview_image.src contains '-mma-preuve-'
+                    assign is_proof = true
+                  endif
                   assign pp_media_for_tile = null
-                  for ppm in product.media
-                    if ppm.media_type == 'image' and ppm.preview_image.src contains 'passe-partout'
-                      assign pp_stem = ppm.preview_image.src | split: '-passe-partout' | first
-                      if media.preview_image.src contains pp_stem
-                        assign pp_media_for_tile = ppm
-                        break
+                  if is_proof == false
+                    for ppm in product.media
+                      if ppm.media_type == 'image' and ppm.preview_image.src contains 'passe-partout'
+                        assign pp_stem = ppm.preview_image.src | split: '-passe-partout' | first
+                        if media.preview_image.src contains pp_stem
+                          assign pp_media_for_tile = ppm
+                          break
+                        endif
                       endif
-                    endif
-                  endfor
+                    endfor
+                  endif
                   render 'tw-main-product-image', media: media, loop: forloop, is_lcp: is_lcp_image, pp_media: pp_media_for_tile, pp_default: pp_default_on
                 endif
               endif
@@ -219,13 +232,20 @@
               {%- assign is_pp_media = false -%}
               {%- if media.preview_image.src contains 'passe-partout' -%}{%- assign is_pp_media = true -%}{%- endif -%}
               {%- if popup_image_index >= popup_start_from and popup_image_index != 2 and is_pp_media == false -%}
+                {%- comment -%} Idem galerie : la preuve « avant / après » est exclue de l'appariage
+                   (elle n'a pas de jumeau et ne doit pas en capter un par collision de préfixe).
+                   Cette boucle doit rester STRICTEMENT symétrique de celle de la galerie. {%- endcomment -%}
+                {%- assign is_proof = false -%}
+                {%- if media.preview_image.src contains '-mma-preuve-' -%}{%- assign is_proof = true -%}{%- endif -%}
                 {%- assign pp_media_for_tile = null -%}
-                {%- for ppm in product.media -%}
-                  {%- if ppm.media_type == 'image' and ppm.preview_image.src contains 'passe-partout' -%}
-                    {%- assign pp_stem = ppm.preview_image.src | split: '-passe-partout' | first -%}
-                    {%- if media.preview_image.src contains pp_stem -%}{%- assign pp_media_for_tile = ppm -%}{%- break -%}{%- endif -%}
-                  {%- endif -%}
-                {%- endfor -%}
+                {%- if is_proof == false -%}
+                  {%- for ppm in product.media -%}
+                    {%- if ppm.media_type == 'image' and ppm.preview_image.src contains 'passe-partout' -%}
+                      {%- assign pp_stem = ppm.preview_image.src | split: '-passe-partout' | first -%}
+                      {%- if media.preview_image.src contains pp_stem -%}{%- assign pp_media_for_tile = ppm -%}{%- break -%}{%- endif -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- endif -%}
                 <popup-image>
                   {%- render 'tw-main-product-popup-image', media: media, loop: forloop, pp_media: pp_media_for_tile -%}
                 </popup-image>
