@@ -23,6 +23,15 @@
   assign ed_faq = collection.metafields.custom.faq.value
   assign ed_cocon = collection.metafields.custom.cocon_links.value
   assign ed_faq_title = collection.title | downcase
+
+  # Pagination : sur ?page=2, 3… seul le H1 reste. Accroche, guide, cocon et FAQ (+ son JSON-LD)
+  # ne sont émis que sur la page 1 ; sinon chaque page de pagination est une copie de la page 1
+  # et Google peut la préférer (constat GSC oct. 2026 : tableau-cuisine?page=4 devant la page 1).
+  if current_page > 1
+    assign ed_intro = ''
+    assign ed_guide = ''
+    assign ed_faq = ''
+  endif
 -%}
 
 <section class="collection-editorial-auto w-full" aria-label="{{ collection.title | escape }}">

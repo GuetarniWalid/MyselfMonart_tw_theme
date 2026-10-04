@@ -28,6 +28,10 @@
     visuellement (le nouveau design utilise le "+" rond plus minimaliste).
 {%- endcomment -%}
 
+{%- comment -%} Pagination collection : la FAQ (et son JSON-LD) n'est émise que sur la page 1 ;
+  sur ?page=2, 3… elle ferait de chaque page une copie de la page 1. Sans effet hors collections. {%- endcomment -%}
+{%- unless template.name == 'collection' and current_page > 1 -%}
+
 {%- liquid
   assign heading_level = section.settings.heading_level | default: 'h2'
   assign heading_id = 'collapsible-' | append: section.id
@@ -232,6 +236,8 @@
     }
   </script>
 {%- endif -%}
+
+{%- endunless -%}
 
 {% schema %}
 {

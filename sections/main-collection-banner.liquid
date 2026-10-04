@@ -7,7 +7,8 @@
 {%- if collection.metafields.custom.guide == blank -%}
   <h1 class="py-8">{{ collection.title | escape }}</h1>
 {%- endif -%}
-{%- if section.settings.show_description and collection.metafields.custom.guide == blank -%}
+{%- comment -%} Pagination : la description n'est rendue que sur la page 1 (le H1 reste sur ?page=N). {%- endcomment -%}
+{%- if section.settings.show_description and collection.metafields.custom.guide == blank and current_page == 1 -%}
 <div class="collection-description dropdown-button-target{% if section.settings.show_collapse_button %} h-56 overflow-hidden relative after:absolute after:bottom-0 after:w-full after:h-20 after:bg-gradient-to-t after:from-secondary{% endif %}">{{ collection.description }}</div>
 {%- if section.settings.show_collapse_button -%}
   <dropdown-button>

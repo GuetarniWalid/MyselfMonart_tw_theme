@@ -39,6 +39,12 @@
       assign content = collection.description
   endcase
 
+  # Pagination : sur ?page=2, 3… ni accroche ni guide (sinon copie de la page 1).
+  # En mode intro avec show_title, le H1 reste rendu seul (garde plus bas).
+  if current_page > 1
+    assign content = ''
+  endif
+
   case section.settings.background_color
     when 'cream'
       assign bg_class = 'bg-main-5'
