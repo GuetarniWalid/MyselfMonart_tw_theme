@@ -51,9 +51,9 @@
         {% endif %}
 
         {% if is_color_filter %}
-          {% render 'filter-colors-section', id_prefix: 'filter-mobile-' | append: forloop.index | append: '-', color_filter: filter, filter_index: forloop.index %}
+          {% render 'filter-colors-section', id_prefix: 'filter-mobile-', append: '-', color_filter: filter, filter_index: forloop.index %}
         {% else %}
-          {% render 'filter-generic-section', id_prefix: 'filter-mobile-' | append: forloop.index | append: '-', filter: filter, filter_index: forloop.index %}
+          {% render 'filter-generic-section', id_prefix: 'filter-mobile-', append: '-', filter: filter, filter_index: forloop.index %}
         {% endif %}
       {% endif %}
     {% endfor %}
@@ -63,3 +63,21 @@
 
   </filter-drawer>
 {% endif %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'filter-colors-section', id_prefix: 'filter-mobile-' | append:
+    forloop.index | append: '-', color_filter: filter, filter_index: forloop.index
+    %}"
+  to: "{% render 'filter-colors-section', id_prefix: 'filter-mobile-', append: '-',
+    color_filter: filter, filter_index: forloop.index %}"
+  position: 2405..2534
+- from: "{% render 'filter-generic-section', id_prefix: 'filter-mobile-' | append:
+    forloop.index | append: '-', filter: filter, filter_index: forloop.index %}"
+  to: "{% render 'filter-generic-section', id_prefix: 'filter-mobile-', append: '-',
+    filter: filter, filter_index: forloop.index %}"
+  position: 2564..2688
+{% endcomment %}

@@ -41,7 +41,7 @@
             "show_payment_icons": true,
             "margin_bottom": "mb-8",
             "is_dynamic_variant": false,
-            "show_promotion": true,
+            "show_promotion": false,
             "promotion_discount": 10,
             "promotion_discount_unit": "%",
             "promotion_reason": "Soldes d'été",

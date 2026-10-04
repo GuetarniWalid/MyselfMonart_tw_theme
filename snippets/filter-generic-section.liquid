@@ -39,12 +39,7 @@
         {% assign extra_class = 'js-extra-filter-' | append: filter_index %}
 
         <li class="{% if value_index >= 8 %}hidden {{ extra_class }}{% endif %}">
-          {% render 'custom-checkbox',
-            checkbox_id: checkbox_id_value,
-            checkbox_name: 'filter-' | append: filter_index,
-            checkbox_value: value_value,
-            checkbox_label: checkbox_label_value,
-            data_filter_param: filter.param_name %}
+          {% render 'custom-checkbox', checkbox_id: checkbox_id_value, checkbox_name: 'filter-', append: filter_index, checkbox_value: value_value, checkbox_label: checkbox_label_value, data_filter_param: filter.param_name %}
         </li>
 
         {% endif %}
@@ -70,3 +65,21 @@
   </details>
 </div>
 {% endif %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {% render 'custom-checkbox',
+                checkbox_id: checkbox_id_value,
+                checkbox_name: 'filter-' | append: filter_index,
+                checkbox_value: value_value,
+                checkbox_label: checkbox_label_value,
+                data_filter_param: filter.param_name %}
+  to: "{% render 'custom-checkbox', checkbox_id: checkbox_id_value, checkbox_name:
+    'filter-', append: filter_index, checkbox_value: value_value, checkbox_label:
+    checkbox_label_value, data_filter_param: filter.param_name %}"
+  position: 2088..2303
+{% endcomment %}
