@@ -26,8 +26,17 @@
 
 | Date | Jalon | /products/* clics / imp / pos | Erreurs Product GSC | Rich results marchand | Notes |
 |---|---|---|---|---|---|
-| 2026-06-14 | J+14 | _à remplir_ | _à vérifier_ | _à vérifier_ | |
-| 2026-06-30 | J+30 | _à remplir_ | _à vérifier_ | _à vérifier_ | |
+| ~~2026-06-14~~ | J+14 | ⊘ sauté | — | — | En plein core update du 21/05-02/06 : lecture faussée |
+| ~~2026-06-30~~ | J+30 | ⊘ sauté | — | — | Remplacé par la lecture J+126 |
+| **2026-10-04** | **J+126** | FR, 28 j : **22 / 2 164 / 13,7** (304 fiches avec impressions) | Non vérifiable par l'API (rapport « Améliorations » GSC à ouvrir à la main) | Extraits produit (tous pays, 28 j) : **928 clics** contre 448 en juin ; fiches marchands dans la recherche : 76 contre 25 | Voir lecture ci-dessous |
+
+## Lecture J+126 (2026-10-04)
+
+> Fenêtres de 28 jours, FR, web : avant la core update (20/04-17/05), creux (29/06-26/07), maintenant (04/09-01/10), il y a un an (05/09-02/10/2025).
+
+- **Clics des fiches produit FR : 12 → 11 → 22**, avec 304 fiches qui reçoivent des impressions (contre 75 avant mai). Il y a un an : 43 clics. Les fiches profitent de la reprise générale, sans gain propre mesurable au template.
+- **Le balisage Product fonctionne** : les extraits produit (prix, avis dans les résultats) rapportent 928 clics sur 28 jours tous pays confondus, contre 448 en juin. C'est aussi ce balisage JSON-LD que lit l'autofeed de Merchant Center depuis le 5 août (11 484 produits approuvés en fiches gratuites, 462 clics en septembre).
+- Lighthouse mobile du 04/10 sur la fiche « Le Petit Prince » : SEO 100, accessibilité 97, performance 60 (LCP labo 11,7 s en 4G lente). Données terrain du site (Chrome, 28 j) : LCP 2,0 s, INP 97 ms, CLS 0, validé.
 
 ## Comment lancer le check (procédure)
 

@@ -24,9 +24,18 @@
 | Date | Jalon | Home clics / imp / pos | "tableau décoration murale" imp/pos | Cannibalisation home vs /collections/tableau-salon ? | Rich snippets FAQ ? | Notes |
 |---|---|---|---|---|---|---|
 | 2026-06-11 | J+14 | ⊘ **non effectué** | ⊘ | ⊘ | ⊘ | Check sauté lors du pivot growth-plan (2026-06-10). Pas de datapoint mi-parcours. |
+| 2026-10-04 | J+129 | **47 / 232 / 11,73** (90 j : 04/07→01/10) | **0 imp** (exact), toujours | Non (home absente du terme) | — | 46 des 47 clics = « myselfmonart ». **Objectif non atteint** ; plus d'effort sur le head term, dernier contrôle mi-novembre. Détail ↓ |
 | 2026-06-27 | J+30 | **23 / 84 / 5,77** (POST 30j) | **0 imp** (exact) — home toujours absente | Non sur le head term (home absente du terme → design *non testé*) ; cannib. intra-collections réelle (catégories) | Schema FAQPage **présent + valide** en live ✓ ; snippet visible peu probable (dépréciation FAQ Google 2023) | Clics home **100 % brand**. Baisse site-wide = **core update** (algo), pas la home. Pas de relaunch. Détail ↓ |
 
 > Repères de comparaison home : baseline Phase-1 **90 j = 8 clics / ~410 imp / pos 17,36** · contrôle 30 j PRE-deploy (28/04→27/05) = **6 / 125 / 13,90** · POST 30 j (28/05→26/06) = **23 / 84 / 5,77**. Échantillon home minuscule (84 imp) → lire en **tendance**, pas au chiffre près (GSC lag : POST s'arrête ~25/06).
+
+## Lecture J+129 (2026-10-04)
+
+> Fenêtre 90 j = 04/07 → 01/10/2026, FR, web. Aucune core update depuis le 02/06 : la lecture n'est plus faussée par un déploiement de Google.
+
+- **Le head term n'apparaît toujours pas** : « tableau décoration murale » (exact) = 0 impression depuis mars 2026, sur la home comme ailleurs sur le site (quelques impressions isolées vers la 35ᵉ-65ᵉ place d'octobre 2025 à février 2026). Après quatre mois, ce n'est plus « trop tôt » : Google sert cette requête aux pages catégories de gros catalogues, et la home ne s'y présente pas.
+- **La home reste une page de marque** : 47 clics sur 90 jours, dont 46 sur « myselfmonart » (70 impressions, position 1,1). La demande de marque est faible (15 à 40 impressions par mois).
+- **Décision proposée** : ne plus investir sur le head term via la home. Dernier contrôle mi-novembre (saison cadeaux), puis clôture de la mission. Le trafic générique se gagne par les collections (salon, couleur, africain, japonais) et par les fiches Shopping.
 
 ## Lecture J+30 (2026-06-27) — vérifiée (data GSC réelle + vérif adversariale 3 lentilles)
 
