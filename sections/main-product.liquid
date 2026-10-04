@@ -646,6 +646,16 @@
   # (« France », « Frankreich »…) et le JSON-LD devenait invalide hors du français.
   assign sd_country = section.settings.ships_country | default: 'FR'
   assign sd_return_days = section.settings.return_days | default: 14
+  # Sur une URL ?variant=X (lien de fiche Shopping, non canonique), une seule offre : celle de X,
+  # comme le prix affiché. Avec toutes les offres, Google ne savait pas quel prix retenir et
+  # Merchant Center refusait ces fiches (« prix manquant »). Sans ?variant= : toutes les offres.
+  assign ld_variants = product.variants
+  if product.selected_variant
+    assign ld_variants = product.variants | where: 'id', product.selected_variant.id
+    if ld_variants.size == 0
+      assign ld_variants = product.variants
+    endif
+  endif
 -%}
 {%- capture product_return_schema -%}
   {%- if section.settings.enable_merchant_schema -%}
@@ -728,7 +738,7 @@
             "name": {{ product.vendor | json }}
           }{{ product_3d_props }}{{ product_studio_props }}{{ product_return_schema }},
           "offers": [
-                    {%- for variant in product.variants -%}
+                    {%- for variant in ld_variants -%}
               {
                         "@type": "Offer",
                         {%- if variant.sku != blank -%}
