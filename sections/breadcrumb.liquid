@@ -297,6 +297,9 @@
 {%- assign item_list_element_names = item_list_element_names | split: '|,|' -%}
 {%- assign item_list_element_urls = item_list_element_urls | split: '|,|' -%}
 
+{%- comment -%} request.origin (domaine seul) et non shop.secure_url : sur un sous-dossier de marché, shop.secure_url
+  contient déjà un préfixe (/fr-eu, /fr-ch, /en-us…) et les URLs, déjà localisées, le doublaient (/fr-eu/en-eu/…).
+  Noms en | json : un titre avec des guillemets rendait tout le bloc invalide. {%- endcomment -%}
 <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -306,8 +309,8 @@
       {
         "@type": "ListItem",
         "position": {{ forloop.index }},
-        "name": "{{ itemListElement_name }}",
-        "item": "{{ shop.secure_url }}{{ item_list_element_urls[forloop.index0] }}"
+        "name": {{ itemListElement_name | json }},
+        "item": {{ request.origin | append: item_list_element_urls[forloop.index0] | json }}
     }{%- if forloop.last == false -%},{%- endif -%}
     {%- endfor -%}
     ]
