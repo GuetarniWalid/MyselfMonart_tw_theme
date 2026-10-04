@@ -642,6 +642,8 @@
   </main-product-blocks>
 </div>
 {%- liquid
+  # ships_country est un select : en champ texte, sa valeur était traduite avec la boutique
+  # (« France », « Frankreich »…) et le JSON-LD devenait invalide hors du français.
   assign sd_country = section.settings.ships_country | default: 'FR'
   assign sd_return_days = section.settings.return_days | default: 14
 -%}
@@ -789,10 +791,13 @@
         "default": true
       },
       {
-        "type": "text",
+        "type": "select",
         "id": "ships_country",
         "label": "Pays (code ISO)",
-        "info": "Code pays pour la livraison et les retours. Ex : FR.",
+        "info": "Pays déclaré pour la livraison et les retours. Liste et non champ texte : un texte est traduit avec la boutique, et Google n'accepte que le code ISO.",
+        "options": [
+          { "value": "FR", "label": "France (FR)" }
+        ],
         "default": "FR"
       },
       {
