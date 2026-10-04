@@ -32,7 +32,10 @@
   -%}
 
   {%- if primary_image -%}
-    {%- capture primary_srcset -%}{%- if primary_image.width >= 200 -%}{{ primary_image | image_url: width: 200 }} 200w,{%- endif -%}{%- if primary_image.width >= 300 -%}{{ primary_image | image_url: width: 300 }} 300w,{%- endif -%}{%- if primary_image.width >= 400 -%}{{ primary_image | image_url: width: 400 }} 400w,{%- endif -%}{%- if primary_image.width >= 500 -%}{{ primary_image | image_url: width: 500 }} 500w,{%- endif -%}{{ primary_image | image_url }} {{ primary_image.width }}w{%- endcapture -%}
+    {%- comment -%} Paliers 600/800/1000 : sans eux, un mobile 2x/3x ou une tablette sautait de 500w à l'original (~1600px, ~480 Ko). {%- endcomment -%}
+    {%- capture primary_srcset -%}{%- if primary_image.width >= 200 -%}{{ primary_image | image_url: width: 200 }} 200w,{%- endif -%}{%- if primary_image.width >= 300 -%}{{ primary_image | image_url: width: 300 }} 300w,{%- endif -%}{%- if primary_image.width >= 400 -%}{{ primary_image | image_url: width: 400 }} 400w,{%- endif -%}{%- if primary_image.width >= 500 -%}{{ primary_image | image_url: width: 500 }} 500w,{%- endif -%}{%- if primary_image.width >= 600 -%}{{ primary_image | image_url: width: 600 }} 600w,{%- endif -%}{%- if primary_image.width >= 800 -%}{{ primary_image | image_url: width: 800 }} 800w,{%- endif -%}{%- if primary_image.width >= 1000 -%}{{ primary_image | image_url: width: 1000 }} 1000w,{%- endif -%}{{ primary_image | image_url }} {{ primary_image.width }}w{%- endcapture -%}
+    {%- comment -%} Largeur réelle d'une carte (.product-grid : 2 col < 1024px, 3 col ≥ 1024px, 4 col ≥ 1280px dans page-width 1280px). Unités vw/px uniquement : un % est invalide dans sizes et le navigateur retombe alors sur 100vw. {%- endcomment -%}
+    {%- assign card_sizes = '(min-width: 1280px) 312px, (min-width: 1024px) 33vw, 50vw' -%}
     {%- capture primary_alt -%}{% if product.metafields.meta_object.media.value.alts.value[1] %}{{ product.metafields.meta_object.media.value.alts.value[1] | escape }}{% else %}{{ product.media[1].alt | escape }}{% endif %}{%- endcapture -%}
     <div class="mb-2 md:mb-5">
       <div class="skeleton overflow-hidden relative w-full duration-100" style="aspect-ratio: {{ primary_image.width }} / {{ primary_image.height }}">
@@ -41,7 +44,7 @@
         <img
           srcset="{{ primary_srcset }}"
           src="{{ primary_image | image_url: width: 400 }}"
-          sizes="(min-width: 768px) 33%, (min-width: 1024px) 300px, 50%"
+          sizes="{{ card_sizes }}"
           alt="{{ primary_alt }}"
           loading="eager"
           fetchpriority="high"
@@ -53,7 +56,7 @@
         <img
           data-srcset="{{ primary_srcset }}"
           src="{{ primary_image | image_url: width: 10 }}"
-          sizes="(min-width: 768px) 33%, (min-width: 1024px) 300px, 50%"
+          sizes="{{ card_sizes }}"
           alt="{{ primary_alt }}"
           loading="lazy"
           width="{{ primary_image.width }}"
@@ -67,9 +70,12 @@
               {%- if next_image.width >= 300 -%}{{ next_image | image_url: width: 300 }} 300w,{%- endif -%}
               {%- if next_image.width >= 400 -%}{{ next_image | image_url: width: 400 }} 400w,{%- endif -%}
               {%- if next_image.width >= 500 -%}{{ next_image | image_url: width: 500 }} 500w,{%- endif -%}
+              {%- if next_image.width >= 600 -%}{{ next_image | image_url: width: 600 }} 600w,{%- endif -%}
+              {%- if next_image.width >= 800 -%}{{ next_image | image_url: width: 800 }} 800w,{%- endif -%}
+              {%- if next_image.width >= 1000 -%}{{ next_image | image_url: width: 1000 }} 1000w,{%- endif -%}
               {{ next_image | image_url }} {{ next_image.width }}w"
             src="{{ next_image | image_url: width: 40 }}"
-            sizes="(min-width: 768px) 33%, (min-width: 1024px) 300px, 50%"
+            sizes="{{ card_sizes }}"
             alt="{% if product.metafields.meta_object.media.value.alts.value[0] %}{{
               product.metafields.meta_object.media.value.alts.value[0] | escape }}{% else %}{{ next_image.alt | escape }}{% endif %}"
             {% unless lazy_load == false %}
