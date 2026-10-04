@@ -76,6 +76,8 @@ Vérifications en ligne après déploiement (run GitHub Actions vert, « Aucun f
 
 4. **13 fiches Merchant Center refusées pour « prix manquant ».** 11 avaient été créées depuis un lien de variante (`?variant=X`) : la page affichait le prix de X mais déclarait les 95 offres du produit et un `og:price` « à partir de », et Google ne retenait aucun prix (les 4 fiches de variante approuvées pointaient vers des variantes supprimées, donc vers la page par défaut, cohérente). **Correctif** (`3f0ed66`, déployé le 2026-10-04) : sur `?variant=X`, le JSON-LD ne garde que l'offre de X (livraison et retours compris) et `og:price` donne son prix ; pages produit sans `?variant=` inchangées. Les 2 autres (Irlande, Royaume-Uni) sont des pages normales, cohérentes aujourd'hui : refusées juste après la création des produits, elles attendent le prochain passage de Google.
 
+5. **Données structurées des marchés.** (a) **Fil d'Ariane** (`28a6e29`) : sur les sous-dossiers de marché, le JSON-LD BreadcrumbList donnait des liens au préfixe doublé (`/fr-eu/en-eu/…`, `/fr-ch/de-ch/…`, `/en-us/en-us/…`), car `shop.secure_url` y contient déjà un préfixe ; un titre avec des guillemets (« Life is so sweet ») cassait tout le bloc. Liens construits depuis `request.origin`, noms en `| json`. (b) **Grille des collections** (`903803f`) : le JSON-LD ItemList étiquetait en EUR des prix déjà dans la devise du marché (76.0 « EUR » sur `/en-us/` pour 76.0 USD sur la fiche) ; `priceCurrency` = devise affichée, titre en `| json`. Déployés le 2026-10-04.
+
 ---
 
 ## 📅 Échéancier de suivi
