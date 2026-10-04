@@ -154,11 +154,13 @@
   </collection-tag-filter>
 {% endif %}
 
+{%- comment -%} priceCurrency = devise affichée (cart.currency), comme sur la fiche produit : price_min est déjà
+  dans la devise du marché, et shop.currency étiquetait en EUR les prix USD/CAD/GBP/CHF. Titre en | json (guillemets). {%- endcomment -%}
 <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "{{ collection.title }}",
+    "name": {{ collection.title | json }},
     "url": "{{ shop.url }}{{ collection.url }}",
     "itemListElement": [
       {%- for product in collection.products -%}
@@ -184,7 +186,7 @@
             },
             "offers": {
               "@type": "Offer",
-              "priceCurrency": "{{ shop.currency }}",
+              "priceCurrency": {{ cart.currency.iso_code | json }},
               "price": "{{ product.price_min |  divided_by: 100.00 }}",
               "availability": "https://schema.org/InStock",
               "url": "{{ shop.url }}{{ product.url }}"
