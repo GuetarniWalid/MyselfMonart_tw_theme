@@ -136,6 +136,18 @@
               ]
             }
           },
+          "parent_collection_Anm7Tb": {
+            "type": "set_of_collections",
+            "settings": {
+              "title": "Animaux",
+              "child_collection_list": [
+                "tableau-animaux",
+                "tableau-lion",
+                "tableau-cheval",
+                "tableau-zebre"
+              ]
+            }
+          },
           "collection_only_yccRzA": {
             "type": "collection_only",
             "settings": {
@@ -199,6 +211,18 @@
               ]
             }
           },
+          "parent_collection_Anm7Pa": {
+            "type": "set_of_collections",
+            "settings": {
+              "title": "Animaux",
+              "child_collection_list": [
+                "posters-affiches-animaux",
+                "posters-affiches-lion",
+                "posters-affiches-cheval",
+                "posters-affiches-zebre"
+              ]
+            }
+          },
           "collection_only_HL3HhC": {
             "type": "collection_only",
             "settings": {
@@ -213,12 +237,14 @@
           "parent_collection_fTjgF8",
           "parent_collection_xnc6qR",
           "parent_collection_MRr679",
+          "parent_collection_Anm7Tb",
           "collection_only_yccRzA",
           "title_only_rNccpq",
           "collection_only_K9q98M",
           "parent_collection_PHcqgr",
           "parent_collection_qTy5fZ",
           "parent_collection_6r52Kb",
+          "parent_collection_Anm7Pa",
           "collection_only_HL3HhC"
         ],
         "settings": {
