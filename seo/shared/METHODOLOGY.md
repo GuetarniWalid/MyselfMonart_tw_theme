@@ -183,7 +183,7 @@ Avant tout, identifier le **type de page** et son **intention dominante** : cela
 
 - ❌ **Jamais "Made in France" / "Fabriqué en France"** (impression en Allemagne → illégal DGCCRF, art. L121-2). ✅ Dire "Conçu en France / Studio créatif français / Imprimé en Europe".
 - ❌ **Jamais de chiffres gonflés** (ventes, avis) → publicité mensongère + perte de citabilité IA. Rester factuel.
-- **Trustpilot 4.1/80** : ne pas afficher la note en gros (comparaison déloyale) → mettre en avant **volume + photos UGC**. La note reste dans le schema (honnêteté pour Google/IA).
+- **Trustpilot 4,2/5 sur 86 avis** (vérifié sur Trustpilot le 05/10/2026 ; libellé officiel « Bien »). Source de vérité unique : réglage du thème « Trustpilot (avis marque) », à mettre à jour quand la note bouge. Ne pas afficher la note en gros (comparaison déloyale) → mettre en avant **volume + photos UGC**. La note reste dans le schema (honnêteté pour Google/IA).
 - **Anti-cannibalisation** : vérifier en Phase 1 que la nouvelle page ne marche pas sur les plates-bandes d'une page existante. Différencier sémantiquement (home = générique, collection = pièce/style, blog = question).
 
 ---

@@ -13,7 +13,7 @@
       - align: {String} Tailwind alignment class for the wrapper (e.g. "items-center md:items-start")
 
     Usage:
-      {% render 'trustpilot-badge', score: 45, review_count: 81, link: 'https://...', size: 'md' %}
+      {% render 'trustpilot-badge', score: 42, review_count: 86, link: 'https://...', size: 'md' %}
 {% endcomment %}
 
 {%- liquid
@@ -41,6 +41,18 @@
   endcase
 
   assign score_display = score | divided_by: 10.0
+  # Virgule décimale hors anglais (« 4,2 » et non « 4.2 »).
+  if request.locale.iso_code != 'en'
+    assign score_display = score_display | replace: '.', ','
+  endif
+
+  # Libellé officiel Trustpilot selon la note : « Excellent » dès 4,3, « Bien » (Great) de 3,8 à 4,2.
+  # Si la note passe sous 3,8, ajouter les libellés suivants (Moyen / Average…) dans les locales.
+  if score >= 43
+    assign tp_label = 'sections.trustpilot.excellent' | t
+  else
+    assign tp_label = 'sections.trustpilot.great' | t
+  endif
 -%}
 
 <div class="trustpilot-badge flex flex-col gap-1 {{ align }}">
@@ -51,7 +63,7 @@
       <span>Trustpilot</span>
     {%- endif -%}
     <span class="!inline-block w-[5px] h-[5px] rounded-full bg-main mx-2" aria-hidden="true"></span>
-    <span class="font-medium">{{ 'sections.trustpilot.excellent' | t }}</span>
+    <span class="font-medium">{{ tp_label }}</span>
   </p>
 
   <div

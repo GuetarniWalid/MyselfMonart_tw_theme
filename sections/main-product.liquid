@@ -581,7 +581,18 @@
               # groupe "Trustpilot"). Modifier la note ou le nb d'avis a UN seul endroit met
               # a jour toutes les fiches produit automatiquement.
               assign tp_score = settings.trustpilot_score_global | default: 42
-              assign tp_count = settings.trustpilot_review_count_global | default: 81
+              assign tp_count = settings.trustpilot_review_count_global | default: 86
+              # Libellé officiel Trustpilot selon la note : « Excellent » dès 4,3, « Bien » (Great) de 3,8 à 4,2.
+              if tp_score >= 43
+                assign tp_label = 'sections.trustpilot.excellent' | t
+              else
+                assign tp_label = 'sections.trustpilot.great' | t
+              endif
+              # Note affichée avec la virgule hors anglais ; le JSON-LD garde le point.
+              assign tp_score_display = tp_score | divided_by: 10.0
+              if request.locale.iso_code != 'en'
+                assign tp_score_display = tp_score_display | replace: '.', ','
+              endif
             -%}
             <div class="{{ block.settings.margin_bottom }} mx-4">
               <p class="flex items-center mb-1 text-main-70">
@@ -590,7 +601,7 @@
                   target="_blank"
                   class="underline">Trustpilot</a>
                 <span class="!inline-block w-[5px] h-[5px] rounded-full bg-main mx-2"></span>
-                {{ 'sections.trustpilot.excellent' | t }}
+                {{ tp_label }}
               </p>
               <div class="flex gap-1">
                 {% for i in (1..5) %}
@@ -624,7 +635,7 @@
                     </svg>
                   </div>
                 {% endfor %}
-                <p class="flex items-center ml-2 text-main-70">{{ 'sections.trustpilot.score' | t }}: {{ tp_score | divided_by: 10.0 }}</p>
+                <p class="flex items-center ml-2 text-main-70">{{ 'sections.trustpilot.score' | t }}: {{ tp_score_display }}</p>
               </div>
             </div>
             {% capture reviews_structured_data %}

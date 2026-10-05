@@ -153,6 +153,7 @@
     },
     "trustpilot": {
       "excellent": "Hervorragend",
+      "great": "Gut",
       "aria_score": "Bewertung von {{ score }} von 5 basierend auf {{ count }} Trustpilot-Bewertungen",
       "score": "Bewertung"
     },

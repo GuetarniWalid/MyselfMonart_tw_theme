@@ -151,6 +151,7 @@
     },
     "trustpilot": {
       "excellent": "Excelente",
+      "great": "Muy bueno",
       "score": "Puntuación",
       "aria_score": "Puntuación de {{ score }} sobre 5 basada en {{ count }} opiniones de Trustpilot"
     },

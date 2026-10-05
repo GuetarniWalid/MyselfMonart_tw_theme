@@ -156,6 +156,8 @@
     },
     "trustpilot": {
       "excellent": "Uitstekend",
+      "great": "Goed",
+      "score": "Score",
       "aria_score": "Score van {{ score }} op 5 gebaseerd op {{ count }} Trustpilot-reviews"
     },
     "trust-signals": {

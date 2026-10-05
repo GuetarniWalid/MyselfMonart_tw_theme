@@ -414,7 +414,8 @@ Quand on rédige du **copy** pour les settings (defaults, exemples, info) :
   - Service client : **Toulouse**
   - Impression : **Allemagne** (communiqué comme "Europe")
   - Création : **2022**
-  - Trustpilot : **4.1/80** (ne pas afficher le 4.1 en gros, garder dans JSON-LD)
+  - Trustpilot : **4,2/5 sur 86 avis**, libellé officiel « Bien » (vérifié le 05/10/2026). Source unique : réglage thème « Trustpilot (avis marque) ». Ne pas afficher la note en gros, la garder dans le JSON-LD
+  - Papier des posters : **vrai papier photo 250 g/m²**
   - Volume : **1 015 tableaux livrés**
   - Téléphone : **09 60 44 61 50**
   - **NE PAS** revendiquer "Made in France" / "Fabriqué en France" (impression Allemagne, risque DGCCRF). Utiliser : "Studio créatif français à Toulouse", "Conçu en France", "Imprimé en Europe", "Direction artistique française".

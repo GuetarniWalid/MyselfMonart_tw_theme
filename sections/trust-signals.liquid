@@ -11,7 +11,7 @@
   # endroit -> mis a jour partout (badge + aggregateRating JSON-LD ici).
   assign score = settings.trustpilot_score_global | default: 42
   assign score_display = score | divided_by: 10.0
-  assign review_count = settings.trustpilot_review_count_global | default: 81
+  assign review_count = settings.trustpilot_review_count_global | default: 86
 -%}
 
 <div class="trust-signals">

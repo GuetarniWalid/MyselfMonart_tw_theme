@@ -393,6 +393,7 @@
     },
     "trustpilot": {
       "excellent": "Excellent",
+      "great": "Great",
       "score": "Score",
       "aria_score": "Rated {{ score }} out of 5 based on {{ count }} Trustpilot reviews"
     },

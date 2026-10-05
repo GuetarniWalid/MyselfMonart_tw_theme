@@ -28,7 +28,7 @@
   # groupe "Trustpilot (avis marque)"). Note et nombre d'avis modifies a UN seul
   # endroit -> mis a jour partout (fiches produit, home, ligne info + JSON-LD ici).
   assign tp_score = settings.trustpilot_score_global | default: 42
-  assign tp_count = settings.trustpilot_review_count_global | default: 81
+  assign tp_count = settings.trustpilot_review_count_global | default: 86
 
   assign visible_review_count = 0
   for block in section.blocks

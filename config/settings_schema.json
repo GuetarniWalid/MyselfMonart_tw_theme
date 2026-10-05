@@ -344,7 +344,7 @@
         "type": "number",
         "id": "trustpilot_review_count_global",
         "label": "Nombre total d'avis",
-        "default": 81
+        "default": 86
       }
     ]
   }

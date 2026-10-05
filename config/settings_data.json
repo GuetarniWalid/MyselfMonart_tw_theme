@@ -9,6 +9,8 @@
  */
 {
   "current": {
+    "trustpilot_score_global": 42,
+    "trustpilot_review_count_global": 86,
     "enable_promo_popup": true,
     "promo_popup_delay": 10,
     "promo_popup_pages": 2,
