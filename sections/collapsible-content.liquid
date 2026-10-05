@@ -185,7 +185,7 @@
               {%- endcomment -%}
               <div class="pb-7 max-w-[760px] cursor-pointer">
                 <div class="font-roboto text-[15px] leading-[1.7] text-main-90 [&>p:not(:last-child)]:mb-3 {{ accent_link_class }} [&_a]:underline [&_a:hover]:opacity-80 motion-reduce:[&_a]:transition-none [&_strong]:text-main [&_strong]:font-semibold">
-                  {{ block.settings.row_content }}
+                  {% render 'trustpilot-tokens', text: block.settings.row_content %}
                 </div>
               </div>
 
@@ -220,7 +220,10 @@
           {%- if block.settings.heading == blank or block.settings.row_content == blank -%}{%- continue -%}{%- endif -%}
           {%- if emitted > 0 -%},{%- endif -%}
           {%- liquid
-            assign answer_text = block.settings.row_content | strip_html | strip | replace: '"', '\"'
+            capture answer_text
+              render 'trustpilot-tokens', text: block.settings.row_content
+            endcapture
+            assign answer_text = answer_text | strip_html | strip | replace: '"', '\"'
           -%}
           {
             "@type": "Question",

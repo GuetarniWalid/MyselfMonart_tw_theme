@@ -154,7 +154,7 @@ return { handle, title, applied, qa: verdict }
 ## 5. Spécification de contenu & SEO (non négociable)
 
 - **Voix** : Hayate (cf. `[[feedback-collaboration-walid]]`). FR naturel, premium, jamais creux.
-- **Anti-hallucination** : tout fait vient des données réelles (produits Shopify, GSC). **Aucun chiffre inventé.** Faits autorisés : Paris/Toulouse/Allemagne, fondé 2022, Trustpilot 4.1/80 avis, ~1015 ventes, mascotte. **Interdits** : « Made in France », faux avis, fausses garanties. (cf. `[[project-myselfmonart-facts]]`, `[[feedback-verify-content-assumptions]]`.)
+- **Anti-hallucination** : tout fait vient des données réelles (produits Shopify, GSC). **Aucun chiffre inventé.** Faits autorisés : Paris/Toulouse/Allemagne, fondé 2022, Trustpilot via les jetons `[[TP_SCORE]]/5 sur [[TP_COUNT]] avis` (jamais de chiffres en dur, cf. METHODOLOGY §7), ~1015 ventes, mascotte. **Interdits** : « Made in France », faux avis, fausses garanties. (cf. `[[project-myselfmonart-facts]]`, `[[feedback-verify-content-assumptions]]`.)
 - **Mots-clés** : la requête de tête réelle de la collection (ex. « tableau salon », « tableau japonais ») dans H1/intro/guide, naturellement. Pas de bourrage.
 - **Structure Hn** : 1 seul **H1** (titre collection, via `collection-editorial` intro `show_title`). Guide en **h2/h3**. Ne jamais créer de 2ᵉ H1.
 - **Maillage interne** : liens RÉELS vers collections sœurs (même `type_of_collection`) + 2–3 produits phares. Renforce le cocon.

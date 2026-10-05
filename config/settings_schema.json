@@ -332,7 +332,7 @@
     "settings": [
       {
         "type": "paragraph",
-        "content": "Note et nombre d'avis utilisés pour l'affichage Trustpilot et l'aggregateRating JSON-LD sur toutes les fiches produit. Une seule source de vérité — modifier ici met à jour toutes les fiches automatiquement."
+        "content": "Seule source de la note et du nombre d'avis : badge, blocs avis et données Google (aggregateRating) de tout le site. Dans un texte (guide ou FAQ de collection, fiche, home), ne jamais écrire les chiffres : écrire [[TP_SCORE]] pour la note et [[TP_COUNT]] pour le nombre d'avis, par exemple « [[TP_SCORE]]/5 sur [[TP_COUNT]] avis ». Ils sont remplacés à l'affichage, dans toutes les langues. Modifier ici met donc tout le site à jour."
       },
       {
         "type": "number",

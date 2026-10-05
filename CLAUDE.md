@@ -10,3 +10,9 @@
 
 - Le menu du haut se règle dans `config/settings_data.json` → section `tw-header` (blocs « Ensemble de collection » = `set_of_collections`), et pas dans le menu Navigation de Shopify.
 - Les titres de groupe se traduisent ensuite via Translate & Adapt, ressource `gid://shopify/OnlineStoreThemeSettingsDataSections/<id du thème>`, clés `section.tw-header.<id du bloc>.title`.
+
+## Note Trustpilot
+
+- La note et le nombre d'avis se règlent à **un seul endroit** : réglages du thème → « Trustpilot (avis marque) » (`trustpilot_score_global`, sur 50, et `trustpilot_review_count_global`). Ce réglage alimente le badge, les blocs avis et les données Google.
+- Dans tout texte (guide ou FAQ de collection, fiche, home, et leurs traductions), écrire `[[TP_SCORE]]/5 sur [[TP_COUNT]] avis`, jamais les chiffres. Le snippet `trustpilot-tokens` les remplace à l'affichage. Une nouvelle section qui affiche du texte libre doit passer par ce snippet.
+- Le hook pre-commit (`scripts/i18n-lint.cjs`) refuse un chiffre en dur dans le thème. Les métachamps Shopify ne passent pas par lui : les relire.

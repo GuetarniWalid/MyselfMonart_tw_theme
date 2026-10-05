@@ -24,6 +24,15 @@
   assign ed_cocon = collection.metafields.custom.cocon_links.value
   assign ed_faq_title = collection.title | downcase
 
+  # Note et nombre d'avis Trustpilot : les textes portent les jetons [[TP_SCORE]] / [[TP_COUNT]],
+  # remplacés ici par le réglage global (snippet trustpilot-tokens). Jamais de chiffres en dur.
+  capture ed_intro
+    render 'trustpilot-tokens', text: ed_intro
+  endcapture
+  capture ed_guide
+    render 'trustpilot-tokens', text: ed_guide
+  endcapture
+
   # Pagination : sur ?page=2, 3… seul le H1 reste. Accroche, guide, cocon et FAQ (+ son JSON-LD)
   # ne sont émis que sur la page 1 ; sinon chaque page de pagination est une copie de la page 1
   # et Google peut la préférer (constat GSC oct. 2026 : tableau-cuisine?page=4 devant la page 1).
@@ -101,10 +110,12 @@
         <div class="max-w-[880px] mx-auto px-6">
           {%- for item in ed_faq -%}
             {%- if item.q == blank or item.a == blank -%}{%- continue -%}{%- endif -%}
+            {%- capture faq_q -%}{%- render 'trustpilot-tokens', text: item.q -%}{%- endcapture -%}
+            {%- capture faq_a -%}{%- render 'trustpilot-tokens', text: item.a -%}{%- endcapture -%}
             <details class="accordion group border-t border-main-10 last:border-b last:border-main-10">
               <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer flex items-center justify-between gap-6 py-6 outline-none focus-visible:ring-2 focus-visible:ring-terra focus-visible:ring-offset-2 focus-visible:rounded-sm">
                 <h3 class="font-heading font-medium leading-[1.3] text-base md:text-lg text-main m-0">
-                  {{ item.q | escape }}
+                  {{ faq_q | escape }}
                 </h3>
                 <span
                   aria-hidden="true"
@@ -114,7 +125,7 @@
               </summary>
               <div class="pb-7 max-w-[760px] cursor-pointer">
                 <div class="font-roboto text-[15px] leading-[1.7] text-main-90 [&>p:not(:last-child)]:mb-3 [&_a]:text-terra [&_a]:underline [&_a:hover]:opacity-80 motion-reduce:[&_a]:transition-none [&_strong]:text-main [&_strong]:font-semibold">
-                  {{ item.a }}
+                  {{ faq_a }}
                 </div>
               </div>
             </details>
@@ -136,12 +147,14 @@
           {%- for item in ed_faq -%}
             {%- if item.q == blank or item.a == blank -%}{%- continue -%}{%- endif -%}
             {%- if emitted > 0 -%},{%- endif -%}
+            {%- capture faq_q -%}{%- render 'trustpilot-tokens', text: item.q -%}{%- endcapture -%}
+            {%- capture faq_a -%}{%- render 'trustpilot-tokens', text: item.a -%}{%- endcapture -%}
             {
               "@type": "Question",
-              "name": {{ item.q | json }},
+              "name": {{ faq_q | json }},
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": {{ item.a | strip_html | strip | json }}
+                "text": {{ faq_a | strip_html | strip | json }}
               }
             }
             {%- assign emitted = emitted | plus: 1 -%}

@@ -30,7 +30,7 @@
 
     {%- if section.settings.subtitle != blank -%}
       <p class="text-base md:text-lg text-main-70 text-center max-w-xl leading-relaxed">
-        {{ section.settings.subtitle }}
+        {% render 'trustpilot-tokens', text: section.settings.subtitle %}
       </p>
     {%- endif -%}
 

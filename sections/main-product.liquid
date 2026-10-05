@@ -273,7 +273,7 @@
           {%- when '@app' -%}
             {% render block %}
           {%- when 'text' -%}
-            <div class="flex flex-col gap-4 mb-4 text-lg mx-4">{{- block.settings.text -}}</div>
+            <div class="flex flex-col gap-4 mb-4 text-lg mx-4">{%- render 'trustpilot-tokens', text: block.settings.text -%}</div>
           {%- when 'title' -%}
             {%- if block.settings.tone == 'subtitle' -%}
               <h1 class="text-xs font-normal text-brand-700 leading-relaxed tracking-wide {{ block.settings.margin_bottom }} mx-4">{{ product.title | escape }}</h1>
@@ -395,7 +395,7 @@
               </summary>
               <div class="collapsible-tab text-sm flex flex-col gap-3 text-main-90 bg-main-2 rounded-xl mb-5">
                 <div class="m-5">
-                  {{ block.settings.content }}
+                  {% render 'trustpilot-tokens', text: block.settings.content %}
                   {{ block.settings.page.content }}
                   {%- comment -%} Repli : si la page liée n'a pas de corps (contenu rendu via un
                      template de page, ex. guide-de-tailles), on affiche un lien vers la page

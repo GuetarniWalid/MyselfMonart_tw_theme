@@ -12,6 +12,9 @@
  *      home BreadcrumbList stayed "Accueil" and Organization.description stayed FR on /es/nl/de —
  *      2026-06-09 audit). Use `{{ 'some.key' | t | json }}` or pull from a localised object
  *      (e.g. `collections[handle].title`). Brand/proper nouns are allow-listed.
+ *   2b. Hardcoded Trustpilot rating / review count in templates, sections, snippets, locales or
+ *      settings_data. Use the [[TP_SCORE]] / [[TP_COUNT]] tokens (snippets/trustpilot-tokens.liquid):
+ *      the figures come from ONE theme setting, so they never go stale.
  *   3. Locale key drift: every key in the source locale (fr.default.json) must exist in
  *      en/es/de/nl.json, or that string falls back to French on the missing language.
  *
@@ -102,6 +105,47 @@ for (const dir of SCAN_DIRS) {
       if (inLd && line.includes('</script>')) inLd = false
     })
   }
+}
+
+// ---- 1c. Hardcoded Trustpilot figures ---------------------------------------------------
+// The rating and review count live in ONE place: theme settings → Trustpilot (avis marque).
+// Free text that copies the figures goes stale as soon as the rating moves (2026-10-05: 4,5/5,
+// 4,1/5 and 80/81 reviews were still shown while the real figure was 4,2/5 on 86 reviews).
+// In templates, section settings and locales, write the tokens instead:
+//   [[TP_SCORE]] (rating, e.g. « 4,2 ») and [[TP_COUNT]] (review count), rendered by
+//   snippets/trustpilot-tokens.liquid in every language.
+const TP_DIRS = ['templates', 'sections', 'snippets', 'locales']
+const TP_EXTRA_FILES = ['config/settings_data.json']
+const TP_FIGURE_RE =
+  /\b[0-5][.,]\d\s*(?:\/|sur|out of|of|von|aus|de|sobre|van|op|uit)\s*5\b|\b\d{2,}\s*(?:avis|reviews?|Bewertungen|rese(?:ñ|n)as|opiniones|valoraciones|beoordelingen|recensies|retours|évaluations|evaluations)\b/i
+
+function listFilesRec(dir, exts) {
+  const abs = path.join(ROOT, dir)
+  if (!fs.existsSync(abs)) return []
+  return fs.readdirSync(abs, { withFileTypes: true }).flatMap((e) => {
+    const rel = path.join(dir, e.name)
+    if (e.isDirectory()) return listFilesRec(rel, exts)
+    return exts.some((x) => e.name.endsWith(x)) ? [path.join(ROOT, rel)] : []
+  })
+}
+
+const tpFiles = [
+  ...TP_DIRS.flatMap((d) => listFilesRec(d, ['.liquid', '.json'])),
+  ...TP_EXTRA_FILES.map((f) => path.join(ROOT, f)).filter((f) => fs.existsSync(f)),
+]
+for (const file of tpFiles) {
+  const rel = path.relative(ROOT, file)
+  fs.readFileSync(file, 'utf8')
+    .split('\n')
+    .forEach((line, i) => {
+      if (line.includes('i18n-lint-ignore') || !/trustpilot/i.test(line)) return
+      const m = line.match(TP_FIGURE_RE)
+      if (!m) return
+      console.log(
+        `  ✖ ${rel}:${i + 1}  hardcoded Trustpilot figure "${m[0]}" (write [[TP_SCORE]] / [[TP_COUNT]] — value set in theme settings → Trustpilot)`
+      )
+      issues++
+    })
 }
 
 // ---- 2. Locale key parity --------------------------------------------------------------

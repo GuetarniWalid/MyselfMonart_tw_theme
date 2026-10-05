@@ -424,7 +424,7 @@
           "settings": {
             "heading": "Est-ce un vrai poster de qualité, ou une simple affiche fragile ?",
             "icon": "none",
-            "row_content": "<p>C’est un tirage photo imprimé en <strong>haute définition</strong> sur un <strong>vrai papier photo de 250 g/m²</strong> : des couleurs éclatantes, des détails nets et fidèles à l’image. L’impression est <strong>sans bordure</strong>, bord à bord, pour un rendu plein cadre, épuré et minimaliste — rien à voir avec une affiche fine bon marché. Chaque tirage est imprimé à la demande, en tirage frais. Conçu en France, imprimé en Europe. Plus de <strong>1000 intérieurs</strong> nous font déjà confiance, avec une note de <strong>4,2/5 sur 86 avis Trustpilot</strong>.</p>"
+            "row_content": "<p>C’est un tirage photo imprimé en <strong>haute définition</strong> sur un <strong>vrai papier photo de 250 g/m²</strong> : des couleurs éclatantes, des détails nets et fidèles à l’image. L’impression est <strong>sans bordure</strong>, bord à bord, pour un rendu plein cadre, épuré et minimaliste — rien à voir avec une affiche fine bon marché. Chaque tirage est imprimé à la demande, en tirage frais. Conçu en France, imprimé en Europe. Plus de <strong>1000 intérieurs</strong> nous font déjà confiance, avec une note de <strong>[[TP_SCORE]]/5 sur [[TP_COUNT]] avis Trustpilot</strong>.</p>"
           }
         },
         "faq_poster_cadre_inclus": {

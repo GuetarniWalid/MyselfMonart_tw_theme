@@ -973,7 +973,7 @@
       "settings": {
         "eyebrow": "Ils nous font confiance",
         "title": "Ce que vivent nos clients au quotidien",
-        "subtitle": "Plus de 80 retours vérifiés sur Trustpilot.",
+        "subtitle": "[[TP_COUNT]] retours vérifiés sur Trustpilot.",
         "show_trustpilot": true,
         "trustpilot_link": "https://fr.trustpilot.com/review/myselfmonart.com"
       }

@@ -45,6 +45,13 @@
     assign content = ''
   endif
 
+  # Jetons Trustpilot [[TP_SCORE]] / [[TP_COUNT]] → réglage global (snippet trustpilot-tokens).
+  if content != blank
+    capture content
+      render 'trustpilot-tokens', text: content
+    endcapture
+  endif
+
   case section.settings.background_color
     when 'cream'
       assign bg_class = 'bg-main-5'

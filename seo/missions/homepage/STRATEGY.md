@@ -84,7 +84,7 @@ Reconstruire la homepage FR de [myselfmonart.com](https://myselfmonart.com) pour
 | Tableaux livrés depuis 2022 | ~1 015 |
 | Catalogue | 700+ produits / ~50 collections |
 | Cible | Femmes 35+, premium-conscient |
-| Trustpilot | 4.1/5 sur 80 avis |
+| Trustpilot | 4,2/5 sur 86 avis au 05/10/2026 (4.1/80 à l'écriture de cette stratégie). Dans les textes : jetons `[[TP_SCORE]]` / `[[TP_COUNT]]`, réglage thème « Trustpilot (avis marque) » |
 | UGC photos clients | ~20+ (23 témoignages intégrés) |
 | Téléphone SAV | 09 60 44 61 50 |
 | Fondateur / DA | Walid (signature publique "Hayate"), graphiste-illustrateur |

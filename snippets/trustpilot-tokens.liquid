@@ -1,0 +1,33 @@
+{%- comment -%}
+  trustpilot-tokens — remplace les jetons Trustpilot d'un texte libre par les valeurs du réglage
+  global (Thème → Trustpilot (avis marque)). Le réglage reste la SEULE source de la note et du
+  nombre d'avis : un texte (guide, FAQ, fiche, home) ne doit jamais écrire ces chiffres en dur.
+
+  Jetons, identiques dans toutes les langues (à recopier tels quels dans les traductions) :
+    [[TP_SCORE]] → note sur 5, virgule décimale hors anglais (« 4,2 » ; « 4.2 » en anglais)
+    [[TP_COUNT]] → nombre d'avis (« 86 »)
+  Exemple : « une note Trustpilot de [[TP_SCORE]]/5 sur [[TP_COUNT]] avis »
+
+  Accepts:
+    - text: {String} texte (HTML permis) ; un texte sans jeton ressort tel quel
+
+  Usage :
+    {% render 'trustpilot-tokens', text: block.settings.row_content %}
+    {%- capture ed_guide -%}{%- render 'trustpilot-tokens', text: ed_guide -%}{%- endcapture -%}
+  Le texte sort brut (aucun échappement ajouté) : échapper au point d'usage (| escape, | json).
+  Garde-fou : scripts/i18n-lint.cjs refuse un commit qui écrit une note ou un nombre d'avis en dur.
+{%- endcomment -%}
+
+{%- liquid
+  assign tp_text = text | append: ''
+  if tp_text contains '[[TP_'
+    assign tp_score = settings.trustpilot_score_global | default: 42
+    assign tp_count = settings.trustpilot_review_count_global | default: 86 | append: ''
+    assign tp_score_display = tp_score | divided_by: 10.0 | append: ''
+    if request.locale.iso_code != 'en'
+      assign tp_score_display = tp_score_display | replace: '.', ','
+    endif
+    assign tp_text = tp_text | replace: '[[TP_SCORE]]', tp_score_display | replace: '[[TP_COUNT]]', tp_count
+  endif
+  echo tp_text
+-%}

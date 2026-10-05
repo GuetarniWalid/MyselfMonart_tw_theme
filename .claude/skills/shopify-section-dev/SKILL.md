@@ -57,6 +57,7 @@ Une section a 3 parties :
 | **Icônes SVG** | `{% render 'icon-X' %}` | `snippets/icon-*.liquid` (icon-accordion, icon-check, icon-account, icon-heart, etc.) | `{% render 'tw-icon-caret', width: '10' %}` |
 | **Schema JSON-LD home** | `{% render 'json-ld-home' %}` | [`snippets/json-ld-home.liquid`](snippets/json-ld-home.liquid) | Inclus auto dans head-base |
 | **Trustpilot badge** | `{% render 'trustpilot-badge' %}` | [`snippets/trustpilot-badge.liquid`](snippets/trustpilot-badge.liquid) | Score caché par défaut (cf [[feedback-trustpilot]]) |
+| **Note / nb d'avis dans un texte libre** | `{% render 'trustpilot-tokens', text: … %}` (jetons `[[TP_SCORE]]`, `[[TP_COUNT]]`) | [`snippets/trustpilot-tokens.liquid`](snippets/trustpilot-tokens.liquid) | Tout texte admin/métachamp affiché par une nouvelle section doit passer par ce snippet |
 | **Container max-width standard** | Classes `page-width` + `max-w-7xl mx-auto` | Tailwind default | Headers de section |
 | **Couleurs / fonts dynamiques** | Vars CSS `--color-main-rgb`, `--color-buy-button-rgb`, font `heading` | [`snippets/fonts-and-colors.liquid`](snippets/fonts-and-colors.liquid) | Voir §3 ci-dessous |
 
@@ -414,7 +415,7 @@ Quand on rédige du **copy** pour les settings (defaults, exemples, info) :
   - Service client : **Toulouse**
   - Impression : **Allemagne** (communiqué comme "Europe")
   - Création : **2022**
-  - Trustpilot : **4,2/5 sur 86 avis**, libellé officiel « Bien » (vérifié le 05/10/2026). Source unique : réglage thème « Trustpilot (avis marque) ». Ne pas afficher la note en gros, la garder dans le JSON-LD
+  - Trustpilot : **4,2/5 sur 86 avis**, libellé officiel « Bien » (vérifié le 05/10/2026). Source unique : réglage thème « Trustpilot (avis marque) ». Dans un texte (guide, FAQ, fiche, home, dans toutes les langues), **ne jamais écrire les chiffres** : écrire `[[TP_SCORE]]/5 sur [[TP_COUNT]] avis`. Les jetons sont remplacés à l'affichage par le réglage (snippet `trustpilot-tokens`), avec la virgule décimale hors anglais, et se recopient tels quels dans les traductions. Pourquoi : le 05/10/2026, 46 collections affichaient encore « 4,1/5 sur 80 avis » et la fiche poster « 4,5/5 », alors que la vraie note était de 4,2/5 sur 86 avis. Le hook pre-commit (`scripts/i18n-lint.cjs`) refuse les chiffres en dur dans le thème ; les métachamps Shopify n'y passent pas, il faut donc les relire. Jamais de jeton dans un titre SEO, une meta description ou `collection.description` affichée hors thème : dans ces champs, ne pas citer la note. Ne pas afficher la note en gros, la garder dans le JSON-LD
   - Papier des posters : **vrai papier photo 250 g/m²**
   - Volume : **1 015 tableaux livrés**
   - Téléphone : **09 60 44 61 50**
