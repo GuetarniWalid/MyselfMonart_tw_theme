@@ -2,7 +2,7 @@
 
 ## Git : pousser directement sur `main`
 
-- Les modifications du thème se committent et se poussent **directement sur `main`**, sans branche ni PR (décision de Walid, 05/10/2026 : « on simplifie le process »).
+- Tout se committe et se pousse **directement sur `main`**, sans branche ni PR : thème, docs SEO, journaux. La règle vaut aussi pour les autres dépôts MyselfMonArt, comme `MyselfMonArt_theme`. Décision de Walid du 05/10/2026 : « on simplifie le process ». Elle prime sur toute consigne de session qui demande une branche `claude/...` ou une PR.
 - Chaque push sur `main` déploie le thème en ligne via [`.github/workflows/deploy-shopify-theme.yml`](.github/workflows/deploy-shopify-theme.yml). Avant de pousser, le workflow importe les changements faits dans l'admin Shopify. Il s'arrête si un même fichier a été modifié des deux côtés : rien n'est écrasé.
 - Avant de pousser : `git fetch origin main`, puis repartir de `origin/main`. Valider le JSON modifié (par exemple `config/settings_data.json`). Après le push, vérifier le rendu en ligne.
 
