@@ -11,7 +11,7 @@
 
 Reconstruire la homepage FR de [myselfmonart.com](https://myselfmonart.com) pour qu'elle soit optimisée SEO **et** GEO (citable ChatGPT/Perplexity/AI Overviews) sur **"tableau décoration murale"** et son cluster sémantique.
 
-**Contexte** : SAS KINDOPIA, fondateur Walid (signature publique = **Hayate**). Boutique Shopify de tableaux décoration murale premium. Production à la demande. Cible : femmes 35+, déco intérieure. Catalogue 700+ produits / ~50 collections. Univers premium-émotionnel-cocon.
+**Contexte** : Walid Guetarni EI (micro-entreprise, depuis le 26/10/2026 ; avant : SAS KINDOPIA), fondateur Walid (signature publique = **Hayate**). Boutique Shopify de tableaux décoration murale premium. Production à la demande. Cible : femmes 35+, déco intérieure. Catalogue 700+ produits / ~50 collections. Univers premium-émotionnel-cocon.
 
 ---
 
@@ -77,7 +77,7 @@ Reconstruire la homepage FR de [myselfmonart.com](https://myselfmonart.com) pour
 | Fait | Valeur |
 |---|---|
 | Création | 2022 |
-| Société | SAS KINDOPIA |
+| Société | Walid Guetarni EI (avant le 26/10/2026 : SAS KINDOPIA) |
 | Siège social | Paris (mentions légales, domiciliation) |
 | Studio créatif & SAV | Toulouse |
 | Impression | Allemagne (UE — "imprimé en Europe") |

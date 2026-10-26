@@ -6,7 +6,7 @@ description: |
 
 # Skill — Développement de sections Shopify (MyselfMonArt theme)
 
-> **À appliquer obligatoirement** dès qu'on touche à : `sections/*.liquid`, `snippets/*.liquid`, `templates/*.json`, `assets/*.css`, ou qu'on intègre une image/typo/couleur. Walid (président SAS KINDOPIA, fondateur MyselfMonArt) ne doit jamais avoir à répéter ces règles.
+> **À appliquer obligatoirement** dès qu'on touche à : `sections/*.liquid`, `snippets/*.liquid`, `templates/*.json`, `assets/*.css`, ou qu'on intègre une image/typo/couleur. Walid (Walid Guetarni EI, fondateur MyselfMonArt) ne doit jamais avoir à répéter ces règles.
 
 ---
 

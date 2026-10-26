@@ -78,7 +78,7 @@ const LD_KEYS = new Set([
   'name', 'alternateName', 'description', 'jobTitle', 'slogan', 'headline',
   'caption', 'abstract', 'disambiguatingDescription', 'reviewBody', 'articleBody', 'text',
 ])
-const LD_BRAND_ALLOW = new Set(['MyselfMonArt', 'Walid', 'SAS KINDOPIA'])
+const LD_BRAND_ALLOW = new Set(['MyselfMonArt', 'Walid', 'Walid Guetarni EI'])
 const LD_KV_RE = /"([A-Za-z]+)"\s*:\s*"([^"]*)"/g
 
 for (const dir of SCAN_DIRS) {
