@@ -62,7 +62,7 @@
           "settings": {
             "heading": "Livraison, paiement & délais",
             "icon": "box",
-            "content": "<p><strong>Livraison offerte partout.</strong> Aucun minimum, en colis suivi jusqu'à votre porte.</p><p><strong>Fabrication à la demande :</strong><br/> comptez 3 à 4 jours de fabrication, puis 3 à 5 jours ouvrés de <br/>livraison. Votre numéro de suivi vous est envoyé dès l'expédition.</p><p><strong>Paiement en 3 fois sans frais</strong> avec Klarna dès 50 €.</p><p><em>Conçu en France, imprimé en Europe.</em></p>",
+            "content": "<p><strong>Livraison offerte partout.</strong> Aucun minimum, en colis suivi jusqu'à votre porte.</p><p><strong>Fabrication à la demande :</strong><br/>Nous n’avons pas de stock. Votre tableau est imprimé à la commande dans nos ateliers, sa toile est tendue à la main sur son châssis, puis il est contrôlé avant d’être expédié. Comptez 7 jours ouvrés entre votre commande et la livraison. Votre numéro de suivi vous est envoyé dès l’expédition.</p><p><strong>Paiement en 3 fois sans frais</strong> avec Klarna dès 50 €.</p><p><em>Conçu en France, imprimé en Europe.</em></p>",
             "page": ""
           }
         },
@@ -135,6 +135,14 @@
     "customer_testimonial_myiwee": {
       "type": "testimonials-carousel",
       "blocks": {
+        "image_text_Emh8qz": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-frida-aviclient-satisafait-deco-toilette.png",
+            "image_asset": "",
+            "message": "Trop contente\nLes coulures sont trop belles, le cadre est magnifique, c’est vraiment un gros coup de cœur. \nMarie L"
+          }
+        },
         "image_text_E4gkJD": {
           "type": "image-text",
           "settings": {
@@ -234,7 +242,7 @@
         "image_text_PTqtay": {
           "type": "image-text",
           "settings": {
-            "image": "shopify://shop_images/deco-mural-ying-yang.jpg",
+            "image": "shopify://shop_images/Coin_yin-yang_et_plantes_luxuriantes.png",
             "image_asset": "",
             "message": "Le tableau est magnifique! Alexandre V"
           }
@@ -330,6 +338,7 @@
         }
       },
       "block_order": [
+        "image_text_Emh8qz",
         "image_text_E4gkJD",
         "image_text_PWRHhc",
         "image_text_fxBift",
@@ -429,7 +438,7 @@
           "settings": {
             "heading": "Quels sont les délais de livraison ? Combien coûte la livraison ?",
             "icon": "none",
-            "row_content": "<p>Chaque tableau est conçu en France et fabriqué à la demande en Europe. Comptez 5 à 8 jours ouvrés pour la fabrication + 2 à 4 jours pour la livraison. Vous recevez un email avec le numéro de suivi dès l'expédition. </p><p><strong>Livraison GRATUITE sur toutes vos commandes 🎁. </strong>Sauf en Suisse où un supplément de 9,99€ est appliqué.</p>"
+            "row_content": "<p>Chez nous, aucun tableau n’attend sur une étagère : le vôtre est créé spécialement pour vous, au moment où vous le commandez. Il est imprimé à la demande dans nos ateliers en Europe, la toile est tendue à la main sur son châssis, et chaque tableau est vérifié avant d’être expédié. Vous le recevez sous 7 jours ouvrés, avec un numéro de suivi envoyé par email dès l’expédition.</p><p><strong>Livraison GRATUITE sur toutes vos commandes 🎁. </strong>Sauf en Suisse où un supplément de 9,99€ est appliqué.</p>"
           }
         },
         "collapsible_row_dNyRAY": {

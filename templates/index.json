@@ -20,6 +20,7 @@
         "cta_secondary_label": "",
         "cta_secondary_link": "",
         "hero_image": "shopify://shop_images/hero-tableau-decoration-murale-salon-v9.jpg",
+        "hero_image_asset": "",
         "hero_image_alt": "Tableau décoration murale moderne accroché dans un salon contemporain — MyselfMonArt",
         "image_asset_width": 1024,
         "image_asset_height": 1024,
@@ -44,6 +45,8 @@
         "show_ornament": true,
         "ornament_symbol": "❋",
         "closing_signature": "Prenez le temps. Le bon tableau, c'est rarement le premier — c'est celui qui revient vous chercher.",
+        "cta_label": "",
+        "cta_link": "",
         "background_color": "cream"
       }
     },
@@ -105,6 +108,7 @@
           "type": "room",
           "settings": {
             "collection": "tableau-salon",
+            "image_alt": "",
             "short_title": "Salon",
             "title": "Tableau pour le salon",
             "description": "<p>Le salon est la pièce où l'on reçoit, mais aussi celle où l'on se pose après une journée. Le bon tableau y crée le point focal sans crier — il invite à s'asseoir, à ralentir, à recommencer une conversation. Pensé pour les murs derrière le canapé, les pans aveugles, les enfilades à habiter.</p>",
@@ -116,6 +120,7 @@
           "type": "room",
           "settings": {
             "collection": "tableau-chambre-adulte",
+            "image_alt": "",
             "short_title": "Chambre adulte",
             "title": "Tableau pour la chambre adulte",
             "description": "<p>La chambre, c'est l'endroit où vous quittez le monde. On y privilégie les tons doux, les sujets apaisants, les compositions qui se lisent allongé. Notre collection est curée pour accompagner les fins de journée, pas pour les agiter.</p>",
@@ -127,6 +132,7 @@
           "type": "room",
           "settings": {
             "collection": "tableau-chambre-garcon",
+            "image_alt": "",
             "short_title": "Chambre enfant",
             "title": "Tableau pour la chambre enfant",
             "description": "<p>Une chambre d'enfant grandit avec son occupant. Nous avons distingué chambre bébé, garçon et adolescent parce que les codes ne sont jamais les mêmes — et parce qu'un tableau bien choisi à 6 ans est un repère encore aimé à 12.</p>",
@@ -138,6 +144,7 @@
           "type": "room",
           "settings": {
             "collection": "tableau-bureau",
+            "image_alt": "",
             "short_title": "Bureau",
             "title": "Tableau pour le bureau",
             "description": "<p>Le mur derrière vous en visio raconte qui vous êtes avant même que vous parliez. Le mur devant vous décide de votre concentration. Notre collection propose des œuvres qui élèvent sans distraire — pensées pour les bureaux à domicile comme pour les espaces professionnels.</p>",
@@ -149,6 +156,7 @@
           "type": "room",
           "settings": {
             "collection": "tableau-cuisine",
+            "image_alt": "",
             "short_title": "Cuisine",
             "title": "Tableau pour la cuisine",
             "description": "<p>La cuisine est devenue une pièce à vivre. Un tableau y trouve naturellement sa place — au-dessus du plan de travail, dans le coin repas, sur le pan de mur qui ramène l'œil. Notre collection joue les couleurs qui rassurent et les sujets qui ouvrent l'appétit.</p>",
@@ -160,6 +168,7 @@
           "type": "room",
           "settings": {
             "collection": "tableau-entree-couloir",
+            "image_alt": "",
             "short_title": "Entrée & couloir",
             "title": "Tableau pour l'entrée et le couloir",
             "description": "<p>L'entrée, c'est la première phrase de votre intérieur. Le couloir, c'est le souffle entre deux pièces. Ce sont des espaces souvent oubliés alors qu'ils décident de votre humeur dès le seuil. Nous avons réuni les œuvres pensées pour ces formats étroits et ces traversées rapides dans une collection dédiée.</p>",
@@ -182,7 +191,11 @@
         "heading_level": "h2",
         "h2_title": "Trouver votre tableau selon la pièce",
         "intro": "Chaque pièce de votre intérieur appelle une intention différente. Un tableau qui fonctionne dans un salon écrasera une chambre ; une œuvre qui apaise une chambre paraîtra timide dans un bureau. Nous avons construit nos collections autour de cette évidence : commencez par la pièce, le reste suit.",
-        "background_color": "cream"
+        "hub_label": "",
+        "hub_collection": "",
+        "background_color": "cream",
+        "padding_size": "large",
+        "show_descriptions": true
       }
     },
     "styles": {
@@ -192,6 +205,7 @@
           "type": "room",
           "settings": {
             "collection": "tableau-abstrait",
+            "image_alt": "",
             "short_title": "Abstrait & moderne",
             "title": "Tableaux abstraits et modernes",
             "description": "<p>L'abstraction laisse votre œil composer sa propre histoire. Couleurs, lignes, équilibres : rien ne vous dit quoi voir, tout vous invite à ressentir. Notre collection regroupe les œuvres les plus contemporaines de notre sélection.</p>",
@@ -203,6 +217,7 @@
           "type": "room",
           "settings": {
             "collection": "tableau-zen",
+            "image_alt": "",
             "short_title": "Zen & nature",
             "title": "Tableaux zen et inspiration nature",
             "description": "<p>Lotus, branches, paysages brumeux, lumière qui filtre. Pour les intérieurs qui cherchent l'apaisement comme une matière. Pensée pour les chambres, les espaces méditation, les salons cocooning.</p>",
@@ -214,6 +229,7 @@
           "type": "room",
           "settings": {
             "collection": "tableau-pop-art",
+            "image_alt": "",
             "short_title": "Pop art",
             "title": "Tableaux pop art et street art",
             "description": "<p>L'énergie d'une scène urbaine, l'audace d'un grand aplat de couleur. Pour les intérieurs qui assument le caractère. Notre collection joue les contrastes francs et les références qui parlent à votre génération.</p>",
@@ -225,6 +241,7 @@
           "type": "room",
           "settings": {
             "collection": "tableau-africain",
+            "image_alt": "",
             "short_title": "Africain & ethnique",
             "title": "Tableaux africains et ethniques",
             "description": "<p>Portraits de femmes africaines, silhouettes berbères, motifs du Sahara : un univers que nous avons construit avec un soin particulier — c'est l'une de nos collections les plus aimées.</p>",
@@ -236,6 +253,7 @@
           "type": "room",
           "settings": {
             "collection": "tableau-noir-et-blanc",
+            "image_alt": "",
             "short_title": "Noir & blanc",
             "title": "Tableaux noir et blanc",
             "description": "<p>Le noir et blanc ne vieillit jamais. Il s'accorde avec tout, structure un mur, fait reposer l'œil. Notre collection couvre la photographie, le dessin, l'abstraction monochrome.</p>",
@@ -247,6 +265,7 @@
           "type": "room",
           "settings": {
             "collection": "tableau-fleurs",
+            "image_alt": "",
             "short_title": "Floral",
             "title": "Tableaux floraux",
             "description": "<p>Pas la nature morte académique — la fleur réinterprétée, agrandie, contemporaine. Notre collection propose des œuvres qui apportent le végétal sans tomber dans le décoratif convenu.</p>",
@@ -258,6 +277,7 @@
           "type": "room",
           "settings": {
             "collection": "tableau-japonais",
+            "image_alt": "",
             "short_title": "Japonais",
             "title": "Tableaux japonais",
             "description": "<p>Estampes revisitées, calligraphies épurées, vagues d'Hokusai et jardins de Kyoto. Notre collection est l'une des plus contemplatives de notre catalogue.</p>",
@@ -269,6 +289,7 @@
           "type": "room",
           "settings": {
             "collection": "tableaux-frida-kahlo",
+            "image_alt": "",
             "short_title": "Frida Kahlo",
             "title": "Tableaux Frida Kahlo",
             "description": "<p>Une figure à elle seule mérite son univers. Notre collection rassemble portraits, autoportraits revisités, et hommages contemporains à l'iconique artiste mexicaine.</p>",
@@ -293,7 +314,11 @@
         "heading_level": "h2",
         "h2_title": "Explorer par style et univers",
         "intro": "Si vous savez déjà ce qui vous touche — un courant, une époque, une géographie — entrez par ici. Voici nos univers, curés un par un.",
-        "background_color": "secondary"
+        "hub_label": "",
+        "hub_collection": "",
+        "background_color": "secondary",
+        "padding_size": "large",
+        "show_descriptions": true
       }
     },
     "size_guide": {
@@ -306,9 +331,13 @@
         "paragraph_1": "<p>La taille d'un tableau ne se choisit pas au hasard, ni au coup de cœur seul. Trois repères suffisent à éviter les regrets.</p>",
         "pull_quote": "",
         "pull_quote_attribution": "",
+        "divider_symbol": "✦",
         "paragraph_2": "<ul><li>Au-dessus d'un meuble, le tableau doit occuper 60 à 75 % de la largeur du canapé ou de la console. Au-dessous, il paraît timide ; au-dessus, il l'écrase.</li><li>Pour la hauteur, placez le centre du tableau à environ 1,50 m du sol — la hauteur moyenne du regard.</li><li>Sur un mur seul, sans meuble dessous, pensez en proportion du mur entier. Un grand format ou un triptyque structurera mieux qu'une petite œuvre perdue.</li></ul><p>Pour aller plus loin, notre guide complet <a href=\"/blogs/tableau-cuisine/quelle-taille-de-tableau-choisir\">Quelle taille de tableau choisir ?</a> vous accompagne pièce par pièce.</p>",
         "show_ornament": false,
+        "ornament_symbol": "❋",
         "closing_signature": "",
+        "cta_label": "",
+        "cta_link": "",
         "background_color": "terracotta-light"
       }
     },
@@ -319,8 +348,10 @@
           "type": "room",
           "settings": {
             "collection": "posters-affiches-zen",
+            "image_alt": "",
             "short_title": "Nature & zen",
             "title": "Poster nature & zen",
+            "description": "",
             "link_label": "Voir les affiches",
             "link": "shopify://collections/posters-affiches-zen"
           }
@@ -329,8 +360,10 @@
           "type": "room",
           "settings": {
             "collection": "posters-affiches-africain",
+            "image_alt": "",
             "short_title": "Africain",
             "title": "Poster & affiche africaine",
+            "description": "",
             "link_label": "Voir les affiches",
             "link": "shopify://collections/posters-affiches-africain"
           }
@@ -339,8 +372,10 @@
           "type": "room",
           "settings": {
             "collection": "posters-affiches-bureau",
+            "image_alt": "",
             "short_title": "Bureau",
             "title": "Poster pour le bureau",
+            "description": "",
             "link_label": "Voir les affiches",
             "link": "shopify://collections/posters-affiches-bureau"
           }
@@ -349,8 +384,10 @@
           "type": "room",
           "settings": {
             "collection": "affiches-poster-cuisine",
+            "image_alt": "",
             "short_title": "Cuisine",
             "title": "Poster & affiche cuisine",
+            "description": "",
             "link_label": "Voir les affiches",
             "link": "shopify://collections/affiches-poster-cuisine"
           }
@@ -359,8 +396,10 @@
           "type": "room",
           "settings": {
             "collection": "posters-affiches-chambre-ado",
+            "image_alt": "",
             "short_title": "Chambre ado",
             "title": "Poster pour la chambre ado",
+            "description": "",
             "link_label": "Voir les affiches",
             "link": "shopify://collections/posters-affiches-chambre-ado"
           }
@@ -369,8 +408,10 @@
           "type": "room",
           "settings": {
             "collection": "posters-affiches-entree-couloir",
+            "image_alt": "",
             "short_title": "Entrée & couloir",
             "title": "Poster pour l'entrée et le couloir",
+            "description": "",
             "link_label": "Voir les affiches",
             "link": "shopify://collections/posters-affiches-entree-couloir"
           }
@@ -407,9 +448,13 @@
         "paragraph_1": "<p>Quand vous validez votre commande, l'œuvre n'attend pas dans un entrepôt. Elle n'existe pas encore. Voici ce qui se passe.</p>",
         "pull_quote": "",
         "pull_quote_attribution": "",
+        "divider_symbol": "✦",
         "paragraph_2": "<p>Le fichier source, déjà retouché par notre direction artistique, part vers notre atelier d'impression européen.</p><p>La toile est imprimée à la demande, jamais en lot. Vos couleurs sont calibrées sur votre format précis.</p><p>Elle est ensuite tendue à la main sur un châssis bois massif, vérifiée œuvre par œuvre.</p><p>Puis livrée prête à accrocher, dans un emballage qui protège les angles — la partie la plus fragile d'un tableau tendu.</p>",
         "show_ornament": false,
+        "ornament_symbol": "❋",
         "closing_signature": "Comptez quelques jours de production en plus du transport. C'est le prix d'une œuvre qui n'aura jamais vécu en stock.",
+        "cta_label": "",
+        "cta_link": "",
         "background_color": "secondary"
       }
     },
@@ -449,6 +494,7 @@
         "h2_title": "Paris, Toulouse, l'Europe",
         "intro": "<p>Nous préférons une chaîne courte, européenne, contrôlée, à un drapeau planté sur un emballage. Un travail dont chaque étape a un visage.</p>",
         "image": "shopify://shop_images/studio-direction-artistique-tableau-epreuve-v2.jpg",
+        "image_asset": "",
         "image_alt": "Direction artistique MyselfMonArt — contrôle des couleurs d'un tableau entre l'écran de retouche et l'épreuve imprimée bord à bord, au studio",
         "image_layout": "image-left",
         "background_color": "secondary"
@@ -461,6 +507,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-femme-abstrait-crayon-pastel.jpg",
+            "image_asset": "",
             "message": "Très beau tableau ! Je suis ravie de mon achat, merci.. Léa M"
           }
         },
@@ -468,6 +515,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-alluminium-japonais-geisha-avis-clien.jpg",
+            "image_asset": "",
             "message": "Je suis juste en admiration devant cette œuvre et vous remercie de sortir de l'ordinaire pour habiller nos murs!!!\nUn grand merci. Sandra B"
           }
         },
@@ -475,6 +523,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/toile-moderne-frida-fleurs.jpg",
+            "image_asset": "",
             "message": "Dès l'ouverture du carton, j'ai trouvé la toile magnifique.\nEncore plus belle que sur la photo du site.\nJe l'ai installée. Et l'effet est «  waouh ! »\nTrès jolie toile ! Très beau site !\nJe suis ravi de mon achat. Cécile C"
           }
         },
@@ -482,6 +531,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-contemporain-abstrait-femme-ronde.jpg",
+            "image_asset": "",
             "message": "Reçu mon tableau et franchement, je ne regrette pas une seconde ! Les couleurs sont incroyables, l'originalité saute aux yeux… Impossible de ne pas s'arrêter devant. Sophie D"
           }
         },
@@ -489,6 +539,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableauphotographie-zebre-animaux-zebre-sauvage.jpg",
+            "image_asset": "",
             "message": "L'animal, majestueux et solitaire trône dans mon salon au dessus de ma console... Peut on dire qu il est magnifique ? Assurément oui et je l adore!\nPatricia G."
           }
         },
@@ -496,6 +547,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-gaming-marvel-iron-man.jpg",
+            "image_asset": "",
             "message": "Très content de mon achat ! Mon fils est ravi il va faire de beaux rêves de super-héros\n. Eugene D"
           }
         },
@@ -503,6 +555,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/peinture-femme-noire-muse.jpg",
+            "image_asset": "",
             "message": "Magnifique tableau et très design, correspond parfaitement à la description.  Morel E"
           }
         },
@@ -510,6 +563,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/Tableau-chambre-bebe_f6e62e6e-707b-41df-aa17-bdad25ef3385.jpg",
+            "image_asset": "",
             "message": "Juste une petite photo avec le cadre mis en place encore un grand merci à vous 🥰. \nElodie G"
           }
         },
@@ -517,6 +571,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/deco-mural-toile-marilyn-monroe-pop-art.jpg",
+            "image_asset": "",
             "message": "Envoie très rapide et tableau encore plus beau que sur le site.\nParfait je recommande !!!\nJessica S"
           }
         },
@@ -524,6 +579,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/decoration-mural-cadre-bois-cactus-paysage-colore.jpg",
+            "image_asset": "",
             "message": "Super contente du rendu de ces cadres en bois ! 🌵 Ça apporte tellement de chaleur et de gaieté à mon salon, j'adore ! 😍 Lina O"
           }
         },
@@ -531,6 +587,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/avis-tableau-plexi_2.jpg",
+            "image_asset": "",
             "message": "Tableau magnifique, très contente du support choisi en plexiglas réalisé avec soin. Joëlle N"
           }
         },
@@ -538,6 +595,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-animaux-rhinoceros_b1022df5-0085-43a4-93b7-011dd579d316.jpg",
+            "image_asset": "",
             "message": "AMAZING ! Le poster est magnifique, il fait son effet dans mon salon. Vanessa K"
           }
         },
@@ -545,6 +603,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/deco-mural-ying-yang.jpg",
+            "image_asset": "",
             "message": "Le tableau est magnifique! Alexandre V"
           }
         },
@@ -552,6 +611,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-fruit-legume-cuisine-ananas-colore.jpg",
+            "image_asset": "",
             "message": "Trop contente de mon tableau, les couleurs sont aussi flashy que sur les photos du site.\nSarah F"
           }
         },
@@ -559,6 +619,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-panoramique-payasage-foret-lac.jpg",
+            "image_asset": "",
             "message": "Ce tableau est magnifique et tellement immersif ! Il donne une vraie sensation d'évasion et transforme l'ambiance de mon salon. Pierre S"
           }
         },
@@ -566,6 +627,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-zen-japonais-geisha_59746ee5-1329-4a3a-94ad-bc201116687c.jpg",
+            "image_asset": "",
             "message": "Nous sommes très satisfait de notre achat\nTrès bonne qualité\nNous ferons d´autres achats chez vous.\nBernard D"
           }
         },
@@ -573,6 +635,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-pour-cuisine-epices-colore.jpg",
+            "image_asset": "",
             "message": "Ravie de mon achat,\ntrès beau rendu des couleurs qui sont éclatantes. \nYannick R."
           }
         },
@@ -580,6 +643,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/Tableau-chambre_a164de8b-ed28-4326-926b-92bbe380279b.jpg",
+            "image_asset": "",
             "message": "Le tableau est super, et encore plus beau en vrai ! Arrivé rapidement et bien protégé. Alain N"
           }
         },
@@ -587,6 +651,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/Tableau-decoration_44dcf7be-75b3-46aa-810b-3020d3b9dc06.jpg",
+            "image_asset": "",
             "message": "Très belle toile, les couleurs sont super et brillante. Marie K"
           }
         },
@@ -594,6 +659,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/Tableau-deco-noir-et-blanc.jpg",
+            "image_asset": "",
             "message": "Top, rien à dire de plus. \nGuillaume H"
           }
         },
@@ -601,6 +667,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-comics-super-man.jpg",
+            "image_asset": "",
             "message": "Nickel, très satisfait c'est ma 3e commande. Hugo G"
           }
         },
@@ -608,6 +675,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-superman-aquarelle.jpg",
+            "image_asset": "",
             "message": "TOP, tableau reçu rapidement avec suivie. Hugo G"
           }
         },
@@ -615,6 +683,7 @@
           "type": "image-text",
           "settings": {
             "image": "shopify://shop_images/tableau-lion-impression-alluminuim.jpg",
+            "image_asset": "",
             "message": "TOP QUALITÉ,  j'ai choisi l'impression sur aluminium et l'image est vraiment top. Ethan V"
           }
         }
@@ -663,9 +732,13 @@
         "paragraph_1": "<p>Choisir un tableau, ce n'est pas choisir un meuble : on ne le change pas tous les cinq ans. On le regarde tous les jours, parfois pendant une décennie. Trois questions valent la peine d'être posées avant d'acheter :</p><ol><li><strong>Quelle est la fonction de la pièce ?</strong> Une chambre demande l'apaisement ; un salon, le caractère ; un bureau, la concentration.</li><li><strong>Quelle est l'ambiance déjà en place ?</strong> Identifiez 2 ou 3 couleurs dominantes. Le tableau idéal en reprend une — pas toutes.</li><li><strong>Quelle est l'intention émotionnelle ?</strong> Souligner, calmer, réveiller, structurer. Décidez de l'effet <strong>avant</strong> de choisir le sujet.</li></ol>",
         "pull_quote": "",
         "pull_quote_attribution": "",
+        "divider_symbol": "✦",
         "paragraph_2": "",
         "show_ornament": false,
+        "ornament_symbol": "❋",
         "closing_signature": "Si ces questions vous laissent hésitant, notre équipe répond par téléphone et par mail. Vraiment.",
+        "cta_label": "",
+        "cta_link": "",
         "background_color": "secondary"
       }
     },
@@ -725,7 +798,7 @@
           "settings": {
             "heading": "Quels sont vos délais de livraison ?",
             "icon": "none",
-            "row_content": "<p>Nos tableaux sont <strong>imprimés à la demande</strong>, jamais en stock. Comptez quelques jours de production en plus du transport. Vos délais exacts sont indiqués sur la fiche produit de chaque œuvre et confirmés dans votre email de validation de commande. Pour toute question, joignez-nous au <strong>09 60 44 61 50</strong>.</p>"
+            "row_content": "<p>Votre tableau n’existe pas avant votre commande : il est créé rien que pour vous. Dans nos ateliers, il est imprimé à la demande, puis sa toile est tendue à la main sur son châssis, avec une attention particulière portée à chaque angle et à chaque bord. Avant de partir, il est inspecté une dernière fois et emballé avec soin pour voyager en toute sécurité. Vous le recevez chez vous sous 7 jours ouvrés, avec un numéro de suivi envoyé par email dès l’expédition. Une question ? Joignez-nous au <strong>09 60 44 61 50.</strong></p>"
           }
         },
         "faq_madeinfrance": {
@@ -760,9 +833,13 @@
         "eyebrow": "FAQ",
         "heading_level": "h2",
         "heading_size": "large",
+        "heading_weight": "semibold",
         "question_size": "large",
+        "accent_tone": "terra",
         "heading": "Questions fréquentes",
+        "lead": "",
         "background_color": "secondary",
+        "padding_size": "large",
         "emit_faq_jsonld": true
       }
     },
@@ -776,8 +853,10 @@
         "paragraph_1": "<p>Pour les projets où l'unicité prime — un cadeau d'exception, un anniversaire, un mur qui mérite mieux — nous proposons la peinture à la main. Une œuvre, un artiste, votre format.</p>",
         "pull_quote": "",
         "pull_quote_attribution": "",
+        "divider_symbol": "✦",
         "paragraph_2": "",
         "show_ornament": false,
+        "ornament_symbol": "❋",
         "closing_signature": "",
         "cta_label": "Demander un devis",
         "cta_link": "shopify://pages/contactez-nous",
@@ -791,8 +870,11 @@
           "type": "card",
           "settings": {
             "collection": "tableau-salon",
+            "image_asset": "",
+            "alt": "",
             "label": "Pièce",
             "title": "Tableau salon",
+            "text": "",
             "link_label": "Voir",
             "link": "shopify://collections/tableau-salon"
           }
@@ -801,8 +883,11 @@
           "type": "card",
           "settings": {
             "collection": "tableau-chambre-adulte",
+            "image_asset": "",
+            "alt": "",
             "label": "Pièce",
             "title": "Tableau chambre adulte",
+            "text": "",
             "link_label": "Voir",
             "link": "shopify://collections/tableau-chambre-adulte"
           }
@@ -811,8 +896,11 @@
           "type": "card",
           "settings": {
             "collection": "tableau-chambre-garcon",
+            "image_asset": "",
+            "alt": "",
             "label": "Pièce",
             "title": "Tableau chambre enfant",
+            "text": "",
             "link_label": "Voir",
             "link": "shopify://collections/tableau-chambre-garcon"
           }
@@ -821,8 +909,11 @@
           "type": "card",
           "settings": {
             "collection": "tableau-bureau",
+            "image_asset": "",
+            "alt": "",
             "label": "Pièce",
             "title": "Tableau bureau",
+            "text": "",
             "link_label": "Voir",
             "link": "shopify://collections/tableau-bureau"
           }
@@ -831,8 +922,11 @@
           "type": "card",
           "settings": {
             "collection": "tableau-cuisine",
+            "image_asset": "",
+            "alt": "",
             "label": "Pièce",
             "title": "Tableau cuisine",
+            "text": "",
             "link_label": "Voir",
             "link": "shopify://collections/tableau-cuisine"
           }
@@ -841,8 +935,11 @@
           "type": "card",
           "settings": {
             "collection": "tableau-abstrait",
+            "image_asset": "",
+            "alt": "",
             "label": "Style",
             "title": "Tableau abstrait",
+            "text": "",
             "link_label": "Voir",
             "link": "shopify://collections/tableau-abstrait"
           }
@@ -851,8 +948,11 @@
           "type": "card",
           "settings": {
             "collection": "tableau-zen",
+            "image_asset": "",
+            "alt": "",
             "label": "Style",
             "title": "Tableau zen",
+            "text": "",
             "link_label": "Voir",
             "link": "shopify://collections/tableau-zen"
           }
@@ -861,8 +961,11 @@
           "type": "card",
           "settings": {
             "collection": "tableau-pop-art",
+            "image_asset": "",
+            "alt": "",
             "label": "Style",
             "title": "Tableau pop art",
+            "text": "",
             "link_label": "Voir",
             "link": "shopify://collections/tableau-pop-art"
           }
@@ -871,8 +974,11 @@
           "type": "card",
           "settings": {
             "collection": "tableau-africain",
+            "image_asset": "",
+            "alt": "",
             "label": "Style",
             "title": "Tableau africain",
+            "text": "",
             "link_label": "Voir",
             "link": "shopify://collections/tableau-africain"
           }
@@ -881,8 +987,11 @@
           "type": "card",
           "settings": {
             "collection": "tableau-noir-et-blanc",
+            "image_asset": "",
+            "alt": "",
             "label": "Style",
             "title": "Tableau noir et blanc",
+            "text": "",
             "link_label": "Voir",
             "link": "shopify://collections/tableau-noir-et-blanc"
           }
@@ -891,8 +1000,11 @@
           "type": "card",
           "settings": {
             "collection": "tableau-fleurs",
+            "image_asset": "",
+            "alt": "",
             "label": "Style",
             "title": "Tableau fleurs",
+            "text": "",
             "link_label": "Voir",
             "link": "shopify://collections/tableau-fleurs"
           }
@@ -901,8 +1013,11 @@
           "type": "card",
           "settings": {
             "collection": "tableau-japonais",
+            "image_asset": "",
+            "alt": "",
             "label": "Style",
             "title": "Tableau japonais",
+            "text": "",
             "link_label": "Voir",
             "link": "shopify://collections/tableau-japonais"
           }
@@ -924,9 +1039,11 @@
       ],
       "settings": {
         "eyebrow": "Toutes nos collections",
+        "heading_level": "h2",
         "title": "Découvrir nos 50 collections",
         "intro": "Par pièce, par style, par couleur, par artiste, par moment de vie. Voici les plus visitées.",
-        "columns": "4"
+        "columns": "4",
+        "background_color": "secondary"
       }
     },
     "all_collections_cta": {
@@ -939,8 +1056,10 @@
         "paragraph_1": "<p>Tableau couleur, tableau ethnique, tableau paysage et bien d'autres univers à explorer.</p>",
         "pull_quote": "",
         "pull_quote_attribution": "",
+        "divider_symbol": "✦",
         "paragraph_2": "",
         "show_ornament": false,
+        "ornament_symbol": "❋",
         "closing_signature": "",
         "cta_label": "Voir nos 50 collections",
         "cta_link": "shopify://collections",
