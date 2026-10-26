@@ -40,18 +40,12 @@
 
 ## Comment lancer le check (procédure)
 
-Via le skill **`gsc-query`** (local). Requêtes utiles :
+Avec le connecteur Claude **« Search Console »**, outil `performances`, avec `pays: "fra"` et le filtre `page` `contient` `/products/`. Requêtes utiles :
 
-1. **Trafic agrégé fiches produit** (90 j ou période adaptée) :
-   ```
-   query --dimensions page --page /products/ --page-operator contains --country fra
-   ```
+1. **Trafic agrégé fiches produit** (90 j ou période adaptée) : `dimensions: ["page"]`.
    Comparer J+14 vs 30 j précédant le déploiement (= baseline implicite).
 
-2. **Top requêtes longue traîne sur les paintings** :
-   ```
-   query --dimensions query,page --page /products/ --page-operator contains --country fra --limit 50
-   ```
+2. **Top requêtes longue traîne sur les paintings** : `dimensions: ["requete", "page"]`, `limite: 50`.
    Repérer les nouvelles requêtes qui apparaissent, les gains de position.
 
 3. **Validation schema Product** : GSC > Améliorations > Produit

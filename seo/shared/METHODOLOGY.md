@@ -38,7 +38,7 @@ Avant tout, identifier le **type de page** et son **intention dominante** : cela
 
 ### Phase 1 — Validation keyword + baseline (data réelle)
 - **Objectif** : choisir/confirmer le keyword cible sur la **vraie data**, pas des estimations.
-- **Méthode** : skill `gsc-query` (siteUrl `sc-domain:myselfmonart.com`, country `fra`). Relever clics/impressions/position actuels de la page = **baseline** (à battre). Diagnostiquer la **cannibalisation** avec les autres pages (dimensions `query,page`).
+- **Méthode** : connecteur Claude « Search Console », outil `performances` (propriété `sc-domain:myselfmonart.com`, pays `fra`). Relever clics/impressions/position actuels de la page = **baseline** (à battre). Diagnostiquer la **cannibalisation** avec les autres pages (dimensions `requete` et `page`).
 - **Livrable** : keyword cible validé + baseline chiffrée + diagnostic cannibalisation.
 - **Validation** : Walid confirme le keyword avant d'avancer.
 
@@ -79,7 +79,7 @@ Avant tout, identifier le **type de page** et son **intention dominante** : cela
 
 | Besoin | Outil |
 |---|---|
-| Data GSC réelle | skill `gsc-query` (local) — `sc-domain:myselfmonart.com`, `fra` |
+| Data GSC réelle | connecteur Claude « Search Console » (`performances`, `inspecter_url`, `sitemaps`) — `sc-domain:myselfmonart.com`, `fra` |
 | SERP / concurrents | WebSearch + WebFetch (WebSearch est US-only → résultats FR par défaut sur keyword FR) |
 | Lighthouse / CWV / responsive | MCP `chrome-devtools` (fermer Chrome si "browser already running") |
 | Validation schema | Google Rich Results Test + validator.schema.org + parse JSON local |
@@ -235,7 +235,7 @@ Déploiement & suivi
 
 ## 9. Suivi & itération
 
-Après live : check **J+14** puis **J+30** via `gsc-query`. Comparer à la **baseline** (Phase 1). Mesurer : position/clics/impressions sur le keyword, apparition des rich snippets, absence de cannibalisation. Consigner dans le `FOLLOWUP.md` de la mission, mettre à jour `ROADMAP.md`. Si sous-performance → diagnostiquer (intention mal lue ? concurrence ? technique ?) et itérer.
+Après live : check **J+14** puis **J+30** avec le connecteur « Search Console ». Comparer à la **baseline** (Phase 1). Mesurer : position/clics/impressions sur le keyword, apparition des rich snippets, absence de cannibalisation. Consigner dans le `FOLLOWUP.md` de la mission, mettre à jour `ROADMAP.md`. Si sous-performance → diagnostiquer (intention mal lue ? concurrence ? technique ?) et itérer.
 
 ---
 

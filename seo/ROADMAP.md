@@ -94,11 +94,11 @@ Vérifications en ligne après déploiement (run GitHub Actions vert, « Aucun f
 | 2026-10-04 | Déployer les 2 correctifs, puis vérifier en live : `?page=2` sans éditorial, page 1 intacte, nouveau `sizes` sur les vignettes | Correctifs | ☑ Fait (cf. détail plus haut) |
 | ~2026-10-07 | Merchant Center : vérifier que les 280 refus de livraison et les 13 « prix manquant » sont levés (statuts produits, Merchant API v1). Ces derniers dépendent du prochain passage de Google : relancer plus tard si besoin | Fiches Shopping | ☐ |
 | **~2026-11-01** | Check GSC : « tableau cuisine » doit revenir sur la page 1 ; part des `?page=N` dans les impressions des collections sous 3 % | Correctifs | ☐ |
-| ~2026-10-30 | Snapshot collections **J146** : `suivi-collections-snapshot.ps1 -Label J146` | 46 collections | ☐ |
+| ~2026-10-30 | Snapshot collections **J146** : « lance le suivi SEO des collections », procédure dans `suivi-collections-README.md` | 46 collections | ☐ |
 | mi-novembre | Dernier contrôle du head term « tableau décoration murale » sur la home, puis clôture de la mission 1 | Homepage | ☐ |
 | novembre-décembre | Surveiller le [tableau de bord Google](https://status.search.google.com/products/rGHU1u87FJnkP6W2GwMi/history) : une core update de fin d'année est probable. **Aucun changement d'URLs, de marchés ou de templates collection pendant la saison cadeaux**, pour pouvoir lire son effet | Tout | ☐ |
 
-> ⚠️ Les rappels email automatiques sont désactivés (Walid relance manuellement). Quand il dit « lance le suivi SEO », exécuter le check via le skill `gsc-query`, consigner le résultat dans le `FOLLOWUP.md` de la mission et cocher ci-dessus.
+> ⚠️ Les rappels email automatiques sont désactivés (Walid relance manuellement). Quand il dit « lance le suivi SEO », exécuter le check avec le connecteur Claude « Search Console » (outil `performances`), consigner le résultat dans le `FOLLOWUP.md` de la mission et cocher ci-dessus.
 > ⚠️ **Toujours vérifier le calendrier des core updates avant de lire un suivi**, et comparer des fenêtres de 28 jours aux mêmes jours de semaine.
 
 ---
@@ -125,7 +125,6 @@ seo/
 │   ├── a11y-theme/                    ← Mission 3 (README = brief + backlog)
 │   └── product-painting/              ← Mission 4 (README, FOLLOWUP)
 ├── suivi-collections-README.md        ← runbook du suivi des 46 collections (+ pièges de mesure)
-├── suivi-collections-snapshot.ps1     ← script de snapshot GSC + GA4 (fenêtres de 28 j)
 ├── suivi-collections-tracking.md      ← tableau de suivi régénéré à chaque snapshot
 ├── i18n-markets-cleanup-plan.md       ← nettoyage marchés × langues (plan, journal, verdict)
 └── poster-collections/                ← briefs et audit anti-cannibalisation des collections posters
@@ -150,8 +149,8 @@ seo/
 
 ## 🔗 Références transverses
 
-- **Search Console** : skill `gsc-query` (local), siteUrl `sc-domain:myselfmonart.com`, country `fra`.
-- **GA4** : `~/.claude/scripts/gsc/ga4.mjs`, propriété `374096343` (toujours passer `--limit 20000`).
+- **Search Console** : connecteur Claude « Search Console » (compte guetarni.walid@gmail.com, code dans `~/dev/connecteur-search-console`) : outils `performances`, `inspecter_url`, `sitemaps` et `proprietes`, en lecture seule. Propriété `sc-domain:myselfmonart.com`, pays `fra`. Il remplace le skill `gsc-query` et ses scripts `~/.claude/scripts/gsc/`, disparus en octobre 2026.
+- **GA4** : propriété `374096343`, administrée par guetarni.walid@gmail.com. Plus de relevé automatique depuis la disparition de `ga4.mjs` (octobre 2026) : les sessions Organic ne sont plus relevées tant que GA4 n'est pas rebranché.
 - **Merchant Center** : compte `763175982`, API **Merchant v1 en REST** (l'API Content est arrêtée depuis le 2026-08-18, `merchant.mjs` ne fonctionne plus). Performance des fiches gratuites : `reports:search` sur `product_performance_view`. **Livraison** : réglée directement dans Merchant Center (`accounts/v1/accounts/763175982/shippingSettings`). L'app Google & YouTube n'est plus installée sur Shopify : une modification des zones de livraison Shopify ne se propage plus, il faut la reporter à la main.
 - **Déploiement** : push `main` → thème live New MyselfMonArt (#167301710171) via GitHub Actions. Plus de branche staging depuis le 2026-05-31.
 - **Faits structurels marque** : mémoire `project_myselfmonart_facts.md`.

@@ -23,14 +23,11 @@
 
 > ⚠️ Le « top du chrono » GSC = moment où le template `tableau-salon` est **assigné** à la collection en admin (la nouvelle page devient effective) + URL soumise à Search Console. Si l'assignation est faite après le 2026-05-29, décaler J+14/J+30 en conséquence.
 
-## Commandes de check (skill gsc-query)
+## Check avec le connecteur « Search Console »
 
-```powershell
-# Agrégat page
-node "$env:USERPROFILE\.claude\scripts\gsc\gsc.mjs" query --site sc-domain:myselfmonart.com --dimensions page --country fra --page https://www.myselfmonart.com/collections/tableau-salon --page-operator equals --format csv
+Outil `performances`, avec `pays: "fra"` et le filtre `page` `egal` `https://www.myselfmonart.com/collections/tableau-salon` :
 
-# Top requêtes de la page
-node "$env:USERPROFILE\.claude\scripts\gsc\gsc.mjs" query --site sc-domain:myselfmonart.com --dimensions query --country fra --page https://www.myselfmonart.com/collections/tableau-salon --page-operator equals --row-limit 60 --format csv
-```
+- **Agrégat de la page** : `dimensions: ["page"]`.
+- **Top requêtes de la page** : `dimensions: ["requete"]`, `limite: 60`.
 
-> ⚠️ Le filtre `--page` doit utiliser le domaine **`www.`** (canonique).
+> ⚠️ Le filtre de page doit utiliser le domaine **`www.`** (canonique).

@@ -32,27 +32,18 @@ La reprise est visible **à partir de la mi-juillet**, et surtout sur des fenêt
 
 ## Lancer un snapshot
 
-Fenêtre glissante de 28 jours (usage courant) :
+Demander à Claude « lance le suivi SEO des collections », avec un label (par exemple `J146`). Par défaut, la fenêtre fait 28 jours et s'arrête 3 jours avant aujourd'hui, au dernier jour de données définitives. On peut aussi donner une fenêtre passée à rejouer (`2026-06-07..2026-07-05`).
 
-```bash
-powershell -NoProfile -ExecutionPolicy Bypass -File "seo\suivi-collections-snapshot.ps1" -Label "J60"
-```
+Claude suit alors ces étapes :
 
-Rejouer une fenêtre passée (reconstruction / comparaison) :
+1. Il relève les pages collection avec le connecteur Claude « Search Console », outil `performances` : `dimensions: ["page"]`, `pays: "fra"`, type `web`, la fenêtre en `debut`/`fin`, et un filtre `regex` sur l'URL canonique (piège n° 1 plus bas). Avec `limite: 500`, il continue avec `debut_ligne` s'il reste des lignes.
+2. Il garde les collections au statut `done` dans `collections-worklist.json`.
+3. Il fait un **upsert** par label dans `suivi-collections-tracking.json` : relancer le même label remplace le snapshot au lieu d'en créer un doublon. Les snapshots restent triés par fenêtre.
+4. Il régénère `suivi-collections-tracking.md` sur le même modèle.
 
-```bash
-powershell -NoProfile -ExecutionPolicy Bypass -File "seo\suivi-collections-snapshot.ps1" -Label "J30" -Start 2026-06-07 -End 2026-07-05
-```
+GA4 n'est plus relevé : l'ancien script `ga4.mjs` a disparu en octobre 2026. La colonne « Sessions Organic » reste vide (« – ») tant que GA4 n'est pas rebranché.
 
-Le script **upsert** par label : relancer le même label remplace le snapshot au lieu d'en créer un doublon. Les snapshots sont triés chronologiquement par fenêtre, et `suivi-collections-tracking.md` est régénéré à chaque run.
-
-⚠️ **Token GSC expire ~7 j.** En cas d'erreur d'auth :
-
-```bash
-node C:\Users\gueta\.claude\scripts\gsc\gsc.mjs auth
-```
-
-(choisir le compte **guetarni.walid@gmail.com**). GA4 = compte team@kindopia.com, token séparé géré par `ga4.mjs`.
+Le connecteur garde sa connexion 30 jours. Ensuite, l'outil demande de le reconnecter dans Claude (Paramètres → Connecteurs), avec le compte guetarni.walid@gmail.com.
 
 ---
 
@@ -71,17 +62,18 @@ node C:\Users\gueta\.claude\scripts\gsc\gsc.mjs auth
 `'/collections/([a-z0-9\-]+)'` matche aussi `?page=4` et `/de-ch/collections/…`. Comme la boucle écrasait à chaque match et que le CSV est trié par clics décroissants, c'est la **dernière variante (une page de pagination à 0 clic)** qui gagnait. `tableau-salon` remontait ainsi « 0 clic, position 1,4 » alors que la vraie page faisait **75 clics**.
 → Toujours ancrer l'URL entière : `^https?://(?:www\.)?myselfmonart\.com/collections/([a-z0-9\-]+)/?$`.
 
-**2. `ga4.mjs` plafonne à 100 lignes par défaut** — le jeu réel dépasse 10 000 lignes (`pagePath` × canal), dominé par Direct et les fiches produit. Sans `--limit`, la quasi-totalité des collections tombait hors du top-100 et remontait à 0 session.
+**2. L'ancien `ga4.mjs` plafonnait à 100 lignes par défaut** (à retenir pour tout futur relevé GA4) — le jeu réel dépasse 10 000 lignes (`pagePath` × canal), dominé par Direct et les fiches produit. Sans `--limit`, la quasi-totalité des collections tombait hors du top-100 et remontait à 0 session.
 → Toujours passer `--limit 20000`. Et filtrer sur `Organic Search` **exact** : `-match 'Organic'` embarque aussi Organic Social et Organic Shopping.
 
 **3. La position moyenne est un indicateur piège** — quand une page perd ses impressions de longue traîne (mal classées), sa position moyenne **s'améliore mécaniquement** sans aucun gain réel. Ne jamais la lire seule.
 
-**4. Un snapshot vide ne doit jamais s'écrire** — l'ancien script écrivait silencieusement des zéros quand l'API échouait, ce qui rendait le bug invisible. Le script abandonne désormais avec un code d'erreur si GSC ou GA4 ne rend aucune page canonique.
+**4. Un snapshot vide ne doit jamais s'écrire** — le premier script écrivait silencieusement des zéros quand l'API échouait, ce qui rendait le bug invisible. Si la Search Console ne rend aucune page canonique, on n'écrit rien et on cherche pourquoi.
 
 ---
 
 ## Fichiers
 
-- `suivi-collections-snapshot.ps1` — script de snapshot (GSC `type=web` + GA4 `Organic Search`, 28 j).
 - `suivi-collections-tracking.json` — historique brut des snapshots.
-- `suivi-collections-tracking.md` — rapport lisible (régénéré à chaque run).
+- `suivi-collections-tracking.md` — rapport lisible (régénéré à chaque snapshot).
+
+Le script PowerShell `suivi-collections-snapshot.ps1` a été supprimé le 2026-10-26. Il appelait les scripts `gsc.mjs` et `ga4.mjs`, disparus, et pointait vers l'ancien emplacement du dépôt.

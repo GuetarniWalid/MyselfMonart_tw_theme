@@ -146,5 +146,5 @@ Reconstruire la homepage FR de [myselfmonart.com](https://myselfmonart.com) pour
 
 ## 📎 Références
 
-- GSC skill : `~/.claude/skills/gsc-query/SKILL.md` (siteUrl `sc-domain:myselfmonart.com`, country `fra`)
+- GSC : connecteur Claude « Search Console » (propriété `sc-domain:myselfmonart.com`, pays `fra`). Il remplace le skill `gsc-query`, disparu en octobre 2026.
 - Memory : `project_myselfmonart_facts.md`, `project_seo_homepage_fr.md`, `feedback_collaboration_walid.md`, `feedback_deploy_workflow.md`, `feedback_shopify_section_conventions.md`

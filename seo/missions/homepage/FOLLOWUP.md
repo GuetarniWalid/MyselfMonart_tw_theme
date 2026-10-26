@@ -64,12 +64,12 @@ Mission 1 reste en 📈 **suivi**. Pas de mission lourde (cohérent avec le plan
 
 ## Comment lancer le check (procédure)
 
-Via le skill **`gsc-query`** (local). Requêtes utiles :
+Avec le connecteur Claude **« Search Console »**, outil `performances`, toujours avec `pays: "fra"`. Requêtes utiles :
 
-1. **Home sur N jours** : `query --dimensions query --page https://www.myselfmonart.com/ --page-operator equals --country fra` (period adaptée)
-2. **Keyword cible** : `query --dimensions query,page --query "tableau décoration murale" --query-operator contains --country fra`
-3. **Cannibalisation** : `query --dimensions query,page --query "tableau" --query-operator contains --country fra` → vérifier si home ET /collections/tableau-salon sortent sur les mêmes requêtes
-4. **Rich snippets FAQ** : non visible dans GSC directement → vérifier via Google Rich Results Test sur l'URL home, ou recherche manuelle des questions FAQ dans la SERP
+1. **Home sur N jours** : `dimensions: ["requete"]`, filtre `page` `egal` `https://www.myselfmonart.com/` (période adaptée)
+2. **Keyword cible** : `dimensions: ["requete", "page"]`, filtre `requete` `contient` `tableau décoration murale`
+3. **Cannibalisation** : `dimensions: ["requete", "page"]`, filtre `requete` `contient` `tableau` → vérifier si home ET /collections/tableau-salon sortent sur les mêmes requêtes
+4. **Rich snippets FAQ** : non visible dans les performances → l'outil `inspecter_url` liste les résultats enrichis détectés sur la home ; sinon Google Rich Results Test, ou recherche manuelle des questions FAQ dans la SERP
 
 Après chaque check : remplir la ligne du journal + mettre à jour le tableau de bord et cocher l'échéance dans [ROADMAP](../../ROADMAP.md).
 

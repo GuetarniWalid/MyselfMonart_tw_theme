@@ -216,8 +216,8 @@ Pour chaque collection traitée (automatiquement) :
 
 ## 9. Mesure & suivi (boucler la boucle)
 
-- **GSC hebdo** par collection : `node ~/.claude/scripts/gsc/gsc.mjs query --type web --page <handle> --page-operator contains --dimensions date …` → la **position** doit remonter sous 2–6 semaines (et surtout au prochain core update).
-- **GA4** : `node ~/.claude/scripts/gsc/ga4.mjs report --property 374096343 --dimensions yearMonth --metrics sessions --start … ` (Organic Search) pour la tendance sessions. ⚠️ CA/conversions GA4 non fiables (tracking dégradé ~13 jan) — utiliser les **sessions** + Shopify pour le CA.
+- **GSC hebdo** par collection : connecteur « Search Console », outil `performances` avec `dimensions: ["date"]` et le filtre `page` `contient` `<handle>` → la **position** doit remonter sous 2–6 semaines (et surtout au prochain core update).
+- **GA4** : propriété `374096343`, sessions Organic Search pour la tendance. Plus de relevé automatique depuis la disparition de `ga4.mjs` (octobre 2026). ⚠️ CA/conversions GA4 non fiables (tracking dégradé ~13 jan) — utiliser les **sessions** + Shopify pour le CA.
 - **Expérience témoin** : comparer la remontée de `tableau-salon` (traité) vs `tableau-cuisine` (à traiter tard) → preuve d'efficacité.
 
 ---
@@ -233,8 +233,8 @@ Pour chaque collection traitée (automatiquement) :
 ## 11. Ressources
 
 - **Mémoire** (lire avant de démarrer) : `[[project-web-collections-regression-jan2026]]`, `[[feedback-collection-layout]]`, `[[feedback-collaboration-walid]]`, `[[feedback-deploy-workflow]]`, `[[feedback-no-unrequested-initiatives]]`, `[[project-painting-titles]]`, `[[project-myselfmonart-facts]]`, `[[reference-gsc-skill]]` (inclut GA4).
-- **Skills** : `shopify-section-dev` (obligatoire dès qu'on touche Liquid/template), `gsc-query`.
-- **Outils data** : GSC `~/.claude/scripts/gsc/gsc.mjs` ; GA4 `~/.claude/scripts/gsc/ga4.mjs` (propriété `374096343`, auth team@kindopia.com) ; MCP **Shopify** (`listCollections`, `getCollection`, `getProduct`, `setMetafield`).
+- **Skills** : `shopify-section-dev` (obligatoire dès qu'on touche Liquid/template).
+- **Outils data** : GSC = connecteur Claude « Search Console » (le skill `gsc-query` et ses scripts ont disparu en octobre 2026) ; GA4 propriété `374096343`, sans relevé automatique pour l'instant ; MCP **Shopify** (`listCollections`, `getCollection`, `getProduct`, `setMetafield`).
 - **Fichiers modèle** : `sections/collection-editorial.liquid`, `templates/collection.tableau-salon.json`.
 - **Déploiement** : tout en local → validation Walid → push direct `main` (= live).
 ```
