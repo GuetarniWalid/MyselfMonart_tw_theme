@@ -37,13 +37,14 @@ Demander à Claude « lance le suivi SEO des collections », avec un label (par 
 Claude suit alors ces étapes :
 
 1. Il relève les pages collection avec le connecteur Claude « Search Console », outil `performances` : `dimensions: ["page"]`, `pays: "fra"`, type `web`, la fenêtre en `debut`/`fin`, et un filtre `regex` sur l'URL canonique (piège n° 1 plus bas). Avec `limite: 500`, il continue avec `debut_ligne` s'il reste des lignes.
-2. Il garde les collections au statut `done` dans `collections-worklist.json`.
-3. Il fait un **upsert** par label dans `suivi-collections-tracking.json` : relancer le même label remplace le snapshot au lieu d'en créer un doublon. Les snapshots restent triés par fenêtre.
-4. Il régénère `suivi-collections-tracking.md` sur le même modèle.
+2. Il relève les sessions GA4 avec l'outil `analytics` du même connecteur, sur la même fenêtre en `debut`/`fin`. Par défaut, l'outil lit la propriété `374096343` et le seul canal « Organic Search » (piège n° 2). Il passe `chemin: "^/collections/[a-z0-9-]+/?$"` et `limite: 500`, puis `debut_ligne` s'il reste des lignes. Il additionne par handle, en minuscules, `/collections/<handle>` et `/collections/<handle>/`. Une collection absente du résultat compte 0 session.
+3. Il garde les collections au statut `done` dans `collections-worklist.json`.
+4. Il fait un **upsert** par label dans `suivi-collections-tracking.json` : relancer le même label remplace le snapshot au lieu d'en créer un doublon. Les snapshots restent triés par fenêtre.
+5. Il régénère `suivi-collections-tracking.md` sur le même modèle. Le total « Sessions Organic » y est la somme des collections, comme dans les snapshots précédents. Il ne reprend pas le « Total » d'`analytics`, qui ne compte qu'une fois une session passée par plusieurs collections.
 
-GA4 n'est plus relevé : l'ancien script `ga4.mjs` a disparu en octobre 2026. La colonne « Sessions Organic » reste vide (« – ») tant que GA4 n'est pas rebranché.
+GA4 se relève comme avec l'ancien script `ga4.mjs`, sans filtre de pays. Son `pagePath` n'a pas de paramètres : les sessions des pages `?page=N` comptent avec leur collection. Contrôle du 2026-10-26 : rejoué sur la fenêtre de J118, `analytics` redonne exactement ses 938 sessions, collection par collection.
 
-Le connecteur garde sa connexion 30 jours. Ensuite, l'outil demande de le reconnecter dans Claude (Paramètres → Connecteurs), avec le compte guetarni.walid@gmail.com.
+Le connecteur garde sa connexion 30 jours. Ensuite, l'outil demande de le reconnecter dans Claude (Paramètres → Connecteurs), avec le compte guetarni.walid@gmail.com. Chez Google, il faut cocher les deux cases, Search Console et Google Analytics.
 
 ---
 
@@ -62,12 +63,12 @@ Le connecteur garde sa connexion 30 jours. Ensuite, l'outil demande de le reconn
 `'/collections/([a-z0-9\-]+)'` matche aussi `?page=4` et `/de-ch/collections/…`. Comme la boucle écrasait à chaque match et que le CSV est trié par clics décroissants, c'est la **dernière variante (une page de pagination à 0 clic)** qui gagnait. `tableau-salon` remontait ainsi « 0 clic, position 1,4 » alors que la vraie page faisait **75 clics**.
 → Toujours ancrer l'URL entière : `^https?://(?:www\.)?myselfmonart\.com/collections/([a-z0-9\-]+)/?$`.
 
-**2. L'ancien `ga4.mjs` plafonnait à 100 lignes par défaut** (à retenir pour tout futur relevé GA4) — le jeu réel dépasse 10 000 lignes (`pagePath` × canal), dominé par Direct et les fiches produit. Sans `--limit`, la quasi-totalité des collections tombait hors du top-100 et remontait à 0 session.
-→ Toujours passer `--limit 20000`. Et filtrer sur `Organic Search` **exact** : `-match 'Organic'` embarque aussi Organic Social et Organic Shopping.
+**2. L'ancien `ga4.mjs` plafonnait à 100 lignes par défaut** — le jeu réel dépasse 10 000 lignes (`pagePath` × canal), dominé par Direct et les fiches produit. Sans `--limit`, la quasi-totalité des collections tombait hors du top-100 et remontait à 0 session.
+→ Filtrer chez Google, par canal et par chemin, puis lire toutes les lignes : `analytics` en rend 500 au plus par appel et dit combien il en reste. Et filtrer sur `Organic Search` **exact**, le défaut de l'outil : un filtre « contient Organic » embarque aussi Organic Social et Organic Shopping.
 
 **3. La position moyenne est un indicateur piège** — quand une page perd ses impressions de longue traîne (mal classées), sa position moyenne **s'améliore mécaniquement** sans aucun gain réel. Ne jamais la lire seule.
 
-**4. Un snapshot vide ne doit jamais s'écrire** — le premier script écrivait silencieusement des zéros quand l'API échouait, ce qui rendait le bug invisible. Si la Search Console ne rend aucune page canonique, on n'écrit rien et on cherche pourquoi.
+**4. Un snapshot vide ne doit jamais s'écrire** — le premier script écrivait silencieusement des zéros quand l'API échouait, ce qui rendait le bug invisible. Si la Search Console ou GA4 ne rend aucune page collection canonique, ou si un outil répond par une erreur, on n'écrit rien et on cherche pourquoi.
 
 ---
 
