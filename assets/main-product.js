@@ -1366,3 +1366,19 @@ window.mmaInitPosterOptions = function mmaInitPosterOptions() {
   if (wb) mmaSetWhiteBorder(wb.dataset.whiteBorder === 'on');
 };
 window.mmaInitPosterOptions();
+
+// ===== Bouton d'achat aligné sur la sélection AFFICHÉE, dès le chargement =====
+// Le serveur rend le bouton avec la variante sélectionnée (selected_or_first_available_variant),
+// mais le navigateur peut restaurer d'autres radios cochés (rechargement sous Firefox, retour
+// arrière) : l'écran montrait alors « Avec cadre » et le clic ajoutait la variante rendue au départ.
+// On relit les radios cochés, comme à chaque changement d'option (VariantPicker.onRadioChange).
+function mmaSyncBuyButtonWithSelection() {
+  const picker = document.querySelector('painting-variant-picker, variant-picker');
+  const buyButton = document.querySelector('.buy-button');
+  if (!picker || !buyButton || typeof picker.getVariantData !== 'function') return;
+  const variant = picker.getVariantData();
+  if (variant && String(variant.id) !== buyButton.dataset.variantId) {
+    VariantPicker.prototype.onRadioChange.call(picker);
+  }
+}
+mmaSyncBuyButtonWithSelection();

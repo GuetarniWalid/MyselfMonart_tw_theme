@@ -307,10 +307,14 @@
                 , block: block %}
             {% endif %}
           {%- when 'buy' -%}
+            {%- comment -%} Variante des deux boutons d'achat = celle que montrent le sélecteur et le prix
+               (selected_or_first_available_variant). Avec first_available_variant, un lien ?variant=
+               (Google Shopping, Pinterest, e-mails) affichait « Avec cadre » et son prix, mais le clic
+               ajoutait la 1re variante du produit : « Sans cadre », moins chère. {%- endcomment -%}
             <div class="relative mt-10 {{ block.settings.margin_bottom }} mx-4">
               <button
                 class="buy-button cart-button glass-anim mb-3"
-                data-variant-id="{{ product.first_available_variant.id }}"
+                data-variant-id="{{ product.selected_or_first_available_variant.id }}"
                 data-template="{{ template.suffix }}"
                 data-product-id="{{ product.id }}"
                 data-is-dynamic-variant="{{ block.settings.is_dynamic_variant }}">
@@ -338,7 +342,7 @@
               <template id="float-buy-button">
                 <button
                   class="float-buy-button shadow-neu-lg hover:shadow-neu-md cart-button fixed bottom-3 justify-around left-4 2xs:gap-5 md:left-1/2 md:gap-6 w-[100px] md:bottom-6 mobile-mini:max-w-[62%] max-w-[70%] transition-colors duration-500 scale-0 glass-anim z-20"
-                  data-variant-id="{{ product.first_available_variant.id }}"
+                  data-variant-id="{{ product.selected_or_first_available_variant.id }}"
                   data-template="{{ template.suffix }}"
                   data-product-id="{{ product.id }}">
                   {% if block.settings.show_promotion and product.selected_or_first_available_variant.compare_at_price or block.settings.promotion_discount > 0 %}
