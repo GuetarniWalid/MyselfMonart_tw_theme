@@ -39,7 +39,9 @@
         },
         "description_ijqC6G": {
           "type": "description",
-          "settings": {}
+          "settings": {
+            "show_collapse_button": false
+          }
         }
       },
       "block_order": [
