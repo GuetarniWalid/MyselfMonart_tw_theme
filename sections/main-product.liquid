@@ -373,13 +373,21 @@
             {% endif %}
           {%- when 'description' -%}
             {%- if product.description != blank -%}
-              <div class="product-description dropdown-button-target description flex flex-col gap-5 leading-relaxed h-56 overflow-hidden relative px-4 text-main-80 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-16 after:bg-gradient-to-t after:from-white after:to-transparent">
-                {{ product.description }}
-              </div>
-              <dropdown-button>
-                <button class="group mt-6 mb-5 mx-4 text-main-80">{{ 'sections.main_collection_banner.learn_more' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
-                <button class="group  mt-6 hidden mb-5 mx-4 text-main-80">{{ 'sections.main_collection_banner.fewer_details' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
-              </dropdown-button>
+              {%- comment -%} Sans « En savoir plus » (template sur-mesure) : la description courte
+                 s'affiche en entier, le bouton ne dépliait rien. {%- endcomment -%}
+              {%- if block.settings.show_collapse_button -%}
+                <div class="product-description dropdown-button-target description flex flex-col gap-5 leading-relaxed h-56 overflow-hidden relative px-4 text-main-80 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-16 after:bg-gradient-to-t after:from-white after:to-transparent">
+                  {{ product.description }}
+                </div>
+                <dropdown-button>
+                  <button class="group mt-6 mb-5 mx-4 text-main-80">{{ 'sections.main_collection_banner.learn_more' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
+                  <button class="group  mt-6 hidden mb-5 mx-4 text-main-80">{{ 'sections.main_collection_banner.fewer_details' | t }} &nbsp; {%- render 'tw-icon-arrow' -%}</button>
+                </dropdown-button>
+              {%- else -%}
+                <div class="product-description description flex flex-col gap-5 leading-relaxed px-4 mb-5 text-main-80">
+                  {{ product.description }}
+                </div>
+              {%- endif -%}
             {%- endif -%}
           {%- when 'collapsible_tab' -%}
             <details class="accordion group border-t border-main-10 first-of-type:mt-5 last-of-type:border-b last-of-type:border-b-main-10 last-of-type:mb-5 mx-4">
@@ -971,7 +979,15 @@
       {
         "type": "description",
         "name": "t:sections.main-product.blocks.description.name",
-        "limit": 1
+        "limit": 1,
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "show_collapse_button",
+            "default": true,
+            "label": "t:sections.main-collection-banner.settings.show_collapse_button.label"
+          }
+        ]
       },
       {
         "type": "collapsible_tab",
