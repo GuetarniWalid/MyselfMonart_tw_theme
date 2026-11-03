@@ -20,6 +20,15 @@
     {%- for m in product.media -%}
       {%- if m.media_type == 'image' and m.preview_image.src contains 'passe-partout' -%}{%- assign has_passe_partout = true -%}{%- break -%}{%- endif -%}
     {%- endfor -%}
+    {%- comment -%} Clavier (fiche-3d, ticket 05). Les radios sont sr-only (pas hidden) : Tab entre dans une rangée,
+       les flèches changent le choix, le lecteur d'écran annonce chaque option. `relative` sur la pastille garde
+       le radio DANS la rangée défilante (sinon il s'en échappe et le focus ne la fait pas défiler) ; son pixel est
+       au CENTRE de la pastille (top-1/2 left-1/2) : un clic sur une pastille à demi coupée par le bord ne la fait
+       pas défiler (le navigateur ne ramène en vue un élément focalisé que s'il est caché). Halo de focus clavier,
+       une seule définition : décalé de 4 px sur les vignettes rondes pour rester distinct du contour « coché »
+       (outline 2 px) ; transitions coupées si le visiteur a demandé des animations réduites. {%- endcomment -%}
+    {%- assign option_focus = 'peer-focus-visible:ring-2 peer-focus-visible:ring-main peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-secondary motion-reduce:transition-none' -%}
+    {%- assign option_focus_round = 'peer-focus-visible:ring-2 peer-focus-visible:ring-main peer-focus-visible:ring-offset-4 peer-focus-visible:ring-offset-secondary motion-reduce:transition-none' -%}
     <div class="mb-6">
         {%- for option in product.options_with_values -%}
             <div class="pt-3 px-1 mx-4 text-main-80">
@@ -76,6 +85,21 @@
                     </button>
                 {% endif %}
             </div>
+            {%- comment -%} Chaque rangée est un groupe radio nommé par l'option (lecteur d'écran). Type de l'option
+               (data-option-kind), même découpage que ci-dessus, lu par assets/product-selection.js pour
+               l'événement mma:selection-change : 1 = taille ; poster 2 = cadre ; toile 2 = bordure, 3 = cadre.
+               motion-reduce:scroll-auto : animations réduites -> la rangée défile sans glisser quand le focus
+               clavier y amène une option. {%- endcomment -%}
+            {%- assign option_kind = '' -%}
+            {%- if option.position == 1 -%}
+                {%- assign option_kind = 'size' -%}
+            {%- elsif is_poster and option.position == 2 -%}
+                {%- assign option_kind = 'frame' -%}
+            {%- elsif option.position == 2 -%}
+                {%- assign option_kind = 'border' -%}
+            {%- elsif option.position == 3 -%}
+                {%- assign option_kind = 'frame' -%}
+            {%- endif -%}
             <div class="relative">
                 <div class="scroll-arrow scroll-arrow-right absolute right-0 top-0 bottom-3 w-12 bg-gradient-to-l from-secondary via-secondary via-60% to-transparent flex items-center justify-center z-10 transition-opacity duration-200">
                     <button type="button" class="w-8 h-8 flex items-center justify-end" aria-label="{{ 'sections.mma.scroll_options_right' | t }}">
@@ -84,7 +108,7 @@
                         </svg>
                     </button>
                 </div>
-                <div class="variant-options-container flex gap-3 overflow-x-auto font-heading text-sm font-semibold py-4 px-5 scrollbar-thin scrollbar-thumb-main-30 scrollbar-track-transparent scroll-smooth">
+                <div class="variant-options-container flex gap-3 overflow-x-auto font-heading text-sm font-semibold py-4 px-5 scrollbar-thin scrollbar-thumb-main-30 scrollbar-track-transparent scroll-smooth motion-reduce:scroll-auto" role="radiogroup" aria-label="{{ option.name | escape }}"{% if option_kind != blank %} data-option-kind="{{ option_kind }}"{% endif %}>
             {%- if is_poster and option.position == 2 -%}
                 {%- comment -%} POSTER — « Cadres » sur UNE seule rangée (UX identique à la toile) : pastille
                    « Sans cadre » + une pastille par couleur, en UN seul clic. Le découpage variante
@@ -98,12 +122,13 @@
                 {%- for v in option.values -%}
                     {%- if forloop.first -%}{%- assign sans_value = v -%}{%- else -%}{%- assign avec_value = v -%}{%- endif -%}
                 {%- endfor -%}
-                {%- comment -%} Pastille « Sans cadre » (cercle barré, identique à la toile) -> variante Sans cadre. {%- endcomment -%}
-                <painting-variant-picker data-option="option2" data-option-value="{{ sans_value }}" data-price-pattern="{{ product.price_min | money }}" data-variant-price="{{ sans_value.price | money }}" data-initially-available="{{ sans_value.available }}" class="flex-shrink-0">
+                {%- comment -%} Pastille « Sans cadre » (cercle barré, identique à la toile) -> variante Sans cadre.
+                   Le visuel est masqué aux lecteurs d'écran : le nom est dans le sr-only. {%- endcomment -%}
+                <painting-variant-picker data-option="option2" data-option-value="{{ sans_value }}" data-price-pattern="{{ product.price_min | money }}" data-variant-price="{{ sans_value.price | money }}" data-initially-available="{{ sans_value.available }}" class="relative flex-shrink-0">
                     <label class="cursor-pointer transition-opacity duration-200">
-                        <input type="radio" name="option2" value="{{ sans_value }}" class="peer hidden" data-frame-mode="none"{% if sans_value.selected %} checked{% endif %} data-variant-option>
+                        <input type="radio" name="option2" value="{{ sans_value }}" class="peer sr-only top-1/2 left-1/2" data-frame-mode="none"{% if sans_value.selected %} checked{% endif %} data-variant-option>
                         <span class="sr-only">{{ sans_value }}</span>
-                        <span class="flex items-center justify-center w-[60px] h-[60px] rounded-full transition-all duration-100 peer-checked:outline peer-checked:outline-1 peer-checked:outline-main peer-checked:outline-offset-2" title="{{ sans_value | escape }}">
+                        <span class="flex items-center justify-center w-[60px] h-[60px] rounded-full transition-all duration-100 peer-checked:outline peer-checked:outline-1 peer-checked:outline-main peer-checked:outline-offset-2 {{ option_focus_round }}" title="{{ sans_value | escape }}" aria-hidden="true">
                             <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 42 42" class="text-main" aria-hidden="true">
                                 <circle class="fill-main-10" cx="21" cy="21" r="20"/>
                                 <line x1="34" y1="8" x2="8" y2="34" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
@@ -113,16 +138,16 @@
                 </painting-variant-picker>
                 {%- comment -%} Une pastille par couleur de cadre poster -> variante Avec cadre (même prix) + property couleur. {%- endcomment -%}
                 {%- for frame in product.metafields.painting_options.frames_poster.value -%}
-                    <painting-variant-picker data-option="option2" data-option-value="{{ avec_value }}" data-price-pattern="{{ product.price_min | money }}" data-variant-price="{{ avec_value.price | money }}" data-initially-available="{{ avec_value.available }}" class="flex-shrink-0">
+                    <painting-variant-picker data-option="option2" data-option-value="{{ avec_value }}" data-price-pattern="{{ product.price_min | money }}" data-variant-price="{{ avec_value.price | money }}" data-initially-available="{{ avec_value.available }}" class="relative flex-shrink-0">
                         <label class="cursor-pointer transition-opacity duration-200">
-                            <input type="radio" name="option2" value="{{ avec_value }}" class="peer hidden" data-frame-mode="framed" data-color-name="{{ frame.name | escape }}" data-color-handle="{{ frame.system.handle | escape }}"{% if avec_value.selected and forloop.first %} checked{% endif %} data-variant-option>
+                            <input type="radio" name="option2" value="{{ avec_value }}" class="peer sr-only top-1/2 left-1/2" data-frame-mode="framed" data-color-name="{{ frame.name | escape }}" data-color-handle="{{ frame.system.handle | escape }}"{% if avec_value.selected and forloop.first %} checked{% endif %} data-variant-option>
                             <span class="sr-only">{{ frame.name }}</span>
                             {%- if frame.radio.value.media.value.src -%}
-                                <span class="block rounded-full overflow-hidden w-[60px] h-[60px] transition-all duration-100 peer-checked:outline peer-checked:outline-1 peer-checked:outline-main peer-checked:outline-offset-2" title="{{ frame.name | escape }}">
+                                <span class="block rounded-full overflow-hidden w-[60px] h-[60px] transition-all duration-100 peer-checked:outline peer-checked:outline-1 peer-checked:outline-main peer-checked:outline-offset-2 {{ option_focus_round }}" title="{{ frame.name | escape }}" aria-hidden="true">
                                     <img src="{{ frame.radio.value.media.value.src | image_url: width: 60 }}" alt="{{ frame.radio.value.media.value.alt | escape }}" width="60" height="60" loading="lazy" class="object-cover">
                                 </span>
                             {%- else -%}
-                                <span class="block rounded-full border border-main-20 bg-secondary px-4 py-2 font-normal text-main transition-all duration-100 peer-checked:bg-main peer-checked:text-secondary" title="{{ frame.name | escape }}">{{ frame.name }}</span>
+                                <span class="block rounded-full border border-main-20 bg-secondary px-4 py-2 font-normal text-main transition-all duration-100 peer-checked:bg-main peer-checked:text-secondary {{ option_focus }}" title="{{ frame.name | escape }}" aria-hidden="true">{{ frame.name }}</span>
                             {%- endif -%}
                         </label>
                     </painting-variant-picker>
@@ -145,21 +170,26 @@
                             {%- if frame.name == value -%}{%- assign render_key = frame.system.handle -%}{%- break -%}{%- endif -%}
                         {%- endfor -%}
                     {%- endif -%}
-                    <painting-variant-picker data-option="option{{ option.position }}" data-option-value="{{ value }}" data-price-pattern="{{ product.price_min | money }}" data-variant-price="{{ value.price | money }}" data-initially-available="{{ value.available }}" class="flex-shrink-0">
+                    {%- comment -%} Bordure et cadre n'ont pas de texte visible : leur nom est donné en sr-only, la
+                       vignette est masquée aux lecteurs d'écran. Pas de tiret à droite du endif de data-render-key :
+                       il soudait l'attribut suivant (`data-render-key="…"data-variant-option`, relevé sur la fiche
+                       en ligne), cf. studio-variant-picker. {%- endcomment -%}
+                    <painting-variant-picker data-option="option{{ option.position }}" data-option-value="{{ value }}" data-price-pattern="{{ product.price_min | money }}" data-variant-price="{{ value.price | money }}" data-initially-available="{{ value.available }}" class="relative flex-shrink-0">
                         <label class="cursor-pointer transition-opacity duration-200">
                             <input
                                 type="radio"
                                 name="option{{ option.position }}"
                                 value="{{ value }}"
-                                class="peer hidden"
+                                class="peer sr-only top-1/2 left-1/2"
                                 {% if value.selected %}checked{% endif %}
-                                {%- if render_key != blank %} data-render-key="{{ render_key | escape }}"{% endif -%}
+                                {%- if render_key != blank %} data-render-key="{{ render_key | escape }}"{% endif %}
                                 data-variant-option>
                             {% if option.position == 1 %}
-                                <span class="block px-3 py-2 font-normal rounded-full bg-secondary peer-checked:bg-main peer-checked:text-secondary text-main transition-all duration-100">
+                                <span class="block px-3 py-2 font-normal rounded-full bg-secondary peer-checked:bg-main peer-checked:text-secondary text-main transition-all duration-100 {{ option_focus }}">
                                     {{ value }}
                                 </span>
                             {% elsif option.position == 2 %}
+                                <span class="sr-only">{{ value }}</span>
                                 {%- comment -%} Find the matching border metaobject for this value {%- endcomment -%}
                                 {%- assign border_option = null -%}
                                 {%- for border in product.metafields.painting_options.borders.value -%}
@@ -170,7 +200,7 @@
                                 {%- endfor -%}
 
                                 {%- if border_option and border_option.radio.value.media.value.src -%}
-                                    <span class="block rounded-full overflow-hidden w-[60px] h-[60px] transition-all duration-100 peer-checked:outline peer-checked:outline-1 peer-checked:outline-main peer-checked:outline-offset-2">
+                                    <span class="block rounded-full overflow-hidden w-[60px] h-[60px] transition-all duration-100 peer-checked:outline peer-checked:outline-1 peer-checked:outline-main peer-checked:outline-offset-2 {{ option_focus_round }}" aria-hidden="true">
                                         <img
                                             src="{{ border_option.radio.value.media.value.src | image_url: width: 60 }}"
                                             alt="{{ border_option.radio.value.media.value.alt | escape }}"
@@ -181,6 +211,7 @@
                                     </span>
                                 {%- endif -%}
                             {% elsif option.position == 3 %}
+                                <span class="sr-only">{{ value }}</span>
                                 {%- comment -%} Find the matching frame metaobject for this value {%- endcomment -%}
                                 {%- assign frame_option = null -%}
                                 {%- assign is_first_frame = false -%}
@@ -195,14 +226,14 @@
                                 {%- endfor -%}
 
                                 {%- if is_first_frame -%}
-                                    <span class="flex items-center justify-center w-[60px] h-[60px] rounded-full transition-all duration-100 peer-checked:outline peer-checked:outline-1 peer-checked:outline-main peer-checked:outline-offset-2">
+                                    <span class="flex items-center justify-center w-[60px] h-[60px] rounded-full transition-all duration-100 peer-checked:outline peer-checked:outline-1 peer-checked:outline-main peer-checked:outline-offset-2 {{ option_focus_round }}" aria-hidden="true">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 42 42" class="text-main">
                                             <circle class="fill-main-10" cx="21" cy="21" r="20"/>
                                             <line x1="34" y1="8" x2="8" y2="34" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
                                         </svg>
                                     </span>
                                 {%- elsif frame_option and frame_option.radio.value.media.value.src -%}
-                                    <span class="block rounded-full overflow-hidden w-[60px] h-[60px] transition-all duration-100 peer-checked:outline peer-checked:outline-1 peer-checked:outline-main peer-checked:outline-offset-2">
+                                    <span class="block rounded-full overflow-hidden w-[60px] h-[60px] transition-all duration-100 peer-checked:outline peer-checked:outline-1 peer-checked:outline-main peer-checked:outline-offset-2 {{ option_focus_round }}" aria-hidden="true">
                                         <img
                                             src="{{ frame_option.radio.value.media.value.src | image_url: width: 60 }}"
                                             alt="{{ frame_option.radio.value.media.value.alt | escape }}"
@@ -213,7 +244,7 @@
                                     </span>
                                 {%- endif -%}
                             {% else %}
-                                <span class="block">{{ value }}</span>
+                                <span class="block {{ option_focus }}">{{ value }}</span>
                             {% endif %}
                         </label>
                     </painting-variant-picker>
@@ -261,14 +292,16 @@
             <div class="pt-3 px-1 mx-4 mb-1 text-main-80">
                 <span class="font-heading font-semibold">{{ 'sections.main_product.variant_picker.white_border' | t }}</span>
             </div>
-            <div class="variant-options-container flex gap-3 overflow-x-auto font-heading text-sm font-semibold py-4 px-5 scrollbar-thin scrollbar-thumb-main-30 scrollbar-track-transparent scroll-smooth" data-white-border-row role="radiogroup" aria-label="{{ 'sections.main_product.variant_picker.white_border' | t }}">
-                <label class="cursor-pointer transition-opacity duration-200 flex-shrink-0">
-                    <input type="radio" name="contour-blanc-ui" value="off" class="peer hidden" data-white-border="off">
-                    <span class="block px-3 py-2 font-normal rounded-full bg-secondary peer-checked:bg-main peer-checked:text-secondary text-main transition-all duration-100">{{ 'sections.main_product.variant_picker.white_border_without' | t }}</span>
+            {%- comment -%} Clavier : comme les rangées d'options ci-dessus (`relative` sur le label, qui est ici la
+               pastille). data-option-kind lu par assets/product-selection.js. {%- endcomment -%}
+            <div class="variant-options-container flex gap-3 overflow-x-auto font-heading text-sm font-semibold py-4 px-5 scrollbar-thin scrollbar-thumb-main-30 scrollbar-track-transparent scroll-smooth motion-reduce:scroll-auto" data-white-border-row data-option-kind="whiteBorder" role="radiogroup" aria-label="{{ 'sections.main_product.variant_picker.white_border' | t }}">
+                <label class="relative cursor-pointer transition-opacity duration-200 flex-shrink-0">
+                    <input type="radio" name="contour-blanc-ui" value="off" class="peer sr-only top-1/2 left-1/2" data-white-border="off">
+                    <span class="block px-3 py-2 font-normal rounded-full bg-secondary peer-checked:bg-main peer-checked:text-secondary text-main transition-all duration-100 {{ option_focus }}">{{ 'sections.main_product.variant_picker.white_border_without' | t }}</span>
                 </label>
-                <label class="cursor-pointer transition-opacity duration-200 flex-shrink-0">
-                    <input type="radio" name="contour-blanc-ui" value="on" class="peer hidden" data-white-border="on" checked>
-                    <span class="block px-3 py-2 font-normal rounded-full bg-secondary peer-checked:bg-main peer-checked:text-secondary text-main transition-all duration-100">{{ 'sections.main_product.variant_picker.white_border_with' | t }}</span>
+                <label class="relative cursor-pointer transition-opacity duration-200 flex-shrink-0">
+                    <input type="radio" name="contour-blanc-ui" value="on" class="peer sr-only top-1/2 left-1/2" data-white-border="on" checked>
+                    <span class="block px-3 py-2 font-normal rounded-full bg-secondary peer-checked:bg-main peer-checked:text-secondary text-main transition-all duration-100 {{ option_focus }}">{{ 'sections.main_product.variant_picker.white_border_with' | t }}</span>
                 </label>
             </div>
             <div class="product-properties">
@@ -280,6 +313,8 @@
     <script type="application/json" id="variants-data-json">
       {{ product.variants | json }}
     </script>
+    {%- comment -%} Choix transmis : événement mma:selection-change + adresse ?variant= (assets/product-selection.js). {%- endcomment -%}
+    <script src="{{ 'product-selection.js' | asset_url }}" defer="defer"></script>
 
     {%- comment -%} Size Guide Popup {%- endcomment -%}
     <dialog id="size-guide-popup" class="backdrop:bg-black/30 bg-transparent p-0 w-full max-w-sm rounded-xl">

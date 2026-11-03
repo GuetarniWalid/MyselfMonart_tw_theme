@@ -1339,6 +1339,26 @@ window.__applyWhiteBorderSwap = (scope) => {
   if (scope && document.body.classList.contains('poster-pp-on')) mmaApplyWhiteBorderSwap(scope, true);
 };
 
+// --- Clavier : une option atteinte au clavier (Tab, flèches) est amenée en vue dans sa rangée
+//     défilante, hors du dégradé de la flèche. Le radio, sr-only, ne mesure qu'1 px : le défilement
+//     natif du focus pouvait laisser la pastille à moitié sous le dégradé. Après une frame, pour passer
+//     derrière le défilement natif. Souris et doigt (pas de :focus-visible) : rien ne bouge. Défilement
+//     doux ou immédiat selon la rangée (scroll-smooth, motion-reduce:scroll-auto). ---
+function mmaRevealFocusedOption(input) {
+  const row = input.closest('.variant-options-container');
+  const item = input.closest('painting-variant-picker') || input.closest('label');
+  if (!row || !item || row.scrollWidth <= row.clientWidth) return;
+  const rowBox = row.getBoundingClientRect();
+  const box = item.getBoundingClientRect();
+  const haloMargin = 8; // halo de focus (ring + décalage) autour de la pastille
+  const arrow = row.parentElement.querySelector('.scroll-arrow-right');
+  const arrowWidth = arrow && !arrow.classList.contains('opacity-0') ? arrow.getBoundingClientRect().width : 0;
+  const visible = box.left >= rowBox.left + haloMargin && box.right <= rowBox.right - arrowWidth - haloMargin;
+  if (visible) return;
+  const offsetToCenter = box.left + box.width / 2 - (rowBox.left + rowBox.width / 2);
+  row.scrollBy({ left: offsetToCenter });
+}
+
 // Écouteurs délégués attachés UNE SEULE fois : ils re-dérivent l'état du DOM courant à chaque
 // événement -> insensibles au remplacement de #MainContent (bascule Poster/Toile sans rechargement).
 if (!window.__mmaMainProductDelegated) {
@@ -1349,6 +1369,12 @@ if (!window.__mmaMainProductDelegated) {
     if (t.matches('painting-variant-picker input[name="option1"]')) mmaSyncPosterFrameAvailability();
     if (t.matches('painting-variant-picker input[data-frame-mode]')) mmaSyncPosterColorProperty();
     if (t.matches('[data-white-border]')) mmaSetWhiteBorder(t.dataset.whiteBorder === 'on');
+  });
+  document.addEventListener('focusin', (e) => {
+    const t = e.target;
+    if (!t || typeof t.matches !== 'function') return;
+    if (!t.matches('.variant-options-container input[type="radio"]')) return;
+    if (t.matches(':focus-visible')) requestAnimationFrame(() => mmaRevealFocusedOption(t));
   });
 }
 
