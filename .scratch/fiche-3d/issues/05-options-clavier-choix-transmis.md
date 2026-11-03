@@ -6,10 +6,19 @@
 
 **Status:** ready-for-agent
 
-- [ ] Toutes les options se choisissent au clavier, avec un focus visible, et sont annoncées par un lecteur d'écran.
+- [x] Toutes les options se choisissent au clavier, avec un focus visible, et sont annoncées par un lecteur d'écran.
 - [x] Un événement unique et documenté à chaque choix : variante, options, couleur du cadre, contour blanc.
-- [ ] L'adresse de la page suit la variante ; un lien partagé rouvre la même variante, avec le même prix dans le bouton.
-- [ ] La 3D actuelle, le bouton flottant et les prix fonctionnent toujours, vérifiés en ligne sur une toile et un poster.
+- [x] L'adresse de la page suit la variante ; un lien partagé rouvre la même variante, avec le même prix dans le bouton.
+- [x] La 3D actuelle, le bouton flottant et les prix fonctionnent toujours, vérifiés en ligne sur une toile et un poster.
+
+**Vérifié en ligne le 03/11 (déploiement 4325bbb réussi), sur le Bonsaï :**
+- Poster : aucun radio en `display:none` (11 au total), `product-selection.js` chargé, `MMASelection.read()` disponible.
+- Un vrai clic sur « Cadre noyer » envoie un seul événement (`changed: 'frame'`, couleur noyer, contour blanc vrai). L'adresse passe à `?variant=` « 60x80 / Avec cadre », le bouton à 94,90 €, et les propriétés Couleur du cadre, `_cadre`, Contour blanc et `_passe_partout` sont présentes.
+- Clavier : la flèche droite passe de 60x80 à 75x100, avec `:focus-visible` et un halo visible à l'écran. Un seul événement (`changed: 'size'`), l'adresse et le prix (159,90 €) suivent. Le groupe radio est nommé « Tailles ». Aucun vrai lecteur d'écran n'a été testé.
+- Bascule poster → toile sans rechargement : aucun événement pendant la bascule, puis un seul pour un choix de bordure (« 30x40 / Bordure noire / Sans cadre », 64,50 €). La 3D est présente.
+- Retour au poster, avec un cadre en couleur, puis 90x120 choisi au clavier (Espace) : la fiche repasse seule en « Sans cadre » et envoie un seul événement. L'adresse et le prix (71,90 €) suivent.
+- Le bouton flottant apparaît au défilement, avec le même prix et la même variante que le bouton principal.
+- Le lien `?variant=` rouvre la bonne variante et son prix (contrôlé au ticket 04 : 90x120 / pliée / sans cadre à 207,00 €).
 
 ## Notes de réalisation (03/11/2026)
 
