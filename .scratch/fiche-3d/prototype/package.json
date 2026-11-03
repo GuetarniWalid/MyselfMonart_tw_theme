@@ -1,0 +1,9 @@
+{
+  "name": "prototype-3d-bonsai",
+  "private": true,
+  "type": "module",
+  "description": "Prototype jetable du ticket 02 (fiche produit 3D à image unique). Aucune dépendance : three.js est chargé depuis cdnjs par la page.",
+  "scripts": {
+    "test": "node --test"
+  }
+}
