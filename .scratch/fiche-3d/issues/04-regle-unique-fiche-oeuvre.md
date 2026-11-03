@@ -9,7 +9,7 @@
 - [x] Tous les endroits qui testent le modèle de page des toiles et des posters passent par la même règle.
 - [x] Ajouter un modèle de page à la liste des œuvres ne demande qu'une modification.
 - [x] Le test invalide de la grille des collections est corrigé.
-- [ ] Fiches toile et poster, panier, tiroir et collections identiques avant et après, vérifiés en ligne.
+- [x] Fiches toile et poster, panier, tiroir et collections identiques avant et après, vérifiés en ligne.
 
 ## Notes de réalisation
 
@@ -24,7 +24,14 @@
 - Modèle partagé par toile et poster : une ligne `when` qui tranche d'après `product` (par exemple `frames_poster`).
 - Si elle reprend la section `main-product`, être « toile » y allume aussi l'ancienne 3D et l'ancien sélecteur : à couper dans le ticket 07.
 
-**À vérifier en ligne, même page avant et après le push.**
+**Vérifié en ligne le 03/11 (déploiement 0077695 réussi).**
+- Avant le push : l'`ItemList` des collections donnait déjà la 2e photo à 10 produits sur 10 (posters, toiles, personnalisés). Après : toujours la 2e photo, aucun produit sans image.
+- Fiche toile Bonsaï : 3 rangées d'options, 3D présente, bouton à 62,50 € sans `?variant=` (prix d'appel) et à 207,00 € avec la variante 90x120 / pliée / sans cadre ; JSON-LD avec les 4 propriétés 3D, dont les bordures.
+- Fiche poster Bonsaï : tailles, cadres (4 couleurs), contour blanc, 3D et bascule toile/poster présents ; bouton à 24,90 € ; JSON-LD avec les propriétés 3D du poster.
+- Fiche personnalisée (Horoscope Balance) : studio présent, bouton « JE CRÉE SON POSTER 39,90 € ».
+- Tiroir : la toile montre son image à plat, le poster sa 1re photo, le kit d'accrochage est proposé. Les deux lignes de test ont été retirées du panier.
+
+**Liste de contrôle d'origine (avant et après le push).**
 1. Collection de posters (`/collections/poster-et-affiche`) et collection de toiles : grille identique, et dans le JSON-LD `ItemList`, même URL d'image pour un même produit. Avant le push, l'image d'un poster doit déjà être sa 2e photo. Sinon, ne pas pousser la grille.
 2. Fiche toile : sélecteur tailles/bordures/cadres, 3D en dernière vignette, prix « à partir de » sans `?variant=` et prix de la variante avec. Dans le JSON-LD, les 4 propriétés 3D avec bordures.
 3. Fiche poster : sélecteur cadre, couleur et contour blanc, 3D, prix du bouton inchangé. Dans le JSON-LD, les propriétés 3D du poster.
