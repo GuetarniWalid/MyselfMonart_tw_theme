@@ -1,0 +1,49 @@
+# Fiche produit 3D à image unique
+
+Plan validé par Walid le 03/11/2026. Les tickets sont dans `issues/`, numérotés dans l'ordre des blocages : un ticket démarre quand tous ceux qui le bloquent sont faits. Les tickets 01 à 06 peuvent démarrer tout de suite, en parallèle.
+
+## But
+
+Ajouter un tableau à partir d'une seule image à plat, sans Photoshop ni mockups, en gardant l'effet premium du site et le SEO des fiches. Le visiteur doit trouver le site et les animations si fluides que la qualité du produit en devient évidente, et ne jamais chercher le bouton d'achat.
+
+## Point de départ (relevé du 03/11/2026)
+
+- Catalogue : environ 1 590 produits, dont 662 posters, 224 toiles récentes et environ 670 anciennes toiles « Tableau mural » sur le même schéma. Ni diptyque, ni format rond.
+- Une même œuvre existe en deux produits jumeaux, une toile et un poster, reliés par des métachamps. La fiche passe de l'un à l'autre sans recharger la page.
+- Options de la toile : Tailles, Bordures (blanche, noire, étirée, miroir, pliée), Cadres (sans cadre, blanc, noir mat, argent ancien, chêne clair, noyer). Options du poster : Tailles, Cadres (sans ou avec). La couleur du cadre du poster (noir, blanc, chêne clair, noyer) et le contour blanc (passe-partout) passent par des propriétés de ligne, pas par des variantes.
+- Formats : portrait 3:4 (de 30x40 à 90x120), paysage 4:3, carré 1:1 (toile seulement).
+- Ordre des médias, dont dépendent les vignettes de collection, le panier et les textes alternatifs : 1re image = le tableau encadré sur fond blanc ; 2e = l'image à plat, source de la 3D ; puis les mockups. Les variantes n'ont aucune image.
+- Une 3D maison existe déjà (`<perspective-canvas>`, WebGL1 écrit à la main) : toile sur châssis, cadres, tranches, inclinaison au doigt. Elle ne sait pas exporter d'image.
+- Le Publisher du backend crée déjà le produit à partir d'une image : textes par Claude, variantes copiées d'un produit modèle, traductions la nuit. Seuls les mockups (moteur Photopea sur le PC, insertion par Gemini) ralentissent.
+- SEO sur 90 jours à fin octobre 2026 : Google Images fait 27 % des clics Google et 42 % de ceux qui arrivent sur les fiches ; les fiches pèsent 34 % des clics Google ; Google Shopping gratuit est en hausse ; deux tiers des clics Google viennent du mobile.
+- Fiche toile actuelle : tableau principal affiché en 0,99 s, aucun décalage de mise en page.
+
+## Décisions
+
+1. Périmètre : toiles et posters. Personnalisés, tapisseries, gourdes et sur-mesure ne changent pas.
+2. Calendrier : prototype validé courant novembre ; nouveaux produits sur la nouvelle fiche dès qu'elle est prête, avant Noël ; aucun produit qui se vend déjà ne change de fiche avant janvier.
+3. Image de départ : l'œuvre à plat, de face, sans cadre ni décor. Sous 4 000 px sur le grand côté, le Publisher l'agrandit, pour le site seulement.
+4. Moteur : three.js, comparé au prototype à la 3D actuelle.
+5. Affichage : une vraie image d'abord, puis la 3D prend le relais en fondu, sans décaler la page. Appareil trop faible, 3D indisponible ou animations réduites : on reste sur les photos, avec de simples fondus.
+6. Arrivée : l'œuvre seule, de face, sur un mur clair, avec une lumière douce et une ombre réaliste.
+7. Mise en scène guidée, plus une légère inclinaison au doigt ou à la souris (pas de 3D libre) :
+   - taille : la caméra recule dans la pièce, le tableau change de taille à la vraie échelle, cote en cm ;
+   - bordure : le tableau pivote pour montrer la tranche ;
+   - cadre : zoom sur un coin du cadre ;
+   - contour blanc : zoom de face sur la marge ;
+   - poster ou toile : le tableau s'épaissit ou s'affine ;
+   - la caméra revient de face quand on passe à une autre option.
+8. Châssis des toiles : 2 cm.
+9. Bouton d'achat toujours visible : barre fixe en bas sur mobile ; sur ordinateur, bouton visible dès l'arrivée et 3D fixe pendant qu'on parcourt les options. Le prix et le bouton changent au clic ; l'animation ne bloque jamais rien.
+10. Pièces : photos générées une fois par Gemini, triées par Walid, lumière réglée une fois par pièce. L'IA choisit la pièce de chaque produit.
+11. Photos automatiques : le moteur rend 5 ou 6 vraies photos par produit (de face sur fond clair, de trois-quarts avec la tranche, gros plan de la matière, coin du cadre, dans la pièce), décrites par Claude et visibles sous la 3D dans une bande « Sous tous les angles ». Une image par cadre pour les variantes.
+12. Publisher : une image donne la toile et le poster par défaut (carré : toile seule). L'IA propose la collection et la pièce ; Walid valide sur un seul écran, puis un clic publie.
+13. Rendus : sur le serveur actuel, à la demande, un à la fois, jamais en même temps que le studio des posters personnalisés. On n'agrandit le serveur que si la mesure l'exige. La base MySQL sert encore : on la garde.
+14. Agrandissement : outil choisi par banc d'essai ; chaque image agrandie est comparée automatiquement à l'originale.
+15. Impression : hors projet. Walid continue avec ses propres fichiers.
+16. Mesure : test en deux temps. D'abord les nouveautés, comparées aux nouveautés des mois précédents ; puis, en janvier, la moitié des best-sellers contre l'autre moitié pendant 3 semaines. PostHog tourne sur un compte séparé ouvert avec team@myselfmonart.com, et Clarity est retiré dès que PostHog tourne. La bannière cookies garde l'acceptation automatique, par choix de Walid.
+17. Version 2 : vidéo automatique, réalité augmentée, fichier d'impression HD.
+
+## Règles
+
+Les conventions du skill `shopify-section-dev` s'appliquent : réutiliser l'existant, Tailwind, réglages de schéma, accessibilité, Lighthouse ≥ 90. Tout se pousse sur `main`, qui déploie le thème en ligne (voir `CLAUDE.md`). Aucun secret en clair : les secrets du backend vivent dans les secrets GitHub Actions.
