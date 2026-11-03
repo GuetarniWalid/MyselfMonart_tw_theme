@@ -104,9 +104,11 @@
 
         {% comment %} First pass: Build complete trackers {% endcomment %}
         {% for item in cart.items %}
+          {%- comment -%} Toile, poster ou rien, d'après le modèle de page du produit (règle unique : snippet artwork-kind). {%- endcomment -%}
+          {%- capture item_artwork_kind -%}{% render 'artwork-kind', product: item.product, suffix: item.product.template_suffix %}{%- endcapture -%}
           {% for bundle in item.product.metafields.bundle.paintings.value %}
             {% unless item_product_ids contains bundle.id %}
-              {% if item.product.template_suffix == 'painting' or item.product.template_suffix == 'personalized' %}
+              {% if item_artwork_kind == 'toile' or item.product.template_suffix == 'personalized' %}
                 {% assign bundle_ratio = bundle.images[1].aspect_ratio %}
                 {% if item.product.images[1].aspect_ratio < 1 %}
                   {% assign item_largest_size = item.variant.option1 | split: 'x' | last | split: ' ' | first | plus: 0 %}
@@ -148,7 +150,10 @@
 
         {% for item in cart.items %}
           {% liquid
-            if item.product.template_suffix == 'painting' or item.product.template_suffix == 'personalized'
+            capture item_artwork_kind
+              render 'artwork-kind', product: item.product, suffix: item.product.template_suffix
+            endcapture
+            if item_artwork_kind == 'toile' or item.product.template_suffix == 'personalized'
               assign item_image = item.product.images[1] | default: item.product.featured_image
               if item_image.aspect_ratio < 1
                 assign item_largest_size = item.variant.option1 | split: 'x' | last | split: ' ' | first | plus: 0
@@ -175,7 +180,7 @@
               assign matching_variants_id = null
 
               for variant in bundle.variants
-                if item.product.template_suffix == 'painting' or item.product.template_suffix == 'personalized'
+                if item_artwork_kind == 'toile' or item.product.template_suffix == 'personalized'
                   if bundle_ratio < 1
                     assign bundle_largest_size = variant.option1 | split: 'x' | last | split: ' ' | first | plus: 0
                   else

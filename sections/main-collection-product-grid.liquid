@@ -172,13 +172,10 @@
             "@type": "Product",
             "name": {{ product.title | strip_html | json }},
             {%- liquid
-              if product.template_suffix == "painting"
-                assign product_image = product.images[1] | image_url: width: product.images[1].preview_image.width | prepend: "https:"
-              else if template.suffix == 'personalized'
-                assign product_image = product.images[1] | image_url: width: product.images[1].preview_image.width | prepend: "https:"
-              else
-                assign product_image = product.featured_image | image_url: width: product.featured_image.preview_image.width | prepend: "https:"
-              endif -%} "image": "{{ product_image }}",
+              # 2e photo (l'œuvre à plat) pour tous les produits, comme le rendait déjà l'ancien test
+              # (son else if valait un simple else). Changer de photo changerait les données lues par Google.
+              assign product_image = product.images[1] | image_url: width: product.images[1].preview_image.width | prepend: "https:"
+            -%} "image": "{{ product_image }}",
             "description": {{ product.description | strip_html | json }},
             "brand": {
               "@type": "Brand",

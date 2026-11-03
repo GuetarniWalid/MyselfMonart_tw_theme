@@ -27,7 +27,10 @@
             endcomment
             assign price = product.selected_or_first_available_variant.price
             if product.selected_variant == nil
-                if template.suffix == 'painting' or template.suffix == 'personalized'
+                capture artwork_kind
+                    render 'artwork-kind', product: product, suffix: template.suffix
+                endcapture
+                if artwork_kind == 'toile' or template.suffix == 'personalized'
                     assign price = product.price_min
                 endif
             endif

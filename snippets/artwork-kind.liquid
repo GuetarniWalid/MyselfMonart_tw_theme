@@ -1,0 +1,34 @@
+{%- comment -%}
+  artwork-kind — LA règle qui dit, d'après le modèle de page, si un produit a une fiche d'œuvre,
+  et laquelle. Renvoie « toile », « poster », ou rien pour tout autre modèle (personnalisés,
+  tapisserie, gourde, sur-mesure, carte cadeau, modèle par défaut).
+
+  Seul endroit du thème qui nomme les suffixes de modèle des œuvres : la fiche produit, les
+  boutons d'achat et le tiroir du panier passent par lui. Mettre un nouveau modèle de page parmi
+  les œuvres se fait ici, et nulle part ailleurs :
+    - modèle propre à un type : ajouter son suffixe sur la ligne `when` de ce type
+      (when 'painting', 'nouveau-suffixe') ;
+    - modèle partagé par les toiles et les posters : une ligne `when` qui tranche d'après `product`.
+  À ne pas confondre avec :
+    - le métachamp artwork.type (painting, poster, tapestry), lu par la recherche et le studio ;
+    - is_poster (métachamp frames_poster), qui donne aux posters leur sélecteur et leur 3D
+      quel que soit leur modèle de page.
+
+  Accepts:
+    - product: {Object} le produit. Pas encore lu : les modèles actuels sont propres à un type.
+    - suffix: {String} suffixe du modèle de page : template.suffix sur la fiche produit,
+      product.template_suffix pour un produit affiché ailleurs (ligne du panier)
+
+  Usage :
+    {%- capture artwork_kind -%}{% render 'artwork-kind', product: product, suffix: template.suffix %}{%- endcapture -%}
+    {%- if artwork_kind == 'toile' -%}…{%- endif -%}
+  Le résultat sort sans aucun espace : le comparer tel quel.
+{%- endcomment -%}
+{%- liquid
+  case suffix
+    when 'painting'
+      echo 'toile'
+    when 'poster'
+      echo 'poster'
+  endcase
+-%}

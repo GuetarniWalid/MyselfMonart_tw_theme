@@ -17,8 +17,11 @@
    par défaut (cf. painting-variant-picker) et main-product.js pose le drapeau poster-pp-on à l'init.
    Mettre à false pour revenir à un défaut « Sans contour blanc ». {%- endcomment -%}
 {%- assign pp_default_on = true -%}
+{%- comment -%} Fiche d'œuvre d'après le modèle de page : « toile », « poster » ou rien. Règle unique dans le
+   snippet artwork-kind : ne jamais tester ici le suffixe du modèle d'une œuvre. {%- endcomment -%}
+{%- capture artwork_kind -%}{% render 'artwork-kind', product: product, suffix: template.suffix %}{%- endcapture -%}
 {%- assign show_perspective = false -%}
-{%- if template.suffix == 'painting' or is_poster -%}{%- assign show_perspective = true -%}{%- endif -%}
+{%- if artwork_kind == 'toile' or is_poster -%}{%- assign show_perspective = true -%}{%- endif -%}
 
 {%- comment -%} Jumeau Poster/Toile (métafields link.painting / link.poster) -> bascule sans rechargement.
    Le moteur de soft-navigation n'est chargé que sur les fiches ayant un jumeau réellement PUBLIÉ
@@ -297,7 +300,7 @@
             {%- if section.settings.enable_format_toggle -%}
               {% render 'product-format-toggle', product: product %}
             {%- endif -%}
-            {% if template.suffix == 'painting' or template.suffix == 'personalized' or is_poster %}
+            {% if artwork_kind == 'toile' or template.suffix == 'personalized' or is_poster %}
               {% render 'painting-variant-picker'
                 , product: product
                 , block: block %}
@@ -703,20 +706,20 @@
   {%- endif -%}
 {%- endcapture -%}
 {%- comment -%} Capacité de visualisation 3D -> machine-readable pour Google & agents IA.
-   Gaté par SUFFIXE de template (mutuellement exclusifs) : 'painting' = toile sur châssis
+   Gaté par le MODÈLE DE PAGE (artwork_kind, mutuellement exclusifs) : 'toile' = toile sur châssis
    (bords + cadres caisse américaine) ; 'poster' = tirage encadré sous verre (cadres +
    contour blanc, pas de bords). Jamais émis en même temps que product_studio_props
    (suffixes personalized*) -> pas de clé additionalProperty dupliquée dans le JSON-LD. {%- endcomment -%}
 {%- capture product_3d_props -%}
   {%- if product.media[1] and product.media[1].media_type == 'image' -%}
-    {%- if template.suffix == 'painting' -%}
+    {%- if artwork_kind == 'toile' -%}
   ,"additionalProperty": [
     { "@type": "PropertyValue", "name": {{ 'sections.mma.product_3d_interactive_name' | t | json }}, "value": {{ 'sections.mma.product_3d_interactive_value' | t | json }} },
     { "@type": "PropertyValue", "name": {{ 'sections.mma.product_3d_preview_name' | t | json }}, "value": {{ 'sections.mma.product_3d_preview_value' | t | json }} },
     { "@type": "PropertyValue", "name": {{ 'sections.mma.product_3d_borders_name' | t | json }}, "value": {{ 'sections.mma.product_3d_borders_value' | t | json }} },
     { "@type": "PropertyValue", "name": {{ 'sections.mma.product_3d_frames_name' | t | json }}, "value": {{ 'sections.mma.product_3d_frames_value' | t | json }} }
   ]
-    {%- elsif template.suffix == 'poster' -%}
+    {%- elsif artwork_kind == 'poster' -%}
   ,"additionalProperty": [
     { "@type": "PropertyValue", "name": {{ 'sections.mma.product_3d_interactive_name' | t | json }}, "value": {{ 'sections.mma.product_3d_interactive_value' | t | json }} },
     { "@type": "PropertyValue", "name": {{ 'sections.mma.product_3d_preview_name' | t | json }}, "value": {{ 'sections.mma.product_3d_preview_value_poster' | t | json }} },
