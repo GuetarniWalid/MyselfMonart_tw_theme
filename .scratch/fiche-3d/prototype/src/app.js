@@ -1,13 +1,13 @@
 /*
  * Prototype : relie les options, le directeur de mise en scène et le moteur three.js.
  * Arrivée : la vraie image s'affiche d'abord ; three.js se charge ensuite, quand la page
- * est au repos, puis la 3D la remplace en fondu, sans rien décaler. Le prix et le résumé
- * changent au clic, sans attendre l'animation.
+ * est au repos, puis la 3D apparaît en fondu par-dessus la photo, sans rien décaler.
+ * Le prix et le résumé changent au clic, sans attendre l'animation.
  */
 
 import { createDirector } from './staging.js'
 import { ROOM } from './room.js'
-import { BORDERS, FRAMES, SIZES, priceOf } from './catalog.js'
+import { BORDERS, FRAMES, SIZES, describe, priceOf, sizeLabel } from './catalog.js'
 
 const THREE_URL = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js'
 
@@ -21,34 +21,29 @@ let reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches
 const director = createDirector({ room: ROOM, product: { ...product }, reducedMotion })
 
 let engine = null
-const size = { w: 1, h: 1 }
-const aspect = () => size.w / size.h
+const stageSize = { w: 1, h: 1 }
+const aspect = () => stageSize.w / stageSize.h
 
 /* ---------------- Options ---------------- */
 
-const SWATCH = {
-  border: { blanche: '#efede8', noire: '#272727', etiree: 'image', miroir: 'image', pliee: 'image' },
-  frame: { sans: null, noir: '#1f1f21', chene: 'linear-gradient(135deg, #d8b98e, #b48c60)' },
-}
 const GROUPS = [
-  { name: 'material', legend: 'Matière', options: [['toile', 'Toile'], ['poster', 'Poster']] },
-  { name: 'size', legend: 'Taille', options: SIZES.map((s) => [s, `${s.replace('x', ' × ')} cm`]) },
-  { name: 'border', legend: 'Bordure', only: 'toile', options: BORDERS.map((b) => [b.id, b.label]) },
-  { name: 'frame', legend: 'Cadre', options: FRAMES.map((f) => [f.id, f.label]) },
-  { name: 'passe', legend: 'Contour blanc', only: 'poster', options: [['sans', 'Sans'], ['avec', 'Avec']] },
+  { name: 'material', legend: 'Matière', options: [{ id: 'toile', label: 'Toile' }, { id: 'poster', label: 'Poster' }] },
+  { name: 'size', legend: 'Taille', options: SIZES.map((s) => ({ id: s, label: sizeLabel(s) })) },
+  { name: 'border', legend: 'Bordure', only: 'toile', options: BORDERS, swatch: true },
+  { name: 'frame', legend: 'Cadre', options: FRAMES, swatch: true },
+  { name: 'passe', legend: 'Contour blanc', only: 'poster', options: [{ id: 'sans', label: 'Sans' }, { id: 'avec', label: 'Avec' }] },
 ]
 const valueOf = (group) => (group === 'passe' ? (product.passe ? 'avec' : 'sans') : product[group])
-let noirLabel = null
+const frameWords = new Map() // libellés de cadre, qui changent entre toile et poster
 
-function swatch(group, value) {
-  const look = SWATCH[group] && SWATCH[group][value]
-  if (look === undefined) return null
+function swatch(option) {
   const dot = document.createElement('i')
   dot.className = 'swatch'
   dot.setAttribute('aria-hidden', 'true')
-  if (look === null) dot.style.background = 'transparent'
-  else if (look === 'image') dot.style.background = `center / 260% url(${poster.getAttribute('src')})`
-  else dot.style.background = look
+  // Pas de couleur : bordure qui reprend l'image (pastille d'image) ou pas de cadre (vide).
+  if (option.color) dot.style.background = option.color
+  else if ('add' in option) dot.style.background = `center / 260% url(${poster.getAttribute('src')})`
+  else dot.style.background = 'transparent'
   return dot
 }
 
@@ -61,38 +56,37 @@ function buildOptions() {
     legend.textContent = g.legend
     const chips = document.createElement('div')
     chips.className = 'chips'
-    for (const [value, label] of g.options) {
+    for (const option of g.options) {
       const chip = document.createElement('label')
       chip.className = 'chip'
       const input = document.createElement('input')
-      Object.assign(input, { type: 'radio', name: g.name, value, id: `opt-${g.name}-${value}` })
-      input.checked = valueOf(g.name) === value
+      Object.assign(input, { type: 'radio', name: g.name, value: option.id, id: `opt-${g.name}-${option.id}` })
+      input.checked = valueOf(g.name) === option.id
       const text = document.createElement('span')
-      const dot = swatch(g.name, value)
-      if (dot) text.append(dot)
-      const words = document.createTextNode(label)
+      if (g.swatch) text.append(swatch(option))
+      const words = document.createTextNode(option.label)
       text.append(words)
-      if (g.name === 'frame' && value === 'noir') noirLabel = words
+      if (g.name === 'frame') frameWords.set(option, words)
       chip.append(input, text)
       chips.append(chip)
     }
     fieldset.append(legend, chips)
     form.append(fieldset)
+    // La photo de la pièce part dès qu'on s'approche des tailles, avant le clic.
+    if (g.name === 'size') {
+      fieldset.addEventListener('pointerdown', prefetchRoom, { once: true })
+      fieldset.addEventListener('focusin', prefetchRoom, { once: true })
+    }
   }
   form.addEventListener('change', (event) => choose(event.target.name, event.target.value))
   form.addEventListener('submit', (event) => event.preventDefault())
 }
 
-function describe(p) {
-  const dims = `${p.size.replace('x', ' × ')} cm`
-  if (p.material === 'poster') {
-    const frame = p.frame === 'sans' ? 'sans cadre' : `cadre ${p.frame === 'noir' ? 'noir' : 'chêne clair'}`
-    return `Poster ${dims} · ${frame} · ${p.passe ? 'contour blanc' : 'sans contour'}`
-  }
-  const border = BORDERS.find((b) => b.id === p.border).label.toLowerCase()
-  const frame = p.frame === 'sans' ? 'sans cadre' : `cadre ${FRAMES.find((f) => f.id === p.frame).label.toLowerCase()}`
-  return `Toile ${dims} · bordure ${border} · ${frame}`
+function prefetchRoom() {
+  if (engine) engine.prefetchRoom()
+  else wantRoom = true
 }
+let wantRoom = false
 
 function updateTexts() {
   const text = describe(product)
@@ -104,7 +98,9 @@ function updateTexts() {
   for (const fieldset of document.querySelectorAll('fieldset[data-only]')) {
     fieldset.hidden = fieldset.dataset.only !== product.material
   }
-  if (noirLabel) noirLabel.textContent = product.material === 'poster' ? 'Noir' : 'Noir mat'
+  for (const [frame, words] of frameWords) {
+    words.textContent = product.material === 'poster' ? frame.posterLabel : frame.label
+  }
 }
 
 function choose(group, value) {
@@ -113,8 +109,9 @@ function choose(group, value) {
   updateTexts()
   director.choose(group, { ...product }, performance.now())
   if (reducedMotion && engine) {
+    // Animations réduites : simple fondu au changement de plan.
     canvas.classList.remove('fade-cut')
-    void canvas.offsetWidth // relance le fondu
+    void canvas.offsetWidth
     canvas.classList.add('fade-cut')
   }
   requestRender()
@@ -129,11 +126,16 @@ function requestRender() {
   if (!raf && engine) raf = requestAnimationFrame(frame)
 }
 
+function draw(at) {
+  const view = director.view(at, aspect())
+  engine.render(view, at)
+  placeDims(view)
+  return view
+}
+
 function frame(now) {
   raf = 0
-  const view = director.view(now, aspect())
-  engine.render(view, product, now)
-  placeDims(view)
+  const view = draw(now)
   $('hint').classList.toggle('gone', hintGone || view.room > 0.5)
   run.times.push(now)
   if (engine.roomReady() && !roomReported) reportRoom()
@@ -166,7 +168,7 @@ canvas.addEventListener('pointerdown', (event) => {
 })
 canvas.addEventListener('pointermove', (event) => {
   if (!drag || event.pointerId !== drag.id) return
-  director.drag((event.clientX - drag.x) / size.w, (event.clientY - drag.y) / size.h, performance.now())
+  director.drag((event.clientX - drag.x) / stageSize.w, (event.clientY - drag.y) / stageSize.h, performance.now())
   hintGone = true
   requestRender()
 })
@@ -180,13 +182,14 @@ canvas.addEventListener('pointerup', endDrag)
 canvas.addEventListener('pointercancel', endDrag)
 
 $('frontBtn').addEventListener('click', () => choose('front'))
+$('roomBtn').addEventListener('pointerdown', prefetchRoom, { once: true })
 $('roomBtn').addEventListener('click', () => choose('size', product.size))
 
 new ResizeObserver(([entry]) => {
-  size.w = Math.max(1, Math.round(entry.contentRect.width))
-  size.h = Math.max(1, Math.round(entry.contentRect.height))
+  stageSize.w = Math.max(1, Math.round(entry.contentRect.width))
+  stageSize.h = Math.max(1, Math.round(entry.contentRect.height))
   if (engine) {
-    engine.resize(size.w, size.h)
+    engine.resize(stageSize.w, stageSize.h)
     requestRender()
   }
 }).observe(stageEl)
@@ -196,6 +199,8 @@ new ResizeObserver(([entry]) => {
 const setMeasure = (key, text) => { document.querySelector(`[data-m="${key}"]`).textContent = text }
 const kb = (bytes) => `${Math.round(bytes / 1024)} Ko`
 const seconds = (ms) => `${decimal.format(ms / 1000)} s`
+const resources = () => performance.getEntriesByType('resource')
+const bytesOf = (entry) => entry.transferSize || entry.encodedBodySize || 0
 
 function transfer(url) {
   const entry = performance.getEntriesByName(new URL(url, location.href).href)[0]
@@ -203,31 +208,23 @@ function transfer(url) {
   return entry.transferSize ? kb(entry.transferSize) : `${kb(entry.encodedBodySize || entry.decodedBodySize)} (cache)`
 }
 
-function gpuName() {
-  try {
-    const gl = engine.renderer.getContext()
-    const info = gl.getExtension('WEBGL_debug_renderer_info')
-    return gl.getParameter(info ? info.UNMASKED_RENDERER_WEBGL : gl.RENDERER) || 'GPU inconnu'
-  } catch {
-    return 'GPU inconnu'
-  }
-}
-
 function reportLoad(times) {
   const three = performance.getEntriesByName(THREE_URL)[0]
-  setMeasure('three', three
-    ? `${three.transferSize ? kb(three.transferSize) : 'cache'} · r170 · ${Math.round(three.duration)} ms`
-    : 'r170')
+  const own = resources().filter((e) => /\/src\/[a-z]+\.js$/.test(e.name))
+  const ownBytes = own.reduce((s, e) => s + bytesOf(e), 0)
+  setMeasure('three', `${three && three.transferSize ? kb(three.transferSize) : 'cache'} (r170, ${three ? Math.round(three.duration) : '?'} ms) + prototype ${kb(ownBytes)}`)
   setMeasure('art', `${transfer(poster.getAttribute('src')) || '?'} · ${poster.naturalWidth}×${poster.naturalHeight} px`)
   setMeasure('first', `${seconds(times.first)} après l'ouverture (photo ${seconds(times.photo)}, three.js ${seconds(times.module)})`)
-  setMeasure('screen', `${size.w}×${size.h} px × ${Math.min(window.devicePixelRatio || 1, 2)} · ${gpuName()}`)
+  setMeasure('screen', `${stageSize.w}×${stageSize.h} px × ${engine.pixelRatio()} · ${engine.gpuName()}`)
 }
 
 let roomReported = false
 function reportRoom() {
   roomReported = true
-  setMeasure('room', `${transfer(ROOM.image) || '?'}, chargée au premier recul`)
+  setMeasure('room', `${transfer(ROOM.image) || '?'}, chargée à la première approche des tailles`)
 }
+
+const SLOW_FPS = 24 // en dessous, la vraie fiche resterait sur les photos
 
 function reportFluidity() {
   const t = run.times
@@ -237,18 +234,23 @@ function reportFluidity() {
   const mean = deltas.reduce((s, v) => s + v, 0) / deltas.length
   const slow = deltas.filter((d) => d > 34).length
   const fps = Math.round(1000 / mean)
-  setMeasure('fps', `${fps} images/s pendant la dernière animation · ${slow} image${slow > 1 ? 's' : ''} lente${slow > 1 ? 's' : ''} sur ${deltas.length}`)
+  const verdict = fps < SLOW_FPS ? ' · trop lent : la vraie fiche resterait sur les photos' : ''
+  setMeasure('fps', `${fps} images/s pendant la dernière animation · ${slow} image${slow > 1 ? 's' : ''} lente${slow > 1 ? 's' : ''} sur ${deltas.length}${verdict}`)
   window.__lastRun = { fps, slow, frames: deltas.length, worst: Math.round(Math.max(...deltas)) }
 }
 
-function measureColors() {
+// Mesurée une fois, de face, sur une toile dont la façade montre toute l'image (la bordure
+// pliée en montre le centre) ; on réessaie chaque seconde pendant deux minutes au plus.
+function measureColors(attempt = 0) {
   const now = performance.now()
   const view = director.view(now, aspect())
-  if (director.isMoving(now) || drag || view.shot !== 'front' || product.material !== 'toile') {
-    setTimeout(measureColors, 1000)
+  const fullFace = product.material === 'toile' && product.border !== 'pliee'
+  if (director.isMoving(now) || drag || view.shot !== 'front' || !fullFace) {
+    if (attempt < 120) setTimeout(() => measureColors(attempt + 1), 1000)
+    else setMeasure('color', 'à mesurer de face, sur la toile (bordure non pliée)')
     return
   }
-  const r = engine.measureFidelity(view, product)
+  const r = engine.measureFidelity(view)
   if (!r) return
   window.__fidelity = r
   setMeasure('color', `écart ΔE ${decimal.format(r.deltaE)} en moyenne, ${decimal.format(r.deltaE95)} au pire (95 %) ; invisible sous 2 · teinte ${decimal.format(r.hue)}°`)
@@ -256,18 +258,25 @@ function measureColors() {
 
 /* ---------------- Démarrage et garde-fous ---------------- */
 
-function showNotice(text, action, onAction) {
+function showNotice(text, actions = []) {
   const box = $('notice')
-  box.textContent = text
-  if (action) {
-    const button = document.createElement('button')
-    button.type = 'button'
-    button.className = 'link-btn'
-    button.textContent = action
-    button.addEventListener('click', () => { box.hidden = true; onAction() })
-    box.append(document.createElement('br'), button)
-  }
+  box.replaceChildren()
   box.hidden = false
+  // Texte posé après l'affichage, pour que les lecteurs d'écran l'annoncent.
+  setTimeout(() => {
+    box.append(text)
+    for (const [label, onAction] of actions) {
+      const button = document.createElement('button')
+      button.type = 'button'
+      button.className = 'link-btn'
+      button.textContent = label
+      button.addEventListener('click', () => {
+        box.hidden = true
+        onAction()
+      })
+      box.append(document.createElement('br'), button)
+    }
+  }, 60)
 }
 
 const marks = { photo: 0 }
@@ -277,7 +286,10 @@ const photoReady = new Promise((resolve) => {
   else poster.addEventListener('load', done, { once: true })
 })
 
+let starting = false
 async function start3D() {
+  if (starting) return
+  starting = true
   try {
     await photoReady
     // Décodage anticipé : un plus, jamais un blocage (une page en arrière-plan peut l'ajourner).
@@ -291,20 +303,28 @@ async function start3D() {
     return
   }
   const rect = stageEl.getBoundingClientRect()
-  size.w = Math.max(1, Math.round(rect.width))
-  size.h = Math.max(1, Math.round(rect.height))
-  engine.resize(size.w, size.h)
+  stageSize.w = Math.max(1, Math.round(rect.width))
+  stageSize.h = Math.max(1, Math.round(rect.height))
+  engine.resize(stageSize.w, stageSize.h)
   engine.onNeedsRender = requestRender
-  const now = performance.now()
-  engine.render(director.view(now, aspect()), product, now)
+  draw(performance.now())
   marks.first = performance.now()
+  requestRender() // un choix fait avant l'arrivée de la 3D continue sa transition
+  if (wantRoom) engine.prefetchRoom()
+  // Fondu : la 3D apparaît par-dessus la photo, qui reste opaque dessous jusqu'au bout.
   requestAnimationFrame(() => {
+    canvas.removeAttribute('aria-hidden')
     canvas.classList.add('on')
-    poster.classList.add('off')
+    setTimeout(() => {
+      poster.classList.add('off')
+      poster.setAttribute('aria-hidden', 'true')
+    }, 500)
   })
   canvas.addEventListener('webglcontextlost', () => {
     canvas.classList.remove('on')
+    canvas.setAttribute('aria-hidden', 'true')
     poster.classList.remove('off')
+    poster.removeAttribute('aria-hidden')
     showNotice('La 3D s’est arrêtée (mémoire du téléphone) : retour à la photo.')
   })
   reportLoad(marks)
@@ -331,19 +351,41 @@ function whenIdle(task) {
   else window.addEventListener('load', go, { once: true })
 }
 
+function fillCredit() {
+  const { title, author, url } = ROOM.credit
+  const link = document.createElement('a')
+  Object.assign(link, { href: url, target: '_blank', rel: 'noopener', textContent: 'Unsplash' })
+  $('credit').replaceChildren(`Pièce provisoire : « ${title} », rendu de ${author} sur `, link,
+    ' (licence Unsplash), en attendant les pièces du ticket 11.')
+}
+
 buildOptions()
 updateTexts()
+fillCredit()
 
+/* Garde-fous de la vraie fiche (décision 5) : réseau lent ou économie de données, appareil
+   modeste, animations réduites -> on reste sur la photo. Le prototype propose quand même
+   de voir la 3D, pour que Walid puisse juger sur son téléphone. */
 const connection = navigator.connection
 const slowNetwork = !!(connection && (connection.saveData || /2g/.test(connection.effectiveType || '')))
+const weakDevice = (navigator.deviceMemory && navigator.deviceMemory <= 2) ||
+  (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2)
+const showAnyway = ['Voir la 3D quand même', start3D]
 if (slowNetwork) {
-  showNotice('Économie de données ou réseau lent : la vraie fiche resterait sur cette photo.', 'Charger la 3D quand même', start3D)
+  showNotice('Économie de données ou réseau lent : la vraie fiche resterait sur cette photo.', [showAnyway])
+} else if (weakDevice) {
+  showNotice('Appareil modeste : la vraie fiche resterait sur cette photo.', [showAnyway])
+} else if (reducedMotion) {
+  showNotice('Animations réduites sur cet appareil : la vraie fiche resterait sur les photos.', [
+    ['Voir la 3D sans animations', start3D],
+    ['Voir la 3D avec animations', () => {
+      reducedMotion = false
+      director.setReducedMotion(false)
+      start3D()
+    }],
+  ])
 } else {
   whenIdle(start3D)
-  if (reducedMotion) {
-    showNotice('Animations réduites sur cet appareil : la vraie fiche resterait sur les photos, ici la 3D change de plan sans mouvement.',
-      'Voir les animations', () => { reducedMotion = false; director.setReducedMotion(false) })
-  }
 }
 
 for (const id of ['buy', 'buyDesk']) {
@@ -356,17 +398,6 @@ for (const id of ['buy', 'buyDesk']) {
   })
 }
 
-/* Accès pour les vérifications dans le navigateur : `render(at)` dessine une image complète
-   (3D et cotes) pour un instant donné, même quand la page est en arrière-plan. */
-window.__proto = {
-  director,
-  product,
-  engine: () => engine,
-  measureColors,
-  render(at) {
-    const view = director.view(at, aspect())
-    engine.render(view, product, at)
-    placeDims(view)
-    return view
-  },
-}
+// Accès pour les vérifications dans le navigateur : `render(at)` dessine une image complète
+// (3D et cotes) pour un instant donné, même quand la page est en arrière-plan.
+window.__proto = { director, product, engine: () => engine, measureColors, render: draw }

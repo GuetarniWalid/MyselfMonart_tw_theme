@@ -1,15 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { createDirector, paintingCorners } from '../src/staging.js'
-
-// Pièce provisoire (calibrée à la main sur la photo du salon) : seules les valeurs
-// utiles à la mise en scène. Unités : cm.
-const ROOM = {
-  photo: { left: 0, right: 363.6, bottom: -20.3, top: 184.2 },
-  hang: { x: 121, minBottom: 111, center: 145 },
-  view: { bottom: -12, height: 250 },
-  light: [-0.5, 0.45, 0.74], // vers la lumière : fenêtre à gauche, un peu en hauteur
-}
+import { ROOM } from '../src/room.js' // la pièce provisoire réelle (lumière venant de la gauche)
 
 const TOILE = { material: 'toile', size: '30x40', border: 'blanche', frame: 'sans', passe: false }
 const PORTRAIT = 0.8 // largeur / hauteur de la scène 3D sur un téléphone
@@ -24,7 +16,7 @@ function heightFraction(view, h) {
 }
 
 test("à l'arrivée, le tableau est de face et occupe 72 % de la hauteur d'un écran de téléphone", () => {
-  const director = createDirector({ room: ROOM, product: TOILE, now: 0 })
+  const director = createDirector({ room: ROOM, product: TOILE })
   const view = director.view(0, PORTRAIT)
 
   assert.equal(view.shot, 'front')
@@ -61,7 +53,7 @@ function project(camera, aspect, point) {
 }
 
 test('choisir une bordure fait pivoter le tableau pour montrer sa tranche éclairée, sans entrer dans le mur', () => {
-  const director = createDirector({ room: ROOM, product: TOILE, now: 0 })
+  const director = createDirector({ room: ROOM, product: TOILE })
   director.choose('border', { ...TOILE, border: 'miroir' }, 100)
   const view = director.view(100 + LATER, PORTRAIT)
 
@@ -80,7 +72,7 @@ test('choisir une bordure fait pivoter le tableau pour montrer sa tranche éclai
 })
 
 test('choisir un cadre amène la caméra de trois-quarts sur un coin du cadre, côté lumière, en gros plan', () => {
-  const director = createDirector({ room: ROOM, product: TOILE, now: 0 })
+  const director = createDirector({ room: ROOM, product: TOILE })
   director.choose('frame', { ...TOILE, frame: 'chene' }, 100)
   const view = director.view(100 + LATER, PORTRAIT)
 
@@ -110,14 +102,14 @@ function assertSameView(a, b, label, tolerance = 0.5) {
 }
 
 test("passer à un autre groupe d'option ramène d'abord la caméra de face, sans à-coup", () => {
-  const director = createDirector({ room: ROOM, product: TOILE, now: 0 })
+  const director = createDirector({ room: ROOM, product: TOILE })
   director.choose('border', { ...TOILE, border: 'miroir' }, 0)
   const framed = { ...TOILE, border: 'miroir', frame: 'chene' }
   const before = director.view(LATER - 1, PORTRAIT)
   director.choose('frame', framed, LATER)
   assertSameView(before, director.view(LATER + 1, PORTRAIT), 'au clic')
 
-  const front = createDirector({ room: ROOM, product: framed, now: 0 }).view(0, PORTRAIT)
+  const front = createDirector({ room: ROOM, product: framed }).view(0, PORTRAIT)
   let passedFront = false
   let previous = director.view(LATER, PORTRAIT)
   for (let t = LATER; t <= 2 * LATER; t += 8) {
@@ -135,7 +127,7 @@ test("passer à un autre groupe d'option ramène d'abord la caméra de face, san
 })
 
 test('choisir une taille fait reculer la caméra dans la pièce, tableau à la vraie échelle et coté en cm', () => {
-  const director = createDirector({ room: ROOM, product: TOILE, now: 0 })
+  const director = createDirector({ room: ROOM, product: TOILE })
   director.choose('size', { ...TOILE, size: '75x100' }, 0)
   const view = director.view(LATER, PORTRAIT)
 
@@ -163,7 +155,7 @@ test('choisir une taille fait reculer la caméra dans la pièce, tableau à la v
 const POSTER = { material: 'poster', size: '30x40', border: 'blanche', frame: 'sans', passe: false }
 
 test('choisir le contour blanc zoome de face sur la marge du poster', () => {
-  const director = createDirector({ room: ROOM, product: POSTER, now: 0 })
+  const director = createDirector({ room: ROOM, product: POSTER })
   director.choose('passe', { ...POSTER, passe: true }, 0)
   const view = director.view(LATER, PORTRAIT)
 
@@ -182,7 +174,7 @@ test('choisir le contour blanc zoome de face sur la marge du poster', () => {
 })
 
 test("passer de la toile au poster montre de trois-quarts le tableau qui s'affine", () => {
-  const director = createDirector({ room: ROOM, product: TOILE, now: 0 })
+  const director = createDirector({ room: ROOM, product: TOILE })
   director.choose('material', { ...TOILE, material: 'poster' }, 0)
 
   let previous = director.view(0, PORTRAIT).painting.depth
@@ -213,7 +205,7 @@ function sideAngle(view) {
 }
 
 test("glisser le doigt incline légèrement le tableau, puis il revient de face avec un rebond", () => {
-  const director = createDirector({ room: ROOM, product: TOILE, now: 0 })
+  const director = createDirector({ room: ROOM, product: TOILE })
   director.grab(0)
   director.drag(0.15, 0, 50)
   const tilted = sideAngle(director.view(50, PORTRAIT))
@@ -234,8 +226,26 @@ test("glisser le doigt incline légèrement le tableau, puis il revient de face 
   assert.ok(Math.abs(sideAngle(director.view(1100, PORTRAIT))) < 0.2, 'revenu de face en 1 s')
 })
 
+test("un choix fait pendant le rebond garde l'inclinaison du moment, sans la doubler", () => {
+  const director = createDirector({ room: ROOM, product: TOILE })
+  director.grab(0)
+  director.drag(3, 0, 10) // inclinaison maximale
+  director.release(20)
+  const before = sideAngle(director.view(119, PORTRAIT))
+  director.choose('border', { ...TOILE, border: 'noire' }, 120)
+  const after = sideAngle(director.view(121, PORTRAIT))
+  assert.ok(Math.abs(after - before) < 0.5, `l'inclinaison saute de ${before.toFixed(1)}° à ${after.toFixed(1)}°`)
+})
+
+test("toucher la 3D sans glisser (début d'un défilement de page) ne lance aucun rebond", () => {
+  const director = createDirector({ room: ROOM, product: TOILE })
+  director.grab(0)
+  director.release(40)
+  assert.equal(director.isMoving(60), false)
+})
+
 test("dans la pièce, le doigt n'incline rien : la photo ne se regarde que de face", () => {
-  const director = createDirector({ room: ROOM, product: TOILE, now: 0 })
+  const director = createDirector({ room: ROOM, product: TOILE })
   director.choose('size', { ...TOILE, size: '75x100' }, 0)
   director.grab(LATER)
   director.drag(0.3, 0.2, LATER + 50)
@@ -243,9 +253,9 @@ test("dans la pièce, le doigt n'incline rien : la photo ne se regarde que de fa
 })
 
 test('avec les animations réduites, un choix coupe directement sur le plan, sans mouvement', () => {
-  const director = createDirector({ room: ROOM, product: TOILE, now: 0, reducedMotion: true })
+  const director = createDirector({ room: ROOM, product: TOILE, reducedMotion: true })
   director.choose('border', { ...TOILE, border: 'pliee' }, 1000)
-  const settled = createDirector({ room: ROOM, product: TOILE, now: 0 })
+  const settled = createDirector({ room: ROOM, product: TOILE })
   settled.choose('border', { ...TOILE, border: 'pliee' }, 0)
   assertSameView(settled.view(LATER, PORTRAIT), director.view(1000, PORTRAIT), 'dès le clic')
   assert.equal(director.isMoving(1000), false)
@@ -257,12 +267,13 @@ test('avec les animations réduites, un choix coupe directement sur le plan, san
 })
 
 test("la scène ne s'anime que pendant une transition, un glisser ou un rebond", () => {
-  const director = createDirector({ room: ROOM, product: TOILE, now: 0 })
+  const director = createDirector({ room: ROOM, product: TOILE })
   assert.equal(director.isMoving(0), false)
   director.choose('frame', { ...TOILE, frame: 'noir' }, 100)
   assert.equal(director.isMoving(150), true)
   assert.equal(director.isMoving(100 + LATER), false)
   director.grab(LATER * 2)
+  director.drag(0.1, 0, LATER * 2 + 5)
   assert.equal(director.isMoving(LATER * 2 + 10), true)
   director.release(LATER * 2 + 20)
   assert.equal(director.isMoving(LATER * 2 + 200), true)
@@ -271,7 +282,7 @@ test("la scène ne s'anime que pendant une transition, un glisser ou un rebond",
 
 test("sur un écran large, la vue de la pièce ne sort jamais de la photo", () => {
   const WIDE = 1.8
-  const director = createDirector({ room: ROOM, product: TOILE, now: 0 })
+  const director = createDirector({ room: ROOM, product: TOILE })
   director.choose('size', { ...TOILE, size: '75x100' }, 0)
   const view = director.view(LATER, WIDE)
   const left = project(view.camera, WIDE, [ROOM.photo.left, 80, 0])
@@ -280,7 +291,7 @@ test("sur un écran large, la vue de la pièce ne sort jamais de la photo", () =
 })
 
 test("dans la pièce, changer de taille garde la caméra et fait grandir le tableau sous les yeux", () => {
-  const director = createDirector({ room: ROOM, product: TOILE, now: 0 })
+  const director = createDirector({ room: ROOM, product: TOILE })
   director.choose('size', { ...TOILE, size: '75x100' }, 0)
   const big = director.view(LATER, PORTRAIT)
   director.choose('size', { ...TOILE, size: '30x40' }, LATER)
@@ -295,7 +306,7 @@ test("dans la pièce, changer de taille garde la caméra et fait grandir le tabl
 })
 
 test('un nouveau clic en pleine transition repart de la vue en cours, sans saut', () => {
-  const director = createDirector({ room: ROOM, product: TOILE, now: 0 })
+  const director = createDirector({ room: ROOM, product: TOILE })
   director.choose('border', { ...TOILE, border: 'noire' }, 0)
   const before = director.view(299, PORTRAIT)
   director.choose('size', { ...TOILE, border: 'noire', size: '75x100' }, 300)
@@ -303,7 +314,7 @@ test('un nouveau clic en pleine transition repart de la vue en cours, sans saut'
 })
 
 test('changer de valeur dans le même groupe garde le plan en cours', () => {
-  const director = createDirector({ room: ROOM, product: TOILE, now: 0 })
+  const director = createDirector({ room: ROOM, product: TOILE })
   director.choose('border', { ...TOILE, border: 'miroir' }, 0)
   const edge = director.view(LATER, PORTRAIT)
   director.choose('border', { ...TOILE, border: 'noire' }, LATER)

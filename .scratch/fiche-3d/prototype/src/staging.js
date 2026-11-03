@@ -11,9 +11,12 @@
  * arrière est en (x, y, z). Il tourne autour de ce point : d'abord `pitch` autour de
  * l'axe x, puis `yaw` autour de l'axe y (ordre 'YXZ' de three.js). `outer` est la boîte
  * extérieure (cadre compris) ; l'œuvre y occupe width × height × depth, à partir de `artZ`.
+ * `frame` est le profil du cadre et `paper` passe de 0 (toile) à 1 (poster) : les deux
+ * s'interpolent pendant la transition. La vue porte aussi `product`, les choix en cours,
+ * pour que le moteur rende tout à partir de la seule vue.
  */
 
-import { CANVAS_DEPTH, FRAME_PROFILE, PAPER_DEPTH, hasFrame } from './catalog.js'
+import { CANVAS_DEPTH, FRAME_PROFILE, PAPER_DEPTH, dimensionsOf, hasFrame } from './catalog.js'
 
 const DEG = Math.PI / 180
 const FOV_Y = 30 * DEG
@@ -51,11 +54,6 @@ function springFactor(ms) {
 }
 
 const clamp = (v, max) => Math.max(-max, Math.min(max, v))
-
-function sizeOf(product) {
-  const [w, h] = product.size.split('x').map(Number)
-  return { w, h }
-}
 
 function hangingCenter(room, h) {
   const bottom = Math.max(room.hang.minBottom, room.hang.center - h / 2)
@@ -108,20 +106,20 @@ function clearance(painting) {
 }
 
 function hungPainting(room, product) {
-  const { w, h } = sizeOf(product)
+  const { width: w, height: h } = dimensionsOf(product.size)
   const depth = product.material === 'poster' ? PAPER_DEPTH : CANVAS_DEPTH
+  const frame = { ...FRAME_PROFILE[product.material] }
   let outer = { width: w, height: h, depth }
   let artZ = 0
   if (hasFrame(product)) {
-    const f = FRAME_PROFILE[product.material]
-    const band = 2 * (f.gap + f.face)
-    outer = { width: w + band, height: h + band, depth: Math.max(f.depth, f.floor + depth) }
-    artZ = f.floor
+    const band = 2 * (frame.gap + frame.face)
+    outer = { width: w + band, height: h + band, depth: Math.max(frame.depth, frame.floor + depth) }
+    artZ = frame.floor
   }
   const c = hangingCenter(room, outer.height)
   const paper = product.material === 'poster' ? 1 : 0
   const passe = paper && product.passe ? 1 : 0 // contour blanc, en fondu pendant la transition
-  return { x: c.x, y: c.y, z: 0, yaw: 0, pitch: 0, width: w, height: h, depth, artZ, outer, paper, passe }
+  return { x: c.x, y: c.y, z: 0, yaw: 0, pitch: 0, width: w, height: h, depth, artZ, outer, frame, paper, passe }
 }
 
 const artFront = (p) => [p.x, p.y, p.z + p.artZ + p.depth]
@@ -175,13 +173,9 @@ function cornerShot(room, product) {
     (c) => c.side.x === side && c.side.y < 0 && c.side.z === 1,
   )
   const target = add(corner, [-side * CORNER.inset, CORNER.inset, 0])
-  const dir = [
-    side * Math.sin(CORNER.yaw) * Math.cos(CORNER.pitch),
-    Math.sin(CORNER.pitch),
-    Math.cos(CORNER.yaw) * Math.cos(CORNER.pitch),
-  ]
   const d = CORNER.field / (2 * Math.tan(FOV_Y / 2))
-  return shotOf('corner', { position: add(target, scale(dir, d)), target, fovY: FOV_Y }, painting)
+  const position = orbit(target, side * CORNER.yaw, CORNER.pitch, d)
+  return shotOf('corner', { position, target, fovY: FOV_Y }, painting)
 }
 
 function marginShot(room, product) {
@@ -293,7 +287,7 @@ export function createDirector({ room, product, reducedMotion = false }) {
 
   function view(at, aspect) {
     state.aspect = aspect
-    const base = staged(at, aspect)
+    const base = { ...staged(at, aspect), product: state.product }
     const k = 1 - base.room // la photo de la pièce ne s'incline pas
     const offset = tiltAt(at)
     if (k === 0 || (offset.yaw === 0 && offset.pitch === 0)) return base
@@ -317,7 +311,10 @@ export function createDirector({ room, product, reducedMotion = false }) {
   function release(at) {
     if (!tilt.grabbed) return
     tilt.grabbed = false
-    tilt.releasedAt = state.reducedMotion ? null : at
+    // Un toucher sans glisser (souvent le début d'un défilement) ne lance aucun rebond.
+    const moved = tilt.held.yaw !== 0 || tilt.held.pitch !== 0
+    tilt.releasedAt = state.reducedMotion || !moved ? null : at
+    if (!moved) tilt.held = { yaw: 0, pitch: 0 }
   }
 
   function isMoving(at) {
@@ -332,7 +329,8 @@ export function createDirector({ room, product, reducedMotion = false }) {
   }
 
   function choose(group, nextProduct, at) {
-    const from = view(at, state.aspect)
+    // Départ figé sans l'inclinaison : celle-ci continue à part, par-dessus la transition.
+    const from = staged(at, state.aspect)
     const shot = SHOT_OF_GROUP[group] || 'front'
     const legs = []
     let start = at

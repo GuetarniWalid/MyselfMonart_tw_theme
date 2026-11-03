@@ -9,16 +9,15 @@
  * s'élargit avec la distance au mur), sans carte d'ombre.
  */
 
-import { artBox, frameRing, frameProfile, frameOpening } from './geometry.js'
+import { artBox, convexHull, frameRing, frameProfile, frameOpening } from './geometry.js'
 import { paintingCorners } from './staging.js'
-import { FRAME_PROFILE } from './catalog.js'
+import { PAPER_WHITE, borderOf, hasFrame } from './catalog.js'
+import { compareImages } from './fidelity.js'
 import {
   weaveCanvas, paperCanvas, oakCanvas, environmentCanvas,
   WEAVE_TILE_CM, PAPER_TILE_CM, OAK_TILE_CM,
 } from './textures.js'
 
-const BORDER_SRGB = { blanche: '#efede8', noire: '#272727', papier: '#f7f6f2' }
-const PAPER_WHITE = '#f7f6f2'
 const PASSE_RATIO = 0.08 // contour blanc : 8 % du petit côté, égal en cm sur les 4 côtés
 const SHADE = { ambient: 0.55, diffuse: 0.45, weave: 0.075, bump: 0.38 }
 const SHADOW = { key: 0.34, keyFade: 28, penumbra: 0.35, penumbraPerCm: 0.42, ao: 0.12, aoRadius: 1.6 }
@@ -181,24 +180,6 @@ const unit = (v) => {
   return v.map((c) => c / n)
 }
 
-// Enveloppe convexe 2D (chaîne monotone d'Andrew), sens trigonométrique.
-function convexHull(points) {
-  const p = points.slice().sort((a, b) => a[0] - b[0] || a[1] - b[1])
-  const cross = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
-  const lower = [], upper = []
-  for (const q of p) {
-    while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], q) <= 0) lower.pop()
-    lower.push(q)
-  }
-  for (let i = p.length - 1; i >= 0; i--) {
-    const q = p[i]
-    while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], q) <= 0) upper.pop()
-    upper.push(q)
-  }
-  return lower.slice(0, -1).concat(upper.slice(0, -1))
-}
-
-const lerp = (a, b, t) => a + (b - a) * t
 const round = (v) => Math.round(v * 1000) / 1000
 
 export function createScene(THREE, { canvas, artImage, room }) {
@@ -258,7 +239,7 @@ export function createScene(THREE, { canvas, artImage, room }) {
     uPaperTex: { value: null }, // calculé au premier poster ou au repos (ensurePaper)
     uWeaveScale: { value: 1 / WEAVE_TILE_CM },
     uPaperScale: { value: 1 / PAPER_TILE_CM },
-    uBorder: { value: new THREE.Color(BORDER_SRGB.blanche) },
+    uBorder: { value: new THREE.Color(borderOf('blanche').color) },
     uPaperWhite: { value: new THREE.Color(PAPER_WHITE) },
     uLight: { value: new THREE.Vector3(...light) },
     uAmbient: { value: SHADE.ambient },
@@ -366,11 +347,15 @@ export function createScene(THREE, { canvas, artImage, room }) {
     mesh.geometry = g
   }
 
+  const borderColor = new THREE.Color()
+
   function updatePainting(p, product) {
     group.position.set(p.x, p.y, p.z)
     group.rotation.set(p.pitch, p.yaw, 0)
 
-    const border = p.paper > 0.5 ? 'papier' : product.border
+    // La bordure de la toile reste en place pendant tout l'affinage (la tranche d'une toile
+    // pliée rétrécit avec l'épaisseur) ; la feuille ne devient du papier nu qu'à l'arrivée.
+    const border = p.paper >= 0.999 ? 'papier' : product.border
     const key = [p.width, p.height, p.depth].map(round).join('x') + border
     if (key !== artKey) {
       setGeometry(artMesh, artBox({ width: p.width, height: p.height, depth: p.depth, border }), ['fab', 'art'])
@@ -378,8 +363,8 @@ export function createScene(THREE, { canvas, artImage, room }) {
     }
     artMesh.position.z = p.artZ
 
-    const toile = new THREE.Color(BORDER_SRGB[product.border] || BORDER_SRGB.blanche)
-    artUniforms.uBorder.value.copy(toile).lerp(artUniforms.uPaperWhite.value, p.paper)
+    borderColor.set(borderOf(product.border).color || PAPER_WHITE)
+    artUniforms.uBorder.value.copy(borderColor).lerp(artUniforms.uPaperWhite.value, p.paper)
     if (p.paper > 0) ensurePaper()
     artUniforms.uPaper.value = p.paper
     artUniforms.uPasse.value = p.passe
@@ -393,13 +378,12 @@ export function createScene(THREE, { canvas, artImage, room }) {
       innerRatio < artRatio ? 1 : artRatio / innerRatio,
     )
 
-    const framed = product.frame !== 'sans'
+    const framed = hasFrame(product)
     frameMesh.visible = framed
     glass.visible = framed && p.paper > 0.01
     if (framed) {
-      // Le profil glisse de la caisse américaine à la baguette sous verre avec `paper`.
-      const a = FRAME_PROFILE.toile, b = FRAME_PROFILE.poster
-      const f = Object.fromEntries(Object.keys(a).map((k) => [k, lerp(a[k], b[k], p.paper)]))
+      // p.frame glisse de la caisse américaine à la baguette sous verre avec `paper`.
+      const f = p.frame
       const kind = p.paper > 0.5 ? 'poster' : 'toile'
       const fk = [p.width, p.height, f.gap, f.face, f.depth, f.floor].map(round).join('x') + kind
       if (fk !== frameKey) {
@@ -431,19 +415,29 @@ export function createScene(THREE, { canvas, artImage, room }) {
     wallUniforms.uAoAmt.value = SHADOW.ao * Math.exp(-p.z / 2.5) * Math.min(1, p.outer.depth / 2)
   }
 
-  // ---- Pièce : chargée au premier besoin, puis fondue ----
+  /* ---- Pièce : chargée au premier signe d'intérêt (la page appelle prefetchRoom dès qu'on
+     touche les tailles), sinon au premier recul. L'image est décodée puis envoyée tout de
+     suite à la carte graphique, pour ne pas le faire en pleine animation. ---- */
   let roomState = 'none', roomShownAt = 0
-  function loadRoom() {
+  function prefetchRoom() {
     if (roomState !== 'none') return
     roomState = 'loading'
-    new THREE.TextureLoader().load(room.image, (texture) => {
+    const image = new Image()
+    image.decoding = 'async'
+    image.onload = async () => {
+      await Promise.race([image.decode().catch(() => {}), new Promise((resolve) => setTimeout(resolve, 300))])
+      const texture = new THREE.Texture(image)
       texture.colorSpace = THREE.SRGBColorSpace
       texture.anisotropy = anisotropy
+      texture.needsUpdate = true
+      renderer.initTexture(texture)
       wallUniforms.uRoom.value = texture
       roomState = 'ready'
       roomShownAt = performance.now()
       if (onNeedsRender) onNeedsRender()
-    }, undefined, () => { roomState = 'error' })
+    }
+    image.onerror = () => { roomState = 'error' }
+    image.src = room.image
   }
   const roomFade = (now) => (roomState === 'ready' ? Math.min(1, (now - roomShownAt) / 350) : 0)
 
@@ -457,19 +451,30 @@ export function createScene(THREE, { canvas, artImage, room }) {
     camera.aspect = width / height
   }
 
-  function render(view, product, now) {
+  // Tout vient de la vue du directeur : caméra, pose, pièce et choix en cours (view.product).
+  function render(view, now) {
     camera.fov = (view.camera.fovY * 180) / Math.PI
     camera.position.set(...view.camera.position)
     camera.lookAt(...view.camera.target)
     camera.updateProjectionMatrix()
-    updatePainting(view.painting, product)
+    updatePainting(view.painting, view.product)
     updateShadow(view.painting)
     const p = view.painting
     keyLight.position.set(p.x + light[0] * 400, p.y + light[1] * 400, light[2] * 400)
     keyLight.target.position.set(p.x, p.y, 0)
-    if (view.room > 0) loadRoom()
+    if (view.room > 0) prefetchRoom()
     wallUniforms.uRoomMix.value = view.room * roomFade(now)
     renderer.render(scene, camera)
+  }
+
+  function gpuName() {
+    try {
+      const gl = renderer.getContext()
+      const info = gl.getExtension('WEBGL_debug_renderer_info')
+      return gl.getParameter(info ? info.UNMASKED_RENDERER_WEBGL : gl.RENDERER) || 'GPU inconnu'
+    } catch {
+      return 'GPU inconnu'
+    }
   }
 
   // Projette un point du mur ou du tableau en pixels CSS dans le canvas.
@@ -480,10 +485,10 @@ export function createScene(THREE, { canvas, artImage, room }) {
   }
 
   /* Fidélité : rend la vue de face, lit les pixels de la façade et les compare, zone par
-     zone (24 × 32), à l'image à plat ramenée à la même taille. Le grain de la toile est
-     ainsi moyenné ; il reste l'effet de l'éclairage. Écart en ΔE (CIELAB 1976). */
-  function measureFidelity(view, product) {
-    render(view, product, performance.now())
+     zone, à l'image à plat ramenée à la même taille (calcul dans fidelity.js). La vue doit
+     être de face, sur une toile dont la façade montre toute l'image (pas la bordure pliée). */
+  function measureFidelity(view) {
+    render(view, performance.now())
     const gl = renderer.getContext()
     const size = renderer.getDrawingBufferSize(new THREE.Vector2())
     const face = paintingCorners(view.painting).filter((c) => c.side.z === 1).map((c) => {
@@ -512,46 +517,7 @@ export function createScene(THREE, { canvas, artImage, room }) {
     const fw = right - left, fh = top - bottom
     ctx.drawImage(artImage, ((x0 - left) / fw) * nw, ((top - y1) / fh) * nh, (w / fw) * nw, (h / fh) * nh, 0, 0, w, h)
     const source = ctx.getImageData(0, 0, w, h).data
-
-    const lab = (r, g, b) => {
-      const lin = [r, g, b].map((v) => (v /= 255) <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4)
-      const X = (0.4124 * lin[0] + 0.3576 * lin[1] + 0.1805 * lin[2]) / 0.95047
-      const Y = 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2]
-      const Z = (0.0193 * lin[0] + 0.1192 * lin[1] + 0.9505 * lin[2]) / 1.08883
-      const f = (t) => (t > 216 / 24389 ? Math.cbrt(t) : (24389 / 27 * t + 16) / 116)
-      return [116 * f(Y) - 16, 500 * (f(X) - f(Y)), 200 * (f(Y) - f(Z))]
-    }
-    const blockMean = (data, bx, by, bw, bh) => {
-      let r = 0, g = 0, b = 0, n = 0
-      for (let y = by; y < by + bh; y++) for (let x = bx; x < bx + bw; x++) {
-        const i = (y * w + x) * 4
-        r += data[i]; g += data[i + 1]; b += data[i + 2]; n++
-      }
-      return [r / n, g / n, b / n]
-    }
-    const cols = 24, rows = 32, bw = Math.floor(w / cols), bh = Math.floor(h / rows)
-    const deltas = [], hues = [], lightness = []
-    for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) {
-      const a = lab(...blockMean(source, i * bw, j * bh, bw, bh))
-      const b = lab(...blockMean(rendered, i * bw, j * bh, bw, bh))
-      deltas.push(Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]))
-      lightness.push(b[0] - a[0])
-      const ca = Math.hypot(a[1], a[2]), cb = Math.hypot(b[1], b[2])
-      if (ca > 10 && cb > 10) {
-        let d = Math.abs(Math.atan2(a[2], a[1]) - Math.atan2(b[2], b[1])) * (180 / Math.PI)
-        hues.push(d > 180 ? 360 - d : d)
-      }
-    }
-    deltas.sort((p, q) => p - q)
-    const mean = (xs) => xs.reduce((s, v) => s + v, 0) / Math.max(1, xs.length)
-    return {
-      deltaE: mean(deltas),
-      deltaE95: deltas[Math.floor(deltas.length * 0.95)],
-      hue: mean(hues),
-      hueSamples: hues.length,
-      lightness: mean(lightness),
-      pixels: `${w}×${h}`,
-    }
+    return { ...compareImages(source, rendered, w, h), pixels: `${w}×${h}` }
   }
 
   /* Au repos, après la première image : prépare papier, bois et reflets, et compile les
@@ -572,13 +538,14 @@ export function createScene(THREE, { canvas, artImage, room }) {
   }
 
   return {
-    renderer,
     resize,
     render,
     toScreen,
     measureFidelity,
     warmUp,
-    loadRoom,
+    prefetchRoom,
+    gpuName,
+    pixelRatio: () => renderer.getPixelRatio(),
     roomReady: () => roomState === 'ready',
     roomFading: (now) => roomState === 'ready' && now - roomShownAt < 350,
     set onNeedsRender(fn) { onNeedsRender = fn },

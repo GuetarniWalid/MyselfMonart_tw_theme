@@ -19,19 +19,34 @@ export const FRAME_PROFILE = {
 
 export const SIZES = ['30x40', '75x100']
 
+// Taille d'option (« 30x40 ») : largeur et hauteur en cm, et libellé affiché.
+export function dimensionsOf(size) {
+  const [width, height] = size.split('x').map(Number)
+  return { width, height }
+}
+
+export const sizeLabel = (size) => `${size.replace('x', ' × ')} cm`
+
+/* Bordures et cadres. `color` (sRGB) sert à la fois à la pastille de l'option et au
+   moteur ; null : la bordure reprend l'image, ou il n'y a pas de cadre. */
 export const BORDERS = [
-  { id: 'blanche', label: 'Blanche', add: 0 },
-  { id: 'noire', label: 'Noire', add: 2 },
-  { id: 'etiree', label: 'Étirée', add: 4 },
-  { id: 'miroir', label: 'Miroir', add: 6 },
-  { id: 'pliee', label: 'Pliée', add: 8 },
+  { id: 'blanche', label: 'Blanche', add: 0, color: '#efede8' },
+  { id: 'noire', label: 'Noire', add: 2, color: '#272727' },
+  { id: 'etiree', label: 'Étirée', add: 4, color: null },
+  { id: 'miroir', label: 'Miroir', add: 6, color: null },
+  { id: 'pliee', label: 'Pliée', add: 8, color: null },
 ]
 
+export const PAPER_WHITE = '#f7f6f2'
+
 export const FRAMES = [
-  { id: 'sans', label: 'Sans cadre' },
-  { id: 'noir', label: 'Noir mat' },
-  { id: 'chene', label: 'Chêne clair' },
+  { id: 'sans', label: 'Sans cadre', posterLabel: 'Sans cadre', color: null },
+  { id: 'noir', label: 'Noir mat', posterLabel: 'Noir', color: '#1f1f21' },
+  { id: 'chene', label: 'Chêne clair', posterLabel: 'Chêne clair', color: '#c9a77c' },
 ]
+
+export const borderOf = (id) => BORDERS.find((b) => b.id === id) || BORDERS[0]
+export const frameOf = (id) => FRAMES.find((f) => f.id === id) || FRAMES[0]
 
 const TOILE_BASE = { '30x40': 62.5, '75x100': 136.5 } // bordure blanche, sans cadre
 const TOILE_FRAME_ADD = { sans: 0, noir: 40, chene: 50 }
@@ -40,14 +55,23 @@ const POSTER_PRICE = {
   '75x100': { sans: 64.9, avec: 159.9 },
 }
 
-export function priceOf(product) {
-  if (product.material === 'poster') {
-    return POSTER_PRICE[product.size][product.frame === 'sans' ? 'sans' : 'avec']
-  }
-  const border = BORDERS.find((b) => b.id === product.border)
-  return TOILE_BASE[product.size] + (border ? border.add : 0) + TOILE_FRAME_ADD[product.frame]
-}
-
 export function hasFrame(product) {
   return product.frame !== 'sans'
+}
+
+export function priceOf(product) {
+  if (product.material === 'poster') return POSTER_PRICE[product.size][hasFrame(product) ? 'avec' : 'sans']
+  return TOILE_BASE[product.size] + borderOf(product.border).add + TOILE_FRAME_ADD[product.frame]
+}
+
+// Résumé affiché sous le titre, et lu par le lecteur d'écran sur la 3D.
+export function describe(product) {
+  const size = sizeLabel(product.size)
+  const frame = frameOf(product.frame)
+  if (product.material === 'poster') {
+    const framing = hasFrame(product) ? `cadre ${frame.posterLabel.toLowerCase()}` : 'sans cadre'
+    return `Poster ${size} · ${framing} · ${product.passe ? 'contour blanc' : 'sans contour'}`
+  }
+  const framing = hasFrame(product) ? `cadre ${frame.label.toLowerCase()}` : 'sans cadre'
+  return `Toile ${size} · bordure ${borderOf(product.border).label.toLowerCase()} · ${framing}`
 }
