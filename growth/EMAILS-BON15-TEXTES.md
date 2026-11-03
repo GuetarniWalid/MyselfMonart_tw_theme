@@ -323,7 +323,7 @@ Titre :
 La même image, deux matières.
 
 Sur toile.
-Toile polyester 285 g/m² tendue sur châssis en bois, 3 cm de profondeur. Encres haute pigmentation, couleurs garanties 75 ans sans altération. Elle arrive montée : vous déballez, vous accrochez.
+Toile polyester 285 g/m² tendue sur châssis en bois, 2 cm de profondeur. Encres haute pigmentation, couleurs garanties 75 ans sans altération. Elle arrive montée : vous déballez, vous accrochez.
 
 En affiche.
 Tirage photo haute définition sur vrai papier photo, imprimé bord à bord, sans bordure. Léger, à encadrer soi-même ou à composer en mur-galerie. Du 30 × 40 au 90 × 120 cm.
@@ -395,7 +395,7 @@ TIMING J+2 / J+3. La distribution des délais d'achat (BS&Co, 159 229 abonnés) 
 
 ANGLE DÉSIR, PAS REMISE — ET POURQUOI CE N'EST PAS UN CAPRICE DE TON. L'encart a déjà donné le code à l'écran, avec bouton copier et lien qui pré-applique la remise : les visiteurs les plus chauds ont déjà converti sur le site. E2 ne s'adresse qu'aux autres, pour qui la remise n'a pas suffi — donc répéter la remise ne servirait à rien. D'où l'ordre des blocs : l'œuvre, l'usage, la matière, la tranquillité, et le bon seulement en bloc 5.
 
-CE QUI EST DIT DANS LE BLOC MATIÈRE EST VÉRIFIÉ, PAS INVENTÉ. Toile polyester 285 g/m², encres haute pigmentation, couleurs garanties 75 ans, châssis bois 3 cm, livrée montée, emballage renforcé et réexpédition sans frais, 14 jours pour changer d'avis, Klarna 3 fois sans frais dès 50 €, conçue en France / fabriquée à la demande en Europe : tout cela est repris mot pour mot du contenu déjà publié sur les fiches (C:\Users\gueta\Documents\Mes_projets\tw_myselfmonart_shopify_theme\templates\product.painting.json). Les faits affiche (vrai papier photo, tirage HD, impression bord à bord sans bordure, du 30 × 40 au 90 × 120) viennent de C:\Users\gueta\Documents\Mes_projets\tw_myselfmonart_shopify_theme\templates\product.poster.json.
+CE QUI EST DIT DANS LE BLOC MATIÈRE EST VÉRIFIÉ, PAS INVENTÉ. Toile polyester 285 g/m², encres haute pigmentation, couleurs garanties 75 ans, châssis bois 2 cm, livrée montée, emballage renforcé et réexpédition sans frais, 14 jours pour changer d'avis, Klarna 3 fois sans frais dès 50 €, conçue en France / fabriquée à la demande en Europe : tout cela est repris mot pour mot du contenu déjà publié sur les fiches (C:\Users\gueta\Documents\Mes_projets\tw_myselfmonart_shopify_theme\templates\product.painting.json). Les faits affiche (vrai papier photo, tirage HD, impression bord à bord sans bordure, du 30 × 40 au 90 × 120) viennent de C:\Users\gueta\Documents\Mes_projets\tw_myselfmonart_shopify_theme\templates\product.poster.json.
 
 CE QUE JE N'AI PAS ÉCRIT, EXPRÈS. Aucun délai de livraison : les fiches en annoncent deux versions contradictoires (« 3 à 4 jours de fabrication puis 3 à 5 jours ouvrés » d'un côté, « 5 à 8 jours ouvrés + 2 à 4 jours » de l'autre). Tant que ce n'est pas tranché, un délai dans un e-mail promotionnel est une promesse opposable. Même prudence pour « livraison offerte », laissé en crochets. Les mentions SIREN / RCS / siège sont en crochets : elles sont obligatoires (art. R.123-237 code de commerce, applicable aux documents publicitaires et à toute correspondance) et je ne les invente pas.
 
