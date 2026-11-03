@@ -26,7 +26,7 @@ Fait dans le thème (03/11/2026) :
 - Collection Tableau Mer : phrase « 2 ou 4 cm » réécrite dans la description et ses traductions.
 - Produit « Tableau Agrumes - Fraîcheur éclatante » : phrase « 2 ou 4 cm » réécrite dans la description et ses traductions.
 
-Écart à connaître : `updateCollection` ne transmet pas les espaces insécables. Dans les descriptions françaises de Cuisine (7) et de Mer (3), elles sont devenues des espaces simples. Les traductions de Cuisine ont été recopiées à la main : leurs longueurs sont exactes, mais la même perte y est possible. L'effet visible se limite à une espace en moins à quelques endroits.
+Espaces insécables : le caractère se perd à l'envoi, mais écrit `&nbsp;`, Shopify le convertit en U+00A0. Les 7 de Cuisine et les 3 de Mer sont ainsi rétablies. Un doute reste sur les textes recopiés à la main (traductions de Cuisine et de Zen, guides Trustpilot, guide et FAQ Zèbre) : une insécable devenue espace simple ne s'y verrait pas, car la longueur ne change pas.
 
 Relu en lecture seule, aucun autre cas d'épaisseur :
 
@@ -39,9 +39,20 @@ Pas relus : les traductions des métachamps des collections autres que Zèbre, l
 
 Popups « Châssis 2 cm » et « Châssis 4 cm » : ils dépendent des options `chassis-de-2-cm` et `chassis-de-4-cm` (type `thickness`), que le thème ne lit pas. Ils ne s'affichent donc plus, et aucun produit n'a encore d'option châssis.
 
-À faire valider par Walid :
+Validé par Walid, écrit le 03/11/2026 puis relu :
 
-- Supprimer ces deux popups et leurs options, désormais inutiles (facultatif).
-- Hors épaisseur : `custom.guide` de tableau-rose, papier-peint-colore et papier-peint-fleur écrit la note Trustpilot en chiffres ; la description de tableau-zen contient une balise `<script src="chrome-extension://…">` ; dans celle de tableaux-nature-sauvage, le « r » de « mer » est un lien vers l'admin Shopify ; `translation.handle` de posters-affiches-africain a une adresse anglaise vide.
+- `custom.guide` de tableau-rose, papier-peint-colore et papier-peint-fleur (métachamps 64743004995931, 64743110213979, 64743133970779) : note Trustpilot remplacée par les jetons, en français et dans les 4 traductions. `collection-editorial-auto` et `collection-editorial`, les deux chemins d'affichage, passent bien par `trustpilot-tokens`.
+- Tableau Zen : balise `<script src="chrome-extension://…">` retirée de la description et des 4 traductions.
+- Tableaux nature sauvage : lien vers l'admin retiré de la description et des 4 traductions.
+- Tableau Cuisine : phrase reformulée, « Pour une touche chaleureuse qui accompagne vos cuisines en bois… », en français et dans les 4 traductions.
 
-Vérifié en ligne le 03/11 sur la fiche toile du Bonsaï : « 2 cm » en fr, en, de, es et nl, et plus aucun « 3 cm ».
+Laissés tels quels : les popups Châssis et `translation.handle` de posters-affiches-africain.
+
+Traduction anglaise de nature sauvage : le « r » isolé hérité de l'ancien lien (« dedicated to the sear ») est retiré, sur accord de Walid. L'allemand (« Meer »), l'espagnol (« mar ») et le néerlandais (« zee ») n'avaient pas cette faute.
+
+Vérifié en ligne le 03/11 :
+
+- fiche toile du Bonsaï : « 2 cm » en fr, en, de, es et nl, et plus aucun « 3 cm » ;
+- tableau-rose : « 4,2/5 sur 86 avis » affiché depuis le réglage, sans jeton brut (les collections de papier peint ne sont pas publiques, donc pas contrôlées en ligne) ;
+- tableau-zen et tableaux-nature-sauvage : plus de balise d'extension ni de lien vers l'admin ;
+- tableau-cuisine : nouvelle phrase dans la description.
