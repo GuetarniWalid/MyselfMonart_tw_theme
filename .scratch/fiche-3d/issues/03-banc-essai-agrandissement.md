@@ -4,12 +4,12 @@
 
 **Blocked by:** None (can start immediately)
 
-**Status:** en attente du choix de Walid
+**Status:** done
 
 - [x] Une page de comparaison en gros plan, chaque résultat côte à côte avec l'original simplement agrandi.
-- [ ] Pour chaque outil : qualité perçue, détails inventés repérés, durée et coût par image. Durée, coût et détails ajoutés sont mesurés ; la qualité perçue reste à juger par Walid sur la page.
-- [ ] Une mesure automatique de fidélité (l'image agrandie, réduite, comparée à l'original) et le seuil d'alerte retenu. La mesure est faite et le seuil proposé ; il sera retenu avec l'outil.
-- [ ] Le choix de Walid est écrit dans le ticket.
+- [x] Pour chaque outil : qualité perçue, détails inventés repérés, durée et coût par image.
+- [x] Une mesure automatique de fidélité (l'image agrandie, réduite, comparée à l'original) et le seuil d'alerte retenu.
+- [x] Le choix de Walid est écrit dans le ticket.
 
 ## Notes de réalisation (03/11/2026)
 
@@ -60,4 +60,10 @@
 
 ### Choix de Walid
 
-À écrire ici : l'outil retenu, ce qu'il a vu en gros plan, et le seuil retenu.
+**Topaz High Fidelity V2**, choisi par Walid le 04/11/2026 après comparaison des gros plans : « le meilleur est toujours Topaz High Fidelity V2 ». Son œil l'emporte sur les mesures, qui recommandaient Lanczos ou Recraft.
+
+- Coût : 0,05 $ par œuvre jusqu'à 24 MP de sortie (4 000 px sur le grand côté en 3:4 font 12 MP). Un seul agrandissement sert à la toile et au poster.
+- Durée : 15 à 19 s de calcul par image sur le banc.
+- À garder en tête : c'est l'outil qui ajoute le plus de détail sur un visage (×3,4 face à la vraie image). Le site peut donc montrer de près des détails absents de l'impression, faite avec les fichiers de Walid.
+
+Seuil d'alerte retenu pour le ticket 16, provisoire, à recaler sur plus d'œuvres : alerte si le SSIM de la pire zone passe sous 0,42, si le ΔE moyen dépasse 3,3, ou si le détail ajouté dépasse ×6,5. Pire valeur mesurée pour Topaz : 0,482, 2,73 et ×5,29.
