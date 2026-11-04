@@ -33,9 +33,15 @@ const WALL_GAP = 1 // cm laissés entre le tableau qui pivote et le mur
    éclaire (room.light, vecteur vers la lumière) : -1 si elle vient de la gauche. */
 const litSide = (room) => (room.light && room.light[0] < 0 ? -1 : 1)
 
-const EDGE = { yaw: 38 * DEG, pitch: -6 * DEG, fill: 0.74, side: 0.8, front: 0.6 }
-// Coin du cadre : caméra au-dessus du coin bas, côté lumière, 14 cm de champ.
-const CORNER = { yaw: 32 * DEG, pitch: 18 * DEG, field: 14, inset: 2 }
+/* Bordure : le tableau pivote, la caméra regarde entre la tranche et la façade (side et front,
+   cosinus des deux angles). share : part de la largeur de l'écran prise par la tranche, field :
+   plus petite hauteur visible, en cm. Sous un cadre, la tranche ne se voit pas : le plan montre
+   le tableau entier, qui remplit `fill` de l'écran. */
+const EDGE = { yaw: 38 * DEG, pitch: -6 * DEG, fill: 0.74, side: 0.8, front: 0.6, share: 0.4, field: 3.2 }
+/* Coin du cadre : caméra au-dessus du coin bas, côté lumière. field : petit côté du plan, en cm.
+   Le coin se pose au bord de l'écran, en gardant la part `margin` de la demi-largeur et de la
+   demi-hauteur : l'œuvre et le cadre remplissent le reste, quel que soit le format de la vue. */
+const CORNER = { yaw: 32 * DEG, pitch: 18 * DEG, field: 13, margin: 0.05 }
 // Contour blanc : de face, sur le coin bas gauche, 36 % de la hauteur du tirage à l'écran.
 const MARGIN = { inX: 0.13, inY: 0.11, field: 0.36 }
 // Poster sous verre, ou animations réduites : la caméra tourne autour du tableau resté au mur.
@@ -108,6 +114,8 @@ function fitDistance(w, h, aspect, fill) {
 const add = (a, b) => a.map((v, i) => v + b[i])
 const scale = (a, s) => a.map((v) => v * s)
 const unit = (a) => scale(a, 1 / Math.hypot(...a))
+const dot = (a, b) => a.reduce((s, v, i) => s + v * b[i], 0)
+const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]
 const lerp = (a, b, t) => a + (b - a) * t
 
 function rotate([x, y, z], pitch, yaw) {
@@ -171,6 +179,7 @@ const artFront = (p) => [p.x, p.y, p.z + p.artZ + p.depth]
 const DIMS_OFFSET = 6
 const DIMS_LABEL = 14 // hauteur à laisser au-dessus de la ligne pour son étiquette, dans la pièce
 const ROOM_HEADROOM = 7 // cm gardés au-dessus du tableau dans le cadrage de la pièce
+const ROOM_SHARE = 0.25 // part de la hauteur de la vue que le tableau prend au moins, dans la pièce
 const DIMS_UNDER = 8 // sous le tableau, la ligne descend d'autant pour laisser la place à l'étiquette
 
 function dimsOf(p, opacity, under = false) {
@@ -200,16 +209,19 @@ function frontShot(room, product, aspect) {
 }
 
 /* Recul dans la pièce : cadrage fixe (du sol jusqu'au-dessus du tableau), réduit si
-   l'écran est plus large que la photo, et décalé pour ne jamais sortir de la photo. */
+   l'écran est plus large que la photo, et décalé pour ne jamais sortir de la photo. Un petit
+   tableau resserre le cadrage sur le milieu de la pièce : il garde sa vraie échelle, mais on
+   ne voit plus qu'une partie du canapé. */
 function roomShot(room, product, aspect) {
   const painting = hungPainting(room, product)
   const { photo, view } = room
-  const height = Math.min(view.height, (photo.right - photo.left) / aspect)
+  const whole = Math.min(view.height, (photo.right - photo.left) / aspect)
+  const height = Math.min(whole, painting.outer.height / ROOM_SHARE)
   const halfWidth = (height * aspect) / 2
   const x = Math.min(Math.max(painting.x, photo.left + halfWidth), photo.right - halfWidth)
   // Sur un écran large, le cadrage rétrécit : il monte juste assez pour garder le tableau entier.
   const paintingTop = painting.y + painting.outer.height / 2
-  const bottom = Math.max(view.bottom, paintingTop + ROOM_HEADROOM - height)
+  const bottom = Math.max(view.bottom + (whole - height) / 2, paintingTop + ROOM_HEADROOM - height)
   const target = [x, bottom + height / 2, 0]
   const d = distanceFor(height)
   // Un grand tableau monte près du haut du cadrage : sa cote de largeur passe dessous.
@@ -217,14 +229,24 @@ function roomShot(room, product, aspect) {
   return shotOf('room', { position: add(target, [0, 0, d]), target, fovY: FOV_Y }, painting, 1, dimsUnder)
 }
 
-function cornerShot(room, product) {
+// Le coin du cadre au bord de l'écran, côté lumière et en bas, selon le format de la vue.
+function cornerShot(room, product, aspect) {
   const side = litSide(room)
   const painting = hungPainting(room, product)
-  const corner = paintingCorners(painting, 'outer').find(
-    (c) => c.side.x === side && c.side.y < 0 && c.side.z === 1,
-  )
-  const target = add(corner, [-side * CORNER.inset, CORNER.inset, 0])
-  const position = orbit(target, side * CORNER.yaw, CORNER.pitch, distanceFor(CORNER.field))
+  const direction = orbitDirection(side * CORNER.yaw, CORNER.pitch)
+  const right = unit(cross([0, 1, 0], direction))
+  const up = cross(direction, right)
+  const height = CORNER.field / Math.min(1, aspect)
+  const edge = paintingCorners(painting, 'outer').filter((c) => c.side.x === side && c.side.y < 0)
+  const across = edge.map((c) => dot(c, right))
+  const outermost = side < 0 ? Math.min(...across) : Math.max(...across)
+  const lowest = Math.min(...edge.map((c) => dot(c, up)))
+  const toEdge = (1 - CORNER.margin) / 2 // du milieu de l'écran au coin, en part de sa taille
+  const front = edge.find((c) => c.side.z === 1) // plus près de la caméra, c'est lui qui se voit
+  const towards = outermost - side * toEdge * height * aspect - dot(front, right)
+  const above = lowest + toEdge * height - dot(front, up)
+  const target = add(front, add(scale(right, towards), scale(up, above)))
+  const position = add(target, scale(direction, distanceFor(height)))
   return shotOf('corner', { position, target, fovY: FOV_Y }, painting)
 }
 
@@ -240,10 +262,11 @@ function marginShot(room, product) {
   return shotOf('margin', { position: add(target, [0, 0, d]), target, fovY: FOV_Y }, painting)
 }
 
+const orbitDirection = (yaw, pitch) => [Math.sin(yaw) * Math.cos(pitch), Math.sin(pitch), Math.cos(yaw) * Math.cos(pitch)]
+
 // Caméra placée en orbite autour d'un point : yaw vers la droite, pitch vers le haut.
 function orbit(target, yaw, pitch, distance) {
-  const dir = [Math.sin(yaw) * Math.cos(pitch), Math.sin(pitch), Math.cos(yaw) * Math.cos(pitch)]
-  return add(target, scale(dir, distance))
+  return add(target, scale(orbitDirection(yaw, pitch), distance))
 }
 
 function materialShot(room, product, aspect) {
@@ -267,7 +290,8 @@ function edgeShot(room, product, aspect) {
   const sideNormal = rotate([side, 0, 0], painting.pitch, painting.yaw)
   const frontNormal = rotate([0, 0, 1], painting.pitch, painting.yaw)
   const dir = unit(add(scale(sideNormal, EDGE.side), scale(frontNormal, EDGE.front)))
-  const d = fitDistance(painting.outer.width, painting.outer.height, aspect, EDGE.fill)
+  const close = distanceFor(Math.max(EDGE.field, (painting.depth * EDGE.side) / (EDGE.share * aspect)))
+  const d = hasFrame(product) ? fitDistance(painting.outer.width, painting.outer.height, aspect, EDGE.fill) : close
   return shotOf('edge', { position: add(target, scale(dir, d)), target, fovY: FOV_Y }, painting)
 }
 
@@ -361,6 +385,8 @@ const SHOTS = {
   curl: curlShot,
 }
 const SHOT_OF_GROUP = { border: 'edge', frame: 'corner', size: 'room', passe: 'margin', material: 'material' }
+
+const sameProduct = (a, b) => Object.keys(b).every((key) => a[key] === b[key])
 
 /* Les actes. exit : où un acte interrompu à l'avancement u s'arrête sur son chemin. La toile
    revient au mur par le plus court ; le papier redescend par où il est monté, ou finit de
@@ -474,9 +500,13 @@ export function createDirector({ room, product, reducedMotion = false }) {
     if (!moved) tilt.held = { yaw: 0, pitch: 0 }
   }
 
-  function isMoving(at) {
+  function isStaging(at) {
     const last = state.legs[state.legs.length - 1]
-    if (last && at < last.start + last.duration) return true
+    return !!last && at < last.start + last.duration
+  }
+
+  function isMoving(at) {
+    if (isStaging(at)) return true
     if (tilt.grabbed) return true
     return tilt.releasedAt !== null && at - tilt.releasedAt < SPRING_SETTLED_MS
   }
@@ -497,6 +527,9 @@ export function createDirector({ room, product, reducedMotion = false }) {
     state.legs.find((leg) => ACTS[leg.shot] && at >= leg.start + leg.join && at < leg.start + leg.duration)
 
   function choose(group, nextProduct, at) {
+    // Retoucher l'option en cours rejoue sa mise en scène, une fois la précédente finie.
+    const replay = group === state.group && sameProduct(state.product, nextProduct)
+    if (replay && isStaging(at)) return
     // Départ figé sans l'inclinaison : celle-ci continue à part, par-dessus la transition.
     const from = unwound(staged(at, state.aspect))
     const act = actOf(group, nextProduct)
@@ -519,7 +552,7 @@ export function createDirector({ room, product, reducedMotion = false }) {
     if (act) {
       legs.push({ shot: act, start, duration: ACTS[act].ms, join: JOIN_MS })
     } else if (!state.reducedMotion) {
-      if (group !== state.group && state.shot !== 'front' && shot !== 'front') {
+      if ((replay || group !== state.group) && state.shot !== 'front' && shot !== 'front') {
         legs.push({ shot: 'front', start, duration: RETURN_MS, join: RETURN_MS })
         start += RETURN_MS
       }

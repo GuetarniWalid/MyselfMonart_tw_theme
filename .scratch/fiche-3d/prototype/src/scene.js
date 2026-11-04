@@ -28,6 +28,7 @@ import { MARK_COUNT, marksLayout, paintMarks } from './marks.js'
 import { compareImages } from './fidelity.js'
 import { decodeImage, imageSize } from './images.js'
 import { PAPER_TILE_CM, RELIEF_SIZE, WEAVE_TILE_CM } from './textures.js'
+import { NEUTRAL_WALL, paintWall, wallOf } from './walls.js'
 
 const PASSE_RATIO = 0.08 // contour blanc : 8 % du petit côté, égal en cm sur les 4 côtés
 const SHADE = { ambient: 0.55, diffuse: 0.45, weave: 0.075, bump: 0.38 }
@@ -272,7 +273,13 @@ const WALL_FRAGMENT = /* glsl */ `
   uniform vec3 uWall;
   uniform float uSlope;
   uniform float uRefX;
+  uniform sampler2D uWallA; // murs d'essai : deux places, pour passer de l'un à l'autre en fondu
+  uniform sampler2D uWallB;
+  uniform vec2 uWallTiles; // largeur de leur tuile, en cm
+  uniform vec3 uWallMix; // parts du mur uni, et des murs d'essai
   uniform sampler2D uRoom;
+  uniform sampler2D uRoomWall; // où est le mur, sur la photo de la pièce
+  uniform float uRoomWallMix;
   uniform float uRoomMix;
   uniform vec4 uRoomRect;
   uniform float uFeather;
@@ -296,13 +303,23 @@ const WALL_FRAGMENT = /* glsl */ `
   }
 
   void main() {
-    vec3 col = uWall * (1.0 + uSlope * (vXY.x - uRefX));
+    vec2 onWall = vec2(vXY.x, -vXY.y);
+    vec3 surface = uWall * uWallMix.x;
+    if (uWallMix.y > 0.0) surface += texture2D(uWallA, onWall / uWallTiles.x).rgb * uWallMix.y;
+    if (uWallMix.z > 0.0) surface += texture2D(uWallB, onWall / uWallTiles.y).rgb * uWallMix.z;
+    vec3 col = surface * (1.0 + uSlope * (vXY.x - uRefX));
     if (uRoomMix > 0.0) {
       vec2 ruv = (vXY - uRoomRect.xy) / (uRoomRect.zw - uRoomRect.xy);
       // Bords de la photo lissés sur un pixel ; le haut se fond dans le mur.
       vec2 edge = clamp(min(ruv, 1.0 - ruv) / max(fwidth(ruv), vec2(1e-6)) + 0.5, 0.0, 1.0);
       float feather = 1.0 - smoothstep(uRoomRect.w - uFeather, uRoomRect.w, vXY.y);
-      col = mix(col, texture2D(uRoom, vec2(ruv.x, 1.0 - ruv.y)).rgb, uRoomMix * edge.x * edge.y * feather);
+      vec2 onPhoto = vec2(ruv.x, 1.0 - ruv.y);
+      vec3 photo = texture2D(uRoom, onPhoto).rgb;
+      // Le mur choisi remplace celui de la photo : il en garde la lumière et les ombres.
+      if (uWallMix.x < 1.0) {
+        photo = mix(photo, surface * photo / uWall, texture2D(uRoomWall, onPhoto).r * uRoomWallMix);
+      }
+      col = mix(col, photo, uRoomMix * edge.x * edge.y * feather);
     }
     // Pénombres : jamais plus fines qu'un pixel, même vues de loin.
     float hull = hullDistance(uHull, uHullN, vXY);
@@ -474,7 +491,13 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
     uWall: { value: new THREE.Color().setRGB(...room.wall.map((c) => c / 255), THREE.SRGBColorSpace) },
     uSlope: { value: room.wallSlope },
     uRefX: { value: room.hang.x },
+    uWallA: { value: null },
+    uWallB: { value: null },
+    uWallTiles: { value: new THREE.Vector2(1, 1) },
+    uWallMix: { value: new THREE.Vector3(1, 0, 0) },
     uRoom: { value: null },
+    uRoomWall: { value: null },
+    uRoomWallMix: { value: 0 },
     uRoomMix: { value: 0 },
     uRoomRect: { value: new THREE.Vector4(room.photo.left, room.photo.bottom, room.photo.right, room.photo.top) },
     uFeather: { value: 18 },
@@ -826,6 +849,50 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
   })
   // Pièce : chargée quand on touche aux tailles (la page l'annonce), sinon au premier recul.
   const roomPhoto = lazyTexture(room.image, (texture) => { wallUniforms.uRoom.value = texture })
+  // Masque du mur de la pièce : seuls les murs d'essai en ont besoin.
+  const roomWall = lazyTexture(room.wallMask, (texture) => {
+    texture.colorSpace = THREE.NoColorSpace
+    wallUniforms.uRoomWall.value = texture
+  })
+
+  /* Murs d'essai : une tuile peinte une fois, puis gardée. Deux places, pour qu'un mur en
+     remplace un autre en fondu ; wallFade va de la part de chacun à leur part d'arrivée. */
+  const wallTiles = new Map()
+  const wallSlots = [null, null]
+  const wallFade = { from: [1, 0, 0], to: [1, 0, 0], at: -Infinity }
+  const wallMix = (now) => {
+    const t = fadeSince(wallFade.at, now)
+    return wallFade.from.map((v, i) => v + (wallFade.to[i] - v) * t)
+  }
+
+  function wallTile(id) {
+    if (!wallTiles.has(id)) {
+      const canvas = document.createElement('canvas')
+      paintWall(canvas, wallOf(id))
+      const texture = imageTexture(canvas)
+      texture.wrapS = texture.wrapT = THREE.RepeatWrapping
+      renderer.initTexture(texture)
+      wallTiles.set(id, texture)
+    }
+    return wallTiles.get(id)
+  }
+
+  function useWall(id, now) {
+    roomWall.load()
+    const shares = wallMix(now)
+    wallFade.from = shares
+    wallFade.at = now
+    if (id === NEUTRAL_WALL) {
+      wallFade.to = [1, 0, 0]
+      return
+    }
+    const held = wallSlots.indexOf(id)
+    const slot = held >= 0 ? held : shares[1] <= shares[2] ? 0 : 1
+    wallSlots[slot] = id
+    wallUniforms[slot ? 'uWallB' : 'uWallA'].value = wallTile(id)
+    wallUniforms.uWallTiles.value.setComponent(slot, wallOf(id).tileCm)
+    wallFade.to = slot ? [0, 0, 1] : [0, 1, 0]
+  }
 
   let onNeedsRender = null
   let width = 1, height = 1
@@ -851,6 +918,8 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
     roomShown = view.room > 0
     if (roomShown) roomPhoto.load()
     wallUniforms.uRoomMix.value = view.room * roomPhoto.fade(now)
+    wallUniforms.uRoomWallMix.value = roomWall.fade(now)
+    wallUniforms.uWallMix.value.set(...wallMix(now))
     finishArtSwap(now)
     renderer.render(scene, camera)
   }
@@ -995,7 +1064,8 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
 
   // Seul ce qui se voit compte : un fondu hors du champ ne réclame aucune image.
   function isFading(now) {
-    return !!artSwap || (roomShown && roomPhoto.isFading(now)) || (frameMesh.visible && wood.isFading(now))
+    return !!artSwap || (roomShown && (roomPhoto.isFading(now) || roomWall.isFading(now))) ||
+      (frameMesh.visible && wood.isFading(now)) || now - wallFade.at < FADE_MS
   }
 
   return {
@@ -1007,6 +1077,8 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
     setPaperRelief,
     loadWood: wood.load,
     useArtImage,
+    useWall,
+    prepareWall: wallTile,
     prefetchRoom: roomPhoto.load,
     gpuName,
     density: () => renderer.getPixelRatio(),

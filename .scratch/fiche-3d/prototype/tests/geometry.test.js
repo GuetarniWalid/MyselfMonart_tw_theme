@@ -3,6 +3,20 @@ import assert from 'node:assert/strict'
 import { artBox, backLayout, backShell, convexHull, curlOutline, curlPoint, curlShape, curlSheet, frameProfile, frameRing, stapleRowToCorner, stapleRows } from '../src/geometry.js'
 import { FRAME_PROFILE } from '../src/catalog.js'
 
+test("vue de près, l'image ne saute pas entre l'arête arrondie et la tranche", () => {
+  for (const border of ['etiree', 'miroir', 'pliee']) {
+    const { position, uv } = artBox({ width: 30, height: 40, depth: 2, border })
+    const seen = new Map()
+    for (let i = 0; i < position.length / 3; i++) {
+      const place = [...position.slice(3 * i, 3 * i + 3)].map((v) => v.toFixed(4)).join()
+      const image = [uv[2 * i], uv[2 * i + 1]]
+      const other = seen.get(place)
+      if (other) assert.ok(Math.hypot(image[0] - other[0], image[1] - other[1]) < 1e-6, `${border} : l'image saute en ${place}`)
+      seen.set(place, image)
+    }
+  }
+})
+
 test('un rang part d’un point et rejoint le coin à égale distance, sans doubler l’agrafe du coin', () => {
   assert.deepEqual(stapleRowToCorner(6, 28), { first: 6, gap: 11, count: 2 })
   assert.deepEqual(stapleRowToCorner(-6, -28), { first: -17, gap: 11, count: 2 })

@@ -11,6 +11,7 @@ import { BORDERS, FRAMES, SIZES, borderTakesImage, canFrame, describe, fitChoice
 import { densityForCost, renderDensity } from './quality.js'
 import { decodeImage } from './images.js'
 import { startReliefs } from './reliefs.js'
+import { NEUTRAL_WALL, WALLS } from './walls.js'
 
 const THREE_URL = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js'
 const WOOD_IMAGE = 'assets/chene-clair.jpg'
@@ -24,6 +25,7 @@ const euro = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR'
 const decimal = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 1, minimumFractionDigits: 1 })
 
 const product = { material: 'toile', size: '30x40', border: 'blanche', frame: 'sans', passe: false }
+let wall = NEUTRAL_WALL // décor d'essai : ne change ni le produit ni son prix
 let reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches
 const director = createDirector({ room: ROOM, product: { ...product }, reducedMotion })
 
@@ -41,8 +43,19 @@ const GROUPS = [
   { name: 'border', legend: 'Bordure', only: 'toile', onApproach: loadDetail, options: BORDERS, swatch: true },
   { name: 'frame', legend: 'Cadre', onApproach: loadDetail, options: FRAMES, swatch: true },
   { name: 'passe', legend: 'Contour blanc', only: 'poster', onApproach: loadDetail, options: [{ id: 'sans', label: 'Sans' }, { id: 'avec', label: 'Avec' }] },
+  {
+    name: 'wall',
+    legend: 'Mur',
+    trial: 'Essai pour le ticket 11 : ce décor ne change ni le tableau ni son prix.',
+    onApproach: prepareWalls,
+    options: WALLS,
+    swatch: true,
+  },
 ]
-const valueOf = (group) => (group === 'passe' ? (product.passe ? 'avec' : 'sans') : product[group])
+const valueOf = (group) => {
+  if (group === 'wall') return wall
+  return group === 'passe' ? (product.passe ? 'avec' : 'sans') : product[group]
+}
 const frameWords = new Map() // libellés de cadre, qui changent entre toile et poster
 
 function swatch(option) {
@@ -63,6 +76,12 @@ function buildOptions() {
     if (g.only) fieldset.dataset.only = g.only
     const legend = document.createElement('legend')
     legend.textContent = g.legend
+    if (g.trial) {
+      const badge = document.createElement('span')
+      badge.className = 'badge'
+      badge.textContent = 'Essai'
+      legend.append(' ', badge)
+    }
     const chips = document.createElement('div')
     chips.className = 'chips'
     for (const option of g.options) {
@@ -80,6 +99,12 @@ function buildOptions() {
       chips.append(chip)
     }
     fieldset.append(legend, chips)
+    if (g.trial) {
+      const note = document.createElement('p')
+      note.className = 'note'
+      note.textContent = g.trial
+      fieldset.append(note)
+    }
     form.append(fieldset)
     if (g.onApproach) {
       fieldset.addEventListener('pointerdown', g.onApproach, { once: true })
@@ -87,6 +112,10 @@ function buildOptions() {
     }
   }
   form.addEventListener('change', (event) => choose(event.target.name, event.target.value))
+  // Retoucher l'option déjà choisie : pas de change, mais le visiteur veut revoir le mouvement.
+  form.addEventListener('click', ({ target: { type, name, value } }) => {
+    if (type === 'radio' && value === valueOf(name)) choose(name, value)
+  })
   form.addEventListener('submit', (event) => event.preventDefault())
 }
 
@@ -95,6 +124,12 @@ const pendingTasks = []
 const onceLive = (task) => (live ? task() : pendingTasks.push(task))
 function prefetchRoom() {
   onceLive(() => engine.prefetchRoom())
+}
+// Les tuiles se peignent une à une, au repos, dès qu'on s'approche du choix du mur.
+function prepareWalls() {
+  onceLive(() => {
+    for (const { id, paint } of WALLS) if (paint) whenIdle(() => engine.prepareWall(id))
+  })
 }
 
 /* Source complète de l'œuvre : chargée quand on s'approche d'un gros plan, jamais à
@@ -138,7 +173,22 @@ function updatePanel() {
   }
 }
 
+// Le mur se voit de face ou dans la pièce : un gros plan le cacherait.
+function chooseWall(value) {
+  if (value === wall) return
+  wall = value
+  onceLive(() => {
+    engine.useWall(value, performance.now())
+    requestRender()
+  })
+  if (director.view(performance.now(), aspect()).room < 0.5) choose('front')
+}
+
 function choose(group, value) {
+  if (group === 'wall') {
+    chooseWall(value)
+    return
+  }
   if (group === 'passe') product.passe = value === 'avec'
   else if (group in product) product[group] = value
   Object.assign(product, fitChoice(product))

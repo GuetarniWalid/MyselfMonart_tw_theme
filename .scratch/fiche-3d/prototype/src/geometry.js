@@ -88,14 +88,14 @@ export function artBox({ width: W, height: H, depth: D, border, paper = 0 }) {
     previous = ring
   }
 
-  // Tranches : de la fin de l'arrondi jusqu'au mur. s = profondeur sous la façade.
+  // Tranches : de la fin de l'arrondi jusqu'au mur. s = profondeur sous cet arrondi.
   const sideUV = (p, s) => {
     if (border === 'pliee') return artUV(p.x + p.nx * s, p.y + p.ny * s)
     if (border === 'miroir') return artUV(p.x - p.nx * s, p.y - p.ny * s)
     return artUV(p.x, p.y)
   }
   const sideRing = (z) =>
-    rim.map((p) => vertex([p.x, p.y, z], [p.nx, p.ny, 0], sideUV(p, D - z), sideArt ? 1 : 0))
+    rim.map((p) => vertex([p.x, p.y, z], [p.nx, p.ny, 0], sideUV(p, D - re - z), sideArt ? 1 : 0))
   strip(sideRing(D - re), sideRing(0))
 
   if (border === 'papier') {

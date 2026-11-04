@@ -14,6 +14,8 @@ const FLOOR_PX = 1216 // ligne du pied du mur, depuis le haut de l'image
 
 export const ROOM = {
   image: 'assets/piece-salon-canape.jpg',
+  // Où est le mur sur la photo (tools/mur-piece.js) : le mur choisi y remplace celui de la photo.
+  wallMask: 'assets/piece-salon-canape-mur.png',
   credit: {
     title: 'a couch with pillows and a potted plant',
     author: 'dada design',
