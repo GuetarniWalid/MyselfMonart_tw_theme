@@ -120,7 +120,7 @@ function swapDetail() {
   requestRender()
 }
 
-function updateTexts() {
+function updatePanel() {
   const text = describe(product)
   const price = euro.format(priceOf(product))
   $('summary').textContent = text
@@ -142,7 +142,7 @@ function choose(group, value) {
   if (group === 'passe') product.passe = value === 'avec'
   else if (group in product) product[group] = value
   Object.assign(product, fitChoice(product))
-  updateTexts()
+  updatePanel()
   director.choose(group, { ...product }, performance.now())
   run.active = true
   if (reducedMotion && engine) {
@@ -441,7 +441,7 @@ function fillCredit() {
 }
 
 buildOptions()
-updateTexts()
+updatePanel()
 fillCredit()
 
 /* Garde-fous de la vraie fiche (décision 5) : réseau lent ou économie de données, appareil

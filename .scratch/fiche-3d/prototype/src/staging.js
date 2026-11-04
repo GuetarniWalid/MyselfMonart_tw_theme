@@ -170,6 +170,7 @@ const artFront = (p) => [p.x, p.y, p.z + p.artZ + p.depth]
    seule leur opacité dit si on les montre. */
 const DIMS_OFFSET = 6
 const DIMS_LABEL = 14 // hauteur à laisser au-dessus de la ligne pour son étiquette, dans la pièce
+const ROOM_HEADROOM = 7 // cm gardés au-dessus du tableau dans le cadrage de la pièce
 const DIMS_UNDER = 8 // sous le tableau, la ligne descend d'autant pour laisser la place à l'étiquette
 
 function dimsOf(p, opacity, under = false) {
@@ -181,6 +182,7 @@ function dimsOf(p, opacity, under = false) {
   const y = under ? bottom - oy - DIMS_UNDER : top + oy
   return {
     opacity,
+    under,
     width: { a: [left, y, z], b: [right, y, z], text: `${p.width} cm` },
     height: { a: [right + ox, bottom, z], b: [right + ox, top, z], text: `${p.height} cm` },
   }
@@ -205,10 +207,13 @@ function roomShot(room, product, aspect) {
   const height = Math.min(view.height, (photo.right - photo.left) / aspect)
   const halfWidth = (height * aspect) / 2
   const x = Math.min(Math.max(painting.x, photo.left + halfWidth), photo.right - halfWidth)
-  const target = [x, view.bottom + height / 2, 0]
+  // Sur un écran large, le cadrage rétrécit : il monte juste assez pour garder le tableau entier.
+  const paintingTop = painting.y + painting.outer.height / 2
+  const bottom = Math.max(view.bottom, paintingTop + ROOM_HEADROOM - height)
+  const target = [x, bottom + height / 2, 0]
   const d = distanceFor(height)
   // Un grand tableau monte près du haut du cadrage : sa cote de largeur passe dessous.
-  const dimsUnder = painting.y + painting.outer.height / 2 + DIMS_OFFSET + DIMS_LABEL > target[1] + height / 2
+  const dimsUnder = paintingTop + DIMS_OFFSET + DIMS_LABEL > bottom + height
   return shotOf('room', { position: add(target, [0, 0, d]), target, fovY: FOV_Y }, painting, 1, dimsUnder)
 }
 
@@ -377,6 +382,11 @@ function progressOf(leg, at) {
 function mix(a, b, t) {
   const view = { ...blend(a, b, t), shot: t < 1 ? a.shot : b.shot }
   view.painting.z = Math.max(view.painting.z, -lowestCorner(view.painting))
+  // Une cote qui change de côté du tableau s'efface puis réapparaît : elle ne traverse pas l'œuvre.
+  if (a.dims.under !== b.dims.under) {
+    const side = t < 0.5 ? a : b
+    view.dims = { ...side.dims, opacity: side.dims.opacity * Math.max(0, 2 * Math.abs(1 - 2 * t) - 1) }
+  }
   return view
 }
 
@@ -426,9 +436,15 @@ export function createDirector({ room, product, reducedMotion = false }) {
     return SHOTS[state.shot](room, state.product, aspect)
   }
 
+  // Le produit à l'écran : celui d'un acte qui se finit, sinon le dernier choix.
+  function shownProduct(at) {
+    const finishing = state.legs.find((leg) => leg.product && at < leg.start + leg.duration)
+    return finishing ? finishing.product : state.product
+  }
+
   function view(at, aspect) {
     state.aspect = aspect
-    const base = { ...staged(at, aspect), product: state.product }
+    const base = { ...staged(at, aspect), product: shownProduct(at) }
     const k = 1 - base.room // la photo de la pièce ne s'incline pas
     const offset = tiltAt(at)
     if (k === 0 || (offset.yaw === 0 && offset.pitch === 0)) return base

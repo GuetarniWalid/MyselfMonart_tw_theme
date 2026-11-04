@@ -61,7 +61,7 @@ const POSTER_PRICE = {
 }
 
 // La boutique ne vend pas le 90 × 120 encadré, ni en toile ni en poster.
-export const canFrame = (size) => size !== '90x120'
+export const canFrame = (size) => 'avec' in POSTER_PRICE[size]
 
 // Un choix qui n'existe pas en boutique repasse sans cadre.
 export const fitChoice = (product) => (canFrame(product.size) ? product : { ...product, frame: 'sans' })

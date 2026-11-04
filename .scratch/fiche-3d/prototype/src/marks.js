@@ -21,12 +21,12 @@ export function marksLayout(W, H, textLength) {
   const bottom = -H / 2
   const codeX = W / 2 - middle + (code + gap + textHeight) / 2 - code
   const codeY = bottom + free + ABOVE_FREE
-  const top = free + ABOVE_FREE + Math.max(code, textLength)
+  const markedHeight = free + ABOVE_FREE + Math.max(code, textLength)
   return {
     logo: { x: -logo / 2, y: bottom + middle - logo / 2, width: logo, height: logo },
     code: { x: codeX, y: codeY, width: code, height: code },
     text: { x: codeX - gap - textHeight, y: codeY, width: textHeight, height: textLength },
-    markedCornerInset: Math.max(cornerStapleInset, top + STAPLE_CLEARANCE),
+    markedCornerInset: Math.max(cornerStapleInset, markedHeight + STAPLE_CLEARANCE),
   }
 }
 
@@ -89,14 +89,15 @@ function drawLogo(ctx, size) {
 }
 
 const CODE_BLUE = '#1b2c54'
-const ATLAS = { width: 1024, height: 256, logo: 256, codeCell: 11, textRow: 64, textPxPerCm: 160, margin: 16 }
+const ATLAS = { width: 1024, logo: 256, codeCell: 11, textRow: 64, textPxPerCm: 160, margin: 16 }
 
 /* Planche des marques sur fond blanc : le shader la multiplie au tissu, comme une encre. Le
    texte de chaque format y a sa ligne, pour que changer de taille ne redessine rien.
    Renvoie les zones de la planche (x, y, largeur, hauteur, de 0 à 1) et la longueur de chaque
    texte en cm. */
 export function paintMarks(canvas) {
-  const { width: W, height: H, logo, codeCell, textRow, textPxPerCm, margin } = ATLAS
+  const { width: W, logo, codeCell, textRow, textPxPerCm, margin } = ATLAS
+  const H = Math.max(logo, SIZES.length * textRow)
   canvas.width = W
   canvas.height = H
   const ctx = canvas.getContext('2d')

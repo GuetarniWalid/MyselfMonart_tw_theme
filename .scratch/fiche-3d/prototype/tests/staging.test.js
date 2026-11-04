@@ -274,6 +274,56 @@ for (const size of ALL_SIZES) {
   })
 }
 
+test('sur un écran large aussi, le 90 × 120 tient en entier dans la pièce', () => {
+  for (const aspect of [1.2, 1.5, 1.58, 1.8, 2.2]) {
+    const director = createDirector({ room: ROOM, product: TOILE })
+    director.choose('size', { ...TOILE, size: '90x120' }, 0)
+    const view = director.view(LATER, aspect)
+    const p = view.painting
+    const top = project(view.camera, aspect, [p.x, p.y + p.height / 2, 0])
+    assert.ok(top.y <= 1, `haut coupé à ${aspect} : ${top.y.toFixed(2)}`)
+    const bottom = project(view.camera, aspect, [p.x, p.y - p.height / 2, 0])
+    assert.ok(bottom.y >= -1, `bas coupé à ${aspect}`)
+    const left = project(view.camera, aspect, [ROOM.photo.left, 80, 0])
+    const right = project(view.camera, aspect, [ROOM.photo.right, 80, 0])
+    assert.ok(left.x <= -0.999 && right.x >= 0.999, 'la vue ne sort pas de la photo')
+  }
+})
+
+test('une cote qui change de côté du tableau ne traverse jamais l’œuvre', () => {
+  const crossings = (director, from, to) => {
+    const seen = []
+    for (let t = from; t <= to; t += 16) {
+      const view = director.view(t, PORTRAIT)
+      const { y, height } = view.painting
+      const line = view.dims.width.a[1]
+      if (view.dims.opacity > 0.01 && line > y - height / 2 && line < y + height / 2) seen.push(t)
+    }
+    return seen
+  }
+  const inRoom = createDirector({ room: ROOM, product: { ...TOILE, size: '75x100' } })
+  inRoom.choose('size', { ...TOILE, size: '75x100' }, 0)
+  inRoom.choose('size', { ...TOILE, size: '90x120' }, LATER)
+  assert.deepEqual(crossings(inRoom, LATER, 2 * LATER), [])
+  const back = createDirector({ room: ROOM, product: { ...TOILE, size: '75x100' } })
+  back.choose('size', { ...TOILE, size: '90x120' }, 0)
+  back.choose('size', { ...TOILE, size: '75x100' }, LATER)
+  assert.deepEqual(crossings(back, LATER, 2 * LATER), [])
+  const fromFront = createDirector({ room: ROOM, product: TOILE })
+  fromFront.choose('size', { ...TOILE, size: '90x120' }, 0)
+  assert.deepEqual(crossings(fromFront, 0, LATER), [])
+  assert.equal(fromFront.view(LATER, PORTRAIT).dims.opacity, 1)
+})
+
+test('un tour interrompu garde le produit qu’il montrait jusqu’à la fin : le format imprimé reste le bon', () => {
+  const director = chooseToile()
+  const at = 1800
+  director.choose('size', { ...POSTER, material: 'toile', size: '90x120' }, at)
+  assert.equal(director.view(at + 100, PORTRAIT).product.size, '30x40')
+  assert.equal(director.view(at + 100, PORTRAIT).painting.width, 30)
+  assert.equal(director.view(at + LATER, PORTRAIT).product.size, '90x120')
+})
+
 test('quand le tableau monte trop haut, la cote de largeur passe dessous, sans toucher au canapé', () => {
   const director = createDirector({ room: ROOM, product: TOILE })
   director.choose('size', { ...TOILE, size: '90x120' }, 0)

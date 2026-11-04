@@ -117,7 +117,7 @@
     transition: border-color 150ms ease, box-shadow 150ms ease;
   }
   .chip input:checked + span { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
-  .chip input:disabled { cursor: not-allowed; }
+  .chip:has(input:disabled), .chip input:disabled { cursor: not-allowed; }
   .chip input:disabled + span { opacity: 0.45; }
   .swatch { width: 14px; height: 14px; border-radius: 50%; border: 1px solid rgba(33, 21, 12, 0.25); flex: none; }
 
@@ -180,7 +180,7 @@
     <div>
       <p class="eyebrow">Prototype 3D · ticket 02</p>
       <h1 id="title">Bonsaï zen</h1>
-      <p class="summary" id="summary">Toile 30 × 40 cm · bordure blanche · sans cadre</p>
+      <p class="summary" id="summary" aria-live="polite">Toile 30 × 40 cm · bordure blanche · sans cadre</p>
       <p class="price" id="price">62,50 €</p>
       <button type="button" class="buy desk-buy" id="buyDesk">Ajouter au panier</button>
     </div>
