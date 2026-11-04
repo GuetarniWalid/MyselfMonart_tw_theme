@@ -107,10 +107,29 @@ export function artBox({ width: W, height: H, depth: D, border, paper = 0 }) {
   return pack({ position, normal, uv, fab, art, index })
 }
 
-/* Dos de la toile, relevé sur une 75 × 100 : 4 cm de toile repliée sur le châssis, puis
-   1,75 cm de pin, puis la toile tendue au fond. Mêmes baguettes pour tous les formats.
-   bar : largeur totale du châssis vu de dos. */
-export const BACK = { band: 4, bar: 5.75 }
+/* Dos de la toile, relevé sur une 75 × 100 : 4 cm de toile repliée sur le châssis, puis 2 cm
+   de pin, puis la toile tendue au fond. Mêmes baguettes pour tous les formats.
+   bar : largeur totale du châssis vu de dos. cornerStaples : distance au bord haut ou bas des
+   deux agrafes de chaque coin. */
+export const BACK = { band: 4, bar: 6, cornerStaples: 3 }
+const STAPLE_EVERY = 11
+
+// Rang d'agrafes régulier sur `span` cm centrés : premier, écart, nombre. `ends` : les bouts
+// du rang portent déjà une agrafe (celles du coin), sinon elles sont à une demi-maille du bout.
+function stapleRow(span, ends) {
+  const cells = Math.max(ends ? 2 : 1, Math.round(span / STAPLE_EVERY))
+  const gap = span / cells
+  return { first: -span / 2 + (ends ? gap : gap / 2), gap, count: ends ? cells - 1 : cells }
+}
+
+/* Agrafes le long des bandes, tous les 10 à 12 cm. Sur les bords verticaux, le rang s'accroche
+   aux agrafes des coins ; sur les bords horizontaux, il va d'une bande verticale à l'autre. */
+export function stapleRows(W, H) {
+  return {
+    upright: stapleRow(H - 2 * BACK.cornerStaples, true),
+    flat: stapleRow(W - 2 * BACK.band, false),
+  }
+}
 
 const CANVAS_SKIN = 0.12 // la toile tendue est juste derrière la façade
 

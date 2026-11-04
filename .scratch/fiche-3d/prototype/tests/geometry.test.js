@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { BACK, artBox, backShell, convexHull, curlOutline, curlPoint, curlShape, curlSheet, frameProfile, frameRing } from '../src/geometry.js'
+import { BACK, artBox, backShell, convexHull, curlOutline, curlPoint, curlShape, curlSheet, frameProfile, frameRing, stapleRows } from '../src/geometry.js'
 import { FRAME_PROFILE } from '../src/catalog.js'
 
 // Ce que l'arrondi retire au coin d'un rectangle 30 × 40, le long de la diagonale.
@@ -56,6 +56,29 @@ test('la toile laisse son dos ouvert au châssis ; la feuille de papier reste fe
 test('le dos a les mesures relevées : 4 cm de toile repliée, puis 1,5 à 2 cm de pin', () => {
   assert.equal(BACK.band, 4)
   assert.ok(BACK.bar - BACK.band >= 1.5 && BACK.bar - BACK.band <= 2)
+})
+
+const row = ({ first, gap, count }) => Array.from({ length: count }, (_, k) => first + k * gap)
+
+test('les agrafes sont tous les 10 à 12 cm, sur tous les formats, en comptant celles des coins', () => {
+  for (const [W, H] of [[30, 40], [75, 100], [40, 30], [60, 80], [90, 120]]) {
+    const { upright, flat } = stapleRows(W, H)
+    const corner = H / 2 - BACK.cornerStaples
+    const vertical = [-corner, ...row(upright), corner]
+    for (let i = 1; i < vertical.length; i++) {
+      const gap = vertical[i] - vertical[i - 1]
+      assert.ok(gap >= 10 && gap <= 12.5, `bord vertical du ${W} × ${H} : ${gap.toFixed(1)} cm`)
+    }
+    assert.ok(flat.gap >= 10 && flat.gap <= 12.5, `bord horizontal du ${W} × ${H} : ${flat.gap.toFixed(1)} cm`)
+  }
+})
+
+test('sur les bords horizontaux, les agrafes restent entre les deux bandes verticales', () => {
+  for (const [W, H] of [[30, 40], [75, 100]]) {
+    for (const at of row(stapleRows(W, H).flat)) {
+      assert.ok(Math.abs(at) + 1 < W / 2 - BACK.band, `agrafe sous la bande verticale : ${at} cm`)
+    }
+  }
 })
 
 test('le dos de la toile : un anneau au ras du mur, des parois de châssis, la toile tendue au fond', () => {

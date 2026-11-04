@@ -1,13 +1,13 @@
 /*
  * Dos de la toile, peint par le shader en cm, d'après les photos de Walid (une 75 × 100).
- * Rien à télécharger, et le même code sert tous les formats : les agrafes se répartissent
- * selon la taille du tableau, les largeurs viennent de BACK (geometry.js). Du bord vers le centre :
- * l'image (ou la couleur de tranche) qui revient de quelques mm, un fin trait noir, la toile
- * blanche repliée avec ses agrafes et ses plis de coin, le pin du châssis, et au fond la toile
- * brute, un peu translucide. Aucune marque de l'imprimeur.
+ * Rien à télécharger, et le même code sert tous les formats : largeurs et agrafes viennent de
+ * geometry.js (BACK, stapleRows). Du bord vers le centre : l'image (ou la couleur de tranche)
+ * qui revient de quelques mm, un fin trait noir, la toile blanche repliée et ses agrafes, le pin
+ * pâle du châssis, et au fond la toile brute, blanc cassé. Aux coins, la bande verticale passe
+ * sur la bande horizontale. Aucune marque de l'imprimeur.
  */
 
-export const BACK_COLORS = { band: '#f1efe9', raw: '#dcd7ce', pine: '#e4d0a6' }
+export const BACK_COLORS = { band: '#f1efe9', raw: '#e9e6df', pine: '#e6dccb' }
 
 export const BACK_VERTEX = /* glsl */ `
   attribute float part;
@@ -37,6 +37,9 @@ export const BACK_FRAGMENT = /* glsl */ `
   uniform vec2 uHalf;
   uniform float uBand;
   uniform float uBar;
+  uniform vec3 uStaplesUpright; // rang d'agrafes des bords verticaux : premier, écart, nombre
+  uniform vec3 uStaplesFlat; // et des bords horizontaux
+  uniform float uCornerStaples; // distance au bord haut ou bas des agrafes de coin
   uniform vec3 uLight;
   uniform vec3 uLightLocal;
   uniform float uAmbient;
@@ -46,10 +49,11 @@ export const BACK_FRAGMENT = /* glsl */ `
   varying vec3 vNormalW;
   varying float vPart;
 
-  const float STAPLE_EVERY = 11.0; // cm
   const float STAPLE_HALF = 1.0; // une agrafe fait 2 cm
   const float WIRE = 0.055; // demi-épaisseur du fil
-  const float FLAP_ROUND = 0.8;
+  const float SHOULDER = 1.3; // arrondi de la bande du dessus, près du coin
+  const vec2 POINT = vec2(1.15, 1.7); // tout petit rabat replié, à la pointe du coin
+  const float OAK_MEAN = 1.34; // somme moyenne des trois canaux de l'image de chêne
 
   float pixel; // taille d'un pixel à l'écran, en cm
 
@@ -69,15 +73,15 @@ export const BACK_FRAGMENT = /* glsl */ `
 
   // Pin : sa propre teinte, avec le fil du chêne des cadres. q.y suit le fil.
   vec3 pine(vec2 q) {
-    float fibre = dot(texture2D(uMap, q * uTile).rgb, vec3(1.0)) / 1.18;
-    return uPineColor * (1.0 + 1.5 * uPine * (fibre - 1.0));
+    float fibre = dot(texture2D(uMap, q * uTile).rgb, vec3(1.0)) / OAK_MEAN;
+    return uPineColor * (1.0 + uPine * (fibre - 1.0));
   }
 
   // q : position depuis le milieu de l'agrafe, x le long du fil. Le tissu se creuse autour,
   // le fil pose une ombre courte et brille sur son arête.
   vec3 staple(vec3 color, vec2 q, float half_) {
-    vec2 spread = q / vec2(half_ + 0.7, 0.55);
-    color *= 1.0 - 0.07 * exp(-dot(spread, spread));
+    vec2 spread = q / vec2(half_ + 0.8, 0.65);
+    color *= 1.0 - 0.09 * exp(-dot(spread, spread));
     float wire = length(vec2(max(abs(q.x) - half_, 0.0), q.y));
     color *= 1.0 - 0.4 * exp(-pow(wire / 0.13, 2.0));
     float crest = q.y / max(0.03, pixel * 0.7);
@@ -95,42 +99,46 @@ export const BACK_FRAGMENT = /* glsl */ `
     vec3 color = pine(upright ? p : p.yx);
     color *= 1.0 - 0.5 * inside(0.03 - abs(c.x - c.y));
 
-    // Pli de coin : a et b comptent depuis les deux bords ; la bande du bord b passe sur
-    // l'autre et finit par un rabat au bord arrondi. Le sens alterne d'un coin à l'autre.
-    bool swapped = p.x * p.y > 0.0;
-    float a = swapped ? c.y : c.x;
-    float b = swapped ? c.x : c.y;
-    float cut = uBand + 0.035 * sin(along * 1.1 + side * 2.3) + 0.02 * sin(along * 2.9 + side);
-    float slant = a - 1.3 * uBand * pow(clamp(b / uBand, 0.0, 1.0), 0.85);
-    vec2 rounded = max(vec2(FLAP_ROUND - slant, FLAP_ROUND - (cut - b)), 0.0);
-    float top = FLAP_ROUND - length(rounded); // > 0 dans la bande du dessus
-    float band = max(inside(top), inside(cut - a));
+    // Coin : la bande verticale passe par-dessus et court tout droit jusqu'au bord haut ou bas,
+    // son bord s'arrondit à l'approche du coin. La bande horizontale s'arrête contre elle.
+    float cutUpright = uBand + 0.03 * sin(p.y * 1.1 + sign(p.x) * 2.3) + 0.018 * sin(p.y * 2.9 + sign(p.x));
+    float cutFlat = uBand + 0.03 * sin(p.x * 1.1 + sign(p.y) * 1.2) + 0.018 * sin(p.x * 2.9 + sign(p.y) * 2.0);
+    vec2 rounded = max(vec2(SHOULDER - (cutUpright - c.x), SHOULDER - c.y), 0.0);
+    float over = SHOULDER - length(rounded); // > 0 dans la bande du dessus
+    float band = max(inside(over), inside(cutFlat - c.y));
 
-    // La bande pose une ombre étroite sur le pin.
-    color *= 1.0 - 0.3 * exp(-max(e - cut, 0.0) / 0.25);
+    // Les bandes posent une ombre étroite sur le pin.
+    color *= 1.0 - 0.22 * exp(-max(min(c.x - cutUpright, c.y - cutFlat), 0.0) / 0.25);
 
-    // Toile repliée : blanc mat, trame fine, ondulations douces.
-    float ripple = 0.6 * sin(along * 0.55 + e * 1.2 + side * 1.7) + 0.4 * sin(along * 1.35 - e * 2.1 + side * 0.7);
+    // Toile repliée : blanc mat, trame fine, ondulations à peine marquées.
+    float ripple = 0.6 * sin(p.y * 0.55 + p.x * 0.4) + 0.4 * sin(p.x * 1.35 - p.y * 0.9);
     float grain = texture2D(uWeave, p * uWeaveScale).r;
-    vec3 cloth = uBandColor * (1.0 + 0.016 * ripple) * (0.955 + 0.07 * grain);
-    cloth *= 1.0 - 0.3 * exp(-max(-top, 0.0) / 0.3) * (1.0 - inside(top)); // ombre du rabat
-    cloth *= 1.0 + 0.05 * exp(-max(top, 0.0) / 0.12) * inside(top); // sa tranche attrape la lumière
+    vec3 cloth = uBandColor * (1.0 + 0.007 * ripple) * (0.96 + 0.06 * grain);
 
-    // Agrafes le long de la bande, loin des coins, posées à la main.
-    float length_ = upright ? 2.0 * uHalf.y : 2.0 * uHalf.x;
-    float usable = length_ - 3.2 * uBand;
-    float count = max(1.0, floor(usable / STAPLE_EVERY + 0.5));
-    float gap = usable / count;
-    float k = clamp(floor(along / gap + count * 0.5), 0.0, count - 1.0);
+    // La bande du dessus fait une légère ombre sur l'autre, et son bord attrape la lumière.
+    float onTop = inside(over);
+    cloth *= 1.0 - 0.16 * exp(-max(-over, 0.0) / 0.4) * (1.0 - onTop);
+    cloth *= 1.0 + 0.03 * exp(-max(over, 0.0) / 0.1) * onTop;
+
+    // Tout au coin, un tout petit rabat replié fait une pointe.
+    float point = (1.0 - dot(c, 1.0 / POINT)) / length(1.0 / POINT); // > 0 dans le rabat
+    float onPoint = inside(point);
+    cloth *= 1.0 - 0.26 * exp(-max(-point, 0.0) / 0.2) * (1.0 - onPoint);
+    cloth *= 1.0 + 0.03 * onPoint;
+
+    // Agrafes le long de la bande, posées à la main.
+    vec3 row = upright ? uStaplesUpright : uStaplesFlat;
+    float k = clamp(floor((along - row.x) / row.y + 0.5), 0.0, row.z - 1.0);
     float jitter = hash(vec2(k, side));
-    float at = (k + 0.5 - count * 0.5) * gap + (jitter - 0.5) * 1.4;
+    float at = row.x + k * row.y + (jitter - 0.5) * 1.4;
     vec2 q = vec2(along - at, e - uBand * (0.52 + 0.1 * (hash(vec2(side, k)) - 0.5)));
     cloth = staple(cloth, turned(q, (jitter - 0.5) * 0.1), STAPLE_HALF);
 
-    // Deux agrafes rapprochées tiennent le rabat, parallèles entre elles.
-    vec2 flap = turned(vec2(a, b) - uBand * vec2(1.06, 0.6), 0.66);
-    cloth = staple(cloth, flap - vec2(0.0, 0.42), STAPLE_HALF * 0.8);
-    cloth = staple(cloth, flap + vec2(0.0, 0.42), STAPLE_HALF * 0.8);
+    // Deux agrafes côte à côte, parallèles au bord vertical, dans la bande qui passe dessus.
+    float corner = hash(sign(p) + 3.0) - 0.5;
+    vec2 pair = vec2(c.y - uCornerStaples, c.x);
+    cloth = staple(cloth, turned(pair - vec2(0.0, uBand * 0.36), corner * 0.06), STAPLE_HALF);
+    cloth = staple(cloth, turned(pair - vec2(corner * 0.5, uBand * 0.6), corner * 0.08), STAPLE_HALF);
 
     color = mix(color, cloth, band);
 
@@ -142,12 +150,11 @@ export const BACK_FRAGMENT = /* glsl */ `
     return mix(color, returned, inside(reach - e));
   }
 
-  // Toile brute : blanc cassé à gris chaud, trame très fine ; l'impression se devine à travers.
+  // Toile brute : blanc cassé, à peine plus grise que la bande, trame très fine, dégradé doux.
   vec3 rawColor(vec2 p) {
     float grain = texture2D(uWeave, p * uWeaveScale * 1.7).r;
-    vec2 uv = vec2(p.x / (2.0 * uHalf.x) + 0.5, 0.5 - p.y / (2.0 * uHalf.y));
-    float tone = dot(textureLod(uArt, uv, 4.5).rgb, vec3(0.2126, 0.7152, 0.0722));
-    return uRawColor * (0.95 + 0.08 * grain) * mix(1.0, 0.86 + 0.36 * sqrt(tone), 0.2);
+    float slope = 0.012 * p.y / uHalf.y - 0.01 * p.x / uHalf.x;
+    return uRawColor * (0.975 + 0.04 * grain) * (1.0 + slope);
   }
 
   void main() {
@@ -166,7 +173,7 @@ export const BACK_FRAGMENT = /* glsl */ `
       shelter = 0.72;
     } else {
       albedo = rawColor(p);
-      shelter = 1.0 - 0.3 * exp(-(min(c.x, c.y) - uBar) / 1.6);
+      shelter = 1.0 - 0.1 * exp(-(min(c.x, c.y) - uBar) / 2.0);
     }
 
     // Le creux ne reçoit la lumière que par l'ouverture du châssis : un point y voit-il la
@@ -176,7 +183,8 @@ export const BACK_FRAGMENT = /* glsl */ `
       float toOpening = max(-uLightLocal.z, 0.001);
       vec2 exit = p + uLightLocal.xy * (depth / toOpening);
       vec2 open = uHalf - uBar - abs(exit);
-      direct *= smoothstep(-0.25, 0.25, min(open.x, open.y)) * step(uLightLocal.z, 0.0);
+      float lit = smoothstep(-0.5, 0.5, min(open.x, open.y)) * step(uLightLocal.z, 0.0);
+      direct *= vPart > 1.5 ? mix(0.72, 1.0, lit) : lit; // la toile claire adoucit son ombre
     }
     float k = (uAmbient * shelter + uDiffuse * direct) * uNorm;
     gl_FragColor = vec4(albedo * min(k, 1.0), 1.0);

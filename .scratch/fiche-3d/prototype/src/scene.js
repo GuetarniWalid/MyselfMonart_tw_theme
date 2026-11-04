@@ -18,7 +18,7 @@
  */
 
 import {
-  BACK, CURL, artBox, backShell, convexHull, curlOutline, curlPoint, curlShape, curlSheet,
+  BACK, CURL, artBox, backShell, convexHull, curlOutline, curlPoint, curlShape, curlSheet, stapleRows,
   frameRing, frameProfile, frameOpening,
 } from './geometry.js'
 import { curlCorner, paintingCorners } from './staging.js'
@@ -584,6 +584,9 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
     uHalf: { value: new THREE.Vector2(1, 1) },
     uBand: { value: BACK.band },
     uBar: { value: BACK.bar },
+    uStaplesUpright: { value: new THREE.Vector3() },
+    uStaplesFlat: { value: new THREE.Vector3() },
+    uCornerStaples: { value: BACK.cornerStaples },
     uLightLocal: { value: new THREE.Vector3(...light) },
   }
   const backMesh = new THREE.Mesh(
@@ -695,6 +698,9 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
       setGeometry(artMesh, artBox({ width: p.width, height: p.height, depth: p.depth, border, paper: p.paper }), ['fab', 'art'])
       setGeometry(backMesh, backShell({ width: p.width, height: p.height, depth: p.depth }), ['part'])
       backUniforms.uHalf.value.set(p.width / 2, p.height / 2)
+      const { upright, flat } = stapleRows(p.width, p.height)
+      backUniforms.uStaplesUpright.value.set(upright.first, upright.gap, upright.count)
+      backUniforms.uStaplesFlat.value.set(flat.first, flat.gap, flat.count)
       artKey = key
     }
     artMesh.position.z = p.artZ
