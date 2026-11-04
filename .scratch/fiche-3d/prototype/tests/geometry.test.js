@@ -1,12 +1,12 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { artBox, backLayout, backShell, convexHull, curlOutline, curlPoint, curlShape, curlSheet, frameProfile, frameRing, stapleRowBetween, stapleRows } from '../src/geometry.js'
+import { artBox, backLayout, backShell, convexHull, curlOutline, curlPoint, curlShape, curlSheet, frameProfile, frameRing, stapleRowToCorner, stapleRows } from '../src/geometry.js'
 import { FRAME_PROFILE } from '../src/catalog.js'
 
-test('un rang entre deux points se répartit à égale distance, sans agrafe à ses deux bouts', () => {
-  assert.deepEqual(stapleRowBetween(0, 22), { first: 11, gap: 11, count: 1 })
-  assert.deepEqual(stapleRowBetween(-10, 35), { first: 1.25, gap: 11.25, count: 3 })
-  assert.equal(stapleRowBetween(10, 18).count, 0, 'pas la place d’une agrafe')
+test('un rang part d’un point et rejoint le coin à égale distance, sans doubler l’agrafe du coin', () => {
+  assert.deepEqual(stapleRowToCorner(6, 28), { first: 6, gap: 11, count: 2 })
+  assert.deepEqual(stapleRowToCorner(-6, -28), { first: -17, gap: 11, count: 2 })
+  assert.deepEqual(stapleRowToCorner(6, 14), { first: 6, gap: 8, count: 1 }, 'toujours l’agrafe de départ')
 })
 
 // Ce que l'arrondi retire au coin d'un rectangle 30 × 40, le long de la diagonale.

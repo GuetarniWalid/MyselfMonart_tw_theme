@@ -16,7 +16,7 @@
 
 ## Notes de réalisation
 
-- **Prototype** : https://claude.ai/artifact/MSMMJ5KFKrEuJ8xZSw69yz (Artifact privé, version 9). Code : `.scratch/fiche-3d/prototype/` ; mise en scène, géométrie, marques, catalogue et densité testés par `node --test` (108 tests). La page affiche ses propres mesures (poids, délai, images/s, couleurs) sur l'appareil qui l'ouvre.
+- **Prototype** : https://claude.ai/artifact/MSMMJ5KFKrEuJ8xZSw69yz (Artifact privé, version 10). Code : `.scratch/fiche-3d/prototype/` ; mise en scène, géométrie, marques, catalogue et densité testés par `node --test` (108 tests). La page affiche ses propres mesures (poids, délai, images/s, couleurs) sur l'appareil qui l'ouvre.
 - **Sources** : image à plat = media[1] de la toile 10807148708187 (PNG 1904 × 2544, publiée en JPEG 1536 × 2052). Pièce provisoire : « a couch with pillows and a potted plant », rendu photoréaliste de dada design sur Unsplash. Licence Unsplash vérifiée : usage commercial permis, sans attribution, interdit de revendre l'image telle quelle.
 - **Mesures** (portable Intel Iris Xe, navigateur intégré, format téléphone 375 × 455 px en densité 2, version 4) :
   - three.js r170 depuis cdnjs : 136 Ko transférés (692 Ko décompressés), en 134 ms. Code du prototype : 94 Ko non compressés.
@@ -57,12 +57,15 @@
   - Agrafes nettes : acier sombre, bord lissé sur un pixel mesuré en travers du fil, trait d'au moins 1,5 px, ombre de contact du côté opposé à la lumière. Écart de luminosité au tissu, sur 1 : de 0,15 à 0,26 avant, de 0,45 à 0,55 après, sur les 4 tailles, à l'arrêt comme en plein tour.
   - Reflet : de près, un filet clair et franc sur toute la longueur du fil. À l'échelle du tour, le fil est trop fin pour le porter (sous 38 px/cm en 30 × 40, 23 en 75 × 100) : un éclat de 2 à 3 px glisse le long du trait quand le tableau tourne.
   - Taille selon le format, comme le rabat : 1,2 cm sur 30 cm, 1,6 sur 60, 2 à partir de 75, interpolés entre deux. L'épaisseur suit, de 0,7 à 1,1 mm.
-  - Marques : logo au centre de la bande du haut ; au centre de la bande du bas, un second code avec le format à côté ; code du coin bas droit sans texte ; « PREMIUM » à la verticale sur la bande de droite, avec son petit trait en équerre (taille et couleur revues en version 9). Au centre des bandes du haut et du bas, une agrafe qui tomberait sur une marque s'efface.
+  - Marques : logo au centre de la bande du haut ; au centre de la bande du bas, un second code avec le format à côté ; code du coin bas droit sans texte ; « PREMIUM » à la verticale sur la bande de droite, avec son petit trait en équerre (taille, couleur et place revues ensuite). Au centre des bandes du haut et du bas, une agrafe qui tomberait sur une marque s'efface.
   - Le coin du poster reste identique au pixel à la version 7, sur les 4 tailles.
-- **Retour de Walid sur la version 8** (version 9) : « super ! », mais il ne voyait pas « PREMIUM », dont les lettres ne faisaient que 2 mm.
-  - Lettres à 40 % de la largeur de la bande : 1 cm en 30 × 40, 1,4 cm en 60 × 80, 1,6 cm à partir du 75 × 100. Seule marque dont la taille suit le format. Gras, gris presque noir (#1c1c1e), et lecture plus nette de la planche (biais de mipmap de −1, pour lui seul), sans quoi le mot virait au gris en 90 × 120. Trait en équerre de la hauteur des lettres.
-  - Place : centré aux deux tiers de la hauteur sur la bande de droite, sur tous les formats. Avec son équerre, il fait 8 à 13 cm, plus qu'un écart d'agrafes : il coupe donc le rang de droite en deux rangs réguliers, comme un coin. De ce côté, les agrafes se décalent de quelques cm et il y en a une ou deux de moins, à l'écart habituel de 10 à 12 cm. Aucune ne peut le toucher, quelle que soit sa longueur, qui dépend de la police du téléphone.
-  - Vérifié en 375 × 812, densité 2, sur les 4 tailles, de dos et pendant le tour : il se lit, y compris en 90 × 120, où ses lettres font 7 px. Le coin du poster reste identique au pixel.
+- **Retour de Walid sur la version 8** (version 9) : « super ! », mais il ne voyait pas « PREMIUM », dont les lettres ne faisaient que 2 mm. Passé à 40 % de la largeur de la bande, gras et presque noir, il se voyait, mais trop.
+- **Retour de Walid sur la version 9** (version 10) : trop gros, trop gras, trop noir, pas centré. « Ça doit se voir, mais pas trop. »
+  - Lettres à 28 % de la largeur de la bande : 0,7 cm en 30 × 40, 1 cm en 60 × 80, 1,1 cm à partir du 75 × 100. Seule marque dont la taille suit le format. Graisse normale, gris #6f6f6f multiplié au tissu, comme imprimé. Trait en équerre de la hauteur des lettres.
+  - Place : le mot et son équerre sont centrés exactement à mi-hauteur de la bande de droite.
+  - Agrafes de ce côté : le mot occupe une case du rang. Ses deux voisines sont à égale distance de lui, assez loin pour ne jamais le toucher, quelle que soit sa longueur, qui dépend de la police du téléphone. Le reste du rang s'espace régulièrement jusqu'aux coins, à 10 à 12 cm : le rang garde sa place en 30 × 40 et se décale d'environ 1 cm au plus en 60 × 80 et 75 × 100. En 90 × 120, l'agrafe du milieu tombait sur le mot : 10 agrafes de ce côté au lieu de 9.
+  - Netteté : la planche est lue en quatre points du pixel, pour ce mot seul. Ses mipmaps brouillaient les lettres de 5 px.
+  - Vérifié en 375 × 812, sur les 4 tailles, de dos et pendant le tour : discret et lisible, plus nettement en densité 3, celle de la plupart des téléphones (lettres de 8 px en 90 × 120, contre 5 px en densité 2). Le coin du poster reste identique au pixel.
 - **Caméra** (champ vertical 30°, transitions de 450 ms pour le retour de face et 900 ms vers le plan, courbe cubique) :
   - De face : tableau sur 72 % de la hauteur.
   - Tranche : tableau tourné de 38° vers la lumière, penché de 6°, écarté du mur juste assez (1 cm de marge).
@@ -98,7 +101,7 @@
   - Fluidité non mesurée sur un vrai téléphone. Sur ce portable, le volet du navigateur était masqué : le parcours complet a tourné sur une minuterie de 16 ms, pas sur le vrai rythme de l'écran.
   - Dans le plan du coin, l'œuvre reste grossie 2,6 à 3,8 fois : elle est nette, mais sans le grain d'une image plus fine.
   - Dos dessiné d'après une description, sans les photos sous les yeux. Sur le 75 × 100 à l'écran du téléphone, les agrafes ne font que 11 px.
-  - Sens de lecture de « PREMIUM » et forme de son trait en équerre : décrits, pas relevés sur la photo. À comparer au vrai tableau. À cette taille, le trait se lit presque comme un L à la suite du mot.
+  - Sens de lecture de « PREMIUM » et forme de son trait en équerre : décrits, pas relevés sur la photo. À comparer au vrai tableau. Le trait se lit presque comme un L à la suite du mot.
   - À l'écran du téléphone, pendant le tour, les agrafes ont la même épaisseur sur les 4 tailles, celle du trait minimal de 1,5 px : seule leur longueur dit le format.
   - Largeurs du dos hors 75 × 100 : estimées. Celles du 30 × 40 sont validées à l'œil par Walid, celles du 60 × 80 restent à vérifier.
   - Sur téléphone, pendant le tour, le format imprimé ne se lit pas (2 px de haut en 30 × 40) : il ne se lirait que sur un gros plan, qui n'existe pas dans la fiche. Le logo et le code se voient comme des touches de couleur.

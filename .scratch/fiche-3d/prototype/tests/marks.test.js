@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { MARKS, STAPLE_DRIFT, dataMatrixCells, marksLayout, sizeText } from '../src/marks.js'
-import { backLayout } from '../src/geometry.js'
+import { backLayout, stapleRows } from '../src/geometry.js'
 import { SIZES, dimensionsOf } from '../src/catalog.js'
 
 const FORMAT_LENGTH = 2 // cm : le plus long format, large
@@ -40,16 +40,14 @@ test('la ligne de texte donne le format choisi', () => {
   assert.equal(sizeText('30x40'), '30×40 cm')
 })
 
-test('quelle que soit la police du téléphone, aucune agrafe ne touche PREMIUM, qui reste à sa place', () => {
+test('quelle que soit la police du téléphone, aucune agrafe ne touche PREMIUM, centré à mi-hauteur', () => {
   for (const [W, H] of [[30, 40], [60, 80], [75, 100], [90, 120]]) {
-    const { cornerStapleInset, stapleLength } = backLayout(W, H)
-    const reach = stapleLength / 2 + STAPLE_DRIFT
+    const reach = backLayout(W, H).stapleLength / 2 + STAPLE_DRIFT
     for (const length of [5, 6.5, 8, 9.5, 12]) {
       const { premium, rightRows: { below, above } } = marksLayout(W, H, FORMAT_LENGTH, { ...PREMIUM_BOX, length })
-      assert.ok(Math.abs(premium.y + premium.height / 2 - H / 6) < 1e-9, 'aux deux tiers, comptés depuis le milieu')
+      assert.ok(Math.abs(premium.y + premium.height / 2) < 1e-9, 'le mot et son équerre sont centrés sur le milieu')
       for (const at of staplesOf(below)) assert.ok(at + reach < premium.y, `${W} × ${H}, mot de ${length} : agrafe à ${at.toFixed(1)} cm`)
       for (const at of staplesOf(above)) assert.ok(at - reach > premium.y + premium.height, `${W} × ${H}, mot de ${length} : agrafe à ${at.toFixed(1)} cm`)
-      assert.ok(premium.y + premium.height + stapleLength < H / 2 - cornerStapleInset, 'agrafe du coin du haut')
     }
   }
 })
@@ -84,20 +82,25 @@ for (const size of SIZES) {
     assert.equal(overlap(cornerCode, format), false)
   })
 
-  test(`${size} : PREMIUM longe la bande verticale de droite, en lettres de 40 % de la bande`, () => {
+  test(`${size} : PREMIUM longe la bande verticale de droite, en lettres de 28 % de la bande`, () => {
     const { W, H, marks: { premium }, back: { band } } = layoutOf(size)
-    assert.ok(Math.abs(premium.width - 0.4 * band * PREMIUM_BOX.height) < 1e-9, 'hauteur des lettres')
-    assert.ok(Math.abs(premium.height - 0.4 * band * PREMIUM_BOX.length) < 1e-9, 'longueur du mot et de son équerre')
+    assert.ok(Math.abs(premium.width - 0.28 * band * PREMIUM_BOX.height) < 1e-9, 'hauteur des lettres')
+    assert.ok(Math.abs(premium.height - 0.28 * band * PREMIUM_BOX.length) < 1e-9, 'longueur du mot et de son équerre')
     const fromRight = W / 2 - (premium.x + premium.width)
     assert.ok(fromRight >= MARKS.free && fromRight + premium.width <= band, `PREMIUM à ${fromRight} cm du bord`)
     const height = (premium.y + premium.height / 2 + H / 2) / H
-    assert.ok(Math.abs(height - 2 / 3) < 1e-9, `à ${(height * 100).toFixed(0)} % de la hauteur`)
+    assert.ok(Math.abs(height - 1 / 2) < 1e-9, `à ${(height * 100).toFixed(0)} % de la hauteur`)
   })
 
-  test(`${size} : sur la bande de droite, les agrafes gardent l'espacement des autres bords`, () => {
-    const { marks: { rightRows: { below, above } } } = layoutOf(size)
-    for (const row of [below, above]) if (row.count > 0) assert.ok(row.gap > 8 && row.gap < 14, `écart de ${row.gap.toFixed(1)} cm`)
-    assert.ok(below.count >= 1, 'au moins une agrafe sous le mot')
+  test(`${size} : sur la bande de droite, les agrafes restent régulières autour du mot`, () => {
+    const { W, H, marks: { rightRows: { below, above } } } = layoutOf(size)
+    for (const row of [below, above]) assert.ok(row.gap > 8 && row.gap < 14, `écart de ${row.gap.toFixed(1)} cm`)
+    const nearestBelow = below.first + (below.count - 1) * below.gap
+    assert.ok(Math.abs(above.first + nearestBelow) < 1e-9, 'ses deux voisines sont à la même distance du mot')
+    const wordCell = 2 * above.first
+    assert.ok(wordCell < 1.35 * Math.min(above.gap, below.gap), `case du mot de ${wordCell.toFixed(1)} cm`)
+    const staples = below.count + above.count
+    assert.ok(Math.abs(staples - stapleRows(W, H).upright.count) <= 1, `${staples} agrafes, à une près celles de l'autre côté`)
   })
 
   test(`${size} : aucune agrafe ne passe sur le code du coin`, () => {

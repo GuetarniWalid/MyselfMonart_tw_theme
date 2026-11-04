@@ -1,12 +1,12 @@
 /*
  * Marques imprimées au dos de la toile : le logo de MyselfMonArt au centre de la bande du haut ;
  * au centre de la bande du bas, un code carré et le format ; en bas à droite, sur la bande
- * verticale, un autre code ; plus haut sur cette bande, « PREMIUM ». Elles gardent la même
+ * verticale, un autre code ; à mi-hauteur de cette bande, « PREMIUM ». Elles gardent la même
  * taille réelle sur tous les formats, sauf PREMIUM, qui suit la largeur de la bande pour se lire
  * sur un téléphone. Tout est dessiné ici : rien à télécharger.
  */
 
-import { backLayout, stapleRowBetween } from './geometry.js'
+import { backLayout, stapleRowToCorner, stapleRows } from './geometry.js'
 import { SIZES } from './catalog.js'
 
 // Tailles réelles, en cm. free : distance au bord où finit le retour d'image.
@@ -15,15 +15,15 @@ const ABOVE_FREE = 0.15 // le code du coin se pose un peu au-dessus du retour d'
 const STAPLE_MARGIN = 0.3 // entre une marque et le bout d'une agrafe
 export const STAPLE_DRIFT = 0.7 // écart d'une agrafe posée à la main, de part et d'autre
 export const MARK_COUNT = 5 // logo, deux codes, format, PREMIUM
-const PREMIUM_HEIGHT = 2 / 3 // part de la hauteur du tableau, depuis le bas
-const PREMIUM_LETTER = 0.4 // hauteur de ses lettres, en part de la largeur de la bande
+const PREMIUM_LETTER = 0.28 // hauteur de ses lettres, en part de la largeur de la bande
 
 /* Boîtes des marques, en cm, telles qu'on les voit de dos : x vers la droite du regard, y vers
    le haut, origine au milieu du tableau. PREMIUM est tourné d'un quart de tour ; premiumBox donne
    sa boîte en hauteurs de lettre, mesurée sur la planche. rowClear : au centre des bandes du haut
    et du bas, distance en deçà de laquelle une agrafe s'efface. rightRows : sur la bande de droite,
-   le mot coupe le rang d'agrafes en deux, comme un coin ; il ne touche donc jamais une agrafe,
-   quelle que soit sa longueur, qui dépend de la police du téléphone. */
+   le mot occupe une case du rang d'agrafes. Ses deux voisines s'écartent autant qu'il le faut,
+   selon sa longueur, qui dépend de la police du téléphone, et le rang reste régulier jusqu'aux
+   coins. */
 export function marksLayout(W, H, formatLength, premiumBox) {
   const { band, cornerStapleInset, stapleLength } = backLayout(W, H)
   const { logo, code, textHeight, gap, free } = MARKS
@@ -34,19 +34,19 @@ export function marksLayout(W, H, formatLength, premiumBox) {
   const letter = PREMIUM_LETTER * band
   const premiumWidth = letter * premiumBox.height
   const premiumLength = letter * premiumBox.length
-  const premiumY = H * (PREMIUM_HEIGHT - 0.5) - premiumLength / 2
+  const wordNeighbour = Math.max(premiumLength / 2 + stapleReach, stapleRows(W, H).upright.gap / 2)
   const markedCornerInset = Math.max(cornerStapleInset, free + ABOVE_FREE + code + STAPLE_MARGIN + stapleLength / 2)
   return {
     logo: { x: -logo / 2, y: H / 2 - middle - logo / 2, width: logo, height: logo },
     cornerCode: { x: W / 2 - middle - code / 2, y: bottom + free + ABOVE_FREE, width: code, height: code },
     centerCode: { x: -rowWidth / 2, y: bottom + middle - code / 2, width: code, height: code },
     format: { x: gap + code - rowWidth / 2, y: bottom + middle - textHeight / 2, width: formatLength, height: textHeight },
-    premium: { x: W / 2 - middle - premiumWidth / 2, y: premiumY, width: premiumWidth, height: premiumLength },
+    premium: { x: W / 2 - middle - premiumWidth / 2, y: -premiumLength / 2, width: premiumWidth, height: premiumLength },
     markedCornerInset,
     rowClear: { top: logo / 2 + stapleReach, bottom: rowWidth / 2 + stapleReach },
     rightRows: {
-      below: stapleRowBetween(bottom + markedCornerInset, premiumY),
-      above: stapleRowBetween(premiumY + premiumLength, H / 2 - cornerStapleInset),
+      below: stapleRowToCorner(-wordNeighbour, bottom + markedCornerInset),
+      above: stapleRowToCorner(wordNeighbour, H / 2 - cornerStapleInset),
     },
   }
 }
@@ -117,7 +117,7 @@ function drawCode(ctx, x, cell, pattern) {
 }
 
 const CODE_BLUE = '#1b2c54'
-const PREMIUM_GREY = '#1c1c1e'
+const PREMIUM_GREY = '#6f6f6f'
 const PREMIUM_STROKE = 4 // trait en équerre, à la suite du mot, en px de la planche
 const PREMIUM_PAD = 4 // marge de sa zone, pour ne pas couper le bord lissé des lettres
 const ATLAS = { width: 1024, logo: 256, codeCell: 11, textRow: 64, textPxPerCm: 160, margin: 16 }
@@ -158,7 +158,7 @@ export function paintMarks(canvas) {
 
   // PREMIUM, sous les codes, suivi de son petit trait en équerre, de la hauteur des lettres.
   const premiumMiddle = code + margin + textRow / 2
-  ctx.font = fontOf(700)
+  ctx.font = fontOf(400)
   ctx.fillStyle = PREMIUM_GREY
   const word = ctx.measureText('PREMIUM')
   const letter = Math.ceil(word.actualBoundingBoxAscent + word.actualBoundingBoxDescent)

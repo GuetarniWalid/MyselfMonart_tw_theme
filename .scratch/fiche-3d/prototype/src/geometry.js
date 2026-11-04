@@ -145,11 +145,12 @@ function stapleRow(span, ends) {
 /* Agrafes le long des bandes, tous les 10 à 12 cm, un peu plus sur les petits formats. Sur les
    bords verticaux, le rang s'accroche aux agrafes des coins ; sur les bords horizontaux, il va
    d'une bande verticale à l'autre. */
-// Rang d'agrafes entre deux points d'un bord : à égale distance, sans agrafe à ses deux bouts.
-export function stapleRowBetween(from, to) {
-  const cells = Math.max(1, Math.round((to - from) / STAPLE_EVERY))
-  const gap = (to - from) / cells
-  return { first: from + gap, gap, count: cells - 1 }
+// Rang d'agrafes à égale distance, de `from`, qui en porte une, jusqu'au coin, qui a la sienne.
+export function stapleRowToCorner(from, corner) {
+  const span = Math.abs(corner - from)
+  const cells = Math.max(1, Math.round(span / STAPLE_EVERY))
+  const gap = span / cells
+  return { first: corner > from ? from : corner + gap, gap, count: cells }
 }
 
 export function stapleRows(W, H) {
