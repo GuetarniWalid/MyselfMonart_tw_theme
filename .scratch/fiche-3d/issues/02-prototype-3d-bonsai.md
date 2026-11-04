@@ -16,7 +16,7 @@
 
 ## Notes de réalisation
 
-- **Prototype** : https://claude.ai/artifact/MSMMJ5KFKrEuJ8xZSw69yz (Artifact privé, version 11). Code : `.scratch/fiche-3d/prototype/` ; mise en scène, géométrie, marques, catalogue et densité testés par `node --test` (141 tests). La page affiche ses propres mesures (poids, délai, images/s, couleurs) sur l'appareil qui l'ouvre.
+- **Prototype** : https://claude.ai/artifact/MSMMJ5KFKrEuJ8xZSw69yz (Artifact privé, version 12). Code : `.scratch/fiche-3d/prototype/` ; mise en scène, géométrie, marques, catalogue et densité testés par `node --test` (151 tests). La page affiche ses propres mesures (poids, délai, images/s, couleurs) sur l'appareil qui l'ouvre.
 - **Sources** : image à plat = media[1] de la toile 10807148708187 (PNG 1904 × 2544, publiée en JPEG 1536 × 2052). Pièce provisoire : « a couch with pillows and a potted plant », rendu photoréaliste de dada design sur Unsplash. Licence Unsplash vérifiée : usage commercial permis, sans attribution, interdit de revendre l'image telle quelle.
 - **Mesures** (portable Intel Iris Xe, navigateur intégré, format téléphone 375 × 455 px en densité 2, version 4) :
   - three.js r170 depuis cdnjs : 136 Ko transférés (692 Ko décompressés), en 134 ms. Code du prototype : 94 Ko non compressés.
@@ -68,11 +68,16 @@
   - Vérifié en 375 × 812, sur les 4 tailles, de dos et pendant le tour : discret et lisible, plus nettement en densité 3, celle de la plupart des téléphones (lettres de 8 px en 90 × 120, contre 5 px en densité 2). Le coin du poster reste identique au pixel.
 - **Retour de Walid sur la version 10** (version 11) : les animations lui plaisent. Cinq points.
   - Rejouer : retoucher une option déjà choisie rejoue sa mise en scène, à la souris, au doigt et au clavier (Espace, Entrée). Toile : le tour ; Poster : le coin ; les autres : retour de face, puis leur plan. Pendant la mise en scène, le toucher ne compte pas, pour qu'un double clic ne la coupe pas. Rien avec les animations réduites. « Dans la pièce » ne fait rien si on y est déjà.
-  - Bordure : gros plan où la tranche prend 30 à 35 % de la largeur, téléphone comme ordinateur, et 23 % sur un écran très large. Étirée, miroir et pliée se distinguent en 30 × 40. L'image sautait de 2,5 mm entre l'arête arrondie et la tranche : invisible de loin, corrigé.
-  - Cadre : le coin se pose au bord de l'écran selon le format de la vue. La façade couvre 76 % de l'écran du téléphone et 71 % d'un écran très large, sans compter le côté du cadre.
+  - Bordure : gros plan où la tranche prenait 30 à 35 % de la largeur, trop serré (revu en version 12). L'image sautait de 2,5 mm entre l'arête arrondie et la tranche : invisible de loin, corrigé.
+  - Cadre : le coin allait au bord de l'écran, selon le format de la vue. La façade couvrait 71 à 76 % de l'écran, trop (revu en version 12).
   - Pièce : un petit tableau resserre le cadrage sur le milieu de la pièce. Le 30 × 40 prend 25 % de la hauteur, devant une partie du canapé ; 60 × 80, 75 × 100 et 90 × 120 gardent le cadrage entier (32, 40 et 48 %). La taille reste animée : caméra et tableau bougent ensemble.
   - Mur d'essai (`src/walls.js`) : neutre, motif terre (inspiré des bogolans), carrelage (zelliges vert sauge de 10 cm), chambre d'enfant. Tuiles de 1024 px peintes par le calcul, au repos, dès qu'on s'approche du choix. Le mur change sur place, en fondu de 350 ms, sans toucher au plan en cours ni au prix.
   - Pièce avec mur d'essai : un masque dit où est le mur sur la photo (`assets/piece-salon-canape-mur.png`, 24 Ko, cuit par `tools/mur-piece.js` à partir de 7 points posés à la main). Le mur choisi y remplace celui de la photo, multiplié par sa lumière : ombres douces et assombrissement près du canapé et du sol sont gardés. Avec le mur neutre, rien ne change : coin du poster identique au pixel, sur les 4 tailles.
+- **Retour de Walid sur la version 11** (version 12) : « super » pour les animations, trois cadrages à placer entre les versions 10 et 11. « C'est un exercice difficile, il faut trouver le juste milieu. »
+  - Cadre : la caméra recule, le coin monte et revient vers le milieu, à 80 % de la hauteur de l'écran, entre les 62 % de la version 10 et les 97 % de la version 11. La façade couvre environ la moitié de l'écran, sur téléphone comme sur ordinateur.
+  - Sans cadre : son propre plan, plus de biais que le coin d'un cadre, pour lire le coin et la tranche de la toile nue. En 30 × 40 sur téléphone, on voit 66 % de l'œuvre et la tranche prend 4 % de la largeur ; en 75 × 100, 32 % et 3 %. Un poster sans cadre a le même plan.
+  - Bordure : le plan se tient à mi-chemin, en zoom, du tableau entier et du gros plan. L'arête passe à gauche de l'écran pour laisser la place à l'image : la tranche prend 11 % de la largeur en 30 × 40 sur téléphone, 7 % en 75 × 100, et on reconnaît l'arbre.
+  - Regardés sur téléphone et sur ordinateur (1440 × 900 et 1920 × 1080), avec chêne et noir, miroir, pliée et étirée, en 30 × 40 et en 75 × 100.
 - **Bilan du mur d'essai, pour le ticket 11** :
   - Pourquoi le gris gênait : le mur de face et celui de la photo ont la même couleur, le mobilier est le seul indice de la pièce. Dès que le mur a un motif, il reste le même sur tous les plans et on sent qu'on recule dans une vraie pièce.
   - Marche : l'œuvre reste lisible sur les trois murs, à toutes les tailles. Le motif, à la vraie échelle sur le plan du mur, suit la perspective des gros plans, du tour et du coin du poster sans glisser. Le mur de la pièce sonne juste, surtout le carrelage et la chambre d'enfant.
@@ -83,8 +88,9 @@
   - Coût : 1,7 ms par image au lieu de 1,3 ms en densité 2, sur ce portable. 5,6 Mo de mémoire graphique par tuile, 4 Mo pour le masque.
 - **Caméra** (champ vertical 30°, transitions de 450 ms pour le retour de face et 900 ms vers le plan, courbe cubique) :
   - De face : tableau sur 72 % de la hauteur.
-  - Tranche : tableau tourné de 38° vers la lumière, penché de 6°, écarté du mur juste assez (1 cm de marge). La caméra vise le milieu de l'arête avant, 40 % de la largeur pour la tranche, 3,2 cm de hauteur visible au moins. Sous un cadre, qui la cache, le plan montre le tableau entier, à 74 %.
-  - Coin du cadre : caméra à 32° de côté et 18° au-dessus. Petit côté du plan de 13 cm, coin à 2,5 % du bord de l'écran.
+  - Tranche : tableau tourné de 38° vers la lumière, penché de 6°, écarté du mur juste assez (1 cm de marge). Recul : moyenne géométrique entre le tableau entier à 74 % et le gros plan où la tranche prend 40 % de la largeur (3,2 cm de hauteur visible au moins). Arête au milieu de sa hauteur, à 45 % de la demi-largeur. Sous un cadre, qui cache la tranche, le plan montre le tableau entier, à 74 %.
+  - Coin du cadre : caméra à 32° de côté et 18° au-dessus. Petit côté du plan de 16 cm en 30 × 40, 20 cm en 75 × 100, coin à 60 % de la demi-largeur et de la demi-hauteur depuis le milieu.
+  - Sans cadre : caméra à 44° de côté et 10° au-dessus, coin à 62 % depuis le milieu. Recul : moyenne géométrique entre le tableau de face et le coin d'un cadre, à surface constante sur tous les écrans.
   - Contour blanc : de face sur le coin bas, 36 % de la hauteur du tirage.
   - Tour de la toile (3,6 s) : le tableau s'écarte de sa demi-largeur plus 1 cm, la caméra se décale de 14° côté lumière et 5° au-dessus, tableau sur 60 % de la hauteur. La tranche éclairée passe la première ; de dos, 50° en 1 s, à 50°/s contre 237°/s au plus vite.
   - Coin du poster (3 s) : en bas, à l'opposé de la lumière. Caméra à 20° de côté et 12° au-dessus, 66 % de la hauteur de la feuille. Le papier monte en 0,8 s, reste 0,4 s, retombe en 0,6 s avec un rebond de 5 %.
@@ -116,7 +122,7 @@
   - Fluidité non mesurée sur un vrai téléphone. Sur ce portable, le volet du navigateur était masqué : le parcours complet a tourné sur une minuterie de 16 ms, pas sur le vrai rythme de l'écran.
   - Dans le plan du coin, l'œuvre reste grossie 2,6 à 3,8 fois : elle est nette, mais sans le grain d'une image plus fine.
   - Dos dessiné d'après une description, sans les photos sous les yeux. Sur le 75 × 100 à l'écran du téléphone, les agrafes ne font que 11 px.
-  - Bordures : sur un aplat de l'image, miroir et pliée se ressemblent, comme sur le vrai produit. Le gros plan est en cm : en 90 × 120, il ne montre qu'une centaine de pixels de la source en hauteur, et l'image y est molle. Une visée sur une zone riche de l'image aiderait.
+  - Bordures : sur un aplat de l'image, miroir et pliée se ressemblent, comme sur le vrai produit. Une visée sur une zone riche de l'image aiderait.
   - Poster sous cadre : pas de coin soulevé, retoucher rejoue son plan de trois-quarts.
   - Sens de lecture de « PREMIUM » et forme de son trait en équerre : décrits, pas relevés sur la photo. À comparer au vrai tableau. Le trait se lit presque comme un L à la suite du mot.
   - À l'écran du téléphone, pendant le tour, les agrafes ont la même épaisseur sur les 4 tailles, celle du trait minimal de 1,5 px : seule leur longueur dit le format.

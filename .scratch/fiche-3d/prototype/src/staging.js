@@ -34,14 +34,22 @@ const WALL_GAP = 1 // cm laissés entre le tableau qui pivote et le mur
 const litSide = (room) => (room.light && room.light[0] < 0 ? -1 : 1)
 
 /* Bordure : le tableau pivote, la caméra regarde entre la tranche et la façade (side et front,
-   cosinus des deux angles). share : part de la largeur de l'écran prise par la tranche, field :
-   plus petite hauteur visible, en cm. Sous un cadre, la tranche ne se voit pas : le plan montre
-   le tableau entier, qui remplit `fill` de l'écran. */
-const EDGE = { yaw: 38 * DEG, pitch: -6 * DEG, fill: 0.74, side: 0.8, front: 0.6, share: 0.4, field: 3.2 }
-/* Coin du cadre : caméra au-dessus du coin bas, côté lumière. field : petit côté du plan, en cm.
-   Le coin se pose au bord de l'écran, en gardant la part `margin` de la demi-largeur et de la
-   demi-hauteur : l'œuvre et le cadre remplissent le reste, quel que soit le format de la vue. */
-const CORNER = { yaw: 32 * DEG, pitch: 18 * DEG, field: 13, margin: 0.05 }
+   cosinus des deux angles). Le plan se tient à mi-chemin, en zoom, du tableau entier (fill : part
+   de l'écran qu'il remplit) et du gros plan où la tranche prend la part `share` de la largeur
+   (field : plus petite hauteur visible, en cm). Assez près pour juger la tranche, assez loin pour
+   reconnaître l'œuvre. at : l'arête de la façade se pose à cette part de la demi-largeur, côté
+   tranche, pour laisser la place à l'image. Sous un cadre, la tranche ne se voit pas : le plan
+   montre le tableau entier. */
+const EDGE = { yaw: 38 * DEG, pitch: -6 * DEG, fill: 0.74, side: 0.8, front: 0.6, share: 0.4, field: 3.2, at: 0.45 }
+/* Coin du cadre : caméra au-dessus du coin bas, côté lumière. field : petit côté du plan pour un
+   30 × 40, en cm ; il s'élargit un peu avec le tableau, pour garder de l'œuvre. spot : place du
+   coin sur l'écran, en part de la demi-largeur et de la demi-hauteur depuis le milieu. L'œuvre et
+   le cadre remplissent le reste, quel que soit le format de la vue. */
+const CORNER = { yaw: 32 * DEG, pitch: 18 * DEG, field: 16, spot: 0.6 }
+/* Toile sans cadre : plus de biais et un peu moins de hauteur que le coin d'un cadre, pour lire la
+   tranche. Le plan se tient à mi-chemin, en zoom, du tableau de face et du coin du cadre, et garde
+   la même surface sur tous les écrans : un écran large montre moins de haut, mais pas de vide. */
+const BARE = { yaw: 44 * DEG, pitch: 10 * DEG, spot: 0.62 }
 // Contour blanc : de face, sur le coin bas gauche, 36 % de la hauteur du tirage à l'écran.
 const MARGIN = { inX: 0.13, inY: 0.11, field: 0.36 }
 // Poster sous verre, ou animations réduites : la caméra tourne autour du tableau resté au mur.
@@ -229,25 +237,35 @@ function roomShot(room, product, aspect) {
   return shotOf('room', { position: add(target, [0, 0, d]), target, fovY: FOV_Y }, painting, 1, dimsUnder)
 }
 
-// Le coin du cadre au bord de l'écran, côté lumière et en bas, selon le format de la vue.
-function cornerShot(room, product, aspect) {
+/* Caméra posée de biais sur le coin bas du tableau, côté lumière : le coin tombe à la place `spot`
+   de l'écran, quel que soit son format. height : hauteur du plan, en cm. */
+function cameraOnCorner(room, painting, aspect, { yaw, pitch, spot }, height) {
   const side = litSide(room)
-  const painting = hungPainting(room, product)
-  const direction = orbitDirection(side * CORNER.yaw, CORNER.pitch)
+  const direction = orbitDirection(side * yaw, pitch)
   const right = unit(cross([0, 1, 0], direction))
   const up = cross(direction, right)
-  const height = CORNER.field / Math.min(1, aspect)
   const edge = paintingCorners(painting, 'outer').filter((c) => c.side.x === side && c.side.y < 0)
   const across = edge.map((c) => dot(c, right))
   const outermost = side < 0 ? Math.min(...across) : Math.max(...across)
   const lowest = Math.min(...edge.map((c) => dot(c, up)))
-  const toEdge = (1 - CORNER.margin) / 2 // du milieu de l'écran au coin, en part de sa taille
   const front = edge.find((c) => c.side.z === 1) // plus près de la caméra, c'est lui qui se voit
-  const towards = outermost - side * toEdge * height * aspect - dot(front, right)
-  const above = lowest + toEdge * height - dot(front, up)
+  const towards = outermost - (side * spot * height * aspect) / 2 - dot(front, right)
+  const above = lowest + (spot * height) / 2 - dot(front, up)
   const target = add(front, add(scale(right, towards), scale(up, above)))
-  const position = add(target, scale(direction, distanceFor(height)))
-  return shotOf('corner', { position, target, fovY: FOV_Y }, painting)
+  return { position: add(target, scale(direction, distanceFor(height))), target, fovY: FOV_Y }
+}
+
+function cornerShot(room, product, aspect) {
+  const painting = hungPainting(room, product)
+  const field = CORNER.field * (painting.height / 40) ** 0.25
+  return shotOf('corner', cameraOnCorner(room, painting, aspect, CORNER, field / Math.min(1, aspect)), painting)
+}
+
+// Toile nue : son coin et sa tranche, avec une bonne part de l'œuvre.
+function bareShot(room, product, aspect) {
+  const painting = hungPainting(room, product)
+  const span = Math.sqrt((painting.height / FRONT_FILL) * CORNER.field)
+  return shotOf('bare', cameraOnCorner(room, painting, aspect, BARE, span / Math.sqrt(aspect)), painting)
 }
 
 function marginShot(room, product) {
@@ -286,12 +304,16 @@ function edgeShot(room, product, aspect) {
   // Visée : milieu de l'arête avant de l'œuvre, côté tranche. Regard entre la normale de
   // la tranche et celle de la façade, pour lire la tranche sans perdre l'image.
   const frontEdge = corners.filter((c) => c.side.x === side && c.side.z === 1)
-  const target = scale(add(frontEdge[0], frontEdge[1]), 0.5)
+  const middle = scale(add(frontEdge[0], frontEdge[1]), 0.5)
   const sideNormal = rotate([side, 0, 0], painting.pitch, painting.yaw)
   const frontNormal = rotate([0, 0, 1], painting.pitch, painting.yaw)
   const dir = unit(add(scale(sideNormal, EDGE.side), scale(frontNormal, EDGE.front)))
+  const whole = fitDistance(painting.outer.width, painting.outer.height, aspect, EDGE.fill)
+  if (hasFrame(product)) return shotOf('edge', { position: add(middle, scale(dir, whole)), target: middle, fovY: FOV_Y }, painting)
   const close = distanceFor(Math.max(EDGE.field, (painting.depth * EDGE.side) / (EDGE.share * aspect)))
-  const d = hasFrame(product) ? fitDistance(painting.outer.width, painting.outer.height, aspect, EDGE.fill) : close
+  const d = Math.sqrt(whole * close)
+  const right = unit(cross([0, 1, 0], dir))
+  const target = add(middle, scale(right, -side * EDGE.at * d * Math.tan(FOV_Y / 2) * aspect))
   return shotOf('edge', { position: add(target, scale(dir, d)), target, fovY: FOV_Y }, painting)
 }
 
@@ -378,6 +400,7 @@ const SHOTS = {
   front: frontShot,
   edge: edgeShot,
   corner: cornerShot,
+  bare: bareShot,
   room: roomShot,
   margin: marginShot,
   material: materialShot,
@@ -385,6 +408,9 @@ const SHOTS = {
   curl: curlShot,
 }
 const SHOT_OF_GROUP = { border: 'edge', frame: 'corner', size: 'room', passe: 'margin', material: 'material' }
+
+// Le plan d'une option : une toile sans cadre a le sien, il n'y a pas de coin de cadre à montrer.
+const planOf = (group, product) => (group === 'frame' && !hasFrame(product) ? 'bare' : SHOT_OF_GROUP[group] || 'front')
 
 const sameProduct = (a, b) => Object.keys(b).every((key) => a[key] === b[key])
 
@@ -534,7 +560,7 @@ export function createDirector({ room, product, reducedMotion = false }) {
     // Départ figé sans l'inclinaison : celle-ci continue à part, par-dessus la transition.
     const from = unwound(staged(at, state.aspect))
     const act = actOf(group, nextProduct)
-    const shot = act ? 'front' : SHOT_OF_GROUP[group] || 'front'
+    const shot = act ? 'front' : planOf(group, nextProduct)
     const legs = []
     let start = at
     const running = actUnderway(at)

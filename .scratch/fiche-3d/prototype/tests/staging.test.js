@@ -73,8 +73,8 @@ test('choisir une bordure fait pivoter le tableau pour montrer sa tranche éclai
 })
 
 for (const aspect of SCREENS) {
-  test(`écran ${aspect} : une bordure se juge de près, la tranche prend une grande part de l'écran`, () => {
-    for (const size of ['30x40', '90x120']) {
+  test(`écran ${aspect} : une bordure se juge sur sa tranche, sans perdre l'œuvre`, () => {
+    for (const size of ['30x40', '75x100', '90x120']) {
       const director = createDirector({ room: ROOM, product: { ...TOILE, size } })
       director.choose('border', { ...TOILE, size, border: 'miroir' }, 0)
       const view = director.view(LATER, aspect)
@@ -82,12 +82,33 @@ for (const aspect of SCREENS) {
       const edge = (z) => mid(corners.filter((c) => c.side.x < 0 && c.side.z === z))
       const front = project(view.camera, aspect, edge(1))
       const back = project(view.camera, aspect, edge(0))
-      const share = Math.abs(front.x - back.x) / 2
-      assert.ok(share >= (aspect < 1.5 ? 0.3 : 0.2), `${size} : la tranche ne prend que ${(share * 100).toFixed(0)} % de la largeur`)
+      // Sur un écran large, la tranche se compte par rapport à la hauteur, son petit côté.
+      const share = (Math.abs(front.x - back.x) / 2) * Math.max(1, aspect)
+      assert.ok(share >= 0.05 && share <= 0.2, `${size} : la tranche prend ${(share * 100).toFixed(0)} % du petit côté`)
       assert.ok(Math.abs(front.x) <= 1 && Math.abs(back.x) <= 1, 'la tranche est entière à l’écran')
       assert.ok(front.depth > 2 && back.depth > 2, 'la caméra reste devant le tableau')
+      assert.ok(front.x < -0.2, `arête à ${front.x.toFixed(2)} : la place va à l'image`)
+      const shown = artShown(view, aspect)
+      assert.ok(shown >= (size === '30x40' ? 0.3 : 0.1), `${size} : on ne voit que ${(shown * 100).toFixed(0)} % de l'œuvre`)
     }
   })
+}
+
+// Part de la façade de l'œuvre qui tombe dans l'écran.
+function artShown(view, aspect) {
+  const corners = paintingCorners(view.painting).filter((c) => c.side.z === 1)
+  const at = (x, y) => corners.find((c) => c.side.x === x && c.side.y === y)
+  const GRID = 30
+  let seen = 0
+  for (let i = 0; i <= GRID; i++) {
+    for (let j = 0; j <= GRID; j++) {
+      const u = i / GRID, v = j / GRID
+      const point = at(-1, -1).map((c, k) => c + (at(1, -1)[k] - c) * u + (at(-1, 1)[k] - c) * v)
+      const { x, y, depth } = project(view.camera, aspect, point)
+      if (depth > 0 && Math.abs(x) <= 1 && Math.abs(y) <= 1) seen++
+    }
+  }
+  return seen / (GRID + 1) ** 2
 }
 
 test('sous un cadre, la tranche ne se voit pas : la bordure se montre sur le tableau entier', () => {
@@ -149,15 +170,55 @@ for (const aspect of SCREENS) {
       director.choose('frame', product, 0)
       const view = director.view(LATER, aspect)
       const share = faceShare(view, aspect)
-      assert.ok(share >= 0.7, `la façade ne couvre que ${(share * 100).toFixed(0)} % de l'écran, avant la tranche du cadre`)
+      assert.ok(share >= 0.42 && share <= 0.62, `la façade couvre ${(share * 100).toFixed(0)} % de l'écran : ni trop, ni trop peu`)
       for (const corner of paintingCorners(view.painting, 'outer').filter((c) => c.side.x < 0 && c.side.y < 0)) {
         const { x, y } = project(view.camera, aspect, corner)
-        assert.ok(x > -1 && x < -0.5, `coin à ${x.toFixed(2)} : il doit être à gauche, à l'écran`)
-        assert.ok(y > -1 && y < -0.5, `coin à ${y.toFixed(2)} : il doit être en bas, à l'écran`)
+        assert.ok(x > -0.75 && x < -0.3, `coin à ${x.toFixed(2)} : il doit être à gauche, sans coller au bord`)
+        assert.ok(y > -0.75 && y < -0.4, `coin à ${y.toFixed(2)} : il doit être en bas, sans coller au bord`)
       }
     })
   }
 }
+
+for (const aspect of SCREENS) {
+  for (const size of ['30x40', '75x100']) {
+    test(`écran ${aspect}, ${size} : une toile sans cadre a son plan, coin et tranche visibles avec l'œuvre`, () => {
+      const director = createDirector({ room: ROOM, product: { ...TOILE, size, frame: 'noir' } })
+      director.choose('frame', { ...TOILE, size }, 0)
+      const view = director.view(LATER, aspect)
+      assert.equal(view.shot, 'bare')
+      assert.equal(view.painting.framed, 0)
+      const corners = paintingCorners(view.painting).filter((c) => c.side.x < 0 && c.side.y < 0)
+      for (const corner of corners) {
+        const { x, y } = project(view.camera, aspect, corner)
+        assert.ok(x > -0.8 && x < -0.3, `coin à ${x.toFixed(2)}`)
+        assert.ok(y > -0.8 && y < -0.4, `coin à ${y.toFixed(2)}`)
+      }
+      const tranche = corners.map((c) => project(view.camera, aspect, c).x)
+      const share = Math.abs(tranche[0] - tranche[1]) / 2
+      assert.ok(share >= 0.015, `la tranche ne prend que ${(share * 100).toFixed(1)} % de la largeur`)
+      const shown = artShown(view, aspect)
+      assert.ok(shown >= (size === '30x40' ? 0.45 : 0.15), `on ne voit que ${(shown * 100).toFixed(0)} % de l'œuvre`)
+      const covered = faceShare(view, aspect)
+      assert.ok(covered >= (aspect < 1.2 ? 0.4 : 0.3), `l'œuvre ne couvre que ${(covered * 100).toFixed(0)} % de l'écran`)
+    })
+  }
+}
+
+test('passer d’un cadre à sans cadre déplace la caméra en douceur pendant que le cadre s’efface', () => {
+  const framed = { ...TOILE, frame: 'chene' }
+  const director = createDirector({ room: ROOM, product: TOILE })
+  director.choose('frame', framed, 0)
+  director.choose('frame', TOILE, LATER)
+  let previous = director.view(LATER, PORTRAIT)
+  assert.equal(previous.shot, 'corner')
+  for (let t = LATER; t <= 2 * LATER; t += 8) {
+    const view = director.view(t, PORTRAIT)
+    assertSameView(previous, view, `à ${t - LATER} ms`, 4)
+    previous = view
+  }
+  assert.equal(previous.shot, 'bare')
+})
 
 // Deux vues prises à un pas de temps d'écart ne doivent pas différer de plus que ce
 // qu'un mouvement fluide parcourt pendant ce pas (cm pour la caméra, rad pour le tableau).
@@ -850,6 +911,12 @@ test('retoucher le cadre choisi rejoue son plan', () => {
   const director = createDirector({ room: ROOM, product: TOILE })
   director.choose('frame', product, 0)
   assertReplay(director, product, 'frame', 'corner')
+})
+
+test('retoucher Sans cadre rejoue son plan', () => {
+  const director = createDirector({ room: ROOM, product: { ...TOILE, frame: 'noir' } })
+  director.choose('frame', TOILE, 0)
+  assertReplay(director, TOILE, 'frame', 'bare')
 })
 
 test('retoucher la taille choisie rejoue le recul dans la pièce', () => {
