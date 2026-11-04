@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { createDirector, paintingCorners } from '../src/staging.js'
+import { createDirector, curlCorner, paintingCorners } from '../src/staging.js'
 import { ROOM } from '../src/room.js' // la pièce provisoire réelle (lumière venant de la gauche)
 
 const TOILE = { material: 'toile', size: '30x40', border: 'blanche', frame: 'sans', passe: false }
@@ -196,15 +196,17 @@ test('choisir le contour blanc zoome de face sur la marge du poster', () => {
   assert.ok(visibleHeight <= 0.45 * p.height, `zoom trop large : ${visibleHeight.toFixed(1)} cm`)
 })
 
-test("passer de la toile au poster montre de trois-quarts le tableau qui s'affine", () => {
-  const director = createDirector({ room: ROOM, product: TOILE })
-  director.choose('material', { ...TOILE, material: 'poster' }, 0)
+test("passer au poster avec un cadre montre de trois-quarts le tableau qui s'affine : pas de coin soulevé sous verre", () => {
+  const framed = { ...TOILE, frame: 'chene' }
+  const director = createDirector({ room: ROOM, product: framed })
+  director.choose('material', { ...framed, material: 'poster' }, 0)
 
   let previous = director.view(0, PORTRAIT).painting.depth
   assert.equal(previous, 2)
   let sawBetween = false
   for (let t = 0; t <= LATER; t += 20) {
-    const depth = director.view(t, PORTRAIT).painting.depth
+    const { depth, curl } = director.view(t, PORTRAIT).painting
+    assert.equal(curl, 0, 'sous verre, le papier ne se soulève pas')
     assert.ok(depth <= previous + 1e-9, 'l’épaisseur ne fait que diminuer')
     if (depth > 0.1 && depth < 1.9) sawBetween = true
     previous = depth
@@ -218,6 +220,202 @@ test("passer de la toile au poster montre de trois-quarts le tableau qui s'affin
   const lit = mid(paintingCorners(view.painting).filter((c) => c.side.x < 0))
   const toCamera = unit(sub(view.camera.position, lit))
   assert.ok(toCamera[0] <= -0.3, 'la caméra voit le tableau de profil, côté fenêtre')
+})
+
+const TURN_END = 3600 // ms : fin du tour de la toile, avec une marge dans les tests
+const FULL_TURN = 2 * Math.PI
+const wrapped = (a) => Math.atan2(Math.sin(a), Math.cos(a))
+
+function choosePoster(product = TOILE) {
+  const director = createDirector({ room: ROOM, product })
+  director.choose('material', { ...product, material: 'poster' }, 0)
+  return director
+}
+
+function chooseToile(product = POSTER) {
+  const director = createDirector({ room: ROOM, product })
+  director.choose('material', { ...product, material: 'toile' }, 0)
+  return director
+}
+
+test('choisir la toile fait quitter le mur au tableau, lui fait faire un tour complet et le repose de face', () => {
+  const director = chooseToile()
+  let previous = 0
+  let lowest = Infinity
+  for (let t = 0; t <= LATER; t += 16) {
+    const { painting } = director.view(t, PORTRAIT)
+    const turned = Math.abs(painting.yaw)
+    if (t < TURN_END) assert.ok(turned >= previous - 1e-9, `le tour recule à ${t} ms`)
+    assert.ok(turned - previous < 0.09, `le tour saute à ${t} ms : ${(turned - previous).toFixed(3)} rad`)
+    if (t < TURN_END) previous = turned
+    for (const c of paintingCorners(painting, 'outer')) lowest = Math.min(lowest, c[2])
+  }
+  assert.ok(Math.abs(previous - FULL_TURN) < 0.05, `tour incomplet : ${previous.toFixed(2)} rad`)
+  assert.ok(lowest >= -1e-6, `le tableau traverse le mur : z = ${lowest.toFixed(2)}`)
+
+  const rest = director.view(LATER, PORTRAIT)
+  assert.equal(rest.shot, 'front')
+  assert.equal(rest.painting.yaw, 0)
+  assert.equal(rest.painting.z, 0)
+  assert.equal(rest.painting.depth, 2)
+  assert.equal(rest.painting.paper, 0)
+  assert.equal(director.isMoving(LATER), false)
+})
+
+test('le tableau quitte le mur juste assez pour tourner', () => {
+  const director = chooseToile()
+  const farthest = Math.max(...Array.from({ length: 300 }, (_, i) => director.view(i * 16, PORTRAIT).painting.z))
+  assert.ok(farthest >= 15, 'il faut au moins la demi-largeur pour tourner')
+  assert.ok(farthest <= 18, `trop loin du mur : ${farthest.toFixed(1)} cm`)
+})
+
+test('de dos, le tableau ralentit pour montrer le châssis', () => {
+  const director = chooseToile()
+  let ofBack = 0
+  let moving = 0
+  for (let t = 0; t <= TURN_END; t += 4) {
+    const turned = Math.abs(director.view(t, PORTRAIT).painting.yaw)
+    if (turned > 0.02 && turned < FULL_TURN - 0.02) moving += 4
+    if (Math.abs(turned - Math.PI) < (25 * Math.PI) / 180) ofBack += 4
+  }
+  // 50° sur 360° au rythme moyen prendraient 14 % du temps de rotation.
+  assert.ok(ofBack >= 900, `dos trop vite passé : ${ofBack} ms`)
+  assert.ok(ofBack / moving >= 0.3, `pas de ralentissement : ${Math.round((ofBack / moving) * 100)} %`)
+})
+
+test('pendant le tour, le tableau reste entier dans le cadre, tranches comprises', () => {
+  const director = chooseToile({ ...POSTER, size: '75x100' })
+  for (let t = 0; t <= TURN_END; t += 32) {
+    const view = director.view(t, PORTRAIT)
+    for (const c of paintingCorners(view.painting, 'outer')) {
+      const { x, y } = project(view.camera, PORTRAIT, c)
+      assert.ok(Math.abs(x) <= 1 && Math.abs(y) <= 1, `coin hors de l'écran à ${t} ms : ${x.toFixed(2)}, ${y.toFixed(2)}`)
+    }
+  }
+})
+
+test('avec une caisse américaine, le tour se fait aussi, cadre compris', () => {
+  const director = chooseToile({ ...POSTER, frame: 'noir' })
+  const back = director.view(1800, PORTRAIT).painting
+  assert.ok(Math.abs(Math.abs(back.yaw) - Math.PI) < 0.5, `pas de dos à mi-parcours : ${back.yaw.toFixed(2)} rad`)
+  assert.equal(back.framed, 1)
+  for (let t = 0; t <= LATER; t += 16) {
+    for (const c of paintingCorners(director.view(t, PORTRAIT).painting, 'outer')) assert.ok(c[2] >= -1e-6)
+  }
+})
+
+test('choisir autre chose pendant le tour repart de la vue en cours, sans saut ni traversée du mur', () => {
+  for (const at of [500, 1200, 1800, 2400, 3000]) {
+    const director = chooseToile()
+    const before = director.view(at - 1, PORTRAIT)
+    const next = { ...POSTER, material: 'toile', frame: 'chene' }
+    director.choose('frame', next, at)
+    const after = director.view(at + 1, PORTRAIT)
+    assert.ok(Math.abs(wrapped(before.painting.yaw - after.painting.yaw)) < 0.05, `saut d'angle à ${at} ms`)
+    assert.ok(Math.hypot(...sub(before.camera.position, after.camera.position)) < 1, `saut de caméra à ${at} ms`)
+    for (let t = at; t <= at + LATER; t += 16) {
+      const view = director.view(t, PORTRAIT)
+      for (const c of paintingCorners(view.painting, 'outer')) {
+        assert.ok(c[2] >= -1e-6, `traversée du mur ${t - at} ms après le clic de ${at} ms`)
+      }
+    }
+    const rest = director.view(at + LATER, PORTRAIT)
+    assert.equal(rest.shot, 'corner')
+    assert.equal(rest.painting.yaw, 0)
+    assert.equal(rest.painting.z, 0)
+  }
+})
+
+test('interrompu après le demi-tour, le tableau finit de tourner au lieu de revenir en arrière', () => {
+  const director = chooseToile()
+  const at = 2400
+  const before = director.view(at, PORTRAIT).painting.yaw
+  assert.ok(Math.abs(before) > Math.PI)
+  director.choose('frame', { ...POSTER, material: 'toile', frame: 'chene' }, at)
+  const soon = director.view(at + 200, PORTRAIT).painting.yaw
+  assert.ok(Math.abs(wrapped(soon)) < Math.abs(wrapped(before)), 'il va vers la face par le plus court')
+})
+
+test('choisir le poster pendant le tour ramène d’abord le tableau de face, sans le fouetter, puis soulève le coin', () => {
+  const director = chooseToile()
+  const at = 1800
+  director.choose('material', { ...POSTER }, at)
+  let previous = wrapped(director.view(at, PORTRAIT).painting.yaw)
+  let most = 0
+  for (let t = at; t <= at + LATER; t += 16) {
+    const { yaw, curl, depth, z } = director.view(t, PORTRAIT).painting
+    const turned = wrapped(yaw)
+    assert.ok(Math.abs(wrapped(turned - previous)) < 0.13, `le tableau fouette à ${t - at} ms`)
+    previous = turned
+    most = Math.max(most, curl)
+    if (curl > 0.001) {
+      assert.ok(Math.abs(turned) < 1e-6 && z < 1e-6, 'le coin se soulève sur un poster à plat, au mur')
+      assert.ok(depth <= 0.051, 'le coin se soulève sur une feuille fine')
+    }
+  }
+  assert.equal(most, 1)
+})
+
+test('avec les animations réduites, choisir la toile ou le poster ne fait ni tour ni coin soulevé', () => {
+  const toile = createDirector({ room: ROOM, product: POSTER, reducedMotion: true })
+  toile.choose('material', { ...POSTER, material: 'toile' }, 0)
+  assert.equal(toile.isMoving(1), false)
+  assert.equal(toile.view(1, PORTRAIT).painting.yaw, 0)
+
+  const poster = createDirector({ room: ROOM, product: TOILE, reducedMotion: true })
+  poster.choose('material', { ...TOILE, material: 'poster' }, 0)
+  assert.equal(poster.isMoving(1), false)
+  assert.equal(poster.view(1, PORTRAIT).painting.curl, 0)
+})
+
+test('choisir le poster sans cadre soulève un coin du papier, qui s’enroule puis retombe, et revient de face', () => {
+  const director = choosePoster()
+  let most = 0
+  let thinBeforeLift = true
+  const curls = []
+  for (let t = 0; t <= LATER; t += 16) {
+    const { curl, depth } = director.view(t, PORTRAIT).painting
+    curls.push(curl)
+    most = Math.max(most, curl)
+    if (curl > 0.01 && depth > 0.06) thinBeforeLift = false
+  }
+  assert.equal(most, 1)
+  assert.ok(thinBeforeLift, 'le coin se soulève sur une feuille déjà fine')
+  for (let i = 1; i < curls.length; i++) {
+    assert.ok(Math.abs(curls[i] - curls[i - 1]) < 0.12, `le papier saute à ${i * 16} ms`)
+  }
+  const atMost = curls.indexOf(1)
+  assert.ok(atMost * 16 >= 600, `le coin monte trop vite : ${atMost * 16} ms`)
+  const rest = director.view(LATER, PORTRAIT)
+  assert.equal(rest.shot, 'front')
+  assert.equal(rest.painting.curl, 0)
+  assert.equal(rest.painting.paper, 1)
+})
+
+test('le coin soulevé est à l’opposé de la lumière, et la caméra s’en approche', () => {
+  const director = choosePoster()
+  const atPeak = 1400
+  const view = director.view(atPeak, PORTRAIT)
+  assert.equal(view.painting.curl, 1)
+  const corner = paintingCorners(view.painting).find((c) => c.side.x === curlCorner(ROOM).x && c.side.y === curlCorner(ROOM).y && c.side.z === 1)
+  assert.ok(ROOM.light[0] * corner.side.x < 0, 'côté opposé à la fenêtre')
+  const onScreen = project(view.camera, PORTRAIT, corner)
+  assert.ok(Math.abs(onScreen.x) < 0.8 && Math.abs(onScreen.y) < 0.8, `coin hors du plan : ${onScreen.x.toFixed(2)}, ${onScreen.y.toFixed(2)}`)
+  assert.ok(heightFraction(view, 40) > 1, 'la caméra se rapproche du coin')
+})
+
+test('choisir autre chose pendant que le coin est levé le fait retomber sans à-coup', () => {
+  const director = choosePoster()
+  const at = 1400
+  director.choose('passe', { ...TOILE, material: 'poster', passe: true }, at)
+  let previous = 1
+  for (let t = at; t <= at + LATER; t += 16) {
+    const { curl } = director.view(t, PORTRAIT).painting
+    assert.ok(curl <= previous + 1e-9, 'le coin ne remonte pas')
+    assert.ok(previous - curl < 0.12, 'le coin retombe sans saut')
+    previous = curl
+  }
+  assert.equal(previous, 0)
 })
 
 // Angle (degrés, signé : positif si la caméra est à droite) entre la caméra et l'axe du

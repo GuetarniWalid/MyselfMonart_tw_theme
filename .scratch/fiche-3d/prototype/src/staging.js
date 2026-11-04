@@ -11,9 +11,14 @@
  * arrière est en (x, y, z). Il tourne autour de ce point : d'abord `pitch` autour de
  * l'axe x, puis `yaw` autour de l'axe y (ordre 'YXZ' de three.js). `outer` est la boîte
  * extérieure (cadre compris) ; l'œuvre y occupe width × height × depth, à partir de `artZ`.
- * `frame` est le profil du cadre, `framed` sa présence (0 à 1, pour le fondu) et `paper`
- * passe de 0 (toile) à 1 (poster) : tous s'interpolent pendant la transition. La vue porte
- * aussi `product`, les choix en cours, pour que le moteur rende tout à partir de la seule vue.
+ * `frame` est le profil du cadre, `framed` sa présence (0 à 1, pour le fondu), `paper`
+ * passe de 0 (toile) à 1 (poster) et `curl` de 0 (à plat) à 1 (coin enroulé) : tous
+ * s'interpolent pendant la transition. La vue porte aussi `product`, les choix en cours,
+ * pour que le moteur rende tout à partir de la seule vue.
+ *
+ * Passer entre toile et poster est un « acte » : une petite scène qui part de la vue en
+ * cours, déroule son propre mouvement (tour de la toile, coin soulevé du poster) et revient
+ * de face. Un autre choix l'interrompt comme n'importe quelle transition.
  */
 
 import { CANVAS_DEPTH, FRAME_PROFILE, PAPER_DEPTH, dimensionsOf, hasFrame } from './catalog.js'
@@ -32,11 +37,44 @@ const EDGE = { yaw: 38 * DEG, pitch: -6 * DEG, fill: 0.74, side: 0.8, front: 0.6
 const CORNER = { yaw: 32 * DEG, pitch: 18 * DEG, field: 14, inset: 2 }
 // Contour blanc : de face, sur le coin bas gauche, 36 % de la hauteur du tirage à l'écran.
 const MARGIN = { inX: 0.13, inY: 0.11, field: 0.36 }
-// Toile ou poster : la caméra tourne autour du tableau resté au mur pour voir son épaisseur.
+// Poster sous verre, ou animations réduites : la caméra tourne autour du tableau resté au mur.
 const MATERIAL = { yaw: 40 * DEG, pitch: 8 * DEG, fill: 0.62 }
+
+/* Tour de la toile. keys : avancement (0 à 1) et angle du tableau en degrés ; il démarre,
+   ralentit de dos, repart, s'arrête. leave : part du temps pour quitter le mur, et y revenir. */
+const TURN = {
+  ms: 3600,
+  keys: [[0.1, 0], [0.36, 155], [0.64, 205], [0.9, 360]],
+  leave: 0.16,
+  yaw: 14 * DEG,
+  pitch: 5 * DEG,
+  fill: 0.6,
+}
+/* Coin soulevé du poster. field : hauteur visible, en part de la hauteur de la feuille.
+   inset : visée rentrée depuis le coin, en part du petit côté. near : part du temps pour
+   s'approcher du coin, et s'en éloigner. start, rise, fall, land, end : avancement où le
+   papier se lève, finit de monter, commence à retomber, touche le mur, et se pose après un
+   petit rebond (bounce). */
+const CURL_ACT = {
+  ms: 3000,
+  field: 0.66,
+  inset: 0.2,
+  yaw: 20 * DEG,
+  pitch: 12 * DEG,
+  near: 0.26,
+  start: 0.17,
+  rise: 0.44,
+  fall: 0.56,
+  land: 0.76,
+  end: 0.84,
+  bounce: 0.05,
+}
+const JOIN_MS = 500 // un acte rejoint son mouvement depuis la vue en cours
 
 const RETURN_MS = 450 // retour de face
 const GO_MS = 900 // vers le plan de l'option
+const TURNED = 60 * DEG // au-delà, le tableau est en plein tour
+const STRAIGHTEN_MS = 1200 // remise de face d'un tour interrompu
 
 /* Inclinaison au doigt : la caméra tourne autour du point visé (le tableau reste au mur,
    on voit son épaisseur et son ombre bouger). Glisser vers la droite fait tourner le
@@ -99,11 +137,11 @@ export function paintingCorners(p, which = 'art') {
   return corners
 }
 
+// Coin le plus enfoncé dans le mur d'un tableau tourné de (pitch, yaw), posé à z = 0.
+const lowestCorner = (painting) => Math.min(...paintingCorners({ ...painting, z: 0 }, 'outer').map((c) => c[2]))
+
 // Recul nécessaire pour qu'un tableau tourné de (pitch, yaw) ne touche pas le mur.
-function clearance(painting) {
-  const minZ = Math.min(...paintingCorners({ ...painting, z: 0 }, 'outer').map((c) => c[2]))
-  return Math.max(0, WALL_GAP - minZ)
-}
+const clearance = (painting) => Math.max(0, WALL_GAP - lowestCorner(painting))
 
 function hungPainting(room, product) {
   const { width: w, height: h } = dimensionsOf(product.size)
@@ -120,7 +158,7 @@ function hungPainting(room, product) {
   const paper = product.material === 'poster' ? 1 : 0
   const passe = paper && product.passe ? 1 : 0 // contour blanc, en fondu pendant la transition
   const framed = hasFrame(product) ? 1 : 0 // le cadre aussi : il n'apparaît jamais d'un coup
-  return { x: c.x, y: c.y, z: 0, yaw: 0, pitch: 0, width: w, height: h, depth, artZ, outer, frame, framed, paper, passe }
+  return { x: c.x, y: c.y, z: 0, yaw: 0, pitch: 0, width: w, height: h, depth, artZ, outer, frame, framed, paper, passe, curl: 0 }
 }
 
 const artFront = (p) => [p.x, p.y, p.z + p.artZ + p.depth]
@@ -222,17 +260,11 @@ function edgeShot(room, product, aspect) {
   return shotOf('edge', { position: add(target, scale(dir, d)), target, fovY: FOV_Y }, painting)
 }
 
-const SHOTS = {
-  front: frontShot,
-  edge: edgeShot,
-  corner: cornerShot,
-  room: roomShot,
-  margin: marginShot,
-  material: materialShot,
-}
-const SHOT_OF_GROUP = { border: 'edge', frame: 'corner', size: 'room', passe: 'margin', material: 'material' }
-
 const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
+const smooth = (t) => {
+  const c = Math.min(1, Math.max(0, t))
+  return c * c * (3 - 2 * c)
+}
 
 // Interpole deux valeurs de même forme (nombres, tableaux, objets imbriqués).
 function blend(a, b, t) {
@@ -244,9 +276,90 @@ function blend(a, b, t) {
   return t < 1 ? a : b
 }
 
-function mix(a, b, t) {
-  return { ...blend(a, b, t), shot: t < 1 ? a.shot : b.shot }
+// Monte sur la part `edge` du début, redescend sur la même part à la fin.
+const away = (u, edge) => smooth(u / edge) * (1 - smooth((u - 1 + edge) / edge))
+
+// Courbe de Hermite : de p0 à p1, pentes m0 et m1 (rapportées à l'intervalle), s de 0 à 1.
+function hermite(p0, p1, m0, m1, s) {
+  const s2 = s * s, s3 = s2 * s
+  return (2 * s3 - 3 * s2 + 1) * p0 + (s3 - 2 * s2 + s) * m0 + (-2 * s3 + 3 * s2) * p1 + (s3 - s2) * m1
 }
+
+// Angle du tableau (degrés) selon l'avancement : vitesse constante et lente de dos.
+function turnAngle(u) {
+  const [[t0, a0], [t1, a1], [t2, a2], [t3, a3]] = TURN.keys
+  const slow = (a2 - a1) / (t2 - t1)
+  if (u <= t0) return a0
+  if (u >= t3) return a3
+  if (u < t1) return hermite(a0, a1, 0, slow * (t1 - t0), (u - t0) / (t1 - t0))
+  if (u <= t2) return lerp(a1, a2, (u - t1) / (t2 - t1))
+  return hermite(a2, a3, slow * (t3 - t2), 0, (u - t2) / (t3 - t2))
+}
+
+/* Acte de la toile : elle quitte le mur juste assez pour tourner autour de son axe vertical,
+   la caméra recule un peu et se décale pour lire la profondeur du châssis. La tranche
+   éclairée passe la première. */
+function turnShot(room, product, aspect, u) {
+  const rest = frontShot(room, product, aspect)
+  const p = rest.painting
+  const side = litSide(room)
+  const out = away(u, TURN.leave)
+  const z = out * (Math.hypot(p.outer.width / 2, p.outer.depth) + WALL_GAP)
+  const axis = [p.x, p.y, z + p.outer.depth / 2]
+  const d = fitDistance(p.outer.width, p.outer.height, aspect, TURN.fill)
+  const orbiting = { position: orbit(axis, side * TURN.yaw, TURN.pitch, d), target: axis, fovY: FOV_Y }
+  return shotOf('turn', blend(rest.camera, orbiting, out), { ...p, z, yaw: -side * turnAngle(u) * DEG })
+}
+
+// Coin soulevé : en bas, à l'opposé de la lumière, pour que le dos du papier la reçoive.
+export const curlCorner = (room) => ({ x: -litSide(room), y: -1 })
+
+// Le papier monte vite puis ralentit, retombe en accélérant et rebondit à peine.
+function curlAmount(u) {
+  const { start, rise, fall, land, end, bounce } = CURL_ACT
+  if (u <= start || u >= end) return 0
+  if (u < rise) return 1 - Math.pow(1 - (u - start) / (rise - start), 3)
+  if (u <= fall) return 1
+  if (u < land) return 1 - Math.pow((u - fall) / (land - fall), 2)
+  return bounce * Math.sin((Math.PI * (u - land)) / (end - land))
+}
+
+/* Acte du poster : la caméra s'approche du coin, de trois-quarts et du côté du coin pour voir
+   le papier se détacher du mur, et revient de face quand il est retombé. */
+function curlShot(room, product, aspect, u) {
+  const rest = frontShot(room, product, aspect)
+  const p = rest.painting
+  const { x, y } = curlCorner(room)
+  const corner = paintingCorners(p).find((c) => c.side.x === x && c.side.y === y && c.side.z === 1)
+  const inset = CURL_ACT.inset * Math.min(p.width, p.height)
+  const target = add(corner, [-x * inset, -y * inset, 0])
+  const d = (CURL_ACT.field * p.height) / (2 * Math.tan(FOV_Y / 2))
+  const close = { position: orbit(target, x * CURL_ACT.yaw, CURL_ACT.pitch, d), target, fovY: FOV_Y }
+  const camera = blend(rest.camera, close, away(u, CURL_ACT.near))
+  return shotOf('curl', camera, { ...p, curl: curlAmount(u) })
+}
+
+const SHOTS = {
+  front: frontShot,
+  edge: edgeShot,
+  corner: cornerShot,
+  room: roomShot,
+  margin: marginShot,
+  material: materialShot,
+  turn: turnShot,
+  curl: curlShot,
+}
+const SHOT_OF_GROUP = { border: 'edge', frame: 'corner', size: 'room', passe: 'margin', material: 'material' }
+const ACT_MS = { turn: TURN.ms, curl: CURL_ACT.ms }
+
+// Vue intermédiaire. Un tableau encore tourné ne doit pas traverser le mur en revenant.
+function mix(a, b, t) {
+  const view = { ...blend(a, b, t), shot: t < 1 ? a.shot : b.shot }
+  view.painting.z = Math.max(view.painting.z, -lowestCorner(view.painting))
+  return view
+}
+
+const shortestAngle = (a) => Math.atan2(Math.sin(a), Math.cos(a))
 
 // Tourne la caméra autour du point visé (yaw vers la droite, pitch vers le haut).
 function withTilt(view, yaw, pitch) {
@@ -278,9 +391,12 @@ export function createDirector({ room, product, reducedMotion = false }) {
   function staged(at, aspect) {
     let from = state.from
     for (const leg of state.legs) {
-      const to = SHOTS[leg.shot](room, state.product, aspect)
       const t = (at - leg.start) / leg.duration
-      if (t < 1) return mix(from, to, easeInOut(Math.max(0, t)))
+      const to = SHOTS[leg.shot](room, state.product, aspect, Math.min(1, Math.max(0, t)))
+      if (t < 1) {
+        const joined = (at - leg.start) / leg.join
+        return joined < 1 ? mix(from, to, easeInOut(Math.max(0, joined))) : to
+      }
       from = to
     }
     return SHOTS[state.shot](room, state.product, aspect)
@@ -329,18 +445,34 @@ export function createDirector({ room, product, reducedMotion = false }) {
     state.reducedMotion = value
   }
 
+  // Passer à la toile la fait tourner ; passer au poster sans cadre lui soulève un coin.
+  function actOf(group, nextProduct) {
+    if (group !== 'material' || state.reducedMotion) return null
+    if (nextProduct.material === 'toile') return 'turn'
+    return hasFrame(nextProduct) ? null : 'curl'
+  }
+
   function choose(group, nextProduct, at) {
     // Départ figé sans l'inclinaison : celle-ci continue à part, par-dessus la transition.
-    const from = staged(at, state.aspect)
-    const shot = SHOT_OF_GROUP[group] || 'front'
+    // Un tableau interrompu dans son tour reprend par le plus court chemin.
+    const current = staged(at, state.aspect)
+    const from = { ...current, painting: { ...current.painting, yaw: shortestAngle(current.painting.yaw) } }
+    const act = actOf(group, nextProduct)
+    const shot = act ? 'front' : SHOT_OF_GROUP[group] || 'front'
     const legs = []
     let start = at
-    if (!state.reducedMotion) {
-      if (group !== state.group && state.shot !== 'front' && shot !== 'front') {
-        legs.push({ shot: 'front', start, duration: RETURN_MS })
-        start += RETURN_MS
-      }
-      legs.push({ shot, start, duration: GO_MS })
+    const back = (duration) => {
+      legs.push({ shot: 'front', start, duration, join: duration })
+      start += duration
+    }
+    // Interrompu en plein tour, le tableau se remet de face avant tout : il ne fouette pas.
+    const turned = Math.abs(from.painting.yaw) > TURNED
+    if (turned) back(STRAIGHTEN_MS)
+    if (act) {
+      legs.push({ shot: act, start, duration: ACT_MS[act], join: JOIN_MS })
+    } else if (!state.reducedMotion) {
+      if (!turned && group !== state.group && state.shot !== 'front' && shot !== 'front') back(RETURN_MS)
+      legs.push({ shot, start, duration: GO_MS, join: GO_MS })
     }
     Object.assign(state, { product: nextProduct, group, shot, legs, from })
   }
