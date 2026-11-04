@@ -10,14 +10,14 @@ Ce que fait Walid : la désinstallation de l'application Clarity.
 
 - [ ] Claude lit le nouveau projet par le connecteur.
 - [x] PostHog se charge sans ralentir l'affichage des pages.
-- [ ] Événements suivis : vue de fiche, choix d'option, ajout au panier, clic sur la barre d'achat. Enregistrements de visites échantillonnés sur les fiches.
+- [x] Événements suivis : vue de fiche, choix d'option, ajout au panier, clic sur la barre d'achat. Enregistrements de visites échantillonnés sur les fiches.
 - [x] Réglages protecteurs : champs de saisie masqués, adresses IP non conservées.
 - [ ] Un premier tableau de bord : visites des fiches, ajouts au panier et commandes, par appareil.
 - [ ] Clarity désactivé dans le thème, puis désinstallé par Walid.
 
 ## Notes de réalisation
 
-**Fait (04/11), à pousser.** `snippets/posthog.liquid`, rendu par `head-base`, porte le jeton, l'hôte Europe et le taux d'enregistrement. La logique est dans `assets/posthog-tracking.js`, testée par `scripts/posthog-tracking.test.cjs`. La fiche se décrit dans `#product-tracking-json` (`sections/main-product.liquid`), que la bascule toile/poster remplace avec le reste. Les 4 chemins d'ajout au panier annoncent leur réussite par `mma:cart-add`.
+**Fait (04/11), en ligne (commits 1fc9f0e et 428dc0d).** `snippets/posthog.liquid`, rendu par `head-base`, porte le jeton, l'hôte Europe et le taux d'enregistrement. La logique est dans `assets/posthog-tracking.js`, testée par `scripts/posthog-tracking.test.cjs`. La fiche se décrit dans `#product-tracking-json` (`sections/main-product.liquid`), que la bascule toile/poster remplace avec le reste. Les 4 chemins d'ajout au panier annoncent leur réussite par `mma:cart-add`.
 
 **Chargement.** La bibliothèque pèse 119 Ko compressés et l'enregistreur 69 Ko, contre 26 Ko pour Clarity. PostHog ne se charge donc que s'il y a quelque chose à envoyer (une fiche, ou un ajout au panier ailleurs), après un vrai geste, la fin du chargement, le repos du navigateur et le consentement. Ce que cela implique :
 - Une vue de fiche est une vue avec au moins un geste. Les chiffres ne se comparent pas directement à GA4 ou à Shopify.
@@ -54,3 +54,9 @@ Ce que fait Walid : la désinstallation de l'application Clarity.
 **Défaut déjà en ligne, trouvé pendant l'essai, non corrigé.** Le bouton flottant vit sur `<body>`, la bascule ne le remplace pas : s'il a été créé avant la bascule, il reste rattaché à l'ancienne fiche.
 - Jusqu'au choix suivant, il affiche et ajoute l'autre produit : vu « Commander 94 € » sur un poster à 24,90 €.
 - Ses propriétés de ligne restent vides, même après un choix : un poster « Cadre chêne clair » est entré au panier sans couleur ni contour blanc, alors que le bouton principal aurait envoyé `Couleur du cadre` et `Contour blanc`.
+
+**Vérifié en ligne le 04/11.** Sur la fiche poster du Bonsaï : rien ne se charge avant un geste ; après un vrai clic, `product_viewed`, `product_option_selected` et `product_added_to_cart` (source main, 47,90 EUR, propriétés de ligne présentes) arrivent dans le projet, et `#product-tracking-json` est rendu par le thème. Clarity n'est plus chargé. Les premiers événements viennent tous de nos essais (`$browser: Claude`) : l'arrivée de vrais visiteurs reste à constater.
+
+**Tableau de bord** : https://eu.posthog.com/project/334087/dashboard/1083520 (9 tuiles, sans commandes). Seul `Desktop` remonte pour l'instant.
+
+**Reste** : désinstallation de Clarity par Walid, accès du connecteur à l'organisation, pixel de commandes dans l'admin si Walid le veut.
