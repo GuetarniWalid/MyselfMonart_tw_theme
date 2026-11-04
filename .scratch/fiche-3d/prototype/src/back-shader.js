@@ -1,7 +1,7 @@
 /*
  * Dos de la toile, peint par le shader en cm, d'après les photos de Walid (une 75 × 100).
- * Rien à télécharger, et le même code sert tous les formats : agrafes, plis et largeurs se
- * calculent depuis la taille du tableau (backLayout). Du bord vers le centre :
+ * Rien à télécharger, et le même code sert tous les formats : les agrafes se répartissent
+ * selon la taille du tableau, les largeurs viennent de BACK (geometry.js). Du bord vers le centre :
  * l'image (ou la couleur de tranche) qui revient de quelques mm, un fin trait noir, la toile
  * blanche repliée avec ses agrafes et ses plis de coin, le pin du châssis, et au fond la toile
  * brute, un peu translucide. Aucune marque de l'imprimeur.
@@ -169,12 +169,14 @@ export const BACK_FRAGMENT = /* glsl */ `
       shelter = 1.0 - 0.3 * exp(-(min(c.x, c.y) - uBar) / 1.6);
     }
 
-    // Le châssis fait de l'ombre au fond : un point du creux voit-il la lumière par l'ouverture ?
+    // Le creux ne reçoit la lumière que par l'ouverture du châssis : un point y voit-il la
+    // lumière ? Quand elle vient du côté de la façade, la toile la coupe tout entière.
     float direct = max(dot(normalize(vNormalW), uLight), 0.0);
-    if (vPart > 0.5 && uLightLocal.z < -0.001) {
-      vec2 exit = p + uLightLocal.xy * (depth / -uLightLocal.z);
+    if (vPart > 0.5) {
+      float toOpening = max(-uLightLocal.z, 0.001);
+      vec2 exit = p + uLightLocal.xy * (depth / toOpening);
       vec2 open = uHalf - uBar - abs(exit);
-      direct *= smoothstep(-0.25, 0.25, min(open.x, open.y));
+      direct *= smoothstep(-0.25, 0.25, min(open.x, open.y)) * step(uLightLocal.z, 0.0);
     }
     float k = (uAmbient * shelter + uDiffuse * direct) * uNorm;
     gl_FragColor = vec4(albedo * min(k, 1.0), 1.0);

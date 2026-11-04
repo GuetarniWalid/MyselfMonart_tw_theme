@@ -35,11 +35,14 @@ const mean = (xs) => xs.reduce((s, v) => s + v, 0) / Math.max(1, xs.length)
 /* source et rendered : pixels RGBA (Uint8), width × height. Renvoie l'écart ΔE moyen et
    au 95e centile, le décalage de teinte moyen (zones assez colorées) et l'écart de
    luminosité L* moyen (positif : le rendu est plus clair). */
-export function compareImages(source, rendered, width, height, cols = 24, rows = 32) {
-  const bw = Math.floor(width / cols), bh = Math.floor(height / rows)
+const COLS = 24
+const ROWS = 32
+
+export function compareImages(source, rendered, width, height) {
+  const bw = Math.floor(width / COLS), bh = Math.floor(height / ROWS)
   const deltas = [], hues = [], lightness = []
-  for (let j = 0; j < rows; j++) {
-    for (let i = 0; i < cols; i++) {
+  for (let j = 0; j < ROWS; j++) {
+    for (let i = 0; i < COLS; i++) {
       const a = labOf(...blockMean(source, width, i * bw, j * bh, bw, bh))
       const b = labOf(...blockMean(rendered, width, i * bw, j * bh, bw, bh))
       deltas.push(Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]))

@@ -336,6 +336,26 @@ test('interrompu après le demi-tour, le tableau finit de tourner au lieu de rev
   assert.ok(Math.abs(wrapped(soon)) < Math.abs(wrapped(before)), 'il va vers la face par le plus court')
 })
 
+test('un tour interrompu se finit sur son propre chemin : même marge au mur, vitesse et recul sans à-coup', () => {
+  for (const at of [900, 1800, 2400]) {
+    const director = chooseToile()
+    const earlier = director.view(at - 16, PORTRAIT).painting
+    let { z: previousZ, yaw: previousYaw } = director.view(at, PORTRAIT).painting
+    let previousStep = Math.abs(wrapped(previousYaw - earlier.yaw))
+    director.choose('frame', { ...POSTER, material: 'toile', frame: 'chene' }, at)
+    for (let t = at + 16; t <= at + 1400; t += 16) {
+      const { z, yaw } = director.view(t, PORTRAIT).painting
+      const step = Math.abs(wrapped(yaw - previousYaw))
+      assert.ok(step < 0.11, `le tableau fouette ${t - at} ms après le clic : ${step.toFixed(3)} rad`)
+      assert.ok(Math.abs(z - previousZ) < 1.3, `le recul saute ${t - at} ms après le clic`)
+      assert.ok(Math.abs(step - previousStep) < 0.03, `la rotation casse ${t - at} ms après le clic`)
+      previousZ = z
+      previousYaw = yaw
+      previousStep = step
+    }
+  }
+})
+
 test('choisir le poster pendant le tour ramène d’abord le tableau de face, sans le fouetter, puis soulève le coin', () => {
   const director = chooseToile()
   const at = 1800
@@ -343,10 +363,11 @@ test('choisir le poster pendant le tour ramène d’abord le tableau de face, sa
   let previous = wrapped(director.view(at, PORTRAIT).painting.yaw)
   let most = 0
   for (let t = at; t <= at + LATER; t += 16) {
-    const { yaw, curl, depth, z } = director.view(t, PORTRAIT).painting
+    const { yaw, curl, depth, z, paper } = director.view(t, PORTRAIT).painting
     const turned = wrapped(yaw)
-    assert.ok(Math.abs(wrapped(turned - previous)) < 0.13, `le tableau fouette à ${t - at} ms`)
+    assert.ok(Math.abs(wrapped(turned - previous)) < 0.11, `le tableau fouette à ${t - at} ms`)
     previous = turned
+    if (Math.abs(turned) > 0.5) assert.equal(paper, 0, 'il reste une toile tant qu’il tourne')
     most = Math.max(most, curl)
     if (curl > 0.001) {
       assert.ok(Math.abs(turned) < 1e-6 && z < 1e-6, 'le coin se soulève sur un poster à plat, au mur')
@@ -416,6 +437,38 @@ test('choisir autre chose pendant que le coin est levé le fait retomber sans à
     previous = curl
   }
   assert.equal(previous, 0)
+  assert.equal(director.view(at + LATER, PORTRAIT).shot, 'margin')
+})
+
+test('choisir un cadre pendant que le coin est levé : le papier retombe avant que le verre arrive', () => {
+  for (const at of [800, 1200, 1400, 1700, 2000]) {
+    const director = choosePoster()
+    director.choose('frame', { ...TOILE, material: 'poster', frame: 'chene' }, at)
+    let sawFrame = false
+    for (let t = at; t <= at + LATER; t += 16) {
+      const { curl, framed } = director.view(t, PORTRAIT).painting
+      if (curl > 0.001) assert.equal(framed, 0, `papier encore levé sous le cadre ${t - at} ms après le clic de ${at} ms`)
+      if (framed > 0) sawFrame = true
+    }
+    assert.ok(sawFrame)
+    assert.equal(director.view(at + LATER, PORTRAIT).shot, 'corner')
+  }
+})
+
+test('le coin qui monte, interrompu, redescend par où il est monté', () => {
+  const director = choosePoster()
+  const at = 800
+  const before = director.view(at, PORTRAIT).painting.curl
+  assert.ok(before > 0 && before < 1)
+  director.choose('passe', { ...TOILE, material: 'poster', passe: true }, at)
+  const curls = []
+  for (let t = at; t <= at + LATER; t += 16) curls.push(director.view(t, PORTRAIT).painting.curl)
+  const peak = Math.max(...curls)
+  assert.ok(peak < before + 0.1, `le papier continue de monter : ${before.toFixed(2)} puis ${peak.toFixed(2)}`)
+  for (let i = curls.indexOf(peak) + 1; i < curls.length; i++) {
+    assert.ok(curls[i] <= curls[i - 1] + 1e-9, 'une fois reparti, le coin ne remonte plus')
+  }
+  assert.equal(curls[curls.length - 1], 0)
 })
 
 // Angle (degrés, signé : positif si la caméra est à droite) entre la caméra et l'axe du

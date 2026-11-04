@@ -48,6 +48,7 @@ export const FRAMES = [
 ]
 
 export const borderOf = (id) => BORDERS.find((b) => b.id === id) || BORDERS[0]
+export const borderTakesImage = (id) => !borderOf(id).color
 export const frameOf = (id) => FRAMES.find((f) => f.id === id) || FRAMES[0]
 
 const TOILE_BASE = { '30x40': 62.5, '75x100': 136.5 } // bordure blanche, sans cadre

@@ -71,9 +71,12 @@
   .tools button:focus-visible, .chip input:focus-visible + span, .buy:focus-visible, .link-btn:focus-visible {
     outline: 2px solid var(--accent); outline-offset: 2px;
   }
+  /* La scène reste claire, même en thème sombre : l'anneau de focus aussi doit s'y voir. */
+  .tools button:focus-visible, .notice .link-btn:focus-visible { outline-color: #21150c; }
   .hint {
     position: absolute; top: 12px; left: 50%; transform: translateX(-50%); margin: 0; white-space: nowrap;
-    font: 500 12px var(--body); color: rgba(33, 21, 12, 0.62); letter-spacing: 0.02em; transition: opacity 400ms ease;
+    font: 500 12px var(--body); color: rgba(33, 21, 12, 0.72); letter-spacing: 0.02em; transition: opacity 400ms ease;
+    background: rgba(255, 253, 250, 0.82); border-radius: 999px; padding: 3px 10px;
   }
   .hint.gone { opacity: 0; }
   .notice {

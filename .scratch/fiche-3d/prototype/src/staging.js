@@ -18,7 +18,8 @@
  *
  * Passer entre toile et poster est un « acte » : une petite scène qui part de la vue en
  * cours, déroule son propre mouvement (tour de la toile, coin soulevé du poster) et revient
- * de face. Un autre choix l'interrompt comme n'importe quelle transition.
+ * de face. Un autre choix ne le coupe pas en plein vol : l'acte se finit vite, sur son propre
+ * chemin, puis la suite s'enchaîne. Le prix et le bouton, eux, n'attendent jamais.
  */
 
 import { CANVAS_DEPTH, FRAME_PROFILE, PAPER_DEPTH, dimensionsOf, hasFrame } from './catalog.js'
@@ -70,11 +71,10 @@ const CURL_ACT = {
   bounce: 0.05,
 }
 const JOIN_MS = 500 // un acte rejoint son mouvement depuis la vue en cours
+const HURRY = 1.2 // un acte interrompu se finit un peu plus vite que prévu
 
 const RETURN_MS = 450 // retour de face
 const GO_MS = 900 // vers le plan de l'option
-const TURNED = 60 * DEG // au-delà, le tableau est en plein tour
-const STRAIGHTEN_MS = 1200 // remise de face d'un tour interrompu
 
 /* Inclinaison au doigt : la caméra tourne autour du point visé (le tableau reste au mur,
    on voit son épaisseur et son ombre bouger). Glisser vers la droite fait tourner le
@@ -98,9 +98,11 @@ function hangingCenter(room, h) {
   return { x: room.hang.x, y: bottom + h / 2 }
 }
 
+// Distance à laquelle une hauteur `field` remplit tout l'écran.
+const distanceFor = (field) => field / (2 * Math.tan(FOV_Y / 2))
+
 function fitDistance(w, h, aspect, fill) {
-  const t = Math.tan(FOV_Y / 2)
-  return Math.max(h / (2 * t * fill), w / (2 * t * aspect * fill))
+  return Math.max(distanceFor(h / fill), distanceFor(w / (aspect * fill)))
 }
 
 const add = (a, b) => a.map((v, i) => v + b[i])
@@ -201,7 +203,7 @@ function roomShot(room, product, aspect) {
   const halfWidth = (height * aspect) / 2
   const x = Math.min(Math.max(painting.x, photo.left + halfWidth), photo.right - halfWidth)
   const target = [x, view.bottom + height / 2, 0]
-  const d = height / (2 * Math.tan(FOV_Y / 2))
+  const d = distanceFor(height)
   return shotOf('room', { position: add(target, [0, 0, d]), target, fovY: FOV_Y }, painting, 1)
 }
 
@@ -212,8 +214,7 @@ function cornerShot(room, product) {
     (c) => c.side.x === side && c.side.y < 0 && c.side.z === 1,
   )
   const target = add(corner, [-side * CORNER.inset, CORNER.inset, 0])
-  const d = CORNER.field / (2 * Math.tan(FOV_Y / 2))
-  const position = orbit(target, side * CORNER.yaw, CORNER.pitch, d)
+  const position = orbit(target, side * CORNER.yaw, CORNER.pitch, distanceFor(CORNER.field))
   return shotOf('corner', { position, target, fovY: FOV_Y }, painting)
 }
 
@@ -225,7 +226,7 @@ function marginShot(room, product) {
     front[1] - painting.height * (0.5 - MARGIN.inY),
     front[2],
   ]
-  const d = (MARGIN.field * painting.height) / (2 * Math.tan(FOV_Y / 2))
+  const d = distanceFor(MARGIN.field * painting.height)
   return shotOf('margin', { position: add(target, [0, 0, d]), target, fovY: FOV_Y }, painting)
 }
 
@@ -333,7 +334,7 @@ function curlShot(room, product, aspect, u) {
   const corner = paintingCorners(p).find((c) => c.side.x === x && c.side.y === y && c.side.z === 1)
   const inset = CURL_ACT.inset * Math.min(p.width, p.height)
   const target = add(corner, [-x * inset, -y * inset, 0])
-  const d = (CURL_ACT.field * p.height) / (2 * Math.tan(FOV_Y / 2))
+  const d = distanceFor(CURL_ACT.field * p.height)
   const close = { position: orbit(target, x * CURL_ACT.yaw, CURL_ACT.pitch, d), target, fovY: FOV_Y }
   const camera = blend(rest.camera, close, away(u, CURL_ACT.near))
   return shotOf('curl', camera, { ...p, curl: curlAmount(u) })
@@ -350,7 +351,22 @@ const SHOTS = {
   curl: curlShot,
 }
 const SHOT_OF_GROUP = { border: 'edge', frame: 'corner', size: 'room', passe: 'margin', material: 'material' }
-const ACT_MS = { turn: TURN.ms, curl: CURL_ACT.ms }
+
+/* Les actes. exit : où un acte interrompu à l'avancement u s'arrête sur son chemin. La toile
+   revient au mur par le plus court ; le papier redescend par où il est monté, ou finit de
+   tomber, pour ne jamais se trouver sous le verre d'un cadre qui arrive. */
+const ACTS = {
+  turn: { ms: TURN.ms, exit: (u) => (u < 0.5 ? 0 : 1) },
+  curl: { ms: CURL_ACT.ms, exit: (u) => (u < CURL_ACT.rise ? CURL_ACT.start : Math.max(u, CURL_ACT.land)) },
+}
+
+/* Avancement d'une étape à l'instant `at`. Une étape qui finit un acte interrompu (span)
+   repart à la vitesse de l'acte, sans à-coup, et s'arrête en douceur sur la sortie. */
+function progressOf(leg, at) {
+  const t = Math.min(1, Math.max(0, (at - leg.start) / leg.duration))
+  if (!leg.span) return t
+  return hermite(leg.span[0], leg.span[1], leg.duration / ACTS[leg.shot].ms, 0, t)
+}
 
 // Vue intermédiaire. Un tableau encore tourné ne doit pas traverser le mur en revenant.
 function mix(a, b, t) {
@@ -359,7 +375,11 @@ function mix(a, b, t) {
   return view
 }
 
-const shortestAngle = (a) => Math.atan2(Math.sin(a), Math.cos(a))
+// Même vue, l'angle ramené au plus court : la suite ne déroule pas le tour à l'envers.
+function unwound(view) {
+  const { yaw } = view.painting
+  return { ...view, painting: { ...view.painting, yaw: Math.atan2(Math.sin(yaw), Math.cos(yaw)) } }
+}
 
 // Tourne la caméra autour du point visé (yaw vers la droite, pitch vers le haut).
 function withTilt(view, yaw, pitch) {
@@ -391,13 +411,12 @@ export function createDirector({ room, product, reducedMotion = false }) {
   function staged(at, aspect) {
     let from = state.from
     for (const leg of state.legs) {
-      const t = (at - leg.start) / leg.duration
-      const to = SHOTS[leg.shot](room, state.product, aspect, Math.min(1, Math.max(0, t)))
-      if (t < 1) {
+      const to = SHOTS[leg.shot](room, leg.product || state.product, aspect, progressOf(leg, at))
+      if (at < leg.start + leg.duration) {
         const joined = (at - leg.start) / leg.join
         return joined < 1 ? mix(from, to, easeInOut(Math.max(0, joined))) : to
       }
-      from = to
+      from = unwound(to)
     }
     return SHOTS[state.shot](room, state.product, aspect)
   }
@@ -452,26 +471,37 @@ export function createDirector({ room, product, reducedMotion = false }) {
     return hasFrame(nextProduct) ? null : 'curl'
   }
 
+  // L'acte en cours, quand il a rejoint son chemin : il se finira avec le produit qu'il montrait.
+  const actUnderway = (at) =>
+    state.legs.find((leg) => ACTS[leg.shot] && at >= leg.start + leg.join && at < leg.start + leg.duration)
+
   function choose(group, nextProduct, at) {
     // Départ figé sans l'inclinaison : celle-ci continue à part, par-dessus la transition.
-    // Un tableau interrompu dans son tour reprend par le plus court chemin.
-    const current = staged(at, state.aspect)
-    const from = { ...current, painting: { ...current.painting, yaw: shortestAngle(current.painting.yaw) } }
+    const from = unwound(staged(at, state.aspect))
     const act = actOf(group, nextProduct)
     const shot = act ? 'front' : SHOT_OF_GROUP[group] || 'front'
     const legs = []
     let start = at
-    const back = (duration) => {
-      legs.push({ shot: 'front', start, duration, join: duration })
-      start += duration
+    const running = actUnderway(at)
+    if (running) {
+      const { ms, exit } = ACTS[running.shot]
+      const u = progressOf(running, at)
+      const end = exit(u)
+      // Finir son geste va un peu plus vite ; revenir sur ses pas prend le temps de s'inverser.
+      const duration = end > u ? ((end - u) * ms) / HURRY : (u - end) * ms
+      if (duration > 0) {
+        const product = running.product || state.product
+        legs.push({ shot: running.shot, product, start, duration, join: 0, span: [u, end] })
+        start += duration
+      }
     }
-    // Interrompu en plein tour, le tableau se remet de face avant tout : il ne fouette pas.
-    const turned = Math.abs(from.painting.yaw) > TURNED
-    if (turned) back(STRAIGHTEN_MS)
     if (act) {
-      legs.push({ shot: act, start, duration: ACT_MS[act], join: JOIN_MS })
+      legs.push({ shot: act, start, duration: ACTS[act].ms, join: JOIN_MS })
     } else if (!state.reducedMotion) {
-      if (!turned && group !== state.group && state.shot !== 'front' && shot !== 'front') back(RETURN_MS)
+      if (group !== state.group && state.shot !== 'front' && shot !== 'front') {
+        legs.push({ shot: 'front', start, duration: RETURN_MS, join: RETURN_MS })
+        start += RETURN_MS
+      }
       legs.push({ shot, start, duration: GO_MS, join: GO_MS })
     }
     Object.assign(state, { product: nextProduct, group, shot, legs, from })

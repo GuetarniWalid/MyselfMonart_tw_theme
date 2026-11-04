@@ -18,11 +18,11 @@
  */
 
 import {
-  CURL, artBox, backLayout, backShell, convexHull, curlOutline, curlPoint, curlShape, curlSheet,
+  BACK, CURL, artBox, backShell, convexHull, curlOutline, curlPoint, curlShape, curlSheet,
   frameRing, frameProfile, frameOpening,
 } from './geometry.js'
 import { curlCorner, paintingCorners } from './staging.js'
-import { PAPER_WHITE, borderOf, frameOf, hasFrame } from './catalog.js'
+import { PAPER_WHITE, borderOf, borderTakesImage, frameOf, hasFrame } from './catalog.js'
 import { BACK_COLORS, BACK_FRAGMENT, BACK_VERTEX } from './back-shader.js'
 import { compareImages } from './fidelity.js'
 import { decodeImage, imageSize } from './images.js'
@@ -99,7 +99,12 @@ const CURL_VERTEX = /* glsl */ `
 `
 
 // Ombres projetées sur le mur et sur le papier.
-const HULL_DISTANCE = /* glsl */ `
+const SHADOW_SHAPES = /* glsl */ `
+  // 1 au cœur de l'ombre, 0 passé sa pénombre, selon la distance signée à son contour.
+  float inShadow(float distance, float penumbra) {
+    return 1.0 - smoothstep(-penumbra, penumbra, distance);
+  }
+
   // Distance signée à un polygone convexe (sens trigonométrique).
   float hullDistance(vec2 hull[8], int count, vec2 p) {
     float d = -1e6;
@@ -145,7 +150,7 @@ const ART_FRAGMENT = /* glsl */ `
     uniform float uFlapKey;
     varying float vBeyond;
     varying vec2 vWallXY;
-    ${HULL_DISTANCE}
+    ${SHADOW_SHAPES}
   #endif
 
   // Lecture bicubique (Catmull-Rom en 5 lectures) : une image grossie reste nette et ne
@@ -242,7 +247,7 @@ const ART_FRAGMENT = /* glsl */ `
       if (gl_FrontFacing) {
         // Le coin levé ombre la feuille restée à plat, et plus du tout le haut de sa courbe.
         float lifted = hullDistance(uFlapHull, uFlapHullN, vWallXY);
-        float shadow = uFlapKey * (1.0 - smoothstep(-uFlapPenumbra, uFlapPenumbra, lifted));
+        float shadow = uFlapKey * inShadow(lifted, uFlapPenumbra);
         k *= 1.0 - shadow * (1.0 - smoothstep(0.0, uCurlRadius, vBeyond));
       } else {
         k = (uAmbient + uDiffuse * max(dot(Np, uLight), 0.0)) * 1.08;
@@ -282,7 +287,7 @@ const WALL_FRAGMENT = /* glsl */ `
   uniform float uFlapPenumbra;
   uniform float uFlapKey;
   varying vec2 vXY;
-  ${HULL_DISTANCE}
+  ${SHADOW_SHAPES}
 
   float boxDistance(vec2 p, vec2 c, vec2 h) {
     vec2 q = abs(p - c) - h;
@@ -301,14 +306,14 @@ const WALL_FRAGMENT = /* glsl */ `
     // Pénombres : jamais plus fines qu'un pixel, même vues de loin.
     float hull = hullDistance(uHull, uHullN, vXY);
     float penumbra = max(uPenumbra, fwidth(hull));
-    float key = uKey * (1.0 - smoothstep(-penumbra, penumbra, hull));
+    float key = uKey * inShadow(hull, penumbra);
     float box = boxDistance(vXY, uAo.xy, uAo.zw);
     float ao = uAoAmt * (1.0 - smoothstep(0.0, max(uAoRadius, fwidth(box)), box));
     // Ombre du coin soulevé du poster, sur le mur qu'il découvre.
     float flap = 0.0;
     if (uFlapKey > 0.0) {
       float lifted = hullDistance(uFlapHull, uFlapHullN, vXY);
-      flap = uFlapKey * (1.0 - smoothstep(-uFlapPenumbra, uFlapPenumbra, lifted));
+      flap = uFlapKey * inShadow(lifted, uFlapPenumbra);
     }
     gl_FragColor = vec4(col * (1.0 - key) * (1.0 - ao) * (1.0 - flap), 1.0);
     #include <colorspace_fragment>
@@ -379,7 +384,7 @@ const FRAME_FRAGMENT = /* glsl */ `
     vec3 ambient = mix(vec3(0.27, 0.24, 0.21), vec3(0.70), N.y * 0.5 + 0.5);
     vec3 color = albedo * (0.64 * ndl + ambient);
 
-    float fresnel = 0.04 + 0.96 * pow(1.0 - max(dot(N, V), 0.0), 5.0);
+    float fresnel = 0.04 + 0.96 * pow(1.0 - clamp(dot(N, V), 0.0, 1.0), 5.0);
     float shine = mix(70.0, 12.0, uRough);
     float glint = pow(max(dot(N, normalize(uLight + V)), 0.0), shine) * (shine + 8.0) * 0.0035;
     color += roomLight(reflect(-V, N)) * fresnel * mix(0.8, 0.5, uRough) + vec3(glint * ndl);
@@ -408,7 +413,7 @@ const GLASS_FRAGMENT = /* glsl */ `
   varying vec3 vWorld;
   void main() {
     vec3 V = normalize(cameraPosition - vWorld);
-    float fresnel = pow(1.0 - max(dot(uNormal, V), 0.0), 5.0);
+    float fresnel = pow(1.0 - clamp(dot(uNormal, V), 0.0, 1.0), 5.0);
     vec3 R = reflect(-V, uNormal);
     float t = (uWin.z - vWorld.z) / max(R.z, 0.05);
     vec2 q = (vWorld.xy + R.xy * t - uWin.xy) / uWinHalf;
@@ -428,6 +433,7 @@ const unit = (v) => {
 
 const round = (v) => Math.round(v * 1000) / 1000
 const FADE_MS = 350
+const fadeSince = (at, now) => Math.min(1, Math.max(0, (now - at) / FADE_MS))
 
 export function createScene(THREE, { canvas, artImage, weave, room, woodImage }) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'default' })
@@ -576,8 +582,8 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
     uPineColor: { value: new THREE.Color(BACK_COLORS.pine) },
     uSideArt: { value: 0 },
     uHalf: { value: new THREE.Vector2(1, 1) },
-    uBand: { value: 1 },
-    uBar: { value: 1 },
+    uBand: { value: BACK.band },
+    uBar: { value: BACK.bar },
     uLightLocal: { value: new THREE.Vector3(...light) },
   }
   const backMesh = new THREE.Mesh(
@@ -645,6 +651,9 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
   sheet.visible = false
   group.add(sheet)
 
+  // Point projeté sur le mur le long de la lumière.
+  const castOnWall = ([x, y, z]) => [x - (light[0] * z) / light[2], y - (light[1] * z) / light[2]]
+
   function updateCurl(p) {
     const curling = p.curl > 0.001
     artMesh.visible = !curling
@@ -662,8 +671,7 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
     // Ombre sur le mur et la feuille : le contour du coin levé, projeté le long de la lumière.
     const lifted = curlOutline(shape).map((q) => curlPoint(q, shape))
     const front = p.z + p.artZ + p.depth
-    const cast = ([x, y, z]) => [p.x + x - (light[0] * (z + front)) / light[2], p.y + y - (light[1] * (z + front)) / light[2]]
-    const shadow = convexHull(lifted.map(cast))
+    const shadow = convexHull(lifted.map(([x, y, z]) => castOnWall([p.x + x, p.y + y, front + z])))
     shadow.forEach((q, i) => flapHull[i].set(q[0], q[1]))
     wallUniforms.uFlapHullN.value = shadow.length
     const rise = Math.max(...lifted.map((q) => q[2]))
@@ -686,10 +694,7 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
     if (key !== artKey) {
       setGeometry(artMesh, artBox({ width: p.width, height: p.height, depth: p.depth, border, paper: p.paper }), ['fab', 'art'])
       setGeometry(backMesh, backShell({ width: p.width, height: p.height, depth: p.depth }), ['part'])
-      const { band, bar } = backLayout(p.width, p.height)
       backUniforms.uHalf.value.set(p.width / 2, p.height / 2)
-      backUniforms.uBand.value = band
-      backUniforms.uBar.value = bar
       artKey = key
     }
     artMesh.position.z = p.artZ
@@ -698,7 +703,7 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
     backMesh.visible = p.paper < 0.999
     backMesh.position.z = p.artZ
     backUniforms.uPine.value = wood.fade(now)
-    backUniforms.uSideArt.value = borderOf(product.border).color ? 0 : 1
+    backUniforms.uSideArt.value = borderTakesImage(product.border) ? 1 : 0
     backUniforms.uLightLocal.value.set(...light).applyQuaternion(towardsLocal.copy(group.quaternion).invert())
 
     borderColor.set(borderOf(product.border).color || PAPER_WHITE)
@@ -746,8 +751,7 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
 
   function updateShadow(p) {
     const corners = paintingCorners(p, 'outer')
-    const projected = corners.map((c) => [c[0] - (light[0] * c[2]) / light[2], c[1] - (light[1] * c[2]) / light[2]])
-    const h = convexHull(projected)
+    const h = convexHull(corners.map(castOnWall))
     h.forEach((q, i) => hull[i].set(q[0], q[1]))
     wallUniforms.uHullN.value = h.length
     const front = corners.filter((c) => c.side.z === 1)
@@ -775,7 +779,7 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
           if (onNeedsRender) onNeedsRender()
         }, () => { state = 'error' })
       },
-      fade: (now) => (state === 'ready' ? Math.min(1, Math.max(0, (now - shownAt) / FADE_MS)) : 0),
+      fade: (now) => (state === 'ready' ? fadeSince(shownAt, now) : 0),
       isFading: (now) => state === 'ready' && now - shownAt < FADE_MS,
       ready: () => state === 'ready',
     }
@@ -888,7 +892,7 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
 
   function finishArtSwap(now) {
     if (!artSwap) return
-    artUniforms.uArtMix.value = Math.min(1, Math.max(0, (now - artSwap.at) / FADE_MS))
+    artUniforms.uArtMix.value = fadeSince(artSwap.at, now)
     if (artUniforms.uArtMix.value < 1) return
     artUniforms.uArtPrev.value.dispose()
     artUniforms.uArtPrev.value = null
@@ -910,7 +914,7 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
   const tmp = new THREE.Vector3()
   function toScreen(point) {
     tmp.set(...point).project(camera)
-    return { x: ((tmp.x + 1) / 2) * width, y: ((1 - tmp.y) / 2) * height, visible: tmp.z < 1 }
+    return { x: ((tmp.x + 1) / 2) * width, y: ((1 - tmp.y) / 2) * height }
   }
 
   /* Fidélité : rend la vue de face, lit les pixels de la façade et les compare, zone par

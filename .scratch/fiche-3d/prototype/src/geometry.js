@@ -3,9 +3,12 @@
  * Unités : cm. L'œuvre occupe x ∈ [-W/2, W/2], y ∈ [-H/2, H/2], z ∈ [0, D] (dos au mur).
  */
 
+import { borderTakesImage } from './catalog.js'
+
 const CANVAS_CORNER = 0.3
 const PAPER_CORNER = 0.02
 const CORNER_SEGMENTS = 4
+const CANVAS_EDGE = 0.25 // arrondi de la toile qui tourne sur le châssis
 
 // Contour à coins arrondis, dans le sens trigonométrique vu de face, un arc par coin.
 function roundedContour(W, H, rc) {
@@ -31,13 +34,13 @@ function roundedContour(W, H, rc) {
    continue sur la tranche : la façade montre donc le centre de l'image), 'papier'.
    paper : de 0 (toile, qui tourne autour du châssis) à 1 (feuille, coupée net).
    Attributs : uv (image), fab (grain, en cm), art (1 = image, 0 = couleur de tranche). */
-export function artBox({ width: W, height: H, depth: D, border, paper = 0, edge = 0.25 }) {
+export function artBox({ width: W, height: H, depth: D, border, paper = 0 }) {
   const M = 4 // segments de l'arête avant
   const corner = CANVAS_CORNER + (PAPER_CORNER - CANVAS_CORNER) * paper
   const rc = Math.min(corner, W / 2, H / 2)
-  const re = Math.min(edge, D * 0.45, rc * 0.95)
+  const re = Math.min(CANVAS_EDGE, D * 0.45, rc * 0.95)
   const fold = border === 'pliee'
-  const sideArt = border === 'pliee' || border === 'miroir' || border === 'etiree'
+  const sideArt = borderTakesImage(border)
 
   // Coordonnées d'image : origine en haut à gauche, les textures n'étant pas retournées.
   const artUV = (x, y) =>
@@ -104,14 +107,10 @@ export function artBox({ width: W, height: H, depth: D, border, paper = 0, edge 
   return pack({ position, normal, uv, fab, art, index })
 }
 
-/* Dos de la toile, relevé sur une 75 × 100 : 4 cm de toile repliée sur le châssis, puis 1,5 à
-   2 cm de pin, puis la toile tendue au fond. Les petits formats ont une bande plus étroite
-   (supposé). bar : largeur totale du châssis vu de dos. */
-export function backLayout(W, H) {
-  const size = Math.min(W, H)
-  const band = 2 + 0.027 * size
-  return { band, bar: band + 1 + 0.01 * size }
-}
+/* Dos de la toile, relevé sur une 75 × 100 : 4 cm de toile repliée sur le châssis, puis
+   1,75 cm de pin, puis la toile tendue au fond. Mêmes baguettes pour tous les formats.
+   bar : largeur totale du châssis vu de dos. */
+export const BACK = { band: 4, bar: 5.75 }
 
 const CANVAS_SKIN = 0.12 // la toile tendue est juste derrière la façade
 
@@ -119,8 +118,7 @@ const CANVAS_SKIN = 0.12 // la toile tendue est juste derrière la façade
    parois intérieures du châssis, la toile tendue au fond. Tout le détail est peint par le
    shader du dos (back-shader.js). Attribut part : 0 anneau, 1 parois, 2 toile tendue. */
 export function backShell({ width: W, height: H, depth: D }) {
-  const { bar } = backLayout(W, H)
-  const ix = W / 2 - bar, iy = H / 2 - bar
+  const ix = W / 2 - BACK.bar, iy = H / 2 - BACK.bar
   const panel = Math.max(0, D - CANVAS_SKIN)
   const position = [], normal = [], uv = [], part = [], index = []
   const vertex = (x, y, z, n, kind) => {

@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { artBox, backLayout, backShell, curlPoint, curlShape, curlSheet, frameProfile, frameRing } from '../src/geometry.js'
+import { BACK, artBox, backShell, convexHull, curlOutline, curlPoint, curlShape, curlSheet, frameProfile, frameRing } from '../src/geometry.js'
 import { FRAME_PROFILE } from '../src/catalog.js'
 
 // Ce que l'arrondi retire au coin d'un rectangle 30 × 40, le long de la diagonale.
@@ -53,15 +53,13 @@ test('la toile laisse son dos ouvert au châssis ; la feuille de papier reste fe
   assert.ok(rearFaces('papier') > 0)
 })
 
-test('sur une 75 × 100, le dos a les mesures relevées : 4 cm de toile repliée, puis 1,5 à 2 cm de pin', () => {
-  const { band, bar } = backLayout(75, 100)
-  assert.ok(Math.abs(band - 4) < 0.1)
-  assert.ok(bar - band >= 1.5 && bar - band <= 2)
+test('le dos a les mesures relevées : 4 cm de toile repliée, puis 1,5 à 2 cm de pin', () => {
+  assert.equal(BACK.band, 4)
+  assert.ok(BACK.bar - BACK.band >= 1.5 && BACK.bar - BACK.band <= 2)
 })
 
 test('le dos de la toile : un anneau au ras du mur, des parois de châssis, la toile tendue au fond', () => {
   const data = backShell({ width: 30, height: 40, depth: 2 })
-  const { bar } = backLayout(30, 40)
   const parts = [0, 1, 2].map((part) => {
     const zs = []
     for (let v = 0; v < data.part.length; v++) if (data.part[v] === part) zs.push(data.position[v * 3 + 2])
@@ -80,7 +78,7 @@ test('le dos de la toile : un anneau au ras du mur, des parois de châssis, la t
   for (let v = 0; v < data.part.length; v++) {
     if (data.part[v] === 2) inner = Math.max(inner, data.position[v * 3])
   }
-  assert.ok(Math.abs(inner - (15 - bar)) < 1e-5, 'ouverture du châssis')
+  assert.ok(Math.abs(inner - (15 - BACK.bar)) < 1e-5, 'ouverture du châssis')
 })
 
 const CORNER = { x: 1, y: -1 }
@@ -119,6 +117,14 @@ test('à plat, le coin ne bouge pas ; soulevé, il garde sa longueur de papier',
   }
   const expected = shape.fold * 1.3
   assert.ok(Math.abs(length - expected) / expected < 0.01, `papier étiré : ${length.toFixed(2)} pour ${expected.toFixed(2)} cm`)
+})
+
+test('l’ombre du coin levé tient dans les 8 sommets que le shader sait lire', () => {
+  for (const amount of [0.1, 0.5, 1]) {
+    const shape = curlShape(amount, 30, 40, CORNER)
+    const hull = convexHull(curlOutline(shape).map((q) => curlPoint(q, shape)).map(([x, y]) => [x, y]))
+    assert.ok(hull.length >= 3 && hull.length <= 8, `${hull.length} sommets`)
+  }
 })
 
 test('à fond, le coin s’enroule au-dessus de la feuille et ne passe jamais derrière le mur', () => {

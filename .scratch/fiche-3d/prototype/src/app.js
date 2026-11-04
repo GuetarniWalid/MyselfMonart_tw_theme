@@ -7,7 +7,7 @@
 
 import { createDirector } from './staging.js'
 import { ROOM } from './room.js'
-import { BORDERS, FRAMES, SIZES, describe, priceOf, sizeLabel } from './catalog.js'
+import { BORDERS, FRAMES, SIZES, borderTakesImage, describe, priceOf, sizeLabel } from './catalog.js'
 import { densityForCost, renderDensity } from './quality.js'
 import { decodeImage } from './images.js'
 import { startReliefs } from './reliefs.js'
@@ -15,6 +15,8 @@ import { startReliefs } from './reliefs.js'
 const THREE_URL = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js'
 const WOOD_IMAGE = 'assets/chene-clair.jpg'
 const DETAIL_IMAGE = 'assets/bonsai-source.jpg' // la source complète, pour les gros plans
+
+document.documentElement.lang = 'fr' // l'hébergeur des Artifacts fournit <html> sans langue
 
 const $ = (id) => document.getElementById(id)
 const stageEl = $('stage'), canvas = $('gl'), poster = $('poster')
@@ -49,7 +51,7 @@ function swatch(option) {
   dot.setAttribute('aria-hidden', 'true')
   // Pas de couleur : bordure qui reprend l'image (pastille d'image) ou pas de cadre (vide).
   if (option.color) dot.style.background = option.color
-  else if ('add' in option) dot.style.background = `center / 260% url(${poster.getAttribute('src')})`
+  else if (borderTakesImage(option.id)) dot.style.background = `center / 260% url(${poster.getAttribute('src')})`
   else dot.style.background = 'transparent'
   return dot
 }
@@ -128,8 +130,8 @@ function updateTexts() {
   for (const fieldset of document.querySelectorAll('fieldset[data-only]')) {
     fieldset.hidden = fieldset.dataset.only !== product.material
   }
-  for (const [frame, words] of frameWords) {
-    words.textContent = product.material === 'poster' ? frame.posterLabel : frame.label
+  for (const [option, words] of frameWords) {
+    words.textContent = product.material === 'poster' ? option.posterLabel : option.label
   }
 }
 
@@ -331,11 +333,15 @@ function showNotice(text, actions = []) {
 }
 
 const marks = { photo: 0 }
-const photoReady = new Promise((resolve) => {
+const photoReady = new Promise((resolve, reject) => {
   const done = () => { marks.photo = performance.now(); resolve() }
   if (poster.complete && poster.naturalWidth) done()
-  else poster.addEventListener('load', done, { once: true })
+  else {
+    poster.addEventListener('load', done, { once: true })
+    poster.addEventListener('error', reject, { once: true })
+  }
 })
+photoReady.catch(() => {}) // l'échec se traite au démarrage de la 3D, qui peut ne jamais venir
 
 // Reliefs : calculés une seule fois, dès qu'on sait que la 3D va démarrer.
 let reliefs = null
@@ -396,6 +402,7 @@ async function start3D() {
     canvas.removeAttribute('aria-hidden')
     canvas.classList.add('on')
     setTimeout(() => {
+      if (contextLost) return
       poster.classList.add('off')
       poster.setAttribute('aria-hidden', 'true')
     }, 500)
@@ -463,8 +470,10 @@ if (slowNetwork) {
 for (const id of ['buy', 'buyDesk']) {
   $(id).addEventListener('click', () => {
     const toast = $('toast')
-    toast.textContent = "Prototype : le panier n'est pas branché ici."
+    toast.textContent = ''
     toast.hidden = false
+    // Texte posé après l'affichage, pour que les lecteurs d'écran l'annoncent.
+    setTimeout(() => { toast.textContent = "Prototype : le panier n'est pas branché ici." }, 60)
     clearTimeout(toast.timer)
     toast.timer = setTimeout(() => { toast.hidden = true }, 2200)
   })
