@@ -5,7 +5,7 @@
 - 4 couleurs de cadre (noir, blanc, chêne clair, noyer), avec le verre et son reflet ;
 - le contour blanc (passe-partout) : le choisir fait zoomer de face sur la marge.
 
-Passer de la toile au poster anime le tableau, qui s'épaissit ou s'affine, sans recharger la 3D. Le Publisher crée le poster en même temps que la toile, relié comme jumeau, avec ses propres photos, dont une avec contour blanc. En format carré, seule la toile est créée. Contexte et décisions : README du dossier `fiche-3d`.
+Choisir le poster sans cadre fait se soulever et s'enrouler un coin du papier, puis il retombe. Choisir la toile lui fait quitter le mur et faire un tour complet pour montrer le châssis au dos, puis elle revient au mur : ces deux mises en scène sont réglées dans le prototype (ticket 02). Le passage de l'une à l'autre se fait sans recharger la 3D. Le Publisher crée le poster en même temps que la toile, relié comme jumeau, avec ses propres photos, dont une avec contour blanc. En format carré, seule la toile est créée. Contexte et décisions : README du dossier `fiche-3d`.
 
 **Blocked by:** 10 (cadres et bordures)
 

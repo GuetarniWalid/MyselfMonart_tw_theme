@@ -31,7 +31,8 @@ Ajouter un tableau à partir d'une seule image à plat, sans Photoshop ni mockup
    - bordure : le tableau pivote pour montrer la tranche ;
    - cadre : zoom sur un coin du cadre ;
    - contour blanc : zoom de face sur la marge ;
-   - poster ou toile : le tableau s'épaissit ou s'affine ;
+   - poster sans cadre : un coin du papier se soulève et s'enroule, puis retombe (demande de Walid du 04/11) ;
+   - toile : le tableau quitte le mur et fait un tour complet pour montrer le châssis au dos (bande blanche agrafée, pin clair), puis revient au mur (demande de Walid du 04/11) ;
    - la caméra revient de face quand on passe à une autre option.
 8. Châssis des toiles : 2 cm.
 9. Bouton d'achat toujours visible : barre fixe en bas sur mobile ; sur ordinateur, bouton visible dès l'arrivée et 3D fixe pendant qu'on parcourt les options. Le prix et le bouton changent au clic ; l'animation ne bloque jamais rien.
