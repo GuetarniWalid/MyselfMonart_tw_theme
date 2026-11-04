@@ -275,7 +275,7 @@ const WALL_FRAGMENT = /* glsl */ `
   uniform float uRefX;
   uniform sampler2D uWallA; // murs d'essai : deux places, pour passer de l'un à l'autre en fondu
   uniform sampler2D uWallB;
-  uniform vec2 uWallTiles; // largeur de leur tuile, en cm
+  uniform vec2 uWallTileCm; // largeur de leur tuile
   uniform vec3 uWallMix; // parts du mur uni, et des murs d'essai
   uniform sampler2D uRoom;
   uniform sampler2D uRoomWall; // où est le mur, sur la photo de la pièce
@@ -305,8 +305,8 @@ const WALL_FRAGMENT = /* glsl */ `
   void main() {
     vec2 onWall = vec2(vXY.x, -vXY.y);
     vec3 surface = uWall * uWallMix.x;
-    if (uWallMix.y > 0.0) surface += texture2D(uWallA, onWall / uWallTiles.x).rgb * uWallMix.y;
-    if (uWallMix.z > 0.0) surface += texture2D(uWallB, onWall / uWallTiles.y).rgb * uWallMix.z;
+    if (uWallMix.y > 0.0) surface += texture2D(uWallA, onWall / uWallTileCm.x).rgb * uWallMix.y;
+    if (uWallMix.z > 0.0) surface += texture2D(uWallB, onWall / uWallTileCm.y).rgb * uWallMix.z;
     vec3 col = surface * (1.0 + uSlope * (vXY.x - uRefX));
     if (uRoomMix > 0.0) {
       vec2 ruv = (vXY - uRoomRect.xy) / (uRoomRect.zw - uRoomRect.xy);
@@ -493,7 +493,7 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
     uRefX: { value: room.hang.x },
     uWallA: { value: null },
     uWallB: { value: null },
-    uWallTiles: { value: new THREE.Vector2(1, 1) },
+    uWallTileCm: { value: new THREE.Vector2(1, 1) },
     uWallMix: { value: new THREE.Vector3(1, 0, 0) },
     uRoom: { value: null },
     uRoomWall: { value: null },
@@ -856,10 +856,12 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
   })
 
   /* Murs d'essai : une tuile peinte une fois, puis gardée. Deux places, pour qu'un mur en
-     remplace un autre en fondu ; wallFade va de la part de chacun à leur part d'arrivée. */
+     remplace un autre en fondu. wallFade va des parts du mur uni et des deux places à leurs parts
+     d'arrivée : `only` donne tout à l'un des trois. */
   const wallTiles = new Map()
   const wallSlots = [null, null]
-  const wallFade = { from: [1, 0, 0], to: [1, 0, 0], at: -Infinity }
+  const only = (index) => [0, 1, 2].map((i) => (i === index ? 1 : 0))
+  const wallFade = { from: only(0), to: only(0), at: -Infinity }
   const wallMix = (now) => {
     const t = fadeSince(wallFade.at, now)
     return wallFade.from.map((v, i) => v + (wallFade.to[i] - v) * t)
@@ -883,15 +885,15 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
     wallFade.from = shares
     wallFade.at = now
     if (id === NEUTRAL_WALL) {
-      wallFade.to = [1, 0, 0]
+      wallFade.to = only(0)
       return
     }
     const held = wallSlots.indexOf(id)
     const slot = held >= 0 ? held : shares[1] <= shares[2] ? 0 : 1
     wallSlots[slot] = id
     wallUniforms[slot ? 'uWallB' : 'uWallA'].value = wallTile(id)
-    wallUniforms.uWallTiles.value.setComponent(slot, wallOf(id).tileCm)
-    wallFade.to = slot ? [0, 0, 1] : [0, 1, 0]
+    wallUniforms.uWallTileCm.value.setComponent(slot, wallOf(id).tileCm)
+    wallFade.to = only(slot + 1)
   }
 
   let onNeedsRender = null

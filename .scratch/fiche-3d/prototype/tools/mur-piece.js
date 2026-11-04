@@ -8,6 +8,9 @@
  * ses pixels à wallMask avec SALON, poser le résultat sur un canvas, puis toBlob(save, 'image/png').
  */
 
+const EDGE = 2 // écart de luminosité où l'image marque un bord
+const WARM = 22 // écart rouge-bleu au-delà duquel ce n'est plus le mur
+
 // Réglages de la pièce provisoire : ligne du sol, et un point par morceau de mur.
 export const SALON = {
   floor: 1216 / 1350,
@@ -52,29 +55,28 @@ function average(zone, width, height, radius) {
 }
 
 // Grandit (ou rétrécit) une zone d'un pixel, en croix.
-function morph(zone, width, height, grow) {
+function morph(zone, width, height, widen) {
   const out = new Uint8Array(zone.length)
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const i = y * width + x
       const around = [zone[i], x > 0 ? zone[i - 1] : zone[i], x + 1 < width ? zone[i + 1] : zone[i],
         y > 0 ? zone[i - width] : zone[i], y + 1 < height ? zone[i + width] : zone[i]]
-      out[i] = grow ? Math.max(...around) : Math.min(...around)
+      out[i] = widen ? Math.max(...around) : Math.min(...around)
     }
   }
   return out
 }
 
 /* rgba : pixels de la photo. seeds : points [x, y] posés sur le mur, en part de la largeur et de
-   la hauteur. edge : écart de luminosité où l'image marque un bord. warm : écart rouge-bleu
-   au-delà duquel ce n'est plus le mur. floor : au-dessous de cette part de la hauteur, plus de mur.
-   grow : pixels gagnés à la fin, pour rejoindre le milieu du bord. Renvoie un octet par pixel. */
-export function wallMask(rgba, width, height, { seeds, edge = 2, warm = 22, floor = 1, grow = 2 }) {
+   la hauteur. floor : au-dessous de cette part de la hauteur, plus de mur. grow : pixels gagnés à
+   la fin, pour rejoindre le milieu du bord. Renvoie un octet par pixel. */
+export function wallMask(rgba, width, height, { seeds, floor = 1, grow = 2 }) {
   const strength = edgeStrength(softLuminosity(rgba, width, height), width, height)
   const lowest = Math.floor(floor * height)
   const open = (i) => {
     const y = Math.floor(i / width)
-    return y < lowest && strength[i] < edge && rgba[4 * i] - rgba[4 * i + 2] < warm
+    return y < lowest && strength[i] < EDGE && rgba[4 * i] - rgba[4 * i + 2] < WARM
   }
   let zone = new Uint8Array(width * height)
   const stack = seeds.map(([x, y]) => Math.floor(y * height) * width + Math.floor(x * width))

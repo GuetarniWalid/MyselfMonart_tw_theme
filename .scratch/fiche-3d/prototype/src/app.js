@@ -113,8 +113,13 @@ function buildOptions() {
   }
   form.addEventListener('change', (event) => choose(event.target.name, event.target.value))
   // Retoucher l'option déjà choisie : pas de change, mais le visiteur veut revoir le mouvement.
-  form.addEventListener('click', ({ target: { type, name, value } }) => {
-    if (type === 'radio' && value === valueOf(name)) choose(name, value)
+  const replay = ({ type, name, value }) => {
+    if (type === 'radio' && value === valueOf(name) && !reducedMotion) choose(name, value)
+  }
+  form.addEventListener('click', (event) => replay(event.target))
+  // Au clavier, Espace et Entrée ne font pas de clic sur une option déjà cochée.
+  form.addEventListener('keydown', (event) => {
+    if ((event.key === ' ' || event.key === 'Enter') && !event.repeat) replay(event.target)
   })
   form.addEventListener('submit', (event) => event.preventDefault())
 }
@@ -173,7 +178,7 @@ function updatePanel() {
   }
 }
 
-// Le mur se voit de face ou dans la pièce : un gros plan le cacherait.
+// Le mur change sur place, en fondu : tous les plans le montrent, et aucun mouvement n'est coupé.
 function chooseWall(value) {
   if (value === wall) return
   wall = value
@@ -181,7 +186,6 @@ function chooseWall(value) {
     engine.useWall(value, performance.now())
     requestRender()
   })
-  if (director.view(performance.now(), aspect()).room < 0.5) choose('front')
 }
 
 function choose(group, value) {
@@ -275,7 +279,9 @@ canvas.addEventListener('pointercancel', endDrag)
 
 $('frontBtn').addEventListener('click', () => choose('front'))
 $('roomBtn').addEventListener('pointerdown', prefetchRoom, { once: true })
-$('roomBtn').addEventListener('click', () => choose('size', product.size))
+$('roomBtn').addEventListener('click', () => {
+  if (director.view(performance.now(), aspect()).room < 1) choose('size', product.size)
+})
 
 // Densité de rendu : celle de l'écran, sous le plafond fixé une fois pour toutes à l'arrivée.
 let densityCap = Infinity

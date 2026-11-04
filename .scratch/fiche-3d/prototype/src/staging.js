@@ -527,7 +527,8 @@ export function createDirector({ room, product, reducedMotion = false }) {
     state.legs.find((leg) => ACTS[leg.shot] && at >= leg.start + leg.join && at < leg.start + leg.duration)
 
   function choose(group, nextProduct, at) {
-    // Retoucher l'option en cours rejoue sa mise en scène, une fois la précédente finie.
+    // Retoucher l'option en cours rejoue sa mise en scène. Pendant qu'elle se joue, le toucher ne
+    // compte pas : un double clic ne doit pas la couper.
     const replay = group === state.group && sameProduct(state.product, nextProduct)
     if (replay && isStaging(at)) return
     // Départ figé sans l'inclinaison : celle-ci continue à part, par-dessus la transition.
