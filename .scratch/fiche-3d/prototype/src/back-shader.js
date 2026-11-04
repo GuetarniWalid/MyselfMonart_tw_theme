@@ -4,7 +4,7 @@
  * geometry.js (backLayout, stapleRows). Du bord vers le centre : l'image (ou la couleur de tranche)
  * qui revient de quelques mm, un fin trait noir, la toile blanche repliée et ses agrafes, le pin
  * pâle du châssis, et au fond la toile brute, blanc cassé. Aux coins, la bande verticale passe
- * sur la bande horizontale. Le logo, le code et le format sont imprimés sur la bande (marks.js).
+ * sur la bande horizontale. Les marques sont imprimées sur la bande (marks.js).
  */
 
 export const BACK_COLORS = { band: '#f1efe9', raw: '#e9e6df', pine: '#e6dccb' }
@@ -39,15 +39,13 @@ export const BACK_FRAGMENT = /* glsl */ `
   uniform float uBar;
   uniform vec3 uStaplesUpright; // rang d'agrafes des bords verticaux : premier, écart, nombre
   uniform vec3 uStaplesFlat; // et des bords horizontaux
+  uniform float uStapleHalf; // demi-longueur d'une agrafe
   uniform float uCornerStapleInset; // distance au bord haut ou bas de l'agrafe de coin
   uniform float uMarkedCornerInset; // de même dans le coin du code, plus haut pour lui laisser la place
+  uniform vec2 uRowClear; // au centre des bandes du haut et du bas, les marques écartent les agrafes
   uniform sampler2D uMarks; // planche des marques
-  uniform vec4 uLogoBox; // boîtes vues de dos, en cm : x, y, largeur, hauteur
-  uniform vec4 uCodeBox;
-  uniform vec4 uTextBox;
-  uniform vec4 uLogoArea; // zones de la planche, de 0 à 1
-  uniform vec4 uCodeArea;
-  uniform vec4 uTextArea;
+  uniform vec4 uMarkBoxes[5]; // boîtes vues de dos, en cm : x, y, largeur, hauteur
+  uniform vec4 uMarkAreas[5]; // zones de la planche, de 0 à 1
   uniform vec3 uLight;
   uniform vec3 uLightLocal;
   uniform float uAmbient;
@@ -57,8 +55,10 @@ export const BACK_FRAGMENT = /* glsl */ `
   varying vec3 vNormalW;
   varying float vPart;
 
-  const float STAPLE_HALF = 1.0; // une agrafe fait 2 cm
-  const float WIRE = 0.055; // demi-épaisseur du fil
+  const float WIRE = 0.055; // demi-épaisseur du fil, en part de la demi-longueur de l'agrafe
+  const vec3 STEEL = vec3(0.13, 0.135, 0.15);
+  const vec3 STEEL_EDGE = vec3(0.04, 0.042, 0.05);
+  const int PREMIUM = 4; // la seule marque tournée d'un quart de tour
   const float SHOULDER = 0.325; // arrondi de la bande du dessus, près du coin, en part de la bande
   const vec2 FOLD_TIP = vec2(0.25, 0.3625); // tout petit rabat replié de la pointe, de même
   const float OAK_MEAN = 1.34; // somme moyenne des trois canaux de l'image de chêne
@@ -72,11 +72,6 @@ export const BACK_FRAGMENT = /* glsl */ `
 
   float hash(vec2 p) {
     return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
-  }
-
-  vec2 turned(vec2 p, float a) {
-    float c = cos(a), s = sin(a);
-    return vec2(c * p.x + s * p.y, c * p.y - s * p.x);
   }
 
   // Pin : sa propre teinte, avec le fil du chêne des cadres. q.y suit le fil.
@@ -98,16 +93,41 @@ export const BACK_FRAGMENT = /* glsl */ `
     return amount * (sin(along * 1.1 + phase) + 0.6 * sin(along * 2.9 + phase * 0.7));
   }
 
-  // q : position depuis le milieu de l'agrafe, x le long du fil. Le tissu se creuse autour,
-  // le fil pose une ombre courte et brille sur son arête.
-  vec3 staple(vec3 color, vec2 q) {
-    vec2 spread = q / vec2(STAPLE_HALF + 0.8, 0.65);
-    color *= 1.0 - 0.09 * exp(-dot(spread, spread));
-    float wire = length(vec2(max(abs(q.x) - STAPLE_HALF, 0.0), q.y));
-    color *= 1.0 - 0.4 * exp(-pow(wire / 0.13, 2.0));
-    float crest = q.y / max(0.03, pixel * 0.7);
-    vec3 metal = mix(vec3(0.3, 0.31, 0.33), vec3(0.82, 0.83, 0.85), exp(-crest * crest));
-    return mix(color, metal, inside(WIRE - wire));
+  // Point exprimé le long du fil (x) et en travers (y).
+  vec2 onWire(vec2 d, vec2 axis) {
+    return vec2(dot(d, axis), dot(d, vec2(-axis.y, axis.x)));
+  }
+
+  float wireDistance(vec2 q) {
+    return length(vec2(max(abs(q.x) - uStapleHalf, 0.0), q.y));
+  }
+
+  /* Agrafe : center, son milieu ; axis, la direction du fil. L'acier sombre et l'ombre de contact
+     la détachent du tissu clair. Le fil garde toujours plus d'un pixel de large, même vu de biais
+     pendant le tour ; son bord se lisse sur un pixel mesuré en travers, pour rester net. Trop
+     fin pour montrer un reflet, il reste un trait sombre, avec une ombre plus légère. */
+  vec3 staple(vec3 color, vec2 p, vec2 center, vec2 axis, float present) {
+    vec2 d = p - center;
+    vec2 q = onWire(d, axis);
+    float across = max(fwidth(q.y), 1e-4);
+    float wire = max(WIRE * uStapleHalf, 0.75 * across);
+    float roomy = smoothstep(2.5, 4.0, 2.0 * wire / across); // le fil est assez large pour ses détails
+
+    vec2 spread = q / (uStapleHalf * vec2(1.8, 0.65));
+    vec3 cloth = color * (1.0 - 0.09 * exp(-dot(spread, spread))); // le tissu se creuse un peu autour
+
+    vec2 towardsLight = normalize(uLightLocal.xy) * max(1.2 * wire, across);
+    float contact = wireDistance(onWire(d + towardsLight, axis));
+    float shadow = clamp((1.25 * wire - contact) / max(across, 0.7 * wire) + 0.5, 0.0, 1.0);
+    cloth *= 1.0 - mix(0.25, 0.5, roomy) * shadow;
+
+    float rise = q.y / wire; // de -1 à 1 en travers du fil
+    vec3 steel = mix(STEEL, STEEL_EDGE, rise * rise);
+    float glint = 1.0 - smoothstep(0.12, 0.3, abs(rise - 0.25));
+    steel = mix(steel, vec3(0.92), glint * roomy);
+
+    float cover = clamp((wire - wireDistance(q)) / across + 0.5, 0.0, 1.0);
+    return mix(color, mix(cloth, steel, cover), present);
   }
 
   vec3 ringColor(vec2 p, vec2 c) {
@@ -153,21 +173,24 @@ export const BACK_FRAGMENT = /* glsl */ `
     float k = clamp(floor((along - row.x) / row.y + 0.5), 0.0, row.z - 1.0);
     float jitter = hash(vec2(k, side));
     float at = row.x + k * row.y + (jitter - 0.5) * 1.4;
-    vec2 q = vec2(along - at, e - uBand * (0.52 + 0.1 * (hash(vec2(side, k)) - 0.5)));
-    // Au milieu de la bande du bas, le logo prend la place de l'agrafe.
-    bool logoHere = !upright && p.y < 0.0 && abs(at) < uLogoBox.z * 0.5 + STAPLE_HALF + 1.0;
-    if (!logoHere) cloth = staple(cloth, turned(q, (jitter - 0.5) * 0.1));
+    float fromEdge = uBand * (0.52 + 0.1 * (hash(vec2(side, k)) - 0.5));
+    float tilt = (jitter - 0.5) * 0.1;
+    vec2 center = upright ? vec2(sign(p.x) * (uHalf.x - fromEdge), at) : vec2(at, sign(p.y) * (uHalf.y - fromEdge));
+    vec2 axis = upright ? vec2(sin(tilt), cos(tilt)) : vec2(cos(tilt), sin(tilt));
+    // Au centre des bandes du haut et du bas, les marques prennent la place de l'agrafe.
+    float clear = p.y > 0.0 ? uRowClear.x : uRowClear.y;
+    cloth = staple(cloth, p, center, axis, upright || abs(at) >= clear ? 1.0 : 0.0);
 
     // Une seule agrafe par coin, parallèle au bord vertical, dans la bande qui passe dessus.
     // Vu de dos, le coin bas droit est à x < 0 : c'est celui du code.
     float inset = p.x < 0.0 && p.y < 0.0 ? uMarkedCornerInset : uCornerStapleInset;
-    float sway = hash(sign(p) + 3.0) - 0.5;
-    cloth = staple(cloth, turned(vec2(c.y - inset, c.x - uBand * 0.5), sway * 0.08));
+    float sway = (hash(sign(p) + 3.0) - 0.5) * 0.08;
+    vec2 corner = sign(p) * (uHalf - vec2(uBand * 0.5, inset));
+    cloth = staple(cloth, p, corner, vec2(sin(sway), cos(sway)), 1.0);
 
     // Marques imprimées sur la toile.
     vec2 seen = vec2(-p.x, p.y);
-    cloth *= ink(seen, uLogoBox, uLogoArea, false) * ink(seen, uCodeBox, uCodeArea, false);
-    cloth *= ink(seen, uTextBox, uTextArea, true);
+    for (int i = 0; i < 5; i++) cloth *= ink(seen, uMarkBoxes[i], uMarkAreas[i], i == PREMIUM);
 
     color = mix(color, cloth, band);
 

@@ -1,32 +1,50 @@
 /*
- * Marques imprimées au dos de la toile : le logo de MyselfMonArt au milieu de la bande du bas ;
- * en bas à droite, sur la bande verticale, un code carré décoratif et le format. Elles gardent
- * la même taille réelle sur tous les formats. Tout est dessiné ici : rien à télécharger.
+ * Marques imprimées au dos de la toile : le logo de MyselfMonArt au centre de la bande du haut ;
+ * au centre de la bande du bas, un code carré et le format ; en bas à droite, sur la bande
+ * verticale, un autre code ; plus haut sur cette bande, « PREMIUM ». Elles gardent la même
+ * taille réelle sur tous les formats. Tout est dessiné ici : rien à télécharger.
  */
 
-import { backLayout } from './geometry.js'
+import { backLayout, stapleRows } from './geometry.js'
 import { SIZES } from './catalog.js'
 
 // Tailles réelles, en cm. free : distance au bord où finit le retour d'image.
 export const MARKS = { logo: 1.5, code: 1.1, textHeight: 0.4, gap: 0.1, free: 0.5 }
-const ABOVE_FREE = 0.15 // le code se pose un peu au-dessus du retour d'image
-const STAPLE_CLEARANCE = 1.3 // de la dernière marque au milieu de l'agrafe du coin
+const ABOVE_FREE = 0.15 // le code du coin se pose un peu au-dessus du retour d'image
+const STAPLE_MARGIN = 0.3 // entre une marque et le bout d'une agrafe
+const STAPLE_DRIFT = 0.7 // écart d'une agrafe posée à la main
+const PREMIUM_HEIGHT = 2 / 3 // part de la hauteur du tableau, depuis le bas
+
+// Hauteur (depuis le milieu) la plus proche de `wanted` où une marque évite le rang d'agrafes.
+function clearOfStaples(wanted, row, margin) {
+  let y = wanted
+  for (let k = 0; k < row.count; k++) {
+    const at = row.first + k * row.gap
+    if (Math.abs(y - at) < margin) y = at + margin
+  }
+  return y
+}
 
 /* Boîtes des marques, en cm, telles qu'on les voit de dos : x vers la droite du regard, y vers
-   le haut, origine au milieu du tableau. Le texte, tourné d'un quart de tour, longe le code. */
-export function marksLayout(W, H, textLength) {
-  const { band, cornerStapleInset } = backLayout(W, H)
+   le haut, origine au milieu du tableau. PREMIUM est tourné d'un quart de tour. rowClear : au
+   centre des bandes du haut et du bas, distance en deçà de laquelle une agrafe s'efface. */
+export function marksLayout(W, H, formatLength, premiumLength) {
+  const { band, cornerStapleInset, stapleLength } = backLayout(W, H)
   const { logo, code, textHeight, gap, free } = MARKS
   const middle = (free + band) / 2 // milieu de la partie libre d'une bande
   const bottom = -H / 2
-  const codeX = W / 2 - middle + (code + gap + textHeight) / 2 - code
-  const codeY = bottom + free + ABOVE_FREE
-  const markedHeight = free + ABOVE_FREE + Math.max(code, textLength)
+  const staple = stapleLength / 2 + STAPLE_DRIFT
+  const rowWidth = code + gap + formatLength
+  const premiumReach = premiumLength / 2 + staple + STAPLE_MARGIN
+  const premiumY = clearOfStaples(H * (PREMIUM_HEIGHT - 0.5), stapleRows(W, H).upright, premiumReach)
   return {
-    logo: { x: -logo / 2, y: bottom + middle - logo / 2, width: logo, height: logo },
-    code: { x: codeX, y: codeY, width: code, height: code },
-    text: { x: codeX - gap - textHeight, y: codeY, width: textHeight, height: textLength },
-    markedCornerInset: Math.max(cornerStapleInset, markedHeight + STAPLE_CLEARANCE),
+    logo: { x: -logo / 2, y: H / 2 - middle - logo / 2, width: logo, height: logo },
+    cornerCode: { x: W / 2 - middle - code / 2, y: bottom + free + ABOVE_FREE, width: code, height: code },
+    centerCode: { x: -rowWidth / 2, y: bottom + middle - code / 2, width: code, height: code },
+    format: { x: gap + code - rowWidth / 2, y: bottom + middle - textHeight / 2, width: formatLength, height: textHeight },
+    premium: { x: W / 2 - middle - textHeight / 2, y: premiumY - premiumLength / 2, width: textHeight, height: premiumLength },
+    markedCornerInset: Math.max(cornerStapleInset, free + ABOVE_FREE + code + STAPLE_MARGIN + stapleLength / 2),
+    rowClear: { top: logo / 2 + staple + STAPLE_MARGIN, bottom: rowWidth / 2 + staple + STAPLE_MARGIN },
   }
 }
 
@@ -36,9 +54,9 @@ const CODE_CELLS = 16
 
 /* Code carré de type Datamatrix : bords gauche et bas pleins, bords haut et droit en pointillés,
    et un motif fixe sans aucun contenu. Il est décoratif : il ne se lit pas. */
-export function dataMatrixCells() {
+export function dataMatrixCells(pattern) {
   const n = CODE_CELLS
-  let seed = 20261104
+  let seed = 20261104 + pattern
   const coin = () => {
     seed = (seed * 1664525 + 1013904223) >>> 0
     return seed / 2 ** 32 < 0.5
@@ -88,13 +106,22 @@ function drawLogo(ctx, size) {
   ctx.restore()
 }
 
+function drawCode(ctx, x, cell, pattern) {
+  ctx.fillStyle = CODE_BLUE
+  dataMatrixCells(pattern).forEach((row, j) => row.forEach((dark, i) => {
+    if (dark) ctx.fillRect(x + i * cell, j * cell, cell, cell)
+  }))
+}
+
 const CODE_BLUE = '#1b2c54'
+const PREMIUM_GREY = '#3b3b3d'
+const PREMIUM_CORNER = 34 // trait en équerre, à la suite du mot, en px de la planche
 const ATLAS = { width: 1024, logo: 256, codeCell: 11, textRow: 64, textPxPerCm: 160, margin: 16 }
 
 /* Planche des marques sur fond blanc : le shader la multiplie au tissu, comme une encre. Le
    texte de chaque format y a sa ligne, pour que changer de taille ne redessine rien.
-   Renvoie les zones de la planche (x, y, largeur, hauteur, de 0 à 1) et la longueur de chaque
-   texte en cm. */
+   Renvoie les zones de la planche (x, y, largeur, hauteur, de 0 à 1) et, pour les textes, leur
+   longueur en cm. */
 export function paintMarks(canvas) {
   const { width: W, logo, codeCell, textRow, textPxPerCm, margin } = ATLAS
   const H = Math.max(logo, SIZES.length * textRow)
@@ -107,23 +134,38 @@ export function paintMarks(canvas) {
 
   drawLogo(ctx, logo)
 
-  const cells = dataMatrixCells()
-  const codeX = logo + margin
-  const code = cells.length * codeCell
-  ctx.fillStyle = CODE_BLUE
-  cells.forEach((row, y) => row.forEach((dark, x) => {
-    if (dark) ctx.fillRect(codeX + x * codeCell, y * codeCell, codeCell, codeCell)
-  }))
+  const code = CODE_CELLS * codeCell
+  const cornerCodeX = logo + margin
+  const centerCodeX = cornerCodeX + code + margin
+  drawCode(ctx, cornerCodeX, codeCell, 1)
+  drawCode(ctx, centerCodeX, codeCell, 2)
 
-  const textX = codeX + code + margin
+  const textX = centerCodeX + code + margin
   ctx.font = `600 ${textRow * 0.7}px system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif`
   ctx.textBaseline = 'middle'
-  const text = {}
+  const format = {}
   SIZES.forEach((size, i) => {
     const words = sizeText(size)
     const length = Math.ceil(ctx.measureText(words).width)
     ctx.fillText(words, textX, (i + 0.5) * textRow)
-    text[size] = { area: area(textX, i * textRow, length, textRow), length: length / textPxPerCm }
+    format[size] = { area: area(textX, i * textRow, length, textRow), length: length / textPxPerCm }
   })
-  return { logo: area(0, 0, logo, logo), code: area(codeX, 0, code, code), text }
+
+  // PREMIUM, sous les codes, suivi de son petit trait en équerre.
+  const premiumY = code + margin
+  ctx.fillStyle = PREMIUM_GREY
+  const word = Math.ceil(ctx.measureText('PREMIUM').width)
+  ctx.fillText('PREMIUM', cornerCodeX, premiumY + textRow / 2)
+  const cornerX = cornerCodeX + word + margin
+  ctx.fillRect(cornerX, premiumY + 12, 4, PREMIUM_CORNER + 4)
+  ctx.fillRect(cornerX, premiumY + 12 + PREMIUM_CORNER, PREMIUM_CORNER, 4)
+  const premiumWidth = word + margin + PREMIUM_CORNER
+
+  return {
+    logo: area(0, 0, logo, logo),
+    cornerCode: area(cornerCodeX, 0, code, code),
+    centerCode: area(centerCodeX, 0, code, code),
+    format,
+    premium: { area: area(cornerCodeX, premiumY, premiumWidth, textRow), length: premiumWidth / textPxPerCm },
+  }
 }

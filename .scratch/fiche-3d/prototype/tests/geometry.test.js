@@ -71,6 +71,12 @@ test('la bande et le pin du dos suivent le format : 4 et 2 cm sur les grands, mo
   }
 })
 
+test('les agrafes raccourcissent avec le format : 1,2 cm en 30 × 40, 1,6 en 60 × 80, 2 à partir du 75 × 100', () => {
+  for (const [W, H, length] of [[30, 40, 1.2], [60, 80, 1.6], [75, 100, 2], [90, 120, 2]]) {
+    assert.ok(near(backLayout(W, H).stapleLength, length), `${W} × ${H} : ${backLayout(W, H).stapleLength}`)
+  }
+})
+
 test('carrés et paysages suivent le même calcul, sur le plus petit côté', () => {
   assert.deepEqual(backLayout(40, 30), backLayout(30, 40))
   assert.deepEqual(backLayout(100, 75), backLayout(75, 100))

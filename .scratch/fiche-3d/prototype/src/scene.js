@@ -592,13 +592,11 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
     uStaplesFlat: { value: new THREE.Vector3() },
     uCornerStapleInset: { value: 1 },
     uMarkedCornerInset: { value: 1 },
+    uStapleHalf: { value: 1 },
+    uRowClear: { value: new THREE.Vector2() },
     uMarks: { value: marksTexture },
-    uLogoBox: { value: new THREE.Vector4() },
-    uCodeBox: { value: new THREE.Vector4() },
-    uTextBox: { value: new THREE.Vector4() },
-    uLogoArea: { value: new THREE.Vector4(...marksAreas.logo) },
-    uCodeArea: { value: new THREE.Vector4(...marksAreas.code) },
-    uTextArea: { value: new THREE.Vector4() },
+    uMarkBoxes: { value: Array.from({ length: 5 }, () => new THREE.Vector4()) },
+    uMarkAreas: { value: Array.from({ length: 5 }, () => new THREE.Vector4()) },
     uLightLocal: { value: new THREE.Vector3(...light) },
   }
   const backMesh = new THREE.Mesh(
@@ -710,21 +708,22 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
       setGeometry(artMesh, artBox({ width: p.width, height: p.height, depth: p.depth, border, paper: p.paper }), ['fab', 'art'])
       setGeometry(backMesh, backShell({ width: p.width, height: p.height, depth: p.depth }), ['part'])
       backUniforms.uHalf.value.set(p.width / 2, p.height / 2)
-      const { band, bar, cornerStapleInset } = backLayout(p.width, p.height)
+      const { band, bar, cornerStapleInset, stapleLength } = backLayout(p.width, p.height)
       backUniforms.uBand.value = band
       backUniforms.uBar.value = bar
       backUniforms.uCornerStapleInset.value = cornerStapleInset
+      backUniforms.uStapleHalf.value = stapleLength / 2
       const { upright, flat } = stapleRows(p.width, p.height)
       backUniforms.uStaplesUpright.value.set(upright.first, upright.gap, upright.count)
       backUniforms.uStaplesFlat.value.set(flat.first, flat.gap, flat.count)
-      const text = marksAreas.text[product.size]
-      const marks = marksLayout(p.width, p.height, text.length)
-      const box = ({ x, y, width: w, height: h }) => [x, y, w, h]
-      backUniforms.uLogoBox.value.set(...box(marks.logo))
-      backUniforms.uCodeBox.value.set(...box(marks.code))
-      backUniforms.uTextBox.value.set(...box(marks.text))
-      backUniforms.uTextArea.value.set(...text.area)
+      const format = marksAreas.format[product.size]
+      const marks = marksLayout(p.width, p.height, format.length, marksAreas.premium.length)
+      const boxes = [marks.logo, marks.cornerCode, marks.centerCode, marks.format, marks.premium]
+      const areas = [marksAreas.logo, marksAreas.cornerCode, marksAreas.centerCode, format.area, marksAreas.premium.area]
+      boxes.forEach(({ x, y, width: w, height: h }, i) => backUniforms.uMarkBoxes.value[i].set(x, y, w, h))
+      areas.forEach((area, i) => backUniforms.uMarkAreas.value[i].set(...area))
       backUniforms.uMarkedCornerInset.value = marks.markedCornerInset
+      backUniforms.uRowClear.value.set(marks.rowClear.top, marks.rowClear.bottom)
       artKey = key
     }
     artMesh.position.z = p.artZ
