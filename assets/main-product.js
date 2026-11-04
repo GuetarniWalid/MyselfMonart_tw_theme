@@ -402,6 +402,15 @@ class MainProductBlocks extends CollapsibleTab {
     }
   }
 
+  // Le bouton flottant vit sur <body> : la bascule toile/poster, qui remplace #MainContent, ne
+  // l'emporte pas. Resté en place, il garderait la fiche d'avant (variante, prix, propriétés de
+  // ligne). L'observateur part aussi, sinon il recréerait ce bouton. La nouvelle fiche a le sien.
+  disconnectedCallback() {
+    this.floatObserver?.disconnect();
+    document.body.querySelector('.float-buy-button')?.remove();
+    this.buyButton = null;
+  }
+
   initObserver = (observed) => {
     const options = {
       root: null,
@@ -425,6 +434,7 @@ class MainProductBlocks extends CollapsibleTab {
     }, options);
 
     observer.observe(observed);
+    this.floatObserver = observer;
   };
 
   hideBuyButton = () => {
