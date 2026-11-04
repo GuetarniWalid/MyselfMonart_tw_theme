@@ -3511,6 +3511,8 @@
         });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const json = await response.json();
+        // Ajout réussi, annoncé à la mesure (assets/posthog-tracking.js).
+        document.dispatchEvent(new CustomEvent('mma:cart-add', { detail: { source: 'studio', items: json.items } }));
 
         const cartResponse = await fetch('/cart.js');
         const cart = await cartResponse.json();
@@ -3561,6 +3563,8 @@
         });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const json = await response.json();
+        // Ajout réussi, annoncé à la mesure (assets/posthog-tracking.js).
+        document.dispatchEvent(new CustomEvent('mma:cart-add', { detail: { source: 'studio', items: json.items } }));
 
         const cart = await (await fetch('/cart.js')).json();
         this.updateCartBubble(cart.item_count);

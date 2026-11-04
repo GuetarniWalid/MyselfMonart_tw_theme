@@ -335,6 +335,8 @@ class QuickAddToCart extends HTMLElement {
     );
     if (!response.ok) throw new Error("Une erreur inattendu s'est produite.");
     const json = await response.json();
+    // Ajout réussi, annoncé à la mesure (assets/posthog-tracking.js).
+    document.dispatchEvent(new CustomEvent('mma:cart-add', { detail: { source: 'bundle', items: json.items } }));
 
     // Fetch current cart state to update bubble
     const cartResponse = await fetch('/cart.js');

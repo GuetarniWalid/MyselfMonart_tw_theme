@@ -495,6 +495,9 @@ class MainProductBlocks extends CollapsibleTab {
       this.displayLoader(button);
       const productProperties = this.getproductProperties();
       const json = await this.buyFetch(button, productProperties);
+      // Ajout réussi, annoncé à la mesure (assets/posthog-tracking.js).
+      const source = button.classList.contains('float-buy-button') ? 'float' : 'main';
+      document.dispatchEvent(new CustomEvent('mma:cart-add', { detail: { source, items: json.items } }));
 
       // Fetch current cart state to update bubble
       const cartResponse = await fetch('/cart.js');

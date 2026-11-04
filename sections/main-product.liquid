@@ -23,6 +23,17 @@
 {%- assign show_perspective = false -%}
 {%- if artwork_kind == 'toile' or is_poster -%}{%- assign show_perspective = true -%}{%- endif -%}
 
+{%- comment -%} La fiche pour la mesure (assets/posthog-tracking.js). Dans #MainContent : la bascule
+   toile/poster la remplace avec le reste de la fiche, l'événement suivant décrit donc le bon produit. {%- endcomment -%}
+<script type="application/json" id="product-tracking-json">
+  {
+    "id": {{ product.id | json }},
+    "handle": {{ product.handle | json }},
+    "kind": {{ artwork_kind | json }},
+    "template": {{ template.suffix | json }}
+  }
+</script>
+
 {%- comment -%} Jumeau Poster/Toile (métafields link.painting / link.poster) -> bascule sans rechargement.
    Le moteur de soft-navigation n'est chargé que sur les fiches ayant un jumeau réellement PUBLIÉ
    (published_at) — même condition que le rendu du bouton (cf. snippet product-format-toggle). {%- endcomment -%}
