@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { BACK, artBox, backShell, convexHull, curlOutline, curlPoint, curlShape, curlSheet, frameProfile, frameRing, stapleRows } from '../src/geometry.js'
+import { artBox, backLayout, backShell, convexHull, curlOutline, curlPoint, curlShape, curlSheet, frameProfile, frameRing, stapleRows } from '../src/geometry.js'
 import { FRAME_PROFILE } from '../src/catalog.js'
 
 // Ce que l'arrondi retire au coin d'un rectangle 30 × 40, le long de la diagonale.
@@ -22,6 +22,14 @@ const triangles = ({ position, normal, index }) => {
   return list
 }
 const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
+
+test('le moteur et ses shaders se chargent', async () => {
+  const { createScene } = await import('../src/scene.js')
+  const { BACK_FRAGMENT, BACK_VERTEX } = await import('../src/back-shader.js')
+  assert.equal(typeof createScene, 'function')
+  assert.match(BACK_VERTEX, /void main/)
+  assert.match(BACK_FRAGMENT, /void main/)
+})
 
 test('la toile a des coins arrondis, la feuille de papier des coins vifs', () => {
   assert.ok(cornerGap(0) > 0.1, `coin de toile : ${cornerGap(0)}`)
@@ -53,32 +61,52 @@ test('la toile laisse son dos ouvert au châssis ; la feuille de papier reste fe
   assert.ok(rearFaces('papier') > 0)
 })
 
-test('le dos a les mesures relevées : 4 cm de toile repliée, puis 1,5 à 2 cm de pin', () => {
-  assert.equal(BACK.band, 4)
-  assert.ok(BACK.bar - BACK.band >= 1.5 && BACK.bar - BACK.band <= 2)
+const near = (value, expected) => Math.abs(value - expected) < 1e-9
+
+test('la bande et le pin du dos suivent le format : 4 et 2 cm sur les grands, moins sur les petits', () => {
+  for (const [W, H, band, pine] of [[30, 40, 2.5, 1.2], [60, 80, 3.5, 1.7], [75, 100, 4, 2], [90, 120, 4, 2]]) {
+    const back = backLayout(W, H)
+    assert.ok(near(back.band, band), `bande du ${W} × ${H} : ${back.band}`)
+    assert.ok(near(back.bar - back.band, pine), `pin du ${W} × ${H} : ${back.bar - back.band}`)
+  }
+})
+
+test('carrés et paysages suivent le même calcul, sur le plus petit côté', () => {
+  assert.deepEqual(backLayout(40, 30), backLayout(30, 40))
+  assert.deepEqual(backLayout(100, 75), backLayout(75, 100))
+  assert.deepEqual(backLayout(60, 60), backLayout(60, 80))
+  const between = backLayout(45, 60)
+  assert.ok(between.band > 2.5 && between.band < 3.5 && between.bar > 3.7 && between.bar < 5.2)
+})
+
+test('sur un petit format, les agrafes de coin sont plus près du bord', () => {
+  assert.ok(backLayout(30, 40).cornerStapleInset < backLayout(75, 100).cornerStapleInset)
+  assert.equal(backLayout(75, 100).cornerStapleInset, 3)
 })
 
 const row = ({ first, gap, count }) => Array.from({ length: count }, (_, k) => first + k * gap)
 
-test('les agrafes sont tous les 10 à 12 cm, sur tous les formats, en comptant celles des coins', () => {
-  for (const [W, H] of [[30, 40], [75, 100], [40, 30], [60, 80], [90, 120]]) {
+test('les agrafes sont tous les 10 à 12 cm, un peu plus sur les petits formats, en comptant celles des coins', () => {
+  for (const [W, H] of [[30, 40], [40, 30], [60, 80], [75, 100], [90, 120]]) {
     const { upright, flat } = stapleRows(W, H)
-    const corner = H / 2 - BACK.cornerStaples
+    const corner = H / 2 - backLayout(W, H).cornerStapleInset
+    const most = Math.min(W, H) < 60 ? 13.5 : 12
     const vertical = [-corner, ...row(upright), corner]
     for (let i = 1; i < vertical.length; i++) {
       const gap = vertical[i] - vertical[i - 1]
-      assert.ok(gap >= 10 && gap <= 12.5, `bord vertical du ${W} × ${H} : ${gap.toFixed(1)} cm`)
+      assert.ok(gap >= 10 && gap <= most, `bord vertical du ${W} × ${H} : ${gap.toFixed(1)} cm`)
     }
-    assert.ok(flat.gap >= 10 && flat.gap <= 12.5, `bord horizontal du ${W} × ${H} : ${flat.gap.toFixed(1)} cm`)
+    assert.ok(flat.gap >= 10 && flat.gap <= most, `bord horizontal du ${W} × ${H} : ${flat.gap.toFixed(1)} cm`)
   }
 })
 
-test('sur les bords horizontaux, les agrafes restent entre les deux bandes verticales', () => {
-  for (const [W, H] of [[30, 40], [75, 100]]) {
-    for (const at of row(stapleRows(W, H).flat)) {
-      assert.ok(Math.abs(at) + 1 < W / 2 - BACK.band, `agrafe sous la bande verticale : ${at} cm`)
-    }
+test('un petit format a moins d’agrafes', () => {
+  const total = (W, H) => {
+    const { upright, flat } = stapleRows(W, H)
+    return 2 * (upright.count + flat.count)
   }
+  assert.ok(total(30, 40) <= 8, `${total(30, 40)} agrafes en 30 × 40`)
+  assert.ok(total(75, 100) >= 3 * total(30, 40), `${total(75, 100)} agrafes en 75 × 100`)
 })
 
 test('le dos de la toile : un anneau au ras du mur, des parois de châssis, la toile tendue au fond', () => {
@@ -101,7 +129,7 @@ test('le dos de la toile : un anneau au ras du mur, des parois de châssis, la t
   for (let v = 0; v < data.part.length; v++) {
     if (data.part[v] === 2) inner = Math.max(inner, data.position[v * 3])
   }
-  assert.ok(Math.abs(inner - (15 - BACK.bar)) < 1e-5, 'ouverture du châssis')
+  assert.ok(Math.abs(inner - (15 - backLayout(30, 40).bar)) < 1e-5, 'ouverture du châssis')
 })
 
 const CORNER = { x: 1, y: -1 }

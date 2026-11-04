@@ -18,7 +18,7 @@
  */
 
 import {
-  BACK, CURL, artBox, backShell, convexHull, curlOutline, curlPoint, curlShape, curlSheet, stapleRows,
+  CURL, artBox, backLayout, backShell, convexHull, curlOutline, curlPoint, curlShape, curlSheet, stapleRows,
   frameRing, frameProfile, frameOpening,
 } from './geometry.js'
 import { curlCorner, paintingCorners } from './staging.js'
@@ -582,11 +582,11 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
     uPineColor: { value: new THREE.Color(BACK_COLORS.pine) },
     uSideArt: { value: 0 },
     uHalf: { value: new THREE.Vector2(1, 1) },
-    uBand: { value: BACK.band },
-    uBar: { value: BACK.bar },
+    uBand: { value: 1 },
+    uBar: { value: 1 },
     uStaplesUpright: { value: new THREE.Vector3() },
     uStaplesFlat: { value: new THREE.Vector3() },
-    uCornerStaples: { value: BACK.cornerStaples },
+    uCornerStapleInset: { value: 1 },
     uLightLocal: { value: new THREE.Vector3(...light) },
   }
   const backMesh = new THREE.Mesh(
@@ -698,6 +698,10 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
       setGeometry(artMesh, artBox({ width: p.width, height: p.height, depth: p.depth, border, paper: p.paper }), ['fab', 'art'])
       setGeometry(backMesh, backShell({ width: p.width, height: p.height, depth: p.depth }), ['part'])
       backUniforms.uHalf.value.set(p.width / 2, p.height / 2)
+      const { band, bar, cornerStapleInset } = backLayout(p.width, p.height)
+      backUniforms.uBand.value = band
+      backUniforms.uBar.value = bar
+      backUniforms.uCornerStapleInset.value = cornerStapleInset
       const { upright, flat } = stapleRows(p.width, p.height)
       backUniforms.uStaplesUpright.value.set(upright.first, upright.gap, upright.count)
       backUniforms.uStaplesFlat.value.set(flat.first, flat.gap, flat.count)

@@ -16,7 +16,7 @@
 
 ## Notes de réalisation
 
-- **Prototype** : https://claude.ai/artifact/MSMMJ5KFKrEuJ8xZSw69yz (Artifact privé, version 5). Code : `.scratch/fiche-3d/prototype/` ; mise en scène, géométrie et densité testées par `node --test` (50 tests). La page affiche ses propres mesures (poids, délai, images/s, couleurs) sur l'appareil qui l'ouvre.
+- **Prototype** : https://claude.ai/artifact/MSMMJ5KFKrEuJ8xZSw69yz (Artifact privé, version 6). Code : `.scratch/fiche-3d/prototype/` ; mise en scène, géométrie et densité testées par `node --test` (55 tests). La page affiche ses propres mesures (poids, délai, images/s, couleurs) sur l'appareil qui l'ouvre.
 - **Sources** : image à plat = media[1] de la toile 10807148708187 (PNG 1904 × 2544, publiée en JPEG 1536 × 2052). Pièce provisoire : « a couch with pillows and a potted plant », rendu photoréaliste de dada design sur Unsplash. Licence Unsplash vérifiée : usage commercial permis, sans attribution, interdit de revendre l'image telle quelle.
 - **Mesures** (portable Intel Iris Xe, navigateur intégré, format téléphone 375 × 455 px en densité 2, version 4) :
   - three.js r170 depuis cdnjs : 136 Ko transférés (692 Ko décompressés), en 134 ms. Code du prototype : 94 Ko non compressés.
@@ -41,6 +41,11 @@
   - Interruption : un acte n'est jamais coupé en plein vol. Il se finit sur son propre chemin, avec le produit qu'il montrait, puis la suite s'enchaîne : le tableau reste à sa distance du mur, le papier retombe avant qu'un verre arrive. Le prix et le bouton changent au clic.
   - Mesures (parcours à une minuterie de 16 ms, machine au repos, avant la relecture finale) : clic de 0,3 à 1 ms, 57 images/s, aucune image lente en densité 2 ni 3. Au tout premier clic : 4 ms de processeur au pire pour le coin, 3,3 ms pour le tour, sans image au-delà de 16 ms. Le code final n'a pu être rejoué que sur une machine chargée par d'autres programmes. À 65 % de charge : 3,8 ms de processeur au pire au premier clic, dos à 1,0 ms et coin à 1,2 ms contre 1,7 ms de face, soit les mêmes proportions. À 80 % : 30 images/s, clic toujours sous 2 ms.
   - Rien à télécharger : le dos est une coquille de quelques faces peinte par son shader, le coin une grille unique déformée par le GPU, préparés à l'arrivée.
+- **Retour de Walid du 04/11, fin** (version 6) : le poster et le tour de 360° sont validés (« le poster est super », « l'animation de 360 est parfaite »), le 75 × 100 aussi (« le dos est top »). Corrigé d'après la comparaison aux photos :
+  - Coins : plus d'onglet dans le tissu. La bande verticale passe sur la bande horizontale et court jusqu'au bord haut ou bas, son bord s'arrondit près du coin avec une légère ombre, un tout petit rabat fait la pointe. Deux agrafes côte à côte, parallèles au bord vertical.
+  - Pin pâle et beige (#e6dccb), onglet gardé. Centre blanc cassé (#e9e6df), sans silhouette de l'œuvre. Ondulations discrètes, creux léger autour des agrafes.
+  - La bande et le bois varient selon le petit côté, carrés et paysages compris : 2,5 et 1,2 cm sur 30 cm, 3,5 et 1,7 sur 60, 4 et 2 à partir de 75, interpolés entre deux. Seul le 75 × 100 vient des photos : **les autres valeurs sont des estimations, pas des mesures.**
+  - Agrafes : rangs calculés, tous les 10 à 12 cm, jusqu'à 13 cm sur les petits formats. 8 agrafes de côté en 30 × 40 contre 28 en 75 × 100. Celles du coin se rapprochent avec la bande.
 - **Caméra** (champ vertical 30°, transitions de 450 ms pour le retour de face et 900 ms vers le plan, courbe cubique) :
   - De face : tableau sur 72 % de la hauteur.
   - Tranche : tableau tourné de 38° vers la lumière, penché de 6°, écarté du mur juste assez (1 cm de marge).
@@ -63,7 +68,7 @@
   - Verre : voile de 1,2 %, reflet d'une fenêtre à carreaux de 6 %, brillance rasante (Fresnel).
   - Papier : grain fin. Contour blanc : 8 % du petit côté, égal en cm sur les 4 côtés.
   - Chêne clair : image cuite de 512 × 1024 px (`tools/chene.js`), tuile de 10 × 30 cm, relief 0,9, rugosité 0,55. Noir mat : relief 0,5, rugosité 0,68.
-  - Dos de la toile, d'après les photos de Walid (`src/back-shader.js`) : couleur de tranche ou image qui revient sur 3 à 4 mm irréguliers, trait noir, bande repliée de 4 cm (#f1efe9), agrafes de 2 cm tous les 10 à 12 cm, plis de coin avec rabat arrondi et 2 agrafes, pin de 1,75 cm (#e4d0a6, fil du chêne des cadres), onglets à 45°, toile brute (#dcd7ce) en retrait de 1,9 cm, où l'impression se devine à peine. Mêmes mesures pour tous les formats. Aucune marque d'imprimeur.
+  - Dos de la toile, d'après les photos de Walid (`src/back-shader.js`) : couleur de tranche ou image qui revient sur 3 à 4 mm irréguliers, trait noir, bande repliée (#f1efe9), agrafes de 2 cm, pin (#e6dccb, fil du chêne des cadres) et ses onglets à 45°, toile brute (#e9e6df) en retrait de 1,9 cm, trame fine et dégradé doux. Largeurs selon le format (voir le retour ci-dessus). Aucune marque d'imprimeur.
   - Coin du poster : grille de 2 600 points, pli à 42°, 23 % du petit côté, rayon de 20 % à 4,8 %, enroulement jusqu'à 206°, cône de 35 %.
 - **Netteté** :
   - Tout bord calculé dans un shader est lissé sur un pixel par sa couverture (`fwidth`, dérivées) : bord de l'œuvre et de la marge, bords de la photo de la pièce, pénombres, verre.
@@ -75,7 +80,8 @@
   - Testé sur les mêmes fichiers servis en local, pas dans le lecteur d'Artifacts : le navigateur intégré n'est pas connecté à claude.ai.
   - Fluidité non mesurée sur un vrai téléphone. Sur ce portable, le volet du navigateur était masqué : le parcours complet a tourné sur une minuterie de 16 ms, pas sur le vrai rythme de l'écran.
   - Dans le plan du coin, l'œuvre reste grossie 2,6 à 3,8 fois : elle est nette, mais sans le grain d'une image plus fine.
-  - Dos dessiné d'après une description, sans les photos sous les yeux : à comparer au vrai, surtout les plis de coin. Sur le 75 × 100 à l'écran du téléphone, les agrafes ne font que 13 px.
+  - Dos dessiné d'après une description, sans les photos sous les yeux. Sur le 75 × 100 à l'écran du téléphone, les agrafes ne font que 13 px.
+  - Largeurs du dos hors 75 × 100 : estimées, à vérifier sur de vrais 30 × 40 et 60 × 80.
   - En bordure blanche, le pourtour du dos est blanc : l'image n'y revient qu'en étirée, miroir et pliée, à confirmer sur un vrai tableau.
   - La feuille du coin soulevé n'a pas de tranche : une seule surface, à une échelle où 0,5 mm ne se voit pas.
   - Profils de cadre et teinte du chêne à comparer aux vrais produits (tickets 10 et 14).

@@ -107,11 +107,27 @@ export function artBox({ width: W, height: H, depth: D, border, paper = 0 }) {
   return pack({ position, normal, uv, fab, art, index })
 }
 
-/* Dos de la toile, relevé sur une 75 × 100 : 4 cm de toile repliée sur le châssis, puis 2 cm
-   de pin, puis la toile tendue au fond. Mêmes baguettes pour tous les formats.
-   bar : largeur totale du châssis vu de dos. cornerStaples : distance au bord haut ou bas des
-   deux agrafes de chaque coin. */
-export const BACK = { band: 4, bar: 6, cornerStaples: 3 }
+/* Dos de la toile, selon le petit côté du tableau : côté, bande de toile repliée, pin. Le 75 × 100
+   vient des photos de Walid ; les autres valeurs sont des estimations, à comparer aux vrais
+   tableaux. Entre deux lignes, les largeurs s'interpolent ; au-delà, elles ne changent plus. */
+const BACK_WIDTHS = [[30, 2.5, 1.2], [60, 3.5, 1.7], [75, 4, 2]]
+
+function backWidth(size, column) {
+  const next = BACK_WIDTHS.findIndex(([side]) => side >= size)
+  if (next === 0) return BACK_WIDTHS[0][column]
+  if (next < 0) return BACK_WIDTHS[BACK_WIDTHS.length - 1][column]
+  const a = BACK_WIDTHS[next - 1], b = BACK_WIDTHS[next]
+  return a[column] + ((b[column] - a[column]) * (size - a[0])) / (b[0] - a[0])
+}
+
+/* band : toile repliée. bar : largeur totale du châssis vu de dos. cornerStapleInset : distance
+   au bord haut ou bas des deux agrafes de chaque coin. */
+export function backLayout(W, H) {
+  const size = Math.min(W, H)
+  const band = backWidth(size, 1)
+  return { band, bar: band + backWidth(size, 2), cornerStapleInset: 0.75 * band }
+}
+
 const STAPLE_EVERY = 11
 
 // Rang d'agrafes régulier sur `span` cm centrés : premier, écart, nombre. `ends` : les bouts
@@ -122,13 +138,12 @@ function stapleRow(span, ends) {
   return { first: -span / 2 + (ends ? gap : gap / 2), gap, count: ends ? cells - 1 : cells }
 }
 
-/* Agrafes le long des bandes, tous les 10 à 12 cm. Sur les bords verticaux, le rang s'accroche
-   aux agrafes des coins ; sur les bords horizontaux, il va d'une bande verticale à l'autre. */
+/* Agrafes le long des bandes, tous les 10 à 12 cm, un peu plus sur les petits formats. Sur les
+   bords verticaux, le rang s'accroche aux agrafes des coins ; sur les bords horizontaux, il va
+   d'une bande verticale à l'autre. */
 export function stapleRows(W, H) {
-  return {
-    upright: stapleRow(H - 2 * BACK.cornerStaples, true),
-    flat: stapleRow(W - 2 * BACK.band, false),
-  }
+  const { band, cornerStapleInset } = backLayout(W, H)
+  return { upright: stapleRow(H - 2 * cornerStapleInset, true), flat: stapleRow(W - 2 * band, false) }
 }
 
 const CANVAS_SKIN = 0.12 // la toile tendue est juste derrière la façade
@@ -137,7 +152,8 @@ const CANVAS_SKIN = 0.12 // la toile tendue est juste derrière la façade
    parois intérieures du châssis, la toile tendue au fond. Tout le détail est peint par le
    shader du dos (back-shader.js). Attribut part : 0 anneau, 1 parois, 2 toile tendue. */
 export function backShell({ width: W, height: H, depth: D }) {
-  const ix = W / 2 - BACK.bar, iy = H / 2 - BACK.bar
+  const { bar } = backLayout(W, H)
+  const ix = W / 2 - bar, iy = H / 2 - bar
   const panel = Math.max(0, D - CANVAS_SKIN)
   const position = [], normal = [], uv = [], part = [], index = []
   const vertex = (x, y, z, n, kind) => {
