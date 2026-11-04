@@ -7,6 +7,8 @@
  * sur la bande horizontale. Les marques sont imprimées sur la bande (marks.js).
  */
 
+import { MARK_COUNT, STAPLE_DRIFT } from './marks.js'
+
 export const BACK_COLORS = { band: '#f1efe9', raw: '#e9e6df', pine: '#e6dccb' }
 
 export const BACK_VERTEX = /* glsl */ `
@@ -44,8 +46,8 @@ export const BACK_FRAGMENT = /* glsl */ `
   uniform float uMarkedCornerInset; // de même dans le coin du code, plus haut pour lui laisser la place
   uniform vec2 uRowClear; // au centre des bandes du haut et du bas, les marques écartent les agrafes
   uniform sampler2D uMarks; // planche des marques
-  uniform vec4 uMarkBoxes[5]; // boîtes vues de dos, en cm : x, y, largeur, hauteur
-  uniform vec4 uMarkAreas[5]; // zones de la planche, de 0 à 1
+  uniform vec4 uMarkBoxes[${MARK_COUNT}]; // boîtes vues de dos, en cm : x, y, largeur, hauteur
+  uniform vec4 uMarkAreas[${MARK_COUNT}]; // zones de la planche, de 0 à 1
   uniform vec3 uLight;
   uniform vec3 uLightLocal;
   uniform float uAmbient;
@@ -58,7 +60,8 @@ export const BACK_FRAGMENT = /* glsl */ `
   const float WIRE = 0.055; // demi-épaisseur du fil, en part de la demi-longueur de l'agrafe
   const vec3 STEEL = vec3(0.13, 0.135, 0.15);
   const vec3 STEEL_EDGE = vec3(0.04, 0.042, 0.05);
-  const int PREMIUM = 4; // la seule marque tournée d'un quart de tour
+  const int PREMIUM = ${MARK_COUNT - 1}; // la dernière marque, seule tournée d'un quart de tour
+  const float DRIFT = ${STAPLE_DRIFT.toFixed(2)}; // écart d'une agrafe posée à la main, de part et d'autre
   const float SHOULDER = 0.325; // arrondi de la bande du dessus, près du coin, en part de la bande
   const vec2 FOLD_TIP = vec2(0.25, 0.3625); // tout petit rabat replié de la pointe, de même
   const float OAK_MEAN = 1.34; // somme moyenne des trois canaux de l'image de chêne
@@ -104,19 +107,24 @@ export const BACK_FRAGMENT = /* glsl */ `
 
   /* Agrafe : center, son milieu ; axis, la direction du fil. L'acier sombre et l'ombre de contact
      la détachent du tissu clair. Le fil garde toujours plus d'un pixel de large, même vu de biais
-     pendant le tour ; son bord se lisse sur un pixel mesuré en travers, pour rester net. Trop
-     fin pour montrer un reflet, il reste un trait sombre, avec une ombre plus légère. */
+     pendant le tour ; son bord se lisse sur un pixel mesuré en travers, pour rester net. Assez
+     large, il montre un reflet fin sur sa longueur ; trop fin pour cela, un éclat plus clair
+     glisse le long du trait quand le tableau tourne, et son ombre s'allège. */
   vec3 staple(vec3 color, vec2 p, vec2 center, vec2 axis, float present) {
     vec2 d = p - center;
     vec2 q = onWire(d, axis);
-    float across = max(fwidth(q.y), 1e-4);
+    // Taille d'un pixel en travers du fil. Mesurée sur p, continu : d et q sautent là où le
+    // milieu de l'agrafe la plus proche change, au centre des bandes.
+    vec2 crossing = vec2(-axis.y, axis.x);
+    float across = max(abs(dot(dFdx(p), crossing)) + abs(dot(dFdy(p), crossing)), 1e-4);
     float wire = max(WIRE * uStapleHalf, 0.75 * across);
     float roomy = smoothstep(2.5, 4.0, 2.0 * wire / across); // le fil est assez large pour ses détails
 
     vec2 spread = q / (uStapleHalf * vec2(1.8, 0.65));
     vec3 cloth = color * (1.0 - 0.09 * exp(-dot(spread, spread))); // le tissu se creuse un peu autour
 
-    vec2 towardsLight = normalize(uLightLocal.xy) * max(1.2 * wire, across);
+    vec2 light = normalize(uLightLocal.xy);
+    vec2 towardsLight = light * max(1.2 * wire, across);
     float contact = wireDistance(onWire(d + towardsLight, axis));
     float shadow = clamp((1.25 * wire - contact) / max(across, 0.7 * wire) + 0.5, 0.0, 1.0);
     cloth *= 1.0 - mix(0.25, 0.5, roomy) * shadow;
@@ -125,6 +133,8 @@ export const BACK_FRAGMENT = /* glsl */ `
     vec3 steel = mix(STEEL, STEEL_EDGE, rise * rise);
     float glint = 1.0 - smoothstep(0.12, 0.3, abs(rise - 0.25));
     steel = mix(steel, vec3(0.92), glint * roomy);
+    float sheen = (q.x / uStapleHalf - 0.6 * dot(axis, light)) / 0.2;
+    steel = mix(steel, vec3(0.5, 0.51, 0.54), 0.85 * exp(-sheen * sheen) * (1.0 - roomy));
 
     float cover = clamp((wire - wireDistance(q)) / across + 0.5, 0.0, 1.0);
     return mix(color, mix(cloth, steel, cover), present);
@@ -172,7 +182,7 @@ export const BACK_FRAGMENT = /* glsl */ `
     vec3 row = upright ? uStaplesUpright : uStaplesFlat;
     float k = clamp(floor((along - row.x) / row.y + 0.5), 0.0, row.z - 1.0);
     float jitter = hash(vec2(k, side));
-    float at = row.x + k * row.y + (jitter - 0.5) * 1.4;
+    float at = row.x + k * row.y + (jitter - 0.5) * 2.0 * DRIFT;
     float fromEdge = uBand * (0.52 + 0.1 * (hash(vec2(side, k)) - 0.5));
     float tilt = (jitter - 0.5) * 0.1;
     vec2 center = upright ? vec2(sign(p.x) * (uHalf.x - fromEdge), at) : vec2(at, sign(p.y) * (uHalf.y - fromEdge));
@@ -190,7 +200,7 @@ export const BACK_FRAGMENT = /* glsl */ `
 
     // Marques imprimées sur la toile.
     vec2 seen = vec2(-p.x, p.y);
-    for (int i = 0; i < 5; i++) cloth *= ink(seen, uMarkBoxes[i], uMarkAreas[i], i == PREMIUM);
+    for (int i = 0; i < ${MARK_COUNT}; i++) cloth *= ink(seen, uMarkBoxes[i], uMarkAreas[i], i == PREMIUM);
 
     color = mix(color, cloth, band);
 

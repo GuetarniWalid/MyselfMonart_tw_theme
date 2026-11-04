@@ -16,7 +16,7 @@
 
 ## Notes de réalisation
 
-- **Prototype** : https://claude.ai/artifact/MSMMJ5KFKrEuJ8xZSw69yz (Artifact privé, version 7). Code : `.scratch/fiche-3d/prototype/` ; mise en scène, géométrie, marques, catalogue et densité testés par `node --test` (79 tests). La page affiche ses propres mesures (poids, délai, images/s, couleurs) sur l'appareil qui l'ouvre.
+- **Prototype** : https://claude.ai/artifact/MSMMJ5KFKrEuJ8xZSw69yz (Artifact privé, version 8). Code : `.scratch/fiche-3d/prototype/` ; mise en scène, géométrie, marques, catalogue et densité testés par `node --test` (103 tests). La page affiche ses propres mesures (poids, délai, images/s, couleurs) sur l'appareil qui l'ouvre.
 - **Sources** : image à plat = media[1] de la toile 10807148708187 (PNG 1904 × 2544, publiée en JPEG 1536 × 2052). Pièce provisoire : « a couch with pillows and a potted plant », rendu photoréaliste de dada design sur Unsplash. Licence Unsplash vérifiée : usage commercial permis, sans attribution, interdit de revendre l'image telle quelle.
 - **Mesures** (portable Intel Iris Xe, navigateur intégré, format téléphone 375 × 455 px en densité 2, version 4) :
   - three.js r170 depuis cdnjs : 136 Ko transférés (692 Ko décompressés), en 134 ms. Code du prototype : 94 Ko non compressés.
@@ -47,12 +47,18 @@
   - La bande et le bois varient selon le petit côté, carrés et paysages compris : 2,5 et 1,2 cm sur 30 cm, 3,5 et 1,7 sur 60, 4 et 2 à partir de 75, interpolés entre deux. Seul le 75 × 100 vient des photos : **les autres valeurs sont des estimations, pas des mesures.**
   - Agrafes : rangs calculés, tous les 10 à 12 cm, jusqu'à 13 cm sur les petits formats. 8 agrafes de côté en 30 × 40 contre 28 en 75 × 100.
 - **Retour de Walid sur la version 6** (version 7) : dimensions du 30 × 40 validées.
-  - Agrafes : une seule, jamais deux collées, y compris aux coins. Les deux des photos sont une erreur rare de production. Au milieu de la bande du bas, le logo prend la place de l'agrafe ; dans le coin du code, l'agrafe remonte.
-  - Marques imprimées (`src/marks.js`), voulues par Walid : logo du site repris de `snippets/tw-default-logo.liquid`, sans son disque, 1,5 cm, au milieu de la bande du bas ; en bas à droite vu de dos, sur la bande verticale, un code carré de 1,1 cm (type Datamatrix, #1b2c54, décoratif, non scannable) et le format, tourné d'un quart de tour pour tenir dans 2,5 cm de bande. Même taille réelle partout, dessinées dans une planche préparée à l'arrivée : rien à télécharger. Ni date, ni autre mention.
+  - Agrafes : une seule, jamais deux collées, y compris aux coins. Les deux des photos sont une erreur rare de production. Au milieu des bandes du haut et du bas, le logo et le code prennent la place de l'agrafe ; dans le coin du code, l'agrafe remonte.
+  - Marques imprimées (`src/marks.js`), voulues par Walid : logo du site repris de `snippets/tw-default-logo.liquid`, sans son disque, 1,5 cm ; code carré de 1,1 cm (type Datamatrix, #1b2c54, décoratif, non scannable) ; format en toutes lettres. Même taille réelle partout, dessinées dans une planche préparée à l'arrivée : rien à télécharger. Leur place a changé en version 8 : voir le retour suivant.
   - Quatre tailles : 30 × 40, 60 × 80, 75 × 100, 90 × 120, prix lus dans Shopify. La boutique ne vend pas le 90 × 120 encadré, **ni en poster ni en toile** : le choix repasse sans cadre et les cadres se grisent.
   - Vérifié sur les 4 tailles : dos, tour, coin du poster, pièce, cotes. En 90 × 120, la cote de largeur passe sous le tableau (au-dessus, son étiquette sortait de la scène) et s'efface pendant la transition pour ne pas traverser l'œuvre. Sur écran large, le cadrage de la pièce monte juste assez pour garder le 90 × 120 entier.
   - Tour interrompu par un changement de taille : le tableau finit son geste avec le format qu'il montrait, celui imprimé au dos compris.
   - Mesure du code final, densité 3, minuterie de 16 ms, machine chargée à 76 % : clic sous 1 ms, 57 images/s, aucune image lente sur le tour et sur le coin. Le coin du poster est identique au pixel à la version 6.
+- **Retour de Walid sur la version 7** (version 8) : agrafes floues, trop grosses en 30 × 40, et il manque un code et « PREMIUM ».
+  - Agrafes nettes : acier sombre, bord lissé sur un pixel mesuré en travers du fil, trait d'au moins 1,5 px, ombre de contact du côté opposé à la lumière. Écart de luminosité au tissu, sur 1 : de 0,15 à 0,26 avant, de 0,45 à 0,55 après, sur les 4 tailles, à l'arrêt comme en plein tour.
+  - Reflet : de près, un filet clair et franc sur toute la longueur du fil. À l'échelle du tour, le fil est trop fin pour le porter (sous 38 px/cm en 30 × 40, 23 en 75 × 100) : un éclat de 2 à 3 px glisse le long du trait quand le tableau tourne.
+  - Taille selon le format, comme le rabat : 1,2 cm sur 30 cm, 1,6 sur 60, 2 à partir de 75, interpolés entre deux. L'épaisseur suit, de 0,7 à 1,1 mm.
+  - Marques : logo au centre de la bande du haut ; au centre de la bande du bas, un second code avec le format à côté ; code du coin bas droit sans texte ; « PREMIUM » en gris foncé, à la verticale sur la bande de droite, avec son petit trait en équerre, vers 67 à 71 % de la hauteur. Une agrafe qui tomberait sur une marque s'efface ou la marque s'écarte, par le plus court.
+  - Le coin du poster reste identique au pixel à la version 7, sur les 4 tailles.
 - **Caméra** (champ vertical 30°, transitions de 450 ms pour le retour de face et 900 ms vers le plan, courbe cubique) :
   - De face : tableau sur 72 % de la hauteur.
   - Tranche : tableau tourné de 38° vers la lumière, penché de 6°, écarté du mur juste assez (1 cm de marge).
@@ -75,7 +81,7 @@
   - Verre : voile de 1,2 %, reflet d'une fenêtre à carreaux de 6 %, brillance rasante (Fresnel).
   - Papier : grain fin. Contour blanc : 8 % du petit côté, égal en cm sur les 4 côtés.
   - Chêne clair : image cuite de 512 × 1024 px (`tools/chene.js`), tuile de 10 × 30 cm, relief 0,9, rugosité 0,55. Noir mat : relief 0,5, rugosité 0,68.
-  - Dos de la toile, d'après les photos de Walid (`src/back-shader.js`) : couleur de tranche ou image qui revient sur 3 à 4 mm irréguliers, trait noir, bande repliée (#f1efe9), agrafes de 2 cm, pin (#e6dccb, fil du chêne des cadres) et ses onglets à 45°, toile brute (#e9e6df) en retrait de 1,9 cm, trame fine et dégradé doux. Largeurs selon le format, marques imprimées : voir les retours ci-dessus.
+  - Dos de la toile, d'après les photos de Walid (`src/back-shader.js`) : couleur de tranche ou image qui revient sur 3 à 4 mm irréguliers, trait noir, bande repliée (#f1efe9), agrafes de 1,2 à 2 cm, pin (#e6dccb, fil du chêne des cadres) et ses onglets à 45°, toile brute (#e9e6df) en retrait de 1,9 cm, trame fine et dégradé doux. Largeurs selon le format, marques imprimées : voir les retours ci-dessus.
   - Coin du poster : grille de 2 600 points, pli à 42°, 23 % du petit côté, rayon de 20 % à 4,8 %, enroulement jusqu'à 206°, cône de 35 %.
 - **Netteté** :
   - Tout bord calculé dans un shader est lissé sur un pixel par sa couverture (`fwidth`, dérivées) : bord de l'œuvre et de la marge, bords de la photo de la pièce, pénombres, verre.
@@ -87,9 +93,11 @@
   - Testé sur les mêmes fichiers servis en local, pas dans le lecteur d'Artifacts : le navigateur intégré n'est pas connecté à claude.ai.
   - Fluidité non mesurée sur un vrai téléphone. Sur ce portable, le volet du navigateur était masqué : le parcours complet a tourné sur une minuterie de 16 ms, pas sur le vrai rythme de l'écran.
   - Dans le plan du coin, l'œuvre reste grossie 2,6 à 3,8 fois : elle est nette, mais sans le grain d'une image plus fine.
-  - Dos dessiné d'après une description, sans les photos sous les yeux. Sur le 75 × 100 à l'écran du téléphone, les agrafes ne font que 13 px.
+  - Dos dessiné d'après une description, sans les photos sous les yeux. Sur le 75 × 100 à l'écran du téléphone, les agrafes ne font que 11 px.
+  - Sens de lecture de « PREMIUM » et forme de son trait en équerre : décrits, pas relevés sur la photo. À comparer au vrai tableau.
+  - À l'écran du téléphone, pendant le tour, les agrafes ont la même épaisseur sur les 4 tailles, celle du trait minimal de 1,5 px : seule leur longueur dit le format.
   - Largeurs du dos hors 75 × 100 : estimées. Celles du 30 × 40 sont validées à l'œil par Walid, celles du 60 × 80 restent à vérifier.
-  - Sur téléphone, pendant le tour, le format imprimé ne se lit pas (2 px de haut en 30 × 40) : il ne se lirait que sur un gros plan, qui n'existe pas dans la fiche. Le logo et le code se voient comme des touches de couleur.
+  - Sur téléphone, pendant le tour, le format et « PREMIUM » ne se lisent pas (2 px de haut en 30 × 40) : ils ne se liraient que sur un gros plan, qui n'existe pas dans la fiche. Le logo et le code se voient comme des touches de couleur.
   - En bordure blanche, le pourtour du dos est blanc : l'image n'y revient qu'en étirée, miroir et pliée, à confirmer sur un vrai tableau.
   - La feuille du coin soulevé n'a pas de tranche : une seule surface, à une échelle où 0,5 mm ne se voit pas.
   - Profils de cadre et teinte du chêne à comparer aux vrais produits (tickets 10 et 14).

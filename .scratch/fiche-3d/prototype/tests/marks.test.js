@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { MARKS, dataMatrixCells, marksLayout, sizeText } from '../src/marks.js'
+import { MARKS, STAPLE_DRIFT, dataMatrixCells, marksLayout, sizeText } from '../src/marks.js'
 import { backLayout, stapleRows } from '../src/geometry.js'
 import { SIZES, dimensionsOf } from '../src/catalog.js'
 
@@ -37,6 +37,22 @@ test('les deux codes du dos sont différents', () => {
 test('la ligne de texte donne le format choisi', () => {
   assert.equal(sizeText('75x100'), '75×100 cm')
   assert.equal(sizeText('30x40'), '30×40 cm')
+})
+
+test('PREMIUM évite une agrafe par le plus court, vers le haut comme vers le bas', () => {
+  for (const [W, H] of [[30, 40], [60, 80], [75, 100], [90, 120]]) {
+    const { upright } = stapleRows(W, H)
+    const reach = backLayout(W, H).stapleLength / 2 + STAPLE_DRIFT
+    for (const length of [1, 1.5, 1.8, 2.4, 3]) {
+      const { premium } = marksLayout(W, H, FORMAT_LENGTH, length)
+      for (let k = 0; k < upright.count; k++) {
+        const at = upright.first + k * upright.gap
+        assert.ok(at + reach < premium.y || at - reach > premium.y + length, `${W} × ${H}, mot de ${length} cm : agrafe à ${at.toFixed(1)} cm dessus`)
+      }
+      const moved = Math.abs(premium.y + length / 2 - H / 6) // les deux tiers, comptés depuis le milieu
+      assert.ok(moved < length / 2 + reach + 0.5, `${W} × ${H}, mot de ${length} cm : déplacé de ${moved.toFixed(1)} cm`)
+    }
+  }
 })
 
 for (const size of SIZES) {
@@ -82,7 +98,7 @@ for (const size of SIZES) {
   test(`${size} : aucune agrafe ne passe sur PREMIUM ni sur le code du coin`, () => {
     const { W, H, marks: { premium, markedCornerInset, cornerCode }, back: { stapleLength } } = layoutOf(size)
     const { upright } = stapleRows(W, H)
-    const reach = stapleLength / 2 + 0.7 // demi-longueur et décalage de la pose à la main
+    const reach = stapleLength / 2 + STAPLE_DRIFT
     for (let k = 0; k < upright.count; k++) {
       const at = upright.first + k * upright.gap
       assert.ok(at + reach < premium.y || at - reach > premium.y + premium.height, `agrafe à ${at.toFixed(1)} cm sur PREMIUM`)
@@ -95,8 +111,9 @@ for (const size of SIZES) {
 
   test(`${size} : les rangs d'agrafes s'écartent du logo et du code du centre`, () => {
     const { marks: { logo, centerCode, format, rowClear }, back: { stapleLength } } = layoutOf(size)
-    assert.ok(rowClear.top >= logo.width / 2 + stapleLength / 2 + 0.7)
-    assert.ok(rowClear.bottom >= format.x + format.width + stapleLength / 2 + 0.7)
-    assert.ok(rowClear.bottom >= -centerCode.x + stapleLength / 2 + 0.7)
+    const reach = stapleLength / 2 + STAPLE_DRIFT
+    assert.ok(rowClear.top >= logo.width / 2 + reach)
+    assert.ok(rowClear.bottom >= format.x + format.width + reach)
+    assert.ok(rowClear.bottom >= -centerCode.x + reach)
   })
 }

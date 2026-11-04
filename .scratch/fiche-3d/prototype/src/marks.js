@@ -12,17 +12,17 @@ import { SIZES } from './catalog.js'
 export const MARKS = { logo: 1.5, code: 1.1, textHeight: 0.4, gap: 0.1, free: 0.5 }
 const ABOVE_FREE = 0.15 // le code du coin se pose un peu au-dessus du retour d'image
 const STAPLE_MARGIN = 0.3 // entre une marque et le bout d'une agrafe
-const STAPLE_DRIFT = 0.7 // écart d'une agrafe posée à la main
+export const STAPLE_DRIFT = 0.7 // écart d'une agrafe posée à la main, de part et d'autre
+export const MARK_COUNT = 5 // logo, deux codes, format, PREMIUM
 const PREMIUM_HEIGHT = 2 / 3 // part de la hauteur du tableau, depuis le bas
 
 // Hauteur (depuis le milieu) la plus proche de `wanted` où une marque évite le rang d'agrafes.
 function clearOfStaples(wanted, row, margin) {
-  let y = wanted
   for (let k = 0; k < row.count; k++) {
     const at = row.first + k * row.gap
-    if (Math.abs(y - at) < margin) y = at + margin
+    if (Math.abs(wanted - at) < margin) return wanted < at ? at - margin : at + margin
   }
-  return y
+  return wanted
 }
 
 /* Boîtes des marques, en cm, telles qu'on les voit de dos : x vers la droite du regard, y vers
@@ -33,9 +33,9 @@ export function marksLayout(W, H, formatLength, premiumLength) {
   const { logo, code, textHeight, gap, free } = MARKS
   const middle = (free + band) / 2 // milieu de la partie libre d'une bande
   const bottom = -H / 2
-  const staple = stapleLength / 2 + STAPLE_DRIFT
+  const stapleReach = stapleLength / 2 + STAPLE_DRIFT + STAPLE_MARGIN
   const rowWidth = code + gap + formatLength
-  const premiumReach = premiumLength / 2 + staple + STAPLE_MARGIN
+  const premiumReach = premiumLength / 2 + stapleReach
   const premiumY = clearOfStaples(H * (PREMIUM_HEIGHT - 0.5), stapleRows(W, H).upright, premiumReach)
   return {
     logo: { x: -logo / 2, y: H / 2 - middle - logo / 2, width: logo, height: logo },
@@ -44,7 +44,7 @@ export function marksLayout(W, H, formatLength, premiumLength) {
     format: { x: gap + code - rowWidth / 2, y: bottom + middle - textHeight / 2, width: formatLength, height: textHeight },
     premium: { x: W / 2 - middle - textHeight / 2, y: premiumY - premiumLength / 2, width: textHeight, height: premiumLength },
     markedCornerInset: Math.max(cornerStapleInset, free + ABOVE_FREE + code + STAPLE_MARGIN + stapleLength / 2),
-    rowClear: { top: logo / 2 + staple + STAPLE_MARGIN, bottom: rowWidth / 2 + staple + STAPLE_MARGIN },
+    rowClear: { top: logo / 2 + stapleReach, bottom: rowWidth / 2 + stapleReach },
   }
 }
 
@@ -137,8 +137,8 @@ export function paintMarks(canvas) {
   const code = CODE_CELLS * codeCell
   const cornerCodeX = logo + margin
   const centerCodeX = cornerCodeX + code + margin
-  drawCode(ctx, cornerCodeX, codeCell, 1)
-  drawCode(ctx, centerCodeX, codeCell, 2)
+  drawCode(ctx, cornerCodeX, codeCell, 0)
+  drawCode(ctx, centerCodeX, codeCell, 1)
 
   const textX = centerCodeX + code + margin
   ctx.font = `600 ${textRow * 0.7}px system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif`

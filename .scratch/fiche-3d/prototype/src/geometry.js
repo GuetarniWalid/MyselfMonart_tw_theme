@@ -110,22 +110,26 @@ export function artBox({ width: W, height: H, depth: D, border, paper = 0 }) {
 /* Dos de la toile, selon le petit côté du tableau : côté, bande de toile repliée, pin, agrafe. Le
    75 × 100 vient des photos de Walid ; les autres valeurs sont des estimations, à comparer aux
    vrais tableaux. Entre deux lignes, elles s'interpolent ; au-delà, elles ne changent plus. */
-const BACK_WIDTHS = [[30, 2.5, 1.2, 1.2], [60, 3.5, 1.7, 1.6], [75, 4, 2, 2]]
+const BACK_WIDTHS = [
+  { side: 30, band: 2.5, pine: 1.2, staple: 1.2 },
+  { side: 60, band: 3.5, pine: 1.7, staple: 1.6 },
+  { side: 75, band: 4, pine: 2, staple: 2 },
+]
 
-function backWidth(size, column) {
-  const next = BACK_WIDTHS.findIndex(([side]) => side >= size)
-  if (next === 0) return BACK_WIDTHS[0][column]
-  if (next < 0) return BACK_WIDTHS[BACK_WIDTHS.length - 1][column]
+function backWidth(size, name) {
+  const next = BACK_WIDTHS.findIndex(({ side }) => side >= size)
+  if (next === 0) return BACK_WIDTHS[0][name]
+  if (next < 0) return BACK_WIDTHS[BACK_WIDTHS.length - 1][name]
   const a = BACK_WIDTHS[next - 1], b = BACK_WIDTHS[next]
-  return a[column] + ((b[column] - a[column]) * (size - a[0])) / (b[0] - a[0])
+  return a[name] + ((b[name] - a[name]) * (size - a.side)) / (b.side - a.side)
 }
 
 /* band : toile repliée. bar : largeur totale du châssis vu de dos. stapleLength : longueur d'une
    agrafe. cornerStapleInset : distance au bord haut ou bas de l'agrafe de chaque coin. */
 export function backLayout(W, H) {
   const size = Math.min(W, H)
-  const band = backWidth(size, 1)
-  return { band, bar: band + backWidth(size, 2), stapleLength: backWidth(size, 3), cornerStapleInset: 0.75 * band }
+  const band = backWidth(size, 'band')
+  return { band, bar: band + backWidth(size, 'pine'), stapleLength: backWidth(size, 'staple'), cornerStapleInset: 0.75 * band }
 }
 
 const STAPLE_EVERY = 11

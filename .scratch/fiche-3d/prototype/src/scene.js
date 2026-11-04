@@ -24,7 +24,7 @@ import {
 import { curlCorner, paintingCorners } from './staging.js'
 import { PAPER_WHITE, borderOf, borderTakesImage, frameOf, hasFrame } from './catalog.js'
 import { BACK_COLORS, BACK_FRAGMENT, BACK_VERTEX } from './back-shader.js'
-import { marksLayout, paintMarks } from './marks.js'
+import { MARK_COUNT, marksLayout, paintMarks } from './marks.js'
 import { compareImages } from './fidelity.js'
 import { decodeImage, imageSize } from './images.js'
 import { PAPER_TILE_CM, RELIEF_SIZE, WEAVE_TILE_CM } from './textures.js'
@@ -595,8 +595,8 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
     uStapleHalf: { value: 1 },
     uRowClear: { value: new THREE.Vector2() },
     uMarks: { value: marksTexture },
-    uMarkBoxes: { value: Array.from({ length: 5 }, () => new THREE.Vector4()) },
-    uMarkAreas: { value: Array.from({ length: 5 }, () => new THREE.Vector4()) },
+    uMarkBoxes: { value: Array.from({ length: MARK_COUNT }, () => new THREE.Vector4()) },
+    uMarkAreas: { value: Array.from({ length: MARK_COUNT }, () => new THREE.Vector4()) },
     uLightLocal: { value: new THREE.Vector3(...light) },
   }
   const backMesh = new THREE.Mesh(
