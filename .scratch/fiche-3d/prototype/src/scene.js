@@ -24,6 +24,7 @@ import {
 import { curlCorner, paintingCorners } from './staging.js'
 import { PAPER_WHITE, borderOf, borderTakesImage, frameOf, hasFrame } from './catalog.js'
 import { BACK_COLORS, BACK_FRAGMENT, BACK_VERTEX } from './back-shader.js'
+import { marksLayout, paintMarks } from './marks.js'
 import { compareImages } from './fidelity.js'
 import { decodeImage, imageSize } from './images.js'
 import { PAPER_TILE_CM, RELIEF_SIZE, WEAVE_TILE_CM } from './textures.js'
@@ -565,6 +566,9 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
   group.add(glass)
 
   // ---- Dos de la toile : quelques faces, tout le détail est peint par son shader ----
+  const marksCanvas = document.createElement('canvas')
+  const marksAreas = paintMarks(marksCanvas)
+  const marksTexture = imageTexture(marksCanvas)
   const backUniforms = {
     uArt: artUniforms.uArt,
     uWeave: artUniforms.uWeave,
@@ -587,6 +591,14 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
     uStaplesUpright: { value: new THREE.Vector3() },
     uStaplesFlat: { value: new THREE.Vector3() },
     uCornerStapleInset: { value: 1 },
+    uMarkedCornerInset: { value: 1 },
+    uMarks: { value: marksTexture },
+    uLogoBox: { value: new THREE.Vector4() },
+    uCodeBox: { value: new THREE.Vector4() },
+    uTextBox: { value: new THREE.Vector4() },
+    uLogoArea: { value: new THREE.Vector4(...marksAreas.logo) },
+    uCodeArea: { value: new THREE.Vector4(...marksAreas.code) },
+    uTextArea: { value: new THREE.Vector4() },
     uLightLocal: { value: new THREE.Vector3(...light) },
   }
   const backMesh = new THREE.Mesh(
@@ -693,7 +705,7 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
     // La bordure de la toile reste en place pendant tout l'affinage (la tranche d'une toile
     // pliée rétrécit avec l'épaisseur) ; la feuille ne devient du papier nu qu'à l'arrivée.
     const border = p.paper >= 0.999 ? 'papier' : product.border
-    const key = [p.width, p.height, p.depth].map(round).join('x') + border
+    const key = [p.width, p.height, p.depth].map(round).join('x') + border + product.size
     if (key !== artKey) {
       setGeometry(artMesh, artBox({ width: p.width, height: p.height, depth: p.depth, border, paper: p.paper }), ['fab', 'art'])
       setGeometry(backMesh, backShell({ width: p.width, height: p.height, depth: p.depth }), ['part'])
@@ -705,6 +717,14 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
       const { upright, flat } = stapleRows(p.width, p.height)
       backUniforms.uStaplesUpright.value.set(upright.first, upright.gap, upright.count)
       backUniforms.uStaplesFlat.value.set(flat.first, flat.gap, flat.count)
+      const text = marksAreas.text[product.size]
+      const marks = marksLayout(p.width, p.height, text.length)
+      const box = ({ x, y, width: w, height: h }) => [x, y, w, h]
+      backUniforms.uLogoBox.value.set(...box(marks.logo))
+      backUniforms.uCodeBox.value.set(...box(marks.code))
+      backUniforms.uTextBox.value.set(...box(marks.text))
+      backUniforms.uTextArea.value.set(...text.area)
+      backUniforms.uMarkedCornerInset.value = marks.markedCornerInset
       artKey = key
     }
     artMesh.position.z = p.artZ
@@ -836,6 +856,7 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
      n'a plus rien à attendre. Renvoie le coût d'une image complète (voir frameCost). */
   async function prepare(view, now) {
     renderer.initTexture(artUniforms.uArt.value)
+    renderer.initTexture(marksTexture)
     await renderer.compileAsync(scene, camera)
     await rehearse(view, now)
     const framed = { ...view.painting, framed: 1 }

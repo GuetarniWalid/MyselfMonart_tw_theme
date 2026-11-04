@@ -7,7 +7,7 @@
 
 import { createDirector } from './staging.js'
 import { ROOM } from './room.js'
-import { BORDERS, FRAMES, SIZES, borderTakesImage, describe, priceOf, sizeLabel } from './catalog.js'
+import { BORDERS, FRAMES, SIZES, borderTakesImage, canFrame, describe, fitChoice, priceOf, sizeLabel } from './catalog.js'
 import { densityForCost, renderDensity } from './quality.js'
 import { decodeImage } from './images.js'
 import { startReliefs } from './reliefs.js'
@@ -132,12 +132,16 @@ function updateTexts() {
   }
   for (const [option, words] of frameWords) {
     words.textContent = product.material === 'poster' ? option.posterLabel : option.label
+    const input = $(`opt-frame-${option.id}`)
+    input.checked = product.frame === option.id
+    input.disabled = option.id !== 'sans' && !canFrame(product.size)
   }
 }
 
 function choose(group, value) {
   if (group === 'passe') product.passe = value === 'avec'
   else if (group in product) product[group] = value
+  Object.assign(product, fitChoice(product))
   updateTexts()
   director.choose(group, { ...product }, performance.now())
   run.active = true

@@ -121,7 +121,7 @@ function backWidth(size, column) {
 }
 
 /* band : toile repliée. bar : largeur totale du châssis vu de dos. cornerStapleInset : distance
-   au bord haut ou bas des deux agrafes de chaque coin. */
+   au bord haut ou bas de l'agrafe de chaque coin. */
 export function backLayout(W, H) {
   const size = Math.min(W, H)
   const band = backWidth(size, 1)

@@ -4,7 +4,7 @@
  * geometry.js (backLayout, stapleRows). Du bord vers le centre : l'image (ou la couleur de tranche)
  * qui revient de quelques mm, un fin trait noir, la toile blanche repliée et ses agrafes, le pin
  * pâle du châssis, et au fond la toile brute, blanc cassé. Aux coins, la bande verticale passe
- * sur la bande horizontale. Aucune marque de l'imprimeur.
+ * sur la bande horizontale. Le logo, le code et le format sont imprimés sur la bande (marks.js).
  */
 
 export const BACK_COLORS = { band: '#f1efe9', raw: '#e9e6df', pine: '#e6dccb' }
@@ -39,7 +39,15 @@ export const BACK_FRAGMENT = /* glsl */ `
   uniform float uBar;
   uniform vec3 uStaplesUpright; // rang d'agrafes des bords verticaux : premier, écart, nombre
   uniform vec3 uStaplesFlat; // et des bords horizontaux
-  uniform float uCornerStapleInset; // distance au bord haut ou bas des agrafes de coin
+  uniform float uCornerStapleInset; // distance au bord haut ou bas de l'agrafe de coin
+  uniform float uMarkedCornerInset; // de même dans le coin du code, plus haut pour lui laisser la place
+  uniform sampler2D uMarks; // planche des marques
+  uniform vec4 uLogoBox; // boîtes vues de dos, en cm : x, y, largeur, hauteur
+  uniform vec4 uCodeBox;
+  uniform vec4 uTextBox;
+  uniform vec4 uLogoArea; // zones de la planche, de 0 à 1
+  uniform vec4 uCodeArea;
+  uniform vec4 uTextArea;
   uniform vec3 uLight;
   uniform vec3 uLightLocal;
   uniform float uAmbient;
@@ -75,6 +83,14 @@ export const BACK_FRAGMENT = /* glsl */ `
   vec3 pine(vec2 q) {
     float fibre = dot(texture2D(uMap, q * uTile).rgb, vec3(1.0)) / OAK_MEAN;
     return uPineColor * (1.0 + uPine * (fibre - 1.0));
+  }
+
+  // Encre d'une marque, à multiplier au tissu : la planche a un fond blanc. at : point vu de dos.
+  vec3 ink(vec2 at, vec4 box, vec4 area, bool quarterTurn) {
+    vec2 q = (at - box.xy) / box.zw;
+    vec2 within = step(vec2(0.0), q) * step(q, vec2(1.0));
+    vec2 uv = quarterTurn ? q.yx : vec2(q.x, 1.0 - q.y);
+    return mix(vec3(1.0), texture2D(uMarks, area.xy + uv * area.zw).rgb, within.x * within.y);
   }
 
   // Bord à peine irrégulier : écart en cm le long d'un bord ; la phase distingue les bords.
@@ -138,13 +154,20 @@ export const BACK_FRAGMENT = /* glsl */ `
     float jitter = hash(vec2(k, side));
     float at = row.x + k * row.y + (jitter - 0.5) * 1.4;
     vec2 q = vec2(along - at, e - uBand * (0.52 + 0.1 * (hash(vec2(side, k)) - 0.5)));
-    cloth = staple(cloth, turned(q, (jitter - 0.5) * 0.1));
+    // Au milieu de la bande du bas, le logo prend la place de l'agrafe.
+    bool logoHere = !upright && p.y < 0.0 && abs(at) < uLogoBox.z * 0.5 + STAPLE_HALF + 1.0;
+    if (!logoHere) cloth = staple(cloth, turned(q, (jitter - 0.5) * 0.1));
 
-    // Deux agrafes côte à côte, parallèles au bord vertical, dans la bande qui passe dessus.
+    // Une seule agrafe par coin, parallèle au bord vertical, dans la bande qui passe dessus.
+    // Vu de dos, le coin bas droit est à x < 0 : c'est celui du code.
+    float inset = p.x < 0.0 && p.y < 0.0 ? uMarkedCornerInset : uCornerStapleInset;
     float sway = hash(sign(p) + 3.0) - 0.5;
-    vec2 pair = vec2(c.y - uCornerStapleInset, c.x);
-    cloth = staple(cloth, turned(pair - vec2(0.0, uBand * 0.36), sway * 0.06));
-    cloth = staple(cloth, turned(pair - vec2(sway * 0.5, uBand * 0.6), sway * 0.08));
+    cloth = staple(cloth, turned(vec2(c.y - inset, c.x - uBand * 0.5), sway * 0.08));
+
+    // Marques imprimées sur la toile.
+    vec2 seen = vec2(-p.x, p.y);
+    cloth *= ink(seen, uLogoBox, uLogoArea, false) * ink(seen, uCodeBox, uCodeArea, false);
+    cloth *= ink(seen, uTextBox, uTextArea, true);
 
     color = mix(color, cloth, band);
 

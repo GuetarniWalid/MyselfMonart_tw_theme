@@ -1,5 +1,5 @@
 /*
- * Données du Bonsaï et des matières (module pur). Prix lus le 03/11/2026 dans Shopify
+ * Données du Bonsaï et des matières (module pur). Prix lus les 03 et 04/11/2026 dans Shopify
  * (toile 10807148708187, poster 10807154082139). Dimensions en cm.
  */
 
@@ -17,7 +17,7 @@ export const FRAME_PROFILE = {
   poster: { gap: -0.5, face: 1.6, depth: 2.0, floor: 1.6 }, // baguette sous verre, tirage collé au verre
 }
 
-export const SIZES = ['30x40', '75x100']
+export const SIZES = ['30x40', '60x80', '75x100', '90x120']
 
 // Taille d'option (« 30x40 ») : largeur et hauteur en cm, et libellé affiché.
 export function dimensionsOf(size) {
@@ -51,12 +51,20 @@ export const borderOf = (id) => BORDERS.find((b) => b.id === id) || BORDERS[0]
 export const borderTakesImage = (id) => !borderOf(id).color
 export const frameOf = (id) => FRAMES.find((f) => f.id === id) || FRAMES[0]
 
-const TOILE_BASE = { '30x40': 62.5, '75x100': 136.5 } // bordure blanche, sans cadre
+const TOILE_BASE = { '30x40': 62.5, '60x80': 94, '75x100': 136.5, '90x120': 199 } // bordure blanche, sans cadre
 const TOILE_FRAME_ADD = { sans: 0, noir: 40, chene: 50 }
 const POSTER_PRICE = {
   '30x40': { sans: 24.9, avec: 47.9 },
+  '60x80': { sans: 44.9, avec: 94.9 },
   '75x100': { sans: 64.9, avec: 159.9 },
+  '90x120': { sans: 71.9 },
 }
+
+// La boutique ne vend pas le 90 × 120 encadré, ni en toile ni en poster.
+export const canFrame = (size) => size !== '90x120'
+
+// Un choix qui n'existe pas en boutique repasse sans cadre.
+export const fitChoice = (product) => (canFrame(product.size) ? product : { ...product, frame: 'sans' })
 
 export function hasFrame(product) {
   return product.frame !== 'sans'

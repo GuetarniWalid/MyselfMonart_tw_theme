@@ -169,22 +169,25 @@ const artFront = (p) => [p.x, p.y, p.z + p.artZ + p.depth]
    posées en façade de l'œuvre. Toujours calculées pour que les fondus restent continus ;
    seule leur opacité dit si on les montre. */
 const DIMS_OFFSET = 6
+const DIMS_LABEL = 14 // hauteur à laisser au-dessus de la ligne pour son étiquette, dans la pièce
+const DIMS_UNDER = 8 // sous le tableau, la ligne descend d'autant pour laisser la place à l'étiquette
 
-function dimsOf(p, opacity) {
+function dimsOf(p, opacity, under = false) {
   const z = p.z + p.artZ + p.depth
   const left = p.x - p.width / 2, right = p.x + p.width / 2
   const bottom = p.y - p.height / 2, top = p.y + p.height / 2
   const ox = (p.outer.width - p.width) / 2 + DIMS_OFFSET
   const oy = (p.outer.height - p.height) / 2 + DIMS_OFFSET
+  const y = under ? bottom - oy - DIMS_UNDER : top + oy
   return {
     opacity,
-    width: { a: [left, top + oy, z], b: [right, top + oy, z], text: `${p.width} cm` },
+    width: { a: [left, y, z], b: [right, y, z], text: `${p.width} cm` },
     height: { a: [right + ox, bottom, z], b: [right + ox, top, z], text: `${p.height} cm` },
   }
 }
 
-function shotOf(shot, camera, painting, roomOpacity = 0) {
-  return { shot, camera, painting, room: roomOpacity, dims: dimsOf(painting, roomOpacity) }
+function shotOf(shot, camera, painting, roomOpacity = 0, dimsUnder = false) {
+  return { shot, camera, painting, room: roomOpacity, dims: dimsOf(painting, roomOpacity, dimsUnder) }
 }
 
 function frontShot(room, product, aspect) {
@@ -204,7 +207,9 @@ function roomShot(room, product, aspect) {
   const x = Math.min(Math.max(painting.x, photo.left + halfWidth), photo.right - halfWidth)
   const target = [x, view.bottom + height / 2, 0]
   const d = distanceFor(height)
-  return shotOf('room', { position: add(target, [0, 0, d]), target, fovY: FOV_Y }, painting, 1)
+  // Un grand tableau monte près du haut du cadrage : sa cote de largeur passe dessous.
+  const dimsUnder = painting.y + painting.outer.height / 2 + DIMS_OFFSET + DIMS_LABEL > target[1] + height / 2
+  return shotOf('room', { position: add(target, [0, 0, d]), target, fovY: FOV_Y }, painting, 1, dimsUnder)
 }
 
 function cornerShot(room, product) {

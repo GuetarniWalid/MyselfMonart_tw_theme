@@ -222,6 +222,67 @@ test("passer au poster avec un cadre montre de trois-quarts le tableau qui s'aff
   assert.ok(toCamera[0] <= -0.3, 'la caméra voit le tableau de profil, côté fenêtre')
 })
 
+const ALL_SIZES = ['30x40', '60x80', '75x100', '90x120']
+
+for (const size of ALL_SIZES) {
+  test(`${size} : le tour complet reste dans le cadre et ne touche jamais le mur`, () => {
+    const director = createDirector({ room: ROOM, product: { ...POSTER, size } })
+    director.choose('material', { ...POSTER, size, material: 'toile' }, 0)
+    let most = 0
+    for (let t = 0; t <= 3600; t += 24) {
+      const view = director.view(t, PORTRAIT)
+      most = Math.max(most, Math.abs(view.painting.yaw))
+      for (const c of paintingCorners(view.painting, 'outer')) {
+        assert.ok(c[2] >= -1e-6, `traversée du mur à ${t} ms`)
+        const { x, y } = project(view.camera, PORTRAIT, c)
+        assert.ok(Math.abs(x) <= 1 && Math.abs(y) <= 1, `coin hors de l'écran à ${t} ms : ${x.toFixed(2)}, ${y.toFixed(2)}`)
+      }
+    }
+    assert.ok(Math.abs(most - 2 * Math.PI) < 0.05)
+  })
+
+  test(`${size} : le coin du poster se lève à l'écran, puis la vue revient de face`, () => {
+    const director = createDirector({ room: ROOM, product: { ...TOILE, size } })
+    director.choose('material', { ...TOILE, size, material: 'poster' }, 0)
+    const view = director.view(1400, PORTRAIT)
+    assert.equal(view.painting.curl, 1)
+    const { x: sx, y: sy } = curlCorner(ROOM)
+    const corner = paintingCorners(view.painting).find((c) => c.side.x === sx && c.side.y === sy && c.side.z === 1)
+    const onScreen = project(view.camera, PORTRAIT, corner)
+    assert.ok(Math.abs(onScreen.x) < 0.8 && Math.abs(onScreen.y) < 0.8, `coin hors du plan : ${onScreen.x.toFixed(2)}, ${onScreen.y.toFixed(2)}`)
+    assert.equal(director.view(LATER, PORTRAIT).shot, 'front')
+  })
+
+  test(`${size} : dans la pièce, le tableau et ses cotes tiennent à l'écran, à la vraie échelle`, () => {
+    const director = createDirector({ room: ROOM, product: TOILE })
+    director.choose('size', { ...TOILE, size }, 0)
+    const view = director.view(LATER, PORTRAIT)
+    const [w, h] = size.split('x').map(Number)
+    assert.equal(view.shot, 'room')
+    assert.equal(view.painting.width, w)
+    assert.equal(view.painting.height, h)
+    assert.equal(view.dims.width.text, `${w} cm`)
+    assert.equal(view.dims.height.text, `${h} cm`)
+    assert.ok(view.painting.y - h / 2 >= ROOM.hang.minBottom, 'accroché au-dessus du canapé')
+    for (const point of [view.dims.width.a, view.dims.width.b, view.dims.height.a, view.dims.height.b]) {
+      const { x, y } = project(view.camera, PORTRAIT, point)
+      assert.ok(Math.abs(x) <= 1 && Math.abs(y) <= 1, `cote hors de l'écran : ${x.toFixed(2)}, ${y.toFixed(2)}`)
+    }
+    // L'étiquette de largeur est posée au-dessus de sa ligne : il lui faut de la place.
+    const line = project(view.camera, PORTRAIT, view.dims.width.a)
+    assert.ok(line.y <= 0.88, `étiquette coupée par le haut de la scène : ligne à ${line.y.toFixed(2)}`)
+  })
+}
+
+test('quand le tableau monte trop haut, la cote de largeur passe dessous, sans toucher au canapé', () => {
+  const director = createDirector({ room: ROOM, product: TOILE })
+  director.choose('size', { ...TOILE, size: '90x120' }, 0)
+  const { painting, dims } = director.view(LATER, PORTRAIT)
+  const bottom = painting.y - painting.height / 2
+  assert.ok(dims.width.a[1] < bottom - 6, 'sous le tableau, avec la place de son étiquette')
+  assert.ok(dims.width.a[1] > 91, 'au-dessus du dossier du canapé')
+})
+
 const TURN_END = 3600 // ms : fin du tour de la toile, avec une marge dans les tests
 const FULL_TURN = 2 * Math.PI
 const wrapped = (a) => Math.atan2(Math.sin(a), Math.cos(a))
