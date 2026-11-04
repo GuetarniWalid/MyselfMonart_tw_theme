@@ -1,15 +1,16 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { MARKS, STAPLE_DRIFT, dataMatrixCells, marksLayout, sizeText } from '../src/marks.js'
-import { backLayout, stapleRows } from '../src/geometry.js'
+import { backLayout } from '../src/geometry.js'
 import { SIZES, dimensionsOf } from '../src/catalog.js'
 
 const FORMAT_LENGTH = 2 // cm : le plus long format, large
-const PREMIUM_LENGTH = 2
+const PREMIUM_BOX = { height: 1.25, length: 8 } // en hauteurs de lettre, mesurée sur la planche
 const layoutOf = (size) => {
   const { width: W, height: H } = dimensionsOf(size)
-  return { W, H, marks: marksLayout(W, H, FORMAT_LENGTH, PREMIUM_LENGTH), back: backLayout(W, H) }
+  return { W, H, marks: marksLayout(W, H, FORMAT_LENGTH, PREMIUM_BOX), back: backLayout(W, H) }
 }
+const staplesOf = ({ first, gap, count }) => Array.from({ length: count }, (_, k) => first + k * gap)
 const overlap = (a, b) => a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height
 
 test('le code est un Datamatrix décoratif : bord en L plein, bord opposé en pointillés, motif fixe', () => {
@@ -39,18 +40,16 @@ test('la ligne de texte donne le format choisi', () => {
   assert.equal(sizeText('30x40'), '30×40 cm')
 })
 
-test('PREMIUM évite une agrafe par le plus court, vers le haut comme vers le bas', () => {
+test('quelle que soit la police du téléphone, aucune agrafe ne touche PREMIUM, qui reste à sa place', () => {
   for (const [W, H] of [[30, 40], [60, 80], [75, 100], [90, 120]]) {
-    const { upright } = stapleRows(W, H)
-    const reach = backLayout(W, H).stapleLength / 2 + STAPLE_DRIFT
-    for (const length of [1, 1.5, 1.8, 2.4, 3]) {
-      const { premium } = marksLayout(W, H, FORMAT_LENGTH, length)
-      for (let k = 0; k < upright.count; k++) {
-        const at = upright.first + k * upright.gap
-        assert.ok(at + reach < premium.y || at - reach > premium.y + length, `${W} × ${H}, mot de ${length} cm : agrafe à ${at.toFixed(1)} cm dessus`)
-      }
-      const moved = Math.abs(premium.y + length / 2 - H / 6) // les deux tiers, comptés depuis le milieu
-      assert.ok(moved < length / 2 + reach + 0.5, `${W} × ${H}, mot de ${length} cm : déplacé de ${moved.toFixed(1)} cm`)
+    const { cornerStapleInset, stapleLength } = backLayout(W, H)
+    const reach = stapleLength / 2 + STAPLE_DRIFT
+    for (const length of [5, 6.5, 8, 9.5, 12]) {
+      const { premium, rightRows: { below, above } } = marksLayout(W, H, FORMAT_LENGTH, { ...PREMIUM_BOX, length })
+      assert.ok(Math.abs(premium.y + premium.height / 2 - H / 6) < 1e-9, 'aux deux tiers, comptés depuis le milieu')
+      for (const at of staplesOf(below)) assert.ok(at + reach < premium.y, `${W} × ${H}, mot de ${length} : agrafe à ${at.toFixed(1)} cm`)
+      for (const at of staplesOf(above)) assert.ok(at - reach > premium.y + premium.height, `${W} × ${H}, mot de ${length} : agrafe à ${at.toFixed(1)} cm`)
+      assert.ok(premium.y + premium.height + stapleLength < H / 2 - cornerStapleInset, 'agrafe du coin du haut')
     }
   }
 })
@@ -85,27 +84,27 @@ for (const size of SIZES) {
     assert.equal(overlap(cornerCode, format), false)
   })
 
-  test(`${size} : PREMIUM longe la bande verticale de droite, vers les deux tiers de la hauteur`, () => {
+  test(`${size} : PREMIUM longe la bande verticale de droite, en lettres de 40 % de la bande`, () => {
     const { W, H, marks: { premium }, back: { band } } = layoutOf(size)
-    assert.equal(premium.height, PREMIUM_LENGTH)
-    assert.equal(premium.width, MARKS.textHeight)
+    assert.ok(Math.abs(premium.width - 0.4 * band * PREMIUM_BOX.height) < 1e-9, 'hauteur des lettres')
+    assert.ok(Math.abs(premium.height - 0.4 * band * PREMIUM_BOX.length) < 1e-9, 'longueur du mot et de son équerre')
     const fromRight = W / 2 - (premium.x + premium.width)
     assert.ok(fromRight >= MARKS.free && fromRight + premium.width <= band, `PREMIUM à ${fromRight} cm du bord`)
     const height = (premium.y + premium.height / 2 + H / 2) / H
-    assert.ok(height > 0.6 && height < 0.75, `à ${(height * 100).toFixed(0)} % de la hauteur`)
+    assert.ok(Math.abs(height - 2 / 3) < 1e-9, `à ${(height * 100).toFixed(0)} % de la hauteur`)
   })
 
-  test(`${size} : aucune agrafe ne passe sur PREMIUM ni sur le code du coin`, () => {
-    const { W, H, marks: { premium, markedCornerInset, cornerCode }, back: { stapleLength } } = layoutOf(size)
-    const { upright } = stapleRows(W, H)
-    const reach = stapleLength / 2 + STAPLE_DRIFT
-    for (let k = 0; k < upright.count; k++) {
-      const at = upright.first + k * upright.gap
-      assert.ok(at + reach < premium.y || at - reach > premium.y + premium.height, `agrafe à ${at.toFixed(1)} cm sur PREMIUM`)
-    }
+  test(`${size} : sur la bande de droite, les agrafes gardent l'espacement des autres bords`, () => {
+    const { marks: { rightRows: { below, above } } } = layoutOf(size)
+    for (const row of [below, above]) if (row.count > 0) assert.ok(row.gap > 8 && row.gap < 14, `écart de ${row.gap.toFixed(1)} cm`)
+    assert.ok(below.count >= 1, 'au moins une agrafe sous le mot')
+  })
+
+  test(`${size} : aucune agrafe ne passe sur le code du coin`, () => {
+    const { W, H, marks: { markedCornerInset, cornerCode, rightRows: { below } }, back: { stapleLength } } = layoutOf(size)
     assert.ok(H / 2 + cornerCode.y + cornerCode.height < markedCornerInset - stapleLength / 2, 'agrafe du coin au-dessus du code')
     assert.ok(markedCornerInset >= backLayout(W, H).cornerStapleInset)
-    const lowest = upright.first + H / 2
+    const lowest = below.first + H / 2
     assert.ok(lowest - stapleLength > markedCornerInset, 'le rang vertical laisse le coin tranquille')
   })
 

@@ -590,6 +590,8 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
     uBar: { value: 1 },
     uStaplesUpright: { value: new THREE.Vector3() },
     uStaplesFlat: { value: new THREE.Vector3() },
+    uStaplesBelow: { value: new THREE.Vector3() },
+    uStaplesAbove: { value: new THREE.Vector3() },
     uCornerStapleInset: { value: 1 },
     uMarkedCornerInset: { value: 1 },
     uStapleHalf: { value: 1 },
@@ -717,13 +719,16 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
       backUniforms.uStaplesUpright.value.set(upright.first, upright.gap, upright.count)
       backUniforms.uStaplesFlat.value.set(flat.first, flat.gap, flat.count)
       const format = marksAreas.format[product.size]
-      const marks = marksLayout(p.width, p.height, format.length, marksAreas.premium.length)
+      const marks = marksLayout(p.width, p.height, format.length, marksAreas.premium)
       const boxes = [marks.logo, marks.cornerCode, marks.centerCode, marks.format, marks.premium]
       const areas = [marksAreas.logo, marksAreas.cornerCode, marksAreas.centerCode, format.area, marksAreas.premium.area]
       boxes.forEach(({ x, y, width: w, height: h }, i) => backUniforms.uMarkBoxes.value[i].set(x, y, w, h))
       areas.forEach((area, i) => backUniforms.uMarkAreas.value[i].set(...area))
       backUniforms.uMarkedCornerInset.value = marks.markedCornerInset
       backUniforms.uRowClear.value.set(marks.rowClear.top, marks.rowClear.bottom)
+      const { below, above } = marks.rightRows
+      backUniforms.uStaplesBelow.value.set(below.first, below.gap, below.count)
+      backUniforms.uStaplesAbove.value.set(above.first, above.gap, above.count)
       artKey = key
     }
     artMesh.position.z = p.artZ

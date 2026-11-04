@@ -41,6 +41,8 @@ export const BACK_FRAGMENT = /* glsl */ `
   uniform float uBar;
   uniform vec3 uStaplesUpright; // rang d'agrafes des bords verticaux : premier, écart, nombre
   uniform vec3 uStaplesFlat; // et des bords horizontaux
+  uniform vec3 uStaplesBelow; // sur la bande de droite, le rang sous PREMIUM
+  uniform vec3 uStaplesAbove; // et au-dessus de lui
   uniform float uStapleHalf; // demi-longueur d'une agrafe
   uniform float uCornerStapleInset; // distance au bord haut ou bas de l'agrafe de coin
   uniform float uMarkedCornerInset; // de même dans le coin du code, plus haut pour lui laisser la place
@@ -88,7 +90,8 @@ export const BACK_FRAGMENT = /* glsl */ `
     vec2 q = (at - box.xy) / box.zw;
     vec2 within = step(vec2(0.0), q) * step(q, vec2(1.0));
     vec2 uv = quarterTurn ? q.yx : vec2(q.x, 1.0 - q.y);
-    return mix(vec3(1.0), texture2D(uMarks, area.xy + uv * area.zw).rgb, within.x * within.y);
+    float sharper = quarterTurn ? -1.0 : 0.0; // PREMIUM doit se lire : ses lettres ne font que 7 px
+    return mix(vec3(1.0), texture2D(uMarks, area.xy + uv * area.zw, sharper).rgb, within.x * within.y);
   }
 
   // Bord à peine irrégulier : écart en cm le long d'un bord ; la phase distingue les bords.
@@ -178,9 +181,12 @@ export const BACK_FRAGMENT = /* glsl */ `
     float onFold = inside(fold);
     cloth *= 1.0 - 0.14 * exp(-max(-fold, 0.0) / 0.22) * (1.0 - onFold);
 
-    // Agrafes le long de la bande, posées à la main.
-    vec3 row = upright ? uStaplesUpright : uStaplesFlat;
-    float k = clamp(floor((along - row.x) / row.y + 0.5), 0.0, row.z - 1.0);
+    // Agrafes le long de la bande, posées à la main. Vue de dos, la bande de droite est à x < 0 :
+    // PREMIUM y coupe le rang en deux.
+    vec4 word = uMarkBoxes[PREMIUM];
+    vec3 besideWord = along < word.y + 0.5 * word.w ? uStaplesBelow : uStaplesAbove;
+    vec3 row = upright ? (p.x < 0.0 ? besideWord : uStaplesUpright) : uStaplesFlat;
+    float k = clamp(floor((along - row.x) / row.y + 0.5), 0.0, max(row.z - 1.0, 0.0));
     float jitter = hash(vec2(k, side));
     float at = row.x + k * row.y + (jitter - 0.5) * 2.0 * DRIFT;
     float fromEdge = uBand * (0.52 + 0.1 * (hash(vec2(side, k)) - 0.5));
@@ -189,7 +195,8 @@ export const BACK_FRAGMENT = /* glsl */ `
     vec2 axis = upright ? vec2(sin(tilt), cos(tilt)) : vec2(cos(tilt), sin(tilt));
     // Au centre des bandes du haut et du bas, les marques prennent la place de l'agrafe.
     float clear = p.y > 0.0 ? uRowClear.x : uRowClear.y;
-    cloth = staple(cloth, p, center, axis, upright || abs(at) >= clear ? 1.0 : 0.0);
+    bool kept = upright ? row.z > 0.5 : abs(at) >= clear;
+    cloth = staple(cloth, p, center, axis, kept ? 1.0 : 0.0);
 
     // Une seule agrafe par coin, parallèle au bord vertical, dans la bande qui passe dessus.
     // Vu de dos, le coin bas droit est à x < 0 : c'est celui du code.
