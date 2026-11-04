@@ -41,7 +41,7 @@ Ajouter un tableau à partir d'une seule image à plat, sans Photoshop ni mockup
 13. Rendus : sur le serveur actuel, à la demande, un à la fois, jamais en même temps que le studio des posters personnalisés. On n'agrandit le serveur que si la mesure l'exige. La base MySQL sert encore : on la garde.
 14. Agrandissement : Recraft Crisp Upscale sur Replicate (0,006 $ par image), choisi par Walid après le banc d'essai (ticket 03) ; chaque image agrandie est comparée automatiquement à l'originale.
 15. Impression : hors projet. Walid continue avec ses propres fichiers.
-16. Mesure : test en deux temps. D'abord les nouveautés, comparées aux nouveautés des mois précédents ; puis, en janvier, la moitié des best-sellers contre l'autre moitié pendant 3 semaines. PostHog tourne sur un compte séparé ouvert avec team@myselfmonart.com, et Clarity est retiré dès que PostHog tourne. La bannière cookies garde l'acceptation automatique, par choix de Walid.
+16. Mesure : test en deux temps. D'abord les nouveautés, comparées aux nouveautés des mois précédents ; puis, en janvier, la moitié des best-sellers contre l'autre moitié pendant 3 semaines. PostHog tourne dans une organisation à part, MyselfMonArt (projet 334087, région Europe), créée le 04/11 dans le compte PostHog existant de Walid et séparée de Made By Mood, avec sa propre offre gratuite. Clarity est retiré dès que PostHog tourne. La bannière cookies garde l'acceptation automatique, par choix de Walid.
 17. Version 2 : vidéo automatique, réalité augmentée, fichier d'impression HD.
 
 ## Règles
