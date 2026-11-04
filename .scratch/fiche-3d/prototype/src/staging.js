@@ -11,9 +11,9 @@
  * arrière est en (x, y, z). Il tourne autour de ce point : d'abord `pitch` autour de
  * l'axe x, puis `yaw` autour de l'axe y (ordre 'YXZ' de three.js). `outer` est la boîte
  * extérieure (cadre compris) ; l'œuvre y occupe width × height × depth, à partir de `artZ`.
- * `frame` est le profil du cadre et `paper` passe de 0 (toile) à 1 (poster) : les deux
- * s'interpolent pendant la transition. La vue porte aussi `product`, les choix en cours,
- * pour que le moteur rende tout à partir de la seule vue.
+ * `frame` est le profil du cadre, `framed` sa présence (0 à 1, pour le fondu) et `paper`
+ * passe de 0 (toile) à 1 (poster) : tous s'interpolent pendant la transition. La vue porte
+ * aussi `product`, les choix en cours, pour que le moteur rende tout à partir de la seule vue.
  */
 
 import { CANVAS_DEPTH, FRAME_PROFILE, PAPER_DEPTH, dimensionsOf, hasFrame } from './catalog.js'
@@ -119,7 +119,8 @@ function hungPainting(room, product) {
   const c = hangingCenter(room, outer.height)
   const paper = product.material === 'poster' ? 1 : 0
   const passe = paper && product.passe ? 1 : 0 // contour blanc, en fondu pendant la transition
-  return { x: c.x, y: c.y, z: 0, yaw: 0, pitch: 0, width: w, height: h, depth, artZ, outer, frame, paper, passe }
+  const framed = hasFrame(product) ? 1 : 0 // le cadre aussi : il n'apparaît jamais d'un coup
+  return { x: c.x, y: c.y, z: 0, yaw: 0, pitch: 0, width: w, height: h, depth, artZ, outer, frame, framed, paper, passe }
 }
 
 const artFront = (p) => [p.x, p.y, p.z + p.artZ + p.depth]

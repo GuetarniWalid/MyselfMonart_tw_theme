@@ -154,6 +154,29 @@ test('choisir une taille fait reculer la caméra dans la pièce, tableau à la v
 
 const POSTER = { material: 'poster', size: '30x40', border: 'blanche', frame: 'sans', passe: false }
 
+test("un cadre arrive et repart en fondu, jamais d'un coup", () => {
+  const director = createDirector({ room: ROOM, product: POSTER })
+  assert.equal(director.view(0, PORTRAIT).painting.framed, 0)
+
+  director.choose('frame', { ...POSTER, frame: 'chene' }, 100)
+  let previous = 0
+  let steps = 0
+  for (let t = 100; t <= 100 + LATER; t += 16) {
+    const framed = director.view(t, PORTRAIT).painting.framed
+    assert.ok(framed >= previous - 1e-9, 'le fondu ne recule pas')
+    assert.ok(framed - previous < 0.12, `le cadre saute de ${previous.toFixed(2)} à ${framed.toFixed(2)}`)
+    if (framed > 0 && framed < 1) steps++
+    previous = framed
+  }
+  assert.equal(previous, 1)
+  assert.ok(steps >= 10, `fondu trop bref : ${steps} images`)
+
+  director.choose('frame', { ...POSTER, frame: 'sans' }, 200 + LATER)
+  const leaving = director.view(200 + LATER + 200, PORTRAIT).painting.framed
+  assert.ok(leaving > 0 && leaving < 1, 'le cadre qui part est encore là, en train de s’effacer')
+  assert.equal(director.view(200 + 2 * LATER, PORTRAIT).painting.framed, 0)
+})
+
 test('choisir le contour blanc zoome de face sur la marge du poster', () => {
   const director = createDirector({ room: ROOM, product: POSTER })
   director.choose('passe', { ...POSTER, passe: true }, 0)

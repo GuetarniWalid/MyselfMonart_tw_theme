@@ -8,8 +8,12 @@
 import { createDirector } from './staging.js'
 import { ROOM } from './room.js'
 import { BORDERS, FRAMES, SIZES, describe, priceOf, sizeLabel } from './catalog.js'
+import { densityAfterRun, renderDensity } from './quality.js'
+import { decodeImage } from './images.js'
 
 const THREE_URL = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js'
+const WOOD_IMAGE = 'assets/chene-clair.jpg'
+const DETAIL_IMAGE = 'assets/bonsai-source.jpg' // la source complète, pour les gros plans
 
 const $ = (id) => document.getElementById(id)
 const stageEl = $('stage'), canvas = $('gl'), poster = $('poster')
@@ -21,8 +25,41 @@ let reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches
 const director = createDirector({ room: ROOM, product: { ...product }, reducedMotion })
 
 let engine = null
+let live = false // moteur prêt à dessiner : programmes compilés
 const stageSize = { w: 1, h: 1 }
 const aspect = () => stageSize.w / stageSize.h
+
+/* Reliefs (trame de la toile, grain du papier) : calculés dans un worker dès l'ouverture,
+   pendant que la photo et three.js se chargent. Sans worker, ils sont calculés ici. */
+function startReliefs() {
+  const done = {}
+  const reliefs = {
+    weave: new Promise((resolve) => { done.weave = resolve }),
+    paper: new Promise((resolve) => { done.paper = resolve }),
+  }
+  const inPage = async () => {
+    const { paperPixels, weavePixels } = await import('./textures.js')
+    done.weave(weavePixels())
+    done.paper(paperPixels())
+  }
+  try {
+    const worker = new Worker(new URL('./relief-worker.js', import.meta.url), { type: 'module' })
+    const silent = setTimeout(inPage, 3000) // un worker muet ne doit pas priver de 3D
+    worker.onmessage = ({ data }) => {
+      clearTimeout(silent)
+      done[data.name](data.pixels)
+      if (data.name === 'paper') worker.terminate()
+    }
+    worker.onerror = () => {
+      clearTimeout(silent)
+      inPage()
+    }
+  } catch {
+    inPage()
+  }
+  return reliefs
+}
+const reliefs = startReliefs()
 
 /* ---------------- Options ---------------- */
 
@@ -72,21 +109,47 @@ function buildOptions() {
     }
     fieldset.append(legend, chips)
     form.append(fieldset)
-    // La photo de la pièce part dès qu'on s'approche des tailles, avant le clic.
-    if (g.name === 'size') {
-      fieldset.addEventListener('pointerdown', prefetchRoom, { once: true })
-      fieldset.addEventListener('focusin', prefetchRoom, { once: true })
+    // Ce qui ne sert qu'à certains plans part dès qu'on s'approche de l'option, avant le clic.
+    const onApproach = g.name === 'size' ? prefetchRoom : g.name === 'material' ? null : loadDetail
+    if (onApproach) {
+      fieldset.addEventListener('pointerdown', onApproach, { once: true })
+      fieldset.addEventListener('focusin', onApproach, { once: true })
     }
   }
   form.addEventListener('change', (event) => choose(event.target.name, event.target.value))
   form.addEventListener('submit', (event) => event.preventDefault())
 }
 
+// Demandes faites avant que le moteur soit prêt : rejouées à son arrivée.
+const whenLive = new Set()
+const onceLive = (task) => (live ? task() : whenLive.add(task))
+const askRoom = () => engine.prefetchRoom()
 function prefetchRoom() {
-  if (engine) engine.prefetchRoom()
-  else wantRoom = true
+  onceLive(askRoom)
 }
-let wantRoom = false
+
+/* Source complète de l'œuvre : chargée quand on s'approche d'un gros plan, jamais à
+   l'arrivée. Son envoi au GPU attend que tout soit immobile, pour ne saccader aucun mouvement. */
+let detailAsked = false, detailReady = null
+function askDetail() {
+  if (detailAsked || lightNetwork) return
+  detailAsked = true
+  decodeImage(DETAIL_IMAGE).then((image) => {
+    detailReady = image
+    swapDetail()
+  }, () => {}) // pas de source complète : on garde la version de l'arrivée
+}
+function loadDetail() {
+  onceLive(askDetail)
+}
+function swapDetail() {
+  if (!detailReady || drag || director.isMoving(performance.now())) return
+  const start = performance.now()
+  engine.useArtImage(detailReady)
+  detailReady = null
+  reportDetail(performance.now() - start)
+  requestRender()
+}
 
 function updateTexts() {
   const text = describe(product)
@@ -123,7 +186,7 @@ let raf = 0
 const run = { times: [] }
 
 function requestRender() {
-  if (!raf && engine) raf = requestAnimationFrame(frame)
+  if (!raf && live) raf = requestAnimationFrame(frame)
 }
 
 function draw(at) {
@@ -139,8 +202,12 @@ function frame(now) {
   $('hint').classList.toggle('gone', hintGone || view.room > 0.5)
   run.times.push(now)
   if (engine.roomReady() && !roomReported) reportRoom()
-  if (director.isMoving(now) || engine.roomFading(now) || drag) raf = requestAnimationFrame(frame)
-  else reportFluidity()
+  if (director.isMoving(now) || engine.isFading(now) || drag) {
+    raf = requestAnimationFrame(frame)
+    return
+  }
+  reportFluidity()
+  swapDetail()
 }
 
 const dimsEl = $('dims'), dimW = $('dimW'), dimH = $('dimH')
@@ -185,11 +252,18 @@ $('frontBtn').addEventListener('click', () => choose('front'))
 $('roomBtn').addEventListener('pointerdown', prefetchRoom, { once: true })
 $('roomBtn').addEventListener('click', () => choose('size', product.size))
 
+// Densité de rendu : celle de l'écran, sous le plafond qu'imposent les animations trop lentes.
+let densityCap = Infinity
+function fitStage() {
+  const fit = renderDensity({ dpr: window.devicePixelRatio || 1, width: stageSize.w, height: stageSize.h })
+  engine.resize(stageSize.w, stageSize.h, Math.min(densityCap, fit))
+}
+
 new ResizeObserver(([entry]) => {
   stageSize.w = Math.max(1, Math.round(entry.contentRect.width))
   stageSize.h = Math.max(1, Math.round(entry.contentRect.height))
   if (engine) {
-    engine.resize(stageSize.w, stageSize.h)
+    fitStage()
     requestRender()
   }
 }).observe(stageEl)
@@ -215,7 +289,15 @@ function reportLoad(times) {
   setMeasure('three', `${three && three.transferSize ? kb(three.transferSize) : 'cache'} (r170, ${three ? Math.round(three.duration) : '?'} ms) + prototype ${kb(ownBytes)}`)
   setMeasure('art', `${transfer(poster.getAttribute('src')) || '?'} · ${poster.naturalWidth}×${poster.naturalHeight} px`)
   setMeasure('first', `${seconds(times.first)} après l'ouverture (photo ${seconds(times.photo)}, three.js ${seconds(times.module)})`)
-  setMeasure('screen', `${stageSize.w}×${stageSize.h} px × ${engine.pixelRatio()} · ${engine.gpuName()}`)
+  reportScreen()
+}
+
+function reportScreen() {
+  setMeasure('screen', `${stageSize.w}×${stageSize.h} px × ${decimal.format(engine.density())} · anticrénelage ${engine.samples()}× · ${engine.gpuName()}`)
+}
+
+function reportDetail(uploadMs) {
+  setMeasure('detail', `${transfer(DETAIL_IMAGE) || '?'} · envoi au GPU ${Math.round(uploadMs)} ms, à l'arrêt`)
 }
 
 let roomReported = false
@@ -237,6 +319,13 @@ function reportFluidity() {
   const verdict = fps < SLOW_FPS ? ' · trop lent : la vraie fiche resterait sur les photos' : ''
   setMeasure('fps', `${fps} images/s pendant la dernière animation · ${slow} image${slow > 1 ? 's' : ''} lente${slow > 1 ? 's' : ''} sur ${deltas.length}${verdict}`)
   window.__lastRun = { fps, slow, frames: deltas.length, worst: Math.round(Math.max(...deltas)) }
+  const lighter = densityAfterRun(engine.density(), fps)
+  if (lighter < engine.density()) {
+    densityCap = lighter
+    fitStage()
+    reportScreen()
+    requestRender()
+  }
 }
 
 // Mesurée une fois, de face, sur une toile dont la façade montre toute l'image (la bordure
@@ -292,25 +381,29 @@ async function start3D() {
   starting = true
   try {
     await photoReady
-    // Décodage anticipé : un plus, jamais un blocage (une page en arrière-plan peut l'ajourner).
-    await Promise.race([poster.decode().catch(() => {}), new Promise((resolve) => setTimeout(resolve, 300))])
-    const [THREE, { createScene }] = await Promise.all([import(THREE_URL), import('./scene.js')])
+    const [THREE, { createScene }, weave, artImage] = await Promise.all([
+      import(THREE_URL), import('./scene.js'), reliefs.weave, decodeImage(poster.currentSrc || poster.src),
+    ])
     marks.module = performance.now()
-    engine = createScene(THREE, { canvas, artImage: poster, room: ROOM })
+    engine = createScene(THREE, { canvas, artImage, weave, room: ROOM })
+    const rect = stageEl.getBoundingClientRect()
+    stageSize.w = Math.max(1, Math.round(rect.width))
+    stageSize.h = Math.max(1, Math.round(rect.height))
+    fitStage()
+    engine.onNeedsRender = requestRender
+    await engine.prepare() // la photo reste affichée pendant que les programmes se compilent
   } catch (error) {
     console.error(error)
     showNotice("La 3D n'a pas pu démarrer sur cet appareil : la vraie fiche resterait sur les photos.")
     return
   }
-  const rect = stageEl.getBoundingClientRect()
-  stageSize.w = Math.max(1, Math.round(rect.width))
-  stageSize.h = Math.max(1, Math.round(rect.height))
-  engine.resize(stageSize.w, stageSize.h)
-  engine.onNeedsRender = requestRender
+  live = true
   draw(performance.now())
   marks.first = performance.now()
   requestRender() // un choix fait avant l'arrivée de la 3D continue sa transition
-  if (wantRoom) engine.prefetchRoom()
+  whenLive.forEach((task) => task())
+  reliefs.paper.then((pixels) => engine.setPaperRelief(pixels))
+  whenIdle(() => engine.loadWood(WOOD_IMAGE))
   // Fondu : la 3D apparaît par-dessus la photo, qui reste opaque dessous jusqu'au bout.
   requestAnimationFrame(() => {
     canvas.removeAttribute('aria-hidden')
@@ -328,10 +421,7 @@ async function start3D() {
     showNotice('La 3D s’est arrêtée (mémoire du téléphone) : retour à la photo.')
   })
   reportLoad(marks)
-  setTimeout(() => {
-    measureColors()
-    whenIdle(() => engine.warmUp())
-  }, 900)
+  setTimeout(() => whenIdle(measureColors), 900)
 }
 
 // Ne pas disputer le processeur à la photo : on attend la fin du chargement et un creux,
@@ -368,6 +458,7 @@ fillCredit()
    de voir la 3D, pour que Walid puisse juger sur son téléphone. */
 const connection = navigator.connection
 const slowNetwork = !!(connection && (connection.saveData || /2g/.test(connection.effectiveType || '')))
+const lightNetwork = slowNetwork || !!(connection && /3g/.test(connection.effectiveType || '')) // pas de source complète
 const weakDevice = (navigator.deviceMemory && navigator.deviceMemory <= 2) ||
   (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2)
 const showAnyway = ['Voir la 3D quand même', start3D]
