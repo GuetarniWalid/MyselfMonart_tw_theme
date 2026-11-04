@@ -39,7 +39,7 @@ Ajouter un tableau à partir d'une seule image à plat, sans Photoshop ni mockup
 11. Photos automatiques : le moteur rend 5 ou 6 vraies photos par produit (de face sur fond clair, de trois-quarts avec la tranche, gros plan de la matière, coin du cadre, dans la pièce), décrites par Claude et visibles sous la 3D dans une bande « Sous tous les angles ». Une image par cadre pour les variantes.
 12. Publisher : une image donne la toile et le poster par défaut (carré : toile seule). L'IA propose la collection et la pièce ; Walid valide sur un seul écran, puis un clic publie.
 13. Rendus : sur le serveur actuel, à la demande, un à la fois, jamais en même temps que le studio des posters personnalisés. On n'agrandit le serveur que si la mesure l'exige. La base MySQL sert encore : on la garde.
-14. Agrandissement : Topaz High Fidelity V2, choisi par Walid après le banc d'essai (ticket 03) ; chaque image agrandie est comparée automatiquement à l'originale.
+14. Agrandissement : Recraft Crisp Upscale sur Replicate (0,006 $ par image), choisi par Walid après le banc d'essai (ticket 03) ; chaque image agrandie est comparée automatiquement à l'originale.
 15. Impression : hors projet. Walid continue avec ses propres fichiers.
 16. Mesure : test en deux temps. D'abord les nouveautés, comparées aux nouveautés des mois précédents ; puis, en janvier, la moitié des best-sellers contre l'autre moitié pendant 3 semaines. PostHog tourne sur un compte séparé ouvert avec team@myselfmonart.com, et Clarity est retiré dès que PostHog tourne. La bannière cookies garde l'acceptation automatique, par choix de Walid.
 17. Version 2 : vidéo automatique, réalité augmentée, fichier d'impression HD.

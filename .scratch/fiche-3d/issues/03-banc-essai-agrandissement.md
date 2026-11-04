@@ -17,7 +17,7 @@
 - Résultats bruts : même dossier, `resultats.json`. Les sorties de chaque outil sont dans `sorties/`.
 - Backend : commits `127d43c` et `fc4e059` sur `main`. Mesure dans `app/Services/UpscaleFidelity` (test doré `tests/golden/upscale-fidelity.js`), banc dans `scripts/banc-agrandissement.js`, workflow manuel `banc-agrandissement.yml`.
 - Passages GitHub : `41721329691` (le seul payant, 18 appels prévus) et `41726421141` (reprise sans aucun appel payant, après correction du témoin et des coûts).
-- Coût calculé : 0,38 $ d'après les tarifs publiés (Topaz 0,35 $, Recraft 0,024 $, Real-ESRGAN 0,008 $). La facture exacte est sur le compte Replicate. Le prix de Recraft est celui de Recraft : Replicate n'affiche pas le sien.
+- Coût calculé : 0,38 $ d'après les tarifs publiés (Topaz 0,35 $, Recraft 0,024 $, Real-ESRGAN 0,008 $). La facture exacte est sur le compte Replicate. Le banc a compté Recraft au tarif de Recraft en direct (0,004 $) ; sur Replicate, c'est 0,006 $ par image, ce qui porte le total à environ 0,39 $.
 
 ### Mesures
 
@@ -60,10 +60,11 @@
 
 ### Choix de Walid
 
-**Topaz High Fidelity V2**, choisi par Walid le 04/11/2026 après comparaison des gros plans : « le meilleur est toujours Topaz High Fidelity V2 ». Son œil l'emporte sur les mesures, qui recommandaient Lanczos ou Recraft.
+**Recraft Crisp Upscale**, choisi par Walid le 04/11/2026. Après les gros plans, il préférait Topaz High Fidelity V2 ; il est passé à Recraft en comparant les prix, à condition d'être sûr du prix.
 
-- Coût : 0,05 $ par œuvre jusqu'à 24 MP de sortie (4 000 px sur le grand côté en 3:4 font 12 MP). Un seul agrandissement sert à la toile et au poster.
-- Durée : 15 à 19 s de calcul par image sur le banc.
-- À garder en tête : c'est l'outil qui ajoute le plus de détail sur un visage (×3,4 face à la vraie image). Le site peut donc montrer de près des détails absents de l'impression, faite avec les fichiers de Walid.
+- Prix vérifié le 04/11 sur la page Replicate du modèle : « $6 per thousand output images or around 166 images for $1 », soit 0,006 $ par image. Le 0,004 $ du banc était le tarif de Recraft en direct. Un seul agrandissement sert à la toile et au poster.
+- Topaz, pour comparer, sur sa page Replicate : 0,05 $ jusqu'à 24 MP d'après son tableau, alors que l'en-tête de la même page annonce « $0.08 per unit ».
+- Durée : 8 à 28 s de calcul par image sur le banc. La sortie plafonne à 4 096 px, ce qui suffit.
+- Ses couleurs dérivent un peu (ΔE moyen autour de 3).
 
-Seuil d'alerte retenu pour le ticket 16, provisoire, à recaler sur plus d'œuvres : alerte si le SSIM de la pire zone passe sous 0,42, si le ΔE moyen dépasse 3,3, ou si le détail ajouté dépasse ×6,5. Pire valeur mesurée pour Topaz : 0,482, 2,73 et ×5,29.
+Seuil d'alerte retenu pour le ticket 16, provisoire, à recaler sur plus d'œuvres : celui proposé plus haut pour Recraft (SSIM de la pire zone sous 0,45, ΔE moyen au-dessus de 4, ou détail ajouté au-delà de ×4).
