@@ -10,27 +10,24 @@
  * bicubique (Catmull-Rom), l'image réduite garde ses mipmaps et le filtrage anisotrope.
  * Ombre : calculée sur le mur (projection du tableau le long de la lumière, pénombre qui
  * s'élargit avec la distance au mur), sans carte d'ombre.
- * Aucun à-coup : les programmes se compilent hors du fil de la page (prepare), et rien de
- * lourd n'attend le clic. Les cadres ont leur propre matériau, léger : ni environnement
- * précalculé ni lumières three.js ; le bois est une image, chargée au repos.
+ * Aucun à-coup : tout se prépare avant que la 3D soit visible (prepare), et rien de lourd
+ * n'attend le clic. Les cadres ont leur propre matériau, léger : ni environnement précalculé
+ * ni lumières three.js ; le bois est une image, chargée au repos.
  */
 
 import { artBox, convexHull, frameRing, frameProfile, frameOpening } from './geometry.js'
 import { paintingCorners } from './staging.js'
 import { PAPER_WHITE, borderOf, frameOf, hasFrame } from './catalog.js'
 import { compareImages } from './fidelity.js'
-import { decodeImage } from './images.js'
+import { decodeImage, imageSize } from './images.js'
 import { PAPER_TILE_CM, RELIEF_SIZE, WEAVE_TILE_CM } from './textures.js'
 
 const PASSE_RATIO = 0.08 // contour blanc : 8 % du petit côté, égal en cm sur les 4 côtés
 const SHADE = { ambient: 0.55, diffuse: 0.45, weave: 0.075, bump: 0.38 }
 const SHADOW = { key: 0.34, keyFade: 28, penumbra: 0.35, penumbraPerCm: 0.42, ao: 0.12, aoRadius: 1.6 }
 const WOOD_TILE_CM = [10, 30] // l'image du chêne couvre 10 cm en travers, 30 cm le long du fil
-// Matières des cadres. wood : part de l'image de bois ; relief : fil du bois sous la lumière.
-const FRAME_LOOK = {
-  noir: { wood: 0, relief: 0.5, rough: 0.68 },
-  chene: { wood: 1, relief: 0.9, rough: 0.55 },
-}
+const REHEARSAL_FRAMES = 30 // images de répétition de l'arrivée, invisibles
+const TRIAL_FRAMES = 4 // images chronométrées de l'arrivée, invisibles
 
 const ART_VERTEX = /* glsl */ `
   attribute vec2 fab;
@@ -50,6 +47,8 @@ const ART_VERTEX = /* glsl */ `
 
 const ART_FRAGMENT = /* glsl */ `
   uniform sampler2D uArt;
+  uniform sampler2D uArtPrev; // version précédente, pendant le fondu d'un changement de source
+  uniform float uArtMix;
   uniform sampler2D uWeave;
   uniform sampler2D uPaperTex;
   uniform float uWeaveScale;
@@ -73,7 +72,7 @@ const ART_FRAGMENT = /* glsl */ `
 
   // Lecture bicubique (Catmull-Rom en 5 lectures) : une image grossie reste nette et ne
   // montre ni les losanges de l'interpolation bilinéaire ni ses pixels.
-  vec3 cubicArt(vec2 uv, vec2 size) {
+  vec3 cubicArt(sampler2D tex, vec2 uv, vec2 size) {
     vec2 pos = uv * size;
     vec2 c1 = floor(pos - 0.5) + 0.5;
     vec2 f = pos - c1;
@@ -87,11 +86,11 @@ const ART_FRAGMENT = /* glsl */ `
     vec2 t0 = (c1 - 1.0) / size;
     vec2 t3 = (c1 + 2.0) / size;
     vec2 t12 = (c1 + w2 / w12) / size;
-    vec3 sum = textureLod(uArt, vec2(t12.x, t0.y), 0.0).rgb * (w12.x * w0.y)
-             + textureLod(uArt, vec2(t0.x, t12.y), 0.0).rgb * (w0.x * w12.y)
-             + textureLod(uArt, t12, 0.0).rgb * (w12.x * w12.y)
-             + textureLod(uArt, vec2(t3.x, t12.y), 0.0).rgb * (w3.x * w12.y)
-             + textureLod(uArt, vec2(t12.x, t3.y), 0.0).rgb * (w12.x * w3.y);
+    vec3 sum = textureLod(tex, vec2(t12.x, t0.y), 0.0).rgb * (w12.x * w0.y)
+             + textureLod(tex, vec2(t0.x, t12.y), 0.0).rgb * (w0.x * w12.y)
+             + textureLod(tex, t12, 0.0).rgb * (w12.x * w12.y)
+             + textureLod(tex, vec2(t3.x, t12.y), 0.0).rgb * (w3.x * w12.y)
+             + textureLod(tex, vec2(t12.x, t3.y), 0.0).rgb * (w12.x * w3.y);
     float total = w12.x * w0.y + w0.x * w12.y + w12.x * w12.y + w3.x * w12.y + w12.x * w3.y;
     return max(sum / total, 0.0);
   }
@@ -99,14 +98,22 @@ const ART_FRAGMENT = /* glsl */ `
   // dx, dy : variation des coordonnées d'un pixel à l'autre, donnée à part car un calcul
   // de coordonnées (recadrage, bornes) fausserait les dérivées automatiques. L'image réduite
   // lit un niveau de mipmap plus fin que la règle (facteur 0,6) : sans quoi la 3D de face
-  // serait plus molle que la photo qu'elle remplace. L'image grossie passe en bicubique.
-  vec3 sampleArt(vec2 uv, vec2 dx, vec2 dy) {
-    vec2 size = vec2(textureSize(uArt, 0));
-    vec3 plain = textureGrad(uArt, uv, dx * 0.6, dy * 0.6).rgb;
+  // serait plus molle que la photo qu'elle remplace. Ce gain ne fait pas scintiller : en
+  // inclinaison vive, 0,009 % des pixels bougent de plus de 12 niveaux sur 255 d'une image à
+  // l'autre. L'image grossie passe en bicubique.
+  vec3 readArt(sampler2D tex, vec2 uv, vec2 dx, vec2 dy) {
+    vec2 size = vec2(textureSize(tex, 0));
+    vec3 plain = textureGrad(tex, uv, dx * 0.6, dy * 0.6).rgb;
     float texelsPerPixel = max(length(dx * size), length(dy * size));
     float magnified = 1.0 - smoothstep(0.7, 1.0, texelsPerPixel);
     if (magnified <= 0.0) return plain;
-    return mix(plain, cubicArt(uv, size), magnified);
+    return mix(plain, cubicArt(tex, uv, size), magnified);
+  }
+
+  vec3 sampleArt(vec2 uv, vec2 dx, vec2 dy) {
+    vec3 color = readArt(uArt, uv, dx, dy);
+    if (uArtMix >= 1.0) return color;
+    return mix(readArt(uArtPrev, uv, dx, dy), color, uArtMix);
   }
 
   // Part du pixel dans l'intervalle [0, 1] : 1 dedans, 0 dehors, bord lissé sur un pixel.
@@ -259,9 +266,15 @@ const FRAME_FRAGMENT = /* glsl */ `
     float h = dot(wood, vec3(0.3333));
     vec3 albedo = mix(uTint, wood, uWood);
 
+    // Axes de l'image de bois sur la surface, tirés des dérivées (aucune tangente à stocker) :
+    // le relief suit le fil sur les quatre baguettes, quelle que soit leur direction.
     vec3 N = normalize(vNormalW);
-    vec3 T = normalize(abs(N.y) < 0.95 ? cross(vec3(0.0, 1.0, 0.0), N) : cross(N, vec3(1.0, 0.0, 0.0)));
-    vec3 B = cross(N, T);
+    vec3 alongX = cross(dFdy(vWorld), N);
+    vec3 alongY = cross(N, dFdx(vWorld));
+    vec3 T = alongX * dFdx(st).x + alongY * dFdy(st).x;
+    vec3 B = alongX * dFdx(st).y + alongY * dFdy(st).y;
+    T *= inversesqrt(max(dot(T, T), 1e-20));
+    B *= inversesqrt(max(dot(B, B), 1e-20));
     N = normalize(N + uRelief * ((h - height(st + vec2(step1.x, 0.0))) * T + (h - height(st + vec2(0.0, step1.y))) * B));
 
     vec3 V = normalize(cameraPosition - vWorld);
@@ -319,7 +332,7 @@ const unit = (v) => {
 const round = (v) => Math.round(v * 1000) / 1000
 const FADE_MS = 350
 
-export function createScene(THREE, { canvas, artImage, weave, room }) {
+export function createScene(THREE, { canvas, artImage, weave, room, woodImage }) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'default' })
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.toneMapping = THREE.NoToneMapping
@@ -378,6 +391,8 @@ export function createScene(THREE, { canvas, artImage, weave, room }) {
   // ---- Œuvre (toile ou papier) ----
   const artUniforms = {
     uArt: { value: imageTexture(artImage) },
+    uArtPrev: { value: null },
+    uArtMix: { value: 1 },
     uWeave: { value: reliefTexture(weave) },
     uPaperTex: { value: null }, // reçu du worker juste après la trame (setPaperRelief)
     uWeaveScale: { value: 1 / WEAVE_TILE_CM },
@@ -483,9 +498,7 @@ export function createScene(THREE, { canvas, artImage, weave, room }) {
     const border = p.paper >= 0.999 ? 'papier' : product.border
     const key = [p.width, p.height, p.depth].map(round).join('x') + border
     if (key !== artKey) {
-      // Coins : la toile tourne autour du châssis, la feuille de papier a des coins vifs.
-      const corner = 0.3 - 0.28 * p.paper
-      setGeometry(artMesh, artBox({ width: p.width, height: p.height, depth: p.depth, border, corner }), ['fab', 'art'])
+      setGeometry(artMesh, artBox({ width: p.width, height: p.height, depth: p.depth, border, paper: p.paper }), ['fab', 'art'])
       artKey = key
     }
     artMesh.position.z = p.artZ
@@ -499,7 +512,8 @@ export function createScene(THREE, { canvas, artImage, weave, room }) {
     artUniforms.uMargin.value.set(m / p.width, m / p.height)
     // Recadrage de l'œuvre dans l'intérieur du contour (remplir sans déformer).
     const innerRatio = (p.width - 2 * m) / (p.height - 2 * m)
-    const artRatio = (artImage.naturalWidth || artImage.width) / (artImage.naturalHeight || artImage.height)
+    const { width: artWidth, height: artHeight } = imageSize(artImage)
+    const artRatio = artWidth / artHeight
     artUniforms.uCover.value.set(
       innerRatio < artRatio ? innerRatio / artRatio : 1,
       innerRatio < artRatio ? 1 : artRatio / innerRatio,
@@ -520,10 +534,11 @@ export function createScene(THREE, { canvas, artImage, weave, room }) {
       frameKey = fk
     }
     if (hasFrame(product)) shownFrame = product.frame
-    const look = FRAME_LOOK[shownFrame]
-    frameUniforms.uTint.value.set(frameOf(shownFrame).color)
-    frameUniforms.uWood.value = look.wood * woodFade(now)
-    frameUniforms.uRelief.value = look.relief * woodFade(now)
+    const look = frameOf(shownFrame)
+    const woodShown = wood.fade(now)
+    frameUniforms.uTint.value.set(look.color)
+    frameUniforms.uWood.value = look.wood * woodShown
+    frameUniforms.uRelief.value = look.relief * woodShown
     frameUniforms.uRough.value = look.rough
     frameUniforms.uOpacity.value = p.framed
     glassUniforms.uOpacity.value = p.paper * p.framed
@@ -545,44 +560,40 @@ export function createScene(THREE, { canvas, artImage, weave, room }) {
     wallUniforms.uAoAmt.value = SHADOW.ao * Math.exp(-p.z / 2.5) * Math.min(1, p.outer.depth / 2)
   }
 
-  /* ---- Bois des cadres : chargé au repos de la page. Tant qu'il n'est pas là, le cadre
-     prend sa teinte unie, puis le bois apparaît en fondu. ---- */
-  let woodShownAt = -Infinity, woodState = 'none'
-  function loadWood(url) {
-    if (woodState !== 'none') return
-    woodState = 'loading'
-    decodeImage(url).then((image) => {
-      const texture = imageTexture(image)
-      texture.wrapS = texture.wrapT = THREE.RepeatWrapping
-      renderer.initTexture(texture)
-      frameUniforms.uMap.value = texture
-      woodState = 'ready'
-      woodShownAt = performance.now()
-      if (onNeedsRender) onNeedsRender()
-    }, () => { woodState = 'error' })
+  /* Image chargée à la demande : décodée hors du fil de la page, envoyée tout de suite à la
+     carte graphique (jamais en pleine animation), puis montrée en fondu. `receive` la range. */
+  function lazyTexture(url, receive) {
+    let state = 'none', shownAt = 0
+    return {
+      load() {
+        if (state !== 'none') return
+        state = 'loading'
+        decodeImage(url).then((image) => {
+          const texture = imageTexture(image)
+          receive(texture)
+          renderer.initTexture(texture)
+          state = 'ready'
+          shownAt = performance.now()
+          if (onNeedsRender) onNeedsRender()
+        }, () => { state = 'error' })
+      },
+      fade: (now) => (state === 'ready' ? Math.min(1, Math.max(0, (now - shownAt) / FADE_MS)) : 0),
+      isFading: (now) => state === 'ready' && now - shownAt < FADE_MS,
+      ready: () => state === 'ready',
+    }
   }
-  const woodFade = (now) => (woodState === 'ready' ? Math.min(1, (now - woodShownAt) / FADE_MS) : 0)
 
-  /* ---- Pièce : chargée au premier signe d'intérêt (la page appelle prefetchRoom dès qu'on
-     touche les tailles), sinon au premier recul. L'image est décodée puis envoyée tout de
-     suite à la carte graphique, pour ne pas le faire en pleine animation. ---- */
-  let roomState = 'none', roomShownAt = 0
-  function prefetchRoom() {
-    if (roomState !== 'none') return
-    roomState = 'loading'
-    decodeImage(room.image).then((image) => {
-      const texture = imageTexture(image)
-      renderer.initTexture(texture)
-      wallUniforms.uRoom.value = texture
-      roomState = 'ready'
-      roomShownAt = performance.now()
-      if (onNeedsRender) onNeedsRender()
-    }, () => { roomState = 'error' })
-  }
-  const roomFade = (now) => (roomState === 'ready' ? Math.min(1, (now - roomShownAt) / FADE_MS) : 0)
+  // Bois des cadres : chargé au repos de la page. Tant qu'il n'est pas là, le cadre a sa teinte.
+  const wood = lazyTexture(woodImage, (texture) => {
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping
+    frameUniforms.uMap.value = texture
+  })
+  // Pièce : chargée quand on touche aux tailles (la page l'annonce), sinon au premier recul.
+  const roomPhoto = lazyTexture(room.image, (texture) => { wallUniforms.uRoom.value = texture })
 
   let onNeedsRender = null
   let width = 1, height = 1
+  let roomShown = false
 
   // density : pixels du tampon par pixel CSS (voir quality.js).
   function resize(w, h, density) {
@@ -601,16 +612,51 @@ export function createScene(THREE, { canvas, artImage, weave, room }) {
     camera.updateProjectionMatrix()
     updatePainting(view.painting, view.product, now)
     updateShadow(view.painting)
-    if (view.room > 0) prefetchRoom()
-    wallUniforms.uRoomMix.value = view.room * roomFade(now)
+    roomShown = view.room > 0
+    if (roomShown) roomPhoto.load()
+    wallUniforms.uRoomMix.value = view.room * roomPhoto.fade(now)
+    finishArtSwap(now)
     renderer.render(scene, camera)
   }
 
-  // Envoie l'œuvre au GPU et compile tous les programmes (œuvre, mur, cadre, verre) hors du
-  // fil de la page, pour que la première image n'ait plus rien à attendre.
-  function prepare() {
+  /* Tout se prépare ici, avant que la 3D soit visible : l'œuvre part au GPU, les programmes se
+     compilent hors du fil de la page, puis une répétition installe le reste. Le premier clic
+     n'a plus rien à attendre. Renvoie le coût d'une image complète (voir frameCost). */
+  async function prepare(view, now) {
     renderer.initTexture(artUniforms.uArt.value)
-    return renderer.compileAsync(scene, camera)
+    await renderer.compileAsync(scene, camera)
+    await rehearse(view, now)
+    return frameCost({ ...view, painting: { ...view.painting, framed: 1, paper: 1 } }, now)
+  }
+
+  /* Répétition : des images complètes (cadre, verre, tailles qui changent comme pendant une
+     animation) limitées à un seul pixel, qui ne coûtent rien à la carte graphique mais rodent
+     le code. Sans elles, chaque image demande 1 à 2 ms au lieu de 0,3 ms, et le navigateur
+     s'interrompt 15 ms au début du premier mouvement. */
+  async function rehearse(view, now) {
+    const { width: w, depth: d } = view.painting
+    renderer.setScissorTest(true)
+    renderer.setScissor(0, 0, 1, 1)
+    for (let i = 0; i < REHEARSAL_FRAMES; i++) {
+      const painting = { ...view.painting, framed: 1, paper: 0.5, width: w + i * 0.002, depth: d - i * 0.002 }
+      render({ ...view, painting }, now)
+      if (i % 10 === 9) await new Promise((resolve) => setTimeout(resolve)) // laisse respirer la page
+    }
+    renderer.setScissorTest(false)
+  }
+
+  // Coût d'une image, attente du GPU comprise : le meilleur de quelques essais.
+  function frameCost(view, now) {
+    const gl = renderer.getContext()
+    const pixel = new Uint8Array(4)
+    let cost = Infinity
+    for (let i = 0; i < TRIAL_FRAMES; i++) {
+      const start = performance.now()
+      render(view, now)
+      gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel)
+      cost = Math.min(cost, performance.now() - start)
+    }
+    return cost
   }
 
   // Le papier arrive du worker après la première image : envoyé tout de suite au GPU.
@@ -621,15 +667,27 @@ export function createScene(THREE, { canvas, artImage, weave, room }) {
     if (onNeedsRender) onNeedsRender()
   }
 
-  /* Remplace l'œuvre par une version plus détaillée. L'envoi au GPU prend quelques dizaines
-     de ms : la page ne l'appelle que quand tout est immobile. */
+  /* Remplace l'œuvre par une version plus détaillée, en fondu : la netteté ne saute pas.
+     L'envoi au GPU prend quelques dizaines de ms : la page ne l'appelle qu'à l'arrêt. */
+  let artSwap = null
   function useArtImage(image) {
     const texture = imageTexture(image)
     renderer.initTexture(texture)
-    artUniforms.uArt.value.dispose()
+    artUniforms.uArtPrev.value = artUniforms.uArt.value
     artUniforms.uArt.value = texture
-    if (artImage.close) artImage.close()
+    artUniforms.uArtMix.value = 0
+    artSwap = { image: artImage, at: performance.now() }
     artImage = image
+  }
+
+  function finishArtSwap(now) {
+    if (!artSwap) return
+    artUniforms.uArtMix.value = Math.min(1, Math.max(0, (now - artSwap.at) / FADE_MS))
+    if (artUniforms.uArtMix.value < 1) return
+    artUniforms.uArtPrev.value.dispose()
+    artUniforms.uArtPrev.value = null
+    if (artSwap.image.close) artSwap.image.close()
+    artSwap = null
   }
 
   function gpuName() {
@@ -678,11 +736,21 @@ export function createScene(THREE, { canvas, artImage, weave, room }) {
     const ctx = ref.getContext('2d', { willReadFrequently: true })
     ctx.translate(0, h)
     ctx.scale(1, -1)
-    const nw = artImage.naturalWidth || artImage.width, nh = artImage.naturalHeight || artImage.height
+    const { width: nw, height: nh } = imageSize(artImage)
     const fw = right - left, fh = top - bottom
     ctx.drawImage(artImage, ((x0 - left) / fw) * nw, ((top - y1) / fh) * nh, (w / fw) * nw, (h / fh) * nh, 0, 0, w, h)
     const source = ctx.getImageData(0, 0, w, h).data
     return { ...compareImages(source, rendered, w, h), pixels: `${w}×${h}` }
+  }
+
+  function samples() {
+    const gl = renderer.getContext()
+    return gl.getParameter(gl.SAMPLES)
+  }
+
+  // Seul ce qui se voit compte : un fondu hors du champ ne réclame aucune image.
+  function isFading(now) {
+    return !!artSwap || (roomShown && roomPhoto.isFading(now)) || (frameMesh.visible && wood.isFading(now))
   }
 
   return {
@@ -692,14 +760,14 @@ export function createScene(THREE, { canvas, artImage, weave, room }) {
     measureFidelity,
     prepare,
     setPaperRelief,
-    loadWood,
+    loadWood: wood.load,
     useArtImage,
-    prefetchRoom,
+    prefetchRoom: roomPhoto.load,
     gpuName,
     density: () => renderer.getPixelRatio(),
-    samples: () => renderer.getContext().getParameter(renderer.getContext().SAMPLES),
-    roomReady: () => roomState === 'ready',
-    isFading: (now) => (roomState === 'ready' && now - roomShownAt < FADE_MS) || (woodState === 'ready' && now - woodShownAt < FADE_MS),
+    samples,
+    roomReady: roomPhoto.ready,
+    isFading,
     set onNeedsRender(fn) { onNeedsRender = fn },
   }
 }

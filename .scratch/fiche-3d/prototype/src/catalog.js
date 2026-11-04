@@ -39,10 +39,12 @@ export const BORDERS = [
 
 export const PAPER_WHITE = '#f7f6f2'
 
+/* Matière des cadres. wood : part de l'image de bois ; relief : fil du bois sous la
+   lumière ; rough : 0 brillant, 1 mat. */
 export const FRAMES = [
   { id: 'sans', label: 'Sans cadre', posterLabel: 'Sans cadre', color: null },
-  { id: 'noir', label: 'Noir mat', posterLabel: 'Noir', color: '#1f1f21' },
-  { id: 'chene', label: 'Chêne clair', posterLabel: 'Chêne clair', color: '#c9a77c' },
+  { id: 'noir', label: 'Noir mat', posterLabel: 'Noir', color: '#1f1f21', wood: 0, relief: 0.5, rough: 0.68 },
+  { id: 'chene', label: 'Chêne clair', posterLabel: 'Chêne clair', color: '#c9a77c', wood: 1, relief: 0.9, rough: 0.55 },
 ]
 
 export const borderOf = (id) => BORDERS.find((b) => b.id === id) || BORDERS[0]

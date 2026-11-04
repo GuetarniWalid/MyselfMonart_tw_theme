@@ -8,10 +8,15 @@
    Bordures : 'blanche' et 'noire' (tranche unie), 'etiree' (le bord de l'image est tiré
    sur la tranche), 'miroir' (la bande voisine du bord, en reflet), 'pliee' (l'image
    continue sur la tranche : la façade montre donc le centre de l'image), 'papier'.
+   paper : de 0 (toile, qui tourne autour du châssis) à 1 (feuille, coupée net).
    Attributs : uv (image), fab (grain, en cm), art (1 = image, 0 = couleur de tranche). */
-export function artBox({ width: W, height: H, depth: D, border, edge = 0.25, corner = 0.3 }) {
+const CANVAS_CORNER = 0.3
+const PAPER_CORNER = 0.02
+
+export function artBox({ width: W, height: H, depth: D, border, paper = 0, edge = 0.25 }) {
   const K = 4 // segments par coin arrondi
   const M = 4 // segments de l'arête avant
+  const corner = CANVAS_CORNER + (PAPER_CORNER - CANVAS_CORNER) * paper
   const rc = Math.min(corner, W / 2, H / 2)
   const re = Math.min(edge, D * 0.45, rc * 0.95)
   const fold = border === 'pliee'
@@ -93,17 +98,17 @@ export function artBox({ width: W, height: H, depth: D, border, edge = 0.25, cor
 }
 
 /* Cadre : 4 baguettes en onglet autour d'une ouverture (demi-tailles hw, hh), décrites
-   par un profil (u, z, jour) : u = écart vers l'extérieur depuis le bord de l'ouverture,
-   z = hauteur depuis le mur, jour = part de lumière qui arrive là (1 par défaut, moins dans
+   par un profil (u, z, shade) : u = écart vers l'extérieur depuis le bord de l'ouverture,
+   z = hauteur depuis le mur, shade = part de lumière qui arrive là (1 par défaut, moins dans
    les creux). La normale d'un segment est (-dz, du), donc le profil se lit de l'intérieur
    vers l'extérieur. uv : grain du bois le long de la baguette, en cm. */
 export function frameRing({ hw, hh, profile }) {
-  const position = [], normal = [], uv = [], shade = [], index = []
+  const position = [], normal = [], uv = [], shades = [], index = []
   const OUT = [[0, -1], [1, 0], [0, 1], [-1, 0]] // bas, droite, haut, gauche
   const rect = (u) => [[-hw - u, -hh - u], [hw + u, -hh - u], [hw + u, hh + u], [-hw - u, hh + u]]
   for (let s = 0; s < profile.length - 1; s++) {
-    const [u0, z0, day0 = 1] = profile[s]
-    const [u1, z1, day1 = 1] = profile[s + 1]
+    const [u0, z0, shade0 = 1] = profile[s]
+    const [u1, z1, shade1 = 1] = profile[s + 1]
     const len = Math.hypot(u1 - u0, z1 - z0)
     if (len < 1e-6) continue
     const nu = -(z1 - z0) / len
@@ -114,20 +119,20 @@ export function frameRing({ hw, hh, profile }) {
       const n = [OUT[k][0] * nu, OUT[k][1] * nu, nz]
       const along = k % 2 === 0 ? 0 : 1 // baguettes du bas et du haut : grain selon x
       const quad = [
-        [A[k], z0, u0, day0], [A[(k + 1) % 4], z0, u0, day0], [B[(k + 1) % 4], z1, u1, day1], [B[k], z1, u1, day1],
+        [A[k], z0, u0, shade0], [A[(k + 1) % 4], z0, u0, shade0], [B[(k + 1) % 4], z1, u1, shade1], [B[k], z1, u1, shade1],
       ]
       const base = position.length / 3
-      for (const [[x, y], z, u, day] of quad) {
+      for (const [[x, y], z, u, shade] of quad) {
         position.push(x, y, z)
         normal.push(n[0], n[1], n[2])
-        shade.push(day)
+        shades.push(shade)
         // Chaque baguette est taillée dans un autre endroit de la planche (décalage par côté).
         uv.push((wall ? z : u) + k * 2.37, (along === 0 ? x : y) + k * 7.1)
       }
       index.push(base, base + 2, base + 1, base, base + 3, base + 2)
     }
   }
-  return pack({ position, normal, uv, shade, index })
+  return pack({ position, normal, uv, shade: shades, index })
 }
 
 /* Profils de cadre (cm), pour une œuvre W × H et un profil du catalogue.

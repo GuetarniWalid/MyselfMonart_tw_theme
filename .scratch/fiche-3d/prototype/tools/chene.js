@@ -2,6 +2,8 @@
  * Outil de cuisson (jamais publié) : calcule le chêne clair une fois pour toutes. L'image
  * obtenue devient assets/chene-clair.jpg ; le téléphone n'a plus qu'à la charger, sans
  * calcul. Le fil suit la hauteur de l'image, tuile de 10 × 30 cm, répétable dans les deux sens.
+ * Cuisson, dans une page du navigateur : poser chenePixels(512, 1024) sur un canvas 2D de
+ * 512 × 1024 (putImageData), puis canvas.toBlob(save, 'image/jpeg', 0.9).
  * Sera remplacée par une vraie texture sous licence libre au ticket 10.
  */
 

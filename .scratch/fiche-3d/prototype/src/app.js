@@ -8,8 +8,9 @@
 import { createDirector } from './staging.js'
 import { ROOM } from './room.js'
 import { BORDERS, FRAMES, SIZES, describe, priceOf, sizeLabel } from './catalog.js'
-import { densityAfterRun, renderDensity } from './quality.js'
+import { densityForCost, renderDensity } from './quality.js'
 import { decodeImage } from './images.js'
+import { startReliefs } from './reliefs.js'
 
 const THREE_URL = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js'
 const WOOD_IMAGE = 'assets/chene-clair.jpg'
@@ -29,46 +30,15 @@ let live = false // moteur prêt à dessiner : programmes compilés
 const stageSize = { w: 1, h: 1 }
 const aspect = () => stageSize.w / stageSize.h
 
-/* Reliefs (trame de la toile, grain du papier) : calculés dans un worker dès l'ouverture,
-   pendant que la photo et three.js se chargent. Sans worker, ils sont calculés ici. */
-function startReliefs() {
-  const done = {}
-  const reliefs = {
-    weave: new Promise((resolve) => { done.weave = resolve }),
-    paper: new Promise((resolve) => { done.paper = resolve }),
-  }
-  const inPage = async () => {
-    const { paperPixels, weavePixels } = await import('./textures.js')
-    done.weave(weavePixels())
-    done.paper(paperPixels())
-  }
-  try {
-    const worker = new Worker(new URL('./relief-worker.js', import.meta.url), { type: 'module' })
-    const silent = setTimeout(inPage, 3000) // un worker muet ne doit pas priver de 3D
-    worker.onmessage = ({ data }) => {
-      clearTimeout(silent)
-      done[data.name](data.pixels)
-      if (data.name === 'paper') worker.terminate()
-    }
-    worker.onerror = () => {
-      clearTimeout(silent)
-      inPage()
-    }
-  } catch {
-    inPage()
-  }
-  return reliefs
-}
-const reliefs = startReliefs()
-
 /* ---------------- Options ---------------- */
 
+// onApproach : ce que l'option réclame part dès qu'on s'en approche, avant le clic.
 const GROUPS = [
   { name: 'material', legend: 'Matière', options: [{ id: 'toile', label: 'Toile' }, { id: 'poster', label: 'Poster' }] },
-  { name: 'size', legend: 'Taille', options: SIZES.map((s) => ({ id: s, label: sizeLabel(s) })) },
-  { name: 'border', legend: 'Bordure', only: 'toile', options: BORDERS, swatch: true },
-  { name: 'frame', legend: 'Cadre', options: FRAMES, swatch: true },
-  { name: 'passe', legend: 'Contour blanc', only: 'poster', options: [{ id: 'sans', label: 'Sans' }, { id: 'avec', label: 'Avec' }] },
+  { name: 'size', legend: 'Taille', onApproach: prefetchRoom, options: SIZES.map((s) => ({ id: s, label: sizeLabel(s) })) },
+  { name: 'border', legend: 'Bordure', only: 'toile', onApproach: loadDetail, options: BORDERS, swatch: true },
+  { name: 'frame', legend: 'Cadre', onApproach: loadDetail, options: FRAMES, swatch: true },
+  { name: 'passe', legend: 'Contour blanc', only: 'poster', onApproach: loadDetail, options: [{ id: 'sans', label: 'Sans' }, { id: 'avec', label: 'Avec' }] },
 ]
 const valueOf = (group) => (group === 'passe' ? (product.passe ? 'avec' : 'sans') : product[group])
 const frameWords = new Map() // libellés de cadre, qui changent entre toile et poster
@@ -109,11 +79,9 @@ function buildOptions() {
     }
     fieldset.append(legend, chips)
     form.append(fieldset)
-    // Ce qui ne sert qu'à certains plans part dès qu'on s'approche de l'option, avant le clic.
-    const onApproach = g.name === 'size' ? prefetchRoom : g.name === 'material' ? null : loadDetail
-    if (onApproach) {
-      fieldset.addEventListener('pointerdown', onApproach, { once: true })
-      fieldset.addEventListener('focusin', onApproach, { once: true })
+    if (g.onApproach) {
+      fieldset.addEventListener('pointerdown', g.onApproach, { once: true })
+      fieldset.addEventListener('focusin', g.onApproach, { once: true })
     }
   }
   form.addEventListener('change', (event) => choose(event.target.name, event.target.value))
@@ -121,11 +89,10 @@ function buildOptions() {
 }
 
 // Demandes faites avant que le moteur soit prêt : rejouées à son arrivée.
-const whenLive = new Set()
-const onceLive = (task) => (live ? task() : whenLive.add(task))
-const askRoom = () => engine.prefetchRoom()
+const pendingTasks = []
+const onceLive = (task) => (live ? task() : pendingTasks.push(task))
 function prefetchRoom() {
-  onceLive(askRoom)
+  onceLive(() => engine.prefetchRoom())
 }
 
 /* Source complète de l'œuvre : chargée quand on s'approche d'un gros plan, jamais à
@@ -171,6 +138,7 @@ function choose(group, value) {
   else if (group in product) product[group] = value
   updateTexts()
   director.choose(group, { ...product }, performance.now())
+  run.active = true
   if (reducedMotion && engine) {
     // Animations réduites : simple fondu au changement de plan.
     canvas.classList.remove('fade-cut')
@@ -183,7 +151,7 @@ function choose(group, value) {
 /* ---------------- Rendu à la demande ---------------- */
 
 let raf = 0
-const run = { times: [] }
+const run = { active: false, times: [] } // un vrai parcours : un choix ou un glisser, pas un fondu
 
 function requestRender() {
   if (!raf && live) raf = requestAnimationFrame(frame)
@@ -200,13 +168,13 @@ function frame(now) {
   raf = 0
   const view = draw(now)
   $('hint').classList.toggle('gone', hintGone || view.room > 0.5)
-  run.times.push(now)
+  if (run.active) run.times.push(now)
   if (engine.roomReady() && !roomReported) reportRoom()
   if (director.isMoving(now) || engine.isFading(now) || drag) {
     raf = requestAnimationFrame(frame)
     return
   }
-  reportFluidity()
+  if (run.active) reportFluidity()
   swapDetail()
 }
 
@@ -230,6 +198,7 @@ canvas.addEventListener('pointerdown', (event) => {
   if (!engine || (event.pointerType === 'mouse' && event.button !== 0)) return
   drag = { x: event.clientX, y: event.clientY, id: event.pointerId }
   director.grab(performance.now())
+  run.active = true
   try { canvas.setPointerCapture(event.pointerId) } catch { /* le doigt peut déjà être relâché */ }
   requestRender()
 })
@@ -252,20 +221,19 @@ $('frontBtn').addEventListener('click', () => choose('front'))
 $('roomBtn').addEventListener('pointerdown', prefetchRoom, { once: true })
 $('roomBtn').addEventListener('click', () => choose('size', product.size))
 
-// Densité de rendu : celle de l'écran, sous le plafond qu'imposent les animations trop lentes.
+// Densité de rendu : celle de l'écran, sous le plafond fixé une fois pour toutes à l'arrivée.
 let densityCap = Infinity
 function fitStage() {
   const fit = renderDensity({ dpr: window.devicePixelRatio || 1, width: stageSize.w, height: stageSize.h })
   engine.resize(stageSize.w, stageSize.h, Math.min(densityCap, fit))
 }
 
+// Redimensionner efface le canvas : on redessine aussitôt, avant que l'écran ne se rafraîchisse.
 new ResizeObserver(([entry]) => {
   stageSize.w = Math.max(1, Math.round(entry.contentRect.width))
   stageSize.h = Math.max(1, Math.round(entry.contentRect.height))
-  if (engine) {
-    fitStage()
-    requestRender()
-  }
+  if (engine) fitStage()
+  if (live) draw(performance.now())
 }).observe(stageEl)
 
 /* ---------------- Mesures ---------------- */
@@ -284,7 +252,7 @@ function transfer(url) {
 
 function reportLoad(times) {
   const three = performance.getEntriesByName(THREE_URL)[0]
-  const own = resources().filter((e) => /\/src\/[a-z]+\.js$/.test(e.name))
+  const own = resources().filter((e) => /\/src\/[a-z-]+\.js$/.test(e.name))
   const ownBytes = own.reduce((s, e) => s + bytesOf(e), 0)
   setMeasure('three', `${three && three.transferSize ? kb(three.transferSize) : 'cache'} (r170, ${three ? Math.round(three.duration) : '?'} ms) + prototype ${kb(ownBytes)}`)
   setMeasure('art', `${transfer(poster.getAttribute('src')) || '?'} · ${poster.naturalWidth}×${poster.naturalHeight} px`)
@@ -293,7 +261,7 @@ function reportLoad(times) {
 }
 
 function reportScreen() {
-  setMeasure('screen', `${stageSize.w}×${stageSize.h} px × ${decimal.format(engine.density())} · anticrénelage ${engine.samples()}× · ${engine.gpuName()}`)
+  setMeasure('screen', `${stageSize.w}×${stageSize.h} px × ${decimal.format(engine.density())} · image ${decimal.format(marks.frameCost)} ms · anticrénelage ${engine.samples()}× · ${engine.gpuName()}`)
 }
 
 function reportDetail(uploadMs) {
@@ -311,6 +279,7 @@ const SLOW_FPS = 24 // en dessous, la vraie fiche resterait sur les photos
 function reportFluidity() {
   const t = run.times
   run.times = []
+  run.active = false
   if (t.length < 20) return
   const deltas = t.slice(1).map((v, i) => v - t[i])
   const mean = deltas.reduce((s, v) => s + v, 0) / deltas.length
@@ -319,13 +288,6 @@ function reportFluidity() {
   const verdict = fps < SLOW_FPS ? ' · trop lent : la vraie fiche resterait sur les photos' : ''
   setMeasure('fps', `${fps} images/s pendant la dernière animation · ${slow} image${slow > 1 ? 's' : ''} lente${slow > 1 ? 's' : ''} sur ${deltas.length}${verdict}`)
   window.__lastRun = { fps, slow, frames: deltas.length, worst: Math.round(Math.max(...deltas)) }
-  const lighter = densityAfterRun(engine.density(), fps)
-  if (lighter < engine.density()) {
-    densityCap = lighter
-    fitStage()
-    reportScreen()
-    requestRender()
-  }
 }
 
 // Mesurée une fois, de face, sur une toile dont la façade montre toute l'image (la bordure
@@ -375,35 +337,60 @@ const photoReady = new Promise((resolve) => {
   else poster.addEventListener('load', done, { once: true })
 })
 
+// Reliefs : calculés une seule fois, dès qu'on sait que la 3D va démarrer.
+let reliefs = null
+const askReliefs = () => (reliefs ||= startReliefs())
+
+let contextLost = false
+function backToPhoto() {
+  contextLost = true
+  live = false
+  canvas.classList.remove('on')
+  canvas.setAttribute('aria-hidden', 'true')
+  poster.classList.remove('off')
+  poster.removeAttribute('aria-hidden')
+  showNotice('La 3D s’est arrêtée (mémoire du téléphone) : retour à la photo.')
+}
+
 let starting = false
 async function start3D() {
   if (starting) return
   starting = true
   try {
     await photoReady
+    const three = import(THREE_URL).then((module) => {
+      marks.module = performance.now()
+      return module
+    })
     const [THREE, { createScene }, weave, artImage] = await Promise.all([
-      import(THREE_URL), import('./scene.js'), reliefs.weave, decodeImage(poster.currentSrc || poster.src),
+      three, import('./scene.js'), askReliefs().weave, decodeImage(poster),
     ])
-    marks.module = performance.now()
-    engine = createScene(THREE, { canvas, artImage, weave, room: ROOM })
+    engine = createScene(THREE, { canvas, artImage, weave, room: ROOM, woodImage: WOOD_IMAGE })
+    canvas.addEventListener('webglcontextlost', backToPhoto)
     const rect = stageEl.getBoundingClientRect()
     stageSize.w = Math.max(1, Math.round(rect.width))
     stageSize.h = Math.max(1, Math.round(rect.height))
     fitStage()
     engine.onNeedsRender = requestRender
-    await engine.prepare() // la photo reste affichée pendant que les programmes se compilent
+    // La photo reste affichée pendant que tout se prépare. Le coût d'une image fixe la densité
+    // ici, une seule fois : une fois la 3D visible, un changement de netteté se verrait.
+    const at = performance.now()
+    marks.frameCost = await engine.prepare(director.view(at, aspect()), at)
+    densityCap = densityForCost(engine.density(), marks.frameCost)
+    if (densityCap < engine.density()) fitStage()
   } catch (error) {
     console.error(error)
     showNotice("La 3D n'a pas pu démarrer sur cet appareil : la vraie fiche resterait sur les photos.")
     return
   }
+  if (contextLost) return
   live = true
   draw(performance.now())
   marks.first = performance.now()
   requestRender() // un choix fait avant l'arrivée de la 3D continue sa transition
-  whenLive.forEach((task) => task())
-  reliefs.paper.then((pixels) => engine.setPaperRelief(pixels))
-  whenIdle(() => engine.loadWood(WOOD_IMAGE))
+  pendingTasks.forEach((task) => task())
+  askReliefs().paper.then((pixels) => engine.setPaperRelief(pixels))
+  whenIdle(engine.loadWood)
   // Fondu : la 3D apparaît par-dessus la photo, qui reste opaque dessous jusqu'au bout.
   requestAnimationFrame(() => {
     canvas.removeAttribute('aria-hidden')
@@ -412,13 +399,6 @@ async function start3D() {
       poster.classList.add('off')
       poster.setAttribute('aria-hidden', 'true')
     }, 500)
-  })
-  canvas.addEventListener('webglcontextlost', () => {
-    canvas.classList.remove('on')
-    canvas.setAttribute('aria-hidden', 'true')
-    poster.classList.remove('off')
-    poster.removeAttribute('aria-hidden')
-    showNotice('La 3D s’est arrêtée (mémoire du téléphone) : retour à la photo.')
   })
   reportLoad(marks)
   setTimeout(() => whenIdle(measureColors), 900)
@@ -476,6 +456,7 @@ if (slowNetwork) {
     }],
   ])
 } else {
+  askReliefs() // en parallèle de la photo et de three.js
   whenIdle(start3D)
 }
 
