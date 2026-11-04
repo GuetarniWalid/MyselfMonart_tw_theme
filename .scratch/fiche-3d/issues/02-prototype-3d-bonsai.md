@@ -39,7 +39,7 @@
   - Choisir Toile : le tableau quitte le mur, fait un tour complet, ralentit de dos et revient se poser ; l'ombre suit. Choisir Poster sans cadre : un coin se soulève, s'enroule et retombe, dos blanc, ombre douce sur le mur et sur la feuille. Avec un cadre, le poster garde la transition d'avant ; avec les animations réduites, ni tour ni coin.
   - L'épaisseur change toujours, en 500 ms, au début du geste : de face ou presque, elle ne se voit plus.
   - Interruption : un acte n'est jamais coupé en plein vol. Il se finit sur son propre chemin, avec le produit qu'il montrait, puis la suite s'enchaîne : le tableau reste à sa distance du mur, le papier retombe avant qu'un verre arrive. Le prix et le bouton changent au clic.
-  - Mesures (parcours à une minuterie de 16 ms, machine au repos, avant la relecture finale) : clic de 0,3 à 1 ms, 57 images/s, aucune image lente en densité 2 ni 3. Au tout premier clic : 4 ms de processeur au pire pour le coin, 3,3 ms pour le tour, sans image au-delà de 16 ms. Sous forte charge (processeur à 80 %, autres programmes) : 30 images/s, clic toujours sous 2 ms.
+  - Mesures (parcours à une minuterie de 16 ms, machine au repos, avant la relecture finale) : clic de 0,3 à 1 ms, 57 images/s, aucune image lente en densité 2 ni 3. Au tout premier clic : 4 ms de processeur au pire pour le coin, 3,3 ms pour le tour, sans image au-delà de 16 ms. Le code final n'a pu être rejoué que sur une machine chargée par d'autres programmes. À 65 % de charge : 3,8 ms de processeur au pire au premier clic, dos à 1,0 ms et coin à 1,2 ms contre 1,7 ms de face, soit les mêmes proportions. À 80 % : 30 images/s, clic toujours sous 2 ms.
   - Rien à télécharger : le dos est une coquille de quelques faces peinte par son shader, le coin une grille unique déformée par le GPU, préparés à l'arrivée.
 - **Caméra** (champ vertical 30°, transitions de 450 ms pour le retour de face et 900 ms vers le plan, courbe cubique) :
   - De face : tableau sur 72 % de la hauteur.
@@ -64,7 +64,7 @@
   - Papier : grain fin. Contour blanc : 8 % du petit côté, égal en cm sur les 4 côtés.
   - Chêne clair : image cuite de 512 × 1024 px (`tools/chene.js`), tuile de 10 × 30 cm, relief 0,9, rugosité 0,55. Noir mat : relief 0,5, rugosité 0,68.
   - Dos de la toile, d'après les photos de Walid (`src/back-shader.js`) : couleur de tranche ou image qui revient sur 3 à 4 mm irréguliers, trait noir, bande repliée de 4 cm (#f1efe9), agrafes de 2 cm tous les 10 à 12 cm, plis de coin avec rabat arrondi et 2 agrafes, pin de 1,75 cm (#e4d0a6, fil du chêne des cadres), onglets à 45°, toile brute (#dcd7ce) en retrait de 1,9 cm, où l'impression se devine à peine. Mêmes mesures pour tous les formats. Aucune marque d'imprimeur.
-  - Poster : grille de 2 500 points, pli à 42°, 23 % du petit côté, rayon de 20 % à 4,8 %, enroulement jusqu'à 206°, cône de 35 %.
+  - Coin du poster : grille de 2 600 points, pli à 42°, 23 % du petit côté, rayon de 20 % à 4,8 %, enroulement jusqu'à 206°, cône de 35 %.
 - **Netteté** :
   - Tout bord calculé dans un shader est lissé sur un pixel par sa couverture (`fwidth`, dérivées) : bord de l'œuvre et de la marge, bords de la photo de la pièce, pénombres, verre.
   - Image grossie : lecture bicubique (Catmull-Rom, 5 lectures), au coût non mesurable. Image réduite : mipmaps avec un biais de 0,6, sans quoi la 3D de face est plus molle que la photo ; 0,009 % des pixels scintillent en inclinaison vive. Filtrage anisotrope au maximum du matériel.
@@ -77,7 +77,7 @@
   - Dans le plan du coin, l'œuvre reste grossie 2,6 à 3,8 fois : elle est nette, mais sans le grain d'une image plus fine.
   - Dos dessiné d'après une description, sans les photos sous les yeux : à comparer au vrai, surtout les plis de coin. Sur le 75 × 100 à l'écran du téléphone, les agrafes ne font que 13 px.
   - En bordure blanche, le pourtour du dos est blanc : l'image n'y revient qu'en étirée, miroir et pliée, à confirmer sur un vrai tableau.
-  - Dans le coin, le dos de la feuille reste plat à l'œil : pas de tranche de papier, invisible à cette échelle.
+  - La feuille du coin soulevé n'a pas de tranche : une seule surface, à une échelle où 0,5 mm ne se voit pas.
   - Profils de cadre et teinte du chêne à comparer aux vrais produits (tickets 10 et 14).
   - Bruit et bois repris de `component-perspective-canvas.js`, à fusionner au ticket 07.
   - En économie de données, sur un appareil modeste ou avec les animations réduites, la page reste sur la photo, comme la vraie fiche, et propose de voir la 3D quand même.
