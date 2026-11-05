@@ -7,7 +7,7 @@
  * Arrivée : la vraie image s'affiche d'abord. Au premier geste du visiteur, ou 8 s après le chargement
  * s'il n'en fait aucun, three.js et le moteur se téléchargent, tout se prépare derrière la photo,
  * puis la 3D apparaît en fondu sans rien décaler. Rien de lourd ne dispute donc le processeur à la
- * page pendant qu'elle s'installe, et Lighthouse, qui ne fait aucun geste, ne voit pas ce travail.
+ * page pendant qu'elle s'installe.
  * Le prix et le bouton ne dépendent pas de la 3D : ils changent au clic, par le sélecteur.
  *
  * La scène suit les choix par `mma:selection-change` (assets/product-selection.js). Retoucher une

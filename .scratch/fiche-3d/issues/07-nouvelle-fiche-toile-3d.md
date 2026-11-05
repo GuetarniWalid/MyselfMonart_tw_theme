@@ -12,8 +12,8 @@ Contexte et décisions : README du dossier `fiche-3d`.
 
 **Status:** ready-for-agent
 
-- [ ] Le modèle de page fait partie des œuvres, grâce à la règle du ticket 04 : le panier, le tiroir et les collections le traitent comme une toile. *(règle vérifiée par un vrai rendu Liquid : `kind: toile` ; panier et tiroir à revoir en ligne)*
-- [ ] Sur mobile, le tableau s'affiche en moins de 2,5 s (0,99 s aujourd'hui), sans aucun décalage de page, avec des interactions de moins de 200 ms et un score Lighthouse ≥ 90. *(à mesurer en ligne ; banc local ci-dessous)*
+- [x] Le modèle de page fait partie des œuvres, grâce à la règle du ticket 04 : le panier, le tiroir et les collections le traitent comme une toile. *(vérifié en ligne le 05/11 : `kind: toile`, bonne variante au panier, tiroir et vignette justes)*
+- [ ] Sur mobile, le tableau s'affiche en moins de 2,5 s (0,99 s aujourd'hui), sans aucun décalage de page, avec des interactions de moins de 200 ms et un score Lighthouse ≥ 90. *(mesuré en ligne le 05/11 : aucun décalage, mais ni 2,5 s sur un téléphone moyen ni Lighthouse ≥ 90, pas plus que la fiche actuelle ; voir « Vérifié en ligne »)*
 - [x] La 3D suit les choix grâce à l'événement du ticket 05 ; le prix et le bouton changent au clic, sans attendre l'animation.
 - [x] Animations réduites, appareil faible ou 3D indisponible : photos et simples fondus.
 - [x] Un doigt posé sur la 3D peut toujours faire défiler la page. *(touches simulées dans Chrome ; à confirmer sur un vrai téléphone)*
@@ -31,7 +31,7 @@ Contexte et décisions : README du dossier `fiche-3d`.
 **Fichiers partagés, sans effet sur `painting` et `poster`.** `sections/main-product.liquid` : balisage identique sur 6 modèles, avant et après, par un vrai rendu Liquid. `assets/main-product.js` : une branche sous `data-buy-bar`. `input.css` : règles sous `.buy-bar` et `[data-buy-bar]`. Le fichier `locales/*.json` gagne 5 clés.
 
 **Choix à faire valider par Walid.**
-- La 3D démarre au premier geste (souris, doigt, molette, touche), ou 8 s après le chargement. Sans cela, Lighthouse comptait 460 ms de blocage de plus. Lighthouse ne voit donc plus ce travail : son score ne dit rien de la 3D. Pour revenir au démarrage du prototype : `QUIET_AFTER_LOAD_MS = 0`.
+- La 3D démarre au premier geste (souris, doigt, molette, touche), ou 8 s après le chargement. Sans cela, Lighthouse comptait 460 ms de blocage de plus. Sur le banc, Lighthouse ne voyait plus ce travail. En ligne, il le voit : il attend assez longtemps pour que le filet de 8 s parte. Pour revenir au démarrage du prototype : `QUIET_AFTER_LOAD_MS = 0`.
 - Bouton « Voir le dos » : sans lui, le tour n'a pas de déclencheur si le produit n'a pas de jumeau. Toucher « Toile » dans la bascule le rejoue aussi.
 - Le bouton d'achat passe avant les options, comme au prototype. Sinon il tombait sous le pli d'un portable. Sur ordinateur, le bouton flottant revient dès que celui de la fiche sort de l'écran.
 - Mur neutre : le plus grand format prend 60 % de l'écran, le 30 × 40 le quart (la règle de la pièce). Le tableau reste centré. Plan `wall` du moteur.
@@ -69,3 +69,37 @@ Contexte et décisions : README du dossier `fiche-3d`.
 - `?view=oeuvre-3d` sur un poster garde la galerie ; ticket 14 : trancher le type d'après `product` dans `artwork-kind`.
 - Bruit et bois restent aussi dans `component-perspective-canvas.js`, à retirer quand la dernière fiche quittera l'ancienne 3D.
 - Sous `npm test`, Node 22.12 au moins (le moteur est un module ES chargé par `require`).
+
+## Vérifié en ligne (05/11/2026)
+
+Commits `72c176d` (section) et `9a94af8` (modèle), poussés l'un après l'autre, déploiements réussis.
+
+**Fiches actuelles inchangées.** Six fiches copiées avant et après le push de la section : toile récente, ancienne toile, poster, tapisserie, deux personnalisés. Le seul écart dans `#MainContent` est un saut de ligne en moins entre deux balises, sans effet à l'écran.
+
+**Nouvelle fiche, sur le Bonsaï, avec `?view=oeuvre-3d`.** Testée dans un Chrome à part, profil jetable, téléphone simulé, PostHog et statistiques coupés.
+- Page : `<oeuvre-3d>` et `data-buy-bar` présents, ni ancienne 3D ni galerie, un seul H1, adresse canonique sans le paramètre, `#product-tracking-json` à `"kind": "toile"` et `"template": "oeuvre-3d"`.
+- 3D : apparue 0,8 à 1,6 s après le premier toucher sur ce PC.
+- Doigt : vertical sur la 3D, la page défile de 245 px ; de côté, le tableau s'incline et la page ne bouge pas.
+- Options : prix et barre à jour 0,3 s après le toucher, `?view=` gardé dans l'adresse avec `variant`. Cote, pivot de la bordure, coin du cadre et tour de la toile regardés sur captures.
+- Achat : barre visible partout ; au panier, 60x80, Bordure noire, Sans cadre, 96 € ; tiroir et vignette justes. Sur ordinateur, le bouton est visible à l'arrivée, la 3D reste fixe et le bouton flottant revient au défilement.
+- Aucune erreur JavaScript.
+
+**À savoir.**
+- L'encart promo de 15 € couvre la fiche et masque la barre d'achat tant qu'il est ouvert, comme la règle le prévoit sur les fiches actuelles.
+- Le 90 × 120 n'a pas de cadre : « Aucun cadre disponible pour cette taille », comme aujourd'hui.
+- « Poster » renvoie à l'ancienne fiche du poster, et « Toile » depuis celle-ci à l'ancienne fiche de la toile : `?view=` ne suit pas la bascule. Normal jusqu'au ticket 14.
+
+**Vitesse, nouvelle fiche contre fiche actuelle, à conditions égales.**
+
+| Mesure, en ligne | Nouvelle | Actuelle |
+|---|---|---|
+| Lighthouse mobile, performance (2 passages) | 46 et 47 | 48 et 39 |
+| Blocage Lighthouse | 1,4 et 1,7 s | 1,2 et 1,25 s |
+| Décalage de page | 0 | 0 |
+| Tableau affiché, sans limitation, sur ce PC | 1,04 s | non mesuré |
+| Tableau affiché, 4G correcte et processeur ÷ 4 | 3,5 et 3,7 s | 3,5 et 4,0 s |
+| Tableau affiché, 4G lente et processeur ÷ 4 | 9,1 et 9,1 s | 8,1 et 11,4 s |
+
+Lecture : la nouvelle fiche affiche le tableau aussi vite que l'actuelle. Le blocage est un peu plus haut parce que Lighthouse attend assez pour voir la 3D se préparer (592 ms de moteur au processeur ÷ 4). Le ≥ 90 du banc n'existait pas non plus (69 contre 61 sur le banc, réseau externe coupé) : en ligne, les deux fiches sont freinées surtout par les scripts de Shopify (pixels, perf-kit), Klarna et Facebook, présents sur tout le site. La fiche seule ne peut pas atteindre 90.
+
+**Reste à voir :** un vrai téléphone et Safari. Rien de cela n'a été essayé.
