@@ -108,7 +108,7 @@ Vérifications en ligne après déploiement (run GitHub Actions vert, « Aucun f
 1. **International.** Le gel i18n reposait sur « 91 % des ventes en France ». Sur juillet-septembre, c'est 51 %. Faut-il traiter l'anglais et l'allemand comme des marchés à part entière pour le Q4 (fiches, alt, prix, livraison) ?
 2. ~~**Merchant Center.** Corriger les ~280 refus de livraison.~~ ☑ **Fait le 2026-10-04**, cf. § Correctifs du 2026-10-04.
 3. **Collection salon.** Reprendre nommément « tableau mural salon », « tableau déco salon » et « tableaux modernes pour salon » dans les intertitres et l'intro : ils faisaient le volume en 2025 et ont glissé.
-4. **GA4.** Filtrer le trafic robot (Singapour, Chine, `trafficheap.cc`) ou s'en tenir aux commandes Shopify pour juger les ventes.
+4. ~~**GA4.** Filtrer le trafic robot (Singapour, Chine, `trafficheap.cc`) ou s'en tenir aux commandes Shopify pour juger les ventes.~~ ☑ **Tranché le 2026-11-05** : Google Analytics est abandonné, les ventes se jugent sur Shopify.
 
 ---
 
@@ -150,7 +150,7 @@ seo/
 ## 🔗 Références transverses
 
 - **Search Console** : connecteur Claude « Search Console » (compte guetarni.walid@gmail.com, code dans `~/dev/connecteur-search-console`) : outils `performances`, `inspecter_url`, `sitemaps` et `proprietes`, en lecture seule. Propriété `sc-domain:myselfmonart.com`, pays `fra`. Il remplace le skill `gsc-query` et ses scripts `~/.claude/scripts/gsc/`, disparus en octobre 2026.
-- **GA4** : propriété `374096343`, administrée par guetarni.walid@gmail.com. Plus de relevé automatique depuis la disparition de `ga4.mjs` (octobre 2026) : les sessions Organic ne sont plus relevées tant que GA4 n'est pas rebranché.
+- **GA4** : abandonné le 2026-11-05, il ne reçoit presque plus rien depuis le 29/10. Les sessions Organic s'arrêtent à J118. L'outil `analytics` du connecteur « Search Console » lit encore l'historique de la propriété `374096343`. Les visites se lisent dans Shopify et PostHog.
 - **Merchant Center** : compte `763175982`, API **Merchant v1 en REST** (l'API Content est arrêtée depuis le 2026-08-18, `merchant.mjs` ne fonctionne plus). Performance des fiches gratuites : `reports:search` sur `product_performance_view`. **Livraison** : réglée directement dans Merchant Center (`accounts/v1/accounts/763175982/shippingSettings`). L'app Google & YouTube n'est plus installée sur Shopify : une modification des zones de livraison Shopify ne se propage plus, il faut la reporter à la main.
 - **Déploiement** : push `main` → thème live New MyselfMonArt (#167301710171) via GitHub Actions. Plus de branche staging depuis le 2026-05-31.
 - **Faits structurels marque** : mémoire `project_myselfmonart_facts.md`.

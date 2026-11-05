@@ -2,7 +2,7 @@
 
 Éditorial E-E-A-T metafield-first (intro/guide/FAQ) appliqué le **2026-06-05** (voir collections-applied-log.md).
 Périmètre mesuré : **page collection canonique FR uniquement** (hors pagination `?page=N` et hors préfixes de langue).
-Source : GSC `type=web` + GA4 `Organic Search`, fenêtres de 28 jours.
+Source : GSC `type=web`, fenêtres de 28 jours. Sessions GA4 `Organic Search` jusqu'à J118 : Google Analytics a été abandonné le 2026-11-05.
 
 > ⚠️ **Contexte algorithmique** — Google a déployé un **core update du 21/05 au 02/06/2026**.
 > Les livraisons SEO (salon 29/05, 46 collections 05/06) tombent en plein rollout : tout

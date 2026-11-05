@@ -37,12 +37,13 @@ Demander à Claude « lance le suivi SEO des collections », avec un label (par 
 Claude suit alors ces étapes :
 
 1. Il relève les pages collection avec le connecteur Claude « Search Console », outil `performances` : `dimensions: ["page"]`, `pays: "fra"`, type `web`, la fenêtre en `debut`/`fin`, et un filtre `regex` sur l'URL canonique (piège n° 1 plus bas). Avec `limite: 500`, il continue avec `debut_ligne` s'il reste des lignes.
-2. Il relève les sessions GA4 avec l'outil `analytics` du même connecteur, sur la même fenêtre en `debut`/`fin`. Par défaut, l'outil lit la propriété `374096343` et le seul canal « Organic Search » (piège n° 2). Il passe `chemin: "^/collections/[a-z0-9-]+/?$"` et `limite: 500`, puis `debut_ligne` s'il reste des lignes. Il additionne par handle, en minuscules, `/collections/<handle>` et `/collections/<handle>/`. Une collection absente du résultat compte 0 session.
-3. Il garde les collections au statut `done` dans `collections-worklist.json`.
-4. Il fait un **upsert** par label dans `suivi-collections-tracking.json` : relancer le même label remplace le snapshot au lieu d'en créer un doublon. Les snapshots restent triés par fenêtre.
-5. Il régénère `suivi-collections-tracking.md` sur le même modèle. Le total « Sessions Organic » y est la somme des collections, comme dans les snapshots précédents. Il ne reprend pas le « Total » d'`analytics`, qui ne compte qu'une fois une session passée par plusieurs collections.
+2. Il garde les collections au statut `done` dans `collections-worklist.json`.
+3. Il fait un **upsert** par label dans `suivi-collections-tracking.json` : relancer le même label remplace le snapshot au lieu d'en créer un doublon. Les snapshots restent triés par fenêtre. Il laisse `ga4_organic` à `null`, jamais à 0, sauf pour une fenêtre rejouée avec ses sessions (voir plus bas).
+4. Il régénère `suivi-collections-tracking.md` sur le même modèle. Dans les totaux, « Sessions Organic » porte « — » pour ce snapshot, et le tableau par collection n'a plus de colonne « sessions Org ».
 
-GA4 se relève comme avec l'ancien script `ga4.mjs`, sans filtre de pays. Son `pagePath` n'a pas de paramètres : les sessions des pages `?page=N` comptent avec leur collection. Contrôle du 2026-10-26 : rejoué sur la fenêtre de J118, `analytics` redonne exactement ses 938 sessions, collection par collection.
+**Google Analytics n'est plus relevé depuis le 2026-11-05.** Walid l'a abandonné, et GA4 ne reçoit presque plus rien depuis le 29/10 : en Organic Search, 809 sessions du 22 au 28/10, puis 21 du 31/10 au 04/11. J118 reste le dernier snapshot avec des sessions. Les visites se lisent maintenant dans Shopify et PostHog, sans les comparer à cette colonne.
+
+Une fenêtre finie au plus tard le 2026-10-28 peut encore se rejouer avec ses sessions, grâce à l'outil `analytics` du même connecteur. Par défaut, il lit la propriété `374096343` et le seul canal « Organic Search » (piège n° 2). Claude lui passe la fenêtre en `debut`/`fin`, `chemin: "^/collections/[a-z0-9-]+/?$"` et `limite: 500`, puis `debut_ligne` s'il reste des lignes. Il additionne par handle, en minuscules, `/collections/<handle>` et `/collections/<handle>/`, sans filtre de pays. Une collection absente du résultat compte 0 session. `pagePath` n'a pas de paramètres : les sessions des pages `?page=N` comptent avec leur collection. Le total est la somme des collections : le « Total » d'`analytics` ne compte qu'une fois une session passée par plusieurs collections. Contrôle du 2026-10-26 : rejoué sur la fenêtre de J118, `analytics` redonne exactement ses 938 sessions, collection par collection.
 
 Le connecteur garde sa connexion 30 jours. Ensuite, l'outil demande de le reconnecter dans Claude (Paramètres → Connecteurs), avec le compte guetarni.walid@gmail.com. Chez Google, il faut cocher les deux cases, Search Console et Google Analytics.
 
@@ -53,7 +54,6 @@ Le connecteur garde sa connexion 30 jours. Ensuite, l'outil demande de le reconn
 - **Impressions GSC** — l'indicateur le plus précoce. Elles remontent avant les clics.
 - **Clics GSC** — la métrique qui compte. C'est elle qui doit valider le levier éditorial.
 - **Position GSC** — utile **seulement lue avec les impressions** (voir piège n°3).
-- **Sessions Organic GA4** — métrique de volume (le CA GA4 n'est pas fiable → croiser avec Shopify).
 
 ---
 
@@ -68,7 +68,7 @@ Le connecteur garde sa connexion 30 jours. Ensuite, l'outil demande de le reconn
 
 **3. La position moyenne est un indicateur piège** — quand une page perd ses impressions de longue traîne (mal classées), sa position moyenne **s'améliore mécaniquement** sans aucun gain réel. Ne jamais la lire seule.
 
-**4. Un snapshot vide ne doit jamais s'écrire** — le premier script écrivait silencieusement des zéros quand l'API échouait, ce qui rendait le bug invisible. Si la Search Console ou GA4 ne rend aucune page collection canonique, ou si un outil répond par une erreur, on n'écrit rien et on cherche pourquoi.
+**4. Un snapshot vide ne doit jamais s'écrire** — le premier script écrivait silencieusement des zéros quand l'API échouait, ce qui rendait le bug invisible. Si la Search Console, ou GA4 pour une fenêtre rejouée, ne rend aucune page collection canonique, ou si un outil répond par une erreur, on n'écrit rien et on cherche pourquoi. Une donnée qu'on ne relève plus reste vide, jamais à 0.
 
 ---
 

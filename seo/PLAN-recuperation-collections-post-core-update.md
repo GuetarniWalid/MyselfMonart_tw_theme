@@ -217,7 +217,7 @@ Pour chaque collection traitée (automatiquement) :
 ## 9. Mesure & suivi (boucler la boucle)
 
 - **GSC hebdo** par collection : connecteur « Search Console », outil `performances` avec `dimensions: ["date"]` et le filtre `page` `contient` `<handle>` → la **position** doit remonter sous 2–6 semaines (et surtout au prochain core update).
-- **GA4** : propriété `374096343`, sessions Organic Search pour la tendance. Plus de relevé automatique depuis la disparition de `ga4.mjs` (octobre 2026). ⚠️ CA/conversions GA4 non fiables (tracking dégradé ~13 jan) — utiliser les **sessions** + Shopify pour le CA.
+- **GA4** : abandonné le 2026-11-05, sessions Organic Search relevées jusqu'à J118 (voir `suivi-collections-README.md`). ⚠️ CA/conversions GA4 non fiables (tracking dégradé ~13 jan) — le CA se lit dans Shopify.
 - **Expérience témoin** : comparer la remontée de `tableau-salon` (traité) vs `tableau-cuisine` (à traiter tard) → preuve d'efficacité.
 
 ---
@@ -234,7 +234,7 @@ Pour chaque collection traitée (automatiquement) :
 
 - **Mémoire** (lire avant de démarrer) : `[[project-web-collections-regression-jan2026]]`, `[[feedback-collection-layout]]`, `[[feedback-collaboration-walid]]`, `[[feedback-deploy-workflow]]`, `[[feedback-no-unrequested-initiatives]]`, `[[project-painting-titles]]`, `[[project-myselfmonart-facts]]`, `[[reference-gsc-skill]]` (inclut GA4).
 - **Skills** : `shopify-section-dev` (obligatoire dès qu'on touche Liquid/template).
-- **Outils data** : GSC = connecteur Claude « Search Console » (le skill `gsc-query` et ses scripts ont disparu en octobre 2026) ; GA4 propriété `374096343`, sans relevé automatique pour l'instant ; MCP **Shopify** (`listCollections`, `getCollection`, `getProduct`, `setMetafield`).
+- **Outils data** : GSC = connecteur Claude « Search Console » (le skill `gsc-query` et ses scripts ont disparu en octobre 2026) ; GA4 abandonné le 2026-11-05, historique de la propriété `374096343` par l'outil `analytics` du même connecteur ; MCP **Shopify** (`listCollections`, `getCollection`, `getProduct`, `setMetafield`).
 - **Fichiers modèle** : `sections/collection-editorial.liquid`, `templates/collection.tableau-salon.json`.
 - **Déploiement** : tout en local → validation Walid → push direct `main` (= live).
 ```
