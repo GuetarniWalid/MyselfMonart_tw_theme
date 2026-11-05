@@ -9,6 +9,7 @@
     - modèle propre à un type : ajouter son suffixe sur la ligne `when` de ce type
       (when 'painting', 'nouveau-suffixe') ;
     - modèle partagé par les toiles et les posters : une ligne `when` qui tranche d'après `product`.
+  oeuvre-3d, la fiche 3D, n'est que pour les toiles tant que le poster n'y arrive pas (ticket 14).
   À ne pas confondre avec :
     - le métachamp artwork.type (painting, poster, tapestry), lu par la recherche et le studio ;
     - is_poster (métachamp frames_poster), qui donne aux posters leur sélecteur et leur 3D
@@ -26,7 +27,7 @@
 {%- endcomment -%}
 {%- liquid
   case suffix
-    when 'painting'
+    when 'painting', 'oeuvre-3d'
       echo 'toile'
     when 'poster'
       echo 'poster'

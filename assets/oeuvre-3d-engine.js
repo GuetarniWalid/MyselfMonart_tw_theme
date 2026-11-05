@@ -1,0 +1,2811 @@
+/*
+ * oeuvre-3d-engine.js — le moteur 3D de la fiche d'œuvre (fiche-3d, ticket 07)
+ * ----------------------------------------------------------------------------------------------
+ * Rend une toile ou un poster à partir de sa seule image à plat. Porté du prototype du ticket 02
+ * (.scratch/fiche-3d/prototype) : les plans, la lumière et les matières y ont été réglés avec
+ * Walid. Les mesures et les retours sont dans .scratch/fiche-3d/issues/02-prototype-3d-bonsai.md.
+ *
+ * Deux parties, qui ne se parlent que par la « vue » :
+ *   createDirector()  la mise en scène : pur calcul, ni three.js ni DOM. Pour un instant et une
+ *                     forme d'écran, elle dit où sont la caméra et le tableau.
+ *   createScene()     le moteur three.js : il dessine la vue qu'on lui donne, et rien d'autre.
+ *
+ * Deux usages, une seule scène :
+ *   - la fiche : assets/component-oeuvre-3d.js, qui charge ce fichier une fois la page posée ;
+ *   - le serveur (ticket 08) : renderStill(), dans une page sans rapport avec la fiche.
+ *
+ * three.js est la seule dépendance, reçue en paramètre : assets/three.module.min.js, r170, MIT.
+ *
+ * Un seul fichier, exprès. Le CDN de Shopify garde un an les adresses sans ?v=, et un `import`
+ * relatif perd le ?v= de son parent : après un déploiement, un visiteur qui revient aurait un
+ * moteur neuf sur des modules périmés. Une import map ne sauve rien : <head> charge déjà des
+ * modules (content_for_header), elle arriverait trop tard sur une bonne partie des navigateurs.
+ *
+ * Testé par scripts/oeuvre-3d-*.test.cjs. Le rendu lui-même se vérifie dans un navigateur.
+ */
+
+/* ==== CATALOGUE ==== */
+
+export const CANVAS_DEPTH = 2 // châssis des toiles (décision 8)
+export const PAPER_DEPTH = 0.05 // feuille du poster, à peine visible de profil
+
+/* Profils de cadre, à comparer aux vrais produits (tickets 10 et 14).
+   gap   : écart entre l'œuvre et l'intérieur du cadre (négatif : la baguette recouvre le bord)
+   face  : largeur de la baguette vue de face
+   depth : profondeur totale, du mur à l'avant du cadre
+   floor : position de l'arrière de l'œuvre dans le cadre (toile posée sur le fond de la caisse,
+           poster plaqué derrière le verre) */
+export const FRAME_PROFILE = {
+  toile: { gap: 0.6, face: 1.2, depth: 3.2, floor: 0.6 }, // caisse américaine : la toile flotte
+  poster: { gap: -0.5, face: 1.6, depth: 2.0, floor: 1.6 }, // baguette sous verre, tirage collé au verre
+}
+
+// Taille du moteur (« 30x40 ») : largeur et hauteur en cm.
+export function dimensionsOf(size) {
+  const [width, height] = size.split('x').map(Number)
+  return { width, height }
+}
+
+/* Bordures et cadres. key : handle du métaobjet Shopify, le même dans toutes les langues.
+   color (sRGB) : teinte de la tranche ou du cadre ; null : la bordure reprend l'image, ou il n'y a
+   pas de cadre. */
+export const BORDERS = [
+  { id: 'blanche', key: 'bordure-blanche', color: '#efede8' },
+  { id: 'noire', key: 'bordure-noire', color: '#272727' },
+  { id: 'etiree', key: 'bordure-etiree', color: null },
+  { id: 'miroir', key: 'bordure-moroir', color: null }, // « moroir » : c'est bien le handle de la boutique
+  { id: 'pliee', key: 'bordure-pliee', color: null },
+]
+
+export const PAPER_WHITE = '#f7f6f2'
+
+/* Matière des cadres. wood : part de l'image de bois ; relief : fil du bois sous la lumière ;
+   rough : 0 brillant, 1 mat. Noir et chêne viennent du prototype. Blanc, argent et noyer gardent
+   pour l'instant la teinte de l'ancienne 3D : leurs matières sont au ticket 10. */
+export const FRAMES = [
+  { id: 'sans', key: 'sans-cadre', color: null },
+  { id: 'blanc', key: 'cadre-blanc', color: '#edebe3', wood: 0, relief: 0.3, rough: 0.6 },
+  { id: 'noir', key: 'cadre-noir-mat', color: '#1f1f21', wood: 0, relief: 0.5, rough: 0.68 },
+  { id: 'argent', key: 'cadre-argent-ancien', color: '#9ea1a8', wood: 0, relief: 0.6, rough: 0.5 },
+  { id: 'chene', key: 'cadre-chene-clair', color: '#c9a77c', wood: 1, relief: 0.9, rough: 0.55 },
+  { id: 'noyer', key: 'cadre-noyer', color: '#66422b', wood: 0, relief: 0.9, rough: 0.55 },
+]
+
+export const borderOf = (id) => BORDERS.find((b) => b.id === id) || BORDERS[0]
+export const borderTakesImage = (id) => !borderOf(id).color
+export const frameOf = (id) => FRAMES.find((f) => f.id === id) || FRAMES[0]
+
+export function hasFrame(product) {
+  return product.frame !== 'sans'
+}
+
+// Option de taille de la boutique (« 30x40 cm ») -> taille du moteur (« 30x40 ») ; null si ce n'en est pas une.
+function sizeOf(value) {
+  const match = /(\d+)\s*[x×]\s*(\d+)/i.exec(value || '')
+  return match ? `${match[1]}x${match[2]}` : null
+}
+
+// variants : `product.variants | json`. Une toile comme un poster ont la taille en option 1.
+export function sizesFromVariants(variants) {
+  return [...new Set(variants.map((variant) => sizeOf(variant.option1)).filter(Boolean))]
+}
+
+/* Du choix de la fiche (détail de mma:selection-change, assets/product-selection.js) au produit que
+   rend le moteur. Seule la toile est branchée : le poster arrive au ticket 14. Les bordures et les
+   cadres se reconnaissent à leur handle, le même dans toutes les langues. */
+export function productFromSelection(selection) {
+  const option = (kind) => selection.options.find((o) => o.kind === kind)
+  const keyOf = (kind) => (option(kind) || {}).key
+  const inList = (list, key) => list.find((item) => item.key === key) || list[0]
+  return {
+    material: 'toile',
+    size: sizeOf(option('size').value),
+    border: inList(BORDERS, keyOf('border')).id,
+    frame: inList(FRAMES, keyOf('frame')).id,
+    passe: false,
+  }
+}
+
+/* Le mur neutre de la fiche : le mur et la lumière réglés au prototype, sans photo de pièce. light :
+   vers la lumière, une fenêtre à gauche. wall : couleur du mur (sRGB). wallSlope : pente de luminosité
+   par cm vers la droite. Le tableau est centré à hauteur d'œil, quelle que soit sa taille : aucun
+   meuble à respecter. largest : le plus grand format du produit, qui fixe le cadrage des tailles. */
+export function neutralRoom(sizes) {
+  const formats = sizes.map(dimensionsOf)
+  const area = ({ width, height }) => width * height
+  return {
+    hang: { x: 121, minBottom: 0, center: 130 },
+    light: [-0.5, 0.45, 0.74],
+    wall: [233, 233, 232],
+    wallSlope: -0.00023,
+    largest: formats.reduce((big, format) => (area(format) > area(big) ? format : big)),
+  }
+}
+
+/* ==== GÉOMÉTRIE ==== */
+
+/* Tableaux de nombres, sans three.js. Unités : cm. L'œuvre occupe x ∈ [-W/2, W/2], y ∈ [-H/2, H/2],
+   z ∈ [0, D] (dos au mur). */
+
+const CANVAS_CORNER = 0.3
+const PAPER_CORNER = 0.02
+const CORNER_SEGMENTS = 4
+const CANVAS_EDGE = 0.25 // arrondi de la toile qui tourne sur le châssis
+
+// Contour à coins arrondis, dans le sens trigonométrique vu de face, un arc par coin.
+function roundedContour(W, H, rc) {
+  const rim = []
+  const arc = (cx, cy, a0) => {
+    for (let k = 0; k <= CORNER_SEGMENTS; k++) {
+      const a = a0 + (k / CORNER_SEGMENTS) * (Math.PI / 2)
+      rim.push({ x: cx + rc * Math.cos(a), y: cy + rc * Math.sin(a), nx: Math.cos(a), ny: Math.sin(a) })
+    }
+  }
+  arc(W / 2 - rc, -H / 2 + rc, -Math.PI / 2)
+  arc(W / 2 - rc, H / 2 - rc, 0)
+  arc(-W / 2 + rc, H / 2 - rc, Math.PI / 2)
+  arc(-W / 2 + rc, -H / 2 + rc, Math.PI)
+  return rim
+}
+
+/* Toile (ou feuille) : rectangle à coins à peine arrondis, arête avant arrondie (la toile
+   qui tourne sur le châssis), tranches droites. Seule la feuille a son dos ici : celui de la
+   toile est ouvert sur le châssis (backShell).
+   Bordures : 'blanche' et 'noire' (tranche unie), 'etiree' (le bord de l'image est tiré
+   sur la tranche), 'miroir' (la bande voisine du bord, en reflet), 'pliee' (l'image
+   continue sur la tranche : la façade montre donc le centre de l'image), 'papier'.
+   paper : de 0 (toile, qui tourne autour du châssis) à 1 (feuille, coupée net).
+   Attributs : uv (image), fab (grain, en cm), art (1 = image, 0 = couleur de tranche). */
+export function artBox({ width: W, height: H, depth: D, border, paper = 0 }) {
+  const M = 4 // segments de l'arête avant
+  const corner = CANVAS_CORNER + (PAPER_CORNER - CANVAS_CORNER) * paper
+  const rc = Math.min(corner, W / 2, H / 2)
+  const re = Math.min(CANVAS_EDGE, D * 0.45, rc * 0.95)
+  const fold = border === 'pliee'
+  const sideArt = borderTakesImage(border)
+
+  // Coordonnées d'image : origine en haut à gauche, les textures n'étant pas retournées.
+  const artUV = (x, y) =>
+    fold
+      ? [(x + W / 2 + D) / (W + 2 * D), 1 - (y + H / 2 + D) / (H + 2 * D)]
+      : [(x + W / 2) / W, 1 - (y + H / 2) / H]
+
+  const rim = roundedContour(W, H, rc)
+  const N = rim.length
+
+  const position = [], normal = [], uv = [], fab = [], art = [], index = []
+  const vertex = (p, n, t, isArt) => {
+    position.push(p[0], p[1], p[2])
+    normal.push(n[0], n[1], n[2])
+    uv.push(t[0], t[1])
+    const ax = Math.abs(n[0]), ay = Math.abs(n[1]), az = Math.abs(n[2])
+    if (az >= ax && az >= ay) fab.push(p[0], p[1])
+    else if (ax >= ay) fab.push(p[2], p[1])
+    else fab.push(p[0], p[2])
+    art.push(isArt)
+    return position.length / 3 - 1
+  }
+  // Bande entre deux anneaux (a vers l'avant, b vers l'arrière), faces tournées vers l'extérieur.
+  const strip = (a, b) => {
+    for (let i = 0; i < N; i++) {
+      const j = (i + 1) % N
+      index.push(a[i], b[j], a[j], a[i], b[i], b[j])
+    }
+  }
+
+  // Façade : éventail depuis le centre, sur le contour rentré de l'arrondi.
+  const center = vertex([0, 0, D], [0, 0, 1], artUV(0, 0), 1)
+  let previous = []
+  for (let j = 0; j <= M; j++) {
+    const phi = (j / M) * (Math.PI / 2)
+    const inset = re * (1 - Math.sin(phi))
+    const z = D - re * (1 - Math.cos(phi))
+    const ring = rim.map((p) => {
+      const x = p.x - p.nx * inset, y = p.y - p.ny * inset
+      const n = [Math.sin(phi) * p.nx, Math.sin(phi) * p.ny, Math.cos(phi)]
+      return vertex([x, y, z], n, artUV(x, y), 1)
+    })
+    if (j === 0) for (let i = 0; i < N; i++) index.push(center, ring[i], ring[(i + 1) % N])
+    else strip(previous, ring)
+    previous = ring
+  }
+
+  // Tranches : de la fin de l'arrondi jusqu'au mur. s = profondeur sous cet arrondi.
+  const sideUV = (p, s) => {
+    if (border === 'pliee') return artUV(p.x + p.nx * s, p.y + p.ny * s)
+    if (border === 'miroir') return artUV(p.x - p.nx * s, p.y - p.ny * s)
+    return artUV(p.x, p.y)
+  }
+  const sideRing = (z) =>
+    rim.map((p) => vertex([p.x, p.y, z], [p.nx, p.ny, 0], sideUV(p, D - re - z), sideArt ? 1 : 0))
+  strip(sideRing(D - re), sideRing(0))
+
+  if (border === 'papier') {
+    const back = rim.map((p) => vertex([p.x, p.y, 0], [0, 0, -1], [0, 0], 0))
+    const backCenter = vertex([0, 0, 0], [0, 0, -1], [0, 0], 0)
+    for (let i = 0; i < N; i++) index.push(backCenter, back[(i + 1) % N], back[i])
+  }
+
+  return pack({ position, normal, uv, fab, art, index })
+}
+
+/* Dos de la toile, selon le petit côté du tableau : côté, bande de toile repliée, pin, agrafe. Le
+   75 × 100 vient des photos de Walid ; les autres valeurs sont des estimations, à comparer aux
+   vrais tableaux. Entre deux lignes, elles s'interpolent ; au-delà, elles ne changent plus. */
+const BACK_WIDTHS = [
+  { side: 30, band: 2.5, pine: 1.2, staple: 1.2 },
+  { side: 60, band: 3.5, pine: 1.7, staple: 1.6 },
+  { side: 75, band: 4, pine: 2, staple: 2 },
+]
+
+function backWidth(size, name) {
+  const next = BACK_WIDTHS.findIndex(({ side }) => side >= size)
+  if (next === 0) return BACK_WIDTHS[0][name]
+  if (next < 0) return BACK_WIDTHS[BACK_WIDTHS.length - 1][name]
+  const a = BACK_WIDTHS[next - 1], b = BACK_WIDTHS[next]
+  return a[name] + ((b[name] - a[name]) * (size - a.side)) / (b.side - a.side)
+}
+
+/* band : toile repliée. bar : largeur totale du châssis vu de dos. stapleLength : longueur d'une
+   agrafe. cornerStapleInset : distance au bord haut ou bas de l'agrafe de chaque coin. */
+export function backLayout(W, H) {
+  const size = Math.min(W, H)
+  const band = backWidth(size, 'band')
+  return { band, bar: band + backWidth(size, 'pine'), stapleLength: backWidth(size, 'staple'), cornerStapleInset: 0.75 * band }
+}
+
+const STAPLE_EVERY = 11
+
+// Rang d'agrafes régulier sur `span` cm centrés : premier, écart, nombre. `ends` : les bouts
+// du rang portent déjà une agrafe (celles du coin), sinon elles sont à une demi-maille du bout.
+function stapleRow(span, ends) {
+  const cells = Math.max(ends ? 2 : 1, Math.round(span / STAPLE_EVERY))
+  const gap = span / cells
+  return { first: -span / 2 + (ends ? gap : gap / 2), gap, count: ends ? cells - 1 : cells }
+}
+
+/* Agrafes le long des bandes, tous les 10 à 12 cm, un peu plus sur les petits formats. Sur les
+   bords verticaux, le rang s'accroche aux agrafes des coins ; sur les bords horizontaux, il va
+   d'une bande verticale à l'autre. */
+// Rang d'agrafes à égale distance, de `from`, qui en porte une, jusqu'au coin, qui a la sienne.
+export function stapleRowToCorner(from, corner) {
+  const span = Math.abs(corner - from)
+  const cells = Math.max(1, Math.round(span / STAPLE_EVERY))
+  const gap = span / cells
+  return { first: corner > from ? from : corner + gap, gap, count: cells }
+}
+
+export function stapleRows(W, H) {
+  const { band, cornerStapleInset } = backLayout(W, H)
+  return { upright: stapleRow(H - 2 * cornerStapleInset, true), flat: stapleRow(W - 2 * band, false) }
+}
+
+const CANVAS_SKIN = 0.12 // la toile tendue est juste derrière la façade
+
+/* Coquille du dos : un anneau au ras de l'arrière du châssis (bande repliée et pin), les
+   parois intérieures du châssis, la toile tendue au fond. Tout le détail est peint par le
+   shader du dos (BACK_FRAGMENT). Attribut part : 0 anneau, 1 parois, 2 toile tendue. */
+export function backShell({ width: W, height: H, depth: D }) {
+  const { bar } = backLayout(W, H)
+  const ix = W / 2 - bar, iy = H / 2 - bar
+  const panel = Math.max(0, D - CANVAS_SKIN)
+  const position = [], normal = [], uv = [], part = [], index = []
+  const vertex = (x, y, z, n, kind) => {
+    position.push(x, y, z)
+    normal.push(...n)
+    uv.push(x, y)
+    part.push(kind)
+    return position.length / 3 - 1
+  }
+  const REAR = [0, 0, -1]
+
+  // Anneau : chaque arc du contour se referme sur le coin de l'ouverture le plus proche.
+  const rim = roundedContour(W, H, Math.min(CANVAS_CORNER, W / 2, H / 2))
+  const opening = [[ix, -iy], [ix, iy], [-ix, iy], [-ix, -iy]]
+  const outer = rim.map((p) => vertex(p.x, p.y, 0, REAR, 0))
+  const inner = opening.map(([x, y]) => vertex(x, y, 0, REAR, 0))
+  const perArc = CORNER_SEGMENTS + 1
+  for (let c = 0; c < 4; c++) {
+    const first = c * perArc
+    for (let k = 0; k < CORNER_SEGMENTS; k++) index.push(outer[first + k + 1], outer[first + k], inner[c])
+    const last = first + CORNER_SEGMENTS, next = ((c + 1) % 4) * perArc
+    index.push(outer[next], outer[last], inner[c], outer[next], inner[c], inner[(c + 1) % 4])
+  }
+
+  // Parois : tournées vers le centre de l'ouverture.
+  for (let c = 0; c < 4; c++) {
+    const [ax, ay] = opening[c], [bx, by] = opening[(c + 1) % 4]
+    const length = Math.hypot(bx - ax, by - ay)
+    const n = [-(by - ay) / length, (bx - ax) / length, 0]
+    const a0 = vertex(ax, ay, 0, n, 1), b0 = vertex(bx, by, 0, n, 1)
+    const b1 = vertex(bx, by, panel, n, 1), a1 = vertex(ax, ay, panel, n, 1)
+    index.push(a0, a1, b1, a0, b1, b0)
+  }
+
+  // Toile tendue, au fond.
+  const [p0, p1, p2, p3] = opening.map(([x, y]) => vertex(x, y, panel, REAR, 2))
+  index.push(p0, p3, p2, p0, p2, p1)
+
+  return pack({ position, normal, uv, part, index })
+}
+
+/* Coin soulevé du poster : au-delà d'une ligne de pli, le papier s'enroule sur un cylindre
+   sans s'étirer, puis repart droit. Le rayon s'élargit vers les bouts du pli, comme une
+   feuille qui se courbe en cône. Tailles en part du petit côté de la feuille.
+   Le vertex shader de la feuille (CURL_VERTEX) fait le même calcul que curlPoint. */
+export const CURL = {
+  angle: (42 * Math.PI) / 180, // direction du coin, depuis l'horizontale
+  fold: 0.23, // distance du coin à la ligne de pli, à fond
+  loose: 0.2, // rayon du papier qui commence à se lever
+  tight: 0.048, // rayon du papier enroulé
+  roll: 3.6, // angle d'enroulement maximal (radians)
+  cone: 0.35,
+}
+
+// corner : coin soulevé (signes x et y). amount : 0 à plat, 1 à fond.
+export function curlShape(amount, W, H, corner) {
+  const size = Math.min(W, H)
+  const tight = amount * amount * (3 - 2 * amount)
+  return {
+    tip: [(corner.x * W) / 2, (corner.y * H) / 2],
+    dir: [corner.x * Math.cos(CURL.angle), corner.y * Math.sin(CURL.angle)],
+    fold: CURL.fold * size * Math.pow(amount, 0.8),
+    radius: size * (CURL.loose + (CURL.tight - CURL.loose) * tight),
+  }
+}
+
+// Point (x, y) de la feuille à plat -> position courbée, z au-dessus de la feuille.
+export function curlPoint([x, y], { tip, dir, fold, radius }) {
+  const rx = x - tip[0], ry = y - tip[1]
+  const beyond = rx * dir[0] + ry * dir[1] + fold
+  if (beyond <= 0 || fold === 0) return [x, y, 0]
+  const across = -rx * dir[1] + ry * dir[0]
+  const r = radius * (1 + (CURL.cone * Math.abs(across)) / fold)
+  const phi = Math.min(beyond / r, CURL.roll)
+  const rest = beyond - phi * r
+  const shift = r * Math.sin(phi) + rest * Math.cos(phi) - beyond
+  return [x + dir[0] * shift, y + dir[1] * shift, r * (1 - Math.cos(phi)) + rest * Math.sin(phi)]
+}
+
+// Contour du coin soulevé, à plat : les deux bords du papier, la pointe, le haut de la courbe.
+export function curlOutline({ tip, dir, fold, radius }) {
+  const edgeX = [-fold / dir[0], 0], edgeY = [0, -fold / dir[1]]
+  const onEdge = ([dx, dy], t) => [tip[0] + dx * t, tip[1] + dy * t]
+  const onDiagonal = (s) => [tip[0] - dir[0] * (fold - s), tip[1] - dir[1] * (fold - s)]
+  return [
+    onEdge(edgeX, 1), onEdge(edgeX, 0.5), tip, onEdge(edgeY, 0.5), onEdge(edgeY, 1),
+    onDiagonal(Math.min(fold, (radius * Math.PI) / 2)), onDiagonal(Math.min(fold, radius * Math.PI)),
+  ]
+}
+
+/* Grille de la feuille, dans le carré unité : (0, 0) au coin soulevé, (1, 1) à l'opposé. Le
+   shader la met à la taille de la feuille : une seule grille, préparée une fois pour tous les
+   formats. Mailles fines là où le papier se courbe, diagonales parallèles au pli. */
+const CURL_ZONE = 0.45
+const CURL_FINE = 44
+const CURL_COARSE = 6
+
+export function curlSheet(corner) {
+  const ticks = []
+  for (let i = 0; i < CURL_FINE; i++) ticks.push((i / CURL_FINE) * CURL_ZONE)
+  for (let i = 0; i <= CURL_COARSE; i++) ticks.push(CURL_ZONE + (i / CURL_COARSE) * (1 - CURL_ZONE))
+  const n = ticks.length
+  const position = [], normal = [], uv = [], index = []
+  for (const gy of ticks) {
+    for (const gx of ticks) {
+      position.push(gx, gy, 0)
+      normal.push(0, 0, 1)
+      uv.push(gx, gy)
+    }
+  }
+  const facing = corner.x * corner.y > 0
+  for (let j = 0; j < n - 1; j++) {
+    for (let i = 0; i < n - 1; i++) {
+      const a = j * n + i, b = a + 1, c = a + n, d = c + 1
+      if (facing) index.push(a, b, c, b, d, c)
+      else index.push(a, c, b, b, c, d)
+    }
+  }
+  return pack({ position, normal, uv, index })
+}
+
+/* Cadre : 4 baguettes en onglet autour d'une ouverture (demi-tailles hw, hh), décrites
+   par un profil (u, z, shade) : u = écart vers l'extérieur depuis le bord de l'ouverture,
+   z = hauteur depuis le mur, shade = part de lumière qui arrive là (1 par défaut, moins dans
+   les creux). La normale d'un segment est (-dz, du), donc le profil se lit de l'intérieur
+   vers l'extérieur. uv : grain du bois le long de la baguette, en cm. */
+export function frameRing({ hw, hh, profile }) {
+  const position = [], normal = [], uv = [], shades = [], index = []
+  const OUT = [[0, -1], [1, 0], [0, 1], [-1, 0]] // bas, droite, haut, gauche
+  const rect = (u) => [[-hw - u, -hh - u], [hw + u, -hh - u], [hw + u, hh + u], [-hw - u, hh + u]]
+  for (let s = 0; s < profile.length - 1; s++) {
+    const [u0, z0, shade0 = 1] = profile[s]
+    const [u1, z1, shade1 = 1] = profile[s + 1]
+    const len = Math.hypot(u1 - u0, z1 - z0)
+    if (len < 1e-6) continue
+    const nu = -(z1 - z0) / len
+    const nz = (u1 - u0) / len
+    const wall = Math.abs(nz) < 0.5 // segment presque vertical : on déroule le grain en z
+    const A = rect(u0), B = rect(u1)
+    for (let k = 0; k < 4; k++) {
+      const n = [OUT[k][0] * nu, OUT[k][1] * nu, nz]
+      const along = k % 2 === 0 ? 0 : 1 // baguettes du bas et du haut : grain selon x
+      const quad = [
+        [A[k], z0, u0, shade0], [A[(k + 1) % 4], z0, u0, shade0], [B[(k + 1) % 4], z1, u1, shade1], [B[k], z1, u1, shade1],
+      ]
+      const base = position.length / 3
+      for (const [[x, y], z, u, shade] of quad) {
+        position.push(x, y, z)
+        normal.push(n[0], n[1], n[2])
+        shades.push(shade)
+        // Chaque baguette est taillée dans un autre endroit de la planche (décalage par côté).
+        uv.push((wall ? z : u) + k * 2.37, (along === 0 ? x : y) + k * 7.1)
+      }
+      index.push(base, base + 2, base + 1, base, base + 3, base + 2)
+    }
+  }
+  return pack({ position, normal, uv, shade: shades, index })
+}
+
+/* Profils de cadre (cm), pour une œuvre W × H et un profil du catalogue.
+   Toile : caisse américaine (fond où la toile flotte, paroi intérieure, face, paroi
+   extérieure, puis le dos, qui se voit quand la toile fait son tour).
+   Poster : baguette dont la feuillure recouvre le bord du tirage, verre. */
+const CHAMFER = 0.08
+
+export function frameProfile(kind, f) {
+  const c = CHAMFER
+  if (kind === 'toile') {
+    return [
+      [-f.gap, f.floor, 0.3],
+      [0, f.floor, 0.45],
+      [0, f.depth - c, 0.9],
+      [c, f.depth],
+      [f.face - c, f.depth],
+      [f.face, f.depth - c],
+      [f.face, 0],
+      [-f.gap, 0],
+      [-f.gap, f.floor],
+    ]
+  }
+  const glassZ = f.floor + 0.1
+  return [
+    [0, glassZ, 0.7],
+    [0, f.depth - c, 0.95],
+    [c, f.depth],
+    [f.face - c, f.depth],
+    [f.face, f.depth - c],
+    [f.face, 0],
+  ]
+}
+
+// Demi-tailles de l'ouverture du cadre pour une œuvre W × H (gap négatif : la feuillure
+// recouvre le bord de l'œuvre).
+export function frameOpening(W, H, f) {
+  return { hw: W / 2 + f.gap, hh: H / 2 + f.gap }
+}
+
+// Enveloppe convexe 2D (chaîne monotone d'Andrew), sens trigonométrique : l'ombre du
+// tableau sur le mur est l'enveloppe de ses coins projetés le long de la lumière.
+export function convexHull(points) {
+  const p = points.slice().sort((a, b) => a[0] - b[0] || a[1] - b[1])
+  const cross = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+  const lower = [], upper = []
+  for (const q of p) {
+    while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], q) <= 0) lower.pop()
+    lower.push(q)
+  }
+  for (let i = p.length - 1; i >= 0; i--) {
+    const q = p[i]
+    while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], q) <= 0) upper.pop()
+    upper.push(q)
+  }
+  return lower.slice(0, -1).concat(upper.slice(0, -1))
+}
+
+function pack({ position, normal, uv, fab, art, shade, part, index }) {
+  const out = {
+    position: new Float32Array(position),
+    normal: new Float32Array(normal),
+    uv: new Float32Array(uv),
+    index: position.length / 3 > 65535 ? new Uint32Array(index) : new Uint16Array(index),
+  }
+  if (fab) out.fab = new Float32Array(fab)
+  if (art) out.art = new Float32Array(art)
+  if (shade) out.shade = new Float32Array(shade)
+  if (part) out.part = new Float32Array(part)
+  return out
+}
+
+/* ==== MARQUES DU DOS ==== */
+
+/* Marques imprimées au dos de la toile : le logo de MyselfMonArt au centre de la bande du haut ; au
+   centre de la bande du bas, un code carré et le format ; en bas à droite, sur la bande verticale,
+   un autre code ; à mi-hauteur de cette bande, « PREMIUM ». Elles gardent la même taille réelle sur
+   tous les formats, sauf PREMIUM, qui suit la largeur de la bande pour se lire sur un téléphone.
+   Tout est dessiné ici : rien à télécharger. */
+
+// Tailles réelles, en cm. free : distance au bord où finit le retour d'image.
+export const MARKS = { logo: 1.5, code: 1.1, textHeight: 0.4, gap: 0.1, free: 0.5 }
+const ABOVE_FREE = 0.15 // le code du coin se pose un peu au-dessus du retour d'image
+const STAPLE_MARGIN = 0.3 // entre une marque et le bout d'une agrafe
+export const STAPLE_DRIFT = 0.7 // écart d'une agrafe posée à la main, de part et d'autre
+export const MARK_COUNT = 5 // logo, deux codes, format, PREMIUM
+const PREMIUM_LETTER = 0.28 // hauteur de ses lettres, en part de la largeur de la bande
+
+/* Boîtes des marques, en cm, telles qu'on les voit de dos : x vers la droite du regard, y vers
+   le haut, origine au milieu du tableau. PREMIUM est tourné d'un quart de tour ; premiumBox donne
+   sa boîte en hauteurs de lettre, mesurée sur la planche. rowClear : au centre des bandes du haut
+   et du bas, distance en deçà de laquelle une agrafe s'efface. rightRows : sur la bande de droite,
+   le mot occupe une case du rang d'agrafes. Ses deux voisines s'écartent autant qu'il le faut,
+   selon sa longueur, qui dépend de la police du téléphone, et le rang reste régulier jusqu'aux
+   coins. */
+export function marksLayout(W, H, formatLength, premiumBox) {
+  const { band, cornerStapleInset, stapleLength } = backLayout(W, H)
+  const { logo, code, textHeight, gap, free } = MARKS
+  const middle = (free + band) / 2 // milieu de la partie libre d'une bande
+  const bottom = -H / 2
+  const stapleReach = stapleLength / 2 + STAPLE_DRIFT + STAPLE_MARGIN
+  const rowWidth = code + gap + formatLength
+  const letter = PREMIUM_LETTER * band
+  const premiumWidth = letter * premiumBox.height
+  const premiumLength = letter * premiumBox.length
+  const wordNeighbour = Math.max(premiumLength / 2 + stapleReach, stapleRows(W, H).upright.gap / 2)
+  const markedCornerInset = Math.max(cornerStapleInset, free + ABOVE_FREE + code + STAPLE_MARGIN + stapleLength / 2)
+  return {
+    logo: { x: -logo / 2, y: H / 2 - middle - logo / 2, width: logo, height: logo },
+    cornerCode: { x: W / 2 - middle - code / 2, y: bottom + free + ABOVE_FREE, width: code, height: code },
+    centerCode: { x: -rowWidth / 2, y: bottom + middle - code / 2, width: code, height: code },
+    format: { x: gap + code - rowWidth / 2, y: bottom + middle - textHeight / 2, width: formatLength, height: textHeight },
+    premium: { x: W / 2 - middle - premiumWidth / 2, y: -premiumLength / 2, width: premiumWidth, height: premiumLength },
+    markedCornerInset,
+    rowClear: { top: logo / 2 + stapleReach, bottom: rowWidth / 2 + stapleReach },
+    rightRows: {
+      below: stapleRowToCorner(-wordNeighbour, bottom + markedCornerInset),
+      above: stapleRowToCorner(wordNeighbour, H / 2 - cornerStapleInset),
+    },
+  }
+}
+
+export const sizeText = (size) => `${size.replace('x', '×')} cm`
+
+const CODE_CELLS = 16
+
+/* Code carré de type Datamatrix : bords gauche et bas pleins, bords haut et droit en pointillés,
+   et un motif fixe sans aucun contenu. Il est décoratif : il ne se lit pas. */
+export function dataMatrixCells(pattern) {
+  const n = CODE_CELLS
+  let seed = 20261104 + pattern
+  const coin = () => {
+    seed = (seed * 1664525 + 1013904223) >>> 0
+    return seed / 2 ** 32 < 0.5
+  }
+  return Array.from({ length: n }, (_, y) =>
+    Array.from({ length: n }, (__, x) => {
+      if (x === 0 || y === n - 1) return true
+      if (y === 0) return x % 2 === 0
+      if (x === n - 1) return y % 2 === 1
+      return coin()
+    }),
+  )
+}
+
+// Logo du site (snippets/tw-default-logo.liquid), sans son disque de fond et cerné de noir.
+const LOGO_BOX = { x: 12.1, y: 12.5, size: 40 }
+const INK = '#14130f'
+const LOGO_SHAPES = [
+  ['#A93514', 'M29.2466 13.6602L29.2466 37.3573L13.6931 37.3573C14.1881 18.1987 29.2466 13.6602 29.2466 13.6602Z'],
+  ['#F0AC01', 'M29.373 13.4951H48.1871V38.7456L50.6627 41.5512L48.8473 43.6142L50.2501 46.0897L48.1871 48.3177V51.1233H29.373V13.4951Z'],
+  [INK, 'M47.8573 52.0541H30.1044C29.3882 52.0541 28.8089 51.4732 28.8089 50.7585V37.96C28.1422 37.96 27.7147 37.96 27.6702 37.96H13.7428C13.4424 37.96 13.1883 37.7438 13.1388 37.4484C12.8318 35.5571 13.0859 33.9034 13.3995 32.2382C15.1406 22.9616 20.5604 16.2066 28.6571 13.2112C29.0383 13.071 29.4476 13 29.8734 13H47.9118C48.4762 13 48.935 13.4588 48.9334 14.0232L48.8707 38.7819C49.9021 39.3595 51.2686 40.2062 51.2307 41.4885C51.2076 42.284 50.6349 43.02 49.4879 43.7231C50.1068 44.134 50.729 44.7512 50.7966 45.5995C50.8725 46.5534 50.2421 47.4545 48.8723 48.3457V48.5025L48.9251 50.9632C48.9383 51.5623 48.4564 52.0541 47.8573 52.0541ZM30.8108 50.8312H46.8308C47.3078 50.8312 47.694 50.44 47.6857 49.9631L47.6527 47.9067C47.651 47.7565 47.7286 47.6163 47.8573 47.5387L47.9448 47.4859C49.0373 46.8257 49.6166 46.1904 49.577 45.6969C49.5358 45.1737 48.77 44.6357 48.029 44.3337L47.9316 44.2941C47.76 44.2248 47.6494 44.0581 47.6494 43.8733V43.591C47.6494 43.4161 47.7501 43.2577 47.9068 43.1818L47.996 43.1388C49.7932 42.2774 50.0028 41.6717 50.0094 41.4522C50.0276 40.8201 48.6974 40.0824 48.0587 39.7292L47.8887 39.6351C47.7418 39.5526 47.6494 39.3975 47.6494 39.2291V38.7307L47.7088 14.9606C47.7088 14.553 47.3804 14.2229 46.9727 14.2229H29.8734C29.5928 14.2229 29.3255 14.2691 29.0812 14.3582C21.4021 17.1985 16.2596 23.6267 14.601 32.461C14.3765 33.6559 14.1933 34.7748 14.2247 35.9631C14.2362 36.3922 14.5878 36.7355 15.0185 36.7355H27.6669C27.7114 36.7355 28.1537 36.7355 28.8419 36.7355H30.0318V50.0522C30.0318 50.4829 30.38 50.8312 30.8108 50.8312Z'],
+  [INK, 'M33.2317 38.1564C32.8967 38.1564 32.5683 38.1564 32.253 38.1564H29.6075C29.5877 38.1564 29.5663 38.1564 29.5465 38.1564L29.393 38.1531C29.1487 38.1383 28.9144 38.0739 28.751 37.7901L28.5381 37.4237L28.6586 37.2141V14.2642C28.6586 13.8599 28.9853 13.5298 29.3913 13.5298C29.7973 13.5298 30.1257 13.8582 30.1257 14.2642V36.6876C31.6292 36.6876 35.0785 36.6876 37.2008 36.6876C39.0063 36.686 39.2572 36.4302 39.2638 34.5818C39.2654 34.1263 39.2654 33.5272 39.2522 32.933C39.2423 32.5287 39.5641 32.192 39.9685 32.1821C40.3761 32.1722 40.7095 32.4941 40.7194 32.8984C40.7326 33.5107 40.7326 34.123 40.7309 34.5867C40.721 37.2504 39.8298 38.1498 37.2025 38.1531C36.0868 38.1531 34.6048 38.1548 33.2317 38.1548V38.1564Z'],
+  [INK, 'M16.7627 32.3886C18.6276 35.549 23.8328 35.9517 26.107 32.4397C24.2372 29.5384 19.4643 28.8832 16.7627 32.3886ZM20.3473 33.8772C19.1904 33.6412 18.5055 33.2171 17.9064 32.4447C18.5088 31.674 19.2283 31.2944 20.3671 31.0138C19.6046 32.014 19.5881 32.8754 20.3473 33.8772ZM21.5075 33.2814C21.0685 33.3095 20.6344 32.92 20.6179 32.481C20.6014 32.047 21.0157 31.6047 21.4497 31.6294C21.9118 31.6542 22.1973 31.9281 22.2782 32.3721C22.3558 32.7896 21.9432 33.2517 21.5075 33.2814ZM22.6198 33.8558C23.2337 32.8886 23.3443 32.0503 22.7386 31.1673C23.6595 31.3142 24.394 31.6789 24.9567 32.4249C24.4385 33.2204 23.7107 33.6165 22.6182 33.8558H22.6198Z'],
+  [INK, 'M34.6963 24.5659C36.8054 28.1405 42.6923 28.596 45.2635 24.6236C43.1494 21.3427 37.7511 20.6017 34.6963 24.5659ZM38.7496 26.2492C37.4408 25.9819 36.6668 25.5033 35.9885 24.6286C36.6668 23.7555 37.4837 23.3264 38.771 23.0112C37.9095 24.1417 37.8897 25.1171 38.7496 26.2492ZM40.0616 25.5759C39.5632 25.6089 39.0747 25.1666 39.0565 24.6715C39.0384 24.183 39.5071 23.6813 39.9972 23.7077C40.5188 23.7357 40.8406 24.0476 40.9346 24.5494C41.0221 25.0214 40.5551 25.5429 40.0616 25.5759ZM41.3192 26.2278C42.014 25.1336 42.1378 24.1846 41.4545 23.1845C42.4959 23.3512 43.326 23.7621 43.9631 24.6088C43.3755 25.5066 42.5536 25.9555 41.3192 26.2261V26.2278Z'],
+]
+const LOGO_EYES = [[21.5326, 32.5569, 4.04338, 1.73288], [40.017, 24.7177, 4.37345, 2.14547]]
+
+function drawLogo(ctx, size) {
+  ctx.save()
+  ctx.scale(size / LOGO_BOX.size, size / LOGO_BOX.size)
+  ctx.translate(-LOGO_BOX.x, -LOGO_BOX.y)
+  const [red, yellow, ...outlines] = LOGO_SHAPES
+  for (const [fill, path] of [red, yellow]) {
+    ctx.fillStyle = fill
+    ctx.fill(new Path2D(path))
+  }
+  ctx.fillStyle = '#ffffff'
+  for (const [x, y, rx, ry] of LOGO_EYES) {
+    ctx.beginPath()
+    ctx.ellipse(x, y, rx, ry, 0, 0, 2 * Math.PI)
+    ctx.fill()
+  }
+  for (const [fill, path] of outlines) {
+    ctx.fillStyle = fill
+    ctx.fill(new Path2D(path))
+  }
+  ctx.restore()
+}
+
+function drawCode(ctx, x, cell, pattern) {
+  ctx.fillStyle = CODE_BLUE
+  dataMatrixCells(pattern).forEach((row, j) => row.forEach((dark, i) => {
+    if (dark) ctx.fillRect(x + i * cell, j * cell, cell, cell)
+  }))
+}
+
+const CODE_BLUE = '#1b2c54'
+const PREMIUM_GREY = '#6f6f6f'
+const PREMIUM_STROKE = 4 // trait en équerre, à la suite du mot, en px de la planche
+const PREMIUM_PAD = 4 // marge de sa zone, pour ne pas couper le bord lissé des lettres
+const ATLAS = { width: 1024, logo: 256, codeCell: 11, textRow: 64, textPxPerCm: 160, margin: 16 }
+
+/* Planche des marques sur fond blanc : le shader la multiplie au tissu, comme une encre. Le
+   texte de chaque format y a sa ligne, pour que changer de taille ne redessine rien.
+   Renvoie les zones de la planche (x, y, largeur, hauteur, de 0 à 1) ; pour le format, sa
+   longueur en cm ; pour PREMIUM, sa boîte en hauteurs de lettre. sizes : les tailles du produit. */
+export function paintMarks(canvas, sizes) {
+  const { width: W, logo, codeCell, textRow, textPxPerCm, margin } = ATLAS
+  const H = Math.max(logo, sizes.length * textRow)
+  canvas.width = W
+  canvas.height = H
+  const ctx = canvas.getContext('2d')
+  ctx.fillStyle = '#ffffff'
+  ctx.fillRect(0, 0, W, H)
+  const area = (x, y, w, h) => [x / W, y / H, w / W, h / H]
+
+  drawLogo(ctx, logo)
+
+  const code = CODE_CELLS * codeCell
+  const cornerCodeX = logo + margin
+  const centerCodeX = cornerCodeX + code + margin
+  drawCode(ctx, cornerCodeX, codeCell, 0)
+  drawCode(ctx, centerCodeX, codeCell, 1)
+
+  const textX = centerCodeX + code + margin
+  const fontOf = (weight) => `${weight} ${textRow * 0.7}px system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif`
+  ctx.font = fontOf(600)
+  ctx.textBaseline = 'middle'
+  const format = {}
+  sizes.forEach((size, i) => {
+    const words = sizeText(size)
+    const length = Math.ceil(ctx.measureText(words).width)
+    ctx.fillText(words, textX, (i + 0.5) * textRow)
+    format[size] = { area: area(textX, i * textRow, length, textRow), length: length / textPxPerCm }
+  })
+
+  // PREMIUM, sous les codes, suivi de son petit trait en équerre, de la hauteur des lettres.
+  const premiumMiddle = code + margin + textRow / 2
+  ctx.font = fontOf(400)
+  ctx.fillStyle = PREMIUM_GREY
+  const word = ctx.measureText('PREMIUM')
+  const letter = Math.ceil(word.actualBoundingBoxAscent + word.actualBoundingBoxDescent)
+  const letterTop = Math.floor(premiumMiddle - word.actualBoundingBoxAscent)
+  ctx.fillText('PREMIUM', cornerCodeX, premiumMiddle)
+  const cornerX = cornerCodeX + Math.ceil(word.width) + margin
+  ctx.fillRect(cornerX, letterTop, PREMIUM_STROKE, letter)
+  ctx.fillRect(cornerX, letterTop + letter - PREMIUM_STROKE, letter, PREMIUM_STROKE)
+  const premiumWidth = cornerX + letter - cornerCodeX + 2 * PREMIUM_PAD
+  const premiumHeight = letter + 2 * PREMIUM_PAD
+
+  return {
+    logo: area(0, 0, logo, logo),
+    cornerCode: area(cornerCodeX, 0, code, code),
+    centerCode: area(centerCodeX, 0, code, code),
+    format,
+    premium: {
+      area: area(cornerCodeX - PREMIUM_PAD, letterTop - PREMIUM_PAD, premiumWidth, premiumHeight),
+      height: premiumHeight / letter,
+      length: premiumWidth / letter,
+    },
+  }
+}
+
+/* ==== SHADER DU DOS ==== */
+
+/* Dos de la toile, peint par le shader en cm, d'après les photos de Walid (une 75 × 100). Rien à
+   télécharger, et le même code sert tous les formats : largeurs et agrafes viennent de backLayout et
+   stapleRows. Du bord vers le centre : l'image (ou la couleur de tranche) qui revient de quelques
+   mm, un fin trait noir, la toile blanche repliée et ses agrafes, le pin pâle du châssis, et au
+   fond la toile brute, blanc cassé. Aux coins, la bande verticale passe sur la bande horizontale. */
+
+export const BACK_COLORS = { band: '#f1efe9', raw: '#e9e6df', pine: '#e6dccb' }
+
+export const BACK_VERTEX = /* glsl */ `
+  attribute float part;
+  varying vec3 vLocal;
+  varying vec3 vNormalW;
+  varying float vPart;
+  void main() {
+    vLocal = position;
+    vPart = part;
+    vNormalW = normalize(mat3(modelMatrix) * normal);
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`
+
+export const BACK_FRAGMENT = /* glsl */ `
+  uniform sampler2D uArt;
+  uniform sampler2D uWeave;
+  uniform sampler2D uMap;
+  uniform float uWeaveScale;
+  uniform vec2 uTile;
+  uniform float uPine;
+  uniform vec3 uBandColor;
+  uniform vec3 uRawColor;
+  uniform vec3 uPineColor;
+  uniform vec3 uBorder;
+  uniform float uSideArt;
+  uniform vec2 uHalf;
+  uniform float uBand;
+  uniform float uBar;
+  uniform vec3 uStaplesUpright; // rang d'agrafes des bords verticaux : premier, écart, nombre
+  uniform vec3 uStaplesFlat; // et des bords horizontaux
+  uniform vec3 uStaplesBelow; // sur la bande de droite, le rang sous PREMIUM
+  uniform vec3 uStaplesAbove; // et au-dessus de lui
+  uniform float uStapleHalf; // demi-longueur d'une agrafe
+  uniform float uCornerStapleInset; // distance au bord haut ou bas de l'agrafe de coin
+  uniform float uMarkedCornerInset; // de même dans le coin du code, plus haut pour lui laisser la place
+  uniform vec2 uRowClear; // au centre des bandes du haut et du bas, les marques écartent les agrafes
+  uniform sampler2D uMarks; // planche des marques
+  uniform vec4 uMarkBoxes[${MARK_COUNT}]; // boîtes vues de dos, en cm : x, y, largeur, hauteur
+  uniform vec4 uMarkAreas[${MARK_COUNT}]; // zones de la planche, de 0 à 1
+  uniform vec3 uLight;
+  uniform vec3 uLightLocal;
+  uniform float uAmbient;
+  uniform float uDiffuse;
+  uniform float uNorm;
+  varying vec3 vLocal;
+  varying vec3 vNormalW;
+  varying float vPart;
+
+  const float WIRE = 0.055; // demi-épaisseur du fil, en part de la demi-longueur de l'agrafe
+  const vec3 STEEL = vec3(0.13, 0.135, 0.15);
+  const vec3 STEEL_EDGE = vec3(0.04, 0.042, 0.05);
+  const int PREMIUM = ${MARK_COUNT - 1}; // la dernière marque, seule tournée d'un quart de tour
+  const float DRIFT = ${STAPLE_DRIFT.toFixed(2)}; // écart d'une agrafe posée à la main, de part et d'autre
+  const float SHOULDER = 0.325; // arrondi de la bande du dessus, près du coin, en part de la bande
+  const vec2 FOLD_TIP = vec2(0.25, 0.3625); // tout petit rabat replié de la pointe, de même
+  const float OAK_MEAN = 1.34; // somme moyenne des trois canaux de l'image de chêne
+
+  float pixel; // taille d'un pixel à l'écran, en cm
+
+  // 1 là où v > 0, 0 ailleurs, bord lissé sur un pixel.
+  float inside(float v) {
+    return clamp(v / pixel + 0.5, 0.0, 1.0);
+  }
+
+  float hash(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+  }
+
+  // Pin : sa propre teinte, avec le fil du chêne des cadres. q.y suit le fil.
+  vec3 pine(vec2 q) {
+    float fibre = dot(texture2D(uMap, q * uTile).rgb, vec3(1.0)) / OAK_MEAN;
+    return uPineColor * (1.0 + uPine * (fibre - 1.0));
+  }
+
+  // Planche lue en quatre points du pixel : ses mipmaps brouilleraient des lettres de 5 px.
+  vec3 fineMarks(vec2 uv) {
+    vec2 x = dFdx(uv), y = dFdy(uv);
+    vec3 sum = texture2D(uMarks, uv + 0.125 * x - 0.375 * y, -2.0).rgb;
+    sum += texture2D(uMarks, uv + 0.375 * x + 0.125 * y, -2.0).rgb;
+    sum += texture2D(uMarks, uv - 0.125 * x + 0.375 * y, -2.0).rgb;
+    sum += texture2D(uMarks, uv - 0.375 * x - 0.125 * y, -2.0).rgb;
+    return 0.25 * sum;
+  }
+
+  // Encre d'une marque, à multiplier au tissu : la planche a un fond blanc. at : point vu de dos.
+  vec3 ink(vec2 at, vec4 box, vec4 area, bool quarterTurn) {
+    vec2 q = (at - box.xy) / box.zw;
+    vec2 within = step(vec2(0.0), q) * step(q, vec2(1.0));
+    vec2 uv = quarterTurn ? q.yx : vec2(q.x, 1.0 - q.y);
+    vec2 onSheet = area.xy + uv * area.zw;
+    vec3 printed = quarterTurn ? fineMarks(onSheet) : texture2D(uMarks, onSheet).rgb;
+    return mix(vec3(1.0), printed, within.x * within.y);
+  }
+
+  // Bord à peine irrégulier : écart en cm le long d'un bord ; la phase distingue les bords.
+  float wavy(float along, float phase, float amount) {
+    return amount * (sin(along * 1.1 + phase) + 0.6 * sin(along * 2.9 + phase * 0.7));
+  }
+
+  // Point exprimé le long du fil (x) et en travers (y).
+  vec2 onWire(vec2 d, vec2 axis) {
+    return vec2(dot(d, axis), dot(d, vec2(-axis.y, axis.x)));
+  }
+
+  float wireDistance(vec2 q) {
+    return length(vec2(max(abs(q.x) - uStapleHalf, 0.0), q.y));
+  }
+
+  /* Agrafe : center, son milieu ; axis, la direction du fil. L'acier sombre et l'ombre de contact
+     la détachent du tissu clair. Le fil garde toujours plus d'un pixel de large, même vu de biais
+     pendant le tour ; son bord se lisse sur un pixel mesuré en travers, pour rester net. Assez
+     large, il montre un reflet fin sur sa longueur ; trop fin pour cela, un éclat plus clair
+     glisse le long du trait quand le tableau tourne, et son ombre s'allège. */
+  vec3 staple(vec3 color, vec2 p, vec2 center, vec2 axis, float present) {
+    vec2 d = p - center;
+    vec2 q = onWire(d, axis);
+    // Taille d'un pixel en travers du fil. Mesurée sur p, continu : d et q sautent là où le
+    // milieu de l'agrafe la plus proche change, au centre des bandes.
+    vec2 crossing = vec2(-axis.y, axis.x);
+    float across = max(abs(dot(dFdx(p), crossing)) + abs(dot(dFdy(p), crossing)), 1e-4);
+    float wire = max(WIRE * uStapleHalf, 0.75 * across);
+    float roomy = smoothstep(2.5, 4.0, 2.0 * wire / across); // le fil est assez large pour ses détails
+
+    vec2 spread = q / (uStapleHalf * vec2(1.8, 0.65));
+    vec3 cloth = color * (1.0 - 0.09 * exp(-dot(spread, spread))); // le tissu se creuse un peu autour
+
+    vec2 light = normalize(uLightLocal.xy);
+    vec2 towardsLight = light * max(1.2 * wire, across);
+    float contact = wireDistance(onWire(d + towardsLight, axis));
+    float shadow = clamp((1.25 * wire - contact) / max(across, 0.7 * wire) + 0.5, 0.0, 1.0);
+    cloth *= 1.0 - mix(0.25, 0.5, roomy) * shadow;
+
+    float rise = q.y / wire; // de -1 à 1 en travers du fil
+    vec3 steel = mix(STEEL, STEEL_EDGE, rise * rise);
+    float glint = 1.0 - smoothstep(0.12, 0.3, abs(rise - 0.25));
+    steel = mix(steel, vec3(0.92), glint * roomy);
+    float sheen = (q.x / uStapleHalf - 0.6 * dot(axis, light)) / 0.2;
+    steel = mix(steel, vec3(0.5, 0.51, 0.54), 0.85 * exp(-sheen * sheen) * (1.0 - roomy));
+
+    float cover = clamp((wire - wireDistance(q)) / across + 0.5, 0.0, 1.0);
+    return mix(color, mix(cloth, steel, cover), present);
+  }
+
+  vec3 ringColor(vec2 p, vec2 c) {
+    bool upright = c.x < c.y; // bande le long d'un bord vertical
+    float e = min(c.x, c.y);
+    float along = upright ? p.y : p.x;
+    float side = upright ? (p.x > 0.0 ? 0.0 : 1.0) : (p.y > 0.0 ? 2.0 : 3.0);
+
+    // Pin, avec son onglet à 45° au coin de l'ouverture.
+    vec3 color = pine(upright ? p : p.yx);
+    color *= 1.0 - 0.5 * inside(0.03 - abs(c.x - c.y));
+
+    // Coin : la bande verticale passe par-dessus et court tout droit jusqu'au bord haut ou bas,
+    // son bord s'arrondit à l'approche du coin. La bande horizontale s'arrête contre elle.
+    float cutUpright = uBand + wavy(p.y, sign(p.x) * 2.3, 0.03);
+    float cutFlat = uBand + wavy(p.x, sign(p.y) * 1.2, 0.03);
+    float shoulder = SHOULDER * uBand;
+    vec2 rounded = max(vec2(shoulder - (cutUpright - c.x), shoulder - c.y), 0.0);
+    float over = shoulder - length(rounded); // > 0 dans la bande du dessus
+    float band = max(inside(over), inside(cutFlat - c.y));
+
+    // Les bandes posent une ombre étroite sur le pin.
+    color *= 1.0 - 0.22 * exp(-max(min(c.x - cutUpright, c.y - cutFlat), 0.0) / 0.25);
+
+    // Toile repliée : blanc mat, trame fine, ondulations à peine marquées.
+    float ripple = 0.6 * sin(p.y * 0.55 + p.x * 0.4) + 0.4 * sin(p.x * 1.35 - p.y * 0.9);
+    float grain = texture2D(uWeave, p * uWeaveScale).r;
+    vec3 cloth = uBandColor * (1.0 + 0.007 * ripple) * (0.96 + 0.06 * grain);
+
+    // La bande du dessus fait une légère ombre sur l'autre, et son bord attrape la lumière.
+    float onTop = inside(over);
+    cloth *= 1.0 - 0.16 * exp(-max(-over, 0.0) / 0.4) * (1.0 - onTop);
+    cloth *= 1.0 + 0.03 * exp(-max(over, 0.0) / 0.1) * onTop;
+
+    // Ombre discrète du petit rabat de la pointe, peint plus bas.
+    vec2 tip = FOLD_TIP * uBand;
+    float fold = (1.0 - dot(c, 1.0 / tip)) / length(1.0 / tip); // > 0 dans le rabat
+    float onFold = inside(fold);
+    cloth *= 1.0 - 0.14 * exp(-max(-fold, 0.0) / 0.22) * (1.0 - onFold);
+
+    // Agrafes le long de la bande, posées à la main. Vue de dos, la bande de droite est à x < 0 :
+    // PREMIUM y occupe une case du rang.
+    vec4 word = uMarkBoxes[PREMIUM];
+    vec3 besideWord = along < word.y + 0.5 * word.w ? uStaplesBelow : uStaplesAbove;
+    vec3 row = upright ? (p.x < 0.0 ? besideWord : uStaplesUpright) : uStaplesFlat;
+    float k = clamp(floor((along - row.x) / row.y + 0.5), 0.0, row.z - 1.0);
+    float jitter = hash(vec2(k, side));
+    float at = row.x + k * row.y + (jitter - 0.5) * 2.0 * DRIFT;
+    float fromEdge = uBand * (0.52 + 0.1 * (hash(vec2(side, k)) - 0.5));
+    float tilt = (jitter - 0.5) * 0.1;
+    vec2 center = upright ? vec2(sign(p.x) * (uHalf.x - fromEdge), at) : vec2(at, sign(p.y) * (uHalf.y - fromEdge));
+    vec2 axis = upright ? vec2(sin(tilt), cos(tilt)) : vec2(cos(tilt), sin(tilt));
+    // Au centre des bandes du haut et du bas, les marques prennent la place de l'agrafe.
+    float clear = p.y > 0.0 ? uRowClear.x : uRowClear.y;
+    cloth = staple(cloth, p, center, axis, upright || abs(at) >= clear ? 1.0 : 0.0);
+
+    // Une seule agrafe par coin, parallèle au bord vertical, dans la bande qui passe dessus.
+    // Vu de dos, le coin bas droit est à x < 0 : c'est celui du code.
+    float inset = p.x < 0.0 && p.y < 0.0 ? uMarkedCornerInset : uCornerStapleInset;
+    float sway = (hash(sign(p) + 3.0) - 0.5) * 0.08;
+    vec2 corner = sign(p) * (uHalf - vec2(uBand * 0.5, inset));
+    cloth = staple(cloth, p, corner, vec2(sin(sway), cos(sway)), 1.0);
+
+    // Marques imprimées sur la toile.
+    vec2 seen = vec2(-p.x, p.y);
+    for (int i = 0; i < ${MARK_COUNT}; i++) cloth *= ink(seen, uMarkBoxes[i], uMarkAreas[i], i == PREMIUM);
+
+    color = mix(color, cloth, band);
+
+    // Au bord, l'image revient sur le dos, sur quelques mm irréguliers, soulignée d'un trait.
+    float reach = 0.36 + wavy(along * 0.75, side * 1.9, 0.04);
+    color = mix(color, vec3(0.02), 0.8 * inside(0.024 - abs(e - reach - 0.024)));
+    vec2 uv = vec2(p.x / (2.0 * uHalf.x) + 0.5, 0.5 - p.y / (2.0 * uHalf.y));
+    vec3 returned = mix(uBorder, textureLod(uArt, uv, 1.5).rgb, uSideArt);
+    color = mix(color, returned, inside(reach - e));
+
+    // Le rabat se replie par-dessus tout, jusqu'à la pointe du coin.
+    return mix(color, uBandColor * 1.02, onFold);
+  }
+
+  // Toile brute : blanc cassé, à peine plus grise que la bande, trame très fine, dégradé doux.
+  vec3 rawColor(vec2 p) {
+    float grain = texture2D(uWeave, p * uWeaveScale).r;
+    float slope = 0.035 * p.y / uHalf.y - 0.025 * p.x / uHalf.x;
+    return uRawColor * (0.96 + 0.07 * grain) * (1.0 + slope);
+  }
+
+  void main() {
+    vec2 p = vLocal.xy;
+    pixel = max(max(fwidth(p.x), fwidth(p.y)), 1e-4);
+    vec2 c = uHalf - abs(p);
+    float depth = vLocal.z;
+
+    vec3 albedo;
+    float shelter = 1.0; // part de lumière ambiante qui arrive au fond
+    if (vPart < 0.5) {
+      albedo = ringColor(p, c);
+    } else if (vPart < 1.5) {
+      bool upright = abs(c.x - uBar) < abs(c.y - uBar);
+      albedo = pine(vec2(depth, upright ? p.y : p.x));
+      shelter = 0.72;
+    } else {
+      albedo = rawColor(p);
+      shelter = 1.0 - 0.1 * exp(-(min(c.x, c.y) - uBar) / 2.0);
+    }
+
+    // Le creux ne reçoit la lumière que par l'ouverture du châssis : un point y voit-il la
+    // lumière ? Quand elle vient du côté de la façade, la toile la coupe tout entière.
+    float direct = max(dot(normalize(vNormalW), uLight), 0.0);
+    if (vPart > 0.5) {
+      float toOpening = max(-uLightLocal.z, 0.001);
+      vec2 exit = p + uLightLocal.xy * (depth / toOpening);
+      vec2 open = uHalf - uBar - abs(exit);
+      float lit = smoothstep(-0.5, 0.5, min(open.x, open.y)) * step(uLightLocal.z, 0.0);
+      direct *= vPart > 1.5 ? mix(0.72, 1.0, lit) : lit; // la toile claire adoucit son ombre
+    }
+    float k = (uAmbient * shelter + uDiffuse * direct) * uNorm;
+    gl_FragColor = vec4(albedo * min(k, 1.0), 1.0);
+    #include <colorspace_fragment>
+  }
+`
+
+/* ==== MISE EN SCÈNE ==== */
+
+/* Le « directeur » reçoit les choix d'option et rend, pour un instant et une forme d'écran donnés,
+   tout ce que le moteur doit afficher : la caméra, la pose du tableau, l'opacité de la pièce et les
+   cotes en cm. Unités : cm, radians, millisecondes. Repère : le mur est le plan z = 0, y monte, x va
+   vers la droite, la caméra regarde vers -z.
+
+   Pose du tableau : un objet (l'œuvre et son éventuel cadre) dont le milieu de la face arrière est
+   en (x, y, z). Il tourne autour de ce point : d'abord `pitch` autour de l'axe x, puis `yaw` autour
+   de l'axe y (ordre 'YXZ' de three.js). `outer` est la boîte extérieure (cadre compris) ; l'œuvre y
+   occupe width × height × depth, à partir de `artZ`. `frame` est le profil du cadre, `framed` sa
+   présence (0 à 1, pour le fondu), `paper` passe de 0 (toile) à 1 (poster) et `curl` de 0 (à plat) à
+   1 (coin enroulé) : tous s'interpolent pendant la transition. La vue porte aussi `product`, les
+   choix en cours, pour que le moteur rende tout à partir de la seule vue.
+
+   Passer entre toile et poster est un « acte » : une petite scène qui part de la vue en cours,
+   déroule son propre mouvement (tour de la toile, coin soulevé du poster) et revient de face. Un
+   autre choix ne le coupe pas en plein vol : l'acte se finit vite, sur son propre chemin, puis la
+   suite s'enchaîne. Le prix et le bouton, eux, n'attendent jamais. */
+
+const DEG = Math.PI / 180
+const FOV_Y = 30 * DEG
+const FRONT_FILL = 0.72 // part de l'écran occupée par le tableau vu de face
+const WALL_GAP = 1 // cm laissés entre le tableau qui pivote et le mur
+
+/* Les plans de tranche, de coin et de profil montrent le côté que la lumière de la pièce
+   éclaire (room.light, vecteur vers la lumière) : -1 si elle vient de la gauche. */
+const litSide = (room) => (room.light && room.light[0] < 0 ? -1 : 1)
+
+/* Bordure : le tableau pivote, la caméra regarde entre la tranche et la façade (side et front,
+   cosinus des deux angles). Le plan se tient à mi-chemin, en zoom, du tableau entier (fill : part
+   de l'écran qu'il remplit) et du gros plan où la tranche prend la part `share` de la largeur
+   (field : plus petite hauteur visible, en cm). Assez près pour juger la tranche, assez loin pour
+   reconnaître l'œuvre. at : l'arête de la façade se pose à cette part de la demi-largeur, côté
+   tranche, pour laisser la place à l'image. Sous un cadre, la tranche ne se voit pas : le plan
+   montre le tableau entier. */
+const EDGE = { yaw: 38 * DEG, pitch: -6 * DEG, fill: 0.74, side: 0.8, front: 0.6, share: 0.4, field: 3.2, at: 0.45 }
+/* Coin du cadre : caméra au-dessus du coin bas, côté lumière. field : petit côté du plan pour un
+   30 × 40, en cm ; il s'élargit un peu avec le tableau, pour garder de l'œuvre. spot : place du
+   coin sur l'écran, en part de la demi-largeur et de la demi-hauteur depuis le milieu. L'œuvre et
+   le cadre remplissent le reste, quel que soit le format de la vue. */
+const CORNER = { yaw: 32 * DEG, pitch: 18 * DEG, field: 16, spot: 0.6 }
+/* Toile sans cadre : plus de biais et un peu moins de hauteur que le coin d'un cadre, pour lire la
+   tranche. Le plan se tient à mi-chemin, en zoom, du tableau de face et du coin du cadre, et garde
+   la même surface sur tous les écrans : un écran large montre moins de haut, mais pas de vide. */
+const BARE = { yaw: 44 * DEG, pitch: 10 * DEG, spot: 0.62 }
+// Contour blanc : de face, sur le coin bas gauche, 36 % de la hauteur du tirage à l'écran.
+const MARGIN = { inX: 0.13, inY: 0.11, field: 0.36 }
+// Poster sous verre, ou animations réduites : la caméra tourne autour du tableau resté au mur.
+const MATERIAL = { yaw: 40 * DEG, pitch: 8 * DEG, fill: 0.62 }
+
+/* Tour de la toile. keys : avancement (0 à 1) et angle du tableau en degrés ; il démarre,
+   ralentit de dos, repart, s'arrête. leave : part du temps pour quitter le mur, et y revenir. */
+const TURN = {
+  ms: 3600,
+  keys: [[0.1, 0], [0.36, 155], [0.64, 205], [0.9, 360]],
+  leave: 0.16,
+  yaw: 14 * DEG,
+  pitch: 5 * DEG,
+  fill: 0.6,
+}
+/* Coin soulevé du poster. field : hauteur visible, en part de la hauteur de la feuille.
+   inset : visée rentrée depuis le coin, en part du petit côté. near : part du temps pour
+   s'approcher du coin, et s'en éloigner. start, rise, fall, land, end : avancement où le
+   papier se lève, finit de monter, commence à retomber, touche le mur, et se pose après un
+   petit rebond (bounce). */
+const CURL_ACT = {
+  ms: 3000,
+  field: 0.66,
+  inset: 0.2,
+  yaw: 20 * DEG,
+  pitch: 12 * DEG,
+  near: 0.26,
+  start: 0.17,
+  rise: 0.44,
+  fall: 0.56,
+  land: 0.76,
+  end: 0.84,
+  bounce: 0.05,
+}
+const JOIN_MS = 500 // un acte rejoint son mouvement depuis la vue en cours
+const HURRY = 1.2 // un acte interrompu se finit un peu plus vite que prévu
+
+const RETURN_MS = 450 // retour de face
+const GO_MS = 900 // vers le plan de l'option
+
+/* Inclinaison au doigt : la caméra tourne autour du point visé (le tableau reste au mur,
+   on voit son épaisseur et son ombre bouger). Glisser vers la droite fait tourner le
+   tableau vers la droite, comme si on le poussait. Déplacements en fraction de la scène. */
+const TILT = { gainYaw: 24 * DEG, gainPitch: 16 * DEG, maxYaw: 12 * DEG, maxPitch: 8 * DEG }
+// Ressort du retour : amortissement 0,6 et 1,6 Hz -> rebond d'environ 10 %, posé en 0,8 s.
+const SPRING = { damping: 0.6, omega: 2 * Math.PI * 1.6 }
+const SPRING_SETTLED_MS = 1100 // au-delà, l'écart restant est sous le centième de degré
+
+function springFactor(ms) {
+  const t = ms / 1000
+  const { damping: z, omega: w } = SPRING
+  const wd = w * Math.sqrt(1 - z * z)
+  return Math.exp(-z * w * t) * (Math.cos(wd * t) + ((z * w) / wd) * Math.sin(wd * t))
+}
+
+const clamp = (v, max) => Math.max(-max, Math.min(max, v))
+
+function hangingCenter(room, h) {
+  const bottom = Math.max(room.hang.minBottom, room.hang.center - h / 2)
+  return { x: room.hang.x, y: bottom + h / 2 }
+}
+
+// Distance à laquelle une hauteur `field` remplit tout l'écran.
+const distanceFor = (field) => field / (2 * Math.tan(FOV_Y / 2))
+
+function fitDistance(w, h, aspect, fill) {
+  return Math.max(distanceFor(h / fill), distanceFor(w / (aspect * fill)))
+}
+
+const add = (a, b) => a.map((v, i) => v + b[i])
+const scale = (a, s) => a.map((v) => v * s)
+const unit = (a) => scale(a, 1 / Math.hypot(...a))
+const dot = (a, b) => a.reduce((s, v, i) => s + v * b[i], 0)
+const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]
+const lerp = (a, b, t) => a + (b - a) * t
+
+function rotate([x, y, z], pitch, yaw) {
+  const cp = Math.cos(pitch), sp = Math.sin(pitch)
+  const y1 = y * cp - z * sp
+  const z1 = y * sp + z * cp
+  const cy = Math.cos(yaw), sy = Math.sin(yaw)
+  return [x * cy + z1 * sy, y1, -x * sy + z1 * cy]
+}
+
+/* Les 8 coins de l'œuvre (ou, avec 'outer', de la boîte cadre compris) dans le repère du
+   mur. `side` dit de quel côté est le coin (x et y : -1 ou 1 ; z : 0 derrière, 1 devant). */
+export function paintingCorners(p, which = 'art') {
+  const box =
+    which === 'outer'
+      ? { w: p.outer.width, h: p.outer.height, z0: 0, z1: p.outer.depth }
+      : { w: p.width, h: p.height, z0: p.artZ, z1: p.artZ + p.depth }
+  const corners = []
+  for (const sz of [0, 1]) {
+    for (const sy of [-1, 1]) {
+      for (const sx of [-1, 1]) {
+        const local = [(sx * box.w) / 2, (sy * box.h) / 2, sz ? box.z1 : box.z0]
+        const c = add(rotate(local, p.pitch, p.yaw), [p.x, p.y, p.z])
+        c.side = { x: sx, y: sy, z: sz }
+        corners.push(c)
+      }
+    }
+  }
+  return corners
+}
+
+// Coin le plus enfoncé dans le mur d'un tableau tourné de (pitch, yaw), posé à z = 0.
+const lowestCorner = (painting) => Math.min(...paintingCorners({ ...painting, z: 0 }, 'outer').map((c) => c[2]))
+
+// Recul nécessaire pour qu'un tableau tourné de (pitch, yaw) ne touche pas le mur.
+const clearance = (painting) => Math.max(0, WALL_GAP - lowestCorner(painting))
+
+function hungPainting(room, product) {
+  const { width: w, height: h } = dimensionsOf(product.size)
+  const depth = product.material === 'poster' ? PAPER_DEPTH : CANVAS_DEPTH
+  const frame = { ...FRAME_PROFILE[product.material] }
+  let outer = { width: w, height: h, depth }
+  let artZ = 0
+  if (hasFrame(product)) {
+    const band = 2 * (frame.gap + frame.face)
+    outer = { width: w + band, height: h + band, depth: Math.max(frame.depth, frame.floor + depth) }
+    artZ = frame.floor
+  }
+  const c = hangingCenter(room, outer.height)
+  const paper = product.material === 'poster' ? 1 : 0
+  const passe = paper && product.passe ? 1 : 0 // contour blanc, en fondu pendant la transition
+  const framed = hasFrame(product) ? 1 : 0 // le cadre aussi : il n'apparaît jamais d'un coup
+  return { x: c.x, y: c.y, z: 0, yaw: 0, pitch: 0, width: w, height: h, depth, artZ, outer, frame, framed, paper, passe, curl: 0 }
+}
+
+const artFront = (p) => [p.x, p.y, p.z + p.artZ + p.depth]
+
+/* Cotes : une ligne au-dessus du tableau pour la largeur, une à sa droite pour la hauteur,
+   posées en façade de l'œuvre. Toujours calculées pour que les fondus restent continus ;
+   seule leur opacité dit si on les montre. */
+const DIMS_OFFSET = 6
+const DIMS_LABEL = 14 // hauteur à laisser au-dessus de la ligne pour son étiquette, dans la pièce
+const ROOM_HEADROOM = 7 // cm gardés au-dessus du tableau dans le cadrage de la pièce
+const ROOM_SHARE = 0.25 // part de la hauteur de la vue que le tableau prend au moins, dans la pièce
+const WALL_FILL = 0.6 // sur le mur neutre, part de l'écran du plus grand format, cotes comprises à côté
+const DIMS_UNDER = 8 // sous le tableau, la ligne descend d'autant pour laisser la place à l'étiquette
+
+function dimsOf(p, opacity, under = false) {
+  const z = p.z + p.artZ + p.depth
+  const left = p.x - p.width / 2, right = p.x + p.width / 2
+  const bottom = p.y - p.height / 2, top = p.y + p.height / 2
+  const ox = (p.outer.width - p.width) / 2 + DIMS_OFFSET
+  const oy = (p.outer.height - p.height) / 2 + DIMS_OFFSET
+  const y = under ? bottom - oy - DIMS_UNDER : top + oy
+  return {
+    opacity,
+    under,
+    width: { a: [left, y, z], b: [right, y, z], text: `${p.width} cm` },
+    height: { a: [right + ox, bottom, z], b: [right + ox, top, z], text: `${p.height} cm` },
+  }
+}
+
+function shotOf(shot, camera, painting, { room = 0, dims = room, dimsUnder = false } = {}) {
+  return { shot, camera, painting, room, dims: dimsOf(painting, dims, dimsUnder) }
+}
+
+function frontShot(room, product, aspect) {
+  const painting = hungPainting(room, product)
+  const d = fitDistance(painting.outer.width, painting.outer.height, aspect, FRONT_FILL)
+  const target = artFront(painting)
+  return shotOf('front', { position: add(target, [0, 0, d]), target, fovY: FOV_Y }, painting)
+}
+
+/* Recul dans la pièce : cadrage fixe (du sol jusqu'au-dessus du tableau), réduit si
+   l'écran est plus large que la photo, et décalé pour ne jamais sortir de la photo. Un petit
+   tableau resserre le cadrage sur le milieu de la pièce : il garde sa vraie échelle, mais on
+   ne voit plus qu'une partie du canapé. */
+function roomShot(room, product, aspect) {
+  const painting = hungPainting(room, product)
+  const { photo, view } = room
+  const whole = Math.min(view.height, (photo.right - photo.left) / aspect)
+  const height = Math.min(whole, painting.outer.height / ROOM_SHARE)
+  const halfWidth = (height * aspect) / 2
+  const x = Math.min(Math.max(painting.x, photo.left + halfWidth), photo.right - halfWidth)
+  // Sur un écran large, le cadrage rétrécit : il monte juste assez pour garder le tableau entier.
+  const paintingTop = painting.y + painting.outer.height / 2
+  const bottom = Math.max(view.bottom + (whole - height) / 2, paintingTop + ROOM_HEADROOM - height)
+  const target = [x, bottom + height / 2, 0]
+  const d = distanceFor(height)
+  // Un grand tableau monte près du haut du cadrage : sa cote de largeur passe dessous.
+  const dimsUnder = paintingTop + DIMS_OFFSET + DIMS_LABEL > bottom + height
+  return shotOf('room', { position: add(target, [0, 0, d]), target, fovY: FOV_Y }, painting, { room: 1, dimsUnder })
+}
+
+/* Mur neutre, sans pièce : aucun meuble pour juger de l'échelle. Le cadrage reste celui du plus grand
+   format du produit (fill : la part de l'écran qu'il remplit), et la taille se lit contre lui, avec
+   la cote en cm. Comme dans la pièce, un petit tableau resserre le cadrage. */
+function wallShot(room, product, aspect) {
+  const painting = hungPainting(room, product)
+  const { width, height } = room.largest
+  const d = Math.min(fitDistance(width, height, aspect, WALL_FILL), distanceFor(painting.outer.height / ROOM_SHARE))
+  const target = artFront(painting)
+  return shotOf('wall', { position: add(target, [0, 0, d]), target, fovY: FOV_Y }, painting, { dims: 1 })
+}
+
+/* Caméra posée de biais sur le coin bas du tableau, côté lumière : le coin tombe à la place `spot`
+   de l'écran, quel que soit son format. height : hauteur du plan, en cm. */
+function cameraOnCorner(room, painting, aspect, { yaw, pitch, spot }, height) {
+  const side = litSide(room)
+  const direction = orbitDirection(side * yaw, pitch)
+  const right = unit(cross([0, 1, 0], direction))
+  const up = cross(direction, right)
+  const edge = paintingCorners(painting, 'outer').filter((c) => c.side.x === side && c.side.y < 0)
+  const across = edge.map((c) => dot(c, right))
+  const outermost = side < 0 ? Math.min(...across) : Math.max(...across)
+  const lowest = Math.min(...edge.map((c) => dot(c, up)))
+  const front = edge.find((c) => c.side.z === 1) // plus près de la caméra, c'est lui qui se voit
+  const towards = outermost - (side * spot * height * aspect) / 2 - dot(front, right)
+  const above = lowest + (spot * height) / 2 - dot(front, up)
+  const target = add(front, add(scale(right, towards), scale(up, above)))
+  return { position: add(target, scale(direction, distanceFor(height))), target, fovY: FOV_Y }
+}
+
+function cornerShot(room, product, aspect) {
+  const painting = hungPainting(room, product)
+  const field = CORNER.field * (painting.height / 40) ** 0.25
+  return shotOf('corner', cameraOnCorner(room, painting, aspect, CORNER, field / Math.min(1, aspect)), painting)
+}
+
+// Toile nue : son coin et sa tranche, avec une bonne part de l'œuvre.
+function bareShot(room, product, aspect) {
+  const painting = hungPainting(room, product)
+  const span = Math.sqrt((painting.height / FRONT_FILL) * CORNER.field)
+  return shotOf('bare', cameraOnCorner(room, painting, aspect, BARE, span / Math.sqrt(aspect)), painting)
+}
+
+function marginShot(room, product) {
+  const painting = hungPainting(room, product)
+  const front = artFront(painting)
+  const target = [
+    front[0] - painting.width * (0.5 - MARGIN.inX),
+    front[1] - painting.height * (0.5 - MARGIN.inY),
+    front[2],
+  ]
+  const d = distanceFor(MARGIN.field * painting.height)
+  return shotOf('margin', { position: add(target, [0, 0, d]), target, fovY: FOV_Y }, painting)
+}
+
+const orbitDirection = (yaw, pitch) => [Math.sin(yaw) * Math.cos(pitch), Math.sin(pitch), Math.cos(yaw) * Math.cos(pitch)]
+
+// Caméra placée en orbite autour d'un point : yaw vers la droite, pitch vers le haut.
+function orbit(target, yaw, pitch, distance) {
+  return add(target, scale(orbitDirection(yaw, pitch), distance))
+}
+
+function materialShot(room, product, aspect) {
+  const painting = hungPainting(room, product)
+  const target = artFront(painting)
+  const d = fitDistance(painting.outer.width, painting.outer.height, aspect, MATERIAL.fill)
+  const position = orbit(target, litSide(room) * MATERIAL.yaw, MATERIAL.pitch, d)
+  return shotOf('material', { position, target, fovY: FOV_Y }, painting)
+}
+
+function edgeShot(room, product, aspect) {
+  const side = litSide(room)
+  // Le tableau tourne pour avancer sa tranche éclairée vers nous, et s'écarte du mur.
+  const base = { ...hungPainting(room, product), yaw: -side * EDGE.yaw, pitch: EDGE.pitch }
+  const painting = { ...base, z: clearance(base) }
+  const corners = paintingCorners(painting)
+  // Visée : milieu de l'arête avant de l'œuvre, côté tranche. Regard entre la normale de
+  // la tranche et celle de la façade, pour lire la tranche sans perdre l'image.
+  const frontEdge = corners.filter((c) => c.side.x === side && c.side.z === 1)
+  const middle = scale(add(frontEdge[0], frontEdge[1]), 0.5)
+  const sideNormal = rotate([side, 0, 0], painting.pitch, painting.yaw)
+  const frontNormal = rotate([0, 0, 1], painting.pitch, painting.yaw)
+  const dir = unit(add(scale(sideNormal, EDGE.side), scale(frontNormal, EDGE.front)))
+  const whole = fitDistance(painting.outer.width, painting.outer.height, aspect, EDGE.fill)
+  if (hasFrame(product)) return shotOf('edge', { position: add(middle, scale(dir, whole)), target: middle, fovY: FOV_Y }, painting)
+  const close = distanceFor(Math.max(EDGE.field, (painting.depth * EDGE.side) / (EDGE.share * aspect)))
+  const d = Math.sqrt(whole * close)
+  const right = unit(cross([0, 1, 0], dir))
+  const target = add(middle, scale(right, -side * EDGE.at * d * Math.tan(FOV_Y / 2) * aspect))
+  return shotOf('edge', { position: add(target, scale(dir, d)), target, fovY: FOV_Y }, painting)
+}
+
+const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
+const smooth = (t) => {
+  const c = Math.min(1, Math.max(0, t))
+  return c * c * (3 - 2 * c)
+}
+
+// Interpole deux valeurs de même forme (nombres, tableaux, objets imbriqués).
+function blend(a, b, t) {
+  if (typeof b === 'number') return lerp(a, b, t)
+  if (Array.isArray(b)) return b.map((v, i) => blend(a[i], v, t))
+  if (b && typeof b === 'object') {
+    return Object.fromEntries(Object.keys(b).map((k) => [k, blend(a[k], b[k], t)]))
+  }
+  return t < 1 ? a : b
+}
+
+// Monte sur la part `edge` du début, redescend sur la même part à la fin.
+const away = (u, edge) => smooth(u / edge) * (1 - smooth((u - 1 + edge) / edge))
+
+// Courbe de Hermite : de p0 à p1, pentes m0 et m1 (rapportées à l'intervalle), s de 0 à 1.
+function hermite(p0, p1, m0, m1, s) {
+  const s2 = s * s, s3 = s2 * s
+  return (2 * s3 - 3 * s2 + 1) * p0 + (s3 - 2 * s2 + s) * m0 + (-2 * s3 + 3 * s2) * p1 + (s3 - s2) * m1
+}
+
+// Angle du tableau (degrés) selon l'avancement : vitesse constante et lente de dos.
+function turnAngle(u) {
+  const [[t0, a0], [t1, a1], [t2, a2], [t3, a3]] = TURN.keys
+  const slow = (a2 - a1) / (t2 - t1)
+  if (u <= t0) return a0
+  if (u >= t3) return a3
+  if (u < t1) return hermite(a0, a1, 0, slow * (t1 - t0), (u - t0) / (t1 - t0))
+  if (u <= t2) return lerp(a1, a2, (u - t1) / (t2 - t1))
+  return hermite(a2, a3, slow * (t3 - t2), 0, (u - t2) / (t3 - t2))
+}
+
+/* Acte de la toile : elle quitte le mur juste assez pour tourner autour de son axe vertical,
+   la caméra recule un peu et se décale pour lire la profondeur du châssis. La tranche
+   éclairée passe la première. */
+function turnShot(room, product, aspect, u) {
+  const rest = frontShot(room, product, aspect)
+  const p = rest.painting
+  const side = litSide(room)
+  const out = away(u, TURN.leave)
+  const z = out * (Math.hypot(p.outer.width / 2, p.outer.depth) + WALL_GAP)
+  const axis = [p.x, p.y, z + p.outer.depth / 2]
+  const d = fitDistance(p.outer.width, p.outer.height, aspect, TURN.fill)
+  const orbiting = { position: orbit(axis, side * TURN.yaw, TURN.pitch, d), target: axis, fovY: FOV_Y }
+  return shotOf('turn', blend(rest.camera, orbiting, out), { ...p, z, yaw: -side * turnAngle(u) * DEG })
+}
+
+// Coin soulevé : en bas, à l'opposé de la lumière, pour que le dos du papier la reçoive.
+export const curlCorner = (room) => ({ x: -litSide(room), y: -1 })
+
+// Le papier monte vite puis ralentit, retombe en accélérant et rebondit à peine.
+function curlAmount(u) {
+  const { start, rise, fall, land, end, bounce } = CURL_ACT
+  if (u <= start || u >= end) return 0
+  if (u < rise) return 1 - Math.pow(1 - (u - start) / (rise - start), 3)
+  if (u <= fall) return 1
+  if (u < land) return 1 - Math.pow((u - fall) / (land - fall), 2)
+  return bounce * Math.sin((Math.PI * (u - land)) / (end - land))
+}
+
+/* Acte du poster : la caméra s'approche du coin, de trois-quarts et du côté du coin pour voir
+   le papier se détacher du mur, et revient de face quand il est retombé. */
+function curlShot(room, product, aspect, u) {
+  const rest = frontShot(room, product, aspect)
+  const p = rest.painting
+  const { x, y } = curlCorner(room)
+  const corner = paintingCorners(p).find((c) => c.side.x === x && c.side.y === y && c.side.z === 1)
+  const inset = CURL_ACT.inset * Math.min(p.width, p.height)
+  const target = add(corner, [-x * inset, -y * inset, 0])
+  const d = distanceFor(CURL_ACT.field * p.height)
+  const close = { position: orbit(target, x * CURL_ACT.yaw, CURL_ACT.pitch, d), target, fovY: FOV_Y }
+  const camera = blend(rest.camera, close, away(u, CURL_ACT.near))
+  return shotOf('curl', camera, { ...p, curl: curlAmount(u) })
+}
+
+const SHOTS = {
+  front: frontShot,
+  edge: edgeShot,
+  corner: cornerShot,
+  bare: bareShot,
+  room: roomShot,
+  wall: wallShot,
+  margin: marginShot,
+  material: materialShot,
+  turn: turnShot,
+  curl: curlShot,
+}
+const SHOT_OF_GROUP = { border: 'edge', frame: 'corner', size: 'room', passe: 'margin', material: 'material' }
+
+// Le plan d'une option. Une toile sans cadre a le sien : il n'y a pas de coin de cadre à montrer.
+// Sans photo de pièce, la taille se montre sur le mur.
+function planOf(group, product, room) {
+  if (group === 'frame' && !hasFrame(product)) return 'bare'
+  if (group === 'size' && !room.photo) return 'wall'
+  return SHOT_OF_GROUP[group] || 'front'
+}
+
+const sameProduct = (a, b) => Object.keys(b).every((key) => a[key] === b[key])
+
+/* Les actes. exit : où un acte interrompu à l'avancement u s'arrête sur son chemin. La toile
+   revient au mur par le plus court ; le papier redescend par où il est monté, ou finit de
+   tomber, pour ne jamais se trouver sous le verre d'un cadre qui arrive. */
+const ACTS = {
+  turn: { ms: TURN.ms, exit: (u) => (u < 0.5 ? 0 : 1) },
+  curl: { ms: CURL_ACT.ms, exit: (u) => (u < CURL_ACT.rise ? CURL_ACT.start : Math.max(u, CURL_ACT.land)) },
+}
+
+/* Avancement d'une étape à l'instant `at`. Une étape qui finit un acte interrompu (span)
+   repart à la vitesse de l'acte, sans à-coup, et s'arrête en douceur sur la sortie. */
+function progressOf(leg, at) {
+  const t = Math.min(1, Math.max(0, (at - leg.start) / leg.duration))
+  if (!leg.span) return t
+  return hermite(leg.span[0], leg.span[1], leg.duration / ACTS[leg.shot].ms, 0, t)
+}
+
+// Vue intermédiaire. Un tableau encore tourné ne doit pas traverser le mur en revenant.
+function mix(a, b, t) {
+  const view = { ...blend(a, b, t), shot: t < 1 ? a.shot : b.shot }
+  view.painting.z = Math.max(view.painting.z, -lowestCorner(view.painting))
+  // Une cote qui change de côté du tableau s'efface puis réapparaît : elle ne traverse pas l'œuvre.
+  if (a.dims.under !== b.dims.under) {
+    const side = t < 0.5 ? a : b
+    view.dims = { ...side.dims, opacity: side.dims.opacity * Math.max(0, 2 * Math.abs(1 - 2 * t) - 1) }
+  }
+  return view
+}
+
+// Même vue, l'angle ramené au plus court : la suite ne déroule pas le tour à l'envers.
+function unwound(view) {
+  const { yaw } = view.painting
+  return { ...view, painting: { ...view.painting, yaw: Math.atan2(Math.sin(yaw), Math.cos(yaw)) } }
+}
+
+// Tourne la caméra autour du point visé (yaw vers la droite, pitch vers le haut).
+function withTilt(view, yaw, pitch) {
+  const { position, target } = view.camera
+  const v = position.map((c, i) => c - target[i])
+  const r = Math.hypot(...v)
+  const baseYaw = Math.atan2(v[0], v[2])
+  const basePitch = Math.asin(v[1] / r)
+  const camera = { ...view.camera, position: orbit(target, baseYaw + yaw, basePitch + pitch, r) }
+  return { ...view, camera }
+}
+
+/* reducedMotion : préférence « animations réduites » du visiteur. Les choix coupent alors
+   directement sur leur plan et l'inclinaison revient de face d'un coup. */
+export function createDirector({ room, product, reducedMotion = false }) {
+  // legs : étapes de la transition en cours, jouées l'une après l'autre ; la première
+  // part de `from`, la vue figée à l'instant du choix.
+  const state = { product, group: null, shot: 'front', legs: [], from: null, aspect: 0.8, reducedMotion }
+  // Inclinaison : `held` pendant le glisser, puis `released` décroît selon le ressort.
+  const tilt = { grabbed: false, start: { yaw: 0, pitch: 0 }, held: { yaw: 0, pitch: 0 }, releasedAt: null }
+
+  function tiltAt(at) {
+    if (tilt.grabbed) return tilt.held
+    if (tilt.releasedAt === null) return { yaw: 0, pitch: 0 }
+    const k = springFactor(at - tilt.releasedAt)
+    return { yaw: tilt.held.yaw * k, pitch: tilt.held.pitch * k }
+  }
+
+  function staged(at, aspect) {
+    let from = state.from
+    for (const leg of state.legs) {
+      const to = SHOTS[leg.shot](room, leg.product || state.product, aspect, progressOf(leg, at))
+      if (at < leg.start + leg.duration) {
+        const joined = (at - leg.start) / leg.join
+        return joined < 1 ? mix(from, to, easeInOut(Math.max(0, joined))) : to
+      }
+      from = unwound(to)
+    }
+    return SHOTS[state.shot](room, state.product, aspect)
+  }
+
+  // Le produit à l'écran : celui d'un acte qui se finit, sinon le dernier choix.
+  function shownProduct(at) {
+    const finishing = state.legs.find((leg) => leg.product && at < leg.start + leg.duration)
+    return finishing ? finishing.product : state.product
+  }
+
+  function view(at, aspect) {
+    state.aspect = aspect
+    const base = { ...staged(at, aspect), product: shownProduct(at) }
+    const k = 1 - base.room // la photo de la pièce ne s'incline pas
+    const offset = tiltAt(at)
+    if (k === 0 || (offset.yaw === 0 && offset.pitch === 0)) return base
+    return withTilt(base, offset.yaw * k, offset.pitch * k)
+  }
+
+  function grab(at) {
+    tilt.start = tiltAt(at)
+    tilt.held = tilt.start
+    tilt.grabbed = true
+  }
+
+  function drag(dx, dy, at) {
+    if (!tilt.grabbed) grab(at)
+    tilt.held = {
+      yaw: clamp(tilt.start.yaw - dx * TILT.gainYaw, TILT.maxYaw),
+      pitch: clamp(tilt.start.pitch + dy * TILT.gainPitch, TILT.maxPitch),
+    }
+  }
+
+  function release(at) {
+    if (!tilt.grabbed) return
+    tilt.grabbed = false
+    // Un toucher sans glisser (souvent le début d'un défilement) ne lance aucun rebond.
+    const moved = tilt.held.yaw !== 0 || tilt.held.pitch !== 0
+    tilt.releasedAt = state.reducedMotion || !moved ? null : at
+    if (!moved) tilt.held = { yaw: 0, pitch: 0 }
+  }
+
+  function isStaging(at) {
+    const last = state.legs[state.legs.length - 1]
+    return !!last && at < last.start + last.duration
+  }
+
+  function isMoving(at) {
+    if (isStaging(at)) return true
+    if (tilt.grabbed) return true
+    return tilt.releasedAt !== null && at - tilt.releasedAt < SPRING_SETTLED_MS
+  }
+
+  // Passer à la toile la fait tourner ; passer au poster sans cadre lui soulève un coin.
+  function actOf(group, nextProduct) {
+    if (group !== 'material' || state.reducedMotion) return null
+    if (nextProduct.material === 'toile') return 'turn'
+    return hasFrame(nextProduct) ? null : 'curl'
+  }
+
+  // L'acte en cours, quand il a rejoint son chemin : il se finira avec le produit qu'il montrait.
+  const actUnderway = (at) =>
+    state.legs.find((leg) => ACTS[leg.shot] && at >= leg.start + leg.join && at < leg.start + leg.duration)
+
+  function choose(group, nextProduct, at) {
+    // Retoucher l'option en cours rejoue sa mise en scène. Pendant qu'elle se joue, le toucher ne
+    // compte pas : un double clic ne doit pas la couper.
+    const replay = group === state.group && sameProduct(state.product, nextProduct)
+    if (replay && isStaging(at)) return
+    // Départ figé sans l'inclinaison : celle-ci continue à part, par-dessus la transition.
+    const from = unwound(staged(at, state.aspect))
+    const act = actOf(group, nextProduct)
+    const shot = act ? 'front' : planOf(group, nextProduct, room)
+    const legs = []
+    let start = at
+    const running = actUnderway(at)
+    if (running) {
+      const { ms, exit } = ACTS[running.shot]
+      const u = progressOf(running, at)
+      const end = exit(u)
+      // Finir son geste va un peu plus vite ; revenir sur ses pas prend le temps de s'inverser.
+      const duration = end > u ? ((end - u) * ms) / HURRY : (u - end) * ms
+      if (duration > 0) {
+        const product = running.product || state.product
+        legs.push({ shot: running.shot, product, start, duration, join: 0, span: [u, end] })
+        start += duration
+      }
+    }
+    if (act) {
+      legs.push({ shot: act, start, duration: ACTS[act].ms, join: JOIN_MS })
+    } else if (!state.reducedMotion) {
+      if ((replay || group !== state.group) && state.shot !== 'front' && shot !== 'front') {
+        legs.push({ shot: 'front', start, duration: RETURN_MS, join: RETURN_MS })
+        start += RETURN_MS
+      }
+      legs.push({ shot, start, duration: GO_MS, join: GO_MS })
+    }
+    Object.assign(state, { product: nextProduct, group, shot, legs, from })
+  }
+
+  return { view, choose, grab, drag, release, isMoving }
+}
+
+/* ==== RELIEFS ==== */
+
+/* Reliefs procéduraux (calcul pur, sans DOM : ils tournent dans un worker, hors du fil de la page).
+   Trame de la toile et grain du papier : hauteur dans R, normale (x, y) dans G et B. */
+
+export const RELIEF_SIZE = 256
+export const WEAVE_TILE_CM = 32 / 7 // 32 fils par tuile, posés à 7 fils par cm
+export const PAPER_TILE_CM = 6
+
+// Bruit de valeur répétable (périodes px, py).
+function hash(ix, iy, px, py) {
+  ix = ((ix % px) + px) % px
+  iy = ((iy % py) + py) % py
+  let h = (ix * 374761393 + iy * 668265263) | 0
+  h = (h ^ (h >> 13)) * 1274126177
+  return ((h ^ (h >> 16)) >>> 0) / 4294967295
+}
+
+export function noise(x, y, px, py) {
+  const ix = Math.floor(x), iy = Math.floor(y)
+  const fx = x - ix, fy = y - iy
+  const sx = fx * fx * (3 - 2 * fx), sy = fy * fy * (3 - 2 * fy)
+  const a = hash(ix, iy, px, py) + (hash(ix + 1, iy, px, py) - hash(ix, iy, px, py)) * sx
+  const b = hash(ix, iy + 1, px, py) + (hash(ix + 1, iy + 1, px, py) - hash(ix, iy + 1, px, py)) * sx
+  return a + (b - a) * sy
+}
+
+export function fbm(u, v, cu, cv, octaves) {
+  let s = 0, amp = 0.5, a = cu, b = cv
+  for (let o = 0; o < octaves; o++) {
+    s += amp * noise(u * a, v * b, a, b)
+    a *= 2
+    b *= 2
+    amp *= 0.5
+  }
+  return s
+}
+
+// Carte de relief RGBA (hauteur + normale) à partir d'une fonction de hauteur.
+function reliefPixels(heightAt, strength) {
+  const size = RELIEF_SIZE
+  const h = new Float32Array(size * size)
+  for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) h[y * size + x] = heightAt(x, y)
+  const at = (x, y) => h[((y + size) % size) * size + ((x + size) % size)]
+  const pixels = new Uint8ClampedArray(size * size * 4)
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      const dx = (at(x + 1, y) - at(x - 1, y)) * strength
+      const dy = (at(x, y + 1) - at(x, y - 1)) * strength
+      const len = Math.hypot(dx, dy, 1)
+      const i = (y * size + x) * 4
+      pixels[i] = Math.round(at(x, y) * 255)
+      pixels[i + 1] = Math.round((0.5 - (0.5 * dx) / len) * 255)
+      pixels[i + 2] = Math.round((0.5 - (0.5 * dy) / len) * 255)
+      pixels[i + 3] = 255
+    }
+  }
+  return pixels
+}
+
+// Toile : armure toile (un fil dessus, un fil dessous), fils légèrement irréguliers.
+export function weavePixels() {
+  const T = 8 // pixels par fil
+  const slub = (i) => 0.88 + 0.12 * hash(i, 7, 32, 32)
+  return reliefPixels((x, y) => {
+    const ix = Math.floor(x / T), iy = Math.floor(y / T)
+    const fx = ((x % T) + 0.5) / T, fy = ((y % T) + 0.5) / T
+    const warpOver = ((ix + iy) & 1) === 0
+    const warp = Math.sin(Math.PI * fx) * slub(ix) * (warpOver ? 1 : 0.55) * (0.8 + 0.2 * Math.sin(Math.PI * fy))
+    const weft = Math.sin(Math.PI * fy) * slub(iy + 40) * (warpOver ? 0.55 : 1) * (0.8 + 0.2 * Math.sin(Math.PI * fx))
+    const fibre = (hash(x, y, RELIEF_SIZE, RELIEF_SIZE) - 0.5) * 0.06
+    return Math.min(1, Math.max(0, 0.22 + 0.74 * Math.max(warp, weft) + fibre))
+  }, 2.2)
+}
+
+// Papier mat : grain fin et fibres à peine visibles.
+export function paperPixels() {
+  return reliefPixels((x, y) => {
+    const u = x / RELIEF_SIZE, v = y / RELIEF_SIZE
+    return 0.6 + 0.3 * (fbm(u, v, 48, 48, 3) - 0.5) + 0.25 * (fbm(u, v, 8, 64, 2) - 0.5)
+  }, 1.2)
+}
+
+const SILENT_WORKER_MS = 3000 // un worker muet ne doit pas priver de 3D
+const PAPER_DELAY_MS = 1500
+
+/* Reliefs calculés dans un worker, en parallèle du chargement de three.js. Ce fichier est son propre
+   worker (voir la fin du fichier) : pas d'autre asset à versionner. Sans worker, la trame est
+   calculée ici et le papier attend que la page soit posée. Renvoie deux promesses de pixels et de quoi
+   arrêter le calcul : { weave, paper, stop }. */
+export function startReliefs() {
+  const done = {}
+  let worker = null
+  let silent = 0
+  let paperTimer = 0
+  const reliefs = {
+    weave: new Promise((resolve) => { done.weave = resolve }),
+    paper: new Promise((resolve) => { done.paper = resolve }),
+    stop() {
+      clearTimeout(silent)
+      clearTimeout(paperTimer)
+      if (worker) worker.terminate()
+    },
+  }
+  let inPageStarted = false
+  const inPage = () => {
+    if (inPageStarted) return
+    inPageStarted = true
+    done.weave(weavePixels())
+    paperTimer = setTimeout(() => done.paper(paperPixels()), PAPER_DELAY_MS)
+  }
+  try {
+    worker = new Worker(import.meta.url, { type: 'module' })
+    silent = setTimeout(inPage, SILENT_WORKER_MS)
+    worker.onmessage = ({ data }) => {
+      clearTimeout(silent)
+      done[data.name](data.pixels)
+      if (data.name === 'paper') worker.terminate()
+    }
+    worker.onerror = () => {
+      clearTimeout(silent)
+      inPage()
+    }
+  } catch {
+    inPage()
+  }
+  return reliefs
+}
+
+/* ==== QUALITÉ ==== */
+
+/* La densité est le nombre de pixels du tampon par pixel CSS. Sous la densité de l'écran, c'est
+   l'écran qui agrandit l'image : bords et œuvre s'amollissent. */
+
+const MAX_DENSITY = 3 // au-delà, le gain ne se voit plus
+const BASE_DENSITY = 2 // toujours permise, quelle que soit la taille de la scène
+const EXTRA_PIXELS = 2.6e6 // au-delà de 2, seulement sous ce budget (téléphone en densité 3 : 1,7 million)
+const MIN_DENSITY = 1.5
+const FRAME_BUDGET_MS = 18 // coût mesuré d'une image, attente du GPU comprise
+
+export function renderDensity({ dpr, width, height }) {
+  const extra = Math.sqrt(EXTRA_PIXELS / (width * height))
+  return Math.min(dpr, MAX_DENSITY, Math.max(BASE_DENSITY, extra))
+}
+
+/* Calibrage, une fois, avant la première animation : si une image coûte trop cher sur cet
+   appareil, on retire ce qu'il faut de pixels pour tenir dans le budget. */
+export function densityForCost(density, frameMs) {
+  if (frameMs <= FRAME_BUDGET_MS) return density
+  return Math.min(density, Math.max(MIN_DENSITY, density * Math.sqrt(FRAME_BUDGET_MS / frameMs)))
+}
+
+const SLOW_FRAME_MS = 1000 / 24 // sous 24 images par seconde, la fiche reste sur les photos
+const RUN_MIN_FRAMES = 20 // en deçà, une animation ne dit rien de l'appareil
+
+// Une fois la densité baissée (fittedDensity), une image coûte-t-elle encore trop cher ?
+export function isTooSlow(density, frameMs, fittedDensity) {
+  return frameMs * (fittedDensity / density) ** 2 > SLOW_FRAME_MS
+}
+
+/* times : instants des images d'une animation. L'écart médian, et non la moyenne : une pause isolée
+   (onglet masqué, appel reçu) n'a rien à voir avec la force de l'appareil. */
+export function isSluggishRun(times) {
+  if (times.length < RUN_MIN_FRAMES) return false
+  const gaps = times.slice(1).map((time, i) => time - times[i]).sort((a, b) => a - b)
+  return gaps[Math.floor(gaps.length / 2)] > SLOW_FRAME_MS
+}
+
+/* ==== IMAGES ==== */
+
+/* Images décodées hors du fil de la page. Par un ImageBitmap, l'envoi au GPU est 6 fois plus court
+   que par un <img> (27 ms contre 178 ms pour 1904 × 2544 px) et ne bloque presque rien. Les deux
+   chemins donnent une image à l'endroit : les textures ne sont jamais retournées (voir artBox), car
+   l'option de retournement n'est pas suivie partout. */
+
+function viaElement(url) {
+  return new Promise((resolve, reject) => {
+    const image = new Image()
+    image.onload = async () => {
+      await Promise.race([image.decode().catch(() => {}), new Promise((done) => setTimeout(done, 300))])
+      resolve(image)
+    }
+    image.onerror = reject
+    image.src = url
+  })
+}
+
+/* Le CDN de Shopify choisit le format d'après cet en-tête, comme pour un <img>. Sans lui, fetch reçoit
+   le fichier d'origine : pour le Bonsaï, un PNG de 8 Mo au lieu d'un WebP de 840 Ko. */
+const LIGHT_IMAGES = { accept: 'image/avif,image/webp,image/*;q=0.8' }
+
+// source : adresse d'une image, ou <img> déjà chargée (rien n'est retéléchargé).
+export async function decodeImage(source) {
+  const loaded = typeof source !== 'string'
+  if (!('createImageBitmap' in globalThis)) return loaded ? source : viaElement(source)
+  try {
+    if (loaded) return await createImageBitmap(source)
+    const response = await fetch(source, { headers: LIGHT_IMAGES })
+    return await createImageBitmap(await response.blob())
+  } catch {
+    return loaded ? source : viaElement(source)
+  }
+}
+
+// Un ImageBitmap garde sa mémoire tant qu'on ne le ferme pas ; un <img> n'a rien à fermer.
+export function closeImage(image) {
+  if (image.close) image.close()
+}
+
+export function imageSize(image) {
+  return { width: image.naturalWidth || image.width, height: image.naturalHeight || image.height }
+}
+
+/* ==== MOTEUR ==== */
+
+/* Rend la vue que calcule le directeur.
+
+   Fidélité des couleurs : l'œuvre n'est éclairée que par un facteur de luminosité, le même sur les
+   trois canaux et plafonné à 1, sans mappage de tons. De face et au repos, ce facteur vaut 1 : chaque
+   pixel garde la couleur de l'image à plat (seul le grain de la toile l'assombrit de quelques %). La
+   teinte ne bouge donc jamais.
+   Netteté : l'anticrénelage matériel ne lisse que les arêtes de géométrie. Tout bord calculé dans un
+   shader est donc lissé sur un pixel par sa couverture ; l'image grossie est lue en bicubique
+   (Catmull-Rom), l'image réduite garde ses mipmaps et le filtrage anisotrope.
+   Ombre : calculée sur le mur (projection du tableau le long de la lumière, pénombre qui s'élargit
+   avec la distance au mur), sans carte d'ombre.
+   Aucun à-coup : tout se prépare avant que la 3D soit visible (prepare), et rien de lourd n'attend
+   le clic. Les cadres ont leur propre matériau, léger : ni environnement précalculé ni lumières
+   three.js ; le bois est une image, chargée au repos.
+   Dos de la toile et coin du poster : une coquille de quelques faces peinte par son shader et une
+   grille unique déformée par le GPU. Rien à calculer pendant le geste. */
+
+const PASSE_RATIO = 0.08 // contour blanc : 8 % du petit côté, égal en cm sur les 4 côtés
+const SHADE = { ambient: 0.55, diffuse: 0.45, weave: 0.075, bump: 0.38 }
+const SHADOW = {
+  key: 0.34, keyFade: 55, penumbra: 0.35, penumbraPerCm: 0.42, ao: 0.12, aoRadius: 1.6,
+  flap: 0.32, flapPenumbraPerCm: 0.3, // coin soulevé du poster
+}
+const WOOD_TILE_CM = [10, 30] // l'image du chêne couvre 10 cm en travers, 30 cm le long du fil
+const REHEARSAL_FRAMES = 36 // images de répétition de l'arrivée, invisibles
+const TRIAL_FRAMES = 3 // images chronométrées de l'arrivée, invisibles
+
+const ART_VERTEX = /* glsl */ `
+  attribute vec2 fab;
+  attribute float art;
+  varying vec2 vUv;
+  varying vec2 vFab;
+  varying float vArt;
+  varying vec3 vNormalW;
+  void main() {
+    vUv = uv;
+    vFab = fab;
+    vArt = art;
+    vNormalW = normalize(mat3(modelMatrix) * normal);
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`
+
+// Feuille du poster au coin soulevé : le même calcul que curlPoint. position
+// porte la grille unité : (0, 0) au coin soulevé.
+const CURL_VERTEX = /* glsl */ `
+  uniform vec2 uCurlHalf;
+  uniform vec2 uCurlCorner;
+  uniform vec2 uCurlDir;
+  uniform float uCurlFold;
+  uniform float uCurlRadius;
+  uniform float uCurlRoll;
+  uniform float uCurlCone;
+  uniform float uCurlZ;
+  varying vec2 vUv;
+  varying vec2 vFab;
+  varying float vArt;
+  varying vec3 vNormalW;
+  varying float vBeyond;
+  varying vec2 vWallXY;
+  void main() {
+    vec2 tip = uCurlCorner * uCurlHalf;
+    vec2 flatPoint = tip - uCurlCorner * position.xy * 2.0 * uCurlHalf;
+    vUv = vec2(0.5 + flatPoint.x / (2.0 * uCurlHalf.x), 0.5 - flatPoint.y / (2.0 * uCurlHalf.y));
+    vFab = flatPoint;
+    vArt = 1.0;
+    vWallXY = (modelMatrix * vec4(flatPoint, 0.0, 1.0)).xy;
+
+    vec2 fromTip = flatPoint - tip;
+    float beyond = dot(fromTip, uCurlDir) + uCurlFold;
+    vBeyond = beyond;
+    vec3 place = vec3(flatPoint, uCurlZ);
+    vec3 normalLocal = vec3(0.0, 0.0, 1.0);
+    if (beyond > 0.0) {
+      float across = dot(fromTip, vec2(-uCurlDir.y, uCurlDir.x));
+      float r = uCurlRadius * (1.0 + uCurlCone * abs(across) / max(uCurlFold, 0.001));
+      float phi = min(beyond / r, uCurlRoll);
+      float rest = beyond - phi * r;
+      place.xy += uCurlDir * (r * sin(phi) + rest * cos(phi) - beyond);
+      place.z += r * (1.0 - cos(phi)) + rest * sin(phi);
+      normalLocal = vec3(-uCurlDir * sin(phi), cos(phi));
+    }
+    vNormalW = normalize(mat3(modelMatrix) * normalLocal);
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(place, 1.0);
+  }
+`
+
+// Ombres projetées sur le mur et sur le papier.
+const SHADOW_SHAPES = /* glsl */ `
+  // 1 au cœur de l'ombre, 0 passé sa pénombre, selon la distance signée à son contour.
+  float inShadow(float distance, float penumbra) {
+    return 1.0 - smoothstep(-penumbra, penumbra, distance);
+  }
+
+  // Distance signée à un polygone convexe (sens trigonométrique).
+  float hullDistance(vec2 hull[8], int count, vec2 p) {
+    float d = -1e6;
+    for (int i = 0; i < 8; i++) {
+      if (i >= count) break;
+      vec2 a = hull[i];
+      vec2 e = normalize(hull[i + 1 < count ? i + 1 : 0] - a);
+      d = max(d, (p.x - a.x) * e.y - (p.y - a.y) * e.x);
+    }
+    return d;
+  }
+`
+
+const ART_FRAGMENT = /* glsl */ `
+  uniform sampler2D uArt;
+  uniform sampler2D uArtPrev; // version précédente, pendant le fondu d'un changement de source
+  uniform float uArtMix;
+  uniform sampler2D uWeave;
+  uniform sampler2D uPaperTex;
+  uniform float uWeaveScale;
+  uniform float uPaperScale;
+  uniform vec3 uBorder;
+  uniform vec3 uPaperWhite;
+  uniform vec3 uLight;
+  uniform float uAmbient;
+  uniform float uDiffuse;
+  uniform float uNorm;
+  uniform float uWeaveAmt;
+  uniform float uBump;
+  uniform float uPaper;
+  uniform float uPasse;
+  uniform vec2 uMargin;
+  uniform vec2 uCover;
+  varying vec2 vUv;
+  varying vec2 vFab;
+  varying float vArt;
+  varying vec3 vNormalW;
+  #ifdef CURL
+    uniform float uCurlRadius;
+    uniform vec2 uFlapHull[8];
+    uniform int uFlapHullN;
+    uniform float uFlapPenumbra;
+    uniform float uFlapKey;
+    varying float vBeyond;
+    varying vec2 vWallXY;
+    ${SHADOW_SHAPES}
+  #endif
+
+  // Lecture bicubique (Catmull-Rom en 5 lectures) : une image grossie reste nette et ne
+  // montre ni les losanges de l'interpolation bilinéaire ni ses pixels.
+  vec3 cubicArt(sampler2D tex, vec2 uv, vec2 size) {
+    vec2 pos = uv * size;
+    vec2 c1 = floor(pos - 0.5) + 0.5;
+    vec2 f = pos - c1;
+    vec2 f2 = f * f;
+    vec2 f3 = f2 * f;
+    vec2 w0 = -0.5 * f3 + f2 - 0.5 * f;
+    vec2 w1 = 1.5 * f3 - 2.5 * f2 + 1.0;
+    vec2 w2 = -1.5 * f3 + 2.0 * f2 + 0.5 * f;
+    vec2 w3 = 0.5 * f3 - 0.5 * f2;
+    vec2 w12 = w1 + w2;
+    vec2 t0 = (c1 - 1.0) / size;
+    vec2 t3 = (c1 + 2.0) / size;
+    vec2 t12 = (c1 + w2 / w12) / size;
+    vec3 sum = textureLod(tex, vec2(t12.x, t0.y), 0.0).rgb * (w12.x * w0.y)
+             + textureLod(tex, vec2(t0.x, t12.y), 0.0).rgb * (w0.x * w12.y)
+             + textureLod(tex, t12, 0.0).rgb * (w12.x * w12.y)
+             + textureLod(tex, vec2(t3.x, t12.y), 0.0).rgb * (w3.x * w12.y)
+             + textureLod(tex, vec2(t12.x, t3.y), 0.0).rgb * (w12.x * w3.y);
+    float total = w12.x * w0.y + w0.x * w12.y + w12.x * w12.y + w3.x * w12.y + w12.x * w3.y;
+    return max(sum / total, 0.0);
+  }
+
+  // dx, dy : variation des coordonnées d'un pixel à l'autre, donnée à part car un calcul
+  // de coordonnées (recadrage, bornes) fausserait les dérivées automatiques. L'image réduite
+  // lit un niveau de mipmap plus fin que la règle (facteur 0,6) : sans quoi la 3D de face
+  // serait plus molle que la photo qu'elle remplace. Ce gain ne fait pas scintiller : en
+  // inclinaison vive, 0,009 % des pixels bougent de plus de 12 niveaux sur 255 d'une image à
+  // l'autre. L'image grossie passe en bicubique.
+  vec3 readArt(sampler2D tex, vec2 uv, vec2 dx, vec2 dy) {
+    vec2 size = vec2(textureSize(tex, 0));
+    vec3 plain = textureGrad(tex, uv, dx * 0.6, dy * 0.6).rgb;
+    float texelsPerPixel = max(length(dx * size), length(dy * size));
+    float magnified = 1.0 - smoothstep(0.7, 1.0, texelsPerPixel);
+    if (magnified <= 0.0) return plain;
+    return mix(plain, cubicArt(tex, uv, size), magnified);
+  }
+
+  vec3 sampleArt(vec2 uv, vec2 dx, vec2 dy) {
+    vec3 color = readArt(uArt, uv, dx, dy);
+    if (uArtMix >= 1.0) return color;
+    return mix(readArt(uArtPrev, uv, dx, dy), color, uArtMix);
+  }
+
+  // Part du pixel dans l'intervalle [0, 1] : 1 dedans, 0 dehors, bord lissé sur un pixel.
+  float coverage(float v) {
+    float pixel = max(length(vec2(dFdx(v), dFdy(v))), 1e-6);
+    return clamp(min(v, 1.0 - v) / pixel + 0.5, 0.0, 1.0);
+  }
+
+  void main() {
+    vec2 dx = dFdx(vUv);
+    vec2 dy = dFdy(vUv);
+    vec3 art;
+    if (uPasse <= 0.0) {
+      art = sampleArt(vUv, dx, dy);
+    } else {
+      // Contour blanc : marge de papier égale en cm, œuvre recadrée pour remplir l'intérieur.
+      vec2 inner = (vUv - uMargin) / (1.0 - 2.0 * uMargin);
+      vec2 toCrop = uCover / (1.0 - 2.0 * uMargin);
+      vec2 cropUv = clamp((inner - 0.5) * uCover + 0.5, 0.0, 1.0);
+      float inside = coverage(inner.x) * coverage(inner.y);
+      vec3 framed = mix(uPaperWhite, sampleArt(cropUv, dx * toCrop, dy * toCrop), inside);
+      art = uPasse >= 1.0 ? framed : mix(sampleArt(vUv, dx, dy), framed, uPasse);
+    }
+    vec3 base = mix(uBorder, art, vArt);
+    vec3 N = normalize(vNormalW);
+    #ifdef CURL
+      // Le dos de la feuille est blanc, sa face regarde de l'autre côté.
+      if (!gl_FrontFacing) {
+        base = uPaperWhite;
+        N = -N;
+      }
+    #endif
+
+    // Grain : trame de la toile ou papier, en relief (normale) et en luminosité.
+    vec4 grain = mix(texture2D(uWeave, vFab * uWeaveScale), texture2D(uPaperTex, vFab * uPaperScale), uPaper);
+    vec3 T = normalize(abs(N.y) < 0.95 ? cross(vec3(0.0, 1.0, 0.0), N) : cross(N, vec3(1.0, 0.0, 0.0)));
+    vec3 B = cross(N, T);
+    vec2 slope = grain.gb * 2.0 - 1.0;
+    vec3 Np = normalize(N + mix(uBump, uBump * 0.3, uPaper) * (slope.x * T + slope.y * B));
+
+    // Luminosité seule, ramenée à 1 pour la façade de face : la teinte ne change jamais.
+    float k = (uAmbient + uDiffuse * max(dot(Np, uLight), 0.0)) * uNorm;
+    k *= 1.0 - mix(uWeaveAmt, uWeaveAmt * 0.3, uPaper) * (1.0 - grain.r);
+    float brightest = 1.0;
+    #ifdef CURL
+      // Le papier courbé se modèle dans la lumière. Le dos, blanc, n'a pas à garder de couleurs.
+      brightest = 1.15;
+      if (gl_FrontFacing) {
+        // Le coin levé ombre la feuille restée à plat, et plus du tout le haut de sa courbe.
+        float lifted = hullDistance(uFlapHull, uFlapHullN, vWallXY);
+        float shadow = uFlapKey * inShadow(lifted, uFlapPenumbra);
+        k *= 1.0 - shadow * (1.0 - smoothstep(0.0, uCurlRadius, vBeyond));
+      } else {
+        k = (uAmbient + uDiffuse * max(dot(Np, uLight), 0.0)) * 1.08;
+      }
+    #endif
+    gl_FragColor = vec4(base * min(k, brightest), 1.0);
+    #include <colorspace_fragment>
+  }
+`
+
+const WALL_VERTEX = /* glsl */ `
+  varying vec2 vXY;
+  void main() {
+    vec4 world = modelMatrix * vec4(position, 1.0);
+    vXY = world.xy;
+    gl_Position = projectionMatrix * viewMatrix * world;
+  }
+`
+
+const WALL_FRAGMENT = /* glsl */ `
+  uniform vec3 uWall;
+  uniform float uSlope;
+  uniform float uRefX;
+  uniform sampler2D uRoom;
+  uniform float uRoomMix;
+  uniform vec4 uRoomRect;
+  uniform float uFeather;
+  uniform vec2 uHull[8];
+  uniform int uHullN;
+  uniform float uPenumbra;
+  uniform float uKey;
+  uniform vec4 uAo;
+  uniform float uAoAmt;
+  uniform float uAoRadius;
+  uniform vec2 uFlapHull[8];
+  uniform int uFlapHullN;
+  uniform float uFlapPenumbra;
+  uniform float uFlapKey;
+  varying vec2 vXY;
+  ${SHADOW_SHAPES}
+
+  float boxDistance(vec2 p, vec2 c, vec2 h) {
+    vec2 q = abs(p - c) - h;
+    return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0);
+  }
+
+  void main() {
+    vec3 col = uWall * (1.0 + uSlope * (vXY.x - uRefX));
+    if (uRoomMix > 0.0) {
+      vec2 ruv = (vXY - uRoomRect.xy) / (uRoomRect.zw - uRoomRect.xy);
+      // Bords de la photo lissés sur un pixel ; le haut se fond dans le mur.
+      vec2 edge = clamp(min(ruv, 1.0 - ruv) / max(fwidth(ruv), vec2(1e-6)) + 0.5, 0.0, 1.0);
+      float feather = 1.0 - smoothstep(uRoomRect.w - uFeather, uRoomRect.w, vXY.y);
+      vec3 photo = texture2D(uRoom, vec2(ruv.x, 1.0 - ruv.y)).rgb;
+      col = mix(col, photo, uRoomMix * edge.x * edge.y * feather);
+    }
+    // Pénombres : jamais plus fines qu'un pixel, même vues de loin.
+    float hull = hullDistance(uHull, uHullN, vXY);
+    float penumbra = max(uPenumbra, fwidth(hull));
+    float key = uKey * inShadow(hull, penumbra);
+    float box = boxDistance(vXY, uAo.xy, uAo.zw);
+    float ao = uAoAmt * (1.0 - smoothstep(0.0, max(uAoRadius, fwidth(box)), box));
+    // Ombre du coin soulevé du poster, sur le mur qu'il découvre.
+    float flap = 0.0;
+    if (uFlapKey > 0.0) {
+      float lifted = hullDistance(uFlapHull, uFlapHullN, vXY);
+      flap = uFlapKey * inShadow(lifted, uFlapPenumbra);
+    }
+    gl_FragColor = vec4(col * (1.0 - key) * (1.0 - ao) * (1.0 - flap), 1.0);
+    #include <colorspace_fragment>
+  }
+`
+
+const FRAME_VERTEX = /* glsl */ `
+  attribute float shade;
+  varying vec2 vUv;
+  varying vec3 vNormalW;
+  varying vec3 vWorld;
+  varying float vShade;
+  void main() {
+    vUv = uv;
+    vShade = shade;
+    vNormalW = normalize(mat3(modelMatrix) * normal);
+    vec4 world = modelMatrix * vec4(position, 1.0);
+    vWorld = world.xyz;
+    gl_Position = projectionMatrix * viewMatrix * world;
+  }
+`
+
+// Cadres : diffus (lumière principale et ambiance haut/bas), brillance et reflet d'une pièce
+// simplifiée (plafond clair, sol chaud, fenêtre du côté de la lumière), calculés à la volée.
+const FRAME_FRAGMENT = /* glsl */ `
+  uniform sampler2D uMap;
+  uniform vec2 uTile;
+  uniform float uWood;
+  uniform vec3 uTint;
+  uniform float uRelief;
+  uniform float uRough;
+  uniform vec3 uLight;
+  uniform float uOpacity;
+  varying vec2 vUv;
+  varying vec3 vNormalW;
+  varying vec3 vWorld;
+  varying float vShade;
+
+  float height(vec2 st) {
+    return dot(texture2D(uMap, st).rgb, vec3(0.3333));
+  }
+
+  vec3 roomLight(vec3 d) {
+    vec3 room = mix(vec3(0.30, 0.25, 0.20), vec3(0.78, 0.77, 0.75), smoothstep(0.3, 0.72, d.y * 0.5 + 0.5));
+    return room + vec3(1.1) * smoothstep(0.55, 0.97, dot(d, uLight));
+  }
+
+  void main() {
+    vec2 st = vUv * uTile;
+    vec2 step1 = 1.5 / vec2(textureSize(uMap, 0));
+    vec3 wood = texture2D(uMap, st).rgb;
+    float h = dot(wood, vec3(0.3333));
+    vec3 albedo = mix(uTint, wood, uWood);
+
+    // Axes de l'image de bois sur la surface, tirés des dérivées (aucune tangente à stocker) :
+    // le relief suit le fil sur les quatre baguettes, quelle que soit leur direction.
+    vec3 N = normalize(vNormalW);
+    vec3 alongX = cross(dFdy(vWorld), N);
+    vec3 alongY = cross(N, dFdx(vWorld));
+    vec3 T = alongX * dFdx(st).x + alongY * dFdy(st).x;
+    vec3 B = alongX * dFdx(st).y + alongY * dFdy(st).y;
+    T *= inversesqrt(max(dot(T, T), 1e-20));
+    B *= inversesqrt(max(dot(B, B), 1e-20));
+    N = normalize(N + uRelief * ((h - height(st + vec2(step1.x, 0.0))) * T + (h - height(st + vec2(0.0, step1.y))) * B));
+
+    vec3 V = normalize(cameraPosition - vWorld);
+    float ndl = max(dot(N, uLight), 0.0);
+    vec3 ambient = mix(vec3(0.27, 0.24, 0.21), vec3(0.70), N.y * 0.5 + 0.5);
+    vec3 color = albedo * (0.64 * ndl + ambient);
+
+    float fresnel = 0.04 + 0.96 * pow(1.0 - clamp(dot(N, V), 0.0, 1.0), 5.0);
+    float shine = mix(70.0, 12.0, uRough);
+    float glint = pow(max(dot(N, normalize(uLight + V)), 0.0), shine) * (shine + 8.0) * 0.0035;
+    color += roomLight(reflect(-V, N)) * fresnel * mix(0.8, 0.5, uRough) + vec3(glint * ndl);
+
+    gl_FragColor = vec4(color * vShade, uOpacity);
+    #include <colorspace_fragment>
+  }
+`
+
+const GLASS_VERTEX = /* glsl */ `
+  varying vec3 vWorld;
+  void main() {
+    vec4 world = modelMatrix * vec4(position, 1.0);
+    vWorld = world.xyz;
+    gl_Position = projectionMatrix * viewMatrix * world;
+  }
+`
+
+// Verre : voile très léger, reflet d'une fenêtre à petits carreaux (fixe dans la pièce,
+// il glisse donc quand on incline) et brillance rasante (Fresnel). Ajouté à l'image.
+const GLASS_FRAGMENT = /* glsl */ `
+  uniform vec3 uNormal;
+  uniform float uOpacity;
+  uniform vec3 uWin;
+  uniform vec2 uWinHalf;
+  varying vec3 vWorld;
+  void main() {
+    vec3 V = normalize(cameraPosition - vWorld);
+    float fresnel = pow(1.0 - clamp(dot(uNormal, V), 0.0, 1.0), 5.0);
+    vec3 R = reflect(-V, uNormal);
+    float t = (uWin.z - vWorld.z) / max(R.z, 0.05);
+    vec2 q = (vWorld.xy + R.xy * t - uWin.xy) / uWinHalf;
+    float window = (1.0 - smoothstep(0.75, 1.0, abs(q.x))) * (1.0 - smoothstep(0.75, 1.0, abs(q.y))) * smoothstep(0.02, 0.08, R.z);
+    vec2 cell = fract((q * 0.5 + 0.5) * vec2(2.0, 3.0));
+    float panes = smoothstep(0.0, 0.12, cell.x) * smoothstep(0.0, 0.12, 1.0 - cell.x)
+                * smoothstep(0.0, 0.1, cell.y) * smoothstep(0.0, 0.1, 1.0 - cell.y);
+    float a = (0.012 + window * mix(0.45, 1.0, panes) * 0.06 + fresnel * 0.24) * uOpacity;
+    gl_FragColor = vec4(vec3(a), 1.0);
+  }
+`
+
+const FADE_MS = 350
+const fadeSince = (at, now) => Math.min(1, Math.max(0, (now - at) / FADE_MS))
+
+// Rend la main à la page : un doigt posé pendant la préparation de la 3D n'attend pas.
+export const breathe = () => new Promise((resolve) => { setTimeout(resolve) })
+
+// Une toile de dessin, dans une page ou dans un worker.
+const blankCanvas = () => (globalThis.document ? document.createElement('canvas') : new OffscreenCanvas(1, 1))
+
+/* canvas : là où dessiner, dans la page ou non. artImage : l'image à plat, décodée. weave : pixels de
+   la trame (startReliefs). room : mur et lumière (neutralRoom). woodImage : adresse de l'image du
+   chêne. sizes : tailles du produit (« 30x40 »), imprimées au dos. Renvoie de quoi dessiner une vue,
+   et dispose() pour tout rendre à la carte graphique. Sans WebGL2, three.js lève une erreur ici. */
+export function createScene(THREE, { canvas, artImage, weave, room, woodImage, sizes }) {
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'default' })
+  renderer.outputColorSpace = THREE.SRGBColorSpace
+  renderer.toneMapping = THREE.NoToneMapping
+  const anisotropy = renderer.capabilities.getMaxAnisotropy()
+
+  const scene = new THREE.Scene()
+  const camera = new THREE.PerspectiveCamera(30, 1, 0.5, 5000)
+  const light = unit(room.light)
+
+  const reliefTexture = (pixels) => {
+    const t = new THREE.DataTexture(new Uint8Array(pixels.buffer), RELIEF_SIZE, RELIEF_SIZE, THREE.RGBAFormat)
+    t.wrapS = t.wrapT = THREE.RepeatWrapping
+    t.magFilter = THREE.LinearFilter
+    t.minFilter = THREE.LinearMipmapLinearFilter
+    t.generateMipmaps = true
+    t.anisotropy = anisotropy
+    t.needsUpdate = true
+    return t
+  }
+
+  // Images à l'endroit : jamais retournées à l'envoi, ce sont les coordonnées qui s'adaptent.
+  const imageTexture = (image) => {
+    const t = new THREE.Texture(image)
+    t.colorSpace = THREE.SRGBColorSpace
+    t.flipY = false
+    t.anisotropy = anisotropy
+    t.needsUpdate = true
+    return t
+  }
+
+  // ---- Mur (uni, puis photo de la pièce en fondu) et ombre ----
+  const hull = Array.from({ length: 8 }, () => new THREE.Vector2())
+  const flapHull = Array.from({ length: 8 }, () => new THREE.Vector2())
+  const wallUniforms = {
+    uWall: { value: new THREE.Color().setRGB(...room.wall.map((c) => c / 255), THREE.SRGBColorSpace) },
+    uSlope: { value: room.wallSlope },
+    uRefX: { value: room.hang.x },
+    uRoom: { value: null },
+    uRoomMix: { value: 0 },
+    uRoomRect: { value: room.photo ? new THREE.Vector4(room.photo.left, room.photo.bottom, room.photo.right, room.photo.top) : new THREE.Vector4(0, 0, 1, 1) },
+    uFeather: { value: 18 },
+    uHull: { value: hull },
+    uHullN: { value: 0 },
+    uPenumbra: { value: 1 },
+    uKey: { value: 0 },
+    uAo: { value: new THREE.Vector4() },
+    uAoAmt: { value: 0 },
+    uAoRadius: { value: SHADOW.aoRadius },
+    uFlapHull: { value: flapHull },
+    uFlapHullN: { value: 0 },
+    uFlapPenumbra: { value: 1 },
+    uFlapKey: { value: 0 },
+  }
+  const wall = new THREE.Mesh(
+    new THREE.PlaneGeometry(2400, 1400),
+    new THREE.ShaderMaterial({ uniforms: wallUniforms, vertexShader: WALL_VERTEX, fragmentShader: WALL_FRAGMENT }),
+  )
+  wall.position.set(room.hang.x, 150, 0)
+  scene.add(wall)
+
+  // ---- Œuvre (toile ou papier) ----
+  const artUniforms = {
+    uArt: { value: imageTexture(artImage) },
+    uArtPrev: { value: null },
+    uArtMix: { value: 1 },
+    uWeave: { value: reliefTexture(weave) },
+    uPaperTex: { value: null }, // reçu du worker juste après la trame (setPaperRelief)
+    uWeaveScale: { value: 1 / WEAVE_TILE_CM },
+    uPaperScale: { value: 1 / PAPER_TILE_CM },
+    uBorder: { value: new THREE.Color(borderOf('blanche').color) },
+    uPaperWhite: { value: new THREE.Color(PAPER_WHITE) },
+    uLight: { value: new THREE.Vector3(...light) },
+    uAmbient: { value: SHADE.ambient },
+    uDiffuse: { value: SHADE.diffuse },
+    uNorm: { value: 1 / (SHADE.ambient + SHADE.diffuse * light[2]) },
+    uWeaveAmt: { value: SHADE.weave },
+    uBump: { value: SHADE.bump },
+    uPaper: { value: 0 },
+    uPasse: { value: 0 },
+    uMargin: { value: new THREE.Vector2() },
+    uCover: { value: new THREE.Vector2(1, 1) },
+  }
+  const group = new THREE.Group()
+  group.rotation.order = 'YXZ'
+  const artMesh = new THREE.Mesh(
+    new THREE.BufferGeometry(),
+    new THREE.ShaderMaterial({ uniforms: artUniforms, vertexShader: ART_VERTEX, fragmentShader: ART_FRAGMENT }),
+  )
+  group.add(artMesh)
+  scene.add(group)
+
+  // ---- Cadre (toujours le même matériau : un seul programme, compilé dès le départ) ----
+  const frameUniforms = {
+    uMap: { value: null },
+    uTile: { value: new THREE.Vector2(1 / WOOD_TILE_CM[0], 1 / WOOD_TILE_CM[1]) },
+    uWood: { value: 0 },
+    uTint: { value: new THREE.Color() },
+    uRelief: { value: 0 },
+    uRough: { value: 0.6 },
+    uLight: { value: new THREE.Vector3(...light) },
+    uOpacity: { value: 1 },
+  }
+  const frameMesh = new THREE.Mesh(
+    new THREE.BufferGeometry(),
+    new THREE.ShaderMaterial({
+      uniforms: frameUniforms, vertexShader: FRAME_VERTEX, fragmentShader: FRAME_FRAGMENT, transparent: true,
+    }),
+  )
+  frameMesh.visible = false
+  frameMesh.renderOrder = 1
+  group.add(frameMesh)
+
+  const glassUniforms = {
+    uNormal: { value: new THREE.Vector3(0, 0, 1) },
+    uOpacity: { value: 0 },
+    uWin: { value: new THREE.Vector3() },
+    uWinHalf: { value: new THREE.Vector2(20, 30) },
+  }
+  const glass = new THREE.Mesh(
+    new THREE.PlaneGeometry(1, 1),
+    new THREE.ShaderMaterial({
+      uniforms: glassUniforms, vertexShader: GLASS_VERTEX, fragmentShader: GLASS_FRAGMENT,
+      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    }),
+  )
+  glass.renderOrder = 2
+  group.add(glass)
+
+  // ---- Dos de la toile : quelques faces, tout le détail est peint par son shader ----
+  const marksCanvas = blankCanvas()
+  const marksAreas = paintMarks(marksCanvas, sizes)
+  const marksTexture = imageTexture(marksCanvas)
+  const backUniforms = {
+    uArt: artUniforms.uArt,
+    uWeave: artUniforms.uWeave,
+    uWeaveScale: artUniforms.uWeaveScale,
+    uBorder: artUniforms.uBorder,
+    uLight: artUniforms.uLight,
+    uAmbient: artUniforms.uAmbient,
+    uDiffuse: artUniforms.uDiffuse,
+    uNorm: artUniforms.uNorm,
+    uMap: frameUniforms.uMap,
+    uTile: frameUniforms.uTile,
+    uPine: { value: 0 },
+    uBandColor: { value: new THREE.Color(BACK_COLORS.band) },
+    uRawColor: { value: new THREE.Color(BACK_COLORS.raw) },
+    uPineColor: { value: new THREE.Color(BACK_COLORS.pine) },
+    uSideArt: { value: 0 },
+    uHalf: { value: new THREE.Vector2(1, 1) },
+    uBand: { value: 1 },
+    uBar: { value: 1 },
+    uStaplesUpright: { value: new THREE.Vector3() },
+    uStaplesFlat: { value: new THREE.Vector3() },
+    uStaplesBelow: { value: new THREE.Vector3() },
+    uStaplesAbove: { value: new THREE.Vector3() },
+    uCornerStapleInset: { value: 1 },
+    uMarkedCornerInset: { value: 1 },
+    uStapleHalf: { value: 1 },
+    uRowClear: { value: new THREE.Vector2() },
+    uMarks: { value: marksTexture },
+    uMarkBoxes: { value: Array.from({ length: MARK_COUNT }, () => new THREE.Vector4()) },
+    uMarkAreas: { value: Array.from({ length: MARK_COUNT }, () => new THREE.Vector4()) },
+    uLightLocal: { value: new THREE.Vector3(...light) },
+  }
+  const backMesh = new THREE.Mesh(
+    new THREE.BufferGeometry(),
+    new THREE.ShaderMaterial({ uniforms: backUniforms, vertexShader: BACK_VERTEX, fragmentShader: BACK_FRAGMENT }),
+  )
+  group.add(backMesh)
+
+  // ---- Géométries, recalculées seulement quand leurs dimensions changent. Pendant une
+  //      animation (taille, épaisseur), le nombre de sommets ne bouge pas : on réécrit les
+  //      tampons en place au lieu d'en créer de nouveaux. ----
+  let artKey = '', frameKey = ''
+  const setGeometry = (mesh, data, extra) => {
+    const names = ['position', 'normal', 'uv', ...(extra || [])]
+    const current = mesh.geometry
+    const sameShape = names.every((n) => current.getAttribute(n) && current.getAttribute(n).array.length === data[n].length) &&
+      current.index && current.index.array.length === data.index.length
+    if (sameShape) {
+      for (const n of names) {
+        const attribute = current.getAttribute(n)
+        attribute.array.set(data[n])
+        attribute.needsUpdate = true
+      }
+      current.index.array.set(data.index)
+      current.index.needsUpdate = true
+      current.computeBoundingSphere()
+      return
+    }
+    const g = new THREE.BufferGeometry()
+    g.setAttribute('position', new THREE.BufferAttribute(data.position, 3))
+    g.setAttribute('normal', new THREE.BufferAttribute(data.normal, 3))
+    g.setAttribute('uv', new THREE.BufferAttribute(data.uv, 2))
+    if (extra) for (const name of extra) g.setAttribute(name, new THREE.BufferAttribute(data[name], name === 'fab' ? 2 : 1))
+    g.setIndex(new THREE.BufferAttribute(data.index, 1))
+    mesh.geometry.dispose()
+    mesh.geometry = g
+  }
+
+  // ---- Feuille du coin soulevé : une seule grille pour tous les formats, déformée par le GPU.
+  //      Elle remplace la boîte du poster le temps du geste. ----
+  const curlAt = curlCorner(room)
+  const curlUniforms = {
+    uCurlHalf: { value: new THREE.Vector2(1, 1) },
+    uCurlCorner: { value: new THREE.Vector2(curlAt.x, curlAt.y) },
+    uCurlDir: { value: new THREE.Vector2() },
+    uCurlFold: { value: 0 },
+    uCurlRadius: { value: 1 },
+    uCurlRoll: { value: CURL.roll },
+    uCurlCone: { value: CURL.cone },
+    uCurlZ: { value: 0 },
+    uFlapHull: wallUniforms.uFlapHull,
+    uFlapHullN: wallUniforms.uFlapHullN,
+    uFlapPenumbra: wallUniforms.uFlapPenumbra,
+    uFlapKey: wallUniforms.uFlapKey,
+  }
+  const sheet = new THREE.Mesh(
+    new THREE.BufferGeometry(),
+    new THREE.ShaderMaterial({
+      uniforms: { ...artUniforms, ...curlUniforms }, defines: { CURL: 1 },
+      vertexShader: CURL_VERTEX, fragmentShader: ART_FRAGMENT, side: THREE.DoubleSide,
+    }),
+  )
+  setGeometry(sheet, curlSheet(curlAt))
+  sheet.frustumCulled = false // la grille unité ne dit rien de la taille réelle
+  sheet.visible = false
+  group.add(sheet)
+
+  // Point projeté sur le mur le long de la lumière.
+  const castOnWall = ([x, y, z]) => [x - (light[0] * z) / light[2], y - (light[1] * z) / light[2]]
+
+  function updateCurl(p) {
+    const curling = p.curl > 0.001
+    artMesh.visible = !curling
+    sheet.visible = curling
+    wallUniforms.uFlapKey.value = 0
+    if (!curling) return
+    const shape = curlShape(p.curl, p.width, p.height, curlAt)
+    sheet.position.z = p.artZ
+    curlUniforms.uCurlHalf.value.set(p.width / 2, p.height / 2)
+    curlUniforms.uCurlDir.value.set(...shape.dir)
+    curlUniforms.uCurlFold.value = shape.fold
+    curlUniforms.uCurlRadius.value = shape.radius
+    curlUniforms.uCurlZ.value = p.depth
+
+    // Ombre sur le mur et la feuille : le contour du coin levé, projeté le long de la lumière.
+    const lifted = curlOutline(shape).map((q) => curlPoint(q, shape))
+    const front = p.z + p.artZ + p.depth
+    const shadow = convexHull(lifted.map(([x, y, z]) => castOnWall([p.x + x, p.y + y, front + z])))
+    shadow.forEach((q, i) => flapHull[i].set(q[0], q[1]))
+    wallUniforms.uFlapHullN.value = shadow.length
+    const rise = Math.max(...lifted.map((q) => q[2]))
+    wallUniforms.uFlapKey.value = SHADOW.flap * Math.min(1, rise / 1.5)
+    wallUniforms.uFlapPenumbra.value = SHADOW.penumbra + SHADOW.flapPenumbraPerCm * rise
+  }
+
+  const borderColor = new THREE.Color()
+  const towardsLocal = new THREE.Quaternion()
+  let shownFrame = 'noir' // dernier cadre choisi : il reste dessiné pendant qu'il s'efface
+
+  function updatePainting(p, product, now) {
+    group.position.set(p.x, p.y, p.z)
+    group.rotation.set(p.pitch, p.yaw, 0)
+
+    // La bordure de la toile reste en place pendant tout l'affinage (la tranche d'une toile
+    // pliée rétrécit avec l'épaisseur) ; la feuille ne devient du papier nu qu'à l'arrivée.
+    const border = p.paper >= 0.999 ? 'papier' : product.border
+    // Sans arrondi : la dernière image d'une animation doit reconstruire le tableau à sa vraie taille,
+    // pour qu'il soit au pixel près celui d'une photo rendue hors de la page.
+    const key = [p.width, p.height, p.depth].join('x') + border + product.size
+    if (key !== artKey) {
+      setGeometry(artMesh, artBox({ width: p.width, height: p.height, depth: p.depth, border, paper: p.paper }), ['fab', 'art'])
+      setGeometry(backMesh, backShell({ width: p.width, height: p.height, depth: p.depth }), ['part'])
+      backUniforms.uHalf.value.set(p.width / 2, p.height / 2)
+      const { band, bar, cornerStapleInset, stapleLength } = backLayout(p.width, p.height)
+      backUniforms.uBand.value = band
+      backUniforms.uBar.value = bar
+      backUniforms.uCornerStapleInset.value = cornerStapleInset
+      backUniforms.uStapleHalf.value = stapleLength / 2
+      const { upright, flat } = stapleRows(p.width, p.height)
+      backUniforms.uStaplesUpright.value.set(upright.first, upright.gap, upright.count)
+      backUniforms.uStaplesFlat.value.set(flat.first, flat.gap, flat.count)
+      const format = marksAreas.format[product.size]
+      const marks = marksLayout(p.width, p.height, format.length, marksAreas.premium)
+      const boxes = [marks.logo, marks.cornerCode, marks.centerCode, marks.format, marks.premium]
+      const areas = [marksAreas.logo, marksAreas.cornerCode, marksAreas.centerCode, format.area, marksAreas.premium.area]
+      boxes.forEach(({ x, y, width: w, height: h }, i) => backUniforms.uMarkBoxes.value[i].set(x, y, w, h))
+      areas.forEach((area, i) => backUniforms.uMarkAreas.value[i].set(...area))
+      backUniforms.uMarkedCornerInset.value = marks.markedCornerInset
+      backUniforms.uRowClear.value.set(marks.rowClear.top, marks.rowClear.bottom)
+      const { below, above } = marks.rightRows
+      backUniforms.uStaplesBelow.value.set(below.first, below.gap, below.count)
+      backUniforms.uStaplesAbove.value.set(above.first, above.gap, above.count)
+      artKey = key
+    }
+    artMesh.position.z = p.artZ
+    updateCurl(p)
+
+    backMesh.visible = p.paper < 0.999
+    backMesh.position.z = p.artZ
+    backUniforms.uPine.value = wood.fade(now)
+    backUniforms.uSideArt.value = borderTakesImage(product.border) ? 1 : 0
+    backUniforms.uLightLocal.value.set(...light).applyQuaternion(towardsLocal.copy(group.quaternion).invert())
+
+    borderColor.set(borderOf(product.border).color || PAPER_WHITE)
+    artUniforms.uBorder.value.copy(borderColor).lerp(artUniforms.uPaperWhite.value, p.paper)
+    // Tant que le papier n'est pas arrivé du worker, le poster garde la trame sans son relief.
+    artUniforms.uPaper.value = artUniforms.uPaperTex.value ? p.paper : 0
+    artUniforms.uPasse.value = p.passe
+    const m = PASSE_RATIO * Math.min(p.width, p.height)
+    artUniforms.uMargin.value.set(m / p.width, m / p.height)
+    // Recadrage de l'œuvre dans l'intérieur du contour (remplir sans déformer).
+    const innerRatio = (p.width - 2 * m) / (p.height - 2 * m)
+    const { width: artWidth, height: artHeight } = imageSize(artImage)
+    const artRatio = artWidth / artHeight
+    artUniforms.uCover.value.set(
+      innerRatio < artRatio ? innerRatio / artRatio : 1,
+      innerRatio < artRatio ? 1 : artRatio / innerRatio,
+    )
+
+    frameMesh.visible = p.framed > 0.001
+    glass.visible = frameMesh.visible && p.paper > 0.01
+    if (!frameMesh.visible) return
+    // p.frame glisse de la caisse américaine à la baguette sous verre avec `paper`.
+    const f = p.frame
+    const kind = p.paper > 0.5 ? 'poster' : 'toile'
+    const fk = [p.width, p.height, f.gap, f.face, f.depth, f.floor].join('x') + kind
+    if (fk !== frameKey) {
+      const opening = frameOpening(p.width, p.height, f)
+      setGeometry(frameMesh, frameRing({ ...opening, profile: frameProfile(kind, f) }), ['shade'])
+      glass.scale.set(2 * opening.hw, 2 * opening.hh, 1)
+      glass.position.set(0, 0, f.floor + 0.1)
+      frameKey = fk
+    }
+    if (hasFrame(product)) shownFrame = product.frame
+    const look = frameOf(shownFrame)
+    const woodShown = wood.fade(now)
+    frameUniforms.uTint.value.set(look.color)
+    frameUniforms.uWood.value = look.wood * woodShown
+    frameUniforms.uRelief.value = look.relief * woodShown
+    frameUniforms.uRough.value = look.rough
+    frameUniforms.uOpacity.value = p.framed
+    glassUniforms.uOpacity.value = p.paper * p.framed
+    glassUniforms.uNormal.value.set(0, 0, 1).applyEuler(group.rotation)
+    glassUniforms.uWin.value.set(p.x - 28, p.y + 36, p.z + 240)
+  }
+
+  function updateShadow(p) {
+    const corners = paintingCorners(p, 'outer')
+    const h = convexHull(corners.map(castOnWall))
+    h.forEach((q, i) => hull[i].set(q[0], q[1]))
+    wallUniforms.uHullN.value = h.length
+    const front = corners.filter((c) => c.side.z === 1)
+    const height = front.reduce((s, c) => s + c[2], 0) / front.length
+    wallUniforms.uPenumbra.value = SHADOW.penumbra + SHADOW.penumbraPerCm * height
+    wallUniforms.uKey.value = SHADOW.key * Math.exp(-height / SHADOW.keyFade) * Math.min(1, p.outer.depth / 0.6)
+    wallUniforms.uAo.value.set(p.x, p.y, p.outer.width / 2, p.outer.height / 2)
+    wallUniforms.uAoAmt.value = SHADOW.ao * Math.exp(-p.z / 2.5) * Math.min(1, p.outer.depth / 2)
+  }
+
+  /* Image chargée à la demande : décodée hors du fil de la page, envoyée tout de suite à la
+     carte graphique (jamais en pleine animation), puis montrée en fondu. `receive` la range. */
+  function lazyTexture(url, receive) {
+    let state = 'none', shownAt = 0, loading = null
+    return {
+      load() {
+        if (loading) return loading
+        state = 'loading'
+        loading = decodeImage(url).then((image) => {
+          if (disposed) {
+            closeImage(image)
+            return
+          }
+          const texture = imageTexture(image)
+          receive(texture)
+          renderer.initTexture(texture)
+          state = 'ready'
+          shownAt = performance.now()
+          if (onNeedsRender) onNeedsRender()
+        }, () => { state = 'error' })
+        return loading
+      },
+      fade: (now) => (state === 'ready' ? fadeSince(shownAt, now) : 0),
+      isFading: (now) => state === 'ready' && now - shownAt < FADE_MS,
+    }
+  }
+
+  // Bois des cadres : chargé au repos de la page. Tant qu'il n'est pas là, le cadre a sa teinte.
+  const wood = lazyTexture(woodImage, (texture) => {
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping
+    frameUniforms.uMap.value = texture
+  })
+  // Pièce : chargée quand on touche aux tailles (la page l'annonce), sinon au premier recul.
+  const roomPhoto = lazyTexture(room.image, (texture) => { wallUniforms.uRoom.value = texture })
+
+  let onNeedsRender = null
+  let disposed = false
+  let width = 1, height = 1
+  let roomShown = false
+
+  // density : pixels du tampon par pixel CSS (voir renderDensity).
+  function resize(w, h, density) {
+    width = Math.max(1, w)
+    height = Math.max(1, h)
+    renderer.setPixelRatio(density)
+    renderer.setSize(width, height, false)
+    camera.aspect = width / height
+  }
+
+  // Tout vient de la vue du directeur : caméra, pose, pièce et choix en cours (view.product).
+  function render(view, now) {
+    camera.fov = (view.camera.fovY * 180) / Math.PI
+    camera.position.set(...view.camera.position)
+    camera.lookAt(...view.camera.target)
+    camera.updateProjectionMatrix()
+    updatePainting(view.painting, view.product, now)
+    updateShadow(view.painting)
+    roomShown = view.room > 0
+    if (roomShown) roomPhoto.load()
+    wallUniforms.uRoomMix.value = view.room * roomPhoto.fade(now)
+    finishArtSwap(now)
+    renderer.render(scene, camera)
+  }
+
+  /* Tout se prépare ici, avant que la 3D soit visible : l'œuvre part au GPU, les programmes se
+     compilent hors du fil de la page, puis une répétition installe le reste. Le premier clic
+     n'a plus rien à attendre. Renvoie le coût d'une image complète (voir frameCost). */
+  async function prepare(view, now) {
+    renderer.initTexture(artUniforms.uArt.value)
+    renderer.initTexture(marksTexture)
+    await renderer.compileAsync(scene, camera)
+    await rehearse(view, now)
+    const framed = { ...view.painting, framed: 1 }
+    const facing = { ...view, painting: { ...framed, paper: 1 } }
+    const ofBack = { ...view, painting: { ...framed, paper: 0, yaw: Math.PI, z: view.painting.width } }
+    const facingCost = frameCost(facing, now)
+    await breathe()
+    return Math.max(facingCost, frameCost(ofBack, now))
+  }
+
+  /* Répétition : des images complètes (cadre et verre, dos de la toile, coin du poster, tailles
+     qui changent comme pendant une animation) limitées à un seul pixel. Elles ne coûtent rien
+     à la carte graphique mais rodent le code : sans elles, chaque image demande 1 à 2 ms au
+     lieu de 0,3 ms, et le navigateur s'interrompt 15 ms au début du premier mouvement. */
+  async function rehearse(view, now) {
+    const { width: w, depth: d } = view.painting
+    renderer.setScissorTest(true)
+    renderer.setScissor(0, 0, 1, 1)
+    for (let i = 0; i < REHEARSAL_FRAMES; i++) {
+      const sizes = { width: w + i * 0.002, depth: d - i * 0.002 }
+      const pose = [
+        { framed: 1, paper: 0.5 },
+        { yaw: 3, z: w },
+        { paper: 1, curl: 0.5 },
+      ][i % 3]
+      render({ ...view, painting: { ...view.painting, ...sizes, ...pose } }, now)
+      if (i % 3 === 2) await breathe()
+    }
+    renderer.setScissorTest(false)
+  }
+
+  // Coût d'une image, attente du GPU comprise : le meilleur de quelques essais.
+  function frameCost(view, now) {
+    const gl = renderer.getContext()
+    const pixel = new Uint8Array(4)
+    let cost = Infinity
+    for (let i = 0; i < TRIAL_FRAMES; i++) {
+      const start = performance.now()
+      render(view, now)
+      gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel)
+      cost = Math.min(cost, performance.now() - start)
+    }
+    return cost
+  }
+
+  // Le papier arrive du worker après la première image : envoyé tout de suite au GPU.
+  function setPaperRelief(pixels) {
+    if (disposed) return
+    const texture = reliefTexture(pixels)
+    renderer.initTexture(texture)
+    artUniforms.uPaperTex.value = texture
+    if (onNeedsRender) onNeedsRender()
+  }
+
+  /* Remplace l'œuvre par une version plus détaillée, en fondu : la netteté ne saute pas.
+     L'envoi au GPU prend quelques dizaines de ms : la page ne l'appelle qu'à l'arrêt. */
+  let artSwap = null
+  function useArtImage(image) {
+    const texture = imageTexture(image)
+    renderer.initTexture(texture)
+    artUniforms.uArtPrev.value = artUniforms.uArt.value
+    artUniforms.uArt.value = texture
+    artUniforms.uArtMix.value = 0
+    artSwap = { image: artImage, at: performance.now() }
+    artImage = image
+  }
+
+  function finishArtSwap(now) {
+    if (!artSwap) return
+    artUniforms.uArtMix.value = fadeSince(artSwap.at, now)
+    if (artUniforms.uArtMix.value < 1) return
+    artUniforms.uArtPrev.value.dispose()
+    artUniforms.uArtPrev.value = null
+    closeImage(artSwap.image)
+    artSwap = null
+  }
+
+  // Projette un point du mur ou du tableau en pixels CSS dans le canvas.
+  const tmp = new THREE.Vector3()
+  function toScreen(point) {
+    tmp.set(...point).project(camera)
+    return { x: ((tmp.x + 1) / 2) * width, y: ((1 - tmp.y) / 2) * height }
+  }
+
+  // Seul ce qui se voit compte : un fondu hors du champ ne réclame aucune image.
+  function isFading(now) {
+    return !!artSwap || (roomShown && roomPhoto.isFading(now)) || (frameMesh.visible && wood.isFading(now))
+  }
+
+  /* Rend tout à la carte graphique : la bascule toile/poster remplace la fiche, et un navigateur ne
+     garde qu'une quinzaine de contextes WebGL. La scène ne sert plus après. */
+  function dispose() {
+    disposed = true
+    scene.traverse((object) => {
+      if (object.geometry) object.geometry.dispose()
+      if (object.material) object.material.dispose()
+    })
+    const textures = [
+      artUniforms.uArt, artUniforms.uArtPrev, artUniforms.uWeave, artUniforms.uPaperTex,
+      frameUniforms.uMap, wallUniforms.uRoom, backUniforms.uMarks,
+    ]
+    for (const { value } of textures) if (value) value.dispose()
+    closeImage(artImage)
+    renderer.dispose()
+    renderer.forceContextLoss()
+  }
+
+  return {
+    resize,
+    render,
+    toScreen,
+    prepare,
+    setPaperRelief,
+    loadWood: wood.load,
+    useArtImage,
+    prefetchRoom: roomPhoto.load,
+    density: () => renderer.getPixelRatio(),
+    isFading,
+    dispose,
+    set onNeedsRender(fn) { onNeedsRender = fn },
+  }
+}
+
+/* ==== PHOTOS, HORS DE LA PAGE ==== */
+
+/* La vue finie d'un plan, sans transition : ce que montre la fiche une fois le mouvement posé.
+   group : l'option dont on veut le plan ('border', 'frame', 'size'…), rien pour la vue de face. */
+export function stillView({ room, product, group, aspect }) {
+  const director = createDirector({ room, product, reducedMotion: true })
+  if (group) director.choose(group, product, 0)
+  return director.view(0, aspect)
+}
+
+/* Une photo de la scène, pour le serveur (ticket 08) : le même createScene et la même vue que la
+   fiche, sur un canvas qui n'a pas besoin d'être dans une page. Renvoie un Blob.
+   options : celles de createScene, plus product, group, width, height et density. */
+export async function renderStill(THREE, { product, group, width, height, density = 1, type = 'image/png', quality, ...assets }) {
+  const scene = createScene(THREE, assets)
+  try {
+    scene.resize(width, height, density)
+    await scene.loadWood()
+    const view = stillView({ room: assets.room, product, group, aspect: width / height })
+    // Bien après le fondu d'arrivée du bois : la photo montre son état final.
+    scene.render(view, performance.now() + FADE_MS)
+    const { canvas } = assets
+    if (canvas.convertToBlob) return await canvas.convertToBlob({ type, quality })
+    return await new Promise((resolve) => { canvas.toBlob(resolve, type, quality) })
+  } finally {
+    scene.dispose()
+  }
+}
+
+/* ==== WORKER ==== */
+
+// Lancé comme worker par startReliefs : la trame d'abord, le papier ensuite.
+if (typeof WorkerGlobalScope !== 'undefined' && globalThis instanceof WorkerGlobalScope) {
+  const send = (name, pixels) => postMessage({ name, pixels }, [pixels.buffer])
+  send('weave', weavePixels())
+  send('paper', paperPixels())
+}

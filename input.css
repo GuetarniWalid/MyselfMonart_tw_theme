@@ -341,6 +341,32 @@ main-product-blocks .description h3 span {
   }
 }
 
+/* Fiche 3D (sections/main-product.liquid, scène 3D) : sous 900 px, le bouton flottant devient la barre
+   d'achat, fixe et visible dès l'arrivée, même sous la classe .hidden que lui pose l'observateur de
+   main-product.js. L'encart promo la masque toujours (règle plus spécifique, ci-dessus). Le bouton du
+   panier monte au-dessus d'elle, et la page garde de quoi laisser voir le bas du pied de page. Il monte
+   par transform : il est lu avant la section, un changement de `bottom` compterait comme un décalage. */
+@media (max-width: 899px) {
+  .float-buy-button.buy-bar {
+    display: block;
+    left: 1rem;
+    bottom: max(0.75rem, env(safe-area-inset-bottom));
+    width: calc(100% - 2rem);
+    max-width: none;
+    margin-bottom: 0;
+    animation: none;
+    transform: none;
+  }
+
+  body:has([data-buy-bar]) {
+    padding-bottom: 6rem;
+  }
+
+  body:has([data-buy-bar]) #cart-button {
+    transform: translateY(-5rem);
+  }
+}
+
 /* ⛔ Badge flottant hCaptcha injecté par Shopify (div#shop-hcaptcha-badge-container, position
    fixed, z-index 9999, 211x55). Il apparaît dès qu'un formulaire protégé est armé et recouvre
    le bas de l'écran sur mobile — inacceptable sur une fiche produit.
