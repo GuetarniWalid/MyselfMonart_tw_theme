@@ -1,8 +1,9 @@
 {%- comment -%}
   posthog — la mesure de la boutique (fiche-3d, ticket 06). Rendu par head-base, donc sur tous les
   layouts. La logique est dans assets/posthog-tracking.js : lu en `defer`, il ne bloque pas
-  l'affichage, et PostHog lui-même ne se charge que s'il y a quelque chose à envoyer, après un geste
-  du visiteur, la page chargée et le navigateur au repos, si le consentement analytique est accordé.
+  l'affichage. PostHog lui-même ne se charge qu'après un geste du visiteur, la page chargée et le
+  navigateur au repos, si le consentement analytique est accordé. Il compte alors les pages vues de
+  tout le site, et enregistre les visites sur les seules fiches d'œuvres.
   Rien dans l'éditeur de thème.
 
   La configuration vit ici, pas dans un réglage de thème :

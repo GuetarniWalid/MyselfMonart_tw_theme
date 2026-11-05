@@ -3,9 +3,8 @@
  * ----------------------------------------------------------------------------------------------
  * Chargé par snippets/posthog.liquid (jeton, hôte, taux d'enregistrement), sur tous les layouts.
  *
- * Ce fichier est léger ; la bibliothèque PostHog (119 Ko compressés), non. Elle ne se charge donc que
- * s'il y a quelque chose à envoyer (une fiche, ou un ajout au panier ailleurs), une fois ces quatre
- * portes ouvertes :
+ * Ce fichier est léger ; la bibliothèque PostHog (119 Ko compressés), non. Elle se charge sur toutes
+ * les pages, mais seulement une fois ces quatre portes ouvertes :
  *   1. un vrai geste du visiteur (souris, doigt, molette, clavier). C'est le filtre des robots :
  *      en septembre 2026, 93 % des 90 000 sessions GA4 venaient d'eux. Sans geste, rien ne se
  *      charge et rien n'est compté, et Lighthouse ne voit pas PostHog ;
@@ -13,16 +12,27 @@
  *   3. le repos du navigateur ;
  *   4. le consentement analytique de Shopify (Shopify.customerPrivacy). Refusé : rien ne se charge.
  *      Retiré ensuite : PostHog cesse de capter et d'enregistrer.
- * Une vue de fiche est donc une vue avec au moins un geste. Thème non publié : aucun suivi.
+ * Une page vue est donc une vue avec au moins un geste. Thème non publié : aucun suivi.
  *
- * Événements, et rien d'autre (ni clics automatiques, ni pages vues) :
+ * Événements, et rien d'autre (ni clics automatiques, ni défilement) :
+ *   $pageview                    page affichée, y compris à chaque bascule toile/poster
+ *   $pageleave                   page quittée, envoyé par PostHog : durée et rebond de Web Analytics
  *   product_viewed               fiche affichée, y compris à chaque bascule toile/poster
  *   product_option_selected      option choisie par le visiteur (option, option_value)
  *   floating_buy_button_clicked  clic sur le bouton d'achat flottant
  *   product_added_to_cart        ajout réussi (source, quantity, value)
- * Tous portent la devise du marché (currency). Ceux de la fiche portent la fiche
+ * Tous, sauf $pageleave, portent la devise du marché (currency). Ceux de la fiche portent la fiche
  * (#product-tracking-json, sections/main-product.liquid) et le choix du visiteur (window.MMASelection,
  * assets/product-selection.js).
+ *
+ * $pageview part d'ici, pas de PostHog (capture_pageview reste coupé), une fois par page et une fois
+ * par bascule : la vue attend les portes dans la même file que le reste, avec son adresse et sa source
+ * d'arrivée (site d'origine, campagne), lues avant que la page ne change d'adresse.
+ *
+ * PostHog fixe l'entrée et le canal d'une visite d'après son 1er $pageview. Un visiteur qui quitte la
+ * page d'arrivée avant le démarrage perdrait donc Google ou sa campagne : la page suivante aurait le site
+ * lui-même pour origine. Sa vue est alors reportée (sessionStorage, cet onglet seulement, après un
+ * geste et avec le consentement), et elle part en tête à la page suivante, une fois les portes ouvertes.
  *
  * Chaque chemin d'ajout au panier annonce sa réussite par UN événement sur `document` :
  *   document.dispatchEvent(new CustomEvent('mma:cart-add', { detail: { source, items } }));
@@ -48,6 +58,38 @@
       hash = Math.imul(hash ^ sessionId.charCodeAt(i), 16777619);
     }
     return ((hash >>> 0) % 10000) / 10000 < rate;
+  }
+
+  // Les paramètres d'adresse dont PostHog tire la campagne et le canal : sa propre liste, recopiée.
+  const CAMPAIGN_PARAMS = [
+    'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gad_source', 'mc_cid', 'gclid', 'gclsrc',
+    'dclid', 'gbraid', 'wbraid', 'fbclid', 'msclkid', 'twclid', 'li_fat_id', 'igshid', 'ttclid', 'rdt_cid', 'epik',
+    'qclid', 'sccid', 'oppref', 'bfcid', 'irclid', '_kx',
+  ];
+
+  // D'où vient la page : le site d'origine et la campagne de l'adresse. Noms et valeurs sont ceux de
+  // PostHog. Un clic interne ne dit rien du site d'origine : la visite garde celui de sa 1re page.
+  function trafficSource(href, referrer) {
+    const url = new URL(href);
+    const source = {};
+    CAMPAIGN_PARAMS.forEach((name) => {
+      const value = url.searchParams.get(name);
+      if (value) source[name] = value;
+    });
+    const domain = referrer ? new URL(referrer).host : '$direct';
+    if (domain === url.host) return source;
+    return { ...source, $referrer: referrer || '$direct', $referring_domain: domain };
+  }
+
+  // Sans le fragment (#avis), comme PostHog. L'adresse est figée ici : sans cela, deux vues en attente
+  // autour d'une bascule toile/poster partiraient à la même adresse, et cette page compterait double.
+  function pageViewProperties(location, source) {
+    return {
+      ...source,
+      $current_url: location.origin + location.pathname + location.search,
+      $host: location.host,
+      $pathname: location.pathname,
+    };
   }
 
   // product : contenu de #product-tracking-json. selection : détail de mma:selection-change ou
@@ -144,6 +186,35 @@
     });
   }
 
+  // ---- Vues reportées --------------------------------------------------------------------------
+
+  // Le stockage peut être refusé (mode privé, quota) : la vue est alors perdue, sans casser la page.
+  const CARRIED_VIEWS_KEY = 'mma_ph_views';
+
+  function readCarriedViews(win) {
+    try {
+      return JSON.parse(win.sessionStorage.getItem(CARRIED_VIEWS_KEY)) || [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function writeCarriedViews(win, views) {
+    try {
+      win.sessionStorage.setItem(CARRIED_VIEWS_KEY, JSON.stringify(views));
+    } catch (e) {
+      /* vue perdue */
+    }
+  }
+
+  function forgetCarriedViews(win) {
+    try {
+      win.sessionStorage.removeItem(CARRIED_VIEWS_KEY);
+    } catch (e) {
+      /* rien à oublier */
+    }
+  }
+
   // ---- Suivi -----------------------------------------------------------------------------------
 
   function postHogOptions(apiHost) {
@@ -152,8 +223,8 @@
       defaults: '2026-08-30',
       person_profiles: 'identified_only',
       autocapture: false,
-      capture_pageview: false,
-      capture_pageleave: false,
+      capture_pageview: false, // la vue part de trackPage : PostHog en ajouterait une à chaque bascule
+      capture_pageleave: true,
       capture_heatmaps: false,
       capture_dead_clicks: false,
       capture_performance: false,
@@ -171,10 +242,17 @@
     // Aperçu d'un thème non publié, `shopify theme dev` : seule la boutique en ligne est mesurée.
     if (win.Shopify.theme && win.Shopify.theme.role !== 'main') return;
 
-    const queue = []; // ce qui attend le démarrage, en mémoire seulement : rien n'est écrit ni transmis
+    // Lue tout de suite : un clic sur la bascule ou un filtre change l'adresse avant le démarrage.
+    const source = trafficSource(win.location.href, doc.referrer);
+    const queue = []; // ce qui attend le démarrage, en mémoire : rien n'est transmis avant les portes
     let consent = 'pending'; // 'pending' : une porte reste à ouvrir ; 'granted' ; 'refused' : retiré
+    let gestured = false; // vrai geste vu sur cette page
     let posthog = null; // prêt à capter
     let requested = false; // bibliothèque demandée, une fois par page
+
+    function analyticsAllowed() {
+      return !!win.Shopify.customerPrivacy && win.Shopify.customerPrivacy.analyticsProcessingAllowed();
+    }
 
     function track(name, properties) {
       if (consent === 'refused') return;
@@ -194,15 +272,16 @@
       return productProperties(JSON.parse(node.textContent), chosen);
     }
 
-    function trackView() {
+    function trackPage() {
+      track('$pageview', pageViewProperties(win.location, source));
       const product = currentProductProperties();
       if (product) track('product_viewed', product);
     }
 
     // Écouteurs posés une seule fois sur `document`, qui survit au remplacement de #MainContent
     // (bascule toile/poster) : le bouton flottant vit d'ailleurs hors de #MainContent, sur <body>.
-    doc.addEventListener('DOMContentLoaded', trackView, { once: true });
-    doc.addEventListener('mma:soft-navigation', trackView);
+    doc.addEventListener('DOMContentLoaded', trackPage, { once: true });
+    doc.addEventListener('mma:soft-navigation', trackPage);
     doc.addEventListener('mma:selection-change', (e) => {
       if (!e.detail.changed) return;
       track('product_option_selected', optionProperties(currentProductProperties(e.detail), e.detail.changed));
@@ -218,6 +297,18 @@
       true,
     );
 
+    // Parti avant le démarrage : les vues de la page passent à la suivante, datées de ce départ pour
+    // rester avant elle. Sorties de la file : un retour par le cache du navigateur ne les renvoie pas.
+    win.addEventListener('pagehide', () => {
+      if (!gestured || posthog || !analyticsAllowed()) return;
+      const at = Date.now();
+      const views = queue
+        .splice(0)
+        .filter(([name]) => name === '$pageview')
+        .map(([, event]) => ({ event, at }));
+      if (views.length > 0) writeCarriedViews(win, [...readCarriedViews(win), ...views]);
+    });
+
     // Au démarrage, et quand le consentement retiré revient. PostHog garde un retrait d'une page à l'autre.
     function captureAndRecord() {
       if (posthog.has_opted_out_capturing()) posthog.opt_in_capturing({ captureEventName: false });
@@ -232,6 +323,9 @@
       posthog = win.posthog;
       posthog.init(config.token, postHogOptions(config.apiHost));
       captureAndRecord();
+      const carried = readCarriedViews(win);
+      forgetCarriedViews(win);
+      carried.forEach(({ event, at }) => posthog.capture('$pageview', event, { timestamp: new Date(at) }));
       queue.splice(0).forEach(([name, event]) => posthog.capture(name, event));
     }
 
@@ -260,24 +354,37 @@
     function refuse() {
       consent = 'refused';
       queue.length = 0;
+      forgetCarriedViews(win);
       if (!posthog) return;
       posthog.opt_out_capturing();
       posthog.stopSessionRecording(); // l'enregistreur tournerait encore, seul son envoi étant coupé
     }
 
-    Promise.all([firstGesture(win), pageLoaded(win, doc)])
+    const gesture = firstGesture(win).then(() => {
+      gestured = true;
+    });
+
+    Promise.all([gesture, pageLoaded(win, doc)])
       .then(() => browserIdle(win))
       .then(() => consentApi(win))
       .then(() => {
-        const allowed = () => win.Shopify.customerPrivacy.analyticsProcessingAllowed();
-        doc.addEventListener('visitorConsentCollected', () => (allowed() ? grant() : refuse()));
-        if (allowed()) grant();
+        doc.addEventListener('visitorConsentCollected', () => (analyticsAllowed() ? grant() : refuse()));
+        if (analyticsAllowed()) grant();
+        else forgetCarriedViews(win);
       });
   }
 
   // Node (tests) : rien ne démarre, le calcul et le suivi sont exportés.
   if (typeof window === 'undefined') {
-    module.exports = { inSample, productProperties, optionProperties, cartProperties, startTracking };
+    module.exports = {
+      inSample,
+      trafficSource,
+      pageViewProperties,
+      productProperties,
+      optionProperties,
+      cartProperties,
+      startTracking,
+    };
     return;
   }
 
