@@ -146,6 +146,52 @@ Partout : `force` 0,6 ; ombre décalée de 2,6 et 2,4 cm, flou 1,5 cm, force 0,7
 
 **Limites :** trois pièces, une seule œuvre, jugées à l'œil. `force` et les réglages d'ombre sont choisis à la main. Caméra centrée et mur de face, la tranche de 2 cm n'est pas visible : la méthode 1 ne la dessine pas.
 
+### Scènes habitées (05/11/2026)
+
+Walid a préféré la méthode 1 mais n'a rien validé : un 30 × 40 sur un grand mur est ridicule, et les pièces sont vides. Le cahier des charges change : la scène dépend de la taille, et la zone libre n'est qu'un peu plus grande que le tableau. Les intérieurs sont habités, vus de face, avec le mur plan.
+
+**Page à trier :** https://myselfmonart-space.fra1.digitaloceanspaces.com/bench/pieces/scenes/2026-11-05-80aded2bc913/index.html
+
+**Coût : 2,48 $ pour 10 images en 4K** (1,49 $ puis 0,99 $), calculé d'après les jetons comptés par Google, sous le plafond de 3 €. Le plafond du script passe à 7,49 $, et le registre est à 7,28 $ en tout. Six scènes retenues sur dix.
+
+| Scène | Image | Taille | Avis |
+|---|---|---|---|
+| Table de chevet | `chevet-1` | 30 × 40 | La plus forte. Le petit format y a sa raison d'être. |
+| Canapé | `canape-1` | 90 × 120 | Au niveau : le grand format est naturel entre les deux bibliothèques. |
+| Console d'entrée | `console-2` | 60 × 80 | Au niveau. |
+| Bibliothèque et porte | `etroit-1` | 30 × 40 | Très belle, mais le mur fait environ 1,20 m au lieu de 70 cm : le tableau y a plus de place que voulu. Un petit cadre se devine dans la pièce du fond. |
+| Buffet | `buffet-2` | 60 × 80 | Très belle ambiance, mais sombre et très composée : les couleurs d'une œuvre s'y éteignent un peu. |
+| Tête de lit | `lit-1` | 75 × 100 | La moins forte : la plus proche du catalogue, et le tableau y paraît un peu froid. |
+
+**Écartées :** `console-1` et `buffet-1` (panneau dessiné sur le mur pour la première, mise en scène trop sage pour la seconde), `console-3` (bande de soleil dure à l'emplacement du tableau), `bureau-1` (liseré blanc autour de la photo, trop rangée).
+
+**Ce qui a marché dans le prompt :**
+- Dire que c'est une vraie maison pour un reportage de The World of Interiors, jamais un showroom, et donner un moment : « a rainy afternoon, spent reading ».
+- Nommer des traces de vie précises : plaid tiré, livre retourné, chemise sur une chaise, lampe allumée.
+- Écrire que le mur est « simply bare: the same unbroken limewash as everywhere else, with no panel, no recess, no frame ». Les mots « waiting for a picture » ont fait dessiner un panneau sur `console-1`.
+- Les prompts complets sont dans `sorties/<clé>.json` des passages `2026-11-05-89e24064520f` et `2026-11-05-ac3a1e927975`.
+
+**Ce qui reste faux ou incertain :**
+- Ce sont des montages à plat. Le pli de toile imite la tranche, et rien ne remplace encore le relief de la 3D.
+- L'ombre ne se déduit pas toujours du mur : le sens lu sur le mur était faux sur le chevet, où la lampe est sous le tableau. Il a fallu la régler à la main sur le chevet, la console et le buffet. Chaque pièce devra garder le sens de sa lumière principale dans ses réglages.
+- Échelle moins sûre que dans la première série : plafond souvent hors champ, meubles encore plus larges que demandé (console de 130 cm rendue à environ 190 cm). Marge d'environ ± 15 %.
+- Lumières très marquées : l'exposition du tableau reste calée à l'œil. Une seule œuvre a été testée, et une œuvre très sombre ou très claire peut réagir autrement.
+
+**Réglages de la méthode 1 par scène** (de 0 à 1 dans la photo ; ombre en cm) :
+
+| Scène | Mur dans la largeur | Accrochage | Mur libre | Référence claire, albédo | Force | Ombre |
+|---|---|---|---|---|---|---|
+| `chevet-1` | 325 cm | 0,50 0,25 | 0,30 0,05 0,70 0,36 | oreiller 0,70 0,50 0,82 0,56, 0,60 | 0,8 | 0,2 et -2,6, flou 1,8, force 0,6 |
+| `etroit-1` | 380 cm | 0,52 0,35 | 0,39 0,05 0,68 0,75 | pages 0,27 0,46 0,34 0,55, 0,75 | 0,6 | défaut |
+| `console-2` | 430 cm | 0,49 0,37 | 0,27 0,04 0,60 0,48 | lettres 0,455 0,565 0,50 0,578, 0,85 | 0,6 | 2 et -1 |
+| `buffet-2` | 380 cm | 0,50 0,31 | 0,26 0,05 0,66 0,45 | cruche 0,76 0,53 0,78 0,57, 0,60 | 0,5 | 1 et -1,6, force 0,55 |
+| `lit-1` | 432 cm | 0,50 0,345 | 0,33 0,05 0,70 0,50 | oreiller 0,56 0,60 0,62 0,63, 0,85 | 0,6 | défaut |
+| `canape-1` | 485 cm | 0,515 0,365 | 0,30 0,09 0,73 0,54 | assise 0,30 0,73 0,45 0,76, 0,62 | 0,6 | défaut |
+
+Ombre par défaut : décalage de 2,6 et 2,4 cm, flou 1,5 cm, force 0,7. Pli de toile : 0,4 cm, force 0,22.
+
+**Backend :** commits `267e034`, `3f44b97` et `903c903` sur `main`, déploiements réussis, tests dorés et build verts, Prettier passé.
+
 ### Pour la suite du ticket, à ne pas faire dans cette étape
 
 - Poser un papier peint ou un carrelage sur le mur d'une pièce demandera un masque du mur par pièce : le motif ne doit pas traverser le meuble (constat de l'essai de murs du prototype).
