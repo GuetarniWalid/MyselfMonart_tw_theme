@@ -12,6 +12,7 @@ Ce que fait Walid : la désinstallation de l'application Clarity.
 - [x] PostHog se charge sans ralentir l'affichage des pages.
 - [x] Événements suivis : vue de fiche, choix d'option, ajout au panier, clic sur la barre d'achat. Enregistrements de visites échantillonnés sur les fiches.
 - [x] Réglages protecteurs : champs de saisie masqués, adresses IP non conservées.
+- [x] Visites de tout le site dans l'onglet Web Analytics : pages, canaux, durée et rebond.
 - [ ] Un premier tableau de bord : visites des fiches, ajouts au panier et commandes, par appareil.
 - [ ] Clarity désactivé dans le thème, puis désinstallé par Walid.
 
@@ -29,7 +30,7 @@ Ce que fait Walid : la désinstallation de l'application Clarity.
 - `$pageview` part du thème, pas de PostHog : `capture_pageview` reste coupé, sinon la bascule toile/poster compterait double. Une vue par page, une par bascule (`mma:soft-navigation`), aller ou retour. Les filtres et la pagination ne changent que les paramètres : pas de vue en plus.
 - La vue attend dans la file, avec l'adresse et la source lues à l'arrivée : une bascule ou un filtre peut changer l'adresse avant le démarrage.
 - `$pageleave` est envoyé par PostHog (`capture_pageleave: true`). Avec lui, Web Analytics calcule la durée et le rebond. Sans capture automatique, le rebond ne repose que sur le nombre de pages et la durée.
-- PostHog fixe l'entrée et le canal d'une session d'après son 1er `$pageview` (`$entry_referring_domain`, `$entry_utm_*`). Un visiteur qui quitte la page d'arrivée avant le démarrage, par exemple sur un téléphone lent, ferait de sa 2e page l'entrée de la session, avec notre propre site pour origine. Sa vue est donc reportée : écrite dans le `sessionStorage` de l'onglet (`mma_ph_views`) en quittant la page, elle part en tête à la page suivante, datée de ce départ, avec sa source. Cela demande un geste et le consentement ; rien n'est écrit sinon, et un refus l'efface.
+- PostHog fixe l'entrée et le canal d'une session d'après son 1er événement (`$entry_referring_domain`, `$entry_utm_*`). Un visiteur qui quitte la page d'arrivée avant le démarrage, par exemple sur un téléphone lent, ferait de sa 2e page l'entrée de la session, avec notre propre site pour origine. Sa vue est donc reportée : écrite dans le `sessionStorage` de l'onglet (`mma_ph_views`) en quittant la page, elle part en tête à la page suivante, datée de ce départ, avec sa source. Cela demande un geste et le consentement ; rien n'est écrit sinon, et un refus l'efface.
 
 **Événements.** `$pageview`, `$pageleave`, `product_viewed` (à chaque bascule aussi), `product_option_selected` (`option`, `option_value`), `floating_buy_button_clicked`, `product_added_to_cart` (`source` : main, float, bundle ou studio ; `quantity`, `value`). Tous, sauf `$pageleave`, portent `currency`. Les trois événements de fiche portent le produit, le type (`product_kind`), la variante, le prix et les options. Rien d'autre ne part : ni clics automatiques, ni défilement. Le texte libre des lignes de panier ne part jamais.
 
@@ -67,6 +68,17 @@ Ce que fait Walid : la désinstallation de l'application Clarity.
 - Ses propriétés de ligne restent vides, même après un choix : un poster « Cadre chêne clair » est entré au panier sans couleur ni contour blanc, alors que le bouton principal aurait envoyé `Couleur du cadre` et `Contour blanc`.
 
 **Vérifié en ligne le 04/11.** Sur la fiche poster du Bonsaï : rien ne se charge avant un geste ; après un vrai clic, `product_viewed`, `product_option_selected` et `product_added_to_cart` (source main, 47,90 EUR, propriétés de ligne présentes) arrivent dans le projet, et `#product-tracking-json` est rendu par le thème. Clarity n'est plus chargé. Les premiers événements viennent tous de nos essais (`$browser: Claude`) : l'arrivée de vrais visiteurs reste à constater.
+
+**Vérifié en ligne le 05/11, tout le site.** Dans Chrome, avec de vrais gestes :
+- Accueil, collection, article et fiche : rien ne se charge avant le geste ; après, un `$pageview` arrive dans le projet.
+- `$pageleave` arrive à la sortie de page. La bascule toile/poster ajoute une seule vue.
+- Arrivée par un résultat Google : origine `www.google.com`. Arrivée par un lien de campagne : `utm_source` gardé sur toutes les pages de la visite.
+- Arrivée par Google, page quittée avant le démarrage (bibliothèque bloquée pour l'essai) : la vue reportée arrive, et la session a la collection pour entrée, `www.google.com` pour origine, Organic Search pour canal.
+- Refus par la vraie API Shopify : ni chargement ni envoi sur la page, malgré les gestes. À la page suivante, la bannière réaccepte tout et la mesure reprend, comme noté plus haut.
+- Session tirée au sort : enregistrée sur la fiche et après la bascule, pas sur l'accueil ni la collection.
+- Lighthouse sur une collection : 342 requêtes, aucune vers PostHog à part `posthog-tracking.js`.
+- Web Analytics affiche les pages, les canaux, la durée et le rebond. Santé de l'installation : `$pageview` et `$pageleave` validés. La profondeur de défilement et les mesures de performance restent coupées, volontairement.
+- Ces essais restent dans le projet : 4 sessions le 05/11, vers 11 h 20 UTC. L'une a le canal Direct alors qu'elle vient de Google, à cause d'un `posthog.reset()` de l'essai.
 
 **Tableau de bord** : https://eu.posthog.com/project/334087/dashboard/1083520 (9 tuiles, sans commandes). Seul `Desktop` remonte pour l'instant.
 

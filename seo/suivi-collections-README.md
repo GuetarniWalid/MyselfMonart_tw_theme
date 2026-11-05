@@ -43,6 +43,25 @@ Claude suit alors ces étapes :
 
 **Google Analytics n'est plus relevé depuis le 2026-11-05.** Walid l'a abandonné, et GA4 ne reçoit presque plus rien depuis le 29/10 : en Organic Search, 809 sessions du 22 au 28/10, puis 21 du 31/10 au 04/11. J118 reste le dernier snapshot avec des sessions. Les visites se lisent maintenant dans Shopify et PostHog, sans les comparer à cette colonne.
 
+**Les sessions Organic se lisent dans PostHog depuis le 2026-11-05.** Le projet `334087` remplace GA4 comme source. Ces chiffres ne vont pas dans les snapshots : la colonne s'arrête à J118. Cette requête donne les sessions par collection, ici sur la 1re fenêtre de 28 jours complète :
+
+```sql
+SELECT
+  lower(extract(properties.$pathname, '^/collections/([a-zA-Z0-9-]+)/?$')) AS handle,
+  count(DISTINCT $session_id) AS sessions
+FROM events
+WHERE event = '$pageview'
+  AND timestamp >= toDateTime('2026-11-06 00:00:00')
+  AND timestamp < toDateTime('2026-12-04 00:00:00')
+  AND match(properties.$pathname, '^/collections/[a-zA-Z0-9-]+/?$')
+  AND session.$channel_type = 'Organic Search'
+GROUP BY handle
+ORDER BY sessions DESC
+LIMIT 500
+```
+
+Comme dans GA4, une session compte pour chaque collection qu'elle a vue, et les pages `?page=N` comptent avec leur collection. La requête se lance dans l'éditeur SQL du projet, `https://eu.posthog.com/project/334087/sql`, sur le compte madebymood.app@gmail.com : le connecteur Claude « PostHog » ne voit encore que Made by Mood. Le projet est en UTC. PostHog ne compte qu'une session avec un vrai geste : ces chiffres ne prolongent pas ceux de GA4.
+
 Une fenêtre finie au plus tard le 2026-10-28 peut encore se rejouer avec ses sessions, grâce à l'outil `analytics` du même connecteur. Par défaut, il lit la propriété `374096343` et le seul canal « Organic Search » (piège n° 2). Claude lui passe la fenêtre en `debut`/`fin`, `chemin: "^/collections/[a-z0-9-]+/?$"` et `limite: 500`, puis `debut_ligne` s'il reste des lignes. Il additionne par handle, en minuscules, `/collections/<handle>` et `/collections/<handle>/`, sans filtre de pays. Une collection absente du résultat compte 0 session. `pagePath` n'a pas de paramètres : les sessions des pages `?page=N` comptent avec leur collection. Le total est la somme des collections : le « Total » d'`analytics` ne compte qu'une fois une session passée par plusieurs collections. Contrôle du 2026-10-26 : rejoué sur la fenêtre de J118, `analytics` redonne exactement ses 938 sessions, collection par collection.
 
 Le connecteur garde sa connexion 30 jours. Ensuite, l'outil demande de le reconnecter dans Claude (Paramètres → Connecteurs), avec le compte guetarni.walid@gmail.com. Chez Google, il faut cocher les deux cases, Search Console et Google Analytics.

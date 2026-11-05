@@ -29,7 +29,7 @@
  * par bascule : la vue attend les portes dans la même file que le reste, avec son adresse et sa source
  * d'arrivée (site d'origine, campagne), lues avant que la page ne change d'adresse.
  *
- * PostHog fixe l'entrée et le canal d'une visite d'après son 1er $pageview. Un visiteur qui quitte la
+ * PostHog fixe l'entrée et le canal d'une visite d'après son 1er événement. Un visiteur qui quitte la
  * page d'arrivée avant le démarrage perdrait donc Google ou sa campagne : la page suivante aurait le site
  * lui-même pour origine. Sa vue est alors reportée (sessionStorage, cet onglet seulement, après un
  * geste et avec le consentement), et elle part en tête à la page suivante, une fois les portes ouvertes.
