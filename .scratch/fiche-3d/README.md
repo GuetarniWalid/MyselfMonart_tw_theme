@@ -36,7 +36,11 @@ Ajouter un tableau à partir d'une seule image à plat, sans Photoshop ni mockup
    - la caméra revient de face quand on passe à une autre option.
 8. Châssis des toiles : 2 cm.
 9. Bouton d'achat toujours visible : barre fixe en bas sur mobile ; sur ordinateur, bouton visible dès l'arrivée et 3D fixe pendant qu'on parcourt les options. Le prix et le bouton changent au clic ; l'animation ne bloque jamais rien.
-10. Pièces : photos générées une fois par Gemini, triées par Walid, lumière réglée une fois par pièce. L'IA choisit la pièce de chaque produit.
+10. Pièces : photos générées une fois par Gemini, triées par Walid, lumière réglée une fois par pièce. L'IA choisit la pièce de chaque produit. Décisions du 05/11 après le premier test :
+    - la scène dépend de la taille : un 30 × 40 sur un mur étroit entre deux meubles, un 60 × 80 au-dessus d'une console, les grands formats au-dessus d'un canapé ou d'un lit ;
+    - les intérieurs sont habités, pas vides : « autant un mur blanc » sinon ;
+    - le tableau prend la lumière de la pièce par le calcul (méthode 1 du ticket 11), avec la tranche et l'ombre de la 3D ;
+    - les pièces restent un bonus : la fiche démarre sur le mur neutre, et sort sans elles si elles n'atteignent pas le niveau voulu par Walid.
 11. Photos automatiques : le moteur rend 5 ou 6 vraies photos par produit (de face sur fond clair, de trois-quarts avec la tranche, gros plan de la matière, coin du cadre, dans la pièce), décrites par Claude et visibles sous la 3D dans une bande « Sous tous les angles ». Une image par cadre pour les variantes.
 12. Publisher : une image donne la toile et le poster par défaut (carré : toile seule). L'IA propose la collection et la pièce ; Walid valide sur un seul écran, puis un clic publie.
 13. Rendus : sur le serveur actuel, à la demande, un à la fois, jamais en même temps que le studio des posters personnalisés. On n'agrandit le serveur que si la mesure l'exige. La base MySQL sert encore : on la garde.

@@ -13,6 +13,12 @@ Exigences de Walid après avoir vu le prototype (04/11) :
 - **Petits formats :** un 30 × 40 ne doit pas paraître ridicule. On montre qu'il est petit sans exagérer : cadrage resserré, ou meuble plus petit (console, commode) selon la taille, toujours à la vraie échelle.
 - **Murs :** il prévoit des décors variés : africains, cuisine, chambre d'enfant à motifs. Chaque pièce a sa matière de mur (papier peint, carrelage, motifs), la même de près et de loin. L'essai des murs du prototype (ticket 02) dit comment le régler.
 
+Décisions de Walid du 05/11, après le test :
+- Il préfère la méthode 1 (lumière calculée) à la toile dessinée par Gemini.
+- La scène dépend de la taille : un 30 × 40 se pose sur un mur étroit entre deux meubles, pas sur un grand mur ; un grand mur appelle une grande œuvre.
+- Les pièces de la première série sont vides, sans âme : les intérieurs doivent être habités.
+- Rien n'est validé pour l'instant : la fiche démarre sur le mur neutre, et sort sans les pièces si elles n'atteignent pas son niveau.
+
 Ce que fait Walid : trier les pièces.
 
 **Blocked by:** 02 (prototype validé, qui confirme la méthode d'accrochage)
