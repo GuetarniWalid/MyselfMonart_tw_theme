@@ -4,9 +4,9 @@
 
 **Blocked by:** 08 (mesure des rendus sur le serveur)
 
-**Status:** ready-for-agent
+**Status:** fermé le 05/11/2026, sans rien faire : le ticket 08 mesure au pire 728 Mo de mémoire au pic, 475 Mo restant disponibles, et rien d'occupé hors d'un rendu.
 
 - [ ] Un inventaire de chaque service : à quoi il sert et quelle mémoire il utilise réellement.
 - [ ] La liste de ce qui peut partir, validée par Walid avant tout retrait.
 - [ ] Après le ménage, un rendu passe sans ralentir le reste.
-- [ ] Si le ticket 08 montre qu'il y a assez de place, ce ticket est fermé sans rien faire.
+- [x] Si le ticket 08 montre qu'il y a assez de place, ce ticket est fermé sans rien faire.
