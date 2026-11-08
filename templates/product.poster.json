@@ -48,6 +48,12 @@
             "promotion_date": ""
           }
         },
+        "text_WgbE8E": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Black Friday : ajoutez un 2e tableau, le moins cher des deux est à -30 %. La remise s'applique toute seule dans le panier, jusqu'au 30 novembre.</p>"
+          }
+        },
         "collapsible_tab_poster_ou_toile": {
           "type": "collapsible_tab",
           "settings": {
@@ -94,7 +100,9 @@
         },
         "description_Fw7xRB": {
           "type": "description",
-          "settings": {}
+          "settings": {
+            "show_collapse_button": true
+          }
         },
         "shop_arguments_poster": {
           "type": "shop_arguments",
@@ -115,6 +123,7 @@
         "short_title_9m74gE",
         "variant_picker_YiA9jN",
         "buy_qrRzcg",
+        "text_WgbE8E",
         "collapsible_tab_poster_ou_toile",
         "collapsible_tab_livraison",
         "collapsible_tab_finitions",
@@ -125,6 +134,7 @@
       ],
       "settings": {
         "start_from_media": 3,
+        "media_display": "gallery",
         "enable_merchant_schema": true,
         "shipping_free": true,
         "ships_country": "FR",
