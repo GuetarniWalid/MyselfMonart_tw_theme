@@ -839,6 +839,8 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
       fade: (now) => (state === 'ready' ? fadeSince(shownAt, now) : 0),
       isFading: (now) => state === 'ready' && now - shownAt < FADE_MS,
       ready: () => state === 'ready',
+      // Arrivée et fondu finis, ou échec : rien ne changera plus son rendu.
+      settled: (now) => state === 'error' || (state === 'ready' && now - shownAt >= FADE_MS),
     }
   }
 
@@ -1064,6 +1066,96 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
     return gl.getParameter(gl.SAMPLES)
   }
 
+  /* Miniatures des options (maquette du 08/11/2026) : la même scène, vue de plans carrés, rendue en
+     cases côte à côte au bas du tampon. Mêmes programmes que la vue principale : rien à compiler.
+     La page redessine la vue principale dans la même tâche : l'écran ne voit jamais les cases.
+     Lecture sans attente : les pixels partent dans un tampon de la carte graphique (une seule
+     lecture pour toutes les cases), et la promesse se résout quand elle a fini. Lire tout de suite
+     bloquait la page 3 à 5 ms par miniature, le temps de résoudre l'anticrénelage de tout l'écran.
+     Le nombre de cases tient dans la largeur du tampon (maxThumbs). */
+  let syncReads = false
+  function maxThumbs(cssSize) {
+    const side = Math.max(1, Math.round(cssSize * renderer.getPixelRatio()))
+    return Math.floor(renderer.getContext().drawingBufferWidth / side)
+  }
+
+  function renderThumbs(views, now, cssSize) {
+    const density = renderer.getPixelRatio()
+    const side = Math.max(1, Math.round(cssSize * density))
+    const css = side / density
+    const count = Math.min(views.length, maxThumbs(cssSize))
+    const gl = renderer.getContext()
+    const aspect = camera.aspect
+    camera.aspect = 1
+    renderer.setScissorTest(true)
+    try {
+      for (let i = 0; i < count; i++) {
+        renderer.setViewport(i * css, 0, css, css)
+        renderer.setScissor(i * css, 0, css, css)
+        render(views[i], now)
+      }
+    } finally {
+      renderer.setScissorTest(false)
+      renderer.setViewport(0, 0, width, height)
+      camera.aspect = aspect
+      camera.updateProjectionMatrix()
+    }
+    const bytes = side * count * side * 4
+    if (syncReads) {
+      const strip = new Uint8Array(bytes)
+      gl.readPixels(0, 0, side * count, side, gl.RGBA, gl.UNSIGNED_BYTE, strip)
+      return Promise.resolve({ strip, side, count, waitMs: 0 })
+    }
+    const buffer = gl.createBuffer()
+    gl.bindBuffer(gl.PIXEL_PACK_BUFFER, buffer)
+    gl.bufferData(gl.PIXEL_PACK_BUFFER, bytes, gl.STREAM_READ)
+    gl.readPixels(0, 0, side * count, side, gl.RGBA, gl.UNSIGNED_BYTE, 0)
+    gl.bindBuffer(gl.PIXEL_PACK_BUFFER, null)
+    const sync = gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE, 0)
+    gl.flush()
+    const asked = performance.now()
+    return new Promise((resolve, reject) => {
+      const poll = () => {
+        if (gl.isContextLost()) {
+          reject(new Error('contexte perdu'))
+          return
+        }
+        const status = gl.clientWaitSync(sync, 0, 0)
+        if (status === gl.TIMEOUT_EXPIRED) {
+          setTimeout(poll, 4)
+          return
+        }
+        gl.deleteSync(sync)
+        if (status === gl.WAIT_FAILED) {
+          gl.deleteBuffer(buffer)
+          reject(new Error('lecture impossible'))
+          return
+        }
+        const strip = new Uint8Array(bytes)
+        gl.bindBuffer(gl.PIXEL_PACK_BUFFER, buffer)
+        gl.getBufferSubData(gl.PIXEL_PACK_BUFFER, 0, strip)
+        gl.bindBuffer(gl.PIXEL_PACK_BUFFER, null)
+        gl.deleteBuffer(buffer)
+        // Une vraie image est opaque : un tampon resté à zéro dit que ce navigateur a refusé la
+        // lecture différée. Les suivantes se feront tout de suite, en attendant la carte graphique.
+        if (strip[3] === 0 && strip[bytes - 1] === 0) {
+          syncReads = true
+          reject(new Error('lecture différée refusée'))
+          return
+        }
+        resolve({ strip, side, count, waitMs: performance.now() - asked })
+      }
+      setTimeout(poll, 0)
+    })
+  }
+
+  /* Une miniature rendue maintenant restera-t-elle juste ? Il faut le papier, le bois arrivé (ou
+     en échec) et son fondu fini ; pour une vue de la pièce, sa photo aussi. */
+  function stillsReady(now, { room: needsRoom = false } = {}) {
+    if (!artUniforms.uPaperTex.value || !wood.settled(now)) return false
+    return !needsRoom || roomPhoto.settled(now)
+  }
+
   // Seul ce qui se voit compte : un fondu hors du champ ne réclame aucune image.
   function isFading(now) {
     return !!artSwap || (roomShown && (roomPhoto.isFading(now) || roomWall.isFading(now))) ||
@@ -1073,6 +1165,10 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
   return {
     resize,
     render,
+    renderThumbs,
+    maxThumbs,
+    stillsReady,
+    useSyncReads: () => { syncReads = true }, // pour vérifier la lecture de repli
     toScreen,
     measureFidelity,
     prepare,

@@ -16,7 +16,7 @@
 
 ## Notes de réalisation
 
-- **Prototype** : https://claude.ai/artifact/MSMMJ5KFKrEuJ8xZSw69yz (Artifact privé, version 12). Code : `.scratch/fiche-3d/prototype/` ; mise en scène, géométrie, marques, catalogue et densité testés par `node --test` (151 tests). La page affiche ses propres mesures (poids, délai, images/s, couleurs) sur l'appareil qui l'ouvre.
+- **Prototype** : https://claude.ai/artifact/MSMMJ5KFKrEuJ8xZSw69yz (Artifact privé, version 12). Depuis le 08/11, ce lien ouvre la maquette à vignettes du ticket 07 ; cette page-ci reste dans `prototype/index.html` (`npm start`, puis `/index.html`). Code : `.scratch/fiche-3d/prototype/` ; mise en scène, géométrie, marques, catalogue et densité testés par `node --test` (151 tests). La page affiche ses propres mesures (poids, délai, images/s, couleurs) sur l'appareil qui l'ouvre.
 - **Sources** : image à plat = media[1] de la toile 10807148708187 (PNG 1904 × 2544, publiée en JPEG 1536 × 2052). Pièce provisoire : « a couch with pillows and a potted plant », rendu photoréaliste de dada design sur Unsplash. Licence Unsplash vérifiée : usage commercial permis, sans attribution, interdit de revendre l'image telle quelle.
 - **Mesures** (portable Intel Iris Xe, navigateur intégré, format téléphone 375 × 455 px en densité 2, version 4) :
   - three.js r170 depuis cdnjs : 136 Ko transférés (692 Ko décompressés), en 134 ms. Code du prototype : 94 Ko non compressés.

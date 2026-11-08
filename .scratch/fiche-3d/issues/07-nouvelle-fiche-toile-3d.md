@@ -103,3 +103,13 @@ Commits `72c176d` (section) et `9a94af8` (modèle), poussés l'un après l'autre
 Lecture : la nouvelle fiche affiche le tableau aussi vite que l'actuelle. Le blocage est un peu plus haut parce que Lighthouse attend assez pour voir la 3D se préparer (592 ms de moteur au processeur ÷ 4). Le ≥ 90 du banc n'existait pas non plus (69 contre 61 sur le banc, réseau externe coupé) : en ligne, les deux fiches sont freinées surtout par les scripts de Shopify (pixels, perf-kit), Klarna et Facebook, présents sur tout le site. La fiche seule ne peut pas atteindre 90.
 
 **Reste à voir :** un vrai téléphone et Safari. Rien de cela n'a été essayé.
+
+## Retour de Walid du 08/11/2026 : une autre mise en page
+
+Essayée sur son téléphone, la fiche lui plaît pour sa fluidité, pas pour sa mise en page : « je ne veux pas avoir des options en bas séparées de l'image en haut ». Il veut l'œuvre en plein écran et les options en vignettes à gauche et à droite du tableau (décision 9 du README).
+
+- **Maquette** : `prototype/maquette.html` (`npm start` dans `prototype/`), publiée sur le lien du prototype (https://claude.ai/artifact/MSMMJ5KFKrEuJ8xZSw69yz). Moteur, mises en scène et réglages inchangés. Vignettes rendues par le moteur, à l'arrêt seulement, en cases lues sans attente (`renderThumbs` dans `scene.js`, plans dans `src/thumbs.js`) ; un croquis 2D tient la place avant la 3D, ou sans elle.
+- **Choix faits sans Walid, à valider** : deux mots sous chaque vignette (l'option et le choix en cours ; « Toile, ou poster ») ; écart de prix sous chaque aperçu ; bouton « De face » après une mise en scène ; indice au premier affichage, effacé au premier geste ; les six cadres de la boutique (blanc, argent et noyer en teinte seule, ticket 10) ; dans la pièce, le grand format recule assez pour tenir entre les vignettes ; en-tête du site simulé ; vignette Toile : le tableau un peu tourné.
+- **Vérifié** (Chrome sans écran, 390 × 844 et 1440 × 900, 38 contrôles) : rangées, prix au toucher, retouche qui rejoue, toucher ailleurs qui referme, 90 × 120 sans cadre, poster, clavier, défilement et inclinaison au doigt, animations réduites, thème sombre, console vide. Processeur ÷ 4 : 50 à 60 images/s, lenteur seulement à la première image après le toucher ; un lot de vignettes occupe la page 12 ms en moyenne.
+- **Pas vérifié** : un vrai téléphone, Safari, le lecteur d'Artifacts de claude.ai.
+- **Ensuite**, si Walid valide : refaire la mise en page de `?view=oeuvre-3d` sur ce modèle, pour ce modèle seulement.

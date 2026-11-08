@@ -36,6 +36,7 @@ Ajouter un tableau à partir d'une seule image à plat, sans Photoshop ni mockup
    - la caméra revient de face quand on passe à une autre option.
 8. Châssis des toiles : 2 cm.
 9. Bouton d'achat toujours visible : barre fixe en bas sur mobile ; sur ordinateur, bouton visible dès l'arrivée et 3D fixe pendant qu'on parcourt les options. Le prix et le bouton changent au clic ; l'animation ne bloque jamais rien.
+   - Décision du 08/11, après l'essai de la fiche en ligne sur son téléphone : tout dans l'image, plus d'options sous la 3D. L'œuvre occupe l'écran ; ses options sont des vignettes de part et d'autre du tableau, chacune dessinée par la 3D avec le choix en cours. Toucher une vignette ouvre à côté d'elle une rangée d'aperçus, un par choix ; toucher un aperçu applique le choix (prix aussitôt), la 3D joue sa mise en scène, la rangée se referme. Barre d'achat nettement plus petite, en bas, sur l'œuvre. Titre, description, avis et FAQ suivent au défilement. Maquette à valider : ticket 07.
 10. Pièces : photos générées une fois par Gemini, triées par Walid, lumière réglée une fois par pièce. L'IA choisit la pièce de chaque produit. Décisions du 05/11 après le premier test :
     - la scène dépend de la taille : un 30 × 40 sur un mur étroit entre deux meubles, un 60 × 80 au-dessus d'une console, les grands formats au-dessus d'un canapé ou d'un lit ;
     - les intérieurs sont habités, pas vides : « autant un mur blanc » sinon ;

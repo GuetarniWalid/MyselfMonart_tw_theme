@@ -40,11 +40,17 @@ export const BORDERS = [
 export const PAPER_WHITE = '#f7f6f2'
 
 /* Matière des cadres. wood : part de l'image de bois ; relief : fil du bois sous la
-   lumière ; rough : 0 brillant, 1 mat. */
+   lumière ; rough : 0 brillant, 1 mat. Noir et chêne sont réglés ; blanc, argent et noyer
+   gardent la teinte de la fiche en ligne (assets/oeuvre-3d-engine.js), leurs matières sont au
+   ticket 10. Ordre et prix de la boutique, relevés le 08/11/2026. materials : la toile a les six,
+   le poster n'a pas l'argent ancien (sa couleur de cadre est une propriété de ligne). */
 export const FRAMES = [
-  { id: 'sans', label: 'Sans cadre', posterLabel: 'Sans cadre', color: null },
-  { id: 'noir', label: 'Noir mat', posterLabel: 'Noir', color: '#1f1f21', wood: 0, relief: 0.5, rough: 0.68 },
-  { id: 'chene', label: 'Chêne clair', posterLabel: 'Chêne clair', color: '#c9a77c', wood: 1, relief: 0.9, rough: 0.55 },
+  { id: 'sans', label: 'Sans cadre', posterLabel: 'Sans cadre', color: null, materials: ['toile', 'poster'] },
+  { id: 'blanc', label: 'Blanc', posterLabel: 'Blanc', color: '#edebe3', wood: 0, relief: 0.3, rough: 0.6, materials: ['toile', 'poster'] },
+  { id: 'noir', label: 'Noir mat', posterLabel: 'Noir', color: '#1f1f21', wood: 0, relief: 0.5, rough: 0.68, materials: ['toile', 'poster'] },
+  { id: 'argent', label: 'Argent ancien', posterLabel: 'Argent ancien', color: '#9ea1a8', wood: 0, relief: 0.6, rough: 0.5, materials: ['toile'] },
+  { id: 'chene', label: 'Chêne clair', posterLabel: 'Chêne clair', color: '#c9a77c', wood: 1, relief: 0.9, rough: 0.55, materials: ['toile', 'poster'] },
+  { id: 'noyer', label: 'Noyer', posterLabel: 'Noyer', color: '#66422b', wood: 0, relief: 0.9, rough: 0.55, materials: ['toile', 'poster'] },
 ]
 
 export const borderOf = (id) => BORDERS.find((b) => b.id === id) || BORDERS[0]
@@ -52,7 +58,7 @@ export const borderTakesImage = (id) => !borderOf(id).color
 export const frameOf = (id) => FRAMES.find((f) => f.id === id) || FRAMES[0]
 
 const TOILE_BASE = { '30x40': 62.5, '60x80': 94, '75x100': 136.5, '90x120': 199 } // bordure blanche, sans cadre
-const TOILE_FRAME_ADD = { sans: 0, noir: 40, chene: 50 }
+const TOILE_FRAME_ADD = { sans: 0, blanc: 40, noir: 40, argent: 45, chene: 50, noyer: 50 }
 const POSTER_PRICE = {
   '30x40': { sans: 24.9, avec: 47.9 },
   '60x80': { sans: 44.9, avec: 94.9 },
@@ -63,8 +69,12 @@ const POSTER_PRICE = {
 // La boutique ne vend pas le 90 × 120 encadré, ni en toile ni en poster.
 export const canFrame = (size) => 'avec' in POSTER_PRICE[size]
 
+// Ce cadre existe-t-il pour ce produit (matière et taille) ?
+export const frameFits = (product, frame) =>
+  frame === 'sans' || (canFrame(product.size) && frameOf(frame).materials.includes(product.material))
+
 // Un choix qui n'existe pas en boutique repasse sans cadre.
-export const fitChoice = (product) => (canFrame(product.size) ? product : { ...product, frame: 'sans' })
+export const fitChoice = (product) => (frameFits(product, product.frame) ? product : { ...product, frame: 'sans' })
 
 export function hasFrame(product) {
   return product.frame !== 'sans'
