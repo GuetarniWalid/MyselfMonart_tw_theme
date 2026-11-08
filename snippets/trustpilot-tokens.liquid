@@ -29,5 +29,6 @@
     endif
     assign tp_text = tp_text | replace: '[[TP_SCORE]]', tp_score_display | replace: '[[TP_COUNT]]', tp_count
   endif
-  echo tp_text
+  # Texte libre : les liens internes restent dans la langue et le marché de la page (snippet localized-links).
+  render 'localized-links', text: tp_text
 -%}

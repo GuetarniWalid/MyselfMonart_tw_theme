@@ -1,0 +1,62 @@
+{%- comment -%}
+  localized-links — garde les liens internes d'un texte libre dans la langue et le marché de la page.
+
+  Les traductions (descriptions, guides, FAQ, articles, pages) gardent souvent les liens de la
+  source française : /collections/tableau-zen ou https://www.myselfmonart.com/blogs/… Sur /en,
+  /es, /en-gb ou /fr-ch, ces liens renvoyaient le visiteur vers le site français. Hors de la racine
+  française, ce snippet les préfixe par la racine de la page (routes.root_url : /en, /en-gb, /es…).
+  Shopify redirige ensuite /en/collections/<adresse française> vers l'adresse traduite : le lien
+  reste juste quand une adresse change, sans liste d'adresses à tenir. À la racine française
+  (routes.root_url == '/'), le texte ressort tel quel.
+
+  Accepts:
+    - text: {String} HTML ; seuls les attributs href="…" ou href='…' sont touchés
+    - url: {String} une adresse seule (au lieu de text), par exemple un lien de maillage
+
+  Usage :
+    {%- render 'localized-links', text: article.content -%}
+    {%- capture l_url -%}{%- render 'localized-links', url: l.url -%}{%- endcapture -%}
+  Le texte sort brut (aucun échappement ajouté), comme trustpilot-tokens qui l'appelle.
+{%- endcomment -%}
+
+{%- liquid
+  if url != blank
+    assign ll_text = '"' | append: url | append: '"'
+    assign ll_attr = ''
+  else
+    assign ll_text = text | append: ''
+    assign ll_attr = 'href='
+  endif
+
+  assign ll_root = routes.root_url
+  if ll_root != '/' and ll_text contains '/'
+    assign ll_hosts = 'https://www.myselfmonart.com|https://myselfmonart.com|http://www.myselfmonart.com|http://myselfmonart.com' | split: '|'
+    assign ll_types = 'collections,products,blogs,pages' | split: ','
+    assign ll_quotes = '"|' | append: "'" | split: '|'
+    for ll_quote in ll_quotes
+      assign ll_start = ll_attr | append: ll_quote
+      assign ll_target = ll_start | append: ll_root
+      for ll_type in ll_types
+        assign ll_from = ll_start | append: '/' | append: ll_type | append: '/'
+        assign ll_to = ll_target | append: '/' | append: ll_type | append: '/'
+        assign ll_text = ll_text | replace: ll_from, ll_to
+        for ll_host in ll_hosts
+          assign ll_from = ll_start | append: ll_host | append: '/' | append: ll_type | append: '/'
+          assign ll_text = ll_text | replace: ll_from, ll_to
+        endfor
+      endfor
+      for ll_host in ll_hosts
+        assign ll_home = ll_target | append: ll_quote
+        assign ll_from = ll_start | append: ll_host | append: ll_quote
+        assign ll_text = ll_text | replace: ll_from, ll_home
+        assign ll_from = ll_start | append: ll_host | append: '/' | append: ll_quote
+        assign ll_text = ll_text | replace: ll_from, ll_home
+      endfor
+    endfor
+  endif
+
+  if url != blank
+    assign ll_text = ll_text | remove_first: '"' | remove_last: '"'
+  endif
+  echo ll_text
+-%}

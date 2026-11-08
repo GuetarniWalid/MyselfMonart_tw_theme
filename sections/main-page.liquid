@@ -3,7 +3,7 @@
     {{ page.title | escape }}
   </h1>
   <div class="page-description">
-    {{ page.content }}
+    {%- render 'localized-links', text: page.content -%}
   </div>
 </div>
 

@@ -88,6 +88,10 @@
                     assign l_url = collections[l_handle].url
                   endif
                 endif
+                # Blog, page : l'adresse française garde la langue et le marché de la page.
+                capture l_url
+                  render 'localized-links', url: l_url
+                endcapture
               -%}
               <a href="{{ l_url }}">{{ l.label | escape }}</a>{% unless forloop.last %} &middot; {% endunless %}
             {%- endfor -%}

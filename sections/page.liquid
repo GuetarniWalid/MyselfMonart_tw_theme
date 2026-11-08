@@ -7,7 +7,7 @@
 </h2>
 <div>
   {%- if section.settings.page.content != blank -%}
-    {{ section.settings.page.content }}
+    {%- render 'localized-links', text: section.settings.page.content -%}
   {%- else -%}
     <div>
       {{ 'page' | placeholder_svg_tag: 'page-placeholder' }}
