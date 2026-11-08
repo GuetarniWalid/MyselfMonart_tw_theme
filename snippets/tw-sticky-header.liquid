@@ -157,19 +157,12 @@
               </summary>
               <ul class="absolute right-6 top-0 -translate-y-full z-50 bg-white rounded shadow-lg pt-1">
                 {% liquid
-                  if template.name == 'product'
-                    assign resource = product
-                  elsif template.name == 'collection'
-                    assign resource = collection
-                  elsif template.name == 'page'
-                    assign resource = page
-                  else
-                    assign resource = nil
-                  endif
-
-                  # Define country/currency/language combinations
-                  # Format: currency|lang|flag_code|country_name|append_lang|spacing
-                  assign locales_data = 'CAD|en|ca|Canada|true|1,CHF|fr|ch|Suisse|false|2,DKK|en|dk|Danmark|true|2,EUR|fr|fr|France|false|2,GBP|en|uk|UK|true|2,USD|en|us|USA|true|2'
+                  # Pays proposés. Format : devise|langue|drapeau|nom de repli|code pays|espacement
+                  # Chaque pays envoie le formulaire de localisation de Shopify (code pays + code langue).
+                  # Shopify renvoie lui-même vers la page en cours, à son adresse traduite, dans le marché
+                  # et la devise du pays : aucune adresse n'est fabriquée ici, rien ne dérive quand une
+                  # adresse change.
+                  assign locales_data = 'CAD|en|ca|Canada|CA|1,CHF|fr|ch|Suisse|CH|2,DKK|en|dk|Danmark|DK|2,EUR|fr|fr|France|FR|2,GBP|en|uk|UK|GB|2,USD|en|us|USA|US|2'
                   assign locales = locales_data | split: ','
                 %}
 
@@ -182,82 +175,69 @@
                   {%- comment -%} Nom de pays localisé (audit i18n) : on remplace la valeur FR codée en dur de locales_data par la clé de locale traduite, en gardant le fallback si la clé manque. {%- endcomment -%}
                   {%- assign country_label_t = 'sections.header.countries.' | append: locale_flag | t -%}
                   {%- unless country_label_t contains 'ranslation missing' -%}{%- assign locale_name = country_label_t -%}{%- endunless -%}
-                  {%- assign append_lang = locale_parts[4] -%}
+                  {%- assign locale_country = locale_parts[4] -%}
                   {%- assign spacing = locale_parts[5] -%}
 
-                  {%- comment -%} Check if this locale is available in the store {%- endcomment -%}
+                  {%- comment -%} Le pays doit faire partie d'un marché actif de la boutique {%- endcomment -%}
                   {%- assign is_available = false -%}
-                  {%- for language in localization.available_languages -%}
-                    {%- for currency in shop.enabled_currencies -%}
-                      {%- if currency.iso_code == locale_currency and language.iso_code == locale_lang -%}
-                        {%- assign is_available = true -%}
-                        {%- assign current_lang = language -%}
-                        {%- assign current_currency = currency -%}
-                        {%- break -%}
-                      {%- endif -%}
-                    {%- endfor -%}
-                    {%- if is_available -%}{%- break -%}{%- endif -%}
+                  {%- for country in localization.available_countries -%}
+                    {%- if country.iso_code == locale_country -%}
+                      {%- assign is_available = true -%}
+                      {%- break -%}
+                    {%- endif -%}
                   {%- endfor -%}
 
                   {%- if is_available -%}
                     {%- assign is_current = false -%}
-                    {%- if current_lang.iso_code == localization.language.iso_code and localization.country.currency.iso_code == locale_currency -%}
+                    {%- if locale_lang == localization.language.iso_code and localization.country.currency.iso_code == locale_currency -%}
                       {%- assign is_current = true -%}
                     {%- endif -%}
-
-                    {%- comment -%} Build URL based on template and language {%- endcomment -%}
-                    {%- unless is_current -%}
-                      {%- liquid
-                        if template.name == 'index'
-                          if append_lang == 'true'
-                            assign url = routes.root_url | remove_last: 'en' | append: locale_lang
-                          else
-                            assign url = routes.root_url | remove_last: 'en'
-                          endif
-                        elsif template.name == 'search'
-                          if append_lang == 'true'
-                            assign url = routes.root_url | remove_last: 'en' | append: locale_lang | append: '/search'
-                          else
-                            assign url = routes.root_url | remove_last: 'en' | append: 'search'
-                          endif
-                        elsif template.name == 'cart'
-                          if append_lang == 'true'
-                            assign url = routes.root_url | remove_last: 'en' | append: locale_lang | append: '/cart'
-                          else
-                            assign url = routes.root_url | remove_last: 'en' | append: 'cart'
-                          endif
-                        else
-                          assign url = resource.metafields.translation.handle.value[current_lang.iso_code]
-                        endif
-                      -%}
-                    {%- endunless -%}
 
                     {%- assign is_last = false -%}
                     {%- if forloop.last -%}{%- assign is_last = true -%}{%- endif -%}
 
+                    {%- capture locale_label -%}
+                      {% case locale_flag %}
+                        {% when 'ca' %}{% render 'icon-flag-ca' %}
+                        {% when 'ch' %}{% render 'icon-flag-ch' %}
+                        {% when 'dk' %}{% render 'icon-flag-dk' %}
+                        {% when 'fr' %}{% render 'icon-flag-fr' %}
+                        {% when 'uk' %}{% render 'icon-flag-uk' %}
+                        {% when 'us' %}{% render 'icon-flag-us' %}
+                      {% endcase %}{% if spacing == '2' %}&nbsp;{% endif %}&nbsp;{{ locale_name }}
+                    {%- endcapture -%}
+
                     <li tabindex="-1">
                       <localization-flag>
-                        <a
-                          class="inline-flex items-center hover:bg-main-10 w-full py-2 mb-1 px-3 whitespace-nowrap text-main{% if is_current %} bg-main-10 cursor-not-allowed{% endif %}{% if is_last %} last-focusable{% endif %}"
-                          {% if is_current %}
+                        {%- if is_current -%}
+                          <a
+                            class="inline-flex items-center hover:bg-main-10 w-full py-2 mb-1 px-3 whitespace-nowrap text-main bg-main-10 cursor-not-allowed{% if is_last %} last-focusable{% endif %}"
                             role="link"
                             aria-disabled="true"
                             aria-current="true"
-                          {% else %}
-                            href="{{ url }}?currency={{ locale_currency }}"
-                          {% endif %}
-                          hreflang="{{ locale_lang }}"
-                          lang="{{ locale_lang }}"
-                          data-value="{{ locale_lang }}">
-                          {% case locale_flag %}
-                            {% when 'ca' %}{% render 'icon-flag-ca' %}
-                            {% when 'ch' %}{% render 'icon-flag-ch' %}
-                            {% when 'dk' %}{% render 'icon-flag-dk' %}
-                            {% when 'fr' %}{% render 'icon-flag-fr' %}
-                            {% when 'uk' %}{% render 'icon-flag-uk' %}
-                            {% when 'us' %}{% render 'icon-flag-us' %}
-                          {% endcase %}{% if spacing == '2' %}&nbsp;{% endif %}&nbsp;{{ locale_name }}
-                        </a>
+                            hreflang="{{ locale_lang }}"
+                            lang="{{ locale_lang }}"
+                            data-value="{{ locale_lang }}">
+                            {{- locale_label -}}
+                          </a>
+                        {%- else -%}
+                          {%- assign locale_form_id = 'HeaderLocalizationForm-' | append: locale_flag -%}
+                          {%- form 'localization', id: locale_form_id -%}
+                            <input type="hidden" name="country_code" value="{{ locale_country }}">
+                            <input type="hidden" name="language_code" value="{{ locale_lang }}">
+                            {%- comment -%} Page introuvable : on repart de l'accueil du pays choisi, pas d'une autre erreur (le dernier return_to l'emporte sur celui de Shopify) {%- endcomment -%}
+                            {%- if template.name == '404' -%}
+                              <input type="hidden" name="return_to" value="/">
+                            {%- endif -%}
+                            <button
+                              type="submit"
+                              class="inline-flex items-center hover:bg-main-10 w-full py-2 mb-1 px-3 whitespace-nowrap text-main{% if is_last %} last-focusable{% endif %}"
+                              lang="{{ locale_lang }}"
+                              data-value="{{ locale_lang }}">
+                              {{- locale_label -}}
+                            </button>
+                          {%- endform -%}
+                        {%- endif -%}
                       </localization-flag>
                     </li>
                   {%- endif -%}

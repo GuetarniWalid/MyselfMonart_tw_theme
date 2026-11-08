@@ -1015,30 +1015,16 @@ window.filterCategoryDuplicates = function (container, scope) {
   window.filterCategoryDuplicates(grid, ps === 'poster' ? 'poster' : 'toile');
 })();
 
+/**
+ * Une entrée du sélecteur de pays du menu mobile (snippets/tw-sticky-header.liquid).
+ * Chaque pays est un formulaire de localisation Shopify : Shopify renvoie lui-même vers la
+ * page en cours, à son adresse traduite, dans le marché et la devise choisis, recherche
+ * comprise. Il n'y a plus d'adresse à fabriquer ici. Le pays actuel reste un lien désactivé
+ * sans adresse : un clic dessus ne fait rien.
+ */
 class LocalizationFlag extends HTMLElement {
   connectedCallback() {
-    const link = this.querySelector('a');
-    if (!link) return;
-
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-
-      if (window.location.pathname.includes('search')) {
-        const currentSearch = window.location.search;
-        const url = new URL(link.href, window.location.origin);
-
-        const currentParams = new URLSearchParams(currentSearch);
-        for (const [key, value] of currentParams.entries()) {
-          if (!url.searchParams.has(key)) {
-            url.searchParams.set(key, value);
-          }
-        }
-
-        window.location.href = url.toString();
-      } else {
-        window.location.href = link.href;
-      }
-    });
+    this.querySelector('a[aria-disabled="true"]')?.addEventListener('click', (e) => e.preventDefault());
   }
 }
 customElements.define('localization-flag', LocalizationFlag);
