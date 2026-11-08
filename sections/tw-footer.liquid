@@ -103,10 +103,19 @@
       <div class="text-sm flex flex-wrap gap-6 justify-center mb-8 px-3">
         {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
           {% liquid
+            # Devise → pays : tw-footer.js garde le DERNIER pays de chaque devise. L'euro est la devise de
+            # plusieurs pays (Allemagne, Espagne, Pays-Bas…) : sans ordre, « Euro » menait au dernier de la
+            # liste alphabétique, par exemple l'Espagne, en espagnol, depuis /en-ca. On ajoute donc en
+            # dernier la France (marché principal), puis le pays actuel s'il est déjà dans cette devise.
             assign available_countries = ""
+            assign home_country = ""
             for country in localization.available_countries
               assign available_countries = available_countries | append: country.currency.iso_code | append: "," | append: country.iso_code | append: " "
+              if country.iso_code == 'FR'
+                assign home_country = country.currency.iso_code | append: "," | append: country.iso_code | append: " "
+              endif
             endfor
+            assign available_countries = available_countries | append: home_country | append: localization.country.currency.iso_code | append: "," | append: localization.country.iso_code | append: " "
           %}
           <localization-form data-available-countries="{{ available_countries }}">
             {%- form 'localization', id: 'FooterCountryForm' -%}
