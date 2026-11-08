@@ -9,9 +9,7 @@
  */
 {
   "current": {
-    "trustpilot_score_global": 42,
-    "trustpilot_review_count_global": 86,
-    "enable_promo_popup": true,
+    "enable_promo_popup": false,
     "promo_popup_delay": 10,
     "promo_popup_pages": 2,
     "enable_cookie": true,
@@ -42,6 +40,8 @@
     "heading_scale": 100,
     "type_body_font": "roboto_n4",
     "body_scale": 105,
+    "trustpilot_score_global": 42,
+    "trustpilot_review_count_global": 86,
     "checkout_logo_image": "shopify://shop_images/logo-myselfmonart-512x512.png",
     "checkout_logo_position": "center",
     "checkout_logo_size": "large",
