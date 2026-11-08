@@ -31,7 +31,21 @@
       {%- liquid
         assign current = paginate.current_page
         assign total = paginate.pages
-        assign base_url = paginate.parts[0].url | split: '=' | first | append: '='
+        # Adresse d'une page = base_url + numéro + base_url_tail, d'après la première partie qui est
+        # un lien : on coupe son adresse autour de « page=N ». Couper au premier « = » de la première
+        # partie donnait « =2 » sur la page 1 (elle n'est pas un lien), écrasait un filtre de
+        # collection (?filter…=3) et perdait la recherche (/search?page=3, sans q=).
+        assign base_url = ''
+        assign base_url_tail = ''
+        for part in paginate.parts
+          if part.is_link
+            assign page_param = 'page=' | append: part.title
+            assign url_bits = part.url | split: page_param
+            assign base_url = url_bits[0] | append: 'page='
+            assign base_url_tail = url_bits[1] | default: ''
+            break
+          endif
+        endfor
         assign total_minus_1 = total | minus: 1
         assign total_minus_2 = total | minus: 2
       -%}
@@ -47,7 +61,7 @@
             class="bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded">1</a>
         {%- else -%}
           <a
-            href="{{ base_url }}1{{ anchor }}"
+            href="{{ base_url }}1{{ base_url_tail }}{{ anchor }}"
             aria-label="{{ 'snippet.pagination.page' | t: number: 1 }}"
             class="hover:bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded transition-colors duration-200">1</a>
         {%- endif -%}
@@ -67,7 +81,7 @@
                   class="bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded">{{ i }}</a>
               {%- else -%}
                 <a
-                  href="{{ base_url }}{{ i }}{{ anchor }}"
+                  href="{{ base_url }}{{ i }}{{ base_url_tail }}{{ anchor }}"
                   aria-label="{{ 'snippet.pagination.page' | t: number: i }}"
                   class="hover:bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded transition-colors duration-200">{{ i }}</a>
               {%- endif -%}
@@ -80,7 +94,7 @@
         {%- if total > 3 -%}
           <li>
             <a
-              href="{{ base_url }}{{ total }}{{ anchor }}"
+              href="{{ base_url }}{{ total }}{{ base_url_tail }}{{ anchor }}"
               aria-label="{{ 'snippet.pagination.page' | t: number: total }}"
               class="hover:bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded transition-colors duration-200">{{ total }}</a>
           </li>
@@ -100,7 +114,7 @@
                   class="bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded">{{ i }}</a>
               {%- else -%}
                 <a
-                  href="{{ base_url }}{{ i }}{{ anchor }}"
+                  href="{{ base_url }}{{ i }}{{ base_url_tail }}{{ anchor }}"
                   aria-label="{{ 'snippet.pagination.page' | t: number: i }}"
                   class="hover:bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded transition-colors duration-200">{{ i }}</a>
               {%- endif -%}
@@ -113,7 +127,7 @@
         {%- if total > 4 -%}
           <li>
             <a
-              href="{{ base_url }}{{ total }}{{ anchor }}"
+              href="{{ base_url }}{{ total }}{{ base_url_tail }}{{ anchor }}"
               aria-label="{{ 'snippet.pagination.page' | t: number: total }}"
               class="hover:bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded transition-colors duration-200">{{ total }}</a>
           </li>
@@ -137,7 +151,7 @@
                   class="bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded">{{ i }}</a>
               {%- else -%}
                 <a
-                  href="{{ base_url }}{{ i }}{{ anchor }}"
+                  href="{{ base_url }}{{ i }}{{ base_url_tail }}{{ anchor }}"
                   aria-label="{{ 'snippet.pagination.page' | t: number: i }}"
                   class="hover:bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded transition-colors duration-200">{{ i }}</a>
               {%- endif -%}
@@ -163,7 +177,7 @@
                   class="bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded">{{ i }}</a>
               {%- else -%}
                 <a
-                  href="{{ base_url }}{{ i }}{{ anchor }}"
+                  href="{{ base_url }}{{ i }}{{ base_url_tail }}{{ anchor }}"
                   aria-label="{{ 'snippet.pagination.page' | t: number: i }}"
                   class="hover:bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded transition-colors duration-200">{{ i }}</a>
               {%- endif -%}
@@ -189,7 +203,7 @@
                   class="bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded">{{ i }}</a>
               {%- else -%}
                 <a
-                  href="{{ base_url }}{{ i }}{{ anchor }}"
+                  href="{{ base_url }}{{ i }}{{ base_url_tail }}{{ anchor }}"
                   aria-label="{{ 'snippet.pagination.page' | t: number: i }}"
                   class="hover:bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded transition-colors duration-200">{{ i }}</a>
               {%- endif -%}
@@ -213,7 +227,7 @@
                 class="bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded">{{ i }}</a>
             {%- else -%}
               <a
-                href="{{ base_url }}{{ i }}{{ anchor }}"
+                href="{{ base_url }}{{ i }}{{ base_url_tail }}{{ anchor }}"
                 aria-label="{{ 'snippet.pagination.page' | t: number: i }}"
                 class="hover:bg-main-10 inline-flex items-center justify-center w-10 h-10 rounded transition-colors duration-200">{{ i }}</a>
             {%- endif -%}
