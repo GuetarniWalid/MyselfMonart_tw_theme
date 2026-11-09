@@ -1,0 +1,375 @@
+{%- assign first_name = customer.first_name | strip -%}
+{%- assign first_name_caps = first_name | upcase -%}
+{%- if first_name != blank and first_name == first_name_caps -%}{%- assign first_name = first_name | downcase | capitalize -%}{%- endif -%}
+{%- assign art_count = 0 -%}
+{%- assign hero = nil -%}
+{%- for line in subtotal_line_items -%}
+{%- assign line_format = line.variant.title | append: ' ' | append: line.variant_title | append: ' ' | append: line.title -%}
+{%- if line_format contains ' cm' -%}
+{%- assign art_count = art_count | plus: line.quantity -%}
+{%- if hero == nil and line.image -%}{%- assign hero = line -%}{%- endif -%}
+{%- endif -%}
+{%- endfor -%}
+{%- assign one_line = false -%}
+{%- if art_count == 1 and hero and subtotal_line_items.size == 1 -%}{%- assign one_line = true -%}{%- endif -%}
+{%- capture email_title %}Vielen Dank für Ihr Vertrauen{% endcapture -%}
+<!DOCTYPE html>
+<html lang="de" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="x-apple-disable-message-reformatting">
+<meta name="format-detection" content="telephone=no,address=no,email=no,date=no,url=no">
+<meta name="color-scheme" content="light only">
+<title>{{ email_title }}</title>
+<style type="text/css">
+body{margin:0;padding:0;width:100%;background-color:#f6f2ec}
+body,table,td,a{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}
+table,td{mso-table-lspace:0pt;mso-table-rspace:0pt}
+img{-ms-interpolation-mode:bicubic;border:0;outline:none;text-decoration:none}
+a{color:#a0502f}
+@media (min-width:1px){
+  a[x-apple-data-detectors]{color:inherit !important;text-decoration:none !important;font-size:inherit !important;font-family:inherit !important;font-weight:inherit !important;line-height:inherit !important}
+}
+@media only screen and (max-width:620px){
+  .outer{padding:0 !important}
+  .px{padding-left:24px !important;padding-right:24px !important}
+  .h1{font-size:26px !important;line-height:34px !important}
+  .btnw{width:100% !important}
+  .tile{padding:28px 20px !important}
+  .panel{padding:26px 22px !important}
+  .trk{font-size:19px !important;letter-spacing:0 !important}
+  .stack{display:block !important;width:100% !important;padding-right:0 !important}
+}
+@media only screen and (max-width:360px){
+  .thumb{width:54px !important;padding-right:10px !important}
+  .thumbImg{width:44px !important}
+}
+</style>
+<style type="text/css">
+@media (min-width:1px){
+  @font-face{font-family:'Welcome Web';src:url('https://www.myselfmonart.com/cdn/shop/t/25/assets/heading.woff2') format('woff2');font-weight:400;font-style:normal}
+  .ff{font-family:'Welcome Web','Avenir Next',Avenir,'Century Gothic','Segoe UI',Roboto,Helvetica,Arial,sans-serif !important}
+}
+</style>
+<style type="text/css">
+@media (min-width:1px){
+  :root{color-scheme:light dark;supported-color-schemes:light dark}
+}
+@media (prefers-color-scheme:dark){
+  body,.bg{background-color:#17110b !important}
+  .ink{color:#f6ece2 !important}
+  .txt{color:#e3d5c9 !important}
+  .sub{color:#c6b5a8 !important}
+  .fine{color:#bdaba0 !important}
+  .acc{color:#eba98c !important}
+  .hair{border-color:#4a3829 !important}
+  .barOn{border-color:#eba98c !important}
+  .barOff{border-color:#4a3829 !important}
+  .panelSoft{background-color:#33231a !important}
+  .panelSoft .softLabel{color:#eba98c !important}
+  .panelDark{background-color:#2a1d13 !important}
+  a{color:#eeb193 !important}
+  .fine a{color:#e2d2c6 !important}
+  .panelSoft a,.panelDark a{color:#f6ece2 !important}
+  .btn{background-color:#e8b79f !important}
+  .btn a{color:#1c1108 !important}
+  .btnLight{background-color:#e8b79f !important}
+  .btnLight a{color:#1c1108 !important}
+  .logo,.logo a{color:#f0e2d6 !important}
+  .logoLight{display:none !important}
+  .logoDark{display:block !important}
+}
+</style>
+<style type="text/css">
+@media (min-width:1px){
+  [data-ogsc] body,[data-ogsc] .bg{background-color:#17110b !important}
+  [data-ogsc] .ink{color:#f6ece2 !important}
+  [data-ogsc] .txt{color:#e3d5c9 !important}
+  [data-ogsc] .sub{color:#c6b5a8 !important}
+  [data-ogsc] .fine{color:#bdaba0 !important}
+  [data-ogsc] .acc{color:#eba98c !important}
+  [data-ogsc] .hair{border-color:#4a3829 !important}
+  [data-ogsc] .barOn{border-color:#eba98c !important}
+  [data-ogsc] .barOff{border-color:#4a3829 !important}
+  [data-ogsc] .panelSoft{background-color:#33231a !important}
+  [data-ogsc] .panelSoft .softLabel{color:#eba98c !important}
+  [data-ogsc] .panelDark{background-color:#2a1d13 !important}
+  [data-ogsc] a{color:#eeb193 !important}
+  [data-ogsc] .fine a{color:#e2d2c6 !important}
+  [data-ogsc] .panelSoft a,[data-ogsc] .panelDark a{color:#f6ece2 !important}
+  [data-ogsc] .btn{background-color:#e8b79f !important}
+  [data-ogsc] .btn a{color:#1c1108 !important}
+  [data-ogsc] .btnLight{background-color:#e8b79f !important}
+  [data-ogsc] .btnLight a{color:#1c1108 !important}
+  [data-ogsc] .logo,[data-ogsc] .logo a{color:#f0e2d6 !important}
+  [data-ogsc] .logoLight{display:none !important}
+  [data-ogsc] .logoDark{display:block !important}
+  [data-ogsb] body,[data-ogsb] .bg{background-color:#17110b !important}
+  [data-ogsb] .ink{color:#f6ece2 !important}
+  [data-ogsb] .txt{color:#e3d5c9 !important}
+  [data-ogsb] .sub{color:#c6b5a8 !important}
+  [data-ogsb] .fine{color:#bdaba0 !important}
+  [data-ogsb] .acc{color:#eba98c !important}
+  [data-ogsb] .hair{border-color:#4a3829 !important}
+  [data-ogsb] .barOn{border-color:#eba98c !important}
+  [data-ogsb] .barOff{border-color:#4a3829 !important}
+  [data-ogsb] .panelSoft{background-color:#33231a !important}
+  [data-ogsb] .panelSoft .softLabel{color:#eba98c !important}
+  [data-ogsb] .panelDark{background-color:#2a1d13 !important}
+  [data-ogsb] a{color:#eeb193 !important}
+  [data-ogsb] .fine a{color:#e2d2c6 !important}
+  [data-ogsb] .panelSoft a,[data-ogsb] .panelDark a{color:#f6ece2 !important}
+  [data-ogsb] .btn{background-color:#e8b79f !important}
+  [data-ogsb] .btn a{color:#1c1108 !important}
+  [data-ogsb] .btnLight{background-color:#e8b79f !important}
+  [data-ogsb] .btnLight a{color:#1c1108 !important}
+  [data-ogsb] .logo,[data-ogsb] .logo a{color:#f0e2d6 !important}
+  [data-ogsb] .logoLight{display:none !important}
+  [data-ogsb] .logoDark{display:block !important}
+}
+</style>
+</head>
+<body class="bg" style="margin:0;padding:0;width:100%;background-color:#f6f2ec;">
+<div role="article" aria-roledescription="email" aria-label="{{ email_title }}" lang="de">
+<span style="display:none;font-size:1px;color:#f6f2ec;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;">Alles ist in guten Händen. Wir schreiben Ihnen bei jedem Schritt.</span>
+<span style="display:none;font-size:1px;color:#f6f2ec;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;">&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;</span>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="bg" bgcolor="#f6f2ec" style="background-color:#f6f2ec;">
+<tr><td align="center" class="outer" style="padding:0 12px;">
+<!--[if mso]><table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" align="center"><tr><td><![endif]-->
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%;max-width:600px;margin:0 auto;">
+<tr><td align="center" class="px logo" style="padding:36px 44px 30px;font-family:'Avenir Next',Avenir,'Century Gothic','Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:22px;line-height:30px;color:#21150c;font-weight:normal;mso-line-height-rule:exactly;">
+<a href="{{ shop.url }}" style="display:inline-block;color:#21150c;text-decoration:none;">
+<img class="logoLight" src="https://cdn.shopify.com/s/files/1/0623/2388/4287/files/mail-logo-clair.png" width="230" height="37" alt="MyselfMonArt" style="display:block;width:230px;max-width:100%;height:auto;border:0;">
+<img class="logoDark" src="https://cdn.shopify.com/s/files/1/0623/2388/4287/files/mail-logo-sombre.png" width="230" height="37" alt="" style="display:none;width:230px;max-width:100%;height:auto;border:0;mso-hide:all;">
+</a>
+</td></tr>
+<tr><td class="px" style="padding:0 44px;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr><td width="25%" class="barOn" style="border-top:2px solid #a0502f;font-size:0;line-height:0;">&nbsp;</td><td width="6" style="font-size:0;line-height:0;">&nbsp;</td><td width="25%" class="barOff" style="border-top:2px solid #ddd5ca;font-size:0;line-height:0;">&nbsp;</td><td width="6" style="font-size:0;line-height:0;">&nbsp;</td><td width="25%" class="barOff" style="border-top:2px solid #ddd5ca;font-size:0;line-height:0;">&nbsp;</td><td width="6" style="font-size:0;line-height:0;">&nbsp;</td><td width="25%" class="barOff" style="border-top:2px solid #ddd5ca;font-size:0;line-height:0;">&nbsp;</td></tr></table>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+<td class="ink" style="padding-top:8px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:13px;line-height:18px;color:#21150c;mso-line-height-rule:exactly;font-weight:bold;">Bestätigung</td>
+<td align="right" class="sub" style="padding-top:8px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:13px;line-height:18px;color:#6b5e55;mso-line-height-rule:exactly;">Schritt 1 von 4</td>
+</tr></table>
+</td></tr>
+<tr><td class="px acc" style="padding:40px 44px 0;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:12px;line-height:16px;color:#a0502f;mso-line-height-rule:exactly;letter-spacing:1.5px;text-transform:uppercase;">Bestellung {{ order_name }}</td></tr>
+<tr><td class="px" style="padding:12px 44px 0;">
+<h1 class="h1 ink ff" style="margin:0;font-family:'Avenir Next',Avenir,'Century Gothic','Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:29px;line-height:37px;color:#21150c;font-weight:600;mso-line-height-rule:exactly;">{% if art_count == 1 %}Eine wunderbare Wahl{% elsif art_count > 1 %}Eine wunderbare Auswahl{% else %}Vielen Dank für Ihre Bestellung{% endif %}{% if first_name != blank %}, {{ first_name }}{% endif %}</h1>
+</td></tr>
+<tr><td class="px" style="padding:18px 44px 0;">
+<p class="txt" style="margin:0 0 0;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:26px;color:#4a3f37;mso-line-height-rule:exactly;">Ihre Bestellung ist eingegangen. Jedes Werk wird auf Bestellung gedruckt, eigens für Sie. Sie müssen nichts weiter tun: Wir schreiben Ihnen bei jedem Schritt.</p>
+</td></tr>
+{%- if consolidated_estimated_delivery_time -%}
+<tr><td class="px txt" style="padding:12px 44px 0;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#4a3f37;mso-line-height-rule:exactly;">Voraussichtliche Lieferung : <strong class="ink" style="color:#21150c;">{{ consolidated_estimated_delivery_time }}</strong></td></tr>
+{%- endif -%}
+{%- if delivery_instructions != blank -%}
+<tr><td class="px txt" style="padding:12px 44px 0;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#4a3f37;mso-line-height-rule:exactly;">Ihre Lieferhinweise : {{ delivery_instructions }}</td></tr>
+{%- endif -%}
+<tr><td class="px" style="padding:0 44px;"><table role="presentation" cellpadding="0" cellspacing="0" border="0" class="btnw" style="border-collapse:separate;margin-top:28px;">
+<tr><td align="center" class="btn" bgcolor="#21150c" style="background-color:#21150c;mso-padding-alt:16px 40px;">
+<a href="{% if order_status_url %}{{ order_status_url }}{% else %}{{ shop.url }}/de{% endif %}" style="display:block;padding:16px 40px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:20px;font-weight:bold;letter-spacing:0.2px;color:#fffffe;text-decoration:none;mso-line-height-rule:exactly;">Meine Bestellung verfolgen</a>
+</td></tr></table></td></tr>
+{%- if one_line -%}
+{%- assign item_title = hero.product.title | default: hero.title -%}
+{%- if hero.presentment_title != blank -%}{%- assign item_title = hero.presentment_title -%}{%- endif -%}
+<tr><td class="px" style="padding:40px 44px 0;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr><td align="center" class="tile" bgcolor="#fffffe" style="background-color:#fffffe;padding:44px 28px;">
+<img src="{{ hero | img_url: '800x800' }}" width="300" alt="{{ item_title | escape }}" style="display:block;width:100%;max-width:300px;height:auto;border:0;">
+</td></tr>
+<tr><td style="padding-top:14px;">
+<p class="ink ff" style="margin:0;font-family:'Avenir Next',Avenir,'Century Gothic','Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:23px;color:#21150c;font-weight:normal;mso-line-height-rule:exactly;">{{ item_title }}</p>
+{%- if hero.variant.title != blank and hero.variant.title != 'Default Title' %}
+<p class="sub" style="margin:2px 0 0;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:21px;color:#6b5e55;mso-line-height-rule:exactly;">{{ hero.variant.title }}</p>
+{%- endif %}
+</td></tr>
+</table>
+</td></tr>
+{%- endif -%}
+{%- if one_line == false and art_count == 1 and hero -%}
+{%- assign item_title = hero.product.title | default: hero.title -%}
+{%- if hero.presentment_title != blank -%}{%- assign item_title = hero.presentment_title -%}{%- endif -%}
+<tr><td class="px" style="padding:40px 44px 0;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr><td align="center" class="tile" bgcolor="#fffffe" style="background-color:#fffffe;padding:44px 28px;">
+<img src="{{ hero | img_url: '800x800' }}" width="300" alt="{{ item_title | escape }}" style="display:block;width:100%;max-width:300px;height:auto;border:0;">
+</td></tr>
+</table>
+</td></tr>
+{%- endif -%}
+{%- assign gift_card_line_item = line_items | where: "gift_card" -%}
+{%- if gift_card_line_item.first -%}
+<tr><td class="px txt" style="padding:20px 44px 0;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#4a3f37;mso-line-height-rule:exactly;">Für jede Geschenkkarte erhalten Sie eine eigene E-Mail.</td></tr>
+{%- endif -%}
+<tr><td class="px" style="padding:40px 44px 0;">
+<p class="sub" style="margin:0 0 8px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:12px;line-height:16px;color:#6b5e55;mso-line-height-rule:exactly;letter-spacing:1.5px;text-transform:uppercase;">Ihre Bestellung</p>
+{%- unless one_line %}
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+{%- for line in subtotal_line_items -%}
+{%- assign item_title = line.product.title | default: line.title -%}
+{%- if line.presentment_title != blank -%}{%- assign item_title = line.presentment_title -%}{%- endif -%}
+<tr>
+{%- if art_count == 1 and hero %}
+
+<td valign="top" class="hair" style="padding:14px 0;border-top:1px solid #ddd5ca;">
+<p class="ink ff" style="margin:0;word-break:break-word;font-family:'Avenir Next',Avenir,'Century Gothic','Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:23px;color:#21150c;font-weight:normal;mso-line-height-rule:exactly;">{{ item_title }}</p>
+<p class="sub" style="margin:2px 0 0;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:21px;color:#6b5e55;mso-line-height-rule:exactly;">
+{%- if line.variant.title != blank and line.variant.title != 'Default Title' %}{{ line.variant.title }}{%- endif -%}
+{%- if line.quantity > 1 %}{%- if line.variant.title != blank and line.variant.title != 'Default Title' %} &nbsp;·&nbsp; {% endif %}Menge : {{ line.quantity }}{%- endif %}
+</p>
+{%- else %}
+<td width="76" valign="top" class="hair thumb" style="width:76px;padding:14px 16px 14px 0;border-top:1px solid #ddd5ca;">
+{%- if line.image %}<img src="{{ line | img_url: '160x160' }}" width="60" alt="" class="thumbImg" style="display:block;width:60px;height:auto;border:0;">{%- endif %}
+</td>
+<td valign="top" class="hair" style="padding:14px 0;border-top:1px solid #ddd5ca;">
+<p class="ink ff" style="margin:0;word-break:break-word;font-family:'Avenir Next',Avenir,'Century Gothic','Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:23px;color:#21150c;font-weight:normal;mso-line-height-rule:exactly;">{{ item_title }}</p>
+<p class="sub" style="margin:2px 0 0;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:21px;color:#6b5e55;mso-line-height-rule:exactly;">
+{%- if line.variant.title != blank and line.variant.title != 'Default Title' %}{{ line.variant.title }}{%- endif -%}
+{%- if line.quantity > 1 %}{%- if line.variant.title != blank and line.variant.title != 'Default Title' %} &nbsp;·&nbsp; {% endif %}Menge : {{ line.quantity }}{%- endif %}
+</p>
+{%- endif %}
+{%- for property in line.properties -%}
+{%- assign property_first_char = property.first | slice: 0 -%}
+{%- unless property.last == blank or property_first_char == '_' %}
+<p class="sub" style="margin:2px 0 0;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:21px;color:#6b5e55;mso-line-height-rule:exactly;">{{ property.first }} : {{ property.last }}</p>
+{%- endunless -%}
+{%- endfor -%}
+{%- if line.refunded_quantity > 0 %}
+<p class="acc" style="margin:2px 0 0;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:21px;color:#a0502f;mso-line-height-rule:exactly;">Erstattet</p>
+{%- endif -%}
+{%- for discount_allocation in line.discount_allocations -%}
+{%- if discount_allocation.discount_application.target_selection != 'all' %}
+<p class="acc" style="margin:2px 0 0;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:21px;color:#a0502f;mso-line-height-rule:exactly;">{{ discount_allocation.discount_application.title }} (-{{ discount_allocation.amount | money }})</p>
+{%- endif -%}
+{%- endfor %}
+</td>
+<td valign="top" align="right" class="hair txt" style="padding:14px 0 14px 12px;border-top:1px solid #ddd5ca;white-space:nowrap;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:23px;color:#4a3f37;mso-line-height-rule:exactly;">
+{%- if line.final_line_price > 0 %}{{ line.final_line_price | money }}{%- else %}Gratis{%- endif %}
+</td>
+</tr>
+{%- endfor -%}
+</table>
+{%- endunless %}
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="hair" style="border-top:1px solid #ddd5ca;">
+<tr><td colspan="2" style="font-size:0;line-height:0;height:8px;">&nbsp;</td></tr>
+<tr>
+<td class="txt" style="padding-top:0px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#4a3f37;mso-line-height-rule:exactly;">Zwischensumme</td>
+<td align="right" class="txt" style="padding-top:0px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#4a3f37;mso-line-height-rule:exactly;white-space:nowrap;">{{ subtotal_price | money }}</td>
+</tr>
+{%- for discount_application in discount_applications -%}
+{%- if discount_application.target_selection == 'all' -%}
+<tr>
+<td class="txt" style="padding-top:6px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#4a3f37;mso-line-height-rule:exactly;">Rabatt{% if discount_application.title %} ({{ discount_application.title }}){% endif %}</td>
+<td align="right" class="txt" style="padding-top:6px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#4a3f37;mso-line-height-rule:exactly;white-space:nowrap;">-{{ discount_application.total_allocated_amount | money }}</td>
+</tr>
+{%- endif -%}
+{%- endfor -%}
+<tr>
+<td class="txt" style="padding-top:6px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#4a3f37;mso-line-height-rule:exactly;">Lieferung</td>
+<td align="right" class="txt" style="padding-top:6px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#4a3f37;mso-line-height-rule:exactly;white-space:nowrap;">{% if shipping_price > 0 %}{{ shipping_price | money }}{% else %}Kostenlos{% endif %}</td>
+</tr>
+{%- if total_duties -%}
+<tr>
+<td class="txt" style="padding-top:6px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#4a3f37;mso-line-height-rule:exactly;">Zollgebühren</td>
+<td align="right" class="txt" style="padding-top:6px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#4a3f37;mso-line-height-rule:exactly;white-space:nowrap;">{{ total_duties | money }}</td>
+</tr>
+{%- endif -%}
+{%- if tax_price > 0 -%}
+<tr>
+<td class="txt" style="padding-top:6px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#4a3f37;mso-line-height-rule:exactly;">MwSt.</td>
+<td align="right" class="txt" style="padding-top:6px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#4a3f37;mso-line-height-rule:exactly;white-space:nowrap;">{{ tax_price | money }}</td>
+</tr>
+{%- endif -%}
+{%- if total_tip and total_tip > 0 -%}
+<tr>
+<td class="txt" style="padding-top:6px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#4a3f37;mso-line-height-rule:exactly;">Trinkgeld</td>
+<td align="right" class="txt" style="padding-top:6px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#4a3f37;mso-line-height-rule:exactly;white-space:nowrap;">{{ total_tip | money }}</td>
+</tr>
+{%- endif -%}
+{%- if payment_terms -%}
+{%- assign transaction_amount = 0 -%}
+{%- for transaction in transactions -%}
+{%- if transaction.status == 'success' -%}
+{%- unless transaction.kind == 'authorization' or transaction.kind == 'void' -%}
+{%- assign transaction_amount = transaction_amount | plus: transaction.amount -%}
+{%- endunless -%}
+{%- endif -%}
+{%- endfor -%}
+<tr>
+<td class="ink" style="padding-top:12px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;color:#21150c;mso-line-height-rule:exactly;font-weight:bold;">Heute bezahlt</td>
+<td align="right" class="ink" style="padding-top:12px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:20px;line-height:26px;color:#21150c;mso-line-height-rule:exactly;font-weight:bold;white-space:nowrap;">{{ transaction_amount | money_with_currency }}</td>
+</tr>
+<tr>
+<td class="txt" style="padding-top:6px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#4a3f37;mso-line-height-rule:exactly;">Fällig am {{ payment_terms.next_payment.due_at | date: format: 'date' }}</td>
+<td align="right" class="txt" style="padding-top:6px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#4a3f37;mso-line-height-rule:exactly;white-space:nowrap;">{{ payment_terms.next_payment.amount_due | money_with_currency }}</td>
+</tr>
+{%- else -%}
+<tr>
+<td class="ink" style="padding-top:12px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;color:#21150c;mso-line-height-rule:exactly;font-weight:bold;">Gesamt</td>
+<td align="right" class="ink" style="padding-top:12px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:20px;line-height:26px;color:#21150c;mso-line-height-rule:exactly;font-weight:bold;white-space:nowrap;">{{ total_price | money_with_currency }}</td>
+</tr>
+{%- endif -%}
+</table>
+</td></tr>
+{%- assign address_shipped = shipping_address | format_address -%}
+{%- assign address_billed = billing_address | format_address -%}
+<tr><td class="px" style="padding:36px 44px 0;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+{%- if requires_shipping and shipping_address %}
+<td valign="top" width="50%" class="stack" style="padding:0 16px 24px 0;">
+<p class="sub" style="margin:0 0 6px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:12px;line-height:16px;color:#6b5e55;mso-line-height-rule:exactly;letter-spacing:1.5px;text-transform:uppercase;">Lieferadresse</p>
+<div class="txt" style="font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:23px;color:#4a3f37;mso-line-height-rule:exactly;">{{ shipping_address | format_address }}</div>
+</td>
+{%- endif %}
+<td valign="top" width="50%" class="stack" style="padding:0 0 24px;">
+<p class="sub" style="margin:0 0 6px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:12px;line-height:16px;color:#6b5e55;mso-line-height-rule:exactly;letter-spacing:1.5px;text-transform:uppercase;">Zahlung</p>
+{%- for transaction in transactions -%}
+{%- if transaction.status == 'success' or transaction.status == 'pending' -%}
+{%- if transaction.kind == 'capture' or transaction.kind == 'sale' %}
+<p class="txt" style="margin:0;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:23px;color:#4a3f37;mso-line-height-rule:exactly;">
+{%- if transaction.payment_details.credit_card_company -%}
+{{ transaction.payment_details.credit_card_company }} endet auf {{ transaction.payment_details.credit_card_last_four_digits }}
+{%- elsif transaction.gateway_display_name == 'Gift card' -%}
+Geschenkkarte endet auf {{ transaction.payment_details.gift_card.last_four_characters | upcase }} ({{ transaction.amount | money }})<br>Guthaben : {{ transaction.payment_details.gift_card.balance | money }}
+{%- else -%}
+{{ transaction.gateway_display_name }}
+{%- endif -%}
+</p>
+{%- endif -%}
+{%- endif -%}
+{%- endfor %}
+</td>
+</tr>
+{%- if billing_address and address_billed != address_shipped %}
+<tr>
+<td valign="top" width="50%" class="stack" style="padding:0 16px 8px 0;">
+<p class="sub" style="margin:0 0 6px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:12px;line-height:16px;color:#6b5e55;mso-line-height-rule:exactly;letter-spacing:1.5px;text-transform:uppercase;">Rechnungsadresse</p>
+<div class="txt" style="font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:23px;color:#4a3f37;mso-line-height-rule:exactly;">{{ billing_address | format_address }}</div>
+</td>
+<td width="50%" class="stack" style="font-size:0;line-height:0;">&nbsp;</td>
+</tr>
+{%- endif %}
+</table>
+</td></tr>
+<tr><td class="px" style="padding:16px 44px 44px;">
+<p class="txt" style="margin:0 0 18px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#4a3f37;mso-line-height-rule:exactly;">Haben Sie eine Frage? Antworten Sie einfach auf diese E-Mail, wir lesen jede Nachricht.</p>
+<p class="txt" style="margin:0;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#4a3f37;mso-line-height-rule:exactly;">Mit Sorgfalt,</p>
+<p class="ink ff" style="margin:2px 0 0;font-family:'Avenir Next',Avenir,'Century Gothic','Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:17px;line-height:25px;color:#21150c;font-weight:normal;mso-line-height-rule:exactly;">Hayate, für das Team von MyselfMonArt</p>
+</td></tr>
+<tr><td class="px" style="padding:0 44px;"><p class="hair" style="margin:0;border-top:1px solid #ddd5ca;font-size:0;line-height:0;">&nbsp;</p></td></tr>
+<tr><td align="center" class="px fine" style="padding:22px 44px 44px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:13px;line-height:21px;color:#6b5e55;mso-line-height-rule:exactly;text-align:center;">
+In Frankreich gestaltet, in Europa gedruckt. Art Direction in Paris, Kundenservice in Toulouse.<br>
+<a href="{{ shop.url }}/de/policies/refund-policy" style="color:#6b5e55;text-decoration:underline;">Rückgabe</a>
+&nbsp;·&nbsp; <a href="{{ shop.url }}/de/policies/terms-of-service" style="color:#6b5e55;text-decoration:underline;">Verkaufsbedingungen</a>
+&nbsp;·&nbsp; <a href="{{ shop.url }}/de/policies/privacy-policy" style="color:#6b5e55;text-decoration:underline;">Datenschutz</a>
+&nbsp;·&nbsp; <a href="{{ shop.url }}/de/policies/legal-notice" style="color:#6b5e55;text-decoration:underline;">Impressum</a>
+<!-- shopify-managed-taxes-footer -->
+</td></tr>
+</table>
+<!--[if mso]></td></tr></table><![endif]-->
+</td></tr>
+</table>
+</div>
+</body>
+</html>

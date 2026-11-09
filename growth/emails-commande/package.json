@@ -1,0 +1,14 @@
+{
+  "name": "emails-commande",
+  "private": true,
+  "type": "module",
+  "description": "Génère les 5 modèles de notification Shopify de MyselfMonArt et leurs aperçus.",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node qa.mjs"
+  },
+  "devDependencies": {
+    "liquidjs": "^10.30.1",
+    "puppeteer-core": "^25.16.0"
+  }
+}

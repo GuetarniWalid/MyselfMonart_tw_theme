@@ -1,0 +1,93 @@
+<title>Mails de commande</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Une bande par mail : l'ancien à gauche, le nouveau en clair puis en sombre. Charte des mails. */
+:root{--paper:#f6f2ec;--ink:#21150c;--txt:#4a3f37;--sub:#6b5e55;--hair:#ddd5ca;--acc:#a0502f;--tile:#fffffe;--ok:#3f6b4a;--todo:#a0502f}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--paper:#17110b;--ink:#f6ece2;--txt:#e3d5c9;--sub:#c6b5a8;--hair:#4a3829;--acc:#eba98c;--tile:#211810;--ok:#9cc7a6;--todo:#eba98c;color-scheme:dark}
+}
+:root[data-theme="dark"]{--paper:#17110b;--ink:#f6ece2;--txt:#e3d5c9;--sub:#c6b5a8;--hair:#4a3829;--acc:#eba98c;--tile:#211810;--ok:#9cc7a6;--todo:#eba98c;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--txt);font:16px/1.6 Helvetica,Arial,sans-serif}
+main{max-width:1040px;margin:0 auto;padding-block:40px 72px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:Georgia,'Times New Roman',serif;font-weight:normal;color:var(--ink);line-height:1.25;text-wrap:balance}
+h1{font-size:34px;margin:0 0 12px}
+h2{font-size:26px;margin:0 0 16px}
+h2 span{color:var(--acc)}
+h3{font-size:19px;margin:28px 0 8px}
+p{margin:0 0 12px}
+section{padding:44px 0;border-top:1px solid var(--hair)}
+.lead{font-size:18px;max-width:680px}
+ul{margin:0 0 12px;padding-left:20px;max-width:720px}
+li{margin:0 0 6px}
+dl{display:grid;grid-template-columns:72px 1fr;gap:4px 16px;margin:0 0 24px;max-width:760px}
+dt{color:var(--sub);font-size:14px;padding-top:2px}
+dd{margin:0}
+.trio{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px;align-items:start}
+.duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;align-items:start;margin-top:16px}
+.cases{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px 20px;align-items:start}
+figure{margin:0;min-width:0}
+img{display:block;width:100%;max-width:100%;height:auto;border:1px solid var(--hair)}
+figcaption{font-size:14px;line-height:1.4;color:var(--sub);margin-top:8px}
+details{margin-top:18px}
+summary{cursor:pointer;color:var(--acc);padding:6px 0}
+.letter{white-space:pre-line;background:var(--tile);padding:20px;margin-top:12px;max-width:640px}
+.table{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;vertical-align:top;padding:10px 12px 10px 0;border-top:1px solid var(--hair)}
+th{font-weight:normal;color:var(--sub);font-size:14px;border-top:0}
+.ok{color:var(--ok);white-space:nowrap}
+.todo{color:var(--todo);white-space:nowrap}
+</style>
+<main lang="fr">
+<h1>La nouvelle série de mails de commande</h1>
+<p class="lead">Cinq mails, une seule ligne : ton logo, ta typo, le papier crème, et un repère qui montre au client où en est sa commande. La série est en ligne depuis le 5 novembre 2026, dans les 5 langues de la boutique.</p>
+<p>Les œuvres viennent de vraies fiches produit. La commande #1880 de Camille est fictive.</p>
+<h3>Ce qui change</h3>
+<ul>
+<li>Un repère en tête de chaque mail : quatre filets, le nom de l'étape et son numéro.</li>
+<li>Le visage de ton logo, sans le rond, et ton nom dans ta typo Welcome, en tête de chaque mail.</li>
+<li>Les titres passent en Welcome. Gmail refuse les polices de marque : il affiche la police la plus proche de l'appareil, et seul l'en-tête garde ta typo partout.</li>
+<li>Les prix restent dans la police de texte, car le zéro de Welcome se lit comme un O.</li>
+<li>Un bouton au plus par mail, et aucun dans les mails 2 et 5. Le bouton violet Shop disparaît.</li>
+<li>Aucune promo ni suggestion de produit : ce sont des mails de service, c'est ce qui les garde loin des spams.</li>
+<li>Vouvoiement, signature de Hayate, et les cinq langues de la boutique sont prêtes.</li>
+</ul>
+
+<!-- mails -->
+
+<section id="cas">
+<h2>Les cas difficiles</h2>
+<p>Ce sont les mails que le client reçoit quand la commande sort de l'ordinaire.</p>
+<div class="cases">
+<!-- cas -->
+</div>
+</section>
+
+<section id="tests">
+<h2>Ce qui est vérifié, et ce qui ne l'est pas</h2>
+<div class="table"><table>
+<tr><th>Contrôle</th><th>État</th><th>Comment</th></tr>
+<tr><td>Arrivée en boîte de réception</td><td class="ok">Réussi</td><td>Les 5 mails reçus sur ton Gmail, tous classés Important. Une seule boîte testée.</td></tr>
+<tr><td>Authentification SPF, DKIM, DMARC</td><td class="ok">Réussi</td><td>Lue dans les en-têtes des mails reçus, au nom de myselfmonart.com.</td></tr>
+<tr><td>Règles téléphone gardées par Gmail</td><td class="ok">Réussi</td><td>Lues dans Gmail sur ordinateur, sur le mail 4 reçu.</td></tr>
+<tr><td>Téléphone, 390 et 320 px de large</td><td class="ok">Réussi</td><td>25 mails, 5 modèles en 5 langues, dans Chrome, avec et sans ta typo : rien ne déborde.</td></tr>
+<tr><td>Contrastes, clair et sombre</td><td class="ok">Réussi</td><td>21 paires de couleurs mesurées, la plus faible à 5,11:1 pour 4,5:1 demandé.</td></tr>
+<tr><td>Poids</td><td class="ok">Réussi</td><td>Le mail 4 pèse 22 Ko une fois passé chez Shopify. Gmail coupe un mail à partir de 102 Ko.</td></tr>
+<tr><td>Logo et typo dans un vrai mail</td><td class="ok">Réussi</td><td>Images déposées dans Shopify, police gardée par Shopify, mails regardés par toi sur ton téléphone.</td></tr>
+<tr><td>Nouveau repère d'étapes</td><td class="todo">À voir</td><td>Refait après ton test : vu dans Chrome et dans l'aperçu Shopify, pas encore sur un vrai téléphone.</td></tr>
+<tr><td>Mode sombre</td><td class="todo">Simulé</td><td>Dans Chrome, y compris l'inversion de Gmail. À regarder sur ton téléphone.</td></tr>
+<tr><td>Autres messageries</td><td class="todo">Partiel</td><td>Ton téléphone n'a montré que le défaut du repère. Le reste n'a pas été vu sur un vrai appareil.</td></tr>
+<tr><td>Orange, Free, SFR</td><td class="todo">Non testé</td><td>Aucune boîte de test chez eux.</td></tr>
+<tr><td>Code des modèles</td><td class="ok">Aperçu</td><td>Les 5 passent dans Shopify sur sa commande d'exemple, avec une et plusieurs œuvres. À regarder sur la première vraie commande.</td></tr>
+<tr><td>Traductions dans Shopify</td><td class="ok">Réussi</td><td>Les 25 versions sont enregistrées à la bonne taille, et l'aperçu de la confirmation est bon dans les 5 langues. Pas relues par un natif.</td></tr>
+</table></div>
+<h3>À savoir</h3>
+<ul>
+<li>Welcome est une police de Violaine &amp; Jérémy, tous droits réservés : vérifie que ta licence couvre l'usage en mail.</li>
+<li>Les mails 4 et 5 ne partent que pour UPS. Pour Colis Privé et Maersk, Shopify ne reçoit rien après le suivi : un déclencheur reste à brancher et à tester.</li>
+<li>Le mail 2 ne part que si la case « prévenir le client » reste cochée quand la commande est marquée traitée.</li>
+<li>Le mail 1 ne rappelle pas le droit de rétractation de 14 jours. Les conditions de vente citent encore Kindopia et la politique de retour parle de 10 jours ouvrables : à revoir à part.</li>
+</ul>
+</section>
+</main>

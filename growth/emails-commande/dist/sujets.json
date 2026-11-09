@@ -1,0 +1,37 @@
+{
+  "fr": {
+    "order_confirmation": "Merci, votre commande {{ name }} est bien enregistrée",
+    "shipping_confirmation": "{% if fulfillment.tracking_numbers.size > 0 %}Votre commande {{ name }} est terminée : voici votre suivi{% else %}Votre commande {{ name }} est en fabrication{% endif %}",
+    "shipping_update": "Votre commande {{ name }} est terminée : voici votre suivi",
+    "shipment_out_for_delivery": "Votre commande {{ name }} arrive bientôt",
+    "shipment_delivered": "Votre commande {{ name }} est arrivée"
+  },
+  "en": {
+    "order_confirmation": "Thank you, your order {{ name }} is confirmed",
+    "shipping_confirmation": "{% if fulfillment.tracking_numbers.size > 0 %}Your order {{ name }} is finished: here is your tracking{% else %}Your order {{ name }} is being made{% endif %}",
+    "shipping_update": "Your order {{ name }} is finished: here is your tracking",
+    "shipment_out_for_delivery": "Your order {{ name }} is arriving soon",
+    "shipment_delivered": "Your order {{ name }} has arrived"
+  },
+  "de": {
+    "order_confirmation": "Vielen Dank, Ihre Bestellung {{ name }} ist eingegangen",
+    "shipping_confirmation": "{% if fulfillment.tracking_numbers.size > 0 %}Ihre Bestellung {{ name }} ist fertig: Hier ist Ihre Sendungsverfolgung{% else %}Ihre Bestellung {{ name }} wird gefertigt{% endif %}",
+    "shipping_update": "Ihre Bestellung {{ name }} ist fertig: Hier ist Ihre Sendungsverfolgung",
+    "shipment_out_for_delivery": "Ihre Bestellung {{ name }} kommt bald an",
+    "shipment_delivered": "Ihre Bestellung {{ name }} ist angekommen"
+  },
+  "es": {
+    "order_confirmation": "Gracias, su pedido {{ name }} se ha registrado",
+    "shipping_confirmation": "{% if fulfillment.tracking_numbers.size > 0 %}Su pedido {{ name }} está terminado: aquí tiene su seguimiento{% else %}Su pedido {{ name }} está en fabricación{% endif %}",
+    "shipping_update": "Su pedido {{ name }} está terminado: aquí tiene su seguimiento",
+    "shipment_out_for_delivery": "Su pedido {{ name }} llega pronto",
+    "shipment_delivered": "Su pedido {{ name }} ha llegado"
+  },
+  "nl": {
+    "order_confirmation": "Bedankt, uw bestelling {{ name }} is geregistreerd",
+    "shipping_confirmation": "{% if fulfillment.tracking_numbers.size > 0 %}Uw bestelling {{ name }} is klaar: hier is uw tracking{% else %}Uw bestelling {{ name }} wordt gemaakt{% endif %}",
+    "shipping_update": "Uw bestelling {{ name }} is klaar: hier is uw tracking",
+    "shipment_out_for_delivery": "Uw bestelling {{ name }} komt binnenkort aan",
+    "shipment_delivered": "Uw bestelling {{ name }} is aangekomen"
+  }
+}

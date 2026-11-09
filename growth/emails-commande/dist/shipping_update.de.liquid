@@ -1,0 +1,236 @@
+{%- assign first_name = customer.first_name | strip -%}
+{%- assign first_name_caps = first_name | upcase -%}
+{%- if first_name != blank and first_name == first_name_caps -%}{%- assign first_name = first_name | downcase | capitalize -%}{%- endif -%}
+{%- assign art_count = 0 -%}
+{%- assign hero = nil -%}
+{%- for fl in fulfillment.fulfillment_line_items -%}
+{%- assign line_format = fl.line_item.variant.title | append: ' ' | append: fl.line_item.variant_title | append: ' ' | append: fl.line_item.title -%}
+{%- if line_format contains ' cm' -%}
+{%- assign art_count = art_count | plus: fl.quantity -%}
+{%- if hero == nil and fl.line_item.image -%}{%- assign hero = fl.line_item -%}{%- endif -%}
+{%- endif -%}
+{%- endfor -%}
+{%- capture email_title %}{% if art_count == 1 %}Ihr Werk ist fertig{% elsif art_count > 1 %}Ihre Werke sind fertig{% else %}Ihre Bestellung ist fertig{% endif %}{% endcapture -%}
+<!DOCTYPE html>
+<html lang="de" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="x-apple-disable-message-reformatting">
+<meta name="format-detection" content="telephone=no,address=no,email=no,date=no,url=no">
+<meta name="color-scheme" content="light only">
+<title>{{ email_title }}</title>
+<style type="text/css">
+body{margin:0;padding:0;width:100%;background-color:#f6f2ec}
+body,table,td,a{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}
+table,td{mso-table-lspace:0pt;mso-table-rspace:0pt}
+img{-ms-interpolation-mode:bicubic;border:0;outline:none;text-decoration:none}
+a{color:#a0502f}
+@media (min-width:1px){
+  a[x-apple-data-detectors]{color:inherit !important;text-decoration:none !important;font-size:inherit !important;font-family:inherit !important;font-weight:inherit !important;line-height:inherit !important}
+}
+@media only screen and (max-width:620px){
+  .outer{padding:0 !important}
+  .px{padding-left:24px !important;padding-right:24px !important}
+  .h1{font-size:26px !important;line-height:34px !important}
+  .btnw{width:100% !important}
+  .tile{padding:28px 20px !important}
+  .panel{padding:26px 22px !important}
+  .trk{font-size:19px !important;letter-spacing:0 !important}
+  .stack{display:block !important;width:100% !important;padding-right:0 !important}
+}
+@media only screen and (max-width:360px){
+  .thumb{width:54px !important;padding-right:10px !important}
+  .thumbImg{width:44px !important}
+}
+</style>
+<style type="text/css">
+@media (min-width:1px){
+  @font-face{font-family:'Welcome Web';src:url('https://www.myselfmonart.com/cdn/shop/t/25/assets/heading.woff2') format('woff2');font-weight:400;font-style:normal}
+  .ff{font-family:'Welcome Web','Avenir Next',Avenir,'Century Gothic','Segoe UI',Roboto,Helvetica,Arial,sans-serif !important}
+}
+</style>
+<style type="text/css">
+@media (min-width:1px){
+  :root{color-scheme:light dark;supported-color-schemes:light dark}
+}
+@media (prefers-color-scheme:dark){
+  body,.bg{background-color:#17110b !important}
+  .ink{color:#f6ece2 !important}
+  .txt{color:#e3d5c9 !important}
+  .sub{color:#c6b5a8 !important}
+  .fine{color:#bdaba0 !important}
+  .acc{color:#eba98c !important}
+  .hair{border-color:#4a3829 !important}
+  .barOn{border-color:#eba98c !important}
+  .barOff{border-color:#4a3829 !important}
+  .panelSoft{background-color:#33231a !important}
+  .panelSoft .softLabel{color:#eba98c !important}
+  .panelDark{background-color:#2a1d13 !important}
+  a{color:#eeb193 !important}
+  .fine a{color:#e2d2c6 !important}
+  .panelSoft a,.panelDark a{color:#f6ece2 !important}
+  .btn{background-color:#e8b79f !important}
+  .btn a{color:#1c1108 !important}
+  .btnLight{background-color:#e8b79f !important}
+  .btnLight a{color:#1c1108 !important}
+  .logo,.logo a{color:#f0e2d6 !important}
+  .logoLight{display:none !important}
+  .logoDark{display:block !important}
+}
+</style>
+<style type="text/css">
+@media (min-width:1px){
+  [data-ogsc] body,[data-ogsc] .bg{background-color:#17110b !important}
+  [data-ogsc] .ink{color:#f6ece2 !important}
+  [data-ogsc] .txt{color:#e3d5c9 !important}
+  [data-ogsc] .sub{color:#c6b5a8 !important}
+  [data-ogsc] .fine{color:#bdaba0 !important}
+  [data-ogsc] .acc{color:#eba98c !important}
+  [data-ogsc] .hair{border-color:#4a3829 !important}
+  [data-ogsc] .barOn{border-color:#eba98c !important}
+  [data-ogsc] .barOff{border-color:#4a3829 !important}
+  [data-ogsc] .panelSoft{background-color:#33231a !important}
+  [data-ogsc] .panelSoft .softLabel{color:#eba98c !important}
+  [data-ogsc] .panelDark{background-color:#2a1d13 !important}
+  [data-ogsc] a{color:#eeb193 !important}
+  [data-ogsc] .fine a{color:#e2d2c6 !important}
+  [data-ogsc] .panelSoft a,[data-ogsc] .panelDark a{color:#f6ece2 !important}
+  [data-ogsc] .btn{background-color:#e8b79f !important}
+  [data-ogsc] .btn a{color:#1c1108 !important}
+  [data-ogsc] .btnLight{background-color:#e8b79f !important}
+  [data-ogsc] .btnLight a{color:#1c1108 !important}
+  [data-ogsc] .logo,[data-ogsc] .logo a{color:#f0e2d6 !important}
+  [data-ogsc] .logoLight{display:none !important}
+  [data-ogsc] .logoDark{display:block !important}
+  [data-ogsb] body,[data-ogsb] .bg{background-color:#17110b !important}
+  [data-ogsb] .ink{color:#f6ece2 !important}
+  [data-ogsb] .txt{color:#e3d5c9 !important}
+  [data-ogsb] .sub{color:#c6b5a8 !important}
+  [data-ogsb] .fine{color:#bdaba0 !important}
+  [data-ogsb] .acc{color:#eba98c !important}
+  [data-ogsb] .hair{border-color:#4a3829 !important}
+  [data-ogsb] .barOn{border-color:#eba98c !important}
+  [data-ogsb] .barOff{border-color:#4a3829 !important}
+  [data-ogsb] .panelSoft{background-color:#33231a !important}
+  [data-ogsb] .panelSoft .softLabel{color:#eba98c !important}
+  [data-ogsb] .panelDark{background-color:#2a1d13 !important}
+  [data-ogsb] a{color:#eeb193 !important}
+  [data-ogsb] .fine a{color:#e2d2c6 !important}
+  [data-ogsb] .panelSoft a,[data-ogsb] .panelDark a{color:#f6ece2 !important}
+  [data-ogsb] .btn{background-color:#e8b79f !important}
+  [data-ogsb] .btn a{color:#1c1108 !important}
+  [data-ogsb] .btnLight{background-color:#e8b79f !important}
+  [data-ogsb] .btnLight a{color:#1c1108 !important}
+  [data-ogsb] .logo,[data-ogsb] .logo a{color:#f0e2d6 !important}
+  [data-ogsb] .logoLight{display:none !important}
+  [data-ogsb] .logoDark{display:block !important}
+}
+</style>
+</head>
+<body class="bg" style="margin:0;padding:0;width:100%;background-color:#f6f2ec;">
+<div role="article" aria-roledescription="email" aria-label="{{ email_title }}" lang="de">
+<span style="display:none;font-size:1px;color:#f6f2ec;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;">Sie ist verpackt und auf dem Weg. Ihre Sendungsnummer steht in dieser E-Mail.</span>
+<span style="display:none;font-size:1px;color:#f6f2ec;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;">&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;</span>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="bg" bgcolor="#f6f2ec" style="background-color:#f6f2ec;">
+<tr><td align="center" class="outer" style="padding:0 12px;">
+<!--[if mso]><table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" align="center"><tr><td><![endif]-->
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%;max-width:600px;margin:0 auto;">
+<tr><td align="center" class="px logo" style="padding:36px 44px 30px;font-family:'Avenir Next',Avenir,'Century Gothic','Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:22px;line-height:30px;color:#21150c;font-weight:normal;mso-line-height-rule:exactly;">
+<a href="{{ shop.url }}" style="display:inline-block;color:#21150c;text-decoration:none;">
+<img class="logoLight" src="https://cdn.shopify.com/s/files/1/0623/2388/4287/files/mail-logo-clair.png" width="230" height="37" alt="MyselfMonArt" style="display:block;width:230px;max-width:100%;height:auto;border:0;">
+<img class="logoDark" src="https://cdn.shopify.com/s/files/1/0623/2388/4287/files/mail-logo-sombre.png" width="230" height="37" alt="" style="display:none;width:230px;max-width:100%;height:auto;border:0;mso-hide:all;">
+</a>
+</td></tr>
+<tr><td class="px" style="padding:0 44px;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr><td width="25%" class="barOn" style="border-top:2px solid #a0502f;font-size:0;line-height:0;">&nbsp;</td><td width="6" style="font-size:0;line-height:0;">&nbsp;</td><td width="25%" class="barOn" style="border-top:2px solid #a0502f;font-size:0;line-height:0;">&nbsp;</td><td width="6" style="font-size:0;line-height:0;">&nbsp;</td><td width="25%" class="barOn" style="border-top:2px solid #a0502f;font-size:0;line-height:0;">&nbsp;</td><td width="6" style="font-size:0;line-height:0;">&nbsp;</td><td width="25%" class="barOff" style="border-top:2px solid #ddd5ca;font-size:0;line-height:0;">&nbsp;</td></tr></table>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+<td class="ink" style="padding-top:8px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:13px;line-height:18px;color:#21150c;mso-line-height-rule:exactly;font-weight:bold;">Versand</td>
+<td align="right" class="sub" style="padding-top:8px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:13px;line-height:18px;color:#6b5e55;mso-line-height-rule:exactly;">Schritt 3 von 4</td>
+</tr></table>
+</td></tr>
+<tr><td class="px acc" style="padding:40px 44px 0;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:12px;line-height:16px;color:#a0502f;mso-line-height-rule:exactly;letter-spacing:1.5px;text-transform:uppercase;">Bestellung {{ order_name }}</td></tr>
+<tr><td class="px" style="padding:12px 44px 0;">
+<h1 class="h1 ink ff" style="margin:0;font-family:'Avenir Next',Avenir,'Century Gothic','Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:29px;line-height:37px;color:#21150c;font-weight:600;mso-line-height-rule:exactly;">{% if art_count == 1 %}Ihr Werk ist fertig{% elsif art_count > 1 %}Ihre Werke sind fertig{% else %}Ihre Bestellung ist fertig{% endif %}</h1>
+</td></tr>
+<tr><td class="px" style="padding:18px 44px 0;">
+<p class="txt" style="margin:0 0 0;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:26px;color:#4a3f37;mso-line-height-rule:exactly;">{% if first_name != blank %}Guten Tag {{ first_name }},{% else %}Guten Tag,{% endif %}</p>
+<p class="txt" style="margin:12px 0 0;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:26px;color:#4a3f37;mso-line-height-rule:exactly;">Unser Atelier hat Ihre Bestellung fertiggestellt. Sie ist verpackt und auf dem Weg zum Versanddienst. So können Sie sie bis zu Ihnen nach Hause verfolgen.</p>
+</td></tr>
+{%- if fulfillment.item_count != item_count -%}
+<tr><td class="px sub" style="padding:14px 44px 0;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:22px;color:#6b5e55;mso-line-height-rule:exactly;">Diese Nachricht betrifft einen Teil Ihrer Bestellung.</td></tr>
+{%- endif -%}
+<tr><td class="px" style="padding:32px 44px 0;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr><td class="panel panelDark" bgcolor="#21150c" style="background-color:#21150c;padding:30px 28px;">
+<p style="margin:0;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:12px;line-height:16px;color:#e8cdbf;mso-line-height-rule:exactly;letter-spacing:1.5px;text-transform:uppercase;">
+{%- if fulfillment.tracking_numbers.size > 1 %}Sendungsnummern{%- else %}Sendungsnummer{%- endif -%}
+{%- if fulfillment.tracking_company != blank and fulfillment.tracking_company != 'Other' %} &nbsp;·&nbsp; {{ fulfillment.tracking_company }}{%- endif -%}
+</p>
+<p class="trk" style="margin:8px 0 0;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:20px;line-height:30px;color:#fffffe;mso-line-height-rule:exactly;letter-spacing:0.5px;word-break:break-all;">
+{%- for tracking_number in fulfillment.tracking_numbers -%}
+{%- if fulfillment.tracking_urls[forloop.index0] -%}
+<a href="{{ fulfillment.tracking_urls[forloop.index0] }}" style="color:#fffffe;text-decoration:none;">{{ tracking_number }}</a>
+{%- else -%}
+{{ tracking_number }}
+{%- endif -%}
+{%- unless forloop.last %}<br>{% endunless -%}
+{%- endfor -%}
+</p>
+{%- if fulfillment.estimated_delivery_at %}
+<p style="margin:8px 0 0;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:23px;color:#e6d6cd;mso-line-height-rule:exactly;">Voraussichtliche Lieferung : {{ fulfillment.estimated_delivery_at | date: format: 'date' }}</p>
+{%- endif %}
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" class="btnw" style="border-collapse:separate;margin-top:22px;">
+<tr><td align="center" class="btnLight" bgcolor="#d79b86" style="background-color:#d79b86;mso-padding-alt:16px 40px;">
+<a href="{% if fulfillment.tracking_url %}{{ fulfillment.tracking_url }}{% else %}{% if order_status_url %}{{ order_status_url }}{% else %}{{ shop.url }}/de{% endif %}{% endif %}" style="display:block;padding:16px 40px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:20px;font-weight:bold;letter-spacing:0.2px;color:#21150c;text-decoration:none;mso-line-height-rule:exactly;">Mein Paket verfolgen</a>
+</td></tr></table>
+<p style="margin:16px 0 0;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:21px;color:#e6d6cd;mso-line-height-rule:exactly;">Die Sendungsverfolgung wird aktualisiert, sobald der Versanddienst Ihr Paket übernommen hat.</p>
+</td></tr>
+</table>
+</td></tr>
+
+<tr><td class="px" style="padding:36px 44px 0;">
+<p class="sub" style="margin:0 0 8px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:12px;line-height:16px;color:#6b5e55;mso-line-height-rule:exactly;letter-spacing:1.5px;text-transform:uppercase;">In diesem Paket</p>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+{%- for fl in fulfillment.fulfillment_line_items -%}
+{%- assign item = fl.line_item -%}
+{%- assign item_title = item.product.title | default: item.title -%}
+{%- if item.presentment_title != blank -%}{%- assign item_title = item.presentment_title -%}{%- endif -%}
+<tr>
+<td width="76" valign="top" class="hair thumb" style="width:76px;padding:14px 16px 14px 0;border-top:1px solid #ddd5ca;">
+{%- if item.image %}<img src="{{ item | img_url: '160x160' }}" width="60" alt="" class="thumbImg" style="display:block;width:60px;height:auto;border:0;">{%- endif %}
+</td>
+<td valign="top" class="hair" style="padding:14px 0;border-top:1px solid #ddd5ca;">
+<p class="ink ff" style="margin:0;word-break:break-word;font-family:'Avenir Next',Avenir,'Century Gothic','Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:23px;color:#21150c;font-weight:normal;mso-line-height-rule:exactly;">{{ item_title }}</p>
+<p class="sub" style="margin:2px 0 0;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:21px;color:#6b5e55;mso-line-height-rule:exactly;">
+{%- if item.variant.title != blank and item.variant.title != 'Default Title' %}{{ item.variant.title }}{%- endif -%}
+{%- if fl.quantity > 1 %}{%- if item.variant.title != blank and item.variant.title != 'Default Title' %} &nbsp;·&nbsp; {% endif %}Menge : {{ fl.quantity }}{%- endif %}
+</p>
+</td>
+</tr>
+{%- endfor -%}
+</table>
+</td></tr>
+
+<tr><td class="px" style="padding:36px 44px 44px;">
+<p class="txt" style="margin:0 0 18px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#4a3f37;mso-line-height-rule:exactly;">Haben Sie eine Frage? Antworten Sie einfach auf diese E-Mail, wir lesen jede Nachricht.</p>
+<p class="txt" style="margin:0;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#4a3f37;mso-line-height-rule:exactly;">Mit Sorgfalt,</p>
+<p class="ink ff" style="margin:2px 0 0;font-family:'Avenir Next',Avenir,'Century Gothic','Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:17px;line-height:25px;color:#21150c;font-weight:normal;mso-line-height-rule:exactly;">Hayate, für das Team von MyselfMonArt</p>
+</td></tr>
+<tr><td class="px" style="padding:0 44px;"><p class="hair" style="margin:0;border-top:1px solid #ddd5ca;font-size:0;line-height:0;">&nbsp;</p></td></tr>
+<tr><td align="center" class="px fine" style="padding:22px 44px 44px;font-family:Roboto,Helvetica,Arial,sans-serif;font-size:13px;line-height:21px;color:#6b5e55;mso-line-height-rule:exactly;text-align:center;">
+In Frankreich gestaltet, in Europa gedruckt. Art Direction in Paris, Kundenservice in Toulouse.<br>
+<a href="{{ shop.url }}/de/policies/refund-policy" style="color:#6b5e55;text-decoration:underline;">Rückgabe</a>
+&nbsp;·&nbsp; <a href="{{ shop.url }}/de/policies/terms-of-service" style="color:#6b5e55;text-decoration:underline;">Verkaufsbedingungen</a>
+&nbsp;·&nbsp; <a href="{{ shop.url }}/de/policies/privacy-policy" style="color:#6b5e55;text-decoration:underline;">Datenschutz</a>
+&nbsp;·&nbsp; <a href="{{ shop.url }}/de/policies/legal-notice" style="color:#6b5e55;text-decoration:underline;">Impressum</a>
+<!-- shopify-managed-taxes-footer -->
+</td></tr>
+</table>
+<!--[if mso]></td></tr></table><![endif]-->
+</td></tr>
+</table>
+</div>
+</body>
+</html>
