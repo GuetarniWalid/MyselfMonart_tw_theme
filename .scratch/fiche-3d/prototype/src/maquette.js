@@ -5,15 +5,17 @@
  *
  * Les chips (src/chips.js et src/chips.css) sont un module à part, que la fiche du thème reprendra :
  * cette page leur fournit le catalogue du Bonsaï, la scène et la 3D. Le moteur (scene.js), la mise
- * en scène (staging.js) et leurs réglages sont ceux du prototype validé. La page ne fait que cadrer :
- * le tableau de face prend la largeur et la place que le design lui donne (FRONT_FILL, framing),
- * la pièce recule pour tenir entre les légendes (fitRoom), et la 3D est décalée vers le haut comme
- * l'œuvre du design (lensShift). Le reste de la fiche, sous l'œuvre, est factice.
+ * en scène (staging.js) et leurs réglages sont ceux du prototype validé. La page ne fait que cadrer
+ * (framing.js) : le tableau de face prend la largeur et la place que le design lui donne, la pièce
+ * recule pour tenir entre les légendes (fitRoom), la 3D est décalée vers le haut comme l'œuvre du
+ * design (lensShift) et, rangée ouverte, chaque mise en scène se cadre dans la zone visible
+ * au-dessus de la rangée. Le reste de la fiche, sous l'œuvre, est factice.
  *
  * Arrivée : la photo d'abord, à la place exacte de l'œuvre de face, et les chips qui se posent ;
  * three.js se charge au repos et la 3D apparaît en fondu. Toucher une légende ouvre sa rangée ;
- * toucher un choix l'applique (le prix change aussitôt), la 3D joue sa mise en scène et la rangée
- * se referme. Filets et points suivent l'œuvre que la 3D projette, inclinaison comprise.
+ * toucher un choix l'applique (le prix change aussitôt) et la 3D joue sa mise en scène, rangée
+ * ouverte : on enchaîne les choix (retour de Walid du 09/11). Un toucher en dehors, ou Échap, ferme
+ * la rangée et ramène l'œuvre de face. Filets et points suivent l'œuvre que la 3D projette.
  */
 
 import { createDirector, paintingCorners } from './staging.js'
@@ -22,12 +24,12 @@ import { BORDERS, FRAMES, SIZES, canFrame, describe, dimensionsOf, fitChoice, fr
 import { densityForCost, renderDensity } from './quality.js'
 import { decodeImage } from './images.js'
 import { startReliefs } from './reliefs.js'
-import { createChips, eur, maxShift } from './chips.js'
+import { createChips, eur } from './chips.js'
+import { canvasBox, framingAt } from './framing.js'
 
 const THREE_URL = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js'
 const WOOD_IMAGE = 'assets/chene-clair.jpg'
 const DETAIL_IMAGE = 'assets/bonsai-source.jpg' // la source complète, pour les gros plans
-const FRONT_FILL = 0.72 // part de la scène que le tableau occupe de face (FRONT_FILL de staging.js)
 const ART_RATIO = 0.75 // les quatre tailles du Bonsaï sont en 3:4
 
 document.documentElement.lang = 'fr' // l'hébergeur des Artifacts fournit <html> sans langue
@@ -44,10 +46,43 @@ const director = createDirector({ room: ROOM, product: { ...product }, reducedMo
 
 let engine = null
 let live = false // moteur prêt à dessiner : programmes compilés
-/* w, h : la scène visible ; top, glH : la 3D, qui déborde la scène (lensShift) ; framing : forme
-   d'écran donnée au directeur ; zone : largeur libre entre les légendes, pour la pièce. */
-const stageSize = { w: 1, h: 1, top: 0, glH: 1, framing: 1, zone: 1 }
-const aspect = () => stageSize.framing
+/* w, h : la scène visible ; top, glH : la 3D, qui déborde la scène (canvasBox) ; zone : largeur
+   libre entre les légendes, pour la pièce ; L : la mise en page des chips. */
+const stageSize = { w: 1, h: 1, top: 0, glH: 1, zone: 1, L: null }
+
+/* Rangée ouverte, une mise en scène se cadre dans la zone visible au-dessus de la rangée : le poids
+   w (framing.js) passe de 0 à 1 au rythme de la caméra, et revient à 0 avec elle quand la rangée se
+   ferme. zoneShift : la remontée de la scène, figée tant que le poids n'est pas revenu à 0, pour
+   que l'image glisse sans saut quand une note de la rangée apparaît ou disparaît. */
+const zoneMove = { from: 0, to: 0, t0: 0, ms: 0 }
+let zoneShift = 0
+const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2) // la courbe des étapes de staging.js
+function zoneWeight(at) {
+  const { from, to, t0, ms } = zoneMove
+  if (!ms || at >= t0 + ms) return to
+  return from + (to - from) * easeInOut(Math.max(0, (at - t0) / ms))
+}
+// Fin du mouvement que le directeur vient de prévoir : il est pur, on le sonde dans le temps.
+function movingUntil(now) {
+  if (!director.isMoving(now)) return now
+  let lo = now, hi = now + 20000
+  while (hi - lo > 2) {
+    const mid = (lo + hi) / 2
+    if (director.isMoving(mid)) lo = mid
+    else hi = mid
+  }
+  return hi
+}
+function moveZone(to) {
+  const now = performance.now()
+  if (zoneMove.to === to && zoneWeight(now) === to) return
+  Object.assign(zoneMove, { from: zoneWeight(now), to, t0: now, ms: reducedMotion ? 0 : Math.max(0, movingUntil(now) - now) })
+}
+function framingNow(at) {
+  const spot = chips.placement
+  if (spot && zoneMove.to === 0 && zoneWeight(at) === 0) zoneShift = spot.shift
+  return framingAt(stageSize.L, { w: zoneWeight(at), shift: zoneShift, glH: stageSize.glH })
+}
 
 /* ---------------- Le catalogue du Bonsaï, tel que les chips le lisent ---------------- */
 
@@ -102,6 +137,7 @@ const chips = createChips({
   reducedMotion,
   onChoose: (group, id, next) => choose(group, next),
   onOpen: (group) => approach(group),
+  onDismiss: () => goFront(), // un toucher en dehors de la rangée, ou Échap : retour de face
 })
 
 // Seulement ce qui change : un texte réécrit à l'identique relance styles et mise en page.
@@ -143,7 +179,8 @@ stageEl.addEventListener('pointerdown', (event) => {
 })
 
 /* Le prix et les textes changent aussitôt ; la 3D joue ensuite sa mise en scène. Retoucher le
-   choix en cours (dans sa rangée, ou « Toile » dans la bascule) rejoue sa mise en scène. */
+   choix en cours (dans sa rangée, ou « Toile » dans la bascule) rejoue sa mise en scène. Rangée
+   ouverte, la mise en scène se cadre au-dessus de la rangée. */
 function choose(group, next) {
   const started = performance.now()
   queueMicrotask(() => reportChoice(performance.now() - started))
@@ -154,6 +191,7 @@ function choose(group, next) {
     announce()
   }
   director.choose(group, { ...product }, performance.now())
+  if (chips.openGroup) moveZone(1)
   run.active = true
   if (reducedMotion && engine) {
     // Animations réduites : simple fondu au changement de plan.
@@ -164,9 +202,14 @@ function choose(group, next) {
   requestRender()
 }
 
+// Retour de face (bouton, toucher l'œuvre, rangée fermée) ; une mise en scène en cours s'y rend.
 function goFront() {
-  director.choose('front', { ...product }, performance.now())
-  run.active = true
+  const now = performance.now()
+  if (director.isMoving(now) || director.view(now, framingNow(now).aspect).shot !== 'front') {
+    director.choose('front', { ...product }, now)
+    run.active = true
+  }
+  moveZone(0)
   requestRender()
 }
 
@@ -225,9 +268,10 @@ function requestRender() {
    légendes et la cote de hauteur sortait de l'écran. La caméra recule juste ce qu'il faut pour que
    le tableau et ses cotes tiennent dans la largeur de l'œuvre de face, et le cadrage remonte d'autant
    pour ne jamais descendre sous le sol de la photo. Le recul arrive avec la pièce (view.room) : la
-   transition reste continue. Rien ne change ailleurs. */
+   transition reste continue. Rien ne change ailleurs. h : la hauteur d'écran du cadrage en cours
+   (la scène, ou la zone au-dessus de la rangée ouverte). */
 const ROOM_DIMS = { cm: 6, px: 24 } // écart d'une cote au tableau, place de son étiquette
-function fitRoom(view) {
+function fitRoom(view, h) {
   const k = view.room
   if (!(k > 0)) return view
   const { camera, painting } = view
@@ -235,13 +279,13 @@ function fitRoom(view) {
   const offset = camera.position.map((c, i) => c - camera.target[i])
   const distance = Math.hypot(...offset)
   const room = stageSize.zone - 2 * ROOM_DIMS.px
-  const need = ((painting.outer.width + 2 * ROOM_DIMS.cm) * stageSize.h) / (2 * tan * room)
+  const need = ((painting.outer.width + 2 * ROOM_DIMS.cm) * h) / (2 * tan * room)
   if (need <= distance) return view
   const reach = distance + (need - distance) * k
   const half = reach * tan
   const target = [...camera.target]
   target[1] += Math.max(0, ROOM.view.bottom + half - target[1]) * k
-  const sideways = half * (stageSize.w / stageSize.h)
+  const sideways = half * (stageSize.w / h)
   target[0] += (Math.min(Math.max(target[0], ROOM.photo.left + sideways), ROOM.photo.right - sideways) - target[0]) * k
   const position = target.map((t, i) => t + (offset[i] * reach) / distance)
   return { ...view, camera: { ...camera, position, target } }
@@ -249,20 +293,36 @@ function fitRoom(view) {
 
 /* Le design place l'œuvre de face un peu au-dessus du milieu de la scène, pour centrer le bloc
    (bascule, œuvre, cote) au-dessus de la barre d'achat. La 3D garde l'image que la mise en scène
-   calcule pour la scène visible, simplement remontée : le canvas, plus haut que la scène, est centré
-   sur l'œuvre (stageSize.top, glH) et son angle de vue grandit d'autant. C'est un décentrement
-   d'objectif : à l'écran, rien d'autre ne bouge. Le surplus du bas sert quand la scène remonte. */
-function lensShift(view) {
-  if (stageSize.glH === stageSize.h) return view
-  const fovY = 2 * Math.atan(Math.tan(view.camera.fovY / 2) * (stageSize.glH / stageSize.h))
+   calcule pour la scène visible (ou pour la zone au-dessus de la rangée), simplement déplacée : le
+   canvas, plus haut que la scène, est centré sur elle et son angle de vue grandit d'autant
+   (fovScale). C'est un décentrement d'objectif : à l'écran, rien d'autre ne bouge. */
+function lensShift(view, fovScale) {
+  if (fovScale === 1) return view
+  const fovY = 2 * Math.atan(Math.tan(view.camera.fovY / 2) * fovScale)
   return { ...view, camera: { ...view.camera, fovY } }
 }
 
+// Le canvas et ses cotes glissent dans la scène vers la zone au-dessus de la rangée (au pixel de l'écran).
+let canvasOffset = 0
+function placeCanvas(offset) {
+  const dpr = window.devicePixelRatio || 1
+  const snapped = Math.round(offset * dpr) / dpr
+  if (snapped === canvasOffset) return
+  canvasOffset = snapped
+  const transform = snapped ? `translateY(${snapped}px)` : ''
+  canvas.style.transform = transform
+  dimsEl.style.transform = transform
+}
+
+let lastView = null
 function draw(at) {
-  const view = lensShift(fitRoom(director.view(at, aspect())))
+  const f = framingNow(at)
+  const view = lensShift(fitRoom(director.view(at, f.aspect), f.h), f.fovScale)
+  placeCanvas(f.offset)
   engine.render(view, at)
   placeDims(view)
   trackChips(view)
+  lastView = view
   return view
 }
 
@@ -270,7 +330,7 @@ function frame(now) {
   raf = 0
   const view = draw(now)
   if (run.active) run.times.push(now)
-  const moving = director.isMoving(now) || engine.isFading(now) || !!drag
+  const moving = director.isMoving(now) || engine.isFading(now) || !!drag || zoneWeight(now) !== zoneMove.to
   chips.setMoving(moving)
   setFront(!moving && view.shot !== 'front')
   if (moving) {
@@ -281,13 +341,16 @@ function frame(now) {
   swapDetail()
 }
 
+// Un point de la 3D, projeté dans la couche `scene` (canvas décalé compris).
+function toScene(point) {
+  const p = engine.toScreen(point)
+  return { x: p.x, y: p.y + stageSize.top + canvasOffset }
+}
+
 // Les quatre coins de la façade du tableau (cadre compris), projetés dans la scène.
 function trackChips(view) {
   const front = paintingCorners(view.painting, 'outer').filter((c) => c.side.z === 1)
-  const at = (sx, sy) => {
-    const p = engine.toScreen(front.find((c) => c.side.x === sx && c.side.y === sy))
-    return { x: p.x, y: p.y + stageSize.top }
-  }
+  const at = (sx, sy) => toScene(front.find((c) => c.side.x === sx && c.side.y === sy))
   chips.track([at(-1, 1), at(1, 1), at(1, -1), at(-1, -1)])
 }
 
@@ -335,36 +398,29 @@ canvas.addEventListener('pointercancel', endDrag)
 /* ---------------- Cadrage : le tableau de face à la place que le design lui donne ---------------- */
 
 /* Les chips calculent la place de l'œuvre (chipsLayout). Le directeur cadre pour un écran de forme
-   `aspect` : on lui donne la forme qui met le tableau de face à la largeur voulue, la 3D gardant tout
-   l'écran (le mur passe derrière les légendes). Le canvas est centré sur l'œuvre (lensShift) et
-   descend sous la scène de ce que la scène peut remonter quand une rangée s'ouvre. */
+   `aspect` (framing.js) : celle qui met le tableau de face à la largeur voulue, la 3D gardant tout
+   l'écran (le mur passe derrière les légendes). Le canvas est centré sur l'œuvre et couvre la scène
+   dans tous les cadrages : œuvre remontée avec la rangée, zone au-dessus de la rangée (canvasBox). */
 function measureStage() {
   const rect = stageEl.getBoundingClientRect()
   const w = Math.max(1, Math.round(rect.width))
   const h = Math.max(1, Math.round(rect.height))
   const L = chips.resize({ width: w, height: h })
-  const half = Math.max(L.cy, h + maxShift(L) - L.cy)
-  const top = Math.floor(L.cy - half)
-  const glH = Math.round(2 * (L.cy - top))
-  const paintW = L.art.w
-  const natural = Math.min(FRONT_FILL * ART_RATIO * h, FRONT_FILL * w)
-  Object.assign(stageSize, {
-    w, h, top, glH, zone: paintW,
-    framing: paintW < natural - 0.5 ? paintW / (FRONT_FILL * h) : w / h,
-  })
+  const box = canvasBox(L)
+  Object.assign(stageSize, { w, h, top: box.top, glH: box.height, zone: L.art.w, L })
   const set = (name, value) => sceneEl.style.setProperty(name, `${Math.round(value * 100) / 100}px`)
   set('--art-x', L.art.l)
   set('--art-y', L.art.t)
   set('--art-w', L.art.w)
   set('--art-h', L.art.h)
-  set('--gl-top', top)
-  set('--gl-h', glH)
+  set('--gl-top', box.top)
+  set('--gl-h', box.height)
   stageEl.style.setProperty('--notice-top', `${L.toggle.top + (L.desk ? 56 : 52)}px`)
 }
 
-/* La 3D déborde la scène (lensShift) : à densité égale, la carte graphique peindrait jusqu'à 22 % de
+/* La 3D déborde la scène (canvasBox) : à densité égale, la carte graphique peindrait jusqu'à 30 % de
    pixels en plus, et un téléphone moyen perdait des images. Elle garde donc le nombre de pixels de la
-   scène visible : la densité baisse un peu sur les écrans × 3 (2,7 au lieu de 3), jamais sous 2. */
+   scène visible : la densité baisse un peu sur les écrans × 3 (2,6 au lieu de 3), jamais sous 2. */
 let densityCap = Infinity
 function fitStage() {
   const dpr = window.devicePixelRatio || 1
@@ -498,7 +554,8 @@ async function start3D() {
     fitStage()
     engine.onNeedsRender = requestRender
     const at = performance.now()
-    marks.frameCost = await engine.prepare(lensShift(director.view(at, aspect())), at)
+    const f = framingNow(at)
+    marks.frameCost = await engine.prepare(lensShift(director.view(at, f.aspect), f.fovScale), at)
     densityCap = densityForCost(engine.density(), marks.frameCost)
     if (densityCap < engine.density()) fitStage()
   } catch (error) {
@@ -598,4 +655,11 @@ window.__proto = {
   director, product, chips, catalog, engine: () => engine, render: draw, stageSize,
   openGroup: () => chips.openGroup,
   layout: () => chips.layout,
+  framing: () => framingNow(performance.now()),
+  // Les coins de la dernière image (œuvre ou boîte cadre comprise), en px de la scène visible.
+  corners: (which = 'outer') => {
+    const shift = chips.placement ? chips.placement.shift : 0
+    return lastView ? paintingCorners(lastView.painting, which).map((c) => ({ ...toScene(c), y: toScene(c).y - shift, side: c.side })) : []
+  },
+  shot: () => (lastView ? lastView.shot : null),
 }

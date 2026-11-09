@@ -142,6 +142,12 @@
 .chips-rail.is-open {
   opacity: 1; visibility: visible; pointer-events: auto; transform: none;
   -webkit-backdrop-filter: blur(28px) saturate(1.5); backdrop-filter: blur(28px) saturate(1.5);
+  transition: opacity 200ms ease, transform 460ms var(--chips-curve), visibility 0s, -webkit-backdrop-filter 300ms ease, backdrop-filter 300ms ease;
+}
+/* La rangée reste ouverte pendant les mises en scène : son flou attend que la 3D s'arrête, comme
+   celui des plaques (il se recalculerait à chaque image), puis revient en fondu. */
+.chips.is-moving .chips-rail.is-open {
+  -webkit-backdrop-filter: none; backdrop-filter: none;
   transition: opacity 200ms ease, transform 460ms var(--chips-curve), visibility 0s;
 }
 .chips-rail-title {
@@ -177,8 +183,7 @@
 }
 .chips-tile-bench { position: absolute; left: 7px; right: 7px; bottom: 11px; height: 1px; background: rgba(33, 21, 12, 0.2); }
 .chips-opt[aria-pressed="true"] .chips-disc, .chips-opt[aria-pressed="true"] .chips-tile { box-shadow: 0 0 0 1.5px var(--chips-ink); }
-/* Un choix referme la rangée : l'anneau change sans fondu, sinon il se repeindrait pendant 220 ms,
-   juste quand la 3D commence sa mise en scène. */
+/* Rangée fermée, l'anneau change sans fondu : il ne se repeint pas pendant que la 3D se met en scène. */
 .chips-rail:not(.is-open) .chips-disc, .chips-rail:not(.is-open) .chips-tile { transition: none; }
 .chips-opt-name { font: 600 11px/1.1 var(--chips-font); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .chips-opt[aria-pressed="true"] .chips-opt-name { font-weight: 700; }

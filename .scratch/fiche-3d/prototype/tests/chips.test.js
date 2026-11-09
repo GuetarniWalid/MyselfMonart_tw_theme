@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { chipsLayout, railPlacement, maxShift, optionWidth, choicesOf, legendOf, toggleOf, eur, dims, swatchOf, sizeTileOf, TEXTS_FR } from '../src/chips.js'
+import { chipsLayout, railPlacement, maxShift, optionWidth, choicesOf, legendOf, toggleOf, eur, dims, swatchOf, sizeTileOf, railEvent, TEXTS_FR } from '../src/chips.js'
 import { BORDERS, FRAMES, SIZES, canFrame, dimensionsOf, fitChoice, frameFits, hasFrame, priceOf } from '../src/catalog.js'
 
 /* Les valeurs attendues sont celles du design « Fiche chips v2 », relevées sur la page de Claude
@@ -191,4 +191,35 @@ test('pastilles et vignettes de taille : les teintes et les échelles du design'
   assert.deepEqual([swatchOf('passe', 'avec', 1.35).w, swatchOf('passe', 'avec', 1.35).h], [28.5, 38])
   assert.deepEqual(SIZES.map((id) => sizeTileOf(catalog.size(id), 30)), [{ w: 7.5, h: 10 }, { w: 15, h: 20 }, { w: 19, h: 25 }, { w: 22.5, h: 30 }])
   assert.equal(dims({ w: 30, h: 40 }, true), `30${NB}×${NB}40${NB}cm`)
+})
+
+/* Retour de Walid sur la version 14 (09/11) : un choix s'applique et la rangée reste ouverte ; elle
+   se ferme seulement par un toucher en dehors, ou Échap, qui ramène la 3D de face. */
+test('un choix s’applique et la rangée reste ouverte, choix après choix', () => {
+  let state = railEvent(null, { type: 'chip', group: 'border' })
+  assert.deepEqual(state, { open: 'border', effects: [] })
+  for (const id of ['noire', 'miroir', 'miroir']) {
+    state = railEvent(state.open, { type: 'pick', group: 'border', id })
+    assert.deepEqual(state, { open: 'border', effects: ['apply'] })
+  }
+})
+
+test('seul un toucher en dehors ferme la rangée, et il ramène la vue de face', () => {
+  assert.deepEqual(railEvent('frame', { type: 'outside' }), { open: null, effects: ['front'] })
+  // Toucher la légende active, ou « De face », c'est toucher en dehors de la rangée.
+  assert.deepEqual(railEvent('frame', { type: 'chip', group: 'frame' }), { open: null, effects: ['front'] })
+  // Rangée fermée : un toucher sur la scène ne concerne pas les chips.
+  assert.deepEqual(railEvent(null, { type: 'outside' }), { open: null, effects: [] })
+})
+
+test('au clavier : Échap ferme, revient de face et rend le focus à la légende ; un choix garde le focus', () => {
+  assert.deepEqual(railEvent('size', { type: 'escape' }), { open: null, effects: ['front', 'focus-chip'] })
+  assert.deepEqual(railEvent('size', { type: 'pick', group: 'size', id: '60x80', keyboard: true }), { open: 'size', effects: ['apply'] })
+  // Le focus sort de la rangée (Tab) : elle se ferme comme pour un toucher en dehors.
+  assert.deepEqual(railEvent('size', { type: 'focusout' }), { open: null, effects: ['front'] })
+  assert.deepEqual(railEvent(null, { type: 'escape' }), { open: null, effects: [] })
+})
+
+test('la bascule Toile | Poster n’a pas de rangée : elle s’applique, rien d’autre ne change', () => {
+  assert.deepEqual(railEvent(null, { type: 'toggle', id: 'poster' }), { open: null, effects: ['apply'] })
 })

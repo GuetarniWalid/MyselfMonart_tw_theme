@@ -8,9 +8,11 @@
  * l'étiquette en petites capitales et la valeur, posée sur un filet qui finit par un point sur le bord
  * de l'œuvre ; dessous, la taille et sa cote. Toucher une légende ouvre sous l'œuvre une rangée de
  * verre dépoli, un choix par pastille avec son prix, et le point du bord pulse ; toucher un choix
- * l'applique et referme la rangée. S'il manque de la place, la scène remonte, et sur un petit écran
- * la barre d'achat s'efface le temps du choix. Hors du plan de face (pièce, coin du cadre, tranche),
- * les légendes prennent une plaque dépolie et les filets s'effacent.
+ * l'applique et la rangée reste ouverte (retour de Walid du 09/11 : on enchaîne les choix). Seul un
+ * toucher en dehors, ou Échap, la ferme et ramène l'œuvre de face (railEvent). S'il manque de la
+ * place, la scène remonte, et sur un petit écran la barre d'achat s'efface le temps des choix. Hors
+ * du plan de face (pièce, coin du cadre, tranche), les légendes prennent une plaque dépolie et les
+ * filets s'effacent.
  *
  * Trois étages, du plus pur au plus concret :
  *   - chipsLayout, railPlacement, toggleOf, legendOf, choicesOf : géométrie et textes du design,
@@ -125,6 +127,31 @@ export const maxShift = (L) => railPlacement(L, true).shift
 // Largeur d'un choix dans la rangée : la rangée partage la largeur, jamais moins de 44 px.
 export const optionWidth = (L, count) =>
   L.desk ? L.k.optW : Math.max(44, Math.min(L.k.optW, Math.floor((L.W - 40 - 2 * (count - 1)) / count)))
+
+/* Les rangées, d'après le retour de Walid sur la version 14 (09/11/2026) : toucher un choix
+   l'applique (légende, prix, mise en scène) et la rangée reste ouverte, pour enchaîner les choix.
+   Elle se ferme seulement par un toucher en dehors d'elle (mur, œuvre, légende active, « De face »,
+   en-tête…), par Échap ou quand le focus la quitte ; ce toucher ramène la 3D de face (effet
+   'front'). La bascule Toile | Poster n'a pas de rangée. open : la rangée ouverte, ou null ;
+   event.type : chip (une légende ou la cote), pick (un choix), toggle (la bascule), outside, escape,
+   focusout. Rend la rangée ouverte après l'événement et les effets à jouer : apply (appliquer le
+   choix), front (revenir de face), focus-chip (rendre le focus à la légende). */
+export function railEvent(open, event) {
+  switch (event.type) {
+    case 'chip':
+      return open ? { open: null, effects: ['front'] } : { open: event.group, effects: [] }
+    case 'pick':
+    case 'toggle':
+      return { open, effects: ['apply'] }
+    case 'escape':
+      return open ? { open: null, effects: ['front', 'focus-chip'] } : { open, effects: [] }
+    case 'outside':
+    case 'focusout':
+      return open ? { open: null, effects: ['front'] } : { open, effects: [] }
+    default:
+      return { open, effects: [] }
+  }
+}
 
 /* ---------------- Textes ---------------- */
 
@@ -298,13 +325,14 @@ function edgeX(a, b, y) {
 
 /* createChips : la scène (stage) reçoit l'état et les rangées ; la couche `scene`, que la page
    remplit de sa photo et de sa 3D, reçoit les légendes et les filets et remonte avec eux.
-   onChoose(group, id, next, { fromKeyboard }) : la page applique le choix (prix, 3D) puis rappelle
-   update(produit). onOpen(group) : une rangée s'ouvre (la page peut précharger). pill : la barre
-   d'achat, que les petits écrans effacent le temps d'un choix. artImage : l'œuvre, pour les
-   vignettes de taille. */
+   onChoose(group, id, next) : la page applique le choix (prix, 3D) puis rappelle update(produit) ;
+   la rangée reste ouverte. onOpen(group) : une rangée s'ouvre (la page peut précharger).
+   onDismiss() : un toucher en dehors, Échap ou le focus qui part a fermé la rangée ; la page ramène
+   la 3D de face. pill : la barre d'achat, que les petits écrans effacent le temps des choix.
+   artImage : l'œuvre, pour les vignettes de taille. */
 export function createChips({
   stage, scene, catalog, product, texts = TEXTS_FR, pill = null, artImage = '', ratio = 0.75,
-  onChoose = () => {}, onOpen = () => {}, reducedMotion = false, enterAfter = 250, settleAfter = 2000,
+  onChoose = () => {}, onOpen = () => {}, onDismiss = () => {}, reducedMotion = false, enterAfter = 250, settleAfter = 2000,
 }) {
   let current = { ...product }
   let L = null
@@ -371,7 +399,7 @@ export function createChips({
   right.setAttribute('aria-controls', ids.rail('frame'))
   scene.append(svg, toggle, left, right, cote)
 
-  // Toucher ailleurs referme : un voile transparent sur la scène, sous la rangée.
+  // Toucher ailleurs ferme la rangée : un voile transparent sur la scène, sous la rangée.
   const closer = el('div', { class: 'chips-closer', 'aria-hidden': 'true' })
   const rails = {}
   for (const group of RAIL_GROUPS) {
@@ -581,22 +609,18 @@ export function createChips({
     if (!staged) drawMarks()
   }
 
-  /* ---- Ouvrir, choisir, refermer ---- */
+  /* ---- Ouvrir, choisir, fermer ---- */
 
+  let spot = null // où la rangée ouverte se pose
   function place(group) {
     const model = choicesOf(catalog, texts, group, current)
-    const spot = railPlacement(L, !!model.note)
+    spot = railPlacement(L, !!model.note)
     scene.style.transform = spot.shift ? `translateY(${-spot.shift}px)` : ''
     rails[group].style.top = px(spot.top)
     setPillAway(spot.hidePill)
   }
 
   function openRail(group, { focus = false } = {}) {
-    if (open === group) {
-      close()
-      return
-    }
-    if (open) close()
     open = group
     stage.dataset.chipsOpen = group === sideGroup() ? 'side' : group
     stage.classList.add('is-open')
@@ -627,31 +651,47 @@ export function createChips({
     if (focusChip) chipOf(group).focus({ preventScroll: true })
   }
 
-  function choose(group, id, { fromKeyboard = false } = {}) {
-    if (!catalog.available(group, current, id)) return
-    const next = catalog.apply(group, current, id)
-    onChoose(group, id, next, { fromKeyboard })
-    close({ focusChip: fromKeyboard })
+  // Un choix : la page l'applique (prix, 3D) et rappelle update(produit). La rangée reste ouverte.
+  function apply({ type, group, id }) {
+    const g = type === 'toggle' ? 'material' : group
+    if (!catalog.available(g, current, id)) return
+    onChoose(g, id, catalog.apply(g, current, id))
+  }
+
+  // Tout passe par railEvent : ce qui s'applique, ce qui s'ouvre ou se ferme, le retour de face.
+  function dispatch(event) {
+    const { open: next, effects } = railEvent(open, event)
+    if (effects.includes('apply')) apply(event)
+    if (next !== open) {
+      if (next) openRail(next, { focus: !!event.keyboard })
+      else close({ focusChip: effects.includes('focus-chip') })
+    }
+    if (effects.includes('front')) onDismiss()
   }
 
   /* ---- Événements ---- */
 
+  const keyboard = (event) => event.detail === 0 // un clic sans pointeur : Entrée ou Espace
   toggle.addEventListener('click', (event) => {
     const button = event.target.closest('.chips-switch')
-    if (button) choose('material', button.dataset.value, { fromKeyboard: event.detail === 0 })
+    if (button) dispatch({ type: 'toggle', id: button.dataset.value, keyboard: keyboard(event) })
   })
-  left.addEventListener('click', (event) => openRail(sideGroup(), { focus: event.detail === 0 }))
-  right.addEventListener('click', (event) => openRail('frame', { focus: event.detail === 0 }))
-  cote.addEventListener('click', (event) => openRail('size', { focus: event.detail === 0 }))
-  closer.addEventListener('click', () => close())
+  left.addEventListener('click', (event) => dispatch({ type: 'chip', group: sideGroup(), keyboard: keyboard(event) }))
+  right.addEventListener('click', (event) => dispatch({ type: 'chip', group: 'frame', keyboard: keyboard(event) }))
+  cote.addEventListener('click', (event) => dispatch({ type: 'chip', group: 'size', keyboard: keyboard(event) }))
+  // Toucher ailleurs sur la scène (mur, œuvre, légende active, « De face ») : un voile le reçoit,
+  // rien d'autre ne réagit.
+  closer.addEventListener('click', () => dispatch({ type: 'outside' }))
 
   for (const group of RAIL_GROUPS) {
     const rail = rails[group]
     rail.addEventListener('click', (event) => {
       const button = event.target.closest('.chips-opt')
-      if (button && button.getAttribute('aria-disabled') !== 'true') choose(group, button.dataset.value, { fromKeyboard: event.detail === 0 })
+      if (button && button.getAttribute('aria-disabled') !== 'true') {
+        dispatch({ type: 'pick', group, id: button.dataset.value, keyboard: keyboard(event) })
+      }
     })
-    // Au clavier : les flèches parcourent les choix, Échap referme.
+    // Au clavier : les flèches parcourent les choix, Échap ferme.
     rail.addEventListener('keydown', (event) => {
       const items = [...rail.querySelectorAll('.chips-opt')]
       const at = items.indexOf(document.activeElement)
@@ -661,23 +701,24 @@ export function createChips({
         items[(moves[event.key] + items.length) % items.length].focus()
       } else if (event.key === 'Escape') {
         event.preventDefault()
-        close({ focusChip: true })
+        event.stopPropagation()
+        dispatch({ type: 'escape' })
       }
     })
-    // Le focus quitte la légende et sa rangée : la rangée se referme.
+    // Le focus quitte la rangée et sa légende (Tab) : comme un toucher en dehors.
     rail.addEventListener('focusout', (event) => {
       if (open !== group || !event.relatedTarget) return
-      if (!rail.contains(event.relatedTarget) && event.relatedTarget !== chipOf(group)) close()
+      if (!rail.contains(event.relatedTarget) && event.relatedTarget !== chipOf(group)) dispatch({ type: 'focusout' })
     })
   }
 
   const onKey = (event) => {
-    if (event.key === 'Escape' && open) close({ focusChip: true })
+    if (event.key === 'Escape' && open) dispatch({ type: 'escape' })
   }
-  // Un toucher hors de la scène (en-tête, barre d'achat, fiche) referme aussi.
+  // Un toucher hors de la scène (en-tête, fiche) ferme aussi ; la barre d'achat garde son effet.
   const onOutside = (event) => {
     if (!open || stage.contains(event.target)) return
-    close()
+    dispatch({ type: 'outside' })
   }
   document.addEventListener('keydown', onKey)
   document.addEventListener('click', onOutside, true)
@@ -697,6 +738,8 @@ export function createChips({
     open: openRail,
     close,
     get openGroup() { return open },
+    // La rangée ouverte : de combien la scène remonte, où la rangée se pose (px de scène). Sinon null.
+    get placement() { return open ? spot : null },
     get layout() { return L },
     get face() { return face },
     get staged() { return staged },
