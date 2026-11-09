@@ -187,3 +187,31 @@ Walid : « Si je clique sur bordure blanche, la pop-up apparaît avec tous les c
 - Processeur ÷ 4, 375 × 667 × 3, même machine (chargée par d'autres sessions), ordre alterné, 3 tours, première ouverture de la visite. Mise en scène jouée à l'ouverture : 32, 31 et 28 images/s (médianes ; bordure, cadre « Aucun », taille). Même mise en scène lancée rangée posée, version 15 : 39, 32 et 31. Caméra partie avec la rangée, sans l'attente de 200 ms : 10 à 18. Reste une image lente au départ du premier gros plan d'une visite, pendant que la source complète se décode.
 
 **Pas vérifié** : un vrai téléphone (fluidité, et ressenti des 200 ms avant que l'œuvre bouge), Safari, le lecteur d'Artifacts de claude.ai.
+
+### Bordure avec cadre : la tranche dans le jour (retour de Walid du 09/11, sur la version 16)
+
+Walid : « quand il y a un cadre, on ne voit pas la bordure car le cadre vient devant. Il faut vraiment montrer l'intersection entre le cadre et la toile et zoomer dans cette intersection, peut-être à l'angle bas du tableau. »
+
+**Fait.**
+- `staging.js` : avec un cadre, le plan de la bordure (rangée Bordure ouverte, ou choix d'une bordure) devient un gros plan sur l'angle bas côté lumière, tableau au mur, dans le jour de 0,6 cm entre la toile et la caisse (`gapShot`, réglages `GAP`). Avant, il montrait le tableau entier, tourné, et la paroi de la caisse cachait la tranche.
+- La caméra se tient à 6 cm de l'angle, à 17° vers la tranche éclairée et 17° vers le bas. La tranche du côté et celle du bas s'y voient sur toute leur profondeur (2 cm) : 0,46 cm à l'écran, 14 % de sa hauteur, soit 50 à 80 px selon le téléphone. À cette distance la perspective compte : à 14°, la tranche s'aplatit (12 %) ; à 19°, la lèvre en cache le fond.
+- L'angle se pose en bas à gauche de l'écran, l'œuvre remplit le reste. Sur un écran large, il revient vers le milieu : le cadre prend la moitié gauche, sous la légende, l'œuvre la droite, et la caméra garde le même biais. Posé sur le côté d'un écran d'ordinateur, il obligeait la caméra à tourner de 41°, et la légende tombait sur la tranche.
+- D'une bordure à l'autre, le plan ne bouge pas : seule la tranche change. L'arrivée depuis la face et le retour sont continus.
+- Sans cadre, le poster, le plan du cadre et la géométrie (jour, lèvre, châssis) ne changent pas.
+
+**Écarts et limites.**
+- Le coordinateur estimait l'angle vers 13°, en rayons parallèles ; à 6 cm, l'optimum mesuré est 18°, d'où 17°.
+- La tranche du bas regarde le sol : elle reçoit moins de lumière que celle du côté (0,62 contre 0,88 de la face), grisée mais lisible.
+- Noire dans un cadre noir : peu de contraste avec le cadre ; le chanfrein clair de la lèvre les sépare.
+- Étirée, Miroir et Pliée prolongent l'image sur la tranche : elles se distinguent par la texture (traînées étirées, coups de pinceau en miroir, image décalée sur la façade pour Pliée), pas par une couleur.
+- Sur un écran × 3, l'œuvre est grossie environ 6 fois en 30 × 40 et 16 fois en 75 × 100 (source de 1904 px de large) : l'image est plus douce en 75 × 100. Le bois du cadre aussi.
+- **Pas corrigé, à décider** : à l'angle, un petit triangle clair laisse voir le mur. Le fond de la caisse s'arrête au bord carré de la toile, dont l'angle est arrondi (0,3 cm). Invisible de loin, il se voit dans ce gros plan, surtout sur un cadre noir. Correctif proposé : faire passer le fond de la caisse 0,3 cm sous la toile (`frameProfile`, `geometry.js`), sans changer le jour, la lèvre ni le châssis. Non fait, la géométrie devait rester telle quelle.
+
+**Vérifié** (Chrome sans écran, scripts hors dépôt) :
+- 18 tests du directeur (202 en tout). Le plan avec cadre vise l'angle bas côté lumière, sur cinq formes d'écran, en 30 × 40 et 75 × 100. La part de tranche visible dans le jour est calculée à part, d'après le catalogue et le profil du cadre (lèvre sous le chanfrein, à 3,12 cm du mur), en au moins trois hauteurs : au moins 0,4 cm et 10 % de la hauteur de l'écran. Même plan d'une bordure à l'autre ; arrivée et retour sans à-coup ; rejeu.
+- 80 captures regardées : chaque bordure avec un cadre chêne et un cadre noir, sur les quatre formats, en 30 × 40 et 75 × 100. La tranche se voit dans le jour, au-dessus de la rangée ouverte ; la lèvre ne la cache pas. La tranche blanche mesure 218 à 221 de luminance sur 255 dans le jour : éclairée, pas un trou noir. Console vide.
+- Captures en vol : entrée depuis la face, passage de Blanche à Noire (caméra identique), retour de face.
+- Processeur ÷ 4, 375 × 667 × 3, ordre alterné, 3 tours : entrée et sortie du jour à 47 images/s (médiane), contre 41 pour la tranche sans cadre.
+- Les 50 contrôles généraux, les 82 de la rangée ouverte et les 123 de la mise en scène à l'ouverture repassent. Le prototype du ticket 02 (`index.html`), qui partage le directeur, montre le même gros plan, console vide.
+
+**Pas vérifié** : un vrai téléphone, Safari, le lecteur d'Artifacts de claude.ai.

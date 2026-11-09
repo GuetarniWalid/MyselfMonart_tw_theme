@@ -111,15 +111,130 @@ function artShown(view, aspect) {
   return seen / (GRID + 1) ** 2
 }
 
-test('sous un cadre, la tranche ne se voit pas : la bordure se montre sur le tableau entier', () => {
-  const framed = { ...TOILE, frame: 'chene' }
-  const director = createDirector({ room: ROOM, product: framed })
-  director.choose('border', { ...framed, border: 'miroir' }, 0)
-  const view = director.view(LATER, PORTRAIT)
-  for (const corner of paintingCorners(view.painting, 'outer')) {
-    const { x, y } = project(view.camera, PORTRAIT, corner)
-    assert.ok(Math.abs(x) <= 1 && Math.abs(y) <= 1, `coin hors de l'écran : ${x.toFixed(2)}, ${y.toFixed(2)}`)
+/* Bordure sous un cadre (retour de Walid sur la version 16) : la tranche ne se voit que dans le jour
+   de la caisse américaine, entre la toile et la paroi du cadre, sous la lèvre qui dépasse la toile.
+   Le plan est un gros plan sur l'angle bas, côté lumière. La géométrie vient du catalogue et du profil
+   du cadre (catalog.js, geometry.js) ; la part de tranche visible est calculée ici, indépendamment
+   du directeur. */
+const FRAMED = { ...TOILE, frame: 'chene' }
+const JOUR = 0.6 // cm entre la tranche de la toile et la paroi intérieure de la caisse
+const LEVRE = 3.2 - 0.08 // cm du mur : haut de la paroi intérieure, sous le chanfrein de la face
+const DESK_ZONE = 2.4 // ordinateur : la zone au-dessus de la rangée ouverte, très large
+
+const framedEdge = (product, aspect) => {
+  const director = createDirector({ room: ROOM, product })
+  director.choose('border', product, 0)
+  return director.view(LATER, aspect)
+}
+// Angle bas de la façade de la toile, côté lumière (gauche dans la pièce provisoire).
+const lowCorner = (view) => paintingCorners(view.painting).find((c) => c.side.x < 0 && c.side.y < 0 && c.side.z === 1)
+
+/* Part de la tranche gauche visible dans le jour, en part de la hauteur de l'écran, à `above` cm au-dessus
+   du bas de la toile : un point de la tranche se voit si le rayon qui va vers la caméra passe au-dessus
+   de la lèvre du cadre. Rend aussi la part visible en cm, vue perpendiculairement au regard. */
+function gapBand(view, aspect, above) {
+  const p = view.painting
+  const x = p.x - p.width / 2
+  const lip = x - JOUR
+  const y = p.y - p.height / 2 + above
+  const back = p.artZ, front = p.artZ + p.depth
+  const C = view.camera.position
+  const seen = (z) => C[0] < lip && z + (C[2] - z) * ((lip - x) / (C[0] - x)) >= LEVRE
+  if (!seen(front)) return { screen: 0, cm: 0 }
+  let lo = back
+  if (!seen(back)) {
+    let hi = front
+    for (let i = 0; i < 40; i++) {
+      const mid = (lo + hi) / 2
+      if (seen(mid)) hi = mid
+      else lo = mid
+    }
+    lo = hi
   }
+  const a = project(view.camera, aspect, [x, y, lo]), b = project(view.camera, aspect, [x, y, front])
+  const ray = unit(sub(C, [x, y, (lo + front) / 2]))
+  return { screen: Math.hypot((a.x - b.x) * aspect, a.y - b.y) / 2, cm: (front - lo) * Math.hypot(ray[0], ray[1]) }
+}
+
+for (const aspect of [...SCREENS, DESK_ZONE]) {
+  for (const size of ['30x40', '75x100']) {
+    test(`écran ${aspect}, ${size} : sous un cadre, la bordure se montre en gros plan dans le jour, à l'angle bas côté lumière`, () => {
+      const view = framedEdge({ ...FRAMED, size, border: 'miroir' }, aspect)
+      assert.equal(view.shot, 'edge')
+      const p = view.painting
+      assert.ok(p.yaw === 0 && p.pitch === 0 && p.z === 0, 'le tableau reste au mur')
+      const corner = lowCorner(view)
+      const onScreen = project(view.camera, aspect, corner)
+      assert.ok(onScreen.depth > 2, 'la caméra reste devant le cadre')
+      // À gauche sur un téléphone ; près du milieu sur un écran large, le cadre d'un côté, l'œuvre de l'autre.
+      const leftmost = aspect >= 2 ? -0.15 : -0.75, rightmost = aspect >= 2 ? 0.15 : -0.1
+      assert.ok(onScreen.x > leftmost && onScreen.x < rightmost, `angle à ${onScreen.x.toFixed(2)} : à sa place, sans coller au bord`)
+      assert.ok(onScreen.y > -0.75 && onScreen.y < -0.1, `angle à ${onScreen.y.toFixed(2)} : en bas, sans coller au bord`)
+      // La caméra regarde le mur de biais (29° sur un téléphone), jamais en grand angle tourné (41°).
+      const forward = unit(sub(view.camera.target, view.camera.position))
+      const turn = (Math.acos(-forward[2]) * 180) / Math.PI
+      assert.ok(turn <= 32, `la caméra tourne de ${turn.toFixed(1)}° depuis le mur`)
+      const field = 2 * onScreen.depth * Math.tan(view.camera.fovY / 2)
+      assert.ok(field <= 6, `gros plan : ${field.toFixed(1)} cm de haut à l'écran`)
+      // Regard de biais vers la tranche éclairée et vers le bas, de 13 à 20° depuis l'angle : en deçà la
+      // tranche s'aplatit, au-delà la lèvre en cache le fond (caméra à 6 cm, la perspective compte).
+      const look = sub(view.camera.position, corner)
+      const across = (Math.atan2(-look[0], look[2]) * 180) / Math.PI
+      const below = (Math.atan2(-look[1], look[2]) * 180) / Math.PI
+      assert.ok(across >= 13 && across <= 20, `regard à ${across.toFixed(1)}° vers la tranche`)
+      assert.ok(below >= 13 && below <= 20, `regard à ${below.toFixed(1)}° vers le bas`)
+    })
+  }
+}
+
+for (const aspect of [...SCREENS, DESK_ZONE]) {
+  test(`écran ${aspect} : sous un cadre, la tranche visible dans le jour est calculée et assez grande`, () => {
+    for (const size of ['30x40', '75x100']) {
+      const view = framedEdge({ ...FRAMED, size }, aspect)
+      for (const above of [0.5, 1.5, 3]) {
+        const band = gapBand(view, aspect, above)
+        // Ordre de grandeur : jour 0,6 cm, lèvre 0,5 cm devant la toile -> 0,46 cm au plus vue de face.
+        assert.ok(band.cm >= 0.4, `${size}, ${above} cm : ${band.cm.toFixed(2)} cm de tranche visibles`)
+        assert.ok(band.screen >= 0.1, `${size}, ${above} cm : la tranche ne prend que ${(band.screen * 100).toFixed(1)} % de la hauteur`)
+      }
+    }
+    // La tranche montrée reçoit la lumière de la pièce : pas un trou noir.
+    assert.ok(dot([-1, 0, 0], unit(ROOM.light)) >= 0.3, 'la tranche du jour est du côté de la lumière')
+  })
+}
+
+test('sous un cadre, passer d’une bordure à l’autre garde le même plan : seule la tranche change', () => {
+  const director = createDirector({ room: ROOM, product: FRAMED })
+  director.choose('border', { ...FRAMED, border: 'noire' }, 0)
+  const gap = director.view(LATER, PORTRAIT)
+  director.choose('border', { ...FRAMED, border: 'miroir' }, LATER)
+  for (let t = LATER; t <= 2 * LATER; t += 25) assertSameView(gap, director.view(t, PORTRAIT), `à ${t - LATER} ms`, 1e-6)
+  assert.equal(director.view(2 * LATER, PORTRAIT).product.border, 'miroir')
+})
+
+test('sous un cadre, la caméra arrive dans le jour sans à-coup, depuis la face, et en repart', () => {
+  const director = createDirector({ room: ROOM, product: FRAMED })
+  director.choose('border', { ...FRAMED, border: 'etiree' }, 0)
+  let previous = director.view(0, PORTRAIT)
+  for (let t = 0; t <= LATER; t += 8) {
+    const view = director.view(t, PORTRAIT)
+    assertSameView(previous, view, `à ${t} ms`, 3)
+    previous = view
+  }
+  director.choose('front', { ...FRAMED, border: 'etiree' }, LATER)
+  for (let t = LATER; t <= 2 * LATER; t += 8) {
+    const view = director.view(t, PORTRAIT)
+    assertSameView(previous, view, `retour à ${t - LATER} ms`, 3)
+    previous = view
+  }
+  assert.equal(previous.shot, 'front')
+})
+
+test('retoucher la bordure choisie sous un cadre rejoue son plan', () => {
+  const product = { ...FRAMED, border: 'pliee' }
+  const director = createDirector({ room: ROOM, product: FRAMED })
+  director.choose('border', product, 0)
+  assertReplay(director, product, 'border', 'edge')
 })
 
 test('choisir un cadre amène la caméra de trois-quarts sur un coin du cadre, côté lumière, en gros plan', () => {

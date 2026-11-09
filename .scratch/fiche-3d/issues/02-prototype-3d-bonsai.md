@@ -88,7 +88,7 @@
   - Coût : 1,7 ms par image au lieu de 1,3 ms en densité 2, sur ce portable. 5,6 Mo de mémoire graphique par tuile, 4 Mo pour le masque.
 - **Caméra** (champ vertical 30°, transitions de 450 ms pour le retour de face et 900 ms vers le plan, courbe cubique) :
   - De face : tableau sur 72 % de la hauteur.
-  - Tranche : tableau tourné de 38° vers la lumière, penché de 6°, écarté du mur juste assez (1 cm de marge). Recul : moyenne géométrique entre le tableau entier à 74 % et le gros plan où la tranche prend 40 % de la largeur (3,2 cm de hauteur visible au moins). Arête au milieu de sa hauteur, à 45 % de la demi-largeur. Sous un cadre, qui cache la tranche, le plan montre le tableau entier, à 74 %.
+  - Tranche : tableau tourné de 38° vers la lumière, penché de 6°, écarté du mur juste assez (1 cm de marge). Recul : moyenne géométrique entre le tableau entier à 74 % et le gros plan où la tranche prend 40 % de la largeur (3,2 cm de hauteur visible au moins). Arête au milieu de sa hauteur, à 45 % de la demi-largeur. Sous un cadre, qui cache la tranche, le plan montre le tableau entier, à 74 % (remplacé le 09/11 par un gros plan sur la tranche dans le jour du cadre, ticket 07).
   - Coin du cadre : caméra à 32° de côté et 18° au-dessus. Petit côté du plan de 16 cm en 30 × 40, 20 cm en 75 × 100, coin à 60 % de la demi-largeur et de la demi-hauteur depuis le milieu.
   - Sans cadre : caméra à 44° de côté et 10° au-dessus, coin à 62 % depuis le milieu. Recul : moyenne géométrique entre le tableau de face et le coin d'un cadre, à surface constante sur tous les écrans.
   - Contour blanc : de face sur le coin bas, 36 % de la hauteur du tirage.

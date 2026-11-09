@@ -38,9 +38,20 @@ const litSide = (room) => (room.light && room.light[0] < 0 ? -1 : 1)
    de l'écran qu'il remplit) et du gros plan où la tranche prend la part `share` de la largeur
    (field : plus petite hauteur visible, en cm). Assez près pour juger la tranche, assez loin pour
    reconnaître l'œuvre. at : l'arête de la façade se pose à cette part de la demi-largeur, côté
-   tranche, pour laisser la place à l'image. Sous un cadre, la tranche ne se voit pas : le plan
-   montre le tableau entier. */
+   tranche, pour laisser la place à l'image. Sous un cadre, voir GAP. */
 const EDGE = { yaw: 38 * DEG, pitch: -6 * DEG, fill: 0.74, side: 0.8, front: 0.6, share: 0.4, field: 3.2, at: 0.45 }
+/* Bordure sous un cadre (retour de Walid sur la version 16) : dans la caisse américaine, la tranche
+   ne se voit que dans le jour de 0,6 cm, entre la toile et la paroi du cadre, sous la lèvre qui la
+   dépasse. Gros plan sur l'angle bas côté lumière, tableau au mur : la caméra se tient de biais par
+   rapport à cet angle, `look` vers la tranche éclairée et autant vers le bas. À 6 cm, la perspective
+   compte : à 17°, la tranche du côté et celle du bas se voient sur toute leur profondeur (2 cm), soit
+   0,46 cm à l'écran, 14 % de sa hauteur ; à 19°, la lèvre en cache le fond ; à 14°, elle s'aplatit
+   (12 %). field : hauteur du plan à l'angle, en cm. spot : place de l'angle sur l'écran, en part de
+   la demi-largeur et de la demi-hauteur depuis le milieu ; l'œuvre remplit le reste. Sur un écran
+   plus large que `narrow`, l'angle revient vers le milieu, jusqu'au milieu à `wide` (largeur sur
+   hauteur) : le cadre prend un côté, l'œuvre l'autre, et la caméra regarde le mur sous le même biais
+   que sur un téléphone. Poser l'angle sur le côté d'un écran large la ferait tourner de 36°. */
+const GAP = { look: 17 * DEG, field: 3.2, spot: 0.3, narrow: 1.3, wide: 2.2 }
 /* Coin du cadre : caméra au-dessus du coin bas, côté lumière. field : petit côté du plan pour un
    30 × 40, en cm ; il s'élargit un peu avec le tableau, pour garder de l'œuvre. spot : place du
    coin sur l'écran, en part de la demi-largeur et de la demi-hauteur depuis le milieu. L'œuvre et
@@ -295,7 +306,25 @@ function materialShot(room, product, aspect) {
   return shotOf('material', { position, target, fovY: FOV_Y }, painting)
 }
 
+// Bordure sous un cadre : l'angle bas côté lumière, vu de biais dans le jour (GAP).
+function gapShot(room, product, aspect) {
+  const side = litSide(room)
+  const painting = hungPainting(room, product)
+  const corner = paintingCorners(painting).find((c) => c.side.x === side && c.side.y === -1 && c.side.z === 1)
+  const toward = Math.tan(GAP.look)
+  const dir = unit([side * toward, -toward, 1])
+  const d = distanceFor(GAP.field)
+  // La caméra se place par rapport à l'angle ; la visée se décale vers l'œuvre pour poser l'angle à `spot`.
+  const right = unit(cross([0, 1, 0], dir))
+  const up = cross(dir, right)
+  const half = d * Math.tan(FOV_Y / 2)
+  const across = GAP.spot * Math.min(1, Math.max(0, (GAP.wide - aspect) / (GAP.wide - GAP.narrow)))
+  const target = add(corner, add(scale(right, -side * across * half * aspect), scale(up, GAP.spot * half)))
+  return shotOf('edge', { position: add(corner, scale(dir, d)), target, fovY: FOV_Y }, painting)
+}
+
 function edgeShot(room, product, aspect) {
+  if (hasFrame(product)) return gapShot(room, product, aspect)
   const side = litSide(room)
   // Le tableau tourne pour avancer sa tranche éclairée vers nous, et s'écarte du mur.
   const base = { ...hungPainting(room, product), yaw: -side * EDGE.yaw, pitch: EDGE.pitch }
@@ -309,8 +338,7 @@ function edgeShot(room, product, aspect) {
   const frontNormal = rotate([0, 0, 1], painting.pitch, painting.yaw)
   const dir = unit(add(scale(sideNormal, EDGE.side), scale(frontNormal, EDGE.front)))
   const whole = fitDistance(painting.outer.width, painting.outer.height, aspect, EDGE.fill)
-  if (hasFrame(product)) return shotOf('edge', { position: add(middle, scale(dir, whole)), target: middle, fovY: FOV_Y }, painting)
-  const close = distanceFor(Math.max(EDGE.field, (painting.depth * EDGE.side) / (EDGE.share * aspect)))
+  const close =distanceFor(Math.max(EDGE.field, (painting.depth * EDGE.side) / (EDGE.share * aspect)))
   const d = Math.sqrt(whole * close)
   const right = unit(cross([0, 1, 0], dir))
   const target = add(middle, scale(right, -side * EDGE.at * d * Math.tan(FOV_Y / 2) * aspect))
