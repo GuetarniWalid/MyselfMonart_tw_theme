@@ -167,3 +167,23 @@ Walid : « quand on en sélectionne une, la pop-up du bas ne doit pas disparaît
 - Processeur ÷ 4, rangée ouverte, un passage : 35 à 57 images/s selon la mise en scène (la pièce reste la plus lente), inclinaison 60.
 
 **Pas vérifié** : un vrai téléphone, Safari, le lecteur d'Artifacts de claude.ai.
+
+### Mise en scène dès l'ouverture d'une rangée (retour de Walid du 09/11, sur la version 15)
+
+Walid : « Si je clique sur bordure blanche, la pop-up apparaît avec tous les choix et je veux que le tableau zoome vers la bordure, même si je n'ai pas encore changé le choix. »
+
+**Fait.**
+- Ouvrir une rangée (légende ou cote, au doigt ou au clavier) joue tout de suite la mise en scène de son groupe avec le choix en cours, comme si on venait de le choisir, cadrée au-dessus de la rangée : la tranche pour la bordure, la marge pour le contour du poster, le coin pour le cadre (avec « Aucun », le plan de la toile nue, là où irait le cadre), la pièce pour la taille, à la taille en cours et avec ses cotes. Le directeur et ses réglages ne changent pas : la page l'appelle avec le produit inchangé.
+- `railEvent` rend l'effet `stage` à l'ouverture et `createChips` appelle `onStage(groupe)` une fois la rangée posée. Choisir, toucher dehors, Échap et la bascule ne changent pas. Rouvrir une rangée rejoue sa mise en scène.
+- La caméra part quand la rangée est apparue, après son fondu de 200 ms. Le premier rendu de la rangée occupe la carte graphique pendant ses 200 premières ms : partie en même temps, la 3D perdait près d'une image sur deux à processeur ÷ 4. La rangée apparaît donc d'abord, puis l'œuvre bouge ; une mise en scène démarre lentement de toute façon. La source complète des gros plans ne se pose pas dans cet intervalle, mais à l'arrêt de la caméra, comme avant. Refermée avant ces 200 ms, la rangée ne lance rien.
+- Avant la 3D (photo d'arrivée), le toucher démarre la 3D sans attendre que la page soit au repos. La mise en scène part dès que la 3D est prête, si la rangée est encore ouverte, avec le choix fait entre-temps ; une rangée refermée avant n'attend plus rien. Garde-fous (animations réduites, appareil modeste, réseau lent) et 3D en échec : comme pour un choix, sans démarrer la 3D.
+- Corrigé au passage : le cadrage au-dessus de la rangée relève la remontée de la scène à son départ. Sans image entre l'ouverture et la mise en scène, il gardait celle d'avant.
+
+**Vérifié** (Chrome sans écran, scripts hors dépôt) :
+- 7 tests ajoutés (185 en tout).
+- 181 contrôles nouveaux. 123 au doigt sur les quatre formats (390 × 844, 375 × 667, 375 × 553, 1440 × 820) : Bordure, Cadre avec « Aucun » et Taille ouverts sans rien changer, puis Contour sur le poster. La rangée s'ouvre aussitôt, prix et légendes inchangés ; la mise en scène part quand elle est apparue ; sujet au-dessus de la rangée et image centrée sur la zone ; un toucher dehors ramène de face, filets revenus. Aussi : rouvrir rejoue, refermer avant 200 ms ne lance rien, clavier sur ordinateur (Entrée ouvre et joue, focus sur le choix en cours, Échap). 53 pour un toucher avant la 3D, page pas encore chargée, sur les quatre formats : la 3D démarre du toucher et la mise en scène part à son arrivée ; aussi avec la rangée refermée avant, et avec « Noire » choisie avant. 5 pour les animations réduites, avec et sans 3D. Console vide.
+- Les 50 contrôles généraux et les 82 de la rangée ouverte repassent. Comparaison au design refaite : aucun écart nouveau.
+- Captures regardées : chaque rangée ouverte, pendant et après sa mise en scène, et le passage de la photo à la 3D après un toucher précoce, sans image fantôme.
+- Processeur ÷ 4, 375 × 667 × 3, même machine (chargée par d'autres sessions), ordre alterné, 3 tours, première ouverture de la visite. Mise en scène jouée à l'ouverture : 32, 31 et 28 images/s (médianes ; bordure, cadre « Aucun », taille). Même mise en scène lancée rangée posée, version 15 : 39, 32 et 31. Caméra partie avec la rangée, sans l'attente de 200 ms : 10 à 18. Reste une image lente au départ du premier gros plan d'une visite, pendant que la source complète se décode.
+
+**Pas vérifié** : un vrai téléphone (fluidité, et ressenti des 200 ms avant que l'œuvre bouge), Safari, le lecteur d'Artifacts de claude.ai.

@@ -7,9 +7,10 @@
  * soulignée en terracotta ; une légende de chaque côté (bordure ou contour à gauche, cadre à droite),
  * l'étiquette en petites capitales et la valeur, posée sur un filet qui finit par un point sur le bord
  * de l'œuvre ; dessous, la taille et sa cote. Toucher une légende ouvre sous l'œuvre une rangée de
- * verre dépoli, un choix par pastille avec son prix, et le point du bord pulse ; toucher un choix
- * l'applique et la rangée reste ouverte (retour de Walid du 09/11 : on enchaîne les choix). Seul un
- * toucher en dehors, ou Échap, la ferme et ramène l'œuvre de face (railEvent). S'il manque de la
+ * verre dépoli, un choix par pastille avec son prix, le point du bord pulse et la 3D joue aussitôt la
+ * mise en scène du groupe, avec le choix en cours ; toucher un choix l'applique et la rangée reste
+ * ouverte (retours de Walid du 09/11 : on enchaîne les choix). Seul un toucher en dehors, ou Échap,
+ * la ferme et ramène l'œuvre de face (railEvent). S'il manque de la
  * place, la scène remonte, et sur un petit écran la barre d'achat s'efface le temps des choix. Hors
  * du plan de face (pièce, coin du cadre, tranche), les légendes prennent une plaque dépolie et les
  * filets s'effacent.
@@ -128,18 +129,21 @@ export const maxShift = (L) => railPlacement(L, true).shift
 export const optionWidth = (L, count) =>
   L.desk ? L.k.optW : Math.max(44, Math.min(L.k.optW, Math.floor((L.W - 40 - 2 * (count - 1)) / count)))
 
-/* Les rangées, d'après le retour de Walid sur la version 14 (09/11/2026) : toucher un choix
-   l'applique (légende, prix, mise en scène) et la rangée reste ouverte, pour enchaîner les choix.
-   Elle se ferme seulement par un toucher en dehors d'elle (mur, œuvre, légende active, « De face »,
-   en-tête…), par Échap ou quand le focus la quitte ; ce toucher ramène la 3D de face (effet
-   'front'). La bascule Toile | Poster n'a pas de rangée. open : la rangée ouverte, ou null ;
-   event.type : chip (une légende ou la cote), pick (un choix), toggle (la bascule), outside, escape,
-   focusout. Rend la rangée ouverte après l'événement et les effets à jouer : apply (appliquer le
-   choix), front (revenir de face), focus-chip (rendre le focus à la légende). */
+/* Les rangées, d'après les retours de Walid du 09/11/2026. Ouvrir une rangée (sa légende ou la cote,
+   au doigt ou au clavier) joue tout de suite la mise en scène de son groupe avec le choix en cours,
+   sans attendre qu'on en change (effet 'stage', retour sur la version 15). Toucher un choix
+   l'applique (légende, prix, mise en scène) et la rangée reste ouverte, pour enchaîner les choix
+   (retour sur la version 14). Elle se ferme seulement par un toucher en dehors d'elle (mur, œuvre,
+   légende active, « De face », en-tête…), par Échap ou quand le focus la quitte ; ce toucher ramène
+   la 3D de face (effet 'front'). La bascule Toile | Poster n'a pas de rangée. open : la rangée
+   ouverte, ou null ; event.type : chip (une légende ou la cote), pick (un choix), toggle (la
+   bascule), outside, escape, focusout. Rend la rangée ouverte après l'événement et les effets à
+   jouer : stage (mise en scène du groupe qui s'ouvre), apply (appliquer le choix), front (revenir de
+   face), focus-chip (rendre le focus à la légende). */
 export function railEvent(open, event) {
   switch (event.type) {
     case 'chip':
-      return open ? { open: null, effects: ['front'] } : { open: event.group, effects: [] }
+      return open ? { open: null, effects: ['front'] } : { open: event.group, effects: ['stage'] }
     case 'pick':
     case 'toggle':
       return { open, effects: ['apply'] }
@@ -327,12 +331,14 @@ function edgeX(a, b, y) {
    remplit de sa photo et de sa 3D, reçoit les légendes et les filets et remonte avec eux.
    onChoose(group, id, next) : la page applique le choix (prix, 3D) puis rappelle update(produit) ;
    la rangée reste ouverte. onOpen(group) : une rangée s'ouvre (la page peut précharger).
-   onDismiss() : un toucher en dehors, Échap ou le focus qui part a fermé la rangée ; la page ramène
-   la 3D de face. pill : la barre d'achat, que les petits écrans effacent le temps des choix.
-   artImage : l'œuvre, pour les vignettes de taille. */
+   onStage(group) : la légende ou la cote vient d'ouvrir sa rangée ; la page joue la mise en scène du
+   groupe avec le choix en cours, comme pour un choix. onDismiss() : un toucher en dehors, Échap ou
+   le focus qui part a fermé la rangée ; la page ramène la 3D de face. pill : la barre d'achat, que
+   les petits écrans effacent le temps des choix. artImage : l'œuvre, pour les vignettes de taille. */
 export function createChips({
   stage, scene, catalog, product, texts = TEXTS_FR, pill = null, artImage = '', ratio = 0.75,
-  onChoose = () => {}, onOpen = () => {}, onDismiss = () => {}, reducedMotion = false, enterAfter = 250, settleAfter = 2000,
+  onChoose = () => {}, onOpen = () => {}, onStage = () => {}, onDismiss = () => {},
+  reducedMotion = false, enterAfter = 250, settleAfter = 2000,
 }) {
   let current = { ...product }
   let L = null
@@ -658,7 +664,9 @@ export function createChips({
     onChoose(g, id, catalog.apply(g, current, id))
   }
 
-  // Tout passe par railEvent : ce qui s'applique, ce qui s'ouvre ou se ferme, le retour de face.
+  /* Tout passe par railEvent : ce qui s'applique, ce qui s'ouvre ou se ferme, la mise en scène du
+     groupe ouvert, le retour de face. La rangée est posée avant sa mise en scène : la page cadre
+     celle-ci au-dessus d'elle (placement). */
   function dispatch(event) {
     const { open: next, effects } = railEvent(open, event)
     if (effects.includes('apply')) apply(event)
@@ -666,6 +674,7 @@ export function createChips({
       if (next) openRail(next, { focus: !!event.keyboard })
       else close({ focusChip: effects.includes('focus-chip') })
     }
+    if (effects.includes('stage')) onStage(next)
     if (effects.includes('front')) onDismiss()
   }
 

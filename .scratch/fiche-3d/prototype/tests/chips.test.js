@@ -197,7 +197,7 @@ test('pastilles et vignettes de taille : les teintes et les échelles du design'
    se ferme seulement par un toucher en dehors, ou Échap, qui ramène la 3D de face. */
 test('un choix s’applique et la rangée reste ouverte, choix après choix', () => {
   let state = railEvent(null, { type: 'chip', group: 'border' })
-  assert.deepEqual(state, { open: 'border', effects: [] })
+  assert.deepEqual(state, { open: 'border', effects: ['stage'] })
   for (const id of ['noire', 'miroir', 'miroir']) {
     state = railEvent(state.open, { type: 'pick', group: 'border', id })
     assert.deepEqual(state, { open: 'border', effects: ['apply'] })
@@ -218,6 +218,18 @@ test('au clavier : Échap ferme, revient de face et rend le focus à la légende
   // Le focus sort de la rangée (Tab) : elle se ferme comme pour un toucher en dehors.
   assert.deepEqual(railEvent('size', { type: 'focusout' }), { open: null, effects: ['front'] })
   assert.deepEqual(railEvent(null, { type: 'escape' }), { open: null, effects: [] })
+})
+
+/* Retour de Walid sur la version 15 (09/11) : ouvrir une rangée joue tout de suite la mise en scène de
+   son groupe, avec le choix en cours, sans attendre qu'on en change. */
+test('ouvrir une rangée, au doigt comme au clavier, joue tout de suite la mise en scène du groupe', () => {
+  for (const group of ['border', 'passe', 'frame', 'size']) {
+    assert.deepEqual(railEvent(null, { type: 'chip', group }), { open: group, effects: ['stage'] }, group)
+    assert.deepEqual(railEvent(null, { type: 'chip', group, keyboard: true }), { open: group, effects: ['stage'] }, `${group} au clavier`)
+  }
+  // Choisir, toucher dehors, Échap : rien ne change.
+  assert.deepEqual(railEvent('border', { type: 'pick', group: 'border', id: 'noire' }), { open: 'border', effects: ['apply'] })
+  assert.deepEqual(railEvent('border', { type: 'outside' }), { open: null, effects: ['front'] })
 })
 
 test('la bascule Toile | Poster n’a pas de rangée : elle s’applique, rien d’autre ne change', () => {

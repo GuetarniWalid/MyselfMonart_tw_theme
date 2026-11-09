@@ -12,10 +12,11 @@
  * au-dessus de la rangée. Le reste de la fiche, sous l'œuvre, est factice.
  *
  * Arrivée : la photo d'abord, à la place exacte de l'œuvre de face, et les chips qui se posent ;
- * three.js se charge au repos et la 3D apparaît en fondu. Toucher une légende ouvre sa rangée ;
- * toucher un choix l'applique (le prix change aussitôt) et la 3D joue sa mise en scène, rangée
- * ouverte : on enchaîne les choix (retour de Walid du 09/11). Un toucher en dehors, ou Échap, ferme
- * la rangée et ramène l'œuvre de face. Filets et points suivent l'œuvre que la 3D projette.
+ * three.js se charge au repos et la 3D apparaît en fondu. Toucher une légende ouvre sa rangée et, dès
+ * qu'elle est apparue, la 3D joue la mise en scène du groupe avec le choix en cours ; toucher un
+ * choix l'applique (le prix change aussitôt) et la 3D joue sa mise en scène, rangée ouverte : on
+ * enchaîne les choix (retours de Walid du 09/11). Un toucher en dehors, ou Échap, ferme la rangée et
+ * ramène l'œuvre de face. Filets et points suivent l'œuvre que la 3D projette.
  */
 
 import { createDirector, paintingCorners } from './staging.js'
@@ -75,8 +76,11 @@ function movingUntil(now) {
 }
 function moveZone(to) {
   const now = performance.now()
-  if (zoneMove.to === to && zoneWeight(now) === to) return
-  Object.assign(zoneMove, { from: zoneWeight(now), to, t0: now, ms: reducedMotion ? 0 : Math.max(0, movingUntil(now) - now) })
+  const from = zoneWeight(now)
+  if (zoneMove.to === to && from === to) return
+  // La remontée se relève au départ : la rangée vient peut-être de s'ouvrir, sans image depuis.
+  if (from === 0 && chips.placement) zoneShift = chips.placement.shift
+  Object.assign(zoneMove, { from, to, t0: now, ms: reducedMotion ? 0 : Math.max(0, movingUntil(now) - now) })
 }
 function framingNow(at) {
   const spot = chips.placement
@@ -137,6 +141,7 @@ const chips = createChips({
   reducedMotion,
   onChoose: (group, id, next) => choose(group, next),
   onOpen: (group) => approach(group),
+  onStage: (group) => stageOpened(group), // une rangée s'ouvre : sa mise en scène, choix en cours
   onDismiss: () => goFront(), // un toucher en dehors de la rangée, ou Échap : retour de face
 })
 
@@ -190,6 +195,13 @@ function choose(group, next) {
     refresh()
     announce()
   }
+  // Avant la 3D, la rangée ouverte attend déjà sa mise en scène : elle partira avec ce choix.
+  if (stageWaiting) return
+  playStaging(group)
+}
+
+// La 3D joue la mise en scène d'un groupe, avec le produit en cours.
+function playStaging(group) {
   director.choose(group, { ...product }, performance.now())
   if (chips.openGroup) moveZone(1)
   run.active = true
@@ -202,10 +214,46 @@ function choose(group, next) {
   requestRender()
 }
 
+/* Retour de Walid sur la version 15 (09/11) : ouvrir une rangée joue tout de suite la mise en scène
+   de son groupe avec le choix en cours, comme si on venait de le choisir, et cadrée au-dessus de la
+   rangée (Cadre avec « Aucun » : le coin, là où irait le cadre). Si la 3D n'a pas encore démarré
+   (la photo de l'arrivée), le toucher la démarre et la mise en scène part dès qu'elle est prête, si
+   la rangée est encore ouverte (start3D). Sans 3D d'office (garde-fous de la décision 5) ou après un
+   échec : comme pour un choix.
+   La caméra part quand la rangée est apparue (son fondu, chips.css) : le premier rendu de la rangée
+   occupe la carte graphique pendant ses 200 premières ms, et la 3D qui partait en même temps perdait
+   près d'une image sur deux (processeur ÷ 4). Une mise en scène démarre lentement : l'écart ne se
+   voit pas. */
+const RAIL_APPEARS_MS = 200
+let autoStart = false // la 3D démarre d'elle-même, au repos
+let stageWaiting = null // la rangée ouverte avant la 3D, qui attend sa mise en scène
+let stagePending = null // la rangée qui apparaît, 3D prête : sa mise en scène part dans un instant
+function stageOpened(group) {
+  if (live) {
+    stagePending = group
+    setTimeout(() => {
+      if (stagePending !== group) return // une autre rangée s'est ouverte entre-temps
+      stagePending = null
+      if (live && chips.openGroup === group) playStaging(group)
+      else if (live) swapDetail() // refermée aussitôt : la source complète attendait
+    }, RAIL_APPEARS_MS)
+    return
+  }
+  if (!autoStart) {
+    playStaging(group)
+    return
+  }
+  stageWaiting = group
+  start3D()
+}
+
 // Retour de face (bouton, toucher l'œuvre, rangée fermée) ; une mise en scène en cours s'y rend.
 function goFront() {
   const now = performance.now()
-  if (director.isMoving(now) || director.view(now, framingNow(now).aspect).shot !== 'front') {
+  // Une rangée fermée avant la 3D n'attend plus rien ; le directeur prend les choix faits entre-temps.
+  const waited = stageWaiting
+  stageWaiting = null
+  if (waited || director.isMoving(now) || director.view(now, framingNow(now).aspect).shot !== 'front') {
     director.choose('front', { ...product }, now)
     run.active = true
   }
@@ -248,8 +296,9 @@ function askDetail() {
 function loadDetail() {
   onceLive(askDetail)
 }
+// La source complète se pose la 3D arrêtée, jamais juste avant une mise en scène (stagePending).
 function swapDetail() {
-  if (!detailReady || drag || director.isMoving(performance.now())) return
+  if (!detailReady || drag || stagePending || director.isMoving(performance.now())) return
   engine.useArtImage(detailReady)
   detailReady = null
   requestRender()
@@ -526,6 +575,7 @@ let contextLost = false
 function backToPhoto() {
   contextLost = true
   live = false
+  autoStart = false
   canvas.classList.remove('on')
   canvas.setAttribute('aria-hidden', 'true')
   poster.classList.remove('off')
@@ -560,11 +610,18 @@ async function start3D() {
     if (densityCap < engine.density()) fitStage()
   } catch (error) {
     console.error(error)
+    autoStart = false
+    stageWaiting = null
     showNotice("La 3D n'a pas pu démarrer sur cet appareil : la vraie fiche resterait sur les photos.")
     return
   }
   if (contextLost) return
   live = true
+  // Une rangée ouverte avant la 3D : sa mise en scène part maintenant, de face, si elle l'est encore.
+  const waited = stageWaiting
+  stageWaiting = null
+  if (waited && chips.openGroup === waited) playStaging(waited)
+  else if (waited) director.choose('front', { ...product }, performance.now()) // les choix faits entre-temps
   draw(performance.now())
   marks.first = performance.now()
   requestRender() // un choix fait avant l'arrivée de la 3D continue sa transition
@@ -636,6 +693,7 @@ if (slowNetwork) {
     }],
   ])
 } else {
+  autoStart = true // au repos, ou dès qu'une rangée s'ouvre (stageOpened)
   askReliefs() // en parallèle de la photo et de three.js
   whenIdle(start3D)
 }
