@@ -327,7 +327,10 @@ export function frameRing({ hw, hh, profile }) {
 
 /* Profils de cadre (cm), pour une œuvre W × H et un profil du catalogue.
    Toile : caisse américaine (fond où la toile flotte, paroi intérieure, face, paroi
-   extérieure, puis le dos, qui se voit quand la toile fait son tour).
+   extérieure, puis le dos, qui se voit quand la toile fait son tour). Le fond passe sous la
+   toile de la largeur de son angle arrondi : au bord carré, il laissait voir le mur à l'angle
+   (gros plan sur le jour, 09/11). Tourné vers l'avant, il ne se voit pas de dos ; de face, la
+   toile le cache partout ailleurs.
    Poster : baguette dont la feuillure recouvre le bord du tirage, verre. */
 const CHAMFER = 0.08
 
@@ -335,6 +338,7 @@ export function frameProfile(kind, f) {
   const c = CHAMFER
   if (kind === 'toile') {
     return [
+      [-f.gap - CANVAS_CORNER, f.floor, 0.3],
       [-f.gap, f.floor, 0.3],
       [0, f.floor, 0.45],
       [0, f.depth - c, 0.9],

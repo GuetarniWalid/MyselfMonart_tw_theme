@@ -205,7 +205,7 @@ Walid : « quand il y a un cadre, on ne voit pas la bordure car le cadre vient d
 - Noire dans un cadre noir : peu de contraste avec le cadre ; le chanfrein clair de la lèvre les sépare.
 - Étirée, Miroir et Pliée prolongent l'image sur la tranche : elles se distinguent par la texture (traînées étirées, coups de pinceau en miroir, image décalée sur la façade pour Pliée), pas par une couleur.
 - Sur un écran × 3, l'œuvre est grossie environ 6 fois en 30 × 40 et 16 fois en 75 × 100 (source de 1904 px de large) : l'image est plus douce en 75 × 100. Le bois du cadre aussi.
-- **Pas corrigé, à décider** : à l'angle, un petit triangle clair laisse voir le mur. Le fond de la caisse s'arrête au bord carré de la toile, dont l'angle est arrondi (0,3 cm). Invisible de loin, il se voit dans ce gros plan, surtout sur un cadre noir. Correctif proposé : faire passer le fond de la caisse 0,3 cm sous la toile (`frameProfile`, `geometry.js`), sans changer le jour, la lèvre ni le châssis. Non fait, la géométrie devait rester telle quelle.
+- **Corrigé ensuite, après validation de la version 17 (voir plus bas)** : à l'angle, un petit triangle clair laisse voir le mur. Le fond de la caisse s'arrête au bord carré de la toile, dont l'angle est arrondi (0,3 cm). Invisible de loin, il se voit dans ce gros plan, surtout sur un cadre noir. Correctif proposé : faire passer le fond de la caisse 0,3 cm sous la toile (`frameProfile`, `geometry.js`), sans changer le jour, la lèvre ni le châssis. Non fait, la géométrie devait rester telle quelle.
 
 **Vérifié** (Chrome sans écran, scripts hors dépôt) :
 - 18 tests du directeur (202 en tout). Le plan avec cadre vise l'angle bas côté lumière, sur cinq formes d'écran, en 30 × 40 et 75 × 100. La part de tranche visible dans le jour est calculée à part, d'après le catalogue et le profil du cadre (lèvre sous le chanfrein, à 3,12 cm du mur), en au moins trois hauteurs : au moins 0,4 cm et 10 % de la hauteur de l'écran. Même plan d'une bordure à l'autre ; arrivée et retour sans à-coup ; rejeu.
@@ -213,5 +213,20 @@ Walid : « quand il y a un cadre, on ne voit pas la bordure car le cadre vient d
 - Captures en vol : entrée depuis la face, passage de Blanche à Noire (caméra identique), retour de face.
 - Processeur ÷ 4, 375 × 667 × 3, ordre alterné, 3 tours : entrée et sortie du jour à 47 images/s (médiane), contre 41 pour la tranche sans cadre.
 - Les 50 contrôles généraux, les 82 de la rangée ouverte et les 123 de la mise en scène à l'ouverture repassent. Le prototype du ticket 02 (`index.html`), qui partage le directeur, montre le même gros plan, console vide.
+
+**Pas vérifié** : un vrai téléphone, Safari, le lecteur d'Artifacts de claude.ai.
+
+### Angle du jour : le fond de la caisse passe sous la toile (09/11, après la version 17)
+
+Version 17 validée par le coordinateur, qui demande le correctif du triangle clair : il se voyait nettement sur les téléphones, surtout avec un cadre noir et la bordure Noire.
+
+**Fait.**
+- Le fond de la caisse passe 0,3 cm sous la toile, la largeur de son angle arrondi (`frameProfile`, `geometry.js`). Le triangle qui laissait voir le mur à l'angle du jour a disparu. Le jour, la lèvre, la face et le dos de la caisse ne changent pas. Tourné vers l'avant, ce rebord ne se voit pas de dos ; de face, la toile le cache partout ailleurs.
+- Au passage, l'espace manquante est rétablie dans `const close = distanceFor(` (`staging.js`).
+
+**Vérifié** (Chrome sans écran, scripts hors dépôt) :
+- 2 tests de géométrie ajoutés et 1 repris (204 en tout). Aux quatre angles, en 30 × 40 et 75 × 100, les points entre l'arc de l'angle et le coin carré tombent sur le fond ; sur l'ancien profil, ils n'y tombaient pas. Le reste du profil est inchangé, point par point.
+- Angle agrandi sur les quatre formats, cadre noir avec Noire et cadre chêne avec Blanche, avant et après : le triangle a disparu.
+- Pixel à pixel contre la version 17 : vue de face avec cadre (30 × 40 et 75 × 100), plan du Cadre (chêne et noir), tableau retourné à 100° et 180° (dos de la caisse), poster sous verre de face et sur le coin. Aucun pixel ne diffère (écart maximal 2 sur 255). Console vide.
 
 **Pas vérifié** : un vrai téléphone, Safari, le lecteur d'Artifacts de claude.ai.

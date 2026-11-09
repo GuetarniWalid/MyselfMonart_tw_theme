@@ -338,7 +338,7 @@ function edgeShot(room, product, aspect) {
   const frontNormal = rotate([0, 0, 1], painting.pitch, painting.yaw)
   const dir = unit(add(scale(sideNormal, EDGE.side), scale(frontNormal, EDGE.front)))
   const whole = fitDistance(painting.outer.width, painting.outer.height, aspect, EDGE.fill)
-  const close =distanceFor(Math.max(EDGE.field, (painting.depth * EDGE.side) / (EDGE.share * aspect)))
+  const close = distanceFor(Math.max(EDGE.field, (painting.depth * EDGE.side) / (EDGE.share * aspect)))
   const d = Math.sqrt(whole * close)
   const right = unit(cross([0, 1, 0], dir))
   const target = add(middle, scale(right, -side * EDGE.at * d * Math.tan(FOV_Y / 2) * aspect))
