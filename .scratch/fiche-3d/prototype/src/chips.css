@@ -1,0 +1,242 @@
+/*
+ * Chips d'options de la fiche 3D (chips.js). Valeurs du design « Fiche chips v2 » de Walid du
+ * 09/11/2026 : téléphone par défaut, ordinateur sous .is-desk (posé par chips.js selon la largeur de
+ * la scène). La scène est une pièce éclairée : elle reste claire quel que soit le thème, ses chips aussi.
+ * États posés par chips.js sur la scène (.chips) : is-ready, is-settled (arrivée), is-open et
+ * data-chips-open (rangée ouverte), is-staged (la 3D n'est plus de face), is-desk.
+ */
+
+.chips {
+  --chips-ink: var(--scene-ink, #21150c);
+  --chips-paper: var(--scene-paper, #fffdfa);
+  --chips-muted: var(--scene-label, #6b5d51); /* étiquettes en petites capitales */
+  --chips-soft: var(--scene-muted, #5c4f44); /* prix et notes */
+  --chips-terra: var(--scene-terra, #d79b86); /* soulignement de la bascule, pulsation */
+  --chips-plate: rgba(252, 251, 249, 0.82);
+  --chips-glass: rgba(252, 251, 249, 0.86);
+  --chips-curve: cubic-bezier(0.17, 0.67, 0.61, 1.06);
+  --chips-font: "Albert Sans", "Helvetica Neue", Arial, sans-serif;
+  --chips-value: 13.5px;
+  --chips-cote: 13.5px;
+  isolation: isolate;
+}
+
+/* La couche qui remonte quand une rangée manque de place : la 3D, la photo, les filets, les légendes. */
+.chips-scene { position: absolute; inset: 0; z-index: 1; transition: transform 650ms var(--chips-curve); }
+
+/* ---- Filets, points, pulsation ----
+   La couche s'efface quand la 3D quitte le plan de face (is-staged, posé par chips.track) ; chaque
+   filet, chaque point a son SVG : leurs fondus passent au compositeur. */
+.chips-marks { position: absolute; inset: 0; pointer-events: none; transition: opacity 260ms ease; }
+.chips.is-staged .chips-marks { opacity: 0; }
+.chips-mk { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; }
+.chips-line {
+  fill: none; stroke: var(--chips-ink); stroke-width: 1px; stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 1; stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1000ms var(--chips-curve) calc(350ms + var(--i) * 120ms);
+}
+.chips-dot { fill: var(--chips-ink); stroke: var(--chips-paper); stroke-width: 1.5px; }
+.chips-mk-line { opacity: 0.42; transition: opacity 500ms ease calc(750ms + var(--i) * 120ms); }
+.chips-mk-dot { opacity: 0; transition: opacity 500ms ease calc(750ms + var(--i) * 120ms); }
+.chips.is-ready .chips-line { stroke-dashoffset: 0; }
+.chips.is-ready .chips-mk-dot { opacity: 1; }
+.chips.is-settled .chips-line { transition: stroke-dashoffset 300ms ease; }
+.chips.is-settled .chips-mk { transition: opacity 260ms ease; }
+/* Rangée ouverte : seul le filet de la légende touchée reste, plus net ; la cote s'efface. */
+.chips.is-open .chips-mk { opacity: 0; }
+.chips[data-chips-open="side"] .chips-mk-line[data-group="side"],
+.chips[data-chips-open="frame"] .chips-mk-line[data-group="frame"] { opacity: 0.85; }
+.chips.is-ready[data-chips-open="side"] .chips-mk-dot[data-group="side"],
+.chips.is-ready[data-chips-open="frame"] .chips-mk-dot[data-group="frame"] { opacity: 1; }
+.chips-pulse {
+  position: absolute; left: -3px; top: -3px; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--chips-terra); opacity: 0;
+}
+.chips[data-chips-open="side"] .chips-pulse,
+.chips[data-chips-open="frame"] .chips-pulse { animation: chips-pulse 1.8s linear infinite; }
+.chips.is-desk[data-chips-open] .chips-pulse { animation-name: chips-pulse-desk; }
+@keyframes chips-pulse { from { transform: scale(1); opacity: 0.75; } to { transform: scale(4.3333); opacity: 0; } }
+@keyframes chips-pulse-desk { from { transform: scale(1); opacity: 0.75; } to { transform: scale(5); opacity: 0; } }
+
+/* ---- Bascule, légendes, cote : posées sur le mur, une plaque dépolie hors du plan de face ---- */
+.chips-item {
+  opacity: 0; translate: 0 4px;
+  transition: opacity 700ms ease calc(var(--i) * 90ms), translate 900ms var(--chips-curve) calc(var(--i) * 90ms);
+}
+.chips.is-ready .chips-item { opacity: 1; translate: none; }
+.chips.is-settled .chips-item { transition: opacity 260ms ease, translate 320ms ease; }
+.chips.is-open .chips-toggle, .chips.is-open .chips-cote, .chips.is-open .chips-legend[aria-expanded="false"] { opacity: 0; pointer-events: none; }
+/* La plaque dépolie hors du plan de face : sa teinte est un calque (::before) qui vient en fondu, au
+   compositeur. Le flou ne se calcule que la 3D arrêtée (is-moving posé par la page) : sur une 3D qui
+   bouge, le navigateur le refait à chaque image, et un téléphone moyen tombe sous 30 images/s. */
+.chips-plate::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+  background: var(--chips-plate); opacity: 0; transition: opacity 300ms ease;
+}
+.chips.is-staged .chips-plate::before { opacity: 1; }
+.chips.is-staged:not(.is-moving) .chips-plate {
+  -webkit-backdrop-filter: blur(16px) saturate(1.4); backdrop-filter: blur(16px) saturate(1.4);
+}
+.chips.is-settled.is-staged:not(.is-moving) .chips-item {
+  transition: opacity 260ms ease, translate 320ms ease, -webkit-backdrop-filter 300ms ease, backdrop-filter 300ms ease;
+}
+
+.chips-toggle {
+  position: absolute; z-index: 3; display: flex; align-items: center; padding: 0 4px; border-radius: 22px;
+  transform: translateX(-50%);
+}
+.chips-switch {
+  height: 44px; padding: 0 14px; margin: 0; border: 0; background: none; cursor: pointer;
+  display: flex; align-items: center; font: 600 14px/1 var(--chips-font); letter-spacing: -0.005em;
+  color: var(--chips-muted); -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: color 220ms ease;
+}
+.chips-switch[aria-pressed="true"] { color: var(--chips-ink); }
+.chips-switch-name { position: relative; display: block; }
+.chips-underline {
+  position: absolute; left: -1px; right: -1px; bottom: -7px; height: 2px; border-radius: 1px;
+  background: var(--chips-terra); transform: scaleX(0); transition: transform 360ms var(--chips-curve);
+}
+.chips-switch[aria-pressed="true"] .chips-underline { transform: scaleX(1); }
+.chips-divider { width: 1px; height: 12px; background: rgba(33, 21, 12, 0.22); }
+
+.chips-legend, .chips-cote {
+  position: absolute; z-index: 3; box-sizing: border-box; display: flex; flex-direction: column;
+  margin: 0; border: 0; background: none; cursor: pointer; color: var(--chips-ink); font: inherit;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+.chips-legend { justify-content: flex-end; gap: 4px; border-radius: 12px; }
+.chips-legend.is-left { align-items: flex-end; text-align: right; padding: 0 8px 6px 4px; }
+.chips-legend.is-right { align-items: flex-start; text-align: left; padding: 0 4px 6px 8px; }
+.chips-cat {
+  font: 600 9px/1 var(--chips-font); letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--chips-muted); white-space: nowrap;
+}
+.chips-value {
+  font: 600 var(--chips-value)/1.1 var(--chips-font); letter-spacing: -0.005em; white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.chips-cote {
+  min-height: 44px; align-items: center; gap: 8px; padding: 0 0 6px; border-radius: 12px;
+  transform: translateX(-50%);
+}
+.chips-cote .chips-cat { line-height: 10px; }
+.chips-cote .chips-value { font-size: var(--chips-cote); }
+.chips.is-ready .chips-item:active, .chips-switch:active, .chips-opt:active { opacity: 0.6; }
+
+/* ---- Rangée d'aperçus : du verre dépoli sous l'œuvre ---- */
+.chips-closer { position: absolute; inset: 0; z-index: 20; display: none; }
+.chips.is-open .chips-closer { display: block; }
+.chips-rail {
+  position: absolute; z-index: 31; left: 12px; right: 12px; box-sizing: border-box;
+  display: flex; flex-direction: column; align-items: center; gap: 9px; padding: 13px 8px 8px;
+  border-radius: 24px; background: var(--chips-glass);
+  box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.9), 0 0 0 0.5px rgba(33, 21, 12, 0.12),
+    0 24px 48px -18px rgba(33, 21, 12, 0.36), 0 2px 8px rgba(33, 21, 12, 0.06);
+  transform-origin: center top; opacity: 0; visibility: hidden; pointer-events: none;
+  transform: translateY(10px) scale(0.98);
+  /* Le flou ne vit que rangée ouverte : il part dès qu'elle se ferme. Gardé pendant le fondu, il se
+     recalculait à chaque image de la 3D qui démarre, et coûtait 10 images/s à processeur ÷ 4. */
+  transition: opacity 160ms ease, transform 200ms ease, visibility 0s linear 200ms;
+}
+.chips-rail.is-open {
+  opacity: 1; visibility: visible; pointer-events: auto; transform: none;
+  -webkit-backdrop-filter: blur(28px) saturate(1.5); backdrop-filter: blur(28px) saturate(1.5);
+  transition: opacity 200ms ease, transform 460ms var(--chips-curve), visibility 0s;
+}
+.chips-rail-title {
+  margin: 0; font: 600 9px/1 var(--chips-font); letter-spacing: 0.12em; text-transform: uppercase; color: var(--chips-muted);
+}
+.chips-rail-options { display: flex; justify-content: center; gap: 2px; }
+.chips-rail-note { margin: -2px 0 2px; font: 500 10.5px/1.3 var(--chips-font); color: var(--chips-soft); text-align: center; }
+.chips-opt {
+  box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 2px 0;
+  margin: 0; border: 0; background: none; cursor: pointer; color: var(--chips-ink); font: inherit;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  opacity: 0; transform: translateY(6px); transition: opacity 100ms ease, transform 140ms ease;
+}
+.chips-rail.is-open .chips-opt {
+  opacity: 1; transform: none;
+  transition: opacity 220ms ease calc(50ms + var(--j) * 24ms), transform 380ms var(--chips-curve) calc(50ms + var(--j) * 24ms);
+}
+.chips-rail.is-open .chips-opt[aria-disabled="true"] { opacity: 0.38; cursor: not-allowed; }
+.chips-disc {
+  display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85); box-shadow: 0 0 0 0.5px rgba(33, 21, 12, 0.14); transition: box-shadow 220ms ease;
+}
+.chips-swatch { display: block; box-sizing: border-box; }
+.chips-tile {
+  position: relative; display: block; width: 44px; height: 44px; border-radius: 11px; overflow: hidden;
+  background: linear-gradient(180deg, #f6f5f2 0%, #ebe9e4 100%); box-shadow: 0 0 0 0.5px rgba(33, 21, 12, 0.14);
+  transition: box-shadow 220ms ease;
+}
+.chips-tile-art {
+  position: absolute; left: 50%; bottom: 12px; display: block; transform: translateX(-50%);
+  background: var(--chips-art) center / 100% 100% no-repeat #dacdb5;
+  box-shadow: 0 0 0 0.5px rgba(33, 21, 12, 0.22), 1px 2px 3px rgba(33, 21, 12, 0.24);
+}
+.chips-tile-bench { position: absolute; left: 7px; right: 7px; bottom: 11px; height: 1px; background: rgba(33, 21, 12, 0.2); }
+.chips-opt[aria-pressed="true"] .chips-disc, .chips-opt[aria-pressed="true"] .chips-tile { box-shadow: 0 0 0 1.5px var(--chips-ink); }
+/* Un choix referme la rangée : l'anneau change sans fondu, sinon il se repeindrait pendant 220 ms,
+   juste quand la 3D commence sa mise en scène. */
+.chips-rail:not(.is-open) .chips-disc, .chips-rail:not(.is-open) .chips-tile { transition: none; }
+.chips-opt-name { font: 600 11px/1.1 var(--chips-font); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.chips-opt[aria-pressed="true"] .chips-opt-name { font-weight: 700; }
+.chips-opt-price {
+  min-height: 12px; font: 500 10px/1.2 var(--chips-font); color: var(--chips-soft); white-space: nowrap; font-variant-numeric: tabular-nums;
+}
+
+.chips button:focus-visible { outline: 2px solid var(--chips-ink); outline-offset: 2px; }
+.chips .chips-opt:focus-visible { outline-offset: 0; border-radius: 10px; }
+
+/* La barre d'achat, sur un petit écran, laisse sa place à la rangée et revient avec le nouveau prix. */
+.chips-pill { transition: opacity 260ms ease, translate 420ms var(--chips-curve, cubic-bezier(0.17, 0.67, 0.61, 1.06)); }
+.chips-pill.chips-pill-away { opacity: 0; translate: 0 84px; pointer-events: none; }
+
+/* ---- Ordinateur : même grammaire, plus d'air ---- */
+.chips.is-desk .chips-toggle { border-radius: 24px; }
+.chips.is-desk .chips-divider { height: 14px; }
+.chips.is-desk .chips-switch { height: 48px; padding: 0 16px; font-size: 15.5px; }
+.chips.is-desk .chips-underline { bottom: -8px; }
+.chips.is-desk .chips-legend { gap: 6px; border-radius: 14px; }
+.chips.is-desk .chips-legend.is-left { padding: 0 14px 9px 0; }
+.chips.is-desk .chips-legend.is-right { padding: 0 0 9px 14px; }
+.chips.is-desk .chips-cat { font-size: 10px; letter-spacing: 0.14em; }
+.chips.is-desk .chips-value { letter-spacing: -0.01em; }
+.chips.is-desk .chips-cote { min-height: 48px; gap: 10px; border-radius: 14px; }
+.chips.is-desk .chips-cote .chips-cat { line-height: 11px; }
+.chips.is-desk .chips-rail {
+  left: 50%; right: auto; gap: 12px; padding: 16px 14px 12px; border-radius: 30px; background: rgba(252, 251, 249, 0.88);
+  box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.9), 0 0 0 0.5px rgba(33, 21, 12, 0.12),
+    0 30px 60px -24px rgba(33, 21, 12, 0.36), 0 2px 8px rgba(33, 21, 12, 0.06);
+  transform: translateX(-50%) translateY(10px) scale(0.98);
+}
+.chips.is-desk .chips-rail.is-open { transform: translateX(-50%); }
+.chips.is-desk .chips-rail-title { font-size: 10px; letter-spacing: 0.14em; }
+.chips.is-desk .chips-rail-options { gap: 4px; }
+.chips.is-desk .chips-rail-note { font-size: 11.5px; }
+.chips.is-desk .chips-opt { gap: 6px; }
+.chips.is-desk .chips-disc { width: 54px; height: 54px; }
+.chips.is-desk .chips-tile { width: 58px; height: 58px; border-radius: 14px; }
+.chips.is-desk .chips-tile-art { bottom: 15px; }
+.chips.is-desk .chips-tile-bench { left: 9px; right: 9px; bottom: 14px; }
+.chips.is-desk .chips-opt-name { font-size: 12.5px; }
+.chips.is-desk .chips-opt-price { min-height: 13px; font-size: 11px; }
+
+@media (hover: hover) and (pointer: fine) {
+  .chips.is-ready .chips-legend:hover, .chips.is-ready .chips-cote:hover { opacity: 0.68; }
+  .chips-switch:hover { color: var(--chips-ink); }
+  .chips-rail.is-open .chips-opt:not([aria-disabled="true"]):hover { transform: translateY(-2px); }
+}
+
+/* Animations réduites : des fondus, sans glissement ni pulsation ; la scène saute sans glisser. */
+@media (prefers-reduced-motion: reduce) {
+  .chips-scene { transition: none; }
+  .chips-item { translate: none; }
+  .chips-line { stroke-dashoffset: 0; }
+  .chips-rail, .chips-rail.is-open, .chips-opt, .chips-rail.is-open .chips-opt { transform: none; }
+  .chips.is-desk .chips-rail, .chips.is-desk .chips-rail.is-open { transform: translateX(-50%); }
+  .chips[data-chips-open] .chips-pulse { animation: none; opacity: 0.35; transform: scale(2.4); }
+  .chips-underline { transition: none; }
+  .chips-pill, .chips-pill.chips-pill-away { translate: none; }
+}
