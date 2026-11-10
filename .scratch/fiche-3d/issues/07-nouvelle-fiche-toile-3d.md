@@ -280,6 +280,8 @@ Walid : le 30 × 40 était ridicule sur un mur immense. La mise en scène de la 
 - Cadrage au-dessus de la rangée ouverte, sur les quatre formats : le tableau, ses cotes (sous le bouton « De face ») et la tête de la femme toujours ; la femme en entier sur un téléphone en hauteur ; sur un écran large, peu de mur vide, la femme coupée au plus bas à mi-cuisse. Au-delà de la photo, le mur se prolonge en miroir, sans raccord visible.
 - Photos et calques réduits à 2400 px de large (982 Ko pour les quatre poses), chargés à la première approche de la Taille seulement ; le salon ne se charge plus. Le reste de la maquette ne change pas : le tableau est simplement accroché sur le rectangle de sa pose dans tous les plans, ce qui ne se voit pas sur le mur uni.
 
+- Version 22 (retour sur la version 21) : la femme se voit toujours entière en largeur, mains comprises ; en 90 × 120 sur téléphone, le tableau rapetisse un peu pour que son geste, bras ouverts, tienne dans le cadre. Ordinateur et autres tailles inchangés. Détail dans le ticket 12.
+
 **Vérifié** : 217 tests ; 76 contrôles de la Taille sur les quatre formats ; captures de chaque taille, du fondu et de la main ; les contrôles généraux, de la rangée ouverte, de la mise en scène à l'ouverture, des légendes et du jour repassent (détail dans le ticket 12).
 
 **Pas vérifié** : un vrai téléphone, Safari, le lecteur d'Artifacts de claude.ai.

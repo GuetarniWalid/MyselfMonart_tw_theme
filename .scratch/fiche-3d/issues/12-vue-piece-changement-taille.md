@@ -30,7 +30,7 @@ Demande transmise par le coordinateur : « une femme se tient à côté du table
 **Écarts.**
 - Les quatre photos ne placent pas le rectangle au même endroit (30 × 40 à 126 cm du bord gauche, les autres à 112,5 cm ; centre à 150 cm du sol, 140 cm pour le 90 × 120) : en changeant de taille, le tableau glisse d'un rectangle à l'autre en grandissant, pendant le fondu des poses.
 - Le mur uni de la vue de face (233, 233, 232) est plus clair que celui des photos (200 à 228 près du tableau) : en arrivant dans la pose, le mur s'assombrit un peu, en fondu.
-- Le rectangle du 75 × 100 et du 90 × 120 touche presque le haut de la photo : leur cote de largeur passe dessous, et sur un téléphone en hauteur la vue montre jusqu'à 60 cm de mur prolongé au-dessus du tableau, pour garder le visage de la femme à côté de l'œuvre. En 390 × 844, son bras gauche tendu est coupé avec le 90 × 120.
+- Le rectangle du 75 × 100 et du 90 × 120 touche presque le haut de la photo : leur cote de largeur passe dessous, et sur un téléphone en hauteur la vue montre jusqu'à 60 cm de mur prolongé au-dessus du tableau, pour garder le visage de la femme à côté de l'œuvre (145 cm pour le 90 × 120 depuis la version 22, voir plus bas).
 - Sur ordinateur, la zone est très large (2,5 : 1) : le 30 × 40 se voit avec la tête et les épaules de la femme, les grands formats avec la femme jusqu'aux hanches ; le 90 × 120 montre 68 cm de mur prolongé à gauche.
 - Le bouton « De face » occupe le coin en haut à gauche de la zone : sur un téléphone, le tableau et ses cotes descendent sous lui, et la vue montre d'autant plus de mur au-dessus (jusqu'à 55 cm prolongés en 375 × 667). Sur ordinateur, il ne gêne pas.
 - Le paysage et le carré n'ont pas de poses : à générer comme les quatre portraits si la nouvelle fiche les reçoit.
@@ -42,3 +42,17 @@ Demande transmise par le coordinateur : « une femme se tient à côté du table
 - L'ancien prototype (`index.html`, ticket 02) garde son salon, console vide. Les 50 contrôles généraux, les 82 de la rangée ouverte, les 181 de la mise en scène à l'ouverture, les 58 des légendes et les 100 du jour repassent.
 
 **Pas vérifié** : un vrai téléphone (mémoire des quatre photos, fluidité du fondu), Safari, le lecteur d'Artifacts de claude.ai.
+
+### Version 22 : la femme entière en largeur (retour sur la version 21, 10/11)
+
+Version 21 vérifiée par le coordinateur (mains et cheveux propres, main devant le 90 × 120, fondu d'environ 0,3 s, mur prolongé invisible, poses chargées à l'approche de la Taille), sauf un défaut : en 90 × 120, sur les trois téléphones, la main tendue côté droit sortait du cadre, et le pied droit aussi en 390 × 844. C'est la pose bras grands ouverts : le geste doit se voir en entier.
+
+**Fait** (`poseShot`, `staging.js`) :
+- La femme entière en largeur, mains comprises, avec la marge des autres cadrages (4 % de la largeur), fait partie de ce qui doit se voir, sur tous les formats et toutes les tailles. Le centrage de côté ne change pas : seules les mains le décalent quand il le faut.
+- En 90 × 120 sur téléphone, le tableau rapetisse pour ça : en 390 × 844, la vue passe de 284 à 369 cm de haut (le tableau de 242 à 187 px de haut), le mur se prolonge jusqu'à 145 cm au-dessus de la photo, jamais sous son sol ; en 375 × 667, la vue se décale seulement vers la droite (même taille).
+- Coupée, la femme l'est de préférence à mi-cuisse et au plus bas au-dessus du genou ; si la largeur à montrer l'interdit, elle se voit entière. C'est le cas du 90 × 120 en 375 × 553 : avec ses bras ouverts et le bouton « De face », la coupe tomberait aux chevilles ; la vue la montre entière, pieds compris (le tableau de 214 à 147 px de haut).
+- Ordinateur et autres tailles : cadrages identiques ; en 60 × 80, sur 390 × 844 et 375 × 553, la vue glisse de moins d'un centimètre pour garder la marge à droite de la femme.
+
+**Vérifié** : 217 tests (la femme entière en largeur dans chaque zone, jamais coupée sous le genou) ; 69 contrôles sur les trois téléphones, dont la femme entière en largeur pour chaque taille, console vide ; captures du 90 × 120 et du 30 × 40 sur les trois, et le mur prolongé au-dessus du 90 × 120 en 390 × 844, contraste poussé : des plis à peine visibles, invisibles à l'œil normal. Les 58 contrôles des légendes repassent ; ceux de la mise en scène à l'ouverture aussi, sauf deux départs en retard sur ordinateur au premier passage (482 et 707 ms, dont le contour du poster, que la règle ne touche pas ; le PC était chargé), 64 sur 64 au second.
+
+**Pas vérifié** : un vrai téléphone, Safari, le lecteur d'Artifacts de claude.ai.

@@ -130,6 +130,16 @@ ZONES.forEach((screen, z) => {
           inside(project(view.camera, screen, [x, y, 0]), `${label} : tête`)
         }
         if (screen <= 1) inside(project(view.camera, screen, [(person.left + person.right) / 2, person.bottom, 0]), `${label} : pieds`)
+        // La femme entière en largeur, mains comprises, avec la marge des autres cadrages (retour de
+        // Walid sur la version 21 : le geste du 90 × 120, bras ouverts, doit se voir en entier).
+        for (const x of [person.left, person.right]) {
+          const s = project(view.camera, screen, [x, (person.top + person.bottom) / 2, 0])
+          assert.ok(Math.abs(s.x) <= 0.92 + 1e-6, `${label} : la femme sort du cadre en largeur (${s.x.toFixed(3)})`)
+        }
+        // Coupée, jamais plus bas qu'au-dessus du genou : ses pieds se voient, ou la coupe passe au-dessus.
+        const feet = project(view.camera, screen, [(person.left + person.right) / 2, person.bottom, 0]).y
+        const knee = project(view.camera, screen, [0, person.bottom + 0.33 * (person.top - person.bottom), 0]).y
+        assert.ok(feet >= -1 - 1e-6 || knee <= -1 + 1e-6, `${label} : coupée sous le genou (${knee.toFixed(2)})`)
         // Pas de mur vide inutile : de haut en bas, la femme, le tableau et sa cote de largeur (son
         // étiquette au-dessus de la ligne) prennent l'essentiel de la vue...
         const paintingTop = view.painting.y + view.painting.outer.height / 2
@@ -137,10 +147,14 @@ ZONES.forEach((screen, z) => {
         const bottoms = [person.bottom, view.painting.y - view.painting.outer.height / 2, view.dims.width.a[1]]
         const span = (Math.min(1, project(view.camera, screen, [0, Math.max(...tops), 0]).y) -
           Math.max(-1, project(view.camera, screen, [0, Math.min(...bottoms), 0]).y)) / 2
-        assert.ok(span >= 0.75, `${label} : la femme et le tableau ne prennent que ${(span * 100).toFixed(0)} % de la hauteur`)
+        // (sauf quand la largeur de la femme, bras ouverts, impose la hauteur de la vue)
+        const height = 2 * Math.tan(view.camera.fovY / 2) * view.camera.position[2]
+        const forced = (person.right - (view.dims.height.a[0] - 7)) / screen / 0.92 >= height - 0.5
+        assert.ok(span >= 0.75 || forced, `${label} : la femme et le tableau ne prennent que ${(span * 100).toFixed(0)} % de la hauteur`)
         // ... et sur un écran large, le mur vide sur les côtés n'en prend pas plus d'un cinquième,
-        // sauf s'il faut la place pour le tableau et ses cotes.
-        if (screen > 1) {
+        // sauf s'il faut la place pour le tableau et ses cotes, ou pour la montrer entière plutôt que
+        // coupée sous le genou.
+        if (screen > 1 && feet < -1) {
           const [left] = onWall(view.camera, screen, -1, 0)
           const [right] = onWall(view.camera, screen, 1, 0)
           const content = Math.max(person.right, view.painting.x + view.painting.outer.width / 2) - (view.dims.height.a[0] - 7)

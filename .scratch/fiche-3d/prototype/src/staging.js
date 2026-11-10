@@ -258,17 +258,20 @@ const poseCenter = (poses, size) => {
 }
 
 /* Cadrage de la pose, pour la forme réelle de la zone au-dessus de la rangée (screen). Doit se
-   voir : le tableau et ses cotes (hauteur à gauche, la femme est à droite), et la tête de la femme.
+   voir : le tableau et ses cotes (hauteur à gauche, la femme est à droite), la tête de la femme, et
+   la femme entière en largeur, mains comprises (retour de Walid sur la version 21 : le geste du
+   90 × 120, bras ouverts, se voit en entier ; le tableau rapetisse un peu pour ça sur téléphone).
    Le bouton « De face » occupe le coin en haut à gauche de la zone (inset : part de sa hauteur et de
    sa largeur) : si le tableau ou ses cotes y tombent, ils descendent dessous. On cherche à voir :
    la femme en entier. Sur un écran en hauteur, la vue grandit pour la montrer ; sur un écran large,
    le mur vide sur les côtés n'en prend jamais plus d'un cinquième : si elle ne tient pas en
-   hauteur, on garde le haut, et on la coupe au plus bas à mi-cuisse (jamais aux chevilles). Autour
-   de la photo, le mur se prolonge en miroir (scene.js) : la vue en montre au plus BEYOND, jamais sous
-   le sol de la photo, de préférence à gauche et en haut, où la bande sans la femme est large ; à
-   droite, la femme est près du bord et le miroir d'une bande étroite se verrait. */
-const POSE = { margin: 0.04, label: 7, empty: 0.2, torso: 25, thigh: 0.45 }
-export const BEYOND = { side: 80, top: 60 }
+   hauteur, on garde le haut et on la coupe à mi-cuisse, au plus bas au-dessus du genou ; si ce qui
+   doit se voir l'interdit, elle se voit entière (jamais coupée aux jambes ni aux chevilles). Autour de la photo, le mur se
+   prolonge en miroir (scene.js) : à gauche au plus BEYOND.side, en haut autant qu'il le faut (au
+   plus BEYOND.top), jamais sous le sol de la photo ; à droite seulement en dernier recours, la femme
+   y est près du bord et le miroir d'une bande étroite se verrait. */
+const POSE = { margin: 0.04, label: 7, empty: 0.2, torso: 25, thigh: 0.45, knee: 0.33 } // part de sa hauteur, depuis ses pieds
+export const BEYOND = { side: 80, top: 150 }
 const NO_INSET = { top: 0, left: 0 }
 
 function poseShot(room, product, aspect, u, screen = aspect, inset = NO_INSET) {
@@ -287,7 +290,8 @@ function poseShot(room, product, aspect, u, screen = aspect, inset = NO_INSET) {
     top: under ? top : dims.width.a[1] + DIMS_LABEL,
     bottom: under ? dims.width.a[1] : bottom,
   }
-  const must = union(art, head)
+  const core = union(art, head)
+  const must = { ...core, left: Math.min(core.left, person.left), right: Math.max(core.right, person.right) }
   const want = union(must, person)
   const keep = (x, lo, hi) => (lo > hi ? (lo + hi) / 2 : Math.min(Math.max(x, lo), hi))
 
@@ -301,21 +305,24 @@ function poseShot(room, product, aspect, u, screen = aspect, inset = NO_INSET) {
     const whole = tall(want)
     const ceiling = (h) => Math.max(want.top + POSE.margin * h, art.top + roof * h) // haut de la vue, le haut gardé
     if (height < whole) {
-      const thigh = person.bottom + POSE.thigh * (person.top - person.bottom)
-      height = Math.max(fit(must), Math.min(height, (ceiling(height) - thigh) / (1 - POSE.margin)))
+      const line = (share) => person.bottom + share * (person.top - person.bottom)
+      // Ce qui doit se voir la couperait sous le genou (le haut gardé) : elle se voit entière.
+      const atKnee = Math.max((want.top - line(POSE.knee)) / (1 - POSE.margin), (art.top - line(POSE.knee)) / (1 - roof))
+      if (atKnee < fit(must)) height = Math.max(fit(must), whole)
+      else height = Math.max(fit(must), Math.min(height, (ceiling(height) - line(POSE.thigh)) / (1 - POSE.margin)))
     }
     const width = height * screen
     const pad = POSE.margin * height
     // De côté : la femme (sans ses bras tendus) et le tableau au milieu, sans miroir de préférence à
-    // droite, et ce qui doit se voir, dedans.
-    let x = (must.left + Math.max(must.right, (head.left + head.right) / 2 + POSE.torso)) / 2
+    // droite, et ce qui doit se voir (ses mains comprises), dedans.
+    let x = (core.left + Math.max(core.right, (head.left + head.right) / 2 + POSE.torso)) / 2
     x = keep(x, photo.left - Math.min(BEYOND.side, clean.left) + width / 2, photo.right - width / 2)
     x = keep(x, must.right + pad * screen - width / 2, must.left - pad * screen + width / 2)
     x = keep(x, photo.left - BEYOND.side + width / 2, photo.right + BEYOND.side - width / 2)
     // En hauteur : la femme en entier si elle tient, sinon le haut (tableau, tête).
     let y = height >= whole ? (want.top + want.bottom) / 2 : ceiling(height) - height / 2
     y = keep(y, Math.max(art.top + roof * height, must.top + pad) - height / 2, must.bottom - pad + height / 2)
-    y = keep(y, photo.bottom + height / 2, photo.top + BEYOND.top - height / 2)
+    y = Math.max(Math.min(y, photo.top + BEYOND.top - height / 2), photo.bottom + height / 2) // le sol d'abord
     return { x, y, height, width }
   }
   let view = frame(POSE.margin)
