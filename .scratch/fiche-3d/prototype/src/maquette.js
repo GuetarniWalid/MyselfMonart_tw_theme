@@ -20,7 +20,7 @@
  * ramène l'œuvre de face. Filets et points suivent l'œuvre que la 3D projette.
  */
 
-import { createDirector, paintingCorners } from './staging.js'
+import { createDirector, glide, paintingCorners } from './staging.js'
 import { ROOM } from './room.js'
 import { POSES } from './poses.js'
 import { BORDERS, FRAMES, SIZES, canFrame, describe, dimensionsOf, fitChoice, frameFits, hasFrame, priceOf } from './catalog.js'
@@ -59,11 +59,10 @@ const stageSize = { w: 1, h: 1, top: 0, glH: 1, free: { top: 0, left: 0 }, L: nu
    que l'image glisse sans saut quand une note de la rangée apparaît ou disparaît. */
 const zoneMove = { from: 0, to: 0, t0: 0, ms: 0 }
 let zoneShift = 0
-const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2) // la courbe des étapes de staging.js
 function zoneWeight(at) {
   const { from, to, t0, ms } = zoneMove
   if (!ms || at >= t0 + ms) return to
-  return from + (to - from) * easeInOut(Math.max(0, (at - t0) / ms))
+  return from + (to - from) * glide((at - t0) / ms) // la courbe des étapes de staging.js
 }
 // Fin du mouvement que le directeur vient de prévoir : il est pur, on le sonde dans le temps.
 function movingUntil(now) {
@@ -223,23 +222,15 @@ function playStaging(group) {
    (la photo de l'arrivée), le toucher la démarre et la mise en scène part dès qu'elle est prête, si
    la rangée est encore ouverte (start3D). Sans 3D d'office (garde-fous de la décision 5) ou après un
    échec : comme pour un choix.
-   La caméra part quand la rangée est apparue (son fondu, chips.css) : le premier rendu de la rangée
-   occupe la carte graphique pendant ses 200 premières ms, et la 3D qui partait en même temps perdait
-   près d'une image sur deux (processeur ÷ 4). Une mise en scène démarre lentement : l'écart ne se
-   voit pas. */
-const RAIL_APPEARS_MS = 200
+   La caméra part dès le toucher, pendant que la rangée apparaît (demande de Walid pour la version
+   24 : aucun temps mort). Jusqu'à la version 23, elle attendait les 200 ms du fondu de la rangée, dont
+   le premier rendu occupe la carte graphique (à processeur ÷ 4, la 3D partie en même temps perdait
+   alors près d'une image sur deux) ; la courbe en sinus bouge peu pendant ce temps (10 % du chemin). */
 let autoStart = false // la 3D démarre d'elle-même, au repos
 let stageWaiting = null // la rangée ouverte avant la 3D, qui attend sa mise en scène
-let stagePending = null // la rangée qui apparaît, 3D prête : sa mise en scène part dans un instant
 function stageOpened(group) {
   if (live) {
-    stagePending = group
-    setTimeout(() => {
-      if (stagePending !== group) return // une autre rangée s'est ouverte entre-temps
-      stagePending = null
-      if (live && chips.openGroup === group) playStaging(group)
-      else if (live) swapDetail() // refermée aussitôt : la source complète attendait
-    }, RAIL_APPEARS_MS)
+    playStaging(group)
     return
   }
   if (!autoStart) {
@@ -301,9 +292,9 @@ function askDetail() {
 function loadDetail() {
   onceLive(askDetail)
 }
-// La source complète se pose la 3D arrêtée, jamais juste avant une mise en scène (stagePending).
+// La source complète se pose la 3D arrêtée.
 function swapDetail() {
-  if (!detailReady || drag || stagePending || director.isMoving(performance.now())) return
+  if (!detailReady || drag || director.isMoving(performance.now())) return
   engine.useArtImage(detailReady)
   detailReady = null
   requestRender()
@@ -347,7 +338,10 @@ const insetOf = (f) => ({ top: stageSize.free.top / f.h, left: stageSize.free.le
 let lastView = null
 function draw(at) {
   const f = framingNow(at)
-  const view = lensShift(director.view(at, f.aspect, f.screen, insetOf(f)), f.fovScale)
+  // La zone à l'arrivée : le plan d'arrivée se cadre pour elle pendant que la rangée glisse.
+  const g = framingAt(stageSize.L, { w: zoneMove.to, shift: zoneShift, glH: stageSize.glH })
+  const goal = { aspect: g.aspect, screen: g.screen, inset: insetOf(g) }
+  const view = lensShift(director.view(at, f.aspect, f.screen, insetOf(f), goal), f.fovScale)
   placeCanvas(f.offset)
   engine.render(view, at)
   placeDims(view)

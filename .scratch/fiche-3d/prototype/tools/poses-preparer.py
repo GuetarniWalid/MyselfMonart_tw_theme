@@ -9,7 +9,7 @@
 # - pose-<taille>-lumiere.png : la lumière du mur sans la femme ni les meubles, en cases d'environ
 #   3 cm ;
 # - poses.json : les mesures recopiées dans src/poses.js (femme, tête, calque, bandes sans rien devant
-#   le mur le long des bords gauche et droit).
+#   le mur le long des bords gauche et droit, bras lointain).
 #
 #   venv\Scripts\python -I poses-preparer.py <dossier des photos> <dossier des masques> <dossier de sortie> [tailles...]
 import json, os, sys
@@ -160,6 +160,41 @@ def object_key(img, alpha, ignore=None):
     return np.clip(key, 0, 1)
 
 
+def far_arm(mask, person, head):
+    """Son bras lointain (à droite de l'image, côté lampadaire), s'il s'écarte d'elle de plus de 15 cm :
+    le bord de son corps, son coude et son poignet (x, photo d'origine), ou None. Profil des colonnes
+    du masque, entre le bas de sa tête et sa taille : le corps y est épais, le bras fin ; le poignet
+    est le plus fin avant que la main ne s'élargisse, le coude le plus loin de la droite qui joint le
+    bord du corps au poignet."""
+    band = mask[head[3]:person[1] + int(0.42 * (person[3] - person[1]))] > 128
+    thick = band.sum(axis=0).astype(np.float64)
+    cx = (head[0] + head[2]) // 2
+    torso = float(np.median(thick[cx - 5 * PX_PER_CM:cx + 5 * PX_PER_CM]))
+    body = cx
+    while body < person[2] and thick[body] > 0.4 * torso:
+        body += 1
+    if person[2] - body < 15 * PX_PER_CM:
+        return None
+    arm = ndimage.uniform_filter1d(thick[body:person[2]], PX_PER_CM)  # lissé sur 1 cm
+    wrist = None
+    for i in range(1, len(arm) - 1):
+        ahead = arm[i:i + 4 * PX_PER_CM]
+        if arm[i] <= arm[i - 1] and arm[i] <= arm[i + 1] and ahead.max() > 1.2 * arm[i]:
+            wrist = i  # le premier creux suivi de la main, plus large d'un cinquième
+            break
+    if wrist is None:
+        return None
+    rows = np.arange(band.shape[0])[:, None]
+    centre = (band * rows).sum(axis=0) / np.maximum(band.sum(axis=0), 1)
+    xs = np.arange(body, body + wrist + 1)
+    a = np.array([body, centre[body]])
+    b = np.array([body + wrist, centre[body + wrist]])
+    d = b - a
+    gap = np.abs(d[0] * (centre[xs] - a[1]) - d[1] * (xs - a[0])) / max(float(np.hypot(*d)), 1e-6)
+    elbow = int(xs[int(np.argmax(gap))])
+    return {'body': int(body), 'elbow': elbow, 'wrist': int(body + wrist)}
+
+
 def furniture(objects, alpha):
     """Les meubles et objets posés (olivier et son pot, banc, vase, lampadaire, panier) : la boîte de
     chaque grande tache de la clé, hors de la femme. Leurs parties blanches (pot, abat-jour, plateau
@@ -258,6 +293,7 @@ for size in sizes:
     head_rows = a_full[person[1]:person[1] + HEAD_CM * PX_PER_CM] > 128
     hx = np.nonzero(head_rows.any(axis=0))[0]
     head = [int(hx.min()), person[1], int(hx.max()) + 1, person[1] + HEAD_CM * PX_PER_CM]
+    reach = far_arm(a_full, person, head)
     # Zones à refaire, à demi-échelle, seulement si elles sont là (les photos retouchées n'ont plus de
     # rectangle blanc ni de trait) : le rectangle, élargi de 4 px (bords adoucis du dessin), et les
     # traits laissés autour par la génération.
@@ -364,6 +400,8 @@ for size in sizes:
         'clean': clean,
         'balance': [round(float(g), 4) for g in gains],
     }
+    if reach:
+        meta[size]['reach'] = reach
     print(size, json.dumps(meta[size]), flush=True)
 
 path = os.path.join(out_dir, 'poses.json')

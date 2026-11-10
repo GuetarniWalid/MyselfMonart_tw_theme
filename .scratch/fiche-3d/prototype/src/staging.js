@@ -101,7 +101,7 @@ const JOIN_MS = 500 // un acte rejoint son mouvement depuis la vue en cours
 const HURRY = 1.2 // un acte interrompu se finit un peu plus vite que prévu
 
 const RETURN_MS = 450 // retour de face
-const GO_MS = 900 // vers le plan de l'option
+const GO_MS = 1000 // vers le plan de l'option (en sinus : glide)
 
 /* Inclinaison au doigt : la caméra tourne autour du point visé (le tableau reste au mur,
    on voit son épaisseur et son ombre bouger). Glisser vers la droite fait tourner le
@@ -233,7 +233,8 @@ function shotOf(shot, camera, painting, roomOpacity = 0, dimsUnder = false, pose
    du mur, bord gauche en x = 0 et pied du mur en y = 0. À côté d'elle, les tableaux paraissent
    poses.scale fois plus grands que sur la photo (retour de Walid sur la version 21 : elle paraissait
    mesurer 1,80 m) : la photo est réduite d'autant (16 × scale px/cm), le tableau garde ses vraies
-   mesures et s'accroche par son coin bas côté femme, au coin du rectangle de la photo. Ses mains le
+   mesures et s'accroche par son coin bas côté femme, au coin du rectangle de la photo (rect : sa
+   place, à ses vraies mesures, même si le rectangle de la photo est un peu de travers). Ses mains le
    présentent donc toujours au même endroit ; il grandit vers le haut et vers la gauche. Il s'accroche
    ainsi dans tous les plans (hungPainting) : il ne glisse jamais sur le mur, et un changement de
    taille fond une pose dans l'autre sans bouger la pièce. Rend, en cm du mur : la photo, le rectangle
@@ -244,15 +245,15 @@ function shotOf(shot, camera, painting, roomOpacity = 0, dimsUnder = false, pose
 export function posePlacement(poses, size) {
   const pose = poses.bySize[size]
   const k = 1 / (poses.pxPerCm * (poses.scale || 1))
-  const cm = 1 / poses.pxPerCm // le rectangle de la photo, aux vraies mesures du tableau
   const box = ([left, top, right, bottom]) => ({
     left: left * k, right: right * k, top: (poses.floorPx - top) * k, bottom: (poses.floorPx - bottom) * k,
   })
   const [L, T, W, H] = pose.rect
   const corner = box([L + W, T + H, L + W, T + H])
+  const { width, height } = dimensionsOf(size)
   return {
     photo: box([0, 0, ...poses.px]),
-    rect: { left: corner.right - W * cm, right: corner.right, top: corner.bottom + H * cm, bottom: corner.bottom },
+    rect: { left: corner.right - width, right: corner.right, top: corner.bottom + height, bottom: corner.bottom },
     person: box(pose.person),
     body: box(pose.reach ? [pose.person[0], pose.person[1], pose.reach.body, pose.person[3]] : pose.person),
     reach: pose.reach ? { body: pose.reach.body * k, elbow: pose.reach.elbow * k, wrist: pose.reach.wrist * k, tip: pose.person[2] * k } : null,
@@ -284,7 +285,7 @@ const poseCenter = (poses, size) => {
    miroir, au plus BEYOND.side : sur les photos meublées, un objet au bord n'est jamais recopié).
    Si la vue doit être plus large que cela (ordinateur, grands formats), elle se centre sur la photo
    et le mur s'y prolonge uni (scene.js). */
-const POSE = { margin: 0.04, label: 7, empty: 0.2, torso: 25, thigh: 0.45, lowest: 0.37, dimsAbove: 10, joint: 0.3 } // part de sa hauteur, depuis ses pieds ; joint : part du segment du bras
+const POSE = { margin: 0.04, label: 7, empty: 0.2, torso: 25, thigh: 0.45, knee: 0.4, lowest: 0.37, dimsAbove: 10, joint: 0.3 } // part de sa hauteur, depuis ses pieds ; joint : part du segment du bras
 export const BEYOND = { side: 130, top: 200 }
 const NO_INSET = { top: 0, left: 0 }
 
@@ -368,6 +369,8 @@ function poseView(room, product, painting, under, screen, inset) {
         Math.min(right - width / 2, must.left - pad * screen + width / 2))
       let y = height >= whole ? (want.top + want.bottom) / 2 : ceiling(height) - height / 2
       y = keep(y, Math.max(art.top + roof * height, must.top + pad) - height / 2, must.bottom - pad + height / 2)
+      // Coupée : au-dessus de la ligne du genou si la vue peut monter (un peu plus de mur au-dessus).
+      if (height < whole) y = Math.max(y, Math.min(line(POSE.knee) + height / 2, must.bottom - pad + height / 2))
       y = Math.max(Math.min(y, photo.top + BEYOND.top - height / 2), photo.bottom + height / 2) // le sol d'abord
       return { x, y, height, width }
     }
@@ -513,7 +516,11 @@ function edgeShot(room, product, aspect) {
   return shotOf('edge', { position: add(target, scale(dir, d)), target, fovY: FOV_Y }, painting)
 }
 
-const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
+/* Courbe des étapes : en sinus, accélération et freinage symétriques, sans pointe de vitesse (π/2
+   fois la vitesse moyenne, contre 3 fois pour la courbe cubique d'avant, qui restait comme figée
+   les 170 premières ms : retour de Walid sur la version 23). La page cadre et décale le canvas sur
+   la même courbe. */
+export const glide = (t) => (1 - Math.cos(Math.PI * Math.min(1, Math.max(0, t)))) / 2
 const smooth = (t) => {
   const c = Math.min(1, Math.max(0, t))
   return c * c * (3 - 2 * c)
@@ -626,10 +633,29 @@ function progressOf(leg, at) {
   return hermite(leg.span[0], leg.span[1], leg.duration / ACTS[leg.shot].ms, 0, t)
 }
 
+const frontal = (c) => Math.abs(c.position[0] - c.target[0]) < 1e-9 && Math.abs(c.position[1] - c.target[1]) < 1e-9
+
+/* D'une vue de face à une autre (la pièce et la vue de face) : à l'écran, le tableau grandit et
+   glisse selon la courbe même. Sa taille va comme l'inverse du recul : on mêle l'inverse du recul,
+   et l'écart du tableau au centre de l'image rapporté au recul. Mêler le recul lui-même faisait
+   grandir le tableau à peine au début et d'un coup à la fin (30 × 40 : du mur entier à l'œuvre). */
+function frontCamera(a, b, view, t) {
+  const face = view.painting.z + view.painting.artZ + view.painting.depth
+  const inverse = (v) => 1 / Math.max(v.camera.position[2] - face, 1e-6)
+  const ua = inverse(a), ub = inverse(b)
+  const u = lerp(ua, ub, t)
+  const gap = (v, k) => [(v.painting.x - v.camera.position[0]) * k, (v.painting.y - v.camera.position[1]) * k]
+  const ga = gap(a, ua), gb = gap(b, ub)
+  const x = view.painting.x - lerp(ga[0], gb[0], t) / u
+  const y = view.painting.y - lerp(ga[1], gb[1], t) / u
+  return { ...view.camera, position: [x, y, face + 1 / u], target: [x, y, view.camera.target[2]] }
+}
+
 // Vue intermédiaire. Un tableau encore tourné ne doit pas traverser le mur en revenant.
 function mix(a, b, t) {
   const view = { ...blend(a, b, t), shot: t < 1 ? a.shot : b.shot }
   view.painting.z = Math.max(view.painting.z, -lowestCorner(view.painting))
+  if (frontal(a.camera) && frontal(b.camera) && a.camera.fovY === b.camera.fovY) view.camera = frontCamera(a, b, view, t)
   // Une cote qui change de côté du tableau s'efface puis réapparaît : elle ne traverse pas l'œuvre.
   if (a.dims.under !== b.dims.under) {
     const side = t < 0.5 ? a : b
@@ -673,7 +699,7 @@ export function createDirector({ room, product, poses = null, reducedMotion = fa
   // directeur ; screen : celle de l'écran réel (la pose ne doit jamais montrer le bord de sa photo) ;
   // inset : le coin en haut à gauche que la page occupe (bouton « De face »), en part de la hauteur
   // (top) et de la largeur (left) de l'écran.
-  const state = { product, group: null, shot: 'front', legs: [], from: null, aspect: 0.8, screen: 0.8, inset: NO_INSET, reducedMotion }
+  const state = { product, group: null, shot: 'front', legs: [], from: null, aspect: 0.8, screen: 0.8, inset: NO_INSET, goal: null, reducedMotion }
   // Inclinaison : `held` pendant le glisser, puis `released` décroît selon le ressort.
   const tilt = { grabbed: false, start: { yaw: 0, pitch: 0 }, held: { yaw: 0, pitch: 0 }, releasedAt: null }
 
@@ -684,13 +710,16 @@ export function createDirector({ room, product, poses = null, reducedMotion = fa
     return { yaw: tilt.held.yaw * k, pitch: tilt.held.pitch * k }
   }
 
-  function staged(at, aspect, screen, inset) {
+  // goal : la forme de la zone à l'arrivée (la page la fait glisser avec la rangée) ; le plan
+  // d'arrivée d'une étape se cadre pour elle, et ne change pas de décision en route.
+  function staged(at, aspect, screen, inset, goal = null) {
     let from = state.from
+    const g = goal || { aspect, screen, inset }
     for (const leg of state.legs) {
-      const to = shots[leg.shot](stage, leg.product || state.product, aspect, progressOf(leg, at), screen, inset)
+      const to = shots[leg.shot](stage, leg.product || state.product, g.aspect, progressOf(leg, at), g.screen, g.inset)
       if (at < leg.start + leg.duration) {
         const joined = (at - leg.start) / leg.join
-        return joined < 1 ? mix(from, to, easeInOut(Math.max(0, joined))) : to
+        return joined < 1 ? mix(from, to, glide(joined)) : to
       }
       from = unwound(to)
     }
@@ -703,9 +732,9 @@ export function createDirector({ room, product, poses = null, reducedMotion = fa
     return finishing ? finishing.product : state.product
   }
 
-  function view(at, aspect, screen = aspect, inset = NO_INSET) {
-    Object.assign(state, { aspect, screen, inset })
-    const base = { ...staged(at, aspect, screen, inset), product: shownProduct(at) }
+  function view(at, aspect, screen = aspect, inset = NO_INSET, goal = null) {
+    Object.assign(state, { aspect, screen, inset, goal })
+    const base = { ...staged(at, aspect, screen, inset, goal), product: shownProduct(at) }
     const k = 1 - base.room // la photo de la pièce ne s'incline pas
     const offset = tiltAt(at)
     if (k === 0 || (offset.yaw === 0 && offset.pitch === 0)) return base
@@ -767,7 +796,7 @@ export function createDirector({ room, product, poses = null, reducedMotion = fa
     const replay = group === state.group && sameProduct(state.product, nextProduct)
     if (replay && isStaging(at)) return
     // Départ figé sans l'inclinaison : celle-ci continue à part, par-dessus la transition.
-    const from = unwound(staged(at, state.aspect, state.screen, state.inset))
+    const from = unwound(staged(at, state.aspect, state.screen, state.inset, state.goal))
     const act = actOf(group, nextProduct)
     const shot = act ? 'front' : planOf(group, nextProduct)
     const legs = []

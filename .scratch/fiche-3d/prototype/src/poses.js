@@ -2,15 +2,17 @@
  * Mise en scène de la taille (choix de Walid du 10/11) : une femme se tient à côté du tableau, une
  * pose par taille. Elle remplace le grand salon, où le 30 × 40 semblait ridicule sur un mur immense.
  *
- * Photos de la version 23 : la vraie photo de chaque pose, retouchée par Gemini et validée par Walid,
- * pièce meublée (olivier à gauche, banc en chêne sous le tableau avec livres, bol et vase à branches
- * sèches, lampadaire et panier à droite), mur propre. 4800 × 3584 px, 16 px/cm dans le plan du mur
- * (300 cm de mur sur la largeur), même appareil sur les quatre ; pied du mur vers 3222 px (3226 mesurés,
- * 0,25 cm d'écart). Rectangle blanc aux places d'avant, sauf en 60 × 80 (sans rectangle, même place).
+ * Photos de la version 24 : la vraie photo de chaque pose, retouchée par Gemini et validée par Walid,
+ * pièce meublée (olivier entier à gauche, banc en chêne sous le tableau avec livres, bol et vase à
+ * branches sèches, panier et lampadaire entier à droite), mur propre ; en 21:9 (choix de Walid pour
+ * la version 24), pour que l'ordinateur ne voie plus le bord des photos : mur, plinthe et parquet nus
+ * jusqu'aux deux bords. 6336 × 2688 px, 12 px/cm dans le plan du mur (528 cm de mur sur la largeur ;
+ * mesuré sur la hauteur des rectangles blancs, de 11,96 à 12,1), pied du mur vers 2422 px (2420 à
+ * 2427 mesurés). Gemini a recomposé la pièce : les meubles bougent un peu d'une photo à l'autre.
  *
  * Préparées sur le PC par tools/poses-detourer.py et tools/poses-preparer.py (ticket 12), publiées à
- * 2400 px de large : balance des blancs (le mur des quatre au même blanc chaud), rectangle blanc
- * effacé (le mur refait à sa place), et
+ * 3168 px de large (6 px par cm de mur) : balance des blancs (le mur des quatre au même blanc chaud),
+ * rectangle blanc effacé (le mur refait à sa place), et
  * - image : la photo, la femme et les meubles compris ;
  * - figure : ce qui passe devant le tableau, là seulement où il peut aller : la femme (détourée par
  *   BiRefNet, licence MIT), les feuilles de l'olivier et les branches du vase (clé de couleur sur le
@@ -42,9 +44,9 @@ const pose = (size, data) => ({
 })
 
 export const POSES = {
-  px: [4800, 3584],
-  pxPerCm: 16,
-  floorPx: 3222,
+  px: [6336, 2688],
+  pxPerCm: 12,
+  floorPx: 2422,
   // À côté d'elle, les tableaux paraissent 20 % plus grands que sur ses photos (retour de Walid sur la
   // version 21 : elle paraissait mesurer 1,80 m). Les cotes gardent les vraies mesures.
   scale: 1.2,
@@ -54,33 +56,33 @@ export const POSES = {
   light: [0.36, 0.44, 0.82],
   bySize: {
     '30x40': pose('30x40', {
-      rect: [1776, 504, 480, 640],
-      person: [2361, 640, 3846, 3540],
-      head: [3198, 640, 3703, 1024],
-      overlay: [1584, 280, 1588, 284],
-      clean: { left: 0, right: 0 },
+      rect: [2676, 376, 378, 484],
+      person: [3138, 479, 4298, 2651],
+      head: [3792, 479, 4183, 767],
+      overlay: [2528, 208, 2532, 212],
+      clean: { left: 1000, right: 1030 },
     }),
     '60x80': pose('60x80', {
-      rect: [1320, 184, 960, 1280],
-      person: [2337, 639, 3868, 3546],
-      head: [3175, 639, 3702, 1023],
-      overlay: [1032, 1380, 2376, 1492],
-      clean: { left: 0, right: 0 },
+      rect: [2362, 141, 717, 957],
+      person: [3121, 479, 4262, 2663],
+      head: [3750, 479, 4131, 767],
+      overlay: [2146, 1036, 3152, 1118],
+      clean: { left: 976, right: 1128 },
     }),
     '75x100': pose('75x100', {
-      rect: [1200, 24, 1200, 1600],
-      person: [2374, 637, 3783, 3542],
-      head: [3232, 637, 3714, 1021],
-      overlay: [864, 1080, 2496, 1760],
-      clean: { left: 0, right: 0 },
+      rect: [2267, 21, 878, 1198],
+      person: [3145, 479, 4184, 2652],
+      head: [3770, 479, 4135, 767],
+      overlay: [2020, 814, 3216, 1320],
+      clean: { left: 1014, right: 1104 },
     }),
     '90x120': pose('90x120', {
-      rect: [1080, 26, 1440, 1920],
-      person: [2219, 663, 4800, 3542],
-      head: [3211, 663, 3711, 1047],
-      overlay: [696, 950, 2616, 2100],
-      clean: { left: 0, right: 0 },
-      reach: { body: 3710, elbow: 4110, wrist: 4420 },
+      rect: [2175, 20, 1075, 1441],
+      person: [3250, 497, 4957, 2667],
+      head: [3759, 497, 4142, 785],
+      overlay: [1888, 716, 3322, 1576],
+      clean: { left: 1002, right: 1130 },
+      reach: { body: 4180, elbow: 4414, wrist: 4665 },
     }),
   },
 }

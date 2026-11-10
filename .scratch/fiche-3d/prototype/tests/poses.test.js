@@ -76,10 +76,12 @@ test('le tableau, 20 % plus grand qu’elle ne le voyait, garde son coin bas au 
       near(p.y - p.height / 2, (POSES.floorPx - T - H) * k, `${size} ${frame}, bas`)
       near(rect.right, p.x + p.width / 2, `${size} ${frame}, rectangle à droite`)
       near(rect.top, p.y + p.height / 2, `${size} ${frame}, rectangle en haut`)
-      // Ses vraies mesures, 1,2 fois celles du rectangle de la photo réduite.
-      near(p.width, W / POSES.pxPerCm, `${size}, largeur`)
-      near(p.width / (W * k), POSES.scale, `${size}, plus grand que sur la photo`)
-      near(photo.right - photo.left, POSES.px[0] * k, `${size}, 250 cm de mur`)
+      // Ses vraies mesures, celles du rectangle de la photo à 2 cm près (Gemini le trace un peu de
+      // travers), et 1,2 fois plus grand que sur la photo réduite.
+      assert.ok(Math.abs(W / POSES.pxPerCm - p.width) <= 2 && Math.abs(H / POSES.pxPerCm - p.height) <= 2, `${size}, rectangle de ${(W / POSES.pxPerCm).toFixed(1)} × ${(H / POSES.pxPerCm).toFixed(1)} cm`)
+      near(rect.right - rect.left, p.width, `${size}, largeur`)
+      near(1 / (POSES.pxPerCm * k), POSES.scale, `${size}, plus grand que sur la photo`)
+      near(photo.right - photo.left, POSES.px[0] * k, `${size}, mur de la photo`)
       near(photo.bottom, -(POSES.px[1] - POSES.floorPx) * k, `${size}, pied du mur en y = 0`)
       assert.equal(p.z, 0, 'au mur')
     }
@@ -208,6 +210,62 @@ test('le tableau d’abord : sa main lointaine ne fait jamais reculer la vue (br
   // En 390 × 844, le 90 × 120 n'est plus réduit au tiers de la hauteur (354 cm de vue en version 23).
   const view = sizeView({ ...TOILE, size: '90x120' }, ZONES[0], ZONES[0] * 0.9, INSETS[0])
   assert.ok(120 / (2 * Math.tan(view.camera.fovY / 2) * view.camera.position[2]) >= 0.44, '90 × 120 en 390 × 844 : le tableau trop petit')
+})
+
+/* Image par image à 60 images/s (contrôle du coordinateur, retour de Walid sur la version 23 : « comme
+   un saut » au retour de face) : le tableau part dès le toucher, aucune pause de plus de 50 ms tant
+   qu'il bouge (ses coins bougent de moins de 0,05 px), et sa taille à l'écran ne saute jamais de
+   plus de 3 % d'une image à l'autre : 3 % de sa taille de face, la plus grande des deux (à l'aller
+   du 30 × 40, il finit à moins d'un tiers de sa taille de départ : 3 % de sa taille finale ne
+   laisseraient pas assez d'images pour rapetisser en 1 s). Zone de la vraie hauteur en px (390 ×
+   844 : 572 px au-dessus de la rangée). Rend aussi la plus grande vitesse des coins. */
+const ZONE_PX = [572, 409, 351, 569]
+function glideCheck(director, start, screen, z, label) {
+  const H = ZONE_PX[z], W = H * screen
+  const frames = []
+  for (let k = 0; k <= 80; k++) {
+    const view = director.view(start + (k * 1000) / 60, screen, screen, INSETS[z])
+    frames.push(paintingCorners(view.painting, 'outer').filter((c) => c.side.z === 1).map((c) => {
+      const s = project(view.camera, screen, c)
+      return [((s.x + 1) / 2) * W, ((1 - s.y) / 2) * H]
+    }))
+  }
+  const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1])
+  const sizes = frames.map((f) => [dist(f[0], f[1]), dist(f[0], f[2])]) // largeur, hauteur
+  const ends = [sizes[0], sizes[sizes.length - 1]]
+  const steps = frames.slice(1).map((f, k) => Math.max(...f.map((c, i) => dist(c, frames[k][i]))))
+  const moving = steps.map((d) => d >= 0.05)
+  const end = moving.lastIndexOf(true)
+  assert.ok(end > 0, `${label} : le tableau ne bouge pas`)
+  let still = 0
+  for (let k = 0; k <= end; k++) {
+    still = moving[k] ? 0 : still + 1
+    assert.ok(still * 1000 / 60 <= 50 + 1e-6, `${label} : pause de ${(still * 1000 / 60).toFixed(0)} ms à ${((k + 1) * 1000 / 60).toFixed(0)} ms`)
+  }
+  for (const axis of [0, 1]) {
+    const ref = Math.max(ends[0][axis], ends[1][axis])
+    const jump = Math.max(...sizes.slice(1).map((s, k) => Math.abs(s[axis] - sizes[k][axis])))
+    assert.ok(jump <= 0.03 * ref, `${label} : la ${axis ? 'hauteur' : 'largeur'} saute de ${jump.toFixed(1)} px pour ${ref.toFixed(0)} px (${(100 * jump / ref).toFixed(1)} %)`)
+  }
+  return Math.max(...steps)
+}
+
+test('aller et retour entre la vue de face et la Taille, et changement de taille : sans pause ni saut', () => {
+  ZONES.forEach((screen, z) => {
+    for (const size of SIZES) {
+      const product = { ...TOILE, size }
+      const director = createDirector({ room: ROOM, poses: POSES, product: TOILE })
+      director.view(0, screen, screen, INSETS[z])
+      director.choose('size', product, 0)
+      glideCheck(director, 0, screen, z, `${size} en zone ${screen}, aller`)
+      director.choose('front', product, LATER)
+      glideCheck(director, LATER, screen, z, `${size} en zone ${screen}, retour`)
+      const other = SIZES[(SIZES.indexOf(size) + 1) % SIZES.length]
+      director.choose('size', product, 2 * LATER)
+      director.choose('size', { ...TOILE, size: other }, 3 * LATER)
+      glideCheck(director, 3 * LATER, screen, z, `${size} vers ${other} en zone ${screen}`)
+    }
+  })
 })
 
 test('passer d’une taille à l’autre fond une pose dans l’autre, pendant que le tableau change de taille', () => {

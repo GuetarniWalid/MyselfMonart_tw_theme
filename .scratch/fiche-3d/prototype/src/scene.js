@@ -421,18 +421,26 @@ const WALL_FRAGMENT = /* glsl */ `
     float n = fract(sin(dot(cell, vec2(127.1, 311.7))) * 43758.5453) - 0.5;
     return n * 0.012 / max(fwidth(p.x * uPhotoTexels), 1.0); // plusieurs texels par pixel : moyennés
   }
-  // Au-dessus : la lumière du haut de la photo, ses stries lissées en montant (sur 40 cm, ± 18 cm).
-  vec3 topLight(sampler2D light, float x, float above) {
+  // Une rangée de la lumière du mur (v : 0 en haut, 1 en bas), lissée en largeur sur ± 18 cm.
+  vec3 smoothRow(sampler2D light, float x, float v) {
     float spread = 6.0 / (uPoseRect.z - uPoseRect.x);
     vec3 sum = vec3(0.0);
-    for (int k = -3; k <= 3; k++) sum += texture2D(light, vec2(x + float(k) * spread, 0.0)).rgb * (4.0 - abs(float(k)));
-    return mix(texture2D(light, vec2(x, 0.0)).rgb, sum / 16.0, smoothstep(0.0, 40.0, above));
+    for (int k = -3; k <= 3; k++) sum += texture2D(light, vec2(x + float(k) * spread, v)).rgb * (4.0 - abs(float(k)));
+    return sum / 16.0;
   }
+  // Au-dessus : la lumière du haut de la photo, ses stries lissées en montant (sur 40 cm).
+  vec3 topLight(sampler2D light, float x, float above) {
+    return mix(texture2D(light, vec2(x, 0.0)).rgb, smoothRow(light, x, 0.0), smoothstep(0.0, 40.0, above));
+  }
+  // Sous la photo (derrière la rangée, dévoilé quand elle s'efface) : le parquet, sa lumière lissée,
+  // sans les traînées de la dernière rangée de pixels étirée, puis le fond neutre (POSE_FLOOR cm).
+  const float POSE_FLOOR = 20.0;
   float fold(float t, float m) {
     float k = mod(t, 2.0 * m);
     return k < m ? k : 2.0 * m - k;
   }
-  vec3 posePhoto(sampler2D photo, sampler2D light, vec2 clean) {
+  // rgb : la photo prolongée ; a : sa part, qui s'efface sous elle dans le fond neutre.
+  vec4 posePhoto(sampler2D photo, sampler2D light, vec2 clean) {
     vec2 uv = (vXY - uPoseRect.xy) / (uPoseRect.zw - uPoseRect.xy);
     vec2 edge = vec2(clamp(uv.x, 0.0, 1.0), clamp(1.0 - uv.y, 0.0, 1.0));
     vec2 st = edge;
@@ -446,8 +454,10 @@ const WALL_FRAGMENT = /* glsl */ `
       clean.x <= 0.0 ? 1.0 - smoothstep(0.0, fade.x, uv.x) : 0.0,
       clean.y <= 0.0 ? 1.0 - smoothstep(0.0, fade.x, 1.0 - uv.x) : 0.0));
     c = mix(c, lit * (1.0 + grain(vXY)), plain);
-    // Sous la photo (derrière la rangée et la barre d'achat), le parquet s'estompe dans sa lumière.
-    return mix(c, lit, smoothstep(0.0, 0.012, -uv.y));
+    float high = uPoseRect.w - uPoseRect.y;
+    vec3 floorLight = smoothRow(light, edge.x, 1.0);
+    c = mix(c, floorLight, 1.0 - smoothstep(0.0, POSE_FADE * 0.5, uv.y * high));
+    return vec4(c, 1.0 - smoothstep(0.0, POSE_FLOOR, -uv.y * high));
   }
 
   void main() {
@@ -473,10 +483,10 @@ const WALL_FRAGMENT = /* glsl */ `
     float person = 0.0;
     if (uPoseMix > 0.0) {
       float shown = uPoseW.x + uPoseW.y;
-      vec3 photo = vec3(0.0);
+      vec4 photo = vec4(0.0);
       if (uPoseW.x > 0.0) photo += posePhoto(uPoseA, uLightA, uCleanA) * uPoseW.x;
       if (uPoseW.y > 0.0) photo += posePhoto(uPoseB, uLightB, uCleanB) * uPoseW.y;
-      col = mix(col, photo / max(shown, 1e-4), uPoseMix * shown);
+      col = mix(col, photo.rgb / max(shown, 1e-4), uPoseMix * photo.a);
       person = (figureAt(uFigureA, uFigureRectA, vXY).a * uPoseW.x + figureAt(uFigureB, uFigureRectB, vXY).a * uPoseW.y) * uPoseMix;
     }
     // Pénombres : jamais plus fines qu'un pixel, même vues de loin.
