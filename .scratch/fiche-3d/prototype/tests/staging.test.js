@@ -129,9 +129,11 @@ const framedEdge = (product, aspect) => {
 // Angle bas de la façade de la toile, côté lumière (gauche dans la pièce provisoire).
 const lowCorner = (view) => paintingCorners(view.painting).find((c) => c.side.x < 0 && c.side.y < 0 && c.side.z === 1)
 
-/* Part de la tranche gauche visible dans le jour, en part de la hauteur de l'écran, à `above` cm au-dessus
-   du bas de la toile : un point de la tranche se voit si le rayon qui va vers la caméra passe au-dessus
-   de la lèvre du cadre. Rend aussi la part visible en cm, vue perpendiculairement au regard. */
+/* Largeur de la tranche gauche visible dans le jour, en part de la hauteur de l'écran, à `above` cm
+   au-dessus du bas de la toile : un point de la tranche se voit si le rayon qui va vers la caméra passe
+   au-dessus de la lèvre du cadre. La tranche est verticale à l'écran : sa largeur est l'écart
+   horizontal entre l'arête et le fond visible. Rend aussi la part visible en cm, vue
+   perpendiculairement au regard. */
 function gapBand(view, aspect, above) {
   const p = view.painting
   const x = p.x - p.width / 2
@@ -153,12 +155,12 @@ function gapBand(view, aspect, above) {
   }
   const a = project(view.camera, aspect, [x, y, lo]), b = project(view.camera, aspect, [x, y, front])
   const ray = unit(sub(C, [x, y, (lo + front) / 2]))
-  return { screen: Math.hypot((a.x - b.x) * aspect, a.y - b.y) / 2, cm: (front - lo) * Math.hypot(ray[0], ray[1]) }
+  return { screen: (Math.abs(a.x - b.x) * aspect) / 2, cm: (front - lo) * Math.hypot(ray[0], ray[1]) }
 }
 
 for (const aspect of [...SCREENS, DESK_ZONE]) {
   for (const size of ['30x40', '75x100']) {
-    test(`écran ${aspect}, ${size} : sous un cadre, la bordure se montre en gros plan dans le jour, à l'angle bas côté lumière`, () => {
+    test(`écran ${aspect}, ${size} : sous un cadre, la bordure se montre en plan rapproché dans le jour, à l'angle bas côté lumière`, () => {
       const view = framedEdge({ ...FRAMED, size, border: 'miroir' }, aspect)
       assert.equal(view.shot, 'edge')
       const p = view.painting
@@ -174,15 +176,16 @@ for (const aspect of [...SCREENS, DESK_ZONE]) {
       const forward = unit(sub(view.camera.target, view.camera.position))
       const turn = (Math.acos(-forward[2]) * 180) / Math.PI
       assert.ok(turn <= 32, `la caméra tourne de ${turn.toFixed(1)}° depuis le mur`)
+      // Recul demandé par Walid le 10/11 (« reculez un petit peu ») : 1,5 à 2 fois le gros plan à 3,2 cm.
       const field = 2 * onScreen.depth * Math.tan(view.camera.fovY / 2)
-      assert.ok(field <= 6, `gros plan : ${field.toFixed(1)} cm de haut à l'écran`)
-      // Regard de biais vers la tranche éclairée et vers le bas, de 13 à 20° depuis l'angle : en deçà la
-      // tranche s'aplatit, au-delà la lèvre en cache le fond (caméra à 6 cm, la perspective compte).
+      assert.ok(field >= 4.8 && field <= 7, `plan rapproché : ${field.toFixed(1)} cm de haut à l'écran`)
+      // Regard de biais vers la tranche éclairée et vers le bas, de 12 à 18° depuis l'angle : en deçà la
+      // tranche s'aplatit, au-delà la lèvre en cache le fond (caméra à 12 cm, la perspective compte).
       const look = sub(view.camera.position, corner)
       const across = (Math.atan2(-look[0], look[2]) * 180) / Math.PI
       const below = (Math.atan2(-look[1], look[2]) * 180) / Math.PI
-      assert.ok(across >= 13 && across <= 20, `regard à ${across.toFixed(1)}° vers la tranche`)
-      assert.ok(below >= 13 && below <= 20, `regard à ${below.toFixed(1)}° vers le bas`)
+      assert.ok(across >= 12 && across <= 18, `regard à ${across.toFixed(1)}° vers la tranche`)
+      assert.ok(below >= 12 && below <= 18, `regard à ${below.toFixed(1)}° vers le bas`)
     })
   }
 }
@@ -195,7 +198,8 @@ for (const aspect of [...SCREENS, DESK_ZONE]) {
         const band = gapBand(view, aspect, above)
         // Ordre de grandeur : jour 0,6 cm, lèvre 0,5 cm devant la toile -> 0,46 cm au plus vue de face.
         assert.ok(band.cm >= 0.4, `${size}, ${above} cm : ${band.cm.toFixed(2)} cm de tranche visibles`)
-        assert.ok(band.screen >= 0.1, `${size}, ${above} cm : la tranche ne prend que ${(band.screen * 100).toFixed(1)} % de la hauteur`)
+        // Au moins 6,5 % de la hauteur : 24 px sur le plus petit écran (553 px visibles, rangée ouverte).
+        assert.ok(band.screen >= 0.065, `${size}, ${above} cm : la tranche ne prend que ${(band.screen * 100).toFixed(1)} % de la hauteur`)
       }
     }
     // La tranche montrée reçoit la lumière de la pièce : pas un trou noir.

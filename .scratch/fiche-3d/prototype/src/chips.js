@@ -7,20 +7,21 @@
  * soulignée en terracotta ; une légende de chaque côté (bordure ou contour à gauche, cadre à droite),
  * l'étiquette en petites capitales et la valeur, posée sur un filet qui finit par un point sur le bord
  * de l'œuvre ; dessous, la taille et sa cote. Toucher une légende ouvre sous l'œuvre une rangée de
- * verre dépoli, un choix par pastille avec son prix, le point du bord pulse et la 3D joue aussitôt la
- * mise en scène du groupe, avec le choix en cours ; toucher un choix l'applique et la rangée reste
- * ouverte (retours de Walid du 09/11 : on enchaîne les choix). Seul un toucher en dehors, ou Échap,
- * la ferme et ramène l'œuvre de face (railEvent). S'il manque de la
- * place, la scène remonte, et sur un petit écran la barre d'achat s'efface le temps des choix. Hors
- * du plan de face (pièce, coin du cadre, tranche), les légendes prennent une plaque dépolie et les
- * filets s'effacent.
+ * verre dépoli, un choix par pastille avec son prix, et la 3D joue aussitôt la mise en scène du
+ * groupe, avec le choix en cours. Il ne reste alors que la rangée : légendes, bascule, cote et filets
+ * s'effacent, la légende touchée comprise (retour de Walid du 10/11). Toucher un choix l'applique et
+ * la rangée reste ouverte (retours du 09/11 : on enchaîne les choix). Seul un toucher en dehors, ou
+ * Échap, la ferme, ramène l'œuvre de face et les légendes (railEvent). S'il manque de la place, la
+ * scène remonte, et sur un petit écran la barre d'achat s'efface le temps des choix. Hors du plan de
+ * face sans rangée ouverte (bascule Toile | Poster, glisser), les légendes prennent une plaque
+ * dépolie serrée sur leur texte et les filets s'effacent.
  *
  * Trois étages, du plus pur au plus concret :
  *   - chipsLayout, railPlacement, toggleOf, legendOf, choicesOf : géométrie et textes du design,
  *     en px et en mots, sans DOM (tests/chips.test.js) ;
  *   - createChips : le DOM, l'état (choix, rangée ouverte), le clavier et le toucher ;
- *   - chips.track(coins) : à chaque image de la 3D, filets, points et pulsation suivent l'œuvre
- *     projetée par le moteur (toScreen), inclinaison comprise.
+ *   - chips.track(coins) : à chaque image de la 3D, filets et points suivent l'œuvre projetée par le
+ *     moteur (toScreen), inclinaison comprise.
  * Le catalogue (options, prix, règles) et les textes viennent de la page, par un adaptateur : la
  * fiche du thème branchera les siens (voir CATALOG ci-dessous).
  */
@@ -358,10 +359,9 @@ export function createChips({
     pill.inert = away // effacée, elle ne prend plus le focus
   }
 
-  /* Filets, points et pulsation, sous les légendes. Un SVG par élément qui s'efface à part (filet,
-     point, cote) et la pulsation en HTML : leurs fondus passent au compositeur, sans repeindre la
-     page à chaque image de la 3D. Les chemins vont du bord de l'écran vers l'œuvre : ils se
-     dessinent dans ce sens à l'arrivée. */
+  /* Filets et points, sous les légendes. Un SVG par élément qui s'efface à part (filet, point,
+     cote) : leurs fondus passent au compositeur, sans repeindre la page à chaque image de la 3D.
+     Les chemins vont du bord de l'écran vers l'œuvre : ils se dessinent dans ce sens à l'arrivée. */
   const svg = el('div', { class: 'chips-marks', 'aria-hidden': 'true' })
   const layer = (kind, group, i, children) => el('svg', { class: `chips-mk chips-mk-${kind}`, 'data-group': group, focusable: 'false', style: `--i: ${i}` }, children)
   const line = (group) => el('path', { class: 'chips-line', 'data-group': group, pathLength: 1 })
@@ -375,12 +375,10 @@ export function createChips({
     sideDot: el('circle', { class: 'chips-dot', 'data-group': 'side', r: 2.5 }),
     frameDot: el('circle', { class: 'chips-dot', 'data-group': 'frame', r: 2.5 }),
   }
-  const pulse = el('span', { class: 'chips-pulse' })
   svg.append(
     layer('line', 'side', 0, [marks.sideLine]),
     layer('line', 'frame', 1, [marks.frameLine]),
     layer('line', 'size', 2, [marks.tickL, marks.tickR, marks.lineL, marks.lineR]),
-    pulse,
     layer('dot', 'side', 0, [marks.sideDot]),
     layer('dot', 'frame', 1, [marks.frameDot]),
   )
@@ -388,19 +386,16 @@ export function createChips({
   // La bascule Toile | Poster : un interrupteur, pas de menu pour deux choix.
   const toggle = el('div', { class: 'chips-toggle chips-item chips-plate', role: 'group', 'aria-label': texts.group.material, style: '--i: 0' })
 
-  const legendButton = (side, i) => {
-    const button = el('button', { type: 'button', class: `chips-legend chips-item chips-plate is-${side}`, 'aria-expanded': 'false', style: `--i: ${i}` }, [
-      el('span', { class: 'chips-cat' }),
-      el('span', { class: 'chips-value' }),
-    ])
-    return button
-  }
-  const left = legendButton('left', 1)
-  const right = legendButton('right', 2)
-  const cote = el('button', { type: 'button', class: 'chips-cote chips-item chips-plate', 'aria-expanded': 'false', id: ids.chip('size'), 'aria-controls': ids.rail('size'), style: '--i: 3' }, [
-    el('span', { class: 'chips-cat', text: texts.group.size }),
+  /* Légendes et cote : la boîte du bouton est la cible du doigt ; le texte et sa plaque dépolie
+     (.chips-label) la serrent (retour de Walid du 10/11 : trop de marge autour du texte). */
+  const label = (cat) => el('span', { class: 'chips-label chips-plate' }, [
+    el('span', { class: 'chips-cat', ...(cat ? { text: cat } : {}) }),
     el('span', { class: 'chips-value' }),
   ])
+  const legendButton = (side, i) => el('button', { type: 'button', class: `chips-legend chips-item is-${side}`, 'aria-expanded': 'false', style: `--i: ${i}` }, [label()])
+  const left = legendButton('left', 1)
+  const right = legendButton('right', 2)
+  const cote = el('button', { type: 'button', class: 'chips-cote chips-item', 'aria-expanded': 'false', id: ids.chip('size'), 'aria-controls': ids.rail('size'), style: '--i: 3' }, [label(texts.group.size)])
   right.id = ids.chip('frame')
   right.setAttribute('aria-controls', ids.rail('frame'))
   scene.append(svg, toggle, left, right, cote)
@@ -584,11 +579,6 @@ export function createChips({
     setD(marks.lineR, `M${r1(br)} ${b}H${r1(cx + gapHalf)}`)
     setDot(marks.sideDot, xl, y)
     setDot(marks.frameDot, xr, y)
-    const spot = `${r1(open === 'frame' ? xr : xl)}px ${y}px`
-    if (lastD.get(pulse) !== spot) {
-      lastD.set(pulse, spot)
-      pulse.style.translate = spot
-    }
   }
 
   /* track(coins) : les quatre coins de la façade de l'œuvre (haut gauche, haut droit, bas droit,
@@ -611,11 +601,25 @@ export function createChips({
     if (nowStaged !== staged) {
       staged = nowStaged
       stage.classList.toggle('is-staged', staged)
+      if (!staged) setReturning(false) // de retour de face : les plaques peuvent revenir
     }
     if (!staged) drawMarks()
   }
 
   /* ---- Ouvrir, choisir, fermer ---- */
+
+  /* Rangée ouverte, il ne reste qu'elle : la bascule, la cote et les légendes, effacées, ne prennent
+     plus ni le doigt ni le focus. Refermée, elles reviennent aussitôt, sans plaque tant que la 3D
+     revient de face (is-returning). */
+  const setHidden = (hidden) => {
+    for (const item of [toggle, left, right, cote]) item.inert = hidden
+  }
+  let returning = false
+  const setReturning = (on) => {
+    if (returning === on) return
+    returning = on
+    stage.classList.toggle('is-returning', on)
+  }
 
   let spot = null // où la rangée ouverte se pose
   function place(group) {
@@ -630,6 +634,8 @@ export function createChips({
     open = group
     stage.dataset.chipsOpen = group === sideGroup() ? 'side' : group
     stage.classList.add('is-open')
+    setReturning(false)
+    setHidden(true)
     chipOf(group).setAttribute('aria-expanded', 'true')
     renderRail(group)
     place(group)
@@ -654,6 +660,8 @@ export function createChips({
     rails[group].style.top = px(Math.round(L.box.b + L.k.railGap))
     scene.style.transform = ''
     setPillAway(false)
+    setHidden(false)
+    if (staged) setReturning(true)
     if (focusChip) chipOf(group).focus({ preventScroll: true })
   }
 

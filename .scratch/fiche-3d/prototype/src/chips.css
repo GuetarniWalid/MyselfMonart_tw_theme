@@ -3,7 +3,8 @@
  * 09/11/2026 : téléphone par défaut, ordinateur sous .is-desk (posé par chips.js selon la largeur de
  * la scène). La scène est une pièce éclairée : elle reste claire quel que soit le thème, ses chips aussi.
  * États posés par chips.js sur la scène (.chips) : is-ready, is-settled (arrivée), is-open et
- * data-chips-open (rangée ouverte), is-staged (la 3D n'est plus de face), is-desk.
+ * data-chips-open (rangée ouverte), is-staged (la 3D n'est plus de face), is-returning (rangée
+ * fermée, la 3D revient de face), is-desk.
  */
 
 .chips {
@@ -11,7 +12,7 @@
   --chips-paper: var(--scene-paper, #fffdfa);
   --chips-muted: var(--scene-label, #6b5d51); /* étiquettes en petites capitales */
   --chips-soft: var(--scene-muted, #5c4f44); /* prix et notes */
-  --chips-terra: var(--scene-terra, #d79b86); /* soulignement de la bascule, pulsation */
+  --chips-terra: var(--scene-terra, #d79b86); /* soulignement de la bascule */
   --chips-plate: rgba(252, 251, 249, 0.82);
   --chips-glass: rgba(252, 251, 249, 0.86);
   --chips-curve: cubic-bezier(0.17, 0.67, 0.61, 1.06);
@@ -24,7 +25,7 @@
 /* La couche qui remonte quand une rangée manque de place : la 3D, la photo, les filets, les légendes. */
 .chips-scene { position: absolute; inset: 0; z-index: 1; transition: transform 650ms var(--chips-curve); }
 
-/* ---- Filets, points, pulsation ----
+/* ---- Filets et points ----
    La couche s'efface quand la 3D quitte le plan de face (is-staged, posé par chips.track) ; chaque
    filet, chaque point a son SVG : leurs fondus passent au compositeur. */
 .chips-marks { position: absolute; inset: 0; pointer-events: none; transition: opacity 260ms ease; }
@@ -42,21 +43,9 @@
 .chips.is-ready .chips-mk-dot { opacity: 1; }
 .chips.is-settled .chips-line { transition: stroke-dashoffset 300ms ease; }
 .chips.is-settled .chips-mk { transition: opacity 260ms ease; }
-/* Rangée ouverte : seul le filet de la légende touchée reste, plus net ; la cote s'efface. */
+/* Rangée ouverte : tous les filets et les points s'effacent, il ne reste que la rangée (retour de
+   Walid du 10/11 : plus de pulsation sur le bord de l'œuvre). */
 .chips.is-open .chips-mk { opacity: 0; }
-.chips[data-chips-open="side"] .chips-mk-line[data-group="side"],
-.chips[data-chips-open="frame"] .chips-mk-line[data-group="frame"] { opacity: 0.85; }
-.chips.is-ready[data-chips-open="side"] .chips-mk-dot[data-group="side"],
-.chips.is-ready[data-chips-open="frame"] .chips-mk-dot[data-group="frame"] { opacity: 1; }
-.chips-pulse {
-  position: absolute; left: -3px; top: -3px; width: 6px; height: 6px; border-radius: 50%;
-  background: var(--chips-terra); opacity: 0;
-}
-.chips[data-chips-open="side"] .chips-pulse,
-.chips[data-chips-open="frame"] .chips-pulse { animation: chips-pulse 1.8s linear infinite; }
-.chips.is-desk[data-chips-open] .chips-pulse { animation-name: chips-pulse-desk; }
-@keyframes chips-pulse { from { transform: scale(1); opacity: 0.75; } to { transform: scale(4.3333); opacity: 0; } }
-@keyframes chips-pulse-desk { from { transform: scale(1); opacity: 0.75; } to { transform: scale(5); opacity: 0; } }
 
 /* ---- Bascule, légendes, cote : posées sur le mur, une plaque dépolie hors du plan de face ---- */
 .chips-item {
@@ -65,20 +54,35 @@
 }
 .chips.is-ready .chips-item { opacity: 1; translate: none; }
 .chips.is-settled .chips-item { transition: opacity 260ms ease, translate 320ms ease; }
-.chips.is-open .chips-toggle, .chips.is-open .chips-cote, .chips.is-open .chips-legend[aria-expanded="false"] { opacity: 0; pointer-events: none; }
-/* La plaque dépolie hors du plan de face : sa teinte est un calque (::before) qui vient en fondu, au
-   compositeur. Le flou ne se calcule que la 3D arrêtée (is-moving posé par la page) : sur une 3D qui
-   bouge, le navigateur le refait à chaque image, et un téléphone moyen tombe sous 30 images/s. */
+/* Rangée ouverte, il ne reste qu'elle : la bascule, la cote et les deux légendes s'effacent, la
+   légende touchée comprise (retour de Walid du 10/11 : la rangée dit déjà l'option et le choix). */
+.chips.is-open .chips-toggle, .chips.is-open .chips-cote, .chips.is-open .chips-legend { opacity: 0; pointer-events: none; }
+/* La plaque dépolie hors du plan de face (bascule Toile | Poster, glisser) : sa teinte est un calque
+   (::before) qui vient en fondu, au compositeur. Le flou ne se calcule que la 3D arrêtée (is-moving
+   posé par la page) : sur une 3D qui bouge, le navigateur le refait à chaque image, et un téléphone
+   moyen tombe sous 30 images/s. Sur les légendes et la cote, elle serre le texte (.chips-label) : la
+   boîte du bouton, plus grande, reste la cible du doigt. Rangée refermée, pas de plaque pendant
+   que la 3D revient de face (is-returning). */
 .chips-plate::before {
   content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
   background: var(--chips-plate); opacity: 0; transition: opacity 300ms ease;
 }
 .chips.is-staged .chips-plate::before { opacity: 1; }
-.chips.is-staged:not(.is-moving) .chips-plate {
+/* Rangée ouverte, les chips sont effacées : leur plaque aussi, pour ne pas reparaître en s'effaçant
+   quand elles reviennent. */
+.chips.is-staged.is-open .chips-plate::before, .chips.is-staged.is-returning .chips-plate::before { opacity: 0; }
+.chips.is-staged:not(.is-moving):not(.is-returning) .chips-plate {
   -webkit-backdrop-filter: blur(16px) saturate(1.4); backdrop-filter: blur(16px) saturate(1.4);
 }
 .chips.is-settled.is-staged:not(.is-moving) .chips-item {
   transition: opacity 260ms ease, translate 320ms ease, -webkit-backdrop-filter 300ms ease, backdrop-filter 300ms ease;
+}
+.chips.is-settled.is-staged:not(.is-moving) .chips-label { transition: -webkit-backdrop-filter 300ms ease, backdrop-filter 300ms ease; }
+/* Le texte d'une légende ou de la cote, et sa plaque : le retrait compense la marge, le texte ne
+   bouge pas d'un pixel. */
+.chips-label {
+  position: relative; display: flex; flex-direction: column; align-items: inherit; gap: inherit;
+  padding: 5px 8px; margin: -5px -8px; border-radius: 10px;
 }
 
 .chips-toggle {
@@ -234,14 +238,13 @@
   .chips-rail.is-open .chips-opt:not([aria-disabled="true"]):hover { transform: translateY(-2px); }
 }
 
-/* Animations réduites : des fondus, sans glissement ni pulsation ; la scène saute sans glisser. */
+/* Animations réduites : des fondus, sans glissement ; la scène saute sans glisser. */
 @media (prefers-reduced-motion: reduce) {
   .chips-scene { transition: none; }
   .chips-item { translate: none; }
   .chips-line { stroke-dashoffset: 0; }
   .chips-rail, .chips-rail.is-open, .chips-opt, .chips-rail.is-open .chips-opt { transform: none; }
   .chips.is-desk .chips-rail, .chips.is-desk .chips-rail.is-open { transform: translateX(-50%); }
-  .chips[data-chips-open] .chips-pulse { animation: none; opacity: 0.35; transform: scale(2.4); }
   .chips-underline { transition: none; }
   .chips-pill, .chips-pill.chips-pill-away { translate: none; }
 }

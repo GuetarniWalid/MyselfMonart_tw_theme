@@ -230,3 +230,25 @@ Version 17 validée par le coordinateur, qui demande le correctif du triangle cl
 - Pixel à pixel contre la version 17 : vue de face avec cadre (30 × 40 et 75 × 100), plan du Cadre (chêne et noir), tableau retourné à 100° et 180° (dos de la caisse), poster sous verre de face et sur le coin. Aucun pixel ne diffère (écart maximal 2 sur 255). Console vide.
 
 **Pas vérifié** : un vrai téléphone, Safari, le lecteur d'Artifacts de claude.ai.
+
+### Bordure avec cadre reculée, légende de l'option ouverte effacée (retours de Walid du 10/11, sur la version 18)
+
+Walid, sur le gros plan : « c'est un peu trop zoomé à mon goût […] quand on est zoomé autant près, on voit que c'est pas vrai, mais c'est fait en 3D », puis « reculez un petit peu ». Sur la légende de l'option ouverte : « l'encadré blanc est mal fait puisqu'il y a trop de padding […] Tu le fais tout simplement disparaître puisqu'il y a déjà la pop-up du bas qui explique déjà qu'on est dans l'option bordure et quelle bordure a été choisie. »
+
+**Fait.**
+- Bordure avec cadre (`GAP`, `staging.js`) : la caméra recule de 6 à 12 cm, le plan passe de 3,2 à 6,4 cm de haut. On voit toute la baguette, son bord et le mur au-delà, et davantage de tableau. Sur un écran × 3, l'image est grossie 3,2 fois au lieu de 6,3 en 30 × 40, soit à peu près la définition de sa photo ; en 75 × 100, 7,9 fois au lieu de 15,8 (la source fait 1904 px de large). L'angle passe de 17° à 15° : à cette distance l'optimum est à 16°, et la lèvre cache le fond de la tranche au-delà de 18°.
+- La tranche dans le jour : 14,2 % de la hauteur de la zone au-dessus de la rangée avant, 7,0 % après. Soit environ 26 px sur l'iPhone SE dans Safari (52 avant), 30 px en 375 × 667 (61), 40 px en 390 × 844 et sur ordinateur (81 et 84), toute sa profondeur visible (2 cm).
+- Rangée ouverte, il ne reste qu'elle : la bascule, la cote et les deux légendes s'effacent, la légende touchée comprise, avec tous les filets ; la pulsation est retirée. Effacées, elles sont inertes : ni doigt ni focus. Elles reviennent à la fermeture (toucher dehors, Échap), aussitôt, sans plaque tant que la 3D revient de face (`is-returning`) ; les filets reviennent avec la face. Clavier : à l'ouverture, le focus va dans la rangée ; Échap le rend à la légende.
+- La plaque dépolie apparaît encore sans rangée ouverte, quand la 3D n'est pas de face : pendant la bascule Toile | Poster (tour de la toile, coin du poster), au repos sur un poster encadré (vu de trois-quarts, avec « De face »), et en glissant l'œuvre assez loin de la face. Elle serre désormais le texte (`.chips-label`) : 8 px de chaque côté, 5 px dessus et dessous, au lieu de la boîte du bouton (18 px au-dessus du texte sur un téléphone, jusqu'à 102 px à côté sur ordinateur). La boîte du bouton reste la cible du doigt, et le texte ne bouge pas d'un pixel.
+
+**Écarts.**
+- Le design v2 dessine la plaque sur toute la boîte de la légende (62 × 52 px sur un téléphone, colonne de 176 px sur ordinateur) : la plaque serrée s'en écarte, comme demandé.
+- Le test de la tranche mesurait la longueur de son image en biais (11,5 % ici) ; il mesure maintenant sa largeur (7 %), la grandeur qui compte. Les 14 % annoncés pour la version 17 étaient déjà cette largeur.
+
+**Vérifié** (Chrome sans écran, scripts hors dépôt) :
+- 206 tests : bornes du plan reculé (6,4 cm, angle de 12 à 18°, tranche d'au moins 6,5 % de la hauteur), et 2 tests des règles de `chips.css` (toutes les légendes effacées rangée ouverte, plus de pulsation, plaque serrée sans déplacer le texte, pas de plaque sous la rangée ni pendant le retour).
+- 58 contrôles sur les quatre formats : Bordure, Cadre, Taille et Contour ouverts sans légende, ni filet, ni pulsation, chips inertes ; à la fermeture, légendes revenues aussitôt sans plaque, puis filets avec la face ; plaque serrée sur le poster encadré ; clavier. 52 contrôles du plan reculé (cadre chêne avec Blanche, cadre noir avec Noire, 30 × 40 et 75 × 100, quatre formats) : tranche blanche à 219-221 de luminance dans le jour. Console vide.
+- Captures regardées : chaque rangée ouverte, la fermeture, la plaque serrée, le plan reculé avant et après.
+- Les 50 contrôles généraux, les 82 de la rangée ouverte et les 123 de la mise en scène à l'ouverture repassent.
+
+**Pas vérifié** : un vrai téléphone, Safari, le lecteur d'Artifacts de claude.ai.

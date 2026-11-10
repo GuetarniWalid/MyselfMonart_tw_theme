@@ -42,16 +42,18 @@ const litSide = (room) => (room.light && room.light[0] < 0 ? -1 : 1)
 const EDGE = { yaw: 38 * DEG, pitch: -6 * DEG, fill: 0.74, side: 0.8, front: 0.6, share: 0.4, field: 3.2, at: 0.45 }
 /* Bordure sous un cadre (retour de Walid sur la version 16) : dans la caisse américaine, la tranche
    ne se voit que dans le jour de 0,6 cm, entre la toile et la paroi du cadre, sous la lèvre qui la
-   dépasse. Gros plan sur l'angle bas côté lumière, tableau au mur : la caméra se tient de biais par
-   rapport à cet angle, `look` vers la tranche éclairée et autant vers le bas. À 6 cm, la perspective
-   compte : à 17°, la tranche du côté et celle du bas se voient sur toute leur profondeur (2 cm), soit
-   0,46 cm à l'écran, 14 % de sa hauteur ; à 19°, la lèvre en cache le fond ; à 14°, elle s'aplatit
-   (12 %). field : hauteur du plan à l'angle, en cm. spot : place de l'angle sur l'écran, en part de
+   dépasse. Plan rapproché sur l'angle bas côté lumière, tableau au mur : la caméra se tient de biais
+   par rapport à cet angle, `look` vers la tranche éclairée et autant vers le bas. Walid trouvait le
+   gros plan à 6 cm trop serré (10/11 : « on voit que c'est de la 3D ») : la caméra est à 12 cm, le
+   plan fait 6,4 cm de haut, et l'image de l'œuvre n'y est plus grossie au-delà de sa photo en
+   30 × 40. À 15°, la tranche du côté et celle du bas se voient sur toute leur profondeur (2 cm), soit
+   0,46 cm à l'écran, 7 % de sa hauteur ; l'optimum est à 16°, la lèvre en cache le fond au-delà de
+   18°. field : hauteur du plan à l'angle, en cm. spot : place de l'angle sur l'écran, en part de
    la demi-largeur et de la demi-hauteur depuis le milieu ; l'œuvre remplit le reste. Sur un écran
    plus large que `narrow`, l'angle revient vers le milieu, jusqu'au milieu à `wide` (largeur sur
    hauteur) : le cadre prend un côté, l'œuvre l'autre, et la caméra regarde le mur sous le même biais
    que sur un téléphone. Poser l'angle sur le côté d'un écran large la ferait tourner de 36°. */
-const GAP = { look: 17 * DEG, field: 3.2, spot: 0.3, narrow: 1.3, wide: 2.2 }
+const GAP = { look: 15 * DEG, field: 6.4, spot: 0.3, narrow: 1.3, wide: 2.2 }
 /* Coin du cadre : caméra au-dessus du coin bas, côté lumière. field : petit côté du plan pour un
    30 × 40, en cm ; il s'élargit un peu avec le tableau, pour garder de l'œuvre. spot : place du
    coin sur l'écran, en part de la demi-largeur et de la demi-hauteur depuis le milieu. L'œuvre et

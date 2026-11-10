@@ -1,5 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import { chipsLayout, railPlacement, maxShift, optionWidth, choicesOf, legendOf, toggleOf, eur, dims, swatchOf, sizeTileOf, railEvent, TEXTS_FR } from '../src/chips.js'
 import { BORDERS, FRAMES, SIZES, canFrame, dimensionsOf, fitChoice, frameFits, hasFrame, priceOf } from '../src/catalog.js'
 
@@ -230,6 +231,31 @@ test('ouvrir une rangée, au doigt comme au clavier, joue tout de suite la mise 
   // Choisir, toucher dehors, Échap : rien ne change.
   assert.deepEqual(railEvent('border', { type: 'pick', group: 'border', id: 'noire' }), { open: 'border', effects: ['apply'] })
   assert.deepEqual(railEvent('border', { type: 'outside' }), { open: null, effects: ['front'] })
+})
+
+/* Retour de Walid sur la version 18 (10/11) : rangée ouverte, il ne reste qu'elle. La légende touchée
+   s'efface comme les autres, avec son filet ; plus de pulsation. Hors du plan de face, la plaque
+   dépolie serre le texte. Ces règles vivent dans la feuille de style : on les y lit. */
+const CSS = readFileSync(new URL('../src/chips.css', import.meta.url), 'utf8')
+
+test('rangée ouverte, toutes les légendes s’effacent, la touchée comprise, sans filet ni pulsation', () => {
+  const rule = CSS.match(/\.chips\.is-open \.chips-toggle,[^{]*\{[^}]*\}/)
+  assert.ok(rule, 'règle des chips effacées')
+  assert.match(rule[0], /\.chips\.is-open \.chips-legend\s*\{/, 'toutes les légendes, sans exception')
+  assert.match(rule[0], /opacity:\s*0;\s*pointer-events:\s*none/)
+  assert.doesNotMatch(CSS, /aria-expanded="false"\]/, 'la légende touchée ne reste plus')
+  assert.doesNotMatch(CSS, /pulse/, 'plus de pulsation')
+  assert.doesNotMatch(CSS, /data-chips-open="(side|frame)"\] \.chips-mk/, 'plus de filet gardé')
+})
+
+test('la plaque dépolie serre le texte sans le déplacer, et ne revient pas pendant le retour de face', () => {
+  const label = CSS.match(/\.chips-label \{[^}]*padding[^}]*\}/)[0]
+  const pad = label.match(/padding:\s*([\d.]+)px ([\d.]+)px/)
+  const margin = label.match(/margin:\s*-([\d.]+)px -([\d.]+)px/)
+  assert.deepEqual([margin[1], margin[2]], [pad[1], pad[2]], 'la marge négative compense le retrait')
+  assert.ok(Number(pad[1]) <= 6 && Number(pad[2]) <= 10, `retrait de ${pad[1]} × ${pad[2]} px`)
+  // Ni sous la rangée ouverte, ni pendant le retour de face : la plaque ne reparaît pas en s'effaçant.
+  assert.match(CSS, /\.chips\.is-staged\.is-open \.chips-plate::before, \.chips\.is-staged\.is-returning \.chips-plate::before\s*\{\s*opacity:\s*0;/)
 })
 
 test('la bascule Toile | Poster n’a pas de rangée : elle s’applique, rien d’autre ne change', () => {
