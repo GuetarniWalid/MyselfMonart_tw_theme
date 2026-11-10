@@ -1,19 +1,17 @@
 {% comment %}
-  Scène de la fiche d'œuvre (fiche-3d, ticket 07) : remplace la galerie quand le modèle de page le
-  demande (réglage media_display de sections/main-product.liquid).
+  Scène de la fiche d'œuvre (fiche-3d, tickets 07, 12 et 14) : remplace la galerie quand le modèle de
+  page le demande (réglage media_display de sections/main-product.liquid). Mise en page de la maquette
+  validée par Walid le 10/11/2026 (version 26) : l'œuvre occupe l'écran sous l'en-tête, ses options
+  sont posées autour d'elle (assets/oeuvre-3d-chips.js), la pilule d'achat reste en bas.
 
-  La vraie image (media[1], l'œuvre à plat) s'affiche d'abord, au pixel près là où la 3D posera la
-  façade du tableau : 72 % du plus petit côté de la scène, comme le plan de face du moteur. Le fondu
-  ne décale donc rien. Elle reste dans la page, pour Google Images et pour le retour aux photos. Le
-  comportement est dans assets/component-oeuvre-3d.js, le moteur dans assets/oeuvre-3d-engine.js.
+  La vraie image (media[1], l'œuvre à plat) s'affiche d'abord, à la place exacte de l'œuvre de face,
+  par les règles d'input.css (.oeuvre-3d-scene) : la 3D la remplace en fondu sans rien décaler. Elle
+  reste dans la page, pour Google Images et pour le repli sur les photos. Le comportement est dans
+  assets/component-oeuvre-3d.js, le moteur dans assets/oeuvre-3d-engine.js, les styles dans input.css
+  (règles .oeuvre-3d-* et .chips-*).
 
-  Les couleurs de la scène sont celles du mur réglé au prototype (neutralRoom du moteur), pas des
-  couleurs de marque : un mur doit rester un mur.
-
-  Sur téléphone, la scène reste en haut de l'écran pendant qu'on parcourt les options, et se place
-  sous l'en-tête quand il revient (assets/tw-header.js). Sur ordinateur, elle reste fixe à gauche.
-  z-[25] : au-dessus de ce qui défile dessous (étoiles et flèches des options en z-10, cœur en z-20), sous
-  le bouton du panier (z-30) et l'en-tête (z-40). La barre d'achat, en bas de l'écran, ne la croise pas.
+  Les couleurs de la scène sont celles du mur des photos de pose, pas des couleurs de marque : un mur
+  doit rester un mur.
 
   Accepts:
   - product: {Object}
@@ -25,28 +23,112 @@
   assign art = art_media.preview_image
   assign alts = product.metafields.meta_object.media.value.alts.value
   assign art_alt = alts[1] | default: art_media.alt
-  assign tool_class = 'rounded-full border border-main-20 bg-secondary px-3 py-[7px] text-[13px] font-medium text-main shadow-sm transition-colors duration-150 hover:bg-main-5 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2'
+  # Le jumeau publié (métachamps link.poster / link.painting), comme la bascule product-format-toggle.
+  assign has_twin = false
+  if product.metafields.link.painting.value != blank and product.metafields.link.painting.value.published_at != blank
+    assign twin = product.metafields.link.painting.value
+    assign has_twin = true
+  elsif product.metafields.link.poster.value != blank and product.metafields.link.poster.value.published_at != blank
+    assign twin = product.metafields.link.poster.value
+    assign has_twin = true
+  endif
+  # L'œuvre, largeur sur hauteur : celle de sa première taille (« 30x40 cm » -> 0,75), que la 3D rend.
+  assign first_size = product.options_with_values.first.values.first.name | split: ' ' | first | downcase | replace: '×', 'x'
+  assign size_parts = first_size | split: 'x'
+  assign art_ratio = 0.75
+  if size_parts.size == 2
+    assign size_width = size_parts.first | plus: 0
+    assign size_height = size_parts.last | plus: 0
+    if size_width > 0 and size_height > 0
+      assign art_ratio = size_width | times: 1.0 | divided_by: size_height
+    endif
+  endif
+  assign short_title = product.metafields.title.short | default: product.title
+  assign price = product.selected_or_first_available_variant.price
 -%}
+<script src="{{ 'oeuvre-3d-chips.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'component-oeuvre-3d.js' | asset_url }}" defer="defer"></script>
 <oeuvre-3d
-  class="sticky top-0 z-[25] block transition-[top] duration-150 motion-reduce:transition-none [body:has(header.translate-y-0)_&]:top-[var(--header-h)] 2md:col-start-1 2md:row-span-2 2md:row-start-1 2md:top-4 2md:my-4 2md:self-start 2md:[body:has(header.translate-y-0)_&]:top-[calc(var(--header-h)+1rem)]"
-  data-state="arrival">
+  class="oeuvre-3d-stage block"
+  data-state="arrival"
+  role="region"
+  aria-label="{{ 'sections.mma.oeuvre_3d_stage' | t }}">
   <script type="application/json" data-config>
     {
       "three": {{ 'three.module.min.js' | asset_url | json }},
       "engine": {{ 'oeuvre-3d-engine.js' | asset_url | json }},
       "wood": {{ 'texture-chene-clair-cadre.jpg' | asset_url | json }},
-      "detail": {{ art | image_url: width: 2000 | json }}
+      "detail": {{ art | image_url: width: 2000 | json }},
+      "view": {{ template.suffix | json }},
+      "poses": {
+        {%- comment -%} Les photos de la Taille (une pose par taille du portrait 3:4), chargées à la première
+           ouverture de la Taille seulement. {%- endcomment -%}
+        {%- assign pose_sizes = '30x40,60x80,75x100,90x120' | split: ',' -%}
+        {%- for pose_size in pose_sizes -%}
+          {%- assign pose_file = 'oeuvre-3d-pose-' | append: pose_size -%}
+          {{ pose_size | json }}: {
+            "image": {{ pose_file | append: '-photo.webp' | asset_url | json }},
+            "figure": {{ pose_file | append: '-calque.webp' | asset_url | json }},
+            "light": {{ pose_file | append: '-lumiere.webp' | asset_url | json }}
+          }{%- unless forloop.last -%},{%- endunless -%}
+        {%- endfor -%}
+      },
+      "texts": {
+        "group": {
+          "material": {{ 'sections.mma.oeuvre_3d_chips.material' | t | json }},
+          "size": {{ 'sections.mma.oeuvre_3d_chips.size' | t | json }},
+          "border": {{ 'sections.mma.oeuvre_3d_chips.border' | t | json }},
+          "frame": {{ 'sections.mma.oeuvre_3d_chips.frame' | t | json }},
+          "passe": {{ 'sections.mma.oeuvre_3d_chips.passe' | t | json }}
+        },
+        "seeChoices": {{ 'sections.mma.oeuvre_3d_chips.see_choices' | t | json }},
+        "cm": {{ 'sections.mma.oeuvre_3d_chips.cm' | t | json }},
+        "included": {{ 'sections.mma.oeuvre_3d_chips.included' | t | json }},
+        "unavailable": {{ 'sections.mma.oeuvre_3d_chips.unavailable' | t: size: '{size}' | json }},
+        "noFrame": {{ 'sections.mma.oeuvre_3d_chips.no_frame' | t: size: '{size}' | json }},
+        "bigUnframed": {{ 'sections.mma.oeuvre_3d_chips.big_unframed' | t: size: '{size}' | json }},
+        "unframedHint": {{ 'sections.mma.oeuvre_3d_chips.unframed_hint' | t | json }}
+      },
+      "names": {
+        "material": {
+          "toile": {{ 'sections.main_product.format_toggle.canvas' | t | json }},
+          "poster": {{ 'sections.main_product.format_toggle.poster' | t | json }}
+        },
+        "border": {
+          "blanche": {{ 'sections.mma.oeuvre_3d_names.border_blanche' | t | json }},
+          "noire": {{ 'sections.mma.oeuvre_3d_names.border_noire' | t | json }},
+          "etiree": {{ 'sections.mma.oeuvre_3d_names.border_etiree' | t | json }},
+          "miroir": {{ 'sections.mma.oeuvre_3d_names.border_miroir' | t | json }},
+          "pliee": {{ 'sections.mma.oeuvre_3d_names.border_pliee' | t | json }}
+        },
+        "frame": {
+          "sans": {{ 'sections.mma.oeuvre_3d_names.frame_sans' | t | json }},
+          "blanc": {{ 'sections.mma.oeuvre_3d_names.frame_blanc' | t | json }},
+          "noir": {{ 'sections.mma.oeuvre_3d_names.frame_noir' | t | json }},
+          "argent": {{ 'sections.mma.oeuvre_3d_names.frame_argent' | t | json }},
+          "chene": {{ 'sections.mma.oeuvre_3d_names.frame_chene' | t | json }},
+          "noyer": {{ 'sections.mma.oeuvre_3d_names.frame_noyer' | t | json }}
+        },
+        "passe": {
+          "sans": {{ 'sections.mma.oeuvre_3d_names.passe_sans' | t | json }},
+          "avec": {{ 'sections.mma.oeuvre_3d_names.passe_avec' | t | json }}
+        },
+        "passeSpoken": {
+          "sans": {{ 'sections.main_product.variant_picker.white_border_without' | t | json }},
+          "avec": {{ 'sections.main_product.variant_picker.white_border_with' | t | json }}
+        }
+      }
     }
   </script>
-  <figure
-    data-stage
-    class="relative m-0 h-[min(56vh,128vw)] overflow-hidden bg-[radial-gradient(70%_60%_at_40%_38%,#efefee_0%,#e9e9e8_55%,#dcdcdb_100%)] [container-type:size] supports-[height:1svh]:h-[min(56svh,128vw)] 2md:h-[calc(100vh-13rem)] 2md:min-h-[26rem] 2md:rounded-2xl supports-[height:1svh]:2md:h-[calc(100vh-13rem)]"
-    style="--art-ratio: {{ art.aspect_ratio }}">
+  <script type="application/json" data-model>{% render 'oeuvre-3d-model', product: product %}</script>
+  {%- if has_twin -%}
+    <script type="application/json" data-twin>{% render 'oeuvre-3d-model', product: twin %}</script>
+  {%- endif -%}
+  <div class="oeuvre-3d-scene" data-scene style="--art-ratio: {{ art_ratio }}">
     {%- comment -%} crossorigin : cette image sert aussi de texture, sans second téléchargement. {%- endcomment -%}
     <img
       data-art
-      class="absolute left-1/2 top-1/2 h-auto max-h-[72%] max-w-[72%] -translate-x-1/2 -translate-y-1/2 w-[min(72cqw,calc(72cqh*var(--art-ratio)))] shadow-[0.5cqh_0.6cqh_1.2cqh_rgba(40,32,24,0.13),0_0_0.4cqh_rgba(40,32,24,0.1)] transition-opacity duration-300"
+      class="oeuvre-3d-photo transition-opacity duration-300"
       src="{{ art | image_url: width: 750 }}"
       srcset="{%- if art.width >= 400 -%}{{ art | image_url: width: 400 }} 400w,{%- endif -%}
         {%- if art.width >= 550 -%}{{ art | image_url: width: 550 }} 550w,{%- endif -%}
@@ -54,7 +136,7 @@
         {%- if art.width >= 1100 -%}{{ art | image_url: width: 1100 }} 1100w,{%- endif -%}
         {%- if art.width >= 1500 -%}{{ art | image_url: width: 1500 }} 1500w,{%- endif -%}
         {{ art | image_url }} {{ art.width }}w"
-      sizes="(min-width: 900px) 34vw, 66vw"
+      sizes="(min-width: 720px) 340px, 255px"
       alt="{{ art_alt | escape }}"
       width="{{ art.width }}"
       height="{{ art.height }}"
@@ -66,60 +148,74 @@
     {%- comment -%} touch-action : un doigt vertical fait défiler la page, un doigt de côté incline le tableau. {%- endcomment -%}
     <canvas
       data-gl
-      class="absolute inset-0 h-full w-full cursor-grab touch-pan-y opacity-0 transition-opacity duration-[450ms] active:cursor-grabbing motion-reduce:transition-none"
+      class="oeuvre-3d-gl cursor-grab touch-pan-y opacity-0 transition-opacity duration-[450ms] active:cursor-grabbing"
       role="img"
       aria-label="{{ 'sections.mma.perspective_preview_of' | t: title: product.title }}"
       aria-hidden="true">{{ 'sections.mma.perspective_canvas_caption' | t: title: product.title }}</canvas>
-    <div data-dims class="pointer-events-none absolute inset-0 text-main opacity-0" aria-hidden="true">
-      <div data-dim-width class="absolute h-0 border-t border-current font-roboto text-[12px] font-medium before:absolute before:-top-[5px] before:left-0 before:h-[9px] before:w-px before:bg-current after:absolute after:-top-[5px] after:right-0 after:h-[9px] after:w-px after:bg-current"><span class="absolute left-1/2 -translate-x-1/2 -translate-y-[125%] whitespace-nowrap rounded bg-secondary px-1.5 py-px"></span></div>
-      <div data-dim-height class="absolute w-0 border-l border-current font-roboto text-[12px] font-medium before:absolute before:-left-[5px] before:top-0 before:h-px before:w-[9px] before:bg-current after:absolute after:-left-[5px] after:bottom-0 after:h-px after:w-[9px] after:bg-current"><span class="absolute top-1/2 translate-x-2 -translate-y-1/2 whitespace-nowrap rounded bg-secondary px-1.5 py-px"></span></div>
+    <div data-dims class="oeuvre-3d-dims pointer-events-none text-main opacity-0" aria-hidden="true">
+      <div data-dim-width class="oeuvre-3d-dim-w absolute font-roboto text-[12px] font-medium"><span data-allow-empty class="absolute whitespace-nowrap rounded bg-[rgba(var(--color-secondary-rgb),0.95)] px-1.5 py-px"></span></div>
+      <div data-dim-height class="oeuvre-3d-dim-h absolute font-roboto text-[12px] font-medium"><span data-allow-empty class="absolute whitespace-nowrap rounded bg-[rgba(var(--color-secondary-rgb),0.95)]"></span></div>
     </div>
-    <p data-hint class="pointer-events-none absolute left-1/2 top-3 m-0 hidden -translate-x-1/2 whitespace-nowrap rounded-full bg-secondary px-2.5 py-[3px] text-[12px] font-medium text-main-80 transition-opacity duration-300 motion-reduce:transition-none">{{ 'sections.mma.oeuvre_3d_hint' | t }}</p>
-    <div data-tools class="absolute bottom-2.5 right-4 flex hidden gap-2">
-      <button type="button" data-back class="{{ tool_class }}">{{ 'sections.mma.oeuvre_3d_back' | t }}</button>
-      <button type="button" data-front class="{{ tool_class }}">{{ 'sections.mma.oeuvre_3d_front' | t }}</button>
-    </div>
-    {%- comment -%} Sans 3D : les autres photos, chargées seulement si on les demande, et les mêmes que la
-       galerie : à partir de start_from, ni l'image à plat, ni les contours blancs. Même navigation que le
-       carrousel de la fiche. Le fondu reste en animations réduites : c'est la décision 5, et la seule
-       transition de ce mode, d'où l'absence de motion-reduce sur ces images et sur la première. {%- endcomment -%}
-    <template data-photos>
-      {%- assign image_index = 0 -%}
-      {%- for media in product.media -%}
-        {%- if media.media_type == 'image' -%}
-          {%- assign image_index = image_index | plus: 1 -%}
-          {%- if image_index >= start_from and image_index != 2 -%}
-            {%- unless media.preview_image.src contains 'passe-partout' -%}
-              {%- assign photo_alt = alts[forloop.index0] | default: media.alt -%}
-              <img
-                class="absolute inset-0 h-full w-full object-contain opacity-0 transition-opacity duration-300"
-                src="{{ media.preview_image | image_url: width: 1100 }}"
-                srcset="{%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}
-                  {%- if media.preview_image.width >= 1100 -%}{{ media.preview_image | image_url: width: 1100 }} 1100w,{%- endif -%}
-                  {{ media.preview_image | image_url }} {{ media.preview_image.width }}w"
-                sizes="(min-width: 900px) 60vw, 100vw"
-                alt="{{ photo_alt | escape }}"
-                width="{{ media.preview_image.width }}"
-                height="{{ media.preview_image.height }}"
-                loading="eager"
-                decoding="async">
-            {%- endunless -%}
-          {%- endif -%}
+  </div>
+  <button type="button" data-front class="oeuvre-3d-front" inert>
+    <svg class="h-[15px] w-[15px]" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8a4.5 4.5 0 1 0 1.4-3.3"/><path d="M3.2 2.6v2.6h2.6"/></svg>
+    {{ 'sections.mma.oeuvre_3d_front' | t }}
+  </button>
+  {%- comment -%} Sans 3D : les autres photos, chargées seulement si on les demande, et les mêmes que la
+     galerie : à partir de start_from, ni l'image à plat, ni les contours blancs. Le fondu reste en
+     animations réduites : c'est la décision 5, et la seule transition de ce mode. {%- endcomment -%}
+  <template data-photos>
+    {%- assign image_index = 0 -%}
+    {%- for media in product.media -%}
+      {%- if media.media_type == 'image' -%}
+        {%- assign image_index = image_index | plus: 1 -%}
+        {%- if image_index >= start_from and image_index != 2 -%}
+          {%- unless media.preview_image.src contains 'passe-partout' -%}
+            {%- assign photo_alt = alts[forloop.index0] | default: media.alt -%}
+            <img
+              class="absolute inset-x-0 bottom-[72px] top-16 h-[calc(100%-136px)] w-full object-contain opacity-0 transition-opacity duration-300"
+              src="{{ media.preview_image | image_url: width: 1100 }}"
+              srcset="{%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}
+                {%- if media.preview_image.width >= 1100 -%}{{ media.preview_image | image_url: width: 1100 }} 1100w,{%- endif -%}
+                {{ media.preview_image | image_url }} {{ media.preview_image.width }}w"
+              sizes="100vw"
+              alt="{{ photo_alt | escape }}"
+              width="{{ media.preview_image.width }}"
+              height="{{ media.preview_image.height }}"
+              loading="eager"
+              decoding="async">
+          {%- endunless -%}
         {%- endif -%}
-      {%- endfor -%}
-    </template>
-    <div data-photo-nav class="absolute bottom-3 left-1/2 flex hidden h-[47px] -translate-x-1/2 items-center justify-center overflow-hidden rounded-full border-1 border-main bg-secondary">
-      <button type="button" data-previous class="h-full pl-5 pr-3 hover:bg-main-10 focus-visible:bg-main-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-main" aria-label="{{ 'sections.mma.oeuvre_3d_photo_previous' | t }}">
-        <span class="block rotate-90">{% render 'tw-icon-caret', width: '18' %}</span>
-      </button>
-      <span data-photo-count class="px-3"></span>
-      <button type="button" data-next class="h-full pl-3 pr-5 hover:bg-main-10 focus-visible:bg-main-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-main" aria-label="{{ 'sections.mma.oeuvre_3d_photo_next' | t }}">
-        <span class="block -rotate-90">{% render 'tw-icon-caret', width: '18' %}</span>
-      </button>
-    </div>
-    <figcaption class="sr-only">{{ 'sections.mma.perspective_figcaption' | t: title: product.title }}</figcaption>
-    <noscript>
-      <p class="sr-only">{{ 'sections.mma.perspective_noscript' | t: title: product.title }}</p>
-    </noscript>
-  </figure>
+      {%- endif -%}
+    {%- endfor -%}
+  </template>
+  <div data-photo-nav class="oeuvre-3d-photo-nav hidden">
+    <button type="button" data-previous class="h-full pl-3.5 pr-2 hover:bg-main-10 focus-visible:bg-main-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-main" aria-label="{{ 'sections.mma.oeuvre_3d_photo_previous' | t }}">
+      <span class="block rotate-90">{% render 'tw-icon-caret', width: '16' %}</span>
+    </button>
+    <span data-photo-count class="px-2 font-heading text-[13.5px] font-semibold tabular-nums"></span>
+    <button type="button" data-next class="h-full pl-2 pr-3.5 hover:bg-main-10 focus-visible:bg-main-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-main" aria-label="{{ 'sections.mma.oeuvre_3d_photo_next' | t }}">
+      <span class="block -rotate-90">{% render 'tw-icon-caret', width: '16' %}</span>
+    </button>
+  </div>
+  <p class="sr-only" data-live data-allow-empty aria-live="polite"></p>
+  <p class="sr-only">{{ 'sections.mma.perspective_figcaption' | t: title: product.title }}</p>
+  <noscript>
+    <p class="sr-only">{{ 'sections.mma.perspective_noscript' | t: title: product.title }}</p>
+  </noscript>
 </oeuvre-3d>
+{%- comment -%} La pilule d'achat, toujours visible, hors de la scène (une scène est un conteneur : un
+   enfant fixe y resterait collé). Elle ajoute au panier par le bloc d'achat de la fiche : même variante,
+   mêmes propriétés de ligne (assets/component-oeuvre-3d.js). Sur un ordinateur, en bas à droite, avec
+   le titre court de l'œuvre. {%- endcomment -%}
+<div data-oeuvre-3d-pill class="oeuvre-3d-pill" role="group" aria-label="{{ 'sections.mma.oeuvre_3d_buy' | t }}">
+  <span data-pill-title class="oeuvre-3d-pill-title">{{ short_title }}</span>
+  <span data-pill-price class="oeuvre-3d-pill-price">{{ price | money }}</span>
+  <button
+    type="button"
+    data-pill-buy
+    class="oeuvre-3d-buy"
+    data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+    data-template="{{ template.suffix }}"
+    data-product-id="{{ product.id }}">{{ 'products.product.add_to_cart' | t }}</button>
+</div>

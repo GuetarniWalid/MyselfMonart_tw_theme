@@ -390,12 +390,10 @@ class MainProductBlocks extends CollapsibleTab {
   connectedCallback() {
     super.connectedCallback();
 
-    if (this.buttonTemplate) {
-      // Fiche 3D : sous 900 px, le bouton flottant est la barre d'achat fixe (.buy-bar, input.css) et
-      // doit être là dès l'arrivée. Au-delà, il revient dès que le bouton de la fiche sort de l'écran.
-      const isBuyBar = this.hasAttribute('data-buy-bar');
-      if (isBuyBar) this.createBuyButton();
-      this.initObserver(isBuyBar ? this.blockBuyButton : this.section);
+    // Fiche 3D : la pilule d'achat de la scène (snippets/oeuvre-3d-stage.liquid) remplace le bouton
+    // flottant, et passe par onBuyButtonClick. Le gabarit reste : VariantPicker y range variante et prix.
+    if (this.buttonTemplate && !this.hasAttribute('data-buy-pill')) {
+      this.initObserver(this.section);
     }
 
     if (this.blockBuyButton) {

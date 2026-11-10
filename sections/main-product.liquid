@@ -22,12 +22,12 @@
 {%- capture artwork_kind -%}{% render 'artwork-kind', product: product, suffix: template.suffix %}{%- endcapture -%}
 {%- assign show_perspective = false -%}
 {%- if artwork_kind == 'toile' or is_poster -%}{%- assign show_perspective = true -%}{%- endif -%}
-{%- comment -%} Scène 3D à la place de la galerie (fiche-3d, ticket 07) : réglage du modèle de page, toiles
-   seulement pour l'instant. Il faut l'image à plat, media[1] ; sans elle, la galerie reste. Les modèles
-   painting et poster n'ont pas ce réglage : la valeur par défaut leur garde la galerie. {%- endcomment -%}
+{%- comment -%} Scène 3D à la place de la galerie (fiche-3d, tickets 07 et 14) : réglage du modèle de page,
+   pour les toiles et les posters (artwork-kind). Il faut l'image à plat, media[1] ; sans elle, la galerie
+   reste. Les modèles painting et poster n'ont pas ce réglage : la valeur par défaut leur garde la galerie. {%- endcomment -%}
 {%- assign stage_3d = false -%}
-{%- if section.settings.media_display == 'stage_3d' and artwork_kind == 'toile' and is_poster == false and product.media[1].media_type == 'image' -%}
-  {%- assign stage_3d = true -%}
+{%- if section.settings.media_display == 'stage_3d' and product.media[1].media_type == 'image' -%}
+  {%- if artwork_kind == 'toile' or artwork_kind == 'poster' -%}{%- assign stage_3d = true -%}{%- endif -%}
 {%- endif -%}
 
 {%- comment -%} La fiche pour la mesure (assets/posthog-tracking.js). Dans #MainContent : la bascule
@@ -50,13 +50,17 @@
   <script src="{{ 'product-twin-toggle.js' | asset_url }}" defer="defer"></script>
 {%- endif -%}
 
-<a class="px-4 py-2 opacity-0 focus-visible:opacity-100 absolute top-6 left-10 z-10 bg-secondary transition-colors duration-500" href="#ProductInfo-{{ section.id }}">
+{%- comment -%} Scène 3D : le lien d'évitement, invisible, ne prend pas le doigt posé sur la scène. {%- endcomment -%}
+<a class="px-4 py-2 opacity-0 focus-visible:opacity-100 absolute top-6 left-10 z-10 bg-secondary transition-colors duration-500{% if stage_3d %} pointer-events-none focus-visible:pointer-events-auto{% endif %}" href="#ProductInfo-{{ section.id }}">
   {{ "sections.main_product.accessibility.skip_to_product_info" | t }}
 </a>
 
 <div class="{% if stage_3d %}w-full{% else %}md:flex md:justify-center md:gap-6{% endif %}">
   {% if stage_3d %}
-    {%- comment -%} La scène est dans main-product-blocks, avec les options : voir plus bas. {%- endcomment -%}
+    {%- comment -%} La scène prend l'écran sous l'en-tête, ses options posées autour de l'œuvre ; la fiche suit
+       au défilement. La pilule d'achat est rendue avec elle. Le sélecteur de la fiche reste dans la page,
+       caché : les chips cochent ses radios (variante, prix, propriétés de ligne, événement de choix). {%- endcomment -%}
+    {% render 'oeuvre-3d-stage', product: product, start_from: section.settings.start_from_media %}
   {% elsif product.template_suffix == "tapestry" %}
     <tapestry-product-carousel>
       <div class="md:sticky 2md:top-[120px] relative md:max-w-[700px]">
@@ -286,21 +290,15 @@
       {%- endif -%}
     </main-product-carousel>
   {% endif %}
-  {%- comment -%} Scène 3D : sur téléphone elle reste à l'écran le temps des options, et pas sur toute la fiche.
-     Un élément collant s'arrête au bout de son parent : ce parent la réunit donc aux blocs qui vont jusqu'au
-     sélecteur. Sur ordinateur, 2md:contents efface ce parent et tout entre dans la grille : la scène à gauche,
-     sur toute la hauteur, les blocs à droite. data-buy-bar : voir assets/main-product.js. {%- endcomment -%}
+  {%- comment -%} Scène 3D : data-buy-pill : la pilule d'achat de la scène remplace le bouton flottant
+     (assets/main-product.js). {%- endcomment -%}
   <main-product-blocks
-    class="{% if stage_3d %}block 2md:grid 2md:grid-cols-[minmax(0,1fr)_minmax(0,32rem)] 2md:gap-x-8{% else %}grow{% endif %}"
+    class="{% if stage_3d %}block{% else %}grow{% endif %}"
     id="ProductInfo-{{ section.id }}"
-    data-layout="{{ template.suffix }}"{% if stage_3d %} data-buy-bar{% endif %}>
-    {%- assign stage_group_open = false -%}
-    {%- if stage_3d -%}
-      {%- assign stage_group_open = true -%}
-      <div class="2md:contents">
-      {% render 'oeuvre-3d-stage', product: product, start_from: section.settings.start_from_media %}
-    {%- endif -%}
-    <div class="max-w-lg sm:px-0 mx-auto 2md:mx-0 my-4{% if stage_3d %} 2md:col-start-2{% endif %}">
+    data-layout="{{ template.suffix }}"{% if stage_3d %} data-buy-pill{% endif %}>
+    {%- comment -%} Scène 3D : les blocs suivent sous la scène, au milieu. Les autres fiches gardent leur
+       balisage à l'identique, espaces compris. {%- endcomment -%}
+    <div class="{% if stage_3d %}max-w-lg sm:px-0 mx-auto my-4{% else %}max-w-lg sm:px-0 mx-auto 2md:mx-0 my-4{% endif %}">
       {%- for block in section.blocks -%}
         {%- case block.type -%}
           {%- when '@app' -%}
@@ -326,6 +324,9 @@
               </div>
             {%- endif -%}
           {%- when 'variant_picker' -%}
+            {%- comment -%} Scène 3D : les options sont les chips de la scène ; le sélecteur reste, caché, et tient
+               la variante, l'adresse et les propriétés de ligne (assets/component-oeuvre-3d.js). {%- endcomment -%}
+            {%- if stage_3d -%}<div class="hidden" data-oeuvre-3d-picker>{%- endif -%}
             {%- comment -%} Bascule Poster/Toile au-dessus de TOUTES les variantes (si jumeau lié). {%- endcomment -%}
             {%- if section.settings.enable_format_toggle -%}
               {% render 'product-format-toggle', product: product %}
@@ -339,22 +340,22 @@
                 , product: product
                 , block: block %}
             {% endif %}
+            {%- if stage_3d -%}</div>{%- endif -%}
           {%- when 'buy' -%}
             {%- comment -%} Variante des deux boutons d'achat = celle que montrent le sélecteur et le prix
                (selected_or_first_available_variant). Avec first_available_variant, un lien ?variant=
                (Google Shopping, Pinterest, e-mails) affichait « Avec cadre » et son prix, mais le clic
                ajoutait la 1re variante du produit : « Sans cadre », moins chère. {%- endcomment -%}
-            {%- comment -%} Scène 3D : sous 900 px, c'est la barre fixe qui achète. Ce bouton reste caché mais
-               garde la variante et le prix à jour. La barre montre toujours le prix, que `float` retire sur
-               les petits écrans. Pas de reflet glass-anim : il anime `right`, ce qui compte comme un décalage
-               pour un bouton visible à l'arrivée, et ici les deux le sont. {%- endcomment -%}
+            {%- comment -%} Scène 3D : c'est la pilule de la scène qui achète, par ce bloc (même variante, mêmes
+               propriétés de ligne). Le bloc reste caché, mais garde la variante et le prix à jour ; le gabarit
+               du bouton flottant aussi, où VariantPicker range variante et prix (aucun bouton flottant n'en
+               naît, voir data-buy-pill). {%- endcomment -%}
             {%- assign float_hides_price = true -%}
             {%- assign buy_button_classes = 'glass-anim mb-3' -%}
             {%- if stage_3d -%}
-              {%- assign float_hides_price = false -%}
-              {%- assign buy_button_classes = 'hidden 2md:block mb-3' -%}
+              {%- assign buy_button_classes = 'mb-3' -%}
             {%- endif -%}
-            <div class="relative {% if stage_3d %}mt-4{% else %}mt-10{% endif %} {{ block.settings.margin_bottom }} mx-4">
+            <div class="relative {% if stage_3d %}hidden{% else %}mt-10{% endif %} {{ block.settings.margin_bottom }} mx-4">
               <button
                 class="buy-button cart-button {{ buy_button_classes }}"
                 data-variant-id="{{ product.selected_or_first_available_variant.id }}"
@@ -384,7 +385,7 @@
               {% endif %}
               <template id="float-buy-button">
                 <button
-                  class="float-buy-button{% if stage_3d %} buy-bar{% endif %} shadow-neu-lg hover:shadow-neu-md cart-button fixed bottom-3 justify-around left-4 2xs:gap-5 md:left-1/2 md:gap-6 w-[100px] md:bottom-6 mobile-mini:max-w-[62%] max-w-[70%] transition-colors duration-500 scale-0{% unless stage_3d %} glass-anim{% endunless %} z-20"
+                  class="float-buy-button shadow-neu-lg hover:shadow-neu-md cart-button fixed bottom-3 justify-around left-4 2xs:gap-5 md:left-1/2 md:gap-6 w-[100px] md:bottom-6 mobile-mini:max-w-[62%] max-w-[70%] transition-colors duration-500 scale-0{% unless stage_3d %} glass-anim{% endunless %} z-20"
                   data-variant-id="{{ product.selected_or_first_available_variant.id }}"
                   data-template="{{ template.suffix }}"
                   data-product-id="{{ product.id }}">
@@ -703,13 +704,9 @@
                 }
             {% endcapture %}
         {%- endcase -%}
-        {%- if stage_group_open and block.type == 'variant_picker' -%}
-          {%- assign stage_group_open = false -%}
-          </div></div><div class="max-w-lg sm:px-0 mx-auto 2md:mx-0 mb-4 2md:col-start-2">
-        {%- endif -%}
       {%- endfor -%}
     </div>
-    {%- if stage_group_open -%}</div>{%- endif -%}
+    {%- comment -%} Fin des blocs (même balisage qu'avant la scène 3D, espaces compris). {%- endcomment -%}
   </main-product-blocks>
 </div>
 {%- liquid

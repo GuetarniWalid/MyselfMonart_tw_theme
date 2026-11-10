@@ -68,13 +68,59 @@ test('la lumière du profil arrive au cadre : moins dans les creux, pleine sur l
 test('la caisse américaine a un dos : le profil se referme derrière la toile', () => {
   const f = FRAME_PROFILE.toile
   const profile = frameProfile('toile', f)
-  const [first, last] = [profile[0], profile[profile.length - 1]]
-  assert.equal(first[0], last[0])
-  assert.equal(first[1], last[1])
+  // Le dos remonte au fond sous le bord de la toile, et le fond passe dessous : la caisse est fermée.
+  const last = profile[profile.length - 1]
+  assert.deepEqual(last.slice(0, 2), [-f.gap, f.floor])
+  assert.ok(profile[0][1] === f.floor && profile[1][1] === f.floor, 'le profil part du fond')
+  assert.ok(profile[0][0] <= last[0] && profile[1][0] >= last[0], 'le dos retombe sur le fond')
   const { normal } = frameRing({ hw: 15, hh: 20, profile })
   let rear = 0
   for (let i = 2; i < normal.length; i += 3) if (normal[i] < -0.99) rear++
   assert.ok(rear >= 16, 'une face tournée vers le mur sur les quatre baguettes')
+})
+
+/* Retour du coordinateur sur la version 17 (09/11) : dans le gros plan sur le jour, un petit triangle
+   clair laissait voir le mur à l'angle. Le fond de la caisse s'arrêtait au bord carré de la toile, dont
+   l'angle est arrondi (0,3 cm). Il passe désormais 0,3 cm sous la toile. */
+const inTriangle = ([x, y], { a, b, c }) => {
+  const side = (p, q) => (q[0] - p[0]) * (y - p[1]) - (q[1] - p[1]) * (x - p[0])
+  const s = [side(a, b), side(b, c), side(c, a)]
+  return s.every((v) => v >= -1e-9) || s.every((v) => v <= 1e-9)
+}
+
+test('le fond de la caisse passe sous l’angle arrondi de la toile : plus de mur visible à l’angle', () => {
+  const f = FRAME_PROFILE.toile
+  for (const [W, H] of [[30, 40], [75, 100]]) {
+    const ring = frameRing({ hw: W / 2 + f.gap, hh: H / 2 + f.gap, profile: frameProfile('toile', f) })
+    // Positions en Float32Array : 0,6 cm y vaut 0,600000024.
+    const floor = triangles(ring).filter((t) => [t.a, t.b, t.c].every((p) => Math.abs(p[2] - f.floor) < 1e-5) && t.normal[2] > 0.99)
+    assert.ok(floor.length > 0, 'le fond de la caisse existe')
+    // Entre l'arc de l'angle arrondi (rayon 0,3 cm) et le coin carré, sur la diagonale, aux quatre angles.
+    const r = 0.3
+    for (const [sx, sy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) {
+      for (const k of [0.05, 0.5, 0.95]) {
+        const from = [W / 2 - r + r / Math.SQRT2, H / 2 - r + r / Math.SQRT2]
+        const point = [sx * (from[0] + (W / 2 - from[0]) * k), sy * (from[1] + (H / 2 - from[1]) * k)]
+        assert.ok(floor.some((t) => inTriangle(point, t)), `${W} × ${H} : trou en ${point.map((v) => v.toFixed(3))}`)
+      }
+    }
+  }
+})
+
+test('le jour, la lèvre, la face et le dos de la caisse ne bougent pas', () => {
+  const f = FRAME_PROFILE.toile
+  const c = 0.08
+  assert.deepEqual(frameProfile('toile', f).slice(1), [
+    [-f.gap, f.floor, 0.3],
+    [0, f.floor, 0.45],
+    [0, f.depth - c, 0.9],
+    [c, f.depth],
+    [f.face - c, f.depth],
+    [f.face, f.depth - c],
+    [f.face, 0],
+    [-f.gap, 0],
+    [-f.gap, f.floor],
+  ])
 })
 
 test('la toile laisse son dos ouvert au châssis ; la feuille de papier reste fermée', () => {

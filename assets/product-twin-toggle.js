@@ -88,6 +88,17 @@
 
         // 1) Charger les scripts que la fiche jumelle exige et qui manquent (perspective-canvas, like…).
         ensureScripts(newMain);
+        // 1 bis) Fiche 3D (assets/component-oeuvre-3d.js) : la scène en cours passe dans la fiche jumelle à
+        //    la place de la sienne, avec sa 3D (l'acte de la bascule est déjà parti), sans la recharger. Elle
+        //    prend les données de l'autre (adopt) ; un repère garde sa place pendant le remplacement.
+        const liveStage = main.querySelector('oeuvre-3d');
+        const nextStage = newMain.querySelector('oeuvre-3d');
+        let stageMark = null;
+        if (liveStage && nextStage && typeof liveStage.adopt === 'function') {
+          liveStage.adopt(nextStage);
+          stageMark = doc.createComment('oeuvre-3d');
+          nextStage.replaceWith(stageMark);
+        }
         // 2) Remplacer le CONTENU de #MainContent (wrapper conservé). On DÉPLACE directement les nœuds issus
         //    de DOMParser (document sans browsing context -> custom elements NON construits). Surtout PAS
         //    innerHTML NI importNode : tous deux construisent les <painting-variant-picker> TROP TÔT (parse
@@ -99,6 +110,7 @@
         //    Les <script src> hérités de DOMParser sont « already started » -> ils NE s'exécutent PAS (aucun
         //    customElements.define rejoué). disconnectedCallback (teardown WebGL) tiré sur l'ancien contenu.
         main.replaceChildren(...newMain.childNodes);
+        if (stageMark) stageMark.replaceWith(liveStage);
         // 3) Options poster (cadre/couleur + contour blanc) : reset du drapeau pp + ré-init idempotente.
         document.body.classList.remove('poster-pp-on');
         if (typeof window.mmaInitPosterOptions === 'function') window.mmaInitPosterOptions();

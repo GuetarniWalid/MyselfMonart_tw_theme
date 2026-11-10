@@ -148,3 +148,9 @@ test('quitter le plan de la taille efface la cote', () => {
   director.choose('front', toile('60x80'), LATER)
   assert.equal(director.view(2 * LATER, SCREENS[0]).dims.opacity, 0)
 })
+
+test('le mur neutre retient le plus grand format, en portrait, en paysage et en carré', () => {
+  assert.deepEqual(neutralRoom(PORTRAIT).largest, { width: 90, height: 120 })
+  assert.deepEqual(neutralRoom(LANDSCAPE).largest, { width: 120, height: 90 })
+  assert.deepEqual(neutralRoom(SQUARE).largest, { width: 100, height: 100 })
+})

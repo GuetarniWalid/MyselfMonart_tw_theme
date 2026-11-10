@@ -1,0 +1,914 @@
+{
+ "relevé": "05/11/2026, fiches en ligne du Bonsaï",
+ "toile": {
+  "material": "toile",
+  "url": "/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant",
+  "sizes": [
+   "30x40 cm",
+   "60x80 cm",
+   "75x100 cm",
+   "90x120 cm"
+  ],
+  "borders": [
+   [
+    "Bordure blanche",
+    "bordure-blanche"
+   ],
+   [
+    "Bordure noire",
+    "bordure-noire"
+   ],
+   [
+    "Bordure étirée",
+    "bordure-etiree"
+   ],
+   [
+    "Bordure miroir",
+    "bordure-moroir"
+   ],
+   [
+    "Bordure pliée",
+    "bordure-pliee"
+   ]
+  ],
+  "frames": [
+   [
+    "Sans cadre",
+    "sans-cadre"
+   ],
+   [
+    "Cadre blanc",
+    "cadre-blanc"
+   ],
+   [
+    "Cadre noir Mat",
+    "cadre-noir-mat"
+   ],
+   [
+    "Cadre argent ancien",
+    "cadre-argent-ancien"
+   ],
+   [
+    "Cadre chêne clair",
+    "cadre-chene-clair"
+   ],
+   [
+    "Cadre noyer",
+    "cadre-noyer"
+   ]
+  ],
+  "variants": [
+   [
+    54403687874907,
+    "30x40 cm",
+    "Bordure blanche",
+    "Sans cadre",
+    6250,
+    true
+   ],
+   [
+    54403687907675,
+    "30x40 cm",
+    "Bordure blanche",
+    "Cadre blanc",
+    10250,
+    true
+   ],
+   [
+    54403687940443,
+    "30x40 cm",
+    "Bordure blanche",
+    "Cadre noir Mat",
+    10250,
+    true
+   ],
+   [
+    54403687973211,
+    "30x40 cm",
+    "Bordure blanche",
+    "Cadre argent ancien",
+    10750,
+    true
+   ],
+   [
+    54403688005979,
+    "30x40 cm",
+    "Bordure blanche",
+    "Cadre chêne clair",
+    11250,
+    true
+   ],
+   [
+    54403688038747,
+    "30x40 cm",
+    "Bordure blanche",
+    "Cadre noyer",
+    11250,
+    true
+   ],
+   [
+    54403688071515,
+    "30x40 cm",
+    "Bordure noire",
+    "Sans cadre",
+    6450,
+    true
+   ],
+   [
+    54403688104283,
+    "30x40 cm",
+    "Bordure noire",
+    "Cadre blanc",
+    10450,
+    true
+   ],
+   [
+    54403688137051,
+    "30x40 cm",
+    "Bordure noire",
+    "Cadre noir Mat",
+    10450,
+    true
+   ],
+   [
+    54403688169819,
+    "30x40 cm",
+    "Bordure noire",
+    "Cadre argent ancien",
+    10950,
+    true
+   ],
+   [
+    54403688202587,
+    "30x40 cm",
+    "Bordure noire",
+    "Cadre chêne clair",
+    11450,
+    true
+   ],
+   [
+    54403688235355,
+    "30x40 cm",
+    "Bordure noire",
+    "Cadre noyer",
+    11450,
+    true
+   ],
+   [
+    54403688268123,
+    "30x40 cm",
+    "Bordure étirée",
+    "Sans cadre",
+    6650,
+    true
+   ],
+   [
+    54403688300891,
+    "30x40 cm",
+    "Bordure étirée",
+    "Cadre blanc",
+    10650,
+    true
+   ],
+   [
+    54403688333659,
+    "30x40 cm",
+    "Bordure étirée",
+    "Cadre noir Mat",
+    10650,
+    true
+   ],
+   [
+    54403688366427,
+    "30x40 cm",
+    "Bordure étirée",
+    "Cadre argent ancien",
+    11150,
+    true
+   ],
+   [
+    54403688399195,
+    "30x40 cm",
+    "Bordure étirée",
+    "Cadre chêne clair",
+    11650,
+    true
+   ],
+   [
+    54403688431963,
+    "30x40 cm",
+    "Bordure étirée",
+    "Cadre noyer",
+    11650,
+    true
+   ],
+   [
+    54403688464731,
+    "30x40 cm",
+    "Bordure miroir",
+    "Sans cadre",
+    6850,
+    true
+   ],
+   [
+    54403688497499,
+    "30x40 cm",
+    "Bordure miroir",
+    "Cadre blanc",
+    10850,
+    true
+   ],
+   [
+    54403688530267,
+    "30x40 cm",
+    "Bordure miroir",
+    "Cadre noir Mat",
+    10850,
+    true
+   ],
+   [
+    54403688563035,
+    "30x40 cm",
+    "Bordure miroir",
+    "Cadre argent ancien",
+    11350,
+    true
+   ],
+   [
+    54403688595803,
+    "30x40 cm",
+    "Bordure miroir",
+    "Cadre chêne clair",
+    11850,
+    true
+   ],
+   [
+    54403688628571,
+    "30x40 cm",
+    "Bordure miroir",
+    "Cadre noyer",
+    11850,
+    true
+   ],
+   [
+    54403688661339,
+    "30x40 cm",
+    "Bordure pliée",
+    "Sans cadre",
+    7050,
+    true
+   ],
+   [
+    54403688694107,
+    "30x40 cm",
+    "Bordure pliée",
+    "Cadre blanc",
+    11050,
+    true
+   ],
+   [
+    54403688726875,
+    "30x40 cm",
+    "Bordure pliée",
+    "Cadre noir Mat",
+    11050,
+    true
+   ],
+   [
+    54403688759643,
+    "30x40 cm",
+    "Bordure pliée",
+    "Cadre argent ancien",
+    11550,
+    true
+   ],
+   [
+    54403688792411,
+    "30x40 cm",
+    "Bordure pliée",
+    "Cadre chêne clair",
+    12050,
+    true
+   ],
+   [
+    54403688825179,
+    "30x40 cm",
+    "Bordure pliée",
+    "Cadre noyer",
+    12050,
+    true
+   ],
+   [
+    54403688857947,
+    "60x80 cm",
+    "Bordure blanche",
+    "Sans cadre",
+    9400,
+    true
+   ],
+   [
+    54403688890715,
+    "60x80 cm",
+    "Bordure blanche",
+    "Cadre blanc",
+    13400,
+    true
+   ],
+   [
+    54403688923483,
+    "60x80 cm",
+    "Bordure blanche",
+    "Cadre noir Mat",
+    13400,
+    true
+   ],
+   [
+    54403688956251,
+    "60x80 cm",
+    "Bordure blanche",
+    "Cadre argent ancien",
+    13900,
+    true
+   ],
+   [
+    54403688989019,
+    "60x80 cm",
+    "Bordure blanche",
+    "Cadre chêne clair",
+    14400,
+    true
+   ],
+   [
+    54403689021787,
+    "60x80 cm",
+    "Bordure blanche",
+    "Cadre noyer",
+    14400,
+    true
+   ],
+   [
+    54403689054555,
+    "60x80 cm",
+    "Bordure noire",
+    "Sans cadre",
+    9600,
+    true
+   ],
+   [
+    54403689087323,
+    "60x80 cm",
+    "Bordure noire",
+    "Cadre blanc",
+    13600,
+    true
+   ],
+   [
+    54403689120091,
+    "60x80 cm",
+    "Bordure noire",
+    "Cadre noir Mat",
+    13600,
+    true
+   ],
+   [
+    54403689152859,
+    "60x80 cm",
+    "Bordure noire",
+    "Cadre argent ancien",
+    14100,
+    true
+   ],
+   [
+    54403689185627,
+    "60x80 cm",
+    "Bordure noire",
+    "Cadre chêne clair",
+    14600,
+    true
+   ],
+   [
+    54403689218395,
+    "60x80 cm",
+    "Bordure noire",
+    "Cadre noyer",
+    14600,
+    true
+   ],
+   [
+    54403689251163,
+    "60x80 cm",
+    "Bordure étirée",
+    "Sans cadre",
+    9800,
+    true
+   ],
+   [
+    54403689283931,
+    "60x80 cm",
+    "Bordure étirée",
+    "Cadre blanc",
+    13800,
+    true
+   ],
+   [
+    54403689316699,
+    "60x80 cm",
+    "Bordure étirée",
+    "Cadre noir Mat",
+    13800,
+    true
+   ],
+   [
+    54403689349467,
+    "60x80 cm",
+    "Bordure étirée",
+    "Cadre argent ancien",
+    14300,
+    true
+   ],
+   [
+    54403689382235,
+    "60x80 cm",
+    "Bordure étirée",
+    "Cadre chêne clair",
+    14800,
+    true
+   ],
+   [
+    54403689415003,
+    "60x80 cm",
+    "Bordure étirée",
+    "Cadre noyer",
+    14800,
+    true
+   ],
+   [
+    54403689447771,
+    "60x80 cm",
+    "Bordure miroir",
+    "Sans cadre",
+    10000,
+    true
+   ],
+   [
+    54403689480539,
+    "60x80 cm",
+    "Bordure miroir",
+    "Cadre blanc",
+    14000,
+    true
+   ],
+   [
+    54403689513307,
+    "60x80 cm",
+    "Bordure miroir",
+    "Cadre noir Mat",
+    14000,
+    true
+   ],
+   [
+    54403689546075,
+    "60x80 cm",
+    "Bordure miroir",
+    "Cadre argent ancien",
+    14500,
+    true
+   ],
+   [
+    54403689578843,
+    "60x80 cm",
+    "Bordure miroir",
+    "Cadre chêne clair",
+    15000,
+    true
+   ],
+   [
+    54403689611611,
+    "60x80 cm",
+    "Bordure miroir",
+    "Cadre noyer",
+    15000,
+    true
+   ],
+   [
+    54403689644379,
+    "60x80 cm",
+    "Bordure pliée",
+    "Sans cadre",
+    10200,
+    true
+   ],
+   [
+    54403689677147,
+    "60x80 cm",
+    "Bordure pliée",
+    "Cadre blanc",
+    14200,
+    true
+   ],
+   [
+    54403689709915,
+    "60x80 cm",
+    "Bordure pliée",
+    "Cadre noir Mat",
+    14200,
+    true
+   ],
+   [
+    54403689742683,
+    "60x80 cm",
+    "Bordure pliée",
+    "Cadre argent ancien",
+    14700,
+    true
+   ],
+   [
+    54403689775451,
+    "60x80 cm",
+    "Bordure pliée",
+    "Cadre chêne clair",
+    15200,
+    true
+   ],
+   [
+    54403689808219,
+    "60x80 cm",
+    "Bordure pliée",
+    "Cadre noyer",
+    15200,
+    true
+   ],
+   [
+    54403689840987,
+    "75x100 cm",
+    "Bordure blanche",
+    "Sans cadre",
+    13650,
+    true
+   ],
+   [
+    54403689873755,
+    "75x100 cm",
+    "Bordure blanche",
+    "Cadre blanc",
+    17650,
+    true
+   ],
+   [
+    54403689906523,
+    "75x100 cm",
+    "Bordure blanche",
+    "Cadre noir Mat",
+    17650,
+    true
+   ],
+   [
+    54403689939291,
+    "75x100 cm",
+    "Bordure blanche",
+    "Cadre argent ancien",
+    18150,
+    true
+   ],
+   [
+    54403689972059,
+    "75x100 cm",
+    "Bordure blanche",
+    "Cadre chêne clair",
+    18650,
+    true
+   ],
+   [
+    54403690004827,
+    "75x100 cm",
+    "Bordure blanche",
+    "Cadre noyer",
+    18650,
+    true
+   ],
+   [
+    54403690037595,
+    "75x100 cm",
+    "Bordure noire",
+    "Sans cadre",
+    13850,
+    true
+   ],
+   [
+    54403690070363,
+    "75x100 cm",
+    "Bordure noire",
+    "Cadre blanc",
+    17850,
+    true
+   ],
+   [
+    54403690103131,
+    "75x100 cm",
+    "Bordure noire",
+    "Cadre noir Mat",
+    17850,
+    true
+   ],
+   [
+    54403690135899,
+    "75x100 cm",
+    "Bordure noire",
+    "Cadre argent ancien",
+    18350,
+    true
+   ],
+   [
+    54403690168667,
+    "75x100 cm",
+    "Bordure noire",
+    "Cadre chêne clair",
+    18850,
+    true
+   ],
+   [
+    54403690201435,
+    "75x100 cm",
+    "Bordure noire",
+    "Cadre noyer",
+    18850,
+    true
+   ],
+   [
+    54403690234203,
+    "75x100 cm",
+    "Bordure étirée",
+    "Sans cadre",
+    14050,
+    true
+   ],
+   [
+    54403690266971,
+    "75x100 cm",
+    "Bordure étirée",
+    "Cadre blanc",
+    18050,
+    true
+   ],
+   [
+    54403690299739,
+    "75x100 cm",
+    "Bordure étirée",
+    "Cadre noir Mat",
+    18050,
+    true
+   ],
+   [
+    54403690332507,
+    "75x100 cm",
+    "Bordure étirée",
+    "Cadre argent ancien",
+    18550,
+    true
+   ],
+   [
+    54403690365275,
+    "75x100 cm",
+    "Bordure étirée",
+    "Cadre chêne clair",
+    19050,
+    true
+   ],
+   [
+    54403690398043,
+    "75x100 cm",
+    "Bordure étirée",
+    "Cadre noyer",
+    19050,
+    true
+   ],
+   [
+    54403690430811,
+    "75x100 cm",
+    "Bordure miroir",
+    "Sans cadre",
+    14250,
+    true
+   ],
+   [
+    54403690463579,
+    "75x100 cm",
+    "Bordure miroir",
+    "Cadre blanc",
+    18250,
+    true
+   ],
+   [
+    54403690496347,
+    "75x100 cm",
+    "Bordure miroir",
+    "Cadre noir Mat",
+    18250,
+    true
+   ],
+   [
+    54403690529115,
+    "75x100 cm",
+    "Bordure miroir",
+    "Cadre argent ancien",
+    18750,
+    true
+   ],
+   [
+    54403690561883,
+    "75x100 cm",
+    "Bordure miroir",
+    "Cadre chêne clair",
+    19250,
+    true
+   ],
+   [
+    54403690594651,
+    "75x100 cm",
+    "Bordure miroir",
+    "Cadre noyer",
+    19250,
+    true
+   ],
+   [
+    54403690627419,
+    "75x100 cm",
+    "Bordure pliée",
+    "Sans cadre",
+    14450,
+    true
+   ],
+   [
+    54403690660187,
+    "75x100 cm",
+    "Bordure pliée",
+    "Cadre blanc",
+    18450,
+    true
+   ],
+   [
+    54403690692955,
+    "75x100 cm",
+    "Bordure pliée",
+    "Cadre noir Mat",
+    18450,
+    true
+   ],
+   [
+    54403690725723,
+    "75x100 cm",
+    "Bordure pliée",
+    "Cadre argent ancien",
+    18950,
+    true
+   ],
+   [
+    54403690758491,
+    "75x100 cm",
+    "Bordure pliée",
+    "Cadre chêne clair",
+    19450,
+    true
+   ],
+   [
+    54403690791259,
+    "75x100 cm",
+    "Bordure pliée",
+    "Cadre noyer",
+    19450,
+    true
+   ],
+   [
+    54403690824027,
+    "90x120 cm",
+    "Bordure blanche",
+    "Sans cadre",
+    19900,
+    true
+   ],
+   [
+    54403690856795,
+    "90x120 cm",
+    "Bordure noire",
+    "Sans cadre",
+    20100,
+    true
+   ],
+   [
+    54403690889563,
+    "90x120 cm",
+    "Bordure étirée",
+    "Sans cadre",
+    20300,
+    true
+   ],
+   [
+    54403690922331,
+    "90x120 cm",
+    "Bordure miroir",
+    "Sans cadre",
+    20500,
+    true
+   ],
+   [
+    54403690955099,
+    "90x120 cm",
+    "Bordure pliée",
+    "Sans cadre",
+    20700,
+    true
+   ]
+  ]
+ },
+ "poster": {
+  "material": "poster",
+  "url": "/products/poster-bonsai-zen-patience-vegetale-et-harmonie-silencieuse",
+  "sizes": [
+   "30x40 cm",
+   "60x80 cm",
+   "75x100 cm",
+   "90x120 cm"
+  ],
+  "frameModes": [
+   "Sans cadre",
+   "Avec cadre"
+  ],
+  "frameColors": [
+   [
+    "Cadre blanc",
+    "cadre-blanc-1"
+   ],
+   [
+    "Cadre noir Mat",
+    "cadre-noir-mat-1"
+   ],
+   [
+    "Cadre chêne clair",
+    "cadre-chene-clair-1"
+   ],
+   [
+    "Cadre noyer",
+    "cadre-noyer-1"
+   ]
+  ],
+  "passe": true,
+  "variants": [
+   [
+    54403718349147,
+    "30x40 cm",
+    "Sans cadre",
+    null,
+    2490,
+    true
+   ],
+   [
+    54403849027931,
+    "60x80 cm",
+    "Sans cadre",
+    null,
+    4490,
+    true
+   ],
+   [
+    54403849060699,
+    "75x100 cm",
+    "Sans cadre",
+    null,
+    6490,
+    true
+   ],
+   [
+    54403849093467,
+    "90x120 cm",
+    "Sans cadre",
+    null,
+    7190,
+    true
+   ],
+   [
+    54403849126235,
+    "30x40 cm",
+    "Avec cadre",
+    null,
+    4790,
+    true
+   ],
+   [
+    54403849159003,
+    "60x80 cm",
+    "Avec cadre",
+    null,
+    9490,
+    true
+   ],
+   [
+    54403849191771,
+    "75x100 cm",
+    "Avec cadre",
+    null,
+    15990,
+    true
+   ]
+  ]
+ }
+}

@@ -1,0 +1,349 @@
+// Tests de la mise en scène de la taille (la femme à côté du tableau) de assets/oeuvre-3d-engine.js,
+// repris du prototype (version 26, ticket 12), sur les quatre tailles du portrait 3:4.
+// Lancer : node --test scripts/oeuvre-3d-poses.test.cjs  (lanceur intégré de Node, sans dépendance)
+const test = require('node:test')
+const assert = require('node:assert/strict')
+const { BEYOND, SWITCH, createDirector, paintingCorners, posePlacement, posesFor } = require('../assets/oeuvre-3d-engine.js')
+
+// La pièce réglée à la main au prototype : la photo et le mur sont les vrais, pour que ces tests
+// restent ceux du ticket 02 (lumière venant de la gauche, canapé, cadrage du recul).
+const ROOM = {
+  image: 'piece-salon-canape.jpg',
+  photo: { left: 0, right: 2400 / 6.6, bottom: -(1350 - 1216) / 6.6, top: 1216 / 6.6 },
+  hang: { x: 121, minBottom: 111, center: 130 },
+  view: { bottom: -12, height: 250 },
+  light: [-0.5, 0.45, 0.74],
+  wall: [233, 233, 232],
+  wallSlope: -0.00023,
+}
+
+const SIZES = ['30x40', '60x80', '75x100', '90x120']
+const POSES = posesFor(SIZES)
+// La boutique ne vend pas le 90 × 120 encadré.
+const canFrame = (size) => size !== '90x120'
+
+/* Mise en scène de la taille avec la femme (choix de Walid du 10/11) : la photo de la taille en
+   cours remplace le salon, le tableau 3D est posé sur le rectangle de la photo, à la vraie échelle
+   (16 px/cm), et le cadrage tient la femme et le tableau au-dessus de la rangée ouverte. */
+
+const TOILE = { material: 'toile', size: '30x40', border: 'blanche', frame: 'sans', passe: false }
+const LATER = 5000
+// Formes réelles de la zone au-dessus de la rangée ouverte : 390 × 844, 375 × 667, 375 × 553, 1440 × 820,
+// et le coin qu'y prend le bouton « De face », en haut à gauche (part de la hauteur et de la largeur).
+const ZONES = [0.68, 0.92, 1.07, 2.53]
+const INSETS = [
+  { top: 62 / 572, left: 111 / 390 }, { top: 62 / 409, left: 111 / 375 },
+  { top: 62 / 351, left: 111 / 375 }, { top: 74 / 569, left: 123 / 1440 },
+]
+
+const unit = (v) => { const n = Math.hypot(...v); return v.map((c) => c / n) }
+const sub = (a, b) => a.map((v, i) => v - b[i])
+const dot = (a, b) => a.reduce((s, v, i) => s + v * b[i], 0)
+const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]
+
+function basis(camera) {
+  const forward = unit(sub(camera.target, camera.position))
+  const right = unit(cross(forward, [0, 1, 0]))
+  return { forward, right, up: cross(right, forward), t: Math.tan(camera.fovY / 2) }
+}
+// Place d'un point à l'écran, de -1 à 1 sur chaque axe.
+function project(camera, aspect, point) {
+  const { forward, right, up, t } = basis(camera)
+  const rel = sub(point, camera.position)
+  const depth = dot(rel, forward)
+  return { x: dot(rel, right) / (depth * t * aspect), y: dot(rel, up) / (depth * t), depth }
+}
+// Point du mur (z = 0) vu à la place (sx, sy) de l'écran.
+function onWall(camera, aspect, sx, sy) {
+  const { forward, right, up, t } = basis(camera)
+  const ray = forward.map((f, k) => f + right[k] * sx * t * aspect + up[k] * sy * t)
+  const reach = -camera.position[2] / ray[2]
+  return [camera.position[0] + ray[0] * reach, camera.position[1] + ray[1] * reach]
+}
+const inside = (s, label) => assert.ok(Math.abs(s.x) <= 1 + 1e-9 && Math.abs(s.y) <= 1 + 1e-9, `${label} hors de l'écran (${s.x.toFixed(2)}, ${s.y.toFixed(2)})`)
+
+// La page donne au directeur une forme pour la vue de face, et celle de l'écran réel.
+function sizeView(product, screen, aspect = screen, inset = undefined, poses = POSES) {
+  const director = createDirector({ room: ROOM, poses, product: TOILE })
+  director.choose('size', product, 0)
+  return director.view(LATER, aspect, screen, inset)
+}
+const near = (actual, expected, label, tolerance = 1e-6) =>
+  assert.ok(Math.abs(actual - expected) <= tolerance, `${label} : ${actual} au lieu de ${expected}`)
+
+test('choisir une taille montre la femme de cette taille, seule, à la place du salon', () => {
+  for (const size of SIZES) {
+    const view = sizeView({ ...TOILE, size }, 0.92)
+    assert.equal(view.shot, 'room')
+    assert.equal(view.room, 1)
+    assert.deepEqual(view.poses, SIZES.map((s) => (s === size ? 1 : 0)), size)
+  }
+})
+
+test('le tableau, 20 % plus grand qu’elle ne le voyait, garde son coin bas au coin du rectangle de la photo', () => {
+  const k = 1 / (POSES.pxPerCm * POSES.scale) // la photo réduite : cm du mur par px de la photo
+  for (const size of SIZES) {
+    for (const frame of canFrame(size) ? ['sans', 'chene'] : ['sans']) {
+      const product = { ...TOILE, size, frame }
+      const p = sizeView(product, 0.92).painting
+      const { photo, rect } = posePlacement(POSES, size)
+      const [L, T, W, H] = POSES.bySize[size].rect
+      // Le coin bas, côté femme (à droite), au coin du rectangle de la photo.
+      near(p.x + p.width / 2, (L + W) * k, `${size} ${frame}, bord droit`)
+      near(p.y - p.height / 2, (POSES.floorPx - T - H) * k, `${size} ${frame}, bas`)
+      near(rect.right, p.x + p.width / 2, `${size} ${frame}, rectangle à droite`)
+      near(rect.top, p.y + p.height / 2, `${size} ${frame}, rectangle en haut`)
+      // Ses vraies mesures, celles du rectangle de la photo à 2 cm près (Gemini le trace un peu de
+      // travers), et 1,2 fois plus grand que sur la photo réduite.
+      assert.ok(Math.abs(W / POSES.pxPerCm - p.width) <= 2 && Math.abs(H / POSES.pxPerCm - p.height) <= 2, `${size}, rectangle de ${(W / POSES.pxPerCm).toFixed(1)} × ${(H / POSES.pxPerCm).toFixed(1)} cm`)
+      near(rect.right - rect.left, p.width, `${size}, largeur`)
+      near(1 / (POSES.pxPerCm * k), POSES.scale, `${size}, plus grand que sur la photo`)
+      near(photo.right - photo.left, POSES.px[0] * k, `${size}, mur de la photo`)
+      near(photo.bottom, -(POSES.px[1] - POSES.floorPx) * k, `${size}, pied du mur en y = 0`)
+      assert.equal(p.z, 0, 'au mur')
+    }
+  }
+})
+
+test('le tableau ne glisse pas sur le mur entre la vue de face et la pose', () => {
+  for (const size of SIZES) {
+    const product = { ...TOILE, size }
+    const director = createDirector({ room: ROOM, poses: POSES, product })
+    const front = director.view(0, 0.8).painting
+    director.choose('size', product, 0)
+    for (const t of [200, 450, 900, LATER]) {
+      const p = director.view(t, 0.8, 0.92).painting
+      near(p.x, front.x, `${size} à ${t} ms, x`)
+      near(p.y, front.y, `${size} à ${t} ms, y`)
+    }
+  }
+})
+
+ZONES.forEach((screen, z) => {
+  test(`zone ${screen} : cadrage sur la femme et le tableau, sans voir le bord de la photo`, () => {
+    for (const size of SIZES) {
+      for (const frame of canFrame(size) ? ['sans', 'chene'] : ['sans']) {
+        const product = { ...TOILE, size, frame }
+        // Sur le 390 × 844, la page donne au directeur une forme plus étroite que l'écran (vue de face).
+        const view = sizeView(product, screen, screen * 0.9, INSETS[z])
+        const { photo, person, body, reach, head } = posePlacement(POSES, size)
+        const label = `${size} ${frame}`
+        // Les coins de l'écran restent dans la photo prolongée, jamais sous son sol.
+        for (const [sx, sy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) {
+          const [x, y] = onWall(view.camera, screen, sx, sy)
+          assert.ok(x >= photo.left - BEYOND.side - 0.5 && x <= photo.right + BEYOND.side + 0.5 &&
+            y >= photo.bottom - 0.5 && y <= photo.top + BEYOND.top + 0.5,
+          `${label} : coin (${sx}, ${sy}) hors de la photo prolongée, en ${x.toFixed(1)}, ${y.toFixed(1)}`)
+        }
+        // À droite, la femme est près du bord : le mur n'y est prolongé que d'une bande sans elle (le
+        // miroir répété d'une bande étroite se verrait).
+        const [leftEdge] = onWall(view.camera, screen, -1, 0)
+        const [rightEdge] = onWall(view.camera, screen, 1, 0)
+        const { clean } = posePlacement(POSES, size)
+        const wider = rightEdge - leftEdge > photo.right - photo.left + clean.left + clean.right + 0.5
+        if (wider) near((leftEdge + rightEdge) / 2, (photo.left + photo.right) / 2, `${label}, vue centrée sur la photo`, 0.5)
+        else {
+          assert.ok(rightEdge <= photo.right + clean.right + 0.5, `${label} : la vue dépasse la photo à droite (${rightEdge.toFixed(1)} cm)`)
+          assert.ok(leftEdge >= photo.left - clean.left - 0.5, `${label} : la vue dépasse la photo à gauche (${leftEdge.toFixed(1)} cm)`)
+        }
+        // Le tableau, ses cotes et l'étiquette de la cote de hauteur, en entier.
+        for (const c of paintingCorners(view.painting, 'outer').filter((q) => q.side.z === 1)) inside(project(view.camera, screen, c), `${label} : coin du tableau`)
+        for (const end of [view.dims.width.a, view.dims.width.b, view.dims.height.a, view.dims.height.b]) inside(project(view.camera, screen, end), `${label} : cote`)
+        inside(project(view.camera, screen, [view.dims.height.a[0] - 6, view.painting.y, 0]), `${label} : étiquette de la cote de hauteur`)
+        // ... jamais sous le bouton « De face » (l'étiquette de la cote de largeur au-dessus de sa ligne).
+        const outer = view.painting.outer
+        const roof = Math.max(view.painting.y + outer.height / 2, view.dims.under ? -Infinity : view.dims.width.a[1] + 10)
+        const corner = project(view.camera, screen, [view.dims.height.a[0] - 7, roof, 0])
+        const hidden = (corner.x + 1) / 2 < INSETS[z].left && (1 - corner.y) / 2 < INSETS[z].top
+        assert.ok(!hidden, `${label} : le tableau ou ses cotes sous le bouton « De face » (${corner.x.toFixed(2)}, ${corner.y.toFixed(2)})`)
+        // La tête de la femme toujours, ses pieds sur un écran en hauteur.
+        for (const [x, y] of [[head.left, head.top], [head.right, head.top], [head.left, head.bottom], [head.right, head.bottom]]) {
+          inside(project(view.camera, screen, [x, y, 0]), `${label} : tête`)
+        }
+        if (screen <= 1) inside(project(view.camera, screen, [(person.left + person.right) / 2, person.bottom, 0]), `${label} : pieds`)
+        // Son corps en largeur, avec la main qui présente le tableau, et la marge des autres cadrages.
+        // Sa main lointaine en dernier (choix de Walid pour la version 24) : en entier (au bord de la
+        // photo si elle le touche), ou le bord de la vue sur le bras, loin du coude et du poignet.
+        for (const x of [Math.max(body.left, photo.left), Math.min(body.right, photo.right)]) {
+          const s = project(view.camera, screen, [x, (body.top + body.bottom) / 2, 0])
+          const atEdge = x <= photo.left + 0.5 || x >= photo.right - 0.5
+          assert.ok(Math.abs(s.x) <= (atEdge ? 1 : 0.92) + 1e-6, `${label} : son corps sort du cadre en largeur (${s.x.toFixed(3)})`)
+        }
+        if (reach) {
+          const upper = reach.elbow - reach.body, fore = reach.wrist - reach.elbow
+          const whole = rightEdge >= Math.min(reach.tip, photo.right) - 0.01
+          const onUpper = rightEdge >= reach.body && rightEdge <= reach.elbow - 0.3 * upper + 0.01
+          const onFore = rightEdge >= reach.elbow + 0.3 * fore - 0.01 && rightEdge <= reach.wrist - 0.3 * fore + 0.01
+          assert.ok(whole || onUpper || onFore, `${label} : le bord de la vue coupe son bras au coude, au poignet ou dans la main (${rightEdge.toFixed(1)} cm)`)
+        }
+        // Coupée, jamais plus bas qu'un peu au-dessus du genou : ses pieds se voient, ou la coupe passe au-dessus.
+        const feet = project(view.camera, screen, [(person.left + person.right) / 2, person.bottom, 0]).y
+        const knee = project(view.camera, screen, [0, person.bottom + 0.4 * (person.top - person.bottom), 0]).y
+        assert.ok(feet >= -1 - 1e-6 || knee <= -1 + 0.01, `${label} : coupée au genou ou plus bas (${knee.toFixed(2)})`)
+        // Pas de mur vide inutile : de haut en bas, la femme, le tableau et sa cote de largeur (son
+        // étiquette au-dessus de la ligne) prennent l'essentiel de la vue...
+        const paintingTop = view.painting.y + view.painting.outer.height / 2
+        const tops = [person.top, paintingTop, view.dims.under ? paintingTop : view.dims.width.a[1] + 10]
+        const bottoms = [person.bottom, view.painting.y - view.painting.outer.height / 2, view.dims.width.a[1]]
+        const span = (Math.min(1, project(view.camera, screen, [0, Math.max(...tops), 0]).y) -
+          Math.max(-1, project(view.camera, screen, [0, Math.min(...bottoms), 0]).y)) / 2
+        // (sauf quand la largeur de la femme, bras ouverts, impose la hauteur de la vue)
+        const height = 2 * Math.tan(view.camera.fovY / 2) * view.camera.position[2]
+        const forced = (body.right - (view.dims.height.a[0] - 7)) / screen / 0.92 >= height - 0.5
+        assert.ok(span >= 0.75 || forced, `${label} : la femme et le tableau ne prennent que ${(span * 100).toFixed(0)} % de la hauteur`)
+        // ... et sur un écran large, le mur vide sur les côtés n'en prend pas plus d'un cinquième,
+        // sauf s'il faut la place pour le tableau et ses cotes, ou pour la montrer entière plutôt que
+        // coupée sous le genou.
+        if (screen > 1 && feet < -1) {
+          const [left] = onWall(view.camera, screen, -1, 0)
+          const [right] = onWall(view.camera, screen, 1, 0)
+          const content = Math.max(body.right, view.painting.x + view.painting.outer.width / 2) - (view.dims.height.a[0] - 7)
+          const tight = (view.painting.outer.height + 30) * screen // ce que le tableau et ses cotes demandent au moins
+          assert.ok(right - left <= Math.max(content / 0.8, tight * 1.12) + 1e-6, `${label} : ${(right - left).toFixed(0)} cm de large pour ${content.toFixed(0)} cm de contenu`)
+        }
+      }
+    }
+  })
+})
+
+test('le tableau d’abord : sa main lointaine ne fait jamais reculer la vue (bras ouverts du 90 × 120)', () => {
+  // Les mêmes poses, son bras lointain ôté : la vue a la même taille, dans toutes les zones.
+  const trimmed = structuredClone(POSES)
+  for (const pose of Object.values(trimmed.bySize)) {
+    if (!pose.reach) continue
+    pose.person = [pose.person[0], pose.person[1], pose.reach.body, pose.person[3]]
+    delete pose.reach
+  }
+  assert.ok(Object.values(POSES.bySize).some((pose) => pose.reach), 'au moins une pose aux bras ouverts')
+  ZONES.forEach((screen, z) => {
+    for (const size of SIZES) {
+      const product = { ...TOILE, size }
+      const span = (view) => 2 * Math.tan(view.camera.fovY / 2) * view.camera.position[2]
+      const real = sizeView(product, screen, screen * 0.9, INSETS[z])
+      const without = sizeView(product, screen, screen * 0.9, INSETS[z], trimmed)
+      near(span(real), span(without), `${size} en zone ${screen}, hauteur de la vue`, 1e-6)
+    }
+  })
+  // En 390 × 844, le 90 × 120 n'est plus réduit au tiers de la hauteur (354 cm de vue en version 23).
+  const view = sizeView({ ...TOILE, size: '90x120' }, ZONES[0], ZONES[0] * 0.9, INSETS[0])
+  assert.ok(120 / (2 * Math.tan(view.camera.fovY / 2) * view.camera.position[2]) >= 0.44, '90 × 120 en 390 × 844 : le tableau trop petit')
+})
+
+/* Image par image à 60 images/s (contrôle du coordinateur, retour de Walid sur la version 23 : « comme
+   un saut » au retour de face) : le tableau part dès le toucher, aucune pause de plus de 50 ms tant
+   qu'il bouge (ses coins bougent de moins de 0,05 px), et sa taille à l'écran ne saute jamais de
+   plus de 3 % d'une image à l'autre : 3 % de sa taille de face, la plus grande des deux (à l'aller
+   du 30 × 40, il finit à moins d'un tiers de sa taille de départ : 3 % de sa taille finale ne
+   laisseraient pas assez d'images pour rapetisser en 1 s). Zone de la vraie hauteur en px (390 ×
+   844 : 572 px au-dessus de la rangée). Rend aussi la plus grande vitesse des coins. */
+const ZONE_PX = [572, 409, 351, 569]
+function glideCheck(director, start, screen, z, label) {
+  const H = ZONE_PX[z], W = H * screen
+  const frames = []
+  const rooms = []
+  for (let k = 0; k <= 80; k++) {
+    const view = director.view(start + (k * 1000) / 60, screen, screen, INSETS[z])
+    // Un vrai travelling (retour de Walid sur la version 24) : la pièce entière ou absente, jamais
+    // délavée (ses poses font toujours un tout), sauf pendant le court passage au mur de face.
+    rooms.push(view.room)
+    const poses = view.poses.reduce((sum, w) => sum + w, 0)
+    assert.ok(view.room < 1e-6 || Math.abs(poses - 1) < 1e-6, `${label} : poses délavées à ${(k * 1000 / 60).toFixed(0)} ms (${poses.toFixed(3)})`)
+    frames.push(paintingCorners(view.painting, 'outer').filter((c) => c.side.z === 1).map((c) => {
+      const s = project(view.camera, screen, c)
+      return [((s.x + 1) / 2) * W, ((1 - s.y) / 2) * H]
+    }))
+  }
+  const between = rooms.map((r, k) => (r > 1e-3 && r < 1 - 1e-3 ? k : -1)).filter((k) => k >= 0)
+  if (between.length) {
+    const span = ((between[between.length - 1] - between[0] + 1) * 1000) / 60
+    assert.ok(span <= SWITCH * 1000 + 1000 / 60 + 1e-6 && between.length === between[between.length - 1] - between[0] + 1,
+      `${label} : la pièce à moitié pendant ${span.toFixed(0)} ms`)
+  }
+  const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1])
+  const sizes = frames.map((f) => [dist(f[0], f[1]), dist(f[0], f[2])]) // largeur, hauteur
+  const ends = [sizes[0], sizes[sizes.length - 1]]
+  const steps = frames.slice(1).map((f, k) => Math.max(...f.map((c, i) => dist(c, frames[k][i]))))
+  const moving = steps.map((d) => d >= 0.05)
+  const end = moving.lastIndexOf(true)
+  assert.ok(end > 0, `${label} : le tableau ne bouge pas`)
+  let still = 0
+  for (let k = 0; k <= end; k++) {
+    still = moving[k] ? 0 : still + 1
+    assert.ok(still * 1000 / 60 <= 50 + 1e-6, `${label} : pause de ${(still * 1000 / 60).toFixed(0)} ms à ${((k + 1) * 1000 / 60).toFixed(0)} ms`)
+  }
+  for (const axis of [0, 1]) {
+    const ref = Math.max(ends[0][axis], ends[1][axis])
+    const jump = Math.max(...sizes.slice(1).map((s, k) => Math.abs(s[axis] - sizes[k][axis])))
+    assert.ok(jump <= 0.03 * ref, `${label} : la ${axis ? 'hauteur' : 'largeur'} saute de ${jump.toFixed(1)} px pour ${ref.toFixed(0)} px (${(100 * jump / ref).toFixed(1)} %)`)
+  }
+  return Math.max(...steps)
+}
+
+test('aller et retour entre la vue de face et la Taille, et changement de taille : sans pause ni saut', () => {
+  ZONES.forEach((screen, z) => {
+    for (const size of SIZES) {
+      const product = { ...TOILE, size }
+      const director = createDirector({ room: ROOM, poses: POSES, product: TOILE })
+      director.view(0, screen, screen, INSETS[z])
+      director.choose('size', product, 0)
+      glideCheck(director, 0, screen, z, `${size} en zone ${screen}, aller`)
+      // L'aller : le passage au début, puis la pièce entière ; le retour : l'inverse, à la fin.
+      near(director.view(SWITCH * 1000 + 1, screen, screen, INSETS[z]).room, 1, `${size} en zone ${screen}, la pièce entière après le passage`)
+      director.choose('front', product, LATER)
+      glideCheck(director, LATER, screen, z, `${size} en zone ${screen}, retour`)
+      near(director.view(LATER + (1 - SWITCH) * 1000 - 1, screen, screen, INSETS[z]).room, 1, `${size} en zone ${screen}, la pièce entière avant le passage`)
+      const other = SIZES[(SIZES.indexOf(size) + 1) % SIZES.length]
+      director.choose('size', product, 2 * LATER)
+      director.choose('size', { ...TOILE, size: other }, 3 * LATER)
+      glideCheck(director, 3 * LATER, screen, z, `${size} vers ${other} en zone ${screen}`)
+    }
+  })
+})
+
+test('passer d’une taille à l’autre fond une pose dans l’autre, pendant que le tableau change de taille', () => {
+  const director = createDirector({ room: ROOM, poses: POSES, product: TOILE })
+  director.choose('size', TOILE, 0)
+  director.choose('size', { ...TOILE, size: '90x120' }, LATER)
+  let previous = director.view(LATER, 0.92)
+  let mixed = false
+  for (let t = LATER; t <= 2 * LATER; t += 20) {
+    const view = director.view(t, 0.92)
+    const [a, , , b] = view.poses
+    near(a + b, 1, `à ${t - LATER} ms, les deux poses`, 1e-9)
+    assert.ok(b >= previous.poses[3] - 1e-9, 'le fondu ne recule pas')
+    assert.equal(view.poses[1] + view.poses[2], 0, 'aucune autre pose')
+    assert.ok(view.painting.width >= previous.painting.width - 1e-9, 'le tableau grandit sans à-coup')
+    assert.equal(view.room, 1, 'la pièce reste')
+    if (a > 0.1 && b > 0.1) mixed = true
+    previous = view
+  }
+  assert.ok(mixed, 'les deux poses se mêlent un moment')
+  assert.deepEqual(previous.poses, [0, 0, 0, 1])
+  assert.equal(previous.painting.width, 90)
+})
+
+test('la cote de hauteur passe à gauche du tableau, dans tous les plans : la femme est à droite', () => {
+  for (const size of SIZES) {
+    const view = sizeView({ ...TOILE, size }, 0.92)
+    const left = view.painting.x - view.painting.width / 2
+    assert.ok(view.dims.height.a[0] < left && view.dims.height.b[0] < left, `${size} : cote à droite`)
+    assert.equal(view.dims.opacity, 1)
+    assert.equal(view.dims.side, -1)
+  }
+  const director = createDirector({ room: ROOM, poses: POSES, product: TOILE })
+  assert.equal(director.view(0, 0.8).dims.side, -1, 'de face aussi (invisible) : pas de traversée en fondu')
+})
+
+test('les autres plans ne montrent aucune pose ; sans poses, le salon reste comme avant', () => {
+  const director = createDirector({ room: ROOM, poses: POSES, product: TOILE })
+  director.choose('border', TOILE, 0)
+  assert.deepEqual(director.view(LATER, 0.92).poses, [0, 0, 0, 0])
+  const salon = createDirector({ room: ROOM, product: TOILE })
+  const front = salon.view(0, 0.92).painting
+  salon.choose('size', TOILE, 0)
+  const view = salon.view(LATER, 0.92)
+  assert.equal(view.room, 1)
+  assert.deepEqual(view.poses, [])
+  assert.equal(view.dims.side, 1)
+  assert.deepEqual([front.x, front.y], [ROOM.hang.x, ROOM.hang.minBottom + 20], 'accroché au-dessus du canapé')
+})

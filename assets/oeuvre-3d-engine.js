@@ -46,15 +46,15 @@ export function dimensionsOf(size) {
   return { width, height }
 }
 
-/* Bordures et cadres. key : handle du métaobjet Shopify, le même dans toutes les langues.
-   color (sRGB) : teinte de la tranche ou du cadre ; null : la bordure reprend l'image, ou il n'y a
-   pas de cadre. */
+/* Bordures et cadres. color (sRGB) : teinte de la tranche ou du cadre ; null : la bordure reprend
+   l'image, ou il n'y a pas de cadre. Les handles des métaobjets de la boutique y mènent par
+   assets/component-oeuvre-3d.js (productFromSelection). */
 export const BORDERS = [
-  { id: 'blanche', key: 'bordure-blanche', color: '#efede8' },
-  { id: 'noire', key: 'bordure-noire', color: '#272727' },
-  { id: 'etiree', key: 'bordure-etiree', color: null },
-  { id: 'miroir', key: 'bordure-moroir', color: null }, // « moroir » : c'est bien le handle de la boutique
-  { id: 'pliee', key: 'bordure-pliee', color: null },
+  { id: 'blanche', color: '#efede8' },
+  { id: 'noire', color: '#272727' },
+  { id: 'etiree', color: null },
+  { id: 'miroir', color: null },
+  { id: 'pliee', color: null },
 ]
 
 export const PAPER_WHITE = '#f7f6f2'
@@ -63,12 +63,12 @@ export const PAPER_WHITE = '#f7f6f2'
    rough : 0 brillant, 1 mat. Noir et chêne viennent du prototype. Blanc, argent et noyer gardent
    pour l'instant la teinte de l'ancienne 3D : leurs matières sont au ticket 10. */
 export const FRAMES = [
-  { id: 'sans', key: 'sans-cadre', color: null },
-  { id: 'blanc', key: 'cadre-blanc', color: '#edebe3', wood: 0, relief: 0.3, rough: 0.6 },
-  { id: 'noir', key: 'cadre-noir-mat', color: '#1f1f21', wood: 0, relief: 0.5, rough: 0.68 },
-  { id: 'argent', key: 'cadre-argent-ancien', color: '#9ea1a8', wood: 0, relief: 0.6, rough: 0.5 },
-  { id: 'chene', key: 'cadre-chene-clair', color: '#c9a77c', wood: 1, relief: 0.9, rough: 0.55 },
-  { id: 'noyer', key: 'cadre-noyer', color: '#66422b', wood: 0, relief: 0.9, rough: 0.55 },
+  { id: 'sans', color: null },
+  { id: 'blanc', color: '#edebe3', wood: 0, relief: 0.3, rough: 0.6 },
+  { id: 'noir', color: '#1f1f21', wood: 0, relief: 0.5, rough: 0.68 },
+  { id: 'argent', color: '#9ea1a8', wood: 0, relief: 0.6, rough: 0.5 },
+  { id: 'chene', color: '#c9a77c', wood: 1, relief: 0.9, rough: 0.55 },
+  { id: 'noyer', color: '#66422b', wood: 0, relief: 0.9, rough: 0.55 },
 ]
 
 export const borderOf = (id) => BORDERS.find((b) => b.id === id) || BORDERS[0]
@@ -77,33 +77,6 @@ export const frameOf = (id) => FRAMES.find((f) => f.id === id) || FRAMES[0]
 
 export function hasFrame(product) {
   return product.frame !== 'sans'
-}
-
-// Option de taille de la boutique (« 30x40 cm ») -> taille du moteur (« 30x40 ») ; null si ce n'en est pas une.
-function sizeOf(value) {
-  const match = /(\d+)\s*[x×]\s*(\d+)/i.exec(value || '')
-  return match ? `${match[1]}x${match[2]}` : null
-}
-
-// variants : `product.variants | json`. Une toile comme un poster ont la taille en option 1.
-export function sizesFromVariants(variants) {
-  return [...new Set(variants.map((variant) => sizeOf(variant.option1)).filter(Boolean))]
-}
-
-/* Du choix de la fiche (détail de mma:selection-change, assets/product-selection.js) au produit que
-   rend le moteur. Seule la toile est branchée : le poster arrive au ticket 14. Les bordures et les
-   cadres se reconnaissent à leur handle, le même dans toutes les langues. */
-export function productFromSelection(selection) {
-  const option = (kind) => selection.options.find((o) => o.kind === kind)
-  const keyOf = (kind) => (option(kind) || {}).key
-  const inList = (list, key) => list.find((item) => item.key === key) || list[0]
-  return {
-    material: 'toile',
-    size: sizeOf(option('size').value),
-    border: inList(BORDERS, keyOf('border')).id,
-    frame: inList(FRAMES, keyOf('frame')).id,
-    passe: false,
-  }
 }
 
 /* Le mur neutre de la fiche : le mur et la lumière réglés au prototype, sans photo de pièce. light :
@@ -119,6 +92,96 @@ export function neutralRoom(sizes) {
     wall: [233, 233, 232],
     wallSlope: -0.00023,
     largest: formats.reduce((big, format) => (area(format) > area(big) ? format : big)),
+  }
+}
+
+/* ==== POSES DE LA TAILLE ==== */
+
+/* Mise en scène de la taille (choix de Walid du 10/11) : une femme se tient à côté du tableau, une
+   pose par taille. Photos de la version 26 du prototype (.scratch/fiche-3d/prototype/src/poses.js) :
+   la vraie photo de chaque pose, retouchée par Gemini et validée par Walid, pièce meublée, en 21:9.
+   6336 × 2688 px d'origine, 12 px/cm dans le plan du mur, pied du mur vers 2422 px ; publiées à
+   3168 px de large (assets/oeuvre-3d-pose-*), préparées sur le PC par les outils du prototype
+   (tools/poses-detourer.py, tools/poses-preparer.py) :
+   - photo : la photo, la femme et les meubles compris ;
+   - calque : ce qui passe devant le tableau (sa main, les feuilles de l'olivier, les branches du vase),
+     là seulement où il peut aller, couleurs estimées sans le mur ;
+   - lumiere : la lumière du mur sans eux, en cases d'environ 3 cm.
+   Le tableau paraît scale fois plus grand à côté d'elle (la photo est réduite d'autant) ; il garde
+   ses vraies mesures et son coin bas côté femme, au coin du rectangle de la photo : ses mains le
+   présentent comme sur la photo, et il grandit vers le haut et vers la gauche.
+   Valeurs en px de la photo d'origine. rect : le rectangle du tableau (left, top, width, height).
+   person, head : la femme et sa tête (left, top, right, bottom). overlay : la zone du calque. clean :
+   largeur sans rien devant le mur le long des bords gauche et droit (0 : un objet au bord, le mur s'y
+   prolonge uni). reach : son bras lointain (bord du corps, coude, poignet), bras ouverts. */
+export const POSES = {
+  px: [6336, 2688],
+  pxPerCm: 12,
+  floorPx: 2422,
+  // À côté d'elle, les tableaux paraissent 20 % plus grands que sur ses photos (retour de Walid sur la
+  // version 21). Les cotes gardent les vraies mesures.
+  scale: 1.2,
+  // Vers la lumière des photos : elle vient de la droite de l'image ; l'ombre du tableau tombe à
+  // gauche et vers le bas. Pour l'inverser : changer le signe du premier nombre.
+  light: [0.36, 0.44, 0.82],
+  // Le mur de face (sRGB), celui des photos autour du tableau, ramené au même blanc chaud sur les
+  // quatre : le passage de la pièce au mur de face se voit à peine (version 25).
+  wall: [223, 217, 207],
+  bySize: {
+    '30x40': {
+      rect: [2676, 376, 378, 484],
+      person: [3138, 479, 4298, 2651],
+      head: [3792, 479, 4183, 767],
+      overlay: [2528, 208, 2532, 212],
+      clean: { left: 1000, right: 1030 },
+    },
+    '60x80': {
+      rect: [2362, 141, 717, 957],
+      person: [3121, 479, 4262, 2663],
+      head: [3750, 479, 4131, 767],
+      overlay: [2146, 1036, 3152, 1118],
+      clean: { left: 976, right: 1128 },
+    },
+    '75x100': {
+      rect: [2267, 21, 878, 1198],
+      person: [3122, 480, 4186, 2654],
+      head: [3772, 480, 4138, 768],
+      overlay: [2020, 812, 3216, 1320],
+      clean: { left: 1054, right: 1102 },
+    },
+    '90x120': {
+      rect: [2175, 20, 1075, 1441],
+      person: [3005, 497, 4961, 2667],
+      head: [3760, 497, 4146, 785],
+      overlay: [1888, 708, 3322, 1576],
+      clean: { left: 1010, right: 1126 },
+      reach: { body: 4174, elbow: 4420, wrist: 4668 },
+    },
+  },
+}
+
+/* La pose de chaque taille du produit : celle dont le tableau a l'aire la plus proche (en rapport).
+   Les photos ne montrent que des portraits 3:4 ; un paysage 4:3 ou un carré prend la pose de sa
+   taille (40 × 30 et 40 × 40 celle du 30 × 40, … 120 × 90 et 100 × 100 celle du 90 × 120) et s'accroche
+   à la même règle : par son coin bas côté femme, au coin du rectangle que sa main présente ; il
+   grandit vers le haut et vers la gauche. files(pose) : les adresses de ses trois images
+   ({ image, figure, light }). Rend les poses du produit, au format du directeur et du moteur :
+   sizes (l'ordre des parts de pose dans une vue) et bySize, par taille du produit. */
+export function posesFor(sizes, files = () => ({})) {
+  const poseKeys = Object.keys(POSES.bySize)
+  const area = (size) => {
+    const { width, height } = dimensionsOf(size)
+    return width * height
+  }
+  const nearest = (size) => poseKeys.reduce((best, key) =>
+    (Math.abs(Math.log(area(key) / area(size))) < Math.abs(Math.log(area(best) / area(size))) ? key : best))
+  return {
+    ...POSES,
+    sizes: [...sizes],
+    bySize: Object.fromEntries(sizes.map((size) => {
+      const pose = nearest(size)
+      return [size, { ...POSES.bySize[pose], pose, ...files(pose) }]
+    })),
   }
 }
 
@@ -449,7 +512,10 @@ export function frameRing({ hw, hh, profile }) {
 
 /* Profils de cadre (cm), pour une œuvre W × H et un profil du catalogue.
    Toile : caisse américaine (fond où la toile flotte, paroi intérieure, face, paroi
-   extérieure, puis le dos, qui se voit quand la toile fait son tour).
+   extérieure, puis le dos, qui se voit quand la toile fait son tour). Le fond passe sous la
+   toile de la largeur de son angle arrondi : au bord carré, il laissait voir le mur à l'angle
+   (gros plan sur le jour, 09/11). Tourné vers l'avant, il ne se voit pas de dos ; de face, la
+   toile le cache partout ailleurs.
    Poster : baguette dont la feuillure recouvre le bord du tirage, verre. */
 const CHAMFER = 0.08
 
@@ -457,6 +523,7 @@ export function frameProfile(kind, f) {
   const c = CHAMFER
   if (kind === 'toile') {
     return [
+      [-f.gap - CANVAS_CORNER, f.floor, 0.3],
       [-f.gap, f.floor, 0.3],
       [0, f.floor, 0.45],
       [0, f.depth - c, 0.9],
@@ -1006,9 +1073,22 @@ const litSide = (room) => (room.light && room.light[0] < 0 ? -1 : 1)
    de l'écran qu'il remplit) et du gros plan où la tranche prend la part `share` de la largeur
    (field : plus petite hauteur visible, en cm). Assez près pour juger la tranche, assez loin pour
    reconnaître l'œuvre. at : l'arête de la façade se pose à cette part de la demi-largeur, côté
-   tranche, pour laisser la place à l'image. Sous un cadre, la tranche ne se voit pas : le plan
-   montre le tableau entier. */
+   tranche, pour laisser la place à l'image. Sous un cadre, voir GAP. */
 const EDGE = { yaw: 38 * DEG, pitch: -6 * DEG, fill: 0.74, side: 0.8, front: 0.6, share: 0.4, field: 3.2, at: 0.45 }
+/* Bordure sous un cadre (retour de Walid sur la version 16) : dans la caisse américaine, la tranche
+   ne se voit que dans le jour de 0,6 cm, entre la toile et la paroi du cadre, sous la lèvre qui la
+   dépasse. Plan rapproché sur l'angle bas côté lumière, tableau au mur : la caméra se tient de biais
+   par rapport à cet angle, `look` vers la tranche éclairée et autant vers le bas. Walid trouvait le
+   gros plan à 6 cm trop serré (10/11 : « on voit que c'est de la 3D »), puis encore trop zoomé à
+   6,4 cm (version 25 : « effet dessin animé ») : le plan fait 9 cm de haut, la caméra se tient à
+   17 cm, et l'image de l'œuvre y est moins grossie que sa photo en 30 × 40. À 15°, la tranche du
+   côté et celle du bas se voient sur toute leur profondeur (2 cm), soit 0,46 cm à l'écran, 5 % de sa
+   hauteur ; l'optimum est à 16°, la lèvre en cache le fond au-delà de 18°. field : hauteur du plan à l'angle, en cm. spot : place de l'angle sur l'écran, en part de
+   la demi-largeur et de la demi-hauteur depuis le milieu ; l'œuvre remplit le reste. Sur un écran
+   plus large que `narrow`, l'angle revient vers le milieu, jusqu'au milieu à `wide` (largeur sur
+   hauteur) : le cadre prend un côté, l'œuvre l'autre, et la caméra regarde le mur sous le même biais
+   que sur un téléphone. Poser l'angle sur le côté d'un écran large la ferait tourner de 36°. */
+const GAP = { look: 15 * DEG, field: 9, spot: 0.3, narrow: 1.3, wide: 2.2 }
 /* Coin du cadre : caméra au-dessus du coin bas, côté lumière. field : petit côté du plan pour un
    30 × 40, en cm ; il s'élargit un peu avec le tableau, pour garder de l'œuvre. spot : place du
    coin sur l'écran, en part de la demi-largeur et de la demi-hauteur depuis le milieu. L'œuvre et
@@ -1056,7 +1136,7 @@ const JOIN_MS = 500 // un acte rejoint son mouvement depuis la vue en cours
 const HURRY = 1.2 // un acte interrompu se finit un peu plus vite que prévu
 
 const RETURN_MS = 450 // retour de face
-const GO_MS = 900 // vers le plan de l'option
+const GO_MS = 1000 // vers le plan de l'option (en sinus : glide)
 
 /* Inclinaison au doigt : la caméra tourne autour du point visé (le tableau reste au mur,
    on voit son épaisseur et son ombre bouger). Glisser vers la droite fait tourner le
@@ -1140,7 +1220,7 @@ function hungPainting(room, product) {
     outer = { width: w + band, height: h + band, depth: Math.max(frame.depth, frame.floor + depth) }
     artZ = frame.floor
   }
-  const c = hangingCenter(room, outer.height)
+  const c = room.poses ? poseCenter(room.poses, product.size) : hangingCenter(room, outer.height)
   const paper = product.material === 'poster' ? 1 : 0
   const passe = paper && product.passe ? 1 : 0 // contour blanc, en fondu pendant la transition
   const framed = hasFrame(product) ? 1 : 0 // le cadre aussi : il n'apparaît jamais d'un coup
@@ -1151,7 +1231,8 @@ const artFront = (p) => [p.x, p.y, p.z + p.artZ + p.depth]
 
 /* Cotes : une ligne au-dessus du tableau pour la largeur, une à sa droite pour la hauteur,
    posées en façade de l'œuvre. Toujours calculées pour que les fondus restent continus ;
-   seule leur opacité dit si on les montre. */
+   seule leur opacité dit si on les montre. side : -1 met la cote de hauteur à gauche (avec la
+   femme, qui se tient à droite du tableau). */
 const DIMS_OFFSET = 6
 const DIMS_LABEL = 14 // hauteur à laisser au-dessus de la ligne pour son étiquette, dans la pièce
 const ROOM_HEADROOM = 7 // cm gardés au-dessus du tableau dans le cadrage de la pièce
@@ -1159,23 +1240,192 @@ const ROOM_SHARE = 0.25 // part de la hauteur de la vue que le tableau prend au 
 const WALL_FILL = 0.6 // sur le mur neutre, part de l'écran du plus grand format, cotes comprises à côté
 const DIMS_UNDER = 8 // sous le tableau, la ligne descend d'autant pour laisser la place à l'étiquette
 
-function dimsOf(p, opacity, under = false) {
+function dimsOf(p, opacity, under = false, side = 1) {
   const z = p.z + p.artZ + p.depth
   const left = p.x - p.width / 2, right = p.x + p.width / 2
   const bottom = p.y - p.height / 2, top = p.y + p.height / 2
   const ox = (p.outer.width - p.width) / 2 + DIMS_OFFSET
   const oy = (p.outer.height - p.height) / 2 + DIMS_OFFSET
   const y = under ? bottom - oy - DIMS_UNDER : top + oy
+  const x = side > 0 ? right + ox : left - ox
   return {
     opacity,
     under,
+    side,
     width: { a: [left, y, z], b: [right, y, z], text: `${p.width} cm` },
-    height: { a: [right + ox, bottom, z], b: [right + ox, top, z], text: `${p.height} cm` },
+    height: { a: [x, bottom, z], b: [x, top, z], text: `${p.height} cm` },
   }
 }
 
-function shotOf(shot, camera, painting, { room = 0, dims = room, dimsUnder = false } = {}) {
-  return { shot, camera, painting, room, dims: dimsOf(painting, dims, dimsUnder) }
+/* poses : part de chaque pose dans la vue (photos de la femme, une par taille du produit, dans
+   l'ordre de poses.sizes) ; vide hors de la pièce, le directeur la remplit de zéros (createDirector). */
+const NO_POSES = []
+
+function shotOf(shot, camera, painting, { room = 0, dims = room, dimsUnder = false, poses = NO_POSES } = {}) {
+  return { shot, camera, painting, room, dims: dimsOf(painting, dims, dimsUnder), poses }
+}
+
+/* Mise en scène de la taille avec la femme (poses.js, choix de Walid du 10/11). Les quatre photos
+   ont le même mur, la même plinthe et le même appareil : elles se posent toutes au même endroit
+   du mur, bord gauche en x = 0 et pied du mur en y = 0. À côté d'elle, les tableaux paraissent
+   poses.scale fois plus grands que sur la photo (retour de Walid sur la version 21 : elle paraissait
+   mesurer 1,80 m) : la photo est réduite d'autant (16 × scale px/cm), le tableau garde ses vraies
+   mesures et s'accroche par son coin bas côté femme, au coin du rectangle de la photo (rect : sa
+   place, à ses vraies mesures, même si le rectangle de la photo est un peu de travers). Ses mains le
+   présentent donc toujours au même endroit ; il grandit vers le haut et vers la gauche. Il s'accroche
+   ainsi dans tous les plans (hungPainting) : il ne glisse jamais sur le mur, et un changement de
+   taille fond une pose dans l'autre sans bouger la pièce. Rend, en cm du mur : la photo, le rectangle
+   du tableau, la femme, son corps sans son bras lointain (body), sa tête, la zone de son calque, la
+   largeur sans rien devant le mur le long des bords gauche et droit (clean), recopiée en miroir
+   au-delà de la photo, et son bras lointain (reach : bord du corps, coude, poignet, bout des doigts),
+   s'il s'écarte d'elle. */
+export function posePlacement(poses, size) {
+  const pose = poses.bySize[size]
+  const k = 1 / (poses.pxPerCm * (poses.scale || 1))
+  const box = ([left, top, right, bottom]) => ({
+    left: left * k, right: right * k, top: (poses.floorPx - top) * k, bottom: (poses.floorPx - bottom) * k,
+  })
+  const [L, T, W, H] = pose.rect
+  const corner = box([L + W, T + H, L + W, T + H])
+  const { width, height } = dimensionsOf(size)
+  return {
+    photo: box([0, 0, ...poses.px]),
+    rect: { left: corner.right - width, right: corner.right, top: corner.bottom + height, bottom: corner.bottom },
+    person: box(pose.person),
+    body: box(pose.reach ? [pose.person[0], pose.person[1], pose.reach.body, pose.person[3]] : pose.person),
+    reach: pose.reach ? { body: pose.reach.body * k, elbow: pose.reach.elbow * k, wrist: pose.reach.wrist * k, tip: pose.person[2] * k } : null,
+    head: box(pose.head),
+    overlay: box(pose.overlay),
+    clean: { left: pose.clean.left * k, right: pose.clean.right * k },
+  }
+}
+
+const poseCenter = (poses, size) => {
+  const { rect } = posePlacement(poses, size)
+  return { x: (rect.left + rect.right) / 2, y: (rect.top + rect.bottom) / 2 }
+}
+
+/* Cadrage de la pose, pour la forme réelle de la zone au-dessus de la rangée (screen). Le tableau
+   d'abord, puis elle, sa main lointaine en dernier (choix de Walid pour la version 24). Doit se voir :
+   le tableau et ses cotes (hauteur à gauche, la femme est à droite), sa tête, et son corps en
+   largeur, avec la main qui présente le tableau. Son bras lointain (bras ouverts du 90 × 120, côté
+   lampadaire) ne fait jamais reculer la vue : sa main se voit si la vue la contient, sinon le bord
+   de la vue coupe le bras loin du coude et du poignet (POSE.joint de chaque segment), jamais la main.
+   Le bouton « De face » occupe le coin en haut à gauche de la zone (inset : part de sa hauteur et de
+   sa largeur) : si le tableau ou ses cotes y tombent, ils descendent dessous. On cherche à voir :
+   la femme en entier. Sur un écran en hauteur, la vue grandit pour la montrer ; sur un écran large,
+   le mur vide sur les côtés n'en prend jamais plus d'un cinquième : si elle ne tient pas en
+   hauteur, on garde le haut et on la coupe à mi-cuisse, au plus bas un peu au-dessus du genou ; si
+   ce qui doit se voir l'interdit, elle se voit entière (jamais coupée aux genoux ni aux chevilles). Autour de la photo, le mur se
+   prolonge (scene.js) : en haut, uni, autant qu'il le faut (au plus BEYOND.top), jamais sous le sol
+   de la photo ; sur les côtés, en miroir, au plus la bande sans rien devant le mur (clean, un seul
+   miroir, au plus BEYOND.side : sur les photos meublées, un objet au bord n'est jamais recopié).
+   Si la vue doit être plus large que cela (ordinateur, grands formats), elle se centre sur la photo
+   et le mur s'y prolonge uni (scene.js). */
+const POSE = { margin: 0.04, label: 7, empty: 0.2, torso: 25, thigh: 0.45, knee: 0.4, lowest: 0.37, dimsAbove: 10, joint: 0.3 } // part de sa hauteur, depuis ses pieds ; joint : part du segment du bras
+export const BEYOND = { side: 130, top: 200 }
+const NO_INSET = { top: 0, left: 0 }
+
+function poseShot(room, product, aspect, u, screen = aspect, inset = NO_INSET) {
+  const painting = hungPainting(room, product)
+  const top = painting.y + painting.outer.height / 2
+  // La cote de largeur au-dessus du tableau, ou au-dessous : là où le tableau reste le plus grand à
+  // l'écran. Au-dessus, jamais à plus de 10 cm au-dessus de la photo.
+  const above = top + DIMS_OFFSET + DIMS_LABEL <= posePlacement(room.poses, product.size).photo.top + POSE.dimsAbove
+  const views = (above ? [false, true] : [true]).map((under) => poseView(room, product, painting, under, screen, inset))
+  const view = views.reduce((best, v) => (v.height < best.height - 1e-6 ? v : best))
+  const target = [view.x, view.y, 0]
+  const camera = { position: add(target, [0, 0, distanceFor(view.height)]), target, fovY: FOV_Y }
+  return shotOf('room', camera, painting, { room: 1, dimsUnder: view.under, poses: room.poses.sizes.map((s) => (s === product.size ? 1 : 0)) })
+}
+
+function poseView(room, product, painting, under, screen, inset) {
+  const { photo, body, reach, head, clean } = posePlacement(room.poses, product.size)
+  const halfW = painting.outer.width / 2, halfH = painting.outer.height / 2
+  const top = painting.y + halfH, bottom = painting.y - halfH
+  const dims = dimsOf(painting, 1, under, -1)
+  const union = (a, b) => ({
+    left: Math.min(a.left, b.left), right: Math.max(a.right, b.right), top: Math.max(a.top, b.top), bottom: Math.min(a.bottom, b.bottom),
+  })
+  const art = {
+    left: dims.height.a[0] - POSE.label,
+    right: painting.x + halfW,
+    top: under ? top : dims.width.a[1] + DIMS_LABEL,
+    bottom: under ? dims.width.a[1] : bottom,
+  }
+  const core = union(art, head)
+  const must = { ...core, left: Math.min(core.left, body.left), right: Math.max(core.right, body.right) }
+  const want = union(must, body)
+  const keep = (x, lo, hi) => (lo > hi ? (lo + hi) / 2 : Math.min(Math.max(x, lo), hi))
+  // Son bras lointain : le bord droit de la vue au-delà de sa main (au bord de la photo si sa main
+  // le touche), ou sur le bras loin du coude et du poignet ; le plus près du centre choisi, x entre
+  // lo et hi (ce qui doit se voir, dans la photo prolongée).
+  const reachX = (x, width, side, lo, hi) => {
+    if (!reach || lo > hi) return x
+    const upper = reach.elbow - reach.body, fore = reach.wrist - reach.elbow
+    const allowed = [
+      [-Infinity, reach.elbow - POSE.joint * upper],
+      [reach.elbow + POSE.joint * fore, reach.wrist - POSE.joint * fore],
+      [reach.tip >= photo.right - 0.5 ? photo.right : reach.tip + side, Infinity],
+    ]
+    let best = null
+    for (const [a, b] of allowed) {
+      const from = Math.max(a - width / 2, lo), to = Math.min(b - width / 2, hi)
+      if (from > to) continue
+      const at = Math.min(Math.max(x, from), to)
+      if (best === null || Math.abs(at - x) < Math.abs(best - x)) best = at
+    }
+    return best === null ? x : best
+  }
+
+  // roof : part du haut de la vue gardée libre au-dessus du tableau.
+  function frame(roof) {
+    const tall = (box) => Math.max((box.top - box.bottom) / (1 - 2 * POSE.margin), (art.top - box.bottom) / (1 - POSE.margin - roof))
+    const fit = (box) => Math.max(tall(box), (box.right - box.left) / screen / (1 - 2 * POSE.margin))
+    const most = Math.min(photo.top + BEYOND.top - photo.bottom, (photo.right - photo.left + 2 * BEYOND.side) / screen)
+    const roomy = screen <= 1 ? Infinity : (want.right - want.left) / ((1 - POSE.empty) * screen)
+    let height = Math.max(fit(must), Math.min(fit(want), roomy, most))
+    const whole = tall(want)
+    const ceiling = (h) => Math.max(want.top + POSE.margin * h, art.top + roof * h) // haut de la vue, le haut gardé
+    const line = (share) => body.bottom + share * (body.top - body.bottom)
+    // Hauteur de vue qui, le haut gardé, la coupe juste à cette ligne.
+    const cutAt = (y) => Math.max((want.top - y) / (1 - POSE.margin), (art.top - y) / (1 - roof))
+    if (height < whole) height = Math.max(fit(must), Math.min(height, cutAt(line(POSE.thigh))))
+    // De côté : la femme (sans ses bras tendus) et le tableau au milieu, sans miroir de préférence à
+    // droite, et ce qui doit se voir (ses mains comprises), dedans. En hauteur : la femme en entier si
+    // elle tient, sinon le haut (tableau, tête).
+    const place = (height) => {
+      const width = height * screen
+      const pad = POSE.margin * height
+      let x = (core.left + Math.max(core.right, (head.left + head.right) / 2 + POSE.torso)) / 2
+      const left = photo.left - Math.min(BEYOND.side, clean.left), right = photo.right + Math.min(BEYOND.side, clean.right)
+      x = keep(x, left + width / 2, right - width / 2)
+      x = keep(x, must.right + pad * screen - width / 2, must.left - pad * screen + width / 2)
+      x = keep(x, left + width / 2, right - width / 2)
+      x = reachX(x, width, pad * screen, Math.max(left + width / 2, must.right + pad * screen - width / 2),
+        Math.min(right - width / 2, must.left - pad * screen + width / 2))
+      let y = height >= whole ? (want.top + want.bottom) / 2 : ceiling(height) - height / 2
+      y = keep(y, Math.max(art.top + roof * height, must.top + pad) - height / 2, must.bottom - pad + height / 2)
+      // Coupée : au-dessus de la ligne du genou si la vue peut monter (un peu plus de mur au-dessus).
+      if (height < whole) y = Math.max(y, Math.min(line(POSE.knee) + height / 2, must.bottom - pad + height / 2))
+      y = Math.max(Math.min(y, photo.top + BEYOND.top - height / 2), photo.bottom + height / 2) // le sol d'abord
+      return { x, y, height, width }
+    }
+    const view = place(height)
+    // Coupée plus bas qu'un peu au-dessus du genou (ce qui doit se voir l'impose) : elle se voit entière.
+    const bottom = view.y - height / 2
+    if (bottom > body.bottom && bottom < line(POSE.lowest)) return place(Math.max(height, whole))
+    return view
+  }
+  let view = frame(POSE.margin)
+  // Le tableau ou ses cotes sous le bouton « De face » : ils descendent dessous.
+  const roof = inset.top + POSE.margin / 2
+  if (roof > POSE.margin) {
+    const fromLeft = (art.left - (view.x - view.width / 2)) / view.width
+    const fromTop = (view.y + view.height / 2 - art.top) / view.height
+    if (fromLeft < inset.left && fromTop < roof) view = frame(roof)
+  }
+  return { ...view, under }
 }
 
 function frontShot(room, product, aspect) {
@@ -1275,7 +1525,25 @@ function materialShot(room, product, aspect) {
   return shotOf('material', { position, target, fovY: FOV_Y }, painting)
 }
 
+// Bordure sous un cadre : l'angle bas côté lumière, vu de biais dans le jour (GAP).
+function gapShot(room, product, aspect) {
+  const side = litSide(room)
+  const painting = hungPainting(room, product)
+  const corner = paintingCorners(painting).find((c) => c.side.x === side && c.side.y === -1 && c.side.z === 1)
+  const toward = Math.tan(GAP.look)
+  const dir = unit([side * toward, -toward, 1])
+  const d = distanceFor(GAP.field)
+  // La caméra se place par rapport à l'angle ; la visée se décale vers l'œuvre pour poser l'angle à `spot`.
+  const right = unit(cross([0, 1, 0], dir))
+  const up = cross(dir, right)
+  const half = d * Math.tan(FOV_Y / 2)
+  const across = GAP.spot * Math.min(1, Math.max(0, (GAP.wide - aspect) / (GAP.wide - GAP.narrow)))
+  const target = add(corner, add(scale(right, -side * across * half * aspect), scale(up, GAP.spot * half)))
+  return shotOf('edge', { position: add(corner, scale(dir, d)), target, fovY: FOV_Y }, painting)
+}
+
 function edgeShot(room, product, aspect) {
+  if (hasFrame(product)) return gapShot(room, product, aspect)
   const side = litSide(room)
   // Le tableau tourne pour avancer sa tranche éclairée vers nous, et s'écarte du mur.
   const base = { ...hungPainting(room, product), yaw: -side * EDGE.yaw, pitch: EDGE.pitch }
@@ -1289,7 +1557,6 @@ function edgeShot(room, product, aspect) {
   const frontNormal = rotate([0, 0, 1], painting.pitch, painting.yaw)
   const dir = unit(add(scale(sideNormal, EDGE.side), scale(frontNormal, EDGE.front)))
   const whole = fitDistance(painting.outer.width, painting.outer.height, aspect, EDGE.fill)
-  if (hasFrame(product)) return shotOf('edge', { position: add(middle, scale(dir, whole)), target: middle, fovY: FOV_Y }, painting)
   const close = distanceFor(Math.max(EDGE.field, (painting.depth * EDGE.side) / (EDGE.share * aspect)))
   const d = Math.sqrt(whole * close)
   const right = unit(cross([0, 1, 0], dir))
@@ -1297,7 +1564,11 @@ function edgeShot(room, product, aspect) {
   return shotOf('edge', { position: add(target, scale(dir, d)), target, fovY: FOV_Y }, painting)
 }
 
-const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
+/* Courbe des étapes : en sinus, accélération et freinage symétriques, sans pointe de vitesse (π/2
+   fois la vitesse moyenne, contre 3 fois pour la courbe cubique d'avant, qui restait comme figée
+   les 170 premières ms : retour de Walid sur la version 23). La page cadre et décale le canvas sur
+   la même courbe. */
+export const glide = (t) => (1 - Math.cos(Math.PI * Math.min(1, Math.max(0, t)))) / 2
 const smooth = (t) => {
   const c = Math.min(1, Math.max(0, t))
   return c * c * (3 - 2 * c)
@@ -1391,10 +1662,10 @@ const SHOTS = {
 const SHOT_OF_GROUP = { border: 'edge', frame: 'corner', size: 'room', passe: 'margin', material: 'material' }
 
 // Le plan d'une option. Une toile sans cadre a le sien : il n'y a pas de coin de cadre à montrer.
-// Sans photo de pièce, la taille se montre sur le mur.
+// Ni poses ni photo de pièce (une photo hors de la page, renderStill) : la taille se montre sur le mur.
 function planOf(group, product, room) {
   if (group === 'frame' && !hasFrame(product)) return 'bare'
-  if (group === 'size' && !room.photo) return 'wall'
+  if (group === 'size' && !room.photo && !room.poses) return 'wall'
   return SHOT_OF_GROUP[group] || 'front'
 }
 
@@ -1416,10 +1687,41 @@ function progressOf(leg, at) {
   return hermite(leg.span[0], leg.span[1], leg.duration / ACTS[leg.shot].ms, 0, t)
 }
 
-// Vue intermédiaire. Un tableau encore tourné ne doit pas traverser le mur en revenant.
-function mix(a, b, t) {
+const frontal = (c) => Math.abs(c.position[0] - c.target[0]) < 1e-9 && Math.abs(c.position[1] - c.target[1]) < 1e-9
+
+/* D'une vue de face à une autre (la pièce et la vue de face) : à l'écran, le tableau grandit et
+   glisse selon la courbe même. Sa taille va comme l'inverse du recul : on mêle l'inverse du recul,
+   et l'écart du tableau au centre de l'image rapporté au recul. Mêler le recul lui-même faisait
+   grandir le tableau à peine au début et d'un coup à la fin (30 × 40 : du mur entier à l'œuvre). */
+function frontCamera(a, b, view, t) {
+  const face = view.painting.z + view.painting.artZ + view.painting.depth
+  const inverse = (v) => 1 / Math.max(v.camera.position[2] - face, 1e-6)
+  const ua = inverse(a), ub = inverse(b)
+  const u = lerp(ua, ub, t)
+  const gap = (v, k) => [(v.painting.x - v.camera.position[0]) * k, (v.painting.y - v.camera.position[1]) * k]
+  const ga = gap(a, ua), gb = gap(b, ub)
+  const x = view.painting.x - lerp(ga[0], gb[0], t) / u
+  const y = view.painting.y - lerp(ga[1], gb[1], t) / u
+  return { ...view.camera, position: [x, y, face + 1 / u], target: [x, y, view.camera.target[2]] }
+}
+
+/* Passage de la pièce au mur de face : la pièce reste entière pendant le trajet (la femme et les
+   meubles sortent du cadre par le mouvement, jamais en fantômes : retour de Walid sur la version 24),
+   et ne se fond qu'à la fin du retour, quand le tableau remplit le cadre, ou au début de l'aller, sur
+   SWITCH de l'étape (250 ms sur 1 s). La lumière et l'ombre du tableau la suivent (scene.js). */
+export const SWITCH = 0.25
+function roomShare(a, b, raw) {
+  const s = a.room > b.room ? smooth((raw - 1 + SWITCH) / SWITCH) : smooth(raw / SWITCH)
+  return { room: lerp(a.room, b.room, s), poses: (a.room > b.room ? a : b).poses }
+}
+
+// Vue intermédiaire. Un tableau encore tourné ne doit pas traverser le mur en revenant. raw : la part
+// du temps de l'étape (t est sa courbe).
+function mix(a, b, t, raw = t) {
   const view = { ...blend(a, b, t), shot: t < 1 ? a.shot : b.shot }
+  if (a.room !== b.room) Object.assign(view, roomShare(a, b, raw))
   view.painting.z = Math.max(view.painting.z, -lowestCorner(view.painting))
+  if (frontal(a.camera) && frontal(b.camera) && a.camera.fovY === b.camera.fovY) view.camera = frontCamera(a, b, view, t)
   // Une cote qui change de côté du tableau s'efface puis réapparaît : elle ne traverse pas l'œuvre.
   if (a.dims.under !== b.dims.under) {
     const side = t < 0.5 ? a : b
@@ -1447,10 +1749,29 @@ function withTilt(view, yaw, pitch) {
 
 /* reducedMotion : préférence « animations réduites » du visiteur. Les choix coupent alors
    directement sur leur plan et l'inclinaison revient de face d'un coup. */
-export function createDirector({ room, product, reducedMotion = false }) {
+export function createDirector({ room, product, poses = null, reducedMotion = false }) {
+  // Avec les poses, la taille se met en scène avec la femme, et la cote de hauteur passe à gauche
+  // dans tous les plans (elle ne se voit qu'avec la pièce) : elle ne traverse jamais l'œuvre.
+  const stage = poses ? { ...room, poses } : room
+  // Hors de la pièce, aucune pose : une part nulle pour chacune, pour que les fondus restent continus.
+  const noPoses = poses ? poses.sizes.map(() => 0) : NO_POSES
+  const leftDims = (shot) => (...args) => {
+    const view = shot(...args)
+    return {
+      ...view,
+      dims: dimsOf(view.painting, view.dims.opacity, view.dims.under, -1),
+      poses: view.poses.length ? view.poses : noPoses,
+    }
+  }
+  const shots = poses
+    ? Object.fromEntries(Object.entries({ ...SHOTS, room: poseShot }).map(([name, shot]) => [name, leftDims(shot)]))
+    : SHOTS
   // legs : étapes de la transition en cours, jouées l'une après l'autre ; la première
-  // part de `from`, la vue figée à l'instant du choix.
-  const state = { product, group: null, shot: 'front', legs: [], from: null, aspect: 0.8, reducedMotion }
+  // part de `from`, la vue figée à l'instant du choix. aspect : la forme que la page donne au
+  // directeur ; screen : celle de l'écran réel (la pose ne doit jamais montrer le bord de sa photo) ;
+  // inset : le coin en haut à gauche que la page occupe (bouton « De face »), en part de la hauteur
+  // (top) et de la largeur (left) de l'écran.
+  const state = { product, group: null, shot: 'front', legs: [], from: null, aspect: 0.8, screen: 0.8, inset: NO_INSET, goal: null, reducedMotion }
   // Inclinaison : `held` pendant le glisser, puis `released` décroît selon le ressort.
   const tilt = { grabbed: false, start: { yaw: 0, pitch: 0 }, held: { yaw: 0, pitch: 0 }, releasedAt: null }
 
@@ -1461,17 +1782,20 @@ export function createDirector({ room, product, reducedMotion = false }) {
     return { yaw: tilt.held.yaw * k, pitch: tilt.held.pitch * k }
   }
 
-  function staged(at, aspect) {
+  // goal : la forme de la zone à l'arrivée (la page la fait glisser avec la rangée) ; le plan
+  // d'arrivée d'une étape se cadre pour elle, et ne change pas de décision en route.
+  function staged(at, aspect, screen, inset, goal = null) {
     let from = state.from
+    const g = goal || { aspect, screen, inset }
     for (const leg of state.legs) {
-      const to = SHOTS[leg.shot](room, leg.product || state.product, aspect, progressOf(leg, at))
+      const to = shots[leg.shot](stage, leg.product || state.product, g.aspect, progressOf(leg, at), g.screen, g.inset)
       if (at < leg.start + leg.duration) {
         const joined = (at - leg.start) / leg.join
-        return joined < 1 ? mix(from, to, easeInOut(Math.max(0, joined))) : to
+        return joined < 1 ? mix(from, to, glide(joined), Math.max(0, joined)) : to
       }
       from = unwound(to)
     }
-    return SHOTS[state.shot](room, state.product, aspect)
+    return shots[state.shot](stage, state.product, aspect, undefined, screen, inset)
   }
 
   // Le produit à l'écran : celui d'un acte qui se finit, sinon le dernier choix.
@@ -1480,9 +1804,9 @@ export function createDirector({ room, product, reducedMotion = false }) {
     return finishing ? finishing.product : state.product
   }
 
-  function view(at, aspect) {
-    state.aspect = aspect
-    const base = { ...staged(at, aspect), product: shownProduct(at) }
+  function view(at, aspect, screen = aspect, inset = NO_INSET, goal = null) {
+    Object.assign(state, { aspect, screen, inset, goal })
+    const base = { ...staged(at, aspect, screen, inset, goal), product: shownProduct(at) }
     const k = 1 - base.room // la photo de la pièce ne s'incline pas
     const offset = tiltAt(at)
     if (k === 0 || (offset.yaw === 0 && offset.pitch === 0)) return base
@@ -1540,9 +1864,9 @@ export function createDirector({ room, product, reducedMotion = false }) {
     const replay = group === state.group && sameProduct(state.product, nextProduct)
     if (replay && isStaging(at)) return
     // Départ figé sans l'inclinaison : celle-ci continue à part, par-dessus la transition.
-    const from = unwound(staged(at, state.aspect))
+    const from = unwound(staged(at, state.aspect, state.screen, state.inset, state.goal))
     const act = actOf(group, nextProduct)
-    const shot = act ? 'front' : planOf(group, nextProduct, room)
+    const shot = act ? 'front' : planOf(group, nextProduct, stage)
     const legs = []
     let start = at
     const running = actUnderway(at)
@@ -1764,14 +2088,15 @@ function viaElement(url) {
    le fichier d'origine : pour le Bonsaï, un PNG de 8 Mo au lieu d'un WebP de 840 Ko. */
 const LIGHT_IMAGES = { accept: 'image/avif,image/webp,image/*;q=0.8' }
 
-// source : adresse d'une image, ou <img> déjà chargée (rien n'est retéléchargé).
-export async function decodeImage(source) {
+// source : adresse d'une image, ou <img> déjà chargée (rien n'est retéléchargé). options : celles
+// de createImageBitmap (un calque détouré garde son alpha non prémultiplié).
+export async function decodeImage(source, options) {
   const loaded = typeof source !== 'string'
   if (!('createImageBitmap' in globalThis)) return loaded ? source : viaElement(source)
   try {
-    if (loaded) return await createImageBitmap(source)
+    if (loaded) return await createImageBitmap(source, options)
     const response = await fetch(source, { headers: LIGHT_IMAGES })
-    return await createImageBitmap(await response.blob())
+    return await createImageBitmap(await response.blob(), options)
   } catch {
     return loaded ? source : viaElement(source)
   }
@@ -1811,6 +2136,8 @@ const SHADOW = {
   key: 0.34, keyFade: 55, penumbra: 0.35, penumbraPerCm: 0.42, ao: 0.12, aoRadius: 1.6,
   flap: 0.32, flapPenumbraPerCm: 0.3, // coin soulevé du poster
 }
+// Ombre du tableau dans la pièce des poses : celle du montage que Walid a trouvé plus réaliste.
+const POSE_SHADOW = { key: 0.32, penumbra: 0.9 }
 const WOOD_TILE_CM = [10, 30] // l'image du chêne couvre 10 cm en travers, 30 cm le long du fil
 const REHEARSAL_FRAMES = 36 // images de répétition de l'arrivée, invisibles
 const TRIAL_FRAMES = 3 // images chronométrées de l'arrivée, invisibles
@@ -1822,11 +2149,13 @@ const ART_VERTEX = /* glsl */ `
   varying vec2 vFab;
   varying float vArt;
   varying vec3 vNormalW;
+  varying vec3 vWorldPos;
   void main() {
     vUv = uv;
     vFab = fab;
     vArt = art;
     vNormalW = normalize(mat3(modelMatrix) * normal);
+    vWorldPos = (modelMatrix * vec4(position, 1.0)).xyz;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
   }
 `
@@ -1848,6 +2177,7 @@ const CURL_VERTEX = /* glsl */ `
   varying vec3 vNormalW;
   varying float vBeyond;
   varying vec2 vWallXY;
+  varying vec3 vWorldPos;
   void main() {
     vec2 tip = uCurlCorner * uCurlHalf;
     vec2 flatPoint = tip - uCurlCorner * position.xy * 2.0 * uCurlHalf;
@@ -1871,6 +2201,7 @@ const CURL_VERTEX = /* glsl */ `
       normalLocal = vec3(-uCurlDir * sin(phi), cos(phi));
     }
     vNormalW = normalize(mat3(modelMatrix) * normalLocal);
+    vWorldPos = (modelMatrix * vec4(place, 1.0)).xyz;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(place, 1.0);
   }
 `
@@ -1895,6 +2226,37 @@ const SHADOW_SHAPES = /* glsl */ `
   }
 `
 
+/* Dans la pose, le tableau doit sembler photographié dans la même pièce que la femme (retours de
+   Walid sur la version 21) : la lumière du mur à son emplacement (les deux poses en fondu ; un blanc
+   n'y est jamais plus clair que le mur), contraste 0,94, saturation 0,95 et luminosité 0,93 comme le
+   montage qu'il a trouvé plus réaliste, et le grain de la photo, à la taille de ses pixels sur le mur. */
+const PHOTO_SHAPES = /* glsl */ `
+  uniform float uPoseMix;
+  uniform vec4 uPoseRect;
+  uniform vec2 uPoseW;
+  uniform sampler2D uLightA;
+  uniform sampler2D uLightB;
+  uniform float uPhotoTexels; // texels de la photo par cm du mur
+  vec3 wallLightAt(vec2 p) {
+    vec2 uv = (p - uPoseRect.xy) / (uPoseRect.zw - uPoseRect.xy);
+    vec2 st = vec2(clamp(uv.x, 0.0, 1.0), clamp(1.0 - uv.y, 0.0, 1.0));
+    float w = uPoseW.x + uPoseW.y;
+    vec3 l = texture2D(uLightA, st).rgb * uPoseW.x + texture2D(uLightB, st).rgb * uPoseW.y;
+    return w > 0.0 ? l / w : vec3(1.0);
+  }
+  float photoNoise(vec2 p) {
+    vec2 cell = floor(p * uPhotoTexels);
+    return fract(sin(dot(cell, vec2(127.1, 311.7))) * 43758.5453) - 0.5;
+  }
+  vec3 photographed(vec3 color, vec2 p) {
+    vec3 s = pow(max(color, 0.0), vec3(1.0 / 2.2));
+    s = (s - 0.5) * 0.94 + 0.5;
+    s = mix(vec3(dot(s, vec3(0.2126, 0.7152, 0.0722))), s, 0.95);
+    vec3 c = pow(max(s, 0.0), vec3(2.2)) * 0.93 * wallLightAt(p);
+    return c * (1.0 + photoNoise(p) * 0.035);
+  }
+`
+
 const ART_FRAGMENT = /* glsl */ `
   uniform sampler2D uArt;
   uniform sampler2D uArtPrev; // version précédente, pendant le fondu d'un changement de source
@@ -1915,10 +2277,16 @@ const ART_FRAGMENT = /* glsl */ `
   uniform float uPasse;
   uniform vec2 uMargin;
   uniform vec2 uCover;
+  uniform float uArtCm; // largeur de l'œuvre, cm
+  uniform vec2 uArtHalf; // demi-largeur et demi-hauteur de la façade, cm
+  uniform float uShadeSide; // côté de l'ombre (-1 : à gauche), pour le fil sombre du bord
+  uniform float uRelief; // relief de la toile qui accroche la lumière, dans la pièce
   varying vec2 vUv;
   varying vec2 vFab;
   varying float vArt;
   varying vec3 vNormalW;
+  varying vec3 vWorldPos;
+  ${PHOTO_SHAPES}
   #ifdef CURL
     uniform float uCurlRadius;
     uniform vec2 uFlapHull[8];
@@ -1961,11 +2329,15 @@ const ART_FRAGMENT = /* glsl */ `
   // serait plus molle que la photo qu'elle remplace. Ce gain ne fait pas scintiller : en
   // inclinaison vive, 0,009 % des pixels bougent de plus de 12 niveaux sur 255 d'une image à
   // l'autre. L'image grossie passe en bicubique.
+  // Dans la pièce, l'œuvre n'est pas plus nette que la photo : au moins un texel de la photo par
+  // lecture (la taille de ses pixels sur le mur), en fondu avec la pièce.
   vec3 readArt(sampler2D tex, vec2 uv, vec2 dx, vec2 dy) {
     vec2 size = vec2(textureSize(tex, 0));
-    vec3 plain = textureGrad(tex, uv, dx * 0.6, dy * 0.6).rgb;
     float texelsPerPixel = max(length(dx * size), length(dy * size));
-    float magnified = 1.0 - smoothstep(0.7, 1.0, texelsPerPixel);
+    float photoFoot = uPoseMix * size.x / max(uArtCm * uPhotoTexels, 1e-3);
+    float boost = max(0.6, photoFoot / max(texelsPerPixel, 1e-6));
+    vec3 plain = textureGrad(tex, uv, dx * boost, dy * boost).rgb;
+    float magnified = 1.0 - smoothstep(0.7, 1.0, texelsPerPixel * boost / 0.6);
     if (magnified <= 0.0) return plain;
     return mix(plain, cubicArt(tex, uv, size), magnified);
   }
@@ -2030,7 +2402,20 @@ const ART_FRAGMENT = /* glsl */ `
         k = (uAmbient + uDiffuse * max(dot(Np, uLight), 0.0)) * 1.08;
       }
     #endif
-    gl_FragColor = vec4(base * min(k, brightest), 1.0);
+    vec3 color = base * min(k, brightest);
+    if (uPoseMix > 0.0) {
+      // La toile imprimée dans la pièce : sa trame plus marquée, son relief qui accroche la lumière
+      // de biais, un fil sombre au bord de la façade du côté de l'ombre, puis la photo.
+      float threads = 1.0 - 0.6 * mix(uWeaveAmt, uWeaveAmt * 0.3, uPaper) * (1.0 - grain.r);
+      vec2 toLight = normalize(uLight.xy + vec2(1e-4));
+      float relief = 1.0 + uRelief * mix(1.0, 0.4, uPaper) * dot(slope, toLight);
+      float front = step(0.9, N.z);
+      float fromEdge = uArtHalf.x - uShadeSide * vFab.x; // distance au bord du côté de l'ombre
+      float thread = 1.0 - 0.32 * front * (1.0 - smoothstep(0.0, max(0.12, 1.5 * fwidth(vFab.x)), fromEdge));
+      vec3 lit = photographed(color * threads * relief * thread, vWorldPos.xy);
+      color = mix(color, lit, uPoseMix);
+    }
+    gl_FragColor = vec4(color, 1.0);
     #include <colorspace_fragment>
   }
 `
@@ -2041,6 +2426,41 @@ const WALL_VERTEX = /* glsl */ `
     vec4 world = modelMatrix * vec4(position, 1.0);
     vXY = world.xy;
     gl_Position = projectionMatrix * viewMatrix * world;
+  }
+`
+
+/* La femme des poses : ses couleurs sans le mur et son détourage (calque de poses.js), posés sur le
+   mur en cm. Deux places, comme les photos. */
+const FIGURE_SHAPES = /* glsl */ `
+  uniform sampler2D uFigureA;
+  uniform sampler2D uFigureB;
+  uniform vec4 uFigureRectA; // le calque sur le mur, en cm : gauche, bas, droite, haut
+  uniform vec4 uFigureRectB;
+  vec4 figureAt(sampler2D figure, vec4 rect, vec2 p) {
+    vec2 uv = (p - rect.xy) / (rect.zw - rect.xy);
+    float inside = step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0);
+    vec4 c = texture2D(figure, vec2(clamp(uv.x, 0.0, 1.0), 1.0 - clamp(uv.y, 0.0, 1.0)));
+    return vec4(c.rgb, c.a * inside);
+  }
+`
+
+// Reposée sur le tableau, là seulement où il cache le mur (uOver, sa silhouette ramenée au mur) :
+// la main de la femme passe devant l'œuvre. Ailleurs, la photo la montre déjà.
+const FIGURE_FRAGMENT = /* glsl */ `
+  ${FIGURE_SHAPES}
+  uniform vec2 uPoseW;
+  uniform float uPoseMix;
+  uniform vec4 uOver;
+  varying vec2 vXY;
+  void main() {
+    if (uPoseMix <= 0.0 || vXY.x < uOver.x || vXY.x > uOver.z || vXY.y < uOver.y || vXY.y > uOver.w) discard;
+    vec4 a = figureAt(uFigureA, uFigureRectA, vXY);
+    vec4 b = figureAt(uFigureB, uFigureRectB, vXY);
+    float wa = a.a * uPoseW.x, wb = b.a * uPoseW.y;
+    float alpha = (wa + wb) * uPoseMix;
+    if (alpha < 0.003) discard;
+    gl_FragColor = vec4((a.rgb * wa + b.rgb * wb) / (wa + wb), alpha);
+    #include <colorspace_fragment>
   }
 `
 
@@ -2063,12 +2483,75 @@ const WALL_FRAGMENT = /* glsl */ `
   uniform int uFlapHullN;
   uniform float uFlapPenumbra;
   uniform float uFlapKey;
+  uniform sampler2D uPoseA; // poses de la taille (poses.js) : deux places, pour fondre l'une dans l'autre
+  uniform sampler2D uPoseB;
+  uniform sampler2D uLightA; // lumière de leur mur, sans la femme
+  uniform sampler2D uLightB;
+  uniform vec2 uCleanA; // bandes sans rien devant le mur le long des bords gauche et droit (part de la photo)
+  uniform vec2 uCleanB;
+  uniform vec4 uPoseRect; // la photo sur le mur, en cm : gauche, bas, droite, haut
+  uniform vec2 uPoseW; // parts des deux places
+  uniform float uPoseMix; // part de la pièce
+  uniform vec3 uShadowTint; // dans la pièce, l'ombre du tableau tire vers cette couleur
+  uniform float uShadowTintMix;
+  ${FIGURE_SHAPES}
   varying vec2 vXY;
   ${SHADOW_SHAPES}
 
   float boxDistance(vec2 p, vec2 c, vec2 h) {
     vec2 q = abs(p - c) - h;
     return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0);
+  }
+
+  uniform float uPhotoTexels; // texels de la photo par cm du mur
+  // Au-delà de ses bords gauche et droit, la photo se prolonge par un miroir de sa bande sans rien
+  // devant le mur, à la lumière du bord : ni creux ni bosse au raccord, malgré l'assombrissement des
+  // coins. Au-dessus, et sur un bord où un objet touche la photo (olivier, lampadaire), le mur se
+  // prolonge uni, à la lumière du mur sans les meubles, avec le grain de la photo ; la photo s'y fond
+  // sur ses POSE_FADE derniers cm.
+  const float POSE_FADE = 8.0;
+  float grain(vec2 p) {
+    vec2 cell = floor(p * uPhotoTexels);
+    float n = fract(sin(dot(cell, vec2(127.1, 311.7))) * 43758.5453) - 0.5;
+    return n * 0.012 / max(fwidth(p.x * uPhotoTexels), 1.0); // plusieurs texels par pixel : moyennés
+  }
+  // Une rangée de la lumière du mur (v : 0 en haut, 1 en bas), lissée en largeur sur ± 18 cm.
+  vec3 smoothRow(sampler2D light, float x, float v) {
+    float spread = 6.0 / (uPoseRect.z - uPoseRect.x);
+    vec3 sum = vec3(0.0);
+    for (int k = -3; k <= 3; k++) sum += texture2D(light, vec2(x + float(k) * spread, v)).rgb * (4.0 - abs(float(k)));
+    return sum / 16.0;
+  }
+  // Au-dessus : la lumière du haut de la photo, ses stries lissées en montant (sur 40 cm).
+  vec3 topLight(sampler2D light, float x, float above) {
+    return mix(texture2D(light, vec2(x, 0.0)).rgb, smoothRow(light, x, 0.0), smoothstep(0.0, 40.0, above));
+  }
+  // Sous la photo (derrière la rangée, dévoilé quand elle s'efface) : le parquet, sa lumière lissée,
+  // sans les traînées de la dernière rangée de pixels étirée, puis le fond neutre (POSE_FLOOR cm).
+  const float POSE_FLOOR = 20.0;
+  float fold(float t, float m) {
+    float k = mod(t, 2.0 * m);
+    return k < m ? k : 2.0 * m - k;
+  }
+  // rgb : la photo prolongée ; a : sa part, qui s'efface sous elle dans le fond neutre.
+  vec4 posePhoto(sampler2D photo, sampler2D light, vec2 clean) {
+    vec2 uv = (vXY - uPoseRect.xy) / (uPoseRect.zw - uPoseRect.xy);
+    vec2 edge = vec2(clamp(uv.x, 0.0, 1.0), clamp(1.0 - uv.y, 0.0, 1.0));
+    vec2 st = edge;
+    if (uv.x < 0.0) st.x = clean.x > 0.0 ? fold(-uv.x, clean.x) : 0.0;
+    if (uv.x > 1.0) st.x = clean.y > 0.0 ? 1.0 - fold(uv.x - 1.0, clean.y) : 1.0;
+    vec3 lit = texture2D(light, edge).rgb;
+    vec3 c = texture2D(photo, st).rgb * lit / max(texture2D(light, st).rgb, vec3(0.02));
+    if (uv.y > 1.0) lit = topLight(light, edge.x, (uv.y - 1.0) * (uPoseRect.w - uPoseRect.y));
+    vec2 fade = POSE_FADE / (uPoseRect.zw - uPoseRect.xy);
+    float plain = max(1.0 - smoothstep(0.0, fade.y, 1.0 - uv.y), max(
+      clean.x <= 0.0 ? 1.0 - smoothstep(0.0, fade.x, uv.x) : 0.0,
+      clean.y <= 0.0 ? 1.0 - smoothstep(0.0, fade.x, 1.0 - uv.x) : 0.0));
+    c = mix(c, lit * (1.0 + grain(vXY)), plain);
+    float high = uPoseRect.w - uPoseRect.y;
+    vec3 floorLight = smoothRow(light, edge.x, 1.0);
+    c = mix(c, floorLight, 1.0 - smoothstep(0.0, POSE_FADE * 0.5, uv.y * high));
+    return vec4(c, 1.0 - smoothstep(0.0, POSE_FLOOR, -uv.y * high));
   }
 
   void main() {
@@ -2080,6 +2563,16 @@ const WALL_FRAGMENT = /* glsl */ `
       float feather = 1.0 - smoothstep(uRoomRect.w - uFeather, uRoomRect.w, vXY.y);
       vec3 photo = texture2D(uRoom, vec2(ruv.x, 1.0 - ruv.y)).rgb;
       col = mix(col, photo, uRoomMix * edge.x * edge.y * feather);
+    }
+    // La femme est devant le mur : l'ombre du tableau ne tombe pas sur elle.
+    float person = 0.0;
+    if (uPoseMix > 0.0) {
+      float shown = uPoseW.x + uPoseW.y;
+      vec4 photo = vec4(0.0);
+      if (uPoseW.x > 0.0) photo += posePhoto(uPoseA, uLightA, uCleanA) * uPoseW.x;
+      if (uPoseW.y > 0.0) photo += posePhoto(uPoseB, uLightB, uCleanB) * uPoseW.y;
+      col = mix(col, photo.rgb / max(shown, 1e-4), uPoseMix * photo.a);
+      person = (figureAt(uFigureA, uFigureRectA, vXY).a * uPoseW.x + figureAt(uFigureB, uFigureRectB, vXY).a * uPoseW.y) * uPoseMix;
     }
     // Pénombres : jamais plus fines qu'un pixel, même vues de loin.
     float hull = hullDistance(uHull, uHullN, vXY);
@@ -2093,7 +2586,10 @@ const WALL_FRAGMENT = /* glsl */ `
       float lifted = hullDistance(uFlapHull, uFlapHullN, vXY);
       flap = uFlapKey * inShadow(lifted, uFlapPenumbra);
     }
-    gl_FragColor = vec4(col * (1.0 - key) * (1.0 - ao) * (1.0 - flap), 1.0);
+    float bare = 1.0 - person;
+    float dropped = key * bare; // ombre portée du tableau
+    vec3 lit = col * (1.0 - ao * bare) * (1.0 - flap * bare);
+    gl_FragColor = vec4(mix(lit * (1.0 - dropped), mix(lit, uShadowTint, dropped), uShadowTintMix), 1.0);
     #include <colorspace_fragment>
   }
 `
@@ -2129,6 +2625,7 @@ const FRAME_FRAGMENT = /* glsl */ `
   varying vec3 vNormalW;
   varying vec3 vWorld;
   varying float vShade;
+  ${PHOTO_SHAPES}
 
   float height(vec2 st) {
     return dot(texture2D(uMap, st).rgb, vec3(0.3333));
@@ -2167,7 +2664,9 @@ const FRAME_FRAGMENT = /* glsl */ `
     float glint = pow(max(dot(N, normalize(uLight + V)), 0.0), shine) * (shine + 8.0) * 0.0035;
     color += roomLight(reflect(-V, N)) * fresnel * mix(0.8, 0.5, uRough) + vec3(glint * ndl);
 
-    gl_FragColor = vec4(color * vShade, uOpacity);
+    color *= vShade;
+    if (uPoseMix > 0.0) color = mix(color, photographed(color, vWorld.xy), uPoseMix);
+    gl_FragColor = vec4(color, uOpacity);
     #include <colorspace_fragment>
   }
 `
@@ -2217,7 +2716,7 @@ const blankCanvas = () => (globalThis.document ? document.createElement('canvas'
    la trame (startReliefs). room : mur et lumière (neutralRoom). woodImage : adresse de l'image du
    chêne. sizes : tailles du produit (« 30x40 »), imprimées au dos. Renvoie de quoi dessiner une vue,
    et dispose() pour tout rendre à la carte graphique. Sans WebGL2, three.js lève une erreur ici. */
-export function createScene(THREE, { canvas, artImage, weave, room, woodImage, sizes }) {
+export function createScene(THREE, { canvas, artImage, weave, room, woodImage, sizes, poses = null }) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'default' })
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.toneMapping = THREE.NoToneMapping
@@ -2225,7 +2724,13 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
 
   const scene = new THREE.Scene()
   const camera = new THREE.PerspectiveCamera(30, 1, 0.5, 5000)
-  const light = unit(room.light)
+  /* La lumière : celle de la pièce de face, celle des photos dans la pose (poses.light, venue de la
+     droite de l'image), en fondu avec la pièce. Le même tableau sert à l'ombre (castOnWall). */
+  const roomLight = unit(room.light)
+  const poseLight = poses && poses.light ? unit(poses.light) : roomLight
+  const light = [...roomLight]
+  let poseK = 0 // part de la pièce des poses dans la vue en cours
+  const poseSizes = poses ? poses.sizes : [] // les tailles du produit, une pose chacune
 
   const reliefTexture = (pixels) => {
     const t = new THREE.DataTexture(new Uint8Array(pixels.buffer), RELIEF_SIZE, RELIEF_SIZE, THREE.RGBAFormat)
@@ -2252,7 +2757,11 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
   const hull = Array.from({ length: 8 }, () => new THREE.Vector2())
   const flapHull = Array.from({ length: 8 }, () => new THREE.Vector2())
   const wallUniforms = {
-    uWall: { value: new THREE.Color().setRGB(...room.wall.map((c) => c / 255), THREE.SRGBColorSpace) },
+    // Avec les poses, le mur de face est celui de leurs photos autour du tableau (poses.js).
+    uWall: { value: new THREE.Color().setRGB(...((poses && poses.wall) || room.wall).map((c) => c / 255), THREE.SRGBColorSpace) },
+    uShadowTint: { value: new THREE.Color().setRGB(70 / 255, 55 / 255, 40 / 255, THREE.SRGBColorSpace) },
+    uShadowTintMix: { value: 0 },
+    uPhotoTexels: { value: 8 },
     uSlope: { value: room.wallSlope },
     uRefX: { value: room.hang.x },
     uRoom: { value: null },
@@ -2270,6 +2779,19 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
     uFlapHullN: { value: 0 },
     uFlapPenumbra: { value: 1 },
     uFlapKey: { value: 0 },
+    uPoseA: { value: null },
+    uPoseB: { value: null },
+    uLightA: { value: null },
+    uLightB: { value: null },
+    uCleanA: { value: new THREE.Vector2(1, 1) },
+    uCleanB: { value: new THREE.Vector2(1, 1) },
+    uPoseRect: { value: new THREE.Vector4(0, 0, 1, 1) },
+    uPoseW: { value: new THREE.Vector2() },
+    uPoseMix: { value: 0 },
+    uFigureA: { value: null },
+    uFigureB: { value: null },
+    uFigureRectA: { value: new THREE.Vector4(0, 0, 1, 1) },
+    uFigureRectB: { value: new THREE.Vector4(0, 0, 1, 1) },
   }
   const wall = new THREE.Mesh(
     new THREE.PlaneGeometry(2400, 1400),
@@ -2277,6 +2799,47 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
   )
   wall.position.set(room.hang.x, 150, 0)
   scene.add(wall)
+
+  /* ---- La femme des poses, reposée sur le tableau : un plan au mur (aucun décalage de
+          perspective avec la photo), dessiné en dernier, sans test de profondeur. Toujours là,
+          pour être compilé avec le reste : hors de la pièce, il ne dessine rien. ---- */
+  const figureUniforms = {
+    uFigureA: wallUniforms.uFigureA,
+    uFigureB: wallUniforms.uFigureB,
+    uFigureRectA: wallUniforms.uFigureRectA,
+    uFigureRectB: wallUniforms.uFigureRectB,
+    uPoseW: wallUniforms.uPoseW,
+    uPoseMix: wallUniforms.uPoseMix,
+    uOver: { value: new THREE.Vector4(0, 0, -1, -1) },
+  }
+  if (poses) {
+    const zones = poseSizes.map((size) => posePlacement(poses, size).overlay)
+    const left = Math.min(...zones.map((z) => z.left)), right = Math.max(...zones.map((z) => z.right))
+    const bottom = Math.min(...zones.map((z) => z.bottom)), top = Math.max(...zones.map((z) => z.top))
+    const figureMesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(right - left, top - bottom),
+      new THREE.ShaderMaterial({
+        uniforms: figureUniforms, vertexShader: WALL_VERTEX, fragmentShader: FIGURE_FRAGMENT,
+        transparent: true, depthTest: false, depthWrite: false,
+      }),
+    )
+    figureMesh.position.set((left + right) / 2, (bottom + top) / 2, 0)
+    figureMesh.renderOrder = 3
+    scene.add(figureMesh)
+    const { photo } = posePlacement(poses, poseSizes[0])
+    wallUniforms.uPoseRect.value.set(photo.left, photo.bottom, photo.right, photo.top)
+    wallUniforms.uPhotoTexels.value = (poses.px[0] / 2) / (photo.right - photo.left) // photos publiées à 2400 px
+  }
+
+  // Uniformes du traitement « photographié » : les mêmes objets que ceux du mur.
+  const photoUniforms = () => ({
+    uPoseMix: wallUniforms.uPoseMix,
+    uPoseRect: wallUniforms.uPoseRect,
+    uPoseW: wallUniforms.uPoseW,
+    uLightA: wallUniforms.uLightA,
+    uLightB: wallUniforms.uLightB,
+    uPhotoTexels: wallUniforms.uPhotoTexels,
+  })
 
   // ---- Œuvre (toile ou papier) ----
   const artUniforms = {
@@ -2299,6 +2862,11 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
     uPasse: { value: 0 },
     uMargin: { value: new THREE.Vector2() },
     uCover: { value: new THREE.Vector2(1, 1) },
+    uArtCm: { value: 30 },
+    uArtHalf: { value: new THREE.Vector2(15, 20) },
+    uShadeSide: { value: -1 },
+    uRelief: { value: 0.07 },
+    ...photoUniforms(),
   }
   const group = new THREE.Group()
   group.rotation.order = 'YXZ'
@@ -2319,6 +2887,7 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
     uRough: { value: 0.6 },
     uLight: { value: new THREE.Vector3(...light) },
     uOpacity: { value: 1 },
+    ...photoUniforms(),
   }
   const frameMesh = new THREE.Mesh(
     new THREE.BufferGeometry(),
@@ -2528,6 +3097,8 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
     // Tant que le papier n'est pas arrivé du worker, le poster garde la trame sans son relief.
     artUniforms.uPaper.value = artUniforms.uPaperTex.value ? p.paper : 0
     artUniforms.uPasse.value = p.passe
+    artUniforms.uArtCm.value = p.width
+    artUniforms.uArtHalf.value.set(p.width / 2, p.height / 2)
     const m = PASSE_RATIO * Math.min(p.width, p.height)
     artUniforms.uMargin.value.set(m / p.width, m / p.height)
     // Recadrage de l'œuvre dans l'intérieur du contour (remplir sans déformer).
@@ -2563,7 +3134,7 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
     frameUniforms.uOpacity.value = p.framed
     glassUniforms.uOpacity.value = p.paper * p.framed
     glassUniforms.uNormal.value.set(0, 0, 1).applyEuler(group.rotation)
-    glassUniforms.uWin.value.set(p.x - 28, p.y + 36, p.z + 240)
+    glassUniforms.uWin.value.set(p.x + 28 * Math.sign(light[0] || -1), p.y + 36, p.z + 240) // la fenêtre, du côté de la lumière
   }
 
   function updateShadow(p) {
@@ -2573,8 +3144,11 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
     wallUniforms.uHullN.value = h.length
     const front = corners.filter((c) => c.side.z === 1)
     const height = front.reduce((s, c) => s + c[2], 0) / front.length
-    wallUniforms.uPenumbra.value = SHADOW.penumbra + SHADOW.penumbraPerCm * height
-    wallUniforms.uKey.value = SHADOW.key * Math.exp(-height / SHADOW.keyFade) * Math.min(1, p.outer.depth / 0.6)
+    const penumbra = SHADOW.penumbra + SHADOW.penumbraPerCm * height
+    const key = SHADOW.key * Math.exp(-height / SHADOW.keyFade) * Math.min(1, p.outer.depth / 0.6)
+    wallUniforms.uPenumbra.value = penumbra + (POSE_SHADOW.penumbra - penumbra) * poseK
+    wallUniforms.uKey.value = key + (POSE_SHADOW.key * Math.min(1, p.outer.depth / 0.6) - key) * poseK
+    wallUniforms.uShadowTintMix.value = poseK
     wallUniforms.uAo.value.set(p.x, p.y, p.outer.width / 2, p.outer.height / 2)
     wallUniforms.uAoAmt.value = SHADOW.ao * Math.exp(-p.z / 2.5) * Math.min(1, p.outer.depth / 2)
   }
@@ -2603,6 +3177,9 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
       },
       fade: (now) => (state === 'ready' ? fadeSince(shownAt, now) : 0),
       isFading: (now) => state === 'ready' && now - shownAt < FADE_MS,
+      ready: () => state === 'ready',
+      // Arrivée et fondu finis, ou échec : rien ne changera plus son rendu.
+      settled: (now) => state === 'error' || (state === 'ready' && now - shownAt >= FADE_MS),
     }
   }
 
@@ -2613,6 +3190,113 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
   })
   // Pièce : chargée quand on touche aux tailles (la page l'annonce), sinon au premier recul.
   const roomPhoto = lazyTexture(room.image, (texture) => { wallUniforms.uRoom.value = texture })
+  /* Poses de la taille (poses.js) : la photo, la femme et la lumière du mur arrivent ensemble,
+     décodées hors du fil de la page, envoyées tout de suite à la carte graphique, puis montrées en
+     fondu. Sans mipmaps : la photo n'est jamais beaucoup réduite à l'écran, la mémoire reste
+     raisonnable (environ 17 Mo par pose). */
+  const flatTexture = (image) => {
+    const t = imageTexture(image)
+    t.generateMipmaps = false
+    t.minFilter = THREE.LinearFilter
+    return t
+  }
+  function poseSet(size) {
+    const pose = poses.bySize[size]
+    const set = {
+      state: 'none', shownAt: 0, photo: null, figure: null, light: null,
+      clean: [pose.clean.left / poses.px[0], pose.clean.right / poses.px[0]],
+      overlay: posePlacement(poses, size).overlay,
+    }
+    set.load = () => {
+      if (set.state !== 'none') return
+      set.state = 'loading'
+      // Le calque garde ses couleurs telles quelles (alpha non prémultiplié) : pas de liseré sombre.
+      Promise.all([decodeImage(pose.image), decodeImage(pose.figure, { premultiplyAlpha: 'none' }), decodeImage(pose.light)]).then((images) => {
+        if (disposed) {
+          images.forEach(closeImage)
+          return
+        }
+        [set.photo, set.figure, set.light] = images.map(flatTexture)
+        for (const texture of [set.photo, set.figure, set.light]) renderer.initTexture(texture)
+        set.state = 'ready'
+        set.shownAt = performance.now()
+        if (onNeedsRender) onNeedsRender()
+      }, () => { set.state = 'error' })
+    }
+    set.fade = (now) => (set.state === 'ready' ? fadeSince(set.shownAt, now) : 0)
+    set.isFading = (now) => set.state === 'ready' && now - set.shownAt < FADE_MS
+    set.settled = (now) => set.state === 'error' || (set.state === 'ready' && now - set.shownAt >= FADE_MS)
+    set.dispose = () => {
+      for (const texture of [set.photo, set.figure, set.light]) {
+        if (!texture) continue
+        texture.dispose()
+        closeImage(texture.image)
+      }
+    }
+    return set
+  }
+  const poseSets = poses ? Object.fromEntries(poseSizes.map((size) => [size, poseSet(size)])) : null
+
+  // La pose d'une taille tout de suite ; sans taille, la suivante qui n'est pas partie, une à la fois.
+  function prefetchPoses(size) {
+    if (!poseSets) return
+    if (size) {
+      poseSets[size].load()
+      return
+    }
+    if (poseSizes.some((s) => poseSets[s].state === 'loading')) return
+    const next = poseSizes.find((s) => poseSets[s].state === 'none')
+    if (next) poseSets[next].load()
+  }
+
+  /* Les deux poses les plus présentes dans la vue vont dans les places A et B (une troisième, au
+     milieu de choix très rapides, leur cède sa part). Le calque de la femme ne se dessine que sur
+     la silhouette du tableau, ramenée au mur depuis la caméra (sa tranche comprise). */
+  const SLOTS = [
+    ['uPoseA', 'uLightA', 'uCleanA', 'uFigureA', 'uFigureRectA'],
+    ['uPoseB', 'uLightB', 'uCleanB', 'uFigureB', 'uFigureRectB'],
+  ]
+  let posesShown = poseSizes.map(() => 0) // parts des poses dans la dernière vue : seul leur fondu compte
+  function updatePoses(view, now) {
+    posesShown = poseSizes.map((_, i) => (view.room > 0 && view.poses ? view.poses[i] : 0))
+    const shares = poseSizes.map((size, i) => {
+      if (posesShown[i] > 0) poseSets[size].load()
+      return posesShown[i] * poseSets[size].fade(now)
+    })
+    const order = poseSizes.map((_, i) => i).filter((i) => shares[i] > 0).sort((a, b) => shares[b] - shares[a]).slice(0, 2)
+    const kept = order.reduce((sum, i) => sum + shares[i], 0)
+    const total = shares.reduce((sum, share) => sum + share, 0)
+    const weights = [0, 0]
+    order.forEach((i, k) => {
+      const set = poseSets[poseSizes[i]]
+      const [photo, light, clean, figure, rect] = SLOTS[k]
+      wallUniforms[photo].value = set.photo
+      wallUniforms[light].value = set.light
+      wallUniforms[clean].value.set(...set.clean)
+      wallUniforms[figure].value = set.figure
+      wallUniforms[rect].value.set(set.overlay.left, set.overlay.bottom, set.overlay.right, set.overlay.top)
+      weights[k] = shares[i] / kept
+    })
+    // Les poses gardées font un tout ; la pièce est là autant que la plus prête des poses montrées
+    // (une pose qui arrive se fond, une qui cède la place à une pose pas encore prête reste entière :
+    // jamais d'image délavée, version 25).
+    const presence = Math.max(0, ...poseSizes.map((size, i) => (posesShown[i] > 0 ? poseSets[size].fade(now) : 0)))
+    wallUniforms.uPoseW.value.set(...weights)
+    wallUniforms.uPoseMix.value = kept > 0 ? view.room * presence : 0
+    if (kept > 0) {
+      const c = camera.position
+      let l = Infinity, r = -Infinity, b = Infinity, t = -Infinity
+      for (const [x, y, z] of paintingCorners(view.painting, 'outer')) {
+        const k = c.z / (c.z - z)
+        const wx = c.x + (x - c.x) * k, wy = c.y + (y - c.y) * k
+        l = Math.min(l, x, wx)
+        r = Math.max(r, x, wx)
+        b = Math.min(b, y, wy)
+        t = Math.max(t, y, wy)
+      }
+      figureUniforms.uOver.value.set(l - 0.2, b - 0.2, r + 0.2, t + 0.2)
+    }
+  }
 
   let onNeedsRender = null
   let disposed = false
@@ -2629,7 +3313,18 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
   }
 
   // Tout vient de la vue du directeur : caméra, pose, pièce et choix en cours (view.product).
+  function useLight(k) {
+    poseK = k
+    const mixed = unit(roomLight.map((v, i) => v + (poseLight[i] - v) * k))
+    for (let i = 0; i < 3; i++) light[i] = mixed[i]
+    artUniforms.uLight.value.set(...light)
+    frameUniforms.uLight.value.set(...light)
+    artUniforms.uNorm.value = 1 / (SHADE.ambient + SHADE.diffuse * light[2])
+    artUniforms.uShadeSide.value = light[0] > 0 ? -1 : 1
+  }
+
   function render(view, now) {
+    useLight(poseSets ? view.room : 0)
     camera.fov = (view.camera.fovY * 180) / Math.PI
     camera.position.set(...view.camera.position)
     camera.lookAt(...view.camera.target)
@@ -2637,8 +3332,12 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
     updatePainting(view.painting, view.product, now)
     updateShadow(view.painting)
     roomShown = view.room > 0
-    if (roomShown) roomPhoto.load()
-    wallUniforms.uRoomMix.value = view.room * roomPhoto.fade(now)
+    if (poseSets) {
+      updatePoses(view, now) // avec les poses, la pièce ne sert pas
+    } else {
+      if (roomShown) roomPhoto.load()
+      wallUniforms.uRoomMix.value = view.room * roomPhoto.fade(now)
+    }
     finishArtSwap(now)
     renderer.render(scene, camera)
   }
@@ -2733,13 +3432,8 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
     return { x: ((tmp.x + 1) / 2) * width, y: ((1 - tmp.y) / 2) * height }
   }
 
-  // Seul ce qui se voit compte : un fondu hors du champ ne réclame aucune image.
-  function isFading(now) {
-    return !!artSwap || (roomShown && roomPhoto.isFading(now)) || (frameMesh.visible && wood.isFading(now))
-  }
-
-  /* Rend tout à la carte graphique : la bascule toile/poster remplace la fiche, et un navigateur ne
-     garde qu'une quinzaine de contextes WebGL. La scène ne sert plus après. */
+  /* Rend tout à la carte graphique : un navigateur ne garde qu'une quinzaine de contextes WebGL. La
+     scène ne sert plus après. */
   function dispose() {
     disposed = true
     scene.traverse((object) => {
@@ -2751,9 +3445,18 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
       frameUniforms.uMap, wallUniforms.uRoom, backUniforms.uMarks,
     ]
     for (const { value } of textures) if (value) value.dispose()
+    for (const set of Object.values(poseSets || {})) set.dispose()
     closeImage(artImage)
     renderer.dispose()
     renderer.forceContextLoss()
+  }
+
+  // Seul ce qui se voit compte : un fondu hors du champ ne réclame aucune image.
+  // art : compter le fondu de la source complète (la même image, plus nette), qui n'est pas un
+  // mouvement pour la page (ses plaques, « De face »), mais demande encore des images.
+  function isFading(now, { art = true } = {}) {
+    const posesFading = !!poseSets && poseSizes.some((size, i) => posesShown[i] > 0 && poseSets[size].isFading(now))
+    return (art && !!artSwap) || (roomShown && (roomPhoto.isFading(now) || posesFading)) || (frameMesh.visible && wood.isFading(now))
   }
 
   return {
@@ -2765,6 +3468,7 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
     loadWood: wood.load,
     useArtImage,
     prefetchRoom: roomPhoto.load,
+    prefetchPoses,
     density: () => renderer.getPixelRatio(),
     isFading,
     dispose,

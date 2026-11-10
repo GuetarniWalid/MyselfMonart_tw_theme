@@ -9,14 +9,15 @@
     - modèle propre à un type : ajouter son suffixe sur la ligne `when` de ce type
       (when 'painting', 'nouveau-suffixe') ;
     - modèle partagé par les toiles et les posters : une ligne `when` qui tranche d'après `product`.
-  oeuvre-3d, la fiche 3D, n'est que pour les toiles tant que le poster n'y arrive pas (ticket 14).
+  oeuvre-3d, la fiche 3D, sert aux toiles et aux posters (ticket 14) : un poster s'y reconnaît à son
+  métachamp frames_poster, comme partout ailleurs.
   À ne pas confondre avec :
     - le métachamp artwork.type (painting, poster, tapestry), lu par la recherche et le studio ;
     - is_poster (métachamp frames_poster), qui donne aux posters leur sélecteur et leur 3D
       quel que soit leur modèle de page.
 
   Accepts:
-    - product: {Object} le produit. Pas encore lu : les modèles actuels sont propres à un type.
+    - product: {Object} le produit : il tranche pour les modèles partagés (oeuvre-3d).
     - suffix: {String} suffixe du modèle de page : template.suffix sur la fiche produit,
       product.template_suffix pour un produit affiché ailleurs (ligne du panier)
 
@@ -27,9 +28,15 @@
 {%- endcomment -%}
 {%- liquid
   case suffix
-    when 'painting', 'oeuvre-3d'
+    when 'painting'
       echo 'toile'
     when 'poster'
       echo 'poster'
+    when 'oeuvre-3d'
+      if product.metafields.painting_options.frames_poster != blank
+        echo 'poster'
+      else
+        echo 'toile'
+      endif
   endcase
 -%}
