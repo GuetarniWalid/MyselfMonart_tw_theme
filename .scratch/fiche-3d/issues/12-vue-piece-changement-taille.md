@@ -120,3 +120,15 @@ Walid : au retour de face depuis la Taille, encore « pas smooth », « à parti
 **Vérifié** : 219 tests, dont, image par image à 60 images/s, aller, retour et changement de taille, 4 tailles × 4 zones : la pièce entière ou absente sauf pendant le passage de 250 ms, les poses toujours entières, ni pause ni saut. Sur la vraie page : le contrôle image par image du coordinateur (pièce, pauses, sauts) sur les quatre formats, et un vrai retour relevé image par image (aucun flou d'arrière-plan visible) ; images fixes du retour et de l'aller du 60 × 80 en 390 × 844 (à 0, 200, 400, 600, 750, 850 et 1000 ms). Captures des quatre tailles sur les quatre formats, console vide ; les suites de non-régression repassent.
 
 **Pas vérifié** : un vrai téléphone (fluidité), Safari, le lecteur d'Artifacts de claude.ai.
+
+### Version 26 : sa main entière devant le tableau (retour de Walid sur la version 25, 10/11)
+
+Walid : sa main est coupée par le tableau en 75 × 100 et en 90 × 120. Cause, trouvée par le coordinateur : dans les photos 21:9, le rectangle blanc avait été collé par-dessus sa main avant la génération (en 75 × 100, ses doigts s'arrêtaient à son bord ; en 90 × 120, toute la main était dessous) : il n'y avait plus de main à détourer. Il a fait refaire ces deux photos par Gemini : sa main droite complète (doigts entiers en 75 × 100 ; main ouverte, doigts écartés, devant le mur en 90 × 120), le rectangle retiré (mur nu), tout le reste identique.
+
+**Fait :**
+- Recalage des deux photos refaites sur celles de la version 25 (corrélation de phase par régions) : olivier, banc et vase à 1 px près, panier et lampadaire à 3 px, son corps à 3 px, soit 0,25 cm au plus : rien n'a glissé. Les places du tableau de la version 25 restent (`rect` de `poses.js`) ; le préparateur, sans rectangle à effacer, garde le mur de Gemini.
+- Masques BiRefNet refaits, balance des blancs, lumière du mur et calque de ce qui passe devant le tableau : sa main y est entière (90 × 120 : elle commence 245 px plus à gauche, devant le tableau agrandi ; 75 × 100 : les doigts dépassent le bord du rectangle d'avant).
+
+**Vérifié** : 219 tests ; 96 contrôles sur les quatre formats, console vide ; gros plans de sa main devant le 75 × 100 et le 90 × 120 en 390 × 844 et en 1440 × 820 (et en 375 × 667, 375 × 553) : doigts entiers, bords propres, aucune trace du rectangle. Le plan du jour à 9 cm (ticket 07) : 100 contrôles des gros plans sur les quatre formats, captures ; les autres suites de non-régression repassent (50, 82, 181 et 58 contrôles).
+
+**Pas vérifié** : un vrai téléphone, Safari, le lecteur d'Artifacts de claude.ai.

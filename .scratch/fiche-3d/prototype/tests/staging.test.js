@@ -176,9 +176,10 @@ for (const aspect of [...SCREENS, DESK_ZONE]) {
       const forward = unit(sub(view.camera.target, view.camera.position))
       const turn = (Math.acos(-forward[2]) * 180) / Math.PI
       assert.ok(turn <= 32, `la caméra tourne de ${turn.toFixed(1)}° depuis le mur`)
-      // Recul demandé par Walid le 10/11 (« reculez un petit peu ») : 1,5 à 2 fois le gros plan à 3,2 cm.
+      // Recul demandé par Walid le 10/11 (« reculez un petit peu »), puis sur la version 25 (« trop
+      // zoomé », « effet dessin animé » à 6,4 cm) : environ 9 cm de haut à l'écran.
       const field = 2 * onScreen.depth * Math.tan(view.camera.fovY / 2)
-      assert.ok(field >= 4.8 && field <= 7, `plan rapproché : ${field.toFixed(1)} cm de haut à l'écran`)
+      assert.ok(field >= 8 && field <= 10, `plan rapproché : ${field.toFixed(1)} cm de haut à l'écran`)
       // Regard de biais vers la tranche éclairée et vers le bas, de 12 à 18° depuis l'angle : en deçà la
       // tranche s'aplatit, au-delà la lèvre en cache le fond (caméra à 12 cm, la perspective compte).
       const look = sub(view.camera.position, corner)
@@ -198,8 +199,9 @@ for (const aspect of [...SCREENS, DESK_ZONE]) {
         const band = gapBand(view, aspect, above)
         // Ordre de grandeur : jour 0,6 cm, lèvre 0,5 cm devant la toile -> 0,46 cm au plus vue de face.
         assert.ok(band.cm >= 0.4, `${size}, ${above} cm : ${band.cm.toFixed(2)} cm de tranche visibles`)
-        // Au moins 6,5 % de la hauteur : 24 px sur le plus petit écran (553 px visibles, rangée ouverte).
-        assert.ok(band.screen >= 0.065, `${size}, ${above} cm : la tranche ne prend que ${(band.screen * 100).toFixed(1)} % de la hauteur`)
+        // Au moins 4,5 % de la hauteur : 16 px sur le plus petit écran (rangée ouverte), le jour reste
+        // lisible avec le plan reculé à 9 cm (version 26 ; 6,5 % à 6,4 cm).
+        assert.ok(band.screen >= 0.045, `${size}, ${above} cm : la tranche ne prend que ${(band.screen * 100).toFixed(1)} % de la hauteur`)
       }
     }
     // La tranche montrée reçoit la lumière de la pièce : pas un trou noir.
