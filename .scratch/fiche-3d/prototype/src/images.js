@@ -17,14 +17,15 @@ function viaElement(url) {
   })
 }
 
-// source : adresse d'une image, ou <img> déjà chargée (rien n'est retéléchargé).
-export async function decodeImage(source) {
+// source : adresse d'une image, ou <img> déjà chargée (rien n'est retéléchargé). options : celles
+// de createImageBitmap (un calque détouré garde son alpha non prémultiplié).
+export async function decodeImage(source, options) {
   const loaded = typeof source !== 'string'
   if (!('createImageBitmap' in window)) return loaded ? source : viaElement(source)
   try {
-    if (loaded) return await createImageBitmap(source)
+    if (loaded) return await createImageBitmap(source, options)
     const response = await fetch(source)
-    return await createImageBitmap(await response.blob())
+    return await createImageBitmap(await response.blob(), options)
   } catch {
     return loaded ? source : viaElement(source)
   }

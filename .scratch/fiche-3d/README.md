@@ -27,7 +27,7 @@ Ajouter un tableau à partir d'une seule image à plat, sans Photoshop ni mockup
 5. Affichage : une vraie image d'abord, puis la 3D prend le relais en fondu, sans décaler la page. Appareil trop faible, 3D indisponible ou animations réduites : on reste sur les photos, avec de simples fondus.
 6. Arrivée : l'œuvre seule, de face, sur un mur clair, avec une lumière douce et une ombre réaliste.
 7. Mise en scène guidée, plus une légère inclinaison au doigt ou à la souris (pas de 3D libre) :
-   - taille : la caméra recule dans la pièce, le tableau change de taille à la vraie échelle, cote en cm ;
+   - taille : la caméra recule, une femme se tient à côté du tableau (une pose par taille, décision 10 du 10/11), le tableau change de taille à la vraie échelle, cote en cm ;
    - bordure : le tableau pivote pour montrer la tranche ; avec un cadre, gros plan sur la tranche dans le jour entre la toile et le cadre (09/11, décision 9) ;
    - cadre : zoom sur un coin du cadre ;
    - contour blanc : zoom de face sur la marge ;
@@ -47,6 +47,7 @@ Ajouter un tableau à partir d'une seule image à plat, sans Photoshop ni mockup
     - les intérieurs sont habités, pas vides : « autant un mur blanc » sinon ;
     - le tableau prend la lumière de la pièce par le calcul (méthode 1 du ticket 11), avec la tranche et l'ombre de la 3D ;
     - les pièces restent un bonus : la fiche démarre sur le mur neutre, et sort sans elles si elles n'atteignent pas le niveau voulu par Walid.
+    - Choix de Walid du 10/11 : la mise en scène de la taille quitte le grand salon, où le 30 × 40 était ridicule sur un mur immense. Une femme se tient à côté du tableau, sur un mur clair, la même femme dans une pose par taille : quatre photos générées par Gemini et validées par Walid (même mur, plinthe, parquet et appareil, 16 px/cm dans le plan du mur). Le tableau 3D se pose exactement sur le rectangle blanc qui marquait sa place, effacé des photos, avec la lumière de la photo (venue de la gauche), son ombre et sa tranche ; la cote en cm reste, la hauteur à gauche. La femme est détourée sur le PC (BiRefNet, licence MIT) : sa main passe devant le 90 × 120 et l'ombre du tableau ne tombe pas sur elle. Changer de taille, rangée ouverte, fond une pose dans l'autre pendant que le tableau change de taille. Les photos (1 Mo pour les quatre) ne se chargent qu'à la première ouverture de la Taille. Ticket 12.
 11. Photos automatiques : le moteur rend 5 ou 6 vraies photos par produit (de face sur fond clair, de trois-quarts avec la tranche, gros plan de la matière, coin du cadre, dans la pièce), décrites par Claude et visibles sous la 3D dans une bande « Sous tous les angles ». Une image par cadre pour les variantes.
 12. Publisher : une image donne la toile et le poster par défaut (carré : toile seule). L'IA propose la collection et la pièce ; Walid valide sur un seul écran, puis un clic publie.
 13. Rendus : sur le serveur actuel, à la demande, un à la fois, jamais en même temps que le studio des posters personnalisés. On n'agrandit le serveur que si la mesure l'exige. La base MySQL sert encore : on la garde.

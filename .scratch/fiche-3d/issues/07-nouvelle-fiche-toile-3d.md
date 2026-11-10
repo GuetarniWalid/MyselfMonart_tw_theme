@@ -269,3 +269,17 @@ Version 19 validée, sauf un point : à la fermeture de Bordure ou de Cadre, la 
 - Les 50 contrôles généraux, les 82 de la rangée ouverte et les 181 de la mise en scène à l'ouverture repassent.
 
 **Pas vérifié** : un vrai téléphone, Safari, le lecteur d'Artifacts de claude.ai.
+
+### Taille : une femme à côté du tableau, à la place du salon (choix de Walid du 10/11)
+
+Walid : le 30 × 40 était ridicule sur un mur immense. La mise en scène de la Taille quitte le grand salon : une femme se tient à côté du tableau, sur un mur clair, une pose par taille (quatre photos générées par Gemini, validées par Walid). Détail, préparation des photos, écarts et vérifications : ticket 12, section « Maquette du 10/11/2026 ».
+
+**Fait.**
+- Ouvrir la Taille, ou y changer de taille, montre la photo de la pose à la place du salon. Le tableau 3D est posé exactement sur le rectangle de la photo, à la vraie échelle, avec la lumière venue de la gauche, son ombre et sa tranche ; la cote en cm reste, celle de la hauteur passe à gauche (la femme est à droite). Rangée ouverte, changer de taille fond une pose dans l'autre pendant que le tableau change de taille.
+- La femme est détourée : sa main passe devant le 90 × 120, et l'ombre du tableau ne tombe pas sur elle.
+- Cadrage au-dessus de la rangée ouverte, sur les quatre formats : le tableau, ses cotes (sous le bouton « De face ») et la tête de la femme toujours ; la femme en entier sur un téléphone en hauteur ; sur un écran large, peu de mur vide, la femme coupée au plus bas à mi-cuisse. Au-delà de la photo, le mur se prolonge en miroir, sans raccord visible.
+- Photos et calques réduits à 2400 px de large (982 Ko pour les quatre poses), chargés à la première approche de la Taille seulement ; le salon ne se charge plus. Le reste de la maquette ne change pas : le tableau est simplement accroché sur le rectangle de sa pose dans tous les plans, ce qui ne se voit pas sur le mur uni.
+
+**Vérifié** : 217 tests ; 76 contrôles de la Taille sur les quatre formats ; captures de chaque taille, du fondu et de la main ; les contrôles généraux, de la rangée ouverte, de la mise en scène à l'ouverture, des légendes et du jour repassent (détail dans le ticket 12).
+
+**Pas vérifié** : un vrai téléphone, Safari, le lecteur d'Artifacts de claude.ai.

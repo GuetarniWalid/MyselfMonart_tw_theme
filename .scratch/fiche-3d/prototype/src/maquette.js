@@ -6,10 +6,11 @@
  * Les chips (src/chips.js et src/chips.css) sont un module à part, que la fiche du thème reprendra :
  * cette page leur fournit le catalogue du Bonsaï, la scène et la 3D. Le moteur (scene.js), la mise
  * en scène (staging.js) et leurs réglages sont ceux du prototype validé. La page ne fait que cadrer
- * (framing.js) : le tableau de face prend la largeur et la place que le design lui donne, la pièce
- * recule pour tenir entre les légendes (fitRoom), la 3D est décalée vers le haut comme l'œuvre du
- * design (lensShift) et, rangée ouverte, chaque mise en scène se cadre dans la zone visible
- * au-dessus de la rangée. Le reste de la fiche, sous l'œuvre, est factice.
+ * (framing.js) : le tableau de face prend la largeur et la place que le design lui donne, la 3D est
+ * décalée vers le haut comme l'œuvre du design (lensShift) et, rangée ouverte, chaque mise en scène
+ * se cadre dans la zone visible au-dessus de la rangée. La taille se met en scène avec une femme à
+ * côté du tableau, une pose par taille (poses.js, choix de Walid du 10/11), à la place du salon.
+ * Le reste de la fiche, sous l'œuvre, est factice.
  *
  * Arrivée : la photo d'abord, à la place exacte de l'œuvre de face, et les chips qui se posent ;
  * three.js se charge au repos et la 3D apparaît en fondu. Toucher une légende ouvre sa rangée et, dès
@@ -21,6 +22,7 @@
 
 import { createDirector, paintingCorners } from './staging.js'
 import { ROOM } from './room.js'
+import { POSES } from './poses.js'
 import { BORDERS, FRAMES, SIZES, canFrame, describe, dimensionsOf, fitChoice, frameFits, hasFrame, priceOf } from './catalog.js'
 import { densityForCost, renderDensity } from './quality.js'
 import { decodeImage } from './images.js'
@@ -43,13 +45,13 @@ const decimal =new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 1, minimu
 
 const product = { material: 'toile', size: '30x40', border: 'blanche', frame: 'sans', passe: false }
 let reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches
-const director = createDirector({ room: ROOM, product: { ...product }, reducedMotion })
+const director = createDirector({ room: ROOM, poses: POSES, product: { ...product }, reducedMotion })
 
 let engine = null
 let live = false // moteur prêt à dessiner : programmes compilés
-/* w, h : la scène visible ; top, glH : la 3D, qui déborde la scène (canvasBox) ; zone : largeur
-   libre entre les légendes, pour la pièce ; L : la mise en page des chips. */
-const stageSize = { w: 1, h: 1, top: 0, glH: 1, zone: 1, L: null }
+/* w, h : la scène visible ; top, glH : la 3D, qui déborde la scène (canvasBox) ; free : le coin en
+   haut à gauche que prend le bouton « De face », et un peu d'air (px) ; L : la mise en page des chips. */
+const stageSize = { w: 1, h: 1, top: 0, glH: 1, free: { top: 0, left: 0 }, L: null }
 
 /* Rangée ouverte, une mise en scène se cadre dans la zone visible au-dessus de la rangée : le poids
    w (framing.js) passe de 0 à 1 au rythme de la caméra, et revient à 0 avec elle quand la rangée se
@@ -173,10 +175,11 @@ function announce() {
 
 /* ---------------- Choisir ---------------- */
 
-// Ce qu'un groupe réclame part dès qu'on l'approche : la source complète pour les gros plans.
+// Ce qu'un groupe réclame part dès qu'on l'approche : la source complète pour les gros plans, la
+// pose de la taille en cours pour la taille (les trois autres suivent, une à une, la 3D arrêtée).
 function approach(group) {
   if (group === 'border' || group === 'frame' || group === 'passe' || group === 'material') loadDetail()
-  if (group === 'size') prefetchRoom()
+  if (group === 'size') prefetchPoses()
 }
 stageEl.addEventListener('pointerdown', (event) => {
   const target = event.target.closest('.chips-switch, .chips-legend, .chips-cote')
@@ -276,12 +279,14 @@ function setFront(visible) {
 setFront(false)
 frontBtn.addEventListener('click', goFront)
 
-/* ---------------- Source complète, pièce, bois ---------------- */
+/* ---------------- Source complète, poses, bois ---------------- */
 
 const pendingTasks = []
 const onceLive = (task) => (live ? task() : pendingTasks.push(task))
-function prefetchRoom() {
-  onceLive(() => engine.prefetchRoom())
+let posesAsked = false
+function prefetchPoses() {
+  posesAsked = true
+  onceLive(() => engine.prefetchPoses(product.size))
 }
 
 let detailAsked = false, detailReady = null
@@ -313,33 +318,6 @@ function requestRender() {
   if (!raf && live) raf = requestAnimationFrame(frame)
 }
 
-/* Dans la pièce, sur un écran haut et étroit, le 75 × 100 et le 90 × 120 passaient sous les
-   légendes et la cote de hauteur sortait de l'écran. La caméra recule juste ce qu'il faut pour que
-   le tableau et ses cotes tiennent dans la largeur de l'œuvre de face, et le cadrage remonte d'autant
-   pour ne jamais descendre sous le sol de la photo. Le recul arrive avec la pièce (view.room) : la
-   transition reste continue. Rien ne change ailleurs. h : la hauteur d'écran du cadrage en cours
-   (la scène, ou la zone au-dessus de la rangée ouverte). */
-const ROOM_DIMS = { cm: 6, px: 24 } // écart d'une cote au tableau, place de son étiquette
-function fitRoom(view, h) {
-  const k = view.room
-  if (!(k > 0)) return view
-  const { camera, painting } = view
-  const tan = Math.tan(camera.fovY / 2)
-  const offset = camera.position.map((c, i) => c - camera.target[i])
-  const distance = Math.hypot(...offset)
-  const room = stageSize.zone - 2 * ROOM_DIMS.px
-  const need = ((painting.outer.width + 2 * ROOM_DIMS.cm) * h) / (2 * tan * room)
-  if (need <= distance) return view
-  const reach = distance + (need - distance) * k
-  const half = reach * tan
-  const target = [...camera.target]
-  target[1] += Math.max(0, ROOM.view.bottom + half - target[1]) * k
-  const sideways = half * (stageSize.w / h)
-  target[0] += (Math.min(Math.max(target[0], ROOM.photo.left + sideways), ROOM.photo.right - sideways) - target[0]) * k
-  const position = target.map((t, i) => t + (offset[i] * reach) / distance)
-  return { ...view, camera: { ...camera, position, target } }
-}
-
 /* Le design place l'œuvre de face un peu au-dessus du milieu de la scène, pour centrer le bloc
    (bascule, œuvre, cote) au-dessus de la barre d'achat. La 3D garde l'image que la mise en scène
    calcule pour la scène visible (ou pour la zone au-dessus de la rangée), simplement déplacée : le
@@ -363,10 +341,13 @@ function placeCanvas(offset) {
   dimsEl.style.transform = transform
 }
 
+// Le coin du bouton « De face », en part de l'écran que cadre le directeur.
+const insetOf = (f) => ({ top: stageSize.free.top / f.h, left: stageSize.free.left / stageSize.w })
+
 let lastView = null
 function draw(at) {
   const f = framingNow(at)
-  const view = lensShift(fitRoom(director.view(at, f.aspect), f.h), f.fovScale)
+  const view = lensShift(director.view(at, f.aspect, f.screen, insetOf(f)), f.fovScale)
   placeCanvas(f.offset)
   engine.render(view, at)
   placeDims(view)
@@ -388,6 +369,7 @@ function frame(now) {
   }
   if (run.active) reportFluidity()
   swapDetail()
+  if (posesAsked) engine.prefetchPoses() // la pose suivante, à l'arrêt
 }
 
 // Un point de la 3D, projeté dans la couche `scene` (canvas décalé compris).
@@ -408,6 +390,7 @@ function placeDims(view) {
   const o = view.dims.opacity
   dimsEl.style.opacity = o.toFixed(3)
   if (o < 0.01) return
+  dimH.classList.toggle('is-left', view.dims.side < 0) // la femme est à droite du tableau
   const a = engine.toScreen(view.dims.width.a), b = engine.toScreen(view.dims.width.b)
   Object.assign(dimW.style, { left: `${a.x}px`, top: `${a.y}px`, width: `${b.x - a.x}px` })
   dimW.firstChild.textContent = view.dims.width.text
@@ -456,7 +439,9 @@ function measureStage() {
   const h = Math.max(1, Math.round(rect.height))
   const L = chips.resize({ width: w, height: h })
   const box = canvasBox(L)
-  Object.assign(stageSize, { w, h, top: box.top, glH: box.height, zone: L.art.w, L })
+  const button = frontBtn.getBoundingClientRect()
+  const free = { top: button.bottom - rect.top + 6, left: button.right - rect.left + 6 }
+  Object.assign(stageSize, { w, h, top: box.top, glH: box.height, free, L })
   const set = (name, value) => sceneEl.style.setProperty(name, `${Math.round(value * 100) / 100}px`)
   set('--art-x', L.art.l)
   set('--art-y', L.art.t)
@@ -598,14 +583,14 @@ async function start3D() {
     const [THREE, { createScene }, weave, artImage] = await Promise.all([
       three, import('./scene.js'), askReliefs().weave, decodeImage(poster),
     ])
-    engine = createScene(THREE, { canvas, artImage, weave, room: ROOM, woodImage: WOOD_IMAGE })
+    engine = createScene(THREE, { canvas, artImage, weave, room: ROOM, poses: POSES, woodImage: WOOD_IMAGE })
     canvas.addEventListener('webglcontextlost', backToPhoto)
     measureStage()
     fitStage()
     engine.onNeedsRender = requestRender
     const at = performance.now()
     const f = framingNow(at)
-    marks.frameCost = await engine.prepare(lensShift(director.view(at, f.aspect), f.fovScale), at)
+    marks.frameCost = await engine.prepare(lensShift(director.view(at, f.aspect, f.screen, insetOf(f)), f.fovScale), at)
     densityCap = densityForCost(engine.density(), marks.frameCost)
     if (densityCap < engine.density()) fitStage()
   } catch (error) {
@@ -627,9 +612,8 @@ async function start3D() {
   requestRender() // un choix fait avant l'arrivée de la 3D continue sa transition
   pendingTasks.forEach((task) => task())
   askReliefs().paper.then((pixels) => engine.setPaperRelief(pixels))
-  // Les cadres et la pièce en ont besoin : le bois (40 Ko) et la photo de la pièce (211 Ko).
+  // Les cadres en ont besoin : le bois (40 Ko). Les poses de la taille attendent qu'on l'approche.
   engine.loadWood()
-  whenIdle(() => engine.prefetchRoom())
   requestAnimationFrame(() => {
     canvas.removeAttribute('aria-hidden')
     canvas.classList.add('on')
@@ -659,11 +643,8 @@ function whenIdle(task) {
 }
 
 function fillCredit() {
-  const { title, author, url } = ROOM.credit
-  const link = document.createElement('a')
-  Object.assign(link, { href: url, target: '_blank', rel: 'noopener', textContent: 'Unsplash' })
-  $('credit').replaceChildren(`Pièce provisoire : « ${title} », rendu de ${author} sur `, link,
-    ' (licence Unsplash), en attendant les pièces du ticket 11.')
+  $('credit').textContent = 'Mise en scène de la taille : photos générées par Gemini et validées par Walid, ' +
+    'femme détourée sur le PC (BiRefNet, licence MIT).'
 }
 
 measureStage()

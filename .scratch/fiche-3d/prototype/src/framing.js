@@ -40,7 +40,8 @@ export function directorAspect({ w, h, paintW, fill = 0.72, ratio = 0.75 }) {
 }
 
 /* Le cadrage pour un poids w. shift : la remontée de la scène, rangée ouverte ; glH : la hauteur
-   du canvas. Rend la hauteur d'écran pour laquelle le directeur cadre (h) et sa forme (aspect), le
+   du canvas. Rend la hauteur d'écran pour laquelle le directeur cadre (h), sa forme (aspect) et celle
+   de l'écran réel (screen, pour la pose de la taille, qui ne doit pas montrer le bord de sa photo), le
    décalage du canvas dans la scène (offset, px) et le rapport d'angle de vue (fovScale). */
 export function framingAt(L, { w = 0, shift = 0, glH }) {
   const zone = railZone(L)
@@ -48,6 +49,7 @@ export function framingAt(L, { w = 0, shift = 0, glH }) {
   return {
     h,
     aspect: directorAspect({ w: L.W, h, paintW: L.art.w, ratio: L.ratio }),
+    screen: L.W / h,
     offset: w ? w * (zone.center - (L.cy - shift)) : 0,
     fovScale: glH / h,
   }

@@ -22,7 +22,7 @@
  * chemin, puis la suite s'enchaîne. Le prix et le bouton, eux, n'attendent jamais.
  */
 
-import { CANVAS_DEPTH, FRAME_PROFILE, PAPER_DEPTH, dimensionsOf, hasFrame } from './catalog.js'
+import { CANVAS_DEPTH, FRAME_PROFILE, PAPER_DEPTH, SIZES, dimensionsOf, hasFrame } from './catalog.js'
 
 const DEG = Math.PI / 180
 const FOV_Y = 30 * DEG
@@ -185,7 +185,7 @@ function hungPainting(room, product) {
     outer = { width: w + band, height: h + band, depth: Math.max(frame.depth, frame.floor + depth) }
     artZ = frame.floor
   }
-  const c = hangingCenter(room, outer.height)
+  const c = room.poses ? poseCenter(room.poses, product.size) : hangingCenter(room, outer.height)
   const paper = product.material === 'poster' ? 1 : 0
   const passe = paper && product.passe ? 1 : 0 // contour blanc, en fondu pendant la transition
   const framed = hasFrame(product) ? 1 : 0 // le cadre aussi : il n'apparaît jamais d'un coup
@@ -196,30 +196,139 @@ const artFront = (p) => [p.x, p.y, p.z + p.artZ + p.depth]
 
 /* Cotes : une ligne au-dessus du tableau pour la largeur, une à sa droite pour la hauteur,
    posées en façade de l'œuvre. Toujours calculées pour que les fondus restent continus ;
-   seule leur opacité dit si on les montre. */
+   seule leur opacité dit si on les montre. side : -1 met la cote de hauteur à gauche (avec la
+   femme, qui se tient à droite du tableau). */
 const DIMS_OFFSET = 6
 const DIMS_LABEL = 14 // hauteur à laisser au-dessus de la ligne pour son étiquette, dans la pièce
 const ROOM_HEADROOM = 7 // cm gardés au-dessus du tableau dans le cadrage de la pièce
 const ROOM_SHARE = 0.25 // part de la hauteur de la vue que le tableau prend au moins, dans la pièce
 const DIMS_UNDER = 8 // sous le tableau, la ligne descend d'autant pour laisser la place à l'étiquette
 
-function dimsOf(p, opacity, under = false) {
+function dimsOf(p, opacity, under = false, side = 1) {
   const z = p.z + p.artZ + p.depth
   const left = p.x - p.width / 2, right = p.x + p.width / 2
   const bottom = p.y - p.height / 2, top = p.y + p.height / 2
   const ox = (p.outer.width - p.width) / 2 + DIMS_OFFSET
   const oy = (p.outer.height - p.height) / 2 + DIMS_OFFSET
   const y = under ? bottom - oy - DIMS_UNDER : top + oy
+  const x = side > 0 ? right + ox : left - ox
   return {
     opacity,
     under,
+    side,
     width: { a: [left, y, z], b: [right, y, z], text: `${p.width} cm` },
-    height: { a: [right + ox, bottom, z], b: [right + ox, top, z], text: `${p.height} cm` },
+    height: { a: [x, bottom, z], b: [x, top, z], text: `${p.height} cm` },
   }
 }
 
-function shotOf(shot, camera, painting, roomOpacity = 0, dimsUnder = false) {
-  return { shot, camera, painting, room: roomOpacity, dims: dimsOf(painting, roomOpacity, dimsUnder) }
+// Part de chaque pose (photo de la femme, une par taille, dans l'ordre de SIZES) : aucune hors du recul.
+const NO_POSES = SIZES.map(() => 0)
+
+function shotOf(shot, camera, painting, roomOpacity = 0, dimsUnder = false, poses = NO_POSES) {
+  return { shot, camera, painting, room: roomOpacity, dims: dimsOf(painting, roomOpacity, dimsUnder), poses }
+}
+
+/* Mise en scène de la taille avec la femme (poses.js, choix de Walid du 10/11). Les quatre photos
+   ont le même mur, la même plinthe et le même appareil : elles se posent toutes au même endroit
+   du mur, bord gauche en x = 0 et pied du mur en y = 0, à 16 px/cm. Le tableau de chaque taille
+   s'accroche sur son rectangle (hungPainting), dans tous les plans : il ne glisse jamais sur le
+   mur, et un changement de taille fond une pose dans l'autre sans bouger la pièce. Rend, en cm du
+   mur : la photo, le rectangle du tableau, la femme, sa tête, la zone de son calque, et la largeur
+   sans la femme le long des bords (clean), recopiée en miroir au-delà de la photo. */
+export function posePlacement(poses, size) {
+  const pose = poses.bySize[size]
+  const k = 1 / poses.pxPerCm
+  const box = ([left, top, right, bottom]) => ({
+    left: left * k, right: right * k, top: (poses.floorPx - top) * k, bottom: (poses.floorPx - bottom) * k,
+  })
+  const [L, T, W, H] = pose.rect
+  return {
+    photo: box([0, 0, ...poses.px]),
+    rect: box([L, T, L + W, T + H]),
+    person: box(pose.person),
+    head: box(pose.head),
+    overlay: box(pose.overlay),
+    clean: { left: pose.clean.left * k, right: pose.clean.right * k, top: pose.clean.top * k },
+  }
+}
+
+const poseCenter = (poses, size) => {
+  const { rect } = posePlacement(poses, size)
+  return { x: (rect.left + rect.right) / 2, y: (rect.top + rect.bottom) / 2 }
+}
+
+/* Cadrage de la pose, pour la forme réelle de la zone au-dessus de la rangée (screen). Doit se
+   voir : le tableau et ses cotes (hauteur à gauche, la femme est à droite), et la tête de la femme.
+   Le bouton « De face » occupe le coin en haut à gauche de la zone (inset : part de sa hauteur et de
+   sa largeur) : si le tableau ou ses cotes y tombent, ils descendent dessous. On cherche à voir :
+   la femme en entier. Sur un écran en hauteur, la vue grandit pour la montrer ; sur un écran large,
+   le mur vide sur les côtés n'en prend jamais plus d'un cinquième : si elle ne tient pas en
+   hauteur, on garde le haut, et on la coupe au plus bas à mi-cuisse (jamais aux chevilles). Autour
+   de la photo, le mur se prolonge en miroir (scene.js) : la vue en montre au plus BEYOND, jamais sous
+   le sol de la photo, de préférence à gauche et en haut, où la bande sans la femme est large ; à
+   droite, la femme est près du bord et le miroir d'une bande étroite se verrait. */
+const POSE = { margin: 0.04, label: 7, empty: 0.2, torso: 25, thigh: 0.45 }
+export const BEYOND = { side: 80, top: 60 }
+const NO_INSET = { top: 0, left: 0 }
+
+function poseShot(room, product, aspect, u, screen = aspect, inset = NO_INSET) {
+  const { photo, person, head, clean } = posePlacement(room.poses, product.size)
+  const painting = hungPainting(room, product)
+  const halfW = painting.outer.width / 2, halfH = painting.outer.height / 2
+  const top = painting.y + halfH, bottom = painting.y - halfH
+  const under = top + DIMS_OFFSET + DIMS_LABEL > photo.top
+  const dims = dimsOf(painting, 1, under, -1)
+  const union = (a, b) => ({
+    left: Math.min(a.left, b.left), right: Math.max(a.right, b.right), top: Math.max(a.top, b.top), bottom: Math.min(a.bottom, b.bottom),
+  })
+  const art = {
+    left: dims.height.a[0] - POSE.label,
+    right: painting.x + halfW,
+    top: under ? top : dims.width.a[1] + DIMS_LABEL,
+    bottom: under ? dims.width.a[1] : bottom,
+  }
+  const must = union(art, head)
+  const want = union(must, person)
+  const keep = (x, lo, hi) => (lo > hi ? (lo + hi) / 2 : Math.min(Math.max(x, lo), hi))
+
+  // roof : part du haut de la vue gardée libre au-dessus du tableau.
+  function frame(roof) {
+    const tall = (box) => Math.max((box.top - box.bottom) / (1 - 2 * POSE.margin), (art.top - box.bottom) / (1 - POSE.margin - roof))
+    const fit = (box) => Math.max(tall(box), (box.right - box.left) / screen / (1 - 2 * POSE.margin))
+    const most = Math.min(photo.top + BEYOND.top - photo.bottom, (photo.right - photo.left + 2 * BEYOND.side) / screen)
+    const roomy = screen <= 1 ? Infinity : (want.right - want.left) / ((1 - POSE.empty) * screen)
+    let height = Math.max(fit(must), Math.min(fit(want), roomy, most))
+    const whole = tall(want)
+    const ceiling = (h) => Math.max(want.top + POSE.margin * h, art.top + roof * h) // haut de la vue, le haut gardé
+    if (height < whole) {
+      const thigh = person.bottom + POSE.thigh * (person.top - person.bottom)
+      height = Math.max(fit(must), Math.min(height, (ceiling(height) - thigh) / (1 - POSE.margin)))
+    }
+    const width = height * screen
+    const pad = POSE.margin * height
+    // De côté : la femme (sans ses bras tendus) et le tableau au milieu, sans miroir de préférence à
+    // droite, et ce qui doit se voir, dedans.
+    let x = (must.left + Math.max(must.right, (head.left + head.right) / 2 + POSE.torso)) / 2
+    x = keep(x, photo.left - Math.min(BEYOND.side, clean.left) + width / 2, photo.right - width / 2)
+    x = keep(x, must.right + pad * screen - width / 2, must.left - pad * screen + width / 2)
+    x = keep(x, photo.left - BEYOND.side + width / 2, photo.right + BEYOND.side - width / 2)
+    // En hauteur : la femme en entier si elle tient, sinon le haut (tableau, tête).
+    let y = height >= whole ? (want.top + want.bottom) / 2 : ceiling(height) - height / 2
+    y = keep(y, Math.max(art.top + roof * height, must.top + pad) - height / 2, must.bottom - pad + height / 2)
+    y = keep(y, photo.bottom + height / 2, photo.top + BEYOND.top - height / 2)
+    return { x, y, height, width }
+  }
+  let view = frame(POSE.margin)
+  // Le tableau ou ses cotes sous le bouton « De face » : ils descendent dessous.
+  const roof = inset.top + POSE.margin / 2
+  if (roof > POSE.margin) {
+    const fromLeft = (art.left - (view.x - view.width / 2)) / view.width
+    const fromTop = (view.y + view.height / 2 - art.top) / view.height
+    if (fromLeft < inset.left && fromTop < roof) view = frame(roof)
+  }
+  const target = [view.x, view.y, 0]
+  const camera = { position: add(target, [0, 0, distanceFor(view.height)]), target, fovY: FOV_Y }
+  return shotOf('room', camera, painting, 1, under, SIZES.map((s) => (s === product.size ? 1 : 0)))
 }
 
 function frontShot(room, product, aspect) {
@@ -491,10 +600,23 @@ function withTilt(view, yaw, pitch) {
 
 /* reducedMotion : préférence « animations réduites » du visiteur. Les choix coupent alors
    directement sur leur plan et l'inclinaison revient de face d'un coup. */
-export function createDirector({ room, product, reducedMotion = false }) {
+export function createDirector({ room, product, poses = null, reducedMotion = false }) {
+  // Avec les poses, la taille se met en scène avec la femme, et la cote de hauteur passe à gauche
+  // dans tous les plans (elle ne se voit qu'avec la pièce) : elle ne traverse jamais l'œuvre.
+  const stage = poses ? { ...room, poses } : room
+  const leftDims = (shot) => (...args) => {
+    const view = shot(...args)
+    return { ...view, dims: dimsOf(view.painting, view.dims.opacity, view.dims.under, -1) }
+  }
+  const shots = poses
+    ? Object.fromEntries(Object.entries({ ...SHOTS, room: poseShot }).map(([name, shot]) => [name, leftDims(shot)]))
+    : SHOTS
   // legs : étapes de la transition en cours, jouées l'une après l'autre ; la première
-  // part de `from`, la vue figée à l'instant du choix.
-  const state = { product, group: null, shot: 'front', legs: [], from: null, aspect: 0.8, reducedMotion }
+  // part de `from`, la vue figée à l'instant du choix. aspect : la forme que la page donne au
+  // directeur ; screen : celle de l'écran réel (la pose ne doit jamais montrer le bord de sa photo) ;
+  // inset : le coin en haut à gauche que la page occupe (bouton « De face »), en part de la hauteur
+  // (top) et de la largeur (left) de l'écran.
+  const state = { product, group: null, shot: 'front', legs: [], from: null, aspect: 0.8, screen: 0.8, inset: NO_INSET, reducedMotion }
   // Inclinaison : `held` pendant le glisser, puis `released` décroît selon le ressort.
   const tilt = { grabbed: false, start: { yaw: 0, pitch: 0 }, held: { yaw: 0, pitch: 0 }, releasedAt: null }
 
@@ -505,17 +627,17 @@ export function createDirector({ room, product, reducedMotion = false }) {
     return { yaw: tilt.held.yaw * k, pitch: tilt.held.pitch * k }
   }
 
-  function staged(at, aspect) {
+  function staged(at, aspect, screen, inset) {
     let from = state.from
     for (const leg of state.legs) {
-      const to = SHOTS[leg.shot](room, leg.product || state.product, aspect, progressOf(leg, at))
+      const to = shots[leg.shot](stage, leg.product || state.product, aspect, progressOf(leg, at), screen, inset)
       if (at < leg.start + leg.duration) {
         const joined = (at - leg.start) / leg.join
         return joined < 1 ? mix(from, to, easeInOut(Math.max(0, joined))) : to
       }
       from = unwound(to)
     }
-    return SHOTS[state.shot](room, state.product, aspect)
+    return shots[state.shot](stage, state.product, aspect, undefined, screen, inset)
   }
 
   // Le produit à l'écran : celui d'un acte qui se finit, sinon le dernier choix.
@@ -524,9 +646,9 @@ export function createDirector({ room, product, reducedMotion = false }) {
     return finishing ? finishing.product : state.product
   }
 
-  function view(at, aspect) {
-    state.aspect = aspect
-    const base = { ...staged(at, aspect), product: shownProduct(at) }
+  function view(at, aspect, screen = aspect, inset = NO_INSET) {
+    Object.assign(state, { aspect, screen, inset })
+    const base = { ...staged(at, aspect, screen, inset), product: shownProduct(at) }
     const k = 1 - base.room // la photo de la pièce ne s'incline pas
     const offset = tiltAt(at)
     if (k === 0 || (offset.yaw === 0 && offset.pitch === 0)) return base
@@ -588,7 +710,7 @@ export function createDirector({ room, product, reducedMotion = false }) {
     const replay = group === state.group && sameProduct(state.product, nextProduct)
     if (replay && isStaging(at)) return
     // Départ figé sans l'inclinaison : celle-ci continue à part, par-dessus la transition.
-    const from = unwound(staged(at, state.aspect))
+    const from = unwound(staged(at, state.aspect, state.screen, state.inset))
     const act = actOf(group, nextProduct)
     const shot = act ? 'front' : planOf(group, nextProduct)
     const legs = []

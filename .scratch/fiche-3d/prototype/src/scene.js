@@ -21,8 +21,8 @@ import {
   CURL, artBox, backLayout, backShell, convexHull, curlOutline, curlPoint, curlShape, curlSheet, stapleRows,
   frameRing, frameProfile, frameOpening,
 } from './geometry.js'
-import { curlCorner, paintingCorners } from './staging.js'
-import { PAPER_WHITE, borderOf, borderTakesImage, frameOf, hasFrame } from './catalog.js'
+import { curlCorner, paintingCorners, posePlacement } from './staging.js'
+import { PAPER_WHITE, SIZES, borderOf, borderTakesImage, frameOf, hasFrame } from './catalog.js'
 import { BACK_COLORS, BACK_FRAGMENT, BACK_VERTEX } from './back-shader.js'
 import { MARK_COUNT, marksLayout, paintMarks } from './marks.js'
 import { compareImages } from './fidelity.js'
@@ -269,6 +269,41 @@ const WALL_VERTEX = /* glsl */ `
   }
 `
 
+/* La femme des poses : ses couleurs sans le mur et son détourage (calque de poses.js), posés sur le
+   mur en cm. Deux places, comme les photos. */
+const FIGURE_SHAPES = /* glsl */ `
+  uniform sampler2D uFigureA;
+  uniform sampler2D uFigureB;
+  uniform vec4 uFigureRectA; // le calque sur le mur, en cm : gauche, bas, droite, haut
+  uniform vec4 uFigureRectB;
+  vec4 figureAt(sampler2D figure, vec4 rect, vec2 p) {
+    vec2 uv = (p - rect.xy) / (rect.zw - rect.xy);
+    float inside = step(0.0, uv.x) * step(uv.x, 1.0) * step(0.0, uv.y) * step(uv.y, 1.0);
+    vec4 c = texture2D(figure, vec2(clamp(uv.x, 0.0, 1.0), 1.0 - clamp(uv.y, 0.0, 1.0)));
+    return vec4(c.rgb, c.a * inside);
+  }
+`
+
+// Reposée sur le tableau, là seulement où il cache le mur (uOver, sa silhouette ramenée au mur) :
+// la main de la femme passe devant l'œuvre. Ailleurs, la photo la montre déjà.
+const FIGURE_FRAGMENT = /* glsl */ `
+  ${FIGURE_SHAPES}
+  uniform vec2 uPoseW;
+  uniform float uPoseMix;
+  uniform vec4 uOver;
+  varying vec2 vXY;
+  void main() {
+    if (uPoseMix <= 0.0 || vXY.x < uOver.x || vXY.x > uOver.z || vXY.y < uOver.y || vXY.y > uOver.w) discard;
+    vec4 a = figureAt(uFigureA, uFigureRectA, vXY);
+    vec4 b = figureAt(uFigureB, uFigureRectB, vXY);
+    float wa = a.a * uPoseW.x, wb = b.a * uPoseW.y;
+    float alpha = (wa + wb) * uPoseMix;
+    if (alpha < 0.003) discard;
+    gl_FragColor = vec4((a.rgb * wa + b.rgb * wb) / (wa + wb), alpha);
+    #include <colorspace_fragment>
+  }
+`
+
 const WALL_FRAGMENT = /* glsl */ `
   uniform vec3 uWall;
   uniform float uSlope;
@@ -294,12 +329,41 @@ const WALL_FRAGMENT = /* glsl */ `
   uniform int uFlapHullN;
   uniform float uFlapPenumbra;
   uniform float uFlapKey;
+  uniform sampler2D uPoseA; // poses de la taille (poses.js) : deux places, pour fondre l'une dans l'autre
+  uniform sampler2D uPoseB;
+  uniform sampler2D uLightA; // lumière de leur mur, sans la femme
+  uniform sampler2D uLightB;
+  uniform vec3 uCleanA; // bandes sans la femme le long des bords gauche, droit et haut (part de la photo)
+  uniform vec3 uCleanB;
+  uniform vec4 uPoseRect; // la photo sur le mur, en cm : gauche, bas, droite, haut
+  uniform vec2 uPoseW; // parts des deux places
+  uniform float uPoseMix; // part de la pièce
+  ${FIGURE_SHAPES}
   varying vec2 vXY;
   ${SHADOW_SHAPES}
 
   float boxDistance(vec2 p, vec2 c, vec2 h) {
     vec2 q = abs(p - c) - h;
     return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0);
+  }
+
+  // Au-delà de ses bords, la photo se prolonge par un miroir de sa bande sans la femme, à la
+  // lumière du bord : ni creux ni bosse au raccord, malgré l'assombrissement des coins.
+  float fold(float t, float m) {
+    float k = mod(t, 2.0 * m);
+    return k < m ? k : 2.0 * m - k;
+  }
+  vec3 posePhoto(sampler2D photo, sampler2D light, vec3 clean) {
+    vec2 uv = (vXY - uPoseRect.xy) / (uPoseRect.zw - uPoseRect.xy);
+    vec2 edge = vec2(clamp(uv.x, 0.0, 1.0), clamp(1.0 - uv.y, 0.0, 1.0));
+    vec2 st = edge;
+    if (uv.x < 0.0) st.x = fold(-uv.x, clean.x);
+    if (uv.x > 1.0) st.x = 1.0 - fold(uv.x - 1.0, clean.y);
+    if (uv.y > 1.0) st.y = fold(uv.y - 1.0, clean.z);
+    vec3 lit = texture2D(light, edge).rgb;
+    vec3 c = texture2D(photo, st).rgb * lit / max(texture2D(light, st).rgb, vec3(0.02));
+    // Sous la photo (derrière la rangée et la barre d'achat), le parquet s'estompe dans sa lumière.
+    return mix(c, lit, smoothstep(0.0, 0.012, -uv.y));
   }
 
   void main() {
@@ -321,6 +385,16 @@ const WALL_FRAGMENT = /* glsl */ `
       }
       col = mix(col, photo, uRoomMix * edge.x * edge.y * feather);
     }
+    // La femme est devant le mur : l'ombre du tableau ne tombe pas sur elle.
+    float person = 0.0;
+    if (uPoseMix > 0.0) {
+      float shown = uPoseW.x + uPoseW.y;
+      vec3 photo = vec3(0.0);
+      if (uPoseW.x > 0.0) photo += posePhoto(uPoseA, uLightA, uCleanA) * uPoseW.x;
+      if (uPoseW.y > 0.0) photo += posePhoto(uPoseB, uLightB, uCleanB) * uPoseW.y;
+      col = mix(col, photo / max(shown, 1e-4), uPoseMix * shown);
+      person = (figureAt(uFigureA, uFigureRectA, vXY).a * uPoseW.x + figureAt(uFigureB, uFigureRectB, vXY).a * uPoseW.y) * uPoseMix;
+    }
     // Pénombres : jamais plus fines qu'un pixel, même vues de loin.
     float hull = hullDistance(uHull, uHullN, vXY);
     float penumbra = max(uPenumbra, fwidth(hull));
@@ -333,7 +407,8 @@ const WALL_FRAGMENT = /* glsl */ `
       float lifted = hullDistance(uFlapHull, uFlapHullN, vXY);
       flap = uFlapKey * inShadow(lifted, uFlapPenumbra);
     }
-    gl_FragColor = vec4(col * (1.0 - key) * (1.0 - ao) * (1.0 - flap), 1.0);
+    float bare = 1.0 - person;
+    gl_FragColor = vec4(col * (1.0 - key * bare) * (1.0 - ao * bare) * (1.0 - flap * bare), 1.0);
     #include <colorspace_fragment>
   }
 `
@@ -453,7 +528,7 @@ const round = (v) => Math.round(v * 1000) / 1000
 const FADE_MS = 350
 const fadeSince = (at, now) => Math.min(1, Math.max(0, (now - at) / FADE_MS))
 
-export function createScene(THREE, { canvas, artImage, weave, room, woodImage }) {
+export function createScene(THREE, { canvas, artImage, weave, room, woodImage, poses = null }) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'default' })
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.toneMapping = THREE.NoToneMapping
@@ -512,6 +587,19 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
     uFlapHullN: { value: 0 },
     uFlapPenumbra: { value: 1 },
     uFlapKey: { value: 0 },
+    uPoseA: { value: null },
+    uPoseB: { value: null },
+    uLightA: { value: null },
+    uLightB: { value: null },
+    uCleanA: { value: new THREE.Vector3(1, 1, 1) },
+    uCleanB: { value: new THREE.Vector3(1, 1, 1) },
+    uPoseRect: { value: new THREE.Vector4(0, 0, 1, 1) },
+    uPoseW: { value: new THREE.Vector2() },
+    uPoseMix: { value: 0 },
+    uFigureA: { value: null },
+    uFigureB: { value: null },
+    uFigureRectA: { value: new THREE.Vector4(0, 0, 1, 1) },
+    uFigureRectB: { value: new THREE.Vector4(0, 0, 1, 1) },
   }
   const wall = new THREE.Mesh(
     new THREE.PlaneGeometry(2400, 1400),
@@ -519,6 +607,36 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
   )
   wall.position.set(room.hang.x, 150, 0)
   scene.add(wall)
+
+  /* ---- La femme des poses, reposée sur le tableau : un plan au mur (aucun décalage de
+          perspective avec la photo), dessiné en dernier, sans test de profondeur. Toujours là,
+          pour être compilé avec le reste : hors de la pièce, il ne dessine rien. ---- */
+  const figureUniforms = {
+    uFigureA: wallUniforms.uFigureA,
+    uFigureB: wallUniforms.uFigureB,
+    uFigureRectA: wallUniforms.uFigureRectA,
+    uFigureRectB: wallUniforms.uFigureRectB,
+    uPoseW: wallUniforms.uPoseW,
+    uPoseMix: wallUniforms.uPoseMix,
+    uOver: { value: new THREE.Vector4(0, 0, -1, -1) },
+  }
+  if (poses) {
+    const zones = SIZES.map((size) => posePlacement(poses, size).overlay)
+    const left = Math.min(...zones.map((z) => z.left)), right = Math.max(...zones.map((z) => z.right))
+    const bottom = Math.min(...zones.map((z) => z.bottom)), top = Math.max(...zones.map((z) => z.top))
+    const figureMesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(right - left, top - bottom),
+      new THREE.ShaderMaterial({
+        uniforms: figureUniforms, vertexShader: WALL_VERTEX, fragmentShader: FIGURE_FRAGMENT,
+        transparent: true, depthTest: false, depthWrite: false,
+      }),
+    )
+    figureMesh.position.set((left + right) / 2, (bottom + top) / 2, 0)
+    figureMesh.renderOrder = 3
+    scene.add(figureMesh)
+    const { photo } = posePlacement(poses, SIZES[0])
+    wallUniforms.uPoseRect.value.set(photo.left, photo.bottom, photo.right, photo.top)
+  }
 
   // ---- Œuvre (toile ou papier) ----
   const artUniforms = {
@@ -851,6 +969,99 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
   })
   // Pièce : chargée quand on touche aux tailles (la page l'annonce), sinon au premier recul.
   const roomPhoto = lazyTexture(room.image, (texture) => { wallUniforms.uRoom.value = texture })
+  /* Poses de la taille (poses.js) : la photo, la femme et la lumière du mur arrivent ensemble,
+     décodées hors du fil de la page, envoyées tout de suite à la carte graphique, puis montrées en
+     fondu. Sans mipmaps : la photo n'est jamais beaucoup réduite à l'écran, la mémoire reste
+     raisonnable (environ 17 Mo par pose). */
+  const flatTexture = (image) => {
+    const t = imageTexture(image)
+    t.generateMipmaps = false
+    t.minFilter = THREE.LinearFilter
+    return t
+  }
+  function poseSet(size) {
+    const pose = poses.bySize[size]
+    const set = {
+      state: 'none', shownAt: 0, photo: null, figure: null, light: null,
+      clean: [pose.clean.left / poses.px[0], pose.clean.right / poses.px[0], pose.clean.top / poses.px[1]],
+      overlay: posePlacement(poses, size).overlay,
+    }
+    set.load = () => {
+      if (set.state !== 'none') return
+      set.state = 'loading'
+      // Le calque garde ses couleurs telles quelles (alpha non prémultiplié) : pas de liseré sombre.
+      Promise.all([decodeImage(pose.image), decodeImage(pose.figure, { premultiplyAlpha: 'none' }), decodeImage(pose.light)]).then((images) => {
+        [set.photo, set.figure, set.light] = images.map(flatTexture)
+        for (const texture of [set.photo, set.figure, set.light]) renderer.initTexture(texture)
+        set.state = 'ready'
+        set.shownAt = performance.now()
+        if (onNeedsRender) onNeedsRender()
+      }, () => { set.state = 'error' })
+    }
+    set.fade = (now) => (set.state === 'ready' ? fadeSince(set.shownAt, now) : 0)
+    set.isFading = (now) => set.state === 'ready' && now - set.shownAt < FADE_MS
+    set.settled = (now) => set.state === 'error' || (set.state === 'ready' && now - set.shownAt >= FADE_MS)
+    return set
+  }
+  const poseSets = poses ? Object.fromEntries(SIZES.map((size) => [size, poseSet(size)])) : null
+
+  // La pose d'une taille tout de suite ; sans taille, la suivante qui n'est pas partie, une à la fois.
+  function prefetchPoses(size) {
+    if (!poseSets) return
+    if (size) {
+      poseSets[size].load()
+      return
+    }
+    if (SIZES.some((s) => poseSets[s].state === 'loading')) return
+    const next = SIZES.find((s) => poseSets[s].state === 'none')
+    if (next) poseSets[next].load()
+  }
+
+  /* Les deux poses les plus présentes dans la vue vont dans les places A et B (une troisième, au
+     milieu de choix très rapides, leur cède sa part). Le calque de la femme ne se dessine que sur
+     la silhouette du tableau, ramenée au mur depuis la caméra (sa tranche comprise). */
+  const SLOTS = [
+    ['uPoseA', 'uLightA', 'uCleanA', 'uFigureA', 'uFigureRectA'],
+    ['uPoseB', 'uLightB', 'uCleanB', 'uFigureB', 'uFigureRectB'],
+  ]
+  let posesShown = SIZES.map(() => 0) // parts des poses dans la dernière vue : seul leur fondu compte
+  function updatePoses(view, now) {
+    posesShown = SIZES.map((_, i) => (view.room > 0 && view.poses ? view.poses[i] : 0))
+    const shares = SIZES.map((size, i) => {
+      if (posesShown[i] > 0) poseSets[size].load()
+      return posesShown[i] * poseSets[size].fade(now)
+    })
+    const order = SIZES.map((_, i) => i).filter((i) => shares[i] > 0).sort((a, b) => shares[b] - shares[a]).slice(0, 2)
+    const kept = order.reduce((sum, i) => sum + shares[i], 0)
+    const total = shares.reduce((sum, share) => sum + share, 0)
+    const weights = [0, 0]
+    order.forEach((i, k) => {
+      const set = poseSets[SIZES[i]]
+      const [photo, light, clean, figure, rect] = SLOTS[k]
+      wallUniforms[photo].value = set.photo
+      wallUniforms[light].value = set.light
+      wallUniforms[clean].value.set(...set.clean)
+      wallUniforms[figure].value = set.figure
+      wallUniforms[rect].value.set(set.overlay.left, set.overlay.bottom, set.overlay.right, set.overlay.top)
+      weights[k] = (shares[i] * total) / kept
+    })
+    wallUniforms.uPoseW.value.set(...weights)
+    wallUniforms.uPoseMix.value = kept > 0 ? view.room : 0
+    if (kept > 0) {
+      const c = camera.position
+      let l = Infinity, r = -Infinity, b = Infinity, t = -Infinity
+      for (const [x, y, z] of paintingCorners(view.painting, 'outer')) {
+        const k = c.z / (c.z - z)
+        const wx = c.x + (x - c.x) * k, wy = c.y + (y - c.y) * k
+        l = Math.min(l, x, wx)
+        r = Math.max(r, x, wx)
+        b = Math.min(b, y, wy)
+        t = Math.max(t, y, wy)
+      }
+      figureUniforms.uOver.value.set(l - 0.2, b - 0.2, r + 0.2, t + 0.2)
+    }
+  }
+
   // Masque du mur de la pièce : seuls les murs d'essai en ont besoin.
   const roomWall = lazyTexture(room.wallMask, (texture) => {
     texture.colorSpace = THREE.NoColorSpace
@@ -920,8 +1131,12 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
     updatePainting(view.painting, view.product, now)
     updateShadow(view.painting)
     roomShown = view.room > 0
-    if (roomShown) roomPhoto.load()
-    wallUniforms.uRoomMix.value = view.room * roomPhoto.fade(now)
+    if (poseSets) {
+      updatePoses(view, now) // avec les poses, le salon ne sert plus
+    } else {
+      if (roomShown) roomPhoto.load()
+      wallUniforms.uRoomMix.value = view.room * roomPhoto.fade(now)
+    }
     wallUniforms.uRoomWallMix.value = roomWall.fade(now)
     wallUniforms.uWallMix.value.set(...wallMix(now))
     finishArtSwap(now)
@@ -1153,12 +1368,15 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
      en échec) et son fondu fini ; pour une vue de la pièce, sa photo aussi. */
   function stillsReady(now, { room: needsRoom = false } = {}) {
     if (!artUniforms.uPaperTex.value || !wood.settled(now)) return false
-    return !needsRoom || roomPhoto.settled(now)
+    if (!needsRoom) return true
+    // Avec les poses : aucune en cours d'arrivée (elles ne partent qu'à l'approche de la taille).
+    return poseSets ? SIZES.every((size) => poseSets[size].state === 'none' || poseSets[size].settled(now)) : roomPhoto.settled(now)
   }
 
   // Seul ce qui se voit compte : un fondu hors du champ ne réclame aucune image.
   function isFading(now) {
-    return !!artSwap || (roomShown && (roomPhoto.isFading(now) || roomWall.isFading(now))) ||
+    const posesFading = !!poseSets && SIZES.some((size, i) => posesShown[i] > 0 && poseSets[size].isFading(now))
+    return !!artSwap || (roomShown && (roomPhoto.isFading(now) || roomWall.isFading(now) || posesFading)) ||
       (frameMesh.visible && wood.isFading(now)) || now - wallFade.at < FADE_MS
   }
 
@@ -1178,6 +1396,8 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage })
     useWall,
     prepareWall: wallTile,
     prefetchRoom: roomPhoto.load,
+    prefetchPoses,
+    poseReady: (size) => !!poseSets && poseSets[size].settled(performance.now()),
     gpuName,
     density: () => renderer.getPixelRatio(),
     samples,
