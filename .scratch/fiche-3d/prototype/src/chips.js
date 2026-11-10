@@ -11,10 +11,10 @@
  * groupe, avec le choix en cours. Il ne reste alors que la rangée : légendes, bascule, cote et filets
  * s'effacent, la légende touchée comprise (retour de Walid du 10/11). Toucher un choix l'applique et
  * la rangée reste ouverte (retours du 09/11 : on enchaîne les choix). Seul un toucher en dehors, ou
- * Échap, la ferme, ramène l'œuvre de face et les légendes (railEvent). S'il manque de la place, la
- * scène remonte, et sur un petit écran la barre d'achat s'efface le temps des choix. Hors du plan de
- * face sans rangée ouverte (bascule Toile | Poster, glisser), les légendes prennent une plaque
- * dépolie serrée sur leur texte et les filets s'effacent.
+ * Échap, la ferme et ramène l'œuvre de face, puis les légendes, une fois la face retrouvée (railEvent).
+ * S'il manque de la place, la scène remonte, et sur un petit écran la barre d'achat s'efface le temps
+ * des choix. Hors du plan de face sans rangée ouverte (bascule Toile | Poster, glisser), les
+ * légendes prennent une plaque dépolie serrée sur leur texte et les filets s'effacent.
  *
  * Trois étages, du plus pur au plus concret :
  *   - chipsLayout, railPlacement, toggleOf, legendOf, choicesOf : géométrie et textes du design,
@@ -609,8 +609,9 @@ export function createChips({
   /* ---- Ouvrir, choisir, fermer ---- */
 
   /* Rangée ouverte, il ne reste qu'elle : la bascule, la cote et les légendes, effacées, ne prennent
-     plus ni le doigt ni le focus. Refermée, elles reviennent aussitôt, sans plaque tant que la 3D
-     revient de face (is-returning). */
+     plus ni le doigt ni le focus. Refermée, elles reviennent avec la face : tant que la 3D revient
+     (is-returning), elles restent effacées, sans plaque, sauf celle qui a le focus ; sans retour à
+     faire, aussitôt. */
   const setHidden = (hidden) => {
     for (const item of [toggle, left, right, cote]) item.inert = hidden
   }

@@ -238,7 +238,7 @@ Walid, sur le gros plan : « c'est un peu trop zoomé à mon goût […] quand o
 **Fait.**
 - Bordure avec cadre (`GAP`, `staging.js`) : la caméra recule de 6 à 12 cm, le plan passe de 3,2 à 6,4 cm de haut. On voit toute la baguette, son bord et le mur au-delà, et davantage de tableau. Sur un écran × 3, l'image est grossie 3,2 fois au lieu de 6,3 en 30 × 40, soit à peu près la définition de sa photo ; en 75 × 100, 7,9 fois au lieu de 15,8 (la source fait 1904 px de large). L'angle passe de 17° à 15° : à cette distance l'optimum est à 16°, et la lèvre cache le fond de la tranche au-delà de 18°.
 - La tranche dans le jour : 14,2 % de la hauteur de la zone au-dessus de la rangée avant, 7,0 % après. Soit environ 26 px sur l'iPhone SE dans Safari (52 avant), 30 px en 375 × 667 (61), 40 px en 390 × 844 et sur ordinateur (81 et 84), toute sa profondeur visible (2 cm).
-- Rangée ouverte, il ne reste qu'elle : la bascule, la cote et les deux légendes s'effacent, la légende touchée comprise, avec tous les filets ; la pulsation est retirée. Effacées, elles sont inertes : ni doigt ni focus. Elles reviennent à la fermeture (toucher dehors, Échap), aussitôt, sans plaque tant que la 3D revient de face (`is-returning`) ; les filets reviennent avec la face. Clavier : à l'ouverture, le focus va dans la rangée ; Échap le rend à la légende.
+- Rangée ouverte, il ne reste qu'elle : la bascule, la cote et les deux légendes s'effacent, la légende touchée comprise, avec tous les filets ; la pulsation est retirée. Effacées, elles sont inertes : ni doigt ni focus. Elles reviennent à la fermeture (toucher dehors, Échap), aussitôt, sans plaque tant que la 3D revient de face (`is-returning`) ; les filets reviennent avec la face. Revu après la version 19 : elles attendent la face elles aussi (voir plus bas). Clavier : à l'ouverture, le focus va dans la rangée ; Échap le rend à la légende.
 - La plaque dépolie apparaît encore sans rangée ouverte, quand la 3D n'est pas de face : pendant la bascule Toile | Poster (tour de la toile, coin du poster), au repos sur un poster encadré (vu de trois-quarts, avec « De face »), et en glissant l'œuvre assez loin de la face. Elle serre désormais le texte (`.chips-label`) : 8 px de chaque côté, 5 px dessus et dessous, au lieu de la boîte du bouton (18 px au-dessus du texte sur un téléphone, jusqu'à 102 px à côté sur ordinateur). La boîte du bouton reste la cible du doigt, et le texte ne bouge pas d'un pixel.
 
 **Écarts.**
@@ -250,5 +250,22 @@ Walid, sur le gros plan : « c'est un peu trop zoomé à mon goût […] quand o
 - 58 contrôles sur les quatre formats : Bordure, Cadre, Taille et Contour ouverts sans légende, ni filet, ni pulsation, chips inertes ; à la fermeture, légendes revenues aussitôt sans plaque, puis filets avec la face ; plaque serrée sur le poster encadré ; clavier. 52 contrôles du plan reculé (cadre chêne avec Blanche, cadre noir avec Noire, 30 × 40 et 75 × 100, quatre formats) : tranche blanche à 219-221 de luminance dans le jour. Console vide.
 - Captures regardées : chaque rangée ouverte, la fermeture, la plaque serrée, le plan reculé avant et après.
 - Les 50 contrôles généraux, les 82 de la rangée ouverte et les 123 de la mise en scène à l'ouverture repassent.
+
+**Pas vérifié** : un vrai téléphone, Safari, le lecteur d'Artifacts de claude.ai.
+
+### Retour de face : les légendes attendent la face (retour du coordinateur sur la version 19, 10/11)
+
+Version 19 validée, sauf un point : à la fermeture de Bordure ou de Cadre, la bascule, les légendes et la cote revenaient aussitôt, pendant que la 3D revenait de face. L'œuvre, encore agrandie, passait sous elles, sans plaque : en 390 × 844, 450 ms après le toucher dehors, « Toile | Poster » sur le tableau et « Taille 30 × 40 cm » sur son bas.
+
+**Fait.**
+- `chips.css` : tant que la 3D revient de face (`is-returning`), la bascule, les légendes et la cote restent effacées. Elles reviennent en fondu avec les filets quand la 3D est de nouveau de face, fin de `is-returning`. Sans retour à faire (3D déjà de face), elles reviennent aussitôt, comme avant.
+- Clavier : Échap rend le focus à la légende comme avant ; la chip qui a le focus (`:focus-within`) reste visible pendant le retour.
+- Selon le plan, la face revient vers 450 ms (bordure ; tout plan sur ordinateur) ou 800 ms (cadre, taille, contour sur téléphone). Pendant ce retour, les chips effacées ne prennent pas le doigt : on ne touche la bascule ou une légende qu'une fois revenues.
+
+**Vérifié** (Chrome sans écran, scripts hors dépôt) :
+- 1 test des règles de `chips.css` ajouté (207 en tout).
+- `check.cjs` ajusté en conséquence : il attend le retour des chips avant de toucher « Poster » après Échap, et la fin de la remontée de la scène (courbe à léger rebond, 650 ms) avant de la mesurer. La version 19 et celle-ci la posent au même rythme.
+- Captures en vol du retour, 150, 450 et 800 ms après le toucher dehors puis à l'arrivée, après Bordure, Cadre, Taille et Contour, sur les quatre formats. À chaque instant, aucun texte de chip visible ne tombe sur l'œuvre projetée (boîte de ses huit coins, cadre compris) ; à l'arrivée, tout est revenu, hors de l'œuvre. Le même contrôle, lancé sur la version 19 en 390 × 844, relève bien le défaut : bascule et légendes sur l'œuvre à 150 et 450 ms. Clavier : après Échap, la légende a le focus et reste visible, les autres attendent. 58 contrôles, console vide.
+- Les 50 contrôles généraux, les 82 de la rangée ouverte et les 181 de la mise en scène à l'ouverture repassent.
 
 **Pas vérifié** : un vrai téléphone, Safari, le lecteur d'Artifacts de claude.ai.

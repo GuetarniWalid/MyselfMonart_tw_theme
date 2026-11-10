@@ -241,11 +241,21 @@ const CSS = readFileSync(new URL('../src/chips.css', import.meta.url), 'utf8')
 test('rangée ouverte, toutes les légendes s’effacent, la touchée comprise, sans filet ni pulsation', () => {
   const rule = CSS.match(/\.chips\.is-open \.chips-toggle,[^{]*\{[^}]*\}/)
   assert.ok(rule, 'règle des chips effacées')
-  assert.match(rule[0], /\.chips\.is-open \.chips-legend\s*\{/, 'toutes les légendes, sans exception')
+  assert.match(rule[0], /\.chips\.is-open \.chips-legend\s*[,{]/, 'toutes les légendes, sans exception')
   assert.match(rule[0], /opacity:\s*0;\s*pointer-events:\s*none/)
   assert.doesNotMatch(CSS, /aria-expanded="false"\]/, 'la légende touchée ne reste plus')
   assert.doesNotMatch(CSS, /pulse/, 'plus de pulsation')
   assert.doesNotMatch(CSS, /data-chips-open="(side|frame)"\] \.chips-mk/, 'plus de filet gardé')
+})
+
+/* Retour du coordinateur sur la version 19 (10/11) : refermée, les chips revenaient pendant que la 3D
+   revenait de face, sur l'œuvre encore agrandie. Elles attendent la face (fin de is-returning), sauf
+   celle qui a le focus (Échap la rend à la légende). */
+test('rangée refermée, bascule, légendes et cote attendent que la 3D revienne de face, sauf celle qui a le focus', () => {
+  const rule = CSS.match(/\.chips\.is-open \.chips-toggle,[^{]*\{[^}]*\}/)[0]
+  for (const chip of ['toggle', 'cote', 'legend']) {
+    assert.match(rule, new RegExp(`\\.chips\\.is-returning \\.chips-${chip}:not\\(:focus-within\\)\\s*[,{]`), `${chip} pendant le retour`)
+  }
 })
 
 test('la plaque dépolie serre le texte sans le déplacer, et ne revient pas pendant le retour de face', () => {
