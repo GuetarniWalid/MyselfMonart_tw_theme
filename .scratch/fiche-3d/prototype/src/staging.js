@@ -230,25 +230,31 @@ function shotOf(shot, camera, painting, roomOpacity = 0, dimsUnder = false, pose
 
 /* Mise en scène de la taille avec la femme (poses.js, choix de Walid du 10/11). Les quatre photos
    ont le même mur, la même plinthe et le même appareil : elles se posent toutes au même endroit
-   du mur, bord gauche en x = 0 et pied du mur en y = 0, à 16 px/cm. Le tableau de chaque taille
-   s'accroche sur son rectangle (hungPainting), dans tous les plans : il ne glisse jamais sur le
-   mur, et un changement de taille fond une pose dans l'autre sans bouger la pièce. Rend, en cm du
-   mur : la photo, le rectangle du tableau, la femme, sa tête, la zone de son calque, et la largeur
-   sans la femme le long des bords (clean), recopiée en miroir au-delà de la photo. */
+   du mur, bord gauche en x = 0 et pied du mur en y = 0. À côté d'elle, les tableaux paraissent
+   poses.scale fois plus grands que sur la photo (retour de Walid sur la version 21 : elle paraissait
+   mesurer 1,80 m) : la photo est réduite d'autant (16 × scale px/cm), le tableau garde ses vraies
+   mesures et s'accroche par son coin bas côté femme, au coin du rectangle de la photo. Ses mains le
+   présentent donc toujours au même endroit ; il grandit vers le haut et vers la gauche. Il s'accroche
+   ainsi dans tous les plans (hungPainting) : il ne glisse jamais sur le mur, et un changement de
+   taille fond une pose dans l'autre sans bouger la pièce. Rend, en cm du mur : la photo, le rectangle
+   du tableau, la femme, sa tête, la zone de son calque, et la largeur sans rien devant le mur le
+   long des bords gauche et droit (clean), recopiée en miroir au-delà de la photo. */
 export function posePlacement(poses, size) {
   const pose = poses.bySize[size]
-  const k = 1 / poses.pxPerCm
+  const k = 1 / (poses.pxPerCm * (poses.scale || 1))
+  const cm = 1 / poses.pxPerCm // le rectangle de la photo, aux vraies mesures du tableau
   const box = ([left, top, right, bottom]) => ({
     left: left * k, right: right * k, top: (poses.floorPx - top) * k, bottom: (poses.floorPx - bottom) * k,
   })
   const [L, T, W, H] = pose.rect
+  const corner = box([L + W, T + H, L + W, T + H])
   return {
     photo: box([0, 0, ...poses.px]),
-    rect: box([L, T, L + W, T + H]),
+    rect: { left: corner.right - W * cm, right: corner.right, top: corner.bottom + H * cm, bottom: corner.bottom },
     person: box(pose.person),
     head: box(pose.head),
     overlay: box(pose.overlay),
-    clean: { left: pose.clean.left * k, right: pose.clean.right * k, top: pose.clean.top * k },
+    clean: { left: pose.clean.left * k, right: pose.clean.right * k },
   }
 }
 
@@ -265,21 +271,34 @@ const poseCenter = (poses, size) => {
    sa largeur) : si le tableau ou ses cotes y tombent, ils descendent dessous. On cherche à voir :
    la femme en entier. Sur un écran en hauteur, la vue grandit pour la montrer ; sur un écran large,
    le mur vide sur les côtés n'en prend jamais plus d'un cinquième : si elle ne tient pas en
-   hauteur, on garde le haut et on la coupe à mi-cuisse, au plus bas au-dessus du genou ; si ce qui
-   doit se voir l'interdit, elle se voit entière (jamais coupée aux jambes ni aux chevilles). Autour de la photo, le mur se
-   prolonge en miroir (scene.js) : à gauche au plus BEYOND.side, en haut autant qu'il le faut (au
-   plus BEYOND.top), jamais sous le sol de la photo ; à droite seulement en dernier recours, la femme
-   y est près du bord et le miroir d'une bande étroite se verrait. */
-const POSE = { margin: 0.04, label: 7, empty: 0.2, torso: 25, thigh: 0.45, knee: 0.33 } // part de sa hauteur, depuis ses pieds
-export const BEYOND = { side: 80, top: 150 }
+   hauteur, on garde le haut et on la coupe à mi-cuisse, au plus bas un peu au-dessus du genou ; si
+   ce qui doit se voir l'interdit, elle se voit entière (jamais coupée aux genoux ni aux chevilles). Autour de la photo, le mur se
+   prolonge (scene.js) : en haut, uni, autant qu'il le faut (au plus BEYOND.top), jamais sous le sol
+   de la photo ; sur les côtés, en miroir, au plus la bande sans rien devant le mur (clean, un seul
+   miroir, au plus BEYOND.side : sur les photos meublées, un objet au bord n'est jamais recopié).
+   Si la vue doit être plus large que cela (ordinateur, grands formats), elle se centre sur la photo
+   et le mur s'y prolonge uni (scene.js). */
+const POSE = { margin: 0.04, label: 7, empty: 0.2, torso: 25, thigh: 0.45, lowest: 0.37, dimsAbove: 10 } // part de sa hauteur, depuis ses pieds
+export const BEYOND = { side: 130, top: 200 }
 const NO_INSET = { top: 0, left: 0 }
 
 function poseShot(room, product, aspect, u, screen = aspect, inset = NO_INSET) {
-  const { photo, person, head, clean } = posePlacement(room.poses, product.size)
   const painting = hungPainting(room, product)
+  const top = painting.y + painting.outer.height / 2
+  // La cote de largeur au-dessus du tableau, ou au-dessous : là où le tableau reste le plus grand à
+  // l'écran. Au-dessus, jamais à plus de 10 cm au-dessus de la photo.
+  const above = top + DIMS_OFFSET + DIMS_LABEL <= posePlacement(room.poses, product.size).photo.top + POSE.dimsAbove
+  const views = (above ? [false, true] : [true]).map((under) => poseView(room, product, painting, under, screen, inset))
+  const view = views.reduce((best, v) => (v.height < best.height - 1e-6 ? v : best))
+  const target = [view.x, view.y, 0]
+  const camera = { position: add(target, [0, 0, distanceFor(view.height)]), target, fovY: FOV_Y }
+  return shotOf('room', camera, painting, 1, view.under, SIZES.map((s) => (s === product.size ? 1 : 0)))
+}
+
+function poseView(room, product, painting, under, screen, inset) {
+  const { photo, person, head, clean } = posePlacement(room.poses, product.size)
   const halfW = painting.outer.width / 2, halfH = painting.outer.height / 2
   const top = painting.y + halfH, bottom = painting.y - halfH
-  const under = top + DIMS_OFFSET + DIMS_LABEL > photo.top
   const dims = dimsOf(painting, 1, under, -1)
   const union = (a, b) => ({
     left: Math.min(a.left, b.left), right: Math.max(a.right, b.right), top: Math.max(a.top, b.top), bottom: Math.min(a.bottom, b.bottom),
@@ -304,26 +323,31 @@ function poseShot(room, product, aspect, u, screen = aspect, inset = NO_INSET) {
     let height = Math.max(fit(must), Math.min(fit(want), roomy, most))
     const whole = tall(want)
     const ceiling = (h) => Math.max(want.top + POSE.margin * h, art.top + roof * h) // haut de la vue, le haut gardé
-    if (height < whole) {
-      const line = (share) => person.bottom + share * (person.top - person.bottom)
-      // Ce qui doit se voir la couperait sous le genou (le haut gardé) : elle se voit entière.
-      const atKnee = Math.max((want.top - line(POSE.knee)) / (1 - POSE.margin), (art.top - line(POSE.knee)) / (1 - roof))
-      if (atKnee < fit(must)) height = Math.max(fit(must), whole)
-      else height = Math.max(fit(must), Math.min(height, (ceiling(height) - line(POSE.thigh)) / (1 - POSE.margin)))
-    }
-    const width = height * screen
-    const pad = POSE.margin * height
+    const line = (share) => person.bottom + share * (person.top - person.bottom)
+    // Hauteur de vue qui, le haut gardé, la coupe juste à cette ligne.
+    const cutAt = (y) => Math.max((want.top - y) / (1 - POSE.margin), (art.top - y) / (1 - roof))
+    if (height < whole) height = Math.max(fit(must), Math.min(height, cutAt(line(POSE.thigh))))
     // De côté : la femme (sans ses bras tendus) et le tableau au milieu, sans miroir de préférence à
-    // droite, et ce qui doit se voir (ses mains comprises), dedans.
-    let x = (core.left + Math.max(core.right, (head.left + head.right) / 2 + POSE.torso)) / 2
-    x = keep(x, photo.left - Math.min(BEYOND.side, clean.left) + width / 2, photo.right - width / 2)
-    x = keep(x, must.right + pad * screen - width / 2, must.left - pad * screen + width / 2)
-    x = keep(x, photo.left - BEYOND.side + width / 2, photo.right + BEYOND.side - width / 2)
-    // En hauteur : la femme en entier si elle tient, sinon le haut (tableau, tête).
-    let y = height >= whole ? (want.top + want.bottom) / 2 : ceiling(height) - height / 2
-    y = keep(y, Math.max(art.top + roof * height, must.top + pad) - height / 2, must.bottom - pad + height / 2)
-    y = Math.max(Math.min(y, photo.top + BEYOND.top - height / 2), photo.bottom + height / 2) // le sol d'abord
-    return { x, y, height, width }
+    // droite, et ce qui doit se voir (ses mains comprises), dedans. En hauteur : la femme en entier si
+    // elle tient, sinon le haut (tableau, tête).
+    const place = (height) => {
+      const width = height * screen
+      const pad = POSE.margin * height
+      let x = (core.left + Math.max(core.right, (head.left + head.right) / 2 + POSE.torso)) / 2
+      const left = photo.left - Math.min(BEYOND.side, clean.left), right = photo.right + Math.min(BEYOND.side, clean.right)
+      x = keep(x, left + width / 2, right - width / 2)
+      x = keep(x, must.right + pad * screen - width / 2, must.left - pad * screen + width / 2)
+      x = keep(x, left + width / 2, right - width / 2)
+      let y = height >= whole ? (want.top + want.bottom) / 2 : ceiling(height) - height / 2
+      y = keep(y, Math.max(art.top + roof * height, must.top + pad) - height / 2, must.bottom - pad + height / 2)
+      y = Math.max(Math.min(y, photo.top + BEYOND.top - height / 2), photo.bottom + height / 2) // le sol d'abord
+      return { x, y, height, width }
+    }
+    const view = place(height)
+    // Coupée plus bas qu'un peu au-dessus du genou (ce qui doit se voir l'impose) : elle se voit entière.
+    const bottom = view.y - height / 2
+    if (bottom > person.bottom && bottom < line(POSE.lowest)) return place(Math.max(height, whole))
+    return view
   }
   let view = frame(POSE.margin)
   // Le tableau ou ses cotes sous le bouton « De face » : ils descendent dessous.
@@ -333,9 +357,7 @@ function poseShot(room, product, aspect, u, screen = aspect, inset = NO_INSET) {
     const fromTop = (view.y + view.height / 2 - art.top) / view.height
     if (fromLeft < inset.left && fromTop < roof) view = frame(roof)
   }
-  const target = [view.x, view.y, 0]
-  const camera = { position: add(target, [0, 0, distanceFor(view.height)]), target, fovY: FOV_Y }
-  return shotOf('room', camera, painting, 1, under, SIZES.map((s) => (s === product.size ? 1 : 0)))
+  return { ...view, under }
 }
 
 function frontShot(room, product, aspect) {

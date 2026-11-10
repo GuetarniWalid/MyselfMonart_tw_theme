@@ -36,6 +36,8 @@ const SHADOW = {
   key: 0.34, keyFade: 55, penumbra: 0.35, penumbraPerCm: 0.42, ao: 0.12, aoRadius: 1.6,
   flap: 0.32, flapPenumbraPerCm: 0.3, // coin soulevé du poster
 }
+// Ombre du tableau dans la pièce des poses : celle du montage que Walid a trouvé plus réaliste.
+const POSE_SHADOW = { key: 0.32, penumbra: 0.9 }
 const WOOD_TILE_CM = [10, 30] // l'image du chêne couvre 10 cm en travers, 30 cm le long du fil
 const REHEARSAL_FRAMES = 36 // images de répétition de l'arrivée, invisibles
 const TRIAL_FRAMES = 3 // images chronométrées de l'arrivée, invisibles
@@ -47,11 +49,13 @@ const ART_VERTEX = /* glsl */ `
   varying vec2 vFab;
   varying float vArt;
   varying vec3 vNormalW;
+  varying vec3 vWorldPos;
   void main() {
     vUv = uv;
     vFab = fab;
     vArt = art;
     vNormalW = normalize(mat3(modelMatrix) * normal);
+    vWorldPos = (modelMatrix * vec4(position, 1.0)).xyz;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
   }
 `
@@ -73,6 +77,7 @@ const CURL_VERTEX = /* glsl */ `
   varying vec3 vNormalW;
   varying float vBeyond;
   varying vec2 vWallXY;
+  varying vec3 vWorldPos;
   void main() {
     vec2 tip = uCurlCorner * uCurlHalf;
     vec2 flatPoint = tip - uCurlCorner * position.xy * 2.0 * uCurlHalf;
@@ -96,6 +101,7 @@ const CURL_VERTEX = /* glsl */ `
       normalLocal = vec3(-uCurlDir * sin(phi), cos(phi));
     }
     vNormalW = normalize(mat3(modelMatrix) * normalLocal);
+    vWorldPos = (modelMatrix * vec4(place, 1.0)).xyz;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(place, 1.0);
   }
 `
@@ -120,6 +126,37 @@ const SHADOW_SHAPES = /* glsl */ `
   }
 `
 
+/* Dans la pose, le tableau doit sembler photographié dans la même pièce que la femme (retours de
+   Walid sur la version 21) : la lumière du mur à son emplacement (les deux poses en fondu ; un blanc
+   n'y est jamais plus clair que le mur), contraste 0,94, saturation 0,95 et luminosité 0,93 comme le
+   montage qu'il a trouvé plus réaliste, et le grain de la photo, à la taille de ses pixels sur le mur. */
+const PHOTO_SHAPES = /* glsl */ `
+  uniform float uPoseMix;
+  uniform vec4 uPoseRect;
+  uniform vec2 uPoseW;
+  uniform sampler2D uLightA;
+  uniform sampler2D uLightB;
+  uniform float uPhotoTexels; // texels de la photo par cm du mur
+  vec3 wallLightAt(vec2 p) {
+    vec2 uv = (p - uPoseRect.xy) / (uPoseRect.zw - uPoseRect.xy);
+    vec2 st = vec2(clamp(uv.x, 0.0, 1.0), clamp(1.0 - uv.y, 0.0, 1.0));
+    float w = uPoseW.x + uPoseW.y;
+    vec3 l = texture2D(uLightA, st).rgb * uPoseW.x + texture2D(uLightB, st).rgb * uPoseW.y;
+    return w > 0.0 ? l / w : vec3(1.0);
+  }
+  float photoNoise(vec2 p) {
+    vec2 cell = floor(p * uPhotoTexels);
+    return fract(sin(dot(cell, vec2(127.1, 311.7))) * 43758.5453) - 0.5;
+  }
+  vec3 photographed(vec3 color, vec2 p) {
+    vec3 s = pow(max(color, 0.0), vec3(1.0 / 2.2));
+    s = (s - 0.5) * 0.94 + 0.5;
+    s = mix(vec3(dot(s, vec3(0.2126, 0.7152, 0.0722))), s, 0.95);
+    vec3 c = pow(max(s, 0.0), vec3(2.2)) * 0.93 * wallLightAt(p);
+    return c * (1.0 + photoNoise(p) * 0.035);
+  }
+`
+
 const ART_FRAGMENT = /* glsl */ `
   uniform sampler2D uArt;
   uniform sampler2D uArtPrev; // version précédente, pendant le fondu d'un changement de source
@@ -140,10 +177,16 @@ const ART_FRAGMENT = /* glsl */ `
   uniform float uPasse;
   uniform vec2 uMargin;
   uniform vec2 uCover;
+  uniform float uArtCm; // largeur de l'œuvre, cm
+  uniform vec2 uArtHalf; // demi-largeur et demi-hauteur de la façade, cm
+  uniform float uShadeSide; // côté de l'ombre (-1 : à gauche), pour le fil sombre du bord
+  uniform float uRelief; // relief de la toile qui accroche la lumière, dans la pièce
   varying vec2 vUv;
   varying vec2 vFab;
   varying float vArt;
   varying vec3 vNormalW;
+  varying vec3 vWorldPos;
+  ${PHOTO_SHAPES}
   #ifdef CURL
     uniform float uCurlRadius;
     uniform vec2 uFlapHull[8];
@@ -186,11 +229,15 @@ const ART_FRAGMENT = /* glsl */ `
   // serait plus molle que la photo qu'elle remplace. Ce gain ne fait pas scintiller : en
   // inclinaison vive, 0,009 % des pixels bougent de plus de 12 niveaux sur 255 d'une image à
   // l'autre. L'image grossie passe en bicubique.
+  // Dans la pièce, l'œuvre n'est pas plus nette que la photo : au moins un texel de la photo par
+  // lecture (la taille de ses pixels sur le mur), en fondu avec la pièce.
   vec3 readArt(sampler2D tex, vec2 uv, vec2 dx, vec2 dy) {
     vec2 size = vec2(textureSize(tex, 0));
-    vec3 plain = textureGrad(tex, uv, dx * 0.6, dy * 0.6).rgb;
     float texelsPerPixel = max(length(dx * size), length(dy * size));
-    float magnified = 1.0 - smoothstep(0.7, 1.0, texelsPerPixel);
+    float photoFoot = uPoseMix * size.x / max(uArtCm * uPhotoTexels, 1e-3);
+    float boost = max(0.6, photoFoot / max(texelsPerPixel, 1e-6));
+    vec3 plain = textureGrad(tex, uv, dx * boost, dy * boost).rgb;
+    float magnified = 1.0 - smoothstep(0.7, 1.0, texelsPerPixel * boost / 0.6);
     if (magnified <= 0.0) return plain;
     return mix(plain, cubicArt(tex, uv, size), magnified);
   }
@@ -255,7 +302,20 @@ const ART_FRAGMENT = /* glsl */ `
         k = (uAmbient + uDiffuse * max(dot(Np, uLight), 0.0)) * 1.08;
       }
     #endif
-    gl_FragColor = vec4(base * min(k, brightest), 1.0);
+    vec3 color = base * min(k, brightest);
+    if (uPoseMix > 0.0) {
+      // La toile imprimée dans la pièce : sa trame plus marquée, son relief qui accroche la lumière
+      // de biais, un fil sombre au bord de la façade du côté de l'ombre, puis la photo.
+      float threads = 1.0 - 0.6 * mix(uWeaveAmt, uWeaveAmt * 0.3, uPaper) * (1.0 - grain.r);
+      vec2 toLight = normalize(uLight.xy + vec2(1e-4));
+      float relief = 1.0 + uRelief * mix(1.0, 0.4, uPaper) * dot(slope, toLight);
+      float front = step(0.9, N.z);
+      float fromEdge = uArtHalf.x - uShadeSide * vFab.x; // distance au bord du côté de l'ombre
+      float thread = 1.0 - 0.32 * front * (1.0 - smoothstep(0.0, max(0.12, 1.5 * fwidth(vFab.x)), fromEdge));
+      vec3 lit = photographed(color * threads * relief * thread, vWorldPos.xy);
+      color = mix(color, lit, uPoseMix);
+    }
+    gl_FragColor = vec4(color, 1.0);
     #include <colorspace_fragment>
   }
 `
@@ -333,11 +393,13 @@ const WALL_FRAGMENT = /* glsl */ `
   uniform sampler2D uPoseB;
   uniform sampler2D uLightA; // lumière de leur mur, sans la femme
   uniform sampler2D uLightB;
-  uniform vec3 uCleanA; // bandes sans la femme le long des bords gauche, droit et haut (part de la photo)
-  uniform vec3 uCleanB;
+  uniform vec2 uCleanA; // bandes sans rien devant le mur le long des bords gauche et droit (part de la photo)
+  uniform vec2 uCleanB;
   uniform vec4 uPoseRect; // la photo sur le mur, en cm : gauche, bas, droite, haut
   uniform vec2 uPoseW; // parts des deux places
   uniform float uPoseMix; // part de la pièce
+  uniform vec3 uShadowTint; // dans la pièce, l'ombre du tableau tire vers cette couleur
+  uniform float uShadowTintMix;
   ${FIGURE_SHAPES}
   varying vec2 vXY;
   ${SHADOW_SHAPES}
@@ -347,21 +409,43 @@ const WALL_FRAGMENT = /* glsl */ `
     return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0);
   }
 
-  // Au-delà de ses bords, la photo se prolonge par un miroir de sa bande sans la femme, à la
-  // lumière du bord : ni creux ni bosse au raccord, malgré l'assombrissement des coins.
+  uniform float uPhotoTexels; // texels de la photo par cm du mur
+  // Au-delà de ses bords gauche et droit, la photo se prolonge par un miroir de sa bande sans rien
+  // devant le mur, à la lumière du bord : ni creux ni bosse au raccord, malgré l'assombrissement des
+  // coins. Au-dessus, et sur un bord où un objet touche la photo (olivier, lampadaire), le mur se
+  // prolonge uni, à la lumière du mur sans les meubles, avec le grain de la photo ; la photo s'y fond
+  // sur ses POSE_FADE derniers cm.
+  const float POSE_FADE = 8.0;
+  float grain(vec2 p) {
+    vec2 cell = floor(p * uPhotoTexels);
+    float n = fract(sin(dot(cell, vec2(127.1, 311.7))) * 43758.5453) - 0.5;
+    return n * 0.012 / max(fwidth(p.x * uPhotoTexels), 1.0); // plusieurs texels par pixel : moyennés
+  }
+  // Au-dessus : la lumière du haut de la photo, ses stries lissées en montant (sur 40 cm, ± 18 cm).
+  vec3 topLight(sampler2D light, float x, float above) {
+    float spread = 6.0 / (uPoseRect.z - uPoseRect.x);
+    vec3 sum = vec3(0.0);
+    for (int k = -3; k <= 3; k++) sum += texture2D(light, vec2(x + float(k) * spread, 0.0)).rgb * (4.0 - abs(float(k)));
+    return mix(texture2D(light, vec2(x, 0.0)).rgb, sum / 16.0, smoothstep(0.0, 40.0, above));
+  }
   float fold(float t, float m) {
     float k = mod(t, 2.0 * m);
     return k < m ? k : 2.0 * m - k;
   }
-  vec3 posePhoto(sampler2D photo, sampler2D light, vec3 clean) {
+  vec3 posePhoto(sampler2D photo, sampler2D light, vec2 clean) {
     vec2 uv = (vXY - uPoseRect.xy) / (uPoseRect.zw - uPoseRect.xy);
     vec2 edge = vec2(clamp(uv.x, 0.0, 1.0), clamp(1.0 - uv.y, 0.0, 1.0));
     vec2 st = edge;
-    if (uv.x < 0.0) st.x = fold(-uv.x, clean.x);
-    if (uv.x > 1.0) st.x = 1.0 - fold(uv.x - 1.0, clean.y);
-    if (uv.y > 1.0) st.y = fold(uv.y - 1.0, clean.z);
+    if (uv.x < 0.0) st.x = clean.x > 0.0 ? fold(-uv.x, clean.x) : 0.0;
+    if (uv.x > 1.0) st.x = clean.y > 0.0 ? 1.0 - fold(uv.x - 1.0, clean.y) : 1.0;
     vec3 lit = texture2D(light, edge).rgb;
     vec3 c = texture2D(photo, st).rgb * lit / max(texture2D(light, st).rgb, vec3(0.02));
+    if (uv.y > 1.0) lit = topLight(light, edge.x, (uv.y - 1.0) * (uPoseRect.w - uPoseRect.y));
+    vec2 fade = POSE_FADE / (uPoseRect.zw - uPoseRect.xy);
+    float plain = max(1.0 - smoothstep(0.0, fade.y, 1.0 - uv.y), max(
+      clean.x <= 0.0 ? 1.0 - smoothstep(0.0, fade.x, uv.x) : 0.0,
+      clean.y <= 0.0 ? 1.0 - smoothstep(0.0, fade.x, 1.0 - uv.x) : 0.0));
+    c = mix(c, lit * (1.0 + grain(vXY)), plain);
     // Sous la photo (derrière la rangée et la barre d'achat), le parquet s'estompe dans sa lumière.
     return mix(c, lit, smoothstep(0.0, 0.012, -uv.y));
   }
@@ -408,7 +492,9 @@ const WALL_FRAGMENT = /* glsl */ `
       flap = uFlapKey * inShadow(lifted, uFlapPenumbra);
     }
     float bare = 1.0 - person;
-    gl_FragColor = vec4(col * (1.0 - key * bare) * (1.0 - ao * bare) * (1.0 - flap * bare), 1.0);
+    float dropped = key * bare; // ombre portée du tableau
+    vec3 lit = col * (1.0 - ao * bare) * (1.0 - flap * bare);
+    gl_FragColor = vec4(mix(lit * (1.0 - dropped), mix(lit, uShadowTint, dropped), uShadowTintMix), 1.0);
     #include <colorspace_fragment>
   }
 `
@@ -444,6 +530,7 @@ const FRAME_FRAGMENT = /* glsl */ `
   varying vec3 vNormalW;
   varying vec3 vWorld;
   varying float vShade;
+  ${PHOTO_SHAPES}
 
   float height(vec2 st) {
     return dot(texture2D(uMap, st).rgb, vec3(0.3333));
@@ -482,7 +569,9 @@ const FRAME_FRAGMENT = /* glsl */ `
     float glint = pow(max(dot(N, normalize(uLight + V)), 0.0), shine) * (shine + 8.0) * 0.0035;
     color += roomLight(reflect(-V, N)) * fresnel * mix(0.8, 0.5, uRough) + vec3(glint * ndl);
 
-    gl_FragColor = vec4(color * vShade, uOpacity);
+    color *= vShade;
+    if (uPoseMix > 0.0) color = mix(color, photographed(color, vWorld.xy), uPoseMix);
+    gl_FragColor = vec4(color, uOpacity);
     #include <colorspace_fragment>
   }
 `
@@ -536,7 +625,12 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, p
 
   const scene = new THREE.Scene()
   const camera = new THREE.PerspectiveCamera(30, 1, 0.5, 5000)
-  const light = unit(room.light)
+  /* La lumière : celle de la pièce de face, celle des photos dans la pose (poses.light, venue de la
+     droite de l'image), en fondu avec la pièce. Le même tableau sert à l'ombre (castOnWall). */
+  const roomLight = unit(room.light)
+  const poseLight = poses && poses.light ? unit(poses.light) : roomLight
+  const light = [...roomLight]
+  let poseK = 0 // part de la pièce des poses dans la vue en cours
 
   const reliefTexture = (pixels) => {
     const t = new THREE.DataTexture(new Uint8Array(pixels.buffer), RELIEF_SIZE, RELIEF_SIZE, THREE.RGBAFormat)
@@ -564,6 +658,9 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, p
   const flapHull = Array.from({ length: 8 }, () => new THREE.Vector2())
   const wallUniforms = {
     uWall: { value: new THREE.Color().setRGB(...room.wall.map((c) => c / 255), THREE.SRGBColorSpace) },
+    uShadowTint: { value: new THREE.Color().setRGB(70 / 255, 55 / 255, 40 / 255, THREE.SRGBColorSpace) },
+    uShadowTintMix: { value: 0 },
+    uPhotoTexels: { value: 8 },
     uSlope: { value: room.wallSlope },
     uRefX: { value: room.hang.x },
     uWallA: { value: null },
@@ -591,8 +688,8 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, p
     uPoseB: { value: null },
     uLightA: { value: null },
     uLightB: { value: null },
-    uCleanA: { value: new THREE.Vector3(1, 1, 1) },
-    uCleanB: { value: new THREE.Vector3(1, 1, 1) },
+    uCleanA: { value: new THREE.Vector2(1, 1) },
+    uCleanB: { value: new THREE.Vector2(1, 1) },
     uPoseRect: { value: new THREE.Vector4(0, 0, 1, 1) },
     uPoseW: { value: new THREE.Vector2() },
     uPoseMix: { value: 0 },
@@ -636,7 +733,18 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, p
     scene.add(figureMesh)
     const { photo } = posePlacement(poses, SIZES[0])
     wallUniforms.uPoseRect.value.set(photo.left, photo.bottom, photo.right, photo.top)
+    wallUniforms.uPhotoTexels.value = (poses.px[0] / 2) / (photo.right - photo.left) // photos publiées à 2400 px
   }
+
+  // Uniformes du traitement « photographié » : les mêmes objets que ceux du mur.
+  const photoUniforms = () => ({
+    uPoseMix: wallUniforms.uPoseMix,
+    uPoseRect: wallUniforms.uPoseRect,
+    uPoseW: wallUniforms.uPoseW,
+    uLightA: wallUniforms.uLightA,
+    uLightB: wallUniforms.uLightB,
+    uPhotoTexels: wallUniforms.uPhotoTexels,
+  })
 
   // ---- Œuvre (toile ou papier) ----
   const artUniforms = {
@@ -659,6 +767,11 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, p
     uPasse: { value: 0 },
     uMargin: { value: new THREE.Vector2() },
     uCover: { value: new THREE.Vector2(1, 1) },
+    uArtCm: { value: 30 },
+    uArtHalf: { value: new THREE.Vector2(15, 20) },
+    uShadeSide: { value: -1 },
+    uRelief: { value: 0.07 },
+    ...photoUniforms(),
   }
   const group = new THREE.Group()
   group.rotation.order = 'YXZ'
@@ -679,6 +792,7 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, p
     uRough: { value: 0.6 },
     uLight: { value: new THREE.Vector3(...light) },
     uOpacity: { value: 1 },
+    ...photoUniforms(),
   }
   const frameMesh = new THREE.Mesh(
     new THREE.BufferGeometry(),
@@ -886,6 +1000,8 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, p
     // Tant que le papier n'est pas arrivé du worker, le poster garde la trame sans son relief.
     artUniforms.uPaper.value = artUniforms.uPaperTex.value ? p.paper : 0
     artUniforms.uPasse.value = p.passe
+    artUniforms.uArtCm.value = p.width
+    artUniforms.uArtHalf.value.set(p.width / 2, p.height / 2)
     const m = PASSE_RATIO * Math.min(p.width, p.height)
     artUniforms.uMargin.value.set(m / p.width, m / p.height)
     // Recadrage de l'œuvre dans l'intérieur du contour (remplir sans déformer).
@@ -921,7 +1037,7 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, p
     frameUniforms.uOpacity.value = p.framed
     glassUniforms.uOpacity.value = p.paper * p.framed
     glassUniforms.uNormal.value.set(0, 0, 1).applyEuler(group.rotation)
-    glassUniforms.uWin.value.set(p.x - 28, p.y + 36, p.z + 240)
+    glassUniforms.uWin.value.set(p.x + 28 * Math.sign(light[0] || -1), p.y + 36, p.z + 240) // la fenêtre, du côté de la lumière
   }
 
   function updateShadow(p) {
@@ -931,8 +1047,11 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, p
     wallUniforms.uHullN.value = h.length
     const front = corners.filter((c) => c.side.z === 1)
     const height = front.reduce((s, c) => s + c[2], 0) / front.length
-    wallUniforms.uPenumbra.value = SHADOW.penumbra + SHADOW.penumbraPerCm * height
-    wallUniforms.uKey.value = SHADOW.key * Math.exp(-height / SHADOW.keyFade) * Math.min(1, p.outer.depth / 0.6)
+    const penumbra = SHADOW.penumbra + SHADOW.penumbraPerCm * height
+    const key = SHADOW.key * Math.exp(-height / SHADOW.keyFade) * Math.min(1, p.outer.depth / 0.6)
+    wallUniforms.uPenumbra.value = penumbra + (POSE_SHADOW.penumbra - penumbra) * poseK
+    wallUniforms.uKey.value = key + (POSE_SHADOW.key * Math.min(1, p.outer.depth / 0.6) - key) * poseK
+    wallUniforms.uShadowTintMix.value = poseK
     wallUniforms.uAo.value.set(p.x, p.y, p.outer.width / 2, p.outer.height / 2)
     wallUniforms.uAoAmt.value = SHADOW.ao * Math.exp(-p.z / 2.5) * Math.min(1, p.outer.depth / 2)
   }
@@ -983,7 +1102,7 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, p
     const pose = poses.bySize[size]
     const set = {
       state: 'none', shownAt: 0, photo: null, figure: null, light: null,
-      clean: [pose.clean.left / poses.px[0], pose.clean.right / poses.px[0], pose.clean.top / poses.px[1]],
+      clean: [pose.clean.left / poses.px[0], pose.clean.right / poses.px[0]],
       overlay: posePlacement(poses, size).overlay,
     }
     set.load = () => {
@@ -1123,7 +1242,18 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, p
   }
 
   // Tout vient de la vue du directeur : caméra, pose, pièce et choix en cours (view.product).
+  function useLight(k) {
+    poseK = k
+    const mixed = unit(roomLight.map((v, i) => v + (poseLight[i] - v) * k))
+    for (let i = 0; i < 3; i++) light[i] = mixed[i]
+    artUniforms.uLight.value.set(...light)
+    frameUniforms.uLight.value.set(...light)
+    artUniforms.uNorm.value = 1 / (SHADE.ambient + SHADE.diffuse * light[2])
+    artUniforms.uShadeSide.value = light[0] > 0 ? -1 : 1
+  }
+
   function render(view, now) {
+    useLight(poseSets ? view.room : 0)
     camera.fov = (view.camera.fovY * 180) / Math.PI
     camera.position.set(...view.camera.position)
     camera.lookAt(...view.camera.target)

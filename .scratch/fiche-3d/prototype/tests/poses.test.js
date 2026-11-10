@@ -63,19 +63,24 @@ test('choisir une taille montre la femme de cette taille, seule, à la place du 
   }
 })
 
-test('le tableau est posé exactement sur le rectangle de la photo, à la vraie échelle, cadre ou non', () => {
+test('le tableau, 20 % plus grand qu’elle ne le voyait, garde son coin bas au coin du rectangle de la photo', () => {
+  const k = 1 / (POSES.pxPerCm * POSES.scale) // la photo réduite : cm du mur par px de la photo
   for (const size of SIZES) {
     for (const frame of canFrame(size) ? ['sans', 'chene'] : ['sans']) {
       const product = { ...TOILE, size, frame }
       const p = sizeView(product, 0.92).painting
       const { photo, rect } = posePlacement(POSES, size)
-      near(p.x - p.width / 2, rect.left, `${size} ${frame}, bord gauche`)
-      near(p.x + p.width / 2, rect.right, `${size} ${frame}, bord droit`)
-      near(p.y + p.height / 2, rect.top, `${size} ${frame}, haut`)
-      near(p.y - p.height / 2, rect.bottom, `${size} ${frame}, bas`)
-      near(rect.right - rect.left, p.width, `${size}, largeur à 16 px/cm`)
-      near(photo.right - photo.left, POSES.px[0] / POSES.pxPerCm, `${size}, 300 cm de mur`)
-      near(photo.bottom, -(POSES.px[1] - POSES.floorPx) / POSES.pxPerCm, `${size}, pied du mur en y = 0`)
+      const [L, T, W, H] = POSES.bySize[size].rect
+      // Le coin bas, côté femme (à droite), au coin du rectangle de la photo.
+      near(p.x + p.width / 2, (L + W) * k, `${size} ${frame}, bord droit`)
+      near(p.y - p.height / 2, (POSES.floorPx - T - H) * k, `${size} ${frame}, bas`)
+      near(rect.right, p.x + p.width / 2, `${size} ${frame}, rectangle à droite`)
+      near(rect.top, p.y + p.height / 2, `${size} ${frame}, rectangle en haut`)
+      // Ses vraies mesures, 1,2 fois celles du rectangle de la photo réduite.
+      near(p.width, W / POSES.pxPerCm, `${size}, largeur`)
+      near(p.width / (W * k), POSES.scale, `${size}, plus grand que sur la photo`)
+      near(photo.right - photo.left, POSES.px[0] * k, `${size}, 250 cm de mur`)
+      near(photo.bottom, -(POSES.px[1] - POSES.floorPx) * k, `${size}, pied du mur en y = 0`)
       assert.equal(p.z, 0, 'au mur')
     }
   }
@@ -111,10 +116,17 @@ ZONES.forEach((screen, z) => {
             y >= photo.bottom - 0.5 && y <= photo.top + BEYOND.top + 0.5,
           `${label} : coin (${sx}, ${sy}) hors de la photo prolongée, en ${x.toFixed(1)}, ${y.toFixed(1)}`)
         }
-        // À droite, la femme est près du bord : le mur n'y est pas prolongé (le miroir d'une bande
-        // étroite se verrait).
+        // À droite, la femme est près du bord : le mur n'y est prolongé que d'une bande sans elle (le
+        // miroir répété d'une bande étroite se verrait).
+        const [leftEdge] = onWall(view.camera, screen, -1, 0)
         const [rightEdge] = onWall(view.camera, screen, 1, 0)
-        assert.ok(rightEdge <= photo.right + 0.5, `${label} : la vue dépasse la photo à droite (${rightEdge.toFixed(1)} cm)`)
+        const { clean } = posePlacement(POSES, size)
+        const wider = rightEdge - leftEdge > photo.right - photo.left + clean.left + clean.right + 0.5
+        if (wider) near((leftEdge + rightEdge) / 2, (photo.left + photo.right) / 2, `${label}, vue centrée sur la photo`, 0.5)
+        else {
+          assert.ok(rightEdge <= photo.right + clean.right + 0.5, `${label} : la vue dépasse la photo à droite (${rightEdge.toFixed(1)} cm)`)
+          assert.ok(leftEdge >= photo.left - clean.left - 0.5, `${label} : la vue dépasse la photo à gauche (${leftEdge.toFixed(1)} cm)`)
+        }
         // Le tableau, ses cotes et l'étiquette de la cote de hauteur, en entier.
         for (const c of paintingCorners(view.painting, 'outer').filter((q) => q.side.z === 1)) inside(project(view.camera, screen, c), `${label} : coin du tableau`)
         for (const end of [view.dims.width.a, view.dims.width.b, view.dims.height.a, view.dims.height.b]) inside(project(view.camera, screen, end), `${label} : cote`)
@@ -132,14 +144,16 @@ ZONES.forEach((screen, z) => {
         if (screen <= 1) inside(project(view.camera, screen, [(person.left + person.right) / 2, person.bottom, 0]), `${label} : pieds`)
         // La femme entière en largeur, mains comprises, avec la marge des autres cadrages (retour de
         // Walid sur la version 21 : le geste du 90 × 120, bras ouverts, doit se voir en entier).
-        for (const x of [person.left, person.right]) {
+        // (sa main au bord même de la photo : visible jusqu'au bord, sans marge possible)
+        for (const x of [Math.max(person.left, photo.left), Math.min(person.right, photo.right)]) {
           const s = project(view.camera, screen, [x, (person.top + person.bottom) / 2, 0])
-          assert.ok(Math.abs(s.x) <= 0.92 + 1e-6, `${label} : la femme sort du cadre en largeur (${s.x.toFixed(3)})`)
+          const atEdge = x <= photo.left + 0.5 || x >= photo.right - 0.5
+          assert.ok(Math.abs(s.x) <= (atEdge ? 1 : 0.92) + 1e-6, `${label} : la femme sort du cadre en largeur (${s.x.toFixed(3)})`)
         }
-        // Coupée, jamais plus bas qu'au-dessus du genou : ses pieds se voient, ou la coupe passe au-dessus.
+        // Coupée, jamais plus bas qu'un peu au-dessus du genou : ses pieds se voient, ou la coupe passe au-dessus.
         const feet = project(view.camera, screen, [(person.left + person.right) / 2, person.bottom, 0]).y
-        const knee = project(view.camera, screen, [0, person.bottom + 0.33 * (person.top - person.bottom), 0]).y
-        assert.ok(feet >= -1 - 1e-6 || knee <= -1 + 1e-6, `${label} : coupée sous le genou (${knee.toFixed(2)})`)
+        const knee = project(view.camera, screen, [0, person.bottom + 0.4 * (person.top - person.bottom), 0]).y
+        assert.ok(feet >= -1 - 1e-6 || knee <= -1 + 0.01, `${label} : coupée au genou ou plus bas (${knee.toFixed(2)})`)
         // Pas de mur vide inutile : de haut en bas, la femme, le tableau et sa cote de largeur (son
         // étiquette au-dessus de la ligne) prennent l'essentiel de la vue...
         const paintingTop = view.painting.y + view.painting.outer.height / 2

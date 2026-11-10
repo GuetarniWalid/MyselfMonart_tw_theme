@@ -2,10 +2,14 @@
 # d'origine et des masques de poses-detourer.py. Pour chaque taille, dans le dossier de sortie :
 # - pose-<taille>.jpg : la photo à 2400 px de large, le rectangle blanc et le trait de crayon sous
 #   lui effacés (le mur refait : sa lumière prolongée depuis autour, son grain pris au mur à gauche) ;
-# - pose-<taille>-femme.png : la femme seule (couleurs estimées sans le mur, pymatting, licence MIT,
-#   et son détourage), là seulement où le tableau et son ombre peuvent passer ;
-# - pose-<taille>-lumiere.png : la lumière du mur sans la femme, en cases d'environ 3 cm ;
-# - poses.json : les mesures recopiées dans src/poses.js (femme, tête, calque, bandes sans la femme).
+# - pose-<taille>-femme.webp : ce qui passe devant le tableau, la femme (détourage BiRefNet) et, sur
+#   les photos meublées, les feuilles, branches et objets (clé de couleur sur le mur blanc), avec
+#   leurs couleurs estimées sans le mur (pymatting, licence MIT), là seulement où le tableau et son
+#   ombre peuvent passer ;
+# - pose-<taille>-lumiere.png : la lumière du mur sans la femme ni les meubles, en cases d'environ
+#   3 cm ;
+# - poses.json : les mesures recopiées dans src/poses.js (femme, tête, calque, bandes sans rien devant
+#   le mur le long des bords gauche et droit).
 #
 #   venv\Scripts\python -I poses-preparer.py <dossier des photos> <dossier des masques> <dossier de sortie> [tailles...]
 import json, os, sys
@@ -21,6 +25,7 @@ os.makedirs(out_dir, exist_ok=True)
 SCALE = 0.5  # 4800 -> 2400 px
 PX_PER_CM = 16  # photos d'origine, dans le plan du mur
 HEAD_CM = 24  # hauteur de la tête, cheveux compris, depuis le haut de la femme
+PLINTH = 3108  # haut de la plinthe (photo d'origine) : la clé de couleur ne joue qu'au-dessus, sur le mur
 # Rectangles blancs (photo d'origine) : left, top, width, height.
 RECTS = {
     '30x40': (1776, 504, 480, 640),
@@ -30,15 +35,46 @@ RECTS = {
 }
 sizes = sys.argv[4:] or list(RECTS)
 # Traits laissés sur le mur par la génération, près du rectangle (photo d'origine) : à refaire aussi.
-# Le même trait de crayon, sous le rectangle, sur les quatre photos : effacé partout (les poses se
-# fondent l'une dans l'autre).
-MARKS = {size: [(1176, 1972, 1604, 2036)] for size in RECTS}
-# Zone où le tableau et son ombre peuvent passer, toutes tailles et cadres confondus (photo
-# d'origine) : union des rectangles, agrandie de 4 cm (cadre) à gauche et en haut, de 18 cm (ombre,
-# vers le bas à droite) à droite et en bas. Le calque de la femme n'est utile que là.
-UNION = (min(r[0] for r in RECTS.values()), min(r[1] for r in RECTS.values()),
-         max(r[0] + r[2] for r in RECTS.values()), max(r[1] + r[3] for r in RECTS.values()))
-ZONE = (UNION[0] - 4 * PX_PER_CM, max(0, UNION[1] - 4 * PX_PER_CM), UNION[2] + 18 * PX_PER_CM, UNION[3] + 18 * PX_PER_CM)
+# Les photos de la version 21 avaient un trait de crayon sous le rectangle, (1176, 1972, 1604, 2036) ;
+# les photos meublées n'en ont plus, et ses branches sèches passent à cet endroit.
+MARKS = {}
+# Parties des meubles que la clé de couleur ne voit pas (blanches ou beiges comme le mur), aux mêmes
+# places sur les quatre photos meublées (photo d'origine : left, top, right, bottom).
+FURNITURE = [
+    (0, 2740, 590, 3510),  # pot de l'olivier
+    (4270, 790, 4800, 1350),  # abat-jour
+    (600, 2560, 2820, 2790),  # plateau du banc
+    (930, 1930, 1560, 2700),  # vase, livres et bol
+]
+# Balance des blancs : le mur de chaque photo ramené au même blanc chaud (rapports rouge, vert, bleu),
+# à luminosité égale. Il est mesuré sur deux bandes de mur nu (photo d'origine : x0, x1, y0, y1).
+WARM_WHITE = (1.0, 0.975, 0.935)
+WALL_SAMPLES = [(2700, 4000, 150, 450), (1700, 2400, 2250, 2450)]
+
+
+def balance(img):
+    """Gains par canal qui ramènent le mur à WARM_WHITE, à luminosité égale."""
+    parts = [img[int(y0 * SCALE):int(y1 * SCALE), int(x0 * SCALE):int(x1 * SCALE)].reshape(-1, 3) for x0, x1, y0, y1 in WALL_SAMPLES]
+    wall = np.concatenate(parts).mean(axis=0)
+    weights = np.array([0.2126, 0.7152, 0.0722])
+    target = np.array(WARM_WHITE) * (wall @ weights) / (np.array(WARM_WHITE) @ weights)
+    return target / wall
+
+
+# Zone où le tableau d'une taille et son ombre peuvent passer, cadre compris (photo d'origine).
+# Depuis la version 23, le tableau paraît SCALE_UP fois plus grand qu'elle ne le voyait
+# (POSES.scale) : accroché par son coin bas côté femme, il couvre le rectangle agrandi d'autant vers
+# le haut et la gauche ; plus 5 cm de cadre autour et 3 cm d'ombre en bas (elle tombe à gauche et en
+# bas). Le calque de ce qui passe devant le tableau n'est utile que là.
+SCALE_UP = 1.2
+FRAME_CM, SHADOW_CM = 5, 3
+
+
+def painted(rect):
+    L, T, W, H = rect
+    k = SCALE_UP * PX_PER_CM  # px de la photo par cm du tableau
+    f, s = FRAME_CM * k, SHADOW_CM * k
+    return (L + W - SCALE_UP * W - f, T + H - SCALE_UP * H - f, L + W + f, T + H + f + s)
 
 
 def harmonic(boundary_values, region):
@@ -66,6 +102,86 @@ def harmonic(boundary_values, region):
     return outv
 
 
+def smoothstep(a, b, x):
+    t = np.clip((x - a) / (b - a), 0, 1)
+    return t * t * (3 - 2 * t)
+
+
+def wall_light(img, wall, by=28, bx=25):
+    """Lumière du mur (couleur) partout : moyenne des pixels de mur par cases d'environ 3 cm, cases
+    sans mur prolongées depuis autour (harmonique), agrandie en bilinéaire."""
+    h, w = wall.shape
+    gh, gw = h // by, w // bx
+    wv = wall[:gh * by, :gw * bx].astype(np.float64)
+    total = (img[:gh * by, :gw * bx] * wv[..., None]).reshape(gh, by, gw, bx, 3).sum(axis=(1, 3))
+    count = wv.reshape(gh, by, gw, bx).sum(axis=(1, 3))
+    seen = count > 0.3 * by * bx
+    low = total / np.maximum(count, 1e-6)[..., None]
+    filled = harmonic(np.where(seen[..., None], low, 0), ~seen)
+    low[~seen] = filled[~seen]
+    yy = np.clip((np.arange(h) + 0.5) / by - 0.5, 0, gh - 1)
+    xx = np.clip((np.arange(w) + 0.5) / bx - 0.5, 0, gw - 1)
+    gy, gx = np.meshgrid(yy, xx, indexing='ij')
+    return np.dstack([ndimage.map_coordinates(low[..., c], [gy, gx], order=1) for c in range(3)])
+
+
+def object_key(img, alpha, ignore=None):
+    """Détourage de ce qui est devant le mur blanc, au-dessus de la plinthe (feuilles, branches,
+    objets) : la part dont chaque pixel est plus sombre ou d'une autre teinte que la lumière du mur à
+    cet endroit. Pixel par pixel, sans combler les jours entre les feuilles : le mur y reste. L'ombre
+    douce de la femme suit la lumière du mur et reste du mur. ignore : une zone qui n'est pas un objet
+    (le rectangle blanc, refait ensuite)."""
+    h, w = alpha.shape
+    above = np.zeros((h, w), dtype=bool)
+    above[:int((PLINTH - 24) * SCALE)] = True  # au-dessus du bord de la plinthe
+    if ignore is not None:
+        above &= ~ignore
+    weights = np.array([0.2126, 0.7152, 0.0722])
+    lum = img @ weights
+    tint = img / np.maximum(lum[..., None], 1)
+    # Le mur, en deux passes : d'abord tout ce qui n'est ni elle ni nettement plus sombre que la
+    # lumière moyenne du lieu, puis sans ce que la première passe a vu.
+    rough = np.maximum(ndimage.gaussian_filter(lum, 40), 1)
+    wall = (alpha < 0.02) & above & (lum > 0.85 * rough)
+    for _ in range(2):
+        light = wall_light(img, wall)
+        light_lum = np.maximum(light @ weights, 1)
+        darker = (light_lum - lum) / light_lum
+        chroma = np.abs(tint - light / light_lum[..., None]).max(axis=2)
+        key = np.maximum(smoothstep(0.04, 0.32, darker), smoothstep(0.05, 0.16, chroma))
+        wall = (alpha < 0.02) & above & (key < 0.05)
+    key = ndimage.grey_opening(key, size=2)  # sans les points isolés du plâtre
+    key[~above] = 0
+    return np.clip(key, 0, 1)
+
+
+def furniture(objects, alpha):
+    """Les meubles et objets posés (olivier et son pot, banc, vase, lampadaire, panier) : la boîte de
+    chaque grande tache de la clé, hors de la femme. Leurs parties blanches (pot, abat-jour, plateau
+    du banc), que la clé ne voit pas, y sont. Une tache qui descend jusqu'à la plinthe tient sur le
+    sol : sa boîte va jusqu'en bas de la photo."""
+    h, w = objects.shape
+    her = ndimage.binary_dilation(alpha > 0.02, iterations=6)
+    spots = ndimage.binary_dilation((objects > 0.3) & ~her, iterations=4)
+    labels, count = ndimage.label(spots)
+    mask = np.zeros((h, w), dtype=bool)
+    floor_line = int((PLINTH - 24) * SCALE) - 12
+    for i, sl in enumerate(ndimage.find_objects(labels)):
+        if sl is None or (labels[sl] == i + 1).sum() < 200:  # moins de 2 cm de côté : du plâtre
+            continue
+        mask[sl[0].start:(h if sl[0].stop >= floor_line else sl[0].stop), sl[1]] = True
+    return ndimage.binary_dilation(mask | furniture_boxes(h, w), iterations=6)
+
+
+def furniture_boxes(h, w):
+    """Les boîtes FURNITURE, à demi-échelle."""
+    mask = np.zeros((h, w), dtype=bool)
+    for box in FURNITURE:
+        l, t, r, b = [int(round(v * SCALE)) for v in box]
+        mask[t:b, l:r] = True
+    return mask
+
+
 def mirror_tile(patch, h, w):
     """Pavage en miroir d'une texture, à la taille h × w."""
     reps_y = h // patch.shape[0] + 2
@@ -75,17 +191,13 @@ def mirror_tile(patch, h, w):
     return full[:h, :w]
 
 
-def clean_box(img, alpha, box, source_right):
+def clean_box(img, alpha, box):
     """Refait le mur dans `box` (left, top, right, bottom, px) : ses grandes variations de lumière,
-    prolongées depuis le mur autour (membrane harmonique, au quart), et son grain, pris au mur dégagé
-    à gauche de `source_right` (passe-haut), puis un fondu de 6 px vers la photo autour."""
+    prolongées depuis le mur autour (membrane harmonique, au quart, sans ce que `alpha` détoure :
+    la femme, les objets), et un grain de la force de celui du mur autour (le mur neuf est lisse :
+    rien n'est recopié d'ailleurs), puis un fondu de 6 px vers la photo autour."""
     h2, w2 = alpha.shape
     feather, sub = 6, 4
-    sx0, sx1 = 20, max(40, source_right - 20)
-    if alpha[box[1]:box[3], sx0:sx1].max() >= 0.02:
-        raise SystemExit('la texture source touche la femme')
-    rows = img[box[1]:box[3], sx0:sx1]
-    grain = rows - ndimage.gaussian_filter(rows, (12, 12, 0), mode='reflect')
     m = 4 * sub
     e = [max(box[0] - m, 0), max(box[1] - m, 0), min(box[2] + m, w2), min(box[3] + m, h2)]
     e[2] = e[0] + (e[2] - e[0]) // sub * sub
@@ -105,14 +217,13 @@ def clean_box(img, alpha, box, source_right):
     xx = (np.arange(e[2] - e[0]) + 0.5) / sub - 0.5
     gy, gx = np.meshgrid(np.clip(yy, 0, hs - 1), np.clip(xx, 0, ws - 1), indexing='ij')
     membrane = np.dstack([ndimage.map_coordinates(membrane_small[..., c], [gy, gx], order=1) for c in range(3)])
-    texture = np.zeros_like(work)
-    hb, wb = box[3] - box[1], box[2] - box[0]
-    tile = mirror_tile(grain, hb + 2 * feather, wb + 2 * feather)
-    oy, ox = box[1] - e[1] - feather, box[0] - e[0] - feather
-    y0, x0 = max(oy, 0), max(ox, 0)
-    part = tile[y0 - oy:, x0 - ox:][:texture.shape[0] - y0, :texture.shape[1] - x0]
-    texture[y0:y0 + part.shape[0], x0:x0 + part.shape[1]] = part
-    filled = np.clip(membrane + texture, 0, 255)
+    lum = work @ np.array([0.2126, 0.7152, 0.0722])
+    fine = lum - ndimage.gaussian_filter(lum, 3)
+    # Force du grain : écart absolu médian (les bords d'objets autour ne comptent pas).
+    sigma = 1.4826 * float(np.median(np.abs(fine[valid]))) if valid.any() else 1.0
+    noise = ndimage.gaussian_filter(np.random.default_rng(7).normal(0, 1, lum.shape), 0.6)
+    noise *= sigma / max(float(noise.std()), 1e-6)
+    filled = np.clip(membrane + noise[..., None], 0, 255)
     dist = ndimage.distance_transform_edt(~hole)
     weight = np.clip(1 - dist / feather, 0, 1)[..., None]
     out = img.copy()
@@ -128,6 +239,11 @@ for size in sizes:
     full_w, full_h = photo.size
     w2, h2 = int(full_w * SCALE), int(full_h * SCALE)
     img = np.asarray(photo.resize((w2, h2), Image.LANCZOS), dtype=np.float64)
+    # Le rectangle blanc se cherche sur la photo telle quelle, la balance des blancs ensuite.
+    l, t, r, b = [int(round(v * SCALE)) for v in (L, T, L + W, T + H)]
+    has_rect = (img[t:b, l:r].min(axis=2) > 245).mean() > 0.6
+    gains = balance(img)
+    img = np.clip(img * gains, 0, 255)
     alpha = np.clip(np.asarray(alpha_full.resize((w2, h2), Image.LANCZOS), dtype=np.float64) / 255.0, 0, 1)
 
     # Contour de la femme et de sa tête (photo d'origine), pour le cadrage : pixels nettement à elle.
@@ -137,23 +253,46 @@ for size in sizes:
     head_rows = a_full[person[1]:person[1] + HEAD_CM * PX_PER_CM] > 128
     hx = np.nonzero(head_rows.any(axis=0))[0]
     head = [int(hx.min()), person[1], int(hx.max()) + 1, person[1] + HEAD_CM * PX_PER_CM]
-    # Marges sans la femme, recopiées en miroir pour prolonger le mur au-delà des bords (3 cm de garde).
+    # Zones à refaire, à demi-échelle, seulement si elles sont là (les photos retouchées n'ont plus de
+    # rectangle blanc ni de trait) : le rectangle, élargi de 4 px (bords adoucis du dessin), et les
+    # traits laissés autour par la génération.
+    # Ce qui passe devant le mur : la femme, et les objets d'une photo meublée (le rectangle blanc,
+    # lui, n'en est pas un).
+    rect_box = (max(l - 4, 0), max(t - 4, 0), min(r + 4, w2), min(b + 4, h2))
+    in_rect = np.zeros((h2, w2), dtype=bool)
+    if has_rect:
+        in_rect[max(rect_box[1] - 4, 0):rect_box[3] + 4, max(rect_box[0] - 4, 0):rect_box[2] + 4] = True
+    # Deux passes : les objets autour du rectangle d'abord (pour refaire le mur sans eux), puis sur le
+    # mur refait, où rien ne reste du bord du rectangle.
+    front = np.maximum(alpha, object_key(img, alpha, ndimage.binary_dilation(in_rect, iterations=20)))
+    cleaned = img
+    if has_rect:
+        cleaned = clean_box(img, front, rect_box)
+        for mark in MARKS.get(size, []):
+            cleaned = clean_box(cleaned, front, [int(round(v * SCALE)) for v in mark])
+    objects = object_key(cleaned, alpha)
+    front = np.maximum(alpha, objects)
+    Image.fromarray((objects * 255 + 0.5).astype(np.uint8), 'L').save(os.path.join(out_dir, f'controle-objets-{size}.png'))
+    # Marges sans rien devant le mur, recopiées en miroir pour le prolonger au-delà des bords gauche
+    # et droit (3 cm de garde) : un objet au bord, et ce côté se prolonge uni (le haut, toujours).
     guard = 3 * PX_PER_CM
-    clean = {'left': person[0] - guard, 'right': full_w - person[2] - guard, 'top': person[1] - guard}
-
-    # Zones à refaire, à demi-échelle : le rectangle, élargi de 4 px (bords adoucis du dessin), et
-    # les traits laissés autour par la génération.
-    l, t, r, b = [int(round(v * SCALE)) for v in (L, T, L + W, T + H)]
-    cleaned = clean_box(img, alpha, (max(l - 4, 0), max(t - 4, 0), min(r + 4, w2), min(b + 4, h2)), l)
-    for mark in MARKS.get(size, []):
-        box = [int(round(v * SCALE)) for v in mark]
-        cleaned = clean_box(cleaned, alpha, box, box[0])
+    solid = front > 0.5
+    labels, count = ndimage.label(solid)
+    if count:
+        areas = ndimage.sum(solid, labels, range(1, count + 1))
+        solid = np.isin(labels, 1 + np.nonzero(areas >= 400)[0])  # plus de 2,5 cm de côté environ
+    fy, fx = np.nonzero(solid)
+    clean = {
+        'left': max(0, int(fx.min() / SCALE) - guard),
+        'right': max(0, full_w - int((fx.max() + 1) / SCALE) - guard),
+    }
 
     # Calque de la femme : la zone du tableau et de son ombre seulement, à demi-échelle. Ses
     # couleurs sont estimées sans le mur ni le rectangle (pas de liseré clair sur l'œuvre).
-    z = [int(round(v * SCALE)) for v in ZONE]
+    # La zone de ce tableau-ci seulement (le 30 × 40 n'a que faire de l'olivier).
+    z = [int(round(v * SCALE)) for v in painted(RECTS[size])]
     z = [max(z[0], 0), max(z[1], 0), min(z[2], w2), min(z[3], h2)]
-    crop = alpha[z[1]:z[3], z[0]:z[2]]
+    crop = front[z[1]:z[3], z[0]:z[2]]
     ys2, xs2 = np.nonzero(crop > 0.004)
     if len(ys2):
         c = [z[0] + int(xs2.min()), z[1] + int(ys2.min()), z[0] + int(xs2.max()) + 1, z[1] + int(ys2.max()) + 1]
@@ -162,11 +301,11 @@ for size in sizes:
     # Un peu de mur autour, pour l'estimation des couleurs, puis le recadrage exact.
     m = 24
     e = [max(c[0] - m, 0), max(c[1] - m, 0), min(c[2] + m, w2), min(c[3] + m, h2)]
-    fg = estimate_foreground_ml(img[e[1]:e[3], e[0]:e[2]] / 255.0, alpha[e[1]:e[3], e[0]:e[2]])
+    fg = estimate_foreground_ml(img[e[1]:e[3], e[0]:e[2]] / 255.0, front[e[1]:e[3], e[0]:e[2]])
     fg = fg[c[1] - e[1]:c[3] - e[1], c[0] - e[0]:c[2] - e[0]]
-    a = alpha[c[1]:c[3], c[0]:c[2]]
+    a = front[c[1]:c[3], c[0]:c[2]]
     rgba = np.dstack([np.clip(fg * 255 + 0.5, 0, 255), np.clip(a * 255 + 0.5, 0, 255)]).astype(np.uint8)
-    Image.fromarray(rgba, 'RGBA').save(os.path.join(out_dir, f'pose-{size}-femme.png'), optimize=True)
+    Image.fromarray(rgba, 'RGBA').save(os.path.join(out_dir, f'pose-{size}-femme.webp'), quality=90, alpha_quality=100, method=6)
     # La photo publiée : le mur refait, la femme par-dessus avec son détourage ; près du tableau,
     # avec ses couleurs estimées (pas de liseré blanc du rectangle autour de sa main).
     a3 = alpha[..., None]
@@ -175,18 +314,41 @@ for size in sizes:
     out = a3 * person_rgb + (1 - a3) * cleaned
     Image.fromarray(np.clip(out + 0.5, 0, 255).astype(np.uint8)).save(os.path.join(out_dir, f'pose-{size}.jpg'), quality=80, optimize=True, progressive=True)
 
-    # Lumière du mur, sans la femme, en cases de 25 × 28 px (environ 3 cm) : le moteur prolonge la
-    # photo au-delà de ses bords en miroir, en gardant la lumière du bord (pas de creux ni de bosse
-    # au raccord, malgré l'assombrissement des coins).
+    # Lumière du mur, sans la femme ni les meubles, en cases de 25 × 28 px (environ 3 cm) : le moteur
+    # prolonge la photo au-delà de ses bords à la lumière du bord (en miroir : pas de creux ni de bosse
+    # au raccord, malgré l'assombrissement des coins ; uni là où un objet touche le bord), et éclaire
+    # le tableau comme le mur. Derrière un meuble, au-dessus de la plinthe : le mur prolongé depuis
+    # autour (harmonique) ; plinthe et sol : rang par rang, depuis les cases dégagées.
     by, bx = 28, 25
     gh, gw = h2 // by, w2 // bx
-    wall = 1 - alpha[:gh * by, :gw * bx]
+    things = furniture(objects, alpha)
+    Image.fromarray((things * 255).astype(np.uint8), 'L').save(os.path.join(out_dir, f'controle-meubles-{size}.png'))
+    wall = ((1 - front) * ~things)[:gh * by, :gw * bx]
     total = (out[:gh * by, :gw * bx] * wall[..., None]).reshape(gh, by, gw, bx, 3).sum(axis=(1, 3))
     count = wall.reshape(gh, by, gw, bx).sum(axis=(1, 3))
     seen = count > 0.5 * by * bx
     low = total / np.maximum(count, 1e-6)[..., None]
-    filled_low = harmonic(np.where(seen[..., None], low, 0), ~seen)
-    low[~seen] = filled_low[~seen]
+    split = int(PLINTH * SCALE) // by  # premier rang de cases qui touche la plinthe
+    upper = seen[:split]
+    filled_low = harmonic(np.where(upper[..., None], low[:split], 0), ~upper)
+    low[:split][~upper] = filled_low[~upper]
+    # Plinthe et sol : les cases ni à elle ni au pot, et pas plus sombres que la plinthe ou le parquet
+    # du rang (pieds du banc, panier, chaussures, trépied), puis entre elles et jusqu'aux bords.
+    floor = ((1 - alpha) * ~ndimage.binary_dilation(furniture_boxes(h2, w2), iterations=6))[:gh * by, :gw * bx]
+    f_total = (out[:gh * by, :gw * bx] * floor[..., None]).reshape(gh, by, gw, bx, 3).sum(axis=(1, 3))
+    f_count = floor.reshape(gh, by, gw, bx).sum(axis=(1, 3))
+    f_low = f_total / np.maximum(f_count, 1e-6)[..., None]
+    cells = np.arange(gw)
+    for row in range(split, gh):
+        ok = f_count[row] > 0.5 * by * bx
+        if ok.any():
+            lum = f_low[row] @ np.array([0.2126, 0.7152, 0.0722])
+            ok &= lum >= 0.9 * np.percentile(lum[ok], 75)
+        if not ok.any():
+            low[row] = low[row - 1]
+            continue
+        for ch in range(3):
+            low[row, :, ch] = np.interp(cells, cells[ok], f_low[row, ok, ch])
     Image.fromarray(np.clip(low + 0.5, 0, 255).astype(np.uint8)).save(os.path.join(out_dir, f'pose-{size}-lumiere.png'), optimize=True)
     meta[size] = {
         'rect': [L, T, W, H],
@@ -195,6 +357,7 @@ for size in sizes:
         # Calque, en px de la photo d'origine : left, top, right, bottom.
         'overlay': [int(v / SCALE) for v in c],
         'clean': clean,
+        'balance': [round(float(g), 4) for g in gains],
     }
     print(size, json.dumps(meta[size]), flush=True)
 
