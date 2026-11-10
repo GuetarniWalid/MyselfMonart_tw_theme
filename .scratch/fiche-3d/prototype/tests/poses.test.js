@@ -46,8 +46,8 @@ function onWall(camera, aspect, sx, sy) {
 const inside = (s, label) => assert.ok(Math.abs(s.x) <= 1 + 1e-9 && Math.abs(s.y) <= 1 + 1e-9, `${label} hors de l'écran (${s.x.toFixed(2)}, ${s.y.toFixed(2)})`)
 
 // La page donne au directeur une forme pour la vue de face, et celle de l'écran réel.
-function sizeView(product, screen, aspect = screen, inset = undefined) {
-  const director = createDirector({ room: ROOM, poses: POSES, product: TOILE })
+function sizeView(product, screen, aspect = screen, inset = undefined, poses = POSES) {
+  const director = createDirector({ room: ROOM, poses, product: TOILE })
   director.choose('size', product, 0)
   return director.view(LATER, aspect, screen, inset)
 }
@@ -107,7 +107,7 @@ ZONES.forEach((screen, z) => {
         const product = { ...TOILE, size, frame }
         // Sur le 390 × 844, la page donne au directeur une forme plus étroite que l'écran (vue de face).
         const view = sizeView(product, screen, screen * 0.9, INSETS[z])
-        const { photo, person, head } = posePlacement(POSES, size)
+        const { photo, person, body, reach, head } = posePlacement(POSES, size)
         const label = `${size} ${frame}`
         // Les coins de l'écran restent dans la photo prolongée, jamais sous son sol.
         for (const [sx, sy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) {
@@ -142,13 +142,20 @@ ZONES.forEach((screen, z) => {
           inside(project(view.camera, screen, [x, y, 0]), `${label} : tête`)
         }
         if (screen <= 1) inside(project(view.camera, screen, [(person.left + person.right) / 2, person.bottom, 0]), `${label} : pieds`)
-        // La femme entière en largeur, mains comprises, avec la marge des autres cadrages (retour de
-        // Walid sur la version 21 : le geste du 90 × 120, bras ouverts, doit se voir en entier).
-        // (sa main au bord même de la photo : visible jusqu'au bord, sans marge possible)
-        for (const x of [Math.max(person.left, photo.left), Math.min(person.right, photo.right)]) {
-          const s = project(view.camera, screen, [x, (person.top + person.bottom) / 2, 0])
+        // Son corps en largeur, avec la main qui présente le tableau, et la marge des autres cadrages.
+        // Sa main lointaine en dernier (choix de Walid pour la version 24) : en entier (au bord de la
+        // photo si elle le touche), ou le bord de la vue sur le bras, loin du coude et du poignet.
+        for (const x of [Math.max(body.left, photo.left), Math.min(body.right, photo.right)]) {
+          const s = project(view.camera, screen, [x, (body.top + body.bottom) / 2, 0])
           const atEdge = x <= photo.left + 0.5 || x >= photo.right - 0.5
-          assert.ok(Math.abs(s.x) <= (atEdge ? 1 : 0.92) + 1e-6, `${label} : la femme sort du cadre en largeur (${s.x.toFixed(3)})`)
+          assert.ok(Math.abs(s.x) <= (atEdge ? 1 : 0.92) + 1e-6, `${label} : son corps sort du cadre en largeur (${s.x.toFixed(3)})`)
+        }
+        if (reach) {
+          const upper = reach.elbow - reach.body, fore = reach.wrist - reach.elbow
+          const whole = rightEdge >= Math.min(reach.tip, photo.right) - 0.01
+          const onUpper = rightEdge >= reach.body && rightEdge <= reach.elbow - 0.3 * upper + 0.01
+          const onFore = rightEdge >= reach.elbow + 0.3 * fore - 0.01 && rightEdge <= reach.wrist - 0.3 * fore + 0.01
+          assert.ok(whole || onUpper || onFore, `${label} : le bord de la vue coupe son bras au coude, au poignet ou dans la main (${rightEdge.toFixed(1)} cm)`)
         }
         // Coupée, jamais plus bas qu'un peu au-dessus du genou : ses pieds se voient, ou la coupe passe au-dessus.
         const feet = project(view.camera, screen, [(person.left + person.right) / 2, person.bottom, 0]).y
@@ -163,7 +170,7 @@ ZONES.forEach((screen, z) => {
           Math.max(-1, project(view.camera, screen, [0, Math.min(...bottoms), 0]).y)) / 2
         // (sauf quand la largeur de la femme, bras ouverts, impose la hauteur de la vue)
         const height = 2 * Math.tan(view.camera.fovY / 2) * view.camera.position[2]
-        const forced = (person.right - (view.dims.height.a[0] - 7)) / screen / 0.92 >= height - 0.5
+        const forced = (body.right - (view.dims.height.a[0] - 7)) / screen / 0.92 >= height - 0.5
         assert.ok(span >= 0.75 || forced, `${label} : la femme et le tableau ne prennent que ${(span * 100).toFixed(0)} % de la hauteur`)
         // ... et sur un écran large, le mur vide sur les côtés n'en prend pas plus d'un cinquième,
         // sauf s'il faut la place pour le tableau et ses cotes, ou pour la montrer entière plutôt que
@@ -171,13 +178,36 @@ ZONES.forEach((screen, z) => {
         if (screen > 1 && feet < -1) {
           const [left] = onWall(view.camera, screen, -1, 0)
           const [right] = onWall(view.camera, screen, 1, 0)
-          const content = Math.max(person.right, view.painting.x + view.painting.outer.width / 2) - (view.dims.height.a[0] - 7)
+          const content = Math.max(body.right, view.painting.x + view.painting.outer.width / 2) - (view.dims.height.a[0] - 7)
           const tight = (view.painting.outer.height + 30) * screen // ce que le tableau et ses cotes demandent au moins
           assert.ok(right - left <= Math.max(content / 0.8, tight * 1.12) + 1e-6, `${label} : ${(right - left).toFixed(0)} cm de large pour ${content.toFixed(0)} cm de contenu`)
         }
       }
     }
   })
+})
+
+test('le tableau d’abord : sa main lointaine ne fait jamais reculer la vue (bras ouverts du 90 × 120)', () => {
+  // Les mêmes poses, son bras lointain ôté : la vue a la même taille, dans toutes les zones.
+  const trimmed = structuredClone(POSES)
+  for (const pose of Object.values(trimmed.bySize)) {
+    if (!pose.reach) continue
+    pose.person = [pose.person[0], pose.person[1], pose.reach.body, pose.person[3]]
+    delete pose.reach
+  }
+  assert.ok(Object.values(POSES.bySize).some((pose) => pose.reach), 'au moins une pose aux bras ouverts')
+  ZONES.forEach((screen, z) => {
+    for (const size of SIZES) {
+      const product = { ...TOILE, size }
+      const span = (view) => 2 * Math.tan(view.camera.fovY / 2) * view.camera.position[2]
+      const real = sizeView(product, screen, screen * 0.9, INSETS[z])
+      const without = sizeView(product, screen, screen * 0.9, INSETS[z], trimmed)
+      near(span(real), span(without), `${size} en zone ${screen}, hauteur de la vue`, 1e-6)
+    }
+  })
+  // En 390 × 844, le 90 × 120 n'est plus réduit au tiers de la hauteur (354 cm de vue en version 23).
+  const view = sizeView({ ...TOILE, size: '90x120' }, ZONES[0], ZONES[0] * 0.9, INSETS[0])
+  assert.ok(120 / (2 * Math.tan(view.camera.fovY / 2) * view.camera.position[2]) >= 0.44, '90 × 120 en 390 × 844 : le tableau trop petit')
 })
 
 test('passer d’une taille à l’autre fond une pose dans l’autre, pendant que le tableau change de taille', () => {

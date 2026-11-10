@@ -1,7 +1,7 @@
 # Outil de cuisson (jamais publié) : prépare les photos de pose (src/poses.js) à partir des photos
 # d'origine et des masques de poses-detourer.py. Pour chaque taille, dans le dossier de sortie :
-# - pose-<taille>.jpg : la photo à 2400 px de large, le rectangle blanc et le trait de crayon sous
-#   lui effacés (le mur refait : sa lumière prolongée depuis autour, son grain pris au mur à gauche) ;
+# - pose-<taille>.jpg : la photo à 3168 px de large (6 px par cm de mur), le rectangle blanc effacé
+#   (le mur refait : sa lumière prolongée depuis autour, un grain de la force de celui du mur) ;
 # - pose-<taille>-femme.webp : ce qui passe devant le tableau, la femme (détourage BiRefNet) et, sur
 #   les photos meublées, les feuilles, branches et objets (clé de couleur sur le mur blanc), avec
 #   leurs couleurs estimées sans le mur (pymatting, licence MIT), là seulement où le tableau et son
@@ -22,34 +22,39 @@ from pymatting import estimate_foreground_ml
 PHOTOS, MASKS, out_dir = sys.argv[1], sys.argv[2], sys.argv[3]
 os.makedirs(out_dir, exist_ok=True)
 
-SCALE = 0.5  # 4800 -> 2400 px
-PX_PER_CM = 16  # photos d'origine, dans le plan du mur
+# Photos larges de la version 24 (6336 × 2688, 21:9) : la pièce recomposée par Gemini, olivier et
+# lampadaire entiers, mur, plinthe et parquet nus jusqu'aux bords.
+SCALE = 0.5  # 6336 -> 3168 px : 6 px par cm de mur, assez pour l'écran
+PX_PER_CM = 12  # photos d'origine, dans le plan du mur (hauteur des rectangles : 11,96 à 12,1)
 HEAD_CM = 24  # hauteur de la tête, cheveux compris, depuis le haut de la femme
-PLINTH = 3108  # haut de la plinthe (photo d'origine) : la clé de couleur ne joue qu'au-dessus, sur le mur
-# Rectangles blancs (photo d'origine) : left, top, width, height.
+PLINTH = 2310  # haut de la plinthe (photo d'origine) : la clé de couleur ne joue qu'au-dessus, sur le mur
+EDGE = round(1.5 * PX_PER_CM)  # garde au-dessus de la plinthe (photo d'origine)
+# Rectangles blancs (photo d'origine) : left, top, width, height, relevés sur chaque photo (Gemini
+# les a tracés un peu larges en 30 × 40 et un peu étroits en 75 × 100 : le tableau s'accroche à leur
+# coin bas droit, là où ses mains le présentent).
 RECTS = {
-    '30x40': (1776, 504, 480, 640),
-    '60x80': (1320, 184, 960, 1280),
-    '75x100': (1200, 24, 1200, 1600),
-    '90x120': (1080, 26, 1440, 1920),
+    '30x40': (2676, 376, 378, 484),
+    '60x80': (2362, 141, 717, 957),
+    '75x100': (2267, 21, 878, 1198),
+    '90x120': (2175, 20, 1075, 1441),
 }
 sizes = sys.argv[4:] or list(RECTS)
-# Traits laissés sur le mur par la génération, près du rectangle (photo d'origine) : à refaire aussi.
-# Les photos de la version 21 avaient un trait de crayon sous le rectangle, (1176, 1972, 1604, 2036) ;
-# les photos meublées n'en ont plus, et ses branches sèches passent à cet endroit.
+# Traits laissés sur le mur par la génération, près du rectangle (photo d'origine) : à refaire aussi
+# (les photos de la version 21 avaient un trait de crayon sous le rectangle ; plus depuis).
 MARKS = {}
-# Parties des meubles que la clé de couleur ne voit pas (blanches ou beiges comme le mur), aux mêmes
-# places sur les quatre photos meublées (photo d'origine : left, top, right, bottom).
+# Parties des meubles que la clé de couleur ne voit pas (blanches ou beiges comme le mur) : une
+# boîte qui les couvre sur les quatre photos, où ils ont un peu bougé (photo d'origine : left, top,
+# right, bottom).
 FURNITURE = [
-    (0, 2740, 590, 3510),  # pot de l'olivier
-    (4270, 790, 4800, 1350),  # abat-jour
-    (600, 2560, 2820, 2790),  # plateau du banc
-    (930, 1930, 1560, 2700),  # vase, livres et bol
+    (1290, 2060, 1820, 2650),  # pot de l'olivier
+    (4560, 590, 5320, 1020),  # abat-jour
+    (1820, 1920, 3480, 2115),  # plateau du banc
+    (2040, 1440, 2560, 2060),  # vase, livres et bol
 ]
 # Balance des blancs : le mur de chaque photo ramené au même blanc chaud (rapports rouge, vert, bleu),
 # à luminosité égale. Il est mesuré sur deux bandes de mur nu (photo d'origine : x0, x1, y0, y1).
 WARM_WHITE = (1.0, 0.975, 0.935)
-WALL_SAMPLES = [(2700, 4000, 150, 450), (1700, 2400, 2250, 2450)]
+WALL_SAMPLES = [(200, 900, 300, 1800), (5600, 6200, 300, 1800)]  # mur nu, à gauche de l'olivier et à droite du lampadaire
 
 
 def balance(img):
@@ -133,7 +138,7 @@ def object_key(img, alpha, ignore=None):
     (le rectangle blanc, refait ensuite)."""
     h, w = alpha.shape
     above = np.zeros((h, w), dtype=bool)
-    above[:int((PLINTH - 24) * SCALE)] = True  # au-dessus du bord de la plinthe
+    above[:int((PLINTH - EDGE) * SCALE)] = True  # au-dessus du bord de la plinthe
     if ignore is not None:
         above &= ~ignore
     weights = np.array([0.2126, 0.7152, 0.0722])
@@ -165,9 +170,9 @@ def furniture(objects, alpha):
     spots = ndimage.binary_dilation((objects > 0.3) & ~her, iterations=4)
     labels, count = ndimage.label(spots)
     mask = np.zeros((h, w), dtype=bool)
-    floor_line = int((PLINTH - 24) * SCALE) - 12
+    floor_line = int((PLINTH - 2 * EDGE) * SCALE)
     for i, sl in enumerate(ndimage.find_objects(labels)):
-        if sl is None or (labels[sl] == i + 1).sum() < 200:  # moins de 2 cm de côté : du plâtre
+        if sl is None or (labels[sl] == i + 1).sum() < (2 * PX_PER_CM * SCALE) ** 2:  # moins de 2 cm de côté : du plâtre
             continue
         mask[sl[0].start:(h if sl[0].stop >= floor_line else sl[0].stop), sl[1]] = True
     return ndimage.binary_dilation(mask | furniture_boxes(h, w), iterations=6)
@@ -280,7 +285,7 @@ for size in sizes:
     labels, count = ndimage.label(solid)
     if count:
         areas = ndimage.sum(solid, labels, range(1, count + 1))
-        solid = np.isin(labels, 1 + np.nonzero(areas >= 400)[0])  # plus de 2,5 cm de côté environ
+        solid = np.isin(labels, 1 + np.nonzero(areas >= (2.5 * PX_PER_CM * SCALE) ** 2)[0])  # plus de 2,5 cm de côté environ
     fy, fx = np.nonzero(solid)
     clean = {
         'left': max(0, int(fx.min() / SCALE) - guard),
@@ -314,12 +319,12 @@ for size in sizes:
     out = a3 * person_rgb + (1 - a3) * cleaned
     Image.fromarray(np.clip(out + 0.5, 0, 255).astype(np.uint8)).save(os.path.join(out_dir, f'pose-{size}.jpg'), quality=80, optimize=True, progressive=True)
 
-    # Lumière du mur, sans la femme ni les meubles, en cases de 25 × 28 px (environ 3 cm) : le moteur
+    # Lumière du mur, sans la femme ni les meubles, en cases d'environ 3 cm : le moteur
     # prolonge la photo au-delà de ses bords à la lumière du bord (en miroir : pas de creux ni de bosse
     # au raccord, malgré l'assombrissement des coins ; uni là où un objet touche le bord), et éclaire
     # le tableau comme le mur. Derrière un meuble, au-dessus de la plinthe : le mur prolongé depuis
     # autour (harmonique) ; plinthe et sol : rang par rang, depuis les cases dégagées.
-    by, bx = 28, 25
+    by = bx = round(3 * PX_PER_CM * SCALE)
     gh, gw = h2 // by, w2 // bx
     things = furniture(objects, alpha)
     Image.fromarray((things * 255).astype(np.uint8), 'L').save(os.path.join(out_dir, f'controle-meubles-{size}.png'))
@@ -364,7 +369,7 @@ for size in sizes:
 path = os.path.join(out_dir, 'poses.json')
 old = json.load(open(path)) if os.path.exists(path) else {'poses': {}}
 old['poses'].update(meta)
-old.update({'size': [4800, 3584], 'published': [w2, h2]})
+old.update({'size': [full_w, full_h], 'published': [w2, h2]})
 with open(path, 'w') as f:
     json.dump(old, f, indent=1)
 print('ok')

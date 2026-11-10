@@ -237,8 +237,10 @@ function shotOf(shot, camera, painting, roomOpacity = 0, dimsUnder = false, pose
    présentent donc toujours au même endroit ; il grandit vers le haut et vers la gauche. Il s'accroche
    ainsi dans tous les plans (hungPainting) : il ne glisse jamais sur le mur, et un changement de
    taille fond une pose dans l'autre sans bouger la pièce. Rend, en cm du mur : la photo, le rectangle
-   du tableau, la femme, sa tête, la zone de son calque, et la largeur sans rien devant le mur le
-   long des bords gauche et droit (clean), recopiée en miroir au-delà de la photo. */
+   du tableau, la femme, son corps sans son bras lointain (body), sa tête, la zone de son calque, la
+   largeur sans rien devant le mur le long des bords gauche et droit (clean), recopiée en miroir
+   au-delà de la photo, et son bras lointain (reach : bord du corps, coude, poignet, bout des doigts),
+   s'il s'écarte d'elle. */
 export function posePlacement(poses, size) {
   const pose = poses.bySize[size]
   const k = 1 / (poses.pxPerCm * (poses.scale || 1))
@@ -252,6 +254,8 @@ export function posePlacement(poses, size) {
     photo: box([0, 0, ...poses.px]),
     rect: { left: corner.right - W * cm, right: corner.right, top: corner.bottom + H * cm, bottom: corner.bottom },
     person: box(pose.person),
+    body: box(pose.reach ? [pose.person[0], pose.person[1], pose.reach.body, pose.person[3]] : pose.person),
+    reach: pose.reach ? { body: pose.reach.body * k, elbow: pose.reach.elbow * k, wrist: pose.reach.wrist * k, tip: pose.person[2] * k } : null,
     head: box(pose.head),
     overlay: box(pose.overlay),
     clean: { left: pose.clean.left * k, right: pose.clean.right * k },
@@ -263,10 +267,12 @@ const poseCenter = (poses, size) => {
   return { x: (rect.left + rect.right) / 2, y: (rect.top + rect.bottom) / 2 }
 }
 
-/* Cadrage de la pose, pour la forme réelle de la zone au-dessus de la rangée (screen). Doit se
-   voir : le tableau et ses cotes (hauteur à gauche, la femme est à droite), la tête de la femme, et
-   la femme entière en largeur, mains comprises (retour de Walid sur la version 21 : le geste du
-   90 × 120, bras ouverts, se voit en entier ; le tableau rapetisse un peu pour ça sur téléphone).
+/* Cadrage de la pose, pour la forme réelle de la zone au-dessus de la rangée (screen). Le tableau
+   d'abord, puis elle, sa main lointaine en dernier (choix de Walid pour la version 24). Doit se voir :
+   le tableau et ses cotes (hauteur à gauche, la femme est à droite), sa tête, et son corps en
+   largeur, avec la main qui présente le tableau. Son bras lointain (bras ouverts du 90 × 120, côté
+   lampadaire) ne fait jamais reculer la vue : sa main se voit si la vue la contient, sinon le bord
+   de la vue coupe le bras loin du coude et du poignet (POSE.joint de chaque segment), jamais la main.
    Le bouton « De face » occupe le coin en haut à gauche de la zone (inset : part de sa hauteur et de
    sa largeur) : si le tableau ou ses cotes y tombent, ils descendent dessous. On cherche à voir :
    la femme en entier. Sur un écran en hauteur, la vue grandit pour la montrer ; sur un écran large,
@@ -278,7 +284,7 @@ const poseCenter = (poses, size) => {
    miroir, au plus BEYOND.side : sur les photos meublées, un objet au bord n'est jamais recopié).
    Si la vue doit être plus large que cela (ordinateur, grands formats), elle se centre sur la photo
    et le mur s'y prolonge uni (scene.js). */
-const POSE = { margin: 0.04, label: 7, empty: 0.2, torso: 25, thigh: 0.45, lowest: 0.37, dimsAbove: 10 } // part de sa hauteur, depuis ses pieds
+const POSE = { margin: 0.04, label: 7, empty: 0.2, torso: 25, thigh: 0.45, lowest: 0.37, dimsAbove: 10, joint: 0.3 } // part de sa hauteur, depuis ses pieds ; joint : part du segment du bras
 export const BEYOND = { side: 130, top: 200 }
 const NO_INSET = { top: 0, left: 0 }
 
@@ -296,7 +302,7 @@ function poseShot(room, product, aspect, u, screen = aspect, inset = NO_INSET) {
 }
 
 function poseView(room, product, painting, under, screen, inset) {
-  const { photo, person, head, clean } = posePlacement(room.poses, product.size)
+  const { photo, body, reach, head, clean } = posePlacement(room.poses, product.size)
   const halfW = painting.outer.width / 2, halfH = painting.outer.height / 2
   const top = painting.y + halfH, bottom = painting.y - halfH
   const dims = dimsOf(painting, 1, under, -1)
@@ -310,9 +316,29 @@ function poseView(room, product, painting, under, screen, inset) {
     bottom: under ? dims.width.a[1] : bottom,
   }
   const core = union(art, head)
-  const must = { ...core, left: Math.min(core.left, person.left), right: Math.max(core.right, person.right) }
-  const want = union(must, person)
+  const must = { ...core, left: Math.min(core.left, body.left), right: Math.max(core.right, body.right) }
+  const want = union(must, body)
   const keep = (x, lo, hi) => (lo > hi ? (lo + hi) / 2 : Math.min(Math.max(x, lo), hi))
+  // Son bras lointain : le bord droit de la vue au-delà de sa main (au bord de la photo si sa main
+  // le touche), ou sur le bras loin du coude et du poignet ; le plus près du centre choisi, x entre
+  // lo et hi (ce qui doit se voir, dans la photo prolongée).
+  const reachX = (x, width, side, lo, hi) => {
+    if (!reach || lo > hi) return x
+    const upper = reach.elbow - reach.body, fore = reach.wrist - reach.elbow
+    const allowed = [
+      [-Infinity, reach.elbow - POSE.joint * upper],
+      [reach.elbow + POSE.joint * fore, reach.wrist - POSE.joint * fore],
+      [reach.tip >= photo.right - 0.5 ? photo.right : reach.tip + side, Infinity],
+    ]
+    let best = null
+    for (const [a, b] of allowed) {
+      const from = Math.max(a - width / 2, lo), to = Math.min(b - width / 2, hi)
+      if (from > to) continue
+      const at = Math.min(Math.max(x, from), to)
+      if (best === null || Math.abs(at - x) < Math.abs(best - x)) best = at
+    }
+    return best === null ? x : best
+  }
 
   // roof : part du haut de la vue gardée libre au-dessus du tableau.
   function frame(roof) {
@@ -323,7 +349,7 @@ function poseView(room, product, painting, under, screen, inset) {
     let height = Math.max(fit(must), Math.min(fit(want), roomy, most))
     const whole = tall(want)
     const ceiling = (h) => Math.max(want.top + POSE.margin * h, art.top + roof * h) // haut de la vue, le haut gardé
-    const line = (share) => person.bottom + share * (person.top - person.bottom)
+    const line = (share) => body.bottom + share * (body.top - body.bottom)
     // Hauteur de vue qui, le haut gardé, la coupe juste à cette ligne.
     const cutAt = (y) => Math.max((want.top - y) / (1 - POSE.margin), (art.top - y) / (1 - roof))
     if (height < whole) height = Math.max(fit(must), Math.min(height, cutAt(line(POSE.thigh))))
@@ -338,6 +364,8 @@ function poseView(room, product, painting, under, screen, inset) {
       x = keep(x, left + width / 2, right - width / 2)
       x = keep(x, must.right + pad * screen - width / 2, must.left - pad * screen + width / 2)
       x = keep(x, left + width / 2, right - width / 2)
+      x = reachX(x, width, pad * screen, Math.max(left + width / 2, must.right + pad * screen - width / 2),
+        Math.min(right - width / 2, must.left - pad * screen + width / 2))
       let y = height >= whole ? (want.top + want.bottom) / 2 : ceiling(height) - height / 2
       y = keep(y, Math.max(art.top + roof * height, must.top + pad) - height / 2, must.bottom - pad + height / 2)
       y = Math.max(Math.min(y, photo.top + BEYOND.top - height / 2), photo.bottom + height / 2) // le sol d'abord
@@ -346,7 +374,7 @@ function poseView(room, product, painting, under, screen, inset) {
     const view = place(height)
     // Coupée plus bas qu'un peu au-dessus du genou (ce qui doit se voir l'impose) : elle se voit entière.
     const bottom = view.y - height / 2
-    if (bottom > person.bottom && bottom < line(POSE.lowest)) return place(Math.max(height, whole))
+    if (bottom > body.bottom && bottom < line(POSE.lowest)) return place(Math.max(height, whole))
     return view
   }
   let view = frame(POSE.margin)

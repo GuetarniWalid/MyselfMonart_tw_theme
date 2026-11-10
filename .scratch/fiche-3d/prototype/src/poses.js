@@ -28,6 +28,10 @@
  * overlay : la zone du calque figure. clean : largeur sans rien devant le mur le long des bords
  * gauche et droit, recopiée en miroir au-delà de la photo (0 : un objet au bord, le mur s'y prolonge
  * uni, la photo s'y fond). Au-dessus de la photo, le mur se prolonge toujours uni.
+ * reach : son bras lointain (à droite de l'image, côté lampadaire), quand il s'écarte d'elle (bras
+ * ouverts du 90 × 120) : le bord de son corps, son coude et son poignet (x), mesurés sur le masque
+ * (profil des colonnes : le coude au plus bas du bras, le poignet là où il est le plus fin). Le
+ * cadrage peut le couper (staging.js), jamais à un coude ni à un poignet.
  */
 
 const pose = (size, data) => ({
@@ -76,6 +80,7 @@ export const POSES = {
       head: [3211, 663, 3711, 1047],
       overlay: [696, 950, 2616, 2100],
       clean: { left: 0, right: 0 },
+      reach: { body: 3710, elbow: 4110, wrist: 4420 },
     }),
   },
 }
