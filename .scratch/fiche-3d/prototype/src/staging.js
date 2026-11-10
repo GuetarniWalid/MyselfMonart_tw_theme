@@ -651,9 +651,21 @@ function frontCamera(a, b, view, t) {
   return { ...view.camera, position: [x, y, face + 1 / u], target: [x, y, view.camera.target[2]] }
 }
 
-// Vue intermédiaire. Un tableau encore tourné ne doit pas traverser le mur en revenant.
-function mix(a, b, t) {
+/* Passage de la pièce au mur de face : la pièce reste entière pendant le trajet (la femme et les
+   meubles sortent du cadre par le mouvement, jamais en fantômes : retour de Walid sur la version 24),
+   et ne se fond qu'à la fin du retour, quand le tableau remplit le cadre, ou au début de l'aller, sur
+   SWITCH de l'étape (250 ms sur 1 s). La lumière et l'ombre du tableau la suivent (scene.js). */
+export const SWITCH = 0.25
+function roomShare(a, b, raw) {
+  const s = a.room > b.room ? smooth((raw - 1 + SWITCH) / SWITCH) : smooth(raw / SWITCH)
+  return { room: lerp(a.room, b.room, s), poses: (a.room > b.room ? a : b).poses }
+}
+
+// Vue intermédiaire. Un tableau encore tourné ne doit pas traverser le mur en revenant. raw : la part
+// du temps de l'étape (t est sa courbe).
+function mix(a, b, t, raw = t) {
   const view = { ...blend(a, b, t), shot: t < 1 ? a.shot : b.shot }
+  if (a.room !== b.room) Object.assign(view, roomShare(a, b, raw))
   view.painting.z = Math.max(view.painting.z, -lowestCorner(view.painting))
   if (frontal(a.camera) && frontal(b.camera) && a.camera.fovY === b.camera.fovY) view.camera = frontCamera(a, b, view, t)
   // Une cote qui change de côté du tableau s'efface puis réapparaît : elle ne traverse pas l'œuvre.
@@ -719,7 +731,7 @@ export function createDirector({ room, product, poses = null, reducedMotion = fa
       const to = shots[leg.shot](stage, leg.product || state.product, g.aspect, progressOf(leg, at), g.screen, g.inset)
       if (at < leg.start + leg.duration) {
         const joined = (at - leg.start) / leg.join
-        return joined < 1 ? mix(from, to, glide(joined)) : to
+        return joined < 1 ? mix(from, to, glide(joined), Math.max(0, joined)) : to
       }
       from = unwound(to)
     }

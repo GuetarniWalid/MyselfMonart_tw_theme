@@ -286,7 +286,7 @@ function askDetail() {
   detailAsked = true
   decodeImage(DETAIL_IMAGE).then((image) => {
     detailReady = image
-    swapDetail()
+    atRest()
   }, () => {}) // pas de source complète : on garde la version de l'arrivée
 }
 function loadDetail() {
@@ -354,16 +354,31 @@ function frame(now) {
   raf = 0
   const view = draw(now)
   if (run.active) run.times.push(now)
-  const moving = director.isMoving(now) || engine.isFading(now) || !!drag || zoneWeight(now) !== zoneMove.to
+  const moving = director.isMoving(now) || engine.isFading(now, { art: false }) || !!drag || zoneWeight(now) !== zoneMove.to
   chips.setMoving(moving)
   setFront(!moving && view.shot !== 'front')
-  if (moving) {
+  if (moving || engine.isFading(now)) {
     raf = requestAnimationFrame(frame)
     return
   }
   if (run.active) reportFluidity()
-  swapDetail()
-  if (posesAsked) engine.prefetchPoses() // la pose suivante, à l'arrêt
+  atRest()
+}
+
+/* Le travail lourd (la source complète des gros plans, la pose suivante : décodage et envoi à la
+   carte graphique) attend le repos, après le retour des légendes et de leurs plaques (leur fondu et
+   leur flou, chips.css) : jamais pendant un trajet ni pendant ce retour (version 25). */
+const AFTER_LEGENDS_MS = 650
+let restTimer = 0
+function atRest() {
+  clearTimeout(restTimer)
+  restTimer = setTimeout(() => {
+    restTimer = 0
+    const now = performance.now()
+    if (raf || drag || director.isMoving(now) || engine.isFading(now)) return // une image en cours : elle rappellera
+    swapDetail()
+    if (posesAsked) engine.prefetchPoses() // la pose suivante
+  }, AFTER_LEGENDS_MS)
 }
 
 // Un point de la 3D, projeté dans la couche `scene` (canvas décalé compris).
@@ -695,4 +710,5 @@ window.__proto = {
     return lastView ? paintingCorners(lastView.painting, which).map((c) => ({ ...toScene(c), y: toScene(c).y - shift, side: c.side })) : []
   },
   shot: () => (lastView ? lastView.shot : null),
+  room: () => (lastView ? lastView.room : null), // part de la pièce dans la dernière image
 }

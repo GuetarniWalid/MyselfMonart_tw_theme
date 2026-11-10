@@ -54,6 +54,10 @@ export const POSES = {
   // ombre tombe sur le mur à sa droite. L'ombre du tableau tombe donc à gauche et vers le bas (0,9 et
   // 1,1 cm pour une toile de 2 cm). Pour l'inverser : changer le signe du premier nombre.
   light: [0.36, 0.44, 0.82],
+  // Le mur de face (sRGB), celui des photos autour du tableau : leur balance des blancs l'y ramène
+  // sur les quatre (blanc chaud, luminosité 218 ; tools/poses-preparer.py). Le passage de la pièce au
+  // mur de face, à la fin du retour, se voit ainsi à peine (version 25).
+  wall: [223, 217, 207],
   bySize: {
     '30x40': pose('30x40', {
       rect: [2676, 376, 378, 484],

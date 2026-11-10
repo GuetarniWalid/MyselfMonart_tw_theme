@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { BEYOND, createDirector, paintingCorners, posePlacement } from '../src/staging.js'
+import { BEYOND, SWITCH, createDirector, paintingCorners, posePlacement } from '../src/staging.js'
 import { ROOM } from '../src/room.js'
 import { POSES } from '../src/poses.js'
 import { SIZES, canFrame } from '../src/catalog.js'
@@ -223,12 +223,24 @@ const ZONE_PX = [572, 409, 351, 569]
 function glideCheck(director, start, screen, z, label) {
   const H = ZONE_PX[z], W = H * screen
   const frames = []
+  const rooms = []
   for (let k = 0; k <= 80; k++) {
     const view = director.view(start + (k * 1000) / 60, screen, screen, INSETS[z])
+    // Un vrai travelling (retour de Walid sur la version 24) : la pièce entière ou absente, jamais
+    // délavée (ses poses font toujours un tout), sauf pendant le court passage au mur de face.
+    rooms.push(view.room)
+    const poses = view.poses.reduce((sum, w) => sum + w, 0)
+    assert.ok(view.room < 1e-6 || Math.abs(poses - 1) < 1e-6, `${label} : poses délavées à ${(k * 1000 / 60).toFixed(0)} ms (${poses.toFixed(3)})`)
     frames.push(paintingCorners(view.painting, 'outer').filter((c) => c.side.z === 1).map((c) => {
       const s = project(view.camera, screen, c)
       return [((s.x + 1) / 2) * W, ((1 - s.y) / 2) * H]
     }))
+  }
+  const between = rooms.map((r, k) => (r > 1e-3 && r < 1 - 1e-3 ? k : -1)).filter((k) => k >= 0)
+  if (between.length) {
+    const span = ((between[between.length - 1] - between[0] + 1) * 1000) / 60
+    assert.ok(span <= SWITCH * 1000 + 1000 / 60 + 1e-6 && between.length === between[between.length - 1] - between[0] + 1,
+      `${label} : la pièce à moitié pendant ${span.toFixed(0)} ms`)
   }
   const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1])
   const sizes = frames.map((f) => [dist(f[0], f[1]), dist(f[0], f[2])]) // largeur, hauteur
@@ -258,8 +270,11 @@ test('aller et retour entre la vue de face et la Taille, et changement de taille
       director.view(0, screen, screen, INSETS[z])
       director.choose('size', product, 0)
       glideCheck(director, 0, screen, z, `${size} en zone ${screen}, aller`)
+      // L'aller : le passage au début, puis la pièce entière ; le retour : l'inverse, à la fin.
+      near(director.view(SWITCH * 1000 + 1, screen, screen, INSETS[z]).room, 1, `${size} en zone ${screen}, la pièce entière après le passage`)
       director.choose('front', product, LATER)
       glideCheck(director, LATER, screen, z, `${size} en zone ${screen}, retour`)
+      near(director.view(LATER + (1 - SWITCH) * 1000 - 1, screen, screen, INSETS[z]).room, 1, `${size} en zone ${screen}, la pièce entière avant le passage`)
       const other = SIZES[(SIZES.indexOf(size) + 1) % SIZES.length]
       director.choose('size', product, 2 * LATER)
       director.choose('size', { ...TOILE, size: other }, 3 * LATER)

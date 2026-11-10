@@ -18,8 +18,8 @@
     --accent: #9a5741;
     --accent-ink: #ffffff;
     /* La scène est une pièce éclairée : elle reste claire dans les deux thèmes, ses chips aussi. */
-    --wall: #e9e9e7;
-    --wall-shade: #dcdcdb;
+    --wall: #dfd9ce; /* le mur de face des poses (POSES.wall), comme la 3D */
+    --wall-shade: #d3cdc3;
     --scene-ink: #21150c;
     --scene-paper: #fffdfa;
     --scene-label: #6b5d51;
@@ -89,7 +89,7 @@
     position: relative; overflow: hidden; container-type: size;
     height: calc(100svh - var(--header-h) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
     min-height: 460px;
-    background: radial-gradient(70% 60% at 40% 38%, #efefee 0%, var(--wall) 55%, var(--wall-shade) 100%);
+    background: radial-gradient(70% 60% at 40% 38%, #e5dfd4 0%, var(--wall) 55%, var(--wall-shade) 100%);
     color: var(--scene-ink);
   }
   /* L'œuvre de face avant le JavaScript, par les règles de chipsLayout (src/chips.js) : 66 px de

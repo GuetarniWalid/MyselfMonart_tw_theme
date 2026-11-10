@@ -667,7 +667,8 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, p
   const hull = Array.from({ length: 8 }, () => new THREE.Vector2())
   const flapHull = Array.from({ length: 8 }, () => new THREE.Vector2())
   const wallUniforms = {
-    uWall: { value: new THREE.Color().setRGB(...room.wall.map((c) => c / 255), THREE.SRGBColorSpace) },
+    // Avec les poses, le mur de face est celui de leurs photos autour du tableau (poses.js).
+    uWall: { value: new THREE.Color().setRGB(...((poses && poses.wall) || room.wall).map((c) => c / 255), THREE.SRGBColorSpace) },
     uShadowTint: { value: new THREE.Color().setRGB(70 / 255, 55 / 255, 40 / 255, THREE.SRGBColorSpace) },
     uShadowTintMix: { value: 0 },
     uPhotoTexels: { value: 8 },
@@ -1172,10 +1173,14 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, p
       wallUniforms[clean].value.set(...set.clean)
       wallUniforms[figure].value = set.figure
       wallUniforms[rect].value.set(set.overlay.left, set.overlay.bottom, set.overlay.right, set.overlay.top)
-      weights[k] = (shares[i] * total) / kept
+      weights[k] = shares[i] / kept
     })
+    // Les poses gardées font un tout ; la pièce est là autant que la plus prête des poses montrées
+    // (une pose qui arrive se fond, une qui cède la place à une pose pas encore prête reste entière :
+    // jamais d'image délavée, version 25).
+    const presence = Math.max(0, ...SIZES.map((size, i) => (posesShown[i] > 0 ? poseSets[size].fade(now) : 0)))
     wallUniforms.uPoseW.value.set(...weights)
-    wallUniforms.uPoseMix.value = kept > 0 ? view.room : 0
+    wallUniforms.uPoseMix.value = kept > 0 ? view.room * presence : 0
     if (kept > 0) {
       const c = camera.position
       let l = Infinity, r = -Infinity, b = Infinity, t = -Infinity
@@ -1514,9 +1519,11 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, p
   }
 
   // Seul ce qui se voit compte : un fondu hors du champ ne réclame aucune image.
-  function isFading(now) {
+  // art : compter le fondu de la source complète (la même image, plus nette), qui n'est pas un
+  // mouvement pour la page (ses plaques, « De face »), mais demande encore des images.
+  function isFading(now, { art = true } = {}) {
     const posesFading = !!poseSets && SIZES.some((size, i) => posesShown[i] > 0 && poseSets[size].isFading(now))
-    return !!artSwap || (roomShown && (roomPhoto.isFading(now) || roomWall.isFading(now) || posesFading)) ||
+    return (art && !!artSwap) || (roomShown && (roomPhoto.isFading(now) || roomWall.isFading(now) || posesFading)) ||
       (frameMesh.visible && wood.isFading(now)) || now - wallFade.at < FADE_MS
   }
 

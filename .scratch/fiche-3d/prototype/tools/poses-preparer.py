@@ -51,18 +51,37 @@ FURNITURE = [
     (1820, 1920, 3480, 2115),  # plateau du banc
     (2040, 1440, 2560, 2060),  # vase, livres et bol
 ]
-# Balance des blancs : le mur de chaque photo ramené au même blanc chaud (rapports rouge, vert, bleu),
-# à luminosité égale. Il est mesuré sur deux bandes de mur nu (photo d'origine : x0, x1, y0, y1).
+# Balance des blancs (version 25) : le mur autour du tableau agrandi, sur RING_CM, ramené au même
+# blanc chaud et à la même luminosité (TARGET_L, valeurs sRGB) sur les quatre photos ; Gemini ne les
+# a pas teintées pareil au milieu (bleuté en 30 × 40, chaud en 75 × 100) et aux bords. C'est là que se
+# fait le passage au mur de face, qui prend cette couleur (POSES.wall) : il se voit à peine.
 WARM_WHITE = (1.0, 0.975, 0.935)
-WALL_SAMPLES = [(200, 900, 300, 1800), (5600, 6200, 300, 1800)]  # mur nu, à gauche de l'olivier et à droite du lampadaire
+TARGET_L = 218
+RING_CM = 15
+LUMA = np.array([0.2126, 0.7152, 0.0722])
 
 
-def balance(img):
-    """Gains par canal qui ramènent le mur à WARM_WHITE, à luminosité égale."""
-    parts = [img[int(y0 * SCALE):int(y1 * SCALE), int(x0 * SCALE):int(x1 * SCALE)].reshape(-1, 3) for x0, x1, y0, y1 in WALL_SAMPLES]
-    wall = np.concatenate(parts).mean(axis=0)
-    weights = np.array([0.2126, 0.7152, 0.0722])
-    target = np.array(WARM_WHITE) * (wall @ weights) / (np.array(WARM_WHITE) @ weights)
+def balance(img, alpha, zone):
+    """Gains par canal qui ramènent le mur autour de `zone` (left, top, right, bottom, photo publiée)
+    à WARM_WHITE, luminosité TARGET_L : sans la femme, sous la plinthe exclue, sans ce qui s'écarte du
+    mur (feuilles, branches, bords d'objets : plus de 2,5 écarts médians)."""
+    h, w = alpha.shape
+    m = int(RING_CM * PX_PER_CM * SCALE)
+    ring = np.zeros((h, w), dtype=bool)
+    ring[max(zone[1] - m, 0):min(zone[3] + m, h), max(zone[0] - m, 0):min(zone[2] + m, w)] = True
+    ring[max(zone[1], 0):zone[3], max(zone[0], 0):zone[2]] = False
+    ring[int((PLINTH - EDGE) * SCALE):] = False
+    ring &= alpha < 0.02
+    px = img[ring]
+    lum = px @ LUMA
+    tint = px / np.maximum(lum[:, None], 1)
+    keep = np.ones(len(px), dtype=bool)
+    for v in [lum] + [tint[:, c] for c in range(3)]:
+        med = np.median(v)
+        mad = 1.4826 * np.median(np.abs(v - med)) + 1e-6
+        keep &= np.abs(v - med) <= 2.5 * mad
+    wall = px[keep].mean(axis=0)
+    target = np.array(WARM_WHITE) * TARGET_L / (np.array(WARM_WHITE) @ LUMA)
     return target / wall
 
 
@@ -282,9 +301,9 @@ for size in sizes:
     # Le rectangle blanc se cherche sur la photo telle quelle, la balance des blancs ensuite.
     l, t, r, b = [int(round(v * SCALE)) for v in (L, T, L + W, T + H)]
     has_rect = (img[t:b, l:r].min(axis=2) > 245).mean() > 0.6
-    gains = balance(img)
-    img = np.clip(img * gains, 0, 255)
     alpha = np.clip(np.asarray(alpha_full.resize((w2, h2), Image.LANCZOS), dtype=np.float64) / 255.0, 0, 1)
+    gains = balance(img, alpha, [int(round(v * SCALE)) for v in painted(RECTS[size])])
+    img = np.clip(img * gains, 0, 255)
 
     # Contour de la femme et de sa tête (photo d'origine), pour le cadrage : pixels nettement à elle.
     a_full = np.asarray(alpha_full, dtype=np.uint8)
@@ -407,7 +426,8 @@ for size in sizes:
 path = os.path.join(out_dir, 'poses.json')
 old = json.load(open(path)) if os.path.exists(path) else {'poses': {}}
 old['poses'].update(meta)
-old.update({'size': [full_w, full_h], 'published': [w2, h2]})
+old.update({'size': [full_w, full_h], 'published': [w2, h2],
+            'wall': [round(float(v), 1) for v in np.array(WARM_WHITE) * TARGET_L / (np.array(WARM_WHITE) @ LUMA)]})
 with open(path, 'w') as f:
     json.dump(old, f, indent=1)
 print('ok')
