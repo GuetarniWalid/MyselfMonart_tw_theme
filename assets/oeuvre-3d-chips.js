@@ -117,14 +117,14 @@
     const h = k.disc + k.railBody + (note ? k.note : 0);
     const need = art.b + k.railGap + h;
     const lim1 = L.pillTop - 8;
-    const maxShift = Math.max(0, art.t - 12);
+    const highest = Math.max(0, art.t - 12); // la scène ne remonte jamais l'œuvre à moins de 12 px du haut
     let shift = 0;
     let hidePill = false;
     if (need > lim1) {
-      shift = Math.min(need - lim1, maxShift);
+      shift = Math.min(need - lim1, highest);
       if (need - shift > lim1 && !L.desk) {
         hidePill = true;
-        shift = Math.min(Math.max(0, need - (L.SH - 12)), maxShift);
+        shift = Math.min(Math.max(0, need - (L.SH - 12)), highest);
       }
     }
     const lim = hidePill || L.desk ? L.SH - 12 : lim1;

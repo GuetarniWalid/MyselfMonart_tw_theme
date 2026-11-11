@@ -354,15 +354,19 @@ main-product-blocks .description h3 span {
    les classes utilitaires. Tailwind garde ces règles : leurs classes sont écrites en entier dans les
    scripts et le snippet. */
 @layer components {
+/* La police des chips, de « De face » et de la pilule : celle des titres du thème. */
+.oeuvre-3d-stage,
+.oeuvre-3d-pill {
+  --scene-font: heading, "Helvetica Neue", Arial, sans-serif;
+}
 .oeuvre-3d-stage {
   --scene-ink: rgb(var(--color-main-rgb));
   --scene-paper: rgb(var(--color-secondary-rgb));
-  --scene-label: rgba(var(--color-main-rgb), 0.62);
+  /* Étiquettes : 4,7:1 au moins sur le mur, jusqu'à son bord le plus sombre (WCAG AA). */
+  --scene-label: rgba(var(--color-main-rgb), 0.66);
   --scene-muted: rgba(var(--color-main-rgb), 0.7);
+  /* Les deux terres du design : la claire souligne la bascule, la foncée porte le bouton d'achat. */
   --scene-terra: rgb(var(--color-buy-button-rgb));
-  --scene-buy: rgb(var(--color-terra-rgb));
-  --scene-line: rgba(var(--color-main-rgb), 0.12);
-  --glass-strong: rgba(var(--color-secondary-rgb), 0.95);
   --plate: rgba(var(--color-secondary-rgb), 0.82);
   --wall: #dfd9ce;
   --wall-shade: #d3cdc3;
@@ -430,12 +434,6 @@ main-product-blocks .description h3 span {
   width: 100%;
   height: var(--gl-h, 100%);
 }
-.oeuvre-3d-fade-cut { animation: oeuvre3dCut 360ms ease; }
-@keyframes oeuvre3dCut {
-  0% { opacity: 1; }
-  35% { opacity: 0.25; }
-  100% { opacity: 1; }
-}
 
 /* Cotes en cm de la pièce (mise en scène de la taille), posées par la 3D. */
 .oeuvre-3d-dim-w { height: 0; border-top: 1px solid currentColor; }
@@ -459,7 +457,7 @@ main-product-blocks .description h3 span {
 .oeuvre-3d-photo-nav {
   position: absolute; z-index: 5; top: 12px; left: max(12px, env(safe-area-inset-left, 0px));
   height: 44px; margin: 0; border: 0; border-radius: 12px; white-space: nowrap;
-  font: 600 13.5px/1 heading, "Helvetica Neue", Arial, sans-serif; letter-spacing: -0.005em;
+  font: 600 13.5px/1 var(--scene-font); letter-spacing: -0.005em;
   color: rgb(var(--color-main-rgb)); background: rgba(var(--color-secondary-rgb), 0.82);
 }
 .oeuvre-3d-front {
@@ -475,9 +473,8 @@ main-product-blocks .description h3 span {
 .oeuvre-3d-front:active { opacity: 0.6; }
 .oeuvre-3d-photo-nav { display: flex; align-items: center; overflow: hidden; }
 .oeuvre-3d-photo-nav.hidden { display: none; }
-.oeuvre-3d-photo-nav button { height: 100%; padding: 0 10px 0 14px; }
-.oeuvre-3d-photo-nav button + span + button { padding: 0 14px 0 10px; }
-.oeuvre-3d-front:focus-visible, .oeuvre-3d-photo-nav button:focus-visible, .oeuvre-3d-buy:focus-visible {
+/* Les flèches des photos ont leurs classes Tailwind (snippet), focus compris. */
+.oeuvre-3d-front:focus-visible, .oeuvre-3d-buy:focus-visible {
   outline: 2px solid rgb(var(--color-main-rgb)); outline-offset: 2px;
 }
 
@@ -491,7 +488,7 @@ main-product-blocks .description h3 span {
   background: rgba(var(--color-secondary-rgb), 0.95); border: 1px solid rgba(var(--color-main-rgb), 0.12); border-radius: 999px;
   box-shadow: 0 8px 26px rgba(var(--color-main-rgb), 0.16), 0 1px 3px rgba(var(--color-main-rgb), 0.08);
   color: rgb(var(--color-main-rgb));
-  font-family: heading, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--scene-font);
 }
 .oeuvre-3d-pill-title {
   display: none; max-width: 16rem; overflow: hidden; text-overflow: ellipsis;
@@ -500,7 +497,7 @@ main-product-blocks .description h3 span {
 .oeuvre-3d-pill-price { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .oeuvre-3d-buy {
   position: relative; height: 40px; padding: 0 18px; border: 0; border-radius: 999px; cursor: pointer;
-  font: 600 14px/1 heading, "Helvetica Neue", Arial, sans-serif; color: #ffffff; background: rgb(var(--color-terra-rgb));
+  font: 600 14px/1 var(--scene-font); color: rgb(var(--color-secondary-rgb)); background: rgb(var(--color-terra-rgb));
   touch-action: manipulation;
 }
 .oeuvre-3d-buy[aria-disabled="true"], .oeuvre-3d-buy:disabled { cursor: progress; opacity: 0.7; }
@@ -545,7 +542,7 @@ body:has(.oeuvre-3d-pill) #cart-button { transform: translateY(-4.5rem); }
   --chips-plate: var(--plate);
   --chips-glass: rgba(var(--color-secondary-rgb), 0.86);
   --chips-curve: cubic-bezier(0.17, 0.67, 0.61, 1.06);
-  --chips-font: heading, "Helvetica Neue", Arial, sans-serif;
+  --chips-font: var(--scene-font);
   --chips-value: 13.5px;
   --chips-cote: 13.5px;
   isolation: isolate;
@@ -669,7 +666,7 @@ body:has(.oeuvre-3d-pill) #cart-button { transform: translateY(-4.5rem); }
   position: absolute; z-index: 31; left: 12px; right: 12px; box-sizing: border-box;
   display: flex; flex-direction: column; align-items: center; gap: 9px; padding: 13px 8px 8px;
   border-radius: 24px; background: var(--chips-glass);
-  box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.9), 0 0 0 0.5px rgba(var(--color-main-rgb), 0.12),
+  box-shadow: inset 0 0 0 0.5px rgba(var(--color-secondary-rgb), 0.9), 0 0 0 0.5px rgba(var(--color-main-rgb), 0.12),
     0 24px 48px -18px rgba(var(--color-main-rgb), 0.36), 0 2px 8px rgba(var(--color-main-rgb), 0.06);
   transform-origin: center top; opacity: 0; visibility: hidden; pointer-events: none;
   transform: translateY(10px) scale(0.98);
@@ -706,7 +703,7 @@ body:has(.oeuvre-3d-pill) #cart-button { transform: translateY(-4.5rem); }
 .chips-rail.is-open .chips-opt[aria-disabled="true"] { opacity: 0.38; cursor: not-allowed; }
 .chips-disc {
   display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%;
-  background: rgba(255, 255, 255, 0.85); box-shadow: 0 0 0 0.5px rgba(var(--color-main-rgb), 0.14); transition: box-shadow 220ms ease;
+  background: rgba(var(--color-secondary-rgb), 0.85); box-shadow: 0 0 0 0.5px rgba(var(--color-main-rgb), 0.14); transition: box-shadow 220ms ease;
 }
 .chips-swatch { display: block; box-sizing: border-box; }
 .chips-tile {
@@ -750,7 +747,7 @@ body:has(.oeuvre-3d-pill) #cart-button { transform: translateY(-4.5rem); }
 .chips.is-desk .chips-cote .chips-cat { line-height: 11px; }
 .chips.is-desk .chips-rail {
   left: 50%; right: auto; gap: 12px; padding: 16px 14px 12px; border-radius: 30px; background: rgba(var(--color-secondary-rgb), 0.88);
-  box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.9), 0 0 0 0.5px rgba(var(--color-main-rgb), 0.12),
+  box-shadow: inset 0 0 0 0.5px rgba(var(--color-secondary-rgb), 0.9), 0 0 0 0.5px rgba(var(--color-main-rgb), 0.12),
     0 30px 60px -24px rgba(var(--color-main-rgb), 0.36), 0 2px 8px rgba(var(--color-main-rgb), 0.06);
   transform: translateX(-50%) translateY(10px) scale(0.98);
 }
@@ -769,6 +766,9 @@ body:has(.oeuvre-3d-pill) #cart-button { transform: translateY(-4.5rem); }
 @media (hover: hover) and (pointer: fine) {
   .chips.is-ready .chips-legend:hover, .chips.is-ready .chips-cote:hover { opacity: 0.68; }
   .chips-switch:hover { color: var(--chips-ink); }
+}
+/* Le choix survolé se soulève, sauf animations réduites. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .chips-rail.is-open .chips-opt:not([aria-disabled="true"]):hover { transform: translateY(-2px); }
 }
 

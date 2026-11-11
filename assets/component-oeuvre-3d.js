@@ -272,6 +272,27 @@
     };
   }
 
+  /* Le choix de la fiche (assets/product-selection.js, window.MMASelection) : son script, différé comme
+     celui-ci, vient plus bas dans la page et s'exécute après lui. On l'attend pour lire le choix d'arrivée
+     (?variant= d'un lien Google Shopping, d'un e-mail, d'un rechargement) : tous les scripts différés ont
+     tourné quand DOMContentLoaded part ; load sert de filet si celui-ci est déjà passé. */
+  function whenSelection(task) {
+    if (window.MMASelection || document.readyState === 'complete') {
+      task();
+      return;
+    }
+    let done = false;
+    const once = () => {
+      if (done) return;
+      done = true;
+      document.removeEventListener('DOMContentLoaded', once);
+      window.removeEventListener('load', once);
+      task();
+    };
+    document.addEventListener('DOMContentLoaded', once);
+    window.addEventListener('load', once);
+  }
+
   // Ne pas disputer le processeur à la page : on attend la fin du chargement et un creux, avec une
   // minuterie de secours (Safari n'a pas requestIdleCallback, d'autres le retardent).
   function whenIdle(task) {
@@ -337,8 +358,9 @@
         return;
       }
       this.started = true;
-      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => this.init(), { once: true });
-      else this.init();
+      whenSelection(() => {
+        if (this.isConnected) this.init();
+      });
     }
 
     disconnectedCallback() {
@@ -617,7 +639,7 @@
 
     // Le choix de la fiche a changé (par les chips, ou par la fiche elle-même) : les chips et le prix suivent.
     onSelection = ({ detail }) => {
-      if (this.twinPending) return; // la fiche du jumeau arrive : son choix fera foi
+      if (this.twinPending || this.adopting) return; // l'autre fiche arrive : adopted() lira son choix
       const next = productFromSelection(this.model, detail, this.product);
       if (sameProduct(next, this.product)) {
         this.refresh(detail);
@@ -631,18 +653,13 @@
       this.requestRender();
     };
 
-    // La 3D joue la mise en scène d'un groupe, avec le produit en cours.
+    // La 3D joue la mise en scène d'un groupe, avec le produit en cours. (Animations réduites : la fiche
+    // reste sur les photos, stageMode ; la 3D ne tourne donc jamais dans ce cas.)
     playStaging(group) {
       if (!this.director) return;
       this.director.choose(group, { ...this.product }, performance.now());
       if (this.chips.openGroup) this.moveZone(1);
       this.run.active = true;
-      if (this.env.reducedMotion && this.live) {
-        // Animations réduites : simple fondu au changement de plan.
-        this.canvas.classList.remove('oeuvre-3d-fade-cut');
-        void this.canvas.offsetWidth;
-        this.canvas.classList.add('oeuvre-3d-fade-cut');
-      }
       this.requestRender();
     }
 
@@ -695,10 +712,11 @@
       else window.location.href = url.toString();
     }
 
-    /* La fiche du jumeau remplace la page (product-twin-toggle.js) : cet élément y reste, avec sa 3D, à
-       la place du sien (next), dont il prend la photo et les données : modèle, jumeau, choix en cours
-       (l'adresse a donné la variante, la fiche ses propriétés par défaut). */
+    /* Une autre fiche remplace la page (product-twin-toggle.js : la bascule des chips, ou le retour et
+       l'avance du navigateur) : cet élément y reste, avec sa 3D, à la place du sien (next), dont il prend
+       la photo, les photos et les données (modèle, jumeau). adopted() suit, au signal de la page. */
     adopt(next) {
+      this.adopting = true;
       this.readModels(next);
       this.config = readJson(next, '[data-config]') || this.config;
       this.catalog = catalogOf({ models: this.models, names: this.config.names });
@@ -713,27 +731,32 @@
       const photos = next.querySelector('[data-photos]');
       const ownPhotos = this.querySelector('[data-photos]');
       if (photos && ownPhotos) ownPhotos.replaceWith(photos);
+      if (this.photos) this.setupPhotos(); // sans 3D : les flèches passent aux photos de l'autre fiche
       this.baseLabel = next.querySelector('[data-gl]').getAttribute('aria-label') || this.baseLabel;
     }
 
     onSoftNavigation = () => {
-      if (this.isConnected && this.twinPending) this.adopted();
+      if (this.isConnected && this.adopting) this.adopted();
     };
 
-    /* Après le remplacement de la page : la pilule de la nouvelle fiche, et son sélecteur, où l'on coche
-       le choix déjà montré (l'adresse a donné la taille ; la couleur du cadre et le contour blanc sont des
-       propriétés de ligne, que la fiche pose à leur valeur par défaut). */
+    /* Après le remplacement de la page : la pilule de la nouvelle fiche, et son sélecteur. Bascule des
+       chips : on y coche le choix déjà montré (l'adresse a donné la taille ; la couleur du cadre et le
+       contour blanc sont des propriétés de ligne, que la fiche pose à leur valeur par défaut). Retour ou
+       avance du navigateur : la fiche fait foi, la 3D la rejoint (l'acte de la matière si elle change). */
     adopted() {
+      const fromChips = this.twinPending;
       this.twinPending = false;
+      this.adopting = false;
       this.unbindPill();
       this.bindPill();
       if (this.pillButton) this.pillButton.removeAttribute('aria-disabled');
       const shown = { ...this.product };
-      this.commit(shown);
+      if (fromChips) this.commit(shown);
       const product = this.readSelection();
       if (product && !sameProduct(product, shown)) {
         this.product = product;
-        if (this.director) this.director.choose('front', { ...this.product }, performance.now());
+        const group = product.material === shown.material ? 'front' : 'material';
+        if (this.director) this.director.choose(group, { ...this.product }, performance.now());
       }
       this.refresh(window.MMASelection ? window.MMASelection.read() : null);
       this.requestRender();
@@ -780,7 +803,7 @@
       if (this.zoneMove.to === to && from === to) return;
       // La remontée se relève au départ : la rangée vient peut-être de s'ouvrir, sans image depuis.
       if (from === 0 && this.chips.placement) this.zoneShift = this.chips.placement.shift;
-      Object.assign(this.zoneMove, { from, to, t0: now, ms: this.env.reducedMotion ? 0 : Math.max(0, this.movingUntil(now) - now) });
+      Object.assign(this.zoneMove, { from, to, t0: now, ms: Math.max(0, this.movingUntil(now) - now) });
     }
 
     framingNow(at) {
@@ -1111,19 +1134,28 @@
       this.art.removeAttribute('aria-hidden');
       this.dims.classList.add('hidden');
       this.placeCanvas(0);
-
-      const nav = this.querySelector('[data-photo-nav]');
-      const template = this.querySelector('[data-photos]');
-      const photos = template ? Array.from(template.content.children) : [];
-      if (!nav || !photos.length || this.photos) return;
-      this.photos = [this.art, ...photos];
-      this.photo = 0;
-      this.photoCount = nav.querySelector('[data-photo-count]');
-      nav.querySelector('[data-previous]').addEventListener('click', () => this.showPhoto(this.photo - 1));
-      nav.querySelector('[data-next]').addEventListener('click', () => this.showPhoto(this.photo + 1));
-      this.showPhotoCount();
-      nav.classList.remove('hidden');
+      if (!this.photos) this.setupPhotos();
     };
+
+    /* Les photos de la fiche, l'œuvre d'abord, que les flèches font défiler. Reprises quand l'autre fiche
+       remplace la page (adopt) : les photos montrées de l'ancienne partent, on revient à l'œuvre. */
+    setupPhotos() {
+      const nav = this.querySelector('[data-photo-nav]');
+      if (!nav) return;
+      if (this.photos) this.photos.slice(1).forEach((image) => image.remove());
+      const template = this.querySelector('[data-photos]');
+      this.photos = [this.art, ...(template ? Array.from(template.content.children) : [])];
+      this.photo = 0;
+      this.classList.remove('is-photo');
+      this.art.classList.remove('opacity-0');
+      if (!this.photoCount) {
+        this.photoCount = nav.querySelector('[data-photo-count]');
+        nav.querySelector('[data-previous]').addEventListener('click', () => this.showPhoto(this.photo - 1));
+        nav.querySelector('[data-next]').addEventListener('click', () => this.showPhoto(this.photo + 1));
+      }
+      this.showPhotoCount();
+      nav.classList.toggle('hidden', this.photos.length < 2);
+    }
 
     showPhotoCount() {
       this.photoCount.textContent = `${this.photo + 1}/${this.photos.length}`;
