@@ -159,7 +159,7 @@
      sans attendre qu'on en change (effet 'stage', retour sur la version 15). Toucher un choix
      l'applique (légende, prix, mise en scène) et la rangée reste ouverte, pour enchaîner les choix
      (retour sur la version 14). Elle se ferme seulement par un toucher en dehors d'elle (mur, œuvre,
-     légende active, « De face », en-tête…), par Échap ou quand le focus la quitte ; ce toucher ramène
+     légende active, « Retour », en-tête…), par Échap ou quand le focus la quitte ; ce toucher ramène
      la 3D de face (effet 'front'). La bascule Toile | Poster n'a pas de rangée. open : la rangée
      ouverte, ou null ; event.type : chip (une légende ou la cote), pick (un choix), toggle (la
      bascule), outside, escape, focusout. Rend la rangée ouverte après l'événement et les effets à
@@ -829,7 +829,7 @@
     left.addEventListener('click', (event) => dispatch({ type: 'chip', group: sideGroup(), keyboard: keyboard(event) }));
     right.addEventListener('click', (event) => dispatch({ type: 'chip', group: 'frame', keyboard: keyboard(event) }));
     cote.addEventListener('click', (event) => dispatch({ type: 'chip', group: 'size', keyboard: keyboard(event) }));
-    // Toucher ailleurs sur la scène (mur, œuvre, légende active, « De face ») : un voile le reçoit,
+    // Toucher ailleurs sur la scène (mur, œuvre, légende active, « Retour ») : un voile le reçoit,
     // rien d'autre ne réagit.
     closer.addEventListener('click', () => dispatch({ type: 'outside' }));
 

@@ -47,7 +47,7 @@
   assign price = product.selected_or_first_available_variant.price
 -%}
 {%- comment -%}
-  Albert Sans, la police des légendes, de la rangée, de « De face » et de la pilule (choix de Walid du
+  Albert Sans, la police des légendes, de la rangée, de « Retour » et de la pilule (choix de Walid du
   11/11/2026) : graisses 500, 600 et 700 seulement, fichiers woff2 statiques pris sur Google Fonts
   (fonts.gstatic.com, version 1.025, caractères latins), hébergés dans le thème.
   Copyright 2021 The Albert Sans Project Authors (https://github.com/usted/Albert-Sans).
@@ -203,9 +203,11 @@
       <div data-dim-height class="oeuvre-3d-dim-h absolute font-roboto text-[12px] font-medium"><span data-allow-empty class="absolute whitespace-nowrap rounded bg-[rgba(var(--color-secondary-rgb),0.95)]"></span></div>
     </div>
   </div>
+  {%- comment -%} « Retour » ramène la 3D de face et referme la rangée ouverte (retour de Walid du 11/11 :
+     une cliente ne savait pas comment quitter une option ; « De face » ne le disait pas). {%- endcomment -%}
   <button type="button" data-front class="oeuvre-3d-front" inert>
-    <svg class="h-[15px] w-[15px]" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8a4.5 4.5 0 1 0 1.4-3.3"/><path d="M3.2 2.6v2.6h2.6"/></svg>
-    {{ 'sections.mma.oeuvre_3d_front' | t }}
+    <svg class="h-[15px] w-[15px]" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 8H3.5"/><path d="M7.5 3.75 3.25 8l4.25 4.25"/></svg>
+    {{ 'sections.mma.oeuvre_3d_back' | t }}
   </button>
   {%- comment -%} Sans 3D : les autres photos, chargées seulement si on les demande, et les mêmes que la
      galerie : à partir de start_from, ni l'image à plat, ni les contours blancs. Le fondu reste en
