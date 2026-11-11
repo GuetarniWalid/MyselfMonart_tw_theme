@@ -1025,7 +1025,13 @@ function sideAngle(view) {
   return (Math.atan2(v[0], v[2]) * 180) / Math.PI
 }
 
-test("glisser le doigt incline légèrement le tableau, puis il revient de face avec un rebond", () => {
+// Angle (degrés, positif si la caméra est au-dessus) entre la caméra et le point visé, vu de côté.
+function upAngle(view) {
+  const v = sub(view.camera.position, view.camera.target)
+  return (Math.asin(v[1] / Math.hypot(...v)) * 180) / Math.PI
+}
+
+test("glisser le doigt incline le tableau, puis il revient de face avec un rebond", () => {
   const director = createDirector({ room: ROOM, product: TOILE })
   director.grab(0)
   director.drag(0.15, 0, 50)
@@ -1034,7 +1040,7 @@ test("glisser le doigt incline légèrement le tableau, puis il revient de face 
 
   director.drag(3, 3, 100) // bien au-delà de la borne
   const far = director.view(100, PORTRAIT)
-  assert.ok(Math.abs(sideAngle(far)) <= 12.0001, `inclinaison bornée : ${sideAngle(far).toFixed(1)}°`)
+  assert.ok(Math.abs(sideAngle(far)) <= 24.0001, `inclinaison bornée : ${sideAngle(far).toFixed(1)}°`)
   const held = sideAngle(far)
 
   director.release(100)
@@ -1045,6 +1051,60 @@ test("glisser le doigt incline légèrement le tableau, puis il revient de face 
   assert.ok(overshoot > 0, 'le retour est élastique : il dépasse un peu la position de face')
   assert.ok(overshoot < 0.2 * Math.abs(held), `rebond trop fort : ${overshoot.toFixed(2)}°`)
   assert.ok(Math.abs(sideAngle(director.view(1100, PORTRAIT))) < 0.2, 'revenu de face en 1 s')
+})
+
+/* Retour de Walid du 11/11 : « quand on manipule le tableau, quand il est de face, j'aimerais qu'on
+   puisse le manipuler plus. Il pivote, mais pas assez à mon goût ». De face, le même geste l'incline deux
+   fois plus qu'avant, jusqu'à 24° de côté et 14° en hauteur (12° et 8° avant). Les gros plans des
+   options gardent la mesure d'avant : la caméra y est à quelques cm du cadre. */
+test('de face, le doigt incline le tableau deux fois plus qu’avant ; un gros plan garde sa mesure', () => {
+  const front = createDirector({ room: ROOM, product: TOILE })
+  front.grab(0)
+  front.drag(0.1, 0, 10)
+  const nudge = sideAngle(front.view(10, PORTRAIT))
+  assert.ok(Math.abs(nudge + 4.8) < 0.05, `un dixième de la scène : ${nudge.toFixed(2)}° (2,4° avant)`)
+  front.drag(3, -3, 20)
+  const far = front.view(20, PORTRAIT)
+  assert.ok(Math.abs(sideAngle(far) + 24) < 0.001, `de côté : ${sideAngle(far).toFixed(2)}°`)
+  assert.ok(Math.abs(upAngle(far) + 14) < 0.001, `en hauteur : ${upAngle(far).toFixed(2)}°`)
+
+  for (const [group, product] of [['border', { ...TOILE, border: 'miroir' }], ['frame', { ...TOILE, frame: 'chene' }], ['border', { ...TOILE, frame: 'chene', border: 'noire' }]]) {
+    const close = createDirector({ room: ROOM, product: TOILE })
+    close.choose(group, product, 0)
+    const settled = close.view(LATER, PORTRAIT)
+    close.grab(LATER)
+    close.drag(0.1, 0, LATER + 10)
+    assert.ok(Math.abs(sideAngle(close.view(LATER + 10, PORTRAIT)) - sideAngle(settled) + 2.4) < 0.05, `${settled.shot} : le geste d'avant`)
+    close.drag(3, -3, LATER + 20)
+    const most = close.view(LATER + 20, PORTRAIT)
+    assert.ok(Math.abs(sideAngle(most) - sideAngle(settled) + 12) < 0.001, `${settled.shot} : 12° de côté au plus, comme avant`)
+    assert.ok(Math.abs(upAngle(most) - upAngle(settled) + 8) < 0.001, `${settled.shot} : 8° en hauteur au plus, comme avant`)
+  }
+})
+
+/* La mesure ample ne vaut que de face et au repos (relecture du 11/11) : pendant le retour de face
+   d'un gros plan, ou pendant un acte, la caméra peut être à quelques cm du cadre. Le geste y garde la
+   mesure d'avant, fixée au toucher ; le geste suivant, de face au repos, retrouve la mesure ample. */
+test('pendant une transition ou un acte, le geste garde la mesure d’avant ; de face au repos, la mesure ample revient', () => {
+  // Inclinaison donnée par un glisser bien au-delà des bornes, à l'instant `at` (degrés de côté, en hauteur).
+  const most = (director, at) => {
+    const before = director.view(at, PORTRAIT)
+    director.grab(at)
+    director.drag(3, -3, at)
+    const held = director.view(at, PORTRAIT)
+    director.release(at)
+    return [sideAngle(held) - sideAngle(before), upAngle(held) - upAngle(before)]
+  }
+  const near = (got, [yaw, pitch], label) => {
+    assert.ok(Math.abs(got[0] - yaw) < 0.01 && Math.abs(got[1] - pitch) < 0.01, `${label} : ${got.map((v) => v.toFixed(2)).join('° / ')}°`)
+  }
+  const back = createDirector({ room: ROOM, product: TOILE })
+  back.choose('frame', { ...TOILE, frame: 'chene' }, 0)
+  back.choose('front', { ...TOILE, frame: 'chene' }, LATER)
+  near(most(back, LATER + 300), [-12, -8], 'retour de face du coin du cadre')
+  near(most(back, 3 * LATER), [-24, -14], 'de face, au repos')
+  near(most(chooseToile(), 1000), [-12, -8], 'pendant le tour de la toile')
+  near(most(choosePoster({ ...TOILE, frame: 'noir' }), 1000), [-12, -8], 'pendant le tour du poster encadré')
 })
 
 test("un choix fait pendant le rebond garde l'inclinaison du moment, sans la doubler", () => {

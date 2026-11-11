@@ -368,9 +368,27 @@
     return { w: Math.round(((h * size.w) / size.h) * 2) / 2, h };
   }
 
+  /* Plan de face ou non : l'œuvre projetée s'écarte de sa place de face (en part de sa largeur). Au-delà
+     de 12 %, on est sur un autre plan. L'inclinaison au doigt la déplace aussi : de 4 % avant le 11/11,
+     jusqu'à 15 % depuis qu'elle va plus loin (retour de Walid : « j'aimerais qu'on puisse le manipuler
+     plus »). Ce qu'elle explique ne compte pas (lean : part de la largeur par radian d'inclinaison) : les
+     filets la suivent, les plaques ne viennent pas. */
+  const FACE = { near: 0.06, far: 0.12, staged: 0.6, lean: 0.4 };
+  const clamp01 = (v) => Math.max(0, Math.min(1, v));
+
+  /* Part du plan de face, de 1 (de face) à 0 (un autre plan). corners : les quatre coins de la façade
+     projetés (haut gauche, haut droit, bas droit, bas gauche) ; art : leur place de face (l, t, r, b, w) ;
+     tilt : l'inclinaison au doigt que la vue de la 3D applique (yaw, pitch, en radians), sinon null. */
+  function faceOf(corners, art, tilt = null) {
+    const ref = [[art.l, art.t], [art.r, art.t], [art.r, art.b], [art.l, art.b]];
+    const dev = Math.max(...corners.map((c, i) => Math.hypot(c.x - ref[i][0], c.y - ref[i][1])));
+    const lean = tilt ? FACE.lean * Math.hypot(tilt.yaw, tilt.pitch) : 0;
+    return clamp01(1 - (dev - (FACE.near + lean) * art.w) / ((FACE.far - FACE.near) * art.w));
+  }
+
   const pure = {
     DESK_MIN, TEXTS_FR, chipsLayout, railPlacement, railWidth, maxShift, optionWidth, railEvent, railZone, canvasBox,
-    directorAspect, framingAt, toggleOf, legendOf, choicesOf, eur, dims, swatchOf, sizeTileOf,
+    directorAspect, framingAt, toggleOf, legendOf, choicesOf, eur, dims, swatchOf, sizeTileOf, faceOf,
   };
 
   // Node (tests) : le calcul pur.
@@ -402,12 +420,6 @@
   const r1 = (v) => Math.round(v * 10) / 10;
   const SIDE_GROUPS = ['border', 'passe'];
   const RAIL_GROUPS = ['border', 'passe', 'frame', 'size'];
-
-  /* Plan de face ou non : l'œuvre projetée s'écarte de sa place de face (en part de sa largeur).
-     L'inclinaison au doigt la déplace d'environ 4 % : les filets la suivent, les plaques ne viennent
-     pas. Au-delà de 12 %, on est sur un autre plan. */
-  const FACE = { near: 0.06, far: 0.12, staged: 0.6 };
-  const clamp01 = (v) => Math.max(0, Math.min(1, v));
 
   /* Où un bord de l'œuvre (de a à b) croise la ligne horizontale y. */
   function edgeX(a, b, y) {
@@ -668,19 +680,14 @@
       setDot(marks.frameDot, xr, y);
     }
 
-    /* track(coins) : les quatre coins de la façade de l'œuvre (haut gauche, haut droit, bas droit,
-       bas gauche), en px de la couche `scene`, tels que la 3D les projette ; null : la photo, à sa
-       place de face. Appelé à chaque image de la 3D ; ne touche au DOM que si quelque chose change. */
-    function track(next) {
+    /* track(coins, tilt) : les quatre coins de la façade de l'œuvre (haut gauche, haut droit, bas
+       droit, bas gauche), en px de la couche `scene`, tels que la 3D les projette, et l'inclinaison au
+       doigt de sa vue (faceOf) ; null : la photo, à sa place de face. Appelé à chaque image de la 3D ;
+       ne touche au DOM que si quelque chose change. */
+    function track(next, tilt = null) {
       if (!L) return;
       corners = next;
-      let k = 1;
-      if (next) {
-        const A = L.art;
-        const ref = [[A.l, A.t], [A.r, A.t], [A.r, A.b], [A.l, A.b]];
-        const dev = Math.max(...next.map((c, i) => Math.hypot(c.x - ref[i][0], c.y - ref[i][1])));
-        k = clamp01(1 - (dev - FACE.near * A.w) / ((FACE.far - FACE.near) * A.w));
-      }
+      const k = next ? faceOf(next, L.art, tilt) : 1;
       face = k;
       /* Un seul état, au compositeur : de face, les filets ; ailleurs, les plaques (fondus en CSS).
          Rien n'est écrit dans la page tant que l'état ne change pas, sauf les filets qui suivent l'œuvre. */

@@ -1406,8 +1406,16 @@ const GO_MS = 1000 // vers le plan de l'option (en sinus : glide)
 
 /* Inclinaison au doigt : la caméra tourne autour du point visé (le tableau reste au mur,
    on voit son épaisseur et son ombre bouger). Glisser vers la droite fait tourner le
-   tableau vers la droite, comme si on le poussait. Déplacements en fraction de la scène. */
-const TILT = { gainYaw: 24 * DEG, gainPitch: 16 * DEG, maxYaw: 12 * DEG, maxPitch: 8 * DEG }
+   tableau vers la droite, comme si on le poussait. Déplacements en fraction de la scène.
+   De face et au repos, le geste va bien plus loin qu'avant : 24° de côté au lieu de 12°, 14° en
+   hauteur au lieu de 8°, le même glisser incliné d'autant (retour de Walid du 11/11 : « quand il est
+   de face, j'aimerais qu'on puisse le manipuler plus. Il pivote, mais pas assez à mon goût »).
+   Ailleurs (gros plans des options, transitions et actes), la mesure d'avant : la caméra peut y être
+   à quelques cm du cadre. */
+const TILT = {
+  front: { gainYaw: 48 * DEG, gainPitch: 28 * DEG, maxYaw: 24 * DEG, maxPitch: 14 * DEG },
+  close: { gainYaw: 24 * DEG, gainPitch: 16 * DEG, maxYaw: 12 * DEG, maxPitch: 8 * DEG },
+}
 // Ressort du retour : amortissement 0,6 et 1,6 Hz -> rebond d'environ 10 %, posé en 0,8 s.
 const SPRING = { damping: 0.6, omega: 2 * Math.PI * 1.6 }
 const SPRING_SETTLED_MS = 1100 // au-delà, l'écart restant est sous le centième de degré
@@ -1526,6 +1534,7 @@ function dimsOf(p, opacity, under = false, side = 1) {
 /* poses : part de chaque pose dans la vue (photos de la femme, une par taille du produit, dans
    l'ordre de poses.sizes) ; vide hors de la pièce, le directeur la remplit de zéros (createDirector). */
 const NO_POSES = []
+const NO_TILT = { yaw: 0, pitch: 0 } // inclinaison au doigt appliquée à la vue, en radians (withTilt)
 
 function shotOf(shot, camera, painting, { room = 0, dims = room, dimsUnder = false, poses = NO_POSES } = {}) {
   return { shot, camera, painting, room, dims: dimsOf(painting, dims, dimsUnder), poses }
@@ -2005,7 +2014,8 @@ function unwound(view) {
   return { ...view, painting: { ...view.painting, yaw: Math.atan2(Math.sin(yaw), Math.cos(yaw)) } }
 }
 
-// Tourne la caméra autour du point visé (yaw vers la droite, pitch vers le haut).
+// Tourne la caméra autour du point visé (yaw vers la droite, pitch vers le haut). La vue garde
+// l'inclinaison appliquée (tilt) : la page n'y voit pas un changement de plan (chips, faceOf).
 function withTilt(view, yaw, pitch) {
   const { position, target } = view.camera
   const v = position.map((c, i) => c - target[i])
@@ -2013,7 +2023,7 @@ function withTilt(view, yaw, pitch) {
   const baseYaw = Math.atan2(v[0], v[2])
   const basePitch = Math.asin(v[1] / r)
   const camera = { ...view.camera, position: orbit(target, baseYaw + yaw, basePitch + pitch, r) }
-  return { ...view, camera }
+  return { ...view, camera, tilt: { yaw, pitch } }
 }
 
 /* reducedMotion : préférence « animations réduites » du visiteur. Les choix coupent alors
@@ -2041,8 +2051,9 @@ export function createDirector({ room, product, poses = null, reducedMotion = fa
   // inset : le coin en haut à gauche que la page occupe (bouton « De face »), en part de la hauteur
   // (top) et de la largeur (left) de l'écran.
   const state = { product, group: null, shot: 'front', legs: [], from: null, aspect: 0.8, screen: 0.8, inset: NO_INSET, goal: null, reducedMotion }
-  // Inclinaison : `held` pendant le glisser, puis `released` décroît selon le ressort.
-  const tilt = { grabbed: false, start: { yaw: 0, pitch: 0 }, held: { yaw: 0, pitch: 0 }, releasedAt: null }
+  // Inclinaison : `held` pendant le glisser, puis `released` décroît selon le ressort. reach : la
+  // mesure du geste (TILT), fixée au toucher.
+  const tilt = { grabbed: false, start: { yaw: 0, pitch: 0 }, held: { yaw: 0, pitch: 0 }, releasedAt: null, reach: TILT.front }
 
   function tiltAt(at) {
     if (tilt.grabbed) return tilt.held
@@ -2078,21 +2089,27 @@ export function createDirector({ room, product, poses = null, reducedMotion = fa
     const base = { ...staged(at, aspect, screen, inset, goal), product: shownProduct(at) }
     const k = 1 - base.room // la photo de la pièce ne s'incline pas
     const offset = tiltAt(at)
-    if (k === 0 || (offset.yaw === 0 && offset.pitch === 0)) return base
+    if (k === 0 || (offset.yaw === 0 && offset.pitch === 0)) return { ...base, tilt: NO_TILT }
     return withTilt(base, offset.yaw * k, offset.pitch * k)
   }
 
+  // La mesure du geste se fixe au toucher, pour qu'elle ne change pas sous le doigt : ample de face et
+  // au repos, celle d'avant ailleurs (TILT), une transition ou un acte compris.
   function grab(at) {
     tilt.start = tiltAt(at)
     tilt.held = tilt.start
     tilt.grabbed = true
+    tilt.reach = state.shot === 'front' && !isStaging(at) ? TILT.front : TILT.close
   }
 
+  // Repris pendant le rebond d'une inclinaison plus ample que la mesure du geste, le tableau ne saute
+  // pas : il garde l'angle déjà là.
   function drag(dx, dy, at) {
     if (!tilt.grabbed) grab(at)
+    const { reach, start } = tilt
     tilt.held = {
-      yaw: clamp(tilt.start.yaw - dx * TILT.gainYaw, TILT.maxYaw),
-      pitch: clamp(tilt.start.pitch + dy * TILT.gainPitch, TILT.maxPitch),
+      yaw: clamp(start.yaw - dx * reach.gainYaw, Math.max(reach.maxYaw, Math.abs(start.yaw))),
+      pitch: clamp(start.pitch + dy * reach.gainPitch, Math.max(reach.maxPitch, Math.abs(start.pitch))),
     }
   }
 

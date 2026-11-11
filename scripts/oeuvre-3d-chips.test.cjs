@@ -406,3 +406,59 @@ test('la plaque dépolie serre le texte sans le déplacer, et ne revient pas pen
 test('la bascule Toile | Poster n’a pas de rangée : elle s’applique, rien d’autre ne change', () => {
   assert.deepEqual(railEvent(null, { type: 'toggle', id: 'poster' }), { open: null, effects: ['apply'] })
 })
+
+/* Retour de Walid du 11/11 : de face, le doigt incline le tableau deux fois plus loin (24° de côté,
+   14° en hauteur). Les coins projetés s'écartent alors jusqu'à 15 % de la largeur de l'œuvre, au-delà
+   du seuil où les légendes prennent leur plaque : ce que l'inclinaison explique ne compte pas, et les
+   plaques (son « encadré blanc ») ne viennent pas. Un vrai changement de plan les fait toujours venir. */
+const { faceOf } = require('../assets/oeuvre-3d-chips.js')
+const { createDirector, neutralRoom, paintingCorners } = require('../assets/oeuvre-3d-engine.js')
+
+const SCREEN = [390, 488] // la zone de la 3D d'un téléphone, en px
+const FRONT_ORDER = [[-1, 1], [1, 1], [1, -1], [-1, -1]] // haut gauche, haut droit, bas droit, bas gauche
+
+// Projection sténopé indépendante du moteur (regard vers la cible, haut = +y), en px de SCREEN.
+function onScreen(view, point) {
+  const sub = (a, b) => a.map((v, i) => v - b[i])
+  const dot = (a, b) => a.reduce((s, v, i) => s + v * b[i], 0)
+  const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]
+  const unit = (a) => a.map((v) => v / Math.hypot(...a))
+  const { position, target, fovY } = view.camera
+  const forward = unit(sub(target, position))
+  const right = unit(cross(forward, [0, 1, 0]))
+  const up = cross(right, forward)
+  const rel = sub(point, position)
+  const t = Math.tan(fovY / 2) * dot(rel, forward)
+  const [W, H] = SCREEN
+  return { x: ((dot(rel, right) / (t * (W / H)) + 1) / 2) * W, y: ((1 - dot(rel, up) / t) / 2) * H }
+}
+
+const facade = (view) => {
+  const front = paintingCorners(view.painting, 'outer').filter((c) => c.side.z === 1)
+  return FRONT_ORDER.map(([sx, sy]) => onScreen(view, front.find((c) => c.side.x === sx && c.side.y === sy)))
+}
+
+for (const product of [
+  { material: 'toile', size: '30x40', border: 'blanche', frame: 'sans', passe: false },
+  { material: 'poster', size: '75x100', border: 'blanche', frame: 'noir', passe: true },
+]) {
+  test(`${product.material} ${product.size} : de face, le doigt incline le tableau sans faire venir les plaques ; un autre plan les fait venir`, () => {
+    const room = neutralRoom(['30x40', '60x80', '75x100', '90x120'])
+    const aspect = SCREEN[0] / SCREEN[1]
+    for (const [dx, dy] of [[3, 3], [-3, -3], [3, -3], [-3, 3]]) {
+      const director = createDirector({ room, product })
+      const [tl, tr, br, bl] = facade(director.view(0, aspect))
+      const art = { l: (tl.x + bl.x) / 2, r: (tr.x + br.x) / 2, t: (tl.y + tr.y) / 2, b: (bl.y + br.y) / 2 }
+      art.w = art.r - art.l
+      director.grab(10)
+      director.drag(dx, dy, 10)
+      const tilted = director.view(10, aspect)
+      assert.ok(faceOf(facade(tilted), art) < 0.6, 'sans compter l’inclinaison, les plaques viendraient : le test porte')
+      assert.equal(faceOf(facade(tilted), art, tilted.tilt), 1, `glisser de ${dx}, ${dy} : toujours de face`)
+      director.release(20)
+      director.choose('frame', product, 5000)
+      const close = director.view(10000, aspect)
+      assert.equal(faceOf(facade(close), art, close.tilt), 0, 'le coin du cadre est un autre plan')
+    }
+  })
+}

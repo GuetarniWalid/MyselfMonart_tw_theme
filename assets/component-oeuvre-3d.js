@@ -1046,11 +1046,12 @@
       return { x: p.x, y: p.y + this.size.top + this.canvasOffset };
     }
 
-    // Les quatre coins de la façade du tableau (cadre compris), projetés dans la scène.
+    // Les quatre coins de la façade du tableau (cadre compris), projetés dans la scène, et l'inclinaison
+    // au doigt de la vue : de face, elle ne fait pas venir les plaques (faceOf).
     trackChips(view) {
       const front = this.engine.paintingCorners(view.painting, 'outer').filter((c) => c.side.z === 1);
       const at = (sx, sy) => this.toScene(front.find((c) => c.side.x === sx && c.side.y === sy));
-      this.chips.track([at(-1, 1), at(1, 1), at(1, -1), at(-1, -1)]);
+      this.chips.track([at(-1, 1), at(1, 1), at(1, -1), at(-1, -1)], view.tilt);
     }
 
     /* ---- Source complète de l'œuvre, pour les gros plans ---- */
