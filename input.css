@@ -820,12 +820,13 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
   background: linear-gradient(180deg, #f6f5f2 0%, #ebe9e4 100%); box-shadow: 0 0 0 0.5px rgba(var(--color-main-rgb), 0.14);
   transition: box-shadow 220ms ease;
 }
+/* Le tableau au centre de sa vignette, à toutes les tailles, sans ligne de sol (retour de Walid du
+   11/11/2026 : posé sur une ligne en bas, il montait en grandissant et ne paraissait plus centré). */
 .chips-tile-art {
-  position: absolute; left: 50%; bottom: 12px; display: block; transform: translateX(-50%);
+  position: absolute; left: 50%; top: 50%; display: block; transform: translate(-50%, -50%);
   background: var(--chips-art) center / 100% 100% no-repeat #dacdb5;
   box-shadow: 0 0 0 0.5px rgba(var(--color-main-rgb), 0.22), 1px 2px 3px rgba(var(--color-main-rgb), 0.24);
 }
-.chips-tile-bench { position: absolute; left: 7px; right: 7px; bottom: 11px; height: 1px; background: rgba(var(--color-main-rgb), 0.2); }
 .chips-opt[aria-pressed="true"] .chips-disc, .chips-opt[aria-pressed="true"] .chips-tile { box-shadow: 0 0 0 1.5px var(--chips-ink); }
 /* Rangée fermée, l'anneau change sans fondu : il ne se repeint pas pendant que la 3D se met en scène. */
 .chips-rail:not(.is-open) .chips-disc, .chips-rail:not(.is-open) .chips-tile { transition: none; }
@@ -867,8 +868,6 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
 .chips.is-desk .chips-opt { gap: 6px; }
 .chips.is-desk .chips-disc { width: 54px; height: 54px; }
 .chips.is-desk .chips-tile { width: 58px; height: 58px; border-radius: 14px; }
-.chips.is-desk .chips-tile-art { bottom: 15px; }
-.chips.is-desk .chips-tile-bench { left: 9px; right: 9px; bottom: 14px; }
 .chips.is-desk .chips-opt-name { font-size: 12.5px; }
 .chips.is-desk .chips-opt-price { min-height: 13px; font-size: 11px; }
 

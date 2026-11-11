@@ -363,7 +363,7 @@
     return { w, h, r: '1px', bg: ART_TONE, shadow, border: '0' };
   }
 
-  // Vignette de taille : l'œuvre à l'échelle des autres formats (tallest : le plus haut, en cm), sur un banc.
+  // Vignette de taille : l'œuvre à l'échelle des autres formats (tallest : le plus haut, en cm), au centre.
   function sizeTileOf(size, maxH, tallest = 120) {
     const h = (maxH * size.h) / tallest;
     return { w: Math.round(((h * size.w) / size.h) * 2) / 2, h };
@@ -601,7 +601,7 @@
     function optionButton(group) {
       return el('button', { type: 'button', class: 'chips-opt' }, [
         group === 'size'
-          ? el('span', { class: 'chips-tile', 'aria-hidden': 'true' }, [el('span', { class: 'chips-tile-art', 'data-allow-empty': true }), el('span', { class: 'chips-tile-bench', 'data-allow-empty': true })])
+          ? el('span', { class: 'chips-tile', 'aria-hidden': 'true' }, [el('span', { class: 'chips-tile-art', 'data-allow-empty': true })])
           : el('span', { class: 'chips-disc', 'aria-hidden': 'true' }, [el('span', { class: 'chips-swatch', 'data-allow-empty': true })]),
         el('span', { class: 'chips-opt-name' }),
         el('span', { class: 'chips-opt-price', 'data-allow-empty': true }),
