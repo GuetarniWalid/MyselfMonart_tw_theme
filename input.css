@@ -527,8 +527,10 @@ main-product-blocks .description h3 span {
 @media (max-width: 767px) {
   body.promo-popup-open .oeuvre-3d-pill { display: none; }
 }
-/* La page garde de quoi laisser voir le bas du pied de page sous la pilule. */
-body:has(.oeuvre-3d-pill) { padding-bottom: 5.5rem; }
+/* Le pied de page se prolonge sous la pilule, dans sa couleur : son bas reste visible au-dessus d'elle.
+   Avant, c'était une marge de la page, une bande blanche sous le pied de page (retour de Walid du
+   11/11/2026 : « une espèce de conteneur blanc tout en bas »). */
+body:has(.oeuvre-3d-pill) #shopify-section-tw-footer { padding-bottom: 5.5rem; }
 
 /* ---- Le bouton du panier de la fiche 3D (snippets/open-cart-drawer-button.liquid, .cart-fab) ----
    Choix de Walid du 11/11/2026 : le dessin « Pilule » de l'agent design (le nombre entre dans le
