@@ -385,6 +385,7 @@ class MainProductBlocks extends CollapsibleTab {
     this.buttonTemplate = document.getElementById('float-buy-button');
     this.blockBuyButton = this.querySelector('.buy-button');
     this.hasButtonBeenShown = false;
+    this.floatObservers = [];
   }
 
   connectedCallback() {
@@ -392,9 +393,8 @@ class MainProductBlocks extends CollapsibleTab {
 
     // Fiche 3D : la pilule d'achat de la scène (snippets/oeuvre-3d-stage.liquid) remplace le bouton
     // flottant, et passe par onBuyButtonClick. Le gabarit reste : VariantPicker y range variante et prix.
-    if (this.buttonTemplate && !this.hasAttribute('data-buy-pill')) {
-      this.initObserver(this.section);
-    }
+    // initObserver n'y pose rien (data-buy-pill).
+    if (this.buttonTemplate) this.initObserver(this.section);
 
     if (this.blockBuyButton) {
       this.blockBuyButton.addEventListener('click', (e) => {
@@ -406,14 +406,23 @@ class MainProductBlocks extends CollapsibleTab {
 
   // Le bouton flottant vit sur <body> : la bascule toile/poster, qui remplace #MainContent, ne
   // l'emporte pas. Resté en place, il garderait la fiche d'avant (variante, prix, propriétés de
-  // ligne). L'observateur part aussi, sinon il recréerait ce bouton. La nouvelle fiche a le sien.
+  // ligne). Les observateurs partent aussi, tous, sinon ils recréeraient ce bouton. La nouvelle fiche
+  // a les siens. Avant, seul le dernier posé partait (celui du pied de page, qui avait écrasé celui de
+  // la fiche) : celui de la fiche recréait aussitôt le bouton de la fiche quittée, qui ajoutait la
+  // toile au panier quand la page montrait le poster (banc du 11/11/2026).
   disconnectedCallback() {
-    this.floatObserver?.disconnect();
+    this.floatObservers.forEach((observer) => observer.disconnect());
+    this.floatObservers = [];
     document.body.querySelector('.float-buy-button')?.remove();
     this.buyButton = null;
   }
 
+  // Le bouton flottant paraît quand ce qu'on observe quitte l'écran : la fiche (connectedCallback) ou
+  // le pied de page (assets/tw-footer.js), et se cache quand il y revient. Jamais sur la fiche 3D
+  // (data-buy-pill) : le pied de page l'y recréait quand on remontait de tout en bas (retour de Walid
+  // du 11/11/2026).
   initObserver = (observed) => {
+    if (!observed || this.hasAttribute('data-buy-pill')) return;
     const options = {
       root: null,
       rootMargin: '0px',
@@ -436,7 +445,7 @@ class MainProductBlocks extends CollapsibleTab {
     }, options);
 
     observer.observe(observed);
-    this.floatObserver = observer;
+    this.floatObservers.push(observer);
   };
 
   hideBuyButton = () => {
