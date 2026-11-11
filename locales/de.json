@@ -226,8 +226,13 @@
         "included": "inklusive",
         "unavailable": "nicht erhältlich in {{ size }}",
         "no_frame": "Kein Rahmen in {{ size }}",
-        "big_unframed": "In {{ size }} ohne Rahmen geliefert",
-        "unframed_hint": "ohne Rahmen"
+        "unframed_hint": "ohne Rahmen",
+        "unframed_size": "Das Format {{ size }} wird ohne Rahmen geliefert.",
+        "keep_frame": "Rahmen behalten",
+        "size_moved": "Mit Rahmen wechselt die Größe zu {{ size }}.",
+        "stay_size": "Bei {{ size }} bleiben",
+        "framed_up_to": "Mit Rahmen: bis {{ size }}",
+        "frame_not_in": "{{ material }}: kein Rahmen in {{ frame }}, er wurde entfernt."
       },
       "oeuvre_3d_names": {
         "border_blanche": "Weiß",

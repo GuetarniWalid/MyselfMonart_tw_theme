@@ -619,8 +619,13 @@
         "included": "inclus",
         "unavailable": "indisponible en {{ size }}",
         "no_frame": "Pas de cadre en {{ size }}",
-        "big_unframed": "En {{ size }}, livré sans cadre",
-        "unframed_hint": "sans cadre"
+        "unframed_hint": "sans cadre",
+        "unframed_size": "Le {{ size }} est livré sans cadre.",
+        "keep_frame": "Garder le cadre",
+        "size_moved": "Avec cadre, la taille passe au {{ size }}.",
+        "stay_size": "Rester en {{ size }}",
+        "framed_up_to": "Avec cadre : jusqu’au {{ size }}",
+        "frame_not_in": "{{ material }} : pas de cadre {{ frame }}, il est retiré."
       },
       "oeuvre_3d_names": {
         "border_blanche": "Blanche",

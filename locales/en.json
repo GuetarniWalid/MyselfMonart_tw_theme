@@ -474,8 +474,13 @@
         "included": "included",
         "unavailable": "unavailable in {{ size }}",
         "no_frame": "No frame in {{ size }}",
-        "big_unframed": "In {{ size }}, delivered without a frame",
-        "unframed_hint": "without frame"
+        "unframed_hint": "without frame",
+        "unframed_size": "The {{ size }} comes without a frame.",
+        "keep_frame": "Keep the frame",
+        "size_moved": "With a frame, the size changes to {{ size }}.",
+        "stay_size": "Keep {{ size }}",
+        "framed_up_to": "With a frame: up to {{ size }}",
+        "frame_not_in": "{{ material }}: no {{ frame }} frame, it has been removed."
       },
       "oeuvre_3d_names": {
         "border_blanche": "White",

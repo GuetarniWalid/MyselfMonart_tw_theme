@@ -236,8 +236,8 @@
   /* ---------------- Textes ---------------- */
 
   /* Textes de la fiche, en français, pour les tests. La fiche passe les siens, traduits par les
-     fichiers de langue du thème. {size} : le format qui n'existe pas encadré. money : le prix en
-     euros mis en forme (la fiche passe celui de la boutique, Product.formatPrice). */
+     fichiers de langue du thème. {size} : un format ; {frame} : un cadre ; {material} : une matière.
+     money : le prix en euros mis en forme (la fiche passe celui de la boutique, Product.formatPrice). */
   const TEXTS_FR = {
     group: { material: 'Matière', size: 'Taille', border: 'Bordure', frame: 'Cadre', passe: 'Contour' },
     seeChoices: 'Voir les choix',
@@ -245,8 +245,13 @@
     included: 'inclus',
     unavailable: 'indisponible en {size}',
     noFrame: 'Pas de cadre en {size}',
-    bigUnframed: 'En {size}, livré sans cadre',
     unframedHint: 'sans cadre',
+    unframedSize: 'Le {size} est livré sans cadre.',
+    keepFrame: 'Garder le cadre',
+    sizeMoved: 'Avec cadre, la taille passe au {size}.',
+    staySize: 'Rester en {size}',
+    framedUpTo: 'Avec cadre : jusqu’au {size}',
+    frameNotIn: '{material} : pas de cadre {frame}, il est retiré.',
   };
 
   const fill = (text, vars) => text.replace(/\{(\w+)\}/g, (_, key) => (vars[key] === undefined ? '' : vars[key]));
@@ -276,11 +281,73 @@
        canFrame(sizeId)               ce format existe-t-il encadré ?
        unframedSize()                 le format sans cadre, en clair (« 90 × 120 ») */
 
-  /* La bascule de la matière : un choix par matière, le prix de chacun dans son libellé. */
-  function toggleOf(catalog, texts, product) {
+  /* ---------------- Le cadre qu'une taille ou une matière n'a pas ---------------- */
+
+  /* Retour de Walid du 11/11/2026 : un cadre choisi, puis le 90 × 120, qui n'existe pas encadré, et le
+     cadre disparaissait sans un mot (« il va croire que c'est un bug »). Solution validée le même jour,
+     « Prévenir et expliquer » :
+       - avec un cadre en tête, la vignette d'une taille qui ne le porte pas dit « sans cadre », et les
+         autres vignettes montrent le cadre ;
+       - la choisir retire le cadre et le dit (noticeOf), avec « Garder le cadre » : la taille la plus
+         proche qui le porte (le 75 × 100) ;
+       - le cadre retiré reste en mémoire (held) : revenir à une taille, ou à une matière, qui le porte
+         le remet ;
+       - à une taille sans cadre, toucher un cadre passe à la taille la plus proche qui le porte, et le dit.
+     Choisir un cadre, « Aucun » compris, efface la mémoire. */
+
+  // La taille la plus proche de celle du produit, en dessous d'abord, qui porte ce cadre ; null : aucune.
+  function framedSizeOf(catalog, product, frame) {
+    const sizes = catalog.options('size', product).map((o) => o.id);
+    const at = sizes.indexOf(product.size);
+    const carries = (size) => catalog.apply('size', { ...product, frame }, size).frame === frame;
+    return sizes.slice(0, Math.max(0, at)).reverse().find(carries) || sizes.slice(at + 1).find(carries) || null;
+  }
+
+  /* Un choix (group, id) sur le produit, avec la mémoire du cadre (held). Rend le produit qui en sort
+     (next), la nouvelle mémoire (held), le cadre que ce choix vient de retirer (dropped) et, quand
+     toucher un cadre a changé la taille, la taille quittée (moved). null : ce choix n'existe pas. */
+  function pickOf(catalog, product, group, id, held = null) {
+    if (group === 'frame') {
+      if (catalog.available('frame', product, id)) return { next: catalog.apply('frame', product, id), held: null, dropped: null, moved: null };
+      const size = framedSizeOf(catalog, product, id);
+      return size ? { next: catalog.apply('frame', { ...product, size }, id), held: null, dropped: null, moved: product.size } : null;
+    }
+    if (!catalog.available(group, product, id)) return null;
+    const wanted = held && product.frame === 'sans' && (group === 'size' || group === 'material') ? { ...product, frame: held } : product;
+    const next = catalog.apply(group, wanted, id);
+    const dropped = product.frame !== 'sans' && next.frame === 'sans' ? product.frame : null;
+    return { next, held: dropped || (next.frame === 'sans' ? held : null), dropped, moved: null };
+  }
+
+  /* Ce qu'un choix doit dire, ou null : le cadre retiré par une taille, avec « Garder le cadre » ; par
+     la matière (le poster n'a pas l'argent), sans bouton : revenir à la toile le remet ; la taille
+     changée par un cadre, avec « Rester en 90 × 120 ». action : le choix que le bouton rejoue. */
+  function noticeOf(catalog, texts, product, group, pick) {
+    if (!pick) return null;
+    const { next, dropped, moved } = pick;
+    const sizeName = (id) => dims(catalog.size(id), false, texts);
+    if (moved) {
+      return { text: fill(texts.sizeMoved, { size: sizeName(next.size) }), action: { label: fill(texts.staySize, { size: sizeName(moved) }), group: 'size', id: moved } };
+    }
+    if (!dropped) return null;
+    if (group === 'material') {
+      const frame = catalog.options('frame', product).find((o) => o.id === dropped);
+      const material = catalog.options('material', next).find((o) => o.id === next.material);
+      return { text: fill(texts.frameNotIn, { frame: frame ? frame.name : '', material: material ? material.name : '' }), action: null };
+    }
+    if (group !== 'size') return null;
+    const size = framedSizeOf(catalog, next, dropped);
+    return { text: fill(texts.unframedSize, { size: sizeName(next.size) }), action: size ? { label: texts.keepFrame, group: 'size', id: size } : null };
+  }
+
+  /* La bascule de la matière : un choix par matière, le prix de chacun dans son libellé (le cadre en
+     mémoire compris, s'il y revient). */
+  function toggleOf(catalog, texts, product, held = null) {
     return catalog.options('material', product).map((o) => {
       const pressed = catalog.value('material', product) === o.id;
-      return { id: o.id, name: o.name, pressed, label: `${texts.group.material} : ${o.spoken}, ${money(texts, catalog.price(catalog.apply('material', product, o.id)))}` };
+      const pick = pickOf(catalog, product, 'material', o.id, held);
+      const next = pick ? pick.next : catalog.apply('material', product, o.id);
+      return { id: o.id, name: o.name, pressed, label: `${texts.group.material} : ${o.spoken}, ${money(texts, catalog.price(next))}` };
     });
   }
 
@@ -298,34 +365,53 @@
   }
 
   /* La rangée d'un groupe : un choix par option, avec son prix (le prix complet pour la taille, l'écart
-     à l'option de base pour les autres), sa disponibilité, et la note de la rangée. */
-  function choicesOf(catalog, texts, group, product) {
-    const size = catalog.unframedSize();
+     à l'option de base pour les autres), sa disponibilité et la note de la rangée. Pour la taille, avec
+     un cadre en tête (choisi, ou en mémoire : held), le cadre que chaque vignette porterait (frame) et
+     « sans cadre » sous celles qui ne le portent pas (caption) ; leurs prix comptent ce cadre. À une
+     taille sans cadre, un cadre se choisit encore : il passe à la taille la plus proche qui le porte ;
+     son prix est l'écart à cette taille, et la note de la rangée le dit. */
+  function choicesOf(catalog, texts, group, product, held = null) {
+    const unframed = catalog.unframedSize();
     const current = catalog.value(group, product);
-    const framed = catalog.framed(product);
+    const wanted = catalog.framed(product) ? product.frame : held;
     let unavailable = false;
+    let movedTo = null;
     const options = catalog.options(group, product).map((o) => {
-      const next = catalog.apply(group, product, o.id);
-      const available = catalog.available(group, product, o.id);
+      const pick = pickOf(catalog, product, group, o.id, held);
+      const available = !!pick;
       if (!available) unavailable = true;
+      const next = pick ? pick.next : catalog.apply(group, product, o.id);
+      const moved = !!(pick && pick.moved);
+      if (moved && !movedTo) movedTo = next.size;
       let price = '';
       let spokenPrice = '';
       if (group === 'size' || group === 'material') {
         price = money(texts, catalog.price(next));
         spokenPrice = price;
       } else if (available) {
-        const delta = Math.round((catalog.price(next) - catalog.price(catalog.apply(group, product, catalog.base(group)))) * 100) / 100;
+        const base = catalog.apply(group, moved ? { ...product, size: next.size } : product, catalog.base(group));
+        const delta = Math.round((catalog.price(next) - catalog.price(base)) * 100) / 100;
         price = delta > 0 ? `+${money(texts, delta)}` : '';
         spokenPrice = price || (group === 'border' || (group === 'passe' && o.id === 'avec') ? texts.included : '');
       }
-      const hint = group === 'size' && framed && !catalog.canFrame(o.id) ? texts.unframedHint : '';
+      const frame = group === 'size' && next.frame !== 'sans' ? next.frame : null;
       const name = group === 'size' ? dims(catalog.size(o.id), false, texts) : o.name;
-      const label = `${texts.group[group]} : ${o.spoken}${available ? (spokenPrice ? `, ${spokenPrice}` : '') : `, ${fill(texts.unavailable, { size })}`}${hint ? `, ${hint}` : ''}`;
-      return { id: o.id, name, price: available ? price : '—', label, selected: o.id === current, available };
+      const spoken = available ? (spokenPrice ? `, ${spokenPrice}` : '') : `, ${fill(texts.unavailable, { size: unframed })}`;
+      const after = moved ? `. ${fill(texts.sizeMoved, { size: dims(catalog.size(next.size), false, texts) })}` : '';
+      return { id: o.id, name, price: available ? price : '—', label: `${texts.group[group]} : ${o.spoken}${spoken}${after}`, selected: o.id === current, available, caption: '', frame };
     });
-    const note = group === 'frame' && unavailable
-      ? fill(texts.noFrame, { size })
-      : group === 'size' && framed && size ? fill(texts.bigUnframed, { size }) : '';
+    /* « sans cadre » sous les tailles qui ne portent pas le cadre en tête, s'il existe à une autre taille de
+       cette matière (le poster n'a jamais l'argent : ses tailles ne le disent pas toutes). */
+    if (group === 'size' && wanted && options.some((o) => o.frame)) {
+      for (const o of options) {
+        if (o.frame) continue;
+        o.caption = texts.unframedHint;
+        o.label += `, ${o.caption}`;
+      }
+    }
+    const note = group !== 'frame' ? ''
+      : movedTo ? fill(texts.framedUpTo, { size: dims(catalog.size(movedTo), false, texts) })
+        : unavailable ? fill(texts.noFrame, { size: unframed }) : '';
     return { group, title: texts.group[group], options, note };
   }
 
@@ -341,6 +427,8 @@
     chene: 'linear-gradient(135deg, #ecd3ab 0%, #d4b07b 55%, #c09760 100%)',
     noyer: 'linear-gradient(135deg, #966242 0%, #6a3d27 55%, #4c2918 100%)',
   };
+  // Le cadre autour du tableau d'une vignette de taille : une teinte pleine par cadre, lisible sur 2 px.
+  const FRAME_TONE = { blanc: '#f7f5ef', noir: '#24201d', argent: '#b4b7bd', chene: '#d2ad78', noyer: '#6a3f28' };
   const EDGE = { blanche: '#ffffff', noire: '#26211d' };
   const RING = 'inset 0 0 0 0.5px rgba(33, 21, 12, 0.3)';
   const half = (v) => Math.round(v * 2) / 2;
@@ -447,7 +535,8 @@
 
   const pure = {
     DESK_MIN, TEXTS_FR, chipsLayout, railPlacement, railWidth, maxShift, optionWidth, railEvent, railZone, canvasBox,
-    directorAspect, framingAt, toggleOf, legendOf, choicesOf, eur, dims, swatchOf, sizeTileOf, faceOf, coteMarks, filetEnds,
+    directorAspect, framingAt, toggleOf, legendOf, choicesOf, pickOf, framedSizeOf, noticeOf, eur, dims, swatchOf, sizeTileOf,
+    faceOf, coteMarks, filetEnds, FRAME_TONE,
   };
 
   // Node (tests) : le calcul pur.
@@ -500,6 +589,7 @@
     let back = null; // l'arrière de la boîte de l'œuvre, projeté (filetEnds)
     let face = 1;
     let staged = false;
+    let held = null; // le cadre qu'une taille ou une matière a retiré, en mémoire (pickOf)
     const ids = { rail: (g) => `chips-rail-${g}`, chip: (g) => `chips-chip-${g}` };
 
     stage.classList.add('chips');
@@ -561,7 +651,21 @@
         el('p', { class: 'chips-rail-note', hidden: true }),
       ]);
     }
-    stage.append(closer, ...Object.values(rails));
+    /* Le message d'un choix qui retire le cadre ou change la taille (noticeOf) : une plaque de papier
+       au-dessus de la rangée ouverte, ou sous la bascule quand la matière l'a retiré. Il reste tant qu'on
+       ne fait rien d'autre ; sans bouton, il part au bout de 6 s. Sa phrase passe aussi par une zone que
+       les lecteurs d'écran lisent, toujours en place : un message qui naît dans une zone cachée n'est pas
+       toujours lu. */
+    const arrow = el('svg', { class: 'chips-notice-arrow', viewBox: '0 0 16 16', fill: 'none', stroke: 'currentColor', 'stroke-width': 1.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true', focusable: 'false' }, [
+      el('path', { d: 'M3 8h9.5' }),
+      el('path', { d: 'M8.5 3.75 12.75 8 8.5 12.25' }),
+    ]);
+    const notice = el('div', { class: 'chips-notice', 'data-anchor': 'rail' }, [
+      el('p', { class: 'chips-notice-text' }),
+      el('button', { type: 'button', class: 'chips-notice-action', hidden: true }, [el('span', { class: 'chips-notice-label' }), arrow]),
+    ]);
+    const spoken = el('p', { class: 'sr-only', role: 'status', 'data-allow-empty': true });
+    stage.append(closer, ...Object.values(rails), notice, spoken);
 
     const sideGroup = () => catalog.side(current);
     const chipOf = (group) => (group === 'size' ? cote : group === 'frame' ? right : left);
@@ -569,7 +673,7 @@
     /* ---- Contenu : textes, prix, états ---- */
 
     function renderToggle() {
-      const items = toggleOf(catalog, texts, current);
+      const items = toggleOf(catalog, texts, current, held);
       const same = toggle.querySelectorAll('.chips-switch').length === items.length &&
         items.every((item) => toggle.querySelector(`[data-value="${item.id}"]`));
       if (!same) {
@@ -605,12 +709,16 @@
           : el('span', { class: 'chips-disc', 'aria-hidden': 'true' }, [el('span', { class: 'chips-swatch', 'data-allow-empty': true })]),
         el('span', { class: 'chips-opt-name' }),
         el('span', { class: 'chips-opt-price', 'data-allow-empty': true }),
+        el('span', { class: 'chips-opt-note', 'aria-hidden': 'true', 'data-allow-empty': true }),
       ]);
     }
 
+    // La rangée a une ligne de note : sa note, ou « sans cadre » sous une vignette (même hauteur).
+    const noteLine = (model) => !!model.note || model.options.some((o) => o.caption);
+
     function renderRail(group) {
       const rail = rails[group];
-      const model = choicesOf(catalog, texts, group, current);
+      const model = choicesOf(catalog, texts, group, current, held);
       const box = rail.querySelector('.chips-rail-options');
       const same = box.childElementCount === model.options.length &&
         model.options.every((o, j) => box.children[j].dataset.value === o.id);
@@ -630,6 +738,13 @@
         setAttr(button, 'aria-label', o.label);
         setText(button.querySelector('.chips-opt-name'), o.name);
         setText(button.querySelector('.chips-opt-price'), o.price);
+        setText(button.querySelector('.chips-opt-note'), o.caption);
+        // Le tableau de la vignette porte le cadre en tête, aux tailles qui le portent.
+        if (group === 'size') {
+          const tone = o.frame ? FRAME_TONE[o.frame] || FRAME_TONE.noir : '';
+          if (button.classList.contains('has-frame') !== !!tone) button.classList.toggle('has-frame', !!tone);
+          if (tone && button.style.getPropertyValue('--chips-frame-tone') !== tone) button.style.setProperty('--chips-frame-tone', tone);
+        }
       });
       const note = rail.querySelector('.chips-rail-note');
       if (note.hidden !== !model.note) note.hidden = !model.note;
@@ -670,6 +785,7 @@
       for (const group of [side, 'frame', 'size']) renderRail(group);
       if (open && !rails[open].hidden) place(open);
       else if (open) close();
+      placeNotice();
     }
 
     /* ---- Mise en page ---- */
@@ -691,6 +807,7 @@
       }
       drawMarks();
       if (open) place(open);
+      placeNotice();
       return L;
     }
 
@@ -772,14 +889,49 @@
 
     let spot = null; // où la rangée ouverte se pose
     function place(group) {
-      const model = choicesOf(catalog, texts, group, current);
-      spot = railPlacement(L, !!model.note, model.options.length);
+      const model = choicesOf(catalog, texts, group, current, held);
+      spot = railPlacement(L, noteLine(model), model.options.length);
       scene.style.transform = spot.shift ? `translateY(${-spot.shift}px)` : '';
       rails[group].style.top = px(spot.top);
       setPillAway(spot.hidePill);
+      placeNotice();
+    }
+
+    /* ---- Le message d'un choix (noticeOf) ---- */
+
+    let shown = null; // le message affiché, ou null
+    let noticeTimer = 0;
+    // Au-dessus de la rangée ouverte, à 8 px ; sans rangée, sous la bascule.
+    function placeNotice() {
+      if (!shown || !L) return;
+      const onRail = !!(open && spot);
+      setAttr(notice, 'data-anchor', onRail ? 'rail' : 'top');
+      notice.style.top = px(onRail ? spot.top - 8 : L.toggle.top + (L.desk ? 60 : 50));
+    }
+    function showNotice(message) {
+      clearTimeout(noticeTimer);
+      shown = message;
+      setText(notice.querySelector('.chips-notice-text'), message.text);
+      const action = notice.querySelector('.chips-notice-action');
+      action.hidden = !message.action;
+      if (message.action) setText(action.querySelector('.chips-notice-label'), message.action.label);
+      placeNotice();
+      notice.classList.add('is-shown');
+      // Vidée puis remplie : la même phrase, deux fois de suite, est lue deux fois.
+      spoken.textContent = '';
+      requestAnimationFrame(() => { if (shown === message) spoken.textContent = message.text; });
+      if (!message.action) noticeTimer = setTimeout(hideNotice, 6000);
+    }
+    function hideNotice() {
+      clearTimeout(noticeTimer);
+      if (!shown) return;
+      shown = null;
+      notice.classList.remove('is-shown');
+      spoken.textContent = '';
     }
 
     function openRail(group, { focus = false } = {}) {
+      hideNotice();
       open = group;
       stage.dataset.chipsOpen = group === sideGroup() ? 'side' : group;
       stage.classList.add('is-open');
@@ -800,6 +952,7 @@
 
     function close({ focusChip = false } = {}) {
       if (!open) return;
+      hideNotice();
       const group = open;
       open = null;
       stage.classList.remove('is-open');
@@ -814,11 +967,18 @@
       if (focusChip) chipOf(group).focus({ preventScroll: true });
     }
 
-    // Un choix : la page l'applique (prix, 3D) et rappelle update(produit). La rangée reste ouverte.
-    function apply({ type, group, id }) {
+    /* Un choix : la page l'applique (prix, 3D) et rappelle update(produit). La rangée reste ouverte. Un
+       choix qui retire le cadre, ou un cadre qui change la taille, le dit (noticeOf) ; le cadre retiré
+       reste en mémoire (pickOf). silent : le choix du bouton du message, qui ne dit rien de plus. */
+    function apply({ type, group, id, silent = false }) {
       const g = type === 'toggle' ? 'material' : group;
-      if (!catalog.available(g, current, id)) return;
-      onChoose(g, id, catalog.apply(g, current, id));
+      const pick = pickOf(catalog, current, g, id, held);
+      if (!pick) return;
+      const message = silent ? null : noticeOf(catalog, texts, current, g, pick);
+      held = pick.held;
+      onChoose(g, id, pick.next);
+      if (message) showNotice(message);
+      else hideNotice();
     }
 
     /* Tout passe par railEvent : ce qui s'applique, ce qui s'ouvre ou se ferme, la mise en scène du
@@ -871,12 +1031,30 @@
           dispatch({ type: 'escape' });
         }
       });
-      // Le focus quitte la rangée et sa légende (Tab) : comme un toucher en dehors.
+      // Le focus quitte la rangée, sa légende et son message (Tab) : comme un toucher en dehors.
       rail.addEventListener('focusout', (event) => {
         if (open !== group || !event.relatedTarget) return;
-        if (!rail.contains(event.relatedTarget) && event.relatedTarget !== chipOf(group)) dispatch({ type: 'focusout' });
+        if (!rail.contains(event.relatedTarget) && event.relatedTarget !== chipOf(group) && !notice.contains(event.relatedTarget)) dispatch({ type: 'focusout' });
       });
     }
+
+    // Le bouton du message rejoue son choix (« Garder le cadre », « Rester en 90 × 120 »), sans autre message.
+    notice.addEventListener('click', (event) => {
+      const action = shown && shown.action;
+      if (!action || !event.target.closest('.chips-notice-action')) return;
+      hideNotice();
+      apply({ type: 'pick', group: action.group, id: action.id, silent: true });
+      // Au clavier, le bouton part avec le message : le focus revient au choix en cours de la rangée.
+      if (keyboard(event) && open) requestAnimationFrame(() => {
+        const target = open && rails[open].querySelector('.chips-opt[aria-pressed="true"]');
+        if (target) target.focus({ preventScroll: true });
+      });
+    });
+    notice.addEventListener('focusout', (event) => {
+      if (!open || !event.relatedTarget) return;
+      const target = event.relatedTarget;
+      if (!rails[open].contains(target) && target !== chipOf(open) && !notice.contains(target)) dispatch({ type: 'focusout' });
+    });
 
     const onKey = (event) => {
       if (event.key === 'Escape' && open) dispatch({ type: 'escape' });
@@ -939,14 +1117,16 @@
         if (zoomed === stage.classList.contains('is-zoomed')) return;
         stage.classList.toggle('is-zoomed', zoomed);
         setHidden(zoomed || !!open);
+        if (zoomed) hideNotice();
       },
       // Pincer pour revenir de face, rangée ouverte : exactement un toucher en dehors.
       dismiss: () => dispatch({ type: 'outside' }),
       destroy() {
         timers.forEach(clearTimeout);
+        clearTimeout(noticeTimer);
         document.removeEventListener('keydown', onKey);
         document.removeEventListener('click', onOutside, true);
-        for (const node of [svg, toggle, left, right, cote, closer, ...Object.values(rails)]) node.remove();
+        for (const node of [svg, toggle, left, right, cote, closer, ...Object.values(rails), notice, spoken]) node.remove();
         stage.classList.remove('chips', 'is-desk', 'is-open', 'is-staged', 'is-ready', 'is-settled', 'is-moving', 'is-returning', 'is-zoomed');
         setPillAway(false);
       },

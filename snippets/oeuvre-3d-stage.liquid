@@ -130,14 +130,22 @@
         "seeChoices": {{ 'sections.mma.oeuvre_3d_chips.see_choices' | t | json }},
         "cm": {{ 'sections.mma.oeuvre_3d_chips.cm' | t | json }},
         "included": {{ 'sections.mma.oeuvre_3d_chips.included' | t | json }},
-        {%- comment -%} Le trou de la taille passe par une variable : Shopify refuse une accolade fermante dans
-           une chaîne écrite entre doubles accolades (« Variable … was not properly terminated »), que
-           liquidjs acceptait. {%- endcomment -%}
-        {%- assign size_hole = '{size}' %}
+        {%- comment -%} Les trous (taille, cadre, matière) passent par des variables : Shopify refuse une
+           accolade fermante dans une chaîne écrite entre doubles accolades (« Variable … was not properly
+           terminated »), que liquidjs acceptait. Le message du cadre qu'une taille ou une matière n'a pas
+           (unframedSize à frameNotIn) : retour de Walid du 11/11/2026. {%- endcomment -%}
+        {%- assign size_hole = '{size}' -%}
+        {%- assign frame_hole = '{frame}' -%}
+        {%- assign material_hole = '{material}' %}
         "unavailable": {{ 'sections.mma.oeuvre_3d_chips.unavailable' | t: size: size_hole | json }},
         "noFrame": {{ 'sections.mma.oeuvre_3d_chips.no_frame' | t: size: size_hole | json }},
-        "bigUnframed": {{ 'sections.mma.oeuvre_3d_chips.big_unframed' | t: size: size_hole | json }},
-        "unframedHint": {{ 'sections.mma.oeuvre_3d_chips.unframed_hint' | t | json }}
+        "unframedHint": {{ 'sections.mma.oeuvre_3d_chips.unframed_hint' | t | json }},
+        "unframedSize": {{ 'sections.mma.oeuvre_3d_chips.unframed_size' | t: size: size_hole | json }},
+        "keepFrame": {{ 'sections.mma.oeuvre_3d_chips.keep_frame' | t | json }},
+        "sizeMoved": {{ 'sections.mma.oeuvre_3d_chips.size_moved' | t: size: size_hole | json }},
+        "staySize": {{ 'sections.mma.oeuvre_3d_chips.stay_size' | t: size: size_hole | json }},
+        "framedUpTo": {{ 'sections.mma.oeuvre_3d_chips.framed_up_to' | t: size: size_hole | json }},
+        "frameNotIn": {{ 'sections.mma.oeuvre_3d_chips.frame_not_in' | t: frame: frame_hole, material: material_hole | json }}
       },
       "names": {
         "material": {

@@ -5,7 +5,7 @@
 const test = require('node:test')
 const assert = require('node:assert/strict')
 const { catalogOf, productFromSelection, choiceInputs, variantOf, sizesOf } = require('../assets/component-oeuvre-3d.js')
-const { choicesOf, toggleOf, legendOf, TEXTS_FR } = require('../assets/oeuvre-3d-chips.js')
+const { choicesOf, toggleOf, legendOf, pickOf, TEXTS_FR } = require('../assets/oeuvre-3d-chips.js')
 const { toile, poster } = require('./fixtures/oeuvre-3d-bonsai.json')
 
 // Les noms courts des chips, ceux des fichiers de langue (sections.mma.oeuvre_3d_names).
@@ -54,7 +54,9 @@ test('les prix sont ceux des variantes : bordure et cadre en écart, taille et m
   assert.deepEqual(euros(choicesOf(both, TEXTS_FR, 'frame', POSTER).options.map((o) => o.price)), ['', '+23 €', '+23 €', '+23 €', '+23 €'])
 })
 
-test('en 90 × 120, pas de cadre : les cadres sont grisés et la rangée le dit', () => {
+/* Retour de Walid du 11/11/2026, solution « Prévenir et expliquer » : en 90 × 120, qui n'existe pas
+   encadré, un cadre se choisit encore et passe au 75 × 100 ; la rangée le dit. */
+test('en 90 × 120, pas de cadre : un cadre passe au 75 × 100, avec son prix là-bas, et la rangée le dit', () => {
   const big = { ...TOILE, size: '90x120' }
   assert.equal(both.available('frame', big, 'chene'), false)
   assert.equal(both.available('frame', big, 'sans'), true)
@@ -62,9 +64,19 @@ test('en 90 × 120, pas de cadre : les cadres sont grisés et la rangée le dit'
   assert.equal(both.canFrame('75x100'), true)
   assert.equal(both.unframedSize(), '90 × 120')
   const frames = choicesOf(both, TEXTS_FR, 'frame', big)
-  assert.equal(frames.note, 'Pas de cadre en 90 × 120')
-  assert.deepEqual(frames.options.map((o) => o.available), [true, false, false, false, false, false])
-  assert.equal(choicesOf(both, TEXTS_FR, 'frame', { ...POSTER, size: '90x120' }).options[1].available, false)
+  assert.equal(plain(frames.note), 'Avec cadre : jusqu’au 75 × 100')
+  assert.deepEqual(frames.options.map((o) => o.available), [true, true, true, true, true, true])
+  assert.deepEqual(euros(frames.options.map((o) => o.price)), ['', '+40 €', '+40 €', '+45 €', '+50 €', '+50 €'])
+  assert.deepEqual(pickOf(both, big, 'frame', 'chene').next, { ...big, size: '75x100', frame: 'chene' })
+  // Le poster aussi : son cadre passe au 75 × 100.
+  const posterBig = { ...POSTER, size: '90x120' }
+  assert.equal(choicesOf(both, TEXTS_FR, 'frame', posterBig).options[1].available, true)
+  assert.deepEqual(pickOf(both, posterBig, 'frame', 'noir').next, { ...posterBig, size: '75x100', frame: 'noir' })
+  // Le cadre retiré par le 90 × 120 revient au 60 × 80, et la vignette du 90 × 120 dit « sans cadre ».
+  const dropped = pickOf(both, { ...TOILE, frame: 'chene' }, 'size', '90x120')
+  assert.deepEqual([dropped.next.frame, dropped.held], ['sans', 'chene'])
+  assert.equal(pickOf(both, dropped.next, 'size', '60x80', dropped.held).next.frame, 'chene')
+  assert.deepEqual(choicesOf(both, TEXTS_FR, 'size', dropped.next, dropped.held).options.map((o) => o.caption), ['', '', '', 'sans cadre'])
 })
 
 test('les règles de la boutique : un cadre qui n’existe pas repasse sans cadre', () => {

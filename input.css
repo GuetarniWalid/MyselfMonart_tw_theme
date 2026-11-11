@@ -845,6 +845,51 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
 .chips-opt-price {
   min-height: 12px; font: 500 10px/1.2 var(--chips-font); color: var(--chips-soft); white-space: nowrap; font-variant-numeric: tabular-nums;
 }
+/* Le cadre qu'une taille n'a pas (retour de Walid du 11/11/2026, solution « Prévenir et expliquer ») :
+   « sans cadre » sous la vignette de cette taille, dans la place de la note de la rangée ; aux autres
+   tailles, le tableau de la vignette porte le cadre choisi (2 px de sa teinte, un filet d'encre pour le
+   blanc sur le fond clair). Texte en terre foncée, celle du bouton d'achat (5,3:1 sur le blanc) : la
+   terre claire du soulignement de la bascule n'a que 2,4:1. */
+.chips-opt-note { margin-top: -1px; font: 600 9.5px/1.2 var(--chips-font); color: rgb(var(--color-terra-rgb)); white-space: nowrap; }
+.chips-opt-note:empty { display: none; }
+.chips-opt.has-frame .chips-tile-art {
+  box-shadow: 0 0 0 2px var(--chips-frame-tone), 0 0 0 2.5px rgba(var(--color-main-rgb), 0.3), 1px 2px 3px rgba(var(--color-main-rgb), 0.24);
+}
+/* Le message d'un choix qui retire le cadre ou change la taille (oeuvre-3d-chips.js, noticeOf) : une
+   plaque de papier, comme « Retour » et la pilule, au-dessus de la rangée ouverte (data-anchor="rail",
+   son bas à 8 px d'elle) ou sous la bascule (data-anchor="top"). Son bouton, en terre foncée comme le
+   bouton d'achat, rejoue le choix proposé (« Garder le cadre ») ; 44 px de zone tactile. */
+.chips-notice {
+  position: absolute; z-index: 33; left: 50%; box-sizing: border-box;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; column-gap: 8px;
+  width: max-content; max-width: min(420px, calc(100% - 24px)); padding: 4px 6px 4px 16px; border-radius: 18px;
+  background: rgba(var(--color-secondary-rgb), 0.96); border: 1px solid rgba(var(--color-main-rgb), 0.12);
+  box-shadow: 0 10px 28px rgba(var(--color-main-rgb), 0.16), 0 1px 3px rgba(var(--color-main-rgb), 0.08);
+  color: var(--chips-ink); font: 500 13.5px/1.35 var(--chips-font); text-align: center;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transform: translate(-50%, calc(-100% + 8px));
+  transition: opacity 160ms ease, transform 200ms ease, visibility 0s linear 200ms;
+}
+.chips-notice[data-anchor="top"] { transform: translate(-50%, -8px); }
+.chips-notice.is-shown {
+  opacity: 1; visibility: visible; pointer-events: auto; transform: translate(-50%, -100%);
+  transition: opacity 220ms ease, transform 420ms var(--chips-curve), visibility 0s;
+}
+.chips-notice[data-anchor="top"].is-shown { transform: translate(-50%, 0); }
+.chips-notice:has(.chips-notice-action[hidden]) { padding-right: 16px; }
+.chips-notice-text { margin: 0; padding: 8px 0; }
+.chips-notice-action {
+  position: relative; display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 10px; margin: 0;
+  border: 0; border-radius: 999px; background: none; cursor: pointer; color: rgb(var(--color-terra-rgb));
+  font: 600 13.5px/1 var(--chips-font); white-space: nowrap; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+.chips-notice-action[hidden] { display: none; }
+.chips-notice-action::after { content: ""; position: absolute; inset: -4px 0; }
+.chips-notice-action:active { opacity: 0.6; }
+.chips-notice-arrow { flex: none; width: 15px; height: 15px; }
+@media (hover: hover) and (pointer: fine) {
+  .chips-notice-action:hover { background: rgba(var(--color-main-rgb), 0.06); }
+}
 
 .chips button:focus-visible { outline: 2px solid var(--chips-ink); outline-offset: 2px; }
 .chips .chips-opt:focus-visible { outline-offset: 0; border-radius: 10px; }
@@ -880,6 +925,9 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
 .chips.is-desk .chips-tile { width: 58px; height: 58px; border-radius: 14px; }
 .chips.is-desk .chips-opt-name { font-size: 12.5px; }
 .chips.is-desk .chips-opt-price { min-height: 13px; font-size: 11px; }
+.chips.is-desk .chips-opt-note { font-size: 10.5px; }
+.chips.is-desk .chips-notice { padding: 5px 8px 5px 18px; border-radius: 20px; font-size: 14.5px; }
+.chips.is-desk .chips-notice-action { height: 40px; font-size: 14.5px; }
 
 @media (hover: hover) and (pointer: fine) {
   .chips.is-ready .chips-legend:hover, .chips.is-ready .chips-cote:hover { opacity: 0.68; }
@@ -899,6 +947,8 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
   .chips.is-desk .chips-rail, .chips.is-desk .chips-rail.is-open { transform: translateX(-50%); }
   .chips-underline { transition: none; }
   .chips-pill, .chips-pill.chips-pill-away { translate: none; }
+  .chips-notice, .chips-notice.is-shown { transform: translate(-50%, -100%); }
+  .chips-notice[data-anchor="top"], .chips-notice[data-anchor="top"].is-shown { transform: translate(-50%, 0); }
 }
 }
 /* ==== Fiche 3D : la scène et ses chips (fin) ==== */

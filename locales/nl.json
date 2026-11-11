@@ -252,8 +252,13 @@
         "included": "inbegrepen",
         "unavailable": "niet beschikbaar in {{ size }}",
         "no_frame": "Geen lijst in {{ size }}",
-        "big_unframed": "In {{ size }} geleverd zonder lijst",
-        "unframed_hint": "zonder lijst"
+        "unframed_hint": "zonder lijst",
+        "unframed_size": "Het formaat {{ size }} wordt zonder lijst geleverd.",
+        "keep_frame": "Lijst behouden",
+        "size_moved": "Met lijst wordt het formaat {{ size }}.",
+        "stay_size": "{{ size }} houden",
+        "framed_up_to": "Met lijst: tot {{ size }}",
+        "frame_not_in": "{{ material }}: geen lijst in {{ frame }}, die is verwijderd."
       },
       "oeuvre_3d_names": {
         "border_blanche": "Wit",
