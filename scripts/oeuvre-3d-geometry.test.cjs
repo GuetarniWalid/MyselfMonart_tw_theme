@@ -2,8 +2,8 @@
 const test = require('node:test')
 const assert = require('node:assert/strict')
 const {
-  artBox, backLayout, backShell, convexHull, curlOutline, curlPoint, curlShape, curlSheet, frameProfile, frameRing,
-  stapleRowToCorner, stapleRows, FRAME_PROFILE,
+  artBox, backLayout, backShell, convexHull, curlOutline, curlPoint, curlShape, curlSheet, frameOpening, frameProfile, frameRing,
+  posterBackLayout, posterBoard, stapleRowToCorner, stapleRows, FRAME_PROFILE, POSTER_BACK,
 } = require('../assets/oeuvre-3d-engine.js')
 
 test("vue de près, l'image ne saute pas entre l'arête arrondie et la tranche", () => {
@@ -47,10 +47,9 @@ const triangles = ({ position, normal, index }) => {
 const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
 
 test('le moteur et ses shaders se chargent', () => {
-  const { BACK_FRAGMENT, BACK_VERTEX, createScene } = require('../assets/oeuvre-3d-engine.js')
+  const { BACK_FRAGMENT, BACK_VERTEX, BOARD_FRAGMENT, BOARD_VERTEX, createScene } = require('../assets/oeuvre-3d-engine.js')
   assert.equal(typeof createScene, 'function')
-  assert.match(BACK_VERTEX, /void main/)
-  assert.match(BACK_FRAGMENT, /void main/)
+  for (const shader of [BACK_VERTEX, BACK_FRAGMENT, BOARD_VERTEX, BOARD_FRAGMENT]) assert.match(shader, /void main/)
 })
 
 test('la toile a des coins arrondis, la feuille de papier des coins vifs', () => {
@@ -121,6 +120,75 @@ test('le jour, la lèvre, la face et le dos de la caisse ne bougent pas', () => 
     [-f.gap, 0],
     [-f.gap, f.floor],
   ])
+})
+
+/* Retour de Walid du 11/11 : le poster encadré fait un tour sur lui-même et montre son dos (« derrière,
+   tu n'as qu'à mettre une espèce de mélaminé marron, comme ils font, avec le crochet déjà installé
+   dessus »). Jusque-là, la baguette sous verre était ouverte à l'arrière. */
+test('la baguette sous verre ne change pas de face ; de dos, elle se referme sur sa feuillure', () => {
+  const f = FRAME_PROFILE.poster
+  const c = 0.08
+  const profile = frameProfile('poster', f)
+  assert.deepEqual(profile.slice(0, 6), [
+    [0, f.floor + 0.1, 0.7],
+    [0, f.depth - c, 0.95],
+    [c, f.depth],
+    [f.face - c, f.depth],
+    [f.face, f.depth - c],
+    [f.face, 0],
+  ], 'la lèvre, la face et la tranche restent celles de la fiche')
+  const rabbet = -f.gap + POSTER_BACK.play
+  const back = profile.slice(5)
+  assert.deepEqual(back[1].slice(0, 2), [rabbet, 0], 'le dos plat de la baguette, au ras du mur')
+  assert.ok(rabbet > -f.gap && rabbet < f.face - 0.5, 'la feuillure passe le bord du tirage, le dos garde de la largeur')
+  assert.ok(back.slice(1).every(([u]) => u === rabbet), 'puis la paroi de la feuillure')
+  assert.ok(back[back.length - 1][1] >= f.floor, 'la paroi monte jusqu’au tirage : rien ne se voit à travers')
+
+  const ring = frameRing({ ...frameOpening(30, 40, f), profile })
+  for (const t of triangles(ring)) assert.ok(dot(t.face, t.normal) > 0, 'chaque face regarde le long de sa normale')
+  const rear = triangles(ring).filter((t) => t.normal[2] < -0.99 && [t.a, t.b, t.c].every((p) => Math.abs(p[2]) < 1e-6))
+  assert.ok(rear.length >= 8, 'une face tournée vers le mur sur les quatre baguettes')
+})
+
+test('le panneau du dos ferme la feuillure, en retrait de 2 à 3 mm sous le dos de la baguette', () => {
+  const f = FRAME_PROFILE.poster
+  for (const [W, H] of [[30, 40], [90, 120], [40, 30], [60, 60]]) {
+    const board = posterBoard({ width: W, height: H })
+    const opening = frameOpening(W, H, f)
+    const rabbet = -f.gap + POSTER_BACK.play
+    let maxX = 0, maxY = 0
+    for (let v = 0; v < board.position.length; v += 3) {
+      maxX = Math.max(maxX, Math.abs(board.position[v]))
+      maxY = Math.max(maxY, Math.abs(board.position[v + 1]))
+      const z = board.position[v + 2]
+      assert.ok(z >= 0.2 && z <= 0.3, `${W} × ${H} : panneau à ${z} cm du dos de la baguette`)
+    }
+    // Float32Array : 15,1 cm y vaut 15,100000381.
+    assert.ok(Math.abs(maxX - (opening.hw + rabbet)) < 1e-5 && Math.abs(maxY - (opening.hh + rabbet)) < 1e-5, `${W} × ${H} : le panneau touche la paroi de la feuillure`)
+    for (const t of triangles(board)) {
+      assert.ok(t.normal[2] < -0.99, 'il regarde vers le mur')
+      assert.ok(dot(t.face, t.normal) > 0)
+    }
+  }
+})
+
+test('le crochet est en haut au milieu du panneau, les pattes sur ses bords, sans se toucher', () => {
+  for (const [W, H] of [[30, 40], [60, 80], [90, 120], [40, 30], [60, 60]]) {
+    const { half, hanger, tabs } = posterBackLayout(W, H)
+    assert.equal(hanger.x, 0)
+    assert.ok(Math.abs(hanger.width - 4.5) < 1e-9 && Math.abs(hanger.height - 1) < 1e-9, 'une attache dents de scie de 4,5 × 1 cm')
+    const top = hanger.y + hanger.height / 2
+    assert.ok(top < half[1] - tabs.length - 0.5 && top > half[1] - 8, `${W} × ${H} : crochet à ${(half[1] - top).toFixed(1)} cm du haut`)
+    for (const [name, row, side] of [['haut et bas', tabs.across, half[0]], ['côtés', tabs.along, half[1]]]) {
+      assert.ok(row.count >= 2, `${W} × ${H} : au moins deux pattes par bord (${name})`)
+      const at = Array.from({ length: row.count }, (_, k) => row.first + k * row.gap)
+      assert.ok(at[0] > -side + 3 && at[at.length - 1] < side - 3, `${W} × ${H} : pattes loin des coins (${name})`)
+      if (row.count > 1) assert.ok(row.gap >= 10 && row.gap <= 22, `${W} × ${H} : une patte tous les ${row.gap.toFixed(1)} cm (${name})`)
+    }
+    // Sur le bord du haut, aucune patte ne tombe sur le crochet.
+    const across = Array.from({ length: tabs.across.count }, (_, k) => tabs.across.first + k * tabs.across.gap)
+    assert.ok(across.every((x) => Math.abs(x) > hanger.width / 2 + tabs.width), `${W} × ${H} : une patte sur le crochet`)
+  }
 })
 
 test('la toile laisse son dos ouvert au châssis ; la feuille de papier reste fermée', () => {

@@ -2,7 +2,7 @@
 // Lancer : node --test scripts/oeuvre-3d-staging.test.cjs  (lanceur intégré de Node, sans dépendance)
 const { test } = require('node:test')
 const assert = require('node:assert/strict')
-const { createDirector, curlCorner, paintingCorners } = require('../assets/oeuvre-3d-engine.js')
+const { createDirector, curlCorner, paintingCorners, GLASS_ROOM } = require('../assets/oeuvre-3d-engine.js')
 
 // La pièce réglée à la main au prototype : la photo et le mur sont les vrais, pour que ces tests
 // restent ceux du ticket 02 (lumière venant de la gauche, canapé, cadrage du recul).
@@ -458,30 +458,167 @@ test('choisir le contour blanc zoome de face sur la marge du poster', () => {
   assert.ok(visibleHeight <= 0.45 * p.height, `zoom trop large : ${visibleHeight.toFixed(1)} cm`)
 })
 
-test("passer au poster avec un cadre montre de trois-quarts le tableau qui s'affine : pas de coin soulevé sous verre", () => {
-  const framed = { ...TOILE, frame: 'chene' }
-  const director = createDirector({ room: ROOM, product: framed })
-  director.choose('material', { ...framed, material: 'poster' }, 0)
+/* Retour de Walid du 11/11 : « quand on [bascule] à poster et que c'est un cadre, le poster ne se met
+   pas de face. Il reste penché de profil ». Sous verre, le papier ne peut pas se soulever : le tableau
+   fait un tour sur lui-même, comme la toile, pour qu'on voie son dos, puis se recale de face. */
+const GLAZED_END = 4000 // ms : fin du tour du poster encadré
+const POSTER_FRAMED = { ...POSTER, frame: 'noir' }
 
-  let previous = director.view(0, PORTRAIT).painting.depth
-  assert.equal(previous, 2)
-  let sawBetween = false
-  for (let t = 0; t <= LATER; t += 20) {
-    const { depth, curl } = director.view(t, PORTRAIT).painting
-    assert.equal(curl, 0, 'sous verre, le papier ne se soulève pas')
-    assert.ok(depth <= previous + 1e-9, 'l’épaisseur ne fait que diminuer')
-    if (depth > 0.1 && depth < 1.9) sawBetween = true
-    previous = depth
+for (const from of [{ ...TOILE, frame: 'noir' }, { ...TOILE, size: '90x120', frame: 'chene' }]) {
+  test(`toile ${from.size} encadrée, puis Poster : le tableau s'affine, fait un tour sur lui-même, montre son dos et revient de face`, () => {
+    const director = createDirector({ room: ROOM, product: from })
+    director.choose('material', { ...from, material: 'poster' }, 0)
+    let depth = director.view(0, PORTRAIT).painting.depth
+    assert.equal(depth, 2)
+    let previous = 0
+    let most = 0
+    let ofBack = 0
+    for (let t = 0; t <= LATER; t += 16) {
+      const view = director.view(t, PORTRAIT)
+      const p = view.painting
+      assert.equal(p.curl, 0, 'sous verre, le papier ne se soulève pas')
+      assert.ok(p.depth <= depth + 1e-9, 'l’épaisseur ne fait que diminuer')
+      depth = p.depth
+      const turned = Math.abs(p.yaw)
+      if (t < GLAZED_END) assert.ok(turned >= previous - 1e-9, `le tour recule à ${t} ms`)
+      assert.ok(Math.abs(wrapped(turned - previous)) < 0.09, `le tour saute à ${t} ms : ${wrapped(turned - previous).toFixed(3)} rad`)
+      previous = turned
+      most = Math.max(most, turned)
+      if (Math.abs(turned - Math.PI) < (25 * Math.PI) / 180) {
+        assert.ok(p.paper === 1 && p.framed === 1, 'de dos, c’est déjà le poster dans son cadre')
+        ofBack += 16
+      }
+      for (const c of paintingCorners(p, 'outer')) {
+        assert.ok(c[2] >= -1e-6, `traversée du mur à ${t} ms`)
+        const { x, y } = project(view.camera, PORTRAIT, c)
+        assert.ok(Math.abs(x) <= 1 && Math.abs(y) <= 1, `coin hors de l'écran à ${t} ms : ${x.toFixed(2)}, ${y.toFixed(2)}`)
+      }
+    }
+    assert.ok(ofBack >= 600, `dos trop vite passé : ${ofBack} ms`)
+    assert.ok(Math.abs(most - FULL_TURN) < 0.05, `tour incomplet : ${most.toFixed(2)} rad`)
+    const rest = director.view(GLAZED_END, PORTRAIT)
+    assert.equal(rest.shot, 'front', 'il se recale de face : plus de plaques ni de « De face »')
+    assert.equal(rest.painting.yaw, 0)
+    assert.equal(rest.painting.z, 0)
+    assert.equal(rest.painting.depth, 0.05)
+    assert.equal(rest.painting.paper, 1)
+    assert.equal(rest.painting.framed, 1)
+    assert.equal(director.isMoving(GLAZED_END), false)
+  })
+}
+
+/* Sa première idée : « un pivot droite-gauche pour qu'on voie la lumière qui se reflète [sur la vitre],
+   qu'on comprenne qu'il y a une vitre ». Les premiers et les derniers degrés du tour passent lentement :
+   le reflet de la fenêtre a le temps de glisser sur le verre, au départ et au retour. */
+test('le poster encadré passe lentement ses premiers et ses derniers degrés : le reflet glisse sur le verre', () => {
+  const director = choosePoster({ ...TOILE, frame: 'noir' })
+  const DEGREE = Math.PI / 180
+  let leaving = 0
+  let landing = 0
+  for (let t = 0; t <= GLAZED_END; t += 4) {
+    const turned = Math.abs(director.view(t, PORTRAIT).painting.yaw)
+    if (turned > 0.5 * DEGREE && turned < 15 * DEGREE) leaving += 4
+    if (turned > 345 * DEGREE && turned < 359.5 * DEGREE) landing += 4
   }
-  assert.ok(sawBetween, 'l’épaisseur passe par des valeurs intermédiaires')
+  // Mesurés ainsi, le tour de la toile passe ces degrés en 156 ms au départ comme au retour.
+  assert.ok(leaving >= 450, `départ trop vif : ${leaving} ms sur les 15 premiers degrés`)
+  assert.ok(landing >= 450, `retour trop vif : ${landing} ms sur les 15 derniers degrés`)
+})
 
-  const view = director.view(LATER, PORTRAIT)
-  assert.equal(view.shot, 'material')
-  assert.equal(view.painting.depth, 0.05)
-  assert.equal(view.painting.paper, 1)
-  const lit = mid(paintingCorners(view.painting).filter((c) => c.side.x < 0))
-  const toCamera = unit(sub(view.camera.position, lit))
-  assert.ok(toCamera[0] <= -0.3, 'la caméra voit le tableau de profil, côté fenêtre')
+/* Le reflet qui doit glisser sur le verre est celui des portes-fenêtres du mur d'en face (GLASS_ROOM,
+   dans le shader du verre). Le miroir est refait ici, sans le moteur : pour chaque point du verre vu de
+   la caméra, le rayon réfléchi touche-t-il une porte-fenêtre ? share : part du verre qui la reflète ;
+   center : milieu de ce reflet, de -1 (bord gauche du verre) à 1 (bord droit). */
+function bayOnGlass(view) {
+  const p = view.painting
+  const turn = ([x, y, z]) => {
+    const cp = Math.cos(p.pitch), sp = Math.sin(p.pitch), cy = Math.cos(p.yaw), sy = Math.sin(p.yaw)
+    const y1 = y * cp - z * sp, z1 = y * sp + z * cp
+    return [x * cy + z1 * sy, y1, -x * sy + z1 * cy]
+  }
+  const { wall, bays } = GLASS_ROOM
+  const hw = p.width / 2 + p.frame.gap, hh = p.height / 2 + p.frame.gap
+  const normal = turn([0, 0, 1])
+  const GRID = 40
+  let hits = 0, across = 0
+  for (let i = 0; i <= GRID; i++) {
+    for (let j = 0; j <= GRID; j++) {
+      const u = -1 + (2 * i) / GRID
+      const point = turn([u * hw, (-1 + (2 * j) / GRID) * hh, p.frame.floor + 0.1]).map((v, k) => v + [p.x, p.y, p.z][k])
+      const eye = unit(sub(view.camera.position, point))
+      const facing = dot(normal, eye)
+      if (facing <= 0) continue
+      const ray = normal.map((n, k) => 2 * facing * n - eye[k])
+      if (ray[2] < 0.08) continue
+      const t = (p.z + wall - point[2]) / ray[2]
+      const x = point[0] + ray[0] * t - p.x, y = point[1] + ray[1] * t - p.y
+      if (Math.abs(Math.abs(x) - bays.x) < bays.half[0] && Math.abs(y - bays.y) < bays.half[1]) {
+        hits++
+        across += u
+      }
+    }
+  }
+  return { share: hits / (GRID + 1) ** 2, center: hits ? across / hits : null }
+}
+
+for (const size of ['30x40', '75x100']) {
+  for (const aspect of [PORTRAIT, 1.8]) {
+    test(`${size}, écran ${aspect} : pendant les degrés lents du poster encadré, au départ et au retour, une porte-fenêtre se reflète et glisse sur le verre`, () => {
+      const director = choosePoster({ ...TOILE, size, frame: 'noir' })
+      const DEGREE = Math.PI / 180
+      const phases = { départ: [], retour: [] }
+      for (let t = 0; t <= GLAZED_END; t += 20) {
+        const view = director.view(t, aspect)
+        const turned = Math.abs(view.painting.yaw)
+        const phase = turned > 0.5 * DEGREE && turned < 15 * DEGREE ? 'départ' : turned > 345 * DEGREE && turned < 359.5 * DEGREE ? 'retour' : null
+        if (phase) phases[phase].push(bayOnGlass(view))
+      }
+      for (const [name, frames] of Object.entries(phases)) {
+        const seen = frames.filter((f) => f.share > 0.02)
+        const most = Math.max(...frames.map((f) => f.share))
+        const centers = seen.map((f) => f.center)
+        const travel = centers.length ? Math.max(...centers) - Math.min(...centers) : 0
+        assert.ok(most >= 0.15, `${name} : le reflet ne couvre que ${(most * 100).toFixed(0)} % du verre`)
+        assert.ok(travel >= 0.75, `${name} : le reflet ne glisse que sur ${(travel * 50).toFixed(0)} % de la largeur du verre`)
+        assert.ok(seen.length * 20 >= 200, `${name} : le reflet ne passe que ${seen.length * 20} ms`)
+      }
+    })
+  }
+}
+
+test('retoucher Poster sous un cadre rejoue le tour', () => {
+  const framed = { ...POSTER_FRAMED }
+  const director = createDirector({ room: ROOM, product: framed })
+  director.choose('material', framed, 0)
+  const spun = (from) => Math.max(...[...Array(120).keys()].map((i) => Math.abs(wrapped(director.view(from + 40 * i, PORTRAIT).painting.yaw))))
+  assert.ok(spun(0) > 3, 'le premier toucher fait tourner le tableau')
+  director.choose('material', framed, LATER)
+  assert.ok(spun(LATER) > 3, 'le second aussi')
+  assert.equal(director.view(2 * LATER, PORTRAIT).shot, 'front')
+})
+
+test('choisir autre chose pendant le tour du poster encadré : il se finit sur son chemin, sans saut ni traversée du mur', () => {
+  for (const at of [600, 1400, 2000, 2600, 3400]) {
+    const director = choosePoster({ ...TOILE, frame: 'noir' })
+    const before = director.view(at - 1, PORTRAIT)
+    director.choose('frame', { ...POSTER_FRAMED, frame: 'chene' }, at)
+    const after = director.view(at + 1, PORTRAIT)
+    assert.ok(Math.abs(wrapped(before.painting.yaw - after.painting.yaw)) < 0.05, `saut d'angle à ${at} ms`)
+    assert.ok(Math.hypot(...sub(before.camera.position, after.camera.position)) < 1, `saut de caméra à ${at} ms`)
+    let previous = after.painting.yaw
+    for (let t = at; t <= at + LATER; t += 16) {
+      const view = director.view(t, PORTRAIT)
+      assert.ok(Math.abs(wrapped(view.painting.yaw - previous)) < 0.11, `le tableau fouette ${t - at} ms après le clic de ${at} ms`)
+      previous = view.painting.yaw
+      for (const c of paintingCorners(view.painting, 'outer')) {
+        assert.ok(c[2] >= -1e-6, `traversée du mur ${t - at} ms après le clic de ${at} ms`)
+      }
+    }
+    const rest = director.view(at + LATER, PORTRAIT)
+    assert.equal(rest.shot, 'corner')
+    assert.equal(rest.painting.yaw, 0)
+    assert.equal(rest.painting.z, 0)
+  }
 })
 
 const ALL_SIZES = ['30x40', '60x80', '75x100', '90x120']
@@ -791,6 +928,12 @@ test('avec les animations réduites, choisir la toile ou le poster ne fait ni to
   poster.choose('material', { ...TOILE, material: 'poster' }, 0)
   assert.equal(poster.isMoving(1), false)
   assert.equal(poster.view(1, PORTRAIT).painting.curl, 0)
+
+  const framed = createDirector({ room: ROOM, product: { ...TOILE, frame: 'noir' }, reducedMotion: true })
+  framed.choose('material', POSTER_FRAMED, 0)
+  assert.equal(framed.isMoving(1), false)
+  assert.equal(framed.view(1, PORTRAIT).painting.yaw, 0)
+  assert.equal(framed.view(1, PORTRAIT).shot, 'material', 'comme avant : la caméra tourne autour du tableau resté au mur')
 })
 
 test('choisir le poster sans cadre soulève un coin du papier, qui s’enroule puis retombe, et revient de face', () => {

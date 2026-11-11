@@ -40,6 +40,14 @@ export const FRAME_PROFILE = {
   poster: { gap: -0.5, face: 1.6, depth: 2.0, floor: 1.6 }, // baguette sous verre, tirage collé au verre
 }
 
+/* Dos du poster encadré, qui se voit quand il fait son tour (retour de Walid du 11/11 : « derrière,
+   tu n'as qu'à mettre une espèce de mélaminé marron, comme ils font, avec le crochet déjà installé
+   dessus »). Derrière la lèvre, la baguette a une feuillure où s'empilent le verre, le tirage et un
+   panneau d'isorel, tenu par des pattes de fixation ; un crochet dents de scie est riveté en haut au
+   milieu du panneau. play : jeu entre le bord du tirage et la paroi de la feuillure ; recess :
+   retrait du panneau sous le dos de la baguette. */
+export const POSTER_BACK = { play: 0.1, recess: 0.25 }
+
 // Taille du moteur (« 30x40 ») : largeur et hauteur en cm.
 export function dimensionsOf(size) {
   const [width, height] = size.split('x').map(Number)
@@ -518,7 +526,9 @@ export function frameRing({ hw, hh, profile }) {
    toile de la largeur de son angle arrondi : au bord carré, il laissait voir le mur à l'angle
    (gros plan sur le jour, 09/11). Tourné vers l'avant, il ne se voit pas de dos ; de face, la
    toile le cache partout ailleurs.
-   Poster : baguette dont la feuillure recouvre le bord du tirage, verre. */
+   Poster : baguette dont la lèvre recouvre le bord du tirage, verre ; de dos (son tour, 11/11), le
+   dos plat de la baguette, puis la paroi de la feuillure, que le panneau du dos ferme (posterBoard).
+   La paroi monte jusqu'au tirage : rien de l'intérieur ne se voit entre elle et le panneau. */
 const CHAMFER = 0.08
 
 export function frameProfile(kind, f) {
@@ -538,6 +548,7 @@ export function frameProfile(kind, f) {
     ]
   }
   const glassZ = f.floor + 0.1
+  const rabbet = -f.gap + POSTER_BACK.play
   return [
     [0, glassZ, 0.7],
     [0, f.depth - c, 0.95],
@@ -545,13 +556,51 @@ export function frameProfile(kind, f) {
     [f.face - c, f.depth],
     [f.face, f.depth - c],
     [f.face, 0],
+    [rabbet, 0],
+    [rabbet, POSTER_BACK.recess, 0.55],
+    [rabbet, glassZ, 0.4],
   ]
 }
 
-// Demi-tailles de l'ouverture du cadre pour une œuvre W × H (gap négatif : la feuillure
+// Demi-tailles de l'ouverture du cadre pour une œuvre W × H (gap négatif : la lèvre
 // recouvre le bord de l'œuvre).
 export function frameOpening(W, H, f) {
   return { hw: W / 2 + f.gap, hh: H / 2 + f.gap }
+}
+
+/* Le panneau du dos du poster encadré et ce qu'il porte, en cm, vu de dos (x vers la gauche du regard,
+   tout y est symétrique). half : demi-tailles du panneau, qui touche la paroi de la feuillure. hanger :
+   le crochet, son haut à 2,5 cm du bord plus 3 % de la hauteur (3,7 cm en 30 × 40, 5,5 cm en 75 × 100).
+   tabs : les pattes de fixation, à égale distance le long de chaque bord, en nombre pair en haut et en
+   bas (le crochet a le milieu) ; width et length, leur part visible sur le panneau. */
+const HANGER = { width: 4.5, height: 1 }
+const TAB = { width: 0.5, length: 1.3, every: 18 }
+
+export function posterBackLayout(W, H) {
+  const half = [W / 2 + POSTER_BACK.play, H / 2 + POSTER_BACK.play]
+  const fromTop = 2.5 + 0.03 * H
+  const row = (span, even) => {
+    const count = even ? 2 * Math.max(1, Math.round(span / (2 * TAB.every))) : Math.max(2, Math.round(span / TAB.every))
+    const gap = span / count
+    return { first: (gap - span) / 2, gap, count }
+  }
+  return {
+    half,
+    hanger: { x: 0, y: half[1] - fromTop - HANGER.height / 2, ...HANGER },
+    tabs: { width: TAB.width, length: TAB.length, across: row(2 * half[0], true), along: row(2 * half[1], false) },
+  }
+}
+
+// Le panneau : un rectangle tourné vers le mur. Tout son détail est peint par son shader (BOARD_FRAGMENT).
+export function posterBoard({ width: W, height: H }) {
+  const [hw, hh] = posterBackLayout(W, H).half
+  const position = [], normal = [], uv = []
+  for (const [x, y] of [[-hw, -hh], [hw, -hh], [hw, hh], [-hw, hh]]) {
+    position.push(x, y, POSTER_BACK.recess)
+    normal.push(0, 0, -1)
+    uv.push(x, y)
+  }
+  return pack({ position, normal, uv, index: [0, 2, 1, 0, 3, 2] })
 }
 
 // Enveloppe convexe 2D (chaîne monotone d'Andrew), sens trigonométrique : l'ombre du
@@ -778,6 +827,22 @@ export function paintMarks(canvas, sizes) {
 
 export const BACK_COLORS = { band: '#f1efe9', raw: '#e9e6df', pine: '#e6dccb' }
 
+/* Peints en cm, au pixel près : les shaders du dos de la toile et du panneau du poster encadré. pixel :
+   la taille d'un pixel à l'écran, en cm, que chacun pose au début de main ; inside lisse un bord sur
+   un pixel ; hash, un tirage répétable. */
+const CM_SHAPES = /* glsl */ `
+  float pixel; // taille d'un pixel à l'écran, en cm
+
+  // 1 là où v > 0, 0 ailleurs, bord lissé sur un pixel.
+  float inside(float v) {
+    return clamp(v / pixel + 0.5, 0.0, 1.0);
+  }
+
+  float hash(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+  }
+`
+
 export const BACK_VERTEX = /* glsl */ `
   attribute float part;
   varying vec3 vLocal;
@@ -835,16 +900,7 @@ export const BACK_FRAGMENT = /* glsl */ `
   const vec2 FOLD_TIP = vec2(0.25, 0.3625); // tout petit rabat replié de la pointe, de même
   const float OAK_MEAN = 1.34; // somme moyenne des trois canaux de l'image de chêne
 
-  float pixel; // taille d'un pixel à l'écran, en cm
-
-  // 1 là où v > 0, 0 ailleurs, bord lissé sur un pixel.
-  float inside(float v) {
-    return clamp(v / pixel + 0.5, 0.0, 1.0);
-  }
-
-  float hash(vec2 p) {
-    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
-  }
+  ${CM_SHAPES}
 
   // Pin : sa propre teinte, avec le fil du chêne des cadres. q.y suit le fil.
   vec3 pine(vec2 q) {
@@ -1041,6 +1097,192 @@ export const BACK_FRAGMENT = /* glsl */ `
   }
 `
 
+/* ==== DOS DU POSTER ENCADRÉ ==== */
+
+/* Le panneau du dos (POSTER_BACK), peint par son shader en cm comme le dos de la toile : rien à
+   télécharger. L'isorel, brun chaud et lisse, ses taches douces, ses fibres fines et son léger lustre ;
+   le long des bords, le joint avec la feuillure, l'ombre de la baguette 2,5 mm plus haut et les pattes
+   de fixation ; en haut au milieu, le crochet en métal noir. Sa partie dentée est cintrée, décollée du
+   panneau pour qu'un clou passe derrière ; ses deux bouts y sont plaqués par un rivet. Les détails plus
+   fins qu'un pixel s'effacent : rien ne scintille pendant le tour. Tout se calcule dans le repère du
+   tableau (lumière et caméra comprises) : le panneau y regarde vers -z. */
+export const BOARD_COLORS = { board: '#7b5a40', hanger: '#151517', tab: '#9a9da3' }
+
+export const BOARD_VERTEX = /* glsl */ `
+  varying vec3 vLocal;
+  void main() {
+    vLocal = position;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`
+
+export const BOARD_FRAGMENT = /* glsl */ `
+  uniform vec3 uBoardColor;
+  uniform vec3 uHangerColor;
+  uniform vec3 uTabColor;
+  uniform vec2 uHalf; // demi-tailles du panneau
+  uniform float uRecess; // retrait du panneau sous le dos de la baguette
+  uniform vec4 uHanger; // crochet : milieu (x, y), largeur, hauteur
+  uniform vec3 uTabsAcross; // pattes des bords haut et bas : première, écart, nombre
+  uniform vec3 uTabsAlong; // et des bords gauche et droit
+  uniform vec2 uTab; // largeur et longueur visible d'une patte
+  uniform vec3 uLightLocal; // vers la lumière, dans le repère du tableau
+  uniform vec3 uEyeLocal; // la caméra, dans le même repère
+  uniform float uAmbient;
+  uniform float uDiffuse;
+  uniform float uNorm;
+  uniform float uOpacity;
+  varying vec3 vLocal;
+
+  const vec3 OUT = vec3(0.0, 0.0, -1.0); // le panneau regarde vers le mur, au repos
+  const float SHEET = 0.05; // épaisseur du métal, cm
+  const float ARCH = 0.2; // hauteur de la partie dentée, cintrée, au-dessus du panneau
+  const float PITCH = 0.16; // pas des dents
+  const float TOOTH = 0.09; // profondeur d'une dent
+  const float RIVET = 0.13; // rayon d'un rivet
+
+  ${CM_SHAPES}
+
+  float noise(vec2 p) {
+    vec2 i = floor(p), f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), u.x), mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
+  }
+
+  // Variation de fréquence f (par cm), de -0,5 à 0,5, effacée avant de tomber sous le pixel.
+  float grainAt(vec2 p, float f) {
+    return (noise(p * f) - 0.5) * (1.0 - smoothstep(0.15, 0.4, f * pixel));
+  }
+
+  // Isorel : nuages larges et doux, fibres fines un peu étirées, de rares points plus sombres.
+  vec3 boardColor(vec2 p) {
+    float tone = 0.07 * grainAt(p, 0.12) + 0.025 * grainAt(p + 7.3, 0.6) + 0.035 * grainAt(p * vec2(1.0, 2.6), 3.5) + 0.03 * grainAt(p, 12.0);
+    float fleck = smoothstep(0.88, 0.97, noise(p * 9.0 + 3.1)) * (1.0 - smoothstep(0.15, 0.4, 9.0 * pixel));
+    return uBoardColor * (1.0 + tone) * (1.0 - 0.07 * fleck);
+  }
+
+  // Distance signée à un rectangle aux coins arrondis (rayon r), de demi-tailles h, centré.
+  float roundedBox(vec2 q, vec2 h, float r) {
+    vec2 d = abs(q) - h + r;
+    return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0) - r;
+  }
+
+  // Crochet (q : depuis son milieu) : < 0 dedans. Ses dents, au bas de la partie centrale, pointent
+  // vers le bas ; moins de 3 pixels par dent, elles s'effacent.
+  float hangerShape(vec2 q) {
+    vec2 h = 0.5 * uHanger.zw;
+    float d = roundedBox(q, h, 0.3 * h.y);
+    float saw = abs(fract(q.x / PITCH) - 0.5) * 2.0;
+    float toothed = (1.0 - smoothstep(h.x - 0.95, h.x - 0.8, abs(q.x))) * smoothstep(2.0, 4.0, PITCH / pixel);
+    return max(d, -h.y + TOOTH * (1.0 - saw) * toothed - q.y);
+  }
+
+  // Hauteur du métal au-dessus du panneau : la partie dentée cintrée, les bouts plaqués, les plis doux.
+  float hangerHeight(float x) {
+    float h = 0.5 * uHanger.z;
+    return mix(ARCH, SHEET, smoothstep(h - 1.0, h - 0.45, abs(x)));
+  }
+
+  // Rivets, aux deux bouts : distance à leur bord (< 0 dedans) et leur milieu.
+  vec3 rivet(vec2 q) {
+    vec2 c = vec2(sign(q.x) * (0.5 * uHanger.z - 0.28), 0.0);
+    return vec3(length(q - c) - RIVET, c);
+  }
+
+  // Patte de fixation la plus proche de p : < 0 dedans. Elle sort de la paroi de la feuillure (le bord
+  // du panneau) et s'avance de uTab.y sur lui, son bout arrondi.
+  float tabShape(vec2 p) {
+    vec2 a = abs(p);
+    vec2 h = vec2(0.5 * uTab.x, 0.5 * uTab.y + 0.1);
+    float k = clamp(floor((p.x - uTabsAcross.x) / uTabsAcross.y + 0.5), 0.0, uTabsAcross.z - 1.0);
+    vec2 across = vec2(p.x - (uTabsAcross.x + k * uTabsAcross.y), a.y - uHalf.y + h.y - 0.2);
+    float j = clamp(floor((p.y - uTabsAlong.x) / uTabsAlong.y + 0.5), 0.0, uTabsAlong.z - 1.0);
+    vec2 along = vec2(p.y - (uTabsAlong.x + j * uTabsAlong.y), a.x - uHalf.x + h.y - 0.2);
+    return min(roundedBox(across, h, 0.5 * uTab.x), roundedBox(along, h, 0.5 * uTab.x));
+  }
+
+  // Lumière d'une surface de normale n : la même règle que la façade (luminosité plafonnée), et un
+  // reflet de la lumière (shine : sa finesse, gloss : sa force). direct : part de lumière directe reçue.
+  vec3 shade(vec3 albedo, vec3 n, float direct, float ao, float shine, float gloss) {
+    float facing = max(dot(n, uLightLocal), 0.0);
+    float k = (uAmbient * ao + uDiffuse * facing * direct) * uNorm;
+    vec3 v = normalize(uEyeLocal - vLocal);
+    vec3 h = normalize(uLightLocal + v);
+    float spec = pow(max(dot(n, h), 0.0), shine) * gloss * direct * step(0.0, dot(n, uLightLocal));
+    return albedo * min(k, 1.0) + vec3(spec);
+  }
+
+  // Noir satiné : un peu de lumière, le reflet doux de la pièce (plus clair vers le haut), l'éclat de la
+  // lumière, plus vif sur les arêtes et les plis.
+  vec3 blackMetal(vec3 n, float gloss) {
+    vec3 v = normalize(uEyeLocal - vLocal);
+    vec3 r = reflect(-v, n);
+    float grazing = pow(1.0 - max(dot(n, v), 0.0), 3.0);
+    vec3 room = vec3(0.018 + 0.06 * smoothstep(-0.3, 0.9, r.y)) * (0.6 + 0.4 * grazing);
+    return shade(uHangerColor, n, 1.0, 1.0, 34.0, gloss) + room;
+  }
+
+  void main() {
+    vec2 p = vLocal.xy;
+    pixel = max(max(fwidth(p.x), fwidth(p.y)), 1e-4);
+    vec3 L = uLightLocal;
+    // Vers la lumière, le chemin qui monte de h cm au-dessus du panneau (la lumière vient de l'arrière).
+    vec2 towardLight = L.xy / max(-L.z, 0.08);
+
+    // La baguette, 2,5 mm plus haut, ombre le bord du panneau du côté opposé à la lumière.
+    vec2 exit = p + towardLight * uRecess;
+    float open = min(uHalf.x - abs(exit.x), uHalf.y - abs(exit.y));
+    float lit = smoothstep(-0.5, 0.5, open / max(pixel, 0.03)) * step(L.z, 0.0);
+    float edge = min(uHalf.x - abs(p.x), uHalf.y - abs(p.y));
+    float ao = 1.0 - 0.25 * exp(-edge / 0.2);
+
+    // Le crochet : son ombre (la partie cintrée la porte plus loin), un peu de contact autour.
+    vec2 q = p - uHanger.xy;
+    float rise = hangerHeight(q.x + towardLight.x * ARCH);
+    vec2 caster = q + towardLight * rise;
+    float soft = max(pixel, 0.03 + 0.2 * rise);
+    float hangerShadow = 1.0 - smoothstep(-soft, soft, hangerShape(caster));
+    float tabShadow = 1.0 - smoothstep(-0.03, 0.03, tabShape(p + towardLight * SHEET));
+    float shape = hangerShape(q);
+    ao *= 1.0 - 0.35 * exp(-max(shape, 0.0) / 0.06) * (1.0 - inside(-shape));
+
+    vec3 color = shade(boardColor(p), OUT, lit * (1.0 - 0.85 * hangerShadow) * (1.0 - 0.7 * tabShadow), ao, 14.0, 0.035);
+    // Le joint entre le panneau et la paroi de la feuillure.
+    color *= 1.0 - 0.6 * inside(0.035 - edge);
+
+    // Pattes : acier galvanisé, posées à plat, leur arête plus sombre.
+    float tab = tabShape(p);
+    float onTab = inside(-tab);
+    if (onTab > 0.0) {
+      vec3 metal = shade(uTabColor * (0.92 + 0.16 * grainAt(p * vec2(4.0, 0.6), 6.0)), OUT, lit, 1.0, 40.0, 0.25);
+      metal *= 1.0 - 0.35 * inside(0.05 + tab);
+      color = mix(color, metal, onTab);
+    }
+
+    // Crochet : métal noir, ses plis inclinés, son arête qui accroche la lumière ; ses rivets à peine
+    // bombés.
+    float onHanger = inside(-shape);
+    if (onHanger > 0.0) {
+      float e = 0.03;
+      vec2 grad = vec2(hangerShape(q + vec2(e, 0.0)) - hangerShape(q - vec2(e, 0.0)), hangerShape(q + vec2(0.0, e)) - hangerShape(q - vec2(0.0, e))) / (2.0 * e);
+      float slope = (hangerHeight(q.x + e) - hangerHeight(q.x - e)) / (2.0 * e);
+      float bevel = exp(-max(-shape, 0.0) / 0.03);
+      vec3 n = normalize(OUT + vec3(-slope, 0.0, 0.0) + vec3(grad * 0.7 * bevel, 0.0));
+      vec3 dark = blackMetal(n, 0.22);
+      vec3 bolt = rivet(q);
+      float onRivet = inside(-bolt.x);
+      vec2 dome = (q - bolt.yz) / RIVET;
+      vec3 nr = normalize(OUT + vec3(dome, 0.0) * 0.45);
+      dark = mix(dark, blackMetal(nr, 0.3) * 1.15, onRivet);
+      dark *= 1.0 - 0.5 * inside(0.02 - abs(bolt.x)); // le sertissage autour du rivet
+      color = mix(color, dark, onHanger);
+    }
+
+    gl_FragColor = vec4(color, uOpacity);
+    #include <colorspace_fragment>
+  }
+`
+
 /* ==== MISE EN SCÈNE ==== */
 
 /* Le « directeur » reçoit les choix d'option et rend, pour un instant et une forme d'écran donnés,
@@ -1057,9 +1299,9 @@ export const BACK_FRAGMENT = /* glsl */ `
    choix en cours, pour que le moteur rende tout à partir de la seule vue.
 
    Passer entre toile et poster est un « acte » : une petite scène qui part de la vue en cours,
-   déroule son propre mouvement (tour de la toile, coin soulevé du poster) et revient de face. Un
-   autre choix ne le coupe pas en plein vol : l'acte se finit vite, sur son propre chemin, puis la
-   suite s'enchaîne. Le prix et le bouton, eux, n'attendent jamais. */
+   déroule son propre mouvement (tour de la toile ou du poster encadré, coin soulevé du poster) et
+   revient de face. Un autre choix ne le coupe pas en plein vol : l'acte se finit vite, sur son propre
+   chemin, puis la suite s'enchaîne. Le prix et le bouton, eux, n'attendent jamais. */
 
 const DEG = Math.PI / 180
 const FOV_Y = 30 * DEG
@@ -1102,18 +1344,40 @@ const CORNER = { yaw: 32 * DEG, pitch: 18 * DEG, field: 16, spot: 0.6 }
 const BARE = { yaw: 44 * DEG, pitch: 10 * DEG, spot: 0.62 }
 // Contour blanc : de face, sur le coin bas gauche, 36 % de la hauteur du tirage à l'écran.
 const MARGIN = { inX: 0.13, inY: 0.11, field: 0.36 }
-// Poster sous verre, ou animations réduites : la caméra tourne autour du tableau resté au mur.
+// Animations réduites : la caméra tourne autour du tableau resté au mur.
 const MATERIAL = { yaw: 40 * DEG, pitch: 8 * DEG, fill: 0.62 }
 
-/* Tour de la toile. keys : avancement (0 à 1) et angle du tableau en degrés ; il démarre,
-   ralentit de dos, repart, s'arrête. leave : part du temps pour quitter le mur, et y revenir. */
+// Deux clés de tour reliées à vitesse constante (avancement, angle) : de dos, le tableau tourne lentement.
+const steady = ([t0, a0], [t1, a1]) => {
+  const speed = (a1 - a0) / (t1 - t0)
+  return [[t0, a0, speed], [t1, a1, speed]]
+}
+
+/* Tour de la toile. keys : avancement (0 à 1), angle du tableau en degrés et vitesse en degrés par
+   unité d'avancement ; il démarre, ralentit de dos, repart, s'arrête. leave : part du temps pour
+   quitter le mur, et y revenir. */
 const TURN = {
   ms: 3600,
-  keys: [[0.1, 0], [0.36, 155], [0.64, 205], [0.9, 360]],
+  keys: [[0.1, 0, 0], ...steady([0.36, 155], [0.64, 205]), [0.9, 360, 0]],
   leave: 0.16,
   yaw: 14 * DEG,
   pitch: 5 * DEG,
   fill: 0.6,
+}
+/* Tour du poster encadré (retour de Walid du 11/11 : « quand on [bascule] à poster et que c'est un
+   cadre, le poster ne se met pas de face. Il reste penché de profil »). Sous verre, le papier ne peut
+   pas se soulever : il fait un tour sur lui-même comme la toile, pour qu'on voie son dos (« un pivot
+   sur lui-même […] qu'on puisse voir le dos »), et se recale de face. Ses 15 premiers et ses 15
+   derniers degrés passent lentement : le reflet d'une porte-fenêtre (GLASS_ROOM) a le temps de glisser
+   sur le verre au départ et au retour, et l'on comprend qu'il y a une vitre (sa première idée :
+   « qu'on voie la lumière qui se reflète »). Le milieu du tour va un peu plus vite que celui de la
+   toile. La caméra reste en face, sans se décaler sur le côté : décalée, elle chassait le reflet du
+   départ en 100 ms et avançait celui du retour dans la partie rapide du tour. */
+const GLAZED_TURN = {
+  ...TURN,
+  ms: 4000,
+  keys: [[0.05, 0, 0], [0.2, 15, 150], ...steady([0.4, 155], [0.6, 205]), [0.8, 345, 150], [0.95, 360, 0]],
+  yaw: 0,
 }
 /* Coin soulevé du poster. field : hauteur visible, en part de la hauteur de la feuille.
    inset : visée rentrée depuis le coin, en part du petit côté. near : part du temps pour
@@ -1595,30 +1859,30 @@ function hermite(p0, p1, m0, m1, s) {
   return (2 * s3 - 3 * s2 + 1) * p0 + (s3 - 2 * s2 + s) * m0 + (-2 * s3 + 3 * s2) * p1 + (s3 - s2) * m1
 }
 
-// Angle du tableau (degrés) selon l'avancement : vitesse constante et lente de dos.
-function turnAngle(u) {
-  const [[t0, a0], [t1, a1], [t2, a2], [t3, a3]] = TURN.keys
-  const slow = (a2 - a1) / (t2 - t1)
-  if (u <= t0) return a0
-  if (u >= t3) return a3
-  if (u < t1) return hermite(a0, a1, 0, slow * (t1 - t0), (u - t0) / (t1 - t0))
-  if (u <= t2) return lerp(a1, a2, (u - t1) / (t2 - t1))
-  return hermite(a2, a3, slow * (t3 - t2), 0, (u - t2) / (t3 - t2))
+// Angle du tableau (degrés) selon l'avancement : d'une clé à l'autre, à la vitesse de chaque clé.
+function turnAngle(u, keys) {
+  const last = keys.length - 1
+  if (u <= keys[0][0]) return keys[0][1]
+  if (u >= keys[last][0]) return keys[last][1]
+  const i = keys.findIndex(([t]) => t > u) - 1
+  const [t0, a0, m0] = keys[i], [t1, a1, m1] = keys[i + 1]
+  return hermite(a0, a1, m0 * (t1 - t0), m1 * (t1 - t0), (u - t0) / (t1 - t0))
 }
 
 /* Acte de la toile : elle quitte le mur juste assez pour tourner autour de son axe vertical,
    la caméra recule un peu et se décale pour lire la profondeur du châssis. La tranche
-   éclairée passe la première. */
-function turnShot(room, product, aspect, u) {
+   éclairée passe la première. Le poster encadré joue le même acte sur son propre mouvement
+   (motion : TURN ou GLAZED_TURN), sous le nom de plan `shot`. */
+const turnShot = (motion, shot) => (room, product, aspect, u) => {
   const rest = frontShot(room, product, aspect)
   const p = rest.painting
   const side = litSide(room)
-  const out = away(u, TURN.leave)
+  const out = away(u, motion.leave)
   const z = out * (Math.hypot(p.outer.width / 2, p.outer.depth) + WALL_GAP)
   const axis = [p.x, p.y, z + p.outer.depth / 2]
-  const d = fitDistance(p.outer.width, p.outer.height, aspect, TURN.fill)
-  const orbiting = { position: orbit(axis, side * TURN.yaw, TURN.pitch, d), target: axis, fovY: FOV_Y }
-  return shotOf('turn', blend(rest.camera, orbiting, out), { ...p, z, yaw: -side * turnAngle(u) * DEG })
+  const d = fitDistance(p.outer.width, p.outer.height, aspect, motion.fill)
+  const orbiting = { position: orbit(axis, side * motion.yaw, motion.pitch, d), target: axis, fovY: FOV_Y }
+  return shotOf(shot, blend(rest.camera, orbiting, out), { ...p, z, yaw: -side * turnAngle(u, motion.keys) * DEG })
 }
 
 // Coin soulevé : en bas, à l'opposé de la lumière, pour que le dos du papier la reçoive.
@@ -1658,7 +1922,8 @@ const SHOTS = {
   wall: wallShot,
   margin: marginShot,
   material: materialShot,
-  turn: turnShot,
+  turn: turnShot(TURN, 'turn'),
+  glazed: turnShot(GLAZED_TURN, 'glazed'),
   curl: curlShot,
 }
 const SHOT_OF_GROUP = { border: 'edge', frame: 'corner', size: 'room', passe: 'margin', material: 'material' }
@@ -1673,11 +1938,13 @@ function planOf(group, product, room) {
 
 const sameProduct = (a, b) => Object.keys(b).every((key) => a[key] === b[key])
 
-/* Les actes. exit : où un acte interrompu à l'avancement u s'arrête sur son chemin. La toile
-   revient au mur par le plus court ; le papier redescend par où il est monté, ou finit de
-   tomber, pour ne jamais se trouver sous le verre d'un cadre qui arrive. */
+/* Les actes. exit : où un acte interrompu à l'avancement u s'arrête sur son chemin. La toile, comme
+   le poster encadré, revient de face par le plus court ; le papier redescend par où il est monté, ou
+   finit de tomber, pour ne jamais se trouver sous le verre d'un cadre qui arrive. */
+const nearestFace = (u) => (u < 0.5 ? 0 : 1)
 const ACTS = {
-  turn: { ms: TURN.ms, exit: (u) => (u < 0.5 ? 0 : 1) },
+  turn: { ms: TURN.ms, exit: nearestFace },
+  glazed: { ms: GLAZED_TURN.ms, exit: nearestFace },
   curl: { ms: CURL_ACT.ms, exit: (u) => (u < CURL_ACT.rise ? CURL_ACT.start : Math.max(u, CURL_ACT.land)) },
 }
 
@@ -1849,11 +2116,12 @@ export function createDirector({ room, product, poses = null, reducedMotion = fa
     return tilt.releasedAt !== null && at - tilt.releasedAt < SPRING_SETTLED_MS
   }
 
-  // Passer à la toile la fait tourner ; passer au poster sans cadre lui soulève un coin.
+  // Passer à la toile la fait tourner ; passer au poster sans cadre lui soulève un coin, et sous verre,
+  // où le papier ne peut pas se soulever, le fait tourner aussi (retour de Walid du 11/11).
   function actOf(group, nextProduct) {
     if (group !== 'material' || state.reducedMotion) return null
     if (nextProduct.material === 'toile') return 'turn'
-    return hasFrame(nextProduct) ? null : 'curl'
+    return hasFrame(nextProduct) ? 'glazed' : 'curl'
   }
 
   // L'acte en cours, quand il a rejoint son chemin : il se finira avec le produit qu'il montrait.
@@ -2129,8 +2397,9 @@ export function imageSize(image) {
    Aucun à-coup : tout se prépare avant que la 3D soit visible (prepare), et rien de lourd n'attend
    le clic. Les cadres ont leur propre matériau, léger : ni environnement précalculé ni lumières
    three.js ; le bois est une image, chargée au repos.
-   Dos de la toile et coin du poster : une coquille de quelques faces peinte par son shader et une
-   grille unique déformée par le GPU. Rien à calculer pendant le geste. */
+   Dos de la toile, dos du poster encadré et coin du poster : une coquille de quelques faces et un
+   panneau peints par leur shader, une grille unique déformée par le GPU. Rien à calculer pendant le
+   geste. */
 
 const PASSE_RATIO = 0.08 // contour blanc : 8 % du petit côté, égal en cm sur les 4 côtés
 const SHADE = { ambient: 0.55, diffuse: 0.45, weave: 0.075, bump: 0.38 }
@@ -2141,7 +2410,13 @@ const SHADOW = {
 // Ombre du tableau dans la pièce des poses : celle du montage que Walid a trouvé plus réaliste.
 const POSE_SHADOW = { key: 0.32, penumbra: 0.9 }
 const WOOD_TILE_CM = [10, 30] // l'image du chêne couvre 10 cm en travers, 30 cm le long du fil
-const REHEARSAL_FRAMES = 36 // images de répétition de l'arrivée, invisibles
+/* La pièce que le verre reflète : le mur d'en face, à `wall` cm du tableau, avec sa petite fenêtre (de
+   face, en haut du côté de la lumière : GLASS_FRAGMENT) et deux portes-fenêtres (bays) que le verre ne
+   montre qu'en tournant, à x cm de part et d'autre du tableau, leur milieu y cm plus haut que lui ;
+   demi-tailles et luminosité. Elles sont placées pour passer sur le verre pendant les degrés lents de
+   GLAZED_TURN (scripts/oeuvre-3d-staging.test.cjs le vérifie). */
+export const GLASS_ROOM = { wall: 240, bays: { x: 130, y: 10, half: [40, 110], glow: 4 } }
+const REHEARSAL_FRAMES = 48 // images de répétition de l'arrivée, invisibles : 12 pour chacune des 4 poses (rehearse)
 const TRIAL_FRAMES = 3 // images chronométrées de l'arrivée, invisibles
 
 const ART_VERTEX = /* glsl */ `
@@ -2682,25 +2957,50 @@ const GLASS_VERTEX = /* glsl */ `
   }
 `
 
-// Verre : voile très léger, reflet d'une fenêtre à petits carreaux (fixe dans la pièce,
-// il glisse donc quand on incline) et brillance rasante (Fresnel). Ajouté à l'image.
+/* Verre : voile très léger, reflet d'une fenêtre à petits carreaux (fixe dans la pièce,
+   il glisse donc quand on incline) et brillance rasante (Fresnel). Ajouté à l'image.
+   Pendant le tour du poster encadré (retour de Walid du 11/11 : « qu'on voie la lumière qui se
+   reflète […], qu'on comprenne qu'il y a une vitre »), deux portes-fenêtres, de part et d'autre de la
+   pièce (GLASS_ROOM), passent sur le verre : l'une quand il quitte la face, l'autre quand il y revient,
+   pendant ses degrés lents (GLAZED_TURN). Leur éclat suit Fresnel. Elles ne s'allument que si le verre
+   lui-même a tourné : de face, incliné au doigt ou dans les gros plans, il reste tel qu'avant. */
 const GLASS_FRAGMENT = /* glsl */ `
   uniform vec3 uNormal;
   uniform float uOpacity;
   uniform vec3 uWin;
   uniform vec2 uWinHalf;
+  uniform vec3 uBays; // grandes fenêtres, sur le mur d'en face : x de celle de gauche, de celle de droite, y de leur milieu
+  uniform vec2 uBayHalf;
+  uniform float uBayGlow; // leur luminosité, en part du blanc de l'œuvre
   varying vec3 vWorld;
+
+  // Fenêtre vue en q (de -1 à 1 sur sa largeur et sa hauteur), cells carreaux : 1 sur les vitres,
+  // barLight sur les montants, 0 au-dehors ; ses bords s'adoucissent sur la part soft.
+  float windowAt(vec2 q, float soft, vec2 cells, float barLight) {
+    float inside = (1.0 - smoothstep(1.0 - soft, 1.0, abs(q.x))) * (1.0 - smoothstep(1.0 - soft, 1.0, abs(q.y)));
+    vec2 cell = fract((q * 0.5 + 0.5) * cells);
+    vec2 barWidth = vec2(0.12, 0.1) * vec2(cells.x / 2.0, cells.y / 3.0); // en part d'un carreau
+    float panes = smoothstep(0.0, barWidth.x, cell.x) * smoothstep(0.0, barWidth.x, 1.0 - cell.x)
+                * smoothstep(0.0, barWidth.y, cell.y) * smoothstep(0.0, barWidth.y, 1.0 - cell.y);
+    return inside * mix(barLight, 1.0, panes);
+  }
+
+  // Une porte-fenêtre : le ciel plus clair en haut.
+  float bayAt(vec2 q) {
+    return windowAt(q, 0.12, vec2(2.0, 4.0), 0.22) * mix(0.7, 1.0, smoothstep(-1.0, 1.0, q.y));
+  }
+
   void main() {
     vec3 V = normalize(cameraPosition - vWorld);
     float fresnel = pow(1.0 - clamp(dot(uNormal, V), 0.0, 1.0), 5.0);
     vec3 R = reflect(-V, uNormal);
     float t = (uWin.z - vWorld.z) / max(R.z, 0.05);
-    vec2 q = (vWorld.xy + R.xy * t - uWin.xy) / uWinHalf;
-    float window = (1.0 - smoothstep(0.75, 1.0, abs(q.x))) * (1.0 - smoothstep(0.75, 1.0, abs(q.y))) * smoothstep(0.02, 0.08, R.z);
-    vec2 cell = fract((q * 0.5 + 0.5) * vec2(2.0, 3.0));
-    float panes = smoothstep(0.0, 0.12, cell.x) * smoothstep(0.0, 0.12, 1.0 - cell.x)
-                * smoothstep(0.0, 0.1, cell.y) * smoothstep(0.0, 0.1, 1.0 - cell.y);
-    float a = (0.012 + window * mix(0.45, 1.0, panes) * 0.06 + fresnel * 0.24) * uOpacity;
+    vec2 hit = vWorld.xy + R.xy * t;
+    float facing = smoothstep(0.02, 0.08, R.z);
+    float window = windowAt((hit - uWin.xy) / uWinHalf, 0.25, vec2(2.0, 3.0), 0.45) * facing;
+    float turned = smoothstep(0.0005, 0.004, 1.0 - uNormal.z); // nul à moins de 2° de la face
+    float bays = turned * facing * (bayAt((hit - vec2(uBays.x, uBays.z)) / uBayHalf) + bayAt((hit - vec2(uBays.y, uBays.z)) / uBayHalf));
+    float a = (0.012 + window * 0.06 + (0.04 + 0.96 * fresnel) * uBayGlow * bays + fresnel * 0.24) * uOpacity;
     gl_FragColor = vec4(vec3(a), 1.0);
   }
 `
@@ -2906,6 +3206,9 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
     uOpacity: { value: 0 },
     uWin: { value: new THREE.Vector3() },
     uWinHalf: { value: new THREE.Vector2(20, 30) },
+    uBays: { value: new THREE.Vector3() },
+    uBayHalf: { value: new THREE.Vector2(...GLASS_ROOM.bays.half) },
+    uBayGlow: { value: GLASS_ROOM.bays.glow },
   }
   const glass = new THREE.Mesh(
     new THREE.PlaneGeometry(1, 1),
@@ -2958,6 +3261,33 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
     new THREE.ShaderMaterial({ uniforms: backUniforms, vertexShader: BACK_VERTEX, fragmentShader: BACK_FRAGMENT }),
   )
   group.add(backMesh)
+
+  // ---- Dos du poster encadré : le panneau d'isorel, peint par son shader. Il suit le cadre et n'existe
+  //      que pour le poster, comme le verre. ----
+  const boardUniforms = {
+    uBoardColor: { value: new THREE.Color(BOARD_COLORS.board) },
+    uHangerColor: { value: new THREE.Color(BOARD_COLORS.hanger) },
+    uTabColor: { value: new THREE.Color(BOARD_COLORS.tab) },
+    uHalf: { value: new THREE.Vector2(1, 1) },
+    uRecess: { value: POSTER_BACK.recess },
+    uHanger: { value: new THREE.Vector4() },
+    uTabsAcross: { value: new THREE.Vector3() },
+    uTabsAlong: { value: new THREE.Vector3() },
+    uTab: { value: new THREE.Vector2() },
+    uLightLocal: backUniforms.uLightLocal,
+    uEyeLocal: { value: new THREE.Vector3() },
+    uAmbient: artUniforms.uAmbient,
+    uDiffuse: artUniforms.uDiffuse,
+    uNorm: artUniforms.uNorm,
+    uOpacity: { value: 1 },
+  }
+  const board = new THREE.Mesh(
+    new THREE.BufferGeometry(),
+    new THREE.ShaderMaterial({ uniforms: boardUniforms, vertexShader: BOARD_VERTEX, fragmentShader: BOARD_FRAGMENT, transparent: true }),
+  )
+  board.visible = false
+  board.renderOrder = 1
+  group.add(board)
 
   // ---- Géométries, recalculées seulement quand leurs dimensions changent. Pendant une
   //      animation (taille, épaisseur), le nombre de sommets ne bouge pas : on réécrit les
@@ -3092,7 +3422,10 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
     backMesh.position.z = p.artZ
     backUniforms.uPine.value = wood.fade(now)
     backUniforms.uSideArt.value = borderTakesImage(product.border) ? 1 : 0
-    backUniforms.uLightLocal.value.set(...light).applyQuaternion(towardsLocal.copy(group.quaternion).invert())
+    // Du repère de la pièce à celui du tableau : la lumière (dos de la toile, panneau du poster) et la
+    // caméra (panneau du poster) y sont lues par leur shader.
+    const toLocal = towardsLocal.copy(group.quaternion).invert()
+    backUniforms.uLightLocal.value.set(...light).applyQuaternion(toLocal)
 
     borderColor.set(borderOf(product.border).color || PAPER_WHITE)
     artUniforms.uBorder.value.copy(borderColor).lerp(artUniforms.uPaperWhite.value, p.paper)
@@ -3114,6 +3447,7 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
 
     frameMesh.visible = p.framed > 0.001
     glass.visible = frameMesh.visible && p.paper > 0.01
+    board.visible = glass.visible
     if (!frameMesh.visible) return
     // p.frame glisse de la caisse américaine à la baguette sous verre avec `paper`.
     const f = p.frame
@@ -3124,8 +3458,17 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
       setGeometry(frameMesh, frameRing({ ...opening, profile: frameProfile(kind, f) }), ['shade'])
       glass.scale.set(2 * opening.hw, 2 * opening.hh, 1)
       glass.position.set(0, 0, f.floor + 0.1)
+      setGeometry(board, posterBoard(p))
+      const { half, hanger, tabs } = posterBackLayout(p.width, p.height)
+      boardUniforms.uHalf.value.set(...half)
+      boardUniforms.uHanger.value.set(hanger.x, hanger.y, hanger.width, hanger.height)
+      boardUniforms.uTabsAcross.value.set(tabs.across.first, tabs.across.gap, tabs.across.count)
+      boardUniforms.uTabsAlong.value.set(tabs.along.first, tabs.along.gap, tabs.along.count)
+      boardUniforms.uTab.value.set(tabs.width, tabs.length)
       frameKey = fk
     }
+    boardUniforms.uOpacity.value = p.framed
+    boardUniforms.uEyeLocal.value.copy(camera.position).sub(group.position).applyQuaternion(toLocal)
     if (hasFrame(product)) shownFrame = product.frame
     const look = frameOf(shownFrame)
     const woodShown = wood.fade(now)
@@ -3136,7 +3479,9 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
     frameUniforms.uOpacity.value = p.framed
     glassUniforms.uOpacity.value = p.paper * p.framed
     glassUniforms.uNormal.value.set(0, 0, 1).applyEuler(group.rotation)
-    glassUniforms.uWin.value.set(p.x + 28 * Math.sign(light[0] || -1), p.y + 36, p.z + 240) // la fenêtre, du côté de la lumière
+    glassUniforms.uWin.value.set(p.x + 28 * Math.sign(light[0] || -1), p.y + 36, p.z + GLASS_ROOM.wall) // la fenêtre, du côté de la lumière
+    const { bays } = GLASS_ROOM
+    glassUniforms.uBays.value.set(p.x - bays.x, p.x + bays.x, p.y + bays.y)
   }
 
   function updateShadow(p) {
@@ -3354,29 +3699,34 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
     await rehearse(view, now)
     const framed = { ...view.painting, framed: 1 }
     const facing = { ...view, painting: { ...framed, paper: 1 } }
-    const ofBack = { ...view, painting: { ...framed, paper: 0, yaw: Math.PI, z: view.painting.width } }
-    const facingCost = frameCost(facing, now)
-    await breathe()
-    return Math.max(facingCost, frameCost(ofBack, now))
+    // Les deux dos : la toile et son châssis, le poster encadré et son panneau (qui tourne depuis le 11/11).
+    const backs = [0, 1].map((paper) => ({ ...view, painting: { ...framed, paper, yaw: Math.PI, z: view.painting.width } }))
+    let cost = frameCost(facing, now)
+    for (const back of backs) {
+      await breathe()
+      cost = Math.max(cost, frameCost(back, now))
+    }
+    return cost
   }
 
-  /* Répétition : des images complètes (cadre et verre, dos de la toile, coin du poster, tailles
-     qui changent comme pendant une animation) limitées à un seul pixel. Elles ne coûtent rien
-     à la carte graphique mais rodent le code : sans elles, chaque image demande 1 à 2 ms au
-     lieu de 0,3 ms, et le navigateur s'interrompt 15 ms au début du premier mouvement. */
+  /* Répétition : des images complètes (cadre et verre, dos de la toile, coin du poster, dos du poster
+     encadré, tailles qui changent comme pendant une animation) limitées à un seul pixel. Elles ne
+     coûtent rien à la carte graphique mais rodent le code : sans elles, chaque image demande 1 à 2 ms
+     au lieu de 0,3 ms, et le navigateur s'interrompt 15 ms au début du premier mouvement. */
   async function rehearse(view, now) {
     const { width: w, depth: d } = view.painting
+    const stances = [
+      { framed: 1, paper: 0.5 },
+      { yaw: 3, z: w },
+      { paper: 1, curl: 0.5 },
+      { framed: 1, paper: 1, yaw: 3, z: w },
+    ]
     renderer.setScissorTest(true)
     renderer.setScissor(0, 0, 1, 1)
     for (let i = 0; i < REHEARSAL_FRAMES; i++) {
       const sizes = { width: w + i * 0.002, depth: d - i * 0.002 }
-      const pose = [
-        { framed: 1, paper: 0.5 },
-        { yaw: 3, z: w },
-        { paper: 1, curl: 0.5 },
-      ][i % 3]
-      render({ ...view, painting: { ...view.painting, ...sizes, ...pose } }, now)
-      if (i % 3 === 2) await breathe()
+      render({ ...view, painting: { ...view.painting, ...sizes, ...stances[i % stances.length] } }, now)
+      if (i % stances.length === stances.length - 1) await breathe()
     }
     renderer.setScissorTest(false)
   }
