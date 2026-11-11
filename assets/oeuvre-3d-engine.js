@@ -2186,6 +2186,427 @@ export function createDirector({ room, product, poses = null, reducedMotion = fa
   return { view, choose, grab, drag, release, isMoving }
 }
 
+/* ==== ZOOM SUR L'ŒUVRE ==== */
+
+/* Le visiteur zoome sur l'œuvre de face (retour de Walid du 11/11, après un essai : « première chose
+   qu'il a essayé de faire, c'est de zoomer dessus et de dézoomer »). Le zoom est une couche de la vue,
+   comme l'inclinaison : la caméra s'approche du tableau en restant de face (withZoom). Son état et sa
+   physique (ancrage sous les doigts, bornes, élastique, élan, retours) sont dans createZoom, en px de
+   l'écran ; la page lui passe les gestes. La pièce de détail (tilePlan) apporte, au repos, la vraie
+   résolution de la source là où l'on regarde. */
+
+/* Réglages. sourcePx : un pixel de la source s'étale sur 1,5 pixel de l'écran au plus (au-delà, le
+   flou se voit) ; floor et ceil : bornes de ce zoom maximal. rubber : raideur de l'élastique (celle
+   d'iOS) ; under et over : de combien l'échelle peut passer sous ×1 et au-dessus du maximum, au plus,
+   en facteur. glide : décroissance de l'élan (ms) ; spring : raideur du ressort des bords (par ms) ;
+   back : retour d'une échelle hors bornes (ms) ; still : un doigt immobile depuis autant de ms ne
+   lance rien ; window : les ms du geste qui donnent sa vitesse. zoomed : au-delà de cette échelle,
+   l'œuvre est zoomée (un doigt la déplace, l'inclinaison s'arrête, les chips s'effacent) ; toggle :
+   l'échelle du double toucher, et tap la durée de son glissé (ms) ; reset : celle du retour à ×1 par
+   le bouton, Échap ou un choix (ms). */
+export const ZOOM = {
+  sourcePx: 1.5, floor: 2, ceil: 4,
+  rubber: 0.55, under: 0.6, over: 1.4,
+  glide: 325, spring: 0.012, back: 320, still: 60, window: 100,
+  zoomed: 1.02, toggle: 2.5, tap: 300, reset: 240,
+}
+
+/* Le zoom maximal, pour une œuvre et un écran. native : la source ({ width, height }, px) ; art : l'œuvre
+   de face à l'écran, en px CSS ({ w, h }) ; dpr : pixels de l'écran par px CSS. */
+export function zoomLimit({ native, art, dpr }) {
+  if (!native || !(native.width > 0) || !(native.height > 0)) return ZOOM.floor
+  const sourcePerDevice = Math.min(native.width / art.w, native.height / art.h) / Math.max(1, dpr)
+  return Math.min(ZOOM.ceil, Math.max(ZOOM.floor, ZOOM.sourcePx * sourcePerDevice))
+}
+
+/* La couche du zoom sur une vue : la caméra avance vers le point visé, factor fois plus près, et glisse
+   de shift (cm, vers sa droite et son haut) sans tourner, l'objectif inchangé. Une vue de face le
+   reste : la façade s'y agrandit de factor autour du centre de l'image, comme une photo (sa matière,
+   le cadre et le reflet du verre restent ceux d'un tableau que l'on regarde de près). */
+export function withZoom(view, factor, [sx, sy]) {
+  if (factor === 1 && sx === 0 && sy === 0) return view
+  const { position, target } = view.camera
+  const back = position.map((c, i) => c - target[i])
+  const forward = unit(scale(back, -1))
+  const right = unit(cross(forward, [0, 1, 0]))
+  const up = cross(right, forward)
+  const aim = add(target, add(scale(right, sx), scale(up, sy)))
+  return { ...view, camera: { ...view.camera, position: add(aim, scale(back, 1 / factor)), target: aim }, zoom: factor }
+}
+
+/* Le zoom et son geste. Unités : px de l'écran, comptés depuis le centre de l'image de la 3D, où se
+   trouve le milieu de l'œuvre de face ; ms. L'état : l'échelle (scale) et le centre (x, y), le point de
+   l'œuvre vue à ×1 qui se trouve au centre de l'image : un point vu en u à ×1 se voit alors en
+   scale × (u − centre). À ×1, le centre est (0, 0).
+   frame : la mise en page, à redonner quand elle change. half : demi-largeur et demi-hauteur de l'œuvre
+   à ×1 ; view : l'écran utile (left, top, right, bottom) ; max : le zoom maximal (zoomLimit).
+   Geste : grab(x, y, écart, at) quand le nombre de doigts change (x, y : leur milieu ; écart : leur
+   distance, 0 pour un seul doigt), drag(x, y, écart, at) quand ils bougent, release(at) quand ils sont
+   tous levés. Le point de l'œuvre sous leur milieu y reste, tant que l'œuvre couvre l'écran ; au-delà
+   de ses bords, sous ×1 ou au-dessus du maximum, elle résiste (élastique), puis revient en place. Lâchée
+   en mouvement, elle file sur son élan et rebondit sur ses bords.
+   Rien n'est alloué pendant le geste : la page l'appelle à chaque mouvement du doigt. */
+export function createZoom() {
+  const layout = { half: [1, 1], view: { left: -1, top: -1, right: 1, bottom: 1 }, max: ZOOM.floor }
+  const shown = { scale: 1, x: 0, y: 0 } // ce que rend at() : un seul objet, réécrit
+  /* Le geste en cours, sans élastique (raw) : le point de ×1 sous les doigts (under), le logarithme de
+     l'échelle et l'écart des doigts au toucher. last : leur dernier milieu. */
+  const hold = { active: false, under: [0, 0], log: 0, spread: 0, last: [0, 0] }
+  const range = [0, 0] // bornes d'un axe, réécrites (bounds)
+  // Les derniers milieux des doigts (instant, x, y), pour la vitesse au lâcher : un anneau.
+  const SAMPLES = 8
+  const samples = new Float64Array(SAMPLES * 3)
+  let sampleCount = 0
+  /* Le mouvement en cours, doigts levés : null, un glissé vers un état (glide), ou l'élan d'un axe et
+     de l'autre (fling). Chacun est une fonction du temps : at() peut être appelé pour n'importe quel
+     instant. */
+  let motion = null
+
+  function frame({ half, view, max }) {
+    layout.half = half
+    layout.view = view
+    layout.max = max
+  }
+
+  /* Les centres permis sur un axe (0 : x, 1 : y), à l'échelle s, dans range. Une œuvre plus grande que
+     l'écran le couvre : ses bords ne rentrent jamais. Plus petite, elle ne bouge pas : son milieu va de
+     sa place de face, à ×1, au milieu de l'écran, quand elle l'atteint. */
+  function bounds(axis, s) {
+    const h = layout.half[axis]
+    const v0 = axis ? layout.view.top : layout.view.left
+    const v1 = axis ? layout.view.bottom : layout.view.right
+    const span = v1 - v0
+    if (2 * s * h >= span) {
+      range[0] = -v0 / s - h
+      range[1] = h - v1 / s
+      return range
+    }
+    const t = span > 2 * h ? Math.min(1, Math.max(0, (2 * h * (s - 1)) / (span - 2 * h))) : 1
+    range[0] = range[1] = -(t * (v0 + v1)) / 2 / s
+    return range
+  }
+
+  const viewSpan = (axis) => (axis ? layout.view.bottom - layout.view.top : layout.view.right - layout.view.left)
+
+  // L'élastique : un dépassement e se voit d × (1 − 1 / (1 + 0,55 e / d)), jamais plus que d.
+  const rubber = (e, d) => d * (1 - 1 / (1 + (ZOOM.rubber * e) / d))
+  const unrubber = (r, d) => (d * Math.min(r, d * 0.999)) / (ZOOM.rubber * (d - Math.min(r, d * 0.999)))
+
+  // Logarithme de l'échelle : borné entre 0 (×1) et celui du maximum, élastique au-delà.
+  const logMax = () => Math.log(layout.max)
+  const LOG_UNDER = -Math.log(ZOOM.under)
+  const LOG_OVER = Math.log(ZOOM.over)
+  function elasticLog(log) {
+    if (log < 0) return -rubber(-log, LOG_UNDER)
+    if (log > logMax()) return logMax() + rubber(log - logMax(), LOG_OVER)
+    return log
+  }
+  function rawLog(log) {
+    if (log < 0) return -unrubber(-log, LOG_UNDER)
+    if (log > logMax()) return logMax() + unrubber(log - logMax(), LOG_OVER)
+    return log
+  }
+
+  // Le centre sur un axe, élastique hors de ses bornes (le dépassement compté en px de l'écran).
+  function elasticCenter(axis, c, s) {
+    const [lo, hi] = bounds(axis, s)
+    if (c < lo) return lo - rubber(s * (lo - c), viewSpan(axis)) / s
+    if (c > hi) return hi + rubber(s * (c - hi), viewSpan(axis)) / s
+    return c
+  }
+  function rawCenter(axis, c, s) {
+    const [lo, hi] = bounds(axis, s)
+    if (c < lo) return lo - unrubber(s * (lo - c), viewSpan(axis)) / s
+    if (c > hi) return hi + unrubber(s * (c - hi), viewSpan(axis)) / s
+    return c
+  }
+  const clampCenter = (axis, c, s) => {
+    const [lo, hi] = bounds(axis, s)
+    return Math.min(hi, Math.max(lo, c))
+  }
+
+  function sample(at, x, y) {
+    const i = (sampleCount % SAMPLES) * 3
+    samples[i] = at
+    samples[i + 1] = x
+    samples[i + 2] = y
+    sampleCount += 1
+  }
+
+  // Vitesse des doigts au lâcher (px par ms), sur leurs dernières ms ; nulle s'ils s'étaient arrêtés.
+  function velocity(at, axis) {
+    if (sampleCount < 2) return 0
+    const newest = ((sampleCount - 1) % SAMPLES) * 3
+    if (at - samples[newest] > ZOOM.still) return 0
+    let oldest = newest
+    for (let k = 1; k < Math.min(sampleCount, SAMPLES); k++) {
+      const i = ((sampleCount - 1 - k) % SAMPLES) * 3
+      if (samples[newest] - samples[i] > ZOOM.window) break
+      oldest = i
+    }
+    const dt = samples[newest] - samples[oldest]
+    return dt >= 8 ? (samples[newest + 1 + axis] - samples[oldest + 1 + axis]) / dt : 0
+  }
+
+  // Les doigts se posent, ou leur nombre change : l'état affiché devient le point de départ.
+  function grab(x, y, spread, at) {
+    settle(at)
+    motion = null
+    hold.active = true
+    const s = shown.scale
+    hold.log = rawLog(Math.log(s))
+    hold.under[0] = rawCenter(0, shown.x, s) + x / s
+    hold.under[1] = rawCenter(1, shown.y, s) + y / s
+    hold.spread = spread
+    hold.last[0] = x
+    hold.last[1] = y
+    sampleCount = 0
+    sample(at, x, y)
+  }
+
+  function drag(x, y, spread, at) {
+    if (!hold.active) return
+    const log = hold.spread > 0 && spread > 0 ? hold.log + Math.log(spread / hold.spread) : hold.log
+    const s = Math.exp(elasticLog(log))
+    shown.scale = s
+    shown.x = elasticCenter(0, hold.under[0] - x / s, s)
+    shown.y = elasticCenter(1, hold.under[1] - y / s, s)
+    hold.last[0] = x
+    hold.last[1] = y
+    sample(at, x, y)
+  }
+
+  /* Doigts levés. Une échelle hors bornes revient à la borne, le point sous les doigts gardé autant que
+     possible ; sinon l'œuvre file sur son élan, et revient sur ses bords si elle les a passés. */
+  function release(at) {
+    if (!hold.active) return
+    hold.active = false
+    const s = shown.scale
+    const target = Math.min(layout.max, Math.max(1, s))
+    if (Math.abs(target - s) > 1e-6) {
+      const [mx, my] = hold.last
+      const x = clampCenter(0, shown.x + mx / s - mx / target, target)
+      const y = clampCenter(1, shown.y + my / s - my / target, target)
+      glideTo(target, x, y, at, ZOOM.back)
+      return
+    }
+    motion = { kind: 'fling', t0: at, scale: s, axes: [flingOf(0, s, velocity(at, 0)), flingOf(1, s, velocity(at, 1))] }
+    motion.end = at + Math.max(motion.axes[0].ms, motion.axes[1].ms)
+  }
+
+  /* L'élan d'un axe, lâché à la vitesse v (px de l'écran par ms) : il décroît (glide) ; s'il doit passer
+     un bord, il l'atteint puis un ressort amorti l'y ramène. Un centre déjà hors bornes y revient. */
+  function flingOf(axis, s, v) {
+    const c0 = axis ? shown.y : shown.x
+    const [lo, hi] = bounds(axis, s)
+    // Le centre va à l'envers du contenu, en px de ×1 ; une œuvre qui ne peut pas bouger sur cet axe
+    // (plus petite que l'écran) n'y prend pas d'élan.
+    const vc = hi - lo > 1e-9 ? -v / s : 0
+    const tau = ZOOM.glide
+    const fling = { c0, vc, lo, hi, hit: Infinity, from: c0, vHit: 0, target: c0, ms: 0 }
+    if (c0 < lo || c0 > hi) {
+      fling.hit = 0
+      fling.target = Math.min(hi, Math.max(lo, c0))
+      fling.vHit = vc
+      fling.ms = springMs(c0 - fling.target, vc, s)
+      return fling
+    }
+    const end = c0 + vc * tau
+    if (end >= lo && end <= hi) {
+      // Il finit où il tend, quand il ne reste qu'un vingtième de pixel à parcourir.
+      fling.target = end
+      fling.ms = Math.max(0, tau * Math.log((Math.abs(vc) * tau * s) / 0.05))
+      return fling
+    }
+    const edge = end > hi ? hi : lo
+    const q = (edge - c0) / (vc * tau)
+    fling.hit = -tau * Math.log(1 - q)
+    fling.from = edge
+    fling.target = edge
+    fling.vHit = vc * (1 - q)
+    fling.ms = fling.hit + springMs(0, fling.vHit, s)
+    return fling
+  }
+
+  // Ressort amorti au plus juste, de l'écart a et de la vitesse v : le temps qu'il reste sous 0,05 px.
+  function springMs(a, v, s) {
+    const w = ZOOM.spring
+    const size = (Math.abs(a) + Math.abs(v + w * a) / w) * s
+    return size > 0.05 ? (Math.log(size / 0.05) + 1.5) / w : 0
+  }
+
+  function flingAt(f, t) {
+    if (t < f.hit) return f.c0 + f.vc * ZOOM.glide * (1 - Math.exp(-t / ZOOM.glide))
+    const w = ZOOM.spring
+    const u = t - f.hit
+    const a = f.from - f.target
+    return f.target + (a + (f.vHit + w * a) * u) * Math.exp(-w * u)
+  }
+
+  /* Glissé vers (s1, x1, y1) en ms, ralenti à l'arrivée. Quand l'échelle change, un point de l'écran
+     reste fixe (celui que les deux états y mettent) : l'œuvre grandit ou rapetisse autour de lui, sans
+     dériver. */
+  function glideTo(s1, x1, y1, at, ms) {
+    const s0 = shown.scale
+    const ratio = s1 / s0
+    const fixed = Math.abs(1 - ratio) > 1e-3
+    motion = {
+      kind: 'glide', t0: at, end: at + ms, ms, s0, s1,
+      from: [shown.x, shown.y], to: [x1, y1], under: [0, 0], fixed: [0, 0], scaled: fixed,
+    }
+    if (fixed) {
+      for (const axis of [0, 1]) {
+        const c0 = motion.from[axis], c1 = motion.to[axis]
+        motion.fixed[axis] = (s1 * (c0 - c1)) / (1 - ratio)
+        motion.under[axis] = c0 + motion.fixed[axis] / s0
+      }
+    }
+  }
+
+  const easeOut = (t) => 1 - (1 - t) ** 3
+
+  // Fait avancer l'état affiché jusqu'à l'instant `now` ; fige le mouvement fini.
+  function settle(now) {
+    if (!motion) return
+    const t = now - motion.t0
+    if (motion.kind === 'glide') {
+      const k = motion.ms > 0 ? easeOut(Math.min(1, Math.max(0, t / motion.ms))) : 1
+      const s = motion.s0 * (motion.s1 / motion.s0) ** k
+      shown.scale = s
+      for (const axis of [0, 1]) {
+        const c = motion.scaled ? motion.under[axis] - motion.fixed[axis] / s : motion.from[axis] + (motion.to[axis] - motion.from[axis]) * k
+        if (axis) shown.y = c
+        else shown.x = c
+      }
+      if (k >= 1) {
+        Object.assign(shown, { scale: motion.s1, x: motion.to[0], y: motion.to[1] })
+        motion = null
+      }
+      return
+    }
+    const done = now >= motion.end
+    shown.scale = motion.scale
+    shown.x = done ? motion.axes[0].target : flingAt(motion.axes[0], t)
+    shown.y = done ? motion.axes[1].target : flingAt(motion.axes[1], t)
+    if (done) motion = null
+  }
+
+  function at(now) {
+    if (!hold.active) settle(now)
+    return shown
+  }
+
+  const isMoving = (now) => hold.active || (!!motion && now < motion.end)
+
+  // Vers l'échelle s1, le point de l'écran (x, y) gardé autant que les bords le permettent.
+  function zoomAround(s1, x, y, at, ms) {
+    const s = shown.scale
+    glideTo(s1, clampCenter(0, shown.x + x / s - x / s1, s1), clampCenter(1, shown.y + y / s - y / s1, s1), at, ms)
+  }
+
+  // Double toucher (ou double clic) en (x, y) : vers ×2,5 (ou le maximum), ou retour à ×1.
+  function toggle(x, y, at) {
+    settle(at)
+    hold.active = false
+    if (shown.scale > ZOOM.zoomed) zoomAround(1, x, y, at, ZOOM.tap)
+    else zoomAround(Math.min(ZOOM.toggle, layout.max), x, y, at, ZOOM.tap)
+  }
+
+  // Retour à ×1, en ms (0 : d'un coup).
+  function reset(at, ms = ZOOM.reset) {
+    settle(at)
+    hold.active = false
+    zoomAround(1, 0, 0, at, ms)
+  }
+
+  /* Molette ou pincement du pavé tactile : l'échelle multipliée par factor sous le pointeur (x, y),
+     entre ×1 et le maximum, sans élastique (aucun doigt à lâcher). ms : un cran de souris glisse ; un
+     cran qui arrive pendant le glissé du précédent part de l'arrivée de celui-ci. */
+  function wheel(factor, x, y, at, ms = 0) {
+    settle(at)
+    if (hold.active) return
+    const going = motion && motion.kind === 'glide' && motion.wheel && at < motion.end
+    const from = going ? { scale: motion.s1, x: motion.to[0], y: motion.to[1] } : shown
+    const s1 = Math.min(layout.max, Math.max(1, from.scale * factor))
+    const x1 = clampCenter(0, from.x + x / from.scale - x / s1, s1)
+    const y1 = clampCenter(1, from.y + y / from.scale - y / s1, s1)
+    if (ms > 0) {
+      glideTo(s1, x1, y1, at, ms)
+      motion.wheel = true
+      return
+    }
+    motion = null
+    shown.scale = s1
+    shown.x = x1
+    shown.y = y1
+  }
+
+  return { frame, grab, drag, release, toggle, reset, wheel, at, isMoving }
+}
+
+/* La pièce de détail : zoomée et au repos, la région de la source que l'on regarde, recadrée par le CDN
+   de Shopify, à la résolution de l'écran et jamais au-delà de la source. Le moteur la pose sur l'œuvre
+   par-dessus l'image en place (showTile). Réglages : margin, la marge autour de la vue, en part de sa
+   taille de chaque côté ; grid, le pas de la grille où se calent ses bords (en part du petit côté de
+   la vue, arrondi à une puissance de 2, au moins minGrid px de la source) : deux vues voisines
+   demandent la même pièce, que le CDN garde en cache ; slack : une résolution à 5 % près suffit. Sa
+   résolution va par paliers de √2. */
+export const TILE = { margin: 0.25, grid: 0.125, minGrid: 32, slack: 0.95 }
+
+const clampTo = (v, lo, hi) => Math.min(hi, Math.max(lo, v))
+// Le plus petit palier de √2 (1, 0,71, 0,5…) qui donne au moins 95 % de la résolution voulue.
+const tileStep = (want) => Math.min(1, 2 ** (Math.ceil(2 * Math.log2(TILE.slack * want)) / 2))
+
+/* visible : la région de l'image que l'on voit, en coordonnées d'image (u0, v0, u1, v1 ; 0 à 1, origine
+   en haut à gauche ; elle peut déborder). native : la source ({ width, height }, px). density : les px
+   du canvas par px de la source, à ce zoom. base : l'image en place ({ width }). maxSide : la plus grande
+   texture permise ; maxPixels : le budget de mémoire. Rend null si l'image en place suffit, sinon la
+   pièce : sa région de la source (left, top, width, height, px), sa taille (out), son rectangle en
+   coordonnées d'image (rect) et sa résolution (scale, px de la pièce par px de la source). */
+export function tilePlan({ visible, native, density, base, maxSide, maxPixels }) {
+  const W = native.width, H = native.height
+  const want = Math.min(1, density)
+  if (base && base.width >= TILE.slack * want * W) return null
+  const x0 = clampTo(visible.u0 * W, 0, W), x1 = clampTo(visible.u1 * W, 0, W)
+  const y0 = clampTo(visible.v0 * H, 0, H), y1 = clampTo(visible.v1 * H, 0, H)
+  if (x1 - x0 < 1 || y1 - y0 < 1) return null
+  const grid = 2 ** Math.floor(Math.log2(Math.max(TILE.minGrid, TILE.grid * Math.min(x1 - x0, y1 - y0))))
+  const region = (margin) => {
+    const mx = margin * (x1 - x0), my = margin * (y1 - y0)
+    const left = Math.max(0, Math.floor((x0 - mx) / grid) * grid)
+    const top = Math.max(0, Math.floor((y0 - my) / grid) * grid)
+    return {
+      left, top,
+      width: Math.min(W, Math.ceil((x1 + mx) / grid) * grid) - left,
+      height: Math.min(H, Math.ceil((y1 + my) / grid) * grid) - top,
+    }
+  }
+  let scale = tileStep(want)
+  let r = region(TILE.margin)
+  const fits = (box, k) => box.width * box.height * k * k <= maxPixels && Math.max(box.width, box.height) * k <= maxSide
+  if (!fits(r, scale)) r = region(0)
+  if (!fits(r, scale)) {
+    const room = Math.min(Math.sqrt(maxPixels / (r.width * r.height)), maxSide / Math.max(r.width, r.height))
+    scale = Math.floor(room * 1024) / 1024
+  }
+  return {
+    ...r,
+    out: { width: Math.round(r.width * scale), height: Math.round(r.height * scale) },
+    rect: [r.left / W, r.top / H, (r.left + r.width) / W, (r.top + r.height) / H],
+    scale,
+  }
+}
+
+// La pièce en place sert-elle encore cette vue : la couvre-t-elle, assez finement ?
+export function tileServes(tile, visible, density) {
+  if (!tile) return false
+  const [u0, v0, u1, v1] = tile.rect
+  const e = 1e-6
+  const covers = clampTo(visible.u0, 0, 1) >= u0 - e && clampTo(visible.u1, 0, 1) <= u1 + e &&
+    clampTo(visible.v0, 0, 1) >= v0 - e && clampTo(visible.v1, 0, 1) <= v1 + e
+  return covers && tile.scale >= TILE.slack * Math.min(1, density) - e
+}
+
 /* ==== RELIEFS ==== */
 
 /* Reliefs procéduraux (calcul pur, sans DOM : ils tournent dans un worker, hors du fil de la page).

@@ -220,9 +220,38 @@
     ];
   }
 
+  /* ---- Les gestes sur la scène (zoom sur l'œuvre) ---- */
+
+  /* Ce que font les doigts posés. fingers : leur nombre ; on : où ils se sont posés, la 3D ('canvas') ou
+     le voile d'une rangée ouverte ('closer') ; zoomed : l'œuvre est zoomée ; front : la 3D est de face,
+     au repos, sans rangée ouverte ni transition ; shot : son plan. Rend 'tilt' (incliner le tableau,
+     comme avant), 'pan' (déplacer l'œuvre zoomée), 'pinch' (zoomer), 'dismiss' (pincer pour revenir de
+     face, comme un toucher en dehors : retour de Walid du 11/11, « elle voulait revenir en dézoomant »)
+     ou 'none'. Un toucher du voile reste un clic, qui ferme la rangée. */
+  function gestureOf({ fingers, on, zoomed, front, shot }) {
+    if (on === 'closer') return fingers >= 2 ? 'dismiss' : 'none';
+    if (fingers >= 2) {
+      if (front) return 'pinch';
+      return shot === 'front' ? 'none' : 'dismiss';
+    }
+    return zoomed ? 'pan' : 'tilt';
+  }
+
+  // Pincer pour revenir de face : les doigts se sont rapprochés de 15 % de leur écart du début.
+  const PINCH_DISMISS = 0.85;
+  const pinchDismisses = (startSpread, spread) => spread <= PINCH_DISMISS * startSpread;
+
+  // Un toucher : le second d'un double toucher s'il suit le précédent de près, dans le temps et l'espace.
+  const DOUBLE_TAP = { ms: 320, px: 40 };
+  const tapKind = (previous, tap) => (previous && tap.at - previous.at <= DOUBLE_TAP.ms &&
+    Math.hypot(tap.x - previous.x, tap.y - previous.y) <= DOUBLE_TAP.px ? 'double' : 'single');
+
   // Node (tests) : seul le calcul pur est exporté.
   if (typeof window === 'undefined') {
-    module.exports = { stageMode, wantsDetail, catalogOf, productFromSelection, choiceInputs, variantOf, sizesOf };
+    module.exports = {
+      stageMode, wantsDetail, catalogOf, productFromSelection, choiceInputs, variantOf, sizesOf,
+      gestureOf, pinchDismisses, tapKind,
+    };
     return;
   }
 
