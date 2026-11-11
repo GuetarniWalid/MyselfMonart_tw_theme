@@ -536,9 +536,10 @@ body:has(.oeuvre-3d-pill) #shopify-section-tw-footer { padding-bottom: 5.5rem; }
    Choix de Walid du 11/11/2026 : le dessin « Pilule » de l'agent design (le nombre entre dans le
    bouton, qui s'allonge ; panier vide, le rond seul), taillé dans la matière de la pilule d'achat (même
    papier, même filet, même ombre, même hauteur), et la place « le panier garde son coin » de l'UX :
-   - téléphone : sur la ligne de la pilule, à droite, à 12 px du bord, même bas et même hauteur (50 px) ;
+   - téléphone : sur la ligne de la pilule, à droite, à 20 px du bord, même bas et même hauteur (50 px) ;
      la pilule se centre dans la place qui reste, celle d'un panier à deux chiffres réservée : elle ne
-     bouge pas quand le nombre change ;
+     bouge pas quand le nombre change. 20 px et pas 12 : collé au bord, il paraissait trop à droite face
+     à la pilule (retour de Walid du 11/11/2026) ; 12 px sous 375 px de large, où la place manque ;
    - à partir de 720 px : juste au-dessus de la pilule, sur son bord droit, 56 px de haut, 12 px d'écart ;
    - écran court (rangée ouverte, la pilule s'efface) : il part et revient avec elle, et sort alors de
      l'ordre du clavier (visibility). Partout ailleurs, toujours visible.
@@ -556,7 +557,7 @@ body:has(.oeuvre-3d-pill) #shopify-section-tw-footer { padding-bottom: 5.5rem; }
   --fab-shadow-hover: 0 14px 34px rgba(var(--color-main-rgb), 0.2), 0 2px 5px rgba(var(--color-main-rgb), 0.1);
   --fab-shadow-press: 0 3px 10px rgba(var(--color-main-rgb), 0.16), 0 1px 2px rgba(var(--color-main-rgb), 0.1);
   position: fixed; z-index: 30;
-  right: calc(12px + env(safe-area-inset-right, 0px)); bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  right: calc(20px + env(safe-area-inset-right, 0px)); bottom: calc(12px + env(safe-area-inset-bottom, 0px));
   display: grid; grid-auto-flow: column; place-items: center; place-content: center; column-gap: 7px;
   min-width: var(--fab-size); height: var(--fab-size); margin: 0;
   padding: 0 calc((var(--fab-size) - var(--fab-icon)) / 2 - 1px);
@@ -591,13 +592,20 @@ body:has(.oeuvre-3d-pill) #shopify-section-tw-footer { padding-bottom: 5.5rem; }
 .cart-fab.is-bumped { animation: cart-fab-bump 560ms var(--fab-curve); }
 .cart-fab.is-bumped::after { animation: cart-fab-halo 720ms ease-out; }
 .cart-fab.is-bumped .cart-fab__count { animation: cart-fab-roll 460ms var(--fab-curve) both, cart-fab-ink 1400ms ease-out both; }
-/* La pilule se centre dans la place laissée par un panier à deux chiffres (--fab-room). */
+/* La pilule se centre dans la place laissée par un panier à deux chiffres (--fab-room), à 12 px de
+   lui : 20 px de bord + 12 px d'écart. */
 .oeuvre-3d-pill { --fab-room: 81px; }
 @media (max-width: 719px) {
   .oeuvre-3d-pill {
-    left: calc(12px + env(safe-area-inset-left, 0px)); right: calc(24px + var(--fab-room) + env(safe-area-inset-right, 0px));
+    left: calc(12px + env(safe-area-inset-left, 0px)); right: calc(32px + var(--fab-room) + env(safe-area-inset-right, 0px));
     width: fit-content; margin-inline: auto; transform: none;
   }
+}
+/* Sous 375 px de large, la pilule n'a déjà plus toute sa place : le panier y garde 12 px de bord, pour
+   ne pas s'approcher d'elle (5 px d'écart à 360 px avec un panier à deux chiffres, sinon). */
+@media (max-width: 374px) {
+  .cart-fab { right: calc(12px + env(safe-area-inset-right, 0px)); }
+  .oeuvre-3d-pill { right: calc(24px + var(--fab-room) + env(safe-area-inset-right, 0px)); }
 }
 @media (min-width: 720px) {
   .cart-fab {
