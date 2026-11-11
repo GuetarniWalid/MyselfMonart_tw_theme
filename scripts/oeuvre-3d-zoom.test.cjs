@@ -3,7 +3,7 @@
 // Lancer : node --test scripts/oeuvre-3d-zoom.test.cjs  (lanceur intégré de Node, sans dépendance)
 const { test } = require('node:test')
 const assert = require('node:assert/strict')
-const { zoomLimit, createZoom, withZoom, createDirector, neutralRoom, tilePlan, tileServes } = require('../assets/oeuvre-3d-engine.js')
+const { zoomLimit, createZoom, withZoom, createDirector, neutralRoom, tilePlan, tileServes, tileUrl, visibleImage } = require('../assets/oeuvre-3d-engine.js')
 const { gestureOf, pinchDismisses, tapKind } = require('../assets/component-oeuvre-3d.js')
 
 const near = (actual, expected, tolerance, label = '') =>
@@ -208,6 +208,37 @@ test('molette : le zoom suit le pavé tactile sous le pointeur, sans passer sous
   near(zoom.at(20).scale, 4, 1e-9, 'pas au-delà du maximum')
 })
 
+test("animations réduites : le zoom suit toujours les doigts, mais le double toucher, les retours et l'élan sont immédiats", () => {
+  const zoom = createZoom({ reducedMotion: true })
+  zoom.frame(PHONE)
+  zoom.toggle(30, -50, 0)
+  near(zoom.at(0).scale, 2.5, 1e-9, 'double toucher')
+  assert.equal(zoom.isMoving(1), false)
+  zoom.grab(0, 0, 0, 100)
+  for (const t of [116, 132, 148]) zoom.drag(-1.5 * (t - 100), 0, 0, t)
+  const before = zoom.at(148).x
+  zoom.release(150)
+  assert.ok(Math.abs(zoom.at(150).x - before) < 30, 'pas d’élan')
+  assert.equal(zoom.isMoving(151), false)
+  zoom.reset(200)
+  near(zoom.at(200).scale, 1, 1e-9, 'retour')
+})
+
+test("où l'œuvre va se poser : connu dès le départ d'un glissé ou d'un élan, pour demander sa pièce de détail en route", () => {
+  const zoom = createZoom()
+  zoom.frame(PHONE)
+  zoom.toggle(30, -50, 0)
+  const landing = zoom.landing()
+  near(landing.scale, 2.5, 1e-9, 'échelle')
+  const end = zoom.at(1000)
+  near(landing.x, end.x, 1e-9, 'x')
+  near(landing.y, end.y, 1e-9, 'y')
+  const flying = flung(0.25)
+  near(flying.landing().x, flying.at(5000).x, 1e-9, "l'élan")
+  zoom.grab(0, 0, 0, 2000)
+  assert.equal(zoom.landing(), null, 'doigts posés : on ne sait pas')
+})
+
 test("molette d'une souris : chaque cran glisse, et des crans rapprochés s'additionnent", () => {
   const zoom = createZoom()
   zoom.frame(DESK)
@@ -304,6 +335,35 @@ test('pièce de détail : sous la taille maximale des textures et dans le budget
   assert.ok(plan.out.width * plan.out.height <= 2e6, `${plan.out.width * plan.out.height} pixels`)
   assert.equal(plan.left, 0)
   assert.equal(plan.width, 1904, "toute l'image")
+})
+
+/* La région de l'image que l'on voit, d'après la région de la façade (cm depuis son milieu, y vers le
+   haut) : les coordonnées de la façade d'artBox, et le recadrage du contour blanc du shader. */
+const PAINTING = { width: 30, height: 40, depth: 2, paper: 0, passe: 0 }
+const rectNear = (actual, expected, label) => ['u0', 'v0', 'u1', 'v1'].forEach((k) => near(actual[k], expected[k], 5e-4, `${label} ${k}`))
+
+test("région vue de l'image : toile, la façade montre toute l'image", () => {
+  rectNear(visibleImage(PAINTING, 'blanche', 0.75, [-5, -10, 5, 10]), { u0: 1 / 3, v0: 0.25, u1: 2 / 3, v1: 0.75 }, 'toile')
+})
+
+test("région vue de l'image : bordure pliée, la façade n'en montre que le milieu", () => {
+  rectNear(visibleImage(PAINTING, 'pliee', 0.75, [-5, -10, 5, 10]), { u0: 12 / 34, v0: 12 / 44, u1: 22 / 34, v1: 32 / 44 }, 'pliée')
+})
+
+test("région vue de l'image : poster au contour blanc, l'œuvre recadrée dans l'intérieur", () => {
+  const poster = { ...PAINTING, depth: 0.05, paper: 1, passe: 1 }
+  rectNear(visibleImage(poster, 'papier', 0.75, [-5, -10, 5, 10]), { u0: 0.3106, v0: 0.2159, u1: 0.6894, v1: 0.7841 }, 'contour')
+})
+
+test("l'adresse de la pièce : le recadrage du CDN de Shopify, la version de l'image gardée", () => {
+  const plan = { left: 320, top: 256, width: 1280, height: 2048, out: { width: 905, height: 1448 } }
+  const url = new URL(tileUrl('https://www.myselfmonart.com/cdn/shop/files/bonsai.png?v=1792266398&width=2000', plan))
+  assert.equal(url.pathname, '/cdn/shop/files/bonsai.png')
+  assert.equal(url.searchParams.get('v'), '1792266398')
+  assert.equal(url.searchParams.get('crop'), 'region')
+  assert.deepEqual(['crop_left', 'crop_top', 'crop_width', 'crop_height'].map((k) => url.searchParams.get(k)), ['320', '256', '1280', '2048'])
+  assert.equal(url.searchParams.get('width'), '905')
+  assert.equal(url.searchParams.getAll('width').length, 1)
 })
 
 /* Les gestes, sur la scène. fingers : doigts posés ; on : où ils se sont posés (la 3D, ou le voile

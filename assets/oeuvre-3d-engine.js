@@ -2183,7 +2183,8 @@ export function createDirector({ room, product, poses = null, reducedMotion = fa
     Object.assign(state, { product: nextProduct, group, shot, legs, from })
   }
 
-  return { view, choose, grab, drag, release, isMoving }
+  // isStaging : une mise en scène ou un acte en cours (le ressort de l'inclinaison n'en est pas une).
+  return { view, choose, grab, drag, release, isMoving, isStaging }
 }
 
 /* ==== ZOOM SUR L'ŒUVRE ==== */
@@ -2245,8 +2246,10 @@ export function withZoom(view, factor, [sx, sy]) {
    tous levés. Le point de l'œuvre sous leur milieu y reste, tant que l'œuvre couvre l'écran ; au-delà
    de ses bords, sous ×1 ou au-dessus du maximum, elle résiste (élastique), puis revient en place. Lâchée
    en mouvement, elle file sur son élan et rebondit sur ses bords.
-   Rien n'est alloué pendant le geste : la page l'appelle à chaque mouvement du doigt. */
-export function createZoom() {
+   Rien n'est alloué pendant le geste : la page l'appelle à chaque mouvement du doigt.
+   reducedMotion : préférence « animations réduites » du visiteur ; le zoom suit toujours les doigts,
+   mais double toucher, retours et élan sont immédiats. */
+export function createZoom({ reducedMotion = false } = {}) {
   const layout = { half: [1, 1], view: { left: -1, top: -1, right: 1, bottom: 1 }, max: ZOOM.floor }
   const shown = { scale: 1, x: 0, y: 0 } // ce que rend at() : un seul objet, réécrit
   /* Le geste en cours, sans élastique (raw) : le point de ×1 sous les doigts (under), le logarithme de
@@ -2392,6 +2395,11 @@ export function createZoom() {
     }
     motion = { kind: 'fling', t0: at, scale: s, axes: [flingOf(0, s, velocity(at, 0)), flingOf(1, s, velocity(at, 1))] }
     motion.end = at + Math.max(motion.axes[0].ms, motion.axes[1].ms)
+    if (reducedMotion) {
+      // Ni élan ni rebond : l'œuvre se cale tout de suite dans ses bornes.
+      for (const f of motion.axes) f.target = Math.min(f.hi, Math.max(f.lo, f.c0))
+      motion.end = at
+    }
   }
 
   /* L'élan d'un axe, lâché à la vitesse v (px de l'écran par ms) : il décroît (glide) ; s'il doit passer
@@ -2446,7 +2454,8 @@ export function createZoom() {
   /* Glissé vers (s1, x1, y1) en ms, ralenti à l'arrivée. Quand l'échelle change, un point de l'écran
      reste fixe (celui que les deux états y mettent) : l'œuvre grandit ou rapetisse autour de lui, sans
      dériver. */
-  function glideTo(s1, x1, y1, at, ms) {
+  function glideTo(s1, x1, y1, at, duration) {
+    const ms = reducedMotion ? 0 : duration
     const s0 = shown.scale
     const ratio = s1 / s0
     const fixed = Math.abs(1 - ratio) > 1e-3
@@ -2498,6 +2507,16 @@ export function createZoom() {
 
   const isMoving = (now) => hold.active || (!!motion && now < motion.end)
 
+  /* Où l'œuvre va se poser : la fin du glissé ou de l'élan en cours, sinon l'état affiché ; null tant que
+     des doigts la tiennent. La page y demande la pièce de détail pendant le mouvement. */
+  const landed = { scale: 1, x: 0, y: 0 }
+  function landing() {
+    if (hold.active) return null
+    if (!motion) return shown
+    if (motion.kind === 'glide') return Object.assign(landed, { scale: motion.s1, x: motion.to[0], y: motion.to[1] })
+    return Object.assign(landed, { scale: motion.scale, x: motion.axes[0].target, y: motion.axes[1].target })
+  }
+
   // Vers l'échelle s1, le point de l'écran (x, y) gardé autant que les bords le permettent.
   function zoomAround(s1, x, y, at, ms) {
     const s = shown.scale
@@ -2521,10 +2540,10 @@ export function createZoom() {
 
   /* Molette ou pincement du pavé tactile : l'échelle multipliée par factor sous le pointeur (x, y),
      entre ×1 et le maximum, sans élastique (aucun doigt à lâcher). ms : un cran de souris glisse ; un
-     cran qui arrive pendant le glissé du précédent part de l'arrivée de celui-ci. */
+     cran qui arrive pendant le glissé du précédent part de l'arrivée de celui-ci. Rend l'échelle visée. */
   function wheel(factor, x, y, at, ms = 0) {
     settle(at)
-    if (hold.active) return
+    if (hold.active) return shown.scale
     const going = motion && motion.kind === 'glide' && motion.wheel && at < motion.end
     const from = going ? { scale: motion.s1, x: motion.to[0], y: motion.to[1] } : shown
     const s1 = Math.min(layout.max, Math.max(1, from.scale * factor))
@@ -2533,15 +2552,16 @@ export function createZoom() {
     if (ms > 0) {
       glideTo(s1, x1, y1, at, ms)
       motion.wheel = true
-      return
+      return s1
     }
     motion = null
     shown.scale = s1
     shown.x = x1
     shown.y = y1
+    return s1
   }
 
-  return { frame, grab, drag, release, toggle, reset, wheel, at, isMoving }
+  return { frame, grab, drag, release, toggle, reset, wheel, at, isMoving, landing }
 }
 
 /* La pièce de détail : zoomée et au repos, la région de la source que l'on regarde, recadrée par le CDN
@@ -2595,6 +2615,33 @@ export function tilePlan({ visible, native, density, base, maxSide, maxPixels })
     rect: [r.left / W, r.top / H, (r.left + r.width) / W, (r.top + r.height) / H],
     scale,
   }
+}
+
+/* Le contour blanc du poster : une marge de papier égale en cm (PASSE_RATIO du petit côté), et l'œuvre
+   recadrée pour remplir l'intérieur sans se déformer. margin et cover : en part de la feuille et de
+   l'image (le shader de l'œuvre, uMargin et uCover). */
+function passeCrop(width, height, imageRatio) {
+  const m = PASSE_RATIO * Math.min(width, height)
+  const inner = (width - 2 * m) / (height - 2 * m)
+  return {
+    margin: [m / width, m / height],
+    cover: inner < imageRatio ? [inner / imageRatio, 1] : [1, imageRatio / inner],
+  }
+}
+
+/* La région de l'image que l'on voit, d'après celle de la façade : box = [x0, y0, x1, y1], en cm depuis
+   le milieu de l'œuvre, y vers le haut. Les coordonnées de la façade sont celles d'artBox (la bordure
+   pliée en montre le milieu), recadrées comme le fait le shader sous le contour blanc. imageRatio :
+   largeur sur hauteur de l'image. Rend { u0, v0, u1, v1 }, origine en haut à gauche. */
+export function visibleImage(p, border, imageRatio, [x0, y0, x1, y1]) {
+  const fold = border === 'pliee' ? p.depth : 0
+  const u = (x) => (x + p.width / 2 + fold) / (p.width + 2 * fold)
+  const v = (y) => 1 - (y + p.height / 2 + fold) / (p.height + 2 * fold)
+  const rect = { u0: u(x0), v0: v(y1), u1: u(x1), v1: v(y0) }
+  if (!(p.paper >= 0.999 && p.passe >= 0.999)) return rect
+  const { margin, cover } = passeCrop(p.width, p.height, imageRatio)
+  const crop = (t, axis) => ((t - margin[axis]) / (1 - 2 * margin[axis]) - 0.5) * cover[axis] + 0.5
+  return { u0: crop(rect.u0, 0), v0: crop(rect.v0, 1), u1: crop(rect.u1, 0), v1: crop(rect.v1, 1) }
 }
 
 // La pièce en place sert-elle encore cette vue : la couvre-t-elle, assez finement ?
@@ -2817,6 +2864,37 @@ export function closeImage(image) {
   if (image.close) image.close()
 }
 
+/* L'adresse d'une pièce de détail (tilePlan) : la source (adresse absolue de image_url, sans taille),
+   recadrée et réduite par le CDN de Shopify, qui n'agrandit jamais. Le format suit l'en-tête Accept de
+   loadTile : WebP ou AVIF, 70 Ko pour 512 × 512 px du Bonsaï (le PNG d'origine en pèserait 375). */
+export function tileUrl(source, plan) {
+  const url = new URL(source)
+  url.searchParams.delete('width')
+  url.searchParams.delete('height')
+  url.searchParams.set('crop', 'region')
+  url.searchParams.set('crop_left', String(plan.left))
+  url.searchParams.set('crop_top', String(plan.top))
+  url.searchParams.set('crop_width', String(plan.width))
+  url.searchParams.set('crop_height', String(plan.height))
+  url.searchParams.set('width', String(plan.out.width))
+  return url.href
+}
+
+/* Une pièce de détail : téléchargée (signal l'abandonne), décodée hors du fil de la page. Rend l'image
+   et son poids en octets. */
+export async function loadTile(url, signal) {
+  const response = await fetch(url, { headers: LIGHT_IMAGES, signal })
+  if (!response.ok) throw new Error(`pièce de détail : ${response.status}`)
+  const blob = await response.blob()
+  if ('createImageBitmap' in globalThis) return { image: await createImageBitmap(blob), bytes: blob.size }
+  const local = URL.createObjectURL(blob)
+  try {
+    return { image: await viaElement(local), bytes: blob.size }
+  } finally {
+    URL.revokeObjectURL(local)
+  }
+}
+
 export function imageSize(image) {
   return { width: image.naturalWidth || image.width, height: image.naturalHeight || image.height }
 }
@@ -2978,6 +3056,14 @@ const ART_FRAGMENT = /* glsl */ `
   uniform sampler2D uArt;
   uniform sampler2D uArtPrev; // version précédente, pendant le fondu d'un changement de source
   uniform float uArtMix;
+  // Pièces de détail du zoom (showTile) : la nouvelle, en fondu, sur l'ancienne ; rectangle en
+  // coordonnées d'image (u0, v0, u1, v1) et présence.
+  uniform sampler2D uTile;
+  uniform vec4 uTileRect;
+  uniform float uTileMix;
+  uniform sampler2D uTileOld;
+  uniform vec4 uTileOldRect;
+  uniform float uTileOldMix;
   uniform sampler2D uWeave;
   uniform sampler2D uPaperTex;
   uniform float uWeaveScale;
@@ -3059,10 +3145,33 @@ const ART_FRAGMENT = /* glsl */ `
     return mix(plain, cubicArt(tex, uv, size), magnified);
   }
 
+  // Part d'une pièce de détail en uv : 1 dedans, 0 dehors. Ses bords intérieurs à l'image se fondent
+  // sur 3 % de sa taille : là où elle s'arrête, l'image en place la prolonge sans marche. Les bords
+  // posés sur ceux de l'image restent francs.
+  float tileWeight(vec2 uv, vec4 rect) {
+    vec2 t = (uv - rect.xy) / (rect.zw - rect.xy);
+    vec2 lo = mix(smoothstep(0.0, 0.03, t), step(0.0, t), step(rect.xy, vec2(0.0)));
+    vec2 hi = mix(smoothstep(0.0, 0.03, 1.0 - t), step(t, vec2(1.0)), step(vec2(1.0), rect.zw));
+    return lo.x * lo.y * hi.x * hi.y;
+  }
+
+  vec3 readTile(sampler2D tex, vec4 rect, vec2 uv, vec2 dx, vec2 dy) {
+    vec2 size = rect.zw - rect.xy;
+    return readArt(tex, (uv - rect.xy) / size, dx / size, dy / size);
+  }
+
   vec3 sampleArt(vec2 uv, vec2 dx, vec2 dy) {
-    vec3 color = readArt(uArt, uv, dx, dy);
-    if (uArtMix >= 1.0) return color;
-    return mix(readArt(uArtPrev, uv, dx, dy), color, uArtMix);
+    float fresh = uTileMix > 0.0 ? uTileMix * tileWeight(uv, uTileRect) : 0.0;
+    vec3 color = vec3(0.0);
+    // Au cœur de la pièce en place, elle seule : l'image d'en dessous ne se lit pas.
+    if (fresh < 1.0) {
+      color = readArt(uArt, uv, dx, dy);
+      if (uArtMix < 1.0) color = mix(readArt(uArtPrev, uv, dx, dy), color, uArtMix);
+      float old = uTileOldMix > 0.0 ? uTileOldMix * tileWeight(uv, uTileOldRect) : 0.0;
+      if (old > 0.0) color = mix(color, readTile(uTileOld, uTileOldRect, uv, dx, dy), old);
+    }
+    if (fresh > 0.0) color = mix(color, readTile(uTile, uTileRect, uv, dx, dy), fresh);
+    return color;
   }
 
   // Part du pixel dans l'intervalle [0, 1] : 1 dedans, 0 dehors, bord lissé sur un pixel.
@@ -3588,6 +3697,12 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
     uArt: { value: imageTexture(artImage) },
     uArtPrev: { value: null },
     uArtMix: { value: 1 },
+    uTile: { value: null },
+    uTileRect: { value: new THREE.Vector4(0, 0, 1, 1) },
+    uTileMix: { value: 0 },
+    uTileOld: { value: null },
+    uTileOldRect: { value: new THREE.Vector4(0, 0, 1, 1) },
+    uTileOldMix: { value: 0 },
     uWeave: { value: reliefTexture(weave) },
     uPaperTex: { value: null }, // reçu du worker juste après la trame (setPaperRelief)
     uWeaveScale: { value: 1 / WEAVE_TILE_CM },
@@ -3874,16 +3989,11 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
     artUniforms.uPasse.value = p.passe
     artUniforms.uArtCm.value = p.width
     artUniforms.uArtHalf.value.set(p.width / 2, p.height / 2)
-    const m = PASSE_RATIO * Math.min(p.width, p.height)
-    artUniforms.uMargin.value.set(m / p.width, m / p.height)
     // Recadrage de l'œuvre dans l'intérieur du contour (remplir sans déformer).
-    const innerRatio = (p.width - 2 * m) / (p.height - 2 * m)
     const { width: artWidth, height: artHeight } = imageSize(artImage)
-    const artRatio = artWidth / artHeight
-    artUniforms.uCover.value.set(
-      innerRatio < artRatio ? innerRatio / artRatio : 1,
-      innerRatio < artRatio ? 1 : artRatio / innerRatio,
-    )
+    const { margin, cover } = passeCrop(p.width, p.height, artWidth / artHeight)
+    artUniforms.uMargin.value.set(...margin)
+    artUniforms.uCover.value.set(...cover)
 
     frameMesh.visible = p.framed > 0.001
     glass.visible = frameMesh.visible && p.paper > 0.01
@@ -4126,6 +4236,7 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
       wallUniforms.uRoomMix.value = view.room * roomPhoto.fade(now)
     }
     finishArtSwap(now)
+    updateTiles(now)
     renderer.render(scene, camera)
   }
 
@@ -4217,6 +4328,64 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
     artSwap = null
   }
 
+  /* Pièces de détail du zoom (tilePlan) : posées sur l'œuvre dans leur rectangle (coordonnées d'image),
+     par-dessus l'image en place, en fondu court. La nouvelle arrive sur l'ancienne, qui reste entière
+     dessous puis s'en va : ni saut ni éclair. L'envoi au GPU prend quelques ms : la page ne l'appelle
+     qu'au repos. tiles.shown : la pièce en place (leaving : l'instant où elle a commencé à s'effacer) ;
+     tiles.under : la précédente. */
+  const TILE_FADE_MS = 220
+  const tiles = { shown: null, under: null }
+  const tileFade = (since, now) => Math.min(1, Math.max(0, (now - since) / TILE_FADE_MS))
+
+  function dropTile(tile) {
+    if (!tile) return
+    tile.texture.dispose()
+    closeImage(tile.image)
+  }
+
+  function showTile(image, rect) {
+    const texture = imageTexture(image)
+    renderer.initTexture(texture)
+    dropTile(tiles.under)
+    tiles.under = tiles.shown && tiles.shown.leaving === null ? tiles.shown : null
+    if (tiles.shown && !tiles.under) dropTile(tiles.shown)
+    tiles.shown = { texture, image, rect, at: performance.now(), leaving: null }
+    if (onNeedsRender) onNeedsRender()
+  }
+
+  // La pièce s'efface (retour à ×1) ; sa mémoire est rendue à la fin du fondu.
+  function hideTile() {
+    dropTile(tiles.under)
+    tiles.under = null
+    if (tiles.shown && tiles.shown.leaving === null) tiles.shown.leaving = performance.now()
+    if (onNeedsRender) onNeedsRender()
+  }
+
+  function updateTiles(now) {
+    const { shown } = tiles
+    let mix = 0
+    if (shown) {
+      mix = shown.leaving === null ? tileFade(shown.at, now) : 1 - tileFade(shown.leaving, now)
+      if (shown.leaving !== null && mix <= 0) {
+        dropTile(shown)
+        tiles.shown = null
+      } else if (mix >= 1 && tiles.under) {
+        dropTile(tiles.under)
+        tiles.under = null
+      }
+    }
+    const current = tiles.shown
+    artUniforms.uTile.value = current ? current.texture : null
+    artUniforms.uTileMix.value = current ? mix : 0
+    if (current) artUniforms.uTileRect.value.set(...current.rect)
+    const under = tiles.under
+    artUniforms.uTileOld.value = under ? under.texture : null
+    artUniforms.uTileOldMix.value = under ? 1 : 0
+    if (under) artUniforms.uTileOldRect.value.set(...under.rect)
+  }
+
+  const tileFading = (now) => !!tiles.shown && (tiles.shown.leaving === null ? now - tiles.shown.at < TILE_FADE_MS : true)
+
   // Projette un point du mur ou du tableau en pixels CSS dans le canvas.
   const tmp = new THREE.Vector3()
   function toScreen(point) {
@@ -4238,17 +4407,20 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
     ]
     for (const { value } of textures) if (value) value.dispose()
     for (const set of Object.values(poseSets || {})) set.dispose()
+    dropTile(tiles.shown)
+    dropTile(tiles.under)
     closeImage(artImage)
     renderer.dispose()
     renderer.forceContextLoss()
   }
 
   // Seul ce qui se voit compte : un fondu hors du champ ne réclame aucune image.
-  // art : compter le fondu de la source complète (la même image, plus nette), qui n'est pas un
-  // mouvement pour la page (ses plaques, « De face »), mais demande encore des images.
+  // art : compter les fondus de l'œuvre elle-même (source complète, pièce de détail : la même image,
+  // plus nette), qui ne sont pas un mouvement pour la page (ses plaques, « De face »), mais demandent
+  // encore des images.
   function isFading(now, { art = true } = {}) {
     const posesFading = !!poseSets && poseSizes.some((size, i) => posesShown[i] > 0 && poseSets[size].isFading(now))
-    return (art && !!artSwap) || (roomShown && (roomPhoto.isFading(now) || posesFading)) || (frameMesh.visible && wood.isFading(now))
+    return (art && (!!artSwap || tileFading(now))) || (roomShown && (roomPhoto.isFading(now) || posesFading)) || (frameMesh.visible && wood.isFading(now))
   }
 
   return {
@@ -4259,6 +4431,13 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
     setPaperRelief,
     loadWood: wood.load,
     useArtImage,
+    showTile,
+    hideTile,
+    // L'image de l'œuvre en place (px), et la plus grande texture que la carte graphique accepte.
+    artTexels: () => imageSize(artImage),
+    maxTextureSize: () => renderer.capabilities.maxTextureSize,
+    // La pièce de détail en place, pour les vérifications : son rectangle et sa taille, ou null.
+    tile: () => (tiles.shown ? { rect: tiles.shown.rect, ...imageSize(tiles.shown.image), leaving: tiles.shown.leaving !== null } : null),
     prefetchRoom: roomPhoto.load,
     prefetchPoses,
     density: () => renderer.getPixelRatio(),
