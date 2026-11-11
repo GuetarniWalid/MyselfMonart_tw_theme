@@ -46,6 +46,43 @@
   assign short_title = product.metafields.title.short | default: product.title
   assign price = product.selected_or_first_available_variant.price
 -%}
+{%- comment -%}
+  Albert Sans, la police des légendes, de la rangée, de « De face » et de la pilule (choix de Walid du
+  11/11/2026) : graisses 500, 600 et 700 seulement, fichiers woff2 statiques pris sur Google Fonts
+  (fonts.gstatic.com, version 1.025, caractères latins), hébergés dans le thème.
+  Copyright 2021 The Albert Sans Project Authors (https://github.com/usted/Albert-Sans).
+  Licence : SIL Open Font License 1.1 (https://openfontlicense.org), libre d'usage et de diffusion.
+  Déclarée ici seulement : aucune autre page ne la charge. Les graisses de l'arrivée (500, 600) partent
+  en avance : font-display: swap ne change rien à l'écran, la page ne bouge pas.
+{%- endcomment -%}
+{{ 'oeuvre-3d-albert-sans-500.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+{{ 'oeuvre-3d-albert-sans-600.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+{% style %}
+  @font-face {
+    font-family: 'Albert Sans';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url({{ 'oeuvre-3d-albert-sans-500.woff2' | asset_url }}) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: 'Albert Sans';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url({{ 'oeuvre-3d-albert-sans-600.woff2' | asset_url }}) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: 'Albert Sans';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url({{ 'oeuvre-3d-albert-sans-700.woff2' | asset_url }}) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+{% endstyle %}
 <script src="{{ 'oeuvre-3d-chips.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'component-oeuvre-3d.js' | asset_url }}" defer="defer"></script>
 <oeuvre-3d
@@ -197,7 +234,7 @@
     <button type="button" data-previous class="h-full pl-3.5 pr-2 hover:bg-main-10 focus-visible:bg-main-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-main" aria-label="{{ 'sections.mma.oeuvre_3d_photo_previous' | t }}">
       <span class="block rotate-90">{% render 'tw-icon-caret', width: '16' %}</span>
     </button>
-    <span data-photo-count class="px-2 font-heading text-[13.5px] font-semibold tabular-nums"></span>
+    <span data-photo-count class="px-2 tabular-nums"></span>
     <button type="button" data-next class="h-full pl-2 pr-3.5 hover:bg-main-10 focus-visible:bg-main-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-main" aria-label="{{ 'sections.mma.oeuvre_3d_photo_next' | t }}">
       <span class="block -rotate-90">{% render 'tw-icon-caret', width: '16' %}</span>
     </button>

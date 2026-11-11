@@ -354,10 +354,12 @@ main-product-blocks .description h3 span {
    les classes utilitaires. Tailwind garde ces règles : leurs classes sont écrites en entier dans les
    scripts et le snippet. */
 @layer components {
-/* La police des chips, de « De face » et de la pilule : celle des titres du thème. */
+/* La police des chips, de « De face » et de la pilule : Albert Sans, comme le design (choix de Walid du
+   11/11/2026), déclarée par snippets/oeuvre-3d-stage.liquid seul ; la police des titres du thème en
+   secours, le temps qu'elle arrive. */
 .oeuvre-3d-stage,
 .oeuvre-3d-pill {
-  --scene-font: heading, "Helvetica Neue", Arial, sans-serif;
+  --scene-font: "Albert Sans", heading, "Helvetica Neue", Arial, sans-serif;
 }
 .oeuvre-3d-stage {
   --scene-ink: rgb(var(--color-main-rgb));
