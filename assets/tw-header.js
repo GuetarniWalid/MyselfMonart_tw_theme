@@ -374,19 +374,17 @@ class StickyHeader extends HTMLElement {
       });
     });
 
-    document.addEventListener('PredictiveSearchClose', async () => {
+    // Le bouton du panier reste visible pendant la recherche : il n'est plus caché aux lecteurs d'écran
+    // (aria-hidden le laissait atteignable au clavier : jamais de focus sur un bouton caché).
+    document.addEventListener('PredictiveSearchClose', () => {
       this.cartButton?.classList.replace('translate-y-0', 'translate-y-1/2');
       this.body.classList.remove('overflow-hidden');
-      await waitAnimEnd(this.cartButton);
-      this.cartButton.setAttribute('aria-hidden', 'false');
     });
-    document.addEventListener('PredictiveSearchOpen', async () => {
+    document.addEventListener('PredictiveSearchOpen', () => {
       this.renderBodyScrollable(false);
       this.closeMobileMenu();
       this.reveal();
       this.cartButton?.classList.replace('translate-y-1/2', 'translate-y-0');
-      await waitAnimEnd(this.cartButton);
-      this.cartButton.setAttribute('aria-hidden', 'true');
     });
 
     this.cartButton?.addEventListener('click', () => {

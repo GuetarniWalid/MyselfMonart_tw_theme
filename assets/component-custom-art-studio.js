@@ -3671,7 +3671,14 @@
       return props;
     }
 
+    // Le compteur du bouton du panier, comme les autres scripts du panier (assets/cart-count.js) : le
+    // nom du bouton se lit avec le nombre d'articles (« Ouvrir le panier, 2 articles »). Sans lui,
+    // l'ancienne écriture, avec le texte traduit de la section.
     updateCartBubble(count) {
+      if (window.MMACartCount) {
+        window.MMACartCount.render(count);
+        return;
+      }
       const bubble = document.getElementById('bubble-nb-product');
       if (!bubble) return;
       const srText = (this.i18n.cart_count_sr || '').replace('[count]', count);

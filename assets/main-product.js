@@ -555,19 +555,8 @@ class MainProductBlocks extends CollapsibleTab {
   };
 
   renderNewSections({ items, sections }, cart, headerId) {
-    // Update bubble manually with cart item count
-    const bubble = document.getElementById('bubble-nb-product');
-    if (bubble && cart) {
-      if (cart.item_count > 0) {
-        const itemCountHTML = cart.item_count < 100
-          ? `<span aria-hidden="true">${cart.item_count}</span>`
-          : '';
-        const srOnlyHTML = `<span class="sr-only">Cart count: ${cart.item_count}</span>`;
-        bubble.innerHTML = itemCountHTML + srOnlyHTML;
-      } else {
-        bubble.innerHTML = '';
-      }
-    }
+    // Le compteur du bouton du panier, traduit (assets/cart-count.js, chargé avec le bouton).
+    if (cart) window.MMACartCount?.render(cart.item_count);
 
     const sectionDrawer = document.getElementById(
       'shopify-section-tw-cart-drawer',

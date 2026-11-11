@@ -520,12 +520,108 @@ main-product-blocks .description h3 span {
 @media (max-width: 767px) {
   body.promo-popup-open .oeuvre-3d-pill { display: none; }
 }
-/* La page garde de quoi laisser voir le bas du pied de page sous la pilule. Le bouton rond du panier
-   (snippets/open-cart-drawer-button.liquid), absent de la maquette, reste toujours visible (choix de
-   Walid du 11/11/2026) et monte au-dessus de la pilule, par transform (un changement de `bottom`
-   compterait comme un décalage). */
+/* La page garde de quoi laisser voir le bas du pied de page sous la pilule. */
 body:has(.oeuvre-3d-pill) { padding-bottom: 5.5rem; }
-body:has(.oeuvre-3d-pill) #cart-button { transform: translateY(-4.5rem); }
+
+/* ---- Le bouton du panier de la fiche 3D (snippets/open-cart-drawer-button.liquid, .cart-fab) ----
+   Choix de Walid du 11/11/2026 : le dessin « Pilule » de l'agent design (le nombre entre dans le
+   bouton, qui s'allonge ; panier vide, le rond seul), taillé dans la matière de la pilule d'achat (même
+   papier, même filet, même ombre, même hauteur), et la place « le panier garde son coin » de l'UX :
+   - téléphone : sur la ligne de la pilule, à droite, à 12 px du bord, même bas et même hauteur (50 px) ;
+     la pilule se centre dans la place qui reste, celle d'un panier à deux chiffres réservée : elle ne
+     bouge pas quand le nombre change ;
+   - à partir de 720 px : juste au-dessus de la pilule, sur son bord droit, 56 px de haut, 12 px d'écart ;
+   - écran court (rangée ouverte, la pilule s'efface) : il part et revient avec elle, et sort alors de
+     l'ordre du clavier (visibility). Partout ailleurs, toujours visible.
+   États : survol (souris), focus clavier (anneau blanc puis trait d'encre, comme la pilule), appui,
+   après un ajout (.is-bumped, assets/cart-count.js), animations réduites. Placé par right et bottom ;
+   les états jouent sur translate et scale, le départ avec la pilule sur transform : rien ne s'écrase. */
+.cart-fab {
+  --fab-size: 50px;
+  --fab-icon: 22px;
+  --fab-ink: rgb(var(--color-main-rgb));
+  --fab-paper: rgb(var(--color-secondary-rgb));
+  --fab-terra: rgb(var(--color-terra-rgb));
+  --fab-curve: cubic-bezier(0.17, 0.67, 0.61, 1.06); /* la courbe des chips */
+  --fab-shadow: 0 8px 26px rgba(var(--color-main-rgb), 0.16), 0 1px 3px rgba(var(--color-main-rgb), 0.08);
+  --fab-shadow-hover: 0 14px 34px rgba(var(--color-main-rgb), 0.2), 0 2px 5px rgba(var(--color-main-rgb), 0.1);
+  --fab-shadow-press: 0 3px 10px rgba(var(--color-main-rgb), 0.16), 0 1px 2px rgba(var(--color-main-rgb), 0.1);
+  position: fixed; z-index: 30;
+  right: calc(12px + env(safe-area-inset-right, 0px)); bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  display: grid; grid-auto-flow: column; place-items: center; place-content: center; column-gap: 7px;
+  min-width: var(--fab-size); height: var(--fab-size); margin: 0;
+  padding: 0 calc((var(--fab-size) - var(--fab-icon)) / 2 - 1px);
+  border: 1px solid rgba(var(--color-main-rgb), 0.12); border-radius: 999px;
+  background-color: rgba(var(--color-secondary-rgb), 0.95); color: var(--fab-ink); box-shadow: var(--fab-shadow);
+  cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+  transition: translate 220ms var(--fab-curve), scale 140ms ease, box-shadow 220ms ease, background-color 220ms ease,
+    opacity 260ms ease, transform 420ms var(--fab-curve), visibility 0s;
+}
+.cart-fab__icon { display: block; width: var(--fab-icon); height: var(--fab-icon); pointer-events: none; }
+.cart-fab:has(.cart-fab__count:not(:empty)) { padding: 0 17px 0 14px; }
+.cart-fab__count {
+  font: 600 16px/1 "Albert Sans", heading, "Helvetica Neue", Arial, sans-serif; font-variant-numeric: tabular-nums;
+  color: var(--fab-ink); pointer-events: none;
+}
+.cart-fab__count:empty { display: none; }
+/* Le halo de l'ajout, éteint au repos. */
+.cart-fab::after {
+  content: ""; position: absolute; inset: -1px; border: 2px solid var(--fab-terra); border-radius: inherit;
+  opacity: 0; pointer-events: none;
+}
+@media (hover: hover) {
+  .cart-fab:hover { background-color: var(--fab-paper); box-shadow: var(--fab-shadow-hover); translate: 0 -2px; }
+}
+.cart-fab:focus-visible {
+  outline: 2px solid var(--fab-ink); outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--fab-paper), var(--fab-shadow-hover);
+}
+.cart-fab:active { scale: 0.94; translate: none; box-shadow: var(--fab-shadow-press); transition-duration: 90ms; }
+/* Après un ajout : le bouton prend l'article (petit rebond), le chiffre monte en terre puis reprend
+   l'encre, un halo terre s'élargit et s'efface. */
+.cart-fab.is-bumped { animation: cart-fab-bump 560ms var(--fab-curve); }
+.cart-fab.is-bumped::after { animation: cart-fab-halo 720ms ease-out; }
+.cart-fab.is-bumped .cart-fab__count { animation: cart-fab-roll 460ms var(--fab-curve) both, cart-fab-ink 1400ms ease-out both; }
+/* La pilule se centre dans la place laissée par un panier à deux chiffres (--fab-room). */
+.oeuvre-3d-pill { --fab-room: 81px; }
+@media (max-width: 719px) {
+  .oeuvre-3d-pill {
+    left: calc(12px + env(safe-area-inset-left, 0px)); right: calc(24px + var(--fab-room) + env(safe-area-inset-right, 0px));
+    width: fit-content; margin-inline: auto; transform: none;
+  }
+}
+@media (min-width: 720px) {
+  .cart-fab {
+    --fab-size: 56px;
+    --fab-icon: 24px;
+    --fab-shadow: 0 10px 30px rgba(var(--color-main-rgb), 0.16), 0 1px 3px rgba(var(--color-main-rgb), 0.08);
+    right: calc(32px + env(safe-area-inset-right, 0px)); bottom: calc(96px + env(safe-area-inset-bottom, 0px)); /* 28 + 56 + 12 */
+  }
+  .cart-fab:has(.cart-fab__count:not(:empty)) { padding: 0 19px 0 16px; }
+  .cart-fab__count { font-size: 17px; }
+}
+/* Écran court, rangée ouverte : la pilule s'efface (chips-pill-away), le panier part avec elle, au même
+   rythme, et revient avec elle. Caché, il sort de l'ordre du clavier. */
+body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
+  opacity: 0; transform: translateY(84px); visibility: hidden; pointer-events: none;
+  transition: opacity 260ms ease, transform 420ms var(--fab-curve), visibility 0s linear 420ms;
+}
+/* Animations réduites : rien ne bouge ni ne grandit ; le chiffre paraît en fondu, un anneau terre
+   s'allume sur place puis s'éteint. */
+@media (prefers-reduced-motion: reduce) {
+  .cart-fab { transition: box-shadow 150ms ease, background-color 150ms ease, opacity 150ms ease, visibility 0s; }
+  .cart-fab:hover, .cart-fab:active { translate: none; scale: none; }
+  body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab { transform: none; transition: opacity 150ms ease, visibility 0s linear 150ms; }
+  .cart-fab.is-bumped { animation: none; }
+  .cart-fab.is-bumped::after { animation: cart-fab-glow 1200ms ease-out; }
+  .cart-fab.is-bumped .cart-fab__count { animation: cart-fab-fade 220ms ease both, cart-fab-ink 1400ms ease-out both; }
+}
+@keyframes cart-fab-bump { 0% { scale: 1; } 35% { scale: 1.06; } 100% { scale: 1; } }
+@keyframes cart-fab-halo { 0% { opacity: 0.7; scale: 1; } 100% { opacity: 0; scale: 1.5; } }
+@keyframes cart-fab-roll { from { opacity: 0; translate: 0 70%; } to { opacity: 1; translate: 0 0; } }
+@keyframes cart-fab-ink { 0%, 45% { color: var(--fab-terra); } 100% { color: var(--fab-ink); } }
+@keyframes cart-fab-glow { 0%, 35% { opacity: 0.9; } 100% { opacity: 0; } }
+@keyframes cart-fab-fade { from { opacity: 0; } to { opacity: 1; } }
 
 /* ---- Les chips (src/chips.css de la maquette) ----
    Valeurs du design « Fiche chips v2 » de Walid du 09/11/2026 : téléphone par défaut, ordinateur sous

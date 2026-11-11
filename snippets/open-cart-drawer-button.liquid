@@ -1,15 +1,55 @@
+{%- comment -%}
+  Le bouton du panier, sur toutes les pages (layout/*.liquid).
+  Nom lu avec le nombre d'articles, traduit : « Ouvrir le panier, 2 articles » (aria-labelledby : le
+  libellé, puis le compteur #bubble-nb-product, dont le chiffre visible est caché aux lecteurs d'écran).
+  Les scripts du panier récrivent ce compteur par assets/cart-count.js (MMACartCount.render), avec les
+  modèles traduits de data-count-one et data-count-other.
+  Sur la fiche 3D (?view=oeuvre-3d), le dessin de la pilule d'achat (variante « Pilule » validée par
+  Walid le 11/11/2026, règles .cart-fab d'input.css) : le nombre entre dans le bouton, qui s'allonge ;
+  panier vide, le rond seul. Ailleurs, le dessin de toujours.
+{%- endcomment -%}
+{%- liquid
+  assign count = cart.item_count | default: 0
+  assign fab = false
+  if template.suffix == 'oeuvre-3d'
+    assign fab = true
+  endif
+-%}
+<script src="{{ 'cart-count.js' | asset_url }}" defer="defer"></script>
 <button
   id="cart-button"
+  type="button"
+  {%- if fab %}
+  class="cart-fab cart-fab--pilule"
+  {%- else %}
   class="fixed z-30 right-6 bottom-6 bg-buy-button text-main w-[70px] h-[70px] rounded-full flex justify-center items-center transition-all duration-75 border-main border-[4px] shadow-neu-lg hover:shadow-neu-md"
-  role="button"
-  aria-label="{{ "snippet.tw_sticky_header.open_cart" | t }}">
-  {% render 'tw-icon-bag' %}
-  <div class="absolute top-1/2 left-1/2 -translate-y-1 bg-buy-button w-5 h-5 rounded-full overflow-hidden after:absolute after:inset-0" id="bubble-nb-product">
-    {%- if cart != empty -%}
-      {%- if cart.item_count < 100 -%}
-        <span aria-hidden="true">{{ cart.item_count }}</span>
+  {%- endif %}
+  aria-labelledby="cart-button-label bubble-nb-product"
+  data-count-one="{{ 'sections.header.cart_count' | t: count: 1 | replace: '1', '[count]' }}"
+  data-count-other="{{ 'sections.header.cart_count' | t: count: 2 | replace: '2', '[count]' }}">
+  <span id="cart-button-label" class="sr-only">{{ 'snippet.tw_sticky_header.open_cart' | t }}</span>
+  {%- if fab %}
+    <svg class="cart-fab__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+      <path d="M5 8.5h14v9.25A2.25 2.25 0 0 1 16.75 20h-9.5A2.25 2.25 0 0 1 5 17.75Z"/>
+      <path d="M9 8.5V7a3 3 0 0 1 6 0v1.5"/>
+    </svg>
+    <span class="cart-fab__count" id="bubble-nb-product">
+      {%- if count > 0 -%}
+        <span aria-hidden="true">{% if count > 99 %}99+{% else %}{{ count }}{% endif %}</span>
+        {%- comment -%} Collé au chiffre, comme l'écrit assets/cart-count.js. {%- endcomment -%}
+        <span class="sr-only">, {{ 'sections.header.cart_count' | t: count: count }}</span>
       {%- endif -%}
-      <span class="sr-only">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
+    </span>
+  {%- else %}
+  {% render 'tw-icon-bag' %}
+  <span class="absolute top-1/2 left-1/2 -translate-y-1 bg-buy-button w-5 h-5 rounded-full overflow-hidden after:absolute after:inset-0" id="bubble-nb-product">
+    {%- if count > 0 -%}
+      {%- if count < 100 -%}
+        <span aria-hidden="true">{{ count }}</span>
+      {%- endif -%}
+      {%- comment -%} Collé au chiffre, comme l'écrit assets/cart-count.js. {%- endcomment -%}
+      <span class="sr-only">, {{ 'sections.header.cart_count' | t: count: count }}</span>
     {%- endif -%}
-  </div>
+  </span>
+  {%- endif %}
 </button>

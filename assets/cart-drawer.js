@@ -1,3 +1,13 @@
+// Le bouton du panier se voit-il ? Ni caché (display, visibility, inert), ni transparent.
+function cartButtonShown(button) {
+  if (button.closest('[inert]')) return false;
+  if (typeof button.checkVisibility === 'function') {
+    return button.checkVisibility({ visibilityProperty: true, opacityProperty: true });
+  }
+  const style = getComputedStyle(button);
+  return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
+}
+
 class CartDrawer extends HTMLElement {
   constructor() {
     super();
@@ -57,7 +67,10 @@ class CartDrawer extends HTMLElement {
     this.cartDrawer.classList.replace('translate-x-0', 'translate-x-full');
     this.body.classList.remove('overflow-hidden');
     this.setAttribute('aria-expanded', 'false');
-    this.cartButton.focus();
+    // Le focus revient au bouton du panier, s'il se voit ; jamais sur un bouton caché (fiche 3D, rangée
+    // ouverte sur un écran court : il part avec la pilule). Sinon, il quitte le tiroir refermé.
+    if (this.cartButton && cartButtonShown(this.cartButton)) this.cartButton.focus();
+    else if (this.contains(document.activeElement)) document.activeElement.blur();
   };
 
   scopeFocusElements = () => {
@@ -229,19 +242,8 @@ class CartItem extends HTMLElement {
   }
 
   renderNewSections(json, cart) {
-    // Update bubble manually with cart item count
-    const bubble = document.getElementById('bubble-nb-product');
-    if (bubble && cart) {
-      if (cart.item_count > 0) {
-        const itemCountHTML = cart.item_count < 100
-          ? `<span aria-hidden="true">${cart.item_count}</span>`
-          : '';
-        const srOnlyHTML = `<span class="sr-only">Cart count: ${cart.item_count}</span>`;
-        bubble.innerHTML = itemCountHTML + srOnlyHTML;
-      } else {
-        bubble.innerHTML = '';
-      }
-    }
+    // Le compteur du bouton du panier, traduit (assets/cart-count.js, chargé avec le bouton).
+    if (cart) window.MMACartCount?.render(cart.item_count);
 
     const sectionDrawer = document.getElementById(
       'shopify-section-tw-cart-drawer',
@@ -375,19 +377,8 @@ class QuickAddToCart extends HTMLElement {
   }
 
   renderNewSections({ sections }, cart) {
-    // Update bubble manually with cart item count
-    const bubble = document.getElementById('bubble-nb-product');
-    if (bubble && cart) {
-      if (cart.item_count > 0) {
-        const itemCountHTML = cart.item_count < 100
-          ? `<span aria-hidden="true">${cart.item_count}</span>`
-          : '';
-        const srOnlyHTML = `<span class="sr-only">Cart count: ${cart.item_count}</span>`;
-        bubble.innerHTML = itemCountHTML + srOnlyHTML;
-      } else {
-        bubble.innerHTML = '';
-      }
-    }
+    // Le compteur du bouton du panier, traduit (assets/cart-count.js, chargé avec le bouton).
+    if (cart) window.MMACartCount?.render(cart.item_count);
 
     const sectionDrawer = document.getElementById(
       'shopify-section-tw-cart-drawer',
