@@ -384,6 +384,9 @@ main-product-blocks .description h3 span {
   background: radial-gradient(70% 60% at 40% 38%, #e5dfd4 0%, var(--wall) 55%, var(--wall-shade) 100%);
   color: var(--scene-ink);
 }
+/* La 3D en place, deux doigts sur la scène zooment l'œuvre, jamais la page (assets/component-oeuvre-3d.js) ;
+   un doigt vertical fait toujours défiler la page. Hors de la scène, la page garde son propre zoom. */
+.oeuvre-3d-stage[data-state="3d"] { touch-action: pan-y; }
 /* La scène va d'un bord à l'autre de l'écran : la section de la fiche (page-width) s'efface autour
    d'elle. Les blocs qui la suivent gardent leur colonne (max-w-lg). */
 .page-width:has(.oeuvre-3d-stage) {
@@ -687,6 +690,9 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
 .chips.is-open .chips-toggle, .chips.is-open .chips-cote, .chips.is-open .chips-legend,
 .chips.is-returning .chips-toggle:not(:focus-within), .chips.is-returning .chips-cote:not(:focus-within),
 .chips.is-returning .chips-legend:not(:focus-within) { opacity: 0; pointer-events: none; }
+/* L'œuvre zoomée prend toute la scène (is-zoomed, posé par la page) : bascule, légendes, taille et
+   filets s'effacent ; la pilule d'achat reste. Ils reviennent à ×1. */
+.chips.is-zoomed .chips-item, .chips.is-zoomed .chips-marks { opacity: 0; pointer-events: none; transition: opacity 200ms ease; }
 /* La plaque dépolie hors du plan de face (bascule Toile | Poster, glisser) : sa teinte est un calque
    (::before) qui vient en fondu, au compositeur. Le flou ne se calcule que la 3D arrêtée (is-moving
    posé par la page) : sur une 3D qui bouge, le navigateur le refait à chaque image, et un téléphone

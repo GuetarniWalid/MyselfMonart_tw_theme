@@ -933,12 +933,21 @@
       setMoving(moving) {
         if (moving !== stage.classList.contains('is-moving')) stage.classList.toggle('is-moving', moving);
       },
+      /* L'œuvre est zoomée : légendes, filets, bascule et taille s'effacent et ne prennent plus ni le doigt
+         ni le focus (la pilule d'achat reste). Elles reviennent à ×1. */
+      setZoomed(zoomed) {
+        if (zoomed === stage.classList.contains('is-zoomed')) return;
+        stage.classList.toggle('is-zoomed', zoomed);
+        setHidden(zoomed || !!open);
+      },
+      // Pincer pour revenir de face, rangée ouverte : exactement un toucher en dehors.
+      dismiss: () => dispatch({ type: 'outside' }),
       destroy() {
         timers.forEach(clearTimeout);
         document.removeEventListener('keydown', onKey);
         document.removeEventListener('click', onOutside, true);
         for (const node of [svg, toggle, left, right, cote, closer, ...Object.values(rails)]) node.remove();
-        stage.classList.remove('chips', 'is-desk', 'is-open', 'is-staged', 'is-ready', 'is-settled', 'is-moving', 'is-returning');
+        stage.classList.remove('chips', 'is-desk', 'is-open', 'is-staged', 'is-ready', 'is-settled', 'is-moving', 'is-returning', 'is-zoomed');
         setPillAway(false);
       },
     };

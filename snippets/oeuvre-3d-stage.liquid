@@ -101,6 +101,10 @@
       "engine": {{ 'oeuvre-3d-engine.js' | asset_url | json }},
       "wood": {{ 'texture-chene-clair-cadre.jpg' | asset_url | json }},
       "detail": {{ art | image_url: width: 2000 | json }},
+      {%- comment -%} Le zoom sur l'œuvre : la source à sa taille d'origine, que le CDN recadre en pièces de
+         détail (tileUrl du moteur), et cette taille, qui fixe le zoom maximal. {%- endcomment -%}
+      "source": {{ art | image_url | json }},
+      "native": { "width": {{ art.width | json }}, "height": {{ art.height | json }} },
       "view": {{ template.suffix | json }},
       "poses": {
         {%- comment -%} Les photos de la Taille (une pose par taille du portrait 3:4), chargées à la première

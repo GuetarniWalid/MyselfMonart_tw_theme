@@ -379,6 +379,15 @@
      leur flou) : jamais pendant un trajet ni pendant ce retour (version 25). */
   const AFTER_LEGENDS_MS = 650;
 
+  /* Zoom : l'œuvre zoomée immobile depuis TILE_IDLE_MS, sa pièce de détail part au CDN. TILE_PIXELS : le
+     budget de mémoire d'une pièce (13 Mo, 17 avec ses mipmaps ; un téléphone au plus fort du zoom en
+     demande 2,6 millions) ; TILE_SIDE : son plus grand côté, sous la limite de la carte graphique.
+     WHEEL_PAUSE_MS : la pause de la molette qui rend la page à son défilement, revenue à ×1. */
+  const TILE_IDLE_MS = 150;
+  const TILE_PIXELS = 3.2e6;
+  const TILE_SIDE = 8192;
+  const WHEEL_PAUSE_MS = 300;
+
   class Oeuvre3d extends HTMLElement {
     connectedCallback() {
       // Déplacé tel quel par la bascule toile/poster (adopt) : rien ne s'arrête, rien ne recommence.
@@ -425,6 +434,18 @@
       this.frontShown = true;
       this.size = { w: 1, h: 1, top: 0, glH: 1, free: { top: 0, left: 0 }, L: null };
       this.pendingTasks = [];
+      /* Les doigts sur la scène (et la souris) : pointers, par identifiant ; fingers, les mêmes, dans
+         l'ordre où ils se sont posés. gesture : ce qu'ils font (gestureOf), où ils se sont posés, s'ils
+         ont été plusieurs, de combien ils ont bougé, leur écart au début d'un pincement de retour. */
+      this.pointers = new Map();
+      this.fingers = [];
+      this.gesture = { mode: 'none', on: null, several: false, moved: 0, at: 0, spread: 0, done: false };
+      this.spot = { x: 0, y: 0, spread: 0 }; // milieu et écart des doigts, réécrits (fingerSpot)
+      this.lastTap = null;
+      this.zoomLayout = null; // la mise en page du zoom (zoomFrameOf), à jour à chaque image
+      this.tileLog = []; // les pièces de détail téléchargées : adresse, poids, durée
+      this.wheel = { latched: false, last: 0, pinch: 1, pinchAt: 0, box: null, boxAt: 0 };
+      this.touches = 0;
 
       this.fitTop();
       this.catalog = catalogOf({ models: this.models, names: this.config.names });
@@ -516,6 +537,7 @@
       document.removeEventListener('mma:selection-change', this.onSelection);
       document.removeEventListener('mma:soft-navigation', this.onSoftNavigation);
       document.removeEventListener('mma:cart-count', this.onResize);
+      document.removeEventListener('keydown', this.onKey);
       if (this.resizer) this.resizer.disconnect();
       cancelAnimationFrame(this.raf);
       clearTimeout(this.restTimer);
@@ -528,6 +550,9 @@
       this.live = false;
       cancelAnimationFrame(this.raf);
       this.raf = 0;
+      this.dropTiles();
+      this.zoom = null;
+      this.setZoomed(false);
       if (this.canvas) this.canvas.removeEventListener('webglcontextlost', this.onContextLost);
       if (this.reliefs) this.reliefs.stop();
       if (this.detailReady && this.engine) this.engine.closeImage(this.detailReady);
@@ -669,7 +694,9 @@
       this.refresh(detail);
       if (!this.director) return;
       // Une correction de la fiche (cadre indisponible pour cette taille) : la 3D la prend sans bouger.
-      if (!this.choosing) this.director.choose(detail.changed || 'front', { ...this.product }, performance.now());
+      if (!this.choosing) {
+        this.afterUnzoom(() => this.director.choose(detail.changed || 'front', { ...this.product }, performance.now()));
+      }
       this.requestRender();
     };
 
@@ -677,10 +704,12 @@
     // reste sur les photos, stageMode ; la 3D ne tourne donc jamais dans ce cas.)
     playStaging(group) {
       if (!this.director) return;
-      this.director.choose(group, { ...this.product }, performance.now());
-      if (this.chips.openGroup) this.moveZone(1);
-      this.run.active = true;
-      this.requestRender();
+      this.afterUnzoom(() => {
+        this.director.choose(group, { ...this.product }, performance.now());
+        if (this.chips.openGroup) this.moveZone(1);
+        this.run.active = true;
+        this.requestRender();
+      });
     }
 
     /* Ouvrir une rangée joue tout de suite la mise en scène de son groupe avec le choix en cours,
@@ -697,7 +726,9 @@
     }
 
     // Retour de face (bouton, toucher l'œuvre, rangée fermée) ; une mise en scène en cours s'y rend.
+    // L'œuvre zoomée est déjà de face : « Retour » la ramène à ×1, comme Échap.
     goFront = () => {
+      if (this.unzoom()) return;
       const now = performance.now();
       const waited = this.stageWaiting;
       this.stageWaiting = null;
@@ -778,7 +809,7 @@
       if (product && !sameProduct(product, shown)) {
         this.product = product;
         const group = product.material === shown.material ? 'front' : 'material';
-        if (this.director) this.director.choose(group, { ...this.product }, performance.now());
+        if (this.director) this.afterUnzoom(() => this.director.choose(group, { ...this.product }, performance.now()));
       }
       this.refresh(window.MMASelection ? window.MMASelection.read() : null);
       this.measure(); // la nouvelle pilule (titre, prix) : ce que les rangées doivent éviter
@@ -893,11 +924,22 @@
 
     /* ---- Démarrage de la 3D ---- */
 
+    /* Les gestes passent par la scène : ceux de la 3D (incliner, zoomer, déplacer l'œuvre zoomée) et le
+       pincement de retour sur le voile d'une rangée ouverte. Deux doigts sur la scène ne font jamais
+       défiler ni zoomer la page (touchmove, et les gesture* de Safari) ; un seul doigt vertical la fait
+       défiler comme avant (touch-action, input.css). */
     listen3D() {
-      this.canvas.addEventListener('pointerdown', this.onPointerDown);
-      this.canvas.addEventListener('pointermove', this.onPointerMove);
-      this.canvas.addEventListener('pointerup', this.onPointerEnd);
-      this.canvas.addEventListener('pointercancel', this.onPointerEnd);
+      this.addEventListener('pointerdown', this.onPointerDown);
+      this.addEventListener('pointermove', this.onPointerMove);
+      this.addEventListener('pointerup', this.onPointerEnd);
+      this.addEventListener('pointercancel', this.onPointerEnd);
+      this.addEventListener('touchstart', this.onTouches, { passive: true });
+      this.addEventListener('touchend', this.onTouches, { passive: true });
+      this.addEventListener('touchcancel', this.onTouches, { passive: true });
+      this.addEventListener('touchmove', this.onTouchMove, { passive: false });
+      this.addEventListener('wheel', this.onWheel, { passive: false });
+      for (const type of ['gesturestart', 'gesturechange', 'gestureend']) this.addEventListener(type, this.onSafariGesture);
+      document.addEventListener('keydown', this.onKey);
       this.frontButton.addEventListener('click', this.goFront);
     }
 
@@ -922,6 +964,10 @@
         const files = (pose) => this.config.poses[pose] || {};
         const poses = engine.posesFor(sizes, files);
         this.director = engine.createDirector({ room, poses, product: { ...this.product } });
+        /* Le zoom, et la source de ses pièces de détail : celle de l'image que la 3D montre, gardée telle
+           quelle quand la fiche du jumeau remplace la page (adopt). */
+        this.zoom = engine.createZoom({ reducedMotion: this.env.reducedMotion });
+        this.tileSource = { url: this.config.source ? fullUrl(this.config.source) : null, native: this.config.native };
 
         const [weave, artImage] = await Promise.all([this.reliefs.weave, engine.decodeImage(this.art)]);
         if (stale()) {
@@ -999,11 +1045,14 @@
       // La zone à l'arrivée : le plan d'arrivée se cadre pour elle pendant que la rangée glisse.
       const g = window.Oeuvre3dChips.framingAt(this.size.L, { w: this.zoneMove.to, shift: this.zoneShift, glH: this.size.glH });
       const goal = { aspect: g.aspect, screen: g.screen, inset: this.insetOf(g) };
-      const view = lensShift(this.director.view(at, f.aspect, f.screen, this.insetOf(f), goal), f.fovScale);
+      const base = lensShift(this.director.view(at, f.aspect, f.screen, this.insetOf(f), goal), f.fovScale);
       this.placeCanvas(f.offset);
+      const view = this.zoomedView(base, at);
       this.view3d.render(view, at);
       this.placeDims(view);
-      this.trackChips(view);
+      // Zoomée, les chips sont effacées : elles restent où l'œuvre de face les attend.
+      if (this.zoomShown) this.chips.track(null);
+      else this.trackChips(view);
       this.lastView = view;
       return view;
     }
@@ -1014,15 +1063,19 @@
       const view = this.draw(now);
       if (this.run.active) this.run.times.push(now);
       const moving = this.director.isMoving(now) || this.view3d.isFading(now, { art: false }) || !!this.drag ||
-        this.zoneWeight(now) !== this.zoneMove.to;
+        this.zoom.isMoving(now) || this.zoneWeight(now) !== this.zoneMove.to;
       this.chips.setMoving(moving);
-      this.setFront(!moving && view.shot !== 'front');
+      this.setZoomed(this.zoomShown);
+      // « Retour », au repos : hors du plan de face, ou l'œuvre zoomée (il la ramène à ×1).
+      this.setFront(!moving && (view.shot !== 'front' || this.zoomShown));
       if (moving || this.view3d.isFading(now)) {
+        if (moving) this.holdTiles();
         this.raf = requestAnimationFrame(this.frame);
         return;
       }
       if (this.run.active) this.endRun();
       this.atRest();
+      this.zoomAtRest(now);
     };
 
     // Trop lent pour de vrai, malgré le calibrage de l'arrivée : la fiche repasse sur les photos.
@@ -1109,35 +1162,460 @@
       this.requestRender();
     }
 
-    /* ---- Inclinaison au doigt, et toucher pour revenir de face ---- */
+    /* ---- Zoom sur l'œuvre ---- */
+
+    /* La vue zoomée : la couche du zoom (createZoom du moteur) sur la vue du directeur. La mise en page
+       du zoom se relève de face, au repos : px par cm de la façade, demi-taille de l'œuvre, écran utile
+       (au-dessus de la pilule d'achat sur un téléphone), zoom maximal. Si elle change (fenêtre
+       redimensionnée), le zoom repart de ×1. zoomShown : l'œuvre se voit zoomée (ou rapetissée). */
+    zoomedView(base, at) {
+      if (base.shot === 'front' && !this.director.isStaging(at)) this.updateZoomLayout(base, at);
+      const z = this.zoom.at(at);
+      this.zoomShown = Math.abs(z.scale - 1) > this.engine.ZOOM.zoomed - 1;
+      if (z.scale === 1 && z.x === 0 && z.y === 0) return base;
+      const { k } = this.zoomLayout;
+      return this.engine.withZoom(base, z.scale, [z.x / k, -z.y / k]);
+    }
+
+    updateZoomLayout(base, at) {
+      const { position, target, fovY } = base.camera;
+      const k = this.size.glH / 2 / (Math.hypot(position[0] - target[0], position[1] - target[1], position[2] - target[2]) * Math.tan(fovY / 2));
+      const p = base.painting;
+      const px = this.size.w / 2;
+      const py = this.size.top + this.size.glH / 2 + this.canvasOffset;
+      const bottom = this.size.L ? this.size.L.pillTop : this.size.h;
+      const dpr = window.devicePixelRatio || 1;
+      const last = this.zoomLayout;
+      const same = (a, b) => Math.abs(a - b) < 0.01;
+      if (last && same(last.k, k) && same(last.px, px) && same(last.py, py) && same(last.bottom, bottom) &&
+        same(last.width, p.width) && same(last.height, p.height) && last.dpr === dpr && same(last.w, this.size.w)) {
+        last.painting = p;
+        last.product = base.product;
+        return;
+      }
+      const half = [(k * p.width) / 2, (k * p.height) / 2];
+      const view = { left: -px, top: -py, right: this.size.w - px, bottom: bottom - py };
+      const max = this.engine.zoomLimit({ native: this.tileSource.native, art: { w: 2 * half[0], h: 2 * half[1] }, dpr });
+      this.zoomLayout = { k, px, py, bottom, width: p.width, height: p.height, dpr, w: this.size.w, half, view, max, painting: p, product: base.product };
+      this.zoom.frame(this.zoomLayout);
+      if (last) {
+        this.dropTiles();
+        this.zoom.reset(at, 0);
+      }
+    }
+
+    // Zoomée, les chips s'effacent et la 3D garde les doigts : la page ne défile plus sous eux.
+    setZoomed(zoomed) {
+      if (zoomed === !!this.zoomedState) return;
+      this.zoomedState = zoomed;
+      this.chips.setZoomed(zoomed);
+      this.canvas.style.touchAction = zoomed ? 'none' : '';
+    }
+
+    // De face, au repos, sans rangée ouverte ni transition : là seulement, deux doigts zooment.
+    canZoom(now) {
+      return !!this.zoom && !!this.zoomLayout && !!this.lastView && this.lastView.shot === 'front' && !this.director.isStaging(now) &&
+        !this.chips.openGroup && !this.stageWaiting && this.zoneWeight(now) === 0 && this.zoneMove.to === 0;
+    }
+
+    /* Ramène l'œuvre zoomée à ×1, en ms (le bouton, Échap, un choix) ; rend la durée du retour (au moins
+       1 ms), 0 si elle n'était pas zoomée. Un geste en cours sur l'œuvre zoomée s'arrête. */
+    unzoom(ms = this.engine ? this.engine.ZOOM.reset : 0) {
+      if (!this.zoom) return 0;
+      const now = performance.now();
+      const z = this.zoom.at(now);
+      if (z.scale === 1 && z.x === 0 && z.y === 0 && !this.zoom.isMoving(now)) return 0;
+      if (this.gesture.mode === 'pan' || this.gesture.mode === 'pinch') {
+        this.gesture.mode = 'none';
+        this.drag = null;
+      }
+      const duration = this.env.reducedMotion ? 0 : ms;
+      this.zoom.reset(now, duration);
+      this.requestRender();
+      return Math.max(1, duration);
+    }
+
+    // La mise en scène d'un choix part une fois l'œuvre revenue à ×1 (un retour rapide), sinon aussitôt.
+    afterUnzoom(task) {
+      const ms = this.unzoom();
+      if (!ms) {
+        task();
+        return;
+      }
+      const { session } = this;
+      setTimeout(() => {
+        if (session === this.session && this.director) task();
+      }, ms);
+    }
+
+    /* ---- Pièces de détail du zoom ----
+       Zoomée, la région que l'on regarde (et sa marge) part au CDN, en recadrage (tilePlan du moteur) :
+       150 ms après l'arrêt, ou dès que l'on sait où l'œuvre va se poser (double toucher, doigts levés :
+       elle arrive pendant le mouvement). Une seule demande à la fois, la précédente abandonnée. L'envoi
+       au GPU attend le repos. À ×1, la pièce s'efface et sa mémoire est rendue. */
+
+    // Ce que l'on voit de l'image dans l'état z du zoom, et le nombre de px du canvas par px de la source.
+    visibleOf(z) {
+      const { k, view, painting, product } = this.zoomLayout;
+      const s = z.scale;
+      const box = [(z.x + view.left / s) / k, -(z.y + view.bottom / s) / k, (z.x + view.right / s) / k, -(z.y + view.top / s) / k];
+      const { native } = this.tileSource;
+      const border = painting.paper >= 0.999 ? 'papier' : product.border;
+      const visible = this.engine.visibleImage(painting, border, native.width / native.height, box);
+      const density = ((view.right - view.left) * this.view3d.density()) / ((visible.u1 - visible.u0) * native.width);
+      return { visible, density };
+    }
+
+    holdTiles() {
+      clearTimeout(this.tileTimer);
+      this.tileTimer = 0;
+    }
+
+    zoomAtRest(now) {
+      if (!this.zoomShown) {
+        this.dropTiles();
+        return;
+      }
+      const ready = this.tileReady;
+      if (ready) {
+        this.tileReady = null;
+        const [u0, v0, u1, v1] = ready.plan.rect;
+        const { visible } = this.visibleOf(this.zoom.at(now));
+        // Une pièce arrivée pendant le geste ne sert que si elle touche encore la vue.
+        if (u0 < visible.u1 && u1 > visible.u0 && v0 < visible.v1 && v1 > visible.v0) {
+          this.view3d.showTile(ready.image, ready.plan.rect);
+          this.tileShown = ready.plan;
+          return; // son fondu demande des images : le repos suivant relancera la planification
+        }
+        this.engine.closeImage(ready.image);
+      }
+      this.holdTiles();
+      this.tileTimer = setTimeout(this.planTile, TILE_IDLE_MS);
+    }
+
+    // La pièce de l'endroit où l'œuvre se pose (ou se trouve, au repos), si l'image en place n'y suffit pas.
+    planTile = () => {
+      this.tileTimer = 0;
+      if (!this.live || !this.zoomLayout || !this.tileSource.url || !this.tileSource.native) return;
+      const z = this.zoom.landing();
+      if (!z || z.scale <= this.engine.ZOOM.zoomed) return;
+      const { visible, density } = this.visibleOf(z);
+      const { tileServes, tilePlan } = this.engine;
+      if (tileServes(this.tileShown, visible, density) || tileServes(this.tilePending, visible, density)) return;
+      const plan = tilePlan({
+        visible, native: this.tileSource.native, density, base: this.view3d.artTexels(),
+        maxSide: Math.min(this.view3d.maxTextureSize(), TILE_SIDE), maxPixels: TILE_PIXELS,
+      });
+      if (plan) this.fetchTile(plan);
+    };
+
+    fetchTile(plan) {
+      if (this.tileAbort) this.tileAbort.abort(); // la demande précédente ne sert plus
+      const abort = new AbortController();
+      this.tileAbort = abort;
+      this.tilePending = plan;
+      const url = this.engine.tileUrl(this.tileSource.url, plan);
+      const { session } = this;
+      const started = performance.now();
+      const done = () => {
+        if (this.tileAbort !== abort) return;
+        this.tileAbort = null;
+        this.tilePending = null;
+      };
+      this.engine.loadTile(url, abort.signal).then(({ image, bytes }) => {
+        done();
+        if (session !== this.session || abort.signal.aborted || !this.view3d) {
+          this.engine.closeImage(image);
+          return;
+        }
+        this.tileLog.push({ url, bytes, ms: Math.round(performance.now() - started), width: image.width, height: image.height });
+        if (this.tileLog.length > 20) this.tileLog.shift();
+        if (this.tileReady) this.engine.closeImage(this.tileReady.image);
+        this.tileReady = { image, plan };
+        this.requestRender();
+      }, done); // abandonnée ou refusée : l'image en place reste
+    }
+
+    dropTiles() {
+      this.holdTiles();
+      if (this.tileAbort) this.tileAbort.abort();
+      this.tileAbort = null;
+      this.tilePending = null;
+      if (this.tileReady && this.engine) this.engine.closeImage(this.tileReady.image);
+      this.tileReady = null;
+      this.tileShown = null;
+      const tile = this.view3d && this.view3d.tile();
+      if (tile && !tile.leaving) this.view3d.hideTile();
+    }
+
+    /* ---- Les doigts sur la scène : incliner, zoomer, déplacer, revenir de face ---- */
+
+    // Le point d'un doigt, en px de la scène.
+    place(entry, event) {
+      entry.x = event.clientX - this.stageBox.left;
+      entry.y = event.clientY - this.stageBox.top;
+    }
+
+    // Le milieu des deux premiers doigts (ou le seul), depuis le centre de l'image de la 3D, et leur écart.
+    fingerSpot() {
+      const [a, b] = this.fingers;
+      const { px, py } = this.zoomLayout || { px: 0, py: 0 };
+      const spot = this.spot;
+      spot.x = (b ? (a.x + b.x) / 2 : a.x) - px;
+      spot.y = (b ? (a.y + b.y) / 2 : a.y) - py;
+      spot.spread = b ? Math.hypot(a.x - b.x, a.y - b.y) : 0;
+      return spot;
+    }
 
     onPointerDown = (event) => {
       if (!this.live || (event.pointerType === 'mouse' && event.button !== 0)) return;
-      this.drag = { x: event.clientX, y: event.clientY, id: event.pointerId, at: performance.now(), moved: 0 };
-      this.director.grab(performance.now());
-      this.run.active = true;
-      try {
-        this.canvas.setPointerCapture(event.pointerId);
-      } catch (e) {
-        // Le doigt peut déjà être relâché.
+      const target = event.target;
+      const on = target === this.canvas ? 'canvas' : target.classList && target.classList.contains('chips-closer') ? 'closer' : null;
+      if (!on || this.pointers.has(event.pointerId)) return;
+      const now = performance.now();
+      const g = this.gesture;
+      if (!this.pointers.size) {
+        this.stageBox = this.getBoundingClientRect();
+        Object.assign(g, { mode: 'none', on, several: false, moved: 0, at: now, done: false });
+      }
+      const entry = { x: 0, y: 0, x0: 0, y0: 0, id: event.pointerId };
+      this.place(entry, event);
+      entry.x0 = entry.x;
+      entry.y0 = entry.y;
+      this.pointers.set(event.pointerId, entry);
+      this.fingers.push(entry);
+      if (on === 'canvas') {
+        try {
+          this.canvas.setPointerCapture(event.pointerId);
+        } catch (e) {
+          // Le doigt peut déjà être relâché.
+        }
+      }
+      this.regesture(now);
+    };
+
+    /* Le nombre de doigts a changé : ce qu'ils font (gestureOf), repris de là où l'on est. Un doigt
+       resté seul après un pincement ne se met pas à incliner le tableau. */
+    regesture(now) {
+      const g = this.gesture;
+      const fingers = this.fingers.length;
+      if (fingers > 1) g.several = true;
+      let mode = gestureOf({
+        fingers, on: g.on, zoomed: this.zoom.at(now).scale > this.engine.ZOOM.zoomed, front: this.canZoom(now),
+        shot: this.lastView ? this.lastView.shot : 'front',
+      });
+      // Un doigt resté seul après un pincement n'incline pas ; revenus de face, les doigts ne font plus rien.
+      if ((mode === 'tilt' && g.several) || g.done) mode = 'none';
+      const was = g.mode;
+      if (was === 'tilt' && mode !== 'tilt') {
+        this.drag = null;
+        this.director.release(now);
+      }
+      if ((was === 'pinch' || was === 'pan') && mode !== 'pinch' && mode !== 'pan') {
+        this.drag = null;
+        this.zoom.release(now);
+      }
+      g.mode = mode;
+      const spot = this.fingerSpot();
+      if (mode === 'tilt' && was !== 'tilt') {
+        const [first] = this.fingers;
+        first.x0 = first.x;
+        first.y0 = first.y;
+        this.drag = first;
+        this.director.grab(now);
+        this.run.active = true;
+      } else if (mode === 'pinch' || mode === 'pan') {
+        this.drag = this.fingers[0];
+        this.zoom.grab(spot.x, spot.y, mode === 'pinch' ? spot.spread : 0, now);
+        this.run.active = true;
+      } else if (mode === 'dismiss' && was !== 'dismiss') {
+        g.spread = spot.spread;
+      }
+      this.requestRender();
+    }
+
+    // La 3D s'est arrêtée pendant le geste (photos) : les doigts encore posés ne font plus rien.
+    forgetFingers() {
+      this.pointers.clear();
+      this.fingers.length = 0;
+      this.gesture.mode = 'none';
+      this.drag = null;
+    }
+
+    onPointerMove = (event) => {
+      const entry = this.pointers.get(event.pointerId);
+      if (!entry) return;
+      if (!this.live) {
+        this.forgetFingers();
+        return;
+      }
+      this.place(entry, event);
+      const g = this.gesture;
+      g.moved = Math.max(g.moved, Math.hypot(entry.x - entry.x0, entry.y - entry.y0));
+      const now = performance.now();
+      if (g.mode === 'tilt' && entry === this.drag) {
+        this.director.drag((entry.x - entry.x0) / this.size.w, (entry.y - entry.y0) / this.size.h, now);
+      } else if (g.mode === 'pinch' || g.mode === 'pan') {
+        const spot = this.fingerSpot();
+        this.zoom.drag(spot.x, spot.y, g.mode === 'pinch' ? spot.spread : 0, now);
+      } else if (g.mode === 'dismiss' && pinchDismisses(g.spread, this.fingerSpot().spread)) {
+        g.done = true;
+        g.mode = 'none';
+        this.dismiss();
+      } else {
+        return;
       }
       this.requestRender();
     };
 
-    onPointerMove = (event) => {
-      if (!this.drag || event.pointerId !== this.drag.id) return;
-      this.drag.moved = Math.max(this.drag.moved, Math.hypot(event.clientX - this.drag.x, event.clientY - this.drag.y));
-      this.director.drag((event.clientX - this.drag.x) / this.size.w, (event.clientY - this.drag.y) / this.size.h, performance.now());
+    onPointerEnd = (event) => {
+      const entry = this.pointers.get(event.pointerId);
+      if (!entry) return;
+      if (!this.live) {
+        this.forgetFingers();
+        return;
+      }
+      const now = performance.now();
+      this.pointers.delete(event.pointerId);
+      this.fingers.splice(this.fingers.indexOf(entry), 1);
+      if (this.fingers.length) {
+        this.regesture(now);
+        return;
+      }
+      const g = this.gesture;
+      const tap = event.type === 'pointerup' && !g.several && g.moved < 8 && now - g.at < 400;
+      if (g.mode === 'tilt') this.director.release(now);
+      if (g.mode === 'pinch' || g.mode === 'pan') {
+        this.zoom.release(now);
+        this.planTile(); // on sait où elle se pose : sa pièce part pendant qu'elle y va
+      }
+      g.mode = 'none';
+      this.drag = null;
+      if (tap && g.on === 'canvas') this.onTap(entry, now);
       this.requestRender();
     };
 
-    onPointerEnd = (event) => {
-      if (!this.drag || event.pointerId !== this.drag.id) return;
-      const tap = event.type === 'pointerup' && this.drag.moved < 8 && performance.now() - this.drag.at < 400;
-      this.drag = null;
-      this.director.release(performance.now());
-      if (tap && this.frontShown) this.goFront();
+    /* Un toucher de l'œuvre. En gros plan, il revient de face aussitôt, comme avant. De face, deux
+       touchers rapprochés zooment vers ×2,5 là où l'on touche, ou ramènent l'œuvre zoomée à ×1. */
+    onTap(entry, now) {
+      if (!this.canZoom(now)) {
+        this.lastTap = null;
+        if (this.frontShown) this.goFront();
+        return;
+      }
+      const tap = { at: now, x: entry.x, y: entry.y };
+      if (tapKind(this.lastTap, tap) !== 'double') {
+        this.lastTap = tap;
+        return;
+      }
+      this.lastTap = null;
+      const { px, py } = this.zoomLayout;
+      this.zoom.toggle(tap.x - px, tap.y - py, now);
+      this.planTile();
       this.requestRender();
+    }
+
+    // Pincer pour revenir de face : rangée ouverte, exactement un toucher en dehors ; sinon, un toucher du gros plan.
+    dismiss() {
+      if (this.chips.openGroup) this.chips.dismiss();
+      else this.goFront();
+    }
+
+    // Les doigts posés sur la scène (Safari : ses gesture* accompagnent alors les doigts, qui zooment seuls).
+    onTouches = (event) => {
+      this.touches = event.touches.length;
+    };
+
+    // Deux doigts sur la scène : ni défilement ni zoom de la page.
+    onTouchMove = (event) => {
+      if (this.live && event.cancelable && event.touches.length > 1) event.preventDefault();
+    };
+
+    /* Safari : ses gesture* ne zoomeraient que la page. Au doigt (iPhone), on les arrête, les doigts
+       zooment l'œuvre ; au pavé tactile d'un Mac, ils la zooment sous le pointeur. */
+    onSafariGesture = (event) => {
+      if (!this.live) return;
+      event.preventDefault();
+      if (this.touches > 0) return;
+      if (event.type === 'gesturestart') {
+        this.safari = { scale: 1 };
+        return;
+      }
+      if (event.type === 'gestureend' || !this.safari) {
+        this.safari = null;
+        return;
+      }
+      const factor = event.scale / this.safari.scale;
+      this.safari.scale = event.scale;
+      this.pinchZoom(factor, event.clientX, event.clientY, performance.now());
+    };
+
+    /* Le pincement du pavé tactile (molette avec Ctrl, ou gesture* de Safari), sous le pointeur. En gros
+       plan, des doigts qui se rapprochent de 15 % ramènent de face, comme au doigt. */
+    pinchZoom(factor, clientX, clientY, now) {
+      if (!this.canZoom(now)) {
+        const shot = this.lastView ? this.lastView.shot : 'front';
+        if (!this.chips.openGroup && shot === 'front') return;
+        const w = this.wheel;
+        w.pinch = now - w.pinchAt > WHEEL_PAUSE_MS ? factor : w.pinch * factor;
+        w.pinchAt = now;
+        if (pinchDismisses(1, w.pinch)) {
+          w.pinch = 1;
+          this.dismiss();
+        }
+        return;
+      }
+      const box = this.stageCorner(now);
+      const { px, py } = this.zoomLayout;
+      this.zoom.wheel(factor, clientX - box.left - px, clientY - box.top - py, now);
+      this.requestRender();
+    }
+
+    /* Le coin de la scène dans la fenêtre, relu au début d'une rafale de molette seulement : la page ne
+       défile pas pendant que la molette zoome, et chaque cran ne force pas une mise en page. */
+    stageCorner(now) {
+      const w = this.wheel;
+      if (!w.box || now - w.boxAt > WHEEL_PAUSE_MS) w.box = this.getBoundingClientRect();
+      w.boxAt = now;
+      return w.box;
+    }
+
+    /* La molette. Avec Ctrl (le pincement du pavé tactile), elle zoome toujours l'œuvre, jamais la page.
+       Sans Ctrl, elle fait défiler la page comme avant, sauf l'œuvre zoomée, qu'elle zoome sous le
+       pointeur ; revenue à ×1, la page ne repart qu'après une pause de la molette. */
+    onWheel = (event) => {
+      if (!this.live) return;
+      const now = performance.now();
+      const px = event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? 400 : 1);
+      if (event.ctrlKey) {
+        event.preventDefault();
+        if (!this.safari) this.pinchZoom(Math.exp(-Math.max(-25, Math.min(25, px)) / 100), event.clientX, event.clientY, now);
+        return;
+      }
+      const w = this.wheel;
+      if (this.zoom.at(now).scale > 1 && this.canZoom(now)) {
+        event.preventDefault();
+        const box = this.stageCorner(now);
+        const { px: cx, py: cy } = this.zoomLayout;
+        // Un cran de souris glisse ; le défilement continu du pavé tactile suit tel quel.
+        const target = this.zoom.wheel(Math.exp(-Math.max(-100, Math.min(100, px)) * 0.002),
+          event.clientX - box.left - cx, event.clientY - box.top - cy, now, Math.abs(px) >= 40 ? 160 : 0);
+        w.latched = target <= 1;
+        w.last = now;
+        this.requestRender();
+        return;
+      }
+      if (w.latched && now - w.last < WHEEL_PAUSE_MS) {
+        event.preventDefault();
+        w.last = now;
+        return;
+      }
+      w.latched = false;
+    };
+
+    // Échap ramène l'œuvre zoomée à ×1 (rangée ouverte, il la ferme : assets/oeuvre-3d-chips.js).
+    onKey = (event) => {
+      if (event.key === 'Escape' && !this.chips.openGroup) this.unzoom();
     };
 
     /* ---- Vignettes de taille : une petite copie de l'œuvre ---- */
@@ -1228,6 +1706,10 @@
         size: this.size,
         render: (at) => this.draw(at),
         framing: () => this.framingNow(performance.now()),
+        // Le zoom : son état, sa mise en page, la pièce de détail en place et celles téléchargées.
+        zoom: this.zoom,
+        zoomLayout: () => this.zoomLayout,
+        tiles: () => ({ shown: this.view3d ? this.view3d.tile() : null, plan: this.tileShown || null, log: this.tileLog }),
         shot: () => (this.lastView ? this.lastView.shot : null),
         room: () => (this.lastView ? this.lastView.room : null),
         // Les coins de la dernière image (œuvre ou boîte cadre comprise), en px de la scène visible.
