@@ -84,9 +84,13 @@
         "seeChoices": {{ 'sections.mma.oeuvre_3d_chips.see_choices' | t | json }},
         "cm": {{ 'sections.mma.oeuvre_3d_chips.cm' | t | json }},
         "included": {{ 'sections.mma.oeuvre_3d_chips.included' | t | json }},
-        "unavailable": {{ 'sections.mma.oeuvre_3d_chips.unavailable' | t: size: '{size}' | json }},
-        "noFrame": {{ 'sections.mma.oeuvre_3d_chips.no_frame' | t: size: '{size}' | json }},
-        "bigUnframed": {{ 'sections.mma.oeuvre_3d_chips.big_unframed' | t: size: '{size}' | json }},
+        {%- comment -%} Le trou de la taille passe par une variable : Shopify refuse une accolade fermante dans
+           une chaîne écrite entre doubles accolades (« Variable … was not properly terminated »), que
+           liquidjs acceptait. {%- endcomment -%}
+        {%- assign size_hole = '{size}' %}
+        "unavailable": {{ 'sections.mma.oeuvre_3d_chips.unavailable' | t: size: size_hole | json }},
+        "noFrame": {{ 'sections.mma.oeuvre_3d_chips.no_frame' | t: size: size_hole | json }},
+        "bigUnframed": {{ 'sections.mma.oeuvre_3d_chips.big_unframed' | t: size: size_hole | json }},
         "unframedHint": {{ 'sections.mma.oeuvre_3d_chips.unframed_hint' | t | json }}
       },
       "names": {
