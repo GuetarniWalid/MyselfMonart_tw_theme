@@ -21,8 +21,9 @@
  * légendes prennent une plaque dépolie serrée sur leur texte et les filets s'effacent.
  *
  * Trois étages, du plus pur au plus concret :
- *   - chipsLayout, railPlacement, toggleOf, legendOf, choicesOf, et le cadrage de la 3D (railZone,
- *     canvasBox, directorAspect, framingAt) : géométrie et textes, sans DOM
+ *   - chipsLayout, railPlacement, toggleOf, legendOf, choicesOf, le cadrage de la 3D (railZone,
+ *     canvasBox, directorAspect, framingAt), et l'œuvre projetée (faceOf : de face ou non ; filetEnds et
+ *     coteMarks : filets et cote, hors de l'œuvre même tournée) : géométrie et textes, sans DOM
  *     (scripts/oeuvre-3d-chips.test.cjs, scripts/oeuvre-3d-framing.test.cjs) ;
  *   - createChips : le DOM, l'état (choix, rangée ouverte), le clavier et le toucher ;
  *   - chips.track(coins) : à chaque image de la 3D, filets et points suivent l'œuvre projetée par le
@@ -426,9 +427,27 @@
     return { tickL: tick(bl), tickR: tick(br), lineL: line(bl.x, cx - gapHalf), lineR: line(br.x, cx + gapHalf) };
   }
 
+  /* Les filets des légendes, à la hauteur L.lineY : où ils touchent l'œuvre, à gauche (xl) et à droite
+     (xr). De face, sur les bords de la façade. Tournée (jusqu'à 40° de côté depuis les retours de Walid
+     du 11/11), l'œuvre montre du côté de la caméra la tranche de la toile ou le flanc du cadre : le
+     filet s'arrête au bord de la silhouette, là où l'arrière de la boîte touche le mur, sans passer
+     dessus. corners : les quatre coins de la façade projetés (haut gauche, haut droit, bas droit, bas
+     gauche), sinon null : l'œuvre de face (L.art) ; back : ceux de l'arrière, dans le même ordre. */
+  function filetEnds(L, corners = null, back = null) {
+    if (!corners) return { xl: L.art.l, xr: L.art.r };
+    const y = L.lineY;
+    const [tl, tr, br, bl] = corners;
+    let xl = edgeX(tl, bl, y), xr = edgeX(tr, br, y);
+    if (back) {
+      xl = Math.min(xl, edgeX(back[0], back[3], y));
+      xr = Math.max(xr, edgeX(back[1], back[2], y));
+    }
+    return { xl, xr };
+  }
+
   const pure = {
     DESK_MIN, TEXTS_FR, chipsLayout, railPlacement, railWidth, maxShift, optionWidth, railEvent, railZone, canvasBox,
-    directorAspect, framingAt, toggleOf, legendOf, choicesOf, eur, dims, swatchOf, sizeTileOf, faceOf, coteMarks,
+    directorAspect, framingAt, toggleOf, legendOf, choicesOf, eur, dims, swatchOf, sizeTileOf, faceOf, coteMarks, filetEnds,
   };
 
   // Node (tests) : le calcul pur.
@@ -478,6 +497,7 @@
     let L = null;
     let open = null;
     let corners = null;
+    let back = null; // l'arrière de la boîte de l'œuvre, projeté (filetEnds)
     let face = 1;
     let staged = false;
     const ids = { rail: (g) => `chips-rail-${g}`, chip: (g) => `chips-chip-${g}` };
@@ -698,13 +718,7 @@
 
     function drawMarks() {
       if (!L) return;
-      const A = L.art;
-      let xl = A.l, xr = A.r;
-      if (corners) {
-        const [tl, tr, brc, blc] = corners;
-        xl = edgeX(tl, blc, L.lineY);
-        xr = edgeX(tr, brc, L.lineY);
-      }
+      const { xl, xr } = filetEnds(L, corners, back);
       const { lineY: y } = L;
       const { lx, rx } = L.marks;
       setD(marks.sideLine, `M${r1(lx)} ${y}H${r1(xl)}`);
@@ -718,13 +732,15 @@
       setDot(marks.frameDot, xr, y);
     }
 
-    /* track(coins, tilt) : les quatre coins de la façade de l'œuvre (haut gauche, haut droit, bas
-       droit, bas gauche), en px de la couche `scene`, tels que la 3D les projette, et l'inclinaison au
-       doigt de sa vue (faceOf) ; null : la photo, à sa place de face. Appelé à chaque image de la 3D ;
-       ne touche au DOM que si quelque chose change. */
-    function track(next, tilt = null) {
+    /* track(coins, tilt, arrière) : les quatre coins de la façade de l'œuvre (haut gauche, haut droit, bas
+       droit, bas gauche), en px de la couche `scene`, tels que la 3D les projette, l'inclinaison au doigt
+       de sa vue (faceOf) et les coins de l'arrière de sa boîte, dans le même ordre (filetEnds) ; null :
+       la photo, à sa place de face. Appelé à chaque image de la 3D ; ne touche au DOM que si quelque
+       chose change. */
+    function track(next, tilt = null, nextBack = null) {
       if (!L) return;
       corners = next;
+      back = next ? nextBack : null;
       const k = next ? faceOf(next, L.art, tilt) : 1;
       face = k;
       /* Un seul état, au compositeur : de face, les filets ; ailleurs, les plaques (fondus en CSS).

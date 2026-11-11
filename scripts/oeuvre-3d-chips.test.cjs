@@ -407,18 +407,33 @@ test('la bascule Toile | Poster n’a pas de rangée : elle s’applique, rien d
   assert.deepEqual(railEvent(null, { type: 'toggle', id: 'poster' }), { open: null, effects: ['apply'] })
 })
 
-/* Retours de Walid du 11/11 : de face, le doigt tourne le tableau jusqu'à 40° de côté et 14° en hauteur.
-   Les coins projetés s'écartent alors jusqu'à 23 % de la largeur de l'œuvre, bien au-delà du seuil où
-   les légendes prennent leur plaque : ce que l'inclinaison explique ne compte pas, et les plaques (son
-   « encadré blanc ») ne viennent pas. Un vrai changement de plan les fait toujours venir. */
-const { faceOf } = require('../assets/oeuvre-3d-chips.js')
-const { createDirector, neutralRoom, paintingCorners } = require('../assets/oeuvre-3d-engine.js')
+/* ---- L'œuvre tournée au doigt, de face : plaques, filets et cote ----
+   Retours de Walid du 11/11 : de face, le doigt tourne le tableau jusqu'à 40° de côté et 14° en hauteur.
+   Les tests suivants projettent la vue du vrai directeur, aux extrêmes du geste, pour les quatre matières
+   et cadres au plus petit et au plus grand format. */
+const { faceOf, coteMarks, filetEnds, canvasBox, framingAt } = require('../assets/oeuvre-3d-chips.js')
+const { createDirector, neutralRoom, paintingCorners, convexHull } = require('../assets/oeuvre-3d-engine.js')
 
-const SCREEN = [390, 488] // la zone de la 3D d'un téléphone, en px
 const FRONT_ORDER = [[-1, 1], [1, 1], [1, -1], [-1, -1]] // haut gauche, haut droit, bas droit, bas gauche
+const PHONE_3D = { W: 390, H: 488, fovScale: 1, top: 0 } // la zone de la 3D d'un téléphone, en px
+const EXTREME_PRODUCTS = [
+  { material: 'toile', size: '30x40', border: 'blanche', frame: 'sans', passe: false },
+  { material: 'toile', size: '90x120', border: 'blanche', frame: 'sans', passe: false },
+  { material: 'toile', size: '30x40', border: 'blanche', frame: 'chene', passe: false },
+  { material: 'toile', size: '75x100', border: 'blanche', frame: 'chene', passe: false },
+  { material: 'poster', size: '30x40', border: 'blanche', frame: 'sans', passe: true },
+  { material: 'poster', size: '90x120', border: 'blanche', frame: 'sans', passe: true },
+  { material: 'poster', size: '30x40', border: 'blanche', frame: 'noir', passe: true },
+  { material: 'poster', size: '75x100', border: 'blanche', frame: 'noir', passe: true },
+]
+// Le doigt glissé de (dx, dy) parts de la scène : au plus fort (au-delà des bornes), et en chemin
+// (0,3 et 0,4 de la largeur : 24° et 32° de côté).
+const EXTREME_DRAGS = [[3, 0], [-3, 0], [0, 3], [0, -3], [3, 3], [-3, 3], [3, -3], [-3, -3], [0.3, 3], [-0.3, 3], [0.4, 3], [-0.4, 3]]
+const productName = (p) => `${p.material} ${p.frame === 'sans' ? 'sans cadre' : `cadre ${p.frame}`} ${p.size}`
 
-// Projection sténopé indépendante du moteur (regard vers la cible, haut = +y), en px de SCREEN.
-function onScreen(view, point) {
+/* Projection sténopé indépendante du moteur (regard vers la cible, haut = +y), en px d'un écran
+   { W, H } ; fovScale élargit l'angle de vue et top décale l'image, comme le canvas de la page. */
+function onScreen(view, point, frame = PHONE_3D) {
   const sub = (a, b) => a.map((v, i) => v - b[i])
   const dot = (a, b) => a.reduce((s, v, i) => s + v * b[i], 0)
   const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]
@@ -428,46 +443,68 @@ function onScreen(view, point) {
   const right = unit(cross(forward, [0, 1, 0]))
   const up = cross(right, forward)
   const rel = sub(point, position)
-  const t = Math.tan(fovY / 2) * dot(rel, forward)
-  const [W, H] = SCREEN
-  return { x: ((dot(rel, right) / (t * (W / H)) + 1) / 2) * W, y: ((1 - dot(rel, up) / t) / 2) * H }
+  const t = Math.tan(fovY / 2) * frame.fovScale * dot(rel, forward)
+  const { W, H } = frame
+  return { x: ((dot(rel, right) / (t * (W / H)) + 1) / 2) * W, y: ((1 - dot(rel, up) / t) / 2) * H + frame.top }
 }
 
-const facade = (view) => {
-  const front = paintingCorners(view.painting, 'outer').filter((c) => c.side.z === 1)
-  return FRONT_ORDER.map(([sx, sy]) => onScreen(view, front.find((c) => c.side.x === sx && c.side.y === sy)))
+// Les quatre coins de la boîte de l'œuvre (cadre compris), projetés : z = 1 la façade, z = 0 l'arrière.
+const facade = (view, frame = PHONE_3D, z = 1) => {
+  const box = paintingCorners(view.painting, 'outer').filter((c) => c.side.z === z)
+  return FRONT_ORDER.map(([sx, sy]) => onScreen(view, box.find((c) => c.side.x === sx && c.side.y === sy), frame))
 }
 
-for (const product of [
-  { material: 'toile', size: '30x40', border: 'blanche', frame: 'sans', passe: false },
-  { material: 'poster', size: '75x100', border: 'blanche', frame: 'noir', passe: true },
-]) {
-  test(`${product.material} ${product.size} : de face, le doigt incline le tableau sans faire venir les plaques ; un autre plan les fait venir`, () => {
-    const room = neutralRoom(['30x40', '60x80', '75x100', '90x120'])
-    const aspect = SCREEN[0] / SCREEN[1]
-    for (const [dx, dy] of [[3, 0], [-3, 0], [3, 3], [-3, -3], [3, -3], [-3, 3]]) {
-      const director = createDirector({ room, product })
-      const [tl, tr, br, bl] = facade(director.view(0, aspect))
-      const art = { l: (tl.x + bl.x) / 2, r: (tr.x + br.x) / 2, t: (tl.y + tr.y) / 2, b: (bl.y + br.y) / 2 }
-      art.w = art.r - art.l
-      director.grab(10)
-      director.drag(dx, dy, 10)
-      const tilted = director.view(10, aspect)
-      assert.ok(faceOf(facade(tilted), art) < 0.6, 'sans compter l’inclinaison, les plaques viendraient : le test porte')
-      assert.equal(faceOf(facade(tilted), art, tilted.tilt), 1, `glisser de ${dx}, ${dy} : toujours de face`)
-      director.release(20)
-      director.choose('frame', product, 5000)
-      const close = director.view(10000, aspect)
-      assert.equal(faceOf(facade(close), art, close.tilt), 0, 'le coin du cadre est un autre plan')
+// L'écran de la page (chipsLayout) : le canvas centré sur l'œuvre, son angle de vue élargi (framingAt).
+function sceneFrame(L) {
+  const box = canvasBox(L)
+  const f = framingAt(L, { w: 0, shift: 0, glH: box.height })
+  return { W: L.W, H: box.height, fovScale: f.fovScale, top: box.top, aspect: f.aspect, screen: f.screen }
+}
+
+// La silhouette de l'œuvre (ses huit coins projetés), et l'écart d'un point à elle, en px : > 0 dehors.
+const silhouette = (view, frame) => convexHull(paintingCorners(view.painting, 'outer').map((c) => {
+  const p = onScreen(view, c, frame)
+  return [p.x, p.y]
+}))
+function outside(hull, p) {
+  let most = -Infinity
+  hull.forEach(([ax, ay], i) => {
+    const [bx, by] = hull[(i + 1) % hull.length]
+    most = Math.max(most, -((bx - ax) * (p.y - ay) - (by - ay) * (p.x - ax)) / Math.hypot(bx - ax, by - ay))
+  })
+  return most
+}
+
+function tilted(product, frame, [dx, dy]) {
+  const director = createDirector({ room: neutralRoom(SIZES), product })
+  director.grab(10)
+  director.drag(dx, dy, 10)
+  return director.view(10, frame.aspect || frame.W / frame.H, frame.screen)
+}
+
+/* Les coins projetés s'écartent jusqu'à 23 % de la largeur de l'œuvre, bien au-delà du seuil où les
+   légendes prennent leur plaque : ce que l'inclinaison explique ne compte pas, et les plaques (son
+   « encadré blanc ») ne viennent pas. Un vrai changement de plan les fait toujours venir. */
+for (const product of EXTREME_PRODUCTS) {
+  test(`${productName(product)} : de face, le doigt tourne le tableau sans faire venir les plaques ; un autre plan les fait venir`, () => {
+    const front = createDirector({ room: neutralRoom(SIZES), product })
+    const [tl, tr, br, bl] = facade(front.view(0, PHONE_3D.W / PHONE_3D.H))
+    const art = { l: (tl.x + bl.x) / 2, r: (tr.x + br.x) / 2, t: (tl.y + tr.y) / 2, b: (bl.y + br.y) / 2 }
+    art.w = art.r - art.l
+    for (const drag of [[3, 0], [-3, 0], [3, 3], [-3, -3], [3, -3], [-3, 3]]) {
+      const view = tilted(product, PHONE_3D, drag)
+      assert.ok(faceOf(facade(view), art) < 0.6, 'sans compter l’inclinaison, les plaques viendraient : le test porte')
+      assert.equal(faceOf(facade(view), art, view.tilt), 1, `glisser de ${drag} : toujours de face`)
     }
+    front.choose('frame', product, 5000)
+    const close = front.view(10000, PHONE_3D.W / PHONE_3D.H)
+    assert.equal(faceOf(facade(close), art, close.tilt), 0, 'le coin du cadre est un autre plan')
   })
 }
 
-/* ---- La cote sous l'œuvre (coteMarks) ----
-   De face, comme dans le design (cadre 2b) : un trait à chaque coin bas, de 5 px au-dessus à 5 px
-   au-dessous de la ligne, et deux lignes, des coins au blanc où s'écrit « Taille ». */
-const { coteMarks, canvasBox, framingAt } = require('../assets/oeuvre-3d-chips.js')
-
+/* La cote sous l'œuvre (coteMarks). De face, comme dans le design (cadre 2b) : un trait à chaque coin
+   bas, de 5 px au-dessus à 5 px au-dessous de la ligne, et deux lignes, des coins au blanc où s'écrit
+   « Taille ». */
 test('de face, la cote : un trait à chaque coin bas de l’œuvre, ses lignes des coins au blanc de « Taille »', () => {
   const m = coteMarks(chipsLayout({ width: 390, height: 792 }))
   const same = (got, want) => got.forEach((v, i) => near(v, want[i], 0.06))
@@ -477,92 +514,60 @@ test('de face, la cote : un trait à chaque coin bas de l’œuvre, ses lignes d
   same(m.lineR, [322.05, 584.5, 224, 584.5])
 })
 
-/* Retours de Walid du 11/11 : de face, le tableau tourne jusqu'à 40° de côté. Vu d'en haut (14°), son
-   coin bas le plus proche descend alors jusqu'à la cote : l'œuvre passe devant, comme devant un trait
-   tracé au mur. Ni les traits ni les lignes n'entrent dans sa silhouette (les huit coins de sa boîte,
-   cadre compris), sur un téléphone comme sur un ordinateur, dans le cadrage de la page (framingAt). */
-const SIZE_LIST = ['30x40', '60x80', '75x100', '90x120']
+/* Les filets des légendes. De face, ils finissent sur les bords de la façade, comme dans le design. */
+test('de face, les filets finissent sur les bords de l’œuvre', () => {
+  const L = chipsLayout({ width: 390, height: 792 })
+  assert.deepEqual(filetEnds(L), { xl: L.art.l, xr: L.art.r })
+  const frame = sceneFrame(L)
+  const view = tilted(EXTREME_PRODUCTS[2], frame, [0, 0])
+  const ends = filetEnds(L, facade(view, frame), facade(view, frame, 0))
+  near(ends.xl, L.art.l, 0.6)
+  near(ends.xr, L.art.r, 0.6)
+})
 
-// Les coins projetés en px de la scène, comme la page les rend : canvas centré sur l'œuvre, angle élargi.
-function sceneProjector(L) {
-  const box = canvasBox(L)
-  const f = framingAt(L, { w: 0, shift: 0, glH: box.height })
-  const H = box.height
-  return {
-    f,
-    at(view, point) {
-      const sub = (a, b) => a.map((v, i) => v - b[i])
-      const dot = (a, b) => a.reduce((s, v, i) => s + v * b[i], 0)
-      const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]
-      const unit = (a) => a.map((v) => v / Math.hypot(...a))
-      const { position, target, fovY } = view.camera
-      const forward = unit(sub(target, position))
-      const right = unit(cross(forward, [0, 1, 0]))
-      const up = cross(right, forward)
-      const rel = sub(point, position)
-      const t = Math.tan(fovY / 2) * f.fovScale * dot(rel, forward)
-      return { x: ((dot(rel, right) / (t * (L.W / H)) + 1) / 2) * L.W, y: ((1 - dot(rel, up) / t) / 2) * H + box.top }
-    },
-  }
-}
-
-// Enveloppe convexe de points de l'écran, et écart d'un point à elle, en px : > 0 dehors.
-function hullOf(points) {
-  const cross = (o, a, b) => (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x)
-  const sorted = [...points].sort((a, b) => a.x - b.x || a.y - b.y)
-  const half = (list) => {
-    const out = []
-    for (const p of list) {
-      while (out.length >= 2 && cross(out[out.length - 2], out[out.length - 1], p) <= 0) out.pop()
-      out.push(p)
-    }
-    out.pop()
-    return out
-  }
-  return half(sorted).concat(half([...sorted].reverse()))
-}
-function outside(hull, p) {
-  let most = -Infinity
-  hull.forEach((a, i) => {
-    const b = hull[(i + 1) % hull.length]
-    const len = Math.hypot(b.x - a.x, b.y - a.y)
-    most = Math.max(most, -((b.x - a.x) * (p.y - a.y) - (b.y - a.y) * (p.x - a.x)) / len)
-  })
-  return most
-}
-
+/* Tourné au plus fort, le coin bas le plus proche descend, vu d'en haut, jusqu'à la cote, et la tranche
+   de la toile (ou le flanc du cadre) se montre du côté de la caméra. Ni la cote ni les filets n'entrent
+   dans la silhouette de l'œuvre (ses huit coins, cadre compris) : la cote s'arrête sous son bord bas,
+   comme un trait tracé au mur qu'elle cache ; chaque filet s'arrête au bord de la silhouette et y pose
+   son point. Sur un téléphone comme sur un ordinateur, dans le cadrage de la page. */
 for (const [W, SH] of [[390, 792], [1440, 748]]) {
-  for (const product of [
-    { material: 'toile', size: '30x40', border: 'blanche', frame: 'sans', passe: false },
-    { material: 'toile', size: '30x40', border: 'blanche', frame: 'chene', passe: false },
-    { material: 'poster', size: '75x100', border: 'blanche', frame: 'noir', passe: true },
-    { material: 'poster', size: '90x120', border: 'blanche', frame: 'sans', passe: true },
-  ]) {
-    test(`${W} × ${SH}, ${product.material} ${product.frame} ${product.size} : au plus fort de l’inclinaison, la cote passe sous l’œuvre sans la toucher`, () => {
+  for (const product of EXTREME_PRODUCTS) {
+    test(`${W} × ${SH}, ${productName(product)} : tourné au plus fort, ni la cote ni les filets ne passent sur l’œuvre`, () => {
       const L = chipsLayout({ width: W, height: SH })
-      const screen = sceneProjector(L)
-      let reached = -Infinity
-      for (const [dx, dy] of [[3, 0], [-3, 0], [3, 3], [-3, 3], [3, -3], [-3, -3], [1.5, 3], [-1.5, 3]]) {
-        const director = createDirector({ room: neutralRoom(SIZE_LIST), product })
-        director.grab(10)
-        director.drag(dx, dy, 10)
-        const view = director.view(10, screen.f.aspect, screen.f.screen)
-        const box = paintingCorners(view.painting, 'outer')
-        const hull = hullOf(box.map((c) => screen.at(view, c)))
-        const front = box.filter((c) => c.side.z === 1)
-        const corners = FRONT_ORDER.map(([sx, sy]) => screen.at(view, front.find((c) => c.side.x === sx && c.side.y === sy)))
-        reached = Math.max(reached, ...corners.map((c) => c.y - (L.lineB - 5)))
+      const frame = sceneFrame(L)
+      let lowest = -Infinity
+      let band = -Infinity
+      for (const drag of EXTREME_DRAGS) {
+        const view = tilted(product, frame, drag)
+        const hull = silhouette(view, frame)
+        const corners = facade(view, frame)
+        lowest = Math.max(lowest, ...corners.map((c) => c.y - (L.lineB - 5)))
         const marks = coteMarks(L, corners)
         for (const [name, s] of Object.entries(marks)) {
           if (!s) continue
           for (let i = 0; i <= 50; i++) {
             const p = { x: s[0] + ((s[2] - s[0]) * i) / 50, y: s[1] + ((s[3] - s[1]) * i) / 50 }
-            assert.ok(outside(hull, p) > 1, `glisser de ${dx}, ${dy} : ${name} entre dans l’œuvre en ${p.x.toFixed(1)}, ${p.y.toFixed(1)}`)
+            assert.ok(outside(hull, p) > 1, `glisser de ${drag} : ${name} entre dans l’œuvre en ${p.x.toFixed(1)}, ${p.y.toFixed(1)}`)
           }
         }
-        assert.ok(marks.lineL && marks.lineR, `glisser de ${dx}, ${dy} : la cote garde ses deux lignes`)
+        assert.ok(marks.lineL && marks.lineR, `glisser de ${drag} : la cote garde ses deux lignes`)
+
+        const y = L.lineY
+        const onFacade = filetEnds(L, corners) // sans l'arrière : les bords de la façade
+        band = Math.max(band, -outside(hull, { x: onFacade.xl, y }), -outside(hull, { x: onFacade.xr, y }))
+        const ends = filetEnds(L, corners, facade(view, frame, 0))
+        for (const [from, to, name] of [[L.marks.lx, ends.xl, 'filet gauche'], [L.marks.rx, ends.xr, 'filet droit']]) {
+          assert.ok(Math.abs(outside(hull, { x: to, y })) < 0.75, `glisser de ${drag} : le point du ${name} est au bord de l’œuvre`)
+          for (let i = 0; i <= 50; i++) {
+            const x = from + ((to - from) * i) / 50
+            if (Math.abs(to - x) >= 1.5) assert.ok(outside(hull, { x, y }) > 0.5, `glisser de ${drag} : le ${name} passe sur l’œuvre en ${x.toFixed(1)}`)
+          }
+        }
       }
-      assert.ok(reached > 0, 'au plus fort, un coin bas descend sous le haut des traits : le test porte')
+      assert.ok(lowest > 0, 'au plus fort, un coin bas descend sous le haut des traits : le test porte')
+      // Une feuille de papier n'a pas de tranche ; une toile ou un cadre en montrent une : le test porte.
+      if (product.material === 'poster' && product.frame === 'sans') assert.ok(band < 1, `papier : ${band.toFixed(1)} px`)
+      else assert.ok(band > 3, `au plus fort, la tranche ou le flanc du cadre dépasse la façade de ${band.toFixed(1)} px`)
     })
   }
 }

@@ -1046,12 +1046,14 @@
       return { x: p.x, y: p.y + this.size.top + this.canvasOffset };
     }
 
-    // Les quatre coins de la façade du tableau (cadre compris), projetés dans la scène, et l'inclinaison
-    // au doigt de la vue : de face, elle ne fait pas venir les plaques (faceOf).
+    // Les quatre coins de la façade du tableau (cadre compris), projetés dans la scène, l'inclinaison au
+    // doigt de la vue (de face, elle ne fait pas venir les plaques : faceOf) et les coins de l'arrière de
+    // sa boîte (tourné, les filets s'arrêtent au bord de sa tranche : filetEnds).
     trackChips(view) {
-      const front = this.engine.paintingCorners(view.painting, 'outer').filter((c) => c.side.z === 1);
-      const at = (sx, sy) => this.toScene(front.find((c) => c.side.x === sx && c.side.y === sy));
-      this.chips.track([at(-1, 1), at(1, 1), at(1, -1), at(-1, -1)], view.tilt);
+      const box = this.engine.paintingCorners(view.painting, 'outer');
+      const face = (z) => [[-1, 1], [1, 1], [1, -1], [-1, -1]].map(([sx, sy]) =>
+        this.toScene(box.find((c) => c.side.z === z && c.side.x === sx && c.side.y === sy)));
+      this.chips.track(face(1), view.tilt, face(0));
     }
 
     /* ---- Source complète de l'œuvre, pour les gros plans ---- */

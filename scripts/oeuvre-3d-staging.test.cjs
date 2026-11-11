@@ -1053,7 +1053,8 @@ test("glisser le doigt incline le tableau, puis il revient de face avec un rebon
   assert.ok(Math.abs(sideAngle(director.view(1100, PORTRAIT))) < 0.2, 'revenu de face en 1 s')
   // La scène s'arrête à la fin du rebond : parti de 40°, l'écart qui reste ne se voit plus.
   let rest = 100
-  while (director.isMoving(rest)) rest += 1
+  while (director.isMoving(rest) && rest < 3000) rest += 1
+  assert.equal(director.isMoving(rest), false, 'le rebond se pose en moins de 3 s')
   for (const t of [rest, rest + 50, rest + 500]) {
     assert.ok(Math.abs(sideAngle(director.view(t, PORTRAIT))) < 0.1, `à l'arrêt (${t - 100} ms) : ${sideAngle(director.view(t, PORTRAIT)).toFixed(3)}°`)
   }

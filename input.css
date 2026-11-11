@@ -454,7 +454,7 @@ main-product-blocks .description h3 span {
 .oeuvre-3d-dim-h.is-left > span { left: auto; right: 6px; } /* à gauche du tableau : la femme est à droite */
 
 /* « Retour », après une mise en scène, en haut à gauche ; sans 3D, la même place sert à passer d'une
-   photo à l'autre. Flou seulement bouton visible : il ne paraît que la 3D arrêtée. */
+   photo à l'autre. */
 .oeuvre-3d-front,
 .oeuvre-3d-photo-nav {
   position: absolute; z-index: 5; top: 12px; left: max(12px, env(safe-area-inset-left, 0px));
@@ -462,8 +462,9 @@ main-product-blocks .description h3 span {
   font: 600 13.5px/1 var(--scene-font); letter-spacing: -0.005em;
   color: rgb(var(--color-main-rgb)); background: rgba(var(--color-secondary-rgb), 0.82);
 }
-/* Un bouton qu'on voit : le papier, le filet et l'ombre de la pilule d'achat, sur le mur comme sur
-   l'œuvre en gros plan (retour de Walid du 11/11 : une cliente ne savait pas quitter une option). */
+/* Un bouton qu'on voit : le papier, le filet et l'ombre de la pilule d'achat (valeurs reprises, comme
+   le bouton du panier), sur le mur comme sur l'œuvre en gros plan (retour de Walid du 11/11 : une
+   cliente ne savait pas quitter une option). Papier presque opaque : plus de flou derrière. */
 .oeuvre-3d-front {
   display: inline-flex; align-items: center; gap: 6px; padding: 0 15px 0 11px; cursor: pointer;
   border: 1px solid rgba(var(--color-main-rgb), 0.12); background: rgba(var(--color-secondary-rgb), 0.95);
@@ -474,7 +475,6 @@ main-product-blocks .description h3 span {
 }
 .oeuvre-3d-front.is-shown {
   opacity: 1; visibility: visible; pointer-events: auto; transition: opacity 300ms ease, visibility 0s;
-  -webkit-backdrop-filter: blur(16px) saturate(1.4); backdrop-filter: blur(16px) saturate(1.4);
 }
 .oeuvre-3d-front:active { opacity: 0.6; }
 .oeuvre-3d-photo-nav { display: flex; align-items: center; overflow: hidden; }
