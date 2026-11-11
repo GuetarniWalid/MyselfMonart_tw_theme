@@ -5,7 +5,7 @@
 # - pose-<taille>-femme.webp : ce qui passe devant le tableau, la femme (détourage BiRefNet) et, sur
 #   les photos meublées, les feuilles, branches et objets (clé de couleur sur le mur blanc), avec
 #   leurs couleurs estimées sans le mur (pymatting, licence MIT), là seulement où le tableau et son
-#   ombre peuvent passer ;
+#   ombre peuvent passer, en portrait, en paysage 4:3 ou en carré (painted_any) ;
 # - pose-<taille>-lumiere.png : la lumière du mur sans la femme ni les meubles, en cases d'environ
 #   3 cm ;
 # - poses.json : les mesures recopiées dans src/poses.js (femme, tête, calque, bandes sans rien devant
@@ -99,6 +99,17 @@ def painted(rect):
     k = SCALE_UP * PX_PER_CM  # px de la photo par cm du tableau
     f, s = FRAME_CM * k, SHADOW_CM * k
     return (L + W - SCALE_UP * W - f, T + H - SCALE_UP * H - f, L + W + f, T + H + f + s)
+
+
+def painted_any(rect):
+    """Zone du calque : celle du portrait, élargie aux paysages 4:3 et aux carrés que le thème accroche
+    à la même pose (posesFor du moteur : la pose de la taille d'aire la plus proche) et au même coin
+    bas droit ; ils grandissent plus loin vers la gauche. Un carré de côté max(largeur, hauteur) du
+    rectangle les contient tous les trois (thème, 11/11/2026 : en 100 × 75, 120 × 90, 80 × 80 et
+    100 × 100, les feuilles de l'olivier passaient derrière le tableau, coupées net)."""
+    L, T, W, H = rect
+    side = max(W, H)
+    return painted((L + W - side, T + H - side, side, side))
 
 
 def harmonic(boundary_values, region):
@@ -349,8 +360,10 @@ for size in sizes:
 
     # Calque de la femme : la zone du tableau et de son ombre seulement, à demi-échelle. Ses
     # couleurs sont estimées sans le mur ni le rectangle (pas de liseré clair sur l'œuvre).
-    # La zone de ce tableau-ci seulement (le 30 × 40 n'a que faire de l'olivier).
-    z = [int(round(v * SCALE)) for v in painted(RECTS[size])]
+    # La zone des tableaux de cette pose seulement, portrait, paysage et carré (le 30 × 40 n'a que
+    # faire de l'olivier). La balance des blancs, elle, garde la zone du portrait : les photos ne
+    # changent qu'au bord de sa main (couleurs estimées sur un recadrage plus grand, 18 niveaux au plus).
+    z = [int(round(v * SCALE)) for v in painted_any(RECTS[size])]
     z = [max(z[0], 0), max(z[1], 0), min(z[2], w2), min(z[3], h2)]
     crop = front[z[1]:z[3], z[0]:z[2]]
     ys2, xs2 = np.nonzero(crop > 0.004)

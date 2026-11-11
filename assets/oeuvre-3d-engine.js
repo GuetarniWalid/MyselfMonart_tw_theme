@@ -105,7 +105,9 @@ export function neutralRoom(sizes) {
    (tools/poses-detourer.py, tools/poses-preparer.py) :
    - photo : la photo, la femme et les meubles compris ;
    - calque : ce qui passe devant le tableau (sa main, les feuilles de l'olivier, les branches du vase),
-     là seulement où il peut aller, couleurs estimées sans le mur ;
+     là seulement où il peut aller, en portrait, en paysage 4:3 ou en carré (posesFor : ils prennent la
+     pose et grandissent plus loin vers la gauche ; calques élargis le 11/11/2026, painted_any de
+     l'outil), couleurs estimées sans le mur ;
    - lumiere : la lumière du mur sans eux, en cases d'environ 3 cm.
    Le tableau paraît scale fois plus grand à côté d'elle (la photo est réduite d'autant) ; il garde
    ses vraies mesures et son coin bas côté femme, au coin du rectangle de la photo : ses mains le
@@ -132,28 +134,28 @@ export const POSES = {
       rect: [2676, 376, 378, 484],
       person: [3138, 479, 4298, 2651],
       head: [3792, 479, 4183, 767],
-      overlay: [2528, 208, 2532, 212],
+      overlay: [2402, 208, 2406, 212],
       clean: { left: 1000, right: 1030 },
     },
     '60x80': {
       rect: [2362, 141, 717, 957],
       person: [3121, 479, 4262, 2663],
       head: [3750, 479, 4131, 767],
-      overlay: [2146, 1036, 3152, 1118],
+      overlay: [1858, 688, 3152, 1214],
       clean: { left: 976, right: 1128 },
     },
     '75x100': {
       rect: [2267, 21, 878, 1198],
       person: [3122, 480, 4186, 2654],
       head: [3772, 480, 4138, 768],
-      overlay: [2020, 812, 3216, 1320],
+      overlay: [1636, 516, 3216, 1334],
       clean: { left: 1054, right: 1102 },
     },
     '90x120': {
       rect: [2175, 20, 1075, 1441],
       person: [3005, 497, 4961, 2667],
       head: [3760, 497, 4146, 785],
-      overlay: [1888, 708, 3322, 1576],
+      overlay: [1448, 492, 3322, 1576],
       clean: { left: 1010, right: 1126 },
       reach: { body: 4174, elbow: 4420, wrist: 4668 },
     },
