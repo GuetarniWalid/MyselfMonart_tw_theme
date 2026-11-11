@@ -519,14 +519,11 @@ main-product-blocks .description h3 span {
   body.promo-popup-open .oeuvre-3d-pill { display: none; }
 }
 /* La page garde de quoi laisser voir le bas du pied de page sous la pilule. Le bouton rond du panier
-   (snippets/open-cart-drawer-button.liquid), absent de la maquette, monte au-dessus d'elle, par
-   transform (un changement de `bottom` compterait comme un décalage) ; sur un téléphone, il s'efface
-   tant que la scène est à l'écran (il y couvrirait la cote), et revient au défilement. */
+   (snippets/open-cart-drawer-button.liquid), absent de la maquette, reste toujours visible (choix de
+   Walid du 11/11/2026) et monte au-dessus de la pilule, par transform (un changement de `bottom`
+   compterait comme un décalage). */
 body:has(.oeuvre-3d-pill) { padding-bottom: 5.5rem; }
 body:has(.oeuvre-3d-pill) #cart-button { transform: translateY(-4.5rem); }
-@media (max-width: 719px) {
-  body.oeuvre-3d-in-view #cart-button { opacity: 0; pointer-events: none; }
-}
 
 /* ---- Les chips (src/chips.css de la maquette) ----
    Valeurs du design « Fiche chips v2 » de Walid du 09/11/2026 : téléphone par défaut, ordinateur sous

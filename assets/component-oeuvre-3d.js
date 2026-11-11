@@ -398,7 +398,6 @@
       this.pendingTasks = [];
 
       this.fitTop();
-      this.watchView();
       this.catalog = catalogOf({ models: this.models, names: this.config.names });
       this.product = this.readSelection() || this.defaultProduct();
       const texts = { ...this.config.texts, money: (euros) => this.money(Math.round(euros * 100)) };
@@ -476,14 +475,6 @@
       }
     }
 
-    // Tant que la scène est à l'écran, le bouton rond du panier s'efface sur un téléphone (input.css).
-    watchView() {
-      this.viewWatcher = new IntersectionObserver(([entry]) => {
-        document.body.classList.toggle('oeuvre-3d-in-view', entry.isIntersecting);
-      }, { threshold: 0.4 });
-      this.viewWatcher.observe(this);
-    }
-
     /* ---- Arrêt ---- */
 
     // Arrête tout et rend tout à la carte graphique. La scène ne repart plus ensuite.
@@ -495,8 +486,6 @@
       document.removeEventListener('mma:selection-change', this.onSelection);
       document.removeEventListener('mma:soft-navigation', this.onSoftNavigation);
       if (this.resizer) this.resizer.disconnect();
-      if (this.viewWatcher) this.viewWatcher.disconnect();
-      document.body.classList.remove('oeuvre-3d-in-view');
       cancelAnimationFrame(this.raf);
       clearTimeout(this.restTimer);
       if (this.chips) this.chips.destroy();
