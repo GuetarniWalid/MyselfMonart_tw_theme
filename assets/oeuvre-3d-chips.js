@@ -56,7 +56,9 @@
      garde la largeur du portrait, sa hauteur suit). Ordinateur : l'échelle baisse si la fenêtre est
      trop petite (le design ne montrait que 1440 × 820). Même règle pour la photo d'arrivée, en CSS
      (input.css, .oeuvre-3d-scene) : à garder identique, sinon la page saute. */
-  function chipsLayout({ width, height, ratio = 0.75 }) {
+  /* obstacles : sur ordinateur, ce qu'une rangée ne doit pas couvrir, en px de la scène ({ left, right,
+     top }) : la pilule d'achat, en bas à droite, et le bouton du panier au-dessus d'elle. */
+  function chipsLayout({ width, height, ratio = 0.75, obstacles = [] }) {
     const W = Math.max(1, width);
     const SH = Math.max(1, height);
     const desk = W >= DESK_MIN;
@@ -107,16 +109,29 @@
       // Tailles du texte : 14 px sur un 390 (cadre 2b), 13,5 px en dessous (iPhone SE), 17 et 16 sur ordinateur.
       type: { value: desk ? 17 : W >= 390 ? 14 : 13.5, cote: desk ? 16 : W >= 390 ? 14 : 13.5 },
       pillTop: desk ? SH : SH - k.pill,
+      obstacles: desk ? obstacles : [],
     };
   }
 
+  // La plus longue rangée : les six cadres de la toile (Aucun et cinq teintes).
+  const RAIL_COUNT = 6;
+
+  /* Largeur d'une rangée de count choix : toute la largeur moins 12 px de chaque côté sur un téléphone ;
+     sur ordinateur, centrée, ses choix, 4 px entre eux et 14 px de bord de chaque côté (input.css). */
+  const railWidth = (L, count = RAIL_COUNT) =>
+    L.desk ? count * optionWidth(L, count) + (count - 1) * 4 + 28 : L.W - 24;
+
   /* Une rangée ouverte : où elle se pose, de combien la scène remonte, et si la barre d'achat doit
-     laisser sa place (petit téléphone seulement). note : la rangée a une ligne de note. */
-  function railPlacement(L, note = false) {
+     laisser sa place (petit téléphone seulement). note : la rangée a une ligne de note ; count : son
+     nombre de choix. Sur ordinateur, elle s'arrête au-dessus de la pilule et du panier qu'elle croise
+     (retour de l'UX du 11/11/2026 : en 768 × 1024, elle couvrait leurs prix). */
+  function railPlacement(L, note = false, count = RAIL_COUNT) {
     const { k, box: art } = L;
     const h = k.disc + k.railBody + (note ? k.note : 0);
     const need = art.b + k.railGap + h;
-    const lim1 = L.pillTop - 8;
+    const half = railWidth(L, count) / 2;
+    const crossed = L.obstacles.filter((o) => L.cx + half > o.left - 8 && L.cx - half < o.right + 8);
+    const lim1 = Math.min(L.pillTop, ...crossed.map((o) => o.top)) - 8;
     const highest = Math.max(0, art.t - 12); // la scène ne remonte jamais l'œuvre à moins de 12 px du haut
     let shift = 0;
     let hidePill = false;
@@ -127,7 +142,7 @@
         shift = Math.min(Math.max(0, need - (L.SH - 12)), highest);
       }
     }
-    const lim = hidePill || L.desk ? L.SH - 12 : lim1;
+    const lim = hidePill ? L.SH - 12 : L.desk ? Math.min(L.SH - 12, lim1) : lim1;
     const top = Math.min(art.b - shift + k.railGap, lim - h);
     return { shift: Math.round(shift), hidePill, top: Math.round(top), height: h };
   }
@@ -354,7 +369,7 @@
   }
 
   const pure = {
-    DESK_MIN, TEXTS_FR, chipsLayout, railPlacement, maxShift, optionWidth, railEvent, railZone, canvasBox,
+    DESK_MIN, TEXTS_FR, chipsLayout, railPlacement, railWidth, maxShift, optionWidth, railEvent, railZone, canvasBox,
     directorAspect, framingAt, toggleOf, legendOf, choicesOf, eur, dims, swatchOf, sizeTileOf,
   };
 
@@ -594,8 +609,8 @@
 
     /* ---- Mise en page ---- */
 
-    function resize({ width, height }) {
-      L = chipsLayout({ width, height, ratio });
+    function resize({ width, height, obstacles = [] }) {
+      L = chipsLayout({ width, height, ratio, obstacles });
       stage.classList.toggle('is-desk', L.desk);
       stage.style.setProperty('--chips-value', px(L.type.value));
       stage.style.setProperty('--chips-cote', px(L.type.cote));
@@ -697,7 +712,7 @@
     let spot = null; // où la rangée ouverte se pose
     function place(group) {
       const model = choicesOf(catalog, texts, group, current);
-      spot = railPlacement(L, !!model.note);
+      spot = railPlacement(L, !!model.note, model.options.length);
       scene.style.transform = spot.shift ? `translateY(${-spot.shift}px)` : '';
       rails[group].style.top = px(spot.top);
       setPillAway(spot.hidePill);

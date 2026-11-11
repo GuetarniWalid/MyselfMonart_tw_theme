@@ -5,7 +5,7 @@ const assert = require('node:assert/strict')
 const { readFileSync } = require('node:fs')
 const path = require('node:path')
 const {
-  chipsLayout, railPlacement, maxShift, optionWidth, choicesOf, legendOf, toggleOf, eur, dims, swatchOf, sizeTileOf, railEvent, TEXTS_FR,
+  chipsLayout, railPlacement, railWidth, maxShift, optionWidth, choicesOf, legendOf, toggleOf, eur, dims, swatchOf, sizeTileOf, railEvent, TEXTS_FR,
 } = require('../assets/oeuvre-3d-chips.js')
 
 /* ---- Données de test : le catalogue du Bonsaï de la maquette (.scratch/fiche-3d/prototype/src/catalog.js) ---- */
@@ -212,6 +212,36 @@ test('la rangée ouverte : la scène remonte juste ce qu’il faut, la barre ne 
   assert.deepEqual(railPlacement(desk, true), { shift: 40, hidePill: false, top: 569, height: 167 })
   assert.equal(railPlacement(chipsLayout({ width: 390, height: 792 }), true).shift, 0)
   assert.equal(maxShift(se), 40)
+})
+
+/* Sur ordinateur, la pilule d'achat est en bas à droite et le panier juste au-dessus d'elle (choix de
+   Walid du 11/11/2026). En 768 × 1024, la rangée centrée les croisait et couvrait ses prix (relevé de
+   l'UX) : elle s'arrête au-dessus de ce qu'elle croiserait. La scène fait 1024 - 123 px de haut. */
+const deskObstacles = (W, SH, pillWidth) => {
+  const pill = { left: W - 32 - pillWidth, right: W - 32, top: SH - 28 - 56 }
+  return [pill, { left: W - 32 - 86, right: W - 32, top: pill.top - 12 - 56 }]
+}
+
+test('ordinateur étroit (768 × 1024) : la rangée ouverte s’arrête au-dessus de la pilule et du panier qu’elle croise', () => {
+  const W = 768, SH = 901
+  const obstacles = deskObstacles(W, SH, 300)
+  const L = chipsLayout({ width: W, height: SH, obstacles })
+  for (const [count, note] of [[6, false], [6, true], [5, false], [4, true]]) {
+    const spot = railPlacement(L, note, count)
+    const half = railWidth(L, count) / 2
+    const crossed = obstacles.filter((o) => L.cx + half > o.left - 8 && L.cx - half < o.right + 8)
+    assert.ok(crossed.length, `${count} choix : la rangée croise la pilule`)
+    for (const o of crossed) assert.ok(spot.top + spot.height <= o.top - 8, `${count} choix, note ${note} : bas ${spot.top + spot.height} au-dessus de ${o.top - 8}`)
+  }
+  // La 3D se cadre au-dessus de la plus haute rangée : la zone suit.
+  assert.equal(railPlacement(L, true).top, railPlacement(L, true, 6).top)
+})
+
+test('ordinateur large (1440 × 748) : la pilule est loin de la rangée, rien ne change', () => {
+  const desk = chipsLayout({ width: 1440, height: 748, obstacles: deskObstacles(1440, 748, 365) })
+  assert.deepEqual(railPlacement(desk, false), { shift: 20, hidePill: false, top: 589, height: 147 })
+  assert.deepEqual(railPlacement(desk, true), { shift: 40, hidePill: false, top: 569, height: 167 })
+  assert.equal(railWidth(desk, 4), 352) // 4 choix de 78 px, 4 px entre eux, 14 px de chaque côté
 })
 
 test('la rangée partage la largeur : 54 px par choix sur 375 px pour les six cadres, jamais moins de 44', () => {

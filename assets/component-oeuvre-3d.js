@@ -422,6 +422,7 @@
       this.refresh(window.MMASelection ? window.MMASelection.read() : null);
       document.addEventListener('mma:selection-change', this.onSelection);
       document.addEventListener('mma:soft-navigation', this.onSoftNavigation);
+      document.addEventListener('mma:cart-count', this.onResize); // le bouton du panier change de largeur
       this.addEventListener('pointerdown', this.onApproach);
       this.art.addEventListener('load', this.onArtLoaded, { once: true });
       if (this.art.complete && this.art.naturalWidth) this.onArtLoaded();
@@ -485,6 +486,7 @@
       if (this.cancelWanted) this.cancelWanted();
       document.removeEventListener('mma:selection-change', this.onSelection);
       document.removeEventListener('mma:soft-navigation', this.onSoftNavigation);
+      document.removeEventListener('mma:cart-count', this.onResize);
       if (this.resizer) this.resizer.disconnect();
       cancelAnimationFrame(this.raf);
       clearTimeout(this.restTimer);
@@ -748,6 +750,7 @@
         if (this.director) this.director.choose(group, { ...this.product }, performance.now());
       }
       this.refresh(window.MMASelection ? window.MMASelection.read() : null);
+      this.measure(); // la nouvelle pilule (titre, prix) : ce que les rangées doivent éviter
       this.requestRender();
     }
 
@@ -812,7 +815,7 @@
       const rect = this.getBoundingClientRect();
       const w = Math.max(1, Math.round(rect.width));
       const h = Math.max(1, Math.round(rect.height));
-      const L = this.chips.resize({ width: w, height: h });
+      const L = this.chips.resize({ width: w, height: h, obstacles: this.obstacles(rect, h) });
       const box = window.Oeuvre3dChips.canvasBox(L);
       const button = this.frontButton.getBoundingClientRect();
       const free = { top: button.bottom - rect.top + 6, left: button.right - rect.left + 6 };
@@ -834,6 +837,19 @@
       const visible = this.engine.renderDensity({ dpr, width: this.size.w, height: this.size.h });
       const fit = Math.max(Math.min(dpr, 2), visible * Math.sqrt(this.size.h / this.size.glH));
       this.view3d.resize(this.size.w, this.size.glH, Math.min(this.densityCap, fit));
+    }
+
+    /* Sur ordinateur, ce qu'une rangée ouverte ne doit pas couvrir (chipsLayout) : la pilule d'achat et
+       le bouton du panier au-dessus d'elle, fixés en bas de l'écran, ramenés en px de la scène, dont le
+       bas est celui de l'écran ; 16 px de plus à gauche, pour un prix qui s'allonge. */
+    obstacles(rect, height) {
+      const found = [];
+      for (const node of [this.pill, document.getElementById('cart-button')]) {
+        const r = node && node.isConnected ? node.getBoundingClientRect() : null;
+        if (!r || !r.width) continue;
+        found.push({ left: r.left - rect.left - 16, right: r.right - rect.left, top: height - (window.innerHeight - r.top) });
+      }
+      return found;
     }
 
     // Redimensionner efface le canvas : on redessine aussitôt, avant que l'écran ne se rafraîchisse.
