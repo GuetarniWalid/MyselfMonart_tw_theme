@@ -3,8 +3,10 @@
 // Lancer : node --test scripts/oeuvre-3d-zoom.test.cjs  (lanceur intégré de Node, sans dépendance)
 const { test } = require('node:test')
 const assert = require('node:assert/strict')
-const { zoomLimit, createZoom, withZoom, createDirector, neutralRoom, tilePlan, tileServes, tileUrl, visibleImage } = require('../assets/oeuvre-3d-engine.js')
-const { gestureOf, pinchDismisses, tapKind } = require('../assets/component-oeuvre-3d.js')
+const {
+  zoomLimit, createZoom, withZoom, createDirector, neutralRoom, tilePlan, tileServes, tileUrl, visibleImage, pxPerCm, zoomRegion,
+} = require('../assets/oeuvre-3d-engine.js')
+const { gestureOf, pinchDismisses, tapKind, wheelStep } = require('../assets/component-oeuvre-3d.js')
 
 const near = (actual, expected, tolerance, label = '') =>
   assert.ok(Math.abs(actual - expected) <= tolerance, `${label} ${actual} au lieu de ${expected} (± ${tolerance})`)
@@ -191,9 +193,42 @@ test("retour à ×1 (bouton « Retour », Échap, choix d'une option) : en gliss
   assert.equal(zoom.isMoving(3000), false)
 })
 
+test("lâchée à peine zoomée (sous ×1,02), l'œuvre revient exactement à ×1 : jamais entre les deux", () => {
+  const zoom = createZoom()
+  zoom.frame(PHONE)
+  zoom.grab(10, 10, 100, 0)
+  zoom.drag(10, 10, 101, 16)
+  assert.equal(zoom.isAway(16), false, 'à 1 % près, elle est encore de face')
+  zoom.release(16)
+  const z = zoom.at(2000)
+  assert.deepEqual([z.scale, z.x, z.y], [1, 0, 0])
+  assert.equal(zoom.isZoomed(2000), false)
+})
+
+test("zoomée, ou seulement rapetissée sous les doigts : isZoomed et isAway le disent", () => {
+  const zoom = createZoom()
+  zoom.frame(PHONE)
+  zoom.grab(0, 0, 200, 0)
+  zoom.drag(0, 0, 160, 16) // sous ×1, doigts posés
+  assert.equal(zoom.isAway(16), true, "l'œuvre n'est plus à sa place de face")
+  assert.equal(zoom.isZoomed(16), false, 'mais elle n’est pas zoomée')
+  zoom.drag(0, 0, 400, 32)
+  assert.equal(zoom.isZoomed(32), true)
+})
+
 /* Sur un ordinateur de 1440 × 820 : l'œuvre de face fait 339 × 452 px, l'écran utile va de 720 px de
    chaque côté, de 349,5 px au-dessus de son milieu à 347,5 px dessous. */
 const DESK = { half: [169.4, 225.85], view: { left: -720, top: -349.5, right: 720, bottom: 347.5 }, max: 4 }
+
+test("molette : un pas qui laisse l'œuvre sous ×1,02 la ramène à ×1, et une rafale reste un mouvement jusqu'à 150 ms après son dernier pas", () => {
+  const zoom = createZoom()
+  zoom.frame(DESK)
+  zoom.wheel(1.01, 0, 0, 0)
+  assert.equal(zoom.at(0).scale, 1)
+  zoom.wheel(1.5, 0, 0, 10)
+  assert.equal(zoom.isMoving(100), true, 'la rafale continue peut-être')
+  assert.equal(zoom.isMoving(200), false, 'au repos')
+})
 
 test('molette : le zoom suit le pavé tactile sous le pointeur, sans passer sous ×1 ni au-delà du maximum', () => {
   const zoom = createZoom()
@@ -271,10 +306,11 @@ test("la caméra s'approche du tableau en restant de face : un point vu en u à 
   const director = createDirector({ room: neutralRoom(['30x40']), product: TOILE })
   const front = director.view(0, W / H)
   const target = front.camera.target
-  const k = H / 2 / (Math.hypot(...sub(front.camera.position, target)) * Math.tan(front.camera.fovY / 2)) // px par cm
+  const k = pxPerCm(front, H) // px de l'écran par cm de la façade, à ×1
   const point = [target[0] + 5, target[1] + 4, target[2]] // sur la façade de l'œuvre
   const u = pixel(front.camera, W, H, point)
-  near(u[0], 5 * k, 1e-6, 'à ×1')
+  near(u[0], 5 * k, 1e-6, 'à ×1 (x)')
+  near(u[1], -4 * k, 1e-6, 'à ×1 (y)')
   const center = [20, -30] // px de ×1
   const zoomed = withZoom(front, 2.5, [center[0] / k, -center[1] / k])
   const seen = pixel(zoomed.camera, W, H, point)
@@ -328,6 +364,20 @@ test("pièce de détail : aucune, si l'image en place a déjà la résolution vo
   assert.equal(tilePlan({ visible: MIDDLE, native: BONSAI, density: 0.5, base: ARRIVAL, ...BUDGET }), null)
 })
 
+test("pièce de détail : plafonnée par le budget, elle sert tant qu'une nouvelle ne serait pas plus fine (pas de demande en boucle)", () => {
+  // Une grande source (2600 × 1950) zoomée sur un écran dense : le budget plafonne la résolution.
+  const big = { width: 2600, height: 1950 }
+  const view = { u0: 0.3, v0: 0.2, u1: 0.75, v1: 0.8 }
+  const budget = { maxSide: 4096, maxPixels: 1.2e6 }
+  const plan = tilePlan({ visible: view, native: big, density: 1, base: { width: 800 }, ...budget })
+  assert.ok(plan.scale < 0.95, `plafonnée (${plan.scale})`)
+  const again = tilePlan({ visible: view, native: big, density: 1, base: { width: 800 }, ...budget })
+  assert.equal(tileServes(plan, view, 1, again), true, 'la même vue ne redemande rien')
+  const closer = { u0: 0.45, v0: 0.4, u1: 0.6, v1: 0.6 } // zoomée plus loin : une pièce plus petite, plus fine
+  const finer = tilePlan({ visible: closer, native: big, density: 1, base: { width: 800 }, ...budget })
+  assert.equal(tileServes(plan, closer, 1, finer), false, 'plus près, une pièce plus fine part')
+})
+
 test('pièce de détail : sous la taille maximale des textures et dans le budget de mémoire', () => {
   const whole = { u0: -0.1, v0: -0.05, u1: 1.1, v1: 1.05 }
   const plan = tilePlan({ visible: whole, native: BONSAI, density: 1, base: { width: 400 }, maxSide: 2048, maxPixels: 2e6 })
@@ -353,6 +403,17 @@ test("région vue de l'image : bordure pliée, la façade n'en montre que le mil
 test("région vue de l'image : poster au contour blanc, l'œuvre recadrée dans l'intérieur", () => {
   const poster = { ...PAINTING, depth: 0.05, paper: 1, passe: 1 }
   rectNear(visibleImage(poster, 'papier', 0.75, [-5, -10, 5, 10]), { u0: 0.3106, v0: 0.2159, u1: 0.6894, v1: 0.7841 }, 'contour')
+})
+
+test('région vue au zoom : l’écran utile ramené sur la façade, et les px du canvas par px de la source', () => {
+  // ×2, décalé de 20 px vers la droite (en px de ×1), 10 px par cm de la façade : un écran de 390 × 660
+  // px montre 19,5 × 33 cm de la façade, autour du point à 2 cm à droite de son milieu.
+  const region = zoomRegion({
+    zoom: { scale: 2, x: 20, y: 0 }, view: { left: -195, top: -330, right: 195, bottom: 330 }, k: 10,
+    painting: PAINTING, border: 'blanche', native: { width: 1500, height: 2000 }, density: 2,
+  })
+  rectNear(region.visible, { u0: (17 - 9.75) / 30, v0: (20 - 16.5) / 40, u1: (17 + 9.75) / 30, v1: (20 + 16.5) / 40 }, 'région')
+  near(region.density, (390 * 2) / ((19.5 / 30) * 1500), 1e-9, 'densité')
 })
 
 test("l'adresse de la pièce : le recadrage du CDN de Shopify, la version de l'image gardée", () => {
@@ -395,4 +456,30 @@ test('double toucher : deux touchers en moins de 320 ms, à moins de 40 px', () 
   assert.equal(tapKind(first, { at: 250, x: 120, y: 110 }), 'double')
   assert.equal(tapKind(first, { at: 400, x: 100, y: 100 }), 'single', 'trop lent')
   assert.equal(tapKind(first, { at: 200, x: 180, y: 100 }), 'single', 'trop loin')
+})
+
+/* La molette, en facteur d'échelle. Pincement du pavé tactile (Ctrl) : un événement de deltaY px vaut
+   exp(−deltaY / 100), comme le pincement lui-même ; molette simple (zoomée) : 18 % par cran de 100 px,
+   glissé. Les lignes (Firefox) comptent 16 px, les pages 400. */
+test('molette : le pincement du pavé tactile suit les doigts ; un cran de souris zoome de 18 %, en glissant', () => {
+  const pinchIn = wheelStep({ deltaY: -6, deltaMode: 0, ctrlKey: true })
+  near(pinchIn.factor, Math.exp(0.06), 1e-12, 'pincement')
+  assert.equal(pinchIn.glide, false)
+  near(wheelStep({ deltaY: -400, deltaMode: 0, ctrlKey: true }).factor, Math.exp(0.25), 1e-12, 'un grand pas est borné')
+  const notch = wheelStep({ deltaY: 100, deltaMode: 0, ctrlKey: false })
+  near(notch.factor, Math.exp(-0.2), 1e-12, 'un cran vers soi : dézoome')
+  assert.equal(notch.glide, true, 'un cran glisse')
+  near(wheelStep({ deltaY: 3, deltaMode: 1, ctrlKey: false }).factor, Math.exp(-0.096), 1e-12, '3 lignes = 48 px')
+  assert.equal(wheelStep({ deltaY: 4, deltaMode: 0, ctrlKey: false }).glide, false, 'le défilement continu du pavé suit tel quel')
+})
+
+test("le zoom prend la main : l'inclinaison au doigt revient de face en 200 ms, sans ressort", () => {
+  const director = createDirector({ room: neutralRoom(['30x40']), product: TOILE })
+  director.view(0, 0.5)
+  director.grab(0)
+  director.drag(-0.5, 0, 16) // le tableau incliné de côté
+  director.calmTilt(100)
+  assert.ok(Math.abs(director.view(150, 0.5).tilt.yaw) > 0, 'en route')
+  assert.deepEqual(director.view(300, 0.5).tilt, { yaw: 0, pitch: 0 })
+  assert.equal(director.isMoving(300), false)
 })

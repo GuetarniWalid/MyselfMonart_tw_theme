@@ -246,11 +246,24 @@
   const tapKind = (previous, tap) => (previous && tap.at - previous.at <= DOUBLE_TAP.ms &&
     Math.hypot(tap.x - previous.x, tap.y - previous.y) <= DOUBLE_TAP.px ? 'double' : 'single');
 
+  /* La molette, en facteur d'échelle. Avec Ctrl, c'est le pincement du pavé tactile : chaque événement
+     vaut exp(−deltaY / 100), comme les doigts eux-mêmes, borné à 25 px par événement. Sans Ctrl (l'œuvre
+     zoomée), 18 % par cran de souris de 100 px, borné à un cran ; un cran (40 px et plus) glisse, le
+     défilement continu du pavé tactile suit tel quel. deltaMode : 1 en lignes (Firefox, 16 px chacune),
+     2 en pages (400 px). */
+  const WHEEL = { line: 16, page: 400, pinchStep: 25, pinchPerPx: 0.01, notchStep: 100, notchPerPx: 0.002, notch: 40 };
+  function wheelStep({ deltaY, deltaMode, ctrlKey }) {
+    const px = deltaY * (deltaMode === 1 ? WHEEL.line : deltaMode === 2 ? WHEEL.page : 1);
+    const bounded = (cap) => Math.max(-cap, Math.min(cap, px));
+    if (ctrlKey) return { factor: Math.exp(-bounded(WHEEL.pinchStep) * WHEEL.pinchPerPx), glide: false };
+    return { factor: Math.exp(-bounded(WHEEL.notchStep) * WHEEL.notchPerPx), glide: Math.abs(px) >= WHEEL.notch };
+  }
+
   // Node (tests) : seul le calcul pur est exporté.
   if (typeof window === 'undefined') {
     module.exports = {
       stageMode, wantsDetail, catalogOf, productFromSelection, choiceInputs, variantOf, sizesOf,
-      gestureOf, pinchDismisses, tapKind,
+      gestureOf, pinchDismisses, tapKind, wheelStep,
     };
     return;
   }
@@ -382,11 +395,13 @@
   /* Zoom : l'œuvre zoomée immobile depuis TILE_IDLE_MS, sa pièce de détail part au CDN. TILE_PIXELS : le
      budget de mémoire d'une pièce (13 Mo, 17 avec ses mipmaps ; un téléphone au plus fort du zoom en
      demande 2,6 millions) ; TILE_SIDE : son plus grand côté, sous la limite de la carte graphique.
-     WHEEL_PAUSE_MS : la pause de la molette qui rend la page à son défilement, revenue à ×1. */
+     WHEEL_PAUSE_MS : la pause de la molette qui rend la page à son défilement, revenue à ×1 ; elle marque
+     aussi le début d'une nouvelle rafale. */
   const TILE_IDLE_MS = 150;
   const TILE_PIXELS = 3.2e6;
   const TILE_SIDE = 8192;
   const WHEEL_PAUSE_MS = 300;
+  const WHEEL_GLIDE_MS = 160; // un cran de souris glisse vers sa nouvelle échelle
 
   class Oeuvre3d extends HTMLElement {
     connectedCallback() {
@@ -442,10 +457,10 @@
       this.gesture = { mode: 'none', on: null, several: false, moved: 0, at: 0, spread: 0, done: false };
       this.spot = { x: 0, y: 0, spread: 0 }; // milieu et écart des doigts, réécrits (fingerSpot)
       this.lastTap = null;
-      this.zoomLayout = null; // la mise en page du zoom (zoomFrameOf), à jour à chaque image
+      this.zoomLayout = null; // la mise en page du zoom (updateZoomLayout), relevée de face au repos
       this.tileLog = []; // les pièces de détail téléchargées : adresse, poids, durée
       this.wheel = { latched: false, last: 0, pinch: 1, pinchAt: 0, box: null, boxAt: 0 };
-      this.touches = 0;
+      this.touchCount = 0;
 
       this.fitTop();
       this.catalog = catalogOf({ models: this.models, names: this.config.names });
@@ -552,7 +567,8 @@
       this.raf = 0;
       this.dropTiles();
       this.zoom = null;
-      this.setZoomed(false);
+      this.zoomAway = false;
+      if (this.chips) this.chips.setZoomed(false);
       if (this.canvas) this.canvas.removeEventListener('webglcontextlost', this.onContextLost);
       if (this.reliefs) this.reliefs.stop();
       if (this.detailReady && this.engine) this.engine.closeImage(this.detailReady);
@@ -1051,7 +1067,7 @@
       this.view3d.render(view, at);
       this.placeDims(view);
       // Zoomée, les chips sont effacées : elles restent où l'œuvre de face les attend.
-      if (this.zoomShown) this.chips.track(null);
+      if (this.zoomAway) this.chips.track(null);
       else this.trackChips(view);
       this.lastView = view;
       return view;
@@ -1065,11 +1081,11 @@
       const moving = this.director.isMoving(now) || this.view3d.isFading(now, { art: false }) || !!this.drag ||
         this.zoom.isMoving(now) || this.zoneWeight(now) !== this.zoneMove.to;
       this.chips.setMoving(moving);
-      this.setZoomed(this.zoomShown);
+      this.chips.setZoomed(this.zoomAway);
       // « Retour », au repos : hors du plan de face, ou l'œuvre zoomée (il la ramène à ×1).
-      this.setFront(!moving && (view.shot !== 'front' || this.zoomShown));
+      this.setFront(!moving && (view.shot !== 'front' || this.zoomAway));
       if (moving || this.view3d.isFading(now)) {
-        if (moving) this.holdTiles();
+        if (moving) this.cancelTilePlan();
         this.raf = requestAnimationFrame(this.frame);
         return;
       }
@@ -1167,19 +1183,19 @@
     /* La vue zoomée : la couche du zoom (createZoom du moteur) sur la vue du directeur. La mise en page
        du zoom se relève de face, au repos : px par cm de la façade, demi-taille de l'œuvre, écran utile
        (au-dessus de la pilule d'achat sur un téléphone), zoom maximal. Si elle change (fenêtre
-       redimensionnée), le zoom repart de ×1. zoomShown : l'œuvre se voit zoomée (ou rapetissée). */
+       redimensionnée), le zoom repart de ×1. zoomAway : l'œuvre n'est plus à sa place de face (zoomée,
+       ou rapetissée sous les doigts) ; les chips s'effacent alors (chips.setZoomed). */
     zoomedView(base, at) {
       if (base.shot === 'front' && !this.director.isStaging(at)) this.updateZoomLayout(base, at);
+      this.zoomAway = this.zoom.isAway(at);
       const z = this.zoom.at(at);
-      this.zoomShown = Math.abs(z.scale - 1) > this.engine.ZOOM.zoomed - 1;
       if (z.scale === 1 && z.x === 0 && z.y === 0) return base;
       const { k } = this.zoomLayout;
       return this.engine.withZoom(base, z.scale, [z.x / k, -z.y / k]);
     }
 
     updateZoomLayout(base, at) {
-      const { position, target, fovY } = base.camera;
-      const k = this.size.glH / 2 / (Math.hypot(position[0] - target[0], position[1] - target[1], position[2] - target[2]) * Math.tan(fovY / 2));
+      const k = this.engine.pxPerCm(base, this.size.glH);
       const p = base.painting;
       const px = this.size.w / 2;
       const py = this.size.top + this.size.glH / 2 + this.canvasOffset;
@@ -1204,22 +1220,15 @@
       }
     }
 
-    // Zoomée, les chips s'effacent et la 3D garde les doigts : la page ne défile plus sous eux.
-    setZoomed(zoomed) {
-      if (zoomed === !!this.zoomedState) return;
-      this.zoomedState = zoomed;
-      this.chips.setZoomed(zoomed);
-      this.canvas.style.touchAction = zoomed ? 'none' : '';
-    }
-
-    // De face, au repos, sans rangée ouverte ni transition : là seulement, deux doigts zooment.
+    /* De face, au repos, sans rangée ouverte ni transition, ni mise en scène qui attend le retour à ×1 :
+       là seulement, deux doigts zooment. */
     canZoom(now) {
       return !!this.zoom && !!this.zoomLayout && !!this.lastView && this.lastView.shot === 'front' && !this.director.isStaging(now) &&
-        !this.chips.openGroup && !this.stageWaiting && this.zoneWeight(now) === 0 && this.zoneMove.to === 0;
+        !this.chips.openGroup && !this.stageWaiting && !this.unzooming && this.zoneWeight(now) === 0 && this.zoneMove.to === 0;
     }
 
     /* Ramène l'œuvre zoomée à ×1, en ms (le bouton, Échap, un choix) ; rend la durée du retour (au moins
-       1 ms), 0 si elle n'était pas zoomée. Un geste en cours sur l'œuvre zoomée s'arrête. */
+       1 ms), 0 si elle était déjà à ×1, immobile. Un geste en cours sur l'œuvre zoomée s'arrête. */
     unzoom(ms = this.engine ? this.engine.ZOOM.reset : 0) {
       if (!this.zoom) return 0;
       const now = performance.now();
@@ -1235,7 +1244,8 @@
       return Math.max(1, duration);
     }
 
-    // La mise en scène d'un choix part une fois l'œuvre revenue à ×1 (un retour rapide), sinon aussitôt.
+    /* La mise en scène d'un choix part une fois l'œuvre revenue à ×1 (un retour rapide), sinon aussitôt.
+       Pendant ce retour, aucun geste ne la rezoome ; s'il l'a fait quand même, elle revient d'un coup. */
     afterUnzoom(task) {
       const ms = this.unzoom();
       if (!ms) {
@@ -1243,8 +1253,13 @@
         return;
       }
       const { session } = this;
+      this.unzooming = true;
       setTimeout(() => {
-        if (session === this.session && this.director) task();
+        this.unzooming = false;
+        if (session !== this.session || !this.director) return;
+        if (this.zoom.isAway(performance.now())) this.zoom.reset(performance.now(), 0);
+        task();
+        this.requestRender();
       }, ms);
     }
 
@@ -1255,24 +1270,21 @@
        au GPU attend le repos. À ×1, la pièce s'efface et sa mémoire est rendue. */
 
     // Ce que l'on voit de l'image dans l'état z du zoom, et le nombre de px du canvas par px de la source.
-    visibleOf(z) {
+    regionOf(z) {
       const { k, view, painting, product } = this.zoomLayout;
-      const s = z.scale;
-      const box = [(z.x + view.left / s) / k, -(z.y + view.bottom / s) / k, (z.x + view.right / s) / k, -(z.y + view.top / s) / k];
-      const { native } = this.tileSource;
-      const border = painting.paper >= 0.999 ? 'papier' : product.border;
-      const visible = this.engine.visibleImage(painting, border, native.width / native.height, box);
-      const density = ((view.right - view.left) * this.view3d.density()) / ((visible.u1 - visible.u0) * native.width);
-      return { visible, density };
+      return this.engine.zoomRegion({
+        zoom: z, view, k, painting, border: this.engine.borderShown(painting, product),
+        native: this.tileSource.native, density: this.view3d.density(),
+      });
     }
 
-    holdTiles() {
+    cancelTilePlan() {
       clearTimeout(this.tileTimer);
       this.tileTimer = 0;
     }
 
     zoomAtRest(now) {
-      if (!this.zoomShown) {
+      if (!this.zoomAway) {
         this.dropTiles();
         return;
       }
@@ -1280,7 +1292,7 @@
       if (ready) {
         this.tileReady = null;
         const [u0, v0, u1, v1] = ready.plan.rect;
-        const { visible } = this.visibleOf(this.zoom.at(now));
+        const { visible } = this.regionOf(this.zoom.at(now));
         // Une pièce arrivée pendant le geste ne sert que si elle touche encore la vue.
         if (u0 < visible.u1 && u1 > visible.u0 && v0 < visible.v1 && v1 > visible.v0) {
           this.view3d.showTile(ready.image, ready.plan.rect);
@@ -1289,24 +1301,25 @@
         }
         this.engine.closeImage(ready.image);
       }
-      this.holdTiles();
+      this.cancelTilePlan();
       this.tileTimer = setTimeout(this.planTile, TILE_IDLE_MS);
     }
 
-    // La pièce de l'endroit où l'œuvre se pose (ou se trouve, au repos), si l'image en place n'y suffit pas.
+    /* La pièce de l'endroit où l'œuvre se pose (ou se trouve, au repos), si l'image en place n'y suffit
+       pas, ni la pièce en place ou celle qui arrive (aussi fines que celle qu'on demanderait). */
     planTile = () => {
       this.tileTimer = 0;
       if (!this.live || !this.zoomLayout || !this.tileSource.url || !this.tileSource.native) return;
       const z = this.zoom.landing();
       if (!z || z.scale <= this.engine.ZOOM.zoomed) return;
-      const { visible, density } = this.visibleOf(z);
+      const { visible, density } = this.regionOf(z);
       const { tileServes, tilePlan } = this.engine;
-      if (tileServes(this.tileShown, visible, density) || tileServes(this.tilePending, visible, density)) return;
       const plan = tilePlan({
         visible, native: this.tileSource.native, density, base: this.view3d.artTexels(),
         maxSide: Math.min(this.view3d.maxTextureSize(), TILE_SIDE), maxPixels: TILE_PIXELS,
       });
-      if (plan) this.fetchTile(plan);
+      if (!plan || tileServes(this.tileShown, visible, density, plan) || tileServes(this.tilePending, visible, density, plan)) return;
+      this.fetchTile(plan);
     };
 
     fetchTile(plan) {
@@ -1337,7 +1350,7 @@
     }
 
     dropTiles() {
-      this.holdTiles();
+      this.cancelTilePlan();
       if (this.tileAbort) this.tileAbort.abort();
       this.tileAbort = null;
       this.tilePending = null;
@@ -1394,16 +1407,20 @@
       this.regesture(now);
     };
 
+    // Le plan à l'écran (de face avant la première image).
+    shotNow() {
+      return this.lastView ? this.lastView.shot : 'front';
+    }
+
     /* Le nombre de doigts a changé : ce qu'ils font (gestureOf), repris de là où l'on est. Un doigt
-       resté seul après un pincement ne se met pas à incliner le tableau. */
+       resté seul après un pincement ne se met pas à incliner le tableau. Le zoom prenant la main,
+       l'inclinaison revient de face en 200 ms (calmTilt), même en plein rebond : la caméra du zoom
+       part de face. */
     regesture(now) {
       const g = this.gesture;
       const fingers = this.fingers.length;
       if (fingers > 1) g.several = true;
-      let mode = gestureOf({
-        fingers, on: g.on, zoomed: this.zoom.at(now).scale > this.engine.ZOOM.zoomed, front: this.canZoom(now),
-        shot: this.lastView ? this.lastView.shot : 'front',
-      });
+      let mode = gestureOf({ fingers, on: g.on, zoomed: this.zoom.isZoomed(now), front: this.canZoom(now), shot: this.shotNow() });
       // Un doigt resté seul après un pincement n'incline pas ; revenus de face, les doigts ne font plus rien.
       if ((mode === 'tilt' && g.several) || g.done) mode = 'none';
       const was = g.mode;
@@ -1425,6 +1442,7 @@
         this.director.grab(now);
         this.run.active = true;
       } else if (mode === 'pinch' || mode === 'pan') {
+        if (was !== 'pinch' && was !== 'pan') this.director.calmTilt(now);
         this.drag = this.fingers[0];
         this.zoom.grab(spot.x, spot.y, mode === 'pinch' ? spot.spread : 0, now);
         this.run.active = true;
@@ -1510,6 +1528,7 @@
       }
       this.lastTap = null;
       const { px, py } = this.zoomLayout;
+      this.director.calmTilt(now);
       this.zoom.toggle(tap.x - px, tap.y - py, now);
       this.planTile();
       this.requestRender();
@@ -1523,7 +1542,7 @@
 
     // Les doigts posés sur la scène (Safari : ses gesture* accompagnent alors les doigts, qui zooment seuls).
     onTouches = (event) => {
-      this.touches = event.touches.length;
+      this.touchCount = event.touches.length;
     };
 
     // Deux doigts sur la scène : ni défilement ni zoom de la page.
@@ -1532,30 +1551,33 @@
     };
 
     /* Safari : ses gesture* ne zoomeraient que la page. Au doigt (iPhone), on les arrête, les doigts
-       zooment l'œuvre ; au pavé tactile d'un Mac, ils la zooment sous le pointeur. */
+       zooment l'œuvre ; au pavé tactile d'un Mac, ils la zooment sous le pointeur. safariPinch : l'échelle
+       du geste déjà appliquée. */
     onSafariGesture = (event) => {
       if (!this.live) return;
       event.preventDefault();
-      if (this.touches > 0) return;
+      if (this.touchCount > 0) return;
       if (event.type === 'gesturestart') {
-        this.safari = { scale: 1 };
+        this.safariPinch = { scale: 1 };
         return;
       }
-      if (event.type === 'gestureend' || !this.safari) {
-        this.safari = null;
+      if (event.type === 'gestureend' || !this.safariPinch) {
+        this.safariPinch = null;
         return;
       }
-      const factor = event.scale / this.safari.scale;
-      this.safari.scale = event.scale;
+      const factor = event.scale / this.safariPinch.scale;
+      this.safariPinch.scale = event.scale;
       this.pinchZoom(factor, event.clientX, event.clientY, performance.now());
     };
 
-    /* Le pincement du pavé tactile (molette avec Ctrl, ou gesture* de Safari), sous le pointeur. En gros
-       plan, des doigts qui se rapprochent de 15 % ramènent de face, comme au doigt. */
+    /* Le pincement du pavé tactile (molette avec Ctrl, ou gesture* de Safari), sous le pointeur : deux
+       doigts, comme sur un écran tactile (gestureOf). En gros plan, des doigts qui se rapprochent de 15 %
+       ramènent de face, comme au doigt. */
     pinchZoom(factor, clientX, clientY, now) {
-      if (!this.canZoom(now)) {
-        const shot = this.lastView ? this.lastView.shot : 'front';
-        if (!this.chips.openGroup && shot === 'front') return;
+      const front = this.canZoom(now);
+      const on = this.chips.openGroup ? 'closer' : 'canvas';
+      const mode = gestureOf({ fingers: 2, on, zoomed: this.zoom.isZoomed(now), front, shot: this.shotNow() });
+      if (mode === 'dismiss') {
         const w = this.wheel;
         w.pinch = now - w.pinchAt > WHEEL_PAUSE_MS ? factor : w.pinch * factor;
         w.pinchAt = now;
@@ -1565,44 +1587,41 @@
         }
         return;
       }
-      const box = this.stageCorner(now);
-      const { px, py } = this.zoomLayout;
-      this.zoom.wheel(factor, clientX - box.left - px, clientY - box.top - py, now);
-      this.requestRender();
+      if (mode !== 'pinch') return;
+      this.wheelZoom(factor, clientX, clientY, now, 0);
     }
 
-    /* Le coin de la scène dans la fenêtre, relu au début d'une rafale de molette seulement : la page ne
-       défile pas pendant que la molette zoome, et chaque cran ne force pas une mise en page. */
-    stageCorner(now) {
+    // Un pas de molette ou de pincement du pavé tactile, sous le pointeur ; rend l'échelle visée.
+    wheelZoom(factor, clientX, clientY, now, ms) {
       const w = this.wheel;
-      if (!w.box || now - w.boxAt > WHEEL_PAUSE_MS) w.box = this.getBoundingClientRect();
+      if (!w.box || now - w.boxAt > WHEEL_PAUSE_MS) w.box = this.getBoundingClientRect(); // relu en début de rafale
       w.boxAt = now;
-      return w.box;
+      const { px, py } = this.zoomLayout;
+      this.director.calmTilt(now);
+      const target = this.zoom.wheel(factor, clientX - w.box.left - px, clientY - w.box.top - py, now, ms);
+      this.requestRender();
+      return target;
     }
 
     /* La molette. Avec Ctrl (le pincement du pavé tactile), elle zoome toujours l'œuvre, jamais la page.
        Sans Ctrl, elle fait défiler la page comme avant, sauf l'œuvre zoomée, qu'elle zoome sous le
-       pointeur ; revenue à ×1, la page ne repart qu'après une pause de la molette. */
+       pointeur (wheelStep) ; revenue à ×1, la page ne repart qu'après une pause de la molette. Le coin de
+       la scène n'est relu qu'en début de rafale : la page ne défile pas pendant que la molette zoome, et
+       chaque cran ne force pas une mise en page. */
     onWheel = (event) => {
       if (!this.live) return;
       const now = performance.now();
-      const px = event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? 400 : 1);
+      const step = wheelStep(event);
       if (event.ctrlKey) {
         event.preventDefault();
-        if (!this.safari) this.pinchZoom(Math.exp(-Math.max(-25, Math.min(25, px)) / 100), event.clientX, event.clientY, now);
+        if (!this.safariPinch) this.pinchZoom(step.factor, event.clientX, event.clientY, now);
         return;
       }
       const w = this.wheel;
-      if (this.zoom.at(now).scale > 1 && this.canZoom(now)) {
+      if (this.zoom.isZoomed(now) && this.canZoom(now)) {
         event.preventDefault();
-        const box = this.stageCorner(now);
-        const { px: cx, py: cy } = this.zoomLayout;
-        // Un cran de souris glisse ; le défilement continu du pavé tactile suit tel quel.
-        const target = this.zoom.wheel(Math.exp(-Math.max(-100, Math.min(100, px)) * 0.002),
-          event.clientX - box.left - cx, event.clientY - box.top - cy, now, Math.abs(px) >= 40 ? 160 : 0);
-        w.latched = target <= 1;
+        w.latched = this.wheelZoom(step.factor, event.clientX, event.clientY, now, step.glide ? WHEEL_GLIDE_MS : 0) <= 1;
         w.last = now;
-        this.requestRender();
         return;
       }
       if (w.latched && now - w.last < WHEEL_PAUSE_MS) {

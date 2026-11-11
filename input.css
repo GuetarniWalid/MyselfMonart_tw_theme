@@ -687,12 +687,16 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
    Refermée, elles attendent que la 3D soit revenue de face (is-returning) et reviennent alors en
    fondu, avec les filets : pendant le retour, l'œuvre encore agrandie passerait sous elles. Celle
    qui a le focus (Échap la rend à la légende) reste visible. */
+/* L'œuvre zoomée prend toute la scène (is-zoomed, posé par chips.setZoomed) : bascule, légendes, taille
+   et filets s'effacent aussi ; la pilule d'achat reste. Ils reviennent à ×1. */
 .chips.is-open .chips-toggle, .chips.is-open .chips-cote, .chips.is-open .chips-legend,
 .chips.is-returning .chips-toggle:not(:focus-within), .chips.is-returning .chips-cote:not(:focus-within),
-.chips.is-returning .chips-legend:not(:focus-within) { opacity: 0; pointer-events: none; }
-/* L'œuvre zoomée prend toute la scène (is-zoomed, posé par la page) : bascule, légendes, taille et
-   filets s'effacent ; la pilule d'achat reste. Ils reviennent à ×1. */
-.chips.is-zoomed .chips-item, .chips.is-zoomed .chips-marks { opacity: 0; pointer-events: none; transition: opacity 200ms ease; }
+.chips.is-returning .chips-legend:not(:focus-within),
+.chips.is-zoomed .chips-item, .chips.is-zoomed .chips-marks { opacity: 0; pointer-events: none; }
+.chips.is-zoomed .chips-item, .chips.is-zoomed .chips-marks { transition: opacity 200ms ease; }
+/* Zoomée, la 3D garde le doigt : il déplace l'œuvre, la page ne défile plus sous lui (dès le toucher
+   suivant). À ×1, le canvas reprend touch-pan-y. */
+.chips.is-zoomed .oeuvre-3d-gl { touch-action: none; }
 /* La plaque dépolie hors du plan de face (bascule Toile | Poster, glisser) : sa teinte est un calque
    (::before) qui vient en fondu, au compositeur. Le flou ne se calcule que la 3D arrêtée (is-moving
    posé par la page) : sur une 3D qui bouge, le navigateur le refait à chaque image, et un téléphone

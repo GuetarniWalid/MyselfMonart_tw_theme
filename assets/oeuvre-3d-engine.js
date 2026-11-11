@@ -1421,6 +1421,7 @@ const TILT = {
 // Ressort du retour : amortissement 0,6 et 1,6 Hz -> rebond d'environ 10 %, posé en 0,8 s.
 const SPRING = { damping: 0.6, omega: 2 * Math.PI * 1.6 }
 const SPRING_SETTLED_MS = 1100 // au-delà, l'écart restant est sous le vingtième de degré, même parti de 40°
+const TILT_CALM_MS = 200 // le zoom prend la main : l'inclinaison revient de face, sans ressort (calmTilt)
 
 function springFactor(ms) {
   const t = ms / 1000
@@ -2054,11 +2055,16 @@ export function createDirector({ room, product, poses = null, reducedMotion = fa
   // (top) et de la largeur (left) de l'écran.
   const state = { product, group: null, shot: 'front', legs: [], from: null, aspect: 0.8, screen: 0.8, inset: NO_INSET, goal: null, reducedMotion }
   // Inclinaison : `held` pendant le glisser, puis `released` décroît selon le ressort. reach : la
-  // mesure du geste (TILT), fixée au toucher.
-  const tilt = { grabbed: false, start: { yaw: 0, pitch: 0 }, held: { yaw: 0, pitch: 0 }, releasedAt: null, reach: TILT.front }
+  // mesure du geste (TILT), fixée au toucher. calm : le zoom a pris la main (calmTilt), l'inclinaison
+  // de cet instant (from) revient de face en TILT_CALM_MS.
+  const tilt = { grabbed: false, start: { yaw: 0, pitch: 0 }, held: { yaw: 0, pitch: 0 }, releasedAt: null, reach: TILT.front, calm: null }
 
   function tiltAt(at) {
     if (tilt.grabbed) return tilt.held
+    if (tilt.calm) {
+      const k = 1 - glide((at - tilt.calm.at) / TILT_CALM_MS)
+      return k > 0 ? { yaw: tilt.calm.from.yaw * k, pitch: tilt.calm.from.pitch * k } : { yaw: 0, pitch: 0 }
+    }
     if (tilt.releasedAt === null) return { yaw: 0, pitch: 0 }
     const k = springFactor(at - tilt.releasedAt)
     return { yaw: tilt.held.yaw * k, pitch: tilt.held.pitch * k }
@@ -2101,6 +2107,7 @@ export function createDirector({ room, product, poses = null, reducedMotion = fa
     tilt.start = tiltAt(at)
     tilt.held = tilt.start
     tilt.grabbed = true
+    tilt.calm = null
     tilt.reach = state.shot === 'front' && !isStaging(at) ? TILT.front : TILT.close
   }
 
@@ -2124,6 +2131,17 @@ export function createDirector({ room, product, poses = null, reducedMotion = fa
     if (!moved) tilt.held = { yaw: 0, pitch: 0 }
   }
 
+  /* Le zoom prend la main (la page) : l'inclinaison revient de face en TILT_CALM_MS, sans ressort ni
+     rebond, pour que la caméra du zoom parte de face. Déjà en route, elle continue. */
+  function calmTilt(at) {
+    if (tilt.calm && !tilt.grabbed) return
+    const from = tiltAt(at)
+    tilt.grabbed = false
+    tilt.releasedAt = null
+    tilt.held = { yaw: 0, pitch: 0 }
+    tilt.calm = !state.reducedMotion && (from.yaw !== 0 || from.pitch !== 0) ? { from, at } : null
+  }
+
   function isStaging(at) {
     const last = state.legs[state.legs.length - 1]
     return !!last && at < last.start + last.duration
@@ -2132,6 +2150,7 @@ export function createDirector({ room, product, poses = null, reducedMotion = fa
   function isMoving(at) {
     if (isStaging(at)) return true
     if (tilt.grabbed) return true
+    if (tilt.calm && at - tilt.calm.at < TILT_CALM_MS) return true
     return tilt.releasedAt !== null && at - tilt.releasedAt < SPRING_SETTLED_MS
   }
 
@@ -2184,7 +2203,7 @@ export function createDirector({ room, product, poses = null, reducedMotion = fa
   }
 
   // isStaging : une mise en scène ou un acte en cours (le ressort de l'inclinaison n'en est pas une).
-  return { view, choose, grab, drag, release, isMoving, isStaging }
+  return { view, choose, grab, drag, release, calmTilt, isMoving, isStaging }
 }
 
 /* ==== ZOOM SUR L'ŒUVRE ==== */
@@ -2202,15 +2221,19 @@ export function createDirector({ room, product, poses = null, reducedMotion = fa
    en facteur. glide : décroissance de l'élan (ms) ; spring : raideur du ressort des bords (par ms) ;
    back : retour d'une échelle hors bornes (ms) ; still : un doigt immobile depuis autant de ms ne
    lance rien ; window : les ms du geste qui donnent sa vitesse. zoomed : au-delà de cette échelle,
-   l'œuvre est zoomée (un doigt la déplace, l'inclinaison s'arrête, les chips s'effacent) ; toggle :
-   l'échelle du double toucher, et tap la durée de son glissé (ms) ; reset : celle du retour à ×1 par
-   le bouton, Échap ou un choix (ms). */
+   l'œuvre est zoomée (un doigt la déplace, l'inclinaison s'arrête, les chips s'effacent) ; en deçà,
+   au repos, elle revient exactement à ×1 : jamais entre les deux. toggle : l'échelle du double toucher,
+   et tap la durée de son glissé (ms) ; reset : celle du retour à ×1 par le bouton, Échap ou un choix
+   (ms) ; settle : une rafale de molette compte comme un mouvement jusqu'à autant de ms après son
+   dernier pas. */
 export const ZOOM = {
   sourcePx: 1.5, floor: 2, ceil: 4,
   rubber: 0.55, under: 0.6, over: 1.4,
   glide: 325, spring: 0.012, back: 320, still: 60, window: 100,
-  zoomed: 1.02, toggle: 2.5, tap: 300, reset: 240,
+  zoomed: 1.02, toggle: 2.5, tap: 300, reset: 240, settle: 150,
 }
+
+const clampTo = (v, lo, hi) => Math.min(hi, Math.max(lo, v))
 
 /* Le zoom maximal, pour une œuvre et un écran. native : la source ({ width, height }, px) ; art : l'œuvre
    de face à l'écran, en px CSS ({ w, h }) ; dpr : pixels de l'écran par px CSS. */
@@ -2232,7 +2255,15 @@ export function withZoom(view, factor, [sx, sy]) {
   const right = unit(cross(forward, [0, 1, 0]))
   const up = cross(right, forward)
   const aim = add(target, add(scale(right, sx), scale(up, sy)))
-  return { ...view, camera: { ...view.camera, position: add(aim, scale(back, 1 / factor)), target: aim }, zoom: factor }
+  return { ...view, camera: { ...view.camera, position: add(aim, scale(back, 1 / factor)), target: aim } }
+}
+
+/* Px de l'image par cm, au point visé d'une vue, pour une image de height px de haut : à ×1 et de face,
+   ceux de la façade de l'œuvre (la page y convertit le zoom, en px de l'écran, en cm pour withZoom). */
+export function pxPerCm(view, height) {
+  const { position, target, fovY } = view.camera
+  const distance = Math.hypot(position[0] - target[0], position[1] - target[1], position[2] - target[2])
+  return height / 2 / (distance * Math.tan(fovY / 2))
 }
 
 /* Le zoom et son geste. Unités : px de l'écran, comptés depuis le centre de l'image de la 3D, où se
@@ -2262,8 +2293,9 @@ export function createZoom({ reducedMotion = false } = {}) {
   let sampleCount = 0
   /* Le mouvement en cours, doigts levés : null, un glissé vers un état (glide), ou l'élan d'un axe et
      de l'autre (fling). Chacun est une fonction du temps : at() peut être appelé pour n'importe quel
-     instant. */
+     instant. quietUntil : la fin de la rafale de molette en cours (ZOOM.settle après son dernier pas). */
   let motion = null
+  let quietUntil = -Infinity
 
   function frame({ half, view, max }) {
     layout.half = half
@@ -2284,8 +2316,8 @@ export function createZoom({ reducedMotion = false } = {}) {
       range[1] = h - v1 / s
       return range
     }
-    const t = span > 2 * h ? Math.min(1, Math.max(0, (2 * h * (s - 1)) / (span - 2 * h))) : 1
-    range[0] = range[1] = -(t * (v0 + v1)) / 2 / s
+    const t = span > 2 * h ? clampTo((2 * h * (s - 1)) / (span - 2 * h), 0, 1) : 1
+    range[0] = range[1] = 0 - (t * (v0 + v1)) / (2 * s) // 0 − … : jamais −0 à sa place de face
     return range
   }
 
@@ -2325,7 +2357,15 @@ export function createZoom({ reducedMotion = false } = {}) {
   }
   const clampCenter = (axis, c, s) => {
     const [lo, hi] = bounds(axis, s)
-    return Math.min(hi, Math.max(lo, c))
+    return clampTo(c, lo, hi)
+  }
+  /* Le centre d'un axe quand l'échelle passe de s à s1, le point de l'écran p (px depuis le centre de
+     l'image) gardé fixe autant que les bords le permettent. */
+  const keepPoint = (axis, c, p, s, s1) => clampCenter(axis, c + p / s - p / s1, s1)
+  // L'échelle permise au repos : entre ×1 et le maximum, et ×1 exactement en deçà de ZOOM.zoomed.
+  const restScale = (s) => {
+    const bounded = clampTo(s, 1, layout.max)
+    return bounded < ZOOM.zoomed ? 1 : bounded
   }
 
   function sample(at, x, y) {
@@ -2379,25 +2419,24 @@ export function createZoom({ reducedMotion = false } = {}) {
     sample(at, x, y)
   }
 
-  /* Doigts levés. Une échelle hors bornes revient à la borne, le point sous les doigts gardé autant que
-     possible ; sinon l'œuvre file sur son élan, et revient sur ses bords si elle les a passés. */
+  /* Doigts levés. Une échelle hors bornes revient à la borne (à ×1 sous ×1,02), le point sous les doigts
+     gardé autant que possible ; sinon l'œuvre file sur son élan, et revient sur ses bords si elle les a
+     passés. */
   function release(at) {
     if (!hold.active) return
     hold.active = false
     const s = shown.scale
-    const target = Math.min(layout.max, Math.max(1, s))
+    const target = restScale(s)
     if (Math.abs(target - s) > 1e-6) {
       const [mx, my] = hold.last
-      const x = clampCenter(0, shown.x + mx / s - mx / target, target)
-      const y = clampCenter(1, shown.y + my / s - my / target, target)
-      glideTo(target, x, y, at, ZOOM.back)
+      glideTo(target, keepPoint(0, shown.x, mx, s, target), keepPoint(1, shown.y, my, s, target), at, ZOOM.back)
       return
     }
     motion = { kind: 'fling', t0: at, scale: s, axes: [flingOf(0, s, velocity(at, 0)), flingOf(1, s, velocity(at, 1))] }
     motion.end = at + Math.max(motion.axes[0].ms, motion.axes[1].ms)
     if (reducedMotion) {
       // Ni élan ni rebond : l'œuvre se cale tout de suite dans ses bornes.
-      for (const f of motion.axes) f.target = Math.min(f.hi, Math.max(f.lo, f.c0))
+      for (const f of motion.axes) f.target = clampTo(f.c0, f.lo, f.hi)
       motion.end = at
     }
   }
@@ -2414,7 +2453,7 @@ export function createZoom({ reducedMotion = false } = {}) {
     const fling = { c0, vc, lo, hi, hit: Infinity, from: c0, vHit: 0, target: c0, ms: 0 }
     if (c0 < lo || c0 > hi) {
       fling.hit = 0
-      fling.target = Math.min(hi, Math.max(lo, c0))
+      fling.target = clampTo(c0, lo, hi)
       fling.vHit = vc
       fling.ms = springMs(c0 - fling.target, vc, s)
       return fling
@@ -2505,7 +2544,10 @@ export function createZoom({ reducedMotion = false } = {}) {
     return shown
   }
 
-  const isMoving = (now) => hold.active || (!!motion && now < motion.end)
+  const isMoving = (now) => hold.active || (!!motion && now < motion.end) || now < quietUntil
+  // Zoomée (un doigt la déplace, la molette la zoome) ; loin de sa place de face (zoomée ou rapetissée).
+  const isZoomed = (now) => at(now).scale > ZOOM.zoomed
+  const isAway = (now) => Math.abs(at(now).scale - 1) > ZOOM.zoomed - 1
 
   /* Où l'œuvre va se poser : la fin du glissé ou de l'élan en cours, sinon l'état affiché ; null tant que
      des doigts la tiennent. La page y demande la pièce de détail pendant le mouvement. */
@@ -2520,7 +2562,7 @@ export function createZoom({ reducedMotion = false } = {}) {
   // Vers l'échelle s1, le point de l'écran (x, y) gardé autant que les bords le permettent.
   function zoomAround(s1, x, y, at, ms) {
     const s = shown.scale
-    glideTo(s1, clampCenter(0, shown.x + x / s - x / s1, s1), clampCenter(1, shown.y + y / s - y / s1, s1), at, ms)
+    glideTo(s1, keepPoint(0, shown.x, x, s, s1), keepPoint(1, shown.y, y, s, s1), at, ms)
   }
 
   // Double toucher (ou double clic) en (x, y) : vers ×2,5 (ou le maximum), ou retour à ×1.
@@ -2539,16 +2581,18 @@ export function createZoom({ reducedMotion = false } = {}) {
   }
 
   /* Molette ou pincement du pavé tactile : l'échelle multipliée par factor sous le pointeur (x, y),
-     entre ×1 et le maximum, sans élastique (aucun doigt à lâcher). ms : un cran de souris glisse ; un
-     cran qui arrive pendant le glissé du précédent part de l'arrivée de celui-ci. Rend l'échelle visée. */
+     entre ×1 et le maximum (×1 exactement sous ×1,02), sans élastique (aucun doigt à lâcher). ms : un cran
+     de souris glisse ; un cran qui arrive pendant le glissé du précédent part de l'arrivée de celui-ci.
+     La rafale reste un mouvement jusqu'à ZOOM.settle après son dernier pas. Rend l'échelle visée. */
   function wheel(factor, x, y, at, ms = 0) {
     settle(at)
     if (hold.active) return shown.scale
     const going = motion && motion.kind === 'glide' && motion.wheel && at < motion.end
     const from = going ? { scale: motion.s1, x: motion.to[0], y: motion.to[1] } : shown
-    const s1 = Math.min(layout.max, Math.max(1, from.scale * factor))
-    const x1 = clampCenter(0, from.x + x / from.scale - x / s1, s1)
-    const y1 = clampCenter(1, from.y + y / from.scale - y / s1, s1)
+    const s1 = restScale(from.scale * factor)
+    const x1 = keepPoint(0, from.x, x, from.scale, s1)
+    const y1 = keepPoint(1, from.y, y, from.scale, s1)
+    quietUntil = at + ZOOM.settle
     if (ms > 0) {
       glideTo(s1, x1, y1, at, ms)
       motion.wheel = true
@@ -2561,7 +2605,7 @@ export function createZoom({ reducedMotion = false } = {}) {
     return s1
   }
 
-  return { frame, grab, drag, release, toggle, reset, wheel, at, isMoving, landing }
+  return { frame, grab, drag, release, toggle, reset, wheel, at, isMoving, isZoomed, isAway, landing }
 }
 
 /* La pièce de détail : zoomée et au repos, la région de la source que l'on regarde, recadrée par le CDN
@@ -2573,7 +2617,6 @@ export function createZoom({ reducedMotion = false } = {}) {
    résolution va par paliers de √2. */
 export const TILE = { margin: 0.25, grid: 0.125, minGrid: 32, slack: 0.95 }
 
-const clampTo = (v, lo, hi) => Math.min(hi, Math.max(lo, v))
 // Le plus petit palier de √2 (1, 0,71, 0,5…) qui donne au moins 95 % de la résolution voulue.
 const tileStep = (want) => Math.min(1, 2 ** (Math.ceil(2 * Math.log2(TILE.slack * want)) / 2))
 
@@ -2644,14 +2687,29 @@ export function visibleImage(p, border, imageRatio, [x0, y0, x1, y1]) {
   return { u0: crop(rect.u0, 0), v0: crop(rect.v0, 1), u1: crop(rect.u1, 0), v1: crop(rect.v1, 1) }
 }
 
-// La pièce en place sert-elle encore cette vue : la couvre-t-elle, assez finement ?
-export function tileServes(tile, visible, density) {
+// La bordure que montre la tranche : celle du produit, ou le papier nu d'une feuille de poster arrivée.
+export const borderShown = (p, product) => (p.paper >= 0.999 ? 'papier' : product.border)
+
+/* Ce que l'on voit de l'image au zoom : zoom, l'état de createZoom ; view, l'écran utile (px depuis le
+   centre de l'image) ; k, ses px par cm de la façade à ×1 (pxPerCm) ; density, les px du canvas par px
+   CSS. Rend la région vue de l'image (visibleImage) et les px du canvas par px de la source. */
+export function zoomRegion({ zoom, view, k, painting, border, native, density }) {
+  const s = zoom.scale
+  const box = [(zoom.x + view.left / s) / k, -(zoom.y + view.bottom / s) / k, (zoom.x + view.right / s) / k, -(zoom.y + view.top / s) / k]
+  const visible = visibleImage(painting, border, native.width / native.height, box)
+  return { visible, density: ((view.right - view.left) * density) / ((visible.u1 - visible.u0) * native.width) }
+}
+
+/* La pièce en place sert-elle encore cette vue : la couvre-t-elle, assez finement ? Ou aussi finement
+   que la pièce qu'on demanderait (plan, celle de tilePlan pour cette vue) : plafonnée par le budget de
+   mémoire, une pièce n'est pas redemandée en boucle. */
+export function tileServes(tile, visible, density, plan = null) {
   if (!tile) return false
   const [u0, v0, u1, v1] = tile.rect
   const e = 1e-6
   const covers = clampTo(visible.u0, 0, 1) >= u0 - e && clampTo(visible.u1, 0, 1) <= u1 + e &&
     clampTo(visible.v0, 0, 1) >= v0 - e && clampTo(visible.v1, 0, 1) <= v1 + e
-  return covers && tile.scale >= TILE.slack * Math.min(1, density) - e
+  return covers && (tile.scale >= TILE.slack * Math.min(1, density) - e || (!!plan && tile.scale >= plan.scale - e))
 }
 
 /* ==== RELIEFS ==== */
@@ -2881,7 +2939,8 @@ export function tileUrl(source, plan) {
 }
 
 /* Une pièce de détail : téléchargée (signal l'abandonne), décodée hors du fil de la page. Rend l'image
-   et son poids en octets. */
+   et son poids en octets. Pas decodeImage : une pièce refusée (429 du CDN) ou abandonnée ne doit pas être
+   redemandée par un <img>, qu'on ne pourrait plus arrêter ; l'erreur remonte, l'image en place reste. */
 export async function loadTile(url, signal) {
   const response = await fetch(url, { headers: LIGHT_IMAGES, signal })
   if (!response.ok) throw new Error(`pièce de détail : ${response.status}`)
@@ -3555,7 +3614,7 @@ const GLASS_FRAGMENT = /* glsl */ `
 `
 
 const FADE_MS = 350
-const fadeSince = (at, now) => Math.min(1, Math.max(0, (now - at) / FADE_MS))
+const fadeSince = (at, now, ms = FADE_MS) => Math.min(1, Math.max(0, (now - at) / ms))
 
 // Rend la main à la page : un doigt posé pendant la préparation de la 3D n'attend pas.
 export const breathe = () => new Promise((resolve) => { setTimeout(resolve) })
@@ -3941,7 +4000,7 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
 
     // La bordure de la toile reste en place pendant tout l'affinage (la tranche d'une toile
     // pliée rétrécit avec l'épaisseur) ; la feuille ne devient du papier nu qu'à l'arrivée.
-    const border = p.paper >= 0.999 ? 'papier' : product.border
+    const border = borderShown(p, product)
     // Sans arrondi : la dernière image d'une animation doit reconstruire le tableau à sa vraie taille,
     // pour qu'il soit au pixel près celui d'une photo rendue hors de la page.
     const key = [p.width, p.height, p.depth].join('x') + border + product.size
@@ -4335,7 +4394,6 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
      tiles.under : la précédente. */
   const TILE_FADE_MS = 220
   const tiles = { shown: null, under: null }
-  const tileFade = (since, now) => Math.min(1, Math.max(0, (now - since) / TILE_FADE_MS))
 
   function dropTile(tile) {
     if (!tile) return
@@ -4365,7 +4423,7 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
     const { shown } = tiles
     let mix = 0
     if (shown) {
-      mix = shown.leaving === null ? tileFade(shown.at, now) : 1 - tileFade(shown.leaving, now)
+      mix = shown.leaving === null ? fadeSince(shown.at, now, TILE_FADE_MS) : 1 - fadeSince(shown.leaving, now, TILE_FADE_MS)
       if (shown.leaving !== null && mix <= 0) {
         dropTile(shown)
         tiles.shown = null
