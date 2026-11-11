@@ -1082,8 +1082,12 @@
         this.zoom.isMoving(now) || this.zoneWeight(now) !== this.zoneMove.to;
       this.chips.setMoving(moving);
       this.chips.setZoomed(this.zoomAway);
-      // « Retour », au repos : hors du plan de face, ou l'œuvre zoomée (il la ramène à ×1).
-      this.setFront(!moving && (view.shot !== 'front' || this.zoomAway));
+      /* « Retour » : au repos hors du plan de face ; et dès que l'œuvre est zoomée, même pendant qu'un doigt
+         la déplace ou qu'elle file sur son élan (il la ramène à ×1). Il s'efface dès qu'elle repart vers ×1.
+         Il ne disparaît plus une ou deux secondes à chaque déplacement. */
+      const landing = this.zoom.landing();
+      const zoomed = this.zoom.isZoomed(now) && (!landing || landing.scale > 1);
+      this.setFront(zoomed || (!moving && (view.shot !== 'front' || this.zoomAway)));
       if (moving || this.view3d.isFading(now)) {
         if (moving) this.cancelTilePlan();
         this.raf = requestAnimationFrame(this.frame);
