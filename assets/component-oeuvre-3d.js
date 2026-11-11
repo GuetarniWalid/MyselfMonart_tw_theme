@@ -708,6 +708,8 @@
        la photo, les photos et les données (modèle, jumeau). adopted() suit, au signal de la page. */
     adopt(next) {
       this.adopting = true;
+      // Ses préchargements de police ont servi : déplacée, la scène les relancerait pour rien.
+      this.querySelectorAll('link[rel="preload"]').forEach((link) => link.remove());
       this.readModels(next);
       this.config = readJson(next, '[data-config]') || this.config;
       this.catalog = catalogOf({ models: this.models, names: this.config.names });
