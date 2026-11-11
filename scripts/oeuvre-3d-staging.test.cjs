@@ -1040,7 +1040,7 @@ test("glisser le doigt incline le tableau, puis il revient de face avec un rebon
 
   director.drag(3, 3, 100) // bien au-delà de la borne
   const far = director.view(100, PORTRAIT)
-  assert.ok(Math.abs(sideAngle(far)) <= 24.0001, `inclinaison bornée : ${sideAngle(far).toFixed(1)}°`)
+  assert.ok(Math.abs(sideAngle(far)) <= 40.0001, `inclinaison bornée : ${sideAngle(far).toFixed(1)}°`)
   const held = sideAngle(far)
 
   director.release(100)
@@ -1051,22 +1051,35 @@ test("glisser le doigt incline le tableau, puis il revient de face avec un rebon
   assert.ok(overshoot > 0, 'le retour est élastique : il dépasse un peu la position de face')
   assert.ok(overshoot < 0.2 * Math.abs(held), `rebond trop fort : ${overshoot.toFixed(2)}°`)
   assert.ok(Math.abs(sideAngle(director.view(1100, PORTRAIT))) < 0.2, 'revenu de face en 1 s')
+  // La scène s'arrête à la fin du rebond : parti de 40°, l'écart qui reste ne se voit plus.
+  let rest = 100
+  while (director.isMoving(rest)) rest += 1
+  for (const t of [rest, rest + 50, rest + 500]) {
+    assert.ok(Math.abs(sideAngle(director.view(t, PORTRAIT))) < 0.1, `à l'arrêt (${t - 100} ms) : ${sideAngle(director.view(t, PORTRAIT)).toFixed(3)}°`)
+  }
 })
 
-/* Retour de Walid du 11/11 : « quand on manipule le tableau, quand il est de face, j'aimerais qu'on
-   puisse le manipuler plus. Il pivote, mais pas assez à mon goût ». De face, le même geste l'incline deux
-   fois plus qu'avant, jusqu'à 24° de côté et 14° en hauteur (12° et 8° avant). Les gros plans des
-   options gardent la mesure d'avant : la caméra y est à quelques cm du cadre. */
-test('de face, le doigt incline le tableau deux fois plus qu’avant ; un gros plan garde sa mesure', () => {
+/* Retours de Walid du 11/11 : « quand il est de face, j'aimerais qu'on puisse le manipuler plus », puis,
+   après un essai avec une cliente : « il faudrait qu'on puisse encore le tourner plus à gauche ou à
+   droite. Tu peux encore accentuer cela ». De face, le tableau tourne jusqu'à 40° de côté (12°, puis 24°
+   avant), atteints en glissant la moitié de la largeur de la scène ; en hauteur, toujours 14°. Les gros
+   plans des options gardent la mesure d'avant : la caméra y est à quelques cm du cadre. */
+test('de face, le doigt tourne le tableau jusqu’à 40° de côté, en une demi-largeur de scène ; un gros plan garde sa mesure', () => {
   const front = createDirector({ room: ROOM, product: TOILE })
   front.grab(0)
   front.drag(0.1, 0, 10)
   const nudge = sideAngle(front.view(10, PORTRAIT))
-  assert.ok(Math.abs(nudge + 4.8) < 0.05, `un dixième de la scène : ${nudge.toFixed(2)}° (2,4° avant)`)
+  assert.ok(Math.abs(nudge + 8) < 0.05, `un dixième de la scène : ${nudge.toFixed(2)}° (4,8° avant)`)
+  front.drag(0.5, 0, 15)
+  const half = sideAngle(front.view(15, PORTRAIT))
+  assert.ok(Math.abs(half + 40) < 0.001, `une demi-largeur de scène : ${half.toFixed(2)}°`)
   front.drag(3, -3, 20)
   const far = front.view(20, PORTRAIT)
-  assert.ok(Math.abs(sideAngle(far) + 24) < 0.001, `de côté : ${sideAngle(far).toFixed(2)}°`)
+  assert.ok(Math.abs(sideAngle(far) + 40) < 0.001, `de côté : ${sideAngle(far).toFixed(2)}°`)
   assert.ok(Math.abs(upAngle(far) + 14) < 0.001, `en hauteur : ${upAngle(far).toFixed(2)}°`)
+  front.drag(-3, 3, 30)
+  const other = front.view(30, PORTRAIT)
+  assert.ok(Math.abs(sideAngle(other) - 40) < 0.001 && Math.abs(upAngle(other) - 14) < 0.001, 'de l’autre côté, la même mesure')
 
   for (const [group, product] of [['border', { ...TOILE, border: 'miroir' }], ['frame', { ...TOILE, frame: 'chene' }], ['border', { ...TOILE, frame: 'chene', border: 'noire' }]]) {
     const close = createDirector({ room: ROOM, product: TOILE })
@@ -1102,7 +1115,7 @@ test('pendant une transition ou un acte, le geste garde la mesure d’avant ; de
   back.choose('frame', { ...TOILE, frame: 'chene' }, 0)
   back.choose('front', { ...TOILE, frame: 'chene' }, LATER)
   near(most(back, LATER + 300), [-12, -8], 'retour de face du coin du cadre')
-  near(most(back, 3 * LATER), [-24, -14], 'de face, au repos')
+  near(most(back, 3 * LATER), [-40, -14], 'de face, au repos')
   near(most(chooseToile(), 1000), [-12, -8], 'pendant le tour de la toile')
   near(most(choosePoster({ ...TOILE, frame: 'noir' }), 1000), [-12, -8], 'pendant le tour du poster encadré')
 })

@@ -407,10 +407,10 @@ test('la bascule Toile | Poster n’a pas de rangée : elle s’applique, rien d
   assert.deepEqual(railEvent(null, { type: 'toggle', id: 'poster' }), { open: null, effects: ['apply'] })
 })
 
-/* Retour de Walid du 11/11 : de face, le doigt incline le tableau deux fois plus loin (24° de côté,
-   14° en hauteur). Les coins projetés s'écartent alors jusqu'à 15 % de la largeur de l'œuvre, au-delà
-   du seuil où les légendes prennent leur plaque : ce que l'inclinaison explique ne compte pas, et les
-   plaques (son « encadré blanc ») ne viennent pas. Un vrai changement de plan les fait toujours venir. */
+/* Retours de Walid du 11/11 : de face, le doigt tourne le tableau jusqu'à 40° de côté et 14° en hauteur.
+   Les coins projetés s'écartent alors jusqu'à 23 % de la largeur de l'œuvre, bien au-delà du seuil où
+   les légendes prennent leur plaque : ce que l'inclinaison explique ne compte pas, et les plaques (son
+   « encadré blanc ») ne viennent pas. Un vrai changement de plan les fait toujours venir. */
 const { faceOf } = require('../assets/oeuvre-3d-chips.js')
 const { createDirector, neutralRoom, paintingCorners } = require('../assets/oeuvre-3d-engine.js')
 
@@ -445,7 +445,7 @@ for (const product of [
   test(`${product.material} ${product.size} : de face, le doigt incline le tableau sans faire venir les plaques ; un autre plan les fait venir`, () => {
     const room = neutralRoom(['30x40', '60x80', '75x100', '90x120'])
     const aspect = SCREEN[0] / SCREEN[1]
-    for (const [dx, dy] of [[3, 3], [-3, -3], [3, -3], [-3, 3]]) {
+    for (const [dx, dy] of [[3, 0], [-3, 0], [3, 3], [-3, -3], [3, -3], [-3, 3]]) {
       const director = createDirector({ room, product })
       const [tl, tr, br, bl] = facade(director.view(0, aspect))
       const art = { l: (tl.x + bl.x) / 2, r: (tr.x + br.x) / 2, t: (tl.y + tr.y) / 2, b: (bl.y + br.y) / 2 }
@@ -461,4 +461,108 @@ for (const product of [
       assert.equal(faceOf(facade(close), art, close.tilt), 0, 'le coin du cadre est un autre plan')
     }
   })
+}
+
+/* ---- La cote sous l'œuvre (coteMarks) ----
+   De face, comme dans le design (cadre 2b) : un trait à chaque coin bas, de 5 px au-dessus à 5 px
+   au-dessous de la ligne, et deux lignes, des coins au blanc où s'écrit « Taille ». */
+const { coteMarks, canvasBox, framingAt } = require('../assets/oeuvre-3d-chips.js')
+
+test('de face, la cote : un trait à chaque coin bas de l’œuvre, ses lignes des coins au blanc de « Taille »', () => {
+  const m = coteMarks(chipsLayout({ width: 390, height: 792 }))
+  const same = (got, want) => got.forEach((v, i) => near(v, want[i], 0.06))
+  same(m.tickL, [67.95, 579.5, 67.95, 589.5])
+  same(m.tickR, [322.05, 579.5, 322.05, 589.5])
+  same(m.lineL, [67.95, 584.5, 166, 584.5])
+  same(m.lineR, [322.05, 584.5, 224, 584.5])
+})
+
+/* Retours de Walid du 11/11 : de face, le tableau tourne jusqu'à 40° de côté. Vu d'en haut (14°), son
+   coin bas le plus proche descend alors jusqu'à la cote : l'œuvre passe devant, comme devant un trait
+   tracé au mur. Ni les traits ni les lignes n'entrent dans sa silhouette (les huit coins de sa boîte,
+   cadre compris), sur un téléphone comme sur un ordinateur, dans le cadrage de la page (framingAt). */
+const SIZE_LIST = ['30x40', '60x80', '75x100', '90x120']
+
+// Les coins projetés en px de la scène, comme la page les rend : canvas centré sur l'œuvre, angle élargi.
+function sceneProjector(L) {
+  const box = canvasBox(L)
+  const f = framingAt(L, { w: 0, shift: 0, glH: box.height })
+  const H = box.height
+  return {
+    f,
+    at(view, point) {
+      const sub = (a, b) => a.map((v, i) => v - b[i])
+      const dot = (a, b) => a.reduce((s, v, i) => s + v * b[i], 0)
+      const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]
+      const unit = (a) => a.map((v) => v / Math.hypot(...a))
+      const { position, target, fovY } = view.camera
+      const forward = unit(sub(target, position))
+      const right = unit(cross(forward, [0, 1, 0]))
+      const up = cross(right, forward)
+      const rel = sub(point, position)
+      const t = Math.tan(fovY / 2) * f.fovScale * dot(rel, forward)
+      return { x: ((dot(rel, right) / (t * (L.W / H)) + 1) / 2) * L.W, y: ((1 - dot(rel, up) / t) / 2) * H + box.top }
+    },
+  }
+}
+
+// Enveloppe convexe de points de l'écran, et écart d'un point à elle, en px : > 0 dehors.
+function hullOf(points) {
+  const cross = (o, a, b) => (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x)
+  const sorted = [...points].sort((a, b) => a.x - b.x || a.y - b.y)
+  const half = (list) => {
+    const out = []
+    for (const p of list) {
+      while (out.length >= 2 && cross(out[out.length - 2], out[out.length - 1], p) <= 0) out.pop()
+      out.push(p)
+    }
+    out.pop()
+    return out
+  }
+  return half(sorted).concat(half([...sorted].reverse()))
+}
+function outside(hull, p) {
+  let most = -Infinity
+  hull.forEach((a, i) => {
+    const b = hull[(i + 1) % hull.length]
+    const len = Math.hypot(b.x - a.x, b.y - a.y)
+    most = Math.max(most, -((b.x - a.x) * (p.y - a.y) - (b.y - a.y) * (p.x - a.x)) / len)
+  })
+  return most
+}
+
+for (const [W, SH] of [[390, 792], [1440, 748]]) {
+  for (const product of [
+    { material: 'toile', size: '30x40', border: 'blanche', frame: 'sans', passe: false },
+    { material: 'toile', size: '30x40', border: 'blanche', frame: 'chene', passe: false },
+    { material: 'poster', size: '75x100', border: 'blanche', frame: 'noir', passe: true },
+    { material: 'poster', size: '90x120', border: 'blanche', frame: 'sans', passe: true },
+  ]) {
+    test(`${W} × ${SH}, ${product.material} ${product.frame} ${product.size} : au plus fort de l’inclinaison, la cote passe sous l’œuvre sans la toucher`, () => {
+      const L = chipsLayout({ width: W, height: SH })
+      const screen = sceneProjector(L)
+      let reached = -Infinity
+      for (const [dx, dy] of [[3, 0], [-3, 0], [3, 3], [-3, 3], [3, -3], [-3, -3], [1.5, 3], [-1.5, 3]]) {
+        const director = createDirector({ room: neutralRoom(SIZE_LIST), product })
+        director.grab(10)
+        director.drag(dx, dy, 10)
+        const view = director.view(10, screen.f.aspect, screen.f.screen)
+        const box = paintingCorners(view.painting, 'outer')
+        const hull = hullOf(box.map((c) => screen.at(view, c)))
+        const front = box.filter((c) => c.side.z === 1)
+        const corners = FRONT_ORDER.map(([sx, sy]) => screen.at(view, front.find((c) => c.side.x === sx && c.side.y === sy)))
+        reached = Math.max(reached, ...corners.map((c) => c.y - (L.lineB - 5)))
+        const marks = coteMarks(L, corners)
+        for (const [name, s] of Object.entries(marks)) {
+          if (!s) continue
+          for (let i = 0; i <= 50; i++) {
+            const p = { x: s[0] + ((s[2] - s[0]) * i) / 50, y: s[1] + ((s[3] - s[1]) * i) / 50 }
+            assert.ok(outside(hull, p) > 1, `glisser de ${dx}, ${dy} : ${name} entre dans l’œuvre en ${p.x.toFixed(1)}, ${p.y.toFixed(1)}`)
+          }
+        }
+        assert.ok(marks.lineL && marks.lineR, `glisser de ${dx}, ${dy} : la cote garde ses deux lignes`)
+      }
+      assert.ok(reached > 0, 'au plus fort, un coin bas descend sous le haut des traits : le test porte')
+    })
+  }
 }

@@ -370,9 +370,10 @@
 
   /* Plan de face ou non : l'œuvre projetée s'écarte de sa place de face (en part de sa largeur). Au-delà
      de 12 %, on est sur un autre plan. L'inclinaison au doigt la déplace aussi : de 4 % avant le 11/11,
-     jusqu'à 15 % depuis qu'elle va plus loin (retour de Walid : « j'aimerais qu'on puisse le manipuler
-     plus »). Ce qu'elle explique ne compte pas (lean : part de la largeur par radian d'inclinaison) : les
-     filets la suivent, les plaques ne viennent pas. */
+     jusqu'à 23 % depuis qu'elle va jusqu'à 40° de côté et 14° en hauteur (retours de Walid : « j'aimerais
+     qu'on puisse le manipuler plus », puis « encore le tourner plus à gauche ou à droite »). Ce qu'elle
+     explique ne compte pas (lean : part de la largeur par radian d'inclinaison ; au plus fort, il en faut
+     0,24) : les filets la suivent, les plaques ne viennent pas. */
   const FACE = { near: 0.06, far: 0.12, staged: 0.6, lean: 0.4 };
   const clamp01 = (v) => Math.max(0, Math.min(1, v));
 
@@ -386,9 +387,48 @@
     return clamp01(1 - (dev - (FACE.near + lean) * art.w) / ((FACE.far - FACE.near) * art.w));
   }
 
+  /* Où un bord de l'œuvre (de a à b) croise la ligne horizontale y. */
+  function edgeX(a, b, y) {
+    if (Math.abs(b.y - a.y) < 1e-6) return a.x;
+    const t = Math.max(0, Math.min(1, (y - a.y) / (b.y - a.y)));
+    return a.x + (b.x - a.x) * t;
+  }
+
+  /* La cote sous l'œuvre, en px de scène : un trait à chaque coin bas de la façade, de 5 px au-dessus à
+     5 px au-dessous de la ligne, et deux lignes, des coins au blanc où s'écrit « Taille ». Tourné au plus
+     fort et vu d'en haut (40° de côté, 14° en hauteur, retours de Walid du 11/11), le coin bas le plus
+     proche descend jusqu'à elle : l'œuvre passe devant, comme devant un trait tracé au mur. Traits et
+     lignes s'arrêtent alors à COTE_CLEAR px sous son bord bas ; un trait qui ne croise plus la ligne
+     s'efface. corners : les quatre coins de la façade projetés (haut gauche, haut droit, bas droit, bas
+     gauche), sinon null : l'œuvre de face (L.art). Rend { tickL, tickR, lineL, lineR } : [x1, y1, x2,
+     y2], du coin vers le blanc pour les lignes, ou null pour une marque cachée. */
+  const COTE_CLEAR = 3;
+  function coteMarks(L, corners = null) {
+    const { lineB: y, cx } = L;
+    const { gapHalf } = L.marks;
+    const bl = corners ? corners[3] : { x: L.art.l, y: L.art.b };
+    const br = corners ? corners[2] : { x: L.art.r, y: L.art.b };
+    const roof = y - COTE_CLEAR; // le bord bas de l'œuvre doit rester au-dessus
+    // Les x de la ligne que le bord bas laisse libres : du côté du coin resté assez haut.
+    let lo = -Infinity, hi = Infinity;
+    if (bl.y > roof && br.y > roof) lo = hi = cx;
+    else if (br.y > roof) hi = edgeX(bl, br, roof);
+    else if (bl.y > roof) lo = edgeX(bl, br, roof);
+    const line = (from, to) => {
+      const a = Math.max(Math.min(from, to), lo), b = Math.min(Math.max(from, to), hi);
+      if (b - a < 1) return null;
+      return from < to ? [a, y, b, y] : [b, y, a, y];
+    };
+    const tick = (corner) => {
+      const top = Math.max(y - 5, corner.y + COTE_CLEAR);
+      return top <= y - 1 ? [corner.x, top, corner.x, y + 5] : null;
+    };
+    return { tickL: tick(bl), tickR: tick(br), lineL: line(bl.x, cx - gapHalf), lineR: line(br.x, cx + gapHalf) };
+  }
+
   const pure = {
     DESK_MIN, TEXTS_FR, chipsLayout, railPlacement, railWidth, maxShift, optionWidth, railEvent, railZone, canvasBox,
-    directorAspect, framingAt, toggleOf, legendOf, choicesOf, eur, dims, swatchOf, sizeTileOf, faceOf,
+    directorAspect, framingAt, toggleOf, legendOf, choicesOf, eur, dims, swatchOf, sizeTileOf, faceOf, coteMarks,
   };
 
   // Node (tests) : le calcul pur.
@@ -420,13 +460,6 @@
   const r1 = (v) => Math.round(v * 10) / 10;
   const SIDE_GROUPS = ['border', 'passe'];
   const RAIL_GROUPS = ['border', 'passe', 'frame', 'size'];
-
-  /* Où un bord de l'œuvre (de a à b) croise la ligne horizontale y. */
-  function edgeX(a, b, y) {
-    if (Math.abs(b.y - a.y) < 1e-6) return a.x;
-    const t = Math.max(0, Math.min(1, (y - a.y) / (b.y - a.y)));
-    return a.x + (b.x - a.x) * t;
-  }
 
   /* createChips : la scène (stage) reçoit l'état et les rangées ; la couche `scene`, que la page
      remplit de sa photo et de sa 3D, reçoit les légendes et les filets et remonte avec eux.
@@ -657,25 +690,30 @@
       circle.setAttribute('cy', r1(y));
     };
 
+    // Un segment de coteMarks en chemin SVG ; null : rien à tracer.
+    const segment = (s) => {
+      if (!s) return '';
+      return s[0] === s[2] ? `M${r1(s[0])} ${r1(s[1])}V${r1(s[3])}` : `M${r1(s[0])} ${r1(s[1])}H${r1(s[2])}`;
+    };
+
     function drawMarks() {
       if (!L) return;
       const A = L.art;
-      let xl = A.l, xr = A.r, bl = A.l, br = A.r;
+      let xl = A.l, xr = A.r;
       if (corners) {
         const [tl, tr, brc, blc] = corners;
         xl = edgeX(tl, blc, L.lineY);
         xr = edgeX(tr, brc, L.lineY);
-        bl = blc.x;
-        br = brc.x;
       }
-      const { lineY: y, lineB: b, cx } = L;
-      const { lx, rx, gapHalf } = L.marks;
+      const { lineY: y } = L;
+      const { lx, rx } = L.marks;
       setD(marks.sideLine, `M${r1(lx)} ${y}H${r1(xl)}`);
       setD(marks.frameLine, `M${r1(rx)} ${y}H${r1(xr)}`);
-      setD(marks.tickL, `M${r1(bl)} ${b - 5}V${b + 5}`);
-      setD(marks.tickR, `M${r1(br)} ${b - 5}V${b + 5}`);
-      setD(marks.lineL, `M${r1(bl)} ${b}H${r1(cx - gapHalf)}`);
-      setD(marks.lineR, `M${r1(br)} ${b}H${r1(cx + gapHalf)}`);
+      const cote = coteMarks(L, corners);
+      setD(marks.tickL, segment(cote.tickL));
+      setD(marks.tickR, segment(cote.tickR));
+      setD(marks.lineL, segment(cote.lineL));
+      setD(marks.lineR, segment(cote.lineR));
       setDot(marks.sideDot, xl, y);
       setDot(marks.frameDot, xr, y);
     }

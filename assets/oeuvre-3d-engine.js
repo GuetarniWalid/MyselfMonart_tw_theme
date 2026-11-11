@@ -1407,18 +1407,20 @@ const GO_MS = 1000 // vers le plan de l'option (en sinus : glide)
 /* Inclinaison au doigt : la caméra tourne autour du point visé (le tableau reste au mur,
    on voit son épaisseur et son ombre bouger). Glisser vers la droite fait tourner le
    tableau vers la droite, comme si on le poussait. Déplacements en fraction de la scène.
-   De face et au repos, le geste va bien plus loin qu'avant : 24° de côté au lieu de 12°, 14° en
-   hauteur au lieu de 8°, le même glisser incliné d'autant (retour de Walid du 11/11 : « quand il est
-   de face, j'aimerais qu'on puisse le manipuler plus. Il pivote, mais pas assez à mon goût »).
+   De face et au repos, le geste va bien plus loin qu'ailleurs : jusqu'à 40° de côté, atteints en
+   glissant la moitié de la largeur de la scène, et 14° en hauteur (retours de Walid du 11/11 : « quand
+   il est de face, j'aimerais qu'on puisse le manipuler plus », 24° de côté ; puis, après un essai avec
+   une cliente, « il faudrait qu'on puisse encore le tourner plus à gauche ou à droite »). Au-delà de
+   40°, la tranche et le flanc du cadre prennent le pas sur l'œuvre.
    Ailleurs (gros plans des options, transitions et actes), la mesure d'avant : la caméra peut y être
    à quelques cm du cadre. */
 const TILT = {
-  front: { gainYaw: 48 * DEG, gainPitch: 28 * DEG, maxYaw: 24 * DEG, maxPitch: 14 * DEG },
+  front: { gainYaw: 80 * DEG, gainPitch: 28 * DEG, maxYaw: 40 * DEG, maxPitch: 14 * DEG },
   close: { gainYaw: 24 * DEG, gainPitch: 16 * DEG, maxYaw: 12 * DEG, maxPitch: 8 * DEG },
 }
 // Ressort du retour : amortissement 0,6 et 1,6 Hz -> rebond d'environ 10 %, posé en 0,8 s.
 const SPRING = { damping: 0.6, omega: 2 * Math.PI * 1.6 }
-const SPRING_SETTLED_MS = 1100 // au-delà, l'écart restant est sous le centième de degré
+const SPRING_SETTLED_MS = 1100 // au-delà, l'écart restant est sous le vingtième de degré, même parti de 40°
 
 function springFactor(ms) {
   const t = ms / 1000
