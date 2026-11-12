@@ -115,23 +115,30 @@
     return found ? { id: found[0], price: found[4], available: !!found[5] } : null;
   }
 
+  /* Les photos de pastille des cadres et des bordures (métaobjets, champ radio) montrent un angle : un
+     rond centré le coupait (retour de Walid du 12/11/2026 : « on voyait pas l'angle »). Cadrage CSS
+     (taille et position du fond, dans un rond) réglé sur les photos de novembre 2026. Cadre de la toile :
+     l'angle en haut à gauche (vers 11 % de la photo carrée), posé au quart du rond. Cadre du poster : la
+     pointe du coin vers 63 % × 88 % de la photo 3:2, détourée, posée vers les trois quarts du rond, assez
+     grosse pour que la teinte du cadre se lise (le fond clair de la fiche continue sous la photo).
+     Bordure de la toile : le coin de la toile vu de biais, sa pointe vers 50 % × 82 % de la photo
+     carrée, posée aux trois quarts du rond, la tranche assez grosse pour qu'on la reconnaisse. Une
+     nouvelle photo cadrée autrement demande de revoir ces valeurs. */
+  const PHOTO_CROP = {
+    frame: {
+      toile: { size: '231% auto', position: '1% 1%' },
+      poster: { size: '300% auto', position: '69% 98%' },
+    },
+    border: {
+      toile: { size: '250% auto', position: '50% 86%' },
+    },
+  };
+
   /* L'adaptateur que les chips attendent (assets/oeuvre-3d-chips.js), sur les vraies variantes :
      models : { toile, poster } (la fiche et son jumeau, s'il est publié) ; names : les noms courts des
      chips, traduits (sections.mma.oeuvre_3d_names). Les règles de la boutique : un cadre qui n'existe
      pas pour une taille repasse sans cadre ; la toile passe au poster à la même taille, avec le même
      cadre s'il existe, et le contour blanc par défaut, comme sur la fiche du poster. */
-  /* Les photos de pastille des cadres (métaobjets, champ radio) montrent un angle : un rond centré le
-     coupait (retour de Walid du 12/11/2026 : « on voyait pas l'angle »). Cadrage CSS (taille et position
-     du fond, dans un rond) réglé sur les photos de novembre 2026 : toile, l'angle du cadre en haut à
-     gauche (vers 11 % de la photo carrée), posé au quart du rond ; poster, la pointe du coin vers
-     63 % × 88 % de la photo 3:2, détourée, posée vers les trois quarts du rond, assez grosse pour que
-     la teinte du cadre se lise (le fond clair de la fiche continue sous la photo). Une nouvelle photo
-     cadrée autrement demande de revoir ces valeurs. */
-  const FRAME_PHOTO_CROP = {
-    toile: { size: '231% auto', position: '1% 1%' },
-    poster: { size: '300% auto', position: '69% 98%' },
-  };
-
   function catalogOf({ models, names }) {
     const materials = ['toile', 'poster'].filter((m) => models[m]);
     const modelOf = (product) => models[product.material] || models[materials[0]];
@@ -189,14 +196,16 @@
       base: (group) => (group === 'border' ? 'blanche' : 'sans'),
       size: dimensions,
       framed: (product) => product.frame !== 'sans',
-      /* La photo de la pastille d'un cadre (celle de la fiche classique), cadrée sur son angle : null
-         sans photo (la rangée garde alors sa teinte). */
+      /* La photo de la pastille d'un cadre ou d'une bordure (celle de la fiche classique), cadrée sur son
+         angle : null sans photo (la rangée garde alors sa teinte), et pour « Aucun » cadre. */
       photo(group, product, id) {
-        if (group !== 'frame' || id === 'sans') return null;
         const model = modelOf(product);
-        const list = (model.material === 'poster' ? model.frameColors : model.frames) || [];
-        const entry = list.find(([, key]) => frameIdOf(key) === id);
-        return entry && entry[2] ? { url: entry[2], ...FRAME_PHOTO_CROP[model.material] } : null;
+        const crop = (PHOTO_CROP[group] || {})[model.material];
+        if (!crop || (group === 'frame' && id === 'sans')) return null;
+        const list = (group === 'border' ? model.borders : model.material === 'poster' ? model.frameColors : model.frames) || [];
+        const idOf = group === 'border' ? borderIdOf : frameIdOf;
+        const entry = list.find(([, key]) => idOf(key) === id);
+        return entry && entry[2] ? { url: entry[2], ...crop } : null;
       },
       canFrame,
       unframedSize: () => sizesOf(models[materials[0]]).filter((size) => !canFrame(size)).map((size) => size.replace('x', ' × ')).join(', '),

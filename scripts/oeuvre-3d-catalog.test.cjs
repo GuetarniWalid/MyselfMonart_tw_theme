@@ -197,3 +197,15 @@ test('chaque cadre a la photo de sa pastille, cadrée sur son angle ; « Aucun �
   assert.equal(catalog.photo('border', TOILE, 'noire'), null)
   assert.equal(both.photo('frame', TOILE, 'noir'), null) // un modèle sans photos : la teinte reste
 })
+
+// Retour de Walid du 12/11/2026 : la rangée Bordure aussi, avec les photos de la fiche classique.
+test('chaque bordure de la toile a la photo de sa pastille, cadrée sur le coin de la toile ; le poster n’a pas de bordure', () => {
+  const withPhotos = (list) => list.map(([name, key]) => [name, key, `//cdn.test/${key}.png?width=500`])
+  const catalog = catalogOf({ models: { toile: { ...toile, borders: withPhotos(toile.borders) }, poster }, names: NAMES })
+  const miroir = catalog.photo('border', TOILE, 'miroir')
+  assert.equal(miroir.url, '//cdn.test/bordure-moroir.png?width=500') // le handle de la boutique, « moroir »
+  assert.deepEqual([miroir.size, miroir.position], ['250% auto', '50% 86%'])
+  assert.equal(catalog.photo('border', TOILE, 'blanche').url, '//cdn.test/bordure-blanche.png?width=500')
+  assert.equal(catalog.photo('border', POSTER, 'blanche'), null)
+  assert.equal(both.photo('border', TOILE, 'noire'), null) // un modèle sans photos : la teinte reste
+})

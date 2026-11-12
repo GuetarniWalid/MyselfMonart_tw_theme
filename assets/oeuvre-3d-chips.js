@@ -777,16 +777,18 @@
       return model;
     }
 
-    /* Les photos des cadres (catalog.photo) : chargées seulement quand on approche la légende Cadre ou
-       qu'on ouvre sa rangée, pas pour chaque visite. Chacune s'affiche une fois chargée, sur le fond
-       clair de la fiche (celles du poster sont détourées) ; en attendant, la teinte du cadre. */
-    let photosWanted = false;
+    /* Les photos des cadres et des bordures (catalog.photo) : chargées seulement quand on approche la
+       légende de leur rangée ou qu'on l'ouvre, pas pour chaque visite. Chacune s'affiche une fois
+       chargée, sur le fond clair de la fiche (celles du poster sont détourées) ; en attendant, la teinte
+       du design, à la taille de la photo. */
+    const PHOTO_GROUPS = ['frame', 'border'];
+    const photosWanted = new Set();
     const photoReady = new Set();
     const photoAsked = new Set();
-    const photoOf = (id) => (catalog.photo ? catalog.photo('frame', current, id) : null);
-    function loadPhotos() {
-      for (const { id } of catalog.options('frame', current)) {
-        const photo = photoOf(id);
+    const photoOf = (group, id) => (catalog.photo ? catalog.photo(group, current, id) : null);
+    function loadPhotos(group) {
+      for (const { id } of catalog.options(group, current)) {
+        const photo = photoOf(group, id);
         if (!photo || photoAsked.has(photo.url)) continue;
         photoAsked.add(photo.url);
         const image = new Image();
@@ -797,20 +799,21 @@
         image.src = photo.url;
       }
     }
-    const wantPhotos = () => {
-      if (photosWanted) return;
-      photosWanted = true;
-      loadPhotos();
+    const wantPhotos = (group) => {
+      if (!PHOTO_GROUPS.includes(group) || photosWanted.has(group)) return;
+      photosWanted.add(group);
+      refreshPhotos();
     };
 
-    /* La pastille d'un choix, à la taille de la rangée (L.disc) : la photo de son cadre, si elle en a une,
-       remplit le rond à 2 px de son bord ; sinon la teinte du design, aux trois quarts du rond. */
+    /* La pastille d'un choix, à la taille de la rangée (L.disc) : la photo de son cadre ou de sa bordure,
+       si elle en a une, remplit le rond à 2 px de son bord ; sinon la teinte du design, aux trois quarts
+       du rond. */
     function swatchStyle(group, id) {
-      const photo = group === 'frame' ? photoOf(id) : null;
+      const photo = PHOTO_GROUPS.includes(group) ? photoOf(group, id) : null;
       if (photo) {
         const d = L.disc - 4;
         const shown = photoReady.has(photo.url);
-        const bg = shown ? `url("${photo.url}") ${photo.position} / ${photo.size} no-repeat, rgb(var(--color-secondary-rgb))` : FRAME_BG[id] || '#b9a789';
+        const bg = shown ? `url("${photo.url}") ${photo.position} / ${photo.size} no-repeat, rgb(var(--color-secondary-rgb))` : swatchOf(group, id).bg;
         return { photo: shown ? photo.url : '', w: d, h: d, r: '50%', bg, shadow: RING, border: '0' };
       }
       return { photo: '', ...swatchOf(group, id, L.disc / PHONE.disc) };
@@ -837,17 +840,19 @@
       }
     }
 
-    /* Une photo vient d'arriver, ou l'autre matière a d'autres photos de cadre pour les mêmes choix : la
-       rangée reprend celles qui sont prêtes (et demande les autres). */
+    /* Une photo vient d'arriver, ou l'autre matière a d'autres photos pour les mêmes choix : chaque
+       rangée voulue reprend celles qui sont prêtes (et demande les autres). */
     function refreshPhotos() {
-      if (!L || !photosWanted) return;
-      loadPhotos();
-      const box = rails.frame.querySelector('.chips-rail-options');
-      const stale = [...box.children].some((button) => {
-        const photo = photoOf(button.dataset.value);
-        return (button.dataset.photo || '') !== (photo && photoReady.has(photo.url) ? photo.url : '');
-      });
-      if (stale) sizeRail('frame');
+      if (!L) return;
+      for (const group of photosWanted) {
+        loadPhotos(group);
+        const box = rails[group].querySelector('.chips-rail-options');
+        const stale = [...box.children].some((button) => {
+          const photo = photoOf(group, button.dataset.value);
+          return (button.dataset.photo || '') !== (photo && photoReady.has(photo.url) ? photo.url : '');
+        });
+        if (stale) sizeRail(group);
+      }
     }
 
     function update(next) {
@@ -1011,7 +1016,7 @@
     }
 
     function openRail(group, { focus = false } = {}) {
-      if (group === 'frame') wantPhotos();
+      wantPhotos(group);
       hideNotice();
       open = group;
       stage.dataset.chipsOpen = group === sideGroup() ? 'side' : group;
@@ -1085,8 +1090,11 @@
     });
     left.addEventListener('click', (event) => dispatch({ type: 'chip', group: sideGroup(), keyboard: keyboard(event) }));
     right.addEventListener('click', (event) => dispatch({ type: 'chip', group: 'frame', keyboard: keyboard(event) }));
-    // Le doigt, la souris ou le clavier approchent la légende Cadre : ses photos partent déjà.
-    for (const type of ['pointerenter', 'pointerdown', 'focus']) right.addEventListener(type, wantPhotos, { once: true });
+    // Le doigt, la souris ou le clavier approchent une légende : les photos de sa rangée partent déjà.
+    for (const type of ['pointerenter', 'pointerdown', 'focus']) {
+      right.addEventListener(type, () => wantPhotos('frame'));
+      left.addEventListener(type, () => wantPhotos(sideGroup()));
+    }
     cote.addEventListener('click', (event) => dispatch({ type: 'chip', group: 'size', keyboard: keyboard(event) }));
     // Toucher ailleurs sur la scène (mur, œuvre, légende active, « Retour ») : un voile le reçoit,
     // rien d'autre ne réagit.

@@ -3,9 +3,9 @@
   vraies variantes, et ce qui en donne la matière, dans toutes les langues : les handles des métaobjets
   bordure et cadre de la toile, les couleurs de cadre du poster et son contour blanc (propriétés de
   ligne, comme dans snippets/painting-variant-picker.liquid). Rendu pour la fiche et pour son jumeau
-  (métachamps link.poster / link.painting), dans un <script type="application/json">. Chaque cadre porte
-  aussi la photo de sa pastille (le champ radio de son métaobjet, comme sur la fiche classique), pour la
-  rangée Cadre (retour de Walid du 12/11/2026) ; "" sans photo.
+  (métachamps link.poster / link.painting), dans un <script type="application/json">. Chaque cadre et
+  chaque bordure porte aussi la photo de sa pastille (le champ radio de son métaobjet, comme sur la fiche
+  classique), pour les rangées Cadre et Bordure (retours de Walid du 12/11/2026) ; "" sans photo.
 
   Accepts:
   - product: {Object}
@@ -35,10 +35,15 @@
   "borders": [
       {%- for value in option.values -%}
         {%- assign key = null -%}
+        {%- assign photo = '' -%}
         {%- for border in product.metafields.painting_options.borders.value -%}
-          {%- if border.name == value.name -%}{%- assign key = border.system.handle -%}{%- break -%}{%- endif -%}
+          {%- if border.name == value.name -%}
+            {%- assign key = border.system.handle -%}
+            {%- if border.radio.value.media.value.src -%}{%- assign photo = border.radio.value.media.value.src | image_url: width: 500 -%}{%- endif -%}
+            {%- break -%}
+          {%- endif -%}
         {%- endfor -%}
-        [{{ value.name | json }},{{ key | json }}]{%- unless forloop.last -%},{%- endunless -%}
+        [{{ value.name | json }},{{ key | json }},{{ photo | json }}]{%- unless forloop.last -%},{%- endunless -%}
       {%- endfor -%}],
     {%- elsif option.position == 3 %}
   "frames": [
