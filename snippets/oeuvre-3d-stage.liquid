@@ -167,6 +167,11 @@
           "chene": {{ 'sections.mma.oeuvre_3d_names.frame_chene' | t | json }},
           "noyer": {{ 'sections.mma.oeuvre_3d_names.frame_noyer' | t | json }}
         },
+        {%- comment -%} Le cadre du poster qui porte un autre nom que celui de la toile : le chêne y est
+           un chêne vieilli (cadres de l'atelier, choix de Walid du 12/11/2026). {%- endcomment -%}
+        "framePoster": {
+          "chene": {{ 'sections.mma.oeuvre_3d_names.frame_chene_poster' | t | json }}
+        },
         "passe": {
           "sans": {{ 'sections.mma.oeuvre_3d_names.passe_sans' | t | json }},
           "avec": {{ 'sections.mma.oeuvre_3d_names.passe_avec' | t | json }}

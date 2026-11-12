@@ -209,3 +209,16 @@ test('chaque bordure de la toile a la photo de sa pastille, cadrée sur le coin 
   assert.equal(catalog.photo('border', POSTER, 'blanche'), null)
   assert.equal(both.photo('border', TOILE, 'noire'), null) // un modèle sans photos : la teinte reste
 })
+
+/* Choix de Walid du 12/11/2026 : le chêne du poster est le chêne vieilli de l'atelier, celui de la toile
+   le bois naturel clair. La fiche du poster le nomme « Chêne vieilli » (names.framePoster). */
+test('le chêne du poster s’appelle « Chêne vieilli », celui de la toile garde son nom', () => {
+  const catalog = catalogOf({ models: { toile, poster }, names: { ...NAMES, framePoster: { chene: 'Chêne vieilli' } } })
+  const nameOf = (product, id) => catalog.options('frame', product).find((o) => o.id === id).name
+  assert.equal(nameOf(POSTER, 'chene'), 'Chêne vieilli')
+  assert.equal(nameOf(TOILE, 'chene'), 'Chêne')
+  assert.equal(nameOf(POSTER, 'noyer'), 'Noyer')
+  assert.equal(legendOf(catalog, TEXTS_FR, 'frame', { ...POSTER, frame: 'chene' }).value, 'Chêne vieilli')
+  // Sans nom propre au poster (une langue où il manque), le nom commun reste.
+  assert.equal(both.options('frame', POSTER).find((o) => o.id === 'chene').name, 'Chêne')
+})

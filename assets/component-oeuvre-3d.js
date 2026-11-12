@@ -152,7 +152,11 @@
     const framesOf = (model) => (model.material === 'poster'
       ? ['sans', ...model.frameColors.map(([, key]) => frameIdOf(key)).filter(Boolean)]
       : model.frames.map(([, key]) => frameIdOf(key)).filter(Boolean));
-    const named = (group, ids) => ids.map((id) => ({ id, name: names[group][id], spoken: names[group][id] }));
+    // Le poster peut nommer un cadre autrement que la toile (names.framePoster : son chêne est vieilli).
+    const named = (group, ids, model = null) => ids.map((id) => {
+      const name = (group === 'frame' && model && model.material === 'poster' && names.framePoster && names.framePoster[id]) || names[group][id];
+      return { id, name, spoken: name };
+    });
     // Une taille se fait-elle encadrée, dans l'une des matières ?
     const canFrame = (size) => materials.some((material) => framesOf(models[material]).some((frame) =>
       frame !== 'sans' && sold({ material, size, border: 'blanche', frame })));
@@ -179,7 +183,7 @@
           case 'size': return sizesOf(model).map((id) => ({ id, name: id.replace('x', ' × '), spoken: `${id.replace('x', ' × ')} cm` }));
           case 'border': return named('border', model.material === 'toile' ? model.borders.map(([, key]) => borderIdOf(key)).filter(Boolean) : []);
           case 'passe': return ['sans', 'avec'].map((id) => ({ id, name: names.passe[id], spoken: names.passeSpoken[id] }));
-          default: return named('frame', framesOf(model));
+          default: return named('frame', framesOf(model), model);
         }
       },
       value: (group, product) => (group === 'passe' ? (product.passe ? 'avec' : 'sans') : product[group]),

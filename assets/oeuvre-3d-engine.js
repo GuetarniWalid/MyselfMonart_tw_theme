@@ -67,21 +67,34 @@ export const BORDERS = [
 
 export const PAPER_WHITE = '#f7f6f2'
 
-/* Matière des cadres. wood : part de l'image de bois ; relief : fil du bois sous la lumière ;
-   rough : 0 brillant, 1 mat. Noir et chêne viennent du prototype. Blanc, argent et noyer gardent
-   pour l'instant la teinte de l'ancienne 3D : leurs matières sont au ticket 10. */
+/* Matière des cadres, d'après les vrais cadres de l'atelier (retour de Walid du 12/11/2026 : des
+   clients déçus par la teinte reçue). Picanova les fait en plastique recyclé : « Shadow Frames » de la
+   toile, « Decor Frame » du poster, unis (blanc, noir mat), argent vintage brossé ou à l'aspect bois au
+   fil marqué ; teintes relevées sur leurs photos (merchone.com, leur marque publique). color : teinte
+   (sRGB) ; grain : part du fil du bois dans la teinte (0 : unie) ; relief : fil sous la lumière ;
+   rough : 0 brillant, 1 mat. poster : ce qui change sur le cadre du poster. Le chêne de la toile est le
+   bois naturel clair (« Natural Wood »), celui du poster un chêne vieilli brun-gris (« Oak Vintage
+   Flair ») : l'atelier n'a pas de bois clair pour les posters (choix de Walid du 12/11). */
 export const FRAMES = [
   { id: 'sans', color: null },
-  { id: 'blanc', color: '#edebe3', wood: 0, relief: 0.3, rough: 0.6 },
-  { id: 'noir', color: '#1f1f21', wood: 0, relief: 0.5, rough: 0.68 },
-  { id: 'argent', color: '#9ea1a8', wood: 0, relief: 0.6, rough: 0.5 },
-  { id: 'chene', color: '#c9a77c', wood: 1, relief: 0.9, rough: 0.55 },
-  { id: 'noyer', color: '#66422b', wood: 0, relief: 0.9, rough: 0.55 },
+  { id: 'blanc', color: '#efefed', grain: 0, relief: 0.2, rough: 0.6 },
+  { id: 'noir', color: '#262627', grain: 0, relief: 0.4, rough: 0.68 },
+  { id: 'argent', color: '#9a9381', grain: 0.35, relief: 0.45, rough: 0.42 },
+  { id: 'chene', color: '#c2b09c', grain: 0.5, relief: 0.8, rough: 0.6, poster: { color: '#6f6765', grain: 0.6 } },
+  { id: 'noyer', color: '#856453', grain: 0.6, relief: 0.85, rough: 0.55, poster: { color: '#766554', grain: 0.55 } },
 ]
 
 export const borderOf = (id) => BORDERS.find((b) => b.id === id) || BORDERS[0]
 export const borderTakesImage = (id) => !borderOf(id).color
-export const frameOf = (id) => FRAMES.find((f) => f.id === id) || FRAMES[0]
+// La matière d'un cadre ; kind : 'toile' ou 'poster' (celle du poster passe par-dessus).
+export const frameOf = (id, kind = 'toile') => {
+  const frame = FRAMES.find((f) => f.id === id) || FRAMES[0]
+  return kind === 'poster' && frame.poster ? { ...frame, ...frame.poster } : frame
+}
+
+// Somme moyenne des trois canaux de l'image de chêne : son fil module une teinte autour de 1 (cadres à
+// l'aspect bois, pin du dos de la toile).
+const OAK_MEAN = 1.34
 
 export function hasFrame(product) {
   return product.frame !== 'sans'
@@ -531,17 +544,30 @@ export function frameRing({ hw, hh, profile }) {
    La paroi monte jusqu'au tirage : rien de l'intérieur ne se voit entre elle et le panneau. */
 const CHAMFER = 0.08
 
+/* La baguette des vrais cadres de toile de l'atelier (photos de Picanova, 12/11/2026) : la face avant,
+   au bord extérieur arrondi, tombe par un gradin (la « rainure ») sur un replat plus bas, côté toile,
+   avant la paroi qui descend dans le jour. at : largeur du replat depuis l'intérieur ; drop : hauteur
+   du gradin ; round : rayon du bord extérieur (cm). */
+export const SHADOW_STEP = { at: 0.5, drop: 0.2, round: 0.25 }
+
 export function frameProfile(kind, f) {
   const c = CHAMFER
   if (kind === 'toile') {
+    const { at, drop, round } = SHADOW_STEP
+    const arc = round * (1 - Math.SQRT1_2)
     return [
       [-f.gap - CANVAS_CORNER, f.floor, 0.3],
       [-f.gap, f.floor, 0.3],
       [0, f.floor, 0.45],
-      [0, f.depth - c, 0.9],
-      [c, f.depth],
-      [f.face - c, f.depth],
-      [f.face, f.depth - c],
+      [0, f.depth - drop - c, 0.85],
+      [c, f.depth - drop],
+      [at - c, f.depth - drop, 0.9],
+      [at, f.depth - drop + c],
+      [at, f.depth - c],
+      [at + c, f.depth],
+      [f.face - round, f.depth],
+      [f.face - arc, f.depth - arc],
+      [f.face, f.depth - round],
       [f.face, 0],
       [-f.gap, 0],
       [-f.gap, f.floor],
@@ -898,7 +924,7 @@ export const BACK_FRAGMENT = /* glsl */ `
   const float DRIFT = ${STAPLE_DRIFT.toFixed(2)}; // écart d'une agrafe posée à la main, de part et d'autre
   const float SHOULDER = 0.325; // arrondi de la bande du dessus, près du coin, en part de la bande
   const vec2 FOLD_TIP = vec2(0.25, 0.3625); // tout petit rabat replié de la pointe, de même
-  const float OAK_MEAN = 1.34; // somme moyenne des trois canaux de l'image de chêne
+  const float OAK_MEAN = ${OAK_MEAN.toFixed(2)}; // somme moyenne des trois canaux de l'image de chêne
 
   ${CM_SHAPES}
 
@@ -3531,7 +3557,7 @@ const FRAME_VERTEX = /* glsl */ `
 const FRAME_FRAGMENT = /* glsl */ `
   uniform sampler2D uMap;
   uniform vec2 uTile;
-  uniform float uWood;
+  uniform float uGrain; // part du fil du bois dans la teinte (FRAMES), 0 tant que l'image n'est pas là
   uniform vec3 uTint;
   uniform float uRelief;
   uniform float uRough;
@@ -3557,7 +3583,9 @@ const FRAME_FRAGMENT = /* glsl */ `
     vec2 step1 = 1.5 / vec2(textureSize(uMap, 0));
     vec3 wood = texture2D(uMap, st).rgb;
     float h = dot(wood, vec3(0.3333));
-    vec3 albedo = mix(uTint, wood, uWood);
+    // La teinte du vrai cadre, son fil pris à l'image de chêne : la clarté de l'image autour de sa
+    // moyenne, en part uGrain (un cadre uni n'en a pas).
+    vec3 albedo = uTint * (1.0 + uGrain * (dot(wood, vec3(1.0)) / ${OAK_MEAN.toFixed(2)} - 1.0));
 
     // Axes de l'image de bois sur la surface, tirés des dérivées (aucune tangente à stocker) :
     // le relief suit le fil sur les quatre baguettes, quelle que soit leur direction.
@@ -3828,7 +3856,7 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
   const frameUniforms = {
     uMap: { value: null },
     uTile: { value: new THREE.Vector2(1 / WOOD_TILE_CM[0], 1 / WOOD_TILE_CM[1]) },
-    uWood: { value: 0 },
+    uGrain: { value: 0 },
     uTint: { value: new THREE.Color() },
     uRelief: { value: 0 },
     uRough: { value: 0.6 },
@@ -4110,10 +4138,10 @@ export function createScene(THREE, { canvas, artImage, weave, room, woodImage, s
     boardUniforms.uOpacity.value = p.framed
     boardUniforms.uEyeLocal.value.copy(camera.position).sub(group.position).applyQuaternion(toLocal)
     if (hasFrame(product)) shownFrame = product.frame
-    const look = frameOf(shownFrame)
+    const look = frameOf(shownFrame, kind)
     const woodShown = wood.fade(now)
     frameUniforms.uTint.value.set(look.color)
-    frameUniforms.uWood.value = look.wood * woodShown
+    frameUniforms.uGrain.value = look.grain * woodShown
     frameUniforms.uRelief.value = look.relief * woodShown
     frameUniforms.uRough.value = look.rough
     frameUniforms.uOpacity.value = p.framed
