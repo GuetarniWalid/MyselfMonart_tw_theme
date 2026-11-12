@@ -343,7 +343,11 @@
         "white_border_with": "With white border",
         "white_border_without": "Without white border",
         "size_guide": "Size Guide",
-        "no_frames_available": "No frames available for this size"
+        "frame_size_hint": "No frame in {{ size }}: our frames stop at {{ max }}.",
+        "frame_size_moved": "Our frames stop at {{ max }}. So the size changes from {{ size }} to {{ max }}.",
+        "frame_size_dropped": "Our frames stop at {{ max }}. So the {{ size }} will have no frame.",
+        "frame_size_keep": "Keep the frame, in {{ max }}",
+        "frame_size_stay": "Keep the {{ size }}, no frame"
       },
       "format_toggle": {
         "poster": "Poster",
@@ -475,12 +479,8 @@
         "unavailable": "unavailable in {{ size }}",
         "no_frame": "No frame in {{ size }}",
         "unframed_hint": "without frame",
-        "unframed_size": "The {{ size }} comes without a frame.",
-        "keep_frame": "Keep the frame",
-        "size_moved": "With a frame, the size changes to {{ size }}.",
-        "stay_size": "Keep {{ size }}",
-        "framed_up_to": "With a frame: up to {{ size }}",
-        "frame_not_in": "{{ material }}: no {{ frame }} frame, it has been removed."
+        "framed_up_to": "With a frame, the size changes to {{ size }}",
+        "frame_not_in": "The {{ frame }} frame doesn’t exist for {{ material }}: we removed it."
       },
       "oeuvre_3d_names": {
         "border_blanche": "White",

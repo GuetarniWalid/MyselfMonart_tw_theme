@@ -906,6 +906,149 @@ class VariantPicker extends HTMLElement {
 }
 customElements.define('variant-picker', VariantPicker);
 
+// ===== Le cadre qu'une taille n'a pas (fiches classiques, toile et poster) =====
+// Retour de Walid du 12/11/2026 : en 90 × 120, qui n'existe pas encadré, les cadres étaient grisés et ne
+// réagissaient pas (« il va croire que c'est un bug »), et choisir le 90 × 120 retirait le cadre sans un
+// mot. Chaque clic a maintenant son effet, et un message court (data-frame-notice, painting-variant-picker)
+// dit pourquoi :
+//   - un cadre touché à une taille qui ne le porte pas est mis, et la taille passe à la plus proche qui
+//     le porte (en dessous d'abord), avec « Garder le 90 × 120, sans cadre » ;
+//   - une taille qui ne porte pas le cadre choisi est prise, et le cadre retiré, avec « Garder le cadre,
+//     en 75 × 100 » ;
+//   - à une taille sans aucun cadre, sans cadre choisi : la raison, d'avance.
+// Même logique et mêmes textes que la fiche 3D (assets/oeuvre-3d-chips.js, pickOf et noticeOf).
+let mmaFrameEvent = null; // ce que le clic en cours vient de faire : { kind: 'moved' | 'dropped', size, max, key }
+let mmaFrameNoticeAction = null; // ce que rejoue le bouton du message
+let mmaFrameNoticeTimer = 0;
+/* Le message se calcule une fois le clic entièrement joué : un clic en déclenche d'autres (la taille
+   qu'un cadre change, le « Sans cadre » qu'une taille impose), et leurs événements « change », émis par
+   le navigateur, ne se distinguent pas du clic du visiteur. */
+function mmaScheduleFrameNotice() {
+  if (mmaFrameNoticeTimer) return;
+  mmaFrameNoticeTimer = setTimeout(() => {
+    mmaFrameNoticeTimer = 0;
+    mmaRenderFrameNotice();
+  }, 0);
+}
+
+function mmaVariantsData() {
+  const el = document.getElementById('variants-data-json');
+  return el ? JSON.parse(el.textContent) : [];
+}
+function mmaCheckedValue(name) {
+  return document.querySelector(`painting-variant-picker input[name="${name}"]:checked`)?.value || null;
+}
+function mmaSizeInputs() {
+  return Array.from(document.querySelectorAll('painting-variant-picker input[name="option1"]'));
+}
+// Les choix de cadre : les pastilles du poster (option 2), ou l'option 3 de la toile (la 1re : « Sans cadre »).
+function mmaFrameInputs() {
+  const pastilles = mmaPosterPastilles();
+  return pastilles.length ? pastilles : Array.from(document.querySelectorAll('painting-variant-picker input[name="option3"]'));
+}
+function mmaIsFrame(input) {
+  if (!input) return false;
+  if (input.hasAttribute('data-frame-mode')) return input.dataset.frameMode === 'framed';
+  return input.name === 'option3' && mmaFrameInputs().indexOf(input) > 0;
+}
+// Le nom d'un cadre que l'on peut retrouver : la couleur du poster, ou la valeur de la toile.
+const mmaFrameKey = (input) => input.dataset.colorHandle || input.value;
+// Les options 2 et 3 d'une variante qui porte ce cadre : poster (« Avec cadre », rien) ; toile (la
+// bordure choisie, ce cadre).
+function mmaFrameOptions(input) {
+  return input.hasAttribute('data-frame-mode') ? [input.value, null] : [mmaCheckedValue('option2'), input.value];
+}
+function mmaSells(size, option2, option3, variants = mmaVariantsData()) {
+  return variants.some(
+    (v) => v.option1 === size && v.option2 === option2 && (v.option3 || null) === (option3 || null) && v.available,
+  );
+}
+// La taille la plus proche de `size` qui porte ce cadre, en dessous d'abord ; null : aucune.
+function mmaFramedSizeFor(size, input) {
+  const [option2, option3] = mmaFrameOptions(input);
+  const variants = mmaVariantsData();
+  const sizes = mmaSizeInputs().map((i) => i.value);
+  const at = sizes.indexOf(size);
+  const carries = (s) => mmaSells(s, option2, option3, variants);
+  return sizes.slice(0, Math.max(0, at)).reverse().find(carries) || sizes.slice(at + 1).find(carries) || null;
+}
+// « 90x120 cm » -> « 90 × 120 », espaces fines insécables comme la fiche 3D.
+function mmaSizeName(value) {
+  const match = /(\d+)\s*[x×]\s*(\d+)/i.exec(value || '');
+  return match ? `${match[1]} × ${match[2]}` : value || '';
+}
+const mmaFill = (text, vars) => (text || '').replace(/\{(\w+)\}/g, (_, key) => (vars[key] === undefined ? '' : vars[key]));
+
+// Un cadre touché à une taille qui ne le porte pas : la taille passe à la plus proche qui le porte. Son
+// propre changement met la variante, le prix et les autres cadres à jour. true : c'est fait.
+function mmaMoveToFramedSize(input) {
+  if (!mmaIsFrame(input)) return false;
+  const size = mmaCheckedValue('option1');
+  const [option2, option3] = mmaFrameOptions(input);
+  if (!size || mmaSells(size, option2, option3)) return false;
+  const target = mmaFramedSizeFor(size, input);
+  const targetInput = target && mmaSizeInputs().find((i) => i.value === target);
+  if (!targetInput) return false;
+  mmaFrameEvent = { kind: 'moved', size, max: target };
+  targetInput.click();
+  return true;
+}
+
+// Le message sous les cadres, après un clic (événement de l'utilisateur, une fois tout mis à jour).
+function mmaRenderFrameNotice() {
+  const event = mmaFrameEvent;
+  mmaFrameEvent = null;
+  const notice = document.querySelector('[data-frame-notice]');
+  if (!notice) return;
+  const names = (e) => ({ size: mmaSizeName(e.size), max: mmaSizeName(e.max) });
+  let message = null;
+  if (event && event.kind === 'moved') {
+    message = {
+      text: mmaFill(notice.dataset.moved, names(event)),
+      label: mmaFill(notice.dataset.stay, names(event)),
+      run: () => mmaChooseSize(event.size),
+    };
+  } else if (event && event.kind === 'dropped') {
+    message = {
+      text: mmaFill(notice.dataset.dropped, names(event)),
+      label: mmaFill(notice.dataset.keep, names(event)),
+      run: () => mmaKeepFrame(event),
+    };
+  } else {
+    // À une taille qui n'a aucun cadre, sans cadre choisi : la raison, avant le clic.
+    const size = mmaCheckedValue('option1');
+    const frames = mmaFrameInputs().filter(mmaIsFrame);
+    const chosen = mmaFrameInputs().find((i) => i.checked);
+    const max = size && frames.length && frames.every((i) => !mmaSells(size, ...mmaFrameOptions(i))) ? mmaFramedSizeFor(size, frames[0]) : null;
+    if (max && !mmaIsFrame(chosen)) message = { text: mmaFill(notice.dataset.hint, names({ size, max })) };
+  }
+  mmaFrameNoticeAction = message && message.run ? message.run : null;
+  notice.querySelector('[data-frame-notice-box]').classList.toggle('hidden', !message);
+  notice.querySelector('[data-frame-notice-text]').textContent = message ? message.text : '';
+  const button = notice.querySelector('[data-frame-notice-action]');
+  button.textContent = message && message.label ? message.label : '';
+  button.classList.toggle('hidden', !(message && message.label));
+}
+// « Garder le 90 × 120, sans cadre » : la taille quittée ; le cadre y est retiré, sans redire pourquoi
+// (le message d'avance revient).
+function mmaChooseSize(size) {
+  const input = mmaSizeInputs().find((i) => i.value === size);
+  if (input) input.click();
+  mmaFrameEvent = null;
+  mmaScheduleFrameNotice();
+  return input;
+}
+// « Garder le cadre, en 75 × 100 » : la taille qui le porte, puis le cadre retiré.
+function mmaKeepFrame(event) {
+  const sizeInput = mmaSizeInputs().find((i) => i.value === event.max);
+  if (sizeInput) sizeInput.click();
+  const frame = mmaFrameInputs().find((i) => mmaIsFrame(i) && mmaFrameKey(i) === event.key);
+  if (frame) frame.click();
+  mmaFrameEvent = null;
+  mmaScheduleFrameNotice();
+  return frame;
+}
+
 // PaintingVariantPicker extends VariantPicker with painting-specific availability logic
 class PaintingVariantPicker extends VariantPicker {
   connectedCallback() {
@@ -945,25 +1088,30 @@ class PaintingVariantPicker extends VariantPicker {
       }
     }
 
+    // Un cadre que cette taille n'a pas : il reste choisi, la taille passe à la plus proche qui l'a.
+    if (mmaMoveToFramedSize(this.radioInput)) return;
+
     // Update option availability when size or border changes
     if (this.dataset.option === 'option1' || this.dataset.option === 'option2') {
-      this.updateOptionAvailability();
+      this.updateOptionAvailability(this.dataset.option === 'option1');
     }
 
     // Call parent method to handle variant data updates
     super.onRadioChange();
   }
 
-  updateOptionAvailability() {
+  /* Les cadres de la toile (option 3) pour la taille et la bordure choisies. Un cadre que cette taille n'a
+     pas reste cliquable s'il existe à une autre taille : le toucher y passe (mmaMoveToFramedSize). Seul un
+     cadre qui n'existe à aucune taille est grisé. fromSize : c'est la taille qui vient de changer ; si
+     elle n'a pas le cadre choisi, il est retiré, et le message le dit (mmaRenderFrameNotice). */
+  updateOptionAvailability(fromSize = false) {
     const [currentOption1, currentOption2] = this.getOptions();
 
     // Get all frame option pickers (option3)
     const frameOptions = document.querySelectorAll('painting-variant-picker[data-option="option3"]');
     const frameOptionsArray = Array.from(frameOptions);
-    let availableCount = 0;
-    let firstFrameAvailable = false;
 
-    frameOptionsArray.forEach((framePicker, index) => {
+    frameOptionsArray.forEach((framePicker) => {
       const frameValue = framePicker.dataset.optionValue;
       const radioInput = framePicker.querySelector('input[type="radio"]');
       const label = framePicker.querySelector('label');
@@ -975,46 +1123,31 @@ class PaintingVariantPicker extends VariantPicker {
         variant.option3 === frameValue &&
         variant.available
       );
+      const reachable = isAvailable || !!mmaFramedSizeFor(currentOption1, radioInput);
+      radioInput.disabled = !reachable;
+      label.classList.toggle('grayscale', !reachable);
+      label.classList.toggle('cursor-not-allowed', !reachable);
+      label.classList.toggle('cursor-pointer', reachable);
 
-      if (isAvailable) {
-        availableCount++;
-        if (index === 0) firstFrameAvailable = true;
-        radioInput.disabled = false;
-        label.classList.remove('grayscale', 'cursor-not-allowed');
-        label.classList.add('cursor-pointer');
-      } else {
-        radioInput.disabled = true;
-        label.classList.add('grayscale', 'cursor-not-allowed');
-        label.classList.remove('cursor-pointer');
+      // If this option was selected, select the first available option
+      if (!isAvailable && radioInput.checked) {
+        const firstAvailable = frameOptionsArray.find(picker => {
+          const value = picker.dataset.optionValue;
+          return this.variantsData.some(v =>
+            v.option1 === currentOption1 &&
+            v.option2 === currentOption2 &&
+            v.option3 === value &&
+            v.available
+          );
+        });
 
-        // If this option was selected, select the first available option
-        if (radioInput.checked) {
-          const firstAvailable = frameOptionsArray.find(picker => {
-            const value = picker.dataset.optionValue;
-            return this.variantsData.some(v =>
-              v.option1 === currentOption1 &&
-              v.option2 === currentOption2 &&
-              v.option3 === value &&
-              v.available
-            );
-          });
-
-          if (firstAvailable) {
-            firstAvailable.querySelector('input[type="radio"]').click();
-          }
+        if (firstAvailable) {
+          const max = fromSize && mmaIsFrame(radioInput) ? mmaFramedSizeFor(currentOption1, radioInput) : null;
+          if (max) mmaFrameEvent = { kind: 'dropped', size: currentOption1, max, key: mmaFrameKey(radioInput) };
+          firstAvailable.querySelector('input[type="radio"]').click();
         }
       }
     });
-
-    // Show message if only the first frame (no frame) is available
-    const noFramesMessage = document.getElementById('no-frames-message');
-    if (noFramesMessage) {
-      if (availableCount === 1 && firstFrameAvailable) {
-        noFramesMessage.classList.remove('hidden');
-      } else {
-        noFramesMessage.classList.add('hidden');
-      }
-    }
   }
 }
 customElements.define('painting-variant-picker', PaintingVariantPicker);
@@ -1282,8 +1415,11 @@ function mmaSyncPosterColorProperty() {
   const span = document.getElementById('selected-frame-name');
   if (span && checked) span.textContent = framed ? (checked.dataset.colorName || checked.value) : checked.value;
 }
-// Désactive les pastilles couleur (= Avec cadre) pour les tailles sans variante encadrée (ex. 90×120).
-function mmaSyncPosterFrameAvailability() {
+/* Les pastilles couleur (= Avec cadre) pour la taille choisie. Une couleur que cette taille n'a pas (le
+   90 × 120) reste cliquable : la toucher passe à la taille la plus proche qui l'a (mmaMoveToFramedSize,
+   retour de Walid du 12/11/2026 : grisée, elle ne réagissait pas). fromSize : c'est la taille qui vient
+   de changer ; si elle n'a pas la couleur choisie, celle-ci est retirée, et le message le dit. */
+function mmaSyncPosterFrameAvailability(fromSize = false) {
   const pastilles = mmaPosterPastilles();
   if (!pastilles.length) return;
   const variantsDataEl = document.getElementById('variants-data-json');
@@ -1293,19 +1429,23 @@ function mmaSyncPosterFrameAvailability() {
     const available = variantsData.some(
       (v) => v.option1 === size && v.option2 === input.value && v.available,
     );
+    const reachable = available || !!mmaFramedSizeFor(size, input);
     const label = input.closest('label');
-    if (available) {
-      input.disabled = false;
-      if (label) { label.classList.remove('grayscale', 'cursor-not-allowed'); label.classList.add('cursor-pointer'); }
-    } else {
-      input.disabled = true;
-      if (label) { label.classList.add('grayscale', 'cursor-not-allowed'); label.classList.remove('cursor-pointer'); }
-      // Si la pastille indisponible était cochée, basculer sur la 1re disponible (-> change : variante + prix).
-      if (input.checked) {
-        const fallback = pastilles.find((p) =>
-          variantsData.some((v) => v.option1 === size && v.option2 === p.value && v.available),
-        );
-        if (fallback) fallback.click();
+    input.disabled = !reachable;
+    if (label) {
+      label.classList.toggle('grayscale', !reachable);
+      label.classList.toggle('cursor-not-allowed', !reachable);
+      label.classList.toggle('cursor-pointer', reachable);
+    }
+    // Si la pastille indisponible était cochée, basculer sur la 1re disponible (-> change : variante + prix).
+    if (!available && input.checked) {
+      const fallback = pastilles.find((p) =>
+        variantsData.some((v) => v.option1 === size && v.option2 === p.value && v.available),
+      );
+      if (fallback) {
+        const max = fromSize && mmaIsFrame(input) ? mmaFramedSizeFor(size, input) : null;
+        if (max) mmaFrameEvent = { kind: 'dropped', size, max, key: mmaFrameKey(input) };
+        fallback.click();
       }
     }
   });
@@ -1379,9 +1519,19 @@ if (!window.__mmaMainProductDelegated) {
   document.addEventListener('change', (e) => {
     const t = e.target;
     if (!t || typeof t.matches !== 'function') return;
-    if (t.matches('painting-variant-picker input[name="option1"]')) mmaSyncPosterFrameAvailability();
+    if (t.matches('painting-variant-picker input[name="option1"]')) mmaSyncPosterFrameAvailability(true);
     if (t.matches('painting-variant-picker input[data-frame-mode]')) mmaSyncPosterColorProperty();
     if (t.matches('[data-white-border]')) mmaSetWhiteBorder(t.dataset.whiteBorder === 'on');
+    // Le message sous les cadres, une fois le clic entièrement joué (taille changée par un cadre, cadre
+    // retiré par une taille).
+    if (t.matches('painting-variant-picker input')) mmaScheduleFrameNotice();
+  });
+  // Le bouton du message rejoue son choix ; au clavier, le focus va au choix qu'il vient de faire.
+  document.addEventListener('click', (e) => {
+    const button = e.target && typeof e.target.closest === 'function' && e.target.closest('[data-frame-notice-action]');
+    if (!button || !mmaFrameNoticeAction) return;
+    const chosen = mmaFrameNoticeAction();
+    if (e.detail === 0 && chosen) chosen.focus({ preventScroll: true });
   });
   document.addEventListener('focusin', (e) => {
     const t = e.target;
@@ -1403,6 +1553,9 @@ window.mmaInitPosterOptions = function mmaInitPosterOptions() {
   mmaSyncPosterColorProperty();
   const wb = document.querySelector('[data-white-border]:checked');
   if (wb) mmaSetWhiteBorder(wb.dataset.whiteBorder === 'on');
+  // Une fiche ouverte sur le 90 × 120 dit d'avance pourquoi il n'a pas de cadre (toile et poster).
+  mmaFrameEvent = null;
+  mmaRenderFrameNotice();
 };
 window.mmaInitPosterOptions();
 

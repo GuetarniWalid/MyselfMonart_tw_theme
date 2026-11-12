@@ -109,7 +109,11 @@
         "white_border_with": "Met witte rand",
         "white_border_without": "Zonder witte rand",
         "size_guide": "Maattabel",
-        "no_frames_available": "Geen lijst beschikbaar voor dit formaat"
+        "frame_size_hint": "Geen lijst in {{ size }}: onze lijsten gaan maar tot {{ max }}.",
+        "frame_size_moved": "Onze lijsten gaan maar tot {{ max }}. Het formaat gaat daarom van {{ size }} naar {{ max }}.",
+        "frame_size_dropped": "Onze lijsten gaan maar tot {{ max }}. Het formaat {{ size }} is daarom zonder lijst.",
+        "frame_size_keep": "Lijst houden, in {{ max }}",
+        "frame_size_stay": "{{ size }} houden, zonder lijst"
       },
       "format_toggle": {
         "poster": "Poster",
@@ -253,12 +257,8 @@
         "unavailable": "niet beschikbaar in {{ size }}",
         "no_frame": "Geen lijst in {{ size }}",
         "unframed_hint": "zonder lijst",
-        "unframed_size": "Het formaat {{ size }} wordt zonder lijst geleverd.",
-        "keep_frame": "Lijst behouden",
-        "size_moved": "Met lijst wordt het formaat {{ size }}.",
-        "stay_size": "{{ size }} houden",
-        "framed_up_to": "Met lijst: tot {{ size }}",
-        "frame_not_in": "{{ material }}: geen lijst in {{ frame }}, die is verwijderd."
+        "framed_up_to": "Met een lijst gaat het formaat naar {{ size }}",
+        "frame_not_in": "De lijst {{ frame }} bestaat niet voor {{ material }}: we hebben hem verwijderd."
       },
       "oeuvre_3d_names": {
         "border_blanche": "Wit",

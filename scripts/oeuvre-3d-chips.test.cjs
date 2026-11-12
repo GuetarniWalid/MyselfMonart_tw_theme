@@ -357,18 +357,20 @@ test('les prix des rangées : complets pour la taille et la matière, en écart 
 test('en 90 × 120, un cadre se choisit encore : il passe au 75 × 100, son prix y est, et la rangée le dit', () => {
   const frame = choicesOf(catalog, TEXTS_FR, 'frame', { ...TOILE, size: '90x120' })
   assert.deepEqual(frame.options.map((o) => [o.available, o.price]), [[true, ''], [true, `+${eur(40)}`], [true, `+${eur(40)}`], [true, `+${eur(45)}`], [true, `+${eur(50)}`], [true, `+${eur(50)}`]])
-  assert.equal(frame.note, `Avec cadre : jusqu’au 75${NB}×${NB}100`)
-  assert.equal(frame.options[1].label, `Cadre : cadre blanc, +${eur(40)}. Avec cadre, la taille passe au 75${NB}×${NB}100.`)
+  assert.equal(frame.note, `Avec un cadre, la taille passe au 75${NB}×${NB}100`)
+  assert.equal(frame.options[1].label, `Cadre : cadre blanc, +${eur(40)}. Nos cadres s’arrêtent au 75${NB}×${NB}100. La taille passe donc du 90${NB}×${NB}120 au 75${NB}×${NB}100.`)
   assert.equal(frame.options[0].label, 'Cadre : sans cadre')
 })
 
-test('le 90 × 120 retire le cadre et le dit, avec « Garder le cadre » ; une taille plus petite le remet', () => {
+/* Retour de Walid du 12/11/2026 : « livré sans cadre » faisait croire à un problème de livraison. Le
+   message dit la raison (nos cadres s'arrêtent au 75 × 100), puis ce qui change, et le bouton dit où il mène. */
+test('le 90 × 120 retire le cadre et dit pourquoi, avec « Garder le cadre, en 75 × 100 » ; une taille plus petite le remet', () => {
   const framed = { ...TOILE, frame: 'blanc' }
   const to90 = pickOf(catalog, framed, 'size', '90x120')
   assert.deepEqual(to90, { next: { ...framed, size: '90x120', frame: 'sans' }, held: 'blanc', dropped: 'blanc', moved: null })
   assert.deepEqual(noticeOf(catalog, TEXTS_FR, framed, 'size', to90), {
-    text: `Le 90${NB}×${NB}120 est livré sans cadre.`,
-    action: { label: 'Garder le cadre', group: 'size', id: '75x100' },
+    text: `Nos cadres s’arrêtent au 75${NB}×${NB}100. Le 90${NB}×${NB}120 sera donc sans cadre.`,
+    action: { label: `Garder le cadre, en 75${NB}×${NB}100`, group: 'size', id: '75x100' },
   })
   // « Garder le cadre » : le 75 × 100, avec le cadre en mémoire, sans autre message.
   const keep = pickOf(catalog, to90.next, 'size', '75x100', to90.held)
@@ -392,15 +394,15 @@ test('cadre en mémoire : les prix et les vignettes des tailles le comptent, « 
   assert.equal(toggleOf(catalog, TEXTS_FR, at90, 'blanc')[1].label, `Matière : poster, ${eur(71.9)}`)
 })
 
-test('en 90 × 120, toucher un cadre passe au 75 × 100 avec lui, le dit, et propose de rester en 90 × 120', () => {
+test('en 90 × 120, toucher un cadre le met tout de suite, passe au 75 × 100, dit pourquoi, et propose de garder le 90 × 120', () => {
   const at90 = { ...TOILE, size: '90x120' }
   const pick = pickOf(catalog, at90, 'frame', 'noir', 'blanc')
   assert.deepEqual(pick, { next: { ...at90, size: '75x100', frame: 'noir' }, held: null, dropped: null, moved: '90x120' })
   assert.deepEqual(noticeOf(catalog, TEXTS_FR, at90, 'frame', pick), {
-    text: `Avec cadre, la taille passe au 75${NB}×${NB}100.`,
-    action: { label: `Rester en 90${NB}×${NB}120`, group: 'size', id: '90x120' },
+    text: `Nos cadres s’arrêtent au 75${NB}×${NB}100. La taille passe donc du 90${NB}×${NB}120 au 75${NB}×${NB}100.`,
+    action: { label: `Garder le 90${NB}×${NB}120, sans cadre`, group: 'size', id: '90x120' },
   })
-  // « Rester en 90 × 120 » : sans cadre, le cadre touché en mémoire.
+  // « Garder le 90 × 120, sans cadre » : sans cadre, le cadre touché en mémoire.
   const stay = pickOf(catalog, pick.next, 'size', '90x120')
   assert.deepEqual([stay.next.size, stay.next.frame, stay.held], ['90x120', 'sans', 'noir'])
   // Choisir « Aucun » efface la mémoire.
@@ -411,7 +413,7 @@ test('la toile en argent passe au poster sans cadre et le dit ; revenir à la to
   const argent = { ...TOILE, frame: 'argent' }
   const toPoster = pickOf(catalog, argent, 'material', 'poster')
   assert.deepEqual([toPoster.next.material, toPoster.next.frame, toPoster.held, toPoster.dropped], ['poster', 'sans', 'argent', 'argent'])
-  assert.deepEqual(noticeOf(catalog, TEXTS_FR, argent, 'material', toPoster), { text: 'Poster : pas de cadre Argent, il est retiré.', action: null })
+  assert.deepEqual(noticeOf(catalog, TEXTS_FR, argent, 'material', toPoster), { text: 'Le cadre Argent n’existe pas en Poster : nous l’avons retiré.', action: null })
   assert.equal(pickOf(catalog, toPoster.next, 'material', 'toile', toPoster.held).next.frame, 'argent')
   // Le poster n'a jamais l'argent : ses tailles ne disent pas toutes « sans cadre ».
   assert.deepEqual(choicesOf(catalog, TEXTS_FR, 'size', toPoster.next, 'argent').options.map((o) => o.caption), ['', '', '', ''])

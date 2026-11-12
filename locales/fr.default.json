@@ -488,7 +488,11 @@
         "white_border_with": "Avec contour blanc",
         "white_border_without": "Sans contour blanc",
         "size_guide": "Guide des tailles",
-        "no_frames_available": "Aucun cadre disponible pour cette taille"
+        "frame_size_hint": "Pas de cadre en {{ size }} : nos cadres s’arrêtent au {{ max }}.",
+        "frame_size_moved": "Nos cadres s’arrêtent au {{ max }}. La taille passe donc du {{ size }} au {{ max }}.",
+        "frame_size_dropped": "Nos cadres s’arrêtent au {{ max }}. Le {{ size }} sera donc sans cadre.",
+        "frame_size_keep": "Garder le cadre, en {{ max }}",
+        "frame_size_stay": "Garder le {{ size }}, sans cadre"
       },
       "format_toggle": {
         "poster": "Poster",
@@ -620,12 +624,8 @@
         "unavailable": "indisponible en {{ size }}",
         "no_frame": "Pas de cadre en {{ size }}",
         "unframed_hint": "sans cadre",
-        "unframed_size": "Le {{ size }} est livré sans cadre.",
-        "keep_frame": "Garder le cadre",
-        "size_moved": "Avec cadre, la taille passe au {{ size }}.",
-        "stay_size": "Rester en {{ size }}",
-        "framed_up_to": "Avec cadre : jusqu’au {{ size }}",
-        "frame_not_in": "{{ material }} : pas de cadre {{ frame }}, il est retiré."
+        "framed_up_to": "Avec un cadre, la taille passe au {{ size }}",
+        "frame_not_in": "Le cadre {{ frame }} n’existe pas en {{ material }} : nous l’avons retiré."
       },
       "oeuvre_3d_names": {
         "border_blanche": "Blanche",

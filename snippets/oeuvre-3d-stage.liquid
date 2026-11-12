@@ -133,17 +133,20 @@
         {%- comment -%} Les trous (taille, cadre, matière) passent par des variables : Shopify refuse une
            accolade fermante dans une chaîne écrite entre doubles accolades (« Variable … was not properly
            terminated »), que liquidjs acceptait. Le message du cadre qu'une taille ou une matière n'a pas
-           (unframedSize à frameNotIn) : retour de Walid du 11/11/2026. {%- endcomment -%}
+           (unframedSize à frameNotIn) : retour de Walid du 11/11/2026. Les quatre messages du cadre et de la
+           taille sont ceux de la fiche classique (variant_picker.frame_size_*, retour du 12/11/2026 : « le
+           90 × 120 est livré sans cadre » faisait croire à un problème de livraison). {%- endcomment -%}
         {%- assign size_hole = '{size}' -%}
+        {%- assign max_hole = '{max}' -%}
         {%- assign frame_hole = '{frame}' -%}
         {%- assign material_hole = '{material}' %}
         "unavailable": {{ 'sections.mma.oeuvre_3d_chips.unavailable' | t: size: size_hole | json }},
         "noFrame": {{ 'sections.mma.oeuvre_3d_chips.no_frame' | t: size: size_hole | json }},
         "unframedHint": {{ 'sections.mma.oeuvre_3d_chips.unframed_hint' | t | json }},
-        "unframedSize": {{ 'sections.mma.oeuvre_3d_chips.unframed_size' | t: size: size_hole | json }},
-        "keepFrame": {{ 'sections.mma.oeuvre_3d_chips.keep_frame' | t | json }},
-        "sizeMoved": {{ 'sections.mma.oeuvre_3d_chips.size_moved' | t: size: size_hole | json }},
-        "staySize": {{ 'sections.mma.oeuvre_3d_chips.stay_size' | t: size: size_hole | json }},
+        "unframedSize": {{ 'sections.main_product.variant_picker.frame_size_dropped' | t: size: size_hole, max: max_hole | json }},
+        "keepFrame": {{ 'sections.main_product.variant_picker.frame_size_keep' | t: max: max_hole | json }},
+        "sizeMoved": {{ 'sections.main_product.variant_picker.frame_size_moved' | t: size: size_hole, max: max_hole | json }},
+        "staySize": {{ 'sections.main_product.variant_picker.frame_size_stay' | t: size: size_hole | json }},
         "framedUpTo": {{ 'sections.mma.oeuvre_3d_chips.framed_up_to' | t: size: size_hole | json }},
         "frameNotIn": {{ 'sections.mma.oeuvre_3d_chips.frame_not_in' | t: frame: frame_hole, material: material_hole | json }}
       },

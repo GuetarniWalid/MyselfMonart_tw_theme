@@ -111,7 +111,11 @@
         "white_border": "Borde blanco",
         "white_border_with": "Con borde blanco",
         "white_border_without": "Sin borde blanco",
-        "no_frames_available": "No hay marcos disponibles para este tamaño",
+        "frame_size_hint": "Sin marco en {{ size }}: nuestros marcos llegan hasta {{ max }}.",
+        "frame_size_moved": "Nuestros marcos llegan hasta {{ max }}. Por eso el tamaño pasa de {{ size }} a {{ max }}.",
+        "frame_size_dropped": "Nuestros marcos llegan hasta {{ max }}. Por eso el {{ size }} irá sin marco.",
+        "frame_size_keep": "Mantener el marco, en {{ max }}",
+        "frame_size_stay": "Mantener el {{ size }}, sin marco",
         "size_guide": "Guía de tallas"
       },
       "format_toggle": {
@@ -253,12 +257,8 @@
         "unavailable": "no disponible en {{ size }}",
         "no_frame": "Sin marco en {{ size }}",
         "unframed_hint": "sin marco",
-        "unframed_size": "El {{ size }} se entrega sin marco.",
-        "keep_frame": "Mantener el marco",
-        "size_moved": "Con marco, el tamaño pasa a {{ size }}.",
-        "stay_size": "Quedarse en {{ size }}",
-        "framed_up_to": "Con marco: hasta {{ size }}",
-        "frame_not_in": "{{ material }}: sin marco {{ frame }}, se ha quitado."
+        "framed_up_to": "Con marco, el tamaño pasa a {{ size }}",
+        "frame_not_in": "El marco {{ frame }} no existe en {{ material }}: lo hemos quitado."
       },
       "oeuvre_3d_names": {
         "border_blanche": "Blanco",

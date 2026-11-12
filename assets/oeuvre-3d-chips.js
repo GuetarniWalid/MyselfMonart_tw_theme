@@ -289,12 +289,16 @@
     unavailable: 'indisponible en {size}',
     noFrame: 'Pas de cadre en {size}',
     unframedHint: 'sans cadre',
-    unframedSize: 'Le {size} est livré sans cadre.',
-    keepFrame: 'Garder le cadre',
-    sizeMoved: 'Avec cadre, la taille passe au {size}.',
-    staySize: 'Rester en {size}',
-    framedUpTo: 'Avec cadre : jusqu’au {size}',
-    frameNotIn: '{material} : pas de cadre {frame}, il est retiré.',
+    /* Retour de Walid du 12/11/2026 : « le 90 × 120 est livré sans cadre » faisait croire à un problème de
+       livraison, et « avec cadre, la taille passe au 75 × 100 » ne disait pas pourquoi. Chaque message dit
+       la raison (nos cadres s'arrêtent au 75 × 100), puis ce qui change. {size} : la taille choisie ou
+       quittée ; {max} : la plus proche qui porte le cadre. Mêmes textes sur la fiche classique. */
+    unframedSize: 'Nos cadres s’arrêtent au {max}. Le {size} sera donc sans cadre.',
+    keepFrame: 'Garder le cadre, en {max}',
+    sizeMoved: 'Nos cadres s’arrêtent au {max}. La taille passe donc du {size} au {max}.',
+    staySize: 'Garder le {size}, sans cadre',
+    framedUpTo: 'Avec un cadre, la taille passe au {size}',
+    frameNotIn: 'Le cadre {frame} n’existe pas en {material} : nous l’avons retiré.',
   };
 
   const fill = (text, vars) => text.replace(/\{(\w+)\}/g, (_, key) => (vars[key] === undefined ? '' : vars[key]));
@@ -362,15 +366,19 @@
     return { next, held: dropped || (next.frame === 'sans' ? held : null), dropped, moved: null };
   }
 
-  /* Ce qu'un choix doit dire, ou null : le cadre retiré par une taille, avec « Garder le cadre » ; par
-     la matière (le poster n'a pas l'argent), sans bouton : revenir à la toile le remet ; la taille
-     changée par un cadre, avec « Rester en 90 × 120 ». action : le choix que le bouton rejoue. */
+  /* Ce qu'un choix doit dire, ou null : le cadre retiré par une taille, avec « Garder le cadre, en
+     75 × 100 » ; par la matière (le poster n'a pas l'argent), sans bouton : revenir à la toile le remet ;
+     la taille changée par un cadre, avec « Garder le 90 × 120, sans cadre ». action : le choix que le
+     bouton rejoue. */
   function noticeOf(catalog, texts, product, group, pick) {
     if (!pick) return null;
     const { next, dropped, moved } = pick;
     const sizeName = (id) => dims(catalog.size(id), false, texts);
     if (moved) {
-      return { text: fill(texts.sizeMoved, { size: sizeName(next.size) }), action: { label: fill(texts.staySize, { size: sizeName(moved) }), group: 'size', id: moved } };
+      return {
+        text: fill(texts.sizeMoved, { size: sizeName(moved), max: sizeName(next.size) }),
+        action: { label: fill(texts.staySize, { size: sizeName(moved) }), group: 'size', id: moved },
+      };
     }
     if (!dropped) return null;
     if (group === 'material') {
@@ -379,8 +387,13 @@
       return { text: fill(texts.frameNotIn, { frame: frame ? frame.name : '', material: material ? material.name : '' }), action: null };
     }
     if (group !== 'size') return null;
+    // La taille la plus proche qui porte le cadre retiré : celle d'où l'on vient, au moins.
     const size = framedSizeOf(catalog, next, dropped);
-    return { text: fill(texts.unframedSize, { size: sizeName(next.size) }), action: size ? { label: texts.keepFrame, group: 'size', id: size } : null };
+    if (!size) return { text: fill(texts.noFrame, { size: sizeName(next.size) }), action: null };
+    return {
+      text: fill(texts.unframedSize, { size: sizeName(next.size), max: sizeName(size) }),
+      action: { label: fill(texts.keepFrame, { max: sizeName(size) }), group: 'size', id: size },
+    };
   }
 
   /* La bascule de la matière : un choix par matière, le prix de chacun dans son libellé (le cadre en
@@ -440,7 +453,9 @@
       const frame = group === 'size' && next.frame !== 'sans' ? next.frame : null;
       const name = group === 'size' ? dims(catalog.size(o.id), false, texts) : o.name;
       const spoken = available ? (spokenPrice ? `, ${spokenPrice}` : '') : `, ${fill(texts.unavailable, { size: unframed })}`;
-      const after = moved ? `. ${fill(texts.sizeMoved, { size: dims(catalog.size(next.size), false, texts) })}` : '';
+      const after = moved
+        ? `. ${fill(texts.sizeMoved, { size: dims(catalog.size(product.size), false, texts), max: dims(catalog.size(next.size), false, texts) })}`
+        : '';
       return { id: o.id, name, price: available ? price : '—', label: `${texts.group[group]} : ${o.spoken}${spoken}${after}`, selected: o.id === current, available, caption: '', frame };
     });
     /* « sans cadre » sous les tailles qui ne portent pas le cadre en tête, s'il existe à une autre taille de

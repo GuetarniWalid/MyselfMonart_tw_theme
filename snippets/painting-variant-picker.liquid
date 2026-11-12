@@ -268,11 +268,31 @@
                     <input type="hidden" name="_cadre" data-cadre-handle value="" disabled>
                 </div>
             {% endif %}
-            {% if option.position == 3 %}
-                <div id="no-frames-message" class="hidden px-3 pt-2 text-sm text-main-70 italic ml-4">
-                    {{ 'sections.main_product.variant_picker.no_frames_available' | t }}
+            {%- if option_kind == 'frame' -%}
+                {%- comment -%} Le cadre qu'une taille n'a pas (retour de Walid du 12/11/2026). En 90 × 120, qui
+                   n'existe pas encadré, les cadres étaient grisés et ne réagissaient pas (« il va croire que
+                   c'est un bug »), et « livré sans cadre » faisait croire à un problème de livraison. Chaque
+                   clic a maintenant son effet, et ce message court dit pourquoi, avec un bouton pour revenir
+                   (mmaRenderFrameNotice, assets/main-product.js). Mêmes textes que la fiche 3D. Les trous
+                   passent par des variables : Shopify refuse une accolade dans une chaîne entre doubles
+                   accolades. {%- endcomment -%}
+                {%- assign size_hole = '{size}' -%}
+                {%- assign max_hole = '{max}' -%}
+                <div
+                    data-frame-notice
+                    role="status"
+                    class="mx-5 mt-1 mb-3"
+                    data-hint="{{ 'sections.main_product.variant_picker.frame_size_hint' | t: size: size_hole, max: max_hole | escape }}"
+                    data-moved="{{ 'sections.main_product.variant_picker.frame_size_moved' | t: size: size_hole, max: max_hole | escape }}"
+                    data-dropped="{{ 'sections.main_product.variant_picker.frame_size_dropped' | t: size: size_hole, max: max_hole | escape }}"
+                    data-keep="{{ 'sections.main_product.variant_picker.frame_size_keep' | t: max: max_hole | escape }}"
+                    data-stay="{{ 'sections.main_product.variant_picker.frame_size_stay' | t: size: size_hole | escape }}">
+                    <div data-frame-notice-box class="hidden rounded-xl bg-main-5 px-4 py-3 text-sm leading-snug text-main">
+                        <p data-frame-notice-text></p>
+                        <button type="button" data-frame-notice-action class="hidden mt-1.5 rounded font-semibold underline underline-offset-2 hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2 focus-visible:ring-offset-secondary"></button>
+                    </div>
                 </div>
-            {% endif %}
+            {%- endif -%}
             {% unless forloop.last %}
                 <hr>
             {% endunless %}

@@ -64,7 +64,7 @@ test('en 90 × 120, pas de cadre : un cadre passe au 75 × 100, avec son prix l�
   assert.equal(both.canFrame('75x100'), true)
   assert.equal(both.unframedSize(), '90 × 120')
   const frames = choicesOf(both, TEXTS_FR, 'frame', big)
-  assert.equal(plain(frames.note), 'Avec cadre : jusqu’au 75 × 100')
+  assert.equal(plain(frames.note), 'Avec un cadre, la taille passe au 75 × 100')
   assert.deepEqual(frames.options.map((o) => o.available), [true, true, true, true, true, true])
   assert.deepEqual(euros(frames.options.map((o) => o.price)), ['', '+40 €', '+40 €', '+45 €', '+50 €', '+50 €'])
   assert.deepEqual(pickOf(both, big, 'frame', 'chene').next, { ...big, size: '75x100', frame: 'chene' })
