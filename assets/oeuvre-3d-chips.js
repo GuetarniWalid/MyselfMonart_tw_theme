@@ -175,9 +175,28 @@
   // Le plus grand décalage possible de la scène : la 3D doit couvrir aussi ce qui remonte.
   const maxShift = (L) => railPlacement(L, true).shift;
 
-  // Largeur d'un choix dans la rangée : la rangée partage la largeur, jamais moins de 44 px.
-  const optionWidth = (L, count) =>
-    L.desk ? L.k.optW : Math.max(44, Math.min(L.k.optW, Math.floor((L.W - 40 - 2 * (count - 1)) / count)));
+  // La part d'un choix sur un téléphone : toute la rangée partagée entre ses choix, jamais moins de 44 px.
+  const optionShare = (L, count) =>
+    L.desk ? L.k.optW : Math.max(44, Math.floor((L.W - 40 - 2 * (count - 1)) / count));
+
+  // Largeur d'un choix dans la rangée, celle du design (optW), moins si la rangée n'a pas la place.
+  const optionWidth = (L, count) => (L.desk ? L.k.optW : Math.min(L.k.optW, optionShare(L, count)));
+
+  /* Deux noms voisins d'une rangée ne se touchent jamais : 6 px au moins entre eux (space). Un nom plus
+     large que son choix déborde de part et d'autre ; s'il touche un voisin, les choix s'élargissent
+     d'abord, jusqu'à leur part de la rangée (share) ; si cela ne suffit pas, tous les noms de la rangée
+     rapetissent ensemble, jusqu'aux 4/5 de leur taille (scale). Le 12/11/2026, « Chêne vieilli » (le
+     cadre du poster) tenait en français, mais « Roble envejecido » touchait ses voisins sur un petit
+     téléphone. widths : largeur de chaque nom, en px, à sa taille normale ; width : largeur du choix ;
+     gap : écart entre deux choix. */
+  function railFit(widths, { width, share = width, gap = 2, space = 6, least = 0.8 }) {
+    let worst = 0; // la plus large paire de voisins : la moitié de chacun
+    for (let i = 1; i < widths.length; i += 1) worst = Math.max(worst, (widths[i - 1] + widths[i]) / 2);
+    const need = Math.ceil(worst + space - gap);
+    if (need <= width) return { width, scale: 1 };
+    if (need <= share) return { width: need, scale: 1 };
+    return { width: share, scale: Math.max(least, Math.floor(((share + gap - space) / worst) * 100) / 100) };
+  }
 
   /* Les rangées, d'après les retours de Walid du 09/11/2026. Ouvrir une rangée (sa légende ou la cote,
      au doigt ou au clavier) joue tout de suite la mise en scène de son groupe avec le choix en cours,
@@ -558,7 +577,7 @@
   }
 
   const pure = {
-    DESK_MIN, TEXTS_FR, chipsLayout, railPlacement, railWidth, maxShift, optionWidth, railEvent, railZone, canvasBox,
+    DESK_MIN, TEXTS_FR, chipsLayout, railPlacement, railWidth, maxShift, optionWidth, optionShare, railFit, railEvent, railZone, canvasBox,
     directorAspect, framingAt, toggleOf, legendOf, choicesOf, pickOf, framedSizeOf, noticeOf, eur, dims, swatchOf, sizeTileOf,
     faceOf, coteMarks, filetEnds, FRAME_TONE,
   };
@@ -771,6 +790,8 @@
           if (tone && button.style.getPropertyValue('--chips-frame-tone') !== tone) button.style.setProperty('--chips-frame-tone', tone);
         }
       });
+      // Des noms neufs (l'autre matière, une autre langue) : la rangée se recale sur eux.
+      if (L && fits[group]?.key !== fitKey(group)) sizeRail(group);
       const note = rail.querySelector('.chips-rail-note');
       if (note.hidden !== !model.note) note.hidden = !model.note;
       setText(note, model.note);
@@ -819,11 +840,46 @@
       return { photo: '', ...swatchOf(group, id, L.disc / PHONE.disc) };
     }
 
+    /* La largeur des choix d'une rangée et la taille de ses noms (railFit). Les noms se mesurent en gras,
+       la graisse du choix en cours, à leur taille normale. Recalculées quand les noms ou l'écran
+       changent, et quand une police arrive (avant, la mesure prend celle de secours). */
+    const fits = {};
+    let fontRound = 0;
+    let measure = null;
+    const namesOf = (group) => [...rails[group].querySelectorAll('.chips-opt-name')];
+    const fitKey = (group) => [L.W, L.desk, fontRound, ...namesOf(group).map((n) => n.textContent)].join('|');
+    function fitRail(group) {
+      const key = fitKey(group);
+      if (fits[group]?.key === key) return fits[group];
+      const rail = rails[group];
+      const names = namesOf(group);
+      const width = optionWidth(L, names.length);
+      let widths = [];
+      if (names.some((n) => n.textContent)) {
+        const style = getComputedStyle(names[0]);
+        const scale = Number(rail.style.getPropertyValue('--chips-name-k')) || 1;
+        if (!measure) measure = document.createElement('canvas').getContext('2d');
+        measure.font = `700 ${parseFloat(style.fontSize) / scale}px ${style.fontFamily}`;
+        widths = names.map((n) => measure.measureText(n.textContent).width);
+      }
+      fits[group] = { key, ...railFit(widths, { width, share: optionShare(L, names.length), gap: L.desk ? 4 : 2 }) };
+      rail.style.setProperty('--chips-name-k', String(fits[group].scale));
+      return fits[group];
+    }
+    if (document.fonts) {
+      const refit = () => {
+        fontRound += 1;
+        if (L) for (const group of RAIL_GROUPS) sizeRail(group);
+      };
+      document.fonts.ready.then(refit);
+      document.fonts.addEventListener?.('loadingdone', refit);
+    }
+
     // Tailles des pastilles et des vignettes : elles changent avec la mise en page (téléphone, ordinateur).
     function sizeRail(group) {
       if (!L) return;
       const box = rails[group].querySelector('.chips-rail-options');
-      const width = optionWidth(L, box.childElementCount);
+      const { width } = fitRail(group);
       const tallest = group === 'size' ? Math.max(...[...box.children].map((b) => catalog.size(b.dataset.value).h)) : 0;
       for (const button of box.children) {
         button.style.width = px(width);

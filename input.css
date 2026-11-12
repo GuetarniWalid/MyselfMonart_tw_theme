@@ -850,7 +850,9 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
 .chips-opt[aria-pressed="true"] .chips-disc, .chips-opt[aria-pressed="true"] .chips-tile { box-shadow: 0 0 0 1.5px var(--chips-ink); }
 /* Rangée fermée, l'anneau change sans fondu : il ne se repeint pas pendant que la 3D se met en scène. */
 .chips-rail:not(.is-open) .chips-disc, .chips-rail:not(.is-open) .chips-tile { transition: none; }
-.chips-opt-name { font: 600 11px/1.1 var(--chips-font); white-space: nowrap; font-variant-numeric: tabular-nums; }
+/* --chips-name-k : les noms d'une rangée rapetissent ensemble quand l'un d'eux toucherait ses voisins
+   sur un petit téléphone (railFit, oeuvre-3d-chips.js). */
+.chips-opt-name { font: 600 calc(11px * var(--chips-name-k, 1))/1.1 var(--chips-font); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .chips-opt[aria-pressed="true"] .chips-opt-name { font-weight: 700; }
 .chips-opt-price {
   min-height: 12px; font: 500 10px/1.2 var(--chips-font); color: var(--chips-soft); white-space: nowrap; font-variant-numeric: tabular-nums;
@@ -932,7 +934,7 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
 .chips.is-desk .chips-rail-note { font-size: 11.5px; }
 .chips.is-desk .chips-opt { gap: 6px; }
 .chips.is-desk .chips-tile { width: 58px; height: 58px; border-radius: 14px; }
-.chips.is-desk .chips-opt-name { font-size: 12.5px; }
+.chips.is-desk .chips-opt-name { font-size: calc(12.5px * var(--chips-name-k, 1)); }
 .chips.is-desk .chips-opt-price { min-height: 13px; font-size: 11px; }
 .chips.is-desk .chips-opt-note { font-size: 10.5px; }
 .chips.is-desk .chips-notice { padding: 5px 8px 5px 18px; border-radius: 20px; font-size: 14.5px; }

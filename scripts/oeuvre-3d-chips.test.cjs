@@ -5,8 +5,8 @@ const assert = require('node:assert/strict')
 const { readFileSync } = require('node:fs')
 const path = require('node:path')
 const {
-  chipsLayout, railPlacement, railWidth, maxShift, optionWidth, choicesOf, legendOf, toggleOf, eur, dims, swatchOf, sizeTileOf, railEvent, TEXTS_FR,
-  pickOf, noticeOf,
+  chipsLayout, railPlacement, railWidth, maxShift, optionWidth, optionShare, railFit, choicesOf, legendOf, toggleOf, eur, dims, swatchOf, sizeTileOf,
+  railEvent, TEXTS_FR, pickOf, noticeOf,
 } = require('../assets/oeuvre-3d-chips.js')
 
 /* ---- Données de test : le catalogue du Bonsaï de la maquette (.scratch/fiche-3d/prototype/src/catalog.js) ---- */
@@ -276,6 +276,46 @@ test('la rangée partage la largeur : 54 px par choix sur 375 px pour les six ca
   assert.equal(optionWidth(chipsLayout({ width: 320, height: 500 }), 6), 45)
   assert.equal(optionWidth(chipsLayout({ width: 300, height: 500 }), 6), 44)
   assert.equal(optionWidth(chipsLayout({ width: 1440, height: 748 }), 6), 78)
+  assert.equal(optionShare(chipsLayout({ width: 390, height: 844 }), 5), 68) // les cinq cadres du poster
+})
+
+/* Les noms de la rangée Cadre du poster, en px, en Albert Sans gras à 11 px (mesurés dans Chrome le
+   12/11/2026) : Aucun, Blanc, Noir, Chêne vieilli, Noyer ; en espagnol Ninguno, Blanco, Negro, Roble
+   envejecido, Nogal. */
+const POSTER_FR = [33, 28, 22, 63, 31]
+const POSTER_ES = [43, 35, 31, 88, 29]
+const gapsOf = (widths, { width, scale }, gap = 2) =>
+  widths.slice(1).map((w, i) => width + gap - ((widths[i] + w) / 2) * scale)
+
+test('les noms voisins d’une rangée ne se touchent jamais : 6 px au moins entre eux', () => {
+  for (const [w, h] of [[320, 568], [360, 640], [375, 667], [390, 844], [430, 932]]) {
+    const L = chipsLayout({ width: w, height: h })
+    for (const widths of [POSTER_FR, POSTER_ES]) {
+      const fit = railFit(widths, { width: optionWidth(L, 5), share: optionShare(L, 5) })
+      assert.ok(fit.width >= optionWidth(L, 5) && fit.width <= optionShare(L, 5), `${w} px : choix de ${fit.width} px`)
+      assert.ok(fit.scale >= 0.8 && fit.scale <= 1, `${w} px : noms à ${fit.scale}`)
+      if (fit.scale > 0.8) assert.ok(Math.min(...gapsOf(widths, fit)) >= 5.9, `${w} px : ${gapsOf(widths, fit).map(Math.round)}`)
+    }
+  }
+})
+
+test('le design reste tel quel tant que les noms tiennent : « Chêne vieilli » en français, même sur 320 px', () => {
+  for (const w of [320, 390]) {
+    const L = chipsLayout({ width: w, height: 700 })
+    assert.deepEqual(railFit(POSTER_FR, { width: optionWidth(L, 5), share: optionShare(L, 5) }), { width: optionWidth(L, 5), scale: 1 })
+  }
+  // Une rangée sans nom (pas encore remplie) ne bouge pas non plus.
+  assert.deepEqual(railFit([], { width: 56, share: 68 }), { width: 56, scale: 1 })
+})
+
+test('un nom trop long élargit d’abord les choix, puis rapetisse les noms sur un petit téléphone', () => {
+  const big = chipsLayout({ width: 390, height: 844 })
+  assert.deepEqual(railFit(POSTER_ES, { width: optionWidth(big, 5), share: optionShare(big, 5) }), { width: 64, scale: 1 })
+  const small = chipsLayout({ width: 320, height: 568 })
+  assert.deepEqual(railFit(POSTER_ES, { width: optionWidth(small, 5), share: optionShare(small, 5) }), { width: 54, scale: 0.84 })
+  // Sur ordinateur, les choix gardent leur largeur (la rangée est comptée pour éviter la pilule) : les noms tiennent.
+  const desk = chipsLayout({ width: 1440, height: 900 })
+  assert.deepEqual(railFit(POSTER_ES.map((x) => x * 12.5 / 11), { width: optionWidth(desk, 5), share: optionShare(desk, 5), gap: 4 }), { width: 78, scale: 1 })
 })
 
 test('l’œuvre tient toujours entre les légendes et au-dessus de la barre, du petit téléphone à l’ordinateur', () => {
