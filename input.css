@@ -354,12 +354,22 @@ main-product-blocks .description h3 span {
    les classes utilitaires. Tailwind garde ces règles : leurs classes sont écrites en entier dans les
    scripts et le snippet. */
 @layer components {
-/* La police des chips, de « Retour » et de la pilule : Albert Sans, comme le design (choix de Walid du
-   11/11/2026), déclarée par snippets/oeuvre-3d-stage.liquid seul ; la police des titres du thème en
-   secours, le temps qu'elle arrive. */
+/* La police des chips, de « Retour », de la pilule et du fil d'Ariane posé au-dessus de la scène :
+   Albert Sans, comme le design (choix de Walid du 11/11/2026), déclarée par snippets/oeuvre-3d-stage.liquid
+   seul ; la police des titres du thème en secours, le temps qu'elle arrive. Hors de la fiche 3D, le fil
+   d'Ariane ne s'en sert pas. */
 .oeuvre-3d-stage,
-.oeuvre-3d-pill {
+.oeuvre-3d-pill,
+breadcrumb-popup {
   --scene-font: "Albert Sans", heading, "Helvetica Neue", Arial, sans-serif;
+}
+/* Les trois tons du mur de la scène : le fil d'Ariane posé au-dessus d'elle les reprend (plus bas), pour
+   ne faire qu'un mur avec elle. Hors de la fiche 3D, il ne s'en sert pas. */
+.oeuvre-3d-stage,
+breadcrumb-popup {
+  --wall-light: #e5dfd4;
+  --wall: #dfd9ce;
+  --wall-shade: #d3cdc3;
 }
 .oeuvre-3d-stage {
   --scene-ink: rgb(var(--color-main-rgb));
@@ -370,18 +380,17 @@ main-product-blocks .description h3 span {
   /* Les deux terres du design : la claire souligne la bascule, la foncée porte le bouton d'achat. */
   --scene-terra: rgb(var(--color-buy-button-rgb));
   --plate: rgba(var(--color-secondary-rgb), 0.82);
-  --wall: #dfd9ce;
-  --wall-shade: #d3cdc3;
   position: relative;
   display: block;
   overflow: hidden;
   container-type: size;
-  /* Tout l'écran sous ce qui la précède (le bandeau d'annonce et l'en-tête du site) : le script pose la
-     vraie hauteur de ce qui la précède ; avant lui, celle du bandeau (32,8 px) et de l'en-tête (90 px). */
-  height: calc(100vh - var(--oeuvre-3d-top, 123px));
-  height: calc(100svh - var(--oeuvre-3d-top, 123px));
+  /* Tout l'écran sous ce qui la précède (le bandeau d'annonce, l'en-tête du site et, juste au-dessus
+     d'elle, le fil d'Ariane) : le script pose la vraie hauteur de ce qui la précède ; avant lui, celle
+     du bandeau (32,8 px), de l'en-tête (90 px) et du fil (--oeuvre-3d-crumb, plus bas). */
+  height: calc(100vh - var(--oeuvre-3d-top, calc(123px + var(--oeuvre-3d-crumb, 0px))));
+  height: calc(100svh - var(--oeuvre-3d-top, calc(123px + var(--oeuvre-3d-crumb, 0px))));
   min-height: 400px;
-  background: radial-gradient(70% 60% at 40% 38%, #e5dfd4 0%, var(--wall) 55%, var(--wall-shade) 100%);
+  background: radial-gradient(70% 60% at 40% 38%, var(--wall-light) 0%, var(--wall) 55%, var(--wall-shade) 100%);
   color: var(--scene-ink);
 }
 /* La 3D en place, deux doigts sur la scène zooment l'œuvre, jamais la page (assets/component-oeuvre-3d.js) ;
@@ -393,6 +402,129 @@ main-product-blocks .description h3 span {
   max-width: none;
   padding-left: 0;
   padding-right: 0;
+}
+
+/* ---- Le fil d'Ariane, en haut de la fiche 3D ----
+   Retour de Walid du 12/11/2026 : « il faut que ça aille en haut absolument », sans gêner « Retour », sur
+   le fond de la scène pour s'y fondre, sans perdre le tableau en pleine page, même sur un petit écran.
+   templates/product.oeuvre-3d.json pose la section breadcrumb juste avant la fiche : ces règles ne
+   visent que le fil collé à la scène (déplacé ailleurs dans l'éditeur, il reprend son allure).
+   Une bande de 28 px au-dessus de la scène, d'un bord à l'autre de l'écran, sur le même mur. La scène ne
+   passe jamais dessous : « Retour », la bascule et les légendes restent sous la bande, rien ne se
+   chevauche. La scène prend l'écran sous la bande (fitTop) ; l'œuvre ne perd de sa taille que sur les
+   petits écrans où la hauteur la limite (de 188 à 170 px de large en 320 × 568). Le texte, la liste
+   JSON-LD et le lien « ... » de la section ne changent pas. */
+.shopify-section:has(+ .shopify-section .oeuvre-3d-stage) > breadcrumb-popup,
+.shopify-section:has(> breadcrumb-popup) + .shopify-section .oeuvre-3d-stage {
+  --oeuvre-3d-crumb: 28px;
+}
+.shopify-section:has(> breadcrumb-popup):has(+ .shopify-section .oeuvre-3d-stage) {
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+.shopify-section:has(+ .shopify-section .oeuvre-3d-stage) > breadcrumb-popup {
+  position: relative;
+  display: block;
+  background-color: var(--wall);
+}
+/* Le mur : celui de la 3D est uni (--wall, au niveau près). Avant elle, et sans elle (mode photos), la
+   scène montre son dégradé : le fil le prolonge au-dessus d'elle, même centre et mêmes rayons, comptés
+   sur la hauteur de l'écran. Au raccord, ce dégradé ne dépend que de la largeur, comme celui de la
+   scène : aucune couture, à aucune hauteur d'écran. Il s'efface avec l'arrivée de la 3D, au rythme de
+   son fondu (classes du canvas, snippets/oeuvre-3d-stage.liquid), et revient avec le mode photos. */
+.shopify-section:has(+ .shopify-section .oeuvre-3d-stage) > breadcrumb-popup::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(70% 60vh at 40% calc(100% + 38vh), var(--wall-light) 0%, var(--wall) 55%, var(--wall-shade) 100%);
+  transition: opacity 450ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.shopify-section:has(+ .shopify-section .oeuvre-3d-stage[data-state="3d"]) > breadcrumb-popup::before {
+  opacity: 0;
+}
+/* La 3D en place, le haut de la scène rejoint le fil en fondu, sur les 12 px au-dessus de « Retour » : le
+   mur de la 3D varie d'un à trois niveaux d'un bord à l'autre de l'écran, et une œuvre en gros plan ne
+   s'arrête pas net sous le fil. Au-dessus de la 3D et des légendes (.chips-scene), sous « Retour », les
+   rangées et les messages. */
+.shopify-section:has(> breadcrumb-popup) + .shopify-section .oeuvre-3d-stage::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 0 0 auto;
+  height: 12px;
+  pointer-events: none;
+  background: linear-gradient(var(--wall), transparent);
+  opacity: 0;
+  transition: opacity 450ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.shopify-section:has(> breadcrumb-popup) + .shopify-section .oeuvre-3d-stage[data-state="3d"]::before {
+  opacity: 1;
+}
+/* Le texte au bord gauche de « Retour » (12 px, 24 px sur ordinateur) : les liens gardent 4 px de zone
+   tactile de chaque côté, 28 px de haut (la bande). Pas de display ici : les classes de la section
+   (hidden, md:inline) choisissent les liens montrés sur téléphone et sur ordinateur. */
+.shopify-section:has(+ .shopify-section .oeuvre-3d-stage) > breadcrumb-popup .breadcrumb-wrapper {
+  position: relative;
+  height: var(--oeuvre-3d-crumb);
+  margin: 0;
+  padding: 0 max(12px, env(safe-area-inset-right, 0px)) 0 calc(max(12px, env(safe-area-inset-left, 0px)) - 4px);
+  gap: 4px;
+}
+.shopify-section:has(+ .shopify-section .oeuvre-3d-stage) > breadcrumb-popup .breadcrumb-middle-items {
+  gap: 4px;
+}
+/* Trop long pour l'écran (« Tous les Posters & Affiches / Poster & Affiche Zen » en 320 px), le lien le
+   plus haut se coupe seul : il prend la place que la collection de l'œuvre, la plus proche, laisse. */
+.shopify-section:has(+ .shopify-section .oeuvre-3d-stage) > breadcrumb-popup .breadcrumb-middle-items > div:not(:last-child) {
+  flex: 1 1 0;
+  max-width: max-content;
+}
+/* L'encre de la scène, en Albert Sans comme « Retour » : liens à 70 % comme le titre de la pilule (5,3:1
+   au bord le plus sombre du mur, WCAG AA), séparateurs à 50 % (3:1) ; l'encre pleine au survol. */
+.shopify-section:has(+ .shopify-section .oeuvre-3d-stage) > breadcrumb-popup :is(a, .breadcrumb-ellipsis) {
+  padding: 6px 4px;
+  border-radius: 6px;
+  font: 500 13px/16px var(--scene-font);
+  letter-spacing: 0.005em;
+  color: rgba(var(--color-main-rgb), 0.7);
+  text-decoration: none;
+}
+/* « ... » (la liste des liens cachés, sur téléphone) : 24 px de large pour le doigt, ses points à la même
+   place. */
+.shopify-section:has(+ .shopify-section .oeuvre-3d-stage) > breadcrumb-popup .breadcrumb-ellipsis {
+  padding-left: 7px;
+  padding-right: 7px;
+  margin: 0 -3px;
+}
+.shopify-section:has(+ .shopify-section .oeuvre-3d-stage) > breadcrumb-popup :is(a, .breadcrumb-ellipsis):hover {
+  color: rgb(var(--color-main-rgb));
+}
+.shopify-section:has(+ .shopify-section .oeuvre-3d-stage) > breadcrumb-popup a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+/* Le contour du focus dans la bande : la section coupe ce qui en dépasse. */
+.shopify-section:has(+ .shopify-section .oeuvre-3d-stage) > breadcrumb-popup :is(a, .breadcrumb-ellipsis):focus-visible {
+  outline: 2px solid rgb(var(--color-main-rgb));
+  outline-offset: -2px;
+}
+.shopify-section:has(+ .shopify-section .oeuvre-3d-stage) > breadcrumb-popup .breadcrumb-wrapper span {
+  font: 400 13px/16px var(--scene-font);
+  color: rgba(var(--color-main-rgb), 0.5);
+}
+.shopify-section:has(+ .shopify-section .oeuvre-3d-stage) > breadcrumb-popup svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+@media (min-width: 720px) {
+  .shopify-section:has(+ .shopify-section .oeuvre-3d-stage) > breadcrumb-popup .breadcrumb-wrapper {
+    padding-right: max(24px, env(safe-area-inset-right, 0px));
+    padding-left: calc(max(24px, env(safe-area-inset-left, 0px)) - 4px);
+  }
 }
 /* Sans 3D, une autre photo que l'œuvre prend la scène : les chips s'effacent le temps de la regarder. */
 .oeuvre-3d-stage.is-photo .chips-item,
