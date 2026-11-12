@@ -5,7 +5,7 @@ const assert = require('node:assert/strict')
 const { readFileSync } = require('node:fs')
 const path = require('node:path')
 const {
-  chipsLayout, railPlacement, railWidth, maxShift, optionWidth, optionShare, railFit, choicesOf, legendOf, toggleOf, eur, dims, swatchOf, sizeTileOf,
+  chipsLayout, railPlacement, railWidth, maxShift, optionWidth, optionShare, railFit, legendFit, choicesOf, legendOf, toggleOf, eur, dims, swatchOf, sizeTileOf,
   railEvent, TEXTS_FR, pickOf, noticeOf,
 } = require('../assets/oeuvre-3d-chips.js')
 
@@ -308,6 +308,24 @@ test('le design reste tel quel tant que les noms tiennent : « Chêne vieilli »
   assert.deepEqual(railFit([], { width: 56, share: 68 }), { width: 56, scale: 1 })
 })
 
+/* Le choix d'une légende et son chevron tiennent dans la colonne (retour du 12/11/2026 : « Chêne vieilli »
+   sortait de l'écran). Largeurs d'essai : 6 px par lettre ; le chevron et son écart : 11 px. */
+test('une légende tient dans sa colonne : sur une ligne, sinon coupée à un espace, sinon rapetissée', () => {
+  const measure = (text) => text.length * 6
+  assert.deepEqual(legendFit('Aucun', 50, measure, 11), { wrap: false, scale: 1 }) // 30 + 11
+  assert.deepEqual(legendFit('Chêne vieilli', 54, measure, 11), { wrap: true, scale: 1 }) // « Chêne » 30, « vieilli » 42 + 11
+  assert.deepEqual(legendFit('Chêne vieilli', 50, measure, 11), { wrap: true, scale: 0.94 }) // un peu plus étroit : coupé et rapetissé
+  // Un mot seul trop large rapetisse, jamais sous les 7/10.
+  const fit = legendFit('Notenhout', 50, measure, 11) // 54 + 11
+  assert.equal(fit.wrap, false)
+  assert.ok(fit.scale < 1 && fit.scale >= 0.76 && 65 * fit.scale <= 50, `police à ${fit.scale}`)
+  assert.equal(legendFit('Schattenfugenrahmenweiß', 50, measure, 11).scale, 0.7)
+  // Coupé ET rapetissé : « Roble envejecido » (« envejecido » 60 + 11 > 50).
+  const both = legendFit('Roble envejecido', 50, measure, 11)
+  assert.equal(both.wrap, true)
+  assert.ok(71 * both.scale <= 50, `police à ${both.scale}`)
+})
+
 test('un nom trop long élargit d’abord les choix, puis rapetisse les noms sur un petit téléphone', () => {
   const big = chipsLayout({ width: 390, height: 844 })
   assert.deepEqual(railFit(POSTER_ES, { width: optionWidth(big, 5), share: optionShare(big, 5) }), { width: 64, scale: 1 })
@@ -506,7 +524,14 @@ test('rangée ouverte, toutes les légendes s’effacent, la touchée comprise, 
   assert.match(rule[0], /\.chips\.is-open \.chips-legend\s*[,{]/, 'toutes les légendes, sans exception')
   assert.match(rule[0], /opacity:\s*0;\s*pointer-events:\s*none/)
   assert.doesNotMatch(CSS, /aria-expanded="false"\]/, 'la légende touchée ne reste plus')
-  assert.doesNotMatch(CSS, /pulse/, 'plus de pulsation')
+  /* Rangée ouverte, plus de pulsation (retour du 10/11). Le halo des points (retour du 12/11/2026 :
+     montrer que les légendes sont des options) ne bat que dans la vue générale. */
+  const pulsing = [...CSS.matchAll(/([^{}]*)\{[^{}]*animation:\s*chips-pulse/g)].map((m) => m[1])
+  assert.equal(pulsing.length, 1, 'un seul endroit fait battre le halo')
+  for (const state of ['is-open', 'is-returning', 'is-switching', 'is-zoomed', 'is-staged']) {
+    assert.ok(pulsing[0].includes(`:not(.${state})`), `le halo se tait (${state})`)
+  }
+  assert.match(CSS, /prefers-reduced-motion: reduce\)\s*\{\s*\.chips \.chips-pulse \{ animation: none !important; \}/, 'moins d’animations : pas de battement')
   assert.doesNotMatch(CSS, /data-chips-open="(side|frame)"\] \.chips-mk/, 'plus de filet gardé')
 })
 

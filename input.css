@@ -674,7 +674,26 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
   stroke-dasharray: 1; stroke-dashoffset: 1;
   transition: stroke-dashoffset 1000ms var(--chips-curve) calc(350ms + var(--i) * 120ms);
 }
-.chips-dot { fill: var(--chips-ink); stroke: var(--chips-paper); stroke-width: 1.5px; }
+/* Les points des filets, en terre comme le bouton d'achat, et leur halo qui bat dans la vue générale
+   seulement (retour de Walid du 12/11/2026 : montrer que les légendes sont des options). Le halo
+   (.chips-pulse, posé sur le point par le script) bat au compositeur : scale et opacity. Il se tait dès
+   qu'une rangée s'ouvre, que la 3D quitte la face ou que l'œuvre est zoomée, et pour qui a demandé moins
+   d'animations. */
+.chips-dot { fill: rgb(var(--color-terra-rgb)); stroke: var(--chips-paper); stroke-width: 1.5px; }
+.chips-pulse {
+  position: absolute; left: -5px; top: -5px; width: 10px; height: 10px; border-radius: 50%;
+  background: rgb(var(--color-terra-rgb)); pointer-events: none; opacity: 0;
+}
+.chips.is-settled:not(.is-open):not(.is-returning):not(.is-switching):not(.is-zoomed):not(.is-staged) .chips-pulse {
+  animation: chips-pulse 2000ms cubic-bezier(0, 0, 0.2, 1) calc(400ms + var(--i) * 300ms) infinite;
+}
+@keyframes chips-pulse {
+  0% { opacity: 0.7; scale: 0.6; }
+  70%, 100% { opacity: 0; scale: 2.8; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chips .chips-pulse { animation: none !important; }
+}
 .chips-mk-line { opacity: 0.42; transition: opacity 500ms ease calc(750ms + var(--i) * 120ms); }
 .chips-mk-dot { opacity: 0; transition: opacity 500ms ease calc(750ms + var(--i) * 120ms); }
 .chips.is-ready .chips-line { stroke-dashoffset: 0; }
@@ -773,16 +792,43 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
   font: 600 9px/1 var(--chips-font); letter-spacing: 0.12em; text-transform: uppercase;
   color: var(--chips-muted); white-space: nowrap;
 }
+/* Le choix et son chevron. --chips-legend-k et is-wrapped (legendFit, oeuvre-3d-chips.js) : un choix trop
+   long pour sa colonne passe sur deux lignes à un espace, ou rapetisse ; il ne sort jamais de l'écran. */
 .chips-value {
-  font: 600 var(--chips-value)/1.1 var(--chips-font); letter-spacing: -0.005em; white-space: nowrap;
+  display: inline-flex; align-items: flex-end; gap: 0.12em;
+  font: 600 calc(var(--chips-value) * var(--chips-legend-k, 1))/1.1 var(--chips-font); letter-spacing: -0.005em; white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
+.chips-legend.is-wrapped .chips-value-text { white-space: normal; text-wrap: balance; }
 .chips-cote {
   min-height: 44px; align-items: center; gap: 8px; padding: 0 0 6px; border-radius: 12px;
   transform: translateX(-50%);
 }
 .chips-cote .chips-cat { line-height: 10px; }
-.chips-cote .chips-value { font-size: var(--chips-cote); }
+.chips-cote .chips-value { font-size: calc(var(--chips-cote) * var(--chips-legend-k, 1)); }
+/* Le chevron d'une légende et de la cote, en terre comme le bouton d'achat (retour de Walid du
+   12/11/2026 : un client ne voyait pas que ce sont des options). Il arrive après les légendes ; toucher
+   l'option l'efface d'un trait (il file, rétrécit et se floute) ; revenu à la vue générale, il reprend sa
+   place en douceur, avec un léger rebond, juste après les légendes. */
+.chips-chevron {
+  --chev-delay: calc(1300ms + var(--i, 0) * 140ms);
+  flex: none; display: block; width: 0.6em; height: 0.6em; margin-bottom: 0.2em; overflow: visible;
+  color: rgb(var(--color-terra-rgb));
+  opacity: 0; translate: 0.45em 0; scale: 0.4; filter: blur(2px);
+}
+.chips.is-settled .chips-chevron { --chev-delay: 360ms; }
+.chips.is-ready .chips-chevron {
+  opacity: 1; translate: none; scale: none; filter: none;
+  transition: opacity 380ms ease var(--chev-delay), translate 760ms cubic-bezier(0.34, 1.45, 0.64, 1) var(--chev-delay),
+    scale 760ms cubic-bezier(0.34, 1.45, 0.64, 1) var(--chev-delay), filter 380ms ease var(--chev-delay);
+}
+.chips.is-open .chips-chevron, .chips.is-returning .chips-chevron, .chips.is-switching .chips-chevron, .chips.is-zoomed .chips-chevron {
+  opacity: 0; translate: 0.45em 0; scale: 0.4; filter: blur(2px);
+  transition: opacity 170ms ease, translate 230ms cubic-bezier(0.55, 0, 1, 0.45), scale 230ms cubic-bezier(0.55, 0, 1, 0.45), filter 170ms ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .chips .chips-chevron { translate: none !important; scale: none !important; filter: none !important; transition: opacity 200ms ease !important; }
+}
 .chips.is-ready .chips-item:active, .chips-switch:active, .chips-opt:active { opacity: 0.6; }
 
 /* ---- Rangée d'aperçus : du verre dépoli sous l'œuvre ---- */
@@ -889,7 +935,9 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
 }
 .chips-notice[data-anchor="top"].is-shown { transform: translate(-50%, 0); }
 .chips-notice:has(.chips-notice-action[hidden]) { padding-right: 16px; }
-.chips-notice-text { margin: 0; padding: 8px 0; }
+/* La phrase s'aligne à gauche : sur deux lignes, la seconde repart du bord (retour de Walid du 12/11/2026 :
+   « cadre. » centré seul sur sa ligne). Sur une ligne, elle reste au centre de la plaque, comme le bouton. */
+.chips-notice-text { margin: 0; padding: 8px 0; text-align: left; text-wrap: pretty; }
 .chips-notice-action {
   position: relative; display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 10px; margin: 0;
   border: 0; border-radius: 999px; background: none; cursor: pointer; color: rgb(var(--color-terra-rgb));

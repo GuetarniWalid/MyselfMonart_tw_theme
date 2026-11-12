@@ -1022,12 +1022,41 @@ function mmaRenderFrameNotice() {
     const max = size && frames.length && frames.every((i) => !mmaSells(size, ...mmaFrameOptions(i))) ? mmaFramedSizeFor(size, frames[0]) : null;
     if (max && !mmaIsFrame(chosen)) message = { text: mmaFill(notice.dataset.hint, names({ size, max })) };
   }
-  mmaFrameNoticeAction = message && message.run ? message.run : null;
-  notice.querySelector('[data-frame-notice-box]').classList.toggle('hidden', !message);
-  notice.querySelector('[data-frame-notice-text]').textContent = message ? message.text : '';
+  clearTimeout(mmaFrameNoticeHide);
+  if (!message) {
+    mmaHideFrameNotice(notice, false);
+    return;
+  }
+  mmaFrameNoticeAction = message.run || null;
+  const box = notice.querySelector('[data-frame-notice-box]');
+  box.classList.remove('hidden', 'opacity-0');
+  notice.querySelector('[data-frame-notice-text]').textContent = message.text;
   const button = notice.querySelector('[data-frame-notice-action]');
-  button.textContent = message && message.label ? message.label : '';
-  button.classList.toggle('hidden', !(message && message.label));
+  button.textContent = message.label || '';
+  button.classList.toggle('hidden', !message.label);
+  mmaFrameNoticeHide = setTimeout(() => mmaHideFrameNotice(notice, true), MMA_FRAME_NOTICE_MS);
+}
+/* Le message part au bout de quelques secondes, bouton compris (retour de Walid du 12/11/2026 : « ça sert
+   à rien de le laisser tout le temps à l'écran ») ; pas tant que la souris ou le clavier sont dessus. Il
+   s'efface en fondu (fade), ou d'un coup quand un autre choix le remplace. */
+const MMA_FRAME_NOTICE_MS = 6000;
+let mmaFrameNoticeHide = 0;
+function mmaHideFrameNotice(notice, fade) {
+  const box = notice.querySelector('[data-frame-notice-box]');
+  const hovered = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches && notice.matches(':hover');
+  if (fade && (hovered || notice.contains(document.activeElement))) {
+    mmaFrameNoticeHide = setTimeout(() => mmaHideFrameNotice(notice, true), 1500);
+    return;
+  }
+  mmaFrameNoticeAction = null;
+  const done = () => {
+    box.classList.add('hidden');
+    box.classList.remove('opacity-0');
+    notice.querySelector('[data-frame-notice-text]').textContent = '';
+  };
+  if (!fade || box.classList.contains('hidden')) return done();
+  box.classList.add('opacity-0');
+  mmaFrameNoticeHide = setTimeout(done, 300);
 }
 // « Garder le 90 × 120, sans cadre » : la taille quittée ; le cadre y est retiré, sans redire pourquoi
 // (le message d'avance revient).

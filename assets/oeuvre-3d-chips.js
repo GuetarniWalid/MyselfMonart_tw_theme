@@ -175,6 +175,24 @@
   // Le plus grand décalage possible de la scène : la 3D doit couvrir aussi ce qui remonte.
   const maxShift = (L) => railPlacement(L, true).shift;
 
+  /* Le choix d'une légende (ou de la cote) tient dans sa colonne, chevron compris (extra) : sur une ligne ;
+     sinon sur deux, coupé à un espace (« Chêne / vieilli ») ; sinon la police rapetisse, aux 7/10 au
+     plus. Le 12/11/2026, « Chêne vieilli » dépassait du bord de l'écran sur un téléphone. measure(texte) :
+     sa largeur à la taille normale, en px ; room : la largeur de la colonne. */
+  function legendFit(text, room, measure, extra = 0, least = 0.7) {
+    const one = measure(text) + extra;
+    if (one <= room) return { wrap: false, scale: 1 };
+    const words = String(text).split(' ');
+    let two = Infinity;
+    for (let i = 1; i < words.length; i += 1) {
+      two = Math.min(two, Math.max(measure(words.slice(0, i).join(' ')), measure(words.slice(i).join(' ')) + extra));
+    }
+    const wrap = two < one;
+    const need = Math.min(one, two);
+    if (need <= room) return { wrap, scale: 1 };
+    return { wrap, scale: Math.max(least, Math.floor((room / need) * 100) / 100) };
+  }
+
   // La part d'un choix sur un téléphone : toute la rangée partagée entre ses choix, jamais moins de 44 px.
   const optionShare = (L, count) =>
     L.desk ? L.k.optW : Math.max(44, Math.floor((L.W - 40 - 2 * (count - 1)) / count));
@@ -592,7 +610,7 @@
   }
 
   const pure = {
-    DESK_MIN, TEXTS_FR, chipsLayout, railPlacement, railWidth, maxShift, optionWidth, optionShare, railFit, railEvent, railZone, canvasBox,
+    DESK_MIN, TEXTS_FR, chipsLayout, railPlacement, railWidth, maxShift, optionWidth, optionShare, railFit, legendFit, railEvent, railZone, canvasBox,
     directorAspect, framingAt, toggleOf, legendOf, choicesOf, pickOf, framedSizeOf, noticeOf, eur, dims, swatchOf, sizeTileOf,
     faceOf, coteMarks, filetEnds, FRAME_TONE,
   };
@@ -676,10 +694,19 @@
       sideDot: el('circle', { class: 'chips-dot', 'data-group': 'side', r: 2.5 }),
       frameDot: el('circle', { class: 'chips-dot', 'data-group': 'frame', r: 2.5 }),
     };
+    /* Le halo qui bat sur chaque point, en terre (retour de Walid du 12/11/2026 : montrer que ce sont des
+       options). Un élément à part, posé sur le point et animé par le compositeur (scale, opacity) : la
+       couche des filets ne se repeint pas à chaque battement. */
+    const pulses = {
+      side: el('span', { class: 'chips-pulse', 'data-group': 'side', style: '--i: 0', 'data-allow-empty': true }),
+      frame: el('span', { class: 'chips-pulse', 'data-group': 'frame', style: '--i: 1', 'data-allow-empty': true }),
+    };
     svg.append(
       layer('chips-mk-line', 'side', 0, [marks.sideLine]),
       layer('chips-mk-line', 'frame', 1, [marks.frameLine]),
       layer('chips-mk-line', 'size', 2, [marks.tickL, marks.tickR, marks.lineL, marks.lineR]),
+      pulses.side,
+      pulses.frame,
       layer('chips-mk-dot', 'side', 0, [marks.sideDot]),
       layer('chips-mk-dot', 'frame', 1, [marks.frameDot]),
     );
@@ -688,10 +715,15 @@
     const toggle = el('div', { class: 'chips-toggle chips-item chips-plate', role: 'group', 'aria-label': texts.group.material, style: '--i: 0' });
 
     /* Légendes et cote : la boîte du bouton est la cible du doigt ; le texte et sa plaque dépolie
-       (.chips-label) la serrent (retour de Walid du 10/11 : trop de marge autour du texte). */
+       (.chips-label) la serrent (retour de Walid du 10/11 : trop de marge autour du texte). Un chevron
+       suit le choix (retour du 12/11/2026 : un client ne voyait pas que ce sont des options) ; il
+       s'efface quand on touche l'option et revient avec la vue générale (input.css). */
+    const chevron = () => el('svg', { class: 'chips-chevron', viewBox: '0 0 16 16', fill: 'none', stroke: 'currentColor', 'stroke-width': 2.6, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true', focusable: 'false' }, [
+      el('path', { d: 'M5.5 2.75 10.75 8 5.5 13.25' }),
+    ]);
     const label = (cat) => el('span', { class: 'chips-label chips-plate' }, [
       el('span', { class: 'chips-cat', ...(cat ? { text: cat } : {}) }),
-      el('span', { class: 'chips-value' }),
+      el('span', { class: 'chips-value' }, [el('span', { class: 'chips-value-text' }), chevron()]),
     ]);
     const left = el('button', { type: 'button', class: 'chips-legend chips-item is-left', 'aria-expanded': 'false', style: '--i: 1' }, [label()]);
     const right = el('button', { type: 'button', class: 'chips-legend chips-item is-right', 'aria-expanded': 'false', style: '--i: 2' }, [label()]);
@@ -711,8 +743,8 @@
       ]);
     }
     /* Le message d'un choix qui retire le cadre ou change la taille (noticeOf) : une plaque de papier
-       au-dessus de la rangée ouverte, ou sous la bascule quand la matière l'a retiré. Il reste tant qu'on
-       ne fait rien d'autre ; sans bouton, il part au bout de 6 s. Sa phrase passe aussi par une zone que
+       au-dessus de la rangée ouverte, ou sous la bascule quand la matière l'a retiré. Il part au bout de
+       6 s, ou dès qu'on fait autre chose (hideNoticeLater). Sa phrase passe aussi par une zone que
        les lecteurs d'écran lisent, toujours en place : un message qui naît dans une zone cachée n'est pas
        toujours lu. */
     const arrow = el('svg', { class: 'chips-notice-arrow', viewBox: '0 0 16 16', fill: 'none', stroke: 'currentColor', 'stroke-width': 1.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true', focusable: 'false' }, [
@@ -757,7 +789,9 @@
       const legend = legendOf(catalog, texts, group, current);
       setAttr(button, 'data-group', group);
       setText(button.querySelector('.chips-cat'), legend.cat);
-      setText(button.querySelector('.chips-value'), legend.value);
+      const before = button.querySelector('.chips-value-text').textContent;
+      setText(button.querySelector('.chips-value-text'), legend.value);
+      if (before !== legend.value) fitLegend(button);
       setAttr(button, 'aria-label', legend.label);
     }
 
@@ -881,10 +915,32 @@
       rail.style.setProperty('--chips-name-k', String(fits[group].scale));
       return fits[group];
     }
+    /* Le choix d'une légende ou de la cote dans sa colonne, chevron compris (legendFit) : coupé à un
+       espace (is-wrapped), ou rapetissé (--chips-legend-k). Mesuré à la taille normale de sa police. Le
+       texte peut mordre sur la marge du côté de l'écran, jusqu'à 2 px du bord (EDGE_SLACK) : la colonne
+       garde 4 px de marge et 4 px de retrait de ce côté. */
+    const CHEVRON_EM = 0.72; // le chevron (0,6 em) et son écart (0,12 em)
+    const EDGE_SLACK = 6;
+    function fitLegend(button) {
+      if (!L) return;
+      const value = button.querySelector('.chips-value');
+      const scale = Number(button.style.getPropertyValue('--chips-legend-k')) || 1;
+      const style = getComputedStyle(value);
+      const size = parseFloat(style.fontSize) / scale;
+      if (!measure) measure = document.createElement('canvas').getContext('2d');
+      measure.font = `${style.fontWeight} ${size}px ${style.fontFamily}`;
+      const box = getComputedStyle(button);
+      const slack = button === cote ? 0 : EDGE_SLACK;
+      const room = button.clientWidth - parseFloat(box.paddingLeft) - parseFloat(box.paddingRight) + slack;
+      const fit = legendFit(button.querySelector('.chips-value-text').textContent, room, (t) => measure.measureText(t).width, size * CHEVRON_EM);
+      if (button.style.getPropertyValue('--chips-legend-k') !== String(fit.scale)) button.style.setProperty('--chips-legend-k', String(fit.scale));
+      if (button.classList.contains('is-wrapped') !== fit.wrap) button.classList.toggle('is-wrapped', fit.wrap);
+    }
     if (document.fonts) {
       const refit = () => {
         fontRound += 1;
         if (L) for (const group of RAIL_GROUPS) sizeRail(group);
+        for (const button of [left, right, cote]) fitLegend(button);
       };
       document.fonts.ready.then(refit);
       document.fonts.addEventListener?.('loadingdone', refit);
@@ -957,6 +1013,7 @@
         Object.assign(button.style, { left: px(box.x), top: px(box.y), width: px(box.w), height: px(box.h) });
       }
       Object.assign(cote.style, { left: px(L.cx), top: px(c.y), width: px(c.w) });
+      for (const button of [left, right, cote]) fitLegend(button);
       for (const group of RAIL_GROUPS) {
         sizeRail(group);
         if (group !== open) rails[group].style.top = px(Math.round(L.box.b + L.k.railGap));
@@ -982,6 +1039,13 @@
       circle.setAttribute('cx', r1(x));
       circle.setAttribute('cy', r1(y));
     };
+    // Le halo d'un point, posé sur lui (translate) : son battement joue sur scale, sans conflit.
+    const setPulse = (node, x, y) => {
+      const key = `${r1(x)},${r1(y)}`;
+      if (lastD.get(node) === key) return;
+      lastD.set(node, key);
+      node.style.translate = `${r1(x)}px ${r1(y)}px`;
+    };
 
     // Un segment de coteMarks en chemin SVG ; null : rien à tracer.
     const segment = (s) => {
@@ -1003,6 +1067,8 @@
       setD(marks.lineR, segment(cote.lineR));
       setDot(marks.sideDot, xl, y);
       setDot(marks.frameDot, xr, y);
+      setPulse(pulses.side, xl, y);
+      setPulse(pulses.frame, xr, y);
     }
 
     /* track(coins, tilt, arrière) : les quatre coins de la façade de l'œuvre (haut gauche, haut droit, bas
@@ -1076,7 +1142,19 @@
       // Vidée puis remplie : la même phrase, deux fois de suite, est lue deux fois.
       spoken.textContent = '';
       requestAnimationFrame(() => { if (shown === message) spoken.textContent = message.text; });
-      if (!message.action) noticeTimer = setTimeout(hideNotice, 6000);
+      noticeTimer = setTimeout(hideNoticeLater, NOTICE_MS);
+    }
+    /* Le message part au bout de quelques secondes, bouton compris (retour de Walid du 12/11/2026 : « ça
+       sert à rien de le laisser tout le temps à l'écran ») ; pas tant que la souris ou le clavier sont
+       dessus (au doigt, le survol reste collé après un toucher : il ne compte pas). */
+    const NOTICE_MS = 6000;
+    const hovers = window.matchMedia ? window.matchMedia('(hover: hover) and (pointer: fine)') : null;
+    function hideNoticeLater() {
+      if ((hovers && hovers.matches && notice.matches(':hover')) || notice.contains(document.activeElement)) {
+        noticeTimer = setTimeout(hideNoticeLater, 1500);
+        return;
+      }
+      hideNotice();
     }
     function hideNotice() {
       clearTimeout(noticeTimer);

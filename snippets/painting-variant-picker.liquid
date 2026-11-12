@@ -287,7 +287,7 @@
                     data-dropped="{{ 'sections.main_product.variant_picker.frame_size_dropped' | t: size: size_hole, max: max_hole | escape }}"
                     data-keep="{{ 'sections.main_product.variant_picker.frame_size_keep' | t: max: max_hole | escape }}"
                     data-stay="{{ 'sections.main_product.variant_picker.frame_size_stay' | t: size: size_hole | escape }}">
-                    <div data-frame-notice-box class="hidden rounded-xl bg-main-5 px-4 py-3 text-sm leading-snug text-main">
+                    <div data-frame-notice-box class="hidden rounded-xl bg-main-5 px-4 py-3 text-sm leading-snug text-main transition-opacity duration-300 motion-reduce:transition-none">
                         <p data-frame-notice-text></p>
                         <button type="button" data-frame-notice-action class="hidden mt-1.5 rounded font-semibold underline underline-offset-2 hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2 focus-visible:ring-offset-secondary"></button>
                     </div>
