@@ -117,20 +117,22 @@
 
   /* Les photos de pastille des cadres et des bordures (métaobjets, champ radio) montrent un angle : un
      rond centré le coupait (retour de Walid du 12/11/2026 : « on voyait pas l'angle »). Cadrage CSS
-     (taille et position du fond, dans un rond) réglé sur les photos de novembre 2026. Cadre de la toile :
-     l'angle en haut à gauche (vers 11 % de la photo carrée), posé au quart du rond. Cadre du poster : la
-     pointe du coin vers 63 % × 88 % de la photo 3:2, détourée, posée vers les trois quarts du rond, assez
-     grosse pour que la teinte du cadre se lise (le fond clair de la fiche continue sous la photo).
-     Bordure de la toile : le coin de la toile vu de biais, sa pointe vers 50 % × 82 % de la photo
-     carrée, posée aux trois quarts du rond, la tranche assez grosse pour qu'on la reconnaisse. Une
-     nouvelle photo cadrée autrement demande de revoir ces valeurs. */
+     (taille et position du fond, dans un rond) réglé sur les photos de novembre 2026. Bordure de la
+     toile : le coin de la toile vu de biais, sa pointe vers 50 % × 82 % de la photo carrée, posée aux
+     trois quarts du rond, la tranche assez grosse pour qu'on la reconnaisse. Cadre de la toile : ses
+     photos sont refaites sur le modèle de celles des bordures (Gemini, 12/11 : même toile, même angle,
+     même lumière), d'où le même cadrage. Cadre du poster : la pointe du coin vers 63 % × 88 % de la
+     photo 3:2, détourée, posée vers les trois quarts du rond, assez grosse pour que la teinte du cadre
+     se lise (le fond clair de la fiche continue sous la photo). Une nouvelle photo cadrée autrement
+     demande de revoir ces valeurs. */
+  const CORNER_CROP = { size: '250% auto', position: '50% 86%' };
   const PHOTO_CROP = {
     frame: {
-      toile: { size: '231% auto', position: '1% 1%' },
+      toile: CORNER_CROP,
       poster: { size: '300% auto', position: '69% 98%' },
     },
     border: {
-      toile: { size: '250% auto', position: '50% 86%' },
+      toile: CORNER_CROP,
     },
   };
 

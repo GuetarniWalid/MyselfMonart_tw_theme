@@ -188,7 +188,7 @@ test('chaque cadre a la photo de sa pastille, cadrée sur son angle ; « Aucun �
   const catalog = catalogOf({ models, names: NAMES })
   const noir = catalog.photo('frame', TOILE, 'noir')
   assert.equal(noir.url, '//cdn.test/cadre-noir-mat.png?width=500')
-  assert.deepEqual([noir.size, noir.position], ['231% auto', '1% 1%']) // l'angle en haut à gauche de la photo
+  assert.deepEqual([noir.size, noir.position], ['250% auto', '50% 86%']) // refaite sur le modèle des bordures : le même coin, le même cadrage
   const posterNoir = catalog.photo('frame', POSTER, 'noir')
   assert.equal(posterNoir.url, '//cdn.test/cadre-noir-mat-1.png?width=500')
   assert.deepEqual([posterNoir.size, posterNoir.position], ['300% auto', '69% 98%']) // la pointe du coin, vers les trois quarts du rond
