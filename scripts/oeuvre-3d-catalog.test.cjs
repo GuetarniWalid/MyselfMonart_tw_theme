@@ -179,3 +179,21 @@ test('les tailles du produit, dans leur ordre, quelle que soit leur écriture', 
   assert.deepEqual(sizesOf(toile), ['30x40', '60x80', '75x100', '90x120'])
   assert.deepEqual(sizesOf({ sizes: ['100 x 75 cm', '40×30', ' 120X90 CM', 'Default Title'] }), ['100x75', '40x30', '120x90'])
 })
+
+/* Retour de Walid du 12/11/2026 : la rangée Cadre reprend les photos des pastilles de la fiche classique
+   (snippets/oeuvre-3d-model.liquid les ajoute à chaque cadre), cadrées sur l'angle du cadre. */
+test('chaque cadre a la photo de sa pastille, cadrée sur son angle ; « Aucun » et un cadre sans photo n’en ont pas', () => {
+  const withPhotos = (list) => list.map(([name, key]) => [name, key, key === 'sans-cadre' ? '' : `//cdn.test/${key}.png?width=500`])
+  const models = { toile: { ...toile, frames: withPhotos(toile.frames) }, poster: { ...poster, frameColors: withPhotos(poster.frameColors) } }
+  const catalog = catalogOf({ models, names: NAMES })
+  const noir = catalog.photo('frame', TOILE, 'noir')
+  assert.equal(noir.url, '//cdn.test/cadre-noir-mat.png?width=500')
+  assert.deepEqual([noir.size, noir.position], ['231% auto', '1% 1%']) // l'angle en haut à gauche de la photo
+  const posterNoir = catalog.photo('frame', POSTER, 'noir')
+  assert.equal(posterNoir.url, '//cdn.test/cadre-noir-mat-1.png?width=500')
+  assert.deepEqual([posterNoir.size, posterNoir.position], ['300% auto', '69% 98%']) // la pointe du coin, vers les trois quarts du rond
+  assert.equal(catalog.photo('frame', TOILE, 'sans'), null)
+  assert.equal(catalog.photo('frame', POSTER, 'argent'), null) // le poster n'a pas d'argent ancien
+  assert.equal(catalog.photo('border', TOILE, 'noire'), null)
+  assert.equal(both.photo('frame', TOILE, 'noir'), null) // un modèle sans photos : la teinte reste
+})

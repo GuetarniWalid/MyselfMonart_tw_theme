@@ -42,13 +42,14 @@
 
   /* Réglages du design, téléphone et ordinateur (buildScreen, layoutPhone, layoutDesk du fichier v2).
      togUp : place de la bascule au-dessus de l'œuvre ; legH : hauteur d'une légende ; coteGap : écart
-     de la cote sous l'œuvre ; disc : pastille d'un choix ; optW : largeur d'un choix ; swK : échelle des
-     teintes ; railGap : écart de la rangée sous l'œuvre ; colW : longueur des filets sur ordinateur ;
+     de la cote sous l'œuvre ; disc : pastille d'un choix du design, la mesure de la mise en page de
+     face ; discMax : la pastille de la rangée au plus grand (railDiscOf) ; optW : largeur d'un choix ;
+     railGap : écart de la rangée sous l'œuvre ; colW : longueur des filets sur ordinateur ;
      gapHalf : demi-blanc de la cote, où s'écrit « Taille » ; pill : place de la barre d'achat ;
      railBody : hauteur d'une rangée hors pastille ; note : sa ligne de note ; tile : hauteur du
      tableau le plus grand dans la vignette de taille. */
-  const PHONE = { togUp: 56, legH: 52, coteGap: 18, disc: 40, optW: 56, swK: 1, railGap: 6, colW: 0, gapHalf: 29, pill: 60, maxS: 1.05, railBody: 80, note: 18, tile: 30 };
-  const DESK = { togUp: 66, legH: 62, coteGap: 24, disc: 54, optW: 78, swK: 1.35, railGap: 12, colW: 176, gapHalf: 40, pill: 0, maxS: 1.4, railBody: 93, note: 20, tile: 40 };
+  const PHONE = { togUp: 56, legH: 52, coteGap: 18, disc: 40, discMax: 50, optW: 56, railGap: 6, colW: 0, gapHalf: 29, pill: 60, maxS: 1.05, railBody: 80, note: 18, tile: 30 };
+  const DESK = { togUp: 66, legH: 62, coteGap: 24, disc: 54, discMax: 64, optW: 78, railGap: 12, colW: 176, gapHalf: 40, pill: 0, maxS: 1.4, railBody: 93, note: 20, tile: 40 };
 
   /* L'œuvre prend la place qui reste (« Ce qui s'adapte », fichier v2) : 66 px de colonne pour chaque
      légende, 56 px au-dessus pour la matière, 50 px dessous pour la taille, 60 px pour la barre
@@ -91,7 +92,7 @@
       const w = desk ? k.colW : left ? Math.round(box.l) - 4 : W - 4 - x;
       return { x, y: lineY - (k.legH - 1.5), w, h: k.legH };
     };
-    return {
+    const L = {
       desk,
       W,
       SH,
@@ -113,6 +114,23 @@
       pillTop: desk ? SH : SH - k.pill,
       obstacles: desk ? obstacles : [],
     };
+    L.disc = railDiscOf(L);
+    return L;
+  }
+
+  /* La pastille des rangées (cadre, bordure, contour), plus grande que dans le design pour les photos
+     des cadres (retour de Walid du 12/11/2026 : « il faut que tu grossisses un peu les ronds ») : jusqu'à
+     discMax, 4 px plus étroite que son choix au moins, et jamais au prix de la barre d'achat : sur un
+     petit écran où la rangée la gardait avec la pastille du design, elle la garde encore. La mise en
+     page de face reste celle du design (k.disc). */
+  function railDiscOf(L) {
+    const { k } = L;
+    const widest = L.desk ? k.discMax : Math.min(k.discMax, optionWidth(L, RAIL_COUNT) - 4);
+    // Avec et sans ligne de note : une rangée sans note gardait parfois la barre qu'une rangée notée effaçait.
+    const hides = (disc) => [false, true].map((note) => placeRail(L, disc, note, RAIL_COUNT).hidePill).join();
+    const before = hides(k.disc);
+    for (let disc = widest; disc > k.disc; disc -= 1) if (hides(disc) === before) return disc;
+    return Math.min(widest, k.disc);
   }
 
   // La plus longue rangée : les six cadres de la toile (Aucun et cinq teintes).
@@ -128,8 +146,13 @@
      nombre de choix. Sur ordinateur, elle s'arrête au-dessus de la pilule et du panier qu'elle croise
      (retour de l'UX du 11/11/2026 : en 768 × 1024, elle couvrait leurs prix). */
   function railPlacement(L, note = false, count = RAIL_COUNT) {
+    return placeRail(L, L.disc || L.k.disc, note, count);
+  }
+
+  // railPlacement, pour une pastille de disc px (railDiscOf l'essaie à plusieurs tailles).
+  function placeRail(L, disc, note, count) {
     const { k, box: art } = L;
-    const h = k.disc + k.railBody + (note ? k.note : 0);
+    const h = disc + k.railBody + (note ? k.note : 0);
     const need = art.b + k.railGap + h;
     const half = railWidth(L, count) / 2;
     const crossed = L.obstacles.filter((o) => L.cx + half > o.left - 8 && L.cx - half < o.right + 8);
@@ -754,6 +777,45 @@
       return model;
     }
 
+    /* Les photos des cadres (catalog.photo) : chargées seulement quand on approche la légende Cadre ou
+       qu'on ouvre sa rangée, pas pour chaque visite. Chacune s'affiche une fois chargée, sur le fond
+       clair de la fiche (celles du poster sont détourées) ; en attendant, la teinte du cadre. */
+    let photosWanted = false;
+    const photoReady = new Set();
+    const photoAsked = new Set();
+    const photoOf = (id) => (catalog.photo ? catalog.photo('frame', current, id) : null);
+    function loadPhotos() {
+      for (const { id } of catalog.options('frame', current)) {
+        const photo = photoOf(id);
+        if (!photo || photoAsked.has(photo.url)) continue;
+        photoAsked.add(photo.url);
+        const image = new Image();
+        image.onload = () => {
+          photoReady.add(photo.url);
+          refreshPhotos();
+        };
+        image.src = photo.url;
+      }
+    }
+    const wantPhotos = () => {
+      if (photosWanted) return;
+      photosWanted = true;
+      loadPhotos();
+    };
+
+    /* La pastille d'un choix, à la taille de la rangée (L.disc) : la photo de son cadre, si elle en a une,
+       remplit le rond à 2 px de son bord ; sinon la teinte du design, aux trois quarts du rond. */
+    function swatchStyle(group, id) {
+      const photo = group === 'frame' ? photoOf(id) : null;
+      if (photo) {
+        const d = L.disc - 4;
+        const shown = photoReady.has(photo.url);
+        const bg = shown ? `url("${photo.url}") ${photo.position} / ${photo.size} no-repeat, rgb(var(--color-secondary-rgb))` : FRAME_BG[id] || '#b9a789';
+        return { photo: shown ? photo.url : '', w: d, h: d, r: '50%', bg, shadow: RING, border: '0' };
+      }
+      return { photo: '', ...swatchOf(group, id, L.disc / PHONE.disc) };
+    }
+
     // Tailles des pastilles et des vignettes : elles changent avec la mise en page (téléphone, ordinateur).
     function sizeRail(group) {
       if (!L) return;
@@ -766,12 +828,26 @@
           const tile = sizeTileOf(catalog.size(button.dataset.value), L.k.tile, tallest);
           Object.assign(button.querySelector('.chips-tile-art').style, { width: px(tile.w), height: px(tile.h) });
         } else {
-          const s = swatchOf(group, button.dataset.value, L.k.swK);
+          const s = swatchStyle(group, button.dataset.value);
+          button.dataset.photo = s.photo;
           Object.assign(button.querySelector('.chips-swatch').style, {
             width: px(s.w), height: px(s.h), borderRadius: s.r, background: s.bg, boxShadow: s.shadow, border: s.border,
           });
         }
       }
+    }
+
+    /* Une photo vient d'arriver, ou l'autre matière a d'autres photos de cadre pour les mêmes choix : la
+       rangée reprend celles qui sont prêtes (et demande les autres). */
+    function refreshPhotos() {
+      if (!L || !photosWanted) return;
+      loadPhotos();
+      const box = rails.frame.querySelector('.chips-rail-options');
+      const stale = [...box.children].some((button) => {
+        const photo = photoOf(button.dataset.value);
+        return (button.dataset.photo || '') !== (photo && photoReady.has(photo.url) ? photo.url : '');
+      });
+      if (stale) sizeRail('frame');
     }
 
     function update(next) {
@@ -785,6 +861,7 @@
       renderLegend(right, 'frame');
       renderLegend(cote, 'size');
       for (const group of [side, 'frame', 'size']) renderRail(group);
+      refreshPhotos();
       if (open && !rails[open].hidden) place(open);
       else if (open) close();
       placeNotice();
@@ -797,6 +874,7 @@
       stage.classList.toggle('is-desk', L.desk);
       stage.style.setProperty('--chips-value', px(L.type.value));
       stage.style.setProperty('--chips-cote', px(L.type.cote));
+      stage.style.setProperty('--chips-disc', px(L.disc));
       const { legends: g, toggle: t, cote: c } = L;
       Object.assign(toggle.style, { top: px(t.top), left: px(L.cx) });
       for (const [button, box] of [[left, g.left], [right, g.right]]) {
@@ -933,6 +1011,7 @@
     }
 
     function openRail(group, { focus = false } = {}) {
+      if (group === 'frame') wantPhotos();
       hideNotice();
       open = group;
       stage.dataset.chipsOpen = group === sideGroup() ? 'side' : group;
@@ -1006,6 +1085,8 @@
     });
     left.addEventListener('click', (event) => dispatch({ type: 'chip', group: sideGroup(), keyboard: keyboard(event) }));
     right.addEventListener('click', (event) => dispatch({ type: 'chip', group: 'frame', keyboard: keyboard(event) }));
+    // Le doigt, la souris ou le clavier approchent la légende Cadre : ses photos partent déjà.
+    for (const type of ['pointerenter', 'pointerdown', 'focus']) right.addEventListener(type, wantPhotos, { once: true });
     cote.addEventListener('click', (event) => dispatch({ type: 'chip', group: 'size', keyboard: keyboard(event) }));
     // Toucher ailleurs sur la scène (mur, œuvre, légende active, « Retour ») : un voile le reçoit,
     // rien d'autre ne réagit.

@@ -3,7 +3,9 @@
   vraies variantes, et ce qui en donne la matière, dans toutes les langues : les handles des métaobjets
   bordure et cadre de la toile, les couleurs de cadre du poster et son contour blanc (propriétés de
   ligne, comme dans snippets/painting-variant-picker.liquid). Rendu pour la fiche et pour son jumeau
-  (métachamps link.poster / link.painting), dans un <script type="application/json">.
+  (métachamps link.poster / link.painting), dans un <script type="application/json">. Chaque cadre porte
+  aussi la photo de sa pastille (le champ radio de son métaobjet, comme sur la fiche classique), pour la
+  rangée Cadre (retour de Walid du 12/11/2026) ; "" sans photo.
 
   Accepts:
   - product: {Object}
@@ -42,17 +44,24 @@
   "frames": [
       {%- for value in option.values -%}
         {%- assign key = null -%}
+        {%- assign photo = '' -%}
         {%- for frame in product.metafields.painting_options.frames_canvas.value -%}
-          {%- if frame.name == value.name -%}{%- assign key = frame.system.handle -%}{%- break -%}{%- endif -%}
+          {%- if frame.name == value.name -%}
+            {%- assign key = frame.system.handle -%}
+            {%- if frame.radio.value.media.value.src -%}{%- assign photo = frame.radio.value.media.value.src | image_url: width: 500 -%}{%- endif -%}
+            {%- break -%}
+          {%- endif -%}
         {%- endfor -%}
-        [{{ value.name | json }},{{ key | json }}]{%- unless forloop.last -%},{%- endunless -%}
+        [{{ value.name | json }},{{ key | json }},{{ photo | json }}]{%- unless forloop.last -%},{%- endunless -%}
       {%- endfor -%}],
     {%- endif -%}
   {%- endfor -%}
   {%- if is_poster %}
   "frameColors": [
     {%- for frame in product.metafields.painting_options.frames_poster.value -%}
-      [{{ frame.name | json }},{{ frame.system.handle | json }}]{%- unless forloop.last -%},{%- endunless -%}
+      {%- assign photo = '' -%}
+      {%- if frame.radio.value.media.value.src -%}{%- assign photo = frame.radio.value.media.value.src | image_url: width: 500 -%}{%- endif -%}
+      [{{ frame.name | json }},{{ frame.system.handle | json }},{{ photo | json }}]{%- unless forloop.last -%},{%- endunless -%}
     {%- endfor -%}],
   "passe": {{ has_passe_partout }},
   {%- endif %}

@@ -827,8 +827,11 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
   transition: opacity 220ms ease calc(50ms + var(--j) * 24ms), transform 380ms var(--chips-curve) calc(50ms + var(--j) * 24ms);
 }
 .chips-rail.is-open .chips-opt[aria-disabled="true"] { opacity: 0.38; cursor: not-allowed; }
+/* La pastille : sa taille vient du script (--chips-disc, railDiscOf) : 50 px sur un téléphone, moins sur
+   un petit écran, 64 sur ordinateur (retour de Walid du 12/11/2026 : plus grande, pour les photos des
+   cadres, qui la remplissent à 2 px du bord). */
 .chips-disc {
-  display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%;
+  display: grid; place-items: center; width: var(--chips-disc, 40px); height: var(--chips-disc, 40px); border-radius: 50%;
   background: rgba(var(--color-secondary-rgb), 0.85); box-shadow: 0 0 0 0.5px rgba(var(--color-main-rgb), 0.14); transition: box-shadow 220ms ease;
 }
 .chips-swatch { display: block; box-sizing: border-box; }
@@ -928,7 +931,6 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
 .chips.is-desk .chips-rail-options { gap: 4px; }
 .chips.is-desk .chips-rail-note { font-size: 11.5px; }
 .chips.is-desk .chips-opt { gap: 6px; }
-.chips.is-desk .chips-disc { width: 54px; height: 54px; }
 .chips.is-desk .chips-tile { width: 58px; height: 58px; border-radius: 14px; }
 .chips.is-desk .chips-opt-name { font-size: 12.5px; }
 .chips.is-desk .chips-opt-price { min-height: 13px; font-size: 11px; }

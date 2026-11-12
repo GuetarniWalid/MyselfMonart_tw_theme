@@ -201,18 +201,42 @@ test('390 × 844 : l’œuvre plafonne à 254 px et reste au milieu de la scène
   near(safari.cy, 612 / 2 - 27)
 })
 
+// Pastilles de 50 px (64 sur ordinateur) depuis le 12/11/2026 : la rangée a 10 px de plus.
 test('la rangée ouverte : la scène remonte juste ce qu’il faut, la barre ne s’efface que sur le petit écran', () => {
   const se = chipsLayout({ width: 375, height: 615 })
-  assert.deepEqual(railPlacement(se, false), { shift: 22, hidePill: false, top: 427, height: 120 })
-  assert.equal(railPlacement(se, true).shift, 40)
+  assert.deepEqual(railPlacement(se, false), { shift: 32, hidePill: false, top: 417, height: 130 })
+  assert.equal(railPlacement(se, true).shift, 50)
   const safari = chipsLayout({ width: 375, height: 501 })
-  assert.deepEqual(railPlacement(safari, false), { shift: 16, hidePill: true, top: 369, height: 120 })
-  assert.deepEqual(railPlacement(safari, true), { shift: 34, hidePill: true, top: 351, height: 138 })
+  assert.deepEqual(railPlacement(safari, false), { shift: 26, hidePill: true, top: 359, height: 130 })
+  assert.deepEqual(railPlacement(safari, true), { shift: 44, hidePill: true, top: 341, height: 148 })
   const desk = chipsLayout({ width: 1440, height: 748 })
-  assert.deepEqual(railPlacement(desk, false), { shift: 20, hidePill: false, top: 589, height: 147 })
-  assert.deepEqual(railPlacement(desk, true), { shift: 40, hidePill: false, top: 569, height: 167 })
+  assert.deepEqual(railPlacement(desk, false), { shift: 30, hidePill: false, top: 579, height: 157 })
+  assert.deepEqual(railPlacement(desk, true), { shift: 50, hidePill: false, top: 559, height: 177 })
   assert.equal(railPlacement(chipsLayout({ width: 390, height: 792 }), true).shift, 0)
-  assert.equal(maxShift(se), 40)
+  assert.equal(maxShift(se), 50)
+})
+
+/* Retour de Walid du 12/11/2026 : les ronds des rangées grossissent, pour les photos des cadres, sans que
+   la barre d'achat s'efface là où elle restait : la pastille rapetisse un peu sur les petits écrans. La
+   mise en page de face, elle, ne bouge pas (k.disc). */
+test('les ronds des rangées : 50 px sur un téléphone, 64 sur ordinateur, moins là où la place manque, jamais au prix de la barre d’achat', () => {
+  const discOf = (width, height) => chipsLayout({ width, height }).disc
+  assert.equal(discOf(390, 756), 50)
+  assert.equal(discOf(430, 780), 50)
+  assert.equal(discOf(1440, 820), 64)
+  assert.equal(discOf(768, 901), 64)
+  assert.equal(discOf(375, 553), 44) // iPhone SE dans Safari : 50 px effaceraient la barre
+  assert.equal(discOf(360, 640), 47) // six choix de 51 px
+  assert.equal(discOf(320, 480), 41) // six choix de 45 px
+  for (const [width, height] of [[320, 480], [320, 548], [360, 560], [360, 640], [375, 501], [375, 553], [375, 579], [375, 615], [390, 612], [390, 680], [390, 756], [414, 740], [430, 880], [768, 901], [1024, 600], [1440, 748]]) {
+    const L = chipsLayout({ width, height })
+    const before = { ...L, disc: L.k.disc }
+    for (const note of [false, true]) {
+      assert.equal(railPlacement(L, note).hidePill, railPlacement(before, note).hidePill, `${width} × ${height}, note ${note} : la barre d'achat`)
+    }
+    assert.ok(L.disc >= Math.min(L.k.disc, optionWidth(L, 6) - 4) && L.disc <= L.k.discMax, `${width} × ${height} : ${L.disc} px`)
+    if (!L.desk) assert.ok(L.disc <= optionWidth(L, 6) - 4, `${width} × ${height} : le rond tient dans son choix`)
+  }
 })
 
 /* Sur ordinateur, la pilule d'achat est en bas à droite et le panier juste au-dessus d'elle (choix de
@@ -240,8 +264,8 @@ test('ordinateur étroit (768 × 1024) : la rangée ouverte s’arrête au-dessu
 
 test('ordinateur large (1440 × 748) : la pilule est loin de la rangée, rien ne change', () => {
   const desk = chipsLayout({ width: 1440, height: 748, obstacles: deskObstacles(1440, 748, 365) })
-  assert.deepEqual(railPlacement(desk, false), { shift: 20, hidePill: false, top: 589, height: 147 })
-  assert.deepEqual(railPlacement(desk, true), { shift: 40, hidePill: false, top: 569, height: 167 })
+  assert.deepEqual(railPlacement(desk, false), { shift: 30, hidePill: false, top: 579, height: 157 })
+  assert.deepEqual(railPlacement(desk, true), { shift: 50, hidePill: false, top: 559, height: 177 })
   assert.equal(railWidth(desk, 4), 352) // 4 choix de 78 px, 4 px entre eux, 14 px de chaque côté
 })
 
