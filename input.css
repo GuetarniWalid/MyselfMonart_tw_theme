@@ -386,11 +386,15 @@ main-product-blocks .description h3 span {
 }
 /* Sous la scène, son mur se prolonge en fondu vers la page (sections/main-product.liquid) : un petit
    défilement montre le mur, pas une bande blanche sous la pilule d'achat (retour de Walid du 12/11/2026).
-   Le fondu part du bord bas du mur (--wall-shade de la scène, #d3cdc3). */
+   Le fondu part de la couleur du mur de la 3D au bas de l'écran (#dfd9ce, relevée sur son Pixel). */
 .oeuvre-3d-fade {
   height: 96px; pointer-events: none;
-  background: linear-gradient(to bottom, #d3cdc3 0%, rgba(var(--color-secondary-rgb), 1) 100%);
+  background: linear-gradient(to bottom, #dfd9ce 0%, rgba(var(--color-secondary-rgb), 1) 100%);
 }
+/* Tant que le mur touche le bas de l'écran, le fond de la page est celui du mur : Chrome sur Android en
+   peint la barre de gestes, blanche sinon sous le mur (component-oeuvre-3d.js, syncWallBottom). Le body
+   garde son blanc. */
+html.oeuvre-3d-wall-bottom { background-color: #dfd9ce; }
 /* La 3D en place, deux doigts sur la scène zooment l'œuvre, jamais la page (assets/component-oeuvre-3d.js) ;
    un doigt vertical fait toujours défiler la page. Hors de la scène, la page garde son propre zoom. */
 .oeuvre-3d-stage[data-state="3d"] { touch-action: pan-y; }
