@@ -544,30 +544,21 @@ export function frameRing({ hw, hh, profile }) {
    La paroi monte jusqu'au tirage : rien de l'intérieur ne se voit entre elle et le panneau. */
 const CHAMFER = 0.08
 
-/* La baguette des vrais cadres de toile de l'atelier (photos de Picanova, 12/11/2026) : la face avant,
-   au bord extérieur arrondi, tombe par un gradin (la « rainure ») sur un replat plus bas, côté toile,
-   avant la paroi qui descend dans le jour. at : largeur du replat depuis l'intérieur ; drop : hauteur
-   du gradin ; round : rayon du bord extérieur (cm). */
-export const SHADOW_STEP = { at: 0.5, drop: 0.2, round: 0.25 }
-
+/* Toile : la face de la caisse américaine reste plate, sans gradin. Retour de Walid du 12/11/2026 :
+   le gradin des vrais cadres de l'atelier (face, puis replat plus bas côté toile, bord arrondi), essayé
+   le même jour, faisait « plusieurs enchaînements d'épaisseur » ; la forme d'avant lui plaît mieux.
+   Seules les teintes et le fil du bois (FRAMES) suivent les vrais cadres. */
 export function frameProfile(kind, f) {
   const c = CHAMFER
   if (kind === 'toile') {
-    const { at, drop, round } = SHADOW_STEP
-    const arc = round * (1 - Math.SQRT1_2)
     return [
       [-f.gap - CANVAS_CORNER, f.floor, 0.3],
       [-f.gap, f.floor, 0.3],
       [0, f.floor, 0.45],
-      [0, f.depth - drop - c, 0.85],
-      [c, f.depth - drop],
-      [at - c, f.depth - drop, 0.9],
-      [at, f.depth - drop + c],
-      [at, f.depth - c],
-      [at + c, f.depth],
-      [f.face - round, f.depth],
-      [f.face - arc, f.depth - arc],
-      [f.face, f.depth - round],
+      [0, f.depth - c, 0.9],
+      [c, f.depth],
+      [f.face - c, f.depth],
+      [f.face, f.depth - c],
       [f.face, 0],
       [-f.gap, 0],
       [-f.gap, f.floor],

@@ -3,7 +3,7 @@ const test = require('node:test')
 const assert = require('node:assert/strict')
 const {
   artBox, backLayout, backShell, convexHull, curlOutline, curlPoint, curlShape, curlSheet, frameOpening, frameProfile, frameRing,
-  posterBackLayout, posterBoard, stapleRowToCorner, stapleRows, FRAME_PROFILE, POSTER_BACK, SHADOW_STEP,
+  posterBackLayout, posterBoard, stapleRowToCorner, stapleRows, FRAME_PROFILE, POSTER_BACK,
 } = require('../assets/oeuvre-3d-engine.js')
 
 test("vue de près, l'image ne saute pas entre l'arête arrondie et la tranche", () => {
@@ -106,32 +106,23 @@ test('le fond de la caisse passe sous l’angle arrondi de la toile : plus de mu
   }
 })
 
-/* Retour de Walid du 12/11 : le cadre doit être celui que reçoit le client, rainures comprises. La
-   baguette des vrais cadres de l'atelier a un gradin entre sa face avant et un replat plus bas côté
-   toile, et un bord extérieur arrondi ; le jour, le fond et le dos ne changent pas. */
-test('la caisse américaine : la face, le gradin vers le replat, le bord arrondi ; le jour et le dos ne bougent pas', () => {
+/* La face de la caisse américaine reste plate. Retour de Walid du 12/11/2026 : le gradin des vrais
+   cadres de l'atelier, essayé le même jour, faisait « plusieurs enchaînements d'épaisseur » ; il
+   préfère cette forme. Les teintes suivent les vrais cadres (oeuvre-3d-cadres.test.cjs), pas la forme. */
+test('le jour, la lèvre, la face plate et le dos de la caisse ne bougent pas', () => {
   const f = FRAME_PROFILE.toile
   const c = 0.08
-  const { at, drop, round } = SHADOW_STEP
-  const arc = round * (1 - Math.SQRT1_2)
   assert.deepEqual(frameProfile('toile', f).slice(1), [
     [-f.gap, f.floor, 0.3],
     [0, f.floor, 0.45],
-    [0, f.depth - drop - c, 0.85],
-    [c, f.depth - drop],
-    [at - c, f.depth - drop, 0.9],
-    [at, f.depth - drop + c],
-    [at, f.depth - c],
-    [at + c, f.depth],
-    [f.face - round, f.depth],
-    [f.face - arc, f.depth - arc],
-    [f.face, f.depth - round],
+    [0, f.depth - c, 0.9],
+    [c, f.depth],
+    [f.face - c, f.depth],
+    [f.face, f.depth - c],
     [f.face, 0],
     [-f.gap, 0],
     [-f.gap, f.floor],
   ])
-  // Le gradin se voit de face : le replat est plus bas que la face, sur moins de la moitié de la baguette.
-  assert.ok(drop >= 0.15 && at < f.face / 2, `replat de ${at} cm, ${drop} cm plus bas`)
 })
 
 /* Retour de Walid du 11/11 : le poster encadré fait un tour sur lui-même et montre son dos (« derrière,
