@@ -1082,6 +1082,7 @@
         this.zoom.isMoving(now) || this.zoneWeight(now) !== this.zoneMove.to;
       this.chips.setMoving(moving);
       this.chips.setZoomed(this.zoomAway);
+      this.chips.setSwitching(this.director.isActing(now)); // l'acte de la matière efface les légendes
       /* « Retour » : au repos hors du plan de face ; et dès que l'œuvre est zoomée, même pendant qu'un doigt
          la déplace ou qu'elle file sur son élan (il la ramène à ×1). Il s'efface dès qu'elle repart vers ×1.
          Il ne disparaît plus une ou deux secondes à chaque déplacement. */
@@ -1666,6 +1667,7 @@
       this.dataset.state = 'photos';
       this.chips.track(null);
       this.chips.setMoving(false);
+      this.chips.setSwitching(false);
       this.setFront(false);
       this.canvas.classList.replace('opacity-100', 'opacity-0');
       this.canvas.setAttribute('aria-hidden', 'true');

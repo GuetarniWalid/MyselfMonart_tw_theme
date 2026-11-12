@@ -1327,3 +1327,46 @@ test('avec les animations réduites, retoucher une option ne bouge rien', () => 
   assertSameView(view, director.view(11, PORTRAIT), 'le plan reste')
   assert.equal(director.isMoving(11), false)
 })
+
+/* Retour de Walid du 12/11 : le temps de la bascule Toile | Poster, les légendes s'effacent. La page
+   le lit au directeur (isActing) : l'acte de la matière, du toucher à son retour de face, et lui seul. */
+test('l’acte de la matière dure du toucher à son retour de face : coin du poster, tour de la toile, tour sous verre', () => {
+  const cases = [
+    { name: 'coin du poster', from: TOILE, to: POSTER, ms: 3000 },
+    { name: 'tour de la toile', from: POSTER, to: TOILE, ms: 3600 },
+    { name: 'tour du poster encadré', from: { ...TOILE, frame: 'noir' }, to: POSTER_FRAMED, ms: 4000 },
+  ]
+  for (const { name, from, to, ms } of cases) {
+    const director = createDirector({ room: ROOM, product: from })
+    assert.equal(director.isActing(0), false, `${name} : rien au repos`)
+    director.choose('material', to, 1000)
+    for (const t of [1000, 1000 + ms / 2, 1000 + ms - 1]) assert.equal(director.isActing(t), true, `${name} à ${t - 1000} ms`)
+    assert.equal(director.isActing(1000 + ms), false, `${name} : fini`)
+    assert.equal(director.view(1000 + ms, PORTRAIT).shot, 'front', `${name} : revenu de face`)
+  }
+})
+
+test('retoucher la matière rejoue son acte ; une autre option n’en est pas un', () => {
+  const replay = createDirector({ room: ROOM, product: TOILE })
+  replay.choose('material', TOILE, 0)
+  assert.equal(replay.isActing(1800), true, 'Toile retouchée : le tour se rejoue')
+
+  const frame = createDirector({ room: ROOM, product: TOILE })
+  frame.choose('frame', { ...TOILE, frame: 'noir' }, 0)
+  for (const t of [0, 500, 1500]) assert.equal(frame.isActing(t), false, `cadre à ${t} ms`)
+  assert.equal(frame.isStaging(500), true, 'sa mise en scène se joue pourtant')
+
+  const reduced = createDirector({ room: ROOM, product: TOILE, reducedMotion: true })
+  reduced.choose('material', POSTER, 0)
+  assert.equal(reduced.isActing(0), false, 'animations réduites : pas d’acte')
+})
+
+test('un acte interrompu par un autre choix compte jusqu’au bout de son chemin, pas au-delà', () => {
+  const director = choosePoster()
+  director.choose('frame', { ...POSTER, frame: 'noir' }, 1400)
+  assert.equal(director.isActing(1401), true, 'le coin finit de retomber')
+  const later = [...Array(400).keys()].map((i) => 1400 + 10 * i)
+  const end = later.find((t) => !director.isActing(t))
+  assert.ok(end > 1400 && end < 1400 + 3000, `fin de l'acte à ${end} ms`)
+  assert.equal(director.isStaging(end), true, 'le plan du cadre continue sans lui')
+})

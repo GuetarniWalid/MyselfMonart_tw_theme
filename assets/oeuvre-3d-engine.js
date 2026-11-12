@@ -2202,8 +2202,15 @@ export function createDirector({ room, product, poses = null, reducedMotion = fa
     Object.assign(state, { product: nextProduct, group, shot, legs, from })
   }
 
+  /* Un acte de la matière (la toile qui tourne, le coin du poster, le poster encadré qui tourne) prévu
+     ou en cours, jusqu'à son retour de face ; interrompu par un autre choix, il compte jusqu'au bout de
+     son chemin. La page efface les légendes pendant ce temps (chips.setSwitching). */
+  function isActing(at) {
+    return state.legs.some((leg) => ACTS[leg.shot] && at < leg.start + leg.duration)
+  }
+
   // isStaging : une mise en scène ou un acte en cours (le ressort de l'inclinaison n'en est pas une).
-  return { view, choose, grab, drag, release, calmTilt, isMoving, isStaging }
+  return { view, choose, grab, drag, release, calmTilt, isMoving, isStaging, isActing }
 }
 
 /* ==== ZOOM SUR L'ŒUVRE ==== */

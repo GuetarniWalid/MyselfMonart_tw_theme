@@ -454,6 +454,18 @@ test('rangée refermée, bascule, légendes et cote attendent que la 3D revienne
   }
 })
 
+/* Retour de Walid du 12/11 : pendant l'acte de la matière (is-switching, que la page pose tant que le
+   directeur joue l'acte : isActing), légendes, cote et filets s'effacent, leurs plaques gênaient. La
+   bascule reste : c'est elle qu'on vient de toucher. */
+test('le temps de la bascule Toile | Poster, légendes, cote et filets s’effacent ; la bascule reste', () => {
+  const rule = CSS.match(/\.chips\.is-open \.chips-toggle,[^{]*\{[^}]*\}/)[0]
+  for (const chip of ['cote', 'legend']) {
+    assert.match(rule, new RegExp(`\\.chips\\.is-switching \\.chips-${chip}:not\\(:focus-within\\)\\s*[,{]`), `${chip} pendant l'acte`)
+  }
+  assert.match(rule, /\.chips\.is-switching \.chips-marks\s*[,{]/, 'les filets aussi')
+  assert.doesNotMatch(CSS, /\.chips\.is-switching \.chips-(toggle|item)\b/, 'la bascule reste')
+})
+
 test('la plaque dépolie serre le texte sans le déplacer, et ne revient pas pendant le retour de face', () => {
   const label = CSS.match(/\.chips-label \{[^}]*padding[^}]*\}/)[0]
   const pad = label.match(/padding:\s*([\d.]+)px ([\d.]+)px/)

@@ -17,8 +17,9 @@
  * la rangée reste ouverte (retours du 09/11 : on enchaîne les choix). Seul un toucher en dehors, ou
  * Échap, la ferme et ramène l'œuvre de face, puis les légendes, une fois la face retrouvée (railEvent).
  * S'il manque de la place, la scène remonte, et sur un petit écran la barre d'achat s'efface le temps
- * des choix. Hors du plan de face sans rangée ouverte (bascule Toile | Poster, glisser), les
- * légendes prennent une plaque dépolie serrée sur leur texte et les filets s'effacent.
+ * des choix. Hors du plan de face sans rangée ouverte (glisser), les légendes prennent une plaque
+ * dépolie serrée sur leur texte et les filets s'effacent. Le temps de l'acte de la matière (bascule
+ * Toile | Poster), légendes, cote et filets s'effacent ; la bascule reste, sur sa plaque (retour du 12/11).
  *
  * Trois étages, du plus pur au plus concret :
  *   - chipsLayout, railPlacement, toggleOf, legendOf, choicesOf, le cadrage de la 3D (railZone,
@@ -589,6 +590,7 @@
     let back = null; // l'arrière de la boîte de l'œuvre, projeté (filetEnds)
     let face = 1;
     let staged = false;
+    let switching = false; // l'acte de la matière en cours (setSwitching)
     let held = null; // le cadre qu'une taille ou une matière a retiré, en mémoire (pickOf)
     const ids = { rail: (g) => `chips-rail-${g}`, chip: (g) => `chips-chip-${g}` };
 
@@ -1111,6 +1113,15 @@
       setMoving(moving) {
         if (moving !== stage.classList.contains('is-moving')) stage.classList.toggle('is-moving', moving);
       },
+      /* La 3D joue l'acte de la matière (bascule Toile | Poster) : légendes, cote et filets s'effacent le
+         temps du geste, la bascule reste (retour de Walid du 12/11 : leurs plaques gênaient plus
+         qu'elles n'aidaient). Ils reviennent l'acte fini, une fois l'œuvre de face. */
+      setSwitching(acting) {
+        const next = acting || (switching && staged);
+        if (next === switching) return;
+        switching = next;
+        stage.classList.toggle('is-switching', next);
+      },
       /* L'œuvre est zoomée : légendes, filets, bascule et taille s'effacent et ne prennent plus ni le doigt
          ni le focus (la pilule d'achat reste). Elles reviennent à ×1. */
       setZoomed(zoomed) {
@@ -1127,7 +1138,7 @@
         document.removeEventListener('keydown', onKey);
         document.removeEventListener('click', onOutside, true);
         for (const node of [svg, toggle, left, right, cote, closer, ...Object.values(rails), notice, spoken]) node.remove();
-        stage.classList.remove('chips', 'is-desk', 'is-open', 'is-staged', 'is-ready', 'is-settled', 'is-moving', 'is-returning', 'is-zoomed');
+        stage.classList.remove('chips', 'is-desk', 'is-open', 'is-staged', 'is-ready', 'is-settled', 'is-moving', 'is-returning', 'is-switching', 'is-zoomed');
         setPillAway(false);
       },
     };

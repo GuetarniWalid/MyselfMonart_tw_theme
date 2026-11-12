@@ -699,15 +699,22 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
    qui a le focus (Échap la rend à la légende) reste visible. */
 /* L'œuvre zoomée prend toute la scène (is-zoomed, posé par chips.setZoomed) : bascule, légendes, taille
    et filets s'effacent aussi ; la pilule d'achat reste. Ils reviennent à ×1. */
+/* La bascule Toile | Poster : le temps de l'acte de la matière (is-switching, posé par
+   chips.setSwitching), légendes, cote et filets s'effacent, sans leurs plaques (retour de Walid du
+   12/11 : elles gênaient plus qu'elles n'aidaient). La bascule reste : c'est elle qu'on vient de
+   toucher. Ils reviennent l'acte fini, l'œuvre de face ; celle qui a le focus reste visible. */
 .chips.is-open .chips-toggle, .chips.is-open .chips-cote, .chips.is-open .chips-legend,
 .chips.is-returning .chips-toggle:not(:focus-within), .chips.is-returning .chips-cote:not(:focus-within),
 .chips.is-returning .chips-legend:not(:focus-within),
+.chips.is-switching .chips-cote:not(:focus-within), .chips.is-switching .chips-legend:not(:focus-within),
+.chips.is-switching .chips-marks,
 .chips.is-zoomed .chips-item, .chips.is-zoomed .chips-marks { opacity: 0; pointer-events: none; }
 .chips.is-zoomed .chips-item, .chips.is-zoomed .chips-marks { transition: opacity 200ms ease; }
 /* Zoomée, la 3D garde le doigt : il déplace l'œuvre, la page ne défile plus sous lui (dès le toucher
    suivant). À ×1, le canvas reprend touch-pan-y. */
 .chips.is-zoomed .oeuvre-3d-gl { touch-action: none; }
-/* La plaque dépolie hors du plan de face (bascule Toile | Poster, glisser) : sa teinte est un calque
+/* La plaque dépolie hors du plan de face (glisser ; pendant l'acte de la matière, la bascule seule,
+   les légendes s'étant effacées) : sa teinte est un calque
    (::before) qui vient en fondu, au compositeur. Le flou ne se calcule que la 3D arrêtée (is-moving
    posé par la page) : sur une 3D qui bouge, le navigateur le refait à chaque image, et un téléphone
    moyen tombe sous 30 images/s. Sur les légendes et la cote, elle serre le texte (.chips-label) : la
