@@ -347,3 +347,43 @@ test('les autres plans ne montrent aucune pose ; sans poses, le salon reste comm
   assert.equal(view.dims.side, 1)
   assert.deepEqual([front.x, front.y], [ROOM.hang.x, ROOM.hang.minBottom + 20], 'accroché au-dessus du canapé')
 })
+
+/* Retour de Walid du 12/11 : dans la pièce, le papier du contour blanc sortait gris, plus sombre que le
+   mur beige (le montage de l'œuvre n'y laisse aucun blanc plus clair que le mur). Le shader l'éclaire à
+   part (paperPhotographed) ; on refait son calcul, à plat et sans le grain, avec ses propres constantes. */
+const fs = require('node:fs')
+const path = require('node:path')
+const ENGINE = fs.readFileSync(path.join(__dirname, '..', 'assets', 'oeuvre-3d-engine.js'), 'utf8')
+const glslConst = (name) => Number(ENGINE.match(new RegExp(`const float ${name} = ([0-9.]+);`))[1])
+const toLinear = (c) => (c / 255) ** 2.2
+const toSrgb = (v) => Math.round(255 * Math.max(0, v) ** (1 / 2.2))
+const luma = ([r, g, b]) => 0.2126 * r + 0.7152 * g + 0.0722 * b
+function paperOn(wall) {
+  const [TINT, LIFT, KNEE, TOP] = ['PAPER_TINT', 'PAPER_LIFT', 'PAPER_KNEE', 'PAPER_TOP'].map(glslConst)
+  const light = wall.map(toLinear)
+  const y = luma(light)
+  let tone = light.map((l) => (y + (l - y) * TINT) * LIFT)
+  const high = Math.max(...tone)
+  if (high > KNEE) tone = tone.map((t) => (t * (KNEE + (TOP - KNEE) * (1 - Math.exp((KNEE - high) / (TOP - KNEE))))) / high)
+  return tone.map(toSrgb)
+}
+
+test('dans la pièce, le contour blanc paraît plus clair et moins beige que le mur, sans être un blanc pur', () => {
+  // Le mur des poses (POSES.wall), un mur dans l'ombre et un mur au soleil, mesurés sur le banc.
+  for (const wall of [[223, 217, 207], [185, 176, 163], [240, 236, 230]]) {
+    const paper = paperOn(wall)
+    assert.ok(luma(paper) >= luma(wall) + 6, `papier ${paper} pas assez clair sur le mur ${wall}`)
+    assert.ok(paper[0] - paper[2] < wall[0] - wall[2], `papier ${paper} aussi beige que le mur ${wall}`)
+    assert.ok(Math.max(...paper) <= 248, `papier ${paper} : blanc pur`)
+  }
+})
+
+test('dans la pièce, seul le papier du contour change : l’œuvre garde le montage validé par Walid', () => {
+  // Le montage de l'œuvre : contraste 0,94, saturation 0,95, luminosité 0,93, lumière du mur.
+  assert.match(ENGINE, /s = \(s - 0\.5\) \* 0\.94 \+ 0\.5;/)
+  assert.match(ENGINE, /s = mix\(vec3\(dot\(s, vec3\(0\.2126, 0\.7152, 0\.0722\)\)\), s, 0\.95\);/)
+  assert.match(ENGINE, /\* 0\.93 \* wallLightAt\(p\);/)
+  // Le papier n'est éclairé à part que dans la marge du contour, sur la façade.
+  assert.match(ENGINE, /margin = uPasse \* \(1\.0 - inside\) \* vArt;/)
+  assert.match(ENGINE, /lit = mix\(lit, paperPhotographed\(shaded \/ uPaperWhite, vWorldPos\.xy\), margin\);/)
+})

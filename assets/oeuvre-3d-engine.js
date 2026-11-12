@@ -3116,6 +3116,26 @@ const PHOTO_SHAPES = /* glsl */ `
     vec3 c = pow(max(s, 0.0), vec3(2.2)) * 0.93 * wallLightAt(p);
     return c * (1.0 + photoNoise(p) * 0.035);
   }
+  /* Le papier blanc du contour, dans la pièce (retour de Walid du 12/11 : il sortait gris, plus sombre
+     que le mur beige ; l'œuvre, elle, garde son montage). Un papier blanc photographié contre un mur
+     beige paraît plus clair que lui et moins teinté : la lumière du mur à sa place, sa teinte gardée à
+     PAPER_TINT, PAPER_LIFT fois plus haute, puis le grain de la photo. Au-delà de PAPER_KNEE, ses hauts
+     se tassent en douceur vers PAPER_TOP, teinte gardée : ni blanc pur, ni aplat là où la lumière est
+     forte. shade : le modelé du papier (lumière, relief, fil du bord), 1 à plat. */
+  const float PAPER_TINT = 0.4;
+  const float PAPER_LIFT = 1.25;
+  const float PAPER_KNEE = 0.8;
+  const float PAPER_TOP = 0.94;
+  vec3 paperPhotographed(vec3 shade, vec2 p) {
+    vec3 light = wallLightAt(p);
+    vec3 tone = mix(vec3(dot(light, vec3(0.2126, 0.7152, 0.0722))), light, PAPER_TINT) * PAPER_LIFT;
+    float high = max(tone.r, max(tone.g, tone.b));
+    if (high > PAPER_KNEE) {
+      float room = PAPER_TOP - PAPER_KNEE;
+      tone *= (PAPER_KNEE + room * (1.0 - exp((PAPER_KNEE - high) / room))) / high;
+    }
+    return tone * shade * (1.0 + photoNoise(p) * 0.035);
+  }
 `
 
 const ART_FRAGMENT = /* glsl */ `
@@ -3250,6 +3270,7 @@ const ART_FRAGMENT = /* glsl */ `
     vec2 dx = dFdx(vUv);
     vec2 dy = dFdy(vUv);
     vec3 art;
+    float margin = 0.0; // part du papier du contour blanc dans le pixel (la pièce l'éclaire à part)
     if (uPasse <= 0.0) {
       art = sampleArt(vUv, dx, dy);
     } else {
@@ -3260,6 +3281,7 @@ const ART_FRAGMENT = /* glsl */ `
       float inside = coverage(inner.x) * coverage(inner.y);
       vec3 framed = mix(uPaperWhite, sampleArt(cropUv, dx * toCrop, dy * toCrop), inside);
       art = uPasse >= 1.0 ? framed : mix(sampleArt(vUv, dx, dy), framed, uPasse);
+      margin = uPasse * (1.0 - inside) * vArt;
     }
     vec3 base = mix(uBorder, art, vArt);
     vec3 N = normalize(vNormalW);
@@ -3304,7 +3326,9 @@ const ART_FRAGMENT = /* glsl */ `
       float front = step(0.9, N.z);
       float fromEdge = uArtHalf.x - uShadeSide * vFab.x; // distance au bord du côté de l'ombre
       float thread = 1.0 - 0.32 * front * (1.0 - smoothstep(0.0, max(0.12, 1.5 * fwidth(vFab.x)), fromEdge));
-      vec3 lit = photographed(color * threads * relief * thread, vWorldPos.xy);
+      vec3 shaded = color * threads * relief * thread;
+      vec3 lit = photographed(shaded, vWorldPos.xy);
+      if (margin > 0.0) lit = mix(lit, paperPhotographed(shaded / uPaperWhite, vWorldPos.xy), margin);
       color = mix(color, lit, uPoseMix);
     }
     gl_FragColor = vec4(color, 1.0);
