@@ -438,7 +438,6 @@
   const TILE_SIDE = 8192;
   const WHEEL_PAUSE_MS = 300;
   const WHEEL_GLIDE_MS = 160; // un cran de souris glisse vers sa nouvelle échelle
-  const WALL_FADE_PX = 96; // le fondu du mur sous la scène (.oeuvre-3d-fade, input.css)
 
   class Oeuvre3d extends HTMLElement {
     connectedCallback() {
@@ -517,9 +516,6 @@
         onDismiss: () => this.goFront(),
       });
       this.bindPill();
-      window.addEventListener('scroll', this.syncWallBottom, { passive: true });
-      window.addEventListener('resize', this.syncWallBottom, { passive: true });
-      this.syncWallBottom();
       this.resizer = new ResizeObserver(this.onResize);
       this.resizer.observe(this);
       this.measure();
@@ -573,16 +569,6 @@
       return window.Oeuvre3dChips.eur(cents / 100);
     }
 
-    /* La barre de gestes d'Android prend la couleur du fond de la page (Chrome : vu sur le Pixel de Walid
-       le 12/11/2026, une bande blanche sous le mur). Le fond de la page est donc celui du mur tant que le
-       mur touche le bas de l'écran (jusqu'au milieu de son fondu, .oeuvre-3d-fade), celui de la fiche
-       ensuite (input.css, html.oeuvre-3d-wall-bottom). Le body garde son blanc : le contenu ne change pas. */
-    syncWallBottom = () => {
-      const wall = this.getBoundingClientRect().bottom + WALL_FADE_PX / 2 > window.innerHeight;
-      const root = document.documentElement;
-      if (root.classList.contains('oeuvre-3d-wall-bottom') !== wall) root.classList.toggle('oeuvre-3d-wall-bottom', wall);
-    };
-
     // La scène prend tout l'écran sous ce qui la précède (bandeau d'annonce, en-tête) : sa vraie place.
     fitTop() {
       const top = `${Math.round((this.getBoundingClientRect().top + window.scrollY) * 10) / 10}px`;
@@ -603,9 +589,6 @@
       document.removeEventListener('mma:soft-navigation', this.onSoftNavigation);
       document.removeEventListener('mma:cart-count', this.onResize);
       document.removeEventListener('keydown', this.onKey);
-      window.removeEventListener('scroll', this.syncWallBottom);
-      window.removeEventListener('resize', this.syncWallBottom);
-      document.documentElement.classList.remove('oeuvre-3d-wall-bottom');
       if (this.resizer) this.resizer.disconnect();
       cancelAnimationFrame(this.raf);
       clearTimeout(this.restTimer);

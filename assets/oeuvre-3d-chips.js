@@ -1164,7 +1164,19 @@
       spoken.textContent = '';
     }
 
+    /* Le halo des points bat jusqu'au premier toucher d'une option (retour de Walid du 12/11/2026 : on a
+       compris que ce sont des options, et le battement détourne du tableau). Retenu le temps de la visite
+       (sessionStorage) : il ne revient pas sur la fiche suivante. */
+    const KNOWN_KEY = 'mma_oeuvre3d_options_vues';
+    function markKnown() {
+      if (stage.classList.contains('is-known')) return;
+      stage.classList.add('is-known');
+      try { sessionStorage.setItem(KNOWN_KEY, '1'); } catch (e) { /* stockage refusé : la visite seule */ }
+    }
+    try { if (sessionStorage.getItem(KNOWN_KEY)) stage.classList.add('is-known'); } catch (e) { /* idem */ }
+
     function openRail(group, { focus = false } = {}) {
+      markKnown();
       wantPhotos(group);
       hideNotice();
       open = group;
@@ -1376,7 +1388,7 @@
         document.removeEventListener('keydown', onKey);
         document.removeEventListener('click', onOutside, true);
         for (const node of [svg, toggle, left, right, cote, closer, ...Object.values(rails), notice, spoken]) node.remove();
-        stage.classList.remove('chips', 'is-desk', 'is-open', 'is-staged', 'is-ready', 'is-settled', 'is-moving', 'is-returning', 'is-switching', 'is-zoomed');
+        stage.classList.remove('chips', 'is-desk', 'is-open', 'is-staged', 'is-ready', 'is-settled', 'is-moving', 'is-returning', 'is-switching', 'is-zoomed', 'is-known');
         setPillAway(false);
       },
     };

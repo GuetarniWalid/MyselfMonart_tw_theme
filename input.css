@@ -384,17 +384,6 @@ main-product-blocks .description h3 span {
   background: radial-gradient(70% 60% at 40% 38%, #e5dfd4 0%, var(--wall) 55%, var(--wall-shade) 100%);
   color: var(--scene-ink);
 }
-/* Sous la scène, son mur se prolonge en fondu vers la page (sections/main-product.liquid) : un petit
-   défilement montre le mur, pas une bande blanche sous la pilule d'achat (retour de Walid du 12/11/2026).
-   Le fondu part de la couleur du mur de la 3D au bas de l'écran (#dfd9ce, relevée sur son Pixel). */
-.oeuvre-3d-fade {
-  height: 96px; pointer-events: none;
-  background: linear-gradient(to bottom, #dfd9ce 0%, rgba(var(--color-secondary-rgb), 1) 100%);
-}
-/* Tant que le mur touche le bas de l'écran, le fond de la page est celui du mur : Chrome sur Android en
-   peint la barre de gestes, blanche sinon sous le mur (component-oeuvre-3d.js, syncWallBottom). Le body
-   garde son blanc. */
-html.oeuvre-3d-wall-bottom { background-color: #dfd9ce; }
 /* La 3D en place, deux doigts sur la scène zooment l'œuvre, jamais la page (assets/component-oeuvre-3d.js) ;
    un doigt vertical fait toujours défiler la page. Hors de la scène, la page garde son propre zoom. */
 .oeuvre-3d-stage[data-state="3d"] { touch-action: pan-y; }
@@ -695,7 +684,9 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
   position: absolute; left: -5px; top: -5px; width: 10px; height: 10px; border-radius: 50%;
   background: rgb(var(--color-terra-rgb)); pointer-events: none; opacity: 0;
 }
-.chips.is-settled:not(.is-open):not(.is-returning):not(.is-switching):not(.is-zoomed):not(.is-staged) .chips-pulse {
+/* Seulement avant le premier toucher d'une option (is-known, posé par chips.markKnown) : retour de Walid du
+   12/11/2026, ensuite le battement détourne du tableau. */
+.chips.is-settled:not(.is-known):not(.is-open):not(.is-returning):not(.is-switching):not(.is-zoomed):not(.is-staged) .chips-pulse {
   animation: chips-pulse 2000ms cubic-bezier(0, 0, 0.2, 1) calc(400ms + var(--i) * 300ms) infinite;
 }
 @keyframes chips-pulse {

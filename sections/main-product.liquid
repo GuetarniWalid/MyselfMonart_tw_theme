@@ -61,10 +61,6 @@
        au défilement. La pilule d'achat est rendue avec elle. Le sélecteur de la fiche reste dans la page,
        caché : les chips cochent ses radios (variante, prix, propriétés de ligne, événement de choix). {%- endcomment -%}
     {% render 'oeuvre-3d-stage', product: product, start_from: section.settings.start_from_media %}
-    {%- comment -%} Le mur de la scène se prolonge sous elle, en fondu vers la page (retour de Walid du
-       12/11/2026, vu sur son Pixel) : au moindre défilement, le blanc de la fiche montait sous la pilule
-       d'achat comme un « container blanc » en bas de l'écran. {%- endcomment -%}
-    <div class="oeuvre-3d-fade" aria-hidden="true" data-allow-empty></div>
   {% elsif product.template_suffix == "tapestry" %}
     <tapestry-product-carousel>
       <div class="md:sticky 2md:top-[120px] relative md:max-w-[700px]">

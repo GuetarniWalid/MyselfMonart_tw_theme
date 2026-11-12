@@ -525,10 +525,11 @@ test('rangée ouverte, toutes les légendes s’effacent, la touchée comprise, 
   assert.match(rule[0], /opacity:\s*0;\s*pointer-events:\s*none/)
   assert.doesNotMatch(CSS, /aria-expanded="false"\]/, 'la légende touchée ne reste plus')
   /* Rangée ouverte, plus de pulsation (retour du 10/11). Le halo des points (retour du 12/11/2026 :
-     montrer que les légendes sont des options) ne bat que dans la vue générale. */
+     montrer que les légendes sont des options) ne bat que dans la vue générale, et seulement avant le
+     premier toucher d'une option (is-known). */
   const pulsing = [...CSS.matchAll(/([^{}]*)\{[^{}]*animation:\s*chips-pulse/g)].map((m) => m[1])
   assert.equal(pulsing.length, 1, 'un seul endroit fait battre le halo')
-  for (const state of ['is-open', 'is-returning', 'is-switching', 'is-zoomed', 'is-staged']) {
+  for (const state of ['is-known', 'is-open', 'is-returning', 'is-switching', 'is-zoomed', 'is-staged']) {
     assert.ok(pulsing[0].includes(`:not(.${state})`), `le halo se tait (${state})`)
   }
   assert.match(CSS, /prefers-reduced-motion: reduce\)\s*\{\s*\.chips \.chips-pulse \{ animation: none !important; \}/, 'moins d’animations : pas de battement')
