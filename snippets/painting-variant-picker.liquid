@@ -154,7 +154,15 @@
                 {%- endfor -%}
             {%- else -%}
             {%- for value in option.values -%}
-                {% if value.available %}
+                {%- comment -%} Chaque valeur que la boutique vend est rendue, quelle que soit la variante de départ
+                   (retour de Walid du 12/11/2026). `value.available` ne compte que les variantes compatibles avec
+                   le choix en cours : une fiche ouverte sur le 90 × 120 n'avait aucun cadre, une fiche ouverte
+                   avec un cadre n'avait pas de 90 × 120, et la fiche 3D, qui coche ces boutons, ne trouvait pas
+                   le cadre touché (« le cadre ne s'applique pas »). Ce qui va avec le choix en cours, le script
+                   le règle (main-product.js : updateOptionAvailability, mmaMoveToFramedSize). {%- endcomment -%}
+                {%- assign option_key = 'option' | append: option.position -%}
+                {%- assign value_sold = product.variants | where: option_key, value.name | where: 'available' | size -%}
+                {% if value_sold > 0 %}
                     {%- comment -%} Clé de rendu STABLE et indépendante de la langue pour le visualiseur 3D
                        (assets/component-perspective-canvas.js) : le handle du métaobjet bordure/cadre
                        (ex. « bordure-noire », « cadre-argent-ancien », « sans-cadre ») ne change jamais

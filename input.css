@@ -384,6 +384,13 @@ main-product-blocks .description h3 span {
   background: radial-gradient(70% 60% at 40% 38%, #e5dfd4 0%, var(--wall) 55%, var(--wall-shade) 100%);
   color: var(--scene-ink);
 }
+/* Sous la scène, son mur se prolonge en fondu vers la page (sections/main-product.liquid) : un petit
+   défilement montre le mur, pas une bande blanche sous la pilule d'achat (retour de Walid du 12/11/2026).
+   Le fondu part du bord bas du mur (--wall-shade de la scène, #d3cdc3). */
+.oeuvre-3d-fade {
+  height: 96px; pointer-events: none;
+  background: linear-gradient(to bottom, #d3cdc3 0%, rgba(var(--color-secondary-rgb), 1) 100%);
+}
 /* La 3D en place, deux doigts sur la scène zooment l'œuvre, jamais la page (assets/component-oeuvre-3d.js) ;
    un doigt vertical fait toujours défiler la page. Hors de la scène, la page garde son propre zoom. */
 .oeuvre-3d-stage[data-state="3d"] { touch-action: pan-y; }
