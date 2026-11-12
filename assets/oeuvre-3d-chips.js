@@ -917,10 +917,10 @@
     }
     /* Le choix d'une légende ou de la cote dans sa colonne, chevron compris (legendFit) : coupé à un
        espace (is-wrapped), ou rapetissé (--chips-legend-k). Mesuré à la taille normale de sa police. Le
-       texte peut mordre sur la marge du côté de l'écran, jusqu'à 2 px du bord (EDGE_SLACK) : la colonne
-       garde 4 px de marge et 4 px de retrait de ce côté. */
+       texte peut mordre sur le retrait du côté de l'écran, jusqu'à 4 px du bord (EDGE_SLACK) : la colonne
+       garde 4 px de marge et 4 px de retrait de ce côté, et 6 px côté œuvre. */
     const CHEVRON_EM = 0.72; // le chevron (0,6 em) et son écart (0,12 em)
-    const EDGE_SLACK = 6;
+    const EDGE_SLACK = 4;
     function fitLegend(button) {
       if (!L) return;
       const value = button.querySelector('.chips-value');

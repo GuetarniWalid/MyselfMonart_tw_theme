@@ -786,8 +786,10 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
   -webkit-tap-highlight-color: transparent; touch-action: manipulation;
 }
 .chips-legend { justify-content: flex-end; gap: 4px; border-radius: 12px; }
-.chips-legend.is-left { align-items: flex-end; text-align: right; padding: 0 8px 6px 4px; }
-.chips-legend.is-right { align-items: flex-start; text-align: left; padding: 0 4px 6px 8px; }
+/* 6 px de retrait du côté de l'œuvre (8 avant le chevron) : le choix et son chevron gardent autant d'air
+   côté œuvre que côté écran (legendFit les laisse mordre de 4 px sur la marge de l'écran). */
+.chips-legend.is-left { align-items: flex-end; text-align: right; padding: 0 6px 6px 4px; }
+.chips-legend.is-right { align-items: flex-start; text-align: left; padding: 0 4px 6px 6px; }
 .chips-cat {
   font: 600 9px/1 var(--chips-font); letter-spacing: 0.12em; text-transform: uppercase;
   color: var(--chips-muted); white-space: nowrap;
