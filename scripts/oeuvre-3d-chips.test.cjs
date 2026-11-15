@@ -336,21 +336,45 @@ test('le design reste tel quel tant que les noms tiennent : « Chêne vieilli »
 })
 
 /* Le choix d'une légende et son chevron tiennent dans la colonne (retour du 12/11/2026 : « Chêne vieilli »
-   sortait de l'écran). Largeurs d'essai : 6 px par lettre ; le chevron et son écart : 11 px. */
+   sortait de l'écran). Largeurs d'essai : 6 px par lettre ; le chevron et son écart : 11,5 px (7,5 et 4,
+   le dessin de la maquette du 15/11/2026), qui ne rapetissent pas avec la police. */
 test('une légende tient dans sa colonne : sur une ligne, sinon coupée à un espace, sinon rapetissée', () => {
   const measure = (text) => text.length * 6
-  assert.deepEqual(legendFit('Aucun', 50, measure, 11), { wrap: false, scale: 1 }) // 30 + 11
-  assert.deepEqual(legendFit('Chêne vieilli', 54, measure, 11), { wrap: true, scale: 1 }) // « Chêne » 30, « vieilli » 42 + 11
-  assert.deepEqual(legendFit('Chêne vieilli', 50, measure, 11), { wrap: true, scale: 0.94 }) // un peu plus étroit : coupé et rapetissé
-  // Un mot seul trop large rapetisse, jamais sous les 7/10.
-  const fit = legendFit('Notenhout', 50, measure, 11) // 54 + 11
+  assert.deepEqual(legendFit('Aucun', 50, measure, 11.5), { wrap: false, scale: 1 }) // 30 + 11,5
+  assert.deepEqual(legendFit('Chêne vieilli', 54, measure, 11.5), { wrap: true, scale: 1 }) // « Chêne » 30, « vieilli » 42 + 11,5
+  assert.deepEqual(legendFit('Chêne vieilli', 50, measure, 11.5), { wrap: true, scale: 0.91 }) // un peu plus étroit : coupé et rapetissé
+  // Le chevron suit le dernier mot : la première ligne, sans lui, a toute la colonne.
+  assert.deepEqual(legendFit('Grandeur ville', 45, measure, 11.5), { wrap: true, scale: 0.93 }) // « Grandeur » 48 > 45 ; « ville » 30 + 11,5
+  // Un mot seul trop large rapetisse : le texte seul, le chevron garde sa taille.
+  const fit = legendFit('Notenhout', 50, measure, 11.5) // 54 + 11,5
   assert.equal(fit.wrap, false)
-  assert.ok(fit.scale < 1 && fit.scale >= 0.76 && 65 * fit.scale <= 50, `police à ${fit.scale}`)
-  assert.equal(legendFit('Schattenfugenrahmenweiß', 50, measure, 11).scale, 0.7)
-  // Coupé ET rapetissé : « Roble envejecido » (« envejecido » 60 + 11 > 50).
-  const both = legendFit('Roble envejecido', 50, measure, 11)
+  assert.ok(fit.scale < 1 && fit.scale >= 0.7 && 54 * fit.scale + 11.5 <= 50, `police à ${fit.scale}`)
+  // Jamais sous les 6/10, même pour un mot qui ne tiendrait pas.
+  assert.equal(legendFit('Schattenfugenrahmenweiß', 50, measure, 11.5).scale, 0.6)
+  // Coupé ET rapetissé : « Roble envejecido » (« envejecido » 60 + 11,5 > 50).
+  const both = legendFit('Roble envejecido', 50, measure, 11.5)
   assert.equal(both.wrap, true)
-  assert.ok(71 * both.scale <= 50, `police à ${both.scale}`)
+  assert.ok(60 * both.scale + 11.5 <= 50 && both.scale >= 0.6, `police à ${both.scale}`)
+})
+
+/* Les mots les plus longs des cinq langues, mesurés en Albert Sans 600 à 13,5 px dans Chrome le 15/11/2026
+   (bordures à gauche, cadres à droite), tiennent dans leur colonne avec le chevron de 11,5 px, du petit
+   téléphone au 393 px : jamais au-delà de la marge de 4 px du bord de l'écran. */
+const LONG_WORDS = { Gespiegelt: 67.81, Gevouwen: 65.76, Nussbaum: 64.93, Stretched: 60.6, 'Chêne vieilli': 77.26, 'Chêne': 40.62, vieilli: 32.86 }
+test('le chevron fixe ne fait jamais sortir une légende de l’écran, même en allemand sur 320 px', () => {
+  const measure = (size) => (text) => (LONG_WORDS[text] * size) / 13.5
+  for (const width of [320, 360, 375, 390, 393]) {
+    const L = chipsLayout({ width, height: 800 })
+    const size = L.type.value
+    const rooms = { left: L.legends.left.w - 4 - 6 + 4, right: L.legends.right.w - 6 - 4 + 4 }
+    for (const [side, text] of [['left', 'Gespiegelt'], ['left', 'Gevouwen'], ['left', 'Stretched'], ['right', 'Nussbaum'], ['right', 'Chêne vieilli']]) {
+      const fit = legendFit(text, rooms[side], measure(size), 11.5)
+      const m = (t) => measure(size)(t) * fit.scale
+      const used = fit.wrap ? Math.max(m('Chêne'), m('vieilli') + 11.5) : m(text) + 11.5
+      assert.ok(used <= rooms[side], `${width} px, ${text} : ${used.toFixed(1)} > ${rooms[side]}`)
+      assert.ok(fit.scale >= 0.6, `${width} px, ${text} : police à ${fit.scale}`)
+    }
+  }
 })
 
 test('un nom trop long élargit d’abord les choix, puis rapetisse les noms sur un petit téléphone', () => {

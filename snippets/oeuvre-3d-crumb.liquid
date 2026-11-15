@@ -7,6 +7,9 @@
   terracotta marque la page en cours. Ouvrir, refermer : assets/component-oeuvre-3d-crumb.js.
   Le chemin est celui de sections/breadcrumb.liquid, qui rend ce snippet avec sa liste JSON-LD : tous
   les liens restent dans la page, même repliés (référencement).
+  Le chevron est tracé en deux branches qui partent de sa pointe : celui qui ouvre le chemin les replie
+  en tiret tant que le chemin est ouvert (input.css, 15/11/2026), comme ceux des légendes de la scène
+  (assets/oeuvre-3d-chips.js). Le tiret seul ne sert qu'aux animations réduites, en fondu.
 
   Accepts:
   - names: {Array} les noms du chemin, de l'accueil à l'œuvre
@@ -21,8 +24,8 @@
   assign parent_name = names[parent_index]
   assign parent_url = urls[parent_index]
 -%}
-{%- capture crumb_chevron -%}
-  <svg class="oeuvre-3d-crumb-chevron" width="7.5" height="5" viewBox="0 0 7.5 5" fill="none" aria-hidden="true" focusable="false"><path d="M.24 1.09 3.75 3.55 7.26 1.09" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg>
+{%- capture crumb_branches -%}
+  <path class="oeuvre-3d-crumb-branch" d="M3.75 3.55.75 1.45" pathLength="1"/><path class="oeuvre-3d-crumb-branch" d="M3.75 3.55 6.75 1.45" pathLength="1"/>
 {%- endcapture -%}
 <script src="{{ 'component-oeuvre-3d-crumb.js' | asset_url }}" defer="defer"></script>
 <oeuvre-3d-crumb class="oeuvre-3d-crumb">
@@ -30,7 +33,7 @@
   <nav class="oeuvre-3d-crumb-nav" aria-label="{{ 'sections.mma.breadcrumb_nav' | t }}">
     <div class="oeuvre-3d-crumb-bar">
       <a class="oeuvre-3d-crumb-parent" href="{{ parent_url }}" aria-label="{{ 'sections.mma.breadcrumb_back_to' | t: name: parent_name }}">
-        {{- crumb_chevron -}}
+        <svg class="oeuvre-3d-crumb-chevron" width="7.5" height="5" viewBox="0 0 7.5 5" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" aria-hidden="true" focusable="false">{{ crumb_branches }}</svg>
         <span class="oeuvre-3d-crumb-name">{{ parent_name }}</span>
       </a>
       <span class="oeuvre-3d-crumb-rule" data-allow-empty aria-hidden="true"></span>
@@ -41,7 +44,10 @@
         aria-expanded="false"
         aria-controls="Oeuvre3dCrumbPath"
         aria-label="{{ 'sections.mma.breadcrumb_show_path' | t }}">
-        {{- crumb_chevron -}}
+        <svg class="oeuvre-3d-crumb-chevron" width="7.5" height="5" viewBox="0 0 7.5 5" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" aria-hidden="true" focusable="false">
+          {{- crumb_branches -}}
+          <path class="oeuvre-3d-crumb-dash" d="M1.375 2.5h4.75"/>
+        </svg>
       </button>
     </div>
     <div class="oeuvre-3d-crumb-panel" id="Oeuvre3dCrumbPath">

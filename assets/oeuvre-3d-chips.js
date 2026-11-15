@@ -38,6 +38,7 @@
 
   const DESK_MIN = 720; // largeur de scène à partir de laquelle on passe à la mise en page d'ordinateur
   const NB = ' '; // espace fine insécable, entre les chiffres et autour du « × »
+  const WJ = '\u2060'; // gluon : jamais de retour à la ligne entre le choix et son chevron
   const REF = { w: 242, h: 323 }; // le tableau 3:4 de la maquette, de face, à l'échelle 1 (px)
 
   /* Réglages du design, téléphone et ordinateur (buildScreen, layoutPhone, layoutDesk du fichier v2).
@@ -180,21 +181,27 @@
   const maxShift = (L) => railPlacement(L, true).shift;
 
   /* Le choix d'une légende (ou de la cote) tient dans sa colonne, chevron compris (extra) : sur une ligne ;
-     sinon sur deux, coupé à un espace (« Chêne / vieilli ») ; sinon la police rapetisse, aux 7/10 au
+     sinon sur deux, coupé à un espace (« Chêne / vieilli ») ; sinon la police rapetisse, aux 6/10 au
      plus. Le 12/11/2026, « Chêne vieilli » dépassait du bord de l'écran sur un téléphone. measure(texte) :
-     sa largeur à la taille normale, en px ; room : la largeur de la colonne. */
-  function legendFit(text, room, measure, extra = 0, least = 0.7) {
-    const one = measure(text) + extra;
-    if (one <= room) return { wrap: false, scale: 1 };
+     sa largeur à la taille normale, en px ; room : la largeur de la colonne ; extra : le chevron et son
+     écart, en px. Depuis le 15/11/2026, ils ne rapetissent pas avec la police (7,5 px et 4 px, le dessin
+     de la maquette) : seul le texte compte dans l'échelle. Le chevron suit le dernier mot (.chips-value) :
+     sur deux lignes, seule la seconde le porte. Avec lui, un long mot seul (« Gespiegelt », « Nussbaum »,
+     « Gevouwen ») demande 0,66 sur un téléphone de 393 px ou moins : le plancher passe de 7/10 à 6/10,
+     un texte plus petit plutôt qu'un texte au bord de l'écran. */
+  function legendFit(text, room, measure, extra = 0, least = 0.6) {
+    const one = measure(text);
+    if (one + extra <= room) return { wrap: false, scale: 1 };
+    const single = (room - extra) / one;
     const words = String(text).split(' ');
-    let two = Infinity;
+    let two = 0; // la plus grande échelle d'une coupe, la meilleure
     for (let i = 1; i < words.length; i += 1) {
-      two = Math.min(two, Math.max(measure(words.slice(0, i).join(' ')), measure(words.slice(i).join(' ')) + extra));
+      two = Math.max(two, Math.min(room / measure(words.slice(0, i).join(' ')), (room - extra) / measure(words.slice(i).join(' '))));
     }
-    const wrap = two < one;
-    const need = Math.min(one, two);
-    if (need <= room) return { wrap, scale: 1 };
-    return { wrap, scale: Math.max(least, Math.floor((room / need) * 100) / 100) };
+    const wrap = two > single;
+    const scale = Math.max(single, two);
+    if (scale >= 1) return { wrap, scale: 1 };
+    return { wrap, scale: Math.max(least, Math.floor(scale * 100) / 100) };
   }
 
   // La part d'un choix sur un téléphone : toute la rangée partagée entre ses choix, jamais moins de 44 px.
@@ -720,14 +727,18 @@
 
     /* Légendes et cote : la boîte du bouton est la cible du doigt ; le texte et sa plaque dépolie
        (.chips-label) la serrent (retour de Walid du 10/11 : trop de marge autour du texte). Un chevron
-       suit le choix (retour du 12/11/2026 : un client ne voyait pas que ce sont des options) ; il
-       s'efface quand on touche l'option et revient avec la vue générale (input.css). */
-    const chevron = () => el('svg', { class: 'chips-chevron', viewBox: '0 0 16 16', fill: 'none', stroke: 'currentColor', 'stroke-width': 2.6, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true', focusable: 'false' }, [
-      el('path', { d: 'M5.5 2.75 10.75 8 5.5 13.25' }),
+       suit le choix (retour du 12/11/2026 : un client ne voyait pas que ce sont des options) ; il se
+       replie et s'efface quand on touche l'option, et revient en se dépliant avec la vue générale
+       (input.css). Depuis le 15/11/2026, celui de la maquette, comme le fil d'Ariane : 7,5 × 5 px, trait
+       de 1,25 px, en deux branches qui partent de la pointe (le pli les couche, .chips-branch). */
+    const chevron = () => el('svg', { class: 'chips-chevron', width: 7.5, height: 5, viewBox: '0 0 7.5 5', fill: 'none', stroke: 'currentColor', 'stroke-width': 1.25, 'stroke-linecap': 'round', 'aria-hidden': 'true', focusable: 'false' }, [
+      el('path', { class: 'chips-branch', d: 'M3.75 3.55.75 1.45', pathLength: 1 }),
+      el('path', { class: 'chips-branch', d: 'M3.75 3.55 6.75 1.45', pathLength: 1 }),
     ]);
+    // Le chevron tient au dernier mot du choix (WJ) : sur deux lignes, il suit « vieilli », à 4 px.
     const label = (cat) => el('span', { class: 'chips-label chips-plate' }, [
       el('span', { class: 'chips-cat', ...(cat ? { text: cat } : {}) }),
-      el('span', { class: 'chips-value' }, [el('span', { class: 'chips-value-text' }), chevron()]),
+      el('span', { class: 'chips-value' }, [el('span', { class: 'chips-value-text' }), WJ, chevron()]),
     ]);
     const left = el('button', { type: 'button', class: 'chips-legend chips-item is-left', 'aria-expanded': 'false', style: '--i: 1' }, [label()]);
     const right = el('button', { type: 'button', class: 'chips-legend chips-item is-right', 'aria-expanded': 'false', style: '--i: 2' }, [label()]);
@@ -923,7 +934,10 @@
        espace (is-wrapped), ou rapetissé (--chips-legend-k). Mesuré à la taille normale de sa police. Le
        texte peut mordre sur le retrait du côté de l'écran, jusqu'à 4 px du bord (EDGE_SLACK) : la colonne
        garde 4 px de marge et 4 px de retrait de ce côté, et 6 px côté œuvre. */
-    const CHEVRON_EM = 0.72; // le chevron (0,6 em) et son écart (0,12 em)
+    /* Le chevron (7,5 px) et son écart (4 px), à toutes les tailles de police ; sur ordinateur, 1,2 fois plus
+       grands, comme les choix (17 px au lieu de 14) : 9 et 5 px (input.css, .chips.is-desk .chips-chevron). */
+    const CHEVRON_PX = 11.5;
+    const CHEVRON_PX_DESK = 14;
     const EDGE_SLACK = 4;
     function fitLegend(button) {
       if (!L) return;
@@ -936,7 +950,7 @@
       const box = getComputedStyle(button);
       const slack = button === cote ? 0 : EDGE_SLACK;
       const room = button.clientWidth - parseFloat(box.paddingLeft) - parseFloat(box.paddingRight) + slack;
-      const fit = legendFit(button.querySelector('.chips-value-text').textContent, room, (t) => measure.measureText(t).width, size * CHEVRON_EM);
+      const fit = legendFit(button.querySelector('.chips-value-text').textContent, room, (t) => measure.measureText(t).width, L.desk ? CHEVRON_PX_DESK : CHEVRON_PX);
       if (button.style.getPropertyValue('--chips-legend-k') !== String(fit.scale)) button.style.setProperty('--chips-legend-k', String(fit.scale));
       if (button.classList.contains('is-wrapped') !== fit.wrap) button.classList.toggle('is-wrapped', fit.wrap);
     }

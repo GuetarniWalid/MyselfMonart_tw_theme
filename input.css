@@ -533,7 +533,9 @@ main-product-blocks .description h3 span {
   background: none;
   cursor: pointer;
 }
-/* Le chevron des chips de la maquette : 7,5 × 5 px, trait de 1,25 px, branches à 35°. */
+/* Le chevron des chips de la maquette : 7,5 × 5 px, trait de 1,25 px, branches à 35°, bouts ronds. Le
+   même que celui des légendes et de la cote (.chips-chevron), en deux branches qui partent de la pointe
+   (.oeuvre-3d-crumb-branch) : leurs règles communes sont plus bas, avec le pli. */
 .oeuvre-3d-crumb-chevron {
   display: block;
   flex: 0 0 auto;
@@ -544,15 +546,56 @@ main-product-blocks .description h3 span {
 .oeuvre-3d-crumb-parent .oeuvre-3d-crumb-chevron {
   rotate: 90deg;
 }
-/* Il plonge comme celui des chips (maquette 5a) : il descend vers le chemin qui s'ouvre et s'y fond en
-   300 ms, puis remonte avec le léger rebond de la courbe du site, en 520 ms. */
-.oeuvre-3d-crumb-toggle .oeuvre-3d-crumb-chevron {
-  transition: translate 520ms var(--anim-motion) 80ms, opacity 200ms ease 80ms;
+/* Chemin ouvert, ses deux branches se replient en un tiret de 6 px (la piste 5b de la maquette) : il reste
+   un signe calme sous le doigt, qui dit « refermer » sans se retourner. Le pli répond tout de suite au
+   toucher, en 280 ms ; le chemin refermé, le chevron se déplie en 480 ms, 60 ms après, avec le léger
+   rebond de la courbe du site. Le 15/11/2026, Walid trouvait le plongeon d'avant « pas premium,
+   bizarre, un peu trop grossier » ; le demi-tour était refusé depuis le 11/11. */
+.oeuvre-3d-crumb-toggle .oeuvre-3d-crumb-branch {
+  transition: transform 480ms var(--anim-motion) 60ms, stroke-dashoffset 480ms var(--anim-motion) 60ms;
 }
-.oeuvre-3d-crumb[open] .oeuvre-3d-crumb-toggle .oeuvre-3d-crumb-chevron {
-  translate: 0 12.2px;
+.oeuvre-3d-crumb[open] .oeuvre-3d-crumb-toggle .oeuvre-3d-crumb-branch {
+  transition: transform 280ms var(--anim-motion), stroke-dashoffset 280ms var(--anim-motion);
+}
+/* Le tiret d'un seul trait : il ne paraît, en fondu, que pour qui demande moins d'animations (plus bas). */
+.oeuvre-3d-crumb-dash {
   opacity: 0;
-  transition: translate 300ms cubic-bezier(0.5, 0, 0.75, 0), opacity 130ms linear 170ms;
+}
+/* Le pli, commun au chevron de la capsule et à ceux des légendes et de la cote (.chips-branch, plus bas
+   leurs moments). Chaque branche part de la pointe et pivote sur elle (sa propre boîte) : les deux
+   restent jointes pendant tout le geste, rien ne se croise ni ne s'épaissit (les branches qui tournaient
+   sur leur milieu, comme dans la maquette, se chevauchaient en nœud à mi-course). Son trait est un tiret
+   deux fois plus long qu'elle (pathLength 1) : décalé de 0,5, il la couvre tout entière ; de 1,35, il
+   n'en garde que les 65 % côté pointe. Un tiret plutôt qu'une échelle : les bouts restent ronds et le
+   trait garde son 1,25 px. Que des rotations, des translations et un tiret, que Safari anime aussi (pas
+   le d du tracé) ; rien n'est agrandi ni flouté : le trait reste net à chaque image, en 2x comme en 3x
+   (vérifié image par image sur le banc). */
+.oeuvre-3d-crumb-branch,
+.chips-branch {
+  transform-box: fill-box;
+  stroke-dasharray: 2 2;
+  stroke-dashoffset: 0.5;
+}
+.oeuvre-3d-crumb-branch:first-child,
+.chips-branch:first-child {
+  transform-origin: 100% 100%;
+}
+.oeuvre-3d-crumb-branch:nth-child(2),
+.chips-branch:nth-child(2) {
+  transform-origin: 0 100%;
+}
+/* Plié : chaque branche se couche, raccourcie à 2,4 px, et remonte de 1,05 px. Le tiret, 6 px de bout en
+   bout, se pose au milieu de la boîte, là où était le chevron : sur la hauteur des minuscules. Les
+   chips sont pliés tant qu'ils ne sont pas affichés : ils arrivent en se dépliant. */
+.oeuvre-3d-crumb[open] .oeuvre-3d-crumb-toggle .oeuvre-3d-crumb-branch:first-child,
+.chips-branch:first-child {
+  transform: translateY(-1.05px) rotate(-35deg);
+  stroke-dashoffset: 1.35;
+}
+.oeuvre-3d-crumb[open] .oeuvre-3d-crumb-toggle .oeuvre-3d-crumb-branch:nth-child(2),
+.chips-branch:nth-child(2) {
+  transform: translateY(-1.05px) rotate(35deg);
+  stroke-dashoffset: 1.35;
 }
 .oeuvre-3d-crumb-parent:active,
 .oeuvre-3d-crumb-toggle:active,
@@ -690,7 +733,8 @@ main-product-blocks .description h3 span {
 .shopify-section:has(+ .shopify-section .oeuvre-3d-stage[data-state="photos"]) > .oeuvre-3d-crumb .oeuvre-3d-crumb-name {
   max-width: calc(100vw - 232px);
 }
-/* Moins d'animations : des fondus seulement, rien ne glisse ni ne plonge. */
+/* Moins d'animations : des fondus seulement, rien ne glisse ni ne se plie. Le chevron reste entier : ses
+   branches s'effacent pendant que le tiret d'un seul trait paraît à leur place, puis l'inverse. */
 @media (prefers-reduced-motion: reduce) {
   .oeuvre-3d-crumb-name {
     animation: none;
@@ -698,10 +742,24 @@ main-product-blocks .description h3 span {
   .oeuvre-3d-crumb .oeuvre-3d-crumb-nav,
   .oeuvre-3d-crumb .oeuvre-3d-crumb-panel,
   .oeuvre-3d-crumb .oeuvre-3d-crumb-thread,
-  .oeuvre-3d-crumb .oeuvre-3d-crumb-path > li,
-  .oeuvre-3d-crumb .oeuvre-3d-crumb-toggle .oeuvre-3d-crumb-chevron {
+  .oeuvre-3d-crumb .oeuvre-3d-crumb-path > li {
     translate: none !important;
     transform: none !important;
+  }
+  .oeuvre-3d-crumb .oeuvre-3d-crumb-toggle .oeuvre-3d-crumb-branch {
+    transform: none !important;
+    stroke-dashoffset: 0.5 !important;
+  }
+  .oeuvre-3d-crumb-toggle .oeuvre-3d-crumb-branch,
+  .oeuvre-3d-crumb-dash {
+    transition: opacity 200ms ease;
+  }
+  .oeuvre-3d-crumb[open] .oeuvre-3d-crumb-toggle .oeuvre-3d-crumb-branch {
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+  .oeuvre-3d-crumb[open] .oeuvre-3d-crumb-dash {
+    opacity: 1;
   }
 }
 /* Sans 3D, une autre photo que l'œuvre prend la scène : les chips s'effacent le temps de la regarder. */
@@ -1113,41 +1171,54 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
   color: var(--chips-muted); white-space: nowrap;
 }
 /* Le choix et son chevron. --chips-legend-k et is-wrapped (legendFit, oeuvre-3d-chips.js) : un choix trop
-   long pour sa colonne passe sur deux lignes à un espace, ou rapetisse ; il ne sort jamais de l'écran. */
+   long pour sa colonne passe sur deux lignes à un espace, ou rapetisse ; il ne sort jamais de l'écran.
+   Une seule ligne de texte, pas une boîte flexible (15/11/2026) : sur deux lignes, le chevron suit le
+   dernier mot (« Chêne / vieilli ⌄ ») au lieu de se poser à côté du bloc, loin de « vieilli » quand le
+   texte est aligné à gauche. Seul le texte va à la ligne, jamais le chevron (gluon et nowrap). */
 .chips-value {
-  display: inline-flex; align-items: flex-end; gap: 0.12em;
+  display: inline-block;
   font: 600 calc(var(--chips-value) * var(--chips-legend-k, 1))/1.1 var(--chips-font); letter-spacing: -0.005em; white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
-.chips-legend.is-wrapped .chips-value-text { white-space: normal; text-wrap: balance; }
+.chips-legend.is-wrapped .chips-value { text-wrap-style: balance; }
+.chips-legend.is-wrapped .chips-value-text { white-space: normal; }
 .chips-cote {
   min-height: 44px; align-items: center; gap: 8px; padding: 0 0 6px; border-radius: 12px;
   transform: translateX(-50%);
 }
 .chips-cote .chips-cat { line-height: 10px; }
 .chips-cote .chips-value { font-size: calc(var(--chips-cote) * var(--chips-legend-k, 1)); }
-/* Le chevron d'une légende et de la cote, en terre comme le bouton d'achat (retour de Walid du
-   12/11/2026 : un client ne voyait pas que ce sont des options). Il arrive après les légendes ; toucher
-   l'option l'efface d'un trait (il file, rétrécit et se floute) ; revenu à la vue générale, il reprend sa
-   place en douceur, avec un léger rebond, juste après les légendes. */
+/* Le chevron d'une légende et de la cote (retour de Walid du 12/11/2026 : un client ne voyait pas que ce
+   sont des options). Depuis le 15/11/2026, celui de la maquette, accepté par Walid : 7,5 × 5 px, trait
+   de 1,25 px, à l'encre, 4 px après le choix, centré sur la hauteur de ses minuscules (vertical-align
+   middle : son milieu à la ligne de base plus une demi-hauteur de minuscule, quelle que soit la police
+   chargée). Il se plie comme celui du fil d'Ariane (le pli est avec la capsule, .chips-branch) : une
+   seule famille de gestes pour tous les chevrons de la fiche. Il arrive après les légendes, un tiret qui
+   se déplie ; toucher l'option le replie en tiret, qui s'efface avec la légende ; revenu à la vue
+   générale, il revient de même, juste après les légendes. Le trait d'avant filait, rétrécissait et se
+   floutait : flou, il ne restait pas net. */
 .chips-chevron {
   --chev-delay: calc(1300ms + var(--i, 0) * 140ms);
-  flex: none; display: block; width: 0.6em; height: 0.6em; margin-bottom: 0.2em; overflow: visible;
-  color: rgb(var(--color-terra-rgb));
-  opacity: 0; translate: 0.45em 0; scale: 0.4; filter: blur(2px);
+  display: inline-block; width: 7.5px; height: 5px; margin-left: 4px; vertical-align: middle; overflow: visible;
+  color: var(--chips-ink);
+  opacity: 0; transition: opacity 160ms ease 60ms;
 }
+/* Sur ordinateur, les choix passent de 14 à 17 px : le chevron grandit d'autant (1,2), trait de 1,5 px et
+   5 px d'écart (CHEVRON_PX_DESK d'oeuvre-3d-chips.js). Le pli suit : il est compté dans son dessin. */
+.chips.is-desk .chips-chevron { width: 9px; height: 6px; margin-left: 5px; }
+.chips-branch { transition: transform 220ms var(--chips-curve), stroke-dashoffset 220ms var(--chips-curve); }
 .chips.is-settled .chips-chevron { --chev-delay: 360ms; }
-.chips.is-ready .chips-chevron {
-  opacity: 1; translate: none; scale: none; filter: none;
-  transition: opacity 380ms ease var(--chev-delay), translate 760ms cubic-bezier(0.34, 1.45, 0.64, 1) var(--chev-delay),
-    scale 760ms cubic-bezier(0.34, 1.45, 0.64, 1) var(--chev-delay), filter 380ms ease var(--chev-delay);
+/* Le tiret paraît (200 ms) et se déplie 80 ms plus tard, en 480 ms, avec le léger rebond de la courbe. */
+.chips.is-ready:not(.is-open):not(.is-returning):not(.is-switching):not(.is-zoomed) .chips-chevron {
+  opacity: 1; transition: opacity 200ms ease var(--chev-delay);
 }
-.chips.is-open .chips-chevron, .chips.is-returning .chips-chevron, .chips.is-switching .chips-chevron, .chips.is-zoomed .chips-chevron {
-  opacity: 0; translate: 0.45em 0; scale: 0.4; filter: blur(2px);
-  transition: opacity 170ms ease, translate 230ms cubic-bezier(0.55, 0, 1, 0.45), scale 230ms cubic-bezier(0.55, 0, 1, 0.45), filter 170ms ease;
+.chips.is-ready:not(.is-open):not(.is-returning):not(.is-switching):not(.is-zoomed) .chips-branch {
+  transform: none; stroke-dashoffset: 0.5;
+  transition: transform 480ms var(--chips-curve) calc(var(--chev-delay) + 80ms), stroke-dashoffset 480ms var(--chips-curve) calc(var(--chev-delay) + 80ms);
 }
+/* Moins d'animations : il ne se plie pas, il paraît et s'efface en fondu, toujours après les légendes. */
 @media (prefers-reduced-motion: reduce) {
-  .chips .chips-chevron { translate: none !important; scale: none !important; filter: none !important; transition: opacity 200ms ease !important; }
+  .chips .chips-branch { transform: none !important; stroke-dashoffset: 0.5 !important; }
 }
 .chips.is-ready .chips-item:active, .chips-switch:active, .chips-opt:active { opacity: 0.6; }
 
