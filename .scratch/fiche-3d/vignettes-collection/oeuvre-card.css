@@ -1,0 +1,276 @@
+/* Vignettes d'œuvre des produits à image unique (modèle oeuvre-3d), extraites du prototype du 15/11/2026.
+   À poser dans input.css, hors @layer. Voir NOTES.md. La silhouette du poster A (--paper-edge) sort de
+   tools/papier.py. */
+
+/* ================================================================================================
+   VIGNETTE D'ŒUVRE — produits à image unique (modèle de page oeuvre-3d)
+   Tout est décor autour d'un <img> ordinaire. Unités en cqw : la scène (stage) est un conteneur,
+   1 = sa largeur, si bien que la vignette est la même à toutes les tailles d'écran.
+   Lumière : en haut à gauche, devant (celle de la fiche 3D, L = -0.5, 0.45, 0.74) ; ombres en bas à droite.
+   ================================================================================================ */
+/* La vignette se peint au-dessus du lien étiré de la carte (son ::after couvre toute la carte) et le laisse
+   passer les clics : sans cela, chaque calque 3D en entraîne un second, celui du lien qui le chevauche. */
+.oeuvre-card { position: relative; z-index: 1; pointer-events: none; }
+.oeuvre-card-stage {
+  position: relative;
+  container-type: inline-size;
+  aspect-ratio: 500 / 587;          /* toile : le format des vignettes actuelles des toiles */
+  max-width: 100%;
+  overflow: clip;                   /* et non hidden : hidden en ferait un conteneur de défilement, et la
+                                       timeline view() du reflet se mesurerait contre lui, pas contre la page */
+  background: var(--wall-toile);
+}
+.oeuvre-card[data-kind="poster"] .oeuvre-card-stage { aspect-ratio: 1; background: var(--wall-poster); }
+
+.oeuvre-card-piece {
+  position: absolute; inset: 0; margin: auto;
+  isolation: isolate;
+}
+/* La face est le parent direct de l'<img> : c'est elle qui porte .skeleton pendant le chargement (le script
+   du thème le veut ainsi), et .skeleton la met en position: relative. Sélecteur à deux classes pour garder
+   la face à sa place pendant ce temps-là. */
+.oeuvre-card .oeuvre-card-face { position: absolute; inset: 0; overflow: hidden; background: #e7e1d8; }
+.oeuvre-card-face img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* ---------- Toile : châssis de 2 cm, vue de trois quarts, tranche blanche à l'ombre ----------
+   --t : rotation ; --P : distance de l'œil (en largeurs de scène) ; --D : profondeur du châssis.
+   La tranche est dessinée à plat, dans le plan de la toile, à la largeur et au biais qu'aurait le
+   côté réel une fois projeté (calculs ci-dessous) : un seul calque composité par carte. */
+.oeuvre-card[data-kind="toile"] .oeuvre-card-piece {
+  --t: 22deg;
+  --P: 4.8;
+  --D: .056;
+  --W: min(.8, var(--r));                       /* largeur de la toile : 80 % au plus, 100 % de haut en portrait */
+  --sn: sin(var(--t));
+  --cs: cos(var(--t));
+  --zf: calc(var(--W) * .5 * var(--sn));        /* avancée du bord droit vers l'œil */
+  --kn: calc(var(--P) / (var(--P) - var(--zf)));
+  --kf: calc(var(--P) / (var(--P) + var(--zf)));
+  --kb: calc(var(--P) / (var(--P) - var(--zf) + var(--D) * var(--cs)));
+  --Xb: calc((var(--W) * .5 * var(--cs) + var(--D) * var(--sn)) * var(--kb));   /* arête arrière, à l'écran */
+  --u: calc(var(--Xb) * var(--P) / (var(--P) * var(--cs) + var(--Xb) * var(--sn)));
+  --ko: calc(var(--P) / (var(--P) - var(--u) * var(--sn)));
+  --strip: calc(var(--u) - var(--W) * .5);      /* largeur de la tranche, dans le plan de la toile */
+  --pinch: calc((1 - var(--kb) / var(--ko)) * 50%);   /* fuite de l'arête arrière, en haut et en bas */
+  --dx: calc((var(--W) * .5 * var(--cs) * var(--kf) - var(--Xb)) * .5 - .018);  /* recentre l'objet et son ombre */
+  width: calc(var(--W) * 100cqw);
+  height: calc(var(--W) / var(--r) * 100cqw);
+  transform: translateX(calc(var(--dx) * 100cqw)) perspective(calc(var(--P) * 100cqw)) rotateY(calc(-1 * var(--t)));
+}
+/* Ombre portée sur le mur : la toile décalée de 0,68 D vers la droite et 0,61 D vers le bas (direction
+   de la lumière), adoucie par la pénombre ; plus un voile large et un contact serré. */
+.oeuvre-card[data-kind="toile"] .oeuvre-card-piece::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  box-shadow:
+    calc(var(--D) * .80 * 100cqw) calc(var(--D) * .62 * 100cqw) calc(var(--D) * 1.1 * 100cqw) rgba(38, 27, 18, .34),
+    calc(var(--D) * 1.3 * 100cqw) calc(var(--D) * 1.5 * 100cqw) calc(var(--D) * 2.6 * 100cqw) rgba(38, 27, 18, .10),
+    0 0 calc(var(--D) * .3 * 100cqw) rgba(38, 27, 18, .12);
+}
+/* Lumière sur la face : la toile tournée vers la fenêtre, plus claire en haut à gauche ; l'arrondi du
+   bord gauche prend un filet de lumière, celui du bord droit plonge vers la tranche. */
+.oeuvre-card[data-kind="toile"] .oeuvre-card-piece::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0) 1.1%),
+    linear-gradient(270deg, rgba(30, 22, 15, .16), rgba(30, 22, 15, 0) 1.6%),
+    linear-gradient(118deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, 0) 42%, rgba(30, 22, 15, 0) 58%, rgba(30, 22, 15, .07));
+}
+.oeuvre-card-edge {
+  position: absolute; top: 0; bottom: 0; left: 100%;
+  width: calc(var(--strip) * 100cqw);
+  clip-path: polygon(0 0, 100% var(--pinch), 100% calc(100% - var(--pinch)), 0 100%);
+  /* Tranche « Blanche » (#efede8) côté ombre : plus claire au pli, plus sombre contre le mur. */
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .10), rgba(255, 255, 255, 0) 30%, rgba(30, 22, 15, 0) 65%, rgba(30, 22, 15, .10)),
+    linear-gradient(90deg, #d9d5ce 0%, #c9c4bc 45%, #b4afa6 100%);
+}
+
+/* ---------- Poster : feuille (contour blanc par défaut, comme la fiche), à plat ----------
+   --k : grand côté de l'image ; --m : contour blanc = 8 % du petit côté de la feuille, sur 4 côtés ;
+   --f : baguette du cadre (B). La feuille, ou le cadre, tient dans 80 % de la scène, comme aujourd'hui. */
+.oeuvre-card[data-kind="poster"] {
+  --contour: 1;
+  --framed: 0;
+  --f: .024;
+}
+.oeuvre-card[data-kind="poster"].no-contour { --contour: 0; }
+.oeuvre-card[data-kind="poster"][data-look="verre"] { --framed: 1; }
+.oeuvre-card[data-kind="poster"] .oeuvre-card-piece {
+  --k: calc((.8 - 2 * var(--f) * var(--framed)) / (1 + .1904 * var(--contour)));
+  --iw: min(calc(var(--k) * var(--r)), var(--k));
+  --ih: calc(var(--iw) / var(--r));
+  --m: calc(.0952 * min(var(--iw), var(--ih)) * var(--contour));
+  --ff: calc(var(--f) * var(--framed));
+  width: calc((var(--iw) + 2 * var(--m) + 2 * var(--ff)) * 100cqw);
+  height: calc((var(--ih) + 2 * var(--m) + 2 * var(--ff)) * 100cqw);
+}
+.oeuvre-card-sheet {
+  position: absolute; inset: calc(var(--ff) * 100cqw);
+  padding: calc(var(--m) * 100cqw);
+  background: #fcfbf8;
+}
+.oeuvre-card .oeuvre-card-sheet > .oeuvre-card-face { inset: calc(var(--m) * 100cqw); }
+
+/* A — papier libre : un beau tirage tenu par le haut, qui s'est doucement relâché. Un seul modèle
+   d'onde règle la silhouette, la lumière et l'ombre (tools/papier.py) : crêtes, là où le papier
+   s'éloigne le plus du mur, à 27 % et 71 % de la largeur ; creux à 5 %, 49 % et 93 %.
+   - Silhouette : bord haut droit (tenu) ; côtés qui s'ouvrent vers le bas ; bord bas plus bas sur les
+     crêtes ; coin bas droit (à l'opposé de la lumière, comme sur la fiche) soulevé : il s'écarte et
+     s'arrondit. Retraits en cqw, quelques dixièmes de millimètre à l'échelle du tirage.
+   - Lumière : sur chaque onde, le flanc tourné vers la fenêtre s'éclaire (reflet satiné), l'autre
+     s'assombrit. L'onde naît en haut et s'amplifie vers le bord libre.
+   - Ombre : collée à la silhouette (drop-shadow, qui suit ses ondes) ; plus large sous les crêtes, et
+     sous le coin soulevé, décollée de lui. Aucun calque composité : tout est peint une fois. */
+.oeuvre-card[data-look="papier"] {
+  --paper-edge: polygon(0.75cqw 0, calc(100% - 0.75cqw) 0, calc(100% - 0.75cqw) 7.14%, calc(100% - 0.76cqw) 14.29%, calc(100% - 0.78cqw) 21.43%, calc(100% - 0.78cqw) 28.57%, calc(100% - 0.78cqw) 35.71%, calc(100% - 0.76cqw) 42.86%, calc(100% - 0.69cqw) 50%, calc(100% - 0.58cqw) 57.14%, calc(100% - 0.45cqw) 64.29%, calc(100% - 0.33cqw) 71.43%, calc(100% - 0.21cqw) 78.57%, calc(100% - 0.11cqw) 85.71%, calc(100% - 0.03cqw) 92.86%, 100% calc(100% - 0.66cqw), calc(100% - 0.05cqw) calc(100% - 0.41cqw), calc(100% - 0.19cqw) calc(100% - 0.19cqw), calc(100% - 0.41cqw) calc(100% - 0.05cqw), calc(100% - 0.66cqw) 100%, 97.5% calc(100% - 0.08cqw), 95% calc(100% - 0.31cqw), 92.5% calc(100% - 0.61cqw), 90% calc(100% - 0.89cqw), 87.5% calc(100% - 1.06cqw), 85% calc(100% - 1.05cqw), 82.5% calc(100% - 0.89cqw), 80% calc(100% - 0.71cqw), 77.5% calc(100% - 0.55cqw), 75% calc(100% - 0.43cqw), 72.5% calc(100% - 0.36cqw), 70% calc(100% - 0.36cqw), 67.5% calc(100% - 0.41cqw), 65% calc(100% - 0.52cqw), 62.5% calc(100% - 0.68cqw), 60% calc(100% - 0.85cqw), 57.5% calc(100% - 1.02cqw), 55% calc(100% - 1.18cqw), 52.5% calc(100% - 1.29cqw), 50% calc(100% - 1.34cqw), 47.5% calc(100% - 1.34cqw), 45% calc(100% - 1.27cqw), 42.5% calc(100% - 1.15cqw), 40% calc(100% - 0.99cqw), 37.5% calc(100% - 0.81cqw), 35% calc(100% - 0.64cqw), 32.5% calc(100% - 0.5cqw), 30% calc(100% - 0.4cqw), 27.5% calc(100% - 0.35cqw), 25% calc(100% - 0.37cqw), 22.5% calc(100% - 0.45cqw), 20% calc(100% - 0.58cqw), 17.5% calc(100% - 0.74cqw), 15% calc(100% - 0.92cqw), 12.5% calc(100% - 1.09cqw), 10% calc(100% - 1.21cqw), 7.5% calc(100% - 1.22cqw), 5% calc(100% - 1.13cqw), 2.5% calc(100% - 1.04cqw), 0.45cqw calc(100% - 1cqw), 0.46cqw 92.86%, 0.5cqw 85.71%, 0.54cqw 78.57%, 0.6cqw 71.43%, 0.65cqw 64.29%, 0.7cqw 57.14%, 0.73cqw 50%, 0.75cqw 42.86%, 0.75cqw 35.71%, 0.75cqw 28.57%, 0.75cqw 21.43%, 0.75cqw 14.29%, 0.75cqw 7.14%);
+}
+.oeuvre-card[data-look="papier"] .oeuvre-card-piece {
+  filter: drop-shadow(.12cqw .22cqw .3cqw rgba(38, 27, 18, .34));
+}
+.oeuvre-card[data-look="papier"] .oeuvre-card-sheet {
+  background: #fcfbf8;
+  -webkit-clip-path: var(--paper-edge);
+  clip-path: var(--paper-edge);
+}
+.oeuvre-card[data-look="papier"] .oeuvre-card-sheet::before {
+  /* Lumière et ombre des ondes : flanc gauche des crêtes face à la fenêtre, flanc droit dos à elle.
+     Sans contour blanc, les bandes couvrent toute l'œuvre : un quart plus douces, pour rester du papier
+     et ne pas tourner au tissu. */
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  opacity: calc(.75 + .25 * var(--contour));
+  background: linear-gradient(90deg,
+    rgba(30, 22, 15, .06) 0%, rgba(30, 22, 15, 0) 6%,
+    rgba(255, 255, 255, 0) 7%, rgba(255, 255, 255, .22) 16.5%, rgba(255, 255, 255, 0) 26%,
+    rgba(30, 22, 15, 0) 28%, rgba(30, 22, 15, .19) 38.5%, rgba(30, 22, 15, 0) 49%,
+    rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, .2) 60.5%, rgba(255, 255, 255, 0) 70%,
+    rgba(30, 22, 15, 0) 72%, rgba(30, 22, 15, .17) 82.5%, rgba(30, 22, 15, 0) 93%,
+    rgba(255, 255, 255, 0) 94%, rgba(255, 255, 255, .08) 100%);
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, .4), rgba(0, 0, 0, .62) 38%, #000 90%);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, .4), rgba(0, 0, 0, .62) 38%, #000 90%);
+}
+.oeuvre-card[data-look="papier"] .oeuvre-card-sheet::after {
+  /* Le coin soulevé : une pli doux en travers du coin, le papier au-delà tourné vers la lumière ;
+     le léger bombé d'ensemble ; le haut, tenu, un peu plus clair. */
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0) 85%, rgba(255, 255, 255, .26) 91%, rgba(255, 255, 255, .16)),
+    linear-gradient(135deg, rgba(30, 22, 15, 0) 77%, rgba(30, 22, 15, .10) 84%, rgba(30, 22, 15, 0) 86.5%),
+    linear-gradient(90deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, 0) 42%, rgba(30, 22, 15, 0) 55%, rgba(30, 22, 15, .07)),
+    linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, 0) 30%);
+}
+/* Ombre de la feuille relâchée : collée au mur en haut, elle déborde vers le bas et la droite (forme
+   pleine et floutée, retirée à gauche, côté lumière). */
+.oeuvre-card[data-look="papier"] .oeuvre-card-piece::before {
+  content: ""; position: absolute; inset: 0 0 0 1.2cqw; z-index: -1;
+  background: rgba(38, 27, 18, .2);
+  transform-origin: 50% 0;
+  transform: translate(.1cqw, .1cqw) skewX(1.4deg) scale(1.002, 1.016);
+  filter: blur(.8cqw);
+}
+.oeuvre-card[data-look="papier"] .oeuvre-card-piece::after {
+  /* Sous le bord libre : l'ombre se creuse sous chaque crête (décalée vers la droite par la lumière),
+     et sous le coin soulevé, un peu décollée de lui. */
+  content: ""; position: absolute; z-index: -1;
+  left: 0; bottom: -3.2cqw; width: calc(100% + 3.6cqw); height: 4.6cqw;
+  background:
+    radial-gradient(11% 52% at 27% 26%, rgba(38, 27, 18, .2), rgba(38, 27, 18, 0)),
+    radial-gradient(11% 52% at 68% 26%, rgba(38, 27, 18, .2), rgba(38, 27, 18, 0)),
+    radial-gradient(9% 62% at 92% 30%, rgba(38, 27, 18, .3), rgba(38, 27, 18, 0));
+}
+
+/* B — sous verre : baguette fine (Decor Frame de l'atelier), teinte des vrais cadres. */
+.oeuvre-card[data-look="verre"] { --frame: #353535; --frame-hi: rgba(255, 255, 255, .16); --frame-lo: rgba(0, 0, 0, .28); }
+.oeuvre-card[data-look="verre"][data-frame="blanc"] { --frame: #e2e2e2; --frame-hi: rgba(255, 255, 255, .7); --frame-lo: rgba(0, 0, 0, .16); }
+.oeuvre-card[data-look="verre"][data-frame="chene"] { --frame: #6e6664; --frame-hi: rgba(255, 255, 255, .18); --frame-lo: rgba(0, 0, 0, .26); }
+.oeuvre-card[data-look="verre"][data-frame="noyer"] { --frame: #756454; --frame-hi: rgba(255, 255, 255, .18); --frame-lo: rgba(0, 0, 0, .26); }
+.oeuvre-card[data-look="verre"] .oeuvre-card-piece {
+  --D: .040;                                    /* profondeur du cadre : 2 cm */
+  background:
+    linear-gradient(135deg, var(--frame-hi), rgba(255, 255, 255, 0) 38%, rgba(0, 0, 0, 0) 62%, var(--frame-lo)),
+    var(--frame);
+  box-shadow:
+    inset 0 0 0 .5px rgba(0, 0, 0, .30),
+    inset .5px .5px 0 .5px var(--frame-hi),
+    calc(var(--D) * .80 * 100cqw) calc(var(--D) * .66 * 100cqw) calc(var(--D) * 1.1 * 100cqw) rgba(38, 27, 18, .30),
+    calc(var(--D) * 1.7 * 100cqw) calc(var(--D) * 2 * 100cqw) calc(var(--D) * 4.4 * 100cqw) rgba(38, 27, 18, .12),
+    0 0 calc(var(--D) * .3 * 100cqw) rgba(38, 27, 18, .14);
+}
+/* Feuillure : la lèvre intérieure de la baguette prend la lumière en bas et à droite. */
+.oeuvre-card[data-look="verre"] .oeuvre-card-sheet {
+  box-shadow: 0 0 0 .5px rgba(0, 0, 0, .45), .5px .5px 0 .5px var(--frame-hi);
+}
+/* Vitre : un voile, le reflet fixe de la petite fenêtre (en haut, côté lumière), l'ombre de la lèvre du
+   cadre sur le tirage (en haut et à gauche, 4 mm de retrait), et la porte-fenêtre qui passe (glare). */
+.oeuvre-card-glass {
+  position: absolute; inset: calc(var(--ff) * 100cqw);
+  overflow: clip; pointer-events: none;
+  background:
+    radial-gradient(42% 30% at 16% 9%, rgba(255, 255, 255, .13), rgba(255, 255, 255, 0) 100%),
+    linear-gradient(168deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .015) 38%, rgba(255, 255, 255, .035) 100%);
+  box-shadow:
+    inset calc(var(--D) * .30 * 100cqw) calc(var(--D) * .26 * 100cqw) calc(var(--D) * .45 * 100cqw) rgba(20, 14, 9, .26),
+    inset 0 0 calc(var(--D) * .12 * 100cqw) rgba(20, 14, 9, .18);
+  view-timeline: --oc-glass block;
+}
+/* La porte-fenêtre (GLASS_ROOM de la fiche : 2 battants de 4 carreaux, ciel plus clair en haut, bords doux),
+   fixe dans la pièce : quand la carte monte, son reflet glisse vers le bas de la vitre. --gx : sa place
+   selon la colonne, comme une seule fenêtre reflétée par toute la rangée. */
+.oeuvre-card-glare {
+  position: absolute; top: 0; left: var(--gx, 26%);
+  width: 46%; height: 104%;
+  translate: 0 -62%;                           /* sans animation (mouvement réduit) : le bas de la fenêtre, en haut de la vitre */
+}
+.oeuvre-card-glare::before {
+  content: ""; position: absolute; inset: 0;
+  /* Les carreaux : le ciel, plus clair en haut. Reflet hors de la mise au point : montants et bords doux. */
+  background: linear-gradient(180deg, rgba(248, 251, 255, .50), rgba(248, 251, 255, .36) 40%, rgba(248, 251, 255, .21));
+  transform: skewY(-8deg);
+  -webkit-mask-image:
+    linear-gradient(90deg, transparent 0, #000 10%, #000 90%, transparent 100%),
+    linear-gradient(180deg, transparent 0, #000 4%, #000 96%, transparent 100%),
+    linear-gradient(90deg, #000 44.5%, rgba(0, 0, 0, .26) 48%, rgba(0, 0, 0, .26) 52%, #000 55.5%),
+    repeating-linear-gradient(180deg, #000 0, #000 21%, rgba(0, 0, 0, .26) 23%, rgba(0, 0, 0, .26) 24%, #000 25%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(90deg, transparent 0, #000 10%, #000 90%, transparent 100%),
+    linear-gradient(180deg, transparent 0, #000 4%, #000 96%, transparent 100%),
+    linear-gradient(90deg, #000 44.5%, rgba(0, 0, 0, .26) 48%, rgba(0, 0, 0, .26) 52%, #000 55.5%),
+    repeating-linear-gradient(180deg, #000 0, #000 21%, rgba(0, 0, 0, .26) 23%, rgba(0, 0, 0, .26) 24%, #000 25%);
+  mask-composite: intersect;
+}
+.oeuvre-card-glare::after {                     /* la lumière diffuse autour de la fenêtre */
+  content: ""; position: absolute; inset: -14% -45%;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, .10), rgba(255, 255, 255, 0));
+}
+/* Course : la fenêtre entre par le haut de la vitre quand la carte a fait 12 % de sa traversée de
+   l'écran, en sort par le bas à 88 % ; elle est entière au milieu de l'écran. Elle glisse ainsi à un
+   peu moins de la moitié de la vitesse de la carte : un reflet de la pièce, pas de l'écran. */
+@keyframes oeuvre-card-glare { from { translate: 0 -100%; } to { translate: 0 96%; } }
+@supports (animation-timeline: view()) {
+  .oeuvre-card-glare { animation: oeuvre-card-glare linear both; animation-timeline: --oc-glass; animation-range: cover 12% cover 88%; }
+}
+/* Repli (navigateurs sans animation liée au défilement : Firefox, Safari avant 26) : le petit script
+   anime le reflet des seules cartes proches de l'écran, par une animation Web en pause dont il règle
+   l'instant (currentTime). Mesuré : 5 fois moins de travail pour le navigateur qu'un style réécrit à
+   chaque image, qui l'oblige à recomposer tous les calques de la page. */
+.oc-js .oeuvre-card-glare { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .oeuvre-card-glare { animation: none !important; translate: 0 -62% !important; }
+}
+
+
+/* Reflet d'une seule fenêtre pour toute la rangée : sa place dans la vitre dépend de la colonne. */
+.product-grid > anime-product-card:nth-child(2n + 1) .oeuvre-card-glare { --gx: 40%; }
+.product-grid > anime-product-card:nth-child(2n) .oeuvre-card-glare { --gx: -4%; }
+@media (min-width: 1024px) {
+  .product-grid > anime-product-card:nth-child(3n + 1) .oeuvre-card-glare { --gx: 46%; }
+  .product-grid > anime-product-card:nth-child(3n + 2) .oeuvre-card-glare { --gx: 20%; }
+  .product-grid > anime-product-card:nth-child(3n) .oeuvre-card-glare { --gx: -6%; }
+}
+@media (min-width: 1280px) {
+  .product-grid > anime-product-card:nth-child(4n + 1) .oeuvre-card-glare { --gx: 50%; }
+  .product-grid > anime-product-card:nth-child(4n + 2) .oeuvre-card-glare { --gx: 30%; }
+  .product-grid > anime-product-card:nth-child(4n + 3) .oeuvre-card-glare { --gx: 6%; }
+  .product-grid > anime-product-card:nth-child(4n) .oeuvre-card-glare { --gx: -14%; }
+}
+
