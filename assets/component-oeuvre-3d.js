@@ -929,7 +929,9 @@
       const rect = this.getBoundingClientRect();
       const w = Math.max(1, Math.round(rect.width));
       const h = Math.max(1, Math.round(rect.height));
-      const L = this.chips.resize({ width: w, height: h, obstacles: this.obstacles(rect, h) });
+      // La place du fil d'Ariane posé en haut de la scène (input.css, --crumb-room) : la bascule passe dessous.
+      const top = parseFloat(getComputedStyle(this).getPropertyValue('--crumb-room')) || 0;
+      const L = this.chips.resize({ width: w, height: h, obstacles: this.obstacles(rect, h), top });
       const box = window.Oeuvre3dChips.canvasBox(L);
       const button = this.frontButton.getBoundingClientRect();
       const free = { top: button.bottom - rect.top + 6, left: button.right - rect.left + 6 };

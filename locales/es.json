@@ -234,6 +234,8 @@
       "product_3d_frames_value": "Caja americana en blanco, negro mate, plata envejecida, roble claro o nogal (o sin marco)",
       "breadcrumb_nav": "Ruta de navegación",
       "breadcrumb_show_nav": "Mostrar la ruta de navegación",
+      "breadcrumb_back_to": "Volver a {{ name }}",
+      "breadcrumb_show_path": "Ver toda la ruta",
       "social_visit_on": "MyselfMonArt en {{ network }}",
       "signature_label": "Firma de MyselfMonArt",
       "photo_shared_by": "Foto del cuadro compartida por ",

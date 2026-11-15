@@ -1,8 +1,15 @@
 {% liquid
   assign item_list_element_names = ''
   assign item_list_element_urls = ''
+  # Fiche 3D (modèle product.oeuvre-3d) : le fil devient la capsule de la maquette 7a, posée sur la scène
+  # (snippets/oeuvre-3d-crumb.liquid). Le chemin et la liste JSON-LD restent ceux calculés ici.
+  assign crumb_capsule = false
+  if template.name == 'product' and template.suffix == 'oeuvre-3d'
+    assign crumb_capsule = true
+  endif
 %}
 {% unless template == 'index' or template == 'cart' or template == 'list-collections' %}
+  {%- capture classic_breadcrumb -%}
   <breadcrumb-popup>
     <nav role="navigation" aria-label="{{ 'sections.mma.breadcrumb_nav' | t }}">
       <div class="my-4 px-4 breadcrumb-wrapper flex items-center gap-2 whitespace-nowrap w-full">
@@ -287,6 +294,17 @@
       </div>
     </nav>
   </breadcrumb-popup>
+  {%- endcapture -%}
+  {%- if crumb_capsule -%}
+    {%- liquid
+      assign crumb_names = item_list_element_names | split: '|,|'
+      assign crumb_urls = item_list_element_urls | split: '|,|'
+      assign crumb_current = product.metafields.title.short | default: product.title
+    -%}
+    {%- render 'oeuvre-3d-crumb', names: crumb_names, urls: crumb_urls, current: crumb_current -%}
+  {%- else -%}
+    {{ classic_breadcrumb }}
+  {%- endif %}
 {% endunless %}
 
 {%- comment -%} Popup containers outside overflow context {%- endcomment -%}

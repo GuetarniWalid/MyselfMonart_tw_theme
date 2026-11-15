@@ -201,6 +201,33 @@ test('390 × 844 : l’œuvre plafonne à 254 px et reste au milieu de la scène
   near(safari.cy, 612 / 2 - 27)
 })
 
+/* Le fil d'Ariane de la maquette 7a (15/11/2026) : une capsule posée en haut à gauche de la scène, 50 px
+   de haut avec sa marge (--crumb-room). Sur un téléphone, la bascule passe toujours dessous ; l'œuvre ne
+   rapetisse que là où la hauteur manquait déjà. Sur un écran haut et sur ordinateur, rien ne bouge. */
+test('fil d’Ariane en haut de la scène : la bascule passe sous la capsule, l’œuvre ne rapetisse que sur un écran bas', () => {
+  const room = 50
+  // iPhone SE dans Safari : la bascule était à 12 px du haut ; elle descend sous la capsule.
+  const safari = chipsLayout({ width: 375, height: 501, top: room })
+  assert.equal(safari.toggle.top, room)
+  near(safari.art.w, 204.5, 0.1)
+  near(safari.cy, 242.5)
+  // Le bloc (bascule, œuvre, cote) garde ses 12 px au-dessus de la barre d'achat.
+  assert.equal(safari.box.b + 50, 501 - 60 - 12)
+  // iPhone SE entier : la bascule était déjà sous la capsule (62 px), rien ne change.
+  assert.deepEqual(chipsLayout({ width: 375, height: 615, top: room }), chipsLayout({ width: 375, height: 615 }))
+  // Écran haut (cadre 2b) et ordinateur : rien ne change.
+  assert.deepEqual(chipsLayout({ width: 390, height: 792, top: room }), chipsLayout({ width: 390, height: 792 }))
+  assert.deepEqual(chipsLayout({ width: 1440, height: 748, top: room }), chipsLayout({ width: 1440, height: 748 }))
+  // De 320 × 568 à 430 × 932, toutes hauteurs de navigateur : la bascule ne monte jamais sur la capsule.
+  for (const width of [320, 360, 375, 390, 412, 430]) {
+    for (let height = 400; height <= 820; height += 20) {
+      const L = chipsLayout({ width, height, top: room })
+      assert.ok(L.toggle.top >= room, `${width} × ${height} : bascule à ${L.toggle.top} px`)
+      assert.ok(L.box.b + 50 <= height - 60 - 11.99 || L.S === 0.3, `${width} × ${height} : le bloc déborde sur la barre`)
+    }
+  }
+})
+
 // Pastilles de 50 px (64 sur ordinateur) depuis le 12/11/2026 : la rangée a 10 px de plus.
 test('la rangée ouverte : la scène remonte juste ce qu’il faut, la barre ne s’efface que sur le petit écran', () => {
   const se = chipsLayout({ width: 375, height: 615 })
@@ -566,6 +593,25 @@ test('la plaque dépolie serre le texte sans le déplacer, et ne revient pas pen
   assert.ok(Number(pad[1]) <= 6 && Number(pad[2]) <= 10, `retrait de ${pad[1]} × ${pad[2]} px`)
   // Ni sous la rangée ouverte, ni pendant le retour de face : la plaque ne reparaît pas en s'effaçant.
   assert.match(CSS, /\.chips\.is-staged\.is-open \.chips-plate::before, \.chips\.is-staged\.is-returning \.chips-plate::before\s*\{\s*opacity:\s*0;/)
+})
+
+/* Le fil d'Ariane de la maquette 7a (15/11/2026) : il s'efface quand une rangée s'ouvre, comme la bascule,
+   et le temps du retour de face ; « Retour » prend sa place quand la 3D quitte la face (retour de Walid du
+   12/11 : le fil ne doit pas gêner « Retour »). Il arrive avec les chips. La photo d'arrivée garde la
+   règle du script : la bascule sous la capsule (--crumb-room), sinon la page sauterait. */
+test('le fil d’Ariane s’efface pour une rangée ouverte ou « Retour », arrive avec les chips, et la photo d’arrivée lui laisse sa place', () => {
+  const bare = CSS.replace(/\/\*[\s\S]*?\*\//g, '')
+  const rules = [...bare.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map((m) => ({ selector: m[1].trim(), body: m[2] }))
+  const hide = rules.find((r) => r.selector.includes('.oeuvre-3d-front.is-shown') && r.selector.includes('.oeuvre-3d-crumb'))
+  assert.ok(hide, 'règle qui efface le fil')
+  for (const state of ['is-open', 'is-returning', 'is-zoomed']) assert.ok(hide.selector.includes(`.${state}`), `effacé (${state})`)
+  assert.match(hide.body, /opacity:\s*0;\s*visibility:\s*hidden;\s*pointer-events:\s*none;/)
+  const before = rules.find((r) => r.selector.endsWith('.oeuvre-3d-stage:not(.is-ready)) > .oeuvre-3d-crumb'))
+  assert.ok(before && /opacity:\s*0/.test(before.body), 'caché avant l’arrivée des chips')
+  assert.match(CSS, /\.oeuvre-3d-stage \{\s*--crumb-room: 50px;/, 'la place de la capsule')
+  const scene = rules.find((r) => r.selector === '.oeuvre-3d-scene').body
+  assert.match(scene, /--art-w: min\(100cqw - 132px, \(100cqh - 178px - max\(12px, var\(--crumb-room, 0px\)\)\)/)
+  assert.match(scene, /--art-cy: calc\(max\(max\(8px, var\(--crumb-room, 0px\)\) \+ 56px \+ var\(--box-h\) \/ 2, 50cqh - 27px\)/)
 })
 
 test('la bascule Toile | Poster n’a pas de rangée : elle s’applique, rien d’autre ne change', () => {

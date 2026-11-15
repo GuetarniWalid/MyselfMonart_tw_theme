@@ -674,6 +674,8 @@
       "product_studio_preview_value": "Aperçu 3D du poster personnalisé, en temps réel",
       "breadcrumb_nav": "Fil d’Ariane",
       "breadcrumb_show_nav": "Afficher le fil d’Ariane",
+      "breadcrumb_back_to": "Retour à {{ name }}",
+      "breadcrumb_show_path": "Voir tout le chemin",
       "social_visit_on": "MyselfMonArt sur {{ network }}",
       "signature_label": "Signature MyselfMonArt",
       "home_seo_title": "Tableau décoration murale — Studio Paris | MyselfMonArt",

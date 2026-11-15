@@ -235,6 +235,8 @@
       "product_3d_frames_value": "Floater-lijst in wit, mat zwart, antiekzilver, licht eiken of notenhout (of zonder lijst)",
       "breadcrumb_nav": "Kruimelpad",
       "breadcrumb_show_nav": "Kruimelpad tonen",
+      "breadcrumb_back_to": "Terug naar {{ name }}",
+      "breadcrumb_show_path": "Volledig pad tonen",
       "social_visit_on": "MyselfMonArt op {{ network }}",
       "signature_label": "Handtekening van MyselfMonArt",
       "photo_shared_by": "Foto van schilderij gedeeld door ",

@@ -516,6 +516,8 @@
       "product_3d_frames_value": "Floater frame in white, matte black, antique silver, light oak or walnut (or no frame)",
       "breadcrumb_nav": "Breadcrumb",
       "breadcrumb_show_nav": "Show breadcrumb navigation",
+      "breadcrumb_back_to": "Back to {{ name }}",
+      "breadcrumb_show_path": "Show the full path",
       "social_visit_on": "MyselfMonArt on {{ network }}",
       "signature_label": "MyselfMonArt signature",
       "home_seo_title": "Wall art decoration — Paris Studio | MyselfMonArt",

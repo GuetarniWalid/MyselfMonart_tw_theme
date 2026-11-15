@@ -264,6 +264,8 @@
       "product_3d_frames_value": "Schattenfugenrahmen in Weiß, Mattschwarz, Antiksilber, heller Eiche oder Nussbaum (oder ohne Rahmen)",
       "breadcrumb_nav": "Brotkrümelnavigation",
       "breadcrumb_show_nav": "Brotkrümelnavigation anzeigen",
+      "breadcrumb_back_to": "Zurück zu {{ name }}",
+      "breadcrumb_show_path": "Ganzen Pfad anzeigen",
       "social_visit_on": "MyselfMonArt auf {{ network }}",
       "signature_label": "Signatur von MyselfMonArt",
       "error_generic": "Es ist ein Fehler aufgetreten",

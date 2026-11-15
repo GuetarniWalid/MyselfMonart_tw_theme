@@ -60,23 +60,27 @@
      trop petite (le design ne montrait que 1440 × 820). Même règle pour la photo d'arrivée, en CSS
      (input.css, .oeuvre-3d-scene) : à garder identique, sinon la page saute. */
   /* obstacles : sur ordinateur, ce qu'une rangée ne doit pas couvrir, en px de la scène ({ left, right,
-     top }) : la pilule d'achat, en bas à droite, et le bouton du panier au-dessus d'elle. */
-  function chipsLayout({ width, height, ratio = 0.75, obstacles = [] }) {
+     top }) : la pilule d'achat, en bas à droite, et le bouton du panier au-dessus d'elle.
+     top : sur un téléphone, la place que le fil d'Ariane prend en haut de la scène (la capsule de la
+     maquette 7a, --crumb-room d'input.css) : la bascule passe dessous, et l'œuvre rapetisse d'autant sur
+     un écran trop bas. Sur ordinateur, la bascule est au milieu d'un écran large, loin de la capsule. */
+  function chipsLayout({ width, height, ratio = 0.75, obstacles = [], top = 0 }) {
     const W = Math.max(1, width);
     const SH = Math.max(1, height);
     const desk = W >= DESK_MIN;
     const k = desk ? DESK : PHONE;
+    const room = desk ? 0 : Math.max(0, top);
     const refH = REF.h * (0.75 / ratio);
     const fit = desk
       ? Math.min(k.maxS, (W - 2 * k.colW - 32) / REF.w, (SH - 154) / refH)
-      : Math.min((W - 132) / REF.w, (SH - 190) / refH, k.maxS);
+      : Math.min((W - 132) / REF.w, (SH - 178 - Math.max(12, room)) / refH, k.maxS);
     const S = Math.max(0.3, fit);
     const artW = REF.w * S;
     const artH = artW / ratio;
     /* Le design compte l'œuvre en 242 × 323 (box) ; la 3D la rend en vrai 3:4 (art), 0,3 px plus
        basse au plus. Les chips se placent sur box, comme dans le design ; la photo et la 3D sur art. */
     const boxH = refH * S;
-    const blockTop = desk ? (SH - (66 + boxH + 64)) / 2 : Math.max(8, (SH - 60 - (106 + boxH)) / 2);
+    const blockTop = desk ? (SH - (66 + boxH + 64)) / 2 : Math.max(8, room, (SH - 60 - (106 + boxH)) / 2);
     const cx = W / 2;
     /* Écran haut (cadre 2b, 390 × 844) : l'œuvre reste au milieu de la scène, tant que la plus haute
        rangée tient entre elle et la barre d'achat sans rien déplacer. Sinon (cadres 3a et 3b), le bloc
@@ -1001,8 +1005,8 @@
 
     /* ---- Mise en page ---- */
 
-    function resize({ width, height, obstacles = [] }) {
-      L = chipsLayout({ width, height, ratio, obstacles });
+    function resize({ width, height, obstacles = [], top = 0 }) {
+      L = chipsLayout({ width, height, ratio, obstacles, top });
       stage.classList.toggle('is-desk', L.desk);
       stage.style.setProperty('--chips-value', px(L.type.value));
       stage.style.setProperty('--chips-cote', px(L.type.cote));
