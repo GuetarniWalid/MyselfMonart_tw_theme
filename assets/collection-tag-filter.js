@@ -238,6 +238,12 @@ class CollectionTagFilter extends HTMLElement {
       window.removeSkeletonOnImagesLoad(insertedGrid);
     }
 
+    // Les <script> de la grille reçue ne s'exécutent pas : importer les modules qu'elle porte (le reflet des
+    // vignettes de poster, assets/oeuvre-card-reflet.js), comme le défilement infini (assets/collection.js).
+    if (insertedGrid) {
+      insertedGrid.querySelectorAll('script[type="module"][src]').forEach((script) => import(script.src));
+    }
+
     // Replace filter sections with updated counts (from both section and page HTML)
     this.replaceFilterSections(sectionDoc, pageDoc);
 

@@ -96,6 +96,11 @@ class InfiniteScroll extends HTMLElement {
     if (window.removeSkeletonOnImagesLoad) {
       window.removeSkeletonOnImagesLoad(node);
     }
+
+    // Les <script> d'une page reçue par fetch ne s'exécutent pas. Le reflet des vignettes de poster
+    // (assets/oeuvre-card-reflet.js) arrive en module avec ses cartes : l'importer le lance si la page n'en
+    // avait pas encore. Un module ne s'exécute qu'une fois par page ; déjà lancé, il suit seul les cartes.
+    node.querySelectorAll('script[type="module"][src]').forEach((script) => import(script.src));
   }
 
   keepSameScrollPosition(node) {

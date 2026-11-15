@@ -174,7 +174,15 @@
             {%- liquid
               # 2e photo (l'œuvre à plat) pour tous les produits, comme le rendait déjà l'ancien test
               # (son else if valait un simple else). Changer de photo changerait les données lues par Google.
-              assign product_image = product.images[1] | image_url: width: product.images[1].preview_image.width | prepend: "https:"
+              # Les nouveaux produits (modèle oeuvre-3d, snippet artwork-kind) n'ont que l'œuvre à plat : la 1re.
+              capture ld_image_unique
+                render 'artwork-kind', product: product, suffix: product.template_suffix, image_unique: true
+              endcapture
+              assign ld_image = product.images[1]
+              if ld_image_unique != blank
+                assign ld_image = product.images[0]
+              endif
+              assign product_image = ld_image | image_url: width: ld_image.preview_image.width | prepend: "https:"
             -%} "image": "{{ product_image }}",
             "description": {{ product.description | strip_html | json }},
             "brand": {

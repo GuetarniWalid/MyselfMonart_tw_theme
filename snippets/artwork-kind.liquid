@@ -20,6 +20,9 @@
     - product: {Object} le produit : il tranche pour les modèles partagés (oeuvre-3d).
     - suffix: {String} suffixe du modèle de page : template.suffix sur la fiche produit,
       product.template_suffix pour un produit affiché ailleurs (ligne du panier)
+    - image_unique: {Boolean} ne répondre que pour les nouveaux produits, qui n'ont que l'œuvre à plat
+      (modèle oeuvre-3d) ; rien pour la toile et le poster de toujours (vignettes de collection de
+      snippets/card-product.liquid, et leur image dans les données Google de la collection). Facultatif.
 
   Usage :
     {%- capture artwork_kind -%}{% render 'artwork-kind', product: product, suffix: template.suffix %}{%- endcapture -%}
@@ -29,9 +32,13 @@
 {%- liquid
   case suffix
     when 'painting'
-      echo 'toile'
+      unless image_unique
+        echo 'toile'
+      endunless
     when 'poster'
-      echo 'poster'
+      unless image_unique
+        echo 'poster'
+      endunless
     when 'oeuvre-3d'
       if product.metafields.painting_options.frames_poster != blank
         echo 'poster'
