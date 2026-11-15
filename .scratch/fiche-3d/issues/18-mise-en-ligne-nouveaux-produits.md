@@ -14,6 +14,6 @@
 Un produit qui n'a que l'œuvre à plat (relevé le 15/11/2026, essai des vignettes de collection) :
 
 - [ ] La fiche 3D s'affiche avec cette seule image. Aujourd'hui, `main-product.liquid` attend l'image à plat en 2e position (`media[1]`).
-- [ ] Les vignettes de collection montrent l'œuvre en objet : la toile de trois quarts, sans cadre, avec sa tranche et son ombre ; le poster dans la version choisie par Walid. Code et notes de l'essai du 15/11 dans le dossier `vignettes-collection`. Les cartes des anciens produits ne changent pas.
+- [ ] Les vignettes de collection montrent l'œuvre en objet : la toile de face, sans cadre, avec son ombre et sa lumière ; le poster sous verre, avec un reflet discret au défilement (choix de Walid du 15/11). Code et notes de l'essai du 15/11 dans le dossier `vignettes-collection`. Les cartes des anciens produits ne changent pas.
 - [ ] Les données Google de la page collection (`ItemList` de `main-collection-product-grid.liquid`) et le texte alternatif de la carte prennent la 1re image. Aujourd'hui, ils lisent `images[1]` et `alts.value[1]`.
 - [ ] « Mes j'aime » montre ces œuvres comme la collection : `my-likes.js` remplit certaines cartes avec l'ancien balisage.

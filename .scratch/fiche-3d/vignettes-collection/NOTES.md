@@ -76,8 +76,6 @@ L'image de la vignette est `product.media[0]`, la seule image de ces produits. S
           {%- if vignette == 'poster' -%}
             </div>
             <span class="oeuvre-card-glass" aria-hidden="true"><span class="oeuvre-card-glare" data-allow-empty></span></span>
-          {%- else -%}
-            <span class="oeuvre-card-edge" data-allow-empty aria-hidden="true"></span>
           {%- endif -%}
         </div>
       </div>
@@ -88,28 +86,31 @@ L'image de la vignette est `product.media[0]`, la seule image de ces produits. S
 {%- endif -%}
 ```
 
-Dans le choix entre A et B : pour A (papier libre), écrire `data-look="papier"` et ne pas rendre la vitre.
+Walid a choisi B (15/11) : c'est le balisage ci-dessus. Pour A (papier libre), écrire `data-look="papier"` et ne pas rendre la vitre.
 
 À garder tel quel, chaque point a été vérifié au banc :
 
 1. **La face est le parent direct de l'`<img>` et porte `skeleton`.** `removeSkeletonOnImagesLoad` (tw-global.js) le veut ainsi, et la forme de l'œuvre pulse à sa place pendant le chargement. `.skeleton` la met en `position: relative` : le CSS la replace avec un sélecteur à deux classes.
 2. **`data-allow-empty` sur les `<span>` décoratifs vides.** La règle `*:empty { display: none }` du thème les cacherait.
 3. **Le format de la scène est celui des vignettes actuelles** : 500 / 587 pour les toiles, 1 / 1 pour les posters. Les rangées gardent leur rythme, mélangées aux anciennes cartes. Toutes les tailles découlent de `--r`, connu en Liquid. Aucun décalage au chargement.
-4. **`.oeuvre-card { position: relative; z-index: 1; pointer-events: none }`.** Le lien étiré du titre (`after:absolute after:inset-0`) couvre toute la carte. Peint au-dessus d'une toile en 3D, il forçait un second calque par carte (mesuré : 20 de plus pour 48 cartes). Sous la vignette, il ne coûte rien. `pointer-events: none` lui laisse les clics : toute la carte reste un lien, comme aujourd'hui.
+4. **`.oeuvre-card { position: relative; z-index: 1; pointer-events: none }`.** Le lien étiré du titre (`after:absolute after:inset-0`) couvre toute la carte. Peint au-dessus d'un calque composité (le reflet de B, comme la toile en 3D de la première version), il en forçait un second par carte (mesuré : 20 de plus pour 48 cartes). Sous la vignette, il ne coûte rien. `pointer-events: none` lui laisse les clics : toute la carte reste un lien, comme aujourd'hui.
 5. **`overflow: clip` et non `hidden` sur la scène et la vitre.** `hidden` en fait des conteneurs de défilement, et la timeline `view()` du reflet se mesure alors contre la scène, qui ne défile pas : le reflet restait figé (bogue trouvé au banc).
 
 ## 3. CSS (`input.css`)
 
-Coller `theme/oeuvre-card.css` dans `input.css`, **hors `@layer`**, comme les règles `oeuvre-3d-*` : dans `@layer components`, Tailwind retirerait les classes absentes des fichiers lus. Tailles : 19 Ko avec commentaires, 12 Ko sans, 2,7 Ko compressé.
+Coller `theme/oeuvre-card.css` dans `input.css`, **hors `@layer`**, comme les règles `oeuvre-3d-*` : dans `@layer components`, Tailwind retirerait les classes absentes des fichiers lus. Tailles : 19 Ko avec commentaires, 12 Ko sans, 2,5 Ko compressé.
 
-Vérifié avec la vraie commande du thème (`tailwindcss --minify`) : `sin()`, `cos()`, `cqw`, `@container`, `overflow: clip`, `animation-timeline`, `view-timeline`, `mask-composite` sortent intacts, calculs compris.
+Vérifié avec la vraie commande du thème (`tailwindcss --minify`) : `cqw`, `overflow: clip`, `animation-timeline`, `view-timeline`, `mask-composite`, le polygone `clip-path` et le filtre `drop-shadow` sortent intacts, calculs compris.
 
 Principes du rendu (lumière de la fiche 3D : en haut à gauche, devant ; ombres en bas à droite) :
 
-- **Toile.** Rotation de 22° vers la fenêtre, perspective douce (œil à 4,8 largeurs de vignette), châssis de 2 cm.
-  - La tranche est dessinée à plat dans le plan de la toile, à la largeur et à la fuite qu'aurait le côté réel une fois projeté. Calculs en CSS (`sin`, `cos`) : un seul calque composité par toile.
-  - Tranche « Blanche » (#efede8) côté ombre, plus sombre contre le mur.
-  - Ombre au mur décalée de 0,8 D × 0,62 D, plus un voile et un contact.
+- **Toile, de face** (choix de Walid du 15/11 : « je le veux de face »). Aucune rotation : on ne voit aucun de ses côtés, et plus aucune transformation 3D, donc plus de calque composité. Ce qui en fait un objet décollé du mur par son châssis de 2 cm :
+  - L'ombre portée à droite et en bas, celle de 2 cm de recul sous la lumière de la fiche : décalée de 0,8 D × 0,62 D (D = 2 cm), adoucie par la pénombre, plus un voile plus large.
+  - Un contact sombre et serré au ras des bords droit et bas, là où le côté de la toile rejoint son ombre.
+  - Le pli de la toile autour du châssis (arrondi de 2,5 mm, `CANVAS_EDGE` de la fiche), 0,7 % de la largeur de la scène. Il fait partie de la face, vu de face : ce n'est pas une tranche. Ses arêtes haute et gauche prennent la lumière, la basse et la droite sont à l'ombre ; les coins s'arrondissent à peine. C'est lui qui donne l'épaisseur de face, surtout sur les œuvres sombres.
+  - La face éclairée, un peu plus claire en haut à gauche.
+  - Scène 500/587 et taille inchangées ; l'œuvre et son ombre sont recentrées ensemble (décalage de -1,5 × -1,1 % de la scène).
+  - Ce qui la distingue d'un poster encadré au premier coup d'œil : l'image va jusqu'au bord, sans cadre ni marge blanche, avec son ombre de châssis.
 - **Poster A.** Un beau tirage tenu par le haut, qui s'est doucement relâché. Un seul modèle d'onde règle la silhouette, la lumière et l'ombre : crêtes (papier le plus loin du mur) à 27 % et 71 % de la largeur, creux à 5 %, 49 % et 93 %.
   - Silhouette (`clip-path` sur la feuille, polygone de `papier.py`, retraits en `cqw`) : bord haut droit, tenu ; côtés qui s'ouvrent vers le bas ; bord bas plus bas sur les crêtes ; coin bas droit soulevé, qui s'écarte et s'arrondit. Le coin bas gauche, côté lumière, reste près du mur.
   - Lumière : sur chaque onde, le flanc tourné vers la fenêtre s'éclaire (reflet satiné, jusqu'à +22 % de blanc), l'autre s'assombrit (jusqu'à -19 %). Les bandes traversent l'œuvre ; l'onde naît en haut et s'amplifie vers le bord libre. Sans contour blanc, elles sont un quart plus douces, pour rester du papier et ne pas tourner au tissu.
@@ -120,6 +121,7 @@ Principes du rendu (lumière de la fiche 3D : en haut à gauche, devant ; ombres
 - **Poster B.** Baguette de 2,4 % de la vignette, teintes des vrais cadres (`data-frame` : noir, blanc, chene, noyer).
   - Lèvre du cadre en ombre sur le tirage, reflet fixe de la petite fenêtre.
   - La porte-fenêtre de GLASS_ROOM : 2 battants de 4 carreaux, ciel plus clair en haut, bords doux.
+  - Intensité adoucie de moitié (retour de Walid du 15/11 : « elle éclaire un peu trop […] on n'arrive plus trop à distinguer l'œuvre ») : au plus fort, 25 % de blanc en haut de la fenêtre, 18 % au milieu, 10 % en bas, halo à 5 %. Le reflet fixe de la petite fenêtre et le voile de la vitre suivent (8 %, 4,5 %). Forme, course et rythme inchangés. L'œuvre reste lisible à travers la vitre, même sombre (méditation, zèbre) ; sur une œuvre très claire, le reflet ne se voit plus que sur ses parties sombres, comme une vraie vitre.
   - Elle entre en haut de la vitre à 12 % de la traversée de l'écran par la carte et sort en bas à 88 %. Elle glisse donc à un peu moins de la moitié de la vitesse de la carte, comme un reflet de la pièce et non de l'écran.
   - Sa place dans la vitre dépend de la colonne (`anime-product-card:nth-child`, 2/3/4 colonnes) : toute la rangée reflète la même fenêtre.
 
@@ -163,7 +165,25 @@ Conditions :
 - Défilement composité de 7 200 px : 3 600 à 1 200 px/s, puis 3 600 à 3 000 px/s, simulé à la molette (le geste tactile ne défile pas dans Chrome sans écran).
 - Chrome 157 sans écran, carte graphique réelle.
 
-Dernier passage (15/11, après la reprise du poster A) :
+Dernier passage (15/11 au soir, toile de face et reflet adouci). La machine était chargée par d'autres applications (environ 20 à 30 % du processeur), ce qui pèse sur le fil principal une fois ralenti 4 fois. Deux mesures, donc :
+
+**Images vues à l'écran** (sorties du compositeur, `bench/frames-vues.cjs`), ce que l'œil voit :
+
+| Grille | Images/s à l'écran | Écart médian | p95 | Écarts > 25 ms | Calques | Mémoire des tuiles | Images en mémoire graphique |
+|---|---|---|---|---|---|---|---|
+| Cartes actuelles (une image) | 58 | 16,7 ms | 16,8 ms | 4 | 8 | 14,1 Mo | 18,3 Mo |
+| Toiles + posters B, reflet en CSS | 58 | 16,7 ms | 16,8 ms | 5 | 27 | 14,4 Mo | 19,3 Mo |
+| Toiles + posters B, reflet par le script | 58 | 16,7 ms | 16,8 ms | 4 | 27 | 14,3 Mo | 19,3 Mo |
+| Toiles + posters A | 59 | 16,7 ms | 16,8 ms | 2 | 9 | 14,1 Mo | 19,1 Mo |
+
+**Fil principal** (`requestAnimationFrame`, `bench/perf.cjs`, même jour) : cartes actuelles 59 images/s, 0 tâche longue ; posters B en CSS 38 images/s, 2 tâches longues ; par le script 35 et 1 ; posters A 53 et 1. Ces chiffres suivent la charge de la machine, pas le code :
+
+- passés en alternance dans les mêmes conditions, l'ancien prototype (toile de trois quarts, reflet plein) donne 32 à 36 images/s et 0 à 4 tâches longues, le nouveau 30 à 35 et 1 à 3 ;
+- le même code de B donnait 60 images/s sans tâche longue sur la machine au calme, une heure plus tôt (tableau ci-dessous).
+
+Le reflet de B est animé par le compositeur : le fil principal ne fait que tenir ses comptes, et l'écran reste à 58 images/s.
+
+Passage précédent, machine au calme (toile encore de trois quarts, reflet plein) :
 
 | Grille | Images/s | p95 | Plus lente | > 25 ms | Tâches longues | Styles recalculés | Calques | Mémoire des tuiles | Images en mémoire graphique |
 |---|---|---|---|---|---|---|---|---|---|
@@ -172,12 +192,10 @@ Dernier passage (15/11, après la reprise du poster A) :
 | Toiles + posters B, reflet par le script | 60 | 16,8 ms | 33,3 ms | 1 | 0 | 251 | 46 | 15,8 Mo | 20,6 Mo |
 | Toiles + posters A | 60 | 16,8 ms | 17 ms | 0 | 0 | 0 | 28 | 15,3 Mo | 20,3 Mo |
 
-Les 1 et 2 images à 33 ms des lignes B sont des écarts d'un passage à l'autre : le code de B n'a pas changé, et le passage précédent en comptait 0 sur 264.
-
 - **Rastérisation du poster A** (le filtre `drop-shadow` y déplace le coût) : 60 tâches, 8 ms au total sur les 7 200 px, contre 5 ms pour les cartes actuelles. Négligeable.
 
-- **Calques.** Un par toile (transformation 3D), un par poster B (le reflet animé), aucun pour le poster A. Les 6 à 8 calques de base sont ceux de la page, plus la bande « avant / après » du prototype.
-  - Seuls ceux de l'écran et de ses abords ont de la mémoire : environ +5 Mo de tuiles et +5 Mo d'images au premier écran du téléphone, mesurés par memory-infra.
+- **Calques.** Un par poster B (le reflet animé). Aucun pour la toile, vue de face sans transformation 3D (elle en coûtait un chacune), ni pour le poster A. Pour 48 cartes : 27 calques en mode B (46 avant la toile de face), 9 en mode A (28). Les 8 calques de base sont ceux de la page, plus la bande « avant / après » du prototype.
+  - Mémoire au premier écran du téléphone (memory-infra) : à peine +0,3 Mo de tuiles et +1 Mo d'images en mode B par rapport aux cartes actuelles, contre +5 Mo et +5 Mo quand la toile était en 3D.
 - **Styles.** Même en CSS, Chrome recalcule le style des reflets à chaque image (0,7 ms par image au ralenti, environ 0,2 ms à pleine vitesse). Aucune mise en page.
 - **Trace du fil principal** (3 600 px de défilement, processeur ralenti 4 fois, posters B) : travail par image de 4,4 ms en médiane et 11,3 ms au 95e centile, loin des 16,7 ms d'une image. Recomposition des calques : 4 ms au total en CSS, 2 ms par le script.
 - **Réseau.** Aucune requête en plus : pas d'image, pas de texture. Le reflet et l'ondulation sont des dégradés.
@@ -185,9 +203,10 @@ Les 1 et 2 images à 33 ms des lignes B sont des écarts d'un passage à l'autre
 
 ## 7. À faire valider par Walid
 
-1. **Poster A ou B** (bascule « A et B » du prototype : chaque poster en paire, sur la même rangée). Autre piste : la vignette suit la première variante du poster, A sans cadre, B encadré.
-2. **Cadre de B.** Noir par défaut : sur les fonds clairs des vignettes, c'est lui qui dessine le mieux l'objet, et la vitre s'y lit le mieux. Le blanc se perd sur le fond #f5f4f2.
-3. **Contour blanc.** Le prototype le montre, comme la fiche par défaut (`pp_default_on`). Mais la fiche ne le propose que si le produit a une image « passe-partout ». Un poster à image unique n'en a pas : sans changement de cette règle, sa vignette serait sans contour (test du §2).
+1. **Poster : B, sous verre** — choisi par Walid le 15/11, avec un reflet plus discret (fait). A reste dans le prototype, à comparer.
+2. **Toile : de face** — demandé par Walid le 15/11 (fait).
+3. **Cadre de B.** Noir par défaut : sur les fonds clairs des vignettes, c'est lui qui dessine le mieux l'objet, et la vitre s'y lit le mieux. Le blanc se perd sur le fond #f5f4f2.
+4. **Contour blanc.** Le prototype le montre, comme la fiche par défaut (`pp_default_on`). Mais la fiche ne le propose que si le produit a une image « passe-partout ». Un poster à image unique n'en a pas : sans changement de cette règle, sa vignette serait sans contour (test du §2).
 
 ## 8. Relevé en chemin, hors vignette, à régler avec les nouveaux produits
 

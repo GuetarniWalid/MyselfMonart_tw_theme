@@ -55,6 +55,11 @@ Ajouter un tableau à partir d'une seule image à plat, sans Photoshop ni mockup
 15. Impression : hors projet. Walid continue avec ses propres fichiers.
 16. Mesure : les nouveautés sur la nouvelle fiche, comparées aux nouveautés des mois précédents. Le test de janvier sur les best-sellers est retiré le 15/11/2026 (décision 2). PostHog tourne dans une organisation à part, MyselfMonArt (projet 334087, région Europe), créée le 04/11 dans le compte PostHog existant de Walid et séparée de Made By Mood, avec sa propre offre gratuite. Clarity est retiré dès que PostHog tourne. La bannière cookies garde l'acceptation automatique, par choix de Walid.
 17. Version 2 : vidéo automatique, réalité augmentée, fichier d'impression HD.
+18. Vignettes de collection des nouveaux produits (choix de Walid du 15/11/2026, sur un essai en page privée) : une seule image, l'œuvre à plat, mise en objet par le navigateur, sans WebGL.
+    - Toile : de face, sans cadre, avec son ombre et sa lumière.
+    - Poster : sous verre, dans un cadre fin aux teintes de l'atelier (noir par défaut). Au défilement, le reflet discret d'une porte-fenêtre passe sur la vitre.
+    - Les cartes des anciens produits ne changent pas.
+    - Code et notes dans le dossier `vignettes-collection`, à porter avec le ticket 18.
 
 ## Règles
 

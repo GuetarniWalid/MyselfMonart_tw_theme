@@ -32,57 +32,41 @@
 .oeuvre-card .oeuvre-card-face { position: absolute; inset: 0; overflow: hidden; background: #e7e1d8; }
 .oeuvre-card-face img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
-/* ---------- Toile : châssis de 2 cm, vue de trois quarts, tranche blanche à l'ombre ----------
-   --t : rotation ; --P : distance de l'œil (en largeurs de scène) ; --D : profondeur du châssis.
-   La tranche est dessinée à plat, dans le plan de la toile, à la largeur et au biais qu'aurait le
-   côté réel une fois projeté (calculs ci-dessous) : un seul calque composité par carte. */
+/* ---------- Toile : de face, sur un châssis de 2 cm qui la décolle du mur ----------
+   Aucune rotation (choix de Walid du 15/11) : vue de face, on ne voit aucun côté. Ce qui en fait un objet :
+   - l'ombre portée à droite et en bas, celle d'un châssis de 2 cm sous la lumière de la fiche (en haut à
+     gauche, devant) : décalée de 0,8 D × 0,62 D, adoucie par la pénombre, plus un voile plus large ;
+   - un contact sombre et serré au ras des bords droit et bas, là où le côté de la toile rejoint son ombre ;
+   - le pli de la toile autour du châssis (rayon de 2,5 mm, CANVAS_EDGE de la fiche) : il fait partie de la
+     face, vu de face. Ses arêtes haute et gauche prennent la lumière, la basse et la droite sont à l'ombre ;
+     les coins s'arrondissent à peine ;
+   - la face éclairée, un peu plus claire en haut à gauche.
+   Rien en 3D : aucun calque composité, tout est peint une fois. */
 .oeuvre-card[data-kind="toile"] .oeuvre-card-piece {
-  --t: 22deg;
-  --P: 4.8;
-  --D: .056;
-  --W: min(.8, var(--r));                       /* largeur de la toile : 80 % au plus, 100 % de haut en portrait */
-  --sn: sin(var(--t));
-  --cs: cos(var(--t));
-  --zf: calc(var(--W) * .5 * var(--sn));        /* avancée du bord droit vers l'œil */
-  --kn: calc(var(--P) / (var(--P) - var(--zf)));
-  --kf: calc(var(--P) / (var(--P) + var(--zf)));
-  --kb: calc(var(--P) / (var(--P) - var(--zf) + var(--D) * var(--cs)));
-  --Xb: calc((var(--W) * .5 * var(--cs) + var(--D) * var(--sn)) * var(--kb));   /* arête arrière, à l'écran */
-  --u: calc(var(--Xb) * var(--P) / (var(--P) * var(--cs) + var(--Xb) * var(--sn)));
-  --ko: calc(var(--P) / (var(--P) - var(--u) * var(--sn)));
-  --strip: calc(var(--u) - var(--W) * .5);      /* largeur de la tranche, dans le plan de la toile */
-  --pinch: calc((1 - var(--kb) / var(--ko)) * 50%);   /* fuite de l'arête arrière, en haut et en bas */
-  --dx: calc((var(--W) * .5 * var(--cs) * var(--kf) - var(--Xb)) * .5 - .018);  /* recentre l'objet et son ombre */
+  --D: .056;                                    /* profondeur du châssis : 2 cm, en largeur de scène */
+  --W: min(.8, var(--r));                       /* largeur : 80 % au plus, toute la hauteur utile en portrait */
   width: calc(var(--W) * 100cqw);
   height: calc(var(--W) / var(--r) * 100cqw);
-  transform: translateX(calc(var(--dx) * 100cqw)) perspective(calc(var(--P) * 100cqw)) rotateY(calc(-1 * var(--t)));
+  translate: -1.5cqw -1.1cqw;                   /* l'œuvre et son ombre, ensemble, au centre de la scène */
+  border-radius: .35cqw;
 }
-/* Ombre portée sur le mur : la toile décalée de 0,68 D vers la droite et 0,61 D vers le bas (direction
-   de la lumière), adoucie par la pénombre ; plus un voile large et un contact serré. */
+.oeuvre-card[data-kind="toile"] .oeuvre-card-face { border-radius: inherit; }
 .oeuvre-card[data-kind="toile"] .oeuvre-card-piece::before {
-  content: ""; position: absolute; inset: 0; z-index: -1;
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
   box-shadow:
-    calc(var(--D) * .80 * 100cqw) calc(var(--D) * .62 * 100cqw) calc(var(--D) * 1.1 * 100cqw) rgba(38, 27, 18, .34),
+    calc(var(--D) * .14 * 100cqw) calc(var(--D) * .16 * 100cqw) calc(var(--D) * .22 * 100cqw) rgba(38, 27, 18, .26),
+    calc(var(--D) * .80 * 100cqw) calc(var(--D) * .62 * 100cqw) calc(var(--D) * 1.1 * 100cqw) rgba(38, 27, 18, .32),
     calc(var(--D) * 1.3 * 100cqw) calc(var(--D) * 1.5 * 100cqw) calc(var(--D) * 2.6 * 100cqw) rgba(38, 27, 18, .10),
-    0 0 calc(var(--D) * .3 * 100cqw) rgba(38, 27, 18, .12);
+    0 0 calc(var(--D) * .3 * 100cqw) rgba(38, 27, 18, .10);
 }
-/* Lumière sur la face : la toile tournée vers la fenêtre, plus claire en haut à gauche ; l'arrondi du
-   bord gauche prend un filet de lumière, celui du bord droit plonge vers la tranche. */
 .oeuvre-card[data-kind="toile"] .oeuvre-card-piece::after {
-  content: ""; position: absolute; inset: 0; pointer-events: none;
+  content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
   background:
-    linear-gradient(90deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0) 1.1%),
-    linear-gradient(270deg, rgba(30, 22, 15, .16), rgba(30, 22, 15, 0) 1.6%),
+    linear-gradient(90deg, rgba(255, 255, 255, .30), rgba(255, 255, 255, 0) .7cqw),
+    linear-gradient(180deg, rgba(255, 255, 255, .24), rgba(255, 255, 255, 0) .7cqw),
+    linear-gradient(270deg, rgba(30, 22, 15, .22), rgba(30, 22, 15, 0) .7cqw),
+    linear-gradient(0deg, rgba(30, 22, 15, .26), rgba(30, 22, 15, 0) .7cqw),
     linear-gradient(118deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, 0) 42%, rgba(30, 22, 15, 0) 58%, rgba(30, 22, 15, .07));
-}
-.oeuvre-card-edge {
-  position: absolute; top: 0; bottom: 0; left: 100%;
-  width: calc(var(--strip) * 100cqw);
-  clip-path: polygon(0 0, 100% var(--pinch), 100% calc(100% - var(--pinch)), 0 100%);
-  /* Tranche « Blanche » (#efede8) côté ombre : plus claire au pli, plus sombre contre le mur. */
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, .10), rgba(255, 255, 255, 0) 30%, rgba(30, 22, 15, 0) 65%, rgba(30, 22, 15, .10)),
-    linear-gradient(90deg, #d9d5ce 0%, #c9c4bc 45%, #b4afa6 100%);
 }
 
 /* ---------- Poster : feuille (contour blanc par défaut, comme la fiche), à plat ----------
@@ -205,8 +189,8 @@
   position: absolute; inset: calc(var(--ff) * 100cqw);
   overflow: clip; pointer-events: none;
   background:
-    radial-gradient(42% 30% at 16% 9%, rgba(255, 255, 255, .13), rgba(255, 255, 255, 0) 100%),
-    linear-gradient(168deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .015) 38%, rgba(255, 255, 255, .035) 100%);
+    radial-gradient(42% 30% at 16% 9%, rgba(255, 255, 255, .08), rgba(255, 255, 255, 0) 100%),
+    linear-gradient(168deg, rgba(255, 255, 255, .045), rgba(255, 255, 255, .01) 38%, rgba(255, 255, 255, .022) 100%);
   box-shadow:
     inset calc(var(--D) * .30 * 100cqw) calc(var(--D) * .26 * 100cqw) calc(var(--D) * .45 * 100cqw) rgba(20, 14, 9, .26),
     inset 0 0 calc(var(--D) * .12 * 100cqw) rgba(20, 14, 9, .18);
@@ -223,7 +207,7 @@
 .oeuvre-card-glare::before {
   content: ""; position: absolute; inset: 0;
   /* Les carreaux : le ciel, plus clair en haut. Reflet hors de la mise au point : montants et bords doux. */
-  background: linear-gradient(180deg, rgba(248, 251, 255, .50), rgba(248, 251, 255, .36) 40%, rgba(248, 251, 255, .21));
+  background: linear-gradient(180deg, rgba(248, 251, 255, .25), rgba(248, 251, 255, .18) 40%, rgba(248, 251, 255, .10));
   transform: skewY(-8deg);
   -webkit-mask-image:
     linear-gradient(90deg, transparent 0, #000 10%, #000 90%, transparent 100%),
@@ -240,7 +224,7 @@
 }
 .oeuvre-card-glare::after {                     /* la lumière diffuse autour de la fenêtre */
   content: ""; position: absolute; inset: -14% -45%;
-  background: radial-gradient(closest-side, rgba(255, 255, 255, .10), rgba(255, 255, 255, 0));
+  background: radial-gradient(closest-side, rgba(255, 255, 255, .05), rgba(255, 255, 255, 0));
 }
 /* Course : la fenêtre entre par le haut de la vitre quand la carte a fait 12 % de sa traversée de
    l'écran, en sort par le bas à 88 % ; elle est entière au milieu de l'écran. Elle glisse ainsi à un
