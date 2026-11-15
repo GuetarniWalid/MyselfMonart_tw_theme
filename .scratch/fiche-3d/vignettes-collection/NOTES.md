@@ -1,6 +1,6 @@
 # Vignettes de collection des œuvres à image unique : notes pour le thème
 
-Essai du 15/11/2026, rien n'est encore dans le thème.
+Essai du 15/11/2026. La toile de face et le poster sous verre au cadre noir sont dans le thème depuis le 16/11/2026 (f5226d7, 2788534) : `snippets/card-product.liquid`, `input.css` (« Vignette d'œuvre »), `assets/oeuvre-card-reflet.js`. Le poster papier (A) et les autres teintes de cadre ne sont qu'ici.
 
 - Page d'essai, publiée en page privée pour Walid : https://claude.ai/artifact/GFWunKvBpwpWc5EyFqeD3L (autonome, 1,4 Mo, images en data URI).
 - Code prêt à porter, dans ce dossier : `oeuvre-card.css` (CSS) et `oeuvre-card-reflet.js` (script du reflet). Silhouette du poster A : `papier.py`.

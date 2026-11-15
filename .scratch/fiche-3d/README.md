@@ -59,7 +59,7 @@ Ajouter un tableau à partir d'une seule image à plat, sans Photoshop ni mockup
     - Toile : de face, sans cadre, avec son ombre et sa lumière.
     - Poster : sous verre, dans un cadre fin aux teintes de l'atelier (noir par défaut). Au défilement, le reflet discret d'une porte-fenêtre passe sur la vitre.
     - Les cartes des anciens produits ne changent pas.
-    - Code et notes dans le dossier `vignettes-collection`, à porter avec le ticket 18.
+    - Posé dans le thème le 16/11/2026 : `card-product.liquid`, `input.css` (« Vignette d'œuvre ») et `oeuvre-card-reflet.js`. Il se verra dès qu'un produit aura le modèle `oeuvre-3d` (ticket 18). Notes et code de l'essai dans le dossier `vignettes-collection`.
 
 ## Règles
 
