@@ -70,7 +70,7 @@ test('vignette : le décor vide passe la règle *:empty du thème (data-allow-em
   const { branch } = cardBranches()
   const empty = [...branch.matchAll(/<(\w+)([^>]*)><\/\1>/g)].filter((t) => t[1] !== 'script')
   assert.ok(empty.length > 0)
-  for (const [tag, name, attrs] of empty) assert.match(attrs, /data-allow-empty/, tag)
+  for (const [element, , attrs] of empty) assert.match(attrs, /data-allow-empty/, element)
   assert.match(branch, /<span class="oeuvre-card-glass" aria-hidden="true">/)
 })
 

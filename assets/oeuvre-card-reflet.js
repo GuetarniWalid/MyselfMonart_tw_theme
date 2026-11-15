@@ -12,10 +12,11 @@
      regroupé par requestAnimationFrame, ne met à jour qu'elles ;
    - rien ne bouge quand le visiteur demande moins de mouvement (le CSS fige aussi le reflet) ;
    - un MutationObserver suit les cartes qui arrivent ou s'en vont : filtres (assets/collection-tag-filter.js),
-     défilement infini (assets/collection.js), « Mes j'aime ».
+     défilement infini (assets/collection.js).
 
    Chargé en module par la carte d'un poster sous verre : une seule exécution par page, quel que soit le
-   nombre de cartes, et rien sur une page qui n'en a pas. Node (tests) : seul le calcul pur est exporté. */
+   nombre de cartes, et rien sur une page qui n'en a pas. Tests : scripts/oeuvre-card-reflet.test.cjs, qui le
+   fait tourner dans une page réduite. */
 (() => {
   // La course du reflet, celle du CSS (input.css : @keyframes oeuvre-card-glare et animation-range) : la
   // porte-fenêtre entre en haut de la vitre à 12 % de la traversée de l'écran par la carte, et sort en bas à
@@ -32,15 +33,10 @@
     return Math.round(Math.min(1, Math.max(0, progress)) * DURATION)
   }
 
-  if (typeof window === 'undefined') {
-    module.exports = { COURSE, glareTime }
-    return
-  }
-
   if (CSS.supports('animation-timeline: view()') || !Element.prototype.animate) return
 
   const GLASS = '.oeuvre-card-glass'
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)')
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
   const keyframes = [{ translate: COURSE.from }, { translate: COURSE.to }]
   const anims = new Map() // vitre → animation (en pause) de son reflet
   const near = new Set() // vitres proches de l'écran : les seules mises à jour
@@ -48,7 +44,7 @@
 
   function update() {
     frame = 0
-    if (reduce.matches) return
+    if (reducedMotion.matches) return
     // D'abord toutes les lectures, puis les écritures : une seule mise en page par image.
     const times = [...near].map((glass) => {
       const { top, height } = glass.getBoundingClientRect()
@@ -65,6 +61,8 @@
 
   const io = new IntersectionObserver((entries) => {
     for (const entry of entries) {
+      // Une annonce restée en file peut arriver après le départ de sa carte (sync l'a déjà oubliée).
+      if (!anims.has(entry.target)) continue
       if (entry.isIntersecting) near.add(entry.target)
       else near.delete(entry.target)
     }

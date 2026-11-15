@@ -160,6 +160,19 @@ test('les cartes qui arrivent (filtres, défilement infini) ont leur reflet ; ce
   assert.equal(arrived.anims.length, 1, 'jamais deux animations pour une vitre')
 })
 
+test('une vitre partie ne revient pas par une annonce de l’IntersectionObserver restée en file', () => {
+  const gone = glass(300)
+  const kept = glass(800)
+  const p = page({ glasses: [gone, kept] })
+  p.remove(gone)
+  p.near([gone], [kept]) // l'annonce de `gone` était partie avant son retrait
+  assert.doesNotThrow(() => p.frame())
+  kept.top = 490
+  p.scroll()
+  p.frame()
+  assert.equal(time(kept), 250, 'les autres vitres suivent toujours')
+})
+
 test('arrivées par fetch avant le script : la page sans vitre au départ suit celles qui arrivent', () => {
   const p = page({ glasses: [] })
   assert.equal(p.observers.mo.length, 1)

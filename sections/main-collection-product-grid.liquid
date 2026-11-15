@@ -172,14 +172,14 @@
             "@type": "Product",
             "name": {{ product.title | strip_html | json }},
             {%- liquid
-              # 2e photo (l'œuvre à plat) pour tous les produits, comme le rendait déjà l'ancien test
-              # (son else if valait un simple else). Changer de photo changerait les données lues par Google.
-              # Les nouveaux produits (modèle oeuvre-3d, snippet artwork-kind) n'ont que l'œuvre à plat : la 1re.
-              capture ld_image_unique
+              # L'œuvre à plat. Produits de toujours : leur 2e photo, comme le rendait déjà l'ancien test (son
+              # else if valait un simple else) ; changer de photo changerait les données lues par Google.
+              # Nouveaux produits (modèle oeuvre-3d, snippet artwork-kind) : leur seule photo, la 1re.
+              capture ld_new_kind
                 render 'artwork-kind', product: product, suffix: product.template_suffix, image_unique: true
               endcapture
               assign ld_image = product.images[1]
-              if ld_image_unique != blank
+              if ld_new_kind != blank
                 assign ld_image = product.images[0]
               endif
               assign product_image = ld_image | image_url: width: ld_image.preview_image.width | prepend: "https:"
