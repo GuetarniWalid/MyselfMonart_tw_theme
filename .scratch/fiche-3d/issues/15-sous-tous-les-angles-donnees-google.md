@@ -4,7 +4,7 @@
 
 **Blocked by:** 09 (du Publisher à la fiche)
 
-**Status:** ready-for-agent
+**Status:** en attente (15/11/2026) : Walid ne veut pas des photos rendues par la 3D ; il choisit entre un rendu Blender (essai en cours avec un autre agent) et la seule image de l'œuvre pour Google
 
 - [ ] La bande est visible et accessible, et elle se charge sans ralentir l'arrivée sur la fiche.
 - [ ] Les données produit listent toutes les photos, et chaque variante avec son prix, sa disponibilité et son image. Elles passent sans erreur dans l'outil de test des résultats enrichis de Google.
