@@ -18,7 +18,8 @@ const code = (file) => read(file)
   .replace(/^\s*#.*$/gm, '')
 
 /* L'index de l'œuvre à plat du produit de la fiche, tiré du snippet artwork-flat-index et rendu numérique
-   (l'index d'une liste l'exige), en balises ou dans un bloc {% liquid %}. Rend le nom de la variable. */
+   (l'index d'une liste l'exige), en balises ou dans un bloc {% liquid %}. Rend { name, at } : le nom de la
+   variable qui le porte, et la position de son calcul dans le code. */
 function flatIndex(source, where) {
   const tags = /{%-?\s*capture (\w+)\s*-?%}{%-?\s*render 'artwork-flat-index', product: product\s*-?%}{%-?\s*endcapture\s*-?%}\s*{%-?\s*assign \1 = \1 \| plus: 0\s*-?%}/.exec(source)
   const block = /\bcapture (\w+)\s+render 'artwork-flat-index', product: product\s+endcapture\s+assign \1 = \1 \| plus: 0\b/.exec(source)

@@ -30,7 +30,8 @@
   assign art = art_media.preview_image
   assign alts = product.metafields.meta_object.media.value.alts.value
   assign art_alt = alts[flat_index] | default: art_media.alt
-  # Sa place parmi les images, comptée comme les photos du repli (image_index : 1 pour la 1re).
+  # Sa place comptée comme les photos du repli (image_index : 1 pour la 1re image) : 2 pour un produit de
+  # toujours, comme dans la galerie ; 1 pour un nouveau produit.
   assign art_position = flat_index | plus: 1
   # Le jumeau publié (métachamps link.poster / link.painting), comme la bascule product-format-toggle.
   assign has_twin = false
@@ -240,11 +241,12 @@
     <svg class="h-[15px] w-[15px]" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 8H3.5"/><path d="M7.5 3.75 3.25 8l4.25 4.25"/></svg>
     {{ 'sections.mma.oeuvre_3d_back' | t }}
   </button>
-  {%- comment -%} Sans 3D : les autres photos, chargées seulement si on les demande, et les mêmes que la
-     galerie : à partir de start_from, ni l'image à plat (art_position, là où elle est), ni les contours
-     blancs. Un nouveau produit n'a souvent que l'œuvre à plat et son contour blanc : l'œuvre reste alors
-     seule, sans flèches (setupPhotos, dans assets/component-oeuvre-3d.js). Le fondu reste en animations
-     réduites : c'est la décision 5, et la seule transition de ce mode. {%- endcomment -%}
+  {%- comment -%} Sans 3D : les autres photos, chargées seulement si on les demande : à partir de start_from,
+     ni l'image à plat (art_position, là où elle est), ni les contours blancs. Pour un produit de toujours,
+     ce sont celles de sa galerie. Un nouveau produit, qui n'a pas de galerie, n'a souvent que l'œuvre à plat
+     et son contour blanc : l'œuvre reste alors seule, sans flèches (setupPhotos, dans
+     assets/component-oeuvre-3d.js). Le fondu reste en animations réduites : c'est la décision 5, et la
+     seule transition de ce mode. {%- endcomment -%}
   <template data-photos>
     {%- assign image_index = 0 -%}
     {%- for media in product.media -%}

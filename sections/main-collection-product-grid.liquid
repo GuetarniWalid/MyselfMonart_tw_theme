@@ -172,9 +172,9 @@
             "@type": "Product",
             "name": {{ product.title | strip_html | json }},
             {%- liquid
-              # L'œuvre à plat (snippet artwork-flat-index). Produits de toujours : leur 2e photo, comme le rendait
-              # déjà l'ancien test (son else if valait un simple else) ; changer de photo changerait les données
-              # lues par Google. Nouveaux produits (modèle oeuvre-3d) : leur seule photo, la 1re.
+              # L'œuvre à plat (snippet artwork-flat-index) : la 2e photo des produits de toujours, celle que Google
+              # lit depuis toujours (en changer changerait ses données) ; la 1re et seule des nouveaux produits
+              # (modèle oeuvre-3d).
               capture ld_flat_index
                 render 'artwork-flat-index', product: product
               endcapture

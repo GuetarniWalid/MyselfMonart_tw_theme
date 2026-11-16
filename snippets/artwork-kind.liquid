@@ -22,8 +22,8 @@
       product.template_suffix pour un produit affiché ailleurs (ligne du panier)
     - image_unique: {Boolean} ne répondre que pour les nouveaux produits, qui n'ont que l'œuvre à plat
       (modèle oeuvre-3d) ; rien pour la toile et le poster de toujours (vignettes de collection de
-      snippets/card-product.liquid ; place de l'œuvre à plat, snippet artwork-flat-index, pour le panier,
-      la fiche 3D et les données Google de la collection). Facultatif.
+      snippets/card-product.liquid ; place de l'œuvre à plat, snippet artwork-flat-index, qui dit qui
+      s'en sert). Facultatif.
 
   Usage :
     {%- capture artwork_kind -%}{% render 'artwork-kind', product: product, suffix: template.suffix %}{%- endcapture -%}
