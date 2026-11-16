@@ -14,10 +14,19 @@
       <ul>
         {%- for item in cart.items -%}
           {% liquid
+            # L'œuvre à plat, vignette de la ligne : la 2e photo (index 1) des produits de toujours ; la seule, la
+            # 1re, des nouveaux produits (modèle oeuvre-3d, règle unique : snippet artwork-kind).
+            capture flat_kind
+              render 'artwork-kind', product: item.product, suffix: item.product.template_suffix, image_unique: true
+            endcapture
+            assign flat_index = 1
+            if flat_kind != blank
+              assign flat_index = 0
+            endif
             if item.product.has_only_default_variant
               assign image = item.product.featured_image.src
             else
-              assign image = item.variant.featured_image.src | default: item.product.images[1].src | default: item.product.featured_image.src
+              assign image = item.variant.featured_image.src | default: item.product.images[flat_index].src | default: item.product.featured_image.src
             endif
             # Aperçu personnalisé (propriété masquée _preview, URL externe) -> vignette custom. Vide sinon.
             assign custom_preview_url = ''
@@ -29,7 +38,7 @@
           %}
           <cart-item data-index="{{ forloop.index }}" data-section-id="{{ section.id }}">
             <li class="grid grid-cols-[auto_1fr] md:grid-cols-[auto_1fr_auto_auto] grid-rows-[auto_auto] gap-x-4 gap-y-8 md:gap-y-0 py-8 first:border-t border-b border-main-10">
-              {% if item.product.images[1] %}
+              {% if item.product.images[flat_index] %}
                 <div class="relative md:row-span-2 w-[120px]">
                   <a href="{{ item.url }}" class="absolute inset-0">
                     <img
@@ -40,7 +49,7 @@
                       src="{{ image | image_url: width: 150 }}"
                       {%- endif %}
                       class="skeleton w-full h-full object-contain rounded-lg"
-                      alt="{% if custom_preview_url != blank %}{{ item.product.title | escape }}{% elsif item.product.metafields.meta_object.media.value.alts.value[1] %}{{ item.product.metafields.meta_object.media.value.alts.value[1] | escape }}{% else %}{{ item.product.images[1].alt | escape }}{% endif %}"
+                      alt="{% if custom_preview_url != blank %}{{ item.product.title | escape }}{% elsif item.product.metafields.meta_object.media.value.alts.value[flat_index] %}{{ item.product.metafields.meta_object.media.value.alts.value[flat_index] | escape }}{% else %}{{ item.product.images[flat_index].alt | escape }}{% endif %}"
                       loading="lazy"
                       width="150"
                       height="{{ 150 | divided_by: image.aspect_ratio | ceil }}">
