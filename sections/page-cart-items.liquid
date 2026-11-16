@@ -15,15 +15,16 @@
         {%- for item in cart.items -%}
           {% liquid
             # L'œuvre à plat, vignette de la ligne : la 2e photo des produits de toujours, la seule des nouveaux
-            # produits (snippet artwork-flat-index).
+            # produits (snippet artwork-flat-index). `image` est l'image elle-même, pas son adresse : son format
+            # donne la hauteur de la balise (150 px de large).
             capture flat_index
               render 'artwork-flat-index', product: item.product
             endcapture
             assign flat_index = flat_index | plus: 0
             if item.product.has_only_default_variant
-              assign image = item.product.featured_image.src
+              assign image = item.product.featured_image
             else
-              assign image = item.variant.featured_image.src | default: item.product.images[flat_index].src | default: item.product.featured_image.src
+              assign image = item.variant.featured_image | default: item.product.images[flat_index] | default: item.product.featured_image
             endif
             # Aperçu personnalisé (propriété masquée _preview, URL externe) -> vignette custom. Vide sinon.
             assign custom_preview_url = ''
@@ -38,6 +39,12 @@
               {% if item.product.images[flat_index] %}
                 <div class="relative md:row-span-2 w-[120px]">
                   <a href="{{ item.url }}" class="absolute inset-0">
+                    {%- comment -%}
+                      Toile ou poster : l'œuvre telle que commandée, en objet, entière dans la case (snippet
+                      cart-item-artwork). Toute autre ligne, et toute ligne à aperçu personnalisé : l'image d'avant.
+                    {%- endcomment -%}
+                    {%- capture line_artwork -%}{% render 'cart-item-artwork', item: item, context: 'panier' %}{%- endcapture -%}
+                    {%- if line_artwork != blank -%}{{ line_artwork }}{%- else %}
                     <img
                       {%- if custom_preview_url != blank %}
                       src="{{ custom_preview_url | escape }}"
@@ -50,6 +57,7 @@
                       loading="lazy"
                       width="150"
                       height="{{ 150 | divided_by: image.aspect_ratio | ceil }}">
+                    {%- endif %}
                   </a>
                 </div>
               {% endif %}

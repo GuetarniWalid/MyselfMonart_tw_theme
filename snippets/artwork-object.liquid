@@ -1,0 +1,111 @@
+{%- comment -%}
+  artwork-object — l'œuvre en objet, d'après sa seule image à plat (décision 18 du dossier .scratch/fiche-3d) :
+  la toile de face sur son châssis, avec son ombre et sa lumière, ou dans sa caisse américaine si elle est
+  encadrée ; le poster sous verre dans son cadre, ou en papier s'il n'en a pas, avec son contour blanc s'il en a
+  un. Tout est décor CSS autour d'un <img> ordinaire (input.css, « Vignette d'œuvre ») : ni WebGL, ni autre
+  image. Un seul rendu, un seul endroit où le changer :
+    - la carte de collection et de « Mes j'aime » des nouveaux produits (snippets/card-product.liquid) ;
+    - la vignette d'une ligne du panier, toile ou poster, nouvelle ou de toujours, telle que commandée
+      (snippets/cart-item-artwork.liquid : page panier et tiroir).
+
+  Accepts:
+    - product: {Object} le produit : le texte alternatif de son œuvre à plat (métachamp des textes alternatifs à
+      l'index de l'œuvre, snippet artwork-flat-index ; sinon celui de l'image)
+    - image: {Object} l'œuvre à plat : product.media[0] dans la carte d'un nouveau produit, product.images à
+      l'index de l'œuvre au panier
+    - kind: {String} 'toile' ou 'poster' (snippet artwork-kind)
+    - frame: {String} le cadre, id du moteur 3D : 'sans' (par défaut), 'blanc', 'noir', 'argent', 'chene', 'noyer'
+    - contour: {Boolean} poster : le contour blanc (passe-partout)
+    - context: {String} la taille : 'carte' (grille de collection), 'tiroir' (case de 80 px de large) ou
+      'panier' (page panier, case de 120 px)
+    - lazy: {Boolean} image différée. Carte : image floue puis srcset (lqip, assets/tw-global.js), sinon
+      prioritaire ; panier : loading="lazy", sinon eager. Différée si absent.
+
+  Dans la carte, la porte-fenêtre reflétée par la vitre du poster passe au défilement (son script,
+  assets/oeuvre-card-reflet.js, est chargé par la carte) et la face porte .skeleton. Au panier (data-context),
+  rien ne bouge : la porte-fenêtre reste à sa place de repos, et la face n'attend aucun script (le tiroir est
+  réécrit à chaque changement du panier, sans removeSkeletonOnImagesLoad).
+  Tests : scripts/artwork-object.test.cjs, scripts/oeuvre-card.test.cjs.
+{%- endcomment -%}
+{%- liquid
+  assign frame = frame | default: 'sans'
+  capture flat_index
+    render 'artwork-flat-index', product: product
+  endcapture
+  assign flat_index = flat_index | plus: 0
+  case context
+    when 'carte'
+      # L'œuvre n'occupe qu'une partie de la carte : 80 % de sa largeur au plus (toile, poster sans contour
+      # blanc), 63 % pour un poster à contour blanc.
+      if contour
+        assign art_sizes = '(min-width: 1280px) 200px, (min-width: 1024px) 22vw, 33vw'
+      else
+        assign art_sizes = '(min-width: 1280px) 240px, (min-width: 1024px) 26vw, 39vw'
+      endif
+    when 'tiroir'
+      assign art_width = 80
+    else
+      assign art_width = 120
+  endcase
+  assign art_width_2x = art_width | times: 2
+-%}
+{%- capture art_alt -%}{% if product.metafields.meta_object.media.value.alts.value[flat_index] %}{{ product.metafields.meta_object.media.value.alts.value[flat_index] | escape }}{% else %}{{ image.alt | escape }}{% endif %}{%- endcapture -%}
+<div
+  class="oeuvre-card{% if kind == 'poster' %}{% unless contour %} no-contour{% endunless %}{% endif %}"
+  data-kind="{{ kind }}"
+  {%- if kind == 'poster' %} data-look="{% if frame == 'sans' %}papier{% else %}verre{% endif %}"{% endif %}
+  {%- if frame != 'sans' %} data-frame="{{ frame }}"{% endif %}
+  {%- if context != 'carte' %} data-context="{{ context }}"{% endif %}
+  style="--r: {{ image.aspect_ratio | round: 4 }}">
+  <div class="oeuvre-card-stage">
+    <div class="oeuvre-card-piece">
+      {%- if kind == 'poster' -%}<div class="oeuvre-card-sheet">{%- endif -%}
+      <div class="oeuvre-card-face{% if context == 'carte' %} skeleton{% endif %}">
+        {%- if context == 'carte' -%}
+          {%- comment -%} Les paliers de primary_srcset (ancienne carte, snippets/card-product.liquid), pour l'œuvre. {%- endcomment -%}
+          {%- capture art_srcset -%}{%- if image.width >= 200 -%}{{ image | image_url: width: 200 }} 200w,{%- endif -%}{%- if image.width >= 300 -%}{{ image | image_url: width: 300 }} 300w,{%- endif -%}{%- if image.width >= 400 -%}{{ image | image_url: width: 400 }} 400w,{%- endif -%}{%- if image.width >= 500 -%}{{ image | image_url: width: 500 }} 500w,{%- endif -%}{%- if image.width >= 600 -%}{{ image | image_url: width: 600 }} 600w,{%- endif -%}{%- if image.width >= 800 -%}{{ image | image_url: width: 800 }} 800w,{%- endif -%}{%- if image.width >= 1000 -%}{{ image | image_url: width: 1000 }} 1000w,{%- endif -%}{{ image | image_url }} {{ image.width }}w{%- endcapture -%}
+          {%- if lazy == false -%}
+          <img
+            srcset="{{ art_srcset }}"
+            src="{{ image | image_url: width: 400 }}"
+            sizes="{{ art_sizes }}"
+            alt="{{ art_alt }}"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+            width="{{ image.width }}"
+            height="{{ image.height }}"
+            class="w-full h-full object-cover">
+          {%- else -%}
+          <img
+            data-srcset="{{ art_srcset }}"
+            src="{{ image | image_url: width: 10 }}"
+            sizes="{{ art_sizes }}"
+            alt="{{ art_alt }}"
+            loading="lazy"
+            width="{{ image.width }}"
+            height="{{ image.height }}"
+            class="lqip w-full h-full object-cover">
+          {%- endif -%}
+        {%- else -%}
+          {%- comment -%} Panier : la même œuvre en petit, à la largeur de la case, en 1x et 2x. {%- endcomment -%}
+          <img
+            srcset="{{ image | image_url: width: art_width }} 1x, {{ image | image_url: width: art_width_2x }} 2x"
+            src="{{ image | image_url: width: art_width }}"
+            alt="{{ art_alt }}"
+            loading="{% if lazy == false %}eager{% else %}lazy{% endif %}"
+            decoding="async"
+            width="{{ image.width }}"
+            height="{{ image.height }}"
+            class="w-full h-full object-cover">
+        {%- endif -%}
+      </div>
+      {%- if kind == 'poster' -%}
+        </div>
+        {%- if frame != 'sans' -%}
+          <span class="oeuvre-card-glass" aria-hidden="true"><span class="oeuvre-card-glare" data-allow-empty></span></span>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  </div>
+</div>

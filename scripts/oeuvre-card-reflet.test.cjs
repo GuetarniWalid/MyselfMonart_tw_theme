@@ -12,9 +12,16 @@ const ROOT = path.join(__dirname, '..')
 const FILE = path.join(ROOT, 'assets/oeuvre-card-reflet.js')
 const SOURCE = fs.readFileSync(FILE, 'utf8')
 
+/* Les sélecteurs que la page réduite sait lire : toute vitre de vignette, ou celles des seules cartes (une
+   vignette du panier porte data-context : sa vitre reste immobile). */
+const ANY_GLASS = '.oeuvre-card-glass'
+const CARD_GLASS = '.oeuvre-card:not([data-context]) .oeuvre-card-glass'
+const selects = (selector, g) => selector === ANY_GLASS || (selector === CARD_GLASS && !g.still)
+
 /* Une vitre de vignette (.oeuvre-card-glass) et son reflet (.oeuvre-card-glare, son premier enfant), à `top`
-   px du haut de l'écran. Les animations que le script crée sur le reflet sont gardées dans `anims`. */
-function glass(top, height = 200) {
+   px du haut de l'écran. Les animations que le script crée sur le reflet sont gardées dans `anims`. still :
+   la vitre d'une vignette du panier. */
+function glass(top, height = 200, { still = false } = {}) {
   const anims = []
   const glare = {
     animate(keyframes, options) {
@@ -24,15 +31,15 @@ function glass(top, height = 200) {
     },
   }
   const el = {
-    nodeType: 1, isConnected: true, top, height, anims, firstElementChild: glare,
-    matches: (selector) => selector === '.oeuvre-card-glass',
+    nodeType: 1, isConnected: true, top, height, anims, still, firstElementChild: glare,
+    matches: (selector) => selects(selector, el),
     querySelector: () => null,
     getBoundingClientRect: () => ({ top: el.top, height: el.height }),
   }
   return el
 }
 // Une carte entière, qui contient une vitre (ce que les filtres et le défilement infini ajoutent ou retirent).
-const cardWith = (g) => ({ nodeType: 1, matches: () => false, querySelector: (selector) => (selector === '.oeuvre-card-glass' ? g : null) })
+const cardWith = (g) => ({ nodeType: 1, matches: () => false, querySelector: (selector) => (selects(selector, g) ? g : null) })
 
 /* Une page réduite à ce que le script touche : ses vitres, un écran de 800 px, les observateurs (qu'on
    déclenche à la main), requestAnimationFrame (qu'on déroule à la main), et le défilement. */
@@ -60,7 +67,7 @@ function page({ cssTimeline = false, reducedMotion = false, glasses = [] } = {})
     matchMedia: (query) => ({ matches: reducedMotion && /prefers-reduced-motion: reduce/.test(query), media: query }),
     requestAnimationFrame: (callback) => frames.push(callback),
     addEventListener: (type, callback, options) => { (listeners[type] = listeners[type] || []).push({ callback, options }) },
-    document: { body, documentElement: {}, querySelectorAll: (selector) => (selector === '.oeuvre-card-glass' ? doc.glasses.filter((g) => g.isConnected) : []) },
+    document: { body, documentElement: {}, querySelectorAll: (selector) => doc.glasses.filter((g) => g.isConnected && selects(selector, g)) },
     IntersectionObserver, MutationObserver, Element, Map, Set, Math,
   }
   win.window = win
@@ -171,6 +178,21 @@ test('une vitre partie ne revient pas par une annonce de l’IntersectionObserve
   p.scroll()
   p.frame()
   assert.equal(time(kept), 250, 'les autres vitres suivent toujours')
+})
+
+test('panier : la vitre d’une vignette du panier ne bouge pas (ni animation, ni surveillance), même quand le tiroir est réécrit', () => {
+  const card = glass(300)
+  const cart = glass(100, 60, { still: true })
+  const p = page({ glasses: [card, cart] })
+  assert.equal(card.anims.length, 1)
+  assert.equal(cart.anims.length, 0)
+  assert.ok(!p.observers.io[0].targets.has(cart))
+  // Le tiroir se réécrit à chaque changement du panier (assets/cart-drawer.js) : ses vitres arrivent par le
+  // MutationObserver, et restent immobiles.
+  const redrawn = glass(100, 60, { still: true })
+  p.add(redrawn)
+  assert.equal(redrawn.anims.length, 0)
+  assert.ok(!p.observers.io[0].targets.has(redrawn))
 })
 
 test('arrivées par fetch avant le script : la page sans vitre au départ suit celles qui arrivent', () => {

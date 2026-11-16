@@ -34,9 +34,18 @@ function flatIndex(source, p) {
 test('page panier : la vignette d’un nouveau produit est son œuvre à plat, sans exiger de 2e photo', () => {
   const page = code('sections/page-cart-items.liquid')
   const i = flatIndex(page, 'item.product')
-  assert.match(page, new RegExp(`assign image = item\\.variant\\.featured_image\\.src \\| default: item\\.product\\.images\\[${i}\\]\\.src \\| default: item\\.product\\.featured_image\\.src`))
+  assert.match(page, new RegExp(`assign image = item\\.variant\\.featured_image \\| default: item\\.product\\.images\\[${i}\\] \\| default: item\\.product\\.featured_image\\s`))
   assert.match(page, new RegExp(`{% if item\\.product\\.images\\[${i}\\] %}`), 'la vignette s’affiche dès que l’œuvre à plat existe')
   assert.doesNotMatch(page, /images\[1\]|alts\.value\[1\]/, 'plus aucune 2e photo en dur')
+})
+
+test('page panier : la hauteur de l’image d’une ligne se calcule sur l’image, et non sur son adresse (qui n’a pas de format)', () => {
+  const page = code('sections/page-cart-items.liquid')
+  // `image` est l'image elle-même : son format (aspect_ratio) donne la hauteur pour 150 px de large.
+  assert.match(page, /if item\.product\.has_only_default_variant\s+assign image = item\.product\.featured_image\s+else/)
+  assert.doesNotMatch(page, /assign image = [^\n]*\.src/, 'plus d’adresse à la place de l’image')
+  assert.match(page, /height="{{ 150 \| divided_by: image\.aspect_ratio \| ceil }}"/)
+  assert.match(page, /src="{{ image \| image_url: width: 150 }}"/)
 })
 
 /* Les deux passes du tiroir sur les lignes du panier : la 1re compte les tableaux à proposer en lot, la 2e

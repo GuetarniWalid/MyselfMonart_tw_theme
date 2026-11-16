@@ -1,6 +1,7 @@
 /* Reflet des vitres des vignettes de poster : vignettes de collection des nouveaux produits (snippets/
-   card-product.liquid, branche « vignette » ; CSS dans input.css, « Vignette d'œuvre » ; décision 18 du dossier
-   .scratch/fiche-3d). Quand la carte monte, le reflet d'une porte-fenêtre glisse sur la vitre.
+   card-product.liquid, branche « vignette », et snippets/artwork-object.liquid ; CSS dans input.css, « Vignette
+   d'œuvre » ; décision 18 du dossier .scratch/fiche-3d). Quand la carte monte, le reflet d'une porte-fenêtre
+   glisse sur la vitre. Au panier, la même vitre ne bouge pas.
 
    Le CSS le fait seul là où le navigateur lie une animation au défilement (animation-timeline: view() :
    Chrome, Edge, Samsung Internet, Safari 26 et plus) : le script s'arrête alors aussitôt. Ailleurs (Firefox,
@@ -35,7 +36,9 @@
 
   if (CSS.supports('animation-timeline: view()') || !Element.prototype.animate) return
 
-  const GLASS = '.oeuvre-card-glass'
+  // Les vitres des cartes seulement : celles des vignettes du panier (data-context, snippets/artwork-object.liquid),
+  // dans le tiroir présent sur toutes les pages, restent immobiles, comme en CSS.
+  const GLASS = '.oeuvre-card:not([data-context]) .oeuvre-card-glass'
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
   const keyframes = [{ translate: COURSE.from }, { translate: COURSE.to }]
   const anims = new Map() // vitre → animation (en pause) de son reflet

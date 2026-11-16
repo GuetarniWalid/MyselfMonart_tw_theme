@@ -1,0 +1,108 @@
+{%- comment -%}
+  cart-item-artwork — la vignette d'une ligne du panier, telle que le client l'a commandée : la toile ou le poster
+  en objet (snippet artwork-object, celui des cartes de collection), avec le cadre et le contour blanc de la
+  ligne. Rien pour toute autre ligne : elle garde son image (voir « Rien »).
+  Appelé par la page panier (sections/page-cart-items.liquid) et le tiroir (sections/tw-cart-drawer.liquid) :
+    {%- capture line_artwork -%}{% render 'cart-item-artwork', item: item, context: 'tiroir' %}{%- endcapture -%}
+    {%- if line_artwork != blank -%}{{ line_artwork }}{%- else -%}… l'image d'aujourd'hui …{%- endif -%}
+
+  La commande se lit comme la fiche 3D la lit (snippets/oeuvre-3d-model.liquid, assets/component-oeuvre-3d.js :
+  FRAME_IDS, frameIdOf), dans toutes les langues :
+  - toile : la valeur de l'option 3 (Cadres) mène, par son nom, au métaobjet cadre de
+    painting_options.frames_canvas, dont le handle donne l'id du cadre du moteur 3D. La bordure (option 2) ne se
+    voit pas de face : elle reste dans le texte de la variante ;
+  - poster : la 1re valeur de l'option 2 est « Sans cadre », comme sur la fiche (painting-variant-picker) ;
+    sinon la couleur est la propriété de ligne _cadre, handle d'un métaobjet de painting_options.frames_poster
+    (« cadre-noir-mat-1 » : son suffixe numérique s'ôte). Le contour blanc est la propriété _passe_partout
+    (« oui » ou « non »). « Avec cadre » sans couleur (commande passée hors de la fiche, lien direct vers la
+    variante) : cadre noir, celui des cartes de collection.
+
+  Rien : une ligne avec un aperçu personnalisé (_preview), un produit qui n'est ni toile ni poster (personnalisé,
+  tapisserie, sur-mesure, carte cadeau ; règle unique : snippet artwork-kind), un produit sans œuvre à plat.
+
+  Accepts:
+    - item: {Object} la ligne du panier
+    - context: {String} 'tiroir' ou 'panier' (taille et images de la vignette : snippet artwork-object)
+
+  Tests : scripts/cart-item-artwork.test.cjs.
+{%- endcomment -%}
+{%- liquid
+  capture kind
+    render 'artwork-kind', product: item.product, suffix: item.product.template_suffix
+  endcapture
+  assign has_preview = false
+  for property in item.properties
+    if property.first == '_preview' and property.last != blank
+      assign has_preview = true
+    endif
+  endfor
+  capture flat_index
+    render 'artwork-flat-index', product: item.product
+  endcapture
+  assign flat_index = flat_index | plus: 0
+  assign art = item.product.images[flat_index]
+
+  if kind != blank and has_preview == false and art != blank
+    assign frame_handle = ''
+    if kind == 'toile'
+      for frame_object in item.product.metafields.painting_options.frames_canvas.value
+        if frame_object.name == item.variant.option3
+          assign frame_handle = frame_object.system.handle
+          break
+        endif
+      endfor
+    else
+      capture without_frame
+        echo item.product.options_with_values[1].values.first
+      endcapture
+      if item.variant.option2 == without_frame
+        assign frame_handle = 'sans-cadre'
+      else
+        for property in item.properties
+          if property.first == '_cadre'
+            assign frame_handle = property.last
+          endif
+        endfor
+        if frame_handle == blank
+          assign frame_handle = 'cadre-noir-mat'
+        endif
+      endif
+    endif
+
+    # Le suffixe numérique des couleurs du poster s'ôte (« cadre-noir-mat-1 » -> « cadre-noir-mat »).
+    assign frame_key = frame_handle
+    assign handle_tail = frame_handle | split: '-' | last
+    assign tail_number = handle_tail | plus: 0 | append: ''
+    if tail_number == handle_tail
+      assign frame_key = frame_handle | remove_last: handle_tail | remove_last: '-'
+    endif
+    # Les ids du moteur 3D (FRAME_IDS de assets/component-oeuvre-3d.js). Un handle inconnu : sans cadre.
+    assign frame = 'sans'
+    case frame_key
+      when 'sans-cadre'
+        assign frame = 'sans'
+      when 'cadre-blanc'
+        assign frame = 'blanc'
+      when 'cadre-noir-mat'
+        assign frame = 'noir'
+      when 'cadre-argent-ancien'
+        assign frame = 'argent'
+      when 'cadre-chene-clair'
+        assign frame = 'chene'
+      when 'cadre-noyer'
+        assign frame = 'noyer'
+    endcase
+
+    assign contour = false
+    if kind == 'poster'
+      for property in item.properties
+        if property.first == '_passe_partout' and property.last == 'oui'
+          assign contour = true
+        endif
+      endfor
+    endif
+  endif
+-%}
+{%- if kind != blank and has_preview == false and art != blank -%}
+  {%- render 'artwork-object', product: item.product, image: art, kind: kind, frame: frame, contour: contour, context: context, lazy: true -%}
+{%- endif -%}

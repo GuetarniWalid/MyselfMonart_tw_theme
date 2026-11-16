@@ -36,14 +36,14 @@
   {%- comment -%}
     Vignette d'œuvre des nouveaux produits (décision 18 du dossier .scratch/fiche-3d ; essai, notes et mesures
     dans .scratch/fiche-3d/vignettes-collection) : leur seule image, l'œuvre à plat, mise en objet par le
-    navigateur (input.css, « Vignette d'œuvre »). La toile de face sur son châssis ; le poster sous verre, dans
-    un cadre noir, où passe au défilement le reflet d'une porte-fenêtre (assets/oeuvre-card-reflet.js là où le
-    CSS seul ne sait pas le faire). Tout autre produit garde sa carte à l'octet près (branche elsif).
+    navigateur (snippet artwork-object, le même que la vignette d'une ligne du panier). La toile de face sur
+    son châssis, sans cadre ; le poster sous verre, dans un cadre noir, où passe au défilement le reflet d'une
+    porte-fenêtre (assets/oeuvre-card-reflet.js là où le CSS seul ne sait pas le faire). Tout autre produit
+    garde sa carte à l'octet près (branche elsif).
   {%- endcomment -%}
   {%- capture vignette -%}{% render 'artwork-kind', product: product, suffix: product.template_suffix, image_unique: true %}{%- endcapture -%}
   {%- if vignette != blank and product.media[0].media_type == 'image' -%}
     {%- liquid
-      assign art = product.media[0]
       # Contour blanc (passe-partout) : seulement si la fiche le propose, c'est-à-dire si le produit a une image
       # « passe-partout » (même test que la fiche : snippets/oeuvre-3d-model.liquid, has_passe_partout).
       assign contour = false
@@ -54,63 +54,17 @@
             break
           endif
         endfor
-      endif
-      # L'œuvre n'occupe qu'une partie de la carte : 80 % de sa largeur au plus (toile, poster sans contour
-      # blanc), 63 % pour un poster à contour blanc.
-      if contour
-        assign art_sizes = '(min-width: 1280px) 200px, (min-width: 1024px) 22vw, 33vw'
+        assign card_frame = 'noir'
       else
-        assign art_sizes = '(min-width: 1280px) 240px, (min-width: 1024px) 26vw, 39vw'
+        assign card_frame = 'sans'
       endif
     -%}
-    {%- comment -%} Les paliers de primary_srcset (ancienne carte, ci-dessous), pour l'œuvre. {%- endcomment -%}
-    {%- capture art_srcset -%}{%- if art.width >= 200 -%}{{ art | image_url: width: 200 }} 200w,{%- endif -%}{%- if art.width >= 300 -%}{{ art | image_url: width: 300 }} 300w,{%- endif -%}{%- if art.width >= 400 -%}{{ art | image_url: width: 400 }} 400w,{%- endif -%}{%- if art.width >= 500 -%}{{ art | image_url: width: 500 }} 500w,{%- endif -%}{%- if art.width >= 600 -%}{{ art | image_url: width: 600 }} 600w,{%- endif -%}{%- if art.width >= 800 -%}{{ art | image_url: width: 800 }} 800w,{%- endif -%}{%- if art.width >= 1000 -%}{{ art | image_url: width: 1000 }} 1000w,{%- endif -%}{{ art | image_url }} {{ art.width }}w{%- endcapture -%}
-    {%- capture art_alt -%}{% if product.metafields.meta_object.media.value.alts.value[0] %}{{ product.metafields.meta_object.media.value.alts.value[0] | escape }}{% else %}{{ art.alt | escape }}{% endif %}{%- endcapture -%}
     {%- comment -%}
       Le bloc mb-2 reste ouvert, comme celui de l'ancienne carte : le </div> de la fin du snippet le ferme après
       les infos (card-product-info). Dans une rangée, nouvelles et anciennes cartes gardent leurs infos alignées.
     {%- endcomment -%}
     <div class="mb-2 md:mb-5">
-      <div
-        class="oeuvre-card{% if vignette == 'poster' and contour == false %} no-contour{% endif %}"
-        data-kind="{{ vignette }}"
-        {%- if vignette == 'poster' %} data-look="verre"{% endif %}
-        style="--r: {{ art.preview_image.aspect_ratio | round: 4 }}">
-        <div class="oeuvre-card-stage">
-          <div class="oeuvre-card-piece">
-            {%- if vignette == 'poster' -%}<div class="oeuvre-card-sheet">{%- endif -%}
-            <div class="oeuvre-card-face skeleton">
-              {%- if lazy_load == false -%}
-              <img
-                srcset="{{ art_srcset }}"
-                src="{{ art | image_url: width: 400 }}"
-                sizes="{{ art_sizes }}"
-                alt="{{ art_alt }}"
-                loading="eager"
-                fetchpriority="high"
-                decoding="async"
-                width="{{ art.width }}"
-                height="{{ art.height }}"
-                class="w-full h-full object-cover">
-              {%- else -%}
-              <img
-                data-srcset="{{ art_srcset }}"
-                src="{{ art | image_url: width: 10 }}"
-                sizes="{{ art_sizes }}"
-                alt="{{ art_alt }}"
-                loading="lazy"
-                width="{{ art.width }}"
-                height="{{ art.height }}"
-                class="lqip w-full h-full object-cover">
-              {%- endif -%}
-            </div>
-            {%- if vignette == 'poster' -%}
-              </div>
-              <span class="oeuvre-card-glass" aria-hidden="true"><span class="oeuvre-card-glare" data-allow-empty></span></span>
-            {%- endif -%}
-          </div>
-        </div>
-      </div>
+      {%- render 'artwork-object', product: product, image: product.media[0], kind: vignette, frame: card_frame, contour: contour, context: 'carte', lazy: lazy_load -%}
       {%- if vignette == 'poster' -%}
         {%- comment -%}
           Le reflet suit le défilement par le CSS seul là où le navigateur le sait, et par ce script ailleurs.

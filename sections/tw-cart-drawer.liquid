@@ -389,6 +389,12 @@
                   tabindex="-1"
                   aria-hidden="true"
                   class="absolute inset-0 rounded-lg overflow-hidden">
+                  {%- comment -%}
+                    Toile ou poster : l'œuvre telle que commandée, en objet, entière dans la case (snippet
+                    cart-item-artwork). Toute autre ligne, et toute ligne à aperçu personnalisé : l'image d'avant.
+                  {%- endcomment -%}
+                  {%- capture line_artwork -%}{% render 'cart-item-artwork', item: item, context: 'tiroir' %}{%- endcapture -%}
+                  {%- if line_artwork != blank -%}{{ line_artwork }}{%- else %}
                   <img
                     class="w-full h-full object-cover"
                     {%- if custom_preview_url != blank %}
@@ -402,6 +408,7 @@
                     loading="lazy"
                     width="160"
                     height="auto">
+                  {%- endif %}
                 </a>
                 {% if item.quantity > 1 %}
                   <span class="absolute flex justify-center items-center w-6 h-6 top-0 right-0 translate-x-1/3 -translate-y-1/3 rounded-full bg-white text-main border-main border-1 font-bold text-sm">x{{ item.quantity }}</span>

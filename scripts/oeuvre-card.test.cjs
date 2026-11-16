@@ -48,30 +48,53 @@ test('carte : la vignette d’œuvre pour les seuls produits à image unique don
   assert.equal((old.match(/class="(?:lqip )?w-full h-full object-contain translate-x-1"/g) || []).length, 2)
 })
 
-test('vignette : la face porte .skeleton et contient l’image elle-même (removeSkeletonOnImagesLoad, tw-global.js)', () => {
+/* La vignette est l'œuvre en objet (snippets/artwork-object.liquid), le rendu que partagent la carte et le
+   panier. Rend son code, et sa partie « carte » de la face : de `{%- if context == 'carte' -%}` à son `else`. */
+const OBJECT = 'snippets/artwork-object.liquid'
+function objectCard() {
+  const object = code(OBJECT)
+  const face = /<div class="oeuvre-card-face{% if context == 'carte' %} skeleton{% endif %}">([\s\S]*?)<\/div>/.exec(object)
+  assert.ok(face, 'la face, .skeleton dans la carte seulement')
+  const card = /{%-\s*if context == 'carte'\s*-%}([\s\S]*?){%-\s*else\s*-%}(?=\s*<img\s+srcset="{{ image \| image_url: width: art_width }})/.exec(face[1])
+  assert.ok(card, 'la face : la carte, puis le panier')
+  return { object, face: face[1], card: card[1] }
+}
+
+test('carte : la vignette est l’œuvre en objet, le snippet du panier : l’œuvre à plat (media[0]), la toile sans cadre, le poster sous verre au cadre noir', () => {
   const { branch } = cardBranches()
-  const faces = branch.match(/<div class="oeuvre-card-face skeleton">[\s\S]*?<\/div>/g) || []
-  assert.equal(faces.length, 1)
+  const call = /{%-?\s*render 'artwork-object',([^%]*?)-?%}/.exec(branch)
+  assert.ok(call, 'render artwork-object')
+  const params = Object.fromEntries([...call[1].matchAll(/(\w+): ([^,]+?)\s*(?:,|$)/g)].map((m) => [m[1], m[2].trim()]))
+  assert.deepEqual(params, { product: 'product', image: 'product.media[0]', kind: 'vignette', frame: 'card_frame', contour: 'contour', context: "'carte'", lazy: 'lazy_load' })
+  assert.match(branch, /if vignette == 'poster'[\s\S]*assign card_frame = 'noir'[\s\S]*else\s+assign card_frame = 'sans'/)
+  // Un seul balisage : rien de la vignette n'est resté dans la carte.
+  assert.doesNotMatch(branch, /<img|class="oeuvre-card/)
+})
+
+test('vignette : dans la carte, la face porte .skeleton et contient l’image elle-même (removeSkeletonOnImagesLoad, tw-global.js)', () => {
+  const { card } = objectCard()
   // Entre la face et ses <img> : rien que du Liquid (eager ou lazy), aucun autre élément.
-  const inside = faces[0].replace(/{%-?[\s\S]*?-?%}/g, '').replace(/^<div[^>]*>|<\/div>$/g, '')
+  const inside = card.replace(/{%-?[\s\S]*?-?%}/g, '')
   assert.deepEqual([...inside.matchAll(/<(\w+)/g)].map((t) => t[1]), ['img', 'img'])
   assert.match(inside, /data-srcset="{{ art_srcset }}"[\s\S]*class="lqip w-full h-full object-cover"/)
   assert.match(inside, /srcset="{{ art_srcset }}"[\s\S]*loading="eager"/)
 })
 
-test('vignette : texte alternatif de l’image 0, celle de l’œuvre (et non de l’image 1, absente)', () => {
-  const { branch } = cardBranches()
-  assert.match(branch, /alts\.value\[0\][\s\S]*art\.alt/)
-  assert.doesNotMatch(branch, /\[1\]/)
-  for (const img of branch.match(/<img[\s\S]*?>/g)) assert.match(img, /alt="{{ art_alt }}"/)
+test('vignette : texte alternatif de l’œuvre à plat, à son index (snippet artwork-flat-index : 0 pour un nouveau produit)', () => {
+  const { object } = objectCard()
+  assert.match(object, /capture flat_index\s+render 'artwork-flat-index', product: product\s+endcapture\s+assign flat_index = flat_index \| plus: 0/)
+  assert.match(object, /{% if product\.metafields\.meta_object\.media\.value\.alts\.value\[flat_index\] %}{{ product\.metafields\.meta_object\.media\.value\.alts\.value\[flat_index\] \| escape }}{% else %}{{ image\.alt \| escape }}{% endif %}/)
+  const imgs = object.match(/<img[\s\S]*?>/g)
+  assert.equal(imgs.length, 3, 'carte (eager, lazy) et panier')
+  for (const img of imgs) assert.match(img, /alt="{{ art_alt }}"/)
 })
 
 test('vignette : le décor vide passe la règle *:empty du thème (data-allow-empty), et la vitre est muette', () => {
-  const { branch } = cardBranches()
-  const empty = [...branch.matchAll(/<(\w+)([^>]*)><\/\1>/g)].filter((t) => t[1] !== 'script')
+  const { object } = objectCard()
+  const empty = [...object.matchAll(/<(\w+)([^>]*)><\/\1>/g)]
   assert.ok(empty.length > 0)
   for (const [element, , attrs] of empty) assert.match(attrs, /data-allow-empty/, element)
-  assert.match(branch, /<span class="oeuvre-card-glass" aria-hidden="true">/)
+  for (const glass of object.match(/<span class="oeuvre-card-glass"[^>]*>/g)) assert.match(glass, /aria-hidden="true"/)
 })
 
 /* Les règles de la vignette dans input.css : le bloc « Vignette d'œuvre », de son titre à sa fin. Rend aussi
@@ -93,8 +116,8 @@ const rule = (css, selector) => {
 test('CSS : hors de tout @layer, et chaque classe du balisage y a sa règle', () => {
   const { block, depth } = vignetteCss()
   assert.equal(depth, 0, 'le bloc est hors @layer (et hors de toute règle)')
-  const { branch } = cardBranches()
-  const attrs = [...branch.matchAll(/class="([^"]*)"/g)].map((m) => m[1].replace(/{%[\s\S]*?%}/g, ' ')).join(' ')
+  const { object } = objectCard()
+  const attrs = [...object.matchAll(/class="([^"]*)"/g)].map((m) => m[1].replace(/{%[\s\S]*?%}/g, ' ')).join(' ')
   const classes = new Set(attrs.match(/\boeuvre-card[\w-]*|no-contour/g))
   assert.ok(classes.size >= 7)
   for (const name of classes) assert.match(block, new RegExp(`\\.${name}(?![\\w-])`), name)
@@ -114,7 +137,7 @@ test('CSS : scène et vitre en overflow: clip (hidden figerait le reflet : la ti
     assert.match(r, /overflow: clip/, selector)
     assert.doesNotMatch(r, /overflow: hidden/, selector)
   }
-  assert.match(rule(block, '.oeuvre-card-glass'), /view-timeline: --oc-glass block/)
+  assert.match(rule(block, '.oeuvre-card:not([data-context]) .oeuvre-card-glass'), /view-timeline: --oc-glass block/)
 })
 
 test('CSS : la face reste à sa place pendant le chargement (.skeleton la met en position: relative)', () => {
@@ -126,10 +149,9 @@ test('CSS : animations réduites, le reflet reste immobile', () => {
   assert.match(block, /@media \(prefers-reduced-motion: reduce\) {\s*\.oeuvre-card-glare { animation: none !important; translate: 0 -62% !important; }/)
 })
 
-test('CSS : poster sous verre et cadre noir seulement ; le papier libre (A) et les autres teintes restent dans l’essai', () => {
+test('CSS : le papier libre ondulé (A) reste dans l’essai : ni silhouette découpée, ni filtre (les teintes de cadre : scripts/artwork-object.test.cjs)', () => {
   const rules = vignetteCss().block.replace(/\/\*[\s\S]*?\*\//g, '')
-  assert.doesNotMatch(rules, /papier|paper-edge|data-frame/)
-  assert.match(rule(rules, '.oeuvre-card[data-look="verre"]'), /--frame: #353535/)
+  assert.doesNotMatch(rules, /paper-edge|clip-path|filter:/)
 })
 
 test('reflet : le poster sous verre charge son script en module (une exécution par page), la toile non', () => {
