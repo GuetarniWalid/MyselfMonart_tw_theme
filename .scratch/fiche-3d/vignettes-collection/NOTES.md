@@ -2,6 +2,8 @@
 
 Essai du 15/11/2026. La toile de face et le poster sous verre au cadre noir sont dans le thème depuis le 16/11/2026 (f5226d7, 2788534) : `snippets/card-product.liquid`, `input.css` (« Vignette d'œuvre »), `assets/oeuvre-card-reflet.js`. Le poster papier (A) et les autres teintes de cadre ne sont qu'ici.
 
+Depuis le 17/11/2026, la vignette est le snippet `artwork-object`, que le panier partage (ticket 18). Les teintes de tous les cadres y sont celles du moteur 3D, sauf le noir, qui reste celui de la carte (#353535 ; le moteur a #262627) : les cartes ne changent pas d'un pixel. Un poster sans cadre y est un papier simple, sans ondes. Le papier ondulé (A) et le blanc #e2e2e2 de l'essai restent ici.
+
 - Page d'essai, publiée en page privée pour Walid : https://claude.ai/artifact/GFWunKvBpwpWc5EyFqeD3L (autonome, 1,4 Mo, images en data URI).
 - Code prêt à porter, dans ce dossier : `oeuvre-card.css` (CSS) et `oeuvre-card-reflet.js` (script du reflet). Silhouette du poster A : `papier.py`.
 - Le banc (puppeteer), les captures et l'outil qui construit la page sont restés dans le dossier temporaire de la session. Les mesures du § 6 en viennent.
