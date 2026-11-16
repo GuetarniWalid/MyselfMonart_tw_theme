@@ -62,6 +62,7 @@ Ajouter un tableau à partir d'une seule image à plat, sans Photoshop ni mockup
     - Posé dans le thème le 16/11/2026 : `card-product.liquid`, `input.css` (« Vignette d'œuvre ») et `oeuvre-card-reflet.js`. Il se verra dès qu'un produit aura le modèle `oeuvre-3d` (ticket 18). Notes et code de l'essai dans le dossier `vignettes-collection`.
     - « Mes j'aime » montre la même carte, vignette comprise (`sections/my-likes-card.liquid`, 16/11/2026).
     - Le panier montre l'œuvre à plat de ces produits (`snippets/artwork-flat-index.liquid`, 16/11/2026).
+    - Leur fiche 3D s'affiche avec cette seule image, par le même snippet (16/11/2026).
 
 ## Règles
 
