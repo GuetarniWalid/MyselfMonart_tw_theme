@@ -24,7 +24,6 @@ class MyLikeButton extends HTMLElement {
     super();
     this.productId = this.dataset.productId;
     this.productHandle = this.dataset.productHandle;
-    this.productShortTitle = this.dataset.productShortTitle;
   }
 
   connectedCallback() {
@@ -51,13 +50,11 @@ class MyLikeButton extends HTMLElement {
       if (isLiked) {
         this.deleteProductLikedIdInLocalStorage(productLikedIds);
         this.deleteProductLikedHandleInLocalStorage(productLikedHandles);
-        this.deleteProductShortTitleInLocalStorage();
         this.deleteLiInLikedPage();
         await this.updateLikesCountOnServer(this.productId, 'decrement');
       } else {
         this.saveProductLikedIdInLocalStorage(productLikedIds);
         this.saveProductLikedHandleInLocalStorage(productLikedHandles);
-        this.saveProductShortTitleInLocalStorage();
         this.deleteLiInLikedPage();
         await this.updateLikesCountOnServer(this.productId, 'increment');
       }
@@ -78,11 +75,6 @@ class MyLikeButton extends HTMLElement {
     return productLikedHandles;
   }
 
-  getProductShortTitles() {
-    const shortTitles = localStorage.getItem('productShortTitles');
-    return JSON.parse(shortTitles) || {};
-  }
-
   saveProductLikedIdInLocalStorage(productLikedIds) {
     productLikedIds.push(this.productId);
     localStorage.setItem('productLikedIds', JSON.stringify(productLikedIds));
@@ -91,12 +83,6 @@ class MyLikeButton extends HTMLElement {
   saveProductLikedHandleInLocalStorage(productLikedHandles) {
     productLikedHandles.push(this.productHandle);
     localStorage.setItem('productLikedHandles', JSON.stringify(productLikedHandles));
-  }
-
-  saveProductShortTitleInLocalStorage() {
-    const shortTitles = this.getProductShortTitles();
-    shortTitles[this.productHandle] = this.productShortTitle;
-    localStorage.setItem('productShortTitles', JSON.stringify(shortTitles));
   }
 
   deleteProductLikedIdInLocalStorage(productLikedIds) {
@@ -113,12 +99,6 @@ class MyLikeButton extends HTMLElement {
     localStorage.setItem('productLikedHandles', JSON.stringify(productLikedHandlesFiltered));
   }
 
-  deleteProductShortTitleInLocalStorage() {
-    const shortTitles = this.getProductShortTitles();
-    delete shortTitles[this.productHandle];
-    localStorage.setItem('productShortTitles', JSON.stringify(shortTitles));
-  }
-
   deleteLiInLikedPage() {
     const myLikesComponent = document.querySelector('my-likes');
     if (!myLikesComponent) return;
@@ -131,9 +111,9 @@ class MyLikeButton extends HTMLElement {
       this.closest('li')?.remove();
     }
 
-    const productLikedIds = this.getProductLikedIds();
-    const isLastLi = productLikedIds.length === 0;
-    if (isLastLi) myLikesComponent.showEmptyMessage();
+    // La liste vide dès qu'aucune carte ne reste : productLikedIds peut garder l'identifiant d'une œuvre
+    // retirée de la boutique, qui n'a pas de carte (assets/my-likes.js la saute).
+    if (!myLikesComponent.querySelector('anime-product-card')) myLikesComponent.showEmptyMessage();
   }
 
   updateLikeButtonCount() {

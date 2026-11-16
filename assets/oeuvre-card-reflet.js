@@ -12,7 +12,7 @@
      regroupé par requestAnimationFrame, ne met à jour qu'elles ;
    - rien ne bouge quand le visiteur demande moins de mouvement (le CSS fige aussi le reflet) ;
    - un MutationObserver suit les cartes qui arrivent ou s'en vont : filtres (assets/collection-tag-filter.js),
-     défilement infini (assets/collection.js).
+     défilement infini (assets/collection.js), « Mes j'aime » (assets/my-likes.js).
 
    Chargé en module par la carte d'un poster sous verre : une seule exécution par page, quel que soit le
    nombre de cartes, et rien sur une page qui n'en a pas. Tests : scripts/oeuvre-card-reflet.test.cjs, qui le

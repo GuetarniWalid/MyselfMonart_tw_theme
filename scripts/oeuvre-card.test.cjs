@@ -140,8 +140,8 @@ test('reflet : le poster sous verre charge son script en module (une exécution 
   assert.match(before, /{%-\s*if vignette == 'poster'\s*-%}\s*$/, 'sous la condition du poster')
 })
 
-test('reflet : les cartes reçues par fetch (défilement infini, filtres) importent leur module, dont les balises ne s’exécutent pas', () => {
-  for (const [file, scope] of [['assets/collection.js', 'node'], ['assets/collection-tag-filter.js', 'insertedGrid']]) {
+test('reflet : les cartes reçues par fetch (défilement infini, filtres, « Mes j’aime ») importent leur module, dont les balises ne s’exécutent pas', () => {
+  for (const [file, scope] of [['assets/collection.js', 'node'], ['assets/collection-tag-filter.js', 'insertedGrid'], ['assets/my-likes.js', 'grid']]) {
     assert.match(read(file), new RegExp(`${scope}\\.querySelectorAll\\('script\\[type="module"\\]\\[src\\]'\\)\\.forEach\\(\\(script\\) => import\\(script\\.src\\)\\)`), file)
   }
 })

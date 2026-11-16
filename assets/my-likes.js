@@ -1,138 +1,62 @@
+/* « Mes j'aime » (sections/my-likes.liquid) : les œuvres aimées, que le cœur des cartes garde dans localStorage
+   (assets/my-like-button.js, clé productLikedHandles), chacune avec la carte de la collection. Shopify la rend
+   dans le contexte du produit : /products/<handle>?section_id=my-likes-card (sections/my-likes-card.liquid),
+   derrière le préfixe de langue et de marché. Image, prix, titres et vignette d'œuvre des nouveaux produits
+   viennent donc du serveur, comme dans la collection ; il ne reste ici que ce qui est propre à cette page.
+   Tests : scripts/my-likes.test.cjs. */
 class MyLikes extends HTMLElement {
   async connectedCallback() {
-    this.priceFormat = this.dataset.priceFormat;
-    const template = this.querySelector('template');
-    const instance = template.content.cloneNode(true);
-    const productCardModel = instance.querySelector('anime-product-card');
-    const productsLiked = await this.getProductsLiked();
-    const productsLikedElements = await this.getProductsLikedElements(productsLiked, productCardModel);
-    this.populateInstance(instance, productsLikedElements);
+    const cards = await this.likedCards(this.likedHandles());
     this.hideLoader();
-    if(productsLiked.length === 0) this.showEmptyMessage();
-    this.appendChild(instance);
-  }
-
-  async getProductsLiked() {
-    const productsLiked = localStorage.getItem('productLikedHandles');
-    return JSON.parse(productsLiked) || [];
-  }
-
-  getProductShortTitles() {
-    const shortTitles = localStorage.getItem('productShortTitles');
-    return JSON.parse(shortTitles) || {};
-  }
-
-  async getProductsLikedElements(productsLiked, productCardModel) {
-    const shortTitles = this.getProductShortTitles();
-    const productsLikedElements = await Promise.all(productsLiked.map(handle => this.getProductLikedElement(handle, productCardModel, shortTitles)));
-    return productsLikedElements;
-  }
-
-  async getProductLikedElement(handle, productCardModel, shortTitles) {
-    const product = await this.fetchProductByHandle(handle);
-    const wrapper = productCardModel.cloneNode(true);
-    const li = wrapper.querySelector('li');
-
-    // Update product ID on the li element
-    if (li) {
-      li.id = product.id;
+    if (cards.length === 0) {
+      this.showEmptyMessage();
+      return;
     }
+    // Le cœur de chaque carte, aimé : son identifiant peut manquer dans productLikedIds (anciens j'aime).
+    cards.forEach((card) => card.querySelector('button.like')?.classList.add('is-liked'));
+    const grid = this.querySelector('template').content.firstElementChild.cloneNode();
+    grid.append(...cards);
+    this.append(grid);
+    window.removeSkeletonOnImagesLoad?.(grid);
+    // Les <script> d'une réponse de fetch ne s'exécutent pas : importer les modules des cartes (le reflet des
+    // vignettes de poster, assets/oeuvre-card-reflet.js), comme le défilement infini (assets/collection.js).
+    grid.querySelectorAll('script[type="module"][src]').forEach((script) => import(script.src));
+  }
 
-    // Use short title from localStorage if available, fallback to full title
-    const displayTitle = shortTitles[handle] || product.title;
+  /* Les handles aimés, sans doublon (un ancien double clic en gardait deux). */
+  likedHandles() {
+    try {
+      const handles = JSON.parse(localStorage.getItem('productLikedHandles'));
+      return Array.isArray(handles) ? [...new Set(handles)] : [];
+    } catch (error) {
+      return [];
+    }
+  }
 
-    // Update product link
-    const titleLink = wrapper.querySelector('h3 a');
-    if (titleLink) {
-      titleLink.href = `/products/${handle}`;
-      titleLink.dataset.fullTitle = product.title.toUpperCase();
-      const svg = wrapper.querySelector('h3 a span svg');
-      titleLink.textContent = displayTitle.toUpperCase() + ' ';
-      if (svg) {
-        titleLink.appendChild(svg);
+  /* Les cartes, dans l'ordre des j'aime, six demandes à la fois au plus : la boutique répond 429 aux rafales.
+     Celles qui ne viennent pas (produit retiré ou dépublié : 404 ; réseau) sont sautées, les autres
+     s'affichent. */
+  async likedCards(handles) {
+    const cards = [];
+    let next = 0;
+    const worker = async () => {
+      while (next < handles.length) {
+        const i = next++;
+        cards[i] = await this.fetchCard(handles[i]).catch(() => null);
       }
-    }
-
-    // Update first image while preserving LQIP structure
-    const firstImg = wrapper.querySelector('img');
-    const image = product.image ?? product.images[0];
-    if (firstImg && image) {
-      // Keep the LQIP placeholder in src (10px)
-      firstImg.src = `${image.src}&width=10`;
-      // Set full resolution in data-srcset for LQIP system
-      firstImg.setAttribute('data-srcset', this.buildShopifySrcset(image.src));
-      // Ensure lqip class is present
-      if (!firstImg.classList.contains('lqip')) {
-        firstImg.classList.add('lqip');
-      }
-      firstImg.alt = image.alt;
-      firstImg.width = image.width;
-      firstImg.height = image.height;
-    }
-
-    // Update price
-    const priceElement = wrapper.querySelector('.price-and-likes p strong');
-    if (priceElement && product.variants && product.variants[0]) {
-      priceElement.textContent = this.formatPrice(product.variants[0].price, this.priceFormat);
-    }
-
-    // Remove likes count and mark as liked
-    const likesCount = wrapper.querySelector('.total-users-likes-count');
-    if (likesCount) {
-      likesCount.remove();
-    }
-
-    const likeButton = wrapper.querySelector('.like');
-    if (likeButton) {
-      likeButton.classList.add('is-liked');
-    }
-
-    const myLikeButton = wrapper.querySelector('my-like-button');
-    if (myLikeButton) {
-      myLikeButton.dataset.productId = product.id;
-      myLikeButton.dataset.productHandle = product.handle;
-    }
-
-    return wrapper;
+    };
+    await Promise.all(Array.from({ length: Math.min(6, handles.length) }, worker));
+    return cards.filter(Boolean);
   }
 
-  async fetchProductByHandle(handle) {
-    const response = await fetch(`/products/${handle}.json`);
-    const data = await response.json();
-    return data.product;
-  }
-
-  buildShopifySrcset(baseUrl) {
-    const widths = [380, 430, 500];
-    return widths.map(width => `${baseUrl}&width=${width} ${width}w`).join(',');
-  }
-
-  formatPrice(price, priceString) {
-    const matches = priceString.match(/([\D]*)?([\d.,]+)([\D]*)?/);
-    if (!matches) return priceString;
-
-    const [, beforeNumber, numberPart, afterNumber] = matches;
-    const symbol = (beforeNumber || afterNumber || '').trim();
-    const isSymbolBefore = !!beforeNumber;
-    
-    if (isSymbolBefore) {
-      return `${symbol}${price}`;
-    } else {
-      return `${price} ${symbol}`;
-    }
-  }
-
-  populateInstance(instance, productsLikedElements) {
-    const ul = instance.querySelector('ul');
-    ul.firstElementChild.remove();
-    productsLikedElements.forEach(element => {
-      ul.appendChild(element);
-    });
-
-    // Apply unblur effect to newly loaded images
-    if (window.removeSkeletonOnImagesLoad) {
-      window.removeSkeletonOnImagesLoad(ul);
-    }
+  /* La carte d'une œuvre, prise dans l'enveloppe de sa section : les handles sont traduits par langue, et une
+     redirection qui perdrait section_id rendrait la fiche entière, avec les cartes d'autres œuvres. */
+  async fetchCard(handle) {
+    const root = window.Shopify?.routes?.root || '/';
+    const response = await fetch(`${root}products/${encodeURIComponent(handle)}?section_id=my-likes-card`);
+    if (!response.ok) return null;
+    const html = await response.text();
+    return new DOMParser().parseFromString(html, 'text/html').querySelector('#shopify-section-my-likes-card anime-product-card');
   }
 
   hideLoader() {

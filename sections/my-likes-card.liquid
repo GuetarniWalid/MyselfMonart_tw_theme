@@ -1,0 +1,25 @@
+{%- comment -%}
+  Une carte de « Mes j'aime » (sections/my-likes.liquid) : la carte de la collection (snippets/card-product.liquid),
+  rendue dans le contexte du produit aimé par la Section Rendering API, que demande assets/my-likes.js :
+  /products/<handle>?section_id=my-likes-card, derrière le préfixe de langue et de marché. La carte est donc la
+  même partout : image (index 1, comme la collection), prix, titre court et titre complet pour les lecteurs
+  d'écran ; vignette d'œuvre pour les nouveaux produits (modèle oeuvre-3d), avec le module du reflet des posters.
+  - Chargement immédiat (lazy_load: false) : les premières cartes sont à l'écran dès l'arrivée, et la section
+    ne connaît pas sa place dans la liste.
+  - Rien hors d'une fiche produit (produit retiré : la réponse est une 404, sans carte).
+  - Sans schéma, comme sections/tw-predictive-search-results.liquid : la section ne se propose pas dans
+    l'éditeur de thème ; seule la Section Rendering API la rend, par son nom de fichier.
+{%- endcomment -%}
+{%- if product -%}
+  <anime-product-card>
+    <li id="{{ product.id }}" class="relative group h-full">
+      {% render 'card-product'
+        , product: product
+        , primary_image_index: 1
+        , next_image_index: 0
+        , lazy_load: false
+        , section_id: section.id
+      %}
+    </li>
+  </anime-product-card>
+{%- endif -%}

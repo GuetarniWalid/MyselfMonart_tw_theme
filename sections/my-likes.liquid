@@ -1,23 +1,12 @@
 
-{% liquid
-  assign first_product = collections.all.products.first
-%}
-
-<my-likes data-price-format="{{ first_product.price | money }}">
+{%- comment -%}
+  Les œuvres aimées : assets/my-likes.js remplit la grille de la collection, ci-dessous, avec la carte de chaque
+  œuvre, rendue par Shopify dans le contexte du produit (sections/my-likes-card.liquid). Le chargeur suit
+  <my-likes> : le script le cache.
+{%- endcomment -%}
+<my-likes>
   <template>
-    <ul data-id="{{ section.id }}" class="product-grid">
-      <anime-product-card>
-        <li id="{{ first_product.id }}" class="relative group h-full">
-          {% render 'card-product'
-            , product: first_product
-            , primary_image_index: 1
-            , next_image_index: 0
-            , lazy_load: false
-            , section_id: section.id
-          %}
-        </li>
-      </anime-product-card>
-    </ul>
+    <ul data-id="{{ section.id }}" class="product-grid"></ul>
   </template>
 </my-likes>
 <div class="flex justify-center my-40">
