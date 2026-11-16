@@ -58,18 +58,21 @@ test('cadres : chaque cadre de la commande prend sa teinte (data-frame), et le p
 /* Le snippet de l'œuvre en objet, sans ses commentaires. */
 const object = () => read('snippets/artwork-object.liquid').replace(/{%-?\s*comment\s*-?%}[\s\S]*?{%-?\s*endcomment\s*-?%}/g, '').replace(/^\s*#.*$/gm, '')
 
-test('panier : rien ne bouge. La vitre et sa porte-fenêtre sont celles de la carte, figées à leur place de repos', () => {
+test('panier : rien ne bouge. La vitre de la carte, avec son reflet fixe, sans la porte-fenêtre qui passe', () => {
   const css = vignetteCss()
-  // Le reflet ne suit le défilement que dans les cartes : timeline et animation visent les vignettes sans data-context.
+  // La vitre ne se mesure au défilement que dans les cartes.
   assert.match(css, /\.oeuvre-card:not\(\[data-context\]\) \.oeuvre-card-glass {\s*view-timeline: --oc-glass block;\s*}/)
-  assert.match(css, /@supports \(animation-timeline: view\(\)\) {\s*\.oeuvre-card:not\(\[data-context\]\) \.oeuvre-card-glare { animation: oeuvre-card-glare linear both;/)
   assert.doesNotMatch(rule(css, '.oeuvre-card-glass'), /view-timeline/)
-  assert.equal((css.match(/animation: (?!none)/g) || []).length, 1, 'une seule animation, celle des cartes')
-  assert.match(rule(css, '.oeuvre-card-glare'), /translate: 0 -62%/, 'au repos : le bas de la fenêtre en haut de la vitre')
-  // Le même balisage de vitre partout ; le script du reflet n'est chargé que par la carte.
-  const glasses = object().match(/<span class="oeuvre-card-glass"[\s\S]*?<\/span><\/span>/g) || []
-  assert.deepEqual(glasses, ['<span class="oeuvre-card-glass" aria-hidden="true"><span class="oeuvre-card-glare" data-allow-empty></span></span>'])
-  assert.doesNotMatch(object(), /<script/)
+  assert.equal((css.match(/animation: (?!none)/g) || []).length, 1, 'une seule animation, celle de la porte-fenêtre')
+  // La porte-fenêtre (son masque à quatre couches pèse un quart de la peinture du tiroir, mesuré au banc) n'est
+  // que dans la carte ; au panier, la vitre garde son reflet fixe (la petite fenêtre, le voile, l'ombre de la lèvre).
+  const source = object()
+  const glass = /{%-?\s*if frame != 'sans'\s*-?%}([\s\S]*?){%-?\s*endif\s*-?%}\s*{%-?\s*endif\s*-?%}/.exec(source)
+  assert.ok(glass, 'la vitre, pour un poster encadré')
+  assert.match(glass[1], /{%-?\s*if context == 'carte'\s*-?%}\s*<span class="oeuvre-card-glass" aria-hidden="true"><span class="oeuvre-card-glare" data-allow-empty><\/span><\/span>\s*{%-?\s*else\s*-?%}\s*<span class="oeuvre-card-glass" aria-hidden="true" data-allow-empty><\/span>/)
+  assert.match(rule(css, '.oeuvre-card-glass'), /radial-gradient\(42% 30% at 16% 9%, rgba\(255, 255, 255, \.08\)/, 'le reflet fixe de la petite fenêtre')
+  // Le script du reflet n'est chargé que par la carte, et ne touche qu'aux vitres des cartes.
+  assert.doesNotMatch(source, /<script/)
   assert.match(read('assets/oeuvre-card-reflet.js'), /const GLASS = '\.oeuvre-card:not\(\[data-context\]\) \.oeuvre-card-glass'/)
 })
 

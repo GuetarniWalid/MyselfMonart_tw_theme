@@ -23,7 +23,8 @@
 
   Dans la carte, la porte-fenêtre reflétée par la vitre du poster passe au défilement (son script,
   assets/oeuvre-card-reflet.js, est chargé par la carte) et la face porte .skeleton. Au panier (data-context),
-  rien ne bouge : la porte-fenêtre reste à sa place de repos, et la face n'attend aucun script (le tiroir est
+  rien ne bouge : la vitre garde son reflet fixe, sans la porte-fenêtre (son masque pesait un quart de la
+  peinture du tiroir, pour un reflet invisible en vignette), et la face n'attend aucun script (le tiroir est
   réécrit à chaque changement du panier, sans removeSkeletonOnImagesLoad).
   Tests : scripts/artwork-object.test.cjs, scripts/oeuvre-card.test.cjs.
 {%- endcomment -%}
@@ -103,7 +104,11 @@
       {%- if kind == 'poster' -%}
         </div>
         {%- if frame != 'sans' -%}
-          <span class="oeuvre-card-glass" aria-hidden="true"><span class="oeuvre-card-glare" data-allow-empty></span></span>
+          {%- if context == 'carte' -%}
+            <span class="oeuvre-card-glass" aria-hidden="true"><span class="oeuvre-card-glare" data-allow-empty></span></span>
+          {%- else -%}
+            <span class="oeuvre-card-glass" aria-hidden="true" data-allow-empty></span>
+          {%- endif -%}
         {%- endif -%}
       {%- endif -%}
     </div>

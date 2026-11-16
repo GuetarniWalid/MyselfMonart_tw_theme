@@ -1580,8 +1580,9 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
   box-shadow: 0 0 0 .5px rgba(0, 0, 0, .45), .5px .5px 0 .5px var(--frame-hi);
 }
 /* Vitre : un voile, le reflet fixe de la petite fenêtre (en haut, côté lumière), l'ombre de la lèvre du
-   cadre sur le tirage (en haut et à gauche, 4 mm de retrait), et la porte-fenêtre (glare), qui ne passe au
-   défilement que dans les cartes : au panier, elle reste à sa place de repos. */
+   cadre sur le tirage (en haut et à gauche, 4 mm de retrait), et, dans les cartes seulement, la porte-fenêtre
+   qui passe au défilement (glare). Au panier, la vitre garde ce reflet fixe et ne se mesure pas au défilement :
+   rien n'y bouge. */
 .oeuvre-card-glass {
   position: absolute; inset: calc(var(--ff) * var(--s));
   overflow: clip; pointer-events: none;
@@ -1609,7 +1610,7 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
 .oeuvre-card-glare {
   position: absolute; top: 0; left: var(--gx, 26%);
   width: 46%; height: 104%;
-  translate: 0 -62%;                            /* au repos (panier, mouvement réduit) : le bas de la fenêtre, en haut de la vitre */
+  translate: 0 -62%;                            /* sans animation (mouvement réduit) : le bas de la fenêtre, en haut de la vitre */
 }
 .oeuvre-card-glare::before {
   content: ""; position: absolute; inset: 0;
@@ -1633,14 +1634,13 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
   content: ""; position: absolute; inset: -14% -45%;
   background: radial-gradient(closest-side, rgba(255, 255, 255, .05), rgba(255, 255, 255, 0));
 }
-/* Course, dans les cartes seulement (au panier, rien ne bouge) : la fenêtre entre par le haut de la vitre
-   quand la carte a fait 12 % de sa traversée de l'écran, en sort par le bas à 88 % ; elle est entière au
-   milieu de l'écran. Elle glisse ainsi à un peu moins de la moitié de la vitesse de la carte : un reflet de la
-   pièce, pas de l'écran. Ailleurs (Firefox, Safari avant 26), assets/oeuvre-card-reflet.js fait la même
-   course, aux mêmes vitres : à changer ensemble. */
+/* Course : la fenêtre entre par le haut de la vitre quand la carte a fait 12 % de sa traversée de
+   l'écran, en sort par le bas à 88 % ; elle est entière au milieu de l'écran. Elle glisse ainsi à un
+   peu moins de la moitié de la vitesse de la carte : un reflet de la pièce, pas de l'écran.
+   Ailleurs (Firefox, Safari avant 26), assets/oeuvre-card-reflet.js fait la même course : à changer ensemble. */
 @keyframes oeuvre-card-glare { from { translate: 0 -100%; } to { translate: 0 96%; } }
 @supports (animation-timeline: view()) {
-  .oeuvre-card:not([data-context]) .oeuvre-card-glare { animation: oeuvre-card-glare linear both; animation-timeline: --oc-glass; animation-range: cover 12% cover 88%; }
+  .oeuvre-card-glare { animation: oeuvre-card-glare linear both; animation-timeline: --oc-glass; animation-range: cover 12% cover 88%; }
 }
 @media (prefers-reduced-motion: reduce) {
   .oeuvre-card-glare { animation: none !important; translate: 0 -62% !important; }
@@ -1669,8 +1669,9 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
    carré), centré, jamais étiré ni coupé ; --s est la plus grande échelle qui le fait tenir dans 86 % de la
    case, son ombre comprise. Le fond, --wall-panier, est le mur des posters de la collection : sur le blanc du
    panier, il garde à chaque ligne le pavé de l'image d'avant, et un cadre blanc, un contour blanc ou un
-   tirage sans cadre s'y lisent. Léger sur téléphone : rien ne bouge (la porte-fenêtre reste au repos, sans
-   timeline de défilement), aucun calque composité, aucune autre image. */
+   tirage sans cadre s'y lisent. Léger sur téléphone : rien ne bouge (la vitre garde son reflet fixe, sans la
+   porte-fenêtre ni timeline de défilement), aucun calque composité, aucune autre image. La case de la page
+   panier est réglée plus bas ; celle du tiroir suit la hauteur de la ligne. */
 .oeuvre-card[data-context] { position: absolute; inset: 0; z-index: auto; }
 .oeuvre-card[data-context] .oeuvre-card-stage {
   container-type: size;
