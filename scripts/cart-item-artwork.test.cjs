@@ -79,11 +79,13 @@ test('les lignes qui gardent leur image : aperçu personnalisé (_preview), prod
   assert.ok(guard, 'l’objet, seulement pour une toile ou un poster, sans aperçu, avec son œuvre à plat')
 })
 
-test('poster « Avec cadre » sans couleur (commande passée hors de la fiche) : le cadre noir, celui des cartes de collection', () => {
+test('poster encadré sans couleur connue (commande passée hors de la fiche, couleur que la table ne connaît pas) : le cadre noir, celui des cartes de collection', () => {
   const source = code(SNIPPET)
-  assert.match(source, /for property in item\.properties\s+if property\.first == '_cadre'\s+assign frame_handle = property\.last\s+endif\s+endfor\s+if frame_handle == blank\s+assign frame_handle = 'cadre-noir-mat'/)
   // « Sans cadre » : la 1re valeur de l'option 2, comme sur la fiche (painting-variant-picker : sans_value).
-  assert.match(source, /capture without_frame\s+echo item\.product\.options_with_values\[1\]\.values\.first\s+endcapture\s+if item\.variant\.option2 == without_frame\s+assign frame_handle = 'sans-cadre'/)
+  // Sans option 2 (aucun choix de cadre), le poster n'est pas encadré.
+  assert.match(source, /capture without_frame\s+echo item\.product\.options_with_values\[1\]\.values\.first\s+endcapture\s+if item\.variant\.option2 != blank and item\.variant\.option2 != without_frame\s+assign poster_framed = true\s+for property in item\.properties\s+if property\.first == '_cadre'\s+assign frame_handle = property\.last\s+endif\s+endfor\s+endif/)
+  // Un poster encadré a toujours un cadre : sa couleur si on la connaît, noir sinon.
+  assert.match(source, /endcase\s+if poster_framed and frame == 'sans'\s+assign frame = 'noir'\s+endif/)
 })
 
 /* La case de la vignette d'une ligne, dans une section du panier : le <a> du produit, qui porte l'objet de la

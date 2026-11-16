@@ -79,6 +79,9 @@ test('panier : l’œuvre tient entière dans sa case, à son format, et la case
   assert.match(stage, /container-type: size/)
   assert.match(stage, /height: 100%/)
   assert.match(rule(css, '.oeuvre-card[data-context]'), /position: absolute; inset: 0;/)
+  // Page panier : une case au format d'une œuvre en portrait (120 × 150), centrée, jamais plus haute que la ligne.
+  assert.match(rule(css, '.oeuvre-card[data-context="panier"]'), /display: flex; align-items: center;/)
+  assert.match(rule(css, '.oeuvre-card[data-context="panier"] .oeuvre-card-stage'), /width: 100%; height: auto; aspect-ratio: 4 \/ 5; max-height: 100%;/)
   // L'échelle : la plus grande qui fait tenir l'objet (--ew × --eh, en unités de --s) dans 86 % de la case, son
   // ombre comprise.
   assert.match(rule(css, '.oeuvre-card[data-context] .oeuvre-card-piece'), /--s: min\(calc\(\.86 \* 100cqw \/ var\(--ew\)\), calc\(\.86 \* 100cqh \/ var\(--eh\)\)\)/)

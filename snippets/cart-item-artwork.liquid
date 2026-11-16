@@ -14,8 +14,9 @@
   - poster : la 1re valeur de l'option 2 est « Sans cadre », comme sur la fiche (painting-variant-picker) ;
     sinon la couleur est la propriété de ligne _cadre, handle d'un métaobjet de painting_options.frames_poster
     (« cadre-noir-mat-1 » : son suffixe numérique s'ôte). Le contour blanc est la propriété _passe_partout
-    (« oui » ou « non »). « Avec cadre » sans couleur (commande passée hors de la fiche, lien direct vers la
-    variante) : cadre noir, celui des cartes de collection.
+    (« oui » ou « non »). « Avec cadre » sans couleur connue (commande passée hors de la fiche, lien direct vers
+    la variante, couleur ajoutée à la boutique mais pas encore ici) : cadre noir, celui des cartes de
+    collection.
 
   Rien : une ligne avec un aperçu personnalisé (_preview), un produit qui n'est ni toile ni poster (personnalisé,
   tapisserie, sur-mesure, carte cadeau ; règle unique : snippet artwork-kind), un produit sans œuvre à plat.
@@ -44,6 +45,7 @@
 
   if kind != blank and has_preview == false and art != blank
     assign frame_handle = ''
+    assign poster_framed = false
     if kind == 'toile'
       for frame_object in item.product.metafields.painting_options.frames_canvas.value
         if frame_object.name == item.variant.option3
@@ -55,17 +57,13 @@
       capture without_frame
         echo item.product.options_with_values[1].values.first
       endcapture
-      if item.variant.option2 == without_frame
-        assign frame_handle = 'sans-cadre'
-      else
+      if item.variant.option2 != blank and item.variant.option2 != without_frame
+        assign poster_framed = true
         for property in item.properties
           if property.first == '_cadre'
             assign frame_handle = property.last
           endif
         endfor
-        if frame_handle == blank
-          assign frame_handle = 'cadre-noir-mat'
-        endif
       endif
     endif
 
@@ -92,6 +90,11 @@
       when 'cadre-noyer'
         assign frame = 'noyer'
     endcase
+    # Un poster encadré a toujours un cadre : sans couleur connue (pas de _cadre, ou une couleur que cette table
+    # ne connaît pas encore), le noir des cartes de collection.
+    if poster_framed and frame == 'sans'
+      assign frame = 'noir'
+    endif
 
     assign contour = false
     if kind == 'poster'

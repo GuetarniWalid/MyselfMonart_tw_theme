@@ -1679,6 +1679,10 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
   border-radius: .5rem;
   background: var(--wall-panier);
 }
+/* Page panier : la ligne est haute (titre sur plusieurs lignes) ; la case garde le format d'une œuvre en
+   portrait, 120 × 150, centrée dans la hauteur de la ligne et jamais plus haute qu'elle. */
+.oeuvre-card[data-context="panier"] { display: flex; align-items: center; }
+.oeuvre-card[data-context="panier"] .oeuvre-card-stage { width: 100%; height: auto; aspect-ratio: 4 / 5; max-height: 100%; }
 .oeuvre-card[data-context] .oeuvre-card-piece { --s: min(calc(.86 * 100cqw / var(--ew)), calc(.86 * 100cqh / var(--eh))); }
 /* Une baguette plus large que dans la carte : en vignette, sa teinte doit se lire. */
 .oeuvre-card[data-context][data-kind="poster"] { --f: .036; }
