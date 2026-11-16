@@ -56,7 +56,9 @@
   assign flat_index = flat_index | plus: 0
   assign art = item.product.images[flat_index]
 
+  assign as_object = false
   if kind != blank and has_preview == false and art != blank
+    assign as_object = true
     assign frame_handle = ''
     assign poster_framed = false
     if kind == 'toile'
@@ -107,6 +109,6 @@
     endif
   endif
 -%}
-{%- if kind != blank and has_preview == false and art != blank -%}
+{%- if as_object -%}
   {%- render 'artwork-object', product: item.product, image: art, kind: kind, frame: frame, contour: contour, context: context, lazy: true -%}
 {%- endif -%}

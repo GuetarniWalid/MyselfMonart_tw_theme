@@ -77,8 +77,8 @@ test('la ligne en objet : son œuvre à plat (snippet artwork-flat-index), toile
 test('les lignes qui gardent leur image : aperçu personnalisé (_preview), produit ni toile ni poster, produit sans œuvre à plat', () => {
   const source = code(SNIPPET)
   assert.match(source, /when '_preview'\s+if property\.last != blank\s+assign has_preview = true/)
-  const guard = /{%-?\s*if kind != blank and has_preview == false and art != blank\s*-?%}\s*{%-?\s*render 'artwork-object'/.exec(source)
-  assert.ok(guard, 'l’objet, seulement pour une toile ou un poster, sans aperçu, avec son œuvre à plat')
+  assert.match(source, /if kind != blank and has_preview == false and art != blank\s+assign as_object = true/, 'l’objet, seulement pour une toile ou un poster, sans aperçu, avec son œuvre à plat')
+  assert.match(source, /{%-?\s*if as_object\s*-?%}\s*{%-?\s*render 'artwork-object'/)
 })
 
 test('poster encadré sans couleur connue (commande passée hors de la fiche, couleur que la table ne connaît pas) : le cadre noir, celui des cartes de collection', () => {
