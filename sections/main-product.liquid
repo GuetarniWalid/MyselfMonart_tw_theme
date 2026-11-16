@@ -23,10 +23,15 @@
 {%- assign show_perspective = false -%}
 {%- if artwork_kind == 'toile' or is_poster -%}{%- assign show_perspective = true -%}{%- endif -%}
 {%- comment -%} Scène 3D à la place de la galerie (fiche-3d, tickets 07 et 14) : réglage du modèle de page,
-   pour les toiles et les posters (artwork-kind). Il faut l'image à plat, media[1] ; sans elle, la galerie
-   reste. Les modèles painting et poster n'ont pas ce réglage : la valeur par défaut leur garde la galerie. {%- endcomment -%}
+   pour les toiles et les posters (artwork-kind). Il faut l'image à plat, à sa place (snippet
+   artwork-flat-index) : la 2e image d'un produit de toujours, vu ici avec ?view=oeuvre-3d ; la 1re d'un
+   nouveau produit (modèle oeuvre-3d), qui n'a qu'elle (et, pour un poster à contour blanc, son image
+   « passe-partout »). Sans elle, la galerie reste. Les modèles painting et poster n'ont pas ce réglage : la
+   valeur par défaut leur garde la galerie. {%- endcomment -%}
+{%- capture flat_index -%}{% render 'artwork-flat-index', product: product %}{%- endcapture -%}
+{%- assign flat_index = flat_index | plus: 0 -%}
 {%- assign stage_3d = false -%}
-{%- if section.settings.media_display == 'stage_3d' and product.media[1].media_type == 'image' -%}
+{%- if section.settings.media_display == 'stage_3d' and product.media[flat_index].media_type == 'image' -%}
   {%- if artwork_kind == 'toile' or artwork_kind == 'poster' -%}{%- assign stage_3d = true -%}{%- endif -%}
 {%- endif -%}
 
@@ -748,12 +753,14 @@
   {%- endif -%}
 {%- endcapture -%}
 {%- comment -%} Capacité de visualisation 3D -> machine-readable pour Google & agents IA.
+   Il faut l'image à plat, à sa place (flat_index, comme la scène 3D) : 2e image d'un produit de toujours,
+   1re d'un nouveau produit.
    Gaté par le MODÈLE DE PAGE (artwork_kind, mutuellement exclusifs) : 'toile' = toile sur châssis
    (bords + cadres caisse américaine) ; 'poster' = tirage encadré sous verre (cadres +
    contour blanc, pas de bords). Jamais émis en même temps que product_studio_props
    (suffixes personalized*) -> pas de clé additionalProperty dupliquée dans le JSON-LD. {%- endcomment -%}
 {%- capture product_3d_props -%}
-  {%- if product.media[1] and product.media[1].media_type == 'image' -%}
+  {%- if product.media[flat_index] and product.media[flat_index].media_type == 'image' -%}
     {%- if artwork_kind == 'toile' -%}
   ,"additionalProperty": [
     { "@type": "PropertyValue", "name": {{ 'sections.mma.product_3d_interactive_name' | t | json }}, "value": {{ 'sections.mma.product_3d_interactive_value' | t | json }} },
@@ -855,7 +862,7 @@
         "type": "select",
         "id": "media_display",
         "label": "Présentation de l'œuvre",
-        "info": "Scène 3D : remplace la galerie par la toile en 3D, à partir de la 2e image du produit. Toiles seulement ; sur tout autre produit, la galerie reste.",
+        "info": "Scène 3D : remplace la galerie par l'œuvre en 3D, tirée de son image à plat (la 2e image d'un produit de toujours, la 1re d'un nouveau produit). Toiles et posters seulement ; sur tout autre produit, la galerie reste.",
         "options": [
           { "value": "gallery", "label": "Galerie de photos" },
           { "value": "stage_3d", "label": "Scène 3D" }

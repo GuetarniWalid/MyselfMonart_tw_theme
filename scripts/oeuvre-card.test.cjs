@@ -146,14 +146,15 @@ test('reflet : les cartes reçues par fetch (défilement infini, filtres, « Mes
   }
 })
 
-test('données Google de la collection (ItemList) : la 1re image pour les nouveaux produits, la 2e pour les autres', () => {
+test('données Google de la collection (ItemList) : l’œuvre à plat, 1re image des nouveaux produits, 2e des autres (snippet artwork-flat-index)', () => {
   const grid = read('sections/main-collection-product-grid.liquid')
   const ld = /<script type="application\/ld\+json">[\s\S]*?<\/script>/.exec(grid)[0]
   const image = /{%-\s*liquid([\s\S]*?)-%}\s*"image": "{{ product_image }}"/.exec(ld)
   assert.ok(image, 'le bloc qui choisit l’image')
-  assert.match(image[1], /render 'artwork-kind', product: product, suffix: product\.template_suffix, image_unique: true/)
-  assert.match(image[1], /assign ld_image = product\.images\[1\]\s+if \w+ != blank\s+assign ld_image = product\.images\[0\]\s+endif/)
-  assert.match(image[1], /assign product_image = ld_image \| image_url: width: ld_image\.preview_image\.width \| prepend: "https:"/)
+  const block = image[1].replace(/^\s*#.*$/gm, '')
+  assert.match(block, /capture (\w+)\s+render 'artwork-flat-index', product: product\s+endcapture\s+assign \1 = \1 \| plus: 0\s+assign ld_image = product\.images\[\1\]\s/)
+  assert.match(block, /assign product_image = ld_image \| image_url: width: ld_image\.preview_image\.width \| prepend: "https:"/)
+  assert.doesNotMatch(block, /artwork-kind|images\[[01]\]/, 'la règle vient du snippet, sans copie')
 })
 
 test('la feuille de style compilée (assets/output.css) porte la vignette : Tailwind a été relancé', () => {

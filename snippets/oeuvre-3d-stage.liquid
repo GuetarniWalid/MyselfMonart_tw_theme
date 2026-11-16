@@ -4,8 +4,9 @@
   validée par Walid le 10/11/2026 (version 26) : l'œuvre occupe l'écran sous l'en-tête, ses options
   sont posées autour d'elle (assets/oeuvre-3d-chips.js), la pilule d'achat reste en bas.
 
-  La vraie image (media[1], l'œuvre à plat) s'affiche d'abord, à la place exacte de l'œuvre de face,
-  par les règles d'input.css (.oeuvre-3d-scene) : la 3D la remplace en fondu sans rien décaler. Elle
+  La vraie image (l'œuvre à plat : 2e image d'un produit de toujours, 1re et seule d'un nouveau produit,
+  snippet artwork-flat-index) s'affiche d'abord, à la place exacte de l'œuvre de face, par les règles
+  d'input.css (.oeuvre-3d-scene) : la 3D la remplace en fondu sans rien décaler. Elle
   reste dans la page, pour Google Images et pour le repli sur les photos. Le comportement est dans
   assets/component-oeuvre-3d.js, le moteur dans assets/oeuvre-3d-engine.js, les styles dans input.css
   (règles .oeuvre-3d-* et .chips-*).
@@ -19,10 +20,18 @@
 {% endcomment %}
 
 {%- liquid
-  assign art_media = product.media[1]
+  # L'œuvre à plat, à sa place (snippet artwork-flat-index) : 2e image d'un produit de toujours, 1re d'un
+  # nouveau produit. Son texte alternatif est au même index dans le métachamp.
+  capture flat_index
+    render 'artwork-flat-index', product: product
+  endcapture
+  assign flat_index = flat_index | plus: 0
+  assign art_media = product.media[flat_index]
   assign art = art_media.preview_image
   assign alts = product.metafields.meta_object.media.value.alts.value
-  assign art_alt = alts[1] | default: art_media.alt
+  assign art_alt = alts[flat_index] | default: art_media.alt
+  # Sa place parmi les images, comptée comme les photos du repli (image_index : 1 pour la 1re).
+  assign art_position = flat_index | plus: 1
   # Le jumeau publié (métachamps link.poster / link.painting), comme la bascule product-format-toggle.
   assign has_twin = false
   if product.metafields.link.painting.value != blank and product.metafields.link.painting.value.published_at != blank
@@ -232,14 +241,16 @@
     {{ 'sections.mma.oeuvre_3d_back' | t }}
   </button>
   {%- comment -%} Sans 3D : les autres photos, chargées seulement si on les demande, et les mêmes que la
-     galerie : à partir de start_from, ni l'image à plat, ni les contours blancs. Le fondu reste en
-     animations réduites : c'est la décision 5, et la seule transition de ce mode. {%- endcomment -%}
+     galerie : à partir de start_from, ni l'image à plat (art_position, là où elle est), ni les contours
+     blancs. Un nouveau produit n'a souvent que l'œuvre à plat et son contour blanc : l'œuvre reste alors
+     seule, sans flèches (setupPhotos, dans assets/component-oeuvre-3d.js). Le fondu reste en animations
+     réduites : c'est la décision 5, et la seule transition de ce mode. {%- endcomment -%}
   <template data-photos>
     {%- assign image_index = 0 -%}
     {%- for media in product.media -%}
       {%- if media.media_type == 'image' -%}
         {%- assign image_index = image_index | plus: 1 -%}
-        {%- if image_index >= start_from and image_index != 2 -%}
+        {%- if image_index >= start_from and image_index != art_position -%}
           {%- unless media.preview_image.src contains 'passe-partout' -%}
             {%- assign photo_alt = alts[forloop.index0] | default: media.alt -%}
             <img
