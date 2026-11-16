@@ -107,28 +107,22 @@
           {%- comment -%} Toile, poster ou rien, d'après le modèle de page du produit (règle unique : snippet artwork-kind). {%- endcomment -%}
           {%- capture item_artwork_kind -%}{% render 'artwork-kind', product: item.product, suffix: item.product.template_suffix %}{%- endcapture -%}
           {%- liquid
-            # Portrait ou paysage : le format de l'œuvre à plat. C'est la 2e photo (index 1) des produits de
-            # toujours, la seule (index 0) des nouveaux produits (modèle oeuvre-3d, image_unique). De même pour
-            # chaque tableau proposé en lot, ci-dessous et dans la 2e passe.
-            capture item_flat_kind
-              render 'artwork-kind', product: item.product, suffix: item.product.template_suffix, image_unique: true
+            # Portrait ou paysage : le format de l'œuvre à plat, 2e photo des produits de toujours, seule photo des
+            # nouveaux produits (snippet artwork-flat-index). De même pour chaque tableau proposé en lot,
+            # ci-dessous et dans la 2e passe.
+            capture item_flat_index
+              render 'artwork-flat-index', product: item.product
             endcapture
-            assign item_flat_index = 1
-            if item_flat_kind != blank
-              assign item_flat_index = 0
-            endif
+            assign item_flat_index = item_flat_index | plus: 0
           -%}
           {% for bundle in item.product.metafields.bundle.paintings.value %}
             {% unless item_product_ids contains bundle.id %}
               {% if item_artwork_kind == 'toile' or item.product.template_suffix == 'personalized' %}
                 {% liquid
-                  capture bundle_flat_kind
-                    render 'artwork-kind', product: bundle, suffix: bundle.template_suffix, image_unique: true
+                  capture bundle_flat_index
+                    render 'artwork-flat-index', product: bundle
                   endcapture
-                  assign bundle_flat_index = 1
-                  if bundle_flat_kind != blank
-                    assign bundle_flat_index = 0
-                  endif
+                  assign bundle_flat_index = bundle_flat_index | plus: 0
                   assign bundle_ratio = bundle.images[bundle_flat_index].aspect_ratio
                 %}
                 {% if item.product.images[item_flat_index].aspect_ratio < 1 %}
@@ -176,13 +170,10 @@
             endcapture
             if item_artwork_kind == 'toile' or item.product.template_suffix == 'personalized'
               # L'œuvre à plat, vignette de la ligne et source de son format (voir la 1re passe).
-              capture item_flat_kind
-                render 'artwork-kind', product: item.product, suffix: item.product.template_suffix, image_unique: true
+              capture item_flat_index
+                render 'artwork-flat-index', product: item.product
               endcapture
-              assign item_flat_index = 1
-              if item_flat_kind != blank
-                assign item_flat_index = 0
-              endif
+              assign item_flat_index = item_flat_index | plus: 0
               assign item_image = item.product.images[item_flat_index] | default: item.product.featured_image
               if item_image.aspect_ratio < 1
                 assign item_largest_size = item.variant.option1 | split: 'x' | last | split: ' ' | first | plus: 0
@@ -203,13 +194,10 @@
                 assign bundle_discounts = bundle_discounts | append: discount.title | append: '££'
               endfor
 
-              capture bundle_flat_kind
-                render 'artwork-kind', product: bundle, suffix: bundle.template_suffix, image_unique: true
+              capture bundle_flat_index
+                render 'artwork-flat-index', product: bundle
               endcapture
-              assign bundle_flat_index = 1
-              if bundle_flat_kind != blank
-                assign bundle_flat_index = 0
-              endif
+              assign bundle_flat_index = bundle_flat_index | plus: 0
               assign bundle_ratio = bundle.images[bundle_flat_index].aspect_ratio
               assign bundle_image = bundle.images[bundle_flat_index].src | image_url: width: 80 | default: bundle.featured_image.src | image_url: width: 80
               assign matching_variants_title = null

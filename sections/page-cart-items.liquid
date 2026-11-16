@@ -14,15 +14,12 @@
       <ul>
         {%- for item in cart.items -%}
           {% liquid
-            # L'œuvre à plat, vignette de la ligne : la 2e photo (index 1) des produits de toujours ; la seule, la
-            # 1re, des nouveaux produits (modèle oeuvre-3d, règle unique : snippet artwork-kind).
-            capture flat_kind
-              render 'artwork-kind', product: item.product, suffix: item.product.template_suffix, image_unique: true
+            # L'œuvre à plat, vignette de la ligne : la 2e photo des produits de toujours, la seule des nouveaux
+            # produits (snippet artwork-flat-index).
+            capture flat_index
+              render 'artwork-flat-index', product: item.product
             endcapture
-            assign flat_index = 1
-            if flat_kind != blank
-              assign flat_index = 0
-            endif
+            assign flat_index = flat_index | plus: 0
             if item.product.has_only_default_variant
               assign image = item.product.featured_image.src
             else

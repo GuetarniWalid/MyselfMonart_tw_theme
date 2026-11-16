@@ -17,17 +17,18 @@ const code = (file) => read(file)
   .replace(/{%-?\s*comment\s*-?%}[\s\S]*?{%-?\s*endcomment\s*-?%}/g, '')
   .replace(/^\s*#.*$/gm, '')
 
-/* L'index de l'œuvre à plat d'un produit `p` (expression Liquid, ex. « item.product ») : la règle unique
-   (snippet artwork-kind, image_unique) le met à 0 pour un nouveau produit, et le laisse à 1 sinon. Rend le nom
-   de la variable qui le porte. */
+test('artwork-flat-index : l’œuvre à plat est la 1re image (0) d’un nouveau produit, la 2e (1) de tout autre', () => {
+  const snippet = code('snippets/artwork-flat-index.liquid').trim()
+  assert.match(snippet, /^{%-\s*capture (\w+)\s*-%}{% render 'artwork-kind', product: product, suffix: product\.template_suffix, image_unique: true %}{%-\s*endcapture\s*-%}\s*{%-\s*if \1 != blank\s*-%}0{%-\s*else\s*-%}1{%-\s*endif\s*-%}$/)
+  assert.match(read('snippets/artwork-flat-index.liquid'), /^\s*- product: /m, 'paramètre décrit dans « Accepts »')
+})
+
+/* L'index de l'œuvre à plat d'un produit `p` (expression Liquid, ex. « item.product »), tiré du snippet
+   artwork-flat-index et rendu numérique (l'index d'une liste l'exige). Rend le nom de la variable qui le porte. */
 function flatIndex(source, p) {
-  const esc = p.replace(/\./g, '\\.')
-  const kind = new RegExp(`capture (\\w+)\\s+render 'artwork-kind', product: ${esc}, suffix: ${esc}\\.template_suffix, image_unique: true\\s+endcapture`).exec(source)
-  assert.ok(kind, `${p} : la règle artwork-kind avec image_unique`)
-  const rest = source.slice(kind.index)
-  const index = new RegExp(`assign (\\w+) = 1\\s+if ${kind[1]} != blank\\s+assign \\1 = 0\\s+endif`).exec(rest)
-  assert.ok(index, `${p} : l'index de l'œuvre à plat, 1, puis 0 pour un nouveau produit`)
-  return index[1]
+  const m = new RegExp(`capture (\\w+)\\s+render 'artwork-flat-index', product: ${p.replace(/\./g, '\\.')}\\s+endcapture\\s+assign \\1 = \\1 \\| plus: 0`).exec(source)
+  assert.ok(m, `${p} : l'index de l'œuvre à plat (snippet artwork-flat-index), en nombre`)
+  return m[1]
 }
 
 test('page panier : la vignette d’un nouveau produit est son œuvre à plat, sans exiger de 2e photo', () => {

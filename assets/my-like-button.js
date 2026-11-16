@@ -103,17 +103,10 @@ class MyLikeButton extends HTMLElement {
     const myLikesComponent = document.querySelector('my-likes');
     if (!myLikesComponent) return;
 
-    // Remove the entire anime-product-card wrapper, or fallback to li
-    const cardWrapper = this.closest('anime-product-card');
-    if (cardWrapper) {
-      cardWrapper.remove();
-    } else {
-      this.closest('li')?.remove();
-    }
-
-    // La liste vide dès qu'aucune carte ne reste : productLikedIds peut garder l'identifiant d'une œuvre
-    // retirée de la boutique, qui n'a pas de carte (assets/my-likes.js la saute).
-    if (!myLikesComponent.querySelector('anime-product-card')) myLikesComponent.showEmptyMessage();
+    // La liste « Mes j'aime » (assets/my-likes.js) retire la carte entière (anime-product-card, à défaut le li),
+    // et montre la liste vide quand plus aucune ne reste.
+    const card = this.closest('anime-product-card') || this.closest('li');
+    if (card) myLikesComponent.removeCard(card);
   }
 
   updateLikeButtonCount() {

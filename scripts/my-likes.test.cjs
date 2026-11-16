@@ -21,10 +21,23 @@ const classList = (...initial) => {
   return { add: (c) => set.add(c), remove: (c) => set.delete(c), contains: (c) => set.has(c), toggle: (c, on) => ((on ?? !set.has(c)) ? set.add(c) : set.delete(c)) }
 }
 
-/* Une carte telle que la section my-likes-card la rend, réduite à ce que la page touche : son cœur. La réponse
-   du serveur la décrit en une balise, <anime-product-card data-handle="…">, dans l'enveloppe de la section
-   (#shopify-section-my-likes-card) ou non ; le DOMParser de la page réduite la relit. Ses modules (le reflet des
-   posters) : banc du navigateur, et scripts/oeuvre-card.test.cjs. */
+/* Une image de carte telle que la section la rend : chargement immédiat, en priorité (lazy_load: false). */
+const eagerImage = () => {
+  const attributes = { loading: 'eager', fetchpriority: 'high' }
+  return {
+    attributes,
+    get loading() { return attributes.loading },
+    set loading(value) { attributes.loading = value },
+    getAttribute: (name) => (name in attributes ? attributes[name] : null),
+    setAttribute: (name, value) => { attributes[name] = String(value) },
+    removeAttribute: (name) => { delete attributes[name] },
+  }
+}
+
+/* Une carte telle que la section my-likes-card la rend, réduite à ce que la page touche : son cœur, son image.
+   La réponse du serveur la décrit en une balise, <anime-product-card data-handle="…">, dans l'enveloppe de la
+   section (#shopify-section-my-likes-card) ou non ; le DOMParser de la page réduite la relit. Ses modules (le
+   reflet des posters) : banc du navigateur, et scripts/oeuvre-card.test.cjs. */
 function cardFrom(html, selector) {
   const inSection = /<div id="shopify-section-my-likes-card"[^>]*>\s*<anime-product-card/.test(html)
   if (selector === '#shopify-section-my-likes-card anime-product-card' && !inSection) return null
@@ -32,10 +45,12 @@ function cardFrom(html, selector) {
   const m = /<anime-product-card data-handle="([^"]*)">/.exec(html)
   if (!m) return null
   const like = { classList: classList('like') }
+  const image = eagerImage()
   return {
-    handle: m[1], like,
+    handle: m[1], like, image, parent: null,
     querySelector: (selector) => (selector === 'button.like' ? like : null),
-    querySelectorAll: () => [],
+    querySelectorAll: (selector) => (selector === 'img' ? [image] : []),
+    remove() { if (this.parent) this.parent.children.splice(this.parent.children.indexOf(this), 1); this.parent = null },
   }
 }
 const section = (handle) => `<div id="shopify-section-my-likes-card" class="shopify-section"><anime-product-card data-handle="${handle}"><li></li></anime-product-card></div>`
@@ -52,7 +67,9 @@ async function likesPage({ handles, root = '/', responses = {}, storage, without
   const loader = { classList: classList('flex') }
   const empty = { classList: classList('hidden', 'empty-message') }
   const newGrid = () => {
-    const grid = { children: [], append(...nodes) { this.children.push(...nodes) }, appendChild(node) { this.children.push(node); return node },
+    const grid = { children: [],
+      append(...nodes) { nodes.forEach((n) => { n.parent = this }); this.children.push(...nodes) },
+      appendChild(node) { this.append(node); return node },
       querySelectorAll(selector) { return this.children.flatMap((c) => [...c.querySelectorAll(selector)]) } }
     grids.push(grid)
     return grid
@@ -65,7 +82,11 @@ async function likesPage({ handles, root = '/', responses = {}, storage, without
       this.appended = []
       this.nextElementSibling = loader
     }
-    querySelector(selector) { return selector === 'template' ? template : null }
+    querySelector(selector) {
+      if (selector === 'template') return template
+      if (selector === 'anime-product-card') return this.appended.flatMap((grid) => grid.children)[0] || null
+      return null
+    }
     append(...nodes) { this.appended.push(...nodes) }
     appendChild(node) { this.appended.push(node); return node }
   }
@@ -189,6 +210,25 @@ test('chaque cœur s’affiche aimé, même quand son identifiant manque dans pr
   for (const card of page.cards) assert.ok(card.like.classList.contains('is-liked'), card.handle)
 })
 
+test('comme la grille de collection, les deux premières images se chargent tout de suite et en priorité, les autres à l’approche de l’écran', async () => {
+  const handles = ['a', 'b', 'c', 'd', 'e']
+  const page = await likesPage({ handles, responses: Object.fromEntries(handles.map((h) => [url(h), { status: 200, body: section(h) }])) })
+  assert.deepEqual(page.cards.map((c) => [c.image.getAttribute('loading'), c.image.getAttribute('fetchpriority')]), [
+    ['eager', 'high'], ['eager', 'high'], ['lazy', null], ['lazy', null], ['lazy', null],
+  ])
+})
+
+test('une carte retirée par son cœur part de la liste ; plus aucune carte : la liste vide', async () => {
+  const page = await likesPage({ handles: ['a', 'b'], responses: { [url('a')]: { status: 200, body: section('a') }, [url('b')]: { status: 200, body: section('b') } } })
+  const [a, b] = page.cards
+  page.element.removeCard(a)
+  assert.deepEqual(handlesOf(page.grid.children), ['b'])
+  assert.ok(page.empty.classList.contains('hidden'), 'une carte reste')
+  page.element.removeCard(b)
+  assert.deepEqual(page.grid.children, [])
+  assert.ok(!page.empty.classList.contains('hidden'), 'liste vide')
+})
+
 test('les images se dévoilent : removeSkeletonOnImagesLoad (tw-global.js) reçoit la grille, une fois dans la page', async () => {
   const page = await likesPage({ handles: ['a'], responses: { [url('a')]: { status: 200, body: section('a') } } })
   assert.equal(page.skeletons.length, 1)
@@ -221,15 +261,12 @@ test('sans Shopify.routes.root, les cartes se demandent à la racine', async () 
 })
 
 /* Le cœur des cartes (assets/my-like-button.js, <my-like-button>) dans une page réduite : ses cartes (chacune
-   son cœur), la liste « Mes j'aime » s'il y en a une, localStorage, et le compteur de j'aime du serveur
-   (fetch, sans effet ici). `click(i)` touche le cœur de la carte i. */
+   son cœur), la liste « Mes j'aime » s'il y en a une (elle note les cartes qu'on lui rend), localStorage, et le
+   compteur de j'aime du serveur (fetch, sans effet ici). `click(i)` touche le cœur de la carte i. */
 function heartPage({ cards, storage, likesPageHere = true }) {
   const store = { ...storage }
-  const shown = []
-  let onPage = []
-  const likes = likesPageHere
-    ? { showEmptyMessage: () => shown.push('vide'), querySelector: (selector) => (selector === 'anime-product-card' ? onPage.find((c) => c.isConnected) || null : null) }
-    : null
+  const removed = []
+  const likes = likesPageHere ? { removeCard: (card) => removed.push(card.handle) } : null
   const defined = {}
   let pending = null // ce que le navigateur donne à l'élément avant son constructeur (attributs, enfants)
   class HTMLElement {
@@ -246,8 +283,8 @@ function heartPage({ cards, storage, likesPageHere = true }) {
   }
   win.window = win
   vm.runInNewContext(read('assets/my-like-button.js'), win, { filename: path.join(ROOT, 'assets/my-like-button.js') })
-  onPage = cards.map(({ id, handle, liked = true }) => {
-    const card = { id, handle, isConnected: true, remove() { this.isConnected = false } }
+  const onPage = cards.map(({ id, handle, liked = true }) => {
+    const card = { id, handle }
     const button = { classList: classList('like', ...(liked ? ['is-liked'] : [])) }
     pending = {
       dataset: { productId: id, productHandle: handle }, firstElementChild: button,
@@ -259,33 +296,31 @@ function heartPage({ cards, storage, likesPageHere = true }) {
     return Object.assign(card, { heart, button })
   })
   return {
-    store, shown, onPage,
+    store, removed, onPage,
     async click(i) { for (const { type, callback } of onPage[i].heart.listeners) if (type === 'click') await callback() },
   }
 }
 const stored = (store, key) => JSON.parse(store[key] || 'null')
 
-test('« Mes j’aime » : retirer un j’aime retire sa carte ; la dernière partie, la liste vide s’affiche', async () => {
+test('« Mes j’aime » : retirer un j’aime rend sa carte à la liste, et l’efface des j’aime gardés', async () => {
   // Une œuvre aimée puis retirée de la boutique : son identifiant reste dans productLikedIds, sans carte.
   const page = heartPage({
     cards: [{ id: '1', handle: 'a' }, { id: '2', handle: 'b' }],
     storage: { productLikedIds: '["1","2","9"]', productLikedHandles: '["a","b","retiree"]' },
   })
   await page.click(0)
-  assert.equal(page.onPage[0].isConnected, false, 'carte retirée')
-  assert.deepEqual(page.shown, [], 'une carte reste')
+  assert.deepEqual(page.removed, ['a'])
   assert.deepEqual(stored(page.store, 'productLikedIds'), ['2', '9'])
   assert.deepEqual(stored(page.store, 'productLikedHandles'), ['b', 'retiree'])
   await page.click(1)
-  assert.equal(page.onPage[1].isConnected, false)
-  assert.deepEqual(page.shown, ['vide'], 'plus aucune carte : liste vide')
+  assert.deepEqual(page.removed, ['a', 'b'])
 })
 
 test('ailleurs, le cœur garde les j’aime sous les mêmes clés (productLikedIds, productLikedHandles), et rien d’autre', async () => {
   const page = heartPage({ cards: [{ id: '7', handle: 'h', liked: false }], storage: { productLikedIds: '["1"]', productLikedHandles: '["a"]' }, likesPageHere: false })
   await page.click(0)
   assert.ok(page.onPage[0].button.classList.contains('is-liked'))
-  assert.equal(page.onPage[0].isConnected, true, 'hors de « Mes j’aime », la carte reste')
+  assert.deepEqual(page.removed, [], 'hors de « Mes j’aime », la carte reste')
   assert.deepEqual(Object.keys(page.store).sort(), ['productLikedHandles', 'productLikedIds'])
   assert.deepEqual(stored(page.store, 'productLikedIds'), ['1', '7'])
   assert.deepEqual(stored(page.store, 'productLikedHandles'), ['a', 'h'])

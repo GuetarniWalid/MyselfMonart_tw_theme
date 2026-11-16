@@ -1,0 +1,18 @@
+{%- comment -%}
+  artwork-flat-index — où est l'œuvre à plat d'un produit dans product.images : 0 (sa 1re et seule image) pour
+  un nouveau produit, modèle oeuvre-3d (règle unique : snippet artwork-kind, image_unique) ; 1 (sa 2e photo)
+  pour tout autre produit, la toile et le poster de toujours compris.
+  Le panier en tire la vignette d'une ligne et le format, portrait ou paysage, d'un tableau, ceux d'une ligne
+  comme ceux des tableaux proposés en lot (sections/page-cart-items.liquid, sections/tw-cart-drawer.liquid).
+
+  Accepts:
+    - product: {Object} le produit
+
+  Usage :
+    {%- capture flat_index -%}{% render 'artwork-flat-index', product: product %}{%- endcapture -%}
+    {%- assign flat_index = flat_index | plus: 0 -%}
+    … product.images[flat_index] …
+  Le résultat sort sans aucun espace ; « | plus: 0 » en fait un nombre, ce qu'exige l'index d'une liste.
+{%- endcomment -%}
+{%- capture kind -%}{% render 'artwork-kind', product: product, suffix: product.template_suffix, image_unique: true %}{%- endcapture -%}
+{%- if kind != blank -%}0{%- else -%}1{%- endif -%}

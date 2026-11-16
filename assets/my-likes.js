@@ -14,6 +14,13 @@ class MyLikes extends HTMLElement {
     }
     // Le cœur de chaque carte, aimé : son identifiant peut manquer dans productLikedIds (anciens j'aime).
     cards.forEach((card) => card.querySelector('button.like')?.classList.add('is-liked'));
+    // Comme la grille de collection : les deux premières cartes chargent leur image tout de suite et en
+    // priorité, les autres à l'approche de l'écran. La section les rend toutes en chargement immédiat : elle ne
+    // connaît pas leur place.
+    cards.slice(2).forEach((card) => card.querySelectorAll('img').forEach((img) => {
+      img.loading = 'lazy';
+      img.removeAttribute('fetchpriority');
+    }));
     const grid = this.querySelector('template').content.firstElementChild.cloneNode();
     grid.append(...cards);
     this.append(grid);
@@ -49,14 +56,22 @@ class MyLikes extends HTMLElement {
     return cards.filter(Boolean);
   }
 
-  /* La carte d'une œuvre, prise dans l'enveloppe de sa section : les handles sont traduits par langue, et une
-     redirection qui perdrait section_id rendrait la fiche entière, avec les cartes d'autres œuvres. */
+  /* La carte d'une œuvre, prise dans l'enveloppe de sa section. Les handles sont traduits par langue : Shopify
+     redirige d'un handle (ou d'un marché) à l'autre en gardant section_id (relevé du 16/11/2026). Une
+     redirection qui le perdrait rendrait la fiche entière, avec les cartes d'autres œuvres : rien n'en est pris. */
   async fetchCard(handle) {
     const root = window.Shopify?.routes?.root || '/';
     const response = await fetch(`${root}products/${encodeURIComponent(handle)}?section_id=my-likes-card`);
     if (!response.ok) return null;
-    const html = await response.text();
-    return new DOMParser().parseFromString(html, 'text/html').querySelector('#shopify-section-my-likes-card anime-product-card');
+    const doc = new DOMParser().parseFromString(await response.text(), 'text/html');
+    return doc.querySelector('#shopify-section-my-likes-card anime-product-card');
+  }
+
+  /* Une carte retirée par son cœur (assets/my-like-button.js). Plus aucune carte : la liste vide, même si
+     productLikedIds garde une œuvre retirée de la boutique, qui n'a pas de carte. */
+  removeCard(card) {
+    card.remove();
+    if (!this.querySelector('anime-product-card')) this.showEmptyMessage();
   }
 
   hideLoader() {
