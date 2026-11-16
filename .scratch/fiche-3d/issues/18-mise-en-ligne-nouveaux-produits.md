@@ -16,7 +16,15 @@ Un produit qui n'a que l'œuvre à plat (relevé le 15/11/2026, essai des vignet
 - [ ] La fiche 3D s'affiche avec cette seule image. Aujourd'hui, `main-product.liquid` attend l'image à plat en 2e position (`media[1]`).
 - [x] Les vignettes de collection montrent l'œuvre en objet : la toile de face, sans cadre, avec son ombre et sa lumière ; le poster sous verre, avec un reflet discret au défilement (choix de Walid du 15/11). Code et notes de l'essai du 15/11 dans le dossier `vignettes-collection`. Les cartes des anciens produits ne changent pas. Posé dans le thème le 16/11/2026 (f5226d7, 2788534) : rien ne se voit tant qu'aucun produit n'a le modèle `oeuvre-3d`.
 - [x] Les données Google de la page collection (`ItemList` de `main-collection-product-grid.liquid`) et le texte alternatif de la carte prennent la 1re image pour ces produits (16/11/2026, avec les vignettes).
-- [ ] « Mes j'aime » montre ces œuvres comme la collection : `my-likes.js` remplit certaines cartes avec l'ancien balisage. À régler avant de passer le 1er produit au modèle `oeuvre-3d` : `my-likes.liquid` prend pour modèle la carte du 1er produit de la boutique (`collections.all.products.first`), que `my-likes.js` recopie pour chaque œuvre aimée en ne changeant que l'image. Si ce 1er produit est un nouveau produit, toutes les cartes aimées, anciennes comprises, prennent son cadre et ses proportions.
-- [ ] Le panier montre ces œuvres : la page panier (`page-cart-items.liquid`, ligne 32) n'affiche la vignette que s'il existe une 2e photo (`images[1]`), et les suggestions de lot du tiroir panier (`tw-cart-drawer.liquid`, ligne 113) lisent le format de la 2e photo sans repli.
+- [x] « Mes j'aime » montre ces œuvres comme la collection (16/11/2026). Il n'y a plus de carte modèle : chaque carte est celle de la collection, rendue par Shopify dans le contexte du produit. C'est la section `my-likes-card`, appelée par la Section Rendering API (`/products/<handle>?section_id=my-likes-card`, derrière le préfixe de langue et de marché). Trois défauts relevés en ligne le même jour disparaissent avec elle :
+  - toutes les cartes affichaient le prix du produit modèle (39,90 €) ;
+  - le titre complet, lu par les lecteurs d'écran, avait disparu ;
+  - un seul produit introuvable bloquait le chargeur.
+
+  Reste à faire après le déploiement : vérifier la page en ligne. Ce changement touche tout de suite tous les produits, anciens compris, et le banc ne rendait le Liquid qu'avec liquidjs.
+- [x] Le panier montre ces œuvres (16/11/2026) :
+  - la vignette de la page panier vient de l'œuvre à plat (snippet `artwork-flat-index`) ;
+  - le format des tableaux proposés en lot dans le tiroir en vient aussi ;
+  - les produits de toujours restent identiques à l'octet près (banc : 970 paniers).
 - [ ] Reflet des posters essayé sur un vrai Firefox et un Safari d'avant la version 26 : le banc du 16/11 n'a fait tourner le chemin de secours que dans Chrome.
 - [ ] Au 1er produit passé au modèle `oeuvre-3d`, sa carte regardée en ligne, dans une collection et dans la recherche : le banc du 16/11 rendait le Liquid avec liquidjs, pas avec Shopify.
