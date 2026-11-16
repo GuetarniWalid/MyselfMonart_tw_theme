@@ -31,6 +31,11 @@ Un produit qui n'a que l'œuvre à plat (relevé le 15/11/2026, essai des vignet
 
   Vérifiés, rien à changer : la bascule et le jumeau (chaque fiche prend la place de sa propre œuvre, l'adresse garde `?view=oeuvre-3d`), le fil d'Ariane, les propriétés de ligne envoyées au panier, les balises de partage (1re image). Laissées telles quelles, car un nouveau produit n'y arrive jamais : la galerie avec sa perspective, et la tapisserie.
 
+  Vérifié en ligne le 16/11/2026, après le déploiement de 3e87372, avec un relevé fait juste avant dans un Chrome neuf. Aucune différence sur 5 pages : l'image d'arrivée, les photos du repli, les médias de la galerie et les données Google (`Product` et `ItemList`). Les pages relevées :
+  - le Bonsaï toile et le Bonsaï poster sous `?view=oeuvre-3d` ;
+  - les mêmes en galerie ;
+  - la collection `tableau-zen`.
+
   Reste : les photos du repli sans 3D commencent à la 3e image (`start_from_media` du modèle `oeuvre-3d`, réglé pour les produits de toujours). Un nouveau produit n'a pas d'autre photo aujourd'hui ; si le ticket 15 lui en ajoute, une photo en 2e position n'y figurerait pas.
 - [x] Les vignettes de collection montrent l'œuvre en objet : la toile de face, sans cadre, avec son ombre et sa lumière ; le poster sous verre, avec un reflet discret au défilement (choix de Walid du 15/11). Code et notes de l'essai du 15/11 dans le dossier `vignettes-collection`. Les cartes des anciens produits ne changent pas. Posé dans le thème le 16/11/2026 (f5226d7, 2788534) : rien ne se voit tant qu'aucun produit n'a le modèle `oeuvre-3d`.
 - [x] Les données Google de la page collection (`ItemList` de `main-collection-product-grid.liquid`) et le texte alternatif de la carte prennent la 1re image pour ces produits (16/11/2026, avec les vignettes).
