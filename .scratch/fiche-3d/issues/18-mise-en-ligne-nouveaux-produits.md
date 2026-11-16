@@ -21,10 +21,18 @@ Un produit qui n'a que l'œuvre à plat (relevé le 15/11/2026, essai des vignet
   - le titre complet, lu par les lecteurs d'écran, avait disparu ;
   - un seul produit introuvable bloquait le chargeur.
 
-  Reste à faire après le déploiement : vérifier la page en ligne. Ce changement touche tout de suite tous les produits, anciens compris, et le banc ne rendait le Liquid qu'avec liquidjs.
+  Vérifié en ligne le 16/11/2026, juste après le déploiement (d7796c0), dans un Chrome neuf, avec 3 j'aime :
+  - Shopify sert la section, en français comme sous `/en/` ;
+  - chaque carte a son prix : 24,90 €, 62,50 € et 63,50 €, au lieu de 39,90 € pour toutes ;
+  - le titre complet est revenu pour les lecteurs d'écran ;
+  - un produit introuvable est sauté. Shopify répond alors 200 avec une section vide, et non 404 ;
+  - sans j'aime, la liste vide s'affiche ;
+  - aucun débordement à 390 et 1440 px.
 - [x] Le panier montre ces œuvres (16/11/2026) :
   - la vignette de la page panier vient de l'œuvre à plat (snippet `artwork-flat-index`) ;
   - le format des tableaux proposés en lot dans le tiroir en vient aussi ;
   - les produits de toujours restent identiques à l'octet près (banc : 970 paniers).
+
+  Relevé en passant, laissé tel quel pour garder les anciens produits identiques : dans la page panier, la hauteur de la vignette (`height`) divise 150 par `image.aspect_ratio`, alors que `image` y est une adresse. Le calcul échoue sans doute pour tous les produits, depuis bien avant le 16/11. À regarder sur un vrai panier : en ajouter un ici compterait un ajout au panier dans les chiffres de la boutique.
 - [ ] Reflet des posters essayé sur un vrai Firefox et un Safari d'avant la version 26 : le banc du 16/11 n'a fait tourner le chemin de secours que dans Chrome.
-- [ ] Au 1er produit passé au modèle `oeuvre-3d`, sa carte regardée en ligne, dans une collection et dans la recherche : le banc du 16/11 rendait le Liquid avec liquidjs, pas avec Shopify.
+- [ ] Au 1er produit passé au modèle `oeuvre-3d`, le regarder en ligne : sa carte dans une collection, dans la recherche et dans « Mes j'aime », puis sa ligne dans la page panier et dans le tiroir. Le banc du 16/11 rendait le Liquid avec liquidjs, pas avec Shopify.
