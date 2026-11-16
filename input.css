@@ -1422,12 +1422,14 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
 .oeuvre-card {
   --wall-toile: #ffffff;                        /* fond des vignettes actuelles des toiles */
   --wall-poster: #f5f4f2;                       /* fond des vignettes actuelles des posters */
-  --wall-panier: #f5f4f2;                       /* fond de la vignette d'une ligne du panier, toile ou poster */
+  --wall-panier: var(--wall-poster);            /* fond de la vignette d'une ligne du panier, toile ou poster */
   /* Teintes des cadres : celles du moteur 3D (assets/oeuvre-3d-engine.js, FRAMES ; scripts/artwork-object.test.cjs
      les compare), relevées sur les vrais cadres de l'atelier le 12/11/2026. Le poster a son propre chêne, le
-     chêne vieilli (« Oak Vintage »), et son noyer ; le chêne de la toile est le bois naturel clair. */
+     chêne vieilli (« Oak Vintage »), et son noyer ; le chêne de la toile est le bois naturel clair. Sauf le
+     noir : celui des vignettes de collection, validé par Walid le 15/11/2026 (le moteur a #262627, la base
+     d'une matière qu'il éclaire ; peint à plat, le CSS garde le noir de la carte). */
   --frame-blanc: #efefed;
-  --frame-noir: #262627;
+  --frame-noir: #353535;
   --frame-argent: #9a9381;
   --frame-chene: #c2b09c;
   --frame-noyer: #856453;
@@ -1687,6 +1689,13 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
 .oeuvre-card[data-context] .oeuvre-card-piece { --s: min(calc(.86 * 100cqw / var(--ew)), calc(.86 * 100cqh / var(--eh))); }
 /* Une baguette plus large que dans la carte : en vignette, sa teinte doit se lire. */
 .oeuvre-card[data-context][data-kind="poster"] { --f: .036; }
+/* Le reflet fixe de la vitre, lisible en vignette : la porte-fenêtre des cartes réduite à une bande de lumière
+   douce, de biais, côté lumière (un seul dégradé, sans masque : la porte-fenêtre et son masque pesaient un
+   quart de la peinture du tiroir). */
+.oeuvre-card[data-context] .oeuvre-card-glass::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(104deg, rgba(248, 251, 255, 0) 24%, rgba(248, 251, 255, .16) 34%, rgba(248, 251, 255, .08) 50%, rgba(248, 251, 255, 0) 60%);
+}
 /* ==== Vignette d'œuvre (fin) ==== */
 
 /* ⛔ Badge flottant hCaptcha injecté par Shopify (div#shop-hcaptcha-badge-container, position

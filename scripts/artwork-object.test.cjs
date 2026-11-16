@@ -29,19 +29,30 @@ const rule = (css, selector) => {
   return css.slice(at, css.indexOf('}', at))
 }
 
-test('cadres : une variable CSS par cadre, à la teinte du moteur 3D, le chêne et le noyer du poster compris', () => {
+/* Le noir validé par Walid sur les vignettes de collection (15/11/2026) : les cartes des nouveaux produits ne
+   changent pas. Le moteur 3D a #262627, la base d'une matière qu'il éclaire ; peint à plat, le CSS garde le noir
+   de la carte (écart de 15 sur 255 par canal). Les autres teintes sont celles du moteur. */
+const NOIR_DE_LA_CARTE = '#353535'
+
+test('cadres : une variable CSS par cadre, à la teinte du moteur 3D (le chêne et le noyer du poster compris), sauf le noir de la carte', () => {
   const css = vignetteCss()
   const root = rule(css, '.oeuvre-card')
   const colored = FRAMES.filter((f) => f.color)
   assert.deepEqual(colored.map((f) => f.id), ['blanc', 'noir', 'argent', 'chene', 'noyer'])
   for (const { id } of colored) {
-    assert.match(root, new RegExp(`--frame-${id}: ${frameOf(id, 'toile').color};`), `toile ${id}`)
+    const expected = id === 'noir' ? NOIR_DE_LA_CARTE : frameOf(id, 'toile').color
+    assert.match(root, new RegExp(`--frame-${id}: ${expected};`), `toile ${id}`)
     if (frameOf(id, 'poster').color !== frameOf(id, 'toile').color) {
       assert.match(root, new RegExp(`--frame-poster-${id}: ${frameOf(id, 'poster').color};`), `poster ${id}`)
     }
   }
   // Le chêne du poster est le chêne vieilli, pas le bois clair de la toile (choix de Walid du 12/11/2026).
   assert.match(root, /--frame-poster-chene: #6f6765;/)
+  // Le noir reste un noir du moteur à l'œil : au plus 26 sur 255 de l'un à l'autre (24 entre le moteur et
+  // l'atelier, scripts/oeuvre-3d-cadres.test.cjs).
+  const rgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16))
+  const gap = Math.hypot(...rgb(NOIR_DE_LA_CARTE).map((v, i) => v - rgb(frameOf('noir').color)[i]))
+  assert.ok(gap <= 26, `noir à ${gap.toFixed(1)} du moteur`)
 })
 
 test('cadres : chaque cadre de la commande prend sa teinte (data-frame), et le poster son propre chêne et son noyer', () => {
@@ -71,6 +82,10 @@ test('panier : rien ne bouge. La vitre de la carte, avec son reflet fixe, sans l
   assert.ok(glass, 'la vitre, pour un poster encadré')
   assert.match(glass[1], /{%-?\s*if context == 'carte'\s*-?%}\s*<span class="oeuvre-card-glass" aria-hidden="true"><span class="oeuvre-card-glare" data-allow-empty><\/span><\/span>\s*{%-?\s*else\s*-?%}\s*<span class="oeuvre-card-glass" aria-hidden="true" data-allow-empty><\/span>/)
   assert.match(rule(css, '.oeuvre-card-glass'), /radial-gradient\(42% 30% at 16% 9%, rgba\(255, 255, 255, \.08\)/, 'le reflet fixe de la petite fenêtre')
+  // Et un reflet qui se lit en vignette : la porte-fenêtre réduite à une bande de lumière, un seul dégradé, sans masque.
+  const band = rule(css, '.oeuvre-card[data-context] .oeuvre-card-glass::after')
+  assert.match(band, /background: linear-gradient\(/)
+  assert.doesNotMatch(band, /mask|animation|transform|filter/)
   // Le script du reflet n'est chargé que par la carte, et ne touche qu'aux vitres des cartes.
   assert.doesNotMatch(source, /<script/)
   assert.match(read('assets/oeuvre-card-reflet.js'), /const GLASS = '\.oeuvre-card:not\(\[data-context\]\) \.oeuvre-card-glass'/)
@@ -91,6 +106,8 @@ test('panier : l’œuvre tient entière dans sa case, à son format, et la case
   assert.match(rule(css, '.oeuvre-card-piece'), /width: calc\(var\(--ew\) \* var\(--s\)\);\s*height: calc\(var\(--eh\) \* var\(--s\)\);/)
   // La carte garde sa scène : une largeur de scène par unité.
   assert.match(rule(css, '.oeuvre-card'), /--s: 100cqw;/)
+  // Le fond de la case : le mur des posters de la collection.
+  assert.match(rule(css, '.oeuvre-card'), /--wall-panier: var\(--wall-poster\);/)
   // Hors du calcul de --s, plus aucune unité de conteneur en dur : la carte et le panier partagent tout le reste.
   assert.equal((css.match(/\d*\.?\d+cq[wh]/g) || []).length, 3)
 })

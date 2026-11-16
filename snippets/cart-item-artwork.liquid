@@ -31,11 +31,24 @@
   capture kind
     render 'artwork-kind', product: item.product, suffix: item.product.template_suffix
   endcapture
+  # Les propriétés de la ligne, en un seul passage : l'aperçu personnalisé, la couleur du cadre du poster (son
+  # handle) et son contour blanc.
   assign has_preview = false
+  assign cadre_property = ''
+  assign contour = false
   for property in item.properties
-    if property.first == '_preview' and property.last != blank
-      assign has_preview = true
-    endif
+    case property.first
+      when '_preview'
+        if property.last != blank
+          assign has_preview = true
+        endif
+      when '_cadre'
+        assign cadre_property = property.last
+      when '_passe_partout'
+        if property.last == 'oui'
+          assign contour = true
+        endif
+    endcase
   endfor
   capture flat_index
     render 'artwork-flat-index', product: item.product
@@ -59,19 +72,16 @@
       endcapture
       if item.variant.option2 != blank and item.variant.option2 != without_frame
         assign poster_framed = true
-        for property in item.properties
-          if property.first == '_cadre'
-            assign frame_handle = property.last
-          endif
-        endfor
+        assign frame_handle = cadre_property
       endif
     endif
 
-    # Le suffixe numérique des couleurs du poster s'ôte (« cadre-noir-mat-1 » -> « cadre-noir-mat »).
+    # Le suffixe numérique des couleurs du poster s'ôte (« cadre-noir-mat-1 » -> « cadre-noir-mat ») : la fin du
+    # handle, relue comme un nombre, est-elle restée la même ?
     assign frame_key = frame_handle
     assign handle_tail = frame_handle | split: '-' | last
-    assign tail_number = handle_tail | plus: 0 | append: ''
-    if tail_number == handle_tail
+    assign numeric_tail = handle_tail | plus: 0 | append: ''
+    if numeric_tail == handle_tail
       assign frame_key = frame_handle | remove_last: handle_tail | remove_last: '-'
     endif
     # Les ids du moteur 3D (FRAME_IDS de assets/component-oeuvre-3d.js). Un handle inconnu : sans cadre.
@@ -94,15 +104,6 @@
     # ne connaît pas encore), le noir des cartes de collection.
     if poster_framed and frame == 'sans'
       assign frame = 'noir'
-    endif
-
-    assign contour = false
-    if kind == 'poster'
-      for property in item.properties
-        if property.first == '_passe_partout' and property.last == 'oui'
-          assign contour = true
-        endif
-      endfor
     endif
   endif
 -%}

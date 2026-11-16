@@ -52,8 +52,8 @@ test('cadre d’un poster : chaque couleur de la boutique (« cadre-noir-mat-1 �
   // Le suffixe s'ôte s'il est numérique, et seulement alors (comme frameIdOf de la fiche 3D).
   const source = code(SNIPPET)
   assert.match(source, /assign handle_tail = frame_handle \| split: '-' \| last/)
-  assert.match(source, /assign tail_number = handle_tail \| plus: 0 \| append: ''/)
-  assert.match(source, /if tail_number == handle_tail\s+assign frame_key = frame_handle \| remove_last: handle_tail \| remove_last: '-'/)
+  assert.match(source, /assign numeric_tail = handle_tail \| plus: 0 \| append: ''/)
+  assert.match(source, /if numeric_tail == handle_tail\s+assign frame_key = frame_handle \| remove_last: handle_tail \| remove_last: '-'/)
 })
 
 /* L'appel du snippet de l'œuvre en objet : ses paramètres, nom → expression. */
@@ -68,13 +68,15 @@ test('la ligne en objet : son œuvre à plat (snippet artwork-flat-index), toile
   assert.deepEqual(objectCall(source), { product: 'item.product', image: 'art', kind: 'kind', frame: 'frame', contour: 'contour', context: 'context', lazy: 'true' })
   assert.match(source, /capture flat_index\s+render 'artwork-flat-index', product: item\.product\s+endcapture\s+assign flat_index = flat_index \| plus: 0\s+assign art = item\.product\.images\[flat_index\]/)
   assert.match(source, /capture kind\s+render 'artwork-kind', product: item\.product, suffix: item\.product\.template_suffix\s+endcapture/)
+  // Les propriétés de la ligne se lisent en un seul passage : l'aperçu, la couleur du cadre, le contour blanc.
+  assert.equal((source.match(/for property in item\.properties/g) || []).length, 1)
   // Le contour blanc : la propriété de ligne _passe_partout, « oui » ou « non » (main-product.js, mmaSetWhiteBorder).
-  assert.match(source, /if property\.first == '_passe_partout' and property\.last == 'oui'\s+assign contour = true/)
+  assert.match(source, /when '_passe_partout'\s+if property\.last == 'oui'\s+assign contour = true/)
 })
 
 test('les lignes qui gardent leur image : aperçu personnalisé (_preview), produit ni toile ni poster, produit sans œuvre à plat', () => {
   const source = code(SNIPPET)
-  assert.match(source, /if property\.first == '_preview' and property\.last != blank\s+assign has_preview = true/)
+  assert.match(source, /when '_preview'\s+if property\.last != blank\s+assign has_preview = true/)
   const guard = /{%-?\s*if kind != blank and has_preview == false and art != blank\s*-?%}\s*{%-?\s*render 'artwork-object'/.exec(source)
   assert.ok(guard, 'l’objet, seulement pour une toile ou un poster, sans aperçu, avec son œuvre à plat')
 })
@@ -83,7 +85,8 @@ test('poster encadré sans couleur connue (commande passée hors de la fiche, co
   const source = code(SNIPPET)
   // « Sans cadre » : la 1re valeur de l'option 2, comme sur la fiche (painting-variant-picker : sans_value).
   // Sans option 2 (aucun choix de cadre), le poster n'est pas encadré.
-  assert.match(source, /capture without_frame\s+echo item\.product\.options_with_values\[1\]\.values\.first\s+endcapture\s+if item\.variant\.option2 != blank and item\.variant\.option2 != without_frame\s+assign poster_framed = true\s+for property in item\.properties\s+if property\.first == '_cadre'\s+assign frame_handle = property\.last\s+endif\s+endfor\s+endif/)
+  assert.match(source, /capture without_frame\s+echo item\.product\.options_with_values\[1\]\.values\.first\s+endcapture\s+if item\.variant\.option2 != blank and item\.variant\.option2 != without_frame\s+assign poster_framed = true\s+assign frame_handle = cadre_property\s+endif/)
+  assert.match(source, /when '_cadre'\s+assign cadre_property = property\.last/)
   // Un poster encadré a toujours un cadre : sa couleur si on la connaît, noir sinon.
   assert.match(source, /endcase\s+if poster_framed and frame == 'sans'\s+assign frame = 'noir'\s+endif/)
 })
