@@ -64,6 +64,7 @@ Ajouter un tableau à partir d'une seule image à plat, sans Photoshop ni mockup
     - Le panier montre l'œuvre à plat de ces produits (`snippets/artwork-flat-index.liquid`, 16/11/2026).
     - Leur fiche 3D s'affiche avec cette seule image, par le même snippet (16/11/2026).
     - Le panier, page et tiroir, montre chaque toile et chaque poster, nouveaux ou de toujours, tels que commandés (17/11/2026) : le même objet que la carte, par un snippet commun (`snippets/artwork-object.liquid`), avec le cadre et le contour blanc de la ligne, lus comme la fiche 3D les lit (`snippets/cart-item-artwork.liquid`). Toile encadrée dans sa caisse américaine, poster sans cadre en papier, teintes des cadres du moteur 3D (le noir reste celui de la carte) ; rien n'y bouge. Les lignes personnalisées et les autres produits gardent leur image. Voir le ticket 18.
+    - « Mes j'aime » montre chaque œuvre comme elle a été aimée, nouvelle ou de toujours (demande de Walid du 17/11/2026). Un j'aime donné sur la fiche garde la ligne de l'achat : la variante, et pour un poster la couleur du cadre et le contour blanc. La carte la montre comme le panier (`snippets/artwork-line.liquid`). Seule exception à « les cartes des anciens produits ne changent pas » : une œuvre aimée depuis une carte garde sa carte. Voir le ticket 18.
 
 ## Règles
 

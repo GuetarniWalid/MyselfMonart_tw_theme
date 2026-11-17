@@ -84,6 +84,38 @@ Un produit qui n'a que l'œuvre à plat (relevé le 15/11/2026, essai des vignet
   - Captures avant/après envoyées à Walid.
   - Vérifié en ligne après le déploiement (« Aucun fichier refusé par Shopify ») : le CSS en ligne a le nouveau jour, et l'ancien n'y est plus. Les 9 pages du relevé du matin sont inchangées ; la recherche ne diffère que par l'ordre de ses résultats, qui vient de Shopify.
   - La fiche 3D peint aussi le fond du jour dans l'ombre (`frameProfile` d'`oeuvre-3d-engine.js`, lumière 0,3). Pas vu à l'œil : la 3D ne s'est pas affichée dans le Chrome sans écran du banc. Laissée telle quelle, Walid ne l'a pas demandé.
+- [ ] « Mes j'aime » montre chaque œuvre comme elle a été aimée, nouveaux produits et produits de toujours. Demande de Walid du 17/11/2026 : « si c'était encadré alors il faut le montrer encadré avec le même cadre ». Fait le 17/11, pas encore en ligne ; à cocher après la mise en ligne et la vérification ci-dessous.
+  - Un j'aime donné sur la fiche, classique ou 3D, garde la ligne que l'ajout au panier ferait à cet instant (`cartLine` de `assets/main-product.js`) :
+    - la variante du bouton d'achat, ou de la pilule sur la fiche 3D ;
+    - pour un poster, la couleur du cadre (`_cadre`) et le contour blanc (`_passe_partout`).
+
+    La ligne va dans une nouvelle clé, `productLikedLines`. Les clés de toujours ne changent pas. Un j'aime donné depuis une carte n'en garde aucune et efface celle de l'œuvre ; retirer un j'aime efface sa ligne.
+  - « Mes j'aime » demande la carte d'une œuvre gardée avec sa variante : `/products/<handle>?variant=<id>&section_id=my-likes-card`. La carte la montre en objet, par le même rendu que la vignette du panier (`snippets/artwork-line.liquid`, qui lit le cadre par `snippets/artwork-frame.liquid`) :
+    - la toile encadrée dans sa caisse, à l'échelle de la toile seule (une règle de plus dans `output.css`) ;
+    - le poster sous verre ou en papier. `assets/my-likes.js` pose la couleur du cadre et le contour blanc, que la variante ne dit pas.
+
+    Le lien ouvre la fiche sur la variante aimée ; le prix ne change pas.
+  - Une œuvre sans ligne gardée (aimée depuis une carte, ou j'aime d'avant) garde sa carte d'aujourd'hui, comme une œuvre dont la variante n'existe plus.
+  - Tous les accès des j'aime à localStorage passent par un try/catch, compteur de l'en-tête compris.
+
+  Banc du 17/11 (liquidjs, main 25b9f65 et le thème modifié, Chrome sans écran, aucune requête en ligne). Identiques à l'octet près :
+  - 777 cartes de collection (259 produits, chargement différé, immédiat et par défaut) ;
+  - la grille de collection (3 pages) ;
+  - les 259 cartes de « Mes j'aime » sans ligne gardée ;
+  - 60 paniers, page panier et tiroir (303 lignes).
+
+  « Mes j'aime » à 390 px, avec sept œuvres aimées : chacune comme aimée, sans erreur ni débordement. Captures avant/après pour Walid.
+
+  Lu en ligne le 17/11, sur la section principale de la fiche du Bonsaï toile (une page, trois requêtes, mesures bloquées) :
+  - la Section Rendering API sélectionne la variante de `?variant=` (bouton d'achat, et une seule offre dans les données Google) ;
+  - sous `/en/`, la redirection vers le handle anglais garde `variant` et `section_id` ;
+  - `variant.url` a le préfixe `/en/`.
+
+  Reste à voir sur le vrai Shopify après la mise en ligne, car le banc rend le Liquid avec liquidjs :
+  - les réponses d'avant, inchangées : cartes de collection et de recherche, cartes de « Mes j'aime » sans `?variant=`, page panier, tiroir (`?sections=tw-cart-drawer`). C'est là que se verraient un `render` dans un bloc `liquid` et la lecture par `artwork-line` ;
+  - « Mes j'aime » dans un Chrome neuf, avec un localStorage préparé, sans cliquer de cœur : une toile encadrée, un poster noyer avec contour, un poster sans cadre (`options_with_values[1].values.first`), avec leurs liens et le reflet ;
+  - sur une fiche classique et une fiche 3D, `cartLine()` lu dans la console donne la variante et les propriétés choisies. Aimer pour de vrai compte dans le compteur de j'aime de la boutique : seulement par Walid ou avec son accord ;
+  - l'audit Lighthouse de « Mes j'aime ».
 - [ ] Après la mise en ligne, sur un vrai panier : une toile encadrée, un poster avec couleur et contour blanc, un poster « Avec cadre » sans couleur, une ligne personnalisée. Le banc rend le Liquid avec liquidjs, pas avec Shopify : `options_with_values[1].values.first`, les propriétés de ligne et `image_url` sur l'image plutôt que sur son adresse restent à voir en vrai. Un panier de test pourrait compter un ajout au panier dans les chiffres de la boutique : seulement avec l'accord de Walid.
 - [ ] Reflet des posters essayé sur un vrai Firefox et un Safari d'avant la version 26 : le banc du 16/11 n'a fait tourner le chemin de secours que dans Chrome.
 - [ ] Au 1er produit passé au modèle `oeuvre-3d`, le regarder en ligne : sa fiche (la 3D, le contour blanc d'un poster, le repli sans 3D), sa carte dans une collection, dans la recherche et dans « Mes j'aime », puis sa ligne dans la page panier et dans le tiroir. Le banc du 16/11 rendait le Liquid avec liquidjs, pas avec Shopify.
