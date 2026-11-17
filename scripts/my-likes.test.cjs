@@ -260,10 +260,14 @@ test('sans Shopify.routes.root, les cartes se demandent à la racine', async () 
   assert.deepEqual(handlesOf(page.cards), ['a'])
 })
 
-/* Le cœur des cartes (assets/my-like-button.js, <my-like-button>) dans une page réduite : ses cartes (chacune
-   son cœur), la liste « Mes j'aime » s'il y en a une (elle note les cartes qu'on lui rend), localStorage, et le
-   compteur de j'aime du serveur (fetch, sans effet ici). `click(i)` touche le cœur de la carte i. */
-function heartPage({ cards, storage, likesPageHere = true }) {
+/* Le cœur des cartes et de la fiche (assets/my-like-button.js, <my-like-button>) dans une page réduite : ses
+   cœurs, la liste « Mes j'aime » s'il y en a une (elle note les cartes qu'on lui rend), localStorage, et le
+   compteur de j'aime du serveur (fetch, sans effet ici). Chaque cœur est celui d'une carte, ou celui de la
+   fiche s'il a `fiche` : le bloc de la fiche qui le contient (<main-product-blocks>, assets/main-product.js), dont
+   cartLine() rend la ligne que l'achat ajouterait (`fiche: 'sans-script'` : un bloc pas encore défini, sans
+   cartLine). `brokenStorage` : un localStorage qui refuse tout (stockage bloqué, ou plein). `click(i)` touche
+   le cœur i. */
+function heartPage({ cards, storage, likesPageHere = true, brokenStorage = false }) {
   const store = { ...storage }
   const removed = []
   const likes = likesPageHere ? { removeCard: (card) => removed.push(card.handle) } : null
@@ -273,23 +277,27 @@ function heartPage({ cards, storage, likesPageHere = true }) {
     constructor() { Object.assign(this, pending, { listeners: [] }) }
     addEventListener(type, callback) { this.listeners.push({ type, callback }) }
   }
+  const refuse = () => { throw new Error('SecurityError: stockage refusé') }
   const win = {
     HTMLElement,
     customElements: { define: (name, cls) => { defined[name] = cls }, get: (name) => defined[name] },
-    localStorage: { getItem: (key) => (key in store ? store[key] : null), setItem: (key, value) => { store[key] = String(value) } },
+    localStorage: brokenStorage
+      ? { getItem: refuse, setItem: refuse }
+      : { getItem: (key) => (key in store ? store[key] : null), setItem: (key, value) => { store[key] = String(value) } },
     fetch: async () => ({ json: async () => 0 }),
     document: { querySelector: (selector) => (selector === 'my-likes' ? likes : null) },
-    JSON, Promise, Array, console,
+    JSON, Promise, Array, Object, console,
   }
   win.window = win
   vm.runInNewContext(read('assets/my-like-button.js'), win, { filename: path.join(ROOT, 'assets/my-like-button.js') })
-  const onPage = cards.map(({ id, handle, liked = true }) => {
+  const onPage = cards.map(({ id, handle, liked = true, fiche }) => {
     const card = { id, handle }
     const button = { classList: classList('like', ...(liked ? ['is-liked'] : [])) }
+    const blocks = fiche === undefined ? null : fiche === 'sans-script' ? {} : { cartLine: () => fiche }
     pending = {
       dataset: { productId: id, productHandle: handle }, firstElementChild: button,
       querySelector: (selector) => (selector === 'button.like' ? button : null),
-      closest: (selector) => (selector === 'anime-product-card' ? card : null),
+      closest: (selector) => (selector === 'main-product-blocks' ? blocks : selector === 'anime-product-card' && !blocks ? card : null),
     }
     const heart = new defined['my-like-button']()
     heart.connectedCallback()
@@ -327,5 +335,151 @@ test('ailleurs, le cœur garde les j’aime sous les mêmes clés (productLikedI
   await page.click(0)
   assert.deepEqual(stored(page.store, 'productLikedIds'), ['1'])
   assert.deepEqual(stored(page.store, 'productLikedHandles'), ['a'])
+})
+
+/* La ligne de la fiche du Bonsaï poster, telle que l'achat l'ajouterait : la variante « 30x40 cm / Avec cadre »
+   et toutes les propriétés de ligne (snippets/painting-variant-picker.liquid), dont les libellés traduits. */
+const POSTER_LINE = {
+  id: '54403688138811',
+  properties: { 'Couleur du cadre': 'Cadre noyer', _cadre: 'cadre-noyer-1', 'Contour blanc': 'Avec contour blanc', _passe_partout: 'oui' },
+}
+
+test('un j’aime donné sur la fiche garde la ligne que l’achat ajouterait : sa variante, la couleur du cadre (_cadre) et le contour blanc (_passe_partout)', async () => {
+  const page = heartPage({ cards: [{ id: '7', handle: 'poster-bonsai', liked: false, fiche: POSTER_LINE }], storage: { productLikedIds: '["1"]', productLikedHandles: '["a"]' }, likesPageHere: false })
+  await page.click(0)
+  assert.ok(page.onPage[0].button.classList.contains('is-liked'))
+  assert.deepEqual(stored(page.store, 'productLikedLooks'), {
+    'poster-bonsai': { id: '54403688138811', properties: { _cadre: 'cadre-noyer-1', _passe_partout: 'oui' } },
+  })
+  // Les clés de toujours ne changent pas : le compteur de l'en-tête et l'état des cœurs les lisent.
+  assert.deepEqual(stored(page.store, 'productLikedIds'), ['1', '7'])
+  assert.deepEqual(stored(page.store, 'productLikedHandles'), ['a', 'poster-bonsai'])
+})
+
+test('une toile aimée sur sa fiche : sa variante seule, son cadre y est', async () => {
+  const page = heartPage({ cards: [{ id: '7', handle: 'toile-bonsai', liked: false, fiche: { id: '54403688005979', properties: {} } }], storage: {}, likesPageHere: false })
+  await page.click(0)
+  assert.deepEqual(stored(page.store, 'productLikedLooks'), { 'toile-bonsai': { id: '54403688005979', properties: {} } })
+})
+
+test('aimée de nouveau sur sa fiche : la ligne de cet instant remplace l’ancienne', async () => {
+  const looks = { 'poster-bonsai': { id: '1', properties: { _cadre: 'cadre-blanc-1', _passe_partout: 'non' } }, koi: { id: '2', properties: {} } }
+  const page = heartPage({ cards: [{ id: '7', handle: 'poster-bonsai', liked: false, fiche: POSTER_LINE }], storage: { productLikedLooks: JSON.stringify(looks) }, likesPageHere: false })
+  await page.click(0)
+  assert.deepEqual(stored(page.store, 'productLikedLooks'), {
+    'poster-bonsai': { id: '54403688138811', properties: { _cadre: 'cadre-noyer-1', _passe_partout: 'oui' } },
+    koi: looks.koi,
+  })
+})
+
+test('un j’aime donné depuis une carte ne garde aucune ligne, et efface celle que l’œuvre avait ; les autres restent', async () => {
+  const looks = { bonsai: { id: '1', properties: {} }, koi: { id: '2', properties: { _cadre: 'cadre-blanc-1' } } }
+  const page = heartPage({ cards: [{ id: '7', handle: 'bonsai', liked: false }], storage: { productLikedLooks: JSON.stringify(looks) }, likesPageHere: false })
+  await page.click(0)
+  assert.deepEqual(stored(page.store, 'productLikedLooks'), { koi: looks.koi })
+})
+
+test('retirer un j’aime efface sa ligne, sur la fiche comme sur une carte de « Mes j’aime »', async () => {
+  const looks = { a: { id: '1', properties: {} }, b: { id: '2', properties: {} }, c: { id: '3', properties: {} } }
+  const page = heartPage({
+    cards: [{ id: '1', handle: 'a', fiche: { id: '1', properties: {} } }, { id: '2', handle: 'b' }],
+    storage: { productLikedIds: '["1","2","3"]', productLikedHandles: '["a","b","c"]', productLikedLooks: JSON.stringify(looks) },
+  })
+  await page.click(0)
+  await page.click(1)
+  assert.deepEqual(stored(page.store, 'productLikedLooks'), { c: looks.c })
+  assert.deepEqual(page.removed, ['b'], 'la carte part de « Mes j’aime » ; la fiche n’en est pas une')
+})
+
+test('une fiche dont l’achat n’a pas de variante (aucun bouton d’achat), ou pas encore son script : le j’aime ne garde aucune ligne', async () => {
+  for (const fiche of [{ id: null, properties: {} }, { id: 'pas-un-nombre', properties: {} }, null, 'sans-script']) {
+    const page = heartPage({ cards: [{ id: '7', handle: 'h', liked: false, fiche }], storage: { productLikedLooks: JSON.stringify({ h: { id: '1', properties: {} } }) }, likesPageHere: false })
+    await page.click(0)
+    assert.deepEqual(stored(page.store, 'productLikedLooks'), {}, JSON.stringify(fiche))
+    assert.deepEqual(stored(page.store, 'productLikedHandles'), ['h'], 'le j’aime est gardé quand même')
+  }
+})
+
+test('lignes gardées illisibles : le cœur repart d’une liste vide, sans casser', async () => {
+  for (const unreadable of ['{"pas":"fini"', '[1,2]', '"texte"', 'null']) {
+    const page = heartPage({ cards: [{ id: '7', handle: 'h', liked: false, fiche: { id: '9', properties: {} } }], storage: { productLikedLooks: unreadable }, likesPageHere: false })
+    await page.click(0)
+    assert.deepEqual(stored(page.store, 'productLikedLooks'), { h: { id: '9', properties: {} } }, unreadable)
+  }
+})
+
+/* Le bloc de la fiche (assets/main-product.js, <main-product-blocks>) réduit à ce que l'achat lit : son bouton
+   d'achat (data-variant-id), ses propriétés de ligne (.product-properties input, comme
+   snippets/painting-variant-picker.liquid les rend) et, sur la fiche 3D (data-buy-pill), la pilule d'achat de
+   la scène, hors du bloc (snippets/oeuvre-3d-stage.liquid). */
+function ficheBlocks({ buyButton = null, pill = null, inputs = [] } = {}) {
+  const registry = new Map()
+  class HTMLElement {
+    constructor() { this.attrs = new Set() }
+    hasAttribute(name) { return this.attrs.has(name) }
+    setAttribute(name) { this.attrs.add(name) }
+    querySelector(selector) { return selector === '.buy-button' ? buyButton : null }
+    querySelectorAll(selector) { return selector === '.product-properties input' ? inputs : [] }
+    closest() { return null }
+    addEventListener() {}
+  }
+  class CollapsibleTab extends HTMLElement { connectedCallback() {} }
+  registry.set('collapsible-tab', CollapsibleTab)
+  const document = {
+    body: { querySelector: () => null, appendChild() {} },
+    getElementById: () => null,
+    querySelector: (selector) => (selector === '[data-pill-buy]' ? pill : null),
+    querySelectorAll: () => [],
+    addEventListener() {},
+    dispatchEvent() {},
+  }
+  const context = {
+    HTMLElement, document, console, setTimeout, clearTimeout, requestAnimationFrame: () => 0,
+    IntersectionObserver: class { observe() {} disconnect() {} },
+    Event: class {}, CustomEvent: class {},
+    customElements: { get: (name) => registry.get(name), define: (name, element) => registry.set(name, element) },
+  }
+  context.window = context
+  vm.createContext(context)
+  vm.runInContext(read('assets/main-product.js'), context, { filename: 'assets/main-product.js' })
+  const blocks = new (registry.get('main-product-blocks'))()
+  if (pill) blocks.setAttribute('data-buy-pill')
+  return blocks
+}
+const hidden = (name, value, { disabled = false } = {}) => ({ type: 'hidden', name, value, disabled, checked: false })
+// Les propriétés de ligne d'un poster de la fiche : couleur du cadre (désactivée pour « Sans cadre ») et contour blanc.
+const posterInputs = ({ framed }) => [
+  hidden('Couleur du cadre', framed ? 'Cadre noyer' : '', { disabled: !framed }),
+  hidden('_cadre', framed ? 'cadre-noyer-1' : '', { disabled: !framed }),
+  hidden('Contour blanc', 'Sans contour blanc'),
+  hidden('_passe_partout', 'non'),
+]
+
+test('la ligne du cœur de la fiche est celle de l’achat : la variante du bouton d’achat et les propriétés de ligne envoyées au panier', () => {
+  const framed = ficheBlocks({ buyButton: { dataset: { variantId: '54403688138811' } }, inputs: posterInputs({ framed: true }) })
+  assert.deepEqual(JSON.parse(JSON.stringify(framed.cartLine())), {
+    id: '54403688138811',
+    properties: { 'Couleur du cadre': 'Cadre noyer', _cadre: 'cadre-noyer-1', 'Contour blanc': 'Sans contour blanc', _passe_partout: 'non' },
+  })
+  // « Sans cadre » : la couleur, désactivée, ne part pas au panier.
+  const paper = ficheBlocks({ buyButton: { dataset: { variantId: '54403688106043' } }, inputs: posterInputs({ framed: false }) })
+  assert.deepEqual(JSON.parse(JSON.stringify(paper.cartLine())), { id: '54403688106043', properties: { 'Contour blanc': 'Sans contour blanc', _passe_partout: 'non' } })
+})
+
+test('fiche 3D : la variante est celle de la pilule d’achat de la scène, qui achète (data-buy-pill)', () => {
+  const blocks = ficheBlocks({ buyButton: { dataset: { variantId: '1' } }, pill: { dataset: { variantId: '54403688005979' } } })
+  assert.equal(blocks.cartLine().id, '54403688005979')
+})
+
+test('une fiche sans bouton d’achat : une ligne sans variante', () => {
+  assert.equal(ficheBlocks().cartLine().id, null)
+})
+
+test('localStorage qui refuse tout (stockage bloqué, ou plein) : le cœur s’affiche et change d’état, sans casser la page', async () => {
+  const page = heartPage({ cards: [{ id: '7', handle: 'h', liked: false, fiche: POSTER_LINE }, { id: '8', handle: 'k' }], brokenStorage: true, likesPageHere: false })
+  await page.click(0)
+  await page.click(1)
+  assert.ok(page.onPage[0].button.classList.contains('is-liked'))
+  assert.ok(!page.onPage[1].button.classList.contains('is-liked'))
 })
 

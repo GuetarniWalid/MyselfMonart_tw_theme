@@ -1,4 +1,36 @@
+/* Le cœur des cartes et de la fiche (snippets/my-like-button.liquid). Les j'aime vivent dans localStorage :
+   - productLikedIds et productLikedHandles, les œuvres aimées, que lisent le compteur de l'en-tête
+     (snippets/tw-loup-like-button.liquid), l'état des cœurs et « Mes j'aime » (assets/my-likes.js) ;
+   - productLikedLooks, { handle: { id, properties } } : pour une œuvre aimée sur sa fiche, la ligne que l'achat
+     ajoutait à cet instant (likedLine), que « Mes j'aime » montre telle qu'elle a été aimée.
+   Le compteur de la boutique (métachamp du produit) est tenu par le serveur.
+   Tests : scripts/my-likes.test.cjs. */
 if (!customElements.get('my-likes-button')) {
+/* localStorage peut tout refuser (stockage bloqué, navigation privée, stockage plein) : une valeur illisible ou
+   refusée se lit comme absente, une écriture refusée se perd, et la page continue. */
+const likedStorage = {
+  read(key) {
+    try {
+      return JSON.parse(localStorage.getItem(key));
+    } catch (error) {
+      return null;
+    }
+  },
+  write(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+      // Le j'aime vaut pour cette page seulement.
+    }
+  },
+  list(key) {
+    const list = this.read(key);
+    return Array.isArray(list) ? list : [];
+  },
+};
+// Les propriétés de ligne que « Mes j'aime » montre : la couleur du cadre d'un poster et son contour blanc.
+const LOOK_PROPERTIES = ['_cadre', '_passe_partout'];
+
 class MyLikesButton extends HTMLElement {
   connectedCallback() {
     const productLikedIds = this.getProductLikedIds();
@@ -8,9 +40,7 @@ class MyLikesButton extends HTMLElement {
   }
 
   getProductLikedIds() {
-    const unformattedproductLikedIds = localStorage.getItem('productLikedIds');
-    const productLikedIds = JSON.parse(unformattedproductLikedIds) || [];
-    return productLikedIds;
+    return likedStorage.list('productLikedIds');
   }
 
   colorButton() {
@@ -50,11 +80,13 @@ class MyLikeButton extends HTMLElement {
       if (isLiked) {
         this.deleteProductLikedIdInLocalStorage(productLikedIds);
         this.deleteProductLikedHandleInLocalStorage(productLikedHandles);
+        this.keepLikedLine(null);
         this.deleteLiInLikedPage();
         await this.updateLikesCountOnServer(this.productId, 'decrement');
       } else {
         this.saveProductLikedIdInLocalStorage(productLikedIds);
         this.saveProductLikedHandleInLocalStorage(productLikedHandles);
+        this.keepLikedLine(this.likedLine());
         this.deleteLiInLikedPage();
         await this.updateLikesCountOnServer(this.productId, 'increment');
       }
@@ -64,39 +96,62 @@ class MyLikeButton extends HTMLElement {
   }
 
   getProductLikedIds() {
-    const unformattedproductLikedIds = localStorage.getItem('productLikedIds');
-    const productLikedIds = JSON.parse(unformattedproductLikedIds) || [];
-    return productLikedIds;
+    return likedStorage.list('productLikedIds');
   }
 
   getProductLikedHandles() {
-    const unformattedproductLikedHandles = localStorage.getItem('productLikedHandles');
-    const productLikedHandles = JSON.parse(unformattedproductLikedHandles) || [];
-    return productLikedHandles;
+    return likedStorage.list('productLikedHandles');
   }
 
   saveProductLikedIdInLocalStorage(productLikedIds) {
     productLikedIds.push(this.productId);
-    localStorage.setItem('productLikedIds', JSON.stringify(productLikedIds));
+    likedStorage.write('productLikedIds', productLikedIds);
   }
 
   saveProductLikedHandleInLocalStorage(productLikedHandles) {
     productLikedHandles.push(this.productHandle);
-    localStorage.setItem('productLikedHandles', JSON.stringify(productLikedHandles));
+    likedStorage.write('productLikedHandles', productLikedHandles);
   }
 
   deleteProductLikedIdInLocalStorage(productLikedIds) {
     const productLikedIdsFiltered = productLikedIds.filter(
       (productLikedId) => productLikedId !== this.productId,
     );
-    localStorage.setItem('productLikedIds', JSON.stringify(productLikedIdsFiltered));
+    likedStorage.write('productLikedIds', productLikedIdsFiltered);
   }
 
   deleteProductLikedHandleInLocalStorage(productLikedHandles) {
     const productLikedHandlesFiltered = productLikedHandles.filter(
       (productLikedHandle) => productLikedHandle !== this.productHandle,
     );
-    localStorage.setItem('productLikedHandles', JSON.stringify(productLikedHandlesFiltered));
+    likedStorage.write('productLikedHandles', productLikedHandlesFiltered);
+  }
+
+  /* La ligne que l'achat de la fiche ajouterait à cet instant (cartLine du bloc de la fiche,
+     assets/main-product.js) : sa variante, et la couleur du cadre et le contour blanc d'un poster. Seulement
+     pour le cœur de la fiche, dans ce bloc : le cœur d'une carte n'en a pas, ni une fiche dont l'achat n'a pas
+     de variante. */
+  likedLine() {
+    const blocks = this.closest('main-product-blocks');
+    const line = blocks && typeof blocks.cartLine === 'function' ? blocks.cartLine() : null;
+    if (!line || !/^\d+$/.test(String(line.id))) return null;
+    const properties = {};
+    LOOK_PROPERTIES.forEach((key) => {
+      if (typeof line.properties?.[key] === 'string') properties[key] = line.properties[key];
+    });
+    return { id: String(line.id), properties };
+  }
+
+  /* La ligne gardée avec le j'aime (productLikedLooks), que « Mes j'aime » montre (assets/my-likes.js) : celle
+     de cet instant, ou plus aucune. Un j'aime donné depuis une carte, ou retiré, efface celle de l'œuvre. Rien
+     ne s'écrit quand rien ne change. */
+  keepLikedLine(line) {
+    const stored = likedStorage.read('productLikedLooks');
+    const looks = stored && typeof stored === 'object' && !Array.isArray(stored) ? stored : {};
+    if (line) looks[this.productHandle] = line;
+    else if (Object.prototype.hasOwnProperty.call(looks, this.productHandle)) delete looks[this.productHandle];
+    else return;
+    likedStorage.write('productLikedLooks', looks);
   }
 
   deleteLiInLikedPage() {
@@ -135,14 +190,6 @@ class MyLikeButton extends HTMLElement {
     } finally {
       this.enableButton();
     }
-  }
-
-  updateLikesCountOnLocalStorage(id, action) {
-    const products = JSON.parse(localStorage.getItem('products'));
-    const product = products.find((product) => product.id === id);
-    product.likesCount =
-      action === 'increment' ? product.likesCount + 1 : product.likesCount - 1;
-    localStorage.setItem('products', JSON.stringify(products));
   }
 
   disableButton() {

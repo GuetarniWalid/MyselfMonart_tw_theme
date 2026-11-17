@@ -614,6 +614,14 @@ class MainProductBlocks extends CollapsibleTab {
     });
     return productProperties;
   }
+
+  /* La ligne que l'achat ajouterait à cet instant : la variante de son bouton (sur la fiche 3D, la pilule de la
+     scène, data-buy-pill ; ailleurs le bouton du bloc d'achat, que le bouton flottant recopie) et les propriétés
+     de ligne. Le cœur de la fiche la garde avec le j'aime (assets/my-like-button.js). */
+  cartLine() {
+    const button = (this.hasAttribute('data-buy-pill') && document.querySelector('[data-pill-buy]')) || this.querySelector('.buy-button');
+    return { id: button?.dataset.variantId || null, properties: this.getproductProperties() };
+  }
 }
 customElements.define('main-product-blocks', MainProductBlocks);
 
