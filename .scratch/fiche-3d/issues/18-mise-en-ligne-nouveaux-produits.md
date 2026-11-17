@@ -6,7 +6,18 @@
 
 **Status:** ready-for-agent
 
-- [ ] Le Publisher utilise le nouveau chemin par défaut pour les toiles et les posters.
+- [x] Le Publisher utilise le nouveau chemin par défaut pour les toiles et les posters. Fait le 17/11/2026 (« oui » de Walid ; sous-agent en copie isolée, relu et poussé par la session principale) : backend 425b818 (avec fc90c44, 40f86a1, 4ea3466), front 45b060e (avec b0127fa) dans le dépôt de l'extension, recopié dans `public/publisher`.
+  - Image unique : plus aucun rendu 3D. Le seul média est l'œuvre agrandie par Recraft, en position 0, avec le texte alternatif et le nom de fichier de Claude. Le métaobjet `meta_object.media` est posé à la création.
+  - Une image donne la toile et le poster jumeau (`link.poster` / `link.painting`), tous deux au modèle `oeuvre-3d`. Walid peut décocher l'un des deux ; une image carrée ne donne que la toile. Tout ou rien.
+  - Webhook, réparation horaire, couleurs et thèmes lisent l'œuvre à sa place : 1re image pour `oeuvre-3d`, 2e sinon (`artworkMedia.ts`).
+  - Validation = mise en vente comme l'ancien chemin, après la copie du modèle (2 min au plus). « Mockups » reste à un clic (tapisserie : il faut le choisir).
+  - Essai réel le 17/11 au soir, workflow « Brouillon d'essai », image à plat du Bonsaï, collection Tableau Zen :
+    - toile 10897967939931 : brouillon `oeuvre-3d`, un seul média 3066 × 4096 avec son texte alternatif, 95 variantes, 2 couleurs, 3 thèmes, `link.poster` ;
+    - poster 10897967972699 : brouillon `oeuvre-3d`, un seul média, 7 variantes, `frames_poster` (4 cadres), collection « Poster & Affiche Zen », `link.painting`.
+    - Le texte alternatif du poster est son titre : moins descriptif que celui de la toile, à améliorer.
+  - Brouillons à supprimer sur l'accord de Walid :
+    - ceux de cet essai, qui doublent le Bonsaï ;
+    - ceux du 05/11 (10862725824859) et du 08/11 (10871297376603), à l'ancien ordre.
 - [ ] Les anciens mockups ne servent plus pour les toiles ni les posters, et le code devenu inutile est retiré.
 - [ ] Un point envoyé à Walid au bout de 2 semaines, puis de 4 : chiffres et observations.
 - [ ] Aucune fiche existante n'a changé de modèle de page.
