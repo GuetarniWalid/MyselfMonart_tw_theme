@@ -1,13 +1,17 @@
 {% comment %}
     Renders a product card
     Nouveaux produits (modèle de page oeuvre-3d, qui n'ont que l'œuvre à plat) : vignette d'œuvre, la toile de
-    face, le poster sous verre (branche « vignette » ci-dessous). Tout autre produit : l'ancienne carte.
+    face, le poster sous verre (branche « vignette » ci-dessous). Tout autre produit : l'ancienne carte. Une
+    œuvre aimée sur sa fiche, dans « Mes j'aime » : telle qu'aimée (branche « aimée »).
     Accepts:
     - product: {Object} The product object
     - primary_image_index: {Number} Which image to show as primary (1-based index). Default: 1 (optional)
     - next_image_index: {Number} Which image to show on hover (1-based index). Default: 0 (no hover image) (optional)
     - lazy_load: {Boolean} Image should be lazy loaded. Default: true (optional)
     - section_id: {String} The ID of the section that contains this card.
+    - variant: {Object} la variante d'une œuvre aimée sur sa fiche, que seule la carte de « Mes j'aime » passe
+      (sections/my-likes-card.liquid : product.selected_variant). La carte ne lit jamais selected_variant
+      elle-même : rendue partout, elle ne change pas sans ce paramètre. (optional)
     Usage:
     {% render 'card-product' %}
 {% endcomment %}
@@ -42,7 +46,40 @@
     garde sa carte à l'octet près (branche elsif).
   {%- endcomment -%}
   {%- capture vignette -%}{% render 'artwork-kind', product: product, suffix: product.template_suffix, image_unique: true %}{%- endcapture -%}
-  {%- if vignette != blank and product.media[0].media_type == 'image' -%}
+  {%- comment -%}
+    Branche « aimée » : une œuvre aimée sur sa fiche, dans « Mes j'aime » (variant, la variante gardée avec le
+    j'aime). Toile ou poster, nouveau ou de toujours, en objet comme le panier la montrerait
+    (snippets/cart-item-artwork.liquid) : son œuvre à plat (snippet artwork-flat-index), dans le cadre de sa
+    variante (snippet artwork-frame, la lecture commune de la commande). La couleur du cadre d'un poster et son
+    contour blanc sont des propriétés de ligne, que la variante ne dit pas : la carte arrive sous verre au cadre
+    noir, ou en papier, sans contour blanc, et assets/my-likes.js les pose. Un autre produit aimé sur sa fiche
+    garde sa carte. Sans variant : aucune de ces lignes ne rend rien.
+  {%- endcomment -%}
+  {%- liquid
+    assign liked_art = nil
+    if variant
+      capture liked_kind
+        render 'artwork-kind', product: product, suffix: product.template_suffix
+      endcapture
+      if liked_kind != blank
+        capture liked_index
+          render 'artwork-flat-index', product: product
+        endcapture
+        assign liked_index = liked_index | plus: 0
+        assign liked_art = product.images[liked_index]
+        capture liked_frame
+          render 'artwork-frame', product: product, variant: variant, kind: liked_kind
+        endcapture
+      endif
+    endif
+  -%}
+  {%- if liked_art -%}
+    <div class="mb-2 md:mb-5">
+      {%- render 'artwork-object', product: product, image: liked_art, kind: liked_kind, frame: liked_frame, contour: false, context: 'carte', lazy: lazy_load -%}
+      {%- if liked_kind == 'poster' and liked_frame != 'sans' -%}
+        <script type="module" src="{{ 'oeuvre-card-reflet.js' | asset_url }}"></script>
+      {%- endif -%}
+  {%- elsif vignette != blank and product.media[0].media_type == 'image' -%}
     {%- liquid
       # Contour blanc (passe-partout) : seulement si la fiche le propose, c'est-à-dire si le produit a une image
       # « passe-partout » (même test que la fiche : snippets/oeuvre-3d-model.liquid, has_passe_partout).
@@ -130,5 +167,5 @@
     </div>
   {%- endif -%}
 
-  {% render 'card-product-info', product: product %}
+  {% render 'card-product-info', product: product, variant: variant %}
 </div>

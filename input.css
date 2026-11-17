@@ -1511,11 +1511,12 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
     linear-gradient(118deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, 0) 42%, rgba(30, 22, 15, 0) 58%, rgba(30, 22, 15, .07));
 }
 
-/* ---------- Toile encadrée (panier) : dans sa caisse américaine ----------
+/* ---------- Toile encadrée (panier, « Mes j'aime ») : dans sa caisse américaine ----------
    Le cadre de la toile (Shadow Frame de l'atelier, FRAME_PROFILE.toile du moteur 3D) : une baguette vue de face
    (--fb), puis un jour (--fj) entre elle et la toile, qui flotte dans la caisse ; le fond du jour est la
    paroi du cadre. Proportions d'un 30 × 40, lisibles en vignette. La caisse, plus profonde que le
-   châssis (3,2 cm), porte l'ombre au mur ; la toile garde son pli et sa lumière. */
+   châssis (3,2 cm), porte l'ombre au mur ; la toile garde son pli et sa lumière. Dans la carte d'une toile
+   aimée encadrée (« Mes j'aime ») : voir plus bas. */
 .oeuvre-card[data-kind="toile"][data-frame] .oeuvre-card-piece {
   --D: .09;
   --fb: .036;
@@ -1541,6 +1542,13 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
   box-shadow:
     calc(var(--fj) * -.5 * var(--s)) calc(var(--fj) * -.5 * var(--s)) 0 calc(var(--fj) * .5 * var(--s)) color-mix(in srgb, var(--frame) 84%, #120e0b),
     0 0 0 calc(var(--fj) * var(--s)) color-mix(in srgb, var(--frame) 95%, #120e0b);
+}
+/* Dans la carte (« Mes j'aime » : une toile aimée encadrée, snippets/card-product.liquid), la même caisse, toute
+   à une échelle plus petite (--s : baguette, jour, ombre et pli gardent leurs proportions) : la plus grande qui
+   la fait tenir à la place de la toile seule, 80 % de la scène en largeur au plus et toute la hauteur utile en
+   portrait. Sinon elle remplissait la carte, et son ombre sortait de la scène. */
+.oeuvre-card[data-kind="toile"][data-frame]:not([data-context]) .oeuvre-card-piece {
+  --s: calc(100cqw * min(var(--W) / var(--ew), var(--W) / var(--r) / var(--eh)));
 }
 
 /* ---------- Poster : le tirage, sous verre dans un cadre fin, ou en papier ----------

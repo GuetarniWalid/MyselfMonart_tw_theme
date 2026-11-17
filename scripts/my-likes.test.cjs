@@ -147,7 +147,53 @@ test('la carte de « Mes j’aime » est celle de la collection, rendue pour le 
   const m = /{%-?\s*if product\s*-?%}\s*<anime-product-card>\s*<li id="{{ product\.id }}" class="relative group h-full">\s*{% render 'card-product'([\s\S]*?)%}\s*<\/li>\s*<\/anime-product-card>\s*{%-?\s*endif\s*-?%}/.exec(card)
   assert.ok(m, 'anime-product-card > li#id > card-product, et rien hors d’une fiche produit')
   const args = m[1].replace(/\s+/g, ' ').trim()
-  assert.match(args, /^, product: product , primary_image_index: 1 , next_image_index: 0 , lazy_load: false , section_id: section\.id$/)
+  // variant : la variante que Shopify sélectionne d'après ?variant= (une œuvre aimée sur sa fiche), sinon rien.
+  assert.match(args, /^, product: product , primary_image_index: 1 , next_image_index: 0 , lazy_load: false , section_id: section\.id , variant: product\.selected_variant$/)
+})
+
+test('la variante aimée n’arrive à la carte que par un paramètre : card-product, rendu partout, ne lit jamais selected_variant', () => {
+  for (const file of ['snippets/card-product.liquid', 'snippets/card-product-info.liquid']) {
+    assert.doesNotMatch(code(file), /selected_variant/, file)
+  }
+  assert.match(code('snippets/card-product.liquid'), /{% render 'card-product-info', product: product, variant: variant %}/)
+})
+
+/* La branche de la carte pour une œuvre aimée sur sa fiche (snippets/card-product.liquid) : de son calcul à la
+   branche des nouveaux produits. Rend { compute, branch } : le bloc liquid qui la prépare, et son balisage. */
+function likedBranch() {
+  const card = code('snippets/card-product.liquid')
+  const m = /{%-\s*liquid\s+(assign liked_art = nil[\s\S]*?)-%}\s*{%-\s*if liked_art\s*-%}([\s\S]*?){%-\s*elsif vignette != blank/.exec(card)
+  assert.ok(m, 'le calcul de l’œuvre aimée, puis sa branche, avant celle des nouveaux produits')
+  return { compute: m[1].replace(/\s+/g, ' '), branch: m[2] }
+}
+
+test('carte d’une œuvre aimée sur sa fiche : toute toile et tout poster, nouveau ou de toujours, son œuvre à plat dans le cadre de la variante, comme au panier', () => {
+  const { compute, branch } = likedBranch()
+  // Seulement avec une variante ; toile ou poster, sans image_unique : les produits de toujours aussi.
+  assert.match(compute, /^assign liked_art = nil if variant capture liked_kind render 'artwork-kind', product: product, suffix: product\.template_suffix endcapture if liked_kind != blank /)
+  // L'œuvre à plat, comme au panier (snippets/cart-item-artwork.liquid) : product.images à son index.
+  assert.match(compute, /capture liked_index render 'artwork-flat-index', product: product endcapture assign liked_index = liked_index \| plus: 0 assign liked_art = product\.images\[liked_index\]/)
+  // Le cadre : la lecture commune de la commande, sans la couleur du poster (assets/my-likes.js la pose).
+  assert.match(compute, /capture liked_frame render 'artwork-frame', product: product, variant: variant, kind: liked_kind endcapture/)
+  const call = /{%-?\s*render 'artwork-object',([^%]*?)-?%}/.exec(branch)
+  assert.ok(call, 'render artwork-object')
+  const params = Object.fromEntries([...call[1].matchAll(/(\w+): ([^,]+?)\s*(?:,|$)/g)].map((p) => [p[1], p[2].trim()]))
+  assert.deepEqual(params, { product: 'product', image: 'liked_art', kind: 'liked_kind', frame: 'liked_frame', contour: 'false', context: "'carte'", lazy: 'lazy_load' })
+  // Le bloc mb-2 reste ouvert, comme dans les autres branches : le </div> de la fin du snippet le ferme.
+  assert.match(branch, /^\s*<div class="mb-2 md:mb-5">\s*{%-?\s*render 'artwork-object'/)
+})
+
+test('carte d’une œuvre aimée : un poster sous verre charge le script de son reflet, la toile et le poster en papier non', () => {
+  const { branch } = likedBranch()
+  assert.deepEqual(branch.match(/<script[^>]*>/g), [`<script type="module" src="{{ 'oeuvre-card-reflet.js' | asset_url }}">`])
+  assert.match(branch, /{%-\s*if liked_kind == 'poster' and liked_frame != 'sans'\s*-%}\s*<script type="module"/)
+})
+
+test('le lien de la carte d’une œuvre aimée ouvre la fiche sur la variante aimée ; le prix ne change pas', () => {
+  const info = code('snippets/card-product-info.liquid')
+  assert.match(info, /href="{% if variant %}{{ variant\.url }}{% else %}{{ product\.url }}{% endif %}"/)
+  assert.match(info, /{{ product\.price_min \| money }}/)
+  assert.match(read('snippets/card-product-info.liquid'), /^\s*- variant: /m, 'paramètre décrit dans « Accepts »')
 })
 
 test('la section de la carte ne se propose pas dans l’éditeur de thème (aucun preset)', () => {

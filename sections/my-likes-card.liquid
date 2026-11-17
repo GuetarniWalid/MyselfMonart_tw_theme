@@ -5,6 +5,10 @@
   de la collection : 1re image et aucune au survol (primary_image_index 1, next_image_index 0, les réglages de
   toutes les grilles de collection), prix, titre court et titre complet pour les lecteurs d'écran ; vignette
   d'œuvre pour les nouveaux produits (modèle oeuvre-3d), avec le module du reflet des posters.
+  - Une œuvre aimée sur sa fiche est demandée avec la variante aimée (?variant=, ligne gardée par le cœur) :
+    Shopify la sélectionne (product.selected_variant), et la carte la reçoit par son paramètre variant. Elle
+    montre alors l'œuvre en objet, telle qu'aimée, et son lien ouvre la fiche sur cette variante. Sans
+    ?variant=, selected_variant est vide : la carte de la collection, à l'identique.
   - Chargement immédiat (lazy_load: false) : la section ne connaît pas sa place dans la liste ; assets/my-likes.js
     remet au chargement différé les images après les deux premières cartes, comme la grille de collection.
   - Rien hors d'une fiche produit (produit retiré : la réponse est une 404, sans carte).
@@ -20,6 +24,7 @@
         , next_image_index: 0
         , lazy_load: false
         , section_id: section.id
+        , variant: product.selected_variant
       %}
     </li>
   </anime-product-card>

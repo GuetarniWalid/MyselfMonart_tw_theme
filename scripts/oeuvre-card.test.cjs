@@ -29,12 +29,13 @@ test('artwork-kind, avec image_unique : seul le modèle oeuvre-3d répond, la to
   assert.match(read('snippets/artwork-kind.liquid'), /^\s*- image_unique: /m, 'paramètre décrit dans « Accepts »')
 })
 
-/* La carte (snippets/card-product.liquid) : la nouvelle vignette d'abord, l'ancien balisage ensuite, tel quel.
-   Rend { choice, branch, old } : le test qui choisit la vignette, son balisage, et celui des autres cartes. */
+/* La carte (snippets/card-product.liquid) : l'œuvre aimée sur sa fiche (« Mes j'aime », scripts/my-likes.test.cjs),
+   puis la nouvelle vignette, puis l'ancien balisage, tel quel. Rend { choice, branch, old } : le test qui choisit
+   la vignette, son balisage, et celui des autres cartes. */
 function cardBranches() {
   const card = code('snippets/card-product.liquid')
-  const m = /{%-\s*if (vignette != blank[^%]*?)\s*-%}([\s\S]*?){%-\s*elsif primary_image\s*-%}([\s\S]*?){%-\s*endif\s*-%}\s*{% render 'card-product-info'/.exec(card)
-  assert.ok(m, 'la nouvelle vignette, puis l’ancien balisage en elsif primary_image')
+  const m = /{%-\s*if liked_art\s*-%}[\s\S]*?{%-\s*elsif (vignette != blank[^%]*?)\s*-%}([\s\S]*?){%-\s*elsif primary_image\s*-%}([\s\S]*?){%-\s*endif\s*-%}\s*{% render 'card-product-info'/.exec(card)
+  assert.ok(m, 'l’œuvre aimée, la nouvelle vignette, puis l’ancien balisage en elsif primary_image')
   return { card, choice: m[1], branch: m[2], old: m[3] }
 }
 

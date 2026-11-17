@@ -108,8 +108,18 @@ test('panier : l’œuvre tient entière dans sa case, à son format, et la case
   assert.match(rule(css, '.oeuvre-card'), /--s: 100cqw;/)
   // Le fond de la case : le mur des posters de la collection.
   assert.match(rule(css, '.oeuvre-card'), /--wall-panier: var\(--wall-poster\);/)
-  // Hors du calcul de --s, plus aucune unité de conteneur en dur : la carte et le panier partagent tout le reste.
-  assert.equal((css.match(/\d*\.?\d+cq[wh]/g) || []).length, 3)
+  // Hors du calcul de --s (carte, panier, toile encadrée de la carte), plus aucune unité de conteneur en dur : la
+  // carte et le panier partagent tout le reste.
+  assert.equal((css.match(/\d*\.?\d+cq[wh]/g) || []).length, 4)
+})
+
+test('carte : une toile encadrée (« Mes j’aime ») est la caisse du panier, à l’échelle qui la fait tenir à la place de la toile seule', () => {
+  const css = vignetteCss()
+  // La toile seule : 80 % de la scène en largeur au plus, toute la hauteur utile en portrait (--W, --W / --r).
+  assert.match(rule(css, '.oeuvre-card[data-kind="toile"] .oeuvre-card-piece'), /--W: min\(\.8, var\(--r\)\);/)
+  // Encadrée, dans la carte seulement (pas au panier, data-context) : la même caisse (baguette, jour, ombre),
+  // toute à une échelle plus petite, la plus grande qui la fait tenir dans cette place.
+  assert.match(rule(css, '.oeuvre-card[data-kind="toile"][data-frame]:not([data-context]) .oeuvre-card-piece'), /--s: calc\(100cqw \* min\(var\(--W\) \/ var\(--ew\), var\(--W\) \/ var\(--r\) \/ var\(--eh\)\)\);/)
 })
 
 test('panier : la même œuvre en petit, à la largeur de sa case, en 1x et 2x ; ni .skeleton ni image floue (le tiroir est réécrit sans script)', () => {

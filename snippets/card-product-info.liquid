@@ -2,6 +2,8 @@
   Renders the product info block (title, price, likes)
   Accepts:
   - product: {Object} The product object (required)
+  - variant: {Object} la variante d'une œuvre aimée sur sa fiche (« Mes j'aime », snippets/card-product.liquid) :
+    le lien ouvre la fiche sur elle. Le prix reste celui de la carte. Facultatif.
   Usage:
   {% render 'card-product-info', product: product %}
 {% endcomment %}
@@ -18,7 +20,7 @@
         after:inset-0). Le neutraliser rendait toutes les cartes inatteignables au clavier (WCAG 2.1.1).
       {%- endcomment -%}
       <a
-        href="{{ product.url }}"
+        href="{% if variant %}{{ variant.url }}{% else %}{{ product.url }}{% endif %}"
         class="product-card-title after:absolute after:inset-0 block truncate font-normal focus-visible:shadow-button focus-visible:rounded-sm">
         {{ card_label | escape | upcase }}
         {%- comment -%}
