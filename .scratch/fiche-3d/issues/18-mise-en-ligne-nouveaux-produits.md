@@ -133,6 +133,7 @@ Un produit qui n'a que l'œuvre à plat (relevé le 15/11/2026, essai des vignet
     - recharge automatique plafonnée à 30 $ par mois, plafond atteint (recharges des 10, 13 et 16/11) ;
     - 22,58 $ dépensés du 11 au 17/11 (3 430 requêtes, toutes en gpt-5), alors qu'aucun produit n'a été créé depuis le 08/11 ;
     - au rythme du 17/11, arrêt vers le 20/11 jusqu'au 1er décembre.
+    - Cause trouvée et corrigée le même soir (backend 84bd1e4), sur les journaux du conteneur. Chaque nuit depuis mars 2025, les 92 collections repartaient chez OpenAI dans les 4 langues : l'alignement de leurs textes alternatifs recréait un métaobjet sans traduction. S'y ajoutaient les échos des modèles du thème. On attend une poignée d'appels par nuit, à vérifier sur la nuit du 18/11 (commande « journaux-openai »).
   - **Jamais essayée sur un vrai iPhone ni sur Safari** : seulement sur le Pixel de Walid et dans Chrome.
   - **Mails de commande** (`growth/emails-commande`) : ils montrent l'image de la ligne (`line.image`). Pour un nouveau produit, c'est l'œuvre à plat sur la tuile blanche ; le cadre et le contour blanc ne sont que dans le texte. Les mails peuvent dessiner le cadre à sa teinte et le contour blanc autour de l'image, en tables, comme le panier : à faire si Walid le veut.
   - **Pinterest et Instagram** : avec une seule image, ils prennent l'image 0 (`IMAGE_PRIORITY` [2, 3, 1, 0]), sans carrousel. Pas d'erreur, mais l'œuvre à plat seule. Même remède que Google Images : le ticket 15.
