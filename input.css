@@ -1514,7 +1514,7 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
 /* ---------- Toile encadrée (panier) : dans sa caisse américaine ----------
    Le cadre de la toile (Shadow Frame de l'atelier, FRAME_PROFILE.toile du moteur 3D) : une baguette vue de face
    (--fb), puis un jour (--fj) entre elle et la toile, qui flotte dans la caisse ; le fond du jour est la
-   paroi du cadre, dans l'ombre. Proportions d'un 30 × 40, lisibles en vignette. La caisse, plus profonde que le
+   paroi du cadre. Proportions d'un 30 × 40, lisibles en vignette. La caisse, plus profonde que le
    châssis (3,2 cm), porte l'ombre au mur ; la toile garde son pli et sa lumière. */
 .oeuvre-card[data-kind="toile"][data-frame] .oeuvre-card-piece {
   --D: .09;
@@ -1533,8 +1533,14 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
   inset: calc((var(--fb) + var(--fj)) * var(--s));
   border-radius: calc(.0035 * var(--s));
 }
+/* Le jour, à la teinte du cadre : un peu dans l'ombre de la baguette en haut et à gauche (la lumière vient
+   d'en haut à gauche), presque la teinte du cadre en bas et à droite. Jamais sombre : un trait foncé autour de
+   la toile se lisait comme la bordure noire (retour de Walid du 17/11/2026). La 1re ombre, décalée d'un
+   demi-jour vers le haut et la gauche, ne couvre que ces deux côtés. */
 .oeuvre-card[data-kind="toile"][data-frame] .oeuvre-card-face {
-  box-shadow: 0 0 0 calc(var(--fj) * var(--s)) color-mix(in srgb, var(--frame) 40%, #120e0b);
+  box-shadow:
+    calc(var(--fj) * -.5 * var(--s)) calc(var(--fj) * -.5 * var(--s)) 0 calc(var(--fj) * .5 * var(--s)) color-mix(in srgb, var(--frame) 84%, #120e0b),
+    0 0 0 calc(var(--fj) * var(--s)) color-mix(in srgb, var(--frame) 95%, #120e0b);
 }
 
 /* ---------- Poster : le tirage, sous verre dans un cadre fin, ou en papier ----------
