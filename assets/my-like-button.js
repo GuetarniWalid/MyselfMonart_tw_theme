@@ -1,8 +1,8 @@
 /* Le cœur des cartes et de la fiche (snippets/my-like-button.liquid). Les j'aime vivent dans localStorage :
    - productLikedIds et productLikedHandles, les œuvres aimées, que lisent le compteur de l'en-tête
      (snippets/tw-loup-like-button.liquid), l'état des cœurs et « Mes j'aime » (assets/my-likes.js) ;
-   - productLikedLooks, { handle: { id, properties } } : pour une œuvre aimée sur sa fiche, la ligne que l'achat
-     ajoutait à cet instant (likedLine), que « Mes j'aime » montre telle qu'elle a été aimée.
+   - productLikedLines, { handle: { id, properties } } : les lignes gardées. Pour une œuvre aimée sur sa fiche,
+     la ligne que l'achat ajoutait à cet instant (likedLine), que « Mes j'aime » montre telle qu'elle a été aimée.
    Le compteur de la boutique (métachamp du produit) est tenu par le serveur.
    Tests : scripts/my-likes.test.cjs. */
 if (!customElements.get('my-likes-button')) {
@@ -27,9 +27,15 @@ const likedStorage = {
     const list = this.read(key);
     return Array.isArray(list) ? list : [];
   },
+  // Les lignes gardées, par handle ; illisibles : aucune.
+  lines() {
+    const lines = this.read('productLikedLines');
+    return lines && typeof lines === 'object' && !Array.isArray(lines) ? lines : {};
+  },
 };
-// Les propriétés de ligne que « Mes j'aime » montre : la couleur du cadre d'un poster et son contour blanc.
-const LOOK_PROPERTIES = ['_cadre', '_passe_partout'];
+// Les propriétés de ligne gardées, celles que « Mes j'aime » montre : la couleur du cadre d'un poster et son
+// contour blanc.
+const KEPT_PROPERTIES = ['_cadre', '_passe_partout'];
 
 class MyLikesButton extends HTMLElement {
   connectedCallback() {
@@ -80,13 +86,15 @@ class MyLikeButton extends HTMLElement {
       if (isLiked) {
         this.deleteProductLikedIdInLocalStorage(productLikedIds);
         this.deleteProductLikedHandleInLocalStorage(productLikedHandles);
-        this.keepLikedLine(null);
+        this.forgetLikedLine();
         this.deleteLiInLikedPage();
         await this.updateLikesCountOnServer(this.productId, 'decrement');
       } else {
         this.saveProductLikedIdInLocalStorage(productLikedIds);
         this.saveProductLikedHandleInLocalStorage(productLikedHandles);
-        this.keepLikedLine(this.likedLine());
+        const line = this.likedLine();
+        if (line) this.keepLikedLine(line);
+        else this.forgetLikedLine();
         this.deleteLiInLikedPage();
         await this.updateLikesCountOnServer(this.productId, 'increment');
       }
@@ -136,22 +144,26 @@ class MyLikeButton extends HTMLElement {
     const line = blocks && typeof blocks.cartLine === 'function' ? blocks.cartLine() : null;
     if (!line || !/^\d+$/.test(String(line.id))) return null;
     const properties = {};
-    LOOK_PROPERTIES.forEach((key) => {
+    KEPT_PROPERTIES.forEach((key) => {
       if (typeof line.properties?.[key] === 'string') properties[key] = line.properties[key];
     });
     return { id: String(line.id), properties };
   }
 
-  /* La ligne gardée avec le j'aime (productLikedLooks), que « Mes j'aime » montre (assets/my-likes.js) : celle
-     de cet instant, ou plus aucune. Un j'aime donné depuis une carte, ou retiré, efface celle de l'œuvre. Rien
-     ne s'écrit quand rien ne change. */
+  // La ligne gardée avec le j'aime, que « Mes j'aime » montre (assets/my-likes.js) : celle de cet instant.
   keepLikedLine(line) {
-    const stored = likedStorage.read('productLikedLooks');
-    const looks = stored && typeof stored === 'object' && !Array.isArray(stored) ? stored : {};
-    if (line) looks[this.productHandle] = line;
-    else if (Object.prototype.hasOwnProperty.call(looks, this.productHandle)) delete looks[this.productHandle];
-    else return;
-    likedStorage.write('productLikedLooks', looks);
+    const lines = likedStorage.lines();
+    lines[this.productHandle] = line;
+    likedStorage.write('productLikedLines', lines);
+  }
+
+  /* Plus de ligne gardée pour l'œuvre : un j'aime donné depuis une carte, ou retiré. Rien ne s'écrit si elle
+     n'en avait pas. */
+  forgetLikedLine() {
+    const lines = likedStorage.lines();
+    if (!Object.prototype.hasOwnProperty.call(lines, this.productHandle)) return;
+    delete lines[this.productHandle];
+    likedStorage.write('productLikedLines', lines);
   }
 
   deleteLiInLikedPage() {

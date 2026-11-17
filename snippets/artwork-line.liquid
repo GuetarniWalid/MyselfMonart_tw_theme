@@ -1,0 +1,40 @@
+{%- comment -%}
+  artwork-line — une toile ou un poster tel qu'une ligne le dit, en objet (snippet artwork-object). La ligne est
+  celle du panier (snippets/cart-item-artwork.liquid : page panier et tiroir), ou celle qu'un j'aime donné sur
+  la fiche a gardée, dans la carte de « Mes j'aime » (snippets/card-product.liquid, branche « aimée ») : un seul
+  rendu, celui de la commande. Toile ou poster, nouveau ou de toujours : son œuvre à plat (snippet
+  artwork-flat-index), dans le cadre de la ligne (snippet artwork-frame), avec son contour blanc.
+
+  Rien pour un produit qui n'est ni toile ni poster (personnalisé, tapisserie, sur-mesure, carte cadeau ; règle
+  unique : snippet artwork-kind), ni pour un produit sans œuvre à plat : l'appelant garde alors ce qu'il montrait.
+
+  Accepts:
+    - product: {Object} le produit
+    - variant: {Object} sa variante, celle de la ligne
+    - cadre: {String} poster : la couleur du cadre, handle de la propriété de ligne _cadre. Absente si on ne la
+      connaît pas : cadre noir (snippet artwork-frame).
+    - contour: {Boolean} poster : le contour blanc (propriété de ligne _passe_partout)
+    - context: {String} 'carte', 'tiroir' ou 'panier' (snippet artwork-object)
+    - lazy: {Boolean} image différée (snippet artwork-object)
+
+  Usage :
+    {%- capture line_artwork -%}{% render 'artwork-line', product: product, variant: variant, context: 'carte' %}{%- endcapture -%}
+    {%- if line_artwork != blank -%}…{%- endif -%}
+  Tests : scripts/artwork-line.test.cjs.
+{%- endcomment -%}
+{%- liquid
+  capture kind
+    render 'artwork-kind', product: product, suffix: product.template_suffix
+  endcapture
+  capture flat_index
+    render 'artwork-flat-index', product: product
+  endcapture
+  assign flat_index = flat_index | plus: 0
+  assign art = product.images[flat_index]
+  if kind != blank and art != blank
+    capture frame
+      render 'artwork-frame', product: product, variant: variant, kind: kind, cadre: cadre
+    endcapture
+    render 'artwork-object', product: product, image: art, kind: kind, frame: frame, contour: contour, context: context, lazy: lazy
+  endif
+-%}

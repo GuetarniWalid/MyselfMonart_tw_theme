@@ -18,36 +18,21 @@ const code = (file) => read(file)
   .replace(/^\s*#.*$/gm, '')
 const SNIPPET = 'snippets/cart-item-artwork.liquid'
 
-test('le cadre de la ligne : la lecture commune de la commande (snippet artwork-frame), avec la variante et la couleur _cadre de la ligne', () => {
+test('la ligne en objet : le rendu commun (snippet artwork-line), avec la variante, la couleur du cadre et le contour blanc de la ligne, à la taille de la case', () => {
   const source = code(SNIPPET)
-  assert.match(source, /capture frame\s+render 'artwork-frame', product: item\.product, variant: item\.variant, kind: kind, cadre: cadre_property\s+endcapture/)
-  // Une seule table des cadres, dans le snippet commun (scripts/artwork-frame.test.cjs).
-  assert.doesNotMatch(source, /case frame_key|frames_canvas|options_with_values/)
-})
-
-/* L'appel du snippet de l'œuvre en objet : ses paramètres, nom → expression. */
-function objectCall(source) {
-  const call = /{%-?\s*render 'artwork-object',([^%]*?)-?%}/.exec(source)
-  assert.ok(call, 'render artwork-object')
-  return Object.fromEntries([...call[1].matchAll(/(\w+): ([^,]+?)\s*(?:,|$)/g)].map((m) => [m[1], m[2].trim()]))
-}
-
-test('la ligne en objet : son œuvre à plat (snippet artwork-flat-index), toile ou poster, le cadre, le contour blanc, la taille de la case', () => {
-  const source = code(SNIPPET)
-  assert.deepEqual(objectCall(source), { product: 'item.product', image: 'art', kind: 'kind', frame: 'frame', contour: 'contour', context: 'context', lazy: 'true' })
-  assert.match(source, /capture flat_index\s+render 'artwork-flat-index', product: item\.product\s+endcapture\s+assign flat_index = flat_index \| plus: 0\s+assign art = item\.product\.images\[flat_index\]/)
-  assert.match(source, /capture kind\s+render 'artwork-kind', product: item\.product, suffix: item\.product\.template_suffix\s+endcapture/)
+  assert.match(source, /render 'artwork-line', product: item\.product, variant: item\.variant, cadre: cadre_property, contour: contour, context: context, lazy: true/)
+  // L'œuvre à plat, le cadre et l'objet sont l'affaire du rendu commun (scripts/artwork-line.test.cjs).
+  assert.doesNotMatch(source, /artwork-object|artwork-frame|artwork-flat-index|case frame_key|frames_canvas|options_with_values/)
   // Les propriétés de la ligne se lisent en un seul passage : l'aperçu, la couleur du cadre, le contour blanc.
   assert.equal((source.match(/for property in item\.properties/g) || []).length, 1)
   // Le contour blanc : la propriété de ligne _passe_partout, « oui » ou « non » (main-product.js, mmaSetWhiteBorder).
   assert.match(source, /when '_passe_partout'\s+if property\.last == 'oui'\s+assign contour = true/)
 })
 
-test('les lignes qui gardent leur image : aperçu personnalisé (_preview), produit ni toile ni poster, produit sans œuvre à plat', () => {
+test('les lignes qui gardent leur image : aperçu personnalisé (_preview) ; produit ni toile ni poster, ou sans œuvre à plat (snippet artwork-line)', () => {
   const source = code(SNIPPET)
   assert.match(source, /when '_preview'\s+if property\.last != blank\s+assign has_preview = true/)
-  assert.match(source, /if kind != blank and has_preview == false and art != blank\s+assign as_object = true/, 'l’objet, seulement pour une toile ou un poster, sans aperçu, avec son œuvre à plat')
-  assert.match(source, /{%-?\s*if as_object\s*-?%}\s*{%-?\s*render 'artwork-object'/)
+  assert.match(source, /unless has_preview\s+render 'artwork-line'[^\n]*\s+endunless/)
 })
 
 test('la couleur du cadre d’un poster : la propriété de ligne _cadre, handle de son métaobjet', () => {

@@ -5,14 +5,16 @@
   un. Tout est décor CSS autour d'un <img> ordinaire (input.css, « Vignette d'œuvre ») : ni WebGL, ni autre
   image. Un seul rendu, un seul endroit où le changer :
     - la carte de collection et de « Mes j'aime » des nouveaux produits (snippets/card-product.liquid) ;
-    - la vignette d'une ligne du panier, toile ou poster, nouvelle ou de toujours, telle que commandée
-      (snippets/cart-item-artwork.liquid : page panier et tiroir).
+    - une toile ou un poster tel qu'une ligne le dit, nouveau ou de toujours (snippets/artwork-line.liquid) : la
+      vignette d'une ligne du panier, telle que commandée (snippets/cart-item-artwork.liquid : page panier et
+      tiroir), et la carte de « Mes j'aime » d'une œuvre aimée sur sa fiche, telle qu'aimée
+      (snippets/card-product.liquid, branche « aimée »).
 
   Accepts:
     - product: {Object} le produit : le texte alternatif de son œuvre à plat (métachamp des textes alternatifs à
       l'index de l'œuvre, snippet artwork-flat-index ; sinon celui de l'image)
     - image: {Object} l'œuvre à plat : product.media[0] dans la carte d'un nouveau produit, product.images à
-      l'index de l'œuvre au panier
+      l'index de l'œuvre pour une ligne (snippet artwork-line)
     - kind: {String} 'toile' ou 'poster' (snippet artwork-kind)
     - frame: {String} le cadre, id du moteur 3D : 'sans' (par défaut), 'blanc', 'noir', 'argent', 'chene', 'noyer'
     - contour: {Boolean} poster : le contour blanc (passe-partout)

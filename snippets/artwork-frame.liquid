@@ -1,10 +1,10 @@
 {%- comment -%}
   artwork-frame — le cadre d'une toile ou d'un poster tel qu'une ligne le dit : l'id du cadre du moteur 3D,
   'sans', 'blanc', 'noir', 'argent', 'chene' ou 'noyer', que l'œuvre en objet peint (snippet artwork-object,
-  frame). La seule lecture de la commande, pour :
+  frame). La seule lecture de la commande, que fait le rendu d'une ligne (snippets/artwork-line.liquid) :
     - la vignette d'une ligne du panier (snippets/cart-item-artwork.liquid) ;
     - la carte de « Mes j'aime » d'une œuvre aimée sur sa fiche, avec la variante gardée par le j'aime
-      (snippets/card-product.liquid, variant).
+      (snippets/card-product.liquid, branche « aimée »).
 
   Elle se fait comme la fiche 3D la fait (snippets/oeuvre-3d-model.liquid, assets/component-oeuvre-3d.js :
   FRAME_IDS, frameIdOf), dans toutes les langues :
@@ -17,7 +17,8 @@
     hors de la fiche, lien direct vers la variante, couleur ajoutée à la boutique mais pas encore ici, carte de
     « Mes j'aime », qui n'a pas les propriétés de ligne) : cadre noir, celui des cartes de collection.
   La même table est dans assets/my-likes.js, qui pose sur la carte de « Mes j'aime » la couleur gardée avec le
-  j'aime : scripts/artwork-frame.test.cjs compare les deux à la fiche 3D.
+  j'aime, avec la même règle du suffixe : scripts/artwork-frame.test.cjs compare les tables à celle de la fiche
+  3D, scripts/my-likes.test.cjs la règle.
 
   Accepts:
     - product: {Object} le produit

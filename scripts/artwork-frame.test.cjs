@@ -1,8 +1,8 @@
 // Le cadre d'une toile ou d'un poster tel qu'une ligne le dit (snippets/artwork-frame.liquid) : la seule lecture
-// de la commande, celle de la vignette d'une ligne du panier (snippets/cart-item-artwork.liquid) et de la carte
-// de « Mes j'aime » d'une œuvre aimée sur sa fiche (snippets/card-product.liquid, avec la variante gardée). Elle
-// se lit comme la fiche 3D la lit (assets/component-oeuvre-3d.js : FRAME_IDS, frameIdOf). Le rendu Liquid se
-// vérifie au banc (liquidjs, paniers et cartes réels) ; ici, les contrats du code.
+// de la commande, que fait le rendu d'une ligne (snippets/artwork-line.liquid) pour la vignette d'une ligne du
+// panier et pour la carte de « Mes j'aime » d'une œuvre aimée sur sa fiche. Elle se lit comme la fiche 3D la lit
+// (assets/component-oeuvre-3d.js : FRAME_IDS, frameIdOf). Le rendu Liquid se vérifie au banc (liquidjs, paniers
+// et cartes réels) ; ici, les contrats du code.
 // Lancer : node --test scripts/artwork-frame.test.cjs
 const test = require('node:test')
 const assert = require('node:assert/strict')
@@ -69,13 +69,15 @@ test('poster : sans cadre si la variante a la 1re valeur de l’option 2 ; encad
   assert.match(source, /endcase\s+if poster_framed and frame == 'sans'\s+assign frame = 'noir'\s+endif/)
 })
 
-test('« Mes j’aime » (assets/my-likes.js), qui pose la couleur gardée du poster, a la même table, et ôte le même suffixe', () => {
-  const source = read('assets/my-likes.js')
-  const block = /FRAME_IDS = {([\s\S]*?)}/.exec(source)
-  assert.ok(block, 'la table FRAME_IDS de assets/my-likes.js')
-  const table = Object.fromEntries([...block[1].matchAll(/'([^']+)': '(\w+)'/g)].map((m) => [m[1], m[2]]))
-  assert.deepEqual(table, frameTable())
-  assert.match(source, /\.replace\(\/-\\d\+\$\/, ''\)/, 'le suffixe numérique s’ôte (« cadre-noir-mat-1 »)')
+test('une seule table des cadres : celle de « Mes j’aime » (assets/my-likes.js, la couleur gardée du poster) et celle de la fiche 3D (assets/component-oeuvre-3d.js) sont celle du panier', () => {
+  // La règle du suffixe de « Mes j'aime » : scripts/my-likes.test.cjs.
+  const tableIn = (file) => {
+    const block = /FRAME_IDS = {([\s\S]*?)}/.exec(read(file))
+    assert.ok(block, `la table FRAME_IDS de ${file}`)
+    return Object.fromEntries([...block[1].matchAll(/'([^']+)': '(\w+)'/g)].map((m) => [m[1], m[2]]))
+  }
+  assert.deepEqual(tableIn('assets/my-likes.js'), frameTable())
+  assert.deepEqual(tableIn('assets/component-oeuvre-3d.js'), frameTable())
 })
 
 test('le cadre sort seul, sans aucun espace, pour se comparer tel quel', () => {

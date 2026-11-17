@@ -1405,11 +1405,12 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
 
 /* ==== Vignette d'œuvre : l'œuvre en objet, cartes de collection et panier (début) ====
    snippets/artwork-object.liquid, que rendent la carte de collection des nouveaux produits
-   (snippets/card-product.liquid) et la vignette d'une ligne du panier, toute toile et tout poster
-   (snippets/cart-item-artwork.liquid : page panier et tiroir). Le reflet qui passe sur la vitre des cartes :
-   assets/oeuvre-card-reflet.js. Une seule image, l'œuvre à plat : le navigateur en fait un objet. La toile de
-   face, sur son châssis, et au panier dans sa caisse américaine ; le poster sous verre dans son cadre, ou au
-   panier en papier, sans cadre. Décision 18 du dossier .scratch/fiche-3d, essai validé par Walid le 15/11/2026
+   (snippets/card-product.liquid) et toute toile et tout poster tel qu'une ligne le dit (snippets/artwork-line.liquid) :
+   la vignette d'une ligne du panier (page panier et tiroir), et la carte de « Mes j'aime » d'une œuvre aimée sur
+   sa fiche. Le reflet qui passe sur la vitre des cartes : assets/oeuvre-card-reflet.js. Une seule image, l'œuvre
+   à plat : le navigateur en fait un objet. La toile de face, sur son châssis, ou encadrée dans sa caisse
+   américaine ; le poster sous verre dans son cadre, ou en papier, sans cadre. Décision 18 du dossier
+   .scratch/fiche-3d, essai validé par Walid le 15/11/2026
    (code de référence, notes et mesures dans .scratch/fiche-3d/vignettes-collection, où reste le papier ondulé
    du poster A).
    Hors @layer : Tailwind laisse ces règles telles quelles, à leur place (dans @layer components, il retire

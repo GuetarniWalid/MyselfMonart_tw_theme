@@ -40,8 +40,11 @@
         }
 
         updateCount() {
-            const productLikedIds = localStorage.getItem('productLikedIds');
-            const productLikedIdsArr = JSON.parse(productLikedIds) || [];
+            // localStorage peut tout refuser (stockage bloqué, navigation privée) : aucun j'aime à compter.
+            let productLikedIdsArr = [];
+            try {
+                productLikedIdsArr = JSON.parse(localStorage.getItem('productLikedIds')) || [];
+            } catch (error) {}
             const count = productLikedIdsArr.length;
             this.likeCount = this.likeCount || this.querySelector('span');
             if(!this.likeCount) return;

@@ -6,9 +6,10 @@
     {%- capture line_artwork -%}{% render 'cart-item-artwork', item: item, context: 'tiroir' %}{%- endcapture -%}
     {%- if line_artwork != blank -%}{{ line_artwork }}{%- else -%}… l'image d'aujourd'hui …{%- endif -%}
 
-  Le cadre se lit par la lecture commune de la commande (snippets/artwork-frame.liquid, comme la fiche 3D le
-  lit) : la variante de la ligne, et pour un poster la couleur de son cadre, la propriété de ligne _cadre. Le
-  contour blanc est la propriété _passe_partout (« oui » ou « non »).
+  Ce snippet lit la ligne : sa variante, et pour un poster la couleur de son cadre (propriété de ligne _cadre,
+  le handle d'un métaobjet) et son contour blanc (_passe_partout, « oui » ou « non »). Le rendu est commun avec
+  la carte de « Mes j'aime » d'une œuvre aimée sur sa fiche : snippets/artwork-line.liquid (le cadre se lit
+  comme la fiche 3D le lit, snippets/artwork-frame.liquid).
 
   Rien : une ligne avec un aperçu personnalisé (_preview), un produit qui n'est ni toile ni poster (personnalisé,
   tapisserie, sur-mesure, carte cadeau ; règle unique : snippet artwork-kind), un produit sans œuvre à plat.
@@ -20,9 +21,6 @@
   Tests : scripts/cart-item-artwork.test.cjs.
 {%- endcomment -%}
 {%- liquid
-  capture kind
-    render 'artwork-kind', product: item.product, suffix: item.product.template_suffix
-  endcapture
   # Les propriétés de la ligne, en un seul passage : l'aperçu personnalisé, la couleur du cadre du poster (son
   # handle) et son contour blanc.
   assign has_preview = false
@@ -42,20 +40,8 @@
         endif
     endcase
   endfor
-  capture flat_index
-    render 'artwork-flat-index', product: item.product
-  endcapture
-  assign flat_index = flat_index | plus: 0
-  assign art = item.product.images[flat_index]
-
-  assign as_object = false
-  if kind != blank and has_preview == false and art != blank
-    assign as_object = true
-    capture frame
-      render 'artwork-frame', product: item.product, variant: item.variant, kind: kind, cadre: cadre_property
-    endcapture
-  endif
+  # Un aperçu personnalisé garde l'image de la ligne.
+  unless has_preview
+    render 'artwork-line', product: item.product, variant: item.variant, cadre: cadre_property, contour: contour, context: context, lazy: true
+  endunless
 -%}
-{%- if as_object -%}
-  {%- render 'artwork-object', product: item.product, image: art, kind: kind, frame: frame, contour: contour, context: context, lazy: true -%}
-{%- endif -%}

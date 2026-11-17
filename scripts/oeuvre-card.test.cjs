@@ -34,7 +34,7 @@ test('artwork-kind, avec image_unique : seul le modèle oeuvre-3d répond, la to
    la vignette, son balisage, et celui des autres cartes. */
 function cardBranches() {
   const card = code('snippets/card-product.liquid')
-  const m = /{%-\s*if liked_art\s*-%}[\s\S]*?{%-\s*elsif (vignette != blank[^%]*?)\s*-%}([\s\S]*?){%-\s*elsif primary_image\s*-%}([\s\S]*?){%-\s*endif\s*-%}\s*{% render 'card-product-info'/.exec(card)
+  const m = /{%-\s*if liked_object != blank\s*-%}[\s\S]*?{%-\s*elsif (vignette != blank[^%]*?)\s*-%}([\s\S]*?){%-\s*elsif primary_image\s*-%}([\s\S]*?){%-\s*endif\s*-%}\s*{% render 'card-product-info'/.exec(card)
   assert.ok(m, 'l’œuvre aimée, la nouvelle vignette, puis l’ancien balisage en elsif primary_image')
   return { card, choice: m[1], branch: m[2], old: m[3] }
 }
