@@ -32,6 +32,9 @@ Contexte et décisions : README du dossier `fiche-3d`.
 
 **Choix à faire valider par Walid.**
 - La 3D démarre au premier geste (souris, doigt, molette, touche), ou 8 s après le chargement. Sans cela, Lighthouse comptait 460 ms de blocage de plus. Sur le banc, Lighthouse ne voyait plus ce travail. En ligne, il le voit : il attend assez longtemps pour que le filet de 8 s parte. Pour revenir au démarrage du prototype : `QUIET_AFTER_LOAD_MS = 0`.
+  - Exception du 17/11/2026 (main cabfa45, retour de Walid : après un rechargement, le cadre choisi mettait une dizaine de secondes à venir). Quand la fiche arrive avec un cadre déjà choisi (rechargement, lien `?variant=`), la 3D part à la fin du chargement, sans attendre de geste (`startsAtOnce` de `assets/component-oeuvre-3d.js`, deux tests dans `scripts/oeuvre-3d-stage.test.cjs`).
+    - Vérifié en ligne après le déploiement, sur un téléphone simulé en 4G, processeur ralenti 3 fois, sans toucher l'écran : la 3D à 2,0 s avec le cadre noir, 9,8 s sans cadre (inchangé).
+    - Google et Lighthouse ouvrent la fiche sans `?variant=`, donc sans cadre : rien ne change pour eux.
 - Bouton « Voir le dos » : sans lui, le tour n'a pas de déclencheur si le produit n'a pas de jumeau. Toucher « Toile » dans la bascule le rejoue aussi.
 - Le bouton d'achat passe avant les options, comme au prototype. Sinon il tombait sous le pli d'un portable. Sur ordinateur, le bouton flottant revient dès que celui de la fiche sort de l'écran.
 - Mur neutre : le plus grand format prend 60 % de l'écran, le 30 × 40 le quart (la règle de la pièce). Le tableau reste centré. Plan `wall` du moteur.

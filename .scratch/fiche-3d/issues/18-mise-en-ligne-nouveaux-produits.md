@@ -124,4 +124,16 @@ Un produit qui n'a que l'œuvre à plat (relevé le 15/11/2026, essai des vignet
   Pas vu en ligne : la fiche 3D (`cartLine` par la pilule), faute de produit `oeuvre-3d` publié. C'est dans le dernier point de ce ticket.
 - [ ] Après la mise en ligne, sur un vrai panier : une toile encadrée, un poster avec couleur et contour blanc, un poster « Avec cadre » sans couleur, une ligne personnalisée. Le banc rend le Liquid avec liquidjs, pas avec Shopify : `options_with_values[1].values.first`, les propriétés de ligne et `image_url` sur l'image plutôt que sur son adresse restent à voir en vrai. Un panier de test pourrait compter un ajout au panier dans les chiffres de la boutique : seulement avec l'accord de Walid.
 - [ ] Reflet des posters essayé sur un vrai Firefox et un Safari d'avant la version 26 : le banc du 16/11 n'a fait tourner le chemin de secours que dans Chrome.
+- [ ] Point du 17/11/2026, avant le 1er produit (question de Walid : « a-t-on tout fini, pas de cas caché ? »). Le thème est prêt, mais :
+  - **Le Publisher n'est pas aligné sur l'image unique.** Son nouveau chemin (backend, `DraftFlow.ts`, `mediaOrder`) met encore le rendu « de face » du serveur en 1re image, puis l'œuvre à plat, puis trois rendus (trois-quarts, matière, coin). Walid a refusé ces rendus le 15/11. Depuis le 16/11, le thème prend l'image 0 d'un produit `oeuvre-3d` pour l'œuvre. Un produit créé aujourd'hui montrerait donc le rendu à la place de l'œuvre : dans la 3D, les cartes, le panier, « Mes j'aime » et les données Google.
+    - À faire avant le 1er produit : l'œuvre à plat agrandie, seule et en 1re image, sans rendu ; le poster jumeau (ticket 14) ; une image carrée ne donne que la toile.
+    - Le brouillon du 08/11 (produit 10871297376603) a l'ancien ordre : ne pas le publier tel quel.
+  - **OpenAI** (couleurs, thèmes, traductions de nuit) :
+    - solde de 10,88 $ le 17/11 ;
+    - recharge automatique plafonnée à 30 $ par mois, plafond atteint (recharges des 10, 13 et 16/11) ;
+    - 22,58 $ dépensés du 11 au 17/11 (3 430 requêtes, toutes en gpt-5), alors qu'aucun produit n'a été créé depuis le 08/11 ;
+    - au rythme du 17/11, arrêt vers le 20/11 jusqu'au 1er décembre.
+  - **Jamais essayée sur un vrai iPhone ni sur Safari** : seulement sur le Pixel de Walid et dans Chrome.
+  - **Mails de commande** (`growth/emails-commande`) : ils montrent l'image de la ligne (`line.image`). Pour un nouveau produit, c'est l'œuvre à plat sur la tuile blanche ; le cadre et le contour blanc ne sont que dans le texte. Les mails peuvent dessiner le cadre à sa teinte et le contour blanc autour de l'image, en tables, comme le panier : à faire si Walid le veut.
+  - **Pinterest et Instagram** : avec une seule image, ils prennent l'image 0 (`IMAGE_PRIORITY` [2, 3, 1, 0]), sans carrousel. Pas d'erreur, mais l'œuvre à plat seule. Même remède que Google Images : le ticket 15.
 - [ ] Au 1er produit passé au modèle `oeuvre-3d`, le regarder en ligne : sa fiche (la 3D, le contour blanc d'un poster, le repli sans 3D), sa carte dans une collection, dans la recherche et dans « Mes j'aime », puis sa ligne dans la page panier et dans le tiroir. Lire aussi `cartLine()` dans la console de sa fiche, sans cliquer de cœur : la variante de la pilule et les propriétés choisies. Le banc du 16/11 rendait le Liquid avec liquidjs, pas avec Shopify.
