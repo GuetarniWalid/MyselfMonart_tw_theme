@@ -1,16 +1,14 @@
 // La vignette d'une ligne du panier, telle que le client l'a commandée (snippets/cart-item-artwork.liquid) :
 // toute toile et tout poster, nouveaux ou de toujours, en objet (snippets/artwork-object.liquid), avec le cadre
 // et le contour blanc de la ligne. La page panier (sections/page-cart-items.liquid) et le tiroir
-// (sections/tw-cart-drawer.liquid) passent par lui ; les autres lignes gardent leur image. La commande se lit
-// comme la fiche 3D la lit (snippets/oeuvre-3d-model.liquid, assets/component-oeuvre-3d.js). Le rendu Liquid se
-// vérifie au banc (liquidjs, paniers réels) ; ici, les contrats du code.
+// (sections/tw-cart-drawer.liquid) passent par lui ; les autres lignes gardent leur image. Le cadre se lit par
+// la lecture commune de la commande (snippets/artwork-frame.liquid, scripts/artwork-frame.test.cjs), comme la
+// fiche 3D le lit. Le rendu Liquid se vérifie au banc (liquidjs, paniers réels) ; ici, les contrats du code.
 // Lancer : node --test scripts/cart-item-artwork.test.cjs
 const test = require('node:test')
 const assert = require('node:assert/strict')
 const fs = require('fs')
 const path = require('path')
-const { productFromSelection } = require('../assets/component-oeuvre-3d.js')
-const { toile, poster } = require('./fixtures/oeuvre-3d-bonsai.json')
 
 const ROOT = path.join(__dirname, '..')
 const read = (file) => fs.readFileSync(path.join(ROOT, file), 'utf8')
@@ -20,40 +18,11 @@ const code = (file) => read(file)
   .replace(/^\s*#.*$/gm, '')
 const SNIPPET = 'snippets/cart-item-artwork.liquid'
 
-/* La table du snippet : handle de métaobjet cadre (sans le suffixe numérique des couleurs du poster) → id du
-   cadre du moteur 3D. Lue sur ses lignes « when '<handle>' » suivies de « assign frame = '<id>' ». */
-function frameTable() {
+test('le cadre de la ligne : la lecture commune de la commande (snippet artwork-frame), avec la variante et la couleur _cadre de la ligne', () => {
   const source = code(SNIPPET)
-  const block = /case frame_key([\s\S]*?)endcase/.exec(source)
-  assert.ok(block, 'la table des cadres (case frame_key … endcase)')
-  const table = {}
-  for (const [, handles, id] of block[1].matchAll(/when ((?:'[^']+'(?:,\s*)?)+)\s+assign frame = '(\w+)'/g)) {
-    for (const [, handle] of handles.matchAll(/'([^']+)'/g)) table[handle] = id
-  }
-  return table
-}
-// La sélection de la fiche, comme la lit la fiche 3D (scripts/oeuvre-3d-catalog.test.cjs).
-const toileWith = (frame) => ({ options: [{ position: 1, kind: 'size', value: '30x40 cm', key: null }, { position: 2, kind: 'border', value: 'Bordure', key: 'bordure-blanche' }, { position: 3, kind: 'frame', value: 'Cadre', key: frame }], frameColor: null, whiteBorder: null })
-const posterWith = (key) => ({ options: [{ position: 1, kind: 'size', value: '30x40 cm', key: null }, { position: 2, kind: 'frame', value: 'Avec cadre', key: null }], frameColor: { name: 'Cadre', key }, whiteBorder: null })
-
-test('cadre d’une toile : chaque cadre de la boutique a l’id que lui donne la fiche 3D', () => {
-  const table = frameTable()
-  for (const [, handle] of toile.frames) {
-    assert.equal(table[handle], productFromSelection(toile, toileWith(handle)).frame, handle)
-  }
-})
-
-test('cadre d’un poster : chaque couleur de la boutique (« cadre-noir-mat-1 ») a l’id que lui donne la fiche 3D, suffixe numérique ôté', () => {
-  const table = frameTable()
-  for (const [, handle] of poster.frameColors) {
-    assert.match(handle, /-\d+$/, `${handle} : les couleurs du poster ont leurs propres métaobjets, suffixés`)
-    assert.equal(table[handle.replace(/-\d+$/, '')], productFromSelection(poster, posterWith(handle)).frame, handle)
-  }
-  // Le suffixe s'ôte s'il est numérique, et seulement alors (comme frameIdOf de la fiche 3D).
-  const source = code(SNIPPET)
-  assert.match(source, /assign handle_tail = frame_handle \| split: '-' \| last/)
-  assert.match(source, /assign numeric_tail = handle_tail \| plus: 0 \| append: ''/)
-  assert.match(source, /if numeric_tail == handle_tail\s+assign frame_key = frame_handle \| remove_last: handle_tail \| remove_last: '-'/)
+  assert.match(source, /capture frame\s+render 'artwork-frame', product: item\.product, variant: item\.variant, kind: kind, cadre: cadre_property\s+endcapture/)
+  // Une seule table des cadres, dans le snippet commun (scripts/artwork-frame.test.cjs).
+  assert.doesNotMatch(source, /case frame_key|frames_canvas|options_with_values/)
 })
 
 /* L'appel du snippet de l'œuvre en objet : ses paramètres, nom → expression. */
@@ -81,14 +50,8 @@ test('les lignes qui gardent leur image : aperçu personnalisé (_preview), prod
   assert.match(source, /{%-?\s*if as_object\s*-?%}\s*{%-?\s*render 'artwork-object'/)
 })
 
-test('poster encadré sans couleur connue (commande passée hors de la fiche, couleur que la table ne connaît pas) : le cadre noir, celui des cartes de collection', () => {
-  const source = code(SNIPPET)
-  // « Sans cadre » : la 1re valeur de l'option 2, comme sur la fiche (painting-variant-picker : sans_value).
-  // Sans option 2 (aucun choix de cadre), le poster n'est pas encadré.
-  assert.match(source, /capture without_frame\s+echo item\.product\.options_with_values\[1\]\.values\.first\s+endcapture\s+if item\.variant\.option2 != blank and item\.variant\.option2 != without_frame\s+assign poster_framed = true\s+assign frame_handle = cadre_property\s+endif/)
-  assert.match(source, /when '_cadre'\s+assign cadre_property = property\.last/)
-  // Un poster encadré a toujours un cadre : sa couleur si on la connaît, noir sinon.
-  assert.match(source, /endcase\s+if poster_framed and frame == 'sans'\s+assign frame = 'noir'\s+endif/)
+test('la couleur du cadre d’un poster : la propriété de ligne _cadre, handle de son métaobjet', () => {
+  assert.match(code(SNIPPET), /when '_cadre'\s+assign cadre_property = property\.last/)
 })
 
 /* La case de la vignette d'une ligne, dans une section du panier : le <a> du produit, qui porte l'objet de la
