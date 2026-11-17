@@ -8,8 +8,12 @@ const assert = require('node:assert/strict')
 const fs = require('fs')
 const path = require('path')
 const vm = require('vm')
+const { productFromSelection } = require('../assets/component-oeuvre-3d.js')
+const { poster: posterFixture } = require('./fixtures/oeuvre-3d-bonsai.json')
 
 const ROOT = path.join(__dirname, '..')
+// La sélection d'un poster encadré, comme la lit la fiche 3D (scripts/oeuvre-3d-catalog.test.cjs).
+const posterWith = (key) => ({ options: [{ position: 1, kind: 'size', value: '30x40 cm', key: null }, { position: 2, kind: 'frame', value: 'Avec cadre', key: null }], frameColor: { name: 'Cadre', key }, whiteBorder: null })
 const read = (file) => fs.readFileSync(path.join(ROOT, file), 'utf8')
 // Le code Liquid d'un fichier, sans ses commentaires {% comment %} (ils citent du code).
 const code = (file) => read(file).replace(/{%-?\s*comment\s*-?%}[\s\S]*?{%-?\s*endcomment\s*-?%}/g, '')
@@ -34,10 +38,12 @@ const eagerImage = () => {
   }
 }
 
-/* Une carte telle que la section my-likes-card la rend, réduite à ce que la page touche : son cœur, son image.
-   La réponse du serveur la décrit en une balise, <anime-product-card data-handle="…">, dans l'enveloppe de la
-   section (#shopify-section-my-likes-card) ou non ; le DOMParser de la page réduite la relit. Ses modules (le
-   reflet des posters) : banc du navigateur, et scripts/oeuvre-card.test.cjs. */
+/* Une carte telle que la section my-likes-card la rend, réduite à ce que la page touche : son cœur, son image,
+   et l'œuvre en objet que Shopify y a rendue, s'il y en a une (snippets/artwork-object.liquid). La réponse du
+   serveur la décrit en une balise, <anime-product-card data-handle="…">, dans l'enveloppe de la section
+   (#shopify-section-my-likes-card) ou non, avec la balise de l'objet : <div class="oeuvre-card[ no-contour]"
+   data-kind data-look data-frame>. Le DOMParser de la page réduite la relit. Ses modules (le reflet des
+   posters) : banc du navigateur, et scripts/oeuvre-card.test.cjs. */
 function cardFrom(html, selector) {
   const inSection = /<div id="shopify-section-my-likes-card"[^>]*>\s*<anime-product-card/.test(html)
   if (selector === '#shopify-section-my-likes-card anime-product-card' && !inSection) return null
@@ -46,18 +52,33 @@ function cardFrom(html, selector) {
   if (!m) return null
   const like = { classList: classList('like') }
   const image = eagerImage()
+  const o = /<div class="oeuvre-card( no-contour)?" data-kind="(\w+)"(?: data-look="(\w+)")?(?: data-frame="(\w+)")?>/.exec(html)
+  const object = o && {
+    dataset: { kind: o[2], ...(o[3] && { look: o[3] }), ...(o[4] && { frame: o[4] }) },
+    classList: classList('oeuvre-card', ...(o[1] ? ['no-contour'] : [])),
+  }
+  // .oeuvre-card, et .oeuvre-card[data-kind="…"]
+  const objectFor = (selector) => {
+    const s = /^\.oeuvre-card(?:\[data-kind="(\w+)"\])?$/.exec(selector)
+    return s && object && (!s[1] || s[1] === object.dataset.kind) ? object : null
+  }
   return {
-    handle: m[1], like, image, parent: null,
-    querySelector: (selector) => (selector === 'button.like' ? like : null),
+    handle: m[1], like, image, object, parent: null,
+    querySelector: (selector) => (selector === 'button.like' ? like : objectFor(selector)),
     querySelectorAll: (selector) => (selector === 'img' ? [image] : []),
     remove() { if (this.parent) this.parent.children.splice(this.parent.children.indexOf(this), 1); this.parent = null },
   }
 }
-const section = (handle) => `<div id="shopify-section-my-likes-card" class="shopify-section"><anime-product-card data-handle="${handle}"><li></li></anime-product-card></div>`
+const section = (handle, object = '') => `<div id="shopify-section-my-likes-card" class="shopify-section"><anime-product-card data-handle="${handle}"><li>${object}</li></anime-product-card></div>`
+// L'œuvre en objet, telle que Shopify la rend dans la carte (snippets/artwork-object.liquid).
+const posterObject = ({ look = 'verre', frame = look === 'verre' ? 'noir' : null, contour = false } = {}) =>
+  `<div class="oeuvre-card${contour ? '' : ' no-contour'}" data-kind="poster" data-look="${look}"${frame ? ` data-frame="${frame}"` : ''}>`
+const toileObject = (frame) => `<div class="oeuvre-card" data-kind="toile"${frame ? ` data-frame="${frame}"` : ''}>`
 
 /* La page « Mes j'aime » réduite à ce que le script touche : l'élément <my-likes> (son modèle de grille, le
    chargeur qui le suit), le message de liste vide, localStorage, fetch (chaque réponse avec son délai, pour
-   les faire arriver dans le désordre), DOMParser et removeSkeletonOnImagesLoad (tw-global.js). */
+   les faire arriver dans le désordre ; `responses` : adresse → réponse, ou une fonction de l'adresse),
+   DOMParser et removeSkeletonOnImagesLoad (tw-global.js). */
 async function likesPage({ handles, root = '/', responses = {}, storage, withoutRoutes = false } = {}) {
   const store = storage || { productLikedHandles: JSON.stringify(handles) }
   const requests = []
@@ -96,7 +117,7 @@ async function likesPage({ handles, root = '/', responses = {}, storage, without
     localStorage: { getItem: (key) => (key in store ? store[key] : null), setItem: (key, value) => { store[key] = String(value) } },
     fetch: async (url) => {
       requests.push(url)
-      const r = responses[url] || { status: 404, body: '<div id="shopify-section-my-likes-card" class="shopify-section"></div>' }
+      const r = (typeof responses === 'function' ? responses(url) : responses[url]) || { status: 404, body: '<div id="shopify-section-my-likes-card" class="shopify-section"></div>' }
       flight.max = Math.max(flight.max, ++flight.now)
       await new Promise((resolve) => setTimeout(resolve, r.delay || 0))
       flight.now -= 1
@@ -258,6 +279,97 @@ test('sans Shopify.routes.root, les cartes se demandent à la racine', async () 
   const page = await likesPage({ handles: ['a'], withoutRoutes: true, responses: { [url('a')]: { status: 200, body: section('a') } } })
   assert.deepEqual(page.requests, [url('a')])
   assert.deepEqual(handlesOf(page.cards), ['a'])
+})
+
+/* « Mes j'aime » d'une seule œuvre, h, dont Shopify rend la carte avec `object` (l'œuvre en objet), quelle que
+   soit l'adresse demandée. `looks` : ce que productLikedLooks contient (rien : pas de clé). */
+async function likedCard(object, looks) {
+  const storage = { productLikedHandles: '["h"]' }
+  if (looks !== undefined) storage.productLikedLooks = typeof looks === 'string' ? looks : JSON.stringify(looks)
+  const page = await likesPage({ storage, responses: (address) => (address.startsWith('/products/h?') ? { status: 200, body: section('h', object) } : null) })
+  assert.equal(page.cards.length, 1)
+  return { card: page.cards[0], requests: page.requests }
+}
+// Ce que la vignette montre : son cadre (data-frame, aucun : sans cadre) et son contour blanc.
+const lookOf = (card) => ({ frame: card.object.dataset.frame || null, contour: !card.object.classList.contains('no-contour') })
+
+test('une œuvre aimée sur sa fiche est demandée avec la variante aimée, derrière le préfixe de langue ; les autres, comme avant', async () => {
+  const page = await likesPage({
+    root: '/en/',
+    storage: {
+      productLikedHandles: JSON.stringify(['aimee-sur-la-fiche', 'aimee-sur-une-carte']),
+      productLikedLooks: JSON.stringify({ 'aimee-sur-la-fiche': { id: '54403688005979', properties: {} } }),
+    },
+    responses: {
+      '/en/products/aimee-sur-la-fiche?variant=54403688005979&section_id=my-likes-card': { status: 200, body: section('aimee-sur-la-fiche') },
+      '/en/products/aimee-sur-une-carte?section_id=my-likes-card': { status: 200, body: section('aimee-sur-une-carte') },
+    },
+  })
+  assert.deepEqual(page.requests.slice().sort(), [
+    '/en/products/aimee-sur-la-fiche?variant=54403688005979&section_id=my-likes-card',
+    '/en/products/aimee-sur-une-carte?section_id=my-likes-card',
+  ])
+  assert.deepEqual(handlesOf(page.cards), ['aimee-sur-la-fiche', 'aimee-sur-une-carte'])
+})
+
+test('un poster aimé sous verre prend la couleur de cadre gardée et son contour blanc, que la variante ne dit pas', async () => {
+  const cases = [
+    [{ _cadre: 'cadre-noyer-1', _passe_partout: 'oui' }, { frame: 'noyer', contour: true }],
+    [{ _cadre: 'cadre-blanc-1', _passe_partout: 'non' }, { frame: 'blanc', contour: false }],
+    [{ _cadre: 'cadre-chene-clair-1' }, { frame: 'chene', contour: false }],
+    // « Avec cadre » sans couleur connue : le noir, comme au panier. Pas de _passe_partout : pas de contour.
+    [{ _passe_partout: 'oui' }, { frame: 'noir', contour: true }],
+    [{ _cadre: 'cadre-rose-poudre-1', _passe_partout: 'oui' }, { frame: 'noir', contour: true }],
+    ['pas des propriétés', { frame: 'noir', contour: false }],
+  ]
+  for (const [properties, expected] of cases) {
+    const { card, requests } = await likedCard(posterObject({ look: 'verre', frame: 'noir', contour: false }), { h: { id: '54403688138811', properties } })
+    assert.deepEqual(requests, ['/products/h?variant=54403688138811&section_id=my-likes-card'])
+    assert.deepEqual(lookOf(card), expected, JSON.stringify(properties))
+    assert.equal(card.object.dataset.look, 'verre')
+  }
+})
+
+test('chaque couleur de cadre de poster de la boutique : « Mes j’aime » pose le cadre que lui donne la fiche 3D', async () => {
+  for (const [, handle] of posterFixture.frameColors) {
+    const { card } = await likedCard(posterObject(), { h: { id: '5', properties: { _cadre: handle } } })
+    assert.equal(card.object.dataset.frame, productFromSelection(posterFixture, posterWith(handle)).frame, handle)
+  }
+})
+
+test('un poster aimé sans cadre reste en papier ; seul son contour blanc suit la ligne', async () => {
+  for (const [passePartout, contour] of [['oui', true], ['non', false]]) {
+    const { card } = await likedCard(posterObject({ look: 'papier' }), { h: { id: '5', properties: { _passe_partout: passePartout } } })
+    assert.deepEqual(lookOf(card), { frame: null, contour })
+    assert.equal(card.object.dataset.look, 'papier')
+  }
+})
+
+test('une toile aimée : sa carte telle que Shopify l’a rendue pour la variante, son cadre compris', async () => {
+  const { card } = await likedCard(toileObject('chene'), { h: { id: '5', properties: {} } })
+  assert.deepEqual({ ...card.object.dataset }, { kind: 'toile', frame: 'chene' })
+  assert.ok(!card.object.classList.contains('no-contour'))
+})
+
+test('une œuvre sans ligne gardée (aimée depuis une carte, ou avant) : demandée sans variante, sa carte reçue telle quelle', async () => {
+  for (const looks of [undefined, { autre: { id: '5', properties: {} } }]) {
+    const { card, requests } = await likedCard(posterObject({ look: 'verre', frame: 'noir', contour: true }), looks)
+    assert.deepEqual(requests, [url('h')])
+    assert.deepEqual(lookOf(card), { frame: 'noir', contour: true })
+  }
+})
+
+test('une ligne gardée inutilisable (illisible, sans variante, variante qui n’est pas un nombre) : l’œuvre se montre comme sans ligne', async () => {
+  const unusable = [
+    '{"h":', '["h"]', '"h"', 'null',
+    { h: null }, { h: 'texte' }, { h: { properties: { _cadre: 'cadre-noyer-1' } } },
+    { h: { id: '12&section_id=main-product', properties: {} } }, { h: { id: '', properties: {} } }, { h: { id: 12.5, properties: {} } },
+  ]
+  for (const looks of unusable) {
+    const { card, requests } = await likedCard(posterObject({ look: 'verre', frame: 'noir', contour: true }), looks)
+    assert.deepEqual(requests, [url('h')], JSON.stringify(looks))
+    assert.deepEqual(lookOf(card), { frame: 'noir', contour: true }, JSON.stringify(looks))
+  }
 })
 
 /* Le cœur des cartes et de la fiche (assets/my-like-button.js, <my-like-button>) dans une page réduite : ses

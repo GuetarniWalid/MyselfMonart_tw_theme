@@ -69,6 +69,15 @@ test('poster : sans cadre si la variante a la 1re valeur de l’option 2 ; encad
   assert.match(source, /endcase\s+if poster_framed and frame == 'sans'\s+assign frame = 'noir'\s+endif/)
 })
 
+test('« Mes j’aime » (assets/my-likes.js), qui pose la couleur gardée du poster, a la même table, et ôte le même suffixe', () => {
+  const source = read('assets/my-likes.js')
+  const block = /FRAME_IDS = {([\s\S]*?)}/.exec(source)
+  assert.ok(block, 'la table FRAME_IDS de assets/my-likes.js')
+  const table = Object.fromEntries([...block[1].matchAll(/'([^']+)': '(\w+)'/g)].map((m) => [m[1], m[2]]))
+  assert.deepEqual(table, frameTable())
+  assert.match(source, /\.replace\(\/-\\d\+\$\/, ''\)/, 'le suffixe numérique s’ôte (« cadre-noir-mat-1 »)')
+})
+
 test('le cadre sort seul, sans aucun espace, pour se comparer tel quel', () => {
   const source = read(SNIPPET)
   assert.match(source, /^{%- comment -%}[\s\S]*?{%- endcomment -%}\s*{%- liquid\s[\s\S]*\s+echo frame\s+-%}\s*$/, 'un commentaire, puis un seul bloc liquid qui finit par echo frame')
