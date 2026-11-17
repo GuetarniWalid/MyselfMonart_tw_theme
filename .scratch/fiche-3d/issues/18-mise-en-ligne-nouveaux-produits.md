@@ -77,6 +77,13 @@ Un produit qui n'a que l'œuvre à plat (relevé le 15/11/2026, essai des vignet
   - la recherche « bonsai » : chaque carte identique, hors de l'identifiant de recherche (`_sid`) que Shopify change à chaque recherche. Le nombre de résultats et leur ordre ont changé (90 puis 251), ce qui vient du moteur de recherche de Shopify, pas du thème ;
   - aucune erreur nouvelle dans la console ;
   - le CSS en ligne a les règles du panier (`.oeuvre-card[data-context]`, le mur, les cinq cadres), et le script du reflet laisse de côté les vignettes du panier.
+
+  Retouche du 17/11/2026 (main 52b8c9e). Retour de Walid après la mise en ligne : « comme un trait noir ou sombre entre le canvas et le cadre, donnant une impression du choix bordure noire ».
+  - Avant : le jour de la toile encadrée était peint avec 40 % de la teinte du cadre et 60 % d'un brun presque noir.
+  - Après : il prend la teinte du cadre, à 84 % en haut et à gauche (dans l'ombre de la baguette) et à 95 % en bas et à droite. Seule cette règle change dans `output.css`.
+  - Captures avant/après envoyées à Walid.
+  - Vérifié en ligne après le déploiement (« Aucun fichier refusé par Shopify ») : le CSS en ligne a le nouveau jour, et l'ancien n'y est plus. Les 9 pages du relevé du matin sont inchangées ; la recherche ne diffère que par l'ordre de ses résultats, qui vient de Shopify.
+  - La fiche 3D peint aussi le fond du jour dans l'ombre (`frameProfile` d'`oeuvre-3d-engine.js`, lumière 0,3). Pas vu à l'œil : la 3D ne s'est pas affichée dans le Chrome sans écran du banc. Laissée telle quelle, Walid ne l'a pas demandé.
 - [ ] Après la mise en ligne, sur un vrai panier : une toile encadrée, un poster avec couleur et contour blanc, un poster « Avec cadre » sans couleur, une ligne personnalisée. Le banc rend le Liquid avec liquidjs, pas avec Shopify : `options_with_values[1].values.first`, les propriétés de ligne et `image_url` sur l'image plutôt que sur son adresse restent à voir en vrai. Un panier de test pourrait compter un ajout au panier dans les chiffres de la boutique : seulement avec l'accord de Walid.
 - [ ] Reflet des posters essayé sur un vrai Firefox et un Safari d'avant la version 26 : le banc du 16/11 n'a fait tourner le chemin de secours que dans Chrome.
 - [ ] Au 1er produit passé au modèle `oeuvre-3d`, le regarder en ligne : sa fiche (la 3D, le contour blanc d'un poster, le repli sans 3D), sa carte dans une collection, dans la recherche et dans « Mes j'aime », puis sa ligne dans la page panier et dans le tiroir. Le banc du 16/11 rendait le Liquid avec liquidjs, pas avec Shopify.
