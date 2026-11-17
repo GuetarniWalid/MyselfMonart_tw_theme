@@ -49,6 +49,12 @@
   // La source complète des gros plans pèse près d'un Mo : pas sur un réseau lent.
   const wantsDetail = (env) => !slowNetwork(env) && !/3g/.test(env.effectiveType || '');
 
+  /* La 3D part sans attendre de geste quand on arrive avec un cadre choisi : un rechargement, ou un
+     lien avec ?variant= (e-mail, Google Shopping). La photo d'attente montre l'œuvre seule. Elle
+     tairait ce cadre jusqu'au premier geste, ou 8 s. Retour de Walid du 17/11/2026 : « il faut
+     attendre assez longtemps pour que le cadre arrive ». Sans cadre, la photo montre déjà le choix. */
+  const startsAtOnce = (product) => !!product && !!product.frame && product.frame !== 'sans';
+
   /* Le catalogue de la boutique, tel que le rend snippets/oeuvre-3d-model.liquid (un par produit :
      la fiche et son jumeau) :
        material   'toile' ou 'poster'
@@ -298,7 +304,7 @@
   // Node (tests) : seul le calcul pur est exporté.
   if (typeof window === 'undefined') {
     module.exports = {
-      stageMode, wantsDetail, catalogOf, productFromSelection, choiceInputs, variantOf, sizesOf,
+      stageMode, wantsDetail, startsAtOnce, catalogOf, productFromSelection, choiceInputs, variantOf, sizesOf,
       gestureOf, pinchDismisses, tapKind, wheelStep,
     };
     return;
@@ -323,7 +329,8 @@
 
   /* Le démarrage de la 3D : au premier geste, les mêmes que pour PostHog (assets/posthog-tracking.js),
      avec un filet pour qui regarde sans toucher (Lighthouse comptait 460 ms de blocage de plus sans
-     cette attente, ticket 07). Ouvrir une rangée la démarre aussitôt. */
+     cette attente, ticket 07). Ouvrir une rangée la démarre aussitôt. Une arrivée avec un cadre choisi
+     n'attend que la fin du chargement (startsAtOnce). */
   const QUIET_AFTER_LOAD_MS = 8000;
   const GESTURES = ['pointerdown', 'pointermove', 'touchstart', 'wheel', 'keydown'];
 
@@ -534,7 +541,10 @@
       }
       this.listen3D();
       this.autoStart = true; // au repos, ou dès qu'une rangée s'ouvre (stageOpened)
-      this.cancelWanted = whenWanted(this.start);
+      // Un cadre choisi dès l'arrivée : la 3D part à la fin du chargement, sans geste (startsAtOnce).
+      // Un arrêt entre-temps la tait : start() ne part pas sans session.
+      if (startsAtOnce(this.product)) whenIdle(this.start);
+      else this.cancelWanted = whenWanted(this.start);
     }
 
     // Le modèle de la fiche et celui de son jumeau ; un modèle illisible laisse le précédent en place.
