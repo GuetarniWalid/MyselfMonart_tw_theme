@@ -36,4 +36,13 @@ Un nouveau produit (créé par le Publisher depuis le 18/11/2026, modèle de pag
 
 Shopify n'envoie pas « Arrive bientôt » ni « Arrivée » pour ces colis. Le serveur (dépôt MyselfMonArt_Backend, `app/Services/CarrierEvents/mail`) les envoie lui-même depuis team@myselfmonart.com, avec ces mêmes modèles, relus dans Shopify à chaque passage. Une retouche posée dans Shopify vaut donc aussi pour eux. Une variable ou un filtre Liquid nouveau doit d'abord exister côté serveur (`mail/context.ts`, `mail/render.ts`).
 
-Le dessin des nouveaux produits lit trois variables que le serveur ne donne pas encore à `line_item` : `product.template_suffix`, `product.featured_image` et `properties`. Sans elles, ses mails 2 et 5 gardent l'image de la ligne, sans erreur.
+Depuis le 18/11/2026 (backend a057986), le serveur donne à `line_item` les trois variables du dessin des nouveaux produits : `product.template_suffix`, `product.featured_image` et `properties`. Ses mails 2 et 5 les dessinent donc aussi. Sans elles, ils gardaient l'image de la ligne, sans erreur.
+
+## Poser dans Shopify sans tout recopier (méthode du 18/11/2026)
+
+Les modèles font 26 à 52 Ko : on ne les recopie pas à la main.
+- `preview/` reçoit `liquid-<modèle>.<langue>.html` (copies de `dist/`) et `pont.html`, servis par `python -m http.server 47124 --bind 127.0.0.1`.
+- Dans l'admin (Chrome), un bouton temporaire « PONT » ouvre `pont.html` d'un vrai clic. Cette page envoie les 25 modèles à l'admin par `postMessage`.
+- **Français :** dans `/email_templates/<modèle>/edit`, le contenu de l'éditeur CodeMirror (`.cm-content`, `cmView.view.dispatch`) est remplacé, puis on clique sur « Enregistrer ».
+- **Autres langues :** dans Translate & Adapt, un second bouton « COPIER » met le modèle dans le presse-papiers. On clique dans la traduction du corps, puis Ctrl+A et Ctrl+V, puis « Enregistrer ».
+- **Contrôle :** `getTranslatableContent` sans valeurs. L'empreinte du français doit être le SHA-256 du fichier, et chaque traduction doit être `outdated: false` avec la longueur exacte du fichier.
