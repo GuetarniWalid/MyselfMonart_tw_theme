@@ -162,3 +162,22 @@ Un produit qui n'a que l'œuvre à plat (relevé le 15/11/2026, essai des vignet
   - **Pinterest et Instagram** : avec une seule image, ils prennent l'image 0 (`IMAGE_PRIORITY` [2, 3, 1, 0]), sans carrousel. Pas d'erreur, mais l'œuvre à plat seule. Même remède que Google Images : le ticket 15.
     - Réglé le 18/11/2026 par la photo studio (ticket 15). Elle est ajoutée en image 1 après la mise en vente, et ils la prennent avant l'image 0.
 - [ ] Au 1er produit passé au modèle `oeuvre-3d`, le regarder en ligne : sa fiche (la 3D, le contour blanc d'un poster, le repli sans 3D), sa carte dans une collection, dans la recherche et dans « Mes j'aime », puis sa ligne dans la page panier et dans le tiroir. Lire aussi `cartLine()` dans la console de sa fiche, sans cliquer de cœur : la variante de la pilule et les propriétés choisies. Le banc du 16/11 rendait le Liquid avec liquidjs, pas avec Shopify.
+  - 1er vrai produit le 18/11/2026 à 22 h 57 : Superman. Toile 10900225917275, poster 10900226015579, publiés par Walid avec le Publisher.
+  - En ordre :
+    - les 5 canaux, le modèle `oeuvre-3d` et les jumeaux liés ;
+    - les collections, les couleurs et les thèmes, les textes et les alt ;
+    - la fiche 3D en français et en anglais (vrai Chrome avec carte graphique), `cartLine()` sur la 1re variante ;
+    - les cartes de collection et de « Mes j'aime » en objet ;
+    - le JSON-LD `ProductGroup` et l'og:image sur la photo studio ;
+    - le test des résultats enrichis de Google : toile 98 éléments valides, poster 10, remarques sur des champs facultatifs seulement ;
+    - les photos du poster : principale et sans-cadre.
+  - **Défaut : toile sans options en allemand, espagnol et néerlandais.**
+    - Ce qu'on voit : aucune légende, et l'erreur `Cannot read properties of undefined (reading 'name')` dans `legendOf` (`assets/oeuvre-3d-chips.js`). `chosenOf` rend undefined quand le modèle n'a reconnu aucun cadre ni aucune bordure.
+    - Cause : à la copie du modèle, le serveur ne traduit les options qu'en anglais (`translateProductOptionsInAllLanguages` du Modelcopier). L'allemand, l'espagnol et le néerlandais attendent les traductions de nuit.
+    - En attendant, ces trois langues montrent les noms français, que `oeuvre-3d-model.liquid` et `artwork-frame` ne retrouvent pas parmi les noms traduits des métaobjets.
+  - **Même cause, pas de photos de cadres pour la toile.** Shopify renvoie le conteneur de rendu vers `/de-de/` : seule la principale est faite, même refaite à 22 h 16 UTC. Le cookie `localization` n'arrête pas la redirection de façon fiable (essai du PC).
+  - La recherche du site ne trouvait pas encore Superman 45 min après la publication.
+  - Correctif proposé à Walid, en attente de sa réponse :
+    - traduire les options dans les 5 langues dès la copie, par `optionValueDictionary.ts` ;
+    - dans la fiche, qu'une option non reconnue ne casse plus rien ;
+    - refaire les photos de la toile.
