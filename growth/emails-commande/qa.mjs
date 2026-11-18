@@ -12,7 +12,7 @@
 import { readFileSync } from 'node:fs'
 import { Liquid } from 'liquidjs'
 import puppeteer from 'puppeteer-core'
-import { CASES } from './samples.mjs'
+import { CASES, posterBlancContour, toileChene } from './samples.mjs'
 import { LOCALES } from './strings.mjs'
 import { FONT_URL } from './marque.mjs'
 
@@ -92,6 +92,51 @@ for (const [locale, strings] of Object.entries(LOCALES)) {
   }
 }
 
+// --- Le cadre d'un nouveau produit, lu dans chaque langue -----------------------------------
+// Les valeurs de l'option « Cadres » telles que la boutique les traduit (Translate & Adapt, relevé
+// du 18/11/2026 sur le Bonsaï) : chaque langue doit y retrouver le bon cadre (strings.mjs, frames),
+// et le français aussi, si le format n'est pas traduit. La teinte attendue est celle du thème.
+const CANVAS_FRAMES = {
+  fr: ['Sans cadre', 'Cadre blanc', 'Cadre noir Mat', 'Cadre argent ancien', 'Cadre chêne clair', 'Cadre noyer'],
+  en: ['No frame', 'White frame', 'Matte black frame', 'Antique silver frame', 'Light oak frame', 'Walnut frame'],
+  de: ['Ohne Rahmen', 'Weißer Rahmen', 'Mattschwarzer Rahmen', 'Antiksilberner Rahmen', 'Rahmen aus heller Eiche', 'Nussbaumrahmen'],
+  es: ['Sin marco', 'Marco blanco', 'Marco negro mate', 'Marco plata envejecida', 'Marco roble claro', 'Marco nogal'],
+  nl: ['Zonder lijst', 'Witte lijst', 'Matzwarte lijst', 'Antiek zilveren lijst', 'Lichte eikenhouten lijst', 'Notenhouten lijst'],
+}
+const POSTER_MODES = {
+  fr: ['Sans cadre', 'Avec cadre'],
+  en: ['No frame', 'With frame'],
+  de: ['Ohne Rahmen', 'Mit Rahmen'],
+  es: ['Sin marco', 'Con marco'],
+  nl: ['Zonder lijst', 'Met lijst'],
+}
+const theme = readFileSync('../../input.css', 'utf8')
+const tint = (name) => new RegExp(`--frame-${name}:\\s*(#[0-9a-f]{6})`).exec(theme)[1]
+const CANVAS_IDS = ['sans', 'blanc', 'noir', 'argent', 'chene', 'noyer']
+const allTints = [...new Set([...CANVAS_IDS.slice(1).map(tint), tint('poster-chene'), tint('poster-noyer')])]
+const framesIn = (html) => allTints.filter((hex) => html.includes(`bgcolor="${hex}"`))
+const oneLine = (line) => ({ ...CASES.find((c) => c.id === 'nouvelle-toile').data, subtotal_line_items: [line], line_items: [line] })
+let framesChecked = 0
+for (const locale of Object.keys(LOCALES)) {
+  const source = readFileSync(`dist/order_confirmation.${locale}.liquid`, 'utf8')
+  const expect = async (label, line, wanted) => {
+    const found = framesIn(await engine.parseAndRender(source, oneLine(line)))
+    framesChecked++
+    if (found.join() !== wanted.join()) problems.push(`cadre ${locale} « ${label} » : ${found.join(', ') || 'aucun'} au lieu de ${wanted.join(', ') || 'aucun'}`)
+  }
+  for (const names of [CANVAS_FRAMES[locale], CANVAS_FRAMES.fr]) {
+    for (const [i, name] of names.entries()) {
+      await expect(name, { ...toileChene, variant: { title: `60x80 cm / Bordure blanche / ${name}` } }, i ? [tint(CANVAS_IDS[i])] : [])
+    }
+    const [without, withFrame] = names === CANVAS_FRAMES.fr ? POSTER_MODES.fr : POSTER_MODES[locale]
+    const poster = { ...posterBlancContour, properties: [] }
+    await expect(without, { ...poster, variant: { title: `30x40 cm / ${without}` } }, [])
+    await expect(`${withFrame}, sans couleur`, { ...poster, variant: { title: `30x40 cm / ${withFrame}` } }, [tint('noir')])
+    await expect(`${withFrame}, chêne`, { ...poster, variant: { title: `30x40 cm / ${withFrame}` }, properties: [['_cadre', 'cadre-chene-clair']] }, [tint('poster-chene')])
+    await expect(`${without}, couleur restée`, { ...poster, variant: { title: `30x40 cm / ${without}` }, properties: [['_cadre', 'cadre-noyer-2']] }, [])
+  }
+}
+
 // --- Rendus ----------------------------------------------------------------------------------
 const browser = await puppeteer.launch({ executablePath: CHROME, headless: 'new' })
 const page = await browser.newPage()
@@ -102,22 +147,31 @@ page.on('request', (request) =>
 
 const welcome = `data:font/woff2;base64,${readFileSync('../../assets/heading.woff2').toString('base64')}`
 
-const loaded = {
-  order_confirmation: 'confirmation-plusieurs',
-  shipping_confirmation: 'fabrication-plusieurs',
-  shipping_update: 'terminee-inconnu',
-  shipment_out_for_delivery: 'arrive',
-  shipment_delivered: 'arrivee-plusieurs',
-}
+// Chaque modèle avec une commande chargée de produits de toujours, puis avec de nouveaux produits.
+// objets : les œuvres dessinées attendues (une image dans une cellule en dégradé, objetLu de
+// build.mjs) ; jamais pour un produit de toujours, jamais la photo studio d'une ligne.
+const loaded = [
+  ['order_confirmation', 'confirmation-plusieurs', 0],
+  ['shipping_confirmation', 'fabrication-plusieurs', 0],
+  ['shipping_update', 'terminee-inconnu', 0],
+  ['shipment_out_for_delivery', 'arrive', 0],
+  ['shipment_delivered', 'arrivee-plusieurs', 0],
+  ['order_confirmation', 'nouvelles-deux', 2],
+  ['order_confirmation', 'nouveau-poster-contour', 1],
+  ['shipping_confirmation', 'nouvelles-terminee-allemand', 2],
+  ['shipping_update', 'nouvelles-terminee-allemand', 2],
+  ['shipment_delivered', 'nouvelle-arrivee', 1],
+]
 
 let checked = 0
 let heaviest = 0
-for (const [template, caseId] of Object.entries(loaded)) {
+for (const [template, caseId, objects] of loaded) {
   const sample = CASES.find((c) => c.id === caseId)
   for (const locale of Object.keys(LOCALES)) {
-    const where = `${template}.${locale}`
+    const where = `${template}.${locale} (${caseId})`
     const source = readFileSync(`dist/${template}.${locale}.liquid`, 'utf8')
     const html = await engine.parseAndRender(source, sample.data)
+    if (html.includes('photo-studio-')) problems.push(`${where} : la photo studio de la ligne est montrée`)
     const size = Buffer.byteLength(html) / 1024
     heaviest = Math.max(heaviest, size)
     if (size > 102) problems.push(`${where} : ${size.toFixed(0)} Ko`)
@@ -139,7 +193,9 @@ for (const [template, caseId] of Object.entries(loaded)) {
       h1: document.querySelectorAll('h1').length,
       title: document.title,
       lang: document.documentElement.lang,
+      objects: [...document.images].filter((i) => i.closest('td[style*="linear-gradient"]')).length,
     }))
+    if (facts.objects !== objects) problems.push(`${where} : ${facts.objects} œuvre(s) dessinée(s) au lieu de ${objects}`)
     if (facts.overflow > 0) problems.push(`${where} : déborde de ${facts.overflow} px à 320 px`)
     if (facts.noAlt) problems.push(`${where} : ${facts.noAlt} image(s) sans alt`)
     if (facts.emptyLinks) problems.push(`${where} : ${facts.emptyLinks} lien(s) vide(s)`)
@@ -152,6 +208,7 @@ for (const [template, caseId] of Object.entries(loaded)) {
 await browser.close()
 
 console.log(`${checked} mails contrôlés, le plus lourd : ${heaviest.toFixed(1)} Ko`)
+console.log(`${framesChecked} cadres de nouveaux produits lus, dans les 5 langues`)
 console.log(`${PAIRS.length} contrastes, le plus faible : ${Math.min(...PAIRS.map(([, a, b]) => ratio(a, b))).toFixed(2)}:1`)
 console.log(problems.length ? `PROBLÈMES :\n- ${problems.join('\n- ')}` : 'Aucun problème.')
 process.exitCode = problems.length ? 1 : 0

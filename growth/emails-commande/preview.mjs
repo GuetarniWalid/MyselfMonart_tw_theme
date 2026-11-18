@@ -72,10 +72,13 @@ const shoot = async (id, html, name, { width, dark = false, invert = false, stri
   if (stripFont) content = content.replace(/@font-face\{[^}]*\}/, '').replace(/\.ff\{[^}]*\}/, '')
   if (stripAll) content = content.replace(/<style[\s\S]*?<\/style>/g, '')
   if (stripDark) content = content.replace(/@media \(prefers-color-scheme:dark\)\{[\s\S]*?\n\}/, '')
+  // Gmail inverse les couleurs de fond et de texte, jamais les images ni les fonds en dégradé (l'œuvre
+  // dessinée d'un nouveau produit et sa tuile) : le dégradé le plus extérieur est rétabli, avec tout
+  // ce qu'il contient.
   if (invert) {
     content = content.replace(
       '</head>',
-      '<style>html{background:#fff;filter:invert(1) hue-rotate(180deg)}img{filter:invert(1) hue-rotate(180deg)}</style></head>'
+      '<style>html{background:#fff;filter:invert(1) hue-rotate(180deg)}img{filter:invert(1) hue-rotate(180deg)}[style*="linear-gradient"]{filter:invert(1) hue-rotate(180deg)}[style*="linear-gradient"] [style*="linear-gradient"],[style*="linear-gradient"] img{filter:none}</style></head>'
     )
   }
   await page.setViewport({ width, height: 900, deviceScaleFactor: 2 })

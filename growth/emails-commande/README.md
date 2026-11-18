@@ -22,6 +22,18 @@ Les cinq notifications Shopify d'une commande, dans les cinq langues de la bouti
 
 `preview/` et `apercu.html` ne sont pas gardés dans le dépôt (14 et 4 Mo) : les commandes ci-dessus les refont.
 
+## Les nouveaux produits : l'œuvre telle que commandée
+
+Un nouveau produit (créé par le Publisher depuis le 18/11/2026, modèle de page `oeuvre-3d`) n'a qu'une image, l'œuvre à plat. Les mails le dessinent en objet, comme la vignette du panier : la toile seule ou dans sa caisse américaine, le poster sous verre ou en simple feuille, avec son contour blanc s'il est commandé, à la teinte de l'atelier. Le héros des mails 1 et 5 et les vignettes des lignes (mails 1, 2, 3 et 5). Tout autre produit garde son image, à l'octet près.
+
+- Le signal : `line.product.template_suffix == 'oeuvre-3d'`, la règle du thème (`snippets/artwork-kind.liquid`) et du serveur (`artworkMedia.ts`). Ou, si les notifications ne disent pas le modèle de page, une photo de ligne dont le fichier commence par `photo-studio-` : seuls les nouveaux produits en ont.
+- L'œuvre à plat : `line.product.featured_image`, la 1re image, jamais `line.image`, qui devient la photo studio de la variante. Sans elle, rien n'est dessiné et la ligne garde son image.
+- La matière et le cadre se lisent dans le format de la variante (3 options : toile, 2 : poster ; mots du cadre par langue dans `strings.mjs`, `frames`), la couleur et le contour du poster dans les propriétés `_cadre` et `_passe_partout`.
+- Les teintes sont relues dans `input.css` (« Vignette d'œuvre ») à chaque `node build.mjs`.
+- `qa.mjs` vérifie le nombre d'œuvres dessinées et le cadre lu dans chaque langue, d'après les traductions de la boutique.
+
 ## Les colis Colis Privé
 
 Shopify n'envoie pas « Arrive bientôt » ni « Arrivée » pour ces colis. Le serveur (dépôt MyselfMonArt_Backend, `app/Services/CarrierEvents/mail`) les envoie lui-même depuis team@myselfmonart.com, avec ces mêmes modèles, relus dans Shopify à chaque passage. Une retouche posée dans Shopify vaut donc aussi pour eux. Une variable ou un filtre Liquid nouveau doit d'abord exister côté serveur (`mail/context.ts`, `mail/render.ts`).
+
+Le dessin des nouveaux produits lit trois variables que le serveur ne donne pas encore à `line_item` : `product.template_suffix`, `product.featured_image` et `properties`. Sans elles, ses mails 2 et 5 gardent l'image de la ligne, sans erreur.

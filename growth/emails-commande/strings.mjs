@@ -1,6 +1,13 @@
 // Textes des cinq mails, dans les cinq langues de la boutique.
 // Vouvoiement partout, ton chaleureux et sobre : on rassure, on ne vend pas.
 // {n} = numéro de commande dans les objets.
+//
+// frames : les mots qui disent le cadre dans le format d'une variante, tel que la boutique le
+// traduit (Translate & Adapt, relevé le 18/11/2026 : « Light oak frame », « Rahmen aus heller
+// Eiche », « Marco roble claro », « Lichte eikenhouten lijst »). En minuscules, cherchés dans la
+// valeur du cadre seule : la toile la donne en 3e option, le poster en 2e (« Sans cadre » ou
+// « Avec cadre », sa couleur est dans la commande). Le français vaut aussi pour les autres langues,
+// au cas où le format n'est pas traduit. Voir objetLu dans build.mjs.
 
 const fr = {
   lang: 'fr',
@@ -23,6 +30,15 @@ const fr = {
   partial: 'Ce message concerne une partie de votre commande.',
   inThisParcel: 'Dans ce colis',
   qty: 'Quantité',
+  frames: {
+    blanc: ['blanc'],
+    noir: ['noir'],
+    argent: ['argent'],
+    chene: ['chêne', 'chene'],
+    noyer: ['noyer'],
+    without: ['sans cadre'],
+    with: ['avec cadre'],
+  },
 
   confirmation: {
     titleOne: "Un très beau choix",
@@ -135,6 +151,15 @@ const en = {
   partial: 'This message concerns part of your order.',
   inThisParcel: 'In this parcel',
   qty: 'Quantity',
+  frames: {
+    blanc: ['white'],
+    noir: ['black'],
+    argent: ['silver'],
+    chene: ['oak'],
+    noyer: ['walnut'],
+    without: ['no frame', 'without', 'unframed'],
+    with: ['with frame', 'framed'],
+  },
 
   confirmation: {
     titleOne: "A beautiful choice",
@@ -247,6 +272,15 @@ const de = {
   partial: 'Diese Nachricht betrifft einen Teil Ihrer Bestellung.',
   inThisParcel: 'In diesem Paket',
   qty: 'Menge',
+  frames: {
+    blanc: ['weiß', 'weiss'],
+    noir: ['schwarz'],
+    argent: ['silber'],
+    chene: ['eiche'],
+    noyer: ['nuss'],
+    without: ['ohne'],
+    with: ['mit rahmen', 'gerahmt'],
+  },
 
   confirmation: {
     titleOne: "Eine wunderbare Wahl",
@@ -359,6 +393,15 @@ const es = {
   partial: 'Este mensaje se refiere a una parte de su pedido.',
   inThisParcel: 'En este paquete',
   qty: 'Cantidad',
+  frames: {
+    blanc: ['blanco'],
+    noir: ['negro'],
+    argent: ['plata'],
+    chene: ['roble'],
+    noyer: ['nogal'],
+    without: ['sin marco'],
+    with: ['con marco', 'enmarcado'],
+  },
 
   confirmation: {
     titleOne: "Una elección preciosa",
@@ -471,6 +514,15 @@ const nl = {
   partial: 'Dit bericht gaat over een deel van uw bestelling.',
   inThisParcel: 'In dit pakket',
   qty: 'Aantal',
+  frames: {
+    blanc: ['wit'],
+    noir: ['zwart'],
+    argent: ['zilver'],
+    chene: ['eik'],
+    noyer: ['noten'],
+    without: ['zonder'],
+    with: ['met lijst', 'ingelijst'],
+  },
 
   confirmation: {
     titleOne: "Een prachtige keuze",

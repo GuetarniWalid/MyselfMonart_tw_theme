@@ -6,7 +6,7 @@
 // Le code reste en tables et en styles en ligne : c'est ce qui passe partout, Outlook compris.
 // Aucun texte dans une image, aucune hauteur fixe, aucun pixel de suivi, un bouton au plus.
 
-import { mkdirSync, writeFileSync } from 'node:fs'
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { LOCALES } from './strings.mjs'
 import { FONT_URL, LOGO_DARK, LOGO_HEIGHT, LOGO_LIGHT, LOGO_WIDTH } from './marque.mjs'
 
@@ -280,34 +280,359 @@ const textLink = (href, words, top = 22) => `<tr><td class="px" style="padding:$
 <a href="${href}" style="color:${ACC};text-decoration:underline;">${words}</a>
 </td></tr>`
 
+// --- L'œuvre en objet : les nouveaux produits ------------------------------------------------
+// Un nouveau produit (créé par le Publisher depuis le 18/11/2026, modèle de page oeuvre-3d) n'a
+// qu'une image, l'œuvre à plat. Le mail en fait l'objet commandé, comme la vignette du panier
+// (snippets/artwork-object.liquid, input.css « Vignette d'œuvre ») : la toile seule ou dans sa
+// caisse américaine, le poster sous verre dans son cadre ou en simple feuille, avec son contour
+// blanc s'il est commandé. Tout autre produit garde son image, à l'octet près : ses photos de
+// variante montrent déjà le cadre.
+//
+// Rien que des tables : chaque couche (ombre au mur, baguette, jour, contour) est une cellule
+// pleine autour de la suivante. La lumière vient d'en haut à gauche, comme sur la fiche 3D : bords
+// clairs en haut et à gauche, ombre en bas et à droite. Aucun box-shadow, que Gmail et Outlook
+// jettent. Chaque teinte est aussi un dégradé d'une seule couleur : Gmail en sombre inverse les
+// couleurs de fond, pas les images de fond, et le cadre garde sa teinte. Outlook, qui ignore les
+// dégradés, garde bgcolor.
+
+// Les teintes sont celles du thème, relues dans input.css : une seule source, celle du panier.
+const VIGNETTE = (() => {
+  const css = readFileSync('../../input.css', 'utf8')
+  const start = css.indexOf("/* ==== Vignette d'œuvre :")
+  const end = css.indexOf("/* ==== Vignette d'œuvre (fin)")
+  if (start < 0 || end < start) throw new Error("input.css : bloc « Vignette d'œuvre » introuvable")
+  return css.slice(start, end)
+})()
+
+const fromTheme = (pattern, what) => {
+  const found = pattern.exec(VIGNETTE)
+  if (!found) throw new Error(`input.css, « Vignette d'œuvre » : ${what} introuvable`)
+  return found
+}
+
+const rgbOf = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16))
+// La teinte a, recouverte de b à hauteur de share : un rgba posé sur une couleur pleine.
+const mix = (a, b, share) => {
+  const [x, y] = [rgbOf(a), rgbOf(b)]
+  return `#${x.map((c, i) => Math.round(c + (y[i] - c) * share).toString(16).padStart(2, '0')).join('')}`
+}
+
+const FRAME_IDS = ['blanc', 'noir', 'argent', 'chene', 'noyer']
+const tint = (name) => fromTheme(new RegExp(`--frame-${name}:\\s*(#[0-9a-f]{6})`), `--frame-${name}`)[1]
+const lightOf = (id) => {
+  const [, hi, lo] = fromTheme(
+    new RegExp(
+      `\\[data-frame="${id}"\\] \\{ --frame: var\\(--frame-${id}\\); --frame-hi: rgba\\(255, 255, 255, ([.\\d]+)\\); --frame-lo: rgba\\(0, 0, 0, ([.\\d]+)\\);`
+    ),
+    `lumière du cadre ${id}`
+  )
+  return { hi: Number(hi), lo: Number(lo) }
+}
+// Le jour entre la toile et sa caisse prend la teinte du cadre (règle de Walid du 17/11/2026) :
+// 84 % en haut et à gauche, 95 % en bas et à droite, jamais un trait sombre.
+const JOURS = [...VIGNETTE.matchAll(/color-mix\(in srgb, var\(--frame\) (\d+)%, (#[0-9a-f]{6})\)/g)].map(
+  ([, part, dark]) => ({ part: Number(part) / 100, dark })
+)
+if (JOURS.length !== 2) throw new Error("input.css, « Vignette d'œuvre » : le jour de la caisse a changé de forme")
+const SHEET = fromTheme(/\.oeuvre-card-sheet \{[^}]*background: (#[0-9a-f]{6})/, 'papier du poster')[1]
+// Le mur des posters, celui du panier : un cadre blanc, un contour blanc, une feuille s'y lisent.
+const WALL_POSTER = fromTheme(/--wall-poster:\s*(#[0-9a-f]{6})/, '--wall-poster')[1]
+const SHADOW = fromTheme(/piece::before \{[^}]*?rgba\((\d+), (\d+), (\d+), [.\d]+\)/, "teinte de l'ombre de la toile")
+  .slice(1)
+  .reduce((hex, c) => hex + Number(c).toString(16).padStart(2, '0'), '#')
+
+// Les teintes d'un cadre, dans l'ordre de COLORS. Le chêne et le noyer du poster sont les siens
+// (« Oak Vintage ») ; la lumière est celle du cadre. La lèvre : le filet sombre de la feuillure,
+// autour du tirage sous verre.
+const COLORS = ['base', 'hi', 'lo', 'jour_haut', 'jour_bas', 'levre']
+const frameColors = (kind, id) => {
+  const base = kind === 'poster' && (id === 'chene' || id === 'noyer') ? tint(`poster-${id}`) : tint(id)
+  const { hi, lo } = lightOf(id)
+  const colors = {
+    base,
+    hi: mix(base, '#ffffff', hi),
+    lo: mix(base, '#000000', lo),
+    jour_haut: mix(base, JOURS[0].dark, 1 - JOURS[0].part),
+    jour_bas: mix(base, JOURS[1].dark, 1 - JOURS[1].part),
+    levre: mix(base, '#000000', 0.3),
+  }
+  return COLORS.map((key) => colors[key])
+}
+const color = (key) => `{{ oe_c[${COLORS.indexOf(key)}] }}`
+
+// Les teintes de la toile, puis celles que le poster a en propre.
+const assignColors = () => {
+  const when = (ids, kind) =>
+    ids.map((id) => `{%- when '${id}' -%}{%- assign oe_c = '${frameColors(kind, id).join(' ')}' | split: ' ' -%}`).join('')
+  const own = FRAME_IDS.filter((id) => frameColors('poster', id).join() !== frameColors('toile', id).join())
+  return `{%- case oe_frame -%}${when(FRAME_IDS, 'toile')}{%- endcase -%}
+{%- if oe_kind == 'poster' -%}{%- case oe_frame -%}${when(own, 'poster')}{%- endcase -%}{%- endif -%}`
+}
+
+// Les deux tailles de l'objet. long : son grand côté, ombre à part (la largeur de l'image d'avant) ;
+// baguettes, jour, lèvre et voile en pixels. Les ombres au mur, de la plus lointaine à la plus
+// proche : [pixels, part de l'ombre du thème], par matière. walls : le mur de chaque matière, comme
+// les cartes de collection (la toile sur la tuile blanche, le poster sur le mur des posters) ; la
+// vignette tient dans un carré de 60, comme l'image d'avant, sur le mur du panier.
+const SIZES = {
+  hero: (long) => {
+    const k = long / 300
+    return {
+      long,
+      walls: { caisse: TILE, toile: TILE, verre: WALL_POSTER, papier: WALL_POSTER },
+      edge: 1,
+      caisse: Math.round(12 * k),
+      jour: Math.round(5 * k),
+      verre: Math.round(9 * k),
+      levre: 1,
+      voile: 2,
+      fade: [40, 76],
+      shadows: {
+        caisse: [[4, 0.07], [3, 0.14], [1, 0.3]],
+        toile: [[3, 0.07], [2, 0.14], [1, 0.28]],
+        verre: [[3, 0.06], [2, 0.13], [1, 0.26]],
+        papier: [[2, 0.05], [1, 0.12], [1, 0.22]],
+      },
+    }
+  },
+  thumb: () => ({
+    long: 50,
+    box: 60,
+    walls: { caisse: WALL_POSTER, toile: WALL_POSTER, verre: WALL_POSTER, papier: WALL_POSTER },
+    edge: 0,
+    caisse: 3,
+    jour: 1,
+    verre: 3,
+    levre: 1,
+    voile: 1,
+    shadows: { caisse: [[1, 0.2]], toile: [[1, 0.2]], verre: [[1, 0.2]], papier: [[1, 0.2]] },
+  }),
+}
+
+// La matière telle que dessinée : toile dans sa caisse, toile seule, poster sous verre, papier.
+const LOOKS = [
+  ['caisse', 'oe_caisse'],
+  ['verre', 'oe_verre'],
+  ['toile', "oe_kind == 'toile'"],
+  ['papier', 'true'],
+]
+const assignShadows = (g) => {
+  const sets = (look) =>
+    `{%- assign oe_wall = '${g.walls[look]}' -%}` +
+    g.shadows[look]
+      .map(([px, share], n) => `{%- assign oe_sh${n} = ${px} -%}{%- assign oe_s${n} = '${mix(g.walls[look], SHADOW, share)}' -%}`)
+      .join('')
+  if (new Set(LOOKS.map(([look]) => sets(look))).size === 1) return sets('toile')
+  return (
+    LOOKS.map(([look, test], i) => {
+      const tag = i === 0 ? `{%- if ${test} -%}` : test === 'true' ? '{%- else -%}' : `{%- elsif ${test} -%}`
+      return tag + sets(look)
+    }).join('') + '{%- endif -%}'
+  )
+}
+
+// Lit une ligne : est-ce un nouveau produit, quelle œuvre à plat, quelle matière, quel cadre, quel
+// contour. Sans sortie : elle se place là où le Liquid voisin retire déjà les blancs.
+//
+// Nouveau produit : son modèle de page, la règle du thème (snippets/artwork-kind.liquid) et du
+// serveur (artworkMedia.ts, SINGLE_IMAGE_TEMPLATE). Ou, si les notifications ne disent pas le
+// modèle de page, une photo de ligne dont le fichier commence par « photo-studio- » : la photo
+// studio d'une variante (l'œuvre au mur, dans son cadre), que seuls les nouveaux produits reçoivent.
+// L'œuvre à plat : la 1re image du produit (snippets/artwork-flat-index.liquid), jamais l'image de
+// la ligne, qui devient la photo studio de la variante. Faute de 1re image, l'image de la ligne si
+// ce n'est pas une photo studio ; sinon, rien n'est dessiné et la ligne garde son image.
+// La matière : toile à trois options (taille, bordure, cadre), poster à deux (taille, cadre).
+// Le cadre de la toile se lit dans sa 3e option (strings.mjs, frames) ; celui du poster dans la
+// commande (_cadre : le handle de sa couleur ; sans elle, « Avec cadre » est noir, comme au
+// panier), et son contour blanc dans _passe_partout.
+const objetLu = (s, v, size) => {
+  const words = Object.fromEntries(
+    Object.keys(LOCALES.fr.frames).map((key) => [key, [...new Set([...s.frames[key], ...LOCALES.fr.frames[key]])]])
+  )
+  const any = (name, key) => words[key].map((word) => `${name} contains '${word}'`).join(' or ')
+  const g = size
+  return `{%- assign oe_draw = false -%}
+{%- assign oe_line_src = '' -%}
+{%- if ${v}.image -%}{%- assign oe_line_src = ${v} | img_url: '160x160' -%}{%- endif -%}
+{%- if ${v}.product.template_suffix == 'oeuvre-3d' or oe_line_src contains '/photo-studio-' -%}
+{%- assign oe_has_src = false -%}
+{%- if ${v}.product.featured_image != blank -%}{%- assign oe_src = ${v}.product.featured_image -%}{%- assign oe_has_src = true -%}
+{%- else -%}{%- unless oe_line_src == '' or oe_line_src contains '/photo-studio-' -%}{%- assign oe_src = ${v} -%}{%- assign oe_has_src = true -%}{%- endunless -%}
+{%- endif -%}
+{%- assign oe_parts = ${v}.variant.title | default: ${v}.variant_title | split: ' / ' -%}
+{%- assign oe_kind = '' -%}
+{%- if oe_parts.size == 3 -%}{%- assign oe_kind = 'toile' -%}{%- elsif oe_parts.size == 2 -%}{%- assign oe_kind = 'poster' -%}{%- endif -%}
+{%- if oe_kind != '' and oe_has_src -%}{%- assign oe_draw = true -%}{%- endif -%}
+{%- endif -%}
+{%- if oe_draw -%}
+{%- assign oe_choice = oe_parts.last | downcase -%}
+{%- assign oe_frame = 'sans' -%}
+{%- assign oe_contour = false -%}
+{%- if oe_kind == 'toile' -%}
+{%- if ${any('oe_choice', 'blanc')} -%}{%- assign oe_frame = 'blanc' -%}
+{%- elsif ${any('oe_choice', 'noir')} -%}{%- assign oe_frame = 'noir' -%}
+{%- elsif ${any('oe_choice', 'argent')} -%}{%- assign oe_frame = 'argent' -%}
+{%- elsif ${any('oe_choice', 'chene')} -%}{%- assign oe_frame = 'chene' -%}
+{%- elsif ${any('oe_choice', 'noyer')} -%}{%- assign oe_frame = 'noyer' -%}
+{%- endif -%}
+{%- else -%}
+{%- assign oe_cadre = '' -%}
+{%- for oe_property in ${v}.properties -%}
+{%- if oe_property.first == '_cadre' -%}{%- assign oe_cadre = oe_property.last | downcase -%}{%- endif -%}
+{%- if oe_property.first == '_passe_partout' and oe_property.last == 'oui' -%}{%- assign oe_contour = true -%}{%- endif -%}
+{%- endfor -%}
+{%- if ${any('oe_choice', 'without')} -%}
+{%- elsif oe_cadre != blank -%}
+{%- assign oe_frame = 'noir' -%}
+{%- if oe_cadre contains 'blanc' -%}{%- assign oe_frame = 'blanc' -%}
+{%- elsif oe_cadre contains 'argent' -%}{%- assign oe_frame = 'argent' -%}
+{%- elsif oe_cadre contains 'chene' -%}{%- assign oe_frame = 'chene' -%}
+{%- elsif oe_cadre contains 'noyer' -%}{%- assign oe_frame = 'noyer' -%}
+{%- endif -%}
+{%- elsif ${any('oe_choice', 'with')} -%}{%- assign oe_frame = 'noir' -%}
+{%- endif -%}
+{%- endif -%}
+{%- assign oe_caisse = false -%}{%- assign oe_verre = false -%}
+{%- if oe_frame != 'sans' -%}{%- if oe_kind == 'toile' -%}{%- assign oe_caisse = true -%}{%- else -%}{%- assign oe_verre = true -%}{%- endif -%}{%- endif -%}
+${assignColors()}
+${assignShadows(g)}
+{%- assign oe_bord = 0 -%}
+{%- if oe_caisse -%}{%- assign oe_bord = ${g.edge + g.caisse + g.jour} -%}
+{%- elsif oe_verre -%}{%- assign oe_bord = ${g.edge + g.verre + g.levre} -%}
+{%- endif -%}
+{%- if oe_verre -%}{%- assign oe_voile = '${mix(SHEET, SHADOW, 0.12)}' -%}{%- else -%}{%- assign oe_voile = '${mix(SHEET, SHADOW, 0.06)}' -%}{%- endif -%}
+{%- assign oe_size = oe_parts.first | downcase | replace: '×', 'x' | remove: 'cm' | remove: ' ' | split: 'x' -%}
+{%- assign oe_w = oe_size.first | plus: 0 -%}
+{%- assign oe_h = oe_size.last | plus: 0 -%}
+{%- assign oe_short = 1.0 -%}
+{%- assign oe_landscape = true -%}
+{%- if oe_w > 0 and oe_h > 0 -%}
+{%- if oe_w < oe_h -%}{%- assign oe_short = oe_w | times: 1.0 | divided_by: oe_h -%}{%- assign oe_landscape = false -%}
+{%- else -%}{%- assign oe_short = oe_h | times: 1.0 | divided_by: oe_w -%}
+{%- endif -%}
+{%- endif -%}
+{%- assign oe_long = ${g.long} | minus: oe_bord | minus: oe_bord | times: 1.0 -%}
+{%- assign oe_m = 0 -%}
+{%- if oe_contour -%}
+{%- assign oe_grow = oe_short | times: 0.1904 | plus: 1 -%}
+{%- assign oe_long = oe_long | divided_by: oe_grow -%}
+{%- assign oe_m = oe_long | times: oe_short | times: 0.0952 | round -%}
+{%- endif -%}
+{%- assign oe_other = oe_long | times: oe_short | round -%}
+{%- assign oe_long = oe_long | round -%}
+{%- if oe_landscape -%}{%- assign oe_img = oe_long -%}{%- assign oe_img_h = oe_other -%}
+{%- else -%}{%- assign oe_img = oe_other -%}{%- assign oe_img_h = oe_long -%}
+{%- endif -%}${
+    g.box
+      ? `
+{%- assign oe_around = oe_bord | plus: oe_m | times: 2${g.shadows.toile.map((_, n) => ` | plus: oe_sh${n}`).join('')} -%}
+{%- assign oe_box_w = ${g.box} | minus: oe_img | minus: oe_around -%}
+{%- assign oe_box_h = ${g.box} | minus: oe_img_h | minus: oe_around -%}
+{%- assign oe_left = oe_box_w | divided_by: 2 | floor -%}
+{%- assign oe_right = oe_box_w | minus: oe_left -%}
+{%- assign oe_top = oe_box_h | divided_by: 2 | floor -%}
+{%- assign oe_bottom = oe_box_h | minus: oe_top -%}`
+      : ''
+  }
+{%- endif -%}`
+}
+
+// Une couche : une cellule pleine, à sa teinte, autour de la suivante. when : sa condition Liquid.
+const layer = ({ color, padding, gradient = `linear-gradient(${color},${color})`, when }) => {
+  const open = `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:separate;"><tr><td bgcolor="${color}" style="background-color:${color};background-image:${gradient};padding:${padding};">`
+  const close = '</td></tr></table>'
+  return when
+    ? { open: `{% if ${when} %}${open}{% endif %}`, close: `{% if ${when} %}${close}{% endif %}` }
+    : { open, close }
+}
+
+const nest = (layers, inside) =>
+  layers.map((l) => l.open).join('') + inside + [...layers].reverse().map((l) => l.close).join('')
+
+// L'objet dessiné, d'après objetLu (même taille), de l'ombre au mur jusqu'à l'œuvre. alt : le
+// texte alternatif de l'œuvre.
+const objet = (size, { src, alt }) => {
+  const g = size
+  const framed = 'oe_caisse or oe_verre'
+  const layers = [
+    // L'ombre au mur, en bas et à droite ; épaisseurs et teintes choisies par objetLu. Le dégradé
+    // l'efface vers le coin haut droit et le coin bas gauche : une ombre décalée, comme celle de la
+    // fiche. Sans dégradé (Outlook), un liseré plein.
+    ...g.shadows.toile.map((_, n) => ({
+      color: `{{ oe_s${n} }}`,
+      gradient: g.fade ? `linear-gradient(135deg,{{ oe_wall }} ${g.fade[0]}%,{{ oe_s${n} }} ${g.fade[1]}%)` : undefined,
+      padding: `0 {{ oe_sh${n} }}px {{ oe_sh${n} }}px 0`,
+    })),
+    // L'arête de la baguette : claire en haut et à gauche, sombre en bas et à droite.
+    ...(g.edge
+      ? [
+          { color: color('lo'), padding: `0 ${g.edge}px ${g.edge}px 0`, when: framed },
+          { color: color('hi'), padding: `${g.edge}px 0 0 ${g.edge}px`, when: framed },
+        ]
+      : []),
+    // La baguette, éclairée comme au panier : plus claire en haut à gauche, plus sombre en bas à droite.
+    {
+      color: color('base'),
+      gradient: `linear-gradient(135deg,${color('hi')} 0%,${color('base')} 38%,${color('base')} 62%,${color('lo')} 100%)`,
+      padding: `{% if oe_caisse %}${g.caisse}{% else %}${g.verre}{% endif %}px`,
+      when: framed,
+    },
+    { color: color('levre'), padding: `${g.levre}px`, when: 'oe_verre' },
+    { color: color('jour_haut'), padding: `${g.jour}px 0 0 ${g.jour}px`, when: 'oe_caisse' },
+    { color: color('jour_bas'), padding: `0 ${g.jour}px ${g.jour}px 0`, when: 'oe_caisse' },
+    // Le contour blanc. Sous verre, la lèvre du cadre l'ombre en haut et à gauche ; sans cadre,
+    // c'est le bord de la feuille.
+    { color: '{{ oe_voile }}', padding: `${g.voile}px 0 0 ${g.voile}px`, when: 'oe_contour' },
+    {
+      color: SHEET,
+      padding: `{{ oe_m | minus: ${g.voile} | at_least: 0 }}px {{ oe_m }}px {{ oe_m }}px {{ oe_m | minus: ${g.voile} | at_least: 0 }}px`,
+      when: 'oe_contour',
+    },
+  ]
+  const img = `<img src="{{ ${src} | img_url: '${g.box ? '160x160' : '800x800'}' }}" width="{{ oe_img }}" alt="${alt}" style="display:block;width:100%;max-width:{{ oe_img }}px;height:auto;border:0;">`
+  return nest(layers.map(layer), img)
+}
+
 // L'œuvre sur sa tuile blanche, avec de l'air, comme sur le mur d'une galerie, puis son cartel.
 // Shopify rend l'image dans un carré sans la rogner : portrait ou paysage, rien n'est coupé.
-const artTile = ({ width = 300, top = 40, cartel = true, when = 'art_count == 1 and hero' } = {}) => `{%- if ${when} -%}
-${lineTitle('hero')}
-<tr><td class="px" style="padding:${top}px 44px 0;">
-<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-<tr><td align="center" class="tile" bgcolor="${TILE}" style="background-color:${TILE};padding:44px 28px;">
-<img src="{{ hero | img_url: '800x800' }}" width="${width}" alt="{{ item_title | escape }}" style="display:block;width:100%;max-width:${width}px;height:auto;border:0;">
-</td></tr>${
-  cartel
-    ? `
+// Un nouveau produit y est dessiné en objet (objetLu, objet), la tuile prenant le mur de sa
+// matière, comme les cartes de collection : blanc pour la toile, celui des posters pour le poster.
+// Elle le garde dans Gmail en sombre : l'ombre et le contour sont peints pour ce mur. cartel :
+// true, false, ou la condition Liquid qui le montre.
+const artTile = (s, { width = 300, top = 40, cartel = true, when = 'art_count == 1 and hero' } = {}) => {
+  const words = `
 <tr><td style="padding-top:14px;">
 <p class="ink ff" style="margin:0;${title(16, 23, INK)}">{{ item_title }}</p>
 {%- if hero.variant.title != blank and hero.variant.title != 'Default Title' %}
 <p class="sub" style="margin:2px 0 0;${text(14, 21, SUB)}">{{ hero.variant.title }}</p>
 {%- endif %}
 </td></tr>`
-    : ''
-}
+  return `{%- if ${when} -%}
+${lineTitle('hero')}
+${objetLu(s, 'hero', SIZES.hero(width))}
+<tr><td class="px" style="padding:${top}px 44px 0;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+{% if oe_draw %}<tr><td align="center" class="tile" bgcolor="{{ oe_wall }}" style="background-color:{{ oe_wall }};background-image:linear-gradient({{ oe_wall }},{{ oe_wall }});padding:44px 28px;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 auto;border-collapse:separate;"><tr><td>${objet(SIZES.hero(width), { src: 'oe_src', alt: '{{ item_title | escape }}' })}</td></tr></table>
+</td></tr>{% else %}<tr><td align="center" class="tile" bgcolor="${TILE}" style="background-color:${TILE};padding:44px 28px;">
+<img src="{{ hero | img_url: '800x800' }}" width="${width}" alt="{{ item_title | escape }}" style="display:block;width:100%;max-width:${width}px;height:auto;border:0;">
+</td></tr>{% endif %}${typeof cartel === 'string' ? `{% if ${cartel} %}${words}{% endif %}` : cartel ? words : ''}
 </table>
 </td></tr>
 {%- endif -%}`
+}
+
+// La vignette d'un nouveau produit : l'objet au centre d'un carré de 60, sur le mur du panier.
+const vignette = () => {
+  const g = SIZES.thumb()
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="${g.box}" style="width:${g.box}px;border-collapse:separate;"><tr><td bgcolor="{{ oe_wall }}" style="background-color:{{ oe_wall }};background-image:linear-gradient({{ oe_wall }},{{ oe_wall }});border-radius:6px;padding:{{ oe_top }}px {{ oe_right }}px {{ oe_bottom }}px {{ oe_left }}px;">${objet(g, { src: 'oe_src', alt: '' })}</td></tr></table>`
+}
 
 // Une ligne d'article : vignette, titre, format et quantité.
 const itemCells = (s, v, qty, { thumb = true } = {}) => `${
   thumb
     ? `<td width="76" valign="top" class="hair thumb" style="width:76px;padding:14px 16px 14px 0;border-top:1px solid ${HAIR};">
-{%- if ${v}.image %}<img src="{{ ${v} | img_url: '160x160' }}" width="60" alt="" class="thumbImg" style="display:block;width:60px;height:auto;border:0;">{%- endif %}
+${objetLu(s, v, SIZES.thumb())}{% if oe_draw %}${vignette()}{% else %}{%- if ${v}.image %}<img src="{{ ${v} | img_url: '160x160' }}" width="60" alt="" class="thumbImg" style="display:block;width:60px;height:auto;border:0;">{%- endif %}{% endif %}
 </td>`
     : ''
 }
@@ -433,8 +758,7 @@ ${paragraphs(m.body)}
 <tr><td class="px txt" style="padding:12px 44px 0;${text(15, 24, TXT)}">${m.instructions} : {{ delivery_instructions }}</td></tr>
 {%- endif -%}
 ${buttonRow(orderUrl(s), m.button)}
-${artTile({ cartel: true, when: 'one_line' })}
-${artTile({ cartel: false, when: 'one_line == false and art_count == 1 and hero' })}
+${artTile(s, { cartel: 'one_line' })}
 {%- assign gift_card_line_item = line_items | where: "gift_card" -%}
 {%- if gift_card_line_item.first -%}
 <tr><td class="px txt" style="padding:20px 44px 0;${text(15, 24, TXT)}">${m.giftCards}</td></tr>
@@ -620,7 +944,7 @@ const delivered = (s) => {
 ${head(s)}
 ${open(s, m.preheader)}
 ${steps(s, 5)}
-${artTile({ width: 400, top: 32 })}
+${artTile(s, { width: 400, top: 32 })}
 ${eyebrow(s, 36)}
 ${heading(pickTitle(m))}
 ${paragraphs(hello(s), m.body)}

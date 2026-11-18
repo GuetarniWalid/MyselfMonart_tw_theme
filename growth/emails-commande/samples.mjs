@@ -40,6 +40,54 @@ const poster = {
   properties: [['Couleur du cadre', 'Chêne clair'], ['_interne', 'à ne pas montrer']],
 }
 
+// Nouveaux produits (Publisher, modèle de page oeuvre-3d) : l'œuvre à plat est leur 1re image ; la
+// ligne a la photo studio de sa variante, fichier « photo-studio-… », que le mail ne doit jamais
+// montrer (ces adresses n'existent pas : une image cassée sur une capture le dirait). Le Bonsaï de
+// la boutique, ses vrais formats et propriétés de ligne.
+const BONSAI_TOILE = `${CDN}tableau-zen-bonsai-japonais-fond-beige-abstrait-nature-minimaliste-7a68cc68-ec22-485b-9fda-2e0186e5f4f9.png`
+const BONSAI_POSTER = `${CDN}poster-bonsa-zen-patience-v-g-tale-et-harmonie-silencieuse-32ab2340-2d34-4e44-9b8b-10abe7fe0adc.png`
+const studio = (name) => `${CDN}photo-studio-${name}.jpg`
+const TOILE_BONSAI = 'Tableau sur toile Bonsaï zen - Sérénité végétale et équilibre apaisant'
+const POSTER_BONSAI = 'Poster Bonsaï zen - Patience végétale et harmonie silencieuse'
+
+const nouvelle = (title, featured, extra) => ({
+  title,
+  presentment_title: title,
+  product: { title, template_suffix: 'oeuvre-3d', featured_image: featured },
+  quantity: 1,
+  discount_allocations: [],
+  properties: [],
+  ...extra,
+})
+
+export const toileChene = nouvelle(TOILE_BONSAI, BONSAI_TOILE, {
+  variant: { title: '60x80 cm / Bordure blanche / Cadre chêne clair' },
+  image: studio('tableau-bonsai-zen-cadre-chene-clair'),
+  final_line_price: 15900,
+})
+
+export const posterBlancContour = nouvelle(POSTER_BONSAI, BONSAI_POSTER, {
+  variant: { title: '60x80 cm / Avec cadre' },
+  image: studio('poster-bonsai-zen-cadre-blanc'),
+  final_line_price: 9490,
+  properties: [
+    ['Couleur du cadre', 'Blanc'],
+    ['_cadre', 'cadre-blanc-1'],
+    ['Contour blanc', 'Avec contour blanc'],
+    ['_passe_partout', 'oui'],
+  ],
+})
+
+export const posterSansCadre = nouvelle(POSTER_BONSAI, BONSAI_POSTER, {
+  variant: { title: '30x40 cm / Sans cadre' },
+  image: studio('poster-bonsai-zen-sans-cadre'),
+  final_line_price: 2490,
+  properties: [
+    ['Contour blanc', 'Sans contour blanc'],
+    ['_passe_partout', 'non'],
+  ],
+})
+
 const kit = {
   title: "KIT D'ACCROCHAGE – Simple et Polyvalent",
   product: { title: "KIT D'ACCROCHAGE – Simple et Polyvalent" },
@@ -175,6 +223,55 @@ export const CASES = [
     template: 'order_confirmation',
     locale: 'de',
     data: order([poster, kit], { customer: { first_name: 'Dorothee' }, total_price: 19580 }),
+  },
+  // Nouveaux produits : l'œuvre en objet, avec son cadre et son contour blanc.
+  { id: 'nouvelle-toile', template: 'order_confirmation', data: order([toileChene]) },
+  { id: 'nouveau-poster-contour', template: 'order_confirmation', data: order([posterBlancContour]) },
+  { id: 'nouveau-poster-nu', template: 'order_confirmation', data: order([posterSansCadre]) },
+  {
+    id: 'nouveau-poster-papier-contour',
+    template: 'order_confirmation',
+    data: order([{ ...posterSansCadre, properties: [['Contour blanc', 'Avec contour blanc'], ['_passe_partout', 'oui']] }]),
+  },
+  {
+    id: 'nouvelles-deux',
+    template: 'order_confirmation',
+    data: order([toileChene, posterBlancContour], { total_price: 25390 }),
+  },
+  {
+    id: 'nouvelle-arrivee',
+    template: 'shipment_delivered',
+    data: { ...base, fulfillment: fulfillment([toileChene], ups) },
+  },
+  {
+    id: 'nouvelles-terminee-allemand',
+    template: 'shipping_update',
+    locale: 'de',
+    data: {
+      ...base,
+      customer: { first_name: 'Dorothee' },
+      item_count: 2,
+      fulfillment: fulfillment(
+        [
+          {
+            ...toileChene,
+            presentment_title: 'Leinwandbild Zen-Bonsai - Pflanzliche Gelassenheit und beruhigendes Gleichgewicht',
+            variant: { title: '60x80 cm / Weißer Rand / Rahmen aus heller Eiche' },
+          },
+          {
+            ...posterBlancContour,
+            presentment_title: 'Poster Zen-Bonsai - Pflanzliche Geduld und stille Harmonie',
+            variant: { title: '60x80 cm / Mit Rahmen' },
+          },
+        ],
+        {
+          tracking_numbers: ['00340433927603412126'],
+          tracking_urls: ['https://www.dhl.com/de-de/home/tracking.html?tracking-id=00340433927603412126&submit=1'],
+          tracking_url: 'https://www.dhl.com/de-de/home/tracking.html?tracking-id=00340433927603412126&submit=1',
+          tracking_company: 'DHL eCommerce',
+        }
+      ),
+    },
   },
   {
     id: 'terminee-allemand',

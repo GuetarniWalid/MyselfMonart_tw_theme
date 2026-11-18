@@ -72,6 +72,11 @@ const HARD_CASES = [
   ['confirmation-gmail', 'Simulation : Gmail inverse lui-même les couleurs en sombre'],
   ['terminee-gmail', "Simulation de la même inversion sur l'aplat du suivi"],
   ['terminee-sans-style', 'Messagerie qui retire tout le style : le mail reste propre'],
+  ['nouvelle-toile-mobile-clair', 'Nouveau produit : la toile dans son cadre chêne clair, dessinée d’après l’œuvre à plat'],
+  ['nouveau-poster-contour-mobile-clair', 'Nouveau poster : cadre blanc et contour blanc'],
+  ['nouveau-poster-nu-mobile-clair', 'Nouveau poster sans cadre : une simple feuille'],
+  ['nouvelles-deux-mobile-clair', 'Deux nouvelles œuvres : chacune en vignette, sur le mur du panier'],
+  ['nouvelles-terminee-allemand-mobile-clair', 'Nouvelles œuvres en allemand : le cadre lu dans le format traduit'],
 ]
 
 const browser = await puppeteer.launch({ executablePath: CHROME, headless: 'new' })
