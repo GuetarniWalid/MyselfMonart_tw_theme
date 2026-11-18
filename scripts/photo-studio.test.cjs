@@ -1,9 +1,11 @@
 // La photo studio des nouveaux produits (modèle de page oeuvre-3d) : l'œuvre seule, en grand, sur un mur clair,
-// dessinée par le CSS des vignettes de collection (input.css, « Vignette d'œuvre » ; snippet artwork-object). Le
-// serveur ouvre /products/<handle>?view=photo-studio (templates/product.photo-studio.liquid) juste après la
-// publication, la prend en 2000 × 2000 et l'ajoute au produit après l'œuvre à plat, sous un nom de fichier qui
-// commence par « photo-studio- » (snippet artwork-studio-index). Elle devient la 1re image des données Google de la
-// fiche et son og:image ; partout ailleurs, rien ne change, et les produits de toujours restent à l'octet près.
+// dessinée par le CSS des vignettes de collection (input.css, « Vignette d'œuvre » ; snippet artwork-object), puis
+// une photo par autre cadre vendu. Le serveur ouvre /products/<handle>?view=photo-studio
+// (templates/product.photo-studio.liquid) juste après la publication, prend chaque photo en 2000 × 2000 et les
+// ajoute au produit après l'œuvre à plat, sous des noms de fichier qui commencent par « photo-studio- » (snippet
+// artwork-studio-index). La principale devient la 1re image des données Google de la fiche et son og:image ;
+// chaque photo de cadre, l'image de ses variantes. Partout ailleurs, rien ne change, et les produits de toujours
+// restent à l'octet près.
 // Ici, les contrats du code ; puis le rendu Liquid (liquidjs), quand le module est là : sans lui, ces tests-là sont
 // sautés et le reste passe. Le banc les lance avec NODE_PATH vers un node_modules qui a liquidjs.
 // Lancer : node --test scripts/photo-studio.test.cjs
@@ -70,13 +72,24 @@ test('modèle : un document autonome (layout none), noindex, avec output.css, sa
   assert.doesNotMatch(source.replace(/url\("data:image\/svg\+xml[^"]*"\)/g, ''), /https?:|\/\/[a-z]/i)
 })
 
-test('modèle : une seule photo, [data-photo="principale"], de 1000 × 1000 px de CSS, collée en haut à gauche, sans marge', () => {
+test('modèle : la principale, puis une photo par autre cadre, chacune un [data-photo] de 1000 × 1000 px de CSS, sans marge', () => {
   const source = code(TEMPLATE)
-  assert.equal((source.match(/<\w+[^>]*\sdata-photo="/g) || []).length, 1, 'un seul élément [data-photo]')
-  assert.match(source, /<body>\s*{%-\s*if artwork != blank\s*-%}\s*<div class="photo-studio" data-photo="principale">\s*{{- artwork -}}\s*<\/div>/)
+  assert.equal((source.match(/<\w+[^>]*\sdata-photo="/g) || []).length, 2, 'la principale, et celle de chaque cadre')
+  assert.match(source, /<body>\s*{%-\s*if artwork != blank\s*-%}\s*<div class="photo-studio" data-photo="principale">\s*{{- artwork -}}\s*<\/div>\s*{%-\s*for frame in frames\s*-%}\s*{%-\s*if frame != blank\s*-%}\s*<div class="photo-studio" data-photo="{% if frame == 'sans' %}sans-cadre{% else %}cadre-{{ frame }}{% endif %}">\s*{%-\s*render 'artwork-object', product: product, image: art, kind: kind, frame: frame, context: 'studio'\s*-%}\s*<\/div>/)
   const css = photoCss()
   assert.match(rule(css, 'html, body'), /margin: 0;/)
   assert.match(rule(css, '.photo-studio'), /position: relative; width: 1000px; height: 1000px; overflow: hidden;/)
+})
+
+test('modèle : un cadre par valeur de l’option cadre (3 d’une toile, 2 d’un poster), lu comme une ligne le lit, sans doublon ni le cadre par défaut', () => {
+  const source = code(TEMPLATE)
+  // Le cadre par défaut est celui de la principale : la toile sans cadre, le poster au cadre noir.
+  assert.match(source, /assign default_frame = 'sans'\s+assign frame_position = 3\s+assign frame_key = 'option3'\s+if kind == 'poster'\s+assign default_frame = 'noir'\s+assign frame_position = 2\s+assign frame_key = 'option2'\s+endif/)
+  assert.match(source, /for option in product\.options_with_values\s+if option\.position == frame_position\s+for value in option\.values\s+assign frame_variant = product\.variants \| where: frame_key, value\.name \| first/)
+  // La seule lecture du cadre d'une variante (snippet artwork-frame), sans couleur de poster : le noir.
+  assert.match(source, /capture frame\s+render 'artwork-frame', product: product, variant: frame_variant, kind: kind\s+endcapture/)
+  assert.match(source, /assign frame_mark = ',' \| append: frame \| append: ','\s+unless frame == default_frame or frames contains frame_mark/)
+  assert.match(source, /assign frames = frames \| remove_first: ',' \| split: ','/)
 })
 
 test('modèle : l’œuvre à plat du produit (artwork-flat-index), toile ou poster (artwork-kind), en objet par artwork-object, context studio', () => {
@@ -96,14 +109,13 @@ test('modèle : la toile sans cadre, le poster sous verre au cadre noir, sans co
   assert.ok(line, 'render artwork-line')
   assert.deepEqual(params(line[1]), { product: 'product', variant: 'product.selected_variant', context: "'studio'" })
   assert.match(source, /assign frame = 'sans'\s+if kind == 'poster'\s+assign frame = 'noir'\s+endif/)
-  // Jamais de contour blanc : aucun des deux rendus ne le passe (paramètres ci-dessus et ci-contre, au complet).
-  const object = /render 'artwork-object',([^\n]*)/.exec(source)
-  assert.equal(params(object[1]).contour, undefined)
-  // La lecture du cadre reste la seule de la commande (snippet artwork-frame, appelé par artwork-line seul).
-  assert.doesNotMatch(source, /artwork-frame/)
+  // Jamais de contour blanc : aucun des rendus ne le passe (paramètres ci-dessus et ci-contre, au complet).
+  for (const object of source.matchAll(/render 'artwork-object',([^\n]*)/g)) assert.equal(params(object[1]).contour, undefined)
+  // Le cadre se lit par artwork-frame et rien d'autre : aucun handle de métaobjet ici.
+  assert.doesNotMatch(source, /'cadre-|frames_canvas|frames_poster/)
 })
 
-test('modèle : prête (data-photo-pret) quand l’œuvre est décodée, le mur chargé et la trame posée ; data-photo-erreur sinon', () => {
+test('modèle : prête (data-photo-pret) quand chaque œuvre est décodée, le mur et le bois chargés, la trame posée ; data-photo-erreur sinon', () => {
   const source = code(TEMPLATE)
   // Rien à photographier (ni toile ni poster, ou pas d'œuvre à plat) : l'erreur est dans la page, sans script.
   assert.match(source, /<html lang="{{ request\.locale\.iso_code }}"{% if artwork == blank %} data-photo-erreur="oeuvre"{% endif %}>/)
@@ -111,15 +123,58 @@ test('modèle : prête (data-photo-pret) quand l’œuvre est décodée, le mur 
   assert.match(script, /root\.dataset\.photoPret = '1'/)
   assert.match(script, /root\.dataset\.photoErreur = /)
   assert.match(script, /\.decode\(\)/)
-  assert.match(script, /setProperty\('--weave', /)
-  // Le mur : la même adresse que la feuille, attendue avant la photo.
-  assert.match(script, /wall\.src = {{ wall_texture \| json }}/)
+  // La trame, posée une fois pour toutes les photos.
+  assert.match(script, /root\.style\.setProperty\('--weave', /)
+  // Chaque œuvre de la page, pas seulement la principale.
+  assert.match(script, /document\.querySelectorAll\('\[data-photo\] img'\)\]\.map\(\(image\) => decoded\(image, 'image'\)\)/)
+  // Le mur : la même adresse que la feuille, attendue avant les photos.
+  assert.match(script, /decoded\(load\({{ wall_texture \| json }}\), 'mur'\)/)
   assert.match(source, /assign wall_texture = 'fond-mur-beige-clair-texture\.webp' \| asset_url/)
   assert.match(photoCss(), /url\("«wall_texture»"\) 0 0 \/ 256px 256px/)
-  // Le style des vignettes (output.css) est vérifié : sans lui, la photo serait fausse.
+  // Le bois des cadres, celui de la fiche 3D, attendu s'il y a une caisse américaine à peindre.
+  assert.match(source, /assign wood_texture = 'texture-chene-clair-cadre\.jpg' \| asset_url/)
+  assert.match(script, /if \(document\.querySelector\('\.oeuvre-card-baguette'\)\) waits\.push\(decoded\(load\({{ wood_texture \| json }}\), 'bois'\)\)/)
+  // Le style des vignettes (output.css) est vérifié : sans lui, les photos seraient fausses.
   assert.match(script, /containerType !== 'inline-size'/)
   // La trame : tirée d'une suite fixe, la même photo à chaque passage.
   assert.doesNotMatch(script, /Math\.random/)
+})
+
+/* Les teintes des vrais cadres de la toile, relevées sur les photos de l'atelier au milieu de la baguette
+   (scripts/oeuvre-3d-cadres.test.cjs ; .scratch/fiche-3d/issues/15). La photo les rend au milieu de chaque
+   baguette, mesurées au banc (écart de 0,4 à 1,6 sur 255) : la teinte posée tient compte du grain de la photo. */
+const ATELIER_TOILE = { blanc: '#ececec', noir: '#4a4a4a', argent: '#9a9380', chene: '#bcaa97', noyer: '#866554' }
+const rgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16))
+
+test('modèle : la caisse américaine en grand, photo seulement : la teinte de l’atelier, le fil du bois, la lumière, le jour jamais sombre', () => {
+  const css = photoCss()
+  for (const [frame, real] of Object.entries(ATELIER_TOILE)) {
+    const decl = rule(css, `.photo-studio .oeuvre-card[data-kind="toile"][data-frame="${frame}"]`)
+    const tint = /--frame: (#[0-9a-f]{6});/.exec(decl)
+    assert.ok(tint, `${frame} : sa teinte`)
+    const gap = Math.hypot(...rgb(tint[1]).map((v, i) => v - rgb(real)[i]))
+    assert.ok(gap <= 6, `${frame} : ${tint[1]} loin de l’atelier ${real} (${gap.toFixed(1)})`)
+  }
+  // Le fil : le bois naturel, le noyer et l'argent brossé ; le blanc et le noir sont unis, comme dans la 3D.
+  for (const frame of ['blanc', 'noir']) assert.match(rule(css, `.photo-studio .oeuvre-card[data-kind="toile"][data-frame="${frame}"]`), /--fil: 0;/)
+  for (const frame of ['argent', 'chene', 'noyer']) assert.match(rule(css, `.photo-studio .oeuvre-card[data-kind="toile"][data-frame="${frame}"]`), /--fil: \.\d+;/)
+  // Le jour est peint par les baguettes, aux angles vifs : plus par l'ombre de la toile, aux angles ronds.
+  assert.match(rule(css, '.photo-studio .oeuvre-card[data-kind="toile"][data-frame] .oeuvre-card-face'), /box-shadow: none;/)
+  // Quatre baguettes en onglet, jusqu'au bord de la toile (--T : la face et le jour).
+  assert.match(rule(css, '.photo-studio .oeuvre-card-moulure'), /--B: calc\(var\(--fb\) \* var\(--s\)\);\s*--T: calc\(\(var\(--fb\) \+ var\(--fj\)\) \* var\(--s\)\);/)
+  for (const side of ['haut', 'droite', 'bas', 'gauche']) {
+    assert.match(rule(css, `.photo-studio .oeuvre-card-baguette[data-cote="${side}"]`), /clip-path: polygon\(/, side)
+  }
+  // Le bois de la fiche 3D, en gris centré, en incrustation : il garde la teinte moyenne ; tourné sur les traverses.
+  const grain = rule(css, '.photo-studio .oeuvre-card-baguette::before')
+  assert.match(grain, /background: url\("«wood_texture»"\)/)
+  assert.match(grain, /filter: grayscale\(1\) brightness\(\.7\) contrast\(var\(--fil-contraste, 3\)\);\s*mix-blend-mode: overlay; opacity: var\(--fil\);/)
+  assert.match(css, /\.photo-studio \.oeuvre-card-baguette\[data-cote="haut"\]::before,\s*\.photo-studio \.oeuvre-card-baguette\[data-cote="bas"\]::before \{[^}]*rotate: 90deg;/)
+  // Le jour, à la teinte du cadre : au plus 16 % d'ombre brune, jamais un trait sombre (règle de Walid du 17/11).
+  const profile = rule(css, '.photo-studio .oeuvre-card-moulure') + css.slice(css.indexOf('--profil-lumiere:'), css.indexOf('}', css.indexOf('--profil-ombre:')))
+  for (const [, alpha] of profile.matchAll(/rgba\(28, 20, 14, (\.\d+)\)/g)) assert.ok(Number(alpha) <= 0.16, `jour : ${alpha}`)
+  // Rien de tout cela pour les visiteurs.
+  assert.doesNotMatch(vignetteCss(), /oeuvre-card-baguette|oeuvre-card-moulure|texture-chene-clair-cadre/)
 })
 
 test('modèle : les règles de la photo sont dans le modèle (mur clair, grain, 84 %, trame, reflet fixe, brillance du papier), aucune dans input.css', () => {
@@ -151,11 +206,11 @@ test('modèle : les règles de la photo sont dans le modèle (mur clair, grain, 
   }
   // Rien de la photo dans le CSS commun : output.css ne change pas pour les visiteurs.
   const shared = vignetteCss()
-  assert.doesNotMatch(shared, /oeuvre-card-sheen|photo-studio|--weave|\.84/)
+  assert.doesNotMatch(shared, /oeuvre-card-sheen|oeuvre-card-baguette|photo-studio|--weave|\.84/)
 })
 
-test('visiteurs : la feuille compilée (assets/output.css) ne connaît ni la photo, ni sa brillance, ni sa trame', () => {
-  assert.doesNotMatch(read('assets/output.css'), /photo-studio|oeuvre-card-sheen|--weave/)
+test('visiteurs : la feuille compilée (assets/output.css) ne connaît ni la photo, ni sa brillance, ni sa trame, ni ses baguettes', () => {
+  assert.doesNotMatch(read('assets/output.css'), /photo-studio|oeuvre-card-sheen|oeuvre-card-baguette|oeuvre-card-moulure|--weave/)
 })
 
 /* ---------- L'œuvre en objet, context studio (snippet artwork-object) ---------- */
@@ -184,13 +239,22 @@ test('œuvre en objet, context studio : la vitre garde sa porte-fenêtre ; le po
   assert.doesNotMatch(object, /<script/)
 })
 
+test('œuvre en objet, context studio : une toile encadrée a ses quatre baguettes en onglet, sous la toile (photo seulement)', () => {
+  const object = code(OBJECT)
+  const moulure = /{%-\s*if context == 'studio' and kind == 'toile' and frame != 'sans'\s*-%}([\s\S]*?){%-\s*endif\s*-%}\s*<div class="oeuvre-card-face/.exec(object)
+  assert.ok(moulure, 'les baguettes, avant la face : la toile se peint par-dessus')
+  assert.equal(moulure[1].replace(/\s+/g, ' ').trim(), '<span class="oeuvre-card-moulure" aria-hidden="true"> ' +
+    ['haut', 'droite', 'bas', 'gauche'].map((side) => `<span class="oeuvre-card-baguette" data-cote="${side}" data-allow-empty></span>`).join(' ') + ' </span>')
+})
+
 /* ---------- La photo studio parmi les médias (snippet artwork-studio-index) ---------- */
 
 test('artwork-studio-index : la photo studio des seuls nouveaux produits (artwork-kind, image_unique), jamais leur œuvre à plat', () => {
   const source = code(STUDIO_INDEX)
-  assert.match(source, /capture kind\s+render 'artwork-kind', product: product, suffix: product\.template_suffix, image_unique: true\s+endcapture\s+if kind != blank\s+for media in product\.media/)
-  assert.match(source, /unless forloop\.first\s+if media\.media_type == 'image' and media\.preview_image\.src contains 'photo-studio'\s+echo forloop\.index0\s+break/)
-  // Le résultat sort sans aucun espace : rien, ou l'index.
+  assert.match(source, /capture kind\s+render 'artwork-kind', product: product, suffix: product\.template_suffix, image_unique: true\s+endcapture\s+if kind != blank\s+assign found = false\s+for media in product\.media/)
+  // La principale : la 1re après l'œuvre à plat ; avec toutes, chacune, entourée de virgules.
+  assert.match(source, /unless forloop\.first\s+if media\.media_type == 'image' and media\.preview_image\.src contains 'photo-studio'\s+if toutes\s+unless found\s+echo ','\s+endunless\s+echo forloop\.index0\s+echo ','\s+assign found = true\s+else\s+echo forloop\.index0\s+break\s+endif/)
+  // Le résultat sort sans aucun espace : rien, l'index, ou les index.
   assert.match(read(STUDIO_INDEX), /-%}\s*$/)
   assert.doesNotMatch(source.replace(/{%-[\s\S]*?-%}/g, ''), /\S/)
 })
@@ -205,6 +269,12 @@ test('la photo studio ne sert qu’à Google et au partage : trois lecteurs, cha
   assert.deepEqual(readers.sort(), ['sections/main-product.liquid', 'snippets/meta-tags.liquid', 'snippets/oeuvre-3d-stage.liquid'])
   for (const file of readers) {
     const source = code(file)
+    // La fiche 3D lit toutes les photos studio, pour les tenir hors de ses photos : une liste, jamais un index.
+    if (file === 'snippets/oeuvre-3d-stage.liquid') {
+      assert.match(source, /capture studio_indexes\s+render 'artwork-studio-index', product: product, toutes: true\s+endcapture/)
+      assert.doesNotMatch(source, /product\.media\[studio/)
+      continue
+    }
     assert.ok(STUDIO_LINES.tags.test(source) || STUDIO_LINES.block.test(source), `${file} : l’index, -1 sans photo`)
   }
   // Un seul endroit qui reconnaît le nom de fichier.
@@ -237,14 +307,14 @@ test('og:image : la photo studio d’un nouveau produit, avec sa taille ; sinon 
 
 /* ---------- Partout ailleurs, rien de plus ---------- */
 
-test('fiche 3D, sans 3D : la photo studio n’est jamais parmi les photos, où qu’elle soit', () => {
+test('fiche 3D, sans 3D : aucune photo studio parmi les photos, ni la principale ni celles des cadres, où qu’elles soient', () => {
   const stage = code('snippets/oeuvre-3d-stage.liquid')
-  const studio = STUDIO_LINES.block.exec(stage)
-  assert.ok(studio, 'l’index de la photo studio')
+  const studio = /capture studio_indexes\s+render 'artwork-studio-index', product: product, toutes: true\s+endcapture/.exec(stage)
+  assert.ok(studio, 'les index des photos studio')
   const photos = /<template data-photos>([\s\S]*?)<\/template>/.exec(stage)
   assert.ok(studio.index < photos.index)
   assert.match(photos[1], /{%-\s*for media in product\.media\s*-%}/)
-  assert.match(photos[1], /{%-\s*unless media\.preview_image\.src contains 'passe-partout' or forloop\.index0 == studio_index\s*-%}/)
+  assert.match(photos[1], /{%-\s*capture media_mark\s*-%},{{ forloop\.index0 }},{%-\s*endcapture\s*-%}\s*{%-\s*unless media\.preview_image\.src contains 'passe-partout' or studio_indexes contains media_mark\s*-%}/)
 })
 
 /* ---------- Le rendu Liquid (liquidjs) ---------- */
@@ -281,6 +351,13 @@ function engine() {
   e.registerFilter('money', (cents) => `${(cents / 100).toFixed(2).replace('.', ',')} €`)
   e.registerFilter('money_without_currency', (cents) => (cents / 100).toFixed(2).replace('.', ','))
   e.registerFilter('t', (key) => key)
+  // Une date fixe pour « now » (priceValidUntil du JSON-LD) : un rendu égal d'un jour à l'autre.
+  e.registerFilter('date', (input, format) => {
+    const seconds = input === 'now' ? 1795003200 : Number(input) // 18/11/2026 à midi (UTC)
+    if (format === '%s') return String(seconds)
+    if (format === '%Y-%m-%d') return new Date(seconds * 1000).toISOString().slice(0, 10)
+    return String(input)
+  })
   // {% style %} de Shopify : son contenu, dans une balise <style>.
   e.registerTag('style', {
     parse(token, remain) {
@@ -370,7 +447,17 @@ const globals = (p, extra = {}) => ({
 })
 const renderFile = (file, p, extra) => engine().renderFile(file, {}, { globals: globals(p, extra) })
 const renderSource = (source, p, extra) => engine().parseAndRender(source, {}, { globals: globals(p, extra) })
-const photoDiv = (html) => /<div class="photo-studio" data-photo="principale">([\s\S]*?)<\/div>\s*<script>/.exec(html)
+/* Les photos de la page, dans l'ordre : [nom, balisage], du début de chacune au début de la suivante (la dernière,
+   jusqu'au script). */
+const photos = (html) => {
+  const marks = [...html.matchAll(/<div class="photo-studio" data-photo="([\w-]+)">/g)]
+  const end = html.indexOf('<script>', marks.length ? marks[marks.length - 1].index : 0)
+  return marks.map((m, i) => [m[1], html.slice(m.index + m[0].length, i + 1 < marks.length ? marks[i + 1].index : end)])
+}
+const photoDiv = (html) => {
+  const principal = photos(html).find(([name]) => name === 'principale')
+  return principal ? [null, principal[1]] : null
+}
 const attrs = (html) => /<div\s+class="(oeuvre-card[^"]*)"\s+data-kind="(\w+)"([^>]*)>/.exec(html)
 
 test('rendu du modèle : une nouvelle toile, sans cadre, son œuvre à plat (1re image) en 2000 px, les règles de la carte', { skip: SKIP }, async () => {
@@ -387,7 +474,7 @@ test('rendu du modèle : une nouvelle toile, sans cadre, son œuvre à plat (1re
   assert.match(photo[1], /<img\s+src="\/\/www\.myselfmonart\.com\/cdn\/shop\/files\/bonsai-zen-oeuvre\.jpg\?v=1&width=2000"/)
   assert.match(photo[1], /loading="eager"/)
   assert.doesNotMatch(photo[1], /skeleton|lqip|oeuvre-card-glass|oeuvre-card-sheen|photo-studio-bonsai/)
-  assert.match(html, /wall\.src = "\/\/www\.myselfmonart\.com\/cdn\/shop\/t\/25\/assets\/fond-mur-beige-clair-texture\.webp\?v=1"/)
+  assert.match(html, /decoded\(load\("\/\/www\.myselfmonart\.com\/cdn\/shop\/t\/25\/assets\/fond-mur-beige-clair-texture\.webp\?v=1"\), 'mur'\)/)
   assert.doesNotMatch(html, /<html[^>]*data-photo-erreur/)
 })
 
@@ -420,6 +507,53 @@ test('rendu du modèle : ?variant= d’un poster sans cadre, le papier et sa bri
   toile.selected_variant = toile.variants.find((v) => v.option3 === 'Cadre chêne clair')
   photo = photoDiv(await renderFile('product.photo-studio.liquid', toile))[1]
   assert.match(attrs(photo)[3], /^\s*data-frame="chene"\s+style=/)
+})
+
+test('rendu du modèle : une toile, la principale sans cadre puis un cadre par valeur de son option, dans son ordre, chacun dans sa caisse', { skip: SKIP }, async () => {
+  const html = await renderFile('product.photo-studio.liquid', product({ suffix: 'oeuvre-3d', files: [FLAT, PHOTO] }))
+  const shots = photos(html)
+  assert.deepEqual(shots.map(([name]) => name), ['principale', 'cadre-blanc', 'cadre-noir', 'cadre-argent', 'cadre-chene', 'cadre-noyer'])
+  // La principale, sans cadre : ni data-frame, ni baguettes.
+  assert.doesNotMatch(shots[0][1], /data-frame|oeuvre-card-baguette/)
+  for (const [name, markup] of shots.slice(1)) {
+    const [, classes, kind, rest] = attrs(markup)
+    assert.deepEqual([classes, kind], ['oeuvre-card', 'toile'], name)
+    assert.match(rest, new RegExp(`^\\s*data-frame="${name.replace('cadre-', '')}"\\s+style="--r: 0\\.7484"`), name)
+    assert.doesNotMatch(rest, /data-context/, name)
+    // Les quatre baguettes, sous la toile, puis l'œuvre en grand.
+    assert.equal((markup.match(/<span class="oeuvre-card-baguette" data-cote="(haut|droite|bas|gauche)" data-allow-empty><\/span>/g) || []).length, 4, name)
+    assert.ok(markup.indexOf('oeuvre-card-moulure') < markup.indexOf('oeuvre-card-face'), name)
+    assert.match(markup, /<img\s+src="\/\/www\.myselfmonart\.com\/cdn\/shop\/files\/bonsai-zen-oeuvre\.jpg\?v=1&width=2000"/, name)
+  }
+  // Le bois des cadres est attendu, à l'adresse de la boutique.
+  assert.match(html, /decoded\(load\("\/\/www\.myselfmonart\.com\/cdn\/shop\/t\/25\/assets\/texture-chene-clair-cadre\.jpg\?v=1"\), 'bois'\)/)
+})
+
+test('rendu du modèle : un poster, la principale sous verre au cadre noir puis le papier sans cadre, avec sa brillance floue', { skip: SKIP }, async () => {
+  const html = await renderFile('product.photo-studio.liquid', product({ suffix: 'oeuvre-3d', poster: true, files: [FLAT] }))
+  const shots = photos(html)
+  assert.deepEqual(shots.map(([name]) => name), ['principale', 'sans-cadre'])
+  const [, classes, kind, rest] = attrs(shots[1][1])
+  assert.deepEqual([classes, kind], ['oeuvre-card no-contour', 'poster'])
+  assert.match(rest, /data-look="papier"/)
+  assert.doesNotMatch(rest, /data-frame|data-context/)
+  assert.match(shots[1][1], /<span class="oeuvre-card-sheen" aria-hidden="true"><span class="oeuvre-card-glare" data-allow-empty><\/span><\/span>/)
+  for (const [name, markup] of shots) assert.doesNotMatch(markup, /oeuvre-card-baguette/, name)
+})
+
+test('rendu du modèle : sans doublon, sans le cadre par défaut, ni cadre inconnu ; une toile vendue sans cadre seulement, la principale seule', { skip: SKIP }, async () => {
+  const names = async (p) => photos(await renderFile('product.photo-studio.liquid', p)).map(([name]) => name)
+  // Deux valeurs menant au même cadre, et une valeur sans métaobjet (lue « sans », comme au panier) : une photo par cadre.
+  const toile = product({ suffix: 'oeuvre-3d', files: [FLAT] })
+  toile.options_with_values[2].values.push(optionValue('Cadre noyer bis'), optionValue('Cadre doré'))
+  toile.metafields.painting_options.frames_canvas.value.push({ name: 'Cadre noyer bis', system: { handle: 'cadre-noyer' } })
+  toile.variants.push({ ...toile.variants[5], id: 1, option3: 'Cadre noyer bis' }, { ...toile.variants[5], id: 2, option3: 'Cadre doré' })
+  assert.deepEqual(await names(toile), ['principale', 'cadre-blanc', 'cadre-noir', 'cadre-argent', 'cadre-chene', 'cadre-noyer'])
+  // Une toile vendue sans cadre seulement : rien que la principale.
+  const nue = product({ suffix: 'oeuvre-3d', files: [FLAT] })
+  nue.options_with_values[2].values = [optionValue('Sans cadre')]
+  nue.variants = nue.variants.filter((v) => v.option3 === 'Sans cadre')
+  assert.deepEqual(await names(nue), ['principale'])
 })
 
 test('rendu du modèle : un produit de toujours (le Bonsaï) montre sa vraie œuvre, à l’index 1', { skip: SKIP }, async () => {
@@ -462,6 +596,158 @@ test('rendu des données Google : la photo puis l’œuvre à plat pour un nouve
   assert.deepEqual(await ldImage(product({ suffix: 'poster', poster: true, files: [...OLD, PHOTO] })), [url(OLD[0])])
 })
 
+/* Le JSON-LD de la fiche, tel que la section le rend : de ses réglages (ships_country…) à la fin de la section,
+   avec ce que le haut de la section a calculé (artwork_kind, flat_index) et la note Trustpilot. Rend le texte. */
+const LD_SETTINGS = { ships_country: 'FR', return_days: 14, enable_merchant_schema: true, shipping_free: true }
+const REVIEWS = '"aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.2", "ratingCount": "86", "worstRating": "1", "bestRating": "5" }'
+async function renderLd(p, { source = read('sections/main-product.liquid'), settings = LD_SETTINGS } = {}) {
+  const start = source.indexOf('{%- liquid\n  # ships_country')
+  const end = source.indexOf('{% schema %}')
+  assert.ok(start > 0 && end > start, 'le JSON-LD de la fiche, de ses réglages à la fin de la section')
+  const kind = p.template_suffix === 'painting' ? 'toile' : p.template_suffix === 'poster' ? 'poster' : p.template_suffix === 'oeuvre-3d' ? (p.metafields.painting_options.frames_poster ? 'poster' : 'toile') : ''
+  const flat = p.template_suffix === 'oeuvre-3d' ? 0 : 1
+  return renderSource(source.slice(start, end), p, {
+    section: { settings },
+    artwork_kind: kind,
+    flat_index: flat,
+    reviews_structured_data: REVIEWS,
+  })
+}
+const ldScripts = (html) => [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1]))
+
+// Les photos de cadre du serveur, données aux variantes d'une toile (option 3) ou d'un poster (option 2).
+const FRAME_FILES = {
+  'Cadre blanc': 'photo-studio-bonsai-zen-cadre-blanc.jpg',
+  'Cadre noir Mat': 'photo-studio-bonsai-zen-cadre-noir.jpg',
+  'Cadre argent ancien': 'photo-studio-bonsai-zen-cadre-argent.jpg',
+  'Cadre chêne clair': 'photo-studio-bonsai-zen-cadre-chene.jpg',
+  'Cadre noyer': 'photo-studio-bonsai-zen-cadre-noyer.jpg',
+  'Sans cadre': 'photo-studio-bonsai-zen-sans-cadre.jpg',
+}
+function withVariantPhotos(p, poster) {
+  const principal = p.media.find((m) => m.preview_image.src.includes(PHOTO[0]))
+  for (const variant of p.variants) {
+    const value = poster ? variant.option2 : variant.option3
+    if (!poster && value === 'Sans cadre') variant.featured_media = principal
+    else if (poster && value !== 'Sans cadre') variant.featured_media = principal
+    else {
+      const img = image(FRAME_FILES[value], 2000, 2000)
+      p.images.push(img)
+      p.media.push(asMedia(img))
+      variant.featured_media = p.media[p.media.length - 1]
+    }
+  }
+  return p
+}
+
+test('rendu des données Google : un nouveau produit en groupe de produits, chaque variante avec la photo de son cadre et son offre d’avant', { skip: SKIP }, async () => {
+  const toile = withVariantPhotos(product({ suffix: 'oeuvre-3d', files: [FLAT, PHOTO] }), false)
+  const [group, shipping, returns] = ldScripts(await renderLd(toile))[0]
+  assert.equal(group['@type'], 'ProductGroup')
+  assert.equal(group['@id'], `https://www.myselfmonart.com${toile.url}`)
+  assert.equal(group.url, `https://www.myselfmonart.com${toile.url}`)
+  assert.equal(group.productGroupID, '1')
+  assert.deepEqual(group.variesBy, ['https://schema.org/size', 'https://schema.org/color'])
+  // Les images du groupe : la photo studio, puis l'œuvre à plat ; og:image n'a pas bougé (plus bas).
+  assert.deepEqual(group.image, [url(PHOTO), url(FLAT)])
+  assert.equal(group.brand.name, 'MyselfMonArt')
+  assert.equal(group.aggregateRating.ratingCount, '86')
+  assert.ok(Array.isArray(group.additionalProperty), 'la 3D annoncée, comme avant')
+  assert.equal(group.hasVariant.length, toile.variants.length)
+  for (const [i, variant] of group.hasVariant.entries()) {
+    const source = toile.variants[i]
+    assert.equal(variant['@type'], 'Product')
+    assert.equal(variant.sku, String(source.id), 'sans référence, l’id de la variante')
+    assert.equal(variant.name, `${toile.title} - ${source.title}`)
+    assert.equal(variant.size, source.option1)
+    assert.equal(variant.color, source.option3)
+    const file = source.option3 === 'Sans cadre' ? PHOTO[0] : FRAME_FILES[source.option3]
+    assert.equal(variant.image, `https:${FILES}${file}?v=1&width=2000`, `${source.title} : la photo de son cadre`)
+    // L'offre d'avant : prix, disponibilité, adresse de la variante, date, vendeur ; livraison et retours cités.
+    assert.deepEqual(variant.offers, {
+      '@type': 'Offer',
+      availability: 'https://schema.org/InStock',
+      price: source.price / 100,
+      priceValidUntil: '2027-11-18',
+      priceCurrency: 'EUR',
+      url: `https://www.myselfmonart.com${source.url}`,
+      seller: { '@type': 'Organization', name: 'MyselfMonArt' },
+      shippingDetails: { '@id': '#livraison' },
+      hasMerchantReturnPolicy: { '@id': '#retours' },
+    })
+  }
+  // La livraison et les retours d'avant, décrits une fois.
+  assert.deepEqual(shipping, {
+    '@context': 'https://schema.org/',
+    '@type': 'OfferShippingDetails',
+    '@id': '#livraison',
+    shippingRate: { '@type': 'MonetaryAmount', value: '0', currency: 'EUR' },
+    shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'FR' },
+  })
+  assert.deepEqual(returns, {
+    '@context': 'https://schema.org/',
+    '@type': 'MerchantReturnPolicy',
+    '@id': '#retours',
+    applicableCountry: 'FR',
+    returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+    merchantReturnDays: 14,
+    returnMethod: 'https://schema.org/ReturnByMail',
+  })
+})
+
+test('rendu des données Google : le poster (cadre en option 2), une variante sans photo prend celle du groupe, ?variant= ne garde que la sienne', { skip: SKIP }, async () => {
+  const poster = withVariantPhotos(product({ suffix: 'oeuvre-3d', poster: true, files: [FLAT, PHOTO] }), true)
+  let [group] = ldScripts(await renderLd(poster))[0]
+  for (const [i, variant] of group.hasVariant.entries()) {
+    const source = poster.variants[i]
+    assert.equal(variant.color, source.option2)
+    assert.equal(variant.image, `https:${FILES}${source.option2 === 'Sans cadre' ? FRAME_FILES['Sans cadre'] : PHOTO[0]}?v=1&width=2000`)
+  }
+  // Avant les photos du serveur : chaque variante a l'image du groupe (la photo studio, ou l'œuvre à plat).
+  const nue = product({ suffix: 'oeuvre-3d', files: [FLAT] })
+  ;[group] = ldScripts(await renderLd(nue))[0]
+  assert.deepEqual([...new Set(group.hasVariant.map((v) => v.image))], [url(FLAT)])
+  // Sur une adresse ?variant=, la seule variante choisie, comme le prix affiché.
+  nue.selected_variant = nue.variants[7]
+  ;[group] = ldScripts(await renderLd(nue))[0]
+  assert.deepEqual(group.hasVariant.map((v) => v.sku), [String(nue.variants[7].id)])
+  assert.equal(group.hasVariant[0].offers.price, nue.variants[7].price / 100)
+  // Sans réglage marchand : ni livraison, ni retours, ni les nœuds qui les décrivent.
+  const nodes = ldScripts(await renderLd(nue, { settings: { ...LD_SETTINGS, enable_merchant_schema: false } }))[0]
+  assert.equal(nodes.length, 1)
+  assert.equal(nodes[0].hasVariant[0].offers.shippingDetails, undefined)
+  assert.equal(nodes[0].hasVariant[0].offers.hasMerchantReturnPolicy, undefined)
+})
+
+/* Le relevé des données Google des produits de toujours, rendu par la section d'avant les groupes de produits
+   (thème 3947cb0) : toile et poster, avec et sans ?variant=. Le refaire sur une autre section de référence :
+   RELEVE_JSON_LD=<son main-product.liquid> node --test scripts/photo-studio.test.cjs */
+const LD_TOUJOURS = path.join(__dirname, 'fixtures', 'json-ld-produits-de-toujours.txt')
+const ldToujours = async (source) => {
+  const parts = []
+  for (const [nom, p] of [
+    ['toile', product({ suffix: 'painting', files: OLD })],
+    ['poster', product({ suffix: 'poster', poster: true, files: OLD })],
+  ]) {
+    parts.push(`== ${nom}\n${await renderLd(p, { source })}`)
+    p.selected_variant = p.variants[1]
+    parts.push(`== ${nom} ?variant=\n${await renderLd(p, { source })}`)
+  }
+  return parts.join('\n')
+}
+
+test('rendu des données Google : un produit de toujours, toile ou poster, garde son JSON-LD à l’octet près', { skip: SKIP }, async () => {
+  if (process.env.RELEVE_JSON_LD) {
+    // Le relevé se fait sur la section d'avant : RELEVE_JSON_LD=<son fichier main-product.liquid>.
+    fs.writeFileSync(LD_TOUJOURS, await ldToujours(fs.readFileSync(process.env.RELEVE_JSON_LD, 'utf8')))
+  }
+  assert.equal(await ldToujours(), fs.readFileSync(LD_TOUJOURS, 'utf8'))
+  // Et c'est bien un produit seul, avec ses offres, comme avant.
+  const [old] = ldScripts(await renderLd(product({ suffix: 'painting', files: OLD })))
+  assert.equal(old['@type'], 'Product')
+  assert.ok(Array.isArray(old.offers))
+})
+
 const og = (html) => [...html.matchAll(/<meta property="(og:image[^"]*)" content="([^"]*)">/g)].map((m) => `${m[1]}=${m[2]}`)
 
 test('rendu de og:image : la photo studio et sa taille ; sinon page_image, à l’octet près', { skip: SKIP }, async () => {
@@ -497,6 +783,10 @@ test('rendu de la fiche 3D sans 3D : ses photos ne comptent jamais la photo stud
   }
   assert.deepEqual(await photos(product({ suffix: 'oeuvre-3d', poster: true, files: [FLAT, PASSE, PHOTO] }), 1), [])
   assert.deepEqual(await photos(product({ suffix: 'oeuvre-3d', files: [FLAT, PHOTO, ['bonsai-zen-detail.jpg', 2000, 2000]] }), 1), ['bonsai-zen-detail.jpg'])
+  // Les photos des cadres non plus, où qu'elles soient.
+  const cadres = ['blanc', 'noir', 'argent'].map((id) => [`photo-studio-bonsai-zen-cadre-${id}.jpg`, 2000, 2000])
+  assert.deepEqual(await photos(product({ suffix: 'oeuvre-3d', files: [FLAT, PHOTO, ...cadres, ['bonsai-zen-detail.jpg', 2000, 2000]] }), 1), ['bonsai-zen-detail.jpg'])
+  assert.deepEqual(await photos(product({ suffix: 'oeuvre-3d', poster: true, files: [FLAT, PHOTO, ['photo-studio-bonsai-zen-sans-cadre_9f8e.jpg', 2000, 2000]] }), 1), [])
   // Un produit de toujours sous ?view=oeuvre-3d : ses photos, telles quelles.
   assert.deepEqual(await photos(product({ suffix: 'painting', files: [...OLD, PHOTO] }), 3), ['bonsai-zen-chambre.jpg', PHOTO[0]])
 })
@@ -505,9 +795,9 @@ test('rendu de la carte, du panier et de « Mes j’aime » : aucune trace de la
   for (const poster of [false, true]) {
     const p = product({ suffix: 'oeuvre-3d', poster, files: [FLAT, PHOTO] })
     for (const context of ['carte', 'tiroir', 'panier']) {
-      for (const frame of ['sans', 'noir']) {
+      for (const frame of ['sans', 'noir', 'chene']) {
         const html = await engine().renderFile('artwork-object', { product: p, image: p.media[0], kind: poster ? 'poster' : 'toile', frame, context }, { globals: globals(p) })
-        assert.doesNotMatch(html, /photo-studio|oeuvre-card-sheen|width=2000/, `${context} ${frame}`)
+        assert.doesNotMatch(html, /photo-studio|oeuvre-card-sheen|oeuvre-card-moulure|oeuvre-card-baguette|width=2000/, `${context} ${frame}`)
         assert.equal(/data-context="/.test(html), context !== 'carte', `${context} : data-context`)
       }
     }

@@ -123,10 +123,11 @@ test('CSS : hors de tout @layer, et chaque classe du balisage y a sa règle', ()
   const classes = new Set(attrs.match(/\boeuvre-card[\w-]*|no-contour/g))
   assert.ok(classes.size >= 7)
   for (const name of classes) {
-    // La brillance du papier n'est que dans la photo studio : sa règle est dans son modèle, rien pour les visiteurs.
-    if (name === 'oeuvre-card-sheen') {
-      assert.doesNotMatch(block, /oeuvre-card-sheen/)
-      assert.match(read('templates/product.photo-studio.liquid'), /\.photo-studio \.oeuvre-card-sheen \{/)
+    // La brillance du papier et la caisse américaine en grand ne sont que dans les photos studio : leurs règles sont
+    // dans leur modèle, rien pour les visiteurs.
+    if (['oeuvre-card-sheen', 'oeuvre-card-moulure', 'oeuvre-card-baguette'].includes(name)) {
+      assert.doesNotMatch(block, new RegExp(name))
+      assert.match(read('templates/product.photo-studio.liquid'), new RegExp(`\\.photo-studio \\.${name}[ \\[:]`), name)
       continue
     }
     assert.match(block, new RegExp(`\\.${name}(?![\\w-])`), name)

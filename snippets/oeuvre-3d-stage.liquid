@@ -33,12 +33,12 @@
   # Sa place comptée comme les photos du repli (image_index : 1 pour la 1re image) : 2 pour un produit de
   # toujours, comme dans la galerie ; 1 pour un nouveau produit.
   assign art_position = flat_index | plus: 1
-  # La photo studio d'un nouveau produit (snippet artwork-studio-index) sert à Google et au partage : jamais parmi
-  # les photos du repli, où qu'elle soit. -1 sans elle (tout produit de toujours) : ses photos ne changent pas.
-  capture studio_index
-    render 'artwork-studio-index', product: product
+  # Les photos studio d'un nouveau produit (snippet artwork-studio-index : la principale et celle de chaque cadre)
+  # servent à Google et au partage : jamais parmi les photos du repli, où qu'elles soient. Rien sans elles (tout
+  # produit de toujours) : ses photos ne changent pas.
+  capture studio_indexes
+    render 'artwork-studio-index', product: product, toutes: true
   endcapture
-  assign studio_index = studio_index | default: -1 | plus: 0
   # Le jumeau publié (métachamps link.poster / link.painting), comme la bascule product-format-toggle.
   assign has_twin = false
   if product.metafields.link.painting.value != blank and product.metafields.link.painting.value.published_at != blank
@@ -248,8 +248,8 @@
     {{ 'sections.mma.oeuvre_3d_back' | t }}
   </button>
   {%- comment -%} Sans 3D : les autres photos, chargées seulement si on les demande : à partir de start_from,
-     ni l'image à plat (art_position, là où elle est), ni les contours blancs, ni la photo studio (studio_index :
-     elle est pour Google). Pour un produit de toujours,
+     ni l'image à plat (art_position, là où elle est), ni les contours blancs, ni les photos studio
+     (studio_indexes : elles sont pour Google). Pour un produit de toujours,
      ce sont celles de sa galerie. Un nouveau produit, qui n'a pas de galerie, n'a souvent que l'œuvre à plat
      et son contour blanc : l'œuvre reste alors seule, sans flèches (setupPhotos, dans
      assets/component-oeuvre-3d.js). Le fondu reste en animations réduites : c'est la décision 5, et la
@@ -260,7 +260,8 @@
       {%- if media.media_type == 'image' -%}
         {%- assign image_index = image_index | plus: 1 -%}
         {%- if image_index >= start_from and image_index != art_position -%}
-          {%- unless media.preview_image.src contains 'passe-partout' or forloop.index0 == studio_index -%}
+          {%- capture media_mark -%},{{ forloop.index0 }},{%- endcapture -%}
+          {%- unless media.preview_image.src contains 'passe-partout' or studio_indexes contains media_mark -%}
             {%- assign photo_alt = alts[forloop.index0] | default: media.alt -%}
             <img
               class="absolute inset-x-0 bottom-[72px] top-16 h-[calc(100%-136px)] w-full object-contain opacity-0 transition-opacity duration-300"

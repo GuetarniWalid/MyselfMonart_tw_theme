@@ -44,9 +44,13 @@ test('une seule lecture : le panier et la carte de « Mes j’aime » passent pa
   assert.match(card, /render 'artwork-line', product: product, variant: variant, context: 'carte', lazy: lazy_load/)
   assert.doesNotMatch(cart, /artwork-object|artwork-frame|artwork-flat-index|artwork-kind/)
   assert.doesNotMatch(card, /artwork-frame/)
-  // La lecture du cadre n'a qu'un appelant : ce snippet.
-  for (const file of fs.readdirSync(path.join(ROOT, 'snippets')).concat(fs.readdirSync(path.join(ROOT, 'sections')).map((f) => `../sections/${f}`))) {
-    if (file === 'artwork-line.liquid') continue
+  // La lecture du cadre n'a que deux appelants : ce snippet, et la page des photos studio, qui lit le cadre de
+  // chaque valeur de l'option cadre comme une ligne le lit (scripts/photo-studio.test.cjs).
+  const others = fs.readdirSync(path.join(ROOT, 'snippets'))
+    .concat(fs.readdirSync(path.join(ROOT, 'sections')).map((f) => `../sections/${f}`))
+    .concat(fs.readdirSync(path.join(ROOT, 'templates')).filter((f) => f.endsWith('.liquid')).map((f) => `../templates/${f}`))
+  for (const file of others) {
+    if (file === 'artwork-line.liquid' || file === '../templates/product.photo-studio.liquid') continue
     assert.doesNotMatch(code(`snippets/${file}`), /render 'artwork-frame'/, file)
   }
 })

@@ -12,8 +12,15 @@
   photos (snippets/oeuvre-3d-stage.liquid) ; cartes, panier, « Mes j'aime » et mails ne lisent que l'œuvre à
   plat (snippet artwork-flat-index, ou la 1re image).
 
+  Le serveur ajoute aussi, juste derrière elle, une photo par autre cadre vendu (« photo-studio-<handle>-cadre-…»,
+  « …-sans-cadre »), l'image des variantes de ce cadre : les données Google la lisent sur la variante. La
+  principale reste la 1re photo studio après l'œuvre à plat : le serveur la met en 2e image avant d'ajouter ou de
+  retirer les autres. Avec toutes: true, ce snippet rend l'index de chacune, principale comprise, pour les tenir
+  toutes hors des photos de la fiche 3D.
+
   Accepts:
     - product: {Object} le produit
+    - toutes: {Boolean} chaque photo studio, et non la seule principale. Facultatif.
 
   Usage :
     {%- capture studio_index -%}{% render 'artwork-studio-index', product: product %}{%- endcapture -%}
@@ -21,6 +28,7 @@
     {%- if studio_index >= 0 -%}… product.media[studio_index] …{%- endif -%}
   Le résultat sort sans aucun espace : rien, ou l'index. « | default: -1 | plus: 0 » en fait un nombre, -1 sans
   photo : ne jamais lire product.media[-1], qui serait le dernier média.
+  Avec toutes: true, rien ou les index entourés de virgules (« ,1,2,3, ») : chercher « ,<index>, » dedans.
   Tests : scripts/photo-studio.test.cjs.
 {%- endcomment -%}
 {%- liquid
@@ -28,11 +36,21 @@
     render 'artwork-kind', product: product, suffix: product.template_suffix, image_unique: true
   endcapture
   if kind != blank
+    assign found = false
     for media in product.media
       unless forloop.first
         if media.media_type == 'image' and media.preview_image.src contains 'photo-studio'
-          echo forloop.index0
-          break
+          if toutes
+            unless found
+              echo ','
+            endunless
+            echo forloop.index0
+            echo ','
+            assign found = true
+          else
+            echo forloop.index0
+            break
+          endif
         endif
       endunless
     endfor

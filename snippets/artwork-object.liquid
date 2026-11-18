@@ -9,8 +9,8 @@
       vignette d'une ligne du panier, telle que commandée (snippets/cart-item-artwork.liquid : page panier et
       tiroir), et la carte de « Mes j'aime » d'une œuvre aimée sur sa fiche, telle qu'aimée
       (snippets/card-product.liquid, branche « aimée ») ;
-    - la photo studio d'un nouveau produit (templates/product.photo-studio.liquid) : l'œuvre seule, en grand, au
-      mur, que le serveur prend pour Google et le partage.
+    - les photos studio d'un nouveau produit (templates/product.photo-studio.liquid) : l'œuvre seule, en grand, au
+      mur, puis dans chacun de ses cadres, que le serveur prend pour Google et le partage.
 
   Accepts:
     - product: {Object} le produit : le texte alternatif de son œuvre à plat (métachamp des textes alternatifs à
@@ -33,8 +33,10 @@
   Dans la photo studio, rien ne bouge, mais tout se voit : sans data-context, elle prend les règles de la carte et
   non celles du panier ; la vitre garde sa porte-fenêtre, que le modèle pose à une place fixe ; le poster sans
   cadre, qui n'a pas de vitre, y prend la brillance floue de son papier (.oeuvre-card-sheen, retour de Walid du
-  18/11/2026) ; l'œuvre arrive en grand et tout de suite, sans .skeleton. Les règles propres à la photo sont dans
-  le modèle, pas dans input.css : rien ne change pour les visiteurs.
+  18/11/2026) ; la caisse américaine d'une toile encadrée y a ses quatre baguettes en onglet
+  (.oeuvre-card-baguette), pour le fil du bois dans le sens de chacune, la lumière sur la baguette et le jour ;
+  l'œuvre arrive en grand et tout de suite, sans .skeleton. Les règles propres à la photo sont dans le modèle, pas
+  dans input.css : rien ne change pour les visiteurs.
   Tests : scripts/artwork-object.test.cjs, scripts/oeuvre-card.test.cjs, scripts/photo-studio.test.cjs.
 {%- endcomment -%}
 {%- liquid
@@ -70,6 +72,18 @@
   <div class="oeuvre-card-stage">
     <div class="oeuvre-card-piece">
       {%- if kind == 'poster' -%}<div class="oeuvre-card-sheet">{%- endif -%}
+      {%- if context == 'studio' and kind == 'toile' and frame != 'sans' -%}
+        {%- comment -%}
+          La caisse américaine en grand (photo studio seulement) : ses quatre baguettes en onglet, chacune avec le
+          fil du bois dans son sens, sa lumière et son jour, peintes sous la toile ; leurs règles sont dans le modèle.
+        {%- endcomment -%}
+        <span class="oeuvre-card-moulure" aria-hidden="true">
+          <span class="oeuvre-card-baguette" data-cote="haut" data-allow-empty></span>
+          <span class="oeuvre-card-baguette" data-cote="droite" data-allow-empty></span>
+          <span class="oeuvre-card-baguette" data-cote="bas" data-allow-empty></span>
+          <span class="oeuvre-card-baguette" data-cote="gauche" data-allow-empty></span>
+        </span>
+      {%- endif -%}
       <div class="oeuvre-card-face{% if context == 'carte' %} skeleton{% endif %}">
         {%- if context == 'carte' -%}
           {%- comment -%} Les paliers de primary_srcset (ancienne carte, snippets/card-product.liquid), pour l'œuvre. {%- endcomment -%}

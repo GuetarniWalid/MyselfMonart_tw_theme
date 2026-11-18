@@ -1,0 +1,1187 @@
+== toile
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "@id": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant",
+      "name": "Tableau Bonsaï zen",
+      "logo": "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/logo-myselfmonart.svg?v=1727019678",
+      "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant",
+      
+        "image": ["https://www.myselfmonart.com/cdn/shop/files/bonsai-zen-salon.jpg?v=1&width=1588"],
+        "description": "",
+        
+          "brand": {
+            "@type": "Brand",
+            "name": "MyselfMonArt"
+          },"additionalProperty": [
+    { "@type": "PropertyValue", "name": "sections.mma.product_3d_interactive_name", "value": "sections.mma.product_3d_interactive_value" },
+    { "@type": "PropertyValue", "name": "sections.mma.product_3d_preview_name", "value": "sections.mma.product_3d_preview_value" },
+    { "@type": "PropertyValue", "name": "sections.mma.product_3d_borders_name", "value": "sections.mma.product_3d_borders_value" },
+    { "@type": "PropertyValue", "name": "sections.mma.product_3d_frames_name", "value": "sections.mma.product_3d_frames_value" }
+  ],"hasMerchantReturnPolicy": {
+    "@type": "MerchantReturnPolicy",
+    "applicableCountry": "FR",
+    "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+    "merchantReturnDays": 14,
+    "returnMethod": "https://schema.org/ReturnByMail"
+  },
+          "offers": [{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 62.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403687874907",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        },"shippingDetails": {
+    "@type": "OfferShippingDetails",
+    "shippingRate": { "@type": "MonetaryAmount", "value": "0", "currency": "EUR" },
+    "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "FR" }
+  }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 102.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403687907675",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 102.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403687940443",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 107.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403687973211",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 112.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688005979",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 112.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688038747",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 64.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688071515",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 104.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688104283",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 104.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688137051",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 109.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688169819",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 114.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688202587",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 114.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688235355",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 66.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688268123",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 106.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688300891",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 106.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688333659",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 111.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688366427",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 116.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688399195",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 116.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688431963",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 68.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688464731",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 108.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688497499",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 108.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688530267",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 113.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688563035",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 118.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688595803",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 118.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688628571",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 70.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688661339",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 110.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688694107",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 110.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688726875",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 115.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688759643",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 120.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688792411",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 120.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688825179",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 94,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688857947",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 134,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688890715",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 134,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688923483",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 139,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688956251",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 144,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403688989019",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 144,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689021787",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 96,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689054555",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 136,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689087323",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 136,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689120091",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 141,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689152859",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 146,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689185627",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 146,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689218395",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 98,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689251163",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 138,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689283931",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 138,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689316699",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 143,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689349467",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 148,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689382235",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 148,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689415003",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 100,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689447771",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 140,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689480539",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 140,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689513307",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 145,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689546075",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 150,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689578843",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 150,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689611611",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 102,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689644379",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 142,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689677147",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 142,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689709915",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 147,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689742683",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 152,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689775451",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 152,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689808219",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 136.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689840987",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 176.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689873755",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 176.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689906523",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 181.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689939291",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 186.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403689972059",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 186.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690004827",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 138.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690037595",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 178.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690070363",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 178.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690103131",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 183.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690135899",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 188.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690168667",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 188.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690201435",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 140.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690234203",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 180.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690266971",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 180.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690299739",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 185.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690332507",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 190.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690365275",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 190.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690398043",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 142.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690430811",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 182.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690463579",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 182.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690496347",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 187.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690529115",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 192.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690561883",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 192.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690594651",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 144.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690627419",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 184.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690660187",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 184.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690692955",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 189.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690725723",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 194.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690758491",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 194.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690791259",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 199,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690824027",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 201,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690856795",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 203,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690889563",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 205,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690922331",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 207,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403690955099",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      }],
+                  "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.2", "ratingCount": "86", "worstRating": "1", "bestRating": "5" }}
+  </script>
+
+
+== toile ?variant=
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "@id": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant",
+      "name": "Tableau Bonsaï zen",
+      "logo": "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/logo-myselfmonart.svg?v=1727019678",
+      "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant",
+      
+        "image": ["https://www.myselfmonart.com/cdn/shop/files/bonsai-zen-salon.jpg?v=1&width=1588"],
+        "description": "",
+        
+          "brand": {
+            "@type": "Brand",
+            "name": "MyselfMonArt"
+          },"additionalProperty": [
+    { "@type": "PropertyValue", "name": "sections.mma.product_3d_interactive_name", "value": "sections.mma.product_3d_interactive_value" },
+    { "@type": "PropertyValue", "name": "sections.mma.product_3d_preview_name", "value": "sections.mma.product_3d_preview_value" },
+    { "@type": "PropertyValue", "name": "sections.mma.product_3d_borders_name", "value": "sections.mma.product_3d_borders_value" },
+    { "@type": "PropertyValue", "name": "sections.mma.product_3d_frames_name", "value": "sections.mma.product_3d_frames_value" }
+  ],"hasMerchantReturnPolicy": {
+    "@type": "MerchantReturnPolicy",
+    "applicableCountry": "FR",
+    "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+    "merchantReturnDays": 14,
+    "returnMethod": "https://schema.org/ReturnByMail"
+  },
+          "offers": [{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 102.5,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/tableau-sur-toile-bonsai-zen-serenite-vegetale-et-equilibre-apaisant?variant=54403687907675",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        },"shippingDetails": {
+    "@type": "OfferShippingDetails",
+    "shippingRate": { "@type": "MonetaryAmount", "value": "0", "currency": "EUR" },
+    "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "FR" }
+  }
+                      }],
+                  "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.2", "ratingCount": "86", "worstRating": "1", "bestRating": "5" }}
+  </script>
+
+
+== poster
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "@id": "https://www.myselfmonart.com/products/poster-bonsai-zen-patience-vegetale-et-harmonie-silencieuse",
+      "name": "Poster Bonsaï zen",
+      "logo": "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/logo-myselfmonart.svg?v=1727019678",
+      "url": "https://www.myselfmonart.com/products/poster-bonsai-zen-patience-vegetale-et-harmonie-silencieuse",
+      
+        "image": ["https://www.myselfmonart.com/cdn/shop/files/bonsai-zen-salon.jpg?v=1&width=1588"],
+        "description": "",
+        
+          "brand": {
+            "@type": "Brand",
+            "name": "MyselfMonArt"
+          },"additionalProperty": [
+    { "@type": "PropertyValue", "name": "sections.mma.product_3d_interactive_name", "value": "sections.mma.product_3d_interactive_value" },
+    { "@type": "PropertyValue", "name": "sections.mma.product_3d_preview_name", "value": "sections.mma.product_3d_preview_value_poster" },
+    { "@type": "PropertyValue", "name": "sections.mma.product_3d_frames_name", "value": "sections.mma.product_3d_frames_value_poster" },
+    { "@type": "PropertyValue", "name": "sections.mma.product_3d_pp_name_poster", "value": "sections.mma.product_3d_pp_value_poster" }
+  ],"hasMerchantReturnPolicy": {
+    "@type": "MerchantReturnPolicy",
+    "applicableCountry": "FR",
+    "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+    "merchantReturnDays": 14,
+    "returnMethod": "https://schema.org/ReturnByMail"
+  },
+          "offers": [{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 24.9,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/poster-bonsai-zen-patience-vegetale-et-harmonie-silencieuse?variant=54403718349147",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        },"shippingDetails": {
+    "@type": "OfferShippingDetails",
+    "shippingRate": { "@type": "MonetaryAmount", "value": "0", "currency": "EUR" },
+    "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "FR" }
+  }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 44.9,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/poster-bonsai-zen-patience-vegetale-et-harmonie-silencieuse?variant=54403849027931",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 64.9,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/poster-bonsai-zen-patience-vegetale-et-harmonie-silencieuse?variant=54403849060699",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 71.9,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/poster-bonsai-zen-patience-vegetale-et-harmonie-silencieuse?variant=54403849093467",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 47.9,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/poster-bonsai-zen-patience-vegetale-et-harmonie-silencieuse?variant=54403849126235",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 94.9,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/poster-bonsai-zen-patience-vegetale-et-harmonie-silencieuse?variant=54403849159003",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      },{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 159.9,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/poster-bonsai-zen-patience-vegetale-et-harmonie-silencieuse?variant=54403849191771",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        }
+                      }],
+                  "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.2", "ratingCount": "86", "worstRating": "1", "bestRating": "5" }}
+  </script>
+
+
+== poster ?variant=
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "@id": "https://www.myselfmonart.com/products/poster-bonsai-zen-patience-vegetale-et-harmonie-silencieuse",
+      "name": "Poster Bonsaï zen",
+      "logo": "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/logo-myselfmonart.svg?v=1727019678",
+      "url": "https://www.myselfmonart.com/products/poster-bonsai-zen-patience-vegetale-et-harmonie-silencieuse",
+      
+        "image": ["https://www.myselfmonart.com/cdn/shop/files/bonsai-zen-salon.jpg?v=1&width=1588"],
+        "description": "",
+        
+          "brand": {
+            "@type": "Brand",
+            "name": "MyselfMonArt"
+          },"additionalProperty": [
+    { "@type": "PropertyValue", "name": "sections.mma.product_3d_interactive_name", "value": "sections.mma.product_3d_interactive_value" },
+    { "@type": "PropertyValue", "name": "sections.mma.product_3d_preview_name", "value": "sections.mma.product_3d_preview_value_poster" },
+    { "@type": "PropertyValue", "name": "sections.mma.product_3d_frames_name", "value": "sections.mma.product_3d_frames_value_poster" },
+    { "@type": "PropertyValue", "name": "sections.mma.product_3d_pp_name_poster", "value": "sections.mma.product_3d_pp_value_poster" }
+  ],"hasMerchantReturnPolicy": {
+    "@type": "MerchantReturnPolicy",
+    "applicableCountry": "FR",
+    "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+    "merchantReturnDays": 14,
+    "returnMethod": "https://schema.org/ReturnByMail"
+  },
+          "offers": [{
+                        "@type": "Offer","availability": "https://schema.org/InStock",
+                        "price": 44.9,
+                        "priceValidUntil": "2027-11-18",
+                        "priceCurrency": "EUR",
+                        "url": "https://www.myselfmonart.com/products/poster-bonsai-zen-patience-vegetale-et-harmonie-silencieuse?variant=54403849027931",
+                        "seller": {
+                          "@type": "Organization",
+                          "name": "MyselfMonArt"
+                        },"shippingDetails": {
+    "@type": "OfferShippingDetails",
+    "shippingRate": { "@type": "MonetaryAmount", "value": "0", "currency": "EUR" },
+    "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "FR" }
+  }
+                      }],
+                  "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.2", "ratingCount": "86", "worstRating": "1", "bestRating": "5" }}
+  </script>
+

@@ -797,6 +797,91 @@
    pour tout produit de toujours, la 1re image du produit, comme toujours. {%- endcomment -%}
 {%- capture studio_index -%}{% render 'artwork-studio-index', product: product %}{%- endcapture -%}
 {%- assign studio_index = studio_index | default: -1 | plus: 0 -%}
+{%- comment -%} Un nouveau produit (modèle oeuvre-3d : snippet artwork-kind, image_unique) se décrit en groupe de
+   produits, comme le demande Google pour les variantes (developers.google.com/search/docs/appearance/
+   structured-data/product-variants) : le groupe (son adresse, ses images, sa marque, sa note), puis chaque variante,
+   avec son nom, son identifiant (sa référence, sinon son id), sa taille, son cadre (la couleur, la seule propriété
+   de Google qui le dise) et son image : la photo de son cadre, que le serveur lui donne (templates/
+   product.photo-studio.liquid) ; sans elle, l'image du groupe. Son offre est celle d'avant : prix, disponibilité,
+   adresse de la variante ; la livraison et les retours, décrits une fois et cités par chaque offre. Sur une adresse
+   ?variant=, la seule variante choisie (ld_variants), comme avant. Tout autre produit garde sa ligne de toujours,
+   à l'octet près. {%- endcomment -%}
+{%- capture group_kind -%}{% render 'artwork-kind', product: product, suffix: product.template_suffix, image_unique: true %}{%- endcapture -%}
+{%- if group_kind != blank -%}
+  {%- liquid
+    if studio_index >= 0
+      assign group_image = product.media[studio_index]
+    else
+      assign group_image = product.featured_media
+    endif
+    # Le cadre : l'option 3 d'une toile (Tailles, Bordures, Cadres), la 2 d'un poster (Tailles, Cadres).
+    assign frame_position = 3
+    if group_kind == 'poster'
+      assign frame_position = 2
+    endif
+    assign frame_key = 'option' | append: frame_position
+    assign has_frame_option = false
+    if product.options_with_values.size >= frame_position
+      assign has_frame_option = true
+    endif
+  -%}
+<script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org/",
+      "@type": "ProductGroup",
+      "@id": "{{ request.origin | append: product.url }}",
+      "name": {{ product.title | json }},
+      "logo": "https://cdn.shopify.com/s/files/1/0623/2388/4287/files/logo-myselfmonart.svg?v=1727019678",
+      "url": {{ request.origin | append: product.url | json }},
+      {%- if product.metafields.link.mother_collection.value.title != blank %}
+      "category": {{ product.metafields.link.mother_collection.value.title | json }},
+      {%- endif %}
+      "image": [{% if studio_index >= 0 %}{{ product.media[studio_index] | image_url: width: product.media[studio_index].preview_image.width | prepend: "https:" | json }},{{ product.media[flat_index] | image_url: width: product.media[flat_index].preview_image.width | prepend: "https:" | json }}{% else %}{{ product.featured_media | image_url: width: product.featured_media.preview_image.width | prepend: "https:" | json }}{% endif %}],
+      "description": {{ product.description | strip_html | json }},
+      "brand": {
+        "@type": "Brand",
+        "name": {{ product.vendor | json }}
+      },
+      "productGroupID": {{ product.id | append: '' | json }},
+      "variesBy": ["https://schema.org/size"{% if has_frame_option %}, "https://schema.org/color"{% endif %}]{{ product_3d_props }},
+      "hasVariant": [
+        {%- comment -%} Une variante en trois lignes : jusqu'à 120 variantes par toile, la fiche ne s'alourdit pas
+           d'espaces. {%- endcomment -%}
+        {%- for variant in ld_variants -%}
+          {%- assign variant_image = variant.featured_media | default: group_image %}
+        { "@type": "Product", "sku": {{ variant.sku | default: variant.id | append: '' | json }}, "name": {{ product.title | append: ' - ' | append: variant.title | json }},
+          "image": {{ variant_image | image_url: width: variant_image.preview_image.width | prepend: "https:" | json }}, "size": {{ variant.option1 | json }}{% if has_frame_option and variant[frame_key] != blank %}, "color": {{ variant[frame_key] | json }}{% endif %},
+          "offers": { "@type": "Offer",{% if variant.barcode.size == 12 %} "gtin12": {{ variant.barcode }},{% endif %}{% if variant.barcode.size == 13 %} "gtin13": {{ variant.barcode }},{% endif %}{% if variant.barcode.size == 14 %} "gtin14": {{ variant.barcode }},{% endif %} "availability": "https://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}", "price": {{ variant.price | divided_by: 100.00 | json }}, "priceValidUntil": "{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' }}", "priceCurrency": {{ cart.currency.iso_code | json }}, "url": {{ request.origin | append: variant.url | json }}, "seller": { "@type": "Organization", "name": {{ product.vendor | json }} }{% if section.settings.enable_merchant_schema %}, "shippingDetails": { "@id": "#livraison" }, "hasMerchantReturnPolicy": { "@id": "#retours" }{% endif %} } }{% unless forloop.last %},{% endunless %}
+        {%- endfor %}
+      ]
+      {%- if reviews_structured_data != blank -%},
+      {{ reviews_structured_data }}
+      {%- endif %}
+    }
+    {%- if section.settings.enable_merchant_schema -%},
+    {
+      "@context": "https://schema.org/",
+      "@type": "OfferShippingDetails",
+      "@id": "#livraison",
+      {%- if section.settings.shipping_free %}
+      "shippingRate": { "@type": "MonetaryAmount", "value": "0", "currency": {{ cart.currency.iso_code | json }} },
+      {%- endif %}
+      "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "{{ sd_country }}" }
+    },
+    {
+      "@context": "https://schema.org/",
+      "@type": "MerchantReturnPolicy",
+      "@id": "#retours",
+      "applicableCountry": "{{ sd_country }}",
+      "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+      "merchantReturnDays": {{ sd_return_days }},
+      "returnMethod": "https://schema.org/ReturnByMail"
+    }
+    {%- endif %}
+  ]
+</script>
+{%- else -%}
 <script type="application/ld+json">
     {
       "@context": "https://schema.org/",
@@ -849,6 +934,7 @@
                   {%- endif -%}
     }
   </script>
+{%- endif %}
 
 {% schema %}
   {

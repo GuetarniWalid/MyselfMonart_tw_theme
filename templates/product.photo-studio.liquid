@@ -1,31 +1,39 @@
 {%- layout none -%}
 {%- comment -%}
-  La photo studio d'une œuvre : l'œuvre seule, en grand, sur un mur clair, dessinée par le CSS des vignettes de
-  collection (input.css, « Vignette d'œuvre » ; snippet artwork-object, context studio). Juste après la
-  publication d'un nouveau produit (modèle oeuvre-3d), le serveur ouvre cette page, la prend en 2000 × 2000 px et
-  l'ajoute au produit après l'œuvre à plat, sous un nom de fichier qui commence par « photo-studio- » : elle devient
-  la 1re image des données Google de la fiche et son og:image (snippet artwork-studio-index). Rendu de référence
-  validé par Walid le 18/11/2026 (mur B, « clair »).
+  Les photos studio d'une œuvre : l'œuvre seule, en grand, sur un mur clair, dessinée par le CSS des vignettes de
+  collection (input.css, « Vignette d'œuvre » ; snippet artwork-object, context studio), puis dans chacun de ses
+  cadres. Juste après la publication d'un nouveau produit (modèle oeuvre-3d), le serveur ouvre cette page, prend
+  chaque photo en 2000 × 2000 px et les ajoute au produit après l'œuvre à plat, sous des noms de fichier qui
+  commencent par « photo-studio- » :
+    - « principale » devient la 1re image des données Google de la fiche et son og:image (snippet
+      artwork-studio-index). Rendu de référence validé par Walid le 18/11/2026 (mur B, « clair ») ;
+    - chaque photo de cadre devient l'image des variantes de ce cadre, que les données Google de la fiche
+      décrivent une à une (sections/main-product.liquid, groupe de produits).
 
   Contrat avec le serveur (à ne pas changer sans le lui dire) :
     - adresse : /products/<handle>?view=photo-studio, et en option &variant=<id> ;
     - un document autonome : ni layout, ni script de Shopify, ni suivi ; noindex ; output.css ;
-    - chaque photo est un élément [data-photo="<nom>"] de 1000 × 1000 px de CSS, collé en haut à gauche, sans
-      marge (le serveur la prend en 2x) ; une seule pour l'instant : « principale » ;
-    - par défaut, la toile sans cadre, le poster sous verre au cadre noir, sans contour blanc, comme sa carte de
-      collection (snippets/card-product.liquid) ; avec ?variant=, l'œuvre telle que cette variante la dit
-      (snippet artwork-line : son cadre, lu par artwork-frame ; un poster sans cadre a la brillance floue de son
-      papier) ;
-    - prête quand <html> porte data-photo-pret="1" : l'œuvre décodée, le mur chargé, la trame posée ;
-      data-photo-erreur dit sinon ce qui a manqué : « oeuvre » (ni toile ni poster, ou pas d'œuvre à plat),
-      « image », « mur », « style » (output.css absent), « trame » ;
-    - ressources : la boutique seulement (/cdn/shop/… : la feuille, le mur, l'œuvre) ; le grain et la trame sont
-      dessinés dans la page.
+    - chaque photo est un élément [data-photo="<nom>"] de 1000 × 1000 px de CSS, sans marge, les unes sous les
+      autres (le serveur les prend en 2x), dans cet ordre :
+        1. « principale » : par défaut la toile sans cadre, le poster sous verre au cadre noir, sans contour blanc,
+           comme sa carte de collection (snippets/card-product.liquid) ; avec ?variant=, l'œuvre telle que cette
+           variante la dit (snippet artwork-line : son cadre, lu par artwork-frame) ;
+        2. une par autre cadre que le produit vend, dans l'ordre des valeurs de son option cadre (option 3 d'une
+           toile, 2 d'un poster), le cadre de chaque valeur lu par artwork-frame : « cadre-<id> » pour une toile
+           (blanc, noir, argent, chene, noyer : la caisse américaine de l'atelier), « sans-cadre » pour un poster
+           (son papier, avec la brillance floue). La photo principale montre déjà le cadre par défaut (la toile
+           sans cadre, le poster au cadre noir) : il n'a pas de photo à lui ;
+    - prête quand <html> porte data-photo-pret="1" : chaque œuvre décodée, le mur et le bois chargés, la trame
+      posée ; data-photo-erreur dit sinon ce qui a manqué : « oeuvre » (ni toile ni poster, ou pas d'œuvre à plat),
+      « image », « mur », « bois », « style » (output.css absent), « trame » ;
+    - ressources : la boutique seulement (/cdn/shop/… : la feuille, le mur, le bois des cadres, l'œuvre) ; le
+      grain et la trame sont dessinés dans la page.
   Un produit de toujours s'y voit aussi (sa vraie œuvre est sa 2e image, snippet artwork-flat-index), pour
-  vérifier en ligne ; seuls les nouveaux produits reçoivent la photo.
+  vérifier en ligne ; seuls les nouveaux produits reçoivent les photos.
 
-  Les règles propres à la photo (mur, grain, 84 %, trame, reflet fixe, brillance du papier) sont ici et nulle part
-  ailleurs : output.css ne change pas pour les visiteurs. Tests : scripts/photo-studio.test.cjs.
+  Les règles propres à la photo (mur, grain, 84 %, trame, reflet fixe, brillance du papier, caisse américaine en
+  grand) sont ici et nulle part ailleurs : output.css ne change pas pour les visiteurs. Tests :
+  scripts/photo-studio.test.cjs.
 {%- endcomment -%}
 {%- liquid
   # L'œuvre à plat, à sa place (snippet artwork-flat-index), toile ou poster (artwork-kind), mise en objet.
@@ -38,6 +46,8 @@
   assign flat_index = flat_index | plus: 0
   assign art = product.images[flat_index]
   assign artwork = ''
+  # Les cadres des autres photos, ids du moteur 3D séparés par des virgules (« ,blanc,noir, »).
+  assign frames = ','
   if kind != blank and art != blank
     if product.selected_variant
       capture artwork
@@ -52,9 +62,38 @@
         render 'artwork-object', product: product, image: art, kind: kind, frame: frame, context: 'studio'
       endcapture
     endif
+    # Une photo par cadre vendu : chaque valeur de l'option cadre, lue comme une ligne la lit (artwork-frame,
+    # avec la 1re variante qui la porte). Le cadre par défaut a déjà sa photo, la principale.
+    assign default_frame = 'sans'
+    assign frame_position = 3
+    assign frame_key = 'option3'
+    if kind == 'poster'
+      assign default_frame = 'noir'
+      assign frame_position = 2
+      assign frame_key = 'option2'
+    endif
+    for option in product.options_with_values
+      if option.position == frame_position
+        for value in option.values
+          assign frame_variant = product.variants | where: frame_key, value.name | first
+          if frame_variant
+            capture frame
+              render 'artwork-frame', product: product, variant: frame_variant, kind: kind
+            endcapture
+            assign frame_mark = ',' | append: frame | append: ','
+            unless frame == default_frame or frames contains frame_mark
+              assign frames = frames | append: frame | append: ','
+            endunless
+          endif
+        endfor
+      endif
+    endfor
   endif
-  # La texture du mur, pour la feuille et pour l'attente de la photo : une seule adresse.
+  assign frames = frames | remove_first: ',' | split: ','
+  # La texture du mur, pour la feuille et pour l'attente de la photo : une seule adresse. Le bois des cadres, celui
+  # de la fiche 3D (assets/oeuvre-3d-engine.js, WOOD_TILE_CM ; snippets/oeuvre-3d-stage.liquid) : son fil.
   assign wall_texture = 'fond-mur-beige-clair-texture.webp' | asset_url
+  assign wood_texture = 'texture-chene-clair-cadre.jpg' | asset_url
 -%}
 <!doctype html>
 <html lang="{{ request.locale.iso_code }}"{% if artwork == blank %} data-photo-erreur="oeuvre"{% endif %}>
@@ -67,9 +106,9 @@
     {{ 'output.css' | asset_url | stylesheet_tag }}
     <style>
       html, body { margin: 0; background: #fff; }
-      /* La photo : 1000 × 1000 px de CSS, collée en haut à gauche ; le serveur la prend en 2x. Le mur clair (mur B,
-         choix de Walid du 18/11/2026) : la lumière en haut à gauche, un peu d'ombre en bas à droite, la texture du
-         mur beige clair. */
+      /* Une photo : 1000 × 1000 px de CSS, les unes sous les autres ; le serveur les prend en 2x. Le mur clair
+         (mur B, choix de Walid du 18/11/2026) : la lumière en haut à gauche, un peu d'ombre en bas à droite, la
+         texture du mur beige clair. */
       .photo-studio {
         position: relative; width: 1000px; height: 1000px; overflow: hidden;
         background:
@@ -108,6 +147,84 @@
           calc(.002 * var(--s)) calc(.003 * var(--s)) calc(.004 * var(--s)) rgba(38, 27, 18, .22),
           calc(.010 * var(--s)) calc(.014 * var(--s)) calc(.034 * var(--s)) rgba(38, 27, 18, .13);
       }
+
+      /* ---------- La caisse américaine en grand (toile encadrée) ----------
+         En vignette, une baguette unie et un jour peint autour de la toile suffisent ; en 2000 px, ils paraissaient
+         plats et gris. Ici, ses quatre baguettes en onglet (snippet artwork-object : .oeuvre-card-baguette), chacune :
+           - à la teinte du vrai cadre de l'atelier, mesurée sur ses photos au milieu de la baguette (le noir de la
+             toile, #4a4a4a, n'est pas celui du poster) ; la face reste plate, sans gradin (refus de Walid du 12/11) ;
+           - avec le fil du bois de la fiche 3D dans son sens (le bois naturel, le noyer ; l'argent brossé, plus fin),
+             en niveaux de gris centrés, posé en incrustation sur la teinte : il en garde la moyenne ;
+           - avec la lumière de la photo, en haut à gauche : l'arête extérieure en haut et à gauche, l'arête
+             intérieure en bas et à droite prennent la lumière ; leurs opposées sont à l'ombre ;
+           - avec le jour entre la face et la toile, à la teinte du cadre, un peu dans l'ombre de la baguette en haut
+             et à gauche, presque la teinte du cadre en bas et à droite : jamais un trait sombre, qui se lirait comme
+             la bordure noire (règle de Walid du 17/11/2026). Il a ses angles vifs, ceux de la paroi du cadre.
+         --B : la face de la baguette ; --T : la face et le jour, jusqu'au bord de la toile. */
+      .photo-studio .oeuvre-card[data-kind="toile"][data-frame="blanc"] { --frame: #efefef; --fil: 0; }
+      .photo-studio .oeuvre-card[data-kind="toile"][data-frame="noir"] { --frame: #484848; --fil: 0; }
+      .photo-studio .oeuvre-card[data-kind="toile"][data-frame="argent"] {
+        --frame: #9a9380; --fil: .55; --fil-travers: .023; --fil-long: .93; --fil-contraste: 2.5;
+        --metal-dehors: rgba(0, 0, 0, .07); --metal-dedans: rgba(255, 255, 255, .11);
+      }
+      .photo-studio .oeuvre-card[data-kind="toile"][data-frame="chene"] { --frame: #beac98; --fil: .6; --fil-travers: .07; --fil-long: .49; --fil-contraste: 3; }
+      .photo-studio .oeuvre-card[data-kind="toile"][data-frame="noyer"] { --frame: #886654; --fil: .72; --fil-travers: .07; --fil-long: .44; --fil-contraste: 4; }
+      .photo-studio .oeuvre-card[data-kind="toile"][data-frame] .oeuvre-card-face { box-shadow: none; }
+      .photo-studio .oeuvre-card-moulure {
+        position: absolute; inset: 0;
+        --B: calc(var(--fb) * var(--s));
+        --T: calc((var(--fb) + var(--fj)) * var(--s));
+      }
+      .photo-studio .oeuvre-card-baguette { position: absolute; inset: 0; overflow: hidden; background: var(--frame); }
+      .photo-studio .oeuvre-card-baguette[data-cote="haut"] { clip-path: polygon(0 0, 100% 0, calc(100% - var(--T)) var(--T), var(--T) var(--T)); }
+      .photo-studio .oeuvre-card-baguette[data-cote="droite"] { clip-path: polygon(100% 0, 100% 100%, calc(100% - var(--T)) calc(100% - var(--T)), calc(100% - var(--T)) var(--T)); }
+      .photo-studio .oeuvre-card-baguette[data-cote="bas"] { clip-path: polygon(0 100%, 100% 100%, calc(100% - var(--T)) calc(100% - var(--T)), var(--T) calc(100% - var(--T))); }
+      .photo-studio .oeuvre-card-baguette[data-cote="gauche"] { clip-path: polygon(0 0, var(--T) var(--T), var(--T) calc(100% - var(--T)), 0 100%); }
+      /* Le fil : l'image du chêne de la fiche 3D, en gris centré sur 50 %, en long sur les montants, tournée d'un
+         quart sur la traverse du haut et celle du bas ; chaque baguette taillée dans un autre endroit de la planche. */
+      .photo-studio .oeuvre-card-baguette::before {
+        content: ""; position: absolute; left: 50%; top: 50%;
+        width: calc(var(--ew) * var(--s)); height: calc(var(--eh) * var(--s));
+        translate: -50% -50%;
+        background: url("{{ wood_texture }}") var(--fil-x, 0) 0 / calc(var(--fil-travers, .1) * var(--s)) calc(var(--fil-long, .2) * var(--s));
+        filter: grayscale(1) brightness(.7) contrast(var(--fil-contraste, 3));
+        mix-blend-mode: overlay; opacity: var(--fil);
+      }
+      .photo-studio .oeuvre-card-baguette[data-cote="haut"]::before,
+      .photo-studio .oeuvre-card-baguette[data-cote="bas"]::before {
+        width: calc(var(--eh) * var(--s)); height: calc(var(--ew) * var(--s)); rotate: 90deg;
+      }
+      .photo-studio .oeuvre-card-baguette[data-cote="droite"]::before { --fil-x: 37%; }
+      .photo-studio .oeuvre-card-baguette[data-cote="bas"]::before { --fil-x: 61%; }
+      .photo-studio .oeuvre-card-baguette[data-cote="gauche"]::before { --fil-x: 83%; }
+      /* La lumière, du bord extérieur de chaque baguette vers la toile (--sens) : son profil (--profil, arêtes et
+         jour), le reflet de l'argent, plus clair vers la toile (--metal-*) ; puis celle de la pièce, qui baisse
+         doucement du haut à gauche au bas à droite, d'un seul tenant sur les quatre baguettes. */
+      .photo-studio .oeuvre-card-baguette::after {
+        content: ""; position: absolute; inset: 0;
+        background:
+          linear-gradient(var(--sens), var(--profil)) var(--place) / var(--taille) no-repeat,
+          linear-gradient(var(--sens), var(--metal-dehors, transparent) 0, var(--metal-dedans, transparent) var(--B), transparent var(--B)) var(--place) / var(--taille) no-repeat,
+          linear-gradient(135deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, 0) 45%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, .07));
+      }
+      .photo-studio .oeuvre-card-baguette[data-cote="haut"] { --sens: 180deg; --place: 0 0; --taille: 100% var(--T); --profil: var(--profil-lumiere); }
+      .photo-studio .oeuvre-card-baguette[data-cote="gauche"] { --sens: 90deg; --place: 0 0; --taille: var(--T) 100%; --profil: var(--profil-lumiere); }
+      .photo-studio .oeuvre-card-baguette[data-cote="bas"] { --sens: 0deg; --place: 0 100%; --taille: 100% var(--T); --profil: var(--profil-ombre); }
+      .photo-studio .oeuvre-card-baguette[data-cote="droite"] { --sens: 270deg; --place: 100% 0; --taille: var(--T) 100%; --profil: var(--profil-ombre); }
+      /* Du bord extérieur vers la toile. Côté lumière (haut, gauche) : l'arête extérieure claire, l'arête
+         intérieure à l'ombre, le jour dans l'ombre de la baguette. Côté ombre (bas, droite) : l'inverse, et le
+         jour presque à la teinte du cadre. */
+      .photo-studio .oeuvre-card-moulure {
+        --arete: calc(.005 * var(--s));
+        --profil-lumiere:
+          rgba(0, 0, 0, .10) 0, rgba(255, 255, 255, .30) calc(.15 * var(--arete)), rgba(255, 255, 255, 0) var(--arete),
+          rgba(0, 0, 0, 0) calc(var(--B) - .6 * var(--arete)), rgba(0, 0, 0, .16) var(--B),
+          rgba(28, 20, 14, .16) var(--B), rgba(28, 20, 14, .09) var(--T);
+        --profil-ombre:
+          rgba(0, 0, 0, .22) 0, rgba(0, 0, 0, .10) calc(.4 * var(--arete)), rgba(0, 0, 0, 0) var(--arete),
+          rgba(255, 255, 255, 0) calc(var(--B) - .6 * var(--arete)), rgba(255, 255, 255, .26) var(--B),
+          rgba(28, 20, 14, .04) var(--B), rgba(28, 20, 14, .06) var(--T);
+      }
     </style>
   </head>
   <body>
@@ -115,12 +232,19 @@
       <div class="photo-studio" data-photo="principale">
         {{- artwork -}}
       </div>
+      {%- for frame in frames -%}
+        {%- if frame != blank -%}
+          <div class="photo-studio" data-photo="{% if frame == 'sans' %}sans-cadre{% else %}cadre-{{ frame }}{% endif %}">
+            {%- render 'artwork-object', product: product, image: art, kind: kind, frame: frame, context: 'studio' -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
       <script>
-        /* La photo est prête quand son œuvre est décodée, le mur chargé et la trame de la toile posée : le serveur
-           attend data-photo-pret="1" sur <html> pour la prendre ; data-photo-erreur dit ce qui a manqué. */
+        /* Les photos sont prêtes quand chaque œuvre est décodée, le mur et le bois des cadres chargés, et la trame
+           de la toile posée : le serveur attend data-photo-pret="1" sur <html> pour les prendre ;
+           data-photo-erreur dit ce qui a manqué. */
         (() => {
           const root = document.documentElement
-          const photo = document.querySelector('[data-photo="principale"]')
           const fail = (why) => {
             if (!root.dataset.photoErreur) root.dataset.photoErreur = why
           }
@@ -153,25 +277,31 @@
               }
             }
             g.putImageData(tile, 0, 0)
-            photo.style.setProperty('--weave', `url(${canvas.toDataURL()})`)
+            root.style.setProperty('--weave', `url(${canvas.toDataURL()})`)
           } catch (error) {
             fail('trame')
             return
           }
-          const wall = new Image()
-          wall.src = {{ wall_texture | json }}
           const decoded = (image, why) => image.decode().catch((error) => {
             fail(why)
             throw error
           })
-          Promise.all([decoded(photo.querySelector('img'), 'image'), decoded(wall, 'mur'), document.fonts.ready])
+          const load = (src) => {
+            const image = new Image()
+            image.src = src
+            return image
+          }
+          const waits = [...document.querySelectorAll('[data-photo] img')].map((image) => decoded(image, 'image'))
+          waits.push(decoded(load({{ wall_texture | json }}), 'mur'))
+          if (document.querySelector('.oeuvre-card-baguette')) waits.push(decoded(load({{ wood_texture | json }}), 'bois'))
+          Promise.all([...waits, document.fonts.ready])
             .then(() => {
               /* Le style des vignettes (output.css) est là : la scène de l'œuvre est un conteneur. */
-              if (getComputedStyle(photo.querySelector('.oeuvre-card-stage')).containerType !== 'inline-size') {
+              if (getComputedStyle(document.querySelector('[data-photo] .oeuvre-card-stage')).containerType !== 'inline-size') {
                 fail('style')
                 return
               }
-              /* Deux images de l'écran : la photo est peinte avec tout ce qui vient d'arriver. */
+              /* Deux images de l'écran : les photos sont peintes avec tout ce qui vient d'arriver. */
               requestAnimationFrame(() => requestAnimationFrame(() => {
                 root.dataset.photoPret = '1'
               }))
