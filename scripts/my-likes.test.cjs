@@ -189,9 +189,10 @@ test('carte d’une œuvre aimée sur sa fiche : toute toile et tout poster, nou
 test('carte d’une œuvre aimée : un poster sous verre charge le script de son reflet, la toile et le poster en papier non', () => {
   const { branch } = likedBranch()
   assert.deepEqual(branch.match(/<script[^>]*>/g), [`<script type="module" src="{{ 'oeuvre-card-reflet.js' | asset_url }}">`])
-  // Le reflet qui passe : la porte-fenêtre d'une vitre de carte (snippets/artwork-object.liquid), seulement là.
+  // Le reflet qui passe : la porte-fenêtre d'une vitre de carte (snippets/artwork-object.liquid), seulement là (la
+  // photo studio a aussi la sienne, fixe, et ne passe jamais par la carte).
   assert.match(branch, /{%-\s*if liked_object contains 'oeuvre-card-glare'\s*-%}\s*<script type="module"/)
-  assert.match(code('snippets/artwork-object.liquid'), /{%-?\s*if frame != 'sans'\s*-?%}\s*{%-?\s*if context == 'carte'\s*-?%}\s*<span class="oeuvre-card-glass" aria-hidden="true"><span class="oeuvre-card-glare" data-allow-empty>/)
+  assert.match(code('snippets/artwork-object.liquid'), /{%-?\s*if frame != 'sans'\s*-?%}\s*{%-?\s*if context == 'carte' or context == 'studio'\s*-?%}\s*<span class="oeuvre-card-glass" aria-hidden="true"><span class="oeuvre-card-glare" data-allow-empty>/)
 })
 
 test('le lien de la carte d’une œuvre aimée ouvre la fiche sur la variante aimée ; le prix ne change pas', () => {

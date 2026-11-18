@@ -8,27 +8,34 @@
     - une toile ou un poster tel qu'une ligne le dit, nouveau ou de toujours (snippets/artwork-line.liquid) : la
       vignette d'une ligne du panier, telle que commandée (snippets/cart-item-artwork.liquid : page panier et
       tiroir), et la carte de « Mes j'aime » d'une œuvre aimée sur sa fiche, telle qu'aimée
-      (snippets/card-product.liquid, branche « aimée »).
+      (snippets/card-product.liquid, branche « aimée ») ;
+    - la photo studio d'un nouveau produit (templates/product.photo-studio.liquid) : l'œuvre seule, en grand, au
+      mur, que le serveur prend pour Google et le partage.
 
   Accepts:
     - product: {Object} le produit : le texte alternatif de son œuvre à plat (métachamp des textes alternatifs à
       l'index de l'œuvre, snippet artwork-flat-index ; sinon celui de l'image)
     - image: {Object} l'œuvre à plat : product.media[0] dans la carte d'un nouveau produit, product.images à
-      l'index de l'œuvre pour une ligne (snippet artwork-line)
+      l'index de l'œuvre pour une ligne (snippet artwork-line) et pour la photo studio
     - kind: {String} 'toile' ou 'poster' (snippet artwork-kind)
     - frame: {String} le cadre, id du moteur 3D : 'sans' (par défaut), 'blanc', 'noir', 'argent', 'chene', 'noyer'
     - contour: {Boolean} poster : le contour blanc (passe-partout)
-    - context: {String} la taille : 'carte' (grille de collection), 'tiroir' (case de 80 px de large) ou
-      'panier' (page panier, case de 120 px)
+    - context: {String} la taille : 'carte' (grille de collection), 'tiroir' (case de 80 px de large),
+      'panier' (page panier, case de 120 px) ou 'studio' (la photo studio : 1000 px de CSS, prise en 2x)
     - lazy: {Boolean} image différée. Carte : image floue puis srcset (lqip, assets/tw-global.js), sinon
-      prioritaire ; panier : loading="lazy", sinon eager. Différée si absent.
+      prioritaire ; panier : loading="lazy", sinon eager. Différée si absent. Photo studio : jamais.
 
   Dans la carte, la porte-fenêtre reflétée par la vitre du poster passe au défilement (son script,
   assets/oeuvre-card-reflet.js, est chargé par la carte) et la face porte .skeleton. Au panier (data-context),
   rien ne bouge : la vitre garde son reflet fixe, sans la porte-fenêtre (son masque pesait un quart de la
   peinture du tiroir, pour un reflet invisible en vignette), et la face n'attend aucun script (le tiroir est
   réécrit à chaque changement du panier, sans removeSkeletonOnImagesLoad).
-  Tests : scripts/artwork-object.test.cjs, scripts/oeuvre-card.test.cjs.
+  Dans la photo studio, rien ne bouge, mais tout se voit : sans data-context, elle prend les règles de la carte et
+  non celles du panier ; la vitre garde sa porte-fenêtre, que le modèle pose à une place fixe ; le poster sans
+  cadre, qui n'a pas de vitre, y prend la brillance floue de son papier (.oeuvre-card-sheen, retour de Walid du
+  18/11/2026) ; l'œuvre arrive en grand et tout de suite, sans .skeleton. Les règles propres à la photo sont dans
+  le modèle, pas dans input.css : rien ne change pour les visiteurs.
+  Tests : scripts/artwork-object.test.cjs, scripts/oeuvre-card.test.cjs, scripts/photo-studio.test.cjs.
 {%- endcomment -%}
 {%- liquid
   assign frame = frame | default: 'sans'
@@ -58,7 +65,7 @@
   data-kind="{{ kind }}"
   {%- if kind == 'poster' %} data-look="{% if frame == 'sans' %}papier{% else %}verre{% endif %}"{% endif %}
   {%- if frame != 'sans' %} data-frame="{{ frame }}"{% endif %}
-  {%- if context != 'carte' %} data-context="{{ context }}"{% endif %}
+  {%- if context != 'carte' and context != 'studio' %} data-context="{{ context }}"{% endif %}
   style="--r: {{ image.aspect_ratio | round: 4 }}">
   <div class="oeuvre-card-stage">
     <div class="oeuvre-card-piece">
@@ -90,6 +97,20 @@
             height="{{ image.height }}"
             class="lqip w-full h-full object-cover">
           {%- endif -%}
+        {%- elsif context == 'studio' -%}
+          {%- comment -%}
+            La photo studio : l'œuvre en grand, nette en 2x (son grand côté fait 84 % des 2000 px de la photo),
+            chargée tout de suite ; le modèle attend qu'elle soit décodée avant de dire la photo prête.
+          {%- endcomment -%}
+          <img
+            src="{{ image | image_url: width: 2000 }}"
+            alt="{{ art_alt }}"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+            width="{{ image.width }}"
+            height="{{ image.height }}"
+            class="w-full h-full object-cover">
         {%- else -%}
           {%- comment -%} Panier : la même œuvre en petit, à la largeur de la case, en 1x et 2x. {%- endcomment -%}
           <img
@@ -106,11 +127,17 @@
       {%- if kind == 'poster' -%}
         </div>
         {%- if frame != 'sans' -%}
-          {%- if context == 'carte' -%}
+          {%- if context == 'carte' or context == 'studio' -%}
             <span class="oeuvre-card-glass" aria-hidden="true"><span class="oeuvre-card-glare" data-allow-empty></span></span>
           {%- else -%}
             <span class="oeuvre-card-glass" aria-hidden="true" data-allow-empty></span>
           {%- endif -%}
+        {%- elsif context == 'studio' -%}
+          {%- comment -%}
+            Sans cadre, pas de vitre : le papier satiné renvoie la même porte-fenêtre, floue, sans montant ni bord,
+            coupée aux bords de la feuille (photo studio seulement ; ses règles sont dans le modèle).
+          {%- endcomment -%}
+          <span class="oeuvre-card-sheen" aria-hidden="true"><span class="oeuvre-card-glare" data-allow-empty></span></span>
         {%- endif -%}
       {%- endif -%}
     </div>

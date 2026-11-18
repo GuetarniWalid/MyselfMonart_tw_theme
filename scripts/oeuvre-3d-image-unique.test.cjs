@@ -65,6 +65,7 @@ test('scène sans 3D : les autres photos ne répètent pas l’œuvre à plat, o
   assert.ok(photos, 'les photos du repli')
   assert.ok(position.index < photos.index, 'sa place est connue avant les photos')
   assert.match(photos[1], new RegExp(`{%-\\s*if image_index >= start_from and image_index != ${position[1]}\\s*-%}`))
-  assert.match(photos[1], /{%-\s*unless media\.preview_image\.src contains 'passe-partout'\s*-%}/)
+  // Ni les contours blancs, ni la photo studio d'un nouveau produit (scripts/photo-studio.test.cjs).
+  assert.match(photos[1], /{%-\s*unless media\.preview_image\.src contains 'passe-partout' or forloop\.index0 == studio_index\s*-%}/)
   assert.doesNotMatch(photos[1], /image_index != 2/, 'plus de 2e image en dur')
 })

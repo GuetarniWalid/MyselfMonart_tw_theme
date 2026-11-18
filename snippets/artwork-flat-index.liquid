@@ -1,7 +1,8 @@
 {%- comment -%}
-  artwork-flat-index — où est l'œuvre à plat d'un produit dans product.images : 0 (sa 1re et seule image) pour
-  un nouveau produit, modèle oeuvre-3d (règle unique : snippet artwork-kind, image_unique) ; 1 (sa 2e photo)
-  pour tout autre produit, la toile et le poster de toujours compris.
+  artwork-flat-index — où est l'œuvre à plat d'un produit dans product.images : 0 (sa 1re image ; sa photo
+  studio, que le serveur ajoute après elle, ne sert qu'à Google : snippet artwork-studio-index) pour un nouveau
+  produit, modèle oeuvre-3d (règle unique : snippet artwork-kind, image_unique) ; 1 (sa 2e photo) pour tout
+  autre produit, la toile et le poster de toujours compris.
   Le panier en tire la vignette d'une ligne et le format, portrait ou paysage, d'un tableau, ceux d'une ligne
   comme ceux des tableaux proposés en lot (sections/page-cart-items.liquid, sections/tw-cart-drawer.liquid). Une
   toile ou un poster tel qu'une ligne le dit en tire son œuvre à plat (snippets/artwork-line.liquid : la vignette

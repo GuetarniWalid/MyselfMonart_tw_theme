@@ -49,15 +49,16 @@ test('carte : la vignette d’œuvre pour les seuls produits à image unique don
   assert.equal((old.match(/class="(?:lqip )?w-full h-full object-contain translate-x-1"/g) || []).length, 2)
 })
 
-/* La vignette est l'œuvre en objet (snippets/artwork-object.liquid), le rendu que partagent la carte et le
-   panier. Rend son code, et sa partie « carte » de la face : de `{%- if context == 'carte' -%}` à son `else`. */
+/* La vignette est l'œuvre en objet (snippets/artwork-object.liquid), le rendu que partagent la carte, le panier et
+   la photo studio (scripts/photo-studio.test.cjs). Rend son code, et sa partie « carte » de la face : de
+   `{%- if context == 'carte' -%}` à la branche de la photo studio, que suit celle du panier. */
 const OBJECT = 'snippets/artwork-object.liquid'
 function objectCard() {
   const object = code(OBJECT)
   const face = /<div class="oeuvre-card-face{% if context == 'carte' %} skeleton{% endif %}">([\s\S]*?)<\/div>/.exec(object)
   assert.ok(face, 'la face, .skeleton dans la carte seulement')
-  const card = /{%-\s*if context == 'carte'\s*-%}([\s\S]*?){%-\s*else\s*-%}(?=\s*<img\s+srcset="{{ image \| image_url: width: art_width }})/.exec(face[1])
-  assert.ok(card, 'la face : la carte, puis le panier')
+  const card = /{%-\s*if context == 'carte'\s*-%}([\s\S]*?){%-\s*elsif context == 'studio'\s*-%}[\s\S]*?{%-\s*else\s*-%}(?=\s*<img\s+srcset="{{ image \| image_url: width: art_width }})/.exec(face[1])
+  assert.ok(card, 'la face : la carte, la photo studio, puis le panier')
   return { object, face: face[1], card: card[1] }
 }
 
@@ -86,7 +87,7 @@ test('vignette : texte alternatif de l’œuvre à plat, à son index (snippet a
   assert.match(object, /capture flat_index\s+render 'artwork-flat-index', product: product\s+endcapture\s+assign flat_index = flat_index \| plus: 0/)
   assert.match(object, /{% if product\.metafields\.meta_object\.media\.value\.alts\.value\[flat_index\] %}{{ product\.metafields\.meta_object\.media\.value\.alts\.value\[flat_index\] \| escape }}{% else %}{{ image\.alt \| escape }}{% endif %}/)
   const imgs = object.match(/<img[\s\S]*?>/g)
-  assert.equal(imgs.length, 3, 'carte (eager, lazy) et panier')
+  assert.equal(imgs.length, 4, 'carte (eager, lazy), photo studio et panier')
   for (const img of imgs) assert.match(img, /alt="{{ art_alt }}"/)
 })
 
@@ -121,7 +122,15 @@ test('CSS : hors de tout @layer, et chaque classe du balisage y a sa règle', ()
   const attrs = [...object.matchAll(/class="([^"]*)"/g)].map((m) => m[1].replace(/{%[\s\S]*?%}/g, ' ')).join(' ')
   const classes = new Set(attrs.match(/\boeuvre-card[\w-]*|no-contour/g))
   assert.ok(classes.size >= 7)
-  for (const name of classes) assert.match(block, new RegExp(`\\.${name}(?![\\w-])`), name)
+  for (const name of classes) {
+    // La brillance du papier n'est que dans la photo studio : sa règle est dans son modèle, rien pour les visiteurs.
+    if (name === 'oeuvre-card-sheen') {
+      assert.doesNotMatch(block, /oeuvre-card-sheen/)
+      assert.match(read('templates/product.photo-studio.liquid'), /\.photo-studio \.oeuvre-card-sheen \{/)
+      continue
+    }
+    assert.match(block, new RegExp(`\\.${name}(?![\\w-])`), name)
+  }
 })
 
 test('CSS : la vignette laisse les clics au lien étiré du titre, et se peint au-dessus de lui', () => {

@@ -1,0 +1,40 @@
+{%- comment -%}
+  artwork-studio-index — où est la photo studio d'un produit dans product.media : son index, ou rien.
+  La photo studio : l'œuvre seule, en grand, sur un mur clair (templates/product.photo-studio.liquid), que le
+  serveur prend juste après la publication d'un nouveau produit (modèle oeuvre-3d) et ajoute après son œuvre à
+  plat, sous un nom de fichier qui commence par « photo-studio- ». Seuls les nouveaux produits en ont une (règle
+  unique : snippet artwork-kind, image_unique) ; l'œuvre à plat, leur 1re image, n'en est jamais une, quel que
+  soit son nom. Rien pour tout autre produit, quels que soient ses fichiers : les produits de toujours restent
+  à l'octet près.
+
+  Elle sert à Google et au partage, et à rien d'autre : la 1re image des données Google de la fiche
+  (sections/main-product.liquid) et son og:image (snippets/meta-tags.liquid). La fiche 3D la tient hors de ses
+  photos (snippets/oeuvre-3d-stage.liquid) ; cartes, panier, « Mes j'aime » et mails ne lisent que l'œuvre à
+  plat (snippet artwork-flat-index, ou la 1re image).
+
+  Accepts:
+    - product: {Object} le produit
+
+  Usage :
+    {%- capture studio_index -%}{% render 'artwork-studio-index', product: product %}{%- endcapture -%}
+    {%- assign studio_index = studio_index | default: -1 | plus: 0 -%}
+    {%- if studio_index >= 0 -%}… product.media[studio_index] …{%- endif -%}
+  Le résultat sort sans aucun espace : rien, ou l'index. « | default: -1 | plus: 0 » en fait un nombre, -1 sans
+  photo : ne jamais lire product.media[-1], qui serait le dernier média.
+  Tests : scripts/photo-studio.test.cjs.
+{%- endcomment -%}
+{%- liquid
+  capture kind
+    render 'artwork-kind', product: product, suffix: product.template_suffix, image_unique: true
+  endcapture
+  if kind != blank
+    for media in product.media
+      unless forloop.first
+        if media.media_type == 'image' and media.preview_image.src contains 'photo-studio'
+          echo forloop.index0
+          break
+        endif
+      endunless
+    endfor
+  endif
+-%}

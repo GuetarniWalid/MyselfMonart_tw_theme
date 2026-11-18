@@ -1,0 +1,184 @@
+{%- layout none -%}
+{%- comment -%}
+  La photo studio d'une œuvre : l'œuvre seule, en grand, sur un mur clair, dessinée par le CSS des vignettes de
+  collection (input.css, « Vignette d'œuvre » ; snippet artwork-object, context studio). Juste après la
+  publication d'un nouveau produit (modèle oeuvre-3d), le serveur ouvre cette page, la prend en 2000 × 2000 px et
+  l'ajoute au produit après l'œuvre à plat, sous un nom de fichier qui commence par « photo-studio- » : elle devient
+  la 1re image des données Google de la fiche et son og:image (snippet artwork-studio-index). Rendu de référence
+  validé par Walid le 18/11/2026 (mur B, « clair »).
+
+  Contrat avec le serveur (à ne pas changer sans le lui dire) :
+    - adresse : /products/<handle>?view=photo-studio, et en option &variant=<id> ;
+    - un document autonome : ni layout, ni script de Shopify, ni suivi ; noindex ; output.css ;
+    - chaque photo est un élément [data-photo="<nom>"] de 1000 × 1000 px de CSS, collé en haut à gauche, sans
+      marge (le serveur la prend en 2x) ; une seule pour l'instant : « principale » ;
+    - par défaut, la toile sans cadre, le poster sous verre au cadre noir, sans contour blanc, comme sa carte de
+      collection (snippets/card-product.liquid) ; avec ?variant=, l'œuvre telle que cette variante la dit
+      (snippet artwork-line : son cadre, lu par artwork-frame ; un poster sans cadre a la brillance floue de son
+      papier) ;
+    - prête quand <html> porte data-photo-pret="1" : l'œuvre décodée, le mur chargé, la trame posée ;
+      data-photo-erreur dit sinon ce qui a manqué : « oeuvre » (ni toile ni poster, ou pas d'œuvre à plat),
+      « image », « mur », « style » (output.css absent), « trame » ;
+    - ressources : la boutique seulement (/cdn/shop/… : la feuille, le mur, l'œuvre) ; le grain et la trame sont
+      dessinés dans la page.
+  Un produit de toujours s'y voit aussi (sa vraie œuvre est sa 2e image, snippet artwork-flat-index), pour
+  vérifier en ligne ; seuls les nouveaux produits reçoivent la photo.
+
+  Les règles propres à la photo (mur, grain, 84 %, trame, reflet fixe, brillance du papier) sont ici et nulle part
+  ailleurs : output.css ne change pas pour les visiteurs. Tests : scripts/photo-studio.test.cjs.
+{%- endcomment -%}
+{%- liquid
+  # L'œuvre à plat, à sa place (snippet artwork-flat-index), toile ou poster (artwork-kind), mise en objet.
+  capture kind
+    render 'artwork-kind', product: product, suffix: product.template_suffix
+  endcapture
+  capture flat_index
+    render 'artwork-flat-index', product: product
+  endcapture
+  assign flat_index = flat_index | plus: 0
+  assign art = product.images[flat_index]
+  assign artwork = ''
+  if kind != blank and art != blank
+    if product.selected_variant
+      capture artwork
+        render 'artwork-line', product: product, variant: product.selected_variant, context: 'studio'
+      endcapture
+    else
+      assign frame = 'sans'
+      if kind == 'poster'
+        assign frame = 'noir'
+      endif
+      capture artwork
+        render 'artwork-object', product: product, image: art, kind: kind, frame: frame, context: 'studio'
+      endcapture
+    endif
+  endif
+  # La texture du mur, pour la feuille et pour l'attente de la photo : une seule adresse.
+  assign wall_texture = 'fond-mur-beige-clair-texture.webp' | asset_url
+-%}
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}"{% if artwork == blank %} data-photo-erreur="oeuvre"{% endif %}>
+  <head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex">
+    <title>{{ product.title | escape }}</title>
+    {%- comment -%} Une icône vide : le navigateur ne demande pas /favicon.ico, aucune requête de plus. {%- endcomment %}
+    <link rel="icon" href="data:,">
+    {{ 'output.css' | asset_url | stylesheet_tag }}
+    <style>
+      html, body { margin: 0; background: #fff; }
+      /* La photo : 1000 × 1000 px de CSS, collée en haut à gauche ; le serveur la prend en 2x. Le mur clair (mur B,
+         choix de Walid du 18/11/2026) : la lumière en haut à gauche, un peu d'ombre en bas à droite, la texture du
+         mur beige clair. */
+      .photo-studio {
+        position: relative; width: 1000px; height: 1000px; overflow: hidden;
+        background:
+          radial-gradient(120% 95% at 18% 8%, rgba(255, 255, 255, .55), rgba(255, 255, 255, 0) 60%),
+          radial-gradient(90% 80% at 92% 100%, rgba(120, 100, 80, .10), rgba(120, 100, 80, 0) 70%),
+          url("{{ wall_texture }}") 0 0 / 256px 256px,
+          #f1ede6;
+        background-blend-mode: normal, normal, multiply, normal;
+      }
+      /* Grain fin, comme une vraie photo : évite les aplats en escalier une fois en JPEG. */
+      .photo-studio::after {
+        content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .035; mix-blend-mode: multiply;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+      }
+      /* La scène de la vignette remplit la photo, sur son mur à elle. */
+      .photo-studio .oeuvre-card { position: absolute; inset: 0; --wall-toile: transparent; --wall-poster: transparent; }
+      .photo-studio .oeuvre-card-stage { aspect-ratio: 1 !important; width: 100%; background: transparent !important; }
+      /* L'œuvre remplit 84 % de la photo dans son grand côté (Google : 75 à 90 %) ; le poster, cadre compris, 86 %. */
+      .photo-studio .oeuvre-card[data-kind="toile"] .oeuvre-card-piece { --W: min(.84, calc(.84 * var(--r))); }
+      .photo-studio .oeuvre-card[data-kind="poster"] .oeuvre-card-piece { --k: calc((.86 - 2 * var(--f) * var(--framed)) / (1 + .1904 * var(--contour))); }
+      /* La trame de la toile, visible de près seulement (dessinée par le script plus bas). */
+      .photo-studio .oeuvre-card[data-kind="toile"] .oeuvre-card-face::after {
+        content: ""; position: absolute; inset: 0; pointer-events: none;
+        background: var(--weave) 0 0 / 3px 3px; mix-blend-mode: soft-light; opacity: .55;
+      }
+      /* La vitre, en photo : la porte-fenêtre posée en haut à gauche, sans défilement. */
+      .photo-studio .oeuvre-card-glare { animation: none !important; translate: 0 -38% !important; --gx: 2%; }
+      /* Sans cadre, pas de vitre : le papier satiné renvoie la même porte-fenêtre, mais floue, sans montant ni bord
+         (retour de Walid du 18/11/2026 : « de la brillance, mais pas au point de voir les contours de la
+         fenêtre »), coupée aux bords de la feuille. */
+      .photo-studio .oeuvre-card-sheen { position: absolute; inset: 0; overflow: clip; pointer-events: none; }
+      .photo-studio .oeuvre-card-sheen .oeuvre-card-glare { filter: blur(calc(.04 * var(--s))); opacity: .85; }
+      /* Le papier tient au mur, à plat : l'ombre courte du tirage, un peu plus lisible en grand. */
+      .photo-studio .oeuvre-card[data-look="papier"] .oeuvre-card-piece {
+        box-shadow:
+          calc(.002 * var(--s)) calc(.003 * var(--s)) calc(.004 * var(--s)) rgba(38, 27, 18, .22),
+          calc(.010 * var(--s)) calc(.014 * var(--s)) calc(.034 * var(--s)) rgba(38, 27, 18, .13);
+      }
+    </style>
+  </head>
+  <body>
+    {%- if artwork != blank -%}
+      <div class="photo-studio" data-photo="principale">
+        {{- artwork -}}
+      </div>
+      <script>
+        /* La photo est prête quand son œuvre est décodée, le mur chargé et la trame de la toile posée : le serveur
+           attend data-photo-pret="1" sur <html> pour la prendre ; data-photo-erreur dit ce qui a manqué. */
+        (() => {
+          const root = document.documentElement
+          const photo = document.querySelector('[data-photo="principale"]')
+          const fail = (why) => {
+            if (!root.dataset.photoErreur) root.dataset.photoErreur = why
+          }
+          /* La trame de la toile : une armure toile de 16 × 16 fils de 6 px (weavePixels du moteur 3D), en niveaux
+             de gris centrés sur 50 %, que la feuille pose en 3 px. Son bruit vient d'une suite fixe : la même
+             photo à chaque passage. */
+          try {
+            let seed = 0x2f6b3a1d
+            const random = () => {
+              seed = (seed + 0x6d2b79f5) | 0
+              let t = Math.imul(seed ^ (seed >>> 15), 1 | seed)
+              t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+              return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+            }
+            const T = 6
+            const N = 16
+            const canvas = document.createElement('canvas')
+            canvas.width = canvas.height = T * N
+            const g = canvas.getContext('2d')
+            const tile = g.createImageData(T * N, T * N)
+            for (let y = 0; y < T * N; y++) {
+              for (let x = 0; x < T * N; x++) {
+                const over = ((Math.floor(x / T) + Math.floor(y / T)) & 1) === 0
+                const warp = Math.sin((Math.PI * ((x % T) + 0.5)) / T) * (over ? 1 : 0.55)
+                const weft = Math.sin((Math.PI * ((y % T) + 0.5)) / T) * (over ? 0.55 : 1)
+                const v = Math.round(255 * (0.3 + 0.45 * Math.max(warp, weft) + (random() - 0.5) * 0.06))
+                const i = 4 * (y * T * N + x)
+                tile.data[i] = tile.data[i + 1] = tile.data[i + 2] = v
+                tile.data[i + 3] = 255
+              }
+            }
+            g.putImageData(tile, 0, 0)
+            photo.style.setProperty('--weave', `url(${canvas.toDataURL()})`)
+          } catch (error) {
+            fail('trame')
+            return
+          }
+          const wall = new Image()
+          wall.src = {{ wall_texture | json }}
+          const decoded = (image, why) => image.decode().catch((error) => {
+            fail(why)
+            throw error
+          })
+          Promise.all([decoded(photo.querySelector('img'), 'image'), decoded(wall, 'mur'), document.fonts.ready])
+            .then(() => {
+              /* Le style des vignettes (output.css) est là : la scène de l'œuvre est un conteneur. */
+              if (getComputedStyle(photo.querySelector('.oeuvre-card-stage')).containerType !== 'inline-size') {
+                fail('style')
+                return
+              }
+              /* Deux images de l'écran : la photo est peinte avec tout ce qui vient d'arriver. */
+              requestAnimationFrame(() => requestAnimationFrame(() => {
+                root.dataset.photoPret = '1'
+              }))
+            })
+            .catch(() => {})
+        })()
+      </script>
+    {%- endif -%}
+  </body>
+</html>

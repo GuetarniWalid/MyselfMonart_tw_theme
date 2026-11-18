@@ -792,6 +792,11 @@
   ]
   {%- endif -%}
 {%- endcapture -%}
+{%- comment -%} L'image des données Google. Pour un nouveau produit, sa photo studio si le serveur l'a faite
+   (snippet artwork-studio-index) : l'œuvre seule au mur, en 1re image, puis son œuvre à plat. Sans elle, et
+   pour tout produit de toujours, la 1re image du produit, comme toujours. {%- endcomment -%}
+{%- capture studio_index -%}{% render 'artwork-studio-index', product: product %}{%- endcapture -%}
+{%- assign studio_index = studio_index | default: -1 | plus: 0 -%}
 <script type="application/ld+json">
     {
       "@context": "https://schema.org/",
@@ -803,7 +808,7 @@
       {% if product.metafields.link.mother_collection.value.title != blank %}
         "category" : "{{ product.metafields.link.mother_collection.value.title }}",
         {% endif %}
-        "image": [{{ product.featured_media | image_url: width: product.featured_media.preview_image.width | prepend: "https:" | json }}],
+        "image": [{% if studio_index >= 0 %}{{ product.media[studio_index] | image_url: width: product.media[studio_index].preview_image.width | prepend: "https:" | json }},{{ product.media[flat_index] | image_url: width: product.media[flat_index].preview_image.width | prepend: "https:" | json }}{% else %}{{ product.featured_media | image_url: width: product.featured_media.preview_image.width | prepend: "https:" | json }}{% endif %}],
         "description": {{ product.description | strip_html | json }},
         {% if product.selected_or_first_available_variant.sku != blank -%}
           "sku": {{ product.selected_or_first_available_variant.sku | json }},

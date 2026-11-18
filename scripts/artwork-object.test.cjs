@@ -76,11 +76,12 @@ test('panier : rien ne bouge. La vitre de la carte, avec son reflet fixe, sans l
   assert.doesNotMatch(rule(css, '.oeuvre-card-glass'), /view-timeline/)
   assert.equal((css.match(/animation: (?!none)/g) || []).length, 1, 'une seule animation, celle de la porte-fenêtre')
   // La porte-fenêtre (son masque à quatre couches pèse un quart de la peinture du tiroir, mesuré au banc) n'est
-  // que dans la carte ; au panier, la vitre garde son reflet fixe (la petite fenêtre, le voile, l'ombre de la lèvre).
+  // que dans la carte (et dans la photo studio, où elle reste fixe : scripts/photo-studio.test.cjs) ; au panier, la
+  // vitre garde son reflet fixe (la petite fenêtre, le voile, l'ombre de la lèvre).
   const source = object()
   const glass = /{%-?\s*if frame != 'sans'\s*-?%}([\s\S]*?){%-?\s*endif\s*-?%}\s*{%-?\s*endif\s*-?%}/.exec(source)
   assert.ok(glass, 'la vitre, pour un poster encadré')
-  assert.match(glass[1], /{%-?\s*if context == 'carte'\s*-?%}\s*<span class="oeuvre-card-glass" aria-hidden="true"><span class="oeuvre-card-glare" data-allow-empty><\/span><\/span>\s*{%-?\s*else\s*-?%}\s*<span class="oeuvre-card-glass" aria-hidden="true" data-allow-empty><\/span>/)
+  assert.match(glass[1], /{%-?\s*if context == 'carte' or context == 'studio'\s*-?%}\s*<span class="oeuvre-card-glass" aria-hidden="true"><span class="oeuvre-card-glare" data-allow-empty><\/span><\/span>\s*{%-?\s*else\s*-?%}\s*<span class="oeuvre-card-glass" aria-hidden="true" data-allow-empty><\/span>/)
   assert.match(rule(css, '.oeuvre-card-glass'), /radial-gradient\(42% 30% at 16% 9%, rgba\(255, 255, 255, \.08\)/, 'le reflet fixe de la petite fenêtre')
   // Et un reflet qui se lit en vignette : la porte-fenêtre réduite à une bande de lumière, un seul dégradé, sans masque.
   const band = rule(css, '.oeuvre-card[data-context] .oeuvre-card-glass::after')
