@@ -76,3 +76,13 @@ Les écarts sont sur les arêtes et, en biais, sur les détails fins de l'œuvre
 - Photo de dos : pas faite, le moteur n'a pas de plan fixe de dos.
 - Un job du studio resté `pending` (worker coupé) bloque les rendus.
 - Un déploiement tire `renderer:latest` : cette image doit exister sur Docker Hub.
+
+## Note du 18/11/2026 : rendus du moteur cassés, essai non bloquant
+
+- Le moteur a changé d'API au portage de la maquette v26 (thème d2f46ef, 11/11) : `sizesFromVariants` a été retiré.
+- Depuis, `artwork:render-photos` échoue dans `Docker/renderer/lib/page.js` (`engine.sizesFromVariants is not a function`). L'essai de `renderer-image.yml` l'a vu le 18/11, et l'image du conteneur ne partait plus.
+- Ces photos ne servent plus :
+  - le Publisher ne les demande plus depuis le ticket 18 ;
+  - Walid les a écartées pour Google le 15/11.
+- Backend 739eb8f : l'essai du moteur et celui de la limite de mémoire passent en `continue-on-error`. C'est la photo studio (ticket 15) qui garde l'image du conteneur.
+- Pour refaire des rendus du moteur, reprendre d'abord `lib/page.js` sur son API du moment.
