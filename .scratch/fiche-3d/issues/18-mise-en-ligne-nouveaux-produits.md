@@ -14,10 +14,15 @@
   - Essai réel le 17/11 au soir, workflow « Brouillon d'essai », image à plat du Bonsaï, collection Tableau Zen :
     - toile 10897967939931 : brouillon `oeuvre-3d`, un seul média 3066 × 4096 avec son texte alternatif, 95 variantes, 2 couleurs, 3 thèmes, `link.poster` ;
     - poster 10897967972699 : brouillon `oeuvre-3d`, un seul média, 7 variantes, `frames_poster` (4 cadres), collection « Poster & Affiche Zen », `link.painting`.
-    - Le texte alternatif du poster est son titre : moins descriptif que celui de la toile, à améliorer.
-  - Brouillons à supprimer sur l'accord de Walid :
-    - ceux de cet essai, qui doublent le Bonsaï ;
-    - ceux du 05/11 (10862725824859) et du 08/11 (10871297376603), à l'ancien ordre.
+    - Le texte alternatif du poster était son titre. Corrigé le 18/11 (backend 178983f, demande de Walid : « il faut que le alt soit parfait »).
+      - Claude écrit l'alt de la toile selon les règles de Google : décrire ce qu'on voit, avec le format une fois, en 125 signes au plus (`ArtworkAltGenerator`).
+      - Le poster reprend la même description, avec « Poster » à la place de « Tableau sur toile » (`artworkAlt.ts`, test doré `artwork-alt`).
+      - Essai sur le Bonsaï, préparation sans produit :
+        - toile : « Tableau sur toile d'un bonsaï au tronc incliné et feuillage vert sur fond beige texturé, style zen » ;
+        - poster : « Poster d'un bonsaï au tronc incliné et feuillage vert sur fond beige texturé, style zen ».
+  - Brouillons d'essai supprimés le 18/11 sur l'accord de Walid, par la commande « brouillons-supprimer », qui refuse tout produit hors brouillon :
+    - les 2 de l'essai, avec leurs métaobjets ;
+    - ceux du 05/11 (10862725824859) et du 08/11 (10871297376603).
 - [ ] Les anciens mockups ne servent plus pour les toiles ni les posters, et le code devenu inutile est retiré.
 - [ ] Un point envoyé à Walid au bout de 2 semaines, puis de 4 : chiffres et observations.
 - [ ] Aucune fiche existante n'a changé de modèle de page.
