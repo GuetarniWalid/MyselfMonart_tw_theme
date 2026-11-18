@@ -42,3 +42,27 @@ Walid refuse les photos avec la femme pour Google : il veut « l'œuvre seule »
   - le test des résultats enrichis de Google ;
   - rien de changé sur la fiche 3D, les cartes, le panier, « Mes j'aime » et les mails.
 - Pas décidé : une photo par cadre en images de variantes. Pour le poster, la teinte du cadre est une propriété de la ligne, pas une variante.
+
+## Une photo par cadre, pour Google Shopping (18/11/2026, pas en ligne)
+
+Codé, en attente de la validation de Walid sur les captures (`photos-cadres/` du bloc-notes de la session : chaque cadre en 2000 px et en 200 px, le poster avec et sans cadre, la planche face aux photos de l'atelier, l'avant/après de la caisse).
+
+- Les photos :
+  - toile : la principale (sans cadre), puis une par autre cadre vendu, dans l'ordre de l'option 3 : `cadre-blanc`, `cadre-noir`, `cadre-argent`, `cadre-chene`, `cadre-noyer` ;
+  - poster : la principale (cadre noir sous verre), puis `sans-cadre` (le papier, la brillance floue) ; la couleur du cadre reste une propriété de ligne.
+- La caisse américaine en grand, pour la photo seulement (cartes, panier et « Mes j'aime » inchangés) :
+  - quatre baguettes en onglet, la face plate, sans gradin ;
+  - le fil du bois de la fiche 3D (`texture-chene-clair-cadre.jpg`) dans le sens de chaque baguette : le bois naturel, le noyer, l'argent brossé plus fin ; le blanc et le noir unis, comme dans la 3D ;
+  - la lumière de la photo : arêtes claires en haut et à gauche, à l'ombre en bas et à droite ;
+  - le jour à la teinte du cadre, aux angles vifs, jamais un trait sombre ;
+  - teintes au milieu des baguettes, mesurées sur les rendus : celles de l'atelier à 1,6 près sur 255 (noir de la toile #4a4a4a, blanc #ececec, argent #9a9380, chêne #bcaa97, noyer #866554).
+- Thème :
+  - `templates/product.photo-studio.liquid` : un `[data-photo]` par photo, les unes sous les autres ; le cadre de chaque valeur d'option lu par `artwork-frame` ; prête une fois le bois chargé (`data-photo-erreur="bois"` sinon) ;
+  - `snippets/artwork-object.liquid` : les baguettes, contexte `studio` seulement ;
+  - `sections/main-product.liquid` : un nouveau produit se décrit en groupe de produits (`ProductGroup`), chaque variante avec la photo de son cadre (son image Shopify, sinon celle du groupe), sa taille, son cadre en `color`, et son offre d'avant ; livraison et retours décrits une fois. Les produits de toujours gardent leur JSON-LD à l'octet près (relevé `scripts/fixtures/json-ld-produits-de-toujours.txt`) ;
+  - `snippets/oeuvre-3d-stage.liquid` : aucune photo studio parmi les photos du repli sans 3D.
+- Serveur (branche `photo-par-cadre`) : les photos de cadre ajoutées derrière la principale, chaque variante reçoit la photo de son cadre ; refaites, les anciennes partent une fois toutes les nouvelles prêtes, rangées et données aux variantes. Pinterest et Instagram gardent la principale. Le conteneur de rendu ne change pas.
+- Reste :
+  - la validation de Walid, puis la mise en ligne : le thème, puis l'application ; refaire les photos des produits déjà publiés avec `artwork:studio-photo` ;
+  - au 1er produit : le test des résultats enrichis de Google sur la fiche ;
+  - les images de variantes se voient aussi hors du thème : le paiement, la page de commande, les mails (`line.image`, et `item.image` des mails de suivi du serveur).
