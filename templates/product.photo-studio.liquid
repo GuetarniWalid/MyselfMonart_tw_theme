@@ -3,12 +3,14 @@
   Les photos studio d'une œuvre : l'œuvre seule, en grand, sur un mur clair, dessinée par le CSS des vignettes de
   collection (input.css, « Vignette d'œuvre » ; snippet artwork-object, context studio), puis dans chacun de ses
   cadres. Juste après la publication d'un nouveau produit (modèle oeuvre-3d), le serveur ouvre cette page, prend
-  chaque photo en 2000 × 2000 px et les ajoute au produit après l'œuvre à plat, sous des noms de fichier qui
-  commencent par « photo-studio- » :
+  chaque photo en 2000 × 2000 px et les ajoute au produit après l'œuvre à plat, la principale d'abord, sous les
+  noms de fichier « photo-studio-<handle>.jpg » (la principale) et « photo-studio-<handle>-<nom>.jpg » :
     - « principale » devient la 1re image des données Google de la fiche et son og:image (snippet
       artwork-studio-index). Rendu de référence validé par Walid le 18/11/2026 (mur B, « clair ») ;
-    - chaque photo de cadre devient l'image des variantes de ce cadre, que les données Google de la fiche
-      décrivent une à une (sections/main-product.liquid, groupe de produits).
+    - chaque photo de cadre est l'image, dans les données Google de la fiche (sections/main-product.liquid,
+      groupe de produits), des variantes de ce cadre, retrouvée par son nom de fichier (snippet
+      artwork-studio-index, photo:). Le serveur ne la donne à aucune variante : Shopify la montrerait hors du
+      thème (paiement, mails), et le cadre d'un poster est une propriété de ligne.
 
   Contrat avec le serveur (à ne pas changer sans le lui dire) :
     - adresse : /products/<handle>?view=photo-studio, et en option &variant=<id> ;

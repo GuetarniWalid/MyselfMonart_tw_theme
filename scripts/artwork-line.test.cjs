@@ -44,13 +44,18 @@ test('une seule lecture : le panier et la carte de « Mes j’aime » passent pa
   assert.match(card, /render 'artwork-line', product: product, variant: variant, context: 'carte', lazy: lazy_load/)
   assert.doesNotMatch(cart, /artwork-object|artwork-frame|artwork-flat-index|artwork-kind/)
   assert.doesNotMatch(card, /artwork-frame/)
-  // La lecture du cadre n'a que deux appelants : ce snippet, et la page des photos studio, qui lit le cadre de
-  // chaque valeur de l'option cadre comme une ligne le lit (scripts/photo-studio.test.cjs).
+  // La lecture du cadre n'a que trois appelants : ce snippet, et pour les photos studio, la page qui les rend et
+  // les données Google de la fiche qui les citent, qui lisent le cadre de chaque valeur de l'option cadre comme
+  // une ligne le lit (scripts/photo-studio.test.cjs).
+  const callers = ['artwork-line.liquid', '../templates/product.photo-studio.liquid', '../sections/main-product.liquid']
   const others = fs.readdirSync(path.join(ROOT, 'snippets'))
     .concat(fs.readdirSync(path.join(ROOT, 'sections')).map((f) => `../sections/${f}`))
     .concat(fs.readdirSync(path.join(ROOT, 'templates')).filter((f) => f.endsWith('.liquid')).map((f) => `../templates/${f}`))
   for (const file of others) {
-    if (file === 'artwork-line.liquid' || file === '../templates/product.photo-studio.liquid') continue
+    if (callers.includes(file)) continue
     assert.doesNotMatch(code(`snippets/${file}`), /render 'artwork-frame'/, file)
   }
+  // Dans la fiche, la seule lecture est celle des données Google, avec la 1re variante de chaque valeur.
+  const section = code('sections/main-product.liquid')
+  assert.deepEqual(section.match(/render 'artwork-frame'[^\n]*/g), ["render 'artwork-frame', product: product, variant: value_variant, kind: group_kind"])
 })

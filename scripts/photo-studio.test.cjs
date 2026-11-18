@@ -4,8 +4,9 @@
 // (templates/product.photo-studio.liquid) juste après la publication, prend chaque photo en 2000 × 2000 et les
 // ajoute au produit après l'œuvre à plat, sous des noms de fichier qui commencent par « photo-studio- » (snippet
 // artwork-studio-index). La principale devient la 1re image des données Google de la fiche et son og:image ;
-// chaque photo de cadre, l'image de ses variantes. Partout ailleurs, rien ne change, et les produits de toujours
-// restent à l'octet près.
+// chaque photo de cadre, l'image de ses variantes dans ces données, retrouvée par son nom (aucune image n'est
+// donnée aux variantes dans Shopify). Partout ailleurs, rien ne change, et les produits de toujours restent à
+// l'octet près.
 // Ici, les contrats du code ; puis le rendu Liquid (liquidjs), quand le module est là : sans lui, ces tests-là sont
 // sautés et le reste passe. Le banc les lance avec NODE_PATH vers un node_modules qui a liquidjs.
 // Lancer : node --test scripts/photo-studio.test.cjs
@@ -251,9 +252,12 @@ test('œuvre en objet, context studio : une toile encadrée a ses quatre baguett
 
 test('artwork-studio-index : la photo studio des seuls nouveaux produits (artwork-kind, image_unique), jamais leur œuvre à plat', () => {
   const source = code(STUDIO_INDEX)
-  assert.match(source, /capture kind\s+render 'artwork-kind', product: product, suffix: product\.template_suffix, image_unique: true\s+endcapture\s+if kind != blank\s+assign found = false\s+for media in product\.media/)
+  assert.match(source, /capture kind\s+render 'artwork-kind', product: product, suffix: product\.template_suffix, image_unique: true\s+endcapture\s+if kind != blank\s+if photo != blank/)
+  // La photo d'un cadre : son nom entier, le handle coupé comme le serveur le coupe (200 signes), puis
+  // l'extension ou le suffixe de Shopify ; jamais l'œuvre à plat.
+  assert.match(source, /assign stem = product\.handle \| slice: 0, 200 \| prepend: 'photo-studio-' \| append: '-' \| append: photo\s+assign stem_extension = stem \| append: '\.'\s+assign stem_souligne = stem \| append: '_'\s+assign stem_tiret = stem \| append: '-'\s+for media in product\.media\s+unless forloop\.first\s+if media\.media_type == 'image'\s+assign src = media\.preview_image\.src\s+if src contains stem_extension or src contains stem_souligne or src contains stem_tiret\s+echo forloop\.index0\s+break/)
   // La principale : la 1re après l'œuvre à plat ; avec toutes, chacune, entourée de virgules.
-  assert.match(source, /unless forloop\.first\s+if media\.media_type == 'image' and media\.preview_image\.src contains 'photo-studio'\s+if toutes\s+unless found\s+echo ','\s+endunless\s+echo forloop\.index0\s+echo ','\s+assign found = true\s+else\s+echo forloop\.index0\s+break\s+endif/)
+  assert.match(source, /else\s+assign found = false\s+for media in product\.media\s+unless forloop\.first\s+if media\.media_type == 'image' and media\.preview_image\.src contains 'photo-studio'\s+if toutes\s+unless found\s+echo ','\s+endunless\s+echo forloop\.index0\s+echo ','\s+assign found = true\s+else\s+echo forloop\.index0\s+break\s+endif/)
   // Le résultat sort sans aucun espace : rien, l'index, ou les index.
   assert.match(read(STUDIO_INDEX), /-%}\s*$/)
   assert.doesNotMatch(source.replace(/{%-[\s\S]*?-%}/g, ''), /\S/)
@@ -277,6 +281,8 @@ test('la photo studio ne sert qu’à Google et au partage : trois lecteurs, cha
     }
     assert.ok(STUDIO_LINES.tags.test(source) || STUDIO_LINES.block.test(source), `${file} : l’index, -1 sans photo`)
   }
+  // Les données Google de la fiche lisent aussi la photo de chaque cadre, par son nom : -1 sans elle.
+  assert.match(code('sections/main-product.liquid'), /capture value_index\s+render 'artwork-studio-index', product: product, photo: value_photo\s+endcapture\s+assign value_index = value_index \| default: -1 \| plus: 0/)
   // Un seul endroit qui reconnaît le nom de fichier.
   for (const folder of ['layout', 'sections', 'snippets', 'templates']) {
     for (const name of fs.readdirSync(path.join(ROOT, folder)).filter((n) => n.endsWith('.liquid'))) {
@@ -615,33 +621,29 @@ async function renderLd(p, { source = read('sections/main-product.liquid'), sett
 }
 const ldScripts = (html) => [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1]))
 
-// Les photos de cadre du serveur, données aux variantes d'une toile (option 3) ou d'un poster (option 2).
-const FRAME_FILES = {
-  'Cadre blanc': 'photo-studio-bonsai-zen-cadre-blanc.jpg',
-  'Cadre noir Mat': 'photo-studio-bonsai-zen-cadre-noir.jpg',
-  'Cadre argent ancien': 'photo-studio-bonsai-zen-cadre-argent.jpg',
-  'Cadre chêne clair': 'photo-studio-bonsai-zen-cadre-chene.jpg',
-  'Cadre noyer': 'photo-studio-bonsai-zen-cadre-noyer.jpg',
-  'Sans cadre': 'photo-studio-bonsai-zen-sans-cadre.jpg',
+// Les photos de cadre du serveur, derrière la principale : photo-studio-<handle>-<nom>.jpg (suffixe : celui que
+// Shopify ajoute à un nom déjà pris). Aucune n'est donnée à une variante : les données Google les trouvent par
+// leur nom.
+const PHOTOS_TOILE = {
+  'Cadre blanc': 'cadre-blanc',
+  'Cadre noir Mat': 'cadre-noir',
+  'Cadre argent ancien': 'cadre-argent',
+  'Cadre chêne clair': 'cadre-chene',
+  'Cadre noyer': 'cadre-noyer',
 }
-function withVariantPhotos(p, poster) {
-  const principal = p.media.find((m) => m.preview_image.src.includes(PHOTO[0]))
-  for (const variant of p.variants) {
-    const value = poster ? variant.option2 : variant.option3
-    if (!poster && value === 'Sans cadre') variant.featured_media = principal
-    else if (poster && value !== 'Sans cadre') variant.featured_media = principal
-    else {
-      const img = image(FRAME_FILES[value], 2000, 2000)
-      p.images.push(img)
-      p.media.push(asMedia(img))
-      variant.featured_media = p.media[p.media.length - 1]
-    }
+const framePhoto = (p, nom, suffixe = '') => `photo-studio-${p.handle}-${nom}${suffixe}.jpg`
+function withFramePhotos(p, noms, suffixe = '') {
+  for (const nom of noms) {
+    const img = image(framePhoto(p, nom, suffixe), 2000, 2000)
+    p.images.push(img)
+    p.media.push(asMedia(img))
   }
   return p
 }
+const photoUrl = (file) => `https:${FILES}${file}?v=1&width=2000`
 
 test('rendu des données Google : un nouveau produit en groupe de produits, chaque variante avec la photo de son cadre et son offre d’avant', { skip: SKIP }, async () => {
-  const toile = withVariantPhotos(product({ suffix: 'oeuvre-3d', files: [FLAT, PHOTO] }), false)
+  const toile = withFramePhotos(product({ suffix: 'oeuvre-3d', files: [FLAT, PHOTO] }), Object.values(PHOTOS_TOILE))
   const [group, shipping, returns] = ldScripts(await renderLd(toile))[0]
   assert.equal(group['@type'], 'ProductGroup')
   assert.equal(group['@id'], `https://www.myselfmonart.com${toile.url}`)
@@ -661,8 +663,9 @@ test('rendu des données Google : un nouveau produit en groupe de produits, chaq
     assert.equal(variant.name, `${toile.title} - ${source.title}`)
     assert.equal(variant.size, source.option1)
     assert.equal(variant.color, source.option3)
-    const file = source.option3 === 'Sans cadre' ? PHOTO[0] : FRAME_FILES[source.option3]
-    assert.equal(variant.image, `https:${FILES}${file}?v=1&width=2000`, `${source.title} : la photo de son cadre`)
+    // La photo de son cadre, par son nom ; sans cadre, la principale.
+    const file = source.option3 === 'Sans cadre' ? PHOTO[0] : framePhoto(toile, PHOTOS_TOILE[source.option3])
+    assert.equal(variant.image, photoUrl(file), `${source.title} : la photo de son cadre`)
     // L'offre d'avant : prix, disponibilité, adresse de la variante, date, vendeur ; livraison et retours cités.
     assert.deepEqual(variant.offers, {
       '@type': 'Offer',
@@ -695,17 +698,54 @@ test('rendu des données Google : un nouveau produit en groupe de produits, chaq
   })
 })
 
-test('rendu des données Google : le poster (cadre en option 2), une variante sans photo prend celle du groupe, ?variant= ne garde que la sienne', { skip: SKIP }, async () => {
-  const poster = withVariantPhotos(product({ suffix: 'oeuvre-3d', poster: true, files: [FLAT, PHOTO] }), true)
-  let [group] = ldScripts(await renderLd(poster))[0]
+test('rendu des données Google : une image de variante dans Shopify ne change rien, seul le nom des photos compte', { skip: SKIP }, async () => {
+  const sans = withFramePhotos(product({ suffix: 'oeuvre-3d', files: [FLAT, PHOTO] }), Object.values(PHOTOS_TOILE))
+  const avec = withFramePhotos(product({ suffix: 'oeuvre-3d', files: [FLAT, PHOTO, ['bonsai-zen-detail.jpg', 2000, 2000]] }), Object.values(PHOTOS_TOILE))
+  // Chaque variante porte une image dans Shopify : une autre photo du produit, ou celle d'un autre cadre.
+  const detail = avec.media.find((m) => m.preview_image.src.includes('bonsai-zen-detail'))
+  const blanc = avec.media.find((m) => m.preview_image.src.includes('-cadre-blanc'))
+  for (const [i, variant] of avec.variants.entries()) {
+    const autre = i % 2 ? detail : blanc
+    Object.assign(variant, { featured_media: autre, image: autre.preview_image, featured_image: autre.preview_image })
+  }
+  const [groupSans] = ldScripts(await renderLd(sans))[0]
+  const [groupAvec] = ldScripts(await renderLd(avec))[0]
+  assert.deepEqual(groupAvec.hasVariant.map((v) => v.image), groupSans.hasVariant.map((v) => v.image))
+  // Et le groupe de produits ne la lit jamais.
+  const section = code('sections/main-product.liquid')
+  const ld = section.slice(section.indexOf('{%- capture group_kind -%}'), section.indexOf('{%- else -%}\n<script type="application/ld+json">'))
+  assert.ok(ld.includes('ProductGroup'), 'le JSON-LD du groupe')
+  assert.doesNotMatch(ld, /variant\.(featured_media|featured_image|image)\b/)
+})
+
+test('rendu des données Google : le poster (cadre en option 2), sans cadre le papier, encadré la principale', { skip: SKIP }, async () => {
+  const poster = withFramePhotos(product({ suffix: 'oeuvre-3d', poster: true, files: [FLAT, PHOTO] }), ['sans-cadre'])
+  const [group] = ldScripts(await renderLd(poster))[0]
   for (const [i, variant] of group.hasVariant.entries()) {
     const source = poster.variants[i]
     assert.equal(variant.color, source.option2)
-    assert.equal(variant.image, `https:${FILES}${source.option2 === 'Sans cadre' ? FRAME_FILES['Sans cadre'] : PHOTO[0]}?v=1&width=2000`)
+    const file = source.option2 === 'Sans cadre' ? framePhoto(poster, 'sans-cadre') : PHOTO[0]
+    assert.equal(variant.image, photoUrl(file), source.title)
   }
-  // Avant les photos du serveur : chaque variante a l'image du groupe (la photo studio, ou l'œuvre à plat).
+})
+
+test('rendu des données Google : le nom entier de la photo, suffixe de Shopify compris ; sans elle, l’image du groupe', { skip: SKIP }, async () => {
+  const imagesDe = async (p) => {
+    const [group] = ldScripts(await renderLd(p))[0]
+    return Object.fromEntries(group.hasVariant.map((v, i) => [p.variants[i].option3, v.image]))
+  }
+  // Un nom déjà pris chez Shopify : « …-cadre-chene_5f1c2a.jpg ».
+  let toile = withFramePhotos(product({ suffix: 'oeuvre-3d', files: [FLAT, PHOTO] }), ['cadre-chene'], '_5f1c2a')
+  let images = await imagesDe(toile)
+  assert.equal(images['Cadre chêne clair'], photoUrl(framePhoto(toile, 'cadre-chene', '_5f1c2a')))
+  // Les cadres sans photo, et le noyer d'un autre produit : l'image du groupe, la principale.
+  assert.equal(images['Cadre noyer'], url(PHOTO))
+  toile = product({ suffix: 'oeuvre-3d', files: [FLAT, PHOTO, ['photo-studio-un-autre-produit-cadre-noyer.jpg', 2000, 2000]] })
+  images = await imagesDe(toile)
+  assert.equal(images['Cadre noyer'], url(PHOTO))
+  // Avant les photos du serveur : chaque variante a l'image du groupe (l'œuvre à plat).
   const nue = product({ suffix: 'oeuvre-3d', files: [FLAT] })
-  ;[group] = ldScripts(await renderLd(nue))[0]
+  let [group] = ldScripts(await renderLd(nue))[0]
   assert.deepEqual([...new Set(group.hasVariant.map((v) => v.image))], [url(FLAT)])
   // Sur une adresse ?variant=, la seule variante choisie, comme le prix affiché.
   nue.selected_variant = nue.variants[7]

@@ -12,14 +12,19 @@
   photos (snippets/oeuvre-3d-stage.liquid) ; cartes, panier, « Mes j'aime » et mails ne lisent que l'œuvre à
   plat (snippet artwork-flat-index, ou la 1re image).
 
-  Le serveur ajoute aussi, juste derrière elle, une photo par autre cadre vendu (« photo-studio-<handle>-cadre-…»,
-  « …-sans-cadre »), l'image des variantes de ce cadre : les données Google la lisent sur la variante. La
-  principale reste la 1re photo studio après l'œuvre à plat : le serveur la met en 2e image avant d'ajouter ou de
-  retirer les autres. Avec toutes: true, ce snippet rend l'index de chacune, principale comprise, pour les tenir
-  toutes hors des photos de la fiche 3D.
+  Le serveur ajoute aussi, juste derrière elle, une photo par autre cadre vendu, sous le nom
+  « photo-studio-<handle>-<photo> » (« cadre-chene », « sans-cadre » : templates/product.photo-studio.liquid). Il
+  ne la donne à aucune variante : Shopify montrerait l'image d'une variante hors du thème (paiement, mails), et le
+  cadre d'un poster est une propriété de ligne. Les données Google de la fiche la retrouvent ici, par son nom
+  (photo:), pour les variantes de ce cadre. La principale reste la 1re photo studio après l'œuvre à plat : le
+  serveur la met en 2e image avant d'ajouter ou de retirer les autres. Avec toutes: true, ce snippet rend l'index
+  de chacune, principale comprise, pour les tenir toutes hors des photos de la fiche 3D.
 
   Accepts:
     - product: {Object} le produit
+    - photo: {String} la photo d'un cadre, et non la principale : son nom (« cadre-chene », « sans-cadre »),
+      reconnu au nom entier de son fichier : « photo-studio- », le handle (coupé à 200 signes, comme le serveur
+      le coupe), « - », le nom, puis l'extension ou le suffixe qu'ajoute Shopify à un nom déjà pris. Facultatif.
     - toutes: {Boolean} chaque photo studio, et non la seule principale. Facultatif.
 
   Usage :
@@ -27,7 +32,7 @@
     {%- assign studio_index = studio_index | default: -1 | plus: 0 -%}
     {%- if studio_index >= 0 -%}… product.media[studio_index] …{%- endif -%}
   Le résultat sort sans aucun espace : rien, ou l'index. « | default: -1 | plus: 0 » en fait un nombre, -1 sans
-  photo : ne jamais lire product.media[-1], qui serait le dernier média.
+  photo : ne jamais lire product.media[-1], qui serait le dernier média. Même usage avec photo:.
   Avec toutes: true, rien ou les index entourés de virgules (« ,1,2,3, ») : chercher « ,<index>, » dedans.
   Tests : scripts/photo-studio.test.cjs.
 {%- endcomment -%}
@@ -36,23 +41,41 @@
     render 'artwork-kind', product: product, suffix: product.template_suffix, image_unique: true
   endcapture
   if kind != blank
-    assign found = false
-    for media in product.media
-      unless forloop.first
-        if media.media_type == 'image' and media.preview_image.src contains 'photo-studio'
-          if toutes
-            unless found
-              echo ','
-            endunless
-            echo forloop.index0
-            echo ','
-            assign found = true
-          else
-            echo forloop.index0
-            break
+    if photo != blank
+      assign stem = product.handle | slice: 0, 200 | prepend: 'photo-studio-' | append: '-' | append: photo
+      assign stem_extension = stem | append: '.'
+      assign stem_souligne = stem | append: '_'
+      assign stem_tiret = stem | append: '-'
+      for media in product.media
+        unless forloop.first
+          if media.media_type == 'image'
+            assign src = media.preview_image.src
+            if src contains stem_extension or src contains stem_souligne or src contains stem_tiret
+              echo forloop.index0
+              break
+            endif
           endif
-        endif
-      endunless
-    endfor
+        endunless
+      endfor
+    else
+      assign found = false
+      for media in product.media
+        unless forloop.first
+          if media.media_type == 'image' and media.preview_image.src contains 'photo-studio'
+            if toutes
+              unless found
+                echo ','
+              endunless
+              echo forloop.index0
+              echo ','
+              assign found = true
+            else
+              echo forloop.index0
+              break
+            endif
+          endif
+        endunless
+      endfor
+    endif
   endif
 -%}

@@ -801,11 +801,12 @@
    produits, comme le demande Google pour les variantes (developers.google.com/search/docs/appearance/
    structured-data/product-variants) : le groupe (son adresse, ses images, sa marque, sa note), puis chaque variante,
    avec son nom, son identifiant (sa référence, sinon son id), sa taille, son cadre (la couleur, la seule propriété
-   de Google qui le dise) et son image : la photo de son cadre, que le serveur lui donne (templates/
-   product.photo-studio.liquid) ; sans elle, l'image du groupe. Son offre est celle d'avant : prix, disponibilité,
-   adresse de la variante ; la livraison et les retours, décrits une fois et cités par chaque offre. Sur une adresse
-   ?variant=, la seule variante choisie (ld_variants), comme avant. Tout autre produit garde sa ligne de toujours,
-   à l'octet près. {%- endcomment -%}
+   de Google qui le dise) et son image : la photo de son cadre (templates/product.photo-studio.liquid), retrouvée
+   par son nom de fichier ; sans elle, l'image du groupe. Jamais l'image de la variante dans Shopify : aucune n'est
+   donnée, Shopify la montrerait hors du thème. Son offre est celle d'avant : prix, disponibilité, adresse de la
+   variante ; la livraison et les retours, décrits une fois et cités par chaque offre. Sur une adresse ?variant=, la
+   seule variante choisie (ld_variants), comme avant. Tout autre produit garde sa ligne de toujours, à l'octet
+   près. {%- endcomment -%}
 {%- capture group_kind -%}{% render 'artwork-kind', product: product, suffix: product.template_suffix, image_unique: true %}{%- endcapture -%}
 {%- if group_kind != blank -%}
   {%- liquid
@@ -824,6 +825,41 @@
     if product.options_with_values.size >= frame_position
       assign has_frame_option = true
     endif
+    # La photo de chaque valeur de l'option cadre, cherchée une fois par valeur : son index parmi les médias, -1
+    # sans photo. Le cadre d'une valeur se lit comme une ligne le lit (snippet artwork-frame, avec la 1re variante
+    # qui la porte, comme la page des photos) ; sa photo, par son nom (snippet artwork-studio-index, photo:) :
+    # « cadre-<id> » d'une toile, « sans-cadre » d'un poster sans cadre. Le cadre par défaut (la toile sans cadre,
+    # le poster encadré) n'a pas de photo à lui : c'est la principale, l'image du groupe.
+    assign frame_photo_indexes = ''
+    if has_frame_option
+      for option in product.options_with_values
+        if option.position == frame_position
+          for value in option.values
+            assign value_variant = product.variants | where: frame_key, value.name | first
+            capture value_frame
+              render 'artwork-frame', product: product, variant: value_variant, kind: group_kind
+            endcapture
+            assign value_photo = ''
+            if group_kind == 'poster'
+              if value_frame == 'sans'
+                assign value_photo = 'sans-cadre'
+              endif
+            elsif value_frame != 'sans'
+              assign value_photo = 'cadre-' | append: value_frame
+            endif
+            assign value_index = -1
+            if value_photo != blank
+              capture value_index
+                render 'artwork-studio-index', product: product, photo: value_photo
+              endcapture
+              assign value_index = value_index | default: -1 | plus: 0
+            endif
+            assign frame_photo_indexes = frame_photo_indexes | append: value_index | append: ','
+          endfor
+        endif
+      endfor
+    endif
+    assign frame_photo_indexes = frame_photo_indexes | split: ','
   -%}
 <script type="application/ld+json">
   [
@@ -849,7 +885,25 @@
         {%- comment -%} Une variante en trois lignes : jusqu'à 120 variantes par toile, la fiche ne s'alourdit pas
            d'espaces. {%- endcomment -%}
         {%- for variant in ld_variants -%}
-          {%- assign variant_image = variant.featured_media | default: group_image %}
+          {%- liquid
+            # La photo du cadre de la variante (plus haut), sinon l'image du groupe.
+            assign variant_image = group_image
+            if has_frame_option
+              for option in product.options_with_values
+                if option.position == frame_position
+                  for value in option.values
+                    if value.name == variant[frame_key]
+                      assign value_index = frame_photo_indexes[forloop.index0] | plus: 0
+                      if value_index >= 0
+                        assign variant_image = product.media[value_index]
+                      endif
+                      break
+                    endif
+                  endfor
+                endif
+              endfor
+            endif
+          %}
         { "@type": "Product", "sku": {{ variant.sku | default: variant.id | append: '' | json }}, "name": {{ product.title | append: ' - ' | append: variant.title | json }},
           "image": {{ variant_image | image_url: width: variant_image.preview_image.width | prepend: "https:" | json }}, "size": {{ variant.option1 | json }}{% if has_frame_option and variant[frame_key] != blank %}, "color": {{ variant[frame_key] | json }}{% endif %},
           "offers": { "@type": "Offer",{% if variant.barcode.size == 12 %} "gtin12": {{ variant.barcode }},{% endif %}{% if variant.barcode.size == 13 %} "gtin13": {{ variant.barcode }},{% endif %}{% if variant.barcode.size == 14 %} "gtin14": {{ variant.barcode }},{% endif %} "availability": "https://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}", "price": {{ variant.price | divided_by: 100.00 | json }}, "priceValidUntil": "{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' }}", "priceCurrency": {{ cart.currency.iso_code | json }}, "url": {{ request.origin | append: variant.url | json }}, "seller": { "@type": "Organization", "name": {{ product.vendor | json }} }{% if section.settings.enable_merchant_schema %}, "shippingDetails": { "@id": "#livraison" }, "hasMerchantReturnPolicy": { "@id": "#retours" }{% endif %} } }{% unless forloop.last %},{% endunless %}
