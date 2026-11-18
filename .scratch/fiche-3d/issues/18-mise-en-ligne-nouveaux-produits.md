@@ -23,7 +23,7 @@
   - Brouillons d'essai supprimés le 18/11 sur l'accord de Walid, par la commande « brouillons-supprimer », qui refuse tout produit hors brouillon :
     - les 2 de l'essai, avec leurs métaobjets ;
     - ceux du 05/11 (10862725824859) et du 08/11 (10871297376603).
-- [ ] Les anciens mockups ne servent plus pour les toiles ni les posters, et le code devenu inutile est retiré.
+- [x] Les anciens mockups ne servent plus pour les toiles ni les posters, et le code devenu inutile est retiré. *(18/11/2026, « retire l'ancien code des mockups si plus utilisé », puis « Retire-les » de Walid. Front 4272be8 et 02b8f1b, backend 8e947a4 à 75b2c2b puis 8631f32. Retirés : le bouton « Mockups » d'une toile ou d'un poster, l'automatisation Photoshop, `image:rename`, les posters en masse (page, routes, tâche `RepairPendingPosters`, `shopify:backfill_posters`, flux de l'agent du PC) et le reimage d'une toile ou d'un poster. Gardés : tapisseries, poster personnalisé, reimage d'une tapisserie. Le nouveau chemin n'a changé que dans un commentaire. Vérifié en ligne : routes retirées en 404, front servi identique à la branche. Hors dépôt : la machine du moteur de rendu doit faire un `git pull` puis relancer `node server.js` ; les modèles PSD de toile et les favoris « canvas » du moteur sont devenus inutiles.)*
 - [ ] Un point envoyé à Walid au bout de 2 semaines, puis de 4 : chiffres et observations.
 - [ ] Aucune fiche existante n'a changé de modèle de page.
 
