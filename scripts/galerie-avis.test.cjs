@@ -101,11 +101,17 @@ function ruleOf(head, context, list) {
 const body = (head, context = '') => ruleOf(head, context, false)
 const shared = (head, context = '') => ruleOf(head, context, true)
 
-test('la feuille : le bloc du ticket est le dernier du fichier, et ne redéfinit rien de la présentation', () => {
-  const source = read(CSS)
+// Le bloc du ticket est complet, entre ses deux repères. D'autres sections de la page ajoutent leur bloc après lui :
+// l'ordre des blocs n'importe pas (scripts/oeuvre-galerie.test.cjs vérifie qu'aucun code n'est hors d'un bloc).
+const completeBlock = (file) => {
+  const source = read(file)
+  const start = source.indexOf(`/* === ${BLOCK} : début ===`)
   const end = source.indexOf(`/* === ${BLOCK} : fin === */`)
-  assert.ok(end > 0)
-  assert.equal(source.slice(end).replace(/\/\*[\s\S]*?\*\//g, '').trim(), '', 'rien après le bloc')
+  assert.ok(start >= 0 && end > start, `${file} : le bloc du ticket, entre ses deux repères`)
+}
+
+test('la feuille : le bloc du ticket est complet, et ne redéfinit rien de la présentation', () => {
+  completeBlock(CSS)
   // .galerie-avis et .galerie-avis-texte sont la note de la présentation (ticket 19) : la section des avis a ses
   // propres noms, et aucune règle du bloc ne touche à une classe du socle.
   const taken = ['.galerie', '.galerie-bande', '.galerie-monte', '.galerie-mot', '.galerie-surtitre', '.galerie-avis', '.galerie-avis-texte', '.galerie-titre', '.galerie-court', '.galerie-intro', '.galerie-fiche', '.galerie-etoiles', '.galerie-aime']
@@ -287,11 +293,8 @@ function page({ unveil = true } = {}) {
   return { defined, observers, unveiled, run }
 }
 
-test('le script : le bloc du ticket, à la fin du fichier, ne pose rien de global', () => {
-  const source = read(JS)
-  const end = source.indexOf(`/* === ${BLOCK} : fin === */`)
-  assert.ok(end > 0)
-  assert.equal(source.slice(end).replace(/\/\*[\s\S]*?\*\//g, '').trim(), '', 'rien après le bloc')
+test('le script : le bloc du ticket est complet, et ne pose rien de global', () => {
+  completeBlock(JS)
   const js = blockOf(JS).replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, '')
   assert.match(js, /^\s*\(function \(\) {\s*'use strict';/)
   // Sous Node (les tests du socle chargent le fichier), le bloc s'arrête avant de toucher au navigateur.

@@ -120,9 +120,13 @@ test('la feuille : aucun mouvement hors « mouvements voulus », rien ne suit le
   // Tout mouvement attend « mouvements voulus ». Ce qui suit le défilement (animation-timeline) attend en plus un
   // navigateur qui sait lier une animation au défilement ; le mouvement d'un geste (un volet qui se déplie,
   // ticket 22) se joue dans tout navigateur.
+  // Le mode de secours de la scène (ticket 20), là où le navigateur ne lie pas l'animation au défilement : un script
+  // donne la position et la scène rejoue les mêmes images clés, en pause ; rien n'y est lié au défilement.
+  const SECOURS = /^galerie-scene\[data-mouvement="secours"\] /
   for (const r of animated) {
     if (/animation-timeline\s*:/.test(r.body)) assert.deepEqual(r.context, [MOTION, LINKED], r.head)
     else assert.equal(r.context[0], MOTION, r.head)
+    if (SECOURS.test(r.head)) assert.doesNotMatch(r.body, /timeline|animation-range/, `${r.head} : rien de lié au défilement`)
   }
   // Les mots arrivent l'un après l'autre (--i, posé par le script), la fiche monte : seulement transform et opacity.
   const word = animated.find((r) => r.head === 'galerie-mots .galerie-mot')
@@ -131,7 +135,8 @@ test('la feuille : aucun mouvement hors « mouvements voulus », rien ne suit le
   assert.match(rise.body, /animation: galerie-monte linear both;\s*animation-timeline: view\(\);\s*animation-range: cover 0% cover 22%;/)
   for (const frames of sheet().filter((r) => /^@keyframes /.test(r.head))) {
     const properties = [...frames.body.matchAll(/([\w-]+)\s*:/g)].map((m) => m[1])
-    assert.deepEqual([...new Set(properties)].sort(), ['opacity', 'transform'], frames.head)
+    // Rien d'autre que transform et opacity : l'une, l'autre ou les deux (un fondu n'anime que l'opacité).
+    assert.deepEqual([...new Set(properties)].filter((p) => !['opacity', 'transform'].includes(p)), [], frames.head)
   }
 })
 

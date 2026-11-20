@@ -1,0 +1,210 @@
+{%- comment -%}
+  La scène en quatre temps de la page galerie (fiche-3d, ticket 20), sous la présentation : l'œuvre montrée
+  en quatre temps qui suivent le défilement. Le regard (un public de tableau ancien vient se masser devant
+  elle, un oiseau se pose sur son coin), les couleurs, la lumière (la pièce passe au noir, une lampe de
+  tableau s'allume, une dame sur son lit dit « Laissez allumé. »), la matière (l'œuvre grossit, une main la
+  touche). Portée de la maquette validée par Walid le 20/11/2026 (.scratch/fiche-3d/galerie, version 13,
+  section .visite). Ses styles sont dans assets/oeuvre-galerie.css (bloc « Scène en quatre temps », règles
+  .galerie-scene-*), son comportement dans assets/oeuvre-galerie.js (élément <galerie-scene>) : le bloc
+  principal de la fiche les charge en page galerie (sections/main-product.liquid).
+
+  Sans script, ou en « mouvements réduits », la scène est à plat : l'œuvre, puis les quatre textes à la
+  suite. L'élément <galerie-scene> pose l'état animé (data-mouvement) à son arrivée dans la page : ici, rien.
+
+  - L'œuvre est l'image à plat du produit, celle que montre la scène 3D : à sa place d'après le snippet
+    artwork-flat-index, à ses proportions (--ratio, la seule valeur passée à la feuille, comme --note de la
+    présentation). Un décor ici : son texte alternatif est sur l'image de la scène 3D.
+  - Une page n'écrit que la version de son produit : toile ou poster (métachamp frames_poster, comme le bloc
+    principal).
+  - Les personnages sont des images détourées de tableaux anciens, sous des noms neutres, jamais nommés :
+    un décor, sans texte alternatif, chargé en différé (l'élément les demande quand la scène approche).
+  - Un élément vide garde sa place par data-allow-empty : le thème cache tout élément vide (input.css).
+  - Tout ce qui bouge porte la classe galerie-scene-a.
+  - Le temps 2 pose son titre, l'œuvre et la place des couleurs (galerie-scene-teintes dans l'œuvre,
+    galerie-scene-palette à côté d'elle). La lecture des couleurs, les pastilles et les phrases sont le
+    ticket 21.
+
+  Hors d'une fiche d'œuvre (règle unique : snippet artwork-kind), ou sans image à plat, la section ne rend rien.
+{%- endcomment -%}
+{%- liquid
+  capture artwork_kind
+    render 'artwork-kind', product: product, suffix: template.suffix
+  endcapture
+  capture flat_index
+    render 'artwork-flat-index', product: product
+  endcapture
+  assign flat_index = flat_index | plus: 0
+  assign art_media = product.media[flat_index]
+  assign art = art_media.preview_image
+  assign is_poster = false
+  if product.metafields.painting_options.frames_poster != blank
+    assign is_poster = true
+  endif
+  # Largeur sur hauteur : 0,75 pour un portrait 3:4, 1,33 pour un paysage, 1 pour un carré.
+  assign art_ratio = art.aspect_ratio | default: 0.75 | round: 4
+  if art_ratio <= 0
+    assign art_ratio = 0.75
+  endif
+-%}
+{%- if artwork_kind != blank and art_media.media_type == 'image' -%}
+  {%- comment -%} L'image de l'œuvre : les paliers de la scène 3D (snippets/oeuvre-3d-stage.liquid), et pas plus
+     de 2000 px (au temps 4, elle grossit). La même source pour l'œuvre et sa copie avivée : un seul téléchargement.
+     crossorigin, comme la scène 3D : quand le navigateur choisit la même taille qu'elle, c'est la même requête ; et
+     ses pixels restent lisibles pour les couleurs du temps 2 (ticket 21). {%- endcomment -%}
+  {%- capture art_source -%}
+    src="{{ art | image_url: width: 750 }}"
+    srcset="{%- if art.width >= 400 -%}{{ art | image_url: width: 400 }} 400w,{%- endif -%}
+      {%- if art.width >= 550 -%}{{ art | image_url: width: 550 }} 550w,{%- endif -%}
+      {%- if art.width >= 750 -%}{{ art | image_url: width: 750 }} 750w,{%- endif -%}
+      {%- if art.width >= 1100 -%}{{ art | image_url: width: 1100 }} 1100w,{%- endif -%}
+      {%- if art.width >= 1500 -%}{{ art | image_url: width: 1500 }} 1500w,{%- endif -%}
+      {%- if art.width > 2000 -%}{{ art | image_url: width: 2000 }} 2000w{%- else -%}{{ art | image_url }} {{ art.width }}w{%- endif -%}"
+    sizes="(min-width: 900px) 45vw, 86vw"
+    width="{{ art.width }}" height="{{ art.height }}" alt="" loading="lazy" decoding="async" crossorigin="anonymous"
+  {%- endcapture -%}
+  <galerie-scene
+    class="galerie galerie-scene"
+    role="region"
+    aria-label="{{ 'sections.mma.galerie.scene.label' | t }}"
+    data-support="{% if is_poster %}poster{% else %}toile{% endif %}"
+    style="--ratio: {{ art_ratio }}">
+    <div class="galerie-scene-ecran">
+      {%- comment -%} Trois sondes, lues par le script : un écran (100svh), un mètre de la scène (--cm) et la
+         ligne du sol où posent les personnages (--pied). {%- endcomment -%}
+      <i class="galerie-scene-sonde galerie-scene-sonde-ecran" data-allow-empty aria-hidden="true"></i>
+      <i class="galerie-scene-sonde galerie-scene-sonde-cm" data-allow-empty aria-hidden="true"></i>
+      <i class="galerie-scene-sonde galerie-scene-sonde-pied" data-allow-empty aria-hidden="true"></i>
+      {%- comment -%} Le mur et le sol : des aplats empilés, le suivant se fond par-dessus. {%- endcomment -%}
+      <div class="galerie-scene-murs" aria-hidden="true">
+        <i class="galerie-scene-mur-ciel" data-allow-empty></i>
+        <i class="galerie-scene-mur-creme galerie-scene-a" data-allow-empty></i>
+        <i class="galerie-scene-mur-lilas galerie-scene-a" data-allow-empty></i>
+        <i class="galerie-scene-mur-nuit galerie-scene-a" data-allow-empty></i>
+      </div>
+      <div class="galerie-scene-sols" aria-hidden="true">
+        <i class="galerie-scene-sol-rose" data-allow-empty></i>
+        <i class="galerie-scene-sol-soleil galerie-scene-a" data-allow-empty></i>
+        <i class="galerie-scene-sol-menthe galerie-scene-a" data-allow-empty></i>
+        <i class="galerie-scene-sol-nuit galerie-scene-a" data-allow-empty></i>
+      </div>
+      <div class="galerie-scene-zone">
+        <div class="galerie-scene-chapitres">
+          <article class="galerie-scene-chap galerie-scene-regard galerie-scene-a">
+            <p class="galerie-surtitre"><i>1</i> {{ 'sections.mma.galerie.scene.look' | t }}</p>
+            <h2>{{ 'sections.mma.galerie.scene.look_title_html' | t }}</h2>
+            <p>{{ 'sections.mma.galerie.scene.look_text' | t }}</p>
+          </article>
+          <article class="galerie-scene-chap galerie-scene-couleurs galerie-scene-a">
+            <p class="galerie-surtitre"><i>2</i> {{ 'sections.mma.galerie.scene.colors' | t }}</p>
+            <h2>{{ 'sections.mma.galerie.scene.colors_title_html' | t }}</h2>
+            {%- comment -%} Ticket 21 : les phrases des couleurs s'écrivent ici, sous le titre, dans un
+               <div class="galerie-scene-messages">, comme celles de la lumière plus bas. {%- endcomment -%}
+          </article>
+          {%- comment -%} La lumière : les mêmes phrases pour toutes les œuvres. Dans ce temps, la pièce est
+             noire et le texte blanc. {%- endcomment -%}
+          <article class="galerie-scene-chap galerie-scene-lumiere galerie-scene-a">
+            <p class="galerie-surtitre"><i>3</i> {{ 'sections.mma.galerie.scene.light' | t }}</p>
+            <h2>{{ 'sections.mma.galerie.scene.light_title_html' | t }}</h2>
+            <div class="galerie-scene-messages">
+              <p class="galerie-scene-msg galerie-scene-a"><b>{{ 'sections.mma.galerie.scene.light_off' | t }}</b> {{ 'sections.mma.galerie.scene.light_off_text' | t }}</p>
+              <p class="galerie-scene-msg galerie-scene-a"><b>{{ 'sections.mma.galerie.scene.light_lamp' | t }}</b> {{ 'sections.mma.galerie.scene.light_lamp_text' | t }}</p>
+              <p class="galerie-scene-msg galerie-scene-a"><b>{{ 'sections.mma.galerie.scene.light_on' | t }}</b> {% if is_poster %}{{ 'sections.mma.galerie.scene.light_on_text_poster' | t }}{% else %}{{ 'sections.mma.galerie.scene.light_on_text_canvas' | t }}{% endif %}</p>
+            </div>
+          </article>
+          <article class="galerie-scene-chap galerie-scene-matiere galerie-scene-a">
+            <p class="galerie-surtitre"><i>4</i> {{ 'sections.mma.galerie.scene.matter' | t }}</p>
+            {%- if is_poster -%}
+              <h2>{{ 'sections.mma.galerie.scene.matter_title_poster_html' | t }}</h2>
+              <p>{{ 'sections.mma.galerie.scene.matter_text_poster' | t }}</p>
+            {%- else -%}
+              <h2>{{ 'sections.mma.galerie.scene.matter_title_canvas_html' | t }}</h2>
+              <p>{{ 'sections.mma.galerie.scene.matter_text_canvas' | t }}</p>
+            {%- endif -%}
+          </article>
+        </div>
+        {%- comment -%} L'œuvre, dans la place qui reste sous le texte. Quatre enveloppes, une par mouvement :
+           elle dérive, se place au-dessus du lit (temps 3), se recentre et grossit (temps 4). La lueur, la
+           lampe et l'oiseau sont dans l'enveloppe qui se place : ils suivent l'œuvre. {%- endcomment -%}
+        <div class="galerie-scene-cadre">
+          <div class="galerie-scene-derive galerie-scene-a">
+            <div class="galerie-scene-place galerie-scene-a">
+              <i class="galerie-scene-lueur galerie-scene-a" data-allow-empty aria-hidden="true"></i>
+              <div class="galerie-scene-centre galerie-scene-a">
+                <div class="galerie-scene-oeuvre galerie-scene-a">
+                  <img class="galerie-scene-image" {{ art_source }}>
+                  {%- comment -%} Ticket 21 : les couleurs de l'œuvre reviennent ici, par-dessus l'image (et
+                     son voile gris, à poser juste avant), sous le cache de la nuit. {%- endcomment -%}
+                  <div class="galerie-scene-teintes"></div>
+                  <i class="galerie-scene-cache galerie-scene-a" data-allow-empty></i>
+                  <img class="galerie-scene-vive galerie-scene-a" {{ art_source }}>
+                  <i class="galerie-scene-reflet galerie-scene-a" data-allow-empty></i>
+                  {%- if is_poster -%}
+                    <div class="galerie-scene-brillance galerie-scene-a"><i class="galerie-scene-glisse galerie-scene-a" data-allow-empty></i></div>
+                  {%- else -%}
+                    <div class="galerie-scene-trame galerie-scene-a" data-allow-empty></div>
+                  {%- endif -%}
+                </div>
+              </div>
+              <div class="galerie-scene-lampe galerie-scene-a" aria-hidden="true">
+                <i class="galerie-scene-lampe-patere" data-allow-empty></i>
+                <i class="galerie-scene-lampe-bras" data-allow-empty></i>
+                <i class="galerie-scene-lampe-tube" data-allow-empty></i>
+                <i class="galerie-scene-lampe-feu galerie-scene-a" data-allow-empty></i>
+              </div>
+              <div class="galerie-scene-oiseau galerie-scene-a" aria-hidden="true">
+                <img src="{{ 'galerie-oiseau.webp' | asset_url }}" width="176" height="176" alt="" loading="lazy" decoding="async">
+              </div>
+            </div>
+          </div>
+          {%- comment -%} Ticket 21 : les pastilles des couleurs se posent ici, sous l'œuvre (à sa droite sur
+             ordinateur). {%- endcomment -%}
+          <div class="galerie-scene-palette galerie-scene-a" aria-hidden="true"></div>
+        </div>
+      </div>
+      {%- comment -%} Le public du temps 1, posé devant l'œuvre : la même image trois fois, découpée en trois
+         groupes qui arrivent chacun de son côté et se referment devant elle. {%- endcomment -%}
+      <div class="galerie-scene-invite galerie-scene-public" aria-hidden="true">
+        <img class="galerie-scene-public-gauche galerie-scene-a" src="{{ 'galerie-public.webp' | asset_url }}" width="1687" height="680" alt="" loading="lazy" decoding="async">
+        <img class="galerie-scene-public-milieu galerie-scene-a" src="{{ 'galerie-public.webp' | asset_url }}" width="1687" height="680" alt="" loading="lazy" decoding="async">
+        <img class="galerie-scene-public-droite galerie-scene-a" src="{{ 'galerie-public.webp' | asset_url }}" width="1687" height="680" alt="" loading="lazy" decoding="async">
+      </div>
+      {%- comment -%} La dame du temps 3, sur son lit, et son mot une fois la lampe allumée. {%- endcomment -%}
+      <div class="galerie-scene-lit galerie-scene-a" aria-hidden="true">
+        <div class="galerie-scene-dame">
+          <img src="{{ 'galerie-dame.webp' | asset_url }}" width="1118" height="560" alt="" loading="lazy" decoding="async">
+        </div>
+        <p class="galerie-scene-mot galerie-scene-a">{{ 'sections.mma.galerie.scene.light_quote' | t }}</p>
+      </div>
+      {%- comment -%} La main du temps 4, et l'étincelle au bout de son doigt. {%- endcomment -%}
+      <div class="galerie-scene-invite galerie-scene-main galerie-scene-a" aria-hidden="true">
+        <img src="{{ 'galerie-main.webp' | asset_url }}" width="729" height="440" alt="" loading="lazy" decoding="async">
+        <svg class="galerie-scene-touche galerie-scene-a" viewBox="0 0 40 40" focusable="false"><path d="M20 2v9M20 29v9M2 20h9M29 20h9M7.3 7.3l6.4 6.4M26.3 26.3l6.4 6.4M32.7 7.3l-6.4 6.4M13.7 26.3l-6.4 6.4"/></svg>
+      </div>
+      {%- comment -%} Le repère : quatre traits qui se remplissent ; toucher un trait mène à son temps
+         (data-temps : en écrans depuis l'épinglage de la scène). Chaque trait a son double blanc, qui
+         paraît pendant la nuit du temps 3. {%- endcomment -%}
+      <ol class="galerie-scene-rail" aria-label="{{ 'sections.mma.galerie.scene.steps' | t }}">
+        <li><button type="button" data-temps="0.02" aria-label="1, {{ 'sections.mma.galerie.scene.look' | t }}"><i class="galerie-scene-blanc galerie-scene-a" data-allow-empty></i><i class="galerie-scene-plein galerie-scene-a"><i class="galerie-scene-blanc galerie-scene-a" data-allow-empty></i></i></button></li>
+        <li><button type="button" data-temps="1" aria-label="2, {{ 'sections.mma.galerie.scene.colors' | t }}"><i class="galerie-scene-blanc galerie-scene-a" data-allow-empty></i><i class="galerie-scene-plein galerie-scene-a"><i class="galerie-scene-blanc galerie-scene-a" data-allow-empty></i></i></button></li>
+        <li><button type="button" data-temps="2.2" aria-label="3, {{ 'sections.mma.galerie.scene.light' | t }}"><i class="galerie-scene-blanc galerie-scene-a" data-allow-empty></i><i class="galerie-scene-plein galerie-scene-a"><i class="galerie-scene-blanc galerie-scene-a" data-allow-empty></i></i></button></li>
+        <li><button type="button" data-temps="3.78" aria-label="4, {{ 'sections.mma.galerie.scene.matter' | t }}"><i class="galerie-scene-blanc galerie-scene-a" data-allow-empty></i><i class="galerie-scene-plein galerie-scene-a"><i class="galerie-scene-blanc galerie-scene-a" data-allow-empty></i></i></button></li>
+      </ol>
+    </div>
+  </galerie-scene>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Galerie : la scène",
+  "limit": 1,
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "L'œuvre en quatre temps qui suivent le défilement : le regard, les couleurs, la lumière, la matière. À placer juste sous le bloc principal d'une fiche en page galerie (scène 3D et case « Page galerie » cochées) : c'est lui qui charge ses styles et son script. Rien à régler : l'image est celle de l'œuvre, les textes sont dans les fichiers de langue."
+    }
+  ]
+}
+{% endschema %}

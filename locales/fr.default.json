@@ -773,6 +773,30 @@
           "help_text": "Une vraie personne vous répond 7 jours sur 7.",
           "help_button": "Nous écrire",
           "bubble": "Allô, j’écoute !"
+        },
+        "scene": {
+          "label": "L’œuvre en quatre temps : le regard, les couleurs, la lumière, la matière",
+          "steps": "Les quatre temps",
+          "look": "Le regard",
+          "look_title_html": "Impossible de passer devant <b>sans s’arrêter.</b>",
+          "look_text": "Un regard suffit pour être happé. Et on y revient : il reste toujours un détail à découvrir.",
+          "colors": "Les couleurs",
+          "colors_title_html": "Chaque couleur <b>agit sur vous.</b>",
+          "light": "La lumière",
+          "light_title_html": "Éclairé <b>comme au musée.</b>",
+          "light_off": "Le soir, sans lumière.",
+          "light_off_text": "Les couleurs s’endorment avec le jour.",
+          "light_lamp": "Une lampe de tableau.",
+          "light_lamp_text": "Fixée juste au-dessus, comme dans les musées.",
+          "light_on": "Lampe allumée.",
+          "light_on_text_canvas": "Les couleurs se réveillent : le tableau prend toute sa prestance.",
+          "light_on_text_poster": "Les couleurs se réveillent : le poster prend toute sa prestance.",
+          "light_quote": "Laissez allumé.",
+          "matter": "La matière",
+          "matter_title_canvas_html": "Le grain d’une <b>vraie toile.</b>",
+          "matter_text_canvas": "Épaisse, tendue à la main sur un châssis en bois massif. On a envie d’y toucher.",
+          "matter_title_poster_html": "Un vrai <b>papier photo.</b>",
+          "matter_text_poster": "Épais, 250 g/m², pour un tirage net aux couleurs éclatantes. À encadrer, ou à poser tel quel."
         }
       }
     },

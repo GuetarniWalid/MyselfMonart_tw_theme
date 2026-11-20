@@ -628,6 +628,30 @@
           "help_text": "A real person answers you, 7 days a week.",
           "help_button": "Write to us",
           "bubble": "I’m all ears!"
+        },
+        "scene": {
+          "label": "The artwork in four moments: first glance, the colours, the light, the material",
+          "steps": "The four moments",
+          "look": "First glance",
+          "look_title_html": "Impossible to walk past <b>without stopping.</b>",
+          "look_text": "One look and you’re hooked. And you keep coming back: there is always one more detail to discover.",
+          "colors": "The colours",
+          "colors_title_html": "Every colour <b>does something to you.</b>",
+          "light": "The light",
+          "light_title_html": "Lit <b>like a museum piece.</b>",
+          "light_off": "Evening, lights off.",
+          "light_off_text": "The colours fall asleep with the day.",
+          "light_lamp": "A picture light.",
+          "light_lamp_text": "Fixed just above, as in museums.",
+          "light_on": "Light on.",
+          "light_on_text_canvas": "The colours wake up: the canvas comes into its own.",
+          "light_on_text_poster": "The colours wake up: the poster comes into its own.",
+          "light_quote": "Leave it on.",
+          "matter": "The material",
+          "matter_title_canvas_html": "The grain of <b>real canvas.</b>",
+          "matter_text_canvas": "Thick, stretched by hand over a solid wood stretcher. You just want to touch it.",
+          "matter_title_poster_html": "Real <b>photo paper.</b>",
+          "matter_text_poster": "Thick, 250 g/m², for a sharp print with vivid colours. Frame it, or put it up as it is."
         }
       }
     },

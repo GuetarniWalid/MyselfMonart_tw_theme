@@ -387,6 +387,30 @@
           "help_text": "Ein echter Mensch antwortet Ihnen, an 7 Tagen in der Woche.",
           "help_button": "Schreiben Sie uns",
           "bubble": "Ich bin ganz Ohr!"
+        },
+        "scene": {
+          "label": "Das Werk in vier Momenten: der Blick, die Farben, das Licht, das Material",
+          "steps": "Die vier Momente",
+          "look": "Der Blick",
+          "look_title_html": "Daran kommt <b>niemand vorbei.</b>",
+          "look_text": "Ein Blick genügt, und man ist gefesselt. Und man schaut immer wieder hin: Es gibt stets noch ein Detail zu entdecken.",
+          "colors": "Die Farben",
+          "colors_title_html": "Jede Farbe <b>wirkt auf Sie.</b>",
+          "light": "Das Licht",
+          "light_title_html": "Beleuchtet <b>wie im Museum.</b>",
+          "light_off": "Abends, ohne Licht.",
+          "light_off_text": "Die Farben schlafen mit dem Tag ein.",
+          "light_lamp": "Eine Bilderleuchte.",
+          "light_lamp_text": "Direkt darüber angebracht, wie im Museum.",
+          "light_on": "Licht an.",
+          "light_on_text_canvas": "Die Farben erwachen: Das Wandbild entfaltet seine ganze Wirkung.",
+          "light_on_text_poster": "Die Farben erwachen: Das Poster entfaltet seine ganze Wirkung.",
+          "light_quote": "Lassen Sie es an.",
+          "matter": "Das Material",
+          "matter_title_canvas_html": "Die Struktur <b>echter Leinwand.</b>",
+          "matter_text_canvas": "Dick und von Hand auf einen Keilrahmen aus Massivholz gespannt. Man möchte sie am liebsten berühren.",
+          "matter_title_poster_html": "Echtes <b>Fotopapier.</b>",
+          "matter_text_poster": "Dick, 250 g/m², für einen gestochen scharfen Druck in leuchtenden Farben. Zum Einrahmen oder einfach so zum Aufhängen."
         }
       }
     },

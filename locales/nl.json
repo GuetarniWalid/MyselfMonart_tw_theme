@@ -389,6 +389,30 @@
           "help_text": "Een echt persoon antwoordt je, 7 dagen per week.",
           "help_button": "Schrijf ons",
           "bubble": "Zeg het maar!"
+        },
+        "scene": {
+          "label": "Het kunstwerk in vier momenten: de blik, de kleuren, het licht, het materiaal",
+          "steps": "De vier momenten",
+          "look": "De blik",
+          "look_title_html": "Hier loop je <b>niet zomaar voorbij.</b>",
+          "look_text": "Eén blik en je bent verkocht. En je blijft kijken: er valt altijd nog een detail te ontdekken.",
+          "colors": "De kleuren",
+          "colors_title_html": "Elke kleur <b>doet iets met je.</b>",
+          "light": "Het licht",
+          "light_title_html": "Verlicht <b>zoals in het museum.</b>",
+          "light_off": "’s Avonds, zonder licht.",
+          "light_off_text": "De kleuren gaan slapen met de dag.",
+          "light_lamp": "Een schilderijlamp.",
+          "light_lamp_text": "Vlak erboven bevestigd, zoals in musea.",
+          "light_on": "Lamp aan.",
+          "light_on_text_canvas": "De kleuren worden wakker: het schilderij komt helemaal tot zijn recht.",
+          "light_on_text_poster": "De kleuren worden wakker: de poster komt helemaal tot zijn recht.",
+          "light_quote": "Laat maar aan.",
+          "matter": "Het materiaal",
+          "matter_title_canvas_html": "De structuur van <b>echt canvas.</b>",
+          "matter_text_canvas": "Dik, met de hand gespannen op een spieraam van massief hout. Je wilt het het liefst aanraken.",
+          "matter_title_poster_html": "Echt <b>fotopapier.</b>",
+          "matter_text_poster": "Dik, 250 g/m², voor een haarscherpe print in stralende kleuren. Om in te lijsten, of zo op te hangen."
         }
       }
     },

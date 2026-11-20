@@ -386,6 +386,30 @@
           "help_text": "Una persona de verdad te responde, los 7 días de la semana.",
           "help_button": "Escríbenos",
           "bubble": "¡Soy toda oídos!"
+        },
+        "scene": {
+          "label": "La obra en cuatro tiempos: la mirada, los colores, la luz, la materia",
+          "steps": "Los cuatro tiempos",
+          "look": "La mirada",
+          "look_title_html": "Imposible pasar por delante <b>sin detenerse.</b>",
+          "look_text": "Basta una mirada para quedar atrapado. Y se vuelve a mirar: siempre queda un detalle por descubrir.",
+          "colors": "Los colores",
+          "colors_title_html": "Cada color <b>actúa sobre ti.</b>",
+          "light": "La luz",
+          "light_title_html": "Iluminado <b>como en un museo.</b>",
+          "light_off": "De noche, sin luz.",
+          "light_off_text": "Los colores se duermen con el día.",
+          "light_lamp": "Una lámpara de cuadro.",
+          "light_lamp_text": "Fijada justo encima, como en los museos.",
+          "light_on": "Lámpara encendida.",
+          "light_on_text_canvas": "Los colores despiertan: el cuadro luce en todo su esplendor.",
+          "light_on_text_poster": "Los colores despiertan: el póster luce en todo su esplendor.",
+          "light_quote": "Déjala encendida.",
+          "matter": "La materia",
+          "matter_title_canvas_html": "La textura de un <b>lienzo de verdad.</b>",
+          "matter_text_canvas": "Grueso, tensado a mano sobre un bastidor de madera maciza. Dan ganas de tocarlo.",
+          "matter_title_poster_html": "Un auténtico <b>papel fotográfico.</b>",
+          "matter_text_poster": "Grueso, de 250 g/m², para una impresión nítida de colores vivos. Para enmarcar o para colgar tal cual."
         }
       }
     },
