@@ -761,8 +761,24 @@ main-product-blocks[data-galerie] {
   color: var(--blanc);
   transform: none;
 }
+/* La flèche du thème (snippets/tw-icon-arrow.liquid) n'occupe que la gauche de son cadre (de 0 à 27 sur 60) : le
+   reste sert à l'allonger au survol. Centrée comme boîte, elle paraissait décalée de 6,5 px vers la gauche dans le
+   rond (retour de Walid du 21/11). Elle est décalée de 27 % de sa largeur : son dessin tombe au centre. Sur
+   ordinateur, au survol ou dans le champ, le thème l'allonge (de 0 à 57 sur 60) : 2,5 % suffisent alors. */
 :root[data-galerie-page] #shopify-section-tw-footer input[type="email"] ~ button svg {
   width: 24px;
+  transform: translateX(27%);
+}
+@media (min-width: 768px) {
+  :root[data-galerie-page] #shopify-section-tw-footer .group:hover input[type="email"] ~ button svg,
+  :root[data-galerie-page] #shopify-section-tw-footer .group:focus-within input[type="email"] ~ button svg {
+    transform: translateX(2.5%);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-galerie-page] #shopify-section-tw-footer input[type="email"] ~ button svg {
+    transition: transform 0.2s ease-out;
+  }
 }
 /* Le halo arrive en douceur, aux conditions de mouvement du socle. */
 @media (prefers-reduced-motion: no-preference) {
