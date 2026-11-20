@@ -79,11 +79,16 @@
         "return_days": 14,
         "enable_format_toggle": true
       }
+    },
+    "galerie_raisons": {
+      "type": "galerie-raisons",
+      "settings": {}
     }
   },
   "order": [
     "breadcrumb_RCxFAG",
-    "main"
+    "main",
+    "galerie_raisons"
   ],
   "layout": "product"
 }
