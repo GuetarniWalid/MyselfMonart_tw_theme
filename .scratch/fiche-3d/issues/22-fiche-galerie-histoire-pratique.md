@@ -25,10 +25,12 @@ Référence : la maquette v13, `.scratch/fiche-3d/galerie/proto/index.html` (sec
 
 **Blocked by:** 19 (ossature)
 
-**Status:** ready-for-agent
+**Status:** done, en ligne le 20/11/2026 (`91b0af9` la section, `ab6d815` le modèle).
 
-- [ ] Une toile et un poster affichent chacun leurs volets et leurs engagements ; plus aucun mot de toile sur la fiche d'un poster dans ce bloc.
-- [ ] Une description avec titre et une description sans titre s'affichent toutes deux correctement ; « Lire la suite » déplie et replie, au clavier aussi.
-- [ ] Téléphone et ordinateur comme dans la maquette, sans débordement.
-- [ ] Les cinq langues sont en place, et la vérification des traductions passe.
-- [ ] La fiche actuelle et les autres pages sont inchangées.
+Vérifié en ligne le 20/11/2026 sur la toile et le poster Superman (vue `?view=oeuvre-galerie`, téléphone 390 × 844 et ordinateur 1440 × 900) : mêmes données pour Google que la fiche normale (title, description, canonique, robots, og, h1 unique, deux blocs JSON-LD identiques), aucun débordement, aucune erreur de script, bascule Toile / Poster qui garde la vue de test ; les douze pages témoins du site identiques avant et après le push des fichiers. Pas vérifié : un vrai téléphone, Safari et Firefox (à faire au ticket 27). Le volet « Poster ou toile : lequel choisir ? » de la toile n'a plus la phrase « Envie de la découvrir sur toile ? … », qui ne vaut que pour un poster (décision de la session principale, testée).
+
+- [x] Une toile et un poster affichent chacun leurs volets et leurs engagements ; plus aucun mot de toile sur la fiche d'un poster dans ce bloc.
+- [x] Une description avec titre et une description sans titre s'affichent toutes deux correctement ; « Lire la suite » déplie et replie, au clavier aussi.
+- [x] Téléphone et ordinateur comme dans la maquette, sans débordement.
+- [x] Les cinq langues sont en place, et la vérification des traductions passe.
+- [x] La fiche actuelle et les autres pages sont inchangées.

@@ -30,11 +30,13 @@ L'œuvre est l'image à plat du produit (celle de la 3D), à ses proportions (po
 
 **Blocked by:** 19 (ossature)
 
-**Status:** ready-for-agent
+**Status:** done, en ligne le 20/11/2026 (`389f64b` la section, `eb31133` le modèle). Le sous-agent a été arrêté par une interruption juste avant ses commits : la session principale a relu, testé et commité son travail.
 
-- [ ] Les quatre temps se suivent comme dans la maquette, sur téléphone (320 à 430 px de large) et sur ordinateur, pour une œuvre en portrait, en paysage et carrée.
-- [ ] Toile et poster : le temps 3 dit « le tableau » ou « le poster », le temps 4 montre la trame ou le papier, et la scène se recale après la bascule Toile / Poster.
-- [ ] Le mode de secours et la page à plat (mouvements réduits) montrent tout le texte.
-- [ ] Aucun débordement horizontal ; aucun décalage de mise en page au chargement ; les images des personnages ne se chargent qu'à l'approche de la scène.
-- [ ] Les cinq langues sont en place, et la vérification des traductions du dépôt passe.
-- [ ] La fiche actuelle et les autres pages sont inchangées.
+Vérifié en ligne le 20/11/2026 sur la toile et le poster Superman (vue `?view=oeuvre-galerie`, téléphone 390 × 844 et ordinateur 1440 × 900) : mêmes données pour Google que la fiche normale (title, description, canonique, robots, og, h1 unique, deux blocs JSON-LD identiques), aucun débordement, aucune erreur de script, bascule Toile / Poster qui garde la vue de test ; les douze pages témoins du site identiques avant et après le push des fichiers. Pas vérifié : un vrai téléphone, Safari et Firefox (à faire au ticket 27). Captures en ligne des quatre temps : fidèles à la maquette, toile (trame, « Le grain d'une vraie toile. ») et poster (« Un vrai papier photo. »). Couture laissée au ticket 21 : `.galerie-scene-messages` dans l'article du temps 2, `.galerie-scene-teintes` dans l'œuvre, `.galerie-scene-palette` sous l'œuvre.
+
+- [x] Les quatre temps se suivent comme dans la maquette, sur téléphone (320 à 430 px de large) et sur ordinateur, pour une œuvre en portrait, en paysage et carrée.
+- [x] Toile et poster : le temps 3 dit « le tableau » ou « le poster », le temps 4 montre la trame ou le papier, et la scène se recale après la bascule Toile / Poster.
+- [x] Le mode de secours et la page à plat (mouvements réduits) montrent tout le texte.
+- [x] Aucun débordement horizontal ; aucun décalage de mise en page au chargement ; les images des personnages ne se chargent qu'à l'approche de la scène.
+- [x] Les cinq langues sont en place, et la vérification des traductions du dépôt passe.
+- [x] La fiche actuelle et les autres pages sont inchangées.

@@ -27,10 +27,14 @@ Référence : la maquette v13, `.scratch/fiche-3d/galerie/proto/index.html` (sec
 
 **Blocked by:** 19 (ossature)
 
-**Status:** ready-for-agent
+**Status:** done, en ligne le 20/11/2026 (`e957899` la section et les couleurs autour, `bd41efb` le modèle).
 
-- [ ] La section est fidèle à la maquette sur téléphone et sur ordinateur (le personnage ne grandit pas quand le texte allonge la carte ; pas de débordement).
-- [ ] Toile et poster : le bon mot partout.
-- [ ] Le bouton d'achat, le pied de page et le bandeau prennent leurs couleurs sur cette fiche seulement ; une fiche ancienne, une collection et l'accueil sont inchangés.
-- [ ] Contrastes lisibles (bouton : 4,5 pour 1 au moins).
-- [ ] Les cinq langues sont en place ; la vérification des traductions passe.
+Vérifié en ligne le 20/11/2026 sur la toile et le poster Superman (vue `?view=oeuvre-galerie`, téléphone 390 × 844 et ordinateur 1440 × 900) : mêmes données pour Google que la fiche normale (title, description, canonique, robots, og, h1 unique, deux blocs JSON-LD identiques), aucun débordement, aucune erreur de script, bascule Toile / Poster qui garde la vue de test ; les douze pages témoins du site identiques avant et après le push des fichiers. Pas vérifié : un vrai téléphone, Safari et Firefox (à faire au ticket 27). Bandeau pêche, pied de page menthe à texte encre, bouton d'achat vermillon : seulement sur la vue de test.
+
+**Reste pour la bascule (ticket 27) :** sur un téléphone lent, le bandeau s'affiche d'abord saumon puis passe au pêche en fondu (mesuré en 4G lente simulée : bandeau peint à 1,2-1,5 s, pêche à 2,4-2,8 s). La règle attend le bloc principal (`:has`), qui arrive après le bandeau dans la page. Correction prévue à la bascule : la couleur du bandeau posée dans le `<head>` de `layout/product.liquid` pour le modèle `oeuvre-3d`.
+
+- [x] La section est fidèle à la maquette sur téléphone et sur ordinateur (le personnage ne grandit pas quand le texte allonge la carte ; pas de débordement).
+- [x] Toile et poster : le bon mot partout.
+- [x] Le bouton d'achat, le pied de page et le bandeau prennent leurs couleurs sur cette fiche seulement ; une fiche ancienne, une collection et l'accueil sont inchangés.
+- [x] Contrastes lisibles (bouton : 4,5 pour 1 au moins).
+- [x] Les cinq langues sont en place ; la vérification des traductions passe.

@@ -29,10 +29,12 @@ Référence : la maquette v13, `.scratch/fiche-3d/galerie/proto/index.html` (sec
 
 **Blocked by:** 19 (ossature)
 
-**Status:** ready-for-agent
+**Status:** done, en ligne le 20/11/2026 (`e05344d` les sections, `9aedefe` le modèle).
 
-- [ ] Les trois blocs sont fidèles à la maquette sur téléphone et sur ordinateur, sans débordement.
-- [ ] La note et le nombre d'avis suivent le réglage du thème ; le contrôle du dépôt (chiffre en dur) passe.
-- [ ] Toile et poster : titres et réponses propres à chacun.
-- [ ] Les recommandations se chargent comme aujourd'hui, et les cartes mènent aux bons produits.
-- [ ] Les cinq langues sont en place ; la fiche actuelle et les autres pages sont inchangées.
+Vérifié en ligne le 20/11/2026 sur la toile et le poster Superman (vue `?view=oeuvre-galerie`, téléphone 390 × 844 et ordinateur 1440 × 900) : mêmes données pour Google que la fiche normale (title, description, canonique, robots, og, h1 unique, deux blocs JSON-LD identiques), aucun débordement, aucune erreur de script, bascule Toile / Poster qui garde la vue de test ; les douze pages témoins du site identiques avant et après le push des fichiers. Pas vérifié : un vrai téléphone, Safari et Firefox (à faire au ticket 27). Les recommandations se chargent (10 cartes) et se rechargent après la bascule, avec celles du jumeau ; « Voir la collection » mène à la collection mère. Aucune FAQPage n'est publiée, ni aujourd'hui ni sur la page galerie. L'adresse contact@myselfmonart.com citée dans les questions arrive bien dans team@ (vérifié le 20/11). « +1 000 clients » : un réglage de la section (`customers`), pas un chiffre écrit.
+
+- [x] Les trois blocs sont fidèles à la maquette sur téléphone et sur ordinateur, sans débordement.
+- [x] La note et le nombre d'avis suivent le réglage du thème ; le contrôle du dépôt (chiffre en dur) passe.
+- [x] Toile et poster : titres et réponses propres à chacun.
+- [x] Les recommandations se chargent comme aujourd'hui, et les cartes mènent aux bons produits.
+- [x] Les cinq langues sont en place ; la fiche actuelle et les autres pages sont inchangées.

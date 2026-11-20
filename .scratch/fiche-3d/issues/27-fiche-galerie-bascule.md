@@ -19,9 +19,16 @@
 - Les données lues par Google (produit, fil d'Ariane, balises) sont les mêmes qu'avant.
 - Les phrases des couleurs existent pour les produits en ligne (ticket 25, commande de rattrapage) et sont traduites (ticket 26).
 
+## À montrer à Walid avec la vue de test (relevé à l'intégration des tickets 22 à 24, le 20/11)
+
+- Les textes du poster qui n'étaient pas dans la maquette : les volets du poster (« Livraison », « Détails du produit », « Retour et échange ») viennent de `poster/textes.json` ; la FAQ du poster a ses six réponses de la maquette, plus quatre questions communes (taille après accrochage, paiement, paiement en trois fois, contact).
+- Le titre des avis « +1 000 clients aux anges » : le nombre est un réglage de la section (`customers`, 1000), à tenir à jour dans l'éditeur.
+- Le volet « Poster ou toile » de la toile a perdu sa dernière phrase (« Envie de la découvrir sur toile ? … »), qui ne vaut que pour un poster.
+
 ## La bascule
 
 - Le modèle `oeuvre-3d` prend le contenu du modèle de test. Les produits ne changent pas de modèle.
+- Le bandeau d'annonce : poser sa couleur pêche dans le `<head>` de `layout/product.liquid` pour le modèle `oeuvre-3d` (aujourd'hui, la règle de la feuille de la page attend le bloc principal : sur téléphone lent, le bandeau paraît saumon puis passe au pêche en fondu, environ une seconde après l'affichage). Vérifier ensuite qu'aucune autre page ne change.
 - Les textes éditoriaux du modèle (volets, questions, avis) doivent être traduits dès la bascule : lancer la traduction des modèles juste après, sans attendre la nuit, et vérifier dans une autre langue.
 - Les titres à jeux de mots sont relus dans chaque langue.
 - Le modèle de test est retiré une fois la bascule vérifiée.
