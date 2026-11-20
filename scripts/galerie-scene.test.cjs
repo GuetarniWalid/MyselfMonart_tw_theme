@@ -493,9 +493,11 @@ test('le modèle caché : la scène suit le bloc principal', { skip: inModel ? f
   assert.equal(types.filter((type) => type === 'galerie-scene').length, 1)
   const id = model.order[types.indexOf('galerie-scene')]
   assert.deepEqual(model.sections[id], { type: 'galerie-scene', settings: {} })
-  // La fiche actuelle ne la reçoit pas : rien ne change pour elle avant la bascule.
+  // Seuls les modèles en page galerie la reçoivent : le modèle caché, et la fiche 3D depuis la bascule du 21/11/2026.
   for (const name of fs.readdirSync(path.join(ROOT, 'templates')).filter((n) => /\.json$/.test(n) && `templates/${n}` !== MODEL)) {
-    assert.doesNotMatch(read(`templates/${name}`), /galerie-scene/, name)
+    const source = read(`templates/${name}`)
+    const enGalerie = /"page_galerie":\s*true/.test(source)
+    if (!enGalerie) assert.doesNotMatch(source, /galerie-scene/, name)
   }
 })
 
