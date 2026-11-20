@@ -15,7 +15,7 @@ const fs = require('fs')
 const path = require('path')
 const {
   ROOT, read, exists, code, json, schemaOf, LANGS, rules,
-  SKIP, locales, engine, product, globals, sectionOf, galerieSection, renderSection, renderSectionFile,
+  SKIP, locales, engine, product, globals, sectionOf, galerieSection, renderSection, renderSectionFile, FICHE_3D_AVANT,
 } = require('./galerie-banc.cjs')
 
 const SECTION = 'sections/galerie-raisons.liquid'
@@ -636,7 +636,7 @@ async function staticSection(name, p, lang = 'fr') {
 // Le bloc principal d'une fiche, dans son enveloppe : la page galerie (crochet), ou la fiche 3D d'aujourd'hui.
 async function mainSection(galerie, poster = false) {
   const p = product({ poster })
-  const html = await renderSection(p, galerie ? { suffix: 'oeuvre-galerie', section: galerieSection() } : { section: sectionOf('templates/product.oeuvre-3d.json') })
+  const html = await renderSection(p, galerie ? { suffix: 'oeuvre-galerie', section: galerieSection() } : { section: sectionOf(FICHE_3D_AVANT) })
   const schema = schemaOf('sections/main-product.liquid')
   return `<${schema.tag} id="shopify-section-template--1__main" class="shopify-section ${schema.class}">${html}</${schema.tag}>`
 }

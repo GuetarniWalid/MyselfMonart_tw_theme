@@ -555,7 +555,7 @@ test('le modèle caché : la section suit le bloc principal ; quatre volets pour
 
 test('le modèle caché : les volets de la toile sont ceux de la fiche d’aujourd’hui, à la lettre ; ceux du poster ne disent rien de la toile', { skip: LATER }, () => {
   // La fiche d'aujourd'hui : les quatre volets du bloc principal de product.oeuvre-3d.json, dans leur ordre.
-  const today = mainOf(json('templates/product.oeuvre-3d.json'))
+  const today = mainOf(json('scripts/fixtures/product.oeuvre-3d.avant-galerie.json'))
   const tabs = today.block_order.map((id) => today.blocks[id]).filter((b) => b.type === 'collapsible_tab').map((b) => [b.settings.heading, b.settings.content])
   assert.equal(tabs.length, 4)
   const texts = (support) => modelBlocks().filter((b) => b.settings.support === 'tous' || b.settings.support === support).map((b) => [b.settings.heading, b.settings.content])

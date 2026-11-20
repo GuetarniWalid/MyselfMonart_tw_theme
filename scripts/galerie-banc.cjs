@@ -217,7 +217,10 @@ function sectionOf(file, { settings = {}, blocks = null } = {}) {
 /* Le bloc principal de la page galerie : les réglages de la fiche 3D plus la case, ses blocs gardés (titre, avis,
    titre court, achat, sélecteur) et la fiche en cinq lignes. Le même que le modèle caché, sans dépendre de lui. */
 const KEPT = ['trustpilot_review', 'short_title', 'buy', 'variant_picker', 'title']
-const galerieSection = (change = (list) => list) => sectionOf('templates/product.oeuvre-3d.json', {
+/* La fiche 3D d'avant la page galerie (templates/product.oeuvre-3d.json jusqu'à la bascule du 21/11/2026), figée :
+   la référence des tests (mêmes données pour Google, mêmes volets, mêmes mots de clients). */
+const FICHE_3D_AVANT = 'scripts/fixtures/product.oeuvre-3d.avant-galerie.json'
+const galerieSection = (change = (list) => list) => sectionOf(FICHE_3D_AVANT, {
   settings: { page_galerie: true },
   blocks: (list) => change([...list.filter((b) => KEPT.includes(b.type)), { id: 'fact_sheet', type: 'fact_sheet', settings: {} }]),
 })
@@ -253,5 +256,5 @@ const renderSectionFile = (file, section, p, options = {}) => {
 module.exports = {
   ROOT, read, exists, code, json, schemaOf, SECTION, LANGS, rules, mainOf,
   liquid, SKIP, locales, engine, optionValue, templateOf, image, asMedia, FLAT, OLD, MOTHER,
-  product, globals, sectionOf, KEPT, galerieSection, renderSection, renderSectionFile, renderSnippet, ldOf, blocksOf,
+  product, globals, sectionOf, KEPT, galerieSection, FICHE_3D_AVANT, renderSection, renderSectionFile, renderSnippet, ldOf, blocksOf,
 }

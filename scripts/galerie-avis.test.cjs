@@ -26,7 +26,8 @@ const PIECES = [AVIS, CARTE, RECOS, QUESTIONS]
 const CSS = 'assets/oeuvre-galerie.css'
 const JS = 'assets/oeuvre-galerie.js'
 const MODEL = 'templates/product.oeuvre-galerie.json'
-const TODAY = 'templates/product.oeuvre-3d.json'
+// La fiche 3D d'avant la bascule, figée dans le banc (scripts/galerie-banc.cjs).
+const TODAY = 'scripts/fixtures/product.oeuvre-3d.avant-galerie.json'
 const BLOCK = 'Avis, recommandations, questions (ticket 23)'
 
 // Les sections de la fiche 3D d'aujourd'hui que ce ticket remplace, par leur nom dans son modèle.

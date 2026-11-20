@@ -14,7 +14,7 @@ const path = require('path')
 const {
   ROOT, read, exists, code, json, schemaOf, SECTION, LANGS, rules, mainOf,
   SKIP, locales, engine, FLAT, OLD, MOTHER,
-  product, globals, sectionOf, galerieSection, renderSection, renderSnippet, ldOf, blocksOf,
+  product, globals, sectionOf, galerieSection, renderSection, renderSnippet, ldOf, blocksOf, FICHE_3D_AVANT,
 } = require('./galerie-banc.cjs')
 const { motsDe } = require('../assets/oeuvre-galerie.js')
 
@@ -356,7 +356,7 @@ test('textes de la présentation : sous sections.mma.galerie.intro, les mêmes c
 
 test('le modèle caché : le fil d’Ariane puis le bloc principal de la fiche 3D, en page galerie, sans volets ni description', { skip: exists(MODEL) ? false : 'le modèle arrive par un second commit : Shopify refuse un modèle dont il ne connaît pas encore le réglage' }, () => {
   const galerie = json(MODEL)
-  const fiche3d = json('templates/product.oeuvre-3d.json')
+  const fiche3d = json(FICHE_3D_AVANT)
   // Les sections qui suivent le bloc principal sont celles de la page galerie (tickets 20 à 24), chacune dans
   // son fichier sections/galerie-….liquid : elles s'ajoutent ici sans que ce test change.
   const sectionTypes = galerie.order.map((id) => galerie.sections[id].type)
@@ -437,12 +437,18 @@ test('rendu de la scène : la bascule Toile / Poster garde la vue de test dans l
 const RELEVE = process.env.RELEVE_FICHES
 
 test('rendu, réglage éteint : aucune trace de la page galerie, sur aucun modèle produit', { skip: SKIP }, async () => {
-  const models = fs.readdirSync(path.join(ROOT, 'templates')).filter((name) => /^product.*\.json$/.test(name) && `templates/${name}` !== MODEL)
+  // Tous les modèles produit du thème qui ne sont pas en page galerie, et la fiche 3D d'avant la bascule (figée) :
+  // depuis la bascule du 21/11/2026, templates/product.oeuvre-3d.json est en page galerie, comme le modèle caché.
+  const files = fs.readdirSync(path.join(ROOT, 'templates'))
+    .filter((name) => /^product.*\.json$/.test(name))
+    .map((name) => `templates/${name}`)
+    .filter((file) => file !== MODEL && !sectionOf(file).settings.page_galerie)
+  const models = [...files.map((file) => [file, path.basename(file)]), [FICHE_3D_AVANT, 'product.oeuvre-3d.json']]
   assert.ok(models.length >= 13, 'tous les modèles produit du thème')
   if (RELEVE) fs.mkdirSync(RELEVE, { recursive: true })
-  for (const name of models) {
+  for (const [file, name] of models) {
     const suffix = name.replace(/^product\.?/, '').replace(/\.json$/, '') || null
-    const section = sectionOf(`templates/${name}`)
+    const section = sectionOf(file)
     assert.ok(!section.settings.page_galerie, `${name} : la case reste éteinte`)
     for (const poster of RELEVE || suffix === 'oeuvre-3d' ? [false, true] : [suffix === 'poster']) {
       const p = product({ suffix, poster, files: suffix === 'oeuvre-3d' ? [FLAT] : OLD })
@@ -455,7 +461,7 @@ test('rendu, réglage éteint : aucune trace de la page galerie, sur aucun modè
 })
 
 test('rendu, réglage éteint : la fiche 3D garde son balisage empilé, blancs compris', { skip: SKIP }, async () => {
-  const blocks = blocksOf(await renderSection(product(), { section: sectionOf('templates/product.oeuvre-3d.json') }))
+  const blocks = blocksOf(await renderSection(product(), { section: sectionOf(FICHE_3D_AVANT) }))
   assert.match(blocks, /^<main-product-blocks\s+class="block"\s+id="ProductInfo-template--1__main"\s+data-layout="oeuvre-3d" data-buy-pill><div class="max-w-lg sm:px-0 mx-auto my-4"><div class="mb-4 mx-4">/)
   // Le seul blanc que la section écrit entre deux blocs : celui qui suit la note Trustpilot, tel quel.
   assert.match(blocks, /<p class="flex items-center ml-2 text-main-70">Score: 4,2<\/p>\n {14}<\/div>\n {12}<\/div>\n {12}<div class="flex justify-between items-center mb-2 mx-4"><p class="font-heading font-semibold text-xl"><span class="title-highlight">Bonsaï zen<\/span><\/p>/)
@@ -468,7 +474,7 @@ test('rendu, case cochée sans scène 3D : la fiche de toujours, à l’octet pr
     ['templates/product.painting.json', product({ suffix: 'painting', files: OLD })],
     ['templates/product.poster.json', product({ suffix: 'poster', poster: true, files: OLD })],
     ['templates/product.json', product({ suffix: null, files: OLD })],
-    ['templates/product.oeuvre-3d.json', product({ files: [] })],
+    [FICHE_3D_AVANT, product({ files: [] })],
   ]) {
     const off = await renderSection(p, { section: sectionOf(file) })
     const on = await renderSection(p, { section: sectionOf(file, { settings: { page_galerie: true } }) })
@@ -518,7 +524,7 @@ test('rendu de la page galerie : un seul h1, le titre du produit, le même que s
   for (const poster of [false, true]) {
     const p = product({ poster })
     const galerie = await renderSection(p, { suffix: 'oeuvre-galerie', section: galerieSection() })
-    const fiche3d = await renderSection(p, { section: sectionOf('templates/product.oeuvre-3d.json') })
+    const fiche3d = await renderSection(p, { section: sectionOf(FICHE_3D_AVANT) })
     const h1 = (html) => [...html.matchAll(/<h1[^>]*>([\s\S]*?)<\/h1>/g)].map((m) => m[1])
     assert.deepEqual(h1(galerie), [p.title.replace('&', '&amp;')])
     assert.deepEqual(h1(galerie), h1(fiche3d))
@@ -530,7 +536,7 @@ test('rendu de la page galerie : les données Google sont celles de la fiche 3D,
   for (const poster of [false, true]) {
     const p = product({ poster })
     const galerie = ldOf(await renderSection(p, { suffix: 'oeuvre-galerie', section: galerieSection() }))
-    const fiche3d = ldOf(await renderSection(p, { section: sectionOf('templates/product.oeuvre-3d.json') }))
+    const fiche3d = ldOf(await renderSection(p, { section: sectionOf(FICHE_3D_AVANT) }))
     assert.equal(galerie.length, 1)
     assert.deepEqual(galerie, fiche3d)
     const [group] = JSON.parse(galerie[0])
@@ -543,7 +549,7 @@ test('rendu de la page galerie : la scène 3D, la pilule, l’achat et le sélec
   for (const poster of [false, true]) {
     const p = product({ poster })
     const galerie = await renderSection(p, { suffix: 'oeuvre-galerie', section: galerieSection() })
-    const fiche3d = await renderSection(p, { section: sectionOf('templates/product.oeuvre-3d.json') })
+    const fiche3d = await renderSection(p, { section: sectionOf(FICHE_3D_AVANT) })
     // Tout ce qui précède le bloc principal : la scène, la pilule. Seul le nom de la vue change (adresse du jumeau, mesure).
     const before = (html) => html.slice(0, html.indexOf('<main-product-blocks'))
     assert.equal(before(galerie).replaceAll('oeuvre-galerie', 'oeuvre-3d'), before(fiche3d))
@@ -739,6 +745,6 @@ test('rendu du modèle caché : la page galerie, toile et poster', { skip: SKIP 
     assert.equal((html.match(/<h1[\s>]/g) || []).length, 1)
     assert.equal(lines(introOf(html)).length, 5)
     // Les mêmes données Google que le modèle de la fiche 3D.
-    assert.deepEqual(ldOf(html), ldOf(await renderSection(p, { section: sectionOf('templates/product.oeuvre-3d.json') })))
+    assert.deepEqual(ldOf(html), ldOf(await renderSection(p, { section: sectionOf(FICHE_3D_AVANT) })))
   }
 })
