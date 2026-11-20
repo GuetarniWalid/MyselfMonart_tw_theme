@@ -757,3 +757,344 @@ main-product-blocks[data-galerie] {
 }
 
 /* === Autour de la page (ticket 24) : fin === */
+/* === Histoire et pratique (ticket 22) : début ===
+   sections/galerie-histoire.liquid : à gauche le texte de présentation du produit
+   (snippets/galerie-histoire-recit.liquid), à droite la carte « En pratique », ses volets et ses quatre
+   engagements. Sur téléphone, l'un sous l'autre. Aucun script : la suite du texte et les volets sont des
+   <details>. */
+
+.galerie-histoire {
+  background: var(--blanc);
+  padding-top: 64px;
+  padding-bottom: 70px;
+}
+/* minmax(0, 1fr) : un mot plus large que l'écran (une adresse dans un texte) ne pousse pas la colonne. */
+.galerie-histoire-colonnes {
+  max-width: 1240px;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 52px;
+}
+
+/* « L'histoire », en capitales. Sa taille est celle que la maquette affiche : la règle qu'elle destinait au
+   premier paragraphe (23 px, 30 px sur ordinateur) y tombe sur ce mot depuis sa version 2, et c'est ce que
+   Walid a validé ; le premier paragraphe, lui, est au corps du texte. Quand le texte ne donne pas de titre,
+   ce mot est le h2 du bloc. */
+.galerie-histoire-surtitre {
+  margin: 0 0 0.8em;
+  font: 500 23px/1.28 var(--sans);
+  letter-spacing: -0.022em;
+  text-transform: uppercase;
+  color: var(--encre-70);
+}
+/* Le titre du texte : maigre, sa fin en gras. overflow-wrap : un mot plus large que l'écran passe à la ligne,
+   comme le nom court de la présentation. */
+.galerie-histoire-titre {
+  margin: 14px 0 22px;
+  font: 300 clamp(30px, 8.2vw, 42px)/1.02 var(--sans);
+  letter-spacing: -0.042em;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+.galerie-histoire-titre b {
+  font-weight: 700;
+}
+
+/* Le texte du produit, tel qu'il est écrit : des paragraphes, le plus souvent. */
+.galerie-histoire-texte {
+  font: 400 17px/1.6 var(--sans);
+  overflow-wrap: break-word;
+}
+.galerie-histoire-texte p {
+  margin: 0 0 1em;
+  max-width: 34em;
+}
+/* Ce qu'un texte peut porter d'autre : une liste, une citation, un sous-titre, un lien. La maquette n'en a
+   pas ; ils gardent le corps et la largeur des paragraphes. */
+.galerie-histoire-texte ul,
+.galerie-histoire-texte ol,
+.galerie-histoire-texte blockquote {
+  margin: 0 0 1em;
+  max-width: 34em;
+}
+.galerie-histoire-texte ul {
+  padding-left: 1.2em;
+  list-style: disc;
+}
+.galerie-histoire-texte ol {
+  padding-left: 1.4em;
+  list-style: decimal;
+}
+.galerie-histoire-texte h2,
+.galerie-histoire-texte h3,
+.galerie-histoire-texte h4 {
+  margin: 1.5em 0 0.5em;
+  font: 600 20px/1.25 var(--sans);
+  letter-spacing: -0.012em;
+  max-width: 34em;
+}
+.galerie-histoire-texte a,
+.galerie-histoire-volet-texte a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+/* La suite du texte : un <details>. « Lire la suite » reste sous le texte, replié comme déplié : le bouton
+   est posé au bas du <details>, dans la place qu'un retrait lui garde (8 px, puis ses 40 px de haut). */
+.galerie-histoire-suite {
+  position: relative;
+  padding-bottom: 48px;
+}
+.galerie-histoire-lire {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 18px;
+  border-radius: 999px;
+  background: var(--encre-06);
+  font: 600 14px/1 var(--sans);
+  white-space: nowrap;
+  cursor: pointer;
+  list-style: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.galerie-histoire-lire svg {
+  width: 12px;
+  height: 12px;
+}
+.galerie-histoire-suite[open] .galerie-histoire-lire svg {
+  transform: rotate(180deg);
+}
+/* Le libellé dit ce que fera le bouton : « Lire la suite », puis « Réduire ». */
+.galerie-histoire-lire-moins,
+.galerie-histoire-suite[open] .galerie-histoire-lire-plus {
+  display: none;
+}
+.galerie-histoire-suite[open] .galerie-histoire-lire-moins {
+  display: inline;
+}
+
+/* « En pratique » : une carte crème. */
+.galerie-histoire-pratique {
+  background: var(--creme);
+  border-radius: 28px;
+  padding: 26px 20px;
+}
+.galerie-histoire-pratique-titre {
+  margin: 12px 0 0;
+  font: 300 clamp(30px, 8vw, 40px)/1 var(--sans);
+  letter-spacing: -0.04em;
+}
+.galerie-histoire-pratique-titre b {
+  font-weight: 700;
+}
+
+/* Les volets : ceux du thème (<collapsible-tab> et ses <details>, assets/tw-global.js), au dessin de la
+   maquette. Un seul reste ouvert, et un clic dans son texte le referme : d'où la main sur ce texte. */
+.galerie-histoire-volets {
+  display: block;
+  margin-top: 20px;
+  border-top: 1px solid var(--encre-12);
+}
+.galerie-histoire-volet {
+  border-bottom: 1px solid var(--encre-12);
+}
+.galerie-histoire-volet-titre {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 17px;
+  cursor: pointer;
+  list-style: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.galerie-histoire-volet-titre h3 {
+  margin: 0;
+  font: 500 17px/1.28 var(--sans);
+  letter-spacing: -0.012em;
+}
+/* Le « + » dans sa pastille ; volet ouvert, il tourne en croix sur un fond d'encre. */
+.galerie-histoire-volet-titre i {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--blanc);
+  position: relative;
+}
+.galerie-histoire-volet-titre i::before,
+.galerie-histoire-volet-titre i::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 11px;
+  height: 1.6px;
+  margin: -0.8px 0 0 -5.5px;
+  background: currentColor;
+  border-radius: 2px;
+}
+.galerie-histoire-volet-titre i::after {
+  transform: rotate(90deg);
+}
+.galerie-histoire-volet[open] .galerie-histoire-volet-titre i {
+  background: var(--encre);
+  color: var(--blanc);
+  transform: rotate(45deg);
+}
+.galerie-histoire-volet-texte {
+  padding-bottom: 18px;
+  font: 400 15px/1.6 var(--sans);
+  color: var(--encre-70);
+  cursor: pointer;
+}
+.galerie-histoire-volet-texte p {
+  margin: 0 0 0.9em;
+  max-width: 38em;
+}
+/* Ce que les textes d'aujourd'hui portent en plus des paragraphes de la maquette : des sous-titres (h4, sous
+   le h3 du volet), parfois ouverts par un saut de ligne qui servait d'espace, et des listes. */
+.galerie-histoire-volet-texte h4 {
+  margin: 1.3em 0 0.45em;
+  font: 600 15px/1.35 var(--sans);
+  color: var(--encre);
+}
+.galerie-histoire-volet-texte > :first-child {
+  margin-top: 0;
+}
+.galerie-histoire-volet-texte h4 > br:first-child {
+  display: none;
+}
+.galerie-histoire-volet-texte ul,
+.galerie-histoire-volet-texte ol {
+  margin: 0 0 0.9em;
+  padding-left: 1.2em;
+  max-width: 38em;
+  list-style: disc;
+}
+.galerie-histoire-volet-texte ol {
+  list-style: decimal;
+}
+
+/* Les quatre engagements : un petit dessin dans une pastille, une couleur chacun (ciel, rose, soleil,
+   menthe, comme les lignes de la fiche). minmax(0, 1fr) et overflow-wrap : un mot plus large que sa colonne
+   (en allemand, sur un petit écran) passe à la ligne au lieu de pousser la carte. */
+.galerie-histoire-gages {
+  margin: 26px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 16px;
+}
+.galerie-histoire-gages li {
+  display: grid;
+  gap: 4px;
+  align-content: start;
+  font: 400 13.5px/1.4 var(--sans);
+  color: var(--encre-70);
+  overflow-wrap: break-word;
+}
+.galerie-histoire-gage-dessin {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--ciel);
+  margin-bottom: 6px;
+}
+.galerie-histoire-gages li:nth-child(2) .galerie-histoire-gage-dessin { background: var(--rose); }
+.galerie-histoire-gages li:nth-child(3) .galerie-histoire-gage-dessin { background: var(--soleil); }
+.galerie-histoire-gages li:nth-child(4) .galerie-histoire-gage-dessin { background: var(--menthe); }
+.galerie-histoire-gage-dessin svg {
+  width: 24px;
+  height: 24px;
+  stroke: var(--encre);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.galerie-histoire-gages b {
+  display: block;
+  font: 600 15.5px/1.2 var(--sans);
+  letter-spacing: -0.012em;
+  color: var(--encre);
+}
+
+/* Ordinateur : le texte à gauche, la carte à droite ; elle suit le défilement tant que le texte se lit. */
+@media (min-width: 900px) {
+  .galerie-histoire {
+    padding-top: 104px;
+    padding-bottom: 110px;
+  }
+  .galerie-histoire-colonnes {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 90px;
+    align-items: start;
+  }
+  .galerie-histoire-surtitre {
+    font-size: 30px;
+  }
+  .galerie-histoire-titre {
+    font-size: clamp(40px, 3.7vw, 60px);
+    line-height: 1;
+  }
+  .galerie-histoire-texte {
+    font-size: 18.5px;
+  }
+  .galerie-histoire-pratique {
+    position: sticky;
+    top: 40px;
+    padding: 36px 34px;
+  }
+}
+
+/* Le mouvement d'un geste (ouvrir, fermer), si le visiteur n'en demande pas moins. Il ne suit pas le
+   défilement : tout navigateur le joue. La flèche et le « + » tournent ; la suite du texte et un volet se
+   déplient en douceur là où le navigateur sait animer le contenu d'un <details> (::details-content) : ce
+   contenu devient une ligne de grille, de 0 à sa hauteur. Ailleurs, le <details> s'ouvre d'un coup.
+   Ce qui se plie est coupé pendant le mouvement ; une marge négative et un retrait égaux y laissent voir le
+   contour de focus d'un lien au bord du texte, sans rien déplacer. */
+@media (prefers-reduced-motion: no-preference) {
+  .galerie-histoire-lire svg {
+    transition: transform 0.35s ease;
+  }
+  .galerie-histoire-volet-titre i {
+    transition: background-color 0.25s ease, color 0.25s ease, transform 0.35s ease;
+  }
+  .galerie-histoire-suite-corps,
+  .galerie-histoire-volet-corps {
+    min-height: 0;
+    overflow: hidden;
+    margin: -6px;
+    padding: 6px;
+  }
+  .galerie-histoire-suite::details-content {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.5s cubic-bezier(0.22, 0.8, 0.2, 1), content-visibility 0.5s allow-discrete;
+  }
+  .galerie-histoire-suite[open]::details-content {
+    grid-template-rows: 1fr;
+  }
+  .galerie-histoire-volet::details-content {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.45s cubic-bezier(0.22, 0.8, 0.2, 1), content-visibility 0.45s allow-discrete;
+  }
+  .galerie-histoire-volet[open]::details-content {
+    grid-template-rows: 1fr;
+  }
+}
+
+/* === Histoire et pratique (ticket 22) : fin === */

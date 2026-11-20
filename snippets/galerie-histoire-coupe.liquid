@@ -1,0 +1,32 @@
+{%- comment -%}
+  La première coupe d'un texte (page galerie, fiche-3d, ticket 22) : son début jusqu'au premier des signes
+  donnés, signe compris, si du texte le précède. Sans aucun de ces signes : rien.
+  Les signes par défaut sont les fins de phrase : un point, un point d'exclamation ou d'interrogation, suivi
+  d'une espace (la dernière phrase, sans espace après elle, n'est donc jamais coupée).
+
+  Sert deux fois à « L'histoire » : tirer un titre d'un texte qui n'en a pas (snippets/galerie-histoire-recit.liquid),
+  et partager un titre entre sa part maigre et sa part en gras (snippets/galerie-histoire-titre.liquid), à la fin
+  de sa première phrase, sinon à son premier tiret entouré d'espaces ou à ses deux-points.
+  Limite connue : une abréviation à point (« M. Dupont ») coupe trop tôt ; le texte reste entier, seul le
+  partage se fait un mot trop tôt.
+
+  Accepts:
+  - text: {String} un texte sans balise
+  - marks: {String} facultatif : les signes, séparés par « | », chacun avec ses espaces
+{%- endcomment -%}
+{%- liquid
+  assign cut_marks = marks | default: '. |! |? ' | split: '|'
+  assign cut = ''
+  assign cut_size = text | size
+  for mark in cut_marks
+    if text contains mark
+      assign head = text | split: mark | first
+      assign head_size = head | strip | size
+      if head_size > 0 and head_size < cut_size
+        assign cut_size = head_size
+        assign cut = head | append: mark | strip
+      endif
+    endif
+  endfor
+  echo cut
+-%}

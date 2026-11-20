@@ -586,6 +586,27 @@
           "making_value": "Designed in France, printed in Europe",
           "delivery": "Delivery",
           "delivery_value": "Free, within 7 working days"
+        },
+        "histoire": {
+          "story": "The story",
+          "read_more": "Read more",
+          "read_less": "Show less",
+          "practical": "In practice",
+          "practical_title": "Everything you",
+          "practical_title_strong": "need to know",
+          "pledge_hang": "Ready to hang",
+          "pledge_hang_text": "Delivered mounted on its stretcher.",
+          "pledge_frame": "With or without a frame",
+          "pledge_frame_text": "Frame it yourself, or have it delivered behind glass.",
+          "pledge_colors": "True colours",
+          "pledge_colors_text_canvas": "Rich, sharp, guaranteed for 75 years.",
+          "pledge_colors_text_poster": "Rich and sharp, in high definition.",
+          "pledge_canvas": "Real art canvas",
+          "pledge_canvas_text": "A delicate grain, soft to the touch.",
+          "pledge_paper": "Real photo paper",
+          "pledge_paper_text": "250 g/m², an HD print.",
+          "pledge_person": "A real person",
+          "pledge_person_text": "Answers you 7 days a week."
         }
       }
     },

@@ -1,0 +1,61 @@
+{%- comment -%}
+  Le grand titre de « L'histoire » (page galerie, fiche-3d, ticket 22) : maigre, sa fin en gras, comme tous
+  les grands titres de la maquette validée par Walid le 20/11/2026 (.scratch/fiche-3d/galerie, version 13).
+  Rendu par snippets/galerie-histoire-recit.liquid, dans <galerie-mots>.
+
+  La maquette écrit « Quand Superman rencontre le street art — <b>et que ça explose</b> » pour la toile, et
+  « Certaines affiches murmurent. <b>Celle-ci crie sa joie à pleins poumons.</b> » pour le poster. Ici, le
+  titre vient du texte de chaque produit : la part en gras se trouve seule, pour n'importe quel titre
+  (snippets/galerie-histoire-coupe.liquid).
+  - Plusieurs phrases : la première en maigre, la suite en gras.
+  - Une incise : ce qui suit le premier tiret entouré d'espaces, ou les deux-points.
+  - Sinon : le dernier mot, comme le nom court de la présentation.
+
+  Accepts:
+  - text: {String} le titre, en texte : sans balise ni retour à la ligne
+{%- endcomment -%}
+{%- liquid
+  assign title = text | strip
+  assign light = ''
+  assign strong = title
+
+  # Ce qui précède la coupe reste maigre, le signe compris.
+  capture cut
+    render 'galerie-histoire-coupe', text: title
+  endcapture
+  assign cut = cut | strip
+  if cut == ''
+    capture cut
+      render 'galerie-histoire-coupe', text: title, marks: ' — | – | - |: '
+    endcapture
+    assign cut = cut | strip
+  endif
+
+  if cut != ''
+    assign light = cut
+    assign strong = title | remove_first: cut | strip
+  else
+    # Sans coupe : le dernier mot, avec la ponctuation qu'une espace en détache (« attendait ? »).
+    assign words = title | split: ' '
+    assign last_word = words | last
+    assign strong_from = words.size
+    if words.size > 1 and '?!:;»' contains last_word
+      assign strong_from = words.size | minus: 1
+    endif
+    assign strong = ''
+    for word in words
+      if forloop.index < strong_from
+        assign light = light | append: word | append: ' '
+      else
+        assign strong = strong | append: word | append: ' '
+      endif
+    endfor
+    assign light = light | strip
+    assign strong = strong | strip
+  endif
+
+  if light != ''
+    echo light | append: ' '
+  endif
+  echo '<b>' | append: strong | append: '</b>'
+-%}

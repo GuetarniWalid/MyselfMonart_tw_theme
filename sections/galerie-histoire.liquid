@@ -1,0 +1,118 @@
+{%- comment -%}
+  Page galerie des œuvres 3D (fiche-3d, ticket 22) : « L'histoire » et « En pratique », sous la scène. Porté de
+  la maquette validée par Walid le 20/11/2026 (.scratch/fiche-3d/galerie, version 13, section .histoire) ; ses
+  styles sont dans assets/oeuvre-galerie.css (bloc « Histoire et pratique », classes galerie-histoire-…), que le
+  bloc principal de la fiche charge en page galerie.
+
+  Deux parties, deux colonnes sur ordinateur, l'une sous l'autre sur téléphone, chacune nommée par son titre
+  (aria-labelledby) :
+  - à gauche, le texte de présentation du produit (snippets/galerie-histoire-recit.liquid) ;
+  - à droite, la carte « En pratique » : les volets, puis quatre engagements (snippets/galerie-histoire-gage.liquid).
+
+  Les volets sont les blocs de la section. Chacun dit pour quel support il vaut (réglage « support » : tous,
+  toile, poster) : la page n'écrit que ceux de son produit, toile ou poster, jamais les deux. Un poster se
+  reconnaît à son métachamp frames_poster, comme dans le bloc principal de la fiche. Les volets sont ceux du
+  thème : l'élément <collapsible-tab> (assets/tw-global.js), qui cherche ses <details> par la classe accordion,
+  n'en garde qu'un d'ouvert, et démarre de lui-même après la bascule Toile / Poster. Aucun script ici.
+  Leur titre et leur texte passent par les jetons de la note Trustpilot (snippets/trustpilot-tokens.liquid) ;
+  un sous-titre écrit dans le texte descend d'un cran (h4), sous le titre du volet (h3).
+{%- endcomment -%}
+{%- liquid
+  assign support = 'toile'
+  if product.metafields.painting_options.frames_poster != blank
+    assign support = 'poster'
+  endif
+  assign story_id = 'galerie-histoire-titre-' | append: section.id
+  assign practical_id = 'galerie-histoire-pratique-' | append: section.id
+-%}
+<div class="galerie galerie-bande galerie-histoire">
+  <div class="galerie-histoire-colonnes">
+    {%- if product.description != blank -%}
+      {% render 'galerie-histoire-recit', product: product, heading_id: story_id %}
+    {%- endif -%}
+    <section class="galerie-histoire-pratique galerie-monte" aria-labelledby="{{ practical_id }}">
+      <p class="galerie-surtitre">{{ 'sections.mma.galerie.histoire.practical' | t }}</p>
+      <h2 class="galerie-histoire-pratique-titre" id="{{ practical_id }}">{{ 'sections.mma.galerie.histoire.practical_title' | t }} <b>{{ 'sections.mma.galerie.histoire.practical_title_strong' | t }}</b></h2>
+      {%- capture volets -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'volet' -%}
+            {%- if block.settings.support == 'tous' or block.settings.support == support -%}
+              {%- assign volet_heading = block.settings.heading | escape -%}
+              {%- assign volet_content = block.settings.content | replace: '<h1', '<h4' | replace: '</h1>', '</h4>' | replace: '<h2', '<h4' | replace: '</h2>', '</h4>' | replace: '<h3', '<h4' | replace: '</h3>', '</h4>' -%}
+              <details class="accordion galerie-histoire-volet" {{ block.shopify_attributes }}>
+                <summary class="galerie-histoire-volet-titre">
+                  <h3>{% render 'trustpilot-tokens', text: volet_heading %}</h3>
+                  <i data-allow-empty aria-hidden="true"></i>
+                </summary>
+                <div class="galerie-histoire-volet-corps">
+                  <div class="galerie-histoire-volet-texte">{% render 'trustpilot-tokens', text: volet_content %}</div>
+                </div>
+              </details>
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+      {%- if volets != blank -%}
+        <collapsible-tab class="galerie-histoire-volets">{{ volets }}</collapsible-tab>
+      {%- endif -%}
+      <ul class="galerie-histoire-gages">
+        {%- if support == 'poster' -%}
+          {%- render 'galerie-histoire-gage', dessin: 'cadre', title: 'pledge_frame', text: 'pledge_frame_text' -%}
+          {%- render 'galerie-histoire-gage', dessin: 'couleurs', title: 'pledge_colors', text: 'pledge_colors_text_poster' -%}
+          {%- render 'galerie-histoire-gage', dessin: 'feuille', title: 'pledge_paper', text: 'pledge_paper_text' -%}
+        {%- else -%}
+          {%- render 'galerie-histoire-gage', dessin: 'cadre', title: 'pledge_hang', text: 'pledge_hang_text' -%}
+          {%- render 'galerie-histoire-gage', dessin: 'couleurs', title: 'pledge_colors', text: 'pledge_colors_text_canvas' -%}
+          {%- render 'galerie-histoire-gage', dessin: 'trame', title: 'pledge_canvas', text: 'pledge_canvas_text' -%}
+        {%- endif -%}
+        {%- render 'galerie-histoire-gage', dessin: 'bulle', title: 'pledge_person', text: 'pledge_person_text' -%}
+      </ul>
+    </section>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Galerie : histoire",
+  "tag": "section",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Page galerie des œuvres 3D. À gauche, « L'histoire » : la description du produit, dont le titre devient le grand titre et dont la suite se replie. À droite, « En pratique » : les volets ci-dessous, puis quatre engagements, ceux de la toile ou ceux du poster."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "volet",
+      "name": "Volet",
+      "settings": [
+        {
+          "type": "select",
+          "id": "support",
+          "label": "Affiché pour",
+          "info": "Une fiche n'affiche que les volets de son produit. Un texte qui parle de châssis ou de toile tendue : « Toiles seulement ».",
+          "options": [
+            { "value": "tous", "label": "Toiles et posters" },
+            { "value": "toile", "label": "Toiles seulement" },
+            { "value": "poster", "label": "Posters seulement" }
+          ],
+          "default": "tous"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Titre",
+          "default": "Titre du volet"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Texte",
+          "info": "La note Trustpilot ne s'écrit jamais en chiffres : [[TP_SCORE]]/5 sur [[TP_COUNT]] avis."
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

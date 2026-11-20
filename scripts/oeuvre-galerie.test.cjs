@@ -112,12 +112,18 @@ test('la feuille : chaque règle porte le crochet ou un nom « galerie », rien 
   assert.doesNotMatch(css, /data-layout|oeuvre-galerie|data-template/)
 })
 
-test('la feuille : aucun mouvement hors « mouvements voulus » et hors des navigateurs qui lient une animation au défilement', () => {
+test('la feuille : aucun mouvement hors « mouvements voulus », rien ne suit le défilement hors des navigateurs qui lient une animation au défilement', () => {
   const MOTION = '@media (prefers-reduced-motion: no-preference)'
   const LINKED = '@supports (animation-timeline: view()) and (animation-range-start: contain 10svh)'
   const animated = sheet().filter((r) => /(^|[;\s])(animation|transition)[\w-]*\s*:/.test(r.body))
   assert.ok(animated.length >= 2, 'le titre mot à mot et la fiche qui monte')
-  for (const r of animated) assert.deepEqual(r.context, [MOTION, LINKED], r.head)
+  // Tout mouvement attend « mouvements voulus ». Ce qui suit le défilement (animation-timeline) attend en plus un
+  // navigateur qui sait lier une animation au défilement ; le mouvement d'un geste (un volet qui se déplie,
+  // ticket 22) se joue dans tout navigateur.
+  for (const r of animated) {
+    if (/animation-timeline\s*:/.test(r.body)) assert.deepEqual(r.context, [MOTION, LINKED], r.head)
+    else assert.equal(r.context[0], MOTION, r.head)
+  }
   // Les mots arrivent l'un après l'autre (--i, posé par le script), la fiche monte : seulement transform et opacity.
   const word = animated.find((r) => r.head === 'galerie-mots .galerie-mot')
   assert.match(word.body, /animation: galerie-mot linear both;\s*animation-timeline: view\(\);\s*animation-range: cover calc\(1% \+ var\(--i\) \* 2\.4%\) cover calc\(16% \+ var\(--i\) \* 2\.4%\);/)

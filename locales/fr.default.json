@@ -731,6 +731,27 @@
           "making_value": "Conçu en France, imprimé en Europe",
           "delivery": "Livraison",
           "delivery_value": "Offerte, sous 7 jours ouvrés"
+        },
+        "histoire": {
+          "story": "L’histoire",
+          "read_more": "Lire la suite",
+          "read_less": "Réduire",
+          "practical": "En pratique",
+          "practical_title": "Tout ce qu’il",
+          "practical_title_strong": "faut savoir",
+          "pledge_hang": "Prête à accrocher",
+          "pledge_hang_text": "Livrée montée sur son châssis.",
+          "pledge_frame": "Avec ou sans cadre",
+          "pledge_frame_text": "À encadrer vous-même, ou livré sous verre.",
+          "pledge_colors": "Couleurs fidèles",
+          "pledge_colors_text_canvas": "Riches, nettes, garanties 75 ans.",
+          "pledge_colors_text_poster": "Riches et nettes, en haute définition.",
+          "pledge_canvas": "Vraie toile d’art",
+          "pledge_canvas_text": "Un grain délicat, doux au toucher.",
+          "pledge_paper": "Vrai papier photo",
+          "pledge_paper_text": "250 g/m², un tirage HD.",
+          "pledge_person": "Une vraie personne",
+          "pledge_person_text": "Vous répond 7 jours sur 7."
         }
       }
     },

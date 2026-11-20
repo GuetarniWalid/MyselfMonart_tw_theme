@@ -345,6 +345,27 @@
           "making_value": "In Frankreich entworfen, in Europa gedruckt",
           "delivery": "Lieferung",
           "delivery_value": "Kostenlos, innerhalb von 7 Werktagen"
+        },
+        "histoire": {
+          "story": "Die Geschichte",
+          "read_more": "Weiterlesen",
+          "read_less": "Weniger anzeigen",
+          "practical": "Praktisches",
+          "practical_title": "Alles, was Sie",
+          "practical_title_strong": "wissen müssen",
+          "pledge_hang": "Fertig zum Aufhängen",
+          "pledge_hang_text": "Auf den Keilrahmen gespannt geliefert.",
+          "pledge_frame": "Mit oder ohne Rahmen",
+          "pledge_frame_text": "Zum Selbstrahmen oder gerahmt hinter Glas geliefert.",
+          "pledge_colors": "Originalgetreue Farben",
+          "pledge_colors_text_canvas": "Satt, scharf, 75 Jahre garantiert.",
+          "pledge_colors_text_poster": "Satt und scharf, in hoher Auflösung.",
+          "pledge_canvas": "Echte Kunstleinwand",
+          "pledge_canvas_text": "Feine Struktur, weich im Griff.",
+          "pledge_paper": "Echtes Fotopapier",
+          "pledge_paper_text": "250 g/m², ein HD-Druck.",
+          "pledge_person": "Ein echter Mensch",
+          "pledge_person_text": "Antwortet Ihnen an 7 Tagen die Woche."
         }
       }
     },

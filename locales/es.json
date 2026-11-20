@@ -344,6 +344,27 @@
           "making_value": "Diseñado en Francia, impreso en Europa",
           "delivery": "Envío",
           "delivery_value": "Gratis, en 7 días laborables"
+        },
+        "histoire": {
+          "story": "La historia",
+          "read_more": "Leer más",
+          "read_less": "Ver menos",
+          "practical": "En la práctica",
+          "practical_title": "Todo lo que",
+          "practical_title_strong": "hay que saber",
+          "pledge_hang": "Listo para colgar",
+          "pledge_hang_text": "Se entrega montado en su bastidor.",
+          "pledge_frame": "Con o sin marco",
+          "pledge_frame_text": "Enmárcalo tú mismo, o recíbelo enmarcado con vidrio.",
+          "pledge_colors": "Colores fieles",
+          "pledge_colors_text_canvas": "Ricos, nítidos, garantizados 75 años.",
+          "pledge_colors_text_poster": "Ricos y nítidos, en alta definición.",
+          "pledge_canvas": "Auténtico lienzo de arte",
+          "pledge_canvas_text": "Un grano delicado, suave al tacto.",
+          "pledge_paper": "Auténtico papel fotográfico",
+          "pledge_paper_text": "250 g/m², una impresión HD.",
+          "pledge_person": "Una persona de verdad",
+          "pledge_person_text": "Te responde los 7 días de la semana."
         }
       }
     },

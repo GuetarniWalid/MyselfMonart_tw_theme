@@ -1,0 +1,38 @@
+{%- comment -%}
+  Un engagement de la carte « En pratique » (page galerie, fiche-3d, ticket 22) : son petit dessin dans une
+  pastille de couleur, son titre, une ligne de texte. Rendu quatre fois par sections/galerie-histoire.liquid.
+
+  Les dessins sont ceux de la maquette validée par Walid le 20/11/2026 (.scratch/fiche-3d/galerie, version
+  13, .gages), tracés tels quels : le cadre, les trois couleurs, la trame de la toile, la feuille de papier du
+  poster, la bulle. Aucun autre : un nom inconnu ne dessine rien. Ils sont un décor (aria-hidden) : le titre
+  et le texte disent tout. Une espace sépare le titre du texte : à l'écran, le titre est sur sa ligne ; pour
+  Google et les lecteurs d'écran, les deux mots ne se collent pas.
+
+  Accepts:
+  - dessin: {String} cadre, couleurs, trame, feuille ou bulle
+  - title: {String} la clé du titre, sous sections.mma.galerie.histoire (fichiers de langue)
+  - text: {String} la clé du texte, sous sections.mma.galerie.histoire
+{%- endcomment -%}
+{%- liquid
+  assign title_key = 'sections.mma.galerie.histoire.' | append: title
+  assign text_key = 'sections.mma.galerie.histoire.' | append: text
+-%}
+<li>
+  <span class="galerie-histoire-gage-dessin" aria-hidden="true">
+    <svg viewBox="0 0 32 32" focusable="false">
+      {%- case dessin -%}
+        {%- when 'cadre' -%}
+          <rect x="5" y="7" width="22" height="18" rx="1"/><rect x="9" y="11" width="14" height="10"/><path d="M16 7V4"/>
+        {%- when 'couleurs' -%}
+          <circle cx="12" cy="13" r="7"/><circle cx="20" cy="13" r="7"/><circle cx="16" cy="20" r="7"/>
+        {%- when 'trame' -%}
+          <path d="M5 9h22M5 14h22M5 19h22M5 24h22M9 5v22M14 5v22M19 5v22M24 5v22"/>
+        {%- when 'feuille' -%}
+          <path d="M8 4h11l6 6v18H8z"/><path d="M19 4v6h6"/>
+        {%- when 'bulle' -%}
+          <path d="M6 8h20v13H14l-5 4v-4H6z"/><path d="M11 13h10M11 17h6"/>
+      {%- endcase -%}
+    </svg>
+  </span>
+  <b>{{ title_key | t }}</b> {{ text_key | t -}}
+</li>

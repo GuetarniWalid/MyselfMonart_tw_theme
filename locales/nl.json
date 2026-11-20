@@ -347,6 +347,27 @@
           "making_value": "Ontworpen in Frankrijk, gedrukt in Europa",
           "delivery": "Levering",
           "delivery_value": "Gratis, binnen 7 werkdagen"
+        },
+        "histoire": {
+          "story": "Het verhaal",
+          "read_more": "Verder lezen",
+          "read_less": "Minder tonen",
+          "practical": "In de praktijk",
+          "practical_title": "Alles wat je",
+          "practical_title_strong": "moet weten",
+          "pledge_hang": "Klaar om op te hangen",
+          "pledge_hang_text": "Geleverd op het spieraam gespannen.",
+          "pledge_frame": "Met of zonder lijst",
+          "pledge_frame_text": "Zelf inlijsten, of ingelijst achter glas geleverd.",
+          "pledge_colors": "Natuurgetrouwe kleuren",
+          "pledge_colors_text_canvas": "Rijk, scherp, 75 jaar gegarandeerd.",
+          "pledge_colors_text_poster": "Rijk en scherp, in hoge resolutie.",
+          "pledge_canvas": "Echt kunstcanvas",
+          "pledge_canvas_text": "Een fijne structuur, zacht om aan te raken.",
+          "pledge_paper": "Echt fotopapier",
+          "pledge_paper_text": "250 g/m², een HD-afdruk.",
+          "pledge_person": "Een echt persoon",
+          "pledge_person_text": "Antwoordt je 7 dagen per week."
         }
       }
     },

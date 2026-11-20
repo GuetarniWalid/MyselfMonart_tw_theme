@@ -1,0 +1,152 @@
+{%- comment -%}
+  « L'histoire » de la page galerie (fiche-3d, ticket 22) : le texte de présentation du produit, à gauche de
+  la carte « En pratique ». Porté de la maquette validée par Walid le 20/11/2026 (.scratch/fiche-3d/galerie,
+  version 13, .histoire .prose) ; ses styles sont dans assets/oeuvre-galerie.css (règles .galerie-histoire-*).
+  Rendu par sections/galerie-histoire.liquid.
+
+  Le texte est la description du produit, telle quelle. Le serveur la découpe ici, rien n'est fait par un
+  script : tout le texte est dans la page, replié ou non, et Google le lit.
+  - Son titre (le premier h2) devient le grand titre du bloc : maigre, sa fin en gras
+    (snippets/galerie-histoire-titre.liquid), ses mots arrivant un à un (<galerie-mots>).
+  - Sans titre (les posters, aujourd'hui), le texte en donne un : son premier paragraphe s'il est court
+    (110 caractères au plus), sinon sa première phrase, dont le reste demeure un paragraphe. Ce qui devient
+    le titre n'est écrit qu'une fois. Un paragraphe qui porte du balisage (un lien, du gras) n'est pas
+    démonté, ni un texte d'un seul paragraphe court : « L'histoire » est alors le titre (h2) du bloc.
+  - Son début reste à l'écran : ses premiers paragraphes, jusqu'à 250 caractères au moins. Le premier monte
+    à son entrée dans l'écran.
+  - La suite se replie derrière « Lire la suite » : un <details> du navigateur, qui se déplie au clavier
+    comme au doigt, sans script. Une suite de moins de 100 caractères reste à l'écran.
+  La colonne est une partie nommée de la page (<section>, aria-labelledby) : son nom est son titre, ou
+  « L'histoire » quand le texte n'en donne pas.
+
+  Accepts:
+  - product: {Object}
+  - heading_id: {String} l'identifiant du titre de la colonne, unique dans la page
+{%- endcomment -%}
+{%- liquid
+  # Les seuils, en caractères de texte : un titre tiré du texte, au plus ; le début à l'écran, au moins ; une
+  # suite qui vaut d'être repliée, au moins.
+  assign title_max = 110
+  assign shown_min = 250
+  assign fold_min = 100
+
+  # Le seul h1 de la page est le titre du produit : un h1 égaré dans un texte y devient un h2.
+  assign body = product.description | replace: '<h1', '<h2' | replace: '</h1>', '</h2>'
+  assign title = ''
+
+  # Le titre : le premier h2 du texte, sans ses balises ni ses retours à la ligne.
+  if body contains '<h2'
+    assign before = body | split: '<h2' | first
+    assign from_h2 = body | remove_first: before | remove_first: '<h2'
+    if from_h2 contains '</h2>'
+      assign open_end = from_h2 | split: '>' | first | append: '>'
+      assign inner = from_h2 | remove_first: open_end | split: '</h2>' | first
+      assign h2_html = '<h2' | append: open_end | append: inner | append: '</h2>'
+      assign title = inner | strip_html | newline_to_br | strip_newlines | replace: '<br />', ' ' | strip
+      assign body = body | remove_first: h2_html
+    endif
+  endif
+
+  # Sans titre : le premier paragraphe, s'il est en texte simple.
+  if title == ''
+    assign trimmed = body | strip
+    assign start = trimmed | slice: 0, 3
+    if start == '<p>' or start == '<p '
+      assign p_html = trimmed | split: '</p>' | first
+      assign p_open = p_html | split: '>' | first | append: '>'
+      assign p_text = p_html | remove_first: p_open | newline_to_br | strip_newlines | replace: '<br />', ' ' | strip
+      assign p_size = p_text | size
+      assign after_p = trimmed | remove_first: p_html | remove_first: '</p>'
+      assign after_text = after_p | strip_html | strip
+      unless p_text contains '<'
+        if p_size <= title_max and after_text != ''
+          # Court, et le texte continue : il est le titre, le texte reprend au paragraphe suivant.
+          assign title = p_text
+          assign body = after_p
+        else
+          # Sinon sa première phrase, si elle est courte ; le reste demeure un paragraphe.
+          capture sentence
+            render 'galerie-histoire-coupe', text: p_text
+          endcapture
+          assign sentence = sentence | strip
+          assign sentence_size = sentence | size
+          if sentence != '' and sentence_size <= title_max
+            assign title = sentence
+            assign p_rest = p_text | remove_first: sentence | strip
+            assign body = p_open | append: p_rest | append: '</p>' | append: after_p
+          endif
+        endif
+      endunless
+    endif
+  endif
+
+  # Le titre passe, comme tout le texte, par les jetons de la note Trustpilot (snippets/trustpilot-tokens.liquid).
+  if title != ''
+    capture title_text
+      render 'trustpilot-tokens', text: title
+    endcapture
+    assign title = title_text | strip
+  endif
+
+  # Le début à l'écran (shown) : les premiers paragraphes, jusqu'à shown_min caractères de texte. Le premier à
+  # part (lead) : il monte ; les suivants (after_lead) restent tels quels. La coupe ne passe jamais au travers
+  # d'un bloc : elle s'arrête au premier morceau qui n'est pas un paragraphe (une liste, une citation, un
+  # sous-titre), ou qui n'est pas fermé.
+  assign shown = ''
+  assign lead = ''
+  assign shown_size = 0
+  assign chunks = body | split: '</p>'
+  assign body_end = body | strip | slice: -4, 4
+  for chunk in chunks
+    assign start = chunk | strip | slice: 0, 3
+    if start != '<p>' and start != '<p '
+      break
+    endif
+    if forloop.last and body_end != '</p>'
+      break
+    endif
+    assign shown = shown | append: chunk | append: '</p>'
+    if lead == ''
+      assign lead = shown
+    endif
+    assign chunk_size = chunk | strip_html | strip | size
+    assign shown_size = shown_size | plus: chunk_size
+    if shown_size >= shown_min
+      break
+    endif
+  endfor
+
+  # La suite repliée (more) : ce qui reste. Quelques mots ne valent pas un bouton : ils restent à l'écran. Et un
+  # texte qui ne commence pas par un paragraphe s'écrit en entier, sans rien replier.
+  assign more = body | remove_first: shown
+  assign more_size = more | strip_html | strip | size
+  if shown == '' or more_size < fold_min
+    assign shown = body
+    assign more = ''
+  endif
+  assign after_lead = shown | remove_first: lead
+-%}
+<section class="galerie-histoire-recit" aria-labelledby="{{ heading_id }}">
+  {%- if title != '' -%}
+    <p class="galerie-histoire-surtitre">{{ 'sections.mma.galerie.histoire.story' | t }}</p>
+    <h2 class="galerie-histoire-titre" id="{{ heading_id }}"><galerie-mots>{% render 'galerie-histoire-titre', text: title %}</galerie-mots></h2>
+  {%- else -%}
+    <h2 class="galerie-histoire-surtitre" id="{{ heading_id }}">{{ 'sections.mma.galerie.histoire.story' | t }}</h2>
+  {%- endif -%}
+  <div class="galerie-histoire-texte">
+    {%- if lead != '' -%}
+      <div class="galerie-histoire-chapo galerie-monte">{% render 'trustpilot-tokens', text: lead %}</div>
+    {%- endif -%}
+    {% render 'trustpilot-tokens', text: after_lead %}
+    {%- if more != '' -%}
+      <details class="galerie-histoire-suite">
+        <summary class="galerie-histoire-lire">
+          <span class="galerie-histoire-lire-plus">{{ 'sections.mma.galerie.histoire.read_more' | t }}</span>
+          <span class="galerie-histoire-lire-moins">{{ 'sections.mma.galerie.histoire.read_less' | t }}</span>
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true" focusable="false"><path d="m2 4 4 4 4-4"/></svg>
+        </summary>
+        <div class="galerie-histoire-suite-corps">{% render 'trustpilot-tokens', text: more %}</div>
+      </details>
+    {%- endif -%}
+  </div>
+</section>
