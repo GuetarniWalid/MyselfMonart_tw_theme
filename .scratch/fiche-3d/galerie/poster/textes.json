@@ -1,0 +1,43 @@
+{
+  "_": "Textes de la version poster de la maquette (v13). Rien n'est inventé sur le produit. Sources : le produit Shopify « Poster Superman - Pop art explosif et éclats de rue » (titre, prix, formats, cadres, texte de présentation dans description-poster.html) ; le haut de sa fiche en ligne le 20/11/2026 (collection « Poster & Affiche Street Art », légendes Contour / Cadre / Taille, « Aucun » par défaut) ; ce que le thème dit déjà d'un poster : « Un vrai papier photo de 250 g/m², un tirage HD aux couleurs éclatantes », « à encadrer vous-même avec un cadre standard du commerce, ou à poser tel quel », cadres « Blanc, noir mat, chêne vieilli ou noyer », « tirage photo, encadré et sous verre », « Avec cadre : livrée prête à accrocher ». Non repris, car la boutique ne le dit que des toiles : toile polyester 285 g/m², couleurs garanties 75 ans, châssis. Aujourd'hui, la fiche en ligne d'un poster montre les textes écrits pour les toiles : ces versions poster sont donc à faire valider par Walid.",
+  "collection": "Poster &amp; Affiche Street Art",
+  "titre": "Poster Superman - Pop art explosif et éclats de rue",
+  "prix": "24,90 €",
+  "legende": ["Contour", "Aucun"],
+  "fiche": [
+    ["Support", "Papier photo 250 g/m²"],
+    ["Cadre", "En option : blanc, noir, chêne vieilli ou noyer"]
+  ],
+  "matiere": {
+    "titre": "Un vrai <b>papier photo.</b>",
+    "texte": "Épais, 250 g/m², pour un tirage net aux couleurs éclatantes. À encadrer, ou à poser tel quel."
+  },
+  "volets": [
+    { "titreToile": "Livraison, paiement &amp; délais",
+      "corps": "<p><strong>Livraison offerte partout.</strong> Aucun minimum, en colis suivi jusqu'à votre porte.</p><p>Votre poster est imprimé à la commande dans nos ateliers, puis contrôlé avant d'être expédié. Comptez 7 jours ouvrés.</p><p><strong>Paiement en 3 fois sans frais</strong> avec Klarna dès 50 €.</p>" },
+    { "titreToile": "Détails du produit",
+      "corps": "<p>Chaque poster est imprimé spécialement pour vous, en haute définition, sur un vrai papier photo de 250 g/m².</p><p>Sans cadre, il s'encadre avec un cadre standard du commerce, ou se pose tel quel. Avec cadre, il arrive encadré, sous verre et prêt à accrocher : blanc, noir, chêne vieilli ou noyer.</p>" },
+    { "titreToile": "Retour et échange",
+      "corps": "<p>Si votre poster arrivait endommagé ou ne correspondait pas à nos exigences de qualité, nous vous envoyons une nouvelle pièce sans aucun frais. Nous restons à vos côtés jusqu'à votre entière satisfaction.</p>" }
+  ],
+  "gages": [
+    { "toile": "Prête à accrocher", "titre": "Avec ou sans cadre", "texte": "À encadrer vous-même, ou livré sous verre." },
+    { "toile": "Couleurs fidèles", "titre": "Couleurs fidèles", "texte": "Riches et nettes, en haute définition." },
+    { "toile": "Vraie toile d'art", "titre": "Vrai papier photo", "texte": "250 g/m², un tirage HD.",
+      "dessin": "<span><svg viewBox=\"0 0 32 32\"><path d=\"M8 4h11l6 6v18H8z\"/><path d=\"M19 4v6h6\"/></svg></span>" }
+  ],
+  "questions": [
+    { "titreToile": "Les couleurs seront-elles fidèles à ce que je vois sur mon écran ?",
+      "reponse": "Oui. Votre poster est tiré en haute définition sur un vrai papier photo de 250 g/m². Les couleurs sont riches et nettes. La plupart de nos clientes trouvent le rendu encore plus beau en vrai." },
+    { "titreToile": "C'est une vraie toile ou une simple affiche ?", "titre": "C'est un vrai tirage photo ?",
+      "reponse": "Oui. Conçu en France et imprimé à la demande en Europe : un tirage haute définition sur un vrai papier photo de 250 g/m², aux couleurs éclatantes." },
+    { "titreToile": "Comment choisir la bonne taille pour mon mur ?",
+      "reponse": "Une règle simple : mesurez la largeur de votre mur et divisez par 1,5. Vous obtenez la largeur idéale de votre poster. Un doute ? Découpez un carton aux dimensions et scotchez-le au mur pour visualiser." },
+    { "titreToile": "Quels sont les délais et le prix de la livraison ?",
+      "reponse": "Votre poster est imprimé spécialement pour vous, au moment où vous le commandez. Vous le recevez sous 7 jours ouvrés, avec un numéro de suivi. La livraison est gratuite sur toutes vos commandes." },
+    { "titreToile": "Que faire si le tableau ne me plaît pas ?", "titre": "Que faire si le poster ne me plaît pas ?",
+      "reponse": "Vous disposez de 14 jours après réception pour nous le retourner, dans son état d'origine. Le remboursement est effectué sous 7 jours après réception." },
+    { "titreToile": "Faut-il acheter un cadre en plus ?",
+      "reponse": "Pas forcément. Sans cadre, votre poster s'encadre avec un cadre standard du commerce, ou se pose tel quel. Avec l'option « avec cadre », il arrive encadré, sous verre et prêt à accrocher." }
+  ]
+}

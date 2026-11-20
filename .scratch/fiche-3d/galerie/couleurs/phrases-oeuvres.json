@@ -1,0 +1,92 @@
+{
+  "_": "Phrases de la page d'essai, une par tableau et par couleur montrée : la couleur + le thème du tableau. Écrites à la main par Claude le 20/11/2026 pour montrer ce que le serveur écrirait à la mise en ligne. « montre » : les couleurs montrées, par leur identifiant de la boutique : d'abord les couleurs déclarées (sans « multicolore »), puis, s'il y en a moins de trois, les couleurs ajoutées (« ajoutee ») : celles que le moteur lit ensuite dans l'image et qui couvrent au moins 3 % du tableau.",
+  "superman": { "montre": ["bleu","rose","jaune"], "ajoutee": ["jaune"], "phrases": {
+    "bleu": ["l'aplomb","Il sculpte le visage du héros. Chez vous, il pose la pièce et donne de l'assurance."],
+    "rose": ["l'audace","Un fuchsia franc là où on attendait du rouge. Il ose, et vous donne envie d'oser."],
+    "jaune": ["l'étincelle","Des éclats de soleil qui réveillent le mur, et le moral avec."] } },
+  "zebre": { "montre": ["blanc-noir"], "phrases": {
+    "noir": ["la nuit de la savane","Il enveloppe le zèbre et fait le silence autour de lui. Dans la pièce, il donne de la profondeur."],
+    "blanc": ["le trait de lumière","Chaque rayure accroche la lumière et dessine l'animal. Le regard n'en décroche plus."] } },
+  "encre": { "montre": ["blanc-noir"], "phrases": {
+    "noir": ["l'élan","Une encre lancée d'un seul geste : les chevaux filent. La pièce y gagne du souffle."],
+    "blanc": ["l'espace","Tout ce vide laisse courir le galop. Il allège le mur et repose l'œil."] } },
+  "chevaux": { "montre": ["noir","beige","gris"], "ajoutee": ["gris"], "phrases": {
+    "noir": ["la force calme","Le cheval sombre, taillé à grands aplats, donne du poids et de l'assurance au mur."],
+    "beige": ["la douceur","Le cheval clair lui répond, tout en tendresse. À deux, ils apaisent la pièce."],
+    "gris": ["la nuance","Entre l'ombre et la lumière, les reflets du cheval sombre. Ils adoucissent la rencontre."] } },
+  "ane": { "montre": ["beige","noir"], "phrases": {
+    "beige": ["le sable chaud","Un fond de terre claire, doux comme un mur de pisé. Il réchauffe sans prendre la place."],
+    "noir": ["le dessin","L'animal et les feuillages se découpent comme au pochoir. Net, graphique, plein de caractère."] } },
+  "leopard": { "montre": ["beige","marron","noir"], "ajoutee": ["noir"], "phrases": {
+    "beige": ["le repos","Un pelage de crème où le fauve s'abandonne. Il adoucit la pièce et invite au calme."],
+    "marron": ["la chaleur fauve","Les ombres de sépia donnent du relief à l'animal, et une chaleur de cuir à votre mur."],
+    "noir": ["le regard","Les taches du pelage, l'œil du fauve. Elles donnent du nerf à toute cette douceur."] } },
+  "kaaba": { "montre": ["beige","noir"], "phrases": {
+    "beige": ["la paix","Une lumière de pierre et de sable autour du lieu saint. Elle apaise et invite au recueillement."],
+    "noir": ["la présence","La Kaaba se dresse, dense et immobile. Un point d'ancrage pour le regard, et pour la pièce."] } },
+  "cerisier": { "montre": ["bleu","beige"], "ajoutee": ["beige"], "phrases": {
+    "bleu": ["la nuit paisible","Un bleu presque noir, où se découpent les branches du cerisier. Il fait le silence dans la pièce."],
+    "beige": ["la clarté","La lune et les fleurs, seules lumières de la nuit. Elles attirent l'œil et le retiennent."] } },
+  "etoilee": { "montre": ["bleu"], "phrases": {
+    "bleu": ["le sommeil","Du ciel à la mer, un seul bleu de nuit semé d'étoiles. Il berce la chambre et rassure les petits."] } },
+  "bleu": { "montre": ["bleu","orange","beige"], "ajoutee": ["orange","beige"], "phrases": {
+    "bleu": ["le large","Une vague en rubans, du bleu profond au turquoise. Elle met du mouvement et un air de mer dans la pièce."],
+    "orange": ["le soleil","Un disque chaud au-dessus de la vague. Le point de chaleur qui réveille tout ce bleu."],
+    "beige": ["le sable","Un fond doux, couleur de plage. Il laisse la vague déferler."] } },
+  "ballerine": { "montre": ["noir","rouge","beige"], "ajoutee": ["beige"], "phrases": {
+    "noir": ["l'écrin","Une pénombre de coulisses qui fait ressortir le tutu. Elle donne à la pièce un air de théâtre."],
+    "rouge": ["le velours","Le fond de la boîte à bijoux, sombre et précieux. Une touche de luxe ancien, toute en retenue."],
+    "beige": ["la grâce","Le tutu, clair comme une plume au milieu de l'ombre. C'est lui qui attire l'œil, et allège la pièce."] } },
+  "barakallah": { "montre": ["vert","or","bronze"], "ajoutee": ["bronze"], "phrases": {
+    "vert": ["la sérénité","Un vert profond, celui des jardins. Il pose une paix grave sur le mur."],
+    "dore": ["la bénédiction","La calligraphie brille comme une enluminure. Elle donne au foyer sa lumière."],
+    "bronze": ["la tradition","Les arabesques du cadre, patinées comme un objet ancien. Elles donnent au tableau la chaleur d'un héritage."] } },
+  "lune": { "montre": ["vert","or"], "phrases": {
+    "vert": ["le calme profond","Une mer d'émeraude aux rides lentes. On respire plus doucement en la regardant."],
+    "dore": ["la veilleuse","La lune et son reflet tracent un chemin de lumière. Une présence douce, comme une lampe laissée allumée."] } },
+  "bonsai": { "montre": ["beige","vert"], "phrases": {
+    "beige": ["le silence","Un mur clair, brossé comme un enduit. Il laisse toute la place à l'arbre, et à vos pensées."],
+    "vert": ["la patience","Le feuillage du bonsaï, taillé au fil des années. Un vert qui apprend à ralentir."] } },
+  "barque": { "montre": ["vert","rouge"], "phrases": {
+    "vert": ["la fraîcheur","Un tapis de nénuphars vu du ciel. Il rafraîchit la pièce comme l'ombre d'un jardin."],
+    "rouge": ["l'étincelle de vie","La barque et les poissons, minuscules dans tout ce vert. C'est eux que l'œil cherche, et retrouve."] } },
+  "tournesol": { "montre": ["bleu","jaune","orange"], "ajoutee": ["orange"], "phrases": {
+    "bleu": ["le fond de nuit","Un bleu marine profond, qui pousse la fleur vers vous. Il donne de l'élégance au mur."],
+    "jaune": ["le soleil","Les pétales s'ouvrent comme un grand sourire. Un rayon de bonne humeur, même les jours gris."],
+    "orange": ["le cœur","Le cœur de la fleur, chaud comme une braise. Il donne au bouquet sa profondeur."] } },
+  "desert": { "montre": ["bleu","orange"], "phrases": {
+    "bleu": ["l'immensité","Un ciel sans un nuage, d'un seul aplat. Il ouvre le mur et donne envie de grand air."],
+    "orange": ["la chaleur","Les dunes brûlent sous le soleil, deux chevaux les traversent. Une chaleur qui gagne toute la pièce."] } },
+  "renard": { "montre": ["orange","beige","vert"], "ajoutee": ["vert"], "phrases": {
+    "orange": ["la tendresse","Le pelage roux du renard endormi. Une couleur câline, qui réchauffe la chambre."],
+    "beige": ["la douceur","Un fond de papier crème, calme comme une sieste. Il laisse le petit renard rêver en paix."],
+    "vert": ["le feuillage","Deux feuilles tendres au pied du renard. Un peu de nature pour veiller sur son sommeil."] } },
+  "medina": { "montre": ["beige","orange","bleu"], "ajoutee": ["bleu"], "phrases": {
+    "beige": ["la lumière du Sud","Les murs de la médina, chauffés par le soleil. Ils font entrer chez vous la douceur d'une ruelle."],
+    "orange": ["la vie","Un voile vif devant la vieille porte. La touche qui anime la scène, et réveille le mur."],
+    "bleu": ["la fraîcheur","Un voile bleu, comme un coin d'ombre dans la ruelle. Il repose l'œil au milieu des ocres."] } },
+  "africaines": { "montre": ["jaune","blanc","marron"], "ajoutee": ["marron"], "phrases": {
+    "jaune": ["la fête","Un fond d'or et de feu où tourne la danse. Il remplit la pièce de chaleur et de joie."],
+    "blanc": ["le mouvement","Les robes tourbillonnent, légères comme un souffle. Elles donnent de l'élan à tout le tableau."],
+    "marron": ["la terre","Le sol que frappent les pieds des danseuses. Il ancre la ronde et réchauffe le mur."] } },
+  "harissa": { "montre": ["bleu","jaune","blanc"], "ajoutee": ["blanc"], "phrases": {
+    "bleu": ["la fraîcheur","Un zellige bleu, frais comme un patio. Il donne à la cuisine un air de Méditerranée."],
+    "jaune": ["le piquant","Le tube de harissa claque au milieu des carreaux. Un clin d'œil qui met de la bonne humeur à table."],
+    "blanc": ["la lumière","Entre les carreaux, il fait respirer le motif. Net et lumineux, comme une cuisine au soleil."] } },
+  "coeur": { "montre": ["beige","rose","noir"], "ajoutee": ["noir"], "phrases": {
+    "beige": ["la page","Un fond clair comme une page de carnet, couvert de signes. Il laisse les dessins respirer."],
+    "rose": ["le coup de cœur","Au milieu des graffitis, un cœur rose, franc et tendre. On ne voit que lui, et on sourit."],
+    "noir": ["le trait","Des bonshommes, des croix, des mots griffonnés. Un trait libre, qui donne au mur son énergie."] } },
+  "multicolore": { "montre": ["rose","bleu","jaune"], "ajoutee": ["bleu","jaune"], "phrases": {
+    "rose": ["la tendresse","De grandes courbes roses qui s'enlacent. Elles mettent de la douceur dans la pièce."],
+    "bleu": ["le souffle","Quelques traits bleus, vifs, qui traversent la toile. Ils rafraîchissent l'ensemble et le font respirer."],
+    "jaune": ["la joie","Un ruban de soleil au bas de la toile. La note gaie qui fait sourire le mur."] } },
+  "frida": { "montre": ["bleu","rose","rouge"], "ajoutee": ["rouge"], "phrases": {
+    "bleu": ["la clarté","Un ciel doux derrière le visage. Il fait ressortir les fleurs et allège la pièce."],
+    "rose": ["la douceur","Les orchidées et les dahlias de la couronne. Une tendresse généreuse, pleine de vie."],
+    "rouge": ["le caractère","Les lèvres, quelques fleurs : la force tranquille du portrait. Il donne du cœur au mur."] } },
+  "elephant": { "montre": ["orange","rouge","bleu"], "ajoutee": ["bleu"], "phrases": {
+    "orange": ["l'énergie","Des touches de feu sur la peau de l'éléphant. Elles réveillent la pièce d'un seul coup."],
+    "rouge": ["la force","Il donne à l'animal sa puissance, et au mur une vraie présence."],
+    "bleu": ["la sagesse","Des ombres bleues qui calment le jeu. Elles posent le regard, comme l'animal pose le pas."] } }
+}
