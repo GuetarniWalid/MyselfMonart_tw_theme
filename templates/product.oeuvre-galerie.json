@@ -83,11 +83,92 @@
     "galerie_raisons": {
       "type": "galerie-raisons",
       "settings": {}
+    },
+    "galerie_histoire": {
+      "type": "galerie-histoire",
+      "blocks": {
+        "volet_choisir_toile": {
+          "type": "volet",
+          "settings": {
+            "support": "toile",
+            "heading": "Poster ou toile : lequel choisir ?",
+            "content": "<p>Une même œuvre, deux façons de l’habiter — à vous de choisir celle qui vous ressemble aujourd’hui.</p><p><strong>Le poster, c’est la liberté.</strong> Un format papier léger et accessible, à encadrer vous-même avec un cadre standard du commerce, ou à poser tel quel. On le déplace, on le compose en mur-galerie, on le renouvelle au gré des envies. Idéal pour une première déco, un petit budget, une location ou un cadeau qui a du goût. Le rendu ? Un vrai papier photo de 250 g/m², un tirage HD aux couleurs éclatantes.</p><p><strong>La version sur toile, c’est la pièce forte.</strong> Celle qu’on installe pour durer, qui donne le ton d’un mur et qu’on ne change pas. Plus enveloppante, plus présente — pensée pour rester.</p>"
+          }
+        },
+        "volet_choisir_poster": {
+          "type": "volet",
+          "settings": {
+            "support": "poster",
+            "heading": "Poster ou toile : lequel choisir ?",
+            "content": "<p>Une même œuvre, deux façons de l’habiter — à vous de choisir celle qui vous ressemble aujourd’hui.</p><p><strong>Le poster, c’est la liberté.</strong> Un format papier léger et accessible, à encadrer vous-même avec un cadre standard du commerce, ou à poser tel quel. On le déplace, on le compose en mur-galerie, on le renouvelle au gré des envies. Idéal pour une première déco, un petit budget, une location ou un cadeau qui a du goût. Le rendu ? Un vrai papier photo de 250 g/m², un tirage HD aux couleurs éclatantes.</p><p><strong>La version sur toile, c’est la pièce forte.</strong> Celle qu’on installe pour durer, qui donne le ton d’un mur et qu’on ne change pas. Plus enveloppante, plus présente — pensée pour rester.</p><p>Envie de la découvrir sur toile ? Utilisez la bascule <em>Poster / Toile</em> en haut de page pour voir la même œuvre en version durable.</p>"
+          }
+        },
+        "volet_livraison_toile": {
+          "type": "volet",
+          "settings": {
+            "support": "toile",
+            "heading": "Livraison, paiement & délais",
+            "content": "<p><strong>Livraison offerte partout.</strong> Aucun minimum, en colis suivi jusqu'à votre porte.</p><p><strong>Fabrication à la demande :</strong><br/>Nous n’avons pas de stock. Votre tableau est imprimé à la commande dans nos ateliers, sa toile est tendue à la main sur son châssis, puis il est contrôlé avant d’être expédié. Comptez 7 jours ouvrés entre votre commande et la livraison. Votre numéro de suivi vous est envoyé dès l’expédition.</p><p><strong>Paiement en 3 fois sans frais</strong> avec Klarna dès 50 €.</p><p><em>Conçu en France, imprimé en Europe.</em></p>"
+          }
+        },
+        "volet_livraison_poster": {
+          "type": "volet",
+          "settings": {
+            "support": "poster",
+            "heading": "Livraison, paiement & délais",
+            "content": "<p><strong>Livraison offerte partout.</strong> Aucun minimum, en colis suivi jusqu'à votre porte.</p><p>Votre poster est imprimé à la commande dans nos ateliers, puis contrôlé avant d'être expédié. Comptez 7 jours ouvrés.</p><p><strong>Paiement en 3 fois sans frais</strong> avec Klarna dès 50 €.</p>"
+          }
+        },
+        "volet_details_toile": {
+          "type": "volet",
+          "settings": {
+            "support": "toile",
+            "heading": "Détails du produit",
+            "content": "<h3>Qualité artisanale & savoir-faire</h3><p>Chaque toile est une pièce unique, fabriquée spécialement pour vous. Notre impression à la demande nous permet d'atteindre un niveau de qualité incomparable avec la production industrielle, tout en adoptant une démarche responsable qui limite les déchets.</p><p>Nous utilisons des encres haut de gamme, reconnues pour leur exceptionnelle résistance à la lumière. Vos couleurs restent éclatantes au fil des années, même exposées à la lumière naturelle de votre intérieur.</p><p></p><h3>Montage artisanal</h3><p>Chaque toile est tendue à la main sur un châssis en bois massif, pour un rendu élégant et une profondeur qui donne du relief à l'œuvre. La profondeur est de 2 cm pour les toiles.</p><h3><br/>Directement prêt à accrocher</h3><p>Nos toiles encadrées sont livrées montées et prêtes à accrocher. Le cadre en bois massif apporte une finition soignée qui s'intègre harmonieusement dans tout style de décoration.</p>"
+          }
+        },
+        "volet_details_poster": {
+          "type": "volet",
+          "settings": {
+            "support": "poster",
+            "heading": "Détails du produit",
+            "content": "<p>Chaque poster est imprimé spécialement pour vous, en haute définition, sur un vrai papier photo de 250 g/m².</p><p>Sans cadre, il s'encadre avec un cadre standard du commerce, ou se pose tel quel. Avec cadre, il arrive encadré, sous verre et prêt à accrocher : blanc, noir, chêne vieilli ou noyer.</p>"
+          }
+        },
+        "volet_retour_toile": {
+          "type": "volet",
+          "settings": {
+            "support": "toile",
+            "heading": "Retour et échange",
+            "content": "<h3>Notre engagement qualité</h3><p>Chaque œuvre quitte notre atelier soigneusement emballée pour voyager en toute sécurité jusqu'à chez vous. Dans le rare cas où votre tableau arriverait endommagé ou ne correspondrait pas à nos exigences de qualité, nous nous engageons à vous envoyer une nouvelle pièce sans aucun frais.</p><p>Parce que vous méritez une œuvre parfaite sur vos murs, nous restons à vos côtés jusqu'à votre entière satisfaction.</p>"
+          }
+        },
+        "volet_retour_poster": {
+          "type": "volet",
+          "settings": {
+            "support": "poster",
+            "heading": "Retour et échange",
+            "content": "<p>Si votre poster arrivait endommagé ou ne correspondait pas à nos exigences de qualité, nous vous envoyons une nouvelle pièce sans aucun frais. Nous restons à vos côtés jusqu'à votre entière satisfaction.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "volet_choisir_toile",
+        "volet_choisir_poster",
+        "volet_livraison_toile",
+        "volet_livraison_poster",
+        "volet_details_toile",
+        "volet_details_poster",
+        "volet_retour_toile",
+        "volet_retour_poster"
+      ],
+      "settings": {}
     }
   },
   "order": [
     "breadcrumb_RCxFAG",
     "main",
+    "galerie_histoire",
     "galerie_raisons"
   ],
   "layout": "product"

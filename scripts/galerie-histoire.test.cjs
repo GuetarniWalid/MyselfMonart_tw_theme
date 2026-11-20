@@ -530,12 +530,17 @@ const POSTER_TEXTS = {
 // Les mots qui ne valent que pour une toile.
 const CANVAS_WORDS = /toile|tableau|châssis|tendue|285|75 ans/i
 
+// Le volet « Poster ou toile » finit, sur la fiche d'aujourd'hui, par une phrase qui ne vaut que pour un poster.
+// Décision du 20/11/2026 : la toile a ce volet sans elle, le poster le garde entier. Deux blocs au lieu d'un commun.
+const DECOUVRIR = '<p>Envie de la découvrir sur toile ? Utilisez la bascule <em>Poster / Toile</em> en haut de page pour voir la même œuvre en version durable.</p>'
+
 test('le modèle caché : la section suit le bloc principal ; quatre volets pour la toile, quatre pour le poster', { skip: LATER }, () => {
   const [id, section] = placed
   assert.ok(model.order.indexOf(id) > model.order.indexOf('main'), 'après le bloc principal')
   assert.deepEqual(section.settings, {})
   assert.deepEqual(modelBlocks().map((b) => [b.type, b.settings.support, b.settings.heading]), [
-    ['volet', 'tous', 'Poster ou toile : lequel choisir ?'],
+    ['volet', 'toile', 'Poster ou toile : lequel choisir ?'],
+    ['volet', 'poster', 'Poster ou toile : lequel choisir ?'],
     ['volet', 'toile', 'Livraison, paiement & délais'],
     ['volet', 'poster', 'Livraison, paiement & délais'],
     ['volet', 'toile', 'Détails du produit'],
@@ -554,8 +559,10 @@ test('le modèle caché : les volets de la toile sont ceux de la fiche d’aujou
   const tabs = today.block_order.map((id) => today.blocks[id]).filter((b) => b.type === 'collapsible_tab').map((b) => [b.settings.heading, b.settings.content])
   assert.equal(tabs.length, 4)
   const texts = (support) => modelBlocks().filter((b) => b.settings.support === 'tous' || b.settings.support === support).map((b) => [b.settings.heading, b.settings.content])
-  assert.deepEqual(texts('toile'), tabs)
-  // Le poster : le volet commun, puis ses trois textes, ceux de la maquette validée.
+  // La toile : les quatre volets d'aujourd'hui, à la lettre, sauf la phrase qui ne vaut que pour un poster.
+  assert.ok(tabs[0][1].endsWith(DECOUVRIR), 'la phrase est à la fin du volet commun d’aujourd’hui')
+  assert.deepEqual(texts('toile'), [[tabs[0][0], tabs[0][1].slice(0, -DECOUVRIR.length)], ...tabs.slice(1)])
+  // Le poster : le volet commun entier, phrase comprise, puis ses trois textes, ceux de la maquette validée.
   assert.deepEqual(texts('poster'), [tabs[0], ...Object.entries(POSTER_TEXTS)])
   for (const [heading, content] of Object.entries(POSTER_TEXTS)) assert.doesNotMatch(content, CANVAS_WORDS, heading)
   // Aucune note Trustpilot en chiffres dans ces textes.
