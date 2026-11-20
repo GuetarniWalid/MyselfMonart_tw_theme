@@ -378,7 +378,11 @@ const mainOf = (template) => Object.values(template.sections).find((s) => s.type
 test('le modèle caché : le fil d’Ariane puis le bloc principal de la fiche 3D, en page galerie, sans volets ni description', { skip: exists(MODEL) ? false : 'le modèle arrive par un second commit : Shopify refuse un modèle dont il ne connaît pas encore le réglage' }, () => {
   const galerie = json(MODEL)
   const fiche3d = json('templates/product.oeuvre-3d.json')
-  assert.deepEqual(galerie.order.map((id) => galerie.sections[id].type), ['breadcrumb', 'main-product'])
+  // Les sections qui suivent le bloc principal sont celles de la page galerie (tickets 20 à 24), chacune dans
+  // son fichier sections/galerie-….liquid : elles s'ajoutent ici sans que ce test change.
+  const sectionTypes = galerie.order.map((id) => galerie.sections[id].type)
+  assert.deepEqual(sectionTypes.slice(0, 2), ['breadcrumb', 'main-product'])
+  for (const type of sectionTypes.slice(2)) assert.match(type, /^galerie-/)
   assert.equal(galerie.layout, 'product')
   const main = mainOf(galerie)
   // Les réglages de la fiche 3D (scène, bascule, données Google), plus la page galerie.
