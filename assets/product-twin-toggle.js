@@ -72,6 +72,9 @@
   // ---- Moteur de soft-navigation (singleton) -----------------------------------------------------
   const SoftNav = {
     busy: false,
+    // Un retour ou un suivant du navigateur arrivé pendant qu'une fiche se chargeait : l'adresse à rejouer
+    // ensuite (la dernière fait foi).
+    pendingPop: null,
 
     async navigate(url, options) {
       const push = !options || options.push !== false;
@@ -118,7 +121,14 @@
         if (typeof window.removeSkeletonOnImagesLoad === 'function') window.removeSkeletonOnImagesLoad(main);
         // 5) URL + <title> + métadonnées <head>.
         updateHead(doc);
-        if (push) history.pushState({ mmaSoftNav: true }, '', url);
+        if (push) {
+          // L'entrée de départ (la fiche chargée normalement) doit, elle aussi, se rejouer au retour : on la
+          // marque avant d'empiler la suivante, en gardant ce que d'autres scripts y ont mis
+          // (product-selection.js). Sans cela, « retour » remettait son adresse et laissait la page du jumeau.
+          const current = history.state && typeof history.state === 'object' ? history.state : {};
+          if (!current.mmaSoftNav) history.replaceState({ ...current, mmaSoftNav: true }, '', location.href);
+          history.pushState({ mmaSoftNav: true }, '', url);
+        }
         // 5 bis) Une soft-nav réussie = une page vue de plus pour les modules qui comptent les
         //        pages de la session (compteur mma_pv_count de tw-global.js, lu par promo-popup.js).
         //        Émis ici et pas plus haut : une bascule qui échoue part dans le catch, qui
@@ -134,6 +144,10 @@
         window.location.href = url; // repli robuste : navigation classique
       } finally {
         this.busy = false;
+        // Un retour ou un suivant arrivé pendant le chargement : la page rejoint l'adresse où l'on est.
+        const pending = this.pendingPop;
+        this.pendingPop = null;
+        if (pending && pending !== url) this.navigate(pending, { push: false });
       }
     },
   };
@@ -143,7 +157,9 @@
   if (!window.__mmaSoftNavPopstate) {
     window.__mmaSoftNavPopstate = true;
     window.addEventListener('popstate', (e) => {
-      if (e.state && e.state.mmaSoftNav) SoftNav.navigate(location.href, { push: false });
+      if (!(e.state && e.state.mmaSoftNav)) return;
+      if (SoftNav.busy) SoftNav.pendingPop = location.href;
+      else SoftNav.navigate(location.href, { push: false });
     });
   }
 
