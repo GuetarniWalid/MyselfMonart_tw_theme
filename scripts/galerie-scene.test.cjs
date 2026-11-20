@@ -3,7 +3,7 @@
 // La section sections/galerie-scene.liquid, son bloc dans la feuille et dans le script de la page, ses textes.
 // Trois états, posés par l'élément <galerie-scene> : « natif » (le navigateur lie les animations au défilement),
 // « secours » (un script donne la position, mêmes images clés), et à plat (mouvements réduits, script coupé).
-// La lecture des couleurs du temps 2 est le ticket 21 : ici, sa place seulement.
+// La lecture des couleurs du temps 2 est le ticket 21 (scripts/galerie-couleurs.test.cjs) : ici, sa place seulement.
 // Ici, les calculs purs du script, les contrats du code, puis le rendu Liquid (liquidjs), quand le module est là.
 // Lancer : node --test scripts/galerie-scene.test.cjs
 const test = require('node:test')
@@ -408,11 +408,13 @@ test('la section : l’image à plat et le type d’œuvre viennent des règles 
   assert.match(source, /product\.metafields\.painting_options\.frames_poster != blank/)
   // Ni le nom d'un modèle de page, ni une place d'image écrite en dur.
   assert.doesNotMatch(source, /oeuvre-galerie|oeuvre-3d|template_suffix|product\.media\[\d\]|product\.images\[\d\]|featured_/)
-  // Le temps 2 ne lit aucune couleur : c'est le ticket 21.
-  assert.doesNotMatch(source, /color-pattern|color_pattern|artwork\.colors|color_text|painting\.color/)
-  // Aucun style ni script en ligne ; la seule valeur passée à la feuille est la proportion de l'œuvre.
+  // Les couleurs du temps 2 (ticket 21, scripts/galerie-couleurs.test.cjs) : celles que le serveur a arrêtées, ou
+  // celles que déclare le produit ; jamais painting.color, la même liste, tenue pour les filtres des collections.
+  assert.doesNotMatch(source, /painting\.color/)
+  // Aucun style ni script en ligne ; les seules valeurs passées à la feuille : la proportion de l'œuvre, et la
+  // couleur de la pastille d'une phrase du temps 2 (ticket 21).
   assert.doesNotMatch(source, /<style|<script|{%-?\s*style/)
-  assert.deepEqual([...source.matchAll(/style="([^"]*)"/g)].map((m) => m[1].replace(/{{[^}]*}}/, 'x')), ['--ratio: x'])
+  assert.deepEqual([...source.matchAll(/style="([^"]*)"/g)].map((m) => m[1].replace(/{{[^}]*}}/, 'x')), ['--ratio: x', '--c: x'])
 })
 
 test('la feuille commune du site ne porte rien de la scène', () => {
@@ -557,8 +559,9 @@ test('rendu : l’œuvre est l’image à plat du produit, celle de la scène 3D
   const html = await render()
   const images = tags(html).filter((t) => t.tag === 'img')
   const art = images.filter((t) => /bonsai-zen-oeuvre\.jpg/.test(t.attrs))
-  // Deux fois : l'œuvre, et sa copie avivée sous la lampe (temps 3).
-  assert.deepEqual(art.map((t) => t.classes.join(' ')), ['galerie-scene-image', 'galerie-scene-vive galerie-scene-a'])
+  // L'œuvre ; au temps 2 (ticket 21), sa copie grise et les trois places de ses couleurs ; sa copie avivée sous la
+  // lampe (temps 3).
+  assert.deepEqual(art.map((t) => t.classes.join(' ')), ['galerie-scene-image', 'galerie-scene-gris galerie-scene-a', ...Array(3).fill('galerie-scene-teinte galerie-scene-a'), 'galerie-scene-vive galerie-scene-a'])
   for (const { attrs } of art) {
     assert.match(attrs, / src="\/\/www\.myselfmonart\.com\/cdn\/shop\/files\/bonsai-zen-oeuvre\.jpg\?v=1&width=750"/)
     // Les paliers de la scène 3D, que le navigateur a souvent déjà ; jamais plus large que l'image, ni que 2000 px.
@@ -568,14 +571,14 @@ test('rendu : l’œuvre est l’image à plat du produit, celle de la scène 3D
     // pixels lisibles pour les couleurs du temps 2 (ticket 21).
     assert.match(attrs, / width="1904" height="2544" alt="" loading="lazy" decoding="async" crossorigin="anonymous"/)
   }
-  assert.equal(art[0].attrs.replace(/ class="[^"]*"/, ''), art[1].attrs.replace(/ class="[^"]*"/, ''), 'la même source : un seul téléchargement')
+  for (const copy of art.slice(1)) assert.equal(art[0].attrs.replace(/ class="[^"]*"/, ''), copy.attrs.replace(/ class="[^"]*"/, ''), 'la même source : un seul téléchargement')
   // Aucune autre image du produit, aucun texte alternatif, aucun titre : un décor.
-  assert.equal(images.length, 2 + 6)
+  assert.equal(images.length, 6 + 6)
   for (const { attrs } of images) assert.match(attrs, / alt=""/)
   assert.doesNotMatch(html, / title="| aria-describedby=/)
   // Un produit de toujours vu dans cette page : son image à plat est sa 2e image.
   const old = await render(product({ suffix: 'painting', files: OLD }))
-  assert.equal(tags(old).filter((t) => t.tag === 'img' && /bonsai-zen-oeuvre\.jpg/.test(t.attrs)).length, 2)
+  assert.equal(tags(old).filter((t) => t.tag === 'img' && /bonsai-zen-oeuvre\.jpg/.test(t.attrs)).length, 6)
   assert.doesNotMatch(old, /bonsai-zen-salon|bonsai-zen-chambre/)
   // Une image plus petite que les paliers : les seuls qu'elle atteint, puis elle-même. Une très grande : 2000 px au plus.
   const widths = async (file) => [...tags(await render(product({ files: [file] }))).find((t) => t.classes.includes('galerie-scene-image')).attrs.matchAll(/ (\d+)w/g)].map((m) => Number(m[1]))
@@ -631,9 +634,13 @@ test('rendu : portrait, paysage ou carré, la proportion de l’œuvre est celle
 test('rendu : un élément vide garde sa place (data-allow-empty), et chaque élément mobile a ses images clés et son moment', { skip: SKIP }, async () => {
   // Le thème cache tout élément vide (input.css, *:empty), sauf ceux qui portent data-allow-empty.
   const VOID = new Set(['img', 'path'])
-  // Les deux places des couleurs (ticket 21) restent vides, donc cachées, jusqu'à ce qu'il les remplisse.
-  const LATER = ['galerie-scene-teintes', 'galerie-scene-palette']
-  const css = sheet().filter((r) => !/^@keyframes /.test(r.head))
+  // Les places des couleurs (ticket 21) : leur moment (--a, --b) est posé par l'élément des couleurs, d'après les
+  // couleurs trouvées dans l'image ; leurs images clés sont dans la feuille.
+  const TIMED = ['galerie-scene-teinte', 'galerie-scene-pastille', 'galerie-scene-anneau']
+  // Les règles de la scène, et celles de ses couleurs (ticket 21), dans leur propre bloc de la feuille.
+  const whole = read(CSS)
+  const colours = whole.slice(whole.indexOf('/* === Couleurs de la scène (ticket 21) : début ==='), whole.indexOf('/* === Couleurs de la scène (ticket 21) : fin === */'))
+  const css = [...sheet(), ...rules(colours.replace(/\/\*[\s\S]*?\*\//g, ''))].filter((r) => !/^@keyframes /.test(r.head))
   // Le dernier maillon d'un sélecteur vaut-il pour cet élément ? Sa balise, ses classes ; le reste est ignoré.
   const applies = (selector, el) => {
     const last = selector.trim().split(/\s*[>+~]\s*|\s+/).pop().replace(/::?[\w-]+(\([^)]*\))?|\[[^\]]*\]/g, '')
@@ -647,27 +654,26 @@ test('rendu : un élément vide garde sa place (data-allow-empty), et chaque él
     const html = await render(product({ poster }))
     const empty = [...html.matchAll(/<([a-z][\w-]*)((?:\s+[^<>]*?)?)><\/\1>/g)].map((m) => ({ tag: m[1], attrs: m[2] }))
     assert.ok(empty.length >= 20, 'les murs, les sols, la lampe, les traits du repère…')
-    for (const { tag, attrs } of empty) {
-      if (LATER.some((name) => attrs.includes(`class="${name}`))) assert.doesNotMatch(attrs, /data-allow-empty/, attrs)
-      else assert.match(attrs, / data-allow-empty/, `<${tag}${attrs}> : vide, il serait caché`)
-    }
+    for (const { tag, attrs } of empty) assert.match(attrs, / data-allow-empty/, `<${tag}${attrs}> : vide, il serait caché`)
     const moving = tags(html).filter((t) => t.classes.includes('galerie-scene-a') && !VOID.has(t.tag))
     assert.ok(moving.length >= 35, 'tout ce qui bouge')
     for (const el of [...moving, ...tags(html).filter((t) => t.tag === 'img' && t.classes.includes('galerie-scene-a'))]) {
       const name = `<${el.tag} class="${el.classes.join(' ')}">`
       assert.ok(declares(el, 'n', (v) => v !== 'none'), `${name} : ses images clés (--n)`)
+      if (TIMED.some((timed) => el.classes.includes(timed))) continue
       assert.ok(declares(el, 'a'), `${name} : son début (--a)`)
       assert.ok(declares(el, 'b'), `${name} : sa fin (--b)`)
     }
   }
 })
 
-test('rendu : la place des couleurs du temps 2 (ticket 21), vide, entre l’œuvre et son cache de nuit, et à côté de l’œuvre', { skip: SKIP }, async () => {
+test('rendu : les couleurs du temps 2 (ticket 21) entre l’œuvre et son cache de nuit, et la place des pastilles à côté de l’œuvre', { skip: SKIP }, async () => {
   const html = await render()
-  // Dans l'œuvre : l'image, puis la place des teintes, puis le cache de la nuit, la copie avivée, le reflet, la trame.
-  assert.match(html, /<div class="galerie-scene-oeuvre galerie-scene-a"><img class="galerie-scene-image" [^>]*><div class="galerie-scene-teintes"><\/div><i class="galerie-scene-cache galerie-scene-a" data-allow-empty><\/i><img class="galerie-scene-vive galerie-scene-a" [^>]*><i class="galerie-scene-reflet galerie-scene-a" data-allow-empty><\/i><div class="galerie-scene-trame galerie-scene-a" data-allow-empty><\/div><\/div>/)
-  // À côté de l'œuvre, dans sa colonne : la place des pastilles, qui s'efface à la fin du temps 2.
-  assert.match(html, /<div class="galerie-scene-palette galerie-scene-a" aria-hidden="true"><\/div><\/div><\/div><div class="galerie-scene-invite galerie-scene-public"/)
+  // Dans l'œuvre : l'image, la place des teintes (l'élément des couleurs, scripts/galerie-couleurs.test.cjs) avec sa
+  // copie grise et les trois places des couleurs, puis le cache de la nuit, la copie avivée, le reflet, la trame.
+  assert.match(html, /<div class="galerie-scene-oeuvre galerie-scene-a"><img class="galerie-scene-image" [^>]*><galerie-couleurs class="galerie-scene-teintes" [^>]*><img class="galerie-scene-gris galerie-scene-a" [^>]*>(<img class="galerie-scene-teinte galerie-scene-a" [^>]*>){3}<\/galerie-couleurs><i class="galerie-scene-cache galerie-scene-a" data-allow-empty><\/i><img class="galerie-scene-vive galerie-scene-a" [^>]*><i class="galerie-scene-reflet galerie-scene-a" data-allow-empty><\/i><div class="galerie-scene-trame galerie-scene-a" data-allow-empty><\/div><\/div>/)
+  // À côté de l'œuvre, dans sa colonne : les trois places des pastilles, qui s'effacent à la fin du temps 2.
+  assert.match(html, /<div class="galerie-scene-palette galerie-scene-a" aria-hidden="true">(<span class="galerie-scene-pastille galerie-scene-a"><i class="galerie-scene-point" data-allow-empty><\/i><i class="galerie-scene-anneau galerie-scene-a" data-allow-empty><\/i><\/span>){3}<\/div><\/div><\/div><div class="galerie-scene-invite galerie-scene-public"/)
   const palette = body('.galerie-scene-palette')
   assert.deepEqual([value(palette, 'a'), value(palette, 'b'), value(palette, 'n')], ['1.9', '2.02', 'galerie-scene-efface'])
   assert.match(palette, /^position: absolute; z-index: 2; left: 0; right: 0; top: calc\(100% \+ 4\.4svh\); display: flex; justify-content: center; gap: 20px; pointer-events: none;/)

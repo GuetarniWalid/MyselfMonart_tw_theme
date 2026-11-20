@@ -2578,3 +2578,165 @@ galerie-scene[data-support="poster"] .galerie-scene-oeuvre {
 }
 
 /* === Scène en quatre temps (ticket 20) : fin === */
+
+/* === Couleurs de la scène (ticket 21) : début ===
+   Le temps 2 de la scène (sections/galerie-scene.liquid), « Chaque couleur agit sur vous » : l'œuvre passe en gris
+   pâle, puis chacune de ses couleurs revient seule sur elle, avec sa pastille et sa phrase. L'élément
+   <galerie-couleurs> (assets/oeuvre-galerie.js) lit les couleurs dans l'image, hors du fil principal, puis pose les
+   couleurs sur l'œuvre (galerie-scene-teinte), les pastilles, le moment de chacune (--a, --b, en écrans depuis
+   l'épinglage), et data-pretes sur lui-même. Tout ce qui bouge porte la classe galerie-scene-a : les deux états
+   animés de la scène s'en chargent (natif, secours). À plat, ou si rien n'est lu : l'œuvre en couleurs, et les
+   phrases à la suite. */
+
+/* La place des couleurs sur l'œuvre (l'élément <galerie-couleurs>) : le gris, puis les couleurs qui reviennent. Elle
+   paraît en fondu une fois les couleurs lues : si elles arrivent pendant le temps 2 (un défilement très rapide, un
+   téléphone lent), rien ne saute. L'attribut est sur l'élément, pas sur la scène : ses styles seuls sont à refaire. */
+.galerie-scene-teintes {
+  opacity: 0;
+}
+.galerie-scene-teintes[data-pretes] {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .galerie-scene-teintes {
+    transition: opacity 0.4s ease;
+  }
+}
+/* L'œuvre en gris pâle : sur ce gris, même un noir ou un blanc qui revient se voit (plus pâle que la maquette, comme
+   la page d'essai des couleurs). Il ne paraît que si des couleurs sont là pour revenir dessus. */
+.galerie-scene-gris {
+  filter: grayscale(1) contrast(0.42) brightness(1.22);
+  --a: 0.76;
+  --b: 2;
+  --n: galerie-scene-voile;
+}
+/* Une couleur qui revient : l'image nette de l'œuvre, sous le masque de la couleur, lu sur une copie de 320 px et
+   agrandi sur toute l'œuvre (posé par l'élément, avec son moment). */
+.galerie-scene-teinte {
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  --n: galerie-scene-teinte;
+}
+/* Tant que les couleurs ne sont pas là, le gris ne se dessine pas ; une place sans couleur (data-couleur) non plus.
+   Cachés, mais dans la page dès le départ : les montrer ne fait refaire que leurs styles (les sortir de display: none
+   ferait créer leurs animations, qui suivent le défilement, au moment de les montrer). */
+.galerie-scene-teintes:not([data-pretes]) .galerie-scene-gris,
+.galerie-scene-teinte:not([data-couleur]) {
+  visibility: hidden;
+}
+galerie-scene:not([data-mouvement]) .galerie-scene-gris {
+  display: none;
+}
+
+/* Les phrases : une par couleur, sous le titre, chacune à son tour (les moments de la maquette ; l'élément les
+   repose d'après les couleurs vraiment trouvées). Le titre d'une phrase porte la pastille de sa couleur, cerclée
+   d'un trait léger, pour qu'un blanc se voie sur le mur clair. */
+.galerie-scene-couleurs .galerie-scene-msg:nth-child(1) { --a: 0.88; --b: 1.2; }
+.galerie-scene-couleurs .galerie-scene-msg:nth-child(2) { --a: 1.2; --b: 1.52; }
+.galerie-scene-couleurs .galerie-scene-msg:nth-child(3) { --a: 1.52; --b: 2; }
+.galerie-scene-couleurs .galerie-scene-msg:last-child { --b: 2; }
+/* La phrase d'une couleur que l'image n'a pas (l'élément le dit, par un attribut à lui : l'attribut hidden ferait
+   refaire les styles de toute la scène). */
+.galerie-scene-couleurs .galerie-scene-msg[data-absente] {
+  display: none;
+}
+.galerie-scene-couleurs .galerie-scene-msg b i {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--c, var(--encre));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--encre) 12%, transparent);
+}
+
+/* Les pastilles, dans leur place sous l'œuvre (à sa droite sur ordinateur, galerie-scene-palette) : chacune arrive à
+   son tour, et celle dont on parle est cerclée. Son nom : le libellé de la couleur dans la boutique, que l'élément
+   écrit dans data-nom (un décor : la place est cachée aux lecteurs d'écran). Une place qui n'a pas encore sa couleur
+   ne se voit pas ; une place restée vide (data-vide : moins de trois couleurs) ne prend plus de place. */
+.galerie-scene-pastille {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  font: 600 12px/1 var(--sans);
+  color: var(--encre);
+  --n: galerie-scene-pop;
+}
+.galerie-scene-pastille:not([data-couleur]) {
+  visibility: hidden;
+}
+.galerie-scene-pastille[data-vide] {
+  display: none;
+}
+.galerie-scene-pastille::after {
+  content: attr(data-nom);
+}
+.galerie-scene-point {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--c, var(--encre-12));
+  box-shadow: 0 8px 14px -4px color-mix(in srgb, var(--encre) 30%, transparent), inset 0 0 0 1px color-mix(in srgb, var(--encre) 10%, transparent);
+}
+.galerie-scene-anneau {
+  position: absolute;
+  left: 50%;
+  top: 25px;
+  width: 62px;
+  height: 62px;
+  margin: -31px 0 0 -31px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2.5px var(--encre);
+  --n: galerie-scene-actif;
+}
+/* Un petit téléphone (le texte se serre déjà, voir la scène) : des pastilles plus petites, un peu plus près de l'œuvre,
+   pour que leur nom reste au-dessus de la pilule d'achat. */
+@media (max-height: 700px) and (max-width: 899px) {
+  .galerie-scene-palette {
+    top: calc(100% + 2svh);
+  }
+  .galerie-scene-pastille {
+    gap: 5px;
+    font-size: 11px;
+  }
+  .galerie-scene-point {
+    width: 40px;
+    height: 40px;
+  }
+  .galerie-scene-anneau {
+    top: 20px;
+    width: 50px;
+    height: 50px;
+    margin: -25px 0 0 -25px;
+  }
+}
+@media (min-width: 900px) {
+  .galerie-scene-pastille {
+    grid-auto-flow: column;
+    align-items: center;
+    gap: 14px;
+    font-size: 14px;
+    justify-items: start;
+  }
+  .galerie-scene-point {
+    width: 62px;
+    height: 62px;
+  }
+  .galerie-scene-anneau {
+    left: 31px;
+    top: 50%;
+    width: 76px;
+    height: 76px;
+    margin: -38px 0 0 -38px;
+  }
+}
+
+/* Les images clés du temps 2, pour les deux états animés de la scène. */
+@keyframes galerie-scene-voile { 0% { opacity: 0; } 11% { opacity: 1; } 89% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes galerie-scene-teinte { 0% { opacity: 0; } 24% { opacity: 1; } 76% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes galerie-scene-pop { 0% { opacity: 0; transform: translateY(18px) scale(0.5); } 70% { opacity: 1; transform: translateY(-3px) scale(1.06); } 100% { opacity: 1; transform: none; } }
+@keyframes galerie-scene-actif { 0% { opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; } }
+
+/* === Couleurs de la scène (ticket 21) : fin === */

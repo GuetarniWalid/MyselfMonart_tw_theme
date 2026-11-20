@@ -20,9 +20,12 @@
     un décor, sans texte alternatif, chargé en différé (l'élément les demande quand la scène approche).
   - Un élément vide garde sa place par data-allow-empty : le thème cache tout élément vide (input.css).
   - Tout ce qui bouge porte la classe galerie-scene-a.
-  - Le temps 2 pose son titre, l'œuvre et la place des couleurs (galerie-scene-teintes dans l'œuvre,
-    galerie-scene-palette à côté d'elle). La lecture des couleurs, les pastilles et les phrases sont le
-    ticket 21.
+  - Le temps 2, les couleurs (ticket 21) : l'œuvre passe en gris pâle, puis chacune de ses couleurs revient
+    seule, avec sa pastille et sa phrase. Le serveur écrit ici les phrases (Google les lit, Shopify les
+    traduit) et ce qu'il faut à l'élément <galerie-couleurs> pour trouver les couleurs dans l'image : il
+    les lit hors du fil principal, à l'approche de la scène, puis pose les couleurs sur l'œuvre, les
+    pastilles et les moments de chaque phrase. Sans lui, ou en mouvements réduits : l'œuvre en couleurs,
+    et les phrases à la suite. Voir plus bas « Les couleurs du temps 2 ».
 
   Hors d'une fiche d'œuvre (règle unique : snippet artwork-kind), ou sans image à plat, la section ne rend rien.
 {%- endcomment -%}
@@ -44,6 +47,36 @@
   assign art_ratio = art.aspect_ratio | default: 0.75 | round: 4
   if art_ratio <= 0
     assign art_ratio = 0.75
+  endif
+
+  # Les couleurs du temps 2 (ticket 21), des métaobjets « shopify--color-pattern » de la boutique, désignés par
+  # leur identifiant (handle). D'abord artwork.colors : les couleurs que le serveur a arrêtées pour cette page,
+  # dans leur ordre, avec leurs textes (artwork.color_text_1 à 3, même ordre) ; la page n'y ajoute rien. Sinon,
+  # les couleurs déclarées du produit (shopify.color-pattern) : la page complète jusqu'à trois, sans phrase.
+  # Sinon, l'image seule. « multicolore » n'est pas une couleur et « blanc-noir » en vaut deux : aucun des deux
+  # ne se montre tel quel (l'élément donne quand même « blanc-noir » au moteur, voir assets/oeuvre-galerie.js).
+  assign couleurs_arretees = ''
+  for couleur in product.metafields.artwork.colors.value
+    unless couleur.system.handle == 'multicolore' or couleur.system.handle == 'blanc-noir'
+      assign couleurs_arretees = couleurs_arretees | append: ' ' | append: couleur.system.handle
+    endunless
+  endfor
+  assign couleurs_arretees = couleurs_arretees | strip
+  assign couleurs_declarees = ''
+  for couleur in product.metafields.shopify['color-pattern'].value
+    assign couleurs_declarees = couleurs_declarees | append: ' ' | append: couleur.system.handle
+  endfor
+  assign couleurs_declarees = couleurs_declarees | strip
+  # Le nom de chaque pastille : le libellé du métaobjet, déjà traduit, coupé avant « / » (« Doré / Or » :
+  # « Doré »). Ceux des couleurs arrêtées ; sinon, toutes les couleurs de la boutique, puisque la page peut en
+  # ajouter (à défaut, celles du produit).
+  if couleurs_arretees != blank
+    assign couleurs_nommees = product.metafields.artwork.colors.value
+  else
+    assign couleurs_nommees = shop.metaobjects['shopify--color-pattern'].values
+    if couleurs_nommees == blank
+      assign couleurs_nommees = product.metafields.shopify['color-pattern'].value
+    endif
   endif
 -%}
 {%- if artwork_kind != blank and art_media.media_type == 'image' -%}
@@ -97,8 +130,45 @@
           <article class="galerie-scene-chap galerie-scene-couleurs galerie-scene-a">
             <p class="galerie-surtitre"><i>2</i> {{ 'sections.mma.galerie.scene.colors' | t }}</p>
             <h2>{{ 'sections.mma.galerie.scene.colors_title_html' | t }}</h2>
-            {%- comment -%} Ticket 21 : les phrases des couleurs s'écrivent ici, sous le titre, dans un
-               <div class="galerie-scene-messages">, comme celles de la lumière plus bas. {%- endcomment -%}
+            {%- comment -%} Les phrases des couleurs (ticket 21), une par couleur arrêtée qui a son texte, sous le
+               titre, comme celles de la lumière plus bas. La première phrase du texte (jusqu'au premier point) est
+               son titre, en gras, avec la pastille de la couleur (sa couleur dans la boutique, que l'élément
+               remplace par celle lue dans l'œuvre) ; le reste est son texte. Un texte libre : échappé, et ses jetons
+               de la note Trustpilot remplacés (snippets/trustpilot-tokens.liquid). data-couleur : l'identifiant de
+               la couleur, que l'élément retrouve dans ce qu'il lit. {%- endcomment -%}
+            {%- capture phrases_couleurs -%}
+              {%- if couleurs_arretees != blank -%}
+                {%- for couleur in product.metafields.artwork.colors.value -%}
+                  {%- liquid
+                    assign cle_texte = 'color_text_' | append: forloop.index
+                    assign texte = product.metafields.artwork[cle_texte].value | newline_to_br | replace: '<br />', ' ' | strip_newlines | strip
+                    assign a_montrer = true
+                    if couleur.system.handle == 'multicolore' or couleur.system.handle == 'blanc-noir' or texte == blank
+                      assign a_montrer = false
+                    endif
+                  -%}
+                  {%- if a_montrer -%}
+                    {%- liquid
+                      assign texte_sur = texte | escape
+                      capture texte_pret
+                        render 'trustpilot-tokens', text: texte_sur
+                      endcapture
+                      assign morceaux = texte_pret | split: '. '
+                      assign titre = morceaux | first
+                      assign suite = texte_pret | remove_first: titre | strip
+                      if suite != blank
+                        assign suite = suite | remove_first: '.' | strip
+                        assign titre = titre | append: '.'
+                      endif
+                    -%}
+                    <p class="galerie-scene-msg galerie-scene-a" data-couleur="{{ couleur.system.handle | escape }}"><b><i data-allow-empty{% if couleur.color != blank %} style="--c: {{ couleur.color | escape }}"{% endif %}></i>{{ titre }}</b>{% if suite != blank %} {{ suite }}{% endif %}</p>
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
+            {%- endcapture -%}
+            {%- if phrases_couleurs != blank -%}
+              <div class="galerie-scene-messages">{{ phrases_couleurs }}</div>
+            {%- endif -%}
           </article>
           {%- comment -%} La lumière : les mêmes phrases pour toutes les œuvres. Dans ce temps, la pièce est
              noire et le texte blanc. {%- endcomment -%}
@@ -132,9 +202,28 @@
               <div class="galerie-scene-centre galerie-scene-a">
                 <div class="galerie-scene-oeuvre galerie-scene-a">
                   <img class="galerie-scene-image" {{ art_source }}>
-                  {%- comment -%} Ticket 21 : les couleurs de l'œuvre reviennent ici, par-dessus l'image (et
-                     son voile gris, à poser juste avant), sous le cache de la nuit. {%- endcomment -%}
-                  <div class="galerie-scene-teintes"></div>
+                  {%- comment -%} Le temps 2 (ticket 21), sous le cache de la nuit : l'œuvre en gris pâle (la même
+                     image), puis ses couleurs qui reviennent par-dessus, trois places au plus (la même image encore :
+                     <galerie-couleurs> pose sur chacune le masque d'une couleur). Il lit les couleurs dans l'image.
+                     Ce qu'il lui faut : data-moteur, le moteur (assets/galerie-couleurs.js, le même que celui du
+                     serveur) ; data-image, la copie de 320 px de large que lit aussi le serveur ; data-arretees, les
+                     couleurs arrêtées ; data-declarees, les couleurs déclarées ; et le nom des pastilles, hors de la
+                     page (<template>). Tout est écrit ici : l'élément n'ajoute rien à la page, il ne fait que montrer
+                     (sur cette page, chaque ajout fait refaire les styles de toute la scène). {%- endcomment -%}
+                  <galerie-couleurs class="galerie-scene-teintes" data-moteur="{{ 'galerie-couleurs.js' | asset_url }}" data-image="{{ art | image_url: width: 320 }}"{% if couleurs_arretees != blank %} data-arretees="{{ couleurs_arretees | escape }}"{% endif %}{% if couleurs_declarees != blank %} data-declarees="{{ couleurs_declarees | escape }}"{% endif %}>
+                    <img class="galerie-scene-gris galerie-scene-a" {{ art_source }}>
+                    {%- for place in (1..3) -%}
+                      <img class="galerie-scene-teinte galerie-scene-a" {{ art_source }}>
+                    {%- endfor -%}
+                    {%- capture noms_couleurs -%}
+                      {%- for couleur in couleurs_nommees -%}
+                        {%- unless couleur.system.handle == 'multicolore' or couleur.system.handle == 'blanc-noir' or couleur.label == blank -%}
+                          <span data-couleur="{{ couleur.system.handle | escape }}">{{ couleur.label | split: '/' | first | strip | escape }}</span>
+                        {%- endunless -%}
+                      {%- endfor -%}
+                    {%- endcapture -%}
+                    {%- if noms_couleurs != blank -%}<template>{{ noms_couleurs }}</template>{%- endif -%}
+                  </galerie-couleurs>
                   <i class="galerie-scene-cache galerie-scene-a" data-allow-empty></i>
                   <img class="galerie-scene-vive galerie-scene-a" {{ art_source }}>
                   <i class="galerie-scene-reflet galerie-scene-a" data-allow-empty></i>
@@ -156,9 +245,14 @@
               </div>
             </div>
           </div>
-          {%- comment -%} Ticket 21 : les pastilles des couleurs se posent ici, sous l'œuvre (à sa droite sur
-             ordinateur). {%- endcomment -%}
-          <div class="galerie-scene-palette galerie-scene-a" aria-hidden="true"></div>
+          {%- comment -%} Les pastilles des couleurs (ticket 21), sous l'œuvre (à sa droite sur ordinateur) : trois
+             places, que l'élément <galerie-couleurs> montre une fois les couleurs lues (la couleur, le nom, le
+             moment de chacune). {%- endcomment -%}
+          <div class="galerie-scene-palette galerie-scene-a" aria-hidden="true">
+            {%- for place in (1..3) -%}
+              <span class="galerie-scene-pastille galerie-scene-a"><i class="galerie-scene-point" data-allow-empty></i><i class="galerie-scene-anneau galerie-scene-a" data-allow-empty></i></span>
+            {%- endfor -%}
+          </div>
         </div>
       </div>
       {%- comment -%} Le public du temps 1, posé devant l'œuvre : la même image trois fois, découpée en trois
@@ -203,7 +297,7 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "L'œuvre en quatre temps qui suivent le défilement : le regard, les couleurs, la lumière, la matière. À placer juste sous le bloc principal d'une fiche en page galerie (scène 3D et case « Page galerie » cochées) : c'est lui qui charge ses styles et son script. Rien à régler : l'image est celle de l'œuvre, les textes sont dans les fichiers de langue."
+      "content": "L'œuvre en quatre temps qui suivent le défilement : le regard, les couleurs, la lumière, la matière. À placer juste sous le bloc principal d'une fiche en page galerie (scène 3D et case « Page galerie » cochées) : c'est lui qui charge ses styles et son script. Rien à régler : l'image est celle de l'œuvre, les textes sont dans les fichiers de langue. Les couleurs du temps 2 et leurs phrases sont celles du produit (champs méta « Couleurs montrées sur la fiche » et « Texte de la couleur 1 » à « 3 », écrits par le serveur) ; sans elles, ses couleurs déclarées."
     }
   ]
 }
