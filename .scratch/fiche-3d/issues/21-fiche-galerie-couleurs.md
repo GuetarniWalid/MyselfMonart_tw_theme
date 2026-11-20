@@ -27,11 +27,13 @@ L'identifiant d'un métaobjet donne la couleur au moteur (`bleu`, `vert`, `noir`
 
 **Blocked by:** 20 (la scène). Le ticket 25 (serveur) peut arriver avant ou après : sans ses métachamps, la page suit les cas 2 et 3.
 
-**Status:** ready-for-agent
+**Status:** done, en ligne le 20/11/2026 (`fbdae20` les couleurs, `4c97f15` le texte d'aide de la section raccourci : Shopify refusait le schéma, 561 caractères pour 500).
 
-- [ ] Avec `artwork.colors` et ses textes, la page montre exactement ces couleurs, dans cet ordre, chacune avec sa phrase.
-- [ ] Sans eux, la page montre les couleurs déclarées, complétées jusqu'à trois, sans phrase ; sans rien de déclaré, elle lit l'image.
-- [ ] Toile et poster, portrait, paysage et carré ; un tableau en noir et blanc, un tableau d'une seule couleur, un tableau multicolore donnent un résultat juste (les 25 images d'essai sont dans `couleurs/demo/img/`, ce qui est déclaré pour chacune dans `couleurs/declare.json`).
-- [ ] Le défilement reste fluide pendant le calcul ; rien ne bloque plus de quelques millisecondes d'affilée.
-- [ ] Le moteur du thème est identique à celui du dossier d'essai (même fichier).
-- [ ] La fiche actuelle et les autres pages sont inchangées.
+Vérifié en ligne le 20/11 sur la toile et le poster Superman : le serveur écrit les trois couleurs arrêtées (`data-arretees` : bleu rose jaune pour la toile, rose bleu jaune pour le poster), leurs noms (Bleu, Rose, Jaune) et leurs trois phrases, titre en gras ; à l'écran, l'œuvre passe en gris pâle, puis chaque couleur revient seule avec sa pastille cerclée et sa phrase, dans l'ordre du produit, puis la nuit du temps 3. Le moteur du thème (`assets/galerie-couleurs.js`) est identique à l'octet à celui du dossier d'essai et du serveur. Calcul dans un Worker, à l'approche de la scène. Pas vérifié : un vrai téléphone, Safari et Firefox (sans OffscreenCanvas dans un Worker, iOS avant 16.4 : l'œuvre reste en couleurs, sans pastilles, les phrases défilent quand même), les phrases dans les autres langues (traduites la nuit, ticket 26).
+
+- [x] Avec `artwork.colors` et ses textes, la page montre exactement ces couleurs, dans cet ordre, chacune avec sa phrase.
+- [x] Sans eux, la page montre les couleurs déclarées, complétées jusqu'à trois, sans phrase ; sans rien de déclaré, elle lit l'image.
+- [x] Toile et poster, portrait, paysage et carré ; un tableau en noir et blanc, un tableau d'une seule couleur, un tableau multicolore donnent un résultat juste (les 25 images d'essai sont dans `couleurs/demo/img/`, ce qui est déclaré pour chacune dans `couleurs/declare.json`).
+- [x] Le défilement reste fluide pendant le calcul ; rien ne bloque plus de quelques millisecondes d'affilée.
+- [x] Le moteur du thème est identique à celui du dossier d'essai (même fichier).
+- [x] La fiche actuelle et les autres pages sont inchangées.

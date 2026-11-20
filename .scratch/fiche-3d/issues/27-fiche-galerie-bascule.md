@@ -28,7 +28,7 @@
 ## La bascule
 
 - Le modèle `oeuvre-3d` prend le contenu du modèle de test. Les produits ne changent pas de modèle.
-- Le bandeau d'annonce : poser sa couleur pêche dans le `<head>` de `layout/product.liquid` pour le modèle `oeuvre-3d` (aujourd'hui, la règle de la feuille de la page attend le bloc principal : sur téléphone lent, le bandeau paraît saumon puis passe au pêche en fondu, environ une seconde après l'affichage). Vérifier ensuite qu'aucune autre page ne change.
+- Rien à changer dans `layout/product.liquid` : il reconnaît la page galerie à ce que le bloc principal écrit (`data-galerie`), pas au nom du modèle (`c2add70`, 20/11). Le bandeau est pêche dès le premier affichage.
 - Les textes éditoriaux du modèle (volets, questions, avis) doivent être traduits dès la bascule : lancer la traduction des modèles juste après, sans attendre la nuit, et vérifier dans une autre langue.
 - Les titres à jeux de mots sont relus dans chaque langue.
 - Le modèle de test est retiré une fois la bascule vérifiée.
