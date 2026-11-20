@@ -682,7 +682,27 @@
       "home_seo_description": "Tableaux décoration murale curés à la main par notre studio français à Paris. Toile 285g, encres archival 75 ans, cadre bois massif. ⭐ Trustpilot.",
       "home_org_description": "Studio créatif français spécialisé dans la curation de tableaux décoration murale premium. Direction artistique à Paris, service client à Toulouse, impression européenne.",
       "home_founder_jobtitle": "Directeur artistique, fondateur",
-      "home_collections_list_name": "Collections phares MyselfMonArt"
+      "home_collections_list_name": "Collections phares MyselfMonArt",
+      "galerie": {
+        "intro": {
+          "like": "J’aime",
+          "liked": "Aimé",
+          "support": "Support",
+          "support_canvas": "Toile d’art tendue à la main",
+          "support_poster": "Papier photo 250 g/m²",
+          "stretcher": "Châssis",
+          "stretcher_value": "Bois massif, 2 cm",
+          "frame": "Cadre",
+          "frame_value": "En option : blanc, noir, chêne vieilli ou noyer",
+          "sizes": "Formats",
+          "sizes_range": "De {{ first }} à {{ last }} cm",
+          "sizes_one": "{{ size }} cm",
+          "making": "Fabrication",
+          "making_value": "Conçu en France, imprimé en Europe",
+          "delivery": "Livraison",
+          "delivery_value": "Offerte, sous 7 jours ouvrés"
+        }
+      }
     },
     "promo_popup": {
       "already_subscribed": "Vous êtes déjà inscrit : voici votre bon.",

@@ -34,6 +34,14 @@
 {%- if section.settings.media_display == 'stage_3d' and product.media[flat_index].media_type == 'image' -%}
   {%- if artwork_kind == 'toile' or artwork_kind == 'poster' -%}{%- assign stage_3d = true -%}{%- endif -%}
 {%- endif -%}
+{%- comment -%} Page galerie (fiche-3d, ticket 19) : la nouvelle page des œuvres 3D, à ne pas confondre avec la
+   galerie de photos (media_display). Sous la scène 3D, la présentation de la maquette prend la place des blocs
+   empilés (snippets/galerie-intro.liquid). C'est un réglage de cette section, jamais le nom du modèle de page :
+   la feuille (assets/oeuvre-galerie.css) et le script de la page s'accrochent à data-galerie, posé plus bas
+   sur main-product-blocks. Seulement avec la scène 3D : case éteinte, ou œuvre sans image à plat, la fiche est
+   celle de toujours, à l'octet près (scripts/oeuvre-galerie.test.cjs). {%- endcomment -%}
+{%- assign page_galerie = false -%}
+{%- if section.settings.page_galerie and stage_3d -%}{%- assign page_galerie = true -%}{%- endif -%}
 
 {%- comment -%} La fiche pour la mesure (assets/posthog-tracking.js). Dans #MainContent : la bascule
    toile/poster la remplace avec le reste de la fiche, l'événement suivant décrit donc le bon produit. {%- endcomment -%}
@@ -298,12 +306,18 @@
   {%- comment -%} Scène 3D : data-buy-pill : la pilule d'achat de la scène remplace le bouton flottant
      (assets/main-product.js). {%- endcomment -%}
   <main-product-blocks
-    class="{% if stage_3d %}block{% else %}grow{% endif %}"
+    class="{% if stage_3d %}block{% else %}grow{% endif %}{% if page_galerie %} galerie galerie-bande{% endif %}"
     id="ProductInfo-{{ section.id }}"
-    data-layout="{{ template.suffix }}"{% if stage_3d %} data-buy-pill{% endif %}>
+    data-layout="{{ template.suffix }}"{% if stage_3d %} data-buy-pill{% endif %}{% if page_galerie %} data-galerie{% endif %}>
     {%- comment -%} Scène 3D : les blocs suivent sous la scène, au milieu. Les autres fiches gardent leur
        balisage à l'identique, espaces compris. {%- endcomment -%}
-    <div class="{% if stage_3d %}max-w-lg sm:px-0 mx-auto my-4{% else %}max-w-lg sm:px-0 mx-auto 2md:mx-0 my-4{% endif %}">
+    {%- comment -%} Page galerie : sa feuille et son script, que cette page seule charge. Dans le bloc, après la
+       scène : elle s'affiche sans les attendre, et la bascule Toile / Poster les remplace avec le bloc. {%- endcomment -%}
+    {%- if page_galerie -%}
+      {{ 'oeuvre-galerie.css' | asset_url | stylesheet_tag }}
+      <script src="{{ 'oeuvre-galerie.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+    <div class="{% if page_galerie %}galerie-blocs{% elsif stage_3d %}max-w-lg sm:px-0 mx-auto my-4{% else %}max-w-lg sm:px-0 mx-auto 2md:mx-0 my-4{% endif %}">
       {%- for block in section.blocks -%}
         {%- case block.type -%}
           {%- when '@app' -%}
@@ -311,13 +325,21 @@
           {%- when 'text' -%}
             <div class="flex flex-col gap-4 mb-4 text-lg mx-4">{%- render 'trustpilot-tokens', text: block.settings.text -%}</div>
           {%- when 'title' -%}
-            {%- if block.settings.tone == 'subtitle' -%}
+            {%- comment -%} Page galerie : le titre, le titre court et la note ne s'écrivent pas ici. Chaque bloc
+               note ce que la présentation doit montrer ; elle se compose après la boucle, dans l'ordre de la
+               maquette, quel que soit l'ordre des blocs (snippets/galerie-intro.liquid). {%- endcomment -%}
+            {%- if page_galerie -%}
+              {%- assign galerie_title = true -%}
+            {%- elsif block.settings.tone == 'subtitle' -%}
               <h1 class="text-xs font-normal text-brand-700 leading-relaxed tracking-wide {{ block.settings.margin_bottom }} mx-4">{{ product.title | escape }}</h1>
             {%- else -%}
               <h1 class="{{ block.settings.font_size }} {{ block.settings.margin_bottom }} mx-4">{{ product.title | escape }}</h1>
             {%- endif -%}
           {%- when 'short_title' -%}
-            {%- if product.metafields.title.short != blank or block.settings.show_likes -%}
+            {%- if page_galerie -%}
+              {%- assign galerie_short_title = true -%}
+              {%- assign galerie_likes = block.settings.show_likes -%}
+            {%- elsif product.metafields.title.short != blank or block.settings.show_likes -%}
               <div class="flex justify-between items-center {{ block.settings.margin_bottom }} mx-4">
                 {%- if product.metafields.title.short != blank -%}
                   <p class="font-heading font-semibold text-xl"><span class="title-highlight">{{ product.metafields.title.short }}</span></p>
@@ -328,6 +350,10 @@
                 {%- endif -%}
               </div>
             {%- endif -%}
+          {%- when 'fact_sheet' -%}
+            {%- comment -%} La fiche en cinq lignes : une pièce de la présentation de la page galerie. Ailleurs, ce
+               bloc ne rend rien. {%- endcomment -%}
+            {%- if page_galerie -%}{%- assign galerie_sheet = true -%}{%- endif -%}
           {%- when 'variant_picker' -%}
             {%- comment -%} Scène 3D : les options sont les chips de la scène ; le sélecteur reste, caché, et tient
                la variante, l'adresse et les propriétés de ligne (assets/component-oeuvre-3d.js). {%- endcomment -%}
@@ -655,6 +681,19 @@
                 assign tp_score_display = tp_score_display | replace: '.', ','
               endif
             -%}
+            {%- comment -%} Page galerie : la note se dessine comme dans la maquette, avec le libellé, la note et le
+               lien calculés ci-dessus ; la présentation la pose à sa place. Les données Google de ce bloc, plus
+               bas, ne changent pas. Le endif n'a pas de tiret à droite : le blanc écrit après le bloc reste
+               celui de toujours. {%- endcomment -%}
+            {%- if page_galerie -%}
+              {%- capture galerie_reviews -%}
+                {% render 'galerie-intro-avis'
+                  , link: block.settings.link
+                  , label: tp_label
+                  , score: tp_score
+                  , score_text: tp_score_display %}
+              {%- endcapture -%}
+            {%- else -%}
             <div class="{{ block.settings.margin_bottom }} mx-4">
               <p class="flex items-center mb-1 text-main-70">
                 <a
@@ -699,6 +738,7 @@
                 <p class="flex items-center ml-2 text-main-70">{{ 'sections.trustpilot.score' | t }}: {{ tp_score_display }}</p>
               </div>
             </div>
+            {%- endif %}
             {% capture reviews_structured_data %}
                 "aggregateRating": {
                   "@type": "AggregateRating",
@@ -710,6 +750,18 @@
             {% endcapture %}
         {%- endcase -%}
       {%- endfor -%}
+      {%- comment -%} Page galerie : la présentation, faite des pièces que les blocs ont notées. Elle suit l'achat
+         et le sélecteur, cachés, et tout bloc ajouté au modèle, qui garde son balisage de toujours. {%- endcomment -%}
+      {%- if page_galerie -%}
+        {% render 'galerie-intro'
+          , product: product
+          , is_poster: is_poster
+          , show_title: galerie_title
+          , show_short_title: galerie_short_title
+          , show_likes: galerie_likes
+          , reviews: galerie_reviews
+          , show_sheet: galerie_sheet %}
+      {%- endif -%}
     </div>
     {%- comment -%} Fin des blocs (même balisage qu'avant la scène 3D, espaces compris). {%- endcomment -%}
   </main-product-blocks>
@@ -1015,6 +1067,13 @@
         "default": "gallery"
       },
       {
+        "type": "checkbox",
+        "id": "page_galerie",
+        "label": "Page galerie (nouvelle fiche des œuvres 3D)",
+        "info": "À ne pas confondre avec la galerie de photos ci-dessus. Sous la scène 3D, la présentation en grand (collection, nom court, titre, avis, fiche en cinq lignes) prend la place des blocs empilés. Avec la scène 3D seulement ; sans elle, la fiche ne change pas.",
+        "default": false
+      },
+      {
         "type": "header",
         "content": "Données structurées marchand (SEO)"
       },
@@ -1176,6 +1235,17 @@
               }
             ],
             "default": "mb-4"
+          }
+        ]
+      },
+      {
+        "type": "fact_sheet",
+        "name": "Fiche en cinq lignes",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "paragraph",
+            "content": "Support, châssis (toile) ou cadre (poster), formats, fabrication, livraison : cinq lignes à côté du titre. Les formats se lisent dans les tailles du produit. S'affiche en page galerie seulement."
           }
         ]
       },

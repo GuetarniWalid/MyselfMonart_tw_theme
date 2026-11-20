@@ -1,0 +1,83 @@
+{%- comment -%}
+  La fiche en cinq lignes de la présentation de la page galerie (fiche-3d, ticket 19) : une liste de
+  définitions, à droite du titre sur ordinateur, dessous sur téléphone. Rendue par
+  snippets/galerie-intro.liquid quand le bloc « fiche en cinq lignes » est dans le modèle.
+
+  Une toile : support, châssis, formats, fabrication, livraison. Un poster : support, cadre, puis les trois
+  mêmes. Une page n'écrit que les lignes de son produit. Les textes sont dans les fichiers de langue
+  (sections.mma.galerie.intro) ; aucun ne dit « fabriqué en France ».
+
+  « Formats » se lit dans les tailles du produit, sa première option, comme la scène 3D
+  (snippets/oeuvre-3d-stage.liquid) : de la première à la dernière, « 30x40 cm » écrit « 30 × 40 » ; une
+  seule taille, elle seule. Une taille qui n'est pas « largeur x hauteur » : la ligne manque, plutôt que de
+  dire faux. Les tailles sont en centimètres : l'unité est dans le texte traduit.
+
+  Accepts:
+  - product: {Object}
+  - is_poster: {Boolean} le produit est un poster (métachamp frames_poster)
+{%- endcomment -%}
+{%- liquid
+  # La première et la dernière taille, écrites « 30 × 40 » : deux nombres autour d'une croix, sinon rien.
+  assign first_format = ''
+  assign last_format = ''
+  for size in product.options_with_values.first.values
+    if forloop.first or forloop.last
+      assign parts = size.name | downcase | replace: '×', 'x' | replace: ' x ', 'x' | split: ' ' | first | split: 'x'
+      assign format = ''
+      if parts.size == 2
+        assign width = parts.first | replace: ',', '.' | plus: 0
+        assign height = parts.last | replace: ',', '.' | plus: 0
+        if width > 0 and height > 0
+          assign format = parts | join: ' × '
+        endif
+      endif
+      if forloop.first
+        assign first_format = format
+      endif
+      if forloop.last
+        assign last_format = format
+      endif
+    endif
+  endfor
+  assign formats = ''
+  if first_format != blank and last_format != blank
+    if first_format == last_format
+      assign formats = 'sections.mma.galerie.intro.sizes_one' | t: size: first_format
+    else
+      assign formats = 'sections.mma.galerie.intro.sizes_range' | t: first: first_format, last: last_format
+    endif
+  endif
+-%}
+<dl class="galerie-fiche galerie-monte">
+  <div>
+    <dt>{{ 'sections.mma.galerie.intro.support' | t }}</dt>
+    {%- if is_poster -%}
+      <dd>{{ 'sections.mma.galerie.intro.support_poster' | t }}</dd>
+    {%- else -%}
+      <dd>{{ 'sections.mma.galerie.intro.support_canvas' | t }}</dd>
+    {%- endif -%}
+  </div>
+  <div>
+    {%- if is_poster -%}
+      <dt>{{ 'sections.mma.galerie.intro.frame' | t }}</dt>
+      <dd>{{ 'sections.mma.galerie.intro.frame_value' | t }}</dd>
+    {%- else -%}
+      <dt>{{ 'sections.mma.galerie.intro.stretcher' | t }}</dt>
+      <dd>{{ 'sections.mma.galerie.intro.stretcher_value' | t }}</dd>
+    {%- endif -%}
+  </div>
+  {%- if formats != blank -%}
+    <div>
+      <dt>{{ 'sections.mma.galerie.intro.sizes' | t }}</dt>
+      <dd>{{ formats }}</dd>
+    </div>
+  {%- endif -%}
+  <div>
+    <dt>{{ 'sections.mma.galerie.intro.making' | t }}</dt>
+    <dd>{{ 'sections.mma.galerie.intro.making_value' | t }}</dd>
+  </div>
+  <div>
+    <dt>{{ 'sections.mma.galerie.intro.delivery' | t }}</dt>
+    <dd>{{ 'sections.mma.galerie.intro.delivery_value' | t }}</dd>
+  </div>
+</dl>

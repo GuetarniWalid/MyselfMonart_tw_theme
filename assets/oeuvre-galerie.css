@@ -1,0 +1,326 @@
+/*
+ * oeuvre-galerie.css — la feuille de la page galerie des œuvres 3D
+ * ------------------------------------------------------------------------------------------------------
+ * Chargée par le bloc principal de la fiche (sections/main-product.liquid) quand son réglage « Page galerie »
+ * est coché, et par lui seul : la feuille commune du site (assets/output.css) ne porte rien de cette page.
+ * C'est l'exception voulue à la règle « Tailwind seulement » du thème (.claude/skills/shopify-section-dev) :
+ * la page pèse une quinzaine de kilo-octets de styles, que les autres pages n'ont pas à charger.
+ * Portée de la maquette validée par Walid le 20/11/2026 (.scratch/fiche-3d/galerie, version 13) : mêmes
+ * tailles, mêmes couleurs, mêmes espacements. Seuil « ordinateur » : 900 px, comme elle.
+ *
+ * Le crochet : l'attribut data-galerie de <main-product-blocks>, posé par le réglage. Jamais le nom du
+ * modèle de page : la bascule finale sera un simple échange de modèle.
+ * Chaque règle porte ce crochet ou un nom « galerie » : rien ne déborde sur le reste du site
+ * (scripts/oeuvre-galerie.test.cjs).
+ *
+ * Un bloc par partie de la page, entre deux repères « début » et « fin ». Un bloc suivant s'ajoute à la fin
+ * du fichier, sans toucher à ceux d'avant.
+ */
+
+/* === Socle (ticket 19) : début === */
+
+/* Les couleurs et la typo de la page, posées une fois, pour toute la page qui porte le crochet : ses
+   sections, et ce qui est hors d'elles (pilule d'achat, pied de page).
+   L'encre, le saumon et la terre sont les couleurs du thème (réglages main_color et brand_color) : ils
+   suivent ses réglages. Les aplats sont ceux de la maquette. Le vermillon ne sert qu'à acheter (libellé
+   blanc : 4,7 pour 1) ; le pied de page est un pastel à texte encre ; le bandeau d'annonce, la pêche.
+   Une seule police, Albert Sans, déclarée par la scène 3D (snippets/oeuvre-3d-stage.liquid).
+   --encre-55 : 0,6 et non le 0,58 de la maquette, qui donnait 4,39 pour 1 sur blanc à un petit texte, sous
+   les 4,5 demandés (WCAG AA) ; à 0,6 : 4,69.
+   --etoile, --etoile-vide : le vert et le gris des étoiles de Trustpilot.
+   Aucune couleur ne s'écrit hors de ces variables (scripts/oeuvre-galerie.test.cjs). */
+:root:has(main-product-blocks[data-galerie]) {
+  --encre: rgb(var(--color-main-rgb));
+  --encre-70: rgba(var(--color-main-rgb), 0.72);
+  --encre-55: rgba(var(--color-main-rgb), 0.6);
+  --encre-12: rgba(var(--color-main-rgb), 0.12);
+  --encre-06: rgba(var(--color-main-rgb), 0.06);
+  --blanc: #ffffff;
+  --creme: #f7f2ea;
+  --ciel: #a5d3f7;
+  --rose: #ffb6d2;
+  --soleil: #ffdd6e;
+  --menthe: #b9e9d0;
+  --lilas: #d9c9ff;
+  --peche: #ffcaa8;
+  --chene: #ead3ab;
+  --sauge: #cbdcbc;
+  --ciel-pale: #cde3f6;
+  --poudre: #f8d2dd;
+  --corail: #ff5436;
+  --terra: rgb(var(--color-terra-rgb));
+  --saumon: rgb(var(--color-buy-button-rgb));
+  --achat: #d8361b;
+  --achat-texte: #ffffff;
+  --etoile: #00b67a;
+  --etoile-vide: #dcdce6;
+  --pied-fond: var(--menthe);
+  --pied-encre: var(--encre);
+  --annonce-fond: var(--peche);
+  --annonce-encre: var(--encre);
+  --sans: "Albert Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Les marges de côté d'une bande, écran à encoche compris. */
+  --gout: max(20px, env(safe-area-inset-left, 0px));
+  --goutd: max(20px, env(safe-area-inset-right, 0px));
+}
+
+/* Une partie de la page : sa typo de base. Sa classe se pose sur la racine de chaque section. */
+.galerie {
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--encre);
+  -webkit-font-smoothing: antialiased;
+}
+/* Le focus, toujours visible sur les fonds clairs de la page. :where() : une pièce garde son propre arrondi. */
+:where(.galerie) *:focus-visible {
+  outline: 2px solid var(--encre);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+/* Une bande : d'un bord à l'autre de l'écran, son contenu en retrait des marges. */
+.galerie-bande {
+  padding-left: var(--gout);
+  padding-right: var(--goutd);
+}
+
+/* Le mouvement hors de la scène : chaque défilement fait bouger quelque chose. Seulement là où le navigateur
+   lie une animation au défilement, et si le visiteur ne demande pas moins de mouvement ; ailleurs, tout est
+   simplement en place. Les mêmes conditions que le script (assets/oeuvre-galerie.js, mouvementLie).
+   .galerie-monte : un bloc qui monte à son entrée dans l'écran.
+   <galerie-mots> : un grand titre dont les mots arrivent un à un ; le script pose le rang de chaque mot (--i). */
+@keyframes galerie-monte {
+  from { opacity: 0; transform: translateY(44px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes galerie-mot {
+  from { opacity: 0; transform: translateY(0.6em) rotate(5deg); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) and (animation-range-start: contain 10svh) {
+    .galerie-monte {
+      animation: galerie-monte linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 22%;
+    }
+    galerie-mots .galerie-mot {
+      display: inline-block;
+      animation: galerie-mot linear both;
+      animation-timeline: view();
+      animation-range: cover calc(1% + var(--i) * 2.4%) cover calc(16% + var(--i) * 2.4%);
+    }
+  }
+}
+/* Le texte entier d'un titre découpé, écrit pour les lecteurs d'écran : hors de la sélection, pour qu'une
+   copie du titre ne le prenne pas deux fois. */
+galerie-mots > .sr-only {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+@media (min-width: 900px) {
+  :root:has(main-product-blocks[data-galerie]) {
+    --gout: max(48px, env(safe-area-inset-left, 0px));
+    --goutd: max(48px, env(safe-area-inset-right, 0px));
+  }
+}
+
+/* === Socle (ticket 19) : fin === */
+
+/* === Présentation (ticket 19) : début ===
+   snippets/galerie-intro.liquid, sa note (galerie-intro-avis) et sa fiche (galerie-intro-fiche), dans le bloc
+   principal de la fiche. */
+
+/* Le bloc principal est la bande de la présentation ; la section qui le porte ne laisse rien sous elle. */
+main-product-blocks[data-galerie] {
+  background: var(--blanc);
+  padding-top: 40px;
+  padding-bottom: 52px;
+}
+.tw-main-product-image:has(main-product-blocks[data-galerie]) {
+  padding-bottom: 0;
+}
+.galerie-intro {
+  max-width: 1240px;
+  margin-inline: auto;
+  display: grid;
+  gap: 34px;
+}
+
+/* La collection, en pastille. */
+.galerie-surtitre {
+  margin: 0;
+  font: 600 12px/1.2 var(--sans);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--encre-70);
+}
+.galerie-surtitre a {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 13px;
+  border-radius: 999px;
+  background: var(--soleil);
+  color: var(--encre);
+  letter-spacing: 0.06em;
+}
+
+/* Le nom court, en très grand : maigre, son dernier mot en gras.
+   overflow-wrap : un mot plus large que sa place (une douzaine de lettres sur téléphone) passe à la ligne au
+   lieu d'être coupé par le bord de l'écran. La maquette n'a pas ce cas ; rien ne change pour un mot qui tient. */
+.galerie-court {
+  margin: 18px 0 0;
+  font: 300 clamp(56px, 17vw, 138px)/0.88 var(--sans);
+  letter-spacing: -0.058em;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+.galerie-court b {
+  font-weight: 700;
+}
+
+/* Le titre complet, en petit dessous : le h1 de la page. */
+.galerie-titre {
+  margin: 20px 0 0;
+  font: 400 clamp(17px, 4.6vw, 22px)/1.32 var(--sans);
+  letter-spacing: -0.012em;
+  color: var(--encre-70);
+  max-width: 30em;
+  text-wrap: balance;
+}
+
+/* La note et le « j'aime ». */
+.galerie-avis {
+  margin-top: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  font: 500 13.5px/1 var(--sans);
+}
+/* Cinq étoiles au vert de Trustpilot, remplies d'après la note (--note, sur 5) : la n-ième, comptée de 0
+   (--i), est pleine jusqu'à (note - n), entre 0 et 1. */
+.galerie-etoiles {
+  display: inline-flex;
+  gap: 2px;
+}
+.galerie-etoiles i {
+  --i: 0;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(90deg, var(--etoile) calc(clamp(0, var(--note) - var(--i), 1) * 100%), var(--etoile-vide) 0);
+}
+.galerie-etoiles i:nth-child(2) { --i: 1; }
+.galerie-etoiles i:nth-child(3) { --i: 2; }
+.galerie-etoiles i:nth-child(4) { --i: 3; }
+.galerie-etoiles i:nth-child(5) { --i: 4; }
+.galerie-etoiles svg {
+  width: 12px;
+  height: 12px;
+  fill: var(--blanc);
+}
+/* « Trustpilot » mène à la page des avis : un lien se reconnaît à son trait, comme sur la fiche de toujours
+   (la maquette n'y a qu'un texte). */
+.galerie-avis-texte a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.galerie-aime {
+  display: inline-flex;
+}
+.galerie-aime button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 13px;
+  border-radius: 999px;
+  background: var(--encre-06);
+  font: 600 13px/1 var(--sans);
+}
+.galerie-aime svg {
+  width: 15px;
+  height: 15px;
+}
+/* Aimé (classe is-liked, posée par assets/my-like-button.js) : le cœur plein, et le mot qui le dit. */
+.galerie-aime .is-liked svg {
+  fill: var(--corail);
+  stroke: var(--corail);
+}
+.galerie-aime .galerie-aime-oui,
+.galerie-aime .is-liked .galerie-aime-non {
+  display: none;
+}
+.galerie-aime .is-liked .galerie-aime-oui {
+  display: inline;
+}
+
+/* La fiche en cinq lignes : une pastille de couleur par ligne. */
+.galerie-fiche {
+  margin: 0;
+  display: grid;
+}
+.galerie-fiche div {
+  display: grid;
+  grid-template-columns: 7.6em 1fr;
+  gap: 14px;
+  padding-block: 13px;
+  border-top: 1px solid var(--encre-12);
+  align-items: baseline;
+}
+.galerie-fiche div:last-child {
+  border-bottom: 1px solid var(--encre-12);
+}
+.galerie-fiche dt {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font: 500 13.5px/1.3 var(--sans);
+  color: var(--encre-55);
+}
+.galerie-fiche dt::before {
+  content: "";
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--ciel);
+}
+.galerie-fiche div:nth-child(2) dt::before { background: var(--rose); }
+.galerie-fiche div:nth-child(3) dt::before { background: var(--soleil); }
+.galerie-fiche div:nth-child(4) dt::before { background: var(--menthe); }
+.galerie-fiche div:nth-child(5) dt::before { background: var(--lilas); }
+.galerie-fiche dd {
+  margin: 0;
+  font: 500 16.5px/1.3 var(--sans);
+  letter-spacing: -0.012em;
+}
+
+/* Ordinateur : le titre à gauche, la fiche à droite, alignés par le bas. */
+@media (min-width: 900px) {
+  main-product-blocks[data-galerie] {
+    padding-top: 72px;
+    padding-bottom: 84px;
+  }
+  .galerie-intro {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+    gap: 70px;
+    align-items: end;
+  }
+  /* Deux garde-fous que la maquette n'a pas, pour que le nom court ne passe jamais sur la fiche :
+     - elle pose 138 px dès 900 px de large, où « Superman » recouvre la première ligne de la fiche : le nom
+       grandit donc avec l'écran, et atteint ses 138 px à 1022 px ; au-delà, rien ne change ;
+     - un mot plus large que la colonne déborde dans la gouttière (70 px), comme dans la maquette, mais de
+       50 px au plus : au-delà, il passe à la ligne (overflow-wrap, plus haut). */
+  .galerie-court {
+    font-size: clamp(56px, 13.5vw, 138px);
+    margin-right: -50px;
+  }
+}
+
+/* === Présentation (ticket 19) : fin === */

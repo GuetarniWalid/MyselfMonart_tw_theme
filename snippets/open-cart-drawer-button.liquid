@@ -6,12 +6,13 @@
   modèles traduits de data-count-one et data-count-other.
   Sur la fiche 3D (?view=oeuvre-3d), le dessin de la pilule d'achat (variante « Pilule » validée par
   Walid le 11/11/2026, règles .cart-fab d'input.css) : le nombre entre dans le bouton, qui s'allonge ;
-  panier vide, le rond seul. Ailleurs, le dessin de toujours.
+  panier vide, le rond seul. De même dans sa nouvelle page, le modèle caché oeuvre-galerie
+  (?view=oeuvre-galerie, ticket 19). Ailleurs, le dessin de toujours.
 {%- endcomment -%}
 {%- liquid
   assign count = cart.item_count | default: 0
   assign fab = false
-  if template.suffix == 'oeuvre-3d'
+  if template.suffix == 'oeuvre-3d' or template.suffix == 'oeuvre-galerie'
     assign fab = true
   endif
 -%}

@@ -80,6 +80,8 @@ sticky-header         tapestry-product-carousel  tapestry-select  variant-picker
 variant-to-cart
 ```
 
+Chargé sur la page galerie des œuvres 3D seulement (`assets/oeuvre-galerie.js`, cf. § 2) : `galerie-mots`, un grand titre dont les mots arrivent un à un au défilement.
+
 **⛔ Définis dans le repo mais JAMAIS chargés — ne pas réutiliser, ne pas s'en inspirer :**
 
 ```
@@ -121,6 +123,20 @@ V4 (correct, Walid l'a corrigé manuellement) : réutilise `<snap-carrousel>` du
 **Règle dure** : aucune `<style>` inline, aucun nouveau `.css` à part, aucun CSS scoped par section.
 
 Pourquoi : le theme est tout Tailwind compilé via `npm run tw` (Tailwind 3.4.1, config dans [`tailwind.config.js`](tailwind.config.js)). Casser cette discipline éclate le bundle, les classes utilitaires deviennent inconsistantes, et le purge ne détecte plus rien.
+
+### Une seule exception voulue : la page galerie des œuvres 3D
+
+La nouvelle fiche des œuvres 3D (réglage « Page galerie » de [`sections/main-product.liquid`](sections/main-product.liquid), modèle `product.oeuvre-galerie`) a sa propre feuille, [`assets/oeuvre-galerie.css`](assets/oeuvre-galerie.css), et son propre script, [`assets/oeuvre-galerie.js`](assets/oeuvre-galerie.js). Le bloc principal de la fiche les charge quand le réglage est coché, et lui seul. Décision du ticket 19 (dossier `.scratch/fiche-3d/galerie`) : la page pèse une quinzaine de kilo-octets de styles, que les autres pages n'ont pas à charger. `assets/output.css` ne doit pas grossir pour elle.
+
+Règles de cette feuille, que vérifie `scripts/oeuvre-galerie.test.cjs` :
+- chaque règle porte le crochet `main-product-blocks[data-galerie]` ou un nom `galerie-…`, jamais le nom du modèle de page ;
+- les couleurs et la typo de la page sont des variables posées une fois (`--encre`, `--ciel`, `--sans`…) ; aucune couleur ne s'écrit ailleurs ; l'encre et le saumon reprennent les couleurs du thème ;
+- un bloc par partie de la page, entre deux repères `début` et `fin` ; un nouveau bloc s'ajoute à la fin (le script suit la même règle) ;
+- aucun mouvement hors de `@media (prefers-reduced-motion: no-preference)`.
+
+Et une convention : les classes `galerie` (typo de base) et `galerie-bande` (marges de côté) se posent sur la racine de chaque partie de la page.
+
+Ce n'est pas un précédent : toute autre page reste en Tailwind.
 
 ### Avant d'utiliser une classe arbitraire
 
@@ -431,7 +447,7 @@ Quand on rédige du **copy** pour les settings (defaults, exemples, info) :
 - ❌ À l'inverse, réutiliser un custom element **jamais chargé** (`<details-modal>`, `<media-gallery>`, `<quick-add-modal>`… cf. la liste ⛔ du § 1) : le markup serait inerte, sans la moindre erreur visible
 - ❌ Dupliquer une classe utility / un snippet helper qui existe (`.title-highlight`, `.scrollbar-hidden`, `.cart-button`, `customer-testimonial-card`, etc.)
 - ❌ `<style>` inline ou `style="..."` sur des balises (sauf via `{% style %}` exceptionnel et justifié)
-- ❌ CSS scoped par section dans `assets/x-styles.css`
+- ❌ CSS scoped par section dans `assets/x-styles.css` (une seule exception : la page galerie des œuvres 3D, § 2)
 - ❌ Hardcoder un hex `#C04B2F` au lieu de `bg-accent` ou `bg-buy-button`
 - ❌ Hardcoder une font `font-family: "Playfair Display"` au lieu de `font-heading`
 - ❌ `class="text-[#C04B2F]"` au lieu de `text-accent`

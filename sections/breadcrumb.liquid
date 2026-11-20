@@ -3,9 +3,12 @@
   assign item_list_element_urls = ''
   # Fiche 3D (modèle product.oeuvre-3d) : le fil devient la capsule de la maquette 7a, posée sur la scène
   # (snippets/oeuvre-3d-crumb.liquid). Le chemin et la liste JSON-LD restent ceux calculés ici.
+  # De même dans sa nouvelle page, le modèle caché product.oeuvre-galerie (?view=oeuvre-galerie, ticket 19).
   assign crumb_capsule = false
-  if template.name == 'product' and template.suffix == 'oeuvre-3d'
-    assign crumb_capsule = true
+  if template.name == 'product'
+    if template.suffix == 'oeuvre-3d' or template.suffix == 'oeuvre-galerie'
+      assign crumb_capsule = true
+    endif
   endif
 %}
 {% unless template == 'index' or template == 'cart' or template == 'list-collections' %}

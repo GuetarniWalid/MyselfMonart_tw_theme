@@ -11,6 +11,10 @@
     - modèle partagé par les toiles et les posters : une ligne `when` qui tranche d'après `product`.
   oeuvre-3d, la fiche 3D, sert aux toiles et aux posters (ticket 14) : un poster s'y reconnaît à son
   métachamp frames_poster, comme partout ailleurs.
+  oeuvre-galerie est la même fiche dans sa nouvelle page (ticket 19) : un modèle caché, que l'on voit avec
+  ?view=oeuvre-galerie. Aucun produit ne le porte : il ne se lit que dans template.suffix, où il vaut
+  oeuvre-3d. Hors d'ici, seuls le fil d'Ariane (sections/breadcrumb.liquid) et le bouton du panier
+  (snippets/open-cart-drawer-button.liquid) le nomment, pour garder le dessin de la fiche 3D.
   À ne pas confondre avec :
     - le métachamp artwork.type (painting, poster, tapestry), lu par la recherche et le studio ;
     - is_poster (métachamp frames_poster), qui donne aux posters leur sélecteur et leur 3D
@@ -40,7 +44,7 @@
       unless image_unique
         echo 'poster'
       endunless
-    when 'oeuvre-3d'
+    when 'oeuvre-3d', 'oeuvre-galerie'
       if product.metafields.painting_options.frames_poster != blank
         echo 'poster'
       else

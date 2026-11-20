@@ -537,7 +537,27 @@
       "product_3d_preview_value_poster": "Framed photographic print behind glass, perspective view, interactive rotation (WebGL)",
       "product_3d_frames_value_poster": "White, matte black, aged oak or walnut (or unframed)",
       "product_3d_pp_name_poster": "White border (3D view)",
-      "product_3d_pp_value_poster": "Optional white mat-style border around the artwork"
+      "product_3d_pp_value_poster": "Optional white mat-style border around the artwork",
+      "galerie": {
+        "intro": {
+          "like": "Like",
+          "liked": "Liked",
+          "support": "Material",
+          "support_canvas": "Art canvas, stretched by hand",
+          "support_poster": "250 g/m² photo paper",
+          "stretcher": "Stretcher",
+          "stretcher_value": "Solid wood, 2 cm",
+          "frame": "Frame",
+          "frame_value": "Optional: white, black, aged oak or walnut",
+          "sizes": "Sizes",
+          "sizes_range": "From {{ first }} to {{ last }} cm",
+          "sizes_one": "{{ size }} cm",
+          "making": "Production",
+          "making_value": "Designed in France, printed in Europe",
+          "delivery": "Delivery",
+          "delivery_value": "Free, within 7 working days"
+        }
+      }
     },
     "testimonials_carousel": {
       "eyebrow_default": "They trust us",

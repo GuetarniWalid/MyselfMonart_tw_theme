@@ -1,0 +1,30 @@
+{%- comment -%}
+  La note Trustpilot de la présentation de la page galerie (fiche-3d, ticket 19) : cinq étoiles, puis
+  « Trustpilot · Bien · 4,2 », comme dans la maquette (.etoiles et son texte). Rendue par le bloc « note
+  Trustpilot » de sections/main-product.liquid en page galerie, à la place de son balisage empilé ; ce bloc
+  calcule le libellé et la note, d'après le réglage du thème « Trustpilot (avis marque) ». Jamais un chiffre
+  écrit ici. snippets/galerie-intro.liquid la pose dans sa rangée, avant le « j'aime ».
+
+  Les étoiles sont un décor (aria-hidden) : le texte dit la note. La feuille de la page les remplit d'après
+  la note, qu'elle lit dans --note (assets/oeuvre-galerie.css, .galerie-etoiles) : une valeur passée à la
+  feuille, pas un style, comme --art-ratio de la scène 3D.
+  Le mot « Trustpilot » mène à la page des avis, quand le bloc a son lien.
+
+  Accepts:
+  - link: {String} le lien du bloc vers la page Trustpilot ; facultatif
+  - label: {String} le libellé de la note, traduit (« Bien », « Excellent »)
+  - score: {Number} la note sur 50 (42 pour 4,2)
+  - score_text: {String} la note écrite, avec la virgule hors de l'anglais (« 4,2 »)
+{%- endcomment -%}
+<span class="galerie-etoiles" style="--note: {{ score | divided_by: 10.0 }}" aria-hidden="true">
+  {%- for star in (1..5) -%}
+    <i><svg viewBox="0 0 24 24" focusable="false"><path d="m12 2 3 7 7 .6-5.3 4.7 1.6 7.2L12 17.8 5.7 21.5l1.6-7.2L2 9.6 9 9z"/></svg></i>
+  {%- endfor -%}
+</span>
+<span class="galerie-avis-texte">
+  {%- if link != blank -%}
+    <a href="{{ link }}" target="_blank" rel="noopener">Trustpilot</a>
+  {%- else -%}
+    Trustpilot
+  {%- endif %} · {{ label }} · {{ score_text -}}
+</span>

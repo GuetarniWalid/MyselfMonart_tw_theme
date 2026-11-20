@@ -1,0 +1,86 @@
+{%- comment -%}
+  La présentation de la page galerie (fiche-3d, ticket 19), sous la scène 3D : à gauche, la collection en
+  pastille, le nom court de l'œuvre en très grand, son titre complet (le h1 de la page), la note Trustpilot
+  et le « j'aime » ; à droite, la fiche en cinq lignes (snippets/galerie-intro-fiche.liquid). Sur téléphone,
+  l'un sous l'autre. Porté de la maquette validée par Walid le 20/11/2026 (.scratch/fiche-3d/galerie,
+  version 13, section .intro) ; ses styles sont dans assets/oeuvre-galerie.css (règles .galerie-*).
+
+  Rendu par sections/main-product.liquid quand son réglage « Page galerie » est coché, à la place du balisage
+  empilé des blocs titre, titre court et note. Chaque pièce suit son bloc : un bloc retiré du modèle, sa pièce
+  disparaît. L'ordre est celui de la maquette, quel que soit l'ordre des blocs : c'est aussi l'ordre de
+  lecture et du clavier. La grille (.galerie-intro) n'a que ces deux enfants, la colonne de gauche et la
+  fiche : un autre bloc ajouté au modèle se rend avant elle, sans la déranger.
+
+  - La pastille mène à la collection mère du produit (métachamp link.mother_collection), celle du fil
+    d'Ariane. Sans elle, pas de pastille.
+  - Le nom court (métachamp title.short) a son dernier mot en gras. Ses mots arrivent un à un au défilement :
+    élément <galerie-mots>, assets/oeuvre-galerie.js. Sans ce métachamp, le titre du produit le remplace, comme
+    sur la scène et dans le fil d'Ariane : le h1 le redit juste dessous, les lecteurs d'écran ne lisent donc
+    que le h1 (aria-hidden).
+  - Le h1 est le titre du produit, le même texte que sur la fiche de toujours : le seul h1 de la page.
+  - La note est écrite par le bloc « note Trustpilot » de la section (snippets/galerie-intro-avis.liquid).
+  - Le « j'aime » est le cœur de la fiche (élément <my-like-button>, assets/my-like-button.js : il lui faut
+    data-product-id, data-product-handle et, en premier enfant, un bouton de classe « like », qui prend la
+    classe is-liked). Il est dans le bloc principal : il garde la ligne aimée, comme toujours. Son nom est son
+    texte, qui change une fois aimé.
+
+  Accepts:
+  - product: {Object}
+  - is_poster: {Boolean} le produit est un poster (métachamp frames_poster)
+  - show_title: {Boolean} le bloc « titre » est dans le modèle
+  - show_short_title: {Boolean} le bloc « titre court » est dans le modèle
+  - show_likes: {Boolean} son réglage « j'aime » est coché
+  - reviews: {String} la note Trustpilot, déjà rendue par son bloc ; vide sans ce bloc
+  - show_sheet: {Boolean} le bloc « fiche en cinq lignes » est dans le modèle
+{%- endcomment -%}
+{%- liquid
+  assign mother = product.metafields.link.mother_collection.value
+  # Le nom court, lu comme sur les cartes de collection (snippets/card-product-info.liquid) : ce que le
+  # métachamp écrit, sans ses blancs ; vide, le titre du produit. Mot à mot : le dernier en gras. Chaque mot
+  # est écrit en texte (escape).
+  capture short_name
+    echo product.metafields.title.short
+  endcapture
+  assign short_name = short_name | strip
+  assign name_words = short_name | default: product.title | strip | split: ' '
+  assign name_html = ''
+  for word in name_words
+    assign safe_word = word | escape
+    if forloop.last
+      assign name_html = name_html | append: '<b>' | append: safe_word | append: '</b>'
+    else
+      assign name_html = name_html | append: safe_word | append: ' '
+    endif
+  endfor
+-%}
+<div class="galerie-intro">
+  <div class="galerie-intro-tete">
+    {%- if show_short_title -%}
+      {%- if mother.title != blank -%}
+        <p class="galerie-surtitre"><a href="{{ mother.url }}">{{ mother.title | escape }}</a></p>
+      {%- endif -%}
+      <p class="galerie-court"{% if short_name == blank %} aria-hidden="true"{% endif %}><galerie-mots>{{ name_html }}</galerie-mots></p>
+    {%- endif -%}
+    {%- if show_title -%}
+      <h1 class="galerie-titre">{{ product.title | escape }}</h1>
+    {%- endif -%}
+    {%- if reviews != blank or show_likes -%}
+      <div class="galerie-avis">
+        {{- reviews -}}
+        {%- if show_likes -%}
+          <my-like-button class="galerie-aime" data-product-id="{{ product.id }}" data-product-handle="{{ product.handle }}">
+            <button type="button" class="like">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" focusable="false"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.4A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z"/></svg>
+              <span class="galerie-aime-non">{{ 'sections.mma.galerie.intro.like' | t }}</span>
+              <span class="galerie-aime-oui">{{ 'sections.mma.galerie.intro.liked' | t }}</span>
+            </button>
+          </my-like-button>
+          <script src="{{ 'my-like-button.js' | asset_url }}" defer="defer"></script>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+  {%- if show_sheet -%}
+    {% render 'galerie-intro-fiche', product: product, is_poster: is_poster %}
+  {%- endif -%}
+</div>

@@ -298,7 +298,27 @@
       "product_3d_preview_value_poster": "Ingelijste fotoafdruk achter glas in perspectief, interactieve rotatie (WebGL)",
       "product_3d_frames_value_poster": "Wit, matzwart, oud eiken of walnoot (of zonder lijst)",
       "product_3d_pp_name_poster": "Witte rand in 3D te bekijken",
-      "product_3d_pp_value_poster": "Witte passe-partout-rand rondom de afbeelding, optioneel"
+      "product_3d_pp_value_poster": "Witte passe-partout-rand rondom de afbeelding, optioneel",
+      "galerie": {
+        "intro": {
+          "like": "Vind ik leuk",
+          "liked": "In favorieten",
+          "support": "Materiaal",
+          "support_canvas": "Kunstcanvas, met de hand gespannen",
+          "support_poster": "Fotopapier van 250 g/m²",
+          "stretcher": "Spieraam",
+          "stretcher_value": "Massief hout, 2 cm",
+          "frame": "Lijst",
+          "frame_value": "Optioneel: wit, zwart, oud eiken of walnoot",
+          "sizes": "Formaten",
+          "sizes_range": "Van {{ first }} tot {{ last }} cm",
+          "sizes_one": "{{ size }} cm",
+          "making": "Productie",
+          "making_value": "Ontworpen in Frankrijk, gedrukt in Europa",
+          "delivery": "Levering",
+          "delivery_value": "Gratis, binnen 7 werkdagen"
+        }
+      }
     },
     "my_likes": {
       "empty_text": "Je hebt nog geen favorieten"
