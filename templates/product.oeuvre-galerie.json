@@ -1,0 +1,89 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "breadcrumb_RCxFAG": {
+      "type": "breadcrumb",
+      "settings": {}
+    },
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "trustpilot_review_9q3NVM": {
+          "type": "trustpilot_review",
+          "settings": {
+            "link": "https://fr.trustpilot.com/review/myselfmonart.com",
+            "margin_bottom": "mb-4"
+          }
+        },
+        "short_title_9m74gE": {
+          "type": "short_title",
+          "settings": {
+            "show_likes": true,
+            "margin_bottom": "mb-2"
+          }
+        },
+        "buy_qrRzcg": {
+          "type": "buy",
+          "settings": {
+            "text": "Ajouter au panier",
+            "show_payment_icons": true,
+            "margin_bottom": "mb-8",
+            "is_dynamic_variant": false,
+            "show_promotion": false,
+            "promotion_discount": 10,
+            "promotion_discount_unit": "%",
+            "promotion_reason": "Soldes d'été",
+            "promotion_date": ""
+          }
+        },
+        "variant_picker_YiA9jN": {
+          "type": "variant_picker",
+          "settings": {}
+        },
+        "title": {
+          "type": "title",
+          "settings": {
+            "tone": "subtitle",
+            "font_size": "text-lg",
+            "margin_bottom": "mb-2"
+          }
+        },
+        "fact_sheet": {
+          "type": "fact_sheet",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "trustpilot_review_9q3NVM",
+        "short_title_9m74gE",
+        "buy_qrRzcg",
+        "variant_picker_YiA9jN",
+        "title",
+        "fact_sheet"
+      ],
+      "settings": {
+        "media_display": "stage_3d",
+        "page_galerie": true,
+        "start_from_media": 3,
+        "enable_merchant_schema": true,
+        "shipping_free": true,
+        "ships_country": "FR",
+        "return_days": 14,
+        "enable_format_toggle": true
+      }
+    }
+  },
+  "order": [
+    "breadcrumb_RCxFAG",
+    "main"
+  ],
+  "layout": "product"
+}
