@@ -80,6 +80,10 @@
         "enable_format_toggle": true
       }
     },
+    "galerie_scene": {
+      "type": "galerie-scene",
+      "settings": {}
+    },
     "galerie_raisons": {
       "type": "galerie-raisons",
       "settings": {}
@@ -567,6 +571,7 @@
   "order": [
     "breadcrumb_RCxFAG",
     "main",
+    "galerie_scene",
     "galerie_histoire",
     "customer_testimonial_myiwee",
     "product_recommendations_TX9rdQ",
