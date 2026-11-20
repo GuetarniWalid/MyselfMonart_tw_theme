@@ -41,8 +41,9 @@ Contrôle attendu avant de rendre : des captures de ta section à côté de cell
 Plusieurs tickets écrivent dans les mêmes fichiers. Pour que les branches se réunissent sans conflit :
 
 - **Ta section a ses propres fichiers** : `sections/galerie-<nom>.liquid`, et ses propres snippets s'il en faut (`snippets/galerie-<nom>-….liquid`).
-- **Feuille de style de la page** : ajoute tes règles à la fin du fichier, dans un bloc à toi, entre deux repères `/* === <nom de ta section> (ticket NN) : début === */` et `/* === … : fin === */`. Ne déplace, ne reformate et ne réordonne rien de ce qui existe.
-- **Script de la page** : même règle, un bloc à toi à la fin, tes éléments personnalisés dedans.
+- **Feuille de style de la page** (`assets/oeuvre-galerie.css`) : ajoute tes règles à la fin du fichier, dans un bloc à toi, entre deux repères `/* === <nom de ta section> (ticket NN) : début === */` et `/* === … : fin === */`. Ne déplace, ne reformate et ne réordonne rien de ce qui existe. Seule exception : une couleur qui manque, ajoutée sur sa propre ligne à la liste des variables du socle.
+- **Script de la page** (`assets/oeuvre-galerie.js`) : même règle, un bloc à toi à la fin, tes éléments personnalisés dedans.
+- **Tests** : ton propre fichier `scripts/galerie-<nom>.test.cjs`, avec le banc partagé `scripts/galerie-banc.cjs` (voir « Le socle »).
 - **Fichiers de langue** (`locales/*.json`) : tes clés sous `sections.mma.galerie.<nom de ta section>`, dans les cinq langues. Ne retouche aucune clé existante, ne reformate pas le fichier.
 - **Modèle** `templates/product.oeuvre-galerie.json` : ajoute ta section et sa place dans `order`. L'ordre final de la page est : fil d'Ariane, bloc principal, scène (20), histoire et pratique (22), avis, recommandations, questions (23), raisons (24).
 - **Sections communes du site** (fil d'Ariane, avis, recommandations, questions, badges, en-tête, pied de page, panier) : ne pas les modifier. Réutiliser leurs éléments personnalisés et leurs snippets depuis ta propre section.
@@ -85,6 +86,30 @@ Plusieurs tickets écrivent dans les mêmes fichiers. Pour que les branches se r
 - Ce que montrent les captures (donner leurs chemins) et ce qui reste à voir en ligne.
 - Les choix que tu as faits seul, et ce que la session principale doit faire à l'intégration.
 
-## Le socle (ticket 19)
+## Le socle (ticket 19), en ligne depuis le 20/11/2026
 
-À compléter par la session principale quand le ticket 19 est intégré : noms des fichiers, accroche des styles, variables de couleur et de typo, conventions des éléments personnalisés et des clés de langue.
+La vue de test existe : `https://www.myselfmonart.com/products/<produit oeuvre-3d>?view=oeuvre-galerie`. Elle montre la scène 3D, la pilule, puis la présentation. Lire ces fichiers dans ta copie avant d'écrire : ils sont courts et très commentés.
+
+**Le modèle** `templates/product.oeuvre-galerie.json` : le fil d'Ariane, puis `main` (`main-product`, réglage `page_galerie` coché). Ta section s'ajoute après `main`, à sa place dans l'ordre final. Son type commence par `galerie-` (un test le vérifie).
+
+**Le crochet.** Le réglage `page_galerie` de `sections/main-product.liquid` pose `data-galerie` sur `<main-product-blocks>` (avec la scène 3D seulement). Rien ne s'accroche au nom du modèle de page.
+
+**La feuille** `assets/oeuvre-galerie.css`, chargée par le bloc principal quand le réglage est coché :
+- Le script en garde une copie dans `<head>`, qui ne quitte plus la page (elle tient pendant la bascule Toile / Poster). Donc **chaque règle porte le crochet ou un nom `galerie-…`** : `main-product-blocks[data-galerie] …` pour ce qui est dans le bloc principal, `:root:has(main-product-blocks[data-galerie]) …` pour ce qui est hors de ta section (pied de page, bandeau, pilule), une classe `galerie-<section>…` pour ta section. `scripts/oeuvre-galerie.test.cjs` le vérifie sur toute la feuille, ton bloc compris.
+- Les couleurs et la typo sont des variables posées une fois : `--encre`, `--encre-70`, `--encre-55`, `--encre-12`, `--encre-06`, `--blanc`, `--creme`, `--ciel`, `--rose`, `--soleil`, `--menthe`, `--lilas`, `--peche`, `--chene`, `--sauge`, `--ciel-pale`, `--poudre`, `--corail`, `--terra`, `--saumon`, `--achat`, `--achat-texte`, `--etoile`, `--etoile-vide`, `--pied-fond`, `--pied-encre`, `--annonce-fond`, `--annonce-encre`, `--sans`, et les marges de côté `--gout`, `--goutd`. **Aucune couleur ne s'écrit hors de ces variables** (testé) : une couleur de la maquette qui manque s'ajoute à la liste du socle, dans ton commit, sur une ligne à elle.
+- Classes de base : `galerie` (typo) et `galerie-bande` (marges de côté) sur la racine de ta section ; `galerie-monte` pour un bloc qui monte à son entrée dans l'écran ; l'élément `<galerie-mots>` pour un grand titre dont les mots arrivent un à un (le serveur écrit le texte, le script le découpe).
+- Seuil « ordinateur » : 900 px, comme la maquette.
+- Aucun mouvement hors de `@media (prefers-reduced-motion: no-preference)`, et rien de lié au défilement hors de `@supports (animation-timeline: view()) and (animation-range-start: contain 10svh)` (testé).
+- Un bloc par partie de la page, entre `/* === <Nom> (ticket NN) : début === */` et `/* === <Nom> (ticket NN) : fin === */` : le tien s'ajoute à la fin, rien hors d'un bloc (testé).
+
+**Le script** `assets/oeuvre-galerie.js` : mêmes repères, un bloc par partie, chacun dans sa propre fonction `(function () { 'use strict'; … })();`. En tête de ton bloc, pour les tests : `if (typeof window === 'undefined') { Object.assign(module.exports, { tesCalculsPurs }); return; }`. Puis tes éléments personnalisés, gardés par `if (customElements.get('galerie-…')) return;`. Aucun objet global (`window.x = …` est refusé par un test), aucun `DOMContentLoaded`. La condition « le mouvement suit le défilement » du socle (`mouvementLie`) est privée à son bloc : si tu en as besoin, réécris-la dans le tien, à l'identique.
+
+**Polices.** Albert Sans, déclarée par la scène 3D, en 500, 600 et 700 seulement. Les graisses 300 et 400 de la maquette arriveront (Walid doit donner son accord pour les télécharger) : écris les graisses de la maquette, sans rien télécharger. D'ici là, 300 et 400 sortent en 500 : c'est attendu, ne le compense pas.
+
+**Textes** : `sections.mma.galerie.<section>.<clé>` dans les cinq langues (`intro` existe, 16 clés).
+
+**Snippets** : `snippets/galerie-<section>-….liquid`. Ceux du socle : `galerie-intro`, `galerie-intro-avis`, `galerie-intro-fiche`.
+
+**Tests.** Ton fichier : `scripts/galerie-<section>.test.cjs`. Le banc partagé `scripts/galerie-banc.cjs` donne la lecture des fichiers du thème (`read`, `code`, `json`, `schemaOf`, `rules`), le produit d'essai (`product({ poster })`), le moteur liquidjs avec les filtres de Shopify (`engine(lang)`), et le rendu : `renderSectionFile('sections/galerie-<section>.liquid', { settings, blocks }, produit, { lang, suffix })` pour ta section, `renderSnippet`, `renderSection` pour le bloc principal. Un filtre ou un champ du produit qui manque : ajoute-le dans ton fichier de test (`engine(lang).registerFilter(…)`, `{ ...product(), description: … }`), pas dans le banc. Ne modifie ni le banc ni `scripts/oeuvre-galerie.test.cjs`, sauf pour un vrai défaut, que tu signales. Les tests de rendu demandent liquidjs : `NODE_PATH="C:/Users/gueta/dev/MyselfMonart_tw_theme/growth/emails-commande/node_modules" npm test`.
+
+**Ce que le ticket 19 a vérifié en ligne** : les données lues par Google sont celles de la fiche actuelle, la bascule Toile / Poster garde la vue de test, les douze pages témoins du site n'ont pas changé d'un caractère. Le contrôle en ligne de ta section, c'est la session principale qui le fera après avoir poussé.
