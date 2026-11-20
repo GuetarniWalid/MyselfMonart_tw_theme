@@ -33,6 +33,7 @@
   --encre: rgb(var(--color-main-rgb));
   --encre-70: rgba(var(--color-main-rgb), 0.72);
   --encre-55: rgba(var(--color-main-rgb), 0.6);
+  --encre-16: rgba(var(--color-main-rgb), 0.16);
   --encre-12: rgba(var(--color-main-rgb), 0.12);
   --encre-06: rgba(var(--color-main-rgb), 0.06);
   --blanc: #ffffff;
@@ -324,3 +325,435 @@ main-product-blocks[data-galerie] {
 }
 
 /* === Présentation (ticket 19) : fin === */
+
+/* === Raisons (ticket 24) : début ===
+   sections/galerie-raisons.liquid : « Ce qu'un tableau change chez vous », la dernière section de la page. Un
+   chapeau, quatre cartes de couleur, une raison chacune, puis une phrase de fin. Chaque carte est portée par un
+   personnage détouré : il monte du bas de sa carte au fil du défilement et dépasse par le haut ; ce qui dépasse
+   par les autres côtés est coupé. Les personnages gardent leurs noms neutres : ton, travaux, bouquet, waouh. */
+
+.galerie-raisons {
+  background: var(--blanc);
+  padding-block: 64px 44px;
+}
+.galerie-raisons-in {
+  max-width: 1240px;
+  margin-inline: auto;
+}
+/* Le titre de la section : maigre, ses derniers mots en gras. */
+.galerie-raisons-titre {
+  margin: 14px 0 0;
+  font: 300 clamp(38px, 10.8vw, 64px)/0.98 var(--sans);
+  letter-spacing: -0.042em;
+  text-wrap: balance;
+}
+.galerie-raisons-titre b {
+  font-weight: 700;
+}
+.galerie-raisons-chapo {
+  margin: 18px 0 0;
+  max-width: 29em;
+  font: 400 16.5px/1.5 var(--sans);
+  color: var(--encre-70);
+}
+
+/* Les cartes. --titre-large et --texte-large : la part de la carte que prennent le titre et le texte. Le titre
+   peut courir sur toute la carte ; le paragraphe et la bulle restent à gauche du personnage. */
+.galerie-raisons-liste {
+  margin: 0;
+  padding: 62px 0 0;
+  list-style: none;
+  display: grid;
+  gap: 56px;
+}
+.galerie-raisons-carte {
+  position: relative;
+  display: grid;
+  min-height: 300px;
+  border-radius: 28px;
+  padding: 24px 22px 22px;
+}
+.galerie-raisons-ton {
+  background: var(--ciel);
+  --titre-large: 56%;
+  --texte-large: 52%;
+}
+.galerie-raisons-travaux {
+  background: var(--soleil);
+  --texte-large: 100%;
+}
+.galerie-raisons-bouquet {
+  background: var(--rose);
+  --titre-large: 72%;
+  --texte-large: 50%;
+}
+.galerie-raisons-waouh {
+  background: var(--lilas);
+  --texte-large: 52%;
+}
+.galerie-raisons-texte {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+/* Le gras d'un titre de carte ne se coupe pas : dans chaque langue, il reste court (testé à 320 px). */
+.galerie-raisons-carte h3 {
+  margin: 0;
+  max-width: var(--titre-large, 100%);
+  font: 300 clamp(25px, 7.7vw, 31px)/1 var(--sans);
+  letter-spacing: -0.04em;
+}
+.galerie-raisons-carte h3 b {
+  font-weight: 700;
+  white-space: nowrap;
+}
+.galerie-raisons-texte > p {
+  margin: 12px 0 18px;
+  max-width: var(--texte-large, 52%);
+  font: 400 14.5px/1.45 var(--sans);
+  color: var(--encre-70);
+}
+
+/* Ce que dit le personnage : la bulle reste en bas de la colonne de texte, elle ne peut donc jamais le
+   recouvrir. Son angle pointe vers lui. */
+.galerie-raisons-carte .galerie-raisons-dit {
+  margin: 0;
+  padding: 9px 13px;
+  border-radius: 16px 16px 4px 16px;
+  background: var(--blanc);
+  color: var(--encre);
+  font: 600 13.5px/1.2 var(--sans);
+  letter-spacing: -0.012em;
+  box-shadow: 0 8px 18px var(--encre-12);
+  transform-origin: 100% 100%;
+}
+.galerie-raisons-texte > .galerie-raisons-dit {
+  margin-top: auto;
+}
+/* Un personnage large (les travaux) : sur téléphone, le texte passe au-dessus de lui, sur toute la largeur. La
+   bulle se loge à sa gauche, dans une zone qui a sa hauteur (une part de la largeur, plafonnée) : elle lui
+   réserve la place, le texte ne peut pas le recouvrir. */
+.galerie-raisons-dit-zone {
+  position: relative;
+  width: 100%;
+  margin-top: auto;
+  padding-bottom: min(40%, 150px);
+}
+.galerie-raisons-dit-zone > .galerie-raisons-dit {
+  position: absolute;
+  left: 0;
+  top: 10%;
+  max-width: 43%;
+  font-size: clamp(11px, 3.4vw, 13.5px);
+}
+
+/* La scène de la carte : rien ne dépasse sur les côtés ni en bas (pas de défilement de côté), le haut reste
+   libre. */
+.galerie-raisons-scene {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow-x: clip;
+  clip-path: inset(-80px 0 0 0 round 0 0 28px 28px);
+}
+/* Le personnage, posé en bas à droite de sa carte. Sa largeur est une part de celle de la carte
+   (--perso-large), plafonnée (--perso-max) ; sa hauteur suit la forme de son image : il ne grandit donc pas
+   quand le texte allonge la carte. --perso-droite : son écart à droite (négatif : il sort un peu de la carte,
+   pas plus que --perso-droite-min) ; --perso-bas : la part de sa hauteur cachée sous le bas de la carte. */
+.galerie-raisons-perso {
+  position: absolute;
+  right: max(var(--perso-droite), var(--perso-droite-min, -999px));
+  bottom: 0;
+  width: min(var(--perso-large), var(--perso-max));
+  translate: 0 var(--perso-bas, 0%);
+}
+.galerie-raisons-perso img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+}
+.galerie-raisons-ton .galerie-raisons-perso {
+  aspect-ratio: 333 / 720;
+  --perso-large: 44.5%;
+  --perso-max: 160px;
+  --perso-droite: 2%;
+}
+.galerie-raisons-travaux .galerie-raisons-perso {
+  aspect-ratio: 567 / 380;
+  --perso-large: 61%;
+  --perso-max: 232px;
+  --perso-droite: -3%;
+  --perso-droite-min: -12px;
+}
+.galerie-raisons-bouquet .galerie-raisons-perso {
+  aspect-ratio: 428 / 520;
+  --perso-large: 55%;
+  --perso-max: 240px;
+  --perso-droite: -9%;
+  --perso-droite-min: -34px;
+}
+.galerie-raisons-waouh .galerie-raisons-perso {
+  aspect-ratio: 317 / 620;
+  --perso-large: 44%;
+  --perso-max: 180px;
+  --perso-droite: 3%;
+  --perso-bas: 24%;
+}
+/* Les deux notes du premier personnage : la première au corail, la seconde à l'encre. */
+.galerie-raisons-note {
+  position: absolute;
+  left: 9%;
+  top: 6%;
+  width: 13%;
+  overflow: visible;
+  fill: currentColor;
+  color: var(--corail);
+}
+.galerie-raisons-note + .galerie-raisons-note {
+  left: -9%;
+  top: -2%;
+  color: var(--encre);
+}
+
+.galerie-raisons-fin {
+  margin: 58px 0 0;
+  font: 300 clamp(27px, 7.8vw, 36px)/1.04 var(--sans);
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+.galerie-raisons-fin b {
+  font-weight: 700;
+}
+
+/* Le mouvement, lié au défilement, aux conditions du socle : le personnage sort du bas de sa carte, sa bulle
+   grossit depuis son angle, les notes s'envolent. Le chapeau et les cartes montent par la classe du socle
+   (galerie-monte), les titres arrivent mot à mot par son élément (galerie-mots). Sans ces conditions, tout est
+   en place. */
+@keyframes galerie-raisons-surgit {
+  from { opacity: 1; transform: translateY(62%); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes galerie-raisons-dit {
+  from { opacity: 0; transform: scale(0.3); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes galerie-raisons-note {
+  from { opacity: 0; transform: translate(90%, 150%) rotate(-26deg) scale(0.4); }
+  30% { opacity: 1; }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) and (animation-range-start: contain 10svh) {
+    .galerie-raisons-perso {
+      animation: galerie-raisons-surgit linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 40%;
+    }
+    .galerie-raisons-dit {
+      animation: galerie-raisons-dit linear both;
+      animation-timeline: view();
+      animation-range: cover 12% cover 26%;
+    }
+    .galerie-raisons-note {
+      animation: galerie-raisons-note linear both;
+      animation-timeline: view();
+      animation-range: cover 22% cover 56%;
+    }
+    .galerie-raisons-note + .galerie-raisons-note {
+      animation-range: cover 32% cover 68%;
+    }
+    /* La dernière phrase est tout en bas de la page : ses mots arrivent plus tôt, pour être tous là quand le
+       défilement s'arrête. */
+    .galerie-raisons-fin galerie-mots .galerie-mot {
+      animation-range: cover calc(1% + var(--i) * 0.9%) cover calc(7% + var(--i) * 0.9%);
+    }
+  }
+}
+
+/* Ordinateur : deux cartes par rangée, le texte à gauche, le personnage à droite. */
+@media (min-width: 900px) {
+  .galerie-raisons {
+    padding-block: 104px 80px;
+  }
+  .galerie-raisons-titre {
+    font-size: clamp(56px, 5.6vw, 96px);
+    line-height: 0.96;
+  }
+  .galerie-raisons-chapo {
+    font-size: 19px;
+    margin-top: 24px;
+  }
+  .galerie-raisons-liste {
+    grid-template-columns: 1fr 1fr;
+    gap: 84px 28px;
+    padding-top: 96px;
+  }
+  .galerie-raisons-carte {
+    min-height: 336px;
+    padding: 34px 34px 30px;
+  }
+  .galerie-raisons-carte h3 {
+    font-size: 40px;
+  }
+  .galerie-raisons-texte > p {
+    font-size: 16.5px;
+    margin-top: 16px;
+  }
+  .galerie-raisons-texte > .galerie-raisons-dit {
+    font-size: 17px;
+    padding: 11px 16px;
+    border-radius: 19px 19px 5px 19px;
+  }
+  .galerie-raisons-scene {
+    clip-path: inset(-110px 0 0 0 round 0 0 28px 28px);
+  }
+  .galerie-raisons-ton {
+    --titre-large: 62%;
+    --texte-large: 56%;
+  }
+  .galerie-raisons-ton .galerie-raisons-perso {
+    --perso-large: 30%;
+    --perso-max: 190px;
+    --perso-droite: 4%;
+  }
+  .galerie-raisons-travaux {
+    --titre-large: 60%;
+    --texte-large: 50%;
+  }
+  .galerie-raisons-travaux .galerie-raisons-perso {
+    --perso-large: 47%;
+    --perso-max: 300px;
+    --perso-droite: -1%;
+    --perso-droite-min: -8px;
+  }
+  /* Le personnage large tient à droite du texte : sa bulle revient en bas de la colonne. */
+  .galerie-raisons-dit-zone {
+    max-width: var(--texte-large);
+    padding-bottom: 0;
+  }
+  .galerie-raisons-dit-zone > .galerie-raisons-dit {
+    position: static;
+    max-width: 100%;
+    font-size: 17px;
+  }
+  .galerie-raisons-bouquet {
+    --titre-large: 60%;
+    --texte-large: 48%;
+  }
+  .galerie-raisons-bouquet .galerie-raisons-perso {
+    --perso-large: 46%;
+    --perso-max: 290px;
+    --perso-droite: -3%;
+    --perso-droite-min: -20px;
+  }
+  .galerie-raisons-waouh {
+    --texte-large: 54%;
+  }
+  .galerie-raisons-waouh .galerie-raisons-perso {
+    --perso-large: 36%;
+    --perso-max: 225px;
+    --perso-droite: 5%;
+    --perso-bas: 27%;
+  }
+  .galerie-raisons-fin {
+    font-size: 52px;
+    margin-top: 84px;
+  }
+}
+
+/* === Raisons (ticket 24) : fin === */
+
+/* === Autour de la page (ticket 24) : début ===
+   Les couleurs de l'étude du 20/11 pour ce qui entoure la page : le bouton d'achat de la pilule en vermillon à
+   libellé blanc, le bandeau d'annonce en pêche, le pied de page en menthe à texte encre. Ces trois éléments
+   sont ceux de tout le site (snippets/oeuvre-3d-stage.liquid, sections/tw-announcement-bar.liquid,
+   sections/tw-footer.liquid) : leurs fichiers ne changent pas, et chaque règle d'ici commence par la page qui
+   porte le crochet. Cette feuille reste dans <head> quand la bascule Toile / Poster change le contenu de la
+   page : sans le crochet, la fiche qui suit garderait le pied de page menthe. Un vrai navigateur le vérifie
+   sur le vrai balisage (scripts/galerie-raisons.test.cjs).
+   La pilule garde sa forme et son comportement, le mur de la scène 3D sa couleur. */
+
+/* Le bouton d'achat : le vermillon ne sert qu'à acheter (libellé blanc : 4,7 pour 1). */
+:root:has(main-product-blocks[data-galerie]) .oeuvre-3d-buy {
+  background: var(--achat);
+  color: var(--achat-texte);
+}
+
+/* Le bandeau d'annonce : la pêche, à texte encre (12,1 pour 1). */
+:root:has(main-product-blocks[data-galerie]) #shopify-section-tw-announcement-bar p {
+  background-color: var(--annonce-fond);
+  color: var(--annonce-encre);
+}
+
+/* Le pied de page : un pastel à texte encre (13,3 pour 1 ; avant : blanc sur saumon, 2,35). Ses titres, ses
+   liens, ses libellés et les pictogrammes des réseaux prennent la couleur du texte ; les sélecteurs de devise
+   et de langue sont déjà blancs à texte encre. La vague du haut suit le fond. */
+:root:has(main-product-blocks[data-galerie]) #shopify-section-tw-footer {
+  background-color: var(--pied-fond);
+  color: var(--pied-encre);
+}
+:root:has(main-product-blocks[data-galerie]) #shopify-section-tw-footer footer-logic > svg:first-child path {
+  fill: var(--pied-fond);
+}
+
+/* Le champ de la newsletter, comme dans la maquette (corrigé à sa version 12) : blanc sur le pastel, un seul
+   contour à l'encre qui ne s'épaissit plus, son texte d'attente lisible, et un halo doux quand on y écrit. Son
+   libellé reste pour les lecteurs d'écran, hors de la vue : posé sur le bord du champ, il dépassait au-dessus
+   de lui. Son bouton : un rond à l'encre, la flèche en blanc. */
+:root:has(main-product-blocks[data-galerie]) #shopify-section-tw-footer div:has(> input[type="email"]) {
+  height: 50px;
+}
+:root:has(main-product-blocks[data-galerie]) #shopify-section-tw-footer input[type="email"] {
+  padding: 0 58px 0 20px;
+  border: 1.5px solid var(--encre);
+  border-radius: 999px;
+  background-color: var(--blanc);
+  color: var(--encre);
+}
+:root:has(main-product-blocks[data-galerie]) #shopify-section-tw-footer input[type="email"]::placeholder {
+  color: var(--encre-55);
+  opacity: 1;
+}
+:root:has(main-product-blocks[data-galerie]) #shopify-section-tw-footer input[type="email"]:focus {
+  box-shadow: 0 0 0 4px var(--encre-16);
+}
+/* Rempli par le navigateur : le champ reste blanc, son texte à l'encre. */
+:root:has(main-product-blocks[data-galerie]) #shopify-section-tw-footer input[type="email"]:-webkit-autofill {
+  -webkit-text-fill-color: var(--encre);
+  box-shadow: 0 0 0 1000px var(--blanc) inset;
+}
+:root:has(main-product-blocks[data-galerie]) #shopify-section-tw-footer input[type="email"] ~ label {
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+:root:has(main-product-blocks[data-galerie]) #shopify-section-tw-footer input[type="email"] ~ button {
+  top: 6px;
+  right: 6px;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background-color: var(--encre);
+  color: var(--blanc);
+  transform: none;
+}
+:root:has(main-product-blocks[data-galerie]) #shopify-section-tw-footer input[type="email"] ~ button svg {
+  width: 24px;
+}
+/* Le halo arrive en douceur, aux conditions de mouvement du socle. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) and (animation-range-start: contain 10svh) {
+    :root:has(main-product-blocks[data-galerie]) #shopify-section-tw-footer input[type="email"] {
+      transition: box-shadow 0.2s ease;
+    }
+  }
+}
+
+/* === Autour de la page (ticket 24) : fin === */

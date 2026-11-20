@@ -539,6 +539,36 @@
       "product_3d_pp_name_poster": "White border (3D view)",
       "product_3d_pp_value_poster": "Optional white mat-style border around the artwork",
       "galerie": {
+        "raisons": {
+          "canvas": {
+            "eyebrow": "Why wall art",
+            "title_html": "What wall art <b>changes in your home.</b>",
+            "lead": "A bare wall, and the room never looks finished, however well furnished. Wall art fixes that. And it does much more.",
+            "ton_title_html": "It sets <b>the tone.</b>",
+            "ton_text": "Chic, zen or full of pep: wall art is what gives a room its style. You notice it before the furniture.",
+            "travaux_text": "Ready for a change? No need to repaint or replace the furniture. One piece of wall art, and the room is no longer the same.",
+            "bouquet_text": "A bouquet lasts a week. Wall art, you enjoy every day, for years.",
+            "waouh_text": "Wall art is what your guests notice first, and what they talk to you about.",
+            "waouh_quote": "Where’d you get it?"
+          },
+          "poster": {
+            "eyebrow": "Why a poster",
+            "title_html": "What a poster <b>changes in your home.</b>",
+            "lead": "A bare wall, and the room never looks finished, however well furnished. A poster fixes that. And it does much more.",
+            "ton_title_html": "It sets <b>the tone.</b>",
+            "ton_text": "Chic, zen or full of pep: the poster is what gives a room its style. You notice it before the furniture.",
+            "travaux_text": "Ready for a change? No need to repaint or replace the furniture. One poster on the wall, and the room is no longer the same.",
+            "bouquet_text": "A bouquet lasts a week. A poster, you enjoy every day, for years.",
+            "waouh_text": "The poster is what your guests notice first, and what they talk to you about.",
+            "waouh_quote": "Where’d you get it?"
+          },
+          "travaux_title_html": "Everything changes, <b>no renovation.</b>",
+          "travaux_quote": "Back home, every job is monumental.",
+          "bouquet_title_html": "A pleasure that <b>never wilts.</b>",
+          "bouquet_quote": "Never watered.",
+          "waouh_title_html": "The <b>“wow” effect.</b>",
+          "closing_html": "And love at first sight <b>is not up for debate.</b>"
+        },
         "intro": {
           "like": "Like",
           "liked": "Liked",

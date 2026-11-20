@@ -297,6 +297,36 @@
       "product_3d_pp_name_poster": "Borde blanco con vista 3D",
       "product_3d_pp_value_poster": "Margen blanco tipo paspartú alrededor de la imagen, opcional",
       "galerie": {
+        "raisons": {
+          "canvas": {
+            "eyebrow": "Por qué un cuadro",
+            "title_html": "Lo que un cuadro <b>cambia en tu casa.</b>",
+            "lead": "Una pared desnuda, y la habitación nunca parece terminada, por bien amueblada que esté. Un cuadro lo arregla. Y hace mucho más.",
+            "ton_title_html": "Marca <b>el tono.</b>",
+            "ton_text": "Elegante, zen o con mucha chispa: es el cuadro el que da su estilo a una habitación. Se ve antes que los muebles.",
+            "travaux_text": "¿Ganas de un cambio? No hace falta pintar ni cambiar los muebles. Un cuadro en la pared, y la habitación ya no es la misma.",
+            "bouquet_text": "Un ramo dura una semana. Un cuadro lo disfrutas todos los días, durante años.",
+            "waouh_text": "El cuadro es lo primero que ven tus invitados, y de lo que te hablan.",
+            "waouh_quote": "¿Dónde lo has encontrado?"
+          },
+          "poster": {
+            "eyebrow": "Por qué un póster",
+            "title_html": "Lo que un póster <b>cambia en tu casa.</b>",
+            "lead": "Una pared desnuda, y la habitación nunca parece terminada, por bien amueblada que esté. Un póster lo arregla. Y hace mucho más.",
+            "ton_title_html": "Marca <b>el tono.</b>",
+            "ton_text": "Elegante, zen o con mucha chispa: es el póster el que da su estilo a una habitación. Se ve antes que los muebles.",
+            "travaux_text": "¿Ganas de un cambio? No hace falta pintar ni cambiar los muebles. Un póster en la pared, y la habitación ya no es la misma.",
+            "bouquet_text": "Un ramo dura una semana. Un póster lo disfrutas todos los días, durante años.",
+            "waouh_text": "El póster es lo primero que ven tus invitados, y de lo que te hablan.",
+            "waouh_quote": "¿Dónde lo has encontrado?"
+          },
+          "travaux_title_html": "Todo cambia, <b>sin obras.</b>",
+          "travaux_quote": "En mi casa, las obras son faraónicas.",
+          "bouquet_title_html": "Un placer que <b>no se seca.</b>",
+          "bouquet_quote": "Jamás regado.",
+          "waouh_title_html": "El efecto <b>«guau».</b>",
+          "closing_html": "Y un flechazo <b>no se discute.</b>"
+        },
         "intro": {
           "like": "Me gusta",
           "liked": "En favoritos",

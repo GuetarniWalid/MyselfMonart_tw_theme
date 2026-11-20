@@ -300,6 +300,36 @@
       "product_3d_pp_name_poster": "Witte rand in 3D te bekijken",
       "product_3d_pp_value_poster": "Witte passe-partout-rand rondom de afbeelding, optioneel",
       "galerie": {
+        "raisons": {
+          "canvas": {
+            "eyebrow": "Waarom een schilderij",
+            "title_html": "Wat een schilderij <b>bij jou thuis verandert.</b>",
+            "lead": "Een kale muur, en de kamer voelt nooit af, hoe mooi die ook is ingericht. Een schilderij lost dat op. En het doet nog veel meer.",
+            "ton_title_html": "Het zet <b>de toon.</b>",
+            "ton_text": "Chic, zen of vol pit: het schilderij bepaalt de stijl van een kamer. Je ziet het nog vóór de meubels.",
+            "travaux_text": "Zin in iets nieuws? Je hoeft niet te verven of andere meubels te kopen. Een schilderij aan de muur, en de kamer is niet meer dezelfde.",
+            "bouquet_text": "Een boeket staat een week. Van een schilderij geniet je elke dag, jarenlang.",
+            "waouh_text": "Het schilderij is het eerste wat je gasten opvalt, en waar ze je naar vragen.",
+            "waouh_quote": "Waar heb je dat gevonden?"
+          },
+          "poster": {
+            "eyebrow": "Waarom een poster",
+            "title_html": "Wat een poster <b>bij jou thuis verandert.</b>",
+            "lead": "Een kale muur, en de kamer voelt nooit af, hoe mooi die ook is ingericht. Een poster lost dat op. En hij doet nog veel meer.",
+            "ton_title_html": "Hij zet <b>de toon.</b>",
+            "ton_text": "Chic, zen of vol pit: de poster bepaalt de stijl van een kamer. Je ziet hem nog vóór de meubels.",
+            "travaux_text": "Zin in iets nieuws? Je hoeft niet te verven of andere meubels te kopen. Een poster aan de muur, en de kamer is niet meer dezelfde.",
+            "bouquet_text": "Een boeket staat een week. Van een poster geniet je elke dag, jarenlang.",
+            "waouh_text": "De poster is het eerste wat je gasten opvalt, en waar ze je naar vragen.",
+            "waouh_quote": "Waar heb je die gevonden?"
+          },
+          "travaux_title_html": "Alles anders, zonder <b>verbouwing.</b>",
+          "travaux_quote": "Bij mij is verbouwen faraonisch.",
+          "bouquet_title_html": "Een plezier dat <b>niet verdort.</b>",
+          "bouquet_quote": "Nooit water gehad.",
+          "waouh_title_html": "Het <b>wow-effect.</b>",
+          "closing_html": "En over liefde op het eerste gezicht <b>valt niet te twisten.</b>"
+        },
         "intro": {
           "like": "Vind ik leuk",
           "liked": "In favorieten",

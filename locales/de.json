@@ -298,6 +298,36 @@
       "product_3d_pp_name_poster": "Weißer Rand (3D-Ansicht)",
       "product_3d_pp_value_poster": "Weißer Rand im Passepartout-Stil um das Motiv, optional",
       "galerie": {
+        "raisons": {
+          "canvas": {
+            "eyebrow": "Warum ein Wandbild",
+            "title_html": "Was ein Wandbild <b>bei Ihnen verändert.</b>",
+            "lead": "Eine kahle Wand, und der Raum wirkt nie fertig, auch wenn er schön eingerichtet ist. Ein Wandbild ändert das. Und es kann noch viel mehr.",
+            "ton_title_html": "Es gibt <b>den Ton an.</b>",
+            "ton_text": "Schick, zen oder voller Schwung: Das Wandbild gibt einem Raum seinen Stil. Man sieht es noch vor den Möbeln.",
+            "travaux_text": "Lust auf Veränderung? Sie müssen weder streichen noch die Möbel austauschen. Ein Wandbild aufhängen, und der Raum ist nicht mehr derselbe.",
+            "bouquet_text": "Ein Blumenstrauß hält eine Woche. An einem Wandbild freuen Sie sich jeden Tag, jahrelang.",
+            "waouh_text": "Das Wandbild fällt Ihren Gästen als Erstes auf, und sie sprechen Sie darauf an.",
+            "waouh_quote": "Wo hast du das her?"
+          },
+          "poster": {
+            "eyebrow": "Warum ein Poster",
+            "title_html": "Was ein Poster <b>bei Ihnen verändert.</b>",
+            "lead": "Eine kahle Wand, und der Raum wirkt nie fertig, auch wenn er schön eingerichtet ist. Ein Poster ändert das. Und es kann noch viel mehr.",
+            "ton_title_html": "Es gibt <b>den Ton an.</b>",
+            "ton_text": "Schick, zen oder voller Schwung: Das Poster gibt einem Raum seinen Stil. Man sieht es noch vor den Möbeln.",
+            "travaux_text": "Lust auf Veränderung? Sie müssen weder streichen noch die Möbel austauschen. Ein Poster aufhängen, und der Raum ist nicht mehr derselbe.",
+            "bouquet_text": "Ein Blumenstrauß hält eine Woche. An einem Poster freuen Sie sich jeden Tag, jahrelang.",
+            "waouh_text": "Das Poster fällt Ihren Gästen als Erstes auf, und sie sprechen Sie darauf an.",
+            "waouh_quote": "Wo hast du das her?"
+          },
+          "travaux_title_html": "Alles anders, <b>ohne Umbau.</b>",
+          "travaux_quote": "Bei mir ist jeder Umbau pharaonisch.",
+          "bouquet_title_html": "Eine Freude, die <b>nie welkt.</b>",
+          "bouquet_quote": "Nie gegossen.",
+          "waouh_title_html": "Der <b>Wow-Effekt.</b>",
+          "closing_html": "Und über Liebe auf den ersten Blick <b>lässt sich nicht streiten.</b>"
+        },
         "intro": {
           "like": "Gefällt mir",
           "liked": "In Favoriten",

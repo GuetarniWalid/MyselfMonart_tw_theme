@@ -684,6 +684,36 @@
       "home_founder_jobtitle": "Directeur artistique, fondateur",
       "home_collections_list_name": "Collections phares MyselfMonArt",
       "galerie": {
+        "raisons": {
+          "canvas": {
+            "eyebrow": "Pourquoi un tableau",
+            "title_html": "Ce qu’un tableau <b>change chez vous.</b>",
+            "lead": "Un mur nu, et la pièce ne paraît jamais finie, même bien meublée. Un tableau règle ça. Et il fait bien plus.",
+            "ton_title_html": "Il donne <b>le ton.</b>",
+            "ton_text": "Chic, zen ou plein de peps : c’est le tableau qui donne son style à une pièce. On le voit avant les meubles.",
+            "travaux_text": "Envie de changement ? Pas besoin de repeindre ni de changer les meubles. Un tableau au mur, et la pièce n’est plus la même.",
+            "bouquet_text": "Un bouquet tient une semaine. Un tableau, vous en profitez tous les jours, pendant des années.",
+            "waouh_text": "Le tableau, c’est ce que vos invités remarquent en premier, et ce dont ils vous parlent.",
+            "waouh_quote": "Tu l’as trouvé où ?"
+          },
+          "poster": {
+            "eyebrow": "Pourquoi un poster",
+            "title_html": "Ce qu’un poster <b>change chez vous.</b>",
+            "lead": "Un mur nu, et la pièce ne paraît jamais finie, même bien meublée. Un poster règle ça. Et il fait bien plus.",
+            "ton_title_html": "Il donne <b>le ton.</b>",
+            "ton_text": "Chic, zen ou plein de peps : c’est le poster qui donne son style à une pièce. On le voit avant les meubles.",
+            "travaux_text": "Envie de changement ? Pas besoin de repeindre ni de changer les meubles. Un poster au mur, et la pièce n’est plus la même.",
+            "bouquet_text": "Un bouquet tient une semaine. Un poster, vous en profitez tous les jours, pendant des années.",
+            "waouh_text": "Le poster, c’est ce que vos invités remarquent en premier, et ce dont ils vous parlent.",
+            "waouh_quote": "Tu l’as trouvé où ?"
+          },
+          "travaux_title_html": "Tout change, <b>sans travaux.</b>",
+          "travaux_quote": "Chez moi, les travaux sont pharaoniques.",
+          "bouquet_title_html": "Un plaisir qui <b>ne fane pas.</b>",
+          "bouquet_quote": "Jamais arrosé.",
+          "waouh_title_html": "L’effet <b>« waouh ».</b>",
+          "closing_html": "Et un coup de cœur, <b>ça ne se discute pas.</b>"
+        },
         "intro": {
           "like": "J’aime",
           "liked": "Aimé",

@@ -1,0 +1,109 @@
+{%- comment -%}
+  « Ce qu'un tableau change chez vous » : la dernière section de la page galerie des œuvres 3D (fiche-3d,
+  ticket 24). Les raisons de fond d'accrocher un tableau de décoration chez soi : finir la pièce, lui donner
+  son style, la changer sans travaux, en profiter longtemps, en être fier devant ses invités. Un chapeau, puis
+  quatre cartes de couleur, une raison chacune, portée par un personnage détouré qui monte du bas de sa carte ;
+  puis une phrase de fin. Porté de la maquette validée par Walid le 20/11/2026 (.scratch/fiche-3d/galerie,
+  version 13, section .difference) ; ses styles sont dans assets/oeuvre-galerie.css (bloc « Raisons »).
+
+  Rien n'y dépend de l'œuvre : les mêmes phrases pour toutes. Seul le support compte : « tableau » sur la fiche
+  d'une toile, « poster » sur celle d'un poster (métachamp frames_poster, comme partout dans le thème). Les
+  textes sont dans les fichiers de langue, sous sections.mma.galerie.raisons :
+  - canvas.* et poster.* : deux jeux complets des phrases qui nomment le support ou s'accordent avec lui. Un
+    mot glissé dans une phrase commune ne tient pas dans les cinq langues : en néerlandais « het schilderij »
+    et « de poster » n'ont ni le même article ni le même pronom, en anglais « wall art » n'a pas d'article ;
+  - les autres clés : les phrases qui ne dépendent de rien.
+  Les titres finissent par un passage en gras (clés _html, une balise <b>) ; ceux des cartes sont des jeux de
+  mots, adaptés dans chaque langue. Le gras d'un titre de carte ne se coupe pas : il doit rester court.
+
+  Les personnages gardent leurs noms neutres : ton, travaux, bouquet, waouh (images assets/galerie-<nom>.webp,
+  classes, clés). Ce sont des décors : sans texte alternatif, cachés aux lecteurs d'écran avec leur scène et
+  leur bulle, chargés en différé, à la taille de leur fichier (aucun décalage de page).
+  Tout le mouvement est dans la feuille, lié au défilement : les titres arrivent mot à mot (élément
+  <galerie-mots> du socle), le chapeau et les cartes montent (classe galerie-monte du socle), les personnages
+  sortent du bas, les bulles grossissent, les notes s'envolent. Aucun script ici.
+
+  Pas de préréglage dans le schéma : l'éditeur ne propose donc pas cette section sur une autre fiche, qui
+  n'aurait pas la feuille de la page (le bloc principal ne la charge qu'en page galerie).
+{%- endcomment -%}
+{%- liquid
+  assign texts = 'sections.mma.galerie.raisons.'
+  assign own_texts = texts | append: 'canvas.'
+  if product.metafields.painting_options.frames_poster != blank
+    assign own_texts = texts | append: 'poster.'
+  endif
+-%}
+{%- capture note -%}
+  <svg class="galerie-raisons-note" viewBox="0 0 24 32" focusable="false"><ellipse cx="8" cy="25" rx="7.5" ry="5.5" transform="rotate(-20 8 25)"/><path d="M14.5 24V3c4 2 7.5 5 7.5 11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+{%- endcapture -%}
+<section class="galerie galerie-bande galerie-raisons" aria-labelledby="GalerieRaisons-{{ section.id }}">
+  <div class="galerie-raisons-in">
+    <p class="galerie-surtitre">{{ own_texts | append: 'eyebrow' | t }}</p>
+    <h2 class="galerie-raisons-titre" id="GalerieRaisons-{{ section.id }}"><galerie-mots>{{ own_texts | append: 'title_html' | t }}</galerie-mots></h2>
+    <p class="galerie-raisons-chapo galerie-monte">{{ own_texts | append: 'lead' | t }}</p>
+    <ul class="galerie-raisons-liste">
+      <li class="galerie-raisons-carte galerie-raisons-ton galerie-monte">
+        <div class="galerie-raisons-texte">
+          <h3>{{ own_texts | append: 'ton_title_html' | t }}</h3>
+          <p>{{ own_texts | append: 'ton_text' | t }}</p>
+        </div>
+        <div class="galerie-raisons-scene" aria-hidden="true">
+          <div class="galerie-raisons-perso">
+            <img src="{{ 'galerie-ton.webp' | asset_url }}" width="333" height="720" alt="" loading="lazy" decoding="async">
+            {{- note -}}
+            {{- note -}}
+          </div>
+        </div>
+      </li>
+      <li class="galerie-raisons-carte galerie-raisons-travaux galerie-monte">
+        <div class="galerie-raisons-texte">
+          <h3>{{ texts | append: 'travaux_title_html' | t }}</h3>
+          <p>{{ own_texts | append: 'travaux_text' | t }}</p>
+          <div class="galerie-raisons-dit-zone">
+            <p class="galerie-raisons-dit" aria-hidden="true">{{ texts | append: 'travaux_quote' | t }}</p>
+          </div>
+        </div>
+        <div class="galerie-raisons-scene" aria-hidden="true">
+          <div class="galerie-raisons-perso">
+            <img src="{{ 'galerie-travaux.webp' | asset_url }}" width="567" height="380" alt="" loading="lazy" decoding="async">
+          </div>
+        </div>
+      </li>
+      <li class="galerie-raisons-carte galerie-raisons-bouquet galerie-monte">
+        <div class="galerie-raisons-texte">
+          <h3>{{ texts | append: 'bouquet_title_html' | t }}</h3>
+          <p>{{ own_texts | append: 'bouquet_text' | t }}</p>
+          <p class="galerie-raisons-dit" aria-hidden="true">{{ texts | append: 'bouquet_quote' | t }}</p>
+        </div>
+        <div class="galerie-raisons-scene" aria-hidden="true">
+          <div class="galerie-raisons-perso">
+            <img src="{{ 'galerie-bouquet.webp' | asset_url }}" width="428" height="520" alt="" loading="lazy" decoding="async">
+          </div>
+        </div>
+      </li>
+      <li class="galerie-raisons-carte galerie-raisons-waouh galerie-monte">
+        <div class="galerie-raisons-texte">
+          <h3>{{ texts | append: 'waouh_title_html' | t }}</h3>
+          <p>{{ own_texts | append: 'waouh_text' | t }}</p>
+          <p class="galerie-raisons-dit" aria-hidden="true">{{ own_texts | append: 'waouh_quote' | t }}</p>
+        </div>
+        <div class="galerie-raisons-scene" aria-hidden="true">
+          <div class="galerie-raisons-perso">
+            <img src="{{ 'galerie-waouh.webp' | asset_url }}" width="317" height="620" alt="" loading="lazy" decoding="async">
+          </div>
+        </div>
+      </li>
+    </ul>
+    <p class="galerie-raisons-fin"><galerie-mots>{{ texts | append: 'closing_html' | t }}</galerie-mots></p>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Galerie : raisons",
+  "limit": 1,
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}
