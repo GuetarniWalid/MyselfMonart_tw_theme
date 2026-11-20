@@ -1,0 +1,92 @@
+{%- comment -%}
+  Une carte de la rangée d'avis de la page galerie (fiche-3d, ticket 23 ; sections/galerie-avis.liquid) : la photo
+  qu'un client a envoyée, ses mots, son nom. Portée de la maquette validée par Walid le 20/11/2026
+  (.scratch/fiche-3d/galerie, version 13, .avis-carte) ; ses styles sont dans assets/oeuvre-galerie.css.
+
+  Le bloc est celui de la section d'avis du thème (sections/testimonials-carousel.liquid), et la règle du nom
+  celle de sa carte (snippets/customer-testimonial-card.liquid) : les deux derniers mots du message sont le nom
+  du client (« … merci. Léa M »), le reste ses mots. Ici, le message se lit d'une traite (ses retours à la ligne
+  deviennent des espaces) et le nom finit par un point, comme dans la maquette (« Léa M. »).
+
+  - La photo est recadrée à 4 / 5 par Shopify, en trois largeurs ; elle ne se charge qu'à l'approche de l'écran,
+    et garde sa place d'avance (width, height).
+  - Son texte alternatif vient des fichiers de langue, jamais du fichier image, qui ne se traduit pas (comme la
+    carte du thème).
+  - .carrousel-item : la classe que la rangée qui glisse du thème demande à ses cartes
+    (assets/component-carrousel.js).
+
+  Accepts:
+  - block: {Object} un bloc « image-text » : sa photo (block.settings.image) et son message
+{%- endcomment -%}
+{%- liquid
+  assign photo = block.settings.image
+  # Les mots du message, un à un : retours à la ligne, tabulations et espaces en trop ne font aucun mot.
+  assign words = block.settings.message | newline_to_br | strip_newlines | replace: '<br />', ' ' | replace: '<br>', ' ' | split: ' '
+  assign word_count = 0
+  for word in words
+    assign clean = word | strip
+    if clean != blank
+      assign word_count = word_count | plus: 1
+    endif
+  endfor
+  # Les deux derniers sont le nom ; un message d'un seul mot n'en a pas.
+  assign name_from = word_count | minus: 1
+  if word_count < 2
+    assign name_from = word_count | plus: 1
+  endif
+  assign said = ''
+  assign name = ''
+  assign rank = 0
+  for word in words
+    assign clean = word | strip
+    if clean == blank
+      continue
+    endif
+    assign rank = rank | plus: 1
+    if rank >= name_from
+      assign name = name | append: ' ' | append: clean
+    elsif clean == '.' or clean == ','
+      # Un point ou une virgule seuls (un retour à la ligne avant eux) se recollent au mot d'avant.
+      assign said = said | append: clean
+    else
+      assign said = said | append: ' ' | append: clean
+    endif
+  endfor
+  assign said = said | strip
+  assign name = name | strip
+  if name != blank
+    assign photo_alt = 'sections.mma.photo_shared_by' | t | append: name
+  else
+    assign photo_alt = 'sections.mma.photo_shared_by_customer' | t
+  endif
+  # « Léa M. » : un point après l'initiale, un seul.
+  assign signed = name | append: '.' | replace: '..', '.'
+-%}
+{%- comment -%}
+  Du texte libre : la note et le nombre d'avis ne s'y écrivent que par leurs jetons (snippet trustpilot-tokens,
+  CLAUDE.md). Le snippet rend le texte brut : il est échappé ici.
+{%- endcomment -%}
+{%- capture said -%}{%- render 'trustpilot-tokens', text: said -%}{%- endcapture -%}
+<li class="carrousel-item galerie-avis-carte"{% if block.shopify_attributes != blank %} {{ block.shopify_attributes }}{% endif %}>
+  <figure>
+    {%- if photo != blank -%}
+      <img
+        srcset="{{ photo | image_url: width: 300, height: 375, crop: 'center' }} 300w, {{ photo | image_url: width: 450, height: 563, crop: 'center' }} 450w, {{ photo | image_url: width: 600, height: 750, crop: 'center' }} 600w"
+        src="{{ photo | image_url: width: 300, height: 375, crop: 'center' }}"
+        sizes="(min-width: 900px) 300px, (min-width: 425px) 280px, 66vw"
+        alt="{{ photo_alt | escape }}"
+        width="480"
+        height="600"
+        loading="lazy"
+        decoding="async">
+    {%- endif -%}
+    <figcaption>
+      {%- if said != blank -%}
+        <blockquote>{{ said | escape }}</blockquote>
+      {%- endif -%}
+      {%- if name != blank -%}
+        <cite>{{ signed | escape }}</cite>
+      {%- endif -%}
+    </figcaption>
+  </figure>
+</li>

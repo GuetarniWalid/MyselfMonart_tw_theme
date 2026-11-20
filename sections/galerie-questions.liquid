@@ -1,0 +1,136 @@
+{%- comment -%}
+  Les questions fréquentes de la page galerie des œuvres 3D (fiche-3d, ticket 23) : le titre, les questions en
+  volets, et une carte ciel, « Une autre question ? », où un personnage de tableau ancien, casque-micro sur la
+  tête, dit « Allô, j'écoute ! ». Portée de la maquette validée par Walid le 20/11/2026
+  (.scratch/fiche-3d/galerie, version 13, section .faq) ; ses styles sont dans assets/oeuvre-galerie.css (bloc
+  du ticket 23), que le bloc principal de la fiche charge.
+
+  Elle remplace, sur cette page, la section de questions du thème (sections/collapsible-content.liquid), et en
+  reprend les blocs : les questions de la fiche 3D d'aujourd'hui, mot pour mot, pour une toile.
+
+  - Chaque bloc dit son support (réglage « support » : tous, toile, poster). La page d'une toile n'écrit que
+    les questions de la toile et celles de tous ; celle d'un poster, les siennes et celles de tous. Un poster
+    se reconnaît à son métachamp frames_poster, comme dans le bloc principal de la fiche.
+  - Les volets sont ceux du thème : <collapsible-tab> (assets/tw-global.js, déjà chargé par toute page) et ses
+    <details class="accordion">. Un seul volet ouvert à la fois ; un clic dans une réponse la referme.
+  - Une question et sa réponse passent par le snippet trustpilot-tokens : la note et le nombre d'avis ne s'y
+    écrivent que par leurs jetons (CLAUDE.md). La question est ensuite écrite en texte.
+  - Les données pour Google ne changent pas : sur la fiche 3D, la section du thème ne publie pas ses questions
+    (case « FAQPage » éteinte) ; celle-ci n'en publie aucune non plus.
+  - Les textes fixes sont dans les fichiers de langue (sections.mma.galerie.questions) ; les questions et
+    leurs réponses, dans les blocs du modèle.
+  - Le personnage, son casque et sa bulle sont un décor : cachés aux lecteurs d'écran, jamais nommés. Les
+    couleurs du casque sont dans la feuille.
+  - data-allow-empty : la feuille commune cache tout élément vide (input.css, *:empty) ; le rond à « + » d'un
+    volet, vide et dessiné par la feuille, s'en excepte ainsi.
+  - Sans préréglage : la section ne s'ajoute pas depuis l'éditeur de thème, où elle n'aurait pas sa feuille.
+{%- endcomment -%}
+{%- liquid
+  assign title_id = 'galerie-questions-titre-' | append: section.id
+  assign support = 'toile'
+  if product.metafields.painting_options.frames_poster != blank
+    assign support = 'poster'
+  endif
+-%}
+{%- comment -%} Les volets : une question complète, qui vaut pour ce produit. Sans aucune, pas de volets. {%- endcomment -%}
+{%- capture rows -%}
+  {%- for block in section.blocks -%}
+    {%- assign block_support = block.settings.support | default: 'tous' -%}
+    {%- if block.type == 'collapsible_row' and block.settings.heading != blank and block.settings.row_content != blank -%}
+      {%- if block_support == 'tous' or block_support == support -%}
+        {%- capture question -%}{%- render 'trustpilot-tokens', text: block.settings.heading -%}{%- endcapture -%}
+        <details class="accordion galerie-questions-volet"{% if block.shopify_attributes != blank %} {{ block.shopify_attributes }}{% endif %}>
+          <summary>
+            <h3>{{ question | escape }}</h3>
+            <span class="galerie-questions-plus" aria-hidden="true" data-allow-empty></span>
+          </summary>
+          <div class="galerie-questions-reponse">
+            {%- render 'trustpilot-tokens', text: block.settings.row_content -%}
+          </div>
+        </details>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+<section class="galerie galerie-bande galerie-questions" aria-labelledby="{{ title_id }}">
+  <div class="galerie-questions-in">
+    <div>
+      <p class="galerie-surtitre">{{ 'sections.mma.galerie.questions.eyebrow' | t }}</p>
+      <h2 class="galerie-questions-titre" id="{{ title_id }}"><galerie-mots>{{ 'sections.mma.galerie.questions.title_html' | t }}</galerie-mots></h2>
+    </div>
+    {%- if rows != blank -%}
+      <collapsible-tab class="galerie-questions-volets">
+        {{- rows -}}
+      </collapsible-tab>
+    {%- endif -%}
+    <div class="galerie-questions-aide">
+      <div class="galerie-questions-carte">
+        <p class="galerie-questions-carte-titre">{{ 'sections.mma.galerie.questions.help_title_html' | t }}</p>
+        <p class="galerie-questions-carte-texte">{{ 'sections.mma.galerie.questions.help_text' | t }}</p>
+        {%- if section.settings.contact_link != blank -%}
+          <a class="galerie-questions-bouton" href="{{ section.settings.contact_link }}">{{ 'sections.mma.galerie.questions.help_button' | t }}</a>
+        {%- endif -%}
+        <div class="galerie-questions-bas">
+          <p class="galerie-questions-bulle" aria-hidden="true">{{ 'sections.mma.galerie.questions.bubble' | t }}</p>
+          <div class="galerie-questions-ecoute" aria-hidden="true">
+            <img src="{{ 'galerie-ecoute.webp' | asset_url }}" width="572" height="810" alt="" loading="lazy" decoding="async">
+            <svg class="galerie-questions-casque" viewBox="0 0 572 810" focusable="false"><path class="galerie-questions-arceau" d="M197 152C188 48 240 4 287 4s107 44 100 148"/><rect x="178" y="130" width="32" height="58" rx="14"/><rect x="372" y="130" width="32" height="58" rx="14"/><path class="galerie-questions-tige" d="M194 184c-4 38 20 44 44 30"/><ellipse cx="246" cy="210" rx="12" ry="9"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Galerie : questions",
+  "limit": 1,
+  "max_blocks": 30,
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Les questions fréquentes de la page galerie des œuvres 3D. Chaque question dit pour quel produit elle vaut : la page d'une toile et celle d'un poster n'affichent que les leurs. Les textes fixes sont dans les fichiers de langue."
+    },
+    {
+      "type": "url",
+      "id": "contact_link",
+      "label": "Lien du bouton « Nous écrire »",
+      "info": "Vide : pas de bouton."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collapsible_row",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Question",
+          "default": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "row_content",
+          "label": "Réponse"
+        },
+        {
+          "type": "select",
+          "id": "support",
+          "label": "Pour quel produit",
+          "default": "tous",
+          "options": [
+            { "value": "tous", "label": "Toiles et posters" },
+            { "value": "toile", "label": "Toiles seulement" },
+            { "value": "poster", "label": "Posters seulement" }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

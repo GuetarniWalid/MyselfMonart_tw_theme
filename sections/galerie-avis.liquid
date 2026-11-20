@@ -1,0 +1,139 @@
+{%- comment -%}
+  Les avis de la page galerie des œuvres 3D (fiche-3d, ticket 23) : une bande soleil, son titre (des clients
+  « aux anges », et leur nombre), une phrase, le bouton des retours vérifiés sur Trustpilot, la rangée des
+  photos que les clients ont envoyées, et deux personnages de tableau ancien qui montent du bas de la bande.
+  Portée de la maquette validée par Walid le 20/11/2026 (.scratch/fiche-3d/galerie, version 13, section
+  .avis) ; ses styles sont dans assets/oeuvre-galerie.css (bloc du ticket 23), que le bloc principal de la
+  fiche charge.
+
+  Elle remplace, sur cette page, la section d'avis du thème (sections/testimonials-carousel.liquid), et en
+  reprend les blocs tels quels : les mêmes photos et les mêmes mots que la fiche 3D d'aujourd'hui.
+
+  - La rangée est celle du thème : <snap-carrousel> (assets/component-carrousel.js), qui avance seule d'une
+    carte à l'autre, s'arrête au survol et au toucher, et ne bouge pas en « mouvements réduits ».
+  - Le nombre d'avis du bouton vient du réglage du thème « Trustpilot (avis marque) », par le jeton
+    [[TP_COUNT]] et le snippet trustpilot-tokens : jamais un chiffre écrit ici ni dans les fichiers de langue.
+  - Le nombre de clients du titre est un réglage de la section, comme le titre de la section d'avis du thème
+    l'était. Il s'écrit dans la langue de la page, avec le séparateur des milliers de cette langue (une espace,
+    une virgule, un point) ; sans lui, le titre n'a pas de nombre.
+  - Les textes fixes sont dans les fichiers de langue (sections.mma.galerie.avis). Le jeu de mots du titre y
+    est adapté à chaque langue. La phrase sous le titre est celle de la section d'avis du thème (sa clé
+    sections.testimonials_carousel.lead_default), déjà traduite.
+  - Les données pour Google ne changent pas : comme la section du thème sur la fiche 3D (case éteinte), celle-ci
+    n'en écrit aucune.
+  - Les personnages sont un décor : sans texte alternatif, jamais nommés.
+  - Sa classe est galerie-avis-clients : .galerie-avis est la note de la présentation (ticket 19).
+  - Sans préréglage : la section ne s'ajoute pas depuis l'éditeur de thème, où elle n'aurait pas sa feuille.
+{%- endcomment -%}
+{%- liquid
+  assign title_id = 'galerie-avis-titre-' | append: section.id
+
+  # Le nombre de clients, avec ses milliers : le texte de la langue place le séparateur entre les milliers et
+  # les trois derniers chiffres.
+  assign total = section.settings.customers | default: 0 | floor
+  assign total_text = ''
+  if total >= 1000
+    assign total_thousands = total | divided_by: 1000 | floor
+    assign total_units = total | modulo: 1000 | prepend: '00' | slice: -3, 3
+    assign total_text = 'sections.mma.galerie.avis.thousands' | t: thousands: total_thousands, units: total_units
+  elsif total > 0
+    assign total_text = total
+  endif
+-%}
+{%- comment -%} Les cartes, et leur nombre : un témoignage sans message n'en fait pas. {%- endcomment -%}
+{%- assign shown = 0 -%}
+{%- capture cards -%}
+  {%- for block in section.blocks -%}
+    {%- if block.type == 'image-text' and block.settings.message != blank -%}
+      {%- assign shown = shown | plus: 1 -%}
+      {% render 'galerie-avis-carte', block: block %}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{%- capture reviews_text -%}{{ 'sections.mma.galerie.avis.reviews' | t }}{%- endcapture -%}
+<section class="galerie galerie-avis-clients" aria-labelledby="{{ title_id }}">
+  <div class="galerie-bande">
+    <div class="galerie-avis-tete">
+      <p class="galerie-surtitre">{{ 'sections.mma.galerie.avis.eyebrow' | t }}</p>
+      <h2 class="galerie-avis-titre" id="{{ title_id }}"><galerie-mots>
+        {%- if total_text != blank -%}
+          {{- 'sections.mma.galerie.avis.title_html' | t: total: total_text -}}
+        {%- else -%}
+          {{- 'sections.mma.galerie.avis.title_plain_html' | t -}}
+        {%- endif -%}
+      </galerie-mots></h2>
+      <p class="galerie-avis-chapo galerie-monte">{{ 'sections.testimonials_carousel.lead_default' | t }}</p>
+      {%- if section.settings.trustpilot_link != blank -%}
+        <a class="galerie-avis-bouton galerie-monte" href="{{ section.settings.trustpilot_link }}" target="_blank" rel="noopener">
+          {%- render 'trustpilot-tokens', text: reviews_text -%}
+        </a>
+      {%- else -%}
+        <p class="galerie-avis-retours galerie-monte">
+          {%- render 'trustpilot-tokens', text: reviews_text -%}
+        </p>
+      {%- endif -%}
+    </div>
+  </div>
+  {%- if shown > 0 -%}
+    <snap-carrousel class="galerie-avis-glisse" role="region" aria-label="{{ 'sections.mma.reviews_and_photos' | t }}">
+      <ul class="galerie-avis-rangee">
+        {{- cards -}}
+      </ul>
+    </snap-carrousel>
+    <p class="sr-only">{{ shown }} {{ 'sections.mma.reviews_scroll_hint' | t }}</p>
+    <script src="{{ 'component-carrousel.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+  <div class="galerie-bande">
+    <div class="galerie-avis-pied">
+      <img class="galerie-avis-anges" src="{{ 'galerie-anges.webp' | asset_url }}" width="865" height="330" alt="" loading="lazy" decoding="async">
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Galerie : avis clients",
+  "limit": 1,
+  "max_blocks": 25,
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Les avis de la page galerie des œuvres 3D. Le nombre d'avis du bouton vient du réglage du thème « Trustpilot (avis marque) ». Les textes fixes sont dans les fichiers de langue."
+    },
+    {
+      "type": "number",
+      "id": "customers",
+      "label": "Nombre de clients, dans le titre",
+      "info": "Écrit avec ses milliers, dans la langue de la page. Vide : le titre n'a pas de nombre."
+    },
+    {
+      "type": "url",
+      "id": "trustpilot_link",
+      "label": "Lien du bouton vers Trustpilot",
+      "info": "Vide : la phrase reste, sans lien."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image-text",
+      "name": "Témoignage",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo du client"
+        },
+        {
+          "type": "textarea",
+          "id": "message",
+          "label": "Message",
+          "info": "Les deux derniers mots sont le nom du client (« Léa M »)."
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

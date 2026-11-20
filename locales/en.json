@@ -607,6 +607,27 @@
           "pledge_paper_text": "250 g/m², an HD print.",
           "pledge_person": "A real person",
           "pledge_person_text": "Answers you 7 days a week."
+        },
+        "avis": {
+          "eyebrow": "Customer reviews",
+          "title_html": "{{ total }}+ customers <b>on cloud nine</b>",
+          "title_plain_html": "Customers <b>on cloud nine</b>",
+          "thousands": "{{ thousands }},{{ units }}",
+          "reviews": "[[TP_COUNT]] verified reviews on Trustpilot"
+        },
+        "recos": {
+          "eyebrow": "You may also like",
+          "title_canvas_html": "More artworks, more <b>pearls.</b>",
+          "title_poster_html": "More posters, more <b>pearls.</b>",
+          "button": "See the collection"
+        },
+        "questions": {
+          "eyebrow": "Your questions",
+          "title_html": "Frequently asked <b>questions</b>",
+          "help_title_html": "Another <b>question?</b>",
+          "help_text": "A real person answers you, 7 days a week.",
+          "help_button": "Write to us",
+          "bubble": "I’m all ears!"
         }
       }
     },

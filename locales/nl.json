@@ -368,6 +368,27 @@
           "pledge_paper_text": "250 g/m², een HD-afdruk.",
           "pledge_person": "Een echt persoon",
           "pledge_person_text": "Antwoordt je 7 dagen per week."
+        },
+        "avis": {
+          "eyebrow": "Klantreviews",
+          "title_html": "{{ total }}+ klanten <b>in de zevende hemel</b>",
+          "title_plain_html": "Klanten <b>in de zevende hemel</b>",
+          "thousands": "{{ thousands }}.{{ units }}",
+          "reviews": "[[TP_COUNT]] geverifieerde reviews op Trustpilot"
+        },
+        "recos": {
+          "eyebrow": "Dit vind je vast ook mooi",
+          "title_canvas_html": "Meer schilderijen, meer <b>pareltjes.</b>",
+          "title_poster_html": "Meer posters, meer <b>pareltjes.</b>",
+          "button": "Bekijk de collectie"
+        },
+        "questions": {
+          "eyebrow": "Je vragen",
+          "title_html": "Veelgestelde <b>vragen</b>",
+          "help_title_html": "Nog een <b>vraag?</b>",
+          "help_text": "Een echt persoon antwoordt je, 7 dagen per week.",
+          "help_button": "Schrijf ons",
+          "bubble": "Zeg het maar!"
         }
       }
     },

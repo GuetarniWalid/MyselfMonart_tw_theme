@@ -365,6 +365,27 @@
           "pledge_paper_text": "250 g/m², una impresión HD.",
           "pledge_person": "Una persona de verdad",
           "pledge_person_text": "Te responde los 7 días de la semana."
+        },
+        "avis": {
+          "eyebrow": "Opiniones de clientes",
+          "title_html": "+{{ total }} clientes <b>en el séptimo cielo</b>",
+          "title_plain_html": "Clientes <b>en el séptimo cielo</b>",
+          "thousands": "{{ thousands }}.{{ units }}",
+          "reviews": "[[TP_COUNT]] opiniones verificadas en Trustpilot"
+        },
+        "recos": {
+          "eyebrow": "También te gustará",
+          "title_canvas_html": "Más cuadros, más <b>perlas.</b>",
+          "title_poster_html": "Más pósteres, más <b>perlas.</b>",
+          "button": "Ver la colección"
+        },
+        "questions": {
+          "eyebrow": "Tus preguntas",
+          "title_html": "Preguntas <b>frecuentes</b>",
+          "help_title_html": "¿Otra <b>pregunta?</b>",
+          "help_text": "Una persona de verdad te responde, los 7 días de la semana.",
+          "help_button": "Escríbenos",
+          "bubble": "¡Soy toda oídos!"
         }
       }
     },

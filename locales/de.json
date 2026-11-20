@@ -366,6 +366,27 @@
           "pledge_paper_text": "250 g/m², ein HD-Druck.",
           "pledge_person": "Ein echter Mensch",
           "pledge_person_text": "Antwortet Ihnen an 7 Tagen die Woche."
+        },
+        "avis": {
+          "eyebrow": "Kundenbewertungen",
+          "title_html": "Über {{ total }} Kunden <b>im siebten Himmel</b>",
+          "title_plain_html": "Kunden <b>im siebten Himmel</b>",
+          "thousands": "{{ thousands }}.{{ units }}",
+          "reviews": "[[TP_COUNT]] verifizierte Bewertungen auf Trustpilot"
+        },
+        "recos": {
+          "eyebrow": "Das könnte Ihnen auch gefallen",
+          "title_canvas_html": "Noch mehr Bilder, noch mehr <b>Perlen.</b>",
+          "title_poster_html": "Noch mehr Poster, noch mehr <b>Perlen.</b>",
+          "button": "Zur Kollektion"
+        },
+        "questions": {
+          "eyebrow": "Ihre Fragen",
+          "title_html": "Häufige <b>Fragen</b>",
+          "help_title_html": "Noch eine <b>Frage?</b>",
+          "help_text": "Ein echter Mensch antwortet Ihnen, an 7 Tagen in der Woche.",
+          "help_button": "Schreiben Sie uns",
+          "bubble": "Ich bin ganz Ohr!"
         }
       }
     },

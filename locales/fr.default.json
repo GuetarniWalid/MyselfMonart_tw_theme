@@ -752,6 +752,27 @@
           "pledge_paper_text": "250 g/m², un tirage HD.",
           "pledge_person": "Une vraie personne",
           "pledge_person_text": "Vous répond 7 jours sur 7."
+        },
+        "avis": {
+          "eyebrow": "Avis clients",
+          "title_html": "+{{ total }} clients <b>aux anges</b>",
+          "title_plain_html": "Des clients <b>aux anges</b>",
+          "thousands": "{{ thousands }} {{ units }}",
+          "reviews": "[[TP_COUNT]] retours vérifiés sur Trustpilot"
+        },
+        "recos": {
+          "eyebrow": "Vous aimerez aussi",
+          "title_canvas_html": "D’autres tableaux, d’autres <b>perles.</b>",
+          "title_poster_html": "D’autres posters, d’autres <b>perles.</b>",
+          "button": "Voir la collection"
+        },
+        "questions": {
+          "eyebrow": "Vos questions",
+          "title_html": "Questions <b>fréquentes</b>",
+          "help_title_html": "Une autre <b>question ?</b>",
+          "help_text": "Une vraie personne vous répond 7 jours sur 7.",
+          "help_button": "Nous écrire",
+          "bubble": "Allô, j’écoute !"
         }
       }
     },

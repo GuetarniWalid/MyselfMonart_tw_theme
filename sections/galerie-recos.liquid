@@ -1,0 +1,133 @@
+{%- comment -%}
+  « Vous aimerez aussi », sur la page galerie des œuvres 3D (fiche-3d, ticket 23) : une carte rose avec son
+  titre (« D'autres tableaux, d'autres perles. », « D'autres posters… » pour un poster), le bouton vers la
+  collection du produit et un personnage de tableau ancien dont la perle scintille ; dessous, la rangée des
+  œuvres proposées. Portée de la maquette validée par Walid le 20/11/2026 (.scratch/fiche-3d/galerie, version
+  13, section .recos) ; ses styles sont dans assets/oeuvre-galerie.css (bloc du ticket 23), que le bloc
+  principal de la fiche charge.
+
+  Elle remplace, sur cette page, la section de recommandations du thème
+  (sections/product-recommendations.liquid) : les mêmes œuvres, celles que Shopify propose pour ce produit.
+
+  - L'élément du thème, <product-recommendations> (assets/product-recommendations.js), demande cette section
+    à Shopify quand elle approche de l'écran (data-url, la même adresse qu'aujourd'hui), et dépose ce qu'il
+    trouve dans .product-recommendations. Rien ne bloque la page.
+  - Shopify rend alors la section avec ses recommandations (recommendations.performed?) : elle n'écrit plus que
+    l'endroit où les œuvres se déposent, sans redire le haut. Le produit de la page n'y est pas connu.
+  - Chaque œuvre est la carte de produit du thème (snippets/card-product.liquid), comme dans une collection :
+    la vignette d'œuvre pour un nouveau produit (la toile de face, le poster sous verre), la photo pour un
+    produit de toujours, le nom, le prix, le cœur. Une œuvre cachée des recommandations (métachamp
+    recommandation.hide) n'est pas proposée, comme aujourd'hui.
+  - La rangée est celle du thème, <snap-carrousel> (assets/component-carrousel.js), nommée pour les lecteurs
+    d'écran comme celle des avis.
+  - Toutes les tuiles ont le format de la maquette, 4 / 5 : celle d'un nouveau produit (la scène de sa vignette)
+    comme la photo d'un produit de toujours (assets/oeuvre-galerie.css). La rangée a donc toujours la même hauteur,
+    celle de la place gardée.
+  - .product-recommendations est l'élément <galerie-recos> (assets/oeuvre-galerie.js) : les images de la carte
+    arrivent floues, il les dé-floute dès que les œuvres sont déposées. En attendant, il garde leur place
+    (.galerie-recos-attente) pour que la page ne bouge pas ; s'il n'y a rien à proposer, un repère vide prend
+    cette place, qui se referme. data-allow-empty : la feuille commune cache tout élément vide (input.css,
+    *:empty) ; cette place, vide, s'en excepte ainsi.
+  - Le reflet des vitres des posters (assets/oeuvre-card-reflet.js) est chargé ici : celui que la carte porte
+    ne se lance pas, déposé avec elle.
+  - Le bouton mène à la collection mère du produit (métachamp link.mother_collection), celle du fil d'Ariane ;
+    les lecteurs d'écran l'entendent nommée. Sans elle, pas de bouton.
+  - Les textes fixes sont dans les fichiers de langue (sections.mma.galerie.recos). Le jeu de mots du titre y
+    est adapté à chaque langue.
+  - Le personnage est un décor : sans texte alternatif, jamais nommé.
+  - Sans préréglage : la section ne s'ajoute pas depuis l'éditeur de thème, où elle n'aurait pas sa feuille.
+{%- endcomment -%}
+{%- if recommendations.performed? -%}
+  {%- capture cards -%}
+    {%- for recommendation in recommendations.products -%}
+      {%- unless recommendation.metafields.recommandation.hide == true -%}
+        <li class="carrousel-item galerie-recos-carte">
+          {% render 'card-product'
+            , product: recommendation
+            , primary_image_index: 1
+            , next_image_index: 0
+            , lazy_load: true
+            , section_id: section.id
+          %}
+        </li>
+      {%- endunless -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  <galerie-recos class="product-recommendations galerie-recos-liste">
+    {%- if cards != blank -%}
+      <snap-carrousel class="galerie-recos-glisse" role="region" aria-label="{{ 'sections.mma.galerie.recos.eyebrow' | t }}">
+        <ul class="galerie-recos-rangee">
+          {{- cards -}}
+        </ul>
+      </snap-carrousel>
+    {%- else -%}
+      <span hidden></span>
+    {%- endif -%}
+  </galerie-recos>
+{%- else -%}
+  {%- liquid
+    assign title_id = 'galerie-recos-titre-' | append: section.id
+    assign is_poster = false
+    if product.metafields.painting_options.frames_poster != blank
+      assign is_poster = true
+    endif
+    assign mother = product.metafields.link.mother_collection.value
+    assign limit = section.settings.number_products_to_display | default: 10
+  -%}
+  <section class="galerie galerie-recos" aria-labelledby="{{ title_id }}">
+    <div class="galerie-bande">
+      <div class="galerie-recos-tete">
+        <p class="galerie-surtitre">{{ 'sections.mma.galerie.recos.eyebrow' | t }}</p>
+        <h2 class="galerie-recos-titre" id="{{ title_id }}"><galerie-mots>
+          {%- if is_poster -%}
+            {{- 'sections.mma.galerie.recos.title_poster_html' | t -}}
+          {%- else -%}
+            {{- 'sections.mma.galerie.recos.title_canvas_html' | t -}}
+          {%- endif -%}
+        </galerie-mots></h2>
+        <div class="galerie-recos-bas">
+          {%- if mother.url != blank -%}
+            <a class="galerie-recos-bouton" href="{{ mother.url }}">
+              {{- 'sections.mma.galerie.recos.button' | t -}}
+              <span class="sr-only"> {{ mother.title | escape }}</span>
+            </a>
+          {%- endif -%}
+          <div class="galerie-recos-perle" aria-hidden="true">
+            <img src="{{ 'galerie-perle.webp' | asset_url }}" width="507" height="810" alt="" loading="lazy" decoding="async">
+            <svg class="galerie-recos-eclat" viewBox="0 0 40 40" focusable="false"><path d="M20 0C21 12 28 19 40 20 28 21 21 28 20 40 19 28 12 21 0 20 12 19 19 12 20 0Z"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    <product-recommendations data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ limit }}&intent=related">
+      <galerie-recos class="product-recommendations galerie-recos-liste"><div class="galerie-recos-attente" data-allow-empty></div></galerie-recos>
+    </product-recommendations>
+    <script src="{{ 'product-recommendations.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'component-carrousel.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'my-like-button.js' | asset_url }}" defer="defer"></script>
+    <script type="module" src="{{ 'oeuvre-card-reflet.js' | asset_url }}"></script>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Galerie : recommandations",
+  "limit": 1,
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "« Vous aimerez aussi », sur la page galerie des œuvres 3D : les œuvres que Shopify propose pour ce produit. Le bouton mène à la collection mère du produit. Les textes fixes sont dans les fichiers de langue."
+    },
+    {
+      "type": "number",
+      "id": "number_products_to_display",
+      "label": "Nombre d'œuvres proposées",
+      "info": "Dix au plus.",
+      "default": 10
+    }
+  ]
+}
+{% endschema %}

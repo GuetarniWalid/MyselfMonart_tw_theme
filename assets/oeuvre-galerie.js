@@ -100,3 +100,38 @@
   customElements.define('galerie-mots', GalerieMots);
 })();
 /* === Socle et présentation (ticket 19) : fin === */
+
+/* === Avis, recommandations, questions (ticket 23) : début === */
+(function () {
+  'use strict';
+
+  // Node (tests) : ce bloc n'a aucun calcul à part ; il ne touche qu'au navigateur.
+  if (typeof window === 'undefined') return;
+  if (customElements.get('galerie-recos')) return;
+
+  /* <galerie-recos> : l'endroit où les recommandations de Shopify se déposent (sections/galerie-recos.liquid).
+     L'élément du thème, <product-recommendations> (assets/product-recommendations.js), y écrit les œuvres
+     proposées : des cartes de produit du thème (snippets/card-product.liquid), dont les images arrivent floues
+     et ne se chargent en entier que par le dé-floutage du thème (window.removeSkeletonOnImagesLoad,
+     assets/tw-global.js), qui ne passe qu'au chargement de la page. Il repasse donc ici, sur ces cartes, dès
+     qu'elles sont déposées. L'élément du thème n'est pas retouché : il fait pareil ailleurs.
+     Il guette ses seuls enfants (ce que le thème remplace), et s'arrête à son départ : la bascule Toile /
+     Poster l'enlève avec le reste de la fiche. */
+  class GalerieRecos extends HTMLElement {
+    connectedCallback() {
+      if (this.veille) return;
+      this.veille = new MutationObserver(() => {
+        if (typeof window.removeSkeletonOnImagesLoad === 'function') window.removeSkeletonOnImagesLoad(this);
+      });
+      this.veille.observe(this, { childList: true });
+    }
+
+    disconnectedCallback() {
+      if (!this.veille) return;
+      this.veille.disconnect();
+      this.veille = null;
+    }
+  }
+  customElements.define('galerie-recos', GalerieRecos);
+})();
+/* === Avis, recommandations, questions (ticket 23) : fin === */

@@ -757,6 +757,7 @@ main-product-blocks[data-galerie] {
 }
 
 /* === Autour de la page (ticket 24) : fin === */
+
 /* === Histoire et pratique (ticket 22) : début ===
    sections/galerie-histoire.liquid : à gauche le texte de présentation du produit
    (snippets/galerie-histoire-recit.liquid), à droite la carte « En pratique », ses volets et ses quatre
@@ -1098,3 +1099,606 @@ main-product-blocks[data-galerie] {
 }
 
 /* === Histoire et pratique (ticket 22) : fin === */
+
+/* === Avis, recommandations, questions (ticket 23) : début ===
+   Trois sections de la page, à la suite : sections/galerie-avis.liquid (et sa carte,
+   snippets/galerie-avis-carte.liquid), sections/galerie-recos.liquid et sections/galerie-questions.liquid.
+   Portées de la maquette (.avis, .recos, .faq). Le surtitre de chacune est celui du socle (.galerie-surtitre).
+   La section des avis s'appelle galerie-avis-clients : .galerie-avis et .galerie-avis-texte sont la note de la
+   présentation (ticket 19).
+   Deux écarts voulus avec la maquette, pour reprendre les éléments du thème :
+   - les deux rangées sont la rangée qui glisse du thème (<snap-carrousel>), qui avance seule d'une carte à
+     l'autre : l'accroche est obligatoire (mandatory, et non proximity), pour qu'elle s'arrête au bord d'une
+     carte, et le défilement doux ;
+   - les œuvres proposées sont la carte de produit du thème (snippets/card-product.liquid) : les règles
+     « .galerie-recos-carte … » l'habillent aux couleurs de la page, sans toucher à son balisage. */
+
+/* -- Communs aux trois sections : le grand titre, maigre avec un mot en gras, et le bouton à l'encre -- */
+.galerie-avis-titre,
+.galerie-recos-titre,
+.galerie-questions-titre {
+  margin: 14px 0 0;
+  font: 300 clamp(38px, 10.8vw, 64px)/0.98 var(--sans);
+  letter-spacing: -0.042em;
+  text-wrap: balance;
+}
+.galerie-avis-titre b,
+.galerie-recos-titre b,
+.galerie-questions-titre b {
+  font-weight: 700;
+}
+.galerie-avis-bouton,
+.galerie-recos-bouton,
+.galerie-questions-bouton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 20px;
+  border-radius: 999px;
+  background: var(--encre);
+  color: var(--blanc);
+  font: 600 14px/1 var(--sans);
+  text-decoration: none;
+}
+
+/* -- Les avis : une bande soleil ; ce qui dépasse (la rangée, les personnages qui montent) est coupé -- */
+.galerie-avis-clients {
+  background: var(--soleil);
+  padding-block: 64px 0;
+  overflow: hidden;
+  overflow: clip;
+}
+.galerie-avis-tete {
+  max-width: 1240px;
+  margin-inline: auto;
+}
+.galerie-avis-chapo {
+  margin: 16px 0 20px;
+  max-width: 30em;
+  font: 400 15.5px/1.5 var(--sans);
+  color: var(--encre-70);
+}
+/* Sans lien vers Trustpilot : la même phrase, en texte. */
+.galerie-avis-retours {
+  margin: 0;
+  font: 600 14px/1.3 var(--sans);
+}
+.galerie-avis-glisse {
+  display: block;
+}
+/* La rangée : plus large que l'écran des deux côtés (14 et 16 vw), pour glisser avec la page sans jamais
+   montrer ses bords ; sa première carte s'aligne sur la marge. */
+.galerie-avis-rangee {
+  display: flex;
+  gap: 14px;
+  width: calc(100% + 30vw);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: calc(var(--gout) + 14vw) 0;
+  margin: 34px 0 0 -14vw;
+  padding: 0 calc(var(--goutd) + 16vw) 6px calc(var(--gout) + 14vw);
+  list-style: none;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.galerie-avis-rangee::-webkit-scrollbar {
+  display: none;
+}
+.galerie-avis-carte {
+  flex: 0 0 min(66vw, 280px);
+  scroll-snap-align: start;
+}
+.galerie-avis-carte figure {
+  margin: 0;
+}
+.galerie-avis-carte img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 20px;
+}
+.galerie-avis-carte blockquote {
+  margin: 14px 0 0;
+  font: 500 16px/1.36 var(--sans);
+  letter-spacing: -0.012em;
+}
+.galerie-avis-carte cite {
+  display: block;
+  margin-top: 8px;
+  font: 600 13px/1 var(--sans);
+  font-style: normal;
+  color: var(--encre-70);
+}
+.galerie-avis-pied {
+  max-width: 1240px;
+  margin: 26px auto 0;
+  display: flex;
+  justify-content: center;
+}
+.galerie-avis-anges {
+  width: min(74vw, 380px);
+  height: auto;
+}
+
+/* -- Vous aimerez aussi : une carte rose, puis la rangée des œuvres --
+   --galerie-recos-carte : la largeur d'une carte, posée une fois ; les cartes et la place gardée la suivent. */
+.galerie-recos {
+  --galerie-recos-carte: min(58vw, 250px);
+  background: var(--blanc);
+  padding-block: 22px 60px;
+}
+.galerie-recos-tete {
+  position: relative;
+  max-width: 1240px;
+  margin-inline: auto;
+  background: var(--rose);
+  border-radius: 28px;
+  padding: 26px 22px 0;
+  overflow: hidden;
+  overflow: clip;
+  display: grid;
+}
+.galerie-recos-bas {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+}
+.galerie-recos-bouton {
+  margin-bottom: 24px;
+}
+/* Le personnage. Sans bouton à sa gauche (pas de collection mère), il reste à droite. */
+.galerie-recos-perle {
+  position: relative;
+  height: clamp(150px, 44vw, 250px);
+  aspect-ratio: 507 / 810;
+  flex: none;
+  margin: 0 -4px 0 auto;
+}
+.galerie-recos-perle img {
+  height: 100%;
+  width: auto;
+}
+/* Sa perle scintille : c'est elle, le clin d'œil du titre. */
+.galerie-recos-eclat {
+  position: absolute;
+  left: 49.7%;
+  top: 48.4%;
+  width: 24%;
+  margin: -12% 0 0 -12%;
+  overflow: visible;
+  fill: var(--blanc);
+  filter: drop-shadow(0 0 3px var(--blanc));
+}
+.galerie-recos product-recommendations,
+.galerie-recos-liste,
+.galerie-recos-glisse {
+  display: block;
+}
+/* La place des œuvres, gardée avant leur arrivée : la page ne bouge pas quand Shopify les dépose. Seulement
+   quand le script est là (:defined : l'élément est connu du navigateur) ; sans lui, rien ne viendra. La
+   hauteur est celle d'une rangée : la tuile (4 / 5 de la largeur d'une carte, toutes les tuiles ont ce
+   format), puis 60 px (13 px, le nom sur une ligne, 4 px, le prix, et les 10 px du bas de la rangée). */
+.galerie-recos-liste:defined .galerie-recos-attente {
+  margin-top: 22px;
+  height: calc(var(--galerie-recos-carte) * 1.25 + 60px);
+}
+.galerie-recos-rangee {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gout);
+  margin: 22px 0 0;
+  padding: 0 var(--goutd) 10px var(--gout);
+  list-style: none;
+  scrollbar-width: none;
+}
+.galerie-recos-rangee::-webkit-scrollbar {
+  display: none;
+}
+/* Une carte : la carte de produit du thème. position : son lien, étiré, couvre toute la carte. min-width : un
+   nom long, sur une ligne, ne l'élargit pas. --tuile : l'aplat de sa tuile, six à la suite. */
+.galerie-recos-carte {
+  --tuile: var(--ciel);
+  position: relative;
+  flex: 0 0 var(--galerie-recos-carte);
+  min-width: 0;
+  scroll-snap-align: start;
+}
+.galerie-recos-carte:nth-child(6n + 2) { --tuile: var(--soleil); }
+.galerie-recos-carte:nth-child(6n + 3) { --tuile: var(--menthe); }
+.galerie-recos-carte:nth-child(6n + 4) { --tuile: var(--lilas); }
+.galerie-recos-carte:nth-child(6n + 5) { --tuile: var(--peche); }
+.galerie-recos-carte:nth-child(6n) { --tuile: var(--poudre); }
+/* Un nouveau produit : la scène de sa vignette d'œuvre (snippets/artwork-object.liquid ; input.css, « Vignette
+   d'œuvre ») devient la tuile de la maquette. Son mur prend l'aplat ; l'œuvre y garde son ombre.
+   --s est l'échelle de la vignette (la largeur de sa scène, dans une grille de collection) : à 82 %, une toile
+   en portrait tient les 62 % de la tuile que la maquette lui donne, son ombre et son épaisseur avec elle. Un
+   poster sous verre les tient déjà. */
+.galerie-recos-carte .oeuvre-card[data-kind="toile"] {
+  --s: 82cqw;
+}
+.galerie-recos-carte .oeuvre-card[data-kind] .oeuvre-card-stage {
+  aspect-ratio: 4 / 5;
+  border-radius: 22px;
+  background: var(--tuile);
+}
+/* Un produit de toujours : sa photo, dans une tuile au même format que les autres. La carte écrit le format de
+   la photo en style : seul !important le remplace. La photo remplit la tuile (au plus quelques pour cent de
+   ses bords coupés pour une photo d'ambiance en portrait). Le léger décalage que la carte lui donne dans une
+   collection (translate-x-1) laisserait ici un liseré : il est retiré une fois l'image chargée (pendant le
+   chargement, .skeleton tient la transformation). */
+.galerie-recos-carte [style*="aspect-ratio"] {
+  aspect-ratio: 4 / 5 !important;
+  border-radius: 22px;
+}
+.galerie-recos-carte [style*="aspect-ratio"] img {
+  object-fit: cover;
+}
+.galerie-recos-carte [style*="aspect-ratio"]:not(.skeleton) img {
+  transform: none;
+}
+/* La carte laisse une marge sous elle dans une grille de collection : ici, le bas de la rangée suffit. */
+.galerie-recos-carte > div > div {
+  margin-bottom: 0;
+}
+/* Le nom, le prix et le cœur : sans leur encadré, dans la typo de la page. */
+.galerie-recos-carte div:has(> div > h3) {
+  margin: 0;
+  padding: 13px 0 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.galerie-recos-carte .product-card-title {
+  font: 600 16px/1.2 var(--sans);
+  letter-spacing: -0.012em;
+}
+.galerie-recos-carte h3 + p {
+  margin: 4px 0 0;
+  font: 500 14px/1 var(--sans);
+  color: var(--encre-70);
+  font-variant-numeric: tabular-nums;
+}
+/* Le cœur de la carte, que la maquette n'a pas : un petit rond blanc dans le coin de la tuile, en bas à
+   droite. Le nom et le prix gardent ainsi toute la largeur de la carte, comme dans la maquette.
+   Il se pose par rapport à sa propre case, en haut de la rangée du nom (13 px sous la tuile), et non par
+   rapport à cette rangée : le lien étiré du nom doit continuer à couvrir toute la carte. */
+.galerie-recos-carte div:has(> my-like-button) {
+  position: relative;
+  align-self: flex-start;
+  margin: 0;
+}
+.galerie-recos-carte my-like-button {
+  position: absolute;
+  right: 10px;
+  bottom: 23px;
+}
+.galerie-recos-carte .like {
+  padding: 7px;
+  border-radius: 50%;
+  background: var(--blanc);
+}
+.galerie-recos-carte .heart-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* -- Questions fréquentes : les volets, puis la carte ciel -- */
+.galerie-questions {
+  background: var(--creme);
+  padding-block: 64px 70px;
+}
+.galerie-questions-in {
+  max-width: 1240px;
+  margin-inline: auto;
+  display: grid;
+  gap: 26px;
+}
+.galerie-questions-volets {
+  display: block;
+  border-top: 1px solid var(--encre-12);
+}
+.galerie-questions-volet {
+  border-bottom: 1px solid var(--encre-12);
+}
+.galerie-questions-volet summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 17px;
+  font: 500 17px/1.28 var(--sans);
+  letter-spacing: -0.012em;
+  cursor: pointer;
+  list-style: none;
+}
+.galerie-questions-volet summary::-webkit-details-marker {
+  display: none;
+}
+/* La question : un h3, dans la typo de son volet. pretty : son dernier mot ne reste pas seul sur une ligne. */
+.galerie-questions-volet h3 {
+  margin: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-wrap: pretty;
+}
+/* Le rond à « + », qui tourne en « × » quand le volet est ouvert. */
+.galerie-questions-plus {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--blanc);
+  position: relative;
+}
+.galerie-questions-plus::before,
+.galerie-questions-plus::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 11px;
+  height: 1.6px;
+  margin: -0.8px 0 0 -5.5px;
+  background: currentColor;
+  border-radius: 2px;
+}
+.galerie-questions-plus::after {
+  transform: rotate(90deg);
+}
+.galerie-questions-volet[open] .galerie-questions-plus {
+  background: var(--encre);
+  color: var(--blanc);
+  transform: rotate(45deg);
+}
+/* La réponse : le texte du bloc (paragraphes, listes, gras, liens). Un clic la referme, comme dans les volets
+   du thème : le curseur le dit. */
+.galerie-questions-reponse {
+  padding-bottom: 18px;
+  max-width: 38em;
+  font: 400 15px/1.6 var(--sans);
+  color: var(--encre-70);
+  cursor: pointer;
+}
+.galerie-questions-reponse p,
+.galerie-questions-reponse ul,
+.galerie-questions-reponse ol {
+  margin: 0 0 0.9em;
+}
+.galerie-questions-reponse ul {
+  padding-left: 1.2em;
+  list-style: disc;
+}
+.galerie-questions-reponse ol {
+  padding-left: 1.4em;
+  list-style: decimal;
+}
+.galerie-questions-reponse strong {
+  font-weight: 600;
+  color: var(--encre);
+}
+.galerie-questions-reponse a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.galerie-questions-carte {
+  position: relative;
+  background: var(--ciel);
+  border-radius: 28px;
+  padding: 24px 22px 0;
+  overflow: hidden;
+  overflow: clip;
+}
+.galerie-questions-carte-titre {
+  margin: 0;
+  font: 300 30px/1 var(--sans);
+  letter-spacing: -0.04em;
+}
+.galerie-questions-carte-titre b {
+  font-weight: 700;
+}
+.galerie-questions-carte-texte {
+  margin: 10px 0 16px;
+  font: 400 15px/1.5 var(--sans);
+  color: var(--encre-70);
+  max-width: 20em;
+}
+.galerie-questions-bas {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 4px;
+  margin-top: 4px;
+}
+/* Le personnage au standard : casque sur les oreilles, micro devant la bouche. */
+.galerie-questions-ecoute {
+  position: relative;
+  height: clamp(170px, 50vw, 270px);
+  aspect-ratio: 572 / 810;
+  flex: none;
+}
+.galerie-questions-ecoute img {
+  height: 100%;
+  width: auto;
+}
+.galerie-questions-casque {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: var(--encre);
+}
+.galerie-questions-arceau {
+  fill: none;
+  stroke: var(--corail);
+  stroke-width: 13;
+  stroke-linecap: round;
+}
+.galerie-questions-tige {
+  fill: none;
+  stroke: var(--encre);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+.galerie-questions-bulle {
+  position: relative;
+  margin: 0 0 clamp(96px, 29vw, 150px);
+  padding: 11px 15px;
+  border-radius: 18px 18px 4px 18px;
+  background: var(--blanc);
+  font: 600 15px/1.25 var(--sans);
+  letter-spacing: -0.012em;
+  white-space: nowrap;
+  box-shadow: 0 8px 18px var(--encre-12);
+}
+
+/* -- Ordinateur -- */
+@media (min-width: 900px) {
+  .galerie-avis-titre,
+  .galerie-recos-titre,
+  .galerie-questions-titre {
+    font-size: clamp(56px, 5.6vw, 96px);
+    line-height: 0.96;
+  }
+  .galerie-avis-clients {
+    padding-top: 104px;
+  }
+  .galerie-avis-carte {
+    flex-basis: 300px;
+  }
+  .galerie-avis-rangee {
+    gap: 22px;
+    margin-top: 54px;
+  }
+  .galerie-avis-pied {
+    justify-content: flex-end;
+    margin-top: 40px;
+    padding-right: 4vw;
+  }
+  .galerie-avis-anges {
+    width: 420px;
+  }
+  .galerie-recos {
+    --galerie-recos-carte: 270px;
+    padding-block: 32px 96px;
+  }
+  .galerie-recos-tete {
+    padding: 54px 56px 0;
+  }
+  .galerie-recos-titre {
+    max-width: 11em;
+  }
+  .galerie-recos-bas {
+    margin-top: -30px;
+  }
+  .galerie-recos-perle {
+    height: 330px;
+    margin-right: 3vw;
+  }
+  .galerie-recos-bouton {
+    margin-bottom: 54px;
+  }
+  .galerie-recos-liste:defined .galerie-recos-attente {
+    margin-top: 30px;
+  }
+  .galerie-recos-rangee {
+    gap: 22px;
+    margin-top: 30px;
+  }
+  .galerie-questions {
+    padding-block: 104px 110px;
+  }
+  .galerie-questions-in {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-rows: auto 1fr;
+    gap: 40px 90px;
+    align-items: start;
+  }
+  .galerie-questions-volets {
+    grid-column: 2;
+    grid-row: 1 / 3;
+  }
+  .galerie-questions-aide {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .galerie-questions-carte {
+    padding: 34px 34px 0;
+  }
+  .galerie-questions-carte-titre {
+    font-size: 40px;
+  }
+  .galerie-questions-ecoute {
+    height: 300px;
+  }
+  .galerie-questions-bulle {
+    font-size: 17px;
+    margin-bottom: 170px;
+  }
+}
+
+/* -- Le mouvement --
+   Trois des quatre mouvements ne changent que la place (transform). Leurs images clés redisent pourtant une
+   opacité pleine, sans effet : le test du socle (scripts/oeuvre-galerie.test.cjs) demande que toute image clé
+   de la feuille anime à la fois opacity et transform. À retirer si ce test s'assouplit.
+   - surgit : un personnage sort du bas de son bloc quand le bloc entre dans l'écran ;
+   - derive : la rangée d'avis glisse de côté avec la page ;
+   - scintille : l'étoile de la perle ; hoche : la bulle. En boucle, sans suivre le défilement. */
+@keyframes galerie-avis-surgit {
+  from { opacity: 1; transform: translateY(62%); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes galerie-avis-derive {
+  from { opacity: 1; transform: translateX(8vw); }
+  to { opacity: 1; transform: translateX(-5vw); }
+}
+@keyframes galerie-recos-scintille {
+  from { opacity: 0.5; transform: scale(0.35) rotate(0deg); }
+  to { opacity: 1; transform: scale(1) rotate(45deg); }
+}
+@keyframes galerie-questions-hoche {
+  from { opacity: 1; transform: translateY(0) rotate(-1.5deg); }
+  to { opacity: 1; transform: translateY(-5px) rotate(1.5deg); }
+}
+/* Quand la rangée du thème avance d'une carte, elle y va en douceur ; pas en « mouvements réduits », où elle
+   n'avance pas seule. */
+@media (prefers-reduced-motion: no-preference) {
+  .galerie-avis-rangee {
+    scroll-behavior: smooth;
+  }
+  .galerie-recos-rangee {
+    scroll-behavior: smooth;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) and (animation-range-start: contain 10svh) {
+    .galerie-avis-anges,
+    .galerie-recos-perle,
+    .galerie-questions-ecoute {
+      animation: galerie-avis-surgit linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 40%;
+    }
+    .galerie-avis-rangee {
+      animation: galerie-avis-derive linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+    .galerie-recos-eclat {
+      animation: galerie-recos-scintille 1.7s ease-in-out infinite alternate;
+    }
+    .galerie-questions-bulle {
+      animation: galerie-questions-hoche 2.2s ease-in-out infinite alternate;
+    }
+    .galerie-questions-plus {
+      transition: background-color 0.25s ease, color 0.25s ease, transform 0.35s ease;
+    }
+  }
+}
+
+/* === Avis, recommandations, questions (ticket 23) : fin === */
