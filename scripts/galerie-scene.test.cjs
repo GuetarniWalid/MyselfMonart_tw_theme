@@ -292,7 +292,7 @@ test('la feuille : les images clés de la maquette', () => {
 test('la feuille : les couleurs de la nuit et de la lampe sont des variables du socle, une par ligne', () => {
   const source = read(CSS)
   const NEW = { nuit: '#0b0a10', 'nuit-sol': '#15131c', laiton: '#cfa85a', ampoule: '#fff0b8', 'ampoule-halo': '#ffe696', lueur: '#ffe6a5', 'lueur-moyenne': '#fada96', 'lueur-lointaine': '#d6aa78', reflet: '#fff6d6', 'reflet-halo': '#ffe296', noir: '#000000' }
-  const tokens = rules(source.replace(/\/\*[\s\S]*?\*\//g, '')).find((r) => r.head === ':root:has(main-product-blocks[data-galerie])' && !r.context.length).body
+  const tokens = rules(source.replace(/\/\*[\s\S]*?\*\//g, '')).find((r) => r.head === ':root[data-galerie-page]' && !r.context.length).body
   for (const [name, hex] of Object.entries(NEW)) {
     assert.equal(value(tokens, name), hex, `--${name}`)
     assert.match(source, new RegExp(`^  --${name}: ${hex};$`, 'm'), `--${name} : sur sa propre ligne`)

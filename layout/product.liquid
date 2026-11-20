@@ -1,8 +1,24 @@
+{%- comment -%}
+  Page galerie des œuvres 3D (réglage « Page galerie » du bloc principal, qui pose data-galerie sur
+  <main-product-blocks>, sections/main-product.liquid) : la page le sait dès le serveur. <html> porte
+  data-galerie-page et la feuille de la page (assets/oeuvre-galerie.css) se charge ici, dans <head> : le bandeau,
+  la pilule et le pied de page ont leurs couleurs dès le premier affichage, et la feuille n'a pas à guetter le
+  bloc principal (:root:has(…), qui faisait refaire les styles de toute la page à chaque changement). Le
+  repère est le réglage, lu dans la page rendue, jamais le nom du modèle : la bascule finale n'y change rien.
+  Toute autre page rend exactement le même HTML qu'avant (scripts/oeuvre-galerie.test.cjs).
+{%- endcomment -%}
+{%- liquid
+  assign galerie_page = false
+  if content_for_layout contains ' data-galerie>'
+    assign galerie_page = true
+  endif
+-%}
 <!DOCTYPE html>
-<html lang="{{ request.locale.iso_code }}">
+<html lang="{{ request.locale.iso_code }}"{% if galerie_page %} data-galerie-page{% endif %}>
   <head>
     {% render 'head-base' %}
-    {{ content_for_header }}
+    {{ content_for_header }}{% if galerie_page %}
+    {{ 'oeuvre-galerie.css' | asset_url | stylesheet_tag }}{% endif %}
 
     <script src="{{ 'layout-product.js' | asset_url }}" defer="defer"></script>
   </head>

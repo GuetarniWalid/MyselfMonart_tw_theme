@@ -311,10 +311,9 @@
     data-layout="{{ template.suffix }}"{% if stage_3d %} data-buy-pill{% endif %}{% if page_galerie %} data-galerie{% endif %}>
     {%- comment -%} Scène 3D : les blocs suivent sous la scène, au milieu. Les autres fiches gardent leur
        balisage à l'identique, espaces compris. {%- endcomment -%}
-    {%- comment -%} Page galerie : sa feuille et son script, que cette page seule charge. Dans le bloc, après la
-       scène : elle s'affiche sans les attendre, et la bascule Toile / Poster les remplace avec le bloc. {%- endcomment -%}
+    {%- comment -%} Page galerie : son script, que cette page seule charge. Sa feuille, elle, est dans <head> :
+       layout/product.liquid la pose quand ce bloc porte data-galerie, et elle ne quitte plus la page. {%- endcomment -%}
     {%- if page_galerie -%}
-      {{ 'oeuvre-galerie.css' | asset_url | stylesheet_tag }}
       <script src="{{ 'oeuvre-galerie.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
     <div class="{% if page_galerie %}galerie-blocs{% elsif stage_3d %}max-w-lg sm:px-0 mx-auto my-4{% else %}max-w-lg sm:px-0 mx-auto 2md:mx-0 my-4{% endif %}">

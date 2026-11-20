@@ -126,10 +126,10 @@ Pourquoi : le theme est tout Tailwind compilé via `npm run tw` (Tailwind 3.4.1,
 
 ### Une seule exception voulue : la page galerie des œuvres 3D
 
-La nouvelle fiche des œuvres 3D (réglage « Page galerie » de [`sections/main-product.liquid`](sections/main-product.liquid), modèle `product.oeuvre-galerie`) a sa propre feuille, [`assets/oeuvre-galerie.css`](assets/oeuvre-galerie.css), et son propre script, [`assets/oeuvre-galerie.js`](assets/oeuvre-galerie.js). Le bloc principal de la fiche les charge quand le réglage est coché, et lui seul. Décision du ticket 19 (dossier `.scratch/fiche-3d/galerie`) : la page pèse une quinzaine de kilo-octets de styles, que les autres pages n'ont pas à charger. `assets/output.css` ne doit pas grossir pour elle.
+La nouvelle fiche des œuvres 3D (réglage « Page galerie » de [`sections/main-product.liquid`](sections/main-product.liquid), modèle `product.oeuvre-galerie`) a sa propre feuille, [`assets/oeuvre-galerie.css`](assets/oeuvre-galerie.css), et son propre script, [`assets/oeuvre-galerie.js`](assets/oeuvre-galerie.js), chargés seulement quand le réglage est coché : le script par le bloc principal, la feuille dans `<head>` par [`layout/product.liquid`](layout/product.liquid), qui pose aussi `data-galerie-page` sur `<html>` (il reconnaît la page à ` data-galerie>` dans la page rendue, jamais au nom du modèle). Décision du ticket 19 (dossier `.scratch/fiche-3d/galerie`) : la page pèse une quinzaine de kilo-octets de styles, que les autres pages n'ont pas à charger. `assets/output.css` ne doit pas grossir pour elle.
 
 Règles de cette feuille, que vérifie `scripts/oeuvre-galerie.test.cjs` :
-- chaque règle porte le crochet `main-product-blocks[data-galerie]` ou un nom `galerie-…`, jamais le nom du modèle de page ;
+- chaque règle porte le crochet (`main-product-blocks[data-galerie]` dans le bloc principal, `:root[data-galerie-page]` pour toute la page : variables, bandeau, pilule, pied de page) ou un nom `galerie-…`, jamais le nom du modèle de page ; pas de `:root:has(…)`, qui fait refaire les styles de toute la page à chaque changement ;
 - les couleurs et la typo de la page sont des variables posées une fois (`--encre`, `--ciel`, `--sans`…) ; aucune couleur ne s'écrit ailleurs ; l'encre et le saumon reprennent les couleurs du thème ;
 - un bloc par partie de la page, entre deux repères `début` et `fin` ; un nouveau bloc s'ajoute à la fin (le script suit la même règle) ;
 - aucun mouvement hors de `@media (prefers-reduced-motion: no-preference)`.

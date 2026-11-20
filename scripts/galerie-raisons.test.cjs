@@ -21,7 +21,7 @@ const {
 const SECTION = 'sections/galerie-raisons.liquid'
 const CSS = 'assets/oeuvre-galerie.css'
 const MODEL = 'templates/product.oeuvre-galerie.json'
-const HOOK = ':root:has(main-product-blocks[data-galerie])'
+const HOOK = ':root[data-galerie-page]'
 // Les quatre raisons, dans l'ordre de la page : le nom neutre de leur personnage, la taille de son image, la
 // couleur de sa carte, et si le personnage parle (une bulle).
 const CARDS = [
@@ -641,12 +641,13 @@ async function mainSection(galerie, poster = false) {
   return `<${schema.tag} id="shopify-section-template--1__main" class="shopify-section ${schema.class}">${html}</${schema.tag}>`
 }
 
-/* Une page produit comme le gabarit la monte : le bandeau, la fiche, le pied de page. sheet : la feuille de la page
-   est dans <head> (là où son script la copie, et où elle reste quand la bascule Toile / Poster change la fiche). */
+/* Une page produit comme le gabarit la monte (layout/product.liquid) : le bandeau, la fiche, le pied de page. En page
+   galerie, <html> porte data-galerie-page. sheet : la feuille de la page est dans <head>, où le gabarit la pose, et
+   où elle reste quand la bascule Toile / Poster change la fiche. */
 async function sitePage({ galerie, sheet }) {
   const p = product()
   return [
-    '<!doctype html><html lang="fr"><head><meta charset="utf-8">',
+    `<!doctype html><html lang="fr"${galerie ? ' data-galerie-page' : ''}><head><meta charset="utf-8">`,
     `<style>${themeColors()}</style>`,
     `<style>${read('assets/output.css')}</style>`,
     sheet ? `<style>${read(CSS)}</style>` : '',
@@ -867,11 +868,18 @@ test('navigateur : la bascule sans rechargement vers une fiche sans crochet lui 
   }), ZONES, PROPERTIES)
   const before = await colors(page)
   const html = await mainSection(false)
-  await page.evaluate((html) => { document.getElementById('MainContent').innerHTML = html.replace(/<script\b[\s\S]*?<\/script>/g, '') }, html)
+  // Le script de la page est là, comme sur le site : la bascule annonce la nouvelle fiche (mma:soft-navigation), et
+  // la marque de la page suit le bloc principal.
+  await page.addScriptTag({ content: read('assets/oeuvre-galerie.js') })
+  await page.evaluate((html) => {
+    document.getElementById('MainContent').innerHTML = html.replace(/<script\b[\s\S]*?<\/script>/g, '')
+    document.dispatchEvent(new CustomEvent('mma:soft-navigation'))
+  }, html)
   // Le pied de page et le champ changent de couleur en douceur (transition-colors, 500 ms) : on attend la fin.
   await new Promise((resolve) => setTimeout(resolve, 900))
-  assert.ok(await page.$('head style:last-of-type') && (await page.$eval('head', (h) => h.innerHTML.includes('main-product-blocks[data-galerie]'))), 'la feuille de la page est toujours dans <head>')
+  assert.ok(await page.$('head style:last-of-type') && (await page.$eval('head', (h) => h.innerHTML.includes(':root[data-galerie-page]'))), 'la feuille de la page est toujours dans <head>')
   assert.equal(await page.$('main-product-blocks[data-galerie]'), null)
+  assert.equal(await page.$('html[data-galerie-page]'), null, 'la marque de la page a suivi le bloc principal')
   const now = await colors(page)
   const expected = await colors(reference)
   assert.notDeepEqual(before, expected, 'avant la bascule, la page galerie a ses propres couleurs')

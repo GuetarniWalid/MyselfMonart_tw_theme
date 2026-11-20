@@ -179,7 +179,7 @@ test('la feuille : rien ne bouge si le visiteur demande moins de mouvement ; les
 test('la feuille : les textes de la carte se lisent sur son fond crème (contraste AA, 4,5 pour 1)', () => {
   // L'encre est la couleur principale du thème ; un texte gris est cette encre, en partie transparente, sur la crème.
   const all = rules(read(CSS).replace(/\/\*[\s\S]*?\*\//g, ''))
-  const tokens = all.find((r) => r.head === ':root:has(main-product-blocks[data-galerie])' && !r.context.length).body
+  const tokens = all.find((r) => r.head === ':root[data-galerie-page]' && !r.context.length).body
   const hex = (value) => [1, 3, 5].map((i) => parseInt(value.slice(i, i + 2), 16))
   const ink = hex(json('config/settings_data.json').current.main_color)
   const cream = hex(/--creme:\s*(#[0-9a-f]{6});/.exec(tokens)[1])

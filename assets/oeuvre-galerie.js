@@ -42,12 +42,12 @@
     !window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
     !!(window.CSS && CSS.supports && CSS.supports('animation-timeline: view()') && CSS.supports('animation-range-start', 'contain 10svh'));
 
-  /* La feuille de la page tient pendant la bascule Toile / Poster. La bascule retire le <link> du bloc principal
-     avec le reste de la fiche, et pose celui de la fiche jumelle : le même fichier, mais le navigateur le recharge,
-     même depuis son cache, et une image de la page peut se dessiner sans ses styles entre les deux (mesuré : les
-     styles manquent juste après l'échange). Une copie dans <head>, posée une fois, ne quitte jamais la page. */
-  const feuille = document.querySelector('main-product-blocks[data-galerie] > link[rel="stylesheet"]');
-  if (feuille) document.head.append(feuille.cloneNode());
+  /* La page porte data-galerie-page dès le serveur, et sa feuille est dans <head> (layout/product.liquid) : rien
+     ne bouge pendant la bascule Toile / Poster, qui ne remplace que le contenu sous la scène. Si une bascule menait
+     un jour vers une fiche qui n'est pas en page galerie, la marque suivrait le bloc principal. */
+  document.addEventListener('mma:soft-navigation', () => {
+    document.documentElement.toggleAttribute('data-galerie-page', !!document.querySelector('main-product-blocks[data-galerie]'));
+  });
 
   /* <galerie-mots> : un grand titre dont les mots arrivent un à un, au fil du défilement.
      Si le mouvement suit le défilement : chaque mot passe dans un <span class="galerie-mot"> qui porte son rang

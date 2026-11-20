@@ -57,10 +57,10 @@ test('le script : des éléments personnalisés, définis une fois, qui ne compt
   // Un titre découpé se lit d'une traite : son texte entier pour les lecteurs d'écran, ses mots cachés pour eux.
   assert.match(js, /className = 'sr-only'/)
   assert.match(js, /setAttribute\('aria-hidden', 'true'\)/)
-  // La feuille tient pendant la bascule Toile / Poster : une copie dans <head> du <link> que le bloc principal
-  // porte en premier enfant (trouvé par le crochet, pas par un nom de fichier).
-  assert.match(js, /document\.querySelector\('main-product-blocks\[data-galerie\] > link\[rel="stylesheet"\]'\)/)
-  assert.match(js, /document\.head\.append\(feuille\.cloneNode\(\)\)/)
+  // La feuille est dans <head> dès le serveur (layout/product.liquid) : le script n'en pose pas de copie. Après une
+  // bascule Toile / Poster, la marque de la page (data-galerie-page) suit le bloc principal.
+  assert.doesNotMatch(js, /cloneNode|document\.head\.append/)
+  assert.match(js, /document\.addEventListener\('mma:soft-navigation', \(\) => {\s*document\.documentElement\.toggleAttribute\('data-galerie-page', !!document\.querySelector\('main-product-blocks\[data-galerie\]'\)\);\s*}\);/)
   // Aucun script en ligne dans la présentation : après la bascule Toile / Poster, il ne serait pas rejoué.
   for (const file of PIECES) assert.doesNotMatch(code(file), /<script(?![^>]*\bsrc=)/, file)
 })
@@ -70,7 +70,7 @@ test('le script : des éléments personnalisés, définis une fois, qui ne compt
 const sheet = () => rules(read(CSS).replace(/\/\*[\s\S]*?\*\//g, ''))
 
 test('la feuille : les couleurs et la typo de la maquette, posées une fois sur la page qui porte le crochet', () => {
-  const tokens = sheet().find((r) => r.head === ':root:has(main-product-blocks[data-galerie])' && !r.context.length)
+  const tokens = sheet().find((r) => r.head === ':root[data-galerie-page]' && !r.context.length)
   assert.ok(tokens, 'les variables, sur la page qui a un bloc principal data-galerie')
   const value = (name) => (new RegExp(`--${name}:\\s*([^;]+);`).exec(tokens.body) || [])[1]
   // L'encre et le saumon sont les couleurs du thème (réglages main_color et brand_color) ; les aplats, ceux de la maquette.
@@ -92,7 +92,7 @@ test('la feuille : les couleurs et la typo de la maquette, posées une fois sur 
   assert.equal(value('gout'), 'max(20px, env(safe-area-inset-left, 0px))')
   assert.equal(value('goutd'), 'max(20px, env(safe-area-inset-right, 0px))')
   // Sur ordinateur (900 px, comme la maquette), les marges passent à 48 px.
-  const large = sheet().find((r) => r.head === ':root:has(main-product-blocks[data-galerie])' && r.context.join() === '@media (min-width: 900px)')
+  const large = sheet().find((r) => r.head === ':root[data-galerie-page]' && r.context.join() === '@media (min-width: 900px)')
   assert.match(large.body, /--gout:\s*max\(48px, env\(safe-area-inset-left, 0px\)\);/)
   assert.match(large.body, /--goutd:\s*max\(48px, env\(safe-area-inset-right, 0px\)\);/)
 })
@@ -151,7 +151,7 @@ test('la feuille : les mesures de la présentation sont celles de la maquette', 
   // La bande : blanche, 40 et 52 px ; 72 et 84 px sur ordinateur. La section qui la porte n'ajoute rien dessous.
   assert.equal(body('main-product-blocks[data-galerie]'), 'background: var(--blanc); padding-top: 40px; padding-bottom: 52px;')
   assert.equal(body('main-product-blocks[data-galerie]', LARGE), 'padding-top: 72px; padding-bottom: 84px;')
-  assert.equal(body('.tw-main-product-image:has(main-product-blocks[data-galerie])'), 'padding-bottom: 0;')
+  assert.equal(body(':root[data-galerie-page] .tw-main-product-image'), 'padding-bottom: 0;')
   // La grille : 1240 px au plus, l'un sous l'autre à 34 px ; sur ordinateur, 7 parts et 4 parts à 70 px, alignées en bas.
   assert.equal(body('.galerie-intro'), 'max-width: 1240px; margin-inline: auto; display: grid; gap: 34px;')
   assert.equal(body('.galerie-intro', LARGE), 'grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 70px; align-items: end;')
@@ -193,7 +193,7 @@ test('la feuille : le focus se voit, sur le fond clair de la page, et un lien se
 })
 
 test('la feuille : aucune couleur ne s’écrit hors de ses variables', () => {
-  const TOKENS = ':root:has(main-product-blocks[data-galerie])'
+  const TOKENS = ':root[data-galerie-page]'
   for (const { head, body, context } of sheet()) {
     if (head === TOKENS && !context.length) continue
     assert.doesNotMatch(body, /#[0-9a-f]{3,8}\b|\brgba?\(|\bhsla?\(/i, `${head} : une couleur écrite en dur`)
@@ -251,7 +251,7 @@ test('la feuille : les textes de la présentation se lisent sur blanc (contraste
   const linear = (c) => (c / 255 <= 0.04045 ? c / 255 / 12.92 : ((c / 255 + 0.055) / 1.055) ** 2.4)
   const luminance = ([r, g, b]) => 0.2126 * linear(r) + 0.7152 * linear(g) + 0.0722 * linear(b)
   const onWhite = (alpha) => 1.05 / (luminance(ink.map((c) => 255 + (c - 255) * alpha)) + 0.05)
-  const tokens = sheet().find((r) => r.head === ':root:has(main-product-blocks[data-galerie])' && !r.context.length).body
+  const tokens = sheet().find((r) => r.head === ':root[data-galerie-page]' && !r.context.length).body
   const alpha = (name) => Number(new RegExp(`--${name}:\\s*rgba\\(var\\(--color-main-rgb\\), ([\\d.]+)\\);`).exec(tokens)[1])
   // Les deux gris qui portent du texte : le h1 (encre-70) et les libellés de la fiche (encre-55).
   const color = (head) => /(?:^|;)\s*color:\s*var\(--([\w-]+)\);/.exec(sheet().find((r) => r.head === head).body)[1]
@@ -484,15 +484,34 @@ test('rendu, case cochée sans scène 3D : la fiche de toujours, à l’octet pr
 
 /* -- La page galerie -- */
 
-test('rendu de la page galerie : le crochet, puis la feuille et le script dans le bloc principal', { skip: SKIP }, async () => {
+test('rendu de la page galerie : le crochet, puis le script dans le bloc principal ; la feuille n’y est plus', { skip: SKIP }, async () => {
   const html = await renderSection(product(), { suffix: 'oeuvre-galerie', section: galerieSection() })
   const blocks = tight(blocksOf(html))
+  // « data-galerie> » : ce que layout/product.liquid cherche dans la page rendue pour marquer <html> et charger la
+  // feuille dans <head>. Les deux doivent changer ensemble.
   assert.match(blocks, /^<main-product-blocks\s+class="block galerie galerie-bande"\s+id="ProductInfo-template--1__main"\s+data-layout="oeuvre-galerie" data-buy-pill data-galerie>/)
-  // Dans le bloc : la bascule Toile / Poster les remplace avec lui, et la scène s'affiche sans les attendre.
-  assert.match(blocks, /^<main-product-blocks[^>]*><link href="[^"]*\/oeuvre-galerie\.css\?v=1" rel="stylesheet" type="text\/css" media="all" \/><script src="[^"]*\/oeuvre-galerie\.js\?v=1" defer="defer"><\/script><div class="galerie-blocs">/)
-  assert.equal(html.match(/oeuvre-galerie\.css/g).length, 1)
+  assert.ok(html.includes(' data-galerie>'))
+  // Le script, dans le bloc : un élément personnalisé n'a pas besoin de lui pour s'afficher.
+  assert.match(blocks, /^<main-product-blocks[^>]*><script src="[^"]*\/oeuvre-galerie\.js\?v=1" defer="defer"><\/script><div class="galerie-blocs">/)
   assert.equal(html.match(/oeuvre-galerie\.js/g).length, 1)
-  assert.ok(html.indexOf('</oeuvre-3d>') < html.indexOf('oeuvre-galerie.css'), 'après la scène 3D')
+  assert.doesNotMatch(html, /oeuvre-galerie\.css/)
+})
+
+test('le gabarit des fiches : <html data-galerie-page> et la feuille dans <head>, seulement en page galerie', { skip: SKIP }, async () => {
+  // Le haut de layout/product.liquid, jusqu'à </head>, rendu avec ce que Shopify lui donne : la page déjà rendue
+  // (content_for_layout). head-base et content_for_header sont remplacés par des repères.
+  const source = read('layout/product.liquid')
+  const top = source.slice(0, source.indexOf('</head>') + '</head>'.length).replace("{% render 'head-base' %}", '[head-base]')
+  const renderTop = (content) => engine().parseAndRender(top, { content_for_layout: content, content_for_header: '[content_for_header]', request: { locale: { iso_code: 'fr' } } })
+  const other = await renderTop('<main id="MainContent"><main-product-blocks class="block" data-layout="oeuvre-3d" data-buy-pill></main-product-blocks></main>')
+  // Toute autre page : exactement le haut de toujours.
+  assert.equal(other, '<!DOCTYPE html>\n<html lang="fr">\n  <head>\n    [head-base]\n    [content_for_header]\n\n    <script src="//www.myselfmonart.com/cdn/shop/t/25/assets/layout-product.js?v=1" defer="defer"></script>\n  </head>')
+  const galerie = await renderTop('<main id="MainContent"><main-product-blocks class="block galerie galerie-bande" data-layout="oeuvre-galerie" data-buy-pill data-galerie></main-product-blocks></main>')
+  assert.match(galerie, /^<!DOCTYPE html>\n<html lang="fr" data-galerie-page>\n/)
+  assert.match(galerie, /\[content_for_header\]\n    <link href="[^"]*\/oeuvre-galerie\.css\?v=1" rel="stylesheet" type="text\/css" media="all" \/>\n\n    <script src=/)
+  // La vraie section le rend : la marque cherchée par le gabarit est bien celle qu'elle écrit.
+  const page = await renderSection(product(), { suffix: 'oeuvre-galerie', section: galerieSection() })
+  assert.match(await renderTop(page), /<html lang="fr" data-galerie-page>/)
 })
 
 test('rendu de la page galerie : un seul h1, le titre du produit, le même que sur la fiche 3D', { skip: SKIP }, async () => {

@@ -284,7 +284,7 @@ function page({ unveil = true } = {}) {
     Node: { ELEMENT_NODE: 1, TEXT_NODE: 3 },
     matchMedia: () => ({ matches: false }),
     CSS: { supports: () => false },
-    document: { querySelector: () => null, head: { append() {} } },
+    document: { querySelector: () => null, head: { append() {} }, addEventListener() {} },
   }
   if (unveil) win.removeSkeletonOnImagesLoad = (container) => unveiled.push(container)
   win.window = win
