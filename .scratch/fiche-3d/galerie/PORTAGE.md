@@ -74,7 +74,7 @@ Plusieurs tickets écrivent dans les mêmes fichiers. Pour que les branches se r
 2. Tests d'abord là où il y a de la logique (skill `mattpocock-skills:tdd` si tu peux l'appeler, sinon rouge, vert, remaniement) : dans le style des `scripts/*.test.cjs` existants.
 3. Vérifier souvent : `npm test`, le contrôle des traductions, la taille de la feuille commune, les captures.
 4. Finir par une relecture de ton propre diff contre le ticket, ces consignes, le skill et `CLAUDE.md` (skill `mattpocock-skills:code-review` si tu peux l'appeler), et corriger ce qu'elle trouve.
-5. Deux commits, dans le style du dépôt (`git log`), chacun terminé par la ligne `Co-Authored-By: Claude Fable 5.2 <noreply@anthropic.com>` :
+5. Deux commits, dans le style du dépôt (`git log`), chacun terminé par la ligne d'attribution du modèle qui les écrit (depuis le 20/11 au soir : `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`) :
    - (a) tout sauf le modèle JSON ;
    - (b) le modèle JSON seul. Shopify refuse un modèle qui cite une section ou un réglage qu'il ne connaît pas encore : la session principale pousse (a), puis (b).
 
