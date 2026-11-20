@@ -38,7 +38,7 @@ Sous la scène 3D, comme dans la maquette :
 
 **Blocked by:** rien
 
-**Status:** done, en ligne le 20/11/2026 (commits `1f74555` les fichiers, `ef1ae3a` le modèle caché, `fe64b2b` et `c773005` les tests). Reste : les graisses 300 et 400 d'Albert Sans, à télécharger avec l'accord de Walid ; d'ici là le nom court et le h1 sortent en 500.
+**Status:** done, en ligne le 20/11/2026 (commits `1f74555` les fichiers, `ef1ae3a` le modèle caché, `fe64b2b` et `c773005` les tests). Les graisses 300 et 400 d'Albert Sans sont posées depuis `3b40d7f` (accord de Walid du 20/11 : deux fichiers statiques de Google Fonts, 10 Ko chacun, même version 1.025 que les trois premiers) : le nom court sort en maigre et le h1 en 400, comme dans la maquette. Vérifié en ligne : la fiche actuelle ne demande toujours que 500, 600 et 700, et ne télécharge pas ces deux fichiers ; seule leur déclaration s'ajoute à son HTML.
 
 **Vérifié en ligne le 20/11 (toile et poster Superman, téléphone 390 × 844 et ordinateur 1440 × 900) :**
 - les données lues par Google (title, description, canonique, robots, og, h1, les deux blocs JSON-LD) sont identiques entre la fiche normale et la vue de test ; la canonique de la vue est l'adresse normale ;

@@ -104,7 +104,7 @@ La vue de test existe : `https://www.myselfmonart.com/products/<produit oeuvre-3
 
 **Le script** `assets/oeuvre-galerie.js` : mêmes repères, un bloc par partie, chacun dans sa propre fonction `(function () { 'use strict'; … })();`. En tête de ton bloc, pour les tests : `if (typeof window === 'undefined') { Object.assign(module.exports, { tesCalculsPurs }); return; }`. Puis tes éléments personnalisés, gardés par `if (customElements.get('galerie-…')) return;`. Aucun objet global (`window.x = …` est refusé par un test), aucun `DOMContentLoaded`. La condition « le mouvement suit le défilement » du socle (`mouvementLie`) est privée à son bloc : si tu en as besoin, réécris-la dans le tien, à l'identique.
 
-**Polices.** Albert Sans, déclarée par la scène 3D, en 500, 600 et 700 seulement. Les graisses 300 et 400 de la maquette arriveront (Walid doit donner son accord pour les télécharger) : écris les graisses de la maquette, sans rien télécharger. D'ici là, 300 et 400 sortent en 500 : c'est attendu, ne le compense pas.
+**Polices.** Albert Sans, déclarée par la scène 3D seule (`snippets/oeuvre-3d-stage.liquid`), en 300, 400, 500, 600 et 700 depuis le commit `3b40d7f` du 20/11 (Walid a donné son accord pour les deux fichiers de plus). Écris les graisses de la maquette. Une graisse au-delà (800) n'existe pas dans le thème : elle sortirait en 700 ; ne télécharge rien, signale-le. Si ta copie est partie avant ce commit, prends-le pour des rendus fidèles : `git cherry-pick 3b40d7f` (il ne touche que la scène, deux tests de police et deux fichiers d'`assets`).
 
 **Textes** : `sections.mma.galerie.<section>.<clé>` dans les cinq langues (`intro` existe, 16 clés).
 
