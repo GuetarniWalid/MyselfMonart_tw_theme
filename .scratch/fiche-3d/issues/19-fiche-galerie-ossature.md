@@ -38,10 +38,18 @@ Sous la scène 3D, comme dans la maquette :
 
 **Blocked by:** rien
 
-**Status:** ready-for-agent
+**Status:** done, en ligne le 20/11/2026 (commits `1f74555` les fichiers, `ef1ae3a` le modèle caché, `fe64b2b` et `c773005` les tests). Reste : les graisses 300 et 400 d'Albert Sans, à télécharger avec l'accord de Walid ; d'ici là le nom court et le h1 sortent en 500.
 
-- [ ] `…/products/<produit oeuvre-3d>?view=oeuvre-galerie` montre la scène 3D, la pilule, la capsule et la présentation de la maquette, pour une toile et pour un poster, sur téléphone et sur ordinateur.
-- [ ] Sans `?view`, la fiche est exactement celle d'aujourd'hui ; les fiches des autres produits aussi.
-- [ ] Un seul `h1`, le même qu'aujourd'hui ; les données Google de la page sont les mêmes que sur la fiche actuelle.
-- [ ] La bascule Toile / Poster, l'ajout au panier depuis la pilule et le « j'aime » marchent dans la vue de test.
-- [ ] `npm test` passe ; la vérification des traductions passe ; la feuille commune du site n'a pas grossi de plus de quelques centaines d'octets.
+**Vérifié en ligne le 20/11 (toile et poster Superman, téléphone 390 × 844 et ordinateur 1440 × 900) :**
+- les données lues par Google (title, description, canonique, robots, og, h1, les deux blocs JSON-LD) sont identiques entre la fiche normale et la vue de test ; la canonique de la vue est l'adresse normale ;
+- la scène 3D, la pilule, la capsule du fil d'Ariane et la présentation s'affichent, sans débordement ; la bascule Toile / Poster garde `?view=oeuvre-galerie` et arrive sur le jumeau ;
+- après le push des fichiers (sans le modèle), les douze pages témoins (fiches 3D, anciennes fiches, sur-mesure, personnalisés, vue photo-studio, collection, accueil, panier) sont identiques à leurs copies d'avant, au caractère près, hors l'empreinte de version du thème ;
+- pas vérifié : un vrai téléphone, le panier et le « j'aime » au doigt (Walid), Lighthouse (ticket 27).
+
+**Choix du sous-agent, gardés :** réglage nommé `page_galerie` (« galerie » désigne déjà la galerie de photos) ; la présentation se compose après la boucle des blocs, dans l'ordre de la maquette ; pastilles de la fiche ciel, rose, soleil, menthe, lilas ; `--encre-55` à 0,6 pour le contraste ; « Trustpilot » souligné (c'est un lien) ; un nom court trop long passe à la ligne ; sans titre court, le titre du produit le remplace ; une copie de la feuille reste dans `<head>` (elle tient pendant la bascule).
+
+- [x] `…/products/<produit oeuvre-3d>?view=oeuvre-galerie` montre la scène 3D, la pilule, la capsule et la présentation de la maquette, pour une toile et pour un poster, sur téléphone et sur ordinateur.
+- [x] Sans `?view`, la fiche est exactement celle d'aujourd'hui ; les fiches des autres produits aussi.
+- [x] Un seul `h1`, le même qu'aujourd'hui ; les données Google de la page sont les mêmes que sur la fiche actuelle.
+- [x] La bascule Toile / Poster, l'ajout au panier depuis la pilule et le « j'aime » marchent dans la vue de test. (bascule et ajout au panier essayés le 20/11 dans un navigateur sans écran : 62,50 € au panier, tiroir ouvert ; le « j'aime » est laissé à Walid, un clic compte pour de vrai)
+- [x] `npm test` passe ; la vérification des traductions passe ; la feuille commune du site n'a pas grossi de plus de quelques centaines d'octets. (676 tests, 0 échec ; feuille commune inchangée, 142 725 octets)
