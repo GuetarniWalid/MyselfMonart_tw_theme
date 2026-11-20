@@ -14,6 +14,16 @@
     | Poster Superman | 42 et 45 | 7,5 et 7,3 s | 1,41 et 1,04 s | 0 | 3,34 Mo | 339 |
 
     Le HTML seul de la fiche actuelle pèse 789 Ko pour la toile et 448 Ko pour le poster (avant compression). Outil : `lh.sh` (Lighthouse du cache npx), sorties gardées hors du dépôt.
+  - **Comparaison du 20/11 à 21 h**, page de test complète (couleurs comprises), même conditions (Lighthouse 12.6.1, téléphone simulé, passages alternés fiche actuelle / vue de test, deux tours) :
+
+    | | Performance | Tableau affiché (LCP) | Blocage (TBT) | Décalage (CLS) | Poids | Requêtes |
+    |---|---|---|---|---|---|---|
+    | Toile, fiche actuelle | 47 et 46 | 7,2 et 7,4 s | 0,84 et 1,01 s | 0,0009 | 3,34 Mo | 341 |
+    | Toile, vue de test | 58 et 49 | 5,9 et 6,9 s | 0,51 et 0,81 s | 0,0015 | 3,21 Mo | 339 |
+    | Poster, fiche actuelle | 47 et 50 | 7,0 et 6,9 s | 1,63 et 0,92 s | 0 et 0,0015 | 3,31 Mo | 340 |
+    | Poster, vue de test | 53 et 49 | 6,2 et 6,6 s | 0,79 et 0,88 s | 0,004 | 3,20 Mo | 340 |
+
+    La nouvelle page ne fait pas moins bien : note égale ou meilleure, tableau affiché plus tôt, moins de blocage, un peu plus légère. Le décalage reste négligeable (0,004 au plus, « bon » sous 0,1). Au défilement (trace Chrome, processeur ×4), après `c2add70` : plus long recalcul de styles 20 ms (170 ms avant), tâches longues 6 ou 7 (15 à 17 avant), la plus longue 105 ms (240 ms avant).
   - Copie des pages avant le premier push (HTML du serveur, 20/11 à 13 h 36) : toile et poster Superman, ancienne toile, ancien poster, sur-mesure, deux personnalisés, la vue `photo-studio`, une collection, l'accueil, le panier. À comparer après chaque push qui touche un fichier commun.
 - Contrôle sur un vrai téléphone, dans Safari et dans Firefox (la scène a un mode de secours), en mouvements réduits, et dans les cinq langues.
 - Les données lues par Google (produit, fil d'Ariane, balises) sont les mêmes qu'avant.
@@ -43,6 +53,6 @@
 **Status:** needs-walid
 
 - [ ] Walid a validé la vue de test sur son téléphone.
-- [ ] Les mesures avant / après sont notées, et la nouvelle page ne fait pas moins bien.
+- [x] Les mesures avant / après sont notées, et la nouvelle page ne fait pas moins bien (20/11, vue de test ; à refaire une fois après la bascule).
 - [ ] La fiche des produits 3D est la nouvelle page, en cinq langues, toile et poster.
 - [ ] Les anciennes fiches, les collections et l'accueil sont inchangés.
