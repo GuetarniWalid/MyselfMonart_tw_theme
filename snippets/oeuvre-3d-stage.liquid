@@ -64,8 +64,12 @@
 -%}
 {%- comment -%}
   Albert Sans, la police des légendes, de la rangée, de « Retour » et de la pilule (choix de Walid du
-  11/11/2026) : graisses 500, 600 et 700 seulement, fichiers woff2 statiques pris sur Google Fonts
+  11/11/2026) : graisses 500, 600 et 700, fichiers woff2 statiques pris sur Google Fonts
   (fonts.gstatic.com, version 1.025, caractères latins), hébergés dans le thème.
+  Les graisses 300 et 400 servent à la page galerie, sous la scène (assets/oeuvre-galerie.css : le nom
+  court en maigre, le titre et le texte courant) : mêmes fichiers statiques, même source, ajoutés le
+  20/11/2026 avec l'accord de Walid. La scène, ses chips et sa pilule n'écrivent qu'en 500, 600 et 700 :
+  ces deux graisses ne changent rien à leur dessin, et ne se téléchargent que si un texte les demande.
   Copyright 2021 The Albert Sans Project Authors (https://github.com/usted/Albert-Sans).
   Licence : SIL Open Font License 1.1 (https://openfontlicense.org), libre d'usage et de diffusion.
   Déclarée ici seulement : aucune autre page ne la charge. Les graisses de l'arrivée (500, 600) partent
@@ -77,6 +81,22 @@
 {{ 'oeuvre-3d-albert-sans-500.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
 {{ 'oeuvre-3d-albert-sans-600.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
 {% style %}
+  @font-face {
+    font-family: 'Albert Sans';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url({{ 'oeuvre-3d-albert-sans-300.woff2' | asset_url }}) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: 'Albert Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url({{ 'oeuvre-3d-albert-sans-400.woff2' | asset_url }}) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
   @font-face {
     font-family: 'Albert Sans';
     font-style: normal;

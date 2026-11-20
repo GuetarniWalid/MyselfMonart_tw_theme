@@ -205,10 +205,10 @@ test('la feuille et le script : un bloc par partie de la page, entre deux repèr
   }
 })
 
-/* La maquette écrit en Albert Sans de 300 à 800 (Google Fonts). Le thème ne sert que 500, 600 et 700, pour la scène
-   3D (scripts/oeuvre-3d-police.test.cjs) : le nom court « maigre » (300) et le h1 (400) sortent donc en 500 tant que
-   ces deux graisses ne sont pas posées dans assets/ et déclarées. Ce test le signale (« todo ») tant que c'est
-   vrai, sans faire échouer la suite ; il passe de lui-même quand elles y sont. */
+/* La maquette écrit en Albert Sans de 300 à 800 (Google Fonts). Le thème sert 500, 600 et 700 pour la scène 3D, et
+   300 et 400 pour cette page depuis le 20/11/2026 (scripts/oeuvre-3d-police.test.cjs) : le nom court « maigre » et
+   le h1 ont leur graisse. Une graisse que la feuille demanderait sans que le thème la serve sortirait dans la plus
+   proche : ce test le signale (« todo »), sans faire échouer la suite. */
 test('police : chaque graisse que la feuille demande est servie par le thème', (t) => {
   const asked = new Set()
   for (const { body } of sheet()) {
