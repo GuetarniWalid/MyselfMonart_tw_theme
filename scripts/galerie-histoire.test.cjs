@@ -514,7 +514,8 @@ test('rendu dans chaque langue : les textes fixes de la section sont traduits', 
 
 /* ---------- Le modèle caché ---------- */
 
-const MODEL = 'templates/product.oeuvre-galerie.json'
+// Le modèle en page galerie : la fiche 3D depuis la bascule du 21/11/2026 (avant : le modèle caché product.oeuvre-galerie).
+const MODEL = 'templates/product.oeuvre-3d.json'
 const model = json(MODEL)
 const placed = Object.entries(model.sections).find(([, section]) => section.type === 'galerie-histoire')
 // Le modèle arrive par un second commit : Shopify refuse un modèle qui cite une section qu'il ne connaît pas encore.

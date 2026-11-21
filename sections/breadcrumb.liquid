@@ -3,7 +3,8 @@
   assign item_list_element_urls = ''
   # Fiche 3D (modèle product.oeuvre-3d) : le fil devient la capsule de la maquette 7a, posée sur la scène
   # (snippets/oeuvre-3d-crumb.liquid). Le chemin et la liste JSON-LD restent ceux calculés ici.
-  # De même dans sa nouvelle page, le modèle caché product.oeuvre-galerie (?view=oeuvre-galerie, ticket 19).
+  # oeuvre-galerie : le modèle caché de la page galerie (ticket 19), retiré après la bascule du 21/11/2026, où la
+  # page galerie est devenue la fiche 3D. Sans effet depuis ; à retirer avec ses tests (scripts/oeuvre-galerie.test.cjs).
   assign crumb_capsule = false
   if template.name == 'product'
     if template.suffix == 'oeuvre-3d' or template.suffix == 'oeuvre-galerie'

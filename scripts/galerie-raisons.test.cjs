@@ -20,7 +20,8 @@ const {
 
 const SECTION = 'sections/galerie-raisons.liquid'
 const CSS = 'assets/oeuvre-galerie.css'
-const MODEL = 'templates/product.oeuvre-galerie.json'
+// Le modèle en page galerie : la fiche 3D depuis la bascule du 21/11/2026 (avant : le modèle caché product.oeuvre-galerie).
+const MODEL = 'templates/product.oeuvre-3d.json'
 const HOOK = ':root[data-galerie-page]'
 // Les quatre raisons, dans l'ordre de la page : le nom neutre de leur personnage, la taille de son image, la
 // couleur de sa carte, et si le personnage parle (une bulle).

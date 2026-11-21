@@ -19,7 +19,8 @@ const { modeDeScene, echelleDeScene, placesDeScene, tempsDeScene, departDuTemps 
 const SECTION = 'sections/galerie-scene.liquid'
 const CSS = 'assets/oeuvre-galerie.css'
 const JS = 'assets/oeuvre-galerie.js'
-const MODEL = 'templates/product.oeuvre-galerie.json'
+// Le modèle en page galerie : la fiche 3D depuis la bascule du 21/11/2026 (avant : le modèle caché product.oeuvre-galerie).
+const MODEL = 'templates/product.oeuvre-3d.json'
 const MOTION = '@media (prefers-reduced-motion: no-preference)'
 const LINKED = '@supports (animation-timeline: view()) and (animation-range-start: contain 10svh)'
 const LARGE = '@media (min-width: 900px)'

@@ -25,7 +25,8 @@ const SHEET = 'snippets/galerie-intro-fiche.liquid'
 const PIECES = [INTRO, REVIEWS, SHEET]
 const CSS = 'assets/oeuvre-galerie.css'
 const JS = 'assets/oeuvre-galerie.js'
-const MODEL = 'templates/product.oeuvre-galerie.json'
+// Le modèle en page galerie : la fiche 3D depuis la bascule du 21/11/2026 (avant : le modèle caché product.oeuvre-galerie).
+const MODEL = 'templates/product.oeuvre-3d.json'
 // Ce qui trahit la page galerie dans le HTML d'une fiche.
 const TRACES = /data-galerie|oeuvre-galerie\.|class="[^"]*\bgalerie\b|galerie-[a-z]|<galerie-/
 

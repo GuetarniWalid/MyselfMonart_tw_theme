@@ -25,7 +25,8 @@ const QUESTIONS = 'sections/galerie-questions.liquid'
 const PIECES = [AVIS, CARTE, RECOS, QUESTIONS]
 const CSS = 'assets/oeuvre-galerie.css'
 const JS = 'assets/oeuvre-galerie.js'
-const MODEL = 'templates/product.oeuvre-galerie.json'
+// Le modèle en page galerie : la fiche 3D depuis la bascule du 21/11/2026 (avant : le modèle caché product.oeuvre-galerie).
+const MODEL = 'templates/product.oeuvre-3d.json'
 // La fiche 3D d'avant la bascule, figée dans le banc (scripts/galerie-banc.cjs).
 const TODAY = 'scripts/fixtures/product.oeuvre-3d.avant-galerie.json'
 const BLOCK = 'Avis, recommandations, questions (ticket 23)'
