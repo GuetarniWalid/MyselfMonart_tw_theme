@@ -1,0 +1,582 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "breadcrumb_RCxFAG": {
+      "type": "breadcrumb",
+      "settings": {}
+    },
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "trustpilot_review_9q3NVM": {
+          "type": "trustpilot_review",
+          "settings": {
+            "link": "https://fr.trustpilot.com/review/myselfmonart.com",
+            "margin_bottom": "mb-4"
+          }
+        },
+        "short_title_9m74gE": {
+          "type": "short_title",
+          "settings": {
+            "show_likes": true,
+            "margin_bottom": "mb-2"
+          }
+        },
+        "buy_qrRzcg": {
+          "type": "buy",
+          "settings": {
+            "text": "Ajouter au panier",
+            "show_payment_icons": true,
+            "margin_bottom": "mb-8",
+            "is_dynamic_variant": false,
+            "show_promotion": false,
+            "promotion_discount": 10,
+            "promotion_discount_unit": "%",
+            "promotion_reason": "Soldes d'été",
+            "promotion_date": ""
+          }
+        },
+        "variant_picker_YiA9jN": {
+          "type": "variant_picker",
+          "settings": {}
+        },
+        "title": {
+          "type": "title",
+          "settings": {
+            "tone": "subtitle",
+            "font_size": "text-lg",
+            "margin_bottom": "mb-2"
+          }
+        },
+        "fact_sheet": {
+          "type": "fact_sheet",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "trustpilot_review_9q3NVM",
+        "short_title_9m74gE",
+        "buy_qrRzcg",
+        "variant_picker_YiA9jN",
+        "title",
+        "fact_sheet"
+      ],
+      "settings": {
+        "media_display": "stage_3d",
+        "page_galerie": true,
+        "start_from_media": 3,
+        "enable_merchant_schema": true,
+        "shipping_free": true,
+        "ships_country": "FR",
+        "return_days": 14,
+        "enable_format_toggle": true
+      }
+    },
+    "galerie_scene": {
+      "type": "galerie-scene",
+      "settings": {}
+    },
+    "galerie_raisons": {
+      "type": "galerie-raisons",
+      "settings": {}
+    },
+    "galerie_histoire": {
+      "type": "galerie-histoire",
+      "blocks": {
+        "volet_choisir_toile": {
+          "type": "volet",
+          "settings": {
+            "support": "toile",
+            "heading": "Poster ou toile : lequel choisir ?",
+            "content": "<p>Une même œuvre, deux façons de l’habiter — à vous de choisir celle qui vous ressemble aujourd’hui.</p><p><strong>Le poster, c’est la liberté.</strong> Un format papier léger et accessible, à encadrer vous-même avec un cadre standard du commerce, ou à poser tel quel. On le déplace, on le compose en mur-galerie, on le renouvelle au gré des envies. Idéal pour une première déco, un petit budget, une location ou un cadeau qui a du goût. Le rendu ? Un vrai papier photo de 250 g/m², un tirage HD aux couleurs éclatantes.</p><p><strong>La version sur toile, c’est la pièce forte.</strong> Celle qu’on installe pour durer, qui donne le ton d’un mur et qu’on ne change pas. Plus enveloppante, plus présente — pensée pour rester.</p>"
+          }
+        },
+        "volet_choisir_poster": {
+          "type": "volet",
+          "settings": {
+            "support": "poster",
+            "heading": "Poster ou toile : lequel choisir ?",
+            "content": "<p>Une même œuvre, deux façons de l’habiter — à vous de choisir celle qui vous ressemble aujourd’hui.</p><p><strong>Le poster, c’est la liberté.</strong> Un format papier léger et accessible, à encadrer vous-même avec un cadre standard du commerce, ou à poser tel quel. On le déplace, on le compose en mur-galerie, on le renouvelle au gré des envies. Idéal pour une première déco, un petit budget, une location ou un cadeau qui a du goût. Le rendu ? Un vrai papier photo de 250 g/m², un tirage HD aux couleurs éclatantes.</p><p><strong>La version sur toile, c’est la pièce forte.</strong> Celle qu’on installe pour durer, qui donne le ton d’un mur et qu’on ne change pas. Plus enveloppante, plus présente — pensée pour rester.</p><p>Envie de la découvrir sur toile ? Utilisez la bascule <em>Poster / Toile</em> en haut de page pour voir la même œuvre en version durable.</p>"
+          }
+        },
+        "volet_livraison_toile": {
+          "type": "volet",
+          "settings": {
+            "support": "toile",
+            "heading": "Livraison, paiement & délais",
+            "content": "<p><strong>Livraison offerte partout.</strong> Aucun minimum, en colis suivi jusqu'à votre porte.</p><p><strong>Fabrication à la demande :</strong><br/>Nous n’avons pas de stock. Votre tableau est imprimé à la commande dans nos ateliers, sa toile est tendue à la main sur son châssis, puis il est contrôlé avant d’être expédié. Comptez 7 jours ouvrés entre votre commande et la livraison. Votre numéro de suivi vous est envoyé dès l’expédition.</p><p><strong>Paiement en 3 fois sans frais</strong> avec Klarna dès 50 €.</p><p><em>Conçu en France, imprimé en Europe.</em></p>"
+          }
+        },
+        "volet_livraison_poster": {
+          "type": "volet",
+          "settings": {
+            "support": "poster",
+            "heading": "Livraison, paiement & délais",
+            "content": "<p><strong>Livraison offerte partout.</strong> Aucun minimum, en colis suivi jusqu'à votre porte.</p><p>Votre poster est imprimé à la commande dans nos ateliers, puis contrôlé avant d'être expédié. Comptez 7 jours ouvrés.</p><p><strong>Paiement en 3 fois sans frais</strong> avec Klarna dès 50 €.</p>"
+          }
+        },
+        "volet_details_toile": {
+          "type": "volet",
+          "settings": {
+            "support": "toile",
+            "heading": "Détails du produit",
+            "content": "<h3>Qualité artisanale & savoir-faire</h3><p>Chaque toile est une pièce unique, fabriquée spécialement pour vous. Notre impression à la demande nous permet d'atteindre un niveau de qualité incomparable avec la production industrielle, tout en adoptant une démarche responsable qui limite les déchets.</p><p>Nous utilisons des encres haut de gamme, reconnues pour leur exceptionnelle résistance à la lumière. Vos couleurs restent éclatantes au fil des années, même exposées à la lumière naturelle de votre intérieur.</p><p></p><h3>Montage artisanal</h3><p>Chaque toile est tendue à la main sur un châssis en bois massif, pour un rendu élégant et une profondeur qui donne du relief à l'œuvre. La profondeur est de 2 cm pour les toiles.</p><h3><br/>Directement prêt à accrocher</h3><p>Nos toiles encadrées sont livrées montées et prêtes à accrocher. Le cadre en bois massif apporte une finition soignée qui s'intègre harmonieusement dans tout style de décoration.</p>"
+          }
+        },
+        "volet_details_poster": {
+          "type": "volet",
+          "settings": {
+            "support": "poster",
+            "heading": "Détails du produit",
+            "content": "<p>Chaque poster est imprimé spécialement pour vous, en haute définition, sur un vrai papier photo de 250 g/m².</p><p>Sans cadre, il s'encadre avec un cadre standard du commerce, ou se pose tel quel. Avec cadre, il arrive encadré, sous verre et prêt à accrocher : blanc, noir, chêne vieilli ou noyer.</p>"
+          }
+        },
+        "volet_retour_toile": {
+          "type": "volet",
+          "settings": {
+            "support": "toile",
+            "heading": "Retour et échange",
+            "content": "<h3>Notre engagement qualité</h3><p>Chaque œuvre quitte notre atelier soigneusement emballée pour voyager en toute sécurité jusqu'à chez vous. Dans le rare cas où votre tableau arriverait endommagé ou ne correspondrait pas à nos exigences de qualité, nous nous engageons à vous envoyer une nouvelle pièce sans aucun frais.</p><p>Parce que vous méritez une œuvre parfaite sur vos murs, nous restons à vos côtés jusqu'à votre entière satisfaction.</p>"
+          }
+        },
+        "volet_retour_poster": {
+          "type": "volet",
+          "settings": {
+            "support": "poster",
+            "heading": "Retour et échange",
+            "content": "<p>Si votre poster arrivait endommagé ou ne correspondait pas à nos exigences de qualité, nous vous envoyons une nouvelle pièce sans aucun frais. Nous restons à vos côtés jusqu'à votre entière satisfaction.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "volet_choisir_toile",
+        "volet_choisir_poster",
+        "volet_livraison_toile",
+        "volet_livraison_poster",
+        "volet_details_toile",
+        "volet_details_poster",
+        "volet_retour_toile",
+        "volet_retour_poster"
+      ],
+      "settings": {}
+    },
+    "customer_testimonial_myiwee": {
+      "type": "galerie-avis",
+      "blocks": {
+        "image_text_Emh8qz": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-frida-aviclient-satisafait-deco-toilette.png",
+            "message": "Trop contente\nLes coulures sont trop belles, le cadre est magnifique, c’est vraiment un gros coup de cœur. \nMarie L"
+          }
+        },
+        "image_text_E4gkJD": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-femme-abstrait-crayon-pastel.jpg",
+            "message": "Très beau tableau ! Je suis ravie de mon achat, merci.. Léa M"
+          }
+        },
+        "image_text_PWRHhc": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-alluminium-japonais-geisha-avis-clien.jpg",
+            "message": "Je suis juste en admiration devant cette œuvre et vous remercie de sortir de l’ordinaire pour habiller nos murs!!!\nUn grand merci. Sandra B"
+          }
+        },
+        "image_text_fxBift": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/toile-moderne-frida-fleurs.jpg",
+            "message": "Dès l’ouverture du carton, j’ai trouvé la toile magnifique.\nEncore plus belle que sur la photo du site.\nJe l’ai installée. Et l’effet est «  waouh ! »\nTrès jolie toile ! Très beau site !\nJe suis ravi de mon achat. Cécile C"
+          }
+        },
+        "image_text_Wckbj6": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-contemporain-abstrait-femme-ronde.jpg",
+            "message": "Reçu mon tableau et franchement, je ne regrette pas une seconde ! Les couleurs sont incroyables, l’originalité saute aux yeux… Impossible de ne pas s’arrêter devant. Sophie D"
+          }
+        },
+        "image_text_DCdKLC": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableauphotographie-zebre-animaux-zebre-sauvage.jpg",
+            "message": "L'animal, majestueux et solitaire trône dans mon salon au dessus de ma console... Peut on dire qu il est magnifique ? Assurément oui et je l adore!\nPatricia G."
+          }
+        },
+        "image_text_7ERwAp": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-gaming-marvel-iron-man.jpg",
+            "message": "Très content de mon achat ! Mon fils est ravi il va faire de beaux rêves de super-héros\n. Eugene D"
+          }
+        },
+        "image_text_ragCcn": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/peinture-femme-noire-muse.jpg",
+            "message": "Magnifique tableau et très design, correspond parfaitement à la description.  Morel E"
+          }
+        },
+        "image_text_Riirzd": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/Tableau-chambre-bebe_f6e62e6e-707b-41df-aa17-bdad25ef3385.jpg",
+            "message": "Juste une petite photo avec le cadre mis en place encore un grand merci à vous 🥰. \nElodie G"
+          }
+        },
+        "image_text_qM9rBh": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/deco-mural-toile-marilyn-monroe-pop-art.jpg",
+            "message": "Envoie très rapide et tableau encore plus beau que sur le site.\nParfait je recommande !!!\nJessica S"
+          }
+        },
+        "image_text_xLzjRk": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/decoration-mural-cadre-bois-cactus-paysage-colore.jpg",
+            "message": "Super contente du rendu de ces cadres en bois ! 🌵 Ça apporte tellement de chaleur et de gaieté à mon salon, j’adore ! 😍 Lina O"
+          }
+        },
+        "image_text_jLAVDk": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/avis-tableau-plexi_2.jpg",
+            "message": "Tableau magnifique, très contente du support choisi en plexiglas réalisé avec soin. Joëlle N"
+          }
+        },
+        "image_text_yxnGkz": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-animaux-rhinoceros_b1022df5-0085-43a4-93b7-011dd579d316.jpg",
+            "message": "AMAZING ! Le poster est magnifique, il fait son effet dans mon salon. Vanessa K"
+          }
+        },
+        "image_text_PTqtay": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/Coin_yin-yang_et_plantes_luxuriantes.png",
+            "message": "Le tableau est magnifique! Alexandre V"
+          }
+        },
+        "image_text_NnGTgN": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-fruit-legume-cuisine-ananas-colore.jpg",
+            "message": "Trop contente de mon tableau, les couleurs sont aussi flashy que sur les photos du site.\nSarah F"
+          }
+        },
+        "image_text_YVdFr3": {
+          "type": "image-text",
+          "disabled": true,
+          "settings": {
+            "image": "shopify://shop_images/tableau-street-art-femme-noire.jpg",
+            "message": "Parfait\nSuper rendu. \tMariane B"
+          }
+        },
+        "image_text_VRyJn9": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-panoramique-payasage-foret-lac.jpg",
+            "message": "Ce tableau est magnifique et tellement immersif ! Il donne une vraie sensation d’évasion et transforme l’ambiance de mon salon. Pierre S"
+          }
+        },
+        "image_text_FpM3Nt": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-zen-japonais-geisha_59746ee5-1329-4a3a-94ad-bc201116687c.jpg",
+            "message": "Nous sommes très satisfait de notre achat\nTrès bonne qualité\nNous ferons d´autres achats chez vous.\nBernard D"
+          }
+        },
+        "image_text_UfccPh": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-pour-cuisine-epices-colore.jpg",
+            "message": "Ravie de mon achat,\ntrès beau rendu des couleurs qui sont éclatantes. \nYannick R."
+          }
+        },
+        "image_text_hCDnam": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/Tableau-chambre_a164de8b-ed28-4326-926b-92bbe380279b.jpg",
+            "message": "Le tableau est super, et encore plus beau en vrai ! Arrivé rapidement et bien protégé. Alain N"
+          }
+        },
+        "image_text_XaycRQ": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/Tableau-decoration_44dcf7be-75b3-46aa-810b-3020d3b9dc06.jpg",
+            "message": "Très belle toile, les couleurs sont super et brillante. Marie K"
+          }
+        },
+        "image_text_QfHTN6": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/Tableau-deco-noir-et-blanc.jpg",
+            "message": "Top, rien à dire de plus. \nGuillaume H"
+          }
+        },
+        "image_text_eAxGcM": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-comics-super-man.jpg",
+            "message": "Nickel, très satisfait c'est ma 3e commande. Hugo G"
+          }
+        },
+        "image_text_DbNc9D": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-superman-aquarelle.jpg",
+            "message": "TOP, tableau reçu rapidement avec suivie. Hugo G"
+          }
+        },
+        "image_text_pFY7GA": {
+          "type": "image-text",
+          "settings": {
+            "image": "shopify://shop_images/tableau-lion-impression-alluminuim.jpg",
+            "message": "TOP QUALITÉ,  j'ai choisi l'impression sur aluminium et l'image est vraiment top. Ethan V"
+          }
+        }
+      },
+      "block_order": [
+        "image_text_Emh8qz",
+        "image_text_E4gkJD",
+        "image_text_PWRHhc",
+        "image_text_fxBift",
+        "image_text_Wckbj6",
+        "image_text_DCdKLC",
+        "image_text_7ERwAp",
+        "image_text_ragCcn",
+        "image_text_Riirzd",
+        "image_text_qM9rBh",
+        "image_text_xLzjRk",
+        "image_text_jLAVDk",
+        "image_text_yxnGkz",
+        "image_text_PTqtay",
+        "image_text_NnGTgN",
+        "image_text_YVdFr3",
+        "image_text_VRyJn9",
+        "image_text_FpM3Nt",
+        "image_text_UfccPh",
+        "image_text_hCDnam",
+        "image_text_XaycRQ",
+        "image_text_QfHTN6",
+        "image_text_eAxGcM",
+        "image_text_DbNc9D",
+        "image_text_pFY7GA"
+      ],
+      "settings": {
+        "customers": 1000,
+        "trustpilot_link": "https://fr.trustpilot.com/review/myselfmonart.com"
+      }
+    },
+    "product_recommendations_TX9rdQ": {
+      "type": "galerie-recos",
+      "settings": {
+        "number_products_to_display": 10
+      }
+    },
+    "7ae13aad-330c-4fa7-94cf-fafc1c13cf60": {
+      "type": "galerie-questions",
+      "blocks": {
+        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-1": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Les couleurs seront-elles fidèles à ce que je vois sur mon écran ?",
+            "row_content": "<p>Oui. Nous utilisons des encres haute pigmentation sur une toile polyester 285g/m².</p><p>Les couleurs sont riches, profondes et garanties 75 ans sans altération. La texture légèrement grainée de la toile ajoute même du relief que vous ne percevez pas à l'écran. La plupart de nos clientes trouvent le rendu encore plus beau en vrai. 🤍</p><p></p>",
+            "support": "toile"
+          }
+        },
+        "poster_couleurs": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Les couleurs seront-elles fidèles à ce que je vois sur mon écran ?",
+            "row_content": "<p>Oui. Votre poster est tiré en haute définition sur un vrai papier photo de 250 g/m². Les couleurs sont riches et nettes. La plupart de nos clientes trouvent le rendu encore plus beau en vrai.</p>",
+            "support": "poster"
+          }
+        },
+        "e20d3253-d757-4a99-9237-128916cc9ffb": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "C'est une vraie toile ou une simple affiche ?",
+            "row_content": "<p>Une vraie toile, pas une simple affiche. Conçue en France et imprimée à la demande en Europe : impression haute définition, toile épaisse 285 g/m², châssis en bois massif tendu à la main, finitions soignées. Nous ne faisons aucun compromis sur la qualité — c'est notre signature.</p>",
+            "support": "toile"
+          }
+        },
+        "poster_tirage_photo": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "C'est un vrai tirage photo ?",
+            "row_content": "<p>Oui. Conçu en France et imprimé à la demande en Europe : un tirage haute définition sur un vrai papier photo de 250 g/m², aux couleurs éclatantes.</p>",
+            "support": "poster"
+          }
+        },
+        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-2": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Comment choisir la bonne taille pour mon mur ?",
+            "row_content": "<p>Une règle simple : mesurez la largeur de votre mur et divisez par 1,5. Vous obtenez la largeur idéale de votre tableau.</p><p>Espace Taille recommandée: </p><ul><li>Au-dessus d'une console / petit meuble 30x40 cm</li><li>Au-dessus d'un canapé 2 places 60x80 cm</li><li>Au-dessus d'un lit ou grand canapé75x100 cm</li><li>Grand mur ou pièce de caractère90x120 cm<br/></li></ul><p>Un doute ? Découpez un carton aux dimensions et scotchez-le au mur pour visualiser.</p>",
+            "support": "toile"
+          }
+        },
+        "poster_taille": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Comment choisir la bonne taille pour mon mur ?",
+            "row_content": "<p>Une règle simple : mesurez la largeur de votre mur et divisez par 1,5. Vous obtenez la largeur idéale de votre poster. Un doute ? Découpez un carton aux dimensions et scotchez-le au mur pour visualiser.</p>",
+            "support": "poster"
+          }
+        },
+        "a603c2c1-59a1-4067-9d4b-dc8591ddc1f8": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Et si la taille ne convient pas une fois accroché ?",
+            "row_content": "<p>Vous avez 14 jours pour changer d'avis. Si la taille ne vous convient pas, contactez-nous et nous organisons le retour simplement. Votre satisfaction compte plus qu'une vente.</p>",
+            "support": "tous"
+          }
+        },
+        "collapsible_row_6q4PMJ": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Quels sont les délais de livraison ? Combien coûte la livraison ?",
+            "row_content": "<p>Chez nous, aucun tableau n’attend sur une étagère : le vôtre est créé spécialement pour vous, au moment où vous le commandez. Il est imprimé à la demande dans nos ateliers en Europe, la toile est tendue à la main sur son châssis, et chaque tableau est vérifié avant d’être expédié. Vous le recevez sous 7 jours ouvrés, avec un numéro de suivi envoyé par email dès l’expédition.</p><p><strong>Livraison GRATUITE sur toutes vos commandes 🎁. </strong>Sauf en Suisse où un supplément de 9,99€ est appliqué.</p>",
+            "support": "toile"
+          }
+        },
+        "poster_livraison": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Quels sont les délais et le prix de la livraison ?",
+            "row_content": "<p>Votre poster est imprimé spécialement pour vous, au moment où vous le commandez. Vous le recevez sous 7 jours ouvrés, avec un numéro de suivi. La livraison est gratuite sur toutes vos commandes.</p>",
+            "support": "poster"
+          }
+        },
+        "collapsible_row_dNyRAY": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Mon tableau peut-il être endommagé pendant le transport ?",
+            "row_content": "<p>Nous emballons chaque tableau avec un soin extrême : protection des coins, carton renforcé, calage anti-choc. En cas de dommage malgré tout, envoyez-nous une photo et nous vous renvoyons un nouveau tableau sans frais. 📦</p>",
+            "support": "toile"
+          }
+        },
+        "collapsible_row_eY4ikH": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Que faire si le tableau ne me plaît pas ?",
+            "row_content": "<p>Vous disposez de 14 jours après réception pour nous retourner votre tableau. Il doit être dans son état d'origine, non accroché. Contactez-nous par email et nous vous guiderons pour le retour. Le remboursement est effectué sous 7 jours après réception.</p>",
+            "support": "toile"
+          }
+        },
+        "poster_retour": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Que faire si le poster ne me plaît pas ?",
+            "row_content": "<p>Vous disposez de 14 jours après réception pour nous le retourner, dans son état d'origine. Le remboursement est effectué sous 7 jours après réception.</p>",
+            "support": "poster"
+          }
+        },
+        "collapsible_row_HBrNTG": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Le tableau est-il garanti ?",
+            "row_content": "<p>Oui. Nos toiles sont garanties 75 ans contre la décoloration grâce à nos encres haute pigmentation. Si vous constatez un défaut de fabrication, contactez-nous — nous trouverons une solution.</p>",
+            "support": "toile"
+          }
+        },
+        "collapsible_row_JPTqhr": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Comment accrocher mon tableau ?",
+            "row_content": "<p>Votre toile arrive déjà montée sur châssis en bois, prête à décorer votre intérieur. Pour l'accrocher, nous vous recommandons notre kit de fixation disponible en supplément dans la boutique — il s'adapte à tous les types de murs et garantit une installation sans mauvaise surprise.Aucun cadre à acheter, aucun montage à faire. Vous recevez, vous accrochez, vous admirez. 🤍</p>",
+            "support": "toile"
+          }
+        },
+        "collapsible_row_tzFVxD": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Faut-il acheter un cadre en plus ?",
+            "row_content": "<p>Nos toiles sont tendues sur châssis en bois et se suffisent à elles-mêmes. Mais si vous souhaitez un rendu plus sophistiqué, l'option \"avec cadre\" fait toute la différence — elle apporte une finition galerie d'art qui sublime vraiment le tableau. C'est d'ailleurs le choix préféré de nos clientes. 🤍</p>",
+            "support": "toile"
+          }
+        },
+        "poster_cadre": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Faut-il acheter un cadre en plus ?",
+            "row_content": "<p>Pas forcément. Sans cadre, votre poster s'encadre avec un cadre standard du commerce, ou se pose tel quel. Avec l'option « avec cadre », il arrive encadré, sous verre et prêt à accrocher.</p>",
+            "support": "poster"
+          }
+        },
+        "collapsible_row_gey7Eg": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Le paiement est-il sécurisé ?",
+            "row_content": "<p>Oui. Nous utilisons un système de paiement 100% sécurisé (SSL). Vos données bancaires ne transitent jamais par notre site — elles sont traitées directement par notre prestataire de paiement certifié (Visa, Mastercard, PayPal, Klarna, American Express).</p>",
+            "support": "tous"
+          }
+        },
+        "collapsible_row_fpW8TB": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Puis-je payer en plusieurs fois ?",
+            "row_content": "<p>Oui. Avec Klarna, vous pouvez régler en 3 fois sans frais à partir de 50€ d'achat.</p>",
+            "support": "tous"
+          }
+        },
+        "collapsible_row_jFqUX8": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Comment vous contacter si j'ai une question ?",
+            "row_content": "<p>Une vraie personne vous répond 7 jours sur 7. Écrivez-nous à contact@myselfmonart.com — nous répondons généralement sous 24h. ❤️</p>",
+            "support": "tous"
+          }
+        }
+      },
+      "block_order": [
+        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-1",
+        "poster_couleurs",
+        "e20d3253-d757-4a99-9237-128916cc9ffb",
+        "poster_tirage_photo",
+        "template--16404732215551__7ae13aad-330c-4fa7-94cf-fafc1c13cf60-1665565664f00a2cdf-2",
+        "poster_taille",
+        "a603c2c1-59a1-4067-9d4b-dc8591ddc1f8",
+        "collapsible_row_6q4PMJ",
+        "poster_livraison",
+        "collapsible_row_dNyRAY",
+        "collapsible_row_eY4ikH",
+        "poster_retour",
+        "collapsible_row_HBrNTG",
+        "collapsible_row_JPTqhr",
+        "collapsible_row_tzFVxD",
+        "poster_cadre",
+        "collapsible_row_gey7Eg",
+        "collapsible_row_fpW8TB",
+        "collapsible_row_jFqUX8"
+      ],
+      "settings": {
+        "contact_link": "shopify://pages/contactez-nous"
+      }
+    }
+  },
+  "order": [
+    "breadcrumb_RCxFAG",
+    "main",
+    "galerie_scene",
+    "galerie_histoire",
+    "customer_testimonial_myiwee",
+    "product_recommendations_TX9rdQ",
+    "7ae13aad-330c-4fa7-94cf-fafc1c13cf60",
+    "galerie_raisons"
+  ],
+  "layout": "product"
+}
