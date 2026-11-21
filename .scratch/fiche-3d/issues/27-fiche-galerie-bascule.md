@@ -55,11 +55,11 @@
 
 **Vérifié en ligne après la bascule, sur la toile et le poster Superman :** la fiche des produits 3D est la page galerie (`<html data-galerie-page>`, huit sections) ; title, description, canonique, robots, h1 et données JSON-LD identiques à avant ; bascule Toile / Poster, retour et suivant du navigateur, ajout au panier (62,50 €), recommandations (10 cartes, aussi après la bascule), aucune erreur de script ; les autres pages témoins (anciennes fiches, sur-mesure, personnalisés, vue photo-studio, collection, accueil, panier) identiques au caractère près.
 
-**Traductions :** les phrases des couleurs en anglais posées par la nuit du 21/11 (« Blue: strength. It outlines the muscles… », `outdated` à false) ; espagnol, allemand, néerlandais en cours à 3 h 45 (la tâche des fiches tournait encore). La bascule a été faite avant la traduction des modèles (4 h 15) : les 55 textes nouveaux du modèle (volets, questions du poster…) sont traduits dès la nuit ; les 54 autres, repris mot pour mot de l'ancienne fiche, avaient déjà leur traduction.
+**Traductions :** les phrases des couleurs en anglais posées par la nuit du 21/11 (« Blue: strength. It outlines the muscles… », `outdated` à false) ; espagnol, allemand, néerlandais posés ensuite (relus à 4 h 35, justes). La bascule a été faite avant la traduction des modèles (4 h 15) : les 55 textes nouveaux du modèle (volets, questions du poster…) sont traduits dès la nuit ; les 54 autres, repris mot pour mot de l'ancienne fiche, avaient déjà leur traduction. Relu à 5 h 08 : les 81 textes du modèle (hors liens et images) traduits et à jour en anglais, espagnol, allemand et néerlandais (« Poster or canvas: which to choose? », « Poster oder Leinwand: Was passt besser? », « Poster of canvas: welke kies je? »).
 
 **Modèle de test :** retiré du dépôt (`339a99c`). Il reste sur Shopify, parce que le déploiement ne supprime jamais un fichier (`--nodelete`, voulu) : sans effet pour les clients. À supprimer par Walid dans l'éditeur de code (« Modifier le code », `templates/product.oeuvre-galerie.json`). Les trois branches `oeuvre-galerie` restées dans le thème (règle unique, fil d'Ariane, bouton du panier) sont sans effet ; à retirer avec leurs tests.
 
 - [x] Walid a validé la vue de test sur son téléphone (20/11 au soir).
 - [x] Les mesures avant / après sont notées, et la nouvelle page ne fait pas moins bien (20/11, vue de test ; à refaire une fois après la bascule).
-- [x] La fiche des produits 3D est la nouvelle page, toile et poster (les cinq langues : traductions de la nuit du 21/11, à vérifier).
+- [x] La fiche des produits 3D est la nouvelle page, toile et poster, en cinq langues (traductions de la nuit du 21/11, relues).
 - [x] Les anciennes fiches, les collections et l'accueil sont inchangés.

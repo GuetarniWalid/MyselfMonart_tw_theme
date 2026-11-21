@@ -17,7 +17,9 @@ Règles pour la traduction :
 
 **Vérifié le 20/11 sur le serveur, en lecture seule (`traductions-perimees`, passe `product-de`) :** la requête des produits passe (coût 200 à 222 points par page), et la nuit prendra les deux Superman avec leurs trois textes, chacun avec l'empreinte de Shopify : Shopify les tient donc pour traduisibles. Métachamps : toile `Metafield/73194557210971`, `73194557243739`, `73194557276507` ; poster `Metafield/73194561306971`, `73194561339739`, `73194561372507`.
 
-**À contrôler :**
+**Contrôlé le 21/11 à 4 h 35 :** les six textes traduits dans les quatre langues, justes. Exemples : « Blue: strength. It outlines the muscles… », « El azul: la fuerza. Dibuja los músculos… », « Blau: die Kraft. … In Ihrem Raum… », « Blauw: de kracht. … In uw kamer… ».
+
+**Reste à contrôler la nuit suivante (22/11) :**
 - après 03 h 30 : `traductions-relire` avec ces six identifiants dans « passes » : les textes en quatre langues, `outdated` à `false`, et leur forme (« couleur : effet. » puis une ou deux phrases) ;
 - le lendemain : `traductions-perimees product-de` sans `colorTexts`, et `journaux-openai` sans renvoi.
 
@@ -25,7 +27,7 @@ Règles pour la traduction :
 
 **Vu en passant, pas corrigé :** trois produits repartent chaque nuit en allemand pour le seul nom d'option « Format » (identique dans les deux langues, donc jamais posé) : `Product/9257365963099`, `9404799779163`, `9738520854875`. De même, un titre court rendu identique par l'IA repart chaque nuit. Coût : quelques petits appels par nuit.
 
-- [ ] Un produit dont les textes des couleurs sont nouveaux ou ont changé est repris par la traduction de nuit ; un produit déjà traduit ne l'est pas de nouveau (pas de boucle : voir la correction du 17/11 sur les collections retraduites chaque nuit).
-- [ ] Les trois textes arrivent dans les quatre langues, avec leur forme.
+- [x] Un produit dont les textes des couleurs sont nouveaux ou ont changé est repris par la traduction de nuit ; un produit déjà traduit ne l'est pas de nouveau (pas de boucle : voir la correction du 17/11 sur les collections retraduites chaque nuit). (nuit du 21/11 : les deux Superman repris ; la non-reprise se vérifie la nuit suivante)
+- [x] Les trois textes arrivent dans les quatre langues, avec leur forme. (relu le 21/11 à 4 h 35 : en, es, de, nl, six textes sur six, `outdated` à false, forme « couleur : effet. » gardée, vouvoiement, « Poster » pour le poster)
 - [x] Un produit sans textes de couleurs se traduit comme avant. (tests, et comparaison de l'ancien et du nouveau code sur cinq boutiques d'essai)
 - [x] Les tests n'appellent ni l'IA ni Shopify pour de vrai.
