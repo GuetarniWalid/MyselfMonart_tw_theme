@@ -339,6 +339,82 @@ for (const aspect of SCREENS) {
   }
 }
 
+/* Écran large, rangée ouverte : la zone au-dessus de la rangée fait 3,4 fois sa hauteur sur un ordinateur
+   (1440 × 820) et 3,8 sur un iPad en paysage. Les gros plans y poussaient l'œuvre d'un côté, un grand pan de
+   mur vide de l'autre, et le coin de la toile nue montrait le fond noir au-delà du mur (retour de Walid du
+   21/11/2026 sur iPad : « ça ne se passe pas au centre, ça tire vers le côté »). */
+const WIDE_ZONES = [2.2, 3.36, 3.83]
+
+// Ce qu'on voit de l'œuvre, de gauche à droite (-1 à 1) : un semis de points dans sa boîte (cadre compris),
+// ceux qui tombent dans la hauteur de l'écran. Indépendant du directeur.
+function shownSpan(view, aspect) {
+  const c = paintingCorners(view.painting, 'outer')
+  const at = (x, y, z) => c.find((k) => k.side.x === x && k.side.y === y && k.side.z === z)
+  const o = at(-1, -1, 0)
+  const axes = [at(1, -1, 0), at(-1, 1, 0), at(-1, -1, 1)].map((p) => sub(p, o))
+  const N = 30
+  let left = Infinity, right = -Infinity
+  for (let i = 0; i <= N; i++) {
+    for (let j = 0; j <= N; j++) {
+      for (const w of [0, 0.5, 1]) {
+        const point = o.map((v, k) => v + axes[0][k] * (i / N) + axes[1][k] * (j / N) + axes[2][k] * w)
+        const { x, y, depth } = project(view.camera, aspect, point)
+        if (depth > 0 && Math.abs(y) <= 1) {
+          left = Math.min(left, x)
+          right = Math.max(right, x)
+        }
+      }
+    }
+  }
+  return { left, right }
+}
+
+const WIDE_PLANS = [
+  { group: 'border', product: TOILE, shot: 'edge' },
+  { group: 'border', product: { ...TOILE, size: '90x120' }, shot: 'edge' },
+  { group: 'frame', product: TOILE, shot: 'bare' },
+  { group: 'frame', product: { ...TOILE, size: '75x100' }, shot: 'bare' },
+  { group: 'frame', product: { ...TOILE, frame: 'chene' }, shot: 'corner' },
+  { group: 'passe', product: { ...TOILE, material: 'poster', passe: true }, shot: 'margin' },
+]
+
+for (const aspect of WIDE_ZONES) {
+  for (const { group, product, shot } of WIDE_PLANS) {
+    test(`écran large ${aspect}, ${product.material} ${product.size} ${shot} : l'œuvre reste au milieu`, () => {
+      const director = createDirector({ room: ROOM, product })
+      director.choose(group, product, 0)
+      const view = director.view(LATER, aspect)
+      assert.equal(view.shot, shot)
+      const { left, right } = shownSpan(view, aspect)
+      const where = `de ${left.toFixed(2)} à ${right.toFixed(2)}`
+      // Le coin ou la tranche (à gauche, côté lumière) reste à l'écran.
+      assert.ok(left >= -1.001, `le côté montré sort de l'écran : ${where}`)
+      if ((right - left) / 2 <= 0.8) {
+        // Elle tient dans la largeur : au milieu, plus de pan de mur vide d'un seul côté.
+        assert.ok(Math.abs((left + right) / 2) <= 0.12, `l'œuvre n'est pas au milieu : ${where}`)
+      } else {
+        // Plus large que l'écran, comme sur un téléphone : elle en couvre le milieu.
+        assert.ok(left < 0 && right > 0, `l'œuvre est d'un seul côté : ${where}`)
+      }
+    })
+  }
+}
+
+// Un plan de biais ne regarde pas le mur plus à plat que 80° au bord de l'écran : au-delà, le fond noir.
+for (const aspect of [...SCREENS, ...WIDE_ZONES]) {
+  for (const product of [TOILE, { ...TOILE, frame: 'chene' }]) {
+    test(`écran ${aspect}, ${product.frame === 'sans' ? 'toile nue' : 'coin du cadre'} : le bord de l'écran ne file pas le long du mur`, () => {
+      const director = createDirector({ room: ROOM, product })
+      director.choose('frame', product, 0)
+      const { camera } = director.view(LATER, aspect)
+      const forward = unit(sub(camera.target, camera.position))
+      const yaw = Math.atan2(Math.abs(forward[0]), -forward[2])
+      const edge = yaw + Math.atan(Math.tan(camera.fovY / 2) * aspect)
+      assert.ok(edge <= (80 * Math.PI) / 180 + 1e-9, `bord de l'écran à ${((edge * 180) / Math.PI).toFixed(1)}° de la normale du mur`)
+    })
+  }
+}
+
 test('passer d’un cadre à sans cadre déplace la caméra en douceur pendant que le cadre s’efface', () => {
   const framed = { ...TOILE, frame: 'chene' }
   const director = createDirector({ room: ROOM, product: TOILE })

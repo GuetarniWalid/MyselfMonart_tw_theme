@@ -22,13 +22,22 @@
   assign last_format = ''
   for size in product.options_with_values.first.values
     if forloop.first or forloop.last
-      assign parts = size.name | downcase | replace: '×', 'x' | replace: ' x ', 'x' | split: ' ' | first | split: 'x'
+      assign words = size.name | downcase | replace: '×', 'x' | replace: ' x ', 'x' | split: ' '
+      assign parts = words.first | split: 'x'
       assign format = ''
       if parts.size == 2
         assign width = parts.first | replace: ',', '.' | plus: 0
         assign height = parts.last | replace: ',', '.' | plus: 0
         if width > 0 and height > 0
           assign format = parts | join: ' × '
+          # Les langues anglaises donnent la taille en pouces (« 11.8x15.7 in ») : elle revient aux cm du
+          # texte traduit, à l'entier, comme dans la 3D. Le 21/11/2026, la fiche anglaise disait
+          # « From 11.8 × 15.7 to 35.4 × 47.2 cm ».
+          if words[1] == 'in' or words[1] == 'inch' or words[1] == 'inches'
+            assign width_cm = width | times: 2.54 | round
+            assign height_cm = height | times: 2.54 | round
+            assign format = width_cm | append: ' × ' | append: height_cm
+          endif
         endif
       endif
       if forloop.first

@@ -1363,6 +1363,22 @@ const BARE = { yaw: 44 * DEG, pitch: 10 * DEG, spot: 0.62 }
 const MARGIN = { inX: 0.13, inY: 0.11, field: 0.36 }
 // Animations réduites : la caméra tourne autour du tableau resté au mur.
 const MATERIAL = { yaw: 40 * DEG, pitch: 8 * DEG, fill: 0.62 }
+/* Écran large, rangée ouverte (retour de Walid du 21/11/2026 sur iPad : « quand ça tourne, ça ne se
+   passe pas au centre, ça tire vers le côté »). Sur une tablette en paysage ou un ordinateur, la zone
+   au-dessus de la rangée fait 3 à 4 fois sa hauteur. La tranche, le coin et le contour s'y cadraient
+   comme sur un téléphone, où l'œuvre déborde de l'écran, l'arête ou le coin posé d'un côté : sur un
+   écran large, l'œuvre tient dans la largeur et restait de ce côté, un grand pan de mur vide de
+   l'autre. La caméra glisse alors de côté, sans tourner, jusqu'à centrer ce qu'on voit de l'œuvre :
+   rien jusqu'à un écran `from` fois plus large que haut, tout à `to`. Seulement si l'œuvre tient dans
+   l'écran : centrée tant qu'elle en prend au plus `fits` de la largeur, plus du tout à `loose`, pour
+   ne jamais pousser l'arête ou le coin hors de l'écran. Un téléphone, une tablette en portrait (1,3
+   au plus) ne changent pas. La toile nue garde, au-delà de `to`, le cadrage d'un écran `to` : sa
+   surface constante (BARE) n'y montrait plus qu'un tiers de sa hauteur. */
+const WIDE = { from: 1.3, to: 2.2, fits: 0.8, loose: 0.95 }
+/* Un plan de biais (coin du cadre, toile nue) ne regarde jamais le mur plus à plat que GRAZE depuis sa
+   normale, au bord de l'écran : sur un écran large, le bord de l'image filait le long du mur et le
+   fond noir paraissait au-delà (iPad en paysage, 21/11/2026). Son biais baisse d'autant. */
+const GRAZE = 80 * DEG
 
 // Deux clés de tour reliées à vitesse constante (avancement, angle) : de dos, le tableau tourne lentement.
 const steady = ([t0, a0], [t1, a1]) => {
@@ -1780,17 +1796,22 @@ function cameraOnCorner(room, painting, aspect, { yaw, pitch, spot }, height) {
   return { position: add(target, scale(direction, distanceFor(height))), target, fovY: FOV_Y }
 }
 
-function cornerShot(room, product, aspect) {
+// Biais d'un plan de biais sur un écran de forme `screen` (GRAZE).
+const grazing = (yaw, screen) => Math.min(yaw, GRAZE - Math.atan(Math.tan(FOV_Y / 2) * screen))
+
+function cornerShot(room, product, aspect, u, screen = aspect) {
   const painting = hungPainting(room, product)
   const field = CORNER.field * (painting.height / 40) ** 0.25
-  return shotOf('corner', cameraOnCorner(room, painting, aspect, CORNER, field / Math.min(1, aspect)), painting)
+  const corner = { ...CORNER, yaw: grazing(CORNER.yaw, screen) }
+  return shotOf('corner', cameraOnCorner(room, painting, aspect, corner, field / Math.min(1, aspect)), painting)
 }
 
 // Toile nue : son coin et sa tranche, avec une bonne part de l'œuvre.
-function bareShot(room, product, aspect) {
+function bareShot(room, product, aspect, u, screen = aspect) {
   const painting = hungPainting(room, product)
   const span = Math.sqrt((painting.height / FRONT_FILL) * CORNER.field)
-  return shotOf('bare', cameraOnCorner(room, painting, aspect, BARE, span / Math.sqrt(aspect)), painting)
+  const bare = { ...BARE, yaw: grazing(BARE.yaw, screen) }
+  return shotOf('bare', cameraOnCorner(room, painting, aspect, bare, span / Math.sqrt(Math.min(aspect, WIDE.to))), painting)
 }
 
 function marginShot(room, product) {
@@ -1942,14 +1963,89 @@ function curlShot(room, product, aspect, u) {
   return shotOf('curl', camera, { ...p, curl: curlAmount(u) })
 }
 
+// Enveloppe convexe de points (x, y), dans le sens trigonométrique (chaîne monotone d'Andrew).
+function hullOf(points) {
+  const sorted = [...points].sort((a, b) => a[0] - b[0] || a[1] - b[1])
+  const turn = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+  const chain = (list) => {
+    const out = []
+    for (const q of list) {
+      while (out.length >= 2 && turn(out[out.length - 2], out[out.length - 1], q) <= 0) out.pop()
+      out.push(q)
+    }
+    out.pop()
+    return out
+  }
+  return [...chain(sorted), ...chain([...sorted].reverse())]
+}
+
+// Un polygone convexe coupé à la bande lo <= y <= hi (Sutherland-Hodgman, deux demi-plans).
+function clipBand(polygon, lo, hi) {
+  const cut = (poly, inside, y) => {
+    const out = []
+    poly.forEach((a, i) => {
+      const b = poly[(i + 1) % poly.length]
+      if (inside(a)) out.push(a)
+      if (inside(a) !== inside(b)) out.push([a[0] + ((b[0] - a[0]) * (y - a[1])) / (b[1] - a[1]), y])
+    })
+    return out
+  }
+  return cut(cut(polygon, (q) => q[1] >= lo, lo), (q) => q[1] <= hi, hi)
+}
+
+// Ce qu'on voit de l'œuvre (boîte cadre comprise) sur un écran de forme `screen` : de gauche à droite,
+// de -1 à 1, une fois coupée en haut et en bas par l'écran. null si rien, ou si un coin passe derrière.
+function shownSpan(camera, painting, screen) {
+  const forward = unit(add(camera.target, scale(camera.position, -1)))
+  const right = unit(cross(forward, [0, 1, 0]))
+  const up = cross(right, forward)
+  const t = Math.tan(camera.fovY / 2)
+  const points = []
+  for (const corner of paintingCorners(painting, 'outer')) {
+    const rel = add(corner, scale(camera.position, -1))
+    const depth = dot(rel, forward)
+    if (depth <= 0) return null
+    points.push([dot(rel, right) / (depth * t * screen), dot(rel, up) / (depth * t)])
+  }
+  const xs = clipBand(hullOf(points), -1, 1).map(([x]) => x)
+  return xs.length ? { left: Math.min(...xs), right: Math.max(...xs) } : null
+}
+
+// Le plan recentré sur un écran large (WIDE) : la caméra et sa visée glissent de côté, sans tourner.
+function centeredWide(view, screen) {
+  const wide = Math.min(1, Math.max(0, (screen - WIDE.from) / (WIDE.to - WIDE.from)))
+  const first = wide > 0 ? shownSpan(view.camera, view.painting, screen) : null
+  if (!first) return view
+  const share = (first.right - first.left) / 2
+  const fits = Math.min(1, Math.max(0, (WIDE.loose - share) / (WIDE.loose - WIDE.fits)))
+  const goal = ((first.left + first.right) / 2) * (1 - wide * fits)
+  let camera = view.camera
+  let span = first
+  // Les coins ne sont pas tous à la même distance : trois glissements suffisent à poser le milieu.
+  for (let i = 0; i < 3 && span; i++) {
+    const off = (span.left + span.right) / 2 - goal
+    if (Math.abs(off) < 1e-4) break
+    const ahead = add(camera.target, scale(camera.position, -1))
+    const right = unit(cross(unit(ahead), [0, 1, 0]))
+    const slide = scale(right, off * Math.hypot(...ahead) * Math.tan(camera.fovY / 2) * screen)
+    camera = { ...camera, position: add(camera.position, slide), target: add(camera.target, slide) }
+    span = shownSpan(camera, view.painting, screen)
+  }
+  return camera === view.camera ? view : { ...view, camera }
+}
+
+// Un gros plan cadré comme sur un téléphone, recentré sur un écran large.
+const centeredOnWide = (shot) => (room, product, aspect, u, screen = aspect, inset) =>
+  centeredWide(shot(room, product, aspect, u, screen, inset), screen)
+
 const SHOTS = {
   front: frontShot,
-  edge: edgeShot,
-  corner: cornerShot,
-  bare: bareShot,
+  edge: centeredOnWide(edgeShot),
+  corner: centeredOnWide(cornerShot),
+  bare: centeredOnWide(bareShot),
   room: roomShot,
   wall: wallShot,
-  margin: marginShot,
+  margin: centeredOnWide(marginShot),
   material: materialShot,
   turn: turnShot(TURN, 'turn'),
   glazed: turnShot(GLAZED_TURN, 'glazed'),

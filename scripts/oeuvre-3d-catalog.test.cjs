@@ -138,6 +138,23 @@ test('chaque bordure et chaque cadre de la boutique ont leur matière ; seuls le
   assert.deepEqual(productFromSelection(toile, translated), productFromSelection(toile, selection({ border: 'bordure-moroir', frame: 'cadre-noyer' })))
 })
 
+/* La fiche anglaise donne ses tailles en pouces, au dixième (traduction du serveur). Le 21/11/2026, la 3D y
+   lisait « 8x15 » : la toile se déformait sur l'iPad de Walid. Les tailles reviennent aux cm du moteur. */
+test('la fiche anglaise : les tailles en pouces reviennent aux cm du moteur, variantes et radios comprises', () => {
+  const INCHES = { '30x40 cm': '11.8x15.7 in', '60x80 cm': '23.6x31.5 in', '75x100 cm': '29.5x39.4 in', '90x120 cm': '35.4x47.2 in' }
+  const english = { ...toile, sizes: toile.sizes.map((s) => INCHES[s]), variants: toile.variants.map(([id, size, ...rest]) => [id, INCHES[size], ...rest]) }
+  assert.deepEqual(sizesOf(english), ['30x40', '60x80', '75x100', '90x120'])
+  assert.deepEqual(sizesOf({ sizes: ['30x40 cm', '29,7x42 cm', '30 × 40', '15.7x11.8 inches', 'Sur mesure'] }), ['30x40', '30x42', '40x30'])
+  const picked = productFromSelection(english, selection({ size: '23.6x31.5 in', border: 'bordure-noire', frame: 'cadre-chene-clair' }))
+  assert.deepEqual(picked, { material: 'toile', size: '60x80', border: 'noire', frame: 'chene', passe: false })
+  assert.deepEqual(variantOf(english, picked), variantOf(toile, picked))
+  assert.ok(variantOf(english, picked), 'la variante du 60 × 80 est trouvée')
+  assert.equal(choiceInputs(english, picked)[0].value, '23.6x31.5 in')
+  const catalog = catalogOf({ models: { toile: english }, names: NAMES })
+  assert.deepEqual(catalog.size('75x100'), { w: 75, h: 100 })
+  assert.equal(catalog.price(picked), catalogOf({ models: { toile }, names: NAMES }).price(picked))
+})
+
 test('le choix du poster : la couleur du cadre et le contour blanc, propriétés de ligne', () => {
   assert.deepEqual(
     productFromSelection(poster, selection({ poster: true, size: '75x100 cm', frame: 'Avec cadre', frameColor: { name: 'Cadre noir Mat', key: 'cadre-noir-mat-1' }, whiteBorder: true })),

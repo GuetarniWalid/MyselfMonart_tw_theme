@@ -83,10 +83,17 @@
     'cadre-noyer': 'noyer',
   };
 
-  // Option de taille de la boutique (« 30x40 cm ») -> taille du moteur (« 30x40 ») ; null si ce n'en est pas une.
+  /* Option de taille de la boutique (« 30x40 cm ») -> taille du moteur, en cm (« 30x40 ») ; null si ce
+     n'en est pas une. Les langues anglaises la donnent en pouces, au dixième (« 11.8x15.7 in ») : elle
+     revient aux cm du catalogue, à l'entier. Le 21/11/2026, la fiche anglaise y lisait « 8x15 » : la
+     toile de l'iPad de Walid se déformait, la cote disait « 8 × 15 cm ». */
+  const INCH = 2.54;
   function sizeIdOf(value) {
-    const match = /(\d+)\s*[x×]\s*(\d+)/i.exec(value || '');
-    return match ? `${match[1]}x${match[2]}` : null;
+    const match = /(\d+(?:[.,]\d+)?)\s*[x×]\s*(\d+(?:[.,]\d+)?)\s*(cm|in(?:ch(?:es)?)?\b|″|")?/i.exec(value || '');
+    if (!match) return null;
+    const unit = match[3] && !/^cm$/i.test(match[3]) ? INCH : 1;
+    const [w, h] = [match[1], match[2]].map((n) => Math.round(parseFloat(n.replace(',', '.')) * unit));
+    return w > 0 && h > 0 ? `${w}x${h}` : null;
   }
   const borderIdOf = (key) => BORDER_IDS[key] || null;
   // Les couleurs du poster ont leurs propres métaobjets : « cadre-noir-mat-1 ».

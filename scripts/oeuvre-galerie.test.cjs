@@ -726,6 +726,9 @@ test('rendu de la fiche : « Formats » se lit dans les tailles du produit, de l
   assert.equal(await formats(['30×40 cm', '90X120 cm']), 'De 30 × 40 à 90 × 120 cm')
   assert.equal(await formats(['30 x 40 cm', '90 × 120 cm']), 'De 30 × 40 à 90 × 120 cm')
   assert.equal(await formats(['29,7x42 cm', '59,4x84 cm']), 'De 29,7 × 42 à 59,4 × 84 cm')
+  // Les pouces des langues anglaises reviennent aux cm du texte (21/11/2026 : « From 11.8 × 15.7 to 35.4 × 47.2 cm »).
+  assert.equal(await formats(['11.8x15.7 in', '23.6x31.5 in', '29.5x39.4 in', '35.4x47.2 in']), 'De 30 × 40 à 90 × 120 cm')
+  assert.equal(await formats(['15.7x11.8 in']), '40 × 30 cm')
   // Une taille qui n'est pas « largeur x hauteur » : pas de ligne, plutôt qu'une ligne fausse ; les quatre autres restent.
   assert.equal(await formats(['Petit', 'Grand']), null)
   assert.equal(await formats(['XL', 'XXL']), null)
