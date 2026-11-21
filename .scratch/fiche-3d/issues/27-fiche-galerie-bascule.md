@@ -24,6 +24,7 @@
     | Poster, vue de test | 53 et 49 | 6,2 et 6,6 s | 0,79 et 0,88 s | 0,004 | 3,20 Mo | 340 |
 
     La nouvelle page ne fait pas moins bien : note égale ou meilleure, tableau affiché plus tôt, moins de blocage, un peu plus légère. Le décalage reste négligeable (0,004 au plus, « bon » sous 0,1). Au défilement (trace Chrome, processeur ×4), après `c2add70` : plus long recalcul de styles 20 ms (170 ms avant), tâches longues 6 ou 7 (15 à 17 avant), la plus longue 105 ms (240 ms avant).
+  - **Après la bascule, le 21/11 à 3 h 50** (même outil, la nuit, tâches du serveur en cours) : toile 48 et 45, tableau affiché en 6,8 et 6,3 s, blocage 1,0 et 2,1 s, décalage 0 ; poster 45 et 45, 6,8 et 6,2 s, blocage 1,4 et 2,0 s, décalage 0,004. Dans la fourchette de la fiche d'avant pour la note, meilleur pour le tableau affiché ; le blocage varie beaucoup d'un passage à l'autre sur ce PC. La comparaison qui fait foi est celle du 20/11 à 21 h, faite en alternant les deux pages.
   - Copie des pages avant le premier push (HTML du serveur, 20/11 à 13 h 36) : toile et poster Superman, ancienne toile, ancien poster, sur-mesure, deux personnalisés, la vue `photo-studio`, une collection, l'accueil, le panier. À comparer après chaque push qui touche un fichier commun.
 - Contrôle sur un vrai téléphone, dans Safari et dans Firefox (la scène a un mode de secours), en mouvements réduits, et dans les cinq langues.
 - Les données lues par Google (produit, fil d'Ariane, balises) sont les mêmes qu'avant.
@@ -50,9 +51,15 @@
 
 **Blocked by:** 19, 20, 21, 22, 23, 24, 25, 26, et le feu vert de Walid
 
-**Status:** needs-walid
+**Status:** bascule faite le 21/11/2026 à 3 h 47 (`1f2922a`), avec le feu vert de Walid du 20/11 (« Oui, elle me convient »), après la correction de la flèche du champ e-mail qu'il avait relevée (`4a175a6`).
 
-- [ ] Walid a validé la vue de test sur son téléphone.
+**Vérifié en ligne après la bascule, sur la toile et le poster Superman :** la fiche des produits 3D est la page galerie (`<html data-galerie-page>`, huit sections) ; title, description, canonique, robots, h1 et données JSON-LD identiques à avant ; bascule Toile / Poster, retour et suivant du navigateur, ajout au panier (62,50 €), recommandations (10 cartes, aussi après la bascule), aucune erreur de script ; les autres pages témoins (anciennes fiches, sur-mesure, personnalisés, vue photo-studio, collection, accueil, panier) identiques au caractère près.
+
+**Traductions :** les phrases des couleurs en anglais posées par la nuit du 21/11 (« Blue: strength. It outlines the muscles… », `outdated` à false) ; espagnol, allemand, néerlandais en cours à 3 h 45 (la tâche des fiches tournait encore). La bascule a été faite avant la traduction des modèles (4 h 15) : les 55 textes nouveaux du modèle (volets, questions du poster…) sont traduits dès la nuit ; les 54 autres, repris mot pour mot de l'ancienne fiche, avaient déjà leur traduction.
+
+**Modèle de test :** retiré du dépôt (`339a99c`). Il reste sur Shopify, parce que le déploiement ne supprime jamais un fichier (`--nodelete`, voulu) : sans effet pour les clients. À supprimer par Walid dans l'éditeur de code (« Modifier le code », `templates/product.oeuvre-galerie.json`). Les trois branches `oeuvre-galerie` restées dans le thème (règle unique, fil d'Ariane, bouton du panier) sont sans effet ; à retirer avec leurs tests.
+
+- [x] Walid a validé la vue de test sur son téléphone (20/11 au soir).
 - [x] Les mesures avant / après sont notées, et la nouvelle page ne fait pas moins bien (20/11, vue de test ; à refaire une fois après la bascule).
-- [ ] La fiche des produits 3D est la nouvelle page, en cinq langues, toile et poster.
-- [ ] Les anciennes fiches, les collections et l'accueil sont inchangés.
+- [x] La fiche des produits 3D est la nouvelle page, toile et poster (les cinq langues : traductions de la nuit du 21/11, à vérifier).
+- [x] Les anciennes fiches, les collections et l'accueil sont inchangés.
