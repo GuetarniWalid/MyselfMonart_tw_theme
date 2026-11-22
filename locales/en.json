@@ -652,6 +652,12 @@
           "matter_text_canvas": "Thick, stretched by hand over a solid wood stretcher. You just want to touch it.",
           "matter_title_poster_html": "Real <b>photo paper.</b>",
           "matter_text_poster": "Thick, 250 g/m², for a sharp print with vivid colours. Frame it, or put it up as it is."
+        },
+        "couleurs": {
+          "colors": "The colours",
+          "colors_title_html": "Every colour <b>does something to you.</b>",
+          "swatches_canvas": "The colours of the canvas",
+          "swatches_poster": "The colours of the poster"
         }
       }
     },

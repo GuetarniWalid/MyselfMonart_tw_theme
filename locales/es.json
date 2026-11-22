@@ -410,6 +410,12 @@
           "matter_text_canvas": "Grueso, tensado a mano sobre un bastidor de madera maciza. Dan ganas de tocarlo.",
           "matter_title_poster_html": "Un auténtico <b>papel fotográfico.</b>",
           "matter_text_poster": "Grueso, de 250 g/m², para una impresión nítida de colores vivos. Para enmarcar o para colgar tal cual."
+        },
+        "couleurs": {
+          "colors": "Los colores",
+          "colors_title_html": "Cada color <b>actúa sobre ti.</b>",
+          "swatches_canvas": "Los colores del cuadro",
+          "swatches_poster": "Los colores del póster"
         }
       }
     },

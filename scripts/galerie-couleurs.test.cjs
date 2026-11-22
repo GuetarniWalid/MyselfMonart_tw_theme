@@ -13,7 +13,7 @@ const fs = require('fs')
 const path = require('path')
 const vm = require('vm')
 const zlib = require('zlib')
-const { ROOT, read, code, rules, LANGS, json, SKIP, engine, globals, product } = require('./galerie-banc.cjs')
+const { ROOT, read, exists, code, rules, LANGS, json, schemaOf, SKIP, engine, globals, product, renderSectionFile } = require('./galerie-banc.cjs')
 const { entreeDuMoteur, momentsDesCouleurs, lireLesCouleurs, planDesCouleurs, texteDuTravailleur } = require('../assets/oeuvre-galerie.js')
 
 const SECTION = 'sections/galerie-scene.liquid'
@@ -656,5 +656,273 @@ test('les textes de la scène ne changent pas : le temps 2 n’a besoin d’aucu
   for (const file of Object.values(LANGS)) {
     const scene = json(`locales/${file}`).sections.mma.galerie.scene
     assert.ok(scene.colors && scene.colors_title_html, file)
+  }
+})
+
+/* ---------- La section des couleurs à toucher (ticket 28) ----------
+   sections/galerie-couleurs.liquid, juste après la scène : l'œuvre en couleurs, une pastille et une phrase par couleur
+   arrêtée qui a son texte. Le serveur écrit tout ce qui se lit (Google, sans script) ; les pastilles, cachées, ne
+   paraissent qu'avec l'élément. */
+
+const COULEURS = 'sections/galerie-couleurs.liquid'
+const MODELE = 'templates/product.oeuvre-3d.json'
+// L'identifiant de la section dans le banc (renderSectionFile) : les identifiants de la section en dérivent.
+const IDS = 'GalerieCouleurs-template--1__galerie-couleurs'
+
+const renderCouleurs = async (p, { lang = 'fr', suffix = 'oeuvre-3d' } = {}) => tight(await renderSectionFile(COULEURS, {}, p, { suffix, lang }))
+/* La section rendue, lue : sa racine, l'élément (ses attributs), ses pastilles, ses phrases, son œuvre. */
+function lireCouleurs(html) {
+  const racine = /^<section class="galerie galerie-couleurs" aria-labelledby="([^"]+)"><galerie-couleurs class="galerie-couleurs-element"((?: [\w-]+="[^"]*")*)>([\s\S]*)<\/galerie-couleurs><\/section>$/.exec(html)
+  assert.ok(racine, `la section, sa racine et son élément : ${html.slice(0, 300)}`)
+  const attributs = Object.fromEntries([...racine[2].matchAll(/ ([\w-]+)="([^"]*)"/g)].map((m) => [m[1], m[2]]))
+  const liste = /<div class="galerie-couleurs-pastilles" role="tablist" aria-label="([^"]+)" hidden>([\s\S]*?)<\/div>/.exec(racine[3])
+  assert.ok(liste, 'les pastilles : une liste d’onglets, cachée')
+  const pastilles = [...liste[2].matchAll(/<button class="galerie-couleurs-pastille" type="button" role="tab" id="([^"]+)" aria-controls="([^"]+)" aria-selected="(true|false)" tabindex="(0|-1)" data-couleur="([^"]+)" style="([^"]*)"><i class="galerie-couleurs-point" data-allow-empty aria-hidden="true"><\/i><span>([^<]*)<\/span><\/button>/g)]
+    .map((m) => ({ id: m[1], controle: m[2], choisie: m[3] === 'true', tabindex: m[4], couleur: m[5], style: m[6], nom: m[7] }))
+  assert.equal((liste[2].match(/<button /g) || []).length, pastilles.length, 'chaque pastille a la forme attendue')
+  const bloc = /<div class="galerie-couleurs-phrases">([\s\S]*?)<\/div>/.exec(racine[3])
+  const phrases = [...bloc[1].matchAll(/<p class="galerie-couleurs-phrase" id="([^"]+)" data-couleur="([^"]+)"><b><i data-allow-empty aria-hidden="true"(?: style="--c: ([^"]+)")?><\/i>([^<]*)<\/b>(?: ([^<]*))?<\/p>/g)]
+    .map((m) => ({ id: m[1], couleur: m[2], pastille: m[3] || null, titre: m[4], texte: m[5] || '' }))
+  assert.equal((bloc[1].match(/<p /g) || []).length, phrases.length, 'chaque phrase a la forme attendue')
+  const image = /<img class="galerie-couleurs-image"( [^>]*)>/.exec(racine[3])
+  return { titre: racine[1], attributs, etiquette: liste[1], pastilles, phrases, image: image && image[1], contenu: racine[3] }
+}
+
+test('la section des couleurs : sur les fiches produit seulement, une seule, sans réglage ; un texte d’aide que Shopify accepte', () => {
+  const schema = schemaOf(COULEURS)
+  assert.equal(schema.name, 'Galerie : les couleurs')
+  assert.ok(schema.name.length <= 25, 'Shopify limite le nom d’une section à 25 caractères')
+  assert.deepEqual(schema.enabled_on, { templates: ['product'] })
+  assert.equal(schema.limit, 1)
+  assert.equal(schema.blocks, undefined)
+  assert.equal(schema.presets, undefined, 'elle ne s’ajoute pas depuis l’éditeur : elle a besoin du bloc principal en page galerie')
+  // Un seul réglage : le texte d'aide, 500 caractères au plus (scripts/sections-schema.test.cjs), qui dit à quoi elle
+  // sert, où la placer et d'où viennent ses couleurs et ses phrases.
+  assert.deepEqual(schema.settings.map((s) => s.type), ['paragraph'])
+  const aide = schema.settings[0].content
+  assert.ok(aide.length <= 500, `${aide.length} caractères`)
+  assert.match(aide, /après la scène/)
+  assert.match(aide, /page galerie/)
+  assert.match(aide, /Couleurs montrées sur la fiche/)
+  assert.match(aide, /Texte de la couleur 1/)
+})
+
+test('la section des couleurs : les couleurs arrêtées et leurs textes, le moteur et la copie de 320 px pour l’élément, ni script ni style', () => {
+  const source = code(COULEURS)
+  // Les mêmes règles que la scène : le type d'œuvre, l'image à plat, le support.
+  assert.match(source, /render 'artwork-kind', product: product, suffix: template\.suffix/)
+  assert.match(source, /render 'artwork-flat-index', product: product/)
+  assert.match(source, /product\.metafields\.painting_options\.frames_poster != blank/)
+  // Les couleurs : celles que le serveur a arrêtées, leurs textes ; les déclarées, pour « blanc-noir » ; jamais
+  // painting.color (la même liste, tenue pour les filtres des collections), ni le nom d'un modèle de page.
+  assert.match(source, /for couleur in product\.metafields\.artwork\.colors\.value/)
+  assert.match(source, /assign cle_texte = 'color_text_' \| append: forloop\.index/)
+  assert.match(source, /product\.metafields\.artwork\[cle_texte\]\.value/)
+  assert.match(source, /for couleur in product\.metafields\.shopify\['color-pattern'\]\.value/)
+  assert.doesNotMatch(source, /painting\.color|shop\.metaobjects|oeuvre-galerie|oeuvre-3d|template_suffix/)
+  // Un texte libre : échappé, puis ses jetons de la note Trustpilot remplacés.
+  assert.match(source, /assign texte_sur = texte \| escape\s+capture texte_pret\s+render 'trustpilot-tokens', text: texte_sur\s+endcapture/)
+  // Le moteur n'est pas dans la page : l'élément le donne à son travailleur, avec la copie de l'image que lit le serveur.
+  assert.match(source, /data-moteur="{{ 'galerie-couleurs\.js' \| asset_url }}"/)
+  assert.match(source, /data-image="{{ art \| image_url: width: 320 }}"/)
+  // Aucun style ni script en ligne ; les seules valeurs passées à la feuille : la proportion de l'œuvre, la couleur
+  // d'une pastille et son rang.
+  assert.doesNotMatch(source, /<style|<script|{%-?\s*style/)
+  const valeurs = [...source.matchAll(/style="([^"]*)"/g)].map((m) => m[1].replace(/{%[^%]*%}|{{[^}]*}}/g, '').replace(/[\s;:]+/g, ' ').trim())
+  assert.deepEqual([...new Set(valeurs)].sort(), ['--c', '--c --i', '--ratio'])
+  // Des classes de la page seulement : la feuille commune du site ne change pas.
+  const classes = [...source.matchAll(/class="([^"]*)"/g)].flatMap((m) => m[1].split(/\s+/)).filter(Boolean)
+  for (const name of classes) assert.match(name, /^galerie(-[a-z]+)*$/, `classe « ${name} »`)
+  assert.doesNotMatch(read('input.css'), /galerie-couleurs/)
+})
+
+test('rendu des couleurs, la toile Superman : le titre, puis une phrase et une pastille par couleur, dans l’ordre, la première choisie', { skip: SKIP }, async () => {
+  const html = await renderCouleurs(avecCouleurs({ arretees: ['bleu', 'rose', 'jaune'], textes: SUPERMAN, declarees: ['multicolore', 'bleu', 'rose'] }))
+  const lu = lireCouleurs(html)
+  // La section se nomme par son titre, un h2 : le seul titre de la section (le h1 est celui du bloc principal).
+  assert.equal(lu.titre, `${IDS}-titre`)
+  assert.ok(lu.contenu.startsWith(`<div class="galerie-couleurs-tete"><p class="galerie-couleurs-surtitre">Les couleurs</p><h2 class="galerie-couleurs-titre" id="${IDS}-titre">Chaque couleur <b>agit sur vous.</b></h2></div><div class="galerie-couleurs-pastilles" `), lu.contenu.slice(0, 300))
+  assert.deepEqual(html.match(/<h\d/g), ['<h2'])
+  // Les phrases, toutes dans la page (Google les lit sans script) : le titre en gras avec la pastille de la couleur
+  // dans la boutique, puis la suite.
+  assert.deepEqual(lu.phrases, [
+    { id: `${IDS}-phrase-1`, couleur: 'bleu', pastille: '#005BD3', titre: 'Le bleu : la force.', texte: 'Il dessine les muscles et l&#39;emblème du super-héros. Dans votre pièce, il donne du caractère et de l&#39;énergie.' },
+    { id: `${IDS}-phrase-2`, couleur: 'rose', pastille: '#FFC0CB', titre: 'Le rose : l&#39;explosion.', texte: 'Il éclabousse le portrait comme un graffiti sauvage. Chez vous, il met de la vie et fait vibrer le mur.' },
+    { id: `${IDS}-phrase-3`, couleur: 'jaune', pastille: '#D6C52E', titre: 'Le jaune : l&#39;éclair.', texte: 'Il traverse le tableau en coups de pinceau rapides. Un coup de peps qui réveille la pièce.' },
+  ])
+  // Les pastilles : des onglets, chacun lié à sa phrase ; la première choisie (seule dans l'ordre du clavier) ; leur
+  // nom, le libellé de la couleur coupé avant « / » ; leur couleur dans la boutique et leur rang.
+  assert.equal(lu.etiquette, 'Les couleurs du tableau')
+  assert.deepEqual(lu.pastilles, [
+    { id: `${IDS}-onglet-1`, controle: `${IDS}-phrase-1`, choisie: true, tabindex: '0', couleur: 'bleu', style: '--c: #005BD3; --i: 0', nom: 'Bleu' },
+    { id: `${IDS}-onglet-2`, controle: `${IDS}-phrase-2`, choisie: false, tabindex: '-1', couleur: 'rose', style: '--c: #FFC0CB; --i: 1', nom: 'Rose' },
+    { id: `${IDS}-onglet-3`, controle: `${IDS}-phrase-3`, choisie: false, tabindex: '-1', couleur: 'jaune', style: '--c: #D6C52E; --i: 2', nom: 'Jaune' },
+  ])
+  // Pour l'élément : le moteur, la copie de 320 px, les couleurs arrêtées et les déclarées ; la proportion de l'œuvre.
+  assert.deepEqual(lu.attributs, {
+    'data-moteur': '//www.myselfmonart.com/cdn/shop/t/25/assets/galerie-couleurs.js?v=1',
+    'data-image': '//www.myselfmonart.com/cdn/shop/files/bonsai-zen-oeuvre.jpg?v=1&width=320',
+    'data-arretees': 'bleu rose jaune',
+    'data-declarees': 'multicolore bleu rose',
+    style: '--ratio: 0.7484',
+  })
+  // L'œuvre, en couleurs : la place de ses calques et l'étiquette du survol, vides, que l'élément remplit.
+  assert.match(lu.contenu, /<figure class="galerie-couleurs-oeuvre"><img class="galerie-couleurs-image" [^>]*><div class="galerie-couleurs-calques" data-allow-empty aria-hidden="true"><\/div><div class="galerie-couleurs-survol" aria-hidden="true"><i data-allow-empty><\/i><span data-allow-empty><\/span><\/div><\/figure>$/)
+  // Tout élément vide garde sa place (le thème cache tout élément vide, sauf data-allow-empty).
+  for (const [vide, , attrs] of html.matchAll(/<([a-z][\w-]*)((?:\s+[^<>]*?)?)><\/\1>/g)) assert.match(attrs, / data-allow-empty/, vide)
+})
+
+test('rendu des couleurs : l’œuvre est l’image de la scène, avec les mêmes attributs (une seule requête), lisible par l’élément', { skip: SKIP }, async () => {
+  const p = avecCouleurs({ arretees: ['bleu'], textes: [SUPERMAN[0]] })
+  const { image } = lireCouleurs(await renderCouleurs(p))
+  const scene = tight(await renderSectionFile('sections/galerie-scene.liquid', {}, p, { suffix: 'oeuvre-3d' }))
+  const oeuvre = /<img class="galerie-scene-image"( [^>]*)>/.exec(scene)[1]
+  assert.equal(image, oeuvre, 'les mêmes paliers, la même taille annoncée : le navigateur choisit la même image')
+  assert.match(image, / src="\/\/www\.myselfmonart\.com\/cdn\/shop\/files\/bonsai-zen-oeuvre\.jpg\?v=1&width=750"/)
+  assert.match(image, / sizes="\(min-width: 900px\) 45vw, 86vw" width="1904" height="2544" alt="" loading="lazy" decoding="async" crossorigin="anonymous"$/)
+})
+
+test('rendu des couleurs : sans phrase à montrer, la section ne rend rien', { skip: SKIP }, async () => {
+  // Les couleurs arrêtées sans leurs textes (le serveur ne les a pas encore écrits) ; les seules couleurs déclarées ;
+  // rien du tout ; des textes vides.
+  assert.equal(await renderCouleurs(avecCouleurs({ arretees: ['bleu', 'rose', 'jaune'], declarees: ['multicolore', 'bleu', 'rose'] })), '')
+  assert.equal(await renderCouleurs(avecCouleurs({ declarees: ['multicolore', 'bleu', 'rose'] })), '')
+  assert.equal(await renderCouleurs(avecCouleurs()), '')
+  assert.equal(await renderCouleurs(avecCouleurs({ arretees: ['bleu', 'rose'], textes: ['  ', '\n'] })), '')
+  // « multicolore » ou « blanc-noir » ne se montrent jamais, même avec un texte.
+  assert.equal(await renderCouleurs(avecCouleurs({ arretees: ['multicolore', 'blanc-noir'], textes: ['Plusieurs couleurs.', 'Noir et blanc.'] })), '')
+})
+
+test('rendu des couleurs, le zèbre : « Noir & Blanc » déclaré, deux pastilles, le noir puis le blanc, et « blanc-noir » pour le moteur', { skip: SKIP }, async () => {
+  const lu = lireCouleurs(await renderCouleurs(avecCouleurs({
+    arretees: ['noir', 'blanc'],
+    textes: ['Le noir : la nuit de la savane. Il enveloppe le zèbre et fait le silence autour de lui.', 'Le blanc : le trait de lumière. Chaque rayure accroche la lumière et dessine l’animal.'],
+    declarees: ['blanc-noir'],
+  })))
+  assert.deepEqual(lu.pastilles.map((p) => [p.couleur, p.nom, p.style]), [['noir', 'Noir', '--c: #000000; --i: 0'], ['blanc', 'Blanc', '--c: #FFFFFF; --i: 1']])
+  assert.deepEqual(lu.phrases.map((p) => [p.couleur, p.titre]), [['noir', 'Le noir : la nuit de la savane.'], ['blanc', 'Le blanc : le trait de lumière.']])
+  assert.equal(lu.attributs['data-arretees'], 'noir blanc')
+  assert.equal(lu.attributs['data-declarees'], 'blanc-noir')
+  // Ce que l'élément en fera : « blanc-noir » pour le moteur, qui rend toujours le noir puis le blanc.
+  assert.deepEqual(entreeDuMoteur({ arretees: lu.attributs['data-arretees'].split(' '), declarees: lu.attributs['data-declarees'].split(' ') }), { lire: ['blanc-noir'], completer: false })
+})
+
+test('rendu des couleurs : un texte libre, échappé, ses jetons Trustpilot remplacés, ses lignes jointes ; une couleur sans texte n’a ni pastille ni phrase', { skip: SKIP }, async () => {
+  const lu = lireCouleurs(await renderCouleurs(avecCouleurs({
+    arretees: ['bleu', 'multicolore', 'or', 'rose'],
+    textes: [
+      'Le bleu : <b>l’aplomb</b> & la force.\nIl sculpte le visage.\r\nChez vous, il pose la pièce.',
+      'Plusieurs couleurs.',
+      null,
+      'Le rose : l’audace, [[TP_SCORE]]/5 sur [[TP_COUNT]] avis.',
+    ],
+    declarees: ['bleu'],
+  })))
+  // Le moteur range l'image d'après toutes les couleurs arrêtées, comme le serveur (« multicolore » n'en est pas une) ;
+  // ne se montrent que celles qui ont un texte, numérotées à la suite.
+  assert.equal(lu.attributs['data-arretees'], 'bleu or rose')
+  assert.deepEqual(lu.pastilles.map((p) => [p.id, p.couleur, p.nom, p.style]), [[`${IDS}-onglet-1`, 'bleu', 'Bleu', '--c: #005BD3; --i: 0'], [`${IDS}-onglet-2`, 'rose', 'Rose', '--c: #FFC0CB; --i: 1']])
+  assert.deepEqual(lu.phrases.map((p) => p.couleur), ['bleu', 'rose'])
+  // Le texte est du texte : son balisage écrit tel quel ; ses lignes jointes par une espace.
+  assert.equal(lu.phrases[0].titre, 'Le bleu : &lt;b&gt;l’aplomb&lt;/b&gt; &amp; la force.')
+  assert.equal(lu.phrases[0].texte, 'Il sculpte le visage. Chez vous, il pose la pièce.')
+  // Un texte d'une seule phrase : son titre seul. La note vient du réglage du thème, jamais d'un chiffre écrit.
+  assert.deepEqual(lu.phrases[1], { id: `${IDS}-phrase-2`, couleur: 'rose', pastille: '#FFC0CB', titre: 'Le rose : l’audace, 4,2/5 sur 86 avis.', texte: '' })
+})
+
+test('rendu des couleurs : le libellé d’une couleur est du texte ; sans libellé ni pastille dans la boutique, la couleur garde un nom', { skip: SKIP }, async () => {
+  const p = avecCouleurs({ arretees: [], declarees: [] })
+  p.metafields.artwork.colors = { value: [{ system: { handle: 'bleu' }, label: 'Bleu <nuit> & co / Marine', color: '#005BD3' }, { system: { handle: 'vert' }, label: '', color: null }] }
+  p.metafields.artwork.color_text_1 = { value: 'Le bleu : la nuit. Il tombe.' }
+  p.metafields.artwork.color_text_2 = { value: 'Le vert : la forêt. Il pousse.' }
+  const lu = lireCouleurs(await renderCouleurs(p))
+  assert.deepEqual(lu.pastilles.map((x) => [x.nom, x.style]), [['Bleu &lt;nuit&gt; &amp; co', '--c: #005BD3; --i: 0'], ['Vert', '--i: 1']])
+  // Une couleur sans pastille dans la boutique : sa phrase sans couleur ; l'élément pose celle qu'il lit dans l'œuvre.
+  assert.equal(lu.phrases[1].pastille, null)
+})
+
+test('rendu des couleurs, toile et poster : chacun sa liste, ses couleurs et ses textes ; « tableau » ou « poster »', { skip: SKIP }, async () => {
+  const poster = lireCouleurs(await renderCouleurs(avecCouleurs({ poster: true, arretees: ['rose', 'bleu', 'jaune'], textes: ['Le rose : l’énergie de la rue. Il éclabousse le torse.', 'Le bleu : la force. Il dessine les bras.', 'Le jaune : l’emblème. Le S brille au centre.'], declarees: ['multicolore', 'rose', 'bleu'] })))
+  assert.equal(poster.etiquette, 'Les couleurs du poster')
+  assert.deepEqual(poster.pastilles.map((p) => p.couleur), ['rose', 'bleu', 'jaune'])
+  assert.deepEqual(poster.phrases.map((p) => p.titre), ['Le rose : l’énergie de la rue.', 'Le bleu : la force.', 'Le jaune : l’emblème.'])
+  assert.equal(poster.attributs['data-arretees'], 'rose bleu jaune')
+  const toile = lireCouleurs(await renderCouleurs(avecCouleurs({ arretees: ['bleu'], textes: [SUPERMAN[0]] })))
+  assert.equal(toile.etiquette, 'Les couleurs du tableau')
+})
+
+test('rendu des couleurs : dans chaque langue, ses textes fixes ; les libellés et les phrases tels que Shopify les traduit', { skip: SKIP }, async () => {
+  const ATTENDU = {
+    en: ['The colours', 'Every colour <b>does something to you.</b>', 'The colours of the canvas', 'The colours of the poster'],
+    de: ['Die Farben', 'Jede Farbe <b>wirkt auf Sie.</b>', 'Die Farben des Wandbilds', 'Die Farben des Posters'],
+    es: ['Los colores', 'Cada color <b>actúa sobre ti.</b>', 'Los colores del cuadro', 'Los colores del póster'],
+    nl: ['De kleuren', 'Elke kleur <b>doet iets met je.</b>', 'De kleuren van het schilderij', 'De kleuren van de poster'],
+  }
+  const anglais = BOUTIQUE.map((c) => ({ ...c, label: { or: 'Gold', bleu: 'Blue' }[c.system.handle] || c.label }))
+  for (const [lang, [surtitre, titre, toile, poster]] of Object.entries(ATTENDU)) {
+    for (const estPoster of [false, true]) {
+      const p = avecCouleurs({ poster: estPoster, arretees: [], declarees: [] })
+      p.metafields.artwork.colors = { value: ['bleu', 'or'].map((h) => anglais.find((c) => c.system.handle === h)) }
+      p.metafields.artwork.color_text_1 = { value: 'Blue: confidence. It shapes the hero’s face.' }
+      p.metafields.artwork.color_text_2 = { value: 'Gold: the glow. A soft light, like a lamp left on.' }
+      const lu = lireCouleurs(await renderCouleurs(p, { lang }))
+      assert.ok(lu.contenu.includes(`<p class="galerie-couleurs-surtitre">${surtitre}</p><h2 class="galerie-couleurs-titre" id="${IDS}-titre">${titre}</h2>`), lang)
+      assert.equal(lu.etiquette, estPoster ? poster : toile, lang)
+      assert.deepEqual(lu.pastilles.map((x) => x.nom), ['Blue', 'Gold'], lang)
+      assert.deepEqual(lu.phrases.map((x) => [x.titre, x.texte]), [['Blue: confidence.', 'It shapes the hero’s face.'], ['Gold: the glow.', 'A soft light, like a lamp left on.']], lang)
+    }
+  }
+})
+
+test('rendu des couleurs : hors d’une fiche d’œuvre, ou sans image à plat, la section ne rend rien', { skip: SKIP }, async () => {
+  const p = (options) => {
+    const produit = avecCouleurs({ arretees: ['bleu'], textes: [SUPERMAN[0]] })
+    return options ? { ...product(options), metafields: produit.metafields } : produit
+  }
+  // Un produit sans image.
+  assert.equal(await renderCouleurs(p({ files: [] })), '')
+  // Un autre modèle de page (un produit personnalisé, une tapisserie, le modèle par défaut) : pas une fiche d'œuvre.
+  for (const suffix of ['personalized', 'tapestry', null]) assert.equal(await renderCouleurs(p(), { suffix }), '', String(suffix))
+  // Les fiches d'œuvre de toujours, si la section y était posée : leur image à plat.
+  assert.match(await renderCouleurs(p(), { suffix: 'painting' }), /^<section class="galerie galerie-couleurs" /)
+})
+
+test('les autres pages ne changent pas : la section n’entre que dans la fiche 3D, entre la scène et l’histoire', () => {
+  for (const name of fs.readdirSync(path.join(ROOT, 'templates')).filter((n) => /\.json$/.test(n))) {
+    if (`templates/${name}` === MODELE) continue
+    assert.doesNotMatch(read(`templates/${name}`), /galerie-couleurs|galerie_couleurs/, name)
+  }
+  assert.ok(exists(MODELE))
+  const modele = json(MODELE)
+  const types = modele.order.map((id) => modele.sections[id].type)
+  // Le modèle la reçoit par un second commit : Shopify refuse un modèle qui cite une section qu'il ne connaît pas encore.
+  if (!types.includes('galerie-couleurs')) return
+  assert.deepEqual(types.slice(types.indexOf('galerie-scene'), types.indexOf('galerie-scene') + 3), ['galerie-scene', 'galerie-couleurs', 'galerie-histoire'])
+  assert.deepEqual(modele.sections.galerie_couleurs, { type: 'galerie-couleurs', settings: {} })
+  assert.equal(types.filter((t) => t === 'galerie-couleurs').length, 1)
+})
+
+/* ---------- Les textes de la section (ticket 28) ---------- */
+
+const textesCouleurs = (lang) => json(`locales/${LANGS[lang]}`).sections.mma.galerie.couleurs
+
+test('textes des couleurs : sous sections.mma.galerie.couleurs, les mêmes clés dans les cinq langues, de vraies traductions', () => {
+  const CLES = ['colors', 'colors_title_html', 'swatches_canvas', 'swatches_poster']
+  const fr = textesCouleurs('fr')
+  // Le surtitre et le titre du temps 2 de la scène, repris tels quels ; le nom de la liste des pastilles.
+  assert.deepEqual(fr, { colors: 'Les couleurs', colors_title_html: 'Chaque couleur <b>agit sur vous.</b>', swatches_canvas: 'Les couleurs du tableau', swatches_poster: 'Les couleurs du poster' })
+  for (const lang of Object.keys(LANGS)) {
+    const t = textesCouleurs(lang)
+    assert.ok(t, `${lang} : sections.mma.galerie.couleurs`)
+    assert.deepEqual(Object.keys(t).sort(), CLES, lang)
+    for (const [cle, texte] of Object.entries(t)) {
+      assert.ok(typeof texte === 'string' && texte.trim(), `${lang}.${cle}`)
+      if (lang !== 'fr') assert.notEqual(texte, fr[cle], `${lang}.${cle} : resté en français`)
+      if (cle.endsWith('_html')) assert.match(texte, /^[^<>]*<b>[^<>]+<\/b>[^<>]*$/, `${lang}.${cle}`)
+      else assert.doesNotMatch(texte, /[<>]/, `${lang}.${cle}`)
+      assert.doesNotMatch(texte, /'/, `${lang}.${cle} : apostrophe droite`)
+    }
+    assert.notEqual(t.swatches_canvas, t.swatches_poster, lang)
+    assert.match(t.swatches_poster, /poster|póster/i, lang)
   }
 })

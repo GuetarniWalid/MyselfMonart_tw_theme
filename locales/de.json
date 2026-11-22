@@ -411,6 +411,12 @@
           "matter_text_canvas": "Dick und von Hand auf einen Keilrahmen aus Massivholz gespannt. Man möchte sie am liebsten berühren.",
           "matter_title_poster_html": "Echtes <b>Fotopapier.</b>",
           "matter_text_poster": "Dick, 250 g/m², für einen gestochen scharfen Druck in leuchtenden Farben. Zum Einrahmen oder einfach so zum Aufhängen."
+        },
+        "couleurs": {
+          "colors": "Die Farben",
+          "colors_title_html": "Jede Farbe <b>wirkt auf Sie.</b>",
+          "swatches_canvas": "Die Farben des Wandbilds",
+          "swatches_poster": "Die Farben des Posters"
         }
       }
     },

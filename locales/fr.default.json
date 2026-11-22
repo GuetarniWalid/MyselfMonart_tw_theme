@@ -797,6 +797,12 @@
           "matter_text_canvas": "Épaisse, tendue à la main sur un châssis en bois massif. On a envie d’y toucher.",
           "matter_title_poster_html": "Un vrai <b>papier photo.</b>",
           "matter_text_poster": "Épais, 250 g/m², pour un tirage net aux couleurs éclatantes. À encadrer, ou à poser tel quel."
+        },
+        "couleurs": {
+          "colors": "Les couleurs",
+          "colors_title_html": "Chaque couleur <b>agit sur vous.</b>",
+          "swatches_canvas": "Les couleurs du tableau",
+          "swatches_poster": "Les couleurs du poster"
         }
       }
     },

@@ -413,6 +413,12 @@
           "matter_text_canvas": "Dik, met de hand gespannen op een spieraam van massief hout. Je wilt het het liefst aanraken.",
           "matter_title_poster_html": "Echt <b>fotopapier.</b>",
           "matter_text_poster": "Dik, 250 g/m², voor een haarscherpe print in stralende kleuren. Om in te lijsten, of zo op te hangen."
+        },
+        "couleurs": {
+          "colors": "De kleuren",
+          "colors_title_html": "Elke kleur <b>doet iets met je.</b>",
+          "swatches_canvas": "De kleuren van het schilderij",
+          "swatches_poster": "De kleuren van de poster"
         }
       }
     },

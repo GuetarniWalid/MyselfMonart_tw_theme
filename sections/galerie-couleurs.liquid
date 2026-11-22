@@ -1,0 +1,169 @@
+{%- comment -%}
+  Les couleurs à toucher de la page galerie (fiche-3d, ticket 28), juste après la scène et avant l'histoire :
+  « Chaque couleur agit sur vous. » L'œuvre en couleurs, et ses couleurs principales, chacune avec sa pastille et
+  sa phrase. Toucher une pastille, ou l'œuvre, choisit une couleur : sa phrase se lit, ses points volent de la
+  pastille jusqu'à l'œuvre et se posent là où elle se trouve, et ses zones s'entourent un instant d'un trait
+  blanc. Porté du prototype validé par Walid le 22/11/2026 (.scratch/fiche-3d/galerie/couleurs-interactif) :
+  ses styles sont dans assets/oeuvre-galerie.css (bloc « Couleurs à toucher »), son comportement dans
+  assets/oeuvre-galerie.js (élément <galerie-couleurs>). Le bloc principal de la fiche les charge en page galerie.
+
+  Les données : artwork.colors, les couleurs que le serveur a arrêtées pour cette page (métaobjets
+  « shopify--color-pattern », dans leur ordre), et leurs textes, artwork.color_text_1 à 3, dans le même ordre.
+  Seules se montrent les couleurs qui ont un texte, jamais « multicolore » ni « blanc-noir ». La première phrase
+  d'un texte (jusqu'au premier point) est son titre, en gras, avec la pastille de la couleur ; le reste est sa
+  suite. Un texte libre : échappé, et ses jetons de la note Trustpilot remplacés (snippets/trustpilot-tokens).
+  Le nom d'une pastille est le libellé du métaobjet, déjà traduit, coupé avant « / » (« Doré / Or » : « Doré »).
+
+  Ce que le serveur écrit, lu par Google et visible sans script : le surtitre, le titre, toutes les phrases,
+  l'œuvre en couleurs ; puis les pastilles, cachées (hidden) : sans script, une pastille ne ferait rien.
+  L'élément les montre et fait des phrases des onglets (une seule se lit, à la même place). Pour trouver les
+  couleurs dans l'œuvre, il lit dans un travailleur, à l'approche du bloc : data-moteur, le moteur
+  (assets/galerie-couleurs.js, le même que celui du serveur) ; data-image, la copie de 320 px de large que lit
+  aussi le serveur ; data-arretees, les couleurs arrêtées (avec ou sans texte : le moteur range l'image comme
+  le serveur) ; data-declarees, les couleurs déclarées du produit (un produit « Noir & Blanc » fait lire
+  « blanc-noir » au moteur).
+
+  - L'œuvre est l'image à plat du produit, avec les attributs de celle de la scène (sections/galerie-scene) :
+    le navigateur choisit le même palier, donc la même requête. crossorigin : ses pixels restent lisibles.
+    Un décor ici : son texte alternatif est sur l'image de la scène 3D.
+  - Une page n'écrit que la version de son produit : toile ou poster (métachamp frames_poster).
+  - Un élément vide garde sa place par data-allow-empty : le thème cache tout élément vide (input.css).
+
+  Hors d'une fiche d'œuvre (règle unique : snippet artwork-kind), sans image à plat, ou quand aucune couleur n'a
+  de phrase à montrer, la section ne rend rien. Pas de préréglage dans le schéma : l'éditeur ne la propose pas
+  sur une autre fiche, qui n'aurait pas la feuille de la page.
+{%- endcomment -%}
+{%- liquid
+  capture artwork_kind
+    render 'artwork-kind', product: product, suffix: template.suffix
+  endcapture
+  capture flat_index
+    render 'artwork-flat-index', product: product
+  endcapture
+  assign flat_index = flat_index | plus: 0
+  assign art_media = product.media[flat_index]
+  assign art = art_media.preview_image
+  assign is_poster = false
+  if product.metafields.painting_options.frames_poster != blank
+    assign is_poster = true
+  endif
+  # Largeur sur hauteur : 0,75 pour un portrait 3:4, 1,33 pour un paysage, 1 pour un carré.
+  assign art_ratio = art.aspect_ratio | default: 0.75 | round: 4
+  if art_ratio <= 0
+    assign art_ratio = 0.75
+  endif
+  assign ids = 'GalerieCouleurs-' | append: section.id
+
+  # Ce que lit le moteur : les couleurs arrêtées (artwork.colors), toutes, qu'elles aient un texte ou non, et les
+  # couleurs déclarées du produit (shopify.color-pattern), pour « blanc-noir ».
+  assign couleurs_arretees = ''
+  for couleur in product.metafields.artwork.colors.value
+    unless couleur.system.handle == 'multicolore' or couleur.system.handle == 'blanc-noir'
+      assign couleurs_arretees = couleurs_arretees | append: ' ' | append: couleur.system.handle
+    endunless
+  endfor
+  assign couleurs_arretees = couleurs_arretees | strip
+  assign couleurs_declarees = ''
+  for couleur in product.metafields.shopify['color-pattern'].value
+    assign couleurs_declarees = couleurs_declarees | append: ' ' | append: couleur.system.handle
+  endfor
+  assign couleurs_declarees = couleurs_declarees | strip
+
+  assign pastilles = ''
+  assign phrases = ''
+  assign rang = 0
+-%}
+{%- comment -%} Les couleurs montrées : une pastille et une phrase pour chaque couleur arrêtée qui a son texte,
+   numérotées dans l'ordre où elles se montrent. {%- endcomment -%}
+{%- for couleur in product.metafields.artwork.colors.value -%}
+  {%- liquid
+    assign cle_texte = 'color_text_' | append: forloop.index
+    assign texte = product.metafields.artwork[cle_texte].value | newline_to_br | replace: '<br />', ' ' | strip_newlines | strip
+    assign a_montrer = true
+    if couleur.system.handle == 'multicolore' or couleur.system.handle == 'blanc-noir' or texte == blank
+      assign a_montrer = false
+    endif
+  -%}
+  {%- if a_montrer -%}
+    {%- liquid
+      assign rang = rang | plus: 1
+      assign ordre = rang | minus: 1
+      assign texte_sur = texte | escape
+      capture texte_pret
+        render 'trustpilot-tokens', text: texte_sur
+      endcapture
+      assign morceaux = texte_pret | split: '. '
+      assign titre = morceaux | first
+      assign suite = texte_pret | remove_first: titre | strip
+      if suite != blank
+        assign suite = suite | remove_first: '.' | strip
+        assign titre = titre | append: '.'
+      endif
+      assign nom = couleur.label | split: '/' | first | strip
+      if nom == blank
+        assign nom = couleur.system.handle | capitalize
+      endif
+    -%}
+    {%- capture pastille -%}
+      <button class="galerie-couleurs-pastille" type="button" role="tab" id="{{ ids }}-onglet-{{ rang }}" aria-controls="{{ ids }}-phrase-{{ rang }}" aria-selected="{% if rang == 1 %}true{% else %}false{% endif %}" tabindex="{% if rang == 1 %}0{% else %}-1{% endif %}" data-couleur="{{ couleur.system.handle | escape }}" style="{% if couleur.color != blank %}--c: {{ couleur.color | escape }}; {% endif %}--i: {{ ordre }}"><i class="galerie-couleurs-point" data-allow-empty aria-hidden="true"></i><span>{{ nom | escape }}</span></button>
+    {%- endcapture -%}
+    {%- capture phrase -%}
+      <p class="galerie-couleurs-phrase" id="{{ ids }}-phrase-{{ rang }}" data-couleur="{{ couleur.system.handle | escape }}"><b><i data-allow-empty aria-hidden="true"{% if couleur.color != blank %} style="--c: {{ couleur.color | escape }}"{% endif %}></i>{{ titre }}</b>{% if suite != blank %} {{ suite }}{% endif %}</p>
+    {%- endcapture -%}
+    {%- assign pastilles = pastilles | append: pastille -%}
+    {%- assign phrases = phrases | append: phrase -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if artwork_kind != blank and art_media.media_type == 'image' and phrases != blank -%}
+  <section class="galerie galerie-couleurs" aria-labelledby="{{ ids }}-titre">
+    <galerie-couleurs class="galerie-couleurs-element" data-moteur="{{ 'galerie-couleurs.js' | asset_url }}" data-image="{{ art | image_url: width: 320 }}"{% if couleurs_arretees != blank %} data-arretees="{{ couleurs_arretees | escape }}"{% endif %}{% if couleurs_declarees != blank %} data-declarees="{{ couleurs_declarees | escape }}"{% endif %} style="--ratio: {{ art_ratio }}">
+      <div class="galerie-couleurs-tete">
+        <p class="galerie-couleurs-surtitre">{{ 'sections.mma.galerie.couleurs.colors' | t }}</p>
+        <h2 class="galerie-couleurs-titre" id="{{ ids }}-titre">{{ 'sections.mma.galerie.couleurs.colors_title_html' | t }}</h2>
+      </div>
+      {%- comment -%} Les pastilles, cachées tant que l'élément ne les montre pas : des onglets, un par phrase. La
+         première est choisie d'avance. --c : la couleur de la pastille dans la boutique, que l'élément remplace par
+         celle qu'il lit dans l'œuvre ; --i : son rang, pour son arrivée. {%- endcomment -%}
+      <div class="galerie-couleurs-pastilles" role="tablist" aria-label="{% if is_poster %}{{ 'sections.mma.galerie.couleurs.swatches_poster' | t }}{% else %}{{ 'sections.mma.galerie.couleurs.swatches_canvas' | t }}{% endif %}" hidden>
+        {{- pastilles -}}
+      </div>
+      <div class="galerie-couleurs-phrases">
+        {{- phrases -}}
+      </div>
+      {%- comment -%} L'œuvre, avec les attributs de l'image de la scène (sections/galerie-scene.liquid) : les
+         mêmes paliers, la même taille annoncée, donc la même requête. Les calques des couleurs (leurs points, leurs
+         zones) et l'étiquette du survol sont remplis par l'élément. {%- endcomment -%}
+      <figure class="galerie-couleurs-oeuvre">
+        <img
+          class="galerie-couleurs-image"
+          src="{{ art | image_url: width: 750 }}"
+          srcset="{%- if art.width >= 400 -%}{{ art | image_url: width: 400 }} 400w,{%- endif -%}
+            {%- if art.width >= 550 -%}{{ art | image_url: width: 550 }} 550w,{%- endif -%}
+            {%- if art.width >= 750 -%}{{ art | image_url: width: 750 }} 750w,{%- endif -%}
+            {%- if art.width >= 1100 -%}{{ art | image_url: width: 1100 }} 1100w,{%- endif -%}
+            {%- if art.width >= 1500 -%}{{ art | image_url: width: 1500 }} 1500w,{%- endif -%}
+            {%- if art.width > 2000 -%}{{ art | image_url: width: 2000 }} 2000w{%- else -%}{{ art | image_url }} {{ art.width }}w{%- endif -%}"
+          sizes="(min-width: 900px) 45vw, 86vw"
+          width="{{ art.width }}" height="{{ art.height }}" alt="" loading="lazy" decoding="async" crossorigin="anonymous">
+        <div class="galerie-couleurs-calques" data-allow-empty aria-hidden="true"></div>
+        <div class="galerie-couleurs-survol" aria-hidden="true"><i data-allow-empty></i><span data-allow-empty></span></div>
+      </figure>
+    </galerie-couleurs>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Galerie : les couleurs",
+  "limit": 1,
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Les couleurs de l'œuvre, à toucher : chaque pastille montre où sa couleur se trouve dans l'œuvre et dit ce qu'elle apporte. À placer juste après la scène, dans une fiche en page galerie (case « Page galerie » cochée), qui charge ses styles et son script. Rien à régler : les couleurs et leurs phrases viennent du produit (champs méta « Couleurs montrées sur la fiche » et « Texte de la couleur 1 » à « 3 », écrits par le serveur). Sans phrase, la section ne s'affiche pas."
+    }
+  ]
+}
+{% endschema %}
