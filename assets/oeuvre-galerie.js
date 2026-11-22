@@ -136,7 +136,7 @@
 })();
 /* === Avis, recommandations, questions (ticket 23) : fin === */
 
-/* === Scène en quatre temps (ticket 20) : début === */
+/* === Scène en trois temps (ticket 20) : début === */
 (function () {
   'use strict';
 
@@ -149,7 +149,7 @@
   }
 
   /* L'échelle de la scène sur téléphone, en pixels par centimètre : la plus grande possible entre le bas du texte
-     du temps 3 et la ligne du sol, sans sortir de l'écran. La dame et son lit (1,86 m) tiennent alors toute la
+     de la lumière et la ligne du sol, sans sortir de l'écran. La dame et son lit (1,86 m) tiennent alors toute la
      largeur. En hauteur, il faut loger l'œuvre accrochée à 1,67 m (son centre), sa lampe au-dessus d'elle, et un
      peu d'air : 2,42 m pour un portrait, plus pour une œuvre large, dont la lampe est plus large, donc plus haute
      (voir placesDeScene pour la taille de l'œuvre). */
@@ -162,9 +162,9 @@
   }
 
   /* Les places de l'œuvre, d'après sa boîte dans l'écran de la scène (x, y, l, h), avant tout mouvement.
-     Temps 3 : à l'échelle du lit (cm, en pixels par centimètre), haute de 1,10 m et large de 1,50 m au plus (le
+     La lumière : à l'échelle du lit (cm, en pixels par centimètre), haute de 1,10 m et large de 1,50 m au plus (le
      lit fait 1,86 m), son centre à 1,67 m du sol (--yc, --e3).
-     Temps 4 : sur téléphone, jusqu'où grossir pour qu'elle remplisse l'écran, et de combien la recentrer ; sur
+     La matière : sur téléphone, jusqu'où grossir pour qu'elle remplisse l'écran, et de combien la recentrer ; sur
      ordinateur, le grossissement est celui de la feuille (null : la valeur posée ici est retirée), un peu décalé. */
   function placesDeScene({ grand, largeur, hauteur, ecran, pied, cm, x, y, l, h }) {
     const milieu = y + h / 2;
@@ -206,7 +206,7 @@
     !window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
     !!(window.CSS && CSS.supports && CSS.supports('animation-timeline: view()') && CSS.supports('animation-range-start', 'contain 10svh'));
 
-  /* <galerie-scene> : la scène en quatre temps (sections/galerie-scene.liquid).
+  /* <galerie-scene> : la scène en trois temps (sections/galerie-scene.liquid).
      Sans script, elle est à plat. À son arrivée dans la page, l'élément choisit son état et le pose dans
      data-mouvement ; la feuille fait le reste. Dans un état animé :
      - il mesure la scène (son échelle sur téléphone, la place de l'œuvre au-dessus du lit, son gros plan) et
@@ -362,14 +362,15 @@
   }
   customElements.define('galerie-scene', GalerieScene);
 })();
-/* === Scène en quatre temps (ticket 20) : fin === */
+/* === Scène en trois temps (ticket 20) : fin === */
 
-/* === Couleurs de la scène (ticket 21) : début === */
+/* === Couleurs à toucher (ticket 28) : début === */
 (function () {
   'use strict';
 
   /* Ce que la page donne au moteur (assets/galerie-couleurs.js, sa fonction lire), d'après ce que le serveur a
-     écrit dans la section : des identifiants de couleurs de la boutique (les handles des métaobjets).
+     écrit dans la section (sections/galerie-couleurs.liquid) : des identifiants de couleurs de la boutique (les
+     handles des métaobjets).
      - arretees : les couleurs que le serveur a arrêtées pour cette page (artwork.colors), dans leur ordre. La liste
        est close : le moteur n'ajoute rien (completer: false), il retrouve seulement leurs zones dans l'image.
      - declarees : les couleurs déclarées du produit (shopify.color-pattern). Sans couleurs arrêtées, le moteur lit
@@ -390,63 +391,245 @@
     return { lire, completer: false };
   }
 
-  /* Les moments de chaque couleur montrée, en écrans depuis l'épinglage de la scène : le déroulé de la maquette. La
-     couleur de rang k commence à 0,9 + 0,32 k : sa phrase et sa pastille arrivent un rien avant elle, elle revient
-     sur l'œuvre, et sa pastille reste cerclée tant qu'on parle d'elle. La dernière tient jusqu'à la fin du temps 2.
-     Chaque paire, [début, fin], va dans --a et --b de son élément (la classe galerie-scene-a de la scène). */
-  function momentsDesCouleurs(nombre) {
-    const arrondi = (x) => Math.round(x * 100) / 100;
-    return Array.from({ length: nombre }, (_, rang) => {
-      const debut = 0.9 + 0.32 * rang;
-      const derniere = rang === nombre - 1;
-      return {
-        teinte: [arrondi(debut), arrondi(derniere ? 1.98 : debut + 0.42)],
-        phrase: [arrondi(debut - 0.02), arrondi(derniere ? 2 : debut + 0.3)],
-        pastille: [arrondi(debut - 0.02), arrondi(debut + 0.1)],
-        anneau: [arrondi(debut - 0.02), arrondi(derniere ? 1.96 : debut + 0.36)],
-      };
+  /* ---- Les calculs du travailleur ----
+     Le moteur n'est jamais modifié (il est identique à l'octet à celui du serveur) : ce que la page y ajoute (les
+     points de chaque couleur, son contour, la carte des couleurs) se calcule ici, à partir des masques qu'il rend.
+     Portés du prototype validé (couleurs-interactif/outils/travail.js). Ces fonctions ne lisent rien autour d'elles :
+     le travailleur reçoit leur texte (texteDuTravailleur). */
+
+  /* Un flou en boîte, séparable : la moyenne de ce qui est dans l'image (bords compris). */
+  function flou(src, W, H, r) {
+    const tmp = new Float32Array(W * H);
+    const out = new Float32Array(W * H);
+    for (let y = 0; y < H; y++) {
+      const o = y * W;
+      let s = 0;
+      let n = 0;
+      for (let x = 0; x <= r && x < W; x++) { s += src[o + x]; n++; }
+      for (let x = 0; x < W; x++) {
+        tmp[o + x] = s / n;
+        const plus = x + r + 1;
+        const moins = x - r;
+        if (plus < W) { s += src[o + plus]; n++; }
+        if (moins >= 0) { s -= src[o + moins]; n--; }
+      }
+    }
+    for (let x = 0; x < W; x++) {
+      let s = 0;
+      let n = 0;
+      for (let y = 0; y <= r && y < H; y++) { s += tmp[y * W + x]; n++; }
+      for (let y = 0; y < H; y++) {
+        out[y * W + x] = s / n;
+        const plus = y + r + 1;
+        const moins = y - r;
+        if (plus < H) { s += tmp[plus * W + x]; n++; }
+        if (moins >= 0) { s -= tmp[moins * W + x]; n--; }
+      }
+    }
+    return out;
+  }
+
+  /* Les pixels en OKLab, un sur quatre (le coin de chaque carré de 2 × 2) : la grille des points. */
+  function labDemi(px, W, H, versLab) {
+    const w = W >> 1;
+    const h = H >> 1;
+    const lab = new Float32Array(w * h * 3);
+    const o = [0, 0, 0];
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const i = (2 * y * W + 2 * x) * 4;
+        const k = (y * w + x) * 3;
+        versLab(px[i], px[i + 1], px[i + 2], o);
+        lab[k] = o[0];
+        lab[k + 1] = o[1];
+        lab[k + 2] = o[2];
+      }
+    }
+    return lab;
+  }
+
+  /* Les points d'une couleur : là où elle est la plus dense, sur une grille deux fois plus petite (assez pour placer
+     un point). Le score aime le cœur d'une grande zone (densité proche, densité large) et, pour des touches éparses,
+     l'endroit où elles se serrent ; il aime aussi les pixels qui ressemblent le plus à la pastille (le vert franc des
+     nénuphars plutôt que l'eau sombre entre eux), et un rien le milieu du tableau, pour départager une couleur qui est
+     partout. Une grande couleur reçoit un point, une moyenne deux, une petite ou éparse trois. Chaque point est
+     ramené sur la couleur elle-même, loin des bords. alpha : son masque ; part : sa part de l'image ; lab : les
+     pixels sur la grille (labDemi) ; teinte : [L, a, b] de sa pastille. Rend des positions entre 0 et 1. */
+  function reperes(alpha, W, H, part, lab, teinte) {
+    const w = W >> 1;
+    const h = H >> 1;
+    const m = new Float32Array(w * h);
+    const t = new Float32Array(w * h);
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const i = 2 * y * W + 2 * x;
+        const k = y * w + x;
+        m[k] = (alpha[i] + alpha[i + 1] + alpha[i + W] + alpha[i + W + 1]) / 1020;
+        if (lab && teinte) {
+          const dL = lab[k * 3] - teinte[0];
+          const da = lab[k * 3 + 1] - teinte[1];
+          const db = lab[k * 3 + 2] - teinte[2];
+          t[k] = Math.max(0, 1 - Math.sqrt(0.6 * dL * dL + da * da + db * db) / 0.2) * m[k];
+        } else t[k] = m[k];
+      }
+    }
+    const court = Math.min(w, h);
+    const r1 = Math.max(2, Math.round(court * 0.045));
+    const r2 = Math.max(4, Math.round(court * 0.13));
+    const d1 = flou(flou(m, w, h, r1), w, h, r1);
+    const d2 = flou(flou(m, w, h, r2), w, h, r2);
+    const dt = flou(t, w, h, r1);
+    const cx = w / 2;
+    const cy = h / 2;
+    const demi = Math.hypot(cx, cy);
+    const score = new Float32Array(w * h);
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const i = y * w + x;
+        score[i] = d1[i] * (0.35 + d2[i]) * (0.45 + 0.55 * dt[i]) * (1 - (0.18 * Math.hypot(x - cx, y - cy)) / demi);
+      }
+    }
+    const marge = Math.max(2, Math.round(court * 0.09));
+    const candidats = [];
+    // Toute couleur montrée a au moins un point : le meilleur sommet, même faible ; les suivants doivent valoir au
+    // moins 40 % du premier. (Une couleur tout au bord : le point le plus dense, ramené dans les marges.)
+    let meilleur = -1;
+    let mi = 0;
+    for (let i = 0; i < w * h; i++) if (d1[i] > meilleur) { meilleur = d1[i]; mi = i; }
+    for (let y = marge; y < h - marge; y++) {
+      for (let x = marge; x < w - marge; x++) {
+        const i = y * w + x;
+        const s = score[i];
+        if (s <= 0.0005) continue;
+        if (s < score[i - 1] || s < score[i + 1] || s < score[i - w] || s < score[i + w] || s < score[i - w - 1] || s < score[i - w + 1] || s < score[i + w - 1] || s < score[i + w + 1]) continue;
+        candidats.push([s, x, y]);
+      }
+    }
+    candidats.sort((a, b) => b[0] - a[0]);
+    const max = part >= 0.5 ? 1 : part >= 0.22 ? 2 : 3;
+    const loin = 0.26 * Math.hypot(w, h);
+    const pris = [];
+    for (const [s, x, y] of candidats) {
+      if (pris.length >= max) break;
+      if (pris.length && s < 0.4 * pris[0].s) break;
+      if (pris.some((p) => Math.hypot(p.x - x, p.y - y) < loin)) continue;
+      pris.push({ s, x, y });
+    }
+    if (!pris.length && meilleur > 0) {
+      pris.push({ s: meilleur, x: Math.min(w - marge - 1, Math.max(marge, mi % w)), y: Math.min(h - marge - 1, Math.max(marge, Math.floor(mi / w))) });
+    }
+    // Le point posé sur la couleur : le pixel le plus franc de la couleur tout près (puis un peu plus loin, et moins
+    // franc, pour des touches très éparses).
+    return pris.map((p) => {
+      let bx = p.x;
+      let by = p.y;
+      let bv = -Infinity;
+      for (const [rayon, seuil] of [[r1, 0.6], [2 * r1, 0.35]]) {
+        for (let dy = -rayon; dy <= rayon; dy++) {
+          for (let dx = -rayon; dx <= rayon; dx++) {
+            const x = p.x + dx;
+            const y = p.y + dy;
+            if (x < marge || y < marge || x >= w - marge || y >= h - marge) continue;
+            if (m[y * w + x] < seuil) continue;
+            const v = 0.5 * m[y * w + x] + t[y * w + x] - Math.hypot(dx, dy) / (2 * rayon);
+            if (v > bv) { bv = v; bx = x; by = y; }
+          }
+        }
+        if (bv > -Infinity) break;
+      }
+      return { x: Math.round(((bx + 0.5) / w) * 10000) / 10000, y: Math.round(((by + 0.5) / h) * 10000) / 10000 };
     });
   }
 
-  /* La lecture d'une image (des pixels RGBA) par le moteur : il choisit les couleurs (lire), puis trouve leurs zones
-     (masques). Pour chaque couleur montrée, trois au plus : son identifiant dans la boutique (le moteur dit « dore »
-     pour « or »), sa couleur dans l'œuvre (celle de sa pastille), sa part de l'image, et son masque (0 à 255 par
-     pixel). Rien d'autre que ses paramètres : le travailleur en reçoit le texte (voir travail). */
-  function lireLesCouleurs(moteur, pixels, largeur, hauteur, { lire, completer }) {
+  /* Le contour d'une couleur : un liseré d'un pixel autour de ses zones (la zone, lissée pour oublier les poussières
+     d'un pixel, puis élargie d'un pixel, moins elle-même). */
+  function contour(alpha, W, H) {
+    const n = W * H;
+    const m = new Float32Array(n);
+    for (let i = 0; i < n; i++) m[i] = alpha[i] / 255;
+    const lisse = flou(m, W, H, 1);
+    const dedans = new Uint8Array(n);
+    for (let i = 0; i < n; i++) dedans[i] = lisse[i] >= 0.5 ? 1 : 0;
+    const out = new Uint8ClampedArray(n);
+    for (let y = 0; y < H; y++) {
+      for (let x = 0; x < W; x++) {
+        const i = y * W + x;
+        if (dedans[i]) continue;
+        let pres = 0;
+        for (let dy = -1; dy <= 1 && !pres; dy++) {
+          for (let dx = -1; dx <= 1; dx++) {
+            const xx = x + dx;
+            const yy = y + dy;
+            if (xx >= 0 && yy >= 0 && xx < W && yy < H && dedans[yy * W + xx]) { pres = 1; break; }
+          }
+        }
+        if (pres) out[i] = 255;
+      }
+    }
+    return out;
+  }
+
+  /* La carte : pour une case de 4 × 4 pixels, la couleur montrée la plus présente (son rang), ou 255. */
+  function carte(alphas, W, H) {
+    const pas = 4;
+    const cw = Math.ceil(W / pas);
+    const ch = Math.ceil(H / pas);
+    const c = new Uint8Array(cw * ch).fill(255);
+    for (let y = 0; y < ch; y++) {
+      for (let x = 0; x < cw; x++) {
+        let meilleur = 110;
+        let rang = 255;
+        for (let r = 0; r < alphas.length; r++) {
+          let s = 0;
+          let k = 0;
+          for (let dy = 0; dy < pas; dy += 2) {
+            for (let dx = 0; dx < pas; dx += 2) {
+              const xx = x * pas + dx;
+              const yy = y * pas + dy;
+              if (xx >= W || yy >= H) continue;
+              s += alphas[r][yy * W + xx];
+              k++;
+            }
+          }
+          const v = k ? s / k : 0;
+          if (v > meilleur) { meilleur = v; rang = r; }
+        }
+        c[y * cw + x] = rang;
+      }
+    }
+    return { carte: c, cw, ch };
+  }
+
+  /* La lecture d'une image (des pixels RGBA) : le moteur choisit les couleurs (lire) et trouve leurs zones
+     (masques) ; puis, pour chaque couleur montrée, trois au plus : son identifiant dans la boutique (le moteur dit
+     « dore » pour « or »), sa couleur dans l'œuvre (celle de sa pastille), sa clarté, sa part de l'image et ses
+     points ; son masque et son contour (0 à 255 par pixel) ; et la carte des couleurs. */
+  function lireLesZones(moteur, pixels, largeur, hauteur, { lire, completer }) {
     const modele = moteur.lire(pixels, largeur, hauteur, lire, { completer });
     const zones = moteur.masques(pixels, largeur, hauteur, modele).slice(0, 3);
     const handles = Object.keys(moteur.HANDLES);
+    const lab = labDemi(pixels, largeur, hauteur, moteur.versLab);
     const couleurs = zones.map((zone, rang) => {
-      const cle = modele.choisis[rang].cle;
-      return { handle: handles.find((handle) => moteur.HANDLES[handle] === cle) || cle, css: modele.choisis[rang].css || '', part: zone.part };
+      const choisie = modele.choisis[rang];
+      const teinte = choisie.L != null ? [choisie.L, choisie.a, choisie.b] : null;
+      return {
+        handle: handles.find((handle) => moteur.HANDLES[handle] === choisie.cle) || choisie.cle,
+        css: choisie.css || '',
+        L: Math.round((choisie.L || 0) * 1000) / 1000,
+        part: Math.round(zone.part * 10000) / 10000,
+        reperes: reperes(zone.alpha, largeur, hauteur, zone.part, lab, teinte),
+      };
     });
-    return { couleurs, masques: zones.map((zone) => zone.alpha) };
-  }
-
-  /* Ce que la page montre, une fois les couleurs lues : chaque couleur dans l'ordre du moteur, avec le nom de sa
-     pastille (noms : identifiant → libellé), le rang de sa phrase s'il y en a une (phrases : l'identifiant de
-     chaque phrase, dans l'ordre de la page ; -1 sinon) et ses moments. Une phrase dont la couleur n'a pas été
-     retrouvée dans l'image n'est pas montrée (cachees : leurs rangs). */
-  function planDesCouleurs({ couleurs, phrases = [], noms = {} }) {
-    const montrees = couleurs.slice(0, 3);
-    const moments = momentsDesCouleurs(montrees.length);
-    const plan = montrees.map((couleur, rang) => ({
-      handle: couleur.handle,
-      nom: noms[couleur.handle] || '',
-      css: couleur.css || '',
-      phrase: phrases.indexOf(couleur.handle),
-      moments: moments[rang],
-    }));
-    const gardees = plan.map((couleur) => couleur.phrase);
-    return { couleurs: plan, cachees: phrases.map((_, rang) => rang).filter((rang) => !gardees.includes(rang)) };
+    const lieux = carte(zones.map((zone) => zone.alpha), largeur, hauteur);
+    return { couleurs, masques: zones.map((zone) => zone.alpha), contours: zones.map((zone) => contour(zone.alpha, largeur, hauteur)), carte: lieux.carte, cw: lieux.cw, ch: lieux.ch };
   }
 
   /* Le travailleur (un Worker, hors du fil principal) : il charge le moteur, va chercher la copie de 320 px de
-     l'image, la lit (lireLesCouleurs, qu'il reçoit en paramètre) et rend chaque masque en image PNG. Rien de tout
-     cela ne passe par le fil de la page : le défilement ne l'attend jamais. Il lui faut OffscreenCanvas (Chrome,
-     Firefox 105, Safari 16.4) : sans lui, il répond une erreur, et l'œuvre reste en couleurs. Son texte est celui
-     de cette fonction : elle ne lit rien autour d'elle. */
-  function travail(lire) {
+     l'image (celle que lit le serveur), la lit (lireLesZones) et rend chaque masque et chaque contour en image PNG,
+     avec la carte. Rien de tout cela ne passe par le fil de la page. Il lui faut OffscreenCanvas (Chrome, Firefox
+     105, Safari 16.4) : sans lui, il répond une erreur, et les pastilles et les phrases marchent sans points ni
+     traits. */
+  function travail() {
     self.onmessage = async ({ data }) => {
       try {
         importScripts(data.moteur);
@@ -460,105 +643,230 @@
         contexte.imageSmoothingQuality = 'high';
         contexte.drawImage(image, 0, 0, largeur, hauteur);
         image.close();
-        const lu = lire(self.Couleurs, contexte.getImageData(0, 0, largeur, hauteur).data, largeur, hauteur, data);
+        const lu = lireLesZones(self.Couleurs, contexte.getImageData(0, 0, largeur, hauteur).data, largeur, hauteur, data);
+        const enPng = async (alpha) => {
+          const calque = new ImageData(largeur, hauteur);
+          for (let i = 0; i < alpha.length; i += 1) calque.data[i * 4 + 3] = alpha[i];
+          contexte.putImageData(calque, 0, 0);
+          return toile.convertToBlob({ type: 'image/png' });
+        };
         const masques = [];
-        for (const alpha of lu.masques) {
-          const masque = new ImageData(largeur, hauteur);
-          for (let i = 0; i < alpha.length; i += 1) masque.data[i * 4 + 3] = alpha[i];
-          contexte.putImageData(masque, 0, 0);
-          masques.push(await toile.convertToBlob({ type: 'image/png' }));
-        }
-        self.postMessage({ couleurs: lu.couleurs, masques });
+        for (const alpha of lu.masques) masques.push(await enPng(alpha));
+        const contours = [];
+        for (const alpha of lu.contours) contours.push(await enPng(alpha));
+        self.postMessage({ couleurs: lu.couleurs, masques, contours, carte: lu.carte, cw: lu.cw, ch: lu.ch }, [lu.carte.buffer]);
       } catch (erreur) {
         self.postMessage({ erreur: String((erreur && erreur.message) || erreur) });
       }
     };
   }
 
-  /* Le texte du travailleur : sa fonction, à qui l'on passe celle de la lecture. */
+  /* Le texte du travailleur : ses fonctions, à la suite, puis son départ, par l'expression de sa fonction (un outil
+     qui raccourcirait les noms garde ensemble ceux des déclarations et de leurs appels, pas un nom écrit en texte). */
   function texteDuTravailleur() {
-    return `(${travail})(${lireLesCouleurs});`;
+    return [flou, labDemi, reperes, contour, carte, lireLesZones].join('\n') + `\n(${travail})();`;
+  }
+
+  /* ---- Les calculs de la page ---- */
+
+  /* Les pastilles (leurs couleurs, dans l'ordre de la page) et la lecture (les couleurs rendues par le moteur, dans
+     son ordre) : pour chaque pastille, le rang de sa couleur dans la lecture (-1 si le moteur ne l'a pas retrouvée),
+     et les pastilles à cacher. Si aucune n'est retrouvée (une lecture qui a mal tourné), rien n'est caché : la page
+     reste sans zones. */
+  function planDesOnglets(onglets, lues) {
+    const duMoteur = onglets.map((handle) => lues.indexOf(handle));
+    const cachees = duMoteur.some((rang) => rang >= 0) ? duMoteur.map((rang, i) => (rang < 0 ? i : -1)).filter((i) => i >= 0) : [];
+    return { duMoteur, cachees };
+  }
+
+  /* La pastille de la couleur à un point de l'œuvre (x, y entre 0 et 1) : celle de sa case dans la carte, ou celle
+     de la case la plus proche qui a une pastille, à quatre cases au plus ; -1 sinon. versOnglet : le rang d'une
+     couleur dans la lecture, vers sa pastille. */
+  function ongletAuPoint({ carte: cases, cw, ch }, versOnglet, x, y) {
+    const cx = Math.min(cw - 1, Math.max(0, Math.floor(x * cw)));
+    const cy = Math.min(ch - 1, Math.max(0, Math.floor(y * ch)));
+    for (let r = 0; r <= 4; r++) {
+      let meilleur = -1;
+      let distance = Infinity;
+      for (let dy = -r; dy <= r; dy++) {
+        for (let dx = -r; dx <= r; dx++) {
+          if (Math.max(Math.abs(dx), Math.abs(dy)) !== r) continue;
+          const xx = cx + dx;
+          const yy = cy + dy;
+          if (xx < 0 || yy < 0 || xx >= cw || yy >= ch) continue;
+          const k = cases[yy * cw + xx];
+          if (k === 255 || !versOnglet.has(k)) continue;
+          const d = dx * dx + dy * dy;
+          if (d < distance) {
+            distance = d;
+            meilleur = versOnglet.get(k);
+          }
+        }
+      }
+      if (meilleur >= 0) return meilleur;
+    }
+    return -1;
+  }
+
+  /* Au clavier, dans une liste d'onglets : la place visée depuis celle-ci (rang), parmi nombre. Les flèches vont à la
+     voisine, en boucle ; Début et Fin, aux bouts ; toute autre touche : -1 (rien à faire). */
+  function ongletVise(rang, touche, nombre) {
+    if (touche === 'ArrowRight' || touche === 'ArrowDown') return (rang + 1) % nombre;
+    if (touche === 'ArrowLeft' || touche === 'ArrowUp') return (rang - 1 + nombre) % nombre;
+    if (touche === 'Home') return 0;
+    if (touche === 'End') return nombre - 1;
+    return -1;
+  }
+
+  /* Le vol d'un point, de la pastille jusqu'à sa place sur l'œuvre (dx, dy : de sa place à la pastille, en pixels) :
+     il part de la pastille, gros et invisible, paraît, monte en arc (jusqu'à 120 px au-dessus de la ligne droite) et
+     se pose. Les images clés d'Element.animate(). */
+  function volDuRepere(dx, dy) {
+    const px = (valeur) => Math.round(valeur * 10) / 10 + 'px';
+    const arc = Math.min(120, Math.hypot(dx, dy) * 0.32);
+    return [
+      { transform: `translate(${px(dx)}, ${px(dy)}) scale(2.2)`, opacity: 0 },
+      { transform: `translate(${px(dx)}, ${px(dy)}) scale(2)`, opacity: 1, offset: 0.06 },
+      { transform: `translate(${px(dx * 0.42)}, ${px(dy * 0.42 - arc)}) scale(1.25)`, offset: 0.6 },
+      { transform: 'translate(0px, 0px) scale(1)', opacity: 1 },
+    ];
+  }
+
+  /* L'éclat d'une zone (sa luminosité, pour filter: brightness()) d'après la clarté de sa couleur (L, 0 à 1) :
+     d'autant plus vif que la couleur est sombre ; aucun pour une couleur très claire (un blanc ne s'éclaircit pas,
+     son contour suffit). */
+  function eclatDe(L) {
+    return L < 0.8 ? (1 + Math.min(0.95, 0.85 * (1 - L))).toFixed(2) : null;
   }
 
   // Node (tests) : les calculs purs, et le texte du travailleur.
   if (typeof window === 'undefined') {
-    Object.assign(module.exports, { entreeDuMoteur, momentsDesCouleurs, lireLesCouleurs, planDesCouleurs, texteDuTravailleur });
+    Object.assign(module.exports, { entreeDuMoteur, flou, labDemi, reperes, contour, carte, lireLesZones, texteDuTravailleur, planDesOnglets, ongletAuPoint, ongletVise, volDuRepere, eclatDe });
     return;
   }
   if (customElements.get('galerie-couleurs')) return;
 
   const liste = (texte) => String(texte || '').split(/\s+/).filter(Boolean);
   const absolue = (adresse) => new URL(adresse, document.baseURI).href;
-  /* Une tranche de travail dans un temps mort du fil principal (au plus tard 150 ms après, s'il n'y en a pas) ;
-     sans requestIdleCallback (Safari), la tâche suivante. Et pour l'annuler. */
-  const plusTard = (tranche) => (window.requestIdleCallback ? window.requestIdleCallback(tranche, { timeout: 150 }) : window.setTimeout(tranche, 0));
+  /* Une tranche de travail dans un temps mort du fil principal (au plus tard 120 ms après, s'il n'y en a pas) ; sans
+     requestIdleCallback (Safari), la tâche suivante. Et pour l'annuler. */
+  const plusTard = (tranche) => (window.requestIdleCallback ? window.requestIdleCallback(tranche, { timeout: 120 }) : window.setTimeout(tranche, 0));
   const annuler = (numero) => (window.cancelIdleCallback ? window.cancelIdleCallback(numero) : window.clearTimeout(numero));
 
-  /* <galerie-couleurs> : les couleurs du temps 2 (sections/galerie-scene.liquid). L'élément est la place où elles
-     reviennent sur l'œuvre (le gris, puis trois places de la même image) ; il porte ce que le serveur sait
-     (data-moteur, data-image, data-arretees, data-declarees) et le nom des pastilles (<template>).
-     Si la scène est animée (pas de « mouvements réduits »), il attend qu'elle approche, à un quart d'écran, comme
-     les personnages de la scène (pas avant : rien ne se charge pendant le haut de la page), et lit les couleurs
-     dans un travailleur. Il reste deux écrans de défilement avant le temps 2 : le temps de lire. Puis il montre :
-     sur l'œuvre, chaque couleur (l'image nette, sous le masque de la couleur, agrandi sur elle) ; sous l'œuvre, ses
-     pastilles ; à chaque phrase, son moment, et la couleur lue à sa pastille ; data-pretes sur lui-même, qui fait
-     paraître le gris et les couleurs (voir la feuille). Une phrase dont la couleur n'est pas dans l'image est
-     cachée. Si rien n'est lu (erreur, navigateur trop ancien), rien ne change : l'œuvre reste en couleurs et les
-     phrases se suivent.
-     Sur le fil principal, tout se fait par petites tranches dans les temps morts : le départ du travailleur, une
-     tranche par couleur, puis une où tout paraît. Il n'ajoute ni n'ôte rien à la page (les places sont écrites par
-     le serveur) : sur cette page, chaque ajout fait refaire les styles de toute la scène. Aucune tranche ne retient
-     le défilement (quelques millisecondes, même sur un téléphone lent).
-     À son départ de la page (la bascule Toile / Poster remplace la scène entière), il arrête tout et défait ce qu'il
-     a posé : la nouvelle scène a son propre élément, qui repart de zéro. */
+  /* <galerie-couleurs> : les couleurs à toucher (sections/galerie-couleurs.liquid). Sans script, la section montre
+     l'œuvre en couleurs et les phrases à la suite. Avec lui :
+     - à son arrivée dans la page : les pastilles paraissent, des onglets ; les phrases deviennent leurs panneaux,
+       empilés à la même place (data-pret sur la section) ; la première couleur est choisie, sa phrase se lit ;
+     - à l'approche (un écran et demi avant), une fois : le moteur lit l'œuvre dans un travailleur ; puis, dans un temps
+       mort, les calques de chaque couleur sont posés sur l'œuvre (ses points, son éclat, son contour), cachés sauf
+       ceux de la couleur choisie (data-zones), et les pastilles prennent la couleur lue dans l'œuvre. Une couleur que
+       le moteur n'a pas retrouvée perd sa pastille et sa phrase ;
+     - toucher une pastille (ou une flèche, Début, Fin) : sa phrase ; ses points volent de la pastille jusqu'à l'œuvre,
+       ses zones s'avivent et s'entourent d'un trait blanc un instant ; ensuite, seuls les points restent. Toucher la
+       même couleur rejoue l'éclat. En mouvements réduits : rien ne vole, les zones restent un moment, puis s'éteignent ;
+     - toucher l'œuvre : la couleur sous le doigt ; à la souris, une étiquette nomme la couleur sous le pointeur.
+     Sans travailleur ni OffscreenCanvas (iOS avant 16.4), ou si la lecture échoue : les pastilles et les phrases
+     marchent, sans points ni traits. Tout s'arrête au départ de l'élément (la bascule Toile / Poster remplace la
+     section entière : la nouvelle repart de zéro). */
   class GalerieCouleurs extends HTMLElement {
     connectedCallback() {
-      this.scene = this.closest('galerie-scene');
-      if (!this.scene || this.reduit) return;
-      this.retours = [];
-      this.liens = [];
+      if (this.bloc) return;
+      const bloc = this.closest('.galerie-couleurs');
+      const rangee = this.querySelector('.galerie-couleurs-pastilles[role="tablist"]');
+      if (!bloc || !rangee) return;
+      const onglets = Array.from(rangee.querySelectorAll('[role="tab"]'));
+      const panneaux = onglets.map((onglet) => this.querySelector('#' + CSS.escape(onglet.getAttribute('aria-controls') || '')));
+      if (!onglets.length || panneaux.some((panneau) => !panneau)) return;
+      this.bloc = bloc;
+      this.liste = rangee;
+      this.onglets = onglets;
+      this.panneaux = panneaux;
+      this.figure = this.querySelector('.galerie-couleurs-oeuvre');
+      this.calques = this.querySelector('.galerie-couleurs-calques');
+      this.survol = this.querySelector('.galerie-couleurs-survol');
+      this.image = this.querySelector('.galerie-couleurs-image');
       this.reduit = window.matchMedia('(prefers-reduced-motion: reduce)');
-      this.regler = () => this.guetter();
-      this.reduit.addEventListener('change', this.regler);
-      this.guetter();
+      this.animations = [];
+      this.liens = [];
+      this.zones = null;
+      this.panneaux.forEach((panneau, i) => {
+        panneau.setAttribute('role', 'tabpanel');
+        panneau.setAttribute('aria-labelledby', this.onglets[i].id);
+        panneau.tabIndex = 0;
+      });
+      this.liste.hidden = false;
+      this.bloc.setAttribute('data-pret', '');
+      this.bloc.removeAttribute('data-zones');
+      this.bloc.removeAttribute('data-touche');
+      this.montrer(0, false);
+      this.auClic = (evenement) => {
+        const onglet = evenement.target.closest('[role="tab"]');
+        if (onglet) this.choisir(this.onglets.indexOf(onglet));
+      };
+      this.auClavier = (evenement) => {
+        const visibles = this.onglets.filter((onglet) => !onglet.hidden);
+        const vise = ongletVise(visibles.indexOf(this.onglets[this.rang]), evenement.key, visibles.length);
+        if (vise < 0) return;
+        evenement.preventDefault();
+        visibles[vise].focus();
+        this.choisir(this.onglets.indexOf(visibles[vise]));
+      };
+      this.auToucher = (evenement) => {
+        if (!this.zones) return;
+        const i = this.ongletSous(evenement, this.figure.getBoundingClientRect());
+        this.choisir(i >= 0 ? i : this.rang);
+      };
+      this.auSurvol = (evenement) => {
+        if (evenement.pointerType !== 'mouse' || !this.zones) return;
+        this.dernier = evenement;
+        if (!this.attenteSurvol) this.attenteSurvol = requestAnimationFrame(() => this.suivreSurvol());
+      };
+      this.horsSurvol = () => {
+        cancelAnimationFrame(this.attenteSurvol);
+        this.attenteSurvol = 0;
+        this.figure.removeAttribute('data-survol');
+      };
+      this.liste.addEventListener('click', this.auClic);
+      this.liste.addEventListener('keydown', this.auClavier);
+      this.figure.addEventListener('click', this.auToucher);
+      this.figure.addEventListener('pointermove', this.auSurvol);
+      this.figure.addEventListener('pointerleave', this.horsSurvol);
+      this.approche = new IntersectionObserver(
+        (entrees) => {
+          if (!entrees.some((entree) => entree.isIntersecting)) return;
+          this.approche.disconnect();
+          this.lire();
+        },
+        { rootMargin: '150% 0px' }
+      );
+      this.approche.observe(this);
     }
 
     disconnectedCallback() {
-      if (!this.reduit) return;
-      this.reduit.removeEventListener('change', this.regler);
-      this.reduit = null;
+      if (!this.bloc) return;
+      this.approche.disconnect();
+      this.liste.removeEventListener('click', this.auClic);
+      this.liste.removeEventListener('keydown', this.auClavier);
+      this.figure.removeEventListener('click', this.auToucher);
+      this.figure.removeEventListener('pointermove', this.auSurvol);
+      this.figure.removeEventListener('pointerleave', this.horsSurvol);
       this.arreter();
-      this.defaire();
+      this.animations.forEach((animation) => animation.cancel());
+      this.animations = [];
+      cancelAnimationFrame(this.attenteSurvol);
+      this.attenteSurvol = 0;
+      clearTimeout(this.minuterie);
+      this.rendre();
+      this.bloc = null;
     }
 
-    /* La scène est animée : il attend qu'elle approche pour lire les couleurs, une fois. */
-    guetter() {
-      if (!this.reduit || this.reduit.matches || this.approche || this.travailleur || this.etapes || this.posees) return;
-      this.approche = new IntersectionObserver(
-        (entrees) => {
-          if (!entrees[entrees.length - 1].isIntersecting) return;
-          this.approche.disconnect();
-          this.approche = null;
-          this.suivre([() => this.ecrire(), () => this.lire()]);
-        },
-        { rootMargin: '25% 0px' }
-      );
-      this.approche.observe(this.scene);
-    }
-
-    /* Le texte du travailleur, et son adresse (une tranche à part : la page attend le navigateur pour l'adresse). */
-    ecrire() {
-      try {
-        this.source = URL.createObjectURL(new Blob([texteDuTravailleur()], { type: 'text/javascript' }));
-      } catch (erreur) {
-        this.arreter();
-      }
-    }
-
-    /* Lit les couleurs, hors du fil principal : le travailleur part, avec ce qu'il lui faut. */
+    /* Lit l'œuvre, hors du fil principal : le travailleur part, avec le moteur, la copie de l'image et la liste. Ce
+       qu'il rend se pose dans un temps mort. Une erreur : rien ne change. */
     lire() {
       const entree = entreeDuMoteur({ arretees: liste(this.dataset.arretees), declarees: liste(this.dataset.declarees) });
+      if (!entree.lire.length || !window.Worker) return;
       try {
+        this.source = URL.createObjectURL(new Blob([texteDuTravailleur()], { type: 'text/javascript' }));
         this.travailleur = new Worker(this.source);
       } catch (erreur) {
         this.arreter();
@@ -566,132 +874,207 @@
       }
       this.travailleur.onmessage = ({ data }) => {
         this.arreter();
-        this.suivre([() => this.poser(data)]);
+        if (!data || data.erreur) return;
+        this.tranche = plusTard(() => {
+          this.tranche = 0;
+          if (this.bloc) this.poser(data);
+        });
       };
       this.travailleur.onerror = () => this.arreter();
       this.travailleur.postMessage({ moteur: absolue(this.dataset.moteur), image: absolue(this.dataset.image), ...entree });
     }
 
-    /* Fait les étapes données, une par tranche, dans les temps morts du fil principal : une tranche demandée pendant
-       un temps mort attend le suivant, après l'image d'après (une image de la page, une tranche). */
-    suivre(etapes) {
-      this.etapes = etapes;
-      const suite = () => {
-        this.tranche = 0;
-        const etape = this.etapes && this.etapes.shift();
-        if (etape) etape();
-        if (this.etapes && this.etapes.length) this.tranche = plusTard(suite);
-        else this.etapes = null;
-      };
-      this.tranche = plusTard(suite);
-    }
-
-    /* Arrête la lecture : l'attente de la scène, les tranches qui restent, le travailleur et son texte. */
+    /* Arrête la lecture : la tranche en attente, le travailleur et son texte. */
     arreter() {
-      if (this.approche) this.approche.disconnect();
-      this.approche = null;
       if (this.tranche) annuler(this.tranche);
       this.tranche = 0;
-      this.etapes = null;
       if (this.travailleur) this.travailleur.terminate();
       this.travailleur = null;
       if (this.source) URL.revokeObjectURL(this.source);
       this.source = null;
     }
 
-    /* Pose ce que le travailleur a lu, dans les places que le serveur a écrites (trois sur l'œuvre, trois pastilles) :
-       rien n'est ajouté à la page, rien n'en est ôté, l'élément ne change que des styles et des attributs. Une
-       tranche par couleur (sa place sur l'œuvre : son masque et son moment ; sa pastille : sa couleur, son nom, son
-       moment ; sa phrase : son moment et la couleur lue), le tout encore caché ; puis une dernière où tout paraît
-       d'un coup. Une tranche par image de la page : les styles à refaire restent peu nombreux. Une erreur : rien ne
-       change. */
-    poser({ couleurs, masques } = {}) {
-      if (!Array.isArray(couleurs) || !Array.isArray(masques)) return;
-      const phrases = Array.from(this.scene.querySelectorAll('.galerie-scene-couleurs .galerie-scene-msg[data-couleur]'));
-      const noms = {};
-      const modele = this.querySelector('template');
-      if (modele) {
-        modele.content.querySelectorAll('[data-couleur]').forEach((nom) => {
-          noms[nom.dataset.couleur] = nom.textContent.trim();
-        });
-      }
-      const plan = planDesCouleurs({ couleurs, phrases: phrases.map((phrase) => phrase.dataset.couleur), noms });
-      const teintes = Array.from(this.querySelectorAll('.galerie-scene-teinte'));
-      const pastilles = Array.from(this.scene.querySelectorAll('.galerie-scene-pastille'));
-      const montrees = [];
-      const etapes = plan.couleurs.map((couleur, rang) => () => {
-        // Sa place sur l'œuvre : la même image, sous le masque de la couleur, et le moment où elle revient.
-        const teinte = teintes[rang];
-        if (teinte && masques[rang] instanceof Blob) {
-          const lien = URL.createObjectURL(masques[rang]);
-          this.liens.push(lien);
-          this.changer(teinte, '--a', String(couleur.moments.teinte[0]));
-          this.changer(teinte, '--b', String(couleur.moments.teinte[1]));
-          this.changer(teinte, '-webkit-mask-image', `url("${lien}")`);
-          this.changer(teinte, 'mask-image', `url("${lien}")`);
-          montrees.push([teinte, couleur.handle]);
-        }
-        // Sa pastille : sa couleur, son nom, son moment, et celui du cercle qui la désigne tant qu'on parle d'elle.
-        const pastille = pastilles[rang];
-        if (pastille) {
-          if (couleur.css) this.changer(pastille, '--c', couleur.css);
-          this.changer(pastille, '--a', String(couleur.moments.pastille[0]));
-          this.changer(pastille, '--b', String(couleur.moments.pastille[1]));
-          this.marquer(pastille, 'data-nom', couleur.nom);
-          const anneau = pastille.querySelector('.galerie-scene-anneau');
-          if (anneau) {
-            this.changer(anneau, '--a', String(couleur.moments.anneau[0]));
-            this.changer(anneau, '--b', String(couleur.moments.anneau[1]));
-          }
-          montrees.push([pastille, couleur.handle]);
-        }
-        // Sa phrase : son moment, et la couleur lue à sa pastille.
-        if (couleur.phrase >= 0) {
-          const phrase = phrases[couleur.phrase];
-          this.changer(phrase, '--a', String(couleur.moments.phrase[0]));
-          this.changer(phrase, '--b', String(couleur.moments.phrase[1]));
-          const point = phrase.querySelector('b > i');
-          if (point && couleur.css) this.changer(point, '--c', couleur.css);
-        }
-      });
-      etapes.push(() => {
-        // Tout paraît d'un coup : les couleurs sur l'œuvre, après son gris ; les pastilles. Une place de pastille
-        // restée vide ne prend plus de place ; la phrase d'une couleur que l'image n'a pas est cachée.
-        montrees.forEach(([place, handle]) => this.marquer(place, 'data-couleur', handle));
-        pastilles.slice(plan.couleurs.length).forEach((pastille) => this.marquer(pastille, 'data-vide', ''));
-        plan.cachees.forEach((rang) => this.marquer(phrases[rang], 'data-absente', ''));
-        // Le gris et les couleurs paraissent (l'attribut est sur l'élément : seuls ses styles sont à refaire).
-        if (plan.couleurs.length) this.marquer(this, 'data-pretes', '');
-        this.posees = true;
-      });
-      // Posée elle-même dans une tranche, elle met les siennes à la suite.
-      if (this.etapes) this.etapes.push(...etapes);
-      else this.suivre(etapes);
-    }
-
-    /* Change une propriété du style d'un élément écrit par le serveur, et note comment la remettre. */
-    changer(element, nom, valeur) {
-      const avant = element.style.getPropertyValue(nom);
-      element.style.setProperty(nom, valeur);
-      this.retours.push(() => (avant ? element.style.setProperty(nom, avant) : element.style.removeProperty(nom)));
-    }
-
-    /* Pose un attribut sur un élément écrit par le serveur, et note comment le remettre. */
-    marquer(element, nom, valeur) {
-      const avant = element.getAttribute(nom);
-      element.setAttribute(nom, valeur);
-      this.retours.push(() => (avant === null ? element.removeAttribute(nom) : element.setAttribute(nom, avant)));
-    }
-
-    /* Défait ce qui a été posé, du dernier au premier, et rend les masques. */
-    defaire() {
-      this.retours.reverse().forEach((retour) => retour());
-      this.retours = [];
+    /* Rend ce que les calques tenaient : les adresses des masques et des contours, les calques eux-mêmes. */
+    rendre() {
       this.liens.forEach((lien) => URL.revokeObjectURL(lien));
       this.liens = [];
-      this.posees = false;
+      this.calques.replaceChildren();
+      this.zones = null;
+      this.survolRang = -1;
+      this.figure.removeAttribute('data-survol');
+      this.bloc.removeAttribute('data-zones');
+    }
+
+    /* Pose ce que le travailleur a lu : pour chaque pastille dont la couleur est retrouvée, ses calques (cachés), dans
+       l'ordre des pastilles, et la couleur lue sur la pastille et dans sa phrase. */
+    poser({ couleurs, masques, contours, carte: cases, cw, ch } = {}) {
+      if (!Array.isArray(couleurs) || !Array.isArray(masques) || !Array.isArray(contours) || !cases) return;
+      const plan = planDesOnglets(this.onglets.map((onglet) => onglet.dataset.couleur), couleurs.map((couleur) => couleur.handle));
+      if (plan.duMoteur.every((rang) => rang < 0)) return;
+      this.rendre();
+      // Une couleur que le moteur n'a pas retrouvée dans l'œuvre perd sa pastille, donc sa phrase, qui ne sera plus
+      // choisie. Elle reste dans la pile des phrases, invisible : la hauteur de la pile ne change pas, rien ne bouge
+      // dans la page quand le travailleur répond.
+      this.onglets.forEach((onglet, i) => {
+        onglet.hidden = plan.cachees.includes(i);
+      });
+      this.versOnglet = new Map();
+      plan.duMoteur.forEach((rang, i) => {
+        if (rang >= 0) this.versOnglet.set(rang, i);
+      });
+      const creer = (balise, classe, styles = {}) => {
+        const element = document.createElement(balise);
+        if (classe) element.className = classe;
+        Object.entries(styles).forEach(([nom, valeur]) => element.style.setProperty(nom, valeur));
+        return element;
+      };
+      const adresse = (blob) => {
+        const lien = URL.createObjectURL(blob);
+        this.liens.push(lien);
+        return `url("${lien}")`;
+      };
+      const fragment = document.createDocumentFragment();
+      plan.duMoteur.forEach((rang, i) => {
+        if (rang < 0) return;
+        const c = couleurs[rang];
+        const zone = creer('div', 'galerie-couleurs-zone');
+        zone.dataset.rang = i;
+        // L'éclat : la zone avivée, la même image que l'œuvre sous le masque de la couleur (mêmes paliers, même
+        // requête). Aucun pour une couleur très claire : son contour suffit.
+        const luminosite = eclatDe(c.L);
+        if (luminosite) {
+          const masque = adresse(masques[rang]);
+          const eclat = creer('img', 'galerie-couleurs-eclat', { '--luminosite': luminosite, '-webkit-mask-image': masque, 'mask-image': masque });
+          eclat.alt = '';
+          eclat.decoding = 'async';
+          eclat.loading = this.image.loading;
+          eclat.crossOrigin = 'anonymous';
+          eclat.sizes = this.image.sizes;
+          eclat.srcset = this.image.srcset;
+          eclat.src = this.image.getAttribute('src');
+          zone.append(eclat);
+        }
+        // Le contour : un trait blanc, bordé d'encre, autour de ses zones.
+        const bord = adresse(contours[rang]);
+        const trait = creer('i', '', { '-webkit-mask-image': bord, 'mask-image': bord });
+        trait.setAttribute('data-allow-empty', '');
+        const ligne = creer('span', 'galerie-couleurs-contour');
+        ligne.append(trait);
+        zone.append(ligne);
+        // Ses points : un à trois, là où elle se trouve.
+        const points = creer('div', 'galerie-couleurs-reperes');
+        points.setAttribute('data-allow-empty', '');
+        points.dataset.rang = i;
+        c.reperes.forEach((p, j) => {
+          const point = creer('i', 'galerie-couleurs-repere', { '--x': String(p.x), '--y': String(p.y), '--c': c.css, '--j': String(j) });
+          const halo = document.createElement('b');
+          halo.setAttribute('data-allow-empty', '');
+          point.append(halo);
+          points.append(point);
+        });
+        fragment.append(zone, points);
+        // La couleur lue dans l'œuvre, sur la pastille et dans sa phrase.
+        if (c.css) {
+          this.onglets[i].style.setProperty('--c', c.css);
+          const pastille = this.panneaux[i].querySelector('b > i');
+          if (pastille) pastille.style.setProperty('--c', c.css);
+        }
+      });
+      this.calques.replaceChildren(fragment);
+      this.zones = { carte: cases, cw, ch };
+      this.bloc.setAttribute('data-zones', '');
+      // La couleur choisie, si elle est encore là ; sinon la première qui reste.
+      this.montrer(this.onglets[this.rang].hidden ? this.onglets.findIndex((onglet) => !onglet.hidden) : this.rang, false);
+      // Tant que le visiteur n'a rien touché, les points de la première couleur tombent sur l'œuvre à son arrivée.
+      if (!this.bloc.hasAttribute('data-touche')) {
+        const premiers = this.calques.querySelector(`.galerie-couleurs-reperes[data-rang="${this.rang}"]`);
+        if (premiers) premiers.setAttribute('data-entree', '');
+      }
+    }
+
+    /* Le visiteur choisit une couleur (une pastille, une flèche, l'œuvre) : elle se montre, avec son éclat. */
+    choisir(i) {
+      if (!this.bloc || i < 0 || i >= this.onglets.length || this.onglets[i].hidden) return;
+      this.bloc.setAttribute('data-touche', '');
+      this.montrer(i, true);
+    }
+
+    /* La couleur de rang i : sa pastille choisie (seule dans l'ordre du clavier), sa phrase seule lisible ; ses calques,
+       s'ils sont posés ; son éclat, si elle vient d'être choisie. */
+    montrer(i, anime) {
+      this.rang = i;
+      this.onglets.forEach((onglet, k) => {
+        onglet.setAttribute('aria-selected', String(k === i));
+        onglet.tabIndex = k === i ? 0 : -1;
+      });
+      this.panneaux.forEach((panneau, k) => panneau.setAttribute('aria-hidden', String(k !== i)));
+      if (!this.zones) return;
+      this.calques.querySelectorAll('[data-rang]').forEach((calque) => calque.toggleAttribute('data-actif', Number(calque.dataset.rang) === i));
+      if (anime) this.animer(i);
+    }
+
+    /* Les points partent de la pastille et se posent sur l'œuvre ; un halo s'ouvre autour de chacun ; ses zones
+       s'éclairent et s'entourent de blanc un instant (1,7 s, dont 1,5 s visibles). En mouvements réduits : ni vol ni
+       fondu, les zones restent éclairées un moment, puis s'éteignent. */
+    animer(i) {
+      this.animations.forEach((animation) => animation.cancel());
+      this.animations = [];
+      clearTimeout(this.minuterie);
+      this.calques.querySelectorAll('[data-eclair]').forEach((zone) => zone.removeAttribute('data-eclair'));
+      const zone = this.calques.querySelector(`.galerie-couleurs-zone[data-rang="${i}"]`);
+      if (this.reduit.matches) {
+        if (zone) {
+          zone.setAttribute('data-eclair', '');
+          this.minuterie = setTimeout(() => zone.removeAttribute('data-eclair'), 1800);
+        }
+        return;
+      }
+      const point = this.onglets[i].querySelector('.galerie-couleurs-point').getBoundingClientRect();
+      const cadre = this.figure.getBoundingClientRect();
+      const sx = point.left + point.width / 2;
+      const sy = point.top + point.height / 2;
+      this.calques.querySelectorAll(`.galerie-couleurs-reperes[data-rang="${i}"] .galerie-couleurs-repere`).forEach((repere, j) => {
+        const px = cadre.left + parseFloat(repere.style.getPropertyValue('--x')) * cadre.width;
+        const py = cadre.top + parseFloat(repere.style.getPropertyValue('--y')) * cadre.height;
+        this.animations.push(repere.animate(volDuRepere(sx - px, sy - py), { duration: 620, delay: j * 80, easing: 'cubic-bezier(.3, .1, .25, 1)', fill: 'backwards' }));
+        this.animations.push(repere.firstElementChild.animate([{ opacity: 0.95, transform: 'scale(1)' }, { opacity: 0, transform: 'scale(2.8)' }], { duration: 700, delay: 600 + j * 80, easing: 'ease-out', fill: 'backwards' }));
+      });
+      if (zone) {
+        const eclair = [{ opacity: 0 }, { opacity: 1, offset: 0.2 }, { opacity: 1, offset: 0.62 }, { opacity: 0 }];
+        zone.querySelectorAll('.galerie-couleurs-eclat, .galerie-couleurs-contour').forEach((calque) => {
+          this.animations.push(calque.animate(eclair, { duration: 1700, delay: 320, easing: 'ease-in-out' }));
+        });
+      }
+    }
+
+    /* La pastille de la couleur sous le pointeur (un toucher, la souris), dans le cadre de l'œuvre ; -1 si aucune. */
+    ongletSous(evenement, cadre) {
+      return ongletAuPoint(this.zones, this.versOnglet, (evenement.clientX - cadre.left) / cadre.width, (evenement.clientY - cadre.top) / cadre.height);
+    }
+
+    /* À la souris : l'étiquette suit le pointeur sur l'œuvre et nomme la couleur dessous (rien hors des couleurs). */
+    suivreSurvol() {
+      this.attenteSurvol = 0;
+      if (!this.zones || !this.dernier) return;
+      const cadre = this.figure.getBoundingClientRect();
+      const x = this.dernier.clientX - cadre.left;
+      const y = this.dernier.clientY - cadre.top;
+      const i = this.ongletSous(this.dernier, cadre);
+      if (i < 0) {
+        this.figure.removeAttribute('data-survol');
+        return;
+      }
+      if (i !== this.survolRang) {
+        this.survolRang = i;
+        this.survol.querySelector('span').textContent = this.onglets[i].textContent.trim();
+        this.survol.style.setProperty('--c', this.onglets[i].style.getPropertyValue('--c'));
+      }
+      const largeur = this.survol.offsetWidth || 90;
+      const gauche = x + 16 + largeur > cadre.width ? x - 12 - largeur : x + 16;
+      this.survol.style.transform = `translate(${Math.round(gauche)}px, ${Math.round(Math.min(y + 14, cadre.height - 34))}px)`;
+      this.figure.setAttribute('data-survol', '');
     }
   }
   customElements.define('galerie-couleurs', GalerieCouleurs);
 })();
-/* === Couleurs de la scène (ticket 21) : fin === */
+/* === Couleurs à toucher (ticket 28) : fin === */

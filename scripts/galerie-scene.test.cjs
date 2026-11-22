@@ -1,9 +1,9 @@
-// La scène en quatre temps de la page galerie des œuvres 3D (dossier .scratch/fiche-3d/galerie, ticket 20) :
-// sous la présentation, une scène épinglée qui suit le défilement (le regard, les couleurs, la lumière, la matière).
+// La scène en trois temps de la page galerie des œuvres 3D (dossier .scratch/fiche-3d/galerie, tickets 20 et 28) :
+// sous la présentation, une scène épinglée qui suit le défilement (le regard, la lumière, la matière). Les couleurs
+// en sont sorties le 22/11/2026 : elles ont leur propre section, juste après (ticket 28, scripts/galerie-couleurs.test.cjs).
 // La section sections/galerie-scene.liquid, son bloc dans la feuille et dans le script de la page, ses textes.
 // Trois états, posés par l'élément <galerie-scene> : « natif » (le navigateur lie les animations au défilement),
 // « secours » (un script donne la position, mêmes images clés), et à plat (mouvements réduits, script coupé).
-// La lecture des couleurs du temps 2 est le ticket 21 (scripts/galerie-couleurs.test.cjs) : ici, sa place seulement.
 // Ici, les calculs purs du script, les contrats du code, puis le rendu Liquid (liquidjs), quand le module est là.
 // Lancer : node --test scripts/galerie-scene.test.cjs
 const test = require('node:test')
@@ -30,8 +30,8 @@ const GUESTS = { 'galerie-public.webp': [1687, 680], 'galerie-oiseau.webp': [176
 /* Le bloc de la scène dans la feuille ou le script de la page : entre ses deux repères. */
 const blockOf = (file) => {
   const source = read(file)
-  const start = source.indexOf('/* === Scène en quatre temps (ticket 20) : début ===')
-  const end = source.indexOf('/* === Scène en quatre temps (ticket 20) : fin === */')
+  const start = source.indexOf('/* === Scène en trois temps (ticket 20) : début ===')
+  const end = source.indexOf('/* === Scène en trois temps (ticket 20) : fin === */')
   assert.ok(start >= 0 && end > start, `${file} : le bloc de la scène, entre ses deux repères`)
   return source.slice(start, end)
 }
@@ -103,7 +103,7 @@ test('mode de secours : la position de la scène, en écrans depuis son épingla
   assert.equal(tempsDeScene(0, 844), '0.0000')
   assert.equal(tempsDeScene(-422, 844), '0.5000')
   assert.equal(tempsDeScene(844, 844), '-1.0000')
-  assert.equal(tempsDeScene(-3224.08, 844), '3.8200')
+  assert.equal(tempsDeScene(-2160.64, 844), '2.5600')
   // Un écran sans hauteur (page cachée) : rien de cassé.
   assert.equal(tempsDeScene(-100, 0), '0.0000')
 })
@@ -111,7 +111,7 @@ test('mode de secours : la position de la scène, en écrans depuis son épingla
 test('le repère : un trait mène au début de son temps', () => {
   // La scène à 1500 px du haut de la page ; l'écran défilé de 400 px, donc le haut de la scène à 1100 px du haut de l'écran.
   assert.equal(departDuTemps({ haut: 1100, defilement: 400, ecran: 844, temps: 0.02 }), 1517)
-  assert.equal(departDuTemps({ haut: 1100, defilement: 400, ecran: 844, temps: 2.2 }), 3357)
+  assert.equal(departDuTemps({ haut: 1100, defilement: 400, ecran: 844, temps: 0.94 }), 2293)
   assert.equal(departDuTemps({ haut: -2000, defilement: 3500, ecran: 844, temps: 1 }), 2344)
 })
 
@@ -221,49 +221,57 @@ test('la feuille : seulement transform et opacity, et chaque suite d’images cl
   for (const name of defined) assert.ok(named.has(name), `« ${name} » : des images clés que rien ne joue`)
 })
 
-test('la feuille : la scène dure 3,82 écrans, et ses quatre temps sont ceux de la maquette', () => {
-  // 3,82 écrans de défilement, plus l'écran épinglé.
-  assert.match(body('galerie-scene'), /height: 482vh; height: calc\(100lvh \+ 382svh\);/)
+test('la feuille : la scène dure 2,56 écrans, en trois temps ; ce qui suivait le temps des couleurs vient 1,26 écran plus tôt', () => {
+  // 2,56 écrans de défilement, plus l'écran épinglé : la scène de la maquette (3,82 écrans) sans le temps des
+  // couleurs (de 0,78 à 2,04, soit 1,26 écran), parti dans sa propre section le 22/11/2026 (ticket 28).
+  assert.match(body('galerie-scene'), /height: 356vh; height: calc\(100lvh \+ 256svh\);/)
   assert.match(body('.galerie-scene-ecran'), /^position: sticky; top: 0; height: 100vh; height: 100lvh; overflow: hidden; overflow: clip; isolation: isolate; contain: layout paint;$/)
   const range = (head, context) => { const b = body(head, context); return [Number(value(b, 'a')), Number(value(b, 'b')), value(b, 'n')] }
-  // Les textes : temps 1 jusqu'à 0,78 ; temps 2 jusqu'à 2,04 ; temps 3 jusqu'à 3,2 ; temps 4 jusqu'à 3,82.
+  // Les textes : le regard jusqu'à 0,78, la lumière jusqu'à 1,94, la matière jusqu'à 2,56. La lumière arrive quand le
+  // regard s'en va, comme elle arrivait quand les couleurs s'en allaient.
   assert.deepEqual(range('.galerie-scene-regard'), [-0.4, 0.78, 'galerie-scene-passe-debut'])
-  assert.deepEqual(range('.galerie-scene-couleurs'), [0.78, 2.04, 'galerie-scene-passe-long'])
-  assert.deepEqual(range('.galerie-scene-lumiere'), [2.04, 3.2, 'galerie-scene-passe-long'])
-  assert.deepEqual(range('.galerie-scene-matiere'), [3.2, 3.82, 'galerie-scene-passe-fin'])
-  // Le repère : quatre traits qui se remplissent.
-  const rail = [[0, 0.78], [0.78, 2.02], [2.02, 3.18], [3.18, 3.82]]
+  assert.deepEqual(range('.galerie-scene-lumiere'), [0.78, 1.94, 'galerie-scene-passe-long'])
+  assert.deepEqual(range('.galerie-scene-matiere'), [1.94, 2.56, 'galerie-scene-passe-fin'])
+  assert.equal(sheet().find((r) => /galerie-scene-couleurs/.test(r.head)), undefined, 'plus de temps des couleurs dans la scène')
+  // Le repère : trois traits qui se remplissent, bout à bout.
+  const rail = [[0, 0.78], [0.78, 1.92], [1.92, 2.56]]
   rail.forEach(([a, b], i) => assert.deepEqual(range(`.galerie-scene-rail li:nth-child(${i + 1}) .galerie-scene-plein`).slice(0, 2), [a, b]))
+  assert.equal(sheet().find((r) => /li:nth-child\(4\)/.test(r.head)), undefined)
   assert.equal(value(body('.galerie-scene-plein'), 'n'), 'galerie-scene-remplit')
-  // Le mur et le sol : crème et soleil au temps 2, la nuit au temps 3, lilas et menthe au temps 4.
-  assert.deepEqual(range('.galerie-scene-mur-creme'), [0.64, 0.82, 'galerie-scene-fondu'])
-  assert.deepEqual(range('.galerie-scene-sol-soleil'), [0.64, 0.82, 'galerie-scene-fondu'])
-  assert.deepEqual(range('.galerie-scene-mur-nuit'), [1.98, 3.24, 'galerie-scene-nuit'])
-  assert.deepEqual(range('.galerie-scene-sol-nuit'), [1.98, 3.24, 'galerie-scene-nuit'])
-  assert.deepEqual(range('.galerie-scene-mur-lilas'), [3.1, 3.24, 'galerie-scene-fondu'])
-  assert.deepEqual(range('.galerie-scene-sol-menthe'), [3.1, 3.24, 'galerie-scene-fondu'])
-  // Le temps 3 : la lampe arrive vers 2,3, s'allume à 2,5, la dame parle à 2,8.
-  assert.deepEqual(range('.galerie-scene-lampe'), [2.26, 3.2, 'galerie-scene-lampe'])
-  assert.deepEqual(range('.galerie-scene-lampe .galerie-scene-lampe-feu'), [2.5, 3.2, 'galerie-scene-allume'])
-  assert.deepEqual(range('.galerie-scene-lueur'), [2.5, 3.2, 'galerie-scene-allume'])
-  assert.deepEqual(range('.galerie-scene-cache'), [1.98, 3.2, 'galerie-scene-cache'])
-  assert.deepEqual(range('.galerie-scene-vive'), [2.5, 3.14, 'galerie-scene-allume'])
-  assert.deepEqual(range('.galerie-scene-lit'), [2, 3.2, 'galerie-scene-lit'])
-  assert.deepEqual(range('.galerie-scene-lit > .galerie-scene-mot'), [2.8, 2.9, 'galerie-scene-mot'])
-  const messages = [[2.1, 2.3], [2.3, 2.5], [2.5, 3.22]]
+  // Le mur et le sol : ciel et rose au regard, la nuit à la lumière, lilas et menthe à la matière. Le crème et le
+  // soleil ne servaient qu'aux couleurs : ils sont partis avec elles (le crème et le soleil de la section des couleurs).
+  assert.deepEqual(range('.galerie-scene-mur-nuit'), [0.72, 1.98, 'galerie-scene-nuit'])
+  assert.deepEqual(range('.galerie-scene-sol-nuit'), [0.72, 1.98, 'galerie-scene-nuit'])
+  assert.deepEqual(range('.galerie-scene-mur-lilas'), [1.84, 1.98, 'galerie-scene-fondu'])
+  assert.deepEqual(range('.galerie-scene-sol-menthe'), [1.84, 1.98, 'galerie-scene-fondu'])
+  assert.equal(sheet().find((r) => /mur-creme|sol-soleil/.test(r.head)), undefined)
+  // La lumière : la lampe arrive vers 1,04, s'allume à 1,24, la dame parle à 1,54.
+  assert.deepEqual(range('.galerie-scene-lampe'), [1, 1.94, 'galerie-scene-lampe'])
+  assert.deepEqual(range('.galerie-scene-lampe .galerie-scene-lampe-feu'), [1.24, 1.94, 'galerie-scene-allume'])
+  assert.deepEqual(range('.galerie-scene-lueur'), [1.24, 1.94, 'galerie-scene-allume'])
+  assert.deepEqual(range('.galerie-scene-cache'), [0.72, 1.94, 'galerie-scene-cache'])
+  assert.deepEqual(range('.galerie-scene-vive'), [1.24, 1.88, 'galerie-scene-allume'])
+  assert.deepEqual(range('.galerie-scene-reflet'), [1.24, 1.88, 'galerie-scene-allume'])
+  assert.deepEqual(range('.galerie-scene-lit'), [0.74, 1.94, 'galerie-scene-lit'])
+  assert.deepEqual(range('.galerie-scene-lit > .galerie-scene-mot'), [1.54, 1.64, 'galerie-scene-mot'])
+  const messages = [[0.84, 1.04], [1.04, 1.24], [1.24, 1.96]]
   messages.forEach(([a, b], i) => assert.deepEqual(range(`.galerie-scene-lumiere .galerie-scene-msg:nth-child(${i + 1})`).slice(0, 2), [a, b]))
-  // Le temps 1 : le public de -0,2 à 0,86, l'oiseau de 0,06 à 0,86.
+  // Le regard ne change pas : le public de -0,2 à 0,86, l'oiseau de 0,06 à 0,86.
   for (const group of ['gauche', 'milieu', 'droite']) assert.deepEqual(range(`.galerie-scene-public-${group}`), [-0.2, 0.86, `galerie-scene-public-${group}`])
   assert.deepEqual(range('.galerie-scene-oiseau'), [0.06, 0.86, 'galerie-scene-oiseau'])
-  // Le temps 4 : l'œuvre grossit de 3,18 à 3,62, la main avance, puis l'étincelle.
-  assert.deepEqual(range('.galerie-scene-oeuvre'), [3.18, 3.62, 'galerie-scene-zoom'])
-  assert.deepEqual(range('.galerie-scene-centre'), [3.18, 3.62, 'galerie-scene-centre'])
-  assert.deepEqual(range('.galerie-scene-main'), [3.34, 3.76, 'galerie-scene-main'])
-  assert.deepEqual(range('.galerie-scene-touche'), [3.72, 3.82, 'galerie-scene-touche'])
-  assert.deepEqual(range('.galerie-scene-trame'), [3.32, 3.62, 'galerie-scene-fondu'])
-  // L'œuvre dérive tout au long de la scène, et se place au-dessus du lit au temps 3.
-  assert.deepEqual(range('.galerie-scene-derive'), [-1, 4.82, 'galerie-scene-derive'])
-  assert.deepEqual(range('.galerie-scene-place'), [1.94, 3.3, 'galerie-scene-place'])
+  // La matière : l'œuvre grossit de 1,92 à 2,36, la main avance, puis l'étincelle.
+  assert.deepEqual(range('.galerie-scene-oeuvre'), [1.92, 2.36, 'galerie-scene-zoom'])
+  assert.deepEqual(range('.galerie-scene-centre'), [1.92, 2.36, 'galerie-scene-centre'])
+  assert.deepEqual(range('.galerie-scene-main'), [2.08, 2.5, 'galerie-scene-main'])
+  assert.deepEqual(range('.galerie-scene-touche'), [2.46, 2.56, 'galerie-scene-touche'])
+  assert.deepEqual(range('.galerie-scene-trame'), [2.06, 2.36, 'galerie-scene-fondu'])
+  // L'œuvre dérive tout au long de la scène, de son entrée dans l'écran à sa sortie, et se place au-dessus du lit à la
+  // lumière.
+  assert.deepEqual(range('.galerie-scene-derive'), [-1, 3.56, 'galerie-scene-derive'])
+  assert.deepEqual(range('.galerie-scene-place'), [0.68, 2.04, 'galerie-scene-place'])
+  // Les vitesses ne changent pas : chaque mouvement après le regard dure ce qu'il durait.
+  const ANCIENS = { '.galerie-scene-lumiere': [2.04, 3.2], '.galerie-scene-matiere': [3.2, 3.82], '.galerie-scene-lampe': [2.26, 3.2], '.galerie-scene-lit': [2, 3.2], '.galerie-scene-place': [1.94, 3.3], '.galerie-scene-main': [3.34, 3.76], '.galerie-scene-mur-nuit': [1.98, 3.24] }
+  for (const [head, [a, b]] of Object.entries(ANCIENS)) assert.deepEqual(range(head).slice(0, 2).map((t) => Math.round((t + 1.26) * 100) / 100), [a, b], head)
 })
 
 test('la feuille : les images clés de la maquette', () => {
@@ -272,9 +280,14 @@ test('la feuille : les images clés de la maquette', () => {
   assert.equal(frames('passe-debut'), '0%, 34% { opacity: 1; transform: none; } 88% { opacity: 1; transform: translateY(-14px); } 100% { opacity: 0; transform: translateY(-40px); }')
   assert.equal(frames('passe-long'), '0% { opacity: 0; transform: translateY(40px); } 11% { opacity: 1; transform: translateY(6px); } 90% { opacity: 1; transform: translateY(-6px); } 100% { opacity: 0; transform: translateY(-40px); }')
   assert.equal(frames('passe-fin'), '0% { opacity: 0; transform: translateY(40px); } 26% { opacity: 1; transform: translateY(6px); } 100% { opacity: 1; transform: none; }')
-  // L'œuvre, plus petite et plus haute au temps 1 (--e1, --y1), reprend sa taille ; elle s'accroche au-dessus du lit
-  // (--yc, --e3), puis grossit (--zoom, --zx, --zy) : les valeurs que mesure le script.
-  assert.equal(frames('derive'), '0%, 17.2% { transform: translateY(var(--y1)) scale(var(--e1)); } 28.2% { transform: translateY(var(--y1)) scale(calc(var(--e1) * 1.035)); } 33.2% { transform: translateY(0.8svh) scale(1); } 100% { transform: translateY(-2.4svh) scale(1); }')
+  // L'œuvre, plus petite et plus haute au regard (--e1, --y1), reprend sa taille ; elle s'accroche au-dessus du lit
+  // (--yc, --e3), puis grossit (--zoom, --zx, --zy) : les valeurs que mesure le script. La dérive couvre l'entrée et la
+  // sortie de la scène (de -1 à 3,56 écrans) : ses étapes tombent aux mêmes moments que dans la maquette (0, 0,64 et
+  // 0,93 écran), et elle monte ensuite à la même vitesse (0,82 % d'écran par écran).
+  assert.equal(frames('derive'), '0%, 21.95% { transform: translateY(var(--y1)) scale(var(--e1)); } 35.99% { transform: translateY(var(--y1)) scale(calc(var(--e1) * 1.035)); } 42.37% { transform: translateY(0.8svh) scale(1); } 100% { transform: translateY(-1.36svh) scale(1); }')
+  const moment = (pourcent) => Math.round((-1 + (pourcent / 100) * 4.56) * 100) / 100
+  assert.deepEqual([21.95, 35.99, 42.37].map(moment), [0, 0.64, 0.93])
+  assert.ok(Math.abs((0.8 + 1.36) / (3.56 - 0.93224) - 3.2 / (4.82 - 0.93224)) < 0.002, 'la même vitesse que dans la maquette')
   assert.equal(frames('place'), '0% { transform: none; } 14%, 88% { transform: translateY(var(--yc)) scale(var(--e3)); } 100% { transform: none; }')
   assert.equal(frames('centre'), 'from { transform: none; } to { transform: translate(var(--zx), var(--zy)); }')
   assert.equal(frames('zoom'), 'from { transform: none; } to { transform: scale(var(--zoom)); }')
@@ -330,7 +343,7 @@ test('la feuille : à plat (mouvements réduits, script coupé), la scène se d�
   const hidden = sheet().find((r) => /display: none;/.test(r.body) && r.head.includes(`${FLAT_STATE} .galerie-scene-lit`))
   assert.ok(hidden, 'ce qui ne se montre pas à plat')
   const gone = hidden.head.split(',').map((s) => s.trim().replace(`${FLAT_STATE} `, ''))
-  assert.deepEqual(gone.sort(), ['.galerie-scene-brillance', '.galerie-scene-cache', '.galerie-scene-invite', '.galerie-scene-lampe', '.galerie-scene-lit', '.galerie-scene-lueur', '.galerie-scene-murs i:not(.galerie-scene-mur-ciel)', '.galerie-scene-oiseau', '.galerie-scene-palette', '.galerie-scene-rail', '.galerie-scene-reflet', '.galerie-scene-sols', '.galerie-scene-sonde', '.galerie-scene-teintes', '.galerie-scene-trame', '.galerie-scene-vive'].sort())
+  assert.deepEqual(gone.sort(), ['.galerie-scene-brillance', '.galerie-scene-cache', '.galerie-scene-invite', '.galerie-scene-lampe', '.galerie-scene-lit', '.galerie-scene-lueur', '.galerie-scene-murs i:not(.galerie-scene-mur-ciel)', '.galerie-scene-oiseau', '.galerie-scene-rail', '.galerie-scene-reflet', '.galerie-scene-sols', '.galerie-scene-sonde', '.galerie-scene-trame', '.galerie-scene-vive'].sort())
   // Les textes à la suite, l'œuvre d'abord, à ses proportions.
   assert.equal(body(`${FLAT_STATE} .galerie-scene-zone`), 'position: relative; height: auto; display: grid; gap: 30px; padding-block: 56px;')
   assert.equal(body(`${FLAT_STATE} .galerie-scene-chap`), 'grid-area: auto;')
@@ -343,12 +356,12 @@ test('la feuille : à plat (mouvements réduits, script coupé), la scène se d�
 test('la feuille : l’œuvre garde ses proportions, portrait, paysage ou carré, et ne passe jamais sous le texte', () => {
   // Sa hauteur : toute la place sous le texte, ou 86 % de la largeur de sa colonne, selon ses proportions (--ratio,
   // que la section écrit d'après l'image).
-  const fit = sheet().find((r) => r.head.replace(/\s+/g, ' ') === '.galerie-scene-derive, .galerie-scene-palette' && r.context.join() === '@supports (width: 1cqw)')
+  const fit = sheet().find((r) => r.head === '.galerie-scene-derive' && r.context.join() === '@supports (width: 1cqw)')
   assert.match(fit.body, /--oh:\s*min\(calc\(100cqh - 6px\), calc\(86cqw \/ var\(--ratio\)\)\);/)
   assert.match(body('.galerie-scene-derive'), /top: calc\(50% - var\(--oh\) \/ 2\); left: calc\(50% - var\(--oh\) \* var\(--ratio\) \/ 2\); height: var\(--oh\); width: calc\(var\(--oh\) \* var\(--ratio\)\);/)
   assert.match(body('.galerie-scene-cadre'), /container-type: size;/)
   // Sans unités de conteneur : bornée par la largeur de l'écran aussi, pour une œuvre en paysage.
-  assert.match(body('.galerie-scene-derive, .galerie-scene-palette'), /--oh: min\(40svh, calc\(76vw \/ var\(--ratio\)\)\);/)
+  assert.match(body('.galerie-scene-derive'), /--oh: min\(40svh, calc\(76vw \/ var\(--ratio\)\)\);/)
   // L'image remplit son cadre sans se déformer.
   assert.match(body('.galerie-scene-oeuvre img'), /object-fit: cover;/)
   // Rien ne dépasse de la scène : pas de défilement de côté.
@@ -370,19 +383,20 @@ test('la feuille : sur ordinateur (900 px), le texte à gauche, l’œuvre à dr
   assert.equal(body('.galerie-scene-chap h2'), 'margin: 12px 0 0; font: 300 clamp(31px, 9vw, 42px)/1 var(--sans); letter-spacing: -0.042em; text-wrap: balance;')
 })
 
-test('la feuille : un poster est une feuille, ombre courte, et son temps 4 montre le reflet du papier', () => {
+test('la feuille : un poster est une feuille, ombre courte, et sa matière montre le reflet du papier', () => {
   assert.match(body('galerie-scene[data-support="poster"] .galerie-scene-oeuvre'), /^box-shadow: 0 0 0 0\.5px color-mix\(in srgb, var\(--encre\) 14%, transparent\), 0 8px 12px -6px color-mix\(in srgb, var\(--encre\) 38%, transparent\), 0 1px 3px color-mix\(in srgb, var\(--encre\) 18%, transparent\);$/)
   const shine = body('.galerie-scene-brillance')
-  assert.deepEqual([value(shine, 'a'), value(shine, 'b'), value(shine, 'n')], ['3.3', '3.5', 'galerie-scene-fondu'])
+  assert.deepEqual([value(shine, 'a'), value(shine, 'b'), value(shine, 'n')], ['2.04', '2.24', 'galerie-scene-fondu'])
   const slide = body('.galerie-scene-glisse')
-  assert.deepEqual([value(slide, 'a'), value(slide, 'b'), value(slide, 'n')], ['3.3', '3.82', 'galerie-scene-glisse'])
+  assert.deepEqual([value(slide, 'a'), value(slide, 'b'), value(slide, 'n')], ['2.04', '2.56', 'galerie-scene-glisse'])
   assert.equal(body('@keyframes galerie-scene-glisse'), 'from { transform: translateX(-34%); } to { transform: translateX(30%); }')
 })
 
 test('la feuille : le repère passe au blanc pendant la nuit sans animer de couleur, et son focus se voit sur le noir', () => {
-  // Un trait blanc par-dessus chaque trait, qui apparaît avec la nuit (opacity) : huit petits traits.
+  // Un trait blanc par-dessus chaque trait, qui apparaît avec la nuit (opacity) : six petits traits.
   const white = body('.galerie-scene-blanc')
-  assert.deepEqual([value(white, 'a'), value(white, 'b'), value(white, 'n')], ['1.98', '3.24', 'galerie-scene-nuit'])
+  assert.deepEqual([value(white, 'a'), value(white, 'b'), value(white, 'n')], ['0.72', '1.98', 'galerie-scene-nuit'])
+  assert.deepEqual([value(white, 'a'), value(white, 'b')], [value(body('.galerie-scene-mur-nuit'), 'a'), value(body('.galerie-scene-mur-nuit'), 'b')], 'avec la nuit')
   assert.match(white, /background: var\(--blanc\);/)
   // Le focus : un contour à l'encre doublé de blanc, lisible sur les murs clairs comme dans le noir.
   assert.equal(body('.galerie-scene-rail button:focus-visible'), 'outline: 2px solid var(--encre); outline-offset: 2px; box-shadow: 0 0 0 2px var(--blanc);')
@@ -409,13 +423,12 @@ test('la section : l’image à plat et le type d’œuvre viennent des règles 
   assert.match(source, /product\.metafields\.painting_options\.frames_poster != blank/)
   // Ni le nom d'un modèle de page, ni une place d'image écrite en dur.
   assert.doesNotMatch(source, /oeuvre-galerie|oeuvre-3d|template_suffix|product\.media\[\d\]|product\.images\[\d\]|featured_/)
-  // Les couleurs du temps 2 (ticket 21, scripts/galerie-couleurs.test.cjs) : celles que le serveur a arrêtées, ou
-  // celles que déclare le produit ; jamais painting.color, la même liste, tenue pour les filtres des collections.
-  assert.doesNotMatch(source, /painting\.color/)
-  // Aucun style ni script en ligne ; les seules valeurs passées à la feuille : la proportion de l'œuvre, et la
-  // couleur de la pastille d'une phrase du temps 2 (ticket 21).
+  // Les couleurs ont leur propre section (ticket 28, sections/galerie-couleurs.liquid) : la scène ne lit plus rien
+  // d'elles.
+  assert.doesNotMatch(source, /painting\.color|artwork\.colors|color-pattern|color_text|galerie-couleurs/)
+  // Aucun style ni script en ligne ; la seule valeur passée à la feuille : la proportion de l'œuvre.
   assert.doesNotMatch(source, /<style|<script|{%-?\s*style/)
-  assert.deepEqual([...source.matchAll(/style="([^"]*)"/g)].map((m) => m[1].replace(/{{[^}]*}}/, 'x')), ['--ratio: x', '--c: x'])
+  assert.deepEqual([...source.matchAll(/style="([^"]*)"/g)].map((m) => m[1].replace(/{{[^}]*}}/, 'x')), ['--ratio: x'])
 })
 
 test('la feuille commune du site ne porte rien de la scène', () => {
@@ -438,15 +451,19 @@ test('aucun tableau ancien, aucun artiste n’est nommé : ni dans la section, n
 /* ---------- Les textes ---------- */
 
 const texts = (lang) => json(`locales/${LANGS[lang]}`).sections.mma.galerie.scene
-const KEYS = ['colors', 'colors_title_html', 'label', 'light', 'light_lamp', 'light_lamp_text', 'light_off', 'light_off_text', 'light_on', 'light_on_text_canvas', 'light_on_text_poster', 'light_quote', 'light_title_html', 'look', 'look_text', 'look_title_html', 'matter', 'matter_text_canvas', 'matter_text_poster', 'matter_title_canvas_html', 'matter_title_poster_html', 'steps']
+// Le surtitre et le titre des couleurs (colors, colors_title_html) sont partis avec elles, sous
+// sections.mma.galerie.couleurs (ticket 28).
+const KEYS = ['label', 'light', 'light_lamp', 'light_lamp_text', 'light_off', 'light_off_text', 'light_on', 'light_on_text_canvas', 'light_on_text_poster', 'light_quote', 'light_title_html', 'look', 'look_text', 'look_title_html', 'matter', 'matter_text_canvas', 'matter_text_poster', 'matter_title_canvas_html', 'matter_title_poster_html', 'steps']
 
 test('textes de la scène : sous sections.mma.galerie.scene, les mêmes clés dans les cinq langues, de vraies traductions', () => {
   const fr = texts('fr')
   assert.deepEqual(Object.keys(fr).sort(), KEYS)
+  // Trois temps : le nom de la scène et de son repère le disent.
+  assert.equal(fr.label, 'L’œuvre en trois temps : le regard, la lumière, la matière')
+  assert.equal(fr.steps, 'Les trois temps')
   // Les textes de la maquette.
   assert.equal(fr.look_title_html, 'Impossible de passer devant <b>sans s’arrêter.</b>')
   assert.equal(fr.look_text, 'Un regard suffit pour être happé. Et on y revient : il reste toujours un détail à découvrir.')
-  assert.equal(fr.colors_title_html, 'Chaque couleur <b>agit sur vous.</b>')
   assert.equal(fr.light_title_html, 'Éclairé <b>comme au musée.</b>')
   assert.equal(fr.light_off, 'Le soir, sans lumière.')
   assert.equal(fr.light_off_text, 'Les couleurs s’endorment avec le jour.')
@@ -460,7 +477,7 @@ test('textes de la scène : sous sections.mma.galerie.scene, les mêmes clés da
   assert.equal(fr.matter_text_canvas, 'Épaisse, tendue à la main sur un châssis en bois massif. On a envie d’y toucher.')
   assert.equal(fr.matter_title_poster_html, 'Un vrai <b>papier photo.</b>')
   assert.equal(fr.matter_text_poster, 'Épais, 250 g/m², pour un tirage net aux couleurs éclatantes. À encadrer, ou à poser tel quel.')
-  assert.deepEqual([fr.look, fr.colors, fr.light, fr.matter], ['Le regard', 'Les couleurs', 'La lumière', 'La matière'])
+  assert.deepEqual([fr.look, fr.light, fr.matter], ['Le regard', 'La lumière', 'La matière'])
   for (const lang of Object.keys(LANGS)) {
     const t = texts(lang)
     assert.deepEqual(Object.keys(t).sort(), KEYS, lang)
@@ -513,26 +530,25 @@ const render = async (p = product(), options = {}) => tight(await renderSectionF
 const tags = (html) => [...html.matchAll(/<([a-z][\w-]*)((?:\s+[^<>]*?)?)\/?>/g)].map((m) => ({ tag: m[1], attrs: m[2], classes: ((/\sclass="([^"]*)"/.exec(m[2]) || [])[1] || '').split(/\s+/).filter(Boolean) }))
 const chapters = (html) => [...html.matchAll(/<article class="([^"]*)">([\s\S]*?)<\/article>/g)].map((m) => ({ classes: m[1], html: m[2] }))
 
-test('rendu, toile : la scène, ses quatre temps dans l’ordre, un titre de niveau 2 par temps', { skip: SKIP }, async () => {
+test('rendu, toile : la scène, ses trois temps dans l’ordre, un titre de niveau 2 par temps', { skip: SKIP }, async () => {
   const html = await render()
   // L'élément de la scène : une région nommée, son support, la proportion de l'œuvre pour la feuille.
-  assert.match(html, /^<galerie-scene class="galerie galerie-scene" role="region" aria-label="L’œuvre en quatre temps : le regard, les couleurs, la lumière, la matière" data-support="toile" style="--ratio: 0\.7484"><div class="galerie-scene-ecran">/)
+  assert.match(html, /^<galerie-scene class="galerie galerie-scene" role="region" aria-label="L’œuvre en trois temps : le regard, la lumière, la matière" data-support="toile" style="--ratio: 0\.7484"><div class="galerie-scene-ecran">/)
   assert.match(html, /<\/div><\/galerie-scene>$/)
   assert.doesNotMatch(html, /data-mouvement/, 'l’état est posé par le script : sans lui, la scène est à plat')
   const parts = chapters(html)
-  assert.deepEqual(parts.map((c) => c.classes), ['regard', 'couleurs', 'lumiere', 'matiere'].map((name) => `galerie-scene-chap galerie-scene-${name} galerie-scene-a`))
+  assert.deepEqual(parts.map((c) => c.classes), ['regard', 'lumiere', 'matiere'].map((name) => `galerie-scene-chap galerie-scene-${name} galerie-scene-a`))
   // Le numéro et le nom du temps : une espace entre les deux, pour les lecteurs d'écran (« 1 Le regard ») ; à l'écran,
   // la pastille et le nom gardent leur écart.
   assert.equal(parts[0].html, '<p class="galerie-surtitre"><i>1</i> Le regard</p><h2>Impossible de passer devant <b>sans s’arrêter.</b></h2><p>Un regard suffit pour être happé. Et on y revient : il reste toujours un détail à découvrir.</p>')
-  // Le temps 2 : son titre, et la place des phrases des couleurs (ticket 21), sans rien d'autre.
-  assert.equal(parts[1].html, '<p class="galerie-surtitre"><i>2</i> Les couleurs</p><h2>Chaque couleur <b>agit sur vous.</b></h2>')
-  assert.equal(parts[2].html, '<p class="galerie-surtitre"><i>3</i> La lumière</p><h2>Éclairé <b>comme au musée.</b></h2><div class="galerie-scene-messages">'
+  assert.equal(parts[1].html, '<p class="galerie-surtitre"><i>2</i> La lumière</p><h2>Éclairé <b>comme au musée.</b></h2><div class="galerie-scene-messages">'
     + '<p class="galerie-scene-msg galerie-scene-a"><b>Le soir, sans lumière.</b> Les couleurs s’endorment avec le jour.</p>'
     + '<p class="galerie-scene-msg galerie-scene-a"><b>Une lampe de tableau.</b> Fixée juste au-dessus, comme dans les musées.</p>'
     + '<p class="galerie-scene-msg galerie-scene-a"><b>Lampe allumée.</b> Les couleurs se réveillent : le tableau prend toute sa prestance.</p></div>')
-  assert.equal(parts[3].html, '<p class="galerie-surtitre"><i>4</i> La matière</p><h2>Le grain d’une <b>vraie toile.</b></h2><p>Épaisse, tendue à la main sur un châssis en bois massif. On a envie d’y toucher.</p>')
-  // Un seul h1 dans la page, celui du bloc principal : ici, quatre h2 et rien d'autre.
-  assert.deepEqual(tags(html).filter((t) => /^h\d$/.test(t.tag)).map((t) => t.tag), ['h2', 'h2', 'h2', 'h2'])
+  assert.equal(parts[2].html, '<p class="galerie-surtitre"><i>3</i> La matière</p><h2>Le grain d’une <b>vraie toile.</b></h2><p>Épaisse, tendue à la main sur un châssis en bois massif. On a envie d’y toucher.</p>')
+  // Un seul h1 dans la page, celui du bloc principal : ici, trois h2 et rien d'autre. Les couleurs ont leur section.
+  assert.deepEqual(tags(html).filter((t) => /^h\d$/.test(t.tag)).map((t) => t.tag), ['h2', 'h2', 'h2'])
+  assert.doesNotMatch(html, /galerie-couleurs|galerie-scene-(couleurs|teinte|gris|palette|pastille|anneau|mur-creme|sol-soleil)|agit sur vous/)
   // La trame de la toile, pas le reflet du papier ; rien du poster.
   assert.match(html, /<div class="galerie-scene-trame galerie-scene-a" data-allow-empty><\/div>/)
   assert.doesNotMatch(html, /galerie-scene-brillance|galerie-scene-glisse/)
@@ -545,13 +561,12 @@ test('rendu, poster : « le poster » au temps 3, le papier photo au temps 4, ri
   const html = await render(product({ poster: true }))
   assert.match(html, /^<galerie-scene class="galerie galerie-scene" role="region" aria-label="[^"]+" data-support="poster" style="--ratio: 0\.7484">/)
   const parts = chapters(html)
-  assert.match(parts[2].html, /<b>Lampe allumée\.<\/b> Les couleurs se réveillent : le poster prend toute sa prestance\.<\/p><\/div>$/)
-  assert.equal(parts[3].html, '<p class="galerie-surtitre"><i>4</i> La matière</p><h2>Un vrai <b>papier photo.</b></h2><p>Épais, 250 g/m², pour un tirage net aux couleurs éclatantes. À encadrer, ou à poser tel quel.</p>')
-  // Les temps 1 à 3 sont ceux de la toile, à un mot près.
+  assert.match(parts[1].html, /<b>Lampe allumée\.<\/b> Les couleurs se réveillent : le poster prend toute sa prestance\.<\/p><\/div>$/)
+  assert.equal(parts[2].html, '<p class="galerie-surtitre"><i>3</i> La matière</p><h2>Un vrai <b>papier photo.</b></h2><p>Épais, 250 g/m², pour un tirage net aux couleurs éclatantes. À encadrer, ou à poser tel quel.</p>')
+  // Le regard et la lumière sont ceux de la toile, à un mot près.
   const toile = chapters(await render())
   assert.equal(parts[0].html, toile[0].html)
-  assert.equal(parts[1].html, toile[1].html)
-  assert.equal(parts[2].html, toile[2].html.replace('le tableau', 'le poster'))
+  assert.equal(parts[1].html, toile[1].html.replace('le tableau', 'le poster'))
   // Le reflet du papier, pas la trame ; une seule version dans la page.
   assert.match(html, /<div class="galerie-scene-brillance galerie-scene-a"><i class="galerie-scene-glisse galerie-scene-a" data-allow-empty><\/i><\/div>/)
   assert.doesNotMatch(html, /galerie-scene-trame/)
@@ -562,26 +577,25 @@ test('rendu : l’œuvre est l’image à plat du produit, celle de la scène 3D
   const html = await render()
   const images = tags(html).filter((t) => t.tag === 'img')
   const art = images.filter((t) => /bonsai-zen-oeuvre\.jpg/.test(t.attrs))
-  // L'œuvre ; au temps 2 (ticket 21), sa copie grise et les trois places de ses couleurs ; sa copie avivée sous la
-  // lampe (temps 3).
-  assert.deepEqual(art.map((t) => t.classes.join(' ')), ['galerie-scene-image', 'galerie-scene-gris galerie-scene-a', ...Array(3).fill('galerie-scene-teinte galerie-scene-a'), 'galerie-scene-vive galerie-scene-a'])
+  // L'œuvre, et sa copie avivée sous la lampe (la lumière).
+  assert.deepEqual(art.map((t) => t.classes.join(' ')), ['galerie-scene-image', 'galerie-scene-vive galerie-scene-a'])
   for (const { attrs } of art) {
     assert.match(attrs, / src="\/\/www\.myselfmonart\.com\/cdn\/shop\/files\/bonsai-zen-oeuvre\.jpg\?v=1&width=750"/)
     // Les paliers de la scène 3D, que le navigateur a souvent déjà ; jamais plus large que l'image, ni que 2000 px.
     assert.deepEqual([...attrs.matchAll(/(?:width=(\d+)|\?v=1) (\d+)w/g)].map((m) => [Number(m[1] || 0), Number(m[2])]), [[400, 400], [550, 550], [750, 750], [1100, 1100], [1500, 1500], [0, 1904]])
     assert.match(attrs, / sizes="\(min-width: 900px\) 45vw, 86vw"/)
-    // crossorigin, comme l'image de la scène 3D : la même requête quand le navigateur choisit la même taille, et des
-    // pixels lisibles pour les couleurs du temps 2 (ticket 21).
+    // crossorigin, comme l'image de la scène 3D et celle des couleurs (ticket 28) : la même requête quand le
+    // navigateur choisit la même taille.
     assert.match(attrs, / width="1904" height="2544" alt="" loading="lazy" decoding="async" crossorigin="anonymous"/)
   }
   for (const copy of art.slice(1)) assert.equal(art[0].attrs.replace(/ class="[^"]*"/, ''), copy.attrs.replace(/ class="[^"]*"/, ''), 'la même source : un seul téléchargement')
   // Aucune autre image du produit, aucun texte alternatif, aucun titre : un décor.
-  assert.equal(images.length, 6 + 6)
+  assert.equal(images.length, 2 + 6)
   for (const { attrs } of images) assert.match(attrs, / alt=""/)
   assert.doesNotMatch(html, / title="| aria-describedby=/)
   // Un produit de toujours vu dans cette page : son image à plat est sa 2e image.
   const old = await render(product({ suffix: 'painting', files: OLD }))
-  assert.equal(tags(old).filter((t) => t.tag === 'img' && /bonsai-zen-oeuvre\.jpg/.test(t.attrs)).length, 6)
+  assert.equal(tags(old).filter((t) => t.tag === 'img' && /bonsai-zen-oeuvre\.jpg/.test(t.attrs)).length, 2)
   assert.doesNotMatch(old, /bonsai-zen-salon|bonsai-zen-chambre/)
   // Une image plus petite que les paliers : les seuls qu'elle atteint, puis elle-même. Une très grande : 2000 px au plus.
   const widths = async (file) => [...tags(await render(product({ files: [file] }))).find((t) => t.classes.includes('galerie-scene-image')).attrs.matchAll(/ (\d+)w/g)].map((m) => Number(m[1]))
@@ -610,19 +624,28 @@ test('rendu : les personnages, sous des noms neutres, à leur taille, chargés e
   }
   for (const [name, size] of Object.entries(GUESTS)) assert.deepEqual(webpSize(name), size, name)
   // Tout le décor est caché aux lecteurs d'écran : murs, sols, personnages ; les textes et le repère restent.
-  for (const mark of ['galerie-scene-murs', 'galerie-scene-sols', 'galerie-scene-invite galerie-scene-public', 'galerie-scene-lit galerie-scene-a','galerie-scene-invite galerie-scene-main galerie-scene-a', 'galerie-scene-oiseau galerie-scene-a', 'galerie-scene-lampe galerie-scene-a', 'galerie-scene-palette galerie-scene-a']) {
+  for (const mark of ['galerie-scene-murs', 'galerie-scene-sols', 'galerie-scene-invite galerie-scene-public', 'galerie-scene-lit galerie-scene-a','galerie-scene-invite galerie-scene-main galerie-scene-a', 'galerie-scene-oiseau galerie-scene-a', 'galerie-scene-lampe galerie-scene-a']) {
     assert.match(html, new RegExp(`class="${mark}"[^>]* aria-hidden="true"`), mark)
   }
   assert.doesNotMatch(/<article[\s\S]*<\/article>/.exec(html)[0], /aria-hidden/)
 })
 
-test('rendu : le repère, quatre boutons nommés qui mènent chacun à son temps', { skip: SKIP }, async () => {
+test('rendu : le repère, trois boutons nommés qui mènent chacun à son temps', { skip: SKIP }, async () => {
   const html = await render()
-  const rail = /<ol class="galerie-scene-rail" aria-label="Les quatre temps">([\s\S]*?)<\/ol>/.exec(html)
+  const rail = /<ol class="galerie-scene-rail" aria-label="Les trois temps">([\s\S]*?)<\/ol>/.exec(html)
   assert.ok(rail, 'le repère')
   const buttons = [...rail[1].matchAll(/<li><button type="button" data-temps="([\d.]+)" aria-label="([^"]+)"><i class="galerie-scene-blanc galerie-scene-a" data-allow-empty><\/i><i class="galerie-scene-plein galerie-scene-a"><i class="galerie-scene-blanc galerie-scene-a" data-allow-empty><\/i><\/i><\/button><\/li>/g)]
-  assert.deepEqual(buttons.map((m) => [m[1], m[2]]), [['0.02', '1, Le regard'], ['1', '2, Les couleurs'], ['2.2', '3, La lumière'], ['3.78', '4, La matière']])
-  assert.equal(rail[1].match(/<li>/g).length, 4)
+  // Les moments de la maquette, 1,26 écran plus tôt pour la lumière et la matière (le temps des couleurs est parti).
+  assert.deepEqual(buttons.map((m) => [m[1], m[2]]), [['0.02', '1, Le regard'], ['0.94', '2, La lumière'], ['2.52', '3, La matière']])
+  assert.equal(rail[1].match(/<li>/g).length, 3)
+  // Chaque trait mène dans son temps : après le début de son texte, avant la fin de la scène.
+  const range = (head) => { const b = body(head); return [Number(value(b, 'a')), Number(value(b, 'b'))] }
+  const temps = buttons.map((m) => Number(m[1]))
+  assert.ok(temps[0] < range('.galerie-scene-regard')[1])
+  assert.ok(temps[1] > range('.galerie-scene-lumiere')[0] && temps[1] < range('.galerie-scene-lumiere')[1])
+  assert.ok(temps[2] > range('.galerie-scene-matiere')[0] && temps[2] <= range('.galerie-scene-matiere')[1])
+  // Trois colonnes, une par trait.
+  assert.match(body('.galerie-scene-rail'), /grid-template-columns: repeat\(3, 1fr\);/)
 })
 
 test('rendu : portrait, paysage ou carré, la proportion de l’œuvre est celle de son image', { skip: SKIP }, async () => {
@@ -637,13 +660,8 @@ test('rendu : portrait, paysage ou carré, la proportion de l’œuvre est celle
 test('rendu : un élément vide garde sa place (data-allow-empty), et chaque élément mobile a ses images clés et son moment', { skip: SKIP }, async () => {
   // Le thème cache tout élément vide (input.css, *:empty), sauf ceux qui portent data-allow-empty.
   const VOID = new Set(['img', 'path'])
-  // Les places des couleurs (ticket 21) : leur moment (--a, --b) est posé par l'élément des couleurs, d'après les
-  // couleurs trouvées dans l'image ; leurs images clés sont dans la feuille.
-  const TIMED = ['galerie-scene-teinte', 'galerie-scene-pastille', 'galerie-scene-anneau']
-  // Les règles de la scène, et celles de ses couleurs (ticket 21), dans leur propre bloc de la feuille.
-  const whole = read(CSS)
-  const colours = whole.slice(whole.indexOf('/* === Couleurs de la scène (ticket 21) : début ==='), whole.indexOf('/* === Couleurs de la scène (ticket 21) : fin === */'))
-  const css = [...sheet(), ...rules(colours.replace(/\/\*[\s\S]*?\*\//g, ''))].filter((r) => !/^@keyframes /.test(r.head))
+  // Les règles de la scène (son bloc de la feuille), sans ses images clés.
+  const css = sheet().filter((r) => !/^@keyframes /.test(r.head))
   // Le dernier maillon d'un sélecteur vaut-il pour cet élément ? Sa balise, ses classes ; le reste est ignoré.
   const applies = (selector, el) => {
     const last = selector.trim().split(/\s*[>+~]\s*|\s+/).pop().replace(/::?[\w-]+(\([^)]*\))?|\[[^\]]*\]/g, '')
@@ -659,45 +677,46 @@ test('rendu : un élément vide garde sa place (data-allow-empty), et chaque él
     assert.ok(empty.length >= 20, 'les murs, les sols, la lampe, les traits du repère…')
     for (const { tag, attrs } of empty) assert.match(attrs, / data-allow-empty/, `<${tag}${attrs}> : vide, il serait caché`)
     const moving = tags(html).filter((t) => t.classes.includes('galerie-scene-a') && !VOID.has(t.tag))
-    assert.ok(moving.length >= 35, 'tout ce qui bouge')
+    assert.ok(moving.length >= 30, 'tout ce qui bouge')
     for (const el of [...moving, ...tags(html).filter((t) => t.tag === 'img' && t.classes.includes('galerie-scene-a'))]) {
       const name = `<${el.tag} class="${el.classes.join(' ')}">`
       assert.ok(declares(el, 'n', (v) => v !== 'none'), `${name} : ses images clés (--n)`)
-      if (TIMED.some((timed) => el.classes.includes(timed))) continue
       assert.ok(declares(el, 'a'), `${name} : son début (--a)`)
       assert.ok(declares(el, 'b'), `${name} : sa fin (--b)`)
     }
   }
 })
 
-test('rendu : les couleurs du temps 2 (ticket 21) entre l’œuvre et son cache de nuit, et la place des pastilles à côté de l’œuvre', { skip: SKIP }, async () => {
+test('rendu : l’œuvre de la scène, sans ses couleurs : l’image, puis le cache de la nuit, la copie avivée, le reflet, la trame', { skip: SKIP }, async () => {
   const html = await render()
-  // Dans l'œuvre : l'image, la place des teintes (l'élément des couleurs, scripts/galerie-couleurs.test.cjs) avec sa
-  // copie grise et les trois places des couleurs, puis le cache de la nuit, la copie avivée, le reflet, la trame.
-  assert.match(html, /<div class="galerie-scene-oeuvre galerie-scene-a"><img class="galerie-scene-image" [^>]*><galerie-couleurs class="galerie-scene-teintes" [^>]*><img class="galerie-scene-gris galerie-scene-a" [^>]*>(<img class="galerie-scene-teinte galerie-scene-a" [^>]*>){3}<\/galerie-couleurs><i class="galerie-scene-cache galerie-scene-a" data-allow-empty><\/i><img class="galerie-scene-vive galerie-scene-a" [^>]*><i class="galerie-scene-reflet galerie-scene-a" data-allow-empty><\/i><div class="galerie-scene-trame galerie-scene-a" data-allow-empty><\/div><\/div>/)
-  // À côté de l'œuvre, dans sa colonne : les trois places des pastilles, qui s'effacent à la fin du temps 2.
-  assert.match(html, /<div class="galerie-scene-palette galerie-scene-a" aria-hidden="true">(<span class="galerie-scene-pastille galerie-scene-a"><i class="galerie-scene-point" data-allow-empty><\/i><i class="galerie-scene-anneau galerie-scene-a" data-allow-empty><\/i><\/span>){3}<\/div><\/div><\/div><div class="galerie-scene-invite galerie-scene-public"/)
-  const palette = body('.galerie-scene-palette')
-  assert.deepEqual([value(palette, 'a'), value(palette, 'b'), value(palette, 'n')], ['1.9', '2.02', 'galerie-scene-efface'])
-  assert.match(palette, /^position: absolute; z-index: 2; left: 0; right: 0; top: calc\(100% \+ 4\.4svh\); display: flex; justify-content: center; gap: 20px; pointer-events: none;/)
-  assert.equal(body('.galerie-scene-palette', LARGE), 'left: calc(50% + var(--oh) * var(--ratio) / 2 + 3vw); right: auto; top: 50%; margin-top: -120px; flex-direction: column; gap: 22px;')
+  // Dans l'œuvre : l'image, le cache de la nuit, la copie avivée, le reflet, la trame. Les couleurs, leurs places et
+  // leurs pastilles sont dans leur propre section (ticket 28) ; sous l'œuvre, plus rien.
+  assert.match(html, /<div class="galerie-scene-oeuvre galerie-scene-a"><img class="galerie-scene-image" [^>]*><i class="galerie-scene-cache galerie-scene-a" data-allow-empty><\/i><img class="galerie-scene-vive galerie-scene-a" [^>]*><i class="galerie-scene-reflet galerie-scene-a" data-allow-empty><\/i><div class="galerie-scene-trame galerie-scene-a" data-allow-empty><\/div><\/div>/)
+  assert.match(html, /<div class="galerie-scene-oiseau galerie-scene-a" aria-hidden="true"><img [^>]*><\/div><\/div><\/div><\/div><\/div><div class="galerie-scene-invite galerie-scene-public"/)
+  // Le mur et le sol : ciel et rose, la nuit, lilas et menthe ; plus de crème ni de soleil.
+  assert.match(html, /<div class="galerie-scene-murs" aria-hidden="true"><i class="galerie-scene-mur-ciel" data-allow-empty><\/i><i class="galerie-scene-mur-lilas galerie-scene-a" data-allow-empty><\/i><i class="galerie-scene-mur-nuit galerie-scene-a" data-allow-empty><\/i><\/div>/)
+  assert.match(html, /<div class="galerie-scene-sols" aria-hidden="true"><i class="galerie-scene-sol-rose" data-allow-empty><\/i><i class="galerie-scene-sol-menthe galerie-scene-a" data-allow-empty><\/i><i class="galerie-scene-sol-nuit galerie-scene-a" data-allow-empty><\/i><\/div>/)
+  // Plus rien des couleurs dans la feuille de la scène.
+  for (const { head } of sheet()) assert.doesNotMatch(head, /palette|pastille|teinte|anneau|galerie-scene-gris|mur-creme|sol-soleil|galerie-scene-couleurs/, head)
+  assert.doesNotMatch(blockOf(JS), /galerie-couleurs|momentsDesCouleurs/)
 })
 
 test('rendu : dans chaque langue, ses textes, toile et poster, sans un mot de français', { skip: SKIP }, async () => {
   const EXPECTED = {
-    en: { label: 'The artwork in four moments: first glance, the colours, the light, the material', h2: 'Lit like a museum piece.', canvas: 'the canvas', poster: 'the poster', quote: 'Leave it on.' },
-    de: { label: 'Das Werk in vier Momenten: der Blick, die Farben, das Licht, das Material', h2: 'Beleuchtet wie im Museum.', canvas: 'Das Wandbild', poster: 'Das Poster', quote: 'Lassen Sie es an.' },
-    es: { label: 'La obra en cuatro tiempos: la mirada, los colores, la luz, la materia', h2: 'Iluminado como en un museo.', canvas: 'el cuadro', poster: 'el póster', quote: 'Déjala encendida.' },
-    nl: { label: 'Het kunstwerk in vier momenten: de blik, de kleuren, het licht, het materiaal', h2: 'Verlicht zoals in het museum.', canvas: 'het schilderij', poster: 'de poster', quote: 'Laat maar aan.' },
+    en: { label: 'The artwork in three moments: first glance, the light, the material', steps: 'The three moments', h2: 'Lit like a museum piece.', canvas: 'the canvas', poster: 'the poster', quote: 'Leave it on.' },
+    de: { label: 'Das Werk in drei Momenten: der Blick, das Licht, das Material', steps: 'Die drei Momente', h2: 'Beleuchtet wie im Museum.', canvas: 'Das Wandbild', poster: 'Das Poster', quote: 'Lassen Sie es an.' },
+    es: { label: 'La obra en tres tiempos: la mirada, la luz, la materia', steps: 'Los tres tiempos', h2: 'Iluminado como en un museo.', canvas: 'el cuadro', poster: 'el póster', quote: 'Déjala encendida.' },
+    nl: { label: 'Het kunstwerk in drie momenten: de blik, het licht, het materiaal', steps: 'De drie momenten', h2: 'Verlicht zoals in het museum.', canvas: 'het schilderij', poster: 'de poster', quote: 'Laat maar aan.' },
   }
   for (const [lang, expected] of Object.entries(EXPECTED)) {
     for (const poster of [false, true]) {
       const html = await render(product({ poster }), { lang })
       assert.match(html, new RegExp(`aria-label="${expected.label}"`), lang)
+      assert.match(html, new RegExp(`<ol class="galerie-scene-rail" aria-label="${expected.steps}">`), lang)
       const parts = chapters(html)
-      assert.equal(text(/<h2>[\s\S]*?<\/h2>/.exec(parts[2].html)[0]), expected.h2, lang)
-      assert.match(parts[2].html, new RegExp(expected[poster ? 'poster' : 'canvas']), lang)
-      assert.doesNotMatch(parts[2].html, new RegExp(expected[poster ? 'canvas' : 'poster']), lang)
+      assert.equal(text(/<h2>[\s\S]*?<\/h2>/.exec(parts[1].html)[0]), expected.h2, lang)
+      assert.match(parts[1].html, new RegExp(expected[poster ? 'poster' : 'canvas']), lang)
+      assert.doesNotMatch(parts[1].html, new RegExp(expected[poster ? 'canvas' : 'poster']), lang)
       assert.match(html, new RegExp(`<p class="galerie-scene-mot galerie-scene-a">${expected.quote}</p>`), lang)
       // Tous les textes de la langue sont dans la page, sauf ceux de l'autre support.
       const page = text(html) + ' ' + [...html.matchAll(/aria-label="([^"]*)"/g)].map((m) => m[1]).join(' ')
@@ -706,7 +725,9 @@ test('rendu : dans chaque langue, ses textes, toile et poster, sans un mot de fr
         if (other.test(key)) continue
         assert.ok(page.includes(text(value)), `${lang}.${key} : « ${value} »`)
       }
-      assert.doesNotMatch(page, /Le regard|Les couleurs|La lumière|La matière|sans s’arrêter|agit sur vous|comme au musée|Laissez allumé|Lampe allumée|quatre temps/, lang)
+      assert.doesNotMatch(page, /Le regard|Les couleurs|La lumière|La matière|sans s’arrêter|agit sur vous|comme au musée|Laissez allumé|Lampe allumée|quatre temps|trois temps/, lang)
+      // Trois temps, dans toutes les langues.
+      assert.doesNotMatch(page, /\b(four|vier|cuatro)\b/i, lang)
     }
   }
 })

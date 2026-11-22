@@ -391,13 +391,11 @@
           "bubble": "Zeg het maar!"
         },
         "scene": {
-          "label": "Het kunstwerk in vier momenten: de blik, de kleuren, het licht, het materiaal",
-          "steps": "De vier momenten",
+          "label": "Het kunstwerk in drie momenten: de blik, het licht, het materiaal",
+          "steps": "De drie momenten",
           "look": "De blik",
           "look_title_html": "Hier loop je <b>niet zomaar voorbij.</b>",
           "look_text": "Eén blik en je bent verkocht. En je blijft kijken: er valt altijd nog een detail te ontdekken.",
-          "colors": "De kleuren",
-          "colors_title_html": "Elke kleur <b>doet iets met je.</b>",
           "light": "Het licht",
           "light_title_html": "Verlicht <b>zoals in het museum.</b>",
           "light_off": "’s Avonds, zonder licht.",

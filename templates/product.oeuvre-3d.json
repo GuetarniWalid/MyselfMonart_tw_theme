@@ -84,6 +84,10 @@
       "type": "galerie-scene",
       "settings": {}
     },
+    "galerie_couleurs": {
+      "type": "galerie-couleurs",
+      "settings": {}
+    },
     "galerie_raisons": {
       "type": "galerie-raisons",
       "settings": {}
@@ -572,6 +576,7 @@
     "breadcrumb_RCxFAG",
     "main",
     "galerie_scene",
+    "galerie_couleurs",
     "galerie_histoire",
     "customer_testimonial_myiwee",
     "product_recommendations_TX9rdQ",

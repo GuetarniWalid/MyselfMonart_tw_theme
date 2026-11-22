@@ -388,13 +388,11 @@
           "bubble": "¡Soy toda oídos!"
         },
         "scene": {
-          "label": "La obra en cuatro tiempos: la mirada, los colores, la luz, la materia",
-          "steps": "Los cuatro tiempos",
+          "label": "La obra en tres tiempos: la mirada, la luz, la materia",
+          "steps": "Los tres tiempos",
           "look": "La mirada",
           "look_title_html": "Imposible pasar por delante <b>sin detenerse.</b>",
           "look_text": "Basta una mirada para quedar atrapado. Y se vuelve a mirar: siempre queda un detalle por descubrir.",
-          "colors": "Los colores",
-          "colors_title_html": "Cada color <b>actúa sobre ti.</b>",
           "light": "La luz",
           "light_title_html": "Iluminado <b>como en un museo.</b>",
           "light_off": "De noche, sin luz.",

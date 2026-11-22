@@ -630,13 +630,11 @@
           "bubble": "I’m all ears!"
         },
         "scene": {
-          "label": "The artwork in four moments: first glance, the colours, the light, the material",
-          "steps": "The four moments",
+          "label": "The artwork in three moments: first glance, the light, the material",
+          "steps": "The three moments",
           "look": "First glance",
           "look_title_html": "Impossible to walk past <b>without stopping.</b>",
           "look_text": "One look and you’re hooked. And you keep coming back: there is always one more detail to discover.",
-          "colors": "The colours",
-          "colors_title_html": "Every colour <b>does something to you.</b>",
           "light": "The light",
           "light_title_html": "Lit <b>like a museum piece.</b>",
           "light_off": "Evening, lights off.",

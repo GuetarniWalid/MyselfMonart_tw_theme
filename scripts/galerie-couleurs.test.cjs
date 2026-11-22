@@ -1,8 +1,9 @@
-// Les couleurs du temps 2 de la scène de la page galerie (dossier .scratch/fiche-3d/galerie, ticket 21) : « Chaque
-// couleur agit sur vous ». L'œuvre passe en gris pâle, puis chacune de ses couleurs revient seule, avec sa pastille
-// et sa phrase. Le serveur écrit les phrases dans la section (sections/galerie-scene.liquid) ; l'élément
-// <galerie-couleurs> (assets/oeuvre-galerie.js) trouve les couleurs dans l'image, hors du fil principal, avec le
-// moteur de la page d'essai (assets/galerie-couleurs.js, le même que celui du serveur).
+// Les couleurs à toucher de la page galerie (dossier .scratch/fiche-3d/galerie, ticket 28) : « Chaque couleur agit
+// sur vous », une section à part, juste après la scène (sections/galerie-couleurs.liquid). L'œuvre en couleurs, une
+// pastille et une phrase par couleur ; toucher une pastille, ou l'œuvre, montre la phrase de la couleur et pose ses
+// points là où elle se trouve, après un éclat de ses zones. L'élément <galerie-couleurs> (assets/oeuvre-galerie.js)
+// trouve les zones dans un travailleur, avec le moteur de la page d'essai (assets/galerie-couleurs.js, le même que
+// celui du serveur), puis calcule ce qu'il y ajoute (points, contours, carte des couleurs) à partir de ses masques.
 // Ici : le moteur, les calculs purs du script, le texte du travailleur (joué dans un bac à sable), les contrats de la
 // feuille et du script, puis le rendu Liquid (liquidjs), quand le module est là.
 // Lancer : node --test scripts/galerie-couleurs.test.cjs
@@ -13,10 +14,11 @@ const fs = require('fs')
 const path = require('path')
 const vm = require('vm')
 const zlib = require('zlib')
-const { ROOT, read, exists, code, rules, LANGS, json, schemaOf, SKIP, engine, globals, product, renderSectionFile } = require('./galerie-banc.cjs')
-const { entreeDuMoteur, momentsDesCouleurs, lireLesCouleurs, planDesCouleurs, texteDuTravailleur } = require('../assets/oeuvre-galerie.js')
+const { ROOT, read, exists, code, rules, LANGS, json, schemaOf, SKIP, product, renderSectionFile } = require('./galerie-banc.cjs')
+const {
+  entreeDuMoteur, lireLesZones, texteDuTravailleur, planDesOnglets, ongletAuPoint, ongletVise, volDuRepere, eclatDe,
+} = require('../assets/oeuvre-galerie.js')
 
-const SECTION = 'sections/galerie-scene.liquid'
 const CSS = 'assets/oeuvre-galerie.css'
 const JS = 'assets/oeuvre-galerie.js'
 const MOTEUR = 'assets/galerie-couleurs.js'
@@ -24,6 +26,8 @@ const MOTEUR = 'assets/galerie-couleurs.js'
 // serveur pour sa copie (dépôt du backend, tests/golden/artwork-colors.js, app/Services/ArtworkColors/couleurs.ts).
 const ESSAI = '.scratch/fiche-3d/galerie/couleurs/couleurs.js'
 const EMPREINTE = '58c19596165179587ae3285b7f58ed970f93c7b25209dfb4fc12353ea570729e'
+const MOTION = '@media (prefers-reduced-motion: no-preference)'
+const LINKED = '@supports (animation-timeline: view()) and (animation-range-start: contain 10svh)'
 const LARGE = '@media (min-width: 900px)'
 
 // Le moteur, chargé comme dans une page : il se pose sur l'objet global.
@@ -33,8 +37,8 @@ const Couleurs = globalThis.Couleurs
 /* Le bloc des couleurs dans la feuille ou le script de la page : entre ses deux repères. */
 const blockOf = (file) => {
   const source = read(file)
-  const start = source.indexOf('/* === Couleurs de la scène (ticket 21) : début ===')
-  const end = source.indexOf('/* === Couleurs de la scène (ticket 21) : fin === */')
+  const start = source.indexOf('/* === Couleurs à toucher (ticket 28) : début ===')
+  const end = source.indexOf('/* === Couleurs à toucher (ticket 28) : fin === */')
   assert.ok(start >= 0 && end > start, `${file} : le bloc des couleurs, entre ses deux repères`)
   return source.slice(start, end)
 }
@@ -45,7 +49,6 @@ const body = (head, context = '') => {
   assert.ok(found, `règle « ${head} »${context ? ` dans ${context}` : ''}`)
   return found.body.replace(/\s+/g, ' ').trim()
 }
-const value = (text, name) => (new RegExp(`(?:^|[;\\s])--${name}:\\s*([^;]+);`).exec(text) || [])[1]
 
 /* ---------- Des images d'essai ---------- */
 
@@ -141,7 +144,7 @@ test('le moteur du thème est celui de la page d’essai, à l’octet près, av
   assert.equal(Couleurs.HANDLES.or, 'dore')
 })
 
-/* ---------- Le script : ses calculs ---------- */
+/* ---------- Ce que la page donne au moteur ---------- */
 
 test('ce que la page donne au moteur : les couleurs arrêtées, sans rien ajouter ; sinon les déclarées, qu’il complète ; sinon rien', () => {
   // Les couleurs arrêtées par le serveur (artwork.colors) : leur liste, close.
@@ -167,27 +170,17 @@ test('noir et blanc : un produit qui déclare « blanc-noir » a le noir et le b
   assert.deepEqual(entreeDuMoteur({ arretees: ['noir', 'blanc'], declarees: ['noir', 'beige'] }).lire, ['noir', 'blanc'])
 })
 
-test('les moments des couleurs : le déroulé de la maquette, une couleur à la fois, la dernière jusqu’à la fin du temps 2', () => {
-  // Trois couleurs : les valeurs que la maquette calcule (début 0,9 + 0,32 par rang).
-  assert.deepEqual(momentsDesCouleurs(3), [
-    { teinte: [0.9, 1.32], phrase: [0.88, 1.2], pastille: [0.88, 1], anneau: [0.88, 1.26] },
-    { teinte: [1.22, 1.64], phrase: [1.2, 1.52], pastille: [1.2, 1.32], anneau: [1.2, 1.58] },
-    { teinte: [1.54, 1.98], phrase: [1.52, 2], pastille: [1.52, 1.64], anneau: [1.52, 1.96] },
-  ])
-  // Moins de couleurs : la dernière tient jusqu'à la fin du temps 2.
-  assert.deepEqual(momentsDesCouleurs(2).map((m) => [m.teinte, m.phrase, m.anneau]), [[[0.9, 1.32], [0.88, 1.2], [0.88, 1.26]], [[1.22, 1.98], [1.2, 2], [1.2, 1.96]]])
-  assert.deepEqual(momentsDesCouleurs(1), [{ teinte: [0.9, 1.98], phrase: [0.88, 2], pastille: [0.88, 1], anneau: [0.88, 1.96] }])
-  assert.deepEqual(momentsDesCouleurs(0), [])
-  // Tout le temps 2 : de 0,76 (le gris arrive) à 2,04 (le temps 3).
-  for (const n of [1, 2, 3]) for (const m of momentsDesCouleurs(n)) for (const [debut, fin] of Object.values(m)) assert.ok(debut >= 0.76 && fin <= 2.04 && debut < fin)
-})
+/* ---------- La lecture des zones (dans le travailleur) ---------- */
 
-test('la lecture : les couleurs arrêtées dans leur ordre, chacune avec sa couleur, sa part et son masque', () => {
+test('la lecture : les couleurs données, dans leur ordre, chacune avec sa couleur lue, sa clarté, sa part et son masque', () => {
   const { pixels, largeur, hauteur } = bandes([['bleu', 0.45], ['rose', 0.35], ['jaune', 0.2]])
-  const lu = lireLesCouleurs(Couleurs, pixels, largeur, hauteur, { lire: ['bleu', 'rose', 'jaune'], completer: false })
+  const lu = lireLesZones(Couleurs, pixels, largeur, hauteur, { lire: ['bleu', 'rose', 'jaune'], completer: false })
   assert.deepEqual(lu.couleurs.map((c) => c.handle), ['bleu', 'rose', 'jaune'])
   lu.couleurs.forEach((c) => assert.match(c.css, /^rgb\(\d+,\d+,\d+\)$/))
   assert.deepEqual(lu.couleurs.map((c) => Math.round(c.part * 100)), [45, 35, 20])
+  // La clarté (OKLab, 0 à 1) : le jaune bien plus clair que le bleu.
+  const [bleu, , jaune] = lu.couleurs.map((c) => c.L)
+  assert.ok(bleu > 0.3 && bleu < 0.6 && jaune > 0.8, `bleu ${bleu}, jaune ${jaune}`)
   // Un masque par couleur, de la taille de l'image : plein sur sa bande, vide sur les autres.
   assert.equal(lu.masques.length, 3)
   for (const alpha of lu.masques) assert.equal(alpha.length, largeur * hauteur)
@@ -195,62 +188,95 @@ test('la lecture : les couleurs arrêtées dans leur ordre, chacune avec sa coul
   assert.ok(moyenne(lu.masques[1], largeur, 160, 250) > 250 && moyenne(lu.masques[1], largeur, 270, 320) < 5)
   assert.ok(moyenne(lu.masques[2], largeur, 270, 320) > 250 && moyenne(lu.masques[2], largeur, 10, 130) < 5)
   // L'ordre est celui de la liste, pas celui de l'image.
-  assert.deepEqual(lireLesCouleurs(Couleurs, pixels, largeur, hauteur, { lire: ['jaune', 'bleu'], completer: false }).couleurs.map((c) => c.handle), ['jaune', 'bleu'])
+  assert.deepEqual(lireLesZones(Couleurs, pixels, largeur, hauteur, { lire: ['jaune', 'bleu'], completer: false }).couleurs.map((c) => c.handle), ['jaune', 'bleu'])
 })
 
-test('la lecture : une couleur arrêtée que l’image n’a pas n’est pas montrée ; la liste arrêtée ne se complète pas', () => {
-  const deux = bandes([['bleu', 0.5], ['rose', 0.5]])
-  const lu = lireLesCouleurs(Couleurs, deux.pixels, deux.largeur, deux.hauteur, { lire: ['vert', 'bleu'], completer: false })
-  assert.deepEqual(lu.couleurs.map((c) => c.handle), ['bleu'])
-  assert.equal(lu.masques.length, 1)
+test('la lecture : les points d’une couleur se posent sur elle, loin des bords ; un, deux ou trois selon sa place dans l’œuvre', () => {
   const { pixels, largeur, hauteur } = bandes([['bleu', 0.45], ['rose', 0.35], ['jaune', 0.2]])
-  // Les déclarées seules (« multicolore » n'en est pas une) : la page complète jusqu'à trois, avec ce que l'image a de plus.
-  assert.deepEqual(lireLesCouleurs(Couleurs, pixels, largeur, hauteur, { lire: ['multicolore', 'bleu', 'rose'], completer: true }).couleurs.map((c) => c.handle), ['bleu', 'rose', 'jaune'])
-  // Rien de déclaré : l'image seule.
-  assert.deepEqual(lireLesCouleurs(Couleurs, pixels, largeur, hauteur, { lire: [], completer: true }).couleurs.map((c) => c.handle).sort(), ['bleu', 'jaune', 'rose'])
+  const lu = lireLesZones(Couleurs, pixels, largeur, hauteur, { lire: ['bleu', 'rose', 'jaune'], completer: false })
+  const BANDES = { bleu: [0, 0.45], rose: [0.45, 0.8], jaune: [0.8, 1] }
+  for (const c of lu.couleurs) {
+    assert.ok(c.reperes.length >= 1 && c.reperes.length <= 3, `${c.handle} : ${c.reperes.length} points`)
+    for (const { x, y } of c.reperes) {
+      // Sur sa bande, et dans les marges de l'œuvre (9 % de son petit côté).
+      assert.ok(x > BANDES[c.handle][0] && x < BANDES[c.handle][1], `${c.handle} : x = ${x}`)
+      assert.ok(y > 0.09 && y < 0.91, `${c.handle} : y = ${y}`)
+    }
+  }
+  // Une couleur qui tient la moitié de l'œuvre ou plus : un seul point.
+  const grande = lireLesZones(Couleurs, ...Object.values(bandes([['bleu', 0.7], ['jaune', 0.3]])), { lire: ['bleu', 'jaune'], completer: false })
+  assert.equal(grande.couleurs[0].reperes.length, 1)
+  // Des taches éparses d'une couleur : plusieurs points, loin les uns des autres (un quart de la diagonale au moins).
+  const W = 320
+  const H = 240
+  const taches = new Uint8ClampedArray(W * H * 4)
+  for (let i = 0; i < W * H; i++) taches.set([...TEINTES.bleu, 255], i * 4)
+  for (const [cx, cy] of [[50, 50], [270, 50], [160, 200]]) {
+    for (let y = cy - 14; y < cy + 14; y++) for (let x = cx - 14; x < cx + 14; x++) taches.set([...TEINTES.rouge, 255], (y * W + x) * 4)
+  }
+  const rouge = lireLesZones(Couleurs, taches, W, H, { lire: ['bleu', 'rouge'], completer: false }).couleurs.find((c) => c.handle === 'rouge')
+  assert.equal(rouge.reperes.length, 3)
+  for (const [i, p] of rouge.reperes.entries()) {
+    // Chaque point sur une tache, et loin des autres points.
+    assert.ok([[50, 50], [270, 50], [160, 200]].some(([cx, cy]) => Math.abs(p.x * W - cx) < 14 && Math.abs(p.y * H - cy) < 14), `point ${p.x}, ${p.y}`)
+    for (const q of rouge.reperes.slice(i + 1)) assert.ok(Math.hypot((p.x - q.x) * W, (p.y - q.y) * H) > 0.26 * Math.hypot(W, H) - 2)
+  }
 })
 
-test('la lecture : le doré s’appelle « or » dans la boutique, « dore » dans le moteur', () => {
-  const { pixels, largeur, hauteur } = bandes([['dore', 0.7], ['noir', 0.3]])
-  const lu = lireLesCouleurs(Couleurs, pixels, largeur, hauteur, { lire: ['or', 'noir'], completer: false })
-  assert.deepEqual(lu.couleurs.map((c) => c.handle), ['or', 'noir'])
+test('la lecture : le contour d’une couleur est un trait d’un pixel juste autour de ses zones', () => {
+  const { pixels, largeur, hauteur } = bandes([['bleu', 0.45], ['rose', 0.35], ['jaune', 0.2]])
+  const lu = lireLesZones(Couleurs, pixels, largeur, hauteur, { lire: ['bleu', 'rose', 'jaune'], completer: false })
+  assert.equal(lu.contours.length, 3)
+  // Le bleu tient les colonnes 0 à 143 : son trait est juste après, colonne 144 (à un pixel près), sur toute la hauteur.
+  const colonnes = (alpha) => [...new Set([...alpha.keys()].filter((i) => alpha[i] > 0).map((i) => i % largeur))].sort((a, b) => a - b)
+  const bleu = colonnes(lu.contours[0])
+  assert.ok(bleu.length >= 1 && bleu.length <= 2 && bleu.every((x) => x >= 143 && x <= 145), `colonnes ${bleu}`)
+  assert.equal(lu.contours[0].filter((v) => v > 0).length, hauteur * bleu.length)
+  // Le rose a deux bords : un de chaque côté.
+  const rose = colonnes(lu.contours[1])
+  assert.ok(rose.some((x) => x >= 142 && x <= 144) && rose.some((x) => x >= 256 && x <= 258), `colonnes ${rose}`)
+  // Jamais à l'intérieur d'une zone.
+  assert.ok(lu.contours[0].every((v, i) => !v || lu.masques[0][i] < 128))
 })
 
-test('le zèbre : avec « blanc-noir », le noir puis le blanc, chacun avec sa phrase ; le blanc séparé, il n’en resterait presque rien', () => {
+test('la lecture : la carte dit quelle couleur est où, une case pour 4 × 4 pixels', () => {
+  const { pixels, largeur, hauteur } = bandes([['bleu', 0.45], ['rose', 0.35], ['jaune', 0.2]])
+  const lu = lireLesZones(Couleurs, pixels, largeur, hauteur, { lire: ['bleu', 'rose', 'jaune'], completer: false })
+  assert.deepEqual([lu.cw, lu.ch], [80, 60])
+  assert.equal(lu.carte.length, 80 * 60)
+  assert.ok(lu.carte instanceof Uint8Array)
+  // Le rang de la couleur dans la lecture : le bleu à gauche, le rose au milieu, le jaune à droite.
+  for (const y of [0, 30, 59]) assert.deepEqual([10, 50, 75].map((x) => lu.carte[y * 80 + x]), [0, 1, 2])
+  // Une case sans couleur montrée : 255. Le noir n'est pas lu ici.
+  const avecNoir = bandes([['bleu', 0.5], ['noir', 0.5]])
+  const sans = lireLesZones(Couleurs, avecNoir.pixels, 320, 240, { lire: ['bleu'], completer: false })
+  assert.deepEqual([sans.carte[30 * 80 + 10], sans.carte[30 * 80 + 70]], [0, 255])
+})
+
+test('la lecture : une couleur que l’image n’a pas n’est pas rendue ; le doré s’appelle « or » dans la boutique', () => {
+  const deux = bandes([['bleu', 0.5], ['rose', 0.5]])
+  const lu = lireLesZones(Couleurs, deux.pixels, deux.largeur, deux.hauteur, { lire: ['vert', 'bleu'], completer: false })
+  assert.deepEqual(lu.couleurs.map((c) => c.handle), ['bleu'])
+  assert.deepEqual([lu.masques.length, lu.contours.length], [1, 1])
+  const dore = bandes([['dore', 0.7], ['noir', 0.3]])
+  assert.deepEqual(lireLesZones(Couleurs, dore.pixels, dore.largeur, dore.hauteur, { lire: ['or', 'noir'], completer: false }).couleurs.map((c) => c.handle), ['or', 'noir'])
+})
+
+test('le zèbre : avec « blanc-noir », le noir puis le blanc, chacun avec ses points ; le blanc séparé, il n’en resterait presque rien', () => {
   const { pixels, largeur, hauteur } = zebre()
   assert.deepEqual([largeur, hauteur], [160, 120])
-  // Ce que le serveur a écrit pour lui : déclaré « Noir & Blanc », arrêté noir puis blanc, une phrase pour chacun.
-  const entree = entreeDuMoteur({ arretees: ['noir', 'blanc'], declarees: ['blanc-noir'] })
-  const lu = lireLesCouleurs(Couleurs, pixels, largeur, hauteur, entree)
+  // Ce que le serveur a écrit pour lui : déclaré « Noir & Blanc », arrêté noir puis blanc.
+  const lu = lireLesZones(Couleurs, pixels, largeur, hauteur, entreeDuMoteur({ arretees: ['noir', 'blanc'], declarees: ['blanc-noir'] }))
   assert.deepEqual(lu.couleurs.map((c) => c.handle), ['noir', 'blanc'])
   const [noir, blanc] = lu.couleurs.map((c) => c.part)
   assert.ok(noir > 0.75 && blanc > 0.1, `noir ${(noir * 100).toFixed(1)} %, blanc ${(blanc * 100).toFixed(1)} %`)
-  // Ses deux pastilles, noir puis blanc, chacune avec son texte.
-  const plan = planDesCouleurs({ couleurs: lu.couleurs, phrases: ['noir', 'blanc'], noms: { noir: 'Noir', blanc: 'Blanc' } })
-  assert.deepEqual(plan.couleurs.map((c) => [c.handle, c.nom, c.phrase]), [['noir', 'Noir', 0], ['blanc', 'Blanc', 1]])
-  assert.deepEqual(plan.cachees, [])
+  for (const c of lu.couleurs) assert.ok(c.reperes.length >= 1, c.handle)
+  // Ses deux pastilles, noir puis blanc, gardent chacune sa couleur.
+  assert.deepEqual(planDesOnglets(['noir', 'blanc'], lu.couleurs.map((c) => c.handle)), { duMoteur: [0, 1], cachees: [] })
   // Sans la règle : le même zèbre, le noir et le blanc donnés à part. Les rayures sépia ne sont plus du blanc.
-  const separes = lireLesCouleurs(Couleurs, pixels, largeur, hauteur, { lire: ['noir', 'blanc'], completer: false })
+  const separes = lireLesZones(Couleurs, pixels, largeur, hauteur, { lire: ['noir', 'blanc'], completer: false })
   const blancSepare = separes.couleurs.find((c) => c.handle === 'blanc')
   assert.ok(!blancSepare || blancSepare.part < 0.03, `blanc à part : ${blancSepare && (blancSepare.part * 100).toFixed(1)} %`)
-})
-
-test('le plan : chaque couleur lue dans l’ordre du moteur, sa pastille, sa phrase s’il y en a une ; une phrase sans sa couleur est cachée', () => {
-  const lues = [{ handle: 'rose', css: 'rgb(215,74,136)', part: 0.3 }, { handle: 'bleu', css: 'rgb(32,65,139)', part: 0.25 }]
-  const plan = planDesCouleurs({ couleurs: lues, phrases: ['bleu', 'jaune', 'rose'], noms: { bleu: 'Bleu', rose: 'Rose', jaune: 'Jaune' } })
-  // L'ordre du moteur ; chaque phrase retrouvée par sa couleur, où qu'elle soit dans la page.
-  assert.deepEqual(plan.couleurs.map((c) => [c.handle, c.nom, c.css, c.phrase]), [['rose', 'Rose', 'rgb(215,74,136)', 2], ['bleu', 'Bleu', 'rgb(32,65,139)', 0]])
-  // Les moments suivent le rang à l'écran : la deuxième, la dernière, tient jusqu'à la fin du temps 2.
-  assert.deepEqual(plan.couleurs.map((c) => c.moments.phrase), [[0.88, 1.2], [1.2, 2]])
-  // Le jaune n'a pas été retrouvé dans l'image : sa phrase est cachée.
-  assert.deepEqual(plan.cachees, [1])
-  // Une couleur lue sans phrase (pas de texte) garde sa pastille ; sans nom connu, une pastille sans nom.
-  const sans = planDesCouleurs({ couleurs: [{ handle: 'vert', css: 'rgb(0,90,40)', part: 0.2 }], phrases: [], noms: {} })
-  assert.deepEqual(sans.couleurs.map((c) => [c.handle, c.nom, c.phrase]), [['vert', '', -1]])
-  // Rien de lu : aucune couleur, et aucune phrase montrée.
-  assert.deepEqual(planDesCouleurs({ couleurs: [], phrases: ['bleu', 'rose'] }), { couleurs: [], cachees: [0, 1] })
-  // Trois couleurs au plus.
-  assert.equal(planDesCouleurs({ couleurs: ['a', 'b', 'c', 'd'].map((handle) => ({ handle, css: '', part: 0.1 })) }).couleurs.length, 3)
 })
 
 /* ---------- Le travailleur ---------- */
@@ -259,11 +285,9 @@ test('le plan : chaque couleur lue dans l’ordre du moteur, sa pastille, sa phr
    createImageBitmap, OffscreenCanvas, ImageData), et rien de la page. Une image de 640 × 480 en bandes. */
 function travailleur({ image = { ok: true }, liste = [['bleu', 0.45], ['rose', 0.35], ['jaune', 0.2]] } = {}) {
   const journal = []
-  const toiles = []
   class FausseToile {
     constructor(largeur, hauteur) {
       Object.assign(this, { largeur, hauteur, pixels: new Uint8ClampedArray(largeur * hauteur * 4) })
-      toiles.push(this)
     }
 
     getContext(type, options) {
@@ -294,205 +318,272 @@ function travailleur({ image = { ok: true }, liste = [['bleu', 0.45], ['rose', 0
   bac.self = bac
   vm.createContext(bac)
   vm.runInContext(texteDuTravailleur(), bac)
-  // Ce qui sort du bac à sable, ramené à des valeurs simples (ses objets ne sont pas ceux de ce fichier).
-  const reponse = new Promise((resolve) => { bac.postMessage = (message) => resolve(JSON.parse(JSON.stringify(message))) })
-  return { bac, journal: { lire: () => JSON.parse(JSON.stringify(journal)) }, toiles, reponse }
+  // Ce qui sort du bac à sable, ramené à des valeurs simples (ses objets ne sont pas ceux de ce fichier) ; la carte,
+  // un tableau d'octets, en liste.
+  const reponse = new Promise((resolve) => {
+    bac.postMessage = (message, transfert = []) => resolve({
+      message: JSON.parse(JSON.stringify({ ...message, carte: message.carte ? Array.from(message.carte) : undefined })),
+      transfert: Array.from(transfert, (objet) => objet === (message.carte && message.carte.buffer)),
+    })
+  })
+  return { bac, journal: () => JSON.parse(JSON.stringify(journal)), reponse }
 }
 
-test('le travailleur : il charge le moteur, lit l’image ramenée à 320 px, et rend chaque couleur avec son masque en PNG', async () => {
+test('le travailleur : il charge le moteur, lit l’image ramenée à 320 px, et rend les couleurs, leurs masques et leurs contours en PNG, et la carte', async () => {
   const { bac, journal, reponse } = travailleur()
   bac.onmessage({ data: { moteur: 'https://boutique.test/assets/galerie-couleurs.js', image: 'https://boutique.test/files/oeuvre.jpg?width=320', lire: ['bleu', 'rose', 'jaune'], completer: false } })
-  const { couleurs, masques, erreur } = await reponse
-  assert.equal(erreur, undefined)
-  assert.deepEqual(couleurs.map((c) => c.handle), ['bleu', 'rose', 'jaune'])
+  const { message, transfert } = await reponse
+  assert.equal(message.erreur, undefined)
+  assert.deepEqual(message.couleurs.map((c) => c.handle), ['bleu', 'rose', 'jaune'])
   // Le moteur et la copie de l'image qu'on lui donne ; l'image lue à 320 px de large, à ses proportions.
-  const fait = journal.lire()
+  const fait = journal()
   assert.deepEqual(fait.filter(([nom]) => nom === 'importScripts' || nom === 'fetch'), [['importScripts', 'https://boutique.test/assets/galerie-couleurs.js'], ['fetch', 'https://boutique.test/files/oeuvre.jpg?width=320']])
   assert.deepEqual(fait.find(([nom]) => nom === 'drawImage'), ['drawImage', 640, 480, 320, 240])
   assert.deepEqual(fait.find(([nom]) => nom === 'getContext'), ['getContext', '2d', { willReadFrequently: true }])
   assert.ok(fait.some(([nom]) => nom === 'close'), 'l’image décodée est rendue')
-  // Un masque par couleur, en PNG : le masque de la lecture, dans le canal alpha.
-  assert.equal(masques.length, 3)
-  masques.forEach((masque) => { assert.equal(masque.type, 'image/png'); assert.equal(masque.alpha.length, 320 * 240) })
-  const attendu = lireLesCouleurs(Couleurs, bandes([['bleu', 0.45], ['rose', 0.35], ['jaune', 0.2]]).pixels, 320, 240, { lire: ['bleu', 'rose', 'jaune'], completer: false })
-  masques.forEach((masque, rang) => assert.deepEqual(masque.alpha, Array.from(attendu.masques[rang]), `masque ${rang}`))
+  // Ce que la page lit : la lecture faite ici, à l'identique.
+  const attendu = lireLesZones(Couleurs, bandes([['bleu', 0.45], ['rose', 0.35], ['jaune', 0.2]]).pixels, 320, 240, { lire: ['bleu', 'rose', 'jaune'], completer: false })
+  assert.deepEqual(message.couleurs, JSON.parse(JSON.stringify(attendu.couleurs)))
+  // Chaque masque et chaque contour en PNG, dans le canal alpha.
+  assert.deepEqual([message.masques.length, message.contours.length], [3, 3])
+  message.masques.forEach((masque, rang) => { assert.equal(masque.type, 'image/png'); assert.deepEqual(masque.alpha, Array.from(attendu.masques[rang]), `masque ${rang}`) })
+  message.contours.forEach((trait, rang) => { assert.equal(trait.type, 'image/png'); assert.deepEqual(trait.alpha, Array.from(attendu.contours[rang]), `contour ${rang}`) })
+  // La carte, transférée (pas copiée), et sa taille.
+  assert.deepEqual([message.cw, message.ch, message.carte.length], [80, 60, 4800])
+  assert.deepEqual(message.carte, Array.from(attendu.carte))
+  assert.deepEqual(transfert, [true])
 })
 
 test('le travailleur : une image qui ne vient pas, une erreur ; rien d’autre', async () => {
   const { bac, reponse } = travailleur({ image: { ok: false } })
   bac.onmessage({ data: { moteur: 'https://boutique.test/m.js', image: 'https://boutique.test/i.jpg', lire: [], completer: true } })
-  assert.deepEqual(await reponse, { erreur: 'image 404' })
+  assert.deepEqual((await reponse).message, { erreur: 'image 404' })
+})
+
+/* ---------- Les calculs de la page ---------- */
+
+test('les pastilles et la lecture : chaque pastille retrouve sa couleur ; une couleur que l’œuvre n’a pas perd sa pastille', () => {
+  // L'ordre de la page (celui des pastilles) n'est pas forcément celui du moteur.
+  assert.deepEqual(planDesOnglets(['bleu', 'rose', 'jaune'], ['bleu', 'rose', 'jaune']), { duMoteur: [0, 1, 2], cachees: [] })
+  assert.deepEqual(planDesOnglets(['bleu', 'rose', 'jaune'], ['rose', 'bleu']), { duMoteur: [1, 0, -1], cachees: [2] })
+  // Une couleur lue sans pastille (arrêtée sans texte) : rien à montrer pour elle.
+  assert.deepEqual(planDesOnglets(['bleu', 'rose'], ['bleu', 'or', 'rose']), { duMoteur: [0, 2], cachees: [] })
+  // Aucune pastille retrouvée (une lecture qui a mal tourné) : rien n'est caché, la page reste sans zones.
+  assert.deepEqual(planDesOnglets(['bleu', 'or'], ['vert']), { duMoteur: [-1, -1], cachees: [] })
+  assert.deepEqual(planDesOnglets(['bleu'], []), { duMoteur: [-1], cachees: [] })
+})
+
+test('toucher l’œuvre : la couleur sous le doigt, ou la plus proche à quatre cases au plus ; sinon aucune', () => {
+  // Une carte de 4 × 3 cases : le rang de la couleur lue, ou 255. Le rang 2 n'a pas de pastille.
+  const zones = { cw: 4, ch: 3, carte: Uint8Array.from([0, 0, 1, 1, 0, 255, 1, 1, 255, 255, 255, 2]) }
+  const versOnglet = new Map([[0, 0], [1, 2]])
+  assert.equal(ongletAuPoint(zones, versOnglet, 0.1, 0.1), 0)
+  assert.equal(ongletAuPoint(zones, versOnglet, 0.9, 0.1), 2)
+  // Une case vide : la case la plus proche qui a une pastille (à égalité, la première en lisant).
+  assert.equal(ongletAuPoint(zones, versOnglet, 0.3, 0.5), 0)
+  // Une case dont la couleur n'a pas de pastille : la plus proche qui en a une.
+  assert.equal(ongletAuPoint(zones, versOnglet, 0.95, 0.9), 2)
+  // Hors de l'œuvre (le bord d'un doigt) : ramené au bord.
+  assert.equal(ongletAuPoint(zones, versOnglet, -0.2, 1.3), 0)
+  // Rien à quatre cases : aucune.
+  const loin = { cw: 12, ch: 1, carte: Uint8Array.from([0, ...Array(11).fill(255)]) }
+  assert.equal(ongletAuPoint(loin, new Map([[0, 0]]), 0.99, 0.5), -1)
+  assert.equal(ongletAuPoint(loin, new Map([[0, 0]]), 0.3, 0.5), 0)
+})
+
+test('au clavier : les flèches vont d’une pastille à la voisine, en boucle ; Début et Fin vont aux bouts ; le reste ne fait rien', () => {
+  assert.equal(ongletVise(0, 'ArrowRight', 3), 1)
+  assert.equal(ongletVise(2, 'ArrowRight', 3), 0)
+  assert.equal(ongletVise(1, 'ArrowDown', 3), 2)
+  assert.equal(ongletVise(0, 'ArrowLeft', 3), 2)
+  assert.equal(ongletVise(1, 'ArrowUp', 3), 0)
+  assert.equal(ongletVise(2, 'Home', 3), 0)
+  assert.equal(ongletVise(0, 'End', 3), 2)
+  assert.equal(ongletVise(0, 'ArrowRight', 1), 0)
+  for (const touche of ['Enter', ' ', 'Tab', 'a', 'Escape']) assert.equal(ongletVise(1, touche, 3), -1, touche)
+})
+
+test('le vol d’un point : il part de la pastille, monte en arc, et se pose ; l’arc ne dépasse pas 120 px', () => {
+  // Un point posé 100 px à gauche et 200 px au-dessus de la pastille : il part d'elle (100, 200), gros et invisible.
+  assert.deepEqual(volDuRepere(100, 200), [
+    { transform: 'translate(100px, 200px) scale(2.2)', opacity: 0 },
+    { transform: 'translate(100px, 200px) scale(2)', opacity: 1, offset: 0.06 },
+    { transform: 'translate(42px, 12.4px) scale(1.25)', offset: 0.6 },
+    { transform: 'translate(0px, 0px) scale(1)', opacity: 1 },
+  ])
+  // De loin, l'arc plafonne à 120 px au-dessus de la ligne droite.
+  assert.equal(volDuRepere(0, 600)[2].transform, 'translate(0px, 132px) scale(1.25)')
+})
+
+test('l’éclat d’une zone : d’autant plus vif que la couleur est sombre ; aucun pour une couleur très claire', () => {
+  assert.equal(eclatDe(0), '1.85')
+  assert.equal(eclatDe(0.2), '1.68')
+  assert.equal(eclatDe(0.79), '1.18')
+  // Un blanc ne s'éclaircit pas : son contour suffit.
+  assert.equal(eclatDe(0.8), null)
+  assert.equal(eclatDe(0.97), null)
 })
 
 /* ---------- Le script : l'élément ---------- */
 
-test('le script : l’élément galerie-couleurs, défini une fois, démarre à son arrivée et défait tout à son départ', () => {
+test('le script : l’élément galerie-couleurs, défini une fois, démarre à son arrivée et arrête tout à son départ', () => {
   const js = script()
   assert.match(js, /if \(customElements\.get\('galerie-couleurs'\)\) return;/)
   assert.match(js, /customElements\.define\('galerie-couleurs', /)
   assert.match(js, /connectedCallback\(\) {/)
   assert.match(js, /disconnectedCallback\(\) {/)
-  assert.match(js, /if \(typeof window === 'undefined'\) {\s*Object\.assign\(module\.exports, { entreeDuMoteur, momentsDesCouleurs, lireLesCouleurs, planDesCouleurs, texteDuTravailleur }\);\s*return;\s*}/)
+  assert.match(js, /if \(typeof window === 'undefined'\) {\s*Object\.assign\(module\.exports, { entreeDuMoteur, flou, labDemi, reperes, contour, carte, lireLesZones, texteDuTravailleur, planDesOnglets, ongletAuPoint, ongletVise, volDuRepere, eclatDe }\);\s*return;\s*}/)
+  // La bascule Toile / Poster ne rejoue ni script en ligne ni chargement de page : rien n'y compte ; aucun objet global.
   assert.doesNotMatch(js, /DOMContentLoaded|addEventListener\('load'|readyState|window\.\w+ = /)
-  // Chaque écouteur posé est retiré ; l'observateur est arrêté ; le travailleur est arrêté ; chaque adresse faite
-  // pour une image (le texte du travailleur, les masques) est rendue.
+  // Chaque écouteur posé est retiré au départ.
   const added = [...js.matchAll(/([\w.]+)\.addEventListener\('(\w+)', (this\.\w+)/g)].map((m) => m.slice(1).join(' '))
   const removed = [...js.matchAll(/([\w.]+)\.removeEventListener\('(\w+)', (this\.\w+)/g)].map((m) => m.slice(1).join(' '))
-  assert.deepEqual(added, ['this.reduit change this.regler'])
-  assert.deepEqual(removed, added)
-  assert.equal(js.match(/\.addEventListener\(/g).length, 1)
-  assert.match(js, /this\.approche = new IntersectionObserver\(/)
-  assert.match(js, /if \(this\.approche\) this\.approche\.disconnect\(\);/)
-  assert.match(js, /if \(this\.travailleur\) this\.travailleur\.terminate\(\);/)
-  assert.match(js, /if \(this\.source\) URL\.revokeObjectURL\(this\.source\);/)
-  assert.match(js, /this\.liens\.forEach\(\(lien\) => URL\.revokeObjectURL\(lien\)\);/)
-  assert.equal(js.match(/URL\.createObjectURL\(/g).length, 2)
-  // Au départ : arrêter la lecture, puis défaire ce qui a été posé.
-  assert.match(js, /disconnectedCallback\(\) {\s*if \(!this\.reduit\) return;\s*this\.reduit\.removeEventListener\('change', this\.regler\);\s*this\.reduit = null;\s*this\.arreter\(\);\s*this\.defaire\(\);\s*}/)
+  assert.deepEqual(added.sort(), ['this.figure click this.auToucher', 'this.figure pointerleave this.horsSurvol', 'this.figure pointermove this.auSurvol', 'this.liste click this.auClic', 'this.liste keydown this.auClavier'])
+  assert.deepEqual(removed.sort(), added)
+  assert.equal(js.match(/\.addEventListener\(/g).length, added.length, 'chaque écouteur a une fonction gardée, qu’on peut retirer')
+  // L'approche (un observateur), le travailleur et son texte, la tranche en attente, les animations, l'image demandée,
+  // la minuterie des mouvements réduits, les adresses des masques : tout s'arrête au départ.
+  const depart = /disconnectedCallback\(\) {([\s\S]*?)\n    }\n/.exec(js)[1]
+  for (const geste of [/this\.approche\.disconnect\(\)/, /this\.arreter\(\)/, /this\.animations\.forEach\(\(animation\) => animation\.cancel\(\)\)/, /cancelAnimationFrame\(this\.attenteSurvol\)/, /clearTimeout\(this\.minuterie\)/, /this\.rendre\(\)/]) assert.match(depart, geste)
+  const arret = /arreter\(\) {([\s\S]*?)\n    }\n/.exec(js)[1]
+  for (const geste of [/annuler\(this\.tranche\)/, /this\.travailleur\.terminate\(\)/, /URL\.revokeObjectURL\(this\.source\)/]) assert.match(arret, geste)
+  assert.match(/rendre\(\) {([\s\S]*?)\n    }\n/.exec(js)[1], /this\.liens\.forEach\(\(lien\) => URL\.revokeObjectURL\(lien\)\)/)
 })
 
-test('le script : rien pendant le défilement ; la lecture se fait à l’approche de la scène, hors du fil principal', () => {
+test('le script : rien pendant le défilement ; la lecture se fait à l’approche du bloc, dans un travailleur', () => {
   const js = script()
-  // Aucun écouteur de défilement, rien image par image, aucune minuterie qui revient : le calcul est dans un
-  // travailleur.
-  assert.doesNotMatch(js, /'scroll'|requestAnimationFrame|setInterval/)
+  // Aucun écouteur de défilement ni de taille, rien qui revient : l'arrivée du bloc suit le défilement dans la feuille.
+  assert.doesNotMatch(js, /'scroll'|'resize'|setInterval/)
+  // Un écran et demi avant le bloc (le prototype), une fois.
+  assert.match(js, /this\.approche = new IntersectionObserver\(/)
+  assert.match(js, /{ rootMargin: '150% 0px' }/)
   assert.match(js, /new Worker\(this\.source\)/)
   assert.match(js, /new Blob\(\[texteDuTravailleur\(\)\], { type: 'text\/javascript' }\)/)
-  // Ce qui reste au fil principal se fait par tranches, dans ses temps morts (au plus tard 150 ms après) : le départ
-  // du travailleur, chaque couleur, puis la pose. Une tranche en attente est annulée à l'arrêt.
-  assert.match(js, /const plusTard = \(tranche\) => \(window\.requestIdleCallback \? window\.requestIdleCallback\(tranche, { timeout: 150 }\) : window\.setTimeout\(tranche, 0\)\);/)
-  assert.match(js, /const annuler = \(numero\) => \(window\.cancelIdleCallback \? window\.cancelIdleCallback\(numero\) : window\.clearTimeout\(numero\)\);/)
-  assert.equal(js.match(/requestIdleCallback\(|setTimeout\(/g).length, 2, 'une seule façon de remettre à plus tard')
-  assert.match(js, /this\.suivre\(\[\(\) => this\.ecrire\(\), \(\) => this\.lire\(\)\]\);/)
-  assert.match(js, /this\.travailleur\.onmessage = \({ data }\) => {\s*this\.arreter\(\);\s*this\.suivre\(\[\(\) => this\.poser\(data\)\]\);\s*};/)
-  assert.match(js, /if \(this\.etapes\) this\.etapes\.push\(\.\.\.etapes\);\s*else this\.suivre\(etapes\);/)
-  assert.match(js, /if \(this\.tranche\) annuler\(this\.tranche\);/)
-  // À un quart d'écran de la scène, comme ses personnages (rien pendant le haut de la page), et seulement si elle est
-  // animée (pas de « mouvements réduits »).
-  assert.match(js, /{ rootMargin: '25% 0px' }/)
-  assert.match(js, /window\.matchMedia\('\(prefers-reduced-motion: reduce\)'\)/)
-  assert.match(js, /if \(!this\.reduit \|\| this\.reduit\.matches \|\| this\.approche \|\| this\.travailleur \|\| this\.etapes \|\| this\.posees\) return;/)
   // Le travailleur lit le moteur et l'image du serveur, à des adresses complètes (un travailleur fait d'un texte ne
-  // sait pas lire une adresse relative).
+  // sait pas lire une adresse relative) ; la liste donnée au moteur.
   assert.match(js, /postMessage\({ moteur: absolue\(this\.dataset\.moteur\), image: absolue\(this\.dataset\.image\), \.\.\.entree }\)/)
   assert.match(js, /entreeDuMoteur\({ arretees: liste\(this\.dataset\.arretees\), declarees: liste\(this\.dataset\.declarees\) }\)/)
+  // Ce qu'il rend se pose dans un temps mort du fil principal (au plus tard 120 ms après, comme le prototype).
+  assert.match(js, /const plusTard = \(tranche\) => \(window\.requestIdleCallback \? window\.requestIdleCallback\(tranche, { timeout: 120 }\) : window\.setTimeout\(tranche, 0\)\);/)
+  // La souris ne fait qu'une mise à jour par image ; quand elle quitte l'œuvre, la mise à jour en attente est annulée
+  // (sinon l'étiquette reviendrait hors de l'œuvre).
+  assert.match(js, /if \(!this\.attenteSurvol\) this\.attenteSurvol = requestAnimationFrame\(/)
+  assert.match(js, /this\.horsSurvol = \(\) => {\s*cancelAnimationFrame\(this\.attenteSurvol\);\s*this\.attenteSurvol = 0;\s*this\.figure\.removeAttribute\('data-survol'\);\s*};/)
+  // Le toucher et la souris trouvent la couleur sous le pointeur de la même façon.
+  assert.equal((js.match(/ongletAuPoint\(this\.zones, this\.versOnglet,/g) || []).length, 1)
 })
 
-test('le script : il n’ajoute rien à la page, il montre les places du serveur : chaque couleur sous son masque, sa pastille, le moment de sa phrase', () => {
+test('le texte du travailleur : ses fonctions, puis son départ, sans dépendre du nom de la fonction qui part', () => {
+  const texte = texteDuTravailleur()
+  // Un outil qui raccourcirait les noms garde ceux des déclarations et de leurs appels ensemble ; un nom écrit dans
+  // une chaîne, non : le travailleur part donc par l'expression de sa fonction.
+  assert.match(texte, /\n\(function travail\(\) {[\s\S]*}\)\(\);$/)
+  for (const nom of ['flou', 'labDemi', 'reperes', 'contour', 'carte', 'lireLesZones']) assert.match(texte, new RegExp(`^function ${nom}\\(`, 'm'), nom)
+  assert.doesNotMatch(texte, /\ntravail\(\);/)
+})
+
+test('le script : les pastilles et les phrases deviennent des onglets ; une couleur introuvable perd sa pastille et sa phrase', () => {
   const js = script()
-  // Sur cette page, chaque ajout ou retrait d'élément (et l'attribut hidden) fait refaire les styles de toute la
-  // scène : l'élément ne change que des styles et des attributs à lui, sur les places écrites par le serveur.
-  assert.doesNotMatch(js, /\.append\(|appendChild|insertBefore|insertAdjacent|replaceWith|replaceChildren|\.remove\(|cloneNode|createElement|innerHTML|outerHTML|textContent =|\.hidden\b/)
-  assert.match(js, /const teintes = Array\.from\(this\.querySelectorAll\('\.galerie-scene-teinte'\)\);/)
-  assert.match(js, /const pastilles = Array\.from\(this\.scene\.querySelectorAll\('\.galerie-scene-pastille'\)\);/)
-  // Une couleur : la même image, sous son masque, et son moment ; la couleur et le moment de sa pastille, et de son cercle.
-  assert.match(js, /this\.changer\(teinte, '-webkit-mask-image', `url\("\${lien}"\)`\);\s*this\.changer\(teinte, 'mask-image', `url\("\${lien}"\)`\);/)
-  assert.match(js, /if \(couleur\.css\) this\.changer\(pastille, '--c', couleur\.css\);/)
-  assert.match(js, /this\.changer\(anneau, '--a', String\(couleur\.moments\.anneau\[0\]\)\);/)
-  // Le nom de la pastille, dans un attribut (la feuille l'écrit) ; puis tout paraît d'un coup : les places prennent
-  // leur couleur, l'élément dit que les couleurs sont là.
-  assert.match(js, /this\.marquer\(pastille, 'data-nom', couleur\.nom\);/)
-  assert.match(js, /montrees\.forEach\(\(\[place, handle\]\) => this\.marquer\(place, 'data-couleur', handle\)\);/)
-  assert.match(js, /if \(plan\.couleurs\.length\) this\.marquer\(this, 'data-pretes', ''\);/)
-  assert.doesNotMatch(js, /this\.scene\.setAttribute/)
-  // Une place de pastille restée vide sort de la rangée ; une phrase sans sa couleur est cachée ; les autres prennent
-  // leur moment, et la couleur lue à leur pastille.
-  assert.match(js, /pastilles\.slice\(plan\.couleurs\.length\)\.forEach\(\(pastille\) => this\.marquer\(pastille, 'data-vide', ''\)\);/)
-  assert.match(js, /plan\.cachees\.forEach\(\(rang\) => this\.marquer\(phrases\[rang\], 'data-absente', ''\)\);/)
-  assert.match(js, /if \(point && couleur\.css\) this\.changer\(point, '--c', couleur\.css\);/)
-  // Tout ce qui est changé se remet : chaque changement note son retour.
-  assert.match(js, /changer\(element, nom, valeur\) {\s*const avant = element\.style\.getPropertyValue\(nom\);/)
-  assert.match(js, /marquer\(element, nom, valeur\) {\s*const avant = element\.getAttribute\(nom\);/)
-  assert.match(js, /defaire\(\) {\s*this\.retours\.reverse\(\)\.forEach\(\(retour\) => retour\(\)\);/)
+  // Le script montre les pastilles, fait des phrases des panneaux liés à leur pastille, et dit à la feuille qu'il est là.
+  assert.match(js, /setAttribute\('role', 'tabpanel'\)/)
+  assert.match(js, /setAttribute\('aria-labelledby', /)
+  assert.match(js, /this\.liste\.hidden = false;/)
+  assert.match(js, /this\.bloc\.setAttribute\('data-pret', ''\);/)
+  // La couleur choisie : aria-selected, seule dans l'ordre du clavier ; les autres phrases cachées.
+  assert.match(js, /setAttribute\('aria-selected', String\(/)
+  assert.match(js, /setAttribute\('aria-hidden', String\(/)
+  // Une couleur que le moteur n'a pas retrouvée : sa pastille part ; sa phrase ne se montrera plus, mais reste dans la
+  // pile (invisible), pour que rien ne bouge dans la page quand le travailleur répond.
+  assert.match(js, /this\.onglets\.forEach\(\(onglet, i\) => {\s*onglet\.hidden = plan\.cachees\.includes\(i\);\s*}\);/)
+  assert.doesNotMatch(js, /panneaux\[i\]\.hidden|panneau\.hidden/)
+  // Les zones : la couleur lue sur l'œuvre remplace celle de la boutique, sur la pastille et dans la phrase.
+  assert.match(js, /this\.onglets\[i\]\.style\.setProperty\('--c', c\.css\)/)
+  // Les calques d'une couleur viennent de la même image que l'œuvre (même requête : mêmes paliers, crossorigin).
+  assert.match(js, /eclat\.crossOrigin = 'anonymous';/)
+  assert.match(js, /eclat\.sizes = this\.image\.sizes;\s*eclat\.srcset = this\.image\.srcset;/)
+  // Les éléments vides que le script ajoute gardent leur place (le thème cache tout élément vide).
+  assert.ok((js.match(/setAttribute\('data-allow-empty', ''\)/g) || []).length >= 3)
+  // En mouvements réduits : ni vol ni fondu, les zones un moment, puis seulement les points.
+  assert.match(js, /if \(this\.reduit\.matches\) {/)
 })
 
 /* ---------- La feuille ---------- */
 
-test('la feuille : le bloc des couleurs pose des moments et des images clés ; un seul mouvement à lui, le fondu de leur arrivée', () => {
-  // Les animations sont celles de la scène (classe galerie-scene-a) : natif ou secours, rien de plus ici. Seul
-  // mouvement à lui, en « mouvements voulus » : la place des couleurs paraît en fondu quand elles sont lues.
-  const moving = sheet().filter((r) => /(^|[;\s])(animation|transition)[\w-]*\s*:/.test(r.body))
-  assert.deepEqual(moving.map((r) => [r.head, r.context.join(), r.body.replace(/\s+/g, ' ').trim()]), [['.galerie-scene-teintes', '@media (prefers-reduced-motion: no-preference)', 'transition: opacity 0.4s ease;']])
-  assert.equal(body('.galerie-scene-teintes'), 'opacity: 0;')
-  assert.equal(body('.galerie-scene-teintes[data-pretes]'), 'opacity: 1;')
-  // L'attribut qui fait paraître les couleurs est sur l'élément : les styles à refaire sont les siens, pas toute la scène.
-  for (const r of sheet()) assert.doesNotMatch(r.head, /galerie-scene\[data-|galerie-scene:not\(\[data-(?!mouvement)/, r.head)
-  // Chaque suite d'images clés nommée existe dans le bloc, et chacune sert ; rien que transform et opacity.
-  const frames = sheet().filter((r) => /^@keyframes /.test(r.head))
-  const defined = new Set(frames.map((f) => f.head.replace('@keyframes ', '')))
-  const named = new Set(sheet().flatMap((r) => [...r.body.matchAll(/(?:^|[;\s])--n:\s*([\w-]+);/g)].map((m) => m[1])))
-  assert.deepEqual([...named].sort(), [...defined].sort())
-  assert.deepEqual([...defined].sort(), ['galerie-scene-actif', 'galerie-scene-pop', 'galerie-scene-teinte', 'galerie-scene-voile'])
-  for (const f of frames) {
-    assert.deepEqual(f.context, [], f.head)
-    const properties = [...f.body.matchAll(/([\w-]+)\s*:/g)].map((m) => m[1])
-    assert.deepEqual([...new Set(properties)].filter((p) => !['opacity', 'transform'].includes(p)), [], f.head)
+test('la feuille : un mouvement en « mouvements voulus » seulement ; ce qui suit le défilement, là où le navigateur sait le faire', () => {
+  for (const r of sheet()) {
+    if (!/(^|[;\s])(animation|transition)[\w-]*\s*:/.test(r.body)) continue
+    assert.equal(r.context[0], MOTION, r.head)
+    if (/animation-timeline|animation-range/.test(r.body)) assert.deepEqual(r.context, [MOTION, LINKED], r.head)
   }
-  // Ces noms ne sont pas déjà ceux de la scène.
-  const scene = read(CSS).slice(0, read(CSS).indexOf('/* === Couleurs de la scène (ticket 21) : début ==='))
-  for (const name of defined) assert.doesNotMatch(scene, new RegExp(`@keyframes ${name} `), name)
-  // Aucune couleur écrite, aucune adresse : les masques sont posés par l'élément.
+  // L'arrivée du bloc, liée à son défilement : l'œuvre monte, les pastilles sortent une à une, les points de la première
+  // couleur tombent sur l'œuvre.
+  assert.equal(body('.galerie-couleurs[data-pret]', [MOTION, LINKED].join()), 'view-timeline: --galerie-couleurs block;')
+  assert.equal(body('.galerie-couleurs[data-pret] .galerie-couleurs-oeuvre', [MOTION, LINKED].join()), 'animation: galerie-monte linear both; animation-timeline: --galerie-couleurs; animation-range: entry 0% entry 50%;')
+  assert.equal(body('.galerie-couleurs[data-pret] .galerie-couleurs-pastille', [MOTION, LINKED].join()), 'animation: galerie-couleurs-pop linear both; animation-timeline: --galerie-couleurs; animation-range: entry calc(56% + var(--i) * 8%) entry calc(76% + var(--i) * 8%);')
+  assert.equal(body('.galerie-couleurs[data-zones]:not([data-touche]) .galerie-couleurs-reperes[data-entree] .galerie-couleurs-repere', [MOTION, LINKED].join()), 'animation: galerie-couleurs-tombe linear both; animation-timeline: --galerie-couleurs; animation-range: entry calc(64% + var(--j) * 7%) entry calc(84% + var(--j) * 7%);')
+  // Les images clés : à elles, sauf la montée du socle ; rien que transform et opacity.
+  const frames = sheet().filter((r) => /^@keyframes /.test(r.head))
+  assert.deepEqual(frames.map((f) => f.head).sort(), ['@keyframes galerie-couleurs-pop', '@keyframes galerie-couleurs-tombe'])
+  assert.equal(body('@keyframes galerie-couleurs-pop'), '0% { opacity: 0; transform: translateY(18px) scale(0.5); } 70% { opacity: 1; transform: translateY(-3px) scale(1.06); } 100% { opacity: 1; transform: none; }')
+  assert.equal(body('@keyframes galerie-couleurs-tombe'), '0% { opacity: 0; transform: translateY(-34px) scale(0.4); } 65% { opacity: 1; transform: translateY(3px) scale(1.12); } 100% { opacity: 1; transform: none; }')
+  assert.match(read(CSS), /@keyframes galerie-monte {\s*from { opacity: 0; transform: translateY\(44px\); }\s*to { opacity: 1; transform: none; }\s*}/)
+  // Les transitions du prototype, en « mouvements voulus ».
+  assert.equal(body('.galerie-couleurs[data-pret] .galerie-couleurs-phrase', MOTION), 'transition: opacity 0.26s ease, transform 0.26s ease, visibility 0s linear 0s;')
+  assert.equal(body('.galerie-couleurs[data-pret] .galerie-couleurs-phrase[aria-hidden="true"]', MOTION), 'transition: opacity 0.14s ease, transform 0.14s ease, visibility 0s linear 0.14s;')
+  assert.equal(body('.galerie-couleurs-point', MOTION), 'transition: transform 0.18s ease;')
+  assert.equal(body('.galerie-couleurs-pastille::before', MOTION), 'transition: opacity 0.2s ease, transform 0.28s cubic-bezier(0.3, 1.6, 0.5, 1);')
+  assert.equal(body('.galerie-couleurs-survol', MOTION), 'transition: opacity 0.12s ease;')
+})
+
+test('la feuille : sur téléphone, le titre, l’œuvre, la phrase, puis les pastilles sur la bande soleil, aux tailles du prototype', () => {
+  assert.equal(body('.galerie-couleurs'), 'position: relative; background: var(--creme); overflow: hidden;')
+  assert.equal(body('.galerie-couleurs-element'), 'display: grid; grid-template-areas: "tete" "oeuvre" "phrases" "pastilles"; padding-top: 40px; padding-left: var(--gout); padding-right: var(--goutd);')
+  assert.equal(body('.galerie-couleurs:not([data-pret]) .galerie-couleurs-element'), 'padding-bottom: 56px;')
+  assert.equal(body('.galerie-couleurs-surtitre'), 'margin: 0; font: 400 13px/1.2 var(--sans); letter-spacing: 0.08em; text-transform: uppercase; color: var(--encre);')
+  assert.equal(body('.galerie-couleurs-titre'), 'margin: 12px 0 0; font: 300 clamp(31px, 9vw, 42px)/1 var(--sans); letter-spacing: -0.042em; text-wrap: balance;')
+  assert.equal(body('.galerie-couleurs-phrase'), 'margin: 0; max-width: 31em; font: 400 14.5px/1.45 var(--sans); color: var(--encre-70);')
+  assert.equal(body('.galerie-couleurs-phrase b'), 'display: flex; align-items: center; gap: 8px; margin-bottom: 3px; font: 700 16px/1.25 var(--sans); letter-spacing: -0.015em; color: var(--encre);')
+  // Les phrases empilées à la même place (la plus longue donne la hauteur) : changer de couleur ne fait pas bouger la page.
+  assert.equal(body('.galerie-couleurs[data-pret] .galerie-couleurs-phrase'), 'grid-area: 1 / 1;')
+  assert.equal(body('.galerie-couleurs[data-pret] .galerie-couleurs-phrase[aria-hidden="true"]'), 'visibility: hidden; opacity: 0; transform: translateY(8px);')
+  // L'œuvre : ce qui reste d'un écran une fois le texte et les pastilles posés, sans dépasser la largeur.
+  assert.match(body('.galerie-couleurs-oeuvre'), /^grid-area: oeuvre; justify-self: center; position: relative; margin: 20px 0 0; --oh: min\(clamp\(250px, calc\(100svh - 450px\), 560px\), calc\(\(100vw - 40px\) \/ var\(--ratio\)\)\); height: var\(--oh\); width: calc\(var\(--oh\) \* var\(--ratio\)\); max-width: 100%;/)
+  // Les pastilles, sur la bande soleil, d'un bord à l'autre ; leur nom à 15 px de l'anneau (retouche du 22/11).
+  assert.equal(body('.galerie-couleurs-pastilles'), 'grid-area: pastilles; display: flex; justify-content: center; gap: 20px; margin: 18px calc(-1 * var(--goutd)) 0 calc(-1 * var(--gout)); padding: 16px var(--goutd) 22px var(--gout); background: var(--soleil);')
+  assert.match(body('.galerie-couleurs-pastille'), /^position: relative; display: grid; justify-items: center; gap: 15px; min-width: 64px; padding-top: 6px; font: 600 12\.5px\/1 var\(--sans\); color: var\(--encre\);/)
+  assert.match(body('.galerie-couleurs-point'), /^width: 50px; height: 50px; border-radius: 50%; background: var\(--c, var\(--encre-12\)\);/)
+  assert.match(body('.galerie-couleurs-pastille::before'), /^content: ""; position: absolute; left: 50%; top: 31px; width: 64px; height: 64px; margin: -32px 0 0 -32px; border-radius: 50%; box-shadow: 0 0 0 2\.5px var\(--encre\); opacity: 0; transform: scale\(0\.8\);$/)
+  assert.equal(body('.galerie-couleurs-pastille[aria-selected="true"]::before'), 'opacity: 1; transform: none;')
+  // Les points d'une couleur sur l'œuvre : sa couleur, cerclée de blanc.
+  assert.match(body('.galerie-couleurs-repere'), /^position: absolute; left: calc\(var\(--x\) \* 100%\); top: calc\(var\(--y\) \* 100%\); width: 20px; height: 20px; margin: -10px 0 0 -10px; border-radius: 50%; background: var\(--c\); box-shadow: 0 0 0 3px var\(--blanc\), /)
+  // Cachées : une pastille dont la couleur n'est pas dans l'œuvre, la rangée sans script.
+  assert.equal(body('.galerie-couleurs-pastilles[hidden], .galerie-couleurs-pastille[hidden]'), 'display: none;')
+  // L'éclat d'une zone : la zone avivée, d'autant plus que sa couleur est sombre (--luminosite, posé par l'élément).
+  assert.match(body('.galerie-couleurs-eclat'), /filter: brightness\(var\(--luminosite\)\) saturate\(1\.3\);/)
+})
+
+test('la feuille : sur ordinateur (900 px), le texte, la phrase et les pastilles à gauche, l’œuvre à droite au-dessus du sol soleil', () => {
+  assert.equal(body('.galerie-couleurs[data-pret]::after', LARGE), 'content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 15svh; background: var(--soleil);')
+  assert.equal(body('.galerie-couleurs-element', LARGE), 'position: relative; z-index: 1; min-height: 100svh; grid-template-columns: minmax(0, 32vw) minmax(0, 1fr); grid-template-rows: 1fr auto auto auto 1fr; grid-template-areas: ". oeuvre" "tete oeuvre" "phrases oeuvre" "pastilles oeuvre" ". oeuvre"; column-gap: 6vw; padding: 10svh 10vw 0 6vw;')
+  assert.equal(body('.galerie-couleurs-titre', LARGE), 'margin-top: 18px; font-size: clamp(44px, 4.7vw, 80px); line-height: 0.97;')
+  assert.equal(body('.galerie-couleurs-oeuvre', LARGE), 'align-self: end; justify-self: center; margin: 0 0 calc(15svh + 5svh); --oh: min(66svh, calc(44vw / var(--ratio)));')
+  assert.equal(body('.galerie-couleurs-pastilles', LARGE), 'justify-content: flex-start; gap: 26px; margin: 34px 0 0 -8px; padding: 0; background: none;')
+  assert.equal(body('.galerie-couleurs-point', LARGE), 'width: 58px; height: 58px;')
+  assert.equal(body('.galerie-couleurs-pastille::before', LARGE), 'top: 35px; width: 72px; height: 72px; margin: -36px 0 0 -36px;')
+  assert.equal(body('.galerie-couleurs-repere', LARGE), 'width: 24px; height: 24px; margin: -12px 0 0 -12px;')
+  // Sans script : le titre et les phrases à gauche, l'œuvre à droite, sans hauteur d'écran imposée.
+  assert.equal(body('.galerie-couleurs:not([data-pret]) .galerie-couleurs-element', LARGE), 'min-height: 0; padding-bottom: 8svh; grid-template-areas: "tete oeuvre" "phrases oeuvre"; grid-template-rows: auto 1fr;')
+})
+
+test('la feuille : aucune couleur écrite, aucune adresse ; les ombres par color-mix sur les couleurs du socle', () => {
   for (const { head, body: text } of sheet()) assert.doesNotMatch(text, /#[0-9a-f]{3,8}\b|\brgba?\(|\bhsla?\(|url\(/i, head)
-})
-
-test('la feuille : l’œuvre en gris pâle, puis chaque couleur seule, avec les images clés de la maquette', () => {
-  // Le gris plus pâle que dans la maquette (la page d'essai des couleurs) : un noir ou un blanc qui revient s'y voit.
-  const gris = body('.galerie-scene-gris')
-  assert.match(gris, /^filter: grayscale\(1\) contrast\(0\.42\) brightness\(1\.22\);/)
-  assert.deepEqual([value(gris, 'a'), value(gris, 'b'), value(gris, 'n')], ['0.76', '2', 'galerie-scene-voile'])
-  assert.equal(body('@keyframes galerie-scene-voile'), '0% { opacity: 0; } 11% { opacity: 1; } 89% { opacity: 1; } 100% { opacity: 0; }')
-  // Une couleur : l'image sous son masque, étiré sur toute l'œuvre.
-  assert.equal(body('.galerie-scene-teinte'), '-webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; --n: galerie-scene-teinte;')
-  // Le gris ne se dessine que si des couleurs sont là, une place que si une couleur y est posée : cachés, mais dans la
-  // page (les montrer ne fait refaire que leurs styles) ; à plat, le gris n'est pas dans la page.
-  assert.equal(body('.galerie-scene-teintes:not([data-pretes]) .galerie-scene-gris, .galerie-scene-teinte:not([data-couleur])'), 'visibility: hidden;')
-  assert.equal(body('galerie-scene:not([data-mouvement]) .galerie-scene-gris'), 'display: none;')
-  // La phrase d'une couleur que l'image n'a pas.
-  assert.equal(body('.galerie-scene-couleurs .galerie-scene-msg[data-absente]'), 'display: none;')
-  assert.equal(body('@keyframes galerie-scene-teinte'), '0% { opacity: 0; } 24% { opacity: 1; } 76% { opacity: 1; } 100% { opacity: 0; }')
-  // Les phrases : les moments de la maquette, la dernière jusqu'à la fin du temps 2 (sans script, ou avant la lecture).
-  const moments = [1, 2, 3].map((n) => body(`.galerie-scene-couleurs .galerie-scene-msg:nth-child(${n})`))
-  assert.deepEqual(moments.map((m) => [value(m, 'a'), value(m, 'b')]), [['0.88', '1.2'], ['1.2', '1.52'], ['1.52', '2']])
-  assert.equal(body('.galerie-scene-couleurs .galerie-scene-msg:last-child'), '--b: 2;')
-  assert.deepEqual(momentsDesCouleurs(3).map((m) => m.phrase.map(String)), moments.map((m) => [value(m, 'a'), value(m, 'b')]))
-  // La pastille du titre d'une phrase, cerclée d'un trait léger (un blanc se voit sur le mur clair).
-  assert.equal(body('.galerie-scene-couleurs .galerie-scene-msg b i'), 'flex: none; width: 13px; height: 13px; border-radius: 50%; background: var(--c, var(--encre)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--encre) 12%, transparent);')
-})
-
-test('la feuille : les pastilles de la maquette, sous l’œuvre sur téléphone, en colonne à sa droite sur ordinateur', () => {
-  assert.equal(body('.galerie-scene-pastille'), 'position: relative; display: grid; justify-items: center; gap: 7px; font: 600 12px/1 var(--sans); color: var(--encre); --n: galerie-scene-pop;')
-  // Une place qui n'a pas encore sa couleur ne se voit pas ; restée vide, elle ne prend plus de place. Le nom d'une
-  // pastille vient de l'élément (data-nom).
-  assert.equal(body('.galerie-scene-pastille:not([data-couleur])'), 'visibility: hidden;')
-  assert.equal(body('.galerie-scene-pastille[data-vide]'), 'display: none;')
-  assert.equal(body('.galerie-scene-pastille::after'), 'content: attr(data-nom);')
-  assert.match(body('.galerie-scene-point'), /^width: 50px; height: 50px; border-radius: 50%; background: var\(--c, var\(--encre-12\)\);/)
-  assert.equal(body('.galerie-scene-anneau'), 'position: absolute; left: 50%; top: 25px; width: 62px; height: 62px; margin: -31px 0 0 -31px; border-radius: 50%; box-shadow: 0 0 0 2.5px var(--encre); --n: galerie-scene-actif;')
-  assert.equal(body('@keyframes galerie-scene-pop'), '0% { opacity: 0; transform: translateY(18px) scale(0.5); } 70% { opacity: 1; transform: translateY(-3px) scale(1.06); } 100% { opacity: 1; transform: none; }')
-  assert.equal(body('@keyframes galerie-scene-actif'), '0% { opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; }')
-  assert.equal(body('.galerie-scene-pastille', LARGE), 'grid-auto-flow: column; align-items: center; gap: 14px; font-size: 14px; justify-items: start;')
-  assert.equal(body('.galerie-scene-point', LARGE), 'width: 62px; height: 62px;')
-  assert.equal(body('.galerie-scene-anneau', LARGE), 'left: 31px; top: 50%; width: 76px; height: 76px; margin: -38px 0 0 -38px;')
+  const ombres = sheet().flatMap((r) => [...r.body.matchAll(/color-mix\(in srgb, var\(--([\w-]+)\) \d+%, transparent\)/g)].map((m) => m[1]))
+  assert.ok(ombres.length >= 6)
+  assert.deepEqual([...new Set(ombres)].sort(), ['encre', 'noir'])
+  // Le mur et le sol du temps 2 validé : crème et soleil.
+  assert.match(body('.galerie-couleurs'), /background: var\(--creme\);/)
   // Rien du bloc hors de la feuille de la page : la feuille commune du site ne change pas.
-  assert.doesNotMatch(read('input.css'), /galerie-scene-(gris|teinte|pastille|point|anneau)/)
-})
-
-/* ---------- La section ---------- */
-
-test('la section : les couleurs arrêtées et leurs textes, sinon les déclarées ; jamais painting.color ; le moteur chargé par l’élément', () => {
-  const source = code(SECTION)
-  assert.match(source, /for couleur in product\.metafields\.artwork\.colors\.value/)
-  assert.match(source, /assign cle_texte = 'color_text_' \| append: forloop\.index/)
-  assert.match(source, /product\.metafields\.artwork\[cle_texte\]\.value/)
-  assert.match(source, /for couleur in product\.metafields\.shopify\['color-pattern'\]\.value/)
-  assert.match(source, /shop\.metaobjects\['shopify--color-pattern'\]\.values/)
-  assert.doesNotMatch(source, /painting\.color/)
-  // Le moteur n'est pas dans la page : l'élément le donne à son travailleur, à l'approche de la scène.
-  assert.doesNotMatch(source, /<script/)
-  assert.match(source, /data-moteur="{{ 'galerie-couleurs\.js' \| asset_url }}"/)
-  assert.match(source, /data-image="{{ art \| image_url: width: 320 }}"/)
-  // Un texte libre : échappé, puis ses jetons de la note Trustpilot remplacés.
-  assert.match(source, /assign texte_sur = texte \| escape\s+capture texte_pret\s+render 'trustpilot-tokens', text: texte_sur\s+endcapture/)
+  assert.doesNotMatch(read('input.css'), /galerie-couleurs/)
 })
 
 /* ---------- Le rendu ---------- */
@@ -526,138 +617,6 @@ function avecCouleurs({ poster = false, arretees = null, textes = [], declarees 
   return p
 }
 const tight = (html) => html.replace(/\s+/g, ' ').replace(/> </g, '><').trim()
-/* La scène rendue, la boutique donnant (ou non) ses couleurs à shop.metaobjects. */
-async function render(p, { lang = 'fr', boutique = BOUTIQUE } = {}) {
-  const source = read(SECTION)
-  const g = globals(p, { suffix: 'oeuvre-galerie', lang, section: { id: 'template--1__galerie-scene', settings: {}, blocks: [] } })
-  if (boutique) g.shop = { ...g.shop, metaobjects: { 'shopify--color-pattern': { values: boutique } } }
-  return tight(await engine(lang).parseAndRender(source.slice(0, source.indexOf('{% schema %}')), {}, { globals: g }))
-}
-/* Le temps 2 rendu : ses phrases, son élément (ses attributs) et le nom des pastilles. */
-function tempsDeux(html) {
-  const article = /<article class="galerie-scene-chap galerie-scene-couleurs galerie-scene-a">([\s\S]*?)<\/article>/.exec(html)[1]
-  const phrases = [...article.matchAll(/<p class="galerie-scene-msg galerie-scene-a" data-couleur="([^"]+)"><b><i data-allow-empty(?: style="--c: ([^"]+)")?><\/i>([^<]*)<\/b>(?: ([^<]*))?<\/p>/g)]
-    .map((m) => ({ couleur: m[1], pastille: m[2] || null, titre: m[3], texte: m[4] || '' }))
-  const element = /<galerie-couleurs class="galerie-scene-teintes"((?: [\w-]+="[^"]*")*)>([\s\S]*?)<\/galerie-couleurs>/.exec(html)
-  assert.ok(element, 'l’élément des couleurs')
-  const attributs = Object.fromEntries([...element[1].matchAll(/ ([\w-]+)="([^"]*)"/g)].map((m) => [m[1], m[2]]))
-  const noms = [...element[2].matchAll(/<span data-couleur="([^"]+)">([^<]*)<\/span>/g)].map((m) => [m[1], m[2]])
-  return { article, phrases, attributs, noms, modele: element[2] }
-}
-
-test('rendu, couleurs arrêtées : une phrase par couleur, dans l’ordre, son titre en gras avec sa pastille, puis son texte', { skip: SKIP }, async () => {
-  const html = await render(avecCouleurs({ arretees: ['bleu', 'rose', 'jaune'], textes: SUPERMAN, declarees: ['multicolore', 'bleu', 'rose'] }))
-  const { article, phrases, attributs, noms } = tempsDeux(html)
-  assert.match(article, /^<p class="galerie-surtitre"><i>2<\/i> Les couleurs<\/p><h2>Chaque couleur <b>agit sur vous\.<\/b><\/h2><div class="galerie-scene-messages"><p /)
-  assert.deepEqual(phrases, [
-    { couleur: 'bleu', pastille: '#005BD3', titre: 'Le bleu : la force.', texte: 'Il dessine les muscles et l&#39;emblème du super-héros. Dans votre pièce, il donne du caractère et de l&#39;énergie.' },
-    { couleur: 'rose', pastille: '#FFC0CB', titre: 'Le rose : l&#39;explosion.', texte: 'Il éclabousse le portrait comme un graffiti sauvage. Chez vous, il met de la vie et fait vibrer le mur.' },
-    { couleur: 'jaune', pastille: '#D6C52E', titre: 'Le jaune : l&#39;éclair.', texte: 'Il traverse le tableau en coups de pinceau rapides. Un coup de peps qui réveille la pièce.' },
-  ])
-  // L'élément : le moteur, la copie de 320 px, les couleurs arrêtées et les déclarées ; le nom des pastilles, coupé
-  // avant « / », hors de la page (un modèle).
-  assert.deepEqual(attributs, {
-    'data-moteur': '//www.myselfmonart.com/cdn/shop/t/25/assets/galerie-couleurs.js?v=1',
-    'data-image': '//www.myselfmonart.com/cdn/shop/files/bonsai-zen-oeuvre.jpg?v=1&width=320',
-    'data-arretees': 'bleu rose jaune',
-    'data-declarees': 'multicolore bleu rose',
-  })
-  assert.deepEqual(noms, [['bleu', 'Bleu'], ['rose', 'Rose'], ['jaune', 'Jaune']])
-  // L'œuvre, puis la place des couleurs : son gris, les trois places des couleurs (la même image, sans masque tant
-  // qu'aucune couleur n'y est posée), puis le nom des pastilles ; et les trois places des pastilles, sous l'œuvre.
-  assert.match(html, /<img class="galerie-scene-image" [^>]*><galerie-couleurs class="galerie-scene-teintes" [^>]*><img class="galerie-scene-gris galerie-scene-a" [^>]*>(<img class="galerie-scene-teinte galerie-scene-a" [^>]*>){3}<template>/)
-  assert.match(html, /<div class="galerie-scene-palette galerie-scene-a" aria-hidden="true">(<span class="galerie-scene-pastille galerie-scene-a"><i class="galerie-scene-point" data-allow-empty><\/i><i class="galerie-scene-anneau galerie-scene-a" data-allow-empty><\/i><\/span>){3}<\/div>/)
-  const oeuvre = /<img class="galerie-scene-image"( [^>]*)>/.exec(html)[1]
-  for (const place of html.matchAll(/<img class="galerie-scene-(?:gris|teinte) galerie-scene-a"( [^>]*)>/g)) assert.equal(place[1], oeuvre, 'la même image que l’œuvre : un seul téléchargement')
-  // Un seul titre de niveau 2 dans le temps 2, et un texte que Google lit sans script.
-  assert.equal((article.match(/<h2>/g) || []).length, 1)
-})
-
-test('rendu, le zèbre : « Noir & Blanc » déclaré, le noir puis le blanc arrêtés, chacun avec son texte', { skip: SKIP }, async () => {
-  const html = await render(avecCouleurs({
-    arretees: ['noir', 'blanc'],
-    textes: ['Le noir : la nuit de la savane. Il enveloppe le zèbre et fait le silence autour de lui. Dans la pièce, il donne de la profondeur.', 'Le blanc : le trait de lumière. Chaque rayure accroche la lumière et dessine l\'animal. Le regard n\'en décroche plus.'],
-    declarees: ['blanc-noir'],
-  }))
-  const { phrases, attributs, noms } = tempsDeux(html)
-  assert.deepEqual(phrases.map((p) => [p.couleur, p.titre]), [['noir', 'Le noir : la nuit de la savane.'], ['blanc', 'Le blanc : le trait de lumière.']])
-  assert.equal(attributs['data-arretees'], 'noir blanc')
-  assert.equal(attributs['data-declarees'], 'blanc-noir')
-  assert.deepEqual(noms, [['noir', 'Noir'], ['blanc', 'Blanc']])
-  // Ce que l'élément en fera : « blanc-noir » pour le moteur.
-  assert.deepEqual(entreeDuMoteur({ arretees: attributs['data-arretees'].split(' '), declarees: attributs['data-declarees'].split(' ') }), { lire: ['blanc-noir'], completer: false })
-})
-
-test('rendu, couleurs arrêtées : un texte manquant, une couleur à part ; le texte libre échappé, ses jetons remplacés, ses lignes jointes', { skip: SKIP }, async () => {
-  const html = await render(avecCouleurs({
-    arretees: ['bleu', 'multicolore', 'or', 'rose'],
-    textes: [
-      'Le bleu : <b>l’aplomb</b> & la force.\nIl sculpte le visage.\r\nChez vous, il pose la pièce.',
-      'Plusieurs couleurs.',
-      null,
-      'Le rose : l’audace, [[TP_SCORE]]/5 sur [[TP_COUNT]] avis.',
-    ],
-    declarees: ['bleu'],
-  }))
-  const { phrases, attributs, noms } = tempsDeux(html)
-  // « multicolore » n'est pas une couleur à montrer ; le doré n'a pas de texte : pas de phrase, mais il reste arrêté.
-  assert.equal(attributs['data-arretees'], 'bleu or rose')
-  assert.deepEqual(noms, [['bleu', 'Bleu'], ['or', 'Doré'], ['rose', 'Rose']])
-  assert.deepEqual(phrases.map((p) => p.couleur), ['bleu', 'rose'])
-  // Le texte est du texte : son balisage écrit tel quel ; ses lignes jointes par une espace.
-  assert.equal(phrases[0].titre, 'Le bleu : &lt;b&gt;l’aplomb&lt;/b&gt; &amp; la force.')
-  assert.equal(phrases[0].texte, 'Il sculpte le visage. Chez vous, il pose la pièce.')
-  // Un texte d'une seule phrase : son titre seul. La note vient du réglage du thème.
-  assert.deepEqual(phrases[1], { couleur: 'rose', pastille: '#FFC0CB', titre: 'Le rose : l’audace, 4,2/5 sur 86 avis.', texte: '' })
-  assert.match(html, /<b><i data-allow-empty style="--c: #FFC0CB"><\/i>Le rose : l’audace, 4,2\/5 sur 86 avis\.<\/b><\/p>/)
-})
-
-test('rendu, couleurs déclarées seules : aucune phrase, la page complète avec les couleurs de la boutique', { skip: SKIP }, async () => {
-  const html = await render(avecCouleurs({ declarees: ['multicolore', 'bleu', 'rose'] }))
-  const { article, phrases, attributs, noms } = tempsDeux(html)
-  assert.equal(article, '<p class="galerie-surtitre"><i>2</i> Les couleurs</p><h2>Chaque couleur <b>agit sur vous.</b></h2>')
-  assert.deepEqual(phrases, [])
-  assert.equal(attributs['data-arretees'], undefined)
-  assert.equal(attributs['data-declarees'], 'multicolore bleu rose')
-  // Le nom de toutes les couleurs qu'elle peut montrer (ni « Multicolore » ni « Noir & Blanc »), coupé avant « / ».
-  assert.deepEqual(noms, [['gris', 'Gris'], ['blanc', 'Blanc'], ['vert', 'Vert'], ['jaune', 'Jaune'], ['noir', 'Noir'], ['beige', 'Beige'], ['marron', 'Marron'], ['bleu', 'Bleu'], ['or', 'Doré'], ['rouge', 'Rouge'], ['rose', 'Rose'], ['bronze', 'Bronze'], ['orange', 'Orange'], ['violet', 'Violet']])
-  // Une boutique qui ne donne pas ses couleurs : les noms des couleurs du produit, à défaut.
-  assert.deepEqual(tempsDeux(await render(avecCouleurs({ declarees: ['multicolore', 'bleu', 'rose'] }), { boutique: null })).noms, [['bleu', 'Bleu'], ['rose', 'Rose']])
-})
-
-test('rendu, rien de déclaré : la page lit l’image seule ; sans aucun nom, pas de modèle de noms', { skip: SKIP }, async () => {
-  const { attributs, noms, phrases } = tempsDeux(await render(avecCouleurs()))
-  assert.deepEqual(Object.keys(attributs), ['data-moteur', 'data-image'])
-  assert.equal(noms.length, 14)
-  assert.deepEqual(phrases, [])
-  assert.match(tempsDeux(await render(avecCouleurs(), { boutique: null })).modele, /^<img class="galerie-scene-gris galerie-scene-a" [^>]*>(<img class="galerie-scene-teinte galerie-scene-a" [^>]*>){3}$/)
-})
-
-test('rendu, poster : la même structure, ses propres couleurs et ses propres textes', { skip: SKIP }, async () => {
-  const poster = await render(avecCouleurs({ poster: true, arretees: ['rose', 'bleu', 'jaune'], textes: ['Le rose : l’énergie de la rue. Il éclabousse le torse.', 'Le bleu : la force. Il dessine les bras.', 'Le jaune : l’emblème. Le S brille au centre.'], declarees: ['multicolore', 'rose', 'bleu'] }))
-  const { phrases, attributs } = tempsDeux(poster)
-  assert.match(poster, /^<galerie-scene [^>]*data-support="poster"/)
-  assert.deepEqual(phrases.map((p) => [p.couleur, p.titre]), [['rose', 'Le rose : l’énergie de la rue.'], ['bleu', 'Le bleu : la force.'], ['jaune', 'Le jaune : l’emblème.']])
-  assert.equal(attributs['data-arretees'], 'rose bleu jaune')
-})
-
-test('rendu : dans une autre langue, les libellés et les textes traduits par Shopify, tels quels', { skip: SKIP }, async () => {
-  const anglais = BOUTIQUE.map((c) => ({ ...c, label: { or: 'Gold', bleu: 'Blue', rose: 'Pink' }[c.system.handle] || c.label }))
-  const p = avecCouleurs({ arretees: [], declarees: [] })
-  p.metafields.artwork.colors = { value: ['bleu', 'or'].map((h) => anglais.find((c) => c.system.handle === h)) }
-  p.metafields.artwork.color_text_1 = { value: 'Blue: confidence. It shapes the hero’s face.' }
-  p.metafields.artwork.color_text_2 = { value: 'Gold: the glow. A soft light, like a lamp left on.' }
-  const { phrases, noms } = tempsDeux(await render(p, { lang: 'en' }))
-  assert.deepEqual(noms, [['bleu', 'Blue'], ['or', 'Gold']])
-  assert.deepEqual(phrases.map((ph) => [ph.titre, ph.texte]), [['Blue: confidence.', 'It shapes the hero’s face.'], ['Gold: the glow.', 'A soft light, like a lamp left on.']])
-})
-
-test('les textes de la scène ne changent pas : le temps 2 n’a besoin d’aucun texte fixe de plus', () => {
-  for (const file of Object.values(LANGS)) {
-    const scene = json(`locales/${file}`).sections.mma.galerie.scene
-    assert.ok(scene.colors && scene.colors_title_html, file)
-  }
-})
 
 /* ---------- La section des couleurs à toucher (ticket 28) ----------
    sections/galerie-couleurs.liquid, juste après la scène : l'œuvre en couleurs, une pastille et une phrase par couleur

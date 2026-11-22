@@ -775,13 +775,11 @@
           "bubble": "Allô, j’écoute !"
         },
         "scene": {
-          "label": "L’œuvre en quatre temps : le regard, les couleurs, la lumière, la matière",
-          "steps": "Les quatre temps",
+          "label": "L’œuvre en trois temps : le regard, la lumière, la matière",
+          "steps": "Les trois temps",
           "look": "Le regard",
           "look_title_html": "Impossible de passer devant <b>sans s’arrêter.</b>",
           "look_text": "Un regard suffit pour être happé. Et on y revient : il reste toujours un détail à découvrir.",
-          "colors": "Les couleurs",
-          "colors_title_html": "Chaque couleur <b>agit sur vous.</b>",
           "light": "La lumière",
           "light_title_html": "Éclairé <b>comme au musée.</b>",
           "light_off": "Le soir, sans lumière.",

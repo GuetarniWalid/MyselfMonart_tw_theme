@@ -389,13 +389,11 @@
           "bubble": "Ich bin ganz Ohr!"
         },
         "scene": {
-          "label": "Das Werk in vier Momenten: der Blick, die Farben, das Licht, das Material",
-          "steps": "Die vier Momente",
+          "label": "Das Werk in drei Momenten: der Blick, das Licht, das Material",
+          "steps": "Die drei Momente",
           "look": "Der Blick",
           "look_title_html": "Daran kommt <b>niemand vorbei.</b>",
           "look_text": "Ein Blick genügt, und man ist gefesselt. Und man schaut immer wieder hin: Es gibt stets noch ein Detail zu entdecken.",
-          "colors": "Die Farben",
-          "colors_title_html": "Jede Farbe <b>wirkt auf Sie.</b>",
           "light": "Das Licht",
           "light_title_html": "Beleuchtet <b>wie im Museum.</b>",
           "light_off": "Abends, ohne Licht.",
