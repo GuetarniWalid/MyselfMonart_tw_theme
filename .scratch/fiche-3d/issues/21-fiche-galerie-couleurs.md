@@ -27,6 +27,8 @@ L'identifiant d'un métaobjet donne la couleur au moteur (`bleu`, `vert`, `noir`
 
 **Blocked by:** 20 (la scène). Le ticket 25 (serveur) peut arriver avant ou après : sans ses métachamps, la page suit les cas 2 et 3.
 
+**Remplacé le 22/11/2026 par le ticket 28** (`28-fiche-galerie-couleurs-a-toucher.md`). Les clients touchaient les pastilles sans comprendre qu'il fallait faire défiler la page. Les couleurs ont maintenant leur propre section, à toucher, et la scène a trois temps. Les règles des données ci-dessus (cas 1, noir et blanc) restent valables.
+
 **Status:** done, en ligne le 20/11/2026 (`fbdae20` les couleurs, `4c97f15` le texte d'aide de la section raccourci : Shopify refusait le schéma, 561 caractères pour 500).
 
 Vérifié en ligne le 20/11 sur la toile et le poster Superman : le serveur écrit les trois couleurs arrêtées (`data-arretees` : bleu rose jaune pour la toile, rose bleu jaune pour le poster), leurs noms (Bleu, Rose, Jaune) et leurs trois phrases, titre en gras ; à l'écran, l'œuvre passe en gris pâle, puis chaque couleur revient seule avec sa pastille cerclée et sa phrase, dans l'ordre du produit, puis la nuit du temps 3. Le moteur du thème (`assets/galerie-couleurs.js`) est identique à l'octet à celui du dossier d'essai et du serveur. Calcul dans un Worker, à l'approche de la scène. Pas vérifié : un vrai téléphone, Safari et Firefox (sans OffscreenCanvas dans un Worker, iOS avant 16.4 : l'œuvre reste en couleurs, sans pastilles, les phrases défilent quand même), les phrases dans les autres langues (traduites la nuit, ticket 26).
