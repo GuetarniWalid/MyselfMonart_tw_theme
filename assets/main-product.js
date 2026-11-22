@@ -980,10 +980,12 @@ function mmaFramedSizeFor(size, input) {
   const carries = (s) => mmaSells(s, option2, option3, variants);
   return sizes.slice(0, Math.max(0, at)).reverse().find(carries) || sizes.slice(at + 1).find(carries) || null;
 }
-// « 90x120 cm » -> « 90 × 120 », espaces fines insécables comme la fiche 3D.
+// « 90x120 cm » -> « 90 × 120 », espaces fines insécables comme la fiche 3D. Les langues anglaises donnent
+// des pouces, au dixième (« 35.4x47.2 in ») : « 35.4 × 47.2 in », l'unité gardée. Le 22/11/2026, le message
+// des cadres de la fiche anglaise y lisait « 5 × 39 ».
 function mmaSizeName(value) {
-  const match = /(\d+)\s*[x×]\s*(\d+)/i.exec(value || '');
-  return match ? `${match[1]} × ${match[2]}` : value || '';
+  const match = /(\d+(?:[.,]\d+)?)\s*[x×]\s*(\d+(?:[.,]\d+)?)\s*(in(?:ch(?:es)?)?\b)?/i.exec(value || '');
+  return match ? `${match[1]} × ${match[2]}${match[3] ? ' in' : ''}` : value || '';
 }
 const mmaFill = (text, vars) => (text || '').replace(/\{(\w+)\}/g, (_, key) => (vars[key] === undefined ? '' : vars[key]));
 
