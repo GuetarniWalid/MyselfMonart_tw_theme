@@ -62,6 +62,7 @@ Légende statut : 🔜 à démarrer · 🟡 en cours · ✅ déployée · 📈 e
 | **Nettoyage marchés × langues** (5 947 URLs retirées, hreflang 58 → 32) | 2026-07-30 | ✅ **Pari gagné** : `/de-de/` ×6 et `/es-es/` ×5 en impressions/jour ; versions génériques et pays gardées ×3,5 à ×12 ; anglais +23 % au total | [i18n-markets-cleanup-plan.md](i18n-markets-cleanup-plan.md) |
 | **Fiches Shopping gratuites** (autofeed Merchant Center) | 2026-08-05 | Canal mort depuis juillet 2025 (≤ 5 clics/mois) → **462 clics en septembre** ; 11 484 produits approuvés sur 12 671 ; 293 refusés : 280 pour la livraison et 13 sans prix, corrigés le 2026-10-04 (cf. points 3 et 4 ci-dessous) | Merchant API v1, rapport de performance |
 | **Correctifs pagination + images des vignettes** | 2026-10-04 (`e2049eb`, `a0dbb5c`) | ✅ Déployés et vérifiés en ligne (détail ci-dessous). Effet GSC à lire début novembre | Échéancier |
+| **Cocon des collections** (plan validé par Walid) | 2026-11-22 | Collections créées au fil de l'eau dès 20 tableaux. Veilleur horaire du backend (tags et jauges), pastilles des sous-collections sur chaque page de collection, case Série du Publisher, routine quotidienne (au plus 10 créations par jour). Première vague de 10 collections en ligne. Lecture GSC à faire mi-décembre | [cocon/README.md](cocon/README.md), [carte vivante](https://claude.ai/artifact/BVe1r3KNmDx6GWB3Y6wbWY) |
 
 ### Correctifs du 2026-10-04 (appliqués et vérifiés)
 
@@ -96,7 +97,8 @@ Vérifications en ligne après déploiement (run GitHub Actions vert, « Aucun f
 | **~2026-11-01** | Check GSC : « tableau cuisine » doit revenir sur la page 1 ; part des `?page=N` dans les impressions des collections sous 3 % | Correctifs | ☐ |
 | ~2026-10-30 | Snapshot collections **J146** : « lance le suivi SEO des collections », procédure dans `suivi-collections-README.md` | 46 collections | ☐ |
 | mi-novembre | Dernier contrôle du head term « tableau décoration murale » sur la home, puis clôture de la mission 1 | Homepage | ☐ |
-| novembre-décembre | Surveiller le [tableau de bord Google](https://status.search.google.com/products/rGHU1u87FJnkP6W2GwMi/history) : une core update de fin d'année est probable. **Aucun changement d'URLs, de marchés ou de templates collection pendant la saison cadeaux**, pour pouvoir lire son effet | Tout | ☐ |
+| novembre-décembre | Surveiller le [tableau de bord Google](https://status.search.google.com/products/rGHU1u87FJnkP6W2GwMi/history) : une core update de fin d'année est probable. **Aucun changement d'URLs, de marchés ou de templates collection pendant la saison cadeaux**, pour pouvoir lire son effet. Exception décidée par Walid le 22/11 : le cocon des collections avance au fil de l'eau (nouvelles adresses seulement, plus une fusion avec redirection) | Tout | ☐ |
+| ~2026-12-15 | Cocon : première lecture GSC des collections créées depuis le 22/11 (indexation, impressions, requêtes visées), et des pages racines avec leurs pastilles | Cocon | ☐ |
 
 > ⚠️ Les rappels email automatiques sont désactivés (Walid relance manuellement). Quand il dit « lance le suivi SEO », exécuter le check avec le connecteur Claude « Search Console » (outil `performances`), consigner le résultat dans le `FOLLOWUP.md` de la mission et cocher ci-dessus.
 > ⚠️ **Toujours vérifier le calendrier des core updates avant de lire un suivi**, et comparer des fenêtres de 28 jours aux mêmes jours de semaine.
