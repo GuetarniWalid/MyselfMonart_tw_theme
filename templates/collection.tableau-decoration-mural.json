@@ -14,10 +14,6 @@
       "type": "breadcrumb",
       "settings": {}
     },
-    "sous_collections": {
-      "type": "sous-collections",
-      "settings": {}
-    },
     "collections_grid_tghmpm": {
       "type": "collections-pages-grid",
       "blocks": {
@@ -488,7 +484,6 @@
   },
   "order": [
     "cf6565ea-5338-4b92-985b-b5b0824700db",
-    "sous_collections",
     "collections_grid_tghmpm",
     "main-collection-product-grid",
     "badges_L9nCbF",

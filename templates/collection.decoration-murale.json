@@ -10,10 +10,6 @@
 {
   "layout": "collection",
   "sections": {
-    "sous_collections": {
-      "type": "sous-collections",
-      "settings": {}
-    },
     "collections_grid_q33zjw": {
       "type": "collections-pages-grid",
       "blocks": {
@@ -279,7 +275,6 @@
     }
   },
   "order": [
-    "sous_collections",
     "collections_grid_q33zjw",
     "main-collection-product-grid",
     "rich_text_ynDdrH",

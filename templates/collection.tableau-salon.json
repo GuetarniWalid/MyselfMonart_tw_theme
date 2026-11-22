@@ -14,10 +14,6 @@
       "type": "breadcrumb",
       "settings": {}
     },
-    "sous_collections": {
-      "type": "sous-collections",
-      "settings": {}
-    },
     "main-collection-product-grid": {
       "type": "main-collection-product-grid",
       "settings": {
@@ -194,7 +190,6 @@
   },
   "order": [
     "breadcrumb",
-    "sous_collections",
     "main-collection-product-grid",
     "collection_editorial_intro",
     "related_carousel",

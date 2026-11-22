@@ -14,10 +14,6 @@
       "type": "breadcrumb",
       "settings": {}
     },
-    "sous_collections": {
-      "type": "sous-collections",
-      "settings": {}
-    },
     "collections_pages_grid_mdxnY9": {
       "type": "collections-pages-grid",
       "blocks": {
@@ -116,7 +112,6 @@
   },
   "order": [
     "cf6565ea-5338-4b92-985b-b5b0824700db",
-    "sous_collections",
     "collections_pages_grid_mdxnY9",
     "main-collection-product-grid",
     "main-collection-banner",

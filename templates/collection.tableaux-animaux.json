@@ -38,10 +38,6 @@
       "type": "breadcrumb",
       "settings": {}
     },
-    "sous_collections": {
-      "type": "sous-collections",
-      "settings": {}
-    },
     "main-collection-product-grid": {
       "type": "main-collection-product-grid",
       "settings": {
@@ -116,7 +112,6 @@
   "order": [
     "collections_pages_grid_G6Db6e",
     "cf6565ea-5338-4b92-985b-b5b0824700db",
-    "sous_collections",
     "main-collection-product-grid",
     "main-collection-banner",
     "badges_YArLKH"

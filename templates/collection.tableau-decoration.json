@@ -14,10 +14,6 @@
       "type": "breadcrumb",
       "settings": {}
     },
-    "sous_collections": {
-      "type": "sous-collections",
-      "settings": {}
-    },
     "main-collection-banner": {
       "type": "main-collection-banner",
       "settings": {
@@ -94,7 +90,6 @@
   },
   "order": [
     "cf6565ea-5338-4b92-985b-b5b0824700db",
-    "sous_collections",
     "main-collection-banner",
     "main-collection-product-grid",
     "0a4d0ad2-05f5-4939-8b62-ad000c188ded"

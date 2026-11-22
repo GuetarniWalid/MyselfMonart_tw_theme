@@ -14,10 +14,6 @@
       "type": "breadcrumb",
       "settings": {}
     },
-    "sous_collections": {
-      "type": "sous-collections",
-      "settings": {}
-    },
     "main-collection-product-grid": {
       "type": "main-collection-product-grid",
       "disabled": true,
@@ -284,7 +280,6 @@
   },
   "order": [
     "cf6565ea-5338-4b92-985b-b5b0824700db",
-    "sous_collections",
     "main-collection-product-grid",
     "collections_grid_cKWm7i",
     "rich_text_fw8KVN",
