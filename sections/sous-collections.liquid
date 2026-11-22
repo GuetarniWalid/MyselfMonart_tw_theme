@@ -77,8 +77,10 @@
           {%- if sc_n.parent != sc_page -%}{%- continue -%}{%- endif -%}
           {%- if sc_racine and sc_n.rayon != sc_rayon -%}{%- continue -%}{%- endif -%}
           {%- unless sc_decisions_montrees contains sc_n.decision -%}{%- continue -%}{%- endunless -%}
+          {%- comment -%} Une collection pas encore créée rend un objet vide, dont le compte est une chaîne : plus: 0 en fait un nombre. {%- endcomment -%}
           {%- assign sc_col = collections[sc_n.id] -%}
-          {%- if sc_col.all_products_count > 0 -%}
+          {%- assign sc_nb = sc_col.all_products_count | plus: 0 -%}
+          {%- if sc_col.id != blank and sc_nb > 0 -%}
             <li class="shrink-0"><a href="{{ sc_col.url }}" class="pastille-collection{% if sc_n.rayon == 'bestseller' %} pastille-collection--best-seller{% endif %}">{{ sc_col.title | escape }}</a></li>
           {%- endif -%}
         {%- endfor -%}
