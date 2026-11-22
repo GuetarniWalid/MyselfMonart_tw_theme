@@ -206,6 +206,17 @@
       "read_full_guide": "Lees de volledige gids",
       "learn_more": "Verder lezen:"
     },
+    "sous_collections": {
+      "nav": "Subcollecties",
+      "rayons": {
+        "piece": "Kamers",
+        "style": "Stijlen",
+        "sujet": "Onderwerpen",
+        "couleur": "Kleuren",
+        "inspiration": "Inspiraties",
+        "personnalise": "Gepersonaliseerd"
+      }
+    },
     "mma": {
       "add_to_favorites": "Toevoegen aan favorieten",
       "add_artwork_to_favorites": "Dit schilderij toevoegen aan mijn favorieten",

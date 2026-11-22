@@ -445,6 +445,17 @@
       "faq_heading": "Your questions about {{ title }}",
       "learn_more": "Further reading:"
     },
+    "sous_collections": {
+      "nav": "Subcollections",
+      "rayons": {
+        "piece": "Rooms",
+        "style": "Styles",
+        "sujet": "Subjects",
+        "couleur": "Colours",
+        "inspiration": "Inspirations",
+        "personnalise": "Personalized"
+      }
+    },
     "mma": {
       "add_to_favorites": "Add to favorites",
       "remove_from_favorites": "Remove from favorites",

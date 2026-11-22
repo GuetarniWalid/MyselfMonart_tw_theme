@@ -203,6 +203,17 @@
       "faq_heading": "Tus preguntas sobre {{ title }}",
       "learn_more": "Para saber más:"
     },
+    "sous_collections": {
+      "nav": "Subcolecciones",
+      "rayons": {
+        "piece": "Estancias",
+        "style": "Estilos",
+        "sujet": "Temas",
+        "couleur": "Colores",
+        "inspiration": "Inspiraciones",
+        "personnalise": "Personalizados"
+      }
+    },
     "mma": {
       "add_to_favorites": "Añadir a favoritos",
       "add_artwork_to_favorites": "Añadir este cuadro a mis favoritos",

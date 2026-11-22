@@ -204,6 +204,17 @@
       "learn_more": "Mehr erfahren:",
       "faq_heading": "Ihre Fragen zu {{ title }}"
     },
+    "sous_collections": {
+      "nav": "Unterkollektionen",
+      "rayons": {
+        "piece": "Räume",
+        "style": "Stile",
+        "sujet": "Motive",
+        "couleur": "Farben",
+        "inspiration": "Inspirationen",
+        "personnalise": "Personalisiert"
+      }
+    },
     "mma": {
       "remove_from_favorites": "Aus Favoriten entfernen",
       "add_artwork_to_favorites": "Dieses Bild zu meinen Favoriten hinzufügen",

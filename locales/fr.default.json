@@ -590,6 +590,17 @@
       "faq_heading": "Vos questions sur {{ title }}",
       "learn_more": "Pour aller plus loin :"
     },
+    "sous_collections": {
+      "nav": "Sous-collections",
+      "rayons": {
+        "piece": "Pièces",
+        "style": "Styles",
+        "sujet": "Sujets",
+        "couleur": "Couleurs",
+        "inspiration": "Inspirations",
+        "personnalise": "Personnalisés"
+      }
+    },
     "mma": {
       "add_to_favorites": "Ajouter aux favoris",
       "remove_from_favorites": "Retirer des favoris",

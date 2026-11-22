@@ -2030,6 +2030,15 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
     @apply grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-4 sm:gap-y-8 md:gap-y-10 pb-3;
   }
 
+  /* Pastille vers une sous-collection (sections/sous-collections.liquid) : un lien en capsule, à l'ombre « neu »
+     du thème, qui s'y enfonce au toucher. Celle du best-seller prend le fond de la marque. */
+  .pastille-collection {
+    @apply inline-flex items-center min-h-10 md:min-h-9 px-4 rounded-full border border-main bg-secondary text-sm font-medium leading-tight text-main whitespace-nowrap shadow-neu-sm transition-[box-shadow,transform,background-color] duration-100 ease-out hover:bg-buy-button-20 hover:shadow-neu-xs active:translate-x-0.5 active:translate-y-[3px] active:shadow-none motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-main focus-visible:ring-offset-2 focus-visible:ring-offset-secondary;
+  }
+  .pastille-collection--best-seller {
+    @apply bg-buy-button font-semibold hover:bg-buy-button-70;
+  }
+
   .close-nav {
     @apply translate-y-full -translate-x-full md:translate-y-0 md:translate-x-0;
   }

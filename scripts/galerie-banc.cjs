@@ -7,6 +7,8 @@
 // Ce fichier n'est pas un test : npm test ne lance que scripts/*.test.cjs.
 // Un test de section qui a besoin d'un filtre de plus l'ajoute à son moteur, dans son propre fichier
 // (engine(lang).registerFilter(…)) : chaque fichier de test tourne dans son propre processus.
+// Hors de la galerie, scripts/sous-collections.test.cjs prend ici la lecture des fichiers et le moteur par langue
+// (engine), avec ses propres données : une page de collection, pas un produit.
 const fs = require('fs')
 const path = require('path')
 const bonsai = require('./fixtures/oeuvre-3d-bonsai.json')
