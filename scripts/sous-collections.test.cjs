@@ -6,7 +6,9 @@
 // Lancer : NODE_PATH=<un node_modules qui a liquidjs> node --test scripts/sous-collections.test.cjs
 const test = require('node:test')
 const assert = require('node:assert/strict')
-const { read, SKIP, engine } = require('./galerie-banc.cjs')
+const fs = require('fs')
+const path = require('path')
+const { ROOT, read, json, SKIP, engine } = require('./galerie-banc.cjs')
 const PLAN = require('./fixtures/cocon-plan.json')
 
 const FILE = 'sections/sous-collections.liquid'
@@ -220,4 +222,23 @@ test('ailleurs qu’à la racine, une seule rangée, sans libellé', { skip: SKI
   assert.deepEqual(groups(render({ page: collections['tableau-animaux'], collections })), [
     { name: null, links: ['Tableau Chevaux', 'Tableau Lion', 'Tableau Oiseaux', 'Tableau Chat'] },
   ])
+})
+
+/* ---------- Les modèles de collection ---------- */
+
+test('chaque modèle de collection pose les pastilles juste sous le fil d’Ariane, avant la grille', () => {
+  const files = fs.readdirSync(path.join(ROOT, 'templates')).filter((name) => /^collection(\.[^.]+)?\.json$/.test(name))
+  assert.ok(files.includes('collection.json'), 'le modèle par défaut')
+  for (const file of files) {
+    const { sections, order } = json(`templates/${file}`)
+    const keys = Object.keys(sections).filter((key) => sections[key].type === 'sous-collections')
+    assert.equal(keys.length, 1, `${file} : une section des pastilles`)
+    assert.ok(!sections[keys[0]].disabled, `${file} : active`)
+    const at = order.indexOf(keys[0])
+    // Sans fil d'Ariane (decoration-murale), en tête de page.
+    const crumb = order.findIndex((key) => sections[key].type === 'breadcrumb')
+    assert.equal(at, crumb + 1, `${file} : juste sous le fil d’Ariane`)
+    const grid = order.findIndex((key) => sections[key].type === 'main-collection-product-grid')
+    assert.ok(grid < 0 || at < grid, `${file} : avant la grille des produits`)
+  }
 })
