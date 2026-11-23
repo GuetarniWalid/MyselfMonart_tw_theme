@@ -840,6 +840,23 @@
         }
       },
       "collection": {
+        "bas": {
+          "sujets": {
+            "surtitre": "Autres sujets",
+            "titre_html": "Envie d’un autre <b>sujet ?</b>",
+            "bulle": "On va voir à côté ?"
+          },
+          "guide": {
+            "surtitre": "Le guide",
+            "titre_html": "Suivez <b>le guide.</b>",
+            "texte": "Tout ce qu’il faut savoir pour bien choisir parmi les {{ titre }} : le sujet, le format, la place au mur.",
+            "lire": "Lire le guide",
+            "refermer": "Refermer le guide"
+          },
+          "questions": {
+            "titre_html": "Vos questions sur <b>{{ titre }}</b>"
+          }
+        },
         "emblemes": {
           "tableaux": {
             "one": "{{ count }} tableau",

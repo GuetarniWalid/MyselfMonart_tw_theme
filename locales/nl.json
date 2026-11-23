@@ -456,6 +456,23 @@
         }
       },
       "collection": {
+        "bas": {
+          "sujets": {
+            "surtitre": "Andere onderwerpen",
+            "titre_html": "Zin in een ander <b>onderwerp?</b>",
+            "bulle": "Even verderop kijken?"
+          },
+          "guide": {
+            "surtitre": "De gids",
+            "titre_html": "Volg <b>de gids.</b>",
+            "texte": "Alles wat je moet weten om goed te kiezen uit onze {{ titre }}: het onderwerp, het formaat, de plek aan de muur.",
+            "lire": "Lees de gids",
+            "refermer": "Sluit de gids"
+          },
+          "questions": {
+            "titre_html": "Jouw vragen over <b>{{ titre }}</b>"
+          }
+        },
         "emblemes": {
           "tableaux": {
             "one": "{{ count }} schilderij",

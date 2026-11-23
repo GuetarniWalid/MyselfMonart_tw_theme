@@ -16,10 +16,13 @@
   markup repris à l'identique de collection-editorial.liquid + collapsible-content.liquid.
   Tailwind only · vars globales · a11y (<details> natifs, focus-visible, motion-reduce) · 1 seul H1 (aucun ici).
 
-  Paramètres (nouvelle page collection, dossier .scratch/collection-design, ticket 02) :
+  Paramètres (nouvelle page collection, dossier .scratch/collection-design, tickets 02 et 08) :
    - partie : 'tout' (par défaut) écrit le bloc d'aujourd'hui, en entier. Une seule partie s'écrit sans l'enveloppe
-     <section> : 'intro', le h1 et le paragraphe de l'accroche, sans leur bande, que l'entrée de la nouvelle page
-     (sections/collection-refonte.liquid) pose dans sa mise en page ; 'guide' et 'faq', leur bloc d'aujourd'hui.
+     <section>, pour une section de la nouvelle page qui la pose dans sa mise en page :
+       'intro' : le h1 et le paragraphe de l'accroche, sans leur bande (l'entrée, sections/collection-refonte.liquid) ;
+       'guide' : le texte du guide, puis le paragraphe « Pour aller plus loin », sans volet ni bande (la carte du guide,
+         sections/collection-guide.liquid) ;
+       'faq-ld' : la liste FAQPage seule (les questions, sections/collection-questions.liquid, qui écrit ses volets).
    - titre : faux retire le h1 (vrai par défaut). L'entrée de la nouvelle page écrit le sien : elle demande
      partie: 'intro', titre: false.
   Les textes sont traités de même dans tous les cas : jetons Trustpilot, retours à la ligne, rien après la page 1.
@@ -64,7 +67,7 @@
       assign ed_faq = ''
     when 'guide'
       assign ed_faq = ''
-    when 'faq'
+    when 'faq-ld'
       assign ed_guide = ''
   endcase
   assign ed_titre = true
@@ -94,6 +97,33 @@
 
   {%- comment -%} 2) Guide profond — replié dans <details> (réutilise .collection-description + tw-icon-chevron). {%- endcomment -%}
   {%- if ed_guide != blank -%}
+    {%- comment -%} Pour aller plus loin : les articles de blog et les pages du champ custom.cocon_links, préservés de
+      l'ancienne description masquée par le banner. Ses liens de collection ne s'affichent plus depuis le 23/11/2026
+      (cocon sémantique, décision de Walid) : la mère est dans le fil d'Ariane, les filles dans les pastilles du haut,
+      les sœurs et la jumelle dans le bas de page (snippets/cocon-famille.liquid), tous tirés du plan. Les afficher
+      ici aussi répétait les mêmes liens, ou menait vers d'autres branches. {%- endcomment -%}
+    {%- liquid
+      assign ed_plus_loin = ''
+      for l in ed_cocon
+        if l.url contains '/collections/'
+          continue
+        endif
+        # Blog, page : l'adresse française garde la langue et le marché de la page.
+        capture l_url
+          render 'localized-links', url: l.url
+        endcapture
+        assign l_label = l.label | escape
+        if ed_plus_loin != ''
+          assign ed_plus_loin = ed_plus_loin | append: ' &middot; '
+        endif
+        assign ed_plus_loin = ed_plus_loin | append: '<a href="' | append: l_url | append: '">' | append: l_label | append: '</a>'
+      endfor
+    -%}
+    {%- comment -%} La partie « guide » : le texte et ses liens, sans volet ni bande ; la carte du guide les pose. {%- endcomment -%}
+    {%- if ed_partie == 'guide' -%}
+      {{- ed_guide -}}
+      {%- if ed_plus_loin != '' -%}<p><strong>{{ 'sections.collection_editorial.learn_more' | t }}</strong> {{ ed_plus_loin }}</p>{%- endif -%}
+    {%- else -%}
     <div class="bg-main-5 w-full py-8 md:py-12">
       <div class="max-w-3xl mx-auto px-4 md:px-6">
         <details class="collection-guide group border-t border-b border-main-10">
@@ -107,28 +137,6 @@
             {{ ed_guide }}
           </div>
         </details>
-        {%- comment -%} Pour aller plus loin : les articles de blog et les pages du champ custom.cocon_links, préservés de
-          l'ancienne description masquée par le banner. Ses liens de collection ne s'affichent plus depuis le 23/11/2026
-          (cocon sémantique, décision de Walid) : la mère est dans le fil d'Ariane, les filles dans les pastilles du haut,
-          les sœurs et la jumelle dans le bas de page (snippets/cocon-famille.liquid), tous tirés du plan. Les afficher
-          ici aussi répétait les mêmes liens, ou menait vers d'autres branches. {%- endcomment -%}
-        {%- liquid
-          assign ed_plus_loin = ''
-          for l in ed_cocon
-            if l.url contains '/collections/'
-              continue
-            endif
-            # Blog, page : l'adresse française garde la langue et le marché de la page.
-            capture l_url
-              render 'localized-links', url: l.url
-            endcapture
-            assign l_label = l.label | escape
-            if ed_plus_loin != ''
-              assign ed_plus_loin = ed_plus_loin | append: ' &middot; '
-            endif
-            assign ed_plus_loin = ed_plus_loin | append: '<a href="' | append: l_url | append: '">' | append: l_label | append: '</a>'
-          endfor
-        -%}
         {%- if ed_plus_loin != '' -%}
           <p class="font-roboto text-[15px] leading-[1.7] text-main-70 pt-6 [&_a]:text-terra [&_a]:underline">
             <strong class="text-main">{{ 'sections.collection_editorial.learn_more' | t }}</strong> {{ ed_plus_loin }}
@@ -136,10 +144,13 @@
         {%- endif -%}
       </div>
     </div>
+    {%- endif -%}
   {%- endif -%}
 
   {%- comment -%} 3) FAQ — accordéon repris de collapsible-content.liquid, piloté par le metafield json custom.faq. {%- endcomment -%}
   {%- if ed_faq != blank and ed_faq.size > 0 -%}
+    {%- comment -%} La partie « faq-ld » : la liste FAQPage seule ; les questions de la nouvelle page écrivent leurs volets. {%- endcomment -%}
+    {%- unless ed_partie == 'faq-ld' -%}
     <div class="collapsible-content bg-secondary text-main w-full py-10 md:py-14" aria-labelledby="faq-auto-{{ collection.id }}">
       <div class="max-w-[760px] mx-auto px-6 text-center mb-10 md:mb-16">
         <p class="font-roboto text-xs font-medium tracking-[0.18em] uppercase text-terra mb-4">FAQ</p>
@@ -177,6 +188,7 @@
       (defer → <collapsible-tab> est défini à temps). Un 2e include le ferait tourner 2x sur la page
       et casserait les images placeholder (replacePlaceholderImages → srcset="null"). {%- endcomment -%}
     </div>
+    {%- endunless -%}
 
     {%- comment -%} JSON-LD FAQPage — source unique = le metafield faq (n'émettre que sur de vraies FAQ). {%- endcomment -%}
     <script type="application/ld+json">

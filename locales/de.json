@@ -454,6 +454,23 @@
         }
       },
       "collection": {
+        "bas": {
+          "sujets": {
+            "surtitre": "Weitere Motive",
+            "titre_html": "Lust auf ein anderes <b>Motiv?</b>",
+            "bulle": "Schauen wir mal nebenan?"
+          },
+          "guide": {
+            "surtitre": "Der Ratgeber",
+            "titre_html": "Folgen Sie <b>dem Ratgeber.</b>",
+            "texte": "Alles, was Sie wissen müssen, um unter unseren {{ titre_exact }} gut zu wählen: das Motiv, das Format, der Platz an der Wand.",
+            "lire": "Ratgeber lesen",
+            "refermer": "Ratgeber schließen"
+          },
+          "questions": {
+            "titre_html": "Ihre Fragen zu <b>{{ titre_exact }}</b>"
+          }
+        },
         "emblemes": {
           "tableaux": {
             "one": "{{ count }} Bild",

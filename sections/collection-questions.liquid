@@ -1,0 +1,101 @@
+{%- comment -%}
+  Les questions de la nouvelle page collection (vue ?view=refonte, modèle templates/collection.refonte.json, dossier
+  .scratch/collection-design, ticket 08 ; décision 9 de Walid), après le guide, au dessin des questions de la fiche 3D
+  (sections/galerie-questions.liquid) : sur fond crème, le surtitre, « Vos questions sur tableaux nature », les
+  questions en volets, et la carte ciel « Une autre question ? » où la Joconde au casque dit « Allô, j'écoute ! ».
+  - Les questions et leurs réponses : celles de collection.metafields.custom.faq, comme aujourd'hui (une question sans
+    réponse, ou l'inverse, ne se montre pas), chacune passée par snippets/trustpilot-tokens.liquid. Les volets sont
+    ceux du thème : <collapsible-tab> (assets/tw-global.js, chargé par toute page) et ses <details class="accordion">,
+    un seul ouvert à la fois ; un clic dans une réponse la referme. Le rond « + » est dessiné par la feuille :
+    data-allow-empty l'excepte de la règle *:empty d'input.css.
+  - La liste FAQPage : exactement celle d'aujourd'hui, écrite par snippets/collection-editorial-auto.liquid (partie
+    « faq-ld »), qui en garde les règles : rien après la page 1, rien sans question.
+  - Comme aujourd'hui (sections/main-collection-product-grid.liquid), les questions ne s'écrivent qu'avec un guide :
+    vider custom.guide retire tous les textes d'une collection, FAQPage comprise (seo/collections-applied-log.md).
+  - Le titre porte le nom de la collection, en minuscules comme le titre des questions d'aujourd'hui (en allemand, tel
+    qu'il s'écrit). Les textes de la carte ciel sont ceux de la fiche 3D (sections.mma.galerie.questions) ; son bouton
+    mène à la page de contact (réglage, comme sur la fiche 3D).
+  - La Joconde, son casque (le dessin de la fiche 3D, recopié : la fiche ne doit pas bouger) et sa bulle : un décor,
+    caché aux lecteurs d'écran, jamais nommé.
+  Sans question à montrer, la section n'écrit rien. Styles : bloc « Bas de page (ticket 08) » de
+  assets/collection-refonte.css. Textes : sections.mma.collection.bas.questions. Tests : scripts/collection-bas.test.cjs.
+{%- endcomment -%}
+{%- liquid
+  # La liste FAQPage, seulement avec un guide (comme aujourd'hui). Le snippet la laisse vide sans questions et après
+  # la page 1 : les volets la suivent, ils ne s'écrivent que si elle s'écrit.
+  assign cq_ld = ''
+  if collection.metafields.custom.guide != blank
+    capture cq_ld
+      render 'collection-editorial-auto', partie: 'faq-ld'
+    endcapture
+  endif
+-%}
+{%- capture cq_volets -%}
+  {%- if cq_ld != blank -%}
+    {%- for item in collection.metafields.custom.faq.value -%}
+      {%- if item.q == blank or item.a == blank -%}{%- continue -%}{%- endif -%}
+      {%- capture cq_question -%}{%- render 'trustpilot-tokens', text: item.q -%}{%- endcapture -%}
+      <details class="accordion c-questions-volet">
+        <summary>
+          <h3>{{ cq_question | escape }}</h3>
+          <span class="c-questions-plus" aria-hidden="true" data-allow-empty></span>
+        </summary>
+        <div class="c-questions-reponse">{%- render 'trustpilot-tokens', text: item.a -%}</div>
+      </details>
+    {%- endfor -%}
+  {%- endif -%}
+{%- endcapture -%}
+{%- if cq_volets != blank -%}
+  {%- liquid
+    assign cq_id = section.id | append: '-titre'
+    assign cq_titre = collection.title | downcase
+  -%}
+  <section class="c-questions" id="questions" aria-labelledby="{{ cq_id }}">
+    <div class="c-questions-in">
+      <div class="c-questions-tete">
+        <p class="c-questions-surtitre">{{ 'sections.mma.galerie.questions.eyebrow' | t }}</p>
+        <h2 class="c-questions-titre" id="{{ cq_id }}">{{ 'sections.mma.collection.bas.questions.titre_html' | t: titre: cq_titre, titre_exact: collection.title }}</h2>
+      </div>
+      <collapsible-tab class="c-questions-volets">
+        {{- cq_volets -}}
+      </collapsible-tab>
+      <div class="c-questions-aide">
+        <p class="c-questions-aide-titre">{{ 'sections.mma.galerie.questions.help_title_html' | t }}</p>
+        <p class="c-questions-aide-texte">{{ 'sections.mma.galerie.questions.help_text' | t }}</p>
+        {%- if section.settings.contact_link != blank -%}
+          <a class="c-questions-bouton" href="{{ section.settings.contact_link }}">{{ 'sections.mma.galerie.questions.help_button' | t }}</a>
+        {%- endif -%}
+        <div class="c-questions-bas">
+          <p class="c-questions-bulle" aria-hidden="true">{{ 'sections.mma.galerie.questions.bubble' | t }}</p>
+          <div class="c-questions-ecoute" aria-hidden="true">
+            <img src="{{ 'galerie-ecoute.webp' | asset_url }}" width="572" height="810" alt="" loading="lazy" decoding="async">
+            <svg class="c-questions-casque" viewBox="0 0 572 810" focusable="false"><path class="c-questions-arceau" d="M197 152C188 48 240 4 287 4s107 44 100 148"/><rect x="178" y="130" width="32" height="58" rx="14"/><rect x="372" y="130" width="32" height="58" rx="14"/><path class="c-questions-tige" d="M194 184c-4 38 20 44 44 30"/><ellipse cx="246" cy="210" rx="12" ry="9"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  {{- cq_ld -}}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Collection : questions",
+  "limit": 1,
+  "enabled_on": {
+    "templates": ["collection"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Les questions de la collection (son métachamp custom.faq), en volets, et leurs données pour Google. Elles ne s'affichent qu'avec un guide, comme aujourd'hui. Les textes fixes sont dans les fichiers de langue."
+    },
+    {
+      "type": "url",
+      "id": "contact_link",
+      "label": "Lien du bouton « Nous écrire »",
+      "info": "Vide : pas de bouton."
+    }
+  ]
+}
+{% endschema %}

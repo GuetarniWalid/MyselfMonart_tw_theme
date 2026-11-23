@@ -340,22 +340,24 @@ test('l’éditorial sans son titre : le bloc d’aujourd’hui, sans le h1', { 
   }
 })
 
-test('l’éditorial, parties « guide » et « questions » : chacune seule, comme aujourd’hui', { skip: SKIP }, async () => {
+test('l’éditorial, parties « guide » et « faq-ld » : chacune seule, comme aujourd’hui', { skip: SKIP }, async () => {
+  // Leur rendu exact, pour la carte du guide et les questions de la nouvelle page : scripts/collection-bas.test.cjs
+  // (ticket 08).
   const vars = editoCases()['page 1, tous les textes']
   const avant = await renderEditoAvant(vars)
   const guide = await renderEdito(EDITO, vars, { partie: 'guide' })
   assert.match(guide, /Bien choisir/)
   assert.match(guide, /Un guide noté 4,2\/5\./)
   assert.match(guide, /Pour aller plus loin/)
-  assert.doesNotMatch(guide, /<h1\b|Respirez|Quelle taille|FAQPage|\[\[TP_/)
-  const faq = await renderEdito(EDITO, vars, { partie: 'faq' })
-  assert.match(faq, /Quelle taille \?/)
-  assert.doesNotMatch(faq, /<h1\b|Respirez|Bien choisir|\[\[TP_/)
-  // La liste FAQPage, celle d'aujourd'hui.
+  assert.doesNotMatch(guide, /<h1\b|Respirez|Quelle taille|FAQPage|<details|\[\[TP_/)
+  // La liste FAQPage seule, celle d'aujourd'hui.
+  const faq = (await renderEdito(EDITO, vars, { partie: 'faq-ld' })).trim()
+  assert.match(faq, /^<script type="application\/ld\+json">[\s\S]*<\/script>$/)
   assert.deepEqual(ldOf(faq).map((ld) => JSON.parse(ld)), ldOf(avant).map((ld) => JSON.parse(ld)))
   assert.equal(ldOf(faq).length, 1)
+  assert.doesNotMatch(faq, /<h[1-6]\b|<details|Respirez|Bien choisir|\[\[TP_/)
   // Rien après la page 1.
-  for (const partie of ['guide', 'faq']) assert.equal((await renderEdito(EDITO, editoCases()['page 2'], { partie })).trim(), '', partie)
+  for (const partie of ['guide', 'faq-ld']) assert.equal((await renderEdito(EDITO, editoCases()['page 2'], { partie })).trim(), '', partie)
 })
 
 /* ---------- L'entrée : le titre, l'interrupteur, l'intro ---------- */

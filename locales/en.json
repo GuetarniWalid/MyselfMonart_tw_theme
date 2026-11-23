@@ -695,6 +695,23 @@
         }
       },
       "collection": {
+        "bas": {
+          "sujets": {
+            "surtitre": "Other subjects",
+            "titre_html": "Fancy another <b>subject?</b>",
+            "bulle": "Shall we look next door?"
+          },
+          "guide": {
+            "surtitre": "The guide",
+            "titre_html": "Follow <b>the guide.</b>",
+            "texte": "Everything you need to know to choose well among our {{ titre }}: the subject, the size, the spot on the wall.",
+            "lire": "Read the guide",
+            "refermer": "Close the guide"
+          },
+          "questions": {
+            "titre_html": "Your questions about <b>{{ titre }}</b>"
+          }
+        },
         "emblemes": {
           "tableaux": {
             "one": "{{ count }} artwork",

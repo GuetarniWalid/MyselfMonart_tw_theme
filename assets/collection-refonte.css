@@ -957,3 +957,560 @@
 }
 
 /* === Entrée (ticket 02) : fin === */
+
+/* === Bas de page (ticket 08) : début === */
+
+/* Le bas de la page, après la grille (décision 9 de Walid ; blocs « 7. Les autres sujets », « 8. Le guide »,
+   « 9. Les questions », « Version 4 » et « Le mouvement » de la maquette) : « Envie d'un autre sujet ? »
+   (sections/collection-sujets.liquid), le guide (sections/collection-guide.liquid), puis les questions
+   (sections/collection-questions.liquid, au dessin des questions de la fiche 3D : bloc du ticket 23 de
+   assets/oeuvre-galerie.css). Trois personnages de tableaux anciens y illustrent sans jamais être des liens : le
+   couple, le voyageur, la Joconde au casque. */
+
+/* -- Communs aux trois sections : le surtitre en pastille, le grand titre maigre au mot gras, le bouton à l'encre,
+   la bulle d'un personnage -- */
+:root[data-refonte-page] :is(.c-sujets-surtitre, .c-guide-surtitre, .c-questions-surtitre) {
+  display: inline-flex;
+  align-items: center;
+  place-self: start;
+  margin: 0;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: var(--soleil);
+  font: 600 11.5px/1.2 var(--sans);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--encre);
+}
+:root[data-refonte-page] :is(.c-guide-surtitre, .c-questions-surtitre) {
+  background: var(--blanc);
+}
+:root[data-refonte-page] :is(.c-sujets-titre, .c-questions-titre) {
+  margin: 14px 0 0;
+  font: 300 clamp(36px, 10.4vw, 64px)/0.98 var(--sans);
+  letter-spacing: -0.042em;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+  color: var(--encre);
+}
+:root[data-refonte-page] :is(.c-sujets-titre, .c-guide-titre, .c-questions-titre, .c-questions-aide-titre) b {
+  font-weight: 700;
+}
+:root[data-refonte-page] :is(.c-guide-bouton, .c-questions-bouton) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  place-self: start;
+  min-height: 46px;
+  padding: 0 20px;
+  border-radius: 999px;
+  background: var(--encre);
+  font: 600 14px/1 var(--sans);
+  color: var(--blanc);
+  text-decoration: none;
+}
+:root[data-refonte-page] :is(.c-sujets-bulle, .c-questions-bulle) {
+  margin: 0;
+  padding: 9px 13px;
+  border-radius: 16px 16px 4px 16px;
+  background: var(--blanc);
+  box-shadow: 0 8px 18px var(--encre-12);
+  font: 600 14px/1.15 var(--sans);
+  letter-spacing: -0.012em;
+  white-space: nowrap;
+  color: var(--encre);
+  transform-origin: 100% 100%;
+}
+/* Le contenu de chaque section, à 1240 px au plus, entre les marges de la page (posées par la section). */
+:root[data-refonte-page] :is(.c-sujets-in, .c-guide-in, .c-questions-in) {
+  max-width: 1240px;
+  margin-inline: auto;
+}
+/* Les volets du guide et des questions : un résumé qu'on touche, sans le triangle du navigateur (input.css cache
+   aussi son marqueur dans Safari). */
+:root[data-refonte-page] :is(.c-guide-carte, .c-questions-volet) > summary {
+  list-style: none;
+  cursor: pointer;
+}
+/* Le texte des métachamps, dans le guide et dans les réponses : listes, gras, liens. */
+:root[data-refonte-page] :is(.c-guide-corps, .c-questions-reponse) ul {
+  padding-left: 1.2em;
+  list-style: disc;
+}
+:root[data-refonte-page] :is(.c-guide-corps, .c-questions-reponse) ol {
+  padding-left: 1.4em;
+  list-style: decimal;
+}
+:root[data-refonte-page] :is(.c-guide-corps, .c-questions-reponse) strong {
+  font-weight: 600;
+  color: var(--encre);
+}
+:root[data-refonte-page] :is(.c-guide-corps, .c-questions-reponse) a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+/* Au clavier, un contour à l'encre. Les emblèmes des sœurs ont le leur (bloc du ticket 03). */
+:root[data-refonte-page] :is(.c-guide, .c-questions) :is(a, summary):focus-visible {
+  outline: 2px solid var(--encre);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* -- « Envie d'un autre sujet ? » : le titre et le couple, puis les sœurs en grands emblèmes
+   (snippets/collection-embleme.liquid, data-taille="bas" : ronds de 104 px, 136 px sur ordinateur, au bloc du
+   ticket 03), sur deux colonnes, quatre sur ordinateur. La section coupe ce qui dépasse sur les côtés : l'image d'un
+   emblème, deux fois plus large que son rond, et le couple qui arrive de la droite ne débordent jamais de l'écran.
+   La bulle, elle, passe au-dessus de la section. -- */
+:root[data-refonte-page] .c-sujets {
+  position: relative;
+  overflow-x: clip;
+  padding: 60px var(--goutd) 6px var(--gout);
+}
+:root[data-refonte-page] .c-sujets-tete {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+}
+:root[data-refonte-page] .c-sujets-perso {
+  position: relative;
+  flex: none;
+  width: 82px;
+  margin: 0 -2px -18px 0;
+}
+:root[data-refonte-page] .c-sujets-perso img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+:root[data-refonte-page] .c-sujets-bulle {
+  position: absolute;
+  right: 34%;
+  bottom: 100%;
+  margin-bottom: 4px;
+}
+:root[data-refonte-page] .c-sujets-liste {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 10px;
+  margin: 26px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* -- Le guide : une carte pêche, un <details> natif. Fermée, son résumé occupe toute la carte (un toucher n'importe
+   où l'ouvre) ; le bouton montre « Lire le guide » ou « Refermer le guide » selon l'état du volet. Le voyageur se
+   tient en bas à droite du résumé, ouvert comme fermé ; le texte s'arrête avant lui. Ouvert, le guide dans une carte
+   blanche, sur deux colonnes sur ordinateur. -- */
+:root[data-refonte-page] .c-guide {
+  padding: 40px var(--goutd) 20px var(--gout);
+}
+:root[data-refonte-page] .c-guide-carte {
+  position: relative;
+  overflow: hidden;
+  overflow: clip;
+  border-radius: 28px;
+  background: var(--peche);
+}
+/* Une grille : ce que la carte a de hauteur en plus de son texte se partage entre ses rangées, qui s'aèrent (la
+   maquette). La pastille et le bouton restent en haut de la leur. */
+:root[data-refonte-page] .c-guide-carte summary {
+  position: relative;
+  display: grid;
+  min-height: 330px;
+  padding: 26px 22px 0;
+}
+/* Le contour du clavier, à l'intérieur de la carte, qui coupe ce qui la dépasse. */
+:root[data-refonte-page] .c-guide-carte summary:focus-visible {
+  outline-offset: -6px;
+  border-radius: 28px;
+}
+:root[data-refonte-page] .c-guide-titre {
+  margin: 14px 0 0;
+  font: 300 40px/0.98 var(--sans);
+  letter-spacing: -0.045em;
+  color: var(--encre);
+}
+:root[data-refonte-page] .c-guide-texte {
+  display: block;
+  margin-top: 12px;
+  font: 400 15.5px/1.5 var(--sans);
+  color: var(--encre-70);
+}
+:root[data-refonte-page] :is(.c-guide-titre, .c-guide-texte) {
+  max-width: calc(100% - 92px);
+}
+:root[data-refonte-page] .c-guide-bouton {
+  margin-top: 18px;
+}
+:root[data-refonte-page] .c-guide-carte[open] .c-guide-ouvrir,
+:root[data-refonte-page] .c-guide-carte:not([open]) .c-guide-fermer {
+  display: none;
+}
+:root[data-refonte-page] .c-guide-perso {
+  position: absolute;
+  right: 16px;
+  bottom: 0;
+  width: 84px;
+  pointer-events: none;
+  transform-origin: 50% 100%;
+}
+:root[data-refonte-page] .c-guide-perso img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+/* Le texte du guide (le métachamp custom.guide : h2, h3, paragraphes, listes, gras, liens), puis « Pour aller plus
+   loin ». */
+:root[data-refonte-page] .c-guide-corps {
+  position: relative;
+  z-index: 1;
+  margin: 22px 12px 12px;
+  padding: 22px 20px 6px;
+  border-radius: 20px;
+  background: var(--blanc);
+  font: 400 15.5px/1.65 var(--sans);
+  color: var(--encre-70);
+}
+:root[data-refonte-page] .c-guide-corps h2 {
+  margin: 6px 0 10px;
+  font: 700 23px/1.15 var(--sans);
+  letter-spacing: -0.025em;
+  color: var(--encre);
+}
+:root[data-refonte-page] .c-guide-corps h3 {
+  margin: 22px 0 8px;
+  font: 700 18px/1.2 var(--sans);
+  letter-spacing: -0.015em;
+  color: var(--encre);
+}
+/* Un titre du guide ne laisse pas son « ? » seul sur une ligne (les textes n'ont pas d'espace insécable). */
+:root[data-refonte-page] .c-guide-corps :is(h2, h3) {
+  text-wrap: pretty;
+}
+:root[data-refonte-page] .c-guide-corps :is(p, ul, ol) {
+  max-width: 40em;
+  margin: 0 0 14px;
+}
+:root[data-refonte-page] .c-guide-corps li {
+  margin-bottom: 6px;
+}
+
+/* -- Les questions : sur la crème, les volets du thème (<collapsible-tab>, <details class="accordion">) et leur rond
+   « + », qui tourne en « × » ouvert ; puis la carte ciel, où la Joconde au casque sort du bas. Un clic dans une
+   réponse la referme, comme dans les volets du thème : le curseur le dit. -- */
+:root[data-refonte-page] .c-questions {
+  margin-top: 40px;
+  padding: 60px var(--goutd) 66px var(--gout);
+  background: var(--creme);
+}
+:root[data-refonte-page] .c-questions-in {
+  display: grid;
+  gap: 26px;
+}
+:root[data-refonte-page] .c-questions-tete {
+  display: grid;
+  min-width: 0;
+}
+:root[data-refonte-page] .c-questions-volets {
+  display: block;
+  border-top: 1px solid var(--encre-12);
+}
+:root[data-refonte-page] .c-questions-volet {
+  border-bottom: 1px solid var(--encre-12);
+}
+:root[data-refonte-page] .c-questions-volet summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 17px;
+  font: 500 17px/1.28 var(--sans);
+  letter-spacing: -0.012em;
+  color: var(--encre);
+}
+/* La question : un h3, dans la typo de son volet. pretty : son dernier mot ne reste pas seul sur une ligne. */
+:root[data-refonte-page] .c-questions-volet h3 {
+  margin: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-wrap: pretty;
+}
+:root[data-refonte-page] .c-questions-plus {
+  position: relative;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--blanc);
+  color: var(--encre);
+}
+:root[data-refonte-page] .c-questions-plus::before,
+:root[data-refonte-page] .c-questions-plus::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 11px;
+  height: 1.6px;
+  margin: -0.8px 0 0 -5.5px;
+  border-radius: 2px;
+  background: currentColor;
+}
+:root[data-refonte-page] .c-questions-plus::after {
+  transform: rotate(90deg);
+}
+:root[data-refonte-page] .c-questions-volet[open] .c-questions-plus {
+  background: var(--encre);
+  color: var(--blanc);
+  transform: rotate(45deg);
+}
+/* La réponse : le texte du métachamp (paragraphes, listes, gras, liens : leurs règles sont communes avec le guide). */
+:root[data-refonte-page] .c-questions-reponse {
+  max-width: 38em;
+  padding-bottom: 18px;
+  font: 400 15px/1.6 var(--sans);
+  color: var(--encre-70);
+  cursor: pointer;
+}
+:root[data-refonte-page] .c-questions-reponse :is(p, ul, ol) {
+  margin: 0 0 0.9em;
+}
+/* La carte ciel : « Une autre question ? », le bouton vers la page de contact, puis la Joconde au casque (le dessin
+   de la fiche 3D : l'arceau corail, les écouteurs et le micro à l'encre) et sa bulle. */
+:root[data-refonte-page] .c-questions-aide {
+  position: relative;
+  overflow: hidden;
+  overflow: clip;
+  padding: 24px 22px 0;
+  border-radius: 28px;
+  background: var(--ciel);
+}
+:root[data-refonte-page] .c-questions-aide-titre {
+  margin: 0;
+  font: 300 30px/1 var(--sans);
+  letter-spacing: -0.04em;
+  color: var(--encre);
+}
+/* pretty : « 7. » ne reste pas seul sur sa ligne (le texte de la fiche 3D n'a pas les espaces insécables de la
+   maquette). */
+:root[data-refonte-page] .c-questions-aide-texte {
+  max-width: 20em;
+  margin: 10px 0 16px;
+  font: 400 15px/1.5 var(--sans);
+  text-wrap: pretty;
+  color: var(--encre-70);
+}
+:root[data-refonte-page] .c-questions-bas {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 4px;
+}
+:root[data-refonte-page] .c-questions-ecoute {
+  position: relative;
+  flex: none;
+  height: clamp(170px, 50vw, 270px);
+  aspect-ratio: 572 / 810;
+}
+:root[data-refonte-page] .c-questions-ecoute img {
+  display: block;
+  width: auto;
+  height: 100%;
+  max-width: none;
+}
+:root[data-refonte-page] .c-questions-casque {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: var(--encre);
+}
+:root[data-refonte-page] .c-questions-arceau {
+  fill: none;
+  stroke: var(--corail);
+  stroke-width: 13;
+  stroke-linecap: round;
+}
+:root[data-refonte-page] .c-questions-tige {
+  fill: none;
+  stroke: var(--encre);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+:root[data-refonte-page] .c-questions-bulle {
+  position: relative;
+  margin-bottom: clamp(96px, 29vw, 150px);
+  padding: 11px 15px;
+  font-size: 15px;
+}
+
+/* -- Ordinateur : plus d'air ; le couple plus grand, sa bulle à sa gauche ; les sœurs sur quatre colonnes ; le
+   guide sur deux colonnes ; les questions à droite du titre et de la carte ciel. -- */
+@media (min-width: 900px) {
+  :root[data-refonte-page] .c-sujets {
+    padding-top: 100px;
+    padding-bottom: 10px;
+  }
+  :root[data-refonte-page] .c-sujets-tete {
+    padding-right: 4%;
+  }
+  :root[data-refonte-page] .c-sujets-perso {
+    width: 118px;
+    margin-bottom: -24px;
+  }
+  :root[data-refonte-page] .c-sujets-bulle {
+    right: 86%;
+    bottom: 72%;
+    padding: 11px 16px;
+    font-size: 17px;
+  }
+  :root[data-refonte-page] .c-sujets-liste {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+    margin-top: 64px;
+  }
+  :root[data-refonte-page] .c-guide {
+    padding-top: 70px;
+    padding-bottom: 30px;
+  }
+  :root[data-refonte-page] .c-guide-carte summary {
+    min-height: 360px;
+    padding: 46px 52px 0;
+  }
+  :root[data-refonte-page] .c-guide-titre {
+    font-size: 64px;
+  }
+  :root[data-refonte-page] .c-guide-texte {
+    font-size: 17px;
+  }
+  :root[data-refonte-page] :is(.c-guide-titre, .c-guide-texte) {
+    max-width: 24em;
+  }
+  :root[data-refonte-page] .c-guide-perso {
+    right: 12%;
+    width: 128px;
+  }
+  :root[data-refonte-page] .c-guide-corps {
+    margin: 30px 40px 40px;
+    padding: 38px 48px 20px;
+    columns: 2 340px;
+    column-gap: 56px;
+  }
+  :root[data-refonte-page] .c-guide-corps :is(h2, h3) {
+    break-after: avoid;
+  }
+  :root[data-refonte-page] .c-questions {
+    margin-top: 70px;
+    padding-top: 104px;
+    padding-bottom: 110px;
+  }
+  :root[data-refonte-page] .c-questions-in {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-rows: auto 1fr;
+    gap: 40px 90px;
+    align-items: start;
+  }
+  :root[data-refonte-page] .c-questions-tete {
+    grid-column: 1;
+  }
+  :root[data-refonte-page] .c-questions-volets {
+    grid-column: 2;
+    grid-row: 1 / 3;
+  }
+  :root[data-refonte-page] .c-questions-aide {
+    grid-column: 1;
+    grid-row: 2;
+    padding: 34px 34px 0;
+  }
+  :root[data-refonte-page] .c-questions-aide-titre {
+    font-size: 40px;
+  }
+  :root[data-refonte-page] .c-questions-ecoute {
+    height: 300px;
+  }
+  :root[data-refonte-page] .c-questions-bulle {
+    margin-bottom: 170px;
+    font-size: 17px;
+  }
+}
+
+/* -- Le mouvement (bloc « Le mouvement » de la maquette), seulement sans « mouvements réduits » ; avec eux, tout est
+   simplement en place. Liés au défilement, là où le navigateur le sait : le couple arrive de la droite en se
+   dandinant, puis sa bulle s'ouvre ; chaque sœur, la carte du guide et la carte ciel montent un peu à leur arrivée
+   (refonte-monte : l'image clé des cartes de la grille, bloc du ticket 05) ; le voyageur avance ; la Joconde sort du
+   bas de sa carte. En boucle, sans suivre le défilement : la bulle de la Joconde hoche la tête. Le rond d'un volet
+   tourne quand il s'ouvre. Les mots des grands titres n'arrivent pas un à un comme dans la maquette : il y faudrait
+   le script de la fiche 3D (<galerie-mots>, assets/oeuvre-galerie.js), que cette page ne charge pas. -- */
+@keyframes refonte-arrive {
+  0% { transform: translateX(120%) rotate(0); }
+  20% { transform: translateX(84%) rotate(-3deg); }
+  40% { transform: translateX(52%) rotate(3deg); }
+  60% { transform: translateX(24%) rotate(-3deg); }
+  80% { transform: translateX(6%) rotate(2deg); }
+  100% { transform: none; }
+}
+@keyframes refonte-dit {
+  from { opacity: 0; transform: scale(0.3); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes refonte-avance {
+  from { transform: translateY(14%) scale(1.12); }
+  to { transform: none; }
+}
+@keyframes refonte-surgit {
+  from { transform: translateY(62%); }
+  to { transform: none; }
+}
+@keyframes refonte-hoche {
+  from { transform: translateY(0) rotate(-1.5deg); }
+  to { transform: translateY(-5px) rotate(1.5deg); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-refonte-page] .c-questions-plus {
+    transition: transform 0.35s ease, background-color 0.25s ease, color 0.25s ease;
+  }
+  :root[data-refonte-page] .c-questions-bulle {
+    animation: refonte-hoche 2.2s ease-in-out infinite alternate;
+  }
+  @supports (animation-timeline: view()) and (animation-range-start: contain 10svh) {
+    :root[data-refonte-page] .c-sujets {
+      view-timeline: --refonte-sujets block;
+    }
+    :root[data-refonte-page] .c-sujets-perso img {
+      animation: refonte-arrive linear both;
+      animation-timeline: --refonte-sujets;
+      animation-range: cover 0% cover 32%;
+    }
+    :root[data-refonte-page] .c-sujets-bulle {
+      animation: refonte-dit linear both;
+      animation-timeline: --refonte-sujets;
+      animation-range: cover 26% cover 36%;
+    }
+    :root[data-refonte-page] .c-sujets-liste .c-emb {
+      animation: refonte-monte linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 24%;
+    }
+    :root[data-refonte-page] :is(.c-guide-carte, .c-questions-aide) {
+      animation: refonte-monte linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 20%;
+    }
+    :root[data-refonte-page] .c-guide-perso {
+      animation: refonte-avance linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 45%;
+    }
+    :root[data-refonte-page] .c-questions-ecoute {
+      animation: refonte-surgit linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 40%;
+    }
+  }
+}
+
+/* === Bas de page (ticket 08) : fin === */

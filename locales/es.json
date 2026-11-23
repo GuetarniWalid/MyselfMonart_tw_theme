@@ -453,6 +453,23 @@
         }
       },
       "collection": {
+        "bas": {
+          "sujets": {
+            "surtitre": "Otros temas",
+            "titre_html": "¿Te apetece otro <b>tema?</b>",
+            "bulle": "¿Vamos a ver al lado?"
+          },
+          "guide": {
+            "surtitre": "La guía",
+            "titre_html": "Sigue <b>la guía.</b>",
+            "texte": "Todo lo que hay que saber para elegir bien entre los {{ titre }}: el tema, el formato, el lugar en la pared.",
+            "lire": "Leer la guía",
+            "refermer": "Cerrar la guía"
+          },
+          "questions": {
+            "titre_html": "Tus preguntas sobre <b>{{ titre }}</b>"
+          }
+        },
         "emblemes": {
           "tableaux": {
             "one": "{{ count }} cuadro",

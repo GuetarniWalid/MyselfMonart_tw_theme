@@ -16,10 +16,21 @@
   Rendu à la fin de sections/main-collection-product-grid.liquid, donc sur toutes les pages de collection, à la place
   où se trouvait « Nos autres collections ». Mise en page des rangées de la racine (libellé, puis pastilles) ; sur
   téléphone, chaque rangée défile en largeur. Aucun titre h1 à h6. Tests : scripts/cocon-famille.test.cjs.
+
+  Paramètre mode (nouvelle page collection, dossier .scratch/collection-design, ticket 08) :
+   - 'liens' (par défaut) : le bas de page qui précède, au caractère près ;
+   - 'emblemes' : les sœurs seules, mêmes règles, même ordre, chacune en grand emblème (snippets/collection-embleme.liquid,
+     taille « bas », image à la demande), sans repère ni libellé : rien que les <li>, que sections/collection-sujets.liquid
+     pose dans sa liste (« Envie d'un autre sujet ? »). Jamais la jumelle : sur cette page, elle est dans l'interrupteur
+     de l'entrée (sections/collection-refonte.liquid). Sans sœur, rien. Tests : scripts/collection-bas.test.cjs.
 {%- endcomment -%}
 {%- liquid
   assign cf_noeuds = shop.metafields.cocon.plan.value.noeuds
   assign cf_decisions_montrees = 'en_ligne,a_creer,idee' | split: ','
+  assign cf_emblemes = false
+  if mode == 'emblemes'
+    assign cf_emblemes = true
+  endif
 
   # La page dans le plan, par son handle, ou par sa collection hors français (snippets/cocon-noeud.liquid).
   capture cf_page
@@ -63,6 +74,7 @@
 -%}
 {%- capture cf_soeurs -%}
   {%- if cf_mere != '' -%}
+    {%- assign cf_rang = 0 -%}
     {%- for cf_n in cf_noeuds -%}
       {%- if cf_n.parent != cf_mere or cf_n.id == cf_page -%}{%- continue -%}{%- endif -%}
       {%- if cf_racine and cf_n.rayon != cf_rayon -%}{%- continue -%}{%- endif -%}
@@ -71,7 +83,12 @@
       {%- assign cf_col = collections[cf_n.id] -%}
       {%- assign cf_nb = cf_col.all_products_count | plus: 0 -%}
       {%- if cf_col.id != blank and cf_nb > 0 -%}
+        {%- if cf_emblemes -%}
+          {%- render 'collection-embleme', cible: cf_col, rang: cf_rang, taille: 'bas', tout_de_suite: false -%}
+          {%- assign cf_rang = cf_rang | plus: 1 -%}
+        {%- else -%}
         <li class="shrink-0"><a href="{{ cf_col.url }}" class="pastille-collection">{{ cf_col.title | escape }}</a></li>
+        {%- endif -%}
       {%- endif -%}
     {%- endfor -%}
   {%- endif -%}
@@ -85,7 +102,9 @@
     {%- endif -%}
   {%- endif -%}
 {%- endcapture -%}
-{%- if cf_soeurs != blank or cf_jumelle != blank -%}
+{%- if cf_emblemes -%}
+  {{- cf_soeurs -}}
+{%- elsif cf_soeurs != blank or cf_jumelle != blank -%}
   {%- liquid
     # Le libellé des sœurs : « Autres sujets » sous une racine, « Aussi dans Tableau Animaux » plus bas.
     if cf_racine

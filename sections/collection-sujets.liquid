@@ -1,0 +1,45 @@
+{%- comment -%}
+  « Envie d'un autre sujet ? » : le bas de la nouvelle page collection (vue ?view=refonte, modèle
+  templates/collection.refonte.json, dossier .scratch/collection-design, ticket 08 ; décision 9 de Walid), juste après
+  la grille. Les sœurs de la page, en grands emblèmes, et un couple de tableau ancien qui part les voir : « On va voir
+  à côté ? ».
+  - Les sœurs : celles du bas de page cocon d'aujourd'hui (snippets/cocon-famille.liquid, mode « emblèmes ») : même
+    plan, mêmes règles d'affichage, même ordre, chacune une fois, chacune en emblème de taille « bas »
+    (snippets/collection-embleme.liquid). Jamais la jumelle (l'interrupteur de l'entrée y mène), aucun autre lien.
+  - Le couple et sa bulle : un décor, caché aux lecteurs d'écran, jamais nommé (un personnage de tableau ancien
+    illustre, il n'est jamais un lien) ; il arrive de la droite et la bulle s'ouvre au défilement, sans « mouvements
+    réduits ».
+  - Le surtitre nomme le repère de navigation ; le titre de la section est un h2 (aucun h1 : celui de la page est
+    dans l'entrée).
+  Sans sœur à montrer, la section n'écrit rien. Styles : bloc « Bas de page (ticket 08) » de
+  assets/collection-refonte.css. Textes : sections.mma.collection.bas.sujets. Tests : scripts/collection-bas.test.cjs.
+{%- endcomment -%}
+{%- capture cs_soeurs -%}{%- render 'cocon-famille', mode: 'emblemes' -%}{%- endcapture -%}
+{%- if cs_soeurs != blank -%}
+  {%- assign cs_id = section.id | append: '-surtitre' -%}
+  <nav class="c-sujets" id="autres-sujets" aria-labelledby="{{ cs_id }}">
+    <div class="c-sujets-in">
+      <div class="c-sujets-tete">
+        <div>
+          <p class="c-sujets-surtitre" id="{{ cs_id }}">{{ 'sections.mma.collection.bas.sujets.surtitre' | t }}</p>
+          <h2 class="c-sujets-titre">{{ 'sections.mma.collection.bas.sujets.titre_html' | t }}</h2>
+        </div>
+        <div class="c-sujets-perso" aria-hidden="true">
+          <img src="{{ 'collection-couple.webp' | asset_url }}" alt="" width="248" height="560" loading="lazy" decoding="async">
+          <p class="c-sujets-bulle">{{ 'sections.mma.collection.bas.sujets.bulle' | t }}</p>
+        </div>
+      </div>
+      <ul class="c-sujets-liste" role="list">{{ cs_soeurs }}</ul>
+    </div>
+  </nav>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Collection : sujets",
+  "limit": 1,
+  "enabled_on": {
+    "templates": ["collection"]
+  }
+}
+{% endschema %}
