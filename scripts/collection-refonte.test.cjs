@@ -18,6 +18,19 @@ const SECTION = 'sections/collection-refonte.liquid'
 
 /* ---------- Le modèle caché et sa section ---------- */
 
+test('le modèle caché : la section de la page en tête, puis celles de collection.json, sans bannière ni badges', () => {
+  const modele = json('templates/collection.refonte.json')
+  const defaut = json('templates/collection.json')
+  assert.equal(modele.layout, 'collection')
+  assert.deepEqual(modele.order.map((key) => modele.sections[key].type), ['collection-refonte', 'breadcrumb', 'sous-collections', 'main-collection-product-grid'])
+  assert.deepEqual(Object.keys(modele.sections).sort(), [...modele.order].sort(), 'aucune section hors de l’ordre')
+  // La section de la page : sans réglage ni bloc.
+  assert.deepEqual(modele.sections[modele.order[0]], { type: 'collection-refonte', settings: {} })
+  // Les sections d'aujourd'hui, telles quelles : mêmes clés, mêmes réglages. Les tickets suivants les remplacent une à
+  // une (ce test suit).
+  for (const key of modele.order.slice(1)) assert.deepEqual(modele.sections[key], defaut.sections[key], key)
+})
+
 test('la section de la page : une marque cachée, sans réglage ni préréglage, un nom de schéma que Shopify accepte', { skip: SKIP }, async () => {
   const schema = schemaOf(SECTION)
   // Shopify refuse un nom de plus de 25 caractères (le fichier refusé fait réimporter l'ancienne version).
