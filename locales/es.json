@@ -240,6 +240,87 @@
           "many": "Ha visto los {{ count }} cuadros."
         }
       },
+      "collection_filtres": {
+        "ligne": "Filtrar y ordenar los cuadros",
+        "familles": {
+          "couleur": "Color",
+          "format": "Formato",
+          "theme": "Tema"
+        },
+        "famille_une": "{{ famille }} · {{ valeur }}",
+        "famille_plusieurs": "{{ famille }} · {{ nombre }}",
+        "aide_ordi": "un clic añade, otro quita",
+        "aide_tel": "Un toque añade, otro quita",
+        "fermer": "Cerrar sin cambiar nada",
+        "effacer": {
+          "couleur": "Borrar el color",
+          "format": "Borrar el formato",
+          "theme": "Borrar el tema"
+        },
+        "voir": {
+          "one": "Ver el cuadro",
+          "other": "Ver los {{ count }} cuadros",
+          "many": "Ver los {{ count }} cuadros"
+        },
+        "voir_aucun": "Ningún cuadro",
+        "compte_html": {
+          "one": "<b>{{ count }}</b> cuadro",
+          "other": "<b>{{ count }}</b> cuadros",
+          "many": "<b>{{ count }}</b> cuadros"
+        },
+        "themes_tous": {
+          "one": "Ver el tema",
+          "other": "Ver los {{ count }} temas",
+          "many": "Ver los {{ count }} temas"
+        },
+        "themes_moins": "Menos temas",
+        "chercher": "Buscar un tema (caballo, zen…)",
+        "chercher_nom": "Buscar un tema",
+        "aucun_theme": {
+          "one": "Ningún tema con ese nombre para este cuadro. Quite un filtro para ver más.",
+          "other": "Ningún tema con ese nombre entre estos {{ count }} cuadros. Quite un filtro para ver más.",
+          "many": "Ningún tema con ese nombre entre estos {{ count }} cuadros. Quite un filtro para ver más."
+        },
+        "trier": "Ordenar",
+        "trier_par": "Ordenar:",
+        "trier_nom": "Ordenar los cuadros",
+        "tri_actif": "Orden · {{ tri }}",
+        "tri_pastille": "Orden: {{ tri }}",
+        "tri_retirer": "Volver al orden por más vendidos",
+        "tris": {
+          "best_selling": "Más vendidos",
+          "created_descending": "Novedades",
+          "price_ascending": "Precio ascendente",
+          "price_descending": "Precio descendente"
+        },
+        "appliquer": "Aplicar",
+        "retirer": "Quitar el filtro {{ nom }}",
+        "tout_effacer": "Borrar todo",
+        "annonce_tableaux": {
+          "one": "{{ count }} cuadro.",
+          "other": "{{ count }} cuadros.",
+          "many": "{{ count }} cuadros."
+        },
+        "annonce_filtres": "Filtros: {{ liste }}.",
+        "annonce_sans_filtre": "Ningún filtro.",
+        "annonce_tri": "Orden: {{ tri }}.",
+        "fin_choix": {
+          "one": "Ha visto el cuadro de esta selección.",
+          "other": "Ha visto los {{ count }} cuadros de esta selección.",
+          "many": "Ha visto los {{ count }} cuadros de esta selección."
+        },
+        "sans_filtre": {
+          "one": "Ver el cuadro, sin filtros",
+          "other": "Ver los {{ count }} cuadros, sin filtros",
+          "many": "Ver los {{ count }} cuadros, sin filtros"
+        },
+        "aucun_resultat": "Ningún cuadro reúne estos filtros.",
+        "formes": {
+          "portrait": "Retrato",
+          "paysage": "Paisaje",
+          "carre": "Cuadrado"
+        }
+      },
       "add_to_favorites": "Añadir a favoritos",
       "add_artwork_to_favorites": "Añadir este cuadro a mis favoritos",
       "breadcrumb_home": "Inicio",

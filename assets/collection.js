@@ -56,6 +56,9 @@ class InfiniteScroll extends HTMLElement {
           observer.disconnect();
 
           const htmlString = await this.fetchPage(direction);
+          // Un filtre a remplacé la grille pendant la demande (assets/collection-filtres.js) : ce lot n'a plus de place,
+          // et la suite de la nouvelle grille ne doit pas le compter.
+          if (!this.isConnected) return;
           const nodeToInsert = this.parseNodeFromString(htmlString);
           this.insertNode(nodeToInsert, direction);
           this.announceBatch(nodeToInsert, direction);

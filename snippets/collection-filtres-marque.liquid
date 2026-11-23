@@ -1,0 +1,25 @@
+{%- comment -%}
+  La marque d'une valeur de filtre, dans la ligne des filtres de la nouvelle page collection
+  (snippets/collection-filtres.liquid, ticket 06) : un décor, caché aux lecteurs d'écran.
+  - Couleur : un rond de la couleur de Search & Discovery (son « swatch »), posée en variable (--c), comme les ronds de
+    la page galerie (sections/galerie-couleurs.liquid). Un rond clair (Beige, Jaune, Rose, Blanc) porte data-clair : sa
+    coche est à l'encre. Sans couleur, l'image du swatch (Multicolore, Noir & Blanc).
+  - Format : la forme dessinée (portrait, paysage, carré).
+  - Thème : rien.
+  Paramètres : famille ('couleur', 'format', 'theme'), valeur (la valeur du filtre), forme ('portrait', 'paysage',
+  'carre' ou vide). Une couleur ou une image vide de Search & Discovery compte pour absente.
+{%- endcomment -%}
+{%- if famille == 'couleur' -%}
+  {%- assign couleur = valeur.swatch.color -%}
+  {%- assign image = valeur.swatch.image -%}
+  {%- if couleur and couleur != blank -%}
+    {%- assign clarte = couleur | color_brightness -%}
+    <span class="filtres-rond"{% if clarte > 160 %} data-clair{% endif %} style="--c: {{ couleur | escape }}" aria-hidden="true" data-allow-empty></span>
+  {%- elsif image and image != blank -%}
+    <span class="filtres-rond" aria-hidden="true"><img src="{{ image | image_url: width: 64 }}" alt="" width="26" height="26" loading="lazy"></span>
+  {%- else -%}
+    <span class="filtres-rond" aria-hidden="true" data-allow-empty></span>
+  {%- endif -%}
+{%- elsif famille == 'format' and forme and forme != blank -%}
+  <span class="filtres-forme" data-forme="{{ forme }}" aria-hidden="true" data-allow-empty></span>
+{%- endif -%}

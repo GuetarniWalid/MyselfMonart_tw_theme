@@ -7,6 +7,9 @@
   réécrit les labels après interaction) — les deux doivent rester identiques.
 
   Usage : {% render 'filter-color-label', label: filter_value.label %}
+  Le libellé court (court: true), pour la ligne des filtres de la nouvelle page collection
+  (snippets/collection-filtres.liquid) : le premier mot d'un libellé composé, dans toutes les langues
+  (« Beige / Crème » → « Beige », « Doré / Or » → « Doré », « Yellow / Ochre » → « Yellow »).
 {%- endcomment -%}
 {%- liquid
   assign out = label
@@ -21,6 +24,9 @@
       when 'Marron'
         assign out = 'sections.filter_drawer.color_brown' | t
     endcase
+  endif
+  if court
+    assign out = out | split: ' / ' | first
   endif
   echo out
 -%}

@@ -243,6 +243,87 @@
           "many": "U heeft alle {{ count }} schilderijen gezien."
         }
       },
+      "collection_filtres": {
+        "ligne": "Schilderijen filteren en sorteren",
+        "familles": {
+          "couleur": "Kleur",
+          "format": "Formaat",
+          "theme": "Thema"
+        },
+        "famille_une": "{{ famille }} · {{ valeur }}",
+        "famille_plusieurs": "{{ famille }} · {{ nombre }}",
+        "aide_ordi": "een klik voegt toe, nog een verwijdert",
+        "aide_tel": "Eén tik voegt toe, nog een verwijdert",
+        "fermer": "Sluiten zonder iets te wijzigen",
+        "effacer": {
+          "couleur": "Kleur wissen",
+          "format": "Formaat wissen",
+          "theme": "Thema wissen"
+        },
+        "voir": {
+          "one": "Het schilderij bekijken",
+          "other": "De {{ count }} schilderijen bekijken",
+          "many": "De {{ count }} schilderijen bekijken"
+        },
+        "voir_aucun": "Geen schilderijen",
+        "compte_html": {
+          "one": "<b>{{ count }}</b> schilderij",
+          "other": "<b>{{ count }}</b> schilderijen",
+          "many": "<b>{{ count }}</b> schilderijen"
+        },
+        "themes_tous": {
+          "one": "Het thema bekijken",
+          "other": "Alle {{ count }} thema’s bekijken",
+          "many": "Alle {{ count }} thema’s bekijken"
+        },
+        "themes_moins": "Minder thema’s",
+        "chercher": "Thema zoeken (paard, zen…)",
+        "chercher_nom": "Thema zoeken",
+        "aucun_theme": {
+          "one": "Geen thema met die naam voor dit schilderij. Verwijder een filter om meer te zien.",
+          "other": "Geen thema met die naam onder deze {{ count }} schilderijen. Verwijder een filter om meer te zien.",
+          "many": "Geen thema met die naam onder deze {{ count }} schilderijen. Verwijder een filter om meer te zien."
+        },
+        "trier": "Sorteren",
+        "trier_par": "Sorteren:",
+        "trier_nom": "Schilderijen sorteren",
+        "tri_actif": "Sortering · {{ tri }}",
+        "tri_pastille": "Sortering: {{ tri }}",
+        "tri_retirer": "Terug naar sorteren op bestsellers",
+        "tris": {
+          "best_selling": "Bestsellers",
+          "created_descending": "Nieuw",
+          "price_ascending": "Prijs oplopend",
+          "price_descending": "Prijs aflopend"
+        },
+        "appliquer": "Toepassen",
+        "retirer": "Filter {{ nom }} verwijderen",
+        "tout_effacer": "Alles wissen",
+        "annonce_tableaux": {
+          "one": "{{ count }} schilderij.",
+          "other": "{{ count }} schilderijen.",
+          "many": "{{ count }} schilderijen."
+        },
+        "annonce_filtres": "Filters: {{ liste }}.",
+        "annonce_sans_filtre": "Geen filter.",
+        "annonce_tri": "Sortering: {{ tri }}.",
+        "fin_choix": {
+          "one": "U heeft het schilderij van deze selectie gezien.",
+          "other": "U heeft alle {{ count }} schilderijen van deze selectie gezien.",
+          "many": "U heeft alle {{ count }} schilderijen van deze selectie gezien."
+        },
+        "sans_filtre": {
+          "one": "Het schilderij bekijken, zonder filters",
+          "other": "Alle {{ count }} schilderijen bekijken, zonder filters",
+          "many": "Alle {{ count }} schilderijen bekijken, zonder filters"
+        },
+        "aucun_resultat": "Geen schilderij voldoet aan deze filters.",
+        "formes": {
+          "portrait": "Staand",
+          "paysage": "Liggend",
+          "carre": "Vierkant"
+        }
+      },
       "add_to_favorites": "Toevoegen aan favorieten",
       "add_artwork_to_favorites": "Dit schilderij toevoegen aan mijn favorieten",
       "breadcrumb_home": "Home",

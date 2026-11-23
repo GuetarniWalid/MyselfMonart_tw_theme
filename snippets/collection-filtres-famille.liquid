@@ -1,0 +1,193 @@
+{%- comment -%}
+  Une famille de la ligne des filtres de la nouvelle page collection (snippets/collection-filtres.liquid, ticket 06) :
+  son bouton et son panneau, dans un <details>.
+  - Le bouton dit ce qui est choisi : « Couleur », « Couleur · Bleu », « Couleur · 2 ».
+  - Ordinateur : le <details> s'ouvre en menu sous le bouton ; sans script aussi. Téléphone : le script ouvre à la place
+    le panneau posé en bas (#feuille), où il déplace ce même panneau, puis l'y reprend.
+  - Le panneau : le nom et l'aide, les valeurs (un fieldset nommé), et le pied : « Effacer la couleur » (s'il y a un
+    choix dans la famille), « Voir les N tableaux », un bouton d'envoi du formulaire.
+  - Couleur : les valeurs par nombre décroissant. Format : Portrait, Paysage, Carré, dessinés. Thème : les 12 plus
+    fournis (les choisis d'abord), puis « Voir les 98 thèmes », qui ouvre une recherche et les autres, de A à Z ; un
+    thème en double dans Search & Discovery n'en fait qu'un.
+  - Une valeur à 0 ne s'écrit pas, sauf cochée.
+  Paramètres : famille ('couleur', 'format', 'theme'), filtre (le filtre de Search & Discovery), coches (les noms
+  cochés de la famille, séparés par « ¤ »), nombre (les tableaux de la page, filtres compris).
+{%- endcomment -%}
+{%- liquid
+  assign cle = 'sections.mma.collection_filtres.familles.' | append: famille
+  assign nom_famille = cle | t
+  assign noms_coches = coches | split: '¤'
+  assign nb_coches = noms_coches | size
+  if nb_coches == 1
+    assign bouton = 'sections.mma.collection_filtres.famille_une' | t: famille: nom_famille, valeur: noms_coches[0]
+  elsif nb_coches > 1
+    assign bouton = 'sections.mma.collection_filtres.famille_plusieurs' | t: famille: nom_famille, nombre: nb_coches
+  else
+    assign bouton = nom_famille
+  endif
+  if nombre == 0
+    assign voir = 'sections.mma.collection_filtres.voir_aucun' | t
+  else
+    assign voir = 'sections.mma.collection_filtres.voir' | t: count: nombre
+  endif
+  assign cle_effacer = 'sections.mma.collection_filtres.effacer.' | append: famille
+-%}
+<details class="filtres-famille" data-famille="{{ famille }}" name="filtres">
+  <summary class="filtres-fac"{% if nb_coches > 0 %} data-actif{% endif %}>
+    {%- if famille == 'couleur' -%}<span class="filtres-mini" aria-hidden="true" data-allow-empty></span>{%- endif -%}
+    <span class="filtres-fac-nom">{{ bouton }}</span>
+    <svg class="filtres-chevron" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M2 4l4 4 4-4"/></svg>
+  </summary>
+  <div class="filtres-panneau" id="filtres-panneau-{{ famille }}" data-famille="{{ famille }}">
+    <div class="filtres-panneau-tete">
+      <div class="filtres-panneau-noms">
+        <p class="filtres-panneau-titre" id="filtres-titre-{{ famille }}" tabindex="-1">{{ nom_famille }}</p>
+        <p class="filtres-panneau-aide"><span class="filtres-aide-tel">{{ 'sections.mma.collection_filtres.aide_tel' | t }}</span><span class="filtres-aide-ordi">{{ 'sections.mma.collection_filtres.aide_ordi' | t }}</span></p>
+      </div>
+      <button type="button" class="filtres-fermer" aria-label="{{ 'sections.mma.collection_filtres.fermer' | t }}" data-fermer>
+        <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M2 2l10 10M12 2 2 12"/></svg>
+      </button>
+    </div>
+    <div class="filtres-panneau-corps">
+      <fieldset class="filtres-groupe">
+        <legend class="sr-only">{{ nom_famille }}</legend>
+        {%- case famille -%}
+          {%- when 'couleur' -%}
+            {%- liquid
+              # Par nombre de tableaux décroissant : une clé « 99999 − nombre » triée comme du texte, puis le libellé.
+              assign cles = ''
+              for valeur in filtre.values
+                if valeur.count > 0 or valeur.active
+                  assign rang = 99999 | minus: valeur.count
+                  assign cle = rang | append: '§' | append: valeur.value
+                  if cles == ''
+                    assign cles = cle
+                  else
+                    assign cles = cles | append: '¤' | append: cle
+                  endif
+                endif
+              endfor
+              assign cles = cles | split: '¤' | sort
+            -%}
+            <div class="filtres-valeurs">
+              {%- for cle in cles -%}
+                {%- assign valeur_id = cle | split: '§' | last -%}
+                {%- assign groupe = filtre.values | where: 'value', valeur_id -%}
+                {%- assign premiere = groupe | first -%}
+                {%- capture nom -%}{% render 'filter-color-label', label: premiere.label, court: true %}{%- endcapture -%}
+                {%- render 'collection-filtres-valeur', famille: famille, groupe: groupe, nom: nom -%}
+              {%- endfor -%}
+            </div>
+          {%- when 'format' -%}
+            {%- liquid
+              # Portrait, Paysage, Carré, dessinés (snippets/collection-filtres-forme.liquid), puis un format inconnu :
+              # une clé « ordre § forme § valeur » triée comme du texte.
+              assign cles = ''
+              for valeur in filtre.values
+                if valeur.count > 0 or valeur.active
+                  capture forme
+                    render 'collection-filtres-forme', nom: valeur.label
+                  endcapture
+                  case forme
+                    when 'portrait'
+                      assign ordre = '1'
+                    when 'paysage'
+                      assign ordre = '2'
+                    when 'carre'
+                      assign ordre = '3'
+                    else
+                      assign ordre = '4'
+                  endcase
+                  assign cle = ordre | append: '§' | append: forme | append: '§' | append: valeur.value
+                  if cles == ''
+                    assign cles = cle
+                  else
+                    assign cles = cles | append: '¤' | append: cle
+                  endif
+                endif
+              endfor
+              assign cles = cles | split: '¤' | sort
+            -%}
+            <div class="filtres-valeurs filtres-valeurs-formes">
+              {%- for cle in cles -%}
+                {%- assign morceaux = cle | split: '§' -%}
+                {%- assign groupe = filtre.values | where: 'value', morceaux[2] -%}
+                {%- assign premiere = groupe | first -%}
+                {%- render 'collection-filtres-valeur', famille: famille, groupe: groupe, nom: premiere.label, forme: morceaux[1] -%}
+              {%- endfor -%}
+            </div>
+          {%- when 'theme' -%}
+            {%- liquid
+              # Un thème par nom (Search & Discovery en a en double) ; ceux qui ont des tableaux, ou cochés.
+              assign noms = filtre.values | map: 'label' | uniq
+              assign visibles = ''
+              assign cles = ''
+              for nom in noms
+                assign groupe = filtre.values | where: 'label', nom
+                assign compte = 0
+                assign actif = false
+                for valeur in groupe
+                  assign compte = compte | plus: valeur.count
+                  if valeur.active
+                    assign actif = true
+                  endif
+                endfor
+                if compte > 0 or actif
+                  # Les choisis d'abord, puis les plus fournis : « 0 » ou « 1 », puis « 99999 − nombre », puis le nom.
+                  assign rang = 99999 | minus: compte
+                  if actif
+                    assign cle = '0' | append: rang | append: '§' | append: nom
+                  else
+                    assign cle = '1' | append: rang | append: '§' | append: nom
+                  endif
+                  if cles == ''
+                    assign cles = cle
+                    assign visibles = nom
+                  else
+                    assign cles = cles | append: '¤' | append: cle
+                    assign visibles = visibles | append: '¤' | append: nom
+                  endif
+                endif
+              endfor
+              assign cles = cles | split: '¤' | sort
+              assign visibles = visibles | split: '¤'
+              assign nb_themes = visibles | size
+              assign nb_haut = 12
+              if nb_coches > nb_haut
+                assign nb_haut = nb_coches
+              endif
+              assign haut = ''
+            -%}
+            <div class="filtres-valeurs">
+              {%- for cle in cles limit: nb_haut -%}
+                {%- assign nom = cle | split: '§' | last -%}
+                {%- assign haut = haut | append: '¤' | append: nom -%}
+                {%- assign groupe = filtre.values | where: 'label', nom -%}
+                {%- render 'collection-filtres-valeur', famille: famille, groupe: groupe, nom: nom -%}
+              {%- endfor -%}
+            </div>
+            {%- if nb_themes > nb_haut -%}
+              {%- assign haut = haut | split: '¤' -%}
+              <details class="filtres-tous">
+                <summary class="filtres-tous-bouton"><span class="filtres-tous-plus">{{ 'sections.mma.collection_filtres.themes_tous' | t: count: nb_themes }}</span><span class="filtres-tous-moins">{{ 'sections.mma.collection_filtres.themes_moins' | t }}</span></summary>
+                <input class="filtres-cherche" type="search" placeholder="{{ 'sections.mma.collection_filtres.chercher' | t }}" aria-label="{{ 'sections.mma.collection_filtres.chercher_nom' | t }}" autocomplete="off" enterkeyhint="search">
+                <div class="filtres-valeurs">
+                  {%- for nom in visibles -%}
+                    {%- unless haut contains nom -%}
+                      {%- assign groupe = filtre.values | where: 'label', nom -%}
+                      {%- render 'collection-filtres-valeur', famille: famille, groupe: groupe, nom: nom -%}
+                    {%- endunless -%}
+                  {%- endfor -%}
+                </div>
+                <p class="filtres-aucun" hidden>{{ 'sections.mma.collection_filtres.aucun_theme' | t: count: nombre }}</p>
+              </details>
+            {%- endif -%}
+        {%- endcase -%}
+      </fieldset>
+    </div>
+    <div class="filtres-panneau-pied">
+      <a class="filtres-effacer" href="{{ filtre.url_to_remove }}" data-effacer{% if nb_coches == 0 %} hidden{% endif %}>{{ cle_effacer | t }}</a>
+      <button type="submit" class="filtres-voir">{{ voir }}</button>
+    </div>
+  </div>
+</details>

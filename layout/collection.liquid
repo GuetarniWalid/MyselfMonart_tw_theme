@@ -6,6 +6,8 @@
   (snippets/collection-refonte-police.liquid). Le bandeau, le pied de page et le texte ont leurs couleurs et leur
   police dès le premier affichage. Le repère est la section, jamais le nom du modèle : la bascule sera un échange de
   modèle. Toute autre page de collection rend exactement le même HTML qu'avant (scripts/collection-refonte.test.cjs).
+  Sur cette page, pas de tiroir des filtres : sa ligne des filtres le remplace (ticket 06,
+  snippets/collection-filtres.liquid).
 {%- endcomment -%}
 {%- liquid
   assign refonte_page = false
@@ -36,7 +38,7 @@
     {% section 'tw-announcement-bar' %}
     {% section 'tw-header' %}
     {% section 'tw-cart-drawer' %}
-    {% render 'tw-filter-drawer' %}
+    {% unless refonte_page %}{% render 'tw-filter-drawer' %}{% endunless %}
     {% render 'open-cart-drawer-button' %}
 
 

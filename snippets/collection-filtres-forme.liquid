@@ -1,0 +1,20 @@
+{%- comment -%}
+  La forme d'un format de la ligne des filtres (snippets/collection-filtres.liquid, ticket 06) : 'portrait',
+  'paysage', 'carre', ou rien. Search & Discovery ne donne que le nom de la valeur, traduit : la forme se reconnaît à
+  ce nom dans la langue de la page (sections.mma.collection_filtres.formes, les noms des métaobjets de format relevés le
+  23/11/2026 : Portrait, Paysage, Carré ; Landscape, Square ; Hochformat, Querformat, Quadratisch ; Retrato, Paisaje,
+  Cuadrado ; Staand, Liggend, Vierkant). Un nom inconnu n'a pas de forme : la valeur s'affiche sans dessin.
+  Paramètre : nom.
+{%- endcomment -%}
+{%- liquid
+  assign nom_valeur = nom | strip | downcase
+  assign formes = 'portrait,paysage,carre' | split: ','
+  for forme in formes
+    assign cle = 'sections.mma.collection_filtres.formes.' | append: forme
+    assign nom_forme = cle | t | downcase
+    if nom_forme == nom_valeur
+      echo forme
+      break
+    endif
+  endfor
+-%}

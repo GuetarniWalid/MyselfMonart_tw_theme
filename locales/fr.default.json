@@ -627,6 +627,87 @@
           "many": "Vous avez vu les {{ count }} tableaux."
         }
       },
+      "collection_filtres": {
+        "ligne": "Filtres et tri des tableaux",
+        "familles": {
+          "couleur": "Couleur",
+          "format": "Format",
+          "theme": "Thème"
+        },
+        "famille_une": "{{ famille }} · {{ valeur }}",
+        "famille_plusieurs": "{{ famille }} · {{ nombre }}",
+        "aide_ordi": "un clic ajoute, un autre retire",
+        "aide_tel": "Un toucher ajoute, un autre retire",
+        "fermer": "Fermer sans rien changer",
+        "effacer": {
+          "couleur": "Effacer la couleur",
+          "format": "Effacer le format",
+          "theme": "Effacer le thème"
+        },
+        "voir": {
+          "one": "Voir le tableau",
+          "other": "Voir les {{ count }} tableaux",
+          "many": "Voir les {{ count }} tableaux"
+        },
+        "voir_aucun": "Aucun tableau",
+        "compte_html": {
+          "one": "<b>{{ count }}</b> tableau",
+          "other": "<b>{{ count }}</b> tableaux",
+          "many": "<b>{{ count }}</b> tableaux"
+        },
+        "themes_tous": {
+          "one": "Voir le thème",
+          "other": "Voir les {{ count }} thèmes",
+          "many": "Voir les {{ count }} thèmes"
+        },
+        "themes_moins": "Moins de thèmes",
+        "chercher": "Chercher un thème (cheval, zen…)",
+        "chercher_nom": "Chercher un thème",
+        "aucun_theme": {
+          "one": "Aucun thème de ce nom pour ce tableau. Retirez un filtre pour en voir plus.",
+          "other": "Aucun thème de ce nom parmi ces {{ count }} tableaux. Retirez un filtre pour en voir plus.",
+          "many": "Aucun thème de ce nom parmi ces {{ count }} tableaux. Retirez un filtre pour en voir plus."
+        },
+        "trier": "Trier",
+        "trier_par": "Trier :",
+        "trier_nom": "Trier les tableaux",
+        "tri_actif": "Tri · {{ tri }}",
+        "tri_pastille": "Tri : {{ tri }}",
+        "tri_retirer": "Revenir au tri par meilleures ventes",
+        "tris": {
+          "best_selling": "Meilleures ventes",
+          "created_descending": "Nouveautés",
+          "price_ascending": "Prix croissant",
+          "price_descending": "Prix décroissant"
+        },
+        "appliquer": "Appliquer",
+        "retirer": "Retirer le filtre {{ nom }}",
+        "tout_effacer": "Tout effacer",
+        "annonce_tableaux": {
+          "one": "{{ count }} tableau.",
+          "other": "{{ count }} tableaux.",
+          "many": "{{ count }} tableaux."
+        },
+        "annonce_filtres": "Filtres : {{ liste }}.",
+        "annonce_sans_filtre": "Aucun filtre.",
+        "annonce_tri": "Tri : {{ tri }}.",
+        "fin_choix": {
+          "one": "Vous avez vu le tableau de ce choix.",
+          "other": "Vous avez vu les {{ count }} tableaux de ce choix.",
+          "many": "Vous avez vu les {{ count }} tableaux de ce choix."
+        },
+        "sans_filtre": {
+          "one": "Voir le tableau, sans filtre",
+          "other": "Voir les {{ count }} tableaux, sans filtre",
+          "many": "Voir les {{ count }} tableaux, sans filtre"
+        },
+        "aucun_resultat": "Aucun tableau ne réunit ces filtres.",
+        "formes": {
+          "portrait": "Portrait",
+          "paysage": "Paysage",
+          "carre": "Carré"
+        }
+      },
       "add_to_favorites": "Ajouter aux favoris",
       "remove_from_favorites": "Retirer des favoris",
       "add_artwork_to_favorites": "Ajouter ce tableau à mes favoris",

@@ -1,0 +1,638 @@
+{%- comment -%} Destination du lien « Suivre ma commande » (repli sur l'espace compte client natif) {%- endcomment -%}
+{%- liquid
+  assign order_tracking_url = settings.order_tracking_url
+  if order_tracking_url == blank
+    assign order_tracking_url = routes.account_url
+  endif
+-%}
+
+{%- comment -%} Check if filters should be shown for this collection type {%- endcomment -%}
+{% assign show_filters = false %}
+{%- if template.name == 'collection' -%}
+  {% assign collection_type = collection.metafields.custom.type_of_collection | default: 'other' %}
+  {% if collection_type == 'painting' and settings.enable_painting_filtering %}
+    {% assign show_filters = true %}
+  {% elsif collection_type == 'poster' and settings.enable_poster_filtering %}
+    {% assign show_filters = true %}
+  {% elsif collection_type == 'tapestry' and settings.enable_tapestry_filtering %}
+    {% assign show_filters = true %}
+  {% elsif collection_type == 'other' and settings.enable_other_filtering %}
+    {% assign show_filters = true %}
+  {% endif %}
+{%- endif -%}
+
+<sticky-header class="transition-colors duration-500 border-b border-solid border-main relative">
+  <div>
+    <div class="bg-secondary pl-6 pr-3 flex items-center justify-between border-b border-solid border-main-70 min-h-[90px] md:px-10 lg:px-14 relative">
+      {% comment %} start on mobile {% endcomment %}
+      <details class="inline-block h-full md:hidden">
+        <summary class="group menu-opener list-none cursor-pointer" aria-label="{{ 'snippet.tw_sticky_header.open_menu' | t }}">
+          <span class="group-focus-visible:border-2 group-focus-visible:border-main rounded mobile-menu">
+            <span class="hamburger" aria-hidden="true">{% render 'tw-icon-hamburger' %}</span>
+            <span class="close hidden" aria-hidden="true">{% render 'tw-icon-close' %}</span>
+          </span>
+        </summary>
+        <div
+          class="bg-secondary absolute bottom-0 left-0 w-screen border-t border-solid border-main close-nav transition-all duration-150 h-[calc(100vh-122px)] grid grid-rows-[1fr_auto]"
+          role="dialog"
+          aria-modal="true"
+          aria-label="{{ "snippet.tw_sticky_header.navigation" | t }}">
+          <nav class="px-5 relative pb-8 overflow-y-auto scrollbar {% if show_filters %}pt-[54px]{% else %}pt-8{% endif %} min-h-0"  aria-label="{{ "snippet.tw_sticky_header.navigation" | t }}">
+            {% assign section_open = false %}
+            {% assign has_title_blocks = false %}
+
+            {%- comment -%} Check if there are any title_only blocks {%- endcomment -%}
+            {% for block in section.blocks %}
+              {% if block.type == "title_only" %}
+                {% assign has_title_blocks = true %}
+                {% break %}
+              {% endif %}
+            {% endfor %}
+
+            {%- comment -%} If no title blocks, open a single ul for all items {%- endcomment -%}
+            {% if has_title_blocks == false %}
+              <ul class="flex flex-col gap-y-3">
+            {% endif %}
+
+            {% for block in section.blocks %}
+              {% if block.type == "title_only" %}
+                {%- comment -%} Close previous section if one was open {%- endcomment -%}
+                {% if section_open %}
+                  </ul>
+                  </section>
+                {% endif %}
+
+                {%- comment -%} Start new section {%- endcomment -%}
+                <section class="mb-6">
+                  <h3 class="font-limelight mb-4">
+                    {{ block.settings.title | escape }}
+                  </h3>
+                  <ul class="flex flex-col">
+                {% assign section_open = true %}
+
+              {% elsif block.type == "collection_only" %}
+                <li>
+                  <a
+                    href="{{ block.settings.collection.url }}"
+                    class="block underline underline-offset-4 hover:translate-x-1 transition-transform duration-200 p-3">
+                    {{ block.settings.collection.title | escape }}
+                  </a>
+                </li>
+              {% elsif block.type == "product_only" %}
+                <li>
+                  <a
+                    href="{{ block.settings.product.url }}"
+                    class="block underline underline-offset-4 hover:translate-x-1 transition-transform duration-200 p-3">
+                    {{ block.settings.product.title | escape }}
+                  </a>
+                </li>
+              {% elsif block.type == "page_only" %}
+                <li>
+                  <a
+                    href="{{ block.settings.page.url }}"
+                    class="block underline underline-offset-4 hover:translate-x-1 transition-transform duration-200 p-3">
+                    {{ block.settings.page.title | escape }}
+                  </a>
+                </li>
+              {% else %}
+                <li class="details-wrapper">
+                  <details class="js-nav-submenu group">
+                    <summary class="list-none flex items-center justify-between gap-3 p-3 cursor-pointer group-open:border-b group-open:border-main-10 group-open:pb-4">
+                      <span>{{ block.settings.title | escape }}</span>
+                      <span class="transition-transform duration-150 ease-out group-open:rotate-180 text-main-70">
+                        {% render 'tw-icon-chevron', direction: "top" %}
+                      </span>
+                    </summary>
+                    <ul class="pl-8 group-open:mt-2 flex flex-col gap-y-2">
+                      {% for collection in block.settings.child_collection_list %}
+                        <li>
+                          <a
+                            href="{{ collection.url }}"
+                            class="block text-main-70 underline underline-offset-4 hover:translate-x-1 transition-transform duration-200 p-3">
+                            {{ collection.title | escape }}
+                          </a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </details>
+                </li>
+              {% endif %}
+            {% endfor %}
+
+            {%- comment -%} Close the last section or the single ul {%- endcomment -%}
+            {% if section_open %}
+              </ul>
+              </section>
+            {% elsif has_title_blocks == false %}
+              </ul>
+            {% endif %}
+          </nav>
+          <div>
+            <div class="p-4">
+              {% render 'tw-order-tracking-link',
+                class: 'w-full justify-center py-3 bg-buy-button text-main rounded-lg',
+                show_icon: true,
+                icon_width: 22
+              %}
+            </div>
+            <div class="bg-buy-button text-main flex justify-between pb-10 pt-6">
+            {% render 'tw-list-social' %}
+            <details class="relative px-6">
+              <summary class="flex items-center justify-center text-main cursor-pointer">
+                {% if localization.country.currency.iso_code == 'CAD' and localization.language.iso_code == 'en' %}
+                  {% render 'icon-flag-ca' %}
+                {% elsif localization.country.currency.iso_code == 'CHF' and localization.language.iso_code == 'fr' %}
+                  {% render 'icon-flag-ch' %}
+                {% elsif localization.country.currency.iso_code == 'DKK' and localization.language.iso_code == 'en' %}
+                  {% render 'icon-flag-dk' %}
+                {% elsif localization.country.currency.iso_code == 'EUR' and localization.language.iso_code == 'fr' %}
+                  {% render 'icon-flag-fr' %}
+                {% elsif localization.country.currency.iso_code == 'GBP' and localization.language.iso_code == 'en' %}
+                  {% render 'icon-flag-uk' %}
+                {% elsif localization.country.currency.iso_code == 'USD' and localization.language.iso_code == 'en' %}
+                  {% render 'icon-flag-us' %}
+                {% else %}
+                  {% render 'icon-flag-world' %}
+                {% endif %}
+              </summary>
+              <ul class="absolute right-6 top-0 -translate-y-full z-50 bg-white rounded shadow-lg pt-1">
+                {% liquid
+                  # Pays proposés. Format : devise|langue|drapeau|nom de repli|code pays|espacement
+                  # Chaque pays envoie le formulaire de localisation de Shopify (code pays + code langue).
+                  # Shopify renvoie lui-même vers la page en cours, à son adresse traduite, dans le marché
+                  # et la devise du pays : aucune adresse n'est fabriquée ici, rien ne dérive quand une
+                  # adresse change.
+                  assign locales_data = 'CAD|en|ca|Canada|CA|1,CHF|fr|ch|Suisse|CH|2,DKK|en|dk|Danmark|DK|2,EUR|fr|fr|France|FR|2,GBP|en|uk|UK|GB|2,USD|en|us|USA|US|2'
+                  assign locales = locales_data | split: ','
+                %}
+
+                {%- for locale in locales -%}
+                  {%- assign locale_parts = locale | split: '|' -%}
+                  {%- assign locale_currency = locale_parts[0] -%}
+                  {%- assign locale_lang = locale_parts[1] -%}
+                  {%- assign locale_flag = locale_parts[2] -%}
+                  {%- assign locale_name = locale_parts[3] -%}
+                  {%- comment -%} Nom de pays localisé (audit i18n) : on remplace la valeur FR codée en dur de locales_data par la clé de locale traduite, en gardant le fallback si la clé manque. {%- endcomment -%}
+                  {%- assign country_label_t = 'sections.header.countries.' | append: locale_flag | t -%}
+                  {%- unless country_label_t contains 'ranslation missing' -%}{%- assign locale_name = country_label_t -%}{%- endunless -%}
+                  {%- assign locale_country = locale_parts[4] -%}
+                  {%- assign spacing = locale_parts[5] -%}
+
+                  {%- comment -%} Le pays doit faire partie d'un marché actif de la boutique {%- endcomment -%}
+                  {%- assign is_available = false -%}
+                  {%- for country in localization.available_countries -%}
+                    {%- if country.iso_code == locale_country -%}
+                      {%- assign is_available = true -%}
+                      {%- break -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+
+                  {%- if is_available -%}
+                    {%- assign is_current = false -%}
+                    {%- if locale_lang == localization.language.iso_code and localization.country.currency.iso_code == locale_currency -%}
+                      {%- assign is_current = true -%}
+                    {%- endif -%}
+
+                    {%- assign is_last = false -%}
+                    {%- if forloop.last -%}{%- assign is_last = true -%}{%- endif -%}
+
+                    {%- capture locale_label -%}
+                      {% case locale_flag %}
+                        {% when 'ca' %}{% render 'icon-flag-ca' %}
+                        {% when 'ch' %}{% render 'icon-flag-ch' %}
+                        {% when 'dk' %}{% render 'icon-flag-dk' %}
+                        {% when 'fr' %}{% render 'icon-flag-fr' %}
+                        {% when 'uk' %}{% render 'icon-flag-uk' %}
+                        {% when 'us' %}{% render 'icon-flag-us' %}
+                      {% endcase %}{% if spacing == '2' %}&nbsp;{% endif %}&nbsp;{{ locale_name }}
+                    {%- endcapture -%}
+
+                    <li tabindex="-1">
+                      <localization-flag>
+                        {%- if is_current -%}
+                          <a
+                            class="inline-flex items-center hover:bg-main-10 w-full py-2 mb-1 px-3 whitespace-nowrap text-main bg-main-10 cursor-not-allowed{% if is_last %} last-focusable{% endif %}"
+                            role="link"
+                            aria-disabled="true"
+                            aria-current="true"
+                            hreflang="{{ locale_lang }}"
+                            lang="{{ locale_lang }}"
+                            data-value="{{ locale_lang }}">
+                            {{- locale_label -}}
+                          </a>
+                        {%- else -%}
+                          {%- assign locale_form_id = 'HeaderLocalizationForm-' | append: locale_flag -%}
+                          {%- form 'localization', id: locale_form_id -%}
+                            <input type="hidden" name="country_code" value="{{ locale_country }}">
+                            <input type="hidden" name="language_code" value="{{ locale_lang }}">
+                            {%- comment -%} Page introuvable : on repart de l'accueil du pays choisi, pas d'une autre erreur (le dernier return_to l'emporte sur celui de Shopify) {%- endcomment -%}
+                            {%- if template.name == '404' -%}
+                              <input type="hidden" name="return_to" value="/">
+                            {%- endif -%}
+                            <button
+                              type="submit"
+                              class="inline-flex items-center hover:bg-main-10 w-full py-2 mb-1 px-3 whitespace-nowrap text-main{% if is_last %} last-focusable{% endif %}"
+                              lang="{{ locale_lang }}"
+                              data-value="{{ locale_lang }}">
+                              {{- locale_label -}}
+                            </button>
+                          {%- endform -%}
+                        {%- endif -%}
+                      </localization-flag>
+                    </li>
+                  {%- endif -%}
+                {%- endfor -%}
+              </ul>
+            </details>
+            </div>
+          </div>
+        </div>
+      </details>
+      {% comment %} end on mobile {% endcomment %}
+
+      {%- comment -%} Desktop navigation buttons {%- endcomment -%}
+      {%- liquid
+        comment
+          Count how many title_only blocks exist
+        endcomment
+        assign title_count = 0
+        for block in section.blocks
+          if block.type == "title_only"
+            assign title_count = title_count | plus: 1
+          endif
+        endfor
+      -%}
+      <nav class="hidden md:flex items-center gap-2 self-stretch" aria-label="{{ 'snippet.tw_sticky_header.main_nav' | t }}">
+        {% for block in section.blocks %}
+          {% if block.type == "title_only" %}
+            <button
+              type="button"
+              class="desktop-nav-button h-full px-3 text-sm text-main-80 hover:underline underline-offset-4 focus:underline outline-none cursor-pointer flex items-center"
+              aria-expanded="false"
+              aria-haspopup="true"
+              aria-controls="dropdown-{{ block.id }}"
+              data-section-id="{{ block.id }}"
+              aria-label="{% if title_count == 1 %}{{ 'snippet.tw_sticky_header.open_menu' | t }}{% else %}{{ block.settings.title | escape }}{% endif %}">
+              {% if title_count == 1 %}
+                {% render 'tw-icon-hamburger' %}
+              {% else %}
+                {{ block.settings.title | escape }}
+              {% endif %}
+            </button>
+          {% endif %}
+        {% endfor %}
+      </nav>
+
+      <a
+        href="{{ routes.root_url }}"
+        class="inline-flex items-center text-2xl sm:text-3xl mobile:absolute mobile:left-1/2 mobile:-translate-x-1/2 mobile:top-1/2 mobile:-translate-y-1/2"
+        aria-label="{{ 'snippet.tw_sticky_header.go_to_homepage' | t }}">
+        {% if section.settings.logo_svg != blank %}
+          {{ section.settings.logo_svg }}
+        {% else %}
+          {% render 'tw-default-logo' %}
+        {% endif %}
+        <span class="ml-3 hidden md:block font-heading text-4xl">MyselfMonArt</span>
+      </a>
+
+      
+      {% render 'tw-loup-like-button' %}
+    </div>
+
+    {%- comment -%} Desktop dropdown panels - Full width {%- endcomment -%}
+    <div class="desktop-dropdown-container hidden md:block relative">
+      {% for block in section.blocks %}
+        {% if block.type == "title_only" %}
+          {% liquid
+            assign title_index = forloop.index0
+            assign next_title_index = section.blocks.size
+
+            for future_block in section.blocks
+              if future_block.type == 'title_only' and forloop.index0 > title_index
+                assign next_title_index = forloop.index0
+                break
+              endif
+            endfor
+          %}
+
+          <div
+            id="dropdown-{{ block.id }}"
+            class="desktop-dropdown hidden absolute inset-x-0 bottom-0 translate-y-full border-b border-main shadow-lg z-20 bg-secondary max-h-[calc(100vh-122px)] overflow-y-auto scrollbar"
+            data-section-id="{{ block.id }}"
+            aria-hidden="true">
+
+            <div class="max-w-7xl mx-auto px-5 lg:px-10">
+              <div class="dropdown-grid grid grid-cols-[200px_1fr] lg:grid-cols-[280px_1fr]">
+                {%- comment -%} Left column: Title + All items - relative positioning context {%- endcomment -%}
+                <div class="relative py-8 gap-y-1 max-w-[200px] lg:max-w-[280px] min-h-[550px]">
+                  <h3 class="font-limelight text-3xl mb-6">
+                    {{ block.settings.title | escape }}
+                  </h3>
+                  <ul class="flex flex-col">
+                    {% for content_block in section.blocks %}
+                      {% assign content_index = forloop.index0 %}
+
+                      {% if content_index > title_index and content_index < next_title_index %}
+
+                        {% if content_block.type == "collection_only" %}
+                          <li class="desktop-nav-collection-item obfuscate underline underline-offset-4 hover:translate-x-1 transition-transform duration-200 p-3 cursor-pointer"
+                            data-url64="{{ content_block.settings.collection.url | base64_encode }}"
+                            data-image-id="image-{{ content_block.id }}"
+                            tabindex="-1">
+                            {{ content_block.settings.collection.title | escape }}
+                          </li>
+
+                        {% elsif content_block.type == "product_only" %}
+                          <li class="desktop-nav-product-item obfuscate underline underline-offset-4 hover:translate-x-1 transition-transform duration-200 p-3 cursor-pointer"
+                            data-url64="{{ content_block.settings.product.url | base64_encode }}"
+                            data-image-id="image-{{ content_block.id }}"
+                            tabindex="-1">
+                            {{ content_block.settings.product.title | escape }}
+                          </li>
+
+                        {% elsif content_block.type == "page_only" %}
+                          <li class="desktop-nav-page-item obfuscate underline underline-offset-4 hover:translate-x-1 transition-transform duration-200 p-3 cursor-pointer"
+                            data-url64="{{ content_block.settings.page.url | base64_encode }}"
+                            data-image-id="image-{{ content_block.id }}"
+                            tabindex="-1">
+                            {{ content_block.settings.page.title | escape }}
+                          </li>
+
+                        {% elsif content_block.type == "set_of_collections" %}
+                          <li class="desktop-nav-parent-item group/parent" data-image-id="image-{{ content_block.id }}">
+                            <div class="relative p-3 cursor-pointer group-hover/parent:shadow-[0_-1px_0_0_currentColor,0_1px_0_0_currentColor]
+                            before:absolute before:top-0 before:bottom-0 before:w-full before:left-0 before:shadow-[0_-1px_0_0_currentColor,0_1px_0_0_currentColor] before:-translate-x-full before:hidden group-hover/parent:before:block after:absolute after:top-0 after:right-0 after:w-1 after:h-full after:bg-secondary after:translate-x-[1px] after:hidden group-hover/parent:after:block after:z-10">
+                              {{ content_block.settings.title | escape }}
+                            </div>
+                            {%- comment -%} Children positioned to the right via CSS - no JavaScript {%- endcomment -%}
+                            <div class="desktop-nav-children hidden group-hover/parent:block absolute top-0 bottom-0 right-0 translate-x-full pl-8 py-8 border-l-1 border-l-main">
+                              <h3 class="font-limelight text-3xl mb-6 w-11/12">{{ content_block.settings.title | escape }}</h3>
+                              <ul class="flex flex-col">
+                                {% for collection in content_block.settings.child_collection_list %}
+                                  <li class="obfuscate underline underline-offset-4 hover:translate-x-1 transition-transform duration-200 p-3 cursor-pointer"
+                                    data-url64="{{ collection.url | base64_encode }}" tabindex="-1">
+                                    {{ collection.title | escape }}
+                                  </li>
+                                {% endfor %}
+                              </ul>
+                            </div>
+                          </li>
+                        {% endif %}
+
+                      {% endif %}
+                    {% endfor %}
+                    {%- comment -%} Dernier lien du menu : Suivre ma commande {%- endcomment -%}
+                    <li class="obfuscate underline underline-offset-4 hover:translate-x-1 transition-transform duration-200 p-3 cursor-pointer"
+                      data-url64="{{ order_tracking_url | base64_encode }}"
+                      tabindex="-1">
+                      {{ 'general.order_tracking' | t }}
+                    </li>
+                  </ul>
+                </div>
+
+                {%- comment -%} Right column: All images positioned here, shown/hidden via JS {%- endcomment -%}
+                <div class="relative py-8">
+                  {%- comment -%} Default image grid - shown when nothing is hovered {%- endcomment -%}
+                  {% assign has_default_images = false %}
+                  {% if section.settings.default_desktop_image_1 != blank or section.settings.default_desktop_image_2 != blank or section.settings.default_desktop_image_3 != blank or section.settings.default_desktop_image_4 != blank %}
+                    {% assign has_default_images = true %}
+                  {% endif %}
+
+                  {% if has_default_images %}
+                    <div id="default-image-{{ block.id }}" class="desktop-nav-default-image w-full h-full max-h-[500px] grid grid-cols-2 lg:grid-cols-3 grid-rows-2 gap-6">
+                      {%- assign nav_alt = shop.name -%}
+                      {% if section.settings.default_desktop_image_1 != blank %}
+                        <div class="row-span-2 col-span-1">
+                          {{
+                            section.settings.default_desktop_image_1
+                            | image_url: width: 300
+                            | image_tag:
+                              alt: nav_alt,
+                              widths: '300',
+                              sizes: '(min-width: 768px) 300px, 0px',
+                              class: 'w-full h-full object-cover'
+                          }}
+                        </div>
+                      {% endif %}
+                      {% if section.settings.default_desktop_image_2 != blank %}
+                        <div class="row-span-1 col-span-1 lg:row-span-1 lg:col-span-2">
+                          {{
+                            section.settings.default_desktop_image_2
+                            | image_url: width: 600
+                            | image_tag:
+                              alt: nav_alt,
+                              widths: '400, 600',
+                              sizes: '(min-width: 1024px) 600px, (min-width: 768px) 400px, 0px',
+                              class: 'w-full h-full object-cover'
+                          }}
+                        </div>
+                      {% endif %}
+                      {% if section.settings.default_desktop_image_3 != blank %}
+                        <div class="row-span-1 col-span-1">
+                          {{
+                            section.settings.default_desktop_image_3
+                            | image_url: width: 400
+                            | image_tag:
+                              alt: nav_alt,
+                              widths: '400',
+                              sizes: '(min-width: 768px) 400px, 0px',
+                              class: 'w-full h-full object-cover'
+                          }}
+                        </div>
+                      {% endif %}
+                      {% if section.settings.default_desktop_image_4 != blank %}
+                        <div class="hidden lg:block row-span-1 col-span-1">
+                          {{
+                            section.settings.default_desktop_image_4
+                            | image_url: width: 300
+                            | image_tag:
+                              alt: nav_alt,
+                              widths: '300',
+                              sizes: '(min-width: 1024px) 300px, 0px',
+                              class: 'w-full h-full object-cover'
+                          }}
+                        </div>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+
+                  {%- comment -%} Collection, product, and page-specific images - shown on hover {%- endcomment -%}
+                  {% for content_block in section.blocks %}
+                    {% assign content_index = forloop.index0 %}
+
+                    {% if content_index > title_index and content_index < next_title_index %}
+                      {% if content_block.type == "collection_only" %}
+                        {% assign has_images = false %}
+                        {% if content_block.settings.desktop_image_1 != blank or content_block.settings.desktop_image_2 != blank or content_block.settings.desktop_image_3 != blank or content_block.settings.desktop_image_4 != blank %}
+                          {% assign has_images = true %}
+                        {% endif %}
+
+                        {% if has_images %}
+                          <div id="image-{{ content_block.id }}" class="desktop-nav-image hidden w-full h-full max-h-[500px] grid-cols-2 lg:grid-cols-3 grid-rows-2 gap-6">
+                            {%- assign nav_alt = content_block.settings.collection.title | default: shop.name -%}
+                            {% if content_block.settings.desktop_image_1 != blank %}
+                              <div class="row-span-2 col-span-1">
+                                {{
+                                  content_block.settings.desktop_image_1
+                                  | image_url: width: 300
+                                  | image_tag:
+                                    alt: nav_alt,
+                                    widths: '300',
+                                    sizes: '(min-width: 768px) 300px, 0px',
+                                    class: 'w-full h-full object-cover'
+                                }}
+                              </div>
+                            {% endif %}
+
+                            {% if content_block.settings.desktop_image_2 != blank %}
+                              <div class="row-span-1 col-span-1 lg:row-span-1 lg:col-span-2">
+                                {{
+                                  content_block.settings.desktop_image_2
+                                  | image_url: width: 600
+                                  | image_tag:
+                                    alt: nav_alt,
+                                    widths: '400, 600',
+                                    sizes: '(min-width: 1024px) 600px, (min-width: 768px) 400px, 0px',
+                                    class: 'w-full h-full object-cover'
+                                }}
+                              </div>
+                            {% endif %}
+
+                            {% if content_block.settings.desktop_image_3 != blank %}
+                              <div class="row-span-1 col-span-1">
+                                {{
+                                  content_block.settings.desktop_image_3
+                                  | image_url: width: 400
+                                  | image_tag:
+                                    alt: nav_alt,
+                                    widths: '400',
+                                    sizes: '(min-width: 768px) 400px, 0px',
+                                    class: 'w-full h-full object-cover'
+                                }}
+                              </div>
+                            {% endif %}
+
+                            {% if content_block.settings.desktop_image_4 != blank %}
+                              <div class="hidden lg:block row-span-1 col-span-1">
+                                {{
+                                  content_block.settings.desktop_image_4
+                                  | image_url: width: 300
+                                  | image_tag:
+                                    alt: nav_alt,
+                                    widths: '300',
+                                    sizes: '(min-width: 1024px) 300px, 0px',
+                                    class: 'w-full h-full object-cover'
+                                }}
+                              </div>
+                            {% endif %}
+                            </div>
+                        {% endif %}
+                      {% elsif content_block.type == "product_only" %}
+                        {% liquid
+                          assign product_image = blank
+
+                          # Check if custom desktop image is set
+                          if content_block.settings.desktop_image != blank
+                            assign product_image = content_block.settings.desktop_image
+                          elsif content_block.settings.product.featured_image != blank
+                            # Fallback to product's featured image
+                            assign product_image = content_block.settings.product.featured_image
+                          endif
+
+                          assign nav_alt = content_block.settings.product.title | default: shop.name
+                        %}
+                        {% if product_image != blank %}
+                          <div id="image-{{ content_block.id }}" class="desktop-nav-image hidden mx-auto h-[500px] max-w-[500px]">
+                            {{
+                              product_image
+                              | image_url: width: 500
+                              | image_tag:
+                                alt: nav_alt,
+                                widths: '500',
+                                sizes: '(min-width: 768px) 500px, 0px',
+                                class: 'h-full w-auto object-contain object-top'
+                            }}
+                          </div>
+                        {% endif %}
+                      {% elsif content_block.type == "page_only" and content_block.settings.desktop_image != blank %}
+                        {%- assign nav_alt = content_block.settings.page.title | default: shop.name -%}
+                        <div id="image-{{ content_block.id }}" class="desktop-nav-image hidden mx-auto h-full max-h-[500px] max-w-[500px]">
+                            {{  
+                              content_block.settings.desktop_image
+                              | image_url: width: 500
+                              | image_tag:
+                                alt: nav_alt,
+                                widths: '500',
+                                sizes: '(min-width: 768px) 500px, 0px',
+                                class: 'h-full w-auto object-contain object-top'
+                            }}
+                          </div>
+                      {% elsif content_block.type == "set_of_collections" %}
+                        {% liquid
+                          assign parent_image = blank
+                          assign first_collection = content_block.settings.child_collection_list | first
+
+                          if content_block.settings.desktop_image != blank
+                            assign parent_image = content_block.settings.desktop_image
+                          elsif first_collection != blank and first_collection.featured_image != blank
+                            assign parent_image = first_collection.featured_image
+                          endif
+
+                          assign nav_alt = first_collection.title | default: shop.name
+                        %}
+                        {% if parent_image != blank %}
+                          <div id="image-{{ content_block.id }}" class="desktop-nav-image hidden mx-auto h-[500px] max-h-[400px] max-w-[400px]">
+                            {{
+                              parent_image
+                              | image_url: width: 400
+                              | image_tag:
+                                alt: nav_alt,
+                                widths: '400',
+                                sizes: '(min-width: 768px) 400px, 0px',
+                                class: 'h-full w-full object-cover'
+                            }}
+                          </div>
+                        {% endif %}
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  {%- comment -%} Mobile filter button - Collection pages only {%- endcomment -%}
+  {%- if show_filters -%}
+    <div
+      id="mobile-filter-button-wrapper"
+      class="md:hidden w-screen bg-secondary border-b border-main transition-transform duration-150"
+      style="margin-left: calc(-50vw + 50%);">
+
+      <button
+        type="button"
+        id="filter-button-mobile"
+        class="w-full flex items-center justify-center gap-3 py-3 px-4 hover:bg-main-10 transition-colors duration-100"
+        aria-label="{{ 'sections.filter_drawer.open' | t }}"
+        aria-expanded="false">
+
+        {% render 'icon-filter' %}
+
+        <span class="font-semibold text-sm heading">
+          {{ 'sections.filter_drawer.button_label' | t | upcase }}
+        </span>
+
+        {% if collection.products_count %}
+          <span class="text-xs text-main-70">
+            {{ collection.products_count }} {{ 'sections.filter_drawer.products' | t }}
+          </span>
+        {% endif %}
+      </button>
+    </div>
+  {%- endif -%}
+
+</sticky-header>

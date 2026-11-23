@@ -1,0 +1,30 @@
+{%- comment -%}
+  Une valeur de filtre, dans la ligne des filtres de la nouvelle page collection (snippets/collection-filtres.liquid,
+  ticket 06) : une pastille qui porte une vraie case à cocher (clavier, lecteurs d'écran, formulaire sans script), au
+  paramètre et à la valeur de Search & Discovery, puis sa marque, son nom et son nombre de tableaux (compté avec les
+  autres familles cochées, comme la boutique).
+  Un thème en double dans Search & Discovery (« Humour » ×2) ne fait qu'une pastille : la case porte la première
+  valeur, chaque autre suit dans un champ caché (data-jumeau), envoyé seulement quand la case est cochée (le script
+  le tient à jour) ; le nombre est leur somme.
+  Paramètres : famille ('couleur', 'format', 'theme'), groupe (les valeurs de ce nom, une seule en général), nom (le
+  nom affiché), forme (pour un format : 'portrait', 'paysage', 'carre' ou vide).
+{%- endcomment -%}
+{%- liquid
+  assign premiere = groupe | first
+  assign compte = 0
+  assign active = false
+  for valeur in groupe
+    assign compte = compte | plus: valeur.count
+    if valeur.active
+      assign active = true
+    endif
+  endfor
+-%}
+<label class="filtres-puce" data-nom="{{ nom | escape }}">
+  <input class="filtres-case" type="checkbox" name="{{ premiere.param_name | escape }}" value="{{ premiere.value | escape }}" data-nom="{{ nom | escape }}"{% if active %} checked{% endif %}>
+  {%- for valeur in groupe offset: 1 -%}
+    <input type="hidden" name="{{ valeur.param_name | escape }}" value="{{ valeur.value | escape }}" data-jumeau{% unless active %} disabled{% endunless %}>
+  {%- endfor -%}
+  {%- render 'collection-filtres-marque', famille: famille, valeur: premiere, forme: forme -%}
+  <span class="filtres-puce-nom">{{ nom | escape }}</span> <span class="filtres-nb">{{ compte }}</span>
+</label>

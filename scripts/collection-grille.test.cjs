@@ -348,16 +348,17 @@ test('la section : 24 cartes par page, toutes de la nouvelle carte, et aucun h1'
   assert.equal((await grille(collection(50), { page: 3 })).match(/<li class="refonte-carte">/g).length, 2)
 })
 
-test('la section : ses places dans l’ordre, le titre invisible, la ligne des filtres à venir, la zone parlée', { skip: SKIP }, async () => {
+test('la section : ses places dans l’ordre, le titre invisible, la ligne des filtres, la zone parlée', { skip: SKIP }, async () => {
   const html = await grille(collection(50))
   assert.match(html, /^\s*<section id="grille" class="refonte-grille" aria-labelledby="grille-titre">/)
   // Le titre, pour les lecteurs d'écran (la grille a son nom dans le plan de la page, sous le h1 de l'entrée).
   assert.match(html, /<h2 id="grille-titre" class="sr-only">Les tableaux nature<\/h2>/)
-  // L'ordre de la maquette : la ligne des filtres (ticket 06), la liste, la suite, les liens des pages, la zone parlée.
+  // L'ordre de la maquette : la ligne des filtres (ticket 06, scripts/collection-filtres.test.cjs), la liste, la
+  // suite, les liens des pages, la zone parlée.
   const ids = [...html.matchAll(/\sid="(grille-titre|ancre-barre|barre|liste|suite|pages|statut)"/g)].map((m) => m[1])
   assert.deepEqual(ids, ['grille-titre', 'ancre-barre', 'barre', 'liste', 'suite', 'pages', 'statut'])
-  // Les places encore vides passent la règle *:empty du thème (input.css) : la zone parlée doit exister pour parler.
-  for (const id of ['ancre-barre', 'barre', 'statut']) assert.match(html, new RegExp(`<div id="${id}"[^>]*\\sdata-allow-empty>`), id)
+  // Les places vides passent la règle *:empty du thème (input.css) : la zone parlée doit exister pour parler.
+  for (const id of ['ancre-barre', 'statut']) assert.match(html, new RegExp(`<div id="${id}"[^>]*\\sdata-allow-empty>`), id)
   assert.match(html, /<div id="statut" class="sr-only" role="status" aria-live="polite" aria-atomic="true" data-allow-empty><\/div>/)
   // Le titre dans les cinq langues.
   const TITRES = { fr: 'Les tableaux nature', en: 'The tableaux nature', de: 'Die Tableaux Nature', es: 'Selección de tableaux nature', nl: 'De tableaux nature' }
@@ -525,6 +526,7 @@ function pageDuScript({ search = '?view=refonte' } = {}) {
       children.forEach((c) => this.append(c))
       if (pending && pending.parent) pending.parent.append(this)
     }
+    get isConnected() { for (let n = this; n; n = n.parent) if (n === body) return true; return false }
     get firstElementChild() { return this.children[0] || null }
     get lastElementChild() { return this.children[this.children.length - 1] || null }
     get childElementCount() { return this.children.length }
@@ -640,6 +642,22 @@ test('<infinite-scroll> : chaque lot arrivé s’annonce sur document (mma:colle
   await haut.fire(true)
   await attendre()
   assert.deepEqual({ ...q.events.find((e) => e.type === 'mma:collection-lot').detail }, { cards: 24, direction: 'up' })
+})
+
+test('<infinite-scroll> retiré de la page pendant sa demande (un filtre a remplacé la grille) : son lot ne se pose ni ne s’annonce', async () => {
+  const p = pageDuScript()
+  const liste = new p.El('div', { attrs: { id: 'liste' } })
+  p.body.append(liste)
+  const ancien = p.monter('infinite-scroll', { 'data-pages': '14', 'data-page': '1', 'data-section-id': 'template--1__grille', 'data-marge': '700' }, [new p.El('ul')], liste)
+  p.repondre({ page: 2, cartes: 24 })
+  const demande = p.observers[0].fire(true)
+  // La ligne des filtres (ticket 06) remplace la grille avant la réponse.
+  liste.detach()
+  await demande
+  await attendre()
+  assert.equal(p.requests.length, 1)
+  assert.equal(ancien.nextElementSibling, null, 'rien de posé après l’ancienne grille')
+  assert.deepEqual(p.events.filter((e) => e.type === 'mma:collection-lot'), [], 'la suite de la nouvelle grille ne compte pas ce lot')
 })
 
 test('<collection-suite> : le compte et la jauge suivent les lots qui arrivent en bas, puis la fin ; la zone parlée le dit', () => {

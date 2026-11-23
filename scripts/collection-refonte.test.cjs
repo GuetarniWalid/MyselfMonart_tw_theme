@@ -112,9 +112,10 @@ test('le gabarit des pages collection : avec la marque, <html data-refonte-page>
   const head = html.slice(0, html.indexOf('</head>'))
   assert.match(head, /\[content_for_header\]\n {4}<link href="\/\/www\.myselfmonart\.com\/cdn\/shop\/t\/25\/assets\/collection-refonte\.css\?v=1" rel="stylesheet" type="text\/css" media="all" \/>\n/)
   assert.equal(html.match(/collection-refonte\.css/g).length, 1)
-  // Rien d'autre ne change : sans la marque de <html> et sans ce qui s'ajoute à <head>, le HTML d'avant.
+  // Rien d'autre ne change : sans la marque de <html> et sans ce qui s'ajoute à <head>, le HTML d'avant, moins le
+  // tiroir des filtres, que la ligne des filtres de la page remplace (ticket 06, scripts/collection-filtres.test.cjs).
   const rest = html.replace('<html lang="fr" data-refonte-page>', '<html lang="fr">').replace(/(\[content_for_header\])[\s\S]*?(\n\n {4}<script src=)/, '$1$2')
-  assert.equal(rest, await renderLayout(AVANT, page))
+  assert.equal(rest, (await renderLayout(AVANT, page)).replace('[render tw-filter-drawer]', ''))
 })
 
 /* ---------- La police ---------- */

@@ -21,6 +21,8 @@
  *   product_option_selected      option choisie par le visiteur (option, option_value)
  *   floating_buy_button_clicked  clic sur le bouton d'achat flottant
  *   product_added_to_cart        ajout réussi (source, quantity, value)
+ *   filter_applied               filtre ou tri appliqué dans la ligne des filtres de la nouvelle page collection
+ *                                (filter_family, filter_value, filter_action, results_count)
  * Tous, sauf $pageleave, portent la devise du marché (currency). Ceux de la fiche portent la fiche
  * (#product-tracking-json, sections/main-product.liquid) et le choix du visiteur (window.MMASelection,
  * assets/product-selection.js).
@@ -37,6 +39,9 @@
  * Chaque chemin d'ajout au panier annonce sa réussite par UN événement sur `document` :
  *   document.dispatchEvent(new CustomEvent('mma:cart-add', { detail: { source, items } }));
  *   source : 'main' | 'float' | 'bundle' | 'studio' ; items : `items` de la réponse de /cart/add.js.
+ * La ligne des filtres (assets/collection-filtres.js) annonce chaque changement appliqué de même :
+ *   mma:filter-applied, { famille, valeur, action, resultats } (famille : 'couleur' | 'format' | 'theme' | 'tri' |
+ *   'tout' ; valeur : les noms affichés, ou la clé du tri ; action : 'ajout' | 'retrait' | 'effacer' | 'tri').
  *
  * Enregistrements de visites : fiches d'œuvres seulement (toile, poster), jamais les personnalisés
  * (photos et prénoms des clients), pour les sessions tirées au sort. Le tirage est fait ici et non
@@ -140,6 +145,19 @@
       source: detail.source,
       quantity: sum('quantity'),
       value: sum('final_line_price') / 100,
+    };
+  }
+
+  // detail : celui de mma:filter-applied. La famille et le geste prennent des noms anglais, stables, comme les
+  // autres propriétés ; la valeur reste le nom affiché (la clé, pour le tri).
+  const FILTER_FAMILIES = { couleur: 'color', format: 'format', theme: 'theme', tri: 'sort', tout: 'all' };
+  const FILTER_ACTIONS = { ajout: 'add', retrait: 'remove', effacer: 'clear', tri: 'sort' };
+  function filterProperties(detail) {
+    return {
+      filter_family: FILTER_FAMILIES[detail.famille] || detail.famille,
+      filter_value: detail.valeur,
+      filter_action: FILTER_ACTIONS[detail.action] || detail.action,
+      results_count: detail.resultats,
     };
   }
 
@@ -289,6 +307,9 @@
     doc.addEventListener('mma:cart-add', (e) => {
       track('product_added_to_cart', cartProperties(e.detail, currentProductProperties()));
     });
+    doc.addEventListener('mma:filter-applied', (e) => {
+      track('filter_applied', filterProperties(e.detail));
+    });
     doc.addEventListener(
       'click',
       (e) => {
@@ -383,6 +404,7 @@
       productProperties,
       optionProperties,
       cartProperties,
+      filterProperties,
       startTracking,
     };
     return;

@@ -1514,3 +1514,750 @@
 }
 
 /* === Bas de page (ticket 08) : fin === */
+
+/* === Ligne des filtres (ticket 06) : début === */
+
+/* La ligne des filtres (snippets/collection-filtres.liquid et ses morceaux, assets/collection-filtres.js), juste
+   au-dessus des tableaux, et les filtres actifs dessous. Les mesures de la maquette (blocs « 3. La ligne des
+   filtres », « Téléphone : le panneau », « Version 4 ») et de la fiche du spécialiste des filtres. Téléphone : les
+   trois familles et le tri dans une ligne qui défile en largeur, chaque famille ouvre son panneau posé en bas (un
+   <dialog>). Ordinateur (900 px et plus) : un menu sous chaque famille, le nombre et le tri à droite. */
+
+/* La ligne : d'un bord à l'autre de l'écran, blanche, collée sous l'en-tête pendant toute la grille (--barre-top, que
+   pose l'en-tête au ticket 07 ; 0 sans lui) ; elle part avec la dernière rangée. Sur téléphone, elle touche le bord
+   droit : la ligne y défile. */
+:root[data-refonte-page] .filtres-ligne {
+  position: sticky;
+  top: var(--barre-top, 0px);
+  z-index: 20;
+  display: block;
+  margin-inline: calc(-1 * var(--gout)) calc(-1 * var(--goutd));
+  padding-inline: var(--gout) 0;
+  background: var(--blanc);
+}
+:root[data-refonte-page] .filtres-form {
+  margin: 0;
+}
+:root[data-refonte-page] .filtres-dedans {
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  max-width: 1240px;
+  margin-inline: auto;
+}
+/* Les trois familles et le tri : s'ils ne tiennent pas, ils défilent en largeur, le dernier coupé par un fondu à
+   droite (le signe qu'il y a une suite). */
+:root[data-refonte-page] .filtres-defile {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 6px var(--goutd) 6px 0;
+  -webkit-mask-image: linear-gradient(90deg, var(--encre) calc(100% - 30px), transparent);
+  mask-image: linear-gradient(90deg, var(--encre) calc(100% - 30px), transparent);
+}
+:root[data-refonte-page] .filtres-defile::-webkit-scrollbar {
+  display: none;
+}
+
+/* Le bouton d'une famille : 44 px, contour encre ; une famille choisie passe en fond encre (« Couleur · Bleu »). */
+:root[data-refonte-page] .filtres-famille {
+  position: relative;
+  flex: none;
+}
+:root[data-refonte-page] .filtres-fac {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 44px;
+  padding: 0 12px 0 15px;
+  border: 1.5px solid var(--encre);
+  border-radius: 999px;
+  background: var(--blanc);
+  color: var(--encre);
+  font: 600 14px/1 var(--sans);
+  white-space: nowrap;
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+:root[data-refonte-page] .filtres-fac::-webkit-details-marker {
+  display: none;
+}
+:root[data-refonte-page] .filtres-fac[data-actif] {
+  background: var(--encre);
+  color: var(--blanc);
+}
+/* « Thème · Formes géométriques » : un nom trop long s'arrête sur des points. */
+:root[data-refonte-page] .filtres-fac-nom {
+  max-width: 15em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+:root[data-refonte-page] .filtres-chevron {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+}
+:root[data-refonte-page] .filtres-famille[open] > .filtres-fac .filtres-chevron {
+  transform: rotate(180deg);
+}
+/* Le petit rond multicolore de « Couleur », dans les aplats de la page. */
+:root[data-refonte-page] .filtres-mini {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: conic-gradient(var(--corail), var(--soleil), var(--menthe), var(--ciel), var(--lilas), var(--rose), var(--corail));
+  box-shadow: inset 0 0 0 1px var(--encre-12);
+}
+
+/* Le nombre (ordinateur seulement) et le tri : un vrai <select>, transparent, posé sur une pilule. */
+:root[data-refonte-page] .filtres-compte {
+  display: none;
+  margin: 0 6px 0 auto;
+  font: 400 15px/1 var(--sans);
+  color: var(--encre);
+  white-space: nowrap;
+}
+:root[data-refonte-page] .filtres-compte b {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+:root[data-refonte-page] .filtres-tri {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 44px;
+  padding: 0 34px 0 15px;
+  border: 1.5px solid var(--encre);
+  border-radius: 999px;
+  background: var(--blanc);
+  color: var(--encre);
+  font: 600 14px/1 var(--sans);
+  white-space: nowrap;
+  cursor: pointer;
+}
+:root[data-refonte-page] .filtres-tri select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  font-size: 16px;
+  cursor: pointer;
+}
+:root[data-refonte-page] .filtres-tri .filtres-chevron {
+  position: absolute;
+  right: 13px;
+  pointer-events: none;
+}
+:root[data-refonte-page] .filtres-tri-ordi {
+  display: none;
+}
+:root[data-refonte-page] .filtres-tri-nom {
+  font-weight: 400;
+  color: var(--encre-70);
+}
+:root[data-refonte-page] .filtres-tri:has(select:focus-visible) {
+  outline: 2px solid var(--encre);
+  outline-offset: 3px;
+}
+/* Sans script : un bouton pour envoyer le tri. */
+:root[data-refonte-page] .filtres-appliquer {
+  flex: none;
+  height: 44px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--encre);
+  color: var(--blanc);
+  font: 600 14px/1 var(--sans);
+}
+
+/* Le panneau d'une famille : son nom et l'aide, ses valeurs, son pied. Le même sur téléphone, déplacé par le script
+   dans le panneau posé en bas, et sur ordinateur, en menu. */
+:root[data-refonte-page] .filtres-panneau {
+  color: var(--encre);
+}
+:root[data-refonte-page] .filtres-panneau-tete {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+:root[data-refonte-page] .filtres-panneau-noms {
+  min-width: 0;
+}
+:root[data-refonte-page] .filtres-panneau-titre {
+  margin: 0;
+  font: 700 15px/1.2 var(--sans);
+}
+:root[data-refonte-page] .filtres-panneau-titre:focus {
+  outline: none;
+}
+:root[data-refonte-page] .filtres-panneau-aide {
+  margin: 0;
+  font: 400 13px/1.3 var(--sans);
+  color: var(--encre-55);
+}
+:root[data-refonte-page] .filtres-aide-ordi {
+  display: none;
+}
+:root[data-refonte-page] .filtres-fermer {
+  flex: none;
+  display: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1.5px solid var(--encre);
+  border-radius: 50%;
+  background: var(--blanc);
+  color: var(--encre);
+  cursor: pointer;
+}
+:root[data-refonte-page] .filtres-fermer svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+}
+:root[data-refonte-page] .filtres-groupe {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+:root[data-refonte-page] .filtres-valeurs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Une valeur : une pastille de 44 px qui porte sa case (invisible, sur toute la pastille), son rond ou sa forme, son
+   nom et son nombre. Cochée : fond encre, texte blanc, une coche dans le rond (à l'encre sur un rond clair). */
+:root[data-refonte-page] .filtres-puce {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 14px 0 9px;
+  border-radius: 999px;
+  background: var(--encre-06);
+  color: var(--encre);
+  font: 500 14px/1 var(--sans);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+:root[data-refonte-page] .filtres-panneau[data-famille="theme"] .filtres-puce {
+  padding-left: 14px;
+}
+/* Un nom trop long pour sa colonne (le menu de l'ordinateur) s'arrête sur des points ; le nombre reste. */
+:root[data-refonte-page] .filtres-puce-nom {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+:root[data-refonte-page] .filtres-case {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+:root[data-refonte-page] .filtres-puce:has(.filtres-case:focus-visible) {
+  outline: 2px solid var(--encre);
+  outline-offset: 2px;
+}
+:root[data-refonte-page] .filtres-puce:has(.filtres-case:checked) {
+  background: var(--encre);
+  color: var(--blanc);
+}
+:root[data-refonte-page] .filtres-nb {
+  font-size: 12px;
+  color: var(--encre-55);
+  font-variant-numeric: tabular-nums;
+}
+:root[data-refonte-page] .filtres-puce:has(.filtres-case:checked) .filtres-nb {
+  color: color-mix(in srgb, var(--blanc) 72%, transparent);
+}
+/* Le rond d'une couleur : celle de Search & Discovery (--c), ou son image (Multicolore, Noir & Blanc). */
+:root[data-refonte-page] .filtres-rond {
+  position: relative;
+  flex: none;
+  width: 26px;
+  height: 26px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--c, var(--encre-06));
+  box-shadow: inset 0 0 0 1px var(--encre-16);
+}
+:root[data-refonte-page] .filtres-rond img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+:root[data-refonte-page] .filtres-puce:has(.filtres-case:checked) .filtres-rond::after {
+  content: "";
+  position: absolute;
+  left: 9px;
+  top: 6px;
+  width: 6px;
+  height: 11px;
+  border: solid var(--coche, var(--blanc));
+  border-width: 0 2.2px 2.2px 0;
+  transform: rotate(45deg);
+}
+:root[data-refonte-page] .filtres-rond[data-clair] {
+  --coche: var(--encre);
+}
+/* La forme d'un format : portrait, paysage, carré. */
+:root[data-refonte-page] .filtres-forme {
+  flex: none;
+  display: inline-block;
+  border: 1.8px solid currentColor;
+  border-radius: 2px;
+}
+:root[data-refonte-page] .filtres-forme[data-forme="portrait"] {
+  width: 12px;
+  height: 16px;
+}
+:root[data-refonte-page] .filtres-forme[data-forme="paysage"] {
+  width: 17px;
+  height: 12px;
+}
+:root[data-refonte-page] .filtres-forme[data-forme="carre"] {
+  width: 14px;
+  height: 14px;
+}
+
+/* Les thèmes : « Voir les 98 thèmes », puis la recherche et les autres ; rien ne correspond : la phrase qui le dit. */
+:root[data-refonte-page] .filtres-tous {
+  margin-top: 12px;
+}
+:root[data-refonte-page] .filtres-tous-bouton {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1.5px solid var(--encre);
+  border-radius: 999px;
+  font: 600 14px/1 var(--sans);
+  list-style: none;
+  cursor: pointer;
+}
+:root[data-refonte-page] .filtres-tous-bouton::-webkit-details-marker {
+  display: none;
+}
+:root[data-refonte-page] .filtres-tous[open] .filtres-tous-plus,
+:root[data-refonte-page] .filtres-tous:not([open]) .filtres-tous-moins {
+  display: none;
+}
+:root[data-refonte-page] .filtres-cherche {
+  display: block;
+  width: 100%;
+  height: 46px;
+  margin: 12px 0 10px;
+  padding: 0 16px;
+  border: 1.5px solid var(--encre-16);
+  border-radius: 999px;
+  background: var(--blanc);
+  color: var(--encre);
+  font: 400 16px/1 var(--sans);
+}
+:root[data-refonte-page] .filtres-cherche:focus-visible {
+  border-color: var(--encre);
+  outline: 2px solid var(--encre);
+  outline-offset: 2px;
+}
+:root[data-refonte-page] .filtres-aucun {
+  margin: 4px 0 0;
+  font: 400 14px/1.4 var(--sans);
+  color: var(--encre-55);
+}
+
+/* Le pied : « Effacer la couleur », et « Voir les N tableaux », un bouton encre. */
+:root[data-refonte-page] .filtres-panneau-pied {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+:root[data-refonte-page] .filtres-effacer {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 4px;
+  font: 600 14px/1 var(--sans);
+  color: var(--encre);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+:root[data-refonte-page] .filtres-voir {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  margin-left: auto;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--encre);
+  color: var(--blanc);
+  font: 600 14px/1 var(--sans);
+  cursor: pointer;
+}
+:root[data-refonte-page] .filtres-voir[aria-busy="true"] {
+  opacity: 0.72;
+}
+
+/* Téléphone : le panneau posé en bas, à la hauteur de son contenu (88 % de l'écran au plus), coins de 26 px, sur un
+   voile encre à 38 %. Le nom de la famille en 700 20 px ; les valeurs défilent, le pied reste collé en bas. Sur une
+   tablette, il garde la largeur d'un téléphone, au milieu. */
+:root[data-refonte-page] .filtres-feuille {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: 88svh;
+  margin: auto 0 0;
+  inset-block: auto 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 26px 26px 0 0;
+  background: var(--blanc);
+  color: var(--encre);
+  box-shadow: 0 -10px 40px color-mix(in srgb, var(--encre) 20%, transparent);
+}
+:root[data-refonte-page] .filtres-feuille::backdrop {
+  background: color-mix(in srgb, var(--encre) 38%, transparent);
+}
+:root[data-refonte-page] .filtres-feuille[open] {
+  display: flex;
+  flex-direction: column;
+}
+:root[data-refonte-page] .filtres-feuille > .filtres-panneau {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: 88svh;
+}
+:root[data-refonte-page] .filtres-feuille .filtres-panneau-tete {
+  padding: 14px 14px 12px 20px;
+  border-bottom: 1px solid var(--encre-12);
+}
+:root[data-refonte-page] .filtres-feuille .filtres-panneau-titre {
+  font-size: 20px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+:root[data-refonte-page] .filtres-feuille .filtres-panneau-aide {
+  margin-top: 4px;
+}
+:root[data-refonte-page] .filtres-feuille .filtres-fermer {
+  display: grid;
+}
+:root[data-refonte-page] .filtres-feuille .filtres-panneau-corps {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 16px 20px 18px;
+}
+:root[data-refonte-page] .filtres-feuille .filtres-panneau-pied {
+  padding: 12px 20px calc(16px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--encre-12);
+  background: var(--blanc);
+}
+:root[data-refonte-page] .filtres-feuille .filtres-voir {
+  flex: 1;
+  min-height: 48px;
+  font-size: 15px;
+}
+/* Les formats : trois tuiles de 84 px, la forme dessinée, le nom, le nombre. */
+:root[data-refonte-page] .filtres-feuille .filtres-valeurs-formes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+:root[data-refonte-page] .filtres-feuille .filtres-valeurs-formes .filtres-puce {
+  flex-direction: column;
+  justify-content: center;
+  gap: 7px;
+  height: 84px;
+  padding: 0 6px;
+  border-radius: 18px;
+  text-align: center;
+  white-space: normal;
+}
+/* Chaque forme prend 24 px de haut, marges comprises : les noms des trois tuiles restent alignés. */
+:root[data-refonte-page] .filtres-feuille .filtres-forme[data-forme="portrait"] {
+  width: 18px;
+  height: 24px;
+}
+:root[data-refonte-page] .filtres-feuille .filtres-forme[data-forme="paysage"] {
+  width: 26px;
+  height: 18px;
+  margin-block: 3px;
+}
+:root[data-refonte-page] .filtres-feuille .filtres-forme[data-forme="carre"] {
+  width: 21px;
+  height: 21px;
+  margin-block: 1.5px;
+}
+@media (min-width: 600px) {
+  :root[data-refonte-page] .filtres-feuille {
+    max-width: 560px;
+    margin: auto auto 0;
+  }
+}
+@keyframes refonte-feuille {
+  from {
+    transform: translateY(40px);
+    opacity: 0.4;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-refonte-page] .filtres-feuille[open] {
+    animation: refonte-feuille 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+}
+
+/* Les filtres actifs, sous la ligne (qui ne se colle pas) : sur téléphone, « 103 tableaux » puis les pastilles ; sur
+   ordinateur, les pastilles seules ; puis « Tout effacer ». Une pastille : fond encre, 36 px, 44 px de zone de
+   toucher. Le tri n'y figure que sur téléphone. */
+:root[data-refonte-page] .filtres-resume {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding: 2px 0 10px;
+}
+:root[data-refonte-page] .filtres-resume-compte {
+  margin: 0 4px 0 0;
+  font: 400 15px/1.2 var(--sans);
+  color: var(--encre);
+}
+:root[data-refonte-page] .filtres-resume-compte b {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+:root[data-refonte-page] .filtres-pastille {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 36px;
+  padding: 0 10px 0 8px;
+  border-radius: 999px;
+  background: var(--encre);
+  color: var(--blanc);
+  font: 600 13.5px/1 var(--sans);
+  white-space: nowrap;
+  text-decoration: none;
+}
+:root[data-refonte-page] .filtres-pastille::before {
+  content: "";
+  position: absolute;
+  inset: -4px 0;
+}
+:root[data-refonte-page] .filtres-pastille:not(:has(.filtres-rond, .filtres-forme)) {
+  padding-left: 13px;
+}
+:root[data-refonte-page] .filtres-pastille .filtres-rond {
+  width: 20px;
+  height: 20px;
+}
+:root[data-refonte-page] .filtres-croix {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+}
+:root[data-refonte-page] .filtres-tout {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 6px;
+  font: 600 13.5px/1 var(--sans);
+  color: var(--encre);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+:root[data-refonte-page] .filtres-tout::before {
+  content: "";
+  position: absolute;
+  inset: -4px 0;
+}
+
+/* À la fin d'un choix, ou sans tableau pour ces filtres : « Voir les 327 tableaux, sans filtre ». */
+:root[data-refonte-page] .filtres-sans {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-height: 46px;
+  margin: 12px auto 0;
+  padding: 0 20px;
+  border-radius: 999px;
+  background: var(--blanc);
+  color: var(--encre);
+  box-shadow: inset 0 0 0 1.5px var(--encre);
+  font: 600 14px/1 var(--sans);
+  text-decoration: none;
+}
+
+/* Pendant la réponse du serveur, la grille à 35 % ; le fondu, seulement sans « mouvements réduits ». */
+:root[data-refonte-page] .refonte-grille-dedans[aria-busy="true"] {
+  opacity: 0.35;
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-refonte-page] .refonte-grille-dedans {
+    transition: opacity 0.18s ease;
+  }
+  :root[data-refonte-page] .filtres-chevron {
+    transition: transform 0.2s ease;
+  }
+}
+
+/* Au clavier, un contour encre de 2 px. */
+:root[data-refonte-page] :is(.filtres-fac, .filtres-tous-bouton, .filtres-fermer, .filtres-effacer, .filtres-voir, .filtres-pastille, .filtres-tout, .filtres-sans, .filtres-appliquer):focus-visible {
+  outline: 2px solid var(--encre);
+  outline-offset: 3px;
+}
+
+/* Cachés : une valeur hors de la recherche, « Effacer » sans choix, la phrase « aucun thème », la ligne des filtres
+   actifs vide (leur display l'emporterait sur [hidden]). */
+:root[data-refonte-page] :is(.filtres-puce, .filtres-effacer, .filtres-aucun, .filtres-resume)[hidden] {
+  display: none;
+}
+
+/* Sans script, sur téléphone : une famille ouverte s'étale sous la ligne. */
+:root[data-refonte-page] .filtres-ligne:not([data-pret]) .filtres-defile:has(> .filtres-famille[open]) {
+  flex-wrap: wrap;
+  overflow: visible;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+:root[data-refonte-page] .filtres-ligne:not([data-pret]) .filtres-famille[open] {
+  flex-basis: 100%;
+}
+@media (max-width: 899px) {
+  :root[data-refonte-page] .filtres-famille > .filtres-panneau {
+    margin-top: 8px;
+    padding: 14px;
+    border-radius: 18px;
+    box-shadow: 0 0 0 1px var(--encre-12);
+  }
+  /* Le tri choisi, sur téléphone : « Tri · Nouveautés », en fond encre. */
+  :root[data-refonte-page] .filtres-tri[data-actif] {
+    background: var(--encre);
+    color: var(--blanc);
+  }
+}
+
+/* Ordinateur : la ligne de 68 px dans les marges de la page, sans défilement ; le nombre et le tri à droite ; chaque
+   menu (600 px, 420 pour Format, coins de 22 px) sous son bouton, décalé par le script s'il dépassait à droite, et
+   jamais plus haut que l'écran. Couleur et Format sur trois colonnes. */
+@media (min-width: 900px) {
+  :root[data-refonte-page] .filtres-ligne {
+    padding-inline: var(--gout) var(--goutd);
+  }
+  :root[data-refonte-page] .filtres-dedans {
+    min-height: 68px;
+  }
+  :root[data-refonte-page] .filtres-defile {
+    gap: 10px;
+    overflow: visible;
+    padding: 0;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  :root[data-refonte-page] .filtres-fac {
+    gap: 8px;
+    padding: 0 14px 0 16px;
+  }
+  :root[data-refonte-page] .filtres-compte {
+    display: block;
+  }
+  :root[data-refonte-page] .filtres-tri {
+    padding: 0 38px 0 16px;
+  }
+  :root[data-refonte-page] .filtres-tri .filtres-chevron {
+    right: 15px;
+  }
+  :root[data-refonte-page] .filtres-tri-tel,
+  :root[data-refonte-page] .filtres-aide-tel {
+    display: none;
+  }
+  :root[data-refonte-page] .filtres-tri-ordi,
+  :root[data-refonte-page] .filtres-aide-ordi {
+    display: inline;
+  }
+  :root[data-refonte-page] .filtres-famille > .filtres-panneau {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: var(--decale, 0px);
+    z-index: 25;
+    width: 600px;
+    max-width: calc(100vw - var(--gout) - var(--goutd));
+    max-height: calc(100svh - var(--barre-top, 0px) - 96px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 18px 20px 14px;
+    border-radius: 22px;
+    background: var(--blanc);
+    box-shadow: 0 26px 60px color-mix(in srgb, var(--encre) 22%, transparent), 0 0 0 1px var(--encre-12);
+  }
+  :root[data-refonte-page] .filtres-famille[data-famille="format"] > .filtres-panneau {
+    width: 420px;
+  }
+  :root[data-refonte-page] .filtres-famille > .filtres-panneau .filtres-panneau-tete {
+    margin-bottom: 12px;
+  }
+  :root[data-refonte-page] .filtres-famille > .filtres-panneau .filtres-panneau-noms {
+    display: flex;
+    flex: 1;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  :root[data-refonte-page] .filtres-famille:not([data-famille="theme"]) > .filtres-panneau .filtres-valeurs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  :root[data-refonte-page] .filtres-famille > .filtres-panneau .filtres-panneau-pied {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--encre-12);
+  }
+  :root[data-refonte-page] .filtres-resume-compte,
+  :root[data-refonte-page] .filtres-pastille-tri,
+  :root[data-refonte-page] .filtres-resume[data-tri-seul] {
+    display: none;
+  }
+}
+
+/* === Ligne des filtres (ticket 06) : fin === */

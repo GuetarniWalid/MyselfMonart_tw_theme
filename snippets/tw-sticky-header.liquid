@@ -20,6 +20,14 @@
     {% assign show_filters = true %}
   {% endif %}
 {%- endif -%}
+{%- comment -%}
+  La nouvelle page collection (ticket 06 de .scratch/collection-design) a sa ligne des filtres au-dessus des tableaux :
+  ni barre ici, ni tiroir. Elle se reconnaît, comme dans layout/collection.liquid, à la marque de sa section dans la
+  page rendue (content_for_layout est un objet global de Shopify). Ailleurs, rien ne change.
+{%- endcomment -%}
+{%- if content_for_layout contains ' data-refonte>' -%}
+  {%- assign show_filters = false -%}
+{%- endif -%}
 
 <sticky-header class="transition-colors duration-500 border-b border-solid border-main relative">
   <div>

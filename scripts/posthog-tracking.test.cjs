@@ -10,6 +10,7 @@ const {
   productProperties,
   optionProperties,
   cartProperties,
+  filterProperties,
   startTracking,
 } = require('../assets/posthog-tracking.js');
 
@@ -207,6 +208,21 @@ test('lot ajouté depuis le tiroir : décrit le 1er produit et cumule quantités
 test('ajout au panier : le texte libre de la ligne (prénoms, aperçu) ne part jamais', () => {
   const properties = cartProperties({ source: 'studio', items: [CART_ITEM] }, null);
   assert.doesNotMatch(JSON.stringify(properties), /Léa|apercu/);
+});
+
+// mma:filter-applied, tel que l'envoie la ligne des filtres de la nouvelle page collection (assets/collection-filtres.js).
+const FILTRE_BLEU = { famille: 'couleur', valeur: 'Bleu', action: 'ajout', resultats: 103 };
+
+test('filtre appliqué : la famille, la valeur, le geste et le nombre de tableaux, aux noms de PostHog', () => {
+  assert.deepEqual(filterProperties(FILTRE_BLEU), { filter_family: 'color', filter_value: 'Bleu', filter_action: 'add', results_count: 103 });
+  assert.deepEqual(filterProperties({ famille: 'tout', valeur: 'Bleu, Zen', action: 'effacer', resultats: 327 }), {
+    filter_family: 'all', filter_value: 'Bleu, Zen', filter_action: 'clear', results_count: 327,
+  });
+  assert.deepEqual(filterProperties({ famille: 'tri', valeur: 'price-ascending', action: 'tri', resultats: 327 }), {
+    filter_family: 'sort', filter_value: 'price-ascending', filter_action: 'sort', results_count: 327,
+  });
+  assert.equal(filterProperties({ famille: 'format', valeur: 'Carré', action: 'retrait', resultats: 54 }).filter_family, 'format');
+  assert.equal(filterProperties({ famille: 'theme', valeur: 'Zen', action: 'retrait', resultats: 77 }).filter_action, 'remove');
 });
 
 // ---- Le suivi, à la frontière du navigateur ----
@@ -710,6 +726,7 @@ test('bascule : les écouteurs ne se multiplient pas, un choix ne compte qu’un
   assert.equal(browser.doc.listenerCount('mma:selection-change'), 1);
   assert.equal(browser.doc.listenerCount('mma:soft-navigation'), 1);
   assert.equal(browser.doc.listenerCount('mma:cart-add'), 1);
+  assert.equal(browser.doc.listenerCount('mma:filter-applied'), 1);
   assert.equal(browser.doc.listenerCount('click'), 1);
   browser.doc.emit('mma:selection-change', { detail: { ...TOILE_SELECTION, changed: 'size' } });
   assert.equal(browser.captured('product_option_selected').length, 1);
@@ -752,6 +769,29 @@ test('ajout au panier : part avec sa source, sa quantité et son montant', async
   assert.equal(event.properties.quantity, 1);
   assert.equal(event.properties.value, 62.5);
   assert.equal(event.properties.product_id, TOILE.id);
+});
+
+test('filtre appliqué : un changement de la ligne des filtres part en filter_applied, avec la devise', async () => {
+  const browser = await visit({ product: null, url: `${SITE}/collections/tableaux-nature-sauvage?view=refonte` });
+  browser.libraryLoaded();
+  browser.doc.emit('mma:filter-applied', { detail: FILTRE_BLEU });
+  assert.deepEqual(browser.captured('filter_applied'), [
+    { name: 'filter_applied', properties: { ...filterProperties(FILTRE_BLEU), currency: 'EUR' } },
+  ]);
+});
+
+test('filtre appliqué avant le démarrage : il attend, dans l’ordre, après la page vue', async () => {
+  const browser = await visit({ product: null, url: `${SITE}/collections/tableaux-nature-sauvage?view=refonte` });
+  browser.doc.emit('mma:filter-applied', { detail: FILTRE_BLEU });
+  browser.libraryLoaded();
+  assert.deepEqual(browser.posthog.captured.map((event) => event.name), ['$pageview', 'filter_applied']);
+});
+
+test('filtre appliqué : rien ne part sans consentement', async () => {
+  const browser = await visit({ product: null, consent: false });
+  browser.doc.emit('mma:filter-applied', { detail: FILTRE_BLEU });
+  assert.equal(browser.scripts.length, 0);
+  assert.equal(browser.posthog.captured.length, 0);
 });
 
 test('ajout au panier hors d’une fiche (page panier) : PostHog n’est chargé qu’une fois', async () => {

@@ -482,6 +482,87 @@
           "many": "You have seen all {{ count }} artworks."
         }
       },
+      "collection_filtres": {
+        "ligne": "Filter and sort the artworks",
+        "familles": {
+          "couleur": "Colour",
+          "format": "Format",
+          "theme": "Theme"
+        },
+        "famille_une": "{{ famille }} · {{ valeur }}",
+        "famille_plusieurs": "{{ famille }} · {{ nombre }}",
+        "aide_ordi": "one click adds, another removes",
+        "aide_tel": "One tap adds, another removes",
+        "fermer": "Close without changing anything",
+        "effacer": {
+          "couleur": "Clear colour",
+          "format": "Clear format",
+          "theme": "Clear theme"
+        },
+        "voir": {
+          "one": "See the artwork",
+          "other": "See the {{ count }} artworks",
+          "many": "See the {{ count }} artworks"
+        },
+        "voir_aucun": "No artworks",
+        "compte_html": {
+          "one": "<b>{{ count }}</b> artwork",
+          "other": "<b>{{ count }}</b> artworks",
+          "many": "<b>{{ count }}</b> artworks"
+        },
+        "themes_tous": {
+          "one": "See the theme",
+          "other": "See all {{ count }} themes",
+          "many": "See all {{ count }} themes"
+        },
+        "themes_moins": "Fewer themes",
+        "chercher": "Search a theme (horse, zen…)",
+        "chercher_nom": "Search a theme",
+        "aucun_theme": {
+          "one": "No theme by that name for this artwork. Remove a filter to see more.",
+          "other": "No theme by that name among these {{ count }} artworks. Remove a filter to see more.",
+          "many": "No theme by that name among these {{ count }} artworks. Remove a filter to see more."
+        },
+        "trier": "Sort",
+        "trier_par": "Sort:",
+        "trier_nom": "Sort the artworks",
+        "tri_actif": "Sort · {{ tri }}",
+        "tri_pastille": "Sort: {{ tri }}",
+        "tri_retirer": "Back to sorting by best sellers",
+        "tris": {
+          "best_selling": "Best sellers",
+          "created_descending": "New arrivals",
+          "price_ascending": "Price, low to high",
+          "price_descending": "Price, high to low"
+        },
+        "appliquer": "Apply",
+        "retirer": "Remove the {{ nom }} filter",
+        "tout_effacer": "Clear all",
+        "annonce_tableaux": {
+          "one": "{{ count }} artwork.",
+          "other": "{{ count }} artworks.",
+          "many": "{{ count }} artworks."
+        },
+        "annonce_filtres": "Filters: {{ liste }}.",
+        "annonce_sans_filtre": "No filter.",
+        "annonce_tri": "Sort: {{ tri }}.",
+        "fin_choix": {
+          "one": "You have seen the artwork in this selection.",
+          "other": "You have seen all {{ count }} artworks in this selection.",
+          "many": "You have seen all {{ count }} artworks in this selection."
+        },
+        "sans_filtre": {
+          "one": "See the artwork, without filters",
+          "other": "See all {{ count }} artworks, without filters",
+          "many": "See all {{ count }} artworks, without filters"
+        },
+        "aucun_resultat": "No artwork matches these filters.",
+        "formes": {
+          "portrait": "Portrait",
+          "paysage": "Landscape",
+          "carre": "Square"
+        }
+      },
       "add_to_favorites": "Add to favorites",
       "remove_from_favorites": "Remove from favorites",
       "add_artwork_to_favorites": "Add this artwork to my favorites",

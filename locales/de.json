@@ -241,6 +241,87 @@
           "many": "Sie haben alle {{ count }} Bilder gesehen."
         }
       },
+      "collection_filtres": {
+        "ligne": "Bilder filtern und sortieren",
+        "familles": {
+          "couleur": "Farbe",
+          "format": "Format",
+          "theme": "Thema"
+        },
+        "famille_une": "{{ famille }} · {{ valeur }}",
+        "famille_plusieurs": "{{ famille }} · {{ nombre }}",
+        "aide_ordi": "ein Klick fügt hinzu, ein weiterer entfernt",
+        "aide_tel": "Einmal tippen fügt hinzu, nochmal entfernt",
+        "fermer": "Schließen, ohne etwas zu ändern",
+        "effacer": {
+          "couleur": "Farbe löschen",
+          "format": "Format löschen",
+          "theme": "Thema löschen"
+        },
+        "voir": {
+          "one": "Das Bild ansehen",
+          "other": "Die {{ count }} Bilder ansehen",
+          "many": "Die {{ count }} Bilder ansehen"
+        },
+        "voir_aucun": "Keine Bilder",
+        "compte_html": {
+          "one": "<b>{{ count }}</b> Bild",
+          "other": "<b>{{ count }}</b> Bilder",
+          "many": "<b>{{ count }}</b> Bilder"
+        },
+        "themes_tous": {
+          "one": "Das Thema ansehen",
+          "other": "Alle {{ count }} Themen ansehen",
+          "many": "Alle {{ count }} Themen ansehen"
+        },
+        "themes_moins": "Weniger Themen",
+        "chercher": "Thema suchen (Pferd, Zen…)",
+        "chercher_nom": "Thema suchen",
+        "aucun_theme": {
+          "one": "Kein Thema mit diesem Namen für dieses Bild. Entfernen Sie einen Filter, um mehr zu sehen.",
+          "other": "Kein Thema mit diesem Namen unter diesen {{ count }} Bildern. Entfernen Sie einen Filter, um mehr zu sehen.",
+          "many": "Kein Thema mit diesem Namen unter diesen {{ count }} Bildern. Entfernen Sie einen Filter, um mehr zu sehen."
+        },
+        "trier": "Sortieren",
+        "trier_par": "Sortieren:",
+        "trier_nom": "Bilder sortieren",
+        "tri_actif": "Sortierung · {{ tri }}",
+        "tri_pastille": "Sortierung: {{ tri }}",
+        "tri_retirer": "Zurück zur Sortierung nach Bestsellern",
+        "tris": {
+          "best_selling": "Bestseller",
+          "created_descending": "Neuheiten",
+          "price_ascending": "Preis aufsteigend",
+          "price_descending": "Preis absteigend"
+        },
+        "appliquer": "Anwenden",
+        "retirer": "Filter {{ nom }} entfernen",
+        "tout_effacer": "Alle löschen",
+        "annonce_tableaux": {
+          "one": "{{ count }} Bild.",
+          "other": "{{ count }} Bilder.",
+          "many": "{{ count }} Bilder."
+        },
+        "annonce_filtres": "Filter: {{ liste }}.",
+        "annonce_sans_filtre": "Kein Filter.",
+        "annonce_tri": "Sortierung: {{ tri }}.",
+        "fin_choix": {
+          "one": "Sie haben das Bild dieser Auswahl gesehen.",
+          "other": "Sie haben alle {{ count }} Bilder dieser Auswahl gesehen.",
+          "many": "Sie haben alle {{ count }} Bilder dieser Auswahl gesehen."
+        },
+        "sans_filtre": {
+          "one": "Das Bild ansehen, ohne Filter",
+          "other": "Alle {{ count }} Bilder ansehen, ohne Filter",
+          "many": "Alle {{ count }} Bilder ansehen, ohne Filter"
+        },
+        "aucun_resultat": "Kein Bild entspricht diesen Filtern.",
+        "formes": {
+          "portrait": "Hochformat",
+          "paysage": "Querformat",
+          "carre": "Quadratisch"
+        }
+      },
       "remove_from_favorites": "Aus Favoriten entfernen",
       "add_artwork_to_favorites": "Dieses Bild zu meinen Favoriten hinzufügen",
       "breadcrumb_home": "Startseite",
