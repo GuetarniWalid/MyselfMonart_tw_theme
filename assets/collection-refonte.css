@@ -2154,10 +2154,15 @@
   display: none;
 }
 
-/* La barre « Filtrer et trier » de l'en-tête et son tiroir ne s'écrivent pas sur cette page (snippets/tw-sticky-header,
-   layout/collection) ; si l'en-tête l'écrivait quand même, elle ne se montrerait pas. */
+/* La barre « Filtrer et trier » de l'en-tête (snippets/tw-sticky-header.liquid) ne se montre pas sur cette page ; son
+   tiroir ne s'y écrit pas (layout/collection.liquid). L'en-tête, une section, ne voit pas la page rendue
+   (content_for_layout n'y est pas lisible : relevé en ligne le 23/11/2026) : il écrit encore la barre, et garde dans
+   le menu du téléphone la place qu'elle prenait (pt-[54px]). Le menu reprend la marge des pages sans filtres (pt-8). */
 :root[data-refonte-page] #mobile-filter-button-wrapper {
   display: none;
+}
+:root[data-refonte-page] sticky-header nav.pt-\[54px\] {
+  padding-top: 2rem;
 }
 
 /* Sans script, sur téléphone : une famille ouverte s'étale sous la ligne. */

@@ -517,13 +517,14 @@ test('aucun tableau pour ces filtres : « Aucun tableau ne réunit ces filtres. 
   assert.equal(texte(element(await grille(avecProduits(0)), /<div class="refonte-grille-dedans">/)), 'Aucun produit trouvé')
 })
 
-/* ---------- Plus de bouton de filtres dans l'en-tête, plus de tiroir, sur cette page seulement ---------- */
+/* ---------- Plus de barre des filtres dans l'en-tête, plus de tiroir, sur cette page seulement ---------- */
 
 /* L'en-tête (sections/tw-header.liquid → snippets/tw-sticky-header.liquid) écrit sur les pages de collection la barre
-   « FILTRER ET TRIER 327 produits » (#mobile-filter-button-wrapper) qui ouvre le tiroir des filtres. Sur la nouvelle
-   page, la ligne la remplace : l'en-tête reconnaît la page à la marque de sa section dans la page rendue
-   (content_for_layout, un objet global de Shopify), comme le gabarit. Seule cette marque change l'en-tête ; le HTML
-   en ligne des autres pages se compare avant et après le push (scripts/temoins.cjs). */
+   « FILTRER ET TRIER 327 produits » (#mobile-filter-button-wrapper) qui ouvre le tiroir des filtres, et réserve sa
+   place en haut du menu du téléphone (pt-[54px] sur son nav). Sur la nouvelle page, la ligne la remplace. L'en-tête
+   est une section : il ne voit pas la page rendue (content_for_layout n'y est pas lisible, relevé en ligne le
+   23/11/2026 : la barre restait écrite) et ne change pas. La feuille de la page cache la barre et rend au menu la
+   marge des pages sans filtres (pt-8). */
 const ENTETE = 'snippets/tw-sticky-header.liquid'
 const { read, templateOf } = require('./galerie-banc.cjs')
 // La balise {% form %} de Shopify (le sélecteur de langue de l'en-tête), pour liquidjs.
@@ -543,9 +544,9 @@ function formulaire(e) {
   })
 }
 if (!SKIP) for (const lang of Object.keys(LANGS)) formulaire(engine(lang))
-const entete = ({ contenu, type = 'painting', modele = templateOf('collection', 'refonte'), reglages = { enable_painting_filtering: true, enable_poster_filtering: true } }) => engine('fr').parseAndRender(read(ENTETE), {}, {
+const entete = ({ type = 'painting', reglages = { enable_painting_filtering: true, enable_poster_filtering: true } } = {}) => engine('fr').parseAndRender(read(ENTETE), {}, {
   globals: {
-    content_for_layout: contenu, template: modele, settings: reglages,
+    template: templateOf('collection', 'refonte'), settings: reglages,
     collection: { metafields: { custom: { type_of_collection: type } }, products_count: 327 },
     section: { id: 'tw-header', settings: {}, blocks: [] },
     request: { locale: { iso_code: 'fr' }, page_type: 'collection', origin: 'https://www.myselfmonart.com' },
@@ -555,30 +556,21 @@ const entete = ({ contenu, type = 'painting', modele = templateOf('collection', 
 })
 const MARQUE = '<div id="shopify-section-template--1__collection_refonte" class="shopify-section"><div hidden data-refonte></div></div>'
 
-test('l’en-tête : sur la nouvelle page, ni la barre « Filtrer et trier » ni la place qu’elle prenait dans le menu', { skip: SKIP }, async () => {
-  const aujourdhui = await entete({ contenu: '<h1>Tableaux Nature</h1>' })
-  assert.match(aujourdhui, /id="mobile-filter-button-wrapper"/, 'une collection d’aujourd’hui l’écrit')
-  assert.match(aujourdhui, /pt-\[54px\]/)
-  const html = await entete({ contenu: MARQUE })
-  assert.doesNotMatch(html, /mobile-filter-button-wrapper|filter-button-mobile/)
-  assert.doesNotMatch(html, /pt-\[54px\]/)
-  // Rien d'autre ne change : l'en-tête d'une collection dont les filtres sont coupés (aux blancs près qui précèdent
-  // <sticky-header>, ceux des réglages lus avant lui).
-  const corps = (texteHtml) => texteHtml.slice(texteHtml.indexOf('<sticky-header'))
-  assert.equal(corps(html), corps(await entete({ contenu: MARQUE, reglages: {} })))
-})
-
-test('l’en-tête : seule la marque de la nouvelle page le change ; ailleurs, la page rendue n’y fait rien', { skip: SKIP }, async () => {
-  const PAGES = {
-    'une collection d’aujourd’hui': { contenu: '<div id="shopify-section-template--1__main" class="shopify-section"><h1>Tableaux Nature</h1></div>' },
-    'une collection de posters': { contenu: '<h1>Posters</h1>', type: 'poster' },
-    'la page galerie des œuvres 3D': { contenu: '<main-product-blocks class="block" data-galerie></main-product-blocks>', modele: templateOf('product', 'oeuvre-galerie') },
-    'un attribut voisin': { contenu: '<div data-refonte-page></div><div data-refonte="1"></div><p data-refontes></p>' },
-    'le mot seul': { contenu: '<p>La refonte de la page : data-refonte, bientôt.</p>' },
-  }
-  for (const [nom, page] of Object.entries(PAGES)) {
-    assert.equal(await entete(page), await entete({ ...page, contenu: undefined }), nom)
-  }
+test('l’en-tête écrit encore la barre « Filtrer et trier » et sa place dans le menu ; la feuille de la page les retire', { skip: SKIP }, async () => {
+  const html = await entete()
+  assert.match(html, /id="mobile-filter-button-wrapper"/)
+  // Le menu du téléphone : le premier nav de l'en-tête, avec la marge de la barre. La feuille le vise par cette classe.
+  const menu = /<sticky-header\b[\s\S]*?<nav class="([^"]*)"/.exec(html)
+  assert.ok(menu, 'le menu du téléphone')
+  assert.ok(menu[1].split(/\s+/).includes('pt-[54px]'), menu[1])
+  // Sans filtres, la marge des autres pages : celle que la feuille rend au menu.
+  const sansFiltres = await entete({ reglages: {} })
+  const sans = /<sticky-header\b[\s\S]*?<nav class="([^"]*)"/.exec(sansFiltres)
+  assert.ok(sans[1].split(/\s+/).includes('pt-8'), sans[1])
+  assert.doesNotMatch(sansFiltres, /mobile-filter-button-wrapper/)
+  const bloc = blocCss()
+  assert.equal(regle(bloc, `${H} #mobile-filter-button-wrapper`).body.trim(), 'display: none;')
+  assert.equal(regle(bloc, `${H} sticky-header nav.pt-\\[54px\\]`).body.trim(), 'padding-top: 2rem;')
 })
 
 /* Le tiroir des filtres (snippets/tw-filter-drawer.liquid), rendu par le gabarit des pages collection : pas sur la
