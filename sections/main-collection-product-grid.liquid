@@ -157,53 +157,11 @@
   </collection-tag-filter>
 {% endif %}
 
-{%- comment -%} priceCurrency = devise affichée (cart.currency), comme sur la fiche produit : price_min est déjà
-  dans la devise du marché, et shop.currency étiquetait en EUR les prix USD/CAD/GBP/CHF. Titre en | json (guillemets). {%- endcomment -%}
-<script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    "name": {{ collection.title | json }},
-    "url": "{{ shop.url }}{{ collection.url }}",
-    "itemListElement": [
-      {%- for product in collection.products -%}
-        {
-          "@type": "ListItem",
-          "position": {{ forloop.index }},
-          "url": "{{ shop.url }}{{ product.url }}",
-          "item": {
-            "@type": "Product",
-            "name": {{ product.title | strip_html | json }},
-            {%- liquid
-              # L'œuvre à plat (snippet artwork-flat-index) : la 2e photo des produits de toujours, celle que Google
-              # lit depuis toujours (en changer changerait ses données) ; la 1re et seule des nouveaux produits
-              # (modèle oeuvre-3d).
-              capture ld_flat_index
-                render 'artwork-flat-index', product: product
-              endcapture
-              assign ld_flat_index = ld_flat_index | plus: 0
-              assign ld_image = product.images[ld_flat_index]
-              assign product_image = ld_image | image_url: width: ld_image.preview_image.width | prepend: "https:"
-            -%} "image": "{{ product_image }}",
-            "description": {{ product.description | strip_html | json }},
-            "brand": {
-              "@type": "Brand",
-              "name": "{{ shop.name }}"
-            },
-            "offers": {
-              "@type": "Offer",
-              "priceCurrency": {{ cart.currency.iso_code | json }},
-              "price": "{{ product.price_min |  divided_by: 100.00 }}",
-              "availability": "https://schema.org/InStock",
-              "url": "{{ shop.url }}{{ product.url }}"
-            }
-          }
-        }{% unless forloop.last %},{% endunless %}
-      {%- endfor -%}
-    ]
-  }
-</script>
-
+{%- comment -%}
+  La liste ItemList des produits de la page, pour Google : snippet json-ld-item-list, que rend aussi la grille de la
+  nouvelle page collection (sections/collection-grille.liquid). Le même HTML qu'avant, au caractère près.
+{%- endcomment -%}
+{%- render 'json-ld-item-list' %}
 {% schema %}
   {
     "name": "t:sections.main-collection-product-grid.name",

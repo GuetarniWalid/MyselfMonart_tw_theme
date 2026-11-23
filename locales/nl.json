@@ -233,6 +233,16 @@
       }
     },
     "mma": {
+      "collection_grille": {
+        "titre": "De {{ titre }}",
+        "prix": "Vanaf {{ prix }}",
+        "compte_html": "<b data-vus>{{ vus }}</b> van <b>{{ total }}</b> schilderijen",
+        "fin": {
+          "one": "U heeft het schilderij gezien.",
+          "other": "U heeft alle {{ count }} schilderijen gezien.",
+          "many": "U heeft alle {{ count }} schilderijen gezien."
+        }
+      },
       "add_to_favorites": "Toevoegen aan favorieten",
       "add_artwork_to_favorites": "Dit schilderij toevoegen aan mijn favorieten",
       "breadcrumb_home": "Home",

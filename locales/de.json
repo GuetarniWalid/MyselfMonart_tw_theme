@@ -231,6 +231,16 @@
       }
     },
     "mma": {
+      "collection_grille": {
+        "titre": "Die {{ titre_exact }}",
+        "prix": "Ab {{ prix }}",
+        "compte_html": "<b data-vus>{{ vus }}</b> von <b>{{ total }}</b> Bildern",
+        "fin": {
+          "one": "Sie haben das Bild gesehen.",
+          "other": "Sie haben alle {{ count }} Bilder gesehen.",
+          "many": "Sie haben alle {{ count }} Bilder gesehen."
+        }
+      },
       "remove_from_favorites": "Aus Favoriten entfernen",
       "add_artwork_to_favorites": "Dieses Bild zu meinen Favoriten hinzufügen",
       "breadcrumb_home": "Startseite",

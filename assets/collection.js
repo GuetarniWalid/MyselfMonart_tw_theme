@@ -18,6 +18,9 @@ class InfiniteScroll extends HTMLElement {
     this.baseUrl = location.pathname + (queryString ? `?${queryString}&page=` : '?page=');
 
     this.sectionId = this.dataset.sectionId;
+    // La page suivante se charge quand la fin approche à moins de `marge` px : 300 par défaut, data-marge pour une
+    // autre (700 sur la nouvelle page collection, sections/collection-grille.liquid).
+    this.margin = Number(this.dataset.marge) || 300;
     this.previousPageExists =
       Number(this.previousElementSibling?.dataset?.page) === this.page - 1;
     this.nextPageExists =
@@ -55,10 +58,11 @@ class InfiniteScroll extends HTMLElement {
           const htmlString = await this.fetchPage(direction);
           const nodeToInsert = this.parseNodeFromString(htmlString);
           this.insertNode(nodeToInsert, direction);
+          this.announceBatch(nodeToInsert, direction);
         }
       });
     }, {
-      rootMargin: '0px 0px 300px 0px' // Trigger 300px before bottom sentinel visible
+      rootMargin: `0px 0px ${this.margin}px 0px` // Trigger `margin` px (300 by default) before bottom sentinel visible
     });
 
     observer.observe(this.querySelector(`.${direction}`));
@@ -101,6 +105,18 @@ class InfiniteScroll extends HTMLElement {
     // (assets/oeuvre-card-reflet.js) arrive en module avec ses cartes : l'importer le lance si la page n'en
     // avait pas encore. Un module ne s'exécute qu'une fois par page ; déjà lancé, il suit seul les cartes.
     node.querySelectorAll('script[type="module"][src]').forEach((script) => import(script.src));
+  }
+
+  /* Le lot arrivé, annoncé sur document : mma:collection-lot, { cards, direction }, son nombre de cartes et où il s'est
+     posé ('down' : après, en descendant ; 'up' : avant, en remontant). Annoncé à l'image suivante, quand un lot du haut
+     est posé lui aussi (keepSameScrollPosition). La nouvelle page collection en tient son compte (<collection-suite>,
+     plus bas) ; ailleurs, personne ne l'écoute. */
+  announceBatch(node, direction) {
+    const cards = node?.querySelector('ul')?.childElementCount ?? 0;
+    const detail = { cards, direction: direction === this.bottom ? 'down' : 'up' };
+    requestAnimationFrame(() => {
+      document.dispatchEvent(new CustomEvent('mma:collection-lot', { detail }));
+    });
   }
 
   keepSameScrollPosition(node) {
@@ -420,6 +436,48 @@ class InfiniteScroll extends HTMLElement {
   }
 }
 customElements.define('infinite-scroll', InfiniteScroll);
+
+/* La suite par lots de la nouvelle page collection (sections/collection-grille.liquid, ticket 05 de
+   .scratch/collection-design) : au bout du dernier lot, « 48 tableaux sur 327 » et une jauge, puis « Vous avez vu les
+   327 tableaux. ». Le serveur l'écrit pour la page demandée, dans sa langue ; chaque lot arrivé en bas
+   (mma:collection-lot, <infinite-scroll>) l'avance de ses cartes : le script ne change que le nombre, la jauge et ce
+   qui se montre. La zone parlée de la grille (data-statut : son id) le dit aux lecteurs d'écran. Un lot posé en haut
+   (arrivé sur ?page=3, on remonte) ne change rien : le compte est le rang du dernier tableau montré.
+   Tests : scripts/collection-grille.test.cjs. */
+class CollectionSuite extends HTMLElement {
+  connectedCallback() {
+    this.seen = Number(this.dataset.vus) || 0;
+    this.total = Number(this.dataset.total) || 0;
+    this.onBatch = (event) => this.advance(event.detail);
+    document.addEventListener('mma:collection-lot', this.onBatch);
+  }
+
+  disconnectedCallback() {
+    document.removeEventListener('mma:collection-lot', this.onBatch);
+  }
+
+  advance(batch) {
+    if (!batch || batch.direction !== 'down' || !batch.cards) return;
+    this.seen = Math.min(this.total, this.seen + batch.cards);
+    const end = this.seen >= this.total;
+    const seenNumber = this.querySelector('[data-vus]');
+    const countLine = this.querySelector('.refonte-suite-compte');
+    const gauge = this.querySelector('progress');
+    const endLine = this.querySelector('.refonte-suite-fin');
+    if (seenNumber) seenNumber.textContent = String(this.seen);
+    if (gauge) {
+      gauge.value = this.seen;
+      gauge.hidden = end;
+    }
+    if (countLine) countLine.hidden = end;
+    if (endLine) endLine.hidden = !end;
+    // Ce qui se lit maintenant, dit aussi aux lecteurs d'écran.
+    const status = document.getElementById(this.dataset.statut);
+    const shownLine = end ? endLine : countLine;
+    if (status && shownLine) status.textContent = shownLine.textContent.replace(/\s+/g, ' ').trim();
+  }
+}
+customElements.define('collection-suite', CollectionSuite);
 
 class ClickProduct extends HTMLElement {
   connectedCallback() {

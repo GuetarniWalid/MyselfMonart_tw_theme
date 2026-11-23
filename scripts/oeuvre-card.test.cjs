@@ -180,7 +180,11 @@ test('reflet : les cartes reçues par fetch (défilement infini, filtres, « Mes
 })
 
 test('données Google de la collection (ItemList) : l’œuvre à plat, 1re image des nouveaux produits, 2e des autres (snippet artwork-flat-index)', () => {
-  const grid = read('sections/main-collection-product-grid.liquid')
+  // La liste vient d'un snippet commun aux deux grilles de collection (ticket 05 de .scratch/collection-design).
+  for (const file of ['sections/main-collection-product-grid.liquid', 'sections/collection-grille.liquid']) {
+    assert.match(code(file), /{%-?\s*render 'json-ld-item-list'\s*-?%}/, file)
+  }
+  const grid = read('snippets/json-ld-item-list.liquid')
   const ld = /<script type="application\/ld\+json">[\s\S]*?<\/script>/.exec(grid)[0]
   const image = /{%-\s*liquid([\s\S]*?)-%}\s*"image": "{{ product_image }}"/.exec(ld)
   assert.ok(image, 'le bloc qui choisit l’image')

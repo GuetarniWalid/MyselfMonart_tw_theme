@@ -1,0 +1,256 @@
+{%- paginate collection.products by 24 -%}
+  {%- if collection.products.size == 0 -%}
+    <h2 class="my-40 text-center">
+      {{ 'sections.main_collection_product_grid.empty' | t }}
+    </h2>
+  {%- else -%}
+    {%- comment -%} Check if filters should be shown for this collection type {%- endcomment -%}
+    {% assign collection_type = collection.metafields.custom.type_of_collection | default: 'other' %}
+    {% assign show_filters = false %}
+    {% if collection_type == 'painting' and settings.enable_painting_filtering %}
+      {% assign show_filters = true %}
+    {% elsif collection_type == 'poster' and settings.enable_poster_filtering %}
+      {% assign show_filters = true %}
+    {% elsif collection_type == 'tapestry' and settings.enable_tapestry_filtering %}
+      {% assign show_filters = true %}
+    {% elsif collection_type == 'other' and settings.enable_other_filtering %}
+      {% assign show_filters = true %}
+    {% endif %}
+
+    {%- comment -%} Desktop: sidebar + grid layout {%- endcomment -%}
+    <div class="flex gap-8">
+
+      {%- comment -%} Desktop sidebar (hidden on mobile) {%- endcomment -%}
+      {% if show_filters %}
+        {% render 'filter-sidebar' %}
+      {% endif %}
+
+      {%- comment -%} Product grid (full width on mobile, flex-1 on desktop) {%- endcomment -%}
+      <div class="flex-1 min-w-0">
+        {%- if paginate.pages > 1 -%}
+        <infinite-scroll
+          id="infinite-scroll-{{ collection.id }}-{{ paginate.current_page }}"
+          data-pages="{{ paginate.pages }}"
+          data-page="{{ paginate.current_page }}"
+          data-section-id="{{ section.id }}"
+          data-paginate-previous-url="{{ paginate.previous.url }}"
+          data-paginate-next-url="{{ paginate.next.url }}">
+          <ul data-id="{{ section.id }}" class="product-grid {{ section.settings.margin_top }}">
+            {%- for product in collection.products -%}
+              {% liquid
+                assign lazy_load = false
+                if forloop.index > 2
+                  assign lazy_load = true
+                endif
+              %}
+              <anime-product-card>
+                <li id="{{ product.id }}" class="relative group h-full">
+                  {% render 'card-product'
+                    , product: product
+                    , primary_image_index: section.settings.primary_image_index
+                    , next_image_index: section.settings.next_image_index
+                    , lazy_load: lazy_load
+                    , section_id: section.id
+                  %}
+                </li>
+              </anime-product-card>
+            {%- endfor -%}
+          </ul>
+        </infinite-scroll>
+        {% render 'pagination'
+          , paginate: paginate
+          , anchor: '' %}
+      {%- else -%}
+        <ul data-id="{{ section.id }}" class="product-grid">
+          {%- for product in collection.products -%}
+            {% liquid
+              assign lazy_load = false
+              if forloop.index > 2
+                assign lazy_load = true
+              endif
+            %}
+            <anime-product-card>
+              <li id="{{ product.id }}" class="relative group h-full">
+                {% render 'card-product'
+                  , product: product
+                  , primary_image_index: section.settings.primary_image_index
+                  , next_image_index: section.settings.next_image_index
+                  , lazy_load: lazy_load
+                  , section_id: section.id
+                %}
+              </li>
+            </anime-product-card>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+      </div>
+      {%- comment -%} End of product grid wrapper {%- endcomment -%}
+
+    </div>
+    {%- comment -%} End of flex container {%- endcomment -%}
+  {%- endif -%}
+{%- endpaginate -%}
+
+{%- comment -%}
+  Éditorial E-E-A-T piloté par metafields (récup. SEO post Core Update déc. 2025).
+  GARDE : rendu uniquement si custom.guide est renseigné → no-op total sinon
+  (collections non traitées + pilote tableau-salon qui a son propre template).
+{%- endcomment -%}
+{%- if collection.metafields.custom.guide != blank -%}
+  {% render 'collection-editorial-auto' %}
+{%- endif -%}
+
+{%- comment -%} Cocon : les sœurs et la jumelle de la page, tirées du plan des collections (23/11/2026). {%- endcomment -%}
+{%- render 'cocon-famille' -%}
+
+{%- comment -%} Check if filters should be shown for this collection type {%- endcomment -%}
+{% assign collection_type = collection.metafields.custom.type_of_collection | default: 'other' %}
+{% assign show_filters = false %}
+{% if collection_type == 'painting' and settings.enable_painting_filtering %}
+  {% assign show_filters = true %}
+{% elsif collection_type == 'poster' and settings.enable_poster_filtering %}
+  {% assign show_filters = true %}
+{% elsif collection_type == 'tapestry' and settings.enable_tapestry_filtering %}
+  {% assign show_filters = true %}
+{% elsif collection_type == 'other' and settings.enable_other_filtering %}
+  {% assign show_filters = true %}
+{% endif %}
+
+{% if show_filters %}
+  {%- comment -%} Theme filtering custom element {%- endcomment -%}
+  {%- comment -%} Detect which color filter parameter is being used {%- endcomment -%}
+  {% assign color_param_name = 'filter.v.m.shopify.color-pattern' %}
+  {% for filter in collection.filters %}
+    {% if filter.type == 'list' %}
+      {% assign filter_label_lower = filter.label | downcase %}
+      {% if filter_label_lower contains 'color' or filter_label_lower contains 'colour' or filter_label_lower contains 'couleur' %}
+        {% assign color_param_name = filter.param_name %}
+        {% break %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+  <collection-tag-filter>
+    {%- comment -%} Include filter count data for JavaScript to update UI {%- endcomment -%}
+    <script type="application/json" data-filter-counts>
+      {
+        {%- for filter in collection.filters -%}
+          {%- if filter.type == 'list' -%}
+            "{{ filter.param_name | handleize }}": [
+              {%- for filter_value in filter.values -%}
+                {%- if filter.param_name contains 'color' -%}
+                  {%- capture mapped_label -%}{% render 'filter-color-label', label: filter_value.label %}{%- endcapture -%}
+                {%- else -%}
+                  {%- capture mapped_label -%}{{ filter_value.label }}{%- endcapture -%}
+                {%- endif -%}
+                {
+                  "value": {{ filter_value.value | json }},
+                  "label": {{ mapped_label | strip | json }},
+                  "count": {{ filter_value.count | json }}
+                }{% unless forloop.last %},{% endunless %}
+              {%- endfor -%}
+            ]{% unless forloop.last %},{% endunless %}
+          {%- endif -%}
+        {%- endfor -%}
+      }
+    </script>
+  </collection-tag-filter>
+{% endif %}
+
+{%- comment -%} priceCurrency = devise affichée (cart.currency), comme sur la fiche produit : price_min est déjà
+  dans la devise du marché, et shop.currency étiquetait en EUR les prix USD/CAD/GBP/CHF. Titre en | json (guillemets). {%- endcomment -%}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": {{ collection.title | json }},
+    "url": "{{ shop.url }}{{ collection.url }}",
+    "itemListElement": [
+      {%- for product in collection.products -%}
+        {
+          "@type": "ListItem",
+          "position": {{ forloop.index }},
+          "url": "{{ shop.url }}{{ product.url }}",
+          "item": {
+            "@type": "Product",
+            "name": {{ product.title | strip_html | json }},
+            {%- liquid
+              # L'œuvre à plat (snippet artwork-flat-index) : la 2e photo des produits de toujours, celle que Google
+              # lit depuis toujours (en changer changerait ses données) ; la 1re et seule des nouveaux produits
+              # (modèle oeuvre-3d).
+              capture ld_flat_index
+                render 'artwork-flat-index', product: product
+              endcapture
+              assign ld_flat_index = ld_flat_index | plus: 0
+              assign ld_image = product.images[ld_flat_index]
+              assign product_image = ld_image | image_url: width: ld_image.preview_image.width | prepend: "https:"
+            -%} "image": "{{ product_image }}",
+            "description": {{ product.description | strip_html | json }},
+            "brand": {
+              "@type": "Brand",
+              "name": "{{ shop.name }}"
+            },
+            "offers": {
+              "@type": "Offer",
+              "priceCurrency": {{ cart.currency.iso_code | json }},
+              "price": "{{ product.price_min |  divided_by: 100.00 }}",
+              "availability": "https://schema.org/InStock",
+              "url": "{{ shop.url }}{{ product.url }}"
+            }
+          }
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ]
+  }
+</script>
+
+{% schema %}
+  {
+    "name": "t:sections.main-collection-product-grid.name",
+    "class": "main-collection-product-grid page-width px-4",
+    "tag": "section",
+    "enabled_on": {
+      "templates": ["collection"]
+    },
+    "settings": [
+      {
+        "type": "number",
+        "id": "primary_image_index",
+        "label": "t:sections.main-collection-product-grid.settings.primary_image_index.label",
+        "info": "t:sections.main-collection-product-grid.settings.primary_image_index.info",
+        "default": 1
+      },
+      {
+        "type": "number",
+        "id": "next_image_index",
+        "label": "t:sections.main-collection-product-grid.settings.next_image_index.label",
+        "info": "t:sections.main-collection-product-grid.settings.next_image_index.info",
+        "default": 0
+      },
+      {
+        "type": "select",
+        "id": "margin_top",
+        "label": "t:sections.main-collection-product-grid.settings.margin_top.label",
+        "options": [
+          {
+            "value": "mt-0",
+            "label": "t:sections.main-collection-product-grid.settings.margin_top.options.none.label"
+          },
+          {
+            "value": "mt-2",
+            "label": "t:sections.main-collection-product-grid.settings.margin_top.options.small.label"
+          },
+          {
+            "value": "mt-4",
+            "label": "t:sections.main-collection-product-grid.settings.margin_top.options.medium.label"
+          },
+          {
+            "value": "mt-8",
+            "label": "t:sections.main-collection-product-grid.settings.margin_top.options.large.label"
+          }
+        ],
+        "default": "mt-0"
+      }
+    ]
+  }
+{% endschema %}

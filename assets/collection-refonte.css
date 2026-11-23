@@ -422,3 +422,285 @@
 }
 
 /* === Emblèmes des sous-collections (ticket 03) : fin === */
+
+/* === Grille et suite (ticket 05) : début === */
+
+/* La grille (sections/collection-grille.liquid) : les marges de la page, le contenu à 1240 px au plus. Deux colonnes,
+   trois dès 700 px, quatre dès 1100 px, et les écarts de la maquette (bloc « 4. La grille »). Chaque lot de 24
+   tableaux est un <infinite-scroll> (assets/collection.js) qui porte sa liste : les lots se suivent à l'écart d'une
+   rangée, et se lisent comme une seule grille (24 se partage en 2, 3 et 4 colonnes). */
+:root[data-refonte-page] .refonte-grille {
+  --rangee: 22px;
+  --colonne: 8px;
+  padding: 8px var(--goutd) 0 var(--gout);
+}
+@media (min-width: 700px) {
+  :root[data-refonte-page] .refonte-grille {
+    --rangee: 34px;
+    --colonne: 14px;
+  }
+}
+@media (min-width: 1100px) {
+  :root[data-refonte-page] .refonte-grille {
+    --rangee: 40px;
+    --colonne: 18px;
+  }
+}
+:root[data-refonte-page] .refonte-grille-dedans {
+  max-width: 1240px;
+  margin-inline: auto;
+}
+:root[data-refonte-page] .refonte-liste {
+  display: grid;
+  row-gap: var(--rangee);
+}
+:root[data-refonte-page] .refonte-cartes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--rangee) var(--colonne);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 700px) {
+  :root[data-refonte-page] .refonte-cartes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1100px) {
+  :root[data-refonte-page] .refonte-cartes {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+:root[data-refonte-page] .refonte-grille-vide {
+  margin: 40px 0;
+  text-align: center;
+  font: 500 16px/1.4 var(--sans);
+  color: var(--encre-70);
+}
+
+/* La carte (snippets/collection-carte.liquid) : l'œuvre en objet (snippets/artwork-object.liquid ; input.css,
+   « Vignette d'œuvre »), toile comme poster sur le blanc de la page, dans une scène au format des vignettes de toile
+   (500 / 587) ; l'œuvre y prend 80 % de la largeur au plus, son ombre sur le blanc. Dessous, le nom et le prix, alignés
+   sur le bord de l'œuvre, et le cœur. Le lien du nom couvre la carte ; la vignette se peint au-dessus de lui et lui
+   laisse les clics (input.css) ; le cœur passe devant. */
+:root[data-refonte-page] .refonte-carte {
+  position: relative;
+  min-width: 0;
+}
+/* Sur le blanc de la page, la scène ne coupe pas l'ombre de l'œuvre : coupée à son bord, elle dessinait un cadre gris
+   autour de chaque tableau. Elle s'estompe sur le blanc, comme dans la maquette (la vitre d'un poster garde sa coupe :
+   le reflet y reste). */
+:root[data-refonte-page] .refonte-carte .oeuvre-card-stage {
+  aspect-ratio: 500 / 587;
+  overflow: visible;
+  background: var(--blanc);
+}
+:root[data-refonte-page] .refonte-carte-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 2px;
+  margin-top: 2px;
+  padding-inline: 9% 4%;
+}
+:root[data-refonte-page] .refonte-carte-textes {
+  flex: 1;
+  min-width: 0;
+}
+/* Le nom : deux lignes au plus. Le titre entier qu'il porte pour les lecteurs d'écran est collé au coin de la carte
+   (sr-only left-0 top-0) : il ne dépasse jamais de l'écran (scripts/card-titre.test.cjs). Interligne de 1,26 et non 1,22
+   (maquette) : à 1,22, l'accent d'une capitale au début de la 3e ligne, cachée (« Éclat »), dépassait sous la 2e. */
+:root[data-refonte-page] .refonte-carte-nom {
+  display: -webkit-box;
+  margin: 6px 0 0;
+  overflow: hidden;
+  font: 600 15.5px/1.26 var(--sans);
+  letter-spacing: -0.014em;
+  color: var(--encre);
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+:root[data-refonte-page] .refonte-carte-lien {
+  color: inherit;
+  text-decoration: none;
+}
+:root[data-refonte-page] .refonte-carte-lien::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+}
+:root[data-refonte-page] .refonte-carte-lien:focus-visible {
+  outline: none;
+}
+:root[data-refonte-page] .refonte-carte-lien:focus-visible::after {
+  outline: 2px solid var(--encre);
+  outline-offset: 4px;
+}
+:root[data-refonte-page] .refonte-carte-prix {
+  margin: 3px 0 0;
+  font: 500 13.5px/1.2 var(--sans);
+  color: var(--encre-70);
+  font-variant-numeric: tabular-nums;
+}
+@media (min-width: 1100px) {
+  :root[data-refonte-page] .refonte-carte-nom {
+    font-size: 16.5px;
+  }
+  :root[data-refonte-page] .refonte-carte-prix {
+    font-size: 14px;
+  }
+}
+/* Le cœur de toutes les cartes (snippets/my-like-button.liquid), à droite du nom : un rond de 40 px. */
+:root[data-refonte-page] .refonte-carte my-like-button {
+  flex: none;
+}
+:root[data-refonte-page] .refonte-carte .like {
+  margin-top: -2px;
+  padding: 9px;
+  border-radius: 50%;
+}
+:root[data-refonte-page] .refonte-carte .heart-icon {
+  width: 22px;
+  height: 22px;
+}
+@media (hover: hover) {
+  :root[data-refonte-page] .refonte-carte .like:hover {
+    background: var(--encre-06);
+  }
+}
+/* Le reflet d'une seule porte-fenêtre pour toute la rangée de posters : sa place dans la vitre selon la colonne,
+   comme dans la grille d'aujourd'hui (input.css, .product-grid), aux colonnes de celle-ci. */
+:root[data-refonte-page] .refonte-cartes > li:nth-child(2n + 1) .oeuvre-card-glare { --gx: 40%; }
+:root[data-refonte-page] .refonte-cartes > li:nth-child(2n) .oeuvre-card-glare { --gx: -4%; }
+@media (min-width: 700px) {
+  :root[data-refonte-page] .refonte-cartes > li:nth-child(3n + 1) .oeuvre-card-glare { --gx: 46%; }
+  :root[data-refonte-page] .refonte-cartes > li:nth-child(3n + 2) .oeuvre-card-glare { --gx: 20%; }
+  :root[data-refonte-page] .refonte-cartes > li:nth-child(3n) .oeuvre-card-glare { --gx: -6%; }
+}
+@media (min-width: 1100px) {
+  :root[data-refonte-page] .refonte-cartes > li:nth-child(4n + 1) .oeuvre-card-glare { --gx: 50%; }
+  :root[data-refonte-page] .refonte-cartes > li:nth-child(4n + 2) .oeuvre-card-glare { --gx: 30%; }
+  :root[data-refonte-page] .refonte-cartes > li:nth-child(4n + 3) .oeuvre-card-glare { --gx: 6%; }
+  :root[data-refonte-page] .refonte-cartes > li:nth-child(4n) .oeuvre-card-glare { --gx: -14%; }
+}
+
+/* La suite (bloc « 6. La suite » de la maquette) : au bout du dernier lot, « 48 tableaux sur 327 » et une jauge de
+   180 × 4 px, puis « Vous avez vu les 327 tableaux. » (<collection-suite>, assets/collection.js). La jauge est un
+   <progress> : le script n'en change que la valeur. */
+:root[data-refonte-page] .refonte-suite {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding-block: 34px 4px;
+  text-align: center;
+  font: 500 14px/1.45 var(--sans);
+  color: var(--encre-70);
+}
+:root[data-refonte-page] .refonte-suite-compte,
+:root[data-refonte-page] .refonte-suite-fin {
+  margin: 0;
+}
+:root[data-refonte-page] .refonte-suite b {
+  color: var(--encre);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+:root[data-refonte-page] .refonte-suite-fin {
+  max-width: 26em;
+  color: var(--encre);
+  font-weight: 600;
+}
+:root[data-refonte-page] .refonte-jauge {
+  display: block;
+  width: 180px;
+  height: 4px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 4px;
+  background: var(--encre-12);
+  color: var(--encre);
+  -webkit-appearance: none;
+  appearance: none;
+}
+:root[data-refonte-page] .refonte-jauge::-webkit-progress-bar {
+  border-radius: 4px;
+  background: var(--encre-12);
+}
+:root[data-refonte-page] .refonte-jauge::-webkit-progress-value {
+  border-radius: 4px;
+  background: var(--encre);
+}
+:root[data-refonte-page] .refonte-jauge::-moz-progress-bar {
+  border-radius: 4px;
+  background: var(--encre);
+}
+:root[data-refonte-page] .refonte-suite > [hidden] {
+  display: none;
+}
+
+/* Les liens des pages, pour Google et sans JavaScript (snippets/pagination.liquid, que <infinite-scroll> tient à jour
+   en défilant) : des ronds de 34 px, la page qu'on regarde sur un aplat. */
+:root[data-refonte-page] .refonte-pages .pagination {
+  padding-block: 12px 4px;
+}
+:root[data-refonte-page] .refonte-pages ul {
+  gap: 4px;
+}
+:root[data-refonte-page] .refonte-pages a,
+:root[data-refonte-page] .refonte-pages .etc {
+  display: grid;
+  place-items: center;
+  min-width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: none;
+  font: 500 14px/1 var(--sans);
+  color: var(--encre-70);
+  text-decoration: none;
+}
+:root[data-refonte-page] .refonte-pages a > span {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: none;
+}
+:root[data-refonte-page] .refonte-pages a[aria-current="page"] {
+  background: var(--encre-06);
+  color: var(--encre);
+  font-weight: 700;
+}
+@media (hover: hover) {
+  :root[data-refonte-page] .refonte-pages a[href]:hover {
+    background: var(--encre-06);
+  }
+}
+
+/* Les mouvements : chaque carte monte un peu à son arrivée, au rythme du défilement (bloc « Le mouvement » de la
+   maquette), et l'œuvre s'avance au survol. Rien pour qui demande moins de mouvement. */
+@keyframes refonte-monte {
+  from { transform: translateY(34px); }
+  to { transform: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) and (animation-range-start: contain 10svh) {
+    :root[data-refonte-page] .refonte-carte {
+      animation: refonte-monte linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 20%;
+    }
+  }
+  @media (hover: hover) {
+    :root[data-refonte-page] .refonte-carte .oeuvre-card-piece {
+      transition: scale 0.35s ease;
+    }
+    :root[data-refonte-page] .refonte-carte:hover .oeuvre-card-piece {
+      scale: 1.04;
+    }
+    :root[data-refonte-page] .refonte-carte .like {
+      transition: background-color 0.2s ease;
+    }
+  }
+}
+
+/* === Grille et suite (ticket 05) : fin === */

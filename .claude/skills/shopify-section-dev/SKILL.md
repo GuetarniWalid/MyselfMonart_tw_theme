@@ -82,6 +82,8 @@ variant-to-cart
 
 Chargé sur la page galerie des œuvres 3D seulement (`assets/oeuvre-galerie.js`, cf. § 2) : `galerie-mots`, un grand titre dont les mots arrivent un à un au défilement.
 
+Chargé sur les pages collection (`assets/collection.js`), utilisé par la nouvelle page collection seulement (`sections/collection-grille.liquid`, cf. § 2) : `collection-suite`, le compte « 48 tableaux sur 327 » et sa jauge au bout des lots que charge `<infinite-scroll>`. Celui-ci prend une marge (`data-marge`, 300 px par défaut) et annonce chaque lot arrivé sur `document` (`mma:collection-lot`, `{ cards, direction }`).
+
 **⛔ Définis dans le repo mais JAMAIS chargés — ne pas réutiliser, ne pas s'en inspirer :**
 
 ```

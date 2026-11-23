@@ -1,0 +1,101 @@
+{%- comment -%}
+  collection-carte — la carte d'un tableau dans la grille de la nouvelle page collection (sections/collection-grille.liquid,
+  vue ?view=refonte, dossier .scratch/collection-design, ticket 05 ; décision 5 de Walid : « l'œuvre seule, sur fond
+  blanc, anciens produits compris »). La carte des autres pages, snippets/card-product.liquid (recommandations,
+  « Mes j'aime », recherche), ne change pas.
+
+  L'œuvre seule, en objet, sur le blanc de la page : la vignette des nouveaux produits (snippets/artwork-object.liquid),
+  la toile de face sur son châssis, le poster sous verre dans son cadre noir, avec son contour blanc si sa fiche le
+  propose (même règle que snippets/card-product.liquid). Toile ou poster : la règle unique des œuvres, snippet
+  artwork-kind. L'œuvre à plat : snippet artwork-flat-index, la 1re image d'un nouveau produit (modèle oeuvre-3d), la
+  2e de tout autre produit, celle que Google lit dans la liste ItemList de la page.
+  Dessous : le nom court (métachamp title.short, à défaut le titre), le titre entier pour les lecteurs d'écran, le plus
+  bas prix, « Dès 62,50 € », et le cœur. Le lien du nom couvre toute la carte.
+
+  Règle de repli : un produit qui n'est pas une œuvre (artwork-kind vide : tapisserie, personnalisé, carte cadeau…) ou
+  dont l'œuvre à plat manque (pas d'image à son index) garde la carte d'aujourd'hui (snippets/card-product.liquid),
+  dans la même case de la grille.
+
+  Accepts:
+    - product: {Object} le produit
+    - lazy: {Boolean} image différée (floue, puis chargée par assets/tw-global.js) ; false pour les deux premières
+      cartes de la page, chargées tout de suite et en priorité. Différée si absent.
+    - sizes: {String} l'attribut sizes de l'œuvre, selon la grille qui montre la carte (la section le donne).
+    - section_id: {String} la section, pour la carte de repli.
+
+  Usage :
+    {% render 'collection-carte', product: product, lazy: lazy, sizes: sizes, section_id: section.id %}
+  Tests : scripts/collection-grille.test.cjs.
+{%- endcomment -%}
+{%- liquid
+  capture kind
+    render 'artwork-kind', product: product, suffix: product.template_suffix
+  endcapture
+  capture flat_index
+    render 'artwork-flat-index', product: product
+  endcapture
+  assign flat_index = flat_index | plus: 0
+  assign flat = product.images[flat_index]
+-%}
+{%- if kind != blank and flat -%}
+  {%- liquid
+    assign frame = 'sans'
+    assign contour = false
+    if kind == 'poster'
+      # Sous verre, au cadre noir ; le contour blanc seulement si la fiche le propose, c'est-à-dire si le produit a
+      # une image « passe-partout » (même test que la carte des autres pages et que la fiche).
+      assign frame = 'noir'
+      for m in product.media
+        if m.media_type == 'image' and m.preview_image.src contains 'passe-partout'
+          assign contour = true
+          break
+        endif
+      endfor
+    endif
+
+    # Le nom : le titre court, tel qu'il est écrit (« Voile sur fleuve »), sa première lettre en capitale ; un nom
+    # écrit tout en capitales passe en minuscules d'abord.
+    capture short
+      echo product.metafields.title.short
+    endcapture
+    assign short = short | strip
+    assign nom = short | default: product.title
+    assign nom_capitales = nom | upcase
+    if nom == nom_capitales
+      assign nom = nom | downcase
+    endif
+    assign nom_debut = nom | slice: 0 | upcase
+    assign nom_reste = nom | slice: 1, nom.size
+    assign nom = nom_debut | append: nom_reste
+
+    assign prix = product.price_min | money
+  -%}
+  <li class="refonte-carte">
+    {%- render 'artwork-object', product: product, image: flat, kind: kind, frame: frame, contour: contour, context: 'carte', lazy: lazy, sizes: sizes -%}
+    {%- if kind == 'poster' -%}
+      {%- comment -%} Le reflet qui passe sur la vitre, là où le CSS seul ne sait pas le faire : un module, une seule exécution par page. {%- endcomment -%}
+      <script type="module" src="{{ 'oeuvre-card-reflet.js' | asset_url }}"></script>
+    {%- endif -%}
+    <div class="refonte-carte-info">
+      <div class="refonte-carte-textes">
+        <h3 class="refonte-carte-nom">
+          {%- comment -%}
+            Le titre entier, invisible, complète le nom court pour les lecteurs d'écran et sert d'ancre au lien vers la
+            fiche ; collé au coin de la carte (left-0 top-0, comme dans snippets/card-product-info.liquid), il ne
+            dépasse jamais de l'écran.
+          {%- endcomment -%}
+          <a class="refonte-carte-lien" href="{{ product.url }}">
+            {{- nom | escape -}}
+            {%- if short != blank and short != product.title -%}<span class="sr-only left-0 top-0">, {{ product.title | escape }}</span>{%- endif -%}
+          </a>
+        </h3>
+        <p class="refonte-carte-prix">{{ 'sections.mma.collection_grille.prix' | t: prix: prix }}</p>
+      </div>
+      {%- render 'my-like-button', product: product -%}
+    </div>
+  </li>
+{%- else -%}
+  <li class="refonte-carte refonte-carte-repli">
+    {%- render 'card-product', product: product, primary_image_index: 1, next_image_index: 0, lazy_load: lazy, section_id: section_id -%}
+  </li>
+{%- endif -%}

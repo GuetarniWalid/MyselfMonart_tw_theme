@@ -1,0 +1,99 @@
+{%- comment -%}
+  La grille de la nouvelle page collection (vue ?view=refonte, modèle templates/collection.refonte.json, dossier
+  .scratch/collection-design, ticket 05 ; décisions 5 et 7 de Walid) : elle y remplace main-collection-product-grid, qui
+  sert toujours toutes les autres pages de collection.
+  - Les tableaux, 24 par page (paginate), dans des cartes où l'œuvre est seule, en objet, sur le blanc de la page,
+    anciens produits compris (snippets/collection-carte.liquid). Deux colonnes, trois dès 700 px, quatre dès 1100 px.
+  - La suite arrive seule : <infinite-scroll> (assets/collection.js) charge la page suivante (?page=N&section_id=),
+    700 px avant la fin, et l'annonce (évènement mma:collection-lot) ; <collection-suite> (même fichier) tient le compte
+    au bout du dernier lot : « 48 tableaux sur 327 » et une jauge, puis « Vous avez vu les 327 tableaux. ».
+  - Les liens ?page=N (snippets/pagination.liquid) restent dans le HTML pour Google, et mènent sans JavaScript aux
+    pages suivantes.
+  - La liste ItemList de la page, la même que celle de la grille d'aujourd'hui (snippet commun json-ld-item-list).
+  Ni éditorial ni cocon (en haut, ticket 02 ; en bas, ticket 08), ni colonne de filtres : la ligne des filtres viendra
+  au ticket 06, à sa place, juste au-dessus des tableaux (#ancre-barre, #barre). Aucun h1 : celui de la page est dans
+  l'entrée. Styles : assets/collection-refonte.css, bloc « Grille et suite (ticket 05) ». Textes :
+  sections.mma.collection_grille. Tests : scripts/collection-grille.test.cjs.
+{%- endcomment -%}
+{%- liquid
+  # Le titre de la grille, pour les lecteurs d'écran : « Les tableaux nature » (fr), le titre de la collection en
+  # minuscules ; les langues qui gardent les capitales des noms prennent le titre tel quel.
+  assign titre_bas = collection.title | downcase
+  # La largeur de l'œuvre dans sa carte (80 % de la carte au plus), selon la grille de assets/collection-refonte.css :
+  # 2 colonnes (écart 8 px), 3 dès 700 px (14 px), 4 dès 1100 px (18 px), dans 1240 px au plus, entre les marges de la
+  # page (20 px, 48 px dès 900 px). Ex. à 390 px : 0,8 × (390 − 40 − 8) / 2 = 137 px.
+  assign sizes = '(min-width: 1336px) 237px, (min-width: 1100px) calc(20vw - 30px), (min-width: 900px) calc(26.67vw - 33px), (min-width: 700px) calc(26.67vw - 18px), calc(40vw - 19px)'
+-%}
+{%- paginate collection.products by 24 -%}
+  <section id="grille" class="refonte-grille" aria-labelledby="grille-titre">
+    <h2 id="grille-titre" class="sr-only">{{ 'sections.mma.collection_grille.titre' | t: titre: titre_bas, titre_exact: collection.title }}</h2>
+    {%- comment -%} La ligne des filtres (ticket 06) : son ancre, puis la ligne, juste au-dessus des tableaux. {%- endcomment -%}
+    <div id="ancre-barre" data-allow-empty></div>
+    <div id="barre" data-allow-empty></div>
+    <div class="refonte-grille-dedans">
+      {%- if collection.products.size == 0 -%}
+        <p class="refonte-grille-vide">{{ 'sections.main_collection_product_grid.empty' | t }}</p>
+      {%- else -%}
+        {%- liquid
+          # Le compte : le rang du dernier tableau de la page, sur le nombre de tableaux de la collection.
+          assign vus = paginate.current_offset | plus: collection.products.size
+          assign total = collection.products_count
+          if vus > total
+            assign total = vus
+          endif
+          assign fin = false
+          if vus >= total
+            assign fin = true
+          endif
+        -%}
+        <div id="liste" class="refonte-liste">
+          {%- if paginate.pages > 1 -%}
+            <infinite-scroll
+              id="infinite-scroll-{{ collection.id }}-{{ paginate.current_page }}"
+              data-pages="{{ paginate.pages }}"
+              data-page="{{ paginate.current_page }}"
+              data-section-id="{{ section.id }}"
+              data-marge="700"
+              data-paginate-previous-url="{{ paginate.previous.url }}"
+              data-paginate-next-url="{{ paginate.next.url }}">
+          {%- endif -%}
+          <ul class="refonte-cartes" role="list">
+            {%- for product in collection.products -%}
+              {%- liquid
+                assign lazy = true
+                if forloop.index <= 2
+                  assign lazy = false
+                endif
+              -%}
+              {%- render 'collection-carte', product: product, lazy: lazy, sizes: sizes, section_id: section.id -%}
+            {%- endfor -%}
+          </ul>
+          {%- if paginate.pages > 1 -%}
+            </infinite-scroll>
+          {%- endif -%}
+        </div>
+        <collection-suite id="suite" class="refonte-suite" data-vus="{{ vus }}" data-total="{{ total }}" data-statut="statut">
+          <p class="refonte-suite-compte"{% if fin %} hidden{% endif %}>{{ 'sections.mma.collection_grille.compte_html' | t: vus: vus, total: total }}</p>
+          <progress class="refonte-jauge" value="{{ vus }}" max="{{ total }}" aria-hidden="true" data-allow-empty{% if fin %} hidden{% endif %}></progress>
+          <p class="refonte-suite-fin"{% unless fin %} hidden{% endunless %}>{{ 'sections.mma.collection_grille.fin' | t: count: total }}</p>
+        </collection-suite>
+        <div id="pages" class="refonte-pages">
+          {%- render 'pagination', paginate: paginate, anchor: '' -%}
+        </div>
+      {%- endif -%}
+    </div>
+    <div id="statut" class="sr-only" role="status" aria-live="polite" aria-atomic="true" data-allow-empty></div>
+  </section>
+{%- endpaginate -%}
+{%- comment -%} La liste ItemList des produits de la page, la même que celle de la grille d'aujourd'hui. {%- endcomment -%}
+{%- render 'json-ld-item-list' -%}
+
+{% schema %}
+{
+  "name": "Collection : grille",
+  "limit": 1,
+  "enabled_on": {
+    "templates": ["collection"]
+  }
+}
+{% endschema %}

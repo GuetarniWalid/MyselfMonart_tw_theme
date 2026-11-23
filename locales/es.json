@@ -230,6 +230,16 @@
       }
     },
     "mma": {
+      "collection_grille": {
+        "titre": "Selección de {{ titre }}",
+        "prix": "Desde {{ prix }}",
+        "compte_html": "<b data-vus>{{ vus }}</b> de <b>{{ total }}</b> cuadros",
+        "fin": {
+          "one": "Ha visto el cuadro.",
+          "other": "Ha visto los {{ count }} cuadros.",
+          "many": "Ha visto los {{ count }} cuadros."
+        }
+      },
       "add_to_favorites": "Añadir a favoritos",
       "add_artwork_to_favorites": "Añadir este cuadro a mis favoritos",
       "breadcrumb_home": "Inicio",

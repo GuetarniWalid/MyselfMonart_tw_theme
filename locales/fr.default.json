@@ -617,6 +617,16 @@
       }
     },
     "mma": {
+      "collection_grille": {
+        "titre": "Les {{ titre }}",
+        "prix": "Dès {{ prix }}",
+        "compte_html": "<b data-vus>{{ vus }}</b> tableaux sur <b>{{ total }}</b>",
+        "fin": {
+          "one": "Vous avez vu le tableau.",
+          "other": "Vous avez vu les {{ count }} tableaux.",
+          "many": "Vous avez vu les {{ count }} tableaux."
+        }
+      },
       "add_to_favorites": "Ajouter aux favoris",
       "remove_from_favorites": "Retirer des favoris",
       "add_artwork_to_favorites": "Ajouter ce tableau à mes favoris",

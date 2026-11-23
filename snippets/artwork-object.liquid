@@ -24,6 +24,9 @@
       'panier' (page panier, case de 120 px) ou 'studio' (la photo studio : 1000 px de CSS, prise en 2x)
     - lazy: {Boolean} image différée. Carte : image floue puis srcset (lqip, assets/tw-global.js), sinon
       prioritaire ; panier : loading="lazy", sinon eager. Différée si absent. Photo studio : jamais.
+    - sizes: {String} carte : l'attribut sizes de l'œuvre, selon la grille qui la montre (la grille de la nouvelle page
+      collection, snippets/collection-carte.liquid). Sans lui, celui de la grille .product-grid des collections
+      d'aujourd'hui. Facultatif.
 
   Dans la carte, la porte-fenêtre reflétée par la vitre du poster passe au défilement (son script,
   assets/oeuvre-card-reflet.js, est chargé par la carte) et la face porte .skeleton. Au panier (data-context),
@@ -49,7 +52,9 @@
     when 'carte'
       # L'œuvre n'occupe qu'une partie de la carte : 80 % de sa largeur au plus (toile, poster sans contour
       # blanc), 63 % pour un poster à contour blanc.
-      if contour
+      if sizes != blank
+        assign art_sizes = sizes
+      elsif contour
         assign art_sizes = '(min-width: 1280px) 200px, (min-width: 1024px) 22vw, 33vw'
       else
         assign art_sizes = '(min-width: 1280px) 240px, (min-width: 1024px) 26vw, 39vw'

@@ -194,8 +194,8 @@ test('la feuille : chaque règle commence par la page qui porte la marque, rien 
   // Ni police ni import : Albert Sans est déclarée par le gabarit (snippets/collection-refonte-police.liquid).
   const css = read(CSS).replace(/\/\*[\s\S]*?\*\//g, '')
   assert.doesNotMatch(css, /@font-face|@import/)
-  // Le crochet est la marque de la section, jamais le nom du modèle.
-  assert.doesNotMatch(css, /collection\.refonte|data-template|template-/)
+  // Le crochet est la marque de la section, jamais le nom du modèle (grid-template-columns n'en est pas un).
+  assert.doesNotMatch(css, /collection\.refonte|data-template|(?<![\w-])template-/)
 })
 
 test('la feuille : les couleurs et la typo de la maquette, posées une fois, les mêmes que sur la fiche 3D', () => {

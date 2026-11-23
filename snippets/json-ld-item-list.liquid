@@ -1,0 +1,55 @@
+{%- comment -%}
+  json-ld-item-list — la liste ItemList d'une page de collection, pour Google : les produits de la page (paginate
+  par 24 dans la section qui la rend), chacun avec son œuvre à plat, son prix et son adresse. Une seule liste, un seul
+  endroit où la changer : la grille d'aujourd'hui (sections/main-collection-product-grid.liquid) et celle de la nouvelle
+  page collection (sections/collection-grille.liquid, ticket 05 de .scratch/collection-design) la rendent après leur
+  bloc paginate. Rendue sans paramètre : elle lit collection, shop et cart.
+  priceCurrency = devise affichée (cart.currency), comme sur la fiche produit : price_min est déjà
+  dans la devise du marché, et shop.currency étiquetait en EUR les prix USD/CAD/GBP/CHF. Titre en | json (guillemets).
+  Tests : scripts/collection-grille.test.cjs (même HTML qu'avant dans la grille d'aujourd'hui, même liste dans les
+  deux grilles), scripts/oeuvre-card.test.cjs (l'image).
+{%- endcomment -%}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": {{ collection.title | json }},
+    "url": "{{ shop.url }}{{ collection.url }}",
+    "itemListElement": [
+      {%- for product in collection.products -%}
+        {
+          "@type": "ListItem",
+          "position": {{ forloop.index }},
+          "url": "{{ shop.url }}{{ product.url }}",
+          "item": {
+            "@type": "Product",
+            "name": {{ product.title | strip_html | json }},
+            {%- liquid
+              # L'œuvre à plat (snippet artwork-flat-index) : la 2e photo des produits de toujours, celle que Google
+              # lit depuis toujours (en changer changerait ses données) ; la 1re et seule des nouveaux produits
+              # (modèle oeuvre-3d).
+              capture ld_flat_index
+                render 'artwork-flat-index', product: product
+              endcapture
+              assign ld_flat_index = ld_flat_index | plus: 0
+              assign ld_image = product.images[ld_flat_index]
+              assign product_image = ld_image | image_url: width: ld_image.preview_image.width | prepend: "https:"
+            -%} "image": "{{ product_image }}",
+            "description": {{ product.description | strip_html | json }},
+            "brand": {
+              "@type": "Brand",
+              "name": "{{ shop.name }}"
+            },
+            "offers": {
+              "@type": "Offer",
+              "priceCurrency": {{ cart.currency.iso_code | json }},
+              "price": "{{ product.price_min |  divided_by: 100.00 }}",
+              "availability": "https://schema.org/InStock",
+              "url": "{{ shop.url }}{{ product.url }}"
+            }
+          }
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ]
+  }
+</script>

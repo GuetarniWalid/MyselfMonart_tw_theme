@@ -472,6 +472,16 @@
       }
     },
     "mma": {
+      "collection_grille": {
+        "titre": "The {{ titre }}",
+        "prix": "From {{ prix }}",
+        "compte_html": "<b data-vus>{{ vus }}</b> of <b>{{ total }}</b> artworks",
+        "fin": {
+          "one": "You have seen the artwork.",
+          "other": "You have seen all {{ count }} artworks.",
+          "many": "You have seen all {{ count }} artworks."
+        }
+      },
       "add_to_favorites": "Add to favorites",
       "remove_from_favorites": "Remove from favorites",
       "add_artwork_to_favorites": "Add this artwork to my favorites",
