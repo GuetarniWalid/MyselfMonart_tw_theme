@@ -64,6 +64,18 @@ test('neutraliser : ce qui change à chaque affichage, ou avec un déploiement, 
   assert.notEqual(neutraliser('<img src="//www.myselfmonart.com/cdn/shop/files/lion.jpg?v=1">'), neutraliser('<img src="//www.myselfmonart.com/cdn/shop/files/lion.jpg?v=2">'))
 })
 
+/* La région du centre de calcul qui a rendu la page : Shopify l'écrit dans une balise de ses mesures, et elle change
+   d'un affichage à l'autre selon le centre qui répond (relevé le 24/11/2026 : 10 pages témoins sur 11 « différentes »
+   pour cette seule ligne). */
+test('neutraliser : la région du centre de calcul qui a rendu la page', () => {
+  const { neutraliser } = require('./temoins.cjs')
+  const balise = (region) => `<script\n  data-application="storefront-renderer"\n  data-shop-id="62323884287"\n  data-render-region="${region}"\n  data-page-type="cart"\n></script>`
+  assert.equal(neutraliser(balise('gcp-europe-west1')), neutraliser(balise('gcp-europe-west4')))
+  assert.ok(neutraliser(balise('gcp-europe-west1')).includes('data-render-region="…"'))
+  // Le reste de la balise compte.
+  assert.notEqual(neutraliser(balise('gcp-europe-west1')), neutraliser(balise('gcp-europe-west1').replace('cart', 'collection')))
+})
+
 test('neutraliser : la version d’un fichier du thème, écrite telle quelle ou dans un JSON (barres échappées)', () => {
   const { neutraliser } = require('./temoins.cjs')
   // La fiche 3D écrit l'adresse de ses fichiers dans sa configuration (snippets/oeuvre-3d-stage.liquid, | json).

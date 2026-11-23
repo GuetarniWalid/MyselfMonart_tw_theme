@@ -75,6 +75,9 @@ const NEUTRES = [
   [/(data-expiration=")\d+"/g, '$1…"'],
   // L'empreinte du thème dans les mesures d'audience : un identifiant de déploiement, qui peut suivre un push.
   [/("themeCityHash":")\d+"/g, '$1…"'],
+  // La région du centre de calcul qui a rendu la page (data-render-region, écrit par Shopify) : elle change d'un
+  // affichage à l'autre selon le centre qui répond (gcp-europe-west1, gcp-europe-west4 : relevé le 24/11/2026).
+  [/(data-render-region=")[^"]+"/g, '$1…"'],
 ]
 
 const neutraliser = (html) => NEUTRES.reduce((text, [pattern, by]) => text.replace(pattern, by), html)
