@@ -573,6 +573,18 @@ test('l’en-tête écrit encore la barre « Filtrer et trier » et sa place dan
   assert.equal(regle(bloc, `${H} sticky-header nav.pt-\\[54px\\]`).body.trim(), 'padding-top: 2rem;')
 })
 
+/* La demande de sections : avec l'en-tête « Accept: application/json », Shopify répond la collection elle-même en JSON
+   ({ "collection": … }) et ignore ?sections= (relevé en ligne le 23/11/2026). Le script n'y trouvait pas la grille et
+   rechargeait la page entière à chaque choix ; le nombre de « Voir les N tableaux » ne suivait pas. */
+test('la demande de sections part sans en-tête Accept, sinon Shopify répond la collection et non les sections', () => {
+  const source = read('assets/collection-filtres.js')
+  const appels = [...source.matchAll(/fetch\(adresseSections\([^)]*\),\s*(\{[^}]*\})\)/g)]
+  assert.equal(appels.length, 1, 'une seule demande de sections')
+  assert.doesNotMatch(appels[0][1], /Accept|headers/)
+  // Le code seul, sans ses commentaires (qui racontent le piège).
+  assert.doesNotMatch(source.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, ''), /application\/json/)
+})
+
 /* Le tiroir des filtres (snippets/tw-filter-drawer.liquid), rendu par le gabarit des pages collection : pas sur la
    nouvelle page, que le gabarit reconnaît déjà à sa marque (layout/collection.liquid). Le gabarit rendu avec des
    repères à la place des sections et des snippets qu'il rend, comme scripts/collection-refonte.test.cjs. */

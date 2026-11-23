@@ -494,7 +494,9 @@
       if (this.requete) this.requete.controleur.abort();
       const ids = this.idsSections();
       const controleur = new AbortController();
-      const promesse = fetch(adresseSections(adresse, ids), { signal: controleur.signal, headers: { Accept: 'application/json' } })
+      // Sans en-tête Accept : avec « application/json », Shopify répond la collection en JSON ({ collection }) et non les
+      // sections (relevé en ligne le 23/11/2026) ; le script retombait alors sur la page entière à chaque choix.
+      const promesse = fetch(adresseSections(adresse, ids), { signal: controleur.signal })
         .then((reponse) => {
           if (!reponse.ok) throw new Error(`HTTP ${reponse.status}`);
           return reponse.json();
