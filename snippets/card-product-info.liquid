@@ -28,9 +28,14 @@
           lien (WCAG 2.4.4 Link Purpose). On complete le nom accessible avec le titre descriptif,
           qui sert du meme coup d'ancre de lien interne vers la fiche produit.
           Emis uniquement s'il existe un titre court distinct, sinon le libelle serait duplique.
+          left-0 top-0 : sans eux, ce texte invisible (position absolue) se place au bout du libellé, que truncate
+          coupe sans le couper lui, car le lien n'est pas son bloc conteneur (le lien ne peut pas être relative : son
+          after:inset-0 couvre toute la carte). Avec un long libellé dans la colonne de droite, il dépassait de l'écran
+          et élargissait la page sur téléphone, que Chrome réduisait pour la faire tenir (Tableaux Nature : 405 px
+          au lieu de 390, relevé du 23/11/2026). Collé au coin de la carte, il ne dépasse plus.
         {%- endcomment -%}
         {%- if card_short != blank and card_short != product.title -%}
-          <span class="sr-only">{{ product.title | escape }}</span>
+          <span class="sr-only left-0 top-0">{{ product.title | escape }}</span>
         {%- endif -%}
       </a>
     </h3>

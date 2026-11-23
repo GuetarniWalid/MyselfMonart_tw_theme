@@ -754,7 +754,8 @@ test('rendu des recommandations de Shopify : la rangée du thème et sa carte de
     const card = tight(await engine().renderFile('card-product', { product: p, primary_image_index: 1, next_image_index: 0, lazy_load: true, section_id: RECOS_ID }, { globals: globals(product()) }))
     assert.equal(cards[i].replace(/<\/li>.*$/, ''), card, p.handle)
     assert.match(cards[i], new RegExp(`<a href="/products/oeuvre-${i + 1}" class="product-card-title `))
-    assert.match(cards[i], />\s*ŒUVRE [123]\s*<span class="sr-only">Tableau œuvre [123] - Titre complet<\/span>/)
+    // left-0 top-0 : le titre entier invisible reste collé au coin de la carte (scripts/card-titre.test.cjs).
+    assert.match(cards[i], />\s*ŒUVRE [123]\s*<span class="sr-only left-0 top-0">Tableau œuvre [123] - Titre complet<\/span>/)
     assert.match(cards[i], /62,50 €/)
     assert.match(cards[i], new RegExp(`<my-like-button data-product-id="${100 + i + 1}" data-product-handle="oeuvre-${i + 1}">`))
     // Les images arrivent floues, en différé : <galerie-recos> les dé-floute (le script, plus haut).
