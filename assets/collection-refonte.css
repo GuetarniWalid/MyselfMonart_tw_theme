@@ -2154,6 +2154,12 @@
   display: none;
 }
 
+/* La barre « Filtrer et trier » de l'en-tête et son tiroir ne s'écrivent pas sur cette page (snippets/tw-sticky-header,
+   layout/collection) ; si l'en-tête l'écrivait quand même, elle ne se montrerait pas. */
+:root[data-refonte-page] #mobile-filter-button-wrapper {
+  display: none;
+}
+
 /* Sans script, sur téléphone : une famille ouverte s'étale sous la ligne. */
 :root[data-refonte-page] .filtres-ligne:not([data-pret]) .filtres-defile:has(> .filtres-famille[open]) {
   flex-wrap: wrap;

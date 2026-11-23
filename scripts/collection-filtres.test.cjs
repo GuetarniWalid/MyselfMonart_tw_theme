@@ -522,10 +522,9 @@ test('aucun tableau pour ces filtres : « Aucun tableau ne réunit ces filtres. 
 /* L'en-tête (sections/tw-header.liquid → snippets/tw-sticky-header.liquid) écrit sur les pages de collection la barre
    « FILTRER ET TRIER 327 produits » (#mobile-filter-button-wrapper) qui ouvre le tiroir des filtres. Sur la nouvelle
    page, la ligne la remplace : l'en-tête reconnaît la page à la marque de sa section dans la page rendue
-   (content_for_layout, un objet global de Shopify), comme le gabarit. Ailleurs, le même HTML qu'avant (copie figée :
-   scripts/fixtures/tw-sticky-header.avant-filtres.liquid). */
+   (content_for_layout, un objet global de Shopify), comme le gabarit. Seule cette marque change l'en-tête ; le HTML
+   en ligne des autres pages se compare avant et après le push (scripts/temoins.cjs). */
 const ENTETE = 'snippets/tw-sticky-header.liquid'
-const ENTETE_AVANT = 'scripts/fixtures/tw-sticky-header.avant-filtres.liquid'
 const { read, templateOf } = require('./galerie-banc.cjs')
 // La balise {% form %} de Shopify (le sélecteur de langue de l'en-tête), pour liquidjs.
 function formulaire(e) {
@@ -544,7 +543,7 @@ function formulaire(e) {
   })
 }
 if (!SKIP) for (const lang of Object.keys(LANGS)) formulaire(engine(lang))
-const entete = (file, { contenu, type = 'painting', modele = templateOf('collection', 'refonte'), reglages = { enable_painting_filtering: true, enable_poster_filtering: true } }) => engine('fr').parseAndRender(read(file), {}, {
+const entete = ({ contenu, type = 'painting', modele = templateOf('collection', 'refonte'), reglages = { enable_painting_filtering: true, enable_poster_filtering: true } }) => engine('fr').parseAndRender(read(ENTETE), {}, {
   globals: {
     content_for_layout: contenu, template: modele, settings: reglages,
     collection: { metafields: { custom: { type_of_collection: type } }, products_count: 327 },
@@ -557,27 +556,28 @@ const entete = (file, { contenu, type = 'painting', modele = templateOf('collect
 const MARQUE = '<div id="shopify-section-template--1__collection_refonte" class="shopify-section"><div hidden data-refonte></div></div>'
 
 test('l’en-tête : sur la nouvelle page, ni la barre « Filtrer et trier » ni la place qu’elle prenait dans le menu', { skip: SKIP }, async () => {
-  const avant = await entete(ENTETE_AVANT, { contenu: MARQUE })
-  assert.match(avant, /id="mobile-filter-button-wrapper"/, 'la copie d’avant l’écrit')
-  const html = await entete(ENTETE, { contenu: MARQUE })
+  const aujourdhui = await entete({ contenu: '<h1>Tableaux Nature</h1>' })
+  assert.match(aujourdhui, /id="mobile-filter-button-wrapper"/, 'une collection d’aujourd’hui l’écrit')
+  assert.match(aujourdhui, /pt-\[54px\]/)
+  const html = await entete({ contenu: MARQUE })
   assert.doesNotMatch(html, /mobile-filter-button-wrapper|filter-button-mobile/)
   assert.doesNotMatch(html, /pt-\[54px\]/)
   // Rien d'autre ne change : l'en-tête d'une collection dont les filtres sont coupés (aux blancs près qui précèdent
   // <sticky-header>, ceux des réglages lus avant lui).
   const corps = (texteHtml) => texteHtml.slice(texteHtml.indexOf('<sticky-header'))
-  assert.equal(corps(html), corps(await entete(ENTETE_AVANT, { contenu: MARQUE, reglages: {} })))
+  assert.equal(corps(html), corps(await entete({ contenu: MARQUE, reglages: {} })))
 })
 
-test('l’en-tête : partout ailleurs, exactement le HTML d’avant', { skip: SKIP }, async () => {
+test('l’en-tête : seule la marque de la nouvelle page le change ; ailleurs, la page rendue n’y fait rien', { skip: SKIP }, async () => {
   const PAGES = {
     'une collection d’aujourd’hui': { contenu: '<div id="shopify-section-template--1__main" class="shopify-section"><h1>Tableaux Nature</h1></div>' },
     'une collection de posters': { contenu: '<h1>Posters</h1>', type: 'poster' },
     'la page galerie des œuvres 3D': { contenu: '<main-product-blocks class="block" data-galerie></main-product-blocks>', modele: templateOf('product', 'oeuvre-galerie') },
-    'un attribut voisin': { contenu: '<div data-refonte-page></div><div data-refonte="1"></div>' },
-    'sans page rendue': { contenu: undefined },
+    'un attribut voisin': { contenu: '<div data-refonte-page></div><div data-refonte="1"></div><p data-refontes></p>' },
+    'le mot seul': { contenu: '<p>La refonte de la page : data-refonte, bientôt.</p>' },
   }
   for (const [nom, page] of Object.entries(PAGES)) {
-    assert.equal(await entete(ENTETE, page), await entete(ENTETE_AVANT, page), nom)
+    assert.equal(await entete(page), await entete({ ...page, contenu: undefined }), nom)
   }
 })
 
@@ -608,7 +608,8 @@ function blocCss() {
   return rules(read(CSS).slice(reperes[0].end, reperes[1].start).replace(/\/\*[\s\S]*?\*\//g, ''))
 }
 const regle = (bloc, head, context = '') => bloc.find((r) => r.head === head && r.context.join(' / ') === context)
-const FICHIERS = ['snippets/collection-filtres.liquid', 'snippets/collection-filtres-famille.liquid', 'snippets/collection-filtres-valeur.liquid', 'snippets/collection-filtres-marque.liquid', 'sections/collection-grille.liquid']
+const FICHIERS = ['collection-filtres', 'collection-filtres-famille', 'collection-filtres-valeur', 'collection-filtres-marque', 'collection-filtres-pastille', 'collection-filtres-icone']
+  .map((nom) => `snippets/${nom}.liquid`).concat('sections/collection-grille.liquid')
 
 test('la feuille : chaque classe de la ligne, des panneaux et des filtres actifs a sa règle, dans le bloc du ticket', () => {
   const bloc = blocCss()

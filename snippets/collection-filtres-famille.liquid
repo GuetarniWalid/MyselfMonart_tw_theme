@@ -7,15 +7,18 @@
   - Le panneau : le nom et l'aide, les valeurs (un fieldset nommé), et le pied : « Effacer la couleur » (s'il y a un
     choix dans la famille), « Voir les N tableaux », un bouton d'envoi du formulaire.
   - Couleur : les valeurs par nombre décroissant. Format : Portrait, Paysage, Carré, dessinés. Thème : les 12 plus
-    fournis (les choisis d'abord), puis « Voir les 98 thèmes », qui ouvre une recherche et les autres, de A à Z ; un
-    thème en double dans Search & Discovery n'en fait qu'un.
+    fournis (les choisis d'abord : un thème coché reste en vue), puis « Voir les 98 thèmes », qui ouvre une recherche
+    et les autres, de A à Z (l'ordre de Search & Discovery, alphabétique dans chaque langue, relevé le 23/11/2026) ;
+    un thème en double dans Search & Discovery n'en fait qu'un.
   - Une valeur à 0 ne s'écrit pas, sauf cochée.
+  Les listes se trient par des clés texte (« 99999 − nombre », puis le nom) : Liquid ne trie pas des objets qu'il
+  fabrique, et l'ordre des égalités reste le même d'un rendu à l'autre.
   Paramètres : famille ('couleur', 'format', 'theme'), filtre (le filtre de Search & Discovery), coches (les noms
   cochés de la famille, séparés par « ¤ »), nombre (les tableaux de la page, filtres compris).
 {%- endcomment -%}
 {%- liquid
-  assign cle = 'sections.mma.collection_filtres.familles.' | append: famille
-  assign nom_famille = cle | t
+  assign cle_nom_famille = 'sections.mma.collection_filtres.familles.' | append: famille
+  assign nom_famille = cle_nom_famille | t
   assign noms_coches = coches | split: '¤'
   assign nb_coches = noms_coches | size
   if nb_coches == 1
@@ -36,7 +39,7 @@
   <summary class="filtres-fac"{% if nb_coches > 0 %} data-actif{% endif %}>
     {%- if famille == 'couleur' -%}<span class="filtres-mini" aria-hidden="true" data-allow-empty></span>{%- endif -%}
     <span class="filtres-fac-nom">{{ bouton }}</span>
-    <svg class="filtres-chevron" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M2 4l4 4 4-4"/></svg>
+    {%- render 'collection-filtres-icone', nom: 'chevron' -%}
   </summary>
   <div class="filtres-panneau" id="filtres-panneau-{{ famille }}" data-famille="{{ famille }}">
     <div class="filtres-panneau-tete">
@@ -45,7 +48,7 @@
         <p class="filtres-panneau-aide"><span class="filtres-aide-tel">{{ 'sections.mma.collection_filtres.aide_tel' | t }}</span><span class="filtres-aide-ordi">{{ 'sections.mma.collection_filtres.aide_ordi' | t }}</span></p>
       </div>
       <button type="button" class="filtres-fermer" aria-label="{{ 'sections.mma.collection_filtres.fermer' | t }}" data-fermer>
-        <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M2 2l10 10M12 2 2 12"/></svg>
+        {%- render 'collection-filtres-icone', nom: 'fermer' -%}
       </button>
     </div>
     <div class="filtres-panneau-corps">
@@ -54,20 +57,15 @@
         {%- case famille -%}
           {%- when 'couleur' -%}
             {%- liquid
-              # Par nombre de tableaux décroissant : une clé « 99999 − nombre » triée comme du texte, puis le libellé.
+              # Par nombre de tableaux décroissant, puis par nom : « 99999 − nombre § nom § valeur ».
               assign cles = ''
               for valeur in filtre.values
                 if valeur.count > 0 or valeur.active
                   assign rang = 99999 | minus: valeur.count
-                  assign cle = rang | append: '§' | append: valeur.value
-                  if cles == ''
-                    assign cles = cle
-                  else
-                    assign cles = cles | append: '¤' | append: cle
-                  endif
+                  assign cles = cles | append: '¤' | append: rang | append: '§' | append: valeur.label | append: '§' | append: valeur.value
                 endif
               endfor
-              assign cles = cles | split: '¤' | sort
+              assign cles = cles | remove_first: '¤' | split: '¤' | sort
             -%}
             <div class="filtres-valeurs">
               {%- for cle in cles -%}
@@ -81,7 +79,7 @@
           {%- when 'format' -%}
             {%- liquid
               # Portrait, Paysage, Carré, dessinés (snippets/collection-filtres-forme.liquid), puis un format inconnu :
-              # une clé « ordre § forme § valeur » triée comme du texte.
+              # « ordre § forme § valeur ».
               assign cles = ''
               for valeur in filtre.values
                 if valeur.count > 0 or valeur.active
@@ -98,15 +96,10 @@
                     else
                       assign ordre = '4'
                   endcase
-                  assign cle = ordre | append: '§' | append: forme | append: '§' | append: valeur.value
-                  if cles == ''
-                    assign cles = cle
-                  else
-                    assign cles = cles | append: '¤' | append: cle
-                  endif
+                  assign cles = cles | append: '¤' | append: ordre | append: '§' | append: forme | append: '§' | append: valeur.value
                 endif
               endfor
-              assign cles = cles | split: '¤' | sort
+              assign cles = cles | remove_first: '¤' | split: '¤' | sort
             -%}
             <div class="filtres-valeurs filtres-valeurs-formes">
               {%- for cle in cles -%}
@@ -118,62 +111,52 @@
             </div>
           {%- when 'theme' -%}
             {%- liquid
-              # Un thème par nom (Search & Discovery en a en double) ; ceux qui ont des tableaux, ou cochés.
+              # Un thème par nom (Search & Discovery en a en double) ; ceux qui ont des tableaux, ou cochés. Pour le haut,
+              # les choisis d'abord, puis les plus fournis : « 0 » ou « 1 », puis « 99999 − nombre », puis le nom.
               assign noms = filtre.values | map: 'label' | uniq
               assign visibles = ''
               assign cles = ''
               for nom in noms
                 assign groupe = filtre.values | where: 'label', nom
                 assign compte = 0
-                assign actif = false
+                assign actif = '1'
                 for valeur in groupe
                   assign compte = compte | plus: valeur.count
                   if valeur.active
-                    assign actif = true
+                    assign actif = '0'
                   endif
                 endfor
-                if compte > 0 or actif
-                  # Les choisis d'abord, puis les plus fournis : « 0 » ou « 1 », puis « 99999 − nombre », puis le nom.
+                if compte > 0 or actif == '0'
                   assign rang = 99999 | minus: compte
-                  if actif
-                    assign cle = '0' | append: rang | append: '§' | append: nom
-                  else
-                    assign cle = '1' | append: rang | append: '§' | append: nom
-                  endif
-                  if cles == ''
-                    assign cles = cle
-                    assign visibles = nom
-                  else
-                    assign cles = cles | append: '¤' | append: cle
-                    assign visibles = visibles | append: '¤' | append: nom
-                  endif
+                  assign cles = cles | append: '¤' | append: actif | append: rang | append: '§' | append: nom
+                  assign visibles = visibles | append: '¤' | append: nom
                 endif
               endfor
-              assign cles = cles | split: '¤' | sort
-              assign visibles = visibles | split: '¤'
+              assign cles = cles | remove_first: '¤' | split: '¤' | sort
+              assign visibles = visibles | remove_first: '¤' | split: '¤'
               assign nb_themes = visibles | size
               assign nb_haut = 12
               if nb_coches > nb_haut
                 assign nb_haut = nb_coches
               endif
-              assign haut = ''
+              assign noms_haut = ''
             -%}
             <div class="filtres-valeurs">
               {%- for cle in cles limit: nb_haut -%}
                 {%- assign nom = cle | split: '§' | last -%}
-                {%- assign haut = haut | append: '¤' | append: nom -%}
+                {%- assign noms_haut = noms_haut | append: '¤' | append: nom -%}
                 {%- assign groupe = filtre.values | where: 'label', nom -%}
                 {%- render 'collection-filtres-valeur', famille: famille, groupe: groupe, nom: nom -%}
               {%- endfor -%}
             </div>
             {%- if nb_themes > nb_haut -%}
-              {%- assign haut = haut | split: '¤' -%}
+              {%- assign liste_haut = noms_haut | split: '¤' -%}
               <details class="filtres-tous">
                 <summary class="filtres-tous-bouton"><span class="filtres-tous-plus">{{ 'sections.mma.collection_filtres.themes_tous' | t: count: nb_themes }}</span><span class="filtres-tous-moins">{{ 'sections.mma.collection_filtres.themes_moins' | t }}</span></summary>
                 <input class="filtres-cherche" type="search" placeholder="{{ 'sections.mma.collection_filtres.chercher' | t }}" aria-label="{{ 'sections.mma.collection_filtres.chercher_nom' | t }}" autocomplete="off" enterkeyhint="search">
                 <div class="filtres-valeurs">
                   {%- for nom in visibles -%}
-                    {%- unless haut contains nom -%}
+                    {%- unless liste_haut contains nom -%}
                       {%- assign groupe = filtre.values | where: 'label', nom -%}
                       {%- render 'collection-filtres-valeur', famille: famille, groupe: groupe, nom: nom -%}
                     {%- endunless -%}

@@ -1,0 +1,15 @@
+{%- comment -%}
+  Un filtre actif, sous la ligne des filtres de la nouvelle page collection (snippets/collection-filtres.liquid,
+  ticket 06) : une pastille encre qui le retire, un lien vers la même page sans lui (url_to_remove de Search &
+  Discovery) ; le script la reprend sans recharger la page. Elle porte son rond (couleur) ou sa forme (format), son nom
+  et une croix ; les lecteurs d'écran lisent « Retirer le filtre Bleu ».
+  Paramètres : famille ('couleur', 'format', 'theme'), valeur (la valeur du filtre), nom (le nom affiché).
+{%- endcomment -%}
+{%- if famille == 'format' -%}
+  {%- capture forme -%}{% render 'collection-filtres-forme', nom: valeur.label %}{%- endcapture -%}
+{%- endif -%}
+<a class="filtres-pastille" href="{{ valeur.url_to_remove }}" aria-label="{{ 'sections.mma.collection_filtres.retirer' | t: nom: nom }}" data-retirer="{{ valeur.param_name | escape }}" data-valeur="{{ valeur.value | escape }}">
+  {%- render 'collection-filtres-marque', famille: famille, valeur: valeur, forme: forme -%}
+  <span>{{ nom | escape }}</span>
+  {%- render 'collection-filtres-icone', nom: 'croix' -%}
+</a>

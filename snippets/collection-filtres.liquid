@@ -10,9 +10,11 @@
     bouton « Voir les N tableaux ». Pas de bouton qui ouvre tous les filtres d'un coup.
   - Un formulaire GET : sans script, cocher puis valider marche encore.
   - Les filtres actifs : seulement s'il y en a (ou, sur téléphone, un tri autre que Meilleures ventes) ; chacun est un
-    lien qui le retire (url_to_remove), puis « Tout effacer ».
+    lien qui le retire (snippets/collection-filtres-pastille.liquid), puis « Tout effacer ».
   - La ligne porte ce que le script relit dans chaque réponse du serveur : le nombre de tableaux (data-total) et la
     phrase de la zone parlée (data-annonce : « 103 tableaux. Filtres : Bleu. »).
+  Le tri neutre est Meilleures ventes (le ticket) : tout autre tri se montre. Le tri par défaut de la collection ne
+  s'écrit pas dans l'adresse (data-tri-defaut, lu par le script).
   Le script : assets/collection-filtres.js (<collection-filtres>). Les textes : sections.mma.collection_filtres. Les
   styles : assets/collection-refonte.css, bloc « Ligne des filtres (ticket 06) ». Tests :
   scripts/collection-filtres.test.cjs.
@@ -46,29 +48,22 @@
   # Les noms cochés de chaque famille, séparés par « ¤ » : le libellé court d'une couleur, un thème en double une fois.
   capture coches_couleur
     for valeur in filtre_couleur.active_values
-      unless forloop.first
-        echo '¤'
-      endunless
+      echo '¤'
       render 'filter-color-label', label: valeur.label, court: true
     endfor
   endcapture
+  assign coches_couleur = coches_couleur | remove_first: '¤'
   assign coches_format = filtre_format.active_values | map: 'label' | join: '¤'
   assign coches_theme = filtre_theme.active_values | map: 'label' | uniq | join: '¤'
-  assign coches = coches_couleur
-  if coches_format != ''
-    if coches != ''
-      assign coches = coches | append: '¤'
+  # Tous les noms cochés, pour la zone parlée : « Bleu, Portrait, Zen ».
+  assign noms_coches = coches_couleur | append: '¤' | append: coches_format | append: '¤' | append: coches_theme | split: '¤'
+  assign liste_coches = ''
+  for nom in noms_coches
+    if nom != ''
+      assign liste_coches = liste_coches | append: ', ' | append: nom
     endif
-    assign coches = coches | append: coches_format
-  endif
-  if coches_theme != ''
-    if coches != ''
-      assign coches = coches | append: '¤'
-    endif
-    assign coches = coches | append: coches_theme
-  endif
-  assign noms_coches = coches | split: '¤'
-  assign nb_actifs = noms_coches | size
+  endfor
+  assign liste_coches = liste_coches | remove_first: ', '
 
   # Le tri : quatre choix, ceux que la collection propose ; celui de l'adresse, sinon celui de la collection.
   assign tris = 'best-selling,created-descending,price-ascending,price-descending' | split: ','
@@ -78,19 +73,18 @@
   if tris contains tri
     assign tri_affiche = tri
   endif
-  assign cle_tri = 'sections.mma.collection_filtres.tris.' | append: tri_affiche | replace: '-', '_'
-  assign nom_tri = cle_tri | t
+  assign cle_nom_tri = 'sections.mma.collection_filtres.tris.' | append: tri_affiche | replace: '-', '_'
+  assign nom_tri = cle_nom_tri | t
   assign tri_perso = false
   if tri_affiche != 'best-selling'
     assign tri_perso = true
   endif
 
   # La phrase de la zone parlée, après chaque changement.
-  assign n = collection.products_count
-  assign annonce = 'sections.mma.collection_filtres.annonce_tableaux' | t: count: n
-  if nb_actifs > 0
-    assign liste = noms_coches | join: ', '
-    assign suite = 'sections.mma.collection_filtres.annonce_filtres' | t: liste: liste
+  assign nombre_tableaux = collection.products_count
+  assign annonce = 'sections.mma.collection_filtres.annonce_tableaux' | t: count: nombre_tableaux
+  if liste_coches != ''
+    assign suite = 'sections.mma.collection_filtres.annonce_filtres' | t: liste: liste_coches
   else
     assign suite = 'sections.mma.collection_filtres.annonce_sans_filtre' | t
   endif
@@ -115,14 +109,14 @@
     assign adresse_sans_tri = adresse_sans_tri | append: '?' | append: requete_filtres
   endif
 -%}
-<collection-filtres id="barre" class="filtres-ligne" data-section="{{ section_id }}" data-total="{{ n }}" data-tri-defaut="{{ collection.default_sort_by }}" data-annonce="{{ annonce }}">
+<collection-filtres id="barre" class="filtres-ligne" data-section="{{ section_id }}" data-total="{{ nombre_tableaux }}" data-tri-defaut="{{ collection.default_sort_by }}" data-annonce="{{ annonce }}">
   <form class="filtres-form" method="get" action="{{ collection.url }}" aria-label="{{ 'sections.mma.collection_filtres.ligne' | t }}" autocomplete="off">
     <div class="filtres-dedans">
       <div class="filtres-defile">
-        {%- if filtre_couleur -%}{%- render 'collection-filtres-famille', famille: 'couleur', filtre: filtre_couleur, coches: coches_couleur, nombre: n -%}{%- endif -%}
-        {%- if filtre_format -%}{%- render 'collection-filtres-famille', famille: 'format', filtre: filtre_format, coches: coches_format, nombre: n -%}{%- endif -%}
-        {%- if filtre_theme -%}{%- render 'collection-filtres-famille', famille: 'theme', filtre: filtre_theme, coches: coches_theme, nombre: n -%}{%- endif -%}
-        <p class="filtres-compte">{{ 'sections.mma.collection_filtres.compte_html' | t: count: n }}</p>
+        {%- if filtre_couleur -%}{%- render 'collection-filtres-famille', famille: 'couleur', filtre: filtre_couleur, coches: coches_couleur, nombre: nombre_tableaux -%}{%- endif -%}
+        {%- if filtre_format -%}{%- render 'collection-filtres-famille', famille: 'format', filtre: filtre_format, coches: coches_format, nombre: nombre_tableaux -%}{%- endif -%}
+        {%- if filtre_theme -%}{%- render 'collection-filtres-famille', famille: 'theme', filtre: filtre_theme, coches: coches_theme, nombre: nombre_tableaux -%}{%- endif -%}
+        <p class="filtres-compte">{{ 'sections.mma.collection_filtres.compte_html' | t: count: nombre_tableaux }}</p>
         <label class="filtres-tri"{% if tri_perso %} data-actif{% endif %}>
           <span class="filtres-tri-tel">{% if tri_perso %}{{ 'sections.mma.collection_filtres.tri_actif' | t: tri: nom_tri }}{% else %}{{ 'sections.mma.collection_filtres.trier' | t }}{% endif %}</span>
           <span class="filtres-tri-ordi">{{ 'sections.mma.collection_filtres.trier_par' | t }} <span class="filtres-tri-nom">{{ nom_tri }}</span></span>
@@ -134,7 +128,7 @@
               {%- endif -%}
             {%- endfor -%}
           </select>
-          <svg class="filtres-chevron" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M2 4l4 4 4-4"/></svg>
+          {%- render 'collection-filtres-icone', nom: 'chevron' -%}
         </label>
         <noscript><button type="submit" class="filtres-appliquer">{{ 'sections.mma.collection_filtres.appliquer' | t }}</button></noscript>
       </div>
@@ -142,37 +136,26 @@
     <dialog id="feuille" class="filtres-feuille" data-allow-empty></dialog>
   </form>
 </collection-filtres>
-<div id="resume" class="filtres-resume"{% if nb_actifs == 0 %}{% if tri_perso %} data-tri-seul{% else %} hidden{% endif %}{% endif %}>
-  {%- if nb_actifs > 0 or tri_perso -%}
-    <p class="filtres-resume-compte">{{ 'sections.mma.collection_filtres.compte_html' | t: count: n }}</p>
+<div id="resume" class="filtres-resume"{% if liste_coches == '' %}{% if tri_perso %} data-tri-seul{% else %} hidden{% endif %}{% endif %}>
+  {%- if liste_coches != '' or tri_perso -%}
+    <p class="filtres-resume-compte">{{ 'sections.mma.collection_filtres.compte_html' | t: count: nombre_tableaux }}</p>
     {%- for valeur in filtre_couleur.active_values -%}
       {%- capture nom -%}{% render 'filter-color-label', label: valeur.label, court: true %}{%- endcapture -%}
-      <a class="filtres-pastille" href="{{ valeur.url_to_remove }}" aria-label="{{ 'sections.mma.collection_filtres.retirer' | t: nom: nom }}" data-retirer="{{ valeur.param_name | escape }}" data-valeur="{{ valeur.value | escape }}">
-        {%- render 'collection-filtres-marque', famille: 'couleur', valeur: valeur -%}
-        <span>{{ nom | escape }}</span>
-        <svg class="filtres-croix" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M2 2l8 8M10 2 2 10"/></svg>
-      </a>
+      {%- render 'collection-filtres-pastille', famille: 'couleur', valeur: valeur, nom: nom -%}
     {%- endfor -%}
     {%- for valeur in filtre_format.active_values -%}
-      {%- capture forme -%}{% render 'collection-filtres-forme', nom: valeur.label %}{%- endcapture -%}
-      <a class="filtres-pastille" href="{{ valeur.url_to_remove }}" aria-label="{{ 'sections.mma.collection_filtres.retirer' | t: nom: valeur.label }}" data-retirer="{{ valeur.param_name | escape }}" data-valeur="{{ valeur.value | escape }}">
-        {%- render 'collection-filtres-marque', famille: 'format', valeur: valeur, forme: forme -%}
-        <span>{{ valeur.label | escape }}</span>
-        <svg class="filtres-croix" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M2 2l8 8M10 2 2 10"/></svg>
-      </a>
+      {%- render 'collection-filtres-pastille', famille: 'format', valeur: valeur, nom: valeur.label -%}
     {%- endfor -%}
     {%- assign themes_coches = coches_theme | split: '¤' -%}
     {%- for nom in themes_coches -%}
+      {%- comment -%} Un thème en double (deux valeurs) : une pastille, à la première de ses valeurs cochées. {%- endcomment -%}
       {%- assign valeur = filtre_theme.active_values | where: 'label', nom | first -%}
-      <a class="filtres-pastille" href="{{ valeur.url_to_remove }}" aria-label="{{ 'sections.mma.collection_filtres.retirer' | t: nom: nom }}" data-retirer="{{ valeur.param_name | escape }}" data-valeur="{{ valeur.value | escape }}">
-        <span>{{ nom | escape }}</span>
-        <svg class="filtres-croix" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M2 2l8 8M10 2 2 10"/></svg>
-      </a>
+      {%- render 'collection-filtres-pastille', famille: 'theme', valeur: valeur, nom: nom -%}
     {%- endfor -%}
     {%- if tri_perso -%}
       <a class="filtres-pastille filtres-pastille-tri" href="{{ adresse_sans_tri }}" aria-label="{{ 'sections.mma.collection_filtres.tri_retirer' | t }}" data-retirer-tri>
         <span>{{ 'sections.mma.collection_filtres.tri_pastille' | t: tri: nom_tri }}</span>
-        <svg class="filtres-croix" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M2 2l8 8M10 2 2 10"/></svg>
+        {%- render 'collection-filtres-icone', nom: 'croix' -%}
       </a>
     {%- endif -%}
     <a class="filtres-tout" href="{{ collection.url }}" data-tout>{{ 'sections.mma.collection_filtres.tout_effacer' | t }}</a>

@@ -84,6 +84,8 @@ Chargé sur la page galerie des œuvres 3D seulement (`assets/oeuvre-galerie.js`
 
 Chargé sur les pages collection (`assets/collection.js`), utilisé par la nouvelle page collection seulement (`sections/collection-grille.liquid`, cf. § 2) : `collection-suite`, le compte « 48 tableaux sur 327 » et sa jauge au bout des lots que charge `<infinite-scroll>`. Celui-ci prend une marge (`data-marge`, 300 px par défaut) et annonce chaque lot arrivé sur `document` (`mma:collection-lot`, `{ cards, direction }`).
 
+Chargé par la nouvelle page collection seulement (`assets/collection-filtres.js`, rendu par `snippets/collection-filtres.liquid`) : `collection-filtres`, la ligne des filtres (Couleur, Format, Thème, le tri) au-dessus de la grille. Menus sur ordinateur, panneau posé en bas (`<dialog>`) sur téléphone ; une requête par changement (`?sections=` : la grille et l'entrée de la page) ; `fermerMenu()` pour qui doit fermer son menu (l'en-tête qui part). Chaque changement appliqué part sur `document` : `mma:filter-applied`, `{ famille, valeur, action, resultats }`, que `assets/posthog-tracking.js` transmet en `filter_applied`. Les pages d'aujourd'hui gardent `collection-tag-filter` et `filter-drawer`.
+
 **⛔ Définis dans le repo mais JAMAIS chargés — ne pas réutiliser, ne pas s'en inspirer :**
 
 ```

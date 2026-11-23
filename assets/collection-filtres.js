@@ -12,7 +12,7 @@
  * - Téléphone : le bouton d'une famille ouvre le panneau posé en bas, le <dialog> #feuille, ouvert par showModal(), où
  *   le script déplace le panneau de la famille. C'est un brouillon : la grille ne bouge pas avant « Voir les N
  *   tableaux », dont le nombre suit chaque toucher ; la croix, le voile, Échap et le retour du téléphone ferment sans
- *   rien changer.
+ *   rien changer (le panneau ouvert a son entrée d'historique : Retour le ferme, sans défaire le dernier filtre).
  * - Une seule requête par changement : la grille et l'entrée de la page (#nombre-haut), en une fois, par le rendu des
  *   sections de Shopify (?sections=…), jamais la page entière. « Voir » reprend la réponse du dernier brouillon.
  * - Ensuite : la ligne, les filtres actifs, la grille (sa suite repart du premier lot, ses liens ?page=N portent les
@@ -100,6 +100,8 @@
 
   const ORDI = window.matchMedia('(min-width: 900px)');
   const PREFIXE_SECTION = 'shopify-section-';
+  // L'entrée d'historique du panneau du téléphone : Retour le ferme (fiche du spécialiste des filtres, § 8).
+  const ETAT_PANNEAU = 'filtresPanneau';
 
   // Un défilement d'un coup (« instant » : un navigateur plus ancien ne le connaît pas).
   function defiler(top) {
@@ -110,6 +112,18 @@
     }
   }
 
+  // Les textes rendus par le serveur, d'un morceau de page à l'autre (« Voir les 103 tableaux »…).
+  function copierTextes(ici, la, selecteurs) {
+    selecteurs.forEach((selecteur) => {
+      const cible = ici.querySelector(selecteur);
+      const source = la.querySelector(selecteur);
+      if (cible && source) cible.textContent = source.textContent;
+    });
+  }
+
+  const visible = (element) => element.getClientRects().length > 0;
+  const panneauEnHistoire = () => !!(window.history.state && window.history.state[ETAT_PANNEAU]);
+
   class CollectionFiltres extends HTMLElement {
     connectedCallback() {
       if (this.pret) return;
@@ -117,10 +131,12 @@
       this.feuille = this.querySelector('.filtres-feuille');
       if (!this.form) return;
       this.pret = true;
+      // Le panneau posé en bas existe-t-il ? Sinon (navigateur ancien), la famille s'ouvre sur place, comme sans script.
+      this.modal = !!this.feuille && typeof this.feuille.showModal === 'function';
       this.sequence = 0; // le dernier changement demandé : une réponse plus ancienne ne se pose pas
       this.requete = null; // la requête en cours : { adresse, promesse, controleur }
       this.derniere = null; // la dernière réponse : { adresse, grille, entree }
-      this.ouverte = null; // le panneau du téléphone ouvert : son brouillon
+      this.feuilleOuverte = null; // le panneau du téléphone ouvert, et son brouillon
       this.enAttente = null; // la famille d'un menu ouvert, telle que le serveur l'a rendue ensuite
       this.etatApplique = this.etat();
       this.signatureAffichee = signature(window.location.search);
@@ -146,7 +162,7 @@
       };
       this.surRetour = () => this.retour();
       this.surMode = () => {
-        if (this.ouverte) this.feuille.close();
+        if (this.feuilleOuverte) this.feuille.close();
         this.fermerMenu(false);
         this.majMode();
       };
@@ -176,9 +192,9 @@
     }
 
     etat() {
-      const tri = this.form.elements.sort_by;
+      const choixTri = this.form.elements.sort_by;
       return {
-        tri: tri ? tri.value : '',
+        tri: choixTri ? choixTri.value : '',
         valeurs: [...this.form.querySelectorAll('.filtres-case:checked')].map((c) => ({
           famille: (c.closest('[data-famille]') || {}).dataset?.famille || '',
           cle: `${c.name}=${c.value}`,
@@ -187,10 +203,11 @@
       };
     }
 
-    // Un thème réuni (deux valeurs dans Search & Discovery) : son autre valeur part avec la case, ou pas.
-    jumeaux(caseAcocher) {
+    // Cocher ou décocher une valeur ; un thème réuni (deux valeurs dans Search & Discovery) emporte l'autre avec lui.
+    cocher(caseAcocher, oui) {
+      caseAcocher.checked = oui;
       const puce = caseAcocher.closest('.filtres-puce');
-      if (puce) puce.querySelectorAll('[data-jumeau]').forEach((j) => { j.disabled = !caseAcocher.checked; });
+      if (puce) puce.querySelectorAll('[data-jumeau]').forEach((jumeau) => { jumeau.disabled = !oui; });
     }
 
     choisirTri(valeur) {
@@ -209,9 +226,13 @@
     // Sur téléphone, le bouton d'une famille ouvre un panneau ; sur ordinateur, un menu.
     majMode() {
       this.querySelectorAll('summary.filtres-fac').forEach((bouton) => {
-        if (ORDI.matches) bouton.removeAttribute('aria-haspopup');
+        if (ORDI.matches || !this.modal) bouton.removeAttribute('aria-haspopup');
         else bouton.setAttribute('aria-haspopup', 'dialog');
       });
+    }
+
+    premierBouton() {
+      return this.querySelector('summary.filtres-fac');
     }
 
     // ---- Les gestes ----
@@ -219,8 +240,8 @@
     surChangement(e) {
       const cible = e.target;
       if (cible.matches('.filtres-case')) {
-        this.jumeaux(cible);
-        if (this.ouverte) this.brouillon();
+        this.cocher(cible, cible.checked);
+        if (this.feuilleOuverte) this.majBrouillon();
         else this.appliquer();
       } else if (cible.name === 'sort_by') {
         this.appliquer();
@@ -230,14 +251,14 @@
     surClic(e) {
       const bouton = e.target.closest('summary.filtres-fac');
       if (bouton) {
-        if (!ORDI.matches) {
+        if (!ORDI.matches && this.modal) {
           e.preventDefault();
           this.ouvrirFeuille(bouton.parentElement);
         }
         return;
       }
       if (e.target.closest('[data-fermer]')) {
-        if (this.ouverte) this.feuille.close();
+        if (this.feuilleOuverte) this.feuille.close();
         return;
       }
       const effacer = e.target.closest('[data-effacer]');
@@ -247,28 +268,35 @@
         return;
       }
       // Le voile du panneau : un clic hors du panneau tombe sur le <dialog> lui-même.
-      if (e.target === this.feuille && this.ouverte) this.feuille.close();
+      if (e.target === this.feuille && this.feuilleOuverte) this.feuille.close();
     }
 
+    // « Voir les N tableaux » : dans le panneau du téléphone, il applique le brouillon ; dans un menu, la grille est déjà
+    // à jour, le menu se ferme. Le choix montré n'est pas encore celui de la grille : il s'applique.
     surEnvoi(e) {
       e.preventDefault();
-      if (this.ouverte) {
-        this.ouverte.valide = true;
+      if (this.feuilleOuverte) {
+        this.feuilleOuverte.valide = true;
         this.feuille.close();
-      } else if (this.querySelector('.filtres-famille[open]')) {
-        // « Voir les N tableaux » d'un menu : la grille est déjà à jour, le menu se ferme.
-        this.fermerMenu(true);
-      } else {
-        this.appliquer();
+        return;
       }
+      this.fermerMenu(true);
+      if (signature(new URL(this.adresse(), window.location.origin).search) !== this.signatureAffichee) this.appliquer();
     }
 
-    // Un menu de l'ordinateur s'ouvre ou se ferme ; la suite des thèmes s'ouvre.
+    // Un menu de l'ordinateur s'ouvre ou se ferme ; la suite des thèmes s'ouvre ou se replie.
     surBascule(e) {
       const details = e.target;
       if (details.matches('.filtres-tous')) {
-        if (!details.open) return;
         const champ = details.querySelector('.filtres-cherche');
+        if (!details.open) {
+          // Repliée, la suite oublie sa recherche : les thèmes du haut reparaissent tous.
+          if (champ && champ.value) {
+            champ.value = '';
+            this.chercher(details.closest('.filtres-panneau'));
+          }
+          return;
+        }
         if (champ) champ.focus({ preventScroll: true });
         const menu = details.closest('.filtres-famille[open]');
         if (menu) this.placerMenu(menu);
@@ -279,13 +307,15 @@
         this.poserEnAttente(details);
         return;
       }
-      if (!ORDI.matches) {
+      // Sur téléphone, une famille ne s'ouvre pas sur place : son panneau est posé en bas.
+      if (!ORDI.matches && this.modal) {
         details.open = false;
         return;
       }
       this.querySelectorAll('.filtres-famille[open]').forEach((autre) => {
         if (autre !== details) autre.open = false;
       });
+      if (!ORDI.matches) return;
       this.placerMenu(details);
       const premiere = details.querySelector('.filtres-case');
       if (premiere) premiere.focus({ preventScroll: true });
@@ -300,19 +330,15 @@
         return;
       }
       const ouvert = this.querySelector('.filtres-famille[open]');
-      if (ouvert && !ouvert.contains(e.target)) this.fermerMenu(false);
+      if (ouvert && ORDI.matches && !ouvert.contains(e.target)) this.fermerMenu(false);
     }
 
     // Une pastille des filtres actifs, « Tout effacer », ou « Voir les 327 tableaux, sans filtre ».
     retirer(lien) {
-      const familles = () => this.querySelector('summary.filtres-fac');
       if (lien.hasAttribute('data-tout')) {
-        this.form.querySelectorAll('.filtres-case').forEach((c) => {
-          c.checked = false;
-          this.jumeaux(c);
-        });
+        this.form.querySelectorAll('.filtres-case').forEach((c) => this.cocher(c, false));
         this.choisirTri('best-selling');
-        this.appliquer({ focus: familles });
+        this.appliquer({ focus: () => this.premierBouton() });
         return;
       }
       if (lien.hasAttribute('data-retirer-tri')) {
@@ -322,30 +348,26 @@
         const puce = [...this.form.querySelectorAll('.filtres-puce')].find((p) => [...p.querySelectorAll('input')]
           .some((champ) => champ.name === lien.dataset.retirer && champ.value === lien.dataset.valeur));
         const caseAcocher = puce && puce.querySelector('.filtres-case');
-        if (caseAcocher) {
-          caseAcocher.checked = false;
-          this.jumeaux(caseAcocher);
-        }
+        if (caseAcocher) this.cocher(caseAcocher, false);
       }
-      // Ensuite, le focus va à la pastille suivante ; s'il n'y en a plus, au premier bouton de la ligne.
-      const rang = [...document.querySelectorAll('#resume .filtres-pastille')].indexOf(lien);
+      // Ensuite, le focus va à la pastille suivante (parmi celles qui se voient : sur ordinateur, celle du tri est
+      // cachée) ; s'il n'y en a plus, au premier bouton de la ligne.
+      const pastillesVisibles = () => [...document.querySelectorAll('#resume .filtres-pastille')].filter(visible);
+      const rang = pastillesVisibles().indexOf(lien);
       this.appliquer({
         focus: () => {
-          const pastilles = document.querySelectorAll('#resume .filtres-pastille');
-          return pastilles[Math.min(rang, pastilles.length - 1)] || familles();
+          const pastilles = pastillesVisibles();
+          return pastilles[Math.min(Math.max(rang, 0), pastilles.length - 1)] || this.premierBouton();
         },
       });
     }
 
     effacerFamille(panneau) {
       if (!panneau) return;
-      panneau.querySelectorAll('.filtres-case').forEach((c) => {
-        c.checked = false;
-        this.jumeaux(c);
-      });
+      panneau.querySelectorAll('.filtres-case').forEach((c) => this.cocher(c, false));
       const premiere = () => panneau.querySelector('.filtres-case');
-      if (this.ouverte) {
-        this.brouillon();
+      if (this.feuilleOuverte) {
+        this.majBrouillon();
         if (premiere()) premiere().focus();
       } else {
         this.appliquer({ focus: premiere });
@@ -354,15 +376,15 @@
 
     // ---- Le panneau du téléphone : un brouillon ----
 
+    /* Le panneau d'une famille, déplacé dans le <dialog> posé en bas, ouvert par showModal(). Une entrée d'historique,
+       à la même adresse : Retour (le bouton du navigateur, le geste de l'iPhone) ferme le panneau sans quitter la page
+       ni défaire le dernier filtre. */
     ouvrirFeuille(famille) {
       const panneau = famille.querySelector('.filtres-panneau');
-      if (!panneau || !this.feuille || typeof this.feuille.showModal !== 'function') {
-        famille.open = !famille.open;
-        return;
-      }
+      if (!panneau) return;
       const voir = panneau.querySelector('.filtres-voir');
       const titre = panneau.querySelector('.filtres-panneau-titre');
-      this.ouverte = {
+      this.feuilleOuverte = {
         famille,
         panneau,
         valide: false,
@@ -374,13 +396,14 @@
       this.feuille.append(panneau);
       this.feuille.showModal();
       document.body.classList.add('overflow-hidden');
+      window.history.pushState({ [ETAT_PANNEAU]: true }, '');
       if (titre) titre.focus();
     }
 
     // Chaque toucher : « Effacer la couleur » tout de suite, puis le nombre de « Voir les N tableaux » demandé au
     // serveur ; la grille ne bouge pas.
-    brouillon() {
-      const ouverte = this.ouverte;
+    majBrouillon() {
+      const ouverte = this.feuilleOuverte;
       const { panneau } = ouverte;
       this.majEffacer(panneau);
       const voir = panneau.querySelector('.filtres-voir');
@@ -392,14 +415,9 @@
       if (voir) voir.setAttribute('aria-busy', 'true');
       this.charger(adresse)
         .then((reponse) => {
-          if (this.ouverte !== ouverte || this.adresse() !== adresse) return;
+          if (this.feuilleOuverte !== ouverte || this.adresse() !== adresse) return;
           const rendu = this.lire(reponse.grille).querySelector(`.filtres-panneau[data-famille="${panneau.dataset.famille}"]`);
-          if (!rendu) return;
-          ['.filtres-voir', '.filtres-aucun'].forEach((selecteur) => {
-            const ici = panneau.querySelector(selecteur);
-            const la = rendu.querySelector(selecteur);
-            if (ici && la) ici.textContent = la.textContent;
-          });
+          if (rendu) copierTextes(panneau, rendu, ['.filtres-voir', '.filtres-aucun']);
         })
         .catch(() => {})
         .finally(() => {
@@ -407,18 +425,16 @@
         });
     }
 
-    // Le panneau se ferme : « Voir » applique le brouillon ; la croix, le voile, Échap et le retour l'oublient.
+    /* Le panneau se ferme : « Voir » applique le brouillon, à la place de l'entrée d'historique du panneau ; la croix,
+       le voile, Échap et le retour du téléphone l'oublient (l'entrée du panneau s'en va avec lui). */
     surFermeture() {
-      const ouverte = this.ouverte;
+      const ouverte = this.feuilleOuverte;
       if (!ouverte) return;
-      this.ouverte = null;
+      this.feuilleOuverte = null;
       document.body.classList.remove('overflow-hidden');
       const { famille, panneau } = ouverte;
       if (!ouverte.valide) {
-        ouverte.cases.forEach(([c, coche]) => {
-          c.checked = coche;
-          this.jumeaux(c);
-        });
+        ouverte.cases.forEach(([c, coche]) => this.cocher(c, coche));
         const voir = panneau.querySelector('.filtres-voir');
         if (voir) voir.textContent = ouverte.voir;
         this.majEffacer(panneau);
@@ -426,7 +442,9 @@
       famille.append(panneau);
       const bouton = famille.querySelector('summary');
       if (bouton) bouton.focus({ preventScroll: true });
-      if (ouverte.valide && this.adresse() !== ouverte.adresse) this.appliquer();
+      const change = ouverte.valide && this.adresse() !== ouverte.adresse;
+      if (change) this.appliquer({ remplacer: panneauEnHistoire() });
+      else if (panneauEnHistoire()) window.history.back();
     }
 
     // ---- Les menus de l'ordinateur ----
@@ -506,8 +524,9 @@
     }
 
     /* Appliquer le choix du formulaire (ou, au retour arrière, l'adresse de l'historique) : la grille à 35 % pendant
-       la réponse, puis tout ce qui dépend du choix, l'historique, la zone parlée, la mesure, le focus. */
-    async appliquer({ adresse = this.adresse(), historique = true, focus = null } = {}) {
+       la réponse, puis tout ce qui dépend du choix, l'historique (une entrée de plus, ou celle du panneau remplacée),
+       la zone parlée, la mesure, le focus. */
+    async appliquer({ adresse = this.adresse(), historique = true, remplacer = false, focus = null } = {}) {
       const numero = ++this.sequence;
       const avant = this.etatApplique;
       const etaitCollee = this.estCollee();
@@ -522,7 +541,10 @@
         return;
       }
       if (numero !== this.sequence) return;
-      if (historique) window.history.pushState({ filtres: true }, '', adresse);
+      if (historique) {
+        if (remplacer) window.history.replaceState({ filtres: true }, '', adresse);
+        else window.history.pushState({ filtres: true }, '', adresse);
+      }
       this.poser(reponse);
       this.etatApplique = this.etat();
       this.signatureAffichee = signature(new URL(adresse, window.location.origin).search);
@@ -539,9 +561,10 @@
       if (cible) cible.focus({ preventScroll: true });
     }
 
-    // Retour ou Suivant : la page de cette adresse, sans nouvelle entrée d'historique.
+    // Retour ou Suivant : le panneau ouvert se ferme ; une autre adresse, la page de cette adresse, sans nouvelle
+    // entrée d'historique.
     retour() {
-      if (this.ouverte) this.feuille.close();
+      if (this.feuilleOuverte) this.feuille.close();
       this.fermerMenu(false);
       if (signature(window.location.search) === this.signatureAffichee) return;
       this.appliquer({ adresse: window.location.pathname + window.location.search, historique: false });
@@ -623,30 +646,22 @@
       this.majMode();
     }
 
+    // Le menu ouvert, sans le remplacer : son bouton, ses cases et leurs nombres, son pied, ses phrases.
     majFamille(famille, rendue) {
       const bouton = famille.querySelector('summary');
       const nouveauBouton = rendue.querySelector('summary');
       if (bouton && nouveauBouton) {
         bouton.toggleAttribute('data-actif', nouveauBouton.hasAttribute('data-actif'));
-        const nom = bouton.querySelector('.filtres-fac-nom');
-        const nouveauNom = nouveauBouton.querySelector('.filtres-fac-nom');
-        if (nom && nouveauNom) nom.textContent = nouveauNom.textContent;
+        copierTextes(bouton, nouveauBouton, ['.filtres-fac-nom']);
       }
       const rendues = new Map([...rendue.querySelectorAll('.filtres-case')].map((c) => [`${c.name}=${c.value}`, c]));
       famille.querySelectorAll('.filtres-case').forEach((c) => {
         const r = rendues.get(`${c.name}=${c.value}`);
         if (!r) return;
-        c.checked = r.checked;
-        this.jumeaux(c);
-        const nb = c.closest('.filtres-puce').querySelector('.filtres-nb');
-        const nouveauNb = r.closest('.filtres-puce').querySelector('.filtres-nb');
-        if (nb && nouveauNb) nb.textContent = nouveauNb.textContent;
+        this.cocher(c, r.checked);
+        copierTextes(c.closest('.filtres-puce'), r.closest('.filtres-puce'), ['.filtres-nb']);
       });
-      ['.filtres-voir', '.filtres-aucun', '.filtres-tous-plus'].forEach((selecteur) => {
-        const ici = famille.querySelector(selecteur);
-        const la = rendue.querySelector(selecteur);
-        if (ici && la) ici.textContent = la.textContent;
-      });
+      copierTextes(famille, rendue, ['.filtres-voir', '.filtres-aucun', '.filtres-tous-plus']);
       const effacer = famille.querySelector('.filtres-effacer');
       const nouvelEffacer = rendue.querySelector('.filtres-effacer');
       if (effacer && nouvelEffacer) {
