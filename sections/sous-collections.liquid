@@ -89,7 +89,7 @@
   {%- if sc_page != '' -%}
     {%- for sc_rayon in sc_rayons -%}
       {%- assign sc_rang = 0 -%}
-      {%- capture sc_pastilles -%}
+      {%- capture sc_filles -%}
         {%- for sc_n in sc_noeuds -%}
           {%- if sc_n.parent != sc_page -%}{%- continue -%}{%- endif -%}
           {%- if sc_racine and sc_n.rayon != sc_rayon -%}{%- continue -%}{%- endif -%}
@@ -114,22 +114,22 @@
           {%- endif -%}
         {%- endfor -%}
       {%- endcapture -%}
-      {%- if sc_pastilles == blank -%}{%- continue -%}{%- endif -%}
+      {%- if sc_filles == blank -%}{%- continue -%}{%- endif -%}
       {%- assign sc_libelle = 'sous-collections-' | append: section.id | append: '-' | append: sc_rayon -%}
       {%- if sc_emblemes -%}
         {%- if sc_racine and sc_rayon != 'bestseller' -%}
           <p id="{{ sc_libelle }}" class="sr-only">{{ 'sections.sous_collections.rayons.' | append: sc_rayon | t }}</p>
-          <ul aria-labelledby="{{ sc_libelle }}" class="c-embs">{{ sc_pastilles }}</ul>
+          <ul aria-labelledby="{{ sc_libelle }}" class="c-embs scrollbar-hidden">{{ sc_filles }}</ul>
         {%- else -%}
-          <ul class="c-embs">{{ sc_pastilles }}</ul>
+          <ul class="c-embs scrollbar-hidden">{{ sc_filles }}</ul>
         {%- endif -%}
       {%- elsif sc_racine and sc_rayon != 'bestseller' -%}
         <div class="flex items-center gap-3 md:items-baseline {{ sc_classes_rangee }}">
           <p id="{{ sc_libelle }}" class="shrink-0 min-w-20 md:min-w-36 text-xs font-semibold uppercase tracking-[0.14em] text-terra whitespace-nowrap">{{ 'sections.sous_collections.rayons.' | append: sc_rayon | t }}</p>
-          <ul aria-labelledby="{{ sc_libelle }}" class="flex gap-2 md:flex-1 md:flex-wrap md:min-w-0">{{ sc_pastilles }}</ul>
+          <ul aria-labelledby="{{ sc_libelle }}" class="flex gap-2 md:flex-1 md:flex-wrap md:min-w-0">{{ sc_filles }}</ul>
         </div>
       {%- else -%}
-        <ul class="flex gap-2 md:flex-wrap {{ sc_classes_rangee }}">{{ sc_pastilles }}</ul>
+        <ul class="flex gap-2 md:flex-wrap {{ sc_classes_rangee }}">{{ sc_filles }}</ul>
       {%- endif -%}
     {%- endfor -%}
   {%- endif -%}
@@ -159,7 +159,7 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Les pastilles vers les sous-collections de la page, juste sous le fil d'Ariane. Rien à régler : elles suivent le plan des collections écrit par le serveur (champ méta de la boutique cocon.plan). Une sous-collection n'a sa pastille que si elle existe, est publiée et a au moins un produit. Sur « Tous les tableaux » et « Tous les posters », les pastilles se rangent par rayon. Sans sous-collection, la section ne s'affiche pas."
+      "content": "Les liens vers les sous-collections de la page, juste sous le fil d'Ariane, en pastilles ou en emblèmes. Ils suivent le plan des collections écrit par le serveur (champ méta de la boutique cocon.plan). Une sous-collection n'a son lien que si elle existe, est publiée et a au moins un produit. Sur « Tous les tableaux » et « Tous les posters », les liens se rangent par rayon. Sans sous-collection, la section ne s'affiche pas."
     },
     {
       "type": "select",

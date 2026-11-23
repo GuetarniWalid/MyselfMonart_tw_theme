@@ -196,9 +196,10 @@
   margin-inline: auto;
 }
 
-/* Une rangée : sur téléphone, elle défile en largeur jusqu'au bord droit de l'écran, sans barre, avec une accroche
-   douce. Ses 14 px du haut et ses 4 px de gauche, repris par des marges négatives, gardent le sujet qui monte au
-   survol (jusqu'à 0,16 fois le diamètre au-dessus du cadre) et l'anneau du focus, que le défilement couperait. */
+/* Une rangée : sur téléphone, elle défile en largeur jusqu'au bord droit de l'écran, sans barre (la classe
+   .scrollbar-hidden du thème, posée par la section), avec une accroche douce. Ses 14 px du haut et ses 4 px de
+   gauche, repris par des marges négatives, gardent le sujet qui monte au survol (jusqu'à 0,16 fois le diamètre
+   au-dessus du cadre) et l'anneau du focus, que le défilement couperait. */
 :root[data-refonte-page] .c-embs {
   list-style: none;
   margin: -12px calc(-1 * var(--goutd)) 0 -4px;
@@ -208,10 +209,6 @@
   overflow-x: auto;
   scroll-snap-type: x proximity;
   scroll-padding-inline: 4px var(--goutd);
-  scrollbar-width: none;
-}
-:root[data-refonte-page] .c-embs::-webkit-scrollbar {
-  display: none;
 }
 
 /* Un emblème, et la couleur de son rond (data-fond : le métachamp cocon.embleme_couleur, sinon le rang). */
@@ -348,8 +345,9 @@
 }
 
 /* Sur ordinateur, la rangée tient sur une ligne, dans la largeur de la page. Une rangée trop longue (sur une racine :
-   les styles, les couleurs) défile en largeur, avec une barre fine : passer à la ligne empilerait une dizaine de lignes
-   d'emblèmes avant les tableaux. Ses 20 px du haut gardent le sujet qui monte au survol. */
+   les styles, les couleurs) défile en largeur, avec une barre fine, qui l'emporte sur .scrollbar-hidden : passer à la
+   ligne empilerait une dizaine de lignes d'emblèmes avant les tableaux. Ses 20 px du haut gardent le sujet qui monte
+   au survol. */
 @media (min-width: 900px) {
   :root[data-refonte-page] .c-sous {
     padding-top: 18px;

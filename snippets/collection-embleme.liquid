@@ -32,12 +32,13 @@
   assign emb_largeur = emb_fichier.width | default: emb_fichier.preview_image.width | plus: 0
   assign emb_hauteur = emb_fichier.height | default: emb_fichier.preview_image.height | plus: 0
 
-  # La couleur du rond : celle du métachamp, sinon selon le rang.
+  # La couleur du rond : celle du métachamp, si c'est l'une des six ; sinon, le cycle selon le rang.
   assign emb_couleurs = 'ciel,soleil,menthe,rose,lilas,peche' | split: ','
+  assign emb_cycle = 'ciel,soleil,menthe,rose' | split: ','
   assign emb_couleur = cible.metafields.cocon.embleme_couleur.value | strip | downcase
   unless emb_couleurs contains emb_couleur
-    assign emb_rang = rang | plus: 0 | modulo: 4
-    assign emb_couleur = emb_couleurs[emb_rang]
+    assign emb_rang = rang | plus: 0 | modulo: emb_cycle.size
+    assign emb_couleur = emb_cycle[emb_rang]
   endunless
 
   # Son nombre de tableaux. Une collection pas encore créée rend un objet vide, dont le compte est une chaîne : plus: 0
