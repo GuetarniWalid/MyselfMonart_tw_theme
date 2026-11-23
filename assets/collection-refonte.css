@@ -1,0 +1,169 @@
+/*
+ * collection-refonte.css — la feuille de la nouvelle page collection
+ * ------------------------------------------------------------------------------------------------------
+ * Chargée dans <head> par layout/collection.liquid quand la page porte la marque de sa section
+ * (sections/collection-refonte.liquid, data-refonte), et seulement alors : la feuille commune du site
+ * (assets/output.css) ne porte rien de cette page.
+ * C'est la seconde exception voulue à la règle « Tailwind seulement » du thème (.claude/skills/shopify-section-dev,
+ * § 2), après la page galerie des œuvres 3D (assets/oeuvre-galerie.css) : le même système de design (variables,
+ * Albert Sans), et un poids que les autres pages n'ont pas à charger.
+ * Portée de la maquette validée par Walid le 23/11/2026 (.scratch/collection-design, version 4) : mêmes tailles,
+ * mêmes couleurs, mêmes espacements. Seuil « ordinateur » : 900 px, comme elle.
+ *
+ * Le crochet : data-refonte-page sur <html>, que layout/collection.liquid pose dès le serveur quand la section de la
+ * page est là. Jamais le nom du modèle (collection.refonte pendant la construction) : la bascule sera un simple
+ * échange de modèle. Chaque règle commence par :root[data-refonte-page] (ou une classe .refonte…) : rien ne déborde
+ * sur le reste du site. Aucune couleur hors des variables du socle. Aucun mouvement hors de
+ * @media (prefers-reduced-motion: no-preference). Ce que vérifie scripts/collection-refonte.test.cjs.
+ *
+ * Un bloc par ticket, entre deux repères « début » et « fin ». Un bloc suivant s'ajoute à la fin du fichier, sans
+ * toucher à ceux d'avant.
+ */
+
+/* === Socle (ticket 01) : début === */
+
+/* Les couleurs et la typo de la page, posées une fois pour toute la page qui porte le crochet : ses sections, et ce
+   qui est hors d'elles (bandeau d'annonce, pied de page). Les valeurs de la fiche 3D (assets/oeuvre-galerie.css) :
+   l'encre est la couleur principale du thème (réglage main_color, #21150c), les aplats ceux de la maquette.
+   --encre-55 : 0,6 et non le 0,58 de la maquette, qui donnait 4,39 pour 1 sur blanc à un petit texte (WCAG AA : 4,5).
+   Le pied de page est un pastel à texte encre ; le bandeau d'annonce, la pêche. Une seule police, Albert Sans,
+   déclarée dans <head> par le gabarit (snippets/collection-refonte-police.liquid). */
+:root[data-refonte-page] {
+  --encre: rgb(var(--color-main-rgb));
+  --encre-70: rgba(var(--color-main-rgb), 0.72);
+  --encre-55: rgba(var(--color-main-rgb), 0.6);
+  --encre-16: rgba(var(--color-main-rgb), 0.16);
+  --encre-12: rgba(var(--color-main-rgb), 0.12);
+  --encre-06: rgba(var(--color-main-rgb), 0.06);
+  --blanc: #ffffff;
+  --creme: #f7f2ea;
+  --ciel: #a5d3f7;
+  --rose: #ffb6d2;
+  --soleil: #ffdd6e;
+  --menthe: #b9e9d0;
+  --lilas: #d9c9ff;
+  --peche: #ffcaa8;
+  --corail: #ff5436;
+  --pied-fond: var(--menthe);
+  --pied-encre: var(--encre);
+  --annonce-fond: var(--peche);
+  --annonce-encre: var(--encre);
+  --sans: "Albert Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Les marges de côté d'une bande, écran à encoche compris. */
+  --gout: max(20px, env(safe-area-inset-left, 0px));
+  --goutd: max(20px, env(safe-area-inset-right, 0px));
+}
+@media (min-width: 900px) {
+  :root[data-refonte-page] {
+    --gout: max(48px, env(safe-area-inset-left, 0px));
+    --goutd: max(48px, env(safe-area-inset-right, 0px));
+  }
+}
+
+/* Le corps de la page, sous l'en-tête : Albert Sans, comme la maquette, titres compris (la feuille commune les met
+   en « heading »), et les textes dont une section fixe la police par une classe du thème : une seule police. L'en-tête,
+   son menu, le tiroir du panier et le pied de page gardent la leur. */
+:root[data-refonte-page] #MainContent {
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+:root[data-refonte-page] #MainContent :is(h1, h2, h3, h4, h5, h6, .font-heading, .font-roboto, .font-limelight) {
+  font-family: var(--sans);
+}
+
+/* Autour de la page, les couleurs de la fiche 3D (assets/oeuvre-galerie.css, bloc « Autour de la page ») : le
+   bandeau d'annonce en pêche, le pied de page en menthe à texte encre. Ce sont ceux de tout le site
+   (sections/tw-announcement-bar.liquid, sections/tw-footer.liquid) : leurs fichiers ne changent pas, et chaque règle
+   d'ici commence par la page qui porte le crochet. Les mêmes règles que la fiche 3D, à la marque près : une retouche
+   de l'une se reporte sur l'autre (scripts/collection-refonte.test.cjs le vérifie). */
+
+/* Le bandeau d'annonce : la pêche, à texte encre (12,1 pour 1). */
+:root[data-refonte-page] #shopify-section-tw-announcement-bar p {
+  background-color: var(--annonce-fond);
+  color: var(--annonce-encre);
+}
+
+/* Le pied de page : un pastel à texte encre (13,3 pour 1). Ses titres, ses liens, ses libellés et les pictogrammes des
+   réseaux prennent la couleur du texte ; les sélecteurs de devise et de langue sont déjà blancs à texte encre. La
+   vague du haut suit le fond. */
+:root[data-refonte-page] #shopify-section-tw-footer {
+  background-color: var(--pied-fond);
+  color: var(--pied-encre);
+}
+:root[data-refonte-page] #shopify-section-tw-footer footer-logic > svg:first-child path {
+  fill: var(--pied-fond);
+}
+
+/* Le champ de la newsletter : blanc sur le pastel, un seul contour à l'encre qui ne s'épaissit plus, son texte
+   d'attente lisible, et un halo doux quand on y écrit. Son libellé reste pour les lecteurs d'écran, hors de la vue :
+   posé sur le bord du champ, il dépassait au-dessus de lui. Son bouton : un rond à l'encre, la flèche en blanc. */
+:root[data-refonte-page] #shopify-section-tw-footer div:has(> input[type="email"]) {
+  height: 50px;
+}
+:root[data-refonte-page] #shopify-section-tw-footer input[type="email"] {
+  padding: 0 58px 0 20px;
+  border: 1.5px solid var(--encre);
+  border-radius: 999px;
+  background-color: var(--blanc);
+  color: var(--encre);
+}
+:root[data-refonte-page] #shopify-section-tw-footer input[type="email"]::placeholder {
+  color: var(--encre-55);
+  opacity: 1;
+}
+:root[data-refonte-page] #shopify-section-tw-footer input[type="email"]:focus {
+  box-shadow: 0 0 0 4px var(--encre-16);
+}
+/* Rempli par le navigateur : le champ reste blanc, son texte à l'encre. */
+:root[data-refonte-page] #shopify-section-tw-footer input[type="email"]:-webkit-autofill {
+  -webkit-text-fill-color: var(--encre);
+  box-shadow: 0 0 0 1000px var(--blanc) inset;
+}
+:root[data-refonte-page] #shopify-section-tw-footer input[type="email"] ~ label {
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+:root[data-refonte-page] #shopify-section-tw-footer input[type="email"] ~ button {
+  top: 6px;
+  right: 6px;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background-color: var(--encre);
+  color: var(--blanc);
+  transform: none;
+}
+/* La flèche du thème (snippets/tw-icon-arrow.liquid) n'occupe que la gauche de son cadre : décalée de 27 % de sa
+   largeur, son dessin tombe au centre du rond. Sur ordinateur, au survol ou dans le champ, le thème l'allonge :
+   2,5 % suffisent alors. */
+:root[data-refonte-page] #shopify-section-tw-footer input[type="email"] ~ button svg {
+  width: 24px;
+  transform: translateX(27%);
+}
+@media (min-width: 768px) {
+  :root[data-refonte-page] #shopify-section-tw-footer .group:hover input[type="email"] ~ button svg,
+  :root[data-refonte-page] #shopify-section-tw-footer .group:focus-within input[type="email"] ~ button svg {
+    transform: translateX(2.5%);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-refonte-page] #shopify-section-tw-footer input[type="email"] ~ button svg {
+    transition: transform 0.2s ease-out;
+  }
+}
+/* Le halo arrive en douceur, aux mêmes conditions de mouvement que sur la fiche 3D. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) and (animation-range-start: contain 10svh) {
+    :root[data-refonte-page] #shopify-section-tw-footer input[type="email"] {
+      transition: box-shadow 0.2s ease;
+    }
+  }
+}
+
+/* === Socle (ticket 01) : fin === */

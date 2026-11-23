@@ -1,0 +1,18 @@
+{%- comment -%}
+  La nouvelle page collection, en construction (vue ?view=refonte : templates/collection.refonte.json, dossier
+  .scratch/collection-design, ticket 01) : la marque de la page. layout/collection.liquid cherche « data-refonte> »
+  dans la page rendue ; il pose alors data-refonte-page sur <html> et charge la feuille et la police de la page.
+  Le repère est cette section, jamais le nom du modèle : la bascule sera un simple échange de modèle.
+  Rien à régler, rien à ajouter depuis l'éditeur. Le ticket 02 en fait l'entrée de la page ; la marque reste.
+{%- endcomment -%}
+<div hidden data-refonte></div>
+
+{% schema %}
+{
+  "name": "Collection : refonte",
+  "limit": 1,
+  "enabled_on": {
+    "templates": ["collection"]
+  }
+}
+{% endschema %}

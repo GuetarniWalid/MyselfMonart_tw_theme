@@ -8,7 +8,8 @@
 // Un test de section qui a besoin d'un filtre de plus l'ajoute à son moteur, dans son propre fichier
 // (engine(lang).registerFilter(…)) : chaque fichier de test tourne dans son propre processus.
 // Hors de la galerie, scripts/sous-collections.test.cjs prend ici la lecture des fichiers et le moteur par langue
-// (engine), avec ses propres données : une page de collection, pas un produit.
+// (engine), avec ses propres données : une page de collection, pas un produit. scripts/collection-refonte.test.cjs
+// (la nouvelle page collection) y prend aussi les règles d'une feuille, ses blocs et le rendu d'une section.
 const fs = require('fs')
 const path = require('path')
 const bonsai = require('./fixtures/oeuvre-3d-bonsai.json')
@@ -49,6 +50,25 @@ function rules(css, context = []) {
     i = j
   }
   return out
+}
+
+/* Les blocs d'une feuille ou d'un script de page (assets/oeuvre-galerie.*, assets/collection-refonte.css), un par
+   partie de la page ou par ticket : entre deux repères « === Nom (ticket N) : début === » et « … : fin === ». Vérifie
+   que chaque début a sa fin, au même nom, et qu'aucun code n'est hors d'un bloc (l'en-tête du fichier avant le
+   premier, des blancs entre deux blocs et après le dernier) ; rend les repères, dans l'ordre. */
+function blocs(file) {
+  const assert = require('node:assert/strict')
+  const source = read(file)
+  const marks = [...source.matchAll(/\/\* === (.+?) \(ticket (\d+)\) : (début|fin) ===/g)].map((m) => ({ name: m[1], ticket: m[2], side: m[3], start: m.index, end: source.indexOf('*/', m.index) + 2 }))
+  assert.ok(marks.length >= 2 && marks.length % 2 === 0, `${file} : des repères, par paires`)
+  for (let i = 0; i < marks.length; i += 2) {
+    assert.equal(`${marks[i].side}, ${marks[i + 1].side}`, 'début, fin', `${file} : « ${marks[i].name} »`)
+    assert.equal(`${marks[i + 1].name} (${marks[i + 1].ticket})`, `${marks[i].name} (${marks[i].ticket})`, `${file} : le même nom au début et à la fin`)
+  }
+  const outside = [source.slice(0, marks[0].start)]
+  for (let i = 1; i < marks.length; i += 2) outside.push(source.slice(marks[i].end, i + 1 < marks.length ? marks[i + 1].start : source.length))
+  for (const part of outside) assert.equal(part.replace(/\/\*[\s\S]*?\*\//g, '').trim(), '', `${file} : du code hors d’un bloc`)
+  return marks
 }
 
 // Le bloc principal d'un modèle produit (sa section main-product).
@@ -256,7 +276,7 @@ const renderSectionFile = (file, section, p, options = {}) => {
 }
 
 module.exports = {
-  ROOT, read, exists, code, json, schemaOf, SECTION, LANGS, rules, mainOf,
+  ROOT, read, exists, code, json, schemaOf, SECTION, LANGS, rules, blocs, mainOf,
   liquid, SKIP, locales, engine, optionValue, templateOf, image, asMedia, FLAT, OLD, MOTHER,
   product, globals, sectionOf, KEPT, galerieSection, FICHE_3D_AVANT, renderSection, renderSectionFile, renderSnippet, ldOf, blocksOf,
 }

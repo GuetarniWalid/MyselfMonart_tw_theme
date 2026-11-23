@@ -12,7 +12,7 @@ const fs = require('fs')
 const path = require('path')
 // La lecture des fichiers du thème et le rendu Liquid : le banc partagé avec les tests des sections de la page.
 const {
-  ROOT, read, exists, code, json, schemaOf, SECTION, LANGS, rules, mainOf,
+  ROOT, read, exists, code, json, schemaOf, SECTION, LANGS, rules, blocs, mainOf,
   SKIP, locales, engine, FLAT, OLD, MOTHER,
   product, globals, sectionOf, galerieSection, renderSection, renderSnippet, ldOf, blocksOf, FICHE_3D_AVANT,
 } = require('./galerie-banc.cjs')
@@ -107,7 +107,7 @@ test('la feuille : chaque règle porte le crochet ou un nom « galerie », rien 
     }
     for (const selector of head.split(',')) assert.match(selector, /galerie/, `sélecteur « ${selector.trim()} »`)
   }
-  // Ni police, ni import, ni adresse : Albert Sans est déclarée par la scène 3D seule (scripts/oeuvre-3d-police.test.cjs).
+  // Ni police, ni import, ni adresse : sur la fiche, Albert Sans est déclarée par la scène 3D (scripts/oeuvre-3d-police.test.cjs).
   assert.doesNotMatch(css, /@font-face|@import|url\(/)
   // Le crochet est le réglage (data-galerie), jamais le nom du modèle.
   assert.doesNotMatch(css, /data-layout|oeuvre-galerie|data-template/)
@@ -202,19 +202,8 @@ test('la feuille : aucune couleur ne s’écrit hors de ses variables', () => {
 })
 
 test('la feuille et le script : un bloc par partie de la page, entre deux repères « début » et « fin »', () => {
-  for (const file of [CSS, JS]) {
-    const source = read(file)
-    const marks = [...source.matchAll(/\/\* === (.+?) \(ticket (\d+)\) : (début|fin) ===/g)].map((m) => ({ name: m[1], ticket: m[2], side: m[3], start: m.index, end: source.indexOf('*/', m.index) + 2 }))
-    assert.ok(marks.length >= 2 && marks.length % 2 === 0, `${file} : des repères, par paires`)
-    for (let i = 0; i < marks.length; i += 2) {
-      assert.equal(`${marks[i].side}, ${marks[i + 1].side}`, 'début, fin', `${file} : « ${marks[i].name} »`)
-      assert.equal(`${marks[i + 1].name} (${marks[i + 1].ticket})`, `${marks[i].name} (${marks[i].ticket})`, `${file} : le même nom au début et à la fin`)
-    }
-    // Rien hors des blocs : l'en-tête du fichier avant le premier, des blancs entre deux blocs et après le dernier.
-    const outside = [source.slice(0, marks[0].start)]
-    for (let i = 1; i < marks.length; i += 2) outside.push(source.slice(marks[i].end, i + 1 < marks.length ? marks[i + 1].start : source.length))
-    for (const part of outside) assert.equal(part.replace(/\/\*[\s\S]*?\*\//g, '').trim(), '', `${file} : du code hors d’un bloc`)
-  }
+  // Chaque début a sa fin, au même nom ; rien hors des blocs (scripts/galerie-banc.cjs).
+  for (const file of [CSS, JS]) blocs(file)
 })
 
 /* La maquette écrit en Albert Sans de 300 à 800 (Google Fonts). Le thème sert 500, 600 et 700 pour la scène 3D, et

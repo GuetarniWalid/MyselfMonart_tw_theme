@@ -1,8 +1,25 @@
+{%- comment -%}
+  La nouvelle page collection, en construction (vue ?view=refonte, modèle templates/collection.refonte.json, dossier
+  .scratch/collection-design) : sa section, sections/collection-refonte.liquid, écrit data-refonte. Ce gabarit le lit
+  dans la page rendue, comme layout/product.liquid pour la page galerie des œuvres 3D : <html> porte alors
+  data-refonte-page, et <head> charge la feuille de la page (assets/collection-refonte.css) et sa police
+  (snippets/collection-refonte-police.liquid). Le bandeau, le pied de page et le texte ont leurs couleurs et leur
+  police dès le premier affichage. Le repère est la section, jamais le nom du modèle : la bascule sera un échange de
+  modèle. Toute autre page de collection rend exactement le même HTML qu'avant (scripts/collection-refonte.test.cjs).
+{%- endcomment -%}
+{%- liquid
+  assign refonte_page = false
+  if content_for_layout contains ' data-refonte>'
+    assign refonte_page = true
+  endif
+-%}
 <!DOCTYPE html>
-<html lang="{{ request.locale.iso_code }}">
+<html lang="{{ request.locale.iso_code }}"{% if refonte_page %} data-refonte-page{% endif %}>
   <head>
     {% render 'head-base' %}
-    {{ content_for_header }}
+    {{ content_for_header }}{% if refonte_page %}
+    {{ 'collection-refonte.css' | asset_url | stylesheet_tag }}
+    {% render 'collection-refonte-police' %}{% endif %}
 
     <script src="{{ 'collection.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'dropdown-button.js' | asset_url }}" defer="defer"></script>

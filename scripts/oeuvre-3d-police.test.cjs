@@ -3,6 +3,9 @@
 // la scène seule (snippets/oeuvre-3d-stage.liquid) : aucune autre page ne la charge.
 // Depuis le 20/11/2026, la scène déclare aussi 300 et 400, pour la page galerie qui la suit
 // (assets/oeuvre-galerie.css) : la scène, elle, n'écrit toujours qu'en 500, 600 et 700.
+// Depuis le 23/11/2026, la nouvelle page collection (vue ?view=refonte, ticket 01 de .scratch/collection-design)
+// déclare les mêmes fichiers dans son <head>, sur elle seule (snippets/collection-refonte-police.liquid,
+// scripts/collection-refonte.test.cjs).
 // Lancer : node --test scripts/oeuvre-3d-police.test.cjs
 const test = require('node:test')
 const assert = require('node:assert/strict')
@@ -77,14 +80,16 @@ test('la scène, ses chips et sa pilule écrivent en Albert Sans', () => {
   assert.match(css, /--scene-font:\s*"Albert Sans",/)
 })
 
-test('aucune autre partie du thème ne déclare Albert Sans : elle ne se charge que sur la fiche 3D', () => {
+test('aucune autre partie du thème ne déclare Albert Sans : elle ne se charge que sur la fiche 3D et la nouvelle page collection', () => {
+  // La police de la nouvelle page collection : les mêmes fichiers, rendus par son gabarit sur elle seule.
+  const REFONTE = 'snippets/collection-refonte-police.liquid'
   const found = []
   for (const folder of ['layout', 'sections', 'snippets', 'templates', 'blocks', 'assets']) {
     const dir = path.join(ROOT, folder)
     if (!fs.existsSync(dir)) continue
     for (const name of fs.readdirSync(dir).filter((n) => /\.(liquid|css|js|json)$/.test(n))) {
       const file = `${folder}/${name}`
-      if (file === STAGE) continue
+      if (file === STAGE || file === REFONTE) continue
       if (fontFaces(fs.readFileSync(path.join(dir, name), 'utf8')).length) found.push(file)
     }
   }

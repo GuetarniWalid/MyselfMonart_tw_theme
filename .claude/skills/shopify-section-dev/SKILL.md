@@ -124,7 +124,7 @@ V4 (correct, Walid l'a corrigé manuellement) : réutilise `<snap-carrousel>` du
 
 Pourquoi : le theme est tout Tailwind compilé via `npm run tw` (Tailwind 3.4.1, config dans [`tailwind.config.js`](tailwind.config.js)). Casser cette discipline éclate le bundle, les classes utilitaires deviennent inconsistantes, et le purge ne détecte plus rien.
 
-### Une seule exception voulue : la page galerie des œuvres 3D
+### Première exception voulue : la page galerie des œuvres 3D
 
 La nouvelle fiche des œuvres 3D (réglage « Page galerie » de [`sections/main-product.liquid`](sections/main-product.liquid), modèle `product.oeuvre-galerie`) a sa propre feuille, [`assets/oeuvre-galerie.css`](assets/oeuvre-galerie.css), et son propre script, [`assets/oeuvre-galerie.js`](assets/oeuvre-galerie.js), chargés seulement quand le réglage est coché : le script par le bloc principal, la feuille dans `<head>` par [`layout/product.liquid`](layout/product.liquid), qui pose aussi `data-galerie-page` sur `<html>` (il reconnaît la page à ` data-galerie>` dans la page rendue, jamais au nom du modèle). Décision du ticket 19 (dossier `.scratch/fiche-3d/galerie`) : la page pèse une quinzaine de kilo-octets de styles, que les autres pages n'ont pas à charger. `assets/output.css` ne doit pas grossir pour elle.
 
@@ -136,7 +136,20 @@ Règles de cette feuille, que vérifie `scripts/oeuvre-galerie.test.cjs` :
 
 Et une convention : les classes `galerie` (typo de base) et `galerie-bande` (marges de côté) se posent sur la racine de chaque partie de la page.
 
-Ce n'est pas un précédent : toute autre page reste en Tailwind.
+### Seconde exception voulue : la nouvelle page collection
+
+La refonte de la page collection (dossier `.scratch/collection-design` ; pendant la construction, modèle caché `collection.refonte`, vu avec `?view=refonte`) a sa propre feuille, [`assets/collection-refonte.css`](assets/collection-refonte.css). Mêmes raisons que pour la page galerie : un système de design propre, partagé avec la fiche 3D (mêmes variables, Albert Sans), et un poids que les autres pages n'ont pas à charger. `assets/output.css` ne doit pas grossir pour elle.
+
+Elle se charge sur cette page seulement : la section [`sections/collection-refonte.liquid`](sections/collection-refonte.liquid) écrit `data-refonte` ; [`layout/collection.liquid`](layout/collection.liquid) reconnaît la page à ` data-refonte>` dans la page rendue (jamais au nom du modèle), pose `data-refonte-page` sur `<html>` et charge dans `<head>` la feuille et la police ([`snippets/collection-refonte-police.liquid`](snippets/collection-refonte-police.liquid)). Sur toute autre page de collection, le gabarit rend exactement le HTML d'avant.
+
+Règles de cette feuille, que vérifie `scripts/collection-refonte.test.cjs` :
+- chaque règle commence par `:root[data-refonte-page]` (ou une classe `.refonte…`), jamais par le nom du modèle ; pas de `:root:has(…)` ;
+- les variables du socle (`--encre`, `--peche`, `--menthe`, `--sans`, `--gout`…) ont les valeurs de la fiche 3D ; aucune couleur ne s'écrit ailleurs ; la police est déclarée par le gabarit, jamais dans la feuille ;
+- un bloc par ticket, entre deux repères `début` et `fin` ; un nouveau bloc s'ajoute à la fin ;
+- aucun mouvement hors de `@media (prefers-reduced-motion: no-preference)` ;
+- `assets/output.css` reste ce que Tailwind construit du thème, à l'octet près.
+
+Ces deux feuilles valent chacune pour une page entière, chargée par son gabarit. Elles ne sont pas un modèle pour une section isolée : une section, sur toute autre page, s'écrit en Tailwind.
 
 ### Avant d'utiliser une classe arbitraire
 
@@ -447,7 +460,7 @@ Quand on rédige du **copy** pour les settings (defaults, exemples, info) :
 - ❌ À l'inverse, réutiliser un custom element **jamais chargé** (`<details-modal>`, `<media-gallery>`, `<quick-add-modal>`… cf. la liste ⛔ du § 1) : le markup serait inerte, sans la moindre erreur visible
 - ❌ Dupliquer une classe utility / un snippet helper qui existe (`.title-highlight`, `.scrollbar-hidden`, `.cart-button`, `customer-testimonial-card`, etc.)
 - ❌ `<style>` inline ou `style="..."` sur des balises (sauf via `{% style %}` exceptionnel et justifié)
-- ❌ CSS scoped par section dans `assets/x-styles.css` (une seule exception : la page galerie des œuvres 3D, § 2)
+- ❌ CSS scoped par section dans `assets/x-styles.css` (deux exceptions, chacune pour une page entière : la page galerie des œuvres 3D et la nouvelle page collection, § 2)
 - ❌ Hardcoder un hex `#C04B2F` au lieu de `bg-accent` ou `bg-buy-button`
 - ❌ Hardcoder une font `font-family: "Playfair Display"` au lieu de `font-heading`
 - ❌ `class="text-[#C04B2F]"` au lieu de `text-accent`
