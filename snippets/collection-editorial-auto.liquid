@@ -72,29 +72,31 @@
             {{ ed_guide }}
           </div>
         </details>
-        {%- comment -%} Cocon : liens internes (blog / collections sœurs) préservés de l'ancienne description masquée par le banner. {%- endcomment -%}
-        {%- if ed_cocon != blank and ed_cocon.size > 0 -%}
+        {%- comment -%} Pour aller plus loin : les articles de blog et les pages du champ custom.cocon_links, préservés de
+          l'ancienne description masquée par le banner. Ses liens de collection ne s'affichent plus depuis le 23/11/2026
+          (cocon sémantique, décision de Walid) : la mère est dans le fil d'Ariane, les filles dans les pastilles du haut,
+          les sœurs et la jumelle dans le bas de page (snippets/cocon-famille.liquid), tous tirés du plan. Les afficher
+          ici aussi répétait les mêmes liens, ou menait vers d'autres branches. {%- endcomment -%}
+        {%- liquid
+          assign ed_plus_loin = ''
+          for l in ed_cocon
+            if l.url contains '/collections/'
+              continue
+            endif
+            # Blog, page : l'adresse française garde la langue et le marché de la page.
+            capture l_url
+              render 'localized-links', url: l.url
+            endcapture
+            assign l_label = l.label | escape
+            if ed_plus_loin != ''
+              assign ed_plus_loin = ed_plus_loin | append: ' &middot; '
+            endif
+            assign ed_plus_loin = ed_plus_loin | append: '<a href="' | append: l_url | append: '">' | append: l_label | append: '</a>'
+          endfor
+        -%}
+        {%- if ed_plus_loin != '' -%}
           <p class="font-roboto text-[15px] leading-[1.7] text-main-70 pt-6 [&_a]:text-terra [&_a]:underline">
-            <strong class="text-main">{{ 'sections.collection_editorial.learn_more' | t }}</strong>
-            {%- comment -%} i18n : un lien /collections/<handle> stocké en dur reste FR. On résout l'objet collection
-               par son handle et on rend collection.url (localisé : préfixe locale + handle traduit). Les liens
-               non-collection (blog, page) gardent leur url. {%- endcomment -%}
-            {%- for l in ed_cocon -%}
-              {%- liquid
-                assign l_url = l.url
-                if l.url contains '/collections/'
-                  assign l_handle = l.url | split: '/collections/' | last | split: '?' | first | split: '#' | first | split: '/' | first
-                  if collections[l_handle].url != blank
-                    assign l_url = collections[l_handle].url
-                  endif
-                endif
-                # Blog, page : l'adresse française garde la langue et le marché de la page.
-                capture l_url
-                  render 'localized-links', url: l_url
-                endcapture
-              -%}
-              <a href="{{ l_url }}">{{ l.label | escape }}</a>{% unless forloop.last %} &middot; {% endunless %}
-            {%- endfor -%}
+            <strong class="text-main">{{ 'sections.collection_editorial.learn_more' | t }}</strong> {{ ed_plus_loin }}
           </p>
         {%- endif -%}
       </div>

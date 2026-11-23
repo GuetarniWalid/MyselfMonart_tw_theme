@@ -212,6 +212,21 @@
         "couleur": "Colores",
         "inspiration": "Inspiraciones",
         "personnalise": "Personalizados"
+      },
+      "famille": {
+        "nav": "Colecciones relacionadas",
+        "dans": "También en {{ titre }}",
+        "soeurs": "De la misma familia",
+        "en_poster": "También en póster",
+        "en_toile": "También en lienzo",
+        "autres": {
+          "piece": "Otras estancias",
+          "style": "Otros estilos",
+          "sujet": "Otros temas",
+          "couleur": "Otros colores",
+          "inspiration": "Otras inspiraciones",
+          "personnalise": "Otros personalizados"
+        }
       }
     },
     "mma": {

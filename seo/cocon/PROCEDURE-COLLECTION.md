@@ -33,12 +33,13 @@ Chaque texte est un fichier du dépôt, `seo/cocon/textes/<handle>.json`, avec l
 | `custom.intro` | `multi_line_text_field`, texte simple | 2 ou 3 phrases, requête principale au début. Vouvoiement. |
 | `custom.guide` | `multi_line_text_field` contenant du HTML | 400 à 600 mots en `h2`/`h3`/`p`/`ul`/`strong`/`a`, commencé par un `h2` (jamais de `h1`). |
 | `custom.faq` | `json` | 4 ou 5 objets `{"q": "…", "a": "<p>…</p>"}`, tirés des vraies recherches du dossier. |
-| `custom.cocon_links` | `json` | 3 à 5 liens `{"url": "/collections/…", "label": "…"}` : la mère, la jumelle, 1 à 3 sœurs proches. |
+| `custom.cocon_links` | `json` | `[]`, sauf un article de blog ou une page à recommander : `{"url": "/blogs/…", "label": "…"}`. Depuis le 23/11/2026, le thème n'y affiche plus les liens de collection : la mère, la jumelle et les sœurs se calculent depuis le plan (fil d'Ariane, pastilles, bas de page). |
 | Image | URL d'une image produit + `alt` | Le tableau le plus vendu ou le plus représentatif. `alt` : « Titre — description courte \| MyselfMonArt ». |
 
 Le guide suit cette trame : comment choisir, styles et ambiances, où l'accrocher et en quel format, entretien, pourquoi MyselfMonArt.
 - **Toiles** : toile sur châssis bois. **Posters** : papier 250 g/m², avec ou sans cadre.
 - Il fait des liens vers la page mère, la jumelle et 2 ou 3 tableaux phares du dossier.
+- Ses liens de collection restent dans la famille de la page : mère, jumelle, sœurs, filles. Jamais une autre branche du cocon, par exemple une couleur ou une pièce depuis un sujet (règle de Walid du 23/11/2026).
 - S'il cite la note, c'est toujours par `[[TP_SCORE]]/5 sur [[TP_COUNT]] avis`.
 
 Exemples à suivre : l'éditorial de Tableau Zen et de Poster & Affiche Zen. Voix et garde-fous : [../shared/METHODOLOGY.md](../shared/METHODOLOGY.md), § 4 et § 7.
@@ -88,7 +89,7 @@ Puis une relecture adversariale :
 
 ## 4. Après
 
-- La pastille de la nouvelle collection apparaît seule sur sa page mère, car le thème lit le plan dans le métachamp du shop `cocon.plan`.
+- La pastille de la nouvelle collection apparaît seule sur sa page mère, et dans le bas de page de ses sœurs et de sa jumelle, car le thème lit le plan dans le métachamp du shop `cocon.plan`.
 - La carte et l'outil `etatCocon` la montrent « en ligne » au passage suivant du veilleur.
 - On ajoute une ligne au [journal](journal.md) : date, handle, nombre de produits, ce qui a été vérifié.
 - On commite `seo/cocon/` (textes et journal), puis on pousse sur `main`, sans branche ni PR (voir `CLAUDE.md`). La routine le fait seule à la fin de son passage. Elle ne commite jamais un fichier du thème, car chaque push sur `main` déploie le thème en ligne.

@@ -12,6 +12,7 @@
   "sections": {
     "collections_pages_grid_G6Db6e": {
       "type": "collections-pages-grid",
+      "disabled": true,
       "blocks": {
         "collection_7LTcXY": {
           "type": "collection",

@@ -35,6 +35,7 @@
     },
     "0a4d0ad2-05f5-4939-8b62-ad000c188ded": {
       "type": "collection-list",
+      "disabled": true,
       "blocks": {
         "e964a270-02f8-4c19-9b0c-dc612dc45735": {
           "type": "featured_collection",

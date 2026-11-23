@@ -43,8 +43,10 @@
         {% endif %}
       {% endfor %}
 
-      {%- comment -%} Collection navigation section (not a filter) {%- endcomment -%}
-      {% render 'collection-navigation-section', current_collection: collection %}
+      {%- comment -%} Plus de liste « Autres collections » ici depuis le 23/11/2026 (cocon sémantique, décision de Walid) :
+        elle reliait chaque page à toutes les collections de son type, de A à Z, et aplatissait le cocon. Une page de
+        collection relie désormais sa famille seulement : fil d'Ariane, pastilles des filles, bas de page des sœurs et de
+        la jumelle (snippets/cocon-famille.liquid). {%- endcomment -%}
     </div>
   </div>
 </aside>

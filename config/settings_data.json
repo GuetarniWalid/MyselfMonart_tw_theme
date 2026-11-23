@@ -131,6 +131,7 @@
             "settings": {
               "title": "Nature & Sauvage",
               "child_collection_list": [
+                "tableaux-nature-sauvage",
                 "tableau-animaux",
                 "tableau-fleurs",
                 "tableau-mer-1",

@@ -454,6 +454,21 @@
         "couleur": "Colours",
         "inspiration": "Inspirations",
         "personnalise": "Personalized"
+      },
+      "famille": {
+        "nav": "Related collections",
+        "dans": "Also in {{ titre }}",
+        "soeurs": "In the same family",
+        "en_poster": "Also as a poster",
+        "en_toile": "Also on canvas",
+        "autres": {
+          "piece": "Other rooms",
+          "style": "Other styles",
+          "sujet": "Other subjects",
+          "couleur": "Other colours",
+          "inspiration": "Other inspirations",
+          "personnalise": "More personalized"
+        }
       }
     },
     "mma": {

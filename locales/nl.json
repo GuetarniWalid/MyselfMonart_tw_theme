@@ -215,6 +215,21 @@
         "couleur": "Kleuren",
         "inspiration": "Inspiraties",
         "personnalise": "Gepersonaliseerd"
+      },
+      "famille": {
+        "nav": "Verwante collecties",
+        "dans": "Ook in {{ titre }}",
+        "soeurs": "Uit dezelfde familie",
+        "en_poster": "Ook als poster",
+        "en_toile": "Ook op canvas",
+        "autres": {
+          "piece": "Andere kamers",
+          "style": "Andere stijlen",
+          "sujet": "Andere onderwerpen",
+          "couleur": "Andere kleuren",
+          "inspiration": "Andere inspiraties",
+          "personnalise": "Meer gepersonaliseerd"
+        }
       }
     },
     "mma": {

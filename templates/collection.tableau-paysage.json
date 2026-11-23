@@ -27,6 +27,7 @@
     },
     "collections_grid_Hz3KRG": {
       "type": "collections-pages-grid",
+      "disabled": true,
       "blocks": {
         "collection_49e7fq": {
           "type": "collection",
@@ -90,6 +91,7 @@
     },
     "0a4d0ad2-05f5-4939-8b62-ad000c188ded": {
       "type": "collection-list",
+      "disabled": true,
       "blocks": {
         "f68915d1-93be-46c1-878a-5df7b674c747": {
           "type": "featured_collection",

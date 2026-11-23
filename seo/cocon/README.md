@@ -25,6 +25,13 @@ Carte vivante : [Carte des collections](https://claude.ai/artifact/BVe1r3KNmDx6G
   - Claude ne propose jamais un tag de série de lui-même.
   - Une série garde sa décision quand sa collection se crée : le statut « en ligne » se calcule à part.
 - **Les adresses existantes ne bougent pas.** Seule exception, une fusion décidée avec Walid, faite avec une redirection : « Nos best-sellers » a été fondu dans Tableau best-seller le 22/11, avec la redirection `/collections/best-sellers` → `/collections/bestsellers-1`.
+- **Une page ne relie que sa famille** (23/11/2026). Le fil d'Ariane monte vers la mère. Les pastilles du haut descendent vers les filles. Le bas de page mène aux sœurs et à la jumelle ; sous une racine, seulement les sœurs du même rayon (Tableaux Nature → les autres sujets). Retirés le même jour, parce qu'ils menaient partout ou répétaient les mêmes liens :
+  - la liste de toutes les collections, de A à Z, dans les filtres ;
+  - « Nos autres collections », écrit à la main dans les modèles ;
+  - les grands blocs d'images qui répétaient les pastilles (Nature, Animaux, Chambre, Chambre Enfant, Ethnique) ;
+  - les liens de collection du « Pour aller plus loin », qui ne garde que les articles de blog.
+  Avant, la page Tableaux Nature comptait 230 liens, dont 9 vers Tableau Animaux.
+- **Pas de pages « par sujet », « par style », « par pièce » ni « par couleur »** (décision de Walid du 23/11/2026). Personne ne les cherche sur Google, et elles montreraient les mêmes tableaux que la racine. Le fil d'Ariane suit les recherches : Tous les Tableaux › Tableaux Nature › Tableau Animaux › Tableau Lion. Les rayons se voient sur les pages racines, dans les groupes du menu et dans le bas de page (« Autres sujets »).
 
 ## Où vivent les choses
 
@@ -35,6 +42,7 @@ Carte vivante : [Carte des collections](https://claude.ai/artifact/BVe1r3KNmDx6G
 | Essai à blanc | Workflow « Commande sur le serveur », commande `cocon-etiquettes`, essai coché : il liste sans rien écrire. |
 | L'état, pour Claude et la carte | Outil `etatCocon` du connecteur Shopify, en lecture seule. |
 | Les pastilles des sous-collections | `sections/sous-collections.liquid`, sous le fil d'Ariane de chaque modèle de collection. Elle lit `cocon.plan`. |
+| Le bas de page des sœurs et de la jumelle | `snippets/cocon-famille.liquid`, à la fin de la grille des produits de chaque page de collection. Il lit `cocon.plan` (champs `parent`, `rayon` et `jumeau`). Tests : `scripts/cocon-famille.test.cjs`. |
 | Le fil d'Ariane | Métachamp de collection `breadcrumb.parentCollection`, posé à la création. |
 | La création d'une collection | [PROCEDURE-COLLECTION.md](PROCEDURE-COLLECTION.md), à la main ou par la routine quotidienne. |
 | Les textes publiés | `seo/cocon/textes/<handle>.json` : un fichier par collection créée par le cocon, identique au texte en ligne. |

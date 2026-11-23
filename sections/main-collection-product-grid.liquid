@@ -100,6 +100,9 @@
   {% render 'collection-editorial-auto' %}
 {%- endif -%}
 
+{%- comment -%} Cocon : les sœurs et la jumelle de la page, tirées du plan des collections (23/11/2026). {%- endcomment -%}
+{%- render 'cocon-famille' -%}
+
 {%- comment -%} Check if filters should be shown for this collection type {%- endcomment -%}
 {% assign collection_type = collection.metafields.custom.type_of_collection | default: 'other' %}
 {% assign show_filters = false %}

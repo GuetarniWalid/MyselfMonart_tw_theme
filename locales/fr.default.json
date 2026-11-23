@@ -599,6 +599,21 @@
         "couleur": "Couleurs",
         "inspiration": "Inspirations",
         "personnalise": "Personnalisés"
+      },
+      "famille": {
+        "nav": "Collections de la même famille",
+        "dans": "Aussi dans {{ titre }}",
+        "soeurs": "Dans la même famille",
+        "en_poster": "Aussi en poster",
+        "en_toile": "Aussi en toile",
+        "autres": {
+          "piece": "Autres pièces",
+          "style": "Autres styles",
+          "sujet": "Autres sujets",
+          "couleur": "Autres couleurs",
+          "inspiration": "Autres inspirations",
+          "personnalise": "Autres personnalisés"
+        }
       }
     },
     "mma": {
