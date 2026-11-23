@@ -1,0 +1,122 @@
+{%- comment -%}
+  Sous-collections : les pastilles qui mènent d'une page de collection à ses sous-collections (ticket T1 du plan en
+  cocon sémantique, validé par Walid le 22/11/2026 : « pastilles en haut »). Le fil d'Ariane remonte, elles
+  descendent. Posée juste sous le fil d'Ariane, avant la grille des produits, dans chaque modèle de collection.
+
+  Le plan vient du serveur : champ méta de la boutique cocon.plan (json), { seuil, noeuds: [{ id, titre, arbre,
+  parent, rayon, decision }] }, où id et parent sont des handles français. Une fille de la page a sa pastille quand :
+  - sa décision vaut en_ligne, a_creer ou idee (une piste, une fille écartée ou fondue, jamais) ;
+  - sa collection existe et est publiée (collections[id]) et compte au moins un produit.
+  Sans plan, ou sans fille à montrer, la section ne rend rien, pas même un espace : son enveloppe, vide, est alors
+  masquée par la règle *:empty d'input.css.
+
+  La pastille est un vrai lien, nommé par le titre entier de la collection, que Shopify traduit : l'ancre la plus
+  riche pour Google. Aucun raccourci : « Tableau » et « Poster & Affiche » ne se placent pas de la même façon dans
+  les cinq langues. Sur une page racine (rayon « racine » dans le plan : tous-les-tableaux, posters-affiches), les
+  filles se rangent par rayon : le best-seller d'abord, sans libellé, puis pièces, styles, sujets, couleurs,
+  inspirations et personnalisés (un autre rayon n'y paraît pas). Ailleurs, une seule rangée. Dans une rangée,
+  l'ordre du plan. Sur téléphone, chaque rangée défile en largeur ; sur ordinateur, les pastilles passent à la
+  ligne : tout se voit. La pastille, .pastille-collection (input.css), prend l'ombre « neu » du thème ; celle du
+  best-seller, le fond des boutons d'achat. Aucun titre h1 à h6 : le seul H1 de la page est celui de l'éditorial.
+  Un libellé de rayon nomme sa liste (aria-labelledby). Tests : scripts/sous-collections.test.cjs.
+{%- endcomment -%}
+{%- liquid
+  assign sc_noeuds = shop.metafields.cocon.plan.value.noeuds
+  assign sc_decisions_montrees = 'en_ligne,a_creer,idee' | split: ','
+
+  # Les parents des filles à montrer : les seules pages qui ont des pastilles.
+  assign sc_parents = ''
+  for sc_n in sc_noeuds
+    if sc_n.parent != blank and sc_decisions_montrees contains sc_n.decision
+      assign sc_parents = sc_parents | append: sc_n.parent | append: ','
+    endif
+  endfor
+  assign sc_parents = sc_parents | split: ',' | uniq
+
+  # La page dans le plan, qui parle français. Hors français, collection.handle est le handle traduit (sur /en :
+  # animal-art-prints pour tableau-animaux) : la page se retrouve alors parmi les parents par l'identifiant de sa
+  # collection, car collections[handle français] répond dans toutes les langues.
+  assign sc_page = ''
+  if sc_parents contains collection.handle
+    assign sc_page = collection.handle
+  elsif request.locale.primary != true
+    for sc_p in sc_parents
+      if collections[sc_p].id == collection.id
+        assign sc_page = sc_p
+        break
+      endif
+    endfor
+  endif
+
+  assign sc_racine = false
+  for sc_n in sc_noeuds
+    if sc_n.id == sc_page
+      if sc_n.rayon == 'racine'
+        assign sc_racine = true
+      endif
+      break
+    endif
+  endfor
+  # Sur une page racine, un passage par rayon, dans l'ordre des groupes ; ailleurs, un seul passage (« tous »),
+  # qui prend toutes les filles.
+  if sc_racine
+    assign sc_rayons = 'bestseller,piece,style,sujet,couleur,inspiration,personnalise' | split: ','
+  else
+    assign sc_rayons = 'tous' | split: ','
+  endif
+
+  # Une rangée : elle défile en largeur sur téléphone, ses pastilles passent à la ligne sur ordinateur. Les 6 px du
+  # haut et du bas gardent l'anneau du focus et l'ombre, que le défilement couperait.
+  assign sc_classes_rangee = 'overflow-x-auto scrollbar-hidden px-4 py-1.5 md:overflow-visible'
+-%}
+{%- capture sc_rangees -%}
+  {%- if sc_page != '' -%}
+    {%- for sc_rayon in sc_rayons -%}
+      {%- capture sc_pastilles -%}
+        {%- for sc_n in sc_noeuds -%}
+          {%- if sc_n.parent != sc_page -%}{%- continue -%}{%- endif -%}
+          {%- if sc_racine and sc_n.rayon != sc_rayon -%}{%- continue -%}{%- endif -%}
+          {%- unless sc_decisions_montrees contains sc_n.decision -%}{%- continue -%}{%- endunless -%}
+          {%- comment -%} Une collection pas encore créée rend un objet vide, dont le compte est une chaîne : plus: 0 en fait un nombre. {%- endcomment -%}
+          {%- assign sc_col = collections[sc_n.id] -%}
+          {%- assign sc_nb = sc_col.all_products_count | plus: 0 -%}
+          {%- if sc_col.id != blank and sc_nb > 0 -%}
+            <li class="shrink-0"><a href="{{ sc_col.url }}" class="pastille-collection{% if sc_n.rayon == 'bestseller' %} pastille-collection--best-seller{% endif %}">{{ sc_col.title | escape }}</a></li>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+      {%- if sc_pastilles == blank -%}{%- continue -%}{%- endif -%}
+      {%- if sc_racine and sc_rayon != 'bestseller' -%}
+        {%- assign sc_libelle = 'sous-collections-' | append: section.id | append: '-' | append: sc_rayon -%}
+        <div class="flex items-center gap-3 md:items-baseline {{ sc_classes_rangee }}">
+          <p id="{{ sc_libelle }}" class="shrink-0 min-w-20 md:min-w-36 text-xs font-semibold uppercase tracking-[0.14em] text-terra whitespace-nowrap">{{ 'sections.sous_collections.rayons.' | append: sc_rayon | t }}</p>
+          <ul aria-labelledby="{{ sc_libelle }}" class="flex gap-2 md:flex-1 md:flex-wrap md:min-w-0">{{ sc_pastilles }}</ul>
+        </div>
+      {%- else -%}
+        <ul class="flex gap-2 md:flex-wrap {{ sc_classes_rangee }}">{{ sc_pastilles }}</ul>
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endcapture -%}
+{%- if sc_rangees != blank -%}
+  <nav class="flex flex-col gap-1 pb-3 md:gap-2 md:pb-5" aria-label="{{ 'sections.sous_collections.nav' | t }}">
+    {{- sc_rangees -}}
+  </nav>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Sous-collections",
+  "class": "page-width w-full",
+  "limit": 1,
+  "enabled_on": {
+    "templates": ["collection"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Les pastilles vers les sous-collections de la page, juste sous le fil d'Ariane. Rien à régler : elles suivent le plan des collections écrit par le serveur (champ méta de la boutique cocon.plan). Une sous-collection n'a sa pastille que si elle existe, est publiée et a au moins un produit. Sur « Tous les tableaux » et « Tous les posters », les pastilles se rangent par rayon. Sans sous-collection, la section ne s'affiche pas."
+    }
+  ]
+}
+{% endschema %}

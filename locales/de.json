@@ -442,6 +442,15 @@
           "swatches_canvas": "Die Farben des Wandbilds",
           "swatches_poster": "Die Farben des Posters"
         }
+      },
+      "collection": {
+        "emblemes": {
+          "tableaux": {
+            "one": "{{ count }} Bild",
+            "other": "{{ count }} Bilder",
+            "many": "{{ count }} Bilder"
+          }
+        }
       }
     },
     "collections_grid": {

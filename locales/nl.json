@@ -444,6 +444,15 @@
           "swatches_canvas": "De kleuren van het schilderij",
           "swatches_poster": "De kleuren van de poster"
         }
+      },
+      "collection": {
+        "emblemes": {
+          "tableaux": {
+            "one": "{{ count }} schilderij",
+            "other": "{{ count }} schilderijen",
+            "many": "{{ count }} schilderijen"
+          }
+        }
       }
     },
     "my_likes": {

@@ -828,6 +828,15 @@
           "swatches_canvas": "Les couleurs du tableau",
           "swatches_poster": "Les couleurs du poster"
         }
+      },
+      "collection": {
+        "emblemes": {
+          "tableaux": {
+            "one": "{{ count }} tableau",
+            "other": "{{ count }} tableaux",
+            "many": "{{ count }} tableaux"
+          }
+        }
       }
     },
     "promo_popup": {

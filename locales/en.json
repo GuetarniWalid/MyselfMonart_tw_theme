@@ -683,6 +683,15 @@
           "swatches_canvas": "The colours of the canvas",
           "swatches_poster": "The colours of the poster"
         }
+      },
+      "collection": {
+        "emblemes": {
+          "tableaux": {
+            "one": "{{ count }} artwork",
+            "other": "{{ count }} artworks",
+            "many": "{{ count }} artworks"
+          }
+        }
       }
     },
     "testimonials_carousel": {

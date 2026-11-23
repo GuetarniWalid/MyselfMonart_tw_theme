@@ -1,0 +1,78 @@
+{%- comment -%}
+  collection-embleme — une collection en emblème, sur la nouvelle page collection (dossier .scratch/collection-design,
+  décision 4 de Walid, ticket 03) : un détail détouré de l'un de ses tableaux, posé sur un rond de couleur d'où il sort
+  par le haut ; dessous, le nom entier de la collection, son dernier mot en gras, et son nombre de tableaux. Tout
+  l'emblème mène à la collection. Sans emblème, le même rond, avec l'initiale du dernier mot : la rangée garde sa forme.
+  Rendu par sections/sous-collections.liquid (réglage « Emblèmes ») pour les filles de la page, en haut ; le même
+  rendu servira en bas de page, en grand, pour les sœurs (ticket 08). Ses styles : assets/collection-refonte.css,
+  bloc du ticket 03, chargée par cette page seulement.
+
+  Les données, deux métachamps de la collection (créés dans Shopify par le ticket 04 ; le thème ne fait que les lire) :
+    - cocon.embleme : fichier, image. L'emblème déjà composé : une toile transparente de 2d × 1,65d (d : le diamètre du
+      rond), le rond occupant le bas, au centre, le sujet posé et coupé là où il faut. La page la pose sur le rond, sans
+      masque. Texte de remplacement vide : un décor, le nom de la collection est écrit juste dessous.
+    - cocon.embleme_couleur : texte d'une ligne, ciel, soleil, menthe, rose, lilas ou peche. Sans elle (ou avec une
+      autre valeur), la couleur suit le rang : ciel, soleil, menthe, rose, puis on recommence.
+
+  Accepts:
+    - cible: {Object} la collection (collections[handle]) : son titre traduit, son adresse, son nombre de produits,
+      ses métachamps
+    - rang: {Number} son rang dans sa rangée, à partir de 0
+    - taille: {String} 'haut' (par défaut : rond de 58 px sur téléphone, 80 px sur ordinateur) ou 'bas' (104 et 136 px)
+    - tout_de_suite: {Boolean} l'image arrive tout de suite (loading="eager") : les premiers du haut de page ; sinon,
+      loading="lazy"
+
+  Le titre se coupe avant son dernier mot (« Tableau » en petites capitales, « Animaux » en gras) mais se lit en entier :
+  c'est le nom du lien. Le nombre de tableaux est hors du lien. Aucun titre h1 à h6.
+  Tests : scripts/collection-emblemes.test.cjs.
+{%- endcomment -%}
+{%- liquid
+  # L'emblème, s'il y en a un. Sa largeur décide : un fichier qui n'est pas une image n'en a pas.
+  assign emb_fichier = cible.metafields.cocon.embleme.value
+  assign emb_largeur = emb_fichier.width | default: emb_fichier.preview_image.width | plus: 0
+  assign emb_hauteur = emb_fichier.height | default: emb_fichier.preview_image.height | plus: 0
+
+  # La couleur du rond : celle du métachamp, sinon selon le rang.
+  assign emb_couleurs = 'ciel,soleil,menthe,rose,lilas,peche' | split: ','
+  assign emb_couleur = cible.metafields.cocon.embleme_couleur.value | strip | downcase
+  unless emb_couleurs contains emb_couleur
+    assign emb_rang = rang | plus: 0 | modulo: 4
+    assign emb_couleur = emb_couleurs[emb_rang]
+  endunless
+
+  # Son nombre de tableaux. Une collection pas encore créée rend un objet vide, dont le compte est une chaîne : plus: 0
+  # en fait un nombre (la section ne rend d'ailleurs que les collections qui ont des produits).
+  assign emb_nb = cible.all_products_count | plus: 0
+
+  # Le titre, coupé avant son dernier mot.
+  assign emb_mots = cible.title | strip | split: ' '
+  assign emb_nom = emb_mots | last
+  assign emb_avant = emb_mots.size | minus: 1
+  assign emb_debut = emb_mots | slice: 0, emb_avant | join: ' '
+
+  # L'image fait deux fois le diamètre du rond de large.
+  if taille == 'bas'
+    assign emb_sizes = '(min-width: 900px) 272px, 208px'
+  else
+    assign emb_sizes = '(min-width: 900px) 160px, 116px'
+  endif
+-%}
+{%- capture emb_srcset -%}
+  {%- assign emb_paliers = '160,240,320,480,640' | split: ',' -%}
+  {%- for emb_palier in emb_paliers -%}
+    {%- assign emb_w = emb_palier | plus: 0 -%}
+    {%- if emb_largeur >= emb_w -%}, {{ emb_fichier | image_url: width: emb_w }} {{ emb_w }}w{%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+<li class="c-emb" data-fond="{{ emb_couleur }}"{% if taille == 'bas' %} data-taille="bas"{% endif %}>
+  <span class="c-emb-cadre" aria-hidden="true">
+    <span class="c-emb-rond" data-allow-empty></span>
+    {%- if emb_largeur > 0 %}
+    <img src="{{ emb_fichier | image_url: width: 320 }}" srcset="{{ emb_srcset | remove_first: ', ' }}" sizes="{{ emb_sizes }}" alt="" width="{{ emb_largeur }}" height="{{ emb_hauteur }}" loading="{% if tout_de_suite %}eager{% else %}lazy{% endif %}" decoding="async">
+    {%- else %}
+    <span class="c-emb-initiale">{{ emb_nom | slice: 0 | upcase | escape }}</span>
+    {%- endif %}
+  </span>
+  <a class="c-emb-lien" href="{{ cible.url }}"><span class="c-emb-mot">{{ emb_debut | escape }}</span> <span class="c-emb-nom">{{ emb_nom | escape }}</span></a>
+  <span class="c-emb-nb">{{ 'sections.mma.collection.emblemes.tableaux' | t: count: emb_nb }}</span>
+</li>

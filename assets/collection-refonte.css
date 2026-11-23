@@ -167,3 +167,260 @@
 }
 
 /* === Socle (ticket 01) : fin === */
+
+/* === Emblèmes des sous-collections (ticket 03) : début === */
+
+/* Les sous-collections en emblèmes (sections/sous-collections.liquid au style « Emblèmes », un emblème par fille :
+   snippets/collection-embleme.liquid). Un détail détouré d'un tableau de la collection, posé sur un rond de couleur
+   d'où il sort par le haut : au-dessus du centre du rond, rien ne le coupe ; en dessous, le rond le contient. Dessous,
+   le nom entier, son dernier mot en gras, et le nombre de tableaux. Tout l'emblème mène à la collection. Aucun
+   rectangle : on ne le confond pas avec une carte de la grille. Les mesures de la maquette (version 4) : un rond de
+   58 px sur téléphone, de 80 px dès 900 px ; en bas de page (ticket 08), 104 et 136 px. */
+
+/* La section va d'un bord à l'autre de l'écran, comme les bandes de la maquette : son enveloppe (page-width, que les
+   pastilles gardent sur les autres pages) s'efface, et la section prend les marges de la page et sa largeur de
+   1240 px au plus. Sur une racine, les rangées des rayons s'empilent. */
+:root[data-refonte-page] .page-width:has(> .c-sous) {
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+:root[data-refonte-page] .c-sous {
+  padding: 14px var(--goutd) 0 var(--gout);
+}
+:root[data-refonte-page] .c-sous-in {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+  max-width: 1240px;
+  margin-inline: auto;
+}
+
+/* Une rangée : sur téléphone, elle défile en largeur jusqu'au bord droit de l'écran, sans barre, avec une accroche
+   douce. Ses 14 px du haut et ses 4 px de gauche, repris par des marges négatives, gardent le sujet qui monte au
+   survol (jusqu'à 0,16 fois le diamètre au-dessus du cadre) et l'anneau du focus, que le défilement couperait. */
+:root[data-refonte-page] .c-embs {
+  list-style: none;
+  margin: -12px calc(-1 * var(--goutd)) 0 -4px;
+  padding: 14px var(--goutd) 4px 4px;
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: 4px var(--goutd);
+  scrollbar-width: none;
+}
+:root[data-refonte-page] .c-embs::-webkit-scrollbar {
+  display: none;
+}
+
+/* Un emblème, et la couleur de son rond (data-fond : le métachamp cocon.embleme_couleur, sinon le rang). */
+:root[data-refonte-page] .c-emb {
+  --d: 58px;
+  position: relative;
+  flex: 1 0 74px;
+  max-width: 120px;
+  scroll-snap-align: start;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  padding: 0 2px 2px;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+}
+:root[data-refonte-page] .c-emb[data-fond="ciel"] {
+  --fond: var(--ciel);
+}
+:root[data-refonte-page] .c-emb[data-fond="soleil"] {
+  --fond: var(--soleil);
+}
+:root[data-refonte-page] .c-emb[data-fond="menthe"] {
+  --fond: var(--menthe);
+}
+:root[data-refonte-page] .c-emb[data-fond="rose"] {
+  --fond: var(--rose);
+}
+:root[data-refonte-page] .c-emb[data-fond="lilas"] {
+  --fond: var(--lilas);
+}
+:root[data-refonte-page] .c-emb[data-fond="peche"] {
+  --fond: var(--peche);
+}
+
+/* Le cadre, un décor : le rond en bas, l'emblème ou l'initiale par-dessus. Il grandit depuis le bas du rond (retour
+   de Walid du 23/11 sur la maquette : le rond qui grandissait depuis son centre, sous une image qui montait, laissait
+   le bas du rond vide) : le bas reste en place et rempli, le haut monte. */
+:root[data-refonte-page] .c-emb-cadre {
+  position: relative;
+  display: block;
+  width: var(--d);
+  height: calc(var(--d) * 1.3);
+  transform-origin: 50% 100%;
+}
+:root[data-refonte-page] .c-emb-rond {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: var(--d);
+  height: var(--d);
+  border-radius: 50%;
+  background: var(--fond);
+}
+/* L'emblème est une image prête (le détourage déjà posé et coupé, sur une toile transparente de 2d × 1,65d dont le
+   rond occupe le bas, au centre) : deux fois le diamètre de large, au centre, en bas du cadre, sans masque. */
+:root[data-refonte-page] .c-emb-cadre img {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: calc(var(--d) * 2);
+  height: auto;
+  max-width: none;
+  translate: -50% 0;
+  pointer-events: none;
+}
+/* Sans emblème : l'initiale, en grand, dans le rond. */
+:root[data-refonte-page] .c-emb-initiale {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: var(--d);
+  height: var(--d);
+  display: grid;
+  place-items: center;
+  font: 700 calc(var(--d) * 0.42) / 1 var(--sans);
+  letter-spacing: -0.03em;
+  color: var(--encre);
+}
+
+/* Le lien : le nom de la collection, coupé avant son dernier mot (en petites capitales, puis en gras), lu en entier.
+   Il s'étend à tout l'emblème (::after) : tout l'emblème répond au toucher, et l'anneau du focus l'entoure. */
+:root[data-refonte-page] .c-emb-lien {
+  display: grid;
+  justify-items: center;
+  margin-top: 5px;
+  color: var(--encre);
+  text-decoration: none;
+}
+:root[data-refonte-page] .c-emb-lien::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+}
+:root[data-refonte-page] .c-emb-lien:focus-visible {
+  outline: none;
+}
+:root[data-refonte-page] .c-emb-lien:focus-visible::after {
+  outline: 2px solid var(--encre);
+  outline-offset: 2px;
+}
+:root[data-refonte-page] .c-emb-mot {
+  font: 600 9.5px / 1 var(--sans);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--encre-70);
+}
+:root[data-refonte-page] .c-emb-nom {
+  margin-top: 3px;
+  font: 700 15px / 1.05 var(--sans);
+  letter-spacing: -0.02em;
+}
+:root[data-refonte-page] .c-emb-nb {
+  margin-top: 3px;
+  font: 500 11.5px / 1 var(--sans);
+  color: var(--encre-55);
+  font-variant-numeric: tabular-nums;
+}
+
+/* En bas de page (ticket 08, data-taille="bas") : le même emblème, en grand. La rangée qui le porte est à ce ticket. */
+:root[data-refonte-page] .c-emb[data-taille="bas"] {
+  --d: 104px;
+  max-width: none;
+}
+:root[data-refonte-page] .c-emb[data-taille="bas"] .c-emb-mot {
+  font-size: 11px;
+}
+:root[data-refonte-page] .c-emb[data-taille="bas"] .c-emb-nom {
+  font-size: 22px;
+}
+:root[data-refonte-page] .c-emb[data-taille="bas"] .c-emb-nb {
+  font-size: 13px;
+}
+
+/* Sur ordinateur, la rangée tient sur une ligne, dans la largeur de la page. Une rangée trop longue (sur une racine :
+   les styles, les couleurs) défile en largeur, avec une barre fine : passer à la ligne empilerait une dizaine de lignes
+   d'emblèmes avant les tableaux. Ses 20 px du haut gardent le sujet qui monte au survol. */
+@media (min-width: 900px) {
+  :root[data-refonte-page] .c-sous {
+    padding-top: 18px;
+    padding-bottom: 2px;
+  }
+  :root[data-refonte-page] .c-embs {
+    margin: -18px 0 0 -4px;
+    padding: 20px 0 4px 4px;
+    gap: 14px;
+    scroll-padding-inline: 4px 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--encre-16) transparent;
+  }
+  :root[data-refonte-page] .c-emb {
+    --d: 80px;
+    flex: 0 0 120px;
+  }
+  :root[data-refonte-page] .c-emb-mot {
+    font-size: 10.5px;
+  }
+  :root[data-refonte-page] .c-emb-nom {
+    font-size: 18px;
+  }
+  :root[data-refonte-page] .c-emb-nb {
+    font-size: 12.5px;
+  }
+  :root[data-refonte-page] .c-emb[data-taille="bas"] {
+    --d: 136px;
+  }
+  :root[data-refonte-page] .c-emb[data-taille="bas"] .c-emb-mot {
+    font-size: 12px;
+  }
+  :root[data-refonte-page] .c-emb[data-taille="bas"] .c-emb-nom {
+    font-size: 28px;
+  }
+}
+
+/* Le mouvement, seulement sans « mouvements réduits » ; avec eux, rien ne bouge. Au survol, le cadre grandit depuis le
+   bas du rond (le rond grossit, le sujet sort davantage par le haut) ; au toucher, il s'enfonce. À l'arrivée, chaque
+   emblème glisse un peu, lié au défilement de sa rangée, là où le navigateur le sait (bloc « Le mouvement » de la
+   maquette). */
+@keyframes refonte-glisse {
+  from {
+    translate: 26px 0;
+  }
+  to {
+    translate: none;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-refonte-page] .c-emb-cadre {
+    transition: transform 0.25s ease;
+  }
+  @media (hover: hover) {
+    :root[data-refonte-page] .c-emb:hover .c-emb-cadre {
+      transform: scale(1.08);
+    }
+  }
+  :root[data-refonte-page] .c-emb:active .c-emb-cadre {
+    transform: scale(0.95);
+  }
+  @supports (animation-timeline: view()) and (animation-range-start: contain 10svh) {
+    :root[data-refonte-page] .c-sous .c-embs {
+      view-timeline: --refonte-rangee block;
+    }
+    :root[data-refonte-page] .c-sous .c-emb {
+      animation: refonte-glisse linear both;
+      animation-timeline: --refonte-rangee;
+      animation-range: cover 0% cover 30%;
+    }
+  }
+}
+
+/* === Emblèmes des sous-collections (ticket 03) : fin === */
