@@ -425,7 +425,19 @@ test('la section : une collection vide le dit, sans liste, sans suite, sans lien
   assert.doesNotMatch(html, /<ul|collection-suite|<nav/)
 })
 
-/* ---------- Le schéma ---------- */
+/* ---------- Le modèle caché ---------- */
+
+test('le modèle caché (vue ?view=refonte) : la nouvelle grille à la place de celle d’aujourd’hui, sans réglage', () => {
+  const modele = json('templates/collection.refonte.json')
+  const types = modele.order.map((key) => modele.sections[key].type)
+  assert.ok(!types.includes('main-collection-product-grid'), 'plus de grille d’aujourd’hui')
+  assert.equal(types.filter((type) => type === 'collection-grille').length, 1)
+  assert.deepEqual(modele.sections.collection_grille, { type: 'collection-grille', settings: {} })
+  // Après l'entrée, le fil d'Ariane et les sous-collections (tickets 02 et 03, quel que soit leur nom).
+  assert.equal(types[types.length - 1], 'collection-grille', 'la grille en dernier')
+  // Les autres modèles de collection gardent la grille d'aujourd'hui.
+  assert.equal(json('templates/collection.json').sections['main-collection-product-grid'].type, 'main-collection-product-grid')
+})
 
 test('la section : un nom de schéma que Shopify accepte, rien à régler, une seule fois, sur les pages de collection', () => {
   const schema = schemaOf(GRILLE)

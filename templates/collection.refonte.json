@@ -24,19 +24,15 @@
         "style": "emblemes"
       }
     },
-    "main-collection-product-grid": {
-      "type": "main-collection-product-grid",
-      "settings": {
-        "primary_image_index": 1,
-        "next_image_index": 0,
-        "margin_top": "mt-0"
-      }
+    "collection_grille": {
+      "type": "collection-grille",
+      "settings": {}
     }
   },
   "order": [
     "collection_refonte",
     "cf6565ea-5338-4b92-985b-b5b0824700db",
     "sous_collections",
-    "main-collection-product-grid"
+    "collection_grille"
   ]
 }

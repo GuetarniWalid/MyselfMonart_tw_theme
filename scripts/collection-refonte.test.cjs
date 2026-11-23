@@ -22,14 +22,15 @@ test('le modèle caché : la section de la page en tête, puis celles de collect
   const modele = json('templates/collection.refonte.json')
   const defaut = json('templates/collection.json')
   assert.equal(modele.layout, 'collection')
-  assert.deepEqual(modele.order.map((key) => modele.sections[key].type), ['collection-refonte', 'breadcrumb', 'sous-collections', 'main-collection-product-grid'])
+  assert.deepEqual(modele.order.map((key) => modele.sections[key].type), ['collection-refonte', 'breadcrumb', 'sous-collections', 'collection-grille'])
   assert.deepEqual(Object.keys(modele.sections).sort(), [...modele.order].sort(), 'aucune section hors de l’ordre')
   // La section de la page : sans réglage ni bloc.
   assert.deepEqual(modele.sections[modele.order[0]], { type: 'collection-refonte', settings: {} })
   // Les sections d'aujourd'hui, telles quelles : mêmes clés, mêmes réglages. Les tickets suivants les remplacent une à
-  // une (ce test suit). Les sous-collections passent en emblèmes (ticket 03 : scripts/collection-emblemes.test.cjs).
+  // une (ce test suit) : les sous-collections en emblèmes au ticket 03 (scripts/collection-emblemes.test.cjs), la grille
+  // au ticket 05 (scripts/collection-grille.test.cjs).
   const remplacees = ['sous_collections']
-  for (const key of modele.order.slice(1).filter((k) => !remplacees.includes(k))) assert.deepEqual(modele.sections[key], defaut.sections[key], key)
+  for (const key of modele.order.slice(1).filter((k) => k in defaut.sections && !remplacees.includes(k))) assert.deepEqual(modele.sections[key], defaut.sections[key], key)
 })
 
 test('la section de la page : une marque cachée, sans réglage ni préréglage, un nom de schéma que Shopify accepte', { skip: SKIP }, async () => {
