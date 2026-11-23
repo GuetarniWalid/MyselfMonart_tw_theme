@@ -580,7 +580,8 @@ function pageDuScript({ search = '?view=refonte' } = {}) {
     customElements: { get: (name) => registry.get(name), define: (name, cls) => registry.set(name, cls) },
     requestAnimationFrame: (fn) => fn(),
     scrollY: 0,
-    scrollTo() {},
+    // Un défilement fait par le script : noté avec les évènements, pour leur ordre.
+    scrollTo(...args) { events.push({ type: 'scrollTo', args }) },
     location: { pathname: '/collections/tableaux-nature-sauvage', search },
     history: { replaceState() {} },
     fetch: async (url) => { requests.push(url); return { text: async () => reponse } },
@@ -642,6 +643,21 @@ test('<infinite-scroll> : chaque lot arrivé s’annonce sur document (mma:colle
   await haut.fire(true)
   await attendre()
   assert.deepEqual({ ...q.events.find((e) => e.type === 'mma:collection-lot').detail }, { cards: 24, direction: 'up' })
+})
+
+/* Arrivé sur ?page=3 (Google, ou Retour depuis une fiche : l'adresse suit la page qu'on regarde), on remonte : la page 2
+   se pose au-dessus et le script fait descendre la page d'autant, pour garder la vue. Ce saut s'annonce juste avant
+   (mma:saut-voulu) : sur la nouvelle page collection, l'en-tête qui suit le doigt (assets/tw-header.js, ticket 07) ne
+   le prend pas pour un geste et ne part pas d'un coup ; ailleurs, personne ne l'écoute. */
+test('<infinite-scroll> : un lot posé au-dessus annonce le saut qui garde la vue, avant de le faire ; l’en-tête reste', async () => {
+  const q = pageDuScript({ search: '?view=refonte&page=3' })
+  q.monter('infinite-scroll', { 'data-pages': '14', 'data-page': '3', 'data-section-id': 'template--1__grille', 'data-marge': '700' }, [new q.El('ul')])
+  q.repondre({ page: 2, cartes: 24 })
+  const haut = q.observers.find((o) => o.targets[0] && o.targets[0].className === 'elem-top')
+  await haut.fire(true)
+  await attendre()
+  const sauts = q.events.filter((e) => e.type === 'mma:saut-voulu' || e.type === 'scrollTo').map((e) => (e.type === 'scrollTo' ? 'scrollTo' : `${e.type} ${e.detail.entete}`))
+  assert.deepEqual(sauts, ['mma:saut-voulu reste', 'scrollTo'])
 })
 
 test('<infinite-scroll> retiré de la page pendant sa demande (un filtre a remplacé la grille) : son lot ne se pose ni ne s’annonce', async () => {

@@ -104,10 +104,10 @@
   const ETAT_PANNEAU = 'filtresPanneau';
 
   /* Un défilement d'un coup (« instant » : un navigateur plus ancien ne le connaît pas). L'en-tête qui suit le doigt
-     (assets/collection-entete.js, ticket 07) l'apprend juste avant : ce saut n'est pas un geste du doigt. entete :
+     (assets/tw-header.js, ticket 07) l'apprend juste avant : ce saut n'est pas un geste du doigt. modeEntete :
      'reste' (l'en-tête ne bouge pas) ou 'revient' (il revient en entier). */
-  function defiler(top, entete) {
-    document.dispatchEvent(new CustomEvent('mma:saut-voulu', { detail: { entete } }));
+  function defiler(top, modeEntete) {
+    document.dispatchEvent(new CustomEvent('mma:saut-voulu', { detail: { entete: modeEntete } }));
     try {
       window.scrollTo({ top, behavior: 'instant' });
     } catch (erreur) {
@@ -685,13 +685,13 @@
       });
     }
 
-    // La hauteur où la ligne se colle (--barre-top, que pose assets/collection-entete.js).
+    // La hauteur où la ligne se colle (--barre-top, que pose l'en-tête, assets/tw-header.js).
     hautCollee() {
       return parseFloat(window.getComputedStyle(this).top) || 0;
     }
 
-    // La hauteur de l'en-tête entier (--tete-h, que pose assets/collection-entete.js) ; sans elle, la hauteur où la
-    // ligne se colle.
+    // La hauteur de l'en-tête entier (--tete-h, qu'il pose lui-même, assets/tw-header.js) ; sans elle, la hauteur où
+    // la ligne se colle.
     hauteurEntete() {
       const hauteur = parseFloat(window.getComputedStyle(document.documentElement).getPropertyValue('--tete-h'));
       return Number.isFinite(hauteur) ? hauteur : this.hautCollee();

@@ -7,8 +7,7 @@
   police dès le premier affichage. Le repère est la section, jamais le nom du modèle : la bascule sera un échange de
   modèle. Toute autre page de collection rend exactement le même HTML qu'avant (scripts/collection-refonte.test.cjs).
   Sur cette page, pas de tiroir des filtres : sa ligne des filtres le remplace (ticket 06,
-  snippets/collection-filtres.liquid). Et l'en-tête y suit le doigt : <head> charge aussi son script
-  (assets/collection-entete.js, ticket 07).
+  snippets/collection-filtres.liquid).
 {%- endcomment -%}
 {%- liquid
   assign refonte_page = false
@@ -22,7 +21,6 @@
     {% render 'head-base' %}
     {{ content_for_header }}{% if refonte_page %}
     {{ 'collection-refonte.css' | asset_url | stylesheet_tag }}
-    <script src="{{ 'collection-entete.js' | asset_url }}" defer="defer"></script>
     {% render 'collection-refonte-police' %}{% endif %}
 
     <script src="{{ 'collection.js' | asset_url }}" defer="defer"></script>

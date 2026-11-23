@@ -122,9 +122,13 @@ class InfiniteScroll extends HTMLElement {
     });
   }
 
+  /* Un lot posé au-dessus (on remonte depuis ?page=N) : la page descend d'autant, pour garder la vue. Ce saut
+     s'annonce juste avant, sur document (mma:saut-voulu) : sur la nouvelle page collection, l'en-tête qui suit le doigt
+     (assets/tw-header.js, ticket 07) ne le prend pas pour un geste ; ailleurs, personne ne l'écoute. */
   keepSameScrollPosition(node) {
     const scrollPosition = window.scrollY;
     requestAnimationFrame(() => {
+      document.dispatchEvent(new CustomEvent('mma:saut-voulu', { detail: { entete: 'reste' } }));
       this.before(node);
       const heightNode = node.getBoundingClientRect().height;
       window.scrollTo(0, scrollPosition + heightNode);

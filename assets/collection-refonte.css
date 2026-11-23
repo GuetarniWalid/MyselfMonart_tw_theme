@@ -2275,21 +2275,24 @@
 
 /* === L'en-tête qui suit le doigt (ticket 07) : début === */
 
-/* L'en-tête du site (sections/tw-header.liquid) suit le doigt sur cette page : assets/collection-entete.js le déplace à
-   chaque image (transform), sans la transition de ses classes, qu'il retire lui-même. Sur une couche à part, le
-   déplacement ne repeint rien. */
+/* L'en-tête du site (sections/tw-header.liquid) suit le doigt sur cette page : son script (assets/tw-header.js,
+   EnteteQuiSuit) le déplace à chaque image (transform), sans la transition de ses classes, qu'il retire lui-même. Sur
+   une couche à part, le déplacement ne repeint rien. */
 :root[data-refonte-page] #shopify-section-tw-header {
   will-change: transform;
 }
 
-/* Le focus au clavier ne se cache jamais sous l'en-tête et la ligne des filtres : la hauteur de l'en-tête, mesurée par
-   le script (--tete-h), et celle de la ligne, 56 px (68 px sur ordinateur). */
-:root[data-refonte-page] {
-  scroll-padding-top: calc(var(--tete-h, 0px) + 56px);
+/* Le focus au clavier ne se cache jamais sous l'en-tête et la ligne des filtres : ce qui prend le focus dans la page,
+   hors de la ligne elle-même, s'arrête sous eux (la hauteur de l'en-tête, --tete-h, que mesure le script, puis la
+   ligne : 56 px, 68 px sur ordinateur). Une marge sur ces éléments plutôt qu'un scroll-padding-top sur la page : avec
+   lui, Maj+Tab vers un bouton de la ligne collée, déjà dans l'écran, faisait remonter la page de 450 px (relevé le
+   23/11/2026 à 390 et 1280 px). */
+:root[data-refonte-page] #MainContent :is(a[href], button, input, select, textarea, summary, [tabindex]):not(#barre *) {
+  scroll-margin-top: calc(var(--tete-h, 0px) + 56px);
 }
 @media (min-width: 900px) {
-  :root[data-refonte-page] {
-    scroll-padding-top: calc(var(--tete-h, 0px) + 68px);
+  :root[data-refonte-page] #MainContent :is(a[href], button, input, select, textarea, summary, [tabindex]):not(#barre *) {
+    scroll-margin-top: calc(var(--tete-h, 0px) + 68px);
   }
 }
 

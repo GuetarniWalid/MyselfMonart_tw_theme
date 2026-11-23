@@ -1,3 +1,185 @@
+/*
+ * L'en-tête qui suit le doigt, sur la nouvelle page collection (ticket 07 de .scratch/collection-design)
+ * ----------------------------------------------------------------------------------------------------------------
+ * Un mode de <sticky-header> (plus bas), pris quand <html> porte data-refonte-page (layout/collection.liquid, qui
+ * reconnaît la page à sa section). Partout ailleurs, l'en-tête garde son mode de toujours (onScroll : il se cache et
+ * revient par ses classes, à des seuils, et se cache en bas de page).
+ * - L'en-tête part quand on descend et revient quand on remonte, au rythme du doigt : son décalage (0 : il est là ;
+ *   sa hauteur : il est parti) augmente de ce qu'on descend et diminue de ce qu'on remonte, à chaque image, posé en
+ *   transform: translateY(), sans transition. Il ne part pas tant que le bandeau d'annonce, au-dessus, se voit.
+ * - Sa hauteur, mesurée (et remesurée quand elle change), va sur :root : --tete-h (ce qui prend le focus s'arrête
+ *   sous l'en-tête et la ligne, assets/collection-refonte.css).
+ * - La ligne des filtres (#barre, ticket 06) se colle juste dessous : --barre-top = hauteur − décalage, puis en haut
+ *   de l'écran quand il est parti. Elle porte la classe « collee » quand elle est collée à cette place : son ancre
+ *   (#ancre-barre) est passée au-dessus, et la fin de sa section (la grille) ne l'emporte pas encore.
+ * - Quand l'en-tête part (plus de 2 px), ses menus se ferment, comme hide() ailleurs, et le menu ouvert de la ligne
+ *   (ordinateur) aussi : fermerMenu(), le focus qui était dans la ligne revenant à son bouton.
+ * - Un script de la page qui la fait défiler lui-même l'annonce juste avant, sur document : mma:saut-voulu,
+ *   { entete: 'reste' | 'revient' } (assets/collection-filtres.js, <infinite-scroll> d'assets/collection.js). Ce saut
+ *   ne compte pas comme un geste du doigt : l'en-tête reste où il est, ou revient en entier.
+ * - preventHeaderReveal reste respecté : l'en-tête ne revient pas pendant la remontée en cours (33 ms sans remonter
+ *   suffisent, comme onScroll). Il revient à l'ouverture de la recherche (reveal()) et quand le focus entre dedans : le
+ *   clavier ne va jamais sur un lien caché.
+ * - Un seul écouteur de défilement, passif. Chaque image (requestAnimationFrame) lit la mise en page, puis écrit. Le
+ *   rebond de Safari, au-delà du haut ou du bas de la page, ne compte pas.
+ * Le calcul d'une image est pur, testé sous Node : scripts/tw-header.test.cjs.
+ */
+class EnteteQuiSuit {
+  /* Une image. avant : ce que l'image d'avant a posé, { decalage, y } : le décalage, de 0 (l'en-tête est là) à sa
+     hauteur (il est parti), et la position du défilement qu'elle a lue.
+     lu : ce que cette image vient de lire, { y, max, hauteur, bandeau, saut, retenu, ancre, fin } : window.scrollY ;
+     le défilement le plus bas (scrollHeight − innerHeight) ; la hauteur de l'en-tête ; le bas du bandeau d'annonce,
+     dans la page ; un saut voulu (null, 'reste' ou 'revient') ; retenu, après preventHeaderReveal ; et, dans l'écran,
+     le haut de l'ancre de la ligne et sa fin, la plus haute place où elle se colle avant que le bas de sa section ne
+     l'emporte (null sans ligne).
+     Rend { decalage, y, haut, collee, fermer } : le nouveau décalage, la position gardée, la hauteur où la ligne se
+     colle, la ligne collée à cette place ou non, et s'il faut fermer les menus. */
+  static calculerImage(avant, lu) {
+    // Au-delà de ce décalage, l'en-tête est parti : les menus se ferment.
+    const PARTI = 2;
+    // Le rebond de Safari : au-delà du haut ou du bas de la page, le défilement compte pour 0.
+    const y = Math.min(Math.max(0, lu.y), Math.max(0, lu.max));
+    let voulu;
+    if (lu.saut === 'revient') voulu = 0;
+    else if (lu.saut === 'reste') voulu = avant.decalage;
+    else voulu = avant.decalage + (lu.retenu ? Math.max(0, y - avant.y) : y - avant.y);
+    // Borné entre 0 et sa hauteur ; et jamais plus loin que ce dont il a dépassé le bas du bandeau d'annonce : tant que
+    // le bandeau se voit, l'en-tête reste, puis il part avec la page.
+    const decalage = Math.min(Math.max(voulu, 0), lu.hauteur, Math.max(0, y - lu.bandeau));
+    const haut = lu.hauteur - decalage;
+    // Collée : son ancre est passée au-dessus de la hauteur où elle se colle, et le bas de sa section l'y laisse.
+    const collee = lu.ancre != null && lu.ancre < haut - 0.5 && lu.fin >= haut - 0.5;
+    const fermer = !lu.saut && y !== avant.y && decalage > PARTI;
+    return { decalage, y, haut, collee, fermer };
+  }
+
+  constructor(stickyHeader) {
+    this.stickyHeader = stickyHeader;
+    this.header = stickyHeader.header;
+    this.annonce = document.getElementById('shopify-section-tw-announcement-bar');
+    this.etat = { decalage: 0, y: Math.max(0, window.scrollY) };
+    this.hauteur = 0;
+    this.remesurer = true;
+    this.saut = null;
+    this.retenu = false;
+    this.retenuJusqua = 0;
+    this.prevue = 0;
+    // Ce qui est posé, pour n'écrire que ce qui change.
+    this.pose = { hauteur: null, transform: '', barre: null, haut: null };
+
+    // L'autre mode le fait glisser par la transition de ses classes ; ici, il suit chaque image.
+    this.header.style.transition = 'none';
+    window.addEventListener('scroll', this.planifier, { passive: true });
+    window.addEventListener('resize', this.remesurerPuisPlanifier);
+    if ('ResizeObserver' in window) new ResizeObserver(this.remesurerPuisPlanifier).observe(this.header);
+    document.addEventListener('mma:saut-voulu', (e) => {
+      this.saut = e.detail && e.detail.entete === 'revient' ? 'revient' : 'reste';
+      this.planifier();
+    });
+    stickyHeader.addEventListener('preventHeaderReveal', () => {
+      this.retenu = true;
+      this.retenuJusqua = 0;
+    });
+    this.header.addEventListener('focusin', () => this.revenir());
+    this.planifier();
+  }
+
+  /* L'en-tête revient en entier : la recherche s'ouvre (reveal() de <sticky-header>), ou le focus entre dedans (le
+     navigateur a déjà fait défiler la page vers lui : le mode d'ailleurs le laissait caché, le focus sur un lien
+     invisible). */
+  revenir() {
+    this.saut = 'revient';
+    this.planifier();
+  }
+
+  planifier = () => {
+    if (!this.prevue) this.prevue = window.requestAnimationFrame(this.poserImage);
+  };
+
+  remesurerPuisPlanifier = () => {
+    this.remesurer = true;
+    this.planifier();
+  };
+
+  poserImage = (temps) => {
+    this.prevue = 0;
+    if (this.retenu && this.retenuJusqua && temps > this.retenuJusqua) {
+      this.retenu = false;
+      this.retenuJusqua = 0;
+    }
+
+    // Lire.
+    if (this.remesurer) {
+      this.hauteur = this.header.getBoundingClientRect().height;
+      this.remesurer = false;
+    }
+    const barre = document.getElementById('barre');
+    const ancre = barre && document.getElementById('ancre-barre');
+    const y = window.scrollY;
+    // Un bandeau caché ne retient rien.
+    const bandeau = this.annonce ? this.annonce.getBoundingClientRect() : null;
+    const lu = {
+      y,
+      max: document.documentElement.scrollHeight - window.innerHeight,
+      hauteur: this.hauteur,
+      bandeau: bandeau && bandeau.height ? bandeau.bottom + y : 0,
+      saut: this.saut,
+      retenu: this.retenu,
+      ancre: ancre ? ancre.getBoundingClientRect().top : null,
+      fin: ancre ? this.finDeLigne(barre) : null,
+    };
+    this.saut = null;
+    const suite = EnteteQuiSuit.calculerImage(this.etat, lu);
+    // preventHeaderReveal tient tant qu'on remonte, et 33 ms après.
+    if (this.retenu && suite.y < this.etat.y) this.retenuJusqua = temps + 33;
+
+    // Écrire.
+    if (this.hauteur !== this.pose.hauteur) {
+      document.documentElement.style.setProperty('--tete-h', `${this.hauteur}px`);
+      this.pose.hauteur = this.hauteur;
+    }
+    const decalage = this.auPixel(suite.decalage);
+    const transform = decalage ? `translateY(${-decalage}px)` : '';
+    if (transform !== this.pose.transform) {
+      this.header.style.transform = transform;
+      this.pose.transform = transform;
+    }
+    if (barre) {
+      const haut = this.auPixel(suite.haut);
+      if (barre !== this.pose.barre || haut !== this.pose.haut) {
+        barre.style.setProperty('--barre-top', `${haut}px`);
+        this.pose.barre = barre;
+        this.pose.haut = haut;
+      }
+      barre.classList.toggle('collee', suite.collee);
+    }
+    if (suite.fermer) this.fermerLesMenus(barre);
+    this.etat = { decalage: suite.decalage, y: suite.y };
+  };
+
+  // La fin de la ligne, dans l'écran : la plus haute place où elle se colle avant que le bas de sa section (la grille,
+  // où seulement elle se colle) ne l'emporte avec la dernière rangée.
+  finDeLigne(barre) {
+    const section = barre.parentElement;
+    const style = window.getComputedStyle(section);
+    return section.getBoundingClientRect().bottom - parseFloat(style.paddingBottom) - parseFloat(style.borderBottomWidth) - barre.offsetHeight;
+  }
+
+  // L'en-tête part : ses menus se ferment (comme hide() ailleurs), et celui de la ligne des filtres ; le focus qui
+  // était dans la ligne revient au bouton du menu.
+  fermerLesMenus(barre) {
+    this.stickyHeader.closeDesktopDropdown();
+    this.stickyHeader.closeMobileMenu();
+    if (barre && typeof barre.fermerMenu === 'function') barre.fermerMenu(barre.contains(document.activeElement));
+  }
+
+  // Au pixel de l'écran : l'en-tête et la ligne restent nets.
+  auPixel(valeur) {
+    const ratio = window.devicePixelRatio || 1;
+    return Math.round(valeur * ratio) / ratio;
+  }
+}
+
 class StickyHeader extends HTMLElement {
   constructor() {
     super();
@@ -412,9 +594,11 @@ class StickyHeader extends HTMLElement {
     });
     this.hideHeaderOnScrollUp = () => (this.preventReveal = true);
     this.addEventListener('preventHeaderReveal', this.hideHeaderOnScrollUp);
-    // Sur la nouvelle page collection (<html data-refonte-page>, layout/collection.liquid), l'en-tête suit le doigt :
-    // assets/collection-entete.js le déplace (ticket 07). Partout ailleurs, il se cache et revient par ses classes.
-    if (!document.documentElement.hasAttribute('data-refonte-page')) {
+    // Sur la nouvelle page collection (<html data-refonte-page>, layout/collection.liquid), l'en-tête suit le doigt
+    // (EnteteQuiSuit, en tête de ce fichier ; ticket 07). Partout ailleurs, il se cache et revient par ses classes.
+    if (document.documentElement.hasAttribute('data-refonte-page')) {
+      this.suivi = new EnteteQuiSuit(this);
+    } else {
       window.addEventListener('scroll', this.onScroll, false);
     }
     this.addEventListener('keyup', (evt) => {
@@ -573,6 +757,11 @@ class StickyHeader extends HTMLElement {
   };
 
   reveal = () => {
+    // L'en-tête qui suit le doigt revient en entier (la recherche s'ouvre).
+    if (this.suivi) {
+      this.suivi.revenir();
+      return;
+    }
     if (!this.isHide) return;
     this.header.classList.replace('-translate-y-full', 'translate-y-0');
     this.cartButton?.classList.replace('translate-y-0', 'translate-y-1/2');
