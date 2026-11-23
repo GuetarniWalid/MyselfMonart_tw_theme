@@ -458,14 +458,21 @@
       "collection": {
         "bas": {
           "sujets": {
-            "surtitre": "Andere onderwerpen",
-            "titre_html": "Zin in een ander <b>onderwerp?</b>",
+            "titre": {
+              "sujet_html": "Zin in een ander <b>onderwerp?</b>",
+              "piece_html": "Zin in een andere <b>kamer?</b>",
+              "style_html": "Zin in een andere <b>stijl?</b>",
+              "couleur_html": "Zin in een andere <b>kleur?</b>",
+              "inspiration_html": "Zin in een andere <b>inspiratie?</b>",
+              "personnalise_html": "Zin in een ander <b>idee?</b>",
+              "melange_html": "Zin in iets <b>anders?</b>"
+            },
             "bulle": "Even verderop kijken?"
           },
           "guide": {
             "surtitre": "De gids",
             "titre_html": "Volg <b>de gids.</b>",
-            "texte": "Alles wat je moet weten om goed te kiezen uit onze {{ titre }}: het onderwerp, het formaat, de plek aan de muur.",
+            "texte": "{{ titre }}: alles wat je moet weten om het juiste onderwerp, formaat en plekje aan de muur te kiezen.",
             "lire": "Lees de gids",
             "refermer": "Sluit de gids"
           },

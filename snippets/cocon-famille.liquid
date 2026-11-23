@@ -23,6 +23,9 @@
      taille « bas », image à la demande), sans repère ni libellé : rien que les <li>, que sections/collection-sujets.liquid
      pose dans sa liste (« Envie d'un autre sujet ? »). Jamais la jumelle : sur cette page, elle est dans l'interrupteur
      de l'entrée (sections/collection-refonte.liquid). Sans sœur, rien. Tests : scripts/collection-bas.test.cjs.
+   - 'rayon' : ce que sont ces mêmes sœurs, pour que la section les nomme : leur rayon (sujet, piece, style, couleur…)
+     quand elles l'ont toutes en commun, « melange » sinon, rien sans sœur. Sous une racine, c'est le rayon de la page ;
+     plus bas, les filles d'une même mère peuvent mêler les rayons (sous Tableau Pop Art, un sujet et une inspiration).
 {%- endcomment -%}
 {%- liquid
   assign cf_noeuds = shop.metafields.cocon.plan.value.noeuds
@@ -31,6 +34,11 @@
   if mode == 'emblemes'
     assign cf_emblemes = true
   endif
+  assign cf_mode_rayon = false
+  if mode == 'rayon'
+    assign cf_mode_rayon = true
+  endif
+  assign cf_rayon_soeurs = ''
 
   # La page dans le plan, par son handle, ou par sa collection hors français (snippets/cocon-noeud.liquid).
   capture cf_page
@@ -86,6 +94,12 @@
         {%- if cf_emblemes -%}
           {%- render 'collection-embleme', cible: cf_col, rang: cf_rang, taille: 'bas', tout_de_suite: false -%}
           {%- assign cf_rang = cf_rang | plus: 1 -%}
+        {%- elsif cf_mode_rayon -%}
+          {%- if cf_rayon_soeurs == '' -%}
+            {%- assign cf_rayon_soeurs = cf_n.rayon -%}
+          {%- elsif cf_rayon_soeurs != cf_n.rayon -%}
+            {%- assign cf_rayon_soeurs = 'melange' -%}
+          {%- endif -%}
         {%- else -%}
         <li class="shrink-0"><a href="{{ cf_col.url }}" class="pastille-collection">{{ cf_col.title | escape }}</a></li>
         {%- endif -%}
@@ -104,6 +118,8 @@
 {%- endcapture -%}
 {%- if cf_emblemes -%}
   {{- cf_soeurs -}}
+{%- elsif cf_mode_rayon -%}
+  {{- cf_rayon_soeurs -}}
 {%- elsif cf_soeurs != blank or cf_jumelle != blank -%}
   {%- liquid
     # Le libellé des sœurs : « Autres sujets » sous une racine, « Aussi dans Tableau Animaux » plus bas.

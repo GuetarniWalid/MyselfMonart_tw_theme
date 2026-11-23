@@ -321,6 +321,49 @@ test('les autres sujets : le surtitre, le titre, les sœurs en grands emblèmes,
   assert.deepEqual([...html.matchAll(/<(h[1-6])\b/g)].map((m) => m[1]), ['h2'])
 })
 
+test('les autres sujets : le surtitre et le titre disent ce que sont les sœurs, « Dans la même famille » quand elles se mélangent', { skip: SKIP }, async () => {
+  const tous = col('tous-les-tableaux', 'Tous les Tableaux', { count: 890, defaut: true })
+  const popArt = col('tableau-pop-art', 'Tableau Pop Art', { count: 120, parent: tous })
+  const enfant = col('tableau-chambre-enfant', 'Tableau Chambre Enfant', { count: 150, parent: tous })
+  const posters = col('posters-affiches', 'Tous les Posters & Affiches', { count: 680, type: 'poster' })
+  const c = boutique(tous, popArt, enfant, posters,
+    col('tableau-bleue', 'Tableau Bleu', { count: 90, parent: tous }),
+    col('tableau-jaune', 'Tableau Jaune', { count: 40, parent: tous }),
+    col('tableau-salon', 'Tableau Salon', { count: 496, parent: tous }),
+    col('tableau-chambre', 'Tableau Chambre', { count: 200, parent: tous }),
+    col('tableau-abstrait', 'Tableau Abstrait', { count: 150, parent: tous }),
+    col('tableau-zen', 'Tableau Zen', { count: 60, parent: tous }),
+    col('tableau-super-heros', 'Tableau Super-Héros', { count: 30, parent: popArt }),
+    col('tableau-keith-haring', 'Tableau Keith Haring', { count: 12, parent: popArt }),
+    col('tableau-chambre-fille', 'Tableau Chambre Fille', { count: 40, parent: enfant }),
+    col('tableau-chambre-garcon', 'Tableau Chambre Garçon', { count: 35, parent: enfant }),
+    col('tableau-petit-prince', 'Tableau Petit Prince', { count: 15, parent: enfant }),
+    col('horoscope-bebe', 'Poster bébé : Signe Astrologique', { count: 12, type: 'poster', parent: posters }),
+    col('tableau-personnalise-famille', 'Poster Personnalisé Famille', { count: 5, type: 'poster', parent: posters }),
+  )
+  const attendu = {
+    // Sous une racine, les sœurs du même rayon que la page.
+    'tableau-bleue': ['Autres couleurs', 'Envie d’une autre <b>couleur ?</b>', ['tableau-jaune']],
+    'tableau-salon': ['Autres pièces', 'Envie d’une autre <b>pièce ?</b>', ['tableau-chambre']],
+    'tableau-abstrait': ['Autres styles', 'Envie d’un autre <b>style ?</b>', ['tableau-pop-art', 'tableau-zen']],
+    'horoscope-bebe': ['Autres personnalisés', 'Envie d’une autre <b>idée ?</b>', ['tableau-personnalise-famille']],
+    // Plus bas, le rayon des sœurs, pas celui de la page : sous Tableau Pop Art, la sœur de Super-Héros (un sujet) est
+    // une inspiration, celle de Keith Haring un sujet.
+    'tableau-super-heros': ['Autres inspirations', 'Envie d’une autre <b>inspiration ?</b>', ['tableau-keith-haring']],
+    'tableau-keith-haring': ['Autres sujets', 'Envie d’un autre <b>sujet ?</b>', ['tableau-super-heros']],
+    // Des chambres et une inspiration : un titre qui va à toutes.
+    'tableau-chambre-fille': ['Dans la même famille', 'Envie d’un autre <b>univers ?</b>', ['tableau-chambre-garcon', 'tableau-petit-prince']],
+  }
+  for (const [handle, [surtitre, titre, soeurs]] of Object.entries(attendu)) {
+    const html = (await sujets(pageGlobals({ page: c[handle], collections: c }))).trim()
+    const nav = /^<nav class="c-sujets" id="autres-sujets" aria-labelledby="([^"]+)">/.exec(html)
+    assert.ok(nav, `${handle} : le repère`)
+    assert.ok(html.includes(`<p class="c-sujets-surtitre" id="${nav[1]}">${surtitre}</p>`), `${handle} : le surtitre`)
+    assert.ok(html.includes(`<h2 class="c-sujets-titre">${titre}</h2>`), `${handle} : le titre`)
+    assert.deepEqual(liens(html).map(([href]) => href), soeurs.map((h) => `/collections/${h}`), `${handle} : les sœurs`)
+  }
+})
+
 test('les autres sujets : rien sans sœur à montrer (racine, hors du plan, sans plan, jumelle seule)', { skip: SKIP }, async () => {
   const cases = coconCases()
   for (const name of ['une racine', 'hors du plan', 'sans plan']) assert.equal((await sujets(cases[name])).trim(), '', name)
@@ -369,8 +412,8 @@ test('le guide : la carte pêche fermée dit ce qu’elle contient, le bouton s�
   assert.match(resume[1], new RegExp(`<span class="c-guide-surtitre" id="${section[1]}">Le guide</span>`))
   // « le guide. » ne se coupe pas (espace insécable, comme la maquette).
   assert.match(resume[1], /<h2 class="c-guide-titre">Suivez <b>le\u00a0guide\.<\/b><\/h2>/)
-  // Le nom de la collection, en minuscules.
-  assert.match(resume[1], /<span class="c-guide-texte">Tout ce qu’il faut savoir pour bien choisir parmi les tableaux nature\u00a0: le sujet, le format, la place au mur\.<\/span>/)
+  // Le nom de la collection, tel qu'il s'écrit, en tête de la phrase : juste au singulier comme au pluriel.
+  assert.match(resume[1], /<span class="c-guide-texte">Tableaux Nature\u00a0: tout ce qu’il faut savoir pour bien choisir le sujet, le format et la place au mur\.<\/span>/)
   // Le bouton : ses deux libellés, la feuille montre celui qui convient (fermé : « Lire le guide »).
   assert.match(resume[1], /<span class="c-guide-bouton"><span class="c-guide-ouvrir">Lire le guide<\/span><span class="c-guide-fermer">Refermer le guide<\/span><\/span>/)
   // Le voyageur, vu de dos : un décor, caché aux lecteurs d'écran, chargé à la demande.
@@ -379,9 +422,9 @@ test('le guide : la carte pêche fermée dit ce qu’elle contient, le bouton s�
   assert.deepEqual(balises(perso[1], 'img')[0], { src: '//www.myselfmonart.com/cdn/shop/t/25/assets/collection-voyageur.webp?v=1', alt: '', width: '213', height: '560', loading: 'lazy', decoding: 'async' })
   // Aucun h1 : le titre de la carte (h2), puis ceux du guide, les h2 et h3 du métachamp, tels quels.
   assert.deepEqual([...html.matchAll(/<(h[1-6])\b[^>]*>([\s\S]*?)<\/\1>/g)].map((m) => `${m[1]} ${texte(m[2])}`), ['h2 Suivez le guide.', 'h2 Comment choisir votre tableau nature ?', 'h3 Placement, format et finition'])
-  // Un titre de poster, en minuscules, échappé.
+  // Un titre de poster, au singulier, échappé.
   const posters = await guide(coconCases()['Poster & Affiche Nature'])
-  assert.match(posters, /parmi les poster &amp; affiche nature\u00a0:/)
+  assert.match(posters, /<span class="c-guide-texte">Poster &amp; Affiche Nature\u00a0: tout ce qu’il faut savoir/)
 })
 
 test('le guide : rien sans guide, rien après la page 1', { skip: SKIP }, async () => {
@@ -512,7 +555,10 @@ test('l’éditorial, partie « faq-ld » : rien sans questions ni après la pag
 test('les textes du bas de page : sous sections.mma.collection.bas, dans les cinq langues, traduits', { skip: SKIP }, async () => {
   const fr = locales.fr.sections.mma.collection.bas
   const cles = (o, p = '') => Object.entries(o).flatMap(([k, v]) => (typeof v === 'object' ? cles(v, `${p}${k}.`) : [`${p}${k}`])).sort()
-  assert.deepEqual(cles(fr), ['guide.lire', 'guide.refermer', 'guide.surtitre', 'guide.texte', 'guide.titre_html', 'questions.titre_html', 'sujets.bulle', 'sujets.surtitre', 'sujets.titre_html'])
+  // Le titre des autres sujets, un par rayon des sœurs (leur surtitre est celui du bas de page cocon,
+  // sections.sous_collections.famille), et « melange » quand elles se mélangent.
+  const titres = ['couleur', 'inspiration', 'melange', 'personnalise', 'piece', 'style', 'sujet'].map((r) => `sujets.titre.${r}_html`)
+  assert.deepEqual(cles(fr), ['guide.lire', 'guide.refermer', 'guide.surtitre', 'guide.texte', 'guide.titre_html', 'questions.titre_html', 'sujets.bulle', ...titres])
   for (const lang of Object.keys(LANGS)) {
     const t = locales[lang].sections.mma.collection.bas
     assert.deepEqual(cles(t), cles(fr), lang)
@@ -522,9 +568,10 @@ test('les textes du bas de page : sous sections.mma.collection.bas, dans les cin
       if (lang !== 'fr') assert.notEqual(valeur, cle.split('.').reduce((o, k) => o[k], fr), `${lang}.${cle} : resté en français`)
       assert.doesNotMatch(valeur, /made in france|fabriqué en france|hergestellt in frankreich|hecho en francia|gemaakt in frankrijk/i, `${lang}.${cle}`)
     }
-    // Le nom de la collection dans le texte du guide et le titre des questions (en allemand, avec ses capitales).
+    // Le nom de la collection : en tête du texte du guide, tel qu'il s'écrit ; dans le titre des questions (en
+    // minuscules, sauf en allemand, avec ses capitales).
+    assert.ok(t.guide.texte.startsWith('{{ titre }}'), `${lang}.guide.texte`)
     const nom = lang === 'de' ? '{{ titre_exact }}' : '{{ titre }}'
-    assert.ok(t.guide.texte.includes(nom), `${lang}.guide.texte`)
     assert.ok(t.questions.titre_html.includes(`<b>${nom}</b>`), `${lang}.questions.titre_html`)
   }
   // Rendus dans chaque langue : chaque section écrit ses textes, sans clé restée telle quelle.
@@ -534,7 +581,8 @@ test('les textes du bas de page : sous sections.mma.collection.bas, dans les cin
     const t = locales[lang].sections.mma.collection.bas
     const html = (await sujets(vars)) + (await guide(vars)) + (await questions(vars))
     assert.doesNotMatch(html, /sections\.mma\./, lang)
-    for (const morceau of [t.sujets.surtitre, t.sujets.bulle, t.guide.surtitre, t.guide.lire, t.guide.refermer]) assert.ok(html.includes(echappe(morceau)), `${lang} : ${morceau}`)
+    for (const morceau of [locales[lang].sections.sous_collections.famille.autres.sujet, t.sujets.bulle, t.guide.surtitre, t.guide.lire, t.guide.refermer]) assert.ok(html.includes(echappe(morceau)), `${lang} : ${morceau}`)
+    assert.ok(html.includes(`<h2 class="c-sujets-titre">${t.sujets.titre.sujet_html}</h2>`), `${lang} : le titre des autres sujets`)
     assert.ok(html.includes(locales[lang].sections.mma.galerie.questions.help_button), `${lang} : le bouton de la carte ciel`)
     assert.match(html, lang === 'de' ? /<b>Tableaux Nature<\/b><\/h2>/ : /<b>tableaux nature<\/b><\/h2>/, lang)
   }

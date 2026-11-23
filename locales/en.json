@@ -697,14 +697,21 @@
       "collection": {
         "bas": {
           "sujets": {
-            "surtitre": "Other subjects",
-            "titre_html": "Fancy another <b>subject?</b>",
+            "titre": {
+              "sujet_html": "Fancy another <b>subject?</b>",
+              "piece_html": "Fancy another <b>room?</b>",
+              "style_html": "Fancy another <b>style?</b>",
+              "couleur_html": "Fancy another <b>colour?</b>",
+              "inspiration_html": "Fancy another <b>inspiration?</b>",
+              "personnalise_html": "Fancy another <b>idea?</b>",
+              "melange_html": "Fancy something <b>different?</b>"
+            },
             "bulle": "Shall we look next door?"
           },
           "guide": {
             "surtitre": "The guide",
             "titre_html": "Follow <b>the guide.</b>",
-            "texte": "Everything you need to know to choose well among our {{ titre }}: the subject, the size, the spot on the wall.",
+            "texte": "{{ titre }}: everything you need to know to choose the right subject, size and spot on the wall.",
             "lire": "Read the guide",
             "refermer": "Close the guide"
           },

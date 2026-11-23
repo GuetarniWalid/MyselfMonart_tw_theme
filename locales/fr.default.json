@@ -842,14 +842,21 @@
       "collection": {
         "bas": {
           "sujets": {
-            "surtitre": "Autres sujets",
-            "titre_html": "Envie d’un autre <b>sujet ?</b>",
+            "titre": {
+              "sujet_html": "Envie d’un autre <b>sujet ?</b>",
+              "piece_html": "Envie d’une autre <b>pièce ?</b>",
+              "style_html": "Envie d’un autre <b>style ?</b>",
+              "couleur_html": "Envie d’une autre <b>couleur ?</b>",
+              "inspiration_html": "Envie d’une autre <b>inspiration ?</b>",
+              "personnalise_html": "Envie d’une autre <b>idée ?</b>",
+              "melange_html": "Envie d’un autre <b>univers ?</b>"
+            },
             "bulle": "On va voir à côté ?"
           },
           "guide": {
             "surtitre": "Le guide",
             "titre_html": "Suivez <b>le guide.</b>",
-            "texte": "Tout ce qu’il faut savoir pour bien choisir parmi les {{ titre }} : le sujet, le format, la place au mur.",
+            "texte": "{{ titre }} : tout ce qu’il faut savoir pour bien choisir le sujet, le format et la place au mur.",
             "lire": "Lire le guide",
             "refermer": "Refermer le guide"
           },

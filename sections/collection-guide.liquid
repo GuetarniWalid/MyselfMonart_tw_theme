@@ -7,8 +7,8 @@
     snippets/collection-editorial-auto.liquid (partie « guide ») : jetons Trustpilot, liens dans la langue de la page,
     puis « Pour aller plus loin » (articles et pages seulement). Ses h2 et h3 sont ceux du métachamp ; aucun h1.
   - Fermé, le résumé dit ce que la carte contient : le surtitre, « Suivez le guide. » (le titre de la carte, un h2,
-    que le HTML permet dans un résumé), la phrase au nom de la
-    collection (en minuscules, comme le titre des questions ; en allemand, tel qu'il s'écrit), le bouton « Lire le
+    que le HTML permet dans un résumé), la phrase qui s'ouvre sur le nom de la
+    collection, tel qu'il s'écrit (« Tableau Lion : tout ce qu'il faut savoir… », juste au singulier comme au pluriel), le bouton « Lire le
     guide », qui devient « Refermer le guide » (la feuille montre le bon libellé selon l'état du volet). Ouvert, le
     texte dans une carte blanche, sur deux colonnes sur ordinateur.
   - Le voyageur vu de dos, qui avance au défilement : un décor, caché aux lecteurs d'écran, jamais nommé.
@@ -18,17 +18,14 @@
 {%- endcomment -%}
 {%- capture cg_guide -%}{%- render 'collection-editorial-auto', partie: 'guide' -%}{%- endcapture -%}
 {%- if cg_guide != blank -%}
-  {%- liquid
-    assign cg_id = section.id | append: '-surtitre'
-    assign cg_titre = collection.title | downcase
-  -%}
+  {%- assign cg_id = section.id | append: '-surtitre' -%}
   <section class="c-guide" id="guide" aria-labelledby="{{ cg_id }}">
     <div class="c-guide-in">
       <details class="c-guide-carte">
         <summary>
           <span class="c-guide-surtitre" id="{{ cg_id }}">{{ 'sections.mma.collection.bas.guide.surtitre' | t }}</span>
           <h2 class="c-guide-titre">{{ 'sections.mma.collection.bas.guide.titre_html' | t }}</h2>
-          <span class="c-guide-texte">{{ 'sections.mma.collection.bas.guide.texte' | t: titre: cg_titre, titre_exact: collection.title }}</span>
+          <span class="c-guide-texte">{{ 'sections.mma.collection.bas.guide.texte' | t: titre: collection.title }}</span>
           <span class="c-guide-bouton"><span class="c-guide-ouvrir">{{ 'sections.mma.collection.bas.guide.lire' | t }}</span><span class="c-guide-fermer">{{ 'sections.mma.collection.bas.guide.refermer' | t }}</span></span>
           <span class="c-guide-perso" aria-hidden="true"><img src="{{ 'collection-voyageur.webp' | asset_url }}" alt="" width="213" height="560" loading="lazy" decoding="async"></span>
         </summary>

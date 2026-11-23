@@ -456,14 +456,21 @@
       "collection": {
         "bas": {
           "sujets": {
-            "surtitre": "Weitere Motive",
-            "titre_html": "Lust auf ein anderes <b>Motiv?</b>",
+            "titre": {
+              "sujet_html": "Lust auf ein anderes <b>Motiv?</b>",
+              "piece_html": "Lust auf einen anderen <b>Raum?</b>",
+              "style_html": "Lust auf einen anderen <b>Stil?</b>",
+              "couleur_html": "Lust auf eine andere <b>Farbe?</b>",
+              "inspiration_html": "Lust auf eine andere <b>Inspiration?</b>",
+              "personnalise_html": "Lust auf eine andere <b>Idee?</b>",
+              "melange_html": "Lust auf etwas <b>anderes?</b>"
+            },
             "bulle": "Schauen wir mal nebenan?"
           },
           "guide": {
             "surtitre": "Der Ratgeber",
             "titre_html": "Folgen Sie <b>dem Ratgeber.</b>",
-            "texte": "Alles, was Sie wissen müssen, um unter unseren {{ titre_exact }} gut zu wählen: das Motiv, das Format, der Platz an der Wand.",
+            "texte": "{{ titre }}: alles, was Sie wissen müssen, um Motiv, Format und Platz an der Wand richtig zu wählen.",
             "lire": "Ratgeber lesen",
             "refermer": "Ratgeber schließen"
           },

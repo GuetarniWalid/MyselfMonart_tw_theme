@@ -10,19 +10,36 @@
     illustre, il n'est jamais un lien) ; il arrive de la droite et la bulle s'ouvre au défilement, sans « mouvements
     réduits ».
   - Le surtitre nomme le repère de navigation ; le titre de la section est un h2 (aucun h1 : celui de la page est
-    dans l'entrée).
+    dans l'entrée). Tous deux disent ce que sont les sœurs, par leur rayon (cocon-famille, mode « rayon ») : « Autres
+    couleurs », « Envie d'une autre couleur ? » sous une couleur, « Autres pièces » sous une pièce… Le surtitre est le
+    libellé du bas de page cocon d'aujourd'hui (sections.sous_collections.famille.autres). Des sœurs de rayons mêlés
+    (une inspiration parmi des chambres) : « Dans la même famille », « Envie d'un autre univers ? ».
   Sans sœur à montrer, la section n'écrit rien. Styles : bloc « Bas de page (ticket 08) » de
   assets/collection-refonte.css. Textes : sections.mma.collection.bas.sujets. Tests : scripts/collection-bas.test.cjs.
 {%- endcomment -%}
 {%- capture cs_soeurs -%}{%- render 'cocon-famille', mode: 'emblemes' -%}{%- endcapture -%}
 {%- if cs_soeurs != blank -%}
-  {%- assign cs_id = section.id | append: '-surtitre' -%}
+  {%- liquid
+    assign cs_id = section.id | append: '-surtitre'
+    capture cs_rayon
+      render 'cocon-famille', mode: 'rayon'
+    endcapture
+    assign cs_rayon = cs_rayon | strip
+    assign cs_rayons_nommes = 'sujet,piece,style,couleur,inspiration,personnalise' | split: ','
+    if cs_rayons_nommes contains cs_rayon
+      assign cs_surtitre = 'sections.sous_collections.famille.autres.' | append: cs_rayon | t
+    else
+      assign cs_rayon = 'melange'
+      assign cs_surtitre = 'sections.sous_collections.famille.soeurs' | t
+    endif
+    assign cs_cle_titre = 'sections.mma.collection.bas.sujets.titre.' | append: cs_rayon | append: '_html'
+  -%}
   <nav class="c-sujets" id="autres-sujets" aria-labelledby="{{ cs_id }}">
     <div class="c-sujets-in">
       <div class="c-sujets-tete">
         <div>
-          <p class="c-sujets-surtitre" id="{{ cs_id }}">{{ 'sections.mma.collection.bas.sujets.surtitre' | t }}</p>
-          <h2 class="c-sujets-titre">{{ 'sections.mma.collection.bas.sujets.titre_html' | t }}</h2>
+          <p class="c-sujets-surtitre" id="{{ cs_id }}">{{ cs_surtitre }}</p>
+          <h2 class="c-sujets-titre">{{ cs_cle_titre | t }}</h2>
         </div>
         <div class="c-sujets-perso" aria-hidden="true">
           <img src="{{ 'collection-couple.webp' | asset_url }}" alt="" width="248" height="560" loading="lazy" decoding="async">

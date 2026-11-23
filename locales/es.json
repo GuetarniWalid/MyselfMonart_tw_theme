@@ -455,14 +455,21 @@
       "collection": {
         "bas": {
           "sujets": {
-            "surtitre": "Otros temas",
-            "titre_html": "¿Te apetece otro <b>tema?</b>",
+            "titre": {
+              "sujet_html": "¿Te apetece otro <b>tema?</b>",
+              "piece_html": "¿Te apetece otra <b>estancia?</b>",
+              "style_html": "¿Te apetece otro <b>estilo?</b>",
+              "couleur_html": "¿Te apetece otro <b>color?</b>",
+              "inspiration_html": "¿Te apetece otra <b>inspiración?</b>",
+              "personnalise_html": "¿Te apetece otra <b>idea?</b>",
+              "melange_html": "¿Te apetece algo <b>distinto?</b>"
+            },
             "bulle": "¿Vamos a ver al lado?"
           },
           "guide": {
             "surtitre": "La guía",
             "titre_html": "Sigue <b>la guía.</b>",
-            "texte": "Todo lo que hay que saber para elegir bien entre los {{ titre }}: el tema, el formato, el lugar en la pared.",
+            "texte": "{{ titre }}: todo lo que hay que saber para elegir bien el tema, el formato y el lugar en la pared.",
             "lire": "Leer la guía",
             "refermer": "Cerrar la guía"
           },
