@@ -22,7 +22,7 @@ En session, ce dossier se fait avec `.scratch/cocon/dossiers.cjs`.
 
 Chaque texte est un fichier du dépôt, `seo/cocon/textes/<handle>.json`, avec les clés `handle`, `title`, `requete_principale`, `seo_title`, `seo_description`, `intro`, `guide_html`, `faq`, `cocon_links` et `image` (`src`, `alt`).
 - Il reste identique au texte en ligne : une correction faite sur Shopify se reporte dans le fichier.
-- Le dépôt est public : ces fichiers ne contiennent ni ventes ni chiffres de la Search Console. Le dossier reste hors du dépôt.
+- Le dépôt est public : ces fichiers ne contiennent ni ventes ni chiffres de la Search Console. Le dossier de la collection (§ 1), qui en contient, reste hors du dépôt.
 
 | Champ | Format | Contenu |
 |---|---|---|
@@ -81,7 +81,7 @@ Puis une relecture adversariale :
 3. Vérifier, avant de publier :
    - qu'elle a au moins 20 produits : `listCollections` avec `query: "handle:<handle>"`, champ `productsCount` ;
    - qu'elle a ses métachamps : `getCollection`.
-4. `updateCollection` avec `published: true`, puis `node seo/cocon/outils/verifier-en-ligne.cjs seo/cocon/textes/<handle>.json`. Ce script lit la page en ligne et y cherche chaque phrase du texte relu, ce qui attrape une erreur de recopie.
+4. `updateCollection` avec `published: true`, puis `node seo/cocon/outils/verifier-en-ligne.cjs seo/cocon/textes/<handle>.json`. Ce script lit la page en ligne et y cherche chaque phrase du texte relu, ce qui attrape une erreur de recopie. S'il affiche « ? » (sortie 2), Shopify a servi sa page anti-robot : on relance plus tard, sans rien corriger. Un lien « → 429 » du contrôle des textes vient du même frein.
 5. Le serveur fait seul le reste :
    - les traductions, la nuit (`TranslateCollection`) ;
    - `translation.handle` et `meta_object.media`, par ses tâches.

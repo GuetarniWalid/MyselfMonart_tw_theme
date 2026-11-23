@@ -48,7 +48,7 @@ for (const t of nouveaux) {
     const h = (u.match(/^\/collections\/([^/?#]+)/) || [])[1];
     if (h && handlesNouveaux.has(h)) continue;
     const c = statut(u.split("#")[0]);
-    if (c !== "200") pb.push("lien " + u + " → " + c);
+    if (c !== "200") pb.push("lien " + u + " → " + c + (c === "429" ? " (Shopify freine les requêtes : relancer le contrôle dans quelques minutes, le lien n’est pas en cause)" : ""));
   }
   corpus[t.handle] = tout.replace(/<[^>]+>/g, " ").toLowerCase();
   if (pb.length) ko++;
