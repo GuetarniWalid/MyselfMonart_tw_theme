@@ -462,6 +462,18 @@
             "other": "{{ count }} schilderijen",
             "many": "{{ count }} schilderijen"
           }
+        },
+        "entree": {
+          "groupe": "Canvas of posters",
+          "posters": "Posters",
+          "toiles": "Canvas",
+          "lien_jumelle": "{{ format }}: {{ titre }}",
+          "tableaux": {
+            "one": "{{ count }} schilderij",
+            "other": "{{ count }} schilderijen"
+          },
+          "lire_la_suite": "Verder lezen",
+          "reduire": "Minder tonen"
         }
       }
     },

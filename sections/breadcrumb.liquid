@@ -11,6 +11,14 @@
       assign crumb_capsule = true
     endif
   endif
+  # Affichage « complet » (réglage, nouvelle page collection, ticket 02 du dossier .scratch/collection-design) : tous
+  # les liens restent visibles, sur téléphone aussi, dans la liste de la maquette (styles .c-fil dans
+  # assets/collection-refonte.css), sans le bouton « … » ni sa boîte. Le chemin et la liste JSON-LD restent ceux
+  # calculés ici. En « replié », le réglage par défaut, le HTML de toujours.
+  assign crumb_complet = false
+  if section.settings.affichage == 'complet' and crumb_capsule == false
+    assign crumb_complet = true
+  endif
 %}
 {% unless template == 'index' or template == 'cart' or template == 'list-collections' %}
   {%- capture classic_breadcrumb -%}
@@ -299,22 +307,38 @@
     </nav>
   </breadcrumb-popup>
   {%- endcapture -%}
+  {%- liquid
+    # Le chemin en listes, pour la capsule de la fiche 3D et pour le fil complet.
+    assign crumb_names = item_list_element_names | split: '|,|'
+    assign crumb_urls = item_list_element_urls | split: '|,|'
+  -%}
   {%- if crumb_capsule -%}
     {%- liquid
-      assign crumb_names = item_list_element_names | split: '|,|'
-      assign crumb_urls = item_list_element_urls | split: '|,|'
       assign crumb_current = product.metafields.title.short | default: product.title
     -%}
     {%- render 'oeuvre-3d-crumb', names: crumb_names, urls: crumb_urls, current: crumb_current -%}
+  {%- elsif crumb_complet -%}
+    <nav class="c-fil" aria-label="{{ 'sections.mma.breadcrumb_nav' | t }}"><ol>
+      {%- for crumb_name in crumb_names -%}
+        {%- if forloop.last -%}
+          <li aria-current="page">{{ crumb_name | escape }}</li>
+        {%- else -%}
+          <li><a href="{{ crumb_urls[forloop.index0] }}">{{ crumb_name | escape }}</a></li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ol></nav>
   {%- else -%}
     {{ classic_breadcrumb }}
   {%- endif %}
 {% endunless %}
 
-{%- comment -%} Popup containers outside overflow context {%- endcomment -%}
-<div class="breadcrumb-popup-container fixed invisible opacity-0 bg-secondary border border-main-20 rounded-md shadow-lg py-2 z-50 transition-all duration-200 min-w-[200px]">
+{%- comment -%} Popup containers outside overflow context. Les balises « unless » du fil complet sont collées au
+  contenu, et rognent les blancs qui suivent quand la balise suivante les rogne déjà : en « replié », le HTML reste
+  celui d'avant au caractère près, même avec la tonte des blancs de Shopify (scripts/collection-entree.test.cjs).
+{%- endcomment -%}
+{% unless crumb_complet %}<div class="breadcrumb-popup-container fixed invisible opacity-0 bg-secondary border border-main-20 rounded-md shadow-lg py-2 z-50 transition-all duration-200 min-w-[200px]">
   <ul class="breadcrumb-popup-list flex flex-col gap-1"></ul>
-</div>
+</div>{% endunless -%}
 
 {%- assign item_list_element_names = item_list_element_names | split: '|,|' -%}
 {%- assign item_list_element_urls = item_list_element_urls | split: '|,|' -%}
@@ -339,7 +363,7 @@
   }
 </script>
 
-<script src="{{ 'breadcrumb-popup.js' | asset_url }}" defer></script>
+{% unless crumb_complet %}<script src="{{ 'breadcrumb-popup.js' | asset_url }}" defer></script>{% endunless %}
 
 {% schema %}
 {
@@ -354,6 +378,25 @@
       "product"
     ]
   },
+  "settings": [
+    {
+      "type": "select",
+      "id": "affichage",
+      "label": "t:sections.breadcrumb.settings.affichage.label",
+      "info": "t:sections.breadcrumb.settings.affichage.info",
+      "options": [
+        {
+          "value": "replie",
+          "label": "t:sections.breadcrumb.settings.affichage.options.replie"
+        },
+        {
+          "value": "complet",
+          "label": "t:sections.breadcrumb.settings.affichage.options.complet"
+        }
+      ],
+      "default": "replie"
+    }
+  ],
   "presets": [
     {
       "name": "t:sections.breadcrumb.name"

@@ -1,11 +1,106 @@
 {%- comment -%}
-  La nouvelle page collection, en construction (vue ?view=refonte : templates/collection.refonte.json, dossier
-  .scratch/collection-design, ticket 01) : la marque de la page. layout/collection.liquid cherche « data-refonte> »
-  dans la page rendue ; il pose alors data-refonte-page sur <html> et charge la feuille et la police de la page.
-  Le repère est cette section, jamais le nom du modèle : la bascule sera un simple échange de modèle.
-  Rien à régler, rien à ajouter depuis l'éditeur. Le ticket 02 en fait l'entrée de la page ; la marque reste.
+  L'entrée de la nouvelle page collection (vue ?view=refonte : templates/collection.refonte.json, dossier
+  .scratch/collection-design, ticket 02), juste sous le fil d'Ariane complet (sections/breadcrumb.liquid, affichage
+  « complet ») : le titre de la collection, seul h1 de la page, l'interrupteur Posters | Toiles, puis l'intro.
+
+  La marque de la page (ticket 01) : layout/collection.liquid cherche « data-refonte> » dans la page rendue ; il pose
+  alors data-refonte-page sur <html> et charge la feuille et la police de la page. Le repère est cette section, jamais
+  le nom du modèle : la bascule sera un simple échange de modèle.
+
+  - Le titre : le titre traduit de la collection, maigre, son dernier mot en gras (« Tableaux <b>Nature</b> »).
+  - L'interrupteur : le dessin de la bascule des fiches produit (snippets/product-format-toggle.liquid) : deux
+    cellules, Posters à gauche, Toiles à droite, ses icônes Tabler « photo » et « frame ». Elles sont recopiées ici :
+    la bascule des fiches les écrit en dur, et les fiches ne doivent pas bouger d'un caractère.
+    La jumelle se trouve comme dans le bas de page cocon (snippets/cocon-famille.liquid) : le nœud de la page dans le
+    plan des collections (snippets/cocon-noeud.liquid), son jumeau, sa collection publiée (collections[jumeau]) et non
+    vide. L'arbre du nœud (posters ou tableaux) dit quelle cellule est la page : elle est pressée et porte le nombre de
+    tableaux. L'autre est le seul lien de la page vers la jumelle. Les lecteurs d'écran le lisent
+    « Posters : Poster & Affiche Nature » (aria-label, texte de langue) ; Google lit son texte, qui finit par le titre
+    entier de la jumelle (invisible, collé au coin du lien pour ne jamais dépasser de l'écran).
+    Sans jumelle, pas d'interrupteur : le nombre de tableaux s'écrit en petit à côté du titre.
+  - #nombre-haut : le nombre de tableaux, tel que le serveur l'écrit pour la page et ses filtres
+    (collection.products_count) : seul dans l'interrupteur, « 327 tableaux » sans jumelle. La ligne des filtres
+    (ticket 06) le met à jour en le remplaçant par l'élément de même id de la page filtrée, rendue par le serveur,
+    jamais en y écrivant un nombre : le mot et son pluriel suivent.
+  - L'intro : le texte de l'éditorial (snippets/collection-editorial-auto.liquid, partie « intro »), traité comme
+    aujourd'hui : jetons Trustpilot, retours à la ligne, rien après la page 1. Sur téléphone, deux lignes, puis « Lire
+    la suite » au bout de la deuxième, qui déplie le texte (<collection-intro>, assets/collection-intro.js) ; sur
+    ordinateur, le texte entier.
+  Styles : bloc « Entrée (ticket 02) » de assets/collection-refonte.css. Textes : sections.mma.collection.entree.
+  Rien à régler. Tests : scripts/collection-entree.test.cjs.
 {%- endcomment -%}
+{%- capture ce_icone_poster -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/></svg>{%- endcapture -%}
+{%- capture ce_icone_toile -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 7l16 0"/><path d="M4 17l16 0"/><path d="M7 4l0 16"/><path d="M17 4l0 16"/></svg>{%- endcapture -%}
+{%- liquid
+  # Le titre, maigre, son dernier mot en gras.
+  assign ce_titre = collection.title | strip
+  assign ce_dernier = ce_titre | split: ' ' | last
+  assign ce_debut = ce_titre | remove_last: ce_dernier
+
+  # La page dans le plan, puis sa jumelle : le jumeau du nœud, publié et non vide. Une collection pas encore créée
+  # rend un objet vide, dont le compte est une chaîne : plus: 0 en fait un nombre.
+  capture ce_page
+    render 'cocon-noeud'
+  endcapture
+  assign ce_page = ce_page | strip
+  assign ce_noeud = shop.metafields.cocon.plan.value.noeuds | where: 'id', ce_page | first
+  assign ce_jumelle = nil
+  if ce_noeud.jumeau != blank
+    assign ce_col = collections[ce_noeud.jumeau]
+    assign ce_nb = ce_col.all_products_count | plus: 0
+    if ce_col.id != blank and ce_nb > 0
+      assign ce_jumelle = ce_col
+    endif
+  endif
+
+  # Les deux cellules de l'interrupteur : celle de la page et celle de la jumelle, chacune avec son mot et son icône.
+  assign ce_posters = 'sections.mma.collection.entree.posters' | t
+  assign ce_toiles = 'sections.mma.collection.entree.toiles' | t
+  assign ce_page_posters = false
+  if ce_noeud.arbre == 'posters'
+    assign ce_page_posters = true
+    assign ce_mot_page = ce_posters
+    assign ce_icone_page = ce_icone_poster
+    assign ce_mot_jumelle = ce_toiles
+    assign ce_icone_jumelle = ce_icone_toile
+  else
+    assign ce_mot_page = ce_toiles
+    assign ce_icone_page = ce_icone_toile
+    assign ce_mot_jumelle = ce_posters
+    assign ce_icone_jumelle = ce_icone_poster
+  endif
+  assign ce_id = section.id
+
+  # L'intro, sans bande ni titre : son paragraphe, ou rien.
+  capture ce_intro
+    render 'collection-editorial-auto', partie: 'intro', titre: false
+  endcapture
+  assign ce_intro = ce_intro | strip
+-%}
 <div hidden data-refonte></div>
+<section class="c-entree" aria-labelledby="{{ ce_id }}-titre">
+  <div class="c-entree-in">
+    <div class="c-tete{% unless ce_jumelle %} c-tete-seule{% endunless %}">
+      <h1 class="c-titre" id="{{ ce_id }}-titre">{{ ce_debut | escape }}<b>{{ ce_dernier | escape }}</b></h1>
+      {%- if ce_jumelle -%}
+        {%- capture ce_cellule_page -%}<span aria-current="page">{{ ce_icone_page }}<span>{{ ce_mot_page }}</span> <span class="nb" id="nombre-haut">{{ collection.products_count }}</span></span>{%- endcapture -%}
+        {%- capture ce_cellule_jumelle -%}<a href="{{ ce_jumelle.url }}" aria-label="{{ 'sections.mma.collection.entree.lien_jumelle' | t: format: ce_mot_jumelle, titre: ce_jumelle.title }}">{{ ce_icone_jumelle }}<span>{{ ce_mot_jumelle }}</span> <span class="sr-only left-0 top-0">{{ ce_jumelle.title | escape }}</span></a>{%- endcapture -%}
+        <div class="c-bascule" role="group" aria-label="{{ 'sections.mma.collection.entree.groupe' | t }}">
+          {%- if ce_page_posters -%}{{ ce_cellule_page }}{{ ce_cellule_jumelle }}{%- else -%}{{ ce_cellule_jumelle }}{{ ce_cellule_page }}{%- endif -%}
+        </div>
+      {%- else -%}
+        <p class="c-nombre" id="nombre-haut">{{ 'sections.mma.collection.entree.tableaux' | t: count: collection.products_count }}</p>
+      {%- endif -%}
+    </div>
+    {%- if ce_intro != blank -%}
+      <collection-intro class="c-intro replie" id="{{ ce_id }}-intro">
+        {{ ce_intro }}
+        <button type="button" class="c-intro-plus" aria-expanded="false" aria-controls="{{ ce_id }}-intro"><span class="c-intro-lire">{{ 'sections.mma.collection.entree.lire_la_suite' | t }}</span><span class="c-intro-reduire">{{ 'sections.mma.collection.entree.reduire' | t }}</span></button>
+      </collection-intro>
+      <script src="{{ 'collection-intro.js' | asset_url }}" defer></script>
+    {%- endif -%}
+  </div>
+</section>
 
 {% schema %}
 {

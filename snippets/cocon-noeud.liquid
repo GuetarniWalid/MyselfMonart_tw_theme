@@ -1,0 +1,37 @@
+{%- comment -%}
+  cocon-noeud — la page de collection dans le plan des collections du cocon (champ méta de la boutique cocon.plan, écrit
+  par le serveur : { seuil, noeuds: [{ id, titre, arbre, parent, rayon, decision, jumeau }] }). Rend l'identifiant de
+  son nœud, c'est-à-dire le handle français de la collection, ou rien si elle n'est pas dans le plan (papiers peints,
+  kit) ou sans plan.
+  Le plan parle français. Hors français, collection.handle est le handle traduit (sur /en : animal-art-prints pour
+  tableau-animaux) : la page se retrouve alors par l'identifiant de sa collection, car collections[handle français]
+  répond dans toutes les langues.
+  Utilisé par snippets/cocon-famille.liquid (le bas de page : sœurs et jumelle) et sections/collection-refonte.liquid
+  (l'interrupteur Posters | Toiles de la nouvelle page collection).
+
+  Usage :
+    capture cf_page
+      render 'cocon-noeud'
+    endcapture
+    assign cf_page = cf_page | strip
+  Le résultat sort sans aucun espace.
+{%- endcomment -%}
+{%- liquid
+  assign cn_noeuds = shop.metafields.cocon.plan.value.noeuds
+  assign cn_page = ''
+  for cn_n in cn_noeuds
+    if cn_n.id == collection.handle
+      assign cn_page = cn_n.id
+      break
+    endif
+  endfor
+  if cn_page == '' and request.locale.primary != true
+    for cn_n in cn_noeuds
+      if collections[cn_n.id].id == collection.id
+        assign cn_page = cn_n.id
+        break
+      endif
+    endfor
+  endif
+  echo cn_page
+-%}

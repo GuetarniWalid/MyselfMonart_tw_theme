@@ -704,3 +704,256 @@
 }
 
 /* === Grille et suite (ticket 05) : fin === */
+
+/* === Entrée (ticket 02) : début === */
+
+/* Le haut de la page, sous l'en-tête : le fil d'Ariane complet (sections/breadcrumb.liquid, affichage « complet »),
+   puis l'entrée (sections/collection-refonte.liquid) : le titre et l'interrupteur Posters | Toiles, l'intro sur deux
+   lignes. Compact, pour que la première rangée de tableaux arrive dans le premier écran du téléphone. Les mesures de
+   la maquette (blocs « 1. L'entrée » et « Version 4 »). */
+
+/* Le fil d'Ariane. Sa section a la largeur bornée et les marges de page-width, et coupe ce qui dépasse : ici elle prend
+   toute la largeur, et le fil se cale sur les gouttières de la page. Il passe à la ligne au besoin, tous ses liens
+   visibles. */
+:root[data-refonte-page] .shopify-section:has(> .c-fil) {
+  max-width: none;
+  padding-inline: 0;
+  overflow: visible;
+}
+:root[data-refonte-page] .c-fil {
+  padding: 10px var(--goutd) 0 var(--gout);
+}
+:root[data-refonte-page] .c-fil ol {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 7px;
+  font: 500 13px/1.35 var(--sans);
+  color: var(--encre-70);
+}
+:root[data-refonte-page] .c-fil li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+/* Un chevron fin avant chaque lien qui suit. */
+:root[data-refonte-page] .c-fil li + li::before {
+  content: "";
+  flex: none;
+  width: 6px;
+  height: 6px;
+  margin-right: 2px;
+  border: solid var(--encre-55);
+  border-width: 1.5px 1.5px 0 0;
+  transform: rotate(45deg);
+}
+:root[data-refonte-page] .c-fil a {
+  padding-block: 3px;
+  color: inherit;
+  text-decoration: none;
+}
+:root[data-refonte-page] .c-fil a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+/* La page, en gras, sans lien. */
+:root[data-refonte-page] .c-fil [aria-current] {
+  color: var(--encre);
+  font-weight: 600;
+}
+
+/* L'entrée : 6 px sous le fil (8 sur ordinateur), les gouttières de la page. */
+:root[data-refonte-page] .c-entree {
+  padding: 6px var(--goutd) 6px var(--gout);
+}
+:root[data-refonte-page] .c-entree-in {
+  max-width: 1240px;
+  margin-inline: auto;
+  display: grid;
+  gap: 6px;
+}
+/* Le titre et l'interrupteur : côte à côte sur ordinateur, l'interrupteur dessous quand la ligne ne suffit pas. */
+:root[data-refonte-page] .c-tete {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 18px;
+}
+/* Sans jumelle, pas d'interrupteur : le nombre de tableaux suit le titre, sur sa ligne de base. */
+:root[data-refonte-page] .c-tete-seule {
+  justify-content: flex-start;
+  align-items: baseline;
+  column-gap: 10px;
+}
+/* Le titre, à taille raisonnable : maigre, son dernier mot en gras. */
+:root[data-refonte-page] .c-titre {
+  min-width: 0;
+  margin: 2px 0 0;
+  font: 300 clamp(31px, 8.6vw, 52px)/1.04 var(--sans);
+  letter-spacing: -0.038em;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+  color: var(--encre);
+}
+:root[data-refonte-page] .c-titre b {
+  font-weight: 700;
+}
+:root[data-refonte-page] .c-nombre {
+  margin: 0;
+  font: 500 13px/1.3 var(--sans);
+  color: var(--encre-55);
+  font-variant-numeric: tabular-nums;
+}
+
+/* L'interrupteur Posters | Toiles, au dessin de la bascule des fiches produit : une piste grise, deux cellules. La
+   cellule de la page, pressée (blanche, cerclée d'encre), porte le nombre de tableaux ; l'autre est le lien vers la
+   jumelle. Des cellules de 38 px dans une piste de 44 px : la taille d'un doigt. La fin du nom du lien, invisible, est
+   collée à son coin (left-0 top-0) : la cellule la contient. */
+:root[data-refonte-page] .c-bascule {
+  display: inline-flex;
+  align-items: stretch;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--encre-06);
+}
+:root[data-refonte-page] .c-bascule > * {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 0 15px 0 13px;
+  border-radius: 999px;
+  font: 600 13.5px/1 var(--sans);
+  color: var(--encre);
+  text-decoration: none;
+  white-space: nowrap;
+}
+:root[data-refonte-page] .c-bascule svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+:root[data-refonte-page] .c-bascule [aria-current] {
+  background: var(--blanc);
+  box-shadow: 0 0 0 1px var(--encre), 0 4px 12px var(--encre-12);
+}
+:root[data-refonte-page] .c-bascule a:hover {
+  background: var(--encre-12);
+}
+:root[data-refonte-page] .c-bascule a:active {
+  background: var(--encre-16);
+}
+:root[data-refonte-page] .c-bascule .nb {
+  margin-left: 1px;
+  font-weight: 500;
+  color: var(--encre-55);
+  font-variant-numeric: tabular-nums;
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-refonte-page] .c-bascule > * {
+    transition: background-color 0.2s ease;
+  }
+}
+
+/* L'intro. Sur téléphone, deux lignes, puis « Lire la suite » posé au bout de la deuxième, sur un fondu blanc : il ne
+   prend aucune ligne de plus. Dépliée, le texte entier, et « Réduire » dessous. Le bouton porte ses deux libellés ;
+   l'état de l'intro choisit celui qui se voit. Il se cache quand le texte tient en deux lignes
+   (assets/collection-intro.js). */
+:root[data-refonte-page] .c-intro {
+  position: relative;
+  display: block;
+  margin-top: 4px;
+}
+:root[data-refonte-page] .c-intro p {
+  max-width: 60em;
+  margin: 0;
+  font: 400 15px/1.45 var(--sans);
+  color: var(--encre-70);
+}
+:root[data-refonte-page] .c-intro p a {
+  color: var(--encre);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+:root[data-refonte-page] .c-intro.replie p {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+:root[data-refonte-page] .c-intro-plus {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 0 0 0 56px;
+  border: 0;
+  background: linear-gradient(90deg, transparent, var(--blanc) 50px);
+  font: 600 15px/1.45 var(--sans);
+  color: var(--encre);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+:root[data-refonte-page] .c-intro-plus[hidden],
+:root[data-refonte-page] .c-intro.replie .c-intro-reduire,
+:root[data-refonte-page] .c-intro:not(.replie) .c-intro-lire {
+  display: none;
+}
+:root[data-refonte-page] .c-intro:not(.replie) .c-intro-plus {
+  position: static;
+  margin-top: 4px;
+  padding: 0;
+  background: none;
+}
+
+/* Au clavier, un contour à l'encre. */
+:root[data-refonte-page] :is(.c-fil a, .c-intro-plus):focus-visible {
+  outline: 2px solid var(--encre);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+:root[data-refonte-page] .c-bascule a:focus-visible {
+  outline: 2px solid var(--encre);
+  outline-offset: 2px;
+}
+
+/* Ordinateur : plus d'air, le titre à 52 px, l'intro entière, sans bouton. */
+@media (min-width: 900px) {
+  :root[data-refonte-page] .c-fil {
+    padding-top: 22px;
+  }
+  :root[data-refonte-page] .c-entree {
+    padding-block: 8px 10px;
+  }
+  :root[data-refonte-page] .c-entree-in {
+    gap: 8px;
+  }
+  :root[data-refonte-page] .c-titre {
+    font-size: 52px;
+  }
+  :root[data-refonte-page] .c-intro p {
+    font-size: 16px;
+  }
+  :root[data-refonte-page] .c-intro.replie p {
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
+  }
+  :root[data-refonte-page] .c-intro-plus {
+    display: none;
+  }
+}
+
+/* === Entrée (ticket 02) : fin === */

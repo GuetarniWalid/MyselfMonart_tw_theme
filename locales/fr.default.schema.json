@@ -388,6 +388,14 @@
     "breadcrumb": {
       "name": "Breadcrumb",
       "settings": {
+        "affichage": {
+          "label": "Affichage",
+          "info": "« Complet » : tous les liens restent visibles, sur téléphone aussi. Réservé à la nouvelle page collection, qui en porte le style : ailleurs, le fil complet s'afficherait sans mise en forme.",
+          "options": {
+            "replie": "Replié",
+            "complet": "Complet"
+          }
+        },
         "headings": {
           "current_page_color": {
             "content": "Couleur pour la page actuelle",
@@ -1364,6 +1372,14 @@
         "next_image_index": {
           "label": "Numéro de l'image au survol",
           "info": "Entrez quelle image afficher au survol (0 pour désactiver l'effet de survol, 1 pour la première, 2 pour la deuxième, etc.)"
+        },
+        "editorial": {
+          "label": "Titre, intro, guide et questions sous la grille",
+          "info": "Le texte de la collection (champs méta custom.intro, guide, faq). Décoché sur la nouvelle page collection, dont l'entrée porte le titre et l'intro."
+        },
+        "cocon_famille": {
+          "label": "Collections de la même famille en bas de page",
+          "info": "Les autres sujets et la même collection en poster ou en toile. Décoché sur la nouvelle page collection, où l'interrupteur Posters | Toiles mène à la jumelle."
         }
       }
     },

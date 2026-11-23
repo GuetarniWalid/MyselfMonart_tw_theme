@@ -1,0 +1,173 @@
+{%- comment -%}
+  collection-editorial-auto — Éditorial E-E-A-T piloté par METAFIELDS (rollout récup. post Core Update déc. 2025).
+
+  Rendu UNIQUEMENT si collection.metafields.custom.guide est présent (gate dans
+  main-collection-product-grid) → no-op TOTAL sur toute collection non traitée,
+  y compris le pilote tableau-salon (qui possède son propre template dédié).
+  Aucune duplication possible, aucun impact tant qu'aucun metafield n'est écrit.
+
+  Source de vérité = metafields (live, 100% automatisable, rollback = vider le metafield) :
+   - custom.intro (multi_line)   → accroche, SANS H1 (le H1 reste celui de main-collection-banner → 1 seul H1).
+   - custom.guide (multi_line/HTML) → guide profond, replié dans un <details> natif.
+   - custom.faq  (json: [{"q","a"}]) → FAQ accordéon + JSON-LD FAQPage.
+
+  REUSE FIRST (skill shopify-section-dev) : classes .collection-description, pattern
+  <details>/group-open, snippet tw-icon-chevron, custom element <collapsible-tab> (tw-global.js),
+  markup repris à l'identique de collection-editorial.liquid + collapsible-content.liquid.
+  Tailwind only · vars globales · a11y (<details> natifs, focus-visible, motion-reduce) · 1 seul H1 (aucun ici).
+{%- endcomment -%}
+
+{%- liquid
+  assign ed_intro = collection.metafields.custom.intro.value
+  assign ed_guide = collection.metafields.custom.guide.value
+  assign ed_faq = collection.metafields.custom.faq.value
+  assign ed_cocon = collection.metafields.custom.cocon_links.value
+  assign ed_faq_title = collection.title | downcase
+
+  # Note et nombre d'avis Trustpilot : les textes portent les jetons [[TP_SCORE]] / [[TP_COUNT]],
+  # remplacés ici par le réglage global (snippet trustpilot-tokens). Jamais de chiffres en dur.
+  capture ed_intro
+    render 'trustpilot-tokens', text: ed_intro
+  endcapture
+  capture ed_guide
+    render 'trustpilot-tokens', text: ed_guide
+  endcapture
+
+  # Pagination : sur ?page=2, 3… seul le H1 reste. Accroche, guide, cocon et FAQ (+ son JSON-LD)
+  # ne sont émis que sur la page 1 ; sinon chaque page de pagination est une copie de la page 1
+  # et Google peut la préférer (constat GSC oct. 2026 : tableau-cuisine?page=4 devant la page 1).
+  if current_page > 1
+    assign ed_intro = ''
+    assign ed_guide = ''
+    assign ed_faq = ''
+  endif
+-%}
+
+<section class="collection-editorial-auto w-full" aria-label="{{ collection.title | escape }}">
+
+  {%- comment -%} 1) H1 + accroche — l'éditorial PORTE le H1, EN TÊTE du bloc (sous la grille), exactement comme tableau-salon. main-collection-banner masque son propre H1 quand custom.guide existe → 1 seul H1, jamais orphelin en bas via to_place_first. Le snippet ne s'exécute que si custom.guide existe (garde dans main-collection-product-grid), donc le H1 est toujours légitime ici. {%- endcomment -%}
+  <div class="bg-secondary w-full py-10 md:py-14">
+    <div class="max-w-3xl mx-auto px-4 md:px-6 text-center">
+      <h1 class="font-heading font-medium text-[30px] md:text-[42px] lg:text-[50px] leading-[1.1] tracking-[-0.01em] text-main mb-5">{{ collection.title | escape }}</h1>
+      {%- if ed_intro != blank -%}
+        <div class="font-roboto text-base md:text-lg leading-[1.65] text-main-70 max-w-xl mx-auto [&_a]:text-terra [&_a]:underline">
+          <p>{{ ed_intro | newline_to_br }}</p>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- comment -%} 2) Guide profond — replié dans <details> (réutilise .collection-description + tw-icon-chevron). {%- endcomment -%}
+  {%- if ed_guide != blank -%}
+    <div class="bg-main-5 w-full py-8 md:py-12">
+      <div class="max-w-3xl mx-auto px-4 md:px-6">
+        <details class="collection-guide group border-t border-b border-main-10">
+          <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer flex items-center gap-3 py-6 font-heading text-lg md:text-xl text-main outline-none focus-visible:ring-2 focus-visible:ring-terra focus-visible:ring-offset-2 focus-visible:rounded-sm">
+            <span aria-hidden="true" class="flex-shrink-0 text-terra transition-transform duration-300 ease-out motion-reduce:transition-none group-open:rotate-90">
+              {%- render 'tw-icon-chevron', width: 16 -%}
+            </span>
+            <span>{{ 'sections.collection_editorial.read_full_guide' | t }}</span>
+          </summary>
+          <div class="collection-description pb-8 pt-2">
+            {{ ed_guide }}
+          </div>
+        </details>
+        {%- comment -%} Pour aller plus loin : les articles de blog et les pages du champ custom.cocon_links, préservés de
+          l'ancienne description masquée par le banner. Ses liens de collection ne s'affichent plus depuis le 23/11/2026
+          (cocon sémantique, décision de Walid) : la mère est dans le fil d'Ariane, les filles dans les pastilles du haut,
+          les sœurs et la jumelle dans le bas de page (snippets/cocon-famille.liquid), tous tirés du plan. Les afficher
+          ici aussi répétait les mêmes liens, ou menait vers d'autres branches. {%- endcomment -%}
+        {%- liquid
+          assign ed_plus_loin = ''
+          for l in ed_cocon
+            if l.url contains '/collections/'
+              continue
+            endif
+            # Blog, page : l'adresse française garde la langue et le marché de la page.
+            capture l_url
+              render 'localized-links', url: l.url
+            endcapture
+            assign l_label = l.label | escape
+            if ed_plus_loin != ''
+              assign ed_plus_loin = ed_plus_loin | append: ' &middot; '
+            endif
+            assign ed_plus_loin = ed_plus_loin | append: '<a href="' | append: l_url | append: '">' | append: l_label | append: '</a>'
+          endfor
+        -%}
+        {%- if ed_plus_loin != '' -%}
+          <p class="font-roboto text-[15px] leading-[1.7] text-main-70 pt-6 [&_a]:text-terra [&_a]:underline">
+            <strong class="text-main">{{ 'sections.collection_editorial.learn_more' | t }}</strong> {{ ed_plus_loin }}
+          </p>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} 3) FAQ — accordéon repris de collapsible-content.liquid, piloté par le metafield json custom.faq. {%- endcomment -%}
+  {%- if ed_faq != blank and ed_faq.size > 0 -%}
+    <div class="collapsible-content bg-secondary text-main w-full py-10 md:py-14" aria-labelledby="faq-auto-{{ collection.id }}">
+      <div class="max-w-[760px] mx-auto px-6 text-center mb-10 md:mb-16">
+        <p class="font-roboto text-xs font-medium tracking-[0.18em] uppercase text-terra mb-4">FAQ</p>
+        <h2 id="faq-auto-{{ collection.id }}" class="font-heading font-semibold leading-[1.1] tracking-[-0.01em] text-2xl md:text-3xl lg:text-[36px] mb-0">
+          {{ 'sections.collection_editorial.faq_heading' | t: title: ed_faq_title }}
+        </h2>
+      </div>
+      <collapsible-tab>
+        <div class="max-w-[880px] mx-auto px-6">
+          {%- for item in ed_faq -%}
+            {%- if item.q == blank or item.a == blank -%}{%- continue -%}{%- endif -%}
+            {%- capture faq_q -%}{%- render 'trustpilot-tokens', text: item.q -%}{%- endcapture -%}
+            {%- capture faq_a -%}{%- render 'trustpilot-tokens', text: item.a -%}{%- endcapture -%}
+            <details class="accordion group border-t border-main-10 last:border-b last:border-main-10">
+              <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer flex items-center justify-between gap-6 py-6 outline-none focus-visible:ring-2 focus-visible:ring-terra focus-visible:ring-offset-2 focus-visible:rounded-sm">
+                <h3 class="font-heading font-medium leading-[1.3] text-base md:text-lg text-main m-0">
+                  {{ faq_q | escape }}
+                </h3>
+                <span
+                  aria-hidden="true"
+                  class="flex-shrink-0 w-8 h-8 rounded-full bg-main-10 text-main flex items-center justify-center text-[20px] leading-none transition-[background-color,transform] duration-300 ease-out motion-reduce:transition-none group-open:bg-terra group-open:text-secondary group-open:rotate-45">
+                  +
+                </span>
+              </summary>
+              <div class="pb-7 max-w-[760px] cursor-pointer">
+                <div class="font-roboto text-[15px] leading-[1.7] text-main-90 [&>p:not(:last-child)]:mb-3 [&_a]:text-terra [&_a]:underline [&_a:hover]:opacity-80 motion-reduce:[&_a]:transition-none [&_strong]:text-main [&_strong]:font-semibold">
+                  {{ faq_a }}
+                </div>
+              </div>
+            </details>
+          {%- endfor -%}
+        </div>
+      </collapsible-tab>
+      {%- comment -%} Pas d'include local de tw-global.js : il est déjà chargé globalement via head-base
+      (defer → <collapsible-tab> est défini à temps). Un 2e include le ferait tourner 2x sur la page
+      et casserait les images placeholder (replacePlaceholderImages → srcset="null"). {%- endcomment -%}
+    </div>
+
+    {%- comment -%} JSON-LD FAQPage — source unique = le metafield faq (n'émettre que sur de vraies FAQ). {%- endcomment -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {%- assign emitted = 0 -%}
+          {%- for item in ed_faq -%}
+            {%- if item.q == blank or item.a == blank -%}{%- continue -%}{%- endif -%}
+            {%- if emitted > 0 -%},{%- endif -%}
+            {%- capture faq_q -%}{%- render 'trustpilot-tokens', text: item.q -%}{%- endcapture -%}
+            {%- capture faq_a -%}{%- render 'trustpilot-tokens', text: item.a -%}{%- endcapture -%}
+            {
+              "@type": "Question",
+              "name": {{ faq_q | json }},
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": {{ faq_a | strip_html | strip | json }}
+              }
+            }
+            {%- assign emitted = emitted | plus: 1 -%}
+          {%- endfor -%}
+        ]
+      }
+    </script>
+  {%- endif -%}
+
+</section>

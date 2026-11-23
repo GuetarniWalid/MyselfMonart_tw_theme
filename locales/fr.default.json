@@ -846,6 +846,18 @@
             "other": "{{ count }} tableaux",
             "many": "{{ count }} tableaux"
           }
+        },
+        "entree": {
+          "groupe": "Toiles ou posters",
+          "posters": "Posters",
+          "toiles": "Toiles",
+          "lien_jumelle": "{{ format }} : {{ titre }}",
+          "tableaux": {
+            "one": "{{ count }} tableau",
+            "other": "{{ count }} tableaux"
+          },
+          "lire_la_suite": "Lire la suite",
+          "reduire": "Réduire"
         }
       }
     },

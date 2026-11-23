@@ -459,6 +459,18 @@
             "other": "{{ count }} cuadros",
             "many": "{{ count }} cuadros"
           }
+        },
+        "entree": {
+          "groupe": "Lienzos o pósteres",
+          "posters": "Pósteres",
+          "toiles": "Lienzos",
+          "lien_jumelle": "{{ format }}: {{ titre }}",
+          "tableaux": {
+            "one": "{{ count }} cuadro",
+            "other": "{{ count }} cuadros"
+          },
+          "lire_la_suite": "Leer más",
+          "reduire": "Ver menos"
         }
       }
     },

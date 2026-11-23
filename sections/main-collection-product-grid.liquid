@@ -95,13 +95,16 @@
   Éditorial E-E-A-T piloté par metafields (récup. SEO post Core Update déc. 2025).
   GARDE : rendu uniquement si custom.guide est renseigné → no-op total sinon
   (collections non traitées + pilote tableau-salon qui a son propre template).
+  Réglages « editorial » et « cocon_famille », cochés par défaut : la nouvelle page collection (modèle
+  collection.refonte, ticket 02) les décoche, son entrée (sections/collection-refonte.liquid) porte le h1, l'intro et
+  la jumelle. Ainsi le h1 et le lien vers la jumelle n'y sont qu'une fois.
 {%- endcomment -%}
-{%- if collection.metafields.custom.guide != blank -%}
+{%- if section.settings.editorial and collection.metafields.custom.guide != blank -%}
   {% render 'collection-editorial-auto' %}
 {%- endif -%}
 
 {%- comment -%} Cocon : les sœurs et la jumelle de la page, tirées du plan des collections (23/11/2026). {%- endcomment -%}
-{%- render 'cocon-famille' -%}
+{%- if section.settings.cocon_famille -%}{%- render 'cocon-famille' -%}{%- endif -%}
 
 {%- comment -%} Check if filters should be shown for this collection type {%- endcomment -%}
 {% assign collection_type = collection.metafields.custom.type_of_collection | default: 'other' %}
@@ -208,6 +211,20 @@
           }
         ],
         "default": "mt-0"
+      },
+      {
+        "type": "checkbox",
+        "id": "editorial",
+        "label": "t:sections.main-collection-product-grid.settings.editorial.label",
+        "info": "t:sections.main-collection-product-grid.settings.editorial.info",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "cocon_famille",
+        "label": "t:sections.main-collection-product-grid.settings.cocon_famille.label",
+        "info": "t:sections.main-collection-product-grid.settings.cocon_famille.info",
+        "default": true
       }
     ]
   }

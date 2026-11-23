@@ -15,6 +15,17 @@
   <details>/group-open, snippet tw-icon-chevron, custom element <collapsible-tab> (tw-global.js),
   markup repris à l'identique de collection-editorial.liquid + collapsible-content.liquid.
   Tailwind only · vars globales · a11y (<details> natifs, focus-visible, motion-reduce) · 1 seul H1 (aucun ici).
+
+  Paramètres (nouvelle page collection, dossier .scratch/collection-design, ticket 02) :
+   - partie : 'tout' (par défaut) écrit le bloc d'aujourd'hui, en entier. Une seule partie s'écrit sans l'enveloppe
+     <section> : 'intro', le h1 et le paragraphe de l'accroche, sans leur bande, que l'entrée de la nouvelle page
+     (sections/collection-refonte.liquid) pose dans sa mise en page ; 'guide' et 'faq', leur bloc d'aujourd'hui.
+   - titre : faux retire le h1 (vrai par défaut). L'entrée de la nouvelle page écrit le sien : elle demande
+     partie: 'intro', titre: false.
+  Les textes sont traités de même dans tous les cas : jetons Trustpilot, retours à la ligne, rien après la page 1.
+  Sans paramètre, le HTML est celui d'avant au caractère près, même avec la tonte des blancs de Shopify
+  (scripts/collection-entree.test.cjs) : les balises ajoutées pour les parties sont collées au contenu, et rognent les
+  blancs qui suivent quand la balise suivante les rogne déjà.
 {%- endcomment -%}
 
 {%- liquid
@@ -41,21 +52,45 @@
     assign ed_guide = ''
     assign ed_faq = ''
   endif
--%}
 
-<section class="collection-editorial-auto w-full" aria-label="{{ collection.title | escape }}">
+  # Les parties (voir en tête) : une seule partie demandée, les autres restent vides.
+  assign ed_partie = partie | default: 'tout'
+  assign ed_tout = false
+  case ed_partie
+    when 'tout'
+      assign ed_tout = true
+    when 'intro'
+      assign ed_guide = ''
+      assign ed_faq = ''
+    when 'guide'
+      assign ed_faq = ''
+    when 'faq'
+      assign ed_guide = ''
+  endcase
+  assign ed_titre = true
+  if titre == false
+    assign ed_titre = false
+  endif
+-%}
+{%- capture ed_h1 -%}<h1 class="font-heading font-medium text-[30px] md:text-[42px] lg:text-[50px] leading-[1.1] tracking-[-0.01em] text-main mb-5">{{ collection.title | escape }}</h1>{%- endcapture -%}
+{%- capture ed_accroche -%}<p>{{ ed_intro | newline_to_br }}</p>{%- endcapture -%}
+{% if ed_tout %}<section class="collection-editorial-auto w-full" aria-label="{{ collection.title | escape }}">{% endif -%}
 
   {%- comment -%} 1) H1 + accroche — l'éditorial PORTE le H1, EN TÊTE du bloc (sous la grille), exactement comme tableau-salon. main-collection-banner masque son propre H1 quand custom.guide existe → 1 seul H1, jamais orphelin en bas via to_place_first. Le snippet ne s'exécute que si custom.guide existe (garde dans main-collection-product-grid), donc le H1 est toujours légitime ici. {%- endcomment -%}
-  <div class="bg-secondary w-full py-10 md:py-14">
+  {% if ed_tout %}<div class="bg-secondary w-full py-10 md:py-14">
     <div class="max-w-3xl mx-auto px-4 md:px-6 text-center">
-      <h1 class="font-heading font-medium text-[30px] md:text-[42px] lg:text-[50px] leading-[1.1] tracking-[-0.01em] text-main mb-5">{{ collection.title | escape }}</h1>
+      {% if ed_titre %}{{ ed_h1 }}{% endif -%}
       {%- if ed_intro != blank -%}
         <div class="font-roboto text-base md:text-lg leading-[1.65] text-main-70 max-w-xl mx-auto [&_a]:text-terra [&_a]:underline">
-          <p>{{ ed_intro | newline_to_br }}</p>
+          {{ ed_accroche }}
         </div>
       {%- endif -%}
     </div>
-  </div>
+  </div>{% endif -%}
+  {%- if ed_partie == 'intro' -%}
+    {%- if ed_titre -%}{{ ed_h1 }}{%- endif -%}
+    {%- if ed_intro != blank -%}{{ ed_accroche }}{%- endif -%}
+  {%- endif -%}
 
   {%- comment -%} 2) Guide profond — replié dans <details> (réutilise .collection-description + tw-icon-chevron). {%- endcomment -%}
   {%- if ed_guide != blank -%}
@@ -170,4 +205,4 @@
     </script>
   {%- endif -%}
 
-</section>
+{% if ed_tout %}</section>{% endif %}

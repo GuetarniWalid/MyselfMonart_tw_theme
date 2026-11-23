@@ -40,8 +40,11 @@ test('la section de la page : une marque cachée, sans réglage ni préréglage,
   assert.deepEqual(Object.keys(schema).sort(), ['enabled_on', 'limit', 'name'])
   assert.deepEqual(schema.enabled_on, { templates: ['collection'] })
   assert.equal(schema.limit, 1)
-  // Un seul élément, caché : rien ne se voit, rien ne se lit.
-  assert.equal((await renderSectionFile(SECTION, {}, null)).trim(), '<div hidden data-refonte></div>')
+  // La marque : un élément caché, en tête de la section, une seule fois. L'entrée de la page la suit (ticket 02 :
+  // scripts/collection-entree.test.cjs).
+  const html = await renderSectionFile(SECTION, {}, null)
+  assert.match(html, /^\s*<div hidden data-refonte><\/div>/)
+  assert.equal(html.match(/ data-refonte>/g).length, 1)
 })
 
 /* ---------- Le gabarit des pages collection ---------- */

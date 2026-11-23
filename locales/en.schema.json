@@ -388,6 +388,14 @@
     "breadcrumb": {
       "name": "Breadcrumb",
       "settings": {
+        "affichage": {
+          "label": "Display",
+          "info": "“Full”: every link stays visible, on phones too. Only for the new collection page, which carries its style: elsewhere, the full trail would show unstyled.",
+          "options": {
+            "replie": "Collapsed",
+            "complet": "Full"
+          }
+        },
         "headings": {
           "current_page_color": {
             "content": "Color for current page",
@@ -1277,6 +1285,14 @@
         "next_image_index": {
           "label": "Hover image number",
           "info": "Enter which image to show on hover (0 to disable hover effect, 1 for first, 2 for second, etc.)"
+        },
+        "editorial": {
+          "label": "Title, intro, guide and questions below the grid",
+          "info": "The collection's text (custom.intro, guide, faq metafields). Unchecked on the new collection page, whose header carries the title and intro."
+        },
+        "cocon_famille": {
+          "label": "Related collections at the bottom",
+          "info": "Other subjects and the same collection as posters or canvas. Unchecked on the new collection page, where the Posters | Canvas switch leads to the twin."
         }
       }
     },

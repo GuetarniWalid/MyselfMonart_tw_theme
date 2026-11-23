@@ -701,6 +701,18 @@
             "other": "{{ count }} artworks",
             "many": "{{ count }} artworks"
           }
+        },
+        "entree": {
+          "groupe": "Canvas or posters",
+          "posters": "Posters",
+          "toiles": "Canvas",
+          "lien_jumelle": "{{ format }}: {{ titre }}",
+          "tableaux": {
+            "one": "{{ count }} artwork",
+            "other": "{{ count }} artworks"
+          },
+          "lire_la_suite": "Read more",
+          "reduire": "Show less"
         }
       }
     },

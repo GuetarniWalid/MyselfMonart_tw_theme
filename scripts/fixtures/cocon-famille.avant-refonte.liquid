@@ -1,0 +1,139 @@
+{%- comment -%}
+  Bas de page « même famille » du cocon sémantique (décision de Walid du 23/11/2026). Le fil d'Ariane monte vers la
+  mère, les pastilles du haut (sections/sous-collections.liquid) descendent vers les filles ; ce bloc va à côté :
+  - les sœurs : les nœuds du plan qui ont la même mère. Sous une racine (Tous les tableaux, Tous les posters), seulement
+    celles du même rayon : Tableaux Nature mène aux autres sujets, jamais à une couleur ou à une pièce ;
+  - la jumelle : la même collection dans l'autre arbre (champ jumeau du nœud), « Aussi en poster » ou « Aussi en toile ».
+  Il remplace trois blocs qui menaient partout : « Nos autres collections », écrit à la main dans les modèles, la liste
+  de toutes les collections de A à Z dans les filtres, et les liens de collection du « Pour aller plus loin ».
+
+  Le plan vient du serveur, comme pour les pastilles du haut : champ méta de la boutique cocon.plan (json),
+  { seuil, noeuds: [{ id, titre, arbre, parent, rayon, decision, jumeau }] }, où id, parent et jumeau sont des handles
+  français. Une sœur ou la jumelle a sa pastille aux mêmes conditions qu'une fille en haut : sa décision la montre
+  (en_ligne, a_creer, idee), sa collection existe, est publiée (collections[id]) et compte au moins un produit. Sans
+  plan, hors du plan (papiers peints, kit) ou sans rien à montrer, rien n'est rendu.
+
+  Rendu à la fin de sections/main-collection-product-grid.liquid, donc sur toutes les pages de collection, à la place
+  où se trouvait « Nos autres collections ». Mise en page des rangées de la racine (libellé, puis pastilles) ; sur
+  téléphone, chaque rangée défile en largeur. Aucun titre h1 à h6. Tests : scripts/cocon-famille.test.cjs.
+{%- endcomment -%}
+{%- liquid
+  assign cf_noeuds = shop.metafields.cocon.plan.value.noeuds
+  assign cf_decisions_montrees = 'en_ligne,a_creer,idee' | split: ','
+
+  # La page dans le plan, qui parle français. Hors français, collection.handle est le handle traduit (sur /en :
+  # animal-art-prints pour tableau-animaux) : la page se retrouve alors par l'identifiant de sa collection, car
+  # collections[handle français] répond dans toutes les langues.
+  assign cf_page = ''
+  for cf_n in cf_noeuds
+    if cf_n.id == collection.handle
+      assign cf_page = cf_n.id
+      break
+    endif
+  endfor
+  if cf_page == '' and request.locale.primary != true
+    for cf_n in cf_noeuds
+      if collections[cf_n.id].id == collection.id
+        assign cf_page = cf_n.id
+        break
+      endif
+    endfor
+  endif
+
+  assign cf_mere = ''
+  assign cf_rayon = ''
+  assign cf_jumeau = ''
+  assign cf_arbre = ''
+  if cf_page != ''
+    for cf_n in cf_noeuds
+      if cf_n.id == cf_page
+        assign cf_mere = cf_n.parent | default: ''
+        assign cf_rayon = cf_n.rayon
+        assign cf_jumeau = cf_n.jumeau | default: ''
+        assign cf_arbre = cf_n.arbre
+        break
+      endif
+    endfor
+  endif
+
+  # Sous une racine, les sœurs sont celles du même rayon.
+  assign cf_racine = false
+  if cf_mere != ''
+    for cf_n in cf_noeuds
+      if cf_n.id == cf_mere
+        if cf_n.rayon == 'racine'
+          assign cf_racine = true
+        endif
+        break
+      endif
+    endfor
+  endif
+
+  # Les mêmes rangées que sur la racine (sections/sous-collections.liquid) : elles défilent en largeur sur téléphone,
+  # leurs pastilles passent à la ligne sur ordinateur. Les 6 px du haut et du bas gardent l'anneau du focus et l'ombre.
+  assign cf_classes_rangee = 'flex items-center gap-3 md:items-baseline overflow-x-auto scrollbar-hidden px-4 py-1.5 md:overflow-visible'
+  assign cf_classes_libelle = 'shrink-0 min-w-20 md:min-w-36 text-xs font-semibold uppercase tracking-[0.14em] text-terra whitespace-nowrap'
+-%}
+{%- capture cf_soeurs -%}
+  {%- if cf_mere != '' -%}
+    {%- for cf_n in cf_noeuds -%}
+      {%- if cf_n.parent != cf_mere or cf_n.id == cf_page -%}{%- continue -%}{%- endif -%}
+      {%- if cf_racine and cf_n.rayon != cf_rayon -%}{%- continue -%}{%- endif -%}
+      {%- unless cf_decisions_montrees contains cf_n.decision -%}{%- continue -%}{%- endunless -%}
+      {%- comment -%} Une collection pas encore créée rend un objet vide, dont le compte est une chaîne : plus: 0 en fait un nombre. {%- endcomment -%}
+      {%- assign cf_col = collections[cf_n.id] -%}
+      {%- assign cf_nb = cf_col.all_products_count | plus: 0 -%}
+      {%- if cf_col.id != blank and cf_nb > 0 -%}
+        <li class="shrink-0"><a href="{{ cf_col.url }}" class="pastille-collection">{{ cf_col.title | escape }}</a></li>
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endcapture -%}
+{%- capture cf_jumelle -%}
+  {%- if cf_jumeau != '' -%}
+    {%- assign cf_col = collections[cf_jumeau] -%}
+    {%- assign cf_nb = cf_col.all_products_count | plus: 0 -%}
+    {%- if cf_col.id != blank and cf_nb > 0 -%}
+      <li class="shrink-0"><a href="{{ cf_col.url }}" class="pastille-collection">{{ cf_col.title | escape }}</a></li>
+    {%- endif -%}
+  {%- endif -%}
+{%- endcapture -%}
+{%- if cf_soeurs != blank or cf_jumelle != blank -%}
+  {%- liquid
+    # Le libellé des sœurs : « Autres sujets » sous une racine, « Aussi dans Tableau Animaux » plus bas.
+    if cf_racine
+      assign cf_libelle_soeurs = 'sections.sous_collections.famille.autres.' | append: cf_rayon | t
+    else
+      assign cf_titre_mere = collections[cf_mere].title
+      if cf_titre_mere != blank
+        assign cf_libelle_soeurs = 'sections.sous_collections.famille.dans' | t: titre: cf_titre_mere
+      else
+        assign cf_libelle_soeurs = 'sections.sous_collections.famille.soeurs' | t
+      endif
+    endif
+    if cf_arbre == 'posters'
+      assign cf_libelle_jumelle = 'sections.sous_collections.famille.en_toile' | t
+    else
+      assign cf_libelle_jumelle = 'sections.sous_collections.famille.en_poster' | t
+    endif
+    assign cf_id = 'cocon-famille-' | append: collection.id
+  -%}
+  {%- comment -%} [contain:inline-size] : le bloc ne donne jamais sa largeur à la page. La section de la grille est un
+    élément de la grille de <main>, centré par les marges automatiques de page-width : elle prend la largeur de son
+    contenu. Sans cette règle, la rangée qui défile (4 sœurs, 536 px) élargissait la section, et toute la page, à 686 px
+    sur un téléphone de 390 px, qui dézoomait la page (relevé du 23/11/2026). {%- endcomment -%}
+  <nav class="cocon-famille -mx-4 flex flex-col gap-1 py-10 md:gap-2 md:py-14 [contain:inline-size]" aria-label="{{ 'sections.sous_collections.famille.nav' | t }}">
+    {%- if cf_soeurs != blank -%}
+      <div class="{{ cf_classes_rangee }}">
+        <p id="{{ cf_id }}-soeurs" class="{{ cf_classes_libelle }}">{{ cf_libelle_soeurs }}</p>
+        <ul aria-labelledby="{{ cf_id }}-soeurs" class="flex gap-2 md:flex-1 md:flex-wrap md:min-w-0">{{ cf_soeurs }}</ul>
+      </div>
+    {%- endif -%}
+    {%- if cf_jumelle != blank -%}
+      <div class="{{ cf_classes_rangee }}">
+        <p id="{{ cf_id }}-jumelle" class="{{ cf_classes_libelle }}">{{ cf_libelle_jumelle }}</p>
+        <ul aria-labelledby="{{ cf_id }}-jumelle" class="flex gap-2 md:flex-1 md:flex-wrap md:min-w-0">{{ cf_jumelle }}</ul>
+      </div>
+    {%- endif -%}
+  </nav>
+{%- endif -%}

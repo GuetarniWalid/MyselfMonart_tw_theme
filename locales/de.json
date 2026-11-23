@@ -460,6 +460,18 @@
             "other": "{{ count }} Bilder",
             "many": "{{ count }} Bilder"
           }
+        },
+        "entree": {
+          "groupe": "Leinwand oder Poster",
+          "posters": "Poster",
+          "toiles": "Leinwand",
+          "lien_jumelle": "{{ format }}: {{ titre }}",
+          "tableaux": {
+            "one": "{{ count }} Bild",
+            "other": "{{ count }} Bilder"
+          },
+          "lire_la_suite": "Weiterlesen",
+          "reduire": "Weniger anzeigen"
         }
       }
     },

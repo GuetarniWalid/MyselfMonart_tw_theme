@@ -21,24 +21,11 @@
   assign cf_noeuds = shop.metafields.cocon.plan.value.noeuds
   assign cf_decisions_montrees = 'en_ligne,a_creer,idee' | split: ','
 
-  # La page dans le plan, qui parle français. Hors français, collection.handle est le handle traduit (sur /en :
-  # animal-art-prints pour tableau-animaux) : la page se retrouve alors par l'identifiant de sa collection, car
-  # collections[handle français] répond dans toutes les langues.
-  assign cf_page = ''
-  for cf_n in cf_noeuds
-    if cf_n.id == collection.handle
-      assign cf_page = cf_n.id
-      break
-    endif
-  endfor
-  if cf_page == '' and request.locale.primary != true
-    for cf_n in cf_noeuds
-      if collections[cf_n.id].id == collection.id
-        assign cf_page = cf_n.id
-        break
-      endif
-    endfor
-  endif
+  # La page dans le plan, par son handle, ou par sa collection hors français (snippets/cocon-noeud.liquid).
+  capture cf_page
+    render 'cocon-noeud'
+  endcapture
+  assign cf_page = cf_page | strip
 
   assign cf_mere = ''
   assign cf_rayon = ''
