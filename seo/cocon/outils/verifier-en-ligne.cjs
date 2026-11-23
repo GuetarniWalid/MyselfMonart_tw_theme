@@ -32,7 +32,7 @@ for (const f of fichiers) {
   }
   if (pasLaPage) {
     inconnus++;
-    console.log("? " + h + " | Shopify n'a pas servi la page (page anti-robot, H1 « " + norm(h1).slice(0, 60) + " ») : relancer ce contrôle dans quelques minutes. Le texte n'est pas en cause, ne rien corriger.");
+    console.log("? " + h + " | Shopify n'a pas servi la page de la collection (page anti-robot, ou collection absente ou pas publiée ; H1 « " + norm(h1).slice(0, 60) + " »). Si la collection est bien publiée, relancer ce contrôle dans quelques minutes. Le texte n'est pas en cause, ne rien corriger.");
     continue;
   }
   const ok = manquantes.length === 0 && norm(h1).includes(t.title.toLowerCase());
