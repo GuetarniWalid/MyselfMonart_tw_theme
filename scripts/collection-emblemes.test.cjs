@@ -10,7 +10,9 @@
 // Lancer : NODE_PATH=<un node_modules qui a liquidjs> node --test scripts/collection-emblemes.test.cjs
 const test = require('node:test')
 const assert = require('node:assert/strict')
-const { read, schemaOf, rules, blocs, SKIP, engine, locales, LANGS } = require('./galerie-banc.cjs')
+const fs = require('fs')
+const path = require('path')
+const { ROOT, read, json, schemaOf, rules, blocs, SKIP, engine, locales, LANGS } = require('./galerie-banc.cjs')
 const PLAN = require('./fixtures/cocon-plan.json')
 
 const SECTION = 'sections/sous-collections.liquid'
@@ -372,6 +374,19 @@ test('un emblème en bas de page, en grand : 104 px et 136 px de rond ; en haut 
   assert.equal(tags(emblem(cible, { taille: 'bas' }), 'img')[0].sizes, '(min-width: 900px) 272px, 208px')
   assert.equal(tags(emblem(cible, { taille: 'bas' }), 'img')[0].loading, 'lazy')
   assert.equal(tags(emblem(cible, { tout_de_suite: true }), 'img')[0].loading, 'eager')
+})
+
+/* ---------- Les modèles de collection ---------- */
+
+test('seul le modèle caché passe les sous-collections en emblèmes ; les autres modèles gardent les pastilles', () => {
+  const files = fs.readdirSync(path.join(ROOT, 'templates')).filter((name) => /^collection(\.[^.]+)?\.json$/.test(name))
+  assert.ok(files.includes('collection.refonte.json'), 'le modèle caché')
+  for (const file of files) {
+    const sous = Object.values(json(`templates/${file}`).sections).filter((s) => s.type === 'sous-collections')
+    assert.equal(sous.length, 1, file)
+    const style = (sous[0].settings || {}).style || 'pastilles'
+    assert.equal(style, file === 'collection.refonte.json' ? 'emblemes' : 'pastilles', file)
+  }
 })
 
 /* ---------- Le réglage de la section ---------- */

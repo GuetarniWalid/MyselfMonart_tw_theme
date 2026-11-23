@@ -27,8 +27,9 @@ test('le modèle caché : la section de la page en tête, puis celles de collect
   // La section de la page : sans réglage ni bloc.
   assert.deepEqual(modele.sections[modele.order[0]], { type: 'collection-refonte', settings: {} })
   // Les sections d'aujourd'hui, telles quelles : mêmes clés, mêmes réglages. Les tickets suivants les remplacent une à
-  // une (ce test suit).
-  for (const key of modele.order.slice(1)) assert.deepEqual(modele.sections[key], defaut.sections[key], key)
+  // une (ce test suit). Les sous-collections passent en emblèmes (ticket 03 : scripts/collection-emblemes.test.cjs).
+  const remplacees = ['sous_collections']
+  for (const key of modele.order.slice(1).filter((k) => !remplacees.includes(k))) assert.deepEqual(modele.sections[key], defaut.sections[key], key)
 })
 
 test('la section de la page : une marque cachée, sans réglage ni préréglage, un nom de schéma que Shopify accepte', { skip: SKIP }, async () => {

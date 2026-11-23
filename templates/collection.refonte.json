@@ -20,7 +20,9 @@
     },
     "sous_collections": {
       "type": "sous-collections",
-      "settings": {}
+      "settings": {
+        "style": "emblemes"
+      }
     },
     "main-collection-product-grid": {
       "type": "main-collection-product-grid",
