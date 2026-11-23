@@ -18,19 +18,27 @@ const SECTION = 'sections/collection-refonte.liquid'
 
 /* ---------- Le modèle caché et sa section ---------- */
 
-test('le modèle caché : la section de la page en tête, puis celles de collection.json, sans bannière ni badges', () => {
+test('le modèle caché : le fil d’Ariane, la section de la page, puis celles de collection.json, sans bannière ni badges', () => {
   const modele = json('templates/collection.refonte.json')
   const defaut = json('templates/collection.json')
   assert.equal(modele.layout, 'collection')
-  assert.deepEqual(modele.order.map((key) => modele.sections[key].type), ['collection-refonte', 'breadcrumb', 'sous-collections', 'collection-grille'])
+  // L'ordre : le fil d'Ariane, puis la section de la page, qui en est l'entrée depuis le ticket 02.
+  assert.deepEqual(modele.order.map((key) => modele.sections[key].type), ['breadcrumb', 'collection-refonte', 'sous-collections', 'collection-grille'])
   assert.deepEqual(Object.keys(modele.sections).sort(), [...modele.order].sort(), 'aucune section hors de l’ordre')
   // La section de la page : sans réglage ni bloc.
-  assert.deepEqual(modele.sections[modele.order[0]], { type: 'collection-refonte', settings: {} })
-  // Les sections d'aujourd'hui, telles quelles : mêmes clés, mêmes réglages. Les tickets suivants les remplacent une à
-  // une (ce test suit) : les sous-collections en emblèmes au ticket 03 (scripts/collection-emblemes.test.cjs), la grille
-  // au ticket 05 (scripts/collection-grille.test.cjs).
-  const remplacees = ['sous_collections']
-  for (const key of modele.order.slice(1).filter((k) => k in defaut.sections && !remplacees.includes(k))) assert.deepEqual(modele.sections[key], defaut.sections[key], key)
+  assert.deepEqual(modele.sections.collection_refonte, { type: 'collection-refonte', settings: {} })
+  // Les sections d'aujourd'hui : mêmes clés, mêmes réglages, plus ceux que la refonte leur donne. Les tickets suivants
+  // les remplacent une à une (ce test suit) : les sous-collections en emblèmes au ticket 03
+  // (scripts/collection-emblemes.test.cjs), la grille au ticket 05 (scripts/collection-grille.test.cjs).
+  const REGLAGES = {
+    // Ticket 02 : le fil d'Ariane complet.
+    'cf6565ea-5338-4b92-985b-b5b0824700db': { affichage: 'complet' },
+    // Ticket 03 : les sous-collections en emblèmes.
+    sous_collections: { style: 'emblemes' },
+  }
+  for (const key of modele.order.filter((k) => k in defaut.sections)) {
+    assert.deepEqual(modele.sections[key], { ...defaut.sections[key], settings: { ...defaut.sections[key].settings, ...REGLAGES[key] } }, key)
+  }
 })
 
 test('la section de la page : une marque cachée, sans réglage ni préréglage, un nom de schéma que Shopify accepte', { skip: SKIP }, async () => {

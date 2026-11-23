@@ -23,6 +23,7 @@ const AVANT = {
   [EDITO]: 'scripts/fixtures/collection-editorial-auto.avant-refonte.liquid',
   [GRILLE]: 'scripts/fixtures/main-collection-product-grid.avant-refonte.liquid',
 }
+const MODELE = 'templates/collection.refonte.json'
 
 /* ---------- Le banc : textes au pluriel, pagination de Shopify ---------- */
 
@@ -695,7 +696,17 @@ test('« Lire la suite » : pas de bouton quand le texte tient en deux lignes (c
   assert.equal(court.bouton.hidden, false)
 })
 
-/* ---------- Les autres modèles de collection ---------- */
+/* ---------- Le modèle caché et la page de test ---------- */
+
+test('le modèle caché : le fil complet, l’entrée, les pastilles, puis la grille sans éditorial ni bas de page cocon', () => {
+  const modele = json(MODELE)
+  const types = modele.order.map((key) => modele.sections[key].type)
+  assert.deepEqual(types.slice(0, 2), ['breadcrumb', 'collection-refonte'])
+  const section = (type) => modele.sections[modele.order[types.indexOf(type)]]
+  assert.equal(section('breadcrumb').settings.affichage, 'complet')
+  assert.equal(section('main-collection-product-grid').settings.editorial, false)
+  assert.equal(section('main-collection-product-grid').settings.cocon_famille, false)
+})
 
 test('les autres modèles de collection ne changent pas : fil replié, éditorial et bas de page cocon', () => {
   const files = fs.readdirSync(path.join(ROOT, 'templates')).filter((name) => /^collection(\.[^.]+)?\.json$/.test(name) && name !== 'collection.refonte.json')
@@ -709,5 +720,37 @@ test('les autres modèles de collection ne changent pas : fil replié, éditoria
       }
     }
     assert.ok(!Object.values(json(`templates/${file}`).sections).some((s) => s.type === 'collection-refonte'), `${file} : sans l’entrée de la nouvelle page`)
+  }
+})
+
+/* La page d'un modèle : ses sections dans l'ordre (le fil, l'entrée, les pastilles, la grille), chacune avec les
+   réglages du modèle. Les autres sections du modèle par défaut (bannière désactivée, badges) n'ont ni titre, ni lien de
+   la famille, ni liste pour Google. */
+const RENDUES = ['breadcrumb', 'collection-refonte', 'sous-collections', 'main-collection-product-grid']
+async function pageDuModele(file, vars) {
+  const modele = json(file)
+  let html = ''
+  for (const key of modele.order) {
+    const s = modele.sections[key]
+    if (s.disabled || !RENDUES.includes(s.type)) continue
+    html += await renderFile(`sections/${s.type}.liquid`, vars, { settings: s.settings || {}, id: key })
+  }
+  return html
+}
+
+test('la page de test : un seul h1, un seul lien vers la jumelle, la liste BreadcrumbList de la page normale', { skip: SKIP }, async () => {
+  for (const handle of ['tableaux-nature-sauvage', 'posters-affiches-nature', 'tableau-lion']) {
+    const fr = nature()
+    const vars = pageGlobals({ page: fr[handle], collections: fr })
+    const refonte = await pageDuModele(MODELE, vars)
+    const normale = await pageDuModele('templates/collection.json', vars)
+    assert.equal((refonte.match(/<h1\b/g) || []).length, 1, `${handle} : un seul h1`)
+    assert.match(refonte, /<h1 class="c-titre"/, `${handle} : celui de l’entrée`)
+    const jumeau = PLAN.noeuds.find((n) => n.id === handle).jumeau
+    const versJumelle = liens(refonte).filter(([href]) => href === fr[jumeau].url)
+    assert.equal(versJumelle.length, 1, `${handle} : un seul lien vers la jumelle`)
+    assert.deepEqual(breadcrumbLd(refonte), breadcrumbLd(normale), `${handle} : la même liste BreadcrumbList`)
+    assert.equal(breadcrumbLd(refonte).length, 1)
+    assert.doesNotMatch(refonte, /\[\[TP_/)
   }
 })

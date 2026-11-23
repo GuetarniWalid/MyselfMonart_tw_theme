@@ -235,8 +235,10 @@ test('chaque modèle de collection pose les pastilles juste sous le fil d’Aria
     assert.equal(keys.length, 1, `${file} : une section des pastilles`)
     assert.ok(!sections[keys[0]].disabled, `${file} : active`)
     const at = order.indexOf(keys[0])
-    // Sans fil d'Ariane (decoration-murale), en tête de page.
-    const crumb = order.findIndex((key) => sections[key].type === 'breadcrumb')
+    // Sans fil d'Ariane (decoration-murale), en tête de page. Sur la nouvelle page collection, l'entrée de la page
+    // (titre, interrupteur, intro : sections/collection-refonte.liquid, ticket 02) se place entre le fil et les pastilles.
+    let crumb = order.findIndex((key) => sections[key].type === 'breadcrumb')
+    if (order[crumb + 1] && sections[order[crumb + 1]].type === 'collection-refonte') crumb++
     assert.equal(at, crumb + 1, `${file} : juste sous le fil d’Ariane`)
     const grid = order.findIndex((key) => sections[key].type === 'main-collection-product-grid')
     assert.ok(grid < 0 || at < grid, `${file} : avant la grille des produits`)

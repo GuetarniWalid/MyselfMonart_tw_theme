@@ -10,12 +10,14 @@
 {
   "layout": "collection",
   "sections": {
-    "collection_refonte": {
-      "type": "collection-refonte",
-      "settings": {}
-    },
     "cf6565ea-5338-4b92-985b-b5b0824700db": {
       "type": "breadcrumb",
+      "settings": {
+        "affichage": "complet"
+      }
+    },
+    "collection_refonte": {
+      "type": "collection-refonte",
       "settings": {}
     },
     "sous_collections": {
@@ -30,8 +32,8 @@
     }
   },
   "order": [
-    "collection_refonte",
     "cf6565ea-5338-4b92-985b-b5b0824700db",
+    "collection_refonte",
     "sous_collections",
     "collection_grille"
   ]
