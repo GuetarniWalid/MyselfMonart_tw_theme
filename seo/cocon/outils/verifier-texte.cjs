@@ -1,5 +1,7 @@
 // Contrôle d'un ou plusieurs textes de collection avant création (format de PROCEDURE-COLLECTION.md).
-// Usage : node seo/cocon/outils/verifier-texte.cjs <texte.json>… [--deja <dossier de textes déjà publiés>]
+// Usage : node seo/cocon/outils/verifier-texte.cjs seo/cocon/textes/<handle>.json… [--deja seo/cocon/textes]
+// --deja : dossier des textes déjà publiés. Un fichier passé en argument et aussi présent dans ce dossier n’est pas comparé à lui-même.
+// --retry : Shopify répond 429 quand les liens s’enchaînent trop vite ; curl attend puis recommence.
 // Chaque fichier : {handle, title, requete_principale, seo_title, seo_description, intro, guide_html, faq:[{q,a}], cocon_links:[{url,label}], image:{src,alt}}
 // Vérifie les longueurs, le h2 de tête, l'absence de h1, de « Made in France » et de note en chiffres, que chaque lien répond,
 // et qu'aucun texte ne partage une suite de 8 mots avec un autre (les autres fichiers donnés, et ceux du dossier --deja).
@@ -15,7 +17,7 @@ const statuts = new Map();
 const statut = url => {
   if (!statuts.has(url)) {
     let code = "?";
-    try { code = execFileSync("curl", ["-s", "-o", "/dev/null", "-w", "%{http_code}", "-L", "--max-time", "20", "https://www.myselfmonart.com" + url], { encoding: "utf8" }); } catch (e) { code = "err"; }
+    try { code = execFileSync("curl", ["-s", "-o", "/dev/null", "-w", "%{http_code}", "-L", "--max-time", "20", "--retry", "5", "https://www.myselfmonart.com" + url], { encoding: "utf8" }); } catch (e) { code = "err"; }
     statuts.set(url, code);
   }
   return statuts.get(url);

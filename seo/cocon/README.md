@@ -37,6 +37,8 @@ Carte vivante : [Carte des collections](https://claude.ai/artifact/BVe1r3KNmDx6G
 | Les pastilles des sous-collections | `sections/sous-collections.liquid`, sous le fil d'Ariane de chaque modèle de collection. Elle lit `cocon.plan`. |
 | Le fil d'Ariane | Métachamp de collection `breadcrumb.parentCollection`, posé à la création. |
 | La création d'une collection | [PROCEDURE-COLLECTION.md](PROCEDURE-COLLECTION.md), à la main ou par la routine quotidienne. |
+| Les textes publiés | `seo/cocon/textes/<handle>.json` : un fichier par collection créée par le cocon, identique au texte en ligne. |
+| La routine quotidienne | Routine Claude « Cocon MyselfMonArt – collections du jour », chaque matin vers 7 h (heure de Paris). Elle crée au plus 10 collections prêtes, range leurs textes, écrit le journal, puis commite et pousse sur `main`. |
 | Le journal des créations | [journal.md](journal.md) |
 | Les analyses du 22/11 (Search Console, ventes, catalogue, concurrents) et les scripts de la carte | `.scratch/cocon/` du thème, hors du dépôt. `plan.cjs` y refait `plan.json`, et `plan-boutique.cjs` le plan compact du backend. |
 

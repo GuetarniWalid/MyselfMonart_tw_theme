@@ -20,6 +20,10 @@ En session, ce dossier se fait avec `.scratch/cocon/dossiers.cjs`.
 
 ## 2. Les textes
 
+Chaque texte est un fichier du dépôt, `seo/cocon/textes/<handle>.json`, avec les clés `handle`, `title`, `requete_principale`, `seo_title`, `seo_description`, `intro`, `guide_html`, `faq`, `cocon_links` et `image` (`src`, `alt`).
+- Il reste identique au texte en ligne : une correction faite sur Shopify se reporte dans le fichier.
+- Le dépôt est public : ces fichiers ne contiennent ni ventes ni chiffres de la Search Console. Le dossier reste hors du dépôt.
+
 | Champ | Format | Contenu |
 |---|---|---|
 | `title` | texte | Titre du plan, par exemple « Tableau Minimaliste ». C'est le H1 de la page. |
@@ -49,7 +53,7 @@ Exemples à suivre : l'éditorial de Tableau Zen et de Poster & Affiche Zen. Voi
 
 ### Vérification avant de livrer
 
-D'abord le contrôle mécanique : `node seo/cocon/outils/verifier-texte.cjs <texte.json>…`. Pour la comparaison, on peut ajouter `--deja <dossier>` avec les textes déjà publiés. Il vérifie :
+D'abord le contrôle mécanique, sur tous les textes du jour à la fois : `node seo/cocon/outils/verifier-texte.cjs seo/cocon/textes/<handle>.json… --deja seo/cocon/textes`. L'option `--deja` les compare aussi aux textes déjà publiés. Il vérifie :
 - les longueurs, le `h2` de tête, l'absence de `h1` et de « Made in France » ;
 - la note Trustpilot ;
 - que chaque lien répond ;
@@ -77,7 +81,7 @@ Puis une relecture adversariale :
 3. Vérifier, avant de publier :
    - qu'elle a au moins 20 produits : `listCollections` avec `query: "handle:<handle>"`, champ `productsCount` ;
    - qu'elle a ses métachamps : `getCollection`.
-4. `updateCollection` avec `published: true`, puis `node seo/cocon/outils/verifier-en-ligne.cjs <texte.json>`. Ce script lit la page en ligne et y cherche chaque phrase du texte relu, ce qui attrape une erreur de recopie.
+4. `updateCollection` avec `published: true`, puis `node seo/cocon/outils/verifier-en-ligne.cjs seo/cocon/textes/<handle>.json`. Ce script lit la page en ligne et y cherche chaque phrase du texte relu, ce qui attrape une erreur de recopie.
 5. Le serveur fait seul le reste :
    - les traductions, la nuit (`TranslateCollection`) ;
    - `translation.handle` et `meta_object.media`, par ses tâches.
@@ -87,3 +91,4 @@ Puis une relecture adversariale :
 - La pastille de la nouvelle collection apparaît seule sur sa page mère, car le thème lit le plan dans le métachamp du shop `cocon.plan`.
 - La carte et l'outil `etatCocon` la montrent « en ligne » au passage suivant du veilleur.
 - On ajoute une ligne au [journal](journal.md) : date, handle, nombre de produits, ce qui a été vérifié.
+- On commite `seo/cocon/` (textes et journal), puis on pousse sur `main`, sans branche ni PR (voir `CLAUDE.md`). La routine le fait seule à la fin de son passage. Elle ne commite jamais un fichier du thème, car chaque push sur `main` déploie le thème en ligne.
