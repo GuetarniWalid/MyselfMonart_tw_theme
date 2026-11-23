@@ -704,8 +704,16 @@ test('le modèle caché : le fil complet, l’entrée, les pastilles, puis la gr
   assert.deepEqual(types.slice(0, 2), ['breadcrumb', 'collection-refonte'])
   const section = (type) => modele.sections[modele.order[types.indexOf(type)]]
   assert.equal(section('breadcrumb').settings.affichage, 'complet')
-  assert.equal(section('main-collection-product-grid').settings.editorial, false)
-  assert.equal(section('main-collection-product-grid').settings.cocon_famille, false)
+  // Depuis le ticket 05, la grille est la nouvelle section collection-grille, qui ne rend ni l'éditorial ni le bas de
+  // page cocon (le ticket 08 les remettra) ; l'ancienne grille n'est plus dans le modèle. Si elle y revenait, elle
+  // devrait les décocher.
+  assert.ok(types.includes('collection-grille'), 'la nouvelle grille')
+  const ancienne = types.includes('main-collection-product-grid') ? section('main-collection-product-grid') : null
+  if (ancienne) {
+    assert.equal(ancienne.settings.editorial, false)
+    assert.equal(ancienne.settings.cocon_famille, false)
+  }
+  assert.doesNotMatch(read('sections/collection-grille.liquid'), /render 'collection-editorial-auto'|render 'cocon-famille'/)
 })
 
 test('les autres modèles de collection ne changent pas : fil replié, éditorial et bas de page cocon', () => {
