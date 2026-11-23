@@ -202,6 +202,15 @@ test('chaque langue nomme les sœurs de chaque rayon, la mère et la jumelle', (
   }
 })
 
+test('le bloc ne donne jamais sa largeur à la page (contain: inline-size)', { skip: SKIP }, () => {
+  // Relevé du 23/11/2026 : sans cette règle, la rangée qui défile élargissait la page à 686 px sur un téléphone de 390 px.
+  const collections = nature()
+  const nav = /<nav\b[^>]*\bclass="([^"]*)"/.exec(render({ page: collections['tableaux-nature-sauvage'], collections }))
+  assert.ok(nav, 'le repère du bloc')
+  assert.ok(nav[1].split(/\s+/).includes('[contain:inline-size]'), 'le repère porte [contain:inline-size]')
+  assert.match(read('assets/output.css'), /\.\\\[contain\\:inline-size\\\]\{contain:inline-size\}/, 'la règle est dans output.css')
+})
+
 test('aucun titre : le seul H1 de la page reste celui de l’éditorial', { skip: SKIP }, () => {
   const collections = nature()
   assert.doesNotMatch(render({ page: collections['tableaux-nature-sauvage'], collections }), /<h[1-6]\b/)

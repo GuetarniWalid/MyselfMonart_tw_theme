@@ -118,7 +118,11 @@
     endif
     assign cf_id = 'cocon-famille-' | append: collection.id
   -%}
-  <nav class="cocon-famille -mx-4 flex flex-col gap-1 py-10 md:gap-2 md:py-14" aria-label="{{ 'sections.sous_collections.famille.nav' | t }}">
+  {%- comment -%} [contain:inline-size] : le bloc ne donne jamais sa largeur à la page. La section de la grille est un
+    élément de la grille de <main>, centré par les marges automatiques de page-width : elle prend la largeur de son
+    contenu. Sans cette règle, la rangée qui défile (4 sœurs, 536 px) élargissait la section, et toute la page, à 686 px
+    sur un téléphone de 390 px, qui dézoomait la page (relevé du 23/11/2026). {%- endcomment -%}
+  <nav class="cocon-famille -mx-4 flex flex-col gap-1 py-10 md:gap-2 md:py-14 [contain:inline-size]" aria-label="{{ 'sections.sous_collections.famille.nav' | t }}">
     {%- if cf_soeurs != blank -%}
       <div class="{{ cf_classes_rangee }}">
         <p id="{{ cf_id }}-soeurs" class="{{ cf_classes_libelle }}">{{ cf_libelle_soeurs }}</p>
