@@ -146,6 +146,8 @@ La refonte de la page collection (dossier `.scratch/collection-design` ; pendant
 
 Elle se charge sur cette page seulement : la section [`sections/collection-refonte.liquid`](sections/collection-refonte.liquid) écrit `data-refonte` ; [`layout/collection.liquid`](layout/collection.liquid) reconnaît la page à ` data-refonte>` dans la page rendue (jamais au nom du modèle), pose `data-refonte-page` sur `<html>` et charge dans `<head>` la feuille et la police ([`snippets/collection-refonte-police.liquid`](snippets/collection-refonte-police.liquid)). Sur toute autre page de collection, le gabarit rend exactement le HTML d'avant.
 
+L'en-tête y suit le doigt (ticket 07) : le gabarit charge aussi [`assets/collection-entete.js`](assets/collection-entete.js), qui déplace l'en-tête à chaque image et colle la ligne des filtres dessous (`--tete-h` sur `:root`, `--barre-top` et la classe `collee` sur `#barre`) ; [`assets/tw-header.js`](assets/tw-header.js) n'y écoute plus le défilement (ailleurs, rien ne change). Un script de cette page qui fait défiler la page lui-même l'annonce juste avant, sur `document` : `mma:saut-voulu`, `{ entete: 'reste' | 'revient' }` (comme `defiler()` dans `assets/collection-filtres.js`) ; sans cela, l'en-tête prend le saut pour un geste du doigt.
+
 Règles de cette feuille, que vérifie `scripts/collection-refonte.test.cjs` :
 - chaque règle commence par `:root[data-refonte-page]` (ou une classe `.refonte…`), jamais par le nom du modèle ; pas de `:root:has(…)` ;
 - les variables du socle (`--encre`, `--peche`, `--menthe`, `--sans`, `--gout`…) ont les valeurs de la fiche 3D ; aucune couleur ne s'écrit ailleurs ; la police est déclarée par le gabarit, jamais dans la feuille ;

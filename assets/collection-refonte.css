@@ -2272,3 +2272,31 @@
 }
 
 /* === Ligne des filtres (ticket 06) : fin === */
+
+/* === L'en-tête qui suit le doigt (ticket 07) : début === */
+
+/* L'en-tête du site (sections/tw-header.liquid) suit le doigt sur cette page : assets/collection-entete.js le déplace à
+   chaque image (transform), sans la transition de ses classes, qu'il retire lui-même. Sur une couche à part, le
+   déplacement ne repeint rien. */
+:root[data-refonte-page] #shopify-section-tw-header {
+  will-change: transform;
+}
+
+/* Le focus au clavier ne se cache jamais sous l'en-tête et la ligne des filtres : la hauteur de l'en-tête, mesurée par
+   le script (--tete-h), et celle de la ligne, 56 px (68 px sur ordinateur). */
+:root[data-refonte-page] {
+  scroll-padding-top: calc(var(--tete-h, 0px) + 56px);
+}
+@media (min-width: 900px) {
+  :root[data-refonte-page] {
+    scroll-padding-top: calc(var(--tete-h, 0px) + 68px);
+  }
+}
+
+/* La ligne collée (classe collee, posée par le script) : un trait encre à 12 % et une ombre douce dessous, ceux de la
+   maquette. */
+:root[data-refonte-page] .filtres-ligne.collee {
+  box-shadow: 0 1px 0 var(--encre-12), 0 10px 18px -14px color-mix(in srgb, var(--encre) 35%, transparent);
+}
+
+/* === L'en-tête qui suit le doigt (ticket 07) : fin === */

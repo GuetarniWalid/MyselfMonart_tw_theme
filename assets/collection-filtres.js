@@ -103,8 +103,11 @@
   // L'entrée d'historique du panneau du téléphone : Retour le ferme (fiche du spécialiste des filtres, § 8).
   const ETAT_PANNEAU = 'filtresPanneau';
 
-  // Un défilement d'un coup (« instant » : un navigateur plus ancien ne le connaît pas).
-  function defiler(top) {
+  /* Un défilement d'un coup (« instant » : un navigateur plus ancien ne le connaît pas). L'en-tête qui suit le doigt
+     (assets/collection-entete.js, ticket 07) l'apprend juste avant : ce saut n'est pas un geste du doigt. entete :
+     'reste' (l'en-tête ne bouge pas) ou 'revient' (il revient en entier). */
+  function defiler(top, entete) {
+    document.dispatchEvent(new CustomEvent('mma:saut-voulu', { detail: { entete } }));
     try {
       window.scrollTo({ top, behavior: 'instant' });
     } catch (erreur) {
@@ -458,7 +461,7 @@
     }
 
     // Le menu reste dans l'écran : décalé vers la gauche s'il dépasse à droite ; la page descend juste assez s'il
-    // dépasse en bas, au plus jusqu'à coller la ligne sous l'en-tête.
+    // dépasse en bas, au plus jusqu'à coller la ligne sous l'en-tête, qui ne bouge pas pendant ce saut.
     placerMenu(famille) {
       const panneau = famille.querySelector('.filtres-panneau');
       if (!panneau) return;
@@ -469,7 +472,7 @@
       const depasse = boite.bottom - (window.innerHeight - 16);
       const marge = this.getBoundingClientRect().top - this.hautCollee();
       const descente = Math.min(depasse, marge);
-      if (descente > 4) defiler(window.scrollY + descente);
+      if (descente > 4) defiler(window.scrollY + descente, 'reste');
     }
 
     // Le menu ouvert, rendu de nouveau par le serveur, prend sa nouvelle forme une fois fermé.
@@ -682,9 +685,16 @@
       });
     }
 
-    // La hauteur où la ligne se colle (--barre-top, que pose l'en-tête au ticket 07).
+    // La hauteur où la ligne se colle (--barre-top, que pose assets/collection-entete.js).
     hautCollee() {
       return parseFloat(window.getComputedStyle(this).top) || 0;
+    }
+
+    // La hauteur de l'en-tête entier (--tete-h, que pose assets/collection-entete.js) ; sans elle, la hauteur où la
+    // ligne se colle.
+    hauteurEntete() {
+      const hauteur = parseFloat(window.getComputedStyle(document.documentElement).getPropertyValue('--tete-h'));
+      return Number.isFinite(hauteur) ? hauteur : this.hautCollee();
     }
 
     estCollee() {
@@ -692,10 +702,11 @@
       return !!ancre && ancre.getBoundingClientRect().top < this.hautCollee() - 0.5;
     }
 
-    // Au début des résultats : la ligne à sa place, juste sous l'en-tête.
+    // Au début des résultats : l'en-tête revient, la ligne à sa place juste dessous, puis les filtres actifs et la
+    // grille ; jamais en haut de la page.
     remonter() {
       const ancre = document.getElementById('ancre-barre');
-      if (ancre) defiler(ancre.getBoundingClientRect().top + window.scrollY - this.hautCollee());
+      if (ancre) defiler(ancre.getBoundingClientRect().top + window.scrollY - this.hauteurEntete(), 'revient');
     }
 
     // La recherche d'un thème : les thèmes de ce nom, dans les deux listes ; aucun : la phrase qui le dit.

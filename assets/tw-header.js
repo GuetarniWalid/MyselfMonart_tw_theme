@@ -412,7 +412,11 @@ class StickyHeader extends HTMLElement {
     });
     this.hideHeaderOnScrollUp = () => (this.preventReveal = true);
     this.addEventListener('preventHeaderReveal', this.hideHeaderOnScrollUp);
-    window.addEventListener('scroll', this.onScroll, false);
+    // Sur la nouvelle page collection (<html data-refonte-page>, layout/collection.liquid), l'en-tête suit le doigt :
+    // assets/collection-entete.js le déplace (ticket 07). Partout ailleurs, il se cache et revient par ses classes.
+    if (!document.documentElement.hasAttribute('data-refonte-page')) {
+      window.addEventListener('scroll', this.onScroll, false);
+    }
     this.addEventListener('keyup', (evt) => {
       if (evt.code === 'Escape') {
         this.renderBodyScrollable(true);
