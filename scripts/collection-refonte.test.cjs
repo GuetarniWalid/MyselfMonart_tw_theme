@@ -23,13 +23,14 @@ test('le modèle caché : le fil d’Ariane, la section de la page, puis celles 
   const defaut = json('templates/collection.json')
   assert.equal(modele.layout, 'collection')
   // L'ordre : le fil d'Ariane, puis la section de la page, qui en est l'entrée depuis le ticket 02.
-  assert.deepEqual(modele.order.map((key) => modele.sections[key].type), ['breadcrumb', 'collection-refonte', 'sous-collections', 'collection-grille'])
+  assert.deepEqual(modele.order.map((key) => modele.sections[key].type), ['breadcrumb', 'collection-refonte', 'sous-collections', 'collection-grille', 'collection-sujets', 'collection-guide', 'collection-questions'])
   assert.deepEqual(Object.keys(modele.sections).sort(), [...modele.order].sort(), 'aucune section hors de l’ordre')
   // La section de la page : sans réglage ni bloc.
   assert.deepEqual(modele.sections.collection_refonte, { type: 'collection-refonte', settings: {} })
   // Les sections d'aujourd'hui : mêmes clés, mêmes réglages, plus ceux que la refonte leur donne. Les tickets suivants
   // les remplacent une à une (ce test suit) : les sous-collections en emblèmes au ticket 03
-  // (scripts/collection-emblemes.test.cjs), la grille au ticket 05 (scripts/collection-grille.test.cjs).
+  // (scripts/collection-emblemes.test.cjs), la grille au ticket 05 (scripts/collection-grille.test.cjs), le bas de page
+  // au ticket 08 (scripts/collection-bas.test.cjs).
   const REGLAGES = {
     // Ticket 02 : le fil d'Ariane complet.
     'cf6565ea-5338-4b92-985b-b5b0824700db': { affichage: 'complet' },

@@ -643,3 +643,71 @@ test('la feuille : le couple arrive de la droite et sa bulle s’ouvre, le voyag
   // Rien ne bouge hors de « mouvements voulus » (le test du socle le vérifie pour toute la feuille).
   for (const r of bloc.filter((x) => /(^|[;\s])(animation|transition)[\w-]*\s*:/.test(x.body))) assert.equal(r.context[0], NO_PREF, r.head)
 })
+
+/* ---------- Le modèle caché et la page de test ---------- */
+
+test('le modèle caché : après la grille, les autres sujets, le guide, puis les questions', () => {
+  const modele = json(MODELE)
+  const types = modele.order.map((key) => modele.sections[key].type)
+  const grille = types.indexOf('collection-grille')
+  assert.ok(grille >= 0, 'la grille du ticket 05')
+  assert.deepEqual(types.slice(grille + 1), ['collection-sujets', 'collection-guide', 'collection-questions'])
+  const section = (type) => modele.sections[modele.order[types.indexOf(type)]]
+  assert.deepEqual(section('collection-sujets'), { type: 'collection-sujets', settings: {} })
+  assert.deepEqual(section('collection-guide'), { type: 'collection-guide', settings: {} })
+  // Le bouton « Nous écrire » : la page de contact, la même que sur la fiche 3D.
+  assert.deepEqual(section('collection-questions'), { type: 'collection-questions', settings: { contact_link: 'shopify://pages/contactez-nous' } })
+  const fiche = Object.values(json('templates/product.oeuvre-galerie.json').sections).find((s) => s.type === 'galerie-questions')
+  assert.equal(fiche.settings.contact_link, section('collection-questions').settings.contact_link)
+})
+
+/* La page d'un modèle : ses sections dans l'ordre, chacune avec les réglages du modèle (sans la bannière désactivée ni les
+   badges, qui n'ont ni titre, ni lien de la famille, ni liste pour Google). */
+const RENDUES = ['breadcrumb', 'collection-refonte', 'sous-collections', 'main-collection-product-grid', 'collection-grille', 'collection-sujets', 'collection-guide', 'collection-questions']
+async function pageDuModele(file, vars) {
+  const modele = json(file)
+  let html = ''
+  for (const key of modele.order) {
+    const s = modele.sections[key]
+    if (s.disabled || !RENDUES.includes(s.type)) continue
+    html += `<div id="shopify-section-template--1__${key}" class="shopify-section">${await renderFile(`sections/${s.type}.liquid`, vars, { settings: s.settings || {}, id: key })}</div>`
+  }
+  return html
+}
+/* La famille de chaque page de la boutique d'essai : ancêtres, filles, jumelle, sœurs. */
+const FAMILLES = {
+  'tableaux-nature-sauvage': ['/collections/tous-les-tableaux', '/collections/tableau-animaux', '/collections/tableau-fleurs', '/collections/tableau-mer-1', '/collections/tableau-paysage', '/collections/posters-affiches-nature', ...SOEURS_NATURE],
+  'tableau-lion': ['/collections/tous-les-tableaux', '/collections/tableaux-nature-sauvage', '/collections/tableau-animaux', '/collections/posters-affiches-lion', '/collections/tableau-cheval', '/collections/tableau-oiseaux', '/collections/tableau-chat'],
+  'posters-affiches-nature': ['/collections/posters-affiches', '/collections/tableaux-nature-sauvage', '/collections/posters-affiches-portrait'],
+}
+/* Ce qui n'est pas de la page elle-même : le texte du guide et les réponses aux questions, que le ticket 10 relit. */
+const horsTextes = (html) => html.replace(/<div class="(?:c-guide-corps|c-questions-reponse)">[\s\S]*?<\/div>/g, '').replace(/<div class="collection-description[\s\S]*?<\/details>/g, '').replace(/<div class="pb-7[\s\S]*?<\/details>/g, '')
+
+test('la page de test : un seul h1, chaque lien de la famille une seule fois, BreadcrumbList, ItemList et FAQPage de la page normale', { skip: SKIP }, async () => {
+  for (const handle of ['tableaux-nature-sauvage', 'tableau-lion', 'posters-affiches-nature']) {
+    const fr = nature()
+    const vars = pageGlobals({ page: fr[handle], collections: fr })
+    const refonte = await pageDuModele(MODELE, vars)
+    const normale = await pageDuModele('templates/collection.json', vars)
+    assert.equal((refonte.match(/<h1\b/g) || []).length, 1, `${handle} : un seul h1`)
+    // Les données pour Google : les mêmes listes que la page normale, une fois chacune.
+    for (const type of ['BreadcrumbList', 'ItemList', 'FAQPage']) {
+      assert.equal(ldDe(refonte, type).length, 1, `${handle} : ${type}`)
+      assert.deepEqual(ldDe(refonte, type), ldDe(normale, type), `${handle} : ${type} de la page normale`)
+    }
+    // Hors du texte du guide et des questions (le ticket 10 relit leurs liens), chaque lien de collection une seule fois,
+    // et seulement la famille : les ancêtres (fil d'Ariane), les filles (emblèmes du haut), la jumelle (interrupteur),
+    // les sœurs (emblèmes du bas). Aucun lien vers une autre branche.
+    const collectionsLiees = liens(horsTextes(refonte)).map(([href]) => href).filter((href) => href.startsWith('/collections/'))
+    assert.deepEqual(collectionsLiees, [...new Set(collectionsLiees)], `${handle} : chaque lien de collection une seule fois`)
+    assert.deepEqual([...collectionsLiees].sort(), [...FAMILLES[handle]].sort(), `${handle} : la famille, rien d’autre`)
+    // Les sœurs du bas : les liens d'aujourd'hui, la jumelle en moins (elle est dans l'interrupteur).
+    const jumelle = `/collections/${PLAN.noeuds.find((n) => n.id === handle).jumeau}`
+    const bas = /<nav class="c-sujets"[\s\S]*?<\/nav>/.exec(refonte)
+    const aujourdhui = liens(/<nav class="cocon-famille[\s\S]*?<\/nav>/.exec(normale)[0]).map(([href]) => href).filter((href) => href !== jumelle)
+    assert.ok(aujourdhui.length > 0, `${handle} : des sœurs`)
+    assert.deepEqual(liens(bas[0]).map(([href]) => href), aujourdhui, `${handle} : les sœurs d’aujourd’hui`)
+    assert.doesNotMatch(refonte, /\[\[TP_/)
+    assert.doesNotMatch(refonte, /made in france|fabriqué en france/i)
+  }
+})

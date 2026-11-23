@@ -29,12 +29,29 @@
     "collection_grille": {
       "type": "collection-grille",
       "settings": {}
+    },
+    "collection_sujets": {
+      "type": "collection-sujets",
+      "settings": {}
+    },
+    "collection_guide": {
+      "type": "collection-guide",
+      "settings": {}
+    },
+    "collection_questions": {
+      "type": "collection-questions",
+      "settings": {
+        "contact_link": "shopify://pages/contactez-nous"
+      }
     }
   },
   "order": [
     "cf6565ea-5338-4b92-985b-b5b0824700db",
     "collection_refonte",
     "sous_collections",
-    "collection_grille"
+    "collection_grille",
+    "collection_sujets",
+    "collection_guide",
+    "collection_questions"
   ]
 }

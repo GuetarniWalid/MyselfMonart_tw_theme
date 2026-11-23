@@ -433,8 +433,10 @@ test('le modèle caché (vue ?view=refonte) : la nouvelle grille à la place de 
   assert.ok(!types.includes('main-collection-product-grid'), 'plus de grille d’aujourd’hui')
   assert.equal(types.filter((type) => type === 'collection-grille').length, 1)
   assert.deepEqual(modele.sections.collection_grille, { type: 'collection-grille', settings: {} })
-  // Après l'entrée, le fil d'Ariane et les sous-collections (tickets 02 et 03, quel que soit leur nom).
-  assert.equal(types[types.length - 1], 'collection-grille', 'la grille en dernier')
+  // Après l'entrée, le fil d'Ariane et les sous-collections (tickets 02 et 03, quel que soit leur nom) ; après elle,
+  // seulement le bas de page (ticket 08 : scripts/collection-bas.test.cjs).
+  const BAS = ['collection-sujets', 'collection-guide', 'collection-questions']
+  assert.deepEqual(types.slice(types.indexOf('collection-grille') + 1).filter((type) => !BAS.includes(type)), [], 'la grille, puis le bas de page')
   // Les autres modèles de collection gardent la grille d'aujourd'hui.
   assert.equal(json('templates/collection.json').sections['main-collection-product-grid'].type, 'main-collection-product-grid')
 })
