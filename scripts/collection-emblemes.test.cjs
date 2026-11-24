@@ -193,7 +193,7 @@ test('le rond, vide, est toujours là : la règle *:empty du thème ne le cache 
 test('la couleur du rond : celle du métachamp, sinon selon le rang (ciel, soleil, menthe, rose, puis on recommence)', { skip: SKIP }, () => {
   const fond = (html) => tags(html, 'li')[0]['data-fond']
   // Le métachamp, quel que soit le rang, emblème posé ou non.
-  for (const couleur of ['ciel', 'soleil', 'menthe', 'rose', 'lilas', 'peche']) {
+  for (const couleur of ['ciel', 'soleil', 'menthe', 'rose', 'lilas', 'peche', 'bleu', 'gris', 'orange', 'rouge', 'violet', 'beige', 'vert']) {
     assert.equal(fond(emblem(avecEmbleme('tableau-espace', 'Tableau Espace', 33, couleur), { rang: 2 })), couleur)
     assert.equal(fond(emblem(col('tableau-ville', 'Tableau Ville', 72, { metafields: { cocon: { embleme_couleur: { value: couleur } } } }), { rang: 3 })), couleur)
   }
@@ -203,7 +203,7 @@ test('la couleur du rond : celle du métachamp, sinon selon le rang (ciel, solei
   const sans = col('tableau-arbre', 'Tableau Arbre', 21)
   assert.deepEqual([0, 1, 2, 3, 4, 5, 6, 7, 8].map((rang) => fond(emblem(sans, { rang }))), ['ciel', 'soleil', 'menthe', 'rose', 'ciel', 'soleil', 'menthe', 'rose', 'ciel'])
   // Une valeur qui n'est pas une couleur de la page : le rang aussi.
-  assert.equal(fond(emblem(col('tableau-ville', 'Tableau Ville', 72, { metafields: { cocon: { embleme_couleur: { value: 'orange' } } } }), { rang: 1 })), 'soleil')
+  assert.equal(fond(emblem(col('tableau-ville', 'Tableau Ville', 72, { metafields: { cocon: { embleme_couleur: { value: 'turquoise' } } } }), { rang: 1 })), 'soleil')
 })
 
 const unescape = (text) => text.replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&')
@@ -444,8 +444,9 @@ test('la feuille : un rond de 58 et 80 px en haut, de 104 et 136 px en bas, l’
   const sizes = (taille) => tags(emblem(avecEmbleme('tableau-animaux', 'Tableau Animaux', 152, 'ciel'), { taille }), 'img')[0].sizes
   assert.equal(sizes('haut'), `(min-width: 900px) ${haut[1] * 2}px, ${haut[0] * 2}px`)
   assert.equal(sizes('bas'), `(min-width: 900px) ${bas[1] * 2}px, ${bas[0] * 2}px`)
-  // Les six couleurs du métachamp ont leur règle, sur une couleur du socle.
-  for (const couleur of ['ciel', 'soleil', 'menthe', 'rose', 'lilas', 'peche']) {
+  // Les treize couleurs du métachamp ont leur règle, sur une couleur du socle : les six pastels, et les sept des
+  // collections de couleur (revue de Walid du 24/11/2026 : le rond de Tableau Bleu est bleu, celui de Tableau Gris gris…).
+  for (const couleur of ['ciel', 'soleil', 'menthe', 'rose', 'lilas', 'peche', 'bleu', 'gris', 'orange', 'rouge', 'violet', 'beige', 'vert']) {
     const r = bloc.find((x) => x.head === `${HOOK} .c-emb[data-fond="${couleur}"]`)
     assert.ok(r, couleur)
     assert.match(r.body, new RegExp(`--fond:\\s*var\\(--${couleur}\\);`))

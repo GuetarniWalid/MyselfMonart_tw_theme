@@ -43,6 +43,15 @@
   --menthe: #b9e9d0;
   --lilas: #d9c9ff;
   --peche: #ffcaa8;
+  /* Les ronds des emblèmes des collections de couleur (revue de Walid du 24/11/2026) : la couleur elle-même, claire
+     comme les pastels ci-dessus, mais qui se lit comme son nom (le rond de Tableau Bleu est bleu, celui de Gris gris). */
+  --bleu: #86bdf5;
+  --gris: #d6d2ce;
+  --orange: #ffb05c;
+  --rouge: #ff6f61;
+  --violet: #bba0ff;
+  --beige: #ebdcc4;
+  --vert: #94d6a2;
   --corail: #ff5436;
   --pied-fond: var(--menthe);
   --pied-encre: var(--encre);
@@ -242,6 +251,27 @@
 }
 :root[data-refonte-page] .c-emb[data-fond="peche"] {
   --fond: var(--peche);
+}
+:root[data-refonte-page] .c-emb[data-fond="bleu"] {
+  --fond: var(--bleu);
+}
+:root[data-refonte-page] .c-emb[data-fond="gris"] {
+  --fond: var(--gris);
+}
+:root[data-refonte-page] .c-emb[data-fond="orange"] {
+  --fond: var(--orange);
+}
+:root[data-refonte-page] .c-emb[data-fond="rouge"] {
+  --fond: var(--rouge);
+}
+:root[data-refonte-page] .c-emb[data-fond="violet"] {
+  --fond: var(--violet);
+}
+:root[data-refonte-page] .c-emb[data-fond="beige"] {
+  --fond: var(--beige);
+}
+:root[data-refonte-page] .c-emb[data-fond="vert"] {
+  --fond: var(--vert);
 }
 
 /* Le cadre, un décor : le rond en bas, l'emblème ou l'initiale par-dessus. Il grandit depuis le bas du rond (retour

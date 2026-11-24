@@ -12,8 +12,9 @@
     - cocon.embleme : fichier, image. L'emblème déjà composé : une toile transparente de 2d × 1,65d (d : le diamètre du
       rond), le rond occupant le bas, au centre, le sujet posé et coupé là où il faut. La page la pose sur le rond, sans
       masque. Texte de remplacement vide : un décor, le nom de la collection est écrit juste dessous.
-    - cocon.embleme_couleur : texte d'une ligne, ciel, soleil, menthe, rose, lilas ou peche. Sans elle (ou avec une
-      autre valeur), la couleur suit le rang : ciel, soleil, menthe, rose, puis on recommence.
+    - cocon.embleme_couleur : texte d'une ligne, ciel, soleil, menthe, rose, lilas ou peche (les pastels), ou bleu,
+      gris, orange, rouge, violet, beige ou vert (le rond d'une collection de couleur, revue de Walid du 24/11/2026).
+      Sans elle (ou avec une autre valeur), la couleur suit le rang : ciel, soleil, menthe, rose, puis on recommence.
 
   Accepts:
     - cible: {Object} la collection (collections[handle]) : son titre traduit, son adresse, son nombre de produits,
@@ -36,8 +37,8 @@
   assign emb_largeur = emb_fichier.width | default: emb_fichier.preview_image.width | plus: 0
   assign emb_hauteur = emb_fichier.height | default: emb_fichier.preview_image.height | plus: 0
 
-  # La couleur du rond : celle du métachamp, si c'est l'une des six ; sinon, le cycle selon le rang.
-  assign emb_couleurs = 'ciel,soleil,menthe,rose,lilas,peche' | split: ','
+  # La couleur du rond : celle du métachamp, si c'est l'une des treize ; sinon, le cycle selon le rang.
+  assign emb_couleurs = 'ciel,soleil,menthe,rose,lilas,peche,bleu,gris,orange,rouge,violet,beige,vert' | split: ','
   assign emb_cycle = 'ciel,soleil,menthe,rose' | split: ','
   assign emb_couleur = cible.metafields.cocon.embleme_couleur.value | strip | downcase
   unless emb_couleurs contains emb_couleur
