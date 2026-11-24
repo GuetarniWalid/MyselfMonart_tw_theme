@@ -838,13 +838,17 @@
 :root[data-refonte-page] .c-titre b {
   font-weight: 700;
 }
-/* Un long titre, un cran plus petit, un très long, deux (data-taille, sections/collection-refonte.liquid) : à 390 px, 28
-   et 24 px au lieu de 34 ; sur ordinateur, la taille de tous les titres. */
+/* Un long titre, un cran plus petit, un plus long, deux, un très long, trois (data-taille,
+   sections/collection-refonte.liquid) : à 390 px, 28, 24 et 22 px au lieu de 34 ; sur ordinateur, la taille de tous les
+   titres. */
 :root[data-refonte-page] .c-titre[data-taille="moyen"] {
   font-size: clamp(27px, 7.3vw, 52px);
 }
 :root[data-refonte-page] .c-titre[data-taille="petit"] {
   font-size: clamp(23px, 6.2vw, 52px);
+}
+:root[data-refonte-page] .c-titre[data-taille="mini"] {
+  font-size: clamp(21px, 5.6vw, 52px);
 }
 :root[data-refonte-page] .c-nombre {
   margin: 0;
@@ -2379,6 +2383,64 @@
   flex-basis: 100%;
   overflow-wrap: anywhere;
   hyphens: auto;
+}
+/* La suite d'un très long titre (« Islamic Posters » se voit, « & Arabic Calligraphy Prints » non) : dans le lien, lue
+   par Google et les lecteurs d'écran, sans place dans la page. */
+:root[data-refonte-page] .c-emb-reste {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* En haut de page, un nom ne se coupe pas en plein mot (« Landscap/e », « Jugendzim/mer », relevé du 24/11/2026 : 44 des
+   119 emblèmes en allemand, 32 en néerlandais, 11 en espagnol, 6 en français) : l'emblème s'élargit à son plus long mot,
+   les autres gardent leur largeur. Deux lignes au plus pour les mots de type, deux pour le sujet (trois sur ordinateur) :
+   une légende de sept lignes repoussait les tableaux hors du premier écran. Un mot de plus de 14 lettres s'écrit plus
+   petit (data-mot) ; de plus de 20, il se coupe aussi, selon la langue de la page. */
+:root[data-refonte-page] .c-sous .c-emb {
+  min-width: min-content;
+}
+:root[data-refonte-page] .c-sous :is(.c-emb-mot, .c-emb-nom) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+:root[data-refonte-page] .c-sous .c-emb-nom {
+  line-height: 1.1;
+  overflow-wrap: normal;
+  hyphens: manual;
+}
+:root[data-refonte-page] .c-sous .c-emb[data-mot] .c-emb-nom {
+  font-size: 13px;
+}
+:root[data-refonte-page] .c-sous .c-emb[data-mot="tres-long"] {
+  min-width: 120px;
+}
+:root[data-refonte-page] .c-sous .c-emb[data-mot="tres-long"] .c-emb-nom {
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+/* En bas de page, les mêmes longs mots, à la taille où ils tiennent dans leur colonne. */
+:root[data-refonte-page] .c-emb[data-taille="bas"][data-mot] .c-emb-nom {
+  font-size: 16px;
+}
+@media (min-width: 900px) {
+  :root[data-refonte-page] .c-sous .c-emb-nom {
+    -webkit-line-clamp: 3;
+  }
+  :root[data-refonte-page] .c-sous .c-emb[data-mot] .c-emb-nom {
+    font-size: 16px;
+  }
+  :root[data-refonte-page] .c-sous .c-emb[data-mot="tres-long"] {
+    min-width: 160px;
+  }
+  :root[data-refonte-page] .c-emb[data-taille="bas"][data-mot] .c-emb-nom {
+    font-size: 20px;
+  }
 }
 
 /* === Les mots du titre et les modèles (ticket 09) : fin === */

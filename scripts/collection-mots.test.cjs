@@ -227,7 +227,7 @@ function h1(titre, lang = 'fr') {
   const page = col('collection-essai', titre, { count: 12 })
   const html = renderFile(ENTREE, pageGlobals({ page, lang }), { id: 'collection_refonte' })
   assert.equal((html.match(/<h1\b/g) || []).length, 1, `${titre} : un seul h1`)
-  return /<h1 class="c-titre" id="template--1__collection_refonte-titre"(?: data-taille="(?:moyen|petit)")?>([\s\S]*?)<\/h1>/.exec(html)[1]
+  return /<h1 class="c-titre" id="template--1__collection_refonte-titre"(?: data-taille="(?:moyen|petit|mini)")?>([\s\S]*?)<\/h1>/.exec(html)[1]
 }
 
 test('l’entrée : le h1 met le sujet en gras, les mots de type en tête et en fin restent maigres', { skip: SKIP }, () => {
@@ -271,6 +271,55 @@ test('l’emblème : le début et la fin en petit, le sujet en gras, le titre lu
   }
   // En bas de page aussi.
   assert.equal(lienEmbleme(emblem(col('collection-essai', 'Tableau Pop Art'), { taille: 'bas' })).html, cas[0][2])
+})
+
+/* Relevé du 24/11/2026 : sur les pages mères, en allemand, 44 noms d'emblèmes sur 119 étaient coupés en plein mot et une
+   légende tenait sur sept lignes. Un très long sujet se voit jusqu'à son premier « & », tiret ou deux-points. */
+test('l’emblème : un très long sujet se voit jusqu’à sa première coupe, sa suite reste dans le lien, lue dans l’ordre', { skip: SKIP }, () => {
+  const cas = [
+    // [langue, titre, ce qui se voit en gras, la suite, lue sans se voir (null : rien)]
+    ['en', 'Islamic Posters & Arabic Calligraphy Prints', 'Islamic Posters', ' & Arabic Calligraphy Prints'],
+    ['en', 'Flower Posters & Floral Prints', 'Flower Posters', ' & Floral Prints'],
+    // « Sea » serait trop court : la coupe suivante.
+    ['en', 'Sea & Ocean Posters — Coastal Wall Art Prints', 'Sea & Ocean Posters', ' — Coastal Wall Art Prints'],
+    ['en', 'Kitchen Wall Art: Add Flair to Your Culinary Space', 'Kitchen Wall Art', ': Add Flair to Your Culinary Space'],
+    ['de', 'Poster fürs Schlafzimmer – Wandbilder fürs Erwachsenenschlafzimmer', 'Schlafzimmer', ' – Wandbilder fürs Erwachsenenschlafzimmer'],
+    ['de', 'Tierposter & Tierplakate', 'Tierposter', ' & Tierplakate'],
+    ['de', 'Landschafts‑Poster & Natur‑Kunstdrucke', 'Landschafts‑Poster', ' & Natur‑Kunstdrucke'],
+    ['nl', 'Posters meisjeskamer & affiches kinderkamer meisje', 'meisjeskamer', ' & affiches kinderkamer meisje'],
+    // 20 caractères ou moins : entier, comme avant.
+    ['fr', 'Poster & Affiche Fruits et Légumes', 'Fruits et Légumes', null],
+    ['en', 'Fruit & Vegetable Posters and Prints', 'Fruit & Vegetable', null],
+    // Rien à couper, ou un premier morceau de moins de 8 caractères : entier (la feuille le tient sur deux lignes).
+    ['nl', 'Slaapkamer posters voor volwassenen', 'Slaapkamer posters voor volwassenen', null],
+    ['de', 'Wandbilder für Flur & Eingangsbereich', 'Flur & Eingangsbereich', null],
+    ['fr', 'Poster bébé : Signe Astrologique aquarelle', 'bébé : Signe Astrologique aquarelle', null],
+  ]
+  for (const [lang, titre, vu, reste] of cas) {
+    for (const taille of ['haut', 'bas']) {
+      const html = emblem(col('collection-essai', titre), { lang, taille })
+      const lien = lienEmbleme(html)
+      assert.equal(unescape(/<span class="c-emb-nom">([\s\S]*?)<\/span>/.exec(lien.html)[1]), vu, `${lang} : ${titre}`)
+      const suite = /<span class="c-emb-reste">([\s\S]*?)<\/span>/.exec(lien.html)
+      assert.equal(suite ? unescape(suite[1]) : null, reste, `${lang} : ${titre}`)
+      // Le nom du lien ne change pas : le titre entier, dans son ordre.
+      assert.equal(lien.texte, titre, `${lang} : ${titre}, lu en entier`)
+    }
+  }
+})
+
+test('l’emblème : un mot de plus de 14 lettres porte data-mot="long", de plus de 20, "tres-long" ; un trait d’union coupe', { skip: SKIP }, () => {
+  const mot = (titre, lang) => (/<li class="c-emb"[^>]*? data-mot="([^"]*)"/.exec(emblem(col('collection-essai', titre), { lang })) || [])[1]
+  // Les collections en français n'en ont pas : leur emblème ne bouge pas.
+  for (const [titre] of TITRES.fr) assert.equal(mot(titre, 'fr'), undefined, titre)
+  assert.equal(mot('Landschapsschilderij', 'nl'), 'long', '20 lettres')
+  assert.equal(mot('Minimalistische posters & affiches', 'nl'), 'long', '15 lettres')
+  assert.equal(mot('Poster & Wandbilder Mädchenzimmer', 'de'), undefined, '13 lettres')
+  assert.equal(mot('Erwachsenenschlafzimmerbild', 'de'), 'tres-long')
+  // Le mot qui ne se voit pas ne compte pas.
+  assert.equal(mot('Poster fürs Schlafzimmer – Wandbilder fürs Erwachsenenschlafzimmer', 'de'), undefined)
+  assert.equal(mot('Street-Art-Poster & Graffiti-Poster', 'de'), undefined)
+  assert.equal(mot('Landschafts‑Poster & Natur‑Kunstdrucke', 'de'), undefined)
 })
 
 test('l’emblème sans image : l’initiale du sujet', { skip: SKIP }, () => {
@@ -365,6 +414,23 @@ test('la feuille : sous l’emblème, le début et la fin sur la ligne du haut, 
   // Un mot trop long pour la colonne (« Erwachsenenschlafzimmerbild ») se coupe au lieu de déborder.
   assert.match(nom, /overflow-wrap:\s*anywhere;/)
   assert.match(nom, /hyphens:\s*auto;/)
+  // La suite d'un très long titre : dans la page, sans place.
+  const reste = regle('.c-emb-reste')
+  assert.match(reste, /position:\s*absolute;/)
+  assert.match(reste, /clip-path:\s*inset\(50%\);/)
+  assert.doesNotMatch(reste, /display:\s*none|visibility:\s*hidden/, 'lue par les lecteurs d’écran')
+  // En haut de page, l'emblème s'élargit à son plus long mot, qui ne se coupe pas ; deux lignes au plus.
+  assert.match(regle('.c-sous .c-emb'), /min-width:\s*min-content;/)
+  const lignes = regle('.c-sous :is(.c-emb-mot, .c-emb-nom)')
+  assert.match(lignes, /-webkit-line-clamp:\s*2;/)
+  assert.match(lignes, /overflow:\s*hidden;/)
+  const nomHaut = regle('.c-sous .c-emb-nom')
+  assert.match(nomHaut, /overflow-wrap:\s*normal;/)
+  assert.match(nomHaut, /hyphens:\s*manual;/)
+  // La ligne coupée ne doit pas laisser voir le haut de la suivante : aucune marge intérieure en bas.
+  assert.doesNotMatch(nomHaut, /padding/)
+  // Un mot de plus de 20 lettres, seul, se coupe selon la langue.
+  assert.match(regle('.c-sous .c-emb[data-mot="tres-long"] .c-emb-nom'), /hyphens:\s*auto;/)
   // Rien d'autre ne bouge que l'ordre : aucun mouvement dans ce bloc.
   for (const r of bloc) assert.doesNotMatch(r.body, /(transition|animation|transform)\s*:/, r.head)
 })

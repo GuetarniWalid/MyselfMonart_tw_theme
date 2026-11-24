@@ -29,6 +29,10 @@
   gras, dessous. Il se lit en entier et dans son ordre : c'est le nom du lien (la feuille, bloc du ticket 09, place la
   fin à côté du début). Le nombre est hors du lien : « 152 tableaux », « 103 posters » selon le type de la collection
   visée (custom.type_of_collection), et non celui de la page. Aucun titre h1 à h6.
+  Dans les autres langues, des sujets sont très longs (« Islamic Posters & Arabic Calligraphy ») : au-delà de 20
+  caractères, il se voit jusqu'à son premier « & », tiret ou deux-points (s'il en reste 8), et la suite du titre reste
+  dans le lien, lue mais pas vue (.c-emb-reste). Un sujet dont un mot passe 14 lettres (« Landschapsschilderij ») porte
+  data-mot="long", 20 lettres, data-mot="tres-long" : la feuille l'écrit plus petit, sans couper un mot.
   Tests : scripts/collection-emblemes.test.cjs et scripts/collection-mots.test.cjs.
 {%- endcomment -%}
 {%- liquid
@@ -64,6 +68,39 @@
   assign emb_nom = emb_titre[1]
   assign emb_fin = emb_titre[2]
 
+  # Un très long sujet : ce qui s'en voit (le plus court morceau d'au moins 8 caractères), puis sa suite, lue sans se voir.
+  assign emb_reste = ''
+  if emb_nom.size > 20
+    assign emb_court = emb_nom
+    assign emb_coupes = ' & ¤ – ¤ — ¤ : ¤: ¤ - ' | split: '¤'
+    for emb_coupe in emb_coupes
+      assign emb_morceau = emb_nom | split: emb_coupe | first
+      if emb_morceau.size >= 8 and emb_morceau.size < emb_court.size
+        assign emb_court = emb_morceau
+      endif
+    endfor
+    if emb_court.size < emb_nom.size
+      assign emb_vu = emb_court.size
+      assign emb_reste = emb_nom | slice: emb_vu, emb_nom.size
+      assign emb_nom = emb_court
+    endif
+  endif
+
+  # Le plus long mot de ce qui se voit (un trait d'union le coupe).
+  assign emb_lettres = 0
+  assign emb_mots = emb_nom | replace: '-', ' ' | replace: '‑', ' ' | split: ' '
+  for emb_m in emb_mots
+    if emb_m.size > emb_lettres
+      assign emb_lettres = emb_m.size
+    endif
+  endfor
+  assign emb_long = ''
+  if emb_lettres > 20
+    assign emb_long = 'tres-long'
+  elsif emb_lettres > 14
+    assign emb_long = 'long'
+  endif
+
   # L'image fait deux fois le diamètre du rond de large.
   if taille == 'bas'
     assign emb_sizes = '(min-width: 900px) 272px, 208px'
@@ -78,7 +115,7 @@
     {%- if emb_largeur >= emb_w -%}, {{ emb_fichier | image_url: width: emb_w }} {{ emb_w }}w{%- endif -%}
   {%- endfor -%}
 {%- endcapture -%}
-<li class="c-emb" data-fond="{{ emb_couleur }}"{% if taille == 'bas' %} data-taille="bas"{% endif %}>
+<li class="c-emb" data-fond="{{ emb_couleur }}"{% if emb_long != '' %} data-mot="{{ emb_long }}"{% endif %}{% if taille == 'bas' %} data-taille="bas"{% endif %}>
   <span class="c-emb-cadre" aria-hidden="true">
     <span class="c-emb-rond" data-allow-empty></span>
     {%- if emb_largeur > 0 %}
@@ -87,6 +124,6 @@
     <span class="c-emb-initiale">{{ emb_nom | slice: 0 | upcase | escape }}</span>
     {%- endif %}
   </span>
-  <a class="c-emb-lien" href="{{ cible.url }}">{% if emb_debut != blank %}<span class="c-emb-mot">{{ emb_debut | escape }}</span> {% endif %}<span class="c-emb-nom">{{ emb_nom | escape }}</span>{% if emb_fin != blank %} <span class="c-emb-mot">{{ emb_fin | escape }}</span>{% endif %}</a>
+  <a class="c-emb-lien" href="{{ cible.url }}">{% if emb_debut != blank %}<span class="c-emb-mot">{{ emb_debut | escape }}</span> {% endif %}<span class="c-emb-nom">{{ emb_nom | escape }}</span>{% if emb_reste != '' %}<span class="c-emb-reste">{{ emb_reste | escape }}{% if emb_fin != blank %} {{ emb_fin | escape }}{% endif %}</span>{% elsif emb_fin != blank %} <span class="c-emb-mot">{{ emb_fin | escape }}</span>{% endif %}</a>
   <span class="c-emb-nb">{{ emb_cle_nombre | t: count: emb_nb }}</span>
 </li>

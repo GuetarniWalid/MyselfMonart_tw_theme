@@ -10,8 +10,9 @@
   - Le titre : le titre traduit de la collection, coupé sur son sujet (snippets/collection-titre.liquid, ticket 09) :
     les mots de type en tête et en fin maigres, le sujet en gras (« Tableau <b>Pop Art</b> », « <b>Nature-Themed</b> Wall
     Art Collection ») ; si tous ses mots sont des mots de type, le dernier en gras (« Tous les <b>Tableaux</b> »).
-    Un titre de plus de 21 caractères descend d'un cran (data-taille="moyen"), de plus de 27, de deux ("petit") : au
-    téléphone, il tient le plus souvent sur une ligne, et la première rangée de tableaux reste dans le premier écran.
+    Un titre de plus de 21 caractères descend d'un cran (data-taille="moyen"), de plus de 27, de deux ("petit"), de plus
+    de 31, de trois ("mini") : au téléphone, il tient le plus souvent sur une ligne, et la première rangée de tableaux
+    reste dans le premier écran.
   - L'interrupteur : le dessin de la bascule des fiches produit (snippets/product-format-toggle.liquid) : deux
     cellules, Posters à gauche, Toiles à droite, ses icônes Tabler « photo » et « frame ». Elles sont recopiées ici :
     la bascule des fiches les écrit en dur, et les fiches ne doivent pas bouger d'un caractère.
@@ -44,7 +45,9 @@
   assign ce_titre = ce_titre | split: '¤'
   assign ce_taille = ''
   assign ce_longueur = collection.title | strip | size
-  if ce_longueur > 27
+  if ce_longueur > 31
+    assign ce_taille = 'mini'
+  elsif ce_longueur > 27
     assign ce_taille = 'petit'
   elsif ce_longueur > 21
     assign ce_taille = 'moyen'
