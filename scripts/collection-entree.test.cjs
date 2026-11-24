@@ -723,7 +723,7 @@ test('les autres modèles de collection ne changent pas : fil replié, éditoria
   // Hors des modèles de la nouvelle page : collection.refonte.json et, depuis le ticket 09, un collection.refonte-<suffixe>.json
   // par modèle à grille (scripts/collection-modeles.test.cjs).
   const files = fs.readdirSync(path.join(ROOT, 'templates')).filter((name) => /^collection(\.[^.]+)?\.json$/.test(name) && !modeleNouvellePage(name))
-  assert.ok(files.length >= 20, 'les modèles de collection')
+  assert.equal(files.length, 19, 'les modèles de collection')
   for (const file of files) {
     for (const [key, s] of Object.entries(json(`templates/${file}`).sections)) {
       if (s.type === 'breadcrumb') assert.notEqual((s.settings || {}).affichage, 'complet', `${file} : ${key}`)

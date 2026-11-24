@@ -159,10 +159,10 @@ test('la ligne : un formulaire GET nommé, les trois familles dans l’ordre Cou
   assert.ok(html.indexOf('<select') > html.indexOf('class="filtres-compte"'))
 })
 
-/* Le tri (Walid, 24/11/2026) : « on va enlever prix croissant et prix décroissant, ça n'a pas de sens », et le tri par
-   défaut de chaque collection reste le sien. 43 collections sont en Meilleures ventes, 77 en « Le plus pertinent » de
-   Shopify (mis d'office aux collections créées depuis avril 2026), une en prix décroissant (Tableau Cuisine). */
-test('le tri : un vrai <select>, Meilleures ventes et Nouveautés, jamais les prix ; le tri de la collection en tête s’il est autre', { skip: SKIP }, async () => {
+/* Le tri (Walid, 24/11/2026) : « on va enlever prix croissant et prix décroissant, ça n'a pas de sens », puis « toujours
+   le choix par défaut de Shopify, par pertinence », et trois choix : Pertinence, Nouveautés, Meilleures ventes. Les 44
+   collections qui n'étaient pas en « Le plus pertinent » y sont passées dans l'admin ce jour-là. */
+test('le tri : un vrai <select>, Pertinence, Nouveautés et Meilleures ventes, jamais les prix ; le tri de la collection en tête', { skip: SKIP }, async () => {
   const choix = async (col) => {
     const html = await ligne(col)
     const select = element(html, /<select[^>]*>/)
@@ -170,22 +170,24 @@ test('le tri : un vrai <select>, Meilleures ventes et Nouveautés, jamais les pr
     assert.equal(attr(/<select[^>]*>/.exec(select)[0], 'aria-label'), 'Trier les tableaux')
     return [...select.matchAll(/<option value="([^"]+)"( selected)?>([^<]*)<\/option>/g)].map((m) => [m[1], texte(m[3]), !!m[2]])
   }
+  // Toutes les collections : « Le plus pertinent » en tête, choisi, sous le nom « Pertinence ».
+  const pertinence = (options) => collection({ defaut: 'most-relevant', ...options })
+  assert.deepEqual(await choix(pertinence()), [
+    ['most-relevant', 'Pertinence', true],
+    ['created-descending', 'Nouveautés', false],
+    ['best-selling', 'Meilleures ventes', false],
+  ])
+  assert.deepEqual((await choix(pertinence({ tri: 'created-descending' }))).filter((c) => c[2]).map((c) => c[0]), ['created-descending'])
+  assert.deepEqual((await choix(pertinence({ tri: 'best-selling' }))).filter((c) => c[2]).map((c) => c[0]), ['best-selling'])
+  // Un tri par prix dans l'adresse (un ancien lien) : jamais proposé ; le tri de la collection se montre.
+  assert.deepEqual((await choix(pertinence({ tri: 'price-ascending' }))).filter((c) => c[2]).map((c) => c[0]), ['most-relevant'])
+  // Une collection qui changerait de tri dans l'admin : ce tri en tête, sous son nom, jamais deux fois.
   assert.deepEqual(await choix(collection()), [
     ['best-selling', 'Meilleures ventes', true],
     ['created-descending', 'Nouveautés', false],
   ])
-  assert.deepEqual((await choix(collection({ tri: 'created-descending' }))).filter((c) => c[2]).map((c) => c[0]), ['created-descending'])
-  // Une collection en « Le plus pertinent » : son tri en tête, choisi, sous le nom « Pertinence ».
-  assert.deepEqual(await choix(collection({ defaut: 'most-relevant' })), [
-    ['most-relevant', 'Pertinence', true],
-    ['best-selling', 'Meilleures ventes', false],
-    ['created-descending', 'Nouveautés', false],
-  ])
-  // Un tri par prix dans l'adresse (un ancien lien) : jamais proposé ; le tri de la collection se montre.
-  assert.deepEqual((await choix(collection({ tri: 'price-ascending' }))).filter((c) => c[2]).map((c) => c[0]), ['best-selling'])
-  // Une collection triée par défaut par prix, ou à la main : son tri en tête, sous son nom.
-  assert.deepEqual((await choix(collection({ defaut: 'price-descending' }))).map((c) => c.slice(0, 2)), [['price-descending', 'Prix décroissant'], ['best-selling', 'Meilleures ventes'], ['created-descending', 'Nouveautés']])
-  assert.deepEqual((await choix(collection({ defaut: 'manual' }))).map((c) => c.slice(0, 2)), [['manual', 'Notre sélection'], ['best-selling', 'Meilleures ventes'], ['created-descending', 'Nouveautés']])
+  assert.deepEqual((await choix(collection({ defaut: 'price-descending' }))).map((c) => c.slice(0, 2)), [['price-descending', 'Prix décroissant'], ['created-descending', 'Nouveautés'], ['best-selling', 'Meilleures ventes']])
+  assert.deepEqual((await choix(collection({ defaut: 'manual' }))).map((c) => c.slice(0, 2)), [['manual', 'Notre sélection'], ['created-descending', 'Nouveautés'], ['best-selling', 'Meilleures ventes']])
 })
 
 /* ---------- Les valeurs ---------- */

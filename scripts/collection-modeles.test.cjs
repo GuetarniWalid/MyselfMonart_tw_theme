@@ -4,8 +4,8 @@
 // templates/collection.json. L'ordre de la nouvelle page : le fil d'Ariane complet, l'entrée, les sous-collections en
 // emblèmes, la grille, puis les sections propres du modèle, allumées, avec leurs réglages et leurs textes au caractère
 // près, puis « Envie d'un autre sujet ? », le guide et les questions. Plus de bannière, de grille d'aujourd'hui, de
-// liste de collections, ni de badges aux quatre étapes. Les trois pages sans grille (decoration-murale,
-// poster-et-affiche, tableau-decoration-mural) n'en ont pas : Walid n'a pas tranché (README, « Ce qui attend Walid »).
+// liste de collections, ni de badges aux quatre étapes. Les trois modèles sans grille (decoration-murale,
+// poster-et-affiche, tableau-decoration-mural), qu'aucune collection n'utilisait, sont supprimés (Walid, 24/11/2026).
 // Ces tests ne lisent que les modèles (JSON) et les sections : ils tournent sans liquidjs.
 const test = require('node:test')
 const assert = require('node:assert/strict')
@@ -13,12 +13,12 @@ const fs = require('fs')
 const path = require('path')
 const { ROOT, read, json, modeleNouvellePage } = require('./galerie-banc.cjs')
 
-const SANS_GRILLE = ['decoration-murale', 'poster-et-affiche', 'tableau-decoration-mural']
+const SUPPRIMES = ['decoration-murale', 'poster-et-affiche', 'tableau-decoration-mural']
 const NOUVELLE = 'collection.refonte.json'
 const fichiers = fs.readdirSync(path.join(ROOT, 'templates')).filter((name) => /^collection(\.[^.]+)?\.json$/.test(name))
 const suffixe = (file) => (/^collection\.([^.]+)\.json$/.exec(file) || [])[1] || null
-// Les modèles d'aujourd'hui à grille : collection.json et collection.<suffixe>.json, hors nouvelle page et pages sans grille.
-const actuels = fichiers.filter((f) => !modeleNouvellePage(f) && !SANS_GRILLE.includes(suffixe(f)))
+// Les modèles d'aujourd'hui : collection.json et collection.<suffixe>.json, hors nouvelle page.
+const actuels = fichiers.filter((f) => !modeleNouvellePage(f))
 // Le modèle nouveau d'un modèle d'aujourd'hui.
 const nouveauDe = (file) => (file === 'collection.json' ? NOUVELLE : `collection.refonte-${suffixe(file)}.json`)
 const modele = (file) => json(`templates/${file}`)
@@ -34,19 +34,23 @@ const propres = (m) => m.order.filter((k) => {
   const s = m.sections[k]
   return !s.disabled && !['breadcrumb', 'sous-collections', ...ANCIENNES].includes(s.type) && !quatreEtapes(s)
 })
-// Sur Tableau Salon, l'intro éditoriale écrit un h1 et l'intro : celles de l'entrée. Elle passe éteinte.
-const ETEINTES = { 'collection.tableau-salon.json': ['collection_editorial_intro'] }
+// Sur Tableau Salon, deux sections passent éteintes : l'intro éditoriale (elle écrit un h1 et l'intro, ceux de
+// l'entrée), et le carrousel « Explorez nos autres univers déco », sept liens vers d'autres familles : les emblèmes sont
+// la nouvelle norme (Walid, 24/11/2026).
+const ETEINTES = { 'collection.tableau-salon.json': ['collection_editorial_intro', 'related_carousel'] }
 
-test('un modèle nouveau pour chaque modèle à grille, et rien pour les trois pages sans grille', () => {
+test('un modèle nouveau pour chaque modèle d’aujourd’hui, tous à grille ; les trois modèles sans grille sont partis', () => {
   assert.equal(actuels.length, 19, actuels.join(', '))
-  for (const file of actuels) assert.ok(fichiers.includes(nouveauDe(file)), `${file} : ${nouveauDe(file)}`)
+  for (const file of actuels) {
+    assert.ok(fichiers.includes(nouveauDe(file)), `${file} : ${nouveauDe(file)}`)
+    assert.ok(Object.values(modele(file).sections).some((s) => s.type === 'main-collection-product-grid' && !s.disabled), `${file} : une grille allumée`)
+  }
   const nouveaux = fichiers.filter(modeleNouvellePage)
   assert.equal(nouveaux.length, 19, nouveaux.join(', '))
-  for (const s of SANS_GRILLE) assert.ok(!fichiers.includes(`collection.refonte-${s}.json`), s)
-  // Les pages sans grille le restent : leur grille d'aujourd'hui est éteinte.
-  for (const s of SANS_GRILLE) {
-    const m = modele(`collection.${s}.json`)
-    assert.ok(Object.values(m.sections).filter((x) => x.type === 'main-collection-product-grid').every((x) => x.disabled), s)
+  // Supprimés dans l'éditeur de code de Shopify : un fichier retiré du dépôt seulement, la synchronisation le ramènerait.
+  for (const s of SUPPRIMES) {
+    assert.ok(!fichiers.includes(`collection.${s}.json`), s)
+    assert.ok(!fichiers.includes(`collection.refonte-${s}.json`), s)
   }
 })
 
@@ -128,13 +132,16 @@ test('les points à signaler : bestsellers, collection-japonais, tableau-salon',
   const grilleJap = jap.sections.collections_pages_grid_mdxnY9
   assert.ok(!grilleJap.disabled)
   assert.ok(grilleJap.block_order.every((b) => grilleJap.blocks[b].disabled), 'aucun bloc allumé : aucun lien écrit aujourd’hui')
-  // tableau-salon : ses six sections propres, l'intro éditoriale éteinte (son h1).
+  // tableau-salon : ses six sections propres, l'intro éditoriale (son h1) et le carrousel (la nouvelle norme : les
+  // emblèmes) éteints, leurs réglages gardés.
   const salon = modele('collection.refonte-tableau-salon.json')
   assert.deepEqual(salon.order.slice(salon.order.indexOf('collection_grille') + 1, salon.order.indexOf('collection_sujets')), [
     'collection_editorial_intro', 'related_carousel', 'collection_editorial_guide', 'faq_salon', 'custom_liquid_schema', 'signature_salon',
   ])
   assert.equal(salon.sections.collection_editorial_intro.disabled, true)
   assert.equal(salon.sections.collection_editorial_intro.settings.show_title, true, 'ses réglages gardés')
+  assert.equal(salon.sections.related_carousel.disabled, true)
+  assert.equal(salon.sections.related_carousel.block_order.length, 7, 'ses sept liens gardés, éteints')
 })
 
 /* Une section allumée peut-elle écrire un h1 ? Son fichier en écrit un ; la section éditoriale, seulement en intro avec

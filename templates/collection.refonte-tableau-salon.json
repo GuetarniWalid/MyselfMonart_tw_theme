@@ -46,6 +46,7 @@
     },
     "related_carousel": {
       "type": "cards-carousel",
+      "disabled": true,
       "blocks": {
         "rel_abstrait": {
           "type": "room",

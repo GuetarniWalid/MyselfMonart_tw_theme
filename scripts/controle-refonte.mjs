@@ -137,8 +137,7 @@ export function mesurer() {
     basPremiereRangee: bas.length ? Math.max(...bas) : null,
     largeurPage: document.documentElement.scrollWidth,
     largeurEcran: innerWidth,
-    // Le tri par défaut de la collection : autre que Meilleures ventes, il s'affiche sous la ligne des filtres comme un
-    // tri choisi (ticket 06) et descend la grille.
+    // Le tri par défaut de la collection : « Le plus pertinent » partout (Walid, 24/11/2026).
     triDefaut: barre ? barre.dataset.triDefaut || null : null,
     ld,
   }
@@ -203,8 +202,8 @@ export function defautsPage(m, { largeur, premiereRangee = null, erreurs = [] } 
   if (m.total > 24 && !m.pages.some((h) => /[?&]page=2(&|$)/.test(h))) d.push('pas de lien ?page=2')
   if (m.largeurPage !== largeur) d.push(`page de ${m.largeurPage} px pour un écran de ${largeur} px`)
   if (premiereRangee) {
-    // Un tri par défaut autre que Meilleures ventes s'affiche sous la ligne des filtres : la cause la plus courante.
-    const tri = m.triDefaut && m.triDefaut !== 'best-selling' ? ` ; tri par défaut de la collection : ${m.triDefaut}` : ''
+    // Toutes les collections sont en « Le plus pertinent » (Walid, 24/11/2026) : un autre tri par défaut se signale.
+    const tri = m.triDefaut && m.triDefaut !== 'most-relevant' ? ` ; tri par défaut de la collection : ${m.triDefaut}` : ''
     if (m.basPremiereRangee == null) d.push('aucune carte dans la grille')
     else if (m.basPremiereRangee > premiereRangee) d.push(`première rangée jusqu’à ${Math.round(m.basPremiereRangee)} px (écran de ${premiereRangee} px${tri})`)
   }

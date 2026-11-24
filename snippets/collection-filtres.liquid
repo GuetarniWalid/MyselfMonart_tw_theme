@@ -3,9 +3,9 @@
   ticket 06 ; décision 6 de Walid), rendue par sections/collection-grille.liquid juste au-dessus des tableaux, à la
   place #barre ; puis, dessous, les filtres actifs (#resume).
   - Partout les mêmes trois familles, Couleur, Format et Thème (les filtres « liste » de Search & Discovery, reconnus à
-    leur paramètre : …color, …layout, …theme), puis le nombre de tableaux et le tri : Meilleures ventes et Nouveautés,
-    et en tête le tri par défaut de la collection quand il est autre (jamais les prix : Walid, 24/11/2026). Chaque famille :
-    snippets/collection-filtres-famille.liquid.
+    leur paramètre : …color, …layout, …theme), puis le nombre de tableaux et le tri : en tête celui de la collection
+    (« Pertinence » pour toutes depuis le 24/11/2026), puis Nouveautés et Meilleures ventes, jamais les prix (Walid).
+    Chaque famille : snippets/collection-filtres-famille.liquid.
   - Ordinateur (900 px et plus) : chaque famille ouvre son menu ; un clic sur une valeur change la grille derrière.
     Téléphone : chaque famille ouvre son panneau posé en bas, le <dialog> #feuille, qui ne change la grille qu'au
     bouton « Voir les N tableaux ». Pas de bouton qui ouvre tous les filtres d'un coup.
@@ -14,8 +14,8 @@
     lien qui le retire (snippets/collection-filtres-pastille.liquid), puis « Tout effacer ».
   - La ligne porte ce que le script relit dans chaque réponse du serveur : le nombre de tableaux (data-total) et la
     phrase de la zone parlée (data-annonce : « 103 tableaux. Filtres : Bleu. »).
-  Le tri neutre est celui de la collection (Walid, 24/11/2026 : « on laisse comment c'était par défaut ») : tout autre
-  tri se montre. Il ne s'écrit pas dans l'adresse (data-tri-defaut, lu par le script).
+  Le tri neutre est celui de la collection (Walid, 24/11/2026 : « toujours le choix par défaut de Shopify, par
+  pertinence ») : tout autre tri se montre. Il ne s'écrit pas dans l'adresse (data-tri-defaut, lu par le script).
   Le script : assets/collection-filtres.js (<collection-filtres>). Les textes : sections.mma.collection_filtres. Les
   styles : assets/collection-refonte.css, bloc « Ligne des filtres (ticket 06) ». Tests :
   scripts/collection-filtres.test.cjs.
@@ -74,15 +74,13 @@
   endfor
   assign liste_coches = liste_coches | remove_first: ', '
 
-  # Le tri (Walid, 24/11/2026) : Meilleures ventes et Nouveautés, jamais les prix ; en tête, le tri par défaut de la
-  # collection quand il est autre (« Pertinence » : le « Le plus pertinent » de Shopify, mis d'office aux collections
-  # créées depuis avril 2026 ; ou un tri choisi dans l'admin). Celui de l'adresse s'il est proposé, sinon celui de la
-  # collection ; seul un tri autre que celui de la collection est un tri choisi (pastille, zone parlée).
+  # Le tri (Walid, 24/11/2026) : Pertinence, Nouveautés, Meilleures ventes, jamais les prix. En tête, le tri par défaut
+  # de la collection : « Le plus pertinent » de Shopify (« Pertinence »), mis à toutes les collections ce jour-là, et
+  # d'office à celles créées depuis avril 2026 ; si l'une en change dans l'admin, c'est ce tri qui vient en tête, sous
+  # son nom. Le tri choisi est celui de l'adresse s'il est proposé, sinon celui de la collection ; seul un tri autre que
+  # celui de la collection se montre (pastille, zone parlée).
   assign tri_defaut = collection.default_sort_by
-  assign tris = 'best-selling,created-descending' | split: ','
-  unless tris contains tri_defaut
-    assign tris = tri_defaut | append: ',best-selling,created-descending' | split: ','
-  endunless
+  assign tris = tri_defaut | append: ',created-descending,best-selling' | split: ',' | uniq
   assign tris_proposes = collection.sort_options | map: 'value'
   assign tri = collection.sort_by | default: tri_defaut
   assign tri_affiche = tri_defaut

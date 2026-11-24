@@ -36,18 +36,16 @@ const path = require('path')
 
 const SITE = 'https://www.myselfmonart.com'
 
-/* Les pages témoins : des collections de chaque sorte (sujet, racine, petite collection, posters, pièce, page sans
-   grille, en anglais), une fiche toile 3D, une ancienne fiche toile, l'accueil et le panier.
-   Aucune des 111 collections publiées n'a le modèle decoration-murale (relevé du 23/11/2026, page par page) : la page
-   sans grille se voit donc par sa vue, sur une collection. L'adresse anglaise de Tableaux Nature est celle de son
-   champ méta translation.handle. */
+/* Les pages témoins : des collections de chaque sorte (sujet, racine, petite collection, posters, pièce, meilleures
+   ventes, en anglais), une fiche toile 3D, une ancienne fiche toile, l'accueil et le panier. L'adresse anglaise de
+   Tableaux Nature est celle de son champ méta translation.handle. */
 const PAGES = [
   '/collections/tableaux-nature-sauvage',
   '/collections/tous-les-tableaux',
   '/collections/tableau-lion',
   '/collections/posters-affiches-nature',
   '/collections/tableau-salon',
-  '/collections/tous-les-tableaux?view=decoration-murale',
+  '/collections/bestsellers-1',
   '/en/collections/nature-themed-wall-art',
   '/products/tableau-street-art-superman-energie-pop-et-graffiti-sauvage',
   '/products/toile-contemporaine-le-petit-prince-poesie-etoilee',

@@ -248,7 +248,7 @@ test('chaque modèle de collection pose les pastilles juste sous le fil d’Aria
       const grille = order.findIndex((key) => sections[key].type === 'collection-grille')
       assert.ok(grille > at, `${file} : avant la grille`)
     } else {
-      // Sans fil d'Ariane (decoration-murale), en tête de page.
+      // Sans fil d'Ariane, en tête de page.
       assert.equal(at, crumb + 1, `${file} : juste sous le fil d’Ariane`)
       const grid = order.findIndex((key) => sections[key].type === 'main-collection-product-grid')
       assert.ok(grid < 0 || at < grid, `${file} : avant la grille des produits`)
