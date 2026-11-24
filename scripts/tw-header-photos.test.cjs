@@ -198,7 +198,7 @@ test('au téléphone, rien ne les demande : ni la fin du chargement, ni un survo
 })
 
 test('un menu ouvert avant la fin du chargement : le script n’y touche pas, le navigateur charge celles qui se montrent', () => {
-  // Les demander toutes à l'ouverture les ferait attendre : 0,7 à 1,2 s au lieu de 0,2 à 0,4 s (10 Mb/s, 24/11/2026).
+  // Les demander toutes à l'ouverture les ferait attendre : 0,4 à 1,2 s au lieu de 0,2 à 0,9 s (10 Mb/s, 24/11/2026).
   for (const ouvrir of [(p) => p.bouton.declencher('mouseenter'), (p) => p.bouton.declencher('keydown', { key: 'Enter' })]) {
     const p = page({ largeur: 1280 })
     ouvrir(p)

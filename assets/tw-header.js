@@ -791,7 +791,7 @@ class StickyHeader extends HTMLElement {
      md), elles se chargent d'avance, une fois la page chargée et le navigateur au repos : le premier survol les trouve
      prêtes. De même quand il apparaît plus tard (un téléphone ou une tablette qu'on tourne, une fenêtre qu'on élargit).
      Un menu ouvert avant cela n'a rien à demander : le navigateur charge de lui-même les photos qui se montrent, et
-     d'abord elles (les demander toutes à l'ouverture les ferait attendre deux à trois fois plus). */
+     d'abord elles (les demander toutes à l'ouverture les ferait attendre jusqu'à trois fois plus). */
   preparerPhotosDuMenu() {
     const ordinateur = window.matchMedia('(min-width: 768px)');
     const charger = () => {
