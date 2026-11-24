@@ -295,12 +295,14 @@
         "trier_nom": "Ordenar los cuadros",
         "tri_actif": "Orden · {{ tri }}",
         "tri_pastille": "Orden: {{ tri }}",
-        "tri_retirer": "Volver al orden por más vendidos",
+        "tri_retirer": "Volver al orden inicial",
         "tris": {
           "best_selling": "Más vendidos",
           "created_descending": "Novedades",
           "price_ascending": "Precio ascendente",
-          "price_descending": "Precio descendente"
+          "price_descending": "Precio descendente",
+          "most_relevant": "Relevancia",
+          "manual": "Nuestra selección"
         },
         "appliquer": "Aplicar",
         "retirer": "Quitar el filtro {{ nom }}",

@@ -537,12 +537,14 @@
         "trier_nom": "Sort the artworks",
         "tri_actif": "Sort · {{ tri }}",
         "tri_pastille": "Sort: {{ tri }}",
-        "tri_retirer": "Back to sorting by best sellers",
+        "tri_retirer": "Back to the default sort",
         "tris": {
           "best_selling": "Best sellers",
           "created_descending": "New arrivals",
           "price_ascending": "Price, low to high",
-          "price_descending": "Price, high to low"
+          "price_descending": "Price, high to low",
+          "most_relevant": "Relevance",
+          "manual": "Our selection"
         },
         "appliquer": "Apply",
         "retirer": "Remove the {{ nom }} filter",

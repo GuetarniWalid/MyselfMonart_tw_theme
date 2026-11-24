@@ -159,7 +159,10 @@ test('la ligne : un formulaire GET nommé, les trois familles dans l’ordre Cou
   assert.ok(html.indexOf('<select') > html.indexOf('class="filtres-compte"'))
 })
 
-test('le tri : un vrai <select>, quatre choix seulement, celui de l’adresse choisi, sinon celui de la collection', { skip: SKIP }, async () => {
+/* Le tri (Walid, 24/11/2026) : « on va enlever prix croissant et prix décroissant, ça n'a pas de sens », et le tri par
+   défaut de chaque collection reste le sien. 43 collections sont en Meilleures ventes, 77 en « Le plus pertinent » de
+   Shopify (mis d'office aux collections créées depuis avril 2026), une en prix décroissant (Tableau Cuisine). */
+test('le tri : un vrai <select>, Meilleures ventes et Nouveautés, jamais les prix ; le tri de la collection en tête s’il est autre', { skip: SKIP }, async () => {
   const choix = async (col) => {
     const html = await ligne(col)
     const select = element(html, /<select[^>]*>/)
@@ -170,12 +173,19 @@ test('le tri : un vrai <select>, quatre choix seulement, celui de l’adresse ch
   assert.deepEqual(await choix(collection()), [
     ['best-selling', 'Meilleures ventes', true],
     ['created-descending', 'Nouveautés', false],
-    ['price-ascending', 'Prix croissant', false],
-    ['price-descending', 'Prix décroissant', false],
   ])
-  assert.deepEqual((await choix(collection({ tri: 'price-descending' }))).filter((c) => c[2]).map((c) => c[0]), ['price-descending'])
-  // Un tri que la ligne ne propose pas (ordre manuel) : aucun choix forcé, le premier se montre.
-  assert.deepEqual((await choix(collection({ defaut: 'manual' }))).filter((c) => c[2]), [])
+  assert.deepEqual((await choix(collection({ tri: 'created-descending' }))).filter((c) => c[2]).map((c) => c[0]), ['created-descending'])
+  // Une collection en « Le plus pertinent » : son tri en tête, choisi, sous le nom « Pertinence ».
+  assert.deepEqual(await choix(collection({ defaut: 'most-relevant' })), [
+    ['most-relevant', 'Pertinence', true],
+    ['best-selling', 'Meilleures ventes', false],
+    ['created-descending', 'Nouveautés', false],
+  ])
+  // Un tri par prix dans l'adresse (un ancien lien) : jamais proposé ; le tri de la collection se montre.
+  assert.deepEqual((await choix(collection({ tri: 'price-ascending' }))).filter((c) => c[2]).map((c) => c[0]), ['best-selling'])
+  // Une collection triée par défaut par prix, ou à la main : son tri en tête, sous son nom.
+  assert.deepEqual((await choix(collection({ defaut: 'price-descending' }))).map((c) => c.slice(0, 2)), [['price-descending', 'Prix décroissant'], ['best-selling', 'Meilleures ventes'], ['created-descending', 'Nouveautés']])
+  assert.deepEqual((await choix(collection({ defaut: 'manual' }))).map((c) => c.slice(0, 2)), [['manual', 'Notre sélection'], ['best-selling', 'Meilleures ventes'], ['created-descending', 'Nouveautés']])
 })
 
 /* ---------- Les valeurs ---------- */
@@ -363,6 +373,9 @@ test('le tri choisi : « Tri · Nouveautés » sur téléphone (pastille encre),
   assert.deepEqual(await etiquette(collection({ tri: 'created-descending' })), { actif: true, tel: 'Tri · Nouveautés', ordi: 'Trier : Nouveautés' })
   // Le tri de l'adresse, celui de la collection : rien de particulier.
   assert.deepEqual(await etiquette(collection({ tri: 'best-selling' })), { actif: false, tel: 'Trier', ordi: 'Trier : Meilleures ventes' })
+  // Une collection en « Pertinence » : c'est son tri de départ ; Meilleures ventes y est un tri choisi.
+  assert.deepEqual(await etiquette(collection({ defaut: 'most-relevant' })), { actif: false, tel: 'Trier', ordi: 'Trier : Pertinence' })
+  assert.deepEqual(await etiquette(collection({ defaut: 'most-relevant', tri: 'best-selling' })), { actif: true, tel: 'Tri · Meilleures ventes', ordi: 'Trier : Meilleures ventes' })
 })
 
 /* ---------- Les filtres actifs, sous la ligne ---------- */
@@ -398,20 +411,22 @@ test('les filtres actifs : seulement s’il y en a ; « 103 tableaux », une pas
   assert.match(r, /<a class="filtres-tout" href="\/collections\/tableaux-nature-sauvage" data-tout>Tout effacer<\/a><\/div>$/)
 })
 
-test('les filtres actifs : un tri autre que Meilleures ventes s’y montre sur téléphone, « Tri : Nouveautés », qui se retire', { skip: SKIP }, async () => {
+test('les filtres actifs : un tri autre que celui de la collection s’y montre sur téléphone, « Tri : Nouveautés », qui se retire', { skip: SKIP }, async () => {
   // Le tri seul : la ligne des filtres actifs, sur téléphone seulement (data-tri-seul).
   const seul = await ligne(collection({ tri: 'created-descending' }))
   assert.match(resume(seul), /^<div id="resume" class="filtres-resume" data-tri-seul>/)
   const [tri] = pastilles(seul)
   assert.equal(tri.tri, true)
   assert.equal(tri.nom, 'Tri : Nouveautés')
-  assert.equal(tri.label, 'Revenir au tri par meilleures ventes')
+  assert.equal(tri.label, 'Revenir au tri de départ')
   assert.equal(tri.href, COL_URL)
   // Avec des filtres : la pastille du tri garde les filtres dans son adresse.
-  const avec = pastilles(await ligne(collection({ tri: 'price-ascending', actifs: { couleur: ['Bleu'] } })))
-  assert.deepEqual(avec.map((p) => p.nom), ['Bleu', 'Tri : Prix croissant'])
+  const avec = pastilles(await ligne(collection({ tri: 'created-descending', actifs: { couleur: ['Bleu'] } })))
+  assert.deepEqual(avec.map((p) => p.nom), ['Bleu', 'Tri : Nouveautés'])
   assert.equal(avec[1].href, `${COL_URL}?filter.v.t.painting.color=gid%3A%2F%2Fshopify%2FMetaobject%2F263065862491`)
-  assert.doesNotMatch(resume(await ligne(collection({ tri: 'price-ascending', actifs: { couleur: ['Bleu'] } }))), /data-tri-seul/)
+  assert.doesNotMatch(resume(await ligne(collection({ tri: 'created-descending', actifs: { couleur: ['Bleu'] } }))), /data-tri-seul/)
+  // Le tri de la collection n'est jamais une pastille, même écrit dans l'adresse.
+  assert.equal(pastilles(await ligne(collection({ defaut: 'most-relevant', tri: 'most-relevant' }))).length, 0)
 })
 
 test('la zone parlée : « 103 tableaux. Filtres : Bleu. », sinon « Aucun filtre. », et le tri choisi', { skip: SKIP }, async () => {
@@ -419,7 +434,8 @@ test('la zone parlée : « 103 tableaux. Filtres : Bleu. », sinon « Aucun filt
   assert.equal(await annonce(collection({ actifs: { couleur: ['Bleu'] }, total: 103 })), '103 tableaux. Filtres : Bleu.')
   assert.equal(await annonce(collection()), '327 tableaux. Aucun filtre.')
   assert.equal(await annonce(collection({ actifs: { couleur: ['Doré / Or'], theme: ['Humour', 'Zen'] }, total: 1 })), '1 tableau. Filtres : Doré, Humour, Zen.')
-  assert.equal(await annonce(collection({ tri: 'price-descending', total: 327 })), '327 tableaux. Aucun filtre. Tri : Prix décroissant.')
+  assert.equal(await annonce(collection({ tri: 'created-descending', total: 327 })), '327 tableaux. Aucun filtre. Tri : Nouveautés.')
+  assert.equal(await annonce(collection({ defaut: 'most-relevant', total: 327 })), '327 tableaux. Aucun filtre.')
 })
 
 /* ---------- Dans la grille (sections/collection-grille.liquid) ---------- */

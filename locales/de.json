@@ -296,12 +296,14 @@
         "trier_nom": "Bilder sortieren",
         "tri_actif": "Sortierung · {{ tri }}",
         "tri_pastille": "Sortierung: {{ tri }}",
-        "tri_retirer": "Zurück zur Sortierung nach Bestsellern",
+        "tri_retirer": "Zurück zur Standardsortierung",
         "tris": {
           "best_selling": "Bestseller",
           "created_descending": "Neuheiten",
           "price_ascending": "Preis aufsteigend",
-          "price_descending": "Preis absteigend"
+          "price_descending": "Preis absteigend",
+          "most_relevant": "Relevanz",
+          "manual": "Unsere Auswahl"
         },
         "appliquer": "Anwenden",
         "retirer": "Filter {{ nom }} entfernen",

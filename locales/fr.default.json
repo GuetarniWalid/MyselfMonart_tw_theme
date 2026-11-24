@@ -682,12 +682,14 @@
         "trier_nom": "Trier les tableaux",
         "tri_actif": "Tri · {{ tri }}",
         "tri_pastille": "Tri : {{ tri }}",
-        "tri_retirer": "Revenir au tri par meilleures ventes",
+        "tri_retirer": "Revenir au tri de départ",
         "tris": {
           "best_selling": "Meilleures ventes",
           "created_descending": "Nouveautés",
           "price_ascending": "Prix croissant",
-          "price_descending": "Prix décroissant"
+          "price_descending": "Prix décroissant",
+          "most_relevant": "Pertinence",
+          "manual": "Notre sélection"
         },
         "appliquer": "Appliquer",
         "retirer": "Retirer le filtre {{ nom }}",

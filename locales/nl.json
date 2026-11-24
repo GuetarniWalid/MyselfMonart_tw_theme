@@ -298,12 +298,14 @@
         "trier_nom": "Schilderijen sorteren",
         "tri_actif": "Sortering · {{ tri }}",
         "tri_pastille": "Sortering: {{ tri }}",
-        "tri_retirer": "Terug naar sorteren op bestsellers",
+        "tri_retirer": "Terug naar de standaardsortering",
         "tris": {
           "best_selling": "Bestsellers",
           "created_descending": "Nieuw",
           "price_ascending": "Prijs oplopend",
-          "price_descending": "Prijs aflopend"
+          "price_descending": "Prijs aflopend",
+          "most_relevant": "Relevantie",
+          "manual": "Onze selectie"
         },
         "appliquer": "Toepassen",
         "retirer": "Filter {{ nom }} verwijderen",
