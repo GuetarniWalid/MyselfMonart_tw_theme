@@ -227,7 +227,7 @@ function h1(titre, lang = 'fr') {
   const page = col('collection-essai', titre, { count: 12 })
   const html = renderFile(ENTREE, pageGlobals({ page, lang }), { id: 'collection_refonte' })
   assert.equal((html.match(/<h1\b/g) || []).length, 1, `${titre} : un seul h1`)
-  return /<h1 class="c-titre" id="template--1__collection_refonte-titre">([\s\S]*?)<\/h1>/.exec(html)[1]
+  return /<h1 class="c-titre" id="template--1__collection_refonte-titre"(?: data-taille="(?:moyen|petit)")?>([\s\S]*?)<\/h1>/.exec(html)[1]
 }
 
 test('l’entrée : le h1 met le sujet en gras, les mots de type en tête et en fin restent maigres', { skip: SKIP }, () => {

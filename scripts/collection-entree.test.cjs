@@ -411,6 +411,27 @@ test('l’entrée : un seul h1, le titre traduit de la collection, maigre, son s
   assert.equal(await titre('  Tableau Lion '), 'Tableau <b>Lion</b>')
 })
 
+/* Relevé du 24/11/2026, à 390 px : 33 titres français sur 121 passaient à la ligne à la taille de tous (34 px) ; sur six
+   pages à emblèmes, la première rangée de tableaux sortait du premier écran (de 851 à 883 px, pour 844). Par paliers,
+   tous tiennent sur une ligne, sauf « Poster bébé : Signe Astrologique aquarelle ». */
+test('l’entrée : un long titre descend d’un cran, un très long de deux ; la taille de tous reste celle des titres courts', { skip: SKIP }, async () => {
+  const fr = nature()
+  const taille = async (title) => (/<h1\b([^>]*)>/.exec(await entree({ ...fr['tableaux-nature-sauvage'], title }, fr))[1].match(/ data-taille="([^"]*)"/) || [])[1]
+  assert.equal(await taille('Tableaux Nature'), undefined)
+  assert.equal(await taille('Tableau Entrée Couloir'.slice(0, 21)), undefined, '21 caractères')
+  assert.equal(await taille('Tableau Chambre Enfant'), 'moyen', '22 caractères')
+  assert.equal(await taille('Tous les Posters & Affiches'), 'moyen', '27 caractères')
+  assert.equal(await taille('Poster & Affiche Géométrique'), 'petit', '28 caractères')
+  assert.equal(await taille('Poster & Affiche Chambre Enfant'), 'petit')
+  assert.equal(await taille('  Tableau Lion '), undefined, 'les blancs autour ne comptent pas')
+  // La feuille : deux paliers sous la taille de tous, et la même sur ordinateur (52 px).
+  const css = read('assets/collection-refonte.css')
+  const tailles = (selecteur) => /clamp\((\d+)px, ([\d.]+)vw, (\d+)px\)/.exec(css.slice(css.indexOf(selecteur))).slice(1).map(Number)
+  const [tous, moyen, petit] = ['.c-titre {', '.c-titre[data-taille="moyen"] {', '.c-titre[data-taille="petit"] {'].map(tailles)
+  for (const i of [0, 1]) assert.ok(tous[i] > moyen[i] && moyen[i] > petit[i], JSON.stringify([tous, moyen, petit]))
+  assert.deepEqual([tous[2], moyen[2], petit[2]], [52, 52, 52])
+})
+
 test('l’entrée garde la marque de la page, une fois', { skip: SKIP }, async () => {
   const fr = nature()
   const html = await entree(fr['tableaux-nature-sauvage'], fr)
