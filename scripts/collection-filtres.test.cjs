@@ -590,7 +590,7 @@ test('la demande de sections part sans en-tête Accept, sinon Shopify répond la
    repères à la place des sections et des snippets qu'il rend, comme scripts/collection-refonte.test.cjs. */
 const gabarit = (contenu) => engine('fr').parseAndRender(read('layout/collection.liquid')
   .replace(/{%\s*section\s+'([\w-]+)'\s*%}/g, '[section $1]')
-  .replace(/{%\s*render\s+'(head-base|tw-filter-drawer|open-cart-drawer-button|cookie-banner|collection-refonte-police)'\s*%}/g, '[render $1]'), {
+  .replace(/{%\s*render\s+'(head-base|tw-filter-drawer|open-cart-drawer-button|cookie-banner|collection-refonte-police)'(?:\s*,[^%]*)?\s*%}/g, '[render $1]'), {
   content_for_layout: contenu,
   content_for_header: '',
 }, { globals: { request: { locale: { iso_code: 'fr' }, origin: 'https://www.myselfmonart.com' }, routes: {}, settings: {} } })

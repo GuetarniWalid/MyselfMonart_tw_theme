@@ -64,7 +64,7 @@ test('la section de la page : une marque cachée, sans réglage ni préréglage,
 const AILLEURS = ['head-base', 'tw-filter-drawer', 'open-cart-drawer-button', 'cookie-banner']
 const reperes = (source) => source
   .replace(/{%\s*section\s+'([\w-]+)'\s*%}/g, '[section $1]')
-  .replace(/{%\s*render\s+'([\w-]+)'\s*%}/g, (tag, name) => (AILLEURS.includes(name) ? `[render ${name}]` : tag))
+  .replace(/{%\s*render\s+'([\w-]+)'(?:\s*,[^%]*)?\s*%}/g, (tag, name) => (AILLEURS.includes(name) ? `[render ${name}]` : tag))
 
 /* Le gabarit rendu avec ce que Shopify lui donne : la page déjà rendue (content_for_layout), et des repères pour
    content_for_header. */
@@ -77,6 +77,14 @@ const renderLayout = (file, content, { lang = 'fr', cookie = true } = {}) => eng
     routes: { cart_add_url: '/cart/add', cart_change_url: '/cart/change', cart_update_url: '/cart/update', cart_url: '/cart', predictive_search_url: '/search/suggest' },
     settings: { enable_cookie: cookie },
   },
+})
+
+/* Le bouton du panier de la nouvelle page : la pilule de la fiche 3D (choix de Walid du 24/11/2026). Le gabarit, qui
+   reconnaît la page à sa marque, le dit au bouton ; ailleurs, le paramètre est faux et le bouton reste le même. */
+test('le gabarit dit au bouton du panier s’il est sur la nouvelle page', () => {
+  assert.match(read('layout/collection.liquid'), /{%\s*render\s+'open-cart-drawer-button',\s*pilule:\s*refonte_page\s*%}/)
+  // Sur ordinateur, la pilule reste dans le coin : la page n'a pas de pilule d'achat au-dessus de laquelle monter.
+  assert.match(read('assets/collection-refonte.css'), /@media \(min-width: 720px\) \{\s*:root\[data-refonte-page\] \.cart-fab \{\s*bottom: calc\(28px \+ env\(safe-area-inset-bottom, 0px\)\);\s*\}\s*\}/)
 })
 
 /* Une section telle que Shopify la pose dans la page : dans son enveloppe. */

@@ -39,7 +39,7 @@
     {% section 'tw-header' %}
     {% section 'tw-cart-drawer' %}
     {% unless refonte_page %}{% render 'tw-filter-drawer' %}{% endunless %}
-    {% render 'open-cart-drawer-button' %}
+    {% render 'open-cart-drawer-button', pilule: refonte_page %}
 
 
     <div id="wrapper-overlay" class="relative">

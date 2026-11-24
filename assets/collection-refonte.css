@@ -2332,6 +2332,15 @@
   box-shadow: 0 1px 0 var(--encre-12), 0 10px 18px -14px color-mix(in srgb, var(--encre) 35%, transparent);
 }
 
+/* Le panier, seule chose qui flotte : la pilule de la fiche 3D (.cart-fab d'input.css ; layout/collection.liquid passe
+   pilule: refonte_page au bouton, choix de Walid du 24/11/2026). Sur ordinateur, la fiche 3D la monte au-dessus de sa
+   pilule d'achat (bottom: 96px) ; ici, pas de pilule d'achat : elle reste dans le coin. */
+@media (min-width: 720px) {
+  :root[data-refonte-page] .cart-fab {
+    bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
 /* === L'en-tête qui suit le doigt (ticket 07) : fin === */
 
 /* === Les mots du titre et les modèles (ticket 09) : début === */

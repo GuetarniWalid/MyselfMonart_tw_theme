@@ -405,6 +405,9 @@ test('rendu du bouton du panier : le dessin de la pilule dans la vue galerie, le
   assert.match(await button('oeuvre-galerie'), /class="cart-fab cart-fab--pilule"/)
   assert.equal(await button('oeuvre-galerie'), await button('oeuvre-3d'))
   for (const suffix of ['painting', 'poster', null]) assert.doesNotMatch(await button(suffix), /cart-fab/, String(suffix))
+  // La nouvelle page collection (layout/collection.liquid, pilule: refonte_page) : la même pilule ; faux, le dessin de toujours.
+  assert.equal(await renderSnippet('open-cart-drawer-button', { pilule: true }, null, { suffix: null }), await button('oeuvre-3d'))
+  assert.equal(await renderSnippet('open-cart-drawer-button', { pilule: false }, null, { suffix: null }), await button(null))
 })
 
 test('rendu de la scène : la bascule Toile / Poster garde la vue de test dans l’adresse du jumeau', { skip: SKIP }, async () => {
