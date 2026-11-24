@@ -749,7 +749,10 @@ test('les autres modèles de collection ne changent pas : fil replié, éditoria
     for (const [key, s] of Object.entries(json(`templates/${file}`).sections)) {
       if (s.type === 'breadcrumb') assert.notEqual((s.settings || {}).affichage, 'complet', `${file} : ${key}`)
       if (s.type === 'main-collection-product-grid') {
-        assert.notEqual((s.settings || {}).editorial, false, `${file} : ${key}`)
+        // Tableau Salon seul le décoche : sa page d'aujourd'hui a ses propres guide et questions ; ses textes sont déjà dans
+        // custom.guide et custom.faq pour la nouvelle page, et sa grille les écrirait une seconde fois.
+        if (file === 'collection.tableau-salon.json') assert.equal((s.settings || {}).editorial, false, `${file} : ${key}`)
+        else assert.notEqual((s.settings || {}).editorial, false, `${file} : ${key}`)
         assert.notEqual((s.settings || {}).cocon_famille, false, `${file} : ${key}`)
       }
     }

@@ -23,7 +23,8 @@
       "settings": {
         "primary_image_index": 1,
         "next_image_index": 0,
-        "margin_top": "mt-0"
+        "margin_top": "mt-0",
+        "editorial": false
       }
     },
     "collection_editorial_intro": {
@@ -42,7 +43,7 @@
     "collection_editorial_guide": {
       "type": "collection-editorial",
       "settings": {
-        "source": "guide",
+        "source": "description",
         "collapsible": true,
         "summary_label": "Lire le guide complet du tableau de salon",
         "max_width": "medium",

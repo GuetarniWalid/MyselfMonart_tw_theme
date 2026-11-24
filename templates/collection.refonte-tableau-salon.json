@@ -115,8 +115,9 @@
     },
     "collection_editorial_guide": {
       "type": "collection-editorial",
+      "disabled": true,
       "settings": {
-        "source": "guide",
+        "source": "description",
         "collapsible": true,
         "summary_label": "Lire le guide complet du tableau de salon",
         "max_width": "medium",
@@ -126,6 +127,7 @@
     },
     "faq_salon": {
       "type": "collapsible-content",
+      "disabled": true,
       "blocks": {
         "faq_choisir": {
           "type": "collapsible_row",

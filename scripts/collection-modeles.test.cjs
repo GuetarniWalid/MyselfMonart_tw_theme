@@ -34,10 +34,11 @@ const propres = (m) => m.order.filter((k) => {
   const s = m.sections[k]
   return !s.disabled && !['breadcrumb', 'sous-collections', ...ANCIENNES].includes(s.type) && !quatreEtapes(s)
 })
-// Sur Tableau Salon, deux sections passent éteintes : l'intro éditoriale (elle écrit un h1 et l'intro, ceux de
-// l'entrée), et le carrousel « Explorez nos autres univers déco », sept liens vers d'autres familles : les emblèmes sont
-// la nouvelle norme (Walid, 24/11/2026).
-const ETEINTES = { 'collection.tableau-salon.json': ['collection_editorial_intro', 'related_carousel'] }
+// Sur Tableau Salon, quatre sections passent éteintes (Walid, 24/11/2026 : les nouvelles collections sont la norme) :
+// l'intro éditoriale (elle écrit un h1 et l'intro, ceux de l'entrée), le carrousel « Explorez nos autres univers déco »
+// (sept liens vers d'autres familles ; les emblèmes le remplacent), le guide et la FAQ à l'ancien dessin (leurs textes sont
+// dans custom.guide et custom.faq, que lisent les sections de la nouvelle page).
+const ETEINTES = { 'collection.tableau-salon.json': ['collection_editorial_intro', 'related_carousel', 'collection_editorial_guide', 'faq_salon'] }
 
 test('un modèle nouveau pour chaque modèle d’aujourd’hui, tous à grille ; les trois modèles sans grille sont partis', () => {
   assert.equal(actuels.length, 19, actuels.join(', '))
@@ -132,8 +133,8 @@ test('les points à signaler : bestsellers, collection-japonais, tableau-salon',
   const grilleJap = jap.sections.collections_pages_grid_mdxnY9
   assert.ok(!grilleJap.disabled)
   assert.ok(grilleJap.block_order.every((b) => grilleJap.blocks[b].disabled), 'aucun bloc allumé : aucun lien écrit aujourd’hui')
-  // tableau-salon : ses six sections propres, l'intro éditoriale (son h1) et le carrousel (la nouvelle norme : les
-  // emblèmes) éteints, leurs réglages gardés.
+  // tableau-salon : ses six sections propres ; l'intro éditoriale (son h1), le carrousel (la nouvelle norme : les
+  // emblèmes), le guide et la FAQ à l'ancien dessin sont éteints, leurs réglages gardés.
   const salon = modele('collection.refonte-tableau-salon.json')
   assert.deepEqual(salon.order.slice(salon.order.indexOf('collection_grille') + 1, salon.order.indexOf('collection_sujets')), [
     'collection_editorial_intro', 'related_carousel', 'collection_editorial_guide', 'faq_salon', 'custom_liquid_schema', 'signature_salon',
@@ -142,6 +143,15 @@ test('les points à signaler : bestsellers, collection-japonais, tableau-salon',
   assert.equal(salon.sections.collection_editorial_intro.settings.show_title, true, 'ses réglages gardés')
   assert.equal(salon.sections.related_carousel.disabled, true)
   assert.equal(salon.sections.related_carousel.block_order.length, 7, 'ses sept liens gardés, éteints')
+  assert.equal(salon.sections.collection_editorial_guide.disabled, true)
+  assert.equal(salon.sections.faq_salon.disabled, true)
+  assert.equal(salon.sections.faq_salon.block_order.length, 6, 'ses six questions gardées, éteintes')
+  // Sa page d'aujourd'hui garde ses blocs et ne lit ni custom.guide ni custom.faq : sa grille n'écrit pas l'éditorial, son
+  // guide est la description. Remplir ces champs pour la nouvelle page ne la change donc pas.
+  const salonActuel = modele('collection.tableau-salon.json').sections
+  assert.equal(salonActuel['main-collection-product-grid'].settings.editorial, false)
+  assert.equal(salonActuel.collection_editorial_guide.settings.source, 'description')
+  for (const cle of ['collection_editorial_guide', 'faq_salon']) assert.ok(!salonActuel[cle].disabled, `${cle} : allumée`)
 })
 
 /* Une section allumée peut-elle écrire un h1 ? Son fichier en écrit un ; la section éditoriale, seulement en intro avec
