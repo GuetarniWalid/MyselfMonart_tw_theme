@@ -1181,7 +1181,11 @@
   max-width: calc(100% - 92px);
 }
 :root[data-refonte-page] .c-guide-bouton {
-  margin-top: 18px;
+  margin: 18px 0 24px;
+}
+/* Ouverte, la carte a son texte sous le bouton, à la distance de ce texte. */
+:root[data-refonte-page] .c-guide-carte[open] .c-guide-bouton {
+  margin-bottom: 0;
 }
 :root[data-refonte-page] .c-guide-carte[open] .c-guide-ouvrir,
 :root[data-refonte-page] .c-guide-carte:not([open]) .c-guide-fermer {
@@ -1424,6 +1428,9 @@
   }
   :root[data-refonte-page] .c-guide-texte {
     font-size: 17px;
+  }
+  :root[data-refonte-page] .c-guide-carte:not([open]) .c-guide-bouton {
+    margin-bottom: 34px;
   }
   :root[data-refonte-page] :is(.c-guide-titre, .c-guide-texte) {
     max-width: 24em;
