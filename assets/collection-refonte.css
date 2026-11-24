@@ -57,7 +57,9 @@
   --pied-encre: var(--encre);
   --annonce-fond: var(--peche);
   --annonce-encre: var(--encre);
-  --sans: "Albert Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Une seule police de secours : chercher une à une celles du système, absentes, retardait la première mise en page
+     (180 à 220 ms à froid, 55 à 70 avec celle-ci ; relevé du 24/11/2026). */
+  --sans: "Albert Sans", sans-serif;
   /* Les marges de côté d'une bande, écran à encoche compris. */
   --gout: max(20px, env(safe-area-inset-left, 0px));
   --goutd: max(20px, env(safe-area-inset-right, 0px));

@@ -244,7 +244,8 @@ test('la feuille : les couleurs et la typo de la maquette, posées une fois, les
   assert.equal(value('annonce-encre'), 'var(--encre)')
   assert.equal(value('pied-fond'), 'var(--menthe)')
   assert.equal(value('pied-encre'), 'var(--encre)')
-  assert.equal(value('sans'), '"Albert Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif')
+  // Une seule police de secours : en chercher plusieurs retardait la première mise en page (24/11/2026).
+  assert.equal(value('sans'), '"Albert Sans", sans-serif')
   // Les marges de côté : 20 px, 48 px dès 900 px, écran à encoche compris.
   assert.equal(value('gout'), 'max(20px, env(safe-area-inset-left, 0px))')
   assert.equal(value('goutd'), 'max(20px, env(safe-area-inset-right, 0px))')
@@ -256,7 +257,9 @@ test('la feuille : les couleurs et la typo de la maquette, posées une fois, les
   const galerie = sheet(GALERIE).find((r) => r.head === ':root[data-galerie-page]' && !r.context.length).body
   const shared = [...tokens.body.matchAll(/--([\w-]+):\s*([^;]+);/g)].filter(([, name]) => value(name, galerie) !== undefined)
   assert.ok(shared.length >= 20, 'les variables du socle sont celles de la fiche 3D')
-  for (const [, name, own] of shared) assert.equal(own, value(name, galerie), `--${name} : la valeur de la fiche 3D`)
+  // Sauf la police de secours, plus courte ici (la première mise en page attend moins) ; la fiche 3D n'a pas bougé.
+  for (const [, name, own] of shared.filter(([, name]) => name !== 'sans')) assert.equal(own, value(name, galerie), `--${name} : la valeur de la fiche 3D`)
+  assert.match(value('sans', galerie), /^"Albert Sans", /)
 })
 
 test('la feuille : aucun mouvement hors de « mouvements voulus »', () => {
