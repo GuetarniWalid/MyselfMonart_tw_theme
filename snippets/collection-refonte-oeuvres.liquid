@@ -1,0 +1,35 @@
+{%- comment -%}
+  Les premiers tableaux de la nouvelle page collection (vue ?view=refonte, dossier .scratch/collection-design,
+  ticket 10), demandés dès la tête de la page : leurs images sont ce que la page affiche de plus grand au départ, et
+  sans cela le navigateur ne les découvre qu'au milieu du HTML, après les scripts de la boutique et les images du menu.
+  Relevé du 24/11/2026 (processeur ×4, 4G lente) : sur Tableaux Nature, le premier tableau arrivait à 8,2 s.
+
+  Rendu dans <head> par layout/collection.liquid, sur cette page seulement, avec la page déjà rendue. Il y lit les deux
+  premières cartes (snippets/collection-carte.liquid) et reprend au caractère près le srcset et le sizes de leur image,
+  si elle est prioritaire (fetchpriority="high", snippets/artwork-object.liquid) : le navigateur choisit ici le fichier
+  qu'il choisira là, et ne le demande qu'une fois. Une carte différée, ou de repli (snippets/card-product.liquid), n'est
+  pas demandée en avance ; sans tableau, rien ne s'écrit.
+
+  Paramètre : page, le HTML de la page (content_for_layout).
+  Usage : {% render 'collection-refonte-oeuvres', page: content_for_layout %}
+  Tests : scripts/collection-refonte.test.cjs.
+{%- endcomment -%}
+{%- liquid
+  assign ro_cartes = page | split: '<li class="refonte-carte">'
+  for ro_rang in (1..2)
+    assign ro_image = ro_cartes[ro_rang] | split: '<img' | slice: 1, 1 | first | split: '>' | first
+    unless ro_image contains 'fetchpriority="high"'
+      continue
+    endunless
+    assign ro_srcset = ro_image | split: 'srcset="' | slice: 1, 1 | first | split: '"' | first
+    assign ro_sizes = ro_image | split: 'sizes="' | slice: 1, 1 | first | split: '"' | first
+    if ro_srcset == blank or ro_sizes == blank
+      continue
+    endif
+    echo '<link rel="preload" as="image" imagesrcset="'
+    echo ro_srcset
+    echo '" imagesizes="'
+    echo ro_sizes
+    echo '" fetchpriority="high">'
+  endfor
+-%}

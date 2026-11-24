@@ -6,6 +6,8 @@
   (snippets/collection-refonte-police.liquid). Le bandeau, le pied de page et le texte ont leurs couleurs et leur
   police dès le premier affichage. Le repère est la section, jamais le nom du modèle : la bascule sera un échange de
   modèle. Toute autre page de collection rend exactement le même HTML qu'avant (scripts/collection-refonte.test.cjs).
+  La feuille et les images des deux premiers tableaux (snippets/collection-refonte-oeuvres.liquid) sont demandées avant
+  les scripts de la boutique (content_for_header, 330 Ko) : la page s'affiche plus tôt.
   Sur cette page, pas de tiroir des filtres : sa ligne des filtres le remplace (ticket 06,
   snippets/collection-filtres.liquid).
 {%- endcomment -%}
@@ -18,9 +20,10 @@
 <!DOCTYPE html>
 <html lang="{{ request.locale.iso_code }}"{% if refonte_page %} data-refonte-page{% endif %}>
   <head>
-    {% render 'head-base' %}
+    {% render 'head-base' %}{% if refonte_page %}
+    {{ 'collection-refonte.css' | asset_url | stylesheet_tag: preload: true }}
+    {% render 'collection-refonte-oeuvres', page: content_for_layout %}{% endif %}
     {{ content_for_header }}{% if refonte_page %}
-    {{ 'collection-refonte.css' | asset_url | stylesheet_tag }}
     {% render 'collection-refonte-police' %}{% endif %}
 
     <script src="{{ 'collection.js' | asset_url }}" defer="defer"></script>

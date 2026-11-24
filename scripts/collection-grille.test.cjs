@@ -348,6 +348,23 @@ test('la section : 24 cartes par page, toutes de la nouvelle carte, et aucun h1'
   assert.equal((await grille(collection(50), { page: 3 })).match(/<li class="refonte-carte">/g).length, 2)
 })
 
+/* Les deux premiers tableaux, demandés dès la tête de la page (snippets/collection-refonte-oeuvres.liquid, rendu par
+   layout/collection.liquid) : le srcset et le sizes de leur carte, au caractère près, pour une seule demande. */
+test('les deux premiers tableaux se demandent dès la tête de la page, avec le srcset et le sizes de leur carte ; rien d’autre', { skip: SKIP }, async () => {
+  const enTete = async (page) => (await engine('fr').renderFile('collection-refonte-oeuvres', { page }, { globals: globals() })).trim()
+  const html = await grille(collection(50))
+  const liens = (await enTete(`<h1>Tableaux Nature</h1>${html}`)).match(/<link\b[^>]*>/g)
+  const premieres = imgs(html).filter((tag) => attr(tag, 'fetchpriority') === 'high')
+  assert.equal(premieres.length, 2)
+  assert.deepEqual(liens, premieres.map((tag) => `<link rel="preload" as="image" imagesrcset="${attr(tag, 'srcset')}" imagesizes="${attr(tag, 'sizes')}" fetchpriority="high">`))
+  // Rien de trop : un seul tableau, aucun tableau, pas de grille, une carte différée, une carte de repli.
+  assert.equal((await enTete(await grille(collection(1)))).match(/<link\b/g).length, 1)
+  assert.equal(await enTete(await grille(collection(0))), '')
+  assert.equal(await enTete('<h1>Une page sans grille</h1>'), '')
+  assert.equal(await enTete(await carte(ancienneToile(), { lazy: true })), '', 'une carte différée')
+  assert.equal(await enTete(await carte(sansOeuvre(), { lazy: false })), '', 'une carte de repli')
+})
+
 test('la section : ses places dans l’ordre, le titre invisible, la ligne des filtres, la zone parlée', { skip: SKIP }, async () => {
   const html = await grille(collection(50))
   assert.match(html, /^\s*<section id="grille" class="refonte-grille" aria-labelledby="grille-titre">/)

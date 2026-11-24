@@ -118,11 +118,19 @@ test('le gabarit des pages collection : avec la marque, <html data-refonte-page>
   const html = await renderLayout(LAYOUT, page)
   assert.match(html, /^<!DOCTYPE html>\n<html lang="fr" data-refonte-page>\n {2}<head>\n/)
   const head = html.slice(0, html.indexOf('</head>'))
-  assert.match(head, /\[content_for_header\]\n {4}<link href="\/\/www\.myselfmonart\.com\/cdn\/shop\/t\/25\/assets\/collection-refonte\.css\?v=1" rel="stylesheet" type="text\/css" media="all" \/>\n/)
+  // La feuille juste après celles du thème, avant les scripts de la boutique (content_for_header) : la page s'affiche
+  // plus tôt (ticket 10, relevé du 24/11/2026). La police après eux.
+  assert.match(head, /\[render head-base\]\n {4}<link href="\/\/www\.myselfmonart\.com\/cdn\/shop\/t\/25\/assets\/collection-refonte\.css\?v=1" rel="stylesheet" type="text\/css" media="all" \/>\n/)
   assert.equal(html.match(/collection-refonte\.css/g).length, 1)
+  assert.ok(head.indexOf('collection-refonte.css') < head.indexOf('[content_for_header]'))
+  assert.ok(head.indexOf('[content_for_header]') < head.indexOf('Albert Sans'))
+  // Sa demande part aussi dans l'en-tête de la réponse (stylesheet_tag: preload: true).
+  assert.match(read(LAYOUT), /{{ 'collection-refonte\.css' \| asset_url \| stylesheet_tag: preload: true }}/)
   // Rien d'autre ne change : sans la marque de <html> et sans ce qui s'ajoute à <head>, le HTML d'avant, moins le
   // tiroir des filtres, que la ligne des filtres de la page remplace (ticket 06, scripts/collection-filtres.test.cjs).
-  const rest = html.replace('<html lang="fr" data-refonte-page>', '<html lang="fr">').replace(/(\[content_for_header\])[\s\S]*?(\n\n {4}<script src=)/, '$1$2')
+  const rest = html.replace('<html lang="fr" data-refonte-page>', '<html lang="fr">')
+    .replace(/(\[render head-base\])[\s\S]*?(\n {4}\[content_for_header\])/, '$1$2')
+    .replace(/(\[content_for_header\])[\s\S]*?(\n\n {4}<script src=)/, '$1$2')
   assert.equal(rest, (await renderLayout(AVANT, page)).replace('[render tw-filter-drawer]', ''))
 })
 
