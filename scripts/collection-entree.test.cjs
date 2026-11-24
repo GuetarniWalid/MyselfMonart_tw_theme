@@ -11,7 +11,7 @@ const test = require('node:test')
 const assert = require('node:assert/strict')
 const fs = require('fs')
 const path = require('path')
-const { ROOT, read, json, schemaOf, LANGS, SKIP, engine, locales, templateOf, globals, product, ldOf } = require('./galerie-banc.cjs')
+const { ROOT, read, json, schemaOf, LANGS, SKIP, engine, locales, templateOf, globals, product, ldOf, modeleNouvellePage } = require('./galerie-banc.cjs')
 const PLAN = require('./fixtures/cocon-plan.json')
 
 const CRUMB = 'sections/breadcrumb.liquid'
@@ -397,7 +397,7 @@ function bascule(html) {
   return { nom: unescape(group[1]), cells }
 }
 
-test('l’entrée : un seul h1, le titre traduit de la collection, maigre, son dernier mot en gras', { skip: SKIP }, async () => {
+test('l’entrée : un seul h1, le titre traduit de la collection, maigre, son sujet en gras (ticket 09 : scripts/collection-mots.test.cjs)', { skip: SKIP }, async () => {
   const fr = nature()
   const html = await entree(fr['tableaux-nature-sauvage'], fr)
   assert.equal((html.match(/<h1\b/g) || []).length, 1)
@@ -487,7 +487,8 @@ test('hors du français, la page se retrouve par sa collection, et la jumelle es
       { lien: null, courant: true, texte: 'Canvas 327', nom: null, nombre: '327' },
     ],
   })
-  assert.match(html, /<h1\b[^>]*>Nature-Themed Wall Art <b>Collection<\/b><\/h1>/)
+  // Le sujet en gras, les mots de type maigres après lui (ticket 09).
+  assert.match(html, /<h1\b[^>]*><b>Nature-Themed<\/b> Wall Art Collection<\/h1>/)
 })
 
 test('l’intro : le texte de l’éditorial sur deux lignes, « Lire la suite » au bout, qui déplie le texte', { skip: SKIP }, async () => {
@@ -522,13 +523,13 @@ test('l’intro : rien après la page 1, ni sans texte (pas de bouton seul)', { 
 
 test('les textes de l’entrée : sous sections.mma.collection.entree, dans les cinq langues, traduits', { skip: SKIP }, async () => {
   const fr = locales.fr.sections.mma.collection.entree
-  assert.deepEqual(Object.keys(fr).sort(), ['groupe', 'lien_jumelle', 'lire_la_suite', 'posters', 'reduire', 'tableaux', 'toiles'])
-  assert.deepEqual(Object.keys(fr.tableaux).sort(), ['one', 'other'])
+  // Le nombre de tableaux sans jumelle est un texte commun à l'entrée et aux emblèmes depuis le ticket 09 :
+  // sections.mma.collection.nombre, tableaux ou posters (scripts/collection-mots.test.cjs).
+  assert.deepEqual(Object.keys(fr).sort(), ['groupe', 'lien_jumelle', 'lire_la_suite', 'posters', 'reduire', 'toiles'])
   for (const lang of Object.keys(LANGS)) {
     const t = locales[lang].sections.mma.collection.entree
     assert.deepEqual(Object.keys(t).sort(), Object.keys(fr).sort(), lang)
     for (const key of ['groupe', 'lire_la_suite', 'posters', 'reduire', 'toiles']) assert.ok(typeof t[key] === 'string' && t[key].trim(), `${lang}.${key}`)
-    for (const form of ['one', 'other']) assert.match(t.tableaux[form], /^{{ count }} \S/, `${lang}.tableaux.${form}`)
     if (lang !== 'fr') for (const key of ['groupe', 'lire_la_suite', 'reduire', 'toiles']) assert.notEqual(t[key], fr[key], `${lang}.${key} : resté en français`)
     // Le nom du lien vers la jumelle : le mot de la cellule, puis le titre entier, avec la ponctuation de la langue.
     assert.equal(t.lien_jumelle, lang === 'fr' ? '{{ format }} : {{ titre }}' : '{{ format }}: {{ titre }}', `${lang}.lien_jumelle`)
@@ -719,7 +720,9 @@ test('le modèle caché : le fil complet, l’entrée, les pastilles, puis la gr
 })
 
 test('les autres modèles de collection ne changent pas : fil replié, éditorial et bas de page cocon', () => {
-  const files = fs.readdirSync(path.join(ROOT, 'templates')).filter((name) => /^collection(\.[^.]+)?\.json$/.test(name) && name !== 'collection.refonte.json')
+  // Hors des modèles de la nouvelle page : collection.refonte.json et, depuis le ticket 09, un collection.refonte-<suffixe>.json
+  // par modèle à grille (scripts/collection-modeles.test.cjs).
+  const files = fs.readdirSync(path.join(ROOT, 'templates')).filter((name) => /^collection(\.[^.]+)?\.json$/.test(name) && !modeleNouvellePage(name))
   assert.ok(files.length >= 20, 'les modèles de collection')
   for (const file of files) {
     for (const [key, s] of Object.entries(json(`templates/${file}`).sections)) {

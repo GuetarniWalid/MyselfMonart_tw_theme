@@ -8,7 +8,7 @@ const test = require('node:test')
 const assert = require('node:assert/strict')
 const fs = require('fs')
 const path = require('path')
-const { ROOT, read, json, SKIP, engine } = require('./galerie-banc.cjs')
+const { ROOT, read, json, SKIP, engine, modeleNouvellePage } = require('./galerie-banc.cjs')
 const PLAN = require('./fixtures/cocon-plan.json')
 
 const FILE = 'sections/sous-collections.liquid'
@@ -229,18 +229,29 @@ test('ailleurs qu’à la racine, une seule rangée, sans libellé', { skip: SKI
 test('chaque modèle de collection pose les pastilles juste sous le fil d’Ariane, avant la grille', () => {
   const files = fs.readdirSync(path.join(ROOT, 'templates')).filter((name) => /^collection(\.[^.]+)?\.json$/.test(name))
   assert.ok(files.includes('collection.json'), 'le modèle par défaut')
+  // Les modèles de la nouvelle page collection : collection.refonte.json et, depuis le ticket 09, un
+  // collection.refonte-<suffixe>.json par modèle à grille (leur liste : scripts/collection-modeles.test.cjs).
+  assert.ok(files.some(modeleNouvellePage), 'la nouvelle page')
   for (const file of files) {
     const { sections, order } = json(`templates/${file}`)
     const keys = Object.keys(sections).filter((key) => sections[key].type === 'sous-collections')
     assert.equal(keys.length, 1, `${file} : une section des pastilles`)
     assert.ok(!sections[keys[0]].disabled, `${file} : active`)
     const at = order.indexOf(keys[0])
-    // Sans fil d'Ariane (decoration-murale), en tête de page. Sur la nouvelle page collection, l'entrée de la page
-    // (titre, interrupteur, intro : sections/collection-refonte.liquid, ticket 02) se place entre le fil et les pastilles.
-    let crumb = order.findIndex((key) => sections[key].type === 'breadcrumb')
-    if (order[crumb + 1] && sections[order[crumb + 1]].type === 'collection-refonte') crumb++
-    assert.equal(at, crumb + 1, `${file} : juste sous le fil d’Ariane`)
-    const grid = order.findIndex((key) => sections[key].type === 'main-collection-product-grid')
-    assert.ok(grid < 0 || at < grid, `${file} : avant la grille des produits`)
+    const crumb = order.findIndex((key) => sections[key].type === 'breadcrumb')
+    if (modeleNouvellePage(file)) {
+      // La nouvelle page : le fil, l'entrée (titre, interrupteur, intro : sections/collection-refonte.liquid, ticket 02),
+      // puis les sous-collections en emblèmes, juste après l'entrée, avant la grille (sections/collection-grille.liquid).
+      assert.equal(sections[order[crumb + 1]].type, 'collection-refonte', `${file} : l’entrée juste sous le fil d’Ariane`)
+      assert.equal(at, crumb + 2, `${file} : les emblèmes juste après l’entrée`)
+      assert.equal((sections[keys[0]].settings || {}).style, 'emblemes', `${file} : en emblèmes`)
+      const grille = order.findIndex((key) => sections[key].type === 'collection-grille')
+      assert.ok(grille > at, `${file} : avant la grille`)
+    } else {
+      // Sans fil d'Ariane (decoration-murale), en tête de page.
+      assert.equal(at, crumb + 1, `${file} : juste sous le fil d’Ariane`)
+      const grid = order.findIndex((key) => sections[key].type === 'main-collection-product-grid')
+      assert.ok(grid < 0 || at < grid, `${file} : avant la grille des produits`)
+    }
   }
 })

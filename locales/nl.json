@@ -234,13 +234,22 @@
     },
     "mma": {
       "collection_grille": {
-        "titre": "De {{ titre }}",
+        "titre": "{{ titre }}: de schilderijen",
         "prix": "Vanaf {{ prix }}",
         "compte_html": "<b data-vus>{{ vus }}</b> van <b>{{ total }}</b> schilderijen",
         "fin": {
           "one": "U heeft het schilderij gezien.",
           "other": "U heeft alle {{ count }} schilderijen gezien.",
           "many": "U heeft alle {{ count }} schilderijen gezien."
+        },
+        "poster": {
+          "titre": "{{ titre }}: de posters",
+          "compte_html": "<b data-vus>{{ vus }}</b> van <b>{{ total }}</b> posters",
+          "fin": {
+            "one": "U heeft de poster gezien.",
+            "other": "U heeft alle {{ count }} posters gezien.",
+            "many": "U heeft alle {{ count }} posters gezien."
+          }
         }
       },
       "collection_filtres": {
@@ -322,6 +331,42 @@
           "portrait": "Staand",
           "paysage": "Liggend",
           "carre": "Vierkant"
+        },
+        "poster": {
+          "ligne": "Posters filteren en sorteren",
+          "voir": {
+            "one": "De poster bekijken",
+            "other": "De {{ count }} posters bekijken",
+            "many": "De {{ count }} posters bekijken"
+          },
+          "voir_aucun": "Geen posters",
+          "compte_html": {
+            "one": "<b>{{ count }}</b> poster",
+            "other": "<b>{{ count }}</b> posters",
+            "many": "<b>{{ count }}</b> posters"
+          },
+          "aucun_theme": {
+            "one": "Geen thema met die naam voor deze poster. Verwijder een filter om meer te zien.",
+            "other": "Geen thema met die naam onder deze {{ count }} posters. Verwijder een filter om meer te zien.",
+            "many": "Geen thema met die naam onder deze {{ count }} posters. Verwijder een filter om meer te zien."
+          },
+          "trier_nom": "Posters sorteren",
+          "annonce_tableaux": {
+            "one": "{{ count }} poster.",
+            "other": "{{ count }} posters.",
+            "many": "{{ count }} posters."
+          },
+          "fin_choix": {
+            "one": "U heeft de poster van deze selectie gezien.",
+            "other": "U heeft alle {{ count }} posters van deze selectie gezien.",
+            "many": "U heeft alle {{ count }} posters van deze selectie gezien."
+          },
+          "sans_filtre": {
+            "one": "De poster bekijken, zonder filters",
+            "other": "Alle {{ count }} posters bekijken, zonder filters",
+            "many": "Alle {{ count }} posters bekijken, zonder filters"
+          },
+          "aucun_resultat": "Geen poster voldoet aan deze filters."
         }
       },
       "add_to_favorites": "Toevoegen aan favorieten",
@@ -561,22 +606,27 @@
             "titre_html": "Jouw vragen over <b>{{ titre }}</b>"
           }
         },
-        "emblemes": {
+        "nombre": {
           "tableaux": {
             "one": "{{ count }} schilderij",
             "other": "{{ count }} schilderijen",
             "many": "{{ count }} schilderijen"
+          },
+          "posters": {
+            "one": "{{ count }} poster",
+            "other": "{{ count }} posters",
+            "many": "{{ count }} posters"
           }
+        },
+        "titre": {
+          "mots_type": "schilderij,schilderijen,canvas,doek,doeken,poster,posters,affiche,affiches,print,prints,kunstposter,kunstposters,en,van,voor,de,het,alle,tableau,tableaux,toile,toiles,papier,peint",
+          "sujets": "pop art,street art,line art,art deco"
         },
         "entree": {
           "groupe": "Canvas of posters",
           "posters": "Posters",
           "toiles": "Canvas",
           "lien_jumelle": "{{ format }}: {{ titre }}",
-          "tableaux": {
-            "one": "{{ count }} schilderij",
-            "other": "{{ count }} schilderijen"
-          },
           "lire_la_suite": "Verder lezen",
           "reduire": "Minder tonen"
         }

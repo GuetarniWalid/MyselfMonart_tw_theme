@@ -2303,3 +2303,26 @@
 }
 
 /* === L'en-tête qui suit le doigt (ticket 07) : fin === */
+
+/* === Les mots du titre et les modèles (ticket 09) : début === */
+
+/* Le nom sous un emblème (snippets/collection-embleme.liquid), coupé sur son sujet (snippets/collection-titre.liquid) :
+   le début et la fin, les mots de type en petites capitales (« Tableau », « Wall Art Collection »), sur la ligne du
+   haut ; le sujet, en gras, seul sur la ligne du dessous. Le lien garde l'ordre du titre (« Nature-Themed Wall Art
+   Collection » se lit ainsi) : seule la place de la fin change. Le sujet peut être un long mot (« Erwachsenen-
+   schlafzimmerbild ») : il se coupe, selon la langue de la page, au lieu de déborder de sa colonne. */
+:root[data-refonte-page] .c-emb-lien {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  column-gap: 0.3em;
+}
+:root[data-refonte-page] .c-emb-nom {
+  order: 1;
+  flex-basis: 100%;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+
+/* === Les mots du titre et les modèles (ticket 09) : fin === */

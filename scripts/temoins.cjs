@@ -251,5 +251,6 @@ if (require.main === module) {
   )
 }
 
-// Pour scripts/temoins.test.cjs : la liste par défaut, la neutralisation et les réglages de la copie.
-module.exports = { PAGES, neutraliser, reglages }
+// Pour scripts/temoins.test.cjs : la liste par défaut, la neutralisation et les réglages de la copie. Pour
+// scripts/controle-refonte.mjs (ticket 09) : la même reconnaissance d'une réponse freinée, les mêmes en-têtes.
+module.exports = { PAGES, neutraliser, reglages, estFreine, ENTETES }

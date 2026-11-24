@@ -232,13 +232,22 @@
     },
     "mma": {
       "collection_grille": {
-        "titre": "Die {{ titre_exact }}",
+        "titre": "{{ titre }}: die Bilder",
         "prix": "Ab {{ prix }}",
         "compte_html": "<b data-vus>{{ vus }}</b> von <b>{{ total }}</b> Bildern",
         "fin": {
           "one": "Sie haben das Bild gesehen.",
           "other": "Sie haben alle {{ count }} Bilder gesehen.",
           "many": "Sie haben alle {{ count }} Bilder gesehen."
+        },
+        "poster": {
+          "titre": "{{ titre }}: die Poster",
+          "compte_html": "<b data-vus>{{ vus }}</b> von <b>{{ total }}</b> Postern",
+          "fin": {
+            "one": "Sie haben das Poster gesehen.",
+            "other": "Sie haben alle {{ count }} Poster gesehen.",
+            "many": "Sie haben alle {{ count }} Poster gesehen."
+          }
         }
       },
       "collection_filtres": {
@@ -320,6 +329,42 @@
           "portrait": "Hochformat",
           "paysage": "Querformat",
           "carre": "Quadratisch"
+        },
+        "poster": {
+          "ligne": "Poster filtern und sortieren",
+          "voir": {
+            "one": "Das Poster ansehen",
+            "other": "Die {{ count }} Poster ansehen",
+            "many": "Die {{ count }} Poster ansehen"
+          },
+          "voir_aucun": "Keine Poster",
+          "compte_html": {
+            "one": "<b>{{ count }}</b> Poster",
+            "other": "<b>{{ count }}</b> Poster",
+            "many": "<b>{{ count }}</b> Poster"
+          },
+          "aucun_theme": {
+            "one": "Kein Thema mit diesem Namen für dieses Poster. Entfernen Sie einen Filter, um mehr zu sehen.",
+            "other": "Kein Thema mit diesem Namen unter diesen {{ count }} Postern. Entfernen Sie einen Filter, um mehr zu sehen.",
+            "many": "Kein Thema mit diesem Namen unter diesen {{ count }} Postern. Entfernen Sie einen Filter, um mehr zu sehen."
+          },
+          "trier_nom": "Poster sortieren",
+          "annonce_tableaux": {
+            "one": "{{ count }} Poster.",
+            "other": "{{ count }} Poster.",
+            "many": "{{ count }} Poster."
+          },
+          "fin_choix": {
+            "one": "Sie haben das Poster dieser Auswahl gesehen.",
+            "other": "Sie haben alle {{ count }} Poster dieser Auswahl gesehen.",
+            "many": "Sie haben alle {{ count }} Poster dieser Auswahl gesehen."
+          },
+          "sans_filtre": {
+            "one": "Das Poster ansehen, ohne Filter",
+            "other": "Alle {{ count }} Poster ansehen, ohne Filter",
+            "many": "Alle {{ count }} Poster ansehen, ohne Filter"
+          },
+          "aucun_resultat": "Kein Poster entspricht diesen Filtern."
         }
       },
       "remove_from_favorites": "Aus Favoriten entfernen",
@@ -559,22 +604,27 @@
             "titre_html": "Ihre Fragen zu <b>{{ titre_exact }}</b>"
           }
         },
-        "emblemes": {
+        "nombre": {
           "tableaux": {
             "one": "{{ count }} Bild",
             "other": "{{ count }} Bilder",
             "many": "{{ count }} Bilder"
+          },
+          "posters": {
+            "one": "{{ count }} Poster",
+            "other": "{{ count }} Poster",
+            "many": "{{ count }} Poster"
           }
+        },
+        "titre": {
+          "mots_type": "bild,bilder,wandbild,wandbilder,leinwandbild,leinwandbilder,leinwand,poster,plakat,plakate,kunstdruck,kunstdrucke,druck,drucke,und,mit,für,fürs,auf,alle,die,der,das,tableau,tableaux,toile,toiles,posters,affiche,affiches,papier,peint",
+          "sujets": "pop art,street art,line art,art deco"
         },
         "entree": {
           "groupe": "Leinwand oder Poster",
           "posters": "Poster",
           "toiles": "Leinwand",
           "lien_jumelle": "{{ format }}: {{ titre }}",
-          "tableaux": {
-            "one": "{{ count }} Bild",
-            "other": "{{ count }} Bilder"
-          },
           "lire_la_suite": "Weiterlesen",
           "reduire": "Weniger anzeigen"
         }

@@ -1,8 +1,8 @@
 {%- comment -%}
   collection-embleme — une collection en emblème, sur la nouvelle page collection (dossier .scratch/collection-design,
   décision 4 de Walid, ticket 03) : un détail détouré de l'un de ses tableaux, posé sur un rond de couleur d'où il sort
-  par le haut ; dessous, le nom entier de la collection, son dernier mot en gras, et son nombre de tableaux. Tout
-  l'emblème mène à la collection. Sans emblème, le même rond, avec l'initiale du dernier mot : la rangée garde sa forme.
+  par le haut ; dessous, le nom entier de la collection, son sujet en gras, et son nombre de tableaux (ou de posters).
+  Tout l'emblème mène à la collection. Sans emblème, le même rond, avec l'initiale du sujet : la rangée garde sa forme.
   Rendu par sections/sous-collections.liquid (réglage « Emblèmes ») pour les filles de la page, en haut ; en bas de
   page, en grand, par snippets/cocon-famille.liquid (mode « emblèmes ») pour les sœurs, dans « Envie d'un autre
   sujet ? » (sections/collection-sujets.liquid, ticket 08). Ses styles : assets/collection-refonte.css, bloc du
@@ -23,9 +23,12 @@
     - tout_de_suite: {Boolean} l'image arrive tout de suite (loading="eager") : les premiers du haut de page ; sinon,
       loading="lazy"
 
-  Le titre se coupe avant son dernier mot (« Tableau » en petites capitales, « Animaux » en gras) mais se lit en entier :
-  c'est le nom du lien. Le nombre de tableaux est hors du lien. Aucun titre h1 à h6.
-  Tests : scripts/collection-emblemes.test.cjs.
+  Le titre se coupe sur son sujet (snippets/collection-titre.liquid, ticket 09) : le début et la fin, les mots de type
+  (« Tableau », « Wall Art Collection »), en petites capitales au-dessus ; le sujet (« Pop Art », « Nature-Themed ») en
+  gras, dessous. Il se lit en entier et dans son ordre : c'est le nom du lien (la feuille, bloc du ticket 09, place la
+  fin à côté du début). Le nombre est hors du lien : « 152 tableaux », « 103 posters » selon le type de la collection
+  visée (custom.type_of_collection), et non celui de la page. Aucun titre h1 à h6.
+  Tests : scripts/collection-emblemes.test.cjs et scripts/collection-mots.test.cjs.
 {%- endcomment -%}
 {%- liquid
   # L'emblème, s'il y en a un. Sa largeur décide : un fichier qui n'est pas une image n'en a pas.
@@ -45,12 +48,20 @@
   # Son nombre de tableaux. Une collection pas encore créée rend un objet vide, dont le compte est une chaîne : plus: 0
   # en fait un nombre (la section ne rend d'ailleurs que les collections qui ont des produits).
   assign emb_nb = cible.all_products_count | plus: 0
+  # Le mot du nombre suit la collection visée, pas la page : posters pour une collection de posters.
+  assign emb_cle_nombre = 'sections.mma.collection.nombre.tableaux'
+  if cible.metafields.custom.type_of_collection == 'poster'
+    assign emb_cle_nombre = 'sections.mma.collection.nombre.posters'
+  endif
 
-  # Le titre, coupé avant son dernier mot.
-  assign emb_mots = cible.title | strip | split: ' '
-  assign emb_nom = emb_mots | last
-  assign emb_avant = emb_mots.size | minus: 1
-  assign emb_debut = emb_mots | slice: 0, emb_avant | join: ' '
+  # Le titre, coupé sur son sujet (snippets/collection-titre.liquid) : le début, le sujet, la fin.
+  capture emb_titre
+    render 'collection-titre', titre: cible.title
+  endcapture
+  assign emb_titre = emb_titre | split: '¤'
+  assign emb_debut = emb_titre[0]
+  assign emb_nom = emb_titre[1]
+  assign emb_fin = emb_titre[2]
 
   # L'image fait deux fois le diamètre du rond de large.
   if taille == 'bas'
@@ -75,6 +86,6 @@
     <span class="c-emb-initiale">{{ emb_nom | slice: 0 | upcase | escape }}</span>
     {%- endif %}
   </span>
-  <a class="c-emb-lien" href="{{ cible.url }}"><span class="c-emb-mot">{{ emb_debut | escape }}</span> <span class="c-emb-nom">{{ emb_nom | escape }}</span></a>
-  <span class="c-emb-nb">{{ 'sections.mma.collection.emblemes.tableaux' | t: count: emb_nb }}</span>
+  <a class="c-emb-lien" href="{{ cible.url }}">{% if emb_debut != blank %}<span class="c-emb-mot">{{ emb_debut | escape }}</span> {% endif %}<span class="c-emb-nom">{{ emb_nom | escape }}</span>{% if emb_fin != blank %} <span class="c-emb-mot">{{ emb_fin | escape }}</span>{% endif %}</a>
+  <span class="c-emb-nb">{{ emb_cle_nombre | t: count: emb_nb }}</span>
 </li>

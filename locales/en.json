@@ -473,13 +473,22 @@
     },
     "mma": {
       "collection_grille": {
-        "titre": "The {{ titre }}",
+        "titre": "{{ titre }}: the artworks",
         "prix": "From {{ prix }}",
         "compte_html": "<b data-vus>{{ vus }}</b> of <b>{{ total }}</b> artworks",
         "fin": {
           "one": "You have seen the artwork.",
           "other": "You have seen all {{ count }} artworks.",
           "many": "You have seen all {{ count }} artworks."
+        },
+        "poster": {
+          "titre": "{{ titre }}: the posters",
+          "compte_html": "<b data-vus>{{ vus }}</b> of <b>{{ total }}</b> posters",
+          "fin": {
+            "one": "You have seen the poster.",
+            "other": "You have seen all {{ count }} posters.",
+            "many": "You have seen all {{ count }} posters."
+          }
         }
       },
       "collection_filtres": {
@@ -561,6 +570,42 @@
           "portrait": "Portrait",
           "paysage": "Landscape",
           "carre": "Square"
+        },
+        "poster": {
+          "ligne": "Filter and sort the posters",
+          "voir": {
+            "one": "See the poster",
+            "other": "See the {{ count }} posters",
+            "many": "See the {{ count }} posters"
+          },
+          "voir_aucun": "No posters",
+          "compte_html": {
+            "one": "<b>{{ count }}</b> poster",
+            "other": "<b>{{ count }}</b> posters",
+            "many": "<b>{{ count }}</b> posters"
+          },
+          "aucun_theme": {
+            "one": "No theme by that name for this poster. Remove a filter to see more.",
+            "other": "No theme by that name among these {{ count }} posters. Remove a filter to see more.",
+            "many": "No theme by that name among these {{ count }} posters. Remove a filter to see more."
+          },
+          "trier_nom": "Sort the posters",
+          "annonce_tableaux": {
+            "one": "{{ count }} poster.",
+            "other": "{{ count }} posters.",
+            "many": "{{ count }} posters."
+          },
+          "fin_choix": {
+            "one": "You have seen the poster in this selection.",
+            "other": "You have seen all {{ count }} posters in this selection.",
+            "many": "You have seen all {{ count }} posters in this selection."
+          },
+          "sans_filtre": {
+            "one": "See the poster, without filters",
+            "other": "See all {{ count }} posters, without filters",
+            "many": "See all {{ count }} posters, without filters"
+          },
+          "aucun_resultat": "No poster matches these filters."
         }
       },
       "add_to_favorites": "Add to favorites",
@@ -800,22 +845,27 @@
             "titre_html": "Your questions about <b>{{ titre }}</b>"
           }
         },
-        "emblemes": {
+        "nombre": {
           "tableaux": {
             "one": "{{ count }} artwork",
             "other": "{{ count }} artworks",
             "many": "{{ count }} artworks"
+          },
+          "posters": {
+            "one": "{{ count }} poster",
+            "other": "{{ count }} posters",
+            "many": "{{ count }} posters"
           }
+        },
+        "titre": {
+          "mots_type": "wall,art,print,prints,poster,posters,canvas,canvases,collection,collections,artwork,artworks,painting,paintings,decor,all,the,for,and,on,of,tableau,tableaux,toile,toiles,affiche,affiches,papier,peint",
+          "sujets": "pop art,street art,line art,art deco"
         },
         "entree": {
           "groupe": "Canvas or posters",
           "posters": "Posters",
           "toiles": "Canvas",
           "lien_jumelle": "{{ format }}: {{ titre }}",
-          "tableaux": {
-            "one": "{{ count }} artwork",
-            "other": "{{ count }} artworks"
-          },
           "lire_la_suite": "Read more",
           "reduire": "Show less"
         }

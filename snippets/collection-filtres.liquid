@@ -22,6 +22,14 @@
   Paramètre : section_id, l'identifiant de la section qui rend la ligne (le script la redemande au serveur).
 {%- endcomment -%}
 {%- liquid
+  # Les mots des œuvres (ticket 09) : « posters » sur une collection de posters (custom.type_of_collection), « tableaux »
+  # ailleurs. Les textes des posters sont sous collection_filtres.poster, aux mêmes clés que ceux des tableaux :
+  # cles_textes est le début de leurs clés.
+  assign cles_textes = 'sections.mma.collection_filtres.'
+  if collection.metafields.custom.type_of_collection == 'poster'
+    assign cles_textes = 'sections.mma.collection_filtres.poster.'
+  endif
+
   # Les trois familles, quel que soit l'ordre de Search & Discovery.
   assign filtre_couleur = nil
   assign filtre_format = nil
@@ -82,7 +90,7 @@
 
   # La phrase de la zone parlée, après chaque changement.
   assign nombre_tableaux = collection.products_count
-  assign annonce = 'sections.mma.collection_filtres.annonce_tableaux' | t: count: nombre_tableaux
+  assign annonce = cles_textes | append: 'annonce_tableaux' | t: count: nombre_tableaux
   if liste_coches != ''
     assign suite = 'sections.mma.collection_filtres.annonce_filtres' | t: liste: liste_coches
   else
@@ -110,17 +118,17 @@
   endif
 -%}
 <collection-filtres id="barre" class="filtres-ligne" data-section="{{ section_id }}" data-total="{{ nombre_tableaux }}" data-tri-defaut="{{ collection.default_sort_by }}" data-annonce="{{ annonce }}">
-  <form class="filtres-form" method="get" action="{{ collection.url }}" aria-label="{{ 'sections.mma.collection_filtres.ligne' | t }}" autocomplete="off">
+  <form class="filtres-form" method="get" action="{{ collection.url }}" aria-label="{{ cles_textes | append: 'ligne' | t }}" autocomplete="off">
     <div class="filtres-dedans">
       <div class="filtres-defile">
-        {%- if filtre_couleur -%}{%- render 'collection-filtres-famille', famille: 'couleur', filtre: filtre_couleur, coches: coches_couleur, nombre: nombre_tableaux -%}{%- endif -%}
-        {%- if filtre_format -%}{%- render 'collection-filtres-famille', famille: 'format', filtre: filtre_format, coches: coches_format, nombre: nombre_tableaux -%}{%- endif -%}
-        {%- if filtre_theme -%}{%- render 'collection-filtres-famille', famille: 'theme', filtre: filtre_theme, coches: coches_theme, nombre: nombre_tableaux -%}{%- endif -%}
-        <p class="filtres-compte">{{ 'sections.mma.collection_filtres.compte_html' | t: count: nombre_tableaux }}</p>
+        {%- if filtre_couleur -%}{%- render 'collection-filtres-famille', famille: 'couleur', filtre: filtre_couleur, coches: coches_couleur, nombre: nombre_tableaux, cles_textes: cles_textes -%}{%- endif -%}
+        {%- if filtre_format -%}{%- render 'collection-filtres-famille', famille: 'format', filtre: filtre_format, coches: coches_format, nombre: nombre_tableaux, cles_textes: cles_textes -%}{%- endif -%}
+        {%- if filtre_theme -%}{%- render 'collection-filtres-famille', famille: 'theme', filtre: filtre_theme, coches: coches_theme, nombre: nombre_tableaux, cles_textes: cles_textes -%}{%- endif -%}
+        <p class="filtres-compte">{{ cles_textes | append: 'compte_html' | t: count: nombre_tableaux }}</p>
         <label class="filtres-tri"{% if tri_perso %} data-actif{% endif %}>
           <span class="filtres-tri-tel">{% if tri_perso %}{{ 'sections.mma.collection_filtres.tri_actif' | t: tri: nom_tri }}{% else %}{{ 'sections.mma.collection_filtres.trier' | t }}{% endif %}</span>
           <span class="filtres-tri-ordi">{{ 'sections.mma.collection_filtres.trier_par' | t }} <span class="filtres-tri-nom">{{ nom_tri }}</span></span>
-          <select name="sort_by" aria-label="{{ 'sections.mma.collection_filtres.trier_nom' | t }}">
+          <select name="sort_by" aria-label="{{ cles_textes | append: 'trier_nom' | t }}">
             {%- for valeur_tri in tris -%}
               {%- if tris_proposes contains valeur_tri -%}
                 {%- assign cle_option = 'sections.mma.collection_filtres.tris.' | append: valeur_tri | replace: '-', '_' -%}
@@ -138,7 +146,7 @@
 </collection-filtres>
 <div id="resume" class="filtres-resume"{% if liste_coches == '' %}{% if tri_perso %} data-tri-seul{% else %} hidden{% endif %}{% endif %}>
   {%- if liste_coches != '' or tri_perso -%}
-    <p class="filtres-resume-compte">{{ 'sections.mma.collection_filtres.compte_html' | t: count: nombre_tableaux }}</p>
+    <p class="filtres-resume-compte">{{ cles_textes | append: 'compte_html' | t: count: nombre_tableaux }}</p>
     {%- for valeur in filtre_couleur.active_values -%}
       {%- capture nom -%}{% render 'filter-color-label', label: valeur.label, court: true %}{%- endcapture -%}
       {%- render 'collection-filtres-pastille', famille: 'couleur', valeur: valeur, nom: nom -%}

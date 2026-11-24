@@ -1,0 +1,105 @@
+{%- comment -%}
+  collection-titre — le titre d'une collection, coupé sur son sujet, pour la nouvelle page collection (dossier
+  .scratch/collection-design, ticket 09). Rend « début¤sujet¤fin » : les mots de type en tête et en fin du titre
+  (« Tableau », « Poster & Affiche », « Wall Art Collection »…) restent maigres ; le sujet, entre eux, passe en gras :
+  « Tableau <b>Pop Art</b> », « Poster & Affiche <b>Nature</b> », « <b>Nature-Themed</b> Wall Art Collection ». Si tous
+  les mots sont des mots de type (« Tous les Tableaux »), le dernier mot est le sujet.
+  - Les mots de type : une liste par langue, sections.mma.collection.titre.mots_type, en minuscules, séparés par des
+    virgules. Chaque liste reprend aussi les noms du français (tableau, poster, affiche, toile…) : un titre pas encore
+    traduit garde son titre français.
+  - Les sujets de deux mots qui finissent par un mot de type, que rien ne coupe : sections.mma.collection.titre.sujets
+    (« pop art », « street art » : « Pop Art Canvas Prints » garde son « Art », quand « Living Room Art » le perd).
+  - Un mot se compare sans sa casse ni sa ponctuation (« Art: », « -Plakate ») ; une ponctuation seule (« & », « – »)
+    suit les mots de type qui l'entourent.
+  Utilisé par sections/collection-refonte.liquid (le h1 de l'entrée) et snippets/collection-embleme.liquid (le nom sous
+  l'emblème). Tests : scripts/collection-mots.test.cjs.
+
+  Paramètre : titre, le titre traduit de la collection.
+  Usage :
+    capture ct
+      render 'collection-titre', titre: collection.title
+    endcapture
+    assign ct = ct | split: '¤'
+  puis ct[0] (le début), ct[1] (le sujet), ct[2] (la fin). Un morceau vide peut manquer (split le laisse tomber en fin
+  de liste) : le tester avec blank. Les morceaux sont le texte du titre, à échapper.
+{%- endcomment -%}
+{%- liquid
+  assign ct_types = 'sections.mma.collection.titre.mots_type' | t | split: ','
+  assign ct_sujets = 'sections.mma.collection.titre.sujets' | t | split: ','
+
+  # Les mots du titre ; les blancs en trop ne font pas de mot.
+  assign ct_brut = titre | strip | split: ' '
+  assign ct_liste = ''
+  for ct_m in ct_brut
+    if ct_m != ''
+      assign ct_liste = ct_liste | append: '¤' | append: ct_m
+    endif
+  endfor
+  assign ct_mots = ct_liste | remove_first: '¤' | split: '¤'
+  assign ct_n = 0
+  if ct_liste != ''
+    assign ct_n = ct_mots.size
+  endif
+
+  if ct_n > 0
+    # Chaque mot tel qu'on le compare : sans casse ni ponctuation ; une ponctuation seule devient « · ».
+    assign ct_liste = ''
+    for ct_m in ct_mots
+      assign ct_c = ct_m | downcase | remove: ':' | remove: ',' | remove: '.' | remove: ';' | remove: '!' | remove: '?' | remove: '(' | remove: ')' | remove: '"' | remove: '«' | remove: '»' | remove: '’' | remove: "'" | remove: '&' | remove: '/' | remove: '+' | remove: '–' | remove: '—' | remove: '‑' | remove: '-'
+      if ct_c == ''
+        assign ct_c = '·'
+      endif
+      assign ct_liste = ct_liste | append: '¤' | append: ct_c
+    endfor
+    assign ct_cles = ct_liste | remove_first: '¤' | split: '¤'
+
+    # Le début : les mots de type en tête, jusqu'au premier mot du sujet (ou d'un sujet de deux mots).
+    assign ct_debut = 0
+    for ct_c in ct_cles
+      unless ct_c == '·' or ct_types contains ct_c
+        break
+      endunless
+      assign ct_paire = ct_c | append: ' ' | append: ct_cles[forloop.index]
+      if ct_sujets contains ct_paire
+        break
+      endif
+      assign ct_debut = ct_debut | plus: 1
+    endfor
+
+    # La fin : les mots de type en fin, sans revenir sur le début ni couper un sujet de deux mots.
+    assign ct_fin = 0
+    for ct_c in ct_cles reversed
+      assign ct_i = ct_n | minus: forloop.index
+      if ct_i < ct_debut
+        break
+      endif
+      unless ct_c == '·' or ct_types contains ct_c
+        break
+      endunless
+      assign ct_k = ct_i | minus: 1
+      if ct_k >= ct_debut
+        assign ct_paire = ct_cles[ct_k] | append: ' ' | append: ct_c
+        if ct_sujets contains ct_paire
+          break
+        endif
+      endif
+      assign ct_fin = ct_fin | plus: 1
+    endfor
+
+    # Le sujet, entre les deux ; si tous les mots sont des mots de type, le dernier.
+    assign ct_sujet = ct_n | minus: ct_debut | minus: ct_fin
+    if ct_sujet < 1
+      assign ct_debut = ct_n | minus: 1
+      assign ct_fin = 0
+      assign ct_sujet = 1
+    endif
+    assign ct_apres = ct_debut | plus: ct_sujet
+    echo ct_mots | slice: 0, ct_debut | join: ' '
+    echo '¤'
+    echo ct_mots | slice: ct_debut, ct_sujet | join: ' '
+    echo '¤'
+    echo ct_mots | slice: ct_apres, ct_fin | join: ' '
+  else
+    echo '¤¤'
+  endif
+-%}

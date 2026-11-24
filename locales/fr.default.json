@@ -618,13 +618,22 @@
     },
     "mma": {
       "collection_grille": {
-        "titre": "Les {{ titre }}",
+        "titre": "{{ titre }} : les tableaux",
         "prix": "Dès {{ prix }}",
         "compte_html": "<b data-vus>{{ vus }}</b> tableaux sur <b>{{ total }}</b>",
         "fin": {
           "one": "Vous avez vu le tableau.",
           "other": "Vous avez vu les {{ count }} tableaux.",
           "many": "Vous avez vu les {{ count }} tableaux."
+        },
+        "poster": {
+          "titre": "{{ titre }} : les posters",
+          "compte_html": "<b data-vus>{{ vus }}</b> posters sur <b>{{ total }}</b>",
+          "fin": {
+            "one": "Vous avez vu le poster.",
+            "other": "Vous avez vu les {{ count }} posters.",
+            "many": "Vous avez vu les {{ count }} posters."
+          }
         }
       },
       "collection_filtres": {
@@ -706,6 +715,42 @@
           "portrait": "Portrait",
           "paysage": "Paysage",
           "carre": "Carré"
+        },
+        "poster": {
+          "ligne": "Filtres et tri des posters",
+          "voir": {
+            "one": "Voir le poster",
+            "other": "Voir les {{ count }} posters",
+            "many": "Voir les {{ count }} posters"
+          },
+          "voir_aucun": "Aucun poster",
+          "compte_html": {
+            "one": "<b>{{ count }}</b> poster",
+            "other": "<b>{{ count }}</b> posters",
+            "many": "<b>{{ count }}</b> posters"
+          },
+          "aucun_theme": {
+            "one": "Aucun thème de ce nom pour ce poster. Retirez un filtre pour en voir plus.",
+            "other": "Aucun thème de ce nom parmi ces {{ count }} posters. Retirez un filtre pour en voir plus.",
+            "many": "Aucun thème de ce nom parmi ces {{ count }} posters. Retirez un filtre pour en voir plus."
+          },
+          "trier_nom": "Trier les posters",
+          "annonce_tableaux": {
+            "one": "{{ count }} poster.",
+            "other": "{{ count }} posters.",
+            "many": "{{ count }} posters."
+          },
+          "fin_choix": {
+            "one": "Vous avez vu le poster de ce choix.",
+            "other": "Vous avez vu les {{ count }} posters de ce choix.",
+            "many": "Vous avez vu les {{ count }} posters de ce choix."
+          },
+          "sans_filtre": {
+            "one": "Voir le poster, sans filtre",
+            "other": "Voir les {{ count }} posters, sans filtre",
+            "many": "Voir les {{ count }} posters, sans filtre"
+          },
+          "aucun_resultat": "Aucun poster ne réunit ces filtres."
         }
       },
       "add_to_favorites": "Ajouter aux favoris",
@@ -945,22 +990,27 @@
             "titre_html": "Vos questions sur <b>{{ titre }}</b>"
           }
         },
-        "emblemes": {
+        "nombre": {
           "tableaux": {
             "one": "{{ count }} tableau",
             "other": "{{ count }} tableaux",
             "many": "{{ count }} tableaux"
+          },
+          "posters": {
+            "one": "{{ count }} poster",
+            "other": "{{ count }} posters",
+            "many": "{{ count }} posters"
           }
+        },
+        "titre": {
+          "mots_type": "tableau,tableaux,toile,toiles,poster,posters,affiche,affiches,papier,peint,peints,de,des,du,les,tous,toutes,nos",
+          "sujets": "pop art,street art,line art,art deco"
         },
         "entree": {
           "groupe": "Toiles ou posters",
           "posters": "Posters",
           "toiles": "Toiles",
           "lien_jumelle": "{{ format }} : {{ titre }}",
-          "tableaux": {
-            "one": "{{ count }} tableau",
-            "other": "{{ count }} tableaux"
-          },
           "lire_la_suite": "Lire la suite",
           "reduire": "Réduire"
         }

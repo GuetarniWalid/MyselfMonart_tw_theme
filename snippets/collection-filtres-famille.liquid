@@ -14,7 +14,9 @@
   Les listes se trient par des clés texte (« 99999 − nombre », puis le nom) : Liquid ne trie pas des objets qu'il
   fabrique, et l'ordre des égalités reste le même d'un rendu à l'autre.
   Paramètres : famille ('couleur', 'format', 'theme'), filtre (le filtre de Search & Discovery), coches (les noms
-  cochés de la famille, séparés par « ¤ »), nombre (les tableaux de la page, filtres compris).
+  cochés de la famille, séparés par « ¤ »), nombre (les tableaux de la page, filtres compris), cles_textes (le début des
+  clés des textes qui nomment les œuvres : 'sections.mma.collection_filtres.', ceux des tableaux, ou
+  'sections.mma.collection_filtres.poster.' sur une collection de posters, ticket 09).
 {%- endcomment -%}
 {%- liquid
   assign cle_nom_famille = 'sections.mma.collection_filtres.familles.' | append: famille
@@ -29,9 +31,9 @@
     assign bouton = nom_famille
   endif
   if nombre == 0
-    assign voir = 'sections.mma.collection_filtres.voir_aucun' | t
+    assign voir = cles_textes | append: 'voir_aucun' | t
   else
-    assign voir = 'sections.mma.collection_filtres.voir' | t: count: nombre
+    assign voir = cles_textes | append: 'voir' | t: count: nombre
   endif
   assign cle_effacer = 'sections.mma.collection_filtres.effacer.' | append: famille
 -%}
@@ -162,7 +164,7 @@
                     {%- endunless -%}
                   {%- endfor -%}
                 </div>
-                <p class="filtres-aucun" hidden>{{ 'sections.mma.collection_filtres.aucun_theme' | t: count: nombre }}</p>
+                <p class="filtres-aucun" hidden>{{ cles_textes | append: 'aucun_theme' | t: count: nombre }}</p>
               </details>
             {%- endif -%}
         {%- endcase -%}

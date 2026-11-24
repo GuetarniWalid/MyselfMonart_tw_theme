@@ -735,3 +735,60 @@ test('les cinq langues : chaque texte de la ligne, des panneaux et des filtres a
     assert.deepEqual(cles(locales[lang].sections.mma.collection_filtres).sort(), cles(locales.fr.sections.mma.collection_filtres).sort(), lang)
   }
 })
+
+/* ---------- Une collection de posters dit « posters » (ticket 09) ---------- */
+
+/* La même collection, en posters (custom.type_of_collection), avec ses 256 posters sans filtre. */
+const enPosters = (col) => ({ ...col, handle: 'posters-affiches-nature', title: 'Poster & Affiche Nature', all_products_count: 256, metafields: { custom: { type_of_collection: 'poster' } } })
+// Ce que lit la page : le texte, et les noms et phrases portés par les attributs (aria-label, data-annonce, placeholder).
+const lu = (html) => `${texte(html)} ${[...html.matchAll(/\s(?:aria-label|data-annonce|placeholder)="([^"]*)"/g)].map((m) => unescape(m[1])).join(' ')}`
+// Le mot des tableaux dans chaque langue, qu'une page de posters ne dit jamais.
+const MOT_TABLEAUX = { fr: /tableau/i, en: /artwork/i, de: /\bbild/i, es: /cuadro/i, nl: /schilderij/i }
+const voirDe = (html, f) => texte(/<button type="submit" class="filtres-voir">([\s\S]*?)<\/button>/.exec(panneau(html, f))[1])
+
+test('sur une collection de posters, la ligne dit « posters » : le nombre, « Voir les N posters », la zone parlée, les noms des groupes', { skip: SKIP }, async () => {
+  const html = await ligne(enPosters(collection({ total: 256 })))
+  assert.equal(attr(/<collection-filtres id="barre"[^>]*>/.exec(html)[0], 'data-annonce'), '256 posters. Aucun filtre.')
+  assert.equal(attr(/<form class="filtres-form"[^>]*>/.exec(html)[0], 'aria-label'), 'Filtres et tri des posters')
+  assert.equal(attr(/<select name="sort_by"[^>]*>/.exec(html)[0], 'aria-label'), 'Trier les posters')
+  assert.equal(texte(/<p class="filtres-compte">([\s\S]*?)<\/p>/.exec(html)[1]), '256 posters')
+  for (const f of FAMILLES) assert.equal(voirDe(html, f), 'Voir les 256 posters', f)
+  assert.equal(texte(/<p class="filtres-aucun" hidden>([\s\S]*?)<\/p>/.exec(html)[1]), 'Aucun thème de ce nom parmi ces 256 posters. Retirez un filtre pour en voir plus.')
+  // Les filtres actifs, au singulier ; aucun poster pour ce choix.
+  const un = await ligne(enPosters(collection({ actifs: { couleur: ['Bleu'] }, total: 1 })))
+  assert.equal(texte(/<p class="filtres-resume-compte">([\s\S]*?)<\/p>/.exec(un)[1]), '1 poster')
+  assert.equal(voirDe(un, 'couleur'), 'Voir le poster')
+  assert.equal(attr(/<collection-filtres id="barre"[^>]*>/.exec(un)[0], 'data-annonce'), '1 poster. Filtres : Bleu.')
+  assert.equal(voirDe(await ligne(enPosters(collection({ actifs: { couleur: ['Orange'] }, total: 0 }))), 'couleur'), 'Aucun poster')
+  // Dans les cinq langues, plus un mot des tableaux ; sur une collection de tableaux, toujours les tableaux.
+  for (const lang of Object.keys(LANGS)) {
+    const posters = await ligne(enPosters(collection({ actifs: { couleur: ['Bleu'], theme: ['Zen'] }, total: 103, libelles: FORMES[lang] })), { lang })
+    assert.doesNotMatch(lu(posters), MOT_TABLEAUX[lang], lang)
+    assert.doesNotMatch(posters, /sections\.mma\./, lang)
+    assert.match(lu(await ligne(collection({ total: 103, libelles: FORMES[lang] }), { lang })), MOT_TABLEAUX[lang], `${lang} : les tableaux`)
+  }
+})
+
+test('sur une collection de posters, la fin d’un choix et l’absence de résultat disent « posters »', { skip: SKIP }, async () => {
+  const fin = (html) => texte(/<p class="refonte-suite-fin"[^>]*>([\s\S]*?)<\/p>/.exec(html)[1])
+  assert.equal(fin(await grille(enPosters(avecProduits(10, { actifs: { theme: ['Zen'] } })))), 'Vous avez vu les 10 posters de ce choix. Voir les 256 posters, sans filtre')
+  const vide = await grille(enPosters(avecProduits(0, { actifs: { couleur: ['Orange'], theme: ['Afrique'] } })))
+  assert.equal(texte(element(vide, /<div class="refonte-grille-dedans">/)), 'Aucun poster ne réunit ces filtres. Voir les 256 posters, sans filtre')
+  for (const lang of Object.keys(LANGS)) {
+    const html = await grille(enPosters(avecProduits(10, { actifs: { theme: ['Zen'] } })), { lang })
+    assert.doesNotMatch(lu(element(html, /<collection-suite[^>]*>/)), MOT_TABLEAUX[lang], lang)
+  }
+})
+
+test('les textes des posters de la ligne : les mêmes clés que ceux des tableaux, dans les cinq langues', () => {
+  for (const lang of Object.keys(LANGS)) {
+    const t = locales[lang].sections.mma.collection_filtres
+    for (const [cle, texte] of Object.entries(t.poster)) {
+      assert.ok(cle in t, `${lang}.poster.${cle} : la clé des tableaux existe`)
+      // Le même pluriel que celui des tableaux.
+      assert.deepEqual(typeof texte === 'object' ? Object.keys(texte).sort() : 'texte', typeof t[cle] === 'object' ? Object.keys(t[cle]).sort() : 'texte', `${lang}.poster.${cle}`)
+    }
+    // Traduits : les phrases (« poster » s'écrit pareil en anglais et en néerlandais, pas les phrases).
+    if (lang !== 'fr') for (const cle of ['ligne', 'trier_nom', 'aucun_resultat']) assert.notEqual(t.poster[cle], locales.fr.sections.mma.collection_filtres.poster[cle], `${lang}.poster.${cle} : traduit`)
+  }
+})

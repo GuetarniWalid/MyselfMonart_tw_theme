@@ -351,8 +351,9 @@ test('la section : 24 cartes par page, toutes de la nouvelle carte, et aucun h1'
 test('la section : ses places dans l’ordre, le titre invisible, la ligne des filtres, la zone parlée', { skip: SKIP }, async () => {
   const html = await grille(collection(50))
   assert.match(html, /^\s*<section id="grille" class="refonte-grille" aria-labelledby="grille-titre">/)
-  // Le titre, pour les lecteurs d'écran (la grille a son nom dans le plan de la page, sous le h1 de l'entrée).
-  assert.match(html, /<h2 id="grille-titre" class="sr-only">Les tableaux nature<\/h2>/)
+  // Le titre, pour les lecteurs d'écran (la grille a son nom dans le plan de la page, sous le h1 de l'entrée) : le titre
+  // de la collection tel qu'il s'écrit, puis les œuvres (ticket 09 : « Les tableau lion » ne se dit pas).
+  assert.match(html, /<h2 id="grille-titre" class="sr-only">Tableaux Nature : les tableaux<\/h2>/)
   // L'ordre de la maquette : la ligne des filtres (ticket 06, scripts/collection-filtres.test.cjs), la liste, la
   // suite, les liens des pages, la zone parlée.
   const ids = [...html.matchAll(/\sid="(grille-titre|ancre-barre|barre|liste|suite|pages|statut)"/g)].map((m) => m[1])
@@ -361,7 +362,7 @@ test('la section : ses places dans l’ordre, le titre invisible, la ligne des f
   for (const id of ['ancre-barre', 'statut']) assert.match(html, new RegExp(`<div id="${id}"[^>]*\\sdata-allow-empty>`), id)
   assert.match(html, /<div id="statut" class="sr-only" role="status" aria-live="polite" aria-atomic="true" data-allow-empty><\/div>/)
   // Le titre dans les cinq langues.
-  const TITRES = { fr: 'Les tableaux nature', en: 'The tableaux nature', de: 'Die Tableaux Nature', es: 'Selección de tableaux nature', nl: 'De tableaux nature' }
+  const TITRES = { fr: 'Tableaux Nature : les tableaux', en: 'Tableaux Nature: the artworks', de: 'Tableaux Nature: die Bilder', es: 'Tableaux Nature: los cuadros', nl: 'Tableaux Nature: de schilderijen' }
   for (const [lang, titre] of Object.entries(TITRES)) {
     assert.equal(/<h2 id="grille-titre" class="sr-only">([^<]*)<\/h2>/.exec(await grille(collection(5), { lang }))[1], titre, lang)
   }
@@ -705,4 +706,33 @@ test('<collection-suite> : le compte et la jauge suivent les lots qui arrivent e
   assert.equal(jauge.hidden, true)
   assert.equal(fin.hidden, false)
   assert.equal(statut.textContent, 'Vous avez vu les 80 tableaux.')
+})
+
+test('sur une collection de posters (ticket 09) : « 24 posters sur 80 », « Vous avez vu les 80 posters. », le titre caché, dans les cinq langues', { skip: SKIP }, async () => {
+  const posters = (n) => collection(n, { handle: 'posters-affiches-nature', title: 'Poster & Affiche Nature', type: 'poster' })
+  const TEXTES = {
+    fr: ['24 posters sur 80', 'Vous avez vu les 80 posters.', 'Vous avez vu le poster.', 'Poster & Affiche Nature : les posters'],
+    en: ['24 of 80 posters', 'You have seen all 80 posters.', 'You have seen the poster.', 'Poster & Affiche Nature: the posters'],
+    de: ['24 von 80 Postern', 'Sie haben alle 80 Poster gesehen.', 'Sie haben das Poster gesehen.', 'Poster & Affiche Nature: die Poster'],
+    es: ['24 de 80 pósteres', 'Ha visto los 80 pósteres.', 'Ha visto el póster.', 'Poster & Affiche Nature: los pósteres'],
+    nl: ['24 van 80 posters', 'U heeft alle 80 posters gezien.', 'U heeft de poster gezien.', 'Poster & Affiche Nature: de posters'],
+  }
+  for (const [lang, [compte, vu, un, titre]] of Object.entries(TEXTES)) {
+    const html = await grille(posters(80), { lang })
+    assert.equal(texte(/<p class="refonte-suite-compte">[\s\S]*?<\/p>/.exec(html)[0]), compte, lang)
+    assert.match(/<b data-vus>(\d+)<\/b>/.exec(html)[1], /^24$/, `${lang} : le nombre que le script tient à jour`)
+    assert.equal(texte(/<p class="refonte-suite-fin" hidden>[\s\S]*?<\/p>/.exec(html)[0]), vu, lang)
+    assert.equal(texte(/<p class="refonte-suite-fin">[\s\S]*?<\/p>/.exec(await grille(posters(1), { lang }))[0]), un, `${lang} : un poster`)
+    assert.equal(unescape(/<h2 id="grille-titre" class="sr-only">([^<]*)<\/h2>/.exec(html)[1]), titre, `${lang} : le titre caché`)
+  }
+})
+
+test('les textes des posters de la grille : les mêmes clés que ceux des tableaux, dans les cinq langues', () => {
+  for (const lang of Object.keys(LANGS)) {
+    const t = locales[lang].sections.mma.collection_grille
+    assert.deepEqual(Object.keys(t.poster).sort(), ['compte_html', 'fin', 'titre'], lang)
+    assert.deepEqual(Object.keys(t.poster.fin).sort(), Object.keys(t.fin).sort(), `${lang}.poster.fin : le pluriel des tableaux`)
+    // Le titre de la collection tel qu'il s'écrit, puis les œuvres : jamais « Les tableau lion ».
+    for (const v of [t.titre, t.poster.titre]) assert.match(v, /^{{ titre }} ?: \S/, `${lang} : ${v}`)
+  }
 })

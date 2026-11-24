@@ -1,7 +1,7 @@
 // La nouvelle page collection, ticket 03 (dossier .scratch/collection-design) : les sous-collections en emblèmes.
 // Chaque fille de la page devient un emblème (snippets/collection-embleme.liquid) : un détail détouré d'un de ses
 // tableaux (métachamp de collection cocon.embleme), posé sur un rond de couleur (cocon.embleme_couleur) ; sans emblème,
-// le même rond avec l'initiale ; dessous, le nom entier de la collection, son dernier mot en gras, et son nombre de
+// le même rond avec l'initiale ; dessous, le nom entier de la collection, son sujet en gras (ticket 09), et son nombre de
 // tableaux. La section des pastilles (sections/sous-collections.liquid) les rend avec le réglage « style » à
 // « emblèmes », le seul que pose le modèle caché (templates/collection.refonte.json) ; partout ailleurs, les pastilles
 // d'aujourd'hui, au caractère près (copie de la section d'avant : scripts/fixtures/sous-collections.avant-emblemes.liquid).
@@ -12,7 +12,7 @@ const test = require('node:test')
 const assert = require('node:assert/strict')
 const fs = require('fs')
 const path = require('path')
-const { ROOT, read, json, schemaOf, rules, blocs, SKIP, engine, locales, LANGS } = require('./galerie-banc.cjs')
+const { ROOT, read, json, schemaOf, rules, blocs, SKIP, engine, locales, LANGS, modeleNouvellePage } = require('./galerie-banc.cjs')
 const PLAN = require('./fixtures/cocon-plan.json')
 
 const SECTION = 'sections/sous-collections.liquid'
@@ -168,7 +168,7 @@ test('avec un emblème : l’image prête, décorative, à ses dimensions, de 16
 /* Le texte de l'initiale d'un emblème rendu (null sans initiale). */
 const initiale = (html) => (/<span class="c-emb-initiale">([^<]*)<\/span>/.exec(html) || [])[1] ?? null
 
-test('sans emblème : le même rond, avec l’initiale du dernier mot du titre, en capitale', { skip: SKIP }, () => {
+test('sans emblème : le même rond, avec l’initiale du sujet du titre, en capitale', { skip: SKIP }, () => {
   const html = emblem(col('tableau-mer-1', 'Tableau Mer', 39))
   assert.equal(tags(html, 'img').length, 0, 'aucune image')
   assert.equal(initiale(html), 'M')
@@ -212,11 +212,11 @@ const texte = (html) => unescape(html.replace(/<[^>]*>/g, '')).replace(/\s+/g, '
 /* Les liens d'un HTML, dans l'ordre : [adresse, texte]. */
 const links = (html) => [...html.matchAll(/<a\b[^>]*\bhref="([^"]*)"[^>]*>([\s\S]*?)<\/a>/g)].map(([, href, inner]) => [href, texte(inner)])
 
-test('le lien : le titre traduit, coupé avant son dernier mot (petites capitales, puis gras) mais lu en entier', { skip: SKIP }, () => {
+test('le lien : le titre traduit, coupé sur son sujet (petites capitales, puis gras) mais lu en entier', { skip: SKIP }, () => {
   const html = emblem(avecEmbleme('tableau-animaux', 'Tableau Animaux', 152, 'ciel'))
   assert.deepEqual(links(html), [['/collections/tableau-animaux', 'Tableau Animaux']])
   assert.match(html, /<a class="c-emb-lien" href="\/collections\/tableau-animaux"><span class="c-emb-mot">Tableau<\/span> <span class="c-emb-nom">Animaux<\/span><\/a>/)
-  // Échappé ; le dernier mot seul en gras.
+  // Échappé ; le sujet seul en gras (le découpage sur de vrais titres : scripts/collection-mots.test.cjs).
   const poster = emblem(col('posters-affiches-nature', 'Poster & Affiche Nature', 120))
   assert.match(poster, /<span class="c-emb-mot">Poster &amp; Affiche<\/span> <span class="c-emb-nom">Nature<\/span>/)
   assert.deepEqual(links(poster), [['/collections/posters-affiches-nature', 'Poster & Affiche Nature']])
@@ -378,14 +378,16 @@ test('un emblème en bas de page, en grand : 104 px et 136 px de rond ; en haut 
 
 /* ---------- Les modèles de collection ---------- */
 
-test('seul le modèle caché passe les sous-collections en emblèmes ; les autres modèles gardent les pastilles', () => {
+test('seuls les modèles de la nouvelle page passent les sous-collections en emblèmes ; les autres modèles gardent les pastilles', () => {
   const files = fs.readdirSync(path.join(ROOT, 'templates')).filter((name) => /^collection(\.[^.]+)?\.json$/.test(name))
   assert.ok(files.includes('collection.refonte.json'), 'le modèle caché')
+  // La nouvelle page : collection.refonte.json et, depuis le ticket 09, un collection.refonte-<suffixe>.json par modèle à
+  // grille (leur liste : scripts/collection-modeles.test.cjs).
   for (const file of files) {
     const sous = Object.values(json(`templates/${file}`).sections).filter((s) => s.type === 'sous-collections')
     assert.equal(sous.length, 1, file)
     const style = (sous[0].settings || {}).style || 'pastilles'
-    assert.equal(style, file === 'collection.refonte.json' ? 'emblemes' : 'pastilles', file)
+    assert.equal(style, modeleNouvellePage(file) ? 'emblemes' : 'pastilles', file)
   }
 })
 

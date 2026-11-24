@@ -13,15 +13,23 @@
   - La ligne des filtres, juste au-dessus des tableaux (ticket 06, snippets/collection-filtres.liquid) : son ancre
     (#ancre-barre), la ligne (#barre), puis les filtres actifs (#resume). Avec un filtre, la fin de la liste le dit
     (« … de ce choix. ») et propose de tout revoir ; aucun tableau pour ces filtres : de même.
+  - Les mots des œuvres (ticket 09) : sur une collection de posters, chaque texte qui les compte ou les nomme dit
+    « posters » (« 48 posters sur 256 ») ; le titre caché de la grille, « Tableaux Nature : les tableaux », dit de même
+    « Poster & Affiche Nature : les posters » (le titre tel qu'il s'écrit, au singulier comme au pluriel).
   Ni éditorial ni cocon (en haut, ticket 02 ; en bas, ticket 08), ni colonne de filtres. Aucun h1 : celui de la page
   est dans l'entrée. Styles : assets/collection-refonte.css, blocs « Grille et suite (ticket 05) » et « Ligne des
   filtres (ticket 06) ». Textes : sections.mma.collection_grille et collection_filtres. Tests :
   scripts/collection-grille.test.cjs et scripts/collection-filtres.test.cjs.
 {%- endcomment -%}
 {%- liquid
-  # Le titre de la grille, pour les lecteurs d'écran : « Les tableaux nature » (fr), le titre de la collection en
-  # minuscules ; les langues qui gardent les capitales des noms prennent le titre tel quel.
-  assign titre_bas = collection.title | downcase
+  # Les mots des œuvres (ticket 09) : « posters » sur une collection de posters (custom.type_of_collection), « tableaux »
+  # ailleurs ; les textes des posters sont sous collection_grille.poster et collection_filtres.poster, aux mêmes clés.
+  assign cles_grille = 'sections.mma.collection_grille.'
+  assign cles_filtres = 'sections.mma.collection_filtres.'
+  if collection.metafields.custom.type_of_collection == 'poster'
+    assign cles_grille = 'sections.mma.collection_grille.poster.'
+    assign cles_filtres = 'sections.mma.collection_filtres.poster.'
+  endif
   # Un filtre de la boutique est-il choisi ? La fin de la liste le dit, et propose de tout revoir.
   assign filtres_actifs = 0
   for filtre in collection.filters
@@ -36,14 +44,14 @@
 -%}
 {%- paginate collection.products by 24 -%}
   <section id="grille" class="refonte-grille" aria-labelledby="grille-titre">
-    <h2 id="grille-titre" class="sr-only">{{ 'sections.mma.collection_grille.titre' | t: titre: titre_bas, titre_exact: collection.title }}</h2>
+    <h2 id="grille-titre" class="sr-only">{{ cles_grille | append: 'titre' | t: titre: collection.title }}</h2>
     {%- comment -%} La ligne des filtres (ticket 06) : son ancre, puis la ligne (#barre) et les filtres actifs (#resume), juste au-dessus des tableaux. {%- endcomment -%}
     <div id="ancre-barre" data-allow-empty></div>
     {%- render 'collection-filtres', section_id: section.id -%}
     <div class="refonte-grille-dedans">
       {%- if collection.products.size == 0 -%}
         {%- if filtres_actifs > 0 -%}
-          <p class="refonte-grille-vide">{{ 'sections.mma.collection_filtres.aucun_resultat' | t }} <a class="filtres-sans" href="{{ collection.url }}" data-tout>{{ 'sections.mma.collection_filtres.sans_filtre' | t: count: collection.all_products_count }}</a></p>
+          <p class="refonte-grille-vide">{{ cles_filtres | append: 'aucun_resultat' | t }} <a class="filtres-sans" href="{{ collection.url }}" data-tout>{{ cles_filtres | append: 'sans_filtre' | t: count: collection.all_products_count }}</a></p>
         {%- else -%}
           <p class="refonte-grille-vide">{{ 'sections.main_collection_product_grid.empty' | t }}</p>
         {%- endif -%}
@@ -87,12 +95,12 @@
           {%- endif -%}
         </div>
         <collection-suite id="suite" class="refonte-suite" data-vus="{{ vus }}" data-total="{{ total }}" data-statut="statut">
-          <p class="refonte-suite-compte"{% if fin %} hidden{% endif %}>{{ 'sections.mma.collection_grille.compte_html' | t: vus: vus, total: total }}</p>
+          <p class="refonte-suite-compte"{% if fin %} hidden{% endif %}>{{ cles_grille | append: 'compte_html' | t: vus: vus, total: total }}</p>
           <progress class="refonte-jauge" value="{{ vus }}" max="{{ total }}" aria-hidden="true" data-allow-empty{% if fin %} hidden{% endif %}></progress>
           {%- if filtres_actifs > 0 -%}
-            <p class="refonte-suite-fin"{% unless fin %} hidden{% endunless %}>{{ 'sections.mma.collection_filtres.fin_choix' | t: count: total }} <a class="filtres-sans" href="{{ collection.url }}" data-tout>{{ 'sections.mma.collection_filtres.sans_filtre' | t: count: collection.all_products_count }}</a></p>
+            <p class="refonte-suite-fin"{% unless fin %} hidden{% endunless %}>{{ cles_filtres | append: 'fin_choix' | t: count: total }} <a class="filtres-sans" href="{{ collection.url }}" data-tout>{{ cles_filtres | append: 'sans_filtre' | t: count: collection.all_products_count }}</a></p>
           {%- else -%}
-            <p class="refonte-suite-fin"{% unless fin %} hidden{% endunless %}>{{ 'sections.mma.collection_grille.fin' | t: count: total }}</p>
+            <p class="refonte-suite-fin"{% unless fin %} hidden{% endunless %}>{{ cles_grille | append: 'fin' | t: count: total }}</p>
           {%- endif -%}
         </collection-suite>
         <div id="pages" class="refonte-pages">

@@ -73,6 +73,9 @@ function blocs(file) {
 
 // Le bloc principal d'un modèle produit (sa section main-product).
 const mainOf = (template) => Object.values(template.sections).find((s) => s.type === 'main-product')
+// Un modèle de la nouvelle page collection (dossier .scratch/collection-design) : collection.refonte.json et, depuis le
+// ticket 09, un collection.refonte-<suffixe>.json par modèle de collection à grille.
+const modeleNouvellePage = (file) => /^collection\.refonte(-[^.]+)?\.json$/.test(file)
 
 /* ---------- Le rendu Liquid (liquidjs) ---------- */
 
@@ -276,7 +279,7 @@ const renderSectionFile = (file, section, p, options = {}) => {
 }
 
 module.exports = {
-  ROOT, read, exists, code, json, schemaOf, SECTION, LANGS, rules, blocs, mainOf,
+  ROOT, read, exists, code, json, schemaOf, SECTION, LANGS, rules, blocs, mainOf, modeleNouvellePage,
   liquid, SKIP, locales, engine, optionValue, templateOf, image, asMedia, FLAT, OLD, MOTHER,
   product, globals, sectionOf, KEPT, galerieSection, FICHE_3D_AVANT, renderSection, renderSectionFile, renderSnippet, ldOf, blocksOf,
 }

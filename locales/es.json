@@ -231,13 +231,22 @@
     },
     "mma": {
       "collection_grille": {
-        "titre": "Selección de {{ titre }}",
+        "titre": "{{ titre }}: los cuadros",
         "prix": "Desde {{ prix }}",
         "compte_html": "<b data-vus>{{ vus }}</b> de <b>{{ total }}</b> cuadros",
         "fin": {
           "one": "Ha visto el cuadro.",
           "other": "Ha visto los {{ count }} cuadros.",
           "many": "Ha visto los {{ count }} cuadros."
+        },
+        "poster": {
+          "titre": "{{ titre }}: los pósteres",
+          "compte_html": "<b data-vus>{{ vus }}</b> de <b>{{ total }}</b> pósteres",
+          "fin": {
+            "one": "Ha visto el póster.",
+            "other": "Ha visto los {{ count }} pósteres.",
+            "many": "Ha visto los {{ count }} pósteres."
+          }
         }
       },
       "collection_filtres": {
@@ -319,6 +328,42 @@
           "portrait": "Retrato",
           "paysage": "Paisaje",
           "carre": "Cuadrado"
+        },
+        "poster": {
+          "ligne": "Filtrar y ordenar los pósteres",
+          "voir": {
+            "one": "Ver el póster",
+            "other": "Ver los {{ count }} pósteres",
+            "many": "Ver los {{ count }} pósteres"
+          },
+          "voir_aucun": "Ningún póster",
+          "compte_html": {
+            "one": "<b>{{ count }}</b> póster",
+            "other": "<b>{{ count }}</b> pósteres",
+            "many": "<b>{{ count }}</b> pósteres"
+          },
+          "aucun_theme": {
+            "one": "Ningún tema con ese nombre para este póster. Quite un filtro para ver más.",
+            "other": "Ningún tema con ese nombre entre estos {{ count }} pósteres. Quite un filtro para ver más.",
+            "many": "Ningún tema con ese nombre entre estos {{ count }} pósteres. Quite un filtro para ver más."
+          },
+          "trier_nom": "Ordenar los pósteres",
+          "annonce_tableaux": {
+            "one": "{{ count }} póster.",
+            "other": "{{ count }} pósteres.",
+            "many": "{{ count }} pósteres."
+          },
+          "fin_choix": {
+            "one": "Ha visto el póster de esta selección.",
+            "other": "Ha visto los {{ count }} pósteres de esta selección.",
+            "many": "Ha visto los {{ count }} pósteres de esta selección."
+          },
+          "sans_filtre": {
+            "one": "Ver el póster, sin filtros",
+            "other": "Ver los {{ count }} pósteres, sin filtros",
+            "many": "Ver los {{ count }} pósteres, sin filtros"
+          },
+          "aucun_resultat": "Ningún póster reúne estos filtros."
         }
       },
       "add_to_favorites": "Añadir a favoritos",
@@ -558,22 +603,27 @@
             "titre_html": "Tus preguntas sobre <b>{{ titre }}</b>"
           }
         },
-        "emblemes": {
+        "nombre": {
           "tableaux": {
             "one": "{{ count }} cuadro",
             "other": "{{ count }} cuadros",
             "many": "{{ count }} cuadros"
+          },
+          "posters": {
+            "one": "{{ count }} póster",
+            "other": "{{ count }} pósteres",
+            "many": "{{ count }} pósteres"
           }
+        },
+        "titre": {
+          "mots_type": "cuadro,cuadros,lienzo,lienzos,póster,pósters,pósteres,lámina,láminas,y,de,del,para,en,la,las,el,los,todos,todas,tableau,tableaux,toile,toiles,poster,posters,affiche,affiches,papier,peint",
+          "sujets": "pop art,street art,line art,art deco"
         },
         "entree": {
           "groupe": "Lienzos o pósteres",
           "posters": "Pósteres",
           "toiles": "Lienzos",
           "lien_jumelle": "{{ format }}: {{ titre }}",
-          "tableaux": {
-            "one": "{{ count }} cuadro",
-            "other": "{{ count }} cuadros"
-          },
           "lire_la_suite": "Leer más",
           "reduire": "Ver menos"
         }
