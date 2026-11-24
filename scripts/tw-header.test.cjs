@@ -171,6 +171,11 @@ test('la feuille : la ligne « collee » a son ombre ; le focus ne se cache pas 
   // Ce qui prend le focus dans la page, hors de la ligne, s'arrête sous l'en-tête (--tete-h, que mesure le mode) et la
   // ligne : 56 px, 68 px sur ordinateur. Pas de scroll-padding-top sur la page : la ligne collée sauterait au clavier.
   assert.match(SOURCE, /setProperty\('--tete-h'/)
+  // La feuille la donne déjà, et le script part d'elle : il ne l'écrit sur :root (qui refait les styles de toute la
+  // page) que si l'en-tête a une autre hauteur.
+  assert.match(read(CSS), /^ {2}--tete-h: 90px;$/m)
+  assert.equal(H, 90)
+  assert.match(SOURCE, /if \(this\.pose\.hauteur === null\) \{\r?\n\s*this\.pose\.hauteur = parseFloat\(window\.getComputedStyle\(document\.documentElement\)\.getPropertyValue\('--tete-h'\)\);/)
   const FOCUS = `${HOOK} #MainContent :is(a[href], button, input, select, textarea, summary, [tabindex]):not(#barre *)`
   assert.equal(regle(bloc, FOCUS).body.trim(), 'scroll-margin-top: calc(var(--tete-h, 0px) + 56px);')
   assert.equal(regle(bloc, FOCUS, '@media (min-width: 900px)').body.trim(), 'scroll-margin-top: calc(var(--tete-h, 0px) + 68px);')
@@ -179,7 +184,9 @@ test('la feuille : la ligne « collee » a son ombre ; le focus ne se cache pas 
   assert.equal(regle(bloc, `${HOOK} #shopify-section-tw-header`).body.trim(), 'will-change: transform;')
   // La ligne lit la hauteur que pose le mode (--barre-top, ticket 06).
   assert.match(SOURCE, /setProperty\('--barre-top'/)
-  assert.match(read(CSS), /top: var\(--barre-top, 0px\);/)
+  assert.match(read(CSS), /top: var\(--barre-top, var\(--tete-h, 0px\)\);/)
+  // Une ligne neuve n'a rien de posé : elle est déjà sous l'en-tête entier.
+  assert.match(SOURCE, /const la = barre === this\.pose\.barre \? this\.pose\.haut : this\.hauteur;\r?\n\s*if \(haut !== la\) barre\.style\.setProperty\('--barre-top'/)
 })
 
 test('les scripts de la page annoncent leurs sauts sous le nom qu’écoute l’en-tête', () => {

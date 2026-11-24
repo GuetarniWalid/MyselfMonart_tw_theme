@@ -60,6 +60,10 @@
   /* Une seule police de secours : chercher une à une celles du système, absentes, retardait la première mise en page
      (180 à 220 ms à froid, 55 à 70 avec celle-ci ; relevé du 24/11/2026). */
   --sans: "Albert Sans", sans-serif;
+  /* La hauteur de l'en-tête, la même à toutes les largeurs (90 px de 320 à 1 920 px, relevé du 24/11/2026). Le script
+     de l'en-tête (assets/tw-header.js) ne l'écrit que si elle change : l'écrire sur :root refait les styles de toute la
+     page (environ 400 ms au chargement sur un téléphone moyen). */
+  --tete-h: 90px;
   /* Les marges de côté d'une bande, écran à encoche compris. */
   --gout: max(20px, env(safe-area-inset-left, 0px));
   --goutd: max(20px, env(safe-area-inset-right, 0px));
@@ -1579,7 +1583,7 @@
    droit : la ligne y défile. */
 :root[data-refonte-page] .filtres-ligne {
   position: sticky;
-  top: var(--barre-top, 0px);
+  top: var(--barre-top, var(--tete-h, 0px));
   z-index: 20;
   display: block;
   margin-inline: calc(-1 * var(--gout)) calc(-1 * var(--goutd));
@@ -2285,7 +2289,7 @@
     z-index: 25;
     width: 600px;
     max-width: calc(100vw - var(--gout) - var(--goutd));
-    max-height: calc(100svh - var(--barre-top, 0px) - 96px);
+    max-height: calc(100svh - var(--barre-top, var(--tete-h, 0px)) - 96px);
     overflow-y: auto;
     overscroll-behavior: contain;
     padding: 18px 20px 14px;

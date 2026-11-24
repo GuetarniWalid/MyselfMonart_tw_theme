@@ -8,9 +8,10 @@
  *   sa hauteur : il est parti) augmente de ce qu'on descend et diminue de ce qu'on remonte, à chaque image, posé en
  *   transform: translateY(), sans transition. Il ne part pas tant que le bandeau d'annonce, au-dessus, se voit.
  * - Sa hauteur, mesurée (et remesurée quand elle change), va sur :root : --tete-h (ce qui prend le focus s'arrête
- *   sous l'en-tête et la ligne, assets/collection-refonte.css).
+ *   sous l'en-tête et la ligne, assets/collection-refonte.css). La feuille la donne déjà (90 px) : rien n'est écrit tant
+ *   qu'elle est juste, car l'écrire sur :root refait les styles de toute la page.
  * - La ligne des filtres (#barre, ticket 06) se colle juste dessous : --barre-top = hauteur − décalage, puis en haut
- *   de l'écran quand il est parti. Elle porte la classe « collee » quand elle est collée à cette place : son ancre
+ *   de l'écran quand il est parti ; sans valeur posée, elle se colle sous l'en-tête entier. Elle porte la classe « collee » quand elle est collée à cette place : son ancre
  *   (#ancre-barre) est passée au-dessus, et la fin de sa section (la grille) ne l'emporte pas encore.
  * - Quand l'en-tête part (plus de 2 px), ses menus se ferment, comme hide() ailleurs, et le menu ouvert de la ligne
  *   (ordinateur) aussi : fermerMenu(), le focus qui était dans la ligne revenant à son bouton.
@@ -133,7 +134,10 @@ class EnteteQuiSuit {
     // preventHeaderReveal tient tant qu'on remonte, et 33 ms après.
     if (this.retenu && suite.y < this.etat.y) this.retenuJusqua = temps + 33;
 
-    // Écrire.
+    // Écrire. La hauteur que donne la feuille est déjà là : ne l'écrire que si celle de l'en-tête en diffère.
+    if (this.pose.hauteur === null) {
+      this.pose.hauteur = parseFloat(window.getComputedStyle(document.documentElement).getPropertyValue('--tete-h'));
+    }
     if (this.hauteur !== this.pose.hauteur) {
       document.documentElement.style.setProperty('--tete-h', `${this.hauteur}px`);
       this.pose.hauteur = this.hauteur;
@@ -146,11 +150,11 @@ class EnteteQuiSuit {
     }
     if (barre) {
       const haut = this.auPixel(suite.haut);
-      if (barre !== this.pose.barre || haut !== this.pose.haut) {
-        barre.style.setProperty('--barre-top', `${haut}px`);
-        this.pose.barre = barre;
-        this.pose.haut = haut;
-      }
+      // Une ligne neuve (au chargement, ou rendue de nouveau après un filtre) se colle d'elle-même sous l'en-tête entier.
+      const la = barre === this.pose.barre ? this.pose.haut : this.hauteur;
+      if (haut !== la) barre.style.setProperty('--barre-top', `${haut}px`);
+      this.pose.barre = barre;
+      this.pose.haut = haut;
       barre.classList.toggle('collee', suite.collee);
     }
     if (suite.fermer) this.fermerLesMenus(barre);

@@ -645,7 +645,7 @@ test('la feuille : la ligne collée sous l’en-tête (--barre-top), 56 px sur t
   const bloc = blocCss()
   const ligne = regle(bloc, `${H} .filtres-ligne`).body
   assert.match(ligne, /position: sticky;/)
-  assert.match(ligne, /top: var\(--barre-top, 0px\);/)
+  assert.match(ligne, /top: var\(--barre-top, var\(--tete-h, 0px\)\);/)
   assert.match(ligne, /background: var\(--blanc\);/)
   assert.match(regle(bloc, `${H} .filtres-dedans`).body, /min-height: 56px;/)
   assert.match(regle(bloc, `${H} .filtres-dedans`, '@media (min-width: 900px)').body, /min-height: 68px;/)
