@@ -608,6 +608,7 @@ class StickyHeader extends HTMLElement {
       }
     });
     this.measureFixHeaderHeight();
+    this.preparerPhotosDuMenu();
 
     // Handle orientation/resize changes to reset state when switching between mobile/desktop
     let resizeTimeout;
@@ -784,6 +785,30 @@ class StickyHeader extends HTMLElement {
     this.overlay.classList.toggle('hidden', !bool);
     this.overlay.classList.toggle('!block', bool);
   };
+
+  /* Les photos du menu d'ordinateur (snippets/tw-sticky-header.liquid) attendent, en loading="lazy" : la page ne les
+     demande pas, et au téléphone, où ce menu reste caché, elles ne se chargent jamais. Là où il se montre (dès 768 px,
+     md), elles se chargent d'avance, une fois la page chargée et le navigateur au repos : le premier survol les trouve
+     prêtes. De même quand il apparaît plus tard (un téléphone ou une tablette qu'on tourne, une fenêtre qu'on élargit).
+     Un menu ouvert avant cela n'a rien à demander : le navigateur charge de lui-même les photos qui se montrent, et
+     d'abord elles (les demander toutes à l'ouverture les ferait attendre deux à trois fois plus). */
+  preparerPhotosDuMenu() {
+    const ordinateur = window.matchMedia('(min-width: 768px)');
+    const charger = () => {
+      this.querySelectorAll('.desktop-dropdown-container img[loading="lazy"]').forEach((image) => {
+        image.loading = 'eager';
+      });
+    };
+    const auRepos = () => {
+      if (document.readyState !== 'complete' || !ordinateur.matches) return;
+      // Safari n'a pas requestIdleCallback.
+      if (window.requestIdleCallback) window.requestIdleCallback(charger, { timeout: 2000 });
+      else window.setTimeout(charger, 200);
+    };
+    auRepos();
+    window.addEventListener('load', auRepos, { once: true });
+    ordinateur.addEventListener('change', auRepos);
+  }
 
   openDesktopDropdown = (dropdown, button) => {
     // Close any currently open dropdown

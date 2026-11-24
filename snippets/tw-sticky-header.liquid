@@ -299,7 +299,11 @@
       {% render 'tw-loup-like-button' %}
     </div>
 
-    {%- comment -%} Desktop dropdown panels - Full width {%- endcomment -%}
+    {%- comment -%}
+      Desktop dropdown panels - Full width
+      Photos : toutes en loading: 'lazy', sinon chaque page les charge, au téléphone aussi, où ce menu reste caché.
+      Sur ordinateur, assets/tw-header.js les charge d'avance (preparerPhotosDuMenu).
+    {%- endcomment -%}
     <div class="desktop-dropdown-container hidden md:block relative">
       {% for block in section.blocks %}
         {% if block.type == "title_only" %}
@@ -410,6 +414,7 @@
                               alt: nav_alt,
                               widths: '300',
                               sizes: '(min-width: 768px) 300px, 0px',
+                              loading: 'lazy',
                               class: 'w-full h-full object-cover'
                           }}
                         </div>
@@ -423,6 +428,7 @@
                               alt: nav_alt,
                               widths: '400, 600',
                               sizes: '(min-width: 1024px) 600px, (min-width: 768px) 400px, 0px',
+                              loading: 'lazy',
                               class: 'w-full h-full object-cover'
                           }}
                         </div>
@@ -436,6 +442,7 @@
                               alt: nav_alt,
                               widths: '400',
                               sizes: '(min-width: 768px) 400px, 0px',
+                              loading: 'lazy',
                               class: 'w-full h-full object-cover'
                           }}
                         </div>
@@ -449,6 +456,7 @@
                               alt: nav_alt,
                               widths: '300',
                               sizes: '(min-width: 1024px) 300px, 0px',
+                              loading: 'lazy',
                               class: 'w-full h-full object-cover'
                           }}
                         </div>
@@ -479,6 +487,7 @@
                                     alt: nav_alt,
                                     widths: '300',
                                     sizes: '(min-width: 768px) 300px, 0px',
+                                    loading: 'lazy',
                                     class: 'w-full h-full object-cover'
                                 }}
                               </div>
@@ -493,6 +502,7 @@
                                     alt: nav_alt,
                                     widths: '400, 600',
                                     sizes: '(min-width: 1024px) 600px, (min-width: 768px) 400px, 0px',
+                                    loading: 'lazy',
                                     class: 'w-full h-full object-cover'
                                 }}
                               </div>
@@ -507,6 +517,7 @@
                                     alt: nav_alt,
                                     widths: '400',
                                     sizes: '(min-width: 768px) 400px, 0px',
+                                    loading: 'lazy',
                                     class: 'w-full h-full object-cover'
                                 }}
                               </div>
@@ -521,6 +532,7 @@
                                     alt: nav_alt,
                                     widths: '300',
                                     sizes: '(min-width: 1024px) 300px, 0px',
+                                    loading: 'lazy',
                                     class: 'w-full h-full object-cover'
                                 }}
                               </div>
@@ -550,6 +562,7 @@
                                 alt: nav_alt,
                                 widths: '500',
                                 sizes: '(min-width: 768px) 500px, 0px',
+                                loading: 'lazy',
                                 class: 'h-full w-auto object-contain object-top'
                             }}
                           </div>
@@ -564,6 +577,7 @@
                                 alt: nav_alt,
                                 widths: '500',
                                 sizes: '(min-width: 768px) 500px, 0px',
+                                loading: 'lazy',
                                 class: 'h-full w-auto object-contain object-top'
                             }}
                           </div>
@@ -589,6 +603,7 @@
                                 alt: nav_alt,
                                 widths: '400',
                                 sizes: '(min-width: 768px) 400px, 0px',
+                                loading: 'lazy',
                                 class: 'h-full w-full object-cover'
                             }}
                           </div>
