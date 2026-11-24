@@ -24,8 +24,10 @@
   (dossier .scratch/collection-design, décision 4 de Walid, ticket 03) : le même plan, les mêmes filles, dans le même
   ordre, aux mêmes conditions, mais chaque lien est un emblème (snippets/collection-embleme.liquid : un détail détouré
   d'un de ses tableaux sur un rond de couleur, sinon l'initiale ; son nom entier et son nombre de tableaux). Une
-  rangée défile en largeur sur téléphone et tient sur une ligne sur ordinateur ; sur une racine, une rangée par
-  rayon, que son libellé nomme pour les lecteurs d'écran. Les quatre premiers emblèmes arrivent tout de suite. Ses
+  seule rangée, qui défile en largeur. Sur une racine aussi, les rayons à la suite, dans l'ordre des groupes, sans
+  libellé (décision de Walid du 24/11/2026 : les cinq rangées prenaient environ 750 px sur téléphone avant les
+  premiers tableaux) ; le rang, qui donne la couleur d'un rond sans métachamp, s'y suit d'un bout à l'autre. Les
+  quatre premiers emblèmes arrivent tout de suite. Ses
   styles sont dans assets/collection-refonte.css, que seule cette page charge : seul le modèle caché
   templates/collection.refonte.json le pose. Tests : scripts/collection-emblemes.test.cjs.
 {%- endcomment -%}
@@ -84,11 +86,18 @@
 
   # En emblèmes : les emblèmes déjà rendus dans la page (les quatre premiers arrivent tout de suite).
   assign sc_rendus = 0
+  # En emblèmes sur une racine : une seule rangée, les rayons à la suite ; le rang ne recommence pas.
+  assign sc_une_rangee = false
+  if sc_emblemes and sc_racine
+    assign sc_une_rangee = true
+  endif
+  assign sc_rang = 0
+  assign sc_suite = ''
 -%}
 {%- capture sc_rangees -%}
   {%- if sc_page != '' -%}
     {%- for sc_rayon in sc_rayons -%}
-      {%- assign sc_rang = 0 -%}
+      {%- unless sc_une_rangee -%}{%- assign sc_rang = 0 -%}{%- endunless -%}
       {%- capture sc_filles -%}
         {%- for sc_n in sc_noeuds -%}
           {%- if sc_n.parent != sc_page -%}{%- continue -%}{%- endif -%}
@@ -116,13 +125,10 @@
       {%- endcapture -%}
       {%- if sc_filles == blank -%}{%- continue -%}{%- endif -%}
       {%- assign sc_libelle = 'sous-collections-' | append: section.id | append: '-' | append: sc_rayon -%}
-      {%- if sc_emblemes -%}
-        {%- if sc_racine and sc_rayon != 'bestseller' -%}
-          <p id="{{ sc_libelle }}" class="sr-only">{{ 'sections.sous_collections.rayons.' | append: sc_rayon | t }}</p>
-          <ul aria-labelledby="{{ sc_libelle }}" class="c-embs scrollbar-hidden">{{ sc_filles }}</ul>
-        {%- else -%}
-          <ul class="c-embs scrollbar-hidden">{{ sc_filles }}</ul>
-        {%- endif -%}
+      {%- if sc_une_rangee -%}
+        {%- assign sc_suite = sc_suite | append: sc_filles -%}
+      {%- elsif sc_emblemes -%}
+        <ul class="c-embs scrollbar-hidden">{{ sc_filles }}</ul>
       {%- elsif sc_racine and sc_rayon != 'bestseller' -%}
         <div class="flex items-center gap-3 md:items-baseline {{ sc_classes_rangee }}">
           <p id="{{ sc_libelle }}" class="shrink-0 min-w-20 md:min-w-36 text-xs font-semibold uppercase tracking-[0.14em] text-terra whitespace-nowrap">{{ 'sections.sous_collections.rayons.' | append: sc_rayon | t }}</p>
@@ -132,6 +138,9 @@
         <ul class="flex gap-2 md:flex-wrap {{ sc_classes_rangee }}">{{ sc_filles }}</ul>
       {%- endif -%}
     {%- endfor -%}
+    {%- if sc_suite != '' -%}
+      <ul class="c-embs scrollbar-hidden">{{ sc_suite }}</ul>
+    {%- endif -%}
   {%- endif -%}
 {%- endcapture -%}
 {%- if sc_rangees != blank -%}
@@ -159,7 +168,7 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Les liens vers les sous-collections de la page, juste sous le fil d'Ariane, en pastilles ou en emblèmes. Ils suivent le plan des collections écrit par le serveur (champ méta de la boutique cocon.plan). Une sous-collection n'a son lien que si elle existe, est publiée et a au moins un produit. Sur « Tous les tableaux » et « Tous les posters », les liens se rangent par rayon. Sans sous-collection, la section ne s'affiche pas."
+      "content": "Les liens vers les sous-collections de la page, juste sous le fil d'Ariane, en pastilles ou en emblèmes. Ils suivent le plan des collections écrit par le serveur (champ méta de la boutique cocon.plan). Une sous-collection n'a son lien que si elle existe, est publiée et a au moins un produit. En pastilles, sur « Tous les tableaux » et « Tous les posters », les liens se rangent par rayon ; en emblèmes, ils tiennent sur une seule rangée qui défile. Sans sous-collection, la section ne s'affiche pas."
     },
     {
       "type": "select",

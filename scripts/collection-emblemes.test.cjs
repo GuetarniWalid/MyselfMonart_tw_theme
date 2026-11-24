@@ -323,16 +323,18 @@ test('Tableaux Nature en emblèmes : Animaux, Fleurs, Mer, Paysage, leurs nombre
   assert.deepEqual(avec.split('<li ').slice(1).map(initiale), [null, null, null, null])
 })
 
-test('une racine a une rangée par rayon, dans l’ordre d’aujourd’hui, avec son libellé pour les lecteurs d’écran', { skip: SKIP }, () => {
+/* Sur une racine, les cinq rangées (best-seller, pièces, styles, sujets, couleurs) prenaient environ 750 px sur
+   téléphone avant les premiers tableaux : une seule rangée qui défile, les rayons à la suite (Walid, 24/11/2026). */
+test('une racine a une seule rangée qui défile : les rangées d’avant à la suite, dans l’ordre d’aujourd’hui', { skip: SKIP }, () => {
   for (const [collections, handle] of [[tableaux(), 'tous-les-tableaux'], [posters(), 'posters-affiches']]) {
     const page = collections[handle]
-    const avant = groups(render({ file: AVANT, page, collections })).map(({ name, links: names }) => ({ name, names }))
+    const avant = groups(render({ file: AVANT, page, collections }))
+    assert.ok(avant.length >= 5, `${handle} : les rangées d'avant`)
     const rows = groups(render({ page, collections, settings: EMBLEMES }))
-    // Les mêmes rangées, les mêmes libellés, les mêmes filles (le best-seller d'abord, sans libellé).
-    assert.deepEqual(rows.map(({ name, links: names }) => ({ name, names })), avant, handle)
-    assert.ok(rows.length >= 5, `${handle} : une rangée par rayon`)
-    // Le libellé ne se voit pas : il nomme la rangée pour les lecteurs d'écran.
-    for (const row of rows.slice(1)) assert.equal(row.classe, 'sr-only', `${handle} : ${row.name}`)
+    // Une seule liste, sans libellé (le repère de navigation la nomme) : les mêmes filles, le best-seller d'abord.
+    assert.equal(rows.length, 1, `${handle} : une seule rangée`)
+    assert.equal(rows[0].name, null, handle)
+    assert.deepEqual(rows[0].links, avant.flatMap((g) => g.links), handle)
   }
   // Ailleurs, une seule rangée, sans libellé.
   const collections = animaux()
@@ -358,15 +360,17 @@ test('en « emblèmes », rien sans plan, ni sur une page sans fille à montrer'
 })
 
 test('en haut de page, les quatre premiers emblèmes arrivent tout de suite, les autres à la demande', { skip: SKIP }, () => {
-  // Une racine, tous ses emblèmes posés : la rangée du best-seller, puis celles des rayons.
+  // Une racine, tous ses emblèmes posés, en une seule rangée.
   const collections = Object.fromEntries(Object.entries(tableaux()).map(([handle, c]) => [handle, avecEmbleme(handle, c.title, c.all_products_count, null)]))
   const html = render({ page: collections['tous-les-tableaux'], collections, settings: EMBLEMES })
   const loading = tags(html, 'img').map((img) => img.loading)
   assert.ok(loading.length > 6)
   assert.deepEqual(loading, loading.map((v, i) => (i < 4 ? 'eager' : 'lazy')))
-  // Le rang, pour la couleur, recommence à chaque rangée.
+  // Sans métachamp de couleur, le rang se suit d'un bout à l'autre de la rangée : jamais deux ronds pareils côte à côte.
   const rows = html.split('<ul ').slice(1).map((row) => tags(row.slice(0, row.indexOf('</ul>')), 'li').map((li) => li['data-fond']))
-  for (const row of rows) assert.deepEqual(row, ['ciel', 'soleil', 'menthe', 'rose', 'ciel', 'soleil'].slice(0, row.length))
+  assert.equal(rows.length, 1)
+  const cycle = ['ciel', 'soleil', 'menthe', 'rose']
+  assert.deepEqual(rows[0], rows[0].map((_, i) => cycle[i % cycle.length]))
 })
 
 test('un emblème en bas de page, en grand : 104 px et 136 px de rond ; en haut de page, les premiers arrivent tout de suite', { skip: SKIP }, () => {
