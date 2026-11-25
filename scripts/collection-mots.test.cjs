@@ -227,8 +227,10 @@ function h1(titre, lang = 'fr') {
   const page = col('collection-essai', titre, { count: 12 })
   const html = renderFile(ENTREE, pageGlobals({ page, lang }), { id: 'collection_refonte' })
   assert.equal((html.match(/<h1\b/g) || []).length, 1, `${titre} : un seul h1`)
-  return /<h1 class="c-titre" id="template--1__collection_refonte-titre"(?: data-taille="(?:moyen|petit|mini)")?>([\s\S]*?)<\/h1>/.exec(html)[1]
+  return /<h1 class="c-titre" id="template--1__collection_refonte-titre"(?: data-taille="(?:moyen|petit|mini)")?(?: style="--lettres: \d+")?>([\s\S]*?)<\/h1>/.exec(html)[1]
 }
+/* Le nombre de lettres que le h1 de l'entrée dit à la feuille (undefined : rien). */
+const lettresDuH1 = (titre, lang = 'fr') => (/<h1\b[^>]*? style="--lettres: (\d+)"/.exec(renderFile(ENTREE, pageGlobals({ page: col('collection-essai', titre, { count: 12 }), lang }), { id: 'collection_refonte' })) || [])[1]
 
 test('l’entrée : le h1 met le sujet en gras, les mots de type en tête et en fin restent maigres', { skip: SKIP }, () => {
   assert.equal(h1('Tableaux Nature'), 'Tableaux <b>Nature</b>')
@@ -243,6 +245,40 @@ test('l’entrée : le h1 met le sujet en gras, les mots de type en tête et en 
   assert.equal(h1('Nature-Themed Wall Art Collection', 'en'), '<b>Nature-Themed</b> Wall Art Collection')
   assert.equal(h1('Poster fürs Mädchenzimmer – Wandbilder & Drucke', 'de'), 'Poster fürs <b>Mädchenzimmer</b> – Wandbilder &amp; Drucke')
   assert.equal(h1('Natuurschilderijen', 'nl'), '<b>Natuurschilderijen</b>')
+})
+
+/* En allemand et en néerlandais, un nom de collection peut être un seul très long mot : il se coupait au milieu dans le
+   titre, dans « Vos questions sur… » et sous les emblèmes du bas, et il élargissait la page (relevé du 25/11/2026). */
+test('un très long mot dit son nombre de lettres à la feuille, qui choisit la taille où il tient ; rien ne change en français', { skip: SKIP }, () => {
+  const lettres = (texte) => engine('fr').renderFileSync('collection-lettres', { texte })
+  assert.equal(lettres('Erwachsenenschlafzimmerbild'), '27')
+  assert.equal(lettres('Poster fürs Mädchenzimmer – Wandbilder & Drucke'), '13')
+  assert.equal(lettres('Landschafts‑Poster & Natur‑Kunstdrucke'), '11', 'un trait d’union coupe un mot')
+  assert.equal(lettres('Tableau Noir et Blanc'), '7')
+  assert.equal(lettres(''), '0')
+  // Le titre : au-delà de 12 lettres.
+  assert.equal(lettresDuH1('Erwachsenenschlafzimmerbild', 'de'), '27')
+  assert.equal(lettresDuH1('Landschapsschilderij', 'nl'), '20')
+  assert.equal(lettresDuH1('Poster Personnalisé Famille'), undefined, '12 lettres')
+  for (const [titre] of TITRES.fr) assert.equal(lettresDuH1(titre), undefined, titre)
+  // L'emblème du bas : au-delà de 10 lettres ; celui du haut s'élargit à son mot, il n'en a pas besoin.
+  const style = (titre, options) => (/<li class="c-emb"[^>]*? style="--lettres: (\d+)"/.exec(emblem(col('collection-essai', titre), options)) || [])[1]
+  assert.equal(style('Wohnzimmerbild', { lang: 'de', taille: 'bas' }), '14')
+  assert.equal(style('Wohnzimmerbild', { lang: 'de', taille: 'haut' }), undefined)
+  assert.equal(style('Tableau Lion', { taille: 'bas' }), undefined)
+})
+
+test('la feuille : la taille d’un titre au très long mot est la place, divisée par ses lettres et leur largeur', () => {
+  const css = read(CSS).replace(/\/\*[\s\S]*?\*\//g, '')
+  assert.match(css, /\.c-titre\[style\] \{\s*font-size: min\(var\(--taille\), \(100vw - var\(--gout\) - var\(--goutd\)\) \/ \(var\(--lettres\) \* 0\.575\)\);/)
+  assert.match(css, /\.c-questions-titre\[style\] \{\s*font-size: min\(var\(--taille\), var\(--large\) \/ \(var\(--lettres\) \* 0\.575\)\);/)
+  assert.match(css, /\.c-sujets-liste \.c-emb\[style\] \.c-emb-nom \{\s*font-size: min\(22px, var\(--colonne\) \/ \(var\(--lettres\) \* 0\.585\)\);/)
+  // La place des questions suit leurs colonnes : toute la largeur, la moitié dès 900 px, cinq douzièmes dès 1200 px.
+  assert.deepEqual([...css.matchAll(/--large: ([^;]+);/g)].map((m) => m[1]), [
+    'calc(100vw - var(--gout) - var(--goutd))',
+    'calc((min(100vw - var(--gout) - var(--goutd), 1240px) - 48px) / 2)',
+    'calc((min(100vw - var(--gout) - var(--goutd), 1240px) - 90px) * 5 / 12)',
+  ])
 })
 
 /* L'emblème rendu seul, comme {% render 'collection-embleme', … %}. */

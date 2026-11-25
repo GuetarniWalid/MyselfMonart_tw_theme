@@ -1,0 +1,25 @@
+{%- comment -%}
+  collection-lettres — le nombre de lettres du plus long mot d'un texte (un trait d'union coupe un mot), sur la nouvelle
+  page collection. En allemand et en néerlandais, un nom de collection peut être un seul très long mot
+  (« Erwachsenenschlafzimmerbild », « Landschapsschilderij ») : à la taille des autres titres, il se coupait au milieu
+  (relevé du 25/11/2026). Le titre et les questions le donnent à la feuille (--lettres), qui choisit la taille où il tient
+  sur une ligne.
+
+  Accepts:
+    - texte: {String} le texte
+
+  Usage :
+    {%- capture lettres -%}{% render 'collection-lettres', texte: collection.title %}{%- endcapture -%}
+    {%- assign lettres = lettres | plus: 0 -%}
+  Le résultat sort sans aucun espace. Tests : scripts/collection-mots.test.cjs.
+{%- endcomment -%}
+{%- liquid
+  assign cl_lettres = 0
+  assign cl_mots = texte | replace: '-', ' ' | replace: '‑', ' ' | split: ' '
+  for cl_mot in cl_mots
+    if cl_mot.size > cl_lettres
+      assign cl_lettres = cl_mot.size
+    endif
+  endfor
+  echo cl_lettres
+-%}

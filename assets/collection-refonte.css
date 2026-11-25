@@ -837,9 +837,10 @@
 }
 /* Le titre, à taille raisonnable : maigre, son dernier mot en gras. */
 :root[data-refonte-page] .c-titre {
+  --taille: clamp(31px, 8.6vw, 52px);
   min-width: 0;
   margin: 2px 0 0;
-  font: 300 clamp(31px, 8.6vw, 52px)/1.04 var(--sans);
+  font: 300 var(--taille)/1.04 var(--sans);
   letter-spacing: -0.038em;
   text-wrap: balance;
   overflow-wrap: break-word;
@@ -852,13 +853,19 @@
    sections/collection-refonte.liquid) : à 390 px, 28, 24 et 22 px au lieu de 34 ; sur ordinateur, la taille de tous les
    titres. */
 :root[data-refonte-page] .c-titre[data-taille="moyen"] {
-  font-size: clamp(27px, 7.3vw, 52px);
+  --taille: clamp(27px, 7.3vw, 52px);
 }
 :root[data-refonte-page] .c-titre[data-taille="petit"] {
-  font-size: clamp(23px, 6.2vw, 52px);
+  --taille: clamp(23px, 6.2vw, 52px);
 }
 :root[data-refonte-page] .c-titre[data-taille="mini"] {
-  font-size: clamp(21px, 5.6vw, 52px);
+  --taille: clamp(21px, 5.6vw, 52px);
+}
+/* Un mot de plus de 12 lettres (« Erwachsenenschlafzimmerbild ») tient toujours sur une ligne : la place, divisée par son
+   nombre de lettres (--lettres) et par la largeur d'une lettre. 0,575 : la plus large relevée sur les longs mots des cinq
+   langues (0,557 em, interlettrage compris) et un peu d'air. */
+:root[data-refonte-page] .c-titre[style] {
+  font-size: min(var(--taille), (100vw - var(--gout) - var(--goutd)) / (var(--lettres) * 0.575));
 }
 :root[data-refonte-page] .c-nombre {
   margin: 0;
@@ -995,7 +1002,7 @@
     gap: 8px;
   }
   :root[data-refonte-page] .c-titre {
-    font-size: 52px;
+    --taille: 52px;
   }
   :root[data-refonte-page] .c-intro p {
     font-size: 16px;
@@ -1150,6 +1157,7 @@
 :root[data-refonte-page] .c-sujets-liste {
   --colonnes: 2;
   --ecart: 10px;
+  --colonne: calc((min(100vw - var(--gout) - var(--goutd), 1240px) - (var(--colonnes) - 1) * var(--ecart)) / var(--colonnes) - 4px);
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -1283,13 +1291,26 @@
   padding: 60px var(--goutd) 66px var(--gout);
   background: var(--creme);
 }
+/* minmax(0, 1fr) : la Joconde et sa bulle, qui ne rétrécissent pas, n'élargissent plus la colonne (à 320 px, la page
+   débordait de 12 px en allemand, 6 en espagnol ; relevé du 25/11/2026). */
 :root[data-refonte-page] .c-questions-in {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 26px;
 }
+/* minmax(0, 1fr) : un nom d'un seul très long mot (« Erwachsenenschlafzimmerbild ») n'élargit plus la page (543 px pour
+   un écran de 390, relevé du 25/11/2026). Et il tient sur une ligne, comme dans le titre de la page (bloc de l'entrée). */
 :root[data-refonte-page] .c-questions-tete {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   min-width: 0;
+}
+:root[data-refonte-page] .c-questions-titre {
+  --taille: clamp(36px, 10.4vw, 64px);
+  --large: calc(100vw - var(--gout) - var(--goutd));
+}
+:root[data-refonte-page] .c-questions-titre[style] {
+  font-size: min(var(--taille), var(--large) / (var(--lettres) * 0.575));
 }
 :root[data-refonte-page] .c-questions-volets {
   display: block;
@@ -1428,6 +1449,17 @@
   font-size: 15px;
 }
 
+/* -- Très petits écrans : la bulle et la Joconde un peu plus petites, pour tenir côte à côte dans toutes les langues. -- */
+@media (max-width: 359px) {
+  :root[data-refonte-page] .c-questions-ecoute {
+    height: 150px;
+  }
+  :root[data-refonte-page] .c-questions-bulle {
+    padding-inline: 12px;
+    font-size: 14px;
+  }
+}
+
 /* -- Tablette : la bulle de la Joconde à côté d'elle, et non à l'autre bout de la carte. -- */
 @media (min-width: 600px) and (max-width: 899px) {
   :root[data-refonte-page] .c-questions-bas {
@@ -1511,7 +1543,9 @@
     align-items: start;
   }
   :root[data-refonte-page] .c-questions-titre {
-    font-size: clamp(44px, 4.6vw, 64px);
+    --taille: clamp(44px, 4.6vw, 64px);
+    --large: calc((min(100vw - var(--gout) - var(--goutd), 1240px) - 48px) / 2);
+    font-size: var(--taille);
   }
   :root[data-refonte-page] .c-questions-tete {
     grid-column: 1;
@@ -1540,6 +1574,9 @@
   :root[data-refonte-page] .c-questions-in {
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
     column-gap: 90px;
+  }
+  :root[data-refonte-page] .c-questions-titre {
+    --large: calc((min(100vw - var(--gout) - var(--goutd), 1240px) - 90px) * 5 / 12);
   }
 }
 
@@ -2483,9 +2520,11 @@
   overflow-wrap: anywhere;
   hyphens: auto;
 }
-/* En bas de page, les mêmes longs mots, à la taille où ils tiennent dans leur colonne. */
-:root[data-refonte-page] .c-emb[data-taille="bas"][data-mot] .c-emb-nom {
-  font-size: 16px;
+/* En bas de page, un mot de plus de 10 lettres (« Wohnzimmerbild », --lettres) prend la taille où il tient dans sa
+   colonne (--colonne, posée par la liste, bloc du ticket 08) : 0,585 em par lettre, la plus large relevée (0,575) et un
+   peu d'air. */
+:root[data-refonte-page] .c-sujets-liste .c-emb[style] .c-emb-nom {
+  font-size: min(22px, var(--colonne) / (var(--lettres) * 0.585));
 }
 @media (min-width: 900px) {
   :root[data-refonte-page] .c-sous .c-emb-nom {
@@ -2497,8 +2536,8 @@
   :root[data-refonte-page] .c-sous .c-emb[data-mot="tres-long"] {
     min-width: 160px;
   }
-  :root[data-refonte-page] .c-emb[data-taille="bas"][data-mot] .c-emb-nom {
-    font-size: 20px;
+  :root[data-refonte-page] .c-sujets-liste .c-emb[style] .c-emb-nom {
+    font-size: min(28px, var(--colonne) / (var(--lettres) * 0.585));
   }
 }
 

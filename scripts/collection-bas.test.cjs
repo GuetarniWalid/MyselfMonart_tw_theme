@@ -483,6 +483,9 @@ test('les questions : le surtitre, le titre au nom de la collection, et la carte
   assert.ok(section, 'la section, nommée par son titre')
   assert.match(html, /<p class="c-questions-surtitre">Vos questions<\/p>/)
   assert.match(html, new RegExp(`<h2 class="c-questions-titre" id="${section[1]}">Vos questions sur <b>tableaux nature</b></h2>`))
+  // Un nom au très long mot (plus de 12 lettres) dit son nombre de lettres à la feuille (snippet collection-lettres).
+  const long = { ...vars, collection: { ...vars.collection, title: 'Landschapsschilderij' } }
+  assert.match(await questions(long), /<h2 class="c-questions-titre" id="[^"]+" style="--lettres: 20">/)
   // Un seul titre h2, puis les questions en h3 ; aucun h1.
   assert.deepEqual([...html.matchAll(/<(h[1-6])\b/g)].map((m) => m[1]), ['h2', 'h3', 'h3', 'h3'])
   // La carte ciel : son titre, son texte, le bouton vers la page de contact (réglage).
@@ -682,6 +685,10 @@ test('la feuille : le guide ouvert garde une bande de sa carte sous le texte ; u
 
 test('la feuille : la Joconde tient dans sa carte à côté de sa bulle, de 900 px à l’ordinateur', () => {
   const bloc = monBloc()
+  // Un très long mot du titre se coupe : il n'élargit pas la page (« Erwachsenenschlafzimmerbild »).
+  assert.match(regle(bloc, `${H} .c-questions-tete`).body, /grid-template-columns: minmax\(0, 1fr\);/)
+  // Au téléphone, la carte ne pousse jamais la colonne : la page ne déborde pas, même à 320 px en allemand.
+  assert.match(regle(bloc, `${H} .c-questions-in`).body, /grid-template-columns: minmax\(0, 1fr\);/)
   // Deux colonnes égales jusqu'à 1200 px, celles de la maquette au-delà ; la Joconde grandit avec l'écran, jusqu'à 300 px.
   assert.match(regle(bloc, `${H} .c-questions-in`, [LARGE]).body, /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\);/)
   assert.match(regle(bloc, `${H} .c-questions-in`, ['@media (min-width: 1200px)']).body, /grid-template-columns: minmax\(0, 5fr\) minmax\(0, 7fr\);\s*column-gap: 90px;/)

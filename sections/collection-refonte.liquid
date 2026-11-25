@@ -12,7 +12,8 @@
     Art Collection ») ; si tous ses mots sont des mots de type, le dernier en gras (« Tous les <b>Tableaux</b> »).
     Un titre de plus de 21 caractères descend d'un cran (data-taille="moyen"), de plus de 27, de deux ("petit"), de plus
     de 31, de trois ("mini") : au téléphone, il tient le plus souvent sur une ligne, et la première rangée de tableaux
-    reste dans le premier écran.
+    reste dans le premier écran. Un titre dont un mot passe 12 lettres le dit à la feuille (--lettres, snippet
+    collection-lettres) : ce mot ne se coupe jamais.
   - L'interrupteur : le dessin de la bascule des fiches produit (snippets/product-format-toggle.liquid) : deux
     cellules, Posters à gauche, Toiles à droite, ses icônes Tabler « photo » et « frame ». Elles sont recopiées ici :
     la bascule des fiches les écrit en dur, et les fiches ne doivent pas bouger d'un caractère.
@@ -52,6 +53,10 @@
   elsif ce_longueur > 21
     assign ce_taille = 'moyen'
   endif
+  capture ce_lettres
+    render 'collection-lettres', texte: collection.title
+  endcapture
+  assign ce_lettres = ce_lettres | plus: 0
 
   # Le nombre d'œuvres, sans jumelle : « 327 tableaux », ou « 256 posters » sur une collection de posters.
   assign ce_cle_nombre = 'sections.mma.collection.nombre.tableaux'
@@ -103,7 +108,7 @@
 <section class="c-entree" aria-labelledby="{{ ce_id }}-titre">
   <div class="c-entree-in">
     <div class="c-tete{% unless ce_jumelle %} c-tete-seule{% endunless %}">
-      <h1 class="c-titre" id="{{ ce_id }}-titre"{% if ce_taille != '' %} data-taille="{{ ce_taille }}"{% endif %}>{% if ce_titre[0] != blank %}{{ ce_titre[0] | escape }} {% endif %}<b>{{ ce_titre[1] | escape }}</b>{% if ce_titre[2] != blank %} {{ ce_titre[2] | escape }}{% endif %}</h1>
+      <h1 class="c-titre" id="{{ ce_id }}-titre"{% if ce_taille != '' %} data-taille="{{ ce_taille }}"{% endif %}{% if ce_lettres > 12 %} style="--lettres: {{ ce_lettres }}"{% endif %}>{% if ce_titre[0] != blank %}{{ ce_titre[0] | escape }} {% endif %}<b>{{ ce_titre[1] | escape }}</b>{% if ce_titre[2] != blank %} {{ ce_titre[2] | escape }}{% endif %}</h1>
       {%- if ce_jumelle -%}
         {%- capture ce_cellule_page -%}<span aria-current="page">{{ ce_icone_page }}<span>{{ ce_mot_page }}</span> <span class="nb" id="nombre-haut">{{ collection.products_count }}</span></span>{%- endcapture -%}
         {%- capture ce_cellule_jumelle -%}<a href="{{ ce_jumelle.url }}" aria-label="{{ 'sections.mma.collection.entree.lien_jumelle' | t: format: ce_mot_jumelle, titre: ce_jumelle.title }}">{{ ce_icone_jumelle }}<span>{{ ce_mot_jumelle }}</span> <span class="sr-only left-0 top-0">{{ ce_jumelle.title | escape }}</span></a>{%- endcapture -%}

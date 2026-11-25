@@ -32,7 +32,9 @@
   Dans les autres langues, des sujets sont très longs (« Islamic Posters & Arabic Calligraphy ») : au-delà de 20
   caractères, il se voit jusqu'à son premier « & », tiret ou deux-points (s'il en reste 8), et la suite du titre reste
   dans le lien, lue mais pas vue (.c-emb-reste). Un sujet dont un mot passe 14 lettres (« Landschapsschilderij ») porte
-  data-mot="long", 20 lettres, data-mot="tres-long" : la feuille l'écrit plus petit, sans couper un mot.
+  data-mot="long", 20 lettres, data-mot="tres-long" : en haut de page, la feuille l'écrit plus petit, sans couper un mot.
+  En bas, un mot de plus de 10 lettres dit son nombre de lettres (--lettres) : la feuille choisit la taille où il tient
+  dans sa colonne.
   Tests : scripts/collection-emblemes.test.cjs et scripts/collection-mots.test.cjs.
 {%- endcomment -%}
 {%- liquid
@@ -115,7 +117,7 @@
     {%- if emb_largeur >= emb_w -%}, {{ emb_fichier | image_url: width: emb_w }} {{ emb_w }}w{%- endif -%}
   {%- endfor -%}
 {%- endcapture -%}
-<li class="c-emb" data-fond="{{ emb_couleur }}"{% if emb_long != '' %} data-mot="{{ emb_long }}"{% endif %}{% if taille == 'bas' %} data-taille="bas"{% endif %}>
+<li class="c-emb" data-fond="{{ emb_couleur }}"{% if emb_long != '' %} data-mot="{{ emb_long }}"{% endif %}{% if taille == 'bas' %} data-taille="bas"{% if emb_lettres > 10 %} style="--lettres: {{ emb_lettres }}"{% endif %}{% endif %}>
   <span class="c-emb-cadre" aria-hidden="true">
     <span class="c-emb-rond" data-allow-empty></span>
     {%- if emb_largeur > 0 %}

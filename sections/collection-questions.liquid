@@ -49,12 +49,17 @@
   {%- liquid
     assign cq_id = section.id | append: '-titre'
     assign cq_titre = collection.title | downcase
+    # Un très long mot (allemand, néerlandais) ne se coupe pas : la feuille choisit la taille où il tient (--lettres).
+    capture cq_lettres
+      render 'collection-lettres', texte: collection.title
+    endcapture
+    assign cq_lettres = cq_lettres | plus: 0
   -%}
   <section class="c-questions" id="questions" aria-labelledby="{{ cq_id }}">
     <div class="c-questions-in">
       <div class="c-questions-tete">
         <p class="c-questions-surtitre">{{ 'sections.mma.galerie.questions.eyebrow' | t }}</p>
-        <h2 class="c-questions-titre" id="{{ cq_id }}">{{ 'sections.mma.collection.bas.questions.titre_html' | t: titre: cq_titre, titre_exact: collection.title }}</h2>
+        <h2 class="c-questions-titre" id="{{ cq_id }}"{% if cq_lettres > 12 %} style="--lettres: {{ cq_lettres }}"{% endif %}>{{ 'sections.mma.collection.bas.questions.titre_html' | t: titre: cq_titre, titre_exact: collection.title }}</h2>
       </div>
       <collapsible-tab class="c-questions-volets">
         {{- cq_volets -}}
