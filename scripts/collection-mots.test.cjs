@@ -310,15 +310,19 @@ test('l’emblème : le début et la fin en petit, le sujet en gras, le titre lu
 })
 
 /* Relevé du 24/11/2026 : sur les pages mères, en allemand, 44 noms d'emblèmes sur 119 étaient coupés en plein mot et une
-   légende tenait sur sept lignes. Un très long sujet se voit jusqu'à son premier « & », tiret ou deux-points. */
+   légende tenait sur sept lignes. Un très long sujet se voit jusqu'à son premier « & », tiret ou deux-points. Ce qui s'en
+   voit, coupé à son tour sur son sujet (25/11/2026 : « Kitchen Wall Art » s'écrivait tout en gras à côté de « Bedroom »). */
 test('l’emblème : un très long sujet se voit jusqu’à sa première coupe, sa suite reste dans le lien, lue dans l’ordre', { skip: SKIP }, () => {
   const cas = [
-    // [langue, titre, ce qui se voit en gras, la suite, lue sans se voir (null : rien)]
-    ['en', 'Islamic Posters & Arabic Calligraphy Prints', 'Islamic Posters', ' & Arabic Calligraphy Prints'],
-    ['en', 'Flower Posters & Floral Prints', 'Flower Posters', ' & Floral Prints'],
+    // [langue, titre, ce qui se voit en gras, la suite, lue sans se voir (null : rien), les mots de type qui suivent le gras]
+    ['en', 'Islamic Posters & Arabic Calligraphy Prints', 'Islamic', ' & Arabic Calligraphy Prints', 'Posters'],
+    ['en', 'Flower Posters & Floral Prints', 'Flower', ' & Floral Prints', 'Posters'],
+    ['en', 'Street Art Posters & Graffiti Prints', 'Street Art', ' & Graffiti Prints', 'Posters'],
     // « Sea » serait trop court : la coupe suivante.
-    ['en', 'Sea & Ocean Posters — Coastal Wall Art Prints', 'Sea & Ocean Posters', ' — Coastal Wall Art Prints'],
-    ['en', 'Kitchen Wall Art: Add Flair to Your Culinary Space', 'Kitchen Wall Art', ': Add Flair to Your Culinary Space'],
+    ['en', 'Sea & Ocean Posters — Coastal Wall Art Prints', 'Sea & Ocean', ' — Coastal Wall Art Prints', 'Posters'],
+    ['en', 'Kitchen Wall Art: Add Flair to Your Culinary Space', 'Kitchen', ': Add Flair to Your Culinary Space', 'Wall Art'],
+    ['de', 'Violette Poster & Lila Plakate', 'Violette', ' & Lila Plakate', 'Poster'],
+    ['nl', 'Groene posters & botanische affiches', 'Groene', ' & botanische affiches', 'posters'],
     ['de', 'Poster fürs Schlafzimmer – Wandbilder fürs Erwachsenenschlafzimmer', 'Schlafzimmer', ' – Wandbilder fürs Erwachsenenschlafzimmer'],
     ['de', 'Tierposter & Tierplakate', 'Tierposter', ' & Tierplakate'],
     ['de', 'Landschafts‑Poster & Natur‑Kunstdrucke', 'Landschafts‑Poster', ' & Natur‑Kunstdrucke'],
@@ -331,13 +335,14 @@ test('l’emblème : un très long sujet se voit jusqu’à sa première coupe, 
     ['de', 'Wandbilder für Flur & Eingangsbereich', 'Flur & Eingangsbereich', null],
     ['fr', 'Poster bébé : Signe Astrologique aquarelle', 'bébé : Signe Astrologique aquarelle', null],
   ]
-  for (const [lang, titre, vu, reste] of cas) {
-    for (const taille of ['haut', 'bas']) {
+  for (const [lang, titre, vu, reste, apres = null] of cas) {
+    for (const taille of ['haut', 'bas', 'menu']) {
       const html = emblem(col('collection-essai', titre), { lang, taille })
       const lien = lienEmbleme(html)
       assert.equal(unescape(/<span class="c-emb-nom">([\s\S]*?)<\/span>/.exec(lien.html)[1]), vu, `${lang} : ${titre}`)
       const suite = /<span class="c-emb-reste">([\s\S]*?)<\/span>/.exec(lien.html)
       assert.equal(suite ? unescape(suite[1]) : null, reste, `${lang} : ${titre}`)
+      if (reste) assert.equal((/<\/span> <span class="c-emb-mot">([^<]*)<\/span><span class="c-emb-reste">/.exec(lien.html) || [])[1] ?? null, apres, `${lang} : ${titre}`)
       // Le nom du lien ne change pas : le titre entier, dans son ordre.
       assert.equal(lien.texte, titre, `${lang} : ${titre}, lu en entier`)
     }

@@ -36,7 +36,8 @@
   visée (custom.type_of_collection), et non celui de la page. Aucun titre h1 à h6.
   Dans les autres langues, des sujets sont très longs (« Islamic Posters & Arabic Calligraphy ») : au-delà de 20
   caractères, il se voit jusqu'à son premier « & », tiret ou deux-points (s'il en reste 8), et la suite du titre reste
-  dans le lien, lue mais pas vue (.c-emb-reste). Un sujet dont un mot passe 14 lettres (« Landschapsschilderij ») porte
+  dans le lien, lue mais pas vue (.c-emb-reste) ; s'il se voit alors avec ses mots de type (« Kitchen Wall Art »), ils
+  passent en petites capitales, comme les autres. Un sujet dont un mot passe 14 lettres (« Landschapsschilderij ») porte
   data-mot="long", 20 lettres, data-mot="tres-long" : en haut de page, la feuille l'écrit plus petit, sans couper un mot.
   En bas, un mot de plus de 10 lettres dit son nombre de lettres (--lettres) : la feuille choisit la taille où il tient
   dans sa colonne.
@@ -76,7 +77,9 @@
   assign emb_fin = emb_titre[2]
 
   # Un très long sujet : ce qui s'en voit (le plus court morceau d'au moins 8 caractères), puis sa suite, lue sans se voir.
+  # Ce qui s'en voit peut finir par des mots de type (« Kitchen Wall Art: Add Flair… ») : coupé à son tour comme un titre.
   assign emb_reste = ''
+  assign emb_apres = ''
   if emb_nom.size > 20
     assign emb_court = emb_nom
     assign emb_coupes = ' & ¤ – ¤ — ¤ : ¤: ¤ - ' | split: '¤'
@@ -89,7 +92,15 @@
     if emb_court.size < emb_nom.size
       assign emb_vu = emb_court.size
       assign emb_reste = emb_nom | slice: emb_vu, emb_nom.size
+      capture emb_morceaux
+        render 'collection-titre', titre: emb_court
+      endcapture
+      assign emb_morceaux = emb_morceaux | split: '¤'
       assign emb_nom = emb_court
+      if emb_morceaux[0] == blank and emb_morceaux[1] != blank
+        assign emb_nom = emb_morceaux[1]
+        assign emb_apres = emb_morceaux[2]
+      endif
     endif
   endif
 
@@ -145,6 +156,6 @@
     {%- endif %}
     {%- endif %}
   </span>
-  <a class="c-emb-lien" href="{{ cible.url }}"{% if courante %} aria-current="page"{% endif %}>{% if emb_debut != blank %}<span class="c-emb-mot">{{ emb_debut | escape }}</span> {% endif %}<span class="c-emb-nom">{{ emb_nom | escape }}</span>{% if emb_reste != '' %}<span class="c-emb-reste">{{ emb_reste | escape }}{% if emb_fin != blank %} {{ emb_fin | escape }}{% endif %}</span>{% elsif emb_fin != blank %} <span class="c-emb-mot">{{ emb_fin | escape }}</span>{% endif %}</a>
+  <a class="c-emb-lien" href="{{ cible.url }}"{% if courante %} aria-current="page"{% endif %}>{% if emb_debut != blank %}<span class="c-emb-mot">{{ emb_debut | escape }}</span> {% endif %}<span class="c-emb-nom">{{ emb_nom | escape }}</span>{% if emb_apres != blank %} <span class="c-emb-mot">{{ emb_apres | escape }}</span>{% endif %}{% if emb_reste != '' %}<span class="c-emb-reste">{{ emb_reste | escape }}{% if emb_fin != blank %} {{ emb_fin | escape }}{% endif %}</span>{% elsif emb_fin != blank %} <span class="c-emb-mot">{{ emb_fin | escape }}</span>{% endif %}</a>
   <span class="c-emb-nb">{{ emb_cle_nombre | t: count: emb_nb }}</span>
 </li>
