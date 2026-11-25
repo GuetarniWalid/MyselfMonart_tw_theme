@@ -389,6 +389,9 @@ test('la feuille : les angelots, un bloc à part ; les barres et le cœur ne bou
   const bas = 32 - Number(/bottom: ([\d.]+)px/.exec(corps('.entete-burger-ange'))[1])
   const hautBarre = Number(/top: (\d+)px/.exec(corps('.entete-burger-barres'))[1])
   assert.ok(bas > hautBarre && bas <= hautBarre + 3, `${bas} dans la barre, qui commence à ${hautBarre}`)
+  // À côté de la barre, il est coupé au ras de son bord haut.
+  const ras = 26 - (bas - hautBarre)
+  assert.ok(corps('.entete-burger-ange').includes(`clip-path: polygon(0 0, 100% 0, 100% ${ras}px, 31px ${ras}px, 31px 100%, 5px 100%, 5px ${ras}px, 0 ${ras}px);`), String(ras))
   assert.match(regles.find((r) => r.head.startsWith('@keyframes entete-ange-monte')).body, /^\s*from \{ translate: 0 104%; \}\s*$/)
   const monte = regles.find((r) => /animation: entete-ange-monte/.test(r.body)).body
   const [, , y1, , y2] = /cubic-bezier\(([\d.]+), ([\d.]+), ([\d.]+), ([\d.]+)\)/.exec(monte).map(Number)
