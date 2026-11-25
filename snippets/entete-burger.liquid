@@ -1,0 +1,13 @@
+{%- comment -%}
+  entete-burger — le bouton du menu du téléphone, nouveau dessin (demande de Walid du 25/11/2026 : jouer avec les vieux
+  tableaux) : les trois barres, qui restent un bouton de menu au premier coup d'œil, et l'angelot de gauche de la Madone
+  Sixtine (Raphaël, 1513, domaine public), accoudé sur celle du haut comme sur le parapet du tableau. Il regarde vers le
+  logo ; l'autre, accoudé au cœur des j'aime (snippets/tw-loup-like-button.liquid), le regarde de l'autre côté.
+  Rendu par snippets/tw-sticky-header.liquid, dans .mobile-menu : assets/tw-header.js le cache quand le menu s'ouvre (la
+  croix le remplace) et le montre quand il se ferme : il repasse alors la tête au-dessus de la barre.
+  Styles : input.css, « Les angelots de l'en-tête ». Tests : scripts/menu-telephone.test.cjs.
+{%- endcomment -%}
+<span class="hamburger entete-burger" aria-hidden="true">
+  <span class="entete-burger-ange"><img src="{{ 'entete-angelot-menu.webp' | asset_url }}" alt="" width="32" height="26" decoding="async"></span>
+  <svg class="entete-burger-barres" viewBox="0 0 26 17" focusable="false"><rect width="26" height="2.2" rx="1.1"/><rect y="7.4" width="26" height="2.2" rx="1.1"/><rect y="14.8" width="26" height="2.2" rx="1.1"/></svg>
+</span>

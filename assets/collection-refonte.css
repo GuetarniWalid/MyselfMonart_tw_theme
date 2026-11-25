@@ -609,6 +609,23 @@
     background: var(--encre-06);
   }
 }
+/* Un j'aime : l'angelot du cœur de l'en-tête (--angelot, posé par la section de la grille) passe la tête derrière celui de
+   la carte, puis se recache (assets/my-like-button.js, .vient-d-aimer). Sans mouvement, il ne se montre pas. */
+:root[data-refonte-page] .refonte-carte .like {
+  isolation: isolate;
+}
+:root[data-refonte-page] .refonte-carte .like.vient-d-aimer::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  bottom: 26px;
+  width: 36px;
+  aspect-ratio: 132 / 70;
+  background: var(--angelot) center / 100% no-repeat;
+  opacity: 0;
+  translate: -50% 12px;
+}
 /* Le reflet d'une seule porte-fenêtre pour toute la rangée de posters : sa place dans la vitre selon la colonne,
    comme dans la grille d'aujourd'hui (input.css, .product-grid), aux colonnes de celle-ci. */
 :root[data-refonte-page] .refonte-cartes > li:nth-child(2n + 1) .oeuvre-card-glare { --gx: 40%; }
@@ -722,6 +739,15 @@
   from { transform: translateY(34px); }
   to { transform: none; }
 }
+@keyframes refonte-angelot {
+  0% { opacity: 0; translate: -50% 12px; }
+  22%, 72% { opacity: 1; translate: -50% 0; }
+  100% { opacity: 0; translate: -50% 12px; }
+}
+@keyframes refonte-coeur {
+  30% { scale: 1.28; }
+  60% { scale: 0.92; }
+}
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) and (animation-range-start: contain 10svh) {
     :root[data-refonte-page] .refonte-carte {
@@ -729,6 +755,12 @@
       animation-timeline: view();
       animation-range: cover 0% cover 20%;
     }
+  }
+  :root[data-refonte-page] .refonte-carte .like.vient-d-aimer::before {
+    animation: refonte-angelot 1.7s cubic-bezier(0.2, 0.9, 0.25, 1.1);
+  }
+  :root[data-refonte-page] .refonte-carte .like.vient-d-aimer .heart-icon {
+    animation: refonte-coeur 0.5s ease;
   }
   @media (hover: hover) {
     :root[data-refonte-page] .refonte-carte .oeuvre-card-piece {
@@ -1216,11 +1248,14 @@
   font: 400 15.5px/1.5 var(--sans);
   color: var(--encre-70);
 }
-:root[data-refonte-page] :is(.c-guide-titre, .c-guide-texte) {
-  max-width: calc(100% - 92px);
+/* Au téléphone, le texte prend la largeur de la carte ; sous lui, au-dessus du bouton, la place du drapeau : la hauteur
+   de la figure (0,529 fois sa largeur), moins le bouton et sa marge. */
+:root[data-refonte-page] :is(.c-guide-titre, .c-guide-texte, .c-guide-bouton) {
+  position: relative;
+  z-index: 1;
 }
 :root[data-refonte-page] .c-guide-bouton {
-  margin: 18px 0 24px;
+  margin: calc((100% - 102px) * 0.529 - 60px) 0 24px;
 }
 /* Ouverte, la carte a son texte sous le bouton, à la distance de ce texte, et garde une bande de sa couleur dessous.
    C'est son espace à elle : la marge du texte passait sous la carte (overflow: clip ne retient pas les marges), et le
@@ -1235,13 +1270,18 @@
 :root[data-refonte-page] .c-guide-carte:not([open]) .c-guide-fermer {
   display: none;
 }
+/* La Liberté sort du bas de la carte, à droite du bouton, son drapeau vers lui. Ouverte, elle est derrière le texte
+   blanc : son bas, coupé aux épaules, va jusqu'à lui. */
 :root[data-refonte-page] .c-guide-perso {
   position: absolute;
-  right: 16px;
+  right: -8px;
   bottom: 0;
-  width: 84px;
+  width: calc(100% - 146px);
   pointer-events: none;
-  transform-origin: 50% 100%;
+  transform-origin: 78% 100%;
+}
+:root[data-refonte-page] .c-guide-carte[open] .c-guide-perso {
+  bottom: -22px;
 }
 :root[data-refonte-page] .c-guide-perso img {
   display: block;
@@ -1469,6 +1509,20 @@
   }
 }
 
+/* Sur tablette, le texte à gauche et elle à droite. */
+@media (min-width: 600px) {
+  :root[data-refonte-page] :is(.c-guide-titre, .c-guide-texte) {
+    max-width: 54%;
+  }
+  :root[data-refonte-page] .c-guide-bouton {
+    margin-top: 18px;
+  }
+  :root[data-refonte-page] .c-guide-perso {
+    right: 0;
+    width: min(48%, 400px);
+  }
+}
+
 /* -- Ordinateur : plus d'air ; le couple plus grand, sa bulle à sa gauche ; le guide sur deux colonnes ; les questions
    à droite du titre et de la carte ciel. Jusqu'à 1200 px (iPad en paysage), deux colonnes égales, un titre et une
    Joconde plus petits : dans la colonne étroite de la maquette, le titre prenait quatre lignes et la carte coupait la
@@ -1514,11 +1568,14 @@
     margin-bottom: 34px;
   }
   :root[data-refonte-page] :is(.c-guide-titre, .c-guide-texte) {
-    max-width: 24em;
+    max-width: min(24em, 54%);
   }
   :root[data-refonte-page] .c-guide-perso {
-    right: 12%;
-    width: 128px;
+    right: 3%;
+    width: min(45%, 540px);
+  }
+  :root[data-refonte-page] .c-guide-carte[open] .c-guide-perso {
+    bottom: -30px;
   }
   :root[data-refonte-page] .c-guide-carte[open] {
     padding-bottom: 40px;
@@ -1600,8 +1657,8 @@
   from { opacity: 0; transform: scale(0.3); }
   to { opacity: 1; transform: none; }
 }
-@keyframes refonte-avance {
-  from { transform: translateY(14%) scale(1.12); }
+@keyframes refonte-brandit {
+  from { transform: translateY(60%) rotate(7deg); }
   to { transform: none; }
 }
 @keyframes refonte-surgit {
@@ -1644,7 +1701,7 @@
       animation-range: cover 0% cover 20%;
     }
     :root[data-refonte-page] .c-guide-perso {
-      animation: refonte-avance linear both;
+      animation: refonte-brandit linear both;
       animation-timeline: view();
       animation-range: cover 0% cover 45%;
     }

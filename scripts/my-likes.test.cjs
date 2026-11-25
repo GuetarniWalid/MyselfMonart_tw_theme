@@ -483,7 +483,7 @@ function heartPage({ cards, storage, likesPageHere = true, brokenStorage = false
       : { getItem: (key) => (key in store ? store[key] : null), setItem: (key, value) => { store[key] = String(value) } },
     fetch: async () => ({ json: async () => 0 }),
     document: { querySelector: (selector) => (selector === 'my-likes' ? likes : selector === 'likes-count' ? counter : null) },
-    JSON, Promise, Array, Object, console,
+    JSON, Promise, Array, Object, console, clearTimeout() {}, setTimeout: () => 0,
   }
   win.window = win
   vm.runInNewContext(read('assets/my-like-button.js'), win, { filename: path.join(ROOT, 'assets/my-like-button.js') })
@@ -492,7 +492,7 @@ function heartPage({ cards, storage, likesPageHere = true, brokenStorage = false
   assert.ok(headerScript, 'le script du compteur de l’en-tête')
   vm.runInNewContext(headerScript[1], win, { filename: path.join(ROOT, 'snippets/tw-loup-like-button.liquid') })
   const badge = { textContent: '0', classList: classList() }
-  pending = { querySelector: (selector) => (selector === 'span' ? badge : null) }
+  pending = { querySelector: (selector) => (selector === 'span' ? badge : null), classList: classList(), offsetWidth: 0 }
   counter = new defined['likes-count']()
   counter.connectedCallback()
   const onPage = cards.map(({ id, handle, liked = true, fiche }) => {
@@ -509,7 +509,7 @@ function heartPage({ cards, storage, likesPageHere = true, brokenStorage = false
     return Object.assign(card, { heart, button })
   })
   return {
-    store, removed, onPage, badge,
+    store, removed, onPage, badge, counter, win,
     async click(i) { for (const { type, callback } of onPage[i].heart.listeners) if (type === 'click') await callback() },
   }
 }
@@ -695,5 +695,23 @@ test('le compteur de l’en-tête suit les j’aime (productLikedIds)', async ()
   await page.click(0)
   assert.equal(page.badge.textContent, 2)
   assert.ok(!page.badge.classList.contains('hidden'))
+})
+
+test('un j’aime donné : le compteur change tout de suite, sans attendre le serveur, l’angelot de l’en-tête saute et celui de la carte salue ; retiré, aucun des deux', async () => {
+  const page = heartPage({ cards: [{ id: '7', handle: 'h', liked: false }], storage: { productLikedIds: '["1"]', productLikedHandles: '["a"]' }, likesPageHere: false })
+  // Un serveur qui ne répond pas.
+  page.win.fetch = () => new Promise(() => {})
+  assert.ok(!page.counter.classList.contains('plus'), 'au chargement, rien ne saute')
+  page.click(0)
+  assert.equal(page.badge.textContent, 2)
+  assert.ok(page.counter.classList.contains('plus'))
+  assert.ok(page.onPage[0].button.classList.contains('vient-d-aimer'))
+  // Retiré : le compteur descend, sans saut ni salut.
+  const retire = heartPage({ cards: [{ id: '7', handle: 'h' }], storage: { productLikedIds: '["1","7"]', productLikedHandles: '["a","h"]' }, likesPageHere: false })
+  retire.win.fetch = () => new Promise(() => {})
+  retire.click(0)
+  assert.equal(retire.badge.textContent, 1)
+  assert.ok(!retire.counter.classList.contains('plus'))
+  assert.ok(!retire.onPage[0].button.classList.contains('vient-d-aimer'))
 })
 

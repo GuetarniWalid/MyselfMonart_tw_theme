@@ -396,7 +396,8 @@ test('les deux premiers tableaux se demandent dès la tête de la page, avec le 
 
 test('la section : ses places dans l’ordre, le titre invisible, la ligne des filtres, la zone parlée', { skip: SKIP }, async () => {
   const html = await grille(collection(50))
-  assert.match(html, /^\s*<section id="grille" class="refonte-grille" aria-labelledby="grille-titre">/)
+  // --angelot : l'image de l'angelot du cœur de l'en-tête, que la feuille montre derrière le cœur d'une carte aimée.
+  assert.match(html, /^\s*<section id="grille" class="refonte-grille" aria-labelledby="grille-titre" style="--angelot: url\(\/\/www\.myselfmonart\.com\/cdn\/shop\/t\/25\/assets\/entete-angelot-coeur\.webp\?v=1\)">/)
   // Le titre, pour les lecteurs d'écran (la grille a son nom dans le plan de la page, sous le h1 de l'entrée) : le titre
   // de la collection tel qu'il s'écrit, puis les œuvres (ticket 09 : « Les tableau lion » ne se dit pas).
   assert.match(html, /<h2 id="grille-titre" class="sr-only">Tableaux Nature : les tableaux<\/h2>/)

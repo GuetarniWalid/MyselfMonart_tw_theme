@@ -11,7 +11,9 @@
     collection, tel qu'il s'écrit (« Tableau Lion : tout ce qu'il faut savoir… », juste au singulier comme au pluriel), le bouton « Lire le
     guide », qui devient « Refermer le guide » (la feuille montre le bon libellé selon l'état du volet). Ouvert, le
     texte dans une carte blanche, sur deux colonnes sur ordinateur.
-  - Le voyageur vu de dos, qui avance au défilement : un décor, caché aux lecteurs d'écran, jamais nommé.
+  - La Liberté de Delacroix (1830, Louvre, domaine public), celle qui « guide le peuple », de la tête aux épaules, drapeau
+    levé : elle sort du bas de la carte au défilement. Un décor, caché aux lecteurs d'écran, jamais nommé. Elle remplace
+    le voyageur vu de dos (Walid, 25/11/2026 : un personnage plus pertinent pour « Suivez le guide »).
   Sans guide, ou après la page 1 (rien, comme aujourd'hui), la section n'écrit rien. Styles : bloc « Bas de page
   (ticket 08) » de assets/collection-refonte.css. Textes : sections.mma.collection.bas.guide. Tests :
   scripts/collection-bas.test.cjs.
@@ -27,7 +29,7 @@
           <h2 class="c-guide-titre">{{ 'sections.mma.collection.bas.guide.titre_html' | t }}</h2>
           <span class="c-guide-texte">{{ 'sections.mma.collection.bas.guide.texte' | t: titre: collection.title }}</span>
           <span class="c-guide-bouton"><span class="c-guide-ouvrir">{{ 'sections.mma.collection.bas.guide.lire' | t }}</span><span class="c-guide-fermer">{{ 'sections.mma.collection.bas.guide.refermer' | t }}</span></span>
-          <span class="c-guide-perso" aria-hidden="true"><img src="{{ 'collection-voyageur.webp' | asset_url }}" alt="" width="213" height="560" loading="lazy" decoding="async"></span>
+          <span class="c-guide-perso" aria-hidden="true"><img src="{{ 'collection-liberte.webp' | asset_url }}" alt="" width="760" height="402" loading="lazy" decoding="async"></span>
         </summary>
         <div class="c-guide-corps">{{ cg_guide }}</div>
       </details>

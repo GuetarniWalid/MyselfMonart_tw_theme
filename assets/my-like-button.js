@@ -88,6 +88,7 @@ class MyLikeButton extends HTMLElement {
         this.deleteProductLikedHandleInLocalStorage(productLikedHandles);
         this.forgetLikedLine();
         this.deleteLiInLikedPage();
+        this.updateLikeButtonCount();
         await this.updateLikesCountOnServer(this.productId, 'decrement');
       } else {
         this.saveProductLikedIdInLocalStorage(productLikedIds);
@@ -96,11 +97,20 @@ class MyLikeButton extends HTMLElement {
         if (line) this.keepLikedLine(line);
         else this.forgetLikedLine();
         this.deleteLiInLikedPage();
+        this.updateLikeButtonCount();
+        this.greet(likeButton);
         await this.updateLikesCountOnServer(this.productId, 'increment');
       }
 
-      this.updateLikeButtonCount();
     });
+  }
+
+  // Un j'aime vient d'être donné : sur la nouvelle page collection, un angelot passe la tête derrière le cœur
+  // (assets/collection-refonte.css, .vient-d-aimer). Ailleurs, la classe ne fait rien.
+  greet(likeButton) {
+    likeButton.classList.add('vient-d-aimer');
+    clearTimeout(this.greeting);
+    this.greeting = setTimeout(() => likeButton.classList.remove('vient-d-aimer'), 1800);
   }
 
   getProductLikedIds() {

@@ -1,5 +1,5 @@
-// Le nouveau menu du téléphone et le logo sorti de son rond (demande de Walid du 25/11/2026) : l'en-tête
-// (snippets/tw-sticky-header.liquid) les rend dans la vue de test de la nouvelle page collection seulement ; partout
+// Le nouveau menu du téléphone, le logo sorti de son rond, le bouton du menu et le cœur des j'aime aux angelots de Raphaël
+// (demandes de Walid du 25/11/2026) : l'en-tête (snippets/tw-sticky-header.liquid) les rend dans la vue de test de la nouvelle page collection seulement ; partout
 // ailleurs, l'en-tête d'aujourd'hui. Le menu (snippets/menu-telephone.liquid) : les mêmes liens que celui d'avant, en
 // onglets, en tuiles et en groupes dont les collections sont des emblèmes (snippets/collection-embleme.liquid) ; ses
 // styles (input.css, « Le menu du téléphone ») ; son script (MenuTelephone, assets/tw-header.js).
@@ -117,7 +117,7 @@ test('le nouvel en-tête : dans la vue de test de la nouvelle page collection, e
   ]
   for (const page of ailleurs) {
     const html = entete(page)
-    assert.doesNotMatch(html, /menu-tel/, JSON.stringify(page.name + page.suffix))
+    assert.doesNotMatch(html, /menu-tel|entete-burger|entete-coeur/, JSON.stringify(page.name + page.suffix))
     assert.match(menuTel(html), /<h3 class="font-limelight mb-4">/)
     assert.equal((html.match(/<circle cx="34" cy="34" r="34"/g) || []).length, 1, 'le logo dans son rond')
   }
@@ -135,12 +135,16 @@ test('le menu d’avant tient dans l’écran, barre du navigateur comprise : 10
   assert.ok(vh > 0 && dvh > vh, `${vh} puis ${dvh}`)
 })
 
-test('le logo sorti de son rond a la hauteur du rond : 48 px, 55 px dès 640 px ; son dessin ne change pas', { skip: SKIP }, () => {
+/* 36 px : deux cinquièmes de l'en-tête de 90 px, une fois et demie les icônes de 24 px (Walid, 25/11/2026 : à 48 px, la
+   taille du rond, « un peu trop gros »). */
+test('le logo sorti de son rond : 36 px, 42 px dès 640 px ; son dessin ne change pas', { skip: SKIP }, () => {
   const logo = (html) => /<svg[^>]*aria-labelledby="logo-round-title logo-round-desc"[\s\S]*?<\/svg>/.exec(html)[0]
   const avec = logo(entete({ name: 'index', suffix: null }))
   const sans = logo(entete({ collection: SALON }))
   assert.match(avec, /class="w-12 h-12 sm:w-auto sm:h-auto"/)
-  assert.match(sans, /class="w-auto h-12 sm:h-\[55px\]"/)
+  assert.match(sans, /class="w-auto h-9 sm:h-\[42px\]"/)
+  const css = read('assets/output.css')
+  assert.ok(css.includes('.h-9{height:2.25rem}') && css.includes('.sm\\:h-\\[42px\\]{height:42px}'))
   const traits = (svg) => [...svg.matchAll(/<(?:path|ellipse)\b[^>]*>/g)].map((m) => m[0])
   assert.ok(traits(sans).length >= 8)
   assert.deepEqual(traits(sans), traits(avec))
@@ -148,6 +152,46 @@ test('le logo sorti de son rond a la hauteur du rond : 48 px, 55 px dès 640 px 
   const [x, y, w, h] = /viewBox="([^"]+)"/.exec(sans)[1].split(' ').map(Number)
   assert.ok(x <= 13 && y <= 13 && x + w >= 51.23 && y + h >= 52.06, 'rien de coupé')
   assert.ok(w <= 39 && h <= 40, 'de près')
+})
+
+/* ---------- Les angelots ---------- */
+
+test('le bouton du menu : trois barres, l’angelot au-dessus, un décor ; la croix le remplace comme avant', { skip: SKIP }, () => {
+  const html = entete({ collection: SALON })
+  const bouton = /<summary class="group menu-opener[\s\S]*?<\/summary>/.exec(html)[0]
+  assert.match(bouton, /aria-label="Ouvrir le menu de navigation"/)
+  // assets/tw-header.js cache .hamburger et montre .close.hidden : les deux sont là, et le décor se tait.
+  assert.equal((bouton.match(/class="hamburger entete-burger" aria-hidden="true"/g) || []).length, 1)
+  assert.match(bouton, /<span class="close hidden" aria-hidden="true">/)
+  assert.equal((bouton.match(/<rect /g) || []).length, 3)
+  assert.match(bouton, /<img src="\/\/www\.myselfmonart\.com\/cdn\/shop\/t\/25\/assets\/entete-angelot-menu\.webp\?v=1" alt="" width="32" height="26" decoding="async">/)
+})
+
+test('le cœur des j’aime : un lien nommé dans les cinq langues, l’angelot derrière, son nombre dedans', { skip: SKIP }, () => {
+  const NOMS = { fr: 'Mes j\'aime', en: 'My likes', de: 'Meine Favoriten', es: 'Mis favoritos', nl: 'Mijn favorieten' }
+  for (const [lang, nom] of Object.entries(NOMS)) {
+    const html = entete({ collection: SALON, lang })
+    const lien = /<span tabindex="0" role="link" aria-label="([^"]*)" class="entete-coeur obfuscate" data-url64="([^"]+)">([\s\S]*?)<\/span>/.exec(html)
+    assert.ok(lien, lang)
+    assert.equal(unescape(lien[1]), nom, lang)
+    assert.match(lien[3], /<img class="entete-coeur-ange" src="[^"]*entete-angelot-coeur\.webp\?v=1" alt="" width="37" height="20" decoding="async">/)
+    assert.match(lien[3], /<svg class="entete-coeur-trait" viewBox="0 0 24 24" aria-hidden="true"/)
+    // Le compteur (<likes-count>, son script dans le même fichier) : caché à zéro, frère du lien dans le même <li>.
+    assert.match(html, /<\/span>\s*<likes-count class="entete-coeur-compte"><span class="hidden">0<\/span><\/likes-count>/)
+  }
+})
+
+test('les images des angelots : en WebP, légères, aux proportions qu’écrivent les balises', () => {
+  const fs = require('fs')
+  const path = require('path')
+  for (const [nom, w, h] of [['entete-angelot-menu', 32, 26], ['entete-angelot-coeur', 37, 20]]) {
+    const b = fs.readFileSync(path.join(__dirname, '..', 'assets', `${nom}.webp`))
+    assert.equal(b.toString('ascii', 8, 12), 'WEBP')
+    assert.ok(b.length < 9 * 1024, `${nom} : ${b.length}`)
+    const [W, H] = [1 + b.readUIntLE(24, 3), 1 + b.readUIntLE(27, 3)]
+    assert.ok(Math.abs(W / H - w / h) < 0.05, `${nom} : ${W} × ${H}`)
+    assert.ok(W >= w * 3, `${nom} : net à la densité 3`)
+  }
 })
 
 /* ---------- Le menu : les mêmes liens ---------- */
@@ -313,6 +357,29 @@ test('la feuille : un rayon à la fois, celui de l’onglet choisi ; rien ne bou
     if (r.head.startsWith('@keyframes')) continue
     if (/(^|[;\s])(animation|transition)[\w-]*\s*:/.test(r.body) && !/^\s*transition:\s*none;?\s*$/.test(r.body.trim())) assert.equal(r.context[0], NO_PREF, r.head)
   }
+})
+
+test('la feuille : les angelots, un bloc à part ; les barres et le cœur ne bougent pas de place ; aucun mouvement hors « mouvements réduits »', () => {
+  const debut = INPUT.indexOf("/* ---- Les angelots de l'en-tête (")
+  const fin = INPUT.indexOf("/* ---- Fin des angelots de l'en-tête ---- */")
+  assert.ok(debut > 0 && fin > debut)
+  const regles = rules(INPUT.slice(debut, fin).replace(/\/\*[\s\S]*?\*\//g, ''))
+  for (const r of regles) {
+    if (r.head.startsWith('@keyframes')) { assert.match(r.head, /^@keyframes entete-/); continue }
+    assert.match(r.head, /entete-/, r.head)
+    if (/(^|[;\s])(animation|transition)[\w-]*\s*:/.test(r.body)) assert.equal(r.context[0], NO_PREF, r.head)
+  }
+  // Cachés par la classe hidden de assets/tw-header.js et du compteur : leurs règles ne l'emportent pas sur elle.
+  for (const head of ['.entete-burger:not(.hidden)', '.entete-coeur-compte span:not(.hidden)']) assert.ok(regles.some((r) => r.head === head), head)
+  // Un j'aime ou plus : le cœur se remplit.
+  assert.ok(regles.some((r) => r.head === 'li:has(> likes-count span:not(.hidden)) .entete-coeur-trait path' && /fill: var\(--rose\)/.test(r.body)))
+  // Sous le doigt : 48 px au moins.
+  assert.match(regles.find((r) => r.head === '.menu-opener:has(.entete-burger)').body, /margin: -8px; padding: 8px;/)
+  assert.match(regles.find((r) => r.head === '.entete-coeur').body, /width: 56px; height: 56px;/)
+})
+
+test('la hauteur seule de la fenêtre (la barre du navigateur) ne ferme pas le menu : seul un changement de largeur compte', () => {
+  assert.match(read('assets/tw-header.js'), /let largeur = window\.innerWidth;\s*window\.addEventListener\('resize', \(\) => \{\s*if \(window\.innerWidth === largeur\) return;\s*largeur = window\.innerWidth;/)
 })
 
 test('la feuille construite porte le menu', () => {

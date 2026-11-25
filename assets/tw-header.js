@@ -685,8 +685,12 @@ class StickyHeader extends HTMLElement {
     this.preparerPhotosDuMenu();
 
     // Handle orientation/resize changes to reset state when switching between mobile/desktop
+    // La hauteur seule (la barre du navigateur, le clavier) ne ferme rien : seul un changement de largeur compte.
     let resizeTimeout;
+    let largeur = window.innerWidth;
     window.addEventListener('resize', () => {
+      if (window.innerWidth === largeur) return;
+      largeur = window.innerWidth;
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
         // Reset dropdown state when switching layouts

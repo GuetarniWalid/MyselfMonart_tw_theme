@@ -1,12 +1,16 @@
 {%- comment -%}
   Le logo de la boutique, dans l'en-tête (snippets/tw-sticky-header.liquid), quand aucun n'est saisi dans ses réglages.
   Sans paramètre : dans son rond, 48 px (55 px dès 640 px).
-  sans_rond: true : sorti de son rond, à la hauteur qu'avait le rond (demande de Walid du 25/11/2026). Le cadre est alors
-  celui du dessin lui-même (de 13,00 à 51,23 en largeur, de 13,00 à 52,05 en hauteur), avec 0,2 d'air.
+  sans_rond: true : sorti de son rond (demande de Walid du 25/11/2026). Le cadre est alors celui du dessin lui-même (de
+  13,00 à 51,23 en largeur, de 13,00 à 52,05 en hauteur), avec 0,2 d'air. Sa hauteur, 36 px (42 px dès 640 px) : à celle
+  du rond (48 px), Walid le trouvait trop gros. Les règles qui s'accordent : deux cinquièmes de l'en-tête de 90 px ; une fois
+  et demie les icônes de 24 px, la taille d'icône de Material et d'Apple ; la section d'or de l'en-tête (90 / 1,618²) ;
+  la moyenne géométrique du dessin dans son rond (27,6 px) et du rond (48 px) ; IKEA 33 px, Starbucks 40 px, Desenio 40 %
+  de son en-tête (relevé du 25/11/2026, au téléphone). Sur ordinateur, à côté du nom : 1,618 fois ses capitales (26 px).
   Tests : scripts/menu-telephone.test.cjs.
 {%- endcomment -%}
 {%- if sans_rond -%}
-<svg xmlns="http://www.w3.org/2000/svg" width="54" height="55" viewBox="12.8 12.8 38.63 39.45" fill="none" aria-labelledby="logo-round-title logo-round-desc" class="w-auto h-12 sm:h-[55px]" role="img" focusable="false">
+<svg xmlns="http://www.w3.org/2000/svg" width="41" height="42" viewBox="12.8 12.8 38.63 39.45" fill="none" aria-labelledby="logo-round-title logo-round-desc" class="w-auto h-9 sm:h-[42px]" role="img" focusable="false">
 {%- else -%}
 <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewbox="0 0 68 68" fill="none" aria-labelledby="logo-round-title logo-round-desc" class="w-12 h-12 sm:w-auto sm:h-auto" role="img" focusable="false">
 {%- endif %}

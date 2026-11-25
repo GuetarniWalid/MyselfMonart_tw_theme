@@ -3,7 +3,7 @@
 //   par snippets/cocon-famille.liquid en mode « emblèmes », chacune en grand emblème (snippets/collection-embleme.liquid),
 //   et le couple de tableau ancien qui part les voir (un décor) ;
 // - le guide (sections/collection-guide.liquid) : le texte de custom.guide, traité comme aujourd'hui
-//   (snippets/collection-editorial-auto.liquid, partie « guide »), dans une carte pêche repliée, avec le voyageur ;
+//   (snippets/collection-editorial-auto.liquid, partie « guide »), dans une carte pêche repliée, avec la Liberté de Delacroix ;
 // - les questions (sections/collection-questions.liquid) : les questions de custom.faq en volets, la carte ciel avec la
 //   Joconde au casque, et la liste FAQPage d'aujourd'hui (même snippet, partie « faq-ld »).
 // Mêmes textes et mêmes données Google qu'aujourd'hui : la grille d'aujourd'hui les écrivait sous les tableaux
@@ -402,7 +402,7 @@ test('le guide : le texte d’aujourd’hui, mot pour mot, dans un volet natif f
   assert.doesNotMatch(html, /\[\[TP_/)
 })
 
-test('le guide : la carte pêche fermée dit ce qu’elle contient, le bouton s’ouvre et se referme, le voyageur est un décor', { skip: SKIP }, async () => {
+test('le guide : la carte pêche fermée dit ce qu’elle contient, le bouton s’ouvre et se referme, la Liberté est un décor', { skip: SKIP }, async () => {
   const vars = coconCases()['Tableaux Nature']
   const html = (await guide(vars)).trim()
   const section = /^<section class="c-guide" id="guide" aria-labelledby="([^"]+)">/.exec(html)
@@ -416,10 +416,11 @@ test('le guide : la carte pêche fermée dit ce qu’elle contient, le bouton s�
   assert.match(resume[1], /<span class="c-guide-texte">Tableaux Nature\u00a0: tout ce qu’il faut savoir pour bien choisir le sujet, le format et la place au mur\.<\/span>/)
   // Le bouton : ses deux libellés, la feuille montre celui qui convient (fermé : « Lire le guide »).
   assert.match(resume[1], /<span class="c-guide-bouton"><span class="c-guide-ouvrir">Lire le guide<\/span><span class="c-guide-fermer">Refermer le guide<\/span><\/span>/)
-  // Le voyageur, vu de dos : un décor, caché aux lecteurs d'écran, chargé à la demande.
+  // La Liberté de Delacroix, qui « guide le peuple » (Walid, 25/11/2026 : plus pertinente que le voyageur vu de dos) : un
+  // décor, caché aux lecteurs d'écran, chargé à la demande.
   const perso = /<span class="c-guide-perso" aria-hidden="true">(<img\b[^>]*>)<\/span>/.exec(resume[1])
-  assert.ok(perso, 'le voyageur, caché aux lecteurs d’écran')
-  assert.deepEqual(balises(perso[1], 'img')[0], { src: '//www.myselfmonart.com/cdn/shop/t/25/assets/collection-voyageur.webp?v=1', alt: '', width: '213', height: '560', loading: 'lazy', decoding: 'async' })
+  assert.ok(perso, 'la Liberté, cachée aux lecteurs d’écran')
+  assert.deepEqual(balises(perso[1], 'img')[0], { src: '//www.myselfmonart.com/cdn/shop/t/25/assets/collection-liberte.webp?v=1', alt: '', width: '760', height: '402', loading: 'lazy', decoding: 'async' })
   // Aucun h1 : le titre de la carte (h2), puis ceux du guide, les h2 et h3 du métachamp, tels quels.
   assert.deepEqual([...html.matchAll(/<(h[1-6])\b[^>]*>([\s\S]*?)<\/\1>/g)].map((m) => `${m[1]} ${texte(m[2])}`), ['h2 Suivez le guide.', 'h2 Comment choisir votre tableau nature ?', 'h3 Placement, format et finition'])
   // Un titre de poster, au singulier, échappé.
@@ -621,7 +622,7 @@ test('les personnages du bas de page : dans le thème, en WebP, aux dimensions q
     if (bloc === 'VP8L') { const v = b.readUInt32LE(21); return [1 + (v & 0x3fff), 1 + ((v >> 14) & 0x3fff)] }
     return [b.readUInt16LE(26) & 0x3fff, b.readUInt16LE(28) & 0x3fff]
   }
-  for (const [file, section] of [['assets/collection-couple.webp', SUJETS], ['assets/collection-voyageur.webp', GUIDE], ['assets/galerie-ecoute.webp', QUESTIONS]]) {
+  for (const [file, section] of [['assets/collection-couple.webp', SUJETS], ['assets/collection-liberte.webp', GUIDE], ['assets/galerie-ecoute.webp', QUESTIONS]]) {
     const [w, h] = taille(file)
     const nom = path.basename(file)
     const img = (code(section).match(/<img\b[^>]*>/g) || []).find((tag) => tag.includes(`'${nom}' | asset_url`))
@@ -629,8 +630,8 @@ test('les personnages du bas de page : dans le thème, en WebP, aux dimensions q
     assert.match(img, new RegExp(`\\swidth="${w}"`), `${section} : ${nom}, ${w} px de large`)
     assert.match(img, new RegExp(`\\sheight="${h}"`), `${section} : ${nom}, ${h} px de haut`)
   }
-  // Pas plus lourds qu'il ne faut : des décors d'une centaine de pixels de large.
-  for (const file of ['assets/collection-couple.webp', 'assets/collection-voyageur.webp']) assert.ok(fs.statSync(path.join(ROOT, file)).size < 60 * 1024, file)
+  // Pas plus lourds qu'il ne faut : des décors.
+  for (const file of ['assets/collection-couple.webp', 'assets/collection-liberte.webp']) assert.ok(fs.statSync(path.join(ROOT, file)).size < 60 * 1024, file)
 })
 
 /* ---------- La feuille ---------- */
@@ -702,7 +703,31 @@ test('la feuille : la Joconde tient dans sa carte à côté de sa bulle, de 900 
   }
 })
 
-test('la feuille : le couple arrive de la droite et sa bulle s’ouvre, le voyageur avance, la Joconde surgit ; jamais en « mouvements réduits »', () => {
+test('la feuille : la Liberté sort du bas de la carte, hors du texte et du bouton ; ouverte, elle est derrière le texte blanc', () => {
+  const bloc = monBloc()
+  const un = (head, context = '') => { const r = bloc.find((x) => x.head === `${H} ${head}` && x.context.join(' / ') === context); assert.ok(r, `${head} ${context}`); return r.body }
+  // Au téléphone : la figure (0,529 fois sa largeur : 402 / 760) prend la carte moins 146 px, la place du bouton ; au-dessus
+  // du bouton, une marge à sa hauteur, moins le bouton et sa marge du bas : le texte finit au-dessus du drapeau.
+  assert.match(un('.c-guide-perso'), /right: -8px;\s*bottom: 0;\s*width: calc\(100% - 146px\);/)
+  assert.match(un('.c-guide-bouton'), /margin: calc\(\(100% - 102px\) \* 0\.529 - 60px\) 0 24px;/)
+  for (const carte of [280, 320, 350, 408]) {
+    const figure = (carte - 146) * 402 / 760
+    const marge = (carte - 44 - 102) * 0.529 - 60
+    assert.ok(24 + 46 + marge >= figure, `${carte} px : ${Math.round(24 + 46 + marge)} sous le texte pour une figure de ${Math.round(figure)}`)
+  }
+  // Tablette et ordinateur : le texte à gauche, elle à droite.
+  assert.match(un(':is(.c-guide-titre, .c-guide-texte)', '@media (min-width: 600px)'), /max-width: 54%;/)
+  assert.match(un('.c-guide-perso', '@media (min-width: 600px)'), /width: min\(48%, 400px\);/)
+  assert.match(un('.c-guide-perso', '@media (min-width: 900px)'), /width: min\(45%, 540px\);/)
+  // Le texte et le bouton passent devant elle ; le texte blanc de la carte ouverte aussi, jusqu'où son bas descend.
+  assert.match(un(':is(.c-guide-titre, .c-guide-texte, .c-guide-bouton)'), /position: relative;\s*z-index: 1;/)
+  assert.match(un('.c-guide-corps'), /margin: 22px 12px 0;/)
+  assert.match(un('.c-guide-carte[open] .c-guide-perso'), /bottom: -22px;/)
+  assert.match(un('.c-guide-corps', '@media (min-width: 900px)'), /margin: 30px 40px 0;/)
+  assert.match(un('.c-guide-carte[open] .c-guide-perso', '@media (min-width: 900px)'), /bottom: -30px;/)
+})
+
+test('la feuille : le couple arrive de la droite et sa bulle s’ouvre, la Liberté brandit son drapeau, la Joconde surgit ; jamais en « mouvements réduits »', () => {
   const bloc = monBloc()
   const NO_PREF = '@media (prefers-reduced-motion: no-preference)'
   const LIE = '@supports (animation-timeline: view()) and (animation-range-start: contain 10svh)'
@@ -716,14 +741,14 @@ test('la feuille : le couple arrive de la droite et sa bulle s’ouvre, le voyag
   for (const head of ['.c-sujets-perso img', '.c-sujets-bulle', '.c-sujets-liste .c-emb', '.c-guide-perso', '.c-questions-ecoute']) assert.deepEqual(anime(head).context, [NO_PREF, LIE], head)
   assert.match(anime('.c-sujets-perso img').body, /animation: refonte-arrive linear both;/)
   assert.match(anime('.c-sujets-bulle').body, /animation: refonte-dit linear both;/)
-  assert.match(anime('.c-guide-perso').body, /animation: refonte-avance linear both;/)
+  assert.match(anime('.c-guide-perso').body, /animation: refonte-brandit linear both;/)
   // La bulle de la Joconde hoche la tête, sans fin, comme sur la fiche 3D.
   assert.match(anime('.c-questions-bulle').body, /animation: refonte-hoche 2\.2s ease-in-out infinite alternate;/)
   // Les images clés du bloc : celles de la maquette (bloc « Le mouvement »).
   const cles = (name) => regle(bloc, `@keyframes ${name}`)
   assert.match(cles('refonte-arrive').body, /0% \{ transform: translateX\(120%\) rotate\(0\); \}/)
   assert.match(cles('refonte-dit').body, /from \{ opacity: 0; transform: scale\(0\.3\); \}/)
-  assert.match(cles('refonte-avance').body, /from \{ transform: translateY\(14%\) scale\(1\.12\); \}/)
+  assert.match(cles('refonte-brandit').body, /from \{ transform: translateY\(60%\) rotate\(7deg\); \}/)
   assert.match(cles('refonte-surgit').body, /from \{ transform: translateY\(62%\); \}/)
   // Rien ne bouge hors de « mouvements voulus » (le test du socle le vérifie pour toute la feuille).
   for (const r of bloc.filter((x) => /(^|[;\s])(animation|transition)[\w-]*\s*:/.test(x.body))) assert.equal(r.context[0], NO_PREF, r.head)

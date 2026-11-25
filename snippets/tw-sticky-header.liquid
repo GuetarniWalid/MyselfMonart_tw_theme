@@ -7,8 +7,8 @@
 -%}
 
 {%- comment -%}
-  Le nouvel en-tête (demande de Walid du 25/11/2026) : le logo sorti de son rond et le menu du téléphone en emblèmes
-  (snippets/menu-telephone.liquid). Dans la vue de test de la nouvelle page collection seulement (?view=refonte…), le
+  Le nouvel en-tête (demandes de Walid du 25/11/2026) : le logo sorti de son rond, le menu du téléphone en emblèmes
+  (snippets/menu-telephone.liquid), le bouton du menu et le cœur des j'aime aux angelots de Raphaël. Dans la vue de test de la nouvelle page collection seulement (?view=refonte…), le
   temps que Walid le valide ; ailleurs, l'en-tête d'aujourd'hui. La section ne voit pas la page rendue
   (layout/collection.liquid) : elle reconnaît la vue de test à son modèle.
 {%- endcomment -%}
@@ -41,7 +41,7 @@
       <details class="inline-block h-full md:hidden">
         <summary class="group menu-opener list-none cursor-pointer" aria-label="{{ 'snippet.tw_sticky_header.open_menu' | t }}">
           <span class="group-focus-visible:border-2 group-focus-visible:border-main rounded mobile-menu">
-            <span class="hamburger" aria-hidden="true">{% render 'tw-icon-hamburger' %}</span>
+            {% if nouvel_entete %}{% render 'entete-burger' %}{% else %}<span class="hamburger" aria-hidden="true">{% render 'tw-icon-hamburger' %}</span>{% endif %}
             <span class="close hidden" aria-hidden="true">{% render 'tw-icon-close' %}</span>
           </span>
         </summary>
@@ -218,7 +218,7 @@
       </a>
 
       
-      {% render 'tw-loup-like-button' %}
+      {% render 'tw-loup-like-button', nouveau: nouvel_entete %}
     </div>
 
     {%- comment -%}

@@ -1,3 +1,9 @@
+{%- comment -%}
+  La loupe et le cœur des j'aime de l'en-tête (snippets/tw-sticky-header.liquid).
+  nouveau: true : le cœur du nouvel en-tête (demande de Walid du 25/11/2026), l'angelot de droite de la Madone Sixtine
+  (Raphaël, 1513, domaine public) accoudé dessus ; vide, le cœur est blanc, dès un j'aime il est rose et porte leur nombre.
+  Styles : input.css, « Les angelots de l'en-tête ». Tests : scripts/menu-telephone.test.cjs.
+{%- endcomment -%}
 <ul class="flex items-center transition-colors duration-500 cursor-pointer">
     <li>
         <button id="open-search-loup" class="mobile-mini:p-2 p-4 transition-colors duration-500 flex justify-center items-center">
@@ -24,12 +30,20 @@
             endif
             assign likes_page = racine | append: "/pages/" | append: settings.likes_page | base64_encode
         %}
+        {%- if nouveau %}
+        <span tabindex="0" role="link" aria-label="{{ 'snippet.tw_sticky_header.my_likes' | t }}" class="entete-coeur obfuscate" data-url64="{{ likes_page }}">
+            <img class="entete-coeur-ange" src="{{ 'entete-angelot-coeur.webp' | asset_url }}" alt="" width="37" height="20" decoding="async">
+            <svg class="entete-coeur-trait" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.9C6.6 16.2 2.9 12.8 2.9 8.7c0-3 2.3-5.2 5.1-5.2 1.6 0 3.1.8 4 2.1.9-1.3 2.4-2.1 4-2.1 2.8 0 5.1 2.2 5.1 5.2 0 4.1-3.7 7.5-9.1 12.2Z"/></svg>
+        </span>
+        <likes-count class="entete-coeur-compte"><span class="hidden">0</span></likes-count>
+        {%- else %}
         <span tabindex="0" class="group obfuscate p-4 transition-colors duration-500 relative" data-url64="{{ likes_page }}">
             {% render 'tw-icon-heart-outline' %}
         </span>
         <likes-count>
             <span class="pointer-events-none select-none absolute flex justify-center items-center font-bold bg-secondary transition-colors duration-500 rounded-full h-4 w-4 top-0 right-3">0</span>
         </likes-count>
+        {%- endif %}
     </li>
 </ul>
 
@@ -46,6 +60,13 @@
                 productLikedIdsArr = JSON.parse(localStorage.getItem('productLikedIds')) || [];
             } catch (error) {}
             const count = productLikedIdsArr.length;
+            // Un j'aime de plus : l'angelot du nouvel en-tête saute (input.css, .plus).
+            if (this.nombre !== undefined && count > this.nombre) {
+                this.classList.remove('plus');
+                void this.offsetWidth;
+                this.classList.add('plus');
+            }
+            this.nombre = count;
             this.likeCount = this.likeCount || this.querySelector('span');
             if(!this.likeCount) return;
             if(count > 0) {
