@@ -105,9 +105,9 @@ class MyLikeButton extends HTMLElement {
     });
   }
 
-  // Un j'aime vient d'être donné : sur la nouvelle page collection, les papiers du cœur se collent l'un après l'autre
-  // (assets/collection-refonte.css, .vient-d-aimer), à ce moment-là seulement, jamais au chargement. Ailleurs, la classe ne
-  // fait rien.
+  // Un j'aime vient d'être donné : les papiers du nouveau cœur se collent l'un après l'autre (input.css, « Le cœur de
+  // papiers », .vient-d-aimer), à ce moment-là seulement, jamais au chargement. Sur le cœur de toujours, la classe ne fait
+  // rien.
   greet(likeButton) {
     clearTimeout(this.greeting);
     likeButton.classList.remove('vient-d-aimer');

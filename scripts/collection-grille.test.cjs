@@ -122,26 +122,20 @@ test('le cœur de la grille : trois papiers du thème et leur contour, sur chaqu
     const html = await carte(p)
     const [coeur] = html.match(/<svg class="coeur"[\s\S]*?<\/svg>/) || []
     assert.ok(coeur, p.handle)
-    assert.deepEqual([...coeur.matchAll(/<path class="([^"]+)"/g)].map((m) => m[1]), ['coeur-rose', 'coeur-corail', 'coeur-soleil', 'coeur-trait'], p.handle)
+    assert.deepEqual([...coeur.matchAll(/ class="(coeur-(?!fibre)[^"]+)"/g)].map((m) => m[1]), ['coeur-rose', 'coeur-soleil', 'coeur-corail', 'coeur-trait'], p.handle)
     assert.doesNotMatch(html, /heart-icon|angelot/, p.handle)
   }
   // Le dessin n'arrive que par son paramètre : recommandations, « Mes j'aime » et recherche ne le passent pas.
   const ailleurs = await engine('fr').renderFile('card-product', { product: ancienneToile(), primary_image_index: 1, next_image_index: 0, lazy_load: true }, { globals: globals() })
   assert.match(ailleurs, /<svg [^>]*class="heart-icon w-10 h-10">/)
   assert.doesNotMatch(ailleurs, /class="coeur/)
-  // La feuille : les trois papiers aux couleurs de la page, l'encre autour ; vide, le contour seul.
+  // La feuille de la page ne règle que sa taille, dans un rond de 40 px ; son dessin et ses mouvements sont dans la feuille
+  // commune (scripts/coeur-papiers.test.cjs).
   const bloc = blocCss()
   const C = ':root[data-refonte-page] .refonte-carte'
-  for (const papier of ['rose', 'corail', 'soleil']) assert.match(regle(bloc, `${C} .coeur-${papier}`).body, new RegExp(`fill: var\\(--${papier}\\);`))
-  assert.match(regle(bloc, `${C} .coeur-trait`).body, /fill: none;\s*stroke: currentColor;/)
-  assert.match(regle(bloc, `${C} .like:not(.is-liked) .coeur path:not(.coeur-trait)`).body, /opacity: 0;/)
-  // Les papiers se collent quand on aime, jamais au chargement d'une page où l'œuvre est déjà aimée.
-  for (const papier of ['rose', 'corail', 'soleil']) {
-    const r = bloc.filter((x) => /animation:/.test(x.body) && x.head.endsWith(`.coeur-${papier}`))
-    assert.equal(r.length, 1, papier)
-    assert.equal(r[0].head, `${C} .like.is-liked.vient-d-aimer .coeur-${papier}`)
-    assert.equal(r[0].context[0], '@media (prefers-reduced-motion: no-preference)')
-  }
+  assert.match(regle(bloc, `${C} .coeur`).body, /width: 22px;\s*height: 22px;/)
+  assert.match(regle(bloc, `${C} .like`).body, /padding: 9px;\s*border-radius: 50%;/)
+  assert.ok(!bloc.some((r) => /\.coeur-/.test(r.head)), 'les papiers sont dans input.css')
 })
 
 test('la carte d’un ancien produit : son œuvre à plat (2e image), jamais sa photo d’ambiance', { skip: SKIP }, async () => {

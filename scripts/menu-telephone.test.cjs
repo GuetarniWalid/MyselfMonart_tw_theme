@@ -175,8 +175,8 @@ test('le cœur des j’aime : un lien nommé dans les cinq langues, l’angelot 
     assert.ok(lien, lang)
     assert.equal(unescape(lien[1]), nom, lang)
     assert.match(lien[3], /<img class="entete-coeur-ange" src="[^"]*entete-angelot-coeur\.webp\?v=1" alt="" width="38" height="28" decoding="async">/)
-    const [, dessin] = /<svg class="entete-coeur-dessin" viewBox="0 0 24 24" aria-hidden="true" focusable="false">([\s\S]*?)<\/svg>/.exec(lien[3])
-    assert.deepEqual([...dessin.matchAll(/<path class="([^"]+)"/g)].map((m) => m[1]), ['coeur-rose', 'coeur-corail', 'coeur-soleil', 'coeur-trait'])
+    const [, dessin] = /<svg class="coeur entete-coeur-dessin" viewBox="0 0 24 24" aria-hidden="true" focusable="false">([\s\S]*?)<\/svg>/.exec(lien[3])
+    assert.deepEqual([...dessin.matchAll(/ class="(coeur-(?!fibre)[^"]+)"/g)].map((m) => m[1]), ['coeur-rose', 'coeur-soleil', 'coeur-corail', 'coeur-trait'])
     // Le compteur (<likes-count>, son script dans le même fichier) : caché à zéro, frère du lien dans le même <li>.
     assert.match(html, /<\/span>\s*<likes-count class="entete-coeur-compte"><span class="hidden">0<\/span><\/likes-count>/)
   }
@@ -377,8 +377,8 @@ test('la feuille : les angelots, un bloc à part ; les barres et le cœur ne bou
   const corps = (head) => regles.filter((r) => r.head === head && !r.context.length).map((r) => r.body).join(' ')
   assert.match(corps('.entete-coeur .coeur-rose'), /fill: var\(--blanc\);/)
   assert.match(corps(`${AIME} .coeur-rose`), /fill: var\(--rose\);/)
-  assert.match(corps('.entete-coeur .coeur-corail, .entete-coeur .coeur-soleil'), /opacity: 0;/)
-  assert.match(corps(`${AIME} .coeur-corail, ${AIME} .coeur-soleil`), /opacity: 1;/)
+  assert.match(corps('.entete-coeur .coeur-soleil, .entete-coeur .coeur-corail'), /opacity: 0;/)
+  assert.match(corps(`${AIME} .coeur-soleil, ${AIME} .coeur-corail`), /opacity: 1;/)
   // L'angelot et le cœur sur le même axe, celui du bouton de 56 px, en pixels entiers.
   const [ange, dessin] = ['.entete-coeur .entete-coeur-ange', '.entete-coeur .entete-coeur-dessin'].map((h) => corps(h))
   const axe = (b) => Number(/left: (\d+)px/.exec(b)[1]) + Number(/width: (\d+)px/.exec(b)[1]) / 2
