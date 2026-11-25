@@ -10,6 +10,8 @@
   les scripts de la boutique (content_for_header, 330 Ko) : la page s'affiche plus tôt.
   Sur cette page, pas de tiroir des filtres : sa ligne des filtres le remplace (ticket 06,
   snippets/collection-filtres.liquid).
+  Dans la vue de test seulement (modèle collection.refonte…), un script garde la vue d'une collection à l'autre
+  (snippets/collection-refonte-essai.liquid) : à retirer à la bascule.
 {%- endcomment -%}
 {%- liquid
   assign refonte_page = false
@@ -24,7 +26,8 @@
     {{ 'collection-refonte.css' | asset_url | stylesheet_tag: preload: true }}
     {% render 'collection-refonte-oeuvres', page: content_for_layout %}{% endif %}
     {{ content_for_header }}{% if refonte_page %}
-    {% render 'collection-refonte-police' %}{% endif %}
+    {% render 'collection-refonte-police' %}{% if template.suffix contains 'refonte' %}
+    {% render 'collection-refonte-essai' %}{% endif %}{% endif %}
 
     <script src="{{ 'collection.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'dropdown-button.js' | asset_url }}" defer="defer"></script>

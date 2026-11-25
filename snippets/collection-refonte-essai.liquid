@@ -1,0 +1,26 @@
+{%- comment -%}
+  La vue de test de la nouvelle page collection, et elle seule (?view=refonte…, dossier .scratch/collection-design,
+  ticket 10) : un lien vers une autre collection y mène aussi dans la nouvelle page (?view=refonte, qui marche sur toutes
+  les collections). Walid l'essaie en passant d'une collection à l'autre, par le menu, les emblèmes, le fil d'Ariane ou
+  l'interrupteur Posters | Toiles, sans retomber sur la page d'aujourd'hui. Les liens du HTML ne changent pas : leur
+  adresse ne change qu'au toucher. La grille a les siens (filtres, pages), que son script tient : rien n'y touche.
+
+  Rendu dans <head> par layout/collection.liquid quand le modèle est une vue de test (collection.refonte…). À retirer à
+  la bascule, avec ces modèles.
+  Tests : scripts/collection-refonte.test.cjs.
+{%- endcomment -%}
+<script>
+  (function () {
+    function garderLaVue(e) {
+      var lien = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+      if (!lien || lien.closest('#grille')) return;
+      var adresse = new URL(lien.href, location.href);
+      if (adresse.origin !== location.origin || adresse.searchParams.has('view')) return;
+      if (!/^\/(?:[a-z]{2}(?:-[a-z]{2})?\/)?collections\/[^/]+\/?$/i.test(adresse.pathname)) return;
+      adresse.searchParams.set('view', 'refonte');
+      lien.href = adresse.href;
+    }
+    addEventListener('pointerdown', garderLaVue, true);
+    addEventListener('click', garderLaVue, true);
+  })();
+</script>

@@ -68,7 +68,7 @@ const reperes = (source) => source
 
 /* Le gabarit rendu avec ce que Shopify lui donne : la page déjà rendue (content_for_layout), et des repères pour
    content_for_header. */
-const renderLayout = (file, content, { lang = 'fr', cookie = true } = {}) => engine(lang).parseAndRender(reperes(read(file)), {
+const renderLayout = (file, content, { lang = 'fr', cookie = true, suffix = null } = {}) => engine(lang).parseAndRender(reperes(read(file)), {
   content_for_layout: content,
   content_for_header: '[content_for_header]',
 }, {
@@ -76,6 +76,7 @@ const renderLayout = (file, content, { lang = 'fr', cookie = true } = {}) => eng
     request: { locale: { iso_code: lang }, origin: 'https://www.myselfmonart.com' },
     routes: { cart_add_url: '/cart/add', cart_change_url: '/cart/change', cart_update_url: '/cart/update', cart_url: '/cart', predictive_search_url: '/search/suggest' },
     settings: { enable_cookie: cookie },
+    template: { name: 'collection', suffix },
   },
 })
 
@@ -132,6 +133,40 @@ test('le gabarit des pages collection : avec la marque, <html data-refonte-page>
     .replace(/(\[render head-base\])[\s\S]*?(\n {4}\[content_for_header\])/, '$1$2')
     .replace(/(\[content_for_header\])[\s\S]*?(\n\n {4}<script src=)/, '$1$2')
   assert.equal(rest, (await renderLayout(AVANT, page)).replace('[render tw-filter-drawer]', ''))
+})
+
+/* Walid essaie la vue de test en passant d'une collection à l'autre (25/11/2026) : un script, dans cette vue seulement,
+   garde la vue au toucher d'un lien vers une collection. À retirer à la bascule. */
+test('la vue de test garde la vue d’une collection à l’autre ; aucune autre page n’a ce script, pas même la nouvelle page une fois basculée', { skip: SKIP }, async () => {
+  const page = await pageRefonte()
+  for (const suffix of ['refonte', 'refonte-tableau-salon']) {
+    const html = await renderLayout(LAYOUT, page, { suffix })
+    const head = html.slice(0, html.indexOf('</head>'))
+    assert.equal((head.match(/garderLaVue/g) || []).length, 3, suffix)
+  }
+  // Basculée (aucun suffixe, ou celui d'un modèle d'aujourd'hui), et toute page d'aujourd'hui : rien.
+  for (const suffix of [null, 'tableau-salon']) assert.doesNotMatch(await renderLayout(LAYOUT, page, { suffix }), /garderLaVue/)
+  assert.doesNotMatch(await renderLayout(LAYOUT, PAGES.collection, { suffix: 'refonte' }), /garderLaVue/)
+  // Le script, sur de faux liens : les collections de la boutique, dans toutes les langues ; ni les fiches, ni la grille,
+  // ni un lien qui a déjà sa vue, ni un autre site.
+  const source = /<script>([\s\S]*?)<\/script>/.exec(read('snippets/collection-refonte-essai.liquid'))[1]
+  const ecouteurs = {}
+  new Function('addEventListener', 'location', 'URL', source)((type, f) => { ecouteurs[type] = f }, { href: 'https://www.myselfmonart.com/collections/tableau-lion?view=refonte', origin: 'https://www.myselfmonart.com' }, URL)
+  assert.deepEqual(Object.keys(ecouteurs), ['pointerdown', 'click'])
+  const toucher = (href, dansLaGrille = false) => {
+    const lien = { href: new URL(href, 'https://www.myselfmonart.com').href, closest: (s) => (s === '#grille' ? (dansLaGrille ? {} : null) : lien) }
+    ecouteurs.pointerdown({ target: lien })
+    ecouteurs.click({ target: lien })
+    return lien.href.replace('https://www.myselfmonart.com', '')
+  }
+  assert.equal(toucher('/collections/tableau-zebre'), '/collections/tableau-zebre?view=refonte')
+  assert.equal(toucher('/en-ca/collections/lion-artwork'), '/en-ca/collections/lion-artwork?view=refonte')
+  assert.equal(toucher('/de/collections/loewenbild?page=2'), '/de/collections/loewenbild?page=2&view=refonte')
+  assert.equal(toucher('/collections/tableau-salon?view=refonte-tableau-salon'), '/collections/tableau-salon?view=refonte-tableau-salon')
+  assert.equal(toucher('/products/tableau-lion'), '/products/tableau-lion')
+  assert.equal(toucher('/collections/tableau-lion/products/lion-royal'), '/collections/tableau-lion/products/lion-royal')
+  assert.equal(toucher('/collections/tableau-zebre', true), '/collections/tableau-zebre', 'un lien de la grille')
+  assert.equal(toucher('https://www.instagram.com/collections/x'), 'https://www.instagram.com/collections/x')
 })
 
 /* ---------- La police ---------- */
