@@ -377,5 +377,7 @@ test('le script : le dernier élément du menu au clavier, la liste des pays ouv
 test('le script : avec le menu d’avant, rien ne change ; avec le nouveau, la fermeture n’attend pas une transition qui ne vient pas', () => {
   const source = read('assets/tw-header.js')
   assert.match(source, /this\.menuTelephone = this\.menu\.classList\.contains\('menu-tel'\) \? new MenuTelephone\(this\.menu\) : null;/)
+  // Le focus : lu à la fin, juste avant de cacher le menu ; la recherche ouverte depuis le menu garde le sien.
+  assert.match(source, /const focusDedans = this\.menu\.contains\(document\.activeElement\);\s*this\.detailsParent\.open = false;\s*this\.resetMenuDisplay\(\);\s*if \(this\.menuTelephone && focusDedans\) this\.menuOpener\.focus/)
   assert.match(source, /if \(this\.menuTelephone\) await Promise\.race\(\[waitAnimEnd\(this\.menu\), new Promise\(\(fini\) => setTimeout\(fini, 260\)\)\]\);\s*else await waitAnimEnd\(this\.menu\);/)
 })

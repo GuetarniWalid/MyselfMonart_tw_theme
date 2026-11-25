@@ -731,16 +731,17 @@ class StickyHeader extends HTMLElement {
     this.closeDesktopDropdown();
 
     if (!this.detailsParent.open) return;
-    const focusDedans = this.menu.contains(document.activeElement);
     this.switchMobileMenuLogo(true);
     this.showOverlay(false);
     this.menu.classList.replace('open-nav', 'close-nav');
     // Le nouveau menu ne glisse pas avec « mouvements réduits » : pas de fin de transition à attendre.
     if (this.menuTelephone) await Promise.race([waitAnimEnd(this.menu), new Promise((fini) => setTimeout(fini, 260))]);
     else await waitAnimEnd(this.menu);
+    // Le focus ne reste pas dans un menu caché : il revient à son bouton, sauf s'il est déjà parti ailleurs (la recherche,
+    // ouverte depuis le menu, l'a pris pendant qu'il se fermait).
+    const focusDedans = this.menu.contains(document.activeElement);
     this.detailsParent.open = false;
     this.resetMenuDisplay();
-    // Le focus ne reste pas dans un menu caché.
     if (this.menuTelephone && focusDedans) this.menuOpener.focus({ preventScroll: true });
   };
 
