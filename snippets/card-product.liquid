@@ -12,6 +12,8 @@
     - variant: {Object} la variante d'une œuvre aimée sur sa fiche, que seule la carte de « Mes j'aime » passe
       (sections/my-likes-card.liquid : product.selected_variant). La carte ne lit jamais selected_variant
       elle-même : rendue partout, elle ne change pas sans ce paramètre. (optional)
+    - dessin: {String} le dessin du cœur (snippets/my-like-button.liquid), que seule la grille de la nouvelle page
+      collection passe ('papiers'). (optional)
     Usage:
     {% render 'card-product' %}
 {% endcomment %}
@@ -158,5 +160,5 @@
     </div>
   {%- endif -%}
 
-  {% render 'card-product-info', product: product, variant: variant %}
+  {% render 'card-product-info', product: product, variant: variant, dessin: dessin %}
 </div>

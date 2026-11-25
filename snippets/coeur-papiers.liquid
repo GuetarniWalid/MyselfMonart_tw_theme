@@ -1,0 +1,12 @@
+{%- comment -%}
+  coeur-papiers — le cœur des j'aime du nouveau design (demande de Walid du 25/11/2026 : un cœur normal, en collage, aux
+  couleurs du thème). Trois papiers du thème, rose, soleil et corail, coupés par une verticale et une horizontale comme le
+  visage du logo, et cernés de la même encre. Vide, son contour seul ; aimé, ses papiers. Dessin choisi par un designer
+  parmi cinq directions (rond d'emblème, papier décalé, papier déchiré, corail uni).
+  Rendu sur les cartes de la nouvelle page collection (snippets/my-like-button.liquid, dessin: 'papiers', styles dans
+  assets/collection-refonte.css) et dans le nouvel en-tête (snippets/tw-loup-like-button.liquid, styles dans input.css).
+
+  Accepts:
+    - classe: {String} la classe du dessin : 'coeur' (par défaut, les cartes) ou 'entete-coeur-dessin'
+{%- endcomment -%}
+<svg class="{{ classe | default: 'coeur' }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="coeur-rose" d="M12 20.8C6.9 16.8 2.35 13.25 2.35 8.25A5.05 5.05 0 0 1 12 6.17A5.05 5.05 0 0 1 21.65 8.25C21.65 13.25 17.1 16.8 12 20.8Z"/><path class="coeur-corail" d="M13.34 14.92L5.84 15.53C7.54 17.31 9.72 19.01 12 20.8L12.67 20.28Z"/><path class="coeur-soleil" d="M14.76 3.55A5.05 5.05 0 0 1 21.65 8.25C21.65 13.03 17.49 16.49 12.67 20.28Z"/><path class="coeur-trait" d="M12 20.8C6.9 16.8 2.35 13.25 2.35 8.25A5.05 5.05 0 0 1 12 6.17A5.05 5.05 0 0 1 21.65 8.25C21.65 13.25 17.1 16.8 12 20.8Z"/></svg>

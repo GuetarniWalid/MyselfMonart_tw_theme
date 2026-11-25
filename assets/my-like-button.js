@@ -105,12 +105,15 @@ class MyLikeButton extends HTMLElement {
     });
   }
 
-  // Un j'aime vient d'être donné : sur la nouvelle page collection, un angelot passe la tête derrière le cœur
-  // (assets/collection-refonte.css, .vient-d-aimer). Ailleurs, la classe ne fait rien.
+  // Un j'aime vient d'être donné : sur la nouvelle page collection, les papiers du cœur se collent l'un après l'autre
+  // (assets/collection-refonte.css, .vient-d-aimer), à ce moment-là seulement, jamais au chargement. Ailleurs, la classe ne
+  // fait rien.
   greet(likeButton) {
-    likeButton.classList.add('vient-d-aimer');
     clearTimeout(this.greeting);
-    this.greeting = setTimeout(() => likeButton.classList.remove('vient-d-aimer'), 1800);
+    likeButton.classList.remove('vient-d-aimer');
+    void likeButton.offsetWidth;
+    likeButton.classList.add('vient-d-aimer');
+    this.greeting = setTimeout(() => likeButton.classList.remove('vient-d-aimer'), 900);
   }
 
   getProductLikedIds() {

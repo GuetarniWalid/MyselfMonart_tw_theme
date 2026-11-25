@@ -557,6 +557,7 @@
   font: 600 15.5px/1.26 var(--sans);
   letter-spacing: -0.014em;
   color: var(--encre);
+  overflow-wrap: break-word;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
@@ -582,6 +583,17 @@
   font: 500 13.5px/1.2 var(--sans);
   color: var(--encre-70);
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+/* Un mot plus long que sa colonne (« contemplative » à 360 px) ne disparaît plus au bord : le cœur laisse 7 px au nom (plus
+   bas), et sous 360 px le mot se coupe au trait d'union. Le « € » du prix ne passe plus seul à la ligne (relevé du
+   25/11/2026). */
+@media (max-width: 359px) {
+  :root[data-refonte-page] .refonte-carte-nom {
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    hyphenate-limit-chars: 10 4 4;
+  }
 }
 @media (min-width: 1100px) {
   :root[data-refonte-page] .refonte-carte-nom {
@@ -591,40 +603,72 @@
     font-size: 14px;
   }
 }
-/* Le cœur de toutes les cartes (snippets/my-like-button.liquid), à droite du nom : un rond de 40 px. */
+/* Le cœur de toutes les cartes (snippets/my-like-button.liquid), à droite du nom : un rond de 40 px sous le doigt. Le cœur de
+   papiers (snippets/coeur-papiers.liquid ; Walid, 25/11/2026 : un cœur normal, en collage, aux couleurs du thème) : vide,
+   son contour seul, au trait des pilules (1,5 px), l'encre à 72 % ; aimé, ses trois papiers cernés d'encre. La tranche du
+   papier du dessus passe sous lui (paint-order) : elle ne se voit qu'aux deux coupes. */
 :root[data-refonte-page] .refonte-carte my-like-button {
   flex: none;
+}
+:root[data-refonte-page] .refonte-carte-info my-like-button {
+  margin-left: -7px;
 }
 :root[data-refonte-page] .refonte-carte .like {
   margin-top: -2px;
   padding: 9px;
   border-radius: 50%;
+  color: var(--encre);
+  -webkit-tap-highlight-color: transparent;
 }
-:root[data-refonte-page] .refonte-carte .heart-icon {
+:root[data-refonte-page] .refonte-carte .coeur {
+  display: block;
   width: 22px;
   height: 22px;
+  overflow: visible;
+}
+:root[data-refonte-page] .refonte-carte .coeur path {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+:root[data-refonte-page] .refonte-carte .coeur-rose {
+  fill: var(--rose);
+}
+:root[data-refonte-page] .refonte-carte .coeur-corail {
+  fill: var(--corail);
+}
+:root[data-refonte-page] .refonte-carte .coeur-soleil {
+  fill: var(--soleil);
+}
+:root[data-refonte-page] .refonte-carte :is(.coeur-corail, .coeur-soleil) {
+  stroke: color-mix(in srgb, var(--corail) 62%, var(--encre));
+  stroke-opacity: 0.28;
+  stroke-width: 1.1;
+  stroke-linejoin: round;
+  paint-order: stroke;
+}
+:root[data-refonte-page] .refonte-carte .coeur-trait {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.64;
+  stroke-linejoin: round;
+}
+:root[data-refonte-page] .refonte-carte .like:not(.is-liked) .coeur-trait {
+  stroke-opacity: 0.72;
+}
+:root[data-refonte-page] .refonte-carte .like:not(.is-liked) .coeur path:not(.coeur-trait) {
+  opacity: 0;
 }
 @media (hover: hover) {
   :root[data-refonte-page] .refonte-carte .like:hover {
     background: var(--encre-06);
   }
+  :root[data-refonte-page] .refonte-carte .like:hover .coeur-trait {
+    stroke-opacity: 1;
+  }
 }
-/* Un j'aime : l'angelot du cœur de l'en-tête (--angelot, posé par la section de la grille) passe la tête derrière celui de
-   la carte, puis se recache (assets/my-like-button.js, .vient-d-aimer). Sans mouvement, il ne se montre pas. */
-:root[data-refonte-page] .refonte-carte .like {
-  isolation: isolate;
-}
-:root[data-refonte-page] .refonte-carte .like.vient-d-aimer::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  left: 50%;
-  bottom: 26px;
-  width: 36px;
-  aspect-ratio: 132 / 70;
-  background: var(--angelot) center / 100% no-repeat;
-  opacity: 0;
-  translate: -50% 12px;
+:root[data-refonte-page] .refonte-carte .like:focus-visible {
+  outline: 2px solid var(--encre);
+  outline-offset: -2px;
 }
 /* Le reflet d'une seule porte-fenêtre pour toute la rangée de posters : sa place dans la vitre selon la colonne,
    comme dans la grille d'aujourd'hui (input.css, .product-grid), aux colonnes de celle-ci. */
@@ -739,14 +783,24 @@
   from { transform: translateY(34px); }
   to { transform: none; }
 }
-@keyframes refonte-angelot {
-  0% { opacity: 0; translate: -50% 12px; }
-  22%, 72% { opacity: 1; translate: -50% 0; }
-  100% { opacity: 0; translate: -50% 12px; }
+/* On aime : le papier rose se pose, le coin corail puis la bande soleil se collent, le cœur appuie (0,5 s). Le fondu ne sert
+   qu'à retirer un j'aime : posé aussi à l'aller, il l'emporterait sur l'animation, et les papiers clignoteraient. */
+@keyframes refonte-papier-rose {
+  0% { opacity: 0; transform: rotate(-16deg) scale(0.35); }
+  35% { opacity: 1; }
 }
-@keyframes refonte-coeur {
-  30% { scale: 1.28; }
-  60% { scale: 0.92; }
+@keyframes refonte-papier-corail {
+  0% { opacity: 0; transform: translate(-4px, 4px) rotate(26deg) scale(1.15); }
+  35% { opacity: 1; }
+}
+@keyframes refonte-papier-soleil {
+  0% { opacity: 0; transform: translate(6px, -4px) rotate(-24deg) scale(1.15); }
+  35% { opacity: 1; }
+}
+@keyframes refonte-coeur-appuie {
+  0%, 58% { scale: 1; }
+  76% { scale: 1.17; }
+  90% { scale: 0.96; }
 }
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) and (animation-range-start: contain 10svh) {
@@ -756,11 +810,29 @@
       animation-range: cover 0% cover 20%;
     }
   }
-  :root[data-refonte-page] .refonte-carte .like.vient-d-aimer::before {
-    animation: refonte-angelot 1.7s cubic-bezier(0.2, 0.9, 0.25, 1.1);
+  :root[data-refonte-page] .refonte-carte .coeur {
+    transition: scale 0.16s ease;
   }
-  :root[data-refonte-page] .refonte-carte .like.vient-d-aimer .heart-icon {
-    animation: refonte-coeur 0.5s ease;
+  :root[data-refonte-page] .refonte-carte .like:not(.is-liked) .coeur path {
+    transition: opacity 0.14s ease;
+  }
+  :root[data-refonte-page] .refonte-carte .coeur .coeur-trait {
+    transition: stroke-opacity 0.14s ease;
+  }
+  :root[data-refonte-page] .refonte-carte .like:active .coeur {
+    scale: 0.88;
+  }
+  :root[data-refonte-page] .refonte-carte .like.is-liked.vient-d-aimer .coeur {
+    animation: refonte-coeur-appuie 0.5s ease;
+  }
+  :root[data-refonte-page] .refonte-carte .like.is-liked.vient-d-aimer .coeur-rose {
+    animation: refonte-papier-rose 0.2s cubic-bezier(0.25, 0.7, 0.35, 1.35) backwards;
+  }
+  :root[data-refonte-page] .refonte-carte .like.is-liked.vient-d-aimer .coeur-corail {
+    animation: refonte-papier-corail 0.24s cubic-bezier(0.3, 0.6, 0.35, 1.12) 0.08s backwards;
+  }
+  :root[data-refonte-page] .refonte-carte .like.is-liked.vient-d-aimer .coeur-soleil {
+    animation: refonte-papier-soleil 0.26s cubic-bezier(0.3, 0.6, 0.35, 1.12) 0.16s backwards;
   }
   @media (hover: hover) {
     :root[data-refonte-page] .refonte-carte .oeuvre-card-piece {

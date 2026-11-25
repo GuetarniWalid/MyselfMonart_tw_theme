@@ -4,6 +4,7 @@
   - product: {Object} The product object (required)
   - variant: {Object} la variante d'une œuvre aimée sur sa fiche (« Mes j'aime », snippets/card-product.liquid) :
     le lien ouvre la fiche sur elle. Le prix reste celui de la carte. Facultatif.
+  - dessin: {String} le dessin du cœur (snippets/my-like-button.liquid). Facultatif.
   Usage:
   {% render 'card-product-info', product: product %}
 {% endcomment %}
@@ -44,6 +45,6 @@
     </p>
   </div>
   <div class="flex-shrink-0 ml-2">
-    {% render 'my-like-button', product: product %}
+    {% render 'my-like-button', product: product, dessin: dessin %}
   </div>
 </div>

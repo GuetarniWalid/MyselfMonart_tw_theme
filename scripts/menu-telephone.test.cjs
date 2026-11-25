@@ -167,15 +167,16 @@ test('le bouton du menu : trois barres, l’angelot au-dessus, un décor ; la cr
   assert.match(bouton, /<img src="\/\/www\.myselfmonart\.com\/cdn\/shop\/t\/25\/assets\/entete-angelot-menu\.webp\?v=1" alt="" width="32" height="26" decoding="async">/)
 })
 
-test('le cœur des j’aime : un lien nommé dans les cinq langues, l’angelot derrière, son nombre dedans', { skip: SKIP }, () => {
+test('le cœur des j’aime : un lien nommé dans les cinq langues, l’angelot derrière, le cœur de papiers des cartes, son nombre dedans', { skip: SKIP }, () => {
   const NOMS = { fr: 'Mes j\'aime', en: 'My likes', de: 'Meine Favoriten', es: 'Mis favoritos', nl: 'Mijn favorieten' }
   for (const [lang, nom] of Object.entries(NOMS)) {
     const html = entete({ collection: SALON, lang })
     const lien = /<span tabindex="0" role="link" aria-label="([^"]*)" class="entete-coeur obfuscate" data-url64="([^"]+)">([\s\S]*?)<\/span>/.exec(html)
     assert.ok(lien, lang)
     assert.equal(unescape(lien[1]), nom, lang)
-    assert.match(lien[3], /<img class="entete-coeur-ange" src="[^"]*entete-angelot-coeur\.webp\?v=1" alt="" width="37" height="20" decoding="async">/)
-    assert.match(lien[3], /<svg class="entete-coeur-trait" viewBox="0 0 24 24" aria-hidden="true"/)
+    assert.match(lien[3], /<img class="entete-coeur-ange" src="[^"]*entete-angelot-coeur\.webp\?v=1" alt="" width="38" height="28" decoding="async">/)
+    const [, dessin] = /<svg class="entete-coeur-dessin" viewBox="0 0 24 24" aria-hidden="true" focusable="false">([\s\S]*?)<\/svg>/.exec(lien[3])
+    assert.deepEqual([...dessin.matchAll(/<path class="([^"]+)"/g)].map((m) => m[1]), ['coeur-rose', 'coeur-corail', 'coeur-soleil', 'coeur-trait'])
     // Le compteur (<likes-count>, son script dans le même fichier) : caché à zéro, frère du lien dans le même <li>.
     assert.match(html, /<\/span>\s*<likes-count class="entete-coeur-compte"><span class="hidden">0<\/span><\/likes-count>/)
   }
@@ -184,7 +185,7 @@ test('le cœur des j’aime : un lien nommé dans les cinq langues, l’angelot 
 test('les images des angelots : en WebP, légères, aux proportions qu’écrivent les balises', () => {
   const fs = require('fs')
   const path = require('path')
-  for (const [nom, w, h] of [['entete-angelot-menu', 32, 26], ['entete-angelot-coeur', 37, 20]]) {
+  for (const [nom, w, h] of [['entete-angelot-menu', 32, 26], ['entete-angelot-coeur', 38, 28]]) {
     const b = fs.readFileSync(path.join(__dirname, '..', 'assets', `${nom}.webp`))
     assert.equal(b.toString('ascii', 8, 12), 'WEBP')
     assert.ok(b.length < 9 * 1024, `${nom} : ${b.length}`)
@@ -371,8 +372,27 @@ test('la feuille : les angelots, un bloc à part ; les barres et le cœur ne bou
   }
   // Cachés par la classe hidden de assets/tw-header.js et du compteur : leurs règles ne l'emportent pas sur elle.
   for (const head of ['.entete-burger:not(.hidden)', '.entete-coeur-compte span:not(.hidden)']) assert.ok(regles.some((r) => r.head === head), head)
-  // Un j'aime ou plus : le cœur se remplit.
-  assert.ok(regles.some((r) => r.head === 'li:has(> likes-count span:not(.hidden)) .entete-coeur-trait path' && /fill: var\(--rose\)/.test(r.body)))
+  // Vide, le cœur est blanc ; un j'aime ou plus : ses trois papiers.
+  const AIME = 'li:has(> likes-count span:not(.hidden)) > .entete-coeur'
+  const corps = (head) => regles.filter((r) => r.head === head && !r.context.length).map((r) => r.body).join(' ')
+  assert.match(corps('.entete-coeur .coeur-rose'), /fill: var\(--blanc\);/)
+  assert.match(corps(`${AIME} .coeur-rose`), /fill: var\(--rose\);/)
+  assert.match(corps('.entete-coeur .coeur-corail, .entete-coeur .coeur-soleil'), /opacity: 0;/)
+  assert.match(corps(`${AIME} .coeur-corail, ${AIME} .coeur-soleil`), /opacity: 1;/)
+  // L'angelot et le cœur sur le même axe, celui du bouton de 56 px, en pixels entiers.
+  const [ange, dessin] = ['.entete-coeur .entete-coeur-ange', '.entete-coeur .entete-coeur-dessin'].map((h) => corps(h))
+  const axe = (b) => Number(/left: (\d+)px/.exec(b)[1]) + Number(/width: (\d+)px/.exec(b)[1]) / 2
+  assert.equal(axe(ange), 28)
+  assert.equal(axe(dessin), 28)
+  // L'angelot du menu finit dans l'épaisseur de la barre du haut (8 à 11 px depuis le haut de 32 px), peinte par-dessus, et
+  // son mouvement ne la dépasse jamais : aucun blanc entre elle et lui.
+  const bas = 32 - Number(/bottom: ([\d.]+)px/.exec(corps('.entete-burger-ange'))[1])
+  const hautBarre = Number(/top: (\d+)px/.exec(corps('.entete-burger-barres'))[1])
+  assert.ok(bas > hautBarre && bas <= hautBarre + 3, `${bas} dans la barre, qui commence à ${hautBarre}`)
+  assert.match(regles.find((r) => r.head.startsWith('@keyframes entete-ange-monte')).body, /^\s*from \{ translate: 0 104%; \}\s*$/)
+  const monte = regles.find((r) => /animation: entete-ange-monte/.test(r.body)).body
+  const [, , y1, , y2] = /cubic-bezier\(([\d.]+), ([\d.]+), ([\d.]+), ([\d.]+)\)/.exec(monte).map(Number)
+  assert.ok(y1 <= 1 && y2 <= 1, 'il ne monte pas plus haut que sa place')
   // Sous le doigt : 48 px au moins.
   assert.match(regles.find((r) => r.head === '.menu-opener:has(.entete-burger)').body, /margin: -8px; padding: 8px;/)
   assert.match(regles.find((r) => r.head === '.entete-coeur').body, /width: 56px; height: 56px;/)

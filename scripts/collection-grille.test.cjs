@@ -111,8 +111,37 @@ test('la carte d’un nouveau produit : l’œuvre en objet, son nom court, « D
   assert.match(html, /<h3 class="refonte-carte-nom">\s*<a class="refonte-carte-lien"/)
   // Le prix : le plus bas, « Dès ».
   assert.match(html, /<p class="refonte-carte-prix">Dès 62,50 €<\/p>/)
-  // Le cœur de toutes les cartes (snippets/my-like-button.liquid).
+  // Le cœur de toutes les cartes (snippets/my-like-button.liquid), de papiers dans la grille.
   assert.match(html, new RegExp(`<my-like-button data-product-id="${p.id}" data-product-handle="tableau-superman-envol">`))
+  assert.match(html, /<button type="button" aria-label="[^"]+" class="[^"]*\blike\b[^"]*">\s*<svg class="coeur" viewBox="0 0 24 24" aria-hidden="true" focusable="false">/)
+})
+
+test('le cœur de la grille : trois papiers du thème et leur contour, sur chaque carte, repli compris ; les cartes des autres pages gardent le cœur de toujours', { skip: SKIP }, async () => {
+  const tapisserie = { ...ancienneToile(), template_suffix: 'tapestry' }
+  for (const p of [nouvelleToile(), ancienneToile(), ancienPoster(), sansOeuvre(), tapisserie]) {
+    const html = await carte(p)
+    const [coeur] = html.match(/<svg class="coeur"[\s\S]*?<\/svg>/) || []
+    assert.ok(coeur, p.handle)
+    assert.deepEqual([...coeur.matchAll(/<path class="([^"]+)"/g)].map((m) => m[1]), ['coeur-rose', 'coeur-corail', 'coeur-soleil', 'coeur-trait'], p.handle)
+    assert.doesNotMatch(html, /heart-icon|angelot/, p.handle)
+  }
+  // Le dessin n'arrive que par son paramètre : recommandations, « Mes j'aime » et recherche ne le passent pas.
+  const ailleurs = await engine('fr').renderFile('card-product', { product: ancienneToile(), primary_image_index: 1, next_image_index: 0, lazy_load: true }, { globals: globals() })
+  assert.match(ailleurs, /<svg [^>]*class="heart-icon w-10 h-10">/)
+  assert.doesNotMatch(ailleurs, /class="coeur/)
+  // La feuille : les trois papiers aux couleurs de la page, l'encre autour ; vide, le contour seul.
+  const bloc = blocCss()
+  const C = ':root[data-refonte-page] .refonte-carte'
+  for (const papier of ['rose', 'corail', 'soleil']) assert.match(regle(bloc, `${C} .coeur-${papier}`).body, new RegExp(`fill: var\\(--${papier}\\);`))
+  assert.match(regle(bloc, `${C} .coeur-trait`).body, /fill: none;\s*stroke: currentColor;/)
+  assert.match(regle(bloc, `${C} .like:not(.is-liked) .coeur path:not(.coeur-trait)`).body, /opacity: 0;/)
+  // Les papiers se collent quand on aime, jamais au chargement d'une page où l'œuvre est déjà aimée.
+  for (const papier of ['rose', 'corail', 'soleil']) {
+    const r = bloc.filter((x) => /animation:/.test(x.body) && x.head.endsWith(`.coeur-${papier}`))
+    assert.equal(r.length, 1, papier)
+    assert.equal(r[0].head, `${C} .like.is-liked.vient-d-aimer .coeur-${papier}`)
+    assert.equal(r[0].context[0], '@media (prefers-reduced-motion: no-preference)')
+  }
 })
 
 test('la carte d’un ancien produit : son œuvre à plat (2e image), jamais sa photo d’ambiance', { skip: SKIP }, async () => {
@@ -176,14 +205,26 @@ test('la carte garde chez elle ce qui passe devant elle : son cœur ne passe pas
   assert.match(regle(blocCss(), ':root[data-refonte-page] .refonte-carte').body, /isolation: isolate;/)
 })
 
+test('petits écrans : un mot plus long que sa colonne ne disparaît pas au bord, le « € » du prix ne passe pas seul à la ligne', () => {
+  const bloc = blocCss()
+  const H = ':root[data-refonte-page]'
+  assert.match(regle(bloc, `${H} .refonte-carte-nom`).body, /overflow-wrap: break-word;/)
+  assert.match(regle(bloc, `${H} .refonte-carte-nom`, '@media (max-width: 359px)').body, /-webkit-hyphens: auto;\s*hyphens: auto;\s*hyphenate-limit-chars: 10 4 4;/)
+  assert.match(regle(bloc, `${H} .refonte-carte-prix`).body, /white-space: nowrap;/)
+  // Le rond du cœur (40 px, 22 px de dessin) avance de 7 px sous le nom : « contemplative » tient à 360 px. Pas sur la carte
+  // de repli, qui a ses propres écarts.
+  assert.match(regle(bloc, `${H} .refonte-carte-info my-like-button`).body, /margin-left: -7px;/)
+})
+
 test('repli : un produit sans œuvre à plat, ou qui n’est pas une œuvre, garde la carte d’aujourd’hui', { skip: SKIP }, async () => {
   const tapisserie = { ...ancienneToile(), template_suffix: 'tapestry' }
   for (const p of [sansOeuvre(), tapisserie]) {
     const html = (await carte(p)).trim()
     assert.match(html, /^<li class="refonte-carte refonte-carte-repli">/, p.handle)
     assert.match(html, /<\/li>$/, p.handle)
-    // La carte d'aujourd'hui (snippets/card-product.liquid), telle quelle : sa 1re image, son nom en capitales.
-    assert.equal(html.replace(/^<li class="refonte-carte refonte-carte-repli">|<\/li>$/g, ''), await engine('fr').renderFile('card-product', { product: p, primary_image_index: 1, next_image_index: 0, lazy_load: true }, { globals: globals() }), p.handle)
+    // La carte d'aujourd'hui (snippets/card-product.liquid), telle quelle : sa 1re image, son nom en capitales ; le cœur
+    // de la grille.
+    assert.equal(html.replace(/^<li class="refonte-carte refonte-carte-repli">|<\/li>$/g, ''), await engine('fr').renderFile('card-product', { product: p, primary_image_index: 1, next_image_index: 0, lazy_load: true, dessin: 'papiers' }, { globals: globals() }), p.handle)
     assert.doesNotMatch(html, /oeuvre-card|refonte-carte-prix/, p.handle)
   }
 })
@@ -396,8 +437,7 @@ test('les deux premiers tableaux se demandent dès la tête de la page, avec le 
 
 test('la section : ses places dans l’ordre, le titre invisible, la ligne des filtres, la zone parlée', { skip: SKIP }, async () => {
   const html = await grille(collection(50))
-  // --angelot : l'image de l'angelot du cœur de l'en-tête, que la feuille montre derrière le cœur d'une carte aimée.
-  assert.match(html, /^\s*<section id="grille" class="refonte-grille" aria-labelledby="grille-titre" style="--angelot: url\(\/\/www\.myselfmonart\.com\/cdn\/shop\/t\/25\/assets\/entete-angelot-coeur\.webp\?v=1\)">/)
+  assert.match(html, /^\s*<section id="grille" class="refonte-grille" aria-labelledby="grille-titre">/)
   // Le titre, pour les lecteurs d'écran (la grille a son nom dans le plan de la page, sous le h1 de l'entrée) : le titre
   // de la collection tel qu'il s'écrit, puis les œuvres (ticket 09 : « Les tableau lion » ne se dit pas).
   assert.match(html, /<h2 id="grille-titre" class="sr-only">Tableaux Nature : les tableaux<\/h2>/)

@@ -3,6 +3,8 @@
   Accepts:
   - product: {Object}
   - margin_bottom: {String}
+  - dessin: {String} 'papiers' : le cœur de papiers du nouveau design (snippets/coeur-papiers.liquid) ; sinon, celui de
+    toujours
 
   Usage:
   {% render 'my-like-button', product: product %}
@@ -10,6 +12,6 @@
 
 <my-like-button data-product-id="{{ product.id }}" data-product-handle="{{ product.handle }}">
   <button type="button" aria-label="{{ 'sections.mma.add_artwork_to_favorites' | t }}" class="inline-flex flex-col like relative p-2 items-center gap-1 z-20 {{ margin_bottom }}">
-    {% render 'tw-icon-heart-design' %}
+    {% if dessin == 'papiers' %}{% render 'coeur-papiers' %}{% else %}{% render 'tw-icon-heart-design' %}{% endif %}
   </button>
 </my-like-button>

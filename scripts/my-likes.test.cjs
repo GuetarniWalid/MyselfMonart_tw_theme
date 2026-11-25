@@ -164,7 +164,7 @@ test('la variante aimée n’arrive à la carte que par un paramètre : card-pro
   for (const file of ['snippets/card-product.liquid', 'snippets/card-product-info.liquid']) {
     assert.doesNotMatch(code(file), /selected_variant/, file)
   }
-  assert.match(code('snippets/card-product.liquid'), /{% render 'card-product-info', product: product, variant: variant %}/)
+  assert.match(code('snippets/card-product.liquid'), /{% render 'card-product-info', product: product, variant: variant, dessin: dessin %}/)
 })
 
 /* La branche de la carte pour une œuvre aimée sur sa fiche (snippets/card-product.liquid) : de son calcul à la
@@ -697,7 +697,7 @@ test('le compteur de l’en-tête suit les j’aime (productLikedIds)', async ()
   assert.ok(!page.badge.classList.contains('hidden'))
 })
 
-test('un j’aime donné : le compteur change tout de suite, sans attendre le serveur, l’angelot de l’en-tête saute et celui de la carte salue ; retiré, aucun des deux', async () => {
+test('un j’aime donné : le compteur change tout de suite, sans attendre le serveur, l’angelot de l’en-tête saute et les papiers du cœur se collent ; retiré, aucun des deux', async () => {
   const page = heartPage({ cards: [{ id: '7', handle: 'h', liked: false }], storage: { productLikedIds: '["1"]', productLikedHandles: '["a"]' }, likesPageHere: false })
   // Un serveur qui ne répond pas.
   page.win.fetch = () => new Promise(() => {})
@@ -706,7 +706,7 @@ test('un j’aime donné : le compteur change tout de suite, sans attendre le se
   assert.equal(page.badge.textContent, 2)
   assert.ok(page.counter.classList.contains('plus'))
   assert.ok(page.onPage[0].button.classList.contains('vient-d-aimer'))
-  // Retiré : le compteur descend, sans saut ni salut.
+  // Retiré : le compteur descend, sans saut ni collage.
   const retire = heartPage({ cards: [{ id: '7', handle: 'h' }], storage: { productLikedIds: '["1","7"]', productLikedHandles: '["a","h"]' }, likesPageHere: false })
   retire.win.fetch = () => new Promise(() => {})
   retire.click(0)

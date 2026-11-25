@@ -2249,48 +2249,68 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
    regardent. Les barres et le cœur gardent leur dessin et leur place, alignés sur la loupe : l'angelot est au-dessus. */
 .entete-burger:not(.hidden) { position: relative; display: block; width: 32px; height: 32px; }
 .entete-burger-barres { position: absolute; left: 3px; top: 8px; width: 26px; height: 17px; fill: currentColor; }
-/* Sa boîte finit sur la barre du haut et coupe ce qui la dépasse : il en sort comme de derrière un parapet. */
-.entete-burger-ange { position: absolute; left: -2px; bottom: 23.6px; width: 32px; height: 26px; overflow: hidden; overflow: clip; pointer-events: none; }
+/* Sa boîte finit dans l'épaisseur de la barre du haut, peinte par-dessus, et coupe ce qui la dépasse : il en sort comme de
+   derrière un parapet, sans jamais laisser de blanc entre elle et lui. */
+.entete-burger-ange { position: absolute; left: -2px; bottom: 22.4px; width: 32px; height: 26px; overflow: hidden; overflow: clip; pointer-events: none; }
 .entete-burger-ange img { display: block; width: 100%; height: 100%; max-width: none; }
 /* 48 px sous le doigt. */
 .menu-opener:has(.entete-burger) { margin: -8px; padding: 8px; }
 
-/* Le cœur des j'aime : 56 px sous le doigt, 26 px de dessin. Vide, il est blanc ; dès un j'aime, il est rose et porte leur
-   nombre. L'angelot est derrière lui : ses bras se posent sur les deux lobes. */
+/* Le cœur des j'aime, le même que celui des cartes (snippets/coeur-papiers.liquid) : 56 px sous le doigt, 26 px de dessin,
+   aligné sur la loupe. Vide, il est blanc ; dès un j'aime, ses trois papiers et leur nombre. L'angelot l'entoure de ses bras
+   par-derrière, centré sur lui (Walid, 25/11/2026) : ses coudes tombent de chaque côté des deux lobes, à 4 px du trait à
+   gauche comme à droite. Tous deux sur l'axe de 28 px, en pixels entiers : l'arrondi de l'écran les déplace ensemble. La
+   tranche d'un papier : la brique du logo. */
 .entete-coeur {
-  --rose: #ffb6d2;
   --blanc: #ffffff;
-  position: relative; display: grid; place-items: center; width: 56px; height: 56px;
+  --rose: #ffb6d2;
+  --soleil: #ffdd6e;
+  --corail: #ff5436;
+  --brique: #a93514;
+  position: relative; display: block; width: 56px; height: 56px;
   cursor: pointer; -webkit-tap-highlight-color: transparent;
 }
-.entete-coeur-trait { position: relative; display: block; width: 26px; height: 26px; translate: 0 1px; overflow: visible; }
-.entete-coeur-trait path { fill: var(--blanc); stroke: currentColor; stroke-width: 1.75; stroke-linejoin: round; }
-.entete-coeur-ange { position: absolute; left: 50%; bottom: 33px; width: 37px; height: auto; max-width: none; translate: -50% 0; pointer-events: none; }
-li:has(> likes-count span:not(.hidden)) .entete-coeur-trait path { fill: var(--rose); }
+.entete-coeur .entete-coeur-ange { position: absolute; left: 9px; top: 0; width: 38px; height: 28px; max-width: none; pointer-events: none; }
+.entete-coeur .entete-coeur-dessin { position: absolute; left: 15px; top: 16px; width: 26px; height: 26px; overflow: visible; }
+.entete-coeur .entete-coeur-dessin path { transform-box: fill-box; transform-origin: 50% 50%; }
+.entete-coeur .coeur-rose { fill: var(--blanc); }
+.entete-coeur .coeur-corail { fill: var(--corail); }
+.entete-coeur .coeur-soleil { fill: var(--soleil); }
+.entete-coeur .coeur-corail, .entete-coeur .coeur-soleil { stroke: var(--brique); stroke-opacity: 0.28; stroke-width: 1.1; stroke-linejoin: round; paint-order: stroke; opacity: 0; }
+.entete-coeur .coeur-trait { fill: none; stroke: currentColor; stroke-width: 1.85; stroke-linejoin: round; }
+li:has(> likes-count span:not(.hidden)) > .entete-coeur .coeur-rose { fill: var(--rose); }
+li:has(> likes-count span:not(.hidden)) > .entete-coeur .coeur-corail, li:has(> likes-count span:not(.hidden)) > .entete-coeur .coeur-soleil { opacity: 1; }
 .entete-coeur-compte { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
 .entete-coeur-compte span:not(.hidden) {
-  display: block; translate: 0 1px;
+  display: block; translate: 0 0.5px;
   font: 700 11px/1 "Albert Sans", Roboto, sans-serif; font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
 }
-.entete-coeur:focus-visible, .menu-opener:has(.entete-burger):focus-visible { outline: 2px solid currentColor; outline-offset: -2px; border-radius: 14px; }
+.entete-coeur:focus-visible { outline: 2px solid currentColor; outline-offset: 0; border-radius: 14px; }
+.menu-opener:has(.entete-burger):focus-visible { outline: 2px solid currentColor; outline-offset: -2px; border-radius: 14px; }
 .menu-opener:has(.entete-burger) .mobile-menu { border: 0; }
 
-/* Le mouvement, seulement sans « mouvements réduits » : l'angelot du menu passe la tête au-dessus de la barre (au
-   chargement, et chaque fois que le menu se ferme) ; la croix tourne en arrivant ; un j'aime de plus, et celui du cœur
-   saute, le cœur avec lui. */
+/* Le mouvement, seulement sans « mouvements réduits » : l'angelot du menu monte de derrière la barre (au chargement, et
+   chaque fois que le menu se ferme), sans la dépasser : il montait un peu trop haut puis retombait, et un blanc se voyait
+   entre elle et lui (Walid, 25/11/2026) ; la croix tourne en arrivant ; un j'aime de plus : le cœur bat, ses papiers
+   se recollent, l'angelot se soulève sans le lâcher (3 px : ses bras restent derrière le cœur, aucun jour ne s'ouvre). */
 @keyframes entete-ange-monte { from { translate: 0 104%; } }
 @keyframes entete-croix { from { rotate: -70deg; scale: 0.6; } }
-@keyframes entete-ange-saute { 30% { translate: -50% -7px; rotate: -5deg; } 55% { translate: -50% 1px; rotate: 3deg; } }
-@keyframes entete-coeur-bat { 25% { scale: 1.2; } 55% { scale: 0.94; } }
+@keyframes entete-ange-saute { 30% { translate: 0 -3px; rotate: -4deg; } 58% { translate: 0 1px; rotate: 2.5deg; } }
+@keyframes entete-coeur-bat { 25% { scale: 1.14; } 55% { scale: 0.95; } }
+@keyframes entete-papier-corail { 35% { transform: translate(-2px, 2px) rotate(16deg) scale(1.1); } }
+@keyframes entete-papier-soleil { 35% { transform: translate(3px, -2px) rotate(-14deg) scale(1.1); } }
 @media (prefers-reduced-motion: no-preference) {
-  .entete-burger:not(.hidden) .entete-burger-ange img { animation: entete-ange-monte 0.55s cubic-bezier(0.2, 0.9, 0.25, 1.12) 0.1s backwards; }
+  .entete-burger:not(.hidden) .entete-burger-ange img { animation: entete-ange-monte 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.1s backwards; }
   .menu-opener:has(.entete-burger) .close:not(.hidden) svg { animation: entete-croix 0.28s cubic-bezier(0.2, 0.8, 0.2, 1); }
-  .entete-coeur-ange { transition: translate 0.2s ease; }
+  .entete-coeur .entete-coeur-ange { transition: translate 0.2s ease; transform-origin: 50% 80%; }
+  .entete-coeur .entete-coeur-dessin path { transition: opacity 0.16s ease, fill 0.16s ease; }
   @media (hover: hover) {
-    .entete-coeur:hover .entete-coeur-ange { translate: -50% -2px; }
+    .entete-coeur:hover .entete-coeur-ange { translate: 0 -1.5px; }
   }
-  li:has(> likes-count.plus) .entete-coeur-ange { animation: entete-ange-saute 0.6s ease; }
-  li:has(> likes-count.plus) .entete-coeur-trait { animation: entete-coeur-bat 0.6s ease; }
+  li:has(> likes-count.plus) > .entete-coeur .entete-coeur-ange { animation: entete-ange-saute 0.6s ease; }
+  li:has(> likes-count.plus) > .entete-coeur .entete-coeur-dessin { animation: entete-coeur-bat 0.6s ease; }
+  li:has(> likes-count.plus) > .entete-coeur .coeur-corail { animation: entete-papier-corail 0.34s ease 0.04s; }
+  li:has(> likes-count.plus) > .entete-coeur .coeur-soleil { animation: entete-papier-soleil 0.36s ease 0.12s; }
 }
 /* ---- Fin des angelots de l'en-tête ---- */
 

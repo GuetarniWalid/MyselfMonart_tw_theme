@@ -18,7 +18,7 @@
 
   Règle de repli : un produit qui n'est pas une œuvre (tapisserie, carte cadeau…) ou
   dont l'œuvre à plat manque (pas d'image à son index) garde la carte d'aujourd'hui (snippets/card-product.liquid),
-  dans la même case de la grille.
+  dans la même case de la grille, avec le cœur des autres cartes.
 
   Accepts:
     - product: {Object} le produit
@@ -101,11 +101,11 @@
         </h3>
         <p class="refonte-carte-prix">{{ 'sections.mma.collection_grille.prix' | t: prix: prix }}</p>
       </div>
-      {%- render 'my-like-button', product: product -%}
+      {%- render 'my-like-button', product: product, dessin: 'papiers' -%}
     </div>
   </li>
 {%- else -%}
   <li class="refonte-carte refonte-carte-repli">
-    {%- render 'card-product', product: product, primary_image_index: 1, next_image_index: 0, lazy_load: lazy, section_id: section_id -%}
+    {%- render 'card-product', product: product, primary_image_index: 1, next_image_index: 0, lazy_load: lazy, section_id: section_id, dessin: 'papiers' -%}
   </li>
 {%- endif -%}

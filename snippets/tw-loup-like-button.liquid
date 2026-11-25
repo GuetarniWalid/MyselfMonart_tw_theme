@@ -1,7 +1,8 @@
 {%- comment -%}
   La loupe et le cœur des j'aime de l'en-tête (snippets/tw-sticky-header.liquid).
   nouveau: true : le cœur du nouvel en-tête (demande de Walid du 25/11/2026), l'angelot de droite de la Madone Sixtine
-  (Raphaël, 1513, domaine public) accoudé dessus ; vide, le cœur est blanc, dès un j'aime il est rose et porte leur nombre.
+  (Raphaël, 1513, domaine public) l'entoure de ses bras, centré sur lui ; vide, le cœur est blanc, dès un j'aime il est de
+  trois papiers (snippets/coeur-papiers.liquid, celui des cartes) et porte leur nombre.
   Styles : input.css, « Les angelots de l'en-tête ». Tests : scripts/menu-telephone.test.cjs.
 {%- endcomment -%}
 <ul class="flex items-center transition-colors duration-500 cursor-pointer">
@@ -32,8 +33,8 @@
         %}
         {%- if nouveau %}
         <span tabindex="0" role="link" aria-label="{{ 'snippet.tw_sticky_header.my_likes' | t }}" class="entete-coeur obfuscate" data-url64="{{ likes_page }}">
-            <img class="entete-coeur-ange" src="{{ 'entete-angelot-coeur.webp' | asset_url }}" alt="" width="37" height="20" decoding="async">
-            <svg class="entete-coeur-trait" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 20.9C6.6 16.2 2.9 12.8 2.9 8.7c0-3 2.3-5.2 5.1-5.2 1.6 0 3.1.8 4 2.1.9-1.3 2.4-2.1 4-2.1 2.8 0 5.1 2.2 5.1 5.2 0 4.1-3.7 7.5-9.1 12.2Z"/></svg>
+            <img class="entete-coeur-ange" src="{{ 'entete-angelot-coeur.webp' | asset_url }}" alt="" width="38" height="28" decoding="async">
+            {% render 'coeur-papiers', classe: 'entete-coeur-dessin' %}
         </span>
         <likes-count class="entete-coeur-compte"><span class="hidden">0</span></likes-count>
         {%- else %}
