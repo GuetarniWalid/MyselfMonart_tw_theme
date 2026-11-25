@@ -1,0 +1,91 @@
+{%- comment -%}
+  La liste du choix du pays, dans le menu du téléphone (snippets/tw-sticky-header.liquid, snippets/menu-telephone.liquid) :
+  un <li> par pays proposé, à poser dans un <ul>. Son dernier lien ou bouton porte .last-focusable.
+  alignes: true : sans les espaces entre le drapeau et le nom (le nouveau menu les écarte dans sa feuille).
+{%- endcomment -%}
+{% liquid
+  # Pays proposés. Format : devise|langue|drapeau|nom de repli|code pays|espacement
+  # Chaque pays envoie le formulaire de localisation de Shopify (code pays + code langue).
+  # Shopify renvoie lui-même vers la page en cours, à son adresse traduite, dans le marché
+  # et la devise du pays : aucune adresse n'est fabriquée ici, rien ne dérive quand une
+  # adresse change.
+  assign locales_data = 'CAD|en|ca|Canada|CA|1,CHF|fr|ch|Suisse|CH|2,DKK|en|dk|Danmark|DK|2,EUR|fr|fr|France|FR|2,GBP|en|uk|UK|GB|2,USD|en|us|USA|US|2'
+  assign locales = locales_data | split: ','
+%}
+
+{%- for locale in locales -%}
+  {%- assign locale_parts = locale | split: '|' -%}
+  {%- assign locale_currency = locale_parts[0] -%}
+  {%- assign locale_lang = locale_parts[1] -%}
+  {%- assign locale_flag = locale_parts[2] -%}
+  {%- assign locale_name = locale_parts[3] -%}
+  {%- comment -%} Nom de pays localisé (audit i18n) : on remplace la valeur FR codée en dur de locales_data par la clé de locale traduite, en gardant le fallback si la clé manque. {%- endcomment -%}
+  {%- assign country_label_t = 'sections.header.countries.' | append: locale_flag | t -%}
+  {%- unless country_label_t contains 'ranslation missing' -%}{%- assign locale_name = country_label_t -%}{%- endunless -%}
+  {%- assign locale_country = locale_parts[4] -%}
+  {%- assign spacing = locale_parts[5] -%}
+
+  {%- comment -%} Le pays doit faire partie d'un marché actif de la boutique {%- endcomment -%}
+  {%- assign is_available = false -%}
+  {%- for country in localization.available_countries -%}
+    {%- if country.iso_code == locale_country -%}
+      {%- assign is_available = true -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- if is_available -%}
+    {%- assign is_current = false -%}
+    {%- if locale_lang == localization.language.iso_code and localization.country.currency.iso_code == locale_currency -%}
+      {%- assign is_current = true -%}
+    {%- endif -%}
+
+    {%- assign is_last = false -%}
+    {%- if forloop.last -%}{%- assign is_last = true -%}{%- endif -%}
+
+    {%- capture locale_label -%}
+      {% case locale_flag %}
+        {% when 'ca' %}{% render 'icon-flag-ca' %}
+        {% when 'ch' %}{% render 'icon-flag-ch' %}
+        {% when 'dk' %}{% render 'icon-flag-dk' %}
+        {% when 'fr' %}{% render 'icon-flag-fr' %}
+        {% when 'uk' %}{% render 'icon-flag-uk' %}
+        {% when 'us' %}{% render 'icon-flag-us' %}
+      {% endcase %}{% if alignes %}<span>{{ locale_name }}</span>{% else %}{% if spacing == '2' %}&nbsp;{% endif %}&nbsp;{{ locale_name }}{% endif %}
+    {%- endcapture -%}
+
+    <li tabindex="-1">
+      <localization-flag>
+        {%- if is_current -%}
+          <a
+            class="inline-flex items-center hover:bg-main-10 w-full py-2 mb-1 px-3 whitespace-nowrap text-main bg-main-10 cursor-not-allowed{% if is_last %} last-focusable{% endif %}"
+            role="link"
+            aria-disabled="true"
+            aria-current="true"
+            hreflang="{{ locale_lang }}"
+            lang="{{ locale_lang }}"
+            data-value="{{ locale_lang }}">
+            {{- locale_label -}}
+          </a>
+        {%- else -%}
+          {%- assign locale_form_id = 'HeaderLocalizationForm-' | append: locale_flag -%}
+          {%- form 'localization', id: locale_form_id -%}
+            <input type="hidden" name="country_code" value="{{ locale_country }}">
+            <input type="hidden" name="language_code" value="{{ locale_lang }}">
+            {%- comment -%} Page introuvable : on repart de l'accueil du pays choisi, pas d'une autre erreur (le dernier return_to l'emporte sur celui de Shopify) {%- endcomment -%}
+            {%- if template.name == '404' -%}
+              <input type="hidden" name="return_to" value="/">
+            {%- endif -%}
+            <button
+              type="submit"
+              class="inline-flex items-center hover:bg-main-10 w-full py-2 mb-1 px-3 whitespace-nowrap text-main{% if is_last %} last-focusable{% endif %}"
+              lang="{{ locale_lang }}"
+              data-value="{{ locale_lang }}">
+              {{- locale_label -}}
+            </button>
+          {%- endform -%}
+        {%- endif -%}
+      </localization-flag>
+    </li>
+  {%- endif -%}
+{%- endfor -%}

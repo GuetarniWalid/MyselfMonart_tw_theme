@@ -6,7 +6,8 @@
   Rendu par sections/sous-collections.liquid (réglage « Emblèmes ») pour les filles de la page, en haut ; en bas de
   page, en grand, par snippets/cocon-famille.liquid (mode « emblèmes ») pour les sœurs, dans « Envie d'un autre
   sujet ? » (sections/collection-sujets.liquid, ticket 08). Ses styles : assets/collection-refonte.css, bloc du
-  ticket 03, chargée par cette page seulement.
+  ticket 03, chargée par cette page seulement. Rendu aussi dans le menu du téléphone (snippets/menu-telephone.liquid),
+  aux tailles « menu » et « tuile » : ses styles y sont dans input.css (.menu-tel), pour toutes les pages.
 
   Les données, deux métachamps de la collection (créés dans Shopify par le ticket 04 ; le thème ne fait que les lire) :
     - cocon.embleme : fichier, image. L'emblème déjà composé : une toile transparente de 2d × 1,65d (d : le diamètre du
@@ -20,7 +21,11 @@
     - cible: {Object} la collection (collections[handle]) : son titre traduit, son adresse, son nombre de produits,
       ses métachamps
     - rang: {Number} son rang dans sa rangée, à partir de 0
-    - taille: {String} 'haut' (par défaut : rond de 58 px sur téléphone, 80 px sur ordinateur) ou 'bas' (104 et 136 px)
+    - taille: {String} 'haut' (par défaut : rond de 58 px sur téléphone, 80 px sur ordinateur), 'bas' (104 et 136 px),
+      ou, dans le menu du téléphone, 'menu' (rond de 66 px, dans une rangée qui défile) et 'tuile' (rond de 50 px, à côté
+      du nom ; sans emblème, quatre carrés de couleur, et non l'initiale : « Tous les Tableaux »). Dans le menu, une seule
+      image de 320 px, la même que celle du haut de page : une image déjà vue ne se recharge pas.
+    - courante: {Boolean} la collection de la page en cours : son lien le dit (aria-current="page")
     - tout_de_suite: {Boolean} l'image arrive tout de suite (loading="eager") : les premiers du haut de page ; sinon,
       loading="lazy"
 
@@ -103,6 +108,12 @@
     assign emb_long = 'long'
   endif
 
+  # Le menu du téléphone : ses tailles.
+  assign emb_menu = false
+  if taille == 'menu' or taille == 'tuile'
+    assign emb_menu = true
+  endif
+
   # L'image fait deux fois le diamètre du rond de large.
   if taille == 'bas'
     assign emb_sizes = '(min-width: 900px) 272px, 208px'
@@ -111,21 +122,29 @@
   endif
 -%}
 {%- capture emb_srcset -%}
-  {%- assign emb_paliers = '160,240,320,480,640' | split: ',' -%}
-  {%- for emb_palier in emb_paliers -%}
-    {%- assign emb_w = emb_palier | plus: 0 -%}
-    {%- if emb_largeur >= emb_w -%}, {{ emb_fichier | image_url: width: emb_w }} {{ emb_w }}w{%- endif -%}
-  {%- endfor -%}
+  {%- unless emb_menu -%}
+    {%- assign emb_paliers = '160,240,320,480,640' | split: ',' -%}
+    {%- for emb_palier in emb_paliers -%}
+      {%- assign emb_w = emb_palier | plus: 0 -%}
+      {%- if emb_largeur >= emb_w -%}, {{ emb_fichier | image_url: width: emb_w }} {{ emb_w }}w{%- endif -%}
+    {%- endfor -%}
+  {%- endunless -%}
 {%- endcapture -%}
-<li class="c-emb" data-fond="{{ emb_couleur }}"{% if emb_long != '' %} data-mot="{{ emb_long }}"{% endif %}{% if taille == 'bas' %} data-taille="bas"{% if emb_lettres > 10 %} style="--lettres: {{ emb_lettres }}"{% endif %}{% endif %}>
+<li class="c-emb" data-fond="{{ emb_couleur }}"{% if emb_long != '' %} data-mot="{{ emb_long }}"{% endif %}{% if taille == 'bas' %} data-taille="bas"{% if emb_lettres > 10 %} style="--lettres: {{ emb_lettres }}"{% endif %}{% elsif emb_menu %} data-taille="{{ taille }}"{% endif %}>
   <span class="c-emb-cadre" aria-hidden="true">
+    {%- if taille == 'tuile' and emb_largeur == 0 %}
+    <svg class="c-emb-tout" viewBox="0 0 50 50" focusable="false"><rect x="2" y="2" width="21.5" height="21.5" rx="7"/><rect x="26.5" y="2" width="21.5" height="21.5" rx="7"/><rect x="2" y="26.5" width="21.5" height="21.5" rx="7"/><rect x="26.5" y="26.5" width="21.5" height="21.5" rx="7"/></svg>
+    {%- else %}
     <span class="c-emb-rond" data-allow-empty></span>
-    {%- if emb_largeur > 0 %}
+    {%- if emb_largeur > 0 and emb_menu %}
+    <img src="{{ emb_fichier | image_url: width: 320 }}" alt="" width="{{ emb_largeur }}" height="{{ emb_hauteur }}" loading="lazy" decoding="async">
+    {%- elsif emb_largeur > 0 %}
     <img src="{{ emb_fichier | image_url: width: 320 }}" srcset="{{ emb_srcset | remove_first: ', ' }}" sizes="{{ emb_sizes }}" alt="" width="{{ emb_largeur }}" height="{{ emb_hauteur }}" loading="{% if tout_de_suite %}eager{% else %}lazy{% endif %}" decoding="async">
     {%- else %}
     <span class="c-emb-initiale">{{ emb_nom | slice: 0 | upcase | escape }}</span>
     {%- endif %}
+    {%- endif %}
   </span>
-  <a class="c-emb-lien" href="{{ cible.url }}">{% if emb_debut != blank %}<span class="c-emb-mot">{{ emb_debut | escape }}</span> {% endif %}<span class="c-emb-nom">{{ emb_nom | escape }}</span>{% if emb_reste != '' %}<span class="c-emb-reste">{{ emb_reste | escape }}{% if emb_fin != blank %} {{ emb_fin | escape }}{% endif %}</span>{% elsif emb_fin != blank %} <span class="c-emb-mot">{{ emb_fin | escape }}</span>{% endif %}</a>
+  <a class="c-emb-lien" href="{{ cible.url }}"{% if courante %} aria-current="page"{% endif %}>{% if emb_debut != blank %}<span class="c-emb-mot">{{ emb_debut | escape }}</span> {% endif %}<span class="c-emb-nom">{{ emb_nom | escape }}</span>{% if emb_reste != '' %}<span class="c-emb-reste">{{ emb_reste | escape }}{% if emb_fin != blank %} {{ emb_fin | escape }}{% endif %}</span>{% elsif emb_fin != blank %} <span class="c-emb-mot">{{ emb_fin | escape }}</span>{% endif %}</a>
   <span class="c-emb-nb">{{ emb_cle_nombre | t: count: emb_nb }}</span>
 </li>

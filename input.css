@@ -1942,6 +1942,306 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
 }
 /* Price Animation end */
 
+/* ---- Le menu du téléphone (snippets/menu-telephone.liquid, .menu-tel) ----
+   Demande de Walid du 25/11/2026 : un menu « beaucoup plus joli », les emblèmes des collections en rangées qui défilent à
+   la place des listes de liens, et plus rien de coupé en bas. Sous l'en-tête, jusqu'en bas de l'écran : les onglets
+   (Nos Tableaux | Posters & Affiches), deux tuiles, les groupes ; en bas, toujours là, « Suivre ma commande » et le pays.
+   Le système de design des nouvelles pages (fiche 3D, page collection) : Albert Sans, les mêmes couleurs, posées ici une
+   fois pour le menu (scripts/menu-telephone.test.cjs vérifie qu'elles sont égales), les mêmes emblèmes. La feuille de la
+   page collection a aussi des règles pour .c-emb : celles d'ici, qui commencent par :root .menu-tel .c-emb, l'emportent
+   dans le menu. Script : MenuTelephone (assets/tw-header.js). */
+:root .menu-tel {
+  --encre: rgb(var(--color-main-rgb));
+  --encre-70: rgba(var(--color-main-rgb), 0.72);
+  --encre-55: rgba(var(--color-main-rgb), 0.6);
+  --encre-16: rgba(var(--color-main-rgb), 0.16);
+  --encre-12: rgba(var(--color-main-rgb), 0.12);
+  --encre-06: rgba(var(--color-main-rgb), 0.06);
+  --blanc: #ffffff;
+  --creme: #f7f2ea;
+  --ciel: #a5d3f7;
+  --rose: #ffb6d2;
+  --soleil: #ffdd6e;
+  --menthe: #b9e9d0;
+  --lilas: #d9c9ff;
+  --peche: #ffcaa8;
+  --bleu: #86bdf5;
+  --gris: #d6d2ce;
+  --orange: #ffb05c;
+  --rouge: #ff6f61;
+  --violet: #bba0ff;
+  --beige: #ebdcc4;
+  --vert: #94d6a2;
+  --sans: "Albert Sans", Roboto, sans-serif;
+  --bord-g: max(20px, env(safe-area-inset-left, 0px));
+  --bord-d: max(20px, env(safe-area-inset-right, 0px));
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  height: calc(100vh - var(--menu-haut, 122px));
+  border-top: 1px solid var(--encre-12);
+  background: var(--blanc);
+  color: var(--encre);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  interpolate-size: allow-keywords;
+}
+/* L'écran, la barre du navigateur comprise : 100vh ne la compte pas, et le bas du menu passait dessous. */
+@supports (height: 100dvh) {
+  :root .menu-tel { height: calc(100dvh - var(--menu-haut, 122px)); }
+}
+.menu-tel:focus { outline: none; }
+.menu-tel :is(a, summary, button, .obfuscate):focus-visible {
+  outline: 2px solid var(--encre); outline-offset: -2px; border-radius: 12px;
+}
+
+/* Ce qui défile. Les réseaux se posent en bas s'il reste de la place. */
+.menu-tel-defile {
+  display: flex; flex-direction: column;
+  overflow: hidden auto; overscroll-behavior: contain;
+  padding: 14px 0 12px;
+  scrollbar-width: none;
+}
+.menu-tel-defile::-webkit-scrollbar { display: none; }
+
+/* Les onglets : l'interrupteur de la page collection ; la cellule choisie glisse de l'un à l'autre. */
+.menu-tel-bascule {
+  position: relative; flex: none;
+  display: grid; grid-template-columns: repeat(var(--n, 2), minmax(0, 1fr));
+  margin: 0 var(--bord-d) 12px var(--bord-g); padding: 3px;
+  border-radius: 999px; background: var(--encre-06);
+}
+.menu-tel-bascule::before {
+  content: ""; position: absolute; inset: 3px auto 3px 3px;
+  width: calc((100% - 6px) / var(--n, 2));
+  border-radius: 999px; background: var(--blanc);
+  box-shadow: 0 0 0 1px var(--encre), 0 4px 12px var(--encre-12);
+  translate: calc(100% * var(--i, 0)) 0;
+}
+.menu-tel-bascule:has(.menu-tel-onglet:nth-child(2) :checked) { --i: 1; }
+.menu-tel-bascule:has(.menu-tel-onglet:nth-child(3) :checked) { --i: 2; }
+.menu-tel-onglet {
+  position: relative;
+  display: grid; place-items: center; min-height: 42px; padding: 4px 10px;
+  border-radius: 999px;
+  font: 600 15px/1.1 var(--sans); text-align: center;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.menu-tel-onglet input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.menu-tel-onglet:has(:focus-visible) { outline: 2px solid var(--encre); outline-offset: 2px; }
+/* Un rayon à la fois, celui de son onglet. Un navigateur sans :has les montre tous, sans les onglets. */
+.menu-tel:has(.menu-tel-onglet:nth-child(1) :checked) .menu-tel-rayon:not([data-rayon="1"]),
+.menu-tel:has(.menu-tel-onglet:nth-child(2) :checked) .menu-tel-rayon:not([data-rayon="2"]),
+.menu-tel:has(.menu-tel-onglet:nth-child(3) :checked) .menu-tel-rayon:not([data-rayon="3"]) { display: none; }
+@supports not selector(:has(a)) {
+  .menu-tel-bascule { display: none; }
+}
+
+/* Les emblèmes (snippets/collection-embleme.liquid) : le rond, l'image posée dessus, le nom, le nombre. */
+.menu-tel [data-fond="ciel"] { --fond: var(--ciel); }
+.menu-tel [data-fond="soleil"] { --fond: var(--soleil); }
+.menu-tel [data-fond="menthe"] { --fond: var(--menthe); }
+.menu-tel [data-fond="rose"] { --fond: var(--rose); }
+.menu-tel [data-fond="lilas"] { --fond: var(--lilas); }
+.menu-tel [data-fond="peche"] { --fond: var(--peche); }
+.menu-tel [data-fond="bleu"] { --fond: var(--bleu); }
+.menu-tel [data-fond="gris"] { --fond: var(--gris); }
+.menu-tel [data-fond="orange"] { --fond: var(--orange); }
+.menu-tel [data-fond="rouge"] { --fond: var(--rouge); }
+.menu-tel [data-fond="violet"] { --fond: var(--violet); }
+.menu-tel [data-fond="beige"] { --fond: var(--beige); }
+.menu-tel [data-fond="vert"] { --fond: var(--vert); }
+:root .menu-tel .c-emb {
+  position: relative; list-style: none;
+  color: var(--encre); -webkit-tap-highlight-color: transparent;
+}
+:root .menu-tel .c-emb .c-emb-cadre {
+  position: relative; display: block;
+  width: var(--d); height: calc(var(--d) * 1.3);
+  transform-origin: 50% 100%;
+}
+:root .menu-tel .c-emb .c-emb-rond {
+  position: absolute; left: 0; bottom: 0; width: var(--d); height: var(--d);
+  border-radius: 50%; background: var(--fond, var(--creme));
+}
+:root .menu-tel .c-emb .c-emb-cadre img {
+  position: absolute; left: 50%; bottom: 0;
+  width: calc(var(--d) * 2); height: auto; max-width: none;
+  translate: -50% 0; pointer-events: none;
+}
+:root .menu-tel .c-emb .c-emb-initiale {
+  position: absolute; left: 0; bottom: 0; width: var(--d); height: var(--d);
+  display: grid; place-items: center;
+  font: 700 calc(var(--d) * 0.42) / 1 var(--sans); letter-spacing: -0.03em;
+}
+:root .menu-tel .c-emb .c-emb-lien { color: inherit; text-decoration: none; }
+:root .menu-tel .c-emb .c-emb-lien::after { content: ""; position: absolute; inset: 0; border-radius: 18px; }
+:root .menu-tel .c-emb .c-emb-lien:focus-visible { outline: none; }
+:root .menu-tel .c-emb .c-emb-lien:focus-visible::after { outline: 2px solid var(--encre); outline-offset: -2px; }
+:root .menu-tel .c-emb .c-emb-nom::first-letter { text-transform: uppercase; }
+:root .menu-tel .c-emb .c-emb-nb {
+  font: 500 11.5px/1 var(--sans); color: var(--encre-55);
+  font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+
+/* Les tuiles : l'emblème à gauche, le nom et le nombre à droite. Sans emblème (« Tous les Tableaux »), quatre carrés. */
+.menu-tel-tuiles {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;
+  margin: 0 var(--bord-d) 6px var(--bord-g);
+}
+:root .menu-tel .c-emb[data-taille="tuile"] {
+  --d: clamp(42px, 11.2vw, 50px);
+  display: grid; grid-template-columns: var(--d) minmax(0, 1fr); column-gap: clamp(8px, 2.5vw, 11px); row-gap: 4px;
+  align-content: center; justify-items: start; max-width: none; min-height: 78px; padding: 8px 8px 8px 12px;
+  border-radius: 20px; background: var(--creme);
+  text-align: left;
+}
+:root .menu-tel .c-emb[data-taille="tuile"] .c-emb-cadre { grid-row: 1 / 3; align-self: center; }
+:root .menu-tel .c-emb[data-taille="tuile"] .c-emb-cadre:has(.c-emb-tout) { height: var(--d); }
+:root .menu-tel .c-emb .c-emb-tout { display: block; width: 100%; height: 100%; }
+.menu-tel .c-emb-tout rect:nth-child(1) { fill: var(--ciel); }
+.menu-tel .c-emb-tout rect:nth-child(2) { fill: var(--soleil); }
+.menu-tel .c-emb-tout rect:nth-child(3) { fill: var(--rose); }
+.menu-tel .c-emb-tout rect:nth-child(4) { fill: var(--menthe); }
+:root .menu-tel .c-emb[data-taille="tuile"] .c-emb-lien {
+  display: flex; flex-flow: column nowrap; align-items: flex-start; align-self: end; margin: 0; max-width: 100%;
+}
+:root .menu-tel .c-emb[data-taille="tuile"] .c-emb-mot {
+  margin: 0; font: 600 9.5px/1.15 var(--sans); letter-spacing: 0.08em; text-transform: uppercase; color: var(--encre-70);
+}
+:root .menu-tel .c-emb[data-taille="tuile"] .c-emb-nom {
+  order: 0; flex-basis: auto; margin: 2px 0 0;
+  font: 700 clamp(13.5px, 3.95vw, 17px) / 1.1 var(--sans); letter-spacing: -0.02em; overflow-wrap: normal; hyphens: manual;
+}
+:root .menu-tel .c-emb[data-taille="tuile"] .c-emb-nb { grid-column: 2; align-self: start; margin: 0; }
+/* Une page ou un produit, sans emblème : son nom seul. */
+:root .menu-tel .c-emb[data-nue] { grid-template-columns: minmax(0, 1fr); }
+/* Deux mots liés par un trait (« Best-Sellers ») restent ensemble : la taille suit la place. */
+@media (max-width: 359px) {
+  .menu-tel-tuiles { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Les groupes : une ligne par groupe ; un trait entre deux. */
+.menu-tel-groupe { border-bottom: 1px solid var(--encre-12); }
+.menu-tel-groupes > li:last-child .menu-tel-groupe { border-bottom: 0; }
+.menu-tel-tete {
+  display: flex; align-items: center; gap: 12px;
+  min-height: 54px; padding: 0 var(--bord-d) 0 var(--bord-g);
+  list-style: none; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent;
+}
+.menu-tel-nom { flex: 1; min-width: 0; font: 600 19px/1.15 var(--sans); letter-spacing: -0.015em; }
+.menu-tel-chevron { flex: none; width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.2; }
+.menu-tel-groupe[open] .menu-tel-chevron { transform: rotate(180deg); }
+/* Trois de ses emblèmes en petit, tant qu'il est fermé. */
+.menu-tel-pile { flex: none; display: flex; }
+.menu-tel-petit {
+  position: relative; width: 30px; height: 30px; margin-left: -9px; overflow: hidden;
+  border-radius: 50%; background: var(--fond, var(--creme)); box-shadow: 0 0 0 2px var(--blanc);
+}
+.menu-tel-petit img { position: absolute; left: 50%; bottom: 0; width: 60px; height: auto; max-width: none; translate: -50% 0; }
+.menu-tel-groupe[open] .menu-tel-pile { opacity: 0; }
+
+/* La rangée d'un groupe : elle défile d'un bord à l'autre de l'écran, les marges dans ce qui défile. Quatre emblèmes
+   tiennent sans défiler dès 360 px ; au-delà, le suivant dépasse. Le nom seul se voit (le mot de type, « Tableau », est
+   le même partout : il reste dans le lien, lu par Google et les lecteurs d'écran). */
+.menu-tel-rangee {
+  position: relative;
+  display: flex; gap: 6px; overflow-x: auto;
+  padding: 6px var(--bord-d) 16px var(--bord-g);
+  scroll-snap-type: x proximity; scroll-padding-inline: var(--bord-g) var(--bord-d);
+}
+:root .menu-tel .c-emb[data-taille="menu"] {
+  --d: 66px;
+  flex: 1 0 clamp(72px, 20vw, 88px); min-width: min-content; max-width: 108px;
+  scroll-snap-align: start;
+  display: grid; justify-items: center; align-content: start; padding: 0;
+  text-align: center;
+}
+:root .menu-tel .c-emb[data-taille="menu"] .c-emb-lien { display: block; margin: 6px 0 0; }
+:root .menu-tel .c-emb[data-taille="menu"] :is(.c-emb-mot, .c-emb-reste) {
+  position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+:root .menu-tel .c-emb[data-taille="menu"] .c-emb-nom {
+  display: block; margin: 0; padding: 0 2px;
+  font: 700 15px/1.1 var(--sans); letter-spacing: -0.02em; overflow-wrap: normal; hyphens: manual;
+}
+:root .menu-tel .c-emb[data-taille="menu"][data-mot] .c-emb-nom { font-size: 13px; }
+:root .menu-tel .c-emb[data-taille="menu"][data-mot="tres-long"] { min-width: 120px; }
+:root .menu-tel .c-emb[data-taille="menu"][data-mot="tres-long"] .c-emb-nom { overflow-wrap: anywhere; hyphens: auto; }
+:root .menu-tel .c-emb[data-taille="menu"] .c-emb-nb { margin: 4px 0 0; }
+/* La page en cours. */
+:root .menu-tel .c-emb[data-taille="menu"]:has([aria-current]) .c-emb-rond { box-shadow: 0 0 0 2px var(--blanc), 0 0 0 4px var(--encre); }
+:root .menu-tel .c-emb[data-taille="tuile"]:has([aria-current]) { box-shadow: inset 0 0 0 1.5px var(--encre); }
+
+/* Les réseaux, à la fin de la liste : 44 px par doigt. */
+.menu-tel-reseaux { flex: none; margin-top: auto; padding: 4px calc(var(--bord-d) - 10px) 0 calc(var(--bord-g) - 10px); }
+.menu-tel-reseaux ul { gap: 4px; padding: 0; }
+.menu-tel-reseaux li > * { display: grid; place-items: center; width: 44px; height: 44px; }
+
+/* En bas, toujours là : « Suivre ma commande », et le choix du pays, dont la liste s'ouvre vers le haut. */
+.menu-tel-pied {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px;
+  padding: 12px var(--bord-d) calc(12px + env(safe-area-inset-bottom, 0px)) var(--bord-g);
+  border-top: 1px solid var(--encre-12); background: var(--blanc);
+}
+:root .menu-tel .menu-tel-suivi {
+  justify-content: center; min-height: 50px; padding: 4px 14px;
+  border-radius: 999px; background: var(--peche); color: var(--encre);
+  font: 600 15.5px/1.1 var(--sans);
+}
+.menu-tel-pays { position: relative; }
+:root .menu-tel .menu-tel-pays-bouton {
+  display: flex; align-items: center; gap: 9px; height: 50px; padding: 0 15px;
+  border: 1.5px solid var(--encre); border-radius: 999px;
+  list-style: none; cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.menu-tel-pays-bouton .menu-tel-chevron { width: 12px; height: 12px; transform: rotate(180deg); }
+.menu-tel-pays[open] .menu-tel-chevron { transform: none; }
+.menu-tel-pays-liste {
+  position: absolute; right: 0; bottom: calc(100% + 10px); z-index: 5;
+  padding: 6px; border-radius: 20px; background: var(--blanc);
+  box-shadow: 0 18px 44px var(--encre-16), 0 0 0 1px var(--encre-12);
+}
+:root .menu-tel .menu-tel-pays-liste :is(a, button) {
+  gap: 10px; min-height: 46px; margin: 0; padding: 0 18px 0 12px; border-radius: 14px;
+  font: 500 15px/1 var(--sans);
+}
+.menu-tel-pays-liste svg { flex: none; width: 26px; height: 26px; }
+/* Un téléphone couché : le bas suit la liste, rien ne reste posé. */
+@media (max-height: 420px) {
+  :root .menu-tel { display: block; overflow-y: auto; overscroll-behavior: contain; }
+  .menu-tel-defile { overflow: visible; }
+}
+
+/* Le mouvement, seulement sans « mouvements réduits » : la cellule choisie glisse, un groupe se déplie (là où le
+   navigateur sait animer sa hauteur ; ailleurs il s'ouvre d'un coup), ses emblèmes arrivent l'un après l'autre, et tout
+   s'enfonce un peu sous le doigt. */
+@keyframes menu-tel-arrive { from { opacity: 0; translate: 22px 0; } }
+@keyframes menu-tel-fondu { from { opacity: 0; } }
+@media (prefers-reduced-motion: no-preference) {
+  .menu-tel-bascule::before { transition: translate 0.28s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .menu-tel-chevron { transition: transform 0.25s ease; }
+  .menu-tel-pile { transition: opacity 0.2s ease; }
+  .menu-tel-rayon { animation: menu-tel-fondu 0.25s ease; }
+  .menu-tel-groupe::details-content {
+    block-size: 0; overflow: clip;
+    transition: block-size 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), content-visibility 0.28s allow-discrete;
+  }
+  .menu-tel-groupe[open]::details-content { block-size: auto; }
+  .menu-tel-groupe[open] .c-emb { animation: menu-tel-arrive 0.36s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; }
+  .menu-tel-groupe[open] .c-emb:nth-child(2) { animation-delay: 0.03s; }
+  .menu-tel-groupe[open] .c-emb:nth-child(3) { animation-delay: 0.06s; }
+  .menu-tel-groupe[open] .c-emb:nth-child(4) { animation-delay: 0.09s; }
+  .menu-tel-groupe[open] .c-emb:nth-child(5) { animation-delay: 0.12s; }
+  .menu-tel-groupe[open] .c-emb:nth-child(n + 6) { animation-delay: 0.15s; }
+  :root .menu-tel .c-emb .c-emb-cadre { transition: transform 0.2s ease; }
+  :root .menu-tel .c-emb:active .c-emb-cadre { transform: scale(0.94); }
+  .menu-tel-tete:active .menu-tel-nom, .menu-tel-suivi:active { opacity: 0.6; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root .menu-tel { transition: none; }
+}
+/* ---- Fin du menu du téléphone ---- */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

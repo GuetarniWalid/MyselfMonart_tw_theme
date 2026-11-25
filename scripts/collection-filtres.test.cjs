@@ -542,7 +542,9 @@ test('aucun tableau pour ces filtres : « Aucun tableau ne réunit ces filtres. 
    place en haut du menu du téléphone (pt-[54px] sur son nav). Sur la nouvelle page, la ligne la remplace. L'en-tête
    est une section : il ne voit pas la page rendue (content_for_layout n'y est pas lisible, relevé en ligne le
    23/11/2026 : la barre restait écrite) et ne change pas. La feuille de la page cache la barre et rend au menu la
-   marge des pages sans filtres (pt-8). */
+   marge des pages sans filtres (pt-8). Dans la vue de test (?view=refonte…), l'en-tête rend le nouveau menu
+   (snippets/menu-telephone.liquid, 25/11/2026), qui ne réserve rien ; la page basculée, tant que ce menu n'est pas celui
+   de tout le site, garde le menu d'avant, et ces règles. */
 const ENTETE = 'snippets/tw-sticky-header.liquid'
 const { read, templateOf } = require('./galerie-banc.cjs')
 // La balise {% form %} de Shopify (le sélecteur de langue de l'en-tête), pour liquidjs.
@@ -562,9 +564,9 @@ function formulaire(e) {
   })
 }
 if (!SKIP) for (const lang of Object.keys(LANGS)) formulaire(engine(lang))
-const entete = ({ type = 'painting', reglages = { enable_painting_filtering: true, enable_poster_filtering: true } } = {}) => engine('fr').parseAndRender(read(ENTETE), {}, {
+const entete = ({ type = 'painting', suffix = null, reglages = { enable_painting_filtering: true, enable_poster_filtering: true } } = {}) => engine('fr').parseAndRender(read(ENTETE), {}, {
   globals: {
-    template: templateOf('collection', 'refonte'), settings: reglages,
+    template: templateOf('collection', suffix), settings: reglages,
     collection: { metafields: { custom: { type_of_collection: type } }, products_count: 327 },
     section: { id: 'tw-header', settings: {}, blocks: [] },
     request: { locale: { iso_code: 'fr' }, page_type: 'collection', origin: 'https://www.myselfmonart.com' },
@@ -586,6 +588,11 @@ test('l’en-tête écrit encore la barre « Filtrer et trier » et sa place dan
   const sans = /<sticky-header\b[\s\S]*?<nav class="([^"]*)"/.exec(sansFiltres)
   assert.ok(sans[1].split(/\s+/).includes('pt-8'), sans[1])
   assert.doesNotMatch(sansFiltres, /mobile-filter-button-wrapper/)
+  // La vue de test : le nouveau menu, sans cette marge ; la barre y est encore, la feuille la cache.
+  const essai = await entete({ suffix: 'refonte' })
+  assert.match(essai, /id="mobile-filter-button-wrapper"/)
+  assert.match(essai, /class="menu-tel /)
+  assert.doesNotMatch(essai, /pt-\[54px\]/)
   const bloc = blocCss()
   assert.equal(regle(bloc, `${H} #mobile-filter-button-wrapper`).body.trim(), 'display: none;')
   assert.equal(regle(bloc, `${H} sticky-header nav.pt-\\[54px\\]`).body.trim(), 'padding-top: 2rem;')
@@ -649,6 +656,20 @@ test('la feuille : la ligne collée sous l’en-tête (--barre-top), 56 px sur t
   assert.match(ligne, /background: var\(--blanc\);/)
   assert.match(regle(bloc, `${H} .filtres-dedans`).body, /min-height: 56px;/)
   assert.match(regle(bloc, `${H} .filtres-dedans`, '@media (min-width: 900px)').body, /min-height: 68px;/)
+  // Sur téléphone, d'un bord à l'autre de l'écran (retour de Walid du 25/11/2026 : coupée à gauche, pâlie à droite) : les
+  // marges sont dans ce qui défile, pas autour, et aucun fondu.
+  assert.match(ligne, /margin-inline: calc\(-1 \* var\(--gout\)\) calc\(-1 \* var\(--goutd\)\);/)
+  assert.doesNotMatch(ligne, /padding/)
+  const defile = regle(bloc, `${H} .filtres-defile`).body
+  assert.match(defile, /overflow-x: auto;/)
+  assert.match(defile, /padding: 6px var\(--goutd\) 6px var\(--gout\);/)
+  assert.match(defile, /scroll-padding-inline: var\(--gout\) var\(--goutd\);/)
+  for (const r of bloc) assert.doesNotMatch(r.body, /mask/, r.head)
+  // Sur ordinateur, la ligne tient : elle reprend les marges de la page.
+  assert.match(regle(bloc, `${H} .filtres-ligne`, '@media (min-width: 900px)').body, /padding-inline: var\(--gout\) var\(--goutd\);/)
+  assert.match(regle(bloc, `${H} .filtres-defile`, '@media (min-width: 900px)').body, /overflow: visible;\s*padding: 0;/)
+  // Les quatre boutons se partagent la ligne du téléphone.
+  assert.match(regle(bloc, `${H} .filtres-famille,\n  ${H} .filtres-tri`, '@media (max-width: 479px)').body, /flex: 1 0 auto;/)
   // Boutons de 44 px, contour encre ; actif : fond encre.
   const fac = regle(bloc, `${H} .filtres-fac`).body
   assert.match(fac, /height: 44px;/)

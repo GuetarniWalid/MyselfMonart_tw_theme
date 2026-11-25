@@ -457,6 +457,24 @@ test('la feuille : un rond de 58 et 80 px en haut, de 104 et 136 px en bas, l’
   }
 })
 
+test('la feuille : la rangée va d’un bord à l’autre de l’écran ; les marges de la page sont dans ce qui défile', () => {
+  const bloc = monBloc()
+  const regle = (head, context = []) => bloc.find((r) => r.head === `${HOOK} ${head}` && r.context.join(' / ') === context.join(' / ')).body
+  // Retour de Walid du 25/11/2026 : coupée à gauche, à la marge de la page, et pas à droite. Aucune marge de côté autour.
+  assert.doesNotMatch(regle('.c-sous'), /padding-inline|padding:|margin/)
+  assert.doesNotMatch(regle('.c-sous-in'), /max-width|margin|padding/)
+  const rangee = regle('.c-embs')
+  assert.match(rangee, /--cote-g: max\(var\(--gout\), \(100% - 1240px\) \/ 2\);/)
+  assert.match(rangee, /--cote-d: max\(var\(--goutd\), \(100% - 1240px\) \/ 2\);/)
+  assert.match(rangee, /margin: -12px 0 0;/)
+  assert.match(rangee, /padding: 14px var\(--cote-d\) 4px var\(--cote-g\);/)
+  assert.match(rangee, /scroll-padding-inline: var\(--cote-g\) var\(--cote-d\);/)
+  const large = regle('.c-embs', [LARGE])
+  assert.match(large, /margin: -18px 0 0;/)
+  assert.match(large, /padding: 20px var\(--cote-d\) 4px var\(--cote-g\);/)
+  assert.doesNotMatch(large, /scroll-padding/)
+})
+
 test('la feuille : au survol, le rond et l’emblème grandissent ensemble depuis le bas du rond ; avec « mouvements réduits », rien ne bouge', () => {
   const bloc = monBloc()
   // Ce qui bouge au survol et au toucher : le cadre seul, tout entier (le rond et l'emblème, ou l'initiale), d'une

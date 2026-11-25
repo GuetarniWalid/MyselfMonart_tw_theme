@@ -1,0 +1,198 @@
+{%- comment -%}
+  menu-telephone — le menu du téléphone (demande de Walid du 25/11/2026 : « beaucoup plus joli », les emblèmes des
+  collections en rangées qui défilent à la place des listes de liens, et plus rien de coupé en bas). Rendu par
+  snippets/tw-sticky-header.liquid dans <details class="md:hidden">, sous l'en-tête ; pour l'instant dans la vue de test
+  de la nouvelle page collection seulement (nouvel_entete).
+
+  Les mêmes liens, dans le même ordre, que le menu d'avant : les blocs de la section (section.blocks, réglés dans
+  config/settings_data.json), les mêmes adresses et les mêmes noms, lus en entier dans le lien.
+  - Un titre (title_only) : un onglet (« Nos Tableaux | Posters & Affiches »), le dessin de l'interrupteur de la page
+    collection. Des boutons radio et la feuille (:has) : sans script aussi. Sur une fiche ou une collection de posters,
+    l'onglet des posters est choisi d'abord. Un seul titre, ou aucun : pas d'onglets.
+  - Un lien seul (collection_only, product_only, page_only) : une tuile, en haut (« Tous les Tableaux », « Best-seller »).
+  - Un ensemble de collections (set_of_collections) : un groupe qui s'ouvre, un seul à la fois. Fermé, trois de ses
+    emblèmes en petit, pour voir ce qu'il contient ; ouvert, sa rangée d'emblèmes (snippets/collection-embleme.liquid),
+    qui défile d'un bord à l'autre de l'écran. Celui de la collection en cours est ouvert d'abord, sinon le premier ;
+    data-ouvert dit lequel se rouvre avec le menu. Une collection vide ou retirée n'y paraît pas, un groupe vide non plus.
+  - En bas, toujours là : « Suivre ma commande » et le choix du pays. À la fin de la liste, les réseaux.
+  La hauteur du panneau : l'écran moins ce qui est au-dessus de lui (--menu-haut, que mesure assets/tw-header.js à
+  l'ouverture).
+  Styles : input.css, « Le menu du téléphone » (.menu-tel). Script : assets/tw-header.js (MenuTelephone).
+  Tests : scripts/menu-telephone.test.cjs.
+{%- endcomment -%}
+{%- liquid
+  # La page en cours : sa collection est marquée et son groupe ouvert ; sur un poster, l'onglet des posters d'abord.
+  assign mt_page = 0
+  assign mt_poster = false
+  if template.name == 'collection'
+    assign mt_page = collection.id
+    if collection.metafields.custom.type_of_collection == 'poster'
+      assign mt_poster = true
+    endif
+  elsif template.name == 'product'
+    if product.type == 'poster' or product.metafields.artwork.type == 'poster'
+      assign mt_poster = true
+    endif
+  endif
+
+  # Les onglets : un par titre du menu ; l'onglet choisi, le premier, ou celui dont un lien mène à des posters.
+  assign mt_titres = 0
+  assign mt_choisi = 0
+  for bloc in section.blocks
+    if bloc.type == 'title_only'
+      assign mt_titres = mt_titres | plus: 1
+    elsif mt_poster and mt_choisi == 0 and bloc.type == 'collection_only'
+      if bloc.settings.collection.metafields.custom.type_of_collection == 'poster'
+        assign mt_choisi = mt_titres | at_least: 1
+      endif
+    endif
+  endfor
+  assign mt_choisi = mt_choisi | at_least: 1
+  assign mt_rayons = mt_titres | at_least: 1
+-%}
+{%- capture mt_chevron -%}<svg class="menu-tel-chevron" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M2 4l4 4 4-4"/></svg>{%- endcapture -%}
+<div
+  class="menu-tel absolute bottom-0 left-0 w-screen close-nav transition-transform duration-200"
+  role="dialog"
+  aria-modal="true"
+  aria-label="{{ 'snippet.tw_sticky_header.navigation' | t }}"
+  tabindex="-1">
+  <div class="menu-tel-defile">
+    {%- if mt_titres > 1 -%}
+      <div class="menu-tel-bascule" role="radiogroup" aria-label="{{ 'sections.mma.collection.entree.groupe' | t }}" style="--n: {{ mt_titres }}">
+        {%- assign mt_n = 0 -%}
+        {%- for bloc in section.blocks -%}
+          {%- if bloc.type == 'title_only' -%}
+            {%- assign mt_n = mt_n | plus: 1 -%}
+            <label class="menu-tel-onglet"><input type="radio" name="menu-tel-onglet" value="{{ mt_n }}" autocomplete="off"{% if mt_n == mt_choisi %} checked{% endif %}><span>{{ bloc.settings.title | escape }}</span></label>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+    <nav aria-label="{{ 'snippet.tw_sticky_header.main_nav' | t }}">
+      {%- for mt_n in (1..mt_rayons) -%}
+        {%- liquid
+          # Son titre, et son groupe ouvert d'abord : celui de la page, sinon le premier.
+          assign mt_titre = ''
+          assign mt_ouvert = ''
+          assign mt_premier = ''
+          assign mt_rang = 0
+          for bloc in section.blocks
+            if bloc.type == 'title_only'
+              assign mt_rang = mt_rang | plus: 1
+              if mt_rang == mt_n
+                assign mt_titre = bloc.settings.title
+              endif
+              continue
+            endif
+            assign mt_sien = mt_rang | at_least: 1
+            if mt_sien != mt_n or bloc.type != 'set_of_collections'
+              continue
+            endif
+            if mt_premier == ''
+              assign mt_premier = bloc.id
+            endif
+            if mt_ouvert == '' and mt_page != 0
+              for fille in bloc.settings.child_collection_list
+                if fille.id == mt_page
+                  assign mt_ouvert = bloc.id
+                  break
+                endif
+              endfor
+            endif
+          endfor
+          if mt_ouvert == ''
+            assign mt_ouvert = mt_premier
+          endif
+        -%}
+        {%- comment -%} Les tuiles : les liens seuls du rayon. {%- endcomment -%}
+        {%- capture mt_tuiles -%}
+          {%- assign mt_rang = 0 -%}
+          {%- assign mt_place = 0 -%}
+          {%- for bloc in section.blocks -%}
+            {%- if bloc.type == 'title_only' -%}{%- assign mt_rang = mt_rang | plus: 1 -%}{%- continue -%}{%- endif -%}
+            {%- assign mt_sien = mt_rang | at_least: 1 -%}
+            {%- if mt_sien != mt_n -%}{%- continue -%}{%- endif -%}
+            {%- if bloc.type == 'collection_only' and bloc.settings.collection != blank -%}
+              {%- liquid
+                assign mt_courante = false
+                if bloc.settings.collection.id == mt_page
+                  assign mt_courante = true
+                endif
+              -%}
+              {%- render 'collection-embleme', cible: bloc.settings.collection, rang: mt_place, taille: 'tuile', courante: mt_courante -%}
+              {%- assign mt_place = mt_place | plus: 1 -%}
+            {%- elsif bloc.type == 'product_only' and bloc.settings.product != blank -%}
+              <li class="c-emb" data-taille="tuile" data-nue><a class="c-emb-lien" href="{{ bloc.settings.product.url }}"><span class="c-emb-nom">{{ bloc.settings.product.title | escape }}</span></a></li>
+            {%- elsif bloc.type == 'page_only' and bloc.settings.page != blank -%}
+              <li class="c-emb" data-taille="tuile" data-nue><a class="c-emb-lien" href="{{ bloc.settings.page.url }}"><span class="c-emb-nom">{{ bloc.settings.page.title | escape }}</span></a></li>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endcapture -%}
+        {%- comment -%} Les groupes : les ensembles de collections du rayon. {%- endcomment -%}
+        {%- capture mt_groupes -%}
+          {%- assign mt_rang = 0 -%}
+          {%- for bloc in section.blocks -%}
+            {%- if bloc.type == 'title_only' -%}{%- assign mt_rang = mt_rang | plus: 1 -%}{%- continue -%}{%- endif -%}
+            {%- assign mt_sien = mt_rang | at_least: 1 -%}
+            {%- if mt_sien != mt_n or bloc.type != 'set_of_collections' -%}{%- continue -%}{%- endif -%}
+            {%- assign mt_place = 0 -%}
+            {%- capture mt_pile -%}{%- endcapture -%}
+            {%- capture mt_rangee -%}
+              {%- for fille in bloc.settings.child_collection_list -%}
+                {%- assign mt_nb = fille.all_products_count | plus: 0 -%}
+                {%- if mt_nb == 0 -%}{%- continue -%}{%- endif -%}
+                {%- liquid
+                  assign mt_courante = false
+                  if fille.id == mt_page
+                    assign mt_courante = true
+                  endif
+                -%}
+                {%- render 'collection-embleme', cible: fille, rang: mt_place, taille: 'menu', courante: mt_courante -%}
+                {%- assign mt_fichier = fille.metafields.cocon.embleme.value -%}
+                {%- assign mt_largeur = mt_fichier.width | plus: 0 -%}
+                {%- if mt_place < 3 and mt_largeur > 0 -%}
+                  {%- assign mt_fond = fille.metafields.cocon.embleme_couleur.value | strip | downcase | default: 'ciel' -%}
+                  {%- capture mt_petit -%}<span class="menu-tel-petit" data-fond="{{ mt_fond }}"><img src="{{ mt_fichier | image_url: width: 120 }}" alt="" width="60" height="50" loading="lazy" decoding="async"></span>{%- endcapture -%}
+                  {%- assign mt_pile = mt_pile | append: mt_petit -%}
+                {%- endif -%}
+                {%- assign mt_place = mt_place | plus: 1 -%}
+              {%- endfor -%}
+            {%- endcapture -%}
+            {%- if mt_place == 0 -%}{%- continue -%}{%- endif -%}
+            <li>
+              <details class="menu-tel-groupe js-nav-submenu"{% if bloc.id == mt_ouvert %} open data-ouvert{% endif %}>
+                <summary class="menu-tel-tete"><span class="menu-tel-nom">{{ bloc.settings.title | escape }}</span>{% if mt_pile != '' %}<span class="menu-tel-pile" aria-hidden="true">{{ mt_pile }}</span>{% endif %}{{ mt_chevron }}</summary>
+                <ul class="menu-tel-rangee scrollbar-hidden">
+                  {{- mt_rangee -}}
+                </ul>
+              </details>
+            </li>
+          {%- endfor -%}
+        {%- endcapture -%}
+        <section class="menu-tel-rayon" data-rayon="{{ mt_n }}"{% if mt_titre != blank %} aria-label="{{ mt_titre | escape }}"{% endif %}>
+          {%- if mt_tuiles != blank %}
+          <ul class="menu-tel-tuiles">
+            {{- mt_tuiles -}}
+          </ul>
+          {%- endif %}
+          {%- if mt_groupes != blank %}
+          <ul class="menu-tel-groupes">
+            {{- mt_groupes -}}
+          </ul>
+          {%- endif %}
+        </section>
+      {%- endfor -%}
+    </nav>
+    <div class="menu-tel-reseaux">{% render 'tw-list-social' %}</div>
+  </div>
+  <div class="menu-tel-pied">
+    {% render 'tw-order-tracking-link', class: 'menu-tel-suivi', show_icon: true, icon_width: 22 %}
+    <details class="menu-tel-pays">
+      <summary class="menu-tel-pays-bouton">{% render 'tw-drapeau-pays' %}{{ mt_chevron }}</summary>
+      <ul class="menu-tel-pays-liste">
+        {% render 'tw-choix-pays', alignes: true %}
+      </ul>
+    </details>
+  </div>
+</div>

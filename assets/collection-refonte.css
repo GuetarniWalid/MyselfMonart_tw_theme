@@ -77,7 +77,8 @@
 
 /* Le corps de la page, sous l'en-tête : Albert Sans, comme la maquette, titres compris (la feuille commune les met
    en « heading »), et les textes dont une section fixe la police par une classe du thème : une seule police. L'en-tête,
-   son menu, le tiroir du panier et le pied de page gardent la leur. */
+   son menu d'ordinateur, le tiroir du panier et le pied de page gardent la leur ; le nouveau menu du téléphone a ses
+   styles dans la feuille commune (input.css, .menu-tel), en Albert Sans aussi. */
 :root[data-refonte-page] #MainContent {
   font-family: var(--sans);
   -webkit-font-smoothing: antialiased;
@@ -193,37 +194,39 @@
    58 px sur téléphone, de 80 px dès 900 px ; en bas de page (ticket 08), 104 et 136 px. */
 
 /* La section va d'un bord à l'autre de l'écran, comme les bandes de la maquette : son enveloppe (page-width, que les
-   pastilles gardent sur les autres pages) s'efface, et la section prend les marges de la page et sa largeur de
-   1240 px au plus. Sur une racine, les rangées des rayons s'empilent. */
+   pastilles gardent sur les autres pages) s'efface. Les marges de la page (et sa largeur de 1240 px au plus) sont dans
+   la rangée, pas autour : voir plus bas. */
 :root[data-refonte-page] .page-width:has(> .c-sous) {
   max-width: none;
   padding-left: 0;
   padding-right: 0;
 }
 :root[data-refonte-page] .c-sous {
-  padding: 14px var(--goutd) 0 var(--gout);
+  padding-top: 14px;
 }
 :root[data-refonte-page] .c-sous-in {
   display: flex;
   flex-direction: column;
   row-gap: 8px;
-  max-width: 1240px;
-  margin-inline: auto;
 }
 
-/* Une rangée : sur téléphone, elle défile en largeur jusqu'au bord droit de l'écran, sans barre (la classe
-   .scrollbar-hidden du thème, posée par la section), avec une accroche douce. Ses 14 px du haut et ses 4 px de
-   gauche, repris par des marges négatives, gardent le sujet qui monte au survol (jusqu'à 0,16 fois le diamètre
-   au-dessus du cadre) et l'anneau du focus, que le défilement couperait. */
+/* Une rangée défile en largeur d'un bord à l'autre de l'écran, sans barre (la classe .scrollbar-hidden du thème, posée
+   par la section), avec une accroche douce. Retour de Walid du 25/11/2026 : elle était coupée à gauche, à la marge de la
+   page, et pas à droite. Les marges sont maintenant dans ce qui défile (--cote-g, --cote-d : celles de la page, plus ce
+   qui dépasse des 1240 px du contenu) : le premier emblème part du bord du titre, puis la rangée glisse sous les deux
+   bords de l'écran. Ses 14 px du haut, repris par une marge négative, gardent le sujet qui monte au survol (jusqu'à
+   0,16 fois le diamètre au-dessus du cadre), que le défilement couperait. */
 :root[data-refonte-page] .c-embs {
+  --cote-g: max(var(--gout), (100% - 1240px) / 2);
+  --cote-d: max(var(--goutd), (100% - 1240px) / 2);
   list-style: none;
-  margin: -12px calc(-1 * var(--goutd)) 0 -4px;
-  padding: 14px var(--goutd) 4px 4px;
+  margin: -12px 0 0;
+  padding: 14px var(--cote-d) 4px var(--cote-g);
   display: flex;
   gap: 4px;
   overflow-x: auto;
   scroll-snap-type: x proximity;
-  scroll-padding-inline: 4px var(--goutd);
+  scroll-padding-inline: var(--cote-g) var(--cote-d);
 }
 
 /* Un emblème, et la couleur de son rond (data-fond : le métachamp cocon.embleme_couleur, sinon le rang). */
@@ -380,20 +383,18 @@
   font-size: 13px;
 }
 
-/* Sur ordinateur, la rangée tient sur une ligne, dans la largeur de la page. Une rangée trop longue (sur une racine :
-   les styles, les couleurs) défile en largeur, avec une barre fine, qui l'emporte sur .scrollbar-hidden : passer à la
-   ligne empilerait une dizaine de lignes d'emblèmes avant les tableaux. Ses 20 px du haut gardent le sujet qui monte
-   au survol. */
+/* Sur ordinateur, la rangée tient sur une ligne. Une rangée trop longue (sur une racine : les styles, les couleurs)
+   défile en largeur, avec une barre fine, qui l'emporte sur .scrollbar-hidden : passer à la ligne empilerait une dizaine
+   de lignes d'emblèmes avant les tableaux. Ses 20 px du haut gardent le sujet qui monte au survol. */
 @media (min-width: 900px) {
   :root[data-refonte-page] .c-sous {
     padding-top: 18px;
     padding-bottom: 2px;
   }
   :root[data-refonte-page] .c-embs {
-    margin: -18px 0 0 -4px;
-    padding: 20px 0 4px 4px;
+    margin: -18px 0 0;
+    padding: 20px var(--cote-d) 4px var(--cote-g);
     gap: 14px;
-    scroll-padding-inline: 4px 0;
     scrollbar-width: thin;
     scrollbar-color: var(--encre-16) transparent;
   }
@@ -1666,15 +1667,13 @@
    <dialog>). Ordinateur (900 px et plus) : un menu sous chaque famille, le nombre et le tri à droite. */
 
 /* La ligne : d'un bord à l'autre de l'écran, blanche, collée sous l'en-tête pendant toute la grille (--barre-top, que
-   pose l'en-tête au ticket 07 ; 0 sans lui) ; elle part avec la dernière rangée. Sur téléphone, elle touche le bord
-   droit : la ligne y défile. */
+   pose l'en-tête au ticket 07 ; 0 sans lui) ; elle part avec la dernière rangée. */
 :root[data-refonte-page] .filtres-ligne {
   position: sticky;
   top: var(--barre-top, var(--tete-h, 0px));
   z-index: 20;
   display: block;
   margin-inline: calc(-1 * var(--gout)) calc(-1 * var(--goutd));
-  padding-inline: var(--gout) 0;
   background: var(--blanc);
 }
 :root[data-refonte-page] .filtres-form {
@@ -1687,9 +1686,13 @@
   max-width: 1240px;
   margin-inline: auto;
 }
-/* Les trois familles et le tri : s'ils ne tiennent pas, ils défilent en largeur, le dernier coupé par un fondu à
-   droite (le signe qu'il y a une suite). */
+/* Les trois familles et le tri, sur une ligne. S'ils ne tiennent pas (un filtre choisi, un petit téléphone), ils
+   défilent en largeur d'un bord à l'autre de l'écran : les marges de la page sont dans ce qui défile. Retour de Walid
+   du 25/11/2026 : la ligne était coupée à gauche, à la marge, et le dernier bouton pâlissait à droite. */
 :root[data-refonte-page] .filtres-defile {
+  --fac-g: 15px;
+  --fac-d: 12px;
+  --fac-ecart: 7px;
   flex: 1;
   min-width: 0;
   display: flex;
@@ -1697,9 +1700,8 @@
   gap: 8px;
   overflow-x: auto;
   scrollbar-width: none;
-  padding: 6px var(--goutd) 6px 0;
-  -webkit-mask-image: linear-gradient(90deg, var(--encre) calc(100% - 30px), transparent);
-  mask-image: linear-gradient(90deg, var(--encre) calc(100% - 30px), transparent);
+  padding: 6px var(--goutd) 6px var(--gout);
+  scroll-padding-inline: var(--gout) var(--goutd);
 }
 :root[data-refonte-page] .filtres-defile::-webkit-scrollbar {
   display: none;
@@ -1713,9 +1715,10 @@
 :root[data-refonte-page] .filtres-fac {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  justify-content: center;
+  gap: var(--fac-ecart);
   height: 44px;
-  padding: 0 12px 0 15px;
+  padding: 0 var(--fac-d) 0 var(--fac-g);
   border: 1.5px solid var(--encre);
   border-radius: 999px;
   background: var(--blanc);
@@ -1778,9 +1781,10 @@
   flex: none;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  gap: var(--fac-ecart);
   height: 44px;
-  padding: 0 34px 0 15px;
+  padding: 0 var(--fac-d) 0 var(--fac-g);
   border: 1.5px solid var(--encre);
   border-radius: 999px;
   background: var(--blanc);
@@ -1800,8 +1804,6 @@
   cursor: pointer;
 }
 :root[data-refonte-page] .filtres-tri .filtres-chevron {
-  position: absolute;
-  right: 13px;
   pointer-events: none;
 }
 :root[data-refonte-page] .filtres-tri-ordi {
@@ -2299,7 +2301,8 @@
 /* La barre « Filtrer et trier » de l'en-tête (snippets/tw-sticky-header.liquid) ne se montre pas sur cette page ; son
    tiroir ne s'y écrit pas (layout/collection.liquid). L'en-tête, une section, ne voit pas la page rendue
    (content_for_layout n'y est pas lisible : relevé en ligne le 23/11/2026) : il écrit encore la barre, et garde dans
-   le menu du téléphone la place qu'elle prenait (pt-[54px]). Le menu reprend la marge des pages sans filtres (pt-8). */
+   le menu du téléphone d'avant la place qu'elle prenait (pt-[54px]). Ce menu reprend la marge des pages sans filtres
+   (pt-8) ; le nouveau (snippets/menu-telephone.liquid, vue de test) ne réserve rien. */
 :root[data-refonte-page] #mobile-filter-button-wrapper {
   display: none;
 }
@@ -2311,12 +2314,64 @@
 :root[data-refonte-page] .filtres-ligne:not([data-pret]) .filtres-defile:has(> .filtres-famille[open]) {
   flex-wrap: wrap;
   overflow: visible;
-  -webkit-mask-image: none;
-  mask-image: none;
 }
 :root[data-refonte-page] .filtres-ligne:not([data-pret]) .filtres-famille[open] {
   flex-basis: 100%;
 }
+/* Téléphone : les quatre boutons se partagent la ligne, du bord du titre au bord droit, sans défiler. À 14 px, il leur
+   manquait 7 px sur un Pixel (448 px) et 65 px sur un iPhone (390 px) : ils se resserrent un peu, puis un peu plus sous
+   430 et 384 px (relevé du 25/11/2026 dans les cinq langues). Plus petit encore, ou un filtre choisi, la ligne défile. */
+@media (max-width: 479px) {
+  :root[data-refonte-page] .filtres-defile {
+    --fac-g: 12px;
+    --fac-d: 9px;
+    --fac-ecart: 6px;
+    gap: 6px;
+  }
+  :root[data-refonte-page] .filtres-famille,
+  :root[data-refonte-page] .filtres-tri {
+    flex: 1 0 auto;
+  }
+  :root[data-refonte-page] .filtres-fac {
+    display: flex;
+    font-size: 13.5px;
+  }
+  :root[data-refonte-page] .filtres-tri {
+    font-size: 13.5px;
+  }
+  :root[data-refonte-page] .filtres-defile .filtres-chevron {
+    width: 11px;
+    height: 11px;
+  }
+}
+@media (max-width: 429px) {
+  :root[data-refonte-page] .filtres-defile {
+    --fac-g: 11px;
+    --fac-d: 7.5px;
+    --fac-ecart: 5px;
+    gap: 5px;
+  }
+  :root[data-refonte-page] .filtres-defile .filtres-chevron {
+    width: 10px;
+    height: 10px;
+  }
+  :root[data-refonte-page] .filtres-mini {
+    width: 16px;
+    height: 16px;
+  }
+}
+@media (max-width: 383px) {
+  :root[data-refonte-page] .filtres-defile {
+    --fac-g: 9px;
+    --fac-d: 7px;
+    --fac-ecart: 4px;
+    gap: 4px;
+  }
+  :root[data-refonte-page] :is(.filtres-fac, .filtres-tri) {
+    font-size: 13px;
+  }
+}
+
 @media (max-width: 899px) {
   :root[data-refonte-page] .filtres-famille > .filtres-panneau {
     margin-top: 8px;
@@ -2342,24 +2397,15 @@
     min-height: 68px;
   }
   :root[data-refonte-page] .filtres-defile {
+    --fac-g: 16px;
+    --fac-d: 14px;
+    --fac-ecart: 8px;
     gap: 10px;
     overflow: visible;
     padding: 0;
-    -webkit-mask-image: none;
-    mask-image: none;
-  }
-  :root[data-refonte-page] .filtres-fac {
-    gap: 8px;
-    padding: 0 14px 0 16px;
   }
   :root[data-refonte-page] .filtres-compte {
     display: block;
-  }
-  :root[data-refonte-page] .filtres-tri {
-    padding: 0 38px 0 16px;
-  }
-  :root[data-refonte-page] .filtres-tri .filtres-chevron {
-    right: 15px;
   }
   :root[data-refonte-page] .filtres-tri-tel,
   :root[data-refonte-page] .filtres-aide-tel {

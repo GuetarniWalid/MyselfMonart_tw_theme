@@ -184,6 +184,74 @@ class EnteteQuiSuit {
   }
 }
 
+/*
+ * Le menu du téléphone, nouveau dessin (snippets/menu-telephone.liquid, .menu-tel d'input.css)
+ * ----------------------------------------------------------------------------------------------------------------
+ * Créé par <sticky-header>, qui l'ouvre et le ferme, quand son menu est celui-là ; avec le menu d'avant, rien. Les
+ * onglets et les groupes marchent sans lui : des boutons radio et des <details>. Il fait le reste :
+ * - à l'ouverture, la hauteur du panneau (--menu-haut : ce qui est au-dessus de lui ; le bandeau d'annonce se voit ou
+ *   non) et le focus sur lui ;
+ * - le groupe qui s'ouvre (le précédent se ferme : <sticky-header>) reste en vue pendant qu'il se déplie ; la rangée
+ *   montre la collection de la page en cours, si elle y est ;
+ * - à la fermeture, tout revient à son état du départ (data-ouvert : le groupe ouvert d'abord).
+ */
+class MenuTelephone {
+  constructor(panneau) {
+    this.panneau = panneau;
+    this.defile = panneau.querySelector('.menu-tel-defile');
+    this.groupes = panneau.querySelectorAll('.menu-tel-groupe');
+    this.pays = panneau.querySelector('.menu-tel-pays');
+    this.groupes.forEach((groupe) => groupe.addEventListener('toggle', () => groupe.open && this.suivre(groupe)));
+    panneau.addEventListener('change', (e) => {
+      if (e.target.name === 'menu-tel-onglet') this.defile.scrollTop = 0;
+    });
+  }
+
+  ouvrir(entete) {
+    // L'en-tête parti en partie (il suit le doigt, ou revient) sera là en entier : le panneau commencera plus bas.
+    const haut = this.panneau.getBoundingClientRect().top - Math.min(0, entete.getBoundingClientRect().top);
+    this.panneau.style.setProperty('--menu-haut', `${Math.round(haut)}px`);
+    this.defile.scrollTop = 0;
+    this.groupes.forEach((groupe) => groupe.open && this.montrerLaPage(groupe));
+  }
+
+  fermer() {
+    this.groupes.forEach((groupe) => {
+      groupe.open = groupe.hasAttribute('data-ouvert');
+    });
+    if (this.pays) this.pays.open = false;
+  }
+
+  // Le dernier élément qui prend le focus : dans la liste des pays si elle est ouverte, sinon son bouton.
+  dernier() {
+    if (!this.pays) return null;
+    return (this.pays.open && this.pays.querySelector('.last-focusable')) || this.pays.querySelector('summary');
+  }
+
+  // Le groupe se déplie (0,28 s, input.css) : à chaque image, sa fin reste au-dessus du bas, et sa tête en vue.
+  suivre(groupe) {
+    this.montrerLaPage(groupe);
+    const fin = performance.now() + 360;
+    const image = (temps) => {
+      const vue = this.defile.getBoundingClientRect();
+      const place = groupe.getBoundingClientRect();
+      const pas = Math.min(Math.max(0, place.bottom - vue.bottom), place.top - vue.top);
+      if (pas) this.defile.scrollTop += pas;
+      if (groupe.open && temps < fin) window.requestAnimationFrame(image);
+    };
+    window.requestAnimationFrame(image);
+  }
+
+  // La collection de la page en cours, au milieu de sa rangée.
+  montrerLaPage(groupe) {
+    const lien = groupe.querySelector('[aria-current="page"]');
+    const embleme = lien && lien.closest('.c-emb');
+    if (!embleme) return;
+    const rangee = embleme.parentElement;
+    rangee.scrollLeft = embleme.offsetLeft - (rangee.clientWidth - embleme.offsetWidth) / 2;
+  }
+}
+
 class StickyHeader extends HTMLElement {
   constructor() {
     super();
@@ -192,6 +260,7 @@ class StickyHeader extends HTMLElement {
     this.detailsParent = this.menuOpener.parentNode;
     this.menu = this.menuOpener.nextElementSibling;
     this.subDetails = this.menu.querySelectorAll('details');
+    this.menuTelephone = this.menu.classList.contains('menu-tel') ? new MenuTelephone(this.menu) : null;
 
     // Desktop navigation elements
     this.desktopNavButtons = this.querySelectorAll('.desktop-nav-button');
@@ -588,7 +657,8 @@ class StickyHeader extends HTMLElement {
       // Get focusable elements dynamically when mobile menu is open
       if (this.detailsParent.open) {
         const firstFocusable = this.menuOpener;
-        const lastFocusable = this.menu.querySelector('.last-focusable') ||
+        const lastFocusable = this.menuTelephone?.dernier() ||
+                              this.menu.querySelector('.last-focusable') ||
                               this.menu.querySelector('a:last-of-type') ||
                               this.menu.querySelector('button:last-of-type');
         if (firstFocusable && lastFocusable) {
@@ -661,15 +731,24 @@ class StickyHeader extends HTMLElement {
     this.closeDesktopDropdown();
 
     if (!this.detailsParent.open) return;
+    const focusDedans = this.menu.contains(document.activeElement);
     this.switchMobileMenuLogo(true);
     this.showOverlay(false);
     this.menu.classList.replace('open-nav', 'close-nav');
-    await waitAnimEnd(this.menu);
+    // Le nouveau menu ne glisse pas avec « mouvements réduits » : pas de fin de transition à attendre.
+    if (this.menuTelephone) await Promise.race([waitAnimEnd(this.menu), new Promise((fini) => setTimeout(fini, 260))]);
+    else await waitAnimEnd(this.menu);
     this.detailsParent.open = false;
     this.resetMenuDisplay();
+    // Le focus ne reste pas dans un menu caché.
+    if (this.menuTelephone && focusDedans) this.menuOpener.focus({ preventScroll: true });
   };
 
   resetMenuDisplay = () => {
+    if (this.menuTelephone) {
+      this.menuTelephone.fermer();
+      return;
+    }
     // Close all open submenus when mobile menu closes
     this.subDetails.forEach((detail) => {
       if (detail.classList.contains('js-nav-submenu')) {
@@ -694,11 +773,17 @@ class StickyHeader extends HTMLElement {
   openMobileMenu = () => {
     if (this.detailsParent.open) return;
     this.detailsParent.open = true;
+    // Le nouveau menu prend ses mesures, encore hors de l'écran, puis glisse.
+    this.menuTelephone?.ouvrir(this.header);
     this.menu.classList.replace('close-nav', 'open-nav');
     this.body.classList.add('overflow-hidden');
     this.switchMobileMenuLogo(false);
     this.showOverlay(true);
 
+    if (this.menuTelephone) {
+      this.menu.focus({ preventScroll: true });
+      return;
+    }
     // Focus first link or button in the mobile menu
     const firstFocusable = this.menu.querySelector('a, button');
     if (firstFocusable) {

@@ -1,0 +1,19 @@
+{%- comment -%}
+  Le drapeau du pays en cours (sa devise et sa langue), sur le bouton du choix du pays du menu du téléphone
+  (snippets/tw-sticky-header.liquid, snippets/menu-telephone.liquid) ; un globe si ce pays n'a pas le sien.
+{%- endcomment -%}
+{% if localization.country.currency.iso_code == 'CAD' and localization.language.iso_code == 'en' %}
+  {% render 'icon-flag-ca' %}
+{% elsif localization.country.currency.iso_code == 'CHF' and localization.language.iso_code == 'fr' %}
+  {% render 'icon-flag-ch' %}
+{% elsif localization.country.currency.iso_code == 'DKK' and localization.language.iso_code == 'en' %}
+  {% render 'icon-flag-dk' %}
+{% elsif localization.country.currency.iso_code == 'EUR' and localization.language.iso_code == 'fr' %}
+  {% render 'icon-flag-fr' %}
+{% elsif localization.country.currency.iso_code == 'GBP' and localization.language.iso_code == 'en' %}
+  {% render 'icon-flag-uk' %}
+{% elsif localization.country.currency.iso_code == 'USD' and localization.language.iso_code == 'en' %}
+  {% render 'icon-flag-us' %}
+{% else %}
+  {% render 'icon-flag-world' %}
+{% endif %}

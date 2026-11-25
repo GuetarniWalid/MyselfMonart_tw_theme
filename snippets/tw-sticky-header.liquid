@@ -6,6 +6,19 @@
   endif
 -%}
 
+{%- comment -%}
+  Le nouvel en-tête (demande de Walid du 25/11/2026) : le logo sorti de son rond et le menu du téléphone en emblèmes
+  (snippets/menu-telephone.liquid). Dans la vue de test de la nouvelle page collection seulement (?view=refonte…), le
+  temps que Walid le valide ; ailleurs, l'en-tête d'aujourd'hui. La section ne voit pas la page rendue
+  (layout/collection.liquid) : elle reconnaît la vue de test à son modèle.
+{%- endcomment -%}
+{%- liquid
+  assign nouvel_entete = false
+  if template.name == 'collection' and template.suffix contains 'refonte'
+    assign nouvel_entete = true
+  endif
+-%}
+
 {%- comment -%} Check if filters should be shown for this collection type {%- endcomment -%}
 {% assign show_filters = false %}
 {%- if template.name == 'collection' -%}
@@ -32,8 +45,15 @@
             <span class="close hidden" aria-hidden="true">{% render 'tw-icon-close' %}</span>
           </span>
         </summary>
+        {%- if nouvel_entete %}
+        {% render 'menu-telephone' %}
+        {%- else %}
+        {%- comment -%}
+          La hauteur : l'écran (100dvh : la barre du navigateur comprise, dont 100vh ne tient pas compte et qui coupait le bas
+          du menu), moins le bandeau d'annonce et l'en-tête (122 px).
+        {%- endcomment %}
         <div
-          class="bg-secondary absolute bottom-0 left-0 w-screen border-t border-solid border-main close-nav transition-all duration-150 h-[calc(100vh-122px)] grid grid-rows-[1fr_auto]"
+          class="bg-secondary absolute bottom-0 left-0 w-screen border-t border-solid border-main close-nav transition-all duration-150 h-[calc(100vh-122px)] supports-[height:100dvh]:h-[calc(100dvh-122px)] grid grid-rows-[1fr_auto]"
           role="dialog"
           aria-modal="true"
           aria-label="{{ "snippet.tw_sticky_header.navigation" | t }}">
@@ -139,114 +159,16 @@
             {% render 'tw-list-social' %}
             <details class="relative px-6">
               <summary class="flex items-center justify-center text-main cursor-pointer">
-                {% if localization.country.currency.iso_code == 'CAD' and localization.language.iso_code == 'en' %}
-                  {% render 'icon-flag-ca' %}
-                {% elsif localization.country.currency.iso_code == 'CHF' and localization.language.iso_code == 'fr' %}
-                  {% render 'icon-flag-ch' %}
-                {% elsif localization.country.currency.iso_code == 'DKK' and localization.language.iso_code == 'en' %}
-                  {% render 'icon-flag-dk' %}
-                {% elsif localization.country.currency.iso_code == 'EUR' and localization.language.iso_code == 'fr' %}
-                  {% render 'icon-flag-fr' %}
-                {% elsif localization.country.currency.iso_code == 'GBP' and localization.language.iso_code == 'en' %}
-                  {% render 'icon-flag-uk' %}
-                {% elsif localization.country.currency.iso_code == 'USD' and localization.language.iso_code == 'en' %}
-                  {% render 'icon-flag-us' %}
-                {% else %}
-                  {% render 'icon-flag-world' %}
-                {% endif %}
+                {% render 'tw-drapeau-pays' %}
               </summary>
               <ul class="absolute right-6 top-0 -translate-y-full z-50 bg-white rounded shadow-lg pt-1">
-                {% liquid
-                  # Pays proposés. Format : devise|langue|drapeau|nom de repli|code pays|espacement
-                  # Chaque pays envoie le formulaire de localisation de Shopify (code pays + code langue).
-                  # Shopify renvoie lui-même vers la page en cours, à son adresse traduite, dans le marché
-                  # et la devise du pays : aucune adresse n'est fabriquée ici, rien ne dérive quand une
-                  # adresse change.
-                  assign locales_data = 'CAD|en|ca|Canada|CA|1,CHF|fr|ch|Suisse|CH|2,DKK|en|dk|Danmark|DK|2,EUR|fr|fr|France|FR|2,GBP|en|uk|UK|GB|2,USD|en|us|USA|US|2'
-                  assign locales = locales_data | split: ','
-                %}
-
-                {%- for locale in locales -%}
-                  {%- assign locale_parts = locale | split: '|' -%}
-                  {%- assign locale_currency = locale_parts[0] -%}
-                  {%- assign locale_lang = locale_parts[1] -%}
-                  {%- assign locale_flag = locale_parts[2] -%}
-                  {%- assign locale_name = locale_parts[3] -%}
-                  {%- comment -%} Nom de pays localisé (audit i18n) : on remplace la valeur FR codée en dur de locales_data par la clé de locale traduite, en gardant le fallback si la clé manque. {%- endcomment -%}
-                  {%- assign country_label_t = 'sections.header.countries.' | append: locale_flag | t -%}
-                  {%- unless country_label_t contains 'ranslation missing' -%}{%- assign locale_name = country_label_t -%}{%- endunless -%}
-                  {%- assign locale_country = locale_parts[4] -%}
-                  {%- assign spacing = locale_parts[5] -%}
-
-                  {%- comment -%} Le pays doit faire partie d'un marché actif de la boutique {%- endcomment -%}
-                  {%- assign is_available = false -%}
-                  {%- for country in localization.available_countries -%}
-                    {%- if country.iso_code == locale_country -%}
-                      {%- assign is_available = true -%}
-                      {%- break -%}
-                    {%- endif -%}
-                  {%- endfor -%}
-
-                  {%- if is_available -%}
-                    {%- assign is_current = false -%}
-                    {%- if locale_lang == localization.language.iso_code and localization.country.currency.iso_code == locale_currency -%}
-                      {%- assign is_current = true -%}
-                    {%- endif -%}
-
-                    {%- assign is_last = false -%}
-                    {%- if forloop.last -%}{%- assign is_last = true -%}{%- endif -%}
-
-                    {%- capture locale_label -%}
-                      {% case locale_flag %}
-                        {% when 'ca' %}{% render 'icon-flag-ca' %}
-                        {% when 'ch' %}{% render 'icon-flag-ch' %}
-                        {% when 'dk' %}{% render 'icon-flag-dk' %}
-                        {% when 'fr' %}{% render 'icon-flag-fr' %}
-                        {% when 'uk' %}{% render 'icon-flag-uk' %}
-                        {% when 'us' %}{% render 'icon-flag-us' %}
-                      {% endcase %}{% if spacing == '2' %}&nbsp;{% endif %}&nbsp;{{ locale_name }}
-                    {%- endcapture -%}
-
-                    <li tabindex="-1">
-                      <localization-flag>
-                        {%- if is_current -%}
-                          <a
-                            class="inline-flex items-center hover:bg-main-10 w-full py-2 mb-1 px-3 whitespace-nowrap text-main bg-main-10 cursor-not-allowed{% if is_last %} last-focusable{% endif %}"
-                            role="link"
-                            aria-disabled="true"
-                            aria-current="true"
-                            hreflang="{{ locale_lang }}"
-                            lang="{{ locale_lang }}"
-                            data-value="{{ locale_lang }}">
-                            {{- locale_label -}}
-                          </a>
-                        {%- else -%}
-                          {%- assign locale_form_id = 'HeaderLocalizationForm-' | append: locale_flag -%}
-                          {%- form 'localization', id: locale_form_id -%}
-                            <input type="hidden" name="country_code" value="{{ locale_country }}">
-                            <input type="hidden" name="language_code" value="{{ locale_lang }}">
-                            {%- comment -%} Page introuvable : on repart de l'accueil du pays choisi, pas d'une autre erreur (le dernier return_to l'emporte sur celui de Shopify) {%- endcomment -%}
-                            {%- if template.name == '404' -%}
-                              <input type="hidden" name="return_to" value="/">
-                            {%- endif -%}
-                            <button
-                              type="submit"
-                              class="inline-flex items-center hover:bg-main-10 w-full py-2 mb-1 px-3 whitespace-nowrap text-main{% if is_last %} last-focusable{% endif %}"
-                              lang="{{ locale_lang }}"
-                              data-value="{{ locale_lang }}">
-                              {{- locale_label -}}
-                            </button>
-                          {%- endform -%}
-                        {%- endif -%}
-                      </localization-flag>
-                    </li>
-                  {%- endif -%}
-                {%- endfor -%}
+                {% render 'tw-choix-pays' %}
               </ul>
             </details>
             </div>
           </div>
         </div>
+        {%- endif %}
       </details>
       {% comment %} end on mobile {% endcomment %}
 
@@ -290,7 +212,7 @@
         {% if section.settings.logo_svg != blank %}
           {{ section.settings.logo_svg }}
         {% else %}
-          {% render 'tw-default-logo' %}
+          {% render 'tw-default-logo', sans_rond: nouvel_entete %}
         {% endif %}
         <span class="ml-3 hidden md:block font-heading text-4xl">MyselfMonArt</span>
       </a>
