@@ -777,6 +777,16 @@ async function pageDuModele(file, vars) {
   return html
 }
 
+test('la feuille : le chevron du fil d’Ariane pend au bout du lien, il ne commence jamais une ligne', () => {
+  const css = read('assets/collection-refonte.css').replace(/\/\*[\s\S]*?\*\//g, '')
+  const corps = (selecteur) => (new RegExp(`:root\\[data-refonte-page\\] ${selecteur} \\{([^}]*)\\}`).exec(css) || [])[1]
+  // Dans l'écart qui suit le lien (22 px) : il ne compte pas dans la largeur de la ligne.
+  assert.match(corps('\\.c-fil ol'), /gap: 2px 22px;/)
+  assert.match(corps('\\.c-fil li'), /position: relative;/)
+  assert.match(corps('\\.c-fil li:not\\(:last-child\\)::after'), /position: absolute;[\s\S]*left: calc\(100% \+ 7px\);/)
+  assert.doesNotMatch(css, /\.c-fil li(?: \+ li)?::before/)
+})
+
 test('la page de test : un seul h1, un seul lien vers la jumelle, la liste BreadcrumbList de la page normale', { skip: SKIP }, async () => {
   for (const handle of ['tableaux-nature-sauvage', 'posters-affiches-nature', 'tableau-lion']) {
     const fr = nature()

@@ -519,9 +519,12 @@
    « Vignette d'œuvre »), toile comme poster sur le blanc de la page, dans une scène au format des vignettes de toile
    (500 / 587) ; l'œuvre y prend 80 % de la largeur au plus, son ombre sur le blanc. Dessous, le nom et le prix, alignés
    sur le bord de l'œuvre, et le cœur. Le lien du nom couvre la carte ; la vignette se peint au-dessus de lui et lui
-   laisse les clics (input.css) ; le cœur passe devant. */
+   laisse les clics (input.css) ; le cœur passe devant. Devant sa carte seulement (isolation) : au même niveau que la
+   ligne des filtres (z-20), il passait par-dessus elle au défilement, partout où la carte n'a pas son mouvement
+   (« mouvements réduits », Firefox, les iPhone d'avant iOS 26 ; relevé du 25/11/2026). */
 :root[data-refonte-page] .refonte-carte {
   position: relative;
+  isolation: isolate;
   min-width: 0;
 }
 /* Sur le blanc de la page, la scène ne coupe pas l'ombre de l'œuvre : coupée à son bord, elle dessinait un cadre gris
@@ -767,24 +770,27 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 2px 7px;
+  gap: 2px 22px;
   font: 500 13px/1.35 var(--sans);
   color: var(--encre-70);
 }
 :root[data-refonte-page] .c-fil li {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
   min-width: 0;
   overflow-wrap: anywhere;
 }
-/* Un chevron fin avant chaque lien qui suit. */
-:root[data-refonte-page] .c-fil li + li::before {
+/* Un chevron fin au bout de chaque lien, dans l'écart qui le suit : quand le fil passe à la ligne, il reste au bout de
+   la ligne du dessus, et la suivante s'aligne sur la marge. */
+:root[data-refonte-page] .c-fil li:not(:last-child)::after {
   content: "";
-  flex: none;
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 7px);
   width: 6px;
   height: 6px;
-  margin-right: 2px;
+  margin-top: -3px;
   border: solid var(--encre-55);
   border-width: 1.5px 1.5px 0 0;
   transform: rotate(45deg);
@@ -1108,7 +1114,7 @@
 
 /* -- « Envie d'un autre sujet ? » : le titre et le couple, puis les sœurs en grands emblèmes
    (snippets/collection-embleme.liquid, data-taille="bas" : ronds de 104 px, 136 px sur ordinateur, au bloc du
-   ticket 03), sur deux colonnes, quatre sur ordinateur. La section coupe ce qui dépasse sur les côtés : l'image d'un
+   ticket 03), par deux, par quatre dès 700 px. La section coupe ce qui dépasse sur les côtés : l'image d'un
    emblème, deux fois plus large que son rond, et le couple qui arrive de la droite ne débordent jamais de l'écran.
    La bulle, elle, passe au-dessus de la section. -- */
 :root[data-refonte-page] .c-sujets {
@@ -1139,13 +1145,27 @@
   bottom: 100%;
   margin-bottom: 4px;
 }
+/* Deux emblèmes par rangée, quatre dès 700 px. Une rangée incomplète se centre : un emblème seul à gauche laissait un
+   vide à sa droite (une, trois ou onze sœurs : 50 collections sur 121, relevé du 25/11/2026). */
 :root[data-refonte-page] .c-sujets-liste {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 22px 10px;
+  --colonnes: 2;
+  --ecart: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 22px var(--ecart);
   margin: 26px 0 0;
   padding: 0;
   list-style: none;
+}
+:root[data-refonte-page] .c-sujets-liste .c-emb {
+  flex: 0 0 calc((100% - (var(--colonnes) - 1) * var(--ecart)) / var(--colonnes));
+  min-width: 0;
+}
+@media (min-width: 700px) {
+  :root[data-refonte-page] .c-sujets-liste {
+    --colonnes: 4;
+  }
 }
 
 /* -- Le guide : une carte pêche, un <details> natif. Fermée, son résumé occupe toute la carte (un toucher n'importe
@@ -1193,9 +1213,14 @@
 :root[data-refonte-page] .c-guide-bouton {
   margin: 18px 0 24px;
 }
-/* Ouverte, la carte a son texte sous le bouton, à la distance de ce texte. */
+/* Ouverte, la carte a son texte sous le bouton, à la distance de ce texte, et garde une bande de sa couleur dessous.
+   C'est son espace à elle : la marge du texte passait sous la carte (overflow: clip ne retient pas les marges), et le
+   blanc du texte collait à son bord. */
 :root[data-refonte-page] .c-guide-carte[open] .c-guide-bouton {
   margin-bottom: 0;
+}
+:root[data-refonte-page] .c-guide-carte[open] {
+  padding-bottom: 12px;
 }
 :root[data-refonte-page] .c-guide-carte[open] .c-guide-ouvrir,
 :root[data-refonte-page] .c-guide-carte:not([open]) .c-guide-fermer {
@@ -1219,7 +1244,7 @@
 :root[data-refonte-page] .c-guide-corps {
   position: relative;
   z-index: 1;
-  margin: 22px 12px 12px;
+  margin: 22px 12px 0;
   padding: 22px 20px 6px;
   border-radius: 20px;
   background: var(--blanc);
@@ -1330,6 +1355,9 @@
 :root[data-refonte-page] .c-questions-reponse :is(p, ul, ol) {
   margin: 0 0 0.9em;
 }
+:root[data-refonte-page] .c-questions-reponse > :last-child {
+  margin-bottom: 0;
+}
 /* La carte ciel : « Une autre question ? », le bouton vers la page de contact, puis la Joconde au casque (le dessin
    de la fiche 3D : l'arceau corail, les écouteurs et le micro à l'encre) et sa bulle. */
 :root[data-refonte-page] .c-questions-aide {
@@ -1346,13 +1374,13 @@
   letter-spacing: -0.04em;
   color: var(--encre);
 }
-/* pretty : « 7. » ne reste pas seul sur sa ligne (le texte de la fiche 3D n'a pas les espaces insécables de la
-   maquette). */
+/* balance : deux lignes de même longueur ; « sur 7. » ne reste pas seul sur la sienne (le texte de la fiche 3D n'a pas
+   les espaces insécables de la maquette). */
 :root[data-refonte-page] .c-questions-aide-texte {
   max-width: 20em;
   margin: 10px 0 16px;
   font: 400 15px/1.5 var(--sans);
-  text-wrap: pretty;
+  text-wrap: balance;
   color: var(--encre-70);
 }
 :root[data-refonte-page] .c-questions-bas {
@@ -1400,8 +1428,18 @@
   font-size: 15px;
 }
 
-/* -- Ordinateur : plus d'air ; le couple plus grand, sa bulle à sa gauche ; les sœurs sur quatre colonnes ; le
-   guide sur deux colonnes ; les questions à droite du titre et de la carte ciel. -- */
+/* -- Tablette : la bulle de la Joconde à côté d'elle, et non à l'autre bout de la carte. -- */
+@media (min-width: 600px) and (max-width: 899px) {
+  :root[data-refonte-page] .c-questions-bas {
+    justify-content: flex-end;
+    gap: 14px;
+  }
+}
+
+/* -- Ordinateur : plus d'air ; le couple plus grand, sa bulle à sa gauche ; le guide sur deux colonnes ; les questions
+   à droite du titre et de la carte ciel. Jusqu'à 1200 px (iPad en paysage), deux colonnes égales, un titre et une
+   Joconde plus petits : dans la colonne étroite de la maquette, le titre prenait quatre lignes et la carte coupait la
+   Joconde (de 8 à 112 px selon la largeur et la langue, relevé du 25/11/2026). -- */
 @media (min-width: 900px) {
   :root[data-refonte-page] .c-sujets {
     padding-top: 100px;
@@ -1421,8 +1459,8 @@
     font-size: 17px;
   }
   :root[data-refonte-page] .c-sujets-liste {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 24px;
+    --ecart: 24px;
+    row-gap: 24px;
     margin-top: 64px;
   }
   :root[data-refonte-page] .c-guide {
@@ -1449,8 +1487,11 @@
     right: 12%;
     width: 128px;
   }
+  :root[data-refonte-page] .c-guide-carte[open] {
+    padding-bottom: 40px;
+  }
   :root[data-refonte-page] .c-guide-corps {
-    margin: 30px 40px 40px;
+    margin: 30px 40px 0;
     padding: 38px 48px 20px;
     columns: 2 340px;
     column-gap: 56px;
@@ -1464,10 +1505,13 @@
     padding-bottom: 110px;
   }
   :root[data-refonte-page] .c-questions-in {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: auto 1fr;
-    gap: 40px 90px;
+    gap: 40px 48px;
     align-items: start;
+  }
+  :root[data-refonte-page] .c-questions-titre {
+    font-size: clamp(44px, 4.6vw, 64px);
   }
   :root[data-refonte-page] .c-questions-tete {
     grid-column: 1;
@@ -1485,11 +1529,17 @@
     font-size: 40px;
   }
   :root[data-refonte-page] .c-questions-ecoute {
-    height: 300px;
+    height: clamp(208px, 23.4vw, 300px);
   }
   :root[data-refonte-page] .c-questions-bulle {
-    margin-bottom: 170px;
+    margin-bottom: clamp(118px, 13.3vw, 170px);
     font-size: 17px;
+  }
+}
+@media (min-width: 1200px) {
+  :root[data-refonte-page] .c-questions-in {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: 90px;
   }
 }
 
@@ -2388,6 +2438,11 @@
   overflow-wrap: anywhere;
   hyphens: auto;
 }
+/* Seul sur sa ligne, le sujet commence par une capitale (« best-seller », « indiens d'Amérique ») ; le titre que lit
+   Google ne bouge pas. */
+:root[data-refonte-page] .c-emb-nom::first-letter {
+  text-transform: uppercase;
+}
 /* La suite d'un très long titre (« Islamic Posters » se voit, « & Arabic Calligraphy Prints » non) : dans le lien, lue
    par Google et les lecteurs d'écran, sans place dans la page. */
 :root[data-refonte-page] .c-emb-reste {
@@ -2448,3 +2503,69 @@
 }
 
 /* === Les mots du titre et les modèles (ticket 09) : fin === */
+
+/* === Retouches avant la bascule (ticket 10) : début === */
+
+/* La jonction des questions et du pied de page (retour de Walid du 25/11/2026 : une seule couleur entre les deux).
+   Le pied de page du thème garde une marge au-dessus de lui (112 px, 192 px dès 1280 px ; input.css, .footer), où monte
+   sa vague (1470 × 89, toute la largeur, 8 px dans le pied) : entre la crème des questions et la menthe, elle laissait
+   une bande blanche. Quand les questions finissent la page, leur crème prend cette marge (marge négative de la même
+   valeur, posée ici des deux côtés) et va jusqu'à la vague, qui passe par-dessus ; sous leur carte, l'air qu'elles ont
+   au-dessus de leur titre. Une page qui finit sur du blanc (après la page 1, une collection sans guide) garde la marge :
+   tout y est blanc jusqu'à la vague. */
+:root[data-refonte-page] {
+  --pied-marge: 112px;
+  --vague: calc(100vw * 89 / 1470 - 8px);
+}
+@media (min-width: 1280px) {
+  :root[data-refonte-page] {
+    --pied-marge: 192px;
+  }
+}
+:root[data-refonte-page] #shopify-section-tw-footer {
+  margin-top: var(--pied-marge);
+}
+:root[data-refonte-page] #MainContent > :last-child > .c-questions {
+  margin-bottom: calc(-1 * var(--pied-marge));
+  padding-bottom: calc(60px + var(--vague));
+}
+@media (min-width: 900px) {
+  :root[data-refonte-page] #MainContent > :last-child > .c-questions {
+    padding-bottom: calc(104px + var(--vague));
+  }
+}
+
+/* Le pied de page sur les marges de la page : ses menus, son champ, ses réseaux, la devise et la langue, les paiements
+   commençaient à cinq endroits différents (72, 40, 64, 53 et 61 px à 390 px de large). Tous partent du bord des
+   sections, et finissent au leur sur ordinateur. Son fichier (sections/tw-footer.liquid) ne change pas : le premier
+   bloc est celui des menus, le dernier celui des sélecteurs et des paiements. */
+:root[data-refonte-page] #shopify-section-tw-footer footer-logic > div {
+  max-width: calc(1240px + var(--gout) + var(--goutd));
+  padding: 44px var(--goutd) 0 var(--gout);
+}
+:root[data-refonte-page] #shopify-section-tw-footer footer-logic > div > div:first-child,
+:root[data-refonte-page] #shopify-section-tw-footer footer-logic > div > div:last-child > div:first-child,
+:root[data-refonte-page] #shopify-section-tw-footer footer-logic > div > div > div > ul,
+:root[data-refonte-page] #shopify-section-tw-footer localization-form p {
+  padding-inline: 0;
+}
+:root[data-refonte-page] #shopify-section-tw-footer footer-logic > div > div:last-child > div:first-child,
+:root[data-refonte-page] #shopify-section-tw-footer footer-logic > div > div:last-child > div > ul {
+  justify-content: flex-start;
+}
+@media (min-width: 640px) {
+  :root[data-refonte-page] #shopify-section-tw-footer footer-logic > div > div:last-child {
+    align-items: flex-end;
+    column-gap: 40px;
+  }
+  :root[data-refonte-page] #shopify-section-tw-footer footer-logic > div > div:last-child > div:first-child {
+    flex: none;
+    flex-wrap: nowrap;
+    margin-bottom: 0;
+  }
+  :root[data-refonte-page] #shopify-section-tw-footer footer-logic > div > div:last-child > div > ul {
+    justify-content: flex-end;
+  }
+}
+
+/* === Retouches avant la bascule (ticket 10) : fin === */

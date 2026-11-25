@@ -9,10 +9,14 @@
   propose (même règle que snippets/card-product.liquid). Toile ou poster : la règle unique des œuvres, snippet
   artwork-kind. L'œuvre à plat : snippet artwork-flat-index, la 1re image d'un nouveau produit (modèle oeuvre-3d), la
   2e de tout autre produit, celle que Google lit dans la liste ItemList de la page.
+  Un poster personnalisé (modèles personalized…) n'a pas de fiche d'œuvre, donc pas d'artwork-kind, mais c'est un
+  poster (métachamp artwork.type) : il prend la carte des posters, sans quoi l'ancienne carte se mêlait aux nouvelles
+  sur huit collections de posters (25/11/2026). Son œuvre à plat est sa 2e image, comme pour tout produit de toujours,
+  ou sa 1re quand elle n'est pas carrée (ses mises en scène le sont toutes).
   Dessous : le nom court (métachamp title.short, à défaut le titre), le titre entier pour les lecteurs d'écran, le plus
   bas prix, « Dès 62,50 € », et le cœur. Le lien du nom couvre toute la carte.
 
-  Règle de repli : un produit qui n'est pas une œuvre (artwork-kind vide : tapisserie, personnalisé, carte cadeau…) ou
+  Règle de repli : un produit qui n'est pas une œuvre (tapisserie, carte cadeau…) ou
   dont l'œuvre à plat manque (pas d'image à son index) garde la carte d'aujourd'hui (snippets/card-product.liquid),
   dans la même case de la grille.
 
@@ -35,6 +39,12 @@
     render 'artwork-flat-index', product: product
   endcapture
   assign flat_index = flat_index | plus: 0
+  if kind == blank and product.metafields.artwork.type.value == 'poster'
+    assign kind = 'poster'
+    if product.images[0].aspect_ratio < 0.9
+      assign flat_index = 0
+    endif
+  endif
   assign flat = product.images[flat_index]
 -%}
 {%- if kind != blank and flat -%}
@@ -71,7 +81,7 @@
     assign prix = product.price_min | money
   -%}
   <li class="refonte-carte">
-    {%- render 'artwork-object', product: product, image: flat, kind: kind, frame: frame, contour: contour, context: 'carte', lazy: lazy, sizes: sizes -%}
+    {%- render 'artwork-object', product: product, image: flat, image_index: flat_index, kind: kind, frame: frame, contour: contour, context: 'carte', lazy: lazy, sizes: sizes -%}
     {%- if kind == 'poster' -%}
       {%- comment -%} Le reflet qui passe sur la vitre, là où le CSS seul ne sait pas le faire : un module, une seule exécution par page. {%- endcomment -%}
       <script type="module" src="{{ 'oeuvre-card-reflet.js' | asset_url }}"></script>

@@ -84,7 +84,8 @@ test('vignette : dans la carte, la face porte .skeleton et contient l’image el
 
 test('vignette : texte alternatif de l’œuvre à plat, à son index (snippet artwork-flat-index : 0 pour un nouveau produit)', () => {
   const { object } = objectCard()
-  assert.match(object, /capture flat_index\s+render 'artwork-flat-index', product: product\s+endcapture\s+assign flat_index = flat_index \| plus: 0/)
+  // L'index de celui qui a choisi l'image (image_index : un poster personnalisé, snippets/collection-carte.liquid), sinon le sien.
+  assert.match(object, /capture flat_index\s+render 'artwork-flat-index', product: product\s+endcapture\s+assign flat_index = image_index \| default: flat_index \| plus: 0/)
   assert.match(object, /{% if product\.metafields\.meta_object\.media\.value\.alts\.value\[flat_index\] %}{{ product\.metafields\.meta_object\.media\.value\.alts\.value\[flat_index\] \| escape }}{% else %}{{ image\.alt \| escape }}{% endif %}/)
   const imgs = object.match(/<img[\s\S]*?>/g)
   assert.equal(imgs.length, 4, 'carte (eager, lazy), photo studio et panier')

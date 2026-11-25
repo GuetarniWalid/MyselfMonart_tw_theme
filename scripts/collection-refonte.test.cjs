@@ -10,7 +10,7 @@ const test = require('node:test')
 const assert = require('node:assert/strict')
 const fs = require('fs')
 const path = require('path')
-const { ROOT, read, json, schemaOf, rules, blocs, SKIP, engine, renderSectionFile } = require('./galerie-banc.cjs')
+const { ROOT, read, json, schemaOf, rules, blocs, modeleNouvellePage, SKIP, engine, renderSectionFile } = require('./galerie-banc.cjs')
 
 const LAYOUT = 'layout/collection.liquid'
 const AVANT = 'scripts/fixtures/layout-collection.avant-refonte.liquid'
@@ -193,6 +193,12 @@ const HOOK = ':root[data-refonte-page]'
 const LARGE = '@media (min-width: 900px)'
 const sheet = (file = CSS) => rules(read(file).replace(/\/\*[\s\S]*?\*\//g, ''))
 const tight = (body) => body.replace(/\s+/g, ' ').trim()
+// Les règles du bloc d'un ticket (repères vérifiés par paires : scripts/galerie-banc.cjs).
+function blocDe(ticket) {
+  const marques = blocs(CSS).filter((m) => m.ticket === ticket)
+  assert.equal(marques.length, 2, `le bloc du ticket ${ticket}`)
+  return rules(read(CSS).slice(marques[0].end, marques[1].start).replace(/\/\*[\s\S]*?\*\//g, ''))
+}
 // Les sélecteurs d'une règle : coupés aux virgules de premier niveau, pas à celles d'un :is(…) ou d'un :has(…).
 function selecteurs(head) {
   const out = ['']
@@ -275,12 +281,57 @@ test('la feuille : aucune couleur ne s’écrit hors de ses variables', () => {
 })
 
 test('la feuille : le bandeau d’annonce pêche et le pied de page menthe, les règles de la fiche 3D', () => {
-  // Les règles du bandeau et du pied de page de la fiche 3D, dans leur ordre, chacune à la marque de cette page.
+  // Les règles du bandeau et du pied de page de la fiche 3D, dans leur ordre, chacune à la marque de cette page : celles du
+  // socle (le bloc du ticket 10 pose ensuite le pied de page sur les marges de cette page-ci).
   const AUTOUR = /#shopify-section-tw-(announcement-bar|footer)\b/
-  const own = sheet().filter((r) => AUTOUR.test(r.head)).map((r) => [r.context.join(' / '), r.head, tight(r.body)])
+  const own = blocDe('01').filter((r) => AUTOUR.test(r.head)).map((r) => [r.context.join(' / '), r.head, tight(r.body)])
   const galerie = sheet(GALERIE).filter((r) => AUTOUR.test(r.head)).map((r) => [r.context.join(' / '), r.head.replaceAll(':root[data-galerie-page]', HOOK), tight(r.body)])
   assert.ok(galerie.length >= 10, 'les règles de la fiche 3D')
   assert.deepEqual(own, galerie)
+})
+
+/* Retour de Walid du 25/11/2026 : entre les questions (crème) et le pied de page (menthe), une seule couleur. La marge que
+   le thème garde au-dessus de son pied de page y laissait une bande blanche. */
+test('la feuille : des questions au pied de page, une seule couleur ; la marge du thème et la vague sont celles du thème', () => {
+  const bloc = blocDe('10')
+  const regle = (head, context = '') => bloc.find((r) => r.head === head && r.context.join() === context)
+  // La marge du pied de page est celle du thème (mt-28 : 112 px, xl:mt-48 : 192 px dès 1280 px), posée ici pour que la
+  // marge négative des questions soit toujours la même.
+  const footer = /\.footer \{\s*@apply ([^;]+);/.exec(read('input.css'))[1]
+  assert.match(footer, /(^|\s)mt-28(\s|$)/)
+  assert.match(footer, /(^|\s)xl:mt-48(\s|$)/)
+  assert.match(regle(HOOK).body, /--pied-marge: 112px;/)
+  assert.match(regle(HOOK, '@media (min-width: 1280px)').body, /--pied-marge: 192px;/)
+  assert.match(regle(`${HOOK} #shopify-section-tw-footer`).body, /margin-top: var\(--pied-marge\);/)
+  // Les questions, quand elles finissent la page, prennent cette marge ; l'air sous leur carte, puis la vague.
+  const FIN = `${HOOK} #MainContent > :last-child > .c-questions`
+  assert.match(regle(FIN).body, /margin-bottom: calc\(-1 \* var\(--pied-marge\)\);\s*padding-bottom: calc\(60px \+ var\(--vague\)\);/)
+  assert.match(regle(FIN, LARGE).body, /padding-bottom: calc\(104px \+ var\(--vague\)\);/)
+  // La vague : toute la largeur, 1470 × 89, 8 px dans le pied (top-2).
+  assert.match(regle(HOOK).body, /--vague: calc\(100vw \* 89 \/ 1470 - 8px\);/)
+  assert.match(read('sections/tw-footer.liquid'), /<svg class="absolute top-2 right-0 left-0 -translate-y-full w-full"[^>]*viewBox="0 0 1470 89"/)
+  // Le gabarit ne met rien après les sections de la page : « la dernière » est bien la section des questions, qui finit
+  // chacun des modèles de la nouvelle page.
+  assert.match(read('layout/collection.liquid'), /\{\{ content_for_layout \}\}\s*<\/main>\s*\{% section 'tw-footer' %\}/)
+  const modeles = fs.readdirSync(path.join(ROOT, 'templates')).filter(modeleNouvellePage)
+  assert.ok(modeles.length >= 19, `${modeles.length} modèles`)
+  for (const file of modeles) {
+    const modele = json(`templates/${file}`)
+    assert.equal(modele.sections[modele.order.at(-1)].type, 'collection-questions', file)
+  }
+})
+
+test('la feuille : le pied de page sur les marges de la page ; ses blocs sont ceux que la feuille vise', () => {
+  const bloc = blocDe('10')
+  const PIED = `${HOOK} #shopify-section-tw-footer footer-logic > div`
+  const boite = bloc.find((r) => r.head === PIED)
+  assert.match(boite.body, /max-width: calc\(1240px \+ var\(--gout\) \+ var\(--goutd\)\);\s*padding: 44px var\(--goutd\) 0 var\(--gout\);/)
+  // Le pied de page du thème : dans sa boîte, d'abord les menus, en dernier les sélecteurs puis les paiements.
+  const pied = read('sections/tw-footer.liquid').replace(/{%-?\s*comment[\s\S]*?endcomment\s*-?%}/g, '')
+  const dans = pied.slice(pied.indexOf('</svg>') + 6, pied.indexOf('</footer-logic>'))
+  assert.match(dans, /^\s*<div class="[^"]*max-w-7xl[^"]*">\s*(?:{%[^%]*%}\s*)*<div class="[^"]*px-8">\s*(?:{%[^%]*%}\s*)*<nav>/)
+  const fin = dans.slice(dans.lastIndexOf('<div class="sm:flex'))
+  assert.match(fin, /^<div class="sm:flex sm:justify-between sm:items-center sm:mx-auto">\s*<div class="[^"]*justify-center mb-8 px-3">[\s\S]*<localization-form[\s\S]*<\/localization-form>[\s\S]*<ul class="flex justify-center flex-wrap gap-2 px-3" role="list">/)
 })
 
 test('la feuille : le corps de la page passe en Albert Sans, l’en-tête et le menu gardent leur police', () => {

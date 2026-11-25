@@ -652,10 +652,15 @@ test('la feuille : un bloc à part pour le ticket 08, où chaque classe des troi
   for (const name of classes) assert.match(heads, new RegExp(`\\.${name}(?![\\w-])`), name)
 })
 
-test('la feuille : les sœurs sur deux colonnes, quatre sur ordinateur, en ronds de 104 et 136 px ; rien ne dépasse de la page', () => {
+test('la feuille : les sœurs par deux, par quatre dès 700 px, une rangée incomplète centrée, en ronds de 104 et 136 px ; rien ne dépasse de la page', () => {
   const bloc = monBloc()
-  assert.match(regle(bloc, `${H} .c-sujets-liste`).body, /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\);/)
-  assert.match(regle(bloc, `${H} .c-sujets-liste`, [LARGE]).body, /grid-template-columns: repeat\(4, minmax\(0, 1fr\)\);/)
+  const liste = regle(bloc, `${H} .c-sujets-liste`).body
+  assert.match(liste, /--colonnes: 2;/)
+  assert.match(liste, /display: flex;\s*flex-wrap: wrap;\s*justify-content: center;/)
+  assert.match(regle(bloc, `${H} .c-sujets-liste`, ['@media (min-width: 700px)']).body, /--colonnes: 4;/)
+  // Chaque sœur a la largeur d'une colonne, écarts compris : une rangée pleine fait toute la largeur, jamais plus.
+  assert.match(regle(bloc, `${H} .c-sujets-liste .c-emb`).body, /flex: 0 0 calc\(\(100% - \(var\(--colonnes\) - 1\) \* var\(--ecart\)\) \/ var\(--colonnes\)\);\s*min-width: 0;/)
+  assert.match(regle(bloc, `${H} .c-sujets-liste`, [LARGE]).body, /--ecart: 24px;/)
   // Les ronds du bas : ceux du ticket 03 (data-taille="bas"), 104 px puis 136 px.
   const d = (context) => Number(/--d:\s*(\d+)px;/.exec(rules(read(CSS).replace(/\/\*[\s\S]*?\*\//g, '')).find((r) => r.head === `${H} .c-emb[data-taille="bas"]` && r.context.join(' / ') === context.join(' / ')).body)[1])
   assert.deepEqual([d([]), d([LARGE])], [104, 136])
@@ -663,6 +668,31 @@ test('la feuille : les sœurs sur deux colonnes, quatre sur ordinateur, en ronds
   assert.match(regle(bloc, `${H} .c-sujets`).body, /overflow-x: clip;/)
   assert.match(regle(bloc, `${H} .c-guide-carte`).body, /overflow: clip;/)
   assert.match(regle(bloc, `${H} .c-questions-aide`).body, /overflow: clip;/)
+})
+
+test('la feuille : le guide ouvert garde une bande de sa carte sous le texte ; une réponse ouverte n’a pas deux marges', () => {
+  const bloc = monBloc()
+  // La marge du bas du texte passerait sous la carte (overflow: clip ne retient pas les marges) : c'est l'espace de la carte.
+  assert.match(regle(bloc, `${H} .c-guide-corps`).body, /margin: 22px 12px 0;/)
+  assert.match(regle(bloc, `${H} .c-guide-carte[open]`).body, /padding-bottom: 12px;/)
+  assert.match(regle(bloc, `${H} .c-guide-corps`, [LARGE]).body, /margin: 30px 40px 0;/)
+  assert.match(regle(bloc, `${H} .c-guide-carte[open]`, [LARGE]).body, /padding-bottom: 40px;/)
+  assert.match(regle(bloc, `${H} .c-questions-reponse > :last-child`).body, /margin-bottom: 0;/)
+})
+
+test('la feuille : la Joconde tient dans sa carte à côté de sa bulle, de 900 px à l’ordinateur', () => {
+  const bloc = monBloc()
+  // Deux colonnes égales jusqu'à 1200 px, celles de la maquette au-delà ; la Joconde grandit avec l'écran, jusqu'à 300 px.
+  assert.match(regle(bloc, `${H} .c-questions-in`, [LARGE]).body, /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\);/)
+  assert.match(regle(bloc, `${H} .c-questions-in`, ['@media (min-width: 1200px)']).body, /grid-template-columns: minmax\(0, 5fr\) minmax\(0, 7fr\);\s*column-gap: 90px;/)
+  assert.match(regle(bloc, `${H} .c-questions-ecoute`, [LARGE]).body, /height: clamp\(208px, 23\.4vw, 300px\);/)
+  // La bulle la plus large (159 px, en allemand), l'écart, la Joconde (572 × 810) : entre les marges de la carte (34 px), à
+  // 8 px près (en allemand, vers 1200 px).
+  for (const large of [900, 1024, 1080, 1180, 1199, 1200, 1280, 1440]) {
+    const colonne = large < 1200 ? (large - 96 - 48) / 2 : (Math.min(large - 96, 1240) - 90) * 5 / 12
+    const joconde = Math.min(300, Math.max(208, 0.234 * large)) * 572 / 810
+    assert.ok(159 + 4 + joconde <= colonne - 68 + 8, `${large} px : ${Math.round(159 + 4 + joconde)} dans ${Math.round(colonne - 68)}`)
+  }
 })
 
 test('la feuille : le couple arrive de la droite et sa bulle s’ouvre, le voyageur avance, la Joconde surgit ; jamais en « mouvements réduits »', () => {

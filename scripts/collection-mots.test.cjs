@@ -409,6 +409,8 @@ test('la feuille : sous l’emblème, le début et la fin sur la ligne du haut, 
   assert.match(lien, /flex-wrap:\s*wrap;/)
   assert.match(lien, /justify-content:\s*center;/)
   const nom = regle('.c-emb-nom')
+  // Seul sur sa ligne, le sujet commence par une capitale ; le titre du lien ne bouge pas.
+  assert.match(regle('.c-emb-nom::first-letter'), /text-transform: uppercase;/)
   assert.match(nom, /order:\s*1;/)
   assert.match(nom, /flex-basis:\s*100%;/)
   // Un mot trop long pour la colonne (« Erwachsenenschlafzimmerbild ») se coupe au lieu de déborder.
@@ -432,5 +434,5 @@ test('la feuille : sous l’emblème, le début et la fin sur la ligne du haut, 
   // Un mot de plus de 20 lettres, seul, se coupe selon la langue.
   assert.match(regle('.c-sous .c-emb[data-mot="tres-long"] .c-emb-nom'), /hyphens:\s*auto;/)
   // Rien d'autre ne bouge que l'ordre : aucun mouvement dans ce bloc.
-  for (const r of bloc) assert.doesNotMatch(r.body, /(transition|animation|transform)\s*:/, r.head)
+  for (const r of bloc) assert.doesNotMatch(r.body, /(?<![\w-])(transition|animation|transform)\s*:/, r.head)
 })

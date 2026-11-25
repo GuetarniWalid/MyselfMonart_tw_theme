@@ -24,6 +24,9 @@
       'panier' (page panier, case de 120 px) ou 'studio' (la photo studio : 1000 px de CSS, prise en 2x)
     - lazy: {Boolean} image différée. Carte : image floue puis srcset (lqip, assets/tw-global.js), sinon
       prioritaire ; panier : loading="lazy", sinon eager. Différée si absent. Photo studio : jamais.
+    - image_index: {Number} la place de l'image dans product.images, quand celui qui rend l'œuvre l'a choisie lui-même
+      (snippets/collection-carte.liquid) : son texte alternatif est celui de cette place. Sans lui, artwork-flat-index.
+      Facultatif.
     - sizes: {String} carte : l'attribut sizes de l'œuvre, selon la grille qui la montre (la grille de la nouvelle page
       collection, snippets/collection-carte.liquid). Sans lui, celui de la grille .product-grid des collections
       d'aujourd'hui. Facultatif.
@@ -47,7 +50,7 @@
   capture flat_index
     render 'artwork-flat-index', product: product
   endcapture
-  assign flat_index = flat_index | plus: 0
+  assign flat_index = image_index | default: flat_index | plus: 0
   case context
     when 'carte'
       # L'œuvre n'occupe qu'une partie de la carte : 80 % de sa largeur au plus (toile, poster sans contour

@@ -147,6 +147,35 @@ test('la carte d’un poster : sous verre, au cadre noir, avec son contour blanc
   assert.ok(attr(imgs(await carte(nouveauPoster()))[0], 'data-srcset').startsWith(`${FILES}poster-superman-oeuvre.jpg?v=1&width=200 200w,`))
 })
 
+/* Les posters personnalisés (modèles personalized…) n'ont pas de fiche d'œuvre : l'ancienne carte se mêlait aux nouvelles
+   sur huit collections de posters (relevé du 25/11/2026 : 18 produits, les seuls). Leur métachamp artwork.type dit poster. */
+const posterPerso = (files, type = 'poster') => {
+  const p = produit({ handle: 'cancer-horoscope-cadeau-personnalise-bebe', title: 'CANCER Horoscope - Cadeau Personnalisé Bébé', suffix: 'personalized-baby', short: 'Naissance sous les étoiles', price: 3990, files })
+  p.metafields.artwork = { type: { value: type } }
+  p.metafields.meta_object = { media: { value: { alts: { value: p.images.map((img, i) => `Texte de l'image ${i + 1}`) } } } }
+  return p
+}
+test('un poster personnalisé : la carte des posters, son œuvre à plat sous verre ; sa 2e image, ou la 1re si elle n’est pas carrée', { skip: SKIP }, async () => {
+  const p = posterPerso([['mise-en-scene.jpg', 1588, 1588], ['oeuvre-a-plat.jpg', 1440, 1920], ['poster-vierge.jpg', 2400, 2400]])
+  const html = (await carte(p)).trim()
+  assert.match(html, /^<li class="refonte-carte">/)
+  assert.match(html, /<div\s+class="oeuvre-card no-contour"\s+data-kind="poster" data-look="verre" data-frame="noir"\s+style="--r: 0\.75">/)
+  assert.ok(attr(imgs(html)[0], 'data-srcset').startsWith(`${FILES}oeuvre-a-plat.jpg?v=1&width=200 200w,`))
+  assert.match(texte(html), /^Naissance sous les étoiles, CANCER Horoscope - Cadeau Personnalisé Bébé Dès 39,90 €$/)
+  // Son texte alternatif est celui de l'image montrée.
+  assert.equal(unescape(attr(imgs(html)[0], 'alt')), "Texte de l'image 2")
+  // Le poster de foot : quatre œuvres à plat, la 1re est celle de la fiche (« votre enfant »).
+  const foot = await carte(posterPerso([['enfant.jpg', 896, 1200], ['papa.jpg', 896, 1200], ['ado.jpg', 896, 1200]]))
+  assert.ok(attr(imgs(foot)[0], 'data-srcset').startsWith(`${FILES}enfant.jpg?v=1&width=200 200w,`))
+  assert.equal(unescape(attr(imgs(foot)[0], 'alt')), "Texte de l'image 1")
+  // Seulement un poster : une tapisserie personnalisée garde sa carte.
+  assert.match((await carte(posterPerso([['tapisserie.jpg', 1588, 1588], ['tapisserie-2.jpg', 1440, 1920]], 'tapestry'))).trim(), /^<li class="refonte-carte refonte-carte-repli">/)
+})
+
+test('la carte garde chez elle ce qui passe devant elle : son cœur ne passe pas par-dessus la ligne des filtres', () => {
+  assert.match(regle(blocCss(), ':root[data-refonte-page] .refonte-carte').body, /isolation: isolate;/)
+})
+
 test('repli : un produit sans œuvre à plat, ou qui n’est pas une œuvre, garde la carte d’aujourd’hui', { skip: SKIP }, async () => {
   const tapisserie = { ...ancienneToile(), template_suffix: 'tapestry' }
   for (const p of [sansOeuvre(), tapisserie]) {
