@@ -449,7 +449,7 @@
         "pull_quote": "",
         "pull_quote_attribution": "",
         "divider_symbol": "✦",
-        "paragraph_2": "<p>Le fichier source, déjà retouché par notre direction artistique, part vers notre atelier d'impression européen.</p><p>La toile est imprimée à la demande, jamais en lot. Vos couleurs sont calibrées sur votre format précis.</p><p>Elle est ensuite tendue à la main sur un châssis bois massif, vérifiée œuvre par œuvre.</p><p>Puis livrée prête à accrocher, dans un emballage qui protège les angles — la partie la plus fragile d'un tableau tendu.</p>",
+        "paragraph_2": "<p>Le fichier source, déjà retouché par notre direction artistique, part vers notre atelier d'impression européen.</p><p>La toile est imprimée à la demande, jamais en lot. Vos couleurs sont calibrées sur votre format précis.</p><p>Elle est ensuite tendue à la main sur un châssis bois massif, vérifiée œuvre par œuvre.</p><p>Puis livrée avec soin, dans un emballage qui protège les angles — la partie la plus fragile d'un tableau tendu.</p>",
         "show_ornament": false,
         "ornament_symbol": "❋",
         "closing_signature": "Comptez quelques jours de production en plus du transport. C'est le prix d'une œuvre qui n'aura jamais vécu en stock.",
@@ -766,7 +766,7 @@
           "settings": {
             "heading": "Toile ou poster : lequel choisir ?",
             "icon": "none",
-            "row_content": "<p>Les deux formats portent le même art, sélectionné et retouché à la main par notre studio. C'est la matière et l'intention qui changent :</p><ul><li><strong>La toile</strong> est une pièce maîtresse : imprimée sur une toile de 285 g/m², tendue sur un cadre en bois massif, <strong>prête à accrocher</strong> et pensée pour durer. Idéale pour un salon, une chambre ou un bureau que l'on installe pour longtemps.</li><li><strong>Le poster (ou l'affiche)</strong> est un <strong>format papier léger</strong>, à encadrer soi-même et à renouveler au gré des envies. Parfait pour un petit budget, une entrée, une chambre d'ado ou un bureau, et pour composer un mur-galerie que l'on fait évoluer.</li></ul><p>Beaucoup commencent par l'affiche pour tester un univers, puis adoptent la toile pour la pièce qu'ils veulent vraiment ancrer.</p>"
+            "row_content": "<p>Les deux formats portent le même art, sélectionné et retouché à la main par notre studio. C'est la matière et l'intention qui changent :</p><ul><li><strong>La toile</strong> est une pièce maîtresse : imprimée sur une toile de 285 g/m², tendue sur un cadre en bois massif, <strong>prête à accrocher avec notre kit</strong> et pensée pour durer. Idéale pour un salon, une chambre ou un bureau que l'on installe pour longtemps.</li><li><strong>Le poster (ou l'affiche)</strong> est un <strong>format papier léger</strong>, à encadrer soi-même et à renouveler au gré des envies. Parfait pour un petit budget, une entrée, une chambre d'ado ou un bureau, et pour composer un mur-galerie que l'on fait évoluer.</li></ul><p>Beaucoup commencent par l'affiche pour tester un univers, puis adoptent la toile pour la pièce qu'ils veulent vraiment ancrer.</p>"
           }
         },
         "faq_bascule": {
