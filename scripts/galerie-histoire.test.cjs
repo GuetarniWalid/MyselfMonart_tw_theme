@@ -446,7 +446,7 @@ const gagesOf = (html) => {
 
 test('rendu des engagements : quatre lignes, celles de la toile ou celles du poster, avec les dessins de la maquette', { skip: SKIP }, async () => {
   assert.deepEqual(gagesOf(await render(TOILE)), [
-    ['cadre', 'Prête à accrocher', 'Livrée montée sur son châssis.'],
+    ['cadre', 'Montée sur châssis', 'Kit d’accrochage en option.'],
     ['couleurs', 'Couleurs fidèles', 'Riches, nettes, garanties 75 ans.'],
     ['trame', 'Vraie toile d’art', 'Un grain délicat, doux au toucher.'],
     ['bulle', 'Une vraie personne', 'Vous répond 7 jours sur 7.'],
@@ -494,10 +494,10 @@ test('textes fixes : sous sections.mma.galerie.histoire, les mêmes clés dans l
 
 test('rendu dans chaque langue : les textes fixes de la section sont traduits', { skip: SKIP }, async () => {
   const EXPECTED = {
-    en: { story: 'The story', more: 'Read more', less: 'Show less', title: 'Everything you <b>need to know</b>', hang: 'Ready to hang', paper: 'Real photo paper' },
-    de: { story: 'Die Geschichte', more: 'Weiterlesen', less: 'Weniger anzeigen', title: 'Alles, was Sie <b>wissen müssen</b>', hang: 'Fertig zum Aufhängen', paper: 'Echtes Fotopapier' },
-    es: { story: 'La historia', more: 'Leer más', less: 'Ver menos', title: 'Todo lo que <b>hay que saber</b>', hang: 'Listo para colgar', paper: 'Auténtico papel fotográfico' },
-    nl: { story: 'Het verhaal', more: 'Verder lezen', less: 'Minder tonen', title: 'Alles wat je <b>moet weten</b>', hang: 'Klaar om op te hangen', paper: 'Echt fotopapier' },
+    en: { story: 'The story', more: 'Read more', less: 'Show less', title: 'Everything you <b>need to know</b>', hang: 'Mounted on a stretcher', paper: 'Real photo paper' },
+    de: { story: 'Die Geschichte', more: 'Weiterlesen', less: 'Weniger anzeigen', title: 'Alles, was Sie <b>wissen müssen</b>', hang: 'Auf Keilrahmen gespannt', paper: 'Echtes Fotopapier' },
+    es: { story: 'La historia', more: 'Leer más', less: 'Ver menos', title: 'Todo lo que <b>hay que saber</b>', hang: 'Montado en bastidor', paper: 'Auténtico papel fotográfico' },
+    nl: { story: 'Het verhaal', more: 'Verder lezen', less: 'Minder tonen', title: 'Alles wat je <b>moet weten</b>', hang: 'Op spieraam gespannen', paper: 'Echt fotopapier' },
   }
   for (const [lang, expected] of Object.entries(EXPECTED)) {
     const toile = await render(TOILE, { lang })
