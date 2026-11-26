@@ -211,7 +211,7 @@ test('la barre : le bouton du téléphone, le logo et son nom, la bascule, la re
     assert.match(loupe[2], new RegExp(`<span class="menu-ordi-mot" aria-hidden="true">${mot}</span>`), lang)
   }
   // Vides, la pastille et le voile ne se cachent pas (input.css cache tout élément vide sans data-allow-empty).
-  assert.match(html, /<\/div>\s*<div class="menu-ordi-voile" hidden data-allow-empty><\/div>/)
+  assert.match(html, /<\/div>\s*<div class="menu-ordi-voile" data-allow-empty><\/div>/)
   assert.match(html, /<span class="menu-ordi-pastille" aria-hidden="true" data-allow-empty><\/span>/)
   // Hors de la vue de test, rien de tout cela.
   for (const page of [{ name: 'index', suffix: null, collection: null }, { suffix: null }, { suffix: 'tableau-salon' }]) {
@@ -301,13 +301,14 @@ test('la feuille : le mouvement, seulement sans « mouvements réduits » ; le r
   assert.ok(corps(':root .menu-ordi-barre .menu-tel[data-ordi="ouvert"]', mouvement).includes(`transition: clip-path 0.45s ${COURBE};`))
   assert.match(corps(':root .menu-ordi-barre .menu-tel'), /clip-path: inset\(0 0 100% 0\);/)
   assert.match(corps(':root .menu-ordi-barre .menu-tel[data-ordi="ouvert"]'), /clip-path: inset\(0\);/)
-  // Le voile : il arrive en 0,3 s, s'efface avec le rideau (0,24 s) ; le flou de 6 px.
+  // Le voile : il arrive en 0,3 s, s'efface avec le rideau (0,24 s), puis se cache ; le flou de 6 px.
   const voile = corps('.menu-ordi-voile', mouvement)
-  assert.match(voile, /transition: opacity 0.24s ease;/)
+  assert.match(voile, /transition: opacity 0.24s ease, visibility 0s linear 0.24s;/)
   assert.match(voile, /backdrop-filter: blur\(6px\);/)
-  assert.match(corps('.menu-ordi-voile[data-vu]', mouvement), /transition: opacity 0.3s ease;/)
-  // Prêt et fermé, le panneau est caché (ni lu, ni atteint au clavier).
-  assert.match(corps(':root .menu-ordi-barre .menu-tel[data-ordi="repos"]'), /visibility: hidden;/)
+  assert.match(corps('.menu-ordi-voile[data-vu]', mouvement), /transition: opacity 0.3s ease, visibility 0s;/)
+  // Prêt et fermé, le panneau est caché (ni vu, ni lu, ni atteint au clavier), son contenu gardé tel quel.
+  assert.match(corps(':root .menu-ordi-barre .menu-tel[data-ordi="repos"]', (c) => !c.includes('@supports')), /content-visibility: hidden;/)
+  assert.match(corps(':root .menu-ordi-barre .menu-tel[data-ordi="repos"]', (c) => c.includes('@supports not')), /visibility: hidden;/)
   // Les vagues : le contenu monte de 8 px ; les rangées à 35 ms l'une de l'autre, les emblèmes à 12 ms ; tout fini avant
   // 0,6 s, le plus long retard compris.
   assert.match(REGLES.find((r) => r.head === '@keyframes menu-ordi-monte').body, /from \{ opacity: 0; translate: 0 8px; \}/)
@@ -325,10 +326,12 @@ test('la feuille : les emblèmes, à la plus grande taille entre 44 et 66 px où
   // Une formule : la hauteur sous l'en-tête (40 px de la page restent en vue), la largeur de l'écran, le nombre de rangées
   // et d'emblèmes de la plus longue rangée (posés par le script).
   assert.match(panneau, /--emb: clamp\(44px, min\(var\(--emb-h\), var\(--emb-l\)\), 66px\);/)
-  assert.match(panneau, /--emb-h: calc\(\(100dvh - var\(--menu-haut, 123px\) - 40px/)
-  assert.match(panneau, /var\(--rangees, 5\)/)
-  assert.match(panneau, /--emb-l: calc\(\(100cqw/)
-  assert.match(panneau, /var\(--colonnes, 7\)/)
+  assert.match(panneau, /--emb-h: calc\(\(100dvh - var\(--menu-haut, 123px\) - 40px - var\(--fixe, 302px\)\) \/ \(1\.3 \* var\(--rangees, 5\)\)\);/)
+  assert.match(panneau, /--rangee-l: calc\(100cqw /)
+  assert.match(panneau, /--emb-l: calc\(\(var\(--rangee-l\) - var\(--colonnes, 7\)/)
+  // Ce que le script mesure et pose sur le panneau.
+  const script = read('assets/tw-header.js')
+  for (const nom of ['--fixe', '--rangees', '--colonnes', '--menu-haut']) assert.ok(script.includes(`'${nom}'`), nom)
 })
 
 test('le téléphone : quatre onglets, comme trois', () => {

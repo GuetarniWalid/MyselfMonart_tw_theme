@@ -376,6 +376,7 @@ class MenuOrdinateur {
     this.voile = stickyHeader.querySelector('.menu-ordi-voile');
     this.pastille = nav.querySelector('.menu-ordi-pastille');
     this.boutons = [...nav.querySelectorAll('.menu-ordi-rayon')];
+    this.rayons = [...this.menu.querySelectorAll('.menu-tel-rayon')];
     this.ordinateur = window.matchMedia('(min-width: 768px)');
     this.reduit = window.matchMedia('(prefers-reduced-motion: reduce)');
     const courant = this.boutons.findIndex((b) => b.getAttribute('aria-current') === 'true') + 1;
@@ -385,6 +386,7 @@ class MenuOrdinateur {
     this.pointeur = 'mouse';
     this.posee = null;
     this.changement = null;
+    this.charges = new Set();
 
     // La souris, le toucher, le clavier sur les rayons.
     nav.addEventListener('pointerdown', (e) => (this.pointeur = e.pointerType), true);
@@ -398,9 +400,14 @@ class MenuOrdinateur {
       });
       bouton.addEventListener('keydown', (e) => this.clavier(e, rayon));
     });
-    // La souris dans l'en-tête et le panneau (qui est dedans) ; le focus dans la bascule et le panneau.
-    this.barre.addEventListener('pointerenter', (e) => e.pointerType === 'mouse' && this.geste({ type: 'zone-entre' }));
+    // La souris dans l'en-tête et le panneau (qui est dedans) ; le focus dans la bascule et le panneau. Qui s'en approche
+    // (la souris, le doigt, le clavier) fait venir les images de tous les rayons.
+    this.barre.addEventListener('pointerenter', (e) => {
+      this.chargerTout();
+      if (e.pointerType === 'mouse') this.geste({ type: 'zone-entre' });
+    });
     this.barre.addEventListener('pointerleave', (e) => e.pointerType === 'mouse' && this.geste({ type: 'zone-sort' }));
+    nav.addEventListener('focusin', () => this.chargerTout());
     for (const zone of [nav, this.menu]) {
       zone.addEventListener('focusout', (e) => {
         if (this.etat.ouvert && e.relatedTarget && !this.dansLaZone(e.relatedTarget)) this.geste({ type: 'focus-sort' });
@@ -420,9 +427,19 @@ class MenuOrdinateur {
     });
     // La pastille suit la largeur des mots (la police qui arrive, une fenêtre qu'on élargit).
     if ('ResizeObserver' in window) new ResizeObserver(() => this.placerPastille(this.cible(), false)).observe(nav);
+    // Une fenêtre qui change : la place sous l'en-tête et la taille des emblèmes se mesurent de nouveau.
+    let attente = 0;
+    window.addEventListener('resize', () => {
+      window.clearTimeout(attente);
+      attente = window.setTimeout(() => {
+        if (!this.main || !this.ordinateur.matches || this.changement) return;
+        this.mesurer();
+        this.mesurerPanneau();
+      }, 250);
+    });
     this.placerPastille(this.cible(), false);
-    // Au repos, une fois la page chargée : le panneau se prépare, caché, avec les images de son rayon. Le premier
-    // survol le trouve prêt.
+    // Au repos, une fois la page chargée (après le premier tableau) : le panneau se prépare, caché, avec les images du
+    // rayon de la page. Le premier survol le trouve prêt.
     const auRepos = () => {
       if (document.readyState !== 'complete' || !this.ordinateur.matches) return;
       if (window.requestIdleCallback) window.requestIdleCallback(() => this.preparer(), { timeout: 2000 });
@@ -447,7 +464,6 @@ class MenuOrdinateur {
       else if (f.planifier) {
         window.clearTimeout(this.minuteries[f.planifier]);
         this.minuteries[f.planifier] = window.setTimeout(() => this.geste({ type: 'minuterie', quoi: f.planifier, rayon: f.rayon }), f.delai);
-        if (f.planifier === 'ouvre') this.chargerImages(f.rayon);
       } else if (f.annuler) window.clearTimeout(this.minuteries[f.annuler]);
       else if (f.ouvrir) {
         if (f.avant) this.changer(f.avant, f.ouvrir);
@@ -472,7 +488,13 @@ class MenuOrdinateur {
   }
 
   section(rayon) {
-    return this.menu.querySelector(`.menu-tel-rayon[data-rayon="${rayon}"]`);
+    return this.rayons.find((s) => Number(s.dataset.rayon) === Number(rayon)) || null;
+  }
+
+  // Le rayon qu'on regarde : le seul qui se voit (data-vu). Les autres restent rendus, cachés (input.css) : passer de
+  // l'un à l'autre ne refait ni leurs styles ni leur mise en page.
+  montrer(rayon) {
+    this.rayons.forEach((s) => s.toggleAttribute('data-vu', Number(s.dataset.rayon) === Number(rayon)));
   }
 
   // Ce qui prend le focus dans le panneau, dans l'ordre : les liens du rayon ouvert, puis « Suivre ma commande ».
@@ -519,7 +541,8 @@ class MenuOrdinateur {
   }
 
   /* Le panneau passe à l'ordinateur : il n'est plus un dialogue (le reste de la page n'est pas bloqué), ses groupes
-     sont tous ouverts, leurs titres ne sont plus que des titres (ni clic, ni tabulation). */
+     sont tous ouverts, leurs titres ne sont plus que des titres (ni clic, ni tabulation). Son onglet de téléphone (le
+     bouton radio) ne change pas : sur ordinateur, c'est data-vu qui montre un rayon. */
   prendre() {
     if (this.main) return;
     this.main = true;
@@ -531,37 +554,59 @@ class MenuOrdinateur {
       const titre = groupe.querySelector('summary');
       if (titre) titre.setAttribute('tabindex', '-1');
     });
-    // Les tailles du panneau (input.css) : le plus de rangées d'un rayon, le plus d'emblèmes d'une rangée.
-    const rayons = [...this.menu.querySelectorAll('.menu-tel-rayon')];
-    const rangees = Math.max(1, ...rayons.map((r) => r.querySelectorAll('.menu-tel-groupe').length));
+    // La plus longue rangée (input.css : la taille des emblèmes, en largeur).
     const colonnes = Math.max(1, ...[...this.menu.querySelectorAll('.menu-tel-rangee')].map((r) => r.children.length));
-    this.menu.style.setProperty('--rangees', rangees);
     this.menu.style.setProperty('--colonnes', colonnes);
   }
 
-  // Tout revient comme au téléphone : le <details> fermé, ses groupes, ses titres, son onglet de départ.
+  /* La taille des emblèmes, en hauteur (input.css) : la feuille la tire de la hauteur de l'écran, des rangées du rayon qui
+     en a le plus (--rangees) et de ce qui, dans le panneau, ne grandit pas avec elles (--fixe : marges, noms, nombres, et
+     les lignes de plus des noms longs). Mesurés ici, chaque rayon montré à son tour, jusqu'à ce que la mesure ne change
+     plus (la taille change, les noms se coupent autrement). Au repos de la page, et de nouveau quand la fenêtre change.
+     Chaque rayon finit ainsi mis en page avec ses styles à jour : le montrer plus tard ne refait rien. */
+  mesurerPanneau() {
+    const menu = this.menu;
+    if (!this.details.open || !this.rayons.length) return;
+    const vu = this.rayons.find((s) => s.hasAttribute('data-vu'));
+    // Caché au repos (content-visibility), le panneau se montre le temps de la mesure : rien ne se peint entre-temps.
+    menu.style.contentVisibility = 'visible';
+    for (let tour = 0; tour < 3; tour++) {
+      let pire = null;
+      for (const rayon of this.rayons) {
+        this.montrer(rayon.dataset.rayon);
+        const rangees = rayon.querySelectorAll('.menu-tel-groupe').length;
+        const cadre = rayon.querySelector('.c-emb[data-taille="menu"] .c-emb-cadre');
+        if (!rangees || !cadre) continue;
+        const fixe = menu.scrollHeight - 1.3 * rangees * cadre.getBoundingClientRect().width;
+        if (!pire || rangees > pire.rangees || (rangees === pire.rangees && fixe > pire.fixe)) pire = { rangees, fixe };
+      }
+      if (!pire) break;
+      const fixe = `${Math.ceil(pire.fixe)}px`;
+      if (menu.style.getPropertyValue('--fixe') === fixe && menu.style.getPropertyValue('--rangees') === String(pire.rangees)) break;
+      menu.style.setProperty('--rangees', pire.rangees);
+      menu.style.setProperty('--fixe', fixe);
+    }
+    menu.style.contentVisibility = '';
+    this.montrer(vu ? vu.dataset.rayon : this.etat.ouvert || this.etat.courant || 1);
+  }
+
+  // Tout revient comme au téléphone : le <details> fermé, ses groupes et leurs titres, ses rayons.
   rendre() {
     if (!this.main) return;
     this.annulerChangement();
     this.main = false;
     if (this.tel) this.tel.ordinateur = false;
     this.details.open = false;
-    ['data-ordi', 'data-vagues'].forEach((nom) => this.menu.removeAttribute(nom));
+    this.vagues(null);
+    this.menu.removeAttribute('data-ordi');
     this.attributsTelephone.forEach(([nom, valeur]) => valeur !== null && this.menu.setAttribute(nom, valeur));
     this.menu.querySelectorAll('.menu-tel-groupe').forEach((groupe) => {
       groupe.open = groupe.hasAttribute('data-ouvert');
       const titre = groupe.querySelector('summary');
       if (titre) titre.removeAttribute('tabindex');
     });
-    const depart = [...this.menu.querySelectorAll('input[name="menu-tel-onglet"]')].find((r) => r.defaultChecked);
-    if (depart) depart.checked = true;
-    this.voile.hidden = true;
+    this.rayons.forEach((s) => s.removeAttribute('data-vu'));
     this.voile.removeAttribute('data-vu');
-  }
-
-  cocher(rayon) {
-    const radio = this.menu.querySelector(`input[name="menu-tel-onglet"][value="${rayon}"]`);
-    if (radio) radio.checked = true;
   }
 
   /* La hauteur au-dessus du panneau, en haut de la page (le bandeau d'annonce et l'en-tête entier) : la taille des
@@ -575,46 +620,64 @@ class MenuOrdinateur {
     }
   }
 
-  // Le panneau, prêt et caché : rendu une fois, avec les images de son rayon.
+  // Le panneau, prêt et caché : rendu une fois, mesuré, avec les images du rayon de la page.
   preparer() {
     if (!this.ordinateur.matches || this.details.open) return;
     this.prendre();
-    this.cocher(this.etat.ouvert || this.etat.courant || 1);
     this.mesurer();
     this.menu.dataset.ordi = 'repos';
+    this.montrer(this.etat.ouvert || this.etat.courant || 1);
     this.details.open = true;
+    this.mesurerPanneau();
+    this.chargerImages(this.etat.ouvert || this.etat.courant || 1);
   }
 
+  // Les images d'un rayon, demandées et décodées d'avance : elles sont là dès la première image du rideau.
   chargerImages(rayon) {
     const section = this.section(rayon);
-    if (section) section.querySelectorAll('.c-emb img[loading="lazy"]').forEach((image) => (image.loading = 'eager'));
+    if (!section || this.charges.has(section)) return;
+    this.charges.add(section);
+    section.querySelectorAll('.c-emb img').forEach((image) => {
+      if (image.loading === 'lazy') image.loading = 'eager';
+      if (image.decode) image.decode().catch(() => {});
+    });
   }
 
-  // Le rideau descend : le panneau se découpe de haut en bas, son contenu monte par vagues, le voile arrive.
+  // Sur ordinateur seulement : au téléphone, son menu charge ses images quand il s'ouvre.
+  chargerTout() {
+    if (this.ordinateur.matches) this.rayons.forEach((s) => this.chargerImages(s.dataset.rayon));
+  }
+
+  /* Le rideau descend : le panneau se découpe de haut en bas, son contenu monte par vagues, le voile arrive. Tout se lit
+     d'abord, tout s'écrit ensuite : aucune mise en page forcée, la page dessine dans la foulée. */
   deplier(rayon) {
     this.annulerChangement();
     window.clearTimeout(this.finRepli);
-    const revient = this.menu.dataset.ordi === 'ferme';
-    const premier = !this.details.open;
-    this.preparer();
-    this.mesurer();
-    this.cocher(rayon);
-    this.chargerImages(rayon);
     const menu = this.menu;
+    const revient = menu.dataset.ordi === 'ferme';
+    const premier = !this.details.open;
+    const bas = this.barre.getBoundingClientRect().bottom;
+    this.preparer();
+    this.montrer(rayon);
+    this.chargerImages(rayon);
     // Pas encore prêt (ouvert avant le repos de la page) : il se pose fermé, puis le rideau part.
     if (premier) void menu.offsetHeight;
-    if (!revient && !this.reduit.matches) {
-      menu.setAttribute('data-vagues', '');
-      window.clearTimeout(this.finVagues);
-      this.finVagues = window.setTimeout(() => menu.removeAttribute('data-vagues'), 650);
-    }
+    if (!revient && !this.reduit.matches) this.vagues(this.section(rayon));
     menu.dataset.ordi = 'ouvert';
     // Le voile : de sous l'en-tête jusqu'en bas de l'écran.
-    const bas = this.barre.getBoundingClientRect().bottom;
     this.voile.style.height = `${Math.max(0, Math.floor(window.innerHeight - bas - 1))}px`;
-    this.voile.hidden = false;
-    void this.voile.offsetWidth;
     this.voile.setAttribute('data-vu', '');
+  }
+
+  /* Les vagues (input.css) : sur le rayon qui s'ouvre et sur le pied du panneau, le temps qu'elles passent ; les autres
+     rayons, cachés, n'ont rien à refaire. Sans section : elles s'arrêtent. */
+  vagues(section) {
+    window.clearTimeout(this.finVagues);
+    this.menu.querySelectorAll('[data-vagues]').forEach((x) => x.removeAttribute('data-vagues'));
+    if (!section) return;
+    const pied = this.menu.querySelector('.menu-tel-pied');
+    for (const x of [section, pied]) if (x) x.setAttribute('data-vagues', '');
+    this.finVagues = window.setTimeout(() => this.vagues(null), 650);
   }
 
   // Le rideau remonte, le voile s'efface ; le panneau redevient prêt et caché. Le focus qui était dedans revient au rayon.
@@ -622,13 +685,11 @@ class MenuOrdinateur {
     this.annulerChangement();
     const menu = this.menu;
     const dedans = menu.contains(document.activeElement);
-    menu.removeAttribute('data-vagues');
+    this.vagues(null);
     menu.dataset.ordi = 'ferme';
     this.voile.removeAttribute('data-vu');
     const fin = () => {
-      if (this.etat.ouvert) return;
-      if (menu.dataset.ordi === 'ferme') menu.dataset.ordi = 'repos';
-      this.voile.hidden = true;
+      if (!this.etat.ouvert && menu.dataset.ordi === 'ferme') menu.dataset.ordi = 'repos';
     };
     window.clearTimeout(this.finRepli);
     if (instant || this.reduit.matches) fin();
@@ -645,7 +706,7 @@ class MenuOrdinateur {
     this.chargerImages(apres);
     if (this.reduit.matches || !vieux || !neuf || vieux === neuf) {
       this.annulerChangement();
-      this.cocher(apres);
+      this.montrer(apres);
       return;
     }
     // Un changement en cours : chacun repart d'où il en est.
@@ -658,24 +719,21 @@ class MenuOrdinateur {
     const departNeuf = enCours && enCours.vieux === neuf ? ou(neuf) : null;
     const hauteurAvant = this.hauteurVue();
     this.annulerChangement();
-    // L'ancien rayon reste posé où il est, le temps de partir.
-    const { offsetTop: top, offsetLeft: left, offsetWidth: width } = vieux;
-    const affichage = window.getComputedStyle(vieux).display;
-    Object.assign(vieux.style, { position: 'absolute', top: `${top}px`, left: `${left}px`, width: `${width}px`, display: affichage, pointerEvents: 'none' });
-    vieux.inert = true;
-    this.cocher(apres);
+    // L'ancien rayon reste là, par-dessus, le temps de partir (data-part, input.css).
+    vieux.setAttribute('data-part', '');
+    this.montrer(apres);
     const hauteurApres = menu.offsetHeight;
     const sens = apres > avant ? 1 : -1;
     const options = { duration: MenuOrdinateur.CHANGEMENT, easing: MenuOrdinateur.COURBE };
     const part = vieux.animate([departVieux, { opacity: 0, transform: `translateX(${-24 * sens}px)` }], options);
     const arrive = neuf.animate([departNeuf || { opacity: 0, transform: `translateX(${24 * sens}px)` }, { opacity: 1, transform: 'none' }], options);
     let hauteur = null;
+    const H = Math.ceil(Math.max(hauteurAvant, hauteurApres));
     if (Math.abs(hauteurAvant - hauteurApres) >= 1) {
-      const H = Math.ceil(Math.max(hauteurAvant, hauteurApres));
       menu.style.minHeight = `${H}px`;
       hauteur = menu.animate([{ clipPath: `inset(0 0 ${H - hauteurAvant}px 0)` }, { clipPath: `inset(0 0 ${H - hauteurApres}px 0)` }], options);
     }
-    const changement = { vieux, neuf, part, arrive, hauteur, H: hauteur ? Math.ceil(Math.max(hauteurAvant, hauteurApres)) : 0 };
+    const changement = { vieux, neuf, part, arrive, hauteur, H };
     this.changement = changement;
     arrive.finished.then(() => this.changement === changement && this.annulerChangement(), () => {});
   }
@@ -697,50 +755,55 @@ class MenuOrdinateur {
     c.part.cancel();
     c.arrive.cancel();
     if (c.hauteur) c.hauteur.cancel();
-    c.vieux.removeAttribute('style');
-    c.vieux.inert = false;
+    c.vieux.removeAttribute('data-part');
     this.menu.style.minHeight = '';
   }
 
   /* La pastille, sous un rayon (0 : aucun). Elle glisse en 0,42 s, sa largeur épousant celle du mot ; là où il n'y en
-     avait pas, elle apparaît en fondu en passant de 94 % à 100 % (et disparaît de même). Une seule animation porte sa
-     place, sa largeur et son fondu : rien ne se repeint autrement à la fin. Sans anime : posée tout de suite. */
+     avait pas, elle apparaît en fondu en passant de 94 % à 100 % (et disparaît de même). Elle ne bouge que par sa
+     transformation et son opacité, en une seule animation que la carte graphique joue seule : la bascule garde ses 60
+     images par seconde même quand la page travaille (le panneau qui s'ouvre). Sa largeur d'arrivée est posée d'emblée ;
+     la transformation part de la place et de la largeur d'où elle vient, et finit sans échelle : rien ne se repeint
+     autrement à la fin. Sans anime : posée tout de suite. */
   placerPastille(rayon, anime) {
     const bouton = rayon ? this.boutons[rayon - 1] : null;
     if (!bouton || !bouton.offsetWidth) {
-      if (!this.posee) return;
-      if (!rayon && this.posee.o) this.poser({ ...this.posee, o: 0, s: 0.94 }, anime);
+      if (!rayon && this.posee && this.posee.o) this.poser({ ...this.posee, o: 0, s: 0.94 }, anime);
       return;
     }
     const vers = { x: bouton.offsetLeft, w: bouton.offsetWidth, o: 1, s: 1 };
     const p0 = this.posee;
-    if (p0 && p0.x === vers.x && p0.w === vers.w && p0.o === 1) return;
+    if (p0 && p0.o === 1 && p0.x === vers.x && p0.w === vers.w) return;
     // Là où il n'y en avait pas, elle apparaît sur place.
-    const depuis = p0 && p0.o ? null : { ...vers, o: 0, s: 0.94 };
-    this.poser(vers, anime, depuis);
+    this.poser(vers, anime, p0 && p0.o ? null : { ...vers, o: 0, s: 0.94 });
     this.nav.setAttribute('data-pret', '');
   }
 
+  // vers, depuis : { x, w, o, s } : le bord gauche et la largeur qu'on voit, l'opacité, l'échelle autour du centre.
   poser(vers, anime, depuis = null) {
     const p = this.pastille;
-    const style = (e) => ({ transform: `translateX(${e.x}px) scale(${e.s})`, width: `${e.w}px`, opacity: e.o });
+    const largeur = vers.w;
+    const transformation = (e) => `translateX(${e.x + (e.w * (1 - e.s)) / 2}px) scale(${(e.w * e.s) / largeur}, ${e.s})`;
     let de = depuis;
-    if (!de && anime && p.getAnimations().length) {
-      // En plein glissement : elle repart d'où elle est.
+    if (!de && anime && this.posee) {
+      // D'où elle est, ce qu'on voit : en plein glissement aussi.
       const cs = window.getComputedStyle(p);
       const m = new DOMMatrixReadOnly(cs.transform === 'none' ? undefined : cs.transform);
-      de = { x: m.m41, s: m.a, w: parseFloat(cs.width), o: parseFloat(cs.opacity) };
+      const s = m.d || 1;
+      const w = (parseFloat(cs.width) * m.a) / s;
+      de = { x: m.m41 - (w * (1 - s)) / 2, w, s, o: parseFloat(cs.opacity) };
     }
-    if (!de) de = this.posee;
     p.getAnimations().forEach((a) => a.cancel());
-    Object.assign(p.style, style(vers));
+    p.style.width = `${largeur}px`;
+    p.style.transform = transformation(vers);
+    p.style.opacity = vers.o;
     this.posee = vers;
     if (!anime || !de) return;
     if (this.reduit.matches) {
       if (de.o !== vers.o) p.animate([{ opacity: de.o }, { opacity: vers.o }], { duration: MenuOrdinateur.FONDU, easing: 'ease' });
       return;
     }
-    p.animate([style(de), style(vers)], { duration: MenuOrdinateur.GLISSE, easing: MenuOrdinateur.COURBE });
+    p.animate([{ transform: transformation(de), opacity: de.o }, { transform: transformation(vers), opacity: vers.o }], { duration: MenuOrdinateur.GLISSE, easing: MenuOrdinateur.COURBE });
   }
 
   // Une fermeture demandée d'ailleurs : l'en-tête qui part, la recherche ou le panier qui s'ouvrent.
