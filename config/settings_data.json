@@ -72,7 +72,7 @@
           "title_only_HWVaiW": {
             "type": "title_only",
             "settings": {
-              "title": "Nos Tableaux"
+              "title": "Tableaux"
             }
           },
           "collection_only_3eLBWh": {
@@ -132,7 +132,6 @@
               "title": "Nature & Sauvage",
               "child_collection_list": [
                 "tableaux-nature-sauvage",
-                "tableau-animaux",
                 "tableau-fleurs",
                 "tableau-mer-1",
                 "tableau-paysage"
@@ -163,7 +162,7 @@
           "title_only_rNccpq": {
             "type": "title_only",
             "settings": {
-              "title": "Posters & Affiches"
+              "title": "Posters"
             }
           },
           "collection_only_K9q98M": {
