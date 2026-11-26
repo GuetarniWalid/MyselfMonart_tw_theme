@@ -201,7 +201,9 @@ class MenuTelephone {
     this.defile = panneau.querySelector('.menu-tel-defile');
     this.groupes = panneau.querySelectorAll('.menu-tel-groupe');
     this.pays = panneau.querySelector('.menu-tel-pays');
-    this.groupes.forEach((groupe) => groupe.addEventListener('toggle', () => groupe.open && this.suivre(groupe)));
+    // Sur ordinateur (MenuOrdinateur, ordinateur : true), ses groupes sont tous ouverts : rien à suivre.
+    this.ordinateur = false;
+    this.groupes.forEach((groupe) => groupe.addEventListener('toggle', () => groupe.open && !this.ordinateur && this.suivre(groupe)));
     panneau.addEventListener('change', (e) => {
       if (e.target.name === 'menu-tel-onglet') this.defile.scrollTop = 0;
     });
@@ -252,6 +254,501 @@ class MenuTelephone {
   }
 }
 
+/*
+ * Le menu d'ordinateur, « la bascule » (ticket 13 de .scratch/collection-design : snippets/menu-ordinateur.liquid,
+ * input.css « Le menu d'ordinateur »)
+ * ----------------------------------------------------------------------------------------------------------------
+ * Dès 768 px, dans le nouvel en-tête : un bouton par rayon, et une seule pastille qui glisse de l'un à l'autre. Un rayon
+ * ouvre le menu du téléphone (MenuTelephone), habillé en panneau sous l'en-tête : le même <details>, ouvert au rayon
+ * choisi (son bouton radio coché), tous ses groupes ouverts. Les états du téléphone et ceux de l'ordinateur ne se
+ * mélangent jamais : aLaMain() dit quand le <details> est à l'ordinateur, et tout revient comme au téléphone sous 768 px.
+ * La logique des gestes est pure (suite, testée sous Node : scripts/menu-ordinateur.test.cjs) : un état
+ * { ouvert, par, vise, courant } (le rayon ouvert, 0 sinon ; ce qui l'a ouvert ; le rayon que la souris vise ; celui de la
+ * page, 0 sur une page sans rayon) et un geste rendent le nouvel état et ce qu'il faut faire.
+ */
+class MenuOrdinateur {
+  /* Les délais des gestes, en millisecondes : l'arrêt de la souris avant d'ouvrir (Baymard : 300 à 500 ms) ; menu ouvert,
+     le passage d'un rayon à l'autre ; la sortie de la souris avant de fermer (Nielsen Norman Group). */
+  static OUVRE = 300;
+  static CHANGE = 140;
+  static FERME = 500;
+
+  /* Un geste → { etat, faire }. Les gestes : entre et sort (la souris sur un rayon), minuterie (ouvre ou ferme),
+     clic (par la souris, le toucher ou le clavier), zone-entre et zone-sort (la souris dans l'en-tête et le panneau),
+     echap, dehors (un clic à côté), focus-sort, entete-part (l'en-tête part, ou une autre fermeture demandée), va (le
+     clavier passe à un rayon), bas (flèche bas), telephone (sous 768 px). Ce qu'il faut faire : { pastille } (le rayon
+     qu'elle marque, 0 : aucun), { ouvrir, avant } (0 : le rideau ; sinon, d'un rayon à l'autre), { fermer, focus,
+     instant }, { planifier, rayon, delai }, { annuler }, { entrer } (le focus va dans le panneau). */
+  static suite(avant, geste) {
+    const etat = { ...avant };
+    const faire = [];
+    const pastille = () => faire.push({ pastille: etat.vise || etat.ouvert || etat.courant || 0 });
+    const ouvrir = (rayon, par) => {
+      faire.push({ annuler: 'ouvre' }, { annuler: 'ferme' });
+      if (etat.ouvert !== rayon) faire.push({ ouvrir: rayon, avant: etat.ouvert });
+      etat.ouvert = rayon;
+      etat.par = par;
+      etat.vise = 0;
+      pastille();
+    };
+    const fermer = (focus = false, instant = false) => {
+      faire.push({ annuler: 'ouvre' }, { annuler: 'ferme' });
+      if (etat.ouvert) faire.push({ fermer: etat.ouvert, focus, instant });
+      etat.ouvert = 0;
+      etat.par = null;
+      etat.vise = 0;
+      pastille();
+    };
+    switch (geste.type) {
+      case 'entre':
+        faire.push({ annuler: 'ferme' }, { annuler: 'ouvre' });
+        etat.vise = etat.ouvert === geste.rayon ? 0 : geste.rayon;
+        pastille();
+        if (etat.vise) faire.push({ planifier: 'ouvre', rayon: geste.rayon, delai: etat.ouvert ? MenuOrdinateur.CHANGE : MenuOrdinateur.OUVRE });
+        break;
+      case 'sort':
+        if (etat.vise === geste.rayon) {
+          etat.vise = 0;
+          faire.push({ annuler: 'ouvre' });
+          pastille();
+        }
+        break;
+      case 'minuterie':
+        // Épinglé (un clic, le toucher, le clavier), il le reste quand la souris passe à un autre rayon.
+        if (geste.quoi === 'ouvre' && etat.vise === geste.rayon) ouvrir(geste.rayon, etat.ouvert && etat.par !== 'survol' ? etat.par : 'survol');
+        else if (geste.quoi === 'ferme') fermer();
+        break;
+      case 'clic':
+        if (etat.ouvert !== geste.rayon) ouvrir(geste.rayon, geste.par === 'souris' ? 'clic' : geste.par);
+        else if (etat.par === 'survol' && geste.par === 'souris') {
+          // Ouvert au survol juste avant : le clic l'épingle, il ne le referme pas sous la main.
+          etat.par = 'clic';
+          faire.push({ annuler: 'ferme' });
+        } else fermer();
+        break;
+      case 'zone-entre':
+        faire.push({ annuler: 'ferme' });
+        break;
+      case 'zone-sort':
+        if (etat.ouvert && etat.par === 'survol') faire.push({ planifier: 'ferme', delai: MenuOrdinateur.FERME });
+        break;
+      case 'echap':
+        if (etat.ouvert) fermer(Boolean(geste.focusDedans));
+        break;
+      case 'dehors':
+      case 'focus-sort':
+      case 'entete-part':
+        fermer();
+        break;
+      case 'telephone':
+        fermer(false, true);
+        break;
+      case 'va':
+        if (etat.ouvert && etat.ouvert !== geste.rayon) ouvrir(geste.rayon, 'clavier');
+        break;
+      case 'bas':
+        if (etat.ouvert !== geste.rayon) ouvrir(geste.rayon, 'clavier');
+        faire.push({ entrer: true });
+        break;
+      default:
+        break;
+    }
+    return { etat, faire };
+  }
+
+  /* La courbe et les durées du mouvement (input.css les reprend pour le rideau) : la pastille glisse en 0,42 s, d'un
+     rayon à l'autre le contenu change en 0,32 s ; le rideau remonte en 0,24 s. Avec « mouvements réduits », au plus un
+     fondu de 0,12 s. */
+  static COURBE = 'cubic-bezier(0.32, 0.72, 0, 1)';
+  static GLISSE = 420;
+  static CHANGEMENT = 320;
+  static REPLI = 240;
+  static FONDU = 120;
+
+  constructor(stickyHeader, nav) {
+    this.entete = stickyHeader;
+    this.tel = stickyHeader.menuTelephone;
+    this.details = stickyHeader.detailsParent;
+    this.menu = stickyHeader.menu;
+    this.nav = nav;
+    this.cadre = stickyHeader.querySelector('.menu-ordi-entete');
+    this.barre = stickyHeader.querySelector('.menu-ordi-barre');
+    this.voile = stickyHeader.querySelector('.menu-ordi-voile');
+    this.pastille = nav.querySelector('.menu-ordi-pastille');
+    this.boutons = [...nav.querySelectorAll('.menu-ordi-rayon')];
+    this.ordinateur = window.matchMedia('(min-width: 768px)');
+    this.reduit = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const courant = this.boutons.findIndex((b) => b.getAttribute('aria-current') === 'true') + 1;
+    this.etat = { ouvert: 0, par: null, vise: 0, courant };
+    this.minuteries = {};
+    this.main = false;
+    this.pointeur = 'mouse';
+    this.posee = null;
+    this.changement = null;
+
+    // La souris, le toucher, le clavier sur les rayons.
+    nav.addEventListener('pointerdown', (e) => (this.pointeur = e.pointerType), true);
+    this.boutons.forEach((bouton, i) => {
+      const rayon = i + 1;
+      bouton.addEventListener('pointerenter', (e) => e.pointerType === 'mouse' && this.geste({ type: 'entre', rayon }));
+      bouton.addEventListener('pointerleave', (e) => e.pointerType === 'mouse' && this.geste({ type: 'sort', rayon }));
+      bouton.addEventListener('click', (e) => {
+        const par = e.detail === 0 ? 'clavier' : this.pointeur === 'touch' ? 'toucher' : 'souris';
+        this.geste({ type: 'clic', rayon, par });
+      });
+      bouton.addEventListener('keydown', (e) => this.clavier(e, rayon));
+    });
+    // La souris dans l'en-tête et le panneau (qui est dedans) ; le focus dans la bascule et le panneau.
+    this.barre.addEventListener('pointerenter', (e) => e.pointerType === 'mouse' && this.geste({ type: 'zone-entre' }));
+    this.barre.addEventListener('pointerleave', (e) => e.pointerType === 'mouse' && this.geste({ type: 'zone-sort' }));
+    for (const zone of [nav, this.menu]) {
+      zone.addEventListener('focusout', (e) => {
+        if (this.etat.ouvert && e.relatedTarget && !this.dansLaZone(e.relatedTarget)) this.geste({ type: 'focus-sort' });
+      });
+    }
+    this.menu.addEventListener('keydown', (e) => this.tabulation(e));
+    // Un clic ou un toucher à côté (le voile, le bandeau, la page) ; Échap.
+    document.addEventListener('pointerdown', (e) => this.etat.ouvert && !this.barre.contains(e.target) && this.geste({ type: 'dehors' }), true);
+    document.addEventListener('keydown', (e) => e.key === 'Escape' && this.etat.ouvert && this.geste({ type: 'echap', focusDedans: this.dansLaZone(document.activeElement) }));
+    // Sous 768 px, le menu redevient celui du téléphone ; au-dessus, la pastille reprend sa place.
+    this.ordinateur.addEventListener('change', () => {
+      if (this.ordinateur.matches) this.placerPastille(this.cible(), false);
+      else {
+        this.geste({ type: 'telephone' });
+        this.rendre();
+      }
+    });
+    // La pastille suit la largeur des mots (la police qui arrive, une fenêtre qu'on élargit).
+    if ('ResizeObserver' in window) new ResizeObserver(() => this.placerPastille(this.cible(), false)).observe(nav);
+    this.placerPastille(this.cible(), false);
+    // Au repos, une fois la page chargée : le panneau se prépare, caché, avec les images de son rayon. Le premier
+    // survol le trouve prêt.
+    const auRepos = () => {
+      if (document.readyState !== 'complete' || !this.ordinateur.matches) return;
+      if (window.requestIdleCallback) window.requestIdleCallback(() => this.preparer(), { timeout: 2000 });
+      else window.setTimeout(() => this.preparer(), 200);
+    };
+    auRepos();
+    window.addEventListener('load', auRepos, { once: true });
+    this.ordinateur.addEventListener('change', auRepos);
+  }
+
+  // Le <details> du téléphone est à l'ordinateur : ses gestes du téléphone n'y touchent pas.
+  aLaMain() {
+    return this.main;
+  }
+
+  geste(geste) {
+    const { etat, faire } = MenuOrdinateur.suite(this.etat, geste);
+    this.etat = etat;
+    let pastille = null;
+    for (const f of faire) {
+      if ('pastille' in f) pastille = f.pastille;
+      else if (f.planifier) {
+        window.clearTimeout(this.minuteries[f.planifier]);
+        this.minuteries[f.planifier] = window.setTimeout(() => this.geste({ type: 'minuterie', quoi: f.planifier, rayon: f.rayon }), f.delai);
+        if (f.planifier === 'ouvre') this.chargerImages(f.rayon);
+      } else if (f.annuler) window.clearTimeout(this.minuteries[f.annuler]);
+      else if (f.ouvrir) {
+        if (f.avant) this.changer(f.avant, f.ouvrir);
+        else this.deplier(f.ouvrir);
+      } else if (f.fermer) this.replier(f.fermer, f);
+      else if (f.entrer) {
+        const lien = this.liens()[0];
+        if (lien) lien.focus();
+      }
+    }
+    if (pastille !== null) this.placerPastille(pastille, true);
+    this.boutons.forEach((b, i) => b.setAttribute('aria-expanded', String(this.etat.ouvert === i + 1)));
+  }
+
+  // Le rayon que la pastille marque : celui que la souris vise, sinon l'ouvert, sinon celui de la page.
+  cible() {
+    return this.etat.vise || this.etat.ouvert || this.etat.courant || 0;
+  }
+
+  dansLaZone(element) {
+    return Boolean(element) && (this.nav.contains(element) || this.menu.contains(element));
+  }
+
+  section(rayon) {
+    return this.menu.querySelector(`.menu-tel-rayon[data-rayon="${rayon}"]`);
+  }
+
+  // Ce qui prend le focus dans le panneau, dans l'ordre : les liens du rayon ouvert, puis « Suivre ma commande ».
+  liens() {
+    const rayon = this.section(this.etat.ouvert);
+    if (!rayon) return [];
+    return [...rayon.querySelectorAll('a[href], button'), ...this.menu.querySelectorAll('.menu-tel-pied a[href]')].filter((x) => x.getClientRects().length);
+  }
+
+  clavier(e, rayon) {
+    const n = this.boutons.length;
+    const aller = (k) => {
+      const j = ((k - 1 + n) % n) + 1;
+      this.boutons[j - 1].focus();
+      this.geste({ type: 'va', rayon: j });
+    };
+    if (e.key === 'ArrowDown') this.geste({ type: 'bas', rayon });
+    else if (e.key === 'ArrowRight') aller(rayon + 1);
+    else if (e.key === 'ArrowLeft') aller(rayon - 1);
+    else if (e.key === 'Home') aller(1);
+    else if (e.key === 'End') aller(n);
+    else if (e.key === 'Tab' && !e.shiftKey && this.etat.ouvert === rayon && this.liens().length) {
+      // Le panneau est posé avant l'en-tête dans la page : au clavier, il se lit comme s'il suivait son rayon.
+      this.liens()[0].focus();
+    } else return;
+    e.preventDefault();
+  }
+
+  // Maj+Tab depuis le premier lien revient au rayon ; Tab depuis le dernier va au rayon suivant (ou à la recherche), et
+  // le menu se ferme.
+  tabulation(e) {
+    if (e.key !== 'Tab' || !this.etat.ouvert) return;
+    const liens = this.liens();
+    const bouton = this.boutons[this.etat.ouvert - 1];
+    if (e.shiftKey && document.activeElement === liens[0]) {
+      e.preventDefault();
+      bouton.focus();
+    } else if (!e.shiftKey && document.activeElement === liens[liens.length - 1]) {
+      e.preventDefault();
+      const suivant = this.boutons[this.etat.ouvert] || this.entete.querySelector('#open-search-loup');
+      this.geste({ type: 'focus-sort' });
+      if (suivant) suivant.focus();
+    }
+  }
+
+  /* Le panneau passe à l'ordinateur : il n'est plus un dialogue (le reste de la page n'est pas bloqué), ses groupes
+     sont tous ouverts, leurs titres ne sont plus que des titres (ni clic, ni tabulation). */
+  prendre() {
+    if (this.main) return;
+    this.main = true;
+    if (this.tel) this.tel.ordinateur = true;
+    this.attributsTelephone = ['role', 'aria-modal', 'aria-label'].map((nom) => [nom, this.menu.getAttribute(nom)]);
+    this.attributsTelephone.forEach(([nom]) => this.menu.removeAttribute(nom));
+    this.menu.querySelectorAll('.menu-tel-groupe').forEach((groupe) => {
+      groupe.open = true;
+      const titre = groupe.querySelector('summary');
+      if (titre) titre.setAttribute('tabindex', '-1');
+    });
+    // Les tailles du panneau (input.css) : le plus de rangées d'un rayon, le plus d'emblèmes d'une rangée.
+    const rayons = [...this.menu.querySelectorAll('.menu-tel-rayon')];
+    const rangees = Math.max(1, ...rayons.map((r) => r.querySelectorAll('.menu-tel-groupe').length));
+    const colonnes = Math.max(1, ...[...this.menu.querySelectorAll('.menu-tel-rangee')].map((r) => r.children.length));
+    this.menu.style.setProperty('--rangees', rangees);
+    this.menu.style.setProperty('--colonnes', colonnes);
+  }
+
+  // Tout revient comme au téléphone : le <details> fermé, ses groupes, ses titres, son onglet de départ.
+  rendre() {
+    if (!this.main) return;
+    this.annulerChangement();
+    this.main = false;
+    if (this.tel) this.tel.ordinateur = false;
+    this.details.open = false;
+    ['data-ordi', 'data-vagues'].forEach((nom) => this.menu.removeAttribute(nom));
+    this.attributsTelephone.forEach(([nom, valeur]) => valeur !== null && this.menu.setAttribute(nom, valeur));
+    this.menu.querySelectorAll('.menu-tel-groupe').forEach((groupe) => {
+      groupe.open = groupe.hasAttribute('data-ouvert');
+      const titre = groupe.querySelector('summary');
+      if (titre) titre.removeAttribute('tabindex');
+    });
+    const depart = [...this.menu.querySelectorAll('input[name="menu-tel-onglet"]')].find((r) => r.defaultChecked);
+    if (depart) depart.checked = true;
+    this.voile.hidden = true;
+    this.voile.removeAttribute('data-vu');
+  }
+
+  cocher(rayon) {
+    const radio = this.menu.querySelector(`input[name="menu-tel-onglet"][value="${rayon}"]`);
+    if (radio) radio.checked = true;
+  }
+
+  /* La hauteur au-dessus du panneau, en haut de la page (le bandeau d'annonce et l'en-tête entier) : la taille des
+     emblèmes en dépend (input.css), elle ne change pas quand on défile. */
+  mesurer() {
+    const annonce = document.getElementById('shopify-section-tw-announcement-bar');
+    const haut = (annonce ? annonce.offsetHeight : 0) + this.barre.offsetHeight + 2;
+    if (haut !== this.haut) {
+      this.haut = haut;
+      this.cadre.style.setProperty('--menu-haut', `${haut}px`);
+    }
+  }
+
+  // Le panneau, prêt et caché : rendu une fois, avec les images de son rayon.
+  preparer() {
+    if (!this.ordinateur.matches || this.details.open) return;
+    this.prendre();
+    this.cocher(this.etat.ouvert || this.etat.courant || 1);
+    this.mesurer();
+    this.menu.dataset.ordi = 'repos';
+    this.details.open = true;
+  }
+
+  chargerImages(rayon) {
+    const section = this.section(rayon);
+    if (section) section.querySelectorAll('.c-emb img[loading="lazy"]').forEach((image) => (image.loading = 'eager'));
+  }
+
+  // Le rideau descend : le panneau se découpe de haut en bas, son contenu monte par vagues, le voile arrive.
+  deplier(rayon) {
+    this.annulerChangement();
+    window.clearTimeout(this.finRepli);
+    const revient = this.menu.dataset.ordi === 'ferme';
+    const premier = !this.details.open;
+    this.preparer();
+    this.mesurer();
+    this.cocher(rayon);
+    this.chargerImages(rayon);
+    const menu = this.menu;
+    // Pas encore prêt (ouvert avant le repos de la page) : il se pose fermé, puis le rideau part.
+    if (premier) void menu.offsetHeight;
+    if (!revient && !this.reduit.matches) {
+      menu.setAttribute('data-vagues', '');
+      window.clearTimeout(this.finVagues);
+      this.finVagues = window.setTimeout(() => menu.removeAttribute('data-vagues'), 650);
+    }
+    menu.dataset.ordi = 'ouvert';
+    // Le voile : de sous l'en-tête jusqu'en bas de l'écran.
+    const bas = this.barre.getBoundingClientRect().bottom;
+    this.voile.style.height = `${Math.max(0, Math.floor(window.innerHeight - bas - 1))}px`;
+    this.voile.hidden = false;
+    void this.voile.offsetWidth;
+    this.voile.setAttribute('data-vu', '');
+  }
+
+  // Le rideau remonte, le voile s'efface ; le panneau redevient prêt et caché. Le focus qui était dedans revient au rayon.
+  replier(rayon, { focus, instant }) {
+    this.annulerChangement();
+    const menu = this.menu;
+    const dedans = menu.contains(document.activeElement);
+    menu.removeAttribute('data-vagues');
+    menu.dataset.ordi = 'ferme';
+    this.voile.removeAttribute('data-vu');
+    const fin = () => {
+      if (this.etat.ouvert) return;
+      if (menu.dataset.ordi === 'ferme') menu.dataset.ordi = 'repos';
+      this.voile.hidden = true;
+    };
+    window.clearTimeout(this.finRepli);
+    if (instant || this.reduit.matches) fin();
+    else this.finRepli = window.setTimeout(fin, MenuOrdinateur.REPLI + 20);
+    if (focus || dedans) this.boutons[rayon - 1].focus({ preventScroll: true });
+  }
+
+  /* D'un rayon à l'autre, menu ouvert : le nouveau arrive de 24 px du côté où l'on va, l'ancien part de l'autre côté ; la
+     hauteur du panneau suit, découpée (clip-path), sans saut. */
+  changer(avant, apres) {
+    const menu = this.menu;
+    const vieux = this.section(avant);
+    const neuf = this.section(apres);
+    this.chargerImages(apres);
+    if (this.reduit.matches || !vieux || !neuf || vieux === neuf) {
+      this.annulerChangement();
+      this.cocher(apres);
+      return;
+    }
+    // Un changement en cours : chacun repart d'où il en est.
+    const ou = (el) => {
+      const style = window.getComputedStyle(el);
+      return { opacity: style.opacity, transform: style.transform };
+    };
+    const enCours = this.changement;
+    const departVieux = enCours && enCours.neuf === vieux ? ou(vieux) : { opacity: 1, transform: 'none' };
+    const departNeuf = enCours && enCours.vieux === neuf ? ou(neuf) : null;
+    const hauteurAvant = this.hauteurVue();
+    this.annulerChangement();
+    // L'ancien rayon reste posé où il est, le temps de partir.
+    const { offsetTop: top, offsetLeft: left, offsetWidth: width } = vieux;
+    const affichage = window.getComputedStyle(vieux).display;
+    Object.assign(vieux.style, { position: 'absolute', top: `${top}px`, left: `${left}px`, width: `${width}px`, display: affichage, pointerEvents: 'none' });
+    vieux.inert = true;
+    this.cocher(apres);
+    const hauteurApres = menu.offsetHeight;
+    const sens = apres > avant ? 1 : -1;
+    const options = { duration: MenuOrdinateur.CHANGEMENT, easing: MenuOrdinateur.COURBE };
+    const part = vieux.animate([departVieux, { opacity: 0, transform: `translateX(${-24 * sens}px)` }], options);
+    const arrive = neuf.animate([departNeuf || { opacity: 0, transform: `translateX(${24 * sens}px)` }, { opacity: 1, transform: 'none' }], options);
+    let hauteur = null;
+    if (Math.abs(hauteurAvant - hauteurApres) >= 1) {
+      const H = Math.ceil(Math.max(hauteurAvant, hauteurApres));
+      menu.style.minHeight = `${H}px`;
+      hauteur = menu.animate([{ clipPath: `inset(0 0 ${H - hauteurAvant}px 0)` }, { clipPath: `inset(0 0 ${H - hauteurApres}px 0)` }], options);
+    }
+    const changement = { vieux, neuf, part, arrive, hauteur, H: hauteur ? Math.ceil(Math.max(hauteurAvant, hauteurApres)) : 0 };
+    this.changement = changement;
+    arrive.finished.then(() => this.changement === changement && this.annulerChangement(), () => {});
+  }
+
+  // La hauteur du panneau telle qu'on la voit : pendant un changement, celle que découpe le clip-path.
+  hauteurVue() {
+    const c = this.changement;
+    if (c && c.hauteur) {
+      const bas = /inset\(\s*[\d.]+px\s+[\d.]+px\s+([\d.]+)px/.exec(window.getComputedStyle(this.menu).clipPath);
+      if (bas) return c.H - Number(bas[1]);
+    }
+    return this.menu.offsetHeight;
+  }
+
+  annulerChangement() {
+    const c = this.changement;
+    if (!c) return;
+    this.changement = null;
+    c.part.cancel();
+    c.arrive.cancel();
+    if (c.hauteur) c.hauteur.cancel();
+    c.vieux.removeAttribute('style');
+    c.vieux.inert = false;
+    this.menu.style.minHeight = '';
+  }
+
+  /* La pastille, sous un rayon (0 : aucun). Elle glisse en 0,42 s, sa largeur épousant celle du mot ; là où il n'y en
+     avait pas, elle apparaît en fondu en passant de 94 % à 100 % (et disparaît de même). Une seule animation porte sa
+     place, sa largeur et son fondu : rien ne se repeint autrement à la fin. Sans anime : posée tout de suite. */
+  placerPastille(rayon, anime) {
+    const bouton = rayon ? this.boutons[rayon - 1] : null;
+    if (!bouton || !bouton.offsetWidth) {
+      if (!this.posee) return;
+      if (!rayon && this.posee.o) this.poser({ ...this.posee, o: 0, s: 0.94 }, anime);
+      return;
+    }
+    const vers = { x: bouton.offsetLeft, w: bouton.offsetWidth, o: 1, s: 1 };
+    const p0 = this.posee;
+    if (p0 && p0.x === vers.x && p0.w === vers.w && p0.o === 1) return;
+    // Là où il n'y en avait pas, elle apparaît sur place.
+    const depuis = p0 && p0.o ? null : { ...vers, o: 0, s: 0.94 };
+    this.poser(vers, anime, depuis);
+    this.nav.setAttribute('data-pret', '');
+  }
+
+  poser(vers, anime, depuis = null) {
+    const p = this.pastille;
+    const style = (e) => ({ transform: `translateX(${e.x}px) scale(${e.s})`, width: `${e.w}px`, opacity: e.o });
+    let de = depuis;
+    if (!de && anime && p.getAnimations().length) {
+      // En plein glissement : elle repart d'où elle est.
+      const cs = window.getComputedStyle(p);
+      const m = new DOMMatrixReadOnly(cs.transform === 'none' ? undefined : cs.transform);
+      de = { x: m.m41, s: m.a, w: parseFloat(cs.width), o: parseFloat(cs.opacity) };
+    }
+    if (!de) de = this.posee;
+    p.getAnimations().forEach((a) => a.cancel());
+    Object.assign(p.style, style(vers));
+    this.posee = vers;
+    if (!anime || !de) return;
+    if (this.reduit.matches) {
+      if (de.o !== vers.o) p.animate([{ opacity: de.o }, { opacity: vers.o }], { duration: MenuOrdinateur.FONDU, easing: 'ease' });
+      return;
+    }
+    p.animate([style(de), style(vers)], { duration: MenuOrdinateur.GLISSE, easing: MenuOrdinateur.COURBE });
+  }
+
+  // Une fermeture demandée d'ailleurs : l'en-tête qui part, la recherche ou le panier qui s'ouvrent.
+  fermer() {
+    if (this.etat.ouvert || this.etat.vise) this.geste({ type: 'entete-part' });
+  }
+}
+
 class StickyHeader extends HTMLElement {
   constructor() {
     super();
@@ -261,6 +758,9 @@ class StickyHeader extends HTMLElement {
     this.menu = this.menuOpener.nextElementSibling;
     this.subDetails = this.menu.querySelectorAll('details');
     this.menuTelephone = this.menu.classList.contains('menu-tel') ? new MenuTelephone(this.menu) : null;
+    // Le menu d'ordinateur du nouvel en-tête (ticket 13) : sa bascule ouvre ce même menu, habillé en panneau.
+    const bascule = this.menuTelephone ? this.querySelector('.menu-ordi-rayons') : null;
+    this.menuOrdi = bascule ? new MenuOrdinateur(this, bascule) : null;
 
     // Desktop navigation elements
     this.desktopNavButtons = this.querySelectorAll('.desktop-nav-button');
@@ -287,7 +787,7 @@ class StickyHeader extends HTMLElement {
 
   connectedCallback() {
     document.addEventListener('overlayClick', async (e) => {
-      if (!this.detailsParent.contains(e.target) && this.detailsParent.open) {
+      if (!this.detailsParent.contains(e.target) && this.telephoneOuvert()) {
         this.renderBodyScrollable(true);
         await this.closeMobileMenu();
       }
@@ -615,9 +1115,9 @@ class StickyHeader extends HTMLElement {
       // Only add submenu behavior to navigation submenus, not other details elements (e.g. localization)
       if (!subDetail.classList.contains('js-nav-submenu')) return;
 
-      // Single-open accordion: close other submenus when one opens
+      // Single-open accordion: close other submenus when one opens. Sur ordinateur, ils sont tous ouverts.
       subDetail.addEventListener('toggle', () => {
-        if (subDetail.open) {
+        if (subDetail.open && !this.menuOrdi?.aLaMain()) {
           // Close sibling submenus at the same level
           const parent = subDetail.closest('ul');
           parent.querySelectorAll('.js-nav-submenu').forEach((other) => {
@@ -655,7 +1155,7 @@ class StickyHeader extends HTMLElement {
 
     this.addEventListener('keydown', (e) => {
       // Get focusable elements dynamically when mobile menu is open
-      if (this.detailsParent.open) {
+      if (this.telephoneOuvert()) {
         const firstFocusable = this.menuOpener;
         const lastFocusable = this.menuTelephone?.dernier() ||
                               this.menu.querySelector('.last-focusable') ||
@@ -701,7 +1201,7 @@ class StickyHeader extends HTMLElement {
         if (window.innerWidth < 768) { // md breakpoint
           this.closeDesktopDropdown();
           // Force close mobile menu and reset its state completely
-          if (this.detailsParent.open) {
+          if (this.telephoneOuvert()) {
             this.detailsParent.open = false;
             this.switchMobileMenuLogo(true);
             this.menu.classList.remove('open-nav');
@@ -716,7 +1216,7 @@ class StickyHeader extends HTMLElement {
         // Close mobile menu if switching to desktop
         if (window.innerWidth >= 768) {
           // Force close mobile menu completely when switching to desktop
-          if (this.detailsParent.open) {
+          if (this.telephoneOuvert()) {
             this.detailsParent.open = false;
             this.switchMobileMenuLogo(true);
             this.menu.classList.remove('open-nav');
@@ -730,11 +1230,16 @@ class StickyHeader extends HTMLElement {
     });
   }
 
+  // Le menu du téléphone est ouvert : son <details>, sauf quand l'ordinateur l'a (menuOrdi.aLaMain()).
+  telephoneOuvert() {
+    return this.detailsParent.open && !this.menuOrdi?.aLaMain();
+  }
+
   closeMobileMenu = async () => {
     // Close desktop dropdown if open
     this.closeDesktopDropdown();
 
-    if (!this.detailsParent.open) return;
+    if (!this.telephoneOuvert()) return;
     this.switchMobileMenuLogo(true);
     this.showOverlay(false);
     this.menu.classList.replace('open-nav', 'close-nav');
@@ -933,6 +1438,8 @@ class StickyHeader extends HTMLElement {
   };
 
   closeDesktopDropdown = () => {
+    // Le menu d'ordinateur du nouvel en-tête se ferme aussi (l'en-tête qui part, la recherche, le panier…).
+    this.menuOrdi?.fermer();
     if (!this.currentOpenDropdown) return;
 
     const dropdown = this.currentOpenDropdown;

@@ -35,10 +35,10 @@
 {%- endif -%}
 
 <sticky-header class="transition-colors duration-500 border-b border-solid border-main relative">
-  <div>
-    <div class="bg-secondary pl-6 pr-3 flex items-center justify-between border-b border-solid border-main-70 min-h-[90px] md:px-10 lg:px-14 relative">
+  <div{% if nouvel_entete %} class="menu-ordi-entete"{% endif %}>
+    <div class="bg-secondary pl-6 pr-3 flex items-center justify-between border-b border-solid border-main-70 min-h-[90px] md:px-10 lg:px-14 relative{% if nouvel_entete %} menu-ordi-barre{% endif %}">
       {% comment %} start on mobile {% endcomment %}
-      <details class="inline-block h-full md:hidden">
+      <details class="inline-block h-full {% if nouvel_entete %}menu-ordi-details{% else %}md:hidden{% endif %}">
         <summary class="group menu-opener list-none cursor-pointer" aria-label="{{ 'snippet.tw_sticky_header.open_menu' | t }}">
           <span class="group-focus-visible:border-2 group-focus-visible:border-main rounded mobile-menu">
             {% if nouvel_entete %}{% render 'entete-burger' %}{% else %}<span class="hamburger" aria-hidden="true">{% render 'tw-icon-hamburger' %}</span>{% endif %}
@@ -184,6 +184,7 @@
           endif
         endfor
       -%}
+      {%- unless nouvel_entete -%}
       <nav class="hidden md:flex items-center gap-2 self-stretch" aria-label="{{ 'snippet.tw_sticky_header.main_nav' | t }}">
         {% for block in section.blocks %}
           {% if block.type == "title_only" %}
@@ -204,6 +205,7 @@
           {% endif %}
         {% endfor %}
       </nav>
+      {%- endunless %}
 
       <a
         href="{{ routes.root_url }}"
@@ -214,8 +216,13 @@
         {% else %}
           {% render 'tw-default-logo', sans_rond: nouvel_entete %}
         {% endif %}
+        {%- if nouvel_entete %}
+        <span class="menu-ordi-nom font-heading" aria-hidden="true">MyselfMonArt</span>
+        {%- else %}
         <span class="ml-3 hidden md:block font-heading text-4xl">MyselfMonArt</span>
-      </a>
+        {%- endif %}
+      </a>{% if nouvel_entete %}
+      {% render 'menu-ordinateur' %}{% endif %}
 
       
       {% render 'tw-loup-like-button', nouveau: nouvel_entete %}
@@ -225,7 +232,12 @@
       Desktop dropdown panels - Full width
       Photos : toutes en loading: 'lazy', sinon chaque page les charge, au téléphone aussi, où ce menu reste caché.
       Sur ordinateur, assets/tw-header.js les charge d'avance (preparerPhotosDuMenu).
+      Pas dans la vue de test (nouvel_entete) : la bascule (snippets/menu-ordinateur.liquid) y ouvre le menu du
+      téléphone, habillé en panneau ; ce n'est que le voile, sous l'en-tête, qui adoucit la page derrière lui.
     {%- endcomment -%}
+    {%- if nouvel_entete %}
+    <div class="menu-ordi-voile" hidden data-allow-empty></div>
+    {%- else -%}
     <div class="desktop-dropdown-container hidden md:block relative">
       {% for block in section.blocks %}
         {% if block.type == "title_only" %}
@@ -541,6 +553,7 @@
         {% endif %}
       {% endfor %}
     </div>
+    {%- endif %}
   </div>
 
   {%- comment -%} Mobile filter button - Collection pages only {%- endcomment -%}

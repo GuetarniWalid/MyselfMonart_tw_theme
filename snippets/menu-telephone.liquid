@@ -17,6 +17,9 @@
   - En bas, toujours là : « Suivre ma commande » et le choix du pays. À la fin de la liste, les réseaux.
   La hauteur du panneau : l'écran moins ce qui est au-dessus de lui (--menu-haut, que mesure assets/tw-header.js à
   l'ouverture).
+  Sur ordinateur (dès 768 px, ticket 13), ce même menu s'ouvre sous l'en-tête, au rayon que choisit la bascule
+  (snippets/menu-ordinateur.liquid, dont chaque bouton désigne son rayon : menu-tel-rayon-N), habillé en panneau par la
+  feuille (input.css, « Le menu d'ordinateur ») : ses liens ne sont qu'une fois dans la page.
   Styles : input.css, « Le menu du téléphone » (.menu-tel). Script : assets/tw-header.js (MenuTelephone).
   Tests : scripts/menu-telephone.test.cjs.
 {%- endcomment -%}
@@ -170,7 +173,7 @@
             </li>
           {%- endfor -%}
         {%- endcapture -%}
-        <section class="menu-tel-rayon" data-rayon="{{ mt_n }}"{% if mt_titre != blank %} aria-label="{{ mt_titre | escape }}"{% endif %}>
+        <section class="menu-tel-rayon" id="menu-tel-rayon-{{ mt_n }}" data-rayon="{{ mt_n }}"{% if mt_titre != blank %} aria-label="{{ mt_titre | escape }}"{% endif %}>
           {%- if mt_tuiles != blank %}
           <ul class="menu-tel-tuiles">
             {{- mt_tuiles -}}

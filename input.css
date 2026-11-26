@@ -2019,6 +2019,7 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
 }
 .menu-tel-bascule:has(.menu-tel-onglet:nth-child(2) :checked) { --i: 1; }
 .menu-tel-bascule:has(.menu-tel-onglet:nth-child(3) :checked) { --i: 2; }
+.menu-tel-bascule:has(.menu-tel-onglet:nth-child(4) :checked) { --i: 3; }
 .menu-tel-onglet {
   position: relative;
   display: grid; place-items: center; min-height: 42px; padding: 4px 10px;
@@ -2031,7 +2032,8 @@ body:has(.oeuvre-3d-pill.chips-pill-away) .cart-fab {
 /* Un rayon à la fois, celui de son onglet. Un navigateur sans :has les montre tous, sans les onglets. */
 .menu-tel:has(.menu-tel-onglet:nth-child(1) :checked) .menu-tel-rayon:not([data-rayon="1"]),
 .menu-tel:has(.menu-tel-onglet:nth-child(2) :checked) .menu-tel-rayon:not([data-rayon="2"]),
-.menu-tel:has(.menu-tel-onglet:nth-child(3) :checked) .menu-tel-rayon:not([data-rayon="3"]) { display: none; }
+.menu-tel:has(.menu-tel-onglet:nth-child(3) :checked) .menu-tel-rayon:not([data-rayon="3"]),
+.menu-tel:has(.menu-tel-onglet:nth-child(4) :checked) .menu-tel-rayon:not([data-rayon="4"]) { display: none; }
 @supports not selector(:has(a)) {
   .menu-tel-bascule { display: none; }
 }
@@ -2325,6 +2327,204 @@ li:has(> likes-count span:not(.hidden)) > .entete-coeur .coeur-fond { fill: var(
   li:has(> likes-count.plus) > .entete-coeur .entete-coeur-dessin { animation: entete-coeur-bat 0.6s ease; }
 }
 /* ---- Fin des angelots de l'en-tête ---- */
+
+/* ---- Le menu d'ordinateur (snippets/menu-ordinateur.liquid, .menu-ordi) ----
+   Ticket 13 de .scratch/collection-design, « la bascule » (oui de Walid du 26/11/2026), dans le nouvel en-tête (vue de
+   test) : dès 768 px, le logo et le nom en petit à gauche, les rayons au centre, la recherche et le cœur à droite. Les
+   rayons ouvrent le menu du téléphone (.menu-tel), habillé ici en panneau sous l'en-tête : ses liens ne sont qu'une fois
+   dans la page. Sous 768 px, rien ne change.
+   Les couleurs et la police des nouvelles pages, posées une fois sur l'en-tête (scripts/menu-ordinateur.test.cjs vérifie
+   qu'elles sont égales à celles de la page collection). Le mouvement : une seule pastille qui glisse d'un rayon à l'autre
+   (le script), un rideau qui descend (clip-path), le contenu qui monte par vagues, la page adoucie derrière (le voile et
+   son flou) ; rien de tout cela avec « mouvements réduits ». Script : MenuOrdinateur (assets/tw-header.js). */
+:root .menu-ordi-entete {
+  --encre: rgb(var(--color-main-rgb));
+  --encre-55: rgba(var(--color-main-rgb), 0.6);
+  --encre-12: rgba(var(--color-main-rgb), 0.12);
+  --encre-06: rgba(var(--color-main-rgb), 0.06);
+  --blanc: #ffffff;
+  --voile: rgba(var(--color-main-rgb), 0.16);
+  --sans: "Albert Sans", Roboto, sans-serif;
+  /* Les marges de la page (20 px, 48 px dès 900 px) ; le contenu à 1240 px au plus. */
+  --gout: max(20px, env(safe-area-inset-left, 0px));
+  --goutd: max(20px, env(safe-area-inset-right, 0px));
+}
+/* Au téléphone, rien de l'ordinateur : ni la bascule, ni le nom, ni le mot de la recherche, ni le voile. */
+.menu-ordi-rayons, .menu-ordi-nom, .menu-ordi-mot, .menu-ordi-voile { display: none; }
+
+@media (min-width: 768px) {
+  /* L'en-tête : un conteneur, dont la largeur décide de la place (le nom, puis le champ de recherche, cèdent la leur). */
+  :root .menu-ordi-entete { container: menu-ordi / inline-size; }
+  /* La barre : le logo, les rayons au centre, les outils ; aux marges de la page. */
+  :root .menu-ordi-barre {
+    display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; column-gap: 20px;
+    padding-left: max(var(--gout), (100% - 1240px) / 2); padding-right: max(var(--goutd), (100% - 1240px) / 2);
+  }
+  /* Le menu du téléphone : son bouton se cache ; son <details> ne prend aucune place, le panneau se pose sous la barre. */
+  :root .menu-ordi-details { grid-area: 1 / 1; display: block; width: 0; height: 0; }
+  .menu-ordi-details > .menu-opener { display: none; }
+  :root .menu-ordi-barre > a { grid-area: 1 / 1; justify-self: start; }
+  /* Le nom, en petit, dans la police de la marque : ses capitales font 0,38 fois le logo. */
+  :root .menu-ordi-nom { display: block; margin-left: 11px; font-size: 23px; line-height: 1; letter-spacing: 0.005em; white-space: nowrap; translate: 0 1px; }
+
+  /* La bascule : un bouton par rayon, le mot seul, sur le fond de l'interrupteur du téléphone. */
+  :root .menu-ordi-rayons { grid-area: 1 / 2; position: relative; display: block; padding: 3px; border-radius: 999px; background: var(--encre-06); }
+  .menu-ordi-bascule { display: flex; gap: 2px; margin: 0; padding: 0; list-style: none; }
+  .menu-ordi-rayon {
+    position: relative; display: flex; align-items: center; justify-content: center;
+    min-height: 42px; padding: 0 18px; border: 0; border-radius: 999px; background: none;
+    color: var(--encre); font: 600 15.5px/1 var(--sans); white-space: nowrap;
+    cursor: pointer; -webkit-tap-highlight-color: transparent;
+  }
+  .menu-ordi-rayon:focus-visible { outline: 2px solid var(--encre); outline-offset: 2px; }
+  /* La pastille, une seule : blanche, cerclée d'encre, l'ombre de celle du téléphone. Le script la pose sous un rayon, à
+     sa largeur, et la fait glisser ; avant lui, le rayon de la page porte son dessin (data-pret : elle a pris le relais,
+     au même endroit). */
+  .menu-ordi-pastille {
+    position: absolute; top: 3px; left: 0; width: 0; height: 42px; border-radius: 999px;
+    background: var(--blanc); box-shadow: 0 0 0 1px var(--encre), 0 4px 12px var(--encre-12);
+    opacity: 0; pointer-events: none;
+  }
+  .menu-ordi-rayons:not([data-pret]) .menu-ordi-rayon[aria-current="true"] { background: var(--blanc); box-shadow: 0 0 0 1px var(--encre), 0 4px 12px var(--encre-12); }
+
+  /* Les outils : la loupe (un champ « Recherche » là où il a la place, plus bas), puis le cœur. La place de la recherche
+     est ce que lui laisse sa colonne : un conteneur. */
+  :root .menu-ordi-outils { grid-area: 1 / 3; justify-self: stretch; justify-content: flex-end; gap: 6px; min-width: 0; }
+  .menu-ordi-outils > li:first-child { container: menu-ordi-champ / inline-size; flex: 1 1 0; display: flex; justify-content: flex-end; min-width: 0; }
+  :root .menu-ordi-loupe { gap: 10px; }
+
+  /* Le panneau : le menu du téléphone, sous l'en-tête, fermé (découpé) tant que le script ne l'ouvre pas (data-ordi).
+     Les emblèmes y prennent la plus grande taille, de 44 à 66 px, où tout le rayon tient : sous l'en-tête, 40 px de la
+     page restent en vue (--menu-haut : le haut du panneau, que mesure le script à l'ouverture), et sa plus longue rangée
+     tient dans la largeur (--rangees et --colonnes : le plus de rangées d'un rayon et le plus d'emblèmes d'une rangée,
+     posés par le script). */
+  :root .menu-ordi-barre .menu-tel {
+    --cote-g: max(var(--gout), (100cqw - 1240px) / 2);
+    --cote-d: max(var(--goutd), (100cqw - 1240px) / 2);
+    --col-g: 0px;
+    --col-ecart: 0px;
+    --col-titre: 118px;
+    --emb-marge: 36px;
+    --emb-h: calc((100dvh - var(--menu-haut, 123px) - 40px - 42px - var(--rangees, 5) * 52px) / (1.3 * var(--rangees, 5)));
+    --emb-l: calc((100cqw - var(--cote-g) - var(--cote-d) - var(--col-g) - var(--col-ecart) - var(--col-titre) - 16px) / var(--colonnes, 7) - 2px - var(--emb-marge));
+    --emb: clamp(44px, min(var(--emb-h), var(--emb-l)), 66px);
+    position: absolute; top: calc(100% + 2px); right: auto; bottom: auto; left: 0; width: 100%;
+    display: block; height: auto; max-height: calc(100dvh - var(--menu-haut, 123px) - 40px);
+    overflow: hidden auto; overscroll-behavior: contain;
+    border-top: 0; transform: none; transition: none;
+    clip-path: inset(0 0 100% 0);
+  }
+  /* Prêt (rendu au repos de la page, ou après une fermeture), il reste caché : ni vu, ni lu, ni atteint au clavier. */
+  :root .menu-ordi-barre .menu-tel[data-ordi="repos"] { visibility: hidden; }
+  :root .menu-ordi-barre .menu-tel[data-ordi="ouvert"] { clip-path: inset(0); }
+  :root .menu-ordi-barre .menu-tel-defile { display: block; overflow: visible; padding: 20px var(--cote-d) 22px var(--cote-g); }
+  /* Sur ordinateur, ni l'interrupteur (la bascule de l'en-tête le remplace), ni les réseaux et le pays (au pied de page). */
+  :root .menu-ordi-barre :is(.menu-tel-bascule, .menu-tel-reseaux, .menu-tel-pays, .menu-tel-pile, .menu-tel-chevron) { display: none; }
+  /* Les tuiles. */
+  :root .menu-ordi-barre .menu-tel-tuiles { margin: 0 0 14px; }
+  /* Les groupes, tous ouverts : une ligne chacun, son titre puis la rangée de ses emblèmes, tous visibles d'un coup. Le
+     titre n'est plus qu'un titre (le script le sort du clavier). */
+  :root .menu-ordi-barre .menu-tel-groupe { position: relative; padding-left: calc(var(--col-titre) + 12px); border-top: 1px solid var(--encre-12); border-bottom: 0; }
+  :root .menu-ordi-barre .menu-tel-groupes > li:first-child .menu-tel-groupe { border-top: 0; }
+  :root .menu-ordi-barre .menu-tel-tete { position: absolute; top: 0; bottom: 0; left: 0; width: var(--col-titre); min-height: 0; padding: 0; cursor: default; pointer-events: none; }
+  :root .menu-ordi-barre .menu-tel-nom { font: 600 16px/1.2 var(--sans); letter-spacing: -0.01em; }
+  :root .menu-ordi-barre .menu-tel-rangee { gap: 2px; padding: 9px 2px 5px; scroll-snap-type: none; scroll-padding-inline: 0; scrollbar-width: thin; }
+  :root .menu-ordi-barre .menu-tel .c-emb[data-taille="menu"] { --d: var(--emb); flex: 0 0 auto; width: calc(var(--d) + var(--emb-marge)); min-width: min-content; max-width: none; scroll-snap-align: none; }
+  :root .menu-ordi-barre .menu-tel .c-emb[data-taille="menu"] .c-emb-lien { margin-top: 5px; }
+  :root .menu-ordi-barre .menu-tel .c-emb[data-taille="menu"] .c-emb-nom { font-size: 13.5px; text-wrap: balance; }
+  :root .menu-ordi-barre .menu-tel .c-emb[data-taille="menu"][data-mot] .c-emb-nom { font-size: 12.5px; }
+  :root .menu-ordi-barre .menu-tel .c-emb[data-taille="menu"] .c-emb-nb { margin-top: 3px; }
+  /* « Suivre ma commande », sous le panneau (de 768 à 899 px), puis en bas de la colonne des tuiles. */
+  :root .menu-ordi-barre .menu-tel-pied { display: block; padding: 0 var(--cote-d) 18px var(--cote-g); border-top: 0; background: none; }
+  :root .menu-ordi-barre .menu-tel .menu-tel-suivi { min-height: 46px; padding: 0 14px; gap: 9px; font-size: 14.5px; }
+
+  /* Le voile : la page, derrière le panneau, adoucie d'encre (et floutée, plus bas). Sous l'en-tête, jusqu'en bas de
+     l'écran ; un clic dessus ferme le menu. */
+  :root .menu-ordi-voile:not([hidden]) {
+    position: absolute; top: calc(100% + 1px); left: 0; right: 0; z-index: -1; display: block;
+    height: calc(100dvh - var(--menu-haut, 123px)); background: var(--voile); opacity: 0;
+  }
+  :root .menu-ordi-voile[data-vu] { opacity: 1; }
+}
+@media (min-width: 900px) {
+  :root .menu-ordi-entete { --gout: max(48px, env(safe-area-inset-left, 0px)); --goutd: max(48px, env(safe-area-inset-right, 0px)); }
+}
+
+/* Les rayons plus serrés sous 900 px. Le nom cède sa place d'abord : sous 960 px à deux rayons, sous 1100 px à trois,
+   sous 1180 px à quatre et plus (les largeurs du prototype, qui tiennent en allemand, la plus longue des langues). */
+@container menu-ordi (max-width: 899px) {
+  .menu-ordi-rayon { padding: 0 14px; font-size: 14.5px; }
+}
+@container menu-ordi (max-width: 959px) {
+  :root .menu-ordi-nom { display: none; }
+}
+@container menu-ordi (max-width: 1099px) {
+  :root .menu-ordi-barre:has(> .menu-ordi-rayons[data-n="3"]) .menu-ordi-nom { display: none; }
+}
+@container menu-ordi (max-width: 1179px) {
+  :root .menu-ordi-barre:has(> .menu-ordi-rayons:not([data-n="1"], [data-n="2"], [data-n="3"])) .menu-ordi-nom { display: none; }
+}
+/* La recherche, un champ ouvert dès 1024 px, s'il lui reste 150 px dans sa colonne ; sinon la loupe. C'est le bouton de
+   toujours : il ouvre la recherche d'aujourd'hui. */
+@container menu-ordi (min-width: 1024px) {
+  @container menu-ordi-champ (min-width: 150px) {
+    :root .menu-ordi-loupe {
+      width: min(100%, 270px); height: 44px; padding: 0 16px; justify-content: flex-start;
+      border-radius: 999px; background: var(--encre-06); color: var(--encre-55); cursor: text;
+    }
+    :root .menu-ordi-loupe > span:first-child { transform: none; }
+    .menu-ordi-loupe svg { width: 18px; height: 18px; color: var(--encre); }
+    :root .menu-ordi-mot { display: inline; overflow: hidden; font: 500 15px/1 var(--sans); white-space: nowrap; text-overflow: ellipsis; }
+  }
+}
+/* Le panneau dès 900 px : les tuiles à gauche et « Suivre ma commande » au bas de leur colonne, les groupes à droite. De
+   900 à 1239 px (iPad couché, petits portables), les colonnes des tuiles et des titres plus étroites : la place va aux
+   emblèmes. */
+@container menu-ordi (min-width: 900px) {
+  :root .menu-ordi-barre .menu-tel { --col-g: 228px; --col-ecart: 36px; --col-titre: 146px; --emb-marge: 48px; }
+  :root .menu-ordi-barre .menu-tel-rayon { display: grid; grid-template-columns: var(--col-g) minmax(0, 1fr); column-gap: var(--col-ecart); align-items: start; }
+  :root .menu-ordi-barre .menu-tel-tuiles { grid-template-columns: minmax(0, 1fr); margin: 0 0 56px; }
+  :root .menu-ordi-barre .menu-tel-pied { position: absolute; bottom: 22px; left: var(--cote-g); width: var(--col-g); padding: 0; }
+}
+@container menu-ordi (min-width: 900px) and (max-width: 1239px) {
+  :root .menu-ordi-barre .menu-tel { --col-g: 200px; --col-ecart: 28px; --col-titre: 124px; }
+  :root .menu-ordi-barre .menu-tel-nom { font-size: 15px; }
+}
+
+/* Le mouvement, seulement sans « mouvements réduits ». Le rideau descend depuis l'en-tête (0,45 s) et remonte plus vite
+   (0,24 s) : une découpe, sur la courbe de la pastille. Pendant qu'il descend, le contenu monte de 8 px, par vagues : les
+   tuiles d'abord, puis chaque rangée 35 ms après la précédente, chaque emblème 12 ms après son voisin ; tout est fini
+   avant 0,6 s. Derrière, le voile arrive en fondu, avec un flou de 6 px. */
+@keyframes menu-ordi-monte { from { opacity: 0; translate: 0 8px; } }
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  :root .menu-ordi-barre .menu-tel { transition: clip-path 0.24s cubic-bezier(0.32, 0.72, 0, 1); }
+  :root .menu-ordi-barre .menu-tel[data-ordi="ouvert"] { transition: clip-path 0.45s cubic-bezier(0.32, 0.72, 0, 1); }
+  :root .menu-ordi-barre .menu-tel[data-vagues] :is(.menu-tel-tuiles > .c-emb, .menu-tel-tete, .menu-tel-rangee > .c-emb, .menu-tel-suivi) {
+    animation: menu-ordi-monte 0.34s cubic-bezier(0.32, 0.72, 0, 1) backwards;
+    animation-delay: min(var(--rang, 0) * 35ms + var(--place, 0) * 12ms, 0.25s);
+  }
+  .menu-ordi-barre .menu-tel-groupes > li:nth-child(1) { --rang: 1; }
+  .menu-ordi-barre .menu-tel-groupes > li:nth-child(2) { --rang: 2; }
+  .menu-ordi-barre .menu-tel-groupes > li:nth-child(3) { --rang: 3; }
+  .menu-ordi-barre .menu-tel-groupes > li:nth-child(4) { --rang: 4; }
+  .menu-ordi-barre .menu-tel-groupes > li:nth-child(5) { --rang: 5; }
+  .menu-ordi-barre .menu-tel-groupes > li:nth-child(n + 6) { --rang: 6; }
+  .menu-ordi-barre .menu-tel :is(.menu-tel-tuiles, .menu-tel-rangee) > .c-emb:nth-child(2) { --place: 1; }
+  .menu-ordi-barre .menu-tel :is(.menu-tel-tuiles, .menu-tel-rangee) > .c-emb:nth-child(3) { --place: 2; }
+  .menu-ordi-barre .menu-tel :is(.menu-tel-tuiles, .menu-tel-rangee) > .c-emb:nth-child(4) { --place: 3; }
+  .menu-ordi-barre .menu-tel :is(.menu-tel-tuiles, .menu-tel-rangee) > .c-emb:nth-child(5) { --place: 4; }
+  .menu-ordi-barre .menu-tel :is(.menu-tel-tuiles, .menu-tel-rangee) > .c-emb:nth-child(6) { --place: 5; }
+  .menu-ordi-barre .menu-tel :is(.menu-tel-tuiles, .menu-tel-rangee) > .c-emb:nth-child(7) { --place: 6; }
+  .menu-ordi-barre .menu-tel :is(.menu-tel-tuiles, .menu-tel-rangee) > .c-emb:nth-child(n + 8) { --place: 7; }
+  .menu-ordi-barre .menu-tel .menu-tel-suivi { --place: 2; }
+  /* Le menu du téléphone a ses propres mouvements (un groupe qui se déplie, ses emblèmes qui arrivent de côté) : pas ici. */
+  :root .menu-ordi-barre .menu-tel-groupe::details-content { transition: none; }
+  :root .menu-ordi-barre .menu-tel:not([data-vagues]) .menu-tel-groupe[open] .c-emb { animation: none; }
+  /* Le voile arrive en 0,3 s, et s'efface avec le rideau, en 0,24 s. */
+  .menu-ordi-voile { transition: opacity 0.24s ease; backdrop-filter: blur(6px); }
+  .menu-ordi-voile[data-vu] { transition: opacity 0.3s ease; }
+}
+/* ---- Fin du menu d'ordinateur ---- */
 
 @tailwind base;
 @tailwind components;

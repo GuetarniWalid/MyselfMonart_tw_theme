@@ -4,11 +4,18 @@
   (Raphaël, 1513, domaine public) l'entoure de ses bras, centré sur lui ; vide, le cœur est blanc, dès un j'aime il est
   corail (snippets/coeur-papiers.liquid, celui des cartes) et porte leur nombre.
   Styles : input.css, « Les angelots de l'en-tête ». Tests : scripts/menu-telephone.test.cjs.
+  Sur ordinateur, dans le nouvel en-tête (ticket 13, « la bascule ») : la loupe devient un champ « Recherche », dès
+  1024 px et s'il a la place (input.css, « Le menu d'ordinateur ») ; c'est le même bouton, qui ouvre la recherche
+  d'aujourd'hui (snippets/tw-predictive-search.liquid). Son nom reste celui de la loupe, qui contient le mot vu.
+  Tests : scripts/menu-ordinateur.test.cjs.
 {%- endcomment -%}
-<ul class="flex items-center transition-colors duration-500 cursor-pointer">
+<ul class="flex items-center transition-colors duration-500 cursor-pointer{% if nouveau %} menu-ordi-outils{% endif %}">
     <li>
-        <button id="open-search-loup" class="mobile-mini:p-2 p-4 transition-colors duration-500 flex justify-center items-center">
+        <button id="open-search-loup" class="mobile-mini:p-2 p-4 transition-colors duration-500 flex justify-center items-center{% if nouveau %} menu-ordi-loupe{% endif %}">
             <span class="translate-x-[3px] inline-block">{% render 'tw-icon-loup' %}</span>
+            {%- if nouveau %}
+            <span class="menu-ordi-mot" aria-hidden="true">{{ 'snippet.tw_predictive_search.input_placeholder' | t }}</span>
+            {%- endif %}
         </button>
     </li>
     <li class="group relative">
